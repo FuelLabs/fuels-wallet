@@ -1,0 +1,31 @@
+{
+  "name": "app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && vite build && pnpm create404",
+    "create404": "cp ./dist/index.html ./dist/404.html",
+    "dev": "vite",
+    "preview": "vite preview",
+    "test": "jest --verbose --runInBand",
+    "test:watch": "jest --watch --runInBand --detectOpenHandles"
+  },
+  "dependencies": {
+    "@fuel-ui/css": "^0.2.0",
+    "@fuel-ui/react": "^0.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0",
+    "react-router-dom": "^6.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@types/react-helmet": "^6.1.5",
+    "@vitejs/plugin-react": "^2.0.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.0.0",
+    "vite-tsconfig-paths": "^3.5.0"
+  }
+}
