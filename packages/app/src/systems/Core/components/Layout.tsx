@@ -21,7 +21,7 @@ function Content({ as, children, css }: ContentProps) {
   );
 }
 
-type LayoutProps = {
+export type LayoutProps = {
   title?: string;
   children: ReactNode;
 };
