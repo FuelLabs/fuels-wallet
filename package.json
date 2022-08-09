@@ -34,7 +34,8 @@
     "node:test": "fuelhat node --test",
     "test": "pnpm run --filter=app test",
     "test:coverage": "pnpm run --filter=app test --coverage",
-    "test:clear": "pnpm -r exec jest --clearCache"
+    "test:clear": "pnpm -r exec jest --clearCache",
+    "ts:check": "pnpm -r --filter=app exec tsc --noEmit"
   },
   "dependencies": {
     "@fuel-ui/config": "^0.3.0",
