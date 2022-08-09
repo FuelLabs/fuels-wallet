@@ -23,6 +23,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
+    "storybook": "pnpm -r --filter=app storybook",
     "deps:update": "updates -gu && pnpm -r exec updates -gu",
     "lint:check": "eslint . --ext .ts,.tsx,.js,.jsx",
     "lint:fix": "pnpm lint:check --fix",
