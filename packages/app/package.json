@@ -1,7 +1,7 @@
 {
   "name": "app",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "build": "tsc && vite build && pnpm create404",
     "create404": "cp ./dist/index.html ./dist/404.html",
@@ -13,8 +13,8 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@fuel-ui/css": "^0.2.0",
-    "@fuel-ui/react": "^0.2.0",
+    "@fuel-ui/css": "^0.3.0",
+    "@fuel-ui/react": "^0.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
@@ -46,7 +46,7 @@
     "babel-loader": "^8.2.5",
     "storybook-dark-mode": "^1.1.0",
     "typescript": "^4.7.4",
-    "vite": "^3.0.4",
+    "vite": "^3.0.5",
     "vite-tsconfig-paths": "^3.5.0"
   }
 }

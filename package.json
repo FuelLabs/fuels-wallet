@@ -29,15 +29,16 @@
     "lint": "run-s lint:check prettier:check",
     "prettier:check": "prettier --check .",
     "prettier:format": "prettier --write .",
+    "node:dev": "fuelhat node",
+    "node:test": "fuelhat node --test",
     "test": "pnpm run --filter=app test",
     "test:coverage": "pnpm run --filter=app test --coverage",
     "test:clear": "pnpm -r exec jest --clearCache"
   },
   "dependencies": {
-    "@fuel-ui/config": "^0.2.0",
-    "@fuel-ui/css": "^0.2.0",
-    "@fuel-ui/react": "^0.2.0",
-    "@fuel-ui/test-utils": "^0.2.0"
+    "@fuel-ui/config": "^0.3.0",
+    "@fuel-ui/test-utils": "^0.3.0",
+    "fuelhat": "workspace:*"
   },
   "devDependencies": {
     "@babel/core": "^7.18.10",
