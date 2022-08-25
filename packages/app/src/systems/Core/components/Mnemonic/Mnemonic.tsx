@@ -1,11 +1,15 @@
 import { cssObj } from "@fuel-ui/css";
 import { Box, Button, Flex, Grid, Icon } from "@fuel-ui/react";
 import React, { useEffect, useState } from "react";
-import { useCopyToClipboard } from "react-use";
 
 import { MnemonicInput } from "./MnemonicInput";
 
-const BLANK_ARR = Array.from({ length: 12 }).map(() => "");
+const { VITE_MNEMONIC_WORDS } = process.env;
+const BLANK_ARR = Array.from({ length: VITE_MNEMONIC_WORDS }).map(() => "");
+
+function fillArray(arr: string[], item: string[]) {
+  return arr.map((_, idx) => item[idx] || "");
+}
 
 export type MnemonicProps = {
   value: string[];
@@ -18,22 +22,25 @@ export function Mnemonic({
   type,
   onFilled,
 }: MnemonicProps) {
-  const [, copy] = useCopyToClipboard();
   const [value, setValue] = useState<string[]>(() => {
     if (Array.isArray(initialValue) && initialValue.length > 0) {
-      return BLANK_ARR.map((_, idx) => initialValue[idx] || "");
+      return fillArray(BLANK_ARR, initialValue);
     }
     return BLANK_ARR;
   });
 
+  async function handleCopy() {
+    await navigator.clipboard.writeText(value.join(" "));
+  }
+
   function handlePastInput(ev: React.ClipboardEvent<HTMLInputElement>) {
     const text = ev.clipboardData.getData("text/plain");
-    setValue((v) => v.map((_, idx) => text.split(" ")[idx] || ""));
+    setValue((old) => fillArray(old, text.split(" ")));
   }
 
   async function handlePast() {
     const text = await navigator.clipboard.readText();
-    setValue((v) => v.map((_, idx) => text.split(" ")[idx] || ""));
+    setValue((old) => fillArray(old, text.split(" ")));
   }
 
   function handleChange(idx: number) {
@@ -76,49 +83,27 @@ export function Mnemonic({
       )}
       <Flex as="footer" align="center" gap="$4" css={styles.footer}>
         {type === "read" ? (
-          <>
-            <Button
-              aria-label="Copy button"
-              size="xs"
-              variant="ghost"
-              color="gray"
-              leftIcon={<Icon icon="Copy" color="gray8" />}
-              onPress={() => copy(value.join(" "))}
-            >
-              Copy
-            </Button>
-            <Button
-              aria-label="Download button"
-              size="xs"
-              variant="ghost"
-              color="gray"
-              leftIcon={<Icon icon="Download" color="gray8" />}
-            >
-              Download
-            </Button>
-          </>
+          <Button
+            aria-label="Copy button"
+            size="xs"
+            variant="ghost"
+            color="gray"
+            leftIcon={<Icon icon="Copy" color="gray8" />}
+            onPress={handleCopy}
+          >
+            Copy
+          </Button>
         ) : (
-          <>
-            <Button
-              aria-label="Paste button"
-              size="xs"
-              variant="ghost"
-              color="gray"
-              leftIcon={<Icon icon="ClipboardText" color="gray8" />}
-              onPress={handlePast}
-            >
-              Paste
-            </Button>
-            <Button
-              aria-label="Upload button"
-              size="xs"
-              variant="ghost"
-              color="gray"
-              leftIcon={<Icon icon="Upload" color="gray8" />}
-            >
-              Upload
-            </Button>
-          </>
+          <Button
+            aria-label="Paste button"
+            size="xs"
+            variant="ghost"
+            color="gray"
+            leftIcon={<Icon icon="ClipboardText" color="gray8" />}
+            onPress={handlePast}
+          >
+            Paste
+          </Button>
         )}
       </Flex>
     </Box>
