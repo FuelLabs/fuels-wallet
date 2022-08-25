@@ -2,9 +2,17 @@ import type { ThemeUtilsCSS } from "@fuel-ui/css";
 import { cssObj } from "@fuel-ui/css";
 import { Box, Flex } from "@fuel-ui/react";
 import type { FC, ReactNode } from "react";
+import { useContext, createContext } from "react";
 import { Helmet } from "react-helmet";
 
-import { TopNav } from "./TopNav";
+import { BottomBar } from "./BottomBar";
+import { TopBar } from "./TopBar";
+
+type Context = {
+  isLoading?: boolean;
+};
+
+const ctx = createContext<Context>({});
 
 type ContentProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,31 +30,38 @@ function Content({ as, children, css }: ContentProps) {
 }
 
 export type LayoutProps = {
+  isLoading?: boolean;
   title?: string;
   children: ReactNode;
 };
 
 type LayoutComponent = FC<LayoutProps> & {
-  Content: FC<ContentProps>;
-  TopNav: FC;
+  Content: typeof Content;
+  TopBar: typeof TopBar;
+  BottomBar: typeof BottomBar;
 };
 
-export const Layout: LayoutComponent = ({ title, children }: LayoutProps) => {
+export const Layout: LayoutComponent = ({
+  isLoading,
+  title,
+  children,
+}: LayoutProps) => {
   const titleText = title ? `${title} | Verify` : "Verify";
   return (
-    <>
+    <ctx.Provider value={{ isLoading }}>
       <Helmet>
         <title>{titleText}</title>
       </Helmet>
       <Flex as="main" css={styles.root}>
-        <Box css={styles.wrapper}>{children}</Box>
+        <Flex css={styles.wrapper}>{children}</Flex>
       </Flex>
-    </>
+    </ctx.Provider>
   );
 };
 
 Layout.Content = Content;
-Layout.TopNav = TopNav;
+Layout.TopBar = TopBar;
+Layout.BottomBar = BottomBar;
 
 const styles = {
   root: cssObj({
@@ -56,9 +71,9 @@ const styles = {
     minH: "100vh",
   }),
   wrapper: cssObj({
+    flexDirection: "column",
     width: "350px",
     minHeight: "615px",
-    // boxShadow: "$md",
     borderRadius: "$md",
     background:
       "linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)",
@@ -69,3 +84,7 @@ const styles = {
     flex: 1,
   }),
 };
+
+export function useLayoutContext() {
+  return useContext(ctx);
+}
