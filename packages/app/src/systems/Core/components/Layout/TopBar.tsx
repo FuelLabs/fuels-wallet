@@ -1,8 +1,14 @@
 import { css } from "@fuel-ui/css";
-import { Flex, Icon, IconButton, Spinner, Text } from "@fuel-ui/react";
+import {
+  FuelLogo,
+  Flex,
+  Icon,
+  IconButton,
+  Spinner,
+  Text,
+} from "@fuel-ui/react";
 import { useNavigate } from "react-router-dom";
 
-import { FuelLogo } from "./FuelLogo";
 import { useLayoutContext } from "./Layout";
 
 type TopBarProps = {
