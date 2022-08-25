@@ -60,6 +60,7 @@ importers:
   packages/app:
     specifiers:
       '@babel/core': ^7.18.13
+      '@fontsource/source-code-pro': ^4.5.11
       '@fuel-ui/css': ^0.5.0
       '@fuel-ui/react': ^0.5.0
       '@storybook/addon-a11y': ^6.5.10
@@ -88,6 +89,7 @@ importers:
       react-dom: ^18.2.0
       react-helmet: ^6.1.0
       react-router-dom: ^6.3.0
+      react-use: ^17.4.0
       storybook-dark-mode: ^1.1.0
       tsconfig-paths-webpack-plugin: ^4.0.0
       typescript: ^4.7.4
@@ -95,12 +97,14 @@ importers:
       vite-tsconfig-paths: ^3.5.0
       webpack: '5'
     dependencies:
+      '@fontsource/source-code-pro': 4.5.11
       '@fuel-ui/css': 0.5.0
       '@fuel-ui/react': 0.5.0_3uauuzlp6jhewuklgxo6s4lpka
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-helmet: 6.1.0_react@18.2.0
       react-router-dom: 6.3.0_biqbaboplfbrettd7655fr4n2y
+      react-use: 17.4.0_biqbaboplfbrettd7655fr4n2y
     devDependencies:
       '@babel/core': 7.18.13
       '@storybook/addon-a11y': 6.5.10_biqbaboplfbrettd7655fr4n2y
@@ -1862,6 +1866,10 @@ packages:
       use-isomorphic-layout-effect: 1.1.2_ug65io7jkbhmo4fihdmbrh3ina
     transitivePeerDependencies:
       - '@types/react'
+    dev: false
+
+  /@fontsource/source-code-pro/4.5.11:
+    resolution: {integrity: sha512-SzVV/w+Es+I9JMEzH9ePTaFhgxYKnRBtxrJ8q67yHmSMkHRD5OpPlQR+kMCOt2AaCDcKFjDlyNk/uyRB8dA8hA==}
     dev: false
 
   /@formatjs/ecma402-abstract/1.11.8:
