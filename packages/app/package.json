@@ -13,8 +13,8 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@fuel-ui/css": "^0.4.0",
-    "@fuel-ui/react": "^0.4.0",
+    "@fuel-ui/css": "^0.5.0",
+    "@fuel-ui/react": "^0.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
