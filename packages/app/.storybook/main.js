@@ -19,7 +19,7 @@ module.exports = {
   },
   webpackFinal: async (config) => {
     if (config.build) {
-      config.base = join((process.env.BASE_URL || config.base || ''), 'storybook');
+      config.base = join(process.env.BASE_URL || config.base || '', 'storybook');
     }
     config.resolve.plugins = [new TsconfigPathsPlugin()];
     return config;
