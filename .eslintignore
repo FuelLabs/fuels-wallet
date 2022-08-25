@@ -1,0 +1,10 @@
+**/node_modules/
+**/coverage/
+*.js
+*.html
+dist
+CHANGELOG.md
+packages/app/src/types
+contracts
+**/*.typegen.ts
+.eslintrc.js
