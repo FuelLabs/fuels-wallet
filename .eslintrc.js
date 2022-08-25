@@ -1,4 +1,4 @@
-const config = require('@fuel-ui/config');
+const config = require('./packages/config');
 const path = require('path');
 
 const resolveRoot = (dir = '') => path.resolve(__dirname, dir);
