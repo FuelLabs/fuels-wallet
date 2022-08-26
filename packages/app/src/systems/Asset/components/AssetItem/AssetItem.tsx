@@ -1,12 +1,5 @@
 import { cssObj } from "@fuel-ui/css";
-import {
-  Avatar,
-  CardList,
-  Copyable,
-  Flex,
-  Heading,
-  Text,
-} from "@fuel-ui/react";
+import { Avatar, CardList, Flex, Heading, Text } from "@fuel-ui/react";
 import type { FC } from "react";
 
 import { AssetItemLoader } from "./AssetItemLoader";
@@ -34,11 +27,9 @@ export const AssetItem: AssetItemComponent = ({ asset, amount }) => {
     <CardList.Item rightEl={rightEl} css={{ alignItems: "center" }}>
       <Avatar size="md" name={asset.name} src={asset.imageUrl} />
       <Flex direction="column">
-        <Copyable value={asset.assetId} css={styles.assetName}>
-          <Heading as="h6" css={styles.assetName}>
-            {asset.name}
-          </Heading>
-        </Copyable>
+        <Heading as="h6" css={styles.assetName}>
+          {asset.name}
+        </Heading>
         <Text css={styles.assetSymbol}>{asset.symbol}</Text>
       </Flex>
     </CardList.Item>
@@ -49,14 +40,8 @@ AssetItem.Loader = AssetItemLoader;
 
 const styles = {
   assetName: cssObj({
-    ".fuel_copyable-icon": {
-      py: "$2 !important",
-      height: "$2 !important",
-    },
-    h6: {
-      margin: 0,
-      fontSize: "$sm",
-    },
+    margin: 0,
+    fontSize: "$sm",
   }),
   assetSymbol: cssObj({
     textSize: "sm",
