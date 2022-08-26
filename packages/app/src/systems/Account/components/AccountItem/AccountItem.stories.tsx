@@ -5,7 +5,7 @@ import { AccountItem } from "./AccountItem";
 
 export default {
   component: AccountItem,
-  title: "Account/AccountItem",
+  title: "Account/Components/AccountItem",
 };
 
 const ACCOUNT = {

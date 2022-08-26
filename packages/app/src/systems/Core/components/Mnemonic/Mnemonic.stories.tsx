@@ -5,7 +5,7 @@ import { Mnemonic } from "./Mnemonic";
 
 export default {
   component: Mnemonic,
-  title: "Core/Mnemonic",
+  title: "Core/Components/Mnemonic",
   parameters: {
     Mnemonic: "fullscreen",
   },

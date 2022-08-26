@@ -14,6 +14,11 @@ export const parameters = {
       date: /Date$/,
     },
   },
+  options: {
+    storySort: {
+      order: ["Core"],
+    },
+  },
   darkMode: {
     stylePreview: true,
     dark: {

@@ -8,7 +8,7 @@ import { AssetItem } from "./AssetItem";
 
 export default {
   component: AssetItem,
-  title: "Asset/AssetItem",
+  title: "Asset/Components/AssetItem",
 };
 
 export const Usage = (args: AssetItemProps) => (

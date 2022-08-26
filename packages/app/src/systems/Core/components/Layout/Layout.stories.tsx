@@ -5,7 +5,7 @@ import { Layout } from "./Layout";
 
 export default {
   component: Layout,
-  title: "Core/Layout",
+  title: "Core/Components/Layout",
   parameters: {
     layout: "fullscreen",
   },
