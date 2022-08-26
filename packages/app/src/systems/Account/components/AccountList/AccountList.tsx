@@ -1,7 +1,7 @@
 import { Button, CardList, Stack } from "@fuel-ui/react";
 import { useState } from "react";
 
-import { AccountItem } from "../AccounItem";
+import { AccountItem } from "../AccountItem";
 
 import type { Account } from "~/types";
 
