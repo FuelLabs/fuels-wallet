@@ -22,6 +22,7 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "build:preview": "turbo run build:preview",
     "dev": "turbo run dev --parallel",
     "storybook": "pnpm -r --filter=app storybook",
     "deps:update": "updates -gu && pnpm -r exec updates -gu",
