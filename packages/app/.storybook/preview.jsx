@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@fuel-ui/react";
 import { themes } from "@storybook/theming";
+import { BrowserRouter } from "react-router-dom";
 
 import theme from "./theme";
 
@@ -28,8 +29,10 @@ export const parameters = {
 
 export const decorators = [
   (Story) => (
-    <ThemeProvider>
-      <Story />
-    </ThemeProvider>
+    <BrowserRouter>
+      <ThemeProvider>
+        <Story />
+      </ThemeProvider>
+    </BrowserRouter>
   ),
 ];
