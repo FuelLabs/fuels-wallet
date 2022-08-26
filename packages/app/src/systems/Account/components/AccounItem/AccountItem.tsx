@@ -13,11 +13,16 @@ import type { Account } from "~/types";
 
 export type AccountItemProps = {
   account: Account;
-  isSelected: boolean;
-  isHidden: boolean;
+  isSelected?: boolean;
+  isHidden?: boolean;
 };
 
-export function AccountItem({ account, isSelected }: AccountItemProps) {
+export function AccountItem({
+  account,
+  isSelected,
+  isHidden,
+}: AccountItemProps) {
+  if (isHidden) return null;
   /**
    * TODO: add DropdownMenu here with actions after it's done on @fuel-ui
    */
@@ -39,6 +44,9 @@ export function AccountItem({ account, isSelected }: AccountItemProps) {
       <Avatar
         size="md"
         name={account.name}
+        /**
+         * TODO: Need to add Avatar.Generated here when it's done on @fuel-ui
+         */
         src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
       />
       <Flex direction="column">

@@ -8,4 +8,5 @@ export enum Pages {
 export type Account = {
   name: string;
   address: string;
+  isHidden?: boolean;
 };
