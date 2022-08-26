@@ -4,8 +4,9 @@ import type { FC } from "react";
 
 import { AssetItemLoader } from "./AssetItemLoader";
 
+import type { Asset } from "~/systems/Asset";
+import type { Maybe } from "~/systems/Core";
 import { parseAndFormat, safeBigInt } from "~/systems/Core";
-import type { Asset, Maybe } from "~/types";
 
 export type AssetItemProps = {
   asset: Asset;

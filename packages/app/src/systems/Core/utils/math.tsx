@@ -3,7 +3,7 @@ import type { BigNumberish } from "fuels";
 import { toBigInt } from "fuels";
 
 import { DECIMAL_UNITS, FIXED_UNITS } from "~/config";
-import type { Maybe } from "~/types";
+import type { Maybe } from "~/systems/Core";
 
 export function toFixed(
   number: Maybe<BigNumberish>,

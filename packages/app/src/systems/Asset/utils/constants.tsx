@@ -1,4 +1,4 @@
-import type { Asset } from "~/types";
+import type { Asset } from "~/systems/Asset";
 
 /**
  * TODO: change this for something automatic, this is here just for development purposes

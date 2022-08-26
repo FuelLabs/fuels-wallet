@@ -6,7 +6,8 @@ import { AssetItem } from "../AssetItem";
 import { AssetListEmpty } from "./AssetListEmpty";
 import { AssetListLoading } from "./AssetListLoading";
 
-import type { AmountMap, Asset } from "~/types";
+import type { Asset } from "~/systems/Asset";
+import type { AmountMap } from "~/systems/Core";
 
 export type AssetListProps = {
   assets: Asset[];
