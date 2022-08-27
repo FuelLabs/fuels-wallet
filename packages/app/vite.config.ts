@@ -9,8 +9,14 @@ import { getPublicEnvs } from './load.envs.js';
 export default defineConfig({
   base: process.env.PUBLIC_URL || '/',
   build: {
-    target: ['es2020'],
+    target: 'es2020',
     outDir: process.env.BUILD_PATH || 'dist',
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'es2020',
+      supported: { bigint: true },
+    },
   },
   plugins: [react(), tsconfigPaths()],
   server: {
