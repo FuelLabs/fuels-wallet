@@ -2,12 +2,8 @@ import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import './load.envs.ts';
 
-const WHITELIST = ['NODE_ENV', 'PUBLIC_URL'];
-const ENV_VARS = Object.entries(process.env).filter(([key]) =>
-  WHITELIST.some((k) => k === key || key.match(/^VITE_/))
-);
+import { getPublicEnvs } from './load.envs.js';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -21,7 +17,7 @@ export default defineConfig({
     port: process.env.NODE_ENV === 'test' ? 3001 : 3000,
   },
   define: {
-    'process.env': Object.fromEntries(ENV_VARS),
+    'process.env': getPublicEnvs(),
   },
   resolve: {
     /**
