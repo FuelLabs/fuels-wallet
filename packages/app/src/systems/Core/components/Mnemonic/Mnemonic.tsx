@@ -71,11 +71,13 @@ export function Mnemonic({
             return (
               <Grid key={idx} css={styles.inputWrapper}>
                 <span>{idx + 1}</span>
-                <MnemonicInput
-                  defaultValue={value[idx]}
-                  onChange={handleChange(idx)}
-                  onPaste={handlePastInput}
-                />
+                <div>
+                  <MnemonicInput
+                    defaultValue={value[idx]}
+                    onChange={handleChange(idx)}
+                    onPaste={handlePastInput}
+                  />
+                </div>
               </Grid>
             );
           })}
@@ -85,7 +87,7 @@ export function Mnemonic({
         {type === "read" ? (
           <Button
             aria-label="Copy button"
-            size="xs"
+            size="sm"
             variant="ghost"
             color="gray"
             leftIcon={<Icon icon="Copy" color="gray8" />}
@@ -124,12 +126,12 @@ const styles = {
     gridTemplateColumns: "repeat(3, 1fr)",
     gridTemplateRows: "repeat(4, 1fr)",
     gridColumnGap: "$4",
+    gridRowGap: "$2",
   }),
   word: cssObj({
     position: "relative",
     fontFamily: '"Source Code Pro", monospace',
-    fontSize: "$xs",
-    lineHeight: 2,
+    fontSize: "$sm",
 
     "&::before": {
       w: "14px",
@@ -141,22 +143,25 @@ const styles = {
     },
   }),
   inputWrapper: cssObj({
-    gridTemplateColumns: "14px 65px",
+    boxSizing: "border-box",
+    gridTemplateColumns: "14px 1fr",
     gridColumnGap: "8px",
 
     "&, input": {
       fontFamily: '"Source Code Pro", monospace',
-      fontSize: "$xs",
+      fontSize: "$sm",
     },
     span: {
       color: "$gray8",
       textAlign: "right",
     },
     input: {
+      padding: 0,
+      width: "100%",
       appearance: "none",
       border: "none",
       background: "transparent",
-      borderBottom: "1px dashed $gray4",
+      borderBottom: "1px dashed $gray10",
       color: "$gray11",
 
       "&:focus": {
