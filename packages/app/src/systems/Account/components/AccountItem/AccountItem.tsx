@@ -8,8 +8,8 @@ import {
   Text,
 } from "@fuel-ui/react";
 
+import type { Account } from "~/systems/Account";
 import { shortAddress } from "~/systems/Core";
-import type { Account } from "~/types";
 
 export type AccountItemProps = {
   account: Account;

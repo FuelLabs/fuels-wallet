@@ -5,6 +5,7 @@
     "baseUrl": ".",
     "rootDir": ".",
     "paths": {
+      "~public/*": ["./public/*"],
       "~/*": ["./src/*"]
     }
   },

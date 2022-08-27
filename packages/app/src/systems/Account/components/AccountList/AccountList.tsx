@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { AccountItem } from "../AccountItem";
 
-import type { Account } from "~/types";
+import type { Account } from "~/systems/Account";
 
 export type AccountListProps = {
   accounts: Account[];
