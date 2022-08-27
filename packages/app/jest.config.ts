@@ -1,7 +1,7 @@
 import type { Config } from '@jest/types';
 import { resolve } from 'path';
 
-import './load.envs.ts';
+import './load.envs.js';
 import pkg from './package.json';
 
 const config: Config.InitialOptions = {
