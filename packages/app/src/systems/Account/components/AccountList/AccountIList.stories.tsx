@@ -5,7 +5,7 @@ import { AccountList } from "./AccountList";
 
 export default {
   component: AccountList,
-  title: "Account/AccountList",
+  title: "Account/Components/AccountList",
 };
 
 const ACCOUNTS = [

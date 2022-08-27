@@ -1,6 +1,6 @@
 import { Layout } from "~/systems/Core";
 
-export function HomePage() {
+export function Home() {
   return (
     <Layout title="Home">
       <Layout.TopBar />

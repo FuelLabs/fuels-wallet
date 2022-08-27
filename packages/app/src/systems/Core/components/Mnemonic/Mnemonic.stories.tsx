@@ -5,7 +5,7 @@ import { Mnemonic } from "./Mnemonic";
 
 export default {
   component: Mnemonic,
-  title: "Core/Mnemonic",
+  title: "Core/Components/Mnemonic",
   parameters: {
     Mnemonic: "fullscreen",
   },
@@ -27,7 +27,7 @@ const WORDS = [
 ];
 
 export const Read = (args: MnemonicProps) => (
-  <Box css={{ width: 320 }}>
+  <Box css={{ width: 400 }}>
     <Mnemonic {...args} value={WORDS} type="read" />
   </Box>
 );
@@ -37,7 +37,7 @@ Read.parameters = {
 };
 
 export const Write = (args: MnemonicProps) => (
-  <Box css={{ width: 320 }}>
+  <Box css={{ width: 400 }}>
     <Mnemonic {...args} type="write" />
   </Box>
 );

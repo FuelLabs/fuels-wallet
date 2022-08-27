@@ -30,6 +30,7 @@ function Content({ as, children, css }: ContentProps) {
 }
 
 export type LayoutProps = {
+  isPublic?: boolean;
   isLoading?: boolean;
   title?: string;
   children: ReactNode;
@@ -42,6 +43,7 @@ type LayoutComponent = FC<LayoutProps> & {
 };
 
 export const Layout: LayoutComponent = ({
+  isPublic,
   isLoading,
   title,
   children,
@@ -52,8 +54,12 @@ export const Layout: LayoutComponent = ({
       <Helmet>
         <title>{titleText}</title>
       </Helmet>
-      <Flex as="main" css={styles.root}>
-        <Flex css={styles.wrapper}>{children}</Flex>
+      <Flex as="main" css={styles.root({ isPublic })}>
+        {isPublic ? (
+          <>{children}</>
+        ) : (
+          <Flex css={styles.wrapper}>{children}</Flex>
+        )}
       </Flex>
     </ctx.Provider>
   );
@@ -64,12 +70,17 @@ Layout.TopBar = TopBar;
 Layout.BottomBar = BottomBar;
 
 const styles = {
-  root: cssObj({
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "column",
-    minH: "100vh",
-  }),
+  root: ({ isPublic }: Partial<LayoutProps>) =>
+    cssObj({
+      alignItems: "center",
+      justifyContent: "center",
+      flexDirection: "column",
+      minH: "100vh",
+      ...(isPublic && {
+        background:
+          "linear-gradient(197.05deg, #0E221B 0%, #071614 22.2%, #0C0E0D 40.7%);",
+      }),
+    }),
   wrapper: cssObj({
     flexDirection: "column",
     width: "350px",

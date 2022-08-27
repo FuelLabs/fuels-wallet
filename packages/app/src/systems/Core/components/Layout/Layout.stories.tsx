@@ -5,11 +5,17 @@ import { Layout } from "./Layout";
 
 export default {
   component: Layout,
-  title: "Core/Layout",
+  title: "Core/Components/Layout",
   parameters: {
     layout: "fullscreen",
   },
 };
+
+export const Public = (args: LayoutProps) => (
+  <Layout {...args} isPublic>
+    Hello world
+  </Layout>
+);
 
 export const Default = (args: LayoutProps) => (
   <Layout {...args}>
@@ -25,14 +31,14 @@ export const DefaultLoading = (args: LayoutProps) => (
   </Layout>
 );
 
-export const InternalPage = (args: LayoutProps) => (
+export const Internal = (args: LayoutProps) => (
   <Layout {...args}>
     <Layout.TopBar title="Some Title" />
     <Layout.Content>This is a content</Layout.Content>
   </Layout>
 );
 
-export const InternalPageLoading = (args: LayoutProps) => (
+export const InternalLoading = (args: LayoutProps) => (
   <Layout {...args} isLoading>
     <Layout.TopBar title="Some Title" />
     <Layout.Content>This is a content</Layout.Content>

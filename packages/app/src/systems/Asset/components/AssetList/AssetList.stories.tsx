@@ -8,7 +8,7 @@ import { AssetList } from "./AssetList";
 
 export default {
   component: AssetList,
-  title: "Asset/AssetList",
+  title: "Asset/Components/AssetList",
 };
 
 const AMOUNTS = {
