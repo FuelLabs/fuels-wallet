@@ -12,8 +12,8 @@ function fillArray(arr: string[], item: string[]) {
 }
 
 export type MnemonicProps = {
-  value: string[];
   type: "read" | "write";
+  value?: string[];
   onFilled?: (val: string[]) => void;
 };
 
@@ -98,7 +98,7 @@ export function Mnemonic({
         ) : (
           <Button
             aria-label="Paste button"
-            size="xs"
+            size="sm"
             variant="ghost"
             color="gray"
             leftIcon={<Icon icon="ClipboardText" color="gray8" />}
