@@ -1,7 +1,15 @@
 import { Box, Button, Flex, Heading, Icon, Text } from "@fuel-ui/react";
+import { toBigInt } from "fuels";
 import { useEffect, useState } from "react";
-import { AssetList } from "~/systems/Asset";
+import { AssetList, ASSET_LIST } from "~/systems/Asset";
 import { Layout } from "~/systems/Core";
+
+
+const AMOUNTS = {
+  [ASSET_LIST[0].assetId]: toBigInt(9900020000),
+  [ASSET_LIST[1].assetId]: toBigInt(80000890),
+  [ASSET_LIST[2].assetId]: toBigInt(91000000320),
+};
 
 export function Home() {
   const [ isFirstLoading, setIsFirstLoading ] = useState(true);
@@ -68,6 +76,8 @@ export function Home() {
           </Flex>
           { isFirstLoading ? (
             <AssetList.Loading items={4} />
+          ) : Object.keys(AMOUNTS).length ? (
+            <AssetList assets={ASSET_LIST} amounts={AMOUNTS} />
           ) : (
             <Flex css={{
               flex: '1 0',
