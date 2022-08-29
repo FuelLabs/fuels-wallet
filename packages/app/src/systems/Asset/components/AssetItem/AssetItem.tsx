@@ -25,8 +25,8 @@ export const AssetItem: AssetItemComponent = ({ asset, amount }) => {
   );
 
   return (
-    <CardList.Item rightEl={rightEl} css={{ alignItems: "center" }}>
-      <Avatar size="md" name={asset.name} src={asset.imageUrl} />
+    <CardList.Item rightEl={rightEl} css={{ alignItems: "center", padding: '$2' }}>
+      <Avatar name={asset.name} src={asset.imageUrl} css={{ height: 36, width: 36 }}/>
       <Flex direction="column">
         <Heading as="h6" css={styles.assetName}>
           {asset.name}

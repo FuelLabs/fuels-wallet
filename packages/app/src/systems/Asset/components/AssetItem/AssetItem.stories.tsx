@@ -12,7 +12,7 @@ export default {
 };
 
 export const Usage = (args: AssetItemProps) => (
-  <Box css={{ width: 320 }}>
+  <Box css={{ width: 300 }}>
     <AssetItem
       {...args}
       asset={ASSET_LIST[0]}
@@ -22,7 +22,7 @@ export const Usage = (args: AssetItemProps) => (
 );
 
 export const Loader = () => (
-  <Box css={{ width: 320 }}>
+  <Box css={{ width: 300 }}>
     <AssetItem.Loader />
   </Box>
 );
