@@ -11,8 +11,8 @@ export const BalanceWidgetLoader = (props: IContentLoaderProps) => (
       width={320}
       height={88}
       viewBox="0 0 320 88"
-      backgroundColor={darkColors.gray2}
-      foregroundColor={darkColors.gray3}
+      backgroundColor={darkColors.gray3}
+      foregroundColor={darkColors.gray4}
       {...props}
     >
       <circle cx="25" cy="25" r="25" />
