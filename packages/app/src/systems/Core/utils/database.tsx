@@ -4,7 +4,6 @@ import Dexie from "dexie";
 import type { Account, Vault } from "~/systems/Account";
 
 type AddAccountData = {
-  vaultKey: string;
   name: string;
   address: string;
 };
@@ -17,7 +16,7 @@ class FuelDB extends Dexie {
     super("FuelDB");
     this.version(1).stores({
       vaults: `key`,
-      accounts: `address, vaultKey`,
+      accounts: `address`,
     });
   }
 

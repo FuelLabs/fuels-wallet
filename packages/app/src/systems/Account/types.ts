@@ -4,7 +4,6 @@ export type Vault = {
 };
 
 export type Account = {
-  vaultKey?: string;
   name: string;
   address: string;
   isHidden?: boolean;
