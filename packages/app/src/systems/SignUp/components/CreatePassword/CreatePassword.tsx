@@ -30,25 +30,26 @@ export type CreatePasswordValues = {
 };
 
 export type CreatePasswordProps = {
-  onNext: (data: CreatePasswordValues) => void;
+  isLoading?: boolean;
+  onSubmit: (data: CreatePasswordValues) => void;
   onCancel: () => void;
 };
 
-export function CreatePassword({ onCancel, onNext }: CreatePasswordProps) {
+export function CreatePassword({
+  isLoading,
+  onCancel,
+  onSubmit,
+}: CreatePasswordProps) {
   const form = useForm<CreatePasswordValues>({
     resolver: yupResolver(schema),
     shouldUseNativeValidation: false,
-    reValidateMode: "onChange",
+    mode: "onBlur",
   });
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = form;
-
-  function onSubmit(data: CreatePasswordValues) {
-    onNext(data);
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -114,6 +115,7 @@ export function CreatePassword({ onCancel, onNext }: CreatePasswordProps) {
             color="accent"
             css={{ width: 130 }}
             isDisabled={!form.formState.isValid}
+            isLoading={isLoading}
           >
             Next
           </Button>
