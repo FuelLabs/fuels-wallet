@@ -45,7 +45,17 @@ export function Mnemonic({
 
   function handleChange(idx: number) {
     return (val: string) => {
-      setValue((s) => s.map((word, i) => (i === idx ? val : word)));
+      setValue((s) =>
+        s
+          .map((word, i) => (i === idx ? val : word))
+          .map((word) => {
+            if (word.split(" ").length > 1) {
+              const first = word.split(" ")[0];
+              return first.slice(0, first.length / 2);
+            }
+            return word;
+          })
+      );
     };
   }
 
@@ -73,7 +83,7 @@ export function Mnemonic({
                 <span>{idx + 1}</span>
                 <div>
                   <MnemonicInput
-                    defaultValue={value[idx]}
+                    value={value[idx]}
                     onChange={handleChange(idx)}
                     onPaste={handlePastInput}
                   />
