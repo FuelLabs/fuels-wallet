@@ -1,5 +1,4 @@
 import { Box } from "@fuel-ui/react";
-import { toBigInt } from "fuels";
 
 import type { VisibilityButtonProps } from "./VisibilityButton";
 import { VisibilityButton } from "./VisibilityButton";
@@ -7,7 +6,6 @@ import { VisibilityButton } from "./VisibilityButton";
 export default {
   component: VisibilityButton,
   title: "Core/Components/VisibilityButton",
-
 };
 
 export const Usage = (args: VisibilityButtonProps) => (
@@ -21,4 +19,3 @@ export const Hidden = (args: VisibilityButtonProps) => (
     <VisibilityButton {...args} isHidden />
   </Box>
 );
-
