@@ -15,9 +15,14 @@
   },
   "dependencies": {
     "@fontsource/source-code-pro": "^4.5.11",
+    "@fuel-ts/mnemonic": "^0.12.0",
+    "@fuel-ts/wallet-manager": "^0.12.0",
     "@fuel-ui/css": "dev",
     "@fuel-ui/react": "dev",
     "@hookform/resolvers": "^2.9.7",
+    "@xstate/react": "^3.0.1",
+    "dexie": "^3.2.2",
+    "dexie-react-hooks": "^1.1.1",
     "fuels": "^0.12.0",
     "react": "^18.2.0",
     "react-content-loader": "^6.2.0",
@@ -25,6 +30,7 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.34.2",
     "react-router-dom": "^6.3.0",
+    "xstate": "^4.33.4",
     "yup": "^0.32.11"
   },
   "devDependencies": {
