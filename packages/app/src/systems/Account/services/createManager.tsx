@@ -3,7 +3,7 @@ import { Buffer as BufferPolyfill } from "buffer";
 
 import { IndexedDBStorage } from "../utils";
 
-import { db } from "~/systems/Core";
+import { db, getPhraseFromValue } from "~/systems/Core";
 
 /**
  * TODO: this is here because @fuel-ts/wallet-manager is getting an error
@@ -33,7 +33,7 @@ export async function createManager(data: CreateManagerData) {
     await manager.unlock(data.password);
     await manager.addVault({
       type: "mnemonic",
-      secret: data.mnemonic.join(" "),
+      secret: getPhraseFromValue(data.mnemonic),
     });
     return manager;
   } catch (error) {
