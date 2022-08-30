@@ -4,9 +4,10 @@ import { Header } from "../Header";
 
 import type { Account } from "~/systems/Account";
 import { AccountItem } from "~/systems/Account";
+import type { Maybe } from "~/types";
 
 export type WalletCreatedProps = {
-  account: Account;
+  account?: Maybe<Account>;
 };
 
 export function WalletCreated({ account }: WalletCreatedProps) {
@@ -19,7 +20,7 @@ export function WalletCreated({ account }: WalletCreatedProps) {
         title="Wallet created succesfully"
         subtitle="These are your Fuel wallet details"
       />
-      <AccountItem account={account} />
+      {account && <AccountItem account={account} />}
       <Button size="sm" color="accent">
         Go to wallet
       </Button>

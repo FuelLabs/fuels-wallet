@@ -14,7 +14,7 @@ import { Header } from "../Header";
 import { Mnemonic } from "~/systems/Core";
 
 export type MnemonicReadProps = {
-  words: string[];
+  words?: string[];
   onNext: () => void;
   onCancel: () => void;
 };
