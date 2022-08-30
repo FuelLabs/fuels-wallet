@@ -41,14 +41,7 @@ export function AccountItem({
   );
   return (
     <CardList.Item isActive={isSelected} rightEl={rightEl}>
-      <Avatar
-        size="md"
-        name={account.name}
-        /**
-         * TODO: Need to add Avatar.Generated here when it's done on @fuel-ui
-         */
-        src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
-      />
+      <Avatar.Generated size="md" hash={account.address} />
       <Flex direction="column">
         <Heading as="h5" css={{ margin: 0 }}>
           {account.name}
