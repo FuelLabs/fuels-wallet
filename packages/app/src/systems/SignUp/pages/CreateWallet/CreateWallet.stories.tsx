@@ -4,7 +4,7 @@ import { CreateWallet } from "./CreateWallet";
 
 export default {
   component: CreateWallet,
-  title: "SignUp/Pages/02. CreateWallet",
+  title: "SignUp/Pages/2. CreateWallet",
   parameters: {
     layout: "fullscreen",
   },
