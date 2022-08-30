@@ -6,7 +6,7 @@ import { assign, createMachine } from 'xstate';
 import { MNEMONIC_SIZE } from '~/config';
 import type { Account } from '~/systems/Account';
 import { createManager } from '~/systems/Account';
-import { db } from '~/systems/Core';
+import { db, getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
 import type { Maybe } from '~/types';
 
 // ----------------------------------------------------------------------------
@@ -115,7 +115,9 @@ export const signUpMachine = createMachine(
           },
         },
       },
-      failed: {},
+      failed: {
+        entry: 'assignError',
+      },
       done: {},
     },
   },
@@ -123,7 +125,7 @@ export const signUpMachine = createMachine(
     actions: {
       createMnemonic: assign({
         data: (_) => ({
-          mnemonic: Mnemonic.generate(MNEMONIC_SIZE).split(' '),
+          mnemonic: getWordsFromValue(Mnemonic.generate(MNEMONIC_SIZE)),
         }),
       }),
       confirmMnemonic: assign({
@@ -131,7 +133,8 @@ export const signUpMachine = createMachine(
           return ctx.attempts + 1;
         },
         isConfirmed: (ctx, ev) => {
-          return ev.data.words.join('') === ctx.data?.mnemonic?.join('');
+          if (ctx.type === SignUpType.recover) return true;
+          return getPhraseFromValue(ev.data.words) === getPhraseFromValue(ctx.data?.mnemonic);
         },
       }),
       assignPassword: assign({
