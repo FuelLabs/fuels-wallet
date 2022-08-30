@@ -6,12 +6,13 @@ import {
   MnemonicWrite,
   WalletCreated,
 } from "../../components";
-import { useCreateWallet } from "../../hooks";
+import { useSignUp } from "../../hooks";
+import { SignUpType } from "../../machines/signUpMachine";
 
 import { Layout } from "~/systems/Core";
 
 export function CreateWallet() {
-  const { state, handlers, context } = useCreateWallet();
+  const { state, handlers, context } = useSignUp(SignUpType.create);
   const navigate = useNavigate();
 
   return (

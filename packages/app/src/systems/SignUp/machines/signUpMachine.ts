@@ -13,12 +13,18 @@ import type { Maybe } from '~/types';
 // Machine
 // ----------------------------------------------------------------------------
 
+export enum SignUpType {
+  create,
+  recover,
+}
+
 type FormValues = {
   mnemonic?: string[];
   password?: string;
 };
 
 type MachineContext = {
+  type: SignUpType;
   attempts: number;
   isConfirmed?: boolean;
   error?: string;
@@ -27,7 +33,7 @@ type MachineContext = {
 };
 
 type MachineServices = {
-  createWalletManager: {
+  createManager: {
     data: Maybe<Account>;
   };
 };
@@ -38,21 +44,29 @@ type MachineEvents =
   | { type: 'CONFIRM_MNEMONIC'; data: { words: string[] } }
   | { type: 'CREATE_MANAGER'; data: { password: string } };
 
-export const createWalletMachine = createMachine(
+export const signUpMachine = createMachine(
   {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    tsTypes: {} as import('./createWallet.typegen').Typegen0,
+    tsTypes: {} as import('./signUpMachine.typegen').Typegen0,
     id: '(machine)',
-    initial: 'idle',
+    initial: 'checking',
     schema: {
       context: {} as MachineContext,
       services: {} as MachineServices,
       events: {} as MachineEvents,
     },
-    context: {
-      attempts: 0,
-    },
     states: {
+      checking: {
+        always: [
+          {
+            target: 'idle',
+            cond: 'isCreatingWallet',
+          },
+          {
+            target: 'waitingMnemonic',
+          },
+        ],
+      },
       idle: {
         on: {
           CREATE_MNEMONIC: {
@@ -90,7 +104,7 @@ export const createWalletMachine = createMachine(
       creatingWallet: {
         tags: ['loading'],
         invoke: {
-          src: 'createWalletManager',
+          src: 'createManager',
           onDone: {
             actions: ['assignAccount', 'deleteData'],
             target: 'done',
@@ -137,12 +151,15 @@ export const createWalletMachine = createMachine(
       }),
     },
     guards: {
+      isCreatingWallet: (ctx) => {
+        return ctx.type === SignUpType.create;
+      },
       isMnemonicConfirmed: (ctx) => {
         return Boolean(ctx.isConfirmed);
       },
     },
     services: {
-      async createWalletManager({ data }) {
+      async createManager({ data }) {
         if (!data?.password || !data?.mnemonic) {
           throw new Error('Invalid data');
         }
@@ -158,6 +175,6 @@ export const createWalletMachine = createMachine(
   }
 );
 
-export type CreateWalletMachine = typeof createWalletMachine;
-export type CreateWalletMachineService = InterpreterFrom<CreateWalletMachine>;
-export type CreateWalletMachineState = StateFrom<CreateWalletMachine>;
+export type SignUpMachine = typeof signUpMachine;
+export type SignUpMachineService = InterpreterFrom<SignUpMachine>;
+export type SignUpMachineState = StateFrom<SignUpMachine>;
