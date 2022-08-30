@@ -11,22 +11,22 @@ import { useCreateWallet } from "../../hooks";
 import { Layout } from "~/systems/Core";
 
 export function CreateWallet() {
-  const { state, handlers, data } = useCreateWallet();
+  const { state, handlers, context } = useCreateWallet();
   const navigate = useNavigate();
 
   return (
     <Layout title="Create Wallet" isPublic>
       {state.matches("showingMnemonic") && (
         <MnemonicRead
-          words={data.mnemonic}
+          words={context.data?.mnemonic}
           onNext={handlers.next}
           onCancel={() => navigate("/sign-up")}
         />
       )}
-      {state.matches("confirmingMnemonic") && (
+      {state.matches("waitingMnemonic") && (
         <MnemonicWrite
           error={handlers.checkMnemonicError()}
-          canProceed={data.isConfirmed}
+          canProceed={context.isConfirmed}
           onFilled={handlers.confirmMnemonic}
           onNext={handlers.next}
           onCancel={() => navigate("/sign-up")}
@@ -39,7 +39,7 @@ export function CreateWallet() {
           isLoading={state.hasTag("loading")}
         />
       )}
-      {state.matches("done") && <WalletCreated account={data.account} />}
+      {state.matches("done") && <WalletCreated account={context.account} />}
     </Layout>
   );
 }
