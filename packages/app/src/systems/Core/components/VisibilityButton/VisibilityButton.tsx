@@ -1,6 +1,6 @@
 import { Icon, IconButton } from "@fuel-ui/react";
 
-type VisibilityButtonProps = {
+export type VisibilityButtonProps = {
   isHidden?: boolean;
   onHide?: () => void;
   onShow?: () => void;
