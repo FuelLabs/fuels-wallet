@@ -12,8 +12,6 @@
   },
   "dependencies": {
     "chalk": "^5.0.1",
-    "dockerode": "^3.3.4",
-    "dockerode-compose": "^1.3.2",
     "spinnies": "^0.5.1",
     "yargs": "^17.5.1"
   }
