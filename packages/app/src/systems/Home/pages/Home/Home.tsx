@@ -1,9 +1,9 @@
-import { Box, Button, Flex, Heading, Icon, Text } from "@fuel-ui/react";
+import { Box, Button, Flex, Heading, Icon } from "@fuel-ui/react";
 import { toBigInt } from "fuels";
 import { useEffect, useState } from "react";
+
 import { AssetList, ASSET_LIST } from "~/systems/Asset";
 import { Layout } from "~/systems/Core";
-
 
 const AMOUNTS = {
   [ASSET_LIST[0].assetId]: toBigInt(9900020000),
@@ -74,17 +74,19 @@ export function Home() {
             <Icon icon="Coins" color="accent9" size={22} weight="regular"/>
             <Heading as="h4" css={{ my: '0px', marginLeft: 8 }} color="white">Assets</Heading>
           </Flex>
-          { isFirstLoading ? (
+          { isFirstLoading && (
             <AssetList.Loading items={4} />
-          ) : Object.keys(AMOUNTS).length ? (
+          )}
+          { !isFirstLoading && Object.keys(AMOUNTS).length && (
             <AssetList assets={ASSET_LIST} amounts={AMOUNTS} />
-          ) : (
+          )}
+          { !isFirstLoading && !Object.keys(AMOUNTS).length && (
             <Flex css={{
               flex: '1 0',
             }}>
               <AssetList.Empty />
             </Flex>
-          ) }
+          )}
         </Flex>
       </Layout.Content>
     </Layout>
