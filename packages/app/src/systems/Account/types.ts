@@ -2,5 +2,6 @@ export type Account = {
   name: string;
   address: string;
   isHidden?: boolean;
-  balance?: string;
+  balance?: bigint;
+  balanceSymbol?: string;
 };
