@@ -2,15 +2,21 @@ import { useMachine, useSelector } from "@xstate/react";
 import { useEffect } from "react";
 
 import type { CreatePasswordValues } from "../components";
-import type { CreateWalletMachineState } from "../machines/createWallet";
-import { createWalletMachine } from "../machines/createWallet";
+import type { SignUpMachineState } from "../machines/signUpMachine";
+import { signUpMachine, SignUpType } from "../machines/signUpMachine";
 
 const selectors = {
-  context: (state: CreateWalletMachineState) => state.context,
+  context: (state: SignUpMachineState) => state.context,
 };
 
-export function useCreateWallet() {
-  const [state, send, service] = useMachine(() => createWalletMachine);
+export function useSignUp(type: SignUpType) {
+  const [state, send, service] = useMachine(() =>
+    signUpMachine.withContext({
+      type,
+      attempts: 0,
+    })
+  );
+
   const ctx = useSelector(service, selectors.context);
 
   function next() {
@@ -34,7 +40,7 @@ export function useCreateWallet() {
   }
 
   useEffect(() => {
-    send("CREATE_MNEMONIC");
+    if (type === SignUpType.create) send("CREATE_MNEMONIC");
   }, []);
 
   return {
