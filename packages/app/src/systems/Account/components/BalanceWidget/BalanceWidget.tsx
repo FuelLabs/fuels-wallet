@@ -1,3 +1,4 @@
+import { cssObj } from "@fuel-ui/css";
 import { Avatar, Box, Flex, Icon, IconButton, Text } from "@fuel-ui/react";
 import type { ReactNode } from "react";
 
@@ -6,7 +7,6 @@ import type { Account } from "../../types";
 import { BalanceWidgetLoader } from "./BalanceWidgetLoader";
 
 import { shortAddress } from "~/systems/Core";
-import { cssObj } from "@fuel-ui/css";
 
 type BalanceWidgetWrapperProps = {
   children: ReactNode;
