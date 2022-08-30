@@ -6,7 +6,8 @@ import { VisibilityButton } from "./VisibilityButton";
 
 export default {
   component: VisibilityButton,
-  title: "Account/Components/VisibilityButton",
+  title: "Core/Components/VisibilityButton",
+
 };
 
 export const Usage = (args: VisibilityButtonProps) => (
