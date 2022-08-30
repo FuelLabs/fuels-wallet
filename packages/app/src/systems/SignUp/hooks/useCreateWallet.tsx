@@ -7,21 +7,11 @@ import { createWalletMachine } from "../machines/createWallet";
 
 const selectors = {
   context: (state: CreateWalletMachineState) => state.context,
-  account: ({ context: ctx }: CreateWalletMachineState) => {
-    if (!ctx.walletManager) return null;
-    const manager = ctx.walletManager;
-    const account = manager.getAccounts()[0];
-    return {
-      name: "Account 1",
-      address: account.address.toAddress(),
-    };
-  },
 };
 
 export function useCreateWallet() {
   const [state, send, service] = useMachine(() => createWalletMachine);
   const ctx = useSelector(service, selectors.context);
-  const account = useSelector(service, selectors.account);
 
   function next() {
     send("NEXT");
@@ -55,9 +45,8 @@ export function useCreateWallet() {
       checkMnemonicError,
       createManager,
     },
-    data: {
+    context: {
       ...ctx,
-      account,
     },
   };
 }

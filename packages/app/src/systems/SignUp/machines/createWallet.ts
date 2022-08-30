@@ -1,17 +1,13 @@
-/* eslint-disable @typescript-eslint/consistent-type-imports */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Mnemonic } from '@fuel-ts/mnemonic';
-import { WalletManager } from '@fuel-ts/wallet-manager';
-import { Buffer as BufferPolyfill } from 'buffer';
-import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
+import type { InterpreterFrom, StateFrom } from 'xstate';
+import { assign, createMachine } from 'xstate';
 
 import { MNEMONIC_ENTROPY } from '~/config';
-import { Maybe } from '~/types';
-
-/**
- * TODO: this is here because @fuel-ts/wallet-manager is getting an error
- * related to Buffer when trying to use manager.addVault()
- */
-globalThis.Buffer = BufferPolyfill;
+import type { Account } from '~/systems/Account';
+import { createManager } from '~/systems/Account';
+import { db } from '~/systems/Core';
+import type { Maybe } from '~/types';
 
 // ----------------------------------------------------------------------------
 // Machine
@@ -24,16 +20,15 @@ type FormValues = {
 
 type MachineContext = {
   attempts: number;
-  mnemonic?: string[];
   isConfirmed?: boolean;
-  walletManager?: WalletManager;
   error?: string;
   data?: Maybe<FormValues>;
+  account?: Maybe<Account>;
 };
 
 type MachineServices = {
   createWalletManager: {
-    data: WalletManager;
+    data: Maybe<Account>;
   };
 };
 
@@ -45,6 +40,7 @@ type MachineEvents =
 
 export const createWalletMachine = createMachine(
   {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./createWallet.typegen').Typegen0,
     id: '(machine)',
     initial: 'idle',
@@ -68,14 +64,14 @@ export const createWalletMachine = createMachine(
       showingMnemonic: {
         on: {
           NEXT: {
-            target: 'confirmingMnemonic',
+            target: 'waitingMnemonic',
           },
         },
       },
-      confirmingMnemonic: {
+      waitingMnemonic: {
         on: {
           CONFIRM_MNEMONIC: {
-            actions: ['confirmMnemonic', 'assignMnemonic'],
+            actions: 'confirmMnemonic',
           },
           NEXT: {
             target: 'addingPassword',
@@ -96,7 +92,7 @@ export const createWalletMachine = createMachine(
         invoke: {
           src: 'createWalletManager',
           onDone: {
-            actions: ['assignManager', 'deleteData'],
+            actions: ['assignAccount', 'deleteData'],
             target: 'done',
           },
           onError: {
@@ -112,19 +108,17 @@ export const createWalletMachine = createMachine(
   {
     actions: {
       createMnemonic: assign({
-        mnemonic: (_ctx) => Mnemonic.generate(MNEMONIC_ENTROPY).split(' '),
+        data: (_) => ({
+          mnemonic: Mnemonic.generate(MNEMONIC_ENTROPY).split(' '),
+        }),
       }),
       confirmMnemonic: assign({
-        attempts: (ctx) => ctx.attempts + 1,
-        isConfirmed: (ctx, ev) => {
-          return ev.data.words.join('') === ctx.mnemonic?.join('');
+        attempts: (ctx) => {
+          return ctx.attempts + 1;
         },
-      }),
-      assignMnemonic: assign({
-        data: (ctx, ev) => (ctx.isConfirmed ? { mnemonic: ev.data.words } : null),
-      }),
-      assignManager: assign({
-        walletManager: (_, ev) => ev.data,
+        isConfirmed: (ctx, ev) => {
+          return ev.data.words.join('') === ctx.data?.mnemonic?.join('');
+        },
       }),
       assignPassword: assign({
         data: (ctx, ev) => ({
@@ -133,15 +127,19 @@ export const createWalletMachine = createMachine(
         }),
       }),
       assignError: assign({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         error: (_, ev) => ev.data as any,
+      }),
+      assignAccount: assign({
+        account: (_, ev) => ev.data,
       }),
       deleteData: assign({
         data: (_) => null,
       }),
     },
     guards: {
-      isMnemonicConfirmed: (ctx) => Boolean(ctx.isConfirmed),
+      isMnemonicConfirmed: (ctx) => {
+        return Boolean(ctx.isConfirmed);
+      },
     },
     services: {
       async createWalletManager({ data }) {
@@ -149,14 +147,13 @@ export const createWalletMachine = createMachine(
           throw new Error('Invalid data');
         }
 
-        const manager = new WalletManager();
-        await manager.unlock(data.password);
-        await manager.addVault({
-          type: 'mnemonic',
-          secret: data.mnemonic.join(' '),
+        const manager = await createManager(data);
+        const account = manager.getAccounts()[0];
+        return db.addAccount({
+          vaultKey: manager.STORAGE_KEY,
+          name: 'Account 1',
+          address: account.address.toAddress(),
         });
-
-        return manager;
       },
     },
   }
