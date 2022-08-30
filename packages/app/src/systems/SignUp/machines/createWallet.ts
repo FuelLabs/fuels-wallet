@@ -3,7 +3,7 @@ import { Mnemonic } from '@fuel-ts/mnemonic';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-import { MNEMONIC_ENTROPY } from '~/config';
+import { MNEMONIC_SIZE } from '~/config';
 import type { Account } from '~/systems/Account';
 import { createManager } from '~/systems/Account';
 import { db } from '~/systems/Core';
@@ -109,7 +109,7 @@ export const createWalletMachine = createMachine(
     actions: {
       createMnemonic: assign({
         data: (_) => ({
-          mnemonic: Mnemonic.generate(MNEMONIC_ENTROPY).split(' '),
+          mnemonic: Mnemonic.generate(MNEMONIC_SIZE).split(' '),
         }),
       }),
       confirmMnemonic: assign({
@@ -150,7 +150,6 @@ export const createWalletMachine = createMachine(
         const manager = await createManager(data);
         const account = manager.getAccounts()[0];
         return db.addAccount({
-          vaultKey: manager.STORAGE_KEY,
           name: 'Account 1',
           address: account.address.toAddress(),
         });

@@ -21,9 +21,6 @@ export async function createManager(data: CreateManagerData) {
     throw new Error("Invalid data");
   }
 
-  /**
-   * TODO: check how we will handle with managers here
-   */
   await db.clearVaults();
 
   /**

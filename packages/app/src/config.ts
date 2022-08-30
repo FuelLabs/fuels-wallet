@@ -4,4 +4,4 @@ export const DECIMAL_UNITS = 9;
 export const FORMAT_LANGUAGE = 'es';
 export const MIN_FRACTION_DIGITS = 1;
 export const MAX_FRACTION_DIGITS = 3;
-export const MNEMONIC_ENTROPY = 16;
+export const MNEMONIC_SIZE = 16;
