@@ -1,4 +1,5 @@
 import { Stack, Image, Button, Flex } from "@fuel-ui/react";
+import { useNavigate } from "react-router-dom";
 
 import { Header } from "../Header";
 
@@ -11,6 +12,7 @@ export type WalletCreatedProps = {
 };
 
 export function WalletCreated({ account }: WalletCreatedProps) {
+  const navigate = useNavigate();
   return (
     <Stack gap="$6">
       <Flex justify="center">
@@ -21,7 +23,7 @@ export function WalletCreated({ account }: WalletCreatedProps) {
         subtitle="These are your Fuel wallet details"
       />
       {account && <AccountItem account={account} />}
-      <Button size="sm" color="accent">
+      <Button size="sm" color="accent" onPress={() => navigate("/")}>
         Go to wallet
       </Button>
     </Stack>
