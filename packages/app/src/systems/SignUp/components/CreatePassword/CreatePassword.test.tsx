@@ -1,4 +1,3 @@
-import type { UserPatch } from "@fuel-ui/test-utils";
 import { render, screen } from "@fuel-ui/test-utils";
 
 import { CreatePassword } from "./CreatePassword";
@@ -7,6 +6,8 @@ import { Providers } from "~/systems/Core";
 
 const onSubmitHandler = jest.fn();
 const onCancelHandler = jest.fn();
+
+type UserPatch = ReturnType<typeof render>["user"];
 
 const Content = () => (
   <CreatePassword onSubmit={onSubmitHandler} onCancel={onCancelHandler} />
