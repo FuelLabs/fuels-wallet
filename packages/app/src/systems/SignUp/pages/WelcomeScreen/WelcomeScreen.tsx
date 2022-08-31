@@ -7,6 +7,7 @@ import { Layout } from "~/systems/Core";
 
 export function WelcomeScreen() {
   const navigate = useNavigate();
+
   return (
     <Layout title="Sign Up" isPublic>
       <Stack gap="$6" align="center">
@@ -19,7 +20,7 @@ export function WelcomeScreen() {
           <Button
             size="sm"
             color="accent"
-            onPress={() => navigate("create-wallet")}
+            onPress={() => navigate("../create-wallet")}
           >
             Create a Wallet
           </Button>
@@ -27,7 +28,7 @@ export function WelcomeScreen() {
             size="sm"
             color="gray"
             variant="ghost"
-            onPress={() => navigate("recover-wallet")}
+            onPress={() => navigate("../recover-wallet")}
           >
             I already have a wallet
           </Button>

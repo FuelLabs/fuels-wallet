@@ -59,6 +59,12 @@ class FuelDB extends Dexie {
       return db.accounts.get({ address });
     });
   }
+
+  getAccounts() {
+    return db.transaction("r", db.accounts, async () => {
+      return db.accounts.toArray();
+    });
+  }
 }
 
 export const db = new FuelDB();
