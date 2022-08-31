@@ -21,6 +21,7 @@ export const accountsMachine = createMachine(
   {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import("./accountsMachine.typegen").Typegen0,
+    predictableActionArguments: true,
     id: "(machine)",
     initial: "fetching",
     schema: {
