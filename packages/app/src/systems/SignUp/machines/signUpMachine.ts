@@ -85,9 +85,15 @@ export const signUpMachine = createMachine(
       },
       waitingMnemonic: {
         on: {
-          CONFIRM_MNEMONIC: {
-            actions: 'confirmMnemonic',
-          },
+          CONFIRM_MNEMONIC: [
+            {
+              actions: 'confirmMnemonic',
+              cond: 'hasEnoughAttempts',
+            },
+            {
+              target: 'failed',
+            },
+          ],
           NEXT: {
             target: 'addingPassword',
             cond: 'isMnemonicConfirmed',
@@ -160,6 +166,9 @@ export const signUpMachine = createMachine(
       },
       isMnemonicConfirmed: (ctx) => {
         return Boolean(ctx.isConfirmed);
+      },
+      hasEnoughAttempts: (ctx) => {
+        return Boolean(ctx.attempts < 5);
       },
     },
     services: {
