@@ -45,6 +45,7 @@ export function CreatePassword({
     shouldUseNativeValidation: false,
     mode: "onBlur",
   });
+
   const {
     register,
     handleSubmit,
@@ -91,13 +92,15 @@ export function CreatePassword({
         </Stack>
         <Form.Control css={{ flexDirection: "row" }}>
           <Checkbox
-            id="c1"
+            id="acceptTerms"
             checked={form.watch("accepted")}
-            onCheckedChange={(e) => {
+            onCheckedChange={(e: boolean) => {
               form.setValue("accepted", e as boolean, { shouldValidate: true });
             }}
           />
-          <Form.Label htmlFor="c1">I agree with terms and services</Form.Label>
+          <Form.Label htmlFor="acceptTerms">
+            I agree with terms and services
+          </Form.Label>
         </Form.Control>
         <Flex gap="$4">
           <Button
