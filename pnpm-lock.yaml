@@ -87,6 +87,7 @@ importers:
       '@types/react-helmet': ^6.1.5
       '@types/testing-library__jest-dom': ^5.14.5
       '@vitejs/plugin-react': ^2.0.1
+      '@xstate/cli': ^0.3.2
       '@xstate/react': ^3.0.1
       babel-loader: ^8.2.5
       buffer: ^6.0.3
@@ -154,6 +155,7 @@ importers:
       '@types/react-helmet': 6.1.5
       '@types/testing-library__jest-dom': 5.14.5
       '@vitejs/plugin-react': 2.0.1_vite@3.0.9
+      '@xstate/cli': 0.3.2
       babel-loader: 8.2.5_tb6moc662p5idmcg3l5ipbhpta
       storybook-dark-mode: 1.1.0_szr23uwlzhn73d2k2dkxny45ui
       tsconfig-paths-webpack-plugin: 4.0.0
@@ -7706,6 +7708,31 @@ packages:
       '@xtuc/long': 4.2.2
     dev: true
 
+  /@xstate/cli/0.3.2:
+    resolution: {integrity: sha512-IAToG5cVLkGG9XCnFVbnt2bQ3QYce4vDmA3NYpqqx34/wiWf6AimbWy+X7PF1ivLBXVN5xiwcB0YyGiI3jbkQw==}
+    hasBin: true
+    dependencies:
+      '@babel/core': 7.18.13
+      '@xstate/machine-extractor': 0.7.0_jndrp4mprcowuu7rnwck2k7rx4
+      '@xstate/tools-shared': 1.2.2_jndrp4mprcowuu7rnwck2k7rx4
+      chokidar: 3.5.3
+      commander: 8.3.0
+      xstate: 4.33.4
+    transitivePeerDependencies:
+      - prettier
+      - supports-color
+    dev: true
+
+  /@xstate/machine-extractor/0.7.0_jndrp4mprcowuu7rnwck2k7rx4:
+    resolution: {integrity: sha512-dXHI/sWWWouN/yG687ZuRCP7Cm6XggFWSK1qWj3NohBTyhaYWSR7ojwP6OUK6e1cbiJqxmM9EDnE2Auf+Xlp+A==}
+    peerDependencies:
+      '@babel/core': ^7
+      xstate: ^4
+    dependencies:
+      '@babel/core': 7.18.13
+      xstate: 4.33.4
+    dev: true
+
   /@xstate/react/3.0.1_ee4sfhkxoglkhluu3fwvhssr2a:
     resolution: {integrity: sha512-/tq/gg92P9ke8J+yDNDBv5/PAxBvXJf2cYyGDByzgtl5wKaxKxzDT82Gj3eWlCJXkrBg4J5/V47//gRJuVH2fA==}
     peerDependencies:
@@ -7727,6 +7754,18 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
     dev: false
+
+  /@xstate/tools-shared/1.2.2_jndrp4mprcowuu7rnwck2k7rx4:
+    resolution: {integrity: sha512-L99yPl8C0UcU/3VggLjPUExlLRkF4KmEh+mjFNF8m73IPUtEOxOp6tTAPl18k2Xu5F2EA3GzLKJpTlBOGQyOug==}
+    peerDependencies:
+      prettier: ^2.3.1
+      xstate: ^4
+    dependencies:
+      '@xstate/machine-extractor': 0.7.0_jndrp4mprcowuu7rnwck2k7rx4
+      xstate: 4.33.4
+    transitivePeerDependencies:
+      - '@babel/core'
+    dev: true
 
   /@xtuc/ieee754/1.2.0:
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
@@ -17952,7 +17991,6 @@ packages:
 
   /xstate/4.33.4:
     resolution: {integrity: sha512-3giWybQ8XvAr+3tDENlGduR4XREmiUOVxKRjdqFEe6g8eD8UrYhTth3OyLHX/sR9r/9GY2t/LbjfkCC8XFfv4Q==}
-    dev: false
 
   /xtend/4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
