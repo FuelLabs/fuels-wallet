@@ -30,7 +30,7 @@ export function TopBar({ title }: TopBarProps) {
               aria-label="Back"
               variant="link"
               css={{ px: "0 !important" }}
-              onClick={() => navigate(-1)}
+              onPress={() => navigate(-1)}
             />
             <Text css={{ fontWeight: "$semibold", color: "$gray12" }}>
               {title}
