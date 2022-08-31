@@ -12,8 +12,13 @@ export function Header({ title, subtitle }: HeaderProps) {
         {title}
       </Heading>
       <Heading
-        as="h6"
-        css={{ margin: 0, color: "$gray11", textAlign: "center" }}
+        as="h3"
+        css={{
+          margin: 0,
+          color: "$gray11",
+          textAlign: "center",
+          fontSize: "$lg",
+        }}
       >
         {subtitle}
       </Heading>
