@@ -8,6 +8,7 @@ const config: Config.InitialOptions = {
   ...baseConfig,
   rootDir: __dirname,
   displayName: pkg.name,
+  setupFiles: [...(baseConfig.setupFiles as string[]), 'fake-indexeddb/auto'],
   moduleNameMapper: {
     ...baseConfig.moduleNameMapper,
     '^dexie$': require.resolve('dexie'),
