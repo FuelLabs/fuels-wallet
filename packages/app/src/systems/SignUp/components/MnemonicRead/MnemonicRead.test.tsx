@@ -57,4 +57,18 @@ describe("MnemonicRead", () => {
     const btn = screen.getByText("Next");
     expect(btn).toBeEnabled();
   });
+
+  it("should trigger onCancel and onNext", async () => {
+    const checkbox = screen.getByLabelText(/Confirm saved/i);
+    await user.click(checkbox);
+
+    const btnNext = screen.getByText("Next");
+    const btnCancel = screen.getByText("Cancel");
+
+    await user.click(btnNext);
+    await user.click(btnCancel);
+
+    expect(onNextHandler).toBeCalledTimes(1);
+    expect(onCancelHandler).toBeCalledTimes(1);
+  });
 });
