@@ -16,6 +16,7 @@
     "ts:check": "pnpm xstate:typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@fontsource/source-code-pro": "^4.5.11",
     "@fuel-ts/mnemonic": "^0.12.0",
     "@fuel-ts/wallet-manager": "^0.12.0",
@@ -23,6 +24,7 @@
     "@fuel-ui/react": "dev",
     "@hookform/resolvers": "^2.9.7",
     "@xstate/react": "^3.0.1",
+    "buffer": "^6.0.3",
     "dexie": "^3.2.2",
     "dexie-react-hooks": "^1.1.1",
     "fuels": "^0.12.0",
