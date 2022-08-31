@@ -1,5 +1,4 @@
 /* eslint-disable no-restricted-syntax */
-import type { UserPatch } from "@fuel-ui/test-utils";
 import { render, screen } from "@fuel-ui/test-utils";
 
 import { MnemonicRead } from "./MnemonicRead";
@@ -21,6 +20,8 @@ const WORDS = [
 
 const onNextHandler = jest.fn();
 const onCancelHandler = jest.fn();
+
+type UserPatch = ReturnType<typeof render>["user"];
 
 describe("MnemonicRead", () => {
   let user: UserPatch;

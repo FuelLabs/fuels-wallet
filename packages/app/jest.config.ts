@@ -13,7 +13,7 @@ const config: Config.InitialOptions = {
   rootDir: __dirname,
   displayName: pkg.name,
   setupFilesAfterEnv: [require.resolve('./node_modules/@fuel-ui/test-utils/dist/setup')],
-  setupFiles: ['dotenv/config', 'fake-indexeddb/auto'],
+  setupFiles: ['./load.envs.js', 'fake-indexeddb/auto'],
   moduleNameMapper: {
     ...baseConfig.moduleNameMapper,
     '^dexie$': require.resolve('dexie'),
