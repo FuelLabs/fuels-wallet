@@ -28,6 +28,7 @@
     "buffer": "^6.0.3",
     "dexie": "^3.2.2",
     "dexie-react-hooks": "^1.1.1",
+    "fake-indexeddb": "^4.0.0",
     "fuels": "^0.12.0",
     "react": "^18.2.0",
     "react-content-loader": "^6.2.0",

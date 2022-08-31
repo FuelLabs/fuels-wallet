@@ -33,7 +33,7 @@ export const accountsMachine = createMachine(
         invoke: {
           src: "fetchAccounts",
           onDone: {
-            target: "idle",
+            target: "done",
             actions: "assignAccounts",
           },
           onError: {
@@ -45,7 +45,7 @@ export const accountsMachine = createMachine(
       failed: {
         type: "final",
       },
-      idle: {
+      done: {
         type: "final",
       },
     },
