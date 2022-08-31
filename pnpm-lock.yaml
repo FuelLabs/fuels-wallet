@@ -60,6 +60,7 @@ importers:
   packages/app:
     specifiers:
       '@babel/core': ^7.18.13
+      '@esbuild-plugins/node-globals-polyfill': ^0.1.1
       '@fontsource/source-code-pro': ^4.5.11
       '@fuel-ts/mnemonic': ^0.12.0
       '@fuel-ts/wallet-manager': ^0.12.0
@@ -88,6 +89,7 @@ importers:
       '@vitejs/plugin-react': ^2.0.1
       '@xstate/react': ^3.0.1
       babel-loader: ^8.2.5
+      buffer: ^6.0.3
       dexie: ^3.2.2
       dexie-react-hooks: ^1.1.1
       fuels: ^0.12.0
@@ -107,6 +109,7 @@ importers:
       xstate: ^4.33.4
       yup: ^0.32.11
     dependencies:
+      '@esbuild-plugins/node-globals-polyfill': 0.1.1
       '@fontsource/source-code-pro': 4.5.11
       '@fuel-ts/mnemonic': 0.12.0
       '@fuel-ts/wallet-manager': 0.12.0
@@ -114,6 +117,7 @@ importers:
       '@fuel-ui/react': 0.6.0-dev-04ded1f_3uauuzlp6jhewuklgxo6s4lpka
       '@hookform/resolvers': 2.9.7_react-hook-form@7.34.2
       '@xstate/react': 3.0.1_kvhzz5ouwt4rjjavlbpz3a3cvu
+      buffer: 6.0.3
       dexie: 3.2.2
       dexie-react-hooks: 1.1.1_vjjs7rll6qsrtvmbdjeilqr2uq
       fuels: 0.12.0
@@ -1825,6 +1829,12 @@ packages:
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
     engines: {node: '>=10.0.0'}
     dev: true
+
+  /@esbuild-plugins/node-globals-polyfill/0.1.1:
+    resolution: {integrity: sha512-MR0oAA+mlnJWrt1RQVQ+4VYuRJW/P2YmRTv1AsplObyvuBMnPHiizUF95HHYiSsMGLhyGtWufaq2XQg6+iurBg==}
+    peerDependencies:
+      esbuild: '*'
+    dev: false
 
   /@esbuild/linux-loong64/0.14.53:
     resolution: {integrity: sha512-W2dAL6Bnyn4xa/QRSU3ilIK4EzD5wgYXKXJiS1HDF5vU3675qc2bvFyLwbUcdmssDveyndy7FbitrCoiV/eMLg==}
@@ -8405,7 +8415,6 @@ packages:
 
   /base64-js/1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
-    dev: true
 
   /batch-processor/1.0.0:
     resolution: {integrity: sha512-xoLQD8gmmR32MeuBHgH0Tzd5PuSZx71ZsbhVxOCRbgktZEPe4SQy7s9Z50uPp0F/f7iw2XmkHN2xkgbMfckMDA==}
@@ -8635,6 +8644,13 @@ packages:
       ieee754: 1.2.1
       isarray: 1.0.0
     dev: true
+
+  /buffer/6.0.3:
+    resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
+    dependencies:
+      base64-js: 1.5.1
+      ieee754: 1.2.1
+    dev: false
 
   /builtin-status-codes/3.0.0:
     resolution: {integrity: sha512-HpGFw18DgFWlncDfjTa2rcQ4W88O1mC8e8yZ2AvQY5KDaktSTwo+KRf6nHK6FRI5FyRyb/5T6+TSxfP7QyGsmQ==}
@@ -11832,7 +11848,6 @@ packages:
 
   /ieee754/1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
-    dev: true
 
   /iferr/0.1.5:
     resolution: {integrity: sha512-DUNFN5j7Tln0D+TxzloUjKB+CtVu6myn0JEFak6dG18mNt9YkQ6lzGCdafwofISZ1lLF3xRHJ98VKy9ynkcFaA==}
