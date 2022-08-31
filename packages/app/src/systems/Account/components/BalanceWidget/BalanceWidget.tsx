@@ -15,12 +15,7 @@ import type { Account } from "../../types";
 
 import { BalanceWidgetLoader } from "./BalanceWidgetLoader";
 
-import {
-  parseAndFormat,
-  safeBigInt,
-  shortAddress,
-  VisibilityButton,
-} from "~/systems/Core";
+import { formatUnits, shortAddress, VisibilityButton } from "~/systems/Core";
 
 type BalanceWidgetWrapperProps = {
   children: ReactNode;
@@ -78,7 +73,7 @@ export function BalanceWidget({
           >
             <>
               {account.balanceSymbol}&nbsp;
-              {isHidden ? "•••••" : parseAndFormat(safeBigInt(account.balance))}
+              {isHidden ? "•••••" : formatUnits(account.balance)}
             </>
           </Text>
         </Flex>
