@@ -39,7 +39,7 @@
     "ts:check": "pnpm -r --filter=app exec tsc --noEmit"
   },
   "dependencies": {
-    "@fuel-ui/config": "^0.5.0",
+    "@fuel-ui/config": "^0.6.0",
     "fuelhat": "workspace:*"
   },
   "devDependencies": {
