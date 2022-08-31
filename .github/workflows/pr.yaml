@@ -25,31 +25,31 @@ jobs:
       - uses: ./.github/actions/ci-setup
       - run: pnpm audit --prod
 
-  lint:
+  lint-test:
     name: Lint & Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/ci-setup
       - run: |
-          pnpm build
           pnpm ts:check
           pnpm lint
+          pnpm test
 
-  test:
-    name: Test with coverage
-    runs-on: ubuntu-latest
-    permissions:
-      checks: write
-      pull-requests: write
-      contents: write
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/ci-setup
-      - name: Run tests with coverage
-        uses: ArtiomTr/jest-coverage-report-action@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          package-manager: pnpm
-          annotations: failed-tests
-          test-script: pnpm test:ci
+  # test:
+  #   name: Test with coverage
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     checks: write
+  #     pull-requests: write
+  #     contents: write
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: ./.github/actions/ci-setup
+  #     - name: Run tests with coverage
+  #       uses: ArtiomTr/jest-coverage-report-action@v2
+  #       with:
+  #         github-token: ${{ secrets.GITHUB_TOKEN }}
+  #         package-manager: pnpm
+  #         annotations: failed-tests
+  #         test-script: pnpm test:ci
