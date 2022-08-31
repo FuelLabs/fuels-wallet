@@ -5,11 +5,7 @@ importers:
   .:
     specifiers:
       '@babel/core': ^7.18.13
-<<<<<<< HEAD
-      '@fuel-ui/config': ^0.5.0
-=======
       '@fuel-ui/config': ^0.6.0
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       '@jest/types': ^29.0.1
       '@types/jest': ^29.0.0
       '@types/node': ^18.7.14
@@ -33,11 +29,7 @@ importers:
       typescript: ^4.8.2
       updates: ^13.1.5
     dependencies:
-<<<<<<< HEAD
-      '@fuel-ui/config': 0.5.0_typescript@4.8.2
-=======
       '@fuel-ui/config': 0.6.0_typescript@4.8.2
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       fuelhat: link:packages/fuelhat
     devDependencies:
       '@babel/core': 7.18.13
@@ -2358,13 +2350,8 @@ packages:
     resolution: {integrity: sha512-N/ETVDqxMnc8kxbQIFoza5Je3vuBMdVI758MJJRtwSlwyjmR4il+6tYR4D0koI4FmdE3aF/mDo7ivPxo+SEhZw==}
     dev: false
 
-<<<<<<< HEAD
-  /@fuel-ui/config/0.5.0_typescript@4.8.2:
-    resolution: {integrity: sha512-NO9Ve9QBAZ9axSJ7xfgPLMDiooMS0MBpCfDaTTBgUmQ4jCHHRN14Xe5qrvbGD8wz25QjgUQUcKoDBi//LScGuw==}
-=======
   /@fuel-ui/config/0.6.0_typescript@4.8.2:
     resolution: {integrity: sha512-nDODkYTHpsHn0ZtlVE3FR2Vr98wbGAA/6xZxU6Xag6m//NdyE4IQyetyoIasr/gsyNXIgC2NONgHpAJuERSTUg==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     dependencies:
       '@typescript-eslint/eslint-plugin': 5.36.1_lbwfnm54o3pmr3ypeqp3btnera
       '@typescript-eslint/parser': 5.36.1_yqf6kl63nyoq5megxukfnom5rm
@@ -2429,10 +2416,6 @@ packages:
       react-hot-toast: 2.3.0_biqbaboplfbrettd7655fr4n2y
       react-number-format: 4.9.3_biqbaboplfbrettd7655fr4n2y
       react-stately: 3.17.0_react@18.2.0
-<<<<<<< HEAD
-      react-use: 17.4.0_biqbaboplfbrettd7655fr4n2y
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       xstate: 4.33.4
     transitivePeerDependencies:
       - '@babel/core'
@@ -2566,21 +2549,6 @@ packages:
     resolution: {integrity: sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==}
     engines: {node: '>=8'}
 
-<<<<<<< HEAD
-  /@jest/console/28.1.3:
-    resolution: {integrity: sha512-QPAkP5EwKdK/bxIr6C1I4Vs0rm2nHiANzj/Z5X2JQkrZo6IqvC4ldZ9K95tF0HdidhA8Bo6egxSzUFPYKcEXLw==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@jest/types': 28.1.3
-      '@types/node': 18.7.13
-      chalk: 4.1.2
-      jest-message-util: 28.1.3
-      jest-util: 28.1.3
-      slash: 3.0.0
-    dev: false
-
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
   /@jest/console/29.0.1:
     resolution: {integrity: sha512-SxLvSKf9gk4Rvt3p2KRQWVQ3sVj7S37rjlCHwp2+xNcRO/X+Uw0idbkfOtciUpjghHIxyggqcrrKhThQ+vClLQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -2601,41 +2569,17 @@ packages:
       node-notifier:
         optional: true
     dependencies:
-<<<<<<< HEAD
-      '@jest/console': 28.1.3
-      '@jest/reporters': 28.1.3
-      '@jest/test-result': 28.1.3
-      '@jest/transform': 28.1.3
-      '@jest/types': 28.1.3
-      '@types/node': 18.7.13
-=======
       '@jest/console': 29.0.1
       '@jest/reporters': 29.0.1
       '@jest/test-result': 29.0.1
       '@jest/transform': 29.0.1
       '@jest/types': 29.0.1
       '@types/node': 18.7.14
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       ci-info: 3.3.2
       exit: 0.1.2
       graceful-fs: 4.2.10
-<<<<<<< HEAD
-      jest-changed-files: 28.1.3
-      jest-config: 28.1.3_@types+node@18.7.13
-      jest-haste-map: 28.1.3
-      jest-message-util: 28.1.3
-      jest-regex-util: 28.0.2
-      jest-resolve: 28.1.3
-      jest-resolve-dependencies: 28.1.3
-      jest-runner: 28.1.3
-      jest-runtime: 28.1.3
-      jest-snapshot: 28.1.3
-      jest-util: 28.1.3
-      jest-validate: 28.1.3
-      jest-watcher: 28.1.3
-=======
       jest-changed-files: 29.0.0
       jest-config: 29.0.1_@types+node@18.7.14
       jest-haste-map: 29.0.1
@@ -2649,7 +2593,6 @@ packages:
       jest-util: 29.0.1
       jest-validate: 29.0.1
       jest-watcher: 29.0.1
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       micromatch: 4.0.5
       pretty-format: 29.0.1
       slash: 3.0.0
@@ -2701,19 +2644,6 @@ packages:
       - ts-node
     dev: true
 
-<<<<<<< HEAD
-  /@jest/environment/28.1.3:
-    resolution: {integrity: sha512-1bf40cMFTEkKyEf585R9Iz1WayDjHoHqvts0XFYEqyKM3cFWDpeMoqKKTAF9LSYQModPUlh8FKptoM2YcMWAXA==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@jest/fake-timers': 28.1.3
-      '@jest/types': 28.1.3
-      '@types/node': 18.7.13
-      jest-mock: 28.1.3
-    dev: false
-
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
   /@jest/environment/29.0.1:
     resolution: {integrity: sha512-iLcFfoq2K6DAB+Mc+2VNLzZVmHdwQFeSqvoM/X8SMON6s/+yEi1iuRX3snx/JfwSnvmiMXjSr0lktxNxOcqXYA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -2723,31 +2653,11 @@ packages:
       '@types/node': 18.7.14
       jest-mock: 29.0.1
 
-  /@jest/expect-utils/28.1.3:
-    resolution: {integrity: sha512-wvbi9LUrHJLn3NlDW6wF2hvIMtd4JUl2QNVrjq+IBSHirgfrR3o9RnVtxzdEGO2n9JyIWwHnLfby5KzqBGg2YA==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      jest-get-type: 28.0.2
-    dev: false
-
   /@jest/expect-utils/29.0.1:
     resolution: {integrity: sha512-Tw5kUUOKmXGQDmQ9TSgTraFFS7HMC1HG/B7y0AN2G2UzjdAXz9BzK2rmNpCSDl7g7y0Gf/VLBm//blonvhtOTQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       jest-get-type: 29.0.0
-<<<<<<< HEAD
-
-  /@jest/expect/28.1.3:
-    resolution: {integrity: sha512-lzc8CpUbSoE4dqT0U+g1qODQjBRHPpCPXissXD4mS9+sWQdmmpeJ9zSH1rS1HEkrsMN0fb7nKrJ9giAR1d3wBw==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      expect: 28.1.3
-      jest-snapshot: 28.1.3
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
 
   /@jest/expect/29.0.1:
     resolution: {integrity: sha512-qKB3q52XDV8VUEiqKKLgLrJx7puQ8sYVqIDlul6n7SIXWS97DOK3KqbR2rDDaMtmenRHqEUl2fI+aFzx0oSemA==}
@@ -2757,22 +2667,6 @@ packages:
       jest-snapshot: 29.0.1
     transitivePeerDependencies:
       - supports-color
-<<<<<<< HEAD
-    dev: true
-
-  /@jest/fake-timers/28.1.3:
-    resolution: {integrity: sha512-D/wOkL2POHv52h+ok5Oj/1gOG9HSywdoPtFsRCUmlCILXNn5eIWmcnd3DIiWlJnpGvQtmajqBP95Ei0EimxfLw==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@jest/types': 28.1.3
-      '@sinonjs/fake-timers': 9.1.2
-      '@types/node': 18.7.13
-      jest-message-util: 28.1.3
-      jest-mock: 28.1.3
-      jest-util: 28.1.3
-    dev: false
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
 
   /@jest/fake-timers/29.0.1:
     resolution: {integrity: sha512-XZ+kAhLChVQ+KJNa5034p7O1Mz3vtWrelxDcMoxhZkgqmWDaEQAW9qJeutaeCfPvwaEwKYVyKDYfWpcyT8RiMw==}
@@ -2795,48 +2689,6 @@ packages:
       jest-mock: 29.0.1
     transitivePeerDependencies:
       - supports-color
-<<<<<<< HEAD
-    dev: true
-
-  /@jest/reporters/28.1.3:
-    resolution: {integrity: sha512-JuAy7wkxQZVNU/V6g9xKzCGC5LVXx9FDcABKsSXp5MiKPEE2144a/vXTEDoyzjUpZKfVwp08Wqg5A4WfTMAzjg==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    peerDependencies:
-      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
-    peerDependenciesMeta:
-      node-notifier:
-        optional: true
-    dependencies:
-      '@bcoe/v8-coverage': 0.2.3
-      '@jest/console': 28.1.3
-      '@jest/test-result': 28.1.3
-      '@jest/transform': 28.1.3
-      '@jest/types': 28.1.3
-      '@jridgewell/trace-mapping': 0.3.14
-      '@types/node': 18.7.13
-      chalk: 4.1.2
-      collect-v8-coverage: 1.0.1
-      exit: 0.1.2
-      glob: 7.2.3
-      graceful-fs: 4.2.10
-      istanbul-lib-coverage: 3.2.0
-      istanbul-lib-instrument: 5.2.0
-      istanbul-lib-report: 3.0.0
-      istanbul-lib-source-maps: 4.0.1
-      istanbul-reports: 3.1.5
-      jest-message-util: 28.1.3
-      jest-util: 28.1.3
-      jest-worker: 28.1.3
-      slash: 3.0.0
-      string-length: 4.0.2
-      strip-ansi: 6.0.1
-      terminal-link: 2.1.1
-      v8-to-istanbul: 9.0.1
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
 
   /@jest/reporters/29.0.1:
     resolution: {integrity: sha512-dM3L8JmYYOsdeXUUVZClQy67Tz/v1sMo9h4AQv2U+716VLHV0zdA6Hh4FQNAHMhYw/95dbZbPX8Q+TRR7Rw+wA==}
@@ -2886,18 +2738,6 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@sinclair/typebox': 0.24.27
-<<<<<<< HEAD
-
-  /@jest/source-map/28.1.2:
-    resolution: {integrity: sha512-cV8Lx3BeStJb8ipPHnqVw/IM2VCMWO3crWZzYodSIkxXnRcXJipCdx1JCK0K5MsJJouZQTH73mzf4vgxRaH9ww==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@jridgewell/trace-mapping': 0.3.14
-      callsites: 3.1.0
-      graceful-fs: 4.2.10
-    dev: false
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
 
   /@jest/source-map/29.0.0:
     resolution: {integrity: sha512-nOr+0EM8GiHf34mq2GcJyz/gYFyLQ2INDhAylrZJ9mMWoW21mLBfZa0BUVPPMxVYrLjeiRe2Z7kWXOGnS0TFhQ==}
@@ -2948,32 +2788,6 @@ packages:
       - supports-color
     dev: true
 
-<<<<<<< HEAD
-  /@jest/transform/28.1.3:
-    resolution: {integrity: sha512-u5dT5di+oFI6hfcLOHGTAfmUxFRrjK+vnaP0kkVow9Md/M7V/MxqQMOz/VV25UZO8pzeA9PjfTpOu6BDuwSPQA==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@babel/core': 7.18.13
-      '@jest/types': 28.1.3
-      '@jridgewell/trace-mapping': 0.3.14
-      babel-plugin-istanbul: 6.1.1
-      chalk: 4.1.2
-      convert-source-map: 1.8.0
-      fast-json-stable-stringify: 2.1.0
-      graceful-fs: 4.2.10
-      jest-haste-map: 28.1.3
-      jest-regex-util: 28.0.2
-      jest-util: 28.1.3
-      micromatch: 4.0.5
-      pirates: 4.0.5
-      slash: 3.0.0
-      write-file-atomic: 4.0.1
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
   /@jest/transform/29.0.1:
     resolution: {integrity: sha512-6UxXtqrPScFdDhoip8ys60dQAIYppQinyR87n9nlasR/ZnFfJohKToqzM29KK4gb9gHRv5oDFChdqZKE0SIhsg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -3084,7 +2898,6 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
-    dev: true
 
   /@jridgewell/trace-mapping/0.3.9:
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
@@ -4063,8 +3876,6 @@ packages:
 
   /@react-aria/dialog/3.3.1_react@18.2.0:
     resolution: {integrity: sha512-Sz7XdzX3rRhmfIp1rYS5D90T1tqiDsAkONsbPBRqUJx7NrjKiHhx3wvG4shiK66cPhAZwBk7wuQmMugDeIDFSA==}
-<<<<<<< HEAD
-=======
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
@@ -4082,7 +3893,6 @@ packages:
 
   /@react-aria/dnd/3.0.0-alpha.12_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-smOvMPx+W5KUm7UTi03yb0dr9RK++JorF5HjslsuwDX0S3cccqO5QqFqKpb2CuuOYTbZxcyBGIGeuJHP4s0VIA==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
       react-dom: '*'
@@ -4093,46 +3903,6 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.18.9
-<<<<<<< HEAD
-      '@react-aria/focus': 3.8.0_react@18.2.0
-      '@react-aria/utils': 3.13.3_react@18.2.0
-      '@react-stately/overlays': 3.4.1_react@18.2.0
-      '@react-types/dialog': 3.4.3_react@18.2.0
-=======
-      '@internationalized/string': 3.0.0
-      '@react-aria/i18n': 3.6.0_react@18.2.0
-      '@react-aria/interactions': 3.11.0_react@18.2.0
-      '@react-aria/live-announcer': 3.1.1
-      '@react-aria/overlays': 3.10.1_biqbaboplfbrettd7655fr4n2y
-      '@react-aria/utils': 3.13.3_react@18.2.0
-      '@react-aria/visually-hidden': 3.4.1_react@18.2.0
-      '@react-stately/dnd': 3.0.0-alpha.10_react@18.2.0
-      '@react-stately/selection': 3.10.3_react@18.2.0
-      '@react-types/button': 3.6.1_react@18.2.0
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
-      '@react-types/shared': 3.14.1_react@18.2.0
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
-
-<<<<<<< HEAD
-  /@react-aria/dnd/3.0.0-alpha.12_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-smOvMPx+W5KUm7UTi03yb0dr9RK++JorF5HjslsuwDX0S3cccqO5QqFqKpb2CuuOYTbZxcyBGIGeuJHP4s0VIA==}
-=======
-  /@react-aria/focus/3.8.0_react@18.2.0:
-    resolution: {integrity: sha512-XuaLFdqf/6OyILifkVJo++5k2O+wlpNvXgsJkRWn/wSmB77pZKURm2MMGiSg2u911NqY+829UrSlpmhCZrc8RA==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
-    peerDependencies:
-      react: '*'
-      react-dom: '*'
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-    dependencies:
-      '@babel/runtime': 7.18.9
-<<<<<<< HEAD
       '@internationalized/string': 3.0.0
       '@react-aria/i18n': 3.6.0_react@18.2.0
       '@react-aria/interactions': 3.11.0_react@18.2.0
@@ -4157,8 +3927,6 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.18.9
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       '@react-aria/interactions': 3.11.0_react@18.2.0
       '@react-aria/utils': 3.13.3_react@18.2.0
       '@react-types/shared': 3.14.1_react@18.2.0
@@ -4835,10 +4603,6 @@ packages:
       '@internationalized/date': 3.0.1
       '@internationalized/string': 3.0.0
       '@react-stately/overlays': 3.4.1_react@18.2.0
-<<<<<<< HEAD
-      '@react-stately/utils': 3.5.1_react@18.2.0
-      '@react-types/datepicker': 3.1.1_react@18.2.0
-=======
       '@react-stately/utils': 3.5.1_react@18.2.0
       '@react-types/datepicker': 3.1.1_react@18.2.0
       '@react-types/shared': 3.14.1_react@18.2.0
@@ -4856,28 +4620,6 @@ packages:
       '@babel/runtime': 7.18.9
       '@react-stately/selection': 3.10.3_react@18.2.0
       '@react-stately/utils': 3.5.1_react@18.2.0
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
-      '@react-types/shared': 3.14.1_react@18.2.0
-      react: 18.2.0
-    dev: false
-
-<<<<<<< HEAD
-  /@react-stately/dnd/3.0.0-alpha.10_react@18.2.0:
-    resolution: {integrity: sha512-1yRsxVoCvZom0pMDuAAexS0kpMGbG/auWTHxChzvo9OBAWbz7VeOLIWogdAs8Jy17R08L+6NV82+KSD6zDK47A==}
-=======
-  /@react-stately/grid/3.3.1_react@18.2.0:
-    resolution: {integrity: sha512-2fhh6pgW2odk/TNx5cNsNIQws0frovies5+zmF4kDfHWLDmTCkx8XDPx6gG9ZRlkueU2YzjZmIWtH8ekIg5r0w==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
-    peerDependencies:
-      react: '*'
-    peerDependenciesMeta:
-      react:
-        optional: true
-    dependencies:
-      '@babel/runtime': 7.18.9
-      '@react-stately/selection': 3.10.3_react@18.2.0
-<<<<<<< HEAD
-      '@react-stately/utils': 3.5.1_react@18.2.0
       '@react-types/shared': 3.14.1_react@18.2.0
       react: 18.2.0
     dev: false
@@ -4892,8 +4634,6 @@ packages:
     dependencies:
       '@babel/runtime': 7.18.9
       '@react-stately/selection': 3.10.3_react@18.2.0
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       '@react-types/grid': 3.1.3_react@18.2.0
       '@react-types/shared': 3.14.1_react@18.2.0
       react: 18.2.0
@@ -5235,13 +4975,6 @@ packages:
       '@internationalized/date': 3.0.1
       '@react-types/overlays': 3.6.3_react@18.2.0
       '@react-types/shared': 3.14.1_react@18.2.0
-<<<<<<< HEAD
-      react: 18.2.0
-    dev: false
-
-  /@react-types/dialog/3.4.3_react@18.2.0:
-    resolution: {integrity: sha512-pSUvcp6K9ygXfD3Nf89QDCHfspBhCMMTJqCfMeGstb7qggJWUBBmplmXtpOcZ8pW0hQ86tDFQe85Ew3N+UAGsg==}
-=======
       react: 18.2.0
     dev: false
 
@@ -5260,28 +4993,6 @@ packages:
 
   /@react-types/grid/3.1.3_react@18.2.0:
     resolution: {integrity: sha512-oOrG98KF3WO0yzhCy5gqR1wRcjKWZsShJFMcKXSB4xO+nqiR0HSyj/ynNXYPHWSod9cyhpa5yunpgtWIycZszw==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
-    peerDependencies:
-      react: '*'
-    peerDependenciesMeta:
-      react:
-        optional: true
-    dependencies:
-<<<<<<< HEAD
-      '@react-types/overlays': 3.6.3_react@18.2.0
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
-      '@react-types/shared': 3.14.1_react@18.2.0
-      react: 18.2.0
-    dev: false
-
-<<<<<<< HEAD
-  /@react-types/grid/3.1.3_react@18.2.0:
-    resolution: {integrity: sha512-oOrG98KF3WO0yzhCy5gqR1wRcjKWZsShJFMcKXSB4xO+nqiR0HSyj/ynNXYPHWSod9cyhpa5yunpgtWIycZszw==}
-=======
-  /@react-types/label/3.6.3_react@18.2.0:
-    resolution: {integrity: sha512-Q+8qx4x7+ZqgdfNJorX7CqysYAGAeT1IWzJyNxwcT1OLjFuUIBJyg7njjpkZyK8sFFYdGIKhLxk0Q1Sf8Y5Stw==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
@@ -5292,45 +5003,40 @@ packages:
       react: 18.2.0
     dev: false
 
-<<<<<<< HEAD
   /@react-types/label/3.6.3_react@18.2.0:
     resolution: {integrity: sha512-Q+8qx4x7+ZqgdfNJorX7CqysYAGAeT1IWzJyNxwcT1OLjFuUIBJyg7njjpkZyK8sFFYdGIKhLxk0Q1Sf8Y5Stw==}
-=======
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      '@react-types/shared': 3.14.1_react@18.2.0
+      react: 18.2.0
+    dev: false
+
   /@react-types/link/3.3.3_react@18.2.0:
     resolution: {integrity: sha512-s1inMEaSd2n2GPuULevdVmHkgXXN4ybJXeNPpjN1POlan35k3GgWRPz7F4vc0m/Zy1ZAH5sf37hhQRcbS05+nA==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
       react:
         optional: true
     dependencies:
-<<<<<<< HEAD
-=======
       '@react-aria/interactions': 3.11.0_react@18.2.0
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       '@react-types/shared': 3.14.1_react@18.2.0
       react: 18.2.0
     dev: false
 
-<<<<<<< HEAD
-  /@react-types/link/3.3.3_react@18.2.0:
-    resolution: {integrity: sha512-s1inMEaSd2n2GPuULevdVmHkgXXN4ybJXeNPpjN1POlan35k3GgWRPz7F4vc0m/Zy1ZAH5sf37hhQRcbS05+nA==}
-=======
   /@react-types/list/3.0.0_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-NZkgDYJFIJC2pPFg7vG5hp6FqthnfrLa9jwdfNCsMzgtWRrKB0WqhY9+36CVuYdHB4XfJ5nvwT5zdBBlU+Fh3Q==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
       react:
         optional: true
     dependencies:
-<<<<<<< HEAD
-      '@react-aria/interactions': 3.11.0_react@18.2.0
-=======
       '@react-spectrum/dnd': 3.0.0-alpha.6_biqbaboplfbrettd7655fr4n2y
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       '@react-types/shared': 3.14.1_react@18.2.0
       react: 18.2.0
     transitivePeerDependencies:
@@ -5338,101 +5044,58 @@ packages:
       - react-dom
     dev: false
 
-<<<<<<< HEAD
-  /@react-types/list/3.0.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-NZkgDYJFIJC2pPFg7vG5hp6FqthnfrLa9jwdfNCsMzgtWRrKB0WqhY9+36CVuYdHB4XfJ5nvwT5zdBBlU+Fh3Q==}
-=======
   /@react-types/listbox/3.3.3_react@18.2.0:
     resolution: {integrity: sha512-EhwUl1j2xv48LB8oLcw9uhDGbNY+K1sTrHVdkQpXJwtgV5Mp6WN1yWL3naR+GK23aWL1kD/yxkQU7Lg5a2EXBw==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
       react:
         optional: true
     dependencies:
-<<<<<<< HEAD
-      '@react-spectrum/dnd': 3.0.0-alpha.6_biqbaboplfbrettd7655fr4n2y
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       '@react-types/shared': 3.14.1_react@18.2.0
       react: 18.2.0
-    transitivePeerDependencies:
-      - '@react-spectrum/provider'
-      - react-dom
     dev: false
 
-<<<<<<< HEAD
-  /@react-types/listbox/3.3.3_react@18.2.0:
-    resolution: {integrity: sha512-EhwUl1j2xv48LB8oLcw9uhDGbNY+K1sTrHVdkQpXJwtgV5Mp6WN1yWL3naR+GK23aWL1kD/yxkQU7Lg5a2EXBw==}
-=======
   /@react-types/menu/3.7.1_react@18.2.0:
     resolution: {integrity: sha512-5a+vfu+oX+bMl4La4pzy6hx3pzBors1Kxcy3gykOUPQ/1zWQKnv8bhcqXTVtUQ9TItg+N6L4axXH/1VPvnzAJg==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
       react:
         optional: true
     dependencies:
-<<<<<<< HEAD
-=======
       '@react-types/overlays': 3.6.3_react@18.2.0
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       '@react-types/shared': 3.14.1_react@18.2.0
       react: 18.2.0
     dev: false
 
-<<<<<<< HEAD
-  /@react-types/menu/3.7.1_react@18.2.0:
-    resolution: {integrity: sha512-5a+vfu+oX+bMl4La4pzy6hx3pzBors1Kxcy3gykOUPQ/1zWQKnv8bhcqXTVtUQ9TItg+N6L4axXH/1VPvnzAJg==}
-=======
   /@react-types/meter/3.2.3_react@18.2.0:
     resolution: {integrity: sha512-GuCi9H2ptceaK77E9hVn1SHEmUwQ9BxKpWPZEFpljeL6vO8E976DuIcGMyNnedwLkODeJVkiRhGfTG2UV4J8tg==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
       react:
         optional: true
     dependencies:
-<<<<<<< HEAD
-      '@react-types/overlays': 3.6.3_react@18.2.0
-=======
       '@react-types/progress': 3.2.3_react@18.2.0
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       '@react-types/shared': 3.14.1_react@18.2.0
       react: 18.2.0
     dev: false
 
-<<<<<<< HEAD
-  /@react-types/meter/3.2.3_react@18.2.0:
-    resolution: {integrity: sha512-GuCi9H2ptceaK77E9hVn1SHEmUwQ9BxKpWPZEFpljeL6vO8E976DuIcGMyNnedwLkODeJVkiRhGfTG2UV4J8tg==}
-=======
   /@react-types/numberfield/3.3.3_react@18.2.0:
     resolution: {integrity: sha512-5ZcGRA4vSbLGvtN+/8G6SH4E90YaB9u9UHRuMvdraTSCQDlcpEzXrOREuzgTTPCF0Otfdejso9D6+BA9PQ+LYA==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
       react:
         optional: true
     dependencies:
-<<<<<<< HEAD
-      '@react-types/progress': 3.2.3_react@18.2.0
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       '@react-types/shared': 3.14.1_react@18.2.0
       react: 18.2.0
     dev: false
 
-<<<<<<< HEAD
-  /@react-types/numberfield/3.3.3_react@18.2.0:
-    resolution: {integrity: sha512-5ZcGRA4vSbLGvtN+/8G6SH4E90YaB9u9UHRuMvdraTSCQDlcpEzXrOREuzgTTPCF0Otfdejso9D6+BA9PQ+LYA==}
-=======
   /@react-types/overlays/3.6.3_react@18.2.0:
     resolution: {integrity: sha512-89gqlEiY/b8HdEK/y074Ahsfvv5DmbhZP85ln6ORG62orwX2J0UrDYBhHDLmX96fqZ9FoOCb+Dez0z22R3sxew==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
@@ -5443,13 +5106,8 @@ packages:
       react: 18.2.0
     dev: false
 
-<<<<<<< HEAD
-  /@react-types/overlays/3.6.3_react@18.2.0:
-    resolution: {integrity: sha512-89gqlEiY/b8HdEK/y074Ahsfvv5DmbhZP85ln6ORG62orwX2J0UrDYBhHDLmX96fqZ9FoOCb+Dez0z22R3sxew==}
-=======
   /@react-types/progress/3.2.3_react@18.2.0:
     resolution: {integrity: sha512-j5vmngxcdm603/Fi0lz0L/SwpS4TRpYjtTRKPI/sXouSpodfYJgFQfd3FHxGTqTwpxOWKAMA1tKP90/DLT9HTg==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
@@ -5460,13 +5118,8 @@ packages:
       react: 18.2.0
     dev: false
 
-<<<<<<< HEAD
-  /@react-types/progress/3.2.3_react@18.2.0:
-    resolution: {integrity: sha512-j5vmngxcdm603/Fi0lz0L/SwpS4TRpYjtTRKPI/sXouSpodfYJgFQfd3FHxGTqTwpxOWKAMA1tKP90/DLT9HTg==}
-=======
   /@react-types/radio/3.2.3_react@18.2.0:
     resolution: {integrity: sha512-TiW0PJPQuVKcni8UWI84hc8dYGDsuSkKT/Dgj1r82csYGz/92RnyQDF12CCg9+MpqWZweK30uYQzbtrxa74qBg==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
@@ -5474,58 +5127,24 @@ packages:
         optional: true
     dependencies:
       '@react-types/shared': 3.14.1_react@18.2.0
-      react: 18.2.0
-    dev: false
-
-<<<<<<< HEAD
-  /@react-types/radio/3.2.3_react@18.2.0:
-    resolution: {integrity: sha512-TiW0PJPQuVKcni8UWI84hc8dYGDsuSkKT/Dgj1r82csYGz/92RnyQDF12CCg9+MpqWZweK30uYQzbtrxa74qBg==}
-=======
-  /@react-types/searchfield/3.3.3_react@18.2.0:
-    resolution: {integrity: sha512-LZuYs2nZKvA77YhvRz96QF0c2RHqoXtE2DWuVPEHxPMQHgIDUpE/NBja7VO5//Ft5xgW8oHIDyXHUggilR23Tw==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
-    peerDependencies:
-      react: '*'
-    peerDependenciesMeta:
-      react:
-        optional: true
-    dependencies:
-      '@react-types/shared': 3.14.1_react@18.2.0
-<<<<<<< HEAD
       react: 18.2.0
     dev: false
 
   /@react-types/searchfield/3.3.3_react@18.2.0:
     resolution: {integrity: sha512-LZuYs2nZKvA77YhvRz96QF0c2RHqoXtE2DWuVPEHxPMQHgIDUpE/NBja7VO5//Ft5xgW8oHIDyXHUggilR23Tw==}
-=======
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      '@react-types/shared': 3.14.1_react@18.2.0
       '@react-types/textfield': 3.5.3_react@18.2.0
       react: 18.2.0
     dev: false
 
   /@react-types/select/3.6.3_react@18.2.0:
     resolution: {integrity: sha512-b360PWgujDh3pW40Q6tQqAJSy7w3o6sDvk9x7BLjTuV/yJceEuS7rILANsITS0F0A/348NiJ3eHY6XqXxW+FVg==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
-    peerDependencies:
-      react: '*'
-    peerDependenciesMeta:
-      react:
-        optional: true
-    dependencies:
-      '@react-types/shared': 3.14.1_react@18.2.0
-<<<<<<< HEAD
-      '@react-types/textfield': 3.5.3_react@18.2.0
-      react: 18.2.0
-    dev: false
-
-  /@react-types/select/3.6.3_react@18.2.0:
-    resolution: {integrity: sha512-b360PWgujDh3pW40Q6tQqAJSy7w3o6sDvk9x7BLjTuV/yJceEuS7rILANsITS0F0A/348NiJ3eHY6XqXxW+FVg==}
-=======
-      react: 18.2.0
-    dev: false
-
-  /@react-types/shared/3.14.1_react@18.2.0:
-    resolution: {integrity: sha512-yPPgVRWWanXqbdxFTgJmVwx0JlcnEK3dqkKDIbVk6mxAHvEESI9+oDnHvO8IMHqF+GbrTCzVtAs0zwhYI/uHJA==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
@@ -5536,97 +5155,57 @@ packages:
       react: 18.2.0
     dev: false
 
-<<<<<<< HEAD
   /@react-types/shared/3.14.1_react@18.2.0:
     resolution: {integrity: sha512-yPPgVRWWanXqbdxFTgJmVwx0JlcnEK3dqkKDIbVk6mxAHvEESI9+oDnHvO8IMHqF+GbrTCzVtAs0zwhYI/uHJA==}
-=======
-  /@react-types/slider/3.2.1_react@18.2.0:
-    resolution: {integrity: sha512-adqWZLE2IEzqBGnGHKYQwJ2IY4xlwFcPt3KWCsfp1c1WyG/d7xxQus8rL4eWLqoiMgguTxbYm9F2TF77itw8JA==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
       react:
         optional: true
     dependencies:
-<<<<<<< HEAD
       react: 18.2.0
     dev: false
 
   /@react-types/slider/3.2.1_react@18.2.0:
     resolution: {integrity: sha512-adqWZLE2IEzqBGnGHKYQwJ2IY4xlwFcPt3KWCsfp1c1WyG/d7xxQus8rL4eWLqoiMgguTxbYm9F2TF77itw8JA==}
-=======
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
       '@react-types/shared': 3.14.1_react@18.2.0
       react: 18.2.0
     dev: false
 
   /@react-types/switch/3.2.3_react@18.2.0:
     resolution: {integrity: sha512-EKs8FZfRM1zCD5kgLNi8wQKiPMayABZiAhfzkBgHRwlip1joI4F5oXTyonY8hgHrxLP5GUXFL+rNkYOo6LX1uQ==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
       react:
         optional: true
     dependencies:
-<<<<<<< HEAD
-=======
       '@react-types/checkbox': 3.3.3_react@18.2.0
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       '@react-types/shared': 3.14.1_react@18.2.0
       react: 18.2.0
     dev: false
 
-<<<<<<< HEAD
-  /@react-types/switch/3.2.3_react@18.2.0:
-    resolution: {integrity: sha512-EKs8FZfRM1zCD5kgLNi8wQKiPMayABZiAhfzkBgHRwlip1joI4F5oXTyonY8hgHrxLP5GUXFL+rNkYOo6LX1uQ==}
-=======
   /@react-types/table/3.3.1_react@18.2.0:
     resolution: {integrity: sha512-maZTcxjyVNnikFkQe/rne00hj1kUzaxhel+hSev+1aD6xrh2SUEAcxGQ61ZkzjLqG6nUvEnQQGnotJZIZwN5QQ==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
       react:
         optional: true
     dependencies:
-<<<<<<< HEAD
-      '@react-types/checkbox': 3.3.3_react@18.2.0
-=======
       '@react-types/grid': 3.1.3_react@18.2.0
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       '@react-types/shared': 3.14.1_react@18.2.0
       react: 18.2.0
     dev: false
 
-<<<<<<< HEAD
-  /@react-types/table/3.3.1_react@18.2.0:
-    resolution: {integrity: sha512-maZTcxjyVNnikFkQe/rne00hj1kUzaxhel+hSev+1aD6xrh2SUEAcxGQ61ZkzjLqG6nUvEnQQGnotJZIZwN5QQ==}
-=======
   /@react-types/tabs/3.1.3_react@18.2.0:
     resolution: {integrity: sha512-RfHVSsbQiiIaJxf1qBdTt+mWj1GGC7AK/sXAQGhf3p3bi8fXBcXv2hZyPQF8uWZfb8sANtEXP8V3Xdg5SlWFGA==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
-    peerDependencies:
-      react: '*'
-    peerDependenciesMeta:
-      react:
-        optional: true
-    dependencies:
-<<<<<<< HEAD
-      '@react-types/grid': 3.1.3_react@18.2.0
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
-      '@react-types/shared': 3.14.1_react@18.2.0
-      react: 18.2.0
-    dev: false
-
-<<<<<<< HEAD
-  /@react-types/tabs/3.1.3_react@18.2.0:
-    resolution: {integrity: sha512-RfHVSsbQiiIaJxf1qBdTt+mWj1GGC7AK/sXAQGhf3p3bi8fXBcXv2hZyPQF8uWZfb8sANtEXP8V3Xdg5SlWFGA==}
-=======
-  /@react-types/textfield/3.5.3_react@18.2.0:
-    resolution: {integrity: sha512-1FQrpLevE4kASl/ZD5+2QvFC+Jrcd8qSDGqkrlrKmBuCx5NbZXKi8T9pOoyyp9ArptEJ7zuU+mdY3DDbtKZW3w==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
@@ -5637,20 +5216,14 @@ packages:
       react: 18.2.0
     dev: false
 
-<<<<<<< HEAD
   /@react-types/textfield/3.5.3_react@18.2.0:
     resolution: {integrity: sha512-1FQrpLevE4kASl/ZD5+2QvFC+Jrcd8qSDGqkrlrKmBuCx5NbZXKi8T9pOoyyp9ArptEJ7zuU+mdY3DDbtKZW3w==}
-=======
-  /@react-types/tooltip/3.2.3_react@18.2.0:
-    resolution: {integrity: sha512-Q74S6crirrEu5sEZ0hvr8HjaafqE8BNlvYjD6yD42ArDM0XatkQ+AAtlVkwd+DD9lZMrMhZ35JBBuPPpzUgwQA==}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
       react:
         optional: true
     dependencies:
-<<<<<<< HEAD
       '@react-types/shared': 3.14.1_react@18.2.0
       react: 18.2.0
     dev: false
@@ -5663,8 +5236,6 @@ packages:
       react:
         optional: true
     dependencies:
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       '@react-types/overlays': 3.6.3_react@18.2.0
       '@react-types/shared': 3.14.1_react@18.2.0
       react: 18.2.0
@@ -7514,21 +7085,6 @@ packages:
       expect: 29.0.1
       pretty-format: 29.0.1
 
-<<<<<<< HEAD
-  /@types/js-cookie/2.2.7:
-    resolution: {integrity: sha512-aLkWa0C0vO5b4Sr798E26QgOkss68Un0bLjs7u9qxzPT5CG+8DuNTffWES58YzJs3hrVAOs1wonycqEBqNJubA==}
-    dev: false
-
-  /@types/jsdom/16.2.15:
-    resolution: {integrity: sha512-nwF87yjBKuX/roqGYerZZM0Nv1pZDMAT5YhOHYeM/72Fic+VEqJh4nyoqoapzJnW3pUlfxPY5FhgsJtM+dRnQQ==}
-    dependencies:
-      '@types/node': 18.7.13
-      '@types/parse5': 6.0.3
-      '@types/tough-cookie': 4.0.2
-    dev: false
-
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
   /@types/jsdom/20.0.0:
     resolution: {integrity: sha512-YfAchFs0yM1QPDrLm2VHe+WHGtqms3NXnXAMolrgrVP6fgBHHXy1ozAbo/dFtPNtZC/m66bPiCTWYmqp1F14gA==}
     dependencies:
@@ -8137,11 +7693,6 @@ packages:
       '@xtuc/long': 4.2.2
     dev: true
 
-<<<<<<< HEAD
-  /@xobotyi/scrollbar-width/1.9.5:
-    resolution: {integrity: sha512-N8tkAACJx2ww8vFMneJmaAgmjAG1tnVBZJRLRcx061tmsLRZHSEZSLuGWnwPtunsSLvSqXQ2wfp7Mgqg1I+2dQ==}
-    dev: false
-
   /@xstate/cli/0.3.2:
     resolution: {integrity: sha512-IAToG5cVLkGG9XCnFVbnt2bQ3QYce4vDmA3NYpqqx34/wiWf6AimbWy+X7PF1ivLBXVN5xiwcB0YyGiI3jbkQw==}
     hasBin: true
@@ -8167,8 +7718,6 @@ packages:
       xstate: 4.33.4
     dev: true
 
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
   /@xstate/react/3.0.1_ee4sfhkxoglkhluu3fwvhssr2a:
     resolution: {integrity: sha512-/tq/gg92P9ke8J+yDNDBv5/PAxBvXJf2cYyGDByzgtl5wKaxKxzDT82Gj3eWlCJXkrBg4J5/V47//gRJuVH2fA==}
     peerDependencies:
@@ -10124,11 +9673,6 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dev: false
 
-  /diff-sequences/28.1.1:
-    resolution: {integrity: sha512-FU0iFaH/E23a+a718l8Qa/19bF9p06kgE0KipMOMadwa3SjnaElKzPaUC0vnibs6/B/9ni97s61mcejk8W1fQw==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dev: false
-
   /diff-sequences/29.0.0:
     resolution: {integrity: sha512-7Qe/zd1wxSDL4D/X/FPjOMB+ZMDt71W94KYaq05I2l0oQqgXgs7s4ftYYmV38gBSrPz2vcygxfs1xn0FT+rKNA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -11102,17 +10646,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
-
-  /expect/28.1.3:
-    resolution: {integrity: sha512-eEh0xn8HlsuOBxFgIss+2mX85VAS4Qy3OSkjV7rlBWljtA4oWH37glVGyOZSZvErDT/yBywZdPGwCXuTvSG85g==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@jest/expect-utils': 28.1.3
-      jest-get-type: 28.0.2
-      jest-matcher-utils: 28.1.3
-      jest-message-util: 28.1.3
-      jest-util: 28.1.3
-    dev: false
 
   /expect/29.0.1:
     resolution: {integrity: sha512-yQgemsjLU+1S8t2A7pXT3Sn/v5/37LY8J+tocWtKEA0iEYYc6gfKbbJJX2fxHZmd7K9WpdbQqXUpmYkq1aewYg==}
@@ -12814,37 +12347,6 @@ packages:
     dependencies:
       execa: 5.1.1
       p-limit: 3.1.0
-<<<<<<< HEAD
-    dev: true
-
-  /jest-circus/28.1.3:
-    resolution: {integrity: sha512-cZ+eS5zc79MBwt+IhQhiEp0OeBddpc1n8MBo1nMB8A7oPMKEO+Sre+wHaLJexQUj9Ya/8NOBY0RESUgYjB6fow==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@jest/environment': 28.1.3
-      '@jest/expect': 28.1.3
-      '@jest/test-result': 28.1.3
-      '@jest/types': 28.1.3
-      '@types/node': 18.7.13
-      chalk: 4.1.2
-      co: 4.6.0
-      dedent: 0.7.0
-      is-generator-fn: 2.1.0
-      jest-each: 28.1.3
-      jest-matcher-utils: 28.1.3
-      jest-message-util: 28.1.3
-      jest-runtime: 28.1.3
-      jest-snapshot: 28.1.3
-      jest-util: 28.1.3
-      p-limit: 3.1.0
-      pretty-format: 28.1.3
-      slash: 3.0.0
-      stack-utils: 2.0.5
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
 
   /jest-circus/29.0.1:
     resolution: {integrity: sha512-I5J4LyK3qPo8EnqPmxsMAVR+2SFx7JOaZsbqW9xQmk4UDmTCD92EQgS162Ey3Jq6CfpKJKFDhzhG3QqiE0fRbw==}
@@ -12966,15 +12468,9 @@ packages:
       - supports-color
     dev: false
 
-<<<<<<< HEAD
-  /jest-config/28.1.3_@types+node@18.7.13:
-    resolution: {integrity: sha512-MG3INjByJ0J4AsNBm7T3hsuxKQqFIiRo/AUqb1q9LRKI5UU6Aar9JHbr9Ivn1TVwfUD9KirRoM/T6u8XlcQPHQ==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-=======
   /jest-config/29.0.1_@types+node@18.7.14:
     resolution: {integrity: sha512-3duIx5ucEPIsUOESDTuasMfqHonD0oZRjqHycIMHSC4JwbvHDjAWNKN/NiM0ZxHXjAYrMTLt2QxSQ+IqlbYE5A==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
     peerDependencies:
       '@types/node': '*'
       ts-node: '>=9.0.0'
@@ -12985,17 +12481,10 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.18.13
-<<<<<<< HEAD
-      '@jest/test-sequencer': 28.1.3
-      '@jest/types': 28.1.3
-      '@types/node': 18.7.13
-      babel-jest: 28.1.3_@babel+core@7.18.13
-=======
       '@jest/test-sequencer': 29.0.1
       '@jest/types': 29.0.1
       '@types/node': 18.7.14
       babel-jest: 29.0.1_@babel+core@7.18.13
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
       chalk: 4.1.2
       ci-info: 3.3.2
       deepmerge: 4.2.2
@@ -13068,16 +12557,6 @@ packages:
       pretty-format: 27.5.1
     dev: false
 
-  /jest-diff/28.1.3:
-    resolution: {integrity: sha512-8RqP1B/OXzjjTWkqMX67iqgwBVJRgCyKD3L9nq+6ZqJMdvjE8RgHktqZ6jNrkdMT+dJuYNI3rhQpxaz7drJHfw==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      chalk: 4.1.2
-      diff-sequences: 28.1.1
-      jest-get-type: 28.0.2
-      pretty-format: 28.1.3
-    dev: false
-
   /jest-diff/29.0.1:
     resolution: {integrity: sha512-l8PYeq2VhcdxG9tl5cU78ClAlg/N7RtVSp0v3MlXURR0Y99i6eFnegmasOandyTmO6uEdo20+FByAjBFEO9nuw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -13086,16 +12565,6 @@ packages:
       diff-sequences: 29.0.0
       jest-get-type: 29.0.0
       pretty-format: 29.0.1
-<<<<<<< HEAD
-
-  /jest-docblock/28.1.1:
-    resolution: {integrity: sha512-3wayBVNiOYx0cwAbl9rwm5kKFP8yHH3d/fkEaL02NPTkDojPtheGB7HZSFY4wzX+DxyrvhXz0KSCVksmCknCuA==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      detect-newline: 3.1.0
-    dev: false
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
 
   /jest-docblock/29.0.0:
     resolution: {integrity: sha512-s5Kpra/kLzbqu9dEjov30kj1n4tfu3e7Pl8v+f8jOkeWNqM6Ds8jRaJfZow3ducoQUrf2Z4rs2N5S3zXnb83gw==}
@@ -13112,29 +12581,6 @@ packages:
       jest-get-type: 29.0.0
       jest-util: 29.0.1
       pretty-format: 29.0.1
-<<<<<<< HEAD
-    dev: true
-
-  /jest-environment-jsdom/28.1.3:
-    resolution: {integrity: sha512-HnlGUmZRdxfCByd3GM2F100DgQOajUBzEitjGqIREcb45kGjZvRrKUdlaF6escXBdcXNl0OBh+1ZrfeZT3GnAg==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@jest/environment': 28.1.3
-      '@jest/fake-timers': 28.1.3
-      '@jest/types': 28.1.3
-      '@types/jsdom': 16.2.15
-      '@types/node': 18.7.13
-      jest-mock: 28.1.3
-      jest-util: 28.1.3
-      jsdom: 19.0.0
-    transitivePeerDependencies:
-      - bufferutil
-      - canvas
-      - supports-color
-      - utf-8-validate
-    dev: false
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
 
   /jest-environment-jsdom/29.0.1:
     resolution: {integrity: sha512-rMF501kfui+bw4AmwowLA2bNaYb633A3ejFMN5pVU0AeOqLv2NbMAY5XzzlMr/+lM1itEf+3ZdCr9dGGrUfoxg==}
@@ -13153,22 +12599,6 @@ packages:
       - canvas
       - supports-color
       - utf-8-validate
-<<<<<<< HEAD
-    dev: true
-
-  /jest-environment-node/28.1.3:
-    resolution: {integrity: sha512-ugP6XOhEpjAEhGYvp5Xj989ns5cB1K6ZdjBYuS30umT4CQEETaxSiPcZ/E1kFktX4GkrcM4qu07IIlDYX1gp+A==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@jest/environment': 28.1.3
-      '@jest/fake-timers': 28.1.3
-      '@jest/types': 28.1.3
-      '@types/node': 18.7.13
-      jest-mock: 28.1.3
-      jest-util: 28.1.3
-    dev: false
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
 
   /jest-environment-node/29.0.1:
     resolution: {integrity: sha512-PcIRBrEBFAPBqkbL53ZpEvTptcAnOW6/lDfqBfACMm3vkVT0N7DcfkH/hqNSbDmSxzGr0FtJI6Ej3TPhveWCMA==}
@@ -13190,11 +12620,6 @@ packages:
   /jest-get-type/27.5.1:
     resolution: {integrity: sha512-2KY95ksYSaK7DMBWQn6dQz3kqAf3BB64y2udeG+hv4KfSOb9qwcYQstTJc1KCbsix+wLZWZYN8t7nwX3GOBLRw==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
-    dev: false
-
-  /jest-get-type/28.0.2:
-    resolution: {integrity: sha512-ioj2w9/DxSYHfOm5lJKCdcAmPJzQXmbM/Url3rhlghrPvT3tt+7a/+oXc9azkKmLvoiXjtV83bEWqi+vs5nlPA==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dev: false
 
   /jest-get-type/29.0.0:
@@ -13224,28 +12649,6 @@ packages:
       - supports-color
     dev: true
 
-<<<<<<< HEAD
-  /jest-haste-map/28.1.3:
-    resolution: {integrity: sha512-3S+RQWDXccXDKSWnkHa/dPwt+2qwA8CJzR61w3FoYCvoo3Pn8tvGcysmMF0Bj0EX5RYvAI2EIvC57OmotfdtKA==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@jest/types': 28.1.3
-      '@types/graceful-fs': 4.1.5
-      '@types/node': 18.7.13
-      anymatch: 3.1.2
-      fb-watchman: 2.0.1
-      graceful-fs: 4.2.10
-      jest-regex-util: 28.0.2
-      jest-util: 28.1.3
-      jest-worker: 28.1.3
-      micromatch: 4.0.5
-      walker: 1.0.8
-    optionalDependencies:
-      fsevents: 2.3.2
-    dev: false
-
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
   /jest-haste-map/29.0.1:
     resolution: {integrity: sha512-gcKOAydafpGoSBvcj/mGCfhOKO8fRLkAeee1KXGdcJ1Pb9O2nnOl4I8bQSIID2MaZeMHtLLgNboukh/pUGkBtg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -13281,16 +12684,6 @@ packages:
       pretty-format: 27.5.1
     dev: false
 
-  /jest-matcher-utils/28.1.3:
-    resolution: {integrity: sha512-kQeJ7qHemKfbzKoGjHHrRKH6atgxMk8Enkk2iPQ3XwO6oE/KYD8lMYOziCkeSB9G4adPM4nR1DE8Tf5JeWH6Bw==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      chalk: 4.1.2
-      jest-diff: 28.1.3
-      jest-get-type: 28.0.2
-      pretty-format: 28.1.3
-    dev: false
-
   /jest-matcher-utils/29.0.1:
     resolution: {integrity: sha512-/e6UbCDmprRQFnl7+uBKqn4G22c/OmwriE5KCMVqxhElKCQUDcFnq5XM9iJeKtzy4DUjxT27y9VHmKPD8BQPaw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -13299,21 +12692,6 @@ packages:
       jest-diff: 29.0.1
       jest-get-type: 29.0.0
       pretty-format: 29.0.1
-
-  /jest-message-util/28.1.3:
-    resolution: {integrity: sha512-PFdn9Iewbt575zKPf1286Ht9EPoJmYT7P0kY+RibeYZ2XtOr53pDLEFoTWXbd1h4JiGiWpTBC84fc8xMXQMb7g==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@babel/code-frame': 7.18.6
-      '@jest/types': 28.1.3
-      '@types/stack-utils': 2.0.1
-      chalk: 4.1.2
-      graceful-fs: 4.2.10
-      micromatch: 4.0.5
-      pretty-format: 28.1.3
-      slash: 3.0.0
-      stack-utils: 2.0.5
-    dev: false
 
   /jest-message-util/29.0.1:
     resolution: {integrity: sha512-wRMAQt3HrLpxSubdnzOo68QoTfQ+NLXFzU0Heb18ZUzO2S9GgaXNEdQ4rpd0fI9dq2NXkpCk1IUWSqzYKji64A==}
@@ -13337,17 +12715,6 @@ packages:
       '@types/node': 18.6.5
     dev: true
 
-<<<<<<< HEAD
-  /jest-mock/28.1.3:
-    resolution: {integrity: sha512-o3J2jr6dMMWYVH4Lh/NKmDXdosrsJgi4AviS8oXLujcjpCMBb1FMsblDnOXKZKfSiHLxYub1eS0IHuRXsio9eA==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@jest/types': 28.1.3
-      '@types/node': 18.7.13
-    dev: false
-
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
   /jest-mock/29.0.1:
     resolution: {integrity: sha512-i1yTceg2GKJwUNZFjIzrH7Y74fN1SKJWxQX/Vu3LT4TiJerFARH5l+4URNyapZ+DNpchHYrGOP2deVbn3ma8JA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -13397,39 +12764,6 @@ packages:
       resolve: 1.22.1
       resolve.exports: 1.1.0
       slash: 3.0.0
-<<<<<<< HEAD
-    dev: true
-
-  /jest-runner/28.1.3:
-    resolution: {integrity: sha512-GkMw4D/0USd62OVO0oEgjn23TM+YJa2U2Wu5zz9xsQB1MxWKDOlrnykPxnMsN0tnJllfLPinHTka61u0QhaxBA==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@jest/console': 28.1.3
-      '@jest/environment': 28.1.3
-      '@jest/test-result': 28.1.3
-      '@jest/transform': 28.1.3
-      '@jest/types': 28.1.3
-      '@types/node': 18.7.13
-      chalk: 4.1.2
-      emittery: 0.10.2
-      graceful-fs: 4.2.10
-      jest-docblock: 28.1.1
-      jest-environment-node: 28.1.3
-      jest-haste-map: 28.1.3
-      jest-leak-detector: 28.1.3
-      jest-message-util: 28.1.3
-      jest-resolve: 28.1.3
-      jest-runtime: 28.1.3
-      jest-util: 28.1.3
-      jest-watcher: 28.1.3
-      jest-worker: 28.1.3
-      p-limit: 3.1.0
-      source-map-support: 0.5.13
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
 
   /jest-runner/29.0.1:
     resolution: {integrity: sha512-XeFfPmHtO7HyZyD1uJeO4Oqa8PyTbDHzS1YdGrvsFXk/A5eXinbqA5a42VUEqvsKQgNnKTl5NJD0UtDWg7cQ2A==}
@@ -13563,21 +12897,6 @@ packages:
       ci-info: 3.3.2
       graceful-fs: 4.2.10
       picomatch: 2.3.1
-<<<<<<< HEAD
-
-  /jest-validate/28.1.3:
-    resolution: {integrity: sha512-SZbOGBWEsaTxBGCOpsRWlXlvNkvTkY0XxRfh7zYmvd8uL5Qzyg0CHAXiXKROflh801quA6+/DsT4ODDthOC/OA==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@jest/types': 28.1.3
-      camelcase: 6.3.0
-      chalk: 4.1.2
-      jest-get-type: 28.0.2
-      leven: 3.1.0
-      pretty-format: 28.1.3
-    dev: false
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
 
   /jest-validate/29.0.1:
     resolution: {integrity: sha512-mS4q7F738YXZFWBPqE+NjHU/gEOs7IBIFQ8i9zq5EO691cLrUbLhFq4larf8/lNcmauRO71tn/+DTW2y+MrLow==}
@@ -13589,24 +12908,6 @@ packages:
       jest-get-type: 29.0.0
       leven: 3.1.0
       pretty-format: 29.0.1
-<<<<<<< HEAD
-    dev: true
-
-  /jest-watcher/28.1.3:
-    resolution: {integrity: sha512-t4qcqj9hze+jviFPUN3YAtAEeFnr/azITXQEMARf5cMwKY2SMBRnCQTXLixTl20OR6mLh9KLMrgVJgJISym+1g==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@jest/test-result': 28.1.3
-      '@jest/types': 28.1.3
-      '@types/node': 18.7.13
-      ansi-escapes: 4.3.2
-      chalk: 4.1.2
-      emittery: 0.10.2
-      jest-util: 28.1.3
-      string-length: 4.0.2
-    dev: false
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
 
   /jest-watcher/29.0.1:
     resolution: {integrity: sha512-0LBWDL3sZ+vyHRYxjqm2irhfwhUXHonjLSbd0oDeGq44U1e1uUh3icWNXYF8HO/UEnOoa6+OJDncLUXP2Hdg9A==}
@@ -13639,18 +12940,6 @@ packages:
       supports-color: 8.1.1
     dev: true
 
-<<<<<<< HEAD
-  /jest-worker/28.1.3:
-    resolution: {integrity: sha512-CqRA220YV/6jCo8VWvAt1KKx6eek1VIHMPeLEbpcfSfkEeWyBNppynM/o6q+Wmw+sOhos2ml34wZbSX3G13//g==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@types/node': 18.7.13
-      merge-stream: 2.0.0
-      supports-color: 8.1.1
-    dev: false
-
-=======
->>>>>>> 2003b45 (chore: update fuel-ui dependencies)
   /jest-worker/29.0.1:
     resolution: {integrity: sha512-+B/2/8WW7goit7qVezG9vnI1QP3dlmuzi2W0zxazAQQ8dcDIA63dDn6j4pjOGBARha/ZevcwYQtNIzCySbS7fQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -15415,16 +14704,6 @@ packages:
       ansi-regex: 5.0.1
       ansi-styles: 5.2.0
       react-is: 17.0.2
-
-  /pretty-format/28.1.3:
-    resolution: {integrity: sha512-8gFb/To0OmxHR9+ZTb14Df2vNxdGCX8g1xWGUTqUw5TiZvcQf5sHKObd5UcPyLLyowNwDAMTF3XWOG1B6mxl1Q==}
-    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
-    dependencies:
-      '@jest/schemas': 28.1.3
-      ansi-regex: 5.0.1
-      ansi-styles: 5.2.0
-      react-is: 18.2.0
-    dev: false
 
   /pretty-format/29.0.1:
     resolution: {integrity: sha512-iTHy3QZMzuL484mSTYbQIM1AHhEQsH8mXWS2/vd2yFBYnG3EBqGiMONo28PlPgrW7P/8s/1ISv+y7WH306l8cw==}
