@@ -1,7 +1,12 @@
+import { Mnemonic as FuelMnemonic } from "@fuel-ts/mnemonic";
 import { Box } from "@fuel-ui/react";
+
+import { getWordsFromValue } from "../../utils";
 
 import type { MnemonicProps } from "./Mnemonic";
 import { Mnemonic } from "./Mnemonic";
+
+import { MNEMONIC_SIZE } from "~/config";
 
 export default {
   component: Mnemonic,
@@ -11,20 +16,7 @@ export default {
   },
 };
 
-const WORDS = [
-  "strange",
-  "purple",
-  "adamant",
-  "crayons",
-  "entice",
-  "fun",
-  "eloquent",
-  "missiles",
-  "milk",
-  "ice",
-  "cream",
-  "apple",
-];
+const WORDS = getWordsFromValue(FuelMnemonic.generate(MNEMONIC_SIZE));
 
 export const Read = (args: MnemonicProps) => (
   <Box css={{ width: 400 }}>
