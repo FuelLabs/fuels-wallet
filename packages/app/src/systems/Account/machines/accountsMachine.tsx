@@ -21,6 +21,7 @@ export const accountsMachine = createMachine(
   {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import("./accountsMachine.typegen").Typegen0,
+    predictableActionArguments: true,
     id: "(machine)",
     initial: "fetching",
     schema: {
@@ -32,7 +33,7 @@ export const accountsMachine = createMachine(
         invoke: {
           src: "fetchAccounts",
           onDone: {
-            target: "idle",
+            target: "done",
             actions: "assignAccounts",
           },
           onError: {
@@ -44,7 +45,7 @@ export const accountsMachine = createMachine(
       failed: {
         type: "final",
       },
-      idle: {
+      done: {
         type: "final",
       },
     },

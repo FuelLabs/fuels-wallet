@@ -11,9 +11,11 @@ export function MnemonicInput({
 }: MnemonicInputProps) {
   return (
     <input
+      role="textbox"
       value={value}
       onPaste={onPaste}
       onChange={(ev) => onChange(ev.target.value)}
+      aria-label={value || "Type your text"}
     />
   );
 }

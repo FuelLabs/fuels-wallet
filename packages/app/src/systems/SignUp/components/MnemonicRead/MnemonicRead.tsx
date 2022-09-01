@@ -24,7 +24,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
 
   return (
     <Stack gap="$6" align="center">
-      <Image src="/signup-illustration-1.svg" />
+      <Image src="/signup-illustration-1.svg" alt="Showing your Mnemonic" />
       <Header
         title="Write down your Recover Phrase"
         subtitle="You will need it on the next step"
@@ -34,13 +34,14 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
       </Box>
       <Form.Control css={{ flexDirection: "row" }}>
         <Checkbox
-          id="c1"
+          id="confirmSaved"
+          aria-label="Confirm Saved"
           checked={isChecked}
           onCheckedChange={(e) => {
             setChecked(e as boolean);
           }}
         />
-        <Form.Label htmlFor="c1">
+        <Form.Label htmlFor="confirmSaved">
           I saved my passphrase in some secure place
         </Form.Label>
       </Form.Control>
