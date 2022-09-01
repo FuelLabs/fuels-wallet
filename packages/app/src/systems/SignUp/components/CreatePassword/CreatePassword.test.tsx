@@ -1,4 +1,4 @@
-import { render, screen } from "@fuel-ui/test-utils";
+import { fireEvent, render, screen, waitFor } from "@fuel-ui/test-utils";
 
 import { CreatePassword } from "./CreatePassword";
 
@@ -13,19 +13,23 @@ const Content = () => (
   <CreatePassword onSubmit={onSubmitHandler} onCancel={onCancelHandler} />
 );
 
+function fillInput(el: HTMLElement, value: string) {
+  fireEvent.input(el, { target: { value } });
+}
+
 async function fillInputs(user: UserPatch, pass: string, confirm?: string) {
   const password = screen.getByPlaceholderText("Type your password");
   const confirmPass = screen.getByPlaceholderText("Confirm your password");
 
   await user.tab();
   expect(password).toHaveFocus();
-  await user.type(password, pass);
+  fillInput(password, pass);
   await user.tab();
 
   if (confirm) {
     await user.tab();
     expect(confirmPass).toHaveFocus();
-    await user.type(confirmPass, confirm);
+    fillInput(confirmPass, confirm);
     await user.tab();
   }
 }
@@ -33,7 +37,7 @@ async function fillInputs(user: UserPatch, pass: string, confirm?: string) {
 describe("CreatePassword", () => {
   it("should next button be disabled by default", async () => {
     render(<Content />, { wrapper: Providers });
-    const btn = screen.getByText(/next/i);
+    const btn = screen.getByText("Next");
     expect(btn).toBeInTheDocument();
     expect(btn).toBeDisabled();
   });
@@ -49,29 +53,37 @@ describe("CreatePassword", () => {
     const { user } = render(<Content />, { wrapper: Providers });
 
     await fillInputs(user, "12345678", "12345679");
-    expect(screen.getByText(/must match/)).toBeInTheDocument();
+    await waitFor(() =>
+      expect(screen.getByLabelText("Error message")).toBeInTheDocument()
+    );
   });
 
   it("should be able to click on next if form is valid", async () => {
     const { user } = render(<Content />, { wrapper: Providers });
 
-    await fillInputs(user, "12345678", "12345678");
-    const btn = screen.getByText(/next/i);
-    expect(btn).toBeInTheDocument();
-    expect(btn).toBeDisabled();
+    await fillInputs(user, "123456789", "123456789");
+    await user.tab();
 
-    const checkbox = screen.getByText(/i agree/i);
-    expect(checkbox).toBeInTheDocument();
+    const checkbox = await screen.findByRole("checkbox");
+    expect(checkbox).toHaveFocus();
     await user.click(checkbox);
-    expect(btn).not.toBeDisabled();
 
-    await user.click(btn);
-    expect(onSubmitHandler).toBeCalledTimes(1);
+    await waitFor(async () => {
+      expect(checkbox.getAttribute("data-state")).toBe("checked");
+      await user.tab();
+    });
+
+    await waitFor(async () => {
+      const btn = await screen.findByText("Next");
+      await user.click(btn);
+      expect(btn.getAttribute("aria-disabled")).toBe("false");
+      expect(onSubmitHandler).toBeCalledTimes(1);
+    });
   });
 
   it("should be able to click on cancel button", async () => {
     const { user } = render(<Content />, { wrapper: Providers });
-    const btn = screen.getByText(/cancel/i);
+    const btn = screen.getByText("Cancel");
     expect(btn).toBeInTheDocument();
     await user.click(btn);
     expect(onCancelHandler).toBeCalledTimes(1);

@@ -8,7 +8,7 @@ export type HeaderProps = {
 export function Header({ title, subtitle }: HeaderProps) {
   return (
     <Stack gap="$0">
-      <Heading as="h2" css={{ margin: 0 }}>
+      <Heading as="h2" css={{ margin: 0, textAlign: "center" }}>
         {title}
       </Heading>
       <Heading
