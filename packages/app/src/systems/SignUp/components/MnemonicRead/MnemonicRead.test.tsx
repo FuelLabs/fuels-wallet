@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import { render, screen } from "@fuel-ui/test-utils";
+import { render, screen, waitFor } from "@fuel-ui/test-utils";
 
 import { MnemonicRead } from "./MnemonicRead";
 
@@ -54,22 +54,25 @@ describe("MnemonicRead", () => {
     const checkbox = screen.getByLabelText(/Confirm saved/i);
     expect(checkbox).toBeInTheDocument();
     await user.click(checkbox);
-
-    const btn = screen.getByText("Next");
-    expect(btn).toBeEnabled();
+    await waitFor(() => {
+      const btn = screen.getByText("Next");
+      expect(btn).toBeEnabled();
+    });
   });
 
   it("should trigger onCancel and onNext", async () => {
     const checkbox = screen.getByLabelText(/Confirm saved/i);
     await user.click(checkbox);
 
-    const btnNext = screen.getByText("Next");
-    const btnCancel = screen.getByText("Cancel");
+    await waitFor(async () => {
+      const btnNext = screen.getByText("Next");
+      const btnCancel = screen.getByText("Cancel");
 
-    await user.click(btnNext);
-    await user.click(btnCancel);
+      await user.click(btnNext);
+      await user.click(btnCancel);
 
-    expect(onNextHandler).toBeCalledTimes(1);
-    expect(onCancelHandler).toBeCalledTimes(1);
+      expect(onNextHandler).toBeCalledTimes(1);
+      expect(onCancelHandler).toBeCalledTimes(1);
+    });
   });
 });

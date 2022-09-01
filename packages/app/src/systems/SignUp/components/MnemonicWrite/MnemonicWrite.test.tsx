@@ -1,5 +1,5 @@
 import { Mnemonic as FuelMnemonic } from "@fuel-ts/mnemonic";
-import { render, screen } from "@fuel-ui/test-utils";
+import { render, screen, waitFor } from "@fuel-ui/test-utils";
 
 import { MnemonicWrite } from "./MnemonicWrite";
 
@@ -28,7 +28,7 @@ describe("MnemonicWrite", () => {
     await navigator.clipboard.writeText(MNEMONIC);
     const btn = screen.getByText("Paste");
     await user.click(btn);
-    expect(onFilledHandler).toBeCalledTimes(1);
+    await waitFor(() => expect(onFilledHandler).toBeCalledTimes(1));
   });
 
   it("should be able to click on next if canProceed and isFilled", async () => {
@@ -45,8 +45,10 @@ describe("MnemonicWrite", () => {
     const btnPaste = screen.getByText("Paste");
     await user.click(btnPaste);
 
-    const btnNext = screen.getByText("Next");
-    expect(btnNext).toBeEnabled();
+    await waitFor(() => {
+      const btnNext = screen.getByText("Next");
+      expect(btnNext).toBeEnabled();
+    });
   });
 
   it("should show error message when have error prop", async () => {
