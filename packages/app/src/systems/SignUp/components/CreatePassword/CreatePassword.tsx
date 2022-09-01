@@ -3,15 +3,16 @@ import {
   Stack,
   Flex,
   Button,
-  Form,
   Checkbox,
   InputPassword,
 } from "@fuel-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 import { Header } from "../Header";
+
+import { ControlledField } from "~/systems/Core";
 
 const schema = yup
   .object({
@@ -66,68 +67,41 @@ export function CreatePassword({
           subtitle="Add a safe password for access your wallet"
         />
         <Stack css={{ width: "100%" }} gap="$4">
-          <Controller
-            name="password"
+          <ControlledField
             control={control}
-            render={({ field, fieldState }) => (
-              <Form.Control isInvalid={Boolean(fieldState.error)}>
-                <Form.Label htmlFor="password">Password</Form.Label>
-                <InputPassword
-                  {...field}
-                  id="password"
-                  placeholder="Type your password"
-                />
-                {fieldState.error?.message && (
-                  <Form.ErrorMessage>
-                    {fieldState.error?.message as string}
-                  </Form.ErrorMessage>
-                )}
-              </Form.Control>
+            name="password"
+            label="Password"
+            render={({ field }) => (
+              <InputPassword {...field} placeholder="Type your password" />
             )}
           />
-          <Controller
-            name="confirmPassword"
+          <ControlledField
             control={control}
-            render={({ field, fieldState }) => (
-              <Form.Control isInvalid={Boolean(fieldState.error)}>
-                <Form.Label htmlFor="confirmPassword">
-                  Confirm password
-                </Form.Label>
-                <InputPassword
-                  {...field}
-                  id="confirmPassword"
-                  placeholder="Confirm your password"
-                />
-                {fieldState.error?.message && (
-                  <Form.ErrorMessage aria-label="Error message">
-                    {fieldState.error?.message as string}
-                  </Form.ErrorMessage>
-                )}
-              </Form.Control>
+            name="confirmPassword"
+            label="Confirm password"
+            render={({ field }) => (
+              <InputPassword {...field} placeholder="Confirm your password" />
             )}
           />
         </Stack>
-        <Controller
-          name="accepted"
+        <ControlledField
           control={control}
+          name="accepted"
+          label="I agree with terms and services"
+          labelSide="right"
+          css={{ flexDirection: "row " }}
           render={({ field: { value: _value, ...field } }) => (
-            <Form.Control css={{ flexDirection: "row" }}>
-              <Checkbox
-                {...field}
-                checked={form.watch("accepted")}
-                id="acceptTerms"
-                aria-label="Accept terms"
-                onCheckedChange={(checked) => {
-                  form.setValue("accepted", Boolean(checked), {
-                    shouldValidate: true,
-                    shouldTouch: true,
-                  });
-                }}
-              />
-              <Form.Label htmlFor="acceptTerms">
-                I agree with terms and services
-              </Form.Label>
-            </Form.Control>
+            <Checkbox
+              {...field}
+              checked={form.watch("accepted")}
+              aria-label="Accept terms"
+              onCheckedChange={(checked) => {
+                form.setValue("accepted", Boolean(checked), {
+                  shouldValidate: true,
+                  shouldTouch: true,
+                });
+              }}
+            />
           )}
         />
         <Flex gap="$4">
