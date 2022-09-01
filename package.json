@@ -36,7 +36,7 @@
     "test": "pnpm run --filter=app test",
     "test:coverage": "pnpm run --filter=app test --coverage",
     "test:clear": "pnpm -r exec jest --clearCache",
-    "ts:check": "pnpm -r --filter=app exec tsc --noEmit"
+    "ts:check": "pnpm -r --filter=app ts:check"
   },
   "dependencies": {
     "@fuel-ui/config": "^0.4.0",

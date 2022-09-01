@@ -3,15 +3,17 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "build": "tsc && vite build && pnpm create404",
+    "build": "pnpm ts:check && vite build && pnpm create404",
     "build:preview": "run-s build build-storybook",
     "create404": "cp ./dist/index.html ./dist/404.html",
     "dev": "vite",
     "preview": "vite preview",
-    "test": "jest --verbose --runInBand",
-    "test:watch": "jest --watch --runInBand --detectOpenHandles",
+    "test": "jest --verbose",
+    "test:watch": "jest --watch",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "pnpm exec build-storybook -o dist/storybook"
+    "build-storybook": "pnpm exec build-storybook -o dist/storybook",
+    "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'",
+    "ts:check": "pnpm xstate:typegen && tsc --noEmit"
   },
   "dependencies": {
     "@fontsource/source-code-pro": "^4.5.11",
@@ -55,6 +57,7 @@
     "@types/react-dom": "^18.0.6",
     "@types/react-helmet": "^6.1.5",
     "@vitejs/plugin-react": "^2.0.1",
+    "@xstate/cli": "^0.3.2",
     "babel-loader": "^8.2.5",
     "jest-fail-on-console": "^2.5.0",
     "storybook-dark-mode": "^1.1.0",
