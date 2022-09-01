@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test": "jest --verbose",
     "test:watch": "jest --watch",
+    "test:ci": "pnpm ts:check && pnpm test",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "pnpm exec build-storybook -o dist/storybook",
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'",

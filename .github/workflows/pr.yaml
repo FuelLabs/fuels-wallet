@@ -51,5 +51,5 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           package-manager: pnpm
           annotations: failed-tests
-          test-script: pnpm test
+          test-script: pnpm test:ci
           working-directory: ./packages/app
