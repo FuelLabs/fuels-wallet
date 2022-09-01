@@ -63,7 +63,7 @@ export function ControlledField({
               <Form.Label htmlFor={id}>{label}</Form.Label>
             )}
             {props.fieldState.error && (
-              <Form.ErrorMessage>
+              <Form.ErrorMessage aria-label="Error message">
                 {props.fieldState.error.message}
               </Form.ErrorMessage>
             )}
