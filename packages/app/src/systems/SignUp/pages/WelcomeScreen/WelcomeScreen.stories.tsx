@@ -4,7 +4,7 @@ import { WelcomeScreen } from "./WelcomeScreen";
 
 export default {
   component: WelcomeScreen,
-  title: "SignUp/Pages/01. WelcomeScreen",
+  title: "SignUp/Pages/1. WelcomeScreen",
   parameters: {
     layout: "fullscreen",
   },
