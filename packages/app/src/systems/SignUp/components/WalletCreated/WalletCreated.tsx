@@ -5,7 +5,7 @@ import { Header } from "../Header";
 
 import type { Account } from "~/systems/Account";
 import { AccountItem } from "~/systems/Account";
-import type { Maybe } from "~/types";
+import type { Maybe } from "~/systems/Core";
 
 export type WalletCreatedProps = {
   account?: Maybe<Account>;

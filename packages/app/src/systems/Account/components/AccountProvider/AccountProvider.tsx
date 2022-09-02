@@ -6,7 +6,7 @@ import type { AccountsMachineState } from "../../machines/accountsMachine";
 import { accountsMachine } from "../../machines/accountsMachine";
 import type { Account } from "../../types";
 
-import type { Maybe } from "~/types";
+import type { Maybe } from "~/systems/Core";
 
 type Context = {
   accounts?: Maybe<Account[]>;

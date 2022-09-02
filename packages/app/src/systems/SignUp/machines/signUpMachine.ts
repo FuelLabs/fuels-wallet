@@ -7,7 +7,7 @@ import { MNEMONIC_SIZE } from '~/config';
 import type { Account } from '~/systems/Account';
 import { createManager } from '~/systems/Account';
 import { db, getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
-import type { Maybe } from '~/types';
+import type { Maybe } from '~/systems/Core';
 
 // ----------------------------------------------------------------------------
 // Machine

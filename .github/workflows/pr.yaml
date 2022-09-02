@@ -47,7 +47,7 @@ jobs:
       - uses: ./.github/actions/ci-setup
       - name: Run tests with coverage
       - uses: jwalton/gh-find-current-pr@v1
-          id: findPr
+        id: findPr
 
       - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
