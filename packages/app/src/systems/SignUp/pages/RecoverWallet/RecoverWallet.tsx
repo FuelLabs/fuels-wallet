@@ -1,3 +1,5 @@
+import { cssObj } from "@fuel-ui/css";
+import { Alert } from "@fuel-ui/react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -17,6 +19,12 @@ export function RecoverWallet() {
 
   return (
     <Layout title="Recovering Wallet" isPublic>
+      <Alert status="warning" css={styles.alert}>
+        <Alert.Description>
+          This wallet is current on development, and your phrase is not safely
+          stored, DO NOT IMPORT YOUR CURRENT SEED PHRASE.
+        </Alert.Description>
+      </Alert>
       {state.matches("waitingMnemonic") && (
         <MnemonicWrite
           error={handlers.checkMnemonicError()}
@@ -38,3 +46,17 @@ export function RecoverWallet() {
     </Layout>
   );
 }
+
+const styles = {
+  alert: cssObj({
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100vw",
+    boxShadow: "$lg",
+
+    "&, &::after": {
+      borderRadius: "$none",
+    },
+  }),
+};
