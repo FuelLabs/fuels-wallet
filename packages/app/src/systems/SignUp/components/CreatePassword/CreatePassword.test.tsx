@@ -63,10 +63,12 @@ describe("CreatePassword", () => {
 
     await fillInputs(user, "123456789", "123456789");
     await user.tab();
-
     const checkbox = await screen.findByRole("checkbox");
-    expect(checkbox).toHaveFocus();
-    await user.click(checkbox);
+
+    await waitFor(async () => {
+      expect(checkbox).toHaveFocus();
+      await user.click(checkbox);
+    });
 
     await waitFor(async () => {
       expect(checkbox.getAttribute("data-state")).toBe("checked");
