@@ -93,6 +93,7 @@ importers:
       cypress: ^10.7.0
       dexie: ^3.2.2
       dexie-react-hooks: ^1.1.1
+      eslint-plugin-cypress: ^2.12.1
       fake-indexeddb: ^4.0.0
       fuels: ^0.12.0
       react: ^18.2.0
@@ -157,6 +158,7 @@ importers:
       '@vitejs/plugin-react': 2.0.1_vite@3.0.9
       '@xstate/cli': 0.3.2
       cypress: 10.7.0
+      eslint-plugin-cypress: 2.12.1
       storybook-dark-mode: 1.1.0_szr23uwlzhn73d2k2dkxny45ui
       tsconfig-paths-webpack-plugin: 4.0.0
       typescript: 4.8.2
@@ -10745,6 +10747,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: false
+
+  /eslint-plugin-cypress/2.12.1:
+    resolution: {integrity: sha512-c2W/uPADl5kospNDihgiLc7n87t5XhUbFDoTl6CfVkmG+kDAb5Ux10V9PoLPu9N+r7znpc+iQlcmAqT1A/89HA==}
+    peerDependencies:
+      eslint: '>= 3.2.1'
+    dependencies:
+      globals: 11.12.0
+    dev: true
 
   /eslint-plugin-eslint-comments/3.2.0_eslint@8.23.0:
     resolution: {integrity: sha512-0jkOl0hfojIHHmEHgmNdqv4fmh7300NdpA9FFpF7zaoLvB/QeXOGNLIo86oAveJFrfB1p05kC8hpEMHM8DwWVQ==}
