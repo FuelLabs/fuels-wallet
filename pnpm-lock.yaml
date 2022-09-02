@@ -11,6 +11,7 @@ importers:
       '@types/node': ^18.7.14
       '@types/react': ^18.0.18
       '@types/react-dom': ^18.0.6
+      cypress: ^10.7.0
       dotenv: ^16.0.2
       eslint: ^8.23.0
       fs-extra: ^10.1.0
@@ -38,6 +39,7 @@ importers:
       '@types/node': 18.7.14
       '@types/react': 18.0.18
       '@types/react-dom': 18.0.6
+      cypress: 10.7.0
       dotenv: 16.0.2
       eslint: 8.23.0
       fs-extra: 10.1.0
