@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-ci
+      - uses: ./.github/actions/setup-node
       - run: pnpm audit --prod
 
   lint:
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-ci
+      - uses: ./.github/actions/setup-node
       - run: |
           pnpm ts:check
           pnpm lint
@@ -44,7 +44,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-ci
+      - uses: ./.github/actions/setup-node
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
 

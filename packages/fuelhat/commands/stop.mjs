@@ -14,7 +14,7 @@ const spinnies = new Spinnies({ succeedPrefix: "⚡️ " });
 export const handler = async (argv) => {
   const { projectName } = await createEnv(argv, false);
   const isTest = argv.t;
-  const isDebug = argv.d;
+  const isDebug = argv.l;
   const file = ["-f", resolve("../docker/docker-compose.yml")];
 
   const downArgs = [
@@ -28,15 +28,20 @@ export const handler = async (argv) => {
     "--remove-orphans",
   ];
 
-  spinnies.add("1", { text: "Removing Fuel local node..." });
+  if (!isDebug) {
+    spinnies.add("1", { text: "Removing Fuel local node..." });
+  }
+
   const process = spawn(
     "docker-compose",
     downArgs,
     isDebug && { stdio: "inherit" }
   );
   process.stdout?.on("end", () => {
-    spinnies.succeed("1", { text: "Fuel node removed successfully!" });
-    console.log(c.gray("----"));
+    if (!isDebug) {
+      spinnies.succeed("1", { text: "Fuel node removed successfully!" });
+      console.log(c.gray("----"));
+    }
     console.log(
       `${c.green.bold("⇢ Environment:")} ${isTest ? "Test" : "Development"}`
     );

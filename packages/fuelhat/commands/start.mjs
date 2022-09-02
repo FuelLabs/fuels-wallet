@@ -38,19 +38,25 @@ export const handler = async (argv) => {
     "-d",
   ];
 
-  spinnies.add("1", { text: "Starting Fuel local node..." });
+  if (!isDebug) {
+    spinnies.add("1", { text: "Starting Fuel local node..." });
+  }
+
   const process = spawn(
     "docker-compose",
     args,
     isDebug && { stdio: "inherit" }
   );
+
   process.stdout?.on("data", (data) => {
     console.log(c.cyan(data));
   });
   process.stdout?.on("end", () => {
-    console.log("\n");
-    spinnies.succeed("1", { text: "Fuel node running locally!" });
-    console.log(c.gray("----"));
+    if (!isDebug) {
+      console.log("\n");
+      spinnies.succeed("1", { text: "Fuel node running locally!" });
+      console.log(c.gray("----"));
+    }
     console.log(
       `${label("⇢ Environment:")} ${isTest ? "Test" : "Development"}`
     );
