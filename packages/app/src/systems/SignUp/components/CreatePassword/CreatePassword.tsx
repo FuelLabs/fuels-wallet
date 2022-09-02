@@ -3,7 +3,6 @@ import {
   Stack,
   Flex,
   Button,
-  Form,
   Checkbox,
   InputPassword,
 } from "@fuel-ui/react";
@@ -12,6 +11,8 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 import { Header } from "../Header";
+
+import { ControlledField } from "~/systems/Core";
 
 const schema = yup
   .object({
@@ -36,19 +37,25 @@ export type CreatePasswordProps = {
 };
 
 export function CreatePassword({
-  isLoading,
+  isLoading = false,
   onCancel,
   onSubmit,
 }: CreatePasswordProps) {
   const form = useForm<CreatePasswordValues>({
     resolver: yupResolver(schema),
-    shouldUseNativeValidation: false,
-    mode: "onBlur",
+    reValidateMode: "onChange",
+    mode: "onChange",
+    defaultValues: {
+      password: "",
+      confirmPassword: "",
+      accepted: false,
+    },
   });
+
   const {
-    register,
+    control,
     handleSubmit,
-    formState: { errors },
+    formState: { isValid },
   } = form;
 
   return (
@@ -60,45 +67,43 @@ export function CreatePassword({
           subtitle="Add a safe password for access your wallet"
         />
         <Stack css={{ width: "100%" }} gap="$4">
-          <Form.Control isInvalid={Boolean(errors.password)}>
-            <Form.Label htmlFor="password">Password</Form.Label>
-            <InputPassword
-              {...register("password")}
-              id="password"
-              name="password"
-              placeholder="Type your password"
-            />
-            {errors.password?.message && (
-              <Form.ErrorMessage>
-                {errors.password?.message as string}
-              </Form.ErrorMessage>
+          <ControlledField
+            control={control}
+            name="password"
+            label="Password"
+            render={({ field }) => (
+              <InputPassword {...field} placeholder="Type your password" />
             )}
-          </Form.Control>
-          <Form.Control isInvalid={Boolean(errors.confirmPassword)}>
-            <Form.Label htmlFor="confirmPassword">Confirm password</Form.Label>
-            <InputPassword
-              {...register("confirmPassword")}
-              id="confirmPassword"
-              name="confirmPassword"
-              placeholder="Confirm your password"
-            />
-            {errors.confirmPassword?.message && (
-              <Form.ErrorMessage>
-                {errors.confirmPassword?.message as string}
-              </Form.ErrorMessage>
-            )}
-          </Form.Control>
-        </Stack>
-        <Form.Control css={{ flexDirection: "row" }}>
-          <Checkbox
-            id="c1"
-            checked={form.watch("accepted")}
-            onCheckedChange={(e) => {
-              form.setValue("accepted", e as boolean, { shouldValidate: true });
-            }}
           />
-          <Form.Label htmlFor="c1">I agree with terms and services</Form.Label>
-        </Form.Control>
+          <ControlledField
+            control={control}
+            name="confirmPassword"
+            label="Confirm password"
+            render={({ field }) => (
+              <InputPassword {...field} placeholder="Confirm your password" />
+            )}
+          />
+        </Stack>
+        <ControlledField
+          control={control}
+          name="accepted"
+          label="I agree with terms and services"
+          labelSide="right"
+          css={{ flexDirection: "row " }}
+          render={({ field: { value: _value, ...field } }) => (
+            <Checkbox
+              {...field}
+              checked={form.watch("accepted")}
+              aria-label="Accept terms"
+              onCheckedChange={(checked) => {
+                form.setValue("accepted", Boolean(checked), {
+                  shouldValidate: true,
+                  shouldTouch: true,
+                });
+              }}
+            />
+          )}
+        />
         <Flex gap="$4">
           <Button
             size="sm"
@@ -114,7 +119,7 @@ export function CreatePassword({
             size="sm"
             color="accent"
             css={{ width: 130 }}
-            isDisabled={!form.formState.isValid}
+            isDisabled={!isValid}
             isLoading={isLoading}
           >
             Next

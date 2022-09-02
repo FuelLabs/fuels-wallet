@@ -7,9 +7,9 @@ import { signUpRoutes } from "~/systems/SignUp";
 export const routes = (
   <Routes>
     <Route>
-      <Route path="*" element={<Navigate to={Pages.home} />} />
       {homeRoutes}
       {signUpRoutes}
+      <Route path="*" element={<Navigate to={Pages.home} />} />
     </Route>
   </Routes>
 );

@@ -60,7 +60,10 @@ export function BalanceWidget({
         />
       </Flex>
       <Flex justify="space-between" css={{ flex: "1 0" }}>
-        <Flex direction="column" css={{ marginLeft: 14, alignSelf: "center" }}>
+        <Flex
+          direction="column"
+          css={{ mt: "$2", ml: "$4", alignSelf: "center" }}
+        >
           <Copyable value={account.address}>
             <Text fontSize="sm" color="gray11" css={{ fontWeight: "bold" }}>
               {shortAddress(account.address)}
@@ -79,6 +82,7 @@ export function BalanceWidget({
         </Flex>
         <Box css={{ marginRight: 6, marginTop: 8 }}>
           <VisibilityButton
+            aria-label={isHidden ? "Show balance" : "Hide balance"}
             isHidden={isHidden}
             onHide={() => setIsHidden(true)}
             onShow={() => setIsHidden(false)}

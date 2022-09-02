@@ -1,15 +1,8 @@
 import { WalletManager } from "@fuel-ts/wallet-manager";
-import { Buffer as BufferPolyfill } from "buffer";
 
 import { IndexedDBStorage } from "../utils";
 
 import { db, getPhraseFromValue } from "~/systems/Core";
-
-/**
- * TODO: this is here because @fuel-ts/wallet-manager is getting an error
- * related to Buffer when trying to use manager.addVault()
- */
-globalThis.Buffer = BufferPolyfill;
 
 type CreateManagerData = {
   password?: string;

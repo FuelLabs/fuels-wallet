@@ -6,8 +6,8 @@ import { assign, createMachine } from 'xstate';
 import { MNEMONIC_SIZE } from '~/config';
 import type { Account } from '~/systems/Account';
 import { createManager } from '~/systems/Account';
-import { db } from '~/systems/Core';
-import type { Maybe } from '~/types';
+import { db, getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
+import type { Maybe } from '~/systems/Core';
 
 // ----------------------------------------------------------------------------
 // Machine
@@ -48,6 +48,7 @@ export const signUpMachine = createMachine(
   {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./signUpMachine.typegen').Typegen0,
+    predictableActionArguments: true,
     id: '(machine)',
     initial: 'checking',
     schema: {
@@ -84,9 +85,15 @@ export const signUpMachine = createMachine(
       },
       waitingMnemonic: {
         on: {
-          CONFIRM_MNEMONIC: {
-            actions: 'confirmMnemonic',
-          },
+          CONFIRM_MNEMONIC: [
+            {
+              actions: 'confirmMnemonic',
+              cond: 'hasEnoughAttempts',
+            },
+            {
+              target: 'failed',
+            },
+          ],
           NEXT: {
             target: 'addingPassword',
             cond: 'isMnemonicConfirmed',
@@ -115,7 +122,9 @@ export const signUpMachine = createMachine(
           },
         },
       },
-      failed: {},
+      failed: {
+        entry: 'assignError',
+      },
       done: {},
     },
   },
@@ -123,7 +132,7 @@ export const signUpMachine = createMachine(
     actions: {
       createMnemonic: assign({
         data: (_) => ({
-          mnemonic: Mnemonic.generate(MNEMONIC_SIZE).split(' '),
+          mnemonic: getWordsFromValue(Mnemonic.generate(MNEMONIC_SIZE)),
         }),
       }),
       confirmMnemonic: assign({
@@ -131,7 +140,8 @@ export const signUpMachine = createMachine(
           return ctx.attempts + 1;
         },
         isConfirmed: (ctx, ev) => {
-          return ev.data.words.join('') === ctx.data?.mnemonic?.join('');
+          if (ctx.type === SignUpType.recover) return true;
+          return getPhraseFromValue(ev.data.words) === getPhraseFromValue(ctx.data?.mnemonic);
         },
       }),
       assignPassword: assign({
@@ -156,6 +166,9 @@ export const signUpMachine = createMachine(
       },
       isMnemonicConfirmed: (ctx) => {
         return Boolean(ctx.isConfirmed);
+      },
+      hasEnoughAttempts: (ctx) => {
+        return Boolean(ctx.attempts < 5);
       },
     },
     services: {
