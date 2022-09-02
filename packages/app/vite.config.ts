@@ -1,3 +1,4 @@
+import GlobalPolyFill from '@esbuild-plugins/node-globals-polyfill';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
@@ -16,6 +17,15 @@ export default defineConfig({
     esbuildOptions: {
       target: 'es2020',
       supported: { bigint: true },
+      define: {
+        global: 'globalThis',
+      },
+      plugins: [
+        GlobalPolyFill({
+          process: true,
+          buffer: true,
+        }),
+      ],
     },
   },
   plugins: [react(), tsconfigPaths()],
@@ -32,6 +42,7 @@ export default defineConfig({
     alias: {
       '@fuel-ui/react': resolve(__dirname, './node_modules/@fuel-ui/react/dist/index.mjs'),
       '@fuel-ui/css': resolve(__dirname, './node_modules/@fuel-ui/css/dist/index.mjs'),
+      stream: 'stream-browserify',
     },
   },
   ...(Boolean(process.env.CI) && {

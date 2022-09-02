@@ -6,7 +6,7 @@ import { AssetItemLoader } from "./AssetItemLoader";
 
 import type { Asset } from "~/systems/Asset";
 import type { Maybe } from "~/systems/Core";
-import { parseAndFormat, safeBigInt } from "~/systems/Core";
+import { formatUnits } from "~/systems/Core";
 
 export type AssetItemProps = {
   asset: Asset;
@@ -20,7 +20,7 @@ type AssetItemComponent = FC<AssetItemProps> & {
 export const AssetItem: AssetItemComponent = ({ asset, amount }) => {
   const rightEl = (
     <Text css={{ fontSize: "$sm", fontWeight: "$semibold" }}>
-      {parseAndFormat(safeBigInt(amount))} {asset.symbol}
+      {formatUnits(amount)} {asset.symbol}
     </Text>
   );
 

@@ -1,4 +1,4 @@
-import { Image, Stack, Flex, Button, Box } from "@fuel-ui/react";
+import { Image, Stack, Flex, Button, Alert } from "@fuel-ui/react";
 import { useState } from "react";
 
 import { Header } from "../Header";
@@ -6,12 +6,16 @@ import { Header } from "../Header";
 import { Mnemonic } from "~/systems/Core";
 
 export type MnemonicWriteProps = {
+  canProceed?: boolean;
+  error?: string | boolean;
   onFilled: (words: string[]) => void;
   onNext: () => void;
   onCancel: () => void;
 };
 
 export function MnemonicWrite({
+  canProceed,
+  error,
   onFilled,
   onCancel,
   onNext,
@@ -30,9 +34,14 @@ export function MnemonicWrite({
         title="Write down your Recover Phrase "
         subtitle="You will need it on the next step"
       />
-      <Box css={{ width: 400 }}>
+      <Stack gap="$3" css={{ width: 400 }}>
+        {error && (
+          <Alert css={{ fontSize: "$sm", py: "$2" }} status="error">
+            <Alert.Description>{error}</Alert.Description>
+          </Alert>
+        )}
         <Mnemonic type="write" onFilled={handleFill} />
-      </Box>
+      </Stack>
       <Flex gap="$4">
         <Button
           size="sm"
@@ -48,7 +57,7 @@ export function MnemonicWrite({
           color="accent"
           css={{ width: 130 }}
           onPress={onNext}
-          isDisabled={!isFilled}
+          isDisabled={!isFilled || !canProceed}
         >
           Next
         </Button>

@@ -3,7 +3,6 @@ import {
   Stack,
   Flex,
   Button,
-  Form,
   Checkbox,
   InputPassword,
 } from "@fuel-ui/react";
@@ -12,6 +11,8 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 import { Header } from "../Header";
+
+import { ControlledField } from "~/systems/Core";
 
 const schema = yup
   .object({
@@ -30,25 +31,32 @@ export type CreatePasswordValues = {
 };
 
 export type CreatePasswordProps = {
-  onNext: (data: CreatePasswordValues) => void;
+  isLoading?: boolean;
+  onSubmit: (data: CreatePasswordValues) => void;
   onCancel: () => void;
 };
 
-export function CreatePassword({ onCancel, onNext }: CreatePasswordProps) {
+export function CreatePassword({
+  isLoading = false,
+  onCancel,
+  onSubmit,
+}: CreatePasswordProps) {
   const form = useForm<CreatePasswordValues>({
     resolver: yupResolver(schema),
-    shouldUseNativeValidation: false,
     reValidateMode: "onChange",
+    mode: "onChange",
+    defaultValues: {
+      password: "",
+      confirmPassword: "",
+      accepted: false,
+    },
   });
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = form;
 
-  function onSubmit(data: CreatePasswordValues) {
-    onNext(data);
-  }
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid },
+  } = form;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -59,45 +67,43 @@ export function CreatePassword({ onCancel, onNext }: CreatePasswordProps) {
           subtitle="Add a safe password for access your wallet"
         />
         <Stack css={{ width: "100%" }} gap="$4">
-          <Form.Control isInvalid={Boolean(errors.password)}>
-            <Form.Label htmlFor="password">Password</Form.Label>
-            <InputPassword
-              {...register("password")}
-              id="password"
-              name="password"
-              placeholder="Type your password"
-            />
-            {errors.password?.message && (
-              <Form.ErrorMessage>
-                {errors.password?.message as string}
-              </Form.ErrorMessage>
+          <ControlledField
+            control={control}
+            name="password"
+            label="Password"
+            render={({ field }) => (
+              <InputPassword {...field} placeholder="Type your password" />
             )}
-          </Form.Control>
-          <Form.Control isInvalid={Boolean(errors.confirmPassword)}>
-            <Form.Label htmlFor="confirmPassword">Confirm password</Form.Label>
-            <InputPassword
-              {...register("confirmPassword")}
-              id="confirmPassword"
-              name="confirmPassword"
-              placeholder="Confirm your password"
-            />
-            {errors.confirmPassword?.message && (
-              <Form.ErrorMessage>
-                {errors.confirmPassword?.message as string}
-              </Form.ErrorMessage>
-            )}
-          </Form.Control>
-        </Stack>
-        <Form.Control css={{ flexDirection: "row" }}>
-          <Checkbox
-            id="c1"
-            checked={form.watch("accepted")}
-            onCheckedChange={(e) => {
-              form.setValue("accepted", e as boolean, { shouldValidate: true });
-            }}
           />
-          <Form.Label htmlFor="c1">I agree with terms and services</Form.Label>
-        </Form.Control>
+          <ControlledField
+            control={control}
+            name="confirmPassword"
+            label="Confirm password"
+            render={({ field }) => (
+              <InputPassword {...field} placeholder="Confirm your password" />
+            )}
+          />
+        </Stack>
+        <ControlledField
+          control={control}
+          name="accepted"
+          label="I agree with terms and services"
+          labelSide="right"
+          css={{ flexDirection: "row " }}
+          render={({ field: { value: _value, ...field } }) => (
+            <Checkbox
+              {...field}
+              checked={form.watch("accepted")}
+              aria-label="Accept terms"
+              onCheckedChange={(checked) => {
+                form.setValue("accepted", Boolean(checked), {
+                  shouldValidate: true,
+                  shouldTouch: true,
+                });
+              }}
+            />
+          )}
+        />
         <Flex gap="$4">
           <Button
             size="sm"
@@ -113,7 +119,8 @@ export function CreatePassword({ onCancel, onNext }: CreatePasswordProps) {
             size="sm"
             color="accent"
             css={{ width: 130 }}
-            isDisabled={!form.formState.isValid}
+            isDisabled={!isValid}
+            isLoading={isLoading}
           >
             Next
           </Button>

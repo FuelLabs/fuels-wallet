@@ -48,7 +48,7 @@ export const Layout: LayoutComponent = ({
   title,
   children,
 }: LayoutProps) => {
-  const titleText = title ? `${title} | Verify` : "Verify";
+  const titleText = title ? `${title} | Fuel` : "Fuel";
   return (
     <ctx.Provider value={{ isLoading }}>
       <Helmet>
