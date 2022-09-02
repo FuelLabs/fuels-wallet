@@ -64,15 +64,11 @@ jobs:
     continue-on-error: false
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/setup-node
-      - uses: ./.github/setup-rust
-      - uses: ./.github/setup-docker
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/setup-rust
+      - uses: ./.github/actions/setup-docker
         with:
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup scripts
-        run: |
-          pnpm scripts:setup
 
       - name: "End-to-end tests"
         uses: cypress-io/github-action@v4
