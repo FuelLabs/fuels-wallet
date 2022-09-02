@@ -16,7 +16,7 @@ export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
   const navigate = useNavigate();
   return (
     <BoxCentered css={styles.empty}>
-      <Image src="/empty-assets.png" width={183} height={144} />
+      <Image src="/empty-assets.png" width={183} height={144} alt="No assets" />
       <Heading as="h5">You don&apos;t have any assets</Heading>
       {!isDevnet ? (
         <Text fontSize="sm">Start depositing some assets</Text>

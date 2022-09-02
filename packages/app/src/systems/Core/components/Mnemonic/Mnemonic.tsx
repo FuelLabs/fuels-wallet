@@ -14,7 +14,8 @@ function fillArray(arr: string[], item: string[]) {
 function checkMoreThanOneWord(word: string) {
   if (word.split(" ").length > 1) {
     const first = word.split(" ")[0];
-    return first.slice(0, first.length / 2);
+    const half = first.slice(0, first.length / 2);
+    return `${half}${half}` === first ? half : first;
   }
   return word;
 }
