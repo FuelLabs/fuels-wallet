@@ -46,10 +46,14 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/ci-setup
       - name: Run tests with coverage
-        uses: ArtiomTr/jest-coverage-report-action@v2
+      - uses: jwalton/gh-find-current-pr@v1
+          id: findPr
+
+      - uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           package-manager: pnpm
           annotations: failed-tests
           test-script: pnpm test:ci
           working-directory: ./packages/app
+          prnumber: ${{ steps.findPr.outputs.number }}

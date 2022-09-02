@@ -12,5 +12,5 @@ export function PrivateRoute({ children }: PrivateRouteProps) {
   if (!isLoading && !accounts?.length) {
     return <Navigate to="/sign-up" replace />;
   }
-  return <>{children}</>;
+  return children;
 }

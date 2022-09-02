@@ -12,5 +12,5 @@ export function PublicRoute({ children }: PublicRouteProps) {
   if (!isLoading && accounts?.length) {
     return <Navigate to="/" replace />;
   }
-  return <>{children}</>;
+  return children;
 }

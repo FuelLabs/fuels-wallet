@@ -12,9 +12,9 @@ const wrapper = (
 
 export const signUpRoutes = (
   <Route path={`${Pages.signUp}/*`} element={wrapper}>
-    <Route index element={<Navigate to={Pages["signUp.welcome"]} />} />
-    <Route path={Pages["signUp.welcome"]} element={<WelcomeScreen />} />
-    <Route path={Pages["signUp.createWallet"]} element={<CreateWallet />} />
-    <Route path={Pages["signUp.recoverWallet"]} element={<RecoverWallet />} />
+    <Route index element={<Navigate to={Pages.signUpWelcome} />} />
+    <Route path={Pages.signUpWelcome} element={<WelcomeScreen />} />
+    <Route path={Pages.signUpCreateWallet} element={<CreateWallet />} />
+    <Route path={Pages.signUpRecoverWallet} element={<RecoverWallet />} />
   </Route>
 );
