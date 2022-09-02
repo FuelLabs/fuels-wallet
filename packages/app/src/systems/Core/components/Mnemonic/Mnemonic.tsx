@@ -11,6 +11,15 @@ function fillArray(arr: string[], item: string[]) {
   return arr.map((_, idx) => item[idx] || "");
 }
 
+function checkMoreThanOneWord(word: string) {
+  if (word.split(" ").length > 1) {
+    const first = word.split(" ")[0];
+    const half = first.slice(0, first.length / 2);
+    return `${half}${half}` === first ? half : first;
+  }
+  return word;
+}
+
 export type MnemonicProps = {
   type: "read" | "write";
   value?: string[];
@@ -45,7 +54,11 @@ export function Mnemonic({
 
   function handleChange(idx: number) {
     return (val: string) => {
-      setValue((s) => s.map((word, i) => (i === idx ? val : word)));
+      setValue((oldState) =>
+        oldState
+          .map((word, i) => (i === idx ? val : word))
+          .map(checkMoreThanOneWord)
+      );
     };
   }
 
@@ -73,7 +86,7 @@ export function Mnemonic({
                 <span>{idx + 1}</span>
                 <div>
                   <MnemonicInput
-                    defaultValue={value[idx]}
+                    value={value[idx]}
                     onChange={handleChange(idx)}
                     onPaste={handlePastInput}
                   />

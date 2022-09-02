@@ -20,3 +20,14 @@ export const Usage = () => (
     />
   </BoxCentered>
 );
+
+export const WithError = () => (
+  <BoxCentered minHS>
+    <MnemonicWrite
+      error="Sorry, your mnemonic doesn't match!"
+      onFilled={action("onFilled")}
+      onNext={action("onNext")}
+      onCancel={action("onCancel")}
+    />
+  </BoxCentered>
+);

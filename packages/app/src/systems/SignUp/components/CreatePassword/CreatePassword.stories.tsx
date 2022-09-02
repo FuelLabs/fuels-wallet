@@ -13,6 +13,9 @@ export default {
 
 export const Usage = () => (
   <BoxCentered minHS>
-    <CreatePassword onCancel={action("onCancel")} onNext={action("onNext")} />
+    <CreatePassword
+      onCancel={action("onCancel")}
+      onSubmit={action("onSubmit")}
+    />
   </BoxCentered>
 );
