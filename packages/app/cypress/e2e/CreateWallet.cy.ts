@@ -1,0 +1,36 @@
+describe('CreateWallet', () => {
+  beforeEach(async () => {
+    await cy.clearIndexedDB();
+  });
+
+  it('should be redirect to /signup by default', () => {
+    cy.visit('/');
+    cy.url().should('contain', '/sign-up');
+  });
+
+  it('should be to create wallet and see first account created', () => {
+    cy.visit('/');
+    cy.contains('button', /Create a wallet/i).click();
+
+    /** Write Mnemonic */
+    cy.contains('button', /Copy/i).click();
+    cy.get('button[role="checkbox"]').click();
+    cy.contains('button', /Next/i).click();
+
+    /** COnfirm Mnemonic */
+    cy.contains(/Write down your Recover Phrase/i);
+    cy.contains('button', /Paste/i).click();
+    cy.contains('button', /Next/i).click();
+
+    /** Adding password */
+    cy.contains(/Create your password/i);
+    cy.getByAriaLabel('Your Password').type('12345678');
+    cy.getByAriaLabel('Confirm Password').type('12345678');
+    cy.get('button[role="checkbox"]').click();
+    cy.contains('button', /Next/i).click();
+
+    /** Account created */
+    cy.contains(/Wallet created succesfully/i);
+    cy.contains(/Account 1/i);
+  });
+});
