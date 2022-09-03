@@ -1,4 +1,5 @@
-import './load.envs';
+/* eslint-disable import/no-relative-packages */
+import './packages/app/load.envs';
 import { defineConfig } from 'cypress';
 
 const { NODE_ENV } = process.env;
