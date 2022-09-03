@@ -14,7 +14,7 @@ const spinnies = new Spinnies({ succeedPrefix: "⚡️ " });
 export const handler = async (argv) => {
   const { projectName } = await createEnv(argv, false);
   const isTest = argv.t;
-  const isDebug = argv.l;
+  const isDebug = argv.d;
   const file = ["-f", resolve("../docker/docker-compose.yml")];
 
   const downArgs = [
