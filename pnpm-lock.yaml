@@ -14,6 +14,7 @@ importers:
       cypress: ^10.7.0
       dotenv: ^16.0.2
       eslint: ^8.23.0
+      eslint-plugin-cypress: ^2.12.1
       fs-extra: ^10.1.0
       fuelhat: workspace:*
       husky: ^8.0.1
@@ -42,6 +43,7 @@ importers:
       cypress: 10.7.0
       dotenv: 16.0.2
       eslint: 8.23.0
+      eslint-plugin-cypress: 2.12.1_eslint@8.23.0
       fs-extra: 10.1.0
       husky: 8.0.1
       identity-obj-proxy: 3.0.0
@@ -92,10 +94,8 @@ importers:
       '@xstate/cli': ^0.3.2
       '@xstate/react': ^3.0.1
       buffer: ^6.0.3
-      cypress: ^10.7.0
       dexie: ^3.2.2
       dexie-react-hooks: ^1.1.1
-      eslint-plugin-cypress: ^2.12.1
       fake-indexeddb: ^4.0.0
       fuels: ^0.12.0
       react: ^18.2.0
@@ -159,8 +159,6 @@ importers:
       '@types/testing-library__jest-dom': 5.14.5
       '@vitejs/plugin-react': 2.0.1_vite@3.0.9
       '@xstate/cli': 0.3.2
-      cypress: 10.7.0
-      eslint-plugin-cypress: 2.12.1
       storybook-dark-mode: 1.1.0_szr23uwlzhn73d2k2dkxny45ui
       tsconfig-paths-webpack-plugin: 4.0.0
       typescript: 4.8.2
@@ -10750,11 +10748,12 @@ packages:
       - supports-color
     dev: false
 
-  /eslint-plugin-cypress/2.12.1:
+  /eslint-plugin-cypress/2.12.1_eslint@8.23.0:
     resolution: {integrity: sha512-c2W/uPADl5kospNDihgiLc7n87t5XhUbFDoTl6CfVkmG+kDAb5Ux10V9PoLPu9N+r7znpc+iQlcmAqT1A/89HA==}
     peerDependencies:
       eslint: '>= 3.2.1'
     dependencies:
+      eslint: 8.23.0
       globals: 11.12.0
     dev: true
 
