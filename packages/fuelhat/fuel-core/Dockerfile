@@ -1,4 +1,4 @@
-FROM ghcr.io/fuellabs/fuel-core:v0.9.6
+FROM ghcr.io/fuellabs/fuel-core:v0.10.1
 
 ARG IP=0.0.0.0
 ARG PORT=4000
@@ -26,7 +26,6 @@ CMD ./fuel-core run \
     --db-path ${DB_PATH} \
     --utxo-validation \
     --min-gas-price ${MIN_GAS_PRICE} \
-    --min-byte-price ${MIN_BYTE_PRICE} \
     --chain ./chainConfig.json
 
 EXPOSE ${PORT}

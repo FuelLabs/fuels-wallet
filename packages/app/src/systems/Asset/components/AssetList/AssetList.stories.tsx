@@ -11,15 +11,14 @@ export default {
   title: "Asset/Components/AssetList",
 };
 
-const AMOUNTS = {
-  [ASSET_LIST[0].assetId]: toBigInt(1000000000),
-  [ASSET_LIST[1].assetId]: toBigInt(1000000000),
-  [ASSET_LIST[2].assetId]: toBigInt(1000000000),
-};
+const ASSETS = ASSET_LIST.map(({ assetId }) => ({
+  assetId,
+  amount: toBigInt(1000000000)
+}))
 
 export const Usage = (args: AssetListProps) => (
   <Box css={{ width: 300 }}>
-    <AssetList {...args} assets={ASSET_LIST} amounts={AMOUNTS} />
+    <AssetList {...args} assets={ASSETS} />
   </Box>
 );
 

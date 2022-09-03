@@ -20,6 +20,8 @@
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@fontsource/source-code-pro": "^4.5.12",
     "@fuel-ts/mnemonic": "^0.12.0",
+    "@fuel-ts/providers": "^0.12.0",
+    "@fuel-ts/wallet": "^0.12.0",
     "@fuel-ts/wallet-manager": "^0.12.0",
     "@fuel-ui/css": "^0.6.0",
     "@fuel-ui/react": "^0.6.0",

@@ -15,8 +15,10 @@ export const Usage = (args: AssetItemProps) => (
   <Box css={{ width: 300 }}>
     <AssetItem
       {...args}
-      asset={ASSET_LIST[0]}
-      amount={toBigInt("14563943834")}
+      asset={{
+        assetId: ASSET_LIST[0].assetId,
+        amount: toBigInt("14563943834")
+      }}
     />
   </Box>
 );

@@ -49,7 +49,7 @@ export function BalanceWidget({
   return (
     <BalanceWidgetWrapper>
       <Flex direction="column" align="center">
-        <Avatar.Generated size="lg" hash={account.address} />
+        <Avatar.Generated size="lg" hash={account.address} background="fuel" />
         <IconButton
           size="xs"
           variant="ghost"

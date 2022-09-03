@@ -11,7 +11,7 @@ describe('accountsMachine', () => {
       .withConfig({
         services: {
           fetchAccounts: async () => {
-            return [{ name: 'Account1', address: '0x00' }];
+            return [{ name: 'Account1', address: '0x00', publicKey: '0x00' }];
           },
         },
       });

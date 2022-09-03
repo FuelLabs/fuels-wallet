@@ -1,89 +1,40 @@
-import { Box, Button, Flex, Heading, Icon } from "@fuel-ui/react";
-import { toBigInt } from "fuels";
-import { useEffect, useState } from "react";
+import { Flex } from "@fuel-ui/react";
 
-import { AssetList, ASSET_LIST } from "~/systems/Asset";
+import { useHome } from "../../hooks/useHome";
+import { AssetsTitle } from "../components/AssetsTitle/AssetsTitle";
+import { HomeActions } from "../components/HomeActions/HomeActions";
+
+import { BalanceWidget } from "~/systems/Account/components/BalanceWidget/BalanceWidget";
+import { AssetList } from "~/systems/Asset";
 import { Layout } from "~/systems/Core";
 
-const AMOUNTS = {
-  [ASSET_LIST[0].assetId]: toBigInt(9900020000),
-  [ASSET_LIST[1].assetId]: toBigInt(80000890),
-  [ASSET_LIST[2].assetId]: toBigInt(91000000320),
-};
+
 
 export function Home() {
-  const [ isFirstLoading, setIsFirstLoading ] = useState(true);
+  const { state, context } = useHome();
 
-  useEffect(() => {
-    setTimeout(() => setIsFirstLoading(false), 2000);
-  }, []);
+  const balances = [...(context.account?.balances || [])];
 
   return (
-    <Layout title="Home" isLoading={isFirstLoading}>
+    <Layout title="Home" isLoading={state.hasTag("loading")}>
       <Layout.TopBar />
       <Layout.Content>
-        <Flex
-          direction="column"
-          css={{
-            height: '100%'
-          }}
-        >
-          <Box css={{
-            border: '1px solid $gray6',
-            borderRadius: 10,
-            padding: 10,
-            marginBottom: '$6',
-            flexShrink: 0
-          }}>Acccount Overview</Box>
-          <Flex css={{
-            marginBottom: '$6',
-            flexShrink: 0
-          }}>
-            <Button
-              isDisabled={isFirstLoading}
-              css={{
-                borderRadius: 40,
-                marginRight: '$1',
-                flex: 1,
-                py: '$5'
-              }}
-            >
-              Send
-            </Button>
-            <Button
-              size="sm"
-              isDisabled={isFirstLoading}
-              variant="outlined"
-              color="gray"
-              css={{
-                borderRadius: 40,
-                marginLeft: '$1',
-                flex: 1,
-                py: '$5'
-              }}
-            >
-              Receive
-            </Button>
-          </Flex>
-          <Flex
-            css={{
-              marginBottom: '$5',
-              flexShrink: 0
-            }}
-          >
-            <Icon icon="Coins" color="accent9" size={22} weight="regular"/>
-            <Heading as="h4" css={{ my: '0px', marginLeft: 8 }} color="white">Assets</Heading>
-          </Flex>
-          { isFirstLoading && (
+        <Flex direction="column" css={{ height: "100%", }}>
+          {state.hasTag("loadingAccount") || !context.account ? (
+            <BalanceWidget.Loader />
+          ) : (
+            <BalanceWidget account={context.account} />
+          )}
+          <HomeActions isDisabled={state.hasTag("loading")} />
+          <AssetsTitle />
+          {state.hasTag("loading") && (
             <AssetList.Loading items={4} />
           )}
-          { !isFirstLoading && Object.keys(AMOUNTS).length && (
-            <AssetList assets={ASSET_LIST} amounts={AMOUNTS} />
+          {Boolean(!state.hasTag("loading") && balances.length) && (
+            <AssetList assets={balances} />
           )}
-          { !isFirstLoading && !Object.keys(AMOUNTS).length && (
-            <Flex css={{
-              flex: '1 0',
-            }}>
+          {Boolean(!state.hasTag("loading") && !balances.length) && (
+            <Flex css={{ flex: "1 0", }} >
               <AssetList.Empty />
             </Flex>
           )}

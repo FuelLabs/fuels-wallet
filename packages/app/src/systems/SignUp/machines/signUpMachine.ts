@@ -182,6 +182,7 @@ export const signUpMachine = createMachine(
         return db.addAccount({
           name: 'Account 1',
           address: account.address.toAddress(),
+          publicKey: account.publicKey,
         });
       },
     },
