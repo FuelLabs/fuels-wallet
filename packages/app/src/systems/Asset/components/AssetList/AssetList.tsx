@@ -20,12 +20,7 @@ export const AssetList: AssetListComponent = ({ assets }) => {
   return (
     <CardList>
       {assets.map((asset) => {
-        return (
-          <AssetItem
-            key={asset.assetId}
-            asset={asset}
-          />
-        );
+        return <AssetItem key={asset.assetId} asset={asset} />;
       })}
     </CardList>
   );

@@ -14,4 +14,4 @@ export const AssetsTitle = () => {
       </Heading>
     </Flex>
   );
-}
+};

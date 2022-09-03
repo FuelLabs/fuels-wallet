@@ -17,7 +17,7 @@ export const Usage = (args: AssetItemProps) => (
       {...args}
       asset={{
         assetId: ASSET_LIST[0].assetId,
-        amount: toBigInt("14563943834")
+        amount: toBigInt("14563943834"),
       }}
     />
   </Box>

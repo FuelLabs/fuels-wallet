@@ -15,7 +15,7 @@ type SetBalanceData = {
   balance: bigint;
   balanceSymbol: string;
   balances: CoinQuantity[];
-}
+};
 
 class FuelDB extends Dexie {
   vaults!: Table<Vault, string>;

@@ -14,6 +14,7 @@ const ACCOUNT = {
   address: "fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef",
   balance: toBigInt("12008943834"),
   balanceSymbol: "$",
+  publicKey: "0x00",
 };
 
 export const Usage = (args: BalanceWidgetProps) => (

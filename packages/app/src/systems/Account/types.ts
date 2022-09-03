@@ -1,4 +1,4 @@
-import type { CoinQuantity } from "fuels";
+import type { CoinQuantity } from 'fuels';
 
 export type Vault = {
   key: string;

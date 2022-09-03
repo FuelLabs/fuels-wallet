@@ -6,11 +6,10 @@ import { ASSET_LIST } from "../../utils";
 
 import { AssetList } from "./AssetList";
 
-
 const ASSETS = ASSET_LIST.map(({ assetId }) => ({
   assetId,
-  amount: toBigInt(1000000000)
-}))
+  amount: toBigInt(1000000000),
+}));
 
 describe("AssetList", () => {
   it("a11y", async () => {

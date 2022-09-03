@@ -1,4 +1,4 @@
-// eslint-disable @typescript-eslint/no-explicit-any
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
@@ -22,9 +22,7 @@ type MachineServices = {
   };
 };
 
-type MachineEvents =
-  | { type: 'START_FAUCET'; data: any }
-
+type MachineEvents = { type: 'START_FAUCET'; data: any };
 
 export const homeMachine = createMachine(
   {
@@ -65,12 +63,11 @@ export const homeMachine = createMachine(
           },
         },
       },
-      idle: {
-      },
+      idle: {},
       failed: {
         entry: 'assignError',
       },
-    }
+    },
   },
   {
     actions: {
@@ -92,11 +89,11 @@ export const homeMachine = createMachine(
           address: account?.address || '',
           balances,
           balanceSymbol: '$',
-          balance: BigInt(0)
+          balance: BigInt(0),
         });
         return newAccount;
-      }
-    }
+      },
+    },
   }
 );
 

@@ -2,7 +2,7 @@ import { Button, Flex } from "@fuel-ui/react";
 
 export type HomeActionsProps = {
   isDisabled?: boolean;
-}
+};
 
 export const HomeActions = ({ isDisabled }: HomeActionsProps) => {
   return (
@@ -40,4 +40,4 @@ export const HomeActions = ({ isDisabled }: HomeActionsProps) => {
       </Button>
     </Flex>
   );
-}
+};

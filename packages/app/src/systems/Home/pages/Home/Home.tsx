@@ -8,8 +8,6 @@ import { BalanceWidget } from "~/systems/Account/components/BalanceWidget/Balanc
 import { AssetList } from "~/systems/Asset";
 import { Layout } from "~/systems/Core";
 
-
-
 export function Home() {
   const { state, context } = useHome();
 
@@ -19,7 +17,7 @@ export function Home() {
     <Layout title="Home" isLoading={state.hasTag("loading")}>
       <Layout.TopBar />
       <Layout.Content>
-        <Flex direction="column" css={{ height: "100%", }}>
+        <Flex direction="column" css={{ height: "100%" }}>
           {state.hasTag("loadingAccount") || !context.account ? (
             <BalanceWidget.Loader />
           ) : (
@@ -27,14 +25,12 @@ export function Home() {
           )}
           <HomeActions isDisabled={state.hasTag("loading")} />
           <AssetsTitle />
-          {state.hasTag("loading") && (
-            <AssetList.Loading items={4} />
-          )}
+          {state.hasTag("loading") && <AssetList.Loading items={4} />}
           {Boolean(!state.hasTag("loading") && balances.length) && (
             <AssetList assets={balances} />
           )}
           {Boolean(!state.hasTag("loading") && !balances.length) && (
-            <Flex css={{ flex: "1 0", }} >
+            <Flex css={{ flex: "1 0" }}>
               <AssetList.Empty />
             </Flex>
           )}

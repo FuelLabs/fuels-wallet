@@ -1,14 +1,15 @@
 import { interpret } from 'xstate';
-import { ASSET_LIST } from '~/systems/Asset';
 
 import { homeMachine } from './homeMachine';
+
+import { ASSET_LIST } from '~/systems/Asset';
 
 describe('homeMachine', () => {
   const INITIAL_ACCOUNT = { name: 'Account1', address: '0x00', publicKey: '0x00' };
   const BALANCES = ASSET_LIST.map(({ assetId }) => ({
     assetId,
-    amount: BigInt(10000000)
-  }))
+    amount: BigInt(10000000),
+  }));
 
   it('should get balances initially', (done) => {
     const machine = homeMachine
@@ -25,7 +26,7 @@ describe('homeMachine', () => {
               ...INITIAL_ACCOUNT,
               balanceSymbol: '$',
               balance: BigInt(0),
-              balances: BALANCES
+              balances: BALANCES,
             };
           },
         },

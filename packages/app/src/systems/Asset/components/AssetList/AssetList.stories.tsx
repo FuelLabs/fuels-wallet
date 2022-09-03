@@ -13,8 +13,8 @@ export default {
 
 const ASSETS = ASSET_LIST.map(({ assetId }) => ({
   assetId,
-  amount: toBigInt(1000000000)
-}))
+  amount: toBigInt(1000000000),
+}));
 
 export const Usage = (args: AssetListProps) => (
   <Box css={{ width: 300 }}>
