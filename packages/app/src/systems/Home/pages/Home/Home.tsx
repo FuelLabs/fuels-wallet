@@ -7,6 +7,7 @@ import { HomeActions } from "../components/HomeActions/HomeActions";
 import { BalanceWidget } from "~/systems/Account/components/BalanceWidget/BalanceWidget";
 import { AssetList } from "~/systems/Asset";
 import { Layout } from "~/systems/Core";
+import { FaucetDialog } from "~/systems/Faucet";
 
 export function Home() {
   const { state, context } = useHome();
@@ -31,11 +32,12 @@ export function Home() {
           )}
           {Boolean(!state.hasTag("loading") && !balances.length) && (
             <Flex css={{ flex: "1 0" }}>
-              <AssetList.Empty />
+              <AssetList.Empty isDevnet />
             </Flex>
           )}
         </Flex>
       </Layout.Content>
+      <FaucetDialog />
     </Layout>
   );
 }

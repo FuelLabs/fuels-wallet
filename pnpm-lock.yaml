@@ -86,6 +86,7 @@ importers:
       '@storybook/theming': ^6.5.10
       '@types/react': ^18.0.18
       '@types/react-dom': ^18.0.6
+      '@types/react-google-recaptcha': ^2.1.5
       '@types/react-helmet': ^6.1.5
       '@types/testing-library__jest-dom': ^5.14.5
       '@vitejs/plugin-react': ^2.0.1
@@ -97,9 +98,11 @@ importers:
       dexie-react-hooks: ^1.1.1
       fake-indexeddb: ^4.0.0
       fuels: ^0.12.0
+      jotai: ^1.8.2
       react: ^18.2.0
       react-content-loader: ^6.2.0
       react-dom: ^18.2.0
+      react-google-recaptcha: ^2.1.0
       react-helmet: ^6.1.0
       react-hook-form: ^7.34.2
       react-router-dom: ^6.3.0
@@ -122,15 +125,18 @@ importers:
       '@fuel-ui/react': 0.6.0_2p2tqehoonvr3zxvgzhvryeggu
       '@fuel-ui/test-utils': 0.6.0_2p2tqehoonvr3zxvgzhvryeggu
       '@hookform/resolvers': 2.9.7_react-hook-form@7.34.2
+      '@types/react-google-recaptcha': 2.1.5
       '@xstate/react': 3.0.1_rq32lkiy6e3qvfqnk7z2r4e3pe
       buffer: 6.0.3
       dexie: 3.2.2
       dexie-react-hooks: 1.1.1_pbltbmdl3aqgvck6but5wzzaem
       fake-indexeddb: 4.0.0
       fuels: 0.12.0
+      jotai: 1.8.2_kedzsqwok4iyyk3j2xmouao66e
       react: 18.2.0
       react-content-loader: 6.2.0_react@18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-google-recaptcha: 2.1.0_react@18.2.0
       react-helmet: 6.1.0_react@18.2.0
       react-hook-form: 7.34.2_react@18.2.0
       react-router-dom: 6.3.0_biqbaboplfbrettd7655fr4n2y
@@ -7286,6 +7292,12 @@ packages:
     dependencies:
       '@types/react': 18.0.18
 
+  /@types/react-google-recaptcha/2.1.5:
+    resolution: {integrity: sha512-iWTjmVttlNgp0teyh7eBXqNOQzVq2RWNiFROWjraOptRnb1OcHJehQnji0sjqIRAk9K0z8stjyhU+OLpPb0N6w==}
+    dependencies:
+      '@types/react': 18.0.18
+    dev: false
+
   /@types/react-helmet/6.1.5:
     resolution: {integrity: sha512-/ICuy7OHZxR0YCAZLNg9r7I9aijWUWvxaPR6uTuyxe8tAj5RL4Sw1+R6NhXUtOsarkGYPmaHdBDvuXh2DIN/uA==}
     dependencies:
@@ -11734,6 +11746,12 @@ packages:
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
 
+  /hoist-non-react-statics/3.3.2:
+    resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
+    dependencies:
+      react-is: 16.13.1
+    dev: false
+
   /hosted-git-info/2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}
     dev: true
@@ -13456,6 +13474,47 @@ packages:
       - '@types/node'
       - supports-color
       - ts-node
+    dev: false
+
+  /jotai/1.8.2_kedzsqwok4iyyk3j2xmouao66e:
+    resolution: {integrity: sha512-jRKTQKChLAJGB3zG5zklJoMtpWYixUi2jK3pZd5ZRpH4pQnjYYEOAVYCzZGr4Ce5Uj7j0ffYoLM4ULAAQXUoGw==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      '@babel/core': '*'
+      '@babel/template': '*'
+      '@tanstack/query-core': '*'
+      '@urql/core': '*'
+      immer: '*'
+      optics-ts: '*'
+      react: '*'
+      valtio: '*'
+      wonka: '*'
+      xstate: '*'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@babel/template':
+        optional: true
+      '@tanstack/query-core':
+        optional: true
+      '@urql/core':
+        optional: true
+      immer:
+        optional: true
+      optics-ts:
+        optional: true
+      react:
+        optional: true
+      valtio:
+        optional: true
+      wonka:
+        optional: true
+      xstate:
+        optional: true
+    dependencies:
+      '@babel/core': 7.18.13
+      react: 18.2.0
+      xstate: 4.33.5
     dev: false
 
   /js-sha3/0.8.0:
@@ -15483,6 +15542,19 @@ packages:
       - '@react-spectrum/provider'
     dev: false
 
+  /react-async-script/1.2.0_react@18.2.0:
+    resolution: {integrity: sha512-bCpkbm9JiAuMGhkqoAiC0lLkb40DJ0HOEJIku+9JDjxX3Rcs+ztEOG13wbrOskt3n2DTrjshhaQ/iay+SnGg5Q==}
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      hoist-non-react-statics: 3.3.2
+      prop-types: 15.8.1
+      react: 18.2.0
+    dev: false
+
   /react-content-loader/6.2.0_react@18.2.0:
     resolution: {integrity: sha512-r1dI6S+uHNLW68qraLE2njJYOuy6976PpCExuCZUcABWbfnF3FMcmuESRI8L4Bj45wnZ7n8g71hkPLzbma7/Cw==}
     engines: {node: '>=10'}
@@ -15567,6 +15639,19 @@ packages:
 
   /react-fast-compare/3.2.0:
     resolution: {integrity: sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==}
+    dev: false
+
+  /react-google-recaptcha/2.1.0_react@18.2.0:
+    resolution: {integrity: sha512-K9jr7e0CWFigi8KxC3WPvNqZZ47df2RrMAta6KmRoE4RUi7Ys6NmNjytpXpg4HI/svmQJLKR+PncEPaNJ98DqQ==}
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-async-script: 1.2.0_react@18.2.0
     dev: false
 
   /react-helmet/6.1.0_react@18.2.0:

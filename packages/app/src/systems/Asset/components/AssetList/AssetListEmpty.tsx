@@ -7,13 +7,15 @@ import {
   Button,
   Icon,
 } from "@fuel-ui/react";
-import { useNavigate } from "react-router-dom";
+
+import { useFaucetDialog } from "~/systems/Faucet";
 
 type AssetsEmptyProps = {
   isDevnet?: boolean;
 };
 export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
-  const navigate = useNavigate();
+  const faucetDialog = useFaucetDialog();
+
   return (
     <BoxCentered css={styles.empty}>
       <Image src="/empty-assets.png" width={183} height={144} alt="No assets" />
@@ -25,9 +27,9 @@ export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
          * TODO: need to add right faucet icon on @fuel-ui
          */
         <Button
+          {...faucetDialog.openButtonProps}
           size="sm"
           leftIcon={Icon.is("Coffee")}
-          onPress={() => navigate("/faucet")}
         >
           Faucet
         </Button>
