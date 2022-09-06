@@ -11,6 +11,9 @@
     "test": {
       "dependsOn": []
     },
+    "test:e2e": {
+      "dependsOn": []
+    },
     "dev": {
       "cache": false
     }

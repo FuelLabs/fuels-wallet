@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/ci-setup
+      - uses: ./.github/actions/setup-node
       - run: pnpm audit --prod
 
   lint:
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/ci-setup
+      - uses: ./.github/actions/setup-node
       - run: |
           pnpm ts:check
           pnpm lint
@@ -44,7 +44,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/ci-setup
+      - uses: ./.github/actions/setup-node
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
 
@@ -57,3 +57,25 @@ jobs:
           test-script: pnpm test:ci
           working-directory: ./packages/app
           prnumber: ${{ steps.findPr.outputs.number }}
+
+  end-to-end-test:
+    name: Test E2E
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/setup-docker
+        with:
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "End-to-end tests"
+        uses: cypress-io/github-action@v4
+        with:
+          browser: chrome
+          install: false
+          command: pnpm ci:test-e2e
+          record: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_ENV: "test"

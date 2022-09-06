@@ -72,7 +72,11 @@ export function CreatePassword({
             name="password"
             label="Password"
             render={({ field }) => (
-              <InputPassword {...field} placeholder="Type your password" />
+              <InputPassword
+                {...field}
+                placeholder="Type your password"
+                aria-label="Your Password"
+              />
             )}
           />
           <ControlledField
@@ -80,7 +84,11 @@ export function CreatePassword({
             name="confirmPassword"
             label="Confirm password"
             render={({ field }) => (
-              <InputPassword {...field} placeholder="Confirm your password" />
+              <InputPassword
+                {...field}
+                placeholder="Confirm your password"
+                aria-label="Confirm Password"
+              />
             )}
           />
         </Stack>

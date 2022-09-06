@@ -5,7 +5,8 @@ import React, { useEffect, useState } from "react";
 import { MnemonicInput } from "./MnemonicInput";
 
 const { VITE_MNEMONIC_WORDS } = process.env;
-const BLANK_ARR = Array.from({ length: VITE_MNEMONIC_WORDS }).map(() => "");
+const WORDS = VITE_MNEMONIC_WORDS as number;
+const BLANK_ARR = Array.from({ length: WORDS as number }).map(() => "");
 
 function fillArray(arr: string[], item: string[]) {
   return arr.map((_, idx) => item[idx] || "");
