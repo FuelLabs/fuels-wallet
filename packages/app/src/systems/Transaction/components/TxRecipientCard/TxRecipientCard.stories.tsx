@@ -19,6 +19,11 @@ const CONTRACT = {
 export const TypeAccount = (args: TxRecipientCardProps) => (
   <TxRecipientCard {...args} account={ACCOUNT} />
 );
+
 export const TypeContract = (args: TxRecipientCardProps) => (
   <TxRecipientCard {...args} contract={CONTRACT} />
 );
+
+export const Loader = () => {
+  return <TxRecipientCard.Loader />;
+};

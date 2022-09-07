@@ -1,5 +1,8 @@
 import { cssObj } from "@fuel-ui/css";
 import { Avatar, Box, Card, Copyable, Flex, Icon, Text } from "@fuel-ui/react";
+import type { FC } from "react";
+
+import { TxRecipientCardLoader } from "./TxRecipientCardLoader";
 
 import type { Account } from "~/systems/Account";
 import { shortAddress } from "~/systems/Core";
@@ -9,7 +12,14 @@ export type TxRecipientCardProps = {
   contract?: { address: string };
 };
 
-export function TxRecipientCard({ account, contract }: TxRecipientCardProps) {
+type TxRecipientCardComponent = FC<TxRecipientCardProps> & {
+  Loader: typeof TxRecipientCardLoader;
+};
+
+export const TxRecipientCard: TxRecipientCardComponent = ({
+  account,
+  contract,
+}) => {
   const address = account ? account.address : contract?.address;
   return (
     <Card css={styles.root}>
@@ -36,11 +46,11 @@ export function TxRecipientCard({ account, contract }: TxRecipientCardProps) {
       </Flex>
     </Card>
   );
-}
+};
 
 const styles = {
   root: cssObj({
-    width: "122px",
+    minWidth: "130px",
     padding: "$4",
     display: "inline-flex",
     alignItems: "center",
@@ -66,3 +76,5 @@ const styles = {
     gap: "$1",
   }),
 };
+
+TxRecipientCard.Loader = TxRecipientCardLoader;
