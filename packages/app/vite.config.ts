@@ -16,7 +16,9 @@ export default defineConfig({
   optimizeDeps: {
     esbuildOptions: {
       target: 'es2020',
-      supported: { bigint: true },
+      supported: {
+        bigint: true,
+      },
       define: {
         global: 'globalThis',
       },
@@ -42,7 +44,10 @@ export default defineConfig({
     alias: {
       '@fuel-ui/react': resolve(__dirname, './node_modules/@fuel-ui/react/dist/index.mjs'),
       '@fuel-ui/css': resolve(__dirname, './node_modules/@fuel-ui/css/dist/index.mjs'),
+      process: 'process/browser',
       stream: 'stream-browserify',
+      zlib: 'browserify-zlib',
+      util: 'util',
     },
   },
   ...(Boolean(process.env.CI) && {
