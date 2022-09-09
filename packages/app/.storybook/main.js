@@ -30,6 +30,10 @@ const config = {
     };
     config.resolve.plugins = [new TsconfigPathsPlugin()];
     config.plugins.push(
+      require('@import-meta-env/unplugin').webpack({
+        env: '.env',
+        example: '.env.example',
+      }),
       new webpack.ProvidePlugin({
         Buffer: [require.resolve('buffer/'), 'Buffer'],
       })

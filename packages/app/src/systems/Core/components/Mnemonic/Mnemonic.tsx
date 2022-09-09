@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import { MnemonicInput } from "./MnemonicInput";
 
-const { VITE_MNEMONIC_WORDS: WORDS } = import.meta.env;
+const WORDS = import.meta.env.VITE_MNEMONIC_WORDS;
 const BLANK_ARR = Array.from({ length: WORDS }).map(() => "");
 
 function fillArray(arr: string[], item: string[]) {

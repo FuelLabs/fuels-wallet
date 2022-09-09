@@ -70,6 +70,7 @@ importers:
       '@fuel-ui/react': ^0.7.0
       '@fuel-ui/test-utils': ^0.7.0
       '@hookform/resolvers': ^2.9.7
+      '@import-meta-env/unplugin': ^0.1.8
       '@storybook/addon-a11y': ^6.5.10
       '@storybook/addon-actions': ^6.5.10
       '@storybook/addon-essentials': ^6.5.10
@@ -107,6 +108,7 @@ importers:
       react-hook-form: ^7.34.2
       react-router-dom: ^6.3.0
       storybook-dark-mode: ^1.1.0
+      ts-jest-mock-import-meta: ^0.12.0
       tsconfig-paths-webpack-plugin: ^4.0.0
       typescript: ^4.8.3
       util: ^0.12.4
@@ -143,6 +145,7 @@ importers:
       yup: 0.32.11
     devDependencies:
       '@babel/core': 7.19.0
+      '@import-meta-env/unplugin': 0.1.8_vite@3.1.0+webpack@5.74.0
       '@storybook/addon-a11y': 6.5.10_biqbaboplfbrettd7655fr4n2y
       '@storybook/addon-actions': 6.5.10_biqbaboplfbrettd7655fr4n2y
       '@storybook/addon-essentials': 6.5.10_j6vxofmfptwty4hqkwoul6jsju
@@ -166,6 +169,7 @@ importers:
       '@vitejs/plugin-react': 2.1.0_vite@3.1.0
       '@xstate/cli': 0.3.3
       storybook-dark-mode: 1.1.0_szr23uwlzhn73d2k2dkxny45ui
+      ts-jest-mock-import-meta: 0.12.0
       tsconfig-paths-webpack-plugin: 4.0.0
       typescript: 4.8.3
       vite: 3.1.0
@@ -2538,6 +2542,22 @@ packages:
 
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
+
+  /@import-meta-env/unplugin/0.1.8_vite@3.1.0+webpack@5.74.0:
+    resolution: {integrity: sha512-BSMxFokncqHijsdMztRg/xv20LAr5FdJ+hhKFZ1wJNYRhSoF28DsMlQ119B52XKWycj5okuAQO4Bh69Lb7729Q==}
+    engines: {node: ^12.20.0 || >= 14}
+    peerDependencies:
+      dotenv: ^11.0.0 || ^12.0.4 || ^13.0.1 || ^14.3.2 || ^15.0.1 || ^16.0.0
+    dependencies:
+      object-hash: 3.0.0
+      picocolors: 1.0.0
+      unplugin: 0.3.3_vite@3.1.0+webpack@5.74.0
+    transitivePeerDependencies:
+      - esbuild
+      - rollup
+      - vite
+      - webpack
+    dev: true
 
   /@internationalized/date/3.0.1:
     resolution: {integrity: sha512-E/3lASs4mAeJ2Z2ye6ab7eUD0bPUfTeNVTAv6IS+ne9UtMu9Uepb9A1U2Ae0hDr6WAlBuvUtrakaxEdYB9TV6Q==}
@@ -14597,6 +14617,11 @@ packages:
       kind-of: 3.2.2
     dev: true
 
+  /object-hash/3.0.0:
+    resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
+    engines: {node: '>= 6'}
+    dev: true
+
   /object-inspect/1.12.2:
     resolution: {integrity: sha512-z+cPxW0QGUp0mcqcsgQyLVRDoXFQbXOwBaqyF7VIgI4TWNQsDHrBpUQslRmIfAoYWdYzs6UlKJtB2XJpTaNSpQ==}
 
@@ -17554,6 +17579,12 @@ packages:
     resolution: {integrity: sha512-Z86EW+fFFh/IFB1fqQ3/+7Zpf9t2ebOAxNI/V6Wo7r5gqiqtxmgTlQ1qbqQcjLKYeSHPTsEmvlJUDg/EuL0uHQ==}
     dev: false
 
+  /ts-jest-mock-import-meta/0.12.0:
+    resolution: {integrity: sha512-LfuetNsQ6CDEAPekFOtMpCPRBBAgoA322IQ95eCa3x0mR++GwhZddlsmjOUhxRPLF3utbXUZpCEZiW+HP8jkiA==}
+    peerDependencies:
+      ts-jest: '>=20.0.0'
+    dev: true
+
   /ts-jest/28.0.8_fe5rw525qib7ve6hyskjt4xu3u:
     resolution: {integrity: sha512-5FaG0lXmRPzApix8oFG8RKjAz4ehtm8yMKOTy5HX3fY6W8kmvOrmcY0hKDElW52FJov+clhUbrKAqofnj4mXTg==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
@@ -18076,6 +18107,28 @@ packages:
   /unpipe/1.0.0:
     resolution: {integrity: sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==}
     engines: {node: '>= 0.8'}
+    dev: true
+
+  /unplugin/0.3.3_vite@3.1.0+webpack@5.74.0:
+    resolution: {integrity: sha512-WjZWpUqqcYPQ/efR00Zm2m1+J1LitwoZ4uhHV4VdZ+IpW0Nh/qnDYtVf+nLhozXdGxslMPecOshVR7NiWFl4gA==}
+    peerDependencies:
+      esbuild: '>=0.13'
+      rollup: ^2.50.0
+      vite: ^2.3.0
+      webpack: 4 || 5
+    peerDependenciesMeta:
+      esbuild:
+        optional: true
+      rollup:
+        optional: true
+      vite:
+        optional: true
+      webpack:
+        optional: true
+    dependencies:
+      vite: 3.1.0
+      webpack: 5.74.0
+      webpack-virtual-modules: 0.4.4
     dev: true
 
   /unset-value/1.0.0:
