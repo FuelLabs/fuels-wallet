@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 import { liveQuery } from "dexie";
 import type { StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
@@ -25,10 +26,9 @@ type MachineServices = {
 type MachineEvents = { type: "SET_ACCOUNTS"; data: Account[] };
 
 export const accountsMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAOgDMwAXHAqAQU0wHsBXfS2AYgicJIIBuTANZgSaLHkKkK1KfUat2sBIKaZ0lXLwDaABgC6iUAAcmsXFt7GQAD0QBaABwknARgDMATgBMAFgBWADYvNz0AdnCvcIAaEABPRH8-ElCo8KcfDzdwn38AX3y4iRppcipShWY2Dk4wACd6pnqSEwAbTTJm1HEMUuJyuVoGauVVfCENK3x9IyQQMwtpm3sED3WSPy23IL1s7Kc9IIC4xIQ-LxIPIJCnSKCPP1y9J0LivqkB2UqAIXQO-CYODcXhiNSiXqSAhfCryP4AoEqNRTbQzQw2RaWVErJIeEgRa5BXLEpweJzHU6IPzuVwePJBUkePYBJx+DxvEAlT4yWG0eHoQHAhpNFrtTrdSH9HlDfBQfmCpETdSaVGzDHmLHWeardYpXx+II+O5uJyk4KUtZ6NxXHwvR7rdyHa4crnQ0g8QicADKAFEACoAfToAGFgwB5ACqADk-V71UtsdrEAEoiQQraAlk6QEjh4LSm9CQAsXIhkiQ72Rz8EwIHAbK6yt95CMlBx45r8DiEA5bSQ8h5wkyzccPJmLQOrjcvF5vEEdpkAl4XR83YNfv8BYj28sk92TSRwmyfIa-D5p14nAEyeO6SQ3H49NSU9THsegsuoY30Lg2pBt4nQFWY5wlcTMnSZLw-E8PMEkQQ1J1uMJqUPB83A-KUSA9MB-y1QCqWiA8IhTLIc2yIILQfECDWPLxMxePQ9DPdDuRwztdwcLY+yyQc7WCK8x1g7tHjTdYGJLI43Bzd9CnyIA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAOgDMwAXHAqAQU0wHsBXfS2AYgicJIIBuTANZgSaLHkKkK1KfUat2sBIKaZ0lXLwDaABgC6iUAAcmsXFt7GQAD0QBaABwknARgDMATgCsAFh8fADYAdg83EL03ABoQAE9ENy8QkhCggCYAkJ8nfz10pxCAXyLYiRppcioKhWY2Dk4wACcmpiaSEwAbTTI21HEMCuIquVoGOuVVfCENK3x9IyQQMws5m3sEdNCSLz1szPDQkM9YhIQ-LxIPUL09Py30vR9brxKywalh2RqAIXRu-CYODcXhiNSiAaSAhfaryP4AoEqNSzbTzQw2FaWVHrRwpDz4vxOdJJPRBALpAqnRCEnypY5OJx6LxJPzZDxvEDlT4yWG0eHoQHA5qtdpdHp9SFDHmjfBQfmCpHTdSaVELDHmLHWJYbLZ6K6E4mEryskLuHxUhAeYkkKL4pweSJedx+NwcrnQ0g8QicADKAFEACoAfToAGFQwB5ACqADkAz71atsdrED5IlddhcrZkfFs-BafBESOkfE70k6Qn4XcaSqUQPgmBA4DZ3ZVvvJxkoOInNfgcQgHI9i+kHR49Pbgj4PLmLQ6rkEgl4vN4gm4gkTS26Ph6Rr9-gLET21imB24XJWrRl7kunVOnLOrSQ3H47rlK-b7gut1C2+hcJ1ICPZNQA2QtLhdHIyWnPYni8AtaSXQ1l1XTwz1dOtW2GL0wCArUQMQCk9XJPZiSCDxWT8IICyeYtS3cXxKyedJvylXC+xPBwq2HUdx2nIIpxneJHHIkgyLHUln1NBinD8WsiiAA */
   createMachine(
     {
-      // eslint-disable-next-line @typescript-eslint/consistent-type-imports
       tsTypes: {} as import("./accountsMachine.typegen").Typegen0,
       schema: {
         context: {} as MachineContext,
