@@ -1,35 +1,31 @@
 import { Flex } from "@fuel-ui/react";
 
-import { useHome } from "../../hooks/useHome";
-import { AssetsTitle } from "../components/AssetsTitle/AssetsTitle";
-import { HomeActions } from "../components/HomeActions/HomeActions";
+import { AssetsTitle, HomeActions } from "../../components";
 
-import { BalanceWidget } from "~/systems/Account/components/BalanceWidget/BalanceWidget";
+import { BalanceWidget, useAccounts } from "~/systems/Account";
 import { AssetList } from "~/systems/Asset";
 import { Layout } from "~/systems/Core";
 
 export function Home() {
-  const { state, context } = useHome();
-
-  const balances = [...(context.account?.balances || [])];
+  const { isLoading, currentAccount } = useAccounts();
 
   return (
-    <Layout title="Home" isLoading={state.hasTag("loading")}>
+    <Layout title="Home" isLoading={isLoading}>
       <Layout.TopBar />
       <Layout.Content>
-        <Flex direction="column" css={{ height: "100%" }}>
-          {state.hasTag("loadingAccount") || !context.account ? (
+        <Flex css={{ height: "100%", flexDirection: "column" }}>
+          {isLoading || !currentAccount ? (
             <BalanceWidget.Loader />
           ) : (
-            <BalanceWidget account={context.account} />
+            <BalanceWidget account={currentAccount} />
           )}
-          <HomeActions isDisabled={state.hasTag("loading")} />
+          <HomeActions isDisabled={isLoading} />
           <AssetsTitle />
-          {state.hasTag("loading") && <AssetList.Loading items={4} />}
-          {Boolean(!state.hasTag("loading") && balances.length) && (
-            <AssetList assets={balances} />
+          {isLoading && <AssetList.Loading items={4} />}
+          {Boolean(!isLoading && currentAccount?.balances?.length) && (
+            <AssetList assets={currentAccount?.balances || []} />
           )}
-          {Boolean(!state.hasTag("loading") && !balances.length) && (
+          {Boolean(!isLoading && !currentAccount?.balances?.length) && (
             <Flex css={{ flex: "1 0" }}>
               <AssetList.Empty />
             </Flex>

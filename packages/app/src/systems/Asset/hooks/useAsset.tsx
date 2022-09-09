@@ -1,7 +1,12 @@
+import { useMemo } from "react";
+
 import { ASSET_LIST } from "../utils";
 
 export function useAsset(assetId: string) {
-  const asset = ASSET_LIST.find((asset) => asset.assetId === assetId);
+  const asset = useMemo(
+    () => ASSET_LIST.find((asset) => asset.assetId === assetId),
+    [assetId]
+  );
 
   return (
     asset || {
