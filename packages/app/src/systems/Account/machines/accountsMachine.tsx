@@ -99,8 +99,8 @@ export const accountsMachine =
         async fetchAccounts() {
           return db.getAccounts();
         },
-        async fetchBalances() {
-          const accounts = await db.getAccounts();
+        async fetchBalances({ accounts: _accounts }) {
+          const accounts = _accounts || [];
           const balances = await Promise.all(
             accounts.map(({ publicKey }) => getBalances(publicKey))
           );

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 
-import { useAccounts } from "~/systems/Account/hooks";
+import { useAccounts } from "~/systems/Account";
 
 type PrivateRouteProps = {
   children: ReactNode;
