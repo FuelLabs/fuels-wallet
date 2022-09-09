@@ -106,6 +106,7 @@ export function CreatePassword({
               onCheckedChange={(checked) => {
                 form.setValue("accepted", Boolean(checked), {
                   shouldValidate: true,
+                  shouldTouch: true,
                 });
               }}
             />
