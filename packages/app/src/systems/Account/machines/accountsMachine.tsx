@@ -44,6 +44,7 @@ export const accountsMachine =
             src: "fetchAccounts",
             onDone: [
               {
+                actions: "assignAccounts",
                 target: "fetchingBalances",
               },
             ],
@@ -61,6 +62,7 @@ export const accountsMachine =
             src: "fetchBalances",
             onDone: [
               {
+                actions: "assignAccounts",
                 target: "done",
               },
             ],
