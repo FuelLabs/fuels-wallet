@@ -1,18 +1,22 @@
-import { useMachine } from "@xstate/react";
-import { useLiveQuery } from "dexie-react-hooks";
+import { useSelector } from "@xstate/react";
 
-import { accountsMachine } from "../machines/accountsMachine";
+import type { AccountsMachineState } from "../machines";
 
-import { db } from "~/systems/Core";
+import { useGlobalState } from "~/systems/Core";
+
+const selectors = {
+  accounts: (state: AccountsMachineState) => state.context.accounts,
+  isLoading: (state: AccountsMachineState) => state.hasTag("loading"),
+};
 
 export function useAccounts() {
-  const [state] = useMachine(accountsMachine);
-
-  const accounts = useLiveQuery(() => db.accounts.toArray());
+  const { accountsService } = useGlobalState();
+  const isLoading = useSelector(accountsService, selectors.isLoading);
+  const accounts = useSelector(accountsService, selectors.accounts);
 
   return {
     accounts,
-    isLoading: state.matches("fetchingBalances"),
+    isLoading,
     currentAccount: accounts?.[0],
   };
 }
