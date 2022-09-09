@@ -1,3 +1,4 @@
+import { liveQuery } from "dexie";
 import type { StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
 
@@ -17,6 +18,8 @@ type MachineServices = {
   };
 };
 
+type MachineEvents = { type: "SET_ACCOUNTS"; data: Account[] };
+
 export const accountsMachine = createMachine(
   {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -27,6 +30,7 @@ export const accountsMachine = createMachine(
     schema: {
       context: {} as MachineContext,
       services: {} as MachineServices,
+      events: {} as MachineEvents,
     },
     states: {
       fetching: {
@@ -46,7 +50,14 @@ export const accountsMachine = createMachine(
         type: "final",
       },
       done: {
-        type: "final",
+        invoke: {
+          src: "listenAccountsUpdating",
+        },
+        on: {
+          SET_ACCOUNTS: {
+            actions: "assignAccounts",
+          },
+        },
       },
     },
   },
@@ -58,6 +69,13 @@ export const accountsMachine = createMachine(
     services: {
       async fetchAccounts() {
         return db.getAccounts();
+      },
+      listenAccountsUpdating: () => (send) => {
+        const obs$ = liveQuery(() => db.getAccounts());
+        const subscription = obs$.subscribe({
+          next: (val) => send({ type: "SET_ACCOUNTS", data: val }),
+        });
+        return subscription.unsubscribe;
       },
     },
   }
