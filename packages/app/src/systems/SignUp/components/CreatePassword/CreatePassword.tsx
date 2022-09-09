@@ -20,7 +20,7 @@ const schema = yup
     confirmPassword: yup
       .string()
       .oneOf([yup.ref("password"), null], "Passwords must match"),
-    accepted: yup.bool().required(),
+    accepted: yup.bool().oneOf([true]).required(),
   })
   .required();
 
@@ -48,7 +48,6 @@ export function CreatePassword({
     defaultValues: {
       password: "",
       confirmPassword: "",
-      accepted: false,
     },
   });
 
@@ -93,6 +92,7 @@ export function CreatePassword({
           />
         </Stack>
         <ControlledField
+          hideError
           control={control}
           name="accepted"
           label="I agree with terms and services"

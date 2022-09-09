@@ -26,6 +26,7 @@ export type ControlledFieldProps = Omit<ControllerProps<any>, "render"> & {
   isDisabled?: boolean;
   isReadOnly?: boolean;
   render: (props: RenderProps) => ReactElement;
+  hideError?: boolean;
 };
 
 export function ControlledField({
@@ -39,6 +40,7 @@ export function ControlledField({
   isInvalid,
   isDisabled,
   isReadOnly,
+  hideError,
 }: ControlledFieldProps) {
   const id = useId();
   return (
@@ -62,7 +64,7 @@ export function ControlledField({
             {label && labelSide === "right" && (
               <Form.Label htmlFor={id}>{label}</Form.Label>
             )}
-            {props.fieldState.error && (
+            {!hideError && props.fieldState.error && (
               <Form.ErrorMessage aria-label="Error message">
                 {props.fieldState.error.message}
               </Form.ErrorMessage>

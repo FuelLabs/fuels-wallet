@@ -13,12 +13,11 @@ describe('accountsMachine', () => {
           fetchAccounts: async () => {
             return [{ name: 'Account1', address: '0x00' }];
           },
+          listenAccountsUpdating: () => () => () => null,
         },
       });
 
     const service = interpret(machine).onTransition((state) => {
-      // this is where you expect the state to eventually
-      // be reached
       if (state.matches('done')) {
         const accounts = state.context?.accounts;
         expect(accounts?.length).toBe(1);
