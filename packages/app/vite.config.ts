@@ -4,8 +4,6 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-import { getPublicEnvs } from './load.envs.js';
-
 // https://vitejs.dev/config/
 export default defineConfig({
   base: process.env.PUBLIC_URL || '/',
@@ -16,7 +14,9 @@ export default defineConfig({
   optimizeDeps: {
     esbuildOptions: {
       target: 'es2020',
-      supported: { bigint: true },
+      supported: {
+        bigint: true,
+      },
       define: {
         global: 'globalThis',
       },
@@ -32,9 +32,6 @@ export default defineConfig({
   server: {
     port: process.env.NODE_ENV === 'test' ? 3001 : 3000,
   },
-  define: {
-    'process.env': getPublicEnvs(),
-  },
   resolve: {
     /**
      * We need this to get right build script and use PNPM link correctly
@@ -42,7 +39,10 @@ export default defineConfig({
     alias: {
       '@fuel-ui/react': resolve(__dirname, './node_modules/@fuel-ui/react/dist/index.mjs'),
       '@fuel-ui/css': resolve(__dirname, './node_modules/@fuel-ui/css/dist/index.mjs'),
+      process: 'process/browser',
       stream: 'stream-browserify',
+      zlib: 'browserify-zlib',
+      util: 'util',
     },
   },
   ...(Boolean(process.env.CI) && {
