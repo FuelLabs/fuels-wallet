@@ -1,6 +1,6 @@
-import { createEvent } from "../Core/utils/mediator/useMediator";
-
 import type { Account } from "./types";
+
+import { createEvent } from "~/systems/Core/utils/mediator";
 
 enum Events {
   accountCreated = "accounts:ACCOUNT_CREATED",

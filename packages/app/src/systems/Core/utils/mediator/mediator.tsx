@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useId } from "react";
+import ShortUniqueId from "short-unique-id";
 import { interpret, InterpreterStatus } from "xstate";
 
 import type { Listener } from "./mediatorMachine";
@@ -17,8 +17,8 @@ if (service.status !== InterpreterStatus.Running) {
  * This function will create an event that will be used to send/register
  * inside the mediator
  */
-export function createEvent<T>(name: string) {
-  const fn = (data?: T extends null ? null : T) => {
+export function createEvent<T = any>(name: string) {
+  const fn = (data: T) => {
     service.send("send", { name, data });
   };
   fn._name = name;
@@ -27,17 +27,13 @@ export function createEvent<T>(name: string) {
 
 type Event<T> = (data: T) => void;
 
-export function useSubscribe<T>(
-  event: Event<T>,
-  listener: Listener<T>,
-  deps?: any[]
-) {
-  const id = useId();
+export function subscribe<T>(event: Event<T>, listener: Listener<T>) {
+  const id = new ShortUniqueId({ length: 10 });
   const evName = (event as any)._name;
-  useEffect(() => {
-    service.send("register", { data: { event: evName, id, listener } });
-    return () => {
+  service.send("register", { data: { event: evName, id, listener } });
+  return {
+    unsubscribe: () => {
       service.send("unregister", { data: { event: evName, id } });
-    };
-  }, deps);
+    },
+  };
 }

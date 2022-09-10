@@ -1,1 +1,1 @@
-export * from "./useMediator";
+export * from "./mediator";

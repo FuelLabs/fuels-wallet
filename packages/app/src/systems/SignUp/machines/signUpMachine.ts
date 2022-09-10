@@ -159,8 +159,10 @@ export const signUpMachine = createMachine(
       deleteData: assign({
         data: (_) => null,
       }),
-      sendAccountCreated: () => {
-        accountEvents.accountCreated();
+      sendAccountCreated: (ctx) => {
+        if (ctx.account) {
+          accountEvents.accountCreated(ctx.account);
+        }
       },
     },
     guards: {

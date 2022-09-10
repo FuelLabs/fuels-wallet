@@ -39,6 +39,7 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.34.2",
     "react-router-dom": "^6.3.0",
+    "short-unique-id": "^4.4.4",
     "util": "^0.12.4",
     "xstate": "^4.33.5",
     "yup": "^0.32.11"

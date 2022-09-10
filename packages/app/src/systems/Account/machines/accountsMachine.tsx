@@ -1,10 +1,11 @@
-import type { StateFrom } from "xstate";
+import type { Sender, StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
 
+import { accountEvents } from "..";
 import type { Account } from "../types";
 
 import type { Maybe } from "~/systems/Core";
-import { db } from "~/systems/Core";
+import { subscribe, db } from "~/systems/Core";
 
 type MachineContext = {
   accounts?: Maybe<Account[]>;
@@ -51,6 +52,9 @@ export const accountsMachine = createMachine(
         type: "final",
       },
       done: {
+        invoke: {
+          src: "listenUpdates",
+        },
         on: {
           UPDATE_ACCOUNTS: {
             actions: "updateAccounts",
@@ -70,6 +74,12 @@ export const accountsMachine = createMachine(
     services: {
       async fetchAccounts() {
         return db.getAccounts();
+      },
+      listenUpdates: () => (send: Sender<MachineEvents>) => {
+        const sub = subscribe(accountEvents.accountCreated, (account) => {
+          send({ type: "UPDATE_ACCOUNTS", data: { account } });
+        });
+        return sub.unsubscribe;
       },
     },
   }
