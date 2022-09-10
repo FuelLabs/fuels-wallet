@@ -2,11 +2,13 @@ import { useInterpret, useSelector } from "@xstate/react";
 import type { ReactNode } from "react";
 import { useContext, createContext } from "react";
 
+import { accountEvents } from "../..";
 import type { AccountsMachineState } from "../../machines/accountsMachine";
 import { accountsMachine } from "../../machines/accountsMachine";
 import type { Account } from "../../types";
 
 import type { Maybe } from "~/systems/Core";
+import { useSubscribe } from "~/systems/Core";
 
 type Context = {
   accounts?: Maybe<Account[]>;
@@ -28,6 +30,10 @@ export function AccountProvider({ children }: AccountProviderProps) {
   const service = useInterpret(() => accountsMachine);
   const isLoading = useSelector(service, selectors.isLoading);
   const accounts = useSelector(service, selectors.accounts);
+
+  useSubscribe(accountEvents.accountCreated, (account: Account) => {
+    service.send("UPDATE_ACCOUNTS", { data: { account } });
+  });
 
   return (
     <ctx.Provider value={{ accounts, isLoading }}>{children}</ctx.Provider>
