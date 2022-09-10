@@ -13,7 +13,6 @@ describe('accountsMachine', () => {
           fetchAccounts: async () => {
             return [{ name: 'Account1', address: '0x00' }];
           },
-          listenAccountsUpdating: () => () => () => null,
         },
       });
 
