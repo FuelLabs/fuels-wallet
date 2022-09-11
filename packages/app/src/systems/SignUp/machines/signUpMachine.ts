@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Mnemonic } from '@fuel-ts/mnemonic';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { MNEMONIC_SIZE } from '~/config';
-import type { Account } from '~/systems/Account';
+import type { Account, accountsMachine } from '~/systems/Account';
 import { createManager } from '~/systems/Account';
 import { db, getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
@@ -24,6 +23,7 @@ type FormValues = {
 };
 
 type MachineContext = {
+  accountsService: InterpreterFrom<typeof accountsMachine>;
   type: SignUpType;
   attempts: number;
   isConfirmed?: boolean;
@@ -172,18 +172,25 @@ export const signUpMachine = createMachine(
       },
     },
     services: {
-      async createManager({ data }) {
+      async createManager({ data, accountsService }) {
         if (!data?.password || !data?.mnemonic) {
           throw new Error('Invalid data');
         }
 
         const manager = await createManager(data);
         const account = manager.getAccounts()[0];
-        return db.addAccount({
+        const newAccount = db.addAccount({
           name: 'Account 1',
           address: account.address.toAddress(),
           publicKey: account.publicKey,
         });
+
+        const accountState = accountsService.getSnapshot();
+        if (accountState?.matches('done')) {
+          accountsService.send('REFETCH');
+        }
+
+        return newAccount;
       },
     },
   }

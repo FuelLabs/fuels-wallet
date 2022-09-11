@@ -5,24 +5,26 @@ import type { InterpreterFrom } from "xstate";
 
 import { accountsMachine } from "~/systems/Account";
 
-const GlobalStateContext = createContext({
+const GlobalMachinesContext = createContext({
   accountsService: {} as InterpreterFrom<typeof accountsMachine>,
 });
 
-type GlobalStateProviderProps = {
+type GlobalMachinesProviderProps = {
   children: ReactNode;
 };
 
-export const GlobalStateProvider = ({ children }: GlobalStateProviderProps) => {
+export const GlobalMachinesProvider = ({
+  children,
+}: GlobalMachinesProviderProps) => {
   const accountsService = useInterpret(accountsMachine);
 
   return (
-    <GlobalStateContext.Provider value={{ accountsService }}>
+    <GlobalMachinesContext.Provider value={{ accountsService }}>
       {children}
-    </GlobalStateContext.Provider>
+    </GlobalMachinesContext.Provider>
   );
 };
 
-export function useGlobalState() {
-  return useContext(GlobalStateContext);
+export function useGlobalMachines() {
+  return useContext(GlobalMachinesContext);
 }

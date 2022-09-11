@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation, useResolvedPath } from "react-router-dom";
 
 import { useAccounts } from "~/systems/Account";
 
@@ -8,9 +8,14 @@ type PublicRouteProps = {
 };
 
 export function PublicRoute({ children }: PublicRouteProps) {
-  const { accounts, isLoading } = useAccounts();
-  if (!isLoading && accounts?.length) {
+  const { accounts } = useAccounts();
+  const location = useLocation();
+  const match = useResolvedPath(location.pathname);
+  const isSignUp = match.pathname.includes("/sign-up");
+
+  if (!isSignUp && accounts != null && accounts?.length) {
     return <Navigate to="/" replace />;
   }
+
   return <>{children}</>;
 }

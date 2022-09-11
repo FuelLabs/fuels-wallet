@@ -1,2 +1,2 @@
 export * from "./Providers";
-export * from "./GlobalState";
+export * from "./GlobalMachines";

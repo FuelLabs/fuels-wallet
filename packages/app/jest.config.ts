@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable import/order */
 import type { Config } from '@jest/types';
-// @ts-ignore
 import baseConfig from '@fuel-ui/test-utils/config';
 
 import pkg from './package.json';

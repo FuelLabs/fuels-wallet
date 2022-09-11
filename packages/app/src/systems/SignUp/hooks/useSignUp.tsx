@@ -5,15 +5,20 @@ import type { CreatePasswordValues } from "../components";
 import type { SignUpMachineState } from "../machines/signUpMachine";
 import { signUpMachine, SignUpType } from "../machines/signUpMachine";
 
+import { useGlobalMachines } from "~/systems/Core";
+
 const selectors = {
   context: (state: SignUpMachineState) => state.context,
 };
 
 export function useSignUp(type: SignUpType) {
+  const { accountsService } = useGlobalMachines();
+
   const [state, send, service] = useMachine(() =>
     signUpMachine.withContext({
       type,
       attempts: 0,
+      accountsService,
     })
   );
 

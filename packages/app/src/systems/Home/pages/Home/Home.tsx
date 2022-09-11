@@ -1,4 +1,5 @@
 import { Flex } from "@fuel-ui/react";
+import { useEffect } from "react";
 
 import { AssetsTitle, HomeActions } from "../../components";
 
@@ -7,7 +8,11 @@ import { AssetList } from "~/systems/Asset";
 import { Layout } from "~/systems/Core";
 
 export function Home() {
-  const { isLoading, currentAccount } = useAccounts();
+  const { isLoading, currentAccount, handlers } = useAccounts();
+
+  useEffect(() => {
+    handlers.refetch();
+  }, []);
 
   return (
     <Layout title="Home" isLoading={isLoading}>

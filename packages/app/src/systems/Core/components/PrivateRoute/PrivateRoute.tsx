@@ -8,9 +8,9 @@ type PrivateRouteProps = {
 };
 
 export function PrivateRoute({ children }: PrivateRouteProps) {
-  const { accounts, isLoading } = useAccounts();
+  const { accounts } = useAccounts();
 
-  if (isLoading === false && accounts != null && !accounts?.length) {
+  if (accounts != null && !accounts?.length) {
     return <Navigate to="/sign-up" replace />;
   }
 

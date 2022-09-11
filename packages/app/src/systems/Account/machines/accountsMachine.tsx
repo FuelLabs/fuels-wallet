@@ -23,10 +23,10 @@ type MachineServices = {
   };
 };
 
-type MachineEvents = { type: "SET_ACCOUNTS"; data: Account[] };
+type MachineEvents = { type: "SET_ACCOUNTS" | "REFETCH"; data: Account[] };
 
 export const accountsMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAOgDMwAXHAqAQU0wHsBXfS2AYgicJIIBuTANZgSaLHkKkK1KfUat2sBIKaZ0lXLwDaABgC6iUAAcmsXFt7GQAD0QBaABwknARgDMATgCsAFh8fADYAdg83EL03ABoQAE9ENy8QkhCggCYAkJ8nfz10pxCAXyLYiRppcioKhWY2Dk4wACcmpiaSEwAbTTI21HEMCuIquVoGOuVVfCENK3x9IyQQMws5m3sEdNCSLz1szPDQkM9YhIQ-LxIPUL09Py30vR9brxKywalh2RqAIXRu-CYODcXhiNSiAaSAhfaryP4AoEqNSzbTzQw2FaWVHrRwpDz4vxOdJJPRBALpAqnRCEnypY5OJx6LxJPzZDxvEDlT4yWG0eHoQHA5qtdpdHp9SFDHmjfBQfmCpHTdSaVELDHmLHWJYbLZ6K6E4mEryskLuHxUhAeYkkKL4pweSJedx+NwcrnQ0g8QicADKAFEACoAfToAGFQwB5ACqADkAz71atsdrED5IlddhcrZkfFs-BafBESOkfE70k6Qn4XcaSqUQPgmBA4DZ3ZVvvJxkoOInNfgcQgHI9i+kHR49Pbgj4PLmLQ6rkEgl4vN4gm4gkTS26Ph6Rr9-gLET21imB24XJWrRl7kunVOnLOrSQ3H47rlK-b7gut1C2+hcJ1ICPZNQA2QtLhdHIyWnPYni8AtaSXQ1l1XTwz1dOtW2GL0wCArUQMQCk9XJPZiSCDxWT8IICyeYtS3cXxKyedJvylXC+xPBwq2HUdx2nIIpxneJHHIkgyLHUln1NBinD8WsiiAA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAOgDMwAXHAqAQU0wHsBXfS2AYgicJIIBuTANZgSaLHkKkK1KfUat2sBIKaZ0lXLwDaABgC6iUAAcmsXFt7GQAD0QBGAEx6SehwE4ArB71OAHE5eTgDM-gA0IACejh4ALCQAbADsXskeIXohIelecQC++ZESNNLkVKUKzGwcnGAATvVM9SQmADaaZM2o4hilxOVytAzVyqr4QhpW+PpGSCBmFtM29gjODiSZev5xu4leDiGJ7pExCCEeJHFOTh7+Hp6JiZ7+XoXFfVIDspUAQugdfCYODcXhiNSiXqSAjfCryf6A4EqNRTbQzQw2RaWNErRz+EIkTweUKZPI7LyBU6IOKJBKPYIpRKhBx5ApFEAlL4yOG0BHoIEghpNFrtTrdKH9blDfBQPkC5ETdSaNGzTHmbHWearELXQn+ZLJfX7AIskJUhAuDZ6PQGg5pfyJHWJd4cz4w0g8QicADKAFEACoAfToAGEQwB5ACqADl-d61UscVrEABaBzpTYhTx6YIMzIeZLm0JeEjEi45nwhLwXasuznukiesCcABKvoAYgGQwAJBMa-C4hBphKpJ7PfW7HKJfFFvSJK7OPz3AuvfWFdn4JgQOA2etlH7yEZKDh95bJofppwkV4ORIPB6vR0O800zZ3pwOOIGsL7bJ1t37jyMpykip5JqAqy3gSTIOA4egZAWcTONO5ohE4CRBME-g5vqPiBP+0L7uguBtJAYGahBiA5BsLiZPcFxbIW0SIMEVw3Hc75xBSVb+ARkqNmC5EDueaYZs4NzJB+063mOqE+CQBzoXBwQsncbIfIRxBCYOKa0Zm2a5k4jrwUxZwpmhCkGtauzWkc-j4m865AA */
   createMachine(
     {
       tsTypes: {} as import("./accountsMachine.typegen").Typegen0,
@@ -85,6 +85,9 @@ export const accountsMachine =
           on: {
             SET_ACCOUNTS: {
               actions: "assignAccounts",
+            },
+            REFETCH: {
+              target: "fetchingAccounts",
             },
           },
         },

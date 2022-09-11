@@ -2,7 +2,7 @@ import { useSelector } from "@xstate/react";
 
 import type { AccountsMachineState } from "../machines";
 
-import { useGlobalState } from "~/systems/Core";
+import { useGlobalMachines } from "~/systems/Core";
 
 const selectors = {
   accounts: (state: AccountsMachineState) => state.context.accounts,
@@ -10,13 +10,20 @@ const selectors = {
 };
 
 export function useAccounts() {
-  const { accountsService } = useGlobalState();
+  const { accountsService } = useGlobalMachines();
   const isLoading = useSelector(accountsService, selectors.isLoading);
   const accounts = useSelector(accountsService, selectors.accounts);
+
+  function refetch() {
+    accountsService.send("REFETCH");
+  }
 
   return {
     accounts,
     isLoading,
     currentAccount: accounts?.[0],
+    handlers: {
+      refetch,
+    },
   };
 }

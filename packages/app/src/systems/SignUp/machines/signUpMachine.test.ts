@@ -3,10 +3,15 @@ import { interpret } from 'xstate';
 import type { SignUpMachineService, SignUpMachineState } from './signUpMachine';
 import { SignUpType, signUpMachine } from './signUpMachine';
 
+import { accountsMachine } from '~/systems/Account';
+
 function createMachine() {
+  const accountsService = interpret(accountsMachine);
+
   return signUpMachine.withContext({
     attempts: 0,
     type: SignUpType.create,
+    accountsService,
   });
 }
 
@@ -71,9 +76,12 @@ describe('signUpMachine', () => {
 
   describe('type: recover', () => {
     it('should go to waitingMnemonic after checking', (done) => {
+      const accountsService = interpret(accountsMachine);
+
       const machine = signUpMachine.withContext({
         attempts: 0,
         type: SignUpType.recover,
+        accountsService,
       });
       const service = interpret(machine).onTransition((state) => {
         expect(state.matches('waitingMnemonic')).toBe(true);

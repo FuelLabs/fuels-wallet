@@ -30,7 +30,7 @@ describe('accountsMachine', () => {
               },
             ];
           },
-          listenAccountsUpdating: () => () => {},
+          listenAccountsUpdating: () => () => () => null,
         },
       });
 
