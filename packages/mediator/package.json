@@ -1,0 +1,37 @@
+{
+  "name": "@fuels-wallet/mediator",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "main": "src/index.ts",
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "typings": "dist/index.d.ts",
+    "exports": {
+      ".": {
+        "require": "dist/index.js",
+        "default": "dist/index.mjs"
+      }
+    },
+    "files": [
+      "dist"
+    ]
+  },
+  "scripts": {
+    "build": "pnpm ts:check && tsup --dts",
+    "ts:check": "pnpm xstate:typegen && tsc --noEmit",
+    "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
+  },
+  "dependencies": {
+    "@xstate/react": "^3.0.1",
+    "react": "^18.2.0",
+    "short-unique-id": "^4.4.4",
+    "xstate": "^4.33.6"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.19",
+    "tsup": "^6.2.3"
+  }
+}

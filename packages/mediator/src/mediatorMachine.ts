@@ -1,8 +1,8 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { InterpreterFrom, StateFrom } from "xstate";
-import { assign, createMachine } from "xstate";
+import type { InterpreterFrom, StateFrom } from 'xstate';
+import { assign, createMachine } from 'xstate';
 
 export type Listener<T = any> = (data: T) => any;
 type SubscriberMap = Map<string, Map<string, Listener>>;
@@ -13,15 +13,15 @@ type MachineContext = {
 
 type MachineEvents =
   | {
-      type: "register";
+      type: 'register';
       data: { id: string; event: string; listener: Listener };
     }
   | {
-      type: "unregister";
+      type: 'unregister';
       data: { id: string; event: string };
     }
   | {
-      type: "send";
+      type: 'send';
       name: string;
       data: any;
     };
@@ -29,10 +29,10 @@ type MachineEvents =
 export const mediatorMachine = createMachine(
   {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    tsTypes: {} as import("./mediatorMachine.typegen").Typegen0,
+    tsTypes: {} as import('./mediatorMachine.typegen').Typegen0,
     predictableActionArguments: true,
-    id: "(machine)",
-    initial: "idle",
+    id: '(machine)',
+    initial: 'idle',
     context: {
       subscribers: new Map() as SubscriberMap,
     },
@@ -44,13 +44,13 @@ export const mediatorMachine = createMachine(
       idle: {
         on: {
           register: {
-            actions: "addSubscriber",
+            actions: 'addSubscriber',
           },
           unregister: {
-            actions: "removeSubscriber",
+            actions: 'removeSubscriber',
           },
           send: {
-            actions: "runListeners",
+            actions: 'runListeners',
           },
         },
       },

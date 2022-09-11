@@ -1,3 +1,4 @@
+import { subscribe } from "@fuels-wallet/mediator";
 import type { Sender, StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
 
@@ -5,7 +6,7 @@ import { accountEvents } from "..";
 import type { Account } from "../types";
 
 import type { Maybe } from "~/systems/Core";
-import { subscribe, db } from "~/systems/Core";
+import { db } from "~/systems/Core";
 
 type MachineContext = {
   accounts?: Maybe<Account[]>;

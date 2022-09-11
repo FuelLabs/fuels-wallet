@@ -1,6 +1,6 @@
-import type { Account } from "./types";
+import { createEvent } from "@fuels-wallet/mediator";
 
-import { createEvent } from "~/systems/Core/utils/mediator";
+import type { Account } from "./types";
 
 enum Events {
   accountCreated = "accounts:ACCOUNT_CREATED",
