@@ -1,7 +1,8 @@
-import { liveQuery } from "dexie";
-import type { StateFrom } from "xstate";
+import { subscribe } from "@fuels-wallet/mediator";
+import type { Sender, StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
 
+import { accountEvents } from "..";
 import type { Account } from "../types";
 
 import type { Maybe } from "~/systems/Core";
@@ -18,7 +19,9 @@ type MachineServices = {
   };
 };
 
-type MachineEvents = { type: "SET_ACCOUNTS"; data: Account[] };
+type MachineEvents =
+  | { type: "SET_ACCOUNTS"; data: Account[] }
+  | { type: "UPDATE_ACCOUNTS"; data: { account: Account } };
 
 export const accountsMachine = createMachine(
   {
@@ -51,11 +54,11 @@ export const accountsMachine = createMachine(
       },
       done: {
         invoke: {
-          src: "listenAccountsUpdating",
+          src: "listenUpdates",
         },
         on: {
-          SET_ACCOUNTS: {
-            actions: "assignAccounts",
+          UPDATE_ACCOUNTS: {
+            actions: "updateAccounts",
           },
         },
       },
@@ -65,17 +68,19 @@ export const accountsMachine = createMachine(
     actions: {
       assignAccounts: assign({ accounts: (_, ev) => ev.data }),
       assignError: assign({ error: (_, ev) => ev.data }),
+      updateAccounts: assign({
+        accounts: (ctx, ev) => ctx.accounts?.concat([ev.data.account]),
+      }),
     },
     services: {
       async fetchAccounts() {
         return db.getAccounts();
       },
-      listenAccountsUpdating: () => (send) => {
-        const obs$ = liveQuery(() => db.getAccounts());
-        const subscription = obs$.subscribe({
-          next: (val) => send({ type: "SET_ACCOUNTS", data: val }),
+      listenUpdates: () => (send: Sender<MachineEvents>) => {
+        const sub = subscribe(accountEvents.accountCreated, (account) => {
+          send({ type: "UPDATE_ACCOUNTS", data: { account } });
         });
-        return subscription.unsubscribe;
+        return sub.unsubscribe;
       },
     },
   }
