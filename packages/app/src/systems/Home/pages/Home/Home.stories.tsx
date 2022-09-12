@@ -63,7 +63,6 @@ const ASSETS_MOCK = [
     },
   },
 ];
-
 // mock api response for balances
 WithAssets.parameters = {
   msw: [
