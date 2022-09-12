@@ -21,7 +21,8 @@
     "./packages/*"
   ],
   "scripts": {
-    "build:preview": "turbo run build:preview",
+    "build:libs": "turbo run build --filter=@fuels-wallet/*",
+    "build:preview": "pnpm build:libs && turbo run build:preview",
     "build": "turbo run build",
     "ci:test-e2e": "./scripts/ci-test-e2e.sh",
     "cy:open": "cypress open",
@@ -41,7 +42,7 @@
     "test:clear": "pnpm -r exec jest --clearCache",
     "test:coverage": "pnpm run --filter=app test --coverage",
     "test:e2e": "run-p --race dev cy:run",
-    "ts:check": "pnpm -r --filter=app ts:check",
+    "ts:check": "pnpm -r ts:check",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -55,6 +56,7 @@
     "@types/node": "^18.7.16",
     "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
+    "@xstate/cli": "^0.3.3",
     "cypress": "^10.7.0",
     "dotenv": "^16.0.2",
     "eslint": "^8.23.0",

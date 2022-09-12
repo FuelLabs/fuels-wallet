@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Mnemonic } from '@fuel-ts/mnemonic';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { MNEMONIC_SIZE } from '~/config';
-import type { Account, accountsMachine } from '~/systems/Account';
-import { createManager } from '~/systems/Account';
+import type { Account } from '~/systems/Account';
+import { accountEvents, createManager } from '~/systems/Account';
 import { db, getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
 
@@ -23,7 +24,6 @@ type FormValues = {
 };
 
 type MachineContext = {
-  accountsService: InterpreterFrom<typeof accountsMachine>;
   type: SignUpType;
   attempts: number;
   isConfirmed?: boolean;
@@ -113,7 +113,7 @@ export const signUpMachine = createMachine(
         invoke: {
           src: 'createManager',
           onDone: {
-            actions: ['assignAccount', 'deleteData'],
+            actions: ['assignAccount', 'deleteData', 'sendAccountCreated'],
             target: 'done',
           },
           onError: {
@@ -159,6 +159,11 @@ export const signUpMachine = createMachine(
       deleteData: assign({
         data: (_) => null,
       }),
+      sendAccountCreated: (ctx) => {
+        if (ctx.account) {
+          accountEvents.accountCreated(ctx.account);
+        }
+      },
     },
     guards: {
       isCreatingWallet: (ctx) => {
@@ -172,7 +177,7 @@ export const signUpMachine = createMachine(
       },
     },
     services: {
-      async createManager({ data, accountsService }) {
+      async createManager({ data }) {
         if (!data?.password || !data?.mnemonic) {
           throw new Error('Invalid data');
         }
@@ -184,11 +189,6 @@ export const signUpMachine = createMachine(
           address: account.address.toAddress(),
           publicKey: account.publicKey,
         });
-
-        const accountState = accountsService.getSnapshot();
-        if (accountState?.matches('done')) {
-          accountsService.send('REFETCH');
-        }
 
         return newAccount;
       },

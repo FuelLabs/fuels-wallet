@@ -26,6 +26,7 @@
     "@fuel-ui/css": "^0.7.0",
     "@fuel-ui/react": "^0.7.0",
     "@fuel-ui/test-utils": "^0.7.0",
+    "@fuels-wallet/mediator": "workspace:*",
     "@hookform/resolvers": "^2.9.7",
     "@xstate/react": "^3.0.1",
     "buffer": "^6.0.3",
@@ -34,6 +35,8 @@
     "events": "^3.3.0",
     "fake-indexeddb": "^4.0.0",
     "fuels": "^0.14.0",
+    "msw": "^0.47.1",
+    "msw-storybook-addon": "^1.6.3",
     "process": "^0.11.10",
     "react": "^18.2.0",
     "react-content-loader": "^6.2.0",
@@ -69,7 +72,6 @@
     "@types/react-helmet": "^6.1.5",
     "@types/testing-library__jest-dom": "^5.14.5",
     "@vitejs/plugin-react": "^2.1.0",
-    "@xstate/cli": "^0.3.3",
     "storybook-dark-mode": "^1.1.0",
     "ts-jest-mock-import-meta": "^0.12.0",
     "tsconfig-paths-webpack-plugin": "^4.0.0",
@@ -89,5 +91,8 @@
       "webpack-dev-middleware": "^4.1.0",
       "webpack-virtual-modules": "^0.4.2"
     }
+  },
+  "msw": {
+    "workerDirectory": ""
   }
 }

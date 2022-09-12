@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/consistent-type-imports */
-import { liveQuery } from "dexie";
-import type { StateFrom } from "xstate";
+import { subscribe } from "@fuels-wallet/mediator";
+import type { Sender, StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
 
-import { getBalances } from "../services";
+import { accountEvents, getBalances } from "..";
 import type { Account } from "../types";
 
 import { db } from "~/systems/Core";
@@ -23,12 +22,16 @@ type MachineServices = {
   };
 };
 
-type MachineEvents = { type: "SET_ACCOUNTS" | "REFETCH"; data: Account[] };
+type MachineEvents =
+  | { type: "SET_ACCOUNTS"; data: Account[] }
+  | { type: "UPDATE_ACCOUNTS"; data: { account: Account } }
+  | { type: "REFETCH" };
 
 export const accountsMachine =
   /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAOgDMwAXHAqAQU0wHsBXfS2AYgicJIIBuTANZgSaLHkKkK1KfUat2sBIKaZ0lXLwDaABgC6iUAAcmsXFt7GQAD0QBGAEx6SehwE4ArB71OAHE5eTgDM-gA0IACejh4ALCQAbADsXskeIXohIelecQC++ZESNNLkVKUKzGwcnGAATvVM9SQmADaaZM2o4hilxOVytAzVyqr4QhpW+PpGSCBmFtM29gjODiSZev5xu4leDiGJ7pExCCEeJHFOTh7+Hp6JiZ7+XoXFfVIDspUAQugdfCYODcXhiNSiXqSAjfCryf6A4EqNRTbQzQw2RaWNErRz+EIkTweUKZPI7LyBU6IOKJBKPYIpRKhBx5ApFEAlL4yOG0BHoIEghpNFrtTrdKH9blDfBQPkC5ETdSaNGzTHmbHWearELXQn+ZLJfX7AIskJUhAuDZ6PQGg5pfyJHWJd4cz4w0g8QicADKAFEACoAfToAGEQwB5ACqADl-d61UscVrEABaBzpTYhTx6YIMzIeZLm0JeEjEi45nwhLwXasuznukiesCcABKvoAYgGQwAJBMa-C4hBphKpJ7PfW7HKJfFFvSJK7OPz3AuvfWFdn4JgQOA2etlH7yEZKDh95bJofppwkV4ORIPB6vR0O800zZ3pwOOIGsL7bJ1t37jyMpykip5JqAqy3gSTIOA4egZAWcTONO5ohE4CRBME-g5vqPiBP+0L7uguBtJAYGahBiA5BsLiZPcFxbIW0SIMEVw3Hc75xBSVb+ARkqNmC5EDueaYZs4NzJB+063mOqE+CQBzoXBwQsncbIfIRxBCYOKa0Zm2a5k4jrwUxZwpmhCkGtauzWkc-j4m865AA */
   createMachine(
     {
+      // eslint-disable-next-line @typescript-eslint/consistent-type-imports
       tsTypes: {} as import("./accountsMachine.typegen").Typegen0,
       schema: {
         context: {} as MachineContext,
@@ -80,11 +83,11 @@ export const accountsMachine =
         },
         done: {
           invoke: {
-            src: "listenAccountsUpdating",
+            src: "listenUpdates",
           },
           on: {
-            SET_ACCOUNTS: {
-              actions: "assignAccounts",
+            UPDATE_ACCOUNTS: {
+              actions: "updateAccounts",
             },
             REFETCH: {
               target: "fetchingAccounts",
@@ -97,6 +100,9 @@ export const accountsMachine =
       actions: {
         assignAccounts: assign({ accounts: (_, ev) => ev.data }),
         assignError: assign({ error: (_, ev) => ev.data }),
+        updateAccounts: assign({
+          accounts: (ctx, ev) => ctx.accounts?.concat([ev.data.account]),
+        }),
       },
       services: {
         async fetchAccounts() {
@@ -129,12 +135,11 @@ export const accountsMachine =
 
           return newAccounts;
         },
-        listenAccountsUpdating: () => (send) => {
-          const obs$ = liveQuery(() => db.getAccounts());
-          const subscription = obs$.subscribe({
-            next: (val) => send({ type: "SET_ACCOUNTS", data: val }),
+        listenUpdates: () => (send: Sender<MachineEvents>) => {
+          const sub = subscribe(accountEvents.accountCreated, (account) => {
+            send({ type: "UPDATE_ACCOUNTS", data: { account } });
           });
-          return subscription.unsubscribe;
+          return sub.unsubscribe;
         },
       },
     }
