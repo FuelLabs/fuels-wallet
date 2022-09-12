@@ -2,8 +2,8 @@
 import type { Config } from '@jest/types';
 import baseConfig from '@fuel-ui/test-utils/config';
 
-import pkg from './package.json';
 import { getPublicEnvs } from './load.envs';
+import pkg from './package.json';
 
 const config: Config.InitialOptions = {
   ...baseConfig,

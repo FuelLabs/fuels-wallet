@@ -184,13 +184,11 @@ export const signUpMachine = createMachine(
 
         const manager = await createManager(data);
         const account = manager.getAccounts()[0];
-        const newAccount = db.addAccount({
+        return db.addAccount({
           name: 'Account 1',
           address: account.address.toAddress(),
           publicKey: account.publicKey,
         });
-
-        return newAccount;
       },
     },
   }

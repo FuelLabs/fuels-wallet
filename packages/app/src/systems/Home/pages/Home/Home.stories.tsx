@@ -1,7 +1,6 @@
 import type { Story } from "@storybook/react";
 import { graphql } from "msw";
 import type { FunctionComponent } from "react";
-import { useEffect } from "react";
 
 import { Home } from "./Home";
 
@@ -23,9 +22,7 @@ export default {
 export const Loading: Story<unknown> = () => <Home />;
 Loading.decorators = [
   (Story) => {
-    useEffect(() => {
-      db.accounts.clear();
-    }, []);
+    db.accounts.clear();
 
     return <Story />;
   },
@@ -34,14 +31,12 @@ Loading.decorators = [
 export const NoAssets: Story<unknown> = () => <Home />;
 NoAssets.decorators = [
   (Story) => {
-    useEffect(() => {
-      db.accounts.clear();
-      db.addAccount({
-        name: "Account 1",
-        address: "0x00",
-        publicKey: "0x00",
-      });
-    }, []);
+    db.accounts.clear();
+    db.addAccount({
+      name: "Account 1",
+      address: "0x00",
+      publicKey: "0x00",
+    });
 
     return <Story />;
   },

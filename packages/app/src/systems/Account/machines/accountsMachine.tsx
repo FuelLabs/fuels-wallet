@@ -5,8 +5,8 @@ import { assign, createMachine } from "xstate";
 import { accountEvents, getBalances } from "..";
 import type { Account } from "../types";
 
-import { db } from "~/systems/Core";
 import type { Maybe } from "~/systems/Core";
+import { db } from "~/systems/Core";
 
 type MachineContext = {
   accounts?: Maybe<Account[]>;
