@@ -23,7 +23,7 @@
   "scripts": {
     "build:libs": "turbo run build --filter=@fuels-wallet/*",
     "build:preview": "pnpm build:libs && turbo run build:preview",
-    "build": "turbo run build",
+    "build": "pnpm build:libs && turbo run build",
     "ci:test-e2e": "./scripts/ci-test-e2e.sh",
     "cy:open": "cypress open",
     "cy:run": "cypress run --headless",
