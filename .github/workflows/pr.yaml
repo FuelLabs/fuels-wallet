@@ -8,6 +8,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+env:
+  COVERAGE_FILE: ./coverage/report.json
+
 jobs:
   validate-title:
     name: Validate PR Title
@@ -26,37 +29,40 @@ jobs:
       - run: pnpm audit --prod
 
   lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-node
-      - run: |
-          pnpm ts:check
-          pnpm lint
-
-  test:
-    name: Test with coverage
+    name: Lint & Test
     runs-on: ubuntu-latest
     permissions:
       checks: write
       pull-requests: write
       contents: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-node
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: ./.github/actions/setup-node
+
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
 
+      - name: Run lint
+        run: |
+          pnpm ts:check
+          pnpm lint
+          pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
+
       - name: Run tests with coverage
-        uses: ArtiomTr/jest-coverage-report-action@v2
+        uses: artiomtr/jest-coverage-report-action@v2.0.5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           package-manager: pnpm
           annotations: failed-tests
           test-script: pnpm test:ci
-          working-directory: ./packages/app
           prnumber: ${{ steps.findPr.outputs.number }}
+          skip-test: all
+          working-directory: ./packages/app
+          coverage-file: ${{ env.COVERAGE_FILE }}
+          base-coverage-file: ${{ env.COVERAGE_FILE }}
 
   end-to-end-test:
     name: Test E2E

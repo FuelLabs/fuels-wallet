@@ -1,6 +1,8 @@
-import type { StateFrom } from "xstate";
+import { subscribe } from "@fuels-wallet/mediator";
+import type { Sender, StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
 
+import { accountEvents } from "..";
 import type { Account } from "../types";
 
 import type { Maybe } from "~/systems/Core";
@@ -17,6 +19,10 @@ type MachineServices = {
   };
 };
 
+type MachineEvents =
+  | { type: "SET_ACCOUNTS"; data: Account[] }
+  | { type: "UPDATE_ACCOUNTS"; data: { account: Account } };
+
 export const accountsMachine = createMachine(
   {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -27,6 +33,7 @@ export const accountsMachine = createMachine(
     schema: {
       context: {} as MachineContext,
       services: {} as MachineServices,
+      events: {} as MachineEvents,
     },
     states: {
       fetching: {
@@ -46,7 +53,14 @@ export const accountsMachine = createMachine(
         type: "final",
       },
       done: {
-        type: "final",
+        invoke: {
+          src: "listenUpdates",
+        },
+        on: {
+          UPDATE_ACCOUNTS: {
+            actions: "updateAccounts",
+          },
+        },
       },
     },
   },
@@ -54,10 +68,19 @@ export const accountsMachine = createMachine(
     actions: {
       assignAccounts: assign({ accounts: (_, ev) => ev.data }),
       assignError: assign({ error: (_, ev) => ev.data }),
+      updateAccounts: assign({
+        accounts: (ctx, ev) => ctx.accounts?.concat([ev.data.account]),
+      }),
     },
     services: {
       async fetchAccounts() {
         return db.getAccounts();
+      },
+      listenUpdates: () => (send: Sender<MachineEvents>) => {
+        const sub = subscribe(accountEvents.accountCreated, (account) => {
+          send({ type: "UPDATE_ACCOUNTS", data: { account } });
+        });
+        return sub.unsubscribe;
       },
     },
   }

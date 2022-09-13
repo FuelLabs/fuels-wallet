@@ -5,7 +5,7 @@ import { assign, createMachine } from 'xstate';
 
 import { MNEMONIC_SIZE } from '~/config';
 import type { Account } from '~/systems/Account';
-import { createManager } from '~/systems/Account';
+import { accountEvents, createManager } from '~/systems/Account';
 import { db, getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
 
@@ -113,7 +113,7 @@ export const signUpMachine = createMachine(
         invoke: {
           src: 'createManager',
           onDone: {
-            actions: ['assignAccount', 'deleteData'],
+            actions: ['assignAccount', 'deleteData', 'sendAccountCreated'],
             target: 'done',
           },
           onError: {
@@ -159,6 +159,11 @@ export const signUpMachine = createMachine(
       deleteData: assign({
         data: (_) => null,
       }),
+      sendAccountCreated: (ctx) => {
+        if (ctx.account) {
+          accountEvents.accountCreated(ctx.account);
+        }
+      },
     },
     guards: {
       isCreatingWallet: (ctx) => {
