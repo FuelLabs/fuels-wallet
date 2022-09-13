@@ -1,3 +1,5 @@
+import type { BigNumberish } from 'fuels';
+
 export type Maybe<T> = T | null | undefined;
 
 export enum Pages {
@@ -8,4 +10,4 @@ export enum Pages {
   'signUpRecoverWallet' = 'recover-wallet',
 }
 
-export type AmountMap = Record<string, Maybe<bigint>>;
+export type AmountMap = Record<string, Maybe<BigNumberish>>;

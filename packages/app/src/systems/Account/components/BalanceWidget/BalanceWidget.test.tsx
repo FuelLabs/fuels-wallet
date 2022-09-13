@@ -1,12 +1,11 @@
 import { render, screen, testA11y } from "@fuel-ui/test-utils";
-import { toBigInt } from "fuels";
 
 import { BalanceWidget } from "./BalanceWidget";
 
 const ACCOUNT = {
   name: "Account 1",
   address: "fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef",
-  balance: toBigInt("12008943834"),
+  balance: "12008943834",
   balanceSymbol: "$",
 };
 

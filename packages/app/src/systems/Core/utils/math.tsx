@@ -1,5 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/**
+ * We just add Decimal.js here as a temporarily solution since our SDK
+ * isn't handle well with float numbers inside strings, like bn('1.5')
+ * TODO: remove Decimal.js here later
+ */
+import Decimal from "decimal.js";
 import type { BigNumberish } from "fuels";
-import { toBigInt } from "fuels";
+import { BN, bn } from "fuels";
+
+import type { Maybe } from "../types";
 
 import {
   DECIMAL_UNITS,
@@ -7,26 +17,34 @@ import {
   MAX_FRACTION_DIGITS,
   FORMAT_LANGUAGE,
 } from "~/config";
-import type { Maybe } from "~/systems/Core";
 
-export function safeBigInt(value?: Maybe<BigNumberish>, defaultValue?: number) {
-  return value || toBigInt(defaultValue || 0);
+export function safeBigInt(
+  value?: Maybe<BigNumberish> | bigint,
+  defaultValue: number = 0
+) {
+  return value || bn(defaultValue);
 }
 
 export function unitsToAmount(
-  value: Maybe<BigNumberish>,
+  value: Maybe<BigNumberish> | bigint,
   precision: number = DECIMAL_UNITS
 ) {
-  const val = safeBigInt(value);
-  return toBigInt(parseFloat(val.toString()) * 10 ** precision);
+  const safeVal = safeBigInt(value);
+  if (safeVal instanceof BN) {
+    return bn(safeVal).mul(10).pow(precision).toNumber();
+  }
+  return new Decimal(safeVal.toString()).toNumber() * 10 ** precision;
 }
 
 export function amountToUnits(
-  value: Maybe<BigNumberish>,
+  value: Maybe<BigNumberish> | bigint,
   precision: number = DECIMAL_UNITS
 ) {
-  const val = safeBigInt(value);
-  return parseFloat(val.toString()) / 10 ** precision;
+  const safeVal = safeBigInt(value);
+  if (safeVal instanceof BN) {
+    return bn(safeVal).div(10).pow(precision).toNumber();
+  }
+  return new Decimal(safeVal.toString()).toNumber() / 10 ** precision;
 }
 
 type FormatOpts = {
@@ -36,7 +54,7 @@ type FormatOpts = {
   suffix?: string;
 };
 
-export function formatUnits(value: Maybe<BigNumberish>, opts?: FormatOpts) {
+export function formatUnits(value: any, opts?: FormatOpts) {
   const val = typeof value === "number" ? BigInt(Math.trunc(value)) : value;
   const precision = opts?.precision || DECIMAL_UNITS;
   const minDigits = opts?.minDigits || MIN_FRACTION_DIGITS;
@@ -46,7 +64,7 @@ export function formatUnits(value: Maybe<BigNumberish>, opts?: FormatOpts) {
   const formatted = new Intl.NumberFormat(FORMAT_LANGUAGE, {
     minimumFractionDigits: minDigits,
     maximumFractionDigits: maxDigits,
-  }).format(units);
+  }).format(parseFloat(units.toString()));
 
   return `${formatted}${opts?.suffix || ""}`;
 }

@@ -1,5 +1,5 @@
 import { Box } from "@fuel-ui/react";
-import { toBigInt } from "fuels";
+import { bn } from "fuels";
 
 import { ASSET_LIST } from "../../utils";
 
@@ -13,11 +13,7 @@ export default {
 
 export const Usage = (args: AssetItemProps) => (
   <Box css={{ width: 320 }}>
-    <AssetItem
-      {...args}
-      asset={ASSET_LIST[0]}
-      amount={toBigInt("14563943834")}
-    />
+    <AssetItem {...args} asset={ASSET_LIST[0]} amount={bn("14563943834")} />
   </Box>
 );
 

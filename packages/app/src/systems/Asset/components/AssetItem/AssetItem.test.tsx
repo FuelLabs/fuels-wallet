@@ -1,11 +1,10 @@
 import { render, screen, testA11y } from "@fuel-ui/test-utils";
-import { toBigInt } from "fuels";
 
 import { ASSET_LIST } from "../../utils";
 
 import { AssetItem } from "./AssetItem";
 
-const AMOUNT = toBigInt("14563943834");
+const AMOUNT = "14563943834";
 
 describe("AssetItem", () => {
   it("a11y", async () => {

@@ -1,5 +1,6 @@
 import { cssObj } from "@fuel-ui/css";
 import { Avatar, CardList, Flex, Heading, Text } from "@fuel-ui/react";
+import type { BigNumberish } from "fuels";
 import type { FC } from "react";
 
 import { AssetItemLoader } from "./AssetItemLoader";
@@ -10,7 +11,7 @@ import { formatUnits } from "~/systems/Core";
 
 export type AssetItemProps = {
   asset: Asset;
-  amount: Maybe<bigint>;
+  amount: Maybe<BigNumberish>;
 };
 
 type AssetItemComponent = FC<AssetItemProps> & {
