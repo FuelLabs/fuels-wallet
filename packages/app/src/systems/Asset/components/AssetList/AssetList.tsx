@@ -8,7 +8,8 @@ import { AssetListEmpty } from "./AssetListEmpty";
 import { AssetListLoading } from "./AssetListLoading";
 
 export type AssetListProps = {
-  assets: CoinQuantity[];
+  assets?: CoinQuantity[];
+  isLoading?: boolean;
 };
 
 type AssetListComponent = FC<AssetListProps> & {
@@ -16,7 +17,12 @@ type AssetListComponent = FC<AssetListProps> & {
   Loading: typeof AssetListLoading;
 };
 
-export const AssetList: AssetListComponent = ({ assets }) => {
+export const AssetList: AssetListComponent = ({ assets, isLoading }) => {
+  if (isLoading) return <AssetList.Loading items={4} />;
+
+  const isEmpty = !assets || !assets.length;
+  if (isEmpty) return <AssetList.Empty />;
+
   return (
     <CardList>
       {assets.map((asset) => {

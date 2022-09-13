@@ -19,22 +19,10 @@ export function Home() {
       <Layout.TopBar />
       <Layout.Content>
         <Flex css={{ height: "100%", flexDirection: "column" }}>
-          {isLoading || !currentAccount ? (
-            <BalanceWidget.Loader />
-          ) : (
-            <BalanceWidget account={currentAccount} />
-          )}
+          <BalanceWidget account={currentAccount} isLoading={isLoading} />
           <HomeActions isDisabled={isLoading} />
           <AssetsTitle />
-          {isLoading && <AssetList.Loading items={4} />}
-          {Boolean(!isLoading && currentAccount?.balances?.length) && (
-            <AssetList assets={currentAccount?.balances || []} />
-          )}
-          {Boolean(!isLoading && !currentAccount?.balances?.length) && (
-            <Flex css={{ flex: "1 0" }}>
-              <AssetList.Empty />
-            </Flex>
-          )}
+          <AssetList assets={currentAccount?.balances} isLoading={isLoading} />
         </Flex>
       </Layout.Content>
     </Layout>

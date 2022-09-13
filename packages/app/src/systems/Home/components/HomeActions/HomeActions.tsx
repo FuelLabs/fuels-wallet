@@ -1,3 +1,4 @@
+import { cssObj } from "@fuel-ui/css";
 import { Button, Flex } from "@fuel-ui/react";
 
 export type HomeActionsProps = {
@@ -6,22 +7,8 @@ export type HomeActionsProps = {
 
 export const HomeActions = ({ isDisabled }: HomeActionsProps) => {
   return (
-    <Flex
-      css={{
-        marginTop: "$8",
-        marginBottom: "$6",
-        flexShrink: 0,
-      }}
-    >
-      <Button
-        isDisabled={isDisabled}
-        css={{
-          borderRadius: 40,
-          marginRight: "$1",
-          flex: 1,
-          py: "$5",
-        }}
-      >
+    <Flex css={styles.wrapper}>
+      <Button isDisabled={isDisabled} css={styles.button}>
         Send
       </Button>
       <Button
@@ -29,15 +16,24 @@ export const HomeActions = ({ isDisabled }: HomeActionsProps) => {
         isDisabled={isDisabled}
         variant="outlined"
         color="gray"
-        css={{
-          borderRadius: 40,
-          marginLeft: "$1",
-          flex: 1,
-          py: "$5",
-        }}
+        css={styles.button}
       >
         Receive
       </Button>
     </Flex>
   );
+};
+
+const styles = {
+  wrapper: cssObj({
+    marginTop: "$8",
+    marginBottom: "$6",
+    flexShrink: 0,
+  }),
+  button: cssObj({
+    borderRadius: 40,
+    marginLeft: "$1",
+    flex: 1,
+    py: "$5",
+  }),
 };

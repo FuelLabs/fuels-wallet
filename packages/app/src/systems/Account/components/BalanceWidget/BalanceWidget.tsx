@@ -32,19 +32,23 @@ export function BalanceWidgetWrapper({ children }: BalanceWidgetWrapperProps) {
 }
 
 export type BalanceWidgetProps = {
-  account: Account;
+  account?: Account;
   isHidden?: boolean;
+  isLoading?: boolean;
 };
 
 export function BalanceWidget({
   account,
   isHidden: _isHidden,
+  isLoading,
 }: BalanceWidgetProps) {
   const [isHidden, setIsHidden] = useState(_isHidden);
 
   useEffect(() => {
     setIsHidden(_isHidden);
   }, [_isHidden]);
+
+  if (isLoading || !account) return <BalanceWidget.Loader />;
 
   return (
     <BalanceWidgetWrapper>
