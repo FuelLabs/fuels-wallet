@@ -23,7 +23,7 @@ export function WalletCreated({ account }: WalletCreatedProps) {
         subtitle="These are your Fuel wallet details"
       />
       {account && <AccountItem account={account} />}
-      <Button size="sm" color="accent" onPress={() => navigate("/")}>
+      <Button size="sm" color="accent" onPress={() => navigate("/wallet")}>
         Go to wallet
       </Button>
     </Stack>
