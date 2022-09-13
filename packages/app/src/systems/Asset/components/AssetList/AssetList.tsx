@@ -21,7 +21,8 @@ export const AssetList: AssetListComponent = ({ assets, isLoading }) => {
   if (isLoading) return <AssetList.Loading items={4} />;
 
   const isEmpty = !assets || !assets.length;
-  if (isEmpty) return <AssetList.Empty />;
+  // TODO: how we're gonna identify if it's devnet?
+  if (isEmpty) return <AssetList.Empty isDevnet />;
 
   return (
     <CardList>
