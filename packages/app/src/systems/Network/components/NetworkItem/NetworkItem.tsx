@@ -60,6 +60,8 @@ export function NetworkItem({
 
 const styles = {
   root: cssObj({
+    minHeight: "52px",
+    boxSizing: "border-box",
     ".fuel_button": {
       px: "$1 !important",
       color: "$gray8",
