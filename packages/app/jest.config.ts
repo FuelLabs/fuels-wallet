@@ -1,29 +1,37 @@
-/* eslint-disable import/order */
-import type { Config } from '@jest/types';
-import baseConfig from '@fuel-ui/test-utils/config';
+/* eslint-disable import/no-extraneous-dependencies */
+import baseDefaultConfig from '@fuel-ui/test-utils/config';
+import type { InitialOptionsTsJest } from 'ts-jest';
+import { defaultsESM as tsjPreset } from 'ts-jest/presets';
 
 import { getPublicEnvs } from './load.envs';
 import pkg from './package.json';
 
-const config: Config.InitialOptions = {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { globals, preset, ...baseConfig } = baseDefaultConfig;
+
+const config: InitialOptionsTsJest = {
   ...baseConfig,
-  globals: {
-    ...baseConfig.globals,
-    'ts-jest': {
-      useESM: true,
-      diagnostics: {
-        ignoreCodes: [1343],
+  transform: {
+    '^.+\\.[tj]sx?$': [
+      'ts-jest',
+      {
+        ...tsjPreset[1],
+        useESM: true,
+        diagnostics: {
+          ignoreCodes: [1343],
+        },
+        astTransformers: {
+          before: [
+            {
+              path: './node_modules/ts-jest-mock-import-meta',
+              options: { metaObjectReplacement: { env: getPublicEnvs() } },
+            },
+          ],
+        },
       },
-      astTransformers: {
-        before: [
-          {
-            path: './node_modules/ts-jest-mock-import-meta',
-            options: { metaObjectReplacement: { env: getPublicEnvs() } },
-          },
-        ],
-      },
-    },
+    ],
   },
+  maxWorkers: 1,
   rootDir: __dirname,
   displayName: pkg.name,
   setupFilesAfterEnv: [require.resolve('@fuel-ui/test-utils/setup')],
