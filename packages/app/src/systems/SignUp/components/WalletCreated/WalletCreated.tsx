@@ -1,4 +1,4 @@
-import { Stack, Image, Button, Flex } from "@fuel-ui/react";
+import { Stack, Button, Flex } from "@fuel-ui/react";
 import { useNavigate } from "react-router-dom";
 
 import { Header } from "../Header";
@@ -6,6 +6,7 @@ import { Header } from "../Header";
 import type { Account } from "~/systems/Account";
 import { AccountItem } from "~/systems/Account";
 import type { Maybe } from "~/systems/Core";
+import { ImageLoader } from "~/systems/Core";
 
 export type WalletCreatedProps = {
   account?: Maybe<Account>;
@@ -16,7 +17,11 @@ export function WalletCreated({ account }: WalletCreatedProps) {
   return (
     <Stack gap="$6">
       <Flex justify="center">
-        <Image src="/signup-illustration-3.svg" />
+        <ImageLoader
+          src="/signup-illustration-3.svg"
+          width={129}
+          height={116}
+        />
       </Flex>
       <Header
         title="Wallet created succesfully"

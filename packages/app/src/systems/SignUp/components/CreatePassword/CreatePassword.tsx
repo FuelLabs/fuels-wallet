@@ -1,18 +1,11 @@
-import {
-  Image,
-  Stack,
-  Flex,
-  Button,
-  Checkbox,
-  InputPassword,
-} from "@fuel-ui/react";
+import { Stack, Flex, Button, Checkbox, InputPassword } from "@fuel-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 import { Header } from "../Header";
 
-import { ControlledField } from "~/systems/Core";
+import { ControlledField, ImageLoader } from "~/systems/Core";
 
 const schema = yup
   .object({
@@ -60,7 +53,11 @@ export function CreatePassword({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack gap="$6" align="center">
-        <Image src="/signup-illustration-2.svg" />
+        <ImageLoader
+          src="/signup-illustration-2.svg"
+          width={129}
+          height={116}
+        />
         <Header
           title="Create your password"
           subtitle="Add a safe password for access your wallet"
