@@ -21,7 +21,7 @@
     "./packages/*"
   ],
   "scripts": {
-    "build:libs": "turbo run build --filter=@fuels-wallet/*",
+    "build:libs": "turbo run build --filter=@fuels-wallet/* --no-cache",
     "build:preview": "pnpm build:libs && turbo run build:preview",
     "build": "pnpm build:libs && turbo run build",
     "ci:test-e2e": "./scripts/ci-test-e2e.sh",
