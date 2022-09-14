@@ -1,4 +1,5 @@
 import { Stack, Button, Flex } from "@fuel-ui/react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Header } from "../Header";
@@ -14,6 +15,15 @@ export type WalletCreatedProps = {
 
 export function WalletCreated({ account }: WalletCreatedProps) {
   const navigate = useNavigate();
+
+  function handleGoToWallet() {
+    navigate("/wallet");
+  }
+
+  useEffect(() => {
+    localStorage.setItem("fuel__isLogged", "true");
+  }, []);
+
   return (
     <Stack gap="$6">
       <Flex justify="center">
@@ -28,7 +38,7 @@ export function WalletCreated({ account }: WalletCreatedProps) {
         subtitle="These are your Fuel wallet details"
       />
       {account && <AccountItem account={account} />}
-      <Button size="sm" color="accent" onPress={() => navigate("/wallet")}>
+      <Button size="sm" color="accent" onPress={handleGoToWallet}>
         Go to wallet
       </Button>
     </Stack>
