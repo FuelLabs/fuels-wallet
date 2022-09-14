@@ -32,13 +32,15 @@ export function BalanceWidgetWrapper({ children }: BalanceWidgetWrapperProps) {
 }
 
 export type BalanceWidgetProps = {
-  account: Account;
+  account?: Account;
   isHidden?: boolean;
+  isLoading?: boolean;
 };
 
 export function BalanceWidget({
   account,
   isHidden: _isHidden,
+  isLoading,
 }: BalanceWidgetProps) {
   const [isHidden, setIsHidden] = useState(_isHidden);
 
@@ -46,10 +48,12 @@ export function BalanceWidget({
     setIsHidden(_isHidden);
   }, [_isHidden]);
 
+  if (isLoading || !account) return <BalanceWidget.Loader />;
+
   return (
     <BalanceWidgetWrapper>
       <Flex direction="column" align="center">
-        <Avatar.Generated size="lg" hash={account.address} />
+        <Avatar.Generated size="lg" hash={account.address} background="fuel" />
         <IconButton
           size="xs"
           variant="ghost"

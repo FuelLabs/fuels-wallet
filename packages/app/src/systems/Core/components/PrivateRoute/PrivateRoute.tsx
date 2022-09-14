@@ -1,4 +1,3 @@
-import { BoxCentered, Spinner } from "@fuel-ui/react";
 import type { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 
@@ -9,16 +8,11 @@ type PrivateRouteProps = {
 };
 
 export function PrivateRoute({ children }: PrivateRouteProps) {
-  const { accounts, isLoading } = useAccounts();
-  if (isLoading) {
-    return (
-      <BoxCentered minWS minHS>
-        <Spinner />
-      </BoxCentered>
-    );
-  }
-  if (!isLoading && !accounts?.length) {
+  const { accounts } = useAccounts();
+
+  if (accounts != null && !accounts?.length) {
     return <Navigate to="/sign-up" replace />;
   }
+
   return <>{children}</>;
 }
