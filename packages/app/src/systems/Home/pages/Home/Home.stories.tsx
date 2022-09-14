@@ -1,4 +1,5 @@
 import type { Story } from "@storybook/react";
+import { bn } from "fuels";
 import { graphql } from "msw";
 import type { FunctionComponent } from "react";
 
@@ -47,22 +48,23 @@ const ASSETS_MOCK = [
   {
     node: {
       assetId: ASSET_LIST[0].assetId,
-      amount: "30000000000",
+      amount: bn(30000000000),
     },
   },
   {
     node: {
       assetId: ASSET_LIST[1].assetId,
-      amount: "1500000000000",
+      amount: bn(1500000000000),
     },
   },
   {
     node: {
       assetId: ASSET_LIST[2].assetId,
-      amount: "120000000",
+      amount: bn(120000000),
     },
   },
 ];
+
 // mock api response for balances
 WithAssets.parameters = {
   msw: [

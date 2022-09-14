@@ -55,7 +55,15 @@ type FormatOpts = {
 };
 
 export function formatUnits(value: any, opts?: FormatOpts) {
-  const val = typeof value === "number" ? BigInt(Math.trunc(value)) : value;
+  let val = value;
+
+  if (typeof value === "number") {
+    val = new Decimal(Math.trunc(value));
+  }
+  if (value instanceof BN) {
+    val = value.toString();
+  }
+
   const precision = opts?.precision || DECIMAL_UNITS;
   const minDigits = opts?.minDigits || MIN_FRACTION_DIGITS;
   const maxDigits = opts?.maxDigits || MAX_FRACTION_DIGITS;
