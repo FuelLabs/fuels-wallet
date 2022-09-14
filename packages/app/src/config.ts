@@ -1,4 +1,4 @@
-export const { FUEL_PROVIDER_URL } = import.meta.env;
+export const { VITE_FUEL_PROVIDER_URL } = import.meta.env;
 
 export const DECIMAL_UNITS = 9;
 export const FORMAT_LANGUAGE = 'es';

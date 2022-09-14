@@ -1,11 +1,20 @@
 import type { Table } from "dexie";
 import Dexie from "dexie";
+import type { CoinQuantity } from "fuels";
 
 import type { Account, Vault } from "~/systems/Account";
 
 type AddAccountData = {
   name: string;
   address: string;
+  publicKey: string;
+};
+
+type SetBalanceData = {
+  address: string;
+  balance: bigint;
+  balanceSymbol: string;
+  balances: CoinQuantity[];
 };
 
 class FuelDB extends Dexie {
@@ -63,6 +72,14 @@ class FuelDB extends Dexie {
   getAccounts() {
     return db.transaction("r", db.accounts, async () => {
       return db.accounts.toArray();
+    });
+  }
+
+  setBalance(data: SetBalanceData) {
+    return db.transaction("rw", db.accounts, async () => {
+      const { address, ...updateData } = data;
+      await db.accounts.update(address, updateData);
+      return db.accounts.get({ address: data.address });
     });
   }
 }
