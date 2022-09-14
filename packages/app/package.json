@@ -20,6 +20,8 @@
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
     "@fontsource/source-code-pro": "^4.5.12",
     "@fuel-ts/mnemonic": "^0.14.0",
+    "@fuel-ts/providers": "^0.14.0",
+    "@fuel-ts/wallet": "^0.14.0",
     "@fuel-ts/wallet-manager": "^0.14.0",
     "@fuel-ui/css": "^0.7.0",
     "@fuel-ui/react": "^0.7.0",
@@ -68,6 +70,8 @@
     "@types/react-helmet": "^6.1.5",
     "@types/testing-library__jest-dom": "^5.14.5",
     "@vitejs/plugin-react": "^2.1.0",
+    "msw": "^0.47.1",
+    "msw-storybook-addon": "^1.6.3",
     "storybook-dark-mode": "^1.1.0",
     "ts-jest-mock-import-meta": "^0.12.0",
     "tsconfig-paths-webpack-plugin": "^4.0.0",
@@ -87,5 +91,8 @@
       "webpack-dev-middleware": "^4.1.0",
       "webpack-virtual-modules": "^0.4.2"
     }
+  },
+  "msw": {
+    "workerDirectory": ""
   }
 }

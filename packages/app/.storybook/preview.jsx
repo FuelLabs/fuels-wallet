@@ -1,5 +1,7 @@
 import { ThemeProvider } from "@fuel-ui/react";
+import { addDecorator } from "@storybook/react";
 import { themes } from "@storybook/theming";
+import { initializeWorker, mswDecorator } from "msw-storybook-addon";
 import { BrowserRouter } from "react-router-dom";
 
 import theme from "./theme";
@@ -43,3 +45,6 @@ export const decorators = [
     </BrowserRouter>
   ),
 ];
+
+initializeWorker();
+addDecorator(mswDecorator);

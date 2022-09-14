@@ -1,7 +1,8 @@
 export type Maybe<T> = T | null | undefined;
 
 export enum Pages {
-  'home' = '/',
+  'index' = '/',
+  'home' = '/wallet',
   'signUp' = '/sign-up',
   'signUpWelcome' = 'welcome',
   'signUpCreateWallet' = 'create-wallet',
