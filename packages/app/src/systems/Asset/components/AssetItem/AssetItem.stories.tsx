@@ -12,13 +12,19 @@ export default {
 };
 
 export const Usage = (args: AssetItemProps) => (
-  <Box css={{ width: 320 }}>
-    <AssetItem {...args} asset={ASSET_LIST[0]} amount={bn("14563943834")} />
+  <Box css={{ width: 300 }}>
+    <AssetItem
+      {...args}
+      asset={{
+        assetId: ASSET_LIST[0].assetId,
+        amount: bn("14563943834"),
+      }}
+    />
   </Box>
 );
 
 export const Loader = () => (
-  <Box css={{ width: 320 }}>
+  <Box css={{ width: 300 }}>
     <AssetItem.Loader />
   </Box>
 );

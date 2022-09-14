@@ -11,32 +11,31 @@ export default {
   title: "Asset/Components/AssetList",
 };
 
-const AMOUNTS = {
-  [ASSET_LIST[0].assetId]: bn(1000000000),
-  [ASSET_LIST[1].assetId]: bn(1000000000),
-  [ASSET_LIST[2].assetId]: bn(1000000000),
-};
+const ASSETS = ASSET_LIST.map(({ assetId }) => ({
+  assetId,
+  amount: bn(1000000000),
+}));
 
 export const Usage = (args: AssetListProps) => (
-  <Box css={{ width: 320 }}>
-    <AssetList {...args} assets={ASSET_LIST} amounts={AMOUNTS} />
+  <Box css={{ width: 300 }}>
+    <AssetList {...args} assets={ASSETS} />
   </Box>
 );
 
 export const Loading = () => (
-  <Box css={{ width: 320, height: 300 }}>
+  <Box css={{ width: 300, height: 300 }}>
     <AssetList.Loading items={3} />
   </Box>
 );
 
 export const Empty = () => (
-  <Box css={{ width: 320, height: 300 }}>
+  <Box css={{ width: 300, height: 300 }}>
     <AssetList.Empty />
   </Box>
 );
 
 export const EmptyDevnet = () => (
-  <Box css={{ width: 320, height: 300 }}>
+  <Box css={{ width: 300, height: 300 }}>
     <AssetList.Empty isDevnet />
   </Box>
 );

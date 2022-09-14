@@ -26,7 +26,7 @@ services:
       FUEL_NODE_URL: http://${PROJECT:-fuelhat}_fuel-core:4000/graphql
     # Other configurations can be found at;
     # https://github.com/FuelLabs/faucet#configuration
-    image: ghcr.io/fuellabs/faucet:v0.1.1
+    image: ghcr.io/fuellabs/faucet:v0.1.2
     ports:
       - "${FUEL_FAUCET_PORT:-4040}:3000"
     links:

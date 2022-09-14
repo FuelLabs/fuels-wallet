@@ -7,6 +7,7 @@ const ACCOUNT = {
   address: "fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef",
   balance: "12008943834",
   balanceSymbol: "$",
+  publicKey: "0x000",
 };
 
 describe("BalanceWidget", () => {

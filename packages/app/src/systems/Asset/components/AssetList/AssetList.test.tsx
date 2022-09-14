@@ -1,23 +1,23 @@
 import { render, screen, testA11y } from "@fuel-ui/test-utils";
+import { bn } from "fuels";
 import { BrowserRouter } from "react-router-dom";
 
 import { ASSET_LIST } from "../../utils";
 
 import { AssetList } from "./AssetList";
 
-const AMOUNTS = {
-  [ASSET_LIST[0].assetId]: 1000000000,
-  [ASSET_LIST[1].assetId]: 1000000000,
-  [ASSET_LIST[2].assetId]: 1000000000,
-};
+const ASSETS = ASSET_LIST.map(({ assetId }) => ({
+  assetId,
+  amount: bn(1000000000),
+}));
 
 describe("AssetList", () => {
   it("a11y", async () => {
-    await testA11y(<AssetList assets={ASSET_LIST} amounts={AMOUNTS} />);
+    await testA11y(<AssetList assets={ASSETS} />);
   });
 
   it("should show tree assets", () => {
-    render(<AssetList assets={ASSET_LIST} amounts={AMOUNTS} />);
+    render(<AssetList assets={ASSETS} />);
     expect(screen.getByText("Ethereum")).toBeInTheDocument();
     expect(screen.getByText("Dai")).toBeInTheDocument();
     expect(screen.getByText("Bitcoin")).toBeInTheDocument();

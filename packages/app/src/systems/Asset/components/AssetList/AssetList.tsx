@@ -1,4 +1,5 @@
 import { CardList } from "@fuel-ui/react";
+import type { CoinQuantity } from "fuels";
 import type { FC } from "react";
 
 import { AssetItem } from "../AssetItem";
@@ -6,12 +7,9 @@ import { AssetItem } from "../AssetItem";
 import { AssetListEmpty } from "./AssetListEmpty";
 import { AssetListLoading } from "./AssetListLoading";
 
-import type { Asset } from "~/systems/Asset";
-import type { AmountMap } from "~/systems/Core";
-
 export type AssetListProps = {
-  assets: Asset[];
-  amounts?: AmountMap;
+  assets?: CoinQuantity[];
+  isLoading?: boolean;
 };
 
 type AssetListComponent = FC<AssetListProps> & {
@@ -19,17 +17,16 @@ type AssetListComponent = FC<AssetListProps> & {
   Loading: typeof AssetListLoading;
 };
 
-export const AssetList: AssetListComponent = ({ assets, amounts }) => {
+export const AssetList: AssetListComponent = ({ assets, isLoading }) => {
+  if (isLoading) return <AssetList.Loading items={4} />;
+
+  const isEmpty = !assets || !assets.length;
+  if (isEmpty) return <AssetList.Empty />;
+
   return (
     <CardList>
       {assets.map((asset) => {
-        return (
-          <AssetItem
-            key={asset.assetId}
-            asset={asset}
-            amount={amounts?.[asset.assetId]}
-          />
-        );
+        return <AssetItem key={asset.assetId} asset={asset} />;
       })}
     </CardList>
   );
