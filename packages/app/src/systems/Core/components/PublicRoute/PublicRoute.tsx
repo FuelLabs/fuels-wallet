@@ -1,4 +1,3 @@
-import { BoxCentered, Spinner } from "@fuel-ui/react";
 import type { ReactNode } from "react";
 import { Navigate, useLocation, useResolvedPath } from "react-router-dom";
 
@@ -9,20 +8,14 @@ type PublicRouteProps = {
 };
 
 export function PublicRoute({ children }: PublicRouteProps) {
-  const { accounts, isLoading } = useAccounts();
+  const { accounts } = useAccounts();
   const location = useLocation();
   const match = useResolvedPath(location.pathname);
   const isSignUp = match.pathname.includes("/sign-up");
 
-  if (isLoading) {
-    return (
-      <BoxCentered minWS minHS>
-        <Spinner />
-      </BoxCentered>
-    );
-  }
-  if (!isSignUp && !isLoading && accounts?.length) {
+  if (!isSignUp && accounts != null && accounts?.length) {
     return <Navigate to="/" replace />;
   }
+
   return <>{children}</>;
 }
