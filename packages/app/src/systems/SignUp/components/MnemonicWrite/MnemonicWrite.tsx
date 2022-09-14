@@ -1,9 +1,9 @@
-import { Image, Stack, Flex, Button, Alert } from "@fuel-ui/react";
+import { Stack, Flex, Button, Alert } from "@fuel-ui/react";
 import { useState } from "react";
 
 import { Header } from "../Header";
 
-import { Mnemonic } from "~/systems/Core";
+import { ImageLoader, Mnemonic } from "~/systems/Core";
 
 export type MnemonicWriteProps = {
   canProceed?: boolean;
@@ -29,7 +29,7 @@ export function MnemonicWrite({
 
   return (
     <Stack gap="$6" align="center">
-      <Image src="/signup-illustration-1.svg" />
+      <ImageLoader src="/signup-illustration-1.svg" width={129} height={116} />
       <Header
         title="Write down your Recover Phrase "
         subtitle="You will need it on the next step"

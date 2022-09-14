@@ -1,4 +1,5 @@
 import { subscribe } from "@fuels-wallet/mediator";
+import { bn } from "fuels";
 import type { Sender, StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
 
@@ -111,19 +112,23 @@ export const accountsMachine =
         async fetchBalances({ accounts: _accounts }) {
           const accounts = _accounts || [];
           const balances = await Promise.all(
-            accounts.map(({ publicKey }) => getBalances(publicKey))
+            accounts.map(async ({ publicKey }) => {
+              return getBalances(publicKey);
+            })
           );
 
           const newAccounts: Account[] = await balances.reduce<
             Promise<Account[]>
           >(async (prev, cur, i) => {
             const prevAccounts: Account[] = await prev;
-
             const account = await db.setBalance({
               address: accounts[i].address || "",
-              balances: cur,
+              balances: cur.map((item) => ({
+                ...item,
+                amount: item.amount.toString(),
+              })),
               balanceSymbol: "$",
-              balance: BigInt(0),
+              balance: bn(0).toString(),
             });
 
             if (account) {

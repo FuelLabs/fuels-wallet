@@ -4,12 +4,12 @@ describe('CreateWallet', () => {
   });
 
   it('should be redirect to /signup by default', () => {
-    cy.visit('/');
+    cy.visit('/wallet');
     cy.url().should('contain', '/sign-up');
   });
 
   it('should be to create wallet and see first account created', () => {
-    cy.visit('/');
+    cy.visit('/wallet');
     cy.contains('button', /Create a wallet/i).click();
 
     /** Write Mnemonic */

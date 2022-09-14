@@ -79,7 +79,7 @@ export function BalanceWidget({
             css={{ fontWeight: "bold" }}
           >
             <>
-              {account.balanceSymbol}&nbsp;
+              {account.balanceSymbol || "$"}&nbsp;
               {isHidden ? "•••••" : formatUnits(account.balance)}
             </>
           </Text>
