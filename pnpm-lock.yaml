@@ -104,7 +104,6 @@ importers:
       '@vitejs/plugin-react': ^2.1.0
       '@xstate/react': ^3.0.1
       buffer: ^6.0.3
-      clipboardy: ^3.0.0
       decimal.js: ^10.4.0
       dexie: ^3.2.2
       dexie-react-hooks: ^1.1.1
@@ -184,7 +183,6 @@ importers:
       '@types/react-helmet': 6.1.5
       '@types/testing-library__jest-dom': 5.14.5
       '@vitejs/plugin-react': 2.1.0_vite@3.1.0
-      clipboardy: 3.0.0
       msw: 0.47.2_typescript@4.8.3
       msw-storybook-addon: 1.6.3_32ulyxwgtrfmszksyqyh2e4zc4
       storybook-dark-mode: 1.1.0_fts6fesegbj4xrjfbuvamnlfzy
@@ -9656,15 +9654,6 @@ packages:
   /cli-width/3.0.0:
     resolution: {integrity: sha512-FxqpkPPwu1HjuN93Omfm4h8uIanXofW0RxVEW3k5RKx+mJJYSthzNhp32Kzxxy3YAEZ/Dc/EWN1vZRY0+kOhbw==}
     engines: {node: '>= 10'}
-    dev: true
-
-  /clipboardy/3.0.0:
-    resolution: {integrity: sha512-Su+uU5sr1jkUy1sGRpLKjKrvEOVXgSgiSInwa/qeID6aJ07yh+5NWc3h2QfjHjBnfX4LhtFcuAWKUsJ3r+fjbg==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-    dependencies:
-      arch: 2.2.0
-      execa: 5.1.1
-      is-wsl: 2.2.0
     dev: true
 
   /cliui/7.0.4:
