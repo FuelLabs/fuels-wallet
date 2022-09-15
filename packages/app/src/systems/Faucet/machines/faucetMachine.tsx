@@ -2,6 +2,7 @@ import type { StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
 
 import { VITE_FUEL_FAUCET_URL } from "~/config";
+import { accountEvents } from "~/systems/Account";
 import type { Maybe } from "~/systems/Core";
 
 async function fetchFaucet(input: RequestInit) {
@@ -19,13 +20,12 @@ async function fetchFaucet(input: RequestInit) {
 type MachineContext = {
   address?: Maybe<string>;
   captcha?: Maybe<string>;
-  isLoading?: Maybe<boolean>;
   error?: unknown;
 };
 
 type MachineServices = {
   faucet: {
-    data: Maybe<boolean>;
+    data: void;
   };
 };
 
@@ -36,7 +36,7 @@ export type StartFaucetData = {
 type MachineEvents = { type: "START_FAUCET"; data: StartFaucetData };
 
 export const faucetMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QDMCGBXAxmALgWVUwAsBLAOzADoSIAbMAYgGUAVAQQCUWB9AMTYCqAYQCiLRKAAOAe1gkcJaWQkgAHogC0AJgDsATkp6ALADYjAVi0AGHbvMmAzABoQAT0QBGA1fM6P5jx0rBzsADkcAXyiXMmkIOBU0LFwCYnIqGnoVGTkFJRV1BG0jLUpzIyMPDy1TPQ8TR1CXdyKgwyrzPU6dIx0HC2iQJOx8QlIKSmHccihs2XlFZSQ1TQcqyh0gk1DQo2DzB3Nmzx3KXq09Bys9G4cTK1DBqdG0ibQSegg53MWC1dCrJRAmYdKEPFYrODQc43IgDg4znobDUrJV+tcnhgRqlxlQIEowN8FvlloUNFUdGUTB4wZddqEtPTjgh4YirNstL5bHsPJjki9cUS8ktQGS9kYgToQWCIVDQjCWuSSu1-DcgtZbA4olEgA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QDMCGBXAxmALgWVUwAsBLAOzADoSIAbMAYgGUAVAQQCUWB9AMTYCqAYQCiLRKAAOAe1gkcJaWQkgAHogC0AJgDsATkp6ALADYjAVi0AGHbvMmAzABoQAT0QBGA1fM6P5jx0rBzsADkcAXwiXNCxcAmJyKljsBTIoBgglKnIAN2kAa2SMVITSCkoU3HIoBDzpTFQFJQBtKwBdFRk5ZuUkNU0PYMoPDxDHIx0THRmtF3cEX28rDxMTUL0fBxMAqJiS+MJy4ri0jLAAJwvpC8pJWibkG4BbSoP8I6S305q6snzGr02p1+t15Io+qB1AgNNsTJQjB4tEYrKY9KF-EjzPNEIirJQfFZQqEHOYiUEvFFoiAyNIIHAVFUPokKjR6F1ZOClCpodojFpKOYjIikWjVo5QjiYUFDKNzHp5TpJg4LHsQEyyl8mTUOT0ITzNA5RpQZlZ1qEUaTSVKPMSEbY9A4rHoXdsiWqNZ8KmgSPQILquZCBjCHKF8YEzDoMVYVjYSVLzA4HAjNrYUYiVc6Pe9NRUshQA70DTDRjpBSZbV5Q0ZQloLZK3IhE8mjJt1lpfGmVtnTrmwIX9f1eemRlNJtHY1HnI2S-zZf5iT5EYidFSIkA */
   createMachine(
     {
       // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -59,13 +59,11 @@ export const faucetMachine =
           },
         },
         fauceting: {
-          entry: "startLoading",
-          exit: "stopLoading",
           invoke: {
             src: "faucet",
             onDone: [
               {
-                target: "done",
+                target: "showingDoneFeedback",
               },
             ],
             onError: [
@@ -76,10 +74,18 @@ export const faucetMachine =
             ],
           },
         },
+        showingDoneFeedback: {
+          after: {
+            "2000": {
+              target: "done",
+            },
+          },
+        },
         failed: {
           type: "final",
         },
         done: {
+          entry: ["sendFaucetSuccess", "navigateToHome"],
           type: "final",
         },
       },
@@ -88,22 +94,18 @@ export const faucetMachine =
       actions: {
         assignAddress: assign({ address: (_, ev) => ev.data.address }),
         assignCaptcha: assign({ captcha: (_, ev) => ev.data.captcha }),
-        startLoading: assign({ isLoading: (_) => true }),
-        stopLoading: assign({ isLoading: (_) => false }),
         assignError: assign({ error: (_, ev) => ev.data }),
+        sendFaucetSuccess: () => accountEvents.faucetSuccess(),
       },
       services: {
         faucet: async ({ address, captcha }) => {
-          const response = await fetchFaucet({
+          await fetchFaucet({
             method: "POST",
             body: JSON.stringify({
               address,
               captcha: captcha || "",
             }),
           });
-          console.log(`response`, response);
-
-          return true;
         },
       },
     }

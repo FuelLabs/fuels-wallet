@@ -136,10 +136,22 @@ export const accountsMachine =
           return newAccounts;
         },
         listenUpdates: () => (send: Sender<MachineEvents>) => {
-          const sub = subscribe(accountEvents.accountCreated, (account) => {
-            send({ type: "UPDATE_ACCOUNTS", data: { account } });
-          });
-          return sub.unsubscribe;
+          const subAccountCreated = subscribe(
+            accountEvents.accountCreated,
+            (account) => {
+              send({ type: "UPDATE_ACCOUNTS", data: { account } });
+            }
+          );
+          const subFaucetSuccess = subscribe(
+            accountEvents.faucetSuccess,
+            () => {
+              send({ type: "REFETCH" });
+            }
+          );
+          return () => {
+            subAccountCreated.unsubscribe();
+            subFaucetSuccess.unsubscribe();
+          };
         },
       },
     }

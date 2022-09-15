@@ -10,7 +10,7 @@ import { useAccounts } from "~/systems/Account";
 
 export function FaucetDialog() {
   const navigate = useNavigate();
-  const { handlers } = useFaucetDialog();
+  const { handlers, isLoading, isShowingDoneFeedback } = useFaucetDialog();
   const captcha = useCaptcha();
   const { currentAccount } = useAccounts();
 
@@ -74,9 +74,12 @@ export function FaucetDialog() {
               })
             }
             css={{ width: "100%" }}
+            isLoading={isLoading}
             {...(captcha.needToShow && { isDisabled: !captcha.value })}
           >
-            Give me ETH
+            {isShowingDoneFeedback
+              ? "Success, 0.5 ETH was added."
+              : "Give me ETH"}
           </Button>
         </Dialog.Footer>
       </Dialog.Content>
