@@ -1,5 +1,5 @@
 import { Box } from "@fuel-ui/react";
-import { toBigInt } from "fuels";
+import { bn } from "fuels";
 
 import type { BalanceWidgetProps } from "./BalanceWidget";
 import { BalanceWidget } from "./BalanceWidget";
@@ -12,7 +12,7 @@ export default {
 const ACCOUNT = {
   name: "Account 1",
   address: "fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef",
-  balance: toBigInt("12008943834"),
+  balance: bn(12008943834),
   balanceSymbol: "$",
   publicKey: "0x00",
 };

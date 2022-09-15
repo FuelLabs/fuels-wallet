@@ -6,7 +6,7 @@ import { useGlobalMachines } from "~/systems/Core";
 
 const selectors = {
   accounts: (state: AccountsMachineState) => state.context.accounts,
-  isLoading: (state: AccountsMachineState) => state.hasTag("loading"),
+  isLoading: (state: AccountsMachineState) => state?.hasTag("loading"),
 };
 
 export function useAccounts() {

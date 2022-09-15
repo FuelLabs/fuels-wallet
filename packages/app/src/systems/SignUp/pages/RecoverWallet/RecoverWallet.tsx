@@ -54,6 +54,7 @@ const styles = {
     left: 0,
     width: "100vw",
     boxShadow: "$lg",
+    boxSizing: "border-box",
 
     "&, &::after": {
       borderRadius: "$none",
