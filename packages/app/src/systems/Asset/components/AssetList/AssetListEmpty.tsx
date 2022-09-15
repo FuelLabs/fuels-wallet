@@ -1,22 +1,24 @@
 import { cssObj } from "@fuel-ui/css";
-import {
-  Image,
-  Text,
-  BoxCentered,
-  Heading,
-  Button,
-  Icon,
-} from "@fuel-ui/react";
+import { Text, BoxCentered, Heading, Button, Icon } from "@fuel-ui/react";
 import { useNavigate } from "react-router-dom";
+
+import { ImageLoader } from "~/systems/Core";
 
 type AssetsEmptyProps = {
   isDevnet?: boolean;
 };
+
 export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
   const navigate = useNavigate();
   return (
     <BoxCentered css={styles.empty}>
-      <Image src="/empty-assets.png" width={183} height={144} alt="No assets" />
+      <ImageLoader
+        src="/empty-assets.png"
+        width={183}
+        height={144}
+        alt="No assets"
+        wrapperCSS={{ mb: "$5" }}
+      />
       <Heading as="h5">You don&apos;t have any assets</Heading>
       {!isDevnet ? (
         <Text fontSize="sm">Start depositing some assets</Text>

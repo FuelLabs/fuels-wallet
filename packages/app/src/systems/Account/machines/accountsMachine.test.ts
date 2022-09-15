@@ -1,3 +1,4 @@
+import { bn } from 'fuels';
 import { interpret } from 'xstate';
 
 import { accountsMachine } from './accountsMachine';
@@ -19,11 +20,11 @@ describe('accountsMachine', () => {
                 name: 'Account1',
                 address: '0x00',
                 publicKey: '0x00',
-                balance: BigInt(0),
+                balance: bn(0),
                 balanceSymbol: '$',
                 balances: [
                   {
-                    amount: BigInt(100000),
+                    amount: bn(100000),
                     assetId: '0x0000000000',
                   },
                 ],

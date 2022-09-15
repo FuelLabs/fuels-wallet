@@ -1,4 +1,4 @@
-import type { CoinQuantity } from 'fuels';
+import type { BigNumberish, CoinQuantity } from 'fuels';
 
 export type Vault = {
   key: string;
@@ -10,7 +10,7 @@ export type Account = {
   address: string;
   publicKey: string;
   isHidden?: boolean;
-  balance?: bigint;
+  balance?: BigNumberish;
   balanceSymbol?: string;
   balances?: CoinQuantity[];
 };

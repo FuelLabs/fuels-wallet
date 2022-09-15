@@ -12,9 +12,14 @@ export function PublicRoute({ children }: PublicRouteProps) {
   const location = useLocation();
   const match = useResolvedPath(location.pathname);
   const isSignUp = match.pathname.includes("/sign-up");
+  const isLogged = localStorage.getItem("fuel__isLogged");
+
+  if (isLogged) {
+    return <Navigate to="/wallet" replace />;
+  }
 
   if (!isSignUp && accounts != null && accounts?.length) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/wallet" replace />;
   }
 
   return <>{children}</>;
