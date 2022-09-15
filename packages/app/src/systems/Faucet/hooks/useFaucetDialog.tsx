@@ -1,15 +1,18 @@
-import { useNavigate } from "react-router-dom";
+import { useMachine } from "@xstate/react";
+
+import type { StartFaucetData } from "../machines";
+import { faucetMachine } from "../machines";
 
 export function useFaucetDialog() {
-  const navigate = useNavigate();
+  const [, send] = useMachine(faucetMachine);
 
-  const close = () => {
-    navigate("/");
+  const startFaucet = (data: StartFaucetData) => {
+    send("START_FAUCET", { data });
   };
 
   return {
     handlers: {
-      close,
+      startFaucet,
     },
   };
 }

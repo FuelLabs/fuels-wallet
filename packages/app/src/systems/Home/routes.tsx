@@ -1,6 +1,6 @@
 import { Outlet, Route } from "react-router-dom";
 
-import { FaucetDialog } from "../Faucet/components/FaucetDialog";
+import { FaucetDialog } from "../Faucet/index.tsx";
 
 import { Home } from "./pages";
 
