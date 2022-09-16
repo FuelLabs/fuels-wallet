@@ -48,7 +48,7 @@ export function NetworkItem({
       <Text
         css={{
           color: network.isOnline ? "$accent11" : "$gray8",
-          fontSize: "$xs",
+          fontSize: "8px",
         }}
       >
         ●
