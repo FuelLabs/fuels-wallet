@@ -1,6 +1,20 @@
+import { rest } from 'msw';
 import { interpret } from 'xstate';
 
 import { faucetMachine } from './faucetMachine';
+
+import { mockServer } from '~/mocks/server';
+
+mockServer([
+  rest.post('http://localhost:4041/dispense', (req, res, ctx) => {
+    return res(
+      ctx.json({
+        status: 'Success',
+        tokens: 500000000,
+      })
+    );
+  }),
+]);
 
 describe('faucetMachine', () => {
   it('should go idle if user don`t ask for faucet', (done) => {
