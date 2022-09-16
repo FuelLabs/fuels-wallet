@@ -25,7 +25,6 @@
     "build:preview": "pnpm build:libs && turbo run build:preview",
     "build": "pnpm build:libs && turbo run build",
     "ci:test": "./scripts/ci-test.sh",
-    "ci:test:coverage": "./scripts/ci-test.sh --coverage",
     "ci:test:e2e": "./scripts/ci-test.sh --e2e",
     "cy:open": "cypress open",
     "cy:run": "cypress run --headless",

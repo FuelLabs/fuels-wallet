@@ -2,12 +2,10 @@
 pnpm node:dev start --test --debug
 
 # Run test
-if [ "$1" = "--coverage" ]; then
-    pnpm test:coverage
-elif [ "$1" = "--e2e" ]; then
+if [ "$1" = "--e2e" ]; then
     pnpm test:e2e
 else
-    pnpm test
+    pnpm test:ci
 fi
 
 # Stop services
