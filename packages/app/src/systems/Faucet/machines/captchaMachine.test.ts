@@ -4,9 +4,9 @@ import { captchaMachine } from './captchaMachine';
 
 describe('captchaMachine', () => {
   it('should hide captcha if no key was informed', (done) => {
-    const service = interpret(captchaMachine).onTransition((state) => {
+    const service = interpret(captchaMachine.withContext({})).onTransition((state) => {
       if (state.matches('hidden')) {
-        expect(state.context.key).toBe('');
+        expect(state.context.key).toBeUndefined();
         done();
       }
     });
