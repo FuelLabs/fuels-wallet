@@ -53,7 +53,7 @@ This section has a brief description of each directory. More details can be foun
 - [packages/app](../packages/app/) Frontend Fuel Wallet application
 - [packages/config](../packages/config/) Build configurations
 - [packages/fuelhat](../packages/fuelhat/) Fuel Wallet scripts CLI
-- [packages/mediator](../packages/test-utils/) Mediator library we're using build with XState
+- [packages/mediator](../packages/mediator/) Mediator is a PubSub library we use to better integrate XState machines and also other relevant event-driven issues.
 
 ## 🧰 Useful Scripts
 
