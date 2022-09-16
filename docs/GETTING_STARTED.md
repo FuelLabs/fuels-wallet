@@ -82,7 +82,9 @@ Please make sure you have done these steps first:
 
 ## Run Tests in Development Mode
 
-To run all tests against the node and contract configured in `packages/app/.env` (or `packages/app/.env.test` if the file exists):
+All tests are run against the local node configured in the files `packages/app/.env` (or `packages/app/.env.test` if the file exists).
+
+To run tests use:
 
 ```sh
 pnpm test
