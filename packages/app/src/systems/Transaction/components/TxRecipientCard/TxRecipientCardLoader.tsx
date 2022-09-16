@@ -17,7 +17,7 @@ export const TxRecipientCardLoader = (props: IContentLoaderProps) => (
       <rect x="15" width="62" height="14" rx="4" />
       <rect x="20" y="26" width="52" height="52" rx="26" />
       <rect x="20" y="26" width="52" height="52" rx="26" />
-      <rect y="90" width="92" height="14" rx="4" />
+      <rect y="92" width="92" height="14" rx="4" />
     </ContentLoader>
   </Card>
 );
@@ -26,7 +26,8 @@ const styles = {
   root: cssObj({
     minWidth: "130px",
     minHeight: "122px",
-    padding: "$4",
+    py: "$4",
+    px: "$3",
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",

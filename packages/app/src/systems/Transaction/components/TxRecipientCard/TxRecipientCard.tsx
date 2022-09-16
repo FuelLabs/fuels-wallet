@@ -23,7 +23,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   const address = account ? account.address : contract?.address;
   return (
     <Card css={styles.root}>
-      <Text css={styles.from}>From</Text>
+      <Text css={styles.from}>From {contract && "(Contract)"}</Text>
       {account && (
         <Avatar.Generated
           role="img"
@@ -35,15 +35,14 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
       )}
       {contract && (
         <Box css={styles.iconWrapper}>
-          <Icon icon={Icon.is("Code")} size={22} />
+          <Icon icon={Icon.is("Code")} size={18} />
         </Box>
       )}
-      <Flex css={styles.info}>
-        {contract && <Text css={styles.from}>Contract</Text>}
-        {address && (
+      {address && (
+        <Flex css={styles.info}>
           <Copyable value={address}>{shortAddress(address)}</Copyable>
-        )}
-      </Flex>
+        </Flex>
+      )}
     </Card>
   );
 };
@@ -51,7 +50,8 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
 const styles = {
   root: cssObj({
     minWidth: "130px",
-    padding: "$4",
+    py: "$4",
+    px: "$3",
     display: "inline-flex",
     alignItems: "center",
     gap: "$3",
@@ -63,6 +63,7 @@ const styles = {
     },
   }),
   from: cssObj({
+    fontSize: "$sm",
     fontWeight: "$semibold",
   }),
   iconWrapper: cssObj({
@@ -74,6 +75,10 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
     gap: "$1",
+
+    ".fuel_copyable": {
+      fontSize: "$xs",
+    },
   }),
 };
 
