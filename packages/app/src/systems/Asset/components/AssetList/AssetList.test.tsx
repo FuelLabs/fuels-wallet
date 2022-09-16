@@ -1,5 +1,5 @@
 import { render, screen, testA11y } from "@fuel-ui/test-utils";
-import { toBigInt } from "fuels";
+import { bn } from "fuels";
 import { BrowserRouter } from "react-router-dom";
 
 import { ASSET_LIST } from "../../utils";
@@ -8,7 +8,7 @@ import { AssetList } from "./AssetList";
 
 const ASSETS = ASSET_LIST.map(({ assetId }) => ({
   assetId,
-  amount: toBigInt(1000000000),
+  amount: bn(1000000000),
 }));
 
 describe("AssetList", () => {

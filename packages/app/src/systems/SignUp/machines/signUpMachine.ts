@@ -14,8 +14,8 @@ import type { Maybe } from '~/systems/Core';
 // ----------------------------------------------------------------------------
 
 export enum SignUpType {
-  create,
-  recover,
+  create = 'CREATE',
+  recover = 'RECOVER',
 }
 
 type FormValues = {
@@ -87,7 +87,7 @@ export const signUpMachine = createMachine(
         on: {
           CONFIRM_MNEMONIC: [
             {
-              actions: 'confirmMnemonic',
+              actions: ['confirmMnemonic', 'assignMnemonicWhenRecovering'],
               cond: 'hasEnoughAttempts',
             },
             {
@@ -144,6 +144,11 @@ export const signUpMachine = createMachine(
           return getPhraseFromValue(ev.data.words) === getPhraseFromValue(ctx.data?.mnemonic);
         },
       }),
+      assignMnemonicWhenRecovering: assign({
+        data: (ctx, ev) => {
+          return ctx.type === SignUpType.recover ? { mnemonic: ev.data.words } : ctx.data;
+        },
+      }),
       assignPassword: assign({
         data: (ctx, ev) => ({
           ...ctx.data,
@@ -178,8 +183,11 @@ export const signUpMachine = createMachine(
     },
     services: {
       async createManager({ data }) {
-        if (!data?.password || !data?.mnemonic) {
-          throw new Error('Invalid data');
+        if (!data?.password) {
+          throw new Error('Invalid password');
+        }
+        if (!data.mnemonic) {
+          throw new Error('Invalid mnemonic');
         }
 
         const manager = await createManager(data);

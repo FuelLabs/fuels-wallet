@@ -1,4 +1,6 @@
-describe('CreateWallet', () => {
+const WORDS = 'iron hammer spoon shield ahead long banana foam deposit laundry promote captain';
+
+describe('RecoverWallet', () => {
   beforeEach(async () => {
     await cy.clearIndexedDB();
   });
@@ -8,16 +10,16 @@ describe('CreateWallet', () => {
     cy.url().should('contain', '/sign-up');
   });
 
-  it('should be able to create wallet and see first account created', () => {
+  it('should be able to recover a wallet', () => {
     cy.visit('/wallet');
-    cy.contains('button', /Create a wallet/i).click();
+    cy.contains('button', /I already have a wallet/i).click();
 
-    /** Write Mnemonic */
-    cy.contains('button', /Copy/i).click();
-    cy.get('button[role="checkbox"]').click();
-    cy.contains('button', /Next/i).click();
+    /** Simulating clipboard write */
+    cy.get('input').first().focus();
+    cy.window().its('navigator.clipboard').invoke('writeText', WORDS);
+    cy.document().invoke('execCommand', 'paste');
 
-    /** COnfirm Mnemonic */
+    /** Confirm Mnemonic */
     cy.contains(/Write down your Recover Phrase/i);
     cy.contains('button', /Paste/i).click();
     cy.contains('button', /Next/i).click();
@@ -32,5 +34,6 @@ describe('CreateWallet', () => {
     /** Account created */
     cy.contains(/Wallet created succesfully/i);
     cy.contains(/Account 1/i);
+    cy.contains('fuel1r...xqqj');
   });
 });

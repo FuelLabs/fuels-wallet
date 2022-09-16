@@ -10,11 +10,19 @@ type AddAccountData = {
   publicKey: string;
 };
 
+type DBCoinBalance = Omit<CoinQuantity, "amount"> & {
+  /**
+   * We need amount as string here because isn't possible to save
+   * bn() values inside IndexedDB
+   */
+  amount: string;
+};
+
 type SetBalanceData = {
   address: string;
-  balance: bigint;
+  balance: string;
   balanceSymbol: string;
-  balances: CoinQuantity[];
+  balances: DBCoinBalance[];
 };
 
 class FuelDB extends Dexie {
