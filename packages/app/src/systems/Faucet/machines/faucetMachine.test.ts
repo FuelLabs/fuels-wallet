@@ -23,8 +23,7 @@ describe('faucetMachine', () => {
     service.send('START_FAUCET', {
       data: {
         address: 'fuel1rfmv8mz274rd0ge6yhdpkr6vx04s0q635fmts4mpzzp47z96342s8c7yg9',
-        captcha:
-          '03AIIukzi19UPnXoPApWK700VWImMxuXljUWSE4YZXpPZoVx2NFHsy712RMtzPVHy47mHcstbwXdud3Z8tP2mdzPcdOB2BCj7usfQ8_P7mkfCYHpQYh3A5zYz5Ki837eFcuI74XUftdtfgaTox7r1H14H4Rvg8_zomDN30yNr1e7',
+        captcha: '',
       },
     });
   });
