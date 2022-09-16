@@ -22,8 +22,9 @@ describe('faucetMachine', () => {
     service.start();
     service.send('START_FAUCET', {
       data: {
-        address: 'fuel1a298g66nj7tac33trs0039uzlpx7tar30038gs7cr6gqln268csq9yssrl',
-        captcha: '',
+        address: 'fuel1rfmv8mz274rd0ge6yhdpkr6vx04s0q635fmts4mpzzp47z96342s8c7yg9',
+        captcha:
+          '03AIIukzi19UPnXoPApWK700VWImMxuXljUWSE4YZXpPZoVx2NFHsy712RMtzPVHy47mHcstbwXdud3Z8tP2mdzPcdOB2BCj7usfQ8_P7mkfCYHpQYh3A5zYz5Ki837eFcuI74XUftdtfgaTox7r1H14H4Rvg8_zomDN30yNr1e7',
       },
     });
   });
