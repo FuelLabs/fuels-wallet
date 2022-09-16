@@ -25,7 +25,7 @@ describe("TxRecipientCard", () => {
 
   it("should render contract correctly", () => {
     render(<TxRecipientCard contract={CONTRACT} />);
-    expect(screen.getByText("Contract")).toBeInTheDocument();
+    expect(screen.getByText(/Contract/)).toBeInTheDocument();
     expect(screen.getByText("0x239c...3bb3")).toBeInTheDocument();
   });
 });
