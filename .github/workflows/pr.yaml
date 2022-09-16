@@ -49,7 +49,7 @@ jobs:
         run: |
           pnpm ts:check
           pnpm lint
-          pnpm ci:test --outputFile="${{ env.COVERAGE_FILE }}"
+          pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
 
       - name: Run tests with coverage
         uses: artiomtr/jest-coverage-report-action@v2.0.5
@@ -57,7 +57,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           package-manager: pnpm
           annotations: failed-tests
-          test-script: pnpm ci:test:coverage
+          test-script: pnpm test:ci
           prnumber: ${{ steps.findPr.outputs.number }}
           skip-test: all
           working-directory: ./packages/app
@@ -80,7 +80,7 @@ jobs:
         with:
           browser: chrome
           install: false
-          command: pnpm ci:test:e2e
+          command: pnpm ci:test-e2e
           record: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
