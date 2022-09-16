@@ -1,6 +1,6 @@
 # 💚 Contributing To Fuel Wallet
 
-Thanks for your interest in contributing to Fuel Wallet! This document outlines the process for installing dependencies and setting up Fuel Wallet for development, as well as some conventions on contributing to Fuel Wallet.
+Thanks for your interest in contributing to Fuel Wallet! This document outlines the process for installing dependencies and setting up Fuel Wallet for development, as well as some conventions to improve your contributions.
 
 If you run into any difficulties getting started, you can always ask questions on our [Discord](https://discord.gg/xfpK4Pe).
 
