@@ -3,10 +3,10 @@ import { useEffect } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useNavigate } from "react-router-dom";
 
-import { useCaptcha } from "../hooks/useCaptcha";
-import { useFaucetDialog } from "../hooks/useFaucetDialog";
+import { useCaptcha, useFaucetDialog } from "../hooks";
 
 import { useAccounts } from "~/systems/Account";
+import { Pages } from "~/systems/Core";
 
 export function FaucetDialog() {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ export function FaucetDialog() {
   }, [captcha.isLoaded]);
 
   return (
-    <Dialog open={true} onOpenChange={(open) => !open && navigate("/")}>
+    <Dialog open={true} onOpenChange={(open) => !open && navigate(Pages.home)}>
       <Dialog.Content css={{ maxWidth: 340 }}>
         <Dialog.Heading>
           <Flex css={{ alignItems: "center" }}>
@@ -30,9 +30,9 @@ export function FaucetDialog() {
             Faucet
           </Flex>
         </Dialog.Heading>
-        <Dialog.Description>
+        <Dialog.Description as="div">
           <Text css={{ marginTop: "$2" }} color="gray12">
-            Click the button bellow to receive 0.5 Devnet ETH to your wallet
+            Click the button bellow to receive 0.5 Devnet ETH in your wallet
           </Text>
           {captcha.needToShow && (
             <Box css={{ marginTop: "$7" }}>
@@ -78,7 +78,7 @@ export function FaucetDialog() {
             {...(captcha.needToShow && { isDisabled: !captcha.value })}
           >
             {isShowingDoneFeedback
-              ? "Success, 0.5 ETH was added."
+              ? "Success. 0.5 ETH was added."
               : "Give me ETH"}
           </Button>
         </Dialog.Footer>

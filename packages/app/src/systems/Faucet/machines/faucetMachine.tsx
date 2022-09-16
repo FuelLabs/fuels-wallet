@@ -1,3 +1,4 @@
+import fetch from "cross-fetch";
 import type { StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
 
@@ -96,6 +97,7 @@ export const faucetMachine =
         assignCaptcha: assign({ captcha: (_, ev) => ev.data.captcha }),
         assignError: assign({ error: (_, ev) => ev.data }),
         sendFaucetSuccess: () => accountEvents.faucetSuccess(),
+        navigateToHome: () => {},
       },
       services: {
         faucet: async ({ address, captcha }) => {

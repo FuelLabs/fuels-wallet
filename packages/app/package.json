@@ -30,6 +30,7 @@
     "@hookform/resolvers": "^2.9.8",
     "@xstate/react": "^3.0.1",
     "buffer": "^6.0.3",
+    "cross-fetch": "^3.1.5",
     "decimal.js": "^10.4.0",
     "dexie": "^3.2.2",
     "dexie-react-hooks": "^1.1.1",
