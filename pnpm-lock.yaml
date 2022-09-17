@@ -75,6 +75,7 @@ importers:
       '@fuel-ts/providers': ^0.16.0
       '@fuel-ts/wallet': ^0.16.0
       '@fuel-ts/wallet-manager': ^0.16.0
+      '@fuel-ui/config': ^0.7.0
       '@fuel-ui/css': ^0.7.0
       '@fuel-ui/react': ^0.7.0
       '@fuel-ui/test-utils': ^0.7.0
@@ -109,6 +110,7 @@ importers:
       dexie-react-hooks: ^1.1.1
       events: ^3.3.0
       fake-indexeddb: ^4.0.0
+      framer-motion: ^7.3.5
       fuels: ^0.16.0
       msw: ^0.47.3
       msw-storybook-addon: ^1.6.3
@@ -136,6 +138,7 @@ importers:
       '@fuel-ts/providers': 0.16.0
       '@fuel-ts/wallet': 0.16.0
       '@fuel-ts/wallet-manager': 0.16.0
+      '@fuel-ui/config': 0.7.0_typescript@4.8.3
       '@fuel-ui/css': 0.7.0
       '@fuel-ui/react': 0.7.0_gskn7ndefky3eafwqzgkcdjwse
       '@fuel-ui/test-utils': 0.7.0_kr4gpaf62veridt3zq42wanhha
@@ -148,6 +151,7 @@ importers:
       dexie-react-hooks: 1.1.1_pphq5gcvaylkp7ar4cezkt3rki
       events: 3.3.0
       fake-indexeddb: 4.0.0
+      framer-motion: 7.3.5_biqbaboplfbrettd7655fr4n2y
       fuels: 0.16.0
       process: 0.11.10
       react: 18.2.0
@@ -11972,6 +11976,29 @@ packages:
 
   /framer-motion/7.3.2_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-BTG0BqJSwxoFBWpwaaxS/954DGZFsluF+dUv9Hfq53VNkwUt5g+wYTEM66oTUhiH/+6R/y0Rq+BmkUBcmzbyMQ==}
+    peerDependencies:
+      react: '*'
+      react-dom: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+    dependencies:
+      '@motionone/dom': 10.13.1
+      framesync: 6.1.2
+      hey-listen: 1.0.8
+      popmotion: 11.0.5
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      style-value-types: 5.1.2
+      tslib: 2.4.0
+    optionalDependencies:
+      '@emotion/is-prop-valid': 0.8.8
+    dev: false
+
+  /framer-motion/7.3.5_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-JrLLVCi59LMI3+ZvSSbxf/Z7SOIdYRZrgdkUvJkzyT2RXu34HtGy26n41jNrcD5K85boqlZhGTbfqnAIfMHRLQ==}
     peerDependencies:
       react: '*'
       react-dom: '*'
