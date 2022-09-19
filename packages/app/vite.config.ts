@@ -50,6 +50,14 @@ export default defineConfig({
   }),
   /**
    * Need because of this issue:
+   * https://github.com/vitejs/vite/issues/1973
+   * Avoid "proccess is not defined" when compiling in Cypress side
+   */
+  define: {
+    'process.env': {},
+  },
+  /**
+   * Need because of this issue:
    * https://github.com/vitejs/vite/issues/8644#issuecomment-1159308803
    */
   esbuild: {

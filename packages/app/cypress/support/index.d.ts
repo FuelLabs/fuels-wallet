@@ -12,7 +12,5 @@ declare namespace Cypress {
       ariaLabel: string,
       options?: Partial<Loggable & Timeoutable & Withinable & Shadow>
     ): Chainable<JQuery<E>>;
-
-    clearIndexedDB(): Promise<void>;
   }
 }

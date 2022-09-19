@@ -2,7 +2,7 @@ import { cssObj } from "@fuel-ui/css";
 import { Text, BoxCentered, Heading, Button, Icon } from "@fuel-ui/react";
 import { useNavigate } from "react-router-dom";
 
-import { ImageLoader } from "~/systems/Core";
+import { ImageLoader, Pages } from "~/systems/Core";
 
 type AssetsEmptyProps = {
   isDevnet?: boolean;
@@ -29,7 +29,7 @@ export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
         <Button
           size="sm"
           leftIcon={Icon.is("Coffee")}
-          onPress={() => navigate("/faucet")}
+          onPress={() => navigate(Pages.faucet)}
         >
           Faucet
         </Button>

@@ -1,8 +1,10 @@
+import { clearMocks } from 'cypress/utils';
+
 const WORDS = 'iron hammer spoon shield ahead long banana foam deposit laundry promote captain';
 
 describe('RecoverWallet', () => {
-  beforeEach(async () => {
-    await cy.clearIndexedDB();
+  beforeEach(() => {
+    clearMocks();
   });
 
   it('should be redirect to /signup by default', () => {

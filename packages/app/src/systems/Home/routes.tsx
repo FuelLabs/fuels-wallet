@@ -1,4 +1,6 @@
-import { Route } from "react-router-dom";
+import { Outlet, Route } from "react-router-dom";
+
+import { FaucetDialog } from "../Faucet";
 
 import { Home } from "./pages";
 
@@ -10,7 +12,10 @@ export const homeRoutes = (
     element={
       <PrivateRoute>
         <Home />
+        <Outlet />
       </PrivateRoute>
     }
-  />
+  >
+    <Route path={Pages.faucet} element={<FaucetDialog />} />
+  </Route>
 );

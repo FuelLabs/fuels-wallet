@@ -22,7 +22,11 @@ export function Home() {
           <BalanceWidget account={currentAccount} isLoading={isLoading} />
           <HomeActions isDisabled={isLoading} />
           <AssetsTitle />
-          <AssetList assets={currentAccount?.balances} isLoading={isLoading} />
+          <AssetList
+            assets={currentAccount?.balances}
+            isLoading={isLoading}
+            isDevnet
+          />
         </Flex>
       </Layout.Content>
     </Layout>
