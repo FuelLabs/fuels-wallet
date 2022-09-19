@@ -34,7 +34,6 @@
     "decimal.js": "^10.4.0",
     "dexie": "^3.2.2",
     "dexie-react-hooks": "^1.1.1",
-    "esbuild": "^0.15.7",
     "events": "^3.3.0",
     "fake-indexeddb": "^4.0.0",
     "fuels": "^0.16.0",
