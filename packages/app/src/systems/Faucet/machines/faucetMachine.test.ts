@@ -26,9 +26,9 @@ describe('faucetMachine', () => {
     service.start();
   });
 
-  it('should show done feedback after faucet and before closing the popup', (done) => {
+  it('should faucet and go to last stage', (done) => {
     const service = interpret(faucetMachine.withContext({})).onTransition((state) => {
-      if (state.matches('showingDoneFeedback')) {
+      if (state.matches('done')) {
         done();
       }
     });

@@ -8,8 +8,6 @@ import { Pages } from "~/systems/Core";
 
 const selectors = {
   isLoading: (state: FaucetMachineState) => state.matches("fauceting"),
-  isShowingDoneFeedback: (state: FaucetMachineState) =>
-    state.matches("showingDoneFeedback"),
 };
 
 export function useFaucetDialog() {
@@ -22,11 +20,6 @@ export function useFaucetDialog() {
     },
   });
   const isLoading = useSelector(service, selectors.isLoading);
-  const isShowingDoneFeedback = useSelector(
-    service,
-    selectors.isShowingDoneFeedback
-  );
-
   const startFaucet = (data: StartFaucetData) => {
     send("START_FAUCET", { data });
   };
@@ -36,6 +29,5 @@ export function useFaucetDialog() {
       startFaucet,
     },
     isLoading,
-    isShowingDoneFeedback,
   };
 }

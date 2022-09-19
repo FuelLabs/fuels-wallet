@@ -10,7 +10,7 @@ import { Pages } from "~/systems/Core";
 
 export function FaucetDialog() {
   const navigate = useNavigate();
-  const { handlers, isLoading, isShowingDoneFeedback } = useFaucetDialog();
+  const { handlers, isLoading } = useFaucetDialog();
   const captcha = useCaptcha();
   const { currentAccount } = useAccounts();
 
@@ -37,7 +37,13 @@ export function FaucetDialog() {
           {captcha.needToShow && (
             <Box css={{ marginTop: "$5" }}>
               {captcha.isLoading && (
-                <Flex css={{ alignItems: "center", justifyContent: "center" }}>
+                <Flex
+                  css={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: 78,
+                  }}
+                >
                   <Spinner css={{ marginRight: "$3" }} />
                   Loading Captcha...
                 </Flex>
@@ -77,9 +83,7 @@ export function FaucetDialog() {
             isLoading={isLoading}
             {...(captcha.needToShow && { isDisabled: !captcha.value })}
           >
-            {isShowingDoneFeedback
-              ? "Success. 0.5 ETH was added."
-              : "Give me ETH"}
+            Give me ETH
           </Button>
         </Dialog.Footer>
       </Dialog.Content>

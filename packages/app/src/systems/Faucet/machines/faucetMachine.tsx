@@ -1,3 +1,4 @@
+import { toast } from "@fuel-ui/react";
 import fetch from "cross-fetch";
 import type { StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
@@ -37,7 +38,7 @@ export type StartFaucetData = {
 type MachineEvents = { type: "START_FAUCET"; data: StartFaucetData };
 
 export const faucetMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QDMCGBXAxmALgWVUwAsBLAOzADoSIAbMAYgGUAVAQQCUWB9AMTYCqAYQCiLRKAAOAe1gkcJaWQkgAHogC0AJgDsATkp6ALADYjAVi0AGHbvMmAzABoQAT0QBGA1fM6P5jx0rBzsADkcAXwiXNCxcAmJyKljsBTIoBgglKnIAN2kAa2SMVITSCkoU3HIoBDzpTFQFJQBtKwBdFRk5ZuUkNU0PYMoPDxDHIx0THRmtF3cEX28rDxMTUL0fBxMAqJiS+MJy4ri0jLAAJwvpC8pJWibkG4BbSoP8I6S305q6snzGr02p1+t15Io+qB1AgNNsTJQjB4tEYrKY9KF-EjzPNEIirJQfFZQqEHOYiUEvFFoiAyNIIHAVFUPokKjR6F1ZOClCpodojFpKOYjIikWjVo5QjiYUFDKNzHp5TpJg4LHsQEyyl8mTUOT0ITzNA5RpQZlZ1qEUaTSVKPMSEbY9A4rHoXdsiWqNZ8KmgSPQILquZCBjCHKF8YEzDoMVYVjYSVLzA4HAjNrYUYiVc6Pe9NRUshQA70DTDRjpBSZbV5Q0ZQloLZK3IhE8mjJt1lpfGmVtnTrmwIX9f1eemRlNJtHY1HnI2S-zZf5iT5EYidFSIkA */
+  /** @xstate-layout N4IgpgJg5mDOIC5QDMCGBXAxmALgWVUwAsBLAOzADoSIAbMAYgGUAVAQQCUWB9AMTYCqAYQCiLRKAAOAe1gkcJaWQkgAHogC0AJgAsARkoBWABwBOU3tPHDewwAY9ugDQgAnokuUA7FruGvXgDMejoAbMZmegC+US5oWLgExORU8dgKZFAMEEpU5ABu0gDWqRjpSaQUlGm45FAIBdKYqApKANp2ALoqMnKtykhqmno+RqZa9namdhE6ulou7giBNt7Gen52oVbGOoE6OjFxZYmElaUJGVlgAE430jeUkrQtyA8AttUn+GcpX5d1BpkQrNfodbqDXryRQDUDqBAaFZ2Sh2BzTYwBOaBYwTRaILQYyhYrSmfamGwhUwxWIgMjSCBwFQ1H7JKo0eg9WTQpQqeHaOw6Sh6DGGQzk2zGUJTQx4hFeUwouaGHR2LThLSOLyGI4gZkVP7Muqcvow3maCaGIUq0JeHF6QLBLyhHSykZaSgO3a+RymeWGUI6vW-KpoEj0CDG7mwoYIwIkoWBaWBcJovSywJWIla0I2BwhHSmAM0oOsqg5CiR-pm2O+byhZ2JnQmSzrWX2d0mNV6UIEwIBCaB776iuQrlVwZ8vuC1GWGaYrTY3FuYarAUTT04rz6LRaalRIA */
   createMachine(
     {
       // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -64,7 +65,7 @@ export const faucetMachine =
             src: "faucet",
             onDone: [
               {
-                target: "showingDoneFeedback",
+                target: "done",
               },
             ],
             onError: [
@@ -75,18 +76,11 @@ export const faucetMachine =
             ],
           },
         },
-        showingDoneFeedback: {
-          after: {
-            "2000": {
-              target: "done",
-            },
-          },
-        },
         failed: {
           type: "final",
         },
         done: {
-          entry: ["sendFaucetSuccess", "navigateToHome"],
+          entry: ["showDoneFeedback", "sendFaucetSuccess", "navigateToHome"],
           type: "final",
         },
       },
@@ -98,6 +92,8 @@ export const faucetMachine =
         assignError: assign({ error: (_, ev) => ev.data }),
         sendFaucetSuccess: () => accountEvents.faucetSuccess(),
         navigateToHome: () => {},
+        showDoneFeedback: () =>
+          toast.success("Success, 0.5 ETH was added to your wallet."),
       },
       services: {
         faucet: async ({ address, captcha }) => {

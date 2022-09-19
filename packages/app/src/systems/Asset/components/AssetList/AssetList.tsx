@@ -10,6 +10,7 @@ import { AssetListLoading } from "./AssetListLoading";
 export type AssetListProps = {
   assets?: CoinQuantity[];
   isLoading?: boolean;
+  isDevnet?: boolean;
 };
 
 type AssetListComponent = FC<AssetListProps> & {
@@ -17,12 +18,15 @@ type AssetListComponent = FC<AssetListProps> & {
   Loading: typeof AssetListLoading;
 };
 
-export const AssetList: AssetListComponent = ({ assets, isLoading }) => {
+export const AssetList: AssetListComponent = ({
+  assets,
+  isLoading,
+  isDevnet,
+}) => {
   if (isLoading) return <AssetList.Loading items={4} />;
 
   const isEmpty = !assets || !assets.length;
-  // TODO: how we're gonna identify if it's devnet?
-  if (isEmpty) return <AssetList.Empty isDevnet />;
+  if (isEmpty) return <AssetList.Empty isDevnet={isDevnet} />;
 
   return (
     <CardList>
