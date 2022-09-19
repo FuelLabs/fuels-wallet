@@ -23,7 +23,7 @@ export function FaucetDialog() {
 
   return (
     <Dialog open={true} onOpenChange={(open) => !open && navigate(Pages.home)}>
-      <Dialog.Content css={{ maxWidth: 340 }}>
+      <Dialog.Content css={{ maxWidth: 334 }}>
         <Dialog.Heading>
           <Flex css={{ alignItems: "center" }}>
             <Icon icon="MagicWand" color="gray8" css={{ marginRight: "$3" }} />
@@ -31,11 +31,11 @@ export function FaucetDialog() {
           </Flex>
         </Dialog.Heading>
         <Dialog.Description as="div">
-          <Text css={{ marginTop: "$2" }} color="gray12">
+          <Text color="gray12">
             Click the button bellow to receive 0.5 Devnet ETH in your wallet
           </Text>
           {captcha.needToShow && (
-            <Box css={{ marginTop: "$7" }}>
+            <Box css={{ marginTop: "$5" }}>
               {captcha.isLoading && (
                 <Flex css={{ alignItems: "center", justifyContent: "center" }}>
                   <Spinner css={{ marginRight: "$3" }} />
@@ -64,7 +64,7 @@ export function FaucetDialog() {
             </Box>
           )}
         </Dialog.Description>
-        <Dialog.Footer>
+        <Dialog.Footer css={{ marginTop: 0 }}>
           <Button
             variant="solid"
             onPress={() =>

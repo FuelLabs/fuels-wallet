@@ -1,6 +1,8 @@
+import { clearMocks } from 'cypress/utils';
+
 describe('CreateWallet', () => {
-  beforeEach(async () => {
-    await cy.clearIndexedDB();
+  beforeEach(() => {
+    clearMocks();
   });
 
   it('should be redirect to /signup by default', () => {
