@@ -2,10 +2,6 @@ const { join } = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const { getPublicEnvs } = require('../load.envs');
 const webpack = require('webpack');
-const { resolve } = require('path');
-const homedir = require('os').homedir();
-
-const PNPM_STORE = '.pnpm-store';
 
 const config = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -31,10 +27,6 @@ const config = {
     config.resolve.fallback = {
       ...config.resolve.fallback,
       buffer: require.resolve('buffer/'),
-    };
-    config.resolve.alias = {
-      '@fuel-ui/react': resolve(homedir, PNPM_STORE, '@fuel-ui/react/dist/index.js'),
-      '@fuel-ui/css': resolve(homedir, PNPM_STORE, '@fuel-ui/css/dist/index.js'),
     };
     config.resolve.plugins = [new TsconfigPathsPlugin()];
     config.plugins.push(
