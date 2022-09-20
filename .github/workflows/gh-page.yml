@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/setup-node
+      - uses: ./.github/actions/setup-node
 
       - name: Build
         env:
