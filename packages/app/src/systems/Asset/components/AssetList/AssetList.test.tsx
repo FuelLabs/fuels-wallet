@@ -1,10 +1,11 @@
 import { render, screen, testA11y } from "@fuel-ui/test-utils";
 import { bn } from "fuels";
-import { BrowserRouter } from "react-router-dom";
 
 import { ASSET_LIST } from "../../utils";
 
 import { AssetList } from "./AssetList";
+
+import { TestWrapper } from "~/systems/Core";
 
 const ASSETS = ASSET_LIST.map(({ assetId }) => ({
   assetId,
@@ -24,7 +25,7 @@ describe("AssetList", () => {
   });
 
   it("should show an empty illustration when no assets", () => {
-    render(<AssetList.Empty />, { wrapper: BrowserRouter });
+    render(<AssetList.Empty />, { wrapper: TestWrapper });
     expect(screen.getByText("You don't have any assets")).toBeInTheDocument();
     expect(screen.getByAltText("No assets")).toBeInTheDocument();
   });

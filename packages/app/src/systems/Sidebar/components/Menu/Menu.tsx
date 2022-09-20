@@ -53,7 +53,11 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
             exit={{ opacity: 0, y: -30 }}
             transition={{ ease: "linear", duration: "0.1" }}
           >
-            <RootMenu css={styles.submenu} onAction={handleAction}>
+            <RootMenu
+              css={styles.submenu}
+              onAction={handleAction}
+              aria-label="Submenu"
+            >
               {item.submenu.map((subItem) => (
                 <RootMenu.Item key={subItem.key} textValue={subItem.label}>
                   <Icon icon={subItem.icon} css={{ color: "$gray8" }} />
@@ -88,7 +92,11 @@ export function Menu({ items }: MenuProps) {
   }
 
   return (
-    <RootMenu onAction={handleAction} css={styles.root}>
+    <RootMenu
+      onAction={handleAction}
+      css={styles.root}
+      aria-label="Sidebar Menu"
+    >
       {items.map((item) => (
         <RootMenu.Item key={item.key} textValue={item.label}>
           <MenuItemContent item={item} isOpened={opened === item.key} />
