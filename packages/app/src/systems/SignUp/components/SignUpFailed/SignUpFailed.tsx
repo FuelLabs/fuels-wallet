@@ -2,8 +2,7 @@ import { Stack, Button, Flex, Alert } from "@fuel-ui/react";
 
 import { Header } from "../Header";
 
-import { ImageLoader } from "~/systems/Core";
-import { relativeUrl } from "~/systems/Core/utils/relativeUrl";
+import { ImageLoader, relativeUrl } from "~/systems/Core";
 
 export type SignUpFailedProps = {
   error?: string;

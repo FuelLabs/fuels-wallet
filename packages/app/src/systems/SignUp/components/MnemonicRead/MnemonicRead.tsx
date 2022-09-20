@@ -3,8 +3,7 @@ import { useState } from "react";
 
 import { Header } from "../Header";
 
-import { ImageLoader, Mnemonic } from "~/systems/Core";
-import { relativeUrl } from "~/systems/Core/utils/relativeUrl";
+import { ImageLoader, Mnemonic, relativeUrl } from "~/systems/Core";
 
 export type MnemonicReadProps = {
   words?: string[];

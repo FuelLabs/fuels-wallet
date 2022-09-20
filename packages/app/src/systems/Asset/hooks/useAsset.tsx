@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import { ASSET_LIST } from "../utils";
 
-import { relativeUrl } from "~/systems/Core/utils/relativeUrl";
+import { relativeUrl } from "~/systems/Core";
 
 export function useAsset(assetId: string) {
   const asset = useMemo(() => {

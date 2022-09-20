@@ -5,8 +5,7 @@ import * as yup from "yup";
 
 import { Header } from "../Header";
 
-import { ControlledField, ImageLoader } from "~/systems/Core";
-import { relativeUrl } from "~/systems/Core/utils/relativeUrl";
+import { ControlledField, ImageLoader, relativeUrl } from "~/systems/Core";
 
 const schema = yup
   .object({

@@ -2,8 +2,7 @@ import { cssObj } from "@fuel-ui/css";
 import { Text, BoxCentered, Heading, Button, Icon } from "@fuel-ui/react";
 import { useNavigate } from "react-router-dom";
 
-import { ImageLoader, Pages } from "~/systems/Core";
-import { relativeUrl } from "~/systems/Core/utils/relativeUrl";
+import { ImageLoader, Pages, relativeUrl } from "~/systems/Core";
 
 type AssetsEmptyProps = {
   isDevnet?: boolean;

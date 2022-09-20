@@ -7,8 +7,7 @@ import { Header } from "../Header";
 import type { Account } from "~/systems/Account";
 import { AccountItem } from "~/systems/Account";
 import type { Maybe } from "~/systems/Core";
-import { ImageLoader } from "~/systems/Core";
-import { relativeUrl } from "~/systems/Core/utils/relativeUrl";
+import { ImageLoader, relativeUrl } from "~/systems/Core";
 
 export type WalletCreatedProps = {
   account?: Maybe<Account>;
