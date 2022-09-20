@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { cssObj } from "@fuel-ui/css";
 import type { Icons } from "@fuel-ui/react";
 import { Box, Flex, Icon, Menu as RootMenu } from "@fuel-ui/react";
@@ -83,10 +82,8 @@ export function Menu({ items }: MenuProps) {
   function handleAction(key: string | number) {
     const item = items.find((item) => item.key === key);
     if (item?.submenu) {
-      opened !== item.key ? setOpened(item.key) : setOpened(null);
-      return;
-    }
-    if (item?.path) {
+      setOpened(opened !== item.key ? item.key : null);
+    } else if (item?.path) {
       navigate(item.path);
     }
   }
