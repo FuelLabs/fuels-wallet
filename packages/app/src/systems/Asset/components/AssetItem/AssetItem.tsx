@@ -29,7 +29,7 @@ export const AssetItem: AssetItemComponent = ({ asset }) => {
   return (
     <CardList.Item
       rightEl={rightEl}
-      css={{ alignItems: "center", padding: "$2" }}
+      css={{ alignItems: "center", py: "$2", px: "$3" }}
     >
       <Avatar name={name} src={imageUrl} css={{ height: 36, width: 36 }} />
       <Flex direction="column">
