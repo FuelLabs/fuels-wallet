@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { Header } from "../Header";
 
-import { ImageLoader, Mnemonic } from "~/systems/Core";
+import { ImageLoader, Mnemonic, relativeUrl } from "~/systems/Core";
 
 export type MnemonicWriteProps = {
   canProceed?: boolean;
@@ -29,7 +29,11 @@ export function MnemonicWrite({
 
   return (
     <Stack gap="$6" align="center">
-      <ImageLoader src="/signup-illustration-1.svg" width={129} height={116} />
+      <ImageLoader
+        src={relativeUrl("/signup-illustration-1.svg")}
+        width={129}
+        height={116}
+      />
       <Header
         title="Write down your Recover Phrase "
         subtitle="You will need it on the next step"

@@ -7,7 +7,7 @@ import { Header } from "../Header";
 import type { Account } from "~/systems/Account";
 import { AccountItem } from "~/systems/Account";
 import type { Maybe } from "~/systems/Core";
-import { ImageLoader } from "~/systems/Core";
+import { ImageLoader, relativeUrl } from "~/systems/Core";
 
 export type WalletCreatedProps = {
   account?: Maybe<Account>;
@@ -28,7 +28,7 @@ export function WalletCreated({ account }: WalletCreatedProps) {
     <Stack gap="$6">
       <Flex justify="center">
         <ImageLoader
-          src="/signup-illustration-3.svg"
+          src={relativeUrl("/signup-illustration-3.svg")}
           width={129}
           height={116}
         />
