@@ -6,7 +6,9 @@
 
 The official wallet of the fastest modular execution layer: [Fuel](https://fuel.network/).
 
-[![launch app button](docs/assets/launch-button.png)](https://fuels-wallet.vercel.app)
+[![launch app button](docs/assets/launch-button.png)](https://fuellabs.github.io/fuels-wallet)
+
+The above button launches the latest stable version of Fuel Wallet. To launch the latest unstable version that includes all current changes from the master branch, click [here](https://fuels-wallet.vercel.app/).
 
 The above button launches the latest stable version of the Wallet.
 

@@ -6,6 +6,7 @@ import { assign, createMachine } from "xstate";
 import { accountEvents, getBalances } from "..";
 import type { Account } from "../types";
 
+import { ASSET_LIST } from "~/systems/Asset";
 import type { Maybe } from "~/systems/Core";
 import { db } from "~/systems/Core";
 
@@ -112,23 +113,24 @@ export const accountsMachine =
         async fetchBalances({ accounts: _accounts }) {
           const accounts = _accounts || [];
           const balances = await Promise.all(
-            accounts.map(async ({ publicKey }) => {
-              return getBalances(publicKey);
-            })
+            accounts.map(({ publicKey }) => getBalances(publicKey))
           );
 
           const newAccounts: Account[] = await balances.reduce<
             Promise<Account[]>
           >(async (prev, cur, i) => {
             const prevAccounts: Account[] = await prev;
+            const ethBalance = cur.find(
+              ({ assetId }) => assetId === ASSET_LIST[0].assetId
+            )?.amount;
             const account = await db.setBalance({
               address: accounts[i].address || "",
               balances: cur.map((item) => ({
                 ...item,
                 amount: item.amount.toString(),
               })),
-              balanceSymbol: "$",
-              balance: bn(0).toString(),
+              balanceSymbol: "ETH",
+              balance: bn(ethBalance || 0).toString(),
             });
 
             if (account) {
@@ -141,10 +143,22 @@ export const accountsMachine =
           return newAccounts;
         },
         listenUpdates: () => (send: Sender<MachineEvents>) => {
-          const sub = subscribe(accountEvents.accountCreated, (account) => {
-            send({ type: "UPDATE_ACCOUNTS", data: { account } });
-          });
-          return sub.unsubscribe;
+          const subAccountCreated = subscribe(
+            accountEvents.accountCreated,
+            (account) => {
+              send({ type: "UPDATE_ACCOUNTS", data: { account } });
+            }
+          );
+          const subFaucetSuccess = subscribe(
+            accountEvents.faucetSuccess,
+            () => {
+              send({ type: "REFETCH" });
+            }
+          );
+          return () => {
+            subAccountCreated.unsubscribe();
+            subFaucetSuccess.unsubscribe();
+          };
         },
       },
     }

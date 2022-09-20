@@ -10,7 +10,7 @@ export async function createEnv(argv, createFile = true) {
   const projectName = isTest ? `${project}_test` : project;
   const filepath = isTest ? ".fuelhatenv" : ".fuelhatenv.test";
   const port = isTest ? "4001" : "4000";
-  const faucetPort = isTest ? "4040" : "4041";
+  const faucetPort = isTest ? "4041" : "4040";
   const data = `PROJECT=${projectName}
 FUEL_CORE_PORT=${port}
 FUEL_FAUCET_PORT=${faucetPort}

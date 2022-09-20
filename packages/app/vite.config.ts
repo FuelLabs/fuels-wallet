@@ -6,7 +6,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.PUBLIC_URL || '/',
+  base: process.env.BASE_URL || '/',
   build: {
     target: 'es2020',
     outDir: process.env.BUILD_PATH || 'dist',
@@ -48,6 +48,14 @@ export default defineConfig({
   ...(Boolean(process.env.CI) && {
     logLevel: 'silent',
   }),
+  /**
+   * Need because of this issue:
+   * https://github.com/vitejs/vite/issues/1973
+   * Avoid "proccess is not defined" when compiling in Cypress side
+   */
+  define: {
+    'process.env': {},
+  },
   /**
    * Need because of this issue:
    * https://github.com/vitejs/vite/issues/8644#issuecomment-1159308803

@@ -18,6 +18,7 @@ importers:
       '@types/react-dom': ^18.0.6
       '@xstate/cli': ^0.3.3
       cypress: ^10.8.0
+      cypress-vite: ^1.1.1
       dotenv: ^16.0.2
       eslint: ^8.23.1
       eslint-plugin-cypress: ^2.12.1
@@ -48,6 +49,7 @@ importers:
       '@types/react-dom': 18.0.6
       '@xstate/cli': 0.3.3_prettier@2.7.1
       cypress: 10.8.0
+      cypress-vite: 1.1.1
       dotenv: 16.0.2
       eslint: 8.23.1
       eslint-plugin-cypress: 2.12.1_eslint@8.23.1
@@ -98,13 +100,16 @@ importers:
       '@storybook/react': ^6.5.12
       '@storybook/testing-library': ^0.0.13
       '@storybook/theming': ^6.5.12
+      '@this-dot/cypress-indexeddb': ^1.1.3
       '@types/react': ^18.0.20
       '@types/react-dom': ^18.0.6
+      '@types/react-google-recaptcha': ^2.1.5
       '@types/react-helmet': ^6.1.5
       '@types/testing-library__jest-dom': ^5.14.5
       '@vitejs/plugin-react': ^2.1.0
       '@xstate/react': ^3.0.1
       buffer: ^6.0.3
+      cross-fetch: ^3.1.5
       decimal.js: ^10.4.1
       dexie: ^3.2.2
       dexie-react-hooks: ^1.1.1
@@ -118,6 +123,7 @@ importers:
       react: ^18.2.0
       react-content-loader: ^6.2.0
       react-dom: ^18.2.0
+      react-google-recaptcha: ^2.1.0
       react-helmet: ^6.1.0
       react-hook-form: ^7.35.0
       react-router-dom: ^6.4.0
@@ -125,6 +131,7 @@ importers:
       ts-jest-mock-import-meta: ^0.12.0
       tsconfig-paths-webpack-plugin: ^4.0.0
       typescript: ^4.8.3
+      url-join-ts: ^1.0.5
       util: ^0.12.4
       vite: ^3.1.3
       vite-tsconfig-paths: ^3.5.0
@@ -146,6 +153,7 @@ importers:
       '@hookform/resolvers': 2.9.8_react-hook-form@7.35.0
       '@xstate/react': 3.0.1_csov6svwxizbqjpbal6caks7le
       buffer: 6.0.3
+      cross-fetch: 3.1.5
       decimal.js: 10.4.1
       dexie: 3.2.2
       dexie-react-hooks: 1.1.1_pphq5gcvaylkp7ar4cezkt3rki
@@ -157,9 +165,11 @@ importers:
       react: 18.2.0
       react-content-loader: 6.2.0_react@18.2.0
       react-dom: 18.2.0_react@18.2.0
+      react-google-recaptcha: 2.1.0_react@18.2.0
       react-helmet: 6.1.0_react@18.2.0
       react-hook-form: 7.35.0_react@18.2.0
       react-router-dom: 6.4.0_biqbaboplfbrettd7655fr4n2y
+      url-join-ts: 1.0.5
       util: 0.12.4
       xstate: 4.33.6
       yup: 0.32.11
@@ -182,8 +192,10 @@ importers:
       '@storybook/react': 6.5.12_4pckcgkfmm4wjiducqsnlnfdlm
       '@storybook/testing-library': 0.0.13_biqbaboplfbrettd7655fr4n2y
       '@storybook/theming': 6.5.12_biqbaboplfbrettd7655fr4n2y
+      '@this-dot/cypress-indexeddb': 1.1.3
       '@types/react': 18.0.20
       '@types/react-dom': 18.0.6
+      '@types/react-google-recaptcha': 2.1.5
       '@types/react-helmet': 6.1.5
       '@types/testing-library__jest-dom': 5.14.5
       '@vitejs/plugin-react': 2.1.0_vite@3.1.3
@@ -7452,6 +7464,13 @@ packages:
       '@testing-library/dom': 8.17.1
     dev: false
 
+  /@this-dot/cypress-indexeddb/1.1.3:
+    resolution: {integrity: sha512-OBavqHwds8Wwvm+8/9HBIVTKChWUuIqeGRVzLQh2driDdzmJ9Tzoi6lRmlT/kDFaqmqqj3ZzzBB9UpLNnpUBCA==}
+    peerDependencies:
+      cypress: '*'
+      tslib: ^2.0.0
+    dev: true
+
   /@tootallnate/once/2.0.0:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
     engines: {node: '>= 10'}
@@ -7681,6 +7700,12 @@ packages:
     resolution: {integrity: sha512-/5OFZgfIPSwy+YuIBP/FgJnQnsxhZhjjrnxudMddeblOouIodEQ75X14Rr4wGSG/bknL+Omy9iWlLo1u/9GzAA==}
     dependencies:
       '@types/react': 18.0.20
+
+  /@types/react-google-recaptcha/2.1.5:
+    resolution: {integrity: sha512-iWTjmVttlNgp0teyh7eBXqNOQzVq2RWNiFROWjraOptRnb1OcHJehQnji0sjqIRAk9K0z8stjyhU+OLpPb0N6w==}
+    dependencies:
+      '@types/react': 18.0.20
+    dev: true
 
   /@types/react-helmet/6.1.5:
     resolution: {integrity: sha512-/ICuy7OHZxR0YCAZLNg9r7I9aijWUWvxaPR6uTuyxe8tAj5RL4Sw1+R6NhXUtOsarkGYPmaHdBDvuXh2DIN/uA==}
@@ -10213,6 +10238,12 @@ packages:
     resolution: {integrity: sha512-NJGVKPS81XejHcLhaLJS7plab0fK3slPh11mESeeDq2W4ZI5kUKK/LRRdVDvjJseojbPB7ZwjnyOybg3Igea/A==}
     dev: true
 
+  /cypress-vite/1.1.1:
+    resolution: {integrity: sha512-4mRz4mg2XCMNW10Py+GmyIgm2ogfkwcotLpBfnHwyoCfsHBzI/SVOXvn0hRGVjV4pCNw78dTPqgO5SsO/D6Rug==}
+    peerDependencies:
+      vite: ^2.9.0 || ^3.0.0
+    dev: true
+
   /cypress/10.8.0:
     resolution: {integrity: sha512-QVse0dnLm018hgti2enKMVZR9qbIO488YGX06nH5j3Dg1isL38DwrBtyrax02CANU6y8F4EJUuyW6HJKw1jsFA==}
     engines: {node: '>=12.0.0'}
@@ -12640,6 +12671,12 @@ packages:
       hash.js: 1.1.7
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
+
+  /hoist-non-react-statics/3.3.2:
+    resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
+    dependencies:
+      react-is: 16.13.1
+    dev: false
 
   /hosted-git-info/2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}
@@ -16783,6 +16820,19 @@ packages:
       - '@react-spectrum/provider'
     dev: false
 
+  /react-async-script/1.2.0_react@18.2.0:
+    resolution: {integrity: sha512-bCpkbm9JiAuMGhkqoAiC0lLkb40DJ0HOEJIku+9JDjxX3Rcs+ztEOG13wbrOskt3n2DTrjshhaQ/iay+SnGg5Q==}
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      hoist-non-react-statics: 3.3.2
+      prop-types: 15.8.1
+      react: 18.2.0
+    dev: false
+
   /react-content-loader/6.2.0_react@18.2.0:
     resolution: {integrity: sha512-r1dI6S+uHNLW68qraLE2njJYOuy6976PpCExuCZUcABWbfnF3FMcmuESRI8L4Bj45wnZ7n8g71hkPLzbma7/Cw==}
     engines: {node: '>=10'}
@@ -16867,6 +16917,19 @@ packages:
 
   /react-fast-compare/3.2.0:
     resolution: {integrity: sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==}
+    dev: false
+
+  /react-google-recaptcha/2.1.0_react@18.2.0:
+    resolution: {integrity: sha512-K9jr7e0CWFigi8KxC3WPvNqZZ47df2RrMAta6KmRoE4RUi7Ys6NmNjytpXpg4HI/svmQJLKR+PncEPaNJ98DqQ==}
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-async-script: 1.2.0_react@18.2.0
     dev: false
 
   /react-helmet/6.1.0_react@18.2.0:
@@ -19411,6 +19474,10 @@ packages:
     resolution: {integrity: sha512-Am1ousAhSLBeB9cG/7k7r2R0zj50uDRlZHPGbazid5s9rlF1F/QKYObEKSIunSjIOkJZqwRRLpvewjEkM7pSqg==}
     deprecated: Please see https://github.com/lydell/urix#deprecated
     dev: true
+
+  /url-join-ts/1.0.5:
+    resolution: {integrity: sha512-u+5gi7JyOwhj58ZKwkmkzFGHuepTpmwjqfUDGVjsJJstsCz63CJAINixgJaDcMbmuyWPJIxbtBpIfaDgOQ9KMQ==}
+    dev: false
 
   /url-loader/4.1.1_lit45vopotvaqup7lrvlnvtxwy:
     resolution: {integrity: sha512-3BTV812+AVHHOJQO8O5MkWgZ5aosP7GnROJwvzLS9hWDj00lZ6Z0wNak423Lp9PBZN05N+Jk/N5Si8jRAlGyWA==}
