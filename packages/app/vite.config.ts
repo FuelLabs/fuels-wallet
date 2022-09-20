@@ -6,7 +6,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.PUBLIC_URL || '/',
+  base: process.env.BASE_URL || '/',
   build: {
     target: 'es2020',
     outDir: process.env.BUILD_PATH || 'dist',

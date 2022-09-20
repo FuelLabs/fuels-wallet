@@ -2,7 +2,7 @@ import { Stack, Button, Flex, Alert } from "@fuel-ui/react";
 
 import { Header } from "../Header";
 
-import { ImageLoader } from "~/systems/Core";
+import { ImageLoader, relativeUrl } from "~/systems/Core";
 
 export type SignUpFailedProps = {
   error?: string;
@@ -13,7 +13,7 @@ export function SignUpFailed({ error }: SignUpFailedProps) {
     <Stack gap="$6">
       <Flex justify="center">
         <ImageLoader
-          src="/signup-illustration-4.svg"
+          src={relativeUrl("/signup-illustration-4.svg")}
           width={129}
           height={116}
         />
