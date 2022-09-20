@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Header } from "../Header";
 
 import { ImageLoader, Mnemonic } from "~/systems/Core";
+import { relativeUrl } from "~/systems/Core/utils/relativeUrl";
 
 export type MnemonicReadProps = {
   words?: string[];
@@ -17,7 +18,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
   return (
     <Stack gap="$6" align="center">
       <ImageLoader
-        src="/signup-illustration-1.svg"
+        src={relativeUrl("/signup-illustration-1.svg")}
         width={129}
         height={116}
         alt="Showing your Mnemonic"

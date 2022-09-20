@@ -3,6 +3,7 @@ import { Text, BoxCentered, Heading, Button, Icon } from "@fuel-ui/react";
 import { useNavigate } from "react-router-dom";
 
 import { ImageLoader, Pages } from "~/systems/Core";
+import { relativeUrl } from "~/systems/Core/utils/relativeUrl";
 
 type AssetsEmptyProps = {
   isDevnet?: boolean;
@@ -13,7 +14,7 @@ export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
   return (
     <BoxCentered css={styles.empty}>
       <ImageLoader
-        src="/empty-assets.png"
+        src={relativeUrl("/empty-assets.png")}
         width={183}
         height={144}
         alt="No assets"

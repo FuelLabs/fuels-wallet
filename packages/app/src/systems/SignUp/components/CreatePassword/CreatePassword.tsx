@@ -6,6 +6,7 @@ import * as yup from "yup";
 import { Header } from "../Header";
 
 import { ControlledField, ImageLoader } from "~/systems/Core";
+import { relativeUrl } from "~/systems/Core/utils/relativeUrl";
 
 const schema = yup
   .object({
@@ -54,7 +55,7 @@ export function CreatePassword({
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack gap="$6" align="center">
         <ImageLoader
-          src="/signup-illustration-2.svg"
+          src={relativeUrl("/signup-illustration-2.svg")}
           width={129}
           height={116}
         />
