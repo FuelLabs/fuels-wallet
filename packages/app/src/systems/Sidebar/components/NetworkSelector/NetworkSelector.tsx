@@ -7,15 +7,16 @@ import type { Network } from "~/systems/Network";
 import { NetworkStatus, NetworkItem } from "~/systems/Network";
 
 export type NetworkSelectorProps = {
+  selected: Network;
   networks: Network[];
   onSelectNetwork?: (network: Network) => void;
 };
 
 export function NetworkSelector({
+  selected,
   networks,
   onSelectNetwork,
 }: NetworkSelectorProps) {
-  const selected = networks.find((network) => network.isSelected);
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
