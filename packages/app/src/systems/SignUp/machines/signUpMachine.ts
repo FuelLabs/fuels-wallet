@@ -6,7 +6,7 @@ import { assign, createMachine } from 'xstate';
 import { MNEMONIC_SIZE } from '~/config';
 import type { Account } from '~/systems/Account';
 import { AccountService, accountEvents } from '~/systems/Account';
-import { db, getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
+import { getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
 
 // ----------------------------------------------------------------------------
@@ -192,7 +192,7 @@ export const signUpMachine = createMachine(
 
         const manager = await AccountService.createManager({ data });
         const account = manager.getAccounts()[0];
-        return db.addAccount({
+        return AccountService.addAccount({
           data: {
             name: 'Account 1',
             address: account.address.toAddress(),

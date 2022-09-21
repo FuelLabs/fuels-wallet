@@ -59,6 +59,12 @@ export class AccountService {
     });
   }
 
+  static async clearAccounts() {
+    return db.transaction('rw', db.accounts, async () => {
+      return db.accounts.clear();
+    });
+  }
+
   static async fetchBalance(input: AccountInputs['fetchBalance']) {
     if (!input.account) {
       throw new Error('Account not defined');
@@ -103,7 +109,7 @@ export class AccountService {
       throw new Error('Invalid data');
     }
 
-    await db.clearVaults();
+    await db.vaults.clear();
 
     /**
      * TODO: this is needed because of a typing error with StorageAbstract from fuels-ts

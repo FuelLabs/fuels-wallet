@@ -5,7 +5,6 @@ import { AccountService } from './account';
 
 import { mockServer } from '~/mocks/server';
 import { ASSET_LIST } from '~/systems/Asset';
-import { db } from '~/systems/Core';
 
 const MOCK_ACCOUNT = {
   name: 'Account 1',
@@ -30,14 +29,14 @@ mockServer([
 
 describe('AccountService', () => {
   beforeEach(async () => {
-    await db.clearVaults();
+    await AccountService.clearAccounts();
   });
 
   it('should add a new account', async () => {
-    const accounts = await db.getAccounts();
+    const accounts = await AccountService.getAccounts();
     expect(accounts.length).toBe(0);
     await AccountService.addAccount({ data: MOCK_ACCOUNT });
-    expect((await db.getAccounts()).length).toBe(1);
+    expect((await AccountService.getAccounts()).length).toBe(1);
   });
 
   it('should fetch balance from account', async () => {
