@@ -28,7 +28,7 @@ mockServer([
   }),
 ]);
 
-describe('AccountService()', () => {
+describe('AccountService', () => {
   beforeEach(async () => {
     await db.clearVaults();
   });
