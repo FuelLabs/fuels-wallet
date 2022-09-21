@@ -1,2 +1,2 @@
 export * from "./account";
-export * from "./createManager";
+export * from "./vault";

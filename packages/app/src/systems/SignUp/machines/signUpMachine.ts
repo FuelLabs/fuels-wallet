@@ -5,7 +5,7 @@ import { assign, createMachine } from 'xstate';
 
 import { MNEMONIC_SIZE } from '~/config';
 import type { Account } from '~/systems/Account';
-import { accountEvents, createManager } from '~/systems/Account';
+import { AccountService, accountEvents } from '~/systems/Account';
 import { db, getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
 
@@ -190,12 +190,14 @@ export const signUpMachine = createMachine(
           throw new Error('Invalid mnemonic');
         }
 
-        const manager = await createManager(data);
+        const manager = await AccountService.createManager({ data });
         const account = manager.getAccounts()[0];
         return db.addAccount({
-          name: 'Account 1',
-          address: account.address.toAddress(),
-          publicKey: account.publicKey,
+          data: {
+            name: 'Account 1',
+            address: account.address.toAddress(),
+            publicKey: account.publicKey,
+          },
         });
       },
     },

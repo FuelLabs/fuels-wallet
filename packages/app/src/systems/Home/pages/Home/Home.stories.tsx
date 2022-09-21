@@ -34,9 +34,11 @@ NoAssets.decorators = [
   (Story) => {
     db.accounts.clear();
     db.addAccount({
-      name: "Account 1",
-      address: "0x00",
-      publicKey: "0x00",
+      data: {
+        name: "Account 1",
+        address: "0x00",
+        publicKey: "0x00",
+      },
     });
 
     return <Story />;
@@ -83,9 +85,11 @@ WithAssets.decorators = [
   (Story) => {
     db.accounts.clear();
     db.addAccount({
-      name: "Account 1",
-      address: "0x00",
-      publicKey: "0x00",
+      data: {
+        name: "Account 1",
+        address: "0x00",
+        publicKey: "0x00",
+      },
     });
 
     return <Story />;
