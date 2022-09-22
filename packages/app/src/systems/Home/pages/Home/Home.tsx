@@ -8,7 +8,7 @@ import { AssetList } from "~/systems/Asset";
 import { Layout } from "~/systems/Core";
 
 export function Home() {
-  const { isLoading, currentAccount, handlers } = useAccounts();
+  const { isLoading, account, handlers } = useAccounts();
 
   useEffect(() => {
     handlers.refetch();
@@ -19,11 +19,11 @@ export function Home() {
       <Layout.TopBar />
       <Layout.Content>
         <Flex css={{ height: "100%", flexDirection: "column" }}>
-          <BalanceWidget account={currentAccount} isLoading={isLoading} />
+          <BalanceWidget account={account} isLoading={isLoading} />
           <HomeActions isDisabled={isLoading} />
           <AssetsTitle />
           <AssetList
-            assets={currentAccount?.balances}
+            assets={account?.balances}
             isLoading={isLoading}
             isDevnet
           />

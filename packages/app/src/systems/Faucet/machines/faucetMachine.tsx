@@ -92,8 +92,9 @@ export const faucetMachine =
         assignError: assign({ error: (_, ev) => ev.data }),
         sendFaucetSuccess: () => accountEvents.faucetSuccess(),
         navigateToHome: () => {},
-        showDoneFeedback: () =>
-          toast.success("Success, 0.5 ETH was added to your wallet."),
+        showDoneFeedback: () => {
+          toast.success("Success, 0.5 ETH was added to your wallet.");
+        },
       },
       services: {
         faucet: async ({ address, captcha }) => {
