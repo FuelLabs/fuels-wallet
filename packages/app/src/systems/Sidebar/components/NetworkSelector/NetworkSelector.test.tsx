@@ -18,15 +18,20 @@ const NETWORKS = [
   },
 ];
 
+const props = {
+  networks: NETWORKS,
+  selected: NETWORKS[0],
+};
+
 describe("NetworkSelector", () => {
   it("a11y", async () => {
-    await testA11y(<NetworkSelector networks={NETWORKS} />, {
+    await testA11y(<NetworkSelector {...props} />, {
       wrapper: BrowserRouter,
     });
   });
 
   it("should open dropdown with given networks", async () => {
-    const { user } = render(<NetworkSelector networks={NETWORKS} />, {
+    const { user } = render(<NetworkSelector {...props} />, {
       wrapper: BrowserRouter,
     });
     expect(() => screen.getByText("Localhost")).toThrow();
@@ -38,7 +43,7 @@ describe("NetworkSelector", () => {
   it("should dispatch onSelectNetwork handle", async () => {
     const handler = jest.fn();
     const { user } = render(
-      <NetworkSelector networks={NETWORKS} onSelectNetwork={handler} />,
+      <NetworkSelector {...props} onSelectNetwork={handler} />,
       { wrapper: BrowserRouter }
     );
 
