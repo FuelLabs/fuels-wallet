@@ -51,7 +51,7 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
           <Box css={{ flex: 1 }}>{item.label}</Box>
           {item.submenu && <Icon icon={caret} css={{ color: "$gray8" }} />}
         </Flex>
-        <AnimatePresence>
+        <AnimatePresence mode="wait" initial={false}>
           {isOpened && item.submenu && (
             <motion.div
               initial={{ opacity: 0, y: -30 }}

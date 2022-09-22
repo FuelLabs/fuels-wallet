@@ -5,3 +5,6 @@ import { TextEncoder, TextDecoder } from 'util';
 (global as any).TextDecoder = TextDecoder;
 (global as any).ArrayBuffer = ArrayBuffer;
 (global as any).Uint8Array = Uint8Array;
+
+const noop = () => {};
+Object.defineProperty(window, 'scrollTo', { value: noop, writable: true });
