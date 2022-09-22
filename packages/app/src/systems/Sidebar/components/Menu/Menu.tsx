@@ -53,24 +53,26 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
         </Flex>
         <AnimatePresence mode="wait" initial={false}>
           {isOpened && item.submenu && (
-            <motion.div
-              initial={{ opacity: 0, y: -30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -30 }}
-            >
-              <RootMenu
-                css={styles.submenu}
-                onAction={handleAction}
-                aria-label="Submenu"
+            <Box css={{ overflow: "hidden" }}>
+              <motion.div
+                initial={{ opacity: 0, y: -30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -30 }}
               >
-                {item.submenu.map((subItem) => (
-                  <RootMenu.Item key={subItem.key} textValue={subItem.label}>
-                    <Icon icon={subItem.icon} css={{ color: "$gray8" }} />
-                    {subItem.label}
-                  </RootMenu.Item>
-                ))}
-              </RootMenu>
-            </motion.div>
+                <RootMenu
+                  css={styles.submenu}
+                  onAction={handleAction}
+                  aria-label="Submenu"
+                >
+                  {item.submenu.map((subItem) => (
+                    <RootMenu.Item key={subItem.key} textValue={subItem.label}>
+                      <Icon icon={subItem.icon} css={{ color: "$gray8" }} />
+                      {subItem.label}
+                    </RootMenu.Item>
+                  ))}
+                </RootMenu>
+              </motion.div>
+            </Box>
           )}
         </AnimatePresence>
       </FlexMotion>
