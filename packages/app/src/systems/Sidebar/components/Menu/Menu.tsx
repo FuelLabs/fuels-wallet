@@ -20,9 +20,9 @@ type MenuItemContentProps = {
 };
 
 const FlexMotion = motion(Flex);
+const IconMotion = motion(Icon);
 
 function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
-  const caret = isOpened ? Icon.is("CaretUp") : Icon.is("CaretDown");
   const navigate = useNavigate();
 
   function handleAction(key: string | number) {
@@ -49,7 +49,13 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
             className="main-icon"
           />
           <Box css={{ flex: 1 }}>{item.label}</Box>
-          {item.submenu && <Icon icon={caret} css={{ color: "$gray8" }} />}
+          {item.submenu && (
+            <IconMotion
+              icon="CaretDown"
+              css={{ color: "$gray8" }}
+              animate={{ rotate: isOpened ? "180deg" : "0deg" }}
+            />
+          )}
         </Flex>
         <AnimatePresence mode="wait" initial={false}>
           {isOpened && item.submenu && (
