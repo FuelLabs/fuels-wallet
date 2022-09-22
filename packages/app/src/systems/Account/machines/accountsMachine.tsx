@@ -1,168 +1,137 @@
+/* eslint-disable no-restricted-syntax */
 import { subscribe } from "@fuels-wallet/mediator";
-import { bn } from "fuels";
 import type { Sender, StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
 
-import { accountEvents, getBalances } from "..";
+import { accountEvents, AccountService } from "..";
 import type { Account } from "../types";
 
-import { ASSET_LIST } from "~/systems/Asset";
-import type { Maybe } from "~/systems/Core";
-import { db } from "~/systems/Core";
-
 type MachineContext = {
-  accounts?: Maybe<Account[]>;
+  accounts?: Record<string, Account>;
+  account?: Account;
   error?: unknown;
 };
 
 type MachineServices = {
   fetchAccounts: {
-    data: Maybe<Account[]>;
+    data: Account[];
   };
-  fetchBalances: {
-    data: Maybe<Account[]>;
+  fetchBalance: {
+    data: Account;
   };
 };
 
 type MachineEvents =
   | { type: "SET_ACCOUNTS"; data: Account[] }
-  | { type: "UPDATE_ACCOUNTS"; data: { account: Account } }
+  | { type: "UPDATE_ACCOUNTS"; data: Account[] }
   | { type: "REFETCH" };
 
-export const accountsMachine =
-  /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAOgDMwAXHAqAQU0wHsBXfS2AYgicJIIBuTANZgSaLHkKkK1KfUat2sBIKaZ0lXLwDaABgC6iUAAcmsXFt7GQAD0QBGAEx6SehwE4ArB71OAHE5eTgDM-gA0IACejh4ALCQAbADsXskeIXohIelecQC++ZESNNLkVKUKzGwcnGAATvVM9SQmADaaZM2o4hilxOVytAzVyqr4QhpW+PpGSCBmFtM29gjODiSZev5xu4leDiGJ7pExCCEeJHFOTh7+Hp6JiZ7+XoXFfVIDspUAQugdfCYODcXhiNSiXqSAjfCryf6A4EqNRTbQzQw2RaWNErRz+EIkTweUKZPI7LyBU6IOKJBKPYIpRKhBx5ApFEAlL4yOG0BHoIEghpNFrtTrdKH9blDfBQPkC5ETdSaNGzTHmbHWearELXQn+ZLJfX7AIskJUhAuDZ6PQGg5pfyJHWJd4cz4w0g8QicADKAFEACoAfToAGEQwB5ACqADl-d61UscVrEABaBzpTYhTx6YIMzIeZLm0JeEjEi45nwhLwXasuznukiesCcABKvoAYgGQwAJBMa-C4hBphKpJ7PfW7HKJfFFvSJK7OPz3AuvfWFdn4JgQOA2etlH7yEZKDh95bJofppwkV4ORIPB6vR0O800zZ3pwOOIGsL7bJ1t37jyMpykip5JqAqy3gSTIOA4egZAWcTONO5ohE4CRBME-g5vqPiBP+0L7uguBtJAYGahBiA5BsLiZPcFxbIW0SIMEVw3Hc75xBSVb+ARkqNmC5EDueaYZs4NzJB+063mOqE+CQBzoXBwQsncbIfIRxBCYOKa0Zm2a5k4jrwUxZwpmhCkGtauzWkc-j4m865AA */
-  createMachine(
-    {
-      // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-      tsTypes: {} as import("./accountsMachine.typegen").Typegen0,
-      schema: {
-        context: {} as MachineContext,
-        services: {} as MachineServices,
-        events: {} as MachineEvents,
+export const accountsMachine = createMachine(
+  {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+    tsTypes: {} as import("./accountsMachine.typegen").Typegen0,
+    schema: {
+      context: {} as MachineContext,
+      services: {} as MachineServices,
+      events: {} as MachineEvents,
+    },
+    predictableActionArguments: true,
+    id: "(machine)",
+    initial: "fetchingAccounts",
+    states: {
+      fetchingAccounts: {
+        invoke: {
+          src: "fetchAccounts",
+          onDone: [
+            {
+              actions: ["assignAccounts"],
+              target: "fetchingBalances",
+            },
+          ],
+          onError: [
+            {
+              actions: "assignError",
+              target: "failed",
+            },
+          ],
+        },
+        tags: "loading",
       },
-      predictableActionArguments: true,
-      id: "(machine)",
-      initial: "fetchingAccounts",
-      states: {
-        fetchingAccounts: {
-          invoke: {
-            src: "fetchAccounts",
-            onDone: [
-              {
-                actions: "assignAccounts",
-                target: "fetchingBalances",
-              },
-            ],
-            onError: [
-              {
-                actions: "assignError",
-                target: "failed",
-              },
-            ],
-          },
-          tags: "loading",
-        },
-        fetchingBalances: {
-          invoke: {
-            src: "fetchBalances",
-            onDone: [
-              {
-                actions: "assignAccounts",
-                target: "done",
-              },
-            ],
-            onError: [
-              {
-                actions: "assignError",
-                target: "failed",
-              },
-            ],
-          },
-          tags: "loading",
-        },
-        failed: {
-          type: "final",
-        },
-        done: {
-          invoke: {
-            src: "listenUpdates",
-          },
-          on: {
-            UPDATE_ACCOUNTS: {
-              actions: "updateAccounts",
+      fetchingBalances: {
+        invoke: {
+          src: "fetchBalance",
+          onDone: [
+            {
+              actions: ["assignAccount"],
+              target: "done",
             },
-            REFETCH: {
-              target: "fetchingAccounts",
+          ],
+          onError: [
+            {
+              actions: "assignError",
+              target: "failed",
             },
+          ],
+        },
+        tags: "loading",
+      },
+      failed: {
+        type: "final",
+      },
+      done: {
+        invoke: {
+          src: "listenUpdates",
+        },
+        on: {
+          UPDATE_ACCOUNTS: {
+            actions: ["assignAccounts"],
+            target: "fetchingBalances",
           },
         },
       },
     },
-    {
-      actions: {
-        assignAccounts: assign({ accounts: (_, ev) => ev.data }),
-        assignError: assign({ error: (_, ev) => ev.data }),
-        updateAccounts: assign({
-          accounts: (ctx, ev) => ctx.accounts?.concat([ev.data.account]),
-        }),
+  },
+  {
+    actions: {
+      assignAccounts: assign((_, ev) => ({
+        account: ev.data[0],
+        accounts: AccountService.toMap(ev.data),
+      })),
+      assignAccount: assign((ctx, ev) => {
+        const account = ev.data;
+        const accounts = { ...ctx.accounts, [account.address]: account };
+        return { account, accounts };
+      }),
+      assignError: assign({
+        error: (_, ev) => ev.data,
+      }),
+    },
+    services: {
+      async fetchAccounts() {
+        return AccountService.getAccounts();
       },
-      services: {
-        async fetchAccounts() {
-          return db.getAccounts();
-        },
-        async fetchBalances({ accounts: _accounts }) {
-          const accounts = _accounts || [];
-          const balances = await Promise.all(
-            accounts.map(({ publicKey }) => getBalances(publicKey))
-          );
-
-          const newAccounts: Account[] = await balances.reduce<
-            Promise<Account[]>
-          >(async (prev, cur, i) => {
-            const prevAccounts: Account[] = await prev;
-            const ethBalance = cur.find(
-              ({ assetId }) => assetId === ASSET_LIST[0].assetId
-            )?.amount;
-            const account = await db.setBalance({
-              address: accounts[i].address || "",
-              balances: cur.map((item) => ({
-                ...item,
-                amount: item.amount.toString(),
-              })),
-              balanceSymbol: "ETH",
-              balance: bn(ethBalance || 0).toString(),
-            });
-
-            if (account) {
-              return [...prevAccounts, account];
-            }
-
-            return prevAccounts;
-          }, Promise.resolve([]));
-
-          return newAccounts;
-        },
-        listenUpdates: () => (send: Sender<MachineEvents>) => {
-          const subAccountCreated = subscribe(
-            accountEvents.accountCreated,
-            (account) => {
-              send({ type: "UPDATE_ACCOUNTS", data: { account } });
-            }
-          );
-          const subFaucetSuccess = subscribe(
-            accountEvents.faucetSuccess,
-            () => {
-              send({ type: "REFETCH" });
-            }
-          );
-          return () => {
-            subAccountCreated.unsubscribe();
-            subFaucetSuccess.unsubscribe();
-          };
-        },
+      async fetchBalance({ account }) {
+        return AccountService.fetchBalance({ account });
       },
-    }
-  );
+      listenUpdates: () => (send: Sender<MachineEvents>) => {
+        async function handleUpdate() {
+          const accounts = await AccountService.getAccounts();
+          send({ type: "UPDATE_ACCOUNTS", data: accounts });
+        }
+        const subs = [
+          subscribe(accountEvents.accountCreated, handleUpdate),
+          subscribe(accountEvents.faucetSuccess, handleUpdate),
+        ];
+
+        return () => {
+          for (const sub of subs) {
+            sub.unsubscribe();
+          }
+        };
+      },
+    },
+  }
+);
 
 export type AccountsMachine = typeof accountsMachine;
 export type AccountsMachineState = StateFrom<AccountsMachine>;

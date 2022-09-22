@@ -36,7 +36,7 @@ importers:
       ts-node: ^10.9.1
       turbo: ^1.4.7
       typescript: ^4.8.3
-      updates: ^13.1.5
+      updates: ^13.1.7
     dependencies:
       '@fuel-ui/config': 0.7.0_typescript@4.8.3
       fuelhat: link:packages/fuelhat
@@ -66,7 +66,7 @@ importers:
       ts-node: 10.9.1_bidgzm5cq2du6gnjtweqqjrrn4
       turbo: 1.4.7
       typescript: 4.8.3
-      updates: 13.1.5
+      updates: 13.1.7
 
   packages/app:
     specifiers:
@@ -125,7 +125,7 @@ importers:
       react-dom: ^18.2.0
       react-google-recaptcha: ^2.1.0
       react-helmet: ^6.1.0
-      react-hook-form: ^7.35.0
+      react-hook-form: ^7.36.0
       react-router-dom: ^6.4.0
       storybook-dark-mode: ^1.1.2
       ts-jest-mock-import-meta: ^0.12.0
@@ -150,7 +150,7 @@ importers:
       '@fuel-ui/react': 0.7.0_gskn7ndefky3eafwqzgkcdjwse
       '@fuel-ui/test-utils': 0.7.0_kr4gpaf62veridt3zq42wanhha
       '@fuels-wallet/mediator': link:../mediator
-      '@hookform/resolvers': 2.9.8_react-hook-form@7.35.0
+      '@hookform/resolvers': 2.9.8_react-hook-form@7.36.0
       '@xstate/react': 3.0.1_csov6svwxizbqjpbal6caks7le
       buffer: 6.0.3
       cross-fetch: 3.1.5
@@ -167,7 +167,7 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       react-google-recaptcha: 2.1.0_react@18.2.0
       react-helmet: 6.1.0_react@18.2.0
-      react-hook-form: 7.35.0_react@18.2.0
+      react-hook-form: 7.36.0_react@18.2.0
       react-router-dom: 6.4.0_biqbaboplfbrettd7655fr4n2y
       url-join-ts: 1.0.5
       util: 0.12.4
@@ -2561,12 +2561,12 @@ packages:
     resolution: {integrity: sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==}
     dev: true
 
-  /@hookform/resolvers/2.9.8_react-hook-form@7.35.0:
+  /@hookform/resolvers/2.9.8_react-hook-form@7.36.0:
     resolution: {integrity: sha512-iVVjH0USq+1TqDdGkWe2M1x7Wn5OFPgVRo7CbWFsXTqqXqCaZtZcnzJu+UhljCWbthFWxWGXKLGYUDPZ04oVvQ==}
     peerDependencies:
       react-hook-form: ^7.0.0
     dependencies:
-      react-hook-form: 7.35.0_react@18.2.0
+      react-hook-form: 7.36.0_react@18.2.0
     dev: false
 
   /@humanwhocodes/config-array/0.10.4:
@@ -16947,8 +16947,8 @@ packages:
       react-side-effect: 2.1.2_react@18.2.0
     dev: false
 
-  /react-hook-form/7.35.0_react@18.2.0:
-    resolution: {integrity: sha512-9CYdOed+Itbiu5VMVxW0PK9mBR3f0gDGJcZEyUSm0eJbDymQ913TRs2gHcQZZmfTC+rtxyDFRuelMxx/+xwMcw==}
+  /react-hook-form/7.36.0_react@18.2.0:
+    resolution: {integrity: sha512-2PmRhTDH90/G1XWbUGpfuFBf7wxj9kYvzPqoZCv4wUGBIfuac0fK3up9sbeoz0ghpLYcFFXRVDKMUXgMutLXTw==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: '*'
@@ -19459,8 +19459,8 @@ packages:
       escalade: 3.1.1
       picocolors: 1.0.0
 
-  /updates/13.1.5:
-    resolution: {integrity: sha512-7WPn2P8WskugozCdhMI+D1m9OmJnzZqRUuDYM2G8O55TuyvfqOT2vdR2+InkpXUyK6ZNmbLopvw++h9YQElbmg==}
+  /updates/13.1.7:
+    resolution: {integrity: sha512-HTvHhDhRRpXvFMy5xtj2Y5K2BH/KqgfWZSEimfNPWmVbKFzG7BlI0suTXH20W7K+5NinA/ecvopLPddAXPILvA==}
     engines: {node: '>= 14'}
     hasBin: true
     dev: true

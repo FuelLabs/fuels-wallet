@@ -45,7 +45,7 @@
     "react-dom": "^18.2.0",
     "react-google-recaptcha": "^2.1.0",
     "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.35.0",
+    "react-hook-form": "^7.36.0",
     "react-router-dom": "^6.4.0",
     "url-join-ts": "^1.0.5",
     "util": "^0.12.4",

@@ -126,7 +126,7 @@ const styles = {
       color: "$accent11",
     },
   }),
-  menuItemContent: (opened: booleam) => {
+  menuItemContent: (opened: boolean) => {
     return cssObj({
       transition: "all",
       flex: 1,

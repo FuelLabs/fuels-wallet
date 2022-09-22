@@ -12,7 +12,7 @@ export function FaucetDialog() {
   const navigate = useNavigate();
   const { handlers, isLoading } = useFaucetDialog();
   const captcha = useCaptcha();
-  const { currentAccount } = useAccounts();
+  const { account } = useAccounts();
 
   useEffect(() => {
     if (captcha.isLoaded) {
@@ -75,7 +75,7 @@ export function FaucetDialog() {
             variant="solid"
             onPress={() =>
               handlers.startFaucet({
-                address: currentAccount?.address || "",
+                address: account?.address || "",
                 captcha: captcha.value,
               })
             }
