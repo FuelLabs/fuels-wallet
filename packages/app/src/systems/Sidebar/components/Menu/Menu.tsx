@@ -1,7 +1,7 @@
 import { cssObj } from "@fuel-ui/css";
 import type { Icons } from "@fuel-ui/react";
 import { Box, Flex, Icon, Menu as RootMenu } from "@fuel-ui/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -19,6 +19,8 @@ type MenuItemContentProps = {
   isOpened?: boolean;
 };
 
+const FlexMotion = motion(Flex);
+
 function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
   const caret = isOpened ? Icon.is("CaretUp") : Icon.is("CaretDown");
   const navigate = useNavigate();
@@ -34,40 +36,45 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
   }
 
   return (
-    <Flex direction="column" css={styles.menuItemContent}>
-      <Flex gap="$3">
-        <Icon
-          icon={item.icon}
-          css={{ color: "$gray8" }}
-          className="main-icon"
-        />
-        <Box css={{ flex: 1 }}>{item.label}</Box>
-        {item.submenu && <Icon icon={caret} css={{ color: "$gray8" }} />}
-      </Flex>
-      <AnimatePresence>
-        {item.submenu && isOpened && (
-          <motion.div
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={{ ease: "linear", duration: "0.1" }}
-          >
-            <RootMenu
-              css={styles.submenu}
-              onAction={handleAction}
-              aria-label="Submenu"
+    <MotionConfig transition={{ ease: "linear", duration: 0.2 }}>
+      <FlexMotion
+        direction="column"
+        css={styles.menuItemContent(Boolean(isOpened))}
+        animate={{ height: isOpened ? "100%" : "24px" }}
+      >
+        <Flex gap="$3">
+          <Icon
+            icon={item.icon}
+            css={{ color: "$gray8" }}
+            className="main-icon"
+          />
+          <Box css={{ flex: 1 }}>{item.label}</Box>
+          {item.submenu && <Icon icon={caret} css={{ color: "$gray8" }} />}
+        </Flex>
+        <AnimatePresence>
+          {isOpened && item.submenu && (
+            <motion.div
+              initial={{ opacity: 0, y: -30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
             >
-              {item.submenu.map((subItem) => (
-                <RootMenu.Item key={subItem.key} textValue={subItem.label}>
-                  <Icon icon={subItem.icon} css={{ color: "$gray8" }} />
-                  {subItem.label}
-                </RootMenu.Item>
-              ))}
-            </RootMenu>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </Flex>
+              <RootMenu
+                css={styles.submenu}
+                onAction={handleAction}
+                aria-label="Submenu"
+              >
+                {item.submenu.map((subItem) => (
+                  <RootMenu.Item key={subItem.key} textValue={subItem.label}>
+                    <Icon icon={subItem.icon} css={{ color: "$gray8" }} />
+                    {subItem.label}
+                  </RootMenu.Item>
+                ))}
+              </RootMenu>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </FlexMotion>
+    </MotionConfig>
   );
 }
 
@@ -106,7 +113,7 @@ export function Menu({ items }: MenuProps) {
 const styles = {
   root: cssObj({
     ".fuel_menu-list-item": {
-      py: "$2",
+      py: "$0",
       height: "auto",
     },
     ".fuel_menu-list-item:hover, .fuel_menu-list-item:focus": {
@@ -119,12 +126,19 @@ const styles = {
       color: "$accent11",
     },
   }),
-  menuItemContent: cssObj({
-    flex: 1,
-  }),
+  menuItemContent: (opened: booleam) => {
+    return cssObj({
+      transition: "all",
+      flex: 1,
+      py: "$2",
+      ...(opened && { pb: "$0" }),
+    });
+  },
   submenu: cssObj({
     position: "relative",
     fontSize: "$xs",
+    pb: "$0",
+    pt: "$2",
 
     "&::before": {
       display: "block",
@@ -133,7 +147,7 @@ const styles = {
       top: 10,
       left: 7,
       width: 1,
-      height: "calc(100% - 32px)",
+      height: "calc(100% - 24px)",
       background: "$gray6",
     },
 
