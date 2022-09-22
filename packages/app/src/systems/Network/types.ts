@@ -1,5 +1,5 @@
 export type Network = {
-  id: number;
+  id?: number;
   name: string;
   url: string;
   isSelected?: boolean;
