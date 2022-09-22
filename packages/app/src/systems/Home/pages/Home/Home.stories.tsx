@@ -5,8 +5,9 @@ import type { FunctionComponent } from "react";
 
 import { Home } from "./Home";
 
+import { AccountService } from "~/systems/Account";
 import { ASSET_LIST } from "~/systems/Asset";
-import { db, GlobalMachinesProvider } from "~/systems/Core";
+import { GlobalMachinesProvider } from "~/systems/Core";
 
 export default {
   component: Home,
@@ -23,8 +24,7 @@ export default {
 export const Loading: Story<unknown> = () => <Home />;
 Loading.decorators = [
   (Story) => {
-    db.accounts.clear();
-
+    AccountService.clearAccounts();
     return <Story />;
   },
 ];
@@ -32,11 +32,13 @@ Loading.decorators = [
 export const NoAssets: Story<unknown> = () => <Home />;
 NoAssets.decorators = [
   (Story) => {
-    db.accounts.clear();
-    db.addAccount({
-      name: "Account 1",
-      address: "0x00",
-      publicKey: "0x00",
+    AccountService.clearAccounts();
+    AccountService.addAccount({
+      data: {
+        name: "Account 1",
+        address: "0x00",
+        publicKey: "0x00",
+      },
     });
 
     return <Story />;
@@ -81,11 +83,13 @@ WithAssets.parameters = {
 };
 WithAssets.decorators = [
   (Story) => {
-    db.accounts.clear();
-    db.addAccount({
-      name: "Account 1",
-      address: "0x00",
-      publicKey: "0x00",
+    AccountService.clearAccounts();
+    AccountService.addAccount({
+      data: {
+        name: "Account 1",
+        address: "0x00",
+        publicKey: "0x00",
+      },
     });
 
     return <Story />;
