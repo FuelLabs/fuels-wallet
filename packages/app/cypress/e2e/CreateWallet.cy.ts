@@ -19,7 +19,7 @@ describe('CreateWallet', () => {
     cy.get('button[role="checkbox"]').click();
     cy.contains('button', /Next/i).click();
 
-    /** COnfirm Mnemonic */
+    /** Confirm Mnemonic */
     cy.contains(/Write down your Recover Phrase/i);
     cy.contains('button', /Paste/i).click();
     cy.contains('button', /Next/i).click();
@@ -34,5 +34,12 @@ describe('CreateWallet', () => {
     /** Account created */
     cy.contains(/Wallet created succesfully/i);
     cy.contains(/Account 1/i);
+
+    /**
+     * Checking private and public routes
+     * Need reload() in order to see if will redirect to the right place
+     * */
+    cy.reload();
+    cy.visit('/wallet').contains(/assets/i);
   });
 });

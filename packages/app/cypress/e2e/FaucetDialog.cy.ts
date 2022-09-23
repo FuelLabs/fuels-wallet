@@ -19,6 +19,8 @@ describe('FaucetDialog', () => {
     /** Checks if Balance in assets list refreshed */
     cy.contains('Ethereum');
     cy.contains('0,5 ETH');
+
+    /** Checks if Balance in BalanceWidget refreshed */
     cy.contains('ETH 0,5');
   });
 });
