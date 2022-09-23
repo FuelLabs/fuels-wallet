@@ -6,3 +6,5 @@ export const FORMAT_LANGUAGE = 'es';
 export const MIN_FRACTION_DIGITS = 1;
 export const MAX_FRACTION_DIGITS = 3;
 export const MNEMONIC_SIZE = 16;
+
+export const IS_LOGGED_KEY = 'fuel__isLogged';

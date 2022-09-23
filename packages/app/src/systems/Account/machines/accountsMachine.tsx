@@ -5,6 +5,8 @@ import { assign, createMachine } from "xstate";
 import { accountEvents, AccountService } from "..";
 import type { Account } from "../types";
 
+import { IS_LOGGED_KEY } from "~/config";
+
 type MachineContext = {
   accounts?: Record<string, Account>;
   account?: Account;
@@ -43,11 +45,12 @@ export const accountsMachine = createMachine(
           src: "fetchAccounts",
           onDone: [
             {
-              actions: ["assignAccounts"],
+              actions: ["assignAccounts", "setLocalStorage"],
               target: "fetchingBalances",
               cond: "hasAccount",
             },
             {
+              actions: ["removeLocalStorage"],
               target: "done",
             },
           ],
@@ -108,6 +111,12 @@ export const accountsMachine = createMachine(
       assignError: assign({
         error: (_, ev) => ev.data,
       }),
+      setLocalStorage: () => {
+        localStorage.setItem(IS_LOGGED_KEY, "true");
+      },
+      removeLocalStorage: () => {
+        localStorage.removeItem(IS_LOGGED_KEY);
+      },
     },
     services: {
       async fetchAccounts() {
