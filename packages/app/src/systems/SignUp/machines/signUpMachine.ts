@@ -3,7 +3,7 @@ import { Mnemonic } from '@fuel-ts/mnemonic';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-import { MNEMONIC_SIZE } from '~/config';
+import { IS_LOGGED_KEY, MNEMONIC_SIZE } from '~/config';
 import type { Account } from '~/systems/Account';
 import { AccountService, accountEvents } from '~/systems/Account';
 import { getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
@@ -165,6 +165,7 @@ export const signUpMachine = createMachine(
         data: (_) => null,
       }),
       sendAccountCreated: () => {
+        localStorage.setItem(IS_LOGGED_KEY, 'true');
         accountEvents.updateAccounts();
       },
     },
