@@ -16,7 +16,7 @@ export type NetworkInputs = {
     id: number;
     data: Partial<Network>;
   };
-  setSelected: {
+  selectNetwork: {
     id: number;
   };
   removeNetwork: {
@@ -67,14 +67,30 @@ export class NetworkService {
     });
   }
 
-  static setSelected(input: NetworkInputs['setSelected']) {
+  static selectNetwork(input: NetworkInputs['selectNetwork']) {
     return db.transaction('rw', db.networks, async () => {
       const selected = await db.networks.filter((i) => Boolean(i.isSelected)).first();
       if (selected?.id) {
-        await NetworkService.updateNetwork({ id: selected.id, data: { isSelected: false } });
+        await NetworkService.updateNetwork({
+          id: selected.id,
+          data: { isSelected: false },
+        });
       }
-      await NetworkService.updateNetwork({ id: input.id, data: { isSelected: false } });
+      await NetworkService.updateNetwork({
+        id: input.id,
+        data: { isSelected: true },
+      });
       return db.networks.get(input.id);
+    });
+  }
+
+  static addFirstNetwork() {
+    const isProd = import.meta.env.PROD;
+    return NetworkService.addNetwork({
+      data: {
+        name: isProd ? 'Mainnet' : 'Localhost',
+        url: import.meta.env.VITE_FUEL_PROVIDER_URL,
+      },
     });
   }
 

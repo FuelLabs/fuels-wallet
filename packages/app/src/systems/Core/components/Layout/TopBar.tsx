@@ -11,14 +11,10 @@ import { useNavigate } from "react-router-dom";
 
 import { useLayoutContext } from "./Layout";
 
-type TopBarProps = {
-  title?: string;
-};
-
-export function TopBar({ title }: TopBarProps) {
+export function TopBar() {
   const navigate = useNavigate();
-  const isInternal = Boolean(title);
-  const { isLoading } = useLayoutContext();
+  const { isLoading, title, isHome } = useLayoutContext();
+  const isInternal = !isHome;
 
   return (
     <Flex as="nav" className={style({ isInternal })}>

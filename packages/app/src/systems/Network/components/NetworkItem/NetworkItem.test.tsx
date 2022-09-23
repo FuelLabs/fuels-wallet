@@ -32,15 +32,16 @@ describe("NetworkItem", () => {
     expect(screen.getByText("Mainnet")).toBeInTheDocument();
   });
 
-  it("should render actions when has showActions prop", async () => {
-    render(<Content showActions />, { wrapper: TestWrapper });
-    expect(screen.getByLabelText("Edit")).toBeInTheDocument();
+  it("should render actions when has any handler prop", async () => {
+    const fn = jest.fn();
+    render(<Content onUpdate={fn} />, { wrapper: TestWrapper });
+    expect(screen.getByLabelText("Update")).toBeInTheDocument();
     expect(screen.getByLabelText("Remove")).toBeInTheDocument();
   });
 
   it("should show a confirm dialog before remove", async () => {
     const removeHandler = jest.fn();
-    const { user } = render(<Content showActions onRemove={removeHandler} />, {
+    const { user } = render(<Content onRemove={removeHandler} />, {
       wrapper: TestWrapper,
     });
 

@@ -29,6 +29,8 @@
     "@fuel-ui/test-utils": "^0.7.0",
     "@fuels-wallet/mediator": "workspace:*",
     "@hookform/resolvers": "^2.9.8",
+    "@react-aria/utils": "^3.13.3",
+    "@xstate/inspect": "^0.7.0",
     "@xstate/react": "^3.0.1",
     "buffer": "^6.0.3",
     "cross-fetch": "^3.1.5",

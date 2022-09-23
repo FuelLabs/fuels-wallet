@@ -15,7 +15,7 @@ export function Home() {
   }, []);
 
   return (
-    <Layout title="Home" isLoading={isLoading}>
+    <Layout title="Home" isLoading={isLoading} isHome>
       <Layout.TopBar />
       <Layout.Content>
         <Flex css={{ height: "100%", flexDirection: "column" }}>

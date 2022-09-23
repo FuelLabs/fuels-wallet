@@ -1,4 +1,5 @@
 import { Box, CardList } from "@fuel-ui/react";
+import { action } from "@storybook/addon-actions";
 
 import { NetworkItem } from "./NetworkItem";
 
@@ -27,7 +28,12 @@ export const WithActions = () => {
   return (
     <Box css={{ maxWidth: "$xs" }}>
       <CardList>
-        <NetworkItem network={NETWORK} showActions />
+        <NetworkItem
+          network={NETWORK}
+          onUpdate={action("onUpdate")}
+          onRemove={action("onRemove")}
+          onPress={action("onPress")}
+        />
       </CardList>
     </Box>
   );

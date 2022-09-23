@@ -41,6 +41,7 @@ export const faucetMachine =
   /** @xstate-layout N4IgpgJg5mDOIC5QDMCGBXAxmALgWVUwAsBLAOzADoSIAbMAYgGUAVAQQCUWB9AMTYCqAYQCiLRKAAOAe1gkcJaWQkgAHogC0AJgAsARkoBWABwBOU3tPHDewwAY9ugDQgAnokuUA7FruGvXgDMejoAbMZmegC+US5oWLgExORU8dgKZFAMEEpU5ABu0gDWqRjpSaQUlGm45FAIBdKYqApKANp2ALoqMnKtykhqmno+RqZa9namdhE6ulou7giBNt7Gen52oVbGOoE6OjFxZYmElaUJGVlgAE430jeUkrQtyA8AttUn+GcpX5d1BpkQrNfodbqDXryRQDUDqBAaFZ2Sh2BzTYwBOaBYwTRaILQYyhYrSmfamGwhUwxWIgMjSCBwFQ1H7JKo0eg9WTQpQqeHaOw6Sh6DGGQzk2zGUJTQx4hFeUwouaGHR2LThLSOLyGI4gZkVP7Muqcvow3maCaGIUq0JeHF6QLBLyhHSykZaSgO3a+RymeWGUI6vW-KpoEj0CDG7mwoYIwIkoWBaWBcJovSywJWIla0I2BwhHSmAM0oOsqg5CiR-pm2O+byhZ2JnQmSzrWX2d0mNV6UIEwIBCaB776iuQrlVwZ8vuC1GWGaYrTY3FuYarAUTT04rz6LRaalRIA */
   createMachine(
     {
+      predictableActionArguments: true,
       // eslint-disable-next-line @typescript-eslint/consistent-type-imports
       tsTypes: {} as import("./faucetMachine.typegen").Typegen0,
       schema: {
@@ -48,7 +49,6 @@ export const faucetMachine =
         services: {} as MachineServices,
         events: {} as MachineEvents,
       },
-      predictableActionArguments: true,
       id: "faucetMachine",
       initial: "idle",
       states: {

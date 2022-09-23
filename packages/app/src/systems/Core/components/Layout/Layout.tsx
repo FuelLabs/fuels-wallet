@@ -10,6 +10,8 @@ import { TopBar } from "./TopBar";
 
 type Context = {
   isLoading?: boolean;
+  isHome?: boolean;
+  title?: string;
 };
 
 const ctx = createContext<Context>({});
@@ -32,6 +34,7 @@ function Content({ as, children, css }: ContentProps) {
 export type LayoutProps = {
   isPublic?: boolean;
   isLoading?: boolean;
+  isHome?: boolean;
   title?: string;
   children: ReactNode;
 };
@@ -45,12 +48,13 @@ type LayoutComponent = FC<LayoutProps> & {
 export const Layout: LayoutComponent = ({
   isPublic,
   isLoading,
+  isHome,
   title,
   children,
 }: LayoutProps) => {
   const titleText = title ? `${title} | Fuel` : "Fuel";
   return (
-    <ctx.Provider value={{ isLoading }}>
+    <ctx.Provider value={{ isLoading, isHome, title }}>
       <Helmet>
         <title>{titleText}</title>
       </Helmet>
@@ -90,7 +94,7 @@ const styles = {
       "linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)",
   }),
   content: cssObj({
-    py: "$4",
+    py: "$6",
     px: "$6",
     flex: 1,
   }),

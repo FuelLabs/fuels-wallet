@@ -1,5 +1,5 @@
 import { subscribe } from "@fuels-wallet/mediator";
-import type { Sender, StateFrom } from "xstate";
+import type { InterpreterFrom, Sender, StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
 
 import { accountEvents, AccountService } from "..";
@@ -29,6 +29,7 @@ type MachineEvents =
 
 export const accountsMachine = createMachine(
   {
+    predictableActionArguments: true,
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import("./accountsMachine.typegen").Typegen0,
     schema: {
@@ -36,7 +37,6 @@ export const accountsMachine = createMachine(
       services: {} as MachineServices,
       events: {} as MachineEvents,
     },
-    predictableActionArguments: true,
     id: "(machine)",
     initial: "fetchingAccounts",
     states: {
@@ -144,3 +144,4 @@ export const accountsMachine = createMachine(
 
 export type AccountsMachine = typeof accountsMachine;
 export type AccountsMachineState = StateFrom<AccountsMachine>;
+export type AccountsMachineService = InterpreterFrom<AccountsMachine>;

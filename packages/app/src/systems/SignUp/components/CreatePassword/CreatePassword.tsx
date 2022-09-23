@@ -111,7 +111,6 @@ export function CreatePassword({
         />
         <Flex gap="$4">
           <Button
-            size="sm"
             color="gray"
             variant="ghost"
             css={{ width: 130 }}
@@ -121,7 +120,6 @@ export function CreatePassword({
           </Button>
           <Button
             type="submit"
-            size="sm"
             color="accent"
             css={{ width: 130 }}
             isDisabled={!isValid}

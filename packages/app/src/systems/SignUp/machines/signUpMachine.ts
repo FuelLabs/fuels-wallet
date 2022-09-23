@@ -8,6 +8,7 @@ import type { Account } from '~/systems/Account';
 import { AccountService, accountEvents } from '~/systems/Account';
 import { getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
+import { NetworkService } from '~/systems/Network';
 
 // ----------------------------------------------------------------------------
 // Machine
@@ -46,9 +47,9 @@ type MachineEvents =
 
 export const signUpMachine = createMachine(
   {
+    predictableActionArguments: true,
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./signUpMachine.typegen').Typegen0,
-    predictableActionArguments: true,
     id: '(machine)',
     initial: 'checking',
     schema: {
@@ -191,6 +192,7 @@ export const signUpMachine = createMachine(
 
         const manager = await AccountService.createManager({ data });
         const account = manager.getAccounts()[0];
+        await NetworkService.addFirstNetwork();
         return AccountService.addAccount({
           data: {
             name: 'Account 1',
