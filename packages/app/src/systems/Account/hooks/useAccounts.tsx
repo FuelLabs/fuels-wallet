@@ -8,10 +8,10 @@ import { useGlobalMachines } from "~/systems/Core";
 const selectors = {
   isLoading: (state: AccountsMachineState) => state?.hasTag("loading"),
   account: (state: AccountsMachineState) => {
-    return state.context.account;
+    return state?.context.account;
   },
   accounts: (state: AccountsMachineState) => {
-    return AccountService.fromMap(state.context.accounts || {});
+    return AccountService.fromMap(state?.context.accounts || {});
   },
 };
 

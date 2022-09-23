@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { subscribe } from "@fuels-wallet/mediator";
 import type { Sender, StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
@@ -46,6 +45,10 @@ export const accountsMachine = createMachine(
             {
               actions: ["assignAccounts"],
               target: "fetchingBalances",
+              cond: "hasAccount",
+            },
+            {
+              target: "done",
             },
           ],
           onError: [
@@ -114,21 +117,18 @@ export const accountsMachine = createMachine(
         return AccountService.fetchBalance({ account });
       },
       listenUpdates: () => (send: Sender<MachineEvents>) => {
-        async function handleUpdate() {
+        const sub = subscribe(accountEvents.updateAccounts, async () => {
           const accounts = await AccountService.getAccounts();
           send({ type: "UPDATE_ACCOUNTS", data: accounts });
-        }
-        const subs = [
-          subscribe(accountEvents.accountCreated, handleUpdate),
-          subscribe(accountEvents.faucetSuccess, handleUpdate),
-        ];
+        });
 
         return () => {
-          for (const sub of subs) {
-            sub.unsubscribe();
-          }
+          sub.unsubscribe();
         };
       },
+    },
+    guards: {
+      hasAccount: (_, ev) => Boolean(ev?.data?.length),
     },
   }
 );

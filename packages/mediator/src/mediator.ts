@@ -14,14 +14,16 @@ if (service.status !== InterpreterStatus.Running) {
   service.start();
 }
 
+type ArrayType<T> = T extends (infer Item)[] ? Item[] : T;
+
 /**
  * This function will create an event that will be used to send/register
  * inside the mediator
  */
-export function createEvent<T = any>(name: string) {
-  const fn = (data: T) => {
-    service.send('send', { name, data });
-  };
+export function createEvent(name: string) {
+  function fn<T extends ArrayType<any>>(...args: T extends any[] ? T : never) {
+    service.send('send', { name, data: args[0] });
+  }
   fn._name = name;
   return fn;
 }
