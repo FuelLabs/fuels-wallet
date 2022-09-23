@@ -4,12 +4,10 @@ import type { Account } from '~/systems/Account';
 
 export const clearMocks = () => {
   cy.clearIndexedDb('FuelDB');
-  localStorage.removeItem('fuel__isLogged');
 };
 
 export const mockAccount = (account?: Account) => {
   // needs to set version 8 to openIndexedDb, to match version 10 of application.
-  localStorage.setItem('fuel__isLogged', 'true');
   cy.openIndexedDb('FuelDB', 8).as('db');
 
   const wallet = Wallet.generate();
