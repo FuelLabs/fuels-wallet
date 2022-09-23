@@ -1,10 +1,11 @@
-/* eslint-disable no-restricted-syntax */
 import { subscribe } from "@fuels-wallet/mediator";
 import type { Sender, StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
 
 import { accountEvents, AccountService } from "..";
 import type { Account } from "../types";
+
+import { IS_LOGGED_KEY } from "~/config";
 
 type MachineContext = {
   accounts?: Record<string, Account>;
@@ -44,8 +45,13 @@ export const accountsMachine = createMachine(
           src: "fetchAccounts",
           onDone: [
             {
-              actions: ["assignAccounts"],
+              actions: ["assignAccounts", "setLocalStorage"],
               target: "fetchingBalances",
+              cond: "hasAccount",
+            },
+            {
+              actions: ["removeLocalStorage"],
+              target: "done",
             },
           ],
           onError: [
@@ -105,6 +111,12 @@ export const accountsMachine = createMachine(
       assignError: assign({
         error: (_, ev) => ev.data,
       }),
+      setLocalStorage: () => {
+        localStorage.setItem(IS_LOGGED_KEY, "true");
+      },
+      removeLocalStorage: () => {
+        localStorage.removeItem(IS_LOGGED_KEY);
+      },
     },
     services: {
       async fetchAccounts() {
@@ -114,21 +126,18 @@ export const accountsMachine = createMachine(
         return AccountService.fetchBalance({ account });
       },
       listenUpdates: () => (send: Sender<MachineEvents>) => {
-        async function handleUpdate() {
+        const sub = subscribe(accountEvents.updateAccounts, async () => {
           const accounts = await AccountService.getAccounts();
           send({ type: "UPDATE_ACCOUNTS", data: accounts });
-        }
-        const subs = [
-          subscribe(accountEvents.accountCreated, handleUpdate),
-          subscribe(accountEvents.faucetSuccess, handleUpdate),
-        ];
+        });
 
         return () => {
-          for (const sub of subs) {
-            sub.unsubscribe();
-          }
+          sub.unsubscribe();
         };
       },
+    },
+    guards: {
+      hasAccount: (_, ev) => Boolean(ev?.data?.length),
     },
   }
 );

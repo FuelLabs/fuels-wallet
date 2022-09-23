@@ -1,11 +1,7 @@
 import { createEvent } from "@fuels-wallet/mediator";
 
-import type { Account } from "./types";
-
 enum Events {
-  accountCreated = "accounts:ACCOUNT_CREATED",
-  faucetSuccess = "accounts:FAUCET_SUCCESS",
+  updateAccounts = "accounts:UPDATE_ACCOUNTS",
 }
 
-export const accountCreated = createEvent<Account>(Events.accountCreated);
-export const faucetSuccess = createEvent<void>(Events.faucetSuccess);
+export const updateAccounts = createEvent(Events.updateAccounts);
