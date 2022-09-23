@@ -16,17 +16,9 @@ describe('FaucetDialog', () => {
     /** Ask to start Faucet */
     cy.contains('button', 'Give me ETH').click();
 
-    /** Checks loading */
-    cy.contains('button', /Loading/i);
-
-    /** Checks Done feedback */
-    cy.contains('button', 'Success. 0.5 ETH was added.');
-
     /** Checks if Balance in assets list refreshed */
     cy.contains('Ethereum');
     cy.contains('0,5 ETH');
-
-    /** Checks if Balance in BalanceWidget refreshed */
     cy.contains('ETH 0,5');
   });
 });
