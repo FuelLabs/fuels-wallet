@@ -6,5 +6,9 @@
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true
   },
-  "include": ["vite.config.ts"]
+  "include": [
+    "vite.config.ts",
+    "vite-utils/*.ts",
+    "src/pages/crx/manifest.config.ts"
+  ]
 }

@@ -11,7 +11,7 @@ export const routes = (
       {landingPageRoutes}
       {homeRoutes}
       {signUpRoutes}
-      <Route path="*" element={<Navigate to={Pages.home} />} />
+      <Route path="*" element={<Navigate to={Pages.wallet} />} />
     </Route>
   </Routes>
 );

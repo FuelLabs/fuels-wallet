@@ -1,10 +1,14 @@
-import GlobalPolyFill from '@esbuild-plugins/node-globals-polyfill';
+import { crx } from '@crxjs/vite-plugin';
+// import GlobalPolyFill from '@esbuild-plugins/node-globals-polyfill';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-import { htmlTemplate } from './vite-utils/htmlTemplate';
+import manifest from './pages/crx/manifest.config';
+
+// Inject CRX variable on the process
+process.env.VITE_CRX = 'true';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -22,20 +26,19 @@ export default defineConfig({
       define: {
         global: 'globalThis',
       },
-      plugins: [
-        GlobalPolyFill({
-          process: true,
-          buffer: true,
-        }),
-      ],
+      // plugins: [
+      //   GlobalPolyFill({
+      //     process: true,
+      //     buffer: true,
+      //   }),
+      // ],
     },
   },
   plugins: [
     react(),
     tsconfigPaths(),
-    htmlTemplate({
-      pagesDir: './pages',
-      indexPage: './pages/index.html',
+    crx({
+      manifest,
     }),
   ],
   server: {

@@ -8,6 +8,8 @@ import { Helmet } from "react-helmet";
 import { BottomBar } from "./BottomBar";
 import { TopBar } from "./TopBar";
 
+import { WALLET_HEIGHT, WALLET_WIDTH } from "~/config";
+
 type Context = {
   isLoading?: boolean;
 };
@@ -83,8 +85,8 @@ const styles = {
     }),
   wrapper: cssObj({
     flexDirection: "column",
-    width: "350px",
-    height: "615px",
+    width: WALLET_WIDTH,
+    height: WALLET_HEIGHT,
     borderRadius: "$md",
     background:
       "linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)",
