@@ -90,10 +90,11 @@ export const faucetMachine =
         assignAddress: assign({ address: (_, ev) => ev.data.address }),
         assignCaptcha: assign({ captcha: (_, ev) => ev.data.captcha }),
         assignError: assign({ error: (_, ev) => ev.data }),
-        sendFaucetSuccess: () => accountEvents.faucetSuccess(),
+        sendFaucetSuccess: () => accountEvents.updateAccounts(),
         navigateToHome: () => {},
-        showDoneFeedback: () =>
-          toast.success("Success, 0.5 ETH was added to your wallet."),
+        showDoneFeedback: () => {
+          toast.success("Success, 0.5 ETH was added to your wallet.");
+        },
       },
       services: {
         faucet: async ({ address, captcha }) => {

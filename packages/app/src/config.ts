@@ -10,3 +10,4 @@ export const WALLET_WIDTH = 350;
 export const WALLET_HEIGHT = 600;
 export const TAB_BAR_HEIGHT = 30;
 export const IS_CRX = VITE_CRX === 'true';
+export const IS_LOGGED_KEY = 'fuel__isLogged';

@@ -3,10 +3,10 @@ import { Mnemonic } from '@fuel-ts/mnemonic';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-import { MNEMONIC_SIZE } from '~/config';
+import { IS_LOGGED_KEY, MNEMONIC_SIZE } from '~/config';
 import type { Account } from '~/systems/Account';
-import { accountEvents, createManager } from '~/systems/Account';
-import { db, getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
+import { AccountService, accountEvents } from '~/systems/Account';
+import { getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
 
 // ----------------------------------------------------------------------------
@@ -164,10 +164,9 @@ export const signUpMachine = createMachine(
       deleteData: assign({
         data: (_) => null,
       }),
-      sendAccountCreated: (ctx) => {
-        if (ctx.account) {
-          accountEvents.accountCreated(ctx.account);
-        }
+      sendAccountCreated: () => {
+        localStorage.setItem(IS_LOGGED_KEY, 'true');
+        accountEvents.updateAccounts();
       },
     },
     guards: {
@@ -190,12 +189,14 @@ export const signUpMachine = createMachine(
           throw new Error('Invalid mnemonic');
         }
 
-        const manager = await createManager(data);
+        const manager = await AccountService.createManager({ data });
         const account = manager.getAccounts()[0];
-        return db.addAccount({
-          name: 'Account 1',
-          address: account.address.toAddress(),
-          publicKey: account.publicKey,
+        return AccountService.addAccount({
+          data: {
+            name: 'Account 1',
+            address: account.address.toAddress(),
+            publicKey: account.publicKey,
+          },
         });
       },
     },

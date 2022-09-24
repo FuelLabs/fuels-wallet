@@ -1,7 +1,8 @@
 import { render, screen, testA11y } from "@fuel-ui/test-utils";
-import { BrowserRouter } from "react-router-dom";
 
 import { NetworkList } from "./NetworkList";
+
+import { TestWrapper } from "~/systems/Core";
 
 const NETWORKS = [
   {
@@ -21,12 +22,12 @@ const NETWORKS = [
 describe("NetworkList", () => {
   it("a11y", async () => {
     await testA11y(<NetworkList networks={NETWORKS} />, {
-      wrapper: BrowserRouter,
+      wrapper: TestWrapper,
     });
   });
 
   it("should render a list of networks", () => {
-    render(<NetworkList networks={NETWORKS} />, { wrapper: BrowserRouter });
+    render(<NetworkList networks={NETWORKS} />, { wrapper: TestWrapper });
     expect(screen.getByText("Mainnet")).toBeInTheDocument();
     expect(screen.getByText("Localhost")).toBeInTheDocument();
   });

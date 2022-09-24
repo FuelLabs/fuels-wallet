@@ -34,9 +34,10 @@ const config: InitialOptionsTsJest = {
   maxWorkers: 1,
   rootDir: __dirname,
   displayName: pkg.name,
-  setupFilesAfterEnv: [require.resolve('@fuel-ui/test-utils/setup')],
+  setupFilesAfterEnv: [require.resolve('@fuel-ui/test-utils/setup'), './jest.setup.ts'],
   setupFiles: ['./load.envs.js', 'fake-indexeddb/auto'],
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  injectGlobals: true,
   moduleNameMapper: {
     ...baseConfig.moduleNameMapper,
     '^dexie$': require.resolve('dexie'),
