@@ -9,6 +9,7 @@
     "create404": "cp ./dist/index.html ./dist/404.html",
     "dev": "vite",
     "dev:crx": "vite --config vite.crx.config.ts",
+    "build:crx": "pnpm ts:check && vite build --config vite.crx.config.ts",
     "preview": "vite preview",
     "storybook": "start-storybook -p 6006",
     "test": "jest --verbose",

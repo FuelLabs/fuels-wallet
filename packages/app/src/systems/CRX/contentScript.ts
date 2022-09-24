@@ -1,12 +1,13 @@
-import './pageScript';
+import fileName from './pageScript?script&module';
 
 async function main() {
-  const s = document.createElement('script');
-  s.src = chrome.runtime.getURL('src/systems/CRX/pageScript.ts.js');
-  s.onload = () => {
-    s.remove();
+  const script = document.createElement('script');
+  script.src = chrome.runtime.getURL(fileName);
+  script.type = 'module';
+  script.onload = () => {
+    script.remove();
   };
-  (document.head || document.documentElement).appendChild(s);
+  (document.head || document.documentElement).appendChild(script);
 }
 
 main();

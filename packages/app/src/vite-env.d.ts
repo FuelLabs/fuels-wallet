@@ -14,3 +14,9 @@ interface ImportMeta {
 declare namespace globalThis {
   function FuelWeb3(): void;
 }
+
+// Add script module importing
+declare module '*?script&module' {
+  const src: string;
+  export default src;
+}
