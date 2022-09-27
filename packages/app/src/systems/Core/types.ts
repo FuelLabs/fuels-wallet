@@ -10,6 +10,7 @@ export enum Pages {
   'signUpWelcome' = 'welcome',
   'signUpCreateWallet' = 'create-wallet',
   'signUpRecoverWallet' = 'recover-wallet',
+  'signUpWalletCreated' = 'wallet-created',
 }
 
 export enum PageLinks {
@@ -20,6 +21,7 @@ export enum PageLinks {
   'signUpWelcome' = '/sign-up/welcome',
   'signUpCreateWallet' = '/sign-up/create-wallet',
   'signUpRecoverWallet' = '/sign-up/recover-wallet',
+  'signUpWalletCreated' = '/sign-up/wallet-created',
 }
 
 export type AmountMap = Record<string, Maybe<BigNumberish>>;

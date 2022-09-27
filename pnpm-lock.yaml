@@ -119,6 +119,7 @@ importers:
       fake-indexeddb: ^4.0.0
       framer-motion: ^7.3.5
       fuels: ^0.16.0
+      json-rpc-2.0: ^1.4.1
       msw: ^0.47.3
       msw-storybook-addon: ^1.6.3
       process: ^0.11.10
@@ -164,6 +165,7 @@ importers:
       fake-indexeddb: 4.0.0
       framer-motion: 7.3.5_biqbaboplfbrettd7655fr4n2y
       fuels: 0.16.0
+      json-rpc-2.0: 1.4.1
       process: 0.11.10
       react: 18.2.0
       react-content-loader: 6.2.0_react@18.2.0
@@ -14823,6 +14825,10 @@ packages:
 
   /json-parse-even-better-errors/2.3.1:
     resolution: {integrity: sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==}
+
+  /json-rpc-2.0/1.4.1:
+    resolution: {integrity: sha512-OX1NJhpIfuK4GjDnJ/gKtZy1HOYo0l4eL0a4rb0rNeQheX1xlyQ9+JMmPzs/sFNthpS/TXKPWlGo09X7B5l81A==}
+    dev: false
 
   /json-schema-traverse/0.4.1:
     resolution: {integrity: sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==}

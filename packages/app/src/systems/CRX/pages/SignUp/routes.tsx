@@ -1,18 +1,16 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
-import { Pages } from "~/systems/Core";
+import { PageLinks } from "~/systems/Core";
 import { signUpRoutes } from "~/systems/SignUp";
+import { WalletCreatedPage } from "~/systems/SignUp/pages";
 
 export const routes = (
   <Routes>
-    <Route>
-      {signUpRoutes}
-      <Route
-        path={Pages.wallet}
-        action={() => {
-          window.close();
-        }}
-      />
-    </Route>
+    <Route>{signUpRoutes}</Route>
+    <Route
+      path={PageLinks.signUpWalletCreated}
+      element={<WalletCreatedPage />}
+    />
+    <Route path="*" element={<Navigate to={PageLinks.signUpWelcome} />} />
   </Routes>
 );

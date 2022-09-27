@@ -4,11 +4,13 @@
     "composite": true,
     "module": "ESNext",
     "moduleResolution": "Node",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true
   },
   "include": [
     "vite.config.ts",
     "vite-utils/*.ts",
+    "./package.json",
     "src/pages/crx/manifest.config.ts"
   ]
 }

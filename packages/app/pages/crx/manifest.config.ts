@@ -18,17 +18,9 @@ export default defineManifest({
     },
   },
   background: {
-    service_worker: 'src/systems/CRX/background.ts',
+    service_worker: 'src/systems/CRX/background/index.ts',
     type: 'module',
   },
-  content_scripts: [
-    {
-      matches: ['<all_urls>'],
-      js: ['src/systems/CRX/contentScript.ts'],
-      run_at: 'document_start',
-      all_frames: true,
-    },
-  ],
   permissions: [
     'activeTab',
     'clipboardWrite',
@@ -37,5 +29,6 @@ export default defineManifest({
     'storage',
     'unlimitedStorage',
     'webRequest',
+    'contextMenus',
   ],
 });
