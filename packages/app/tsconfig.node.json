@@ -11,6 +11,6 @@
     "vite.config.ts",
     "vite-utils/*.ts",
     "./package.json",
-    "src/pages/crx/manifest.config.ts"
+    "manifest.config.ts"
   ]
 }

@@ -6,7 +6,7 @@ export default defineManifest({
   version: '1.0.0',
   action: {
     default_title: 'Fuel Wallet',
-    default_popup: 'pages/crx/popup.html',
+    default_popup: 'popup.html',
     default_icon: {
       '16': 'icons/fuel-logo-16.png',
       '19': 'icons/fuel-logo-19.png',
