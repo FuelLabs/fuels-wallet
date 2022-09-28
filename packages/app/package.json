@@ -3,9 +3,9 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "build": "pnpm ts:check && vite build",
+    "build": "pnpm ts:check && vite build && pnpm create404",
     "build-storybook": "pnpm exec build-storybook -o dist/storybook",
-    "build:preview": "run-s build build-storybook",
+    "build:preview": "run-s build build:crx build-storybook",
     "create404": "cp ./dist/index.html ./dist/404.html",
     "dev": "vite",
     "dev:crx": "vite --config vite.crx.config.ts",
@@ -49,7 +49,6 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.36.0",
     "react-router-dom": "^6.4.0",
-    "url-join-ts": "^1.0.5",
     "util": "^0.12.4",
     "xstate": "^4.33.6",
     "yup": "^0.32.11"
@@ -89,7 +88,7 @@
     "tsconfig-paths-webpack-plugin": "^4.0.0",
     "typescript": "^4.8.3",
     "vite": "^3.1.1",
-    "vite-plugin-html-template": "^1.1.5",
+    "vite-plugin-zip-pack": "^1.0.4",
     "vite-tsconfig-paths": "^3.5.0",
     "webpack": "^5.74.0"
   },

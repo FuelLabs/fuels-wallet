@@ -1,3 +1,8 @@
 import { PageLinks } from '~/systems/Core/types';
 
-export const welcomeLink = chrome.runtime.getURL(`#${PageLinks.signUpWelcome}`);
+export enum CRXPages {
+  'index' = '/index.html',
+  'popup' = '/popup.html',
+}
+
+export const welcomeLink = chrome.runtime.getURL(`${CRXPages.index}#${PageLinks.signUpWelcome}`);

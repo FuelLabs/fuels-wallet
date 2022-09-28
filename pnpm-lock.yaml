@@ -133,10 +133,9 @@ importers:
       ts-jest-mock-import-meta: ^0.12.0
       tsconfig-paths-webpack-plugin: ^4.0.0
       typescript: ^4.8.3
-      url-join-ts: ^1.0.5
       util: ^0.12.4
       vite: ^3.1.1
-      vite-plugin-html-template: ^1.1.5
+      vite-plugin-zip-pack: ^1.0.4
       vite-tsconfig-paths: ^3.5.0
       webpack: ^5.74.0
       xstate: ^4.33.6
@@ -172,7 +171,6 @@ importers:
       react-helmet: 6.1.0_react@18.2.0
       react-hook-form: 7.36.0_react@18.2.0
       react-router-dom: 6.4.0_biqbaboplfbrettd7655fr4n2y
-      url-join-ts: 1.0.5
       util: 0.12.4
       xstate: 4.33.6
       yup: 0.32.11
@@ -211,7 +209,7 @@ importers:
       tsconfig-paths-webpack-plugin: 4.0.0
       typescript: 4.8.3
       vite: 3.1.3
-      vite-plugin-html-template: 1.1.5
+      vite-plugin-zip-pack: 1.0.4_vite@3.1.3
       vite-tsconfig-paths: 3.5.0_vite@3.1.3
       webpack: 5.74.0
 
@@ -13043,6 +13041,10 @@ packages:
     resolution: {integrity: sha512-CmxgYGiEPCLhfLnpPp1MoRmifwEIOgjcHXxOBjv7mY96c+eWScsOP9c112ZyLdWHi0FxHjI+4uVhKYp/gcdRmQ==}
     engines: {node: '>= 4'}
 
+  /immediate/3.0.6:
+    resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
+    dev: true
+
   /import-fresh/3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -13138,11 +13140,6 @@ packages:
       get-intrinsic: 1.1.2
       has: 1.0.3
       side-channel: 1.0.4
-
-  /interpret/1.4.0:
-    resolution: {integrity: sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==}
-    engines: {node: '>= 0.10'}
-    dev: true
 
   /interpret/2.2.0:
     resolution: {integrity: sha512-Ju0Bz/cEia55xDwUWEa8+olFpCiQoypjnQySseKtmjNrnps3P+xfpUmGr90T7yjlVJmOtybRvPXhKMbHr+fWnw==}
@@ -14875,6 +14872,15 @@ packages:
       object.assign: 4.1.2
     dev: false
 
+  /jszip/3.10.1:
+    resolution: {integrity: sha512-xXDvecyTpGLrqFrvkrUSoxxfJI5AH7U8zxxtVclpsUtMCq4JQ290LY8AW5c7Ggnr/Y/oK+bQMbqK2qmtk3pN4g==}
+    dependencies:
+      lie: 3.3.0
+      pako: 1.0.11
+      readable-stream: 2.3.7
+      setimmediate: 1.0.5
+    dev: true
+
   /junk/3.1.0:
     resolution: {integrity: sha512-pBxcB3LFc8QVgdggvZWyeys+hnrNWg4OcZIU/1X59k5jQdLBlCsYGRQaz234SqoRLTCgMH00fY0xRJH+F9METQ==}
     engines: {node: '>=8'}
@@ -14956,6 +14962,12 @@ packages:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
+
+  /lie/3.3.0:
+    resolution: {integrity: sha512-UaiMJzeWRlEujzAuw5LokY1L5ecNQYZKfmyZ9L7wDHb/p5etKaxXhohBcrw0EYby+G/NA52vRSN4N39dxHAIwQ==}
+    dependencies:
+      immediate: 3.0.6
+    dev: true
 
   /lilconfig/2.0.5:
     resolution: {integrity: sha512-xaYmXZtTHPAw5m+xLN8ab9C+3a8YmV3asNSPOATITbtwrfbwaLJj8h66H1WMIpALCkqsIzK3h7oQ+PdX+LQ9Eg==}
@@ -17510,13 +17522,6 @@ packages:
       typeson-registry: 1.0.0-alpha.39
     dev: false
 
-  /rechoir/0.6.2:
-    resolution: {integrity: sha512-HFM8rkZ+i3zrV+4LQjwQ0W+ez98pApMGM3HUrN04j3CqzPOzl9nmP15Y8YXNm8QHGv/eacOVEjqhmWpkRV0NAw==}
-    engines: {node: '>= 0.10'}
-    dependencies:
-      resolve: 1.22.1
-    dev: true
-
   /recrawl-sync/2.2.2:
     resolution: {integrity: sha512-E2sI4F25Fu2nrfV+KsnC7/qfk/spQIYXlonfQoS4rwxeNK5BjxnLPbWiRXHVXPwYBOTWtPX5765kTm/zJiL+LQ==}
     dependencies:
@@ -18112,16 +18117,6 @@ packages:
 
   /shell-quote/1.7.3:
     resolution: {integrity: sha512-Vpfqwm4EnqGdlsBFNmHhxhElJYrdfcxPThu+ryKS5J8L/fhAwLazFZtq+S+TWZ9ANj2piSQLGj6NQg+lKPmxrw==}
-    dev: true
-
-  /shelljs/0.8.4:
-    resolution: {integrity: sha512-7gk3UZ9kOfPLIAbslLzyWeGiEqx9e3rxwZM0KE6EL8GlGwjym9Mrlx5/p33bWTu9YG6vcS4MBxYZDHYr5lr8BQ==}
-    engines: {node: '>=4'}
-    hasBin: true
-    dependencies:
-      glob: 7.2.3
-      interpret: 1.4.0
-      rechoir: 0.6.2
     dev: true
 
   /short-unique-id/4.4.4:
@@ -19681,10 +19676,6 @@ packages:
     deprecated: Please see https://github.com/lydell/urix#deprecated
     dev: true
 
-  /url-join-ts/1.0.5:
-    resolution: {integrity: sha512-u+5gi7JyOwhj58ZKwkmkzFGHuepTpmwjqfUDGVjsJJstsCz63CJAINixgJaDcMbmuyWPJIxbtBpIfaDgOQ9KMQ==}
-    dev: false
-
   /url-loader/4.1.1_lit45vopotvaqup7lrvlnvtxwy:
     resolution: {integrity: sha512-3BTV812+AVHHOJQO8O5MkWgZ5aosP7GnROJwvzLS9hWDj00lZ6Z0wNak423Lp9PBZN05N+Jk/N5Si8jRAlGyWA==}
     engines: {node: '>= 10.13.0'}
@@ -19885,10 +19876,13 @@ packages:
       vfile-message: 2.0.4
     dev: true
 
-  /vite-plugin-html-template/1.1.5:
-    resolution: {integrity: sha512-G40Rz9FcsenSF81bYn6DctFEDoktTzJRoaUPyi0npUwjiXQD9qFm2Ut1LoZmOsSCAZgCjtYhNa8tKse/GZhz9A==}
+  /vite-plugin-zip-pack/1.0.4_vite@3.1.3:
+    resolution: {integrity: sha512-f/tX1rpOgEvkheifFBtHEQyoAvqWv5RtuqpoKZUqCyPdZjrUBopxfHcNKVLGgCEn+aun+nE9ySRHyEBJc+HrWQ==}
+    peerDependencies:
+      vite: 2.x || 3.x
     dependencies:
-      shelljs: 0.8.4
+      jszip: 3.10.1
+      vite: 3.1.3
     dev: true
 
   /vite-tsconfig-paths/3.5.0_vite@3.1.3:

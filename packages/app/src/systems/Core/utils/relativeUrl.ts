@@ -5,5 +5,5 @@ function pathJoin(...parts: Array<string>) {
 }
 
 export function relativeUrl(path: string) {
-  return pathJoin(window.location.origin, import.meta.env.BASE_URL, path);
+  return pathJoin(import.meta.env.BASE_URL, path);
 }
