@@ -1,6 +1,6 @@
 import { toast } from "@fuel-ui/react";
 import fetch from "cross-fetch";
-import type { StateFrom } from "xstate";
+import type { InterpreterFrom, StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
 
 import { VITE_FUEL_FAUCET_URL } from "~/config";
@@ -87,10 +87,18 @@ export const faucetMachine =
     },
     {
       actions: {
-        assignAddress: assign({ address: (_, ev) => ev.data.address }),
-        assignCaptcha: assign({ captcha: (_, ev) => ev.data.captcha }),
-        assignError: assign({ error: (_, ev) => ev.data }),
-        sendFaucetSuccess: () => accountEvents.updateAccounts(),
+        assignAddress: assign({
+          address: (_, ev) => ev.data.address,
+        }),
+        assignCaptcha: assign({
+          captcha: (_, ev) => ev.data.captcha,
+        }),
+        assignError: assign({
+          error: (_, ev) => ev.data,
+        }),
+        sendFaucetSuccess: () => {
+          accountEvents.updateAccounts();
+        },
         navigateToHome: () => {},
         showDoneFeedback: () => {
           toast.success("Success, 0.5 ETH was added to your wallet.");
@@ -112,3 +120,4 @@ export const faucetMachine =
 
 export type FaucetMachine = typeof faucetMachine;
 export type FaucetMachineState = StateFrom<FaucetMachine>;
+export type FaucetMachineService = InterpreterFrom<FaucetMachine>;

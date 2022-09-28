@@ -1,6 +1,8 @@
 import { rest } from 'msw';
 import { interpret } from 'xstate';
+import { waitFor } from 'xstate/lib/waitFor';
 
+import type { FaucetMachineService, FaucetMachineState } from './faucetMachine';
 import { faucetMachine } from './faucetMachine';
 
 import { mockServer } from '~/mocks/server';
@@ -17,28 +19,36 @@ mockServer([
 ]);
 
 describe('faucetMachine', () => {
-  it('should go idle if user don`t ask for faucet', (done) => {
-    const service = interpret(faucetMachine).onTransition((state) => {
-      expect(state.matches('idle')).toBe(true);
-      done();
-    });
+  let service: FaucetMachineService;
+  let state: FaucetMachineState;
 
-    service.start();
+  beforeEach(() => {
+    service = interpret(faucetMachine.withContext({})).start();
+    state = service.getSnapshot();
   });
 
-  it('should faucet and go to last stage', (done) => {
-    const service = interpret(faucetMachine.withContext({})).onTransition((state) => {
-      if (state.matches('done')) {
-        done();
-      }
-    });
+  afterEach(() => {
+    service.stop();
+    state = service.getSnapshot();
+  });
 
-    service.start();
-    service.send('START_FAUCET', {
+  it('should go idle if user don`t ask for faucet', async () => {
+    expect(state.value).toBe('idle');
+    expect(state.context.address).toBeUndefined();
+    expect(state.context.captcha).toBeUndefined();
+  });
+
+  it('should faucet and go to last stage', async () => {
+    const mock = {
       data: {
         address: 'fuel1rfmv8mz274rd0ge6yhdpkr6vx04s0q635fmts4mpzzp47z96342s8c7yg9',
         captcha: '',
       },
-    });
+    };
+
+    service.send('START_FAUCET', mock);
+
+    state = await waitFor(service, (state) => state.matches('done'));
+    expect(state.context.address).toBe(mock.data.address);
   });
 });

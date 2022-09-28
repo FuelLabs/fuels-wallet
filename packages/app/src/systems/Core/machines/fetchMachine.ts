@@ -6,7 +6,7 @@ export type FetchResponse<T> = T & {
 };
 
 type MachineContext<I> = {
-  input: I;
+  input?: I;
   attempts?: number;
   error?: unknown;
 };
@@ -22,13 +22,13 @@ type CreateFetchMachineOpts<I, R> = {
   fetch: (ctx: MachineContext<I>) => Promise<R>;
 };
 
-export class FetchMachine {
+export const FetchMachine = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static hasError(_: any, ev: { data: { error?: any } }) {
-    return Boolean(ev.data.error);
-  }
+  hasError(_: any, ev: { data: { error?: any } }) {
+    return Boolean(ev.data?.error);
+  },
 
-  static create<Input, Result>(opts: CreateFetchMachineOpts<Input, Result>) {
+  create<Input, Result>(opts: CreateFetchMachineOpts<Input, Result>) {
     return createMachine(
       {
         predictableActionArguments: true,
@@ -40,6 +40,9 @@ export class FetchMachine {
         },
         id: '(machine)',
         initial: 'loading',
+        context: {
+          attempts: 0,
+        },
         states: {
           loading: {
             tags: ['loading'],
@@ -62,7 +65,7 @@ export class FetchMachine {
           },
           retrying: {
             tags: ['loading'],
-            entry: ['incrementAttemps'],
+            entry: ['logError', 'incrementAttemps'],
             after: {
               500: {
                 target: 'loading',
@@ -91,17 +94,23 @@ export class FetchMachine {
           assignError: assign({
             error: (_, ev) => ev.data,
           }),
+          logError: (_, ev) => {
+            // eslint-disable-next-line no-console
+            console.error(ev.data);
+          },
           incrementAttemps: assign({
             attempts: (ctx) => (ctx.attempts ?? 0) + 1,
           }),
         },
         guards: {
-          hasManyAttempts: (ctx) => Boolean((ctx.attempts ?? 0) > 3),
+          hasManyAttempts: (ctx) => {
+            return Boolean((ctx?.attempts ?? 0) > 3);
+          },
         },
         services: {
           fetch: opts.fetch,
         },
       }
     );
-  }
-}
+  },
+};

@@ -1,4 +1,4 @@
-import type { StateFrom } from "xstate";
+import type { InterpreterFrom, StateFrom } from "xstate";
 import { assign, createMachine } from "xstate";
 
 import { VITE_FAUCET_RECAPTCHA_KEY } from "~/config";
@@ -89,3 +89,4 @@ export const captchaMachine =
 
 export type CaptchaMachine = typeof captchaMachine;
 export type CaptchaMachineState = StateFrom<CaptchaMachine>;
+export type CaptchaMachineService = InterpreterFrom<CaptchaMachine>;

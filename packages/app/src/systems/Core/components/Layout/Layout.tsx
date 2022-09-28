@@ -65,6 +65,11 @@ export const Layout: LayoutComponent = ({
           <Flex css={styles.wrapper}>{children}</Flex>
         )}
       </Flex>
+      {import.meta.env.NODE_ENV === "test" && (
+        <Box css={{ visibility: "hidden" }}>
+          {isLoading ? "is loading" : "is loaded"}
+        </Box>
+      )}
     </ctx.Provider>
   );
 };

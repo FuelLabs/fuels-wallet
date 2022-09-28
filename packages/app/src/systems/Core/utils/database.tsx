@@ -7,14 +7,14 @@ import type { Network } from "~/systems/Network";
 export class FuelDB extends Dexie {
   vaults!: Table<Vault, string>;
   accounts!: Table<Account, string>;
-  networks!: Table<Network, number>;
+  networks!: Table<Network, string>;
 
   constructor() {
     super("FuelDB");
-    this.version(1).stores({
+    this.version(2).stores({
       vaults: `key`,
-      accounts: `&address`,
-      networks: `id++, &url, &name`,
+      accounts: `address`,
+      networks: `&id, &url, &name`,
     });
   }
 }

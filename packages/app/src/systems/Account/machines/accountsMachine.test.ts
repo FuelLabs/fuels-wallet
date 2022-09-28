@@ -1,6 +1,8 @@
 import { bn } from 'fuels';
 import { interpret } from 'xstate';
+import { waitFor } from 'xstate/lib/waitFor';
 
+import type { AccountsMachineService } from './accountsMachine';
 import { accountsMachine } from './accountsMachine';
 
 const MOCK_ACCOUNT = { name: 'Account1', address: '0x00', publicKey: '0x00' };
@@ -12,7 +14,9 @@ const MOCK_ACCOUNT_WITH_BALANCE = {
 };
 
 describe('accountsMachine', () => {
-  it('should fetch accounts and balance initially', (done) => {
+  let service: AccountsMachineService;
+
+  beforeEach(() => {
     const machine = accountsMachine.withContext({ accounts: {} }).withConfig({
       services: {
         async fetchAccounts() {
@@ -24,26 +28,21 @@ describe('accountsMachine', () => {
       },
     });
 
-    const service = interpret(machine).onTransition((state) => {
-      // this is after fetching accounts
-      if (state.matches('fetchingBalances')) {
-        const accounts = Object.values(state.context?.accounts || {});
-        expect(accounts.length).toBe(1);
-        expect(accounts[0].name).toBe('Account1');
-        expect(accounts[0].balances).toBe(undefined);
-      }
+    service = interpret(machine).start();
+  });
 
-      // this is where you expect the state to eventually
-      // be reached
-      if (state.matches('done') || state.matches('failed')) {
-        const { accounts, account } = state.context;
-        const accountsArr = Object.values(accounts || {});
-        expect(accountsArr[0]).toEqual(account);
-        expect(account).toEqual(MOCK_ACCOUNT_WITH_BALANCE);
-        done();
-      }
-    });
+  afterEach(() => {
+    service.stop();
+  });
 
-    service.start();
+  it('should have just one account added', async () => {
+    const state = await waitFor(service, (state) => state.matches('done'));
+    const { account, accounts } = state.context;
+    const accountsArr = Object.values(accounts || {});
+    expect(accountsArr?.length).toBe(1);
+    expect(accountsArr[0].name).toBe('Account1');
+    expect(accountsArr[0].balances).toBe(MOCK_ACCOUNT_WITH_BALANCE.balances);
+    expect(accountsArr[0]).toEqual(account);
+    expect(account).toEqual(MOCK_ACCOUNT_WITH_BALANCE);
   });
 });

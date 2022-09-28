@@ -6,6 +6,7 @@ import { accountEvents, AccountService } from "..";
 import type { Account } from "../types";
 
 import { IS_LOGGED_KEY } from "~/config";
+import { NetworkService } from "~/systems/Network";
 
 type MachineContext = {
   accounts?: Record<string, Account>;
@@ -123,7 +124,10 @@ export const accountsMachine = createMachine(
         return AccountService.getAccounts();
       },
       async fetchBalance({ account }) {
-        return AccountService.fetchBalance({ account });
+        const selectedNetwork = await NetworkService.getSelectedNetwork();
+        const defaultProvider = import.meta.env.VITE_FUEL_PROVIDER_URL;
+        const providerUrl = selectedNetwork?.url || defaultProvider;
+        return AccountService.fetchBalance({ providerUrl, account });
       },
       listenUpdates: () => (send: Sender<MachineEvents>) => {
         const sub = subscribe(accountEvents.updateAccounts, async () => {
@@ -137,7 +141,9 @@ export const accountsMachine = createMachine(
       },
     },
     guards: {
-      hasAccount: (_, ev) => Boolean(ev?.data?.length),
+      hasAccount: (_, ev) => {
+        return Boolean(ev.data?.length);
+      },
     },
   }
 );

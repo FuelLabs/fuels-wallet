@@ -7,14 +7,31 @@ import {
   Spinner,
   Text,
 } from "@fuel-ui/react";
+import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useLayoutContext } from "./Layout";
 
-export function TopBar() {
-  const navigate = useNavigate();
+/**
+ * Because of some cycle-dependency error here, is not
+ * possible to just import by using ~/systems/Network
+ */
+import { NetworkDropdown } from "~/systems/Network/components/NetworkDropdown";
+import { useNetworks } from "~/systems/Network/hooks";
+import { NetworkScreen } from "~/systems/Network/machines";
+
+type TopBarProps = {
+  onBack?: () => void;
+  children?: ReactNode;
+};
+
+export function TopBar({ onBack }: TopBarProps) {
   const { isLoading, title, isHome } = useLayoutContext();
   const isInternal = !isHome;
+  const navigate = useNavigate();
+  const { networks, selectedNetwork, handlers } = useNetworks({
+    type: NetworkScreen.list,
+  });
 
   return (
     <Flex as="nav" className={style({ isInternal })}>
@@ -26,7 +43,7 @@ export function TopBar() {
               aria-label="Back"
               variant="link"
               css={{ px: "0 !important" }}
-              onPress={() => navigate(-1)}
+              onPress={() => (onBack ? onBack() : navigate(-1))}
             />
             <Text css={{ fontWeight: "$semibold", color: "$gray12" }}>
               {title}
@@ -36,7 +53,13 @@ export function TopBar() {
         ) : (
           <>
             <FuelLogo size={36} />
-            {isLoading && <Spinner />}
+            {isLoading && <Spinner aria-label="Spinner" />}
+            {!isLoading && networks && (
+              <NetworkDropdown
+                selected={selectedNetwork}
+                onPress={handlers.goToList}
+              />
+            )}
           </>
         )}
       </Flex>
