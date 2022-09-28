@@ -7,7 +7,7 @@ import { Home } from "./Home";
 
 import { AccountService } from "~/systems/Account";
 import { ASSET_LIST } from "~/systems/Asset";
-import { GlobalMachinesProvider } from "~/systems/Core";
+import { GlobalMachinesProvider } from "~/systems/Global";
 
 export default {
   component: Home,

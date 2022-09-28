@@ -1,9 +1,9 @@
 import { useSelector } from "@xstate/react";
 
-import type { AccountsMachineState } from "../machines";
-import { AccountService } from "../services";
+import type { AccountsMachineState } from "../../Account/machines";
+import { AccountService } from "../../Account/services";
 
-import { useGlobalMachines } from "~/systems/Core";
+import { useGlobalMachines } from "~/systems/Global";
 
 const selectors = {
   isLoading: (state: AccountsMachineState) => state?.hasTag("loading"),

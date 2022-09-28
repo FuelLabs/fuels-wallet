@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Navigate, useLocation, useResolvedPath } from "react-router-dom";
 
-import { useIsLogged } from "~/systems/Account";
+import { useIsLogged } from "../../hooks";
 
 type PublicRouteProps = {
   children: ReactNode;

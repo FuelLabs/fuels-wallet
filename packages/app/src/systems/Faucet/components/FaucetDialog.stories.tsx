@@ -3,7 +3,7 @@ import type { FunctionComponent } from "react";
 
 import { FaucetDialog } from "./FaucetDialog";
 
-import { GlobalMachinesProvider } from "~/systems/Core";
+import { GlobalMachinesProvider } from "~/systems/Global";
 
 export default {
   component: FaucetDialog,

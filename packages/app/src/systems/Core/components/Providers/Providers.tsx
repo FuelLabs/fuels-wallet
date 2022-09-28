@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@fuel-ui/react";
 import type { ReactNode } from "react";
 
-import { GlobalMachinesProvider } from "./GlobalMachines";
+import { GlobalMachinesProvider } from "~/systems/Global";
 
 type ProvidersProps = {
   children: ReactNode;
