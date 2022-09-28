@@ -1,4 +1,4 @@
-import { Button, Focus } from "@fuel-ui/react";
+import { Button, Focus, Icon } from "@fuel-ui/react";
 
 import { Layout } from "~/systems/Core";
 import type { NetworkFormValues } from "~/systems/Network";
@@ -22,13 +22,13 @@ export function AddNetwork() {
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <Layout title="Add Network">
-        <Layout.TopBar />
+        <Layout.TopBar onBack={handlers.goToList} />
         <Focus.Scope autoFocus contain>
           <Layout.Content>
             <NetworkForm form={form} />
           </Layout.Content>
           <Layout.BottomBar>
-            <Button color="gray" variant="ghost">
+            <Button color="gray" variant="ghost" onClick={handlers.goToList}>
               Cancel
             </Button>
             <Button
@@ -36,8 +36,9 @@ export function AddNetwork() {
               color="accent"
               isDisabled={!form.formState.isValid}
               isLoading={isLoading}
+              leftIcon={Icon.is("Plus")}
             >
-              Next
+              Create
             </Button>
           </Layout.BottomBar>
         </Focus.Scope>

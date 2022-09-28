@@ -8,7 +8,7 @@ export type NetworkListProps = Omit<NetworkItemProps, "network"> & {
   networks: Network[];
 };
 
-export function NetworkList({ networks, ...props }: NetworkListProps) {
+export function NetworkList({ networks = [], ...props }: NetworkListProps) {
   return (
     <CardList gap="$4" isClickable>
       {networks.map((network) => (

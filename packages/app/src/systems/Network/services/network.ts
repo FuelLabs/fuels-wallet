@@ -1,10 +1,12 @@
+import { uniqueId } from 'xstate/lib/utils';
+
 import type { Network } from '../types';
 
 import { db } from '~/systems/Core';
 
 export type NetworkInputs = {
   getNetwork: {
-    id: number;
+    id: string;
   };
   addNetwork: {
     data: {
@@ -13,14 +15,14 @@ export type NetworkInputs = {
     };
   };
   updateNetwork: {
-    id: number;
+    id: string;
     data: Partial<Network>;
   };
   selectNetwork: {
-    id: number;
+    id: string;
   };
   removeNetwork: {
-    id: number;
+    id: string;
   };
 };
 
@@ -43,6 +45,7 @@ export class NetworkService {
       const id = await db.networks.add({
         ...input.data,
         ...(count === 0 && { isSelected: true }),
+        id: uniqueId(),
       });
       return db.networks.get(id);
     });
@@ -63,7 +66,23 @@ export class NetworkService {
 
   static removeNetwork(input: NetworkInputs['removeNetwork']) {
     return db.transaction('rw', db.networks, async () => {
-      return db.networks.where(input).delete();
+      const networks = (await NetworkService.getNetworks()) || [];
+      if (networks.length === 1) {
+        throw new Error('You need to stay with at least one network');
+      }
+      const network = await NetworkService.getNetwork(input);
+      if (network?.isSelected) {
+        const nextNetwork = networks.filter((i) => i.id !== input.id)[0];
+        await NetworkService.selectNetwork({ id: nextNetwork.id as string });
+      }
+      await db.networks.where(input).delete();
+      return network?.id;
+    });
+  }
+
+  static getSelectedNetwork() {
+    return db.transaction('r', db.networks, async () => {
+      return (await db.networks.toArray()).find((i) => i.isSelected);
     });
   }
 
@@ -85,10 +104,10 @@ export class NetworkService {
   }
 
   static addFirstNetwork() {
-    const isProd = import.meta.env.PROD;
+    const isProd = import.meta.env.PROD || import.meta.env.NODE_ENV === 'production';
     return NetworkService.addNetwork({
       data: {
-        name: isProd ? 'Mainnet' : 'Localhost',
+        name: isProd ? 'Testnet' : 'Localhost',
         url: import.meta.env.VITE_FUEL_PROVIDER_URL,
       },
     });

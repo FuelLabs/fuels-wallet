@@ -1,4 +1,3 @@
-/* eslint-disable radix */
 import { Focus, Button } from "@fuel-ui/react";
 import { useParams } from "react-router-dom";
 
@@ -13,7 +12,7 @@ import {
 
 export function UpdateNetwork() {
   const params = useParams<{ id: string }>();
-  const id = parseInt(params.id!);
+  const id = params.id!;
   const { network, isLoading, handlers } = useNetworks({
     type: NetworkScreen.update,
     networkId: id,
@@ -29,14 +28,14 @@ export function UpdateNetwork() {
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
-      <Layout title="Update Network" isLoading={isLoading}>
-        <Layout.TopBar />
+      <Layout title="Update Network" isLoading={isLoading || !network}>
+        <Layout.TopBar onBack={handlers.goToList} />
         <Focus.Scope contain autoFocus>
           <Layout.Content>
             <NetworkForm form={form} />
           </Layout.Content>
           <Layout.BottomBar>
-            <Button color="gray" variant="ghost">
+            <Button color="gray" variant="ghost" onClick={handlers.goToList}>
               Cancel
             </Button>
             <Button
@@ -45,7 +44,7 @@ export function UpdateNetwork() {
               isDisabled={!form.formState.isValid}
               isLoading={isLoading}
             >
-              Next
+              Update
             </Button>
           </Layout.BottomBar>
         </Focus.Scope>

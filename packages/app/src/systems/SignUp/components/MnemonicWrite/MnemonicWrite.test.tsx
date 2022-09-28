@@ -27,8 +27,8 @@ describe("MnemonicWrite", () => {
 
     await navigator.clipboard.writeText(MNEMONIC);
     const btn = screen.getByText("Paste");
+    await user.click(btn);
     await waitFor(async () => {
-      await user.click(btn);
       expect(onFilledHandler).toBeCalledTimes(1);
     });
   });

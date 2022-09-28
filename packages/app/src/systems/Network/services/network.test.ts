@@ -1,18 +1,9 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+import { MOCK_NETWORKS } from '../__mocks__';
+
 import { NetworkService } from './network';
 
-const NETWORKS = [
-  {
-    name: 'Mainnet',
-    url: 'https://node.fuel.network/graphql',
-  },
-  {
-    name: 'Localhost',
-    url: 'https://localhost:4000',
-  },
-];
-
-const MAINNET = NETWORKS[0];
+const NETWORK = MOCK_NETWORKS[0];
 
 describe('NetworkService', () => {
   beforeEach(async () => {
@@ -23,30 +14,31 @@ describe('NetworkService', () => {
     const networks = await NetworkService.getNetworks();
     expect(networks.length).toBe(0);
 
-    await NetworkService.addNetwork({ data: MAINNET });
+    await NetworkService.addNetwork({ data: NETWORK });
     const result = await NetworkService.getNetworks();
     expect(result.length).toBe(1);
   });
 
   it('should be able to remove a new network', async () => {
-    const network = await NetworkService.addNetwork({ data: MAINNET });
+    await NetworkService.addNetwork({ data: MOCK_NETWORKS[0] });
+    const network = await NetworkService.addNetwork({ data: MOCK_NETWORKS[1] });
     await NetworkService.removeNetwork({ id: network?.id! });
     const result = await NetworkService.getNetworks();
-    expect(result.length).toBe(0);
+    expect(result.length).toBe(1);
   });
 
   it('should be able to update a new network', async () => {
-    const network = await NetworkService.addNetwork({ data: MAINNET });
+    const network = await NetworkService.addNetwork({ data: NETWORK });
     const id = network?.id!;
-    await NetworkService.updateNetwork({ id, data: { name: 'Testnet' } });
+    await NetworkService.updateNetwork({ id, data: { name: 'Network Test' } });
     const result = await NetworkService.getNetwork({ id });
-    expect(result?.name).toBe('Testnet');
+    expect(result?.name).toBe('Network Test');
   });
 
   it('should be able to retrieve a new network', async () => {
-    const network = await NetworkService.addNetwork({ data: MAINNET });
+    const network = await NetworkService.addNetwork({ data: NETWORK });
     const result = await NetworkService.getNetwork({ id: network?.id! });
-    expect(result?.name).toBe('Mainnet');
+    expect(result?.name).toBe(NETWORK.name);
   });
 
   // ---------------------------------------------------------------------------
@@ -54,13 +46,13 @@ describe('NetworkService', () => {
   // ---------------------------------------------------------------------------
 
   it('should mark selected when add the first network', async () => {
-    const network = await NetworkService.addNetwork({ data: MAINNET });
+    const network = await NetworkService.addNetwork({ data: NETWORK });
     expect(network?.isSelected).toBe(true);
   });
 
   it('should deselect current network when select a new one', async () => {
-    const network1 = await NetworkService.addNetwork({ data: MAINNET });
-    const network2 = await NetworkService.addNetwork({ data: NETWORKS[1] });
+    const network1 = await NetworkService.addNetwork({ data: NETWORK });
+    const network2 = await NetworkService.addNetwork({ data: MOCK_NETWORKS[1] });
     await NetworkService.selectNetwork({ id: network2?.id! });
 
     const res = await NetworkService.getNetwork({ id: network1?.id! });

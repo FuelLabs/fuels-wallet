@@ -20,7 +20,11 @@ export function NetworkForm({ form }: NetworkFormProps) {
         isInvalid={Boolean(formState.errors?.name)}
         render={({ field }) => (
           <Input>
-            <Input.Field {...field} placeholder="Name of your network..." />
+            <Input.Field
+              {...field}
+              aria-label="Network name"
+              placeholder="Name of your network..."
+            />
           </Input>
         )}
       />
@@ -36,7 +40,11 @@ export function NetworkForm({ form }: NetworkFormProps) {
         }
         render={({ field }) => (
           <Input>
-            <Input.Field {...field} placeholder="URL of your network..." />
+            <Input.Field
+              {...field}
+              aria-label="Network URL"
+              placeholder="URL of your network..."
+            />
           </Input>
         )}
       />

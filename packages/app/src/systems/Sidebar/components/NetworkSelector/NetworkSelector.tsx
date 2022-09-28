@@ -41,7 +41,7 @@ export function NetworkSelector({
           aria-label="Actions"
           css={{ width }}
           onAction={(id) => {
-            const network = networks.find((n) => n.id.toString() === id);
+            const network = networks.find((n) => n.id === id);
             network && onSelectNetwork?.(network);
           }}
         >

@@ -4,6 +4,7 @@ import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
 import { NetworkInputs, NetworkService } from '../services';
 import type { Network } from '../types';
 
+import { accountEvents } from '~/systems/Account';
 import type { Maybe, FetchResponse } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
 
@@ -15,7 +16,7 @@ export enum NetworkScreen {
 
 export type NetworkInitialInput = {
   type: NetworkScreen;
-  networkId?: number;
+  networkId?: string;
 };
 
 type MachineContext = {
@@ -26,12 +27,8 @@ type MachineContext = {
   /**
    * Used as data on /network/update/:id
    */
-  networkId?: number;
+  networkId?: string;
   network?: Maybe<Network>;
-  /**
-   * Used globally as network selected
-   */
-  selected?: Network;
   /**
    * Used as data to show error
    */
@@ -49,7 +46,7 @@ type MachineServices = {
     data: FetchResponse<Network>;
   };
   removeNetwork: {
-    data: FetchResponse<number>;
+    data: FetchResponse<string>;
   };
   selectNetwork: {
     data: FetchResponse<Network>;
@@ -94,10 +91,16 @@ export const networksMachine = createMachine(
         tags: ['loading'],
         invoke: {
           src: 'fetchNetworks',
-          onDone: {
-            actions: ['assignNetworks', 'assignNetwork'],
-            target: 'idle',
-          },
+          onDone: [
+            {
+              target: 'idle',
+              cond: FetchMachine.hasError,
+            },
+            {
+              actions: ['assignNetworks', 'assignNetwork'],
+              target: 'idle',
+            },
+          ],
         },
       },
       idle: {
@@ -185,6 +188,7 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
+              actions: ['notifyUpdateAccounts'],
               target: 'fetchingNetworks',
             },
           ],
@@ -203,6 +207,9 @@ export const networksMachine = createMachine(
       assignNetwork: assign({
         network: (ctx, ev) => (ctx.networkId ? ev.data.find((n) => n.id === ctx.networkId) : null),
       }),
+      notifyUpdateAccounts: () => {
+        accountEvents.updateAccounts();
+      },
     },
     services: {
       fetchNetworks: FetchMachine.create<never, Network[]>({
@@ -215,7 +222,7 @@ export const networksMachine = createMachine(
         showError: true,
         async fetch({ input }) {
           try {
-            if (!input.data) {
+            if (!input?.data) {
               throw new Error('Invalid network input');
             }
             const network = await NetworkService.addNetwork(input);
@@ -235,7 +242,7 @@ export const networksMachine = createMachine(
       updateNetwork: FetchMachine.create<NetworkInputs['updateNetwork'], Network>({
         showError: true,
         async fetch({ input }) {
-          if (!input.data) {
+          if (!input?.data) {
             throw new Error('Invalid network input');
           }
           const network = await NetworkService.updateNetwork(input);
@@ -245,7 +252,7 @@ export const networksMachine = createMachine(
           return network;
         },
       }),
-      removeNetwork: FetchMachine.create<NetworkInputs['removeNetwork'], number>({
+      removeNetwork: FetchMachine.create<NetworkInputs['removeNetwork'], string>({
         showError: true,
         async fetch({ input }) {
           if (!input?.id) {
@@ -272,7 +279,9 @@ export const networksMachine = createMachine(
       }),
     },
     guards: {
-      isAddScreen: (_, ev) => ev.input.type === NetworkScreen.add,
+      isAddScreen: (_, ev) => {
+        return ev.input.type === NetworkScreen.add;
+      },
     },
   }
 );

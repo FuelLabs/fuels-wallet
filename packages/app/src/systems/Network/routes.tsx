@@ -1,9 +1,11 @@
 import { Outlet, Route } from "react-router-dom";
 
-import { Networks, UpdateNetwork } from "./pages";
-import { AddNetwork } from "./pages/AddNetwork";
+import { PrivateRoute } from "../Core/components/PrivateRoute";
+import { Pages } from "../Core/types";
 
-import { Pages, PrivateRoute } from "~/systems/Core";
+import { AddNetwork } from "./pages/AddNetwork";
+import { Networks } from "./pages/Networks";
+import { UpdateNetwork } from "./pages/UpdateNetwork";
 
 const wrapper = (
   <PrivateRoute>
@@ -12,9 +14,9 @@ const wrapper = (
 );
 
 export const networkRoutes = (
-  <Route path={`${Pages.networks}/*`} element={wrapper}>
+  <Route path={Pages.networks()} element={wrapper}>
     <Route index element={<Networks />} />
-    <Route path={Pages.updateNetwork} element={<UpdateNetwork />} />
-    <Route path={Pages.addNetwork} element={<AddNetwork />} />
+    <Route path={Pages.networkUpdate()} element={<UpdateNetwork />} />
+    <Route path={Pages.networkAdd()} element={<AddNetwork />} />
   </Route>
 );

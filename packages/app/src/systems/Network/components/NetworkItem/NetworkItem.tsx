@@ -62,6 +62,7 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
         onClick={() => onPress?.(network)}
         css={{ ...styles.root, ...css }}
         isActive={network.isSelected}
+        data-active={network.isSelected}
         {...(showActions && { rightEl: actions })}
       >
         <NetworkStatus network={network} />

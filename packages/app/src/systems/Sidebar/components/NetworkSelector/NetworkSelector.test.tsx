@@ -1,57 +1,47 @@
 import { render, screen, testA11y } from "@fuel-ui/test-utils";
-import { BrowserRouter } from "react-router-dom";
 
 import { NetworkSelector } from "./NetworkSelector";
 
-const NETWORKS = [
-  {
-    id: 1,
-    isSelected: true,
-    isOnline: true,
-    name: "Mainnet",
-    url: "https://node.fuel.network/graphql",
-  },
-  {
-    id: 2,
-    name: "Localhost",
-    url: "http://localhost:4000",
-  },
-];
+import { TestWrapper } from "~/systems/Core/components/TestWrapper";
+import { MOCK_NETWORKS } from "~/systems/Network/__mocks__";
+
+const SELECTED = MOCK_NETWORKS[0];
+const NOT_SELECTED = MOCK_NETWORKS[1];
 
 const props = {
-  networks: NETWORKS,
-  selected: NETWORKS[0],
+  networks: MOCK_NETWORKS,
+  selected: SELECTED,
 };
 
 describe("NetworkSelector", () => {
   it("a11y", async () => {
     await testA11y(<NetworkSelector {...props} />, {
-      wrapper: BrowserRouter,
+      wrapper: TestWrapper,
     });
   });
 
   it("should open dropdown with given networks", async () => {
     const { user } = render(<NetworkSelector {...props} />, {
-      wrapper: BrowserRouter,
+      wrapper: TestWrapper,
     });
-    expect(() => screen.getByText("Localhost")).toThrow();
+    expect(() => screen.getByText(NOT_SELECTED.name)).toThrow();
     const selector = screen.getByTestId("fuel_network-item");
     await user.click(selector);
-    expect(screen.getByText("Localhost")).toBeInTheDocument();
+    expect(screen.getByText(NOT_SELECTED.name)).toBeInTheDocument();
   });
 
   it("should dispatch onSelectNetwork handle", async () => {
     const handler = jest.fn();
     const { user } = render(
       <NetworkSelector {...props} onSelectNetwork={handler} />,
-      { wrapper: BrowserRouter }
+      { wrapper: TestWrapper }
     );
 
     const selector = screen.getByTestId("fuel_network-item");
     await user.click(selector);
-    const item = screen.getByText("Localhost");
+    const item = screen.getByText(NOT_SELECTED.name);
     expect(item).toBeInTheDocument();
     await user.click(item);
-    expect(handler).toBeCalledWith(NETWORKS[1]);
+    expect(handler).toBeCalledWith(NOT_SELECTED);
   });
 });

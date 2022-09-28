@@ -1,6 +1,8 @@
 import { Box, CardList } from "@fuel-ui/react";
 import { action } from "@storybook/addon-actions";
 
+import { MOCK_NETWORKS } from "../../__mocks__";
+
 import { NetworkItem } from "./NetworkItem";
 
 export default {
@@ -8,13 +10,7 @@ export default {
   title: "Network/Components/NetworkItem",
 };
 
-const NETWORK = {
-  id: 1,
-  isSelected: true,
-  isOnline: true,
-  name: "Mainnet",
-  url: "https://node.fuel.network/graphql",
-};
+const NETWORK = MOCK_NETWORKS[0];
 
 export const Usage = () => (
   <Box css={{ maxWidth: "$xs" }}>

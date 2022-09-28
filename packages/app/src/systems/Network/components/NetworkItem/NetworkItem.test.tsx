@@ -1,18 +1,14 @@
 import { CardList } from "@fuel-ui/react";
 import { render, screen, testA11y, waitFor } from "@fuel-ui/test-utils";
 
+import { MOCK_NETWORKS } from "../../__mocks__";
+
 import type { NetworkItemProps } from "./NetworkItem";
 import { NetworkItem } from "./NetworkItem";
 
-import { TestWrapper } from "~/systems/Core";
+import { TestWrapper } from "~/systems/Core/components/TestWrapper";
 
-const NETWORK = {
-  id: 1,
-  isSelected: true,
-  isOnline: true,
-  name: "Mainnet",
-  url: "https://node.fuel.network/graphql",
-};
+const NETWORK = MOCK_NETWORKS[0];
 
 const Content = (props: Partial<NetworkItemProps>) => {
   return (
@@ -29,12 +25,12 @@ describe("NetworkItem", () => {
 
   it("should render item correctly", async () => {
     render(<Content />, { wrapper: TestWrapper });
-    expect(screen.getByText("Mainnet")).toBeInTheDocument();
+    expect(screen.getByText(NETWORK.name)).toBeInTheDocument();
   });
 
   it("should render actions when has any handler prop", async () => {
     const fn = jest.fn();
-    render(<Content onUpdate={fn} />, { wrapper: TestWrapper });
+    render(<Content onUpdate={fn} onRemove={fn} />, { wrapper: TestWrapper });
     expect(screen.getByLabelText("Update")).toBeInTheDocument();
     expect(screen.getByLabelText("Remove")).toBeInTheDocument();
   });
