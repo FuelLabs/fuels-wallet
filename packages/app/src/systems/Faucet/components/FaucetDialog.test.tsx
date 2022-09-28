@@ -1,22 +1,12 @@
 import { render, screen } from "@fuel-ui/test-utils";
-import type { ReactNode } from "react";
-import { BrowserRouter } from "react-router-dom";
 
 import { FaucetDialog } from "./FaucetDialog";
 
-import { GlobalMachinesProvider } from "~/systems/Core";
-
-const DialogProvider = ({ children }: { children: ReactNode }) => (
-  <>
-    <BrowserRouter>
-      <GlobalMachinesProvider>{children}</GlobalMachinesProvider>
-    </BrowserRouter>
-  </>
-);
+import { TestWrapper } from "~/systems/Core/components/TestWrapper";
 
 describe("FaucetDialog", () => {
   it("should show Faucet button", async () => {
-    render(<FaucetDialog />, { wrapper: DialogProvider });
+    render(<FaucetDialog />, { wrapper: TestWrapper });
 
     const faucetBtn = screen.getByText(/Give me ETH/i);
     expect(faucetBtn).toBeInTheDocument();

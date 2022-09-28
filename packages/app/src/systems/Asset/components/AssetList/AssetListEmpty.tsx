@@ -29,7 +29,7 @@ export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
         <Button
           size="sm"
           leftIcon={Icon.is("Coffee")}
-          onPress={() => navigate(Pages.faucet)}
+          onPress={() => navigate(Pages.faucet())}
         >
           Faucet
         </Button>

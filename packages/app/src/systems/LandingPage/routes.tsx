@@ -1,9 +1,9 @@
 import { Route } from "react-router-dom";
 
+import { Pages } from "../Core/types";
+
 import { LandingPage } from "./pages";
 
-import { Pages } from "~/systems/Core";
-
 export const landingPageRoutes = (
-  <Route path={Pages.index} element={<LandingPage />} />
+  <Route path={Pages.index()} element={<LandingPage />} />
 );

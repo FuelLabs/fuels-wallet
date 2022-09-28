@@ -13,6 +13,7 @@ const config = {
     '@storybook/addon-storysource',
     '@storybook/addon-jest',
     'storybook-dark-mode',
+    'storybook-addon-react-router-v6',
   ],
   staticDirs: ['../public'],
   framework: '@storybook/react',

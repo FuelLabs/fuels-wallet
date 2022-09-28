@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@fuel-ui/test-utils";
 
 import { CreatePassword } from "./CreatePassword";
 
-import { Providers } from "~/systems/Core";
+import { TestWrapper } from "~/systems/Core/components/TestWrapper";
 
 const onSubmitHandler = jest.fn();
 const onCancelHandler = jest.fn();
@@ -36,21 +36,21 @@ async function fillInputs(user: UserPatch, pass: string, confirm?: string) {
 
 describe("CreatePassword", () => {
   it("should next button be disabled by default", async () => {
-    render(<Content />, { wrapper: Providers });
+    render(<Content />, { wrapper: TestWrapper });
     const btn = screen.getByText("Next");
     expect(btn).toBeInTheDocument();
     expect(btn).toBeDisabled();
   });
 
   it("should validate if password don't have min length equals 8", async () => {
-    const { user } = render(<Content />, { wrapper: Providers });
+    const { user } = render(<Content />, { wrapper: TestWrapper });
 
     await fillInputs(user, "123456");
     expect(screen.getByText(/at least 8 characters/)).toBeInTheDocument();
   });
 
   it("should validate if password and confirmPassword doesn't match", async () => {
-    const { user } = render(<Content />, { wrapper: Providers });
+    const { user } = render(<Content />, { wrapper: TestWrapper });
 
     await fillInputs(user, "12345678", "12345679");
     await waitFor(() =>
@@ -63,7 +63,7 @@ describe("CreatePassword", () => {
    * btw, this is already testes using Cypress E2E
    */
   // it("should be able to click on next if form is valid", async () => {
-  //   const { user } = render(<Content />, { wrapper: Providers });
+  //   const { user } = render(<Content />, { wrapper: TestWrapper });
 
   //   await fillInputs(user, "123456789", "123456789");
   //   const checkbox = await screen.findByRole("checkbox");
@@ -83,7 +83,7 @@ describe("CreatePassword", () => {
   // });
 
   it("should be able to click on cancel button", async () => {
-    const { user } = render(<Content />, { wrapper: Providers });
+    const { user } = render(<Content />, { wrapper: TestWrapper });
     const btn = screen.getByText("Cancel");
     expect(btn).toBeInTheDocument();
     await user.click(btn);
