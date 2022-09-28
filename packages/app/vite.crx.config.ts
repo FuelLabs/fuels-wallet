@@ -31,6 +31,7 @@ export default defineConfig({
       manifest,
     }),
     zipPack({
+      inDir: 'dist-crx',
       outDir: baseConfig.build?.outDir,
       outFileName: 'fuel-wallet.zip',
     }),
