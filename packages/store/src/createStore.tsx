@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useSelector } from '@xstate/react';
 import { useSyncExternalStore } from 'react';
@@ -25,10 +23,12 @@ export class Store<T extends MachinesObj> implements IStore<T> {
 
   constructor(readonly machines: T) {
     Object.entries(machines).forEach(([key, machine]) => {
-      const item = machine.context ? machine : machine.withContext({});
-      const service = this.#createService(key, item);
-      service.__storeKey = key;
-      this.services.set(key, service);
+      const item = machine?.context ? machine : machine?.withContext({});
+      if (item) {
+        const service = this.#createService(key, item);
+        service.__storeKey = key;
+        this.services.set(key, service);
+      }
     });
   }
 
@@ -42,16 +42,6 @@ export class Store<T extends MachinesObj> implements IStore<T> {
 
   public getInitialState() {
     return { ...this.#initialState };
-  }
-
-  public start() {
-    for (const [, service] of this.services.entries()) {
-      if (service.initialized) {
-        service.stop();
-      } else {
-        service.start();
-      }
-    }
   }
 
   public subscribe(listener: (state: StateObj<T>) => void) {
@@ -124,19 +114,18 @@ export class Store<T extends MachinesObj> implements IStore<T> {
 }
 
 export function createStore<T extends MachinesObj>(machines: T) {
-  const _store = new Store<T>(machines);
-  const store = {
-    __store: _store,
-    send: _store.send.bind(_store),
-    broadcast: _store.broadcast.bind(_store),
-    subscribe: _store.subscribe.bind(_store),
-    start: _store.start.bind(_store),
-    getState: _store.getState.bind(_store),
-    setService: _store.setService.bind(_store),
+  const store = new Store<T>(machines);
+  return {
+    __store: store,
+    send: store.send.bind(store),
+    broadcast: store.broadcast.bind(store),
+    subscribe: store.subscribe.bind(store),
+    getState: store.getState.bind(store),
+    setService: store.setService.bind(store),
     useStoreSelector: useSelector,
     useStoreService(key: keyof T) {
       return useSyncExternalStore(store.subscribe.bind(store), () => {
-        const service = _store.services.get(key) as Service<T>;
+        const service = store.services.get(key) as Service<T>;
         if (!service.initialized) {
           service.start();
         }
@@ -144,9 +133,6 @@ export function createStore<T extends MachinesObj>(machines: T) {
       });
     },
   };
-
-  store.start();
-  return store;
 }
 
 type CreateStore = ReturnType<typeof createStore<any>>;

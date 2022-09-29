@@ -1,10 +1,4 @@
-import { clearMocks } from 'cypress/utils';
-
 describe('CreateWallet', () => {
-  beforeEach(() => {
-    clearMocks();
-  });
-
   it('should be redirect to /signup by default', () => {
     cy.visit('/wallet');
     cy.url().should('contain', '/sign-up');
