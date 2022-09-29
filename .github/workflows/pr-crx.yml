@@ -1,0 +1,31 @@
+name: CRX Playwright Tests
+
+on:
+  pull_request:
+    branches: [main, master]
+    types: [opened, synchronize, edited]
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-node
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Build Chrome Extension
+        working-directory: ./packages/app
+        run: pnpm build:crx
+        
+
+      - name: Run Playwright tests
+        run: pnpm crx:test
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
