@@ -16,6 +16,9 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
+      - name: Build Libs
+        run: pnpm build
+
       - name: Build Chrome Extension
         working-directory: ./packages/app
         run: pnpm build:crx
