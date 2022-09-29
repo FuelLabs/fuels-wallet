@@ -19,6 +19,7 @@ export function useFaucetDialog() {
       },
     },
   });
+
   const isLoading = useSelector(service, selectors.isLoading);
   const startFaucet = (data: StartFaucetData) => {
     send('START_FAUCET', { data });

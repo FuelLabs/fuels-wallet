@@ -1,24 +1,15 @@
-import type { Story } from "@storybook/react";
-import { bn } from "fuels";
-import { graphql } from "msw";
-import type { FunctionComponent } from "react";
+import type { Story } from '@storybook/react';
+import { bn } from 'fuels';
+import { graphql } from 'msw';
 
-import { Home } from "./Home";
+import { Home } from './Home';
 
-import { AccountService } from "~/systems/Account";
-import { ASSET_LIST } from "~/systems/Asset";
-import { GlobalMachinesProvider } from "~/systems/Global";
+import { AccountService } from '~/systems/Account';
+import { ASSET_LIST } from '~/systems/Asset';
 
 export default {
   component: Home,
-  title: "Home/Pages/Home",
-  decorators: [
-    (Story: FunctionComponent) => (
-      <GlobalMachinesProvider>
-        <Story />
-      </GlobalMachinesProvider>
-    ),
-  ],
+  title: 'Home/Pages/Home',
 };
 
 export const Loading: Story<unknown> = () => <Home />;
@@ -35,9 +26,9 @@ NoAssets.decorators = [
     AccountService.clearAccounts();
     AccountService.addAccount({
       data: {
-        name: "Account 1",
-        address: "0x00",
-        publicKey: "0x00",
+        name: 'Account 1',
+        address: '0x00',
+        publicKey: '0x00',
       },
     });
 
@@ -70,7 +61,7 @@ const ASSETS_MOCK = [
 // mock api response for balances
 WithAssets.parameters = {
   msw: [
-    graphql.query("getBalances", (req, res, ctx) => {
+    graphql.query('getBalances', (req, res, ctx) => {
       return res(
         ctx.data({
           balances: {
@@ -86,9 +77,9 @@ WithAssets.decorators = [
     AccountService.clearAccounts();
     AccountService.addAccount({
       data: {
-        name: "Account 1",
-        address: "0x00",
-        publicKey: "0x00",
+        name: 'Account 1',
+        address: '0x00',
+        publicKey: '0x00',
       },
     });
 

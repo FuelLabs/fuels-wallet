@@ -4,7 +4,7 @@ import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
 import { NetworkInputs, NetworkService } from '../services';
 import type { Network } from '../types';
 
-import { accountEvents } from '~/systems/Account';
+import { store } from '~/store';
 import type { Maybe, FetchResponse } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
 
@@ -208,7 +208,7 @@ export const networksMachine = createMachine(
         network: (ctx, ev) => (ctx.networkId ? ev.data.find((n) => n.id === ctx.networkId) : null),
       }),
       notifyUpdateAccounts: () => {
-        accountEvents.updateAccounts();
+        store.send('account', { type: 'UPDATE_ACCOUNT' });
       },
     },
     services: {

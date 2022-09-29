@@ -1,5 +1,5 @@
 {
-  "name": "@fuels-wallet/mediator",
+  "name": "@fuels-wallet/xstore",
   "version": "0.0.1",
   "license": "Apache-2.0",
   "main": "src/index.ts",
@@ -27,7 +27,6 @@
   "dependencies": {
     "@xstate/react": "^3.0.1",
     "react": "^18.2.0",
-    "short-unique-id": "^4.4.4",
     "xstate": "^4.33.6"
   },
   "devDependencies": {

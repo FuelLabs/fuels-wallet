@@ -1,20 +1,10 @@
-import { Box } from "@fuel-ui/react";
-import type { FunctionComponent } from "react";
+import { Box } from '@fuel-ui/react';
 
-import { FaucetDialog } from "./FaucetDialog";
-
-import { GlobalMachinesProvider } from "~/systems/Global";
+import { FaucetDialog } from './FaucetDialog';
 
 export default {
   component: FaucetDialog,
-  title: "Faucet/Components/FaucetDialog",
-  decorators: [
-    (Story: FunctionComponent) => (
-      <GlobalMachinesProvider>
-        <Story />
-      </GlobalMachinesProvider>
-    ),
-  ],
+  title: 'Faucet/Components/FaucetDialog',
 };
 
 export const Usage = () => (

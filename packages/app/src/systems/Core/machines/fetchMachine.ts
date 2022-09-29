@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { toast } from '@fuel-ui/react';
 import { assign, createMachine } from 'xstate';
 
@@ -23,7 +24,6 @@ type CreateFetchMachineOpts<I, R> = {
 };
 
 export const FetchMachine = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   hasError(_: any, ev: { data: { error?: any } }) {
     return Boolean(ev.data?.error);
   },
@@ -87,14 +87,13 @@ export const FetchMachine = {
         actions: {
           showError: (_, ev) => {
             if (!opts.showError) return;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const error = ev.data as any;
             toast.error(error.message);
           },
           assignError: assign({
             error: (_, ev) => ev.data,
           }),
-          logError: (_, ev) => {
+          logError: (_, ev: { data: any }) => {
             // eslint-disable-next-line no-console
             console.error(ev.data);
           },
