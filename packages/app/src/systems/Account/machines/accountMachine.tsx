@@ -61,17 +61,12 @@ export const accountMachine = createMachine(
     },
     on: {
       UPDATE_ACCOUNT: {
-        actions: ['resetContext'],
         target: 'fetchingAccount',
       },
     },
   },
   {
     actions: {
-      resetContext: assign({
-        data: (_) => undefined,
-        error: (_) => null,
-      }),
       assignAccount: assign({
         data: (_, ev) => ev.data,
       }),

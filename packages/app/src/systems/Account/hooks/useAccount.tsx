@@ -3,11 +3,13 @@ import type { StateOf } from '@fuels-wallet/xstore';
 import type { Store } from '~/store';
 import { Services, useStoreService, useStoreSelector } from '~/store';
 
+type State = StateOf<Services.account, Store>;
+
 const selectors = {
-  isLoading: (state: StateOf<Services.account, Store>) => {
+  isLoading: (state: State) => {
     return state.hasTag('loading');
   },
-  account: (state: StateOf<Services.account, Store>) => {
+  account: (state: State) => {
     return state.context?.data;
   },
 };

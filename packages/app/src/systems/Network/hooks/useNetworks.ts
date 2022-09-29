@@ -10,17 +10,19 @@ import type { Store } from '~/store';
 import { useStoreService, useStoreSelector, store, Services } from '~/store';
 import { Pages } from '~/systems/Core';
 
+type State = StateOf<Services.networks, Store>;
+
 const selectors = {
-  networks: (state: StateOf<Services.networks, Store>) => {
+  networks: (state: State) => {
     return state.context?.networks || [];
   },
-  network: (state: StateOf<Services.networks, Store>) => {
+  network: (state: State) => {
     return state.context?.network;
   },
-  isLoading: (state: StateOf<Services.networks, Store>) => {
+  isLoading: (state: State) => {
     return state.hasTag('loading');
   },
-  selectedNetwork: (state: StateOf<Services.networks, Store>) => {
+  selectedNetwork: (state: State) => {
     const networks = state.context?.networks || [];
     return networks.find((n) => n.isSelected);
   },
