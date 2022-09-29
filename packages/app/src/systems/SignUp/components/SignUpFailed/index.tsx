@@ -1,1 +1,1 @@
-export * from "./SignUpFailed";
+export * from './SignUpFailed';

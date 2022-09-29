@@ -1,8 +1,8 @@
-import { Stack, Input, HelperIcon } from "@fuel-ui/react";
+import { Stack, Input, HelperIcon } from '@fuel-ui/react';
 
-import type { UseNetworkFormReturn } from "../../hooks";
+import type { UseNetworkFormReturn } from '../../hooks';
 
-import { ControlledField } from "~/systems/Core";
+import { ControlledField } from '~/systems/Core';
 
 export type NetworkFormProps = {
   form: UseNetworkFormReturn;
@@ -11,7 +11,7 @@ export type NetworkFormProps = {
 export function NetworkForm({ form }: NetworkFormProps) {
   const { control, formState } = form;
   return (
-    <Stack css={{ width: "100%" }} gap="$4">
+    <Stack css={{ width: '100%' }} gap="$4">
       <ControlledField
         control={control}
         name="name"
@@ -33,18 +33,10 @@ export function NetworkForm({ form }: NetworkFormProps) {
         name="url"
         isRequired
         isInvalid={Boolean(formState.errors?.url)}
-        label={
-          <HelperIcon message="The provider URL of your network">
-            URL
-          </HelperIcon>
-        }
+        label={<HelperIcon message="The provider URL of your network">URL</HelperIcon>}
         render={({ field }) => (
           <Input>
-            <Input.Field
-              {...field}
-              aria-label="Network URL"
-              placeholder="URL of your network..."
-            />
+            <Input.Field {...field} aria-label="Network URL" placeholder="URL of your network..." />
           </Input>
         )}
       />

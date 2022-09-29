@@ -1,13 +1,13 @@
-import { Box } from "@fuel-ui/react";
+import { Box } from '@fuel-ui/react';
 
-import { MOCK_NETWORKS } from "../../__mocks__";
-import { useNetworkForm } from "../../hooks";
+import { MOCK_NETWORKS } from '../../__mocks__';
+import { useNetworkForm } from '../../hooks';
 
-import { NetworkForm } from "./NetworkForm";
+import { NetworkForm } from './NetworkForm';
 
 export default {
   component: NetworkForm,
-  title: "Network/components/NetworkForm",
+  title: 'Network/components/NetworkForm',
 };
 
 export const Usage = () => {

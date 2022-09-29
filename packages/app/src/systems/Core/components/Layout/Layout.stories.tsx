@@ -1,13 +1,13 @@
-import { Button } from "@fuel-ui/react";
+import { Button } from '@fuel-ui/react';
 
-import type { LayoutProps } from "./Layout";
-import { Layout } from "./Layout";
+import type { LayoutProps } from './Layout';
+import { Layout } from './Layout';
 
 export default {
   component: Layout,
-  title: "Core/Components/Layout",
+  title: 'Core/Components/Layout',
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
 };
 

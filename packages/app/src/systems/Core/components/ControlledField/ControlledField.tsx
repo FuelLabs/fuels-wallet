@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ThemeUtilsCSS } from "@fuel-ui/css";
-import { Form } from "@fuel-ui/react";
-import { mergeRefs } from "@react-aria/utils";
-import type { ReactElement, ReactNode } from "react";
-import { forwardRef, useId } from "react";
+import type { ThemeUtilsCSS } from '@fuel-ui/css';
+import { Form } from '@fuel-ui/react';
+import { mergeRefs } from '@react-aria/utils';
+import type { ReactElement, ReactNode } from 'react';
+import { forwardRef, useId } from 'react';
 import type {
   ControllerFieldState,
   ControllerProps,
   ControllerRenderProps,
   UseFormStateReturn,
-} from "react-hook-form";
-import { Controller } from "react-hook-form";
+} from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 
 type RenderProps = {
   field: ControllerRenderProps & { id: string };
@@ -18,10 +18,10 @@ type RenderProps = {
   formState: UseFormStateReturn<any>;
 };
 
-export type ControlledFieldProps = Omit<ControllerProps<any>, "render"> & {
+export type ControlledFieldProps = Omit<ControllerProps<any>, 'render'> & {
   css?: ThemeUtilsCSS;
   label?: ReactNode;
-  labelSide?: "left" | "right";
+  labelSide?: 'left' | 'right';
   isRequired?: boolean;
   isInvalid?: boolean;
   isDisabled?: boolean;
@@ -35,7 +35,7 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
     {
       css,
       label,
-      labelSide = "left",
+      labelSide = 'left',
       name,
       control,
       render,
@@ -62,9 +62,7 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
           };
           return (
             <Form.Control {...controlProps}>
-              {label && labelSide === "left" && (
-                <Form.Label htmlFor={id}>{label}</Form.Label>
-              )}
+              {label && labelSide === 'left' && <Form.Label htmlFor={id}>{label}</Form.Label>}
               {render({
                 ...props,
                 field: {
@@ -73,9 +71,7 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
                   ref: mergeRefs(props.field.ref, ref) as any,
                 },
               })}
-              {label && labelSide === "right" && (
-                <Form.Label htmlFor={id}>{label}</Form.Label>
-              )}
+              {label && labelSide === 'right' && <Form.Label htmlFor={id}>{label}</Form.Label>}
               {!hideError && props.fieldState.error && (
                 <Form.ErrorMessage aria-label="Error message">
                   {props.fieldState.error.message}

@@ -1,8 +1,8 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 
-import { ASSET_LIST } from "../utils";
+import { ASSET_LIST } from '../utils';
 
-import { relativeUrl } from "~/systems/Core";
+import { relativeUrl } from '~/systems/Core';
 
 export function useAsset(assetId: string) {
   const asset = useMemo(() => {
@@ -17,10 +17,10 @@ export function useAsset(assetId: string) {
 
   return (
     asset || {
-      assetId: "0x",
-      name: "Unknown",
-      symbol: "",
-      imageUrl: "",
+      assetId: '0x',
+      name: 'Unknown',
+      symbol: '',
+      imageUrl: '',
     }
   );
 }

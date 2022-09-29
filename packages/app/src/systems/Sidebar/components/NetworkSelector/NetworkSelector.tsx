@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import { cssObj } from "@fuel-ui/css";
-import { Dropdown, Flex, Icon, Text } from "@fuel-ui/react";
-import { useEffect, useState } from "react";
+import { cssObj } from '@fuel-ui/css';
+import { Dropdown, Flex, Icon, Text } from '@fuel-ui/react';
+import { useEffect, useState } from 'react';
 
-import type { Network } from "~/systems/Network";
-import { NetworkStatus, NetworkItem } from "~/systems/Network";
+import type { Network } from '~/systems/Network';
+import { NetworkStatus, NetworkItem } from '~/systems/Network';
 
 export type NetworkSelectorProps = {
   selected: Network;
@@ -12,23 +12,17 @@ export type NetworkSelectorProps = {
   onSelectNetwork?: (network: Network) => void;
 };
 
-export function NetworkSelector({
-  selected,
-  networks,
-  onSelectNetwork,
-}: NetworkSelectorProps) {
+export function NetworkSelector({ selected, networks, onSelectNetwork }: NetworkSelectorProps) {
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
-    const selector = document.querySelector(
-      "[data-testid='fuel_network-item']"
-    );
+    const selector = document.querySelector("[data-testid='fuel_network-item']");
     selector && setWidth(selector?.clientWidth);
   }, []);
 
   return (
     <Flex css={styles.root}>
-      <Text as="div" leftIcon={Icon.is("ShareNetwork")}>
+      <Text as="div" leftIcon={Icon.is('ShareNetwork')}>
         Network selected
       </Text>
       <Dropdown>
@@ -37,7 +31,7 @@ export function NetworkSelector({
         </Dropdown.Trigger>
         <Dropdown.Menu
           autoFocus
-          disabledKeys={["edit"]}
+          disabledKeys={['edit']}
           aria-label="Actions"
           css={{ width }}
           onAction={(id) => {
@@ -59,21 +53,21 @@ export function NetworkSelector({
 
 const styles = {
   root: cssObj({
-    flexDirection: "column",
-    gap: "$3",
+    flexDirection: 'column',
+    gap: '$3',
 
-    "& > .fuel_text": {
-      fontSize: "$sm",
+    '& > .fuel_text': {
+      fontSize: '$sm',
     },
   }),
   button: cssObj({
-    fontSize: "$lg",
+    fontSize: '$lg',
 
-    "&:hover": {
-      cursor: "pointer",
+    '&:hover': {
+      cursor: 'pointer',
     },
-    "&::after": {
-      background: "transparent",
+    '&::after': {
+      background: 'transparent',
     },
   }),
 };

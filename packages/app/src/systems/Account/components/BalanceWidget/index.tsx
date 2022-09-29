@@ -1,1 +1,1 @@
-export * from "./BalanceWidget";
+export * from './BalanceWidget';

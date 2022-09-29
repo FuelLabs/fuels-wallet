@@ -1,9 +1,9 @@
-import { Navigate, Outlet, Route } from "react-router-dom";
+import { Navigate, Outlet, Route } from 'react-router-dom';
 
-import { PublicRoute } from "../Core/components/PublicRoute";
-import { Pages } from "../Core/types";
+import { PublicRoute } from '../Core/components/PublicRoute';
+import { Pages } from '../Core/types';
 
-import { CreateWallet, RecoverWallet, WelcomeScreen } from "./pages";
+import { CreateWallet, RecoverWallet, WelcomeScreen } from './pages';
 
 const wrapper = (
   <PublicRoute>

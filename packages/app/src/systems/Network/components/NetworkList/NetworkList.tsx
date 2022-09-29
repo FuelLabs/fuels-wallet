@@ -1,10 +1,10 @@
-import { CardList } from "@fuel-ui/react";
+import { CardList } from '@fuel-ui/react';
 
-import type { Network } from "../../types";
-import type { NetworkItemProps } from "../NetworkItem";
-import { NetworkItem } from "../NetworkItem";
+import type { Network } from '../../types';
+import type { NetworkItemProps } from '../NetworkItem';
+import { NetworkItem } from '../NetworkItem';
 
-export type NetworkListProps = Omit<NetworkItemProps, "network"> & {
+export type NetworkListProps = Omit<NetworkItemProps, 'network'> & {
   networks: Network[];
 };
 

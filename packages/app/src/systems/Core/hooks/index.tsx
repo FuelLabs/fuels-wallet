@@ -1,1 +1,1 @@
-export * from "./useIsLogged";
+export * from './useIsLogged';

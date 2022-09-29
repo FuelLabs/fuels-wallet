@@ -1,17 +1,17 @@
-import type { ThemeUtilsCSS } from "@fuel-ui/css";
-import { cssObj } from "@fuel-ui/css";
-import { Text, CardList, Flex, IconButton, Icon } from "@fuel-ui/react";
-import { forwardRef } from "react";
+import type { ThemeUtilsCSS } from '@fuel-ui/css';
+import { cssObj } from '@fuel-ui/css';
+import { Text, CardList, Flex, IconButton, Icon } from '@fuel-ui/react';
+import { forwardRef } from 'react';
 
-import type { Network } from "../../types";
-import { RemoveNetworkDialog } from "../RemoveNetworkDialog/RemoveNetworkDialog";
+import type { Network } from '../../types';
+import { RemoveNetworkDialog } from '../RemoveNetworkDialog/RemoveNetworkDialog';
 
 export function NetworkStatus({ network }: { network: Network }) {
   return (
     <Text
       css={{
-        color: network.isOnline ? "$accent11" : "$gray8",
-        fontSize: "8px",
+        color: network.isOnline ? '$accent11' : '$gray8',
+        fontSize: '8px',
       }}
     >
       ●
@@ -35,19 +35,16 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
         {onUpdate && (
           <IconButton
             variant="link"
-            icon={<Icon icon={Icon.is("Pencil")} />}
+            icon={<Icon icon={Icon.is('Pencil')} />}
             aria-label="Update"
             onPress={() => onUpdate?.(network)}
           />
         )}
         {onRemove && (
-          <RemoveNetworkDialog
-            network={network}
-            onConfirm={() => onRemove?.(network)}
-          >
+          <RemoveNetworkDialog network={network} onConfirm={() => onRemove?.(network)}>
             <IconButton
               variant="link"
-              icon={<Icon icon={Icon.is("Trash")} />}
+              icon={<Icon icon={Icon.is('Trash')} />}
               aria-label="Remove"
             />
           </RemoveNetworkDialog>
@@ -74,20 +71,20 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
 
 const styles = {
   root: cssObj({
-    minHeight: "52px",
-    boxSizing: "border-box",
+    minHeight: '52px',
+    boxSizing: 'border-box',
 
-    "&:hover": {
-      cursor: "pointer",
+    '&:hover': {
+      cursor: 'pointer',
     },
 
-    ".fuel_button": {
-      px: "$1 !important",
-      color: "$gray8",
+    '.fuel_button': {
+      px: '$1 !important',
+      color: '$gray8',
     },
 
-    ".fuel_button:hover": {
-      color: "$gray11",
+    '.fuel_button:hover': {
+      color: '$gray11',
     },
   }),
 };

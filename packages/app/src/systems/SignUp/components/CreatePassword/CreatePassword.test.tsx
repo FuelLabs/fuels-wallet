@@ -1,25 +1,23 @@
-import { fireEvent, render, screen, waitFor } from "@fuel-ui/test-utils";
+import { fireEvent, render, screen, waitFor } from '@fuel-ui/test-utils';
 
-import { CreatePassword } from "./CreatePassword";
+import { CreatePassword } from './CreatePassword';
 
-import { TestWrapper } from "~/systems/Core/components/TestWrapper";
+import { TestWrapper } from '~/systems/Core/components/TestWrapper';
 
 const onSubmitHandler = jest.fn();
 const onCancelHandler = jest.fn();
 
-type UserPatch = ReturnType<typeof render>["user"];
+type UserPatch = ReturnType<typeof render>['user'];
 
-const Content = () => (
-  <CreatePassword onSubmit={onSubmitHandler} onCancel={onCancelHandler} />
-);
+const Content = () => <CreatePassword onSubmit={onSubmitHandler} onCancel={onCancelHandler} />;
 
 function fillInput(el: HTMLElement, value: string) {
   fireEvent.input(el, { target: { value } });
 }
 
 async function fillInputs(user: UserPatch, pass: string, confirm?: string) {
-  const password = screen.getByPlaceholderText("Type your password");
-  const confirmPass = screen.getByPlaceholderText("Confirm your password");
+  const password = screen.getByPlaceholderText('Type your password');
+  const confirmPass = screen.getByPlaceholderText('Confirm your password');
 
   await user.tab();
   expect(password).toHaveFocus();
@@ -34,10 +32,10 @@ async function fillInputs(user: UserPatch, pass: string, confirm?: string) {
   }
 }
 
-describe("CreatePassword", () => {
-  it("should next button be disabled by default", async () => {
+describe('CreatePassword', () => {
+  it('should next button be disabled by default', async () => {
     render(<Content />, { wrapper: TestWrapper });
-    const btn = screen.getByText("Next");
+    const btn = screen.getByText('Next');
     expect(btn).toBeInTheDocument();
     expect(btn).toBeDisabled();
   });
@@ -45,17 +43,15 @@ describe("CreatePassword", () => {
   it("should validate if password don't have min length equals 8", async () => {
     const { user } = render(<Content />, { wrapper: TestWrapper });
 
-    await fillInputs(user, "123456");
+    await fillInputs(user, '123456');
     expect(screen.getByText(/at least 8 characters/)).toBeInTheDocument();
   });
 
   it("should validate if password and confirmPassword doesn't match", async () => {
     const { user } = render(<Content />, { wrapper: TestWrapper });
 
-    await fillInputs(user, "12345678", "12345679");
-    await waitFor(() =>
-      expect(screen.getByLabelText("Error message")).toBeInTheDocument()
-    );
+    await fillInputs(user, '12345678', '12345679');
+    await waitFor(() => expect(screen.getByLabelText('Error message')).toBeInTheDocument());
   });
 
   /**
@@ -82,9 +78,9 @@ describe("CreatePassword", () => {
   //   });
   // });
 
-  it("should be able to click on cancel button", async () => {
+  it('should be able to click on cancel button', async () => {
     const { user } = render(<Content />, { wrapper: TestWrapper });
-    const btn = screen.getByText("Cancel");
+    const btn = screen.getByText('Cancel');
     expect(btn).toBeInTheDocument();
     await user.click(btn);
     expect(onCancelHandler).toBeCalledTimes(1);

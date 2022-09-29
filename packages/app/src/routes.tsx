@@ -1,10 +1,10 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { Pages } from "~/systems/Core/types";
-import { homeRoutes } from "~/systems/Home/routes";
-import { landingPageRoutes } from "~/systems/LandingPage/routes";
-import { networkRoutes } from "~/systems/Network/routes";
-import { signUpRoutes } from "~/systems/SignUp/routes";
+import { Pages } from '~/systems/Core/types';
+import { homeRoutes } from '~/systems/Home/routes';
+import { landingPageRoutes } from '~/systems/LandingPage/routes';
+import { networkRoutes } from '~/systems/Network/routes';
+import { signUpRoutes } from '~/systems/SignUp/routes';
 
 export const routes = (
   <Routes>

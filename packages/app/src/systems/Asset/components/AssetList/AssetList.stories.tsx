@@ -1,14 +1,14 @@
-import { Box } from "@fuel-ui/react";
-import { bn } from "fuels";
+import { Box } from '@fuel-ui/react';
+import { bn } from 'fuels';
 
-import { ASSET_LIST } from "../../utils";
+import { ASSET_LIST } from '../../utils';
 
-import type { AssetListProps } from "./AssetList";
-import { AssetList } from "./AssetList";
+import type { AssetListProps } from './AssetList';
+import { AssetList } from './AssetList';
 
 export default {
   component: AssetList,
-  title: "Asset/Components/AssetList",
+  title: 'Asset/Components/AssetList',
 };
 
 const ASSETS = ASSET_LIST.map(({ assetId }) => ({

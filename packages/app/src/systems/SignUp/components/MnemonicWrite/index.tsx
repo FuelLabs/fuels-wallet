@@ -1,1 +1,1 @@
-export * from "./MnemonicWrite";
+export * from './MnemonicWrite';

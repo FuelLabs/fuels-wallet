@@ -1,14 +1,9 @@
-import { Focus, Button } from "@fuel-ui/react";
-import { useParams } from "react-router-dom";
+import { Focus, Button } from '@fuel-ui/react';
+import { useParams } from 'react-router-dom';
 
-import { Layout } from "~/systems/Core";
-import type { NetworkFormValues } from "~/systems/Network";
-import {
-  NetworkForm,
-  useNetworkForm,
-  useNetworks,
-  NetworkScreen,
-} from "~/systems/Network";
+import { Layout } from '~/systems/Core';
+import type { NetworkFormValues } from '~/systems/Network';
+import { NetworkForm, useNetworkForm, useNetworks, NetworkScreen } from '~/systems/Network';
 
 export function UpdateNetwork() {
   const params = useParams<{ id: string }>();

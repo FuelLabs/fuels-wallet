@@ -1,7 +1,7 @@
-import { darkColors } from "@fuel-ui/css";
-import { CardList } from "@fuel-ui/react";
-import type { IContentLoaderProps } from "react-content-loader";
-import ContentLoader from "react-content-loader";
+import { darkColors } from '@fuel-ui/css';
+import { CardList } from '@fuel-ui/react';
+import type { IContentLoaderProps } from 'react-content-loader';
+import ContentLoader from 'react-content-loader';
 
 export const AssetItemLoader = (props: IContentLoaderProps) => (
   <CardList.Item css={{ padding: 0 }}>

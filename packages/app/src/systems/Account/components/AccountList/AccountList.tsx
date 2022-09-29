@@ -1,9 +1,9 @@
-import { Button, CardList, Stack } from "@fuel-ui/react";
-import { useState } from "react";
+import { Button, CardList, Stack } from '@fuel-ui/react';
+import { useState } from 'react';
 
-import { AccountItem } from "../AccountItem";
+import { AccountItem } from '../AccountItem';
 
-import type { Account } from "~/systems/Account";
+import type { Account } from '~/systems/Account';
 
 export type AccountListProps = {
   accounts: Account[];
@@ -30,7 +30,7 @@ export function AccountList({ accounts }: AccountListProps) {
         })}
       </CardList>
       <Button size="xs" color="gray" variant="link" onPress={toggle}>
-        {showHidden ? "Hide" : "Show"} hidden accounts
+        {showHidden ? 'Hide' : 'Show'} hidden accounts
       </Button>
     </Stack>
   );

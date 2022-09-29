@@ -52,7 +52,9 @@ describe('NetworkService', () => {
 
   it('should deselect current network when select a new one', async () => {
     const network1 = await NetworkService.addNetwork({ data: NETWORK });
-    const network2 = await NetworkService.addNetwork({ data: MOCK_NETWORKS[1] });
+    const network2 = await NetworkService.addNetwork({
+      data: MOCK_NETWORKS[1],
+    });
     await NetworkService.selectNetwork({ id: network2?.id! });
 
     const res = await NetworkService.getNetwork({ id: network1?.id! });

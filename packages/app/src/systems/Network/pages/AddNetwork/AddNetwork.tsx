@@ -1,13 +1,8 @@
-import { Button, Focus, Icon } from "@fuel-ui/react";
+import { Button, Focus, Icon } from '@fuel-ui/react';
 
-import { Layout } from "~/systems/Core";
-import type { NetworkFormValues } from "~/systems/Network";
-import {
-  NetworkForm,
-  useNetworks,
-  useNetworkForm,
-  NetworkScreen,
-} from "~/systems/Network";
+import { Layout } from '~/systems/Core';
+import type { NetworkFormValues } from '~/systems/Network';
+import { NetworkForm, useNetworks, useNetworkForm, NetworkScreen } from '~/systems/Network';
 
 export function AddNetwork() {
   const form = useNetworkForm();
@@ -36,7 +31,7 @@ export function AddNetwork() {
               color="accent"
               isDisabled={!form.formState.isValid}
               isLoading={isLoading}
-              leftIcon={Icon.is("Plus")}
+              leftIcon={Icon.is('Plus')}
             >
               Create
             </Button>

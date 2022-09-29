@@ -24,7 +24,9 @@ describe('captchaMachine', () => {
   });
 
   it('should show captcha if key was informed', async () => {
-    const machine = captchaMachine.withContext({ key: '6Ld3cEwfAAAAAMd4QTs7aO85LyKGdgj0bFsdBfre' });
+    const machine = captchaMachine.withContext({
+      key: '6Ld3cEwfAAAAAMd4QTs7aO85LyKGdgj0bFsdBfre',
+    });
     service = interpret(machine).start();
     state = service.getSnapshot();
     expect(state.value).toBe('waitingLoad');

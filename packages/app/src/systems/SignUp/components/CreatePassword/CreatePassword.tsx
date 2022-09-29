@@ -1,18 +1,16 @@
-import { Stack, Flex, Button, Checkbox, InputPassword } from "@fuel-ui/react";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
+import { Stack, Flex, Button, Checkbox, InputPassword } from '@fuel-ui/react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
 
-import { Header } from "../Header";
+import { Header } from '../Header';
 
-import { ControlledField, ImageLoader, relativeUrl } from "~/systems/Core";
+import { ControlledField, ImageLoader, relativeUrl } from '~/systems/Core';
 
 const schema = yup
   .object({
-    password: yup.string().min(8).required("Password is required"),
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref("password"), null], "Passwords must match"),
+    password: yup.string().min(8).required('Password is required'),
+    confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
     accepted: yup.bool().oneOf([true]).required(),
   })
   .required();
@@ -29,18 +27,14 @@ export type CreatePasswordProps = {
   onCancel: () => void;
 };
 
-export function CreatePassword({
-  isLoading = false,
-  onCancel,
-  onSubmit,
-}: CreatePasswordProps) {
+export function CreatePassword({ isLoading = false, onCancel, onSubmit }: CreatePasswordProps) {
   const form = useForm<CreatePasswordValues>({
     resolver: yupResolver(schema),
-    reValidateMode: "onChange",
-    mode: "onChange",
+    reValidateMode: 'onChange',
+    mode: 'onChange',
     defaultValues: {
-      password: "",
-      confirmPassword: "",
+      password: '',
+      confirmPassword: '',
     },
   });
 
@@ -53,16 +47,12 @@ export function CreatePassword({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack gap="$6" align="center">
-        <ImageLoader
-          src={relativeUrl("/signup-illustration-2.svg")}
-          width={129}
-          height={116}
-        />
+        <ImageLoader src={relativeUrl('/signup-illustration-2.svg')} width={129} height={116} />
         <Header
           title="Create your password"
           subtitle="Add a safe password for access your wallet"
         />
-        <Stack css={{ width: "100%" }} gap="$4">
+        <Stack css={{ width: '100%' }} gap="$4">
           <ControlledField
             control={control}
             name="password"
@@ -94,14 +84,14 @@ export function CreatePassword({
           name="accepted"
           label="I agree with terms and services"
           labelSide="right"
-          css={{ flexDirection: "row " }}
+          css={{ flexDirection: 'row ' }}
           render={({ field: { value: _value, ...field } }) => (
             <Checkbox
               {...field}
-              checked={form.watch("accepted")}
+              checked={form.watch('accepted')}
               aria-label="Accept terms"
               onCheckedChange={(checked) => {
-                form.setValue("accepted", Boolean(checked), {
+                form.setValue('accepted', Boolean(checked), {
                   shouldValidate: true,
                   shouldTouch: true,
                 });
@@ -110,12 +100,7 @@ export function CreatePassword({
           )}
         />
         <Flex gap="$4">
-          <Button
-            color="gray"
-            variant="ghost"
-            css={{ width: 130 }}
-            onPress={onCancel}
-          >
+          <Button color="gray" variant="ghost" css={{ width: 130 }} onPress={onCancel}>
             Cancel
           </Button>
           <Button

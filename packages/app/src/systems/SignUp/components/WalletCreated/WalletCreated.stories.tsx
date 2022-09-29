@@ -1,19 +1,19 @@
-import { BoxCentered } from "@fuel-ui/react";
+import { BoxCentered } from '@fuel-ui/react';
 
-import { WalletCreated } from "./WalletCreated";
+import { WalletCreated } from './WalletCreated';
 
 export default {
   component: WalletCreated,
-  title: "SignUp/Components/WalletCreated",
+  title: 'SignUp/Components/WalletCreated',
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
 };
 
 const ACCOUNT = {
-  name: "Account 1",
-  address: "fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef",
-  publicKey: "0x00",
+  name: 'Account 1',
+  address: 'fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef',
+  publicKey: '0x00',
 };
 
 export const Usage = () => (

@@ -1,8 +1,8 @@
-import { cssObj } from "@fuel-ui/css";
-import { Text, BoxCentered, Heading, Button, Icon } from "@fuel-ui/react";
-import { useNavigate } from "react-router-dom";
+import { cssObj } from '@fuel-ui/css';
+import { Text, BoxCentered, Heading, Button, Icon } from '@fuel-ui/react';
+import { useNavigate } from 'react-router-dom';
 
-import { ImageLoader, Pages, relativeUrl } from "~/systems/Core";
+import { ImageLoader, Pages, relativeUrl } from '~/systems/Core';
 
 type AssetsEmptyProps = {
   isDevnet?: boolean;
@@ -13,11 +13,11 @@ export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
   return (
     <BoxCentered css={styles.empty}>
       <ImageLoader
-        src={relativeUrl("/empty-assets.png")}
+        src={relativeUrl('/empty-assets.png')}
         width={183}
         height={144}
         alt="No assets"
-        wrapperCSS={{ mb: "$5" }}
+        wrapperCSS={{ mb: '$5' }}
       />
       <Heading as="h5">You don&apos;t have any assets</Heading>
       {!isDevnet ? (
@@ -26,11 +26,7 @@ export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
         /**
          * TODO: need to add right faucet icon on @fuel-ui
          */
-        <Button
-          size="sm"
-          leftIcon={Icon.is("Coffee")}
-          onPress={() => navigate(Pages.faucet())}
-        >
+        <Button size="sm" leftIcon={Icon.is('Coffee')} onPress={() => navigate(Pages.faucet())}>
           Faucet
         </Button>
       )}
@@ -40,21 +36,21 @@ export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
 
 const styles = {
   empty: cssObj({
-    width: "100%",
-    height: "100%",
-    flexDirection: "column",
-    textAlign: "center",
+    width: '100%',
+    height: '100%',
+    flexDirection: 'column',
+    textAlign: 'center',
 
     img: {
-      transform: "translateX(-10px)",
-      mb: "$5",
+      transform: 'translateX(-10px)',
+      mb: '$5',
     },
 
     h5: {
       margin: 0,
     },
     button: {
-      mt: "$2",
+      mt: '$2',
     },
   }),
 };

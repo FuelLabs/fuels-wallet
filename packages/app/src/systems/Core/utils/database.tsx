@@ -1,8 +1,8 @@
-import type { Table } from "dexie";
-import Dexie from "dexie";
+import type { Table } from 'dexie';
+import Dexie from 'dexie';
 
-import type { Account, Vault } from "~/systems/Account";
-import type { Network } from "~/systems/Network";
+import type { Account, Vault } from '~/systems/Account';
+import type { Network } from '~/systems/Network';
 
 export class FuelDB extends Dexie {
   vaults!: Table<Vault, string>;
@@ -10,7 +10,7 @@ export class FuelDB extends Dexie {
   networks!: Table<Network, string>;
 
   constructor() {
-    super("FuelDB");
+    super('FuelDB');
     this.version(2).stores({
       vaults: `key`,
       accounts: `address`,

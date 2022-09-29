@@ -1,8 +1,8 @@
-import { Button, Icon } from "@fuel-ui/react";
-import { useNavigate } from "react-router-dom";
+import { Button, Icon } from '@fuel-ui/react';
+import { useNavigate } from 'react-router-dom';
 
-import { Layout, Pages } from "~/systems/Core";
-import { NetworkList, NetworkScreen, useNetworks } from "~/systems/Network";
+import { Layout, Pages } from '~/systems/Core';
+import { NetworkList, NetworkScreen, useNetworks } from '~/systems/Network';
 
 export function Networks() {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ export function Networks() {
         <Button
           aria-label="Add network"
           onPress={handlers.goToAdd}
-          leftIcon={Icon.is("Plus")}
+          leftIcon={Icon.is('Plus')}
           variant="ghost"
         >
           Add new network

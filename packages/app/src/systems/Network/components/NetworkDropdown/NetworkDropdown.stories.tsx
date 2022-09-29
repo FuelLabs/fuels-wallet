@@ -1,15 +1,15 @@
-import { Box } from "@fuel-ui/react";
-import { useState } from "react";
+import { Box } from '@fuel-ui/react';
+import { useState } from 'react';
 
-import { MOCK_NETWORKS } from "../../__mocks__";
+import { MOCK_NETWORKS } from '../../__mocks__';
 
-import { NetworkDropdown } from "./NetworkDropdown";
+import { NetworkDropdown } from './NetworkDropdown';
 
-import type { Network } from "~/systems/Network";
+import type { Network } from '~/systems/Network';
 
 export default {
   component: NetworkDropdown,
-  title: "Network/Components/NetworkDropdown",
+  title: 'Network/Components/NetworkDropdown',
 };
 
 export const Usage = () => {

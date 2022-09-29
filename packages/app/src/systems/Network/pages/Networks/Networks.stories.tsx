@@ -1,16 +1,16 @@
-import type { Story } from "@storybook/react";
-import type { FunctionComponent } from "react";
+import type { Story } from '@storybook/react';
+import type { FunctionComponent } from 'react';
 
-import { MOCK_NETWORKS } from "../../__mocks__";
-import { NetworkService } from "../../services";
+import { MOCK_NETWORKS } from '../../__mocks__';
+import { NetworkService } from '../../services';
 
-import { Networks } from "./Networks";
+import { Networks } from './Networks';
 
-import { GlobalMachinesProvider } from "~/systems/Global";
+import { GlobalMachinesProvider } from '~/systems/Global';
 
 export default {
   component: Networks,
-  title: "Network/Pages/1. Networks",
+  title: 'Network/Pages/1. Networks',
   decorators: [
     (Story: FunctionComponent) => (
       <GlobalMachinesProvider>

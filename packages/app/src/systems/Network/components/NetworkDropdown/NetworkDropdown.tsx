@@ -1,8 +1,8 @@
-import { cssObj } from "@fuel-ui/css";
-import { Button } from "@fuel-ui/react";
+import { cssObj } from '@fuel-ui/css';
+import { Button } from '@fuel-ui/react';
 
-import type { Network } from "../../types";
-import { NetworkStatus } from "../NetworkItem";
+import type { Network } from '../../types';
+import { NetworkStatus } from '../NetworkItem';
 
 export type NetworkDropdownProps = {
   selected?: Network;
@@ -25,18 +25,18 @@ export function NetworkDropdown({ selected, onPress }: NetworkDropdownProps) {
 
 const styles = {
   trigger: cssObj({
-    cursor: "pointer",
-    fontSize: "$xs",
-    px: "$4 !important",
-    border: "1px dashed $gray4 !important",
-    color: "$gray10 !important",
-    borderRadius: "$full",
-    "&, &:hover": {
-      background: "$transparent !important",
-      boxShadow: "none !important",
+    cursor: 'pointer',
+    fontSize: '$xs',
+    px: '$4 !important',
+    border: '1px dashed $gray4 !important',
+    color: '$gray10 !important',
+    borderRadius: '$full !important',
+    '&, &:hover': {
+      background: '$transparent !important',
+      boxShadow: 'none !important',
     },
-    "&:focus": {
-      outlineColor: "$gray2 !important",
+    '&:focus': {
+      outlineColor: '$gray2 !important',
     },
   }),
 };

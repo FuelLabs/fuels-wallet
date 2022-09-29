@@ -1,1 +1,1 @@
-export * from "./RemoveNetworkDialog";
+export * from './RemoveNetworkDialog';

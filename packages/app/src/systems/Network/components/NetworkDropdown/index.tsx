@@ -1,1 +1,1 @@
-export * from "./NetworkDropdown";
+export * from './NetworkDropdown';

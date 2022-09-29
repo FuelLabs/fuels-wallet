@@ -1,15 +1,7 @@
-import {
-  Avatar,
-  CardList,
-  Flex,
-  Heading,
-  Icon,
-  IconButton,
-  Text,
-} from "@fuel-ui/react";
+import { Avatar, CardList, Flex, Heading, Icon, IconButton, Text } from '@fuel-ui/react';
 
-import type { Account } from "~/systems/Account";
-import { shortAddress } from "~/systems/Core";
+import type { Account } from '~/systems/Account';
+import { shortAddress } from '~/systems/Core';
 
 export type AccountItemProps = {
   account: Account;
@@ -17,11 +9,7 @@ export type AccountItemProps = {
   isHidden?: boolean;
 };
 
-export function AccountItem({
-  account,
-  isSelected,
-  isHidden,
-}: AccountItemProps) {
+export function AccountItem({ account, isSelected, isHidden }: AccountItemProps) {
   if (isHidden) return null;
   /**
    * TODO: add DropdownMenu here with actions after it's done on @fuel-ui
@@ -34,8 +22,8 @@ export function AccountItem({
       icon={<Icon icon="DotsThreeOutline" color="gray8" />}
       aria-label="Action"
       css={{
-        px: "$0",
-        color: "$gray10",
+        px: '$0',
+        color: '$gray10',
       }}
     />
   );

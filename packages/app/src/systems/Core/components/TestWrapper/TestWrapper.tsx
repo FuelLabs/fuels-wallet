@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ReactNode } from "react";
-import { BrowserRouter, MemoryRouter, useLocation } from "react-router-dom";
+import type { ReactNode } from 'react';
+import { BrowserRouter, MemoryRouter, useLocation } from 'react-router-dom';
 
-import { Providers } from "../Providers";
+import { Providers } from '../Providers';
 
 const LocationDisplay = () => {
   const location = useLocation();
@@ -22,9 +22,7 @@ export function TestWrapper({ children, initialEntries }: TestWrapperProps) {
     </>
   );
   if (initialEntries) {
-    return (
-      <MemoryRouter initialEntries={initialEntries}>{content}</MemoryRouter>
-    );
+    return <MemoryRouter initialEntries={initialEntries}>{content}</MemoryRouter>;
   }
   return (
     <BrowserRouter>

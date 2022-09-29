@@ -5,23 +5,15 @@
  * isn't handle well with float numbers inside strings, like bn('1.5')
  * TODO: remove Decimal.js here later
  */
-import Decimal from "decimal.js";
-import type { BigNumberish } from "fuels";
-import { BN, bn } from "fuels";
+import Decimal from 'decimal.js';
+import type { BigNumberish } from 'fuels';
+import { BN, bn } from 'fuels';
 
-import type { Maybe } from "../types";
+import type { Maybe } from '../types';
 
-import {
-  DECIMAL_UNITS,
-  MIN_FRACTION_DIGITS,
-  MAX_FRACTION_DIGITS,
-  FORMAT_LANGUAGE,
-} from "~/config";
+import { DECIMAL_UNITS, MIN_FRACTION_DIGITS, MAX_FRACTION_DIGITS, FORMAT_LANGUAGE } from '~/config';
 
-export function safeBigInt(
-  value?: Maybe<BigNumberish> | bigint,
-  defaultValue: number = 0
-) {
+export function safeBigInt(value?: Maybe<BigNumberish> | bigint, defaultValue: number = 0) {
   return value || bn(defaultValue);
 }
 
@@ -57,7 +49,7 @@ type FormatOpts = {
 export function formatUnits(value: any, opts?: FormatOpts) {
   let val = value;
 
-  if (typeof value === "number") {
+  if (typeof value === 'number') {
     val = new Decimal(Math.trunc(value));
   }
   if (value instanceof BN) {
@@ -74,5 +66,5 @@ export function formatUnits(value: any, opts?: FormatOpts) {
     maximumFractionDigits: maxDigits,
   }).format(parseFloat(units.toString()));
 
-  return `${formatted}${opts?.suffix || ""}`;
+  return `${formatted}${opts?.suffix || ''}`;
 }

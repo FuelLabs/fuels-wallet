@@ -1,17 +1,17 @@
-import type { Story } from "@storybook/react";
-import type { FunctionComponent } from "react";
+import type { Story } from '@storybook/react';
+import type { FunctionComponent } from 'react';
 
-import { MOCK_NETWORKS } from "../../__mocks__";
-import { NetworkService } from "../../services";
+import { MOCK_NETWORKS } from '../../__mocks__';
+import { NetworkService } from '../../services';
 
-import { UpdateNetwork } from "./UpdateNetwork";
+import { UpdateNetwork } from './UpdateNetwork';
 
-import { Pages } from "~/systems/Core";
-import { GlobalMachinesProvider } from "~/systems/Global";
+import { Pages } from '~/systems/Core';
+import { GlobalMachinesProvider } from '~/systems/Global';
 
 export default {
   component: UpdateNetwork,
-  title: "Network/Pages/3. UpdateNetwork",
+  title: 'Network/Pages/3. UpdateNetwork',
   decorators: [
     (Story: FunctionComponent) => (
       <GlobalMachinesProvider>
@@ -22,7 +22,7 @@ export default {
   parameters: {
     reactRouter: {
       routePath: Pages.networkUpdate(),
-      routeParams: { id: "1" },
+      routeParams: { id: '1' },
     },
   },
 };

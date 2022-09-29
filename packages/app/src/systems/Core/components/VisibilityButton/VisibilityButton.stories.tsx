@@ -1,11 +1,11 @@
-import { Box } from "@fuel-ui/react";
+import { Box } from '@fuel-ui/react';
 
-import type { VisibilityButtonProps } from "./VisibilityButton";
-import { VisibilityButton } from "./VisibilityButton";
+import type { VisibilityButtonProps } from './VisibilityButton';
+import { VisibilityButton } from './VisibilityButton';
 
 export default {
   component: VisibilityButton,
-  title: "Core/Components/VisibilityButton",
+  title: 'Core/Components/VisibilityButton',
 };
 
 export const Usage = (args: VisibilityButtonProps) => (

@@ -1,14 +1,14 @@
-import type { Story } from "@storybook/react";
-import type { FunctionComponent } from "react";
+import type { Story } from '@storybook/react';
+import type { FunctionComponent } from 'react';
 
-import { AddNetwork } from "./AddNetwork";
+import { AddNetwork } from './AddNetwork';
 
-import { Pages } from "~/systems/Core";
-import { GlobalMachinesProvider } from "~/systems/Global";
+import { Pages } from '~/systems/Core';
+import { GlobalMachinesProvider } from '~/systems/Global';
 
 export default {
   component: AddNetwork,
-  title: "Network/Pages/2. AddNetwork",
+  title: 'Network/Pages/2. AddNetwork',
   decorators: [
     (Story: FunctionComponent) => (
       <GlobalMachinesProvider>

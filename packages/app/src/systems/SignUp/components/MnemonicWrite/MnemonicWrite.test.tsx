@@ -1,21 +1,19 @@
-import { Mnemonic as FuelMnemonic } from "@fuel-ts/mnemonic";
-import { render, screen, waitFor } from "@fuel-ui/test-utils";
+import { Mnemonic as FuelMnemonic } from '@fuel-ts/mnemonic';
+import { render, screen, waitFor } from '@fuel-ui/test-utils';
 
-import { MnemonicWrite } from "./MnemonicWrite";
+import { MnemonicWrite } from './MnemonicWrite';
 
-import { MNEMONIC_SIZE } from "~/config";
-import { getPhraseFromValue } from "~/systems/Core";
+import { MNEMONIC_SIZE } from '~/config';
+import { getPhraseFromValue } from '~/systems/Core';
 
 const onFilledHandler = jest.fn();
 const onNextHandler = jest.fn();
 const onCancelHandler = jest.fn();
 
-const MNEMONIC = getPhraseFromValue(
-  FuelMnemonic.generate(MNEMONIC_SIZE)
-) as string;
+const MNEMONIC = getPhraseFromValue(FuelMnemonic.generate(MNEMONIC_SIZE)) as string;
 
-describe("MnemonicWrite", () => {
-  it("should trigger onFilled after paste", async () => {
+describe('MnemonicWrite', () => {
+  it('should trigger onFilled after paste', async () => {
     const { user } = render(
       <MnemonicWrite
         canProceed
@@ -26,14 +24,14 @@ describe("MnemonicWrite", () => {
     );
 
     await navigator.clipboard.writeText(MNEMONIC);
-    const btn = screen.getByText("Paste");
+    const btn = screen.getByText('Paste');
     await user.click(btn);
     await waitFor(async () => {
       expect(onFilledHandler).toBeCalledTimes(1);
     });
   });
 
-  it("should be able to click on next if canProceed and isFilled", async () => {
+  it('should be able to click on next if canProceed and isFilled', async () => {
     const { user } = render(
       <MnemonicWrite
         canProceed
@@ -44,16 +42,16 @@ describe("MnemonicWrite", () => {
     );
 
     await navigator.clipboard.writeText(MNEMONIC);
-    const btnPaste = screen.getByText("Paste");
+    const btnPaste = screen.getByText('Paste');
     await user.click(btnPaste);
 
     await waitFor(() => {
-      const btnNext = screen.getByText("Next");
+      const btnNext = screen.getByText('Next');
       expect(btnNext).toBeEnabled();
     });
   });
 
-  it("should show error message when have error prop", async () => {
+  it('should show error message when have error prop', async () => {
     render(
       <MnemonicWrite
         error="This is an error message"
@@ -63,6 +61,6 @@ describe("MnemonicWrite", () => {
       />
     );
 
-    expect(screen.getByText("This is an error message")).toBeInTheDocument();
+    expect(screen.getByText('This is an error message')).toBeInTheDocument();
   });
 });
