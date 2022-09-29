@@ -14,7 +14,7 @@ jobs:
       - uses: ./.github/actions/setup-node
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps chromium
 
       - name: Build Libs
         run: pnpm build
@@ -26,6 +26,7 @@ jobs:
 
       - name: Run Playwright tests
         run: pnpm crx:test
+
       - uses: actions/upload-artifact@v2
         if: always()
         with:
