@@ -12,7 +12,6 @@ export default defineConfig({
     baseUrl: `http://localhost:${PORT}`,
     supportFile: './packages/app/cypress/support/e2e.ts',
     specPattern: './packages/app/cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
-    excludeSpecPattern: './packages/app/playwright',
     setupNodeEvents(on) {
       on(
         'file:preprocessor',
