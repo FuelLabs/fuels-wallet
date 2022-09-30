@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect } from 'react';
@@ -11,10 +12,23 @@ export type NetworkFormValues = {
   url: string;
 };
 
+function isValidUrl(url: any) {
+  try {
+    // eslint-disable-next-line no-new
+    new URL(url);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
 const schema = yup
   .object({
     name: yup.string().required('Name is required'),
-    url: yup.string().required('URL is required'),
+    url: yup
+      .string()
+      .test('is-url-valid', 'URL is not valid', isValidUrl)
+      .required('URL is required'),
   })
   .required();
 
