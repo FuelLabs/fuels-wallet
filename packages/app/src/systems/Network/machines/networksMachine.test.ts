@@ -101,7 +101,7 @@ describe('networksMachine', () => {
       const networks = state.context.networks || [];
       const removeEv: any = {
         type: 'REMOVE_NETWORK',
-        input: { id: networks[1].id },
+        input: { id: networks[1]?.id },
       };
 
       const nextState = service.nextState(removeEv);
@@ -119,12 +119,12 @@ describe('networksMachine', () => {
       let networks = state.context.networks || [];
       const idx = networks.findIndex((n) => n.isSelected);
       const invertIdx = idx === 0 ? 1 : 0;
-      expect(networks[idx].isSelected).toBeTruthy();
-      expect(networks[invertIdx].isSelected).toBeFalsy();
+      expect(networks[idx]?.isSelected).toBeTruthy();
+      expect(networks[invertIdx]?.isSelected).toBeFalsy();
 
       const selectEv: any = {
         type: 'SELECT_NETWORK',
-        input: { id: networks[invertIdx].id },
+        input: { id: networks[invertIdx]?.id },
       };
 
       const nextState = service.nextState(selectEv);
@@ -134,8 +134,8 @@ describe('networksMachine', () => {
       await waitFor(service, (state) => state.matches('selectingNetwork'));
       state = await waitFor(service, (state) => state.matches('idle'));
       networks = state.context.networks || [];
-      expect(networks[idx].isSelected).toBeFalsy();
-      expect(networks[invertIdx].isSelected).toBeTruthy();
+      expect(networks[idx]?.isSelected).toBeFalsy();
+      expect(networks[invertIdx]?.isSelected).toBeTruthy();
     });
   });
 
