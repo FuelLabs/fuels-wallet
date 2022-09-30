@@ -70,7 +70,7 @@ const style = css({
   py: '$2',
   px: '$4',
   gap: '$3',
-  height: '50px',
+  minHeight: '50px',
   borderTopLeftRadius: '$md',
   borderTopRightRadius: '$md',
   background: 'transparent',
