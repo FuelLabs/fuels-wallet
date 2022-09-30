@@ -51,7 +51,7 @@ export class Store<T extends MachinesObj> implements IStore<T> {
     };
   }
 
-  public send<K extends string>(key: K, ev: T[K]['__TEvent']) {
+  public send<K extends keyof T>(key: K, ev: T[K]['__TEvent']) {
     const service = this.services.get(key);
     service?.send(ev);
   }

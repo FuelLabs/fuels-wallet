@@ -1,4 +1,4 @@
-import { render, screen, testA11y } from '@fuel-ui/test-utils';
+import { render, screen, testA11y, waitFor } from '@fuel-ui/test-utils';
 
 import { NetworkSelector } from './NetworkSelector';
 
@@ -14,13 +14,6 @@ const props = {
 };
 
 describe('NetworkSelector', () => {
-  afterAll(() => {
-    jest.useFakeTimers();
-  });
-  beforeAll(() => {
-    jest.useRealTimers();
-  });
-
   it('a11y', async () => {
     await testA11y(<NetworkSelector {...props} />, {
       wrapper: TestWrapper,
@@ -44,12 +37,13 @@ describe('NetworkSelector', () => {
       wrapper: TestWrapper,
     });
 
-    jest.advanceTimersByTime(1000);
-    const selector = screen.getByTestId('fuel_network-item');
-    await user.click(selector);
-    const item = screen.getByText(NOT_SELECTED.name);
-    expect(item).toBeInTheDocument();
-    await user.click(item);
-    expect(handler).toBeCalledWith(NOT_SELECTED);
+    await waitFor(async () => {
+      const selector = screen.getByTestId('fuel_network-item');
+      await user.click(selector);
+      const item = screen.getByText(NOT_SELECTED.name);
+      expect(item).toBeInTheDocument();
+      await user.click(item);
+      expect(handler).toBeCalledWith(NOT_SELECTED);
+    });
   });
 });

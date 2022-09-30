@@ -13,7 +13,7 @@ const NETWORK = MOCK_NETWORKS[0];
 
 const machine = networksMachine
   .withConfig({
-    actions: { redirectToList() {} },
+    actions: { redirectToList() {}, redirectToHome() {} },
   })
   .withContext({});
 

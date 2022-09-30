@@ -132,8 +132,8 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['redirectToList'],
-              target: 'fetchingNetworks',
+              actions: ['notifyUpdateAccounts', 'redirectToHome'],
+              target: 'idle',
             },
           ],
         },
@@ -188,8 +188,8 @@ export const networksMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['notifyUpdateAccounts'],
-              target: 'fetchingNetworks',
+              actions: ['notifyUpdateAccounts', 'redirectToHome'],
+              target: 'idle',
             },
           ],
         },
@@ -225,11 +225,12 @@ export const networksMachine = createMachine(
             if (!input?.data) {
               throw new Error('Invalid network input');
             }
-            const network = await NetworkService.addNetwork(input);
+            let network = await NetworkService.addNetwork(input);
             if (!network) {
               throw new Error('Failed to add network');
             }
-            return network;
+            network = await NetworkService.selectNetwork({ id: network.id! });
+            return network as Network;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any) {
             if (error?.message.includes('uniqueness')) {

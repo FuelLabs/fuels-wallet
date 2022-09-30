@@ -41,6 +41,9 @@ export function useNetworks(opts: NetworkInitialInput) {
       redirectToList() {
         navigate(Pages.networks());
       },
+      redirectToHome() {
+        navigate(Pages.home());
+      },
     },
   });
 

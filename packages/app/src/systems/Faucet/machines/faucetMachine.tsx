@@ -4,7 +4,7 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { VITE_FUEL_FAUCET_URL } from '~/config';
-import { store } from '~/store';
+import { Services, store } from '~/store';
 import type { Maybe } from '~/systems/Core';
 
 async function fetchFaucet(input: RequestInit) {
@@ -98,7 +98,7 @@ export const faucetMachine =
         }),
         navigateToHome() {},
         sendFaucetSuccess: () => {
-          store.send('account', { type: 'UPDATE_ACCOUNT' });
+          store.send(Services.account, { type: 'UPDATE_ACCOUNT' });
         },
         showDoneFeedback: () => {
           toast.success('Success, 0.5 ETH was added to your wallet.');
