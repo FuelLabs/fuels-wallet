@@ -1,7 +1,6 @@
 export type Network = {
-  id: number;
+  id?: string;
   name: string;
   url: string;
   isSelected?: boolean;
-  isOnline?: boolean;
 };

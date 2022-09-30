@@ -1,7 +1,7 @@
-import { cssObj, darkColors } from "@fuel-ui/css";
-import { Card } from "@fuel-ui/react";
-import type { IContentLoaderProps } from "react-content-loader";
-import ContentLoader from "react-content-loader";
+import { cssObj, darkColors } from '@fuel-ui/css';
+import { Card } from '@fuel-ui/react';
+import type { IContentLoaderProps } from 'react-content-loader';
+import ContentLoader from 'react-content-loader';
 
 export const TxRecipientCardLoader = (props: IContentLoaderProps) => (
   <Card css={styles.root}>
@@ -24,12 +24,12 @@ export const TxRecipientCardLoader = (props: IContentLoaderProps) => (
 
 const styles = {
   root: cssObj({
-    minWidth: "130px",
-    minHeight: "122px",
-    py: "$4",
-    px: "$3",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
+    minWidth: '130px',
+    minHeight: '122px',
+    py: '$4',
+    px: '$3',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   }),
 };

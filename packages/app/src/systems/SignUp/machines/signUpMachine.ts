@@ -4,10 +4,12 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { IS_LOGGED_KEY, MNEMONIC_SIZE } from '~/config';
+import { Services, store } from '~/store';
 import type { Account } from '~/systems/Account';
-import { AccountService, accountEvents } from '~/systems/Account';
+import { AccountService } from '~/systems/Account';
 import { getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
+import { NetworkService } from '~/systems/Network';
 
 // ----------------------------------------------------------------------------
 // Machine
@@ -46,9 +48,9 @@ type MachineEvents =
 
 export const signUpMachine = createMachine(
   {
+    predictableActionArguments: true,
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./signUpMachine.typegen').Typegen0,
-    predictableActionArguments: true,
     id: '(machine)',
     initial: 'checking',
     schema: {
@@ -166,7 +168,7 @@ export const signUpMachine = createMachine(
       }),
       sendAccountCreated: () => {
         localStorage.setItem(IS_LOGGED_KEY, 'true');
-        accountEvents.updateAccounts();
+        store.send(Services.account, { type: 'UPDATE_ACCOUNT' });
       },
     },
     guards: {
@@ -191,6 +193,7 @@ export const signUpMachine = createMachine(
 
         const manager = await AccountService.createManager({ data });
         const account = manager.getAccounts()[0];
+        await NetworkService.addFirstNetwork();
         return AccountService.addAccount({
           data: {
             name: 'Account 1',

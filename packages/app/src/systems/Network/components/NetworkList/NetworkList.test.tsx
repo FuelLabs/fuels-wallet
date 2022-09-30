@@ -1,34 +1,18 @@
-import { render, screen, testA11y } from "@fuel-ui/test-utils";
+import { render, screen } from '@fuel-ui/test-utils';
+import { uniqueId } from 'xstate/lib/utils';
 
-import { NetworkList } from "./NetworkList";
+import { MOCK_NETWORKS } from '../../__mocks__';
 
-import { TestWrapper } from "~/systems/Core";
+import { NetworkList } from './NetworkList';
 
-const NETWORKS = [
-  {
-    id: 1,
-    isSelected: true,
-    isOnline: true,
-    name: "Mainnet",
-    url: "https://node.fuel.network/graphql",
-  },
-  {
-    id: 2,
-    name: "Localhost",
-    url: "http://localhost:4000",
-  },
-];
+import { TestWrapper } from '~/systems/Core/components/TestWrapper';
 
-describe("NetworkList", () => {
-  it("a11y", async () => {
-    await testA11y(<NetworkList networks={NETWORKS} />, {
-      wrapper: TestWrapper,
-    });
-  });
+const NETWORKS = MOCK_NETWORKS.map((i) => ({ ...i, id: uniqueId() }));
 
-  it("should render a list of networks", () => {
+describe('NetworkList', () => {
+  it('should render a list of networks', () => {
     render(<NetworkList networks={NETWORKS} />, { wrapper: TestWrapper });
-    expect(screen.getByText("Mainnet")).toBeInTheDocument();
-    expect(screen.getByText("Localhost")).toBeInTheDocument();
+    expect(screen.getByText(NETWORKS[0].name)).toBeInTheDocument();
+    expect(screen.getByText(NETWORKS[1].name)).toBeInTheDocument();
   });
 });

@@ -1,2 +1,1 @@
-export * from "./useAccounts";
-export * from "./useIsLogged";
+export * from './useAccount';

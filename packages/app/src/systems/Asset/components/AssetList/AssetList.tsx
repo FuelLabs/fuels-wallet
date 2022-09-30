@@ -1,11 +1,11 @@
-import { CardList } from "@fuel-ui/react";
-import type { CoinQuantity } from "fuels";
-import type { FC } from "react";
+import { CardList } from '@fuel-ui/react';
+import type { CoinQuantity } from 'fuels';
+import type { FC } from 'react';
 
-import { AssetItem } from "../AssetItem";
+import { AssetItem } from '../AssetItem';
 
-import { AssetListEmpty } from "./AssetListEmpty";
-import { AssetListLoading } from "./AssetListLoading";
+import { AssetListEmpty } from './AssetListEmpty';
+import { AssetListLoading } from './AssetListLoading';
 
 export type AssetListProps = {
   assets?: CoinQuantity[];
@@ -18,11 +18,7 @@ type AssetListComponent = FC<AssetListProps> & {
   Loading: typeof AssetListLoading;
 };
 
-export const AssetList: AssetListComponent = ({
-  assets,
-  isLoading,
-  isDevnet,
-}) => {
+export const AssetList: AssetListComponent = ({ assets, isLoading, isDevnet }) => {
   if (isLoading) return <AssetList.Loading items={4} />;
 
   const isEmpty = !assets || !assets.length;

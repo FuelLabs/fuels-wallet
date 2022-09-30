@@ -1,12 +1,12 @@
-import type { Story } from "@storybook/react";
+import type { Story } from '@storybook/react';
 
-import { RecoverWallet } from "./RecoverWallet";
+import { RecoverWallet } from './RecoverWallet';
 
 export default {
   component: RecoverWallet,
-  title: "SignUp/Pages/3. RecoverWallet",
+  title: 'SignUp/Pages/3. RecoverWallet',
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
 };
 

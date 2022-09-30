@@ -1,1 +1,1 @@
-export * from "./MnemonicRead";
+export * from './MnemonicRead';

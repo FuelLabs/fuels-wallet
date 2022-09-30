@@ -1,14 +1,14 @@
-import { Box } from "@fuel-ui/react";
-import { bn } from "fuels";
+import { Box } from '@fuel-ui/react';
+import { bn } from 'fuels';
 
-import { ASSET_LIST } from "../../utils";
+import { ASSET_LIST } from '../../utils';
 
-import type { AssetItemProps } from "./AssetItem";
-import { AssetItem } from "./AssetItem";
+import type { AssetItemProps } from './AssetItem';
+import { AssetItem } from './AssetItem';
 
 export default {
   component: AssetItem,
-  title: "Asset/Components/AssetItem",
+  title: 'Asset/Components/AssetItem',
 };
 
 export const Usage = (args: AssetItemProps) => (

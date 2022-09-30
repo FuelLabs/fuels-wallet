@@ -1,1 +1,1 @@
-export * from "./Mnemonic";
+export * from './Mnemonic';

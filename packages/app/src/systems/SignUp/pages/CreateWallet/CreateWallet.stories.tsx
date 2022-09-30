@@ -1,12 +1,12 @@
-import type { Story } from "@storybook/react";
+import type { Story } from '@storybook/react';
 
-import { CreateWallet } from "./CreateWallet";
+import { CreateWallet } from './CreateWallet';
 
 export default {
   component: CreateWallet,
-  title: "SignUp/Pages/2. CreateWallet",
+  title: 'SignUp/Pages/2. CreateWallet',
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
 };
 

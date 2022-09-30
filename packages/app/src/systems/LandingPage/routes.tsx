@@ -1,9 +1,7 @@
-import { Route } from "react-router-dom";
+import { Route } from 'react-router-dom';
 
-import { LandingPage } from "./pages";
+import { Pages } from '../Core/types';
 
-import { Pages } from "~/systems/Core";
+import { LandingPage } from './pages';
 
-export const landingPageRoutes = (
-  <Route path={Pages.index} element={<LandingPage />} />
-);
+export const landingPageRoutes = <Route path={Pages.index()} element={<LandingPage />} />;

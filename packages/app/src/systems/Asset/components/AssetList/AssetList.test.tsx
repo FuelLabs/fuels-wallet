@@ -1,32 +1,32 @@
-import { render, screen, testA11y } from "@fuel-ui/test-utils";
-import { bn } from "fuels";
+import { render, screen, testA11y } from '@fuel-ui/test-utils';
+import { bn } from 'fuels';
 
-import { ASSET_LIST } from "../../utils";
+import { ASSET_LIST } from '../../utils';
 
-import { AssetList } from "./AssetList";
+import { AssetList } from './AssetList';
 
-import { TestWrapper } from "~/systems/Core";
+import { TestWrapper } from '~/systems/Core';
 
 const ASSETS = ASSET_LIST.map(({ assetId }) => ({
   assetId,
   amount: bn(1000000000),
 }));
 
-describe("AssetList", () => {
-  it("a11y", async () => {
+describe('AssetList', () => {
+  it('a11y', async () => {
     await testA11y(<AssetList assets={ASSETS} />);
   });
 
-  it("should show tree assets", () => {
+  it('should show tree assets', () => {
     render(<AssetList assets={ASSETS} />);
-    expect(screen.getByText("Ethereum")).toBeInTheDocument();
-    expect(screen.getByText("Dai")).toBeInTheDocument();
-    expect(screen.getByText("Bitcoin")).toBeInTheDocument();
+    expect(screen.getByText('Ethereum')).toBeInTheDocument();
+    expect(screen.getByText('Dai')).toBeInTheDocument();
+    expect(screen.getByText('Bitcoin')).toBeInTheDocument();
   });
 
-  it("should show an empty illustration when no assets", () => {
+  it('should show an empty illustration when no assets', () => {
     render(<AssetList.Empty />, { wrapper: TestWrapper });
     expect(screen.getByText("You don't have any assets")).toBeInTheDocument();
-    expect(screen.getByAltText("No assets")).toBeInTheDocument();
+    expect(screen.getByAltText('No assets')).toBeInTheDocument();
   });
 });

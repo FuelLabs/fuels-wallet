@@ -1,5 +1,5 @@
-import { cssObj } from "@fuel-ui/css";
-import { Button, Flex } from "@fuel-ui/react";
+import { cssObj } from '@fuel-ui/css';
+import { Button, Flex } from '@fuel-ui/react';
 
 export type HomeActionsProps = {
   isDisabled?: boolean;
@@ -11,13 +11,7 @@ export const HomeActions = ({ isDisabled }: HomeActionsProps) => {
       <Button isDisabled={isDisabled} css={styles.button}>
         Send
       </Button>
-      <Button
-        size="sm"
-        isDisabled={isDisabled}
-        variant="outlined"
-        color="gray"
-        css={styles.button}
-      >
+      <Button size="sm" isDisabled={isDisabled} variant="outlined" color="gray" css={styles.button}>
         Receive
       </Button>
     </Flex>
@@ -26,14 +20,14 @@ export const HomeActions = ({ isDisabled }: HomeActionsProps) => {
 
 const styles = {
   wrapper: cssObj({
-    marginTop: "$8",
-    marginBottom: "$6",
+    marginTop: '$8',
+    marginBottom: '$6',
     flexShrink: 0,
   }),
   button: cssObj({
     borderRadius: 40,
-    marginLeft: "$1",
+    marginLeft: '$1',
     flex: 1,
-    py: "$5",
+    py: '$5',
   }),
 };

@@ -1,6 +1,6 @@
-import { CardList } from "@fuel-ui/react";
+import { CardList } from '@fuel-ui/react';
 
-import { AssetItem } from "../AssetItem";
+import { AssetItem } from '../AssetItem';
 
 type AssetListLoadingProps = {
   items?: number;

@@ -1,1 +1,1 @@
-export * from "./RecoverWallet";
+export * from './RecoverWallet';

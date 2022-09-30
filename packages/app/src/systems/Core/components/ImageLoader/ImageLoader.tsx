@@ -1,13 +1,13 @@
-import type { ThemeUtilsCSS } from "@fuel-ui/css";
-import { cssObj, darkColors } from "@fuel-ui/css";
-import type { ImageProps } from "@fuel-ui/react";
-import { Box, Image } from "@fuel-ui/react";
-import { useState } from "react";
-import ContentLoader from "react-content-loader";
+import type { ThemeUtilsCSS } from '@fuel-ui/css';
+import { cssObj, darkColors } from '@fuel-ui/css';
+import type { ImageProps } from '@fuel-ui/react';
+import { Box, Image } from '@fuel-ui/react';
+import { useState } from 'react';
+import ContentLoader from 'react-content-loader';
 
-export type ImageLoaderProps = Omit<ImageProps, "width" | "height"> & {
-  width: ImageProps["width"];
-  height: ImageProps["height"];
+export type ImageLoaderProps = Omit<ImageProps, 'width' | 'height'> & {
+  width: ImageProps['width'];
+  height: ImageProps['height'];
   css?: ThemeUtilsCSS;
   wrapperCSS?: ThemeUtilsCSS;
 };
@@ -19,18 +19,18 @@ export function ImageLoader({ wrapperCSS, ...props }: ImageLoaderProps) {
       <Loader
         {...props}
         css={{
-          zIndex: "$1",
-          position: "absolute",
+          zIndex: '$1',
+          position: 'absolute',
           top: 0,
           left: 0,
-          ...(loaded && { visibility: "hidden" }),
+          ...(loaded && { visibility: 'hidden' }),
         }}
       />
       <Image
         {...props}
         onLoad={() => setLoaded(true)}
         css={{
-          ...(!loaded && { visibility: "hidden" }),
+          ...(!loaded && { visibility: 'hidden' }),
           ...props.css,
         }}
       />
@@ -58,9 +58,9 @@ function Loader({ width, height, css }: ImageLoaderProps) {
 const styles = {
   root: (props: ImageLoaderProps) =>
     cssObj({
-      position: "relative",
+      position: 'relative',
       width: props.width,
       height: props.height,
-      overflow: "hidden",
+      overflow: 'hidden',
     }),
 };

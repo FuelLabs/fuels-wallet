@@ -1,22 +1,19 @@
-import { Box, CardList } from "@fuel-ui/react";
+import { Box, CardList } from '@fuel-ui/react';
+import { action } from '@storybook/addon-actions';
 
-import { NetworkItem } from "./NetworkItem";
+import { MOCK_NETWORKS } from '../../__mocks__';
+
+import { NetworkItem } from './NetworkItem';
 
 export default {
   component: NetworkItem,
-  title: "Network/Components/NetworkItem",
+  title: 'Network/Components/NetworkItem',
 };
 
-const NETWORK = {
-  id: 1,
-  isSelected: true,
-  isOnline: true,
-  name: "Mainnet",
-  url: "https://node.fuel.network/graphql",
-};
+const NETWORK = MOCK_NETWORKS[0];
 
 export const Usage = () => (
-  <Box css={{ maxWidth: "$xs" }}>
+  <Box css={{ maxWidth: '$xs' }}>
     <CardList>
       <NetworkItem network={NETWORK} />
     </CardList>
@@ -25,9 +22,14 @@ export const Usage = () => (
 
 export const WithActions = () => {
   return (
-    <Box css={{ maxWidth: "$xs" }}>
+    <Box css={{ maxWidth: '$xs' }}>
       <CardList>
-        <NetworkItem network={NETWORK} showActions />
+        <NetworkItem
+          network={NETWORK}
+          onUpdate={action('onUpdate')}
+          onRemove={action('onRemove')}
+          onPress={action('onPress')}
+        />
       </CardList>
     </Box>
   );
