@@ -2,7 +2,6 @@ import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
 
 import type { Network } from '../../types';
-import { NetworkStatus } from '../NetworkItem';
 
 export type NetworkDropdownProps = {
   selected?: Network;
@@ -17,7 +16,7 @@ export function NetworkDropdown({ selected, onPress }: NetworkDropdownProps) {
       onPress={() => onPress?.(selected!)}
       aria-label="Selected Network"
     >
-      {selected && <NetworkStatus network={selected} />}
+      {/* {selected && <NetworkStatus network={selected} />} */}
       {selected?.name}
     </Button>
   );

@@ -4,7 +4,7 @@ import { Dropdown, Flex, Icon, Text } from '@fuel-ui/react';
 import { useEffect, useState } from 'react';
 
 import type { Network } from '~/systems/Network';
-import { NetworkStatus, NetworkItem } from '~/systems/Network';
+import { NetworkItem } from '~/systems/Network';
 
 export type NetworkSelectorProps = {
   selected: Network;
@@ -41,7 +41,7 @@ export function NetworkSelector({ selected, networks, onSelectNetwork }: Network
         >
           {networks.map((network) => (
             <Dropdown.MenuItem key={network.id} textValue={network.name}>
-              <NetworkStatus network={network} />
+              {/* <NetworkStatus network={network} /> */}
               {network.name}
             </Dropdown.MenuItem>
           ))}

@@ -6,11 +6,11 @@ import { forwardRef } from 'react';
 import type { Network } from '../../types';
 import { RemoveNetworkDialog } from '../RemoveNetworkDialog/RemoveNetworkDialog';
 
-export function NetworkStatus({ network }: { network: Network }) {
+export function NetworkStatus({ network: _network }: { network: Network }) {
   return (
     <Text
       css={{
-        color: network.isOnline ? '$accent11' : '$gray8',
+        // color: network.isOnline ? '$accent11' : '$gray8',
         fontSize: '8px',
       }}
     >
@@ -62,7 +62,7 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
         data-active={network.isSelected}
         {...(showActions && { rightEl: actions })}
       >
-        <NetworkStatus network={network} />
+        {/* <NetworkStatus network={network} /> */}
         <Text>{network.name}</Text>
       </CardList.Item>
     );
