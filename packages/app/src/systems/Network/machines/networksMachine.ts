@@ -133,7 +133,7 @@ export const networksMachine = createMachine(
             },
             {
               actions: ['notifyUpdateAccounts', 'redirectToHome'],
-              target: 'idle',
+              target: 'fetchingNetworks',
             },
           ],
         },
@@ -189,7 +189,7 @@ export const networksMachine = createMachine(
             },
             {
               actions: ['notifyUpdateAccounts', 'redirectToHome'],
-              target: 'idle',
+              target: 'fetchingNetworks',
             },
           ],
         },

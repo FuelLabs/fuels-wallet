@@ -1,4 +1,4 @@
-import { render, screen, testA11y, waitFor } from '@fuel-ui/test-utils';
+import { fireEvent, render, screen, testA11y } from '@fuel-ui/test-utils';
 
 import { NetworkSelector } from './NetworkSelector';
 
@@ -37,13 +37,11 @@ describe('NetworkSelector', () => {
       wrapper: TestWrapper,
     });
 
-    await waitFor(async () => {
-      const selector = screen.getByTestId('fuel_network-item');
-      await user.click(selector);
-      const item = screen.getByText(NOT_SELECTED.name);
-      expect(item).toBeInTheDocument();
-      await user.click(item);
-      expect(handler).toBeCalledWith(NOT_SELECTED);
-    });
+    const selector = await screen.findByTestId('fuel_network-item');
+    await user.click(selector);
+    const item = screen.getByText(NOT_SELECTED.name);
+    expect(item).toBeInTheDocument();
+    fireEvent.click(item);
+    expect(handler).toBeCalledWith(NOT_SELECTED);
   });
 });
