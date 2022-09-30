@@ -44,8 +44,8 @@ export function TopBar({ onBack }: TopBarProps) {
         ) : (
           <>
             <FuelLogo size={36} />
-            {isLoading && <Spinner aria-label="Spinner" />}
             {networks && <NetworkDropdown selected={selectedNetwork} onPress={handlers.goToList} />}
+            {isLoading && <Spinner aria-label="Spinner" />}
           </>
         )}
       </Flex>
