@@ -1,1 +1,1 @@
-export * from "./CreatePassword";
+export * from './CreatePassword';

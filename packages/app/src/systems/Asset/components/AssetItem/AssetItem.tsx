@@ -1,13 +1,13 @@
-import { cssObj } from "@fuel-ui/css";
-import { Avatar, CardList, Flex, Heading, Text } from "@fuel-ui/react";
-import type { CoinQuantity } from "fuels";
-import type { FC } from "react";
+import { cssObj } from '@fuel-ui/css';
+import { Avatar, CardList, Flex, Heading, Text } from '@fuel-ui/react';
+import type { CoinQuantity } from 'fuels';
+import type { FC } from 'react';
 
-import { useAsset } from "../../hooks/useAsset";
+import { useAsset } from '../../hooks/useAsset';
 
-import { AssetItemLoader } from "./AssetItemLoader";
+import { AssetItemLoader } from './AssetItemLoader';
 
-import { formatUnits } from "~/systems/Core";
+import { formatUnits } from '~/systems/Core';
 
 export type AssetItemProps = {
   asset: CoinQuantity;
@@ -21,16 +21,13 @@ export const AssetItem: AssetItemComponent = ({ asset }) => {
   const { symbol, name, imageUrl } = useAsset(asset.assetId);
 
   const rightEl = (
-    <Text css={{ fontSize: "$sm", fontWeight: "$semibold" }}>
+    <Text css={{ fontSize: '$sm', fontWeight: '$semibold' }}>
       {formatUnits(asset.amount)} {symbol}
     </Text>
   );
 
   return (
-    <CardList.Item
-      rightEl={rightEl}
-      css={{ alignItems: "center", py: "$2", px: "$3" }}
-    >
+    <CardList.Item rightEl={rightEl} css={{ alignItems: 'center', py: '$2', px: '$3' }}>
       <Avatar name={name} src={imageUrl} css={{ height: 36, width: 36 }} />
       <Flex direction="column">
         <Heading as="h6" css={styles.assetName}>
@@ -47,10 +44,10 @@ AssetItem.Loader = AssetItemLoader;
 const styles = {
   assetName: cssObj({
     margin: 0,
-    fontSize: "$sm",
+    fontSize: '$sm',
   }),
   assetSymbol: cssObj({
-    textSize: "sm",
-    fontWeight: "$semibold",
+    textSize: 'sm',
+    fontWeight: '$semibold',
   }),
 };

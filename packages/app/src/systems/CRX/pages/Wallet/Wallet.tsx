@@ -1,12 +1,12 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-import { welcomeLink } from "../../config";
-import { openTab } from "../../utils";
+import { welcomeLink } from '../../config';
+import { openTab } from '../../utils';
 
-import { routes } from "./routes";
+import { routes } from './routes';
 
-import { useIsLogged } from "~/systems/Account";
-import { Providers } from "~/systems/Core";
+import { useIsLogged } from '~/systems/Account';
+import { Providers } from '~/systems/Core';
 
 export function WalletPage() {
   const isLoggedIn = useIsLogged();

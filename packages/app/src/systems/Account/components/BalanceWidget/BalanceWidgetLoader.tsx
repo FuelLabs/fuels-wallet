@@ -1,8 +1,8 @@
-import { darkColors } from "@fuel-ui/css";
-import type { IContentLoaderProps } from "react-content-loader";
-import ContentLoader from "react-content-loader";
+import { darkColors } from '@fuel-ui/css';
+import type { IContentLoaderProps } from 'react-content-loader';
+import ContentLoader from 'react-content-loader';
 
-import { BalanceWidgetWrapper } from "./BalanceWidget";
+import { BalanceWidgetWrapper } from './BalanceWidget';
 
 export const BalanceWidgetLoader = (props: IContentLoaderProps) => (
   <BalanceWidgetWrapper>

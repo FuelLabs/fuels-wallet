@@ -1,16 +1,10 @@
-import { ThemeProvider } from "@fuel-ui/react";
-import type { ReactNode } from "react";
-
-import { GlobalMachinesProvider } from "./GlobalMachines";
+import { ThemeProvider } from '@fuel-ui/react';
+import type { ReactNode } from 'react';
 
 type ProvidersProps = {
   children: ReactNode;
 };
 
 export function Providers({ children }: ProvidersProps) {
-  return (
-    <ThemeProvider>
-      <GlobalMachinesProvider>{children}</GlobalMachinesProvider>
-    </ThemeProvider>
-  );
+  return <ThemeProvider>{children}</ThemeProvider>;
 }

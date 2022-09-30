@@ -1,12 +1,12 @@
-import type { Story } from "@storybook/react";
+import type { Story } from '@storybook/react';
 
-import { WelcomeScreen } from "./WelcomeScreen";
+import { WelcomeScreen } from './WelcomeScreen';
 
 export default {
   component: WelcomeScreen,
-  title: "SignUp/Pages/1. WelcomeScreen",
+  title: 'SignUp/Pages/1. WelcomeScreen',
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
 };
 

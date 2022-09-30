@@ -1,14 +1,14 @@
-import { Outlet, Route } from "react-router-dom";
+import { Outlet, Route } from 'react-router-dom';
 
-import { FaucetDialog } from "../Faucet";
+import { PrivateRoute } from '../Core/components/PrivateRoute';
+import { Pages } from '../Core/types';
+import { FaucetDialog } from '../Faucet/components';
 
-import { Home } from "./pages";
-
-import { Pages, PrivateRoute } from "~/systems/Core";
+import { Home } from './pages';
 
 export const homeRoutes = (
   <Route
-    path={Pages.wallet}
+    path={Pages.home()}
     element={
       <PrivateRoute>
         <Home />
@@ -16,6 +16,6 @@ export const homeRoutes = (
       </PrivateRoute>
     }
   >
-    <Route path={Pages.faucet} element={<FaucetDialog />} />
+    <Route path={Pages.faucet()} element={<FaucetDialog />} />
   </Route>
 );

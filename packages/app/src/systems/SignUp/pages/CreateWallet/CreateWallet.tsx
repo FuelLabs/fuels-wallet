@@ -1,15 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-import {
-  CreatePassword,
-  MnemonicRead,
-  MnemonicWrite,
-  WalletCreated,
-} from "../../components";
-import { useSignUp } from "../../hooks";
-import { SignUpType } from "../../machines/signUpMachine";
+import { CreatePassword, MnemonicRead, MnemonicWrite, WalletCreated } from '../../components';
+import { useSignUp } from '../../hooks';
+import { SignUpType } from '../../machines/signUpMachine';
 
-import { Layout } from "~/systems/Core";
+import { Layout, Pages } from '~/systems/Core';
 
 export function CreateWallet() {
   const { state, handlers, context } = useSignUp(SignUpType.create);
@@ -17,30 +12,30 @@ export function CreateWallet() {
 
   return (
     <Layout title="Create Wallet" isPublic>
-      {state.matches("showingMnemonic") && (
+      {state.matches('showingMnemonic') && (
         <MnemonicRead
           words={context.data?.mnemonic}
           onNext={handlers.next}
-          onCancel={() => navigate("/sign-up")}
+          onCancel={() => navigate(Pages.signUp())}
         />
       )}
-      {state.matches("waitingMnemonic") && (
+      {state.matches('waitingMnemonic') && (
         <MnemonicWrite
           error={handlers.checkMnemonicError()}
           canProceed={context.isConfirmed}
           onFilled={handlers.confirmMnemonic}
           onNext={handlers.next}
-          onCancel={() => navigate("/sign-up")}
+          onCancel={() => navigate(Pages.signUp())}
         />
       )}
-      {(state.matches("addingPassword") || state.hasTag("loading")) && (
+      {(state.matches('addingPassword') || state.hasTag('loading')) && (
         <CreatePassword
           onSubmit={handlers.createManager}
-          onCancel={() => navigate("/sign-up")}
-          isLoading={state.hasTag("loading")}
+          onCancel={() => navigate(Pages.signUp())}
+          isLoading={state.hasTag('loading')}
         />
       )}
-      {state.matches("done") && <WalletCreated account={context.account} />}
+      {state.matches('done') && <WalletCreated account={context.account} />}
     </Layout>
   );
 }

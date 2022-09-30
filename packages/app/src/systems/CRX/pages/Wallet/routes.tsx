@@ -1,7 +1,7 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { Pages } from "~/systems/Core";
-import { homeRoutes } from "~/systems/Home";
+import { Pages } from '~/systems/Core';
+import { homeRoutes } from '~/systems/Home';
 
 export const routes = (
   <Routes>

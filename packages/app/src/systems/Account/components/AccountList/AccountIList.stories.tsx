@@ -1,29 +1,29 @@
-import { Box } from "@fuel-ui/react";
+import { Box } from '@fuel-ui/react';
 
-import type { AccountListProps } from "./AccountList";
-import { AccountList } from "./AccountList";
+import type { AccountListProps } from './AccountList';
+import { AccountList } from './AccountList';
 
 export default {
   component: AccountList,
-  title: "Account/Components/AccountList",
+  title: 'Account/Components/AccountList',
 };
 
 const ACCOUNTS = [
   {
-    name: "Account 1",
-    address: "fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef",
-    publicKey: "0x00",
+    name: 'Account 1',
+    address: 'fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef',
+    publicKey: '0x00',
   },
   {
-    name: "Account 2",
-    address: "fuel0x2c8e117bcfba11c76d7db2d43464b1d20934734r",
-    publicKey: "0x00",
+    name: 'Account 2',
+    address: 'fuel0x2c8e117bcfba11c76d7db2d43464b1d20934734r',
+    publicKey: '0x00',
   },
   {
-    name: "Account 3",
-    address: "fuel0x2c8e117bcfba11c76d7db2d43464b1d209347123",
+    name: 'Account 3',
+    address: 'fuel0x2c8e117bcfba11c76d7db2d43464b1d209347123',
     isHidden: true,
-    publicKey: "0x00",
+    publicKey: '0x00',
   },
 ];
 

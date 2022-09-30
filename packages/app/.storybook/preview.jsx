@@ -1,14 +1,14 @@
-import { ThemeProvider } from "@fuel-ui/react";
-import { addDecorator } from "@storybook/react";
-import { themes } from "@storybook/theming";
-import { initializeWorker, mswDecorator } from "msw-storybook-addon";
-import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from '@fuel-ui/react';
+import { addDecorator } from '@storybook/react';
+import { themes } from '@storybook/theming';
+import { initializeWorker, mswDecorator } from 'msw-storybook-addon';
+import { withRouter } from 'storybook-addon-react-router-v6';
 
-import theme from "./theme";
+import theme from './theme';
 
 export const parameters = {
   actions: {
-    argTypesRegex: "^on[A-Z].*",
+    argTypesRegex: '^on[A-Z].*',
   },
   controls: {
     matchers: {
@@ -37,12 +37,11 @@ export const parameters = {
 };
 
 export const decorators = [
+  withRouter,
   (Story) => (
-    <BrowserRouter>
-      <ThemeProvider>
-        <Story />
-      </ThemeProvider>
-    </BrowserRouter>
+    <ThemeProvider>
+      <Story />
+    </ThemeProvider>
   ),
 ];
 

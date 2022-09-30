@@ -1,2 +1,2 @@
-export * from "./AssetsTitle";
-export * from "./HomeActions";
+export * from './AssetsTitle';
+export * from './HomeActions';

@@ -1,18 +1,18 @@
-import { Mnemonic as FuelMnemonic } from "@fuel-ts/mnemonic";
-import { Box } from "@fuel-ui/react";
+import { Mnemonic as FuelMnemonic } from '@fuel-ts/mnemonic';
+import { Box } from '@fuel-ui/react';
 
-import { getWordsFromValue } from "../../utils";
+import { getWordsFromValue } from '../../utils';
 
-import type { MnemonicProps } from "./Mnemonic";
-import { Mnemonic } from "./Mnemonic";
+import type { MnemonicProps } from './Mnemonic';
+import { Mnemonic } from './Mnemonic';
 
-import { MNEMONIC_SIZE } from "~/config";
+import { MNEMONIC_SIZE } from '~/config';
 
 export default {
   component: Mnemonic,
-  title: "Core/Components/Mnemonic",
+  title: 'Core/Components/Mnemonic',
   parameters: {
-    Mnemonic: "fullscreen",
+    Mnemonic: 'fullscreen',
   },
 };
 
@@ -25,7 +25,7 @@ export const Read = (args: MnemonicProps) => (
 );
 
 Read.parameters = {
-  layout: "centered",
+  layout: 'centered',
 };
 
 export const Write = (args: MnemonicProps) => (
@@ -35,5 +35,5 @@ export const Write = (args: MnemonicProps) => (
 );
 
 Write.parameters = {
-  layout: "centered",
+  layout: 'centered',
 };

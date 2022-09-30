@@ -1,2 +1,1 @@
-export * from "./Providers";
-export * from "./GlobalMachines";
+export * from './Providers';

@@ -1,1 +1,1 @@
-export * from "./VisibilityButton";
+export * from './VisibilityButton';
