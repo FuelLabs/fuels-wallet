@@ -5,8 +5,7 @@ import { openTab } from '../../utils';
 
 import { routes } from './routes';
 
-import { useIsLogged } from '~/systems/Account';
-import { Providers } from '~/systems/Core';
+import { Providers, useIsLogged } from '~/systems/Core';
 
 export function WalletPage() {
   const isLoggedIn = useIsLogged();
