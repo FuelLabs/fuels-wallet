@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Header } from '../../components';
 
-import { Layout } from '~/systems/Core';
+import { Layout, Pages } from '~/systems/Core';
 
 export function WelcomeScreen() {
   const navigate = useNavigate();
@@ -17,14 +17,14 @@ export function WelcomeScreen() {
           subtitle="on the fastest modular execution layer"
         />
         <Flex direction="column" gap="$2">
-          <Button size="sm" color="accent" onPress={() => navigate('../create-wallet')}>
+          <Button size="sm" color="accent" onPress={() => navigate(Pages.signUpCreateWallet())}>
             Create a Wallet
           </Button>
           <Button
             size="sm"
             color="gray"
             variant="ghost"
-            onPress={() => navigate('../recover-wallet')}
+            onPress={() => navigate(Pages.signUpRecoverWallet())}
           >
             I already have a wallet
           </Button>

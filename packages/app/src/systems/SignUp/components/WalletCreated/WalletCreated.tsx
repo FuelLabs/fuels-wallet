@@ -6,7 +6,7 @@ import { Header } from '../Header';
 import type { Account } from '~/systems/Account';
 import { AccountItem } from '~/systems/Account';
 import type { Maybe } from '~/systems/Core';
-import { ImageLoader, relativeUrl } from '~/systems/Core';
+import { Pages, ImageLoader, relativeUrl } from '~/systems/Core';
 
 export type WalletCreatedProps = {
   account?: Maybe<Account>;
@@ -16,7 +16,7 @@ export function WalletCreated({ account }: WalletCreatedProps) {
   const navigate = useNavigate();
 
   function handleGoToWallet() {
-    navigate('/wallet');
+    navigate(Pages.home());
   }
 
   return (

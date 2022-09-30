@@ -4,7 +4,7 @@ import { CreatePassword, MnemonicRead, MnemonicWrite, WalletCreated } from '../.
 import { useSignUp } from '../../hooks';
 import { SignUpType } from '../../machines/signUpMachine';
 
-import { Layout } from '~/systems/Core';
+import { Layout, Pages } from '~/systems/Core';
 
 export function CreateWallet() {
   const { state, handlers, context } = useSignUp(SignUpType.create);
@@ -16,7 +16,7 @@ export function CreateWallet() {
         <MnemonicRead
           words={context.data?.mnemonic}
           onNext={handlers.next}
-          onCancel={() => navigate('/sign-up')}
+          onCancel={() => navigate(Pages.signUp())}
         />
       )}
       {state.matches('waitingMnemonic') && (
@@ -25,13 +25,13 @@ export function CreateWallet() {
           canProceed={context.isConfirmed}
           onFilled={handlers.confirmMnemonic}
           onNext={handlers.next}
-          onCancel={() => navigate('/sign-up')}
+          onCancel={() => navigate(Pages.signUp())}
         />
       )}
       {(state.matches('addingPassword') || state.hasTag('loading')) && (
         <CreatePassword
           onSubmit={handlers.createManager}
-          onCancel={() => navigate('/sign-up')}
+          onCancel={() => navigate(Pages.signUp())}
           isLoading={state.hasTag('loading')}
         />
       )}

@@ -6,7 +6,7 @@ import { CreatePassword, MnemonicWrite, SignUpFailed, WalletCreated } from '../.
 import { useSignUp } from '../../hooks';
 import { SignUpType } from '../../machines/signUpMachine';
 
-import { Layout } from '~/systems/Core';
+import { Layout, Pages } from '~/systems/Core';
 
 export function RecoverWallet() {
   const { state, handlers, context } = useSignUp(SignUpType.recover);
@@ -26,13 +26,13 @@ export function RecoverWallet() {
           canProceed={context.isConfirmed}
           onFilled={handlers.confirmMnemonic}
           onNext={handlers.next}
-          onCancel={() => navigate('/sign-up')}
+          onCancel={() => navigate(Pages.signUp())}
         />
       )}
       {(state.matches('addingPassword') || state.hasTag('loading')) && (
         <CreatePassword
           onSubmit={handlers.createManager}
-          onCancel={() => navigate('/sign-up')}
+          onCancel={() => navigate(Pages.signUp())}
           isLoading={state.hasTag('loading')}
         />
       )}

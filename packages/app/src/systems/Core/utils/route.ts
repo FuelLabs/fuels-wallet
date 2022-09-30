@@ -37,7 +37,7 @@ export class Route<P extends string> {
  */
 export function route<P extends string = any>(path: string) {
   const item = new Route<P>(path);
-  return function parse(params?: Record<P, any>, query?: Record<string, any>): any {
+  return function parse(params?: Record<P, any>, query?: Record<string, any>): string {
     const split = item.path.match(/[^/]+/g);
     const val = split?.map((str) => params?.[str.replace(':', '')] || str).join('/');
     const url = `/${val ?? ''}`;
