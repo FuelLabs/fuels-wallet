@@ -22,7 +22,10 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
         height={116}
         alt="Showing your Mnemonic"
       />
-      <Header title="Write down your Recover Phrase" subtitle="You will need it on the next step" />
+      <Header
+        title="Write down your Recover Phrase"
+        subtitle="You will need it on the next step"
+      />
       <Box css={{ width: 400 }}>
         <Mnemonic value={words} type="read" />
       </Box>
@@ -35,10 +38,18 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
             setChecked(e as boolean);
           }}
         />
-        <Form.Label htmlFor="confirmSaved">I saved my passphrase in some secure place</Form.Label>
+        <Form.Label htmlFor="confirmSaved">
+          I saved my passphrase in some secure place
+        </Form.Label>
       </Form.Control>
       <Flex gap="$4">
-        <Button size="sm" color="gray" variant="ghost" css={{ width: 130 }} onPress={onCancel}>
+        <Button
+          size="sm"
+          color="gray"
+          variant="ghost"
+          css={{ width: 130 }}
+          onPress={onCancel}
+        >
           Cancel
         </Button>
         <Button

@@ -2,7 +2,12 @@ import { cssObj } from '@fuel-ui/css';
 import { Alert } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
-import { CreatePassword, MnemonicWrite, SignUpFailed, WalletCreated } from '../../components';
+import {
+  CreatePassword,
+  MnemonicWrite,
+  SignUpFailed,
+  WalletCreated,
+} from '../../components';
 import { useSignUp } from '../../hooks';
 import { SignUpType } from '../../machines/signUpMachine';
 
@@ -16,8 +21,8 @@ export function RecoverWallet() {
     <Layout title="Recovering Wallet" isPublic>
       <Alert status="warning" css={styles.alert}>
         <Alert.Description>
-          This wallet is current on development, and your phrase is not safely stored, DO NOT IMPORT
-          YOUR CURRENT SEED PHRASE.
+          This wallet is current on development, and your phrase is not safely
+          stored, DO NOT IMPORT YOUR CURRENT SEED PHRASE.
         </Alert.Description>
       </Alert>
       {state.matches('waitingMnemonic') && (

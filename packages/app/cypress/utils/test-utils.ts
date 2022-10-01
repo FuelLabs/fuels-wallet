@@ -21,7 +21,9 @@ export const mockAccount = (account?: Account) => {
   };
 
   cy.getIndexedDb('@db').createObjectStore('vaults');
-  cy.getIndexedDb('@db').createObjectStore('accounts').createItem(accountData.address, accountData);
+  cy.getIndexedDb('@db')
+    .createObjectStore('accounts')
+    .createItem(accountData.address, accountData);
   cy.getIndexedDb('@db')
     .createObjectStore('networks', { keyPath: 'id' })
     .as('networks')

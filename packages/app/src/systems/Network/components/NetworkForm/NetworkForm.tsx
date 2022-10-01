@@ -33,10 +33,18 @@ export function NetworkForm({ form }: NetworkFormProps) {
         name="url"
         isRequired
         isInvalid={Boolean(formState.errors?.url)}
-        label={<HelperIcon message="The provider URL of your network">URL</HelperIcon>}
+        label={
+          <HelperIcon message="The provider URL of your network">
+            URL
+          </HelperIcon>
+        }
         render={({ field }) => (
           <Input>
-            <Input.Field {...field} aria-label="Network URL" placeholder="URL of your network..." />
+            <Input.Field
+              {...field}
+              aria-label="Network URL"
+              placeholder="URL of your network..."
+            />
           </Input>
         )}
       />

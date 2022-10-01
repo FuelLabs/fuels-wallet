@@ -17,7 +17,11 @@ export function Home() {
           <BalanceWidget account={account} isLoading={isLoading} />
           <HomeActions isDisabled={isLoading} />
           <AssetsTitle />
-          <AssetList assets={account?.balances} isLoading={isLoading} isDevnet />
+          <AssetList
+            assets={account?.balances}
+            isLoading={isLoading}
+            isDevnet
+          />
         </Flex>
       </Layout.Content>
     </Layout>

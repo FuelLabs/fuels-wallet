@@ -1,5 +1,12 @@
 import { css } from '@fuel-ui/css';
-import { FuelLogo, Flex, Icon, IconButton, Spinner, Text } from '@fuel-ui/react';
+import {
+  FuelLogo,
+  Flex,
+  Icon,
+  IconButton,
+  Spinner,
+  Text,
+} from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -38,13 +45,20 @@ export function TopBar({ onBack }: TopBarProps) {
               css={{ px: '0 !important' }}
               onPress={() => (onBack ? onBack() : navigate(-1))}
             />
-            <Text css={{ fontWeight: '$semibold', color: '$gray12' }}>{title}</Text>
+            <Text css={{ fontWeight: '$semibold', color: '$gray12' }}>
+              {title}
+            </Text>
             {isLoading && <Spinner />}
           </>
         ) : (
           <>
             <FuelLogo size={36} />
-            {networks && <NetworkDropdown selected={selectedNetwork} onPress={handlers.goToList} />}
+            {networks && (
+              <NetworkDropdown
+                selected={selectedNetwork}
+                onPress={handlers.goToList}
+              />
+            )}
             {isLoading && <Spinner aria-label="Spinner" />}
           </>
         )}

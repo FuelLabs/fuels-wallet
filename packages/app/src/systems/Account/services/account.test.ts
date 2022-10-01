@@ -56,8 +56,8 @@ describe('AccountService', () => {
   });
 
   it('should convert a map of accounts into an array', async () => {
-    expect(AccountService.fromMap({ [MOCK_ACCOUNT.address]: MOCK_ACCOUNT })).toEqual([
-      MOCK_ACCOUNT,
-    ]);
+    expect(
+      AccountService.fromMap({ [MOCK_ACCOUNT.address]: MOCK_ACCOUNT })
+    ).toEqual([MOCK_ACCOUNT]);
   });
 });

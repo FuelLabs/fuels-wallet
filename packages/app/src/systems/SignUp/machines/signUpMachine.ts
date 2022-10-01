@@ -143,12 +143,17 @@ export const signUpMachine = createMachine(
         },
         isConfirmed: (ctx, ev) => {
           if (ctx.type === SignUpType.recover) return true;
-          return getPhraseFromValue(ev.data.words) === getPhraseFromValue(ctx.data?.mnemonic);
+          return (
+            getPhraseFromValue(ev.data.words) ===
+            getPhraseFromValue(ctx.data?.mnemonic)
+          );
         },
       }),
       assignMnemonicWhenRecovering: assign({
         data: (ctx, ev) => {
-          return ctx.type === SignUpType.recover ? { mnemonic: ev.data.words } : ctx.data;
+          return ctx.type === SignUpType.recover
+            ? { mnemonic: ev.data.words }
+            : ctx.data;
         },
       }),
       assignPassword: assign({

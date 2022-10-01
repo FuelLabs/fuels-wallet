@@ -9,7 +9,9 @@ const onCancelHandler = jest.fn();
 
 type UserPatch = ReturnType<typeof render>['user'];
 
-const Content = () => <CreatePassword onSubmit={onSubmitHandler} onCancel={onCancelHandler} />;
+const Content = () => (
+  <CreatePassword onSubmit={onSubmitHandler} onCancel={onCancelHandler} />
+);
 
 function fillInput(el: HTMLElement, value: string) {
   fireEvent.input(el, { target: { value } });
@@ -51,7 +53,9 @@ describe('CreatePassword', () => {
     const { user } = render(<Content />, { wrapper: TestWrapper });
 
     await fillInputs(user, '12345678', '12345679');
-    await waitFor(() => expect(screen.getByLabelText('Error message')).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByLabelText('Error message')).toBeInTheDocument()
+    );
   });
 
   /**

@@ -205,7 +205,8 @@ export const networksMachine = createMachine(
         networks: (_, ev) => ev.data,
       }),
       assignNetwork: assign({
-        network: (ctx, ev) => (ctx.networkId ? ev.data.find((n) => n.id === ctx.networkId) : null),
+        network: (ctx, ev) =>
+          ctx.networkId ? ev.data.find((n) => n.id === ctx.networkId) : null,
       }),
       notifyUpdateAccounts: () => {
         store.send('account', { type: 'UPDATE_ACCOUNT' });
@@ -240,7 +241,10 @@ export const networksMachine = createMachine(
           }
         },
       }),
-      updateNetwork: FetchMachine.create<NetworkInputs['updateNetwork'], Network>({
+      updateNetwork: FetchMachine.create<
+        NetworkInputs['updateNetwork'],
+        Network
+      >({
         showError: true,
         async fetch({ input }) {
           if (!input?.data) {
@@ -253,7 +257,10 @@ export const networksMachine = createMachine(
           return network;
         },
       }),
-      removeNetwork: FetchMachine.create<NetworkInputs['removeNetwork'], string>({
+      removeNetwork: FetchMachine.create<
+        NetworkInputs['removeNetwork'],
+        string
+      >({
         showError: true,
         async fetch({ input }) {
           if (!input?.id) {
@@ -266,7 +273,10 @@ export const networksMachine = createMachine(
           return networkId;
         },
       }),
-      selectNetwork: FetchMachine.create<NetworkInputs['selectNetwork'], Network>({
+      selectNetwork: FetchMachine.create<
+        NetworkInputs['selectNetwork'],
+        Network
+      >({
         async fetch({ input }) {
           if (!input?.id) {
             throw new Error('Invalid network id');

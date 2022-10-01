@@ -8,7 +8,9 @@ import type { ControlledFieldProps } from './ControlledField';
 import { ControlledField } from './ControlledField';
 
 const onSubmitHandler = jest.fn();
-const schema = yup.object({ title: yup.string().min(2).required('Title is required') }).required();
+const schema = yup
+  .object({ title: yup.string().min(2).required('Title is required') })
+  .required();
 
 const Content = (props: Partial<ControlledFieldProps>) => {
   const { control, handleSubmit, watch } = useForm({

@@ -12,11 +12,17 @@ export type NetworkSelectorProps = {
   onSelectNetwork?: (network: Network) => void;
 };
 
-export function NetworkSelector({ selected, networks, onSelectNetwork }: NetworkSelectorProps) {
+export function NetworkSelector({
+  selected,
+  networks,
+  onSelectNetwork,
+}: NetworkSelectorProps) {
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
-    const selector = document.querySelector("[data-testid='fuel_network-item']");
+    const selector = document.querySelector(
+      "[data-testid='fuel_network-item']"
+    );
     selector && setWidth(selector?.clientWidth);
   }, []);
 

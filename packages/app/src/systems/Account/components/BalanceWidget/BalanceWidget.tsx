@@ -1,5 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Copyable, Flex, Icon, IconButton, Text } from '@fuel-ui/react';
+import {
+  Avatar,
+  Box,
+  Copyable,
+  Flex,
+  Icon,
+  IconButton,
+  Text,
+} from '@fuel-ui/react';
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 
@@ -29,7 +37,11 @@ export type BalanceWidgetProps = {
   isLoading?: boolean;
 };
 
-export function BalanceWidget({ account, isHidden: _isHidden, isLoading }: BalanceWidgetProps) {
+export function BalanceWidget({
+  account,
+  isHidden: _isHidden,
+  isLoading,
+}: BalanceWidgetProps) {
   const [isHidden, setIsHidden] = useState(_isHidden);
 
   useEffect(() => {
@@ -52,13 +64,20 @@ export function BalanceWidget({ account, isHidden: _isHidden, isLoading }: Balan
         />
       </Flex>
       <Flex justify="space-between" css={{ flex: '1 0' }}>
-        <Flex direction="column" css={{ mt: '$2', ml: '$4', alignSelf: 'center' }}>
+        <Flex
+          direction="column"
+          css={{ mt: '$2', ml: '$4', alignSelf: 'center' }}
+        >
           <Copyable value={account.address}>
             <Text fontSize="sm" color="gray11" css={{ fontWeight: 'bold' }}>
               {shortAddress(account.address)}
             </Text>
           </Copyable>
-          <Text color={isHidden ? 'gray10' : 'gray12'} fontSize="2xl" css={{ fontWeight: 'bold' }}>
+          <Text
+            color={isHidden ? 'gray10' : 'gray12'}
+            fontSize="2xl"
+            css={{ fontWeight: 'bold' }}
+          >
             <>
               {account.balanceSymbol || '$'}&nbsp;
               {isHidden ? '•••••' : formatUnits(account.balance)}
@@ -95,13 +114,15 @@ const backgroundCss = {
 const styles = {
   backgroundFront: cssObj({
     ...backgroundCss,
-    background: 'linear-gradient(180deg, #1F1F1F 0%, rgba(28, 30, 31, 0.45) 41.15%)',
+    background:
+      'linear-gradient(180deg, #1F1F1F 0%, rgba(28, 30, 31, 0.45) 41.15%)',
     top: 3,
     left: 3,
   }),
   backgroundShadow: cssObj({
     ...backgroundCss,
-    background: 'linear-gradient(180deg, #0F0F0F -9.3%, rgba(18, 20, 20, 0.45) 35.67%)',
+    background:
+      'linear-gradient(180deg, #0F0F0F -9.3%, rgba(18, 20, 20, 0.45) 35.67%)',
     top: 10,
     left: 7,
   }),

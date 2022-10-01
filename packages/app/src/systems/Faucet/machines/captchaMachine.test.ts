@@ -1,7 +1,10 @@
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
-import type { CaptchaMachineService, CaptchaMachineState } from './captchaMachine';
+import type {
+  CaptchaMachineService,
+  CaptchaMachineState,
+} from './captchaMachine';
 import { captchaMachine } from './captchaMachine';
 
 describe('captchaMachine', () => {

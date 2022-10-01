@@ -44,7 +44,9 @@ describe('NetworkItem', () => {
     const removeBtn = screen.getByLabelText('Remove');
     await user.click(removeBtn);
 
-    expect(await screen.findByText('Are you absolutely sure?')).toBeInTheDocument();
+    expect(
+      await screen.findByText('Are you absolutely sure?')
+    ).toBeInTheDocument();
 
     const confirmBtn = screen.getByText('Confirm');
     await user.click(confirmBtn);
