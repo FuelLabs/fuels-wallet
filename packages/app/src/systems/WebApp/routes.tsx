@@ -13,7 +13,7 @@ export const routes = (
       {homeRoutes}
       {networkRoutes}
       {signUpRoutes}
-      <Route path="*" element={<Navigate to={Pages.home()} />} />
+      <Route path="*" element={<Navigate to={Pages.wallet()} />} />
     </Route>
   </Routes>
 );

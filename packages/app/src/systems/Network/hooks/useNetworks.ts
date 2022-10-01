@@ -42,7 +42,7 @@ export function useNetworks(opts: NetworkInitialInput) {
         navigate(Pages.networks());
       },
       redirectToHome() {
-        navigate(Pages.home());
+        navigate(Pages.wallet());
       },
     },
   });

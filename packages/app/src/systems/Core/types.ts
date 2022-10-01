@@ -6,7 +6,7 @@ export type Maybe<T> = T | null | undefined;
 
 export const Pages = {
   index: route('/'),
-  home: route('/wallet'),
+  wallet: route('/wallet'),
   faucet: route('/wallet/faucet'),
   signUp: route('/sign-up'),
   signUpWelcome: route('/sign-up/welcome'),

@@ -8,7 +8,7 @@ import { Home } from './pages';
 
 export const homeRoutes = (
   <Route
-    path={Pages.home()}
+    path={Pages.wallet()}
     element={
       <PrivateRoute>
         <Home />

@@ -7,7 +7,7 @@ export const routes = (
   <Routes>
     <Route>
       {homeRoutes}
-      <Route path="*" element={<Navigate to={Pages.wallet} />} />
+      <Route path="*" element={<Navigate to={Pages.wallet()} />} />
     </Route>
   </Routes>
 );

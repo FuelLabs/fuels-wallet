@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import qs from 'query-string';
 
+import { joinUrl } from './joinUrl';
+
 export class Route<P extends string> {
   path!: string;
   constructor(path: string) {
@@ -40,7 +42,7 @@ export function route<P extends string = any>(path: string) {
   return function parse(params?: Record<P, any>, query?: Record<string, any>): string {
     const split = item.path.match(/[^/]+/g);
     const val = split?.map((str) => params?.[str.replace(':', '')] || str).join('/');
-    const url = `/${val ?? ''}`;
+    const url = joinUrl(`/${val ?? ''}`);
     return qs.stringifyUrl({ url, query });
   };
 }
