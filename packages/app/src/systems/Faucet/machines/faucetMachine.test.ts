@@ -23,7 +23,11 @@ describe('faucetMachine', () => {
   let state: FaucetMachineState;
 
   beforeEach(() => {
-    service = interpret(faucetMachine.withContext({})).start();
+    service = interpret(
+      faucetMachine.withContext({}).withConfig({
+        actions: { sendFaucetSuccess() {} },
+      })
+    ).start();
     state = service.getSnapshot();
   });
 

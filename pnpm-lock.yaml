@@ -18068,8 +18068,8 @@ packages:
     resolution: {integrity: sha512-lVrM/bNdhVX2OgBFNa2YJ9Lxj7kPzylieHd3TNjuGE0Re9JB7joL5VUKOVH1kdNNJTgGPpT8hmwIAPLaSyEVFQ==}
     dev: false
 
-  /sucrase/3.25.0:
-    resolution: {integrity: sha512-WxTtwEYXSmZArPGStGBicyRsg5TBEFhT5b7N+tF+zauImP0Acy+CoUK0/byJ8JNPK/5lbpWIVuFagI4+0l85QQ==}
+  /sucrase/3.27.0:
+    resolution: {integrity: sha512-IjpEeFzOWCGrB/e2DnPawkFajW6ONFFgs+lQT1+Ts5Z5ZM9gPnxpDh0q8tu7HVLt6IfRiUTbSsjfhqjHOP/cwQ==}
     engines: {node: '>=8'}
     hasBin: true
     dependencies:
@@ -18624,7 +18624,7 @@ packages:
       resolve-from: 5.0.0
       rollup: 2.78.1
       source-map: 0.8.0-beta.0
-      sucrase: 3.25.0
+      sucrase: 3.27.0
       tree-kill: 1.2.2
     transitivePeerDependencies:
       - supports-color

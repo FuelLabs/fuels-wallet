@@ -4,7 +4,7 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { IS_LOGGED_KEY, MNEMONIC_SIZE } from '~/config';
-import { Services, store } from '~/store';
+import { store } from '~/store';
 import type { Account } from '~/systems/Account';
 import { AccountService } from '~/systems/Account';
 import { getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
@@ -168,7 +168,7 @@ export const signUpMachine = createMachine(
       }),
       sendAccountCreated: () => {
         localStorage.setItem(IS_LOGGED_KEY, 'true');
-        store.send(Services.account, { type: 'UPDATE_ACCOUNT' });
+        store.updateAccounts();
       },
     },
     guards: {

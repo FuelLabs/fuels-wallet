@@ -208,7 +208,7 @@ export const networksMachine = createMachine(
         network: (ctx, ev) => (ctx.networkId ? ev.data.find((n) => n.id === ctx.networkId) : null),
       }),
       notifyUpdateAccounts: () => {
-        store.send('account', { type: 'UPDATE_ACCOUNT' });
+        store.updateAccounts();
       },
     },
     services: {
