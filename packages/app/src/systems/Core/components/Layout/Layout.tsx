@@ -91,7 +91,7 @@ const styles = {
     background: 'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',
   }),
   content: cssObj({
-    py: '$6',
+    paddingTop: '$1',
     px: '$6',
     flex: 1,
   }),
