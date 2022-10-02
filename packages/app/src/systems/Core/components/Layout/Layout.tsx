@@ -59,10 +59,16 @@ export const Layout: LayoutComponent = ({
         <title>{titleText}</title>
       </Helmet>
       <Flex as="main" css={styles.root({ isPublic })}>
-        {isPublic ? <>{children}</> : <Flex css={styles.wrapper}>{children}</Flex>}
+        {isPublic ? (
+          <>{children}</>
+        ) : (
+          <Flex css={styles.wrapper}>{children}</Flex>
+        )}
       </Flex>
       {import.meta.env.NODE_ENV === 'test' && (
-        <Box css={{ visibility: 'hidden' }}>{isLoading ? 'is loading' : 'is loaded'}</Box>
+        <Box css={{ visibility: 'hidden' }}>
+          {isLoading ? 'is loading' : 'is loaded'}
+        </Box>
       )}
     </ctx.Provider>
   );
@@ -80,7 +86,8 @@ const styles = {
       flexDirection: 'column',
       minH: '100vh',
       ...(isPublic && {
-        background: 'linear-gradient(197.05deg, #0E221B 0%, #071614 22.2%, #0C0E0D 40.7%);',
+        background:
+          'linear-gradient(197.05deg, #0E221B 0%, #071614 22.2%, #0C0E0D 40.7%);',
       }),
     }),
   wrapper: cssObj({
@@ -88,7 +95,8 @@ const styles = {
     width: '350px',
     height: '615px',
     borderRadius: '$md',
-    background: 'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',
+    background:
+      'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',
   }),
   content: cssObj({
     paddingTop: '$1',

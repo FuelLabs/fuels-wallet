@@ -28,7 +28,11 @@ describe('MnemonicRead', () => {
 
   beforeEach(() => {
     const res = render(
-      <MnemonicRead words={WORDS} onNext={onNextHandler} onCancel={onCancelHandler} />
+      <MnemonicRead
+        words={WORDS}
+        onNext={onNextHandler}
+        onCancel={onCancelHandler}
+      />
     );
 
     user = res.user;

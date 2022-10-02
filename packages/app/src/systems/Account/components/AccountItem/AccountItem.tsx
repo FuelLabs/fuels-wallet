@@ -1,4 +1,12 @@
-import { Avatar, CardList, Flex, Heading, Icon, IconButton, Text } from '@fuel-ui/react';
+import {
+  Avatar,
+  CardList,
+  Flex,
+  Heading,
+  Icon,
+  IconButton,
+  Text,
+} from '@fuel-ui/react';
 
 import type { Account } from '~/systems/Account';
 import { shortAddress } from '~/systems/Core';
@@ -9,7 +17,11 @@ export type AccountItemProps = {
   isHidden?: boolean;
 };
 
-export function AccountItem({ account, isSelected, isHidden }: AccountItemProps) {
+export function AccountItem({
+  account,
+  isSelected,
+  isHidden,
+}: AccountItemProps) {
   if (isHidden) return null;
   /**
    * TODO: add DropdownMenu here with actions after it's done on @fuel-ui

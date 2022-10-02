@@ -41,7 +41,10 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
           />
         )}
         {onRemove && (
-          <RemoveNetworkDialog network={network} onConfirm={() => onRemove?.(network)}>
+          <RemoveNetworkDialog
+            network={network}
+            onConfirm={() => onRemove?.(network)}
+          >
             <IconButton
               variant="link"
               icon={<Icon icon={Icon.is('Trash')} />}

@@ -18,7 +18,11 @@ type AssetListComponent = FC<AssetListProps> & {
   Loading: typeof AssetListLoading;
 };
 
-export const AssetList: AssetListComponent = ({ assets, isLoading, isDevnet }) => {
+export const AssetList: AssetListComponent = ({
+  assets,
+  isLoading,
+  isDevnet,
+}) => {
   if (isLoading) return <AssetList.Loading items={4} />;
 
   const isEmpty = !assets || !assets.length;

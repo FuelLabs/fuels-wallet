@@ -10,7 +10,9 @@ import { ControlledField, ImageLoader, relativeUrl } from '~/systems/Core';
 const schema = yup
   .object({
     password: yup.string().min(8).required('Password is required'),
-    confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref('password'), null], 'Passwords must match'),
     accepted: yup.bool().oneOf([true]).required(),
   })
   .required();
@@ -27,7 +29,11 @@ export type CreatePasswordProps = {
   onCancel: () => void;
 };
 
-export function CreatePassword({ isLoading = false, onCancel, onSubmit }: CreatePasswordProps) {
+export function CreatePassword({
+  isLoading = false,
+  onCancel,
+  onSubmit,
+}: CreatePasswordProps) {
   const form = useForm<CreatePasswordValues>({
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
@@ -47,7 +53,11 @@ export function CreatePassword({ isLoading = false, onCancel, onSubmit }: Create
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack gap="$6" align="center">
-        <ImageLoader src={relativeUrl('/signup-illustration-2.svg')} width={129} height={116} />
+        <ImageLoader
+          src={relativeUrl('/signup-illustration-2.svg')}
+          width={129}
+          height={116}
+        />
         <Header
           title="Create your password"
           subtitle="Add a safe password for access your wallet"
@@ -100,7 +110,12 @@ export function CreatePassword({ isLoading = false, onCancel, onSubmit }: Create
           )}
         />
         <Flex gap="$4">
-          <Button color="gray" variant="ghost" css={{ width: 130 }} onPress={onCancel}>
+          <Button
+            color="gray"
+            variant="ghost"
+            css={{ width: 130 }}
+            onPress={onCancel}
+          >
             Cancel
           </Button>
           <Button

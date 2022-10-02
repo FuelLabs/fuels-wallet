@@ -1,6 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 
-import { CreatePassword, MnemonicRead, MnemonicWrite, WalletCreated } from '../../components';
+import {
+  CreatePassword,
+  MnemonicRead,
+  MnemonicWrite,
+  WalletCreated,
+} from '../../components';
 import { useSignUp } from '../../hooks';
 import { SignUpType } from '../../machines/signUpMachine';
 

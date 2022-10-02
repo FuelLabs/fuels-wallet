@@ -26,7 +26,11 @@ export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
         /**
          * TODO: need to add right faucet icon on @fuel-ui
          */
-        <Button size="sm" leftIcon={Icon.is('Coffee')} onPress={() => navigate(Pages.faucet())}>
+        <Button
+          size="sm"
+          leftIcon={Icon.is('Coffee')}
+          onPress={() => navigate(Pages.faucet())}
+        >
           Faucet
         </Button>
       )}

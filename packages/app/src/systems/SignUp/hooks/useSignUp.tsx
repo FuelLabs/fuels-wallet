@@ -28,7 +28,11 @@ export function useSignUp(type: SignUpType) {
   }
 
   function checkMnemonicError() {
-    return ctx.attempts > 0 && !ctx.isConfirmed && "Sorry your mnemonic phrase doesn't match";
+    return (
+      ctx.attempts > 0 &&
+      !ctx.isConfirmed &&
+      "Sorry your mnemonic phrase doesn't match"
+    );
   }
 
   function createManager({ password }: CreatePasswordValues) {

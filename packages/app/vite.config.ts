@@ -37,8 +37,14 @@ export default defineConfig({
      * We need this to get right build script and use PNPM link correctly
      */
     alias: {
-      '@fuel-ui/react': resolve(__dirname, './node_modules/@fuel-ui/react/dist/index.mjs'),
-      '@fuel-ui/css': resolve(__dirname, './node_modules/@fuel-ui/css/dist/index.mjs'),
+      '@fuel-ui/react': resolve(
+        __dirname,
+        './node_modules/@fuel-ui/react/dist/index.mjs'
+      ),
+      '@fuel-ui/css': resolve(
+        __dirname,
+        './node_modules/@fuel-ui/css/dist/index.mjs'
+      ),
       process: 'process/browser',
       stream: 'stream-browserify',
       zlib: 'browserify-zlib',

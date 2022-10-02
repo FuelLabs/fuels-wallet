@@ -41,7 +41,8 @@ describe('faucetMachine', () => {
   it('should faucet and go to last stage', async () => {
     const mock = {
       data: {
-        address: 'fuel1rfmv8mz274rd0ge6yhdpkr6vx04s0q635fmts4mpzzp47z96342s8c7yg9',
+        address:
+          'fuel1rfmv8mz274rd0ge6yhdpkr6vx04s0q635fmts4mpzzp47z96342s8c7yg9',
         captcha: '',
       },
     };

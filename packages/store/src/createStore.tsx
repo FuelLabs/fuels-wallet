@@ -4,7 +4,14 @@ import { useSyncExternalStore } from 'react';
 import type { AnyState, AnyStateMachine, StateFrom } from 'xstate';
 import { interpret } from 'xstate';
 
-import type { StateObj, ValueOf, Service, MachinesObj, RestParams, Opts } from './types';
+import type {
+  StateObj,
+  ValueOf,
+  Service,
+  MachinesObj,
+  RestParams,
+  Opts,
+} from './types';
 import useConstant from './useConstant';
 
 interface IStore<T extends MachinesObj> {
@@ -71,7 +78,10 @@ export class Store<T extends MachinesObj> implements IStore<T> {
     });
   }
 
-  public setService<S extends Service<T>>(service: S, ...[opts = {}]: RestParams<S['machine']>) {
+  public setService<S extends Service<T>>(
+    service: S,
+    ...[opts = {}]: RestParams<S['machine']>
+  ) {
     useConstant(() => {
       const key = service.__storeKey;
       const machine = this.machines[key];
@@ -88,7 +98,8 @@ export class Store<T extends MachinesObj> implements IStore<T> {
     machine: M,
     opts: Opts<M> = {}
   ): Service<T> {
-    const { context, guards, actions, services, delays, ...interpreterOps } = opts;
+    const { context, guards, actions, services, delays, ...interpreterOps } =
+      opts;
 
     const machineConfig = {
       context,
@@ -138,4 +149,6 @@ export function createStore<T extends MachinesObj>(machines: T) {
 type CreateStore = ReturnType<typeof createStore<any>>;
 type StoreMachine<T extends CreateStore> = T['__store']['__TMachines'];
 export type StateKeys<T extends CreateStore> = keyof StoreMachine<T>;
-export type StateOf<K extends StateKeys<T>, T extends CreateStore> = StateFrom<StoreMachine<T>[K]>;
+export type StateOf<K extends StateKeys<T>, T extends CreateStore> = StateFrom<
+  StoreMachine<T>[K]
+>;

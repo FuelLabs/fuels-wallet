@@ -43,7 +43,11 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
         animate={{ height: isOpened ? '100%' : '24px' }}
       >
         <Flex gap="$3">
-          <Icon icon={item.icon} css={{ color: '$gray8' }} className="main-icon" />
+          <Icon
+            icon={item.icon}
+            css={{ color: '$gray8' }}
+            className="main-icon"
+          />
           <Box css={{ flex: 1 }}>{item.label}</Box>
           {item.submenu && (
             <IconMotion
@@ -61,7 +65,11 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -30 }}
               >
-                <RootMenu css={styles.submenu} onAction={handleAction} aria-label="Submenu">
+                <RootMenu
+                  css={styles.submenu}
+                  onAction={handleAction}
+                  aria-label="Submenu"
+                >
                   {item.submenu.map((subItem) => (
                     <RootMenu.Item key={subItem.key} textValue={subItem.label}>
                       <Icon icon={subItem.icon} css={{ color: '$gray8' }} />
@@ -96,7 +104,11 @@ export function Menu({ items }: MenuProps) {
   }
 
   return (
-    <RootMenu onAction={handleAction} css={styles.root} aria-label="Sidebar Menu">
+    <RootMenu
+      onAction={handleAction}
+      css={styles.root}
+      aria-label="Sidebar Menu"
+    >
       {items.map((item) => (
         <RootMenu.Item key={item.key} textValue={item.label}>
           <MenuItemContent item={item} isOpened={opened === item.key} />

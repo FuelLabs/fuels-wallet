@@ -11,7 +11,13 @@ export const HomeActions = ({ isDisabled }: HomeActionsProps) => {
       <Button isDisabled={isDisabled} css={styles.button}>
         Send
       </Button>
-      <Button size="sm" isDisabled={isDisabled} variant="outlined" color="gray" css={styles.button}>
+      <Button
+        size="sm"
+        isDisabled={isDisabled}
+        variant="outlined"
+        color="gray"
+        css={styles.button}
+      >
         Receive
       </Button>
     </Flex>

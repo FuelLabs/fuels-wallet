@@ -1,5 +1,8 @@
-export const { VITE_FUEL_PROVIDER_URL, VITE_FAUCET_RECAPTCHA_KEY, VITE_FUEL_FAUCET_URL } =
-  import.meta.env;
+export const {
+  VITE_FUEL_PROVIDER_URL,
+  VITE_FAUCET_RECAPTCHA_KEY,
+  VITE_FUEL_FAUCET_URL,
+} = import.meta.env;
 
 export const DECIMAL_UNITS = 9;
 export const FORMAT_LANGUAGE = 'es';

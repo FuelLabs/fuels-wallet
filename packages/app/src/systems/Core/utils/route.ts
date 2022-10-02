@@ -9,7 +9,10 @@ export class Route<P extends string> {
 
   public get params(): Record<P, any> {
     const matches = Array.from(this.path.matchAll(/:([^/]+)/g));
-    return matches.reduce((obj, match) => ({ ...obj, [match[1]]: null }), {}) as Record<P, any>;
+    return matches.reduce(
+      (obj, match) => ({ ...obj, [match[1]]: null }),
+      {}
+    ) as Record<P, any>;
   }
 }
 
@@ -37,9 +40,14 @@ export class Route<P extends string> {
  */
 export function route<P extends string = any>(path: string) {
   const item = new Route<P>(path);
-  return function parse(params?: Record<P, any>, query?: Record<string, any>): string {
+  return function parse(
+    params?: Record<P, any>,
+    query?: Record<string, any>
+  ): string {
     const split = item.path.match(/[^/]+/g);
-    const val = split?.map((str) => params?.[str.replace(':', '')] || str).join('/');
+    const val = split
+      ?.map((str) => params?.[str.replace(':', '')] || str)
+      .join('/');
     const url = `/${val ?? ''}`;
     return qs.stringifyUrl({ url, query });
   };

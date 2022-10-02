@@ -1,6 +1,7 @@
 import { clearMocks } from 'cypress/utils';
 
-const WORDS = 'iron hammer spoon shield ahead long banana foam deposit laundry promote captain';
+const WORDS =
+  'iron hammer spoon shield ahead long banana foam deposit laundry promote captain';
 
 describe('RecoverWallet', () => {
   beforeEach(() => {

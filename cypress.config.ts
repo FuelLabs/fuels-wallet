@@ -15,7 +15,9 @@ export default defineConfig({
     setupNodeEvents(on) {
       on(
         'file:preprocessor',
-        vitePreprocessor(path.resolve(__dirname, './packages/app/vite.config.ts'))
+        vitePreprocessor(
+          path.resolve(__dirname, './packages/app/vite.config.ts')
+        )
       );
     },
   },

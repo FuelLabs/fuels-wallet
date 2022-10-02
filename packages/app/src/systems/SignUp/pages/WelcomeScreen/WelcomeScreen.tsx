@@ -17,7 +17,11 @@ export function WelcomeScreen() {
           subtitle="on the fastest modular execution layer"
         />
         <Flex direction="column" gap="$2">
-          <Button size="sm" color="accent" onPress={() => navigate(Pages.signUpCreateWallet())}>
+          <Button
+            size="sm"
+            color="accent"
+            onPress={() => navigate(Pages.signUpCreateWallet())}
+          >
             Create a Wallet
           </Button>
           <Button
