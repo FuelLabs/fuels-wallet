@@ -1,6 +1,5 @@
 import { Outlet, Route } from 'react-router-dom';
 
-import { PrivateRoute } from '../Core/components/PrivateRoute';
 import { Pages } from '../Core/types';
 import { FaucetDialog } from '../Faucet/components';
 
@@ -10,10 +9,10 @@ export const homeRoutes = (
   <Route
     path={Pages.wallet()}
     element={
-      <PrivateRoute>
+      <>
         <Home />
         <Outlet />
-      </PrivateRoute>
+      </>
     }
   >
     <Route path={Pages.faucet()} element={<FaucetDialog />} />

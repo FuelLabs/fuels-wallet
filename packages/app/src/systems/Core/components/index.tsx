@@ -5,5 +5,6 @@ export * from './Mnemonic';
 export * from './PrivateRoute';
 export * from './Providers';
 export * from './PublicRoute';
+export * from './RouteGuard';
 export * from './TestWrapper';
 export * from './VisibilityButton';

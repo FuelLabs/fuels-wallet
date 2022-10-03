@@ -14,7 +14,7 @@ if (IS_DEVELOPMENT) {
   });
   chrome.contextMenus.onClicked.addListener((data) => {
     if (data.menuItemId === menuId) {
-      openTab(welcomeLink);
+      openTab(welcomeLink());
     }
   });
 }

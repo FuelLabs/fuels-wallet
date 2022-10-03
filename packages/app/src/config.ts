@@ -1,3 +1,5 @@
+import { CRXPages } from './systems/Core/types';
+
 export const {
   VITE_FUEL_PROVIDER_URL,
   VITE_FAUCET_RECAPTCHA_KEY,
@@ -17,3 +19,4 @@ export const TAB_BAR_HEIGHT = 30;
 export const IS_CRX = VITE_CRX === 'true';
 export const IS_LOGGED_KEY = 'fuel__isLogged';
 export const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
+export const IS_CRX_POPUP = IS_CRX && globalThis.location.pathname === CRXPages.popup;

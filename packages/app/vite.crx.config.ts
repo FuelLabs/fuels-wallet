@@ -16,7 +16,7 @@ export default defineConfig({
     outDir: 'dist-crx',
     rollupOptions: {
       input: {
-        signup: 'signup.html',
+        index: 'index.html',
       },
     },
   },
