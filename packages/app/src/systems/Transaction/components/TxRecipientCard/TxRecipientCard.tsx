@@ -16,7 +16,10 @@ type TxRecipientCardComponent = FC<TxRecipientCardProps> & {
   Loader: typeof TxRecipientCardLoader;
 };
 
-export const TxRecipientCard: TxRecipientCardComponent = ({ account, contract }) => {
+export const TxRecipientCard: TxRecipientCardComponent = ({
+  account,
+  contract,
+}) => {
   const address = account ? account.address : contract?.address;
   return (
     <Card css={styles.root}>

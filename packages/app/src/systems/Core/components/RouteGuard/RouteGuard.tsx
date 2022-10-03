@@ -17,7 +17,11 @@ export const guards = {
  * Protects a page, let user access only
  * if is logged-in.
  */
-export function RouteGuard({ children, reject, cond = guards.isLoggedIn }: RouteGuardProps) {
+export function RouteGuard({
+  children,
+  reject,
+  cond = guards.isLoggedIn,
+}: RouteGuardProps) {
   const isLogged = useIsLogged();
 
   if (!cond(isLogged)) {

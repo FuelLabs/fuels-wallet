@@ -9,7 +9,10 @@ type PublicRouteProps = {
   children?: ReactNode;
 };
 
-export const PublicRoute = ({ redirect = Pages.wallet(), children }: PublicRouteProps) => (
+export const PublicRoute = ({
+  redirect = Pages.wallet(),
+  children,
+}: PublicRouteProps) => (
   <RouteGuard cond={guards.isNotLoggedIn} reject={<Navigate to={redirect} />}>
     {children || <Outlet />}
   </RouteGuard>

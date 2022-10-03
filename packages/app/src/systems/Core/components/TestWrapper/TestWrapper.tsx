@@ -22,7 +22,9 @@ export function TestWrapper({ children, initialEntries }: TestWrapperProps) {
     </>
   );
   if (initialEntries) {
-    return <MemoryRouter initialEntries={initialEntries}>{content}</MemoryRouter>;
+    return (
+      <MemoryRouter initialEntries={initialEntries}>{content}</MemoryRouter>
+    );
   }
   return (
     <BrowserRouter>

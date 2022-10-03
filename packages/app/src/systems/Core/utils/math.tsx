@@ -11,9 +11,17 @@ import { BN, bn } from 'fuels';
 
 import type { Maybe } from '../types';
 
-import { DECIMAL_UNITS, MIN_FRACTION_DIGITS, MAX_FRACTION_DIGITS, FORMAT_LANGUAGE } from '~/config';
+import {
+  DECIMAL_UNITS,
+  MIN_FRACTION_DIGITS,
+  MAX_FRACTION_DIGITS,
+  FORMAT_LANGUAGE,
+} from '~/config';
 
-export function safeBigInt(value?: Maybe<BigNumberish> | bigint, defaultValue: number = 0) {
+export function safeBigInt(
+  value?: Maybe<BigNumberish> | bigint,
+  defaultValue: number = 0
+) {
   return value || bn(defaultValue);
 }
 

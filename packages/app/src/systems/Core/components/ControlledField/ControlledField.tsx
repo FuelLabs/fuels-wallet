@@ -62,7 +62,9 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
           };
           return (
             <Form.Control {...controlProps}>
-              {label && labelSide === 'left' && <Form.Label htmlFor={id}>{label}</Form.Label>}
+              {label && labelSide === 'left' && (
+                <Form.Label htmlFor={id}>{label}</Form.Label>
+              )}
               {render({
                 ...props,
                 field: {
@@ -71,7 +73,9 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
                   ref: mergeRefs(props.field.ref, ref) as any,
                 },
               })}
-              {label && labelSide === 'right' && <Form.Label htmlFor={id}>{label}</Form.Label>}
+              {label && labelSide === 'right' && (
+                <Form.Label htmlFor={id}>{label}</Form.Label>
+              )}
               {!hideError && props.fieldState.error && (
                 <Form.ErrorMessage aria-label="Error message">
                   {props.fieldState.error.message}

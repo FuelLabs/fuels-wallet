@@ -22,7 +22,10 @@ let context: BrowserContext;
 test.beforeAll(async () => {
   context = await chromium.launchPersistentContext('', {
     headless: false,
-    args: [`--disable-extensions-except=${pathToExtension}`, `--load-extension=${pathToExtension}`],
+    args: [
+      `--disable-extensions-except=${pathToExtension}`,
+      `--load-extension=${pathToExtension}`,
+    ],
   });
 });
 

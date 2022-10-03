@@ -7,7 +7,12 @@ export type VisibilityButtonProps = Omit<IconButtonProps, 'icon'> & {
   onShow?: () => void;
 };
 
-export function VisibilityButton({ isHidden, onHide, onShow, ...props }: VisibilityButtonProps) {
+export function VisibilityButton({
+  isHidden,
+  onHide,
+  onShow,
+  ...props
+}: VisibilityButtonProps) {
   return (
     <IconButton
       {...props}

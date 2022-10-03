@@ -15,7 +15,10 @@ export const PrivateRoute = ({
   reject,
   children,
 }: PrivateRouteProps) => (
-  <RouteGuard cond={guards.isLoggedIn} reject={reject || <Navigate to={redirect} />}>
+  <RouteGuard
+    cond={guards.isLoggedIn}
+    reject={reject || <Navigate to={redirect} />}
+  >
     {children || <Outlet />}
   </RouteGuard>
 );

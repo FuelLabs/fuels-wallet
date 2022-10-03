@@ -22,7 +22,10 @@ export function FaucetDialog() {
   }, [captcha.isLoaded]);
 
   return (
-    <Dialog open={true} onOpenChange={(open) => !open && navigate(Pages.wallet())}>
+    <Dialog
+      open={true}
+      onOpenChange={(open) => !open && navigate(Pages.wallet())}
+    >
       <Dialog.Content css={{ maxWidth: 334 }}>
         <Dialog.Heading>
           <Flex css={{ alignItems: 'center' }}>
@@ -62,7 +65,9 @@ export function FaucetDialog() {
               {captcha.isFailed && (
                 <>
                   <Text color="red10">Sorry, something went wrong here</Text>
-                  <Text color="red10">Please reload this page and try again.</Text>
+                  <Text color="red10">
+                    Please reload this page and try again.
+                  </Text>
                 </>
               )}
             </Box>

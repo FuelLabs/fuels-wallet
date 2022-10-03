@@ -24,7 +24,10 @@ const config = {
   env: (config) => ({ ...config, ...getPublicEnvs() }),
   webpackFinal: async (config) => {
     if (config.build) {
-      config.base = join(process.env.BASE_URL || config.base || '', 'storybook');
+      config.base = join(
+        process.env.BASE_URL || config.base || '',
+        'storybook'
+      );
     }
     config.resolve.alias = {
       ...config.resolve.alias,

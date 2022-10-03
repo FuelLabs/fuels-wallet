@@ -10,7 +10,9 @@ const onFilledHandler = jest.fn();
 const onNextHandler = jest.fn();
 const onCancelHandler = jest.fn();
 
-const MNEMONIC = getPhraseFromValue(FuelMnemonic.generate(MNEMONIC_SIZE)) as string;
+const MNEMONIC = getPhraseFromValue(
+  FuelMnemonic.generate(MNEMONIC_SIZE)
+) as string;
 
 describe('MnemonicWrite', () => {
   it('should trigger onFilled after paste', async () => {

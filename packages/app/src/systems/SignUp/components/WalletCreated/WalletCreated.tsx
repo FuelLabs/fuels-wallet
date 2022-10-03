@@ -22,9 +22,16 @@ export function WalletCreated({ account }: WalletCreatedProps) {
   return (
     <Stack gap="$6">
       <Flex justify="center">
-        <ImageLoader src={relativeUrl('/signup-illustration-3.svg')} width={129} height={116} />
+        <ImageLoader
+          src={relativeUrl('/signup-illustration-3.svg')}
+          width={129}
+          height={116}
+        />
       </Flex>
-      <Header title="Wallet created succesfully" subtitle="These are your Fuel wallet details" />
+      <Header
+        title="Wallet created succesfully"
+        subtitle="These are your Fuel wallet details"
+      />
       {account && <AccountItem account={account} />}
       <Button size="sm" color="accent" onPress={handleGoToWallet}>
         Go to wallet

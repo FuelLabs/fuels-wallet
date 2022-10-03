@@ -26,7 +26,11 @@ export type MnemonicProps = {
   onFilled?: (val: string[]) => void;
 };
 
-export function Mnemonic({ value: initialValue, type, onFilled }: MnemonicProps) {
+export function Mnemonic({
+  value: initialValue,
+  type,
+  onFilled,
+}: MnemonicProps) {
   const [value, setValue] = useState<string[]>(() => {
     if (Array.isArray(initialValue) && initialValue.length > 0) {
       return fillArray(BLANK_ARR, initialValue);
@@ -51,7 +55,9 @@ export function Mnemonic({ value: initialValue, type, onFilled }: MnemonicProps)
   function handleChange(idx: number) {
     return (val: string) => {
       setValue((oldState) =>
-        oldState.map((word, i) => (i === idx ? val : word)).map(checkMoreThanOneWord)
+        oldState
+          .map((word, i) => (i === idx ? val : word))
+          .map(checkMoreThanOneWord)
       );
     };
   }
