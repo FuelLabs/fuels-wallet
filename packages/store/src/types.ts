@@ -64,25 +64,26 @@ export type Opts<T extends AnyStateMachine> = Partial<InterpreterOptions> &
     >
   >;
 
-export type RestParams<TMachine extends AnyStateMachine> = AreAllImplementationsAssumedToBeProvided<
-  TMachine['__TResolvedTypesMeta']
-> extends false
-  ? [
-      options: InterpreterOptions &
-        UseMachineOptions<TMachine['__TContext'], TMachine['__TEvent']> &
-        InternalMachineOptions<
-          TMachine['__TContext'],
-          TMachine['__TEvent'],
-          TMachine['__TResolvedTypesMeta'],
-          true
-        >
-    ]
-  : [
-      options?: InterpreterOptions &
-        UseMachineOptions<TMachine['__TContext'], TMachine['__TEvent']> &
-        InternalMachineOptions<
-          TMachine['__TContext'],
-          TMachine['__TEvent'],
-          TMachine['__TResolvedTypesMeta']
-        >
-    ];
+export type RestParams<TMachine extends AnyStateMachine> =
+  AreAllImplementationsAssumedToBeProvided<
+    TMachine['__TResolvedTypesMeta']
+  > extends false
+    ? [
+        options: InterpreterOptions &
+          UseMachineOptions<TMachine['__TContext'], TMachine['__TEvent']> &
+          InternalMachineOptions<
+            TMachine['__TContext'],
+            TMachine['__TEvent'],
+            TMachine['__TResolvedTypesMeta'],
+            true
+          >
+      ]
+    : [
+        options?: InterpreterOptions &
+          UseMachineOptions<TMachine['__TContext'], TMachine['__TEvent']> &
+          InternalMachineOptions<
+            TMachine['__TContext'],
+            TMachine['__TEvent'],
+            TMachine['__TResolvedTypesMeta']
+          >
+      ];

@@ -88,7 +88,9 @@ export class NetworkService {
 
   static selectNetwork(input: NetworkInputs['selectNetwork']) {
     return db.transaction('rw', db.networks, async () => {
-      const selected = await db.networks.filter((i) => Boolean(i.isSelected)).first();
+      const selected = await db.networks
+        .filter((i) => Boolean(i.isSelected))
+        .first();
       if (selected?.id) {
         await NetworkService.updateNetwork({
           id: selected.id,
@@ -104,7 +106,8 @@ export class NetworkService {
   }
 
   static addFirstNetwork() {
-    const isProd = import.meta.env.PROD || import.meta.env.NODE_ENV === 'production';
+    const isProd =
+      import.meta.env.PROD || import.meta.env.NODE_ENV === 'production';
     return NetworkService.addNetwork({
       data: {
         name: isProd ? 'Testnet' : 'Localhost',

@@ -77,7 +77,9 @@ export class AccountService {
     const { account, providerUrl } = input;
     try {
       const balances = await getBalances(providerUrl, account.publicKey);
-      const ethAsset = balances.find(({ assetId }) => assetId === ASSET_LIST[0].assetId);
+      const ethAsset = balances.find(
+        ({ assetId }) => assetId === ASSET_LIST[0].assetId
+      );
       const ethBalance = ethAsset?.amount;
       const nextAccount = await AccountService.setBalance({
         data: {

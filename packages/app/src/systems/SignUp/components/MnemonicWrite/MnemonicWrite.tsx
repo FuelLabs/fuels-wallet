@@ -29,7 +29,11 @@ export function MnemonicWrite({
 
   return (
     <Stack gap="$6" align="center">
-      <ImageLoader src={relativeUrl('/signup-illustration-1.svg')} width={129} height={116} />
+      <ImageLoader
+        src={relativeUrl('/signup-illustration-1.svg')}
+        width={129}
+        height={116}
+      />
       <Header
         title="Write down your Recover Phrase "
         subtitle="You will need it on the next step"
@@ -43,7 +47,13 @@ export function MnemonicWrite({
         <Mnemonic type="write" onFilled={handleFill} />
       </Stack>
       <Flex gap="$4">
-        <Button size="sm" color="gray" variant="ghost" css={{ width: 130 }} onPress={onCancel}>
+        <Button
+          size="sm"
+          color="gray"
+          variant="ghost"
+          css={{ width: 130 }}
+          onPress={onCancel}
+        >
           Cancel
         </Button>
         <Button

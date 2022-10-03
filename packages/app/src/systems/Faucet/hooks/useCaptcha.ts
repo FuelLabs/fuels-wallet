@@ -11,9 +11,12 @@ const selectors = {
   captcha: (state: CaptchaMachineState) => state.context.captcha,
   needToShow: (state: CaptchaMachineState) => !state.matches('hidden'),
   isFailed: (state: CaptchaMachineState) => state.matches('failed'),
-  isLoaded: (state: CaptchaMachineState) => state.matches('loaded') || state.matches('done'),
+  isLoaded: (state: CaptchaMachineState) =>
+    state.matches('loaded') || state.matches('done'),
   isLoading: (state: CaptchaMachineState) =>
-    state.matches('checking') || state.matches('waitingLoad') || state.matches('transitioning'),
+    state.matches('checking') ||
+    state.matches('waitingLoad') ||
+    state.matches('transitioning'),
 };
 
 export function useCaptcha() {

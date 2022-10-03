@@ -10,7 +10,11 @@ type RemoveNetworkDialogProps = {
   onConfirm: () => void;
 };
 
-export function RemoveNetworkDialog({ network, onConfirm, children }: RemoveNetworkDialogProps) {
+export function RemoveNetworkDialog({
+  network,
+  onConfirm,
+  children,
+}: RemoveNetworkDialogProps) {
   const [opened, setOpened] = useState(false);
 
   function handleCancel() {
@@ -28,7 +32,8 @@ export function RemoveNetworkDialog({ network, onConfirm, children }: RemoveNetw
       <AlertDialog.Content>
         <AlertDialog.Heading>Are you absolutely sure?</AlertDialog.Heading>
         <AlertDialog.Description>
-          This action cannot be undone. {network.name} will be permanently deleted.
+          This action cannot be undone. {network.name} will be permanently
+          deleted.
         </AlertDialog.Description>
         <AlertDialog.Footer>
           <AlertDialog.Cancel>

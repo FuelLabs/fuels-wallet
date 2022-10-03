@@ -4,7 +4,15 @@ import { useSyncExternalStore } from 'react';
 import type { AnyState, AnyStateMachine, StateFrom } from 'xstate';
 import { interpret } from 'xstate';
 
-import type { StateObj, Service, MachinesObj, Opts, ValueOf, Events, RestParams } from './types';
+import type {
+  StateObj,
+  Service,
+  MachinesObj,
+  Opts,
+  ValueOf,
+  Events,
+  RestParams,
+} from './types';
 import useConstant from './useConstant';
 
 interface IStore<T extends MachinesObj> {
@@ -68,7 +76,11 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
     });
   }
 
-  public createMachine<M extends AnyStateMachine>(key: keyof T, machine: M, opts: Opts<M> = {}) {
+  public createMachine<M extends AnyStateMachine>(
+    key: keyof T,
+    machine: M,
+    opts: Opts<M> = {}
+  ) {
     const { context, guards, actions, services, delays } = opts;
     const machineConfig = {
       context,
@@ -88,7 +100,11 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
   /**
    * This method was heavilly inspired on @xstate/react
    */
-  public createService<M extends AnyStateMachine>(key: keyof T, machine: M, opts: Opts<M> = {}) {
+  public createService<M extends AnyStateMachine>(
+    key: keyof T,
+    machine: M,
+    opts: Opts<M> = {}
+  ) {
     const { guards, actions, services, delays, ...interpreterOps } = opts;
     if (!machine) return null;
     const service = interpret(machine, interpreterOps);
@@ -116,7 +132,10 @@ export function createStore<T extends MachinesObj, E extends Events>(
     broadcast: _store.broadcast.bind(_store),
     subscribe: _store.subscribe.bind(_store),
     getState: _store.getState.bind(_store),
-    useSelector<K extends keyof T>(key: K, selector: (state: StateFrom<T[K]>) => any) {
+    useSelector<K extends keyof T>(
+      key: K,
+      selector: (state: StateFrom<T[K]>) => any
+    ) {
       const service = this.useService(key);
       return useSelector(service, selector);
     },
@@ -129,7 +148,10 @@ export function createStore<T extends MachinesObj, E extends Events>(
         return service!;
       });
     },
-    useSetMachineConfig<K extends keyof T>(machineKey: K, ...[opts = {}]: RestParams<T[K]>) {
+    useSetMachineConfig<K extends keyof T>(
+      machineKey: K,
+      ...[opts = {}]: RestParams<T[K]>
+    ) {
       useConstant(() => {
         const service = _store.services.get(machineKey) as Service<T>;
         const key = service?.__storeKey;
@@ -143,7 +165,9 @@ export function createStore<T extends MachinesObj, E extends Events>(
   const evts = opts?.events ? opts.events(_store) : ({} as E);
   const methods = Object.entries(evts).reduce((obj, [key, fn]) => {
     if (Object.keys(store).includes(key)) {
-      throw new Error(`You cannot use "${key}" as event, because it's already a store property`);
+      throw new Error(
+        `You cannot use "${key}" as event, because it's already a store property`
+      );
     }
     return { ...obj, [key]: fn };
   }, {} as E);
@@ -156,10 +180,13 @@ export function createStore<T extends MachinesObj, E extends Events>(
   };
 }
 
-export type Store<T extends MachinesObj = any, E extends Events = any> = ReturnType<
-  typeof createStore<T, E>
->;
+export type Store<
+  T extends MachinesObj = any,
+  E extends Events = any
+> = ReturnType<typeof createStore<T, E>>;
 
 type StoreMachine<T extends Store> = T['__store']['__TMachines'];
 export type StateKeys<T extends Store> = keyof StoreMachine<T>;
-export type StateOf<K extends StateKeys<T>, T extends Store> = StateFrom<StoreMachine<T>[K]>;
+export type StateOf<K extends StateKeys<T>, T extends Store> = StateFrom<
+  StoreMachine<T>[K]
+>;

@@ -7,7 +7,10 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     tsconfigRootDir: resolveRoot(),
-    project: [resolveRoot('./tsconfig.eslint.json'), resolveRoot('./**/**/tsconfig.json')],
+    project: [
+      resolveRoot('./tsconfig.eslint.json'),
+      resolveRoot('./**/**/tsconfig.json'),
+    ],
     ecmaVersion: 2020,
     sourceType: 'module',
     ecmaFeatures: {
@@ -48,7 +51,11 @@ module.exports = {
     'import/order': [
       'error',
       {
-        groups: [['builtin', 'external', 'internal'], ['parent'], ['sibling', 'index']],
+        groups: [
+          ['builtin', 'external', 'internal'],
+          ['parent'],
+          ['sibling', 'index'],
+        ],
         'newlines-between': 'always',
         alphabetize: { order: 'asc' },
       },

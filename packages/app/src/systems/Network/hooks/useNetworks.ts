@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import type { NetworkInitialInput, NetworksMachineState } from '../machines/networksMachine';
+import type {
+  NetworkInitialInput,
+  NetworksMachineState,
+} from '../machines/networksMachine';
 import type { Network } from '../types';
 
 import { store, Services } from '~/store';
@@ -28,7 +31,10 @@ export function useNetworks(opts: NetworkInitialInput) {
   const networks = store.useSelector(Services.networks, selectors.networks);
   const network = store.useSelector(Services.networks, selectors.network);
   const isLoading = store.useSelector(Services.networks, selectors.isLoading);
-  const selectedNetwork = store.useSelector(Services.networks, selectors.selectedNetwork);
+  const selectedNetwork = store.useSelector(
+    Services.networks,
+    selectors.selectedNetwork
+  );
 
   store.useSetMachineConfig(Services.networks, {
     actions: {

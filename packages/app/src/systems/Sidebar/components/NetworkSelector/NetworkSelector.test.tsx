@@ -33,9 +33,12 @@ describe('NetworkSelector', () => {
 
   it('should dispatch onSelectNetwork handle', async () => {
     const handler = jest.fn();
-    const { user } = render(<NetworkSelector {...props} onSelectNetwork={handler} />, {
-      wrapper: TestWrapper,
-    });
+    const { user } = render(
+      <NetworkSelector {...props} onSelectNetwork={handler} />,
+      {
+        wrapper: TestWrapper,
+      }
+    );
 
     const selector = await screen.findByTestId('fuel_network-item');
     await user.click(selector);

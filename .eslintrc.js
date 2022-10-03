@@ -8,6 +8,9 @@ module.exports = {
   parserOptions: {
     ...config.parserOptions,
     tsConfigRootDir: resolveRoot(),
-    project: [resolveRoot('./tsconfig.eslint.json'), resolveRoot('./**/**/tsconfig.json')],
+    project: [
+      resolveRoot('./tsconfig.eslint.json'),
+      resolveRoot('./**/**/tsconfig.json'),
+    ],
   },
 };

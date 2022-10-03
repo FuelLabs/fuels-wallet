@@ -2,7 +2,12 @@ import { Button, Focus, Icon } from '@fuel-ui/react';
 
 import { Layout } from '~/systems/Core';
 import type { NetworkFormValues } from '~/systems/Network';
-import { NetworkForm, useNetworks, useNetworkForm, NetworkScreen } from '~/systems/Network';
+import {
+  NetworkForm,
+  useNetworks,
+  useNetworkForm,
+  NetworkScreen,
+} from '~/systems/Network';
 
 export function AddNetwork() {
   const form = useNetworkForm();
