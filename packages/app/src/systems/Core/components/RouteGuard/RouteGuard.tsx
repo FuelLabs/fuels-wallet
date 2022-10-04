@@ -13,10 +13,6 @@ export const guards = {
   isNotLoggedIn: (i: boolean) => !i,
 };
 
-/**
- * Protects a page, let user access only
- * if is logged-in.
- */
 export function RouteGuard({
   children,
   reject,
