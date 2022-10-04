@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { UseMachineOptions } from '@xstate/react/lib/types';
 import type {
   AnyInterpreter,
@@ -13,6 +14,10 @@ import type {
 
 export type ArrayType<T> = T extends (infer Item)[] ? Item[] : T;
 export type ValueOf<T> = T[keyof T];
+
+export type Events = {
+  [K in string]: (...args: any[]) => any;
+};
 
 export type MachinesObj = Record<string, AnyStateMachine>;
 export type ServicesObj = Record<string, AnyInterpreter>;
