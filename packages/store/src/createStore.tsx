@@ -6,11 +6,12 @@ import { interpret } from 'xstate';
 
 import type {
   StateObj,
-  ValueOf,
   Service,
   MachinesObj,
-  RestParams,
   Opts,
+  ValueOf,
+  Events,
+  RestParams,
 } from './types';
 import useConstant from './useConstant';
 
@@ -19,23 +20,20 @@ interface IStore<T extends MachinesObj> {
   __TMachines: T;
 }
 
-export class Store<T extends MachinesObj> implements IStore<T> {
+export class StoreClass<T extends MachinesObj> implements IStore<T> {
   private listeners = new Set<(state: StateObj<T>) => void>();
   readonly services = new Map<keyof T, Service<T>>();
+  public machines = new Map<keyof T, AnyStateMachine>();
   __TMachines = {} as T;
 
   #prevState!: StateObj<T>;
   #currentState!: StateObj<T>;
   #initialState: StateObj<T> = {} as StateObj<T>;
 
-  constructor(readonly machines: T) {
+  constructor(machines: T) {
     Object.entries(machines).forEach(([key, machine]) => {
-      const item = machine?.context ? machine : machine?.withContext({});
-      if (item) {
-        const service = this.#createService(key, item);
-        service.__storeKey = key;
-        this.services.set(key, service);
-      }
+      const item = this.createMachine(key, machine);
+      this.createService(key, item);
     });
   }
 
@@ -78,29 +76,12 @@ export class Store<T extends MachinesObj> implements IStore<T> {
     });
   }
 
-  public setService<S extends Service<T>>(
-    service: S,
-    ...[opts = {}]: RestParams<S['machine']>
-  ) {
-    useConstant(() => {
-      const key = service.__storeKey;
-      const machine = this.machines[key];
-      const newService = this.#createService(key, machine, opts as Opts<any>);
-      this.services.set(key, newService);
-    });
-  }
-
-  /**
-   * This method was heavilly inspired on @xstate/react
-   */
-  #createService<M extends AnyStateMachine>(
+  public createMachine<M extends AnyStateMachine>(
     key: keyof T,
     machine: M,
     opts: Opts<M> = {}
-  ): Service<T> {
-    const { context, guards, actions, services, delays, ...interpreterOps } =
-      opts;
-
+  ) {
+    const { context, guards, actions, services, delays } = opts;
     const machineConfig = {
       context,
       guards,
@@ -108,47 +89,104 @@ export class Store<T extends MachinesObj> implements IStore<T> {
       services,
       delays,
     };
-
-    const machineWithConfig = machine?.withConfig(machineConfig as any, () => ({
+    const newMachine = machine?.withConfig(machineConfig as any, () => ({
       ...machine.context,
       ...context,
     }));
+    this.machines.set(key, newMachine);
+    return newMachine;
+  }
 
-    const service = interpret(machineWithConfig || {}, interpreterOps);
+  /**
+   * This method was heavilly inspired on @xstate/react
+   */
+  public createService<M extends AnyStateMachine>(
+    key: keyof T,
+    machine: M,
+    opts: Opts<M> = {}
+  ) {
+    const { guards, actions, services, delays, ...interpreterOps } = opts;
+    if (!machine) return null;
+    const service = interpret(machine, interpreterOps);
     Object.assign(service.machine.options.actions!, actions);
     Object.assign(service.machine.options.guards!, guards);
     Object.assign(service.machine.options.services!, services);
     Object.assign(service.machine.options.delays!, delays);
     (service as Service<T>).__storeKey = key;
+    this.services.set(key, service as Service<T>);
     return service as Service<T>;
   }
 }
 
-export function createStore<T extends MachinesObj>(machines: T) {
-  const store = new Store<T>(machines);
-  return {
-    __store: store,
-    send: store.send.bind(store),
-    broadcast: store.broadcast.bind(store),
-    subscribe: store.subscribe.bind(store),
-    getState: store.getState.bind(store),
-    setService: store.setService.bind(store),
-    useStoreSelector: useSelector,
-    useStoreService(key: keyof T) {
-      return useSyncExternalStore(store.subscribe.bind(store), () => {
-        const service = store.services.get(key) as Service<T>;
-        if (!service.initialized) {
-          service.start();
+export function createStore<T extends MachinesObj, E extends Events>(
+  machines: T,
+  opts?: { events(store: StoreClass<T>): E }
+) {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const _store = new StoreClass<T>(machines);
+
+  const store = {
+    /** @deprecated */
+    __store: _store,
+    send: _store.send.bind(_store),
+    broadcast: _store.broadcast.bind(_store),
+    subscribe: _store.subscribe.bind(_store),
+    getState: _store.getState.bind(_store),
+    useSelector<K extends keyof T>(
+      key: K,
+      selector: (state: StateFrom<T[K]>) => any
+    ) {
+      const service = this.useService(key);
+      return useSelector(service, selector);
+    },
+    useService(key: keyof T) {
+      return useSyncExternalStore(_store.subscribe.bind(_store), () => {
+        const service = _store.services.get(key) as Service<T>;
+        if (!service?.initialized) {
+          service?.start();
         }
-        return service;
+        return service!;
+      });
+    },
+    useSetMachineConfig<K extends keyof T>(
+      machineKey: K,
+      ...[opts = {}]: RestParams<T[K]>
+    ) {
+      useConstant(() => {
+        const service = _store.services.get(machineKey) as Service<T>;
+        const key = service?.__storeKey;
+        const machine = _store.machines.get(key);
+        const newMachine = _store.createMachine(key, machine!, opts as any);
+        _store.createService(key, newMachine, opts as any);
       });
     },
   };
+
+  const evts = opts?.events ? opts.events(_store) : ({} as E);
+  const methods = Object.entries(evts).reduce((obj, [key, fn]) => {
+    if (Object.keys(store).includes(key)) {
+      throw new Error(
+        `You cannot use "${key}" as event, because it's already a store property`
+      );
+    }
+    return { ...obj, [key]: fn };
+  }, {} as E);
+
+  return {
+    ...store,
+    ...methods,
+  } as typeof store & {
+    [K in keyof E]: E[K];
+  };
 }
 
-type CreateStore = ReturnType<typeof createStore<any>>;
-type StoreMachine<T extends CreateStore> = T['__store']['__TMachines'];
-export type StateKeys<T extends CreateStore> = keyof StoreMachine<T>;
-export type StateOf<K extends StateKeys<T>, T extends CreateStore> = StateFrom<
+export type Store<
+  T extends MachinesObj = any,
+  E extends Events = any
+> = ReturnType<typeof createStore<T, E>>;
+
+type StoreMachine<T extends Store> = T['__store']['__TMachines'];
+export type StateKeys<T extends Store> = keyof StoreMachine<T>;
+export type StateOf<K extends StateKeys<T>, T extends Store> = StateFrom<
   StoreMachine<T>[K]
 >;

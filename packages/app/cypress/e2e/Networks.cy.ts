@@ -46,6 +46,7 @@ describe('Networks', () => {
     cy.getByAriaLabel('Selected Network').should('include.text', 'Local');
     cy.visit('/networks');
     cy.contains('Another').click();
+    cy.visit('/networks');
     cy.get(ITEM_SELECTOR).eq(1).should('have.attr', 'data-active', 'true');
     cy.visit('/wallet');
     cy.getByAriaLabel('Selected Network').should('include.text', 'Another');
