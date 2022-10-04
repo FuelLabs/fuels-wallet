@@ -3,7 +3,7 @@ import { defineManifest } from '@crxjs/vite-plugin';
 export default defineManifest({
   manifest_version: 3,
   name: 'Fuel Wallet',
-  version: '1.0.0',
+  version: '0.0.1',
   icons: {
     '16': 'icons/fuel-logo-16.png',
     '19': 'icons/fuel-logo-19.png',

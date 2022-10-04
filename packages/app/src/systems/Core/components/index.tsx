@@ -8,3 +8,4 @@ export * from './PublicRoute';
 export * from './RouteGuard';
 export * from './TestWrapper';
 export * from './VisibilityButton';
+export * from './RouterProvider';
