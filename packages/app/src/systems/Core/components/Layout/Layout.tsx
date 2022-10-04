@@ -8,6 +8,8 @@ import { Helmet } from 'react-helmet';
 import { BottomBar } from './BottomBar';
 import { TopBar } from './TopBar';
 
+import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
+
 type Context = {
   isLoading?: boolean;
   isHome?: boolean;
@@ -85,6 +87,7 @@ const styles = {
       justifyContent: 'center',
       flexDirection: 'column',
       minH: '100vh',
+      width: IS_CRX_POPUP ? WALLET_WIDTH : '100vw',
       ...(isPublic && {
         background:
           'linear-gradient(197.05deg, #0E221B 0%, #071614 22.2%, #0C0E0D 40.7%);',
@@ -92,8 +95,8 @@ const styles = {
     }),
   wrapper: cssObj({
     flexDirection: 'column',
-    width: '350px',
-    height: '615px',
+    width: WALLET_WIDTH,
+    height: WALLET_HEIGHT,
     borderRadius: '$md',
     background:
       'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',

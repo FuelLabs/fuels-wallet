@@ -1,18 +1,24 @@
 import type { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 
-import { useIsLogged } from '../../hooks';
+import { Pages } from '../../types';
+import { guards, RouteGuard } from '../RouteGuard';
 
 type PrivateRouteProps = {
-  children: ReactNode;
+  redirect?: string;
+  reject?: ReactNode;
+  children?: ReactNode;
 };
 
-export function PrivateRoute({ children }: PrivateRouteProps) {
-  const isLogged = useIsLogged();
-
-  if (!isLogged) {
-    return <Navigate to="/sign-up" replace />;
-  }
-
-  return <>{children}</>;
-}
+export const PrivateRoute = ({
+  redirect = Pages.signUpWelcome(),
+  reject,
+  children,
+}: PrivateRouteProps) => (
+  <RouteGuard
+    cond={guards.isLoggedIn}
+    reject={reject || <Navigate to={redirect} />}
+  >
+    {children || <Outlet />}
+  </RouteGuard>
+);

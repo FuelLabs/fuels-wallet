@@ -31,6 +31,7 @@ const config: InitialOptionsTsJest = {
       },
     ],
   },
+  modulePathIgnorePatterns: ['/dist/', 'playwright'],
   maxWorkers: 1,
   rootDir: __dirname,
   displayName: pkg.name,

@@ -12,7 +12,7 @@ export function Networks() {
 
   return (
     <Layout title="Networks" isLoading={isLoading}>
-      <Layout.TopBar onBack={() => navigate(Pages.home())} />
+      <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
       <Layout.Content>
         {networks && (
           <NetworkList
