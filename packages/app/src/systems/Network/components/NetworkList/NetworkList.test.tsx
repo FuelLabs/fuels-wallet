@@ -1,7 +1,7 @@
 import { render, screen } from '@fuel-ui/test-utils';
 import { uniqueId } from 'xstate/lib/utils';
 
-import { MOCK_NETWORKS } from '../../__mocks__';
+import { MOCK_NETWORKS } from '../../__mocks__/networks';
 
 import { NetworkList } from './NetworkList';
 

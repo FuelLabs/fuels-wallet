@@ -1,6 +1,6 @@
 import { Box } from '@fuel-ui/react';
 
-import { MOCK_NETWORKS } from '../../__mocks__';
+import { MOCK_NETWORKS } from '../../__mocks__/networks';
 import { useNetworkForm } from '../../hooks';
 
 import { NetworkForm } from './NetworkForm';

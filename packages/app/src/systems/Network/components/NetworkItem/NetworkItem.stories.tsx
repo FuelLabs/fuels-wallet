@@ -1,7 +1,7 @@
 import { Box, CardList } from '@fuel-ui/react';
 import { action } from '@storybook/addon-actions';
 
-import { MOCK_NETWORKS } from '../../__mocks__';
+import { MOCK_NETWORKS } from '../../__mocks__/networks';
 
 import { NetworkItem } from './NetworkItem';
 
