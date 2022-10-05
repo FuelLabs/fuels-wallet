@@ -19,6 +19,7 @@ import { useLayoutContext } from './Layout';
 import { NetworkDropdown } from '~/systems/Network/components/NetworkDropdown';
 import { useNetworks } from '~/systems/Network/hooks';
 import { NetworkScreen } from '~/systems/Network/machines';
+import { useSideBar } from '~/systems/Sidebar/hooks/useSidebar';
 
 type TopBarProps = {
   onBack?: () => void;
@@ -26,6 +27,7 @@ type TopBarProps = {
 };
 
 export function TopBar({ onBack }: TopBarProps) {
+  const { toggle } = useSideBar();
   const { isLoading, title, isHome } = useLayoutContext();
   const { networks, selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
@@ -70,6 +72,7 @@ export function TopBar({ onBack }: TopBarProps) {
         css={{ px: '0 !important' }}
       />
       <IconButton
+        onClick={() => toggle()}
         icon={<Icon icon="List" color="gray8" size={24} />}
         aria-label="Open menu"
         variant="link"

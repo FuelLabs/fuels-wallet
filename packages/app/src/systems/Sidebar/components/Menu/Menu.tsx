@@ -3,7 +3,7 @@ import type { Icons } from '@fuel-ui/react';
 import { Box, Flex, Icon, Menu as RootMenu } from '@fuel-ui/react';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export type MenuItemObj = {
   key: string;
@@ -24,6 +24,7 @@ const IconMotion = motion(Icon);
 
 function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   function handleAction(key: string | number) {
     const subItem = item.submenu?.find((i) => i.key === key);
@@ -42,7 +43,10 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
         css={styles.menuItemContent(Boolean(isOpened))}
         animate={{ height: isOpened ? '100%' : '24px' }}
       >
-        <Flex gap="$3">
+        <Flex
+          css={pathname === item.path ? styles.activeRoute : styles.route}
+          gap="$3"
+        >
           <Icon
             icon={item.icon}
             css={{ color: '$gray8' }}
@@ -119,6 +123,13 @@ export function Menu({ items }: MenuProps) {
 }
 
 const styles = {
+  route: cssObj({ p: '5px', px: '10px', borderRadius: 10 }),
+  activeRoute: cssObj({
+    bg: '$gray3',
+    p: '5px',
+    px: '10px',
+    borderRadius: 10,
+  }),
   root: cssObj({
     '.fuel_menu-list-item': {
       py: '$0',

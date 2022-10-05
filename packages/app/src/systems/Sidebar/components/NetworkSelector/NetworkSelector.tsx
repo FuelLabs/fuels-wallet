@@ -61,6 +61,8 @@ const styles = {
   root: cssObj({
     flexDirection: 'column',
     gap: '$3',
+    w: '$full',
+    padding: '$3',
 
     '& > .fuel_text': {
       fontSize: '$sm',
@@ -68,7 +70,9 @@ const styles = {
   }),
   button: cssObj({
     fontSize: '$lg',
-
+    bg: '$gray4 !important',
+    flex: 1,
+    w: '200',
     '&:hover': {
       cursor: 'pointer',
     },

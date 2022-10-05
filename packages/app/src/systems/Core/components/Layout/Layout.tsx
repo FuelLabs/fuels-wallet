@@ -8,6 +8,9 @@ import { Helmet } from 'react-helmet';
 import { BottomBar } from './BottomBar';
 import { TopBar } from './TopBar';
 
+import { Sidebar } from '~/systems/Sidebar';
+import { useSideBar } from '~/systems/Sidebar/hooks/useSidebar';
+
 type Context = {
   isLoading?: boolean;
   isHome?: boolean;
@@ -52,6 +55,8 @@ export const Layout: LayoutComponent = ({
   title,
   children,
 }: LayoutProps) => {
+  const { isSideBarOpen, toggle } = useSideBar();
+
   const titleText = title ? `${title} | Fuel` : 'Fuel';
   return (
     <ctx.Provider value={{ isLoading, isHome, title }}>
@@ -62,7 +67,19 @@ export const Layout: LayoutComponent = ({
         {isPublic ? (
           <>{children}</>
         ) : (
-          <Flex css={styles.wrapper}>{children}</Flex>
+          <Flex css={styles.wrapper}>
+            {children}
+            <Sidebar
+              size={220}
+              side={'right'}
+              type="tree"
+              isDismissable
+              onClose={() => toggle()}
+              shouldCloseOnBlur
+              shouldCloseOnClickAway
+              isOpen={isSideBarOpen}
+            />
+          </Flex>
         )}
       </Flex>
       {import.meta.env.NODE_ENV === 'test' && (
