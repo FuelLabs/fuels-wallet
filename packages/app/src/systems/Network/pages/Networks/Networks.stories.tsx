@@ -1,6 +1,6 @@
 import type { Story } from '@storybook/react';
 
-import { MOCK_NETWORKS } from '../../__mocks__';
+import { MOCK_NETWORKS } from '../../__mocks__/networks';
 import { NetworkService } from '../../services';
 
 import { Networks } from './Networks';

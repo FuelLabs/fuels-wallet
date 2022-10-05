@@ -26,8 +26,9 @@ type ContentProps = {
 };
 
 function Content({ as, children, css }: ContentProps) {
+  const { isHome } = useLayoutContext();
   return (
-    <Box as={as} css={{ ...styles.content, ...css }}>
+    <Box as={as} css={{ ...styles.content(Boolean(isHome)), ...css }}>
       {children}
     </Box>
   );
@@ -101,11 +102,12 @@ const styles = {
     background:
       'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',
   }),
-  content: cssObj({
-    paddingTop: '$1',
-    px: '$6',
-    flex: 1,
-  }),
+  content: (isHome: boolean) =>
+    cssObj({
+      paddingTop: isHome ? '$1' : '$4',
+      px: '$6',
+      flex: 1,
+    }),
 };
 
 export function useLayoutContext() {
