@@ -1,15 +1,15 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
+import { isBech32 } from 'fuels';
 import type { FC } from 'react';
 
 import { TxRecipientCardLoader } from './TxRecipientCardLoader';
 
-import type { Account } from '~/systems/Account';
 import { shortAddress } from '~/systems/Core';
 
 export type TxRecipientCardProps = {
-  account?: Account;
-  contract?: { address: string };
+  address: string;
+  isReceiver?: boolean;
 };
 
 type TxRecipientCardComponent = FC<TxRecipientCardProps> & {
@@ -17,32 +17,32 @@ type TxRecipientCardComponent = FC<TxRecipientCardProps> & {
 };
 
 export const TxRecipientCard: TxRecipientCardComponent = ({
-  account,
-  contract,
+  address,
+  isReceiver,
 }) => {
-  const address = account ? account.address : contract?.address;
+  const isAccount = isBech32(address);
   return (
     <Card css={styles.root}>
-      <Text css={styles.from}>From {contract && '(Contract)'}</Text>
-      {account && (
+      <Text css={styles.from}>
+        {isReceiver ? 'To' : 'From'} {!isAccount && '(Contract)'}
+      </Text>
+      {isAccount && (
         <Avatar.Generated
           role="img"
           size="lg"
-          hash={account.address}
-          aria-label={account.name}
+          hash={address}
+          aria-label="Generated Address"
           background="fuel"
         />
       )}
-      {contract && (
+      {!isAccount && (
         <Box css={styles.iconWrapper}>
           <Icon icon={Icon.is('Code')} size={18} />
         </Box>
       )}
-      {address && (
-        <Flex css={styles.info}>
-          <Copyable value={address}>{shortAddress(address)}</Copyable>
-        </Flex>
-      )}
+      <Flex css={styles.info}>
+        <Copyable value={address}>{shortAddress(address)}</Copyable>
+      </Flex>
     </Card>
   );
 };

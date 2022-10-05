@@ -8,20 +8,20 @@ export default {
 
 const ACCOUNT = {
   name: 'Account 1',
-  address: 'fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef',
+  address: 'fuel1yal7nrhm4lpwuzjn8eq3qjlsk9366dwpsrpd5ns5q049g30kyp7qcey6wk',
   publicKey: '0x00',
 };
 
 const CONTRACT = {
-  address: '0x239ce1fb790d5b829fe7a40a3d54cb825a403bb3',
+  address: '0x277fe98efbafc2ee0a533e41104bf0b163ad35c180c2da4e1403ea5445f6207c',
 };
 
 export const TypeAccount = (args: TxRecipientCardProps) => (
-  <TxRecipientCard {...args} account={ACCOUNT} />
+  <TxRecipientCard {...args} address={ACCOUNT.address} />
 );
 
 export const TypeContract = (args: TxRecipientCardProps) => (
-  <TxRecipientCard {...args} contract={CONTRACT} />
+  <TxRecipientCard {...args} address={CONTRACT.address} />
 );
 
 export const Loader = () => {

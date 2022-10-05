@@ -29,10 +29,6 @@ const config = {
         'storybook'
       );
     }
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@fuels-wallet/xstore': path.resolve(__dirname, '../../store/dist'),
-    };
     config.resolve.fallback = {
       ...config.resolve.fallback,
       buffer: require.resolve('buffer/'),
