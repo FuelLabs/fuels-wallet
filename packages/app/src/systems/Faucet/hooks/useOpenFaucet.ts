@@ -17,7 +17,7 @@ export function useOpenFaucet() {
     if (IS_CRX) {
       const url = qs.stringifyUrl({
         url: VITE_FUEL_FAUCET_URL,
-        query: { address: account.address },
+        query: { address: account?.address },
       });
       openTab(url);
     } else {
