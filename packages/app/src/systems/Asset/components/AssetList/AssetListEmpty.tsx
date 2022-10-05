@@ -1,15 +1,16 @@
 import { cssObj } from '@fuel-ui/css';
 import { Text, BoxCentered, Heading, Button, Icon } from '@fuel-ui/react';
-import { useNavigate } from 'react-router-dom';
 
-import { ImageLoader, Pages, relativeUrl } from '~/systems/Core';
+import { ImageLoader, relativeUrl } from '~/systems/Core';
+import { useOpenFaucet } from '~/systems/Faucet';
 
 type AssetsEmptyProps = {
   isDevnet?: boolean;
 };
 
 export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
-  const navigate = useNavigate();
+  const openFaucet = useOpenFaucet();
+
   return (
     <BoxCentered css={styles.empty}>
       <ImageLoader
@@ -26,11 +27,7 @@ export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
         /**
          * TODO: need to add right faucet icon on @fuel-ui
          */
-        <Button
-          size="sm"
-          leftIcon={Icon.is('Coffee')}
-          onPress={() => navigate(Pages.faucet())}
-        >
+        <Button size="sm" leftIcon={Icon.is('Coffee')} onPress={openFaucet}>
           Faucet
         </Button>
       )}
