@@ -47,7 +47,6 @@ export function NetworkSelector({
         >
           {networks.map((network) => (
             <Dropdown.MenuItem key={network.id} textValue={network.name}>
-              {/* <NetworkStatus network={network} /> */}
               {network.name}
             </Dropdown.MenuItem>
           ))}

@@ -5,7 +5,7 @@ import { Menu } from './Menu';
 
 export default {
   component: Menu,
-  title: 'Sidebar/Components/Menu',
+  title: 'Core/components/Sidebar/Components/Menu',
 };
 
 const ITEMS: MenuItemObj[] = [
