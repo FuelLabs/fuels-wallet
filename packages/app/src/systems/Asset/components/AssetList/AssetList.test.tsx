@@ -1,24 +1,18 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
-import { bn } from 'fuels';
 
-import { ASSET_LIST } from '../../utils';
+import { MOCK_ASSETS } from '../../__mocks__/assets';
 
 import { AssetList } from './AssetList';
 
 import { TestWrapper } from '~/systems/Core';
 
-const ASSETS = ASSET_LIST.map(({ assetId }) => ({
-  assetId,
-  amount: bn(1000000000),
-}));
-
 describe('AssetList', () => {
   it('a11y', async () => {
-    await testA11y(<AssetList assets={ASSETS} />);
+    await testA11y(<AssetList assets={MOCK_ASSETS} />);
   });
 
   it('should show tree assets', () => {
-    render(<AssetList assets={ASSETS} />);
+    render(<AssetList assets={MOCK_ASSETS} />);
     expect(screen.getByText('Ethereum')).toBeInTheDocument();
     expect(screen.getByText('Dai')).toBeInTheDocument();
     expect(screen.getByText('Bitcoin')).toBeInTheDocument();
