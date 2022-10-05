@@ -1,9 +1,10 @@
 import { fireEvent, render, screen, testA11y } from '@fuel-ui/test-utils';
 
+import { MOCK_NETWORKS } from '../../../Network/__mocks__/networks';
+
 import { NetworkSelector } from './NetworkSelector';
 
 import { TestWrapper } from '~/systems/Core/components/TestWrapper';
-import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
 const SELECTED = MOCK_NETWORKS[0];
 const NOT_SELECTED = MOCK_NETWORKS[1];
@@ -33,15 +34,12 @@ describe('NetworkSelector', () => {
 
   it('should dispatch onSelectNetwork handle', async () => {
     const handler = jest.fn();
-    const { user } = render(
-      <NetworkSelector {...props} onSelectNetwork={handler} />,
-      {
-        wrapper: TestWrapper,
-      }
-    );
+    render(<NetworkSelector {...props} onSelectNetwork={handler} />, {
+      wrapper: TestWrapper,
+    });
 
     const selector = await screen.findByTestId('fuel_network-item');
-    await user.click(selector);
+    fireEvent.click(selector);
     const item = screen.getByText(NOT_SELECTED.name);
     expect(item).toBeInTheDocument();
     fireEvent.click(item);
