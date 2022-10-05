@@ -127,7 +127,9 @@ export const signUpMachine = createMachine(
       failed: {
         entry: 'assignError',
       },
-      done: {},
+      done: {
+        entry: ['redirectToWalletCreated'],
+      },
     },
   },
   {
