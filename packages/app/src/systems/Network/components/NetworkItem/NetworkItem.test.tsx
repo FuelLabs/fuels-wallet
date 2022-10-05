@@ -1,7 +1,7 @@
 import { CardList } from '@fuel-ui/react';
 import { render, screen, testA11y, waitFor } from '@fuel-ui/test-utils';
 
-import { MOCK_NETWORKS } from '../../__mocks__';
+import { MOCK_NETWORKS } from '../../__mocks__/networks';
 
 import type { NetworkItemProps } from './NetworkItem';
 import { NetworkItem } from './NetworkItem';
