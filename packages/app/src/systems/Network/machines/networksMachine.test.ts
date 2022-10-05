@@ -2,7 +2,7 @@
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
-import { MOCK_NETWORKS } from '../__mocks__';
+import { MOCK_NETWORKS } from '../__mocks__/networks';
 import { NetworkService } from '../services';
 import type { Network } from '../types';
 
