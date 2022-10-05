@@ -31,7 +31,7 @@ export function NetworkSelector({
       <Text as="div" leftIcon={Icon.is('ShareNetwork')}>
         Network selected
       </Text>
-      <Dropdown>
+      <Dropdown popoverProps={{ side: 'top' }}>
         <Dropdown.Trigger>
           <NetworkItem network={selected!} css={styles.button} />
         </Dropdown.Trigger>
