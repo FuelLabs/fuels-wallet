@@ -16,7 +16,7 @@ export const Usage = (args: AssetItemProps) => (
     <AssetItem
       {...args}
       asset={{
-        assetId: ASSET_LIST[0].assetId,
+        ...ASSET_LIST[0],
         amount: bn(14563943834),
       }}
     />
