@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Accordion, Text } from '@fuel-ui/react';
-import type { ReceiptScriptResult } from 'fuels';
-import { ReceiptType } from 'fuels';
+import { getGasUsedFromReceipts } from 'fuels';
 import { useMemo } from 'react';
 
 import type { Transaction } from '../../types';
@@ -14,12 +13,10 @@ export type TxDetailsProps = {
 };
 
 export function TxDetails({ tx }: TxDetailsProps) {
-  const gasUsed = useMemo(() => {
-    const receipt = tx?.receipts.find(
-      (i) => i.type === ReceiptType.ScriptResult
-    ) as ReceiptScriptResult;
-    return receipt?.gasUsed;
-  }, [tx?.receipts]);
+  const gasUsed = useMemo(
+    () => getGasUsedFromReceipts(tx?.receipts || []),
+    [tx?.receipts]
+  );
 
   return (
     <Accordion type="multiple">
