@@ -33,16 +33,14 @@ describe('NetworkSelector', () => {
 
   it('should dispatch onSelectNetwork handle', async () => {
     const handler = jest.fn();
-    const { user } = render(
-      <NetworkSelector {...props} onSelectNetwork={handler} />,
-      {
-        wrapper: TestWrapper,
-      }
-    );
+    render(<NetworkSelector {...props} onSelectNetwork={handler} />, {
+      wrapper: TestWrapper,
+    });
 
     const selector = await screen.findByTestId('fuel_network-item');
-    await user.click(selector);
-    const item = screen.getByText(NOT_SELECTED.name);
+    fireEvent.click(selector);
+
+    const item = await screen.findByText(NOT_SELECTED.name);
     expect(item).toBeInTheDocument();
     fireEvent.click(item);
     expect(handler).toBeCalledWith(NOT_SELECTED);
