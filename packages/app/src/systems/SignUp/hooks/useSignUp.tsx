@@ -14,19 +14,19 @@ const selectors = {
 
 export function useSignUp(type: SignUpType) {
   const navigate = useNavigate();
-  const [state, send, service] = useMachine(
-    () =>
-      signUpMachine.withContext({
+  const [state, send, service] = useMachine(() =>
+    signUpMachine
+      .withConfig({
+        actions: {
+          redirectToWalletCreated() {
+            navigate(Pages.signUpWalletCreated());
+          },
+        },
+      })
+      .withContext({
         type,
         attempts: 0,
-      }),
-    {
-      actions: {
-        redirectToWalletCreated() {
-          navigate(Pages.signUpWalletCreated());
-        },
-      },
-    }
+      })
   );
 
   const ctx = useSelector(service, selectors.context);
