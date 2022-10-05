@@ -29,6 +29,7 @@ const styles = {
     marginTop: '$8',
     marginBottom: '$6',
     flexShrink: 0,
+    gap: '$2',
   }),
   button: cssObj({
     borderRadius: 40,
