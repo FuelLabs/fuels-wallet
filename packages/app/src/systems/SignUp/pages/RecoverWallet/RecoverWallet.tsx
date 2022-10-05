@@ -2,12 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Alert } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
-import {
-  CreatePassword,
-  MnemonicWrite,
-  SignUpFailed,
-  WalletCreated,
-} from '../../components';
+import { CreatePassword, MnemonicWrite, SignUpFailed } from '../../components';
 import { useSignUp } from '../../hooks';
 import { SignUpType } from '../../machines/signUpMachine';
 
@@ -42,7 +37,6 @@ export function RecoverWallet() {
         />
       )}
       {state.matches('failed') && <SignUpFailed error={state.context.error} />}
-      {state.matches('done') && <WalletCreated account={context.account} />}
     </Layout>
   );
 }
