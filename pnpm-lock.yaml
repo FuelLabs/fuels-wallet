@@ -135,6 +135,7 @@ importers:
       react-google-recaptcha: ^2.1.0
       react-helmet: ^6.1.0
       react-hook-form: ^7.36.1
+      react-qr-code: ^2.0.8
       react-router-dom: ^6.4.1
       storybook-addon-react-router-v6: ^0.2.1
       storybook-dark-mode: ^1.1.2
@@ -180,6 +181,7 @@ importers:
       react-google-recaptcha: 2.1.0_react@18.2.0
       react-helmet: 6.1.0_react@18.2.0
       react-hook-form: 7.36.1_react@18.2.0
+      react-qr-code: 2.0.8_react@18.2.0
       react-router-dom: 6.4.1_biqbaboplfbrettd7655fr4n2y
       util: 0.12.4
       xstate: 4.33.6
@@ -16438,6 +16440,10 @@ packages:
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     dev: true
 
+  /qr.js/0.0.0:
+    resolution: {integrity: sha512-c4iYnWb+k2E+vYpRimHqSu575b1/wKl4XFeJGpFmrJQz5I88v9aY2czh7s0w36srfCM1sXgC/xpoJz5dJfq+OQ==}
+    dev: false
+
   /qs/6.10.3:
     resolution: {integrity: sha512-wr7M2E0OFRfIfJZjKGieI8lBKb7fRCH4Fv5KNPEs7gJ8jadvotdsS08PzOKR7opXhZ/Xkjtt3WF9g38drmyRqQ==}
     engines: {node: '>=0.6'}
@@ -16772,6 +16778,22 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /react-qr-code/2.0.8_react@18.2.0:
+    resolution: {integrity: sha512-zYO9EAPQU8IIeD6c6uAle7NlKOiVKs8ji9hpbWPTGxO+FLqBN2on+XCXQvnhm91nrRd306RvNXUkUNcXXSfhWA==}
+    peerDependencies:
+      react: '*'
+      react-native-svg: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-native-svg:
+        optional: true
+    dependencies:
+      prop-types: 15.8.1
+      qr.js: 0.0.0
+      react: 18.2.0
     dev: false
 
   /react-refresh/0.11.0:
