@@ -32,7 +32,7 @@ export function ConnectInfo({ url, account }: ConnectInfoProps) {
 
 const styles = {
   root: cssObj({
-    py: '$2',
+    py: '$1',
     px: '$2',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -57,6 +57,7 @@ const styles = {
   }),
   accountBtn: cssObj({
     alignItems: 'center',
+    px: '$0 !important',
 
     '&:hover': {
       textDecoration: 'none !important',
