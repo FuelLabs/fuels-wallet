@@ -40,7 +40,8 @@ describe('NetworkSelector', () => {
 
     const selector = await screen.findByTestId('fuel_network-item');
     fireEvent.click(selector);
-    const item = screen.getByText(NOT_SELECTED.name);
+
+    const item = await screen.findByText(NOT_SELECTED.name);
     expect(item).toBeInTheDocument();
     fireEvent.click(item);
     expect(handler).toBeCalledWith(NOT_SELECTED);

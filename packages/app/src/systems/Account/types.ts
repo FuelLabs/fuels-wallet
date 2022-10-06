@@ -16,3 +16,8 @@ export type Account = {
   balanceSymbol?: string;
   balances?: Asset[];
 };
+
+export enum AddressType {
+  contract,
+  account,
+}
