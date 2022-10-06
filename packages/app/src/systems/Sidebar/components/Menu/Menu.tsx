@@ -3,7 +3,7 @@ import type { Icons } from '@fuel-ui/react';
 import { Box, Flex, Icon, Menu as RootMenu } from '@fuel-ui/react';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useResolvedPath, useMatch } from 'react-router-dom';
 
 export type MenuItemObj = {
   key: string;
@@ -24,7 +24,12 @@ const IconMotion = motion(Icon);
 
 function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const path = useResolvedPath(item.path as string);
+  const match = useMatch({
+    path: path.pathname,
+    end: false,
+    caseSensitive: false,
+  });
 
   function handleAction(key: string | number) {
     const subItem = item.submenu?.find((i) => i.key === key);
@@ -44,7 +49,7 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
         animate={{ height: isOpened ? '100%' : '24px' }}
       >
         <Flex
-          css={pathname === item.path ? styles.activeRoute : styles.route}
+          css={match && item.path ? styles.activeRoute : styles.route}
           gap="$3"
         >
           <Icon
