@@ -54,7 +54,10 @@ export function Sidebar() {
 
             <Icon icon="CaretDown" size={20}></Icon>
           </Flex>
-          <Drawer.CloseButton css={{ top: '$6', right: '$4' }} />
+          <Drawer.CloseButton
+            css={{ top: '$6', right: '$4' }}
+            data-testid="drawer_closeButton"
+          />
         </Flex>
 
         <Menu items={sidebarItems as MenuItemObj[]} />
