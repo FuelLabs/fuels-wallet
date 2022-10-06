@@ -13,7 +13,7 @@ export function ConnectInfo({ url, account }: ConnectInfoProps) {
   return (
     <Card css={styles.root}>
       <Tag as="div" variant="outlined">
-        <Tooltip content={url}>
+        <Tooltip content={url} align="start" alignOffset={-10}>
           <Text as="span">{parseUrl(url)}</Text>
         </Tooltip>
       </Tag>
