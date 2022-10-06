@@ -4,20 +4,17 @@ import type { Story } from '@storybook/react';
 import type { ConnectInfoProps } from './ConnectInfo';
 import { ConnectInfo } from './ConnectInfo';
 
+import { MOCK_ACCOUNTS } from '~/systems/Account';
+
 export default {
   component: ConnectInfo,
   title: 'DApp/Components/ConnectInfo',
 };
 
 const URL = 'https://fuellabs.github.io/swayswap/';
-const ACCOUNT = {
-  name: 'Account 1',
-  address: 'fuel1yal7nrhm4lpwuzjn8eq3qjlsk9366dwpsrpd5ns5q049g30kyp7qcey6wk',
-  publicKey: '0x00',
-};
 
 export const Usage: Story<ConnectInfoProps> = (args) => (
   <Box css={{ width: 300 }}>
-    <ConnectInfo {...args} url={URL} account={ACCOUNT} />
+    <ConnectInfo {...args} url={URL} account={MOCK_ACCOUNTS[0]} />
   </Box>
 );

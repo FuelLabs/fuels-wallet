@@ -2,31 +2,21 @@ import { render, screen, testA11y, waitFor } from '@fuel-ui/test-utils';
 
 import { ConnectInfo } from './ConnectInfo';
 
-import { AccountService } from '~/systems/Account';
+import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 import { TestWrapper } from '~/systems/Core';
 
 const URL = 'https://fuellabs.github.io/swayswap/';
-const ACCOUNT = {
-  name: 'Account 1',
-  address: 'fuel1yal7nrhm4lpwuzjn8eq3qjlsk9366dwpsrpd5ns5q049g30kyp7qcey6wk',
-  publicKey: '0x00',
-};
 
 const PROPS = {
   url: URL,
-  account: ACCOUNT,
+  account: MOCK_ACCOUNTS[0],
 };
 
 describe('ConnectInfo', () => {
   beforeEach(async () => {
     await AccountService.clearAccounts();
     await AccountService.addAccount({
-      data: {
-        name: 'Account 1',
-        address:
-          'fuel1yal7nrhm4lpwuzjn8eq3qjlsk9366dwpsrpd5ns5q049g30kyp7qcey6wk',
-        publicKey: '0x00',
-      },
+      data: MOCK_ACCOUNTS[0],
     });
   });
 

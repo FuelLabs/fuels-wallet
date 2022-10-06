@@ -4,7 +4,7 @@ import { graphql } from 'msw';
 
 import { Home } from './Home';
 
-import { AccountService } from '~/systems/Account';
+import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 import { ASSET_LIST } from '~/systems/Asset';
 
 export default {
@@ -25,11 +25,7 @@ NoAssets.decorators = [
   (Story) => {
     AccountService.clearAccounts();
     AccountService.addAccount({
-      data: {
-        name: 'Account 1',
-        address: '0x00',
-        publicKey: '0x00',
-      },
+      data: MOCK_ACCOUNTS[0],
     });
 
     return <Story />;
@@ -76,11 +72,7 @@ WithAssets.decorators = [
   (Story) => {
     AccountService.clearAccounts();
     AccountService.addAccount({
-      data: {
-        name: 'Account 1',
-        address: '0x00',
-        publicKey: '0x00',
-      },
+      data: MOCK_ACCOUNTS[0],
     });
 
     return <Story />;
