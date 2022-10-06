@@ -10,8 +10,9 @@ export function NetworkStatus({ network: _network }: { network: Network }) {
   return (
     <Text
       css={{
-        // color: network.isOnline ? '$accent11' : '$gray8',
+        color: _network?.isSelected ? '$accent11' : '$gray8',
         fontSize: '8px',
+        ml: '5px',
       }}
     >
       ●

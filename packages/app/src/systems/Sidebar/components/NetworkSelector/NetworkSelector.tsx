@@ -69,7 +69,7 @@ const styles = {
   }),
   button: cssObj({
     fontSize: '$md',
-    bg: '$gray4 !important',
+    bg: '$gray2 !important',
     flex: 1,
     w: '200',
     p: '$2',
