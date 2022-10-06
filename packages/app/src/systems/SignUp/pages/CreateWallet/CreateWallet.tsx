@@ -1,11 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import {
-  CreatePassword,
-  MnemonicRead,
-  MnemonicWrite,
-  WalletCreated,
-} from '../../components';
+import { CreatePassword, MnemonicRead, MnemonicWrite } from '../../components';
 import { useSignUp } from '../../hooks';
 import { SignUpType } from '../../machines/signUpMachine';
 
@@ -40,7 +35,6 @@ export function CreateWallet() {
           isLoading={state.hasTag('loading')}
         />
       )}
-      {state.matches('done') && <WalletCreated account={context.account} />}
     </Layout>
   );
 }

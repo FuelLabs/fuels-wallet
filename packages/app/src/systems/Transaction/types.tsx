@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { TransactionResult } from 'fuels';
+
 import type { AddressType } from '../Account';
 
 export enum TxState {
@@ -11,3 +14,5 @@ export type TxRecipientAddress = {
   address: string;
   type: AddressType;
 };
+
+export type Transaction = TransactionResult<any>;
