@@ -9,7 +9,7 @@ import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
 export default {
   component: NetworkSelector,
-  title: 'Core/components/Sidebar/components/NetworkSelector',
+  title: 'Sidebar/Components/NetworkSelector',
 };
 
 export const Usage = (args: NetworkSelectorProps) => {

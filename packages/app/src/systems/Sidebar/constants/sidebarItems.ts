@@ -1,9 +1,11 @@
+import { Pages } from '~/systems/Core';
+
 export const sidebarItems = [
   {
     key: 'wallet',
     icon: 'Wallet',
     label: 'Wallet',
-    path: '/wallet',
+    path: Pages.wallet(),
   },
   {
     key: 'support',
