@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Button, Card, Icon, Tag, Text } from '@fuel-ui/react';
+import { Avatar, Button, Card, Icon, Tag, Text, Tooltip } from '@fuel-ui/react';
 
 import type { Account } from '~/systems/Account';
 import { parseUrl, shortAddress } from '~/systems/Core';
@@ -13,7 +13,9 @@ export function ConnectInfo({ url, account }: ConnectInfoProps) {
   return (
     <Card css={styles.root}>
       <Tag as="div" variant="outlined">
-        <Text as="span">{parseUrl(url)}</Text>
+        <Tooltip content={url}>
+          <Text as="span">{parseUrl(url)}</Text>
+        </Tooltip>
       </Tag>
       <Button variant="link" size="xs" css={styles.accountBtn} color="gray">
         <Avatar.Generated
