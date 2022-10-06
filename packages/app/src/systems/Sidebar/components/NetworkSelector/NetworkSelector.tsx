@@ -68,10 +68,12 @@ const styles = {
     },
   }),
   button: cssObj({
-    fontSize: '$lg',
+    fontSize: '$md',
     bg: '$gray4 !important',
     flex: 1,
     w: '200',
+    p: '$2',
+    py: '$2',
     '&:hover': {
       cursor: 'pointer',
     },

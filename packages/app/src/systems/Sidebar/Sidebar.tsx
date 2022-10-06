@@ -31,8 +31,9 @@ export function Sidebar() {
             justifyContent: 'space-between',
             flex: 1,
             borderBottomWidth: 'thin',
-            borderBottomStyle: 'solid',
+            borderBottomStyle: 'dashed',
             mb: '$4',
+
             ...styles.separator,
           }}
         >
@@ -49,13 +50,13 @@ export function Sidebar() {
                 background: '$accent11',
               }}
             >
-              <Avatar.Generated size="lg" hash={account?.address as string} />
+              <Avatar.Generated size="md" hash={account?.address as string} />
             </Box>
 
             <Icon icon="CaretDown" size={20}></Icon>
           </Flex>
           <Drawer.CloseButton
-            css={{ top: '$6', right: '$4' }}
+            css={{ top: '$5', right: '$4' }}
             data-testid="drawer_closeButton"
           />
         </Flex>
@@ -71,7 +72,7 @@ export function Sidebar() {
           alignItems: 'center',
           justifyContent: 'center',
           borderTopWidth: 'thin',
-          borderTopStyle: 'solid',
+          borderTopStyle: 'dashed',
           mt: '$4',
           ...styles.separator,
         }}
