@@ -28,6 +28,7 @@ export function Sidebar() {
         <Flex
           css={{
             padding: '$2',
+            py: '$3',
             justifyContent: 'space-between',
             flex: 1,
             borderBottomWidth: 'thin',
@@ -50,13 +51,13 @@ export function Sidebar() {
                 background: '$accent11',
               }}
             >
-              <Avatar.Generated size="md" hash={account?.address as string} />
+              <Avatar.Generated size={'sm'} hash={account?.address as string} />
             </Box>
 
-            <Icon icon="CaretDown" size={20}></Icon>
+            <Icon icon="CaretDown" size={18}></Icon>
           </Flex>
           <Drawer.CloseButton
-            css={{ top: '$5', right: '$4' }}
+            css={{ position: 'unset' }}
             data-testid="drawer_closeButton"
           />
         </Flex>
@@ -88,7 +89,7 @@ export function Sidebar() {
 
 const styles = {
   separator: cssObj({
-    borderColor: '$gray5',
+    borderColor: '$gray4',
   }),
   sidebarWrapper: cssObj({
     overflow: 'hidden',

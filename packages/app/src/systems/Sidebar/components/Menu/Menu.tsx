@@ -54,14 +54,16 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
         >
           <Icon
             icon={item.icon}
-            css={{ color: '$gray8' }}
+            css={{
+              color: match && item.path ? '$accent11' : '$gray8',
+            }}
             className="main-icon"
           />
           <Box css={{ flex: 1 }}>{item.label}</Box>
           {item.submenu && (
             <IconMotion
               icon="CaretDown"
-              css={{ color: '$gray8' }}
+              css={{ color: match && item.path ? '$white' : '$gray8' }}
               animate={{ rotate: isOpened ? '180deg' : '0deg' }}
             />
           )}
