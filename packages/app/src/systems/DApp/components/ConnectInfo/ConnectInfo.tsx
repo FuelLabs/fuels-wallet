@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Card, Flex, Tag, Text } from '@fuel-ui/react';
+import { Avatar, Button, Card, Icon, Tag, Text } from '@fuel-ui/react';
 
 import type { Account } from '~/systems/Account';
 import { parseUrl, shortAddress } from '~/systems/Core';
@@ -15,7 +15,7 @@ export function ConnectInfo({ url, account }: ConnectInfoProps) {
       <Tag as="div" variant="outlined">
         <Text as="span">{parseUrl(url)}</Text>
       </Tag>
-      <Flex css={styles.account}>
+      <Button variant="link" size="xs" css={styles.accountBtn} color="gray">
         <Avatar.Generated
           role="img"
           size="sm"
@@ -24,14 +24,16 @@ export function ConnectInfo({ url, account }: ConnectInfoProps) {
           background="fuel"
         />
         <Text>{shortAddress(account.address)}</Text>
-      </Flex>
+        <Icon icon={Icon.is('CaretDown')} size={14} />
+      </Button>
     </Card>
   );
 }
 
 const styles = {
   root: cssObj({
-    padding: '$3',
+    py: '$2',
+    px: '$2',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -53,13 +55,25 @@ const styles = {
       textSize: 'xs',
     },
   }),
-  account: cssObj({
-    gap: '$3',
+  accountBtn: cssObj({
     alignItems: 'center',
 
-    '& .fuel_text': {
+    '&:hover': {
+      textDecoration: 'none !important',
+    },
+
+    '&, & .fuel_text': {
       fontSize: '$xs',
       fontWeight: '$semibold',
+      color: '$gray9 !important',
+    },
+
+    '&:hover, &:hover .fuel_text': {
+      color: '$gray11 !important',
+    },
+
+    '& .fuel_text': {
+      ml: '$1',
     },
   }),
 };
