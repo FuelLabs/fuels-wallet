@@ -4,9 +4,9 @@ import { Icon, Card, Box, Avatar, Flex, Drawer } from '@fuel-ui/react';
 import type { PropsWithChildren } from 'react';
 import { useRef } from 'react';
 
-import { useAccount } from '../../../Account';
-import type { Network } from '../../../Network';
-import { NetworkScreen, useNetworks } from '../../../Network';
+import { useAccount } from '../Account';
+import type { Network } from '../Network';
+import { NetworkScreen, useNetworks } from '../Network';
 
 import type { MenuItemObj } from './components';
 import { Menu, NetworkSelector } from './components';
@@ -119,9 +119,11 @@ const styles = {
   }),
   sidebarWrapper: cssObj({
     overflow: 'hidden',
-    position: 'fixed',
-    maxW: '350px',
-    maxH: '610px',
+    position: 'relative',
+    maxWidth: '350px',
+    flex: 1,
+    maxHeight: '615px',
+    borderRadius: '$md',
     w: '100%',
     h: '100%',
     display: 'flex',

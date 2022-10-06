@@ -5,6 +5,8 @@ import type { FC, ReactNode } from 'react';
 import { useContext, createContext } from 'react';
 import { Helmet } from 'react-helmet';
 
+import { Sidebar } from '../../../Sidebar';
+
 import { BottomBar } from './BottomBar';
 import { TopBar } from './TopBar';
 
@@ -59,11 +61,13 @@ export const Layout: LayoutComponent = ({
         <title>{titleText}</title>
       </Helmet>
       <Flex as="main" css={styles.root({ isPublic })}>
-        {isPublic ? (
-          <>{children}</>
-        ) : (
-          <Flex css={styles.wrapper}>{children}</Flex>
-        )}
+        <Sidebar>
+          {isPublic ? (
+            <>{children}</>
+          ) : (
+            <Flex css={styles.wrapper}>{children}</Flex>
+          )}
+        </Sidebar>
       </Flex>
       {import.meta.env.NODE_ENV === 'test' && (
         <Box css={{ visibility: 'hidden' }}>
