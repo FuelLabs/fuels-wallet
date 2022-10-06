@@ -1,25 +1,21 @@
+import { MOCK_TX_RECIPIENT } from '../../__mocks__/tx-recipient';
+
 import type { TxRecipientCardProps } from './TxRecipientCard';
 import { TxRecipientCard } from './TxRecipientCard';
-
-import { MOCK_ACCOUNTS } from '~/systems/Account';
 
 export default {
   component: TxRecipientCard,
   title: 'Transaction/Components/TxRecipientCard',
 };
 
-const ACCOUNT = MOCK_ACCOUNTS[0];
-
-const CONTRACT = {
-  address: '0x239ce1fb790d5b829fe7a40a3d54cb825a403bb3',
-};
+const { account: ACCOUNT, contract: CONTRACT } = MOCK_TX_RECIPIENT;
 
 export const TypeAccount = (args: TxRecipientCardProps) => (
-  <TxRecipientCard {...args} account={ACCOUNT} />
+  <TxRecipientCard {...args} recipient={ACCOUNT} />
 );
 
 export const TypeContract = (args: TxRecipientCardProps) => (
-  <TxRecipientCard {...args} contract={CONTRACT} />
+  <TxRecipientCard {...args} recipient={CONTRACT} />
 );
 
 export const Loader = () => {

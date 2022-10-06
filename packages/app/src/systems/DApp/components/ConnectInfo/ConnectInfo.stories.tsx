@@ -11,7 +11,7 @@ export default {
   title: 'DApp/Components/ConnectInfo',
 };
 
-const URL = 'https://fuellabs.github.io/swayswap/';
+const URL = 'fuellabs.github.io/swayswap/';
 
 export const Usage: Story<ConnectInfoProps> = (args) => (
   <Box css={{ width: 300 }}>

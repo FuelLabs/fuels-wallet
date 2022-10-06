@@ -5,7 +5,7 @@ import { ConnectInfo } from './ConnectInfo';
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 import { TestWrapper } from '~/systems/Core';
 
-const URL = 'https://fuellabs.github.io/swayswap/';
+const URL = 'fuellabs.github.io/swayswap/';
 
 const PROPS = {
   url: URL,
