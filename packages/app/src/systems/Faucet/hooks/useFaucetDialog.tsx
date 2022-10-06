@@ -15,7 +15,7 @@ export function useFaucetDialog() {
   const [, send, service] = useMachine(faucetMachine, {
     actions: {
       navigateToHome: (_) => {
-        navigate(Pages.home());
+        navigate(Pages.wallet());
       },
     },
   });

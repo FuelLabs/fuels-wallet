@@ -16,7 +16,7 @@ export function WalletCreated({ account }: WalletCreatedProps) {
   const navigate = useNavigate();
 
   function handleGoToWallet() {
-    navigate(Pages.home());
+    navigate(Pages.wallet());
   }
 
   return (

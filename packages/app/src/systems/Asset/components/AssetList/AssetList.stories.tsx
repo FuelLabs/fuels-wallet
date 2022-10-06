@@ -1,7 +1,6 @@
 import { Box } from '@fuel-ui/react';
-import { bn } from 'fuels';
 
-import { ASSET_LIST } from '../../utils';
+import { MOCK_ASSETS } from '../../__mocks__/assets';
 
 import type { AssetListProps } from './AssetList';
 import { AssetList } from './AssetList';
@@ -11,14 +10,9 @@ export default {
   title: 'Asset/Components/AssetList',
 };
 
-const ASSETS = ASSET_LIST.map(({ assetId }) => ({
-  assetId,
-  amount: bn(1000000000),
-}));
-
 export const Usage = (args: AssetListProps) => (
   <Box css={{ width: 300 }}>
-    <AssetList {...args} assets={ASSETS} />
+    <AssetList {...args} assets={MOCK_ASSETS} />
   </Box>
 );
 

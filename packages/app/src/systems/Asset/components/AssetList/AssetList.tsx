@@ -1,14 +1,14 @@
 import { CardList } from '@fuel-ui/react';
-import type { CoinQuantity } from 'fuels';
 import type { FC } from 'react';
 
+import type { Asset } from '../../types';
 import { AssetItem } from '../AssetItem';
 
 import { AssetListEmpty } from './AssetListEmpty';
 import { AssetListLoading } from './AssetListLoading';
 
 export type AssetListProps = {
-  assets?: CoinQuantity[];
+  assets?: Asset[];
   isLoading?: boolean;
   isDevnet?: boolean;
 };

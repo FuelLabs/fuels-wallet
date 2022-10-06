@@ -4,6 +4,7 @@
 CHANGELOG.md
 coverage
 dist
+dist-crx
 node_modules
 pnpm-lock.yaml
 **/*.typegen.ts

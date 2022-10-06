@@ -5,7 +5,7 @@ import type { NetworkSelectorProps } from './NetworkSelector';
 import { NetworkSelector } from './NetworkSelector';
 
 import type { Network } from '~/systems/Network';
-import { MOCK_NETWORKS } from '~/systems/Network/__mocks__';
+import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
 export default {
   component: NetworkSelector,

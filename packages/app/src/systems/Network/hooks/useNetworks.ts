@@ -1,28 +1,26 @@
-import type { StateOf } from '@fuels-wallet/xstore';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import type { NetworkInitialInput } from '../machines/networksMachine';
-import type { NetworkInputs } from '../services';
+import type {
+  NetworkInitialInput,
+  NetworksMachineState,
+} from '../machines/networksMachine';
 import type { Network } from '../types';
 
-import type { Store } from '~/store';
-import { useStoreService, useStoreSelector, store, Services } from '~/store';
+import { store, Services } from '~/store';
 import { Pages } from '~/systems/Core';
 
-type State = StateOf<Services.networks, Store>;
-
 const selectors = {
-  networks: (state: State) => {
+  networks: (state: NetworksMachineState) => {
     return state.context?.networks || [];
   },
-  network: (state: State) => {
+  network: (state: NetworksMachineState) => {
     return state.context?.network;
   },
-  isLoading: (state: State) => {
+  isLoading: (state: NetworksMachineState) => {
     return state.hasTag('loading');
   },
-  selectedNetwork: (state: State) => {
+  selectedNetwork: (state: NetworksMachineState) => {
     const networks = state.context?.networks || [];
     return networks.find((n) => n.isSelected);
   },
@@ -30,19 +28,21 @@ const selectors = {
 
 export function useNetworks(opts: NetworkInitialInput) {
   const navigate = useNavigate();
-  const service = useStoreService(Services.networks);
-  const networks = useStoreSelector(service, selectors.networks);
-  const network = useStoreSelector(service, selectors.network);
-  const isLoading = useStoreSelector(service, selectors.isLoading);
-  const selectedNetwork = useStoreSelector(service, selectors.selectedNetwork);
+  const networks = store.useSelector(Services.networks, selectors.networks);
+  const network = store.useSelector(Services.networks, selectors.network);
+  const isLoading = store.useSelector(Services.networks, selectors.isLoading);
+  const selectedNetwork = store.useSelector(
+    Services.networks,
+    selectors.selectedNetwork
+  );
 
-  store.setService(service, {
+  store.useSetMachineConfig(Services.networks, {
     actions: {
       redirectToList() {
         navigate(Pages.networks());
       },
       redirectToHome() {
-        navigate(Pages.home());
+        navigate(Pages.wallet());
       },
     },
   });
@@ -57,27 +57,8 @@ export function useNetworks(opts: NetworkInitialInput) {
     navigate(Pages.networks());
   }
 
-  function addNetwork(input: NetworkInputs['addNetwork']) {
-    store.send(Services.networks, { type: 'ADD_NETWORK', input });
-  }
-  function updateNetwork(input: NetworkInputs['updateNetwork']) {
-    store.send(Services.networks, { type: 'UPDATE_NETWORK', input });
-  }
-  function removeNetwork(network: Network) {
-    store.send(Services.networks, {
-      type: 'REMOVE_NETWORK',
-      input: { id: network.id! },
-    });
-  }
-  function selectNetwork(network: Network) {
-    store.send(Services.networks, {
-      type: 'SELECT_NETWORK',
-      input: { id: network.id! },
-    });
-  }
-
   useEffect(() => {
-    store.send(Services.networks, { type: 'SET_INITIAL_DATA', input: opts });
+    store.initNetworks(opts);
   }, [opts.networkId, opts.type]);
 
   return {
@@ -85,10 +66,10 @@ export function useNetworks(opts: NetworkInitialInput) {
       goToUpdate,
       goToAdd,
       goToList,
-      addNetwork,
-      updateNetwork,
-      removeNetwork,
-      selectNetwork,
+      addNetwork: store.addNetwork,
+      updateNetwork: store.updateNetwork,
+      removeNetwork: store.removeNetwork,
+      selectNetwork: store.selectNetwork,
     },
     isLoading,
     selectedNetwork,

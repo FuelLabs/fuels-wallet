@@ -1,7 +1,7 @@
 import { Box } from '@fuel-ui/react';
 import { useState } from 'react';
 
-import { MOCK_NETWORKS } from '../../__mocks__';
+import { MOCK_NETWORKS } from '../../__mocks__/networks';
 
 import { NetworkDropdown } from './NetworkDropdown';
 

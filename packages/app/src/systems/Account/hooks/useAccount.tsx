@@ -1,23 +1,19 @@
-import type { StateOf } from '@fuels-wallet/xstore';
+import type { AccountMachineState } from '../machines';
 
-import type { Store } from '~/store';
-import { Services, useStoreService, useStoreSelector } from '~/store';
-
-type State = StateOf<Services.account, Store>;
+import { Services, store } from '~/store';
 
 const selectors = {
-  isLoading: (state: State) => {
+  isLoading: (state: AccountMachineState) => {
     return state.hasTag('loading');
   },
-  account: (state: State) => {
+  account: (state: AccountMachineState) => {
     return state.context?.data;
   },
 };
 
 export function useAccount() {
-  const service = useStoreService(Services.account);
-  const isLoading = useStoreSelector(service, selectors.isLoading);
-  const account = useStoreSelector(service, selectors.account);
+  const isLoading = store.useSelector(Services.account, selectors.isLoading);
+  const account = store.useSelector(Services.account, selectors.account);
 
   return {
     isLoading,
