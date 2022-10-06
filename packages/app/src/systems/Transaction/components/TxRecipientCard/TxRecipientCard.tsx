@@ -1,14 +1,16 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
-import { isBech32 } from 'fuels';
 import type { FC } from 'react';
+
+import type { TxRecipientAddress } from '../../types';
 
 import { TxRecipientCardLoader } from './TxRecipientCardLoader';
 
+import { AddressType } from '~/systems/Account';
 import { shortAddress } from '~/systems/Core';
 
 export type TxRecipientCardProps = {
-  address: string;
+  recipient: TxRecipientAddress;
   isReceiver?: boolean;
 };
 
@@ -17,10 +19,11 @@ type TxRecipientCardComponent = FC<TxRecipientCardProps> & {
 };
 
 export const TxRecipientCard: TxRecipientCardComponent = ({
-  address,
+  recipient,
   isReceiver,
 }) => {
-  const isAccount = isBech32(address);
+  const { address } = recipient;
+  const isAccount = recipient.type === AddressType.account;
   return (
     <Card css={styles.root}>
       <Text css={styles.from}>

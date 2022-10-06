@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Flex, Icon, Spinner } from '@fuel-ui/react';
 
+import type { TxRecipientAddress } from '../../types';
 import { TxState } from '../../types';
 import { TxRecipientCard } from '../TxRecipientCard';
 
@@ -23,8 +24,8 @@ function TxSpinner({ state = TxState.default }: TxSpinnerProps) {
 
 export type TxFromToProps = {
   state?: TxState;
-  from: string;
-  to: string;
+  from: TxRecipientAddress;
+  to: TxRecipientAddress;
 };
 
 export function TxFromTo({ from, to, state = TxState.default }: TxFromToProps) {
@@ -35,12 +36,12 @@ export function TxFromTo({ from, to, state = TxState.default }: TxFromToProps) {
       {isLoading ? (
         <TxRecipientCard.Loader />
       ) : (
-        <TxRecipientCard address={from} />
+        <TxRecipientCard recipient={from} />
       )}
       {isLoading ? (
         <TxRecipientCard.Loader />
       ) : (
-        <TxRecipientCard address={to} isReceiver />
+        <TxRecipientCard recipient={to} isReceiver />
       )}
     </Flex>
   );

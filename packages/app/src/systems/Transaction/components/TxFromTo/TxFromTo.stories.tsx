@@ -1,3 +1,4 @@
+import { MOCK_TX_RECIPIENT } from '../../__mocks__/tx-recipient';
 import { TxState } from '../../types';
 
 import type { TxFromToProps } from './TxFromTo';
@@ -8,38 +9,17 @@ export default {
   title: 'Transaction/Components/TxFromTo',
 };
 
-const ACCOUNT = {
-  address: 'fuel1yal7nrhm4lpwuzjn8eq3qjlsk9366dwpsrpd5ns5q049g30kyp7qcey6wk',
-};
-
-const CONTRACT = {
-  address: '0x277fe98efbafc2ee0a533e41104bf0b163ad35c180c2da4e1403ea5445f6207c',
-};
+const { account: ACCOUNT, contract: CONTRACT } = MOCK_TX_RECIPIENT;
 
 export const Default = (args: TxFromToProps) => (
-  <TxFromTo {...args} from={ACCOUNT.address} to={CONTRACT.address} />
+  <TxFromTo {...args} from={ACCOUNT} to={CONTRACT} />
 );
 export const Pending = (args: TxFromToProps) => (
-  <TxFromTo
-    {...args}
-    from={ACCOUNT.address}
-    to={CONTRACT.address}
-    state={TxState.pending}
-  />
+  <TxFromTo {...args} from={ACCOUNT} to={CONTRACT} state={TxState.pending} />
 );
 export const Success = (args: TxFromToProps) => (
-  <TxFromTo
-    {...args}
-    from={ACCOUNT.address}
-    to={CONTRACT.address}
-    state={TxState.success}
-  />
+  <TxFromTo {...args} from={ACCOUNT} to={CONTRACT} state={TxState.success} />
 );
 export const Failed = (args: TxFromToProps) => (
-  <TxFromTo
-    {...args}
-    from={ACCOUNT.address}
-    to={CONTRACT.address}
-    state={TxState.failed}
-  />
+  <TxFromTo {...args} from={ACCOUNT} to={CONTRACT} state={TxState.failed} />
 );

@@ -1,20 +1,13 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
 
+import { MOCK_TX_RECIPIENT } from '../../__mocks__/tx-recipient';
 import { TxState } from '../../types';
 
 import { TxFromTo } from './TxFromTo';
 
-const ACCOUNT = {
-  address: 'fuel1yal7nrhm4lpwuzjn8eq3qjlsk9366dwpsrpd5ns5q049g30kyp7qcey6wk',
-};
-
-const CONTRACT = {
-  address: '0x277fe98efbafc2ee0a533e41104bf0b163ad35c180c2da4e1403ea5445f6207c',
-};
-
 const PROPS = {
-  from: ACCOUNT.address,
-  to: CONTRACT.address,
+  from: MOCK_TX_RECIPIENT.account,
+  to: MOCK_TX_RECIPIENT.contract,
 };
 
 describe('TxFromTo', () => {
