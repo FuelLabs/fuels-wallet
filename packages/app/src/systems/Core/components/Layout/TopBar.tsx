@@ -20,6 +20,7 @@ import { useLayoutContext } from './Layout';
 import { NetworkDropdown } from '~/systems/Network/components/NetworkDropdown';
 import { useNetworks } from '~/systems/Network/hooks';
 import { NetworkScreen } from '~/systems/Network/machines';
+import { Sidebar } from '~/systems/Sidebar';
 
 type TopBarProps = {
   onBack?: () => void;
@@ -27,7 +28,7 @@ type TopBarProps = {
 };
 
 export function TopBar({ onBack }: TopBarProps) {
-  const { isLoading, title, isHome } = useLayoutContext();
+  const { isLoading, title, isHome, ref } = useLayoutContext();
   const { networks, selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
@@ -70,14 +71,19 @@ export function TopBar({ onBack }: TopBarProps) {
         variant="link"
         css={{ px: '0 !important' }}
       />
-      <Drawer.Trigger>
-        <IconButton
-          icon={<Icon icon="List" color="gray8" size={24} />}
-          aria-label="Menu"
-          variant="link"
-          css={{ px: '0 !important' }}
-        />
-      </Drawer.Trigger>
+      <Drawer type="menu" size={220} containerRef={ref}>
+        <Drawer.Trigger>
+          <IconButton
+            icon={<Icon icon="List" color="gray8" size={24} />}
+            aria-label="Menu"
+            variant="link"
+            css={{ px: '0 !important' }}
+          />
+        </Drawer.Trigger>
+        <Drawer.Content>
+          <Sidebar />
+        </Drawer.Content>
+      </Drawer>
     </Flex>
   );
 }
