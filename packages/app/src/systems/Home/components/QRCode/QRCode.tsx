@@ -31,7 +31,8 @@ export function ReceiverQRCode({ account }: Props) {
     <Card css={styles.card}>
       <Flex css={styles.qrWrapper}>
         <QRCode
-          id="qrcode-receive"
+          data-testid="qrcode-receiver"
+          id="qrcode-receiver"
           size={120}
           color="#9BA1A6"
           bgColor="transparent"

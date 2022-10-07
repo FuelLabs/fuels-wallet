@@ -125,6 +125,7 @@ importers:
       fake-indexeddb: ^4.0.0
       framer-motion: ^7.5.2
       fuels: ^0.17.0
+      jsqr: ^1.4.0
       msw: ^0.47.4
       msw-storybook-addon: ^1.6.3
       process: ^0.11.10
@@ -173,6 +174,7 @@ importers:
       fake-indexeddb: 4.0.0
       framer-motion: 7.5.2_biqbaboplfbrettd7655fr4n2y
       fuels: 0.17.0
+      jsqr: 1.4.0
       process: 0.11.10
       query-string: 7.1.1
       react: 18.2.0
@@ -14415,6 +14417,10 @@ packages:
       json-schema: 0.4.0
       verror: 1.10.0
     dev: true
+
+  /jsqr/1.4.0:
+    resolution: {integrity: sha512-dxLob7q65Xg2DvstYkRpkYtmKm2sPJ9oFhrhmudT1dZvNFFTlroai3AWSpLey/w5vMcLBXRgOJsbXpdN9HzU/A==}
+    dev: false
 
   /jsx-ast-utils/3.3.2:
     resolution: {integrity: sha512-4ZCADZHRkno244xlNnn4AOG6sRQ7iBZ5BbgZ4vW4y5IZw7cVUD1PPeblm1xx/nfmMxPdt/LHsXZW8z/j58+l9Q==}

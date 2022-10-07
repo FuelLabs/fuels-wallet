@@ -42,6 +42,7 @@
     "fake-indexeddb": "^4.0.0",
     "framer-motion": "^7.5.2",
     "fuels": "^0.17.0",
+    "jsqr": "^1.4.0",
     "process": "^0.11.10",
     "query-string": "^7.1.1",
     "react": "^18.2.0",
