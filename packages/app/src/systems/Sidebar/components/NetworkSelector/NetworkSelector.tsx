@@ -71,6 +71,7 @@ const styles = {
     fontSize: '$md',
     bg: '$gray2 !important',
     flex: 1,
+    maxHeight: '36px',
     w: '200',
     p: '$2',
     py: '$2',

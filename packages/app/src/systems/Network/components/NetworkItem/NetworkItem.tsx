@@ -75,7 +75,7 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
 
 const styles = {
   root: cssObj({
-    maxHeight: '36px',
+    maxHeight: '52px',
     boxSizing: 'border-box',
 
     '&:hover': {
