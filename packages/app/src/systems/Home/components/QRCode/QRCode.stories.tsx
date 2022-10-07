@@ -4,7 +4,7 @@ import { ReceiverQRCode } from './QRCode';
 
 export default {
   component: ReceiverQRCode,
-  title: 'Faucet/Components/FaucetDialog',
+  title: 'Home/Components/QRCode',
 };
 
 export const Usage = () => (

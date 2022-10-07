@@ -4,7 +4,7 @@ import { UserAddressCard } from './UserAddressCard';
 
 export default {
   component: UserAddressCard,
-  title: 'Faucet/Components/FaucetDialog',
+  title: 'Home/Components/UserAddressCard',
 };
 
 export const Usage = () => (
