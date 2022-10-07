@@ -3,11 +3,11 @@ import { Button, Card, Flex } from '@fuel-ui/react';
 import { useCallback } from 'react';
 import QRCode from 'react-qr-code';
 
-import { useAccount } from '~/systems/Account';
+type Props = {
+  account: string;
+};
 
-export function ReceiverQRCode() {
-  const { account } = useAccount();
-
+export function ReceiverQRCode({ account }: Props) {
   const downloadQrCode = useCallback(() => {
     const svg = document.getElementById('qrcode-receive');
     const svgData = new XMLSerializer().serializeToString(svg as HTMLElement);
@@ -36,7 +36,7 @@ export function ReceiverQRCode() {
           color="#9BA1A6"
           bgColor="transparent"
           fgColor="#9BA1A6"
-          value={account?.publicKey as string}
+          value={account as string}
         />
       </Flex>
       <Button onClick={downloadQrCode} variant="ghost" size="sm">
