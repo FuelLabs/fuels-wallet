@@ -1,7 +1,6 @@
+import { cssObj } from '@fuel-ui/css';
 import { Flex } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
-
-// import { ReceiverQRCode } from '../../components/QRCode/QRCode';
 
 import { ReceiverQRCode } from '../../components/QRCode/QRCode';
 import { UserAddressCard } from '../../components/UserAddressCard/UserAddressCard';
@@ -14,7 +13,7 @@ export function Receive() {
     <Layout title="Receive">
       <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
       <Layout.Content>
-        <Flex css={{ height: '100%', flexDirection: 'column', gap: '$6' }}>
+        <Flex css={styles.contentWrapper}>
           <UserAddressCard />
           <ReceiverQRCode />
         </Flex>
@@ -22,3 +21,11 @@ export function Receive() {
     </Layout>
   );
 }
+
+const styles = {
+  contentWrapper: cssObj({
+    height: '100%',
+    flexDirection: 'column',
+    gap: '$6',
+  }),
+};

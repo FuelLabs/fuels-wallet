@@ -1,15 +1,20 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Button, Card, Copyable } from '@fuel-ui/react';
+import { useCallback } from 'react';
 
 import { useAccount } from '~/systems/Account';
 
 export function UserAddressCard() {
   const { account } = useAccount();
 
+  const copyAccount = useCallback(() => {
+    navigator.clipboard.writeText(account?.address as string);
+  }, []);
+
   return (
     <Card
       css={{
-        p: '$4',
+        p: '24px',
         gap: '$3',
         borderRadius: '$lg',
         display: 'flex',
@@ -27,8 +32,8 @@ export function UserAddressCard() {
           account.address.length - 1
         )}
       </Copyable>
-      <Button size="sm" css={{ w: '100%' }}>
-        Share
+      <Button onClick={copyAccount} size="sm" css={{ w: '100%' }}>
+        Copy User Address
       </Button>
     </Card>
   );
