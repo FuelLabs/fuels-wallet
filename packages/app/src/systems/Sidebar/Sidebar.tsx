@@ -16,41 +16,16 @@ export function Sidebar() {
     type: NetworkScreen.list,
   });
   return (
-    <Flex
-      css={{
-        flex: 1,
-        height: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-      }}
-    >
-      <Flex css={{ flex: 1, flexDirection: 'column' }}>
+    <Flex css={styles.wrapper}>
+      <Flex css={styles.column}>
         <Flex
           css={{
-            padding: '$2',
-            py: '$3',
-            justifyContent: 'space-between',
-            flex: 1,
-            borderBottomWidth: 'thin',
-            borderBottomStyle: 'dashed',
-            mb: '$4',
-
+            ...styles.topBorder,
             ...styles.separator,
           }}
         >
-          <Flex
-            css={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: '$2',
-            }}
-          >
-            <Box
-              css={{
-                borderRadius: '$full',
-                background: '$accent11',
-              }}
-            >
+          <Flex css={styles.accountDropdownWrapper}>
+            <Box css={styles.avatarWrapper}>
               <Avatar.Generated size={'sm'} hash={account?.address as string} />
             </Box>
 
@@ -66,15 +41,7 @@ export function Sidebar() {
       </Flex>
       <Flex
         css={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderTopWidth: 'thin',
-          borderTopStyle: 'dashed',
-          mt: '$4',
+          ...styles.bottomBorder,
           ...styles.separator,
         }}
       >
@@ -91,6 +58,41 @@ const styles = {
   separator: cssObj({
     borderColor: '$gray4',
   }),
+  avatarWrapper: cssObj({
+    borderRadius: '$full',
+    background: '$accent11',
+  }),
+  wrapper: cssObj({
+    flex: 1,
+    height: 'flex',
+    flexDirection: 'column',
+  }),
+  bottomBorder: cssObj({
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopWidth: 'thin',
+    borderTopStyle: 'dashed',
+    mt: '$4',
+  }),
+  accountDropdownWrapper: cssObj({
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: '$2',
+  }),
+  topBorder: cssObj({
+    padding: '$2',
+    py: '$3',
+    justifyContent: 'space-between',
+    flex: 1,
+    borderBottomWidth: 'thin',
+    borderBottomStyle: 'dashed',
+    mb: '$4',
+  }),
+  column: cssObj({ flex: 1, flexDirection: 'column' }),
   sidebarWrapper: cssObj({
     overflow: 'hidden',
     position: 'relative',
