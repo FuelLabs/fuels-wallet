@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { cssObj } from '@fuel-ui/css';
 import { Dropdown, Flex, Icon, Text } from '@fuel-ui/react';
-import { useEffect, useState } from 'react';
 
 import type { Network } from '~/systems/Network';
 import { NetworkItem } from '~/systems/Network';
@@ -17,15 +16,6 @@ export function NetworkSelector({
   networks,
   onSelectNetwork,
 }: NetworkSelectorProps) {
-  const [width, setWidth] = useState(0);
-
-  useEffect(() => {
-    const selector = document.querySelector(
-      "[data-testid='fuel_network-item']"
-    );
-    selector && setWidth(selector?.clientWidth);
-  }, []);
-
   return (
     <Flex css={styles.root}>
       <Text as="div" leftIcon={Icon.is('ShareNetwork')}>
@@ -39,7 +29,7 @@ export function NetworkSelector({
           autoFocus
           disabledKeys={['edit']}
           aria-label="Actions"
-          css={{ width }}
+          css={{ width: '200px' }}
           onAction={(id) => {
             const network = networks.find((n) => n.id === id);
             network && onSelectNetwork?.(network);
