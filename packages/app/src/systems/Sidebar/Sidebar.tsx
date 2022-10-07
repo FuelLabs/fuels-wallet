@@ -90,7 +90,6 @@ const styles = {
     flex: 1,
     borderBottomWidth: 'thin',
     borderBottomStyle: 'dashed',
-    mb: '$4',
   }),
   column: cssObj({ flex: 1, flexDirection: 'column' }),
   sidebarWrapper: cssObj({
