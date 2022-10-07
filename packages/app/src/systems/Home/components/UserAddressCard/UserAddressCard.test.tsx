@@ -12,9 +12,9 @@ describe('UserAddressCard', () => {
     render(<UserAddressCard account={TEST_ACCOUNT} />, {
       wrapper: TestWrapper,
     });
-    const accountPreview = await screen.findByTestId('account-preview');
+    const accountPreview = screen.getByLabelText('account-preview');
     expect(accountPreview).toBeInTheDocument();
-    const copyButton = await screen.findByTestId('copy-account');
+    const copyButton = screen.getByLabelText('copy-account');
     expect(copyButton).toBeInTheDocument();
 
     act(() => {
