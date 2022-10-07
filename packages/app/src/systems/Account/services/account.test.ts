@@ -1,17 +1,14 @@
 import { bn } from 'fuels';
 import { graphql } from 'msw';
 
+import { MOCK_ACCOUNTS } from '../__mocks__';
+
 import { AccountService } from './account';
 
 import { mockServer } from '~/mocks/server';
 import { ASSET_LIST } from '~/systems/Asset';
 
-const MOCK_ACCOUNT = {
-  name: 'Account 1',
-  address: 'fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef',
-  publicKey: '0x00',
-};
-
+const MOCK_ACCOUNT = MOCK_ACCOUNTS[0];
 const MOCK_BALANCES = [
   {
     node: {
