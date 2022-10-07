@@ -23,7 +23,9 @@ describe('Home', () => {
 
   it('should open the side bar and close it', () => {
     cy.visit('/wallet');
-    cy.get('[data-testid="drawer_trigger"]').eq(1).click();
-    cy.get('[data-testid="drawer_closeButton"]').eq(1).click();
+    cy.get('[aria-label="drawer_trigger"]').eq(1).click();
+    cy.contains('Wallet');
+    cy.contains('Support');
+    cy.get('[aria-label="drawer_closeButton"]').eq(1).click();
   });
 });

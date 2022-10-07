@@ -34,6 +34,7 @@ export function Sidebar() {
           <Drawer.CloseButton
             css={{ position: 'unset' }}
             data-testid="drawer_closeButton"
+            aria-label="drawer_closeButton"
           />
         </Flex>
 

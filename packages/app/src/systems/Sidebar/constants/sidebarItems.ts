@@ -13,24 +13,23 @@ export const sidebarItems = [
     label: 'Support',
     submenu: [
       {
-        key: 'contact',
-        icon: 'Envelope',
-        label: 'Contact Us',
-        /** This page isn't created yet */
-        ahref: 'https://fuel.network',
-      },
-      {
         key: 'discord',
         icon: 'DiscordLogo',
         label: 'Fuel Discord',
         ahref: 'https://discord.com/invite/xfpK4Pe',
       },
       {
+        key: 'github',
+        icon: 'GithubLogo',
+        label: 'Github',
+        ahref: 'https://github.com/FuelLabs/fuels-wallet',
+      },
+      {
         key: 'bugs',
         icon: 'Bug',
         label: 'Report a Bug',
         /** This page isn't created yet */
-        ahref: 'https://fuel.network',
+        ahref: 'https://github.com/FuelLabs/fuels-wallet/issues/new/choose',
       },
     ],
   },

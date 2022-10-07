@@ -72,7 +72,10 @@ export function TopBar({ onBack }: TopBarProps) {
         css={{ px: '0 !important' }}
       />
       <Drawer type="menu" size={220} containerRef={ref}>
-        <Drawer.Trigger data-testid="drawer_trigger">
+        <Drawer.Trigger
+          aria-label="drawer_trigger"
+          data-testid="drawer_trigger"
+        >
           <IconButton
             icon={<Icon icon="List" color="gray8" size={24} />}
             aria-label="Menu"

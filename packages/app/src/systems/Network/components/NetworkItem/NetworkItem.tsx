@@ -66,7 +66,7 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
         data-active={network?.isSelected}
         {...(showActions && { rightEl: actions })}
       >
-        <NetworkStatus network={network} />
+        {/* <NetworkStatus network={network} /> */}
         <Text>{network?.name}</Text>
       </CardList.Item>
     );
@@ -77,7 +77,7 @@ const styles = {
   root: cssObj({
     maxHeight: '52px',
     boxSizing: 'border-box',
-
+    px: '$2',
     '&:hover': {
       cursor: 'pointer',
     },
