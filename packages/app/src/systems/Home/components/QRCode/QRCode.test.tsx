@@ -1,3 +1,4 @@
+import 'canvas';
 import { render, screen } from '@fuel-ui/test-utils';
 import jsQR from 'jsqr';
 
@@ -11,17 +12,19 @@ const TEST_ACCOUNT =
 describe('QR Code Tests', () => {
   it('should show the qr code on screen', async () => {
     render(<ReceiverQRCode account={TEST_ACCOUNT} />, { wrapper: TestWrapper });
-    const qrCode = screen.findByTestId('qrcode-receiver');
+    const qrCode = screen.getByLabelText('qrcode');
     expect(qrCode).toBeInTheDocument();
   });
 
   it('should be a valid qr code showing on the screen', async () => {
-    render(<ReceiverQRCode account={TEST_ACCOUNT} />);
-    const qrCode = await screen.findByTestId('qrcode-receiver');
+    render(<ReceiverQRCode account={TEST_ACCOUNT} />, { wrapper: TestWrapper });
+    const qrCode = screen.getByLabelText('qrcode');
+
     expect(qrCode).toBeInTheDocument();
 
-    const svg = document.getElementById('qrcode-receive');
-    const svgData = new XMLSerializer().serializeToString(svg as HTMLElement);
+    const svgData = new XMLSerializer().serializeToString(
+      qrCode as HTMLElement
+    );
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     const img = new Image();

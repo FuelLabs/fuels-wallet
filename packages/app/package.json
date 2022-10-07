@@ -86,6 +86,7 @@
     "@types/react-helmet": "^6.1.5",
     "@types/testing-library__jest-dom": "^5.14.5",
     "@vitejs/plugin-react": "^2.1.0",
+    "canvas": "^2.10.1",
     "msw": "^0.47.4",
     "msw-storybook-addon": "^1.6.3",
     "storybook-addon-react-router-v6": "^0.2.1",

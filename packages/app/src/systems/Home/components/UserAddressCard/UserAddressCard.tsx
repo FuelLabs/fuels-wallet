@@ -29,12 +29,12 @@ export function UserAddressCard({ account }: Props) {
           size="lg"
         />
       </Box>
-      <Copyable data-testid="account-preview" value={account as string}>
+      <Copyable aria-label="account-preview" value={account as string}>
         {account.slice(0, 6)}...
         {account.slice(account.length - 7, account.length - 1)}
       </Copyable>
       <Button
-        data-testid="copy-account"
+        aria-label="copy-account"
         onClick={copyAccount}
         size="sm"
         css={{ w: '100%' }}

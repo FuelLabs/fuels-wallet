@@ -1,4 +1,4 @@
-import { render, screen } from '@fuel-ui/test-utils';
+import { act, render, screen } from '@fuel-ui/test-utils';
 
 import { UserAddressCard } from '.';
 
@@ -16,7 +16,11 @@ describe('UserAddressCard', () => {
     expect(accountPreview).toBeInTheDocument();
     const copyButton = await screen.findByTestId('copy-account');
     expect(copyButton).toBeInTheDocument();
-    copyButton.click();
+
+    act(() => {
+      copyButton.click();
+    });
+
     const clipboardValue = await navigator.clipboard.readText();
     expect(clipboardValue).toBe(TEST_ACCOUNT);
   });
