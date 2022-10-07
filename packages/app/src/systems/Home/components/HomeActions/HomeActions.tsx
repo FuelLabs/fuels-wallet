@@ -1,30 +1,26 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Flex } from '@fuel-ui/react';
-import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-import { Pages } from '~/systems/Core';
 
 export type HomeActionsProps = {
   isDisabled?: boolean;
+  receiveAction?: () => void;
+  sendAction?: () => void;
 };
 
-export const HomeActions = ({ isDisabled }: HomeActionsProps) => {
-  const navigate = useNavigate();
-
-  const goToReceive = useCallback(() => {
-    navigate(Pages.receive());
-  }, [navigate]);
-
+export const HomeActions = ({
+  isDisabled,
+  receiveAction = () => {},
+  sendAction = () => {},
+}: HomeActionsProps) => {
   return (
     <Flex css={styles.wrapper}>
-      <Button isDisabled={isDisabled} css={styles.button}>
+      <Button onClick={sendAction} isDisabled={isDisabled} css={styles.button}>
         Send
       </Button>
       <Button
         size="sm"
         isDisabled={isDisabled}
-        onClick={goToReceive}
+        onClick={receiveAction}
         variant="outlined"
         color="gray"
         css={styles.button}

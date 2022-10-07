@@ -18,4 +18,28 @@ describe('HomeActions', () => {
     expect(screen.getByText('Send')).toBeDisabled();
     expect(screen.getByText('Receive')).toBeDisabled();
   });
+
+  it("should call 'Send' and 'Receive' actions when clicked", () => {
+    const receiveAction = jest.fn();
+    const sendAction = jest.fn();
+    render(
+      <HomeActions
+        isDisabled
+        receiveAction={receiveAction}
+        sendAction={sendAction}
+      />
+    );
+
+    const receiveButton = screen.getByText('Receive');
+    const sendButton = screen.getByText('Send');
+
+    expect(receiveButton).toBeInTheDocument();
+    expect(sendButton).toBeInTheDocument();
+
+    sendButton.click();
+    receiveButton.click();
+
+    expect(receiveAction).toBeCalled();
+    expect(sendAction).toBeCalled();
+  });
 });
