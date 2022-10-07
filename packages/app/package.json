@@ -49,8 +49,8 @@
     "react-dom": "^18.2.0",
     "react-google-recaptcha": "^2.1.0",
     "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.36.1",
-    "react-router-dom": "^6.4.1",
+    "react-hook-form": "^7.37.0",
+    "react-router-dom": "^6.4.2",
     "util": "^0.12.4",
     "xstate": "^4.33.6",
     "yup": "^0.32.11"
@@ -92,7 +92,7 @@
     "tsconfig-paths-webpack-plugin": "^4.0.0",
     "vite-plugin-zip-pack": "^1.0.4",
     "typescript": "^4.8.4",
-    "vite": "^3.1.4",
+    "vite": "^3.1.6",
     "vite-tsconfig-paths": "^3.5.1",
     "webpack": "^5.74.0"
   },

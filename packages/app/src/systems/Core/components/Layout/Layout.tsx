@@ -4,6 +4,7 @@ import { Box, Flex } from '@fuel-ui/react';
 import type { FC, ReactNode } from 'react';
 import { useContext, createContext } from 'react';
 import { Helmet } from 'react-helmet';
+import { useLocation } from 'react-router-dom';
 
 import { BottomBar } from './BottomBar';
 import { TopBar } from './TopBar';
@@ -34,11 +35,8 @@ function Content({ as, children, css }: ContentProps) {
   );
 }
 
-export type LayoutProps = {
+export type LayoutProps = Context & {
   isPublic?: boolean;
-  isLoading?: boolean;
-  isHome?: boolean;
-  title?: string;
   children: ReactNode;
 };
 
@@ -51,13 +49,15 @@ type LayoutComponent = FC<LayoutProps> & {
 export const Layout: LayoutComponent = ({
   isPublic,
   isLoading,
-  isHome,
   title,
   children,
 }: LayoutProps) => {
   const titleText = title ? `${title} | Fuel` : 'Fuel';
+  const location = useLocation();
+  const isHome = location.pathname === '/wallet';
+
   return (
-    <ctx.Provider value={{ isLoading, isHome, title }}>
+    <ctx.Provider value={{ isLoading, title, isHome }}>
       <Helmet>
         <title>{titleText}</title>
       </Helmet>
