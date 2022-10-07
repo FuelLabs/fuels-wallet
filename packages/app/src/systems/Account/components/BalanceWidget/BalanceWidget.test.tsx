@@ -1,13 +1,13 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
 
+import { MOCK_ACCOUNTS } from '../../__mocks__';
+
 import { BalanceWidget } from './BalanceWidget';
 
 const ACCOUNT = {
-  name: 'Account 1',
-  address: 'fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef',
+  ...MOCK_ACCOUNTS[0],
   balance: '12008943834',
   balanceSymbol: '$',
-  publicKey: '0x000',
 };
 
 describe('BalanceWidget', () => {

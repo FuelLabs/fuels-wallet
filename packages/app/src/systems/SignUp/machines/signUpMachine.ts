@@ -177,7 +177,7 @@ export const signUpMachine = createMachine(
         localStorage.setItem(IS_LOGGED_KEY, 'true');
         store.updateAccounts();
       },
-      redirectToWalletCreated: () => null,
+      redirectToWalletCreated: () => {},
     },
     guards: {
       isCreatingWallet: (ctx) => {
