@@ -18,7 +18,7 @@ export class Events<T extends EventConnector<T>> extends EventEmitter {
   createMessage<DataType = void>(
     event: string,
     data?: DataType
-  ): EventMessage<DataType, T> {
+  ): Omit<EventMessage<DataType, T>, 'origin'> {
     return {
       id: this.id,
       name: this.name,
@@ -27,9 +27,21 @@ export class Events<T extends EventConnector<T>> extends EventEmitter {
     };
   }
 
+  emit<D = void>(
+    eventName: string,
+    data: D,
+    eventMessage: EventMessage<typeof data, T>
+  ): boolean {
+    return super.emit(eventName, data, eventMessage);
+  }
+
   onMessage<D = void>(eventMessage: EventMessage<D, T>) {
     if (eventMessage.id !== this.id && eventMessage.name === this.name) {
-      this.emit(eventMessage.event, eventMessage.data);
+      this.emit(
+        eventMessage.event,
+        Object.freeze(eventMessage.data),
+        Object.freeze(eventMessage)
+      );
     }
   }
 

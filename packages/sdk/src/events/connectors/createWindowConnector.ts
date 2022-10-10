@@ -13,10 +13,11 @@ export const createWindowConnector = ({
     },
     setupListener: (onMessage) => {
       target.addEventListener('message', (message) => {
-        if (!origin) {
-          onMessage(message.data);
-        } else if (message.origin === origin) {
-          onMessage(message.data);
+        if (message.origin === origin) {
+          onMessage({
+            ...message.data,
+            origin,
+          });
         }
       });
     },

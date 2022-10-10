@@ -17,6 +17,7 @@ export const createExtensionConnector = ({
         if (sender.id === senderId && sender.tab?.id) {
           onMessage({
             ...request,
+            origin: sender.origin,
             metadata: {
               tabId: sender.tab.id,
             },

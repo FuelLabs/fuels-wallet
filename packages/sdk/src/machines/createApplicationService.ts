@@ -1,13 +1,17 @@
 import { v4 } from 'uuid';
 import { interpret } from 'xstate';
 
-import type { EventConnector } from '../events';
+import type { EventConnector, EventMessage } from '../events';
 import { Events } from '../events';
 
-import { applicationMachine } from './applicationMachine';
+import {
+  createApplicationMachine,
+  ExternalAppEvents,
+} from './applicationMachine';
 
 export type ApplicationServiceOptions = {
   connector: EventConnector;
+  services?: any;
 };
 
 export const createApplicationService = (
@@ -18,22 +22,20 @@ export const createApplicationService = (
     name: 'FuelWeb3',
     connector: options.connector,
   });
-  const machine = applicationMachine.withContext({
-    events,
-    isConnected: false,
-  });
+  const machine = createApplicationMachine(options.services || {});
   const service = interpret(machine);
 
   service.onTransition((state, event) => {
-    events.send(state.value.toString(), event.data);
+    if (state.hasTag('emitEvent')) {
+      events.send(state.value.toString(), event.data);
+    }
   });
 
-  events.on('connect', () => {
-    service.send('CONNECT');
+  Object.values(ExternalAppEvents).forEach((eventName) => {
+    events.on(eventName, (_, eventMessage: EventMessage) => {
+      service.send(eventName, { data: eventMessage });
+    });
   });
-
-  // service.send('CONNECT');
-  // service.send('DISCONNECT');
 
   return service.start();
 };
