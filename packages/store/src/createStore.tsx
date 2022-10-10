@@ -132,12 +132,12 @@ export function createStore<T extends MachinesObj, E extends Events>(
     broadcast: _store.broadcast.bind(_store),
     subscribe: _store.subscribe.bind(_store),
     getState: _store.getState.bind(_store),
-    useSelector<K extends keyof T>(
+    useSelector<K extends keyof T, R>(
       key: K,
-      selector: (state: StateFrom<T[K]>) => any
+      selector: (state: StateFrom<T[K]>) => R
     ) {
       const service = this.useService(key);
-      return useSelector(service, selector);
+      return service && useSelector(service, selector);
     },
     useService(key: keyof T) {
       return useSyncExternalStore(_store.subscribe.bind(_store), () => {

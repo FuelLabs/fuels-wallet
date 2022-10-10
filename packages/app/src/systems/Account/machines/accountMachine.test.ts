@@ -3,14 +3,14 @@ import type { InterpreterFrom } from 'xstate';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
+import { MOCK_ACCOUNTS } from '../__mocks__';
+
 import { accountMachine } from './accountMachine';
 
 type Service = InterpreterFrom<typeof accountMachine>;
 
 const MOCK_ACCOUNT = {
-  name: 'Account1',
-  address: '0x00',
-  publicKey: '0x00',
+  ...MOCK_ACCOUNTS[0],
   balance: bn(0),
   balanceSymbol: '$',
   balances: [{ amount: bn(100000), assetId: '0x0000000000' }],

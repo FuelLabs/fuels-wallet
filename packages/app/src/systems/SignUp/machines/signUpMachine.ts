@@ -127,7 +127,9 @@ export const signUpMachine = createMachine(
       failed: {
         entry: 'assignError',
       },
-      done: {},
+      done: {
+        entry: 'redirectToWalletCreated',
+      },
     },
   },
   {
@@ -175,6 +177,7 @@ export const signUpMachine = createMachine(
         localStorage.setItem(IS_LOGGED_KEY, 'true');
         store.updateAccounts();
       },
+      redirectToWalletCreated: () => {},
     },
     guards: {
       isCreatingWallet: (ctx) => {

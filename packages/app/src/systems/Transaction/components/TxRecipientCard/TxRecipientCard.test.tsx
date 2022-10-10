@@ -1,31 +1,29 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
 
+import { MOCK_TX_RECIPIENT } from '../../__mocks__/tx-recipient';
+
 import { TxRecipientCard } from './TxRecipientCard';
 
-const ACCOUNT = {
-  name: 'Account 1',
-  address: 'fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef',
-  publicKey: '0x00',
-};
-
-const CONTRACT = {
-  address: '0x239ce1fb790d5b829fe7a40a3d54cb825a403bb3',
-};
+const { account: ACCOUNT, contract: CONTRACT } = MOCK_TX_RECIPIENT;
 
 describe('TxRecipientCard', () => {
   it('a11y', async () => {
-    await testA11y(<TxRecipientCard account={ACCOUNT} />);
+    await testA11y(<TxRecipientCard recipient={ACCOUNT} />);
   });
 
   it('should render account correctly', () => {
-    render(<TxRecipientCard account={ACCOUNT} />);
-    expect(screen.getByLabelText('Account 1')).toBeInTheDocument();
-    expect(screen.getByText('fuel0x...74ef')).toBeInTheDocument();
+    render(<TxRecipientCard recipient={ACCOUNT} />);
+    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
   });
 
   it('should render contract correctly', () => {
-    render(<TxRecipientCard contract={CONTRACT} />);
-    expect(screen.getByText(/Contract/)).toBeInTheDocument();
-    expect(screen.getByText('0x239c...3bb3')).toBeInTheDocument();
+    render(<TxRecipientCard recipient={CONTRACT} />);
+    expect(screen.getByText('From (Contract)')).toBeInTheDocument();
+    expect(screen.getByText('0x277f...207c')).toBeInTheDocument();
+  });
+
+  it('should change title with isReceiver prop', () => {
+    render(<TxRecipientCard recipient={CONTRACT} isReceiver />);
+    expect(screen.getByText('To (Contract)')).toBeInTheDocument();
   });
 });

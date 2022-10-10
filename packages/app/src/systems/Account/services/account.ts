@@ -1,22 +1,13 @@
 /* eslint-disable consistent-return */
 import { WalletManager } from '@fuel-ts/wallet-manager';
-import type { CoinQuantity } from 'fuels';
 import { bn, Address, Provider } from 'fuels';
 
 import type { Account } from '../types';
 import { IndexedDBStorage } from '../utils';
 
-import { ASSET_LIST } from '~/systems/Asset';
+import { isEth } from '~/systems/Asset';
 import type { Maybe } from '~/systems/Core';
 import { getPhraseFromValue, db } from '~/systems/Core';
-
-type DBCoinBalance = Omit<CoinQuantity, 'amount'> & {
-  /**
-   * We need amount as string here because isn't possible to save
-   * bn() values inside IndexedDB
-   */
-  amount: string;
-};
 
 export type AccountInputs = {
   addAccount: {
@@ -31,12 +22,7 @@ export type AccountInputs = {
     account?: Maybe<Account>;
   };
   setBalance: {
-    data: {
-      address: string;
-      balance: string;
-      balanceSymbol: string;
-      balances: DBCoinBalance[];
-    };
+    data: Pick<Account, 'address' | 'balance' | 'balanceSymbol' | 'balances'>;
   };
   createManager: {
     data: {
@@ -77,9 +63,7 @@ export class AccountService {
     const { account, providerUrl } = input;
     try {
       const balances = await getBalances(providerUrl, account.publicKey);
-      const ethAsset = balances.find(
-        ({ assetId }) => assetId === ASSET_LIST[0].assetId
-      );
+      const ethAsset = balances.find(isEth);
       const ethBalance = ethAsset?.amount;
       const nextAccount = await AccountService.setBalance({
         data: {
