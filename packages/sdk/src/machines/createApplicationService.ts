@@ -25,9 +25,14 @@ export const createApplicationService = (
   const machine = createApplicationMachine(options.services || {});
   const service = interpret(machine);
 
+  service.onChange((state) => {
+    events.send('state', state);
+  });
+
   service.onTransition((state, event) => {
     if (state.hasTag('emitEvent')) {
-      events.send(state.value.toString(), event.data);
+      events.send('state', state.context);
+      events.send(state.value.toString(), state.context.error || event.data);
     }
   });
 

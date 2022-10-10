@@ -3,10 +3,10 @@ import type { Application } from '@fuels-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-type MachineContext = {
+export type MachineContext = {
   application?: Application | null;
   isConnected: boolean;
-  error?: unknown;
+  error?: string;
 };
 
 type MachineServices = {
@@ -19,7 +19,6 @@ type MachineServices = {
   fetchApplication: {
     data: Application | null;
   };
-  emitEvent: any;
 };
 
 export enum ExternalAppEvents {
@@ -75,7 +74,7 @@ export function createApplicationMachine(services: any) {
               },
             },
           },
-          rejected: {
+          error: {
             tags: ['emitEvent'],
           },
           connect: {
@@ -115,7 +114,8 @@ export function createApplicationMachine(services: any) {
                 target: '.authorizeApp',
               },
               [InternalAppEvents.reject]: {
-                target: 'rejected',
+                actions: ['setConnectionRejected'],
+                target: '#(machine).error',
               },
             },
           },
@@ -135,6 +135,9 @@ export function createApplicationMachine(services: any) {
       },
       {
         actions: {
+          setConnectionRejected: assign({
+            error: (_) => 'Connection rejected!',
+          }),
           setApplication: assign({
             application: (_, ev) => {
               return {

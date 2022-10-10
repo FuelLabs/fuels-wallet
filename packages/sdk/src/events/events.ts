@@ -1,11 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import EventEmitter from 'events';
 
-import type { EventConnector, EventsOptions, EventMessage } from './types';
+import type {
+  EventConnector,
+  EventsOptions,
+  EventMessage,
+  MessagePost,
+} from './types';
 
-export class Events<T extends EventConnector<T>> extends EventEmitter {
+export class Events<T = void> extends EventEmitter {
   id: string;
   name: string;
-  connector: T;
+  connector: EventConnector<T>;
 
   constructor(options: EventsOptions<T>) {
     super();
@@ -15,10 +21,7 @@ export class Events<T extends EventConnector<T>> extends EventEmitter {
     options.connector.setupListener(this.onMessage.bind(this));
   }
 
-  createMessage<DataType = void>(
-    event: string,
-    data?: DataType
-  ): Omit<EventMessage<DataType, T>, 'origin'> {
+  createMessage(event: string, data?: any): MessagePost<T> {
     return {
       id: this.id,
       name: this.name,
@@ -27,15 +30,11 @@ export class Events<T extends EventConnector<T>> extends EventEmitter {
     };
   }
 
-  emit<D = void>(
-    eventName: string,
-    data: D,
-    eventMessage: EventMessage<typeof data, T>
-  ): boolean {
+  emit(eventName: string, data: any, eventMessage: EventMessage<T>): boolean {
     return super.emit(eventName, data, eventMessage);
   }
 
-  onMessage<D = void>(eventMessage: EventMessage<D, T>) {
+  onMessage(eventMessage: EventMessage<T>) {
     if (eventMessage.id !== this.id && eventMessage.name === this.name) {
       this.emit(
         eventMessage.event,
@@ -45,7 +44,7 @@ export class Events<T extends EventConnector<T>> extends EventEmitter {
     }
   }
 
-  send<DataType = void>(eventName: string, data?: DataType) {
-    this.connector.postMessage(this.createMessage<DataType>(eventName, data));
+  send(eventName: string, data?: any) {
+    this.connector.postMessage(this.createMessage(eventName, data));
   }
 }

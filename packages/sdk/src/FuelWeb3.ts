@@ -2,7 +2,8 @@ import { v4 } from 'uuid';
 
 import { SERVICE_NAME } from './config';
 import type { EventConnector } from './events';
-import { Events, getConnector } from './events';
+import { createWindowConnector, Events } from './events';
+import type { MachineContext } from './machines/applicationMachine';
 
 export type FuelWeb3Options = {
   connector: EventConnector;
@@ -11,16 +12,21 @@ export type FuelWeb3Options = {
 class FuelWeb3 {
   readonly id: string;
   readonly name: string;
-  readonly events: Events<any>;
+  readonly events: Events;
+
+  #state?: MachineContext;
 
   constructor(options?: FuelWeb3Options) {
     this.id = v4();
     this.name = SERVICE_NAME;
-    const connector = options?.connector || getConnector();
-    this.events = new Events<any>({
+    const connector = options?.connector || createWindowConnector(window);
+    this.events = new Events({
       connector,
       id: this.id,
       name: this.name,
+    });
+    this.events.on('state', (state) => {
+      this.#state = state;
     });
   }
 
@@ -31,7 +37,9 @@ class FuelWeb3 {
   ) {
     return new Promise<T>((resolve, reject) => {
       this.events.once(eventName, resolve);
-      this.events.once(eventErrorName, reject);
+      this.events.once(eventErrorName, (error) => {
+        reject(new Error(error));
+      });
       fn();
     });
   }
@@ -57,19 +65,19 @@ class FuelWeb3 {
     );
   }
 
-  // isConnected(): boolean {
-  //   this.events.send('isConnected');
-  //   return Promise.resolve(true);
-  // }
+  isConnected(): boolean {
+    return !!this.#state?.isConnected;
+  }
 
-  // onConnect(handler: () => void): () => void {
-  //   // this.rpc.server.
-  //   console.log('On connection change', handler);
-  //   return () => {
-  //     // Unsubscribe
-  //     console.log('unsub');
-  //   };
-  // }
+  onConnect(handler: (isConnected: boolean) => void): () => void {
+    const handlerWrapper = () => handler(this.isConnected());
+    this.events.on('connected', handlerWrapper);
+    this.events.on('disconnected', handlerWrapper);
+    return () => {
+      this.events.off('connected', handlerWrapper);
+      this.events.off('disconnected', handlerWrapper);
+    };
+  }
 }
 
 export default FuelWeb3;

@@ -1,19 +1,13 @@
 import type { EventConnector } from '../types';
 
-export const createWindowConnector = ({
-  target,
-  origin,
-}: {
-  target: Window;
-  origin: string;
-}): EventConnector => {
+export const createWindowConnector = (target: Window): EventConnector => {
   return {
     postMessage: (request) => {
-      target.postMessage(request, origin);
+      target.postMessage(request, window.origin);
     },
     setupListener: (onMessage) => {
       target.addEventListener('message', (message) => {
-        if (message.origin === origin) {
+        if (message.origin === window.origin) {
           onMessage({
             ...message.data,
             origin,

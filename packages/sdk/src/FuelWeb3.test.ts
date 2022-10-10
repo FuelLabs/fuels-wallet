@@ -60,7 +60,7 @@ describe('Test FuelWeb3 SDK', () => {
     const fuelWeb3 = new FuelWeb3({
       connector: fuelWeb3Connector,
     });
-    const appService = createApplicationService({
+    createApplicationService({
       connector: appConnector,
       services: {
         fetchApplication: async () => {
@@ -68,11 +68,34 @@ describe('Test FuelWeb3 SDK', () => {
         },
       },
     });
-    expect(appService.getSnapshot().context.isConnected).toBeFalsy();
+    expect(fuelWeb3.isConnected()).toBeFalsy();
 
     const connected = await fuelWeb3.connect();
 
     expect(connected).toEqual(MOCK_APP);
-    expect(appService.getSnapshot().context.isConnected).toBeTruthy();
+    expect(fuelWeb3.isConnected()).toBeTruthy();
+
+    await fuelWeb3.disconnect();
+    expect(fuelWeb3.isConnected()).toBeFalsy();
+  });
+
+  it('Should trigger error when rejected', async () => {
+    const { fuelWeb3Connector, appConnector } = createConnector();
+    const fuelWeb3 = new FuelWeb3({
+      connector: fuelWeb3Connector,
+    });
+    const appService = createApplicationService({
+      connector: appConnector,
+    });
+    appService.onTransition((state) => {
+      if (state.matches('connect.idle')) {
+        appService.send(InternalAppEvents.reject);
+      }
+    });
+    expect(fuelWeb3.isConnected()).toBeFalsy();
+    expect(async () => {
+      await fuelWeb3.connect();
+    }).rejects.toThrowError('Connection rejected!');
+    expect(fuelWeb3.isConnected()).toBeFalsy();
   });
 });

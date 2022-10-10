@@ -1,23 +1,23 @@
+export type MessagePost<T = void> = Omit<EventMessage<T>, 'origin'>;
+
 export type EventConnector<MetadataType = void> = {
-  postMessage: <DataType = void>(
-    eventMessage: Omit<EventMessage<DataType, MetadataType>, 'origin'>
-  ) => void;
-  setupListener: <DataType = void>(
-    receive: (eventMessage: EventMessage<DataType, MetadataType>) => void
+  postMessage: (eventMessage: MessagePost<MetadataType>) => void;
+  setupListener: (
+    receive: (eventMessage: EventMessage<MetadataType>) => void
   ) => void;
 };
 
-export type EventsOptions<T extends EventConnector<T>> = {
+export type EventsOptions<T> = {
   id: string;
   name: string;
-  connector: T;
+  connector: EventConnector<T>;
 };
 
-export type EventMessage<DataType = void, MetadataType = void> = {
+export type EventMessage<MetadataType = void> = {
   id: string;
   name: string;
   event: string;
   origin: string;
-  data?: DataType;
+  data?: any;
   metadata?: MetadataType;
 };
