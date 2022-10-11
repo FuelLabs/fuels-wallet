@@ -16,6 +16,7 @@ import { useLayoutContext } from './Layout';
  * Because of some cycle-dependency error here, is not
  * possible to just import by using ~/systems/Network
  */
+import { useAccount } from '~/systems/Account/hooks/useAccount';
 import { NetworkDropdown } from '~/systems/Network/components/NetworkDropdown';
 import { useNetworks } from '~/systems/Network/hooks';
 import { NetworkScreen } from '~/systems/Network/machines';
@@ -41,6 +42,10 @@ function InternalTopBar({ onBack }: TopBarProps) {
   const { networks, selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
+  const {
+    isLocked,
+    handlers: { goToUnlockPage },
+  } = useAccount();
 
   return (
     <Flex as="nav" className={style({ isHome })}>
@@ -75,10 +80,18 @@ function InternalTopBar({ onBack }: TopBarProps) {
         )}
       </Flex>
       <IconButton
-        icon={<Icon icon="Bell" color="gray8" size={24} />}
-        aria-label="Activities"
+        tooltip="Click to unlock"
+        aria-label={isLocked ? 'Wallet Locked' : 'Wallet Unlocked'}
         variant="link"
         css={{ px: '0 !important' }}
+        onPress={() => goToUnlockPage()}
+        icon={
+          <Icon
+            icon={isLocked ? Icon.is('Lock') : Icon.is('LockKeyOpen')}
+            color="gray8"
+            size={24}
+          />
+        }
       />
       <IconButton
         icon={<Icon icon="List" color="gray8" size={24} />}

@@ -1,13 +1,17 @@
+import type { Wallet } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
+import type { AccountInputs } from '../services/account';
 import { AccountService } from '../services/account';
 import type { Account } from '../types';
 
 import { IS_LOGGED_KEY } from '~/config';
+import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
 type MachineContext = {
+  wallet?: Wallet;
   data?: Account;
   error?: unknown;
 };
@@ -16,9 +20,14 @@ type MachineServices = {
   fetchAccount: {
     data: Account;
   };
+  unlock: {
+    data: Wallet;
+  };
 };
 
-type MachineEvents = { type: 'UPDATE_ACCOUNT' };
+type MachineEvents =
+  | { type: 'UPDATE_ACCOUNT'; input?: null }
+  | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] };
 
 export const accountMachine = createMachine(
   {
@@ -34,6 +43,7 @@ export const accountMachine = createMachine(
     initial: 'fetchingAccount',
     states: {
       fetchingAccount: {
+        tags: ['loading'],
         invoke: {
           src: 'fetchAccount',
           onDone: [
@@ -54,7 +64,25 @@ export const accountMachine = createMachine(
             },
           ],
         },
-        tags: 'loading',
+      },
+      unlocking: {
+        tags: ['loading'],
+        invoke: {
+          src: 'unlock',
+          data: {
+            input: (_: MachineContext, ev: MachineEvents) => ev.input,
+          },
+          onDone: [
+            {
+              target: 'done',
+              cond: FetchMachine.hasError,
+            },
+            {
+              actions: ['assignWallet', 'redirectToStatePath'],
+              target: 'done',
+            },
+          ],
+        },
       },
       done: {},
       failed: {},
@@ -63,12 +91,18 @@ export const accountMachine = createMachine(
       UPDATE_ACCOUNT: {
         target: 'fetchingAccount',
       },
+      UNLOCK_WALLET: {
+        target: 'unlocking',
+      },
     },
   },
   {
     actions: {
       assignAccount: assign({
         data: (_, ev) => ev.data,
+      }),
+      assignWallet: assign({
+        wallet: (_, ev) => ev.data,
       }),
       assignError: assign({
         error: (_, ev) => ev.data,
@@ -81,17 +115,29 @@ export const accountMachine = createMachine(
       },
     },
     services: {
-      async fetchAccount() {
-        const selectedNetwork = await NetworkService.getSelectedNetwork();
-        const defaultProvider = import.meta.env.VITE_FUEL_PROVIDER_URL;
-        const providerUrl = selectedNetwork?.url || defaultProvider;
-        const accounts = await AccountService.getAccounts();
-        const account = accounts[0];
-        if (!account) {
-          throw new Error('Account not found');
-        }
-        return AccountService.fetchBalance({ account, providerUrl });
-      },
+      fetchAccount: FetchMachine.create<never, Account>({
+        showError: true,
+        async fetch() {
+          const selectedNetwork = await NetworkService.getSelectedNetwork();
+          const defaultProvider = import.meta.env.VITE_FUEL_PROVIDER_URL;
+          const providerUrl = selectedNetwork?.url || defaultProvider;
+          const accounts = await AccountService.getAccounts();
+          const account = accounts[0];
+          if (!account) {
+            throw new Error('Account not found');
+          }
+          return AccountService.fetchBalance({ account, providerUrl });
+        },
+      }),
+      unlock: FetchMachine.create<AccountInputs['unlock'], Wallet>({
+        showError: true,
+        async fetch({ input }) {
+          if (!input || !input?.password) {
+            throw new Error('Invalid network input');
+          }
+          return AccountService.unlock(input);
+        },
+      }),
     },
     guards: {
       hasAccount: (ctx, ev) => {
