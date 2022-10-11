@@ -18,7 +18,10 @@ type MachineServices = {
   };
 };
 
-type MachineEvents = { type: 'UPDATE_ACCOUNT' };
+type MachineEvents = {
+  type: 'UPDATE_ACCOUNT' | 'REFRESH_ACCOUNT';
+  data?: Account;
+};
 
 export const accountMachine = createMachine(
   {
@@ -33,6 +36,28 @@ export const accountMachine = createMachine(
     id: '(machine)',
     initial: 'fetchingAccount',
     states: {
+      refreshingAccount: {
+        invoke: {
+          src: 'fetchAccount',
+          onDone: [
+            {
+              target: 'done',
+              actions: ['assignAccount', 'setLocalStorage'],
+              cond: 'hasAccount',
+            },
+            {
+              actions: ['removeLocalStorage'],
+              target: 'done',
+            },
+          ],
+          onError: [
+            {
+              actions: 'assignError',
+              target: 'failed',
+            },
+          ],
+        },
+      },
       fetchingAccount: {
         invoke: {
           src: 'fetchAccount',
@@ -62,6 +87,10 @@ export const accountMachine = createMachine(
     on: {
       UPDATE_ACCOUNT: {
         target: 'fetchingAccount',
+      },
+
+      REFRESH_ACCOUNT: {
+        target: 'refreshingAccount',
       },
     },
   },

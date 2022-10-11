@@ -51,13 +51,14 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.36.1",
     "react-router-dom": "^6.4.1",
+    "react-use-poll": "^1.1.5",
     "util": "^0.12.4",
     "xstate": "^4.33.6",
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@crxjs/vite-plugin": "^1.0.14",
     "@babel/core": "^7.19.3",
+    "@crxjs/vite-plugin": "^1.0.14",
     "@import-meta-env/unplugin": "^0.1.8",
     "@playwright/test": "^1.26.1",
     "@storybook/addon-a11y": "^6.5.12",
@@ -90,9 +91,9 @@
     "storybook-dark-mode": "^1.1.2",
     "ts-jest-mock-import-meta": "^0.12.0",
     "tsconfig-paths-webpack-plugin": "^4.0.0",
-    "vite-plugin-zip-pack": "^1.0.4",
     "typescript": "^4.8.4",
     "vite": "^3.1.4",
+    "vite-plugin-zip-pack": "^1.0.4",
     "vite-tsconfig-paths": "^3.5.1",
     "webpack": "^5.74.0"
   },
