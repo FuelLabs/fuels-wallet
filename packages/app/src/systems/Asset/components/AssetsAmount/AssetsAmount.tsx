@@ -5,9 +5,10 @@ import type { Asset } from '../../types';
 import { getAssetInfoById } from '../../utils';
 
 import { formatUnits, shortAddress } from '~/systems/Core';
+import type { TxInputCoin } from '~/systems/Transaction';
 
 export type AssetsAmountProps = {
-  amounts: Asset[];
+  amounts: Asset[] | TxInputCoin[];
 };
 
 export function AssetsAmount({ amounts }: AssetsAmountProps) {
@@ -17,7 +18,7 @@ export function AssetsAmount({ amounts }: AssetsAmountProps) {
         const asset = getAssetInfoById(item.assetId, item);
         const isPositive = (asset?.amount ?? 0) > 0;
         return (
-          <Grid key={asset.assetId} css={styles.root}>
+          <Grid key={asset.assetId.toString()} css={styles.root}>
             <Flex css={styles.asset}>
               <Avatar
                 name={asset.name}

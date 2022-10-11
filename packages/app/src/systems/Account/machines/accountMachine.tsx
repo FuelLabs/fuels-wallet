@@ -6,7 +6,7 @@ import type { AccountInputs } from '../services/account';
 import { AccountService } from '../services/account';
 import type { Account } from '../types';
 
-import { IS_LOGGED_KEY } from '~/config';
+import { IS_LOCKED_KEY, IS_LOGGED_KEY } from '~/config';
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
@@ -84,7 +84,9 @@ export const accountMachine = createMachine(
           ],
         },
       },
-      done: {},
+      done: {
+        entry: ['setIsLocked'],
+      },
       failed: {},
     },
     on: {
@@ -112,6 +114,13 @@ export const accountMachine = createMachine(
       },
       removeLocalStorage: () => {
         localStorage.removeItem(IS_LOGGED_KEY);
+      },
+      setIsLocked: (ctx) => {
+        if (ctx.wallet) {
+          localStorage.removeItem(IS_LOCKED_KEY);
+        } else {
+          localStorage.setItem(IS_LOCKED_KEY, 'true');
+        }
       },
     },
     services: {

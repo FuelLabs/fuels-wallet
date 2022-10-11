@@ -3,19 +3,19 @@ import { Accordion, Text } from '@fuel-ui/react';
 import { getGasUsedFromReceipts } from 'fuels';
 import { useMemo } from 'react';
 
-import type { Transaction } from '../../types';
+import type { Tx } from '../../types';
 
 import type { Maybe } from '~/systems/Core';
 import { formatUnits } from '~/systems/Core';
 
 export type TxDetailsProps = {
-  tx?: Maybe<Transaction>;
+  receipts?: Maybe<Tx['receipts']>;
 };
 
-export function TxDetails({ tx }: TxDetailsProps) {
+export function TxDetails({ receipts }: TxDetailsProps) {
   const gasUsed = useMemo(
-    () => getGasUsedFromReceipts(tx?.receipts || []),
-    [tx?.receipts]
+    () => getGasUsedFromReceipts(receipts || []),
+    receipts || []
   );
 
   return (

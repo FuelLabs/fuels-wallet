@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { TransactionResult } from 'fuels';
+import type {
+  CoinTransactionRequestInput,
+  TransactionRequestInput,
+  TransactionRequestLike,
+  TransactionResult,
+} from 'fuels';
 
 import type { AddressType } from '../Account';
 
@@ -15,4 +20,7 @@ export type TxRecipientAddress = {
   type: AddressType;
 };
 
-export type Transaction = TransactionResult<any>;
+export type Tx = TransactionResult<any>;
+export type TxRequest = TransactionRequestLike;
+export type TxInput = TransactionRequestInput;
+export type TxInputCoin = CoinTransactionRequestInput;

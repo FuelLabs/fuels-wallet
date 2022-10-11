@@ -1,5 +1,6 @@
 import { Alert, Button, Icon, InputPassword, Stack } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import type { ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -19,10 +20,14 @@ type UnlockFormValues = {
   password: string;
 };
 
-export function Unlock() {
+export type UnlockProps = {
+  ghostChildren?: ReactNode;
+};
+
+export function Unlock({ ghostChildren }: UnlockProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { handlers, isLoading } = useAccount();
+  const { handlers, isLoading, isLocked } = useAccount();
   const form = useForm<UnlockFormValues>({
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
@@ -45,10 +50,16 @@ export function Unlock() {
   store.useSetMachineConfig(Services.account, {
     actions: {
       redirectToStatePath() {
-        navigate(location.state?.lastPage ?? Pages.wallet());
+        if (!ghostChildren) {
+          navigate(location.state?.lastPage ?? Pages.wallet());
+        }
       },
     },
   });
+
+  if (!isLocked && ghostChildren) {
+    return <>{ghostChildren}</>;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

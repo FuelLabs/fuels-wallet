@@ -15,11 +15,11 @@ import { formatUnits } from '~/systems/Core';
 
 describe('TxDetails', () => {
   it('a11y', async () => {
-    await testA11y(<TxDetails tx={MOCK_TX} />);
+    await testA11y(<TxDetails receipts={MOCK_TX.receipts} />);
   });
 
   it('should be able to show the transaction gas used', async () => {
-    render(<TxDetails tx={MOCK_TX} />);
+    render(<TxDetails receipts={MOCK_TX.receipts} />);
     expect(() => screen.getByText(/Gas used/i)).toThrow();
     const btn = screen.getByText(/Transaction Details/i);
     fireEvent.click(btn);

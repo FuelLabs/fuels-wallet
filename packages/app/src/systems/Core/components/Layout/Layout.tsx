@@ -105,7 +105,7 @@ const styles = {
   content: (isHome: boolean) =>
     cssObj({
       paddingTop: isHome ? '$1' : '$4',
-      px: '$6',
+      px: '$4',
       flex: 1,
     }),
 };
