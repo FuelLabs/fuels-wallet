@@ -10,9 +10,8 @@ export function NetworkStatus({ network: _network }: { network: Network }) {
   return (
     <Text
       css={{
-        color: _network?.isSelected ? '$accent11' : '$gray8',
+        // color: network.isOnline ? '$accent11' : '$gray8',
         fontSize: '8px',
-        ml: '5px',
       }}
     >
       ●
@@ -75,9 +74,9 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
 
 const styles = {
   root: cssObj({
-    maxHeight: '52px',
+    minHeight: '52px',
     boxSizing: 'border-box',
-    px: '$2',
+
     '&:hover': {
       cursor: 'pointer',
     },
