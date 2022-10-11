@@ -77,6 +77,7 @@ const styles = {
     justifyContent: 'center',
     borderTopWidth: 'thin',
     borderTopStyle: 'dashed',
+    px: '$1',
     mt: '$4',
   }),
   accountDropdownWrapper: cssObj({
@@ -85,7 +86,7 @@ const styles = {
     gap: '$2',
   }),
   topBorder: cssObj({
-    padding: '$2',
+    padding: '$4',
     py: '$3',
     justifyContent: 'space-between',
     flex: 1,
