@@ -75,12 +75,6 @@ function InternalTopBar({ onBack }: TopBarProps) {
         )}
       </Flex>
       <IconButton
-        icon={<Icon icon="Bell" color="gray8" size={24} />}
-        aria-label="Activities"
-        variant="link"
-        css={{ px: '0 !important' }}
-      />
-      <IconButton
         icon={<Icon icon="List" color="gray8" size={24} />}
         aria-label="Open menu"
         variant="link"

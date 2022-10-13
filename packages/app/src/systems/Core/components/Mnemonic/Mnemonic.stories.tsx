@@ -12,7 +12,7 @@ export default {
   component: Mnemonic,
   title: 'Core/Components/Mnemonic',
   parameters: {
-    Mnemonic: 'fullscreen',
+    layout: 'fullscreen',
   },
 };
 

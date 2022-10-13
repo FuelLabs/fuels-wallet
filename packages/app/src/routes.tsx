@@ -2,14 +2,14 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { IS_CRX, IS_CRX_POPUP } from './config';
 import { CRXPrivateRoute, CRXPublicRoute } from './systems/CRX/components';
-import { WalletCreatedPage } from './systems/SignUp/pages';
 
 import { PrivateRoute, PublicRoute } from '~/systems/Core';
 import { Pages } from '~/systems/Core/types';
-import { homeRoutes } from '~/systems/Home/routes';
-import { landingPageRoutes } from '~/systems/LandingPage/routes';
-import { networkRoutes } from '~/systems/Network/routes';
-import { signUpRoutes } from '~/systems/SignUp/routes';
+import { homeRoutes } from '~/systems/Home';
+import { landingPageRoutes } from '~/systems/LandingPage';
+import { networkRoutes } from '~/systems/Network';
+import { signUpRoutes } from '~/systems/SignUp';
+import { WalletCreatedPage } from '~/systems/SignUp/pages';
 
 const walletRoutes = (
   <>
