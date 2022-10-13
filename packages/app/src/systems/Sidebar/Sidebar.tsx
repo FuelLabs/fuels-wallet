@@ -2,7 +2,6 @@ import { cssObj } from '@fuel-ui/css';
 import { Icon, Box, Avatar, Flex, Drawer } from '@fuel-ui/react';
 
 import { useAccount } from '../Account';
-import type { Network } from '../Network';
 import { NetworkScreen, useNetworks } from '../Network';
 
 import type { MenuItemObj } from './components';
@@ -46,10 +45,7 @@ export function Sidebar() {
           ...styles.separator,
         }}
       >
-        <NetworkSelector
-          selected={selectedNetwork as Network}
-          networks={networks}
-        />
+        <NetworkSelector selected={selectedNetwork} networks={networks} />
       </Flex>
     </Flex>
   );
