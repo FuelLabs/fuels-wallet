@@ -27,7 +27,7 @@
     "@fuel-ts/wallet-manager": "^0.17.0",
     "@fuel-ui/config": "^0.7.0",
     "@fuel-ui/css": "^0.7.0",
-    "@fuel-ui/react": "^0.7.0",
+    "@fuel-ui/react": "0.8.0-dev-501df54",
     "@fuel-ui/test-utils": "^0.7.0",
     "@fuels-wallet/xstore": "workspace:*",
     "@hookform/resolvers": "^2.9.8",
