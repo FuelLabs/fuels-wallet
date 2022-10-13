@@ -5,9 +5,10 @@ export const createExtensionConnector = ({
 }: {
   senderId: string;
 }) => {
+  let metadata: { tabId: number } | null = null;
   const connector: EventConnector<{ tabId: number }> = {
     postMessage: (request) => {
-      const tabId = request.metadata?.tabId;
+      const tabId = metadata?.tabId;
       if (tabId) {
         chrome.tabs.sendMessage(tabId, request);
       }
@@ -15,12 +16,12 @@ export const createExtensionConnector = ({
     setupListener: (onMessage) => {
       chrome.runtime.onMessage.addListener(async (request, sender) => {
         if (sender.id === senderId && sender.tab?.id) {
+          metadata = {
+            tabId: sender.tab.id,
+          };
           onMessage({
             ...request,
             origin: sender.origin,
-            metadata: {
-              tabId: sender.tab.id,
-            },
           });
         }
       });

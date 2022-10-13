@@ -30,6 +30,8 @@
     "@fuel-ui/react": "^0.7.0",
     "@fuel-ui/test-utils": "^0.7.0",
     "@fuels-wallet/xstore": "workspace:*",
+    "@fuels-wallet/types": "workspace:*",
+    "@fuels-wallet/sdk": "workspace:*",
     "@hookform/resolvers": "^2.9.8",
     "@react-aria/utils": "^3.14.0",
     "@xstate/react": "^3.0.1",

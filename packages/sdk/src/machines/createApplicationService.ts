@@ -4,25 +4,28 @@ import { interpret } from 'xstate';
 import type { EventConnector, EventMessage } from '../events';
 import { Events } from '../events';
 
+import type { ApplicationMachine } from './applicationMachine';
 import {
   createApplicationMachine,
   ExternalAppEvents,
 } from './applicationMachine';
 
 export type ApplicationServiceOptions = {
-  connector: EventConnector;
+  connector: EventConnector<{ tabId: number }>;
+  machine: ApplicationMachine;
   services?: any;
 };
 
 export const createApplicationService = (
   options: ApplicationServiceOptions
 ) => {
-  const events = new Events<any>({
+  const events = new Events({
     id: v4(),
     name: 'FuelWeb3',
     connector: options.connector,
   });
-  const machine = createApplicationMachine(options.services || {});
+  const machine =
+    options.machine || createApplicationMachine(options.services || {});
   const service = interpret(machine);
 
   service.onChange((state) => {

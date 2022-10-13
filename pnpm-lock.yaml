@@ -86,6 +86,8 @@ importers:
       '@fuel-ui/css': ^0.7.0
       '@fuel-ui/react': ^0.7.0
       '@fuel-ui/test-utils': ^0.7.0
+      '@fuels-wallet/sdk': workspace:*
+      '@fuels-wallet/types': workspace:*
       '@fuels-wallet/xstore': workspace:*
       '@hookform/resolvers': ^2.9.8
       '@import-meta-env/unplugin': ^0.1.8
@@ -159,6 +161,8 @@ importers:
       '@fuel-ui/css': 0.7.0
       '@fuel-ui/react': 0.7.0_jwn6gsxzl5jjwzv2fykacs24gq
       '@fuel-ui/test-utils': 0.7.0_kyldhc73lasl3pok637iymv4dm
+      '@fuels-wallet/sdk': link:../sdk
+      '@fuels-wallet/types': link:../types
       '@fuels-wallet/xstore': link:../store
       '@hookform/resolvers': 2.9.8_react-hook-form@7.36.1
       '@react-aria/utils': 3.14.0_react@18.2.0

@@ -14,7 +14,9 @@ class FuelWeb3 {
   readonly name: string;
   readonly events: Events;
 
-  #state?: MachineContext;
+  state: MachineContext = {
+    isConnected: false,
+  };
 
   constructor(options?: FuelWeb3Options) {
     this.id = v4();
@@ -26,7 +28,7 @@ class FuelWeb3 {
       name: this.name,
     });
     this.events.on('state', (state) => {
-      this.#state = state;
+      this.state = state;
     });
   }
 
@@ -66,7 +68,7 @@ class FuelWeb3 {
   }
 
   isConnected(): boolean {
-    return !!this.#state?.isConnected;
+    return !!this.state?.isConnected;
   }
 
   onConnect(handler: (isConnected: boolean) => void): () => void {
