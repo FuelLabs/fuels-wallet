@@ -28,12 +28,13 @@ type TopBarProps = {
 };
 
 export function TopBar({ onBack }: TopBarProps) {
+  const navigate = useNavigate();
   const { isLoading, title, isHome, ref } = useLayoutContext();
+  const isInternal = !isHome;
+
   const { networks, selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
-  const navigate = useNavigate();
-  const isInternal = !isHome;
 
   return (
     <Flex as="nav" className={style({ isInternal })}>
