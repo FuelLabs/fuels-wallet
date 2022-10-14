@@ -11,6 +11,10 @@ export type EventsOptions<T> = {
   id: string;
   name: string;
   connector: EventConnector<T>;
+  interceptor?: (
+    message: EventMessage<T>,
+    send: (eventName: string, data?: any) => void
+  ) => Promise<boolean>;
 };
 
 export type EventMessage<MetadataType = void> = {
@@ -20,4 +24,5 @@ export type EventMessage<MetadataType = void> = {
   origin: string;
   data?: any;
   metadata?: MetadataType;
+  namespace?: string;
 };

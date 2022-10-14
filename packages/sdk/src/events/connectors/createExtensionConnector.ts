@@ -14,17 +14,23 @@ export const createExtensionConnector = ({
       }
     },
     setupListener: (onMessage) => {
-      chrome.runtime.onMessage.addListener(async (request, sender) => {
-        if (sender.id === senderId && sender.tab?.id) {
-          metadata = {
-            tabId: sender.tab.id,
-          };
-          onMessage({
-            ...request,
-            origin: sender.origin,
-          });
+      chrome.runtime.onMessage.addListener(
+        async (request, sender, sendResponse) => {
+          if (sender.id === senderId && sender.tab?.id) {
+            metadata = {
+              tabId: sender.tab.id,
+            };
+            onMessage({
+              ...request,
+              origin: sender.origin,
+              metadata: {
+                tabId: sender.tab.id,
+              },
+            });
+          }
+          sendResponse();
         }
-      });
+      );
     },
   };
   return connector;

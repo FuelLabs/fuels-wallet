@@ -12,12 +12,14 @@ export class Events<T = void> extends EventEmitter {
   id: string;
   name: string;
   connector: EventConnector<T>;
+  interceptor: EventsOptions<T>['interceptor'] = async () => true;
 
   constructor(options: EventsOptions<T>) {
     super();
     this.id = options.id;
     this.name = options.name;
     this.connector = options.connector;
+    this.interceptor = options.interceptor || this.interceptor;
     options.connector.setupListener(this.onMessage.bind(this));
   }
 
@@ -34,13 +36,16 @@ export class Events<T = void> extends EventEmitter {
     return super.emit(eventName, data, eventMessage);
   }
 
-  onMessage(eventMessage: EventMessage<T>) {
+  async onMessage(eventMessage: EventMessage<T>) {
     if (eventMessage.id !== this.id && eventMessage.name === this.name) {
-      this.emit(
-        eventMessage.event,
-        Object.freeze(eventMessage.data),
-        Object.freeze(eventMessage)
-      );
+      const shouldContinue = await this.interceptor!(eventMessage, this.send);
+      if (shouldContinue) {
+        this.emit(
+          eventMessage.event,
+          Object.freeze(eventMessage.data),
+          Object.freeze(eventMessage)
+        );
+      }
     }
   }
 

@@ -1,6 +1,6 @@
 import type { Application } from '../types';
 
-import { db } from '~/systems/Core';
+import { db } from '~/systems/Core/utils/database';
 
 export type ConnectInputs = {
   application: {

@@ -4,12 +4,11 @@ const extensionId = chrome.runtime.id;
 
 window.addEventListener('message', ({ data, origin }) => {
   if (origin === window.location.origin && data.id && !data.fromCRX) {
-    chrome.runtime.sendMessage(data);
+    chrome.runtime.sendMessage(extensionId, data);
   }
 });
 
-chrome.runtime.onMessage.addListener((request, sender) => {
-  console.log(request, sender);
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (sender.id === extensionId && request.id) {
     window.postMessage(
       {
@@ -20,6 +19,7 @@ chrome.runtime.onMessage.addListener((request, sender) => {
       window.location.origin
     );
   }
+  sendResponse();
 });
 
 async function main() {

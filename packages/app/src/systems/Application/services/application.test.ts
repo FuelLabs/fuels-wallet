@@ -5,12 +5,10 @@ import { ApplicationService } from './application';
 const MOCK_APP: Application = {
   origin: 'foo.com',
   accounts: ['fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef'],
-  permissions: ['read', 'request'],
 };
 const MOCK_APP_2: Application = {
   origin: 'foo.bar.com',
   accounts: ['fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef'],
-  permissions: ['read', 'request'],
 };
 
 describe('AccountService', () => {
@@ -54,11 +52,9 @@ describe('AccountService', () => {
     const app = await ApplicationService.getApplication(MOCK_APP.origin);
     expect(app?.origin).toEqual(MOCK_APP.origin);
     expect(app?.accounts).toEqual(MOCK_APP.accounts);
-    expect(app?.permissions).toEqual(MOCK_APP.permissions);
     const app2 = await ApplicationService.getApplication(MOCK_APP_2.origin);
     expect(app2?.origin).toEqual(MOCK_APP_2.origin);
     expect(app2?.accounts).toEqual(MOCK_APP_2.accounts);
-    expect(app2?.permissions).toEqual(MOCK_APP_2.permissions);
   });
 
   it('should remove app', async () => {

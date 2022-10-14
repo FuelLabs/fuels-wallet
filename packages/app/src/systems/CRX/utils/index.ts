@@ -1,2 +1,3 @@
-export * from './openTab';
-export * from './getPopUpPosition';
+export * from './popups';
+export * from './tabs';
+export * from './position';

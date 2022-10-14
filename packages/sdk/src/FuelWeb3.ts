@@ -3,7 +3,6 @@ import { v4 } from 'uuid';
 import { SERVICE_NAME } from './config';
 import type { EventConnector } from './events';
 import { createWindowConnector, Events } from './events';
-import type { MachineContext } from './machines/applicationMachine';
 
 export type FuelWeb3Options = {
   connector: EventConnector;
@@ -14,7 +13,7 @@ class FuelWeb3 {
   readonly name: string;
   readonly events: Events;
 
-  state: MachineContext = {
+  state = {
     isConnected: false,
   };
 
@@ -69,6 +68,16 @@ class FuelWeb3 {
 
   isConnected(): boolean {
     return !!this.state?.isConnected;
+  }
+
+  async accounts(): Promise<Array<string>> {
+    return this.sendAndAwaitForEvent<Array<string>>(
+      () => {
+        this.events.send('accounts');
+      },
+      'accounts:return',
+      'error'
+    );
   }
 
   onConnect(handler: (isConnected: boolean) => void): () => void {

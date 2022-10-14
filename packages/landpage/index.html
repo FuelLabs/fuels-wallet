@@ -9,6 +9,7 @@
   <body>
     <button id="connect">Connect</button>
     <button id="disconnect">Disconnect</button>
+    <button id="getAccounts">Get accounts</button>
     <script>
       function init() {
         FuelWeb3.onConnect((data) => {
@@ -32,7 +33,19 @@
             console.log(err);
           }
         }
+        async function getAccounts() {
+          console.log("getAccounts");
+          try {
+            const accounts = await FuelWeb3.accounts();
+            console.log("accounts!", accounts);
+          } catch (err) {
+            console.log(err);
+          }
+        }
         document.getElementById("connect").addEventListener("click", connect);
+        document
+          .getElementById("getAccounts")
+          .addEventListener("click", getAccounts);
         document
           .getElementById("disconnect")
           .addEventListener("click", disconnect);
