@@ -30,6 +30,10 @@ export type AccountInputs = {
       mnemonic?: string[];
     };
   };
+  unlock: {
+    account: Account;
+    password: string;
+  };
 };
 
 export class AccountService {
@@ -132,6 +136,13 @@ export class AccountService {
       console.log(error);
       throw error;
     }
+  }
+
+  static async unlock(input: AccountInputs['unlock']) {
+    const storage = new IndexedDBStorage() as never;
+    const manager = new WalletManager({ storage });
+    await manager.unlock(input.password);
+    return manager.getWallet(Address.fromPublicKey(input.account.publicKey));
   }
 }
 

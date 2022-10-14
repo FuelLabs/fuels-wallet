@@ -26,12 +26,12 @@ type TopBarProps = {
 };
 
 export function TopBar({ onBack }: TopBarProps) {
+  const navigate = useNavigate();
   const { isLoading, title, isHome } = useLayoutContext();
+  const isInternal = !isHome;
   const { networks, selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
-  const navigate = useNavigate();
-  const isInternal = !isHome;
 
   return (
     <Flex as="nav" className={style({ isInternal })}>
@@ -63,12 +63,6 @@ export function TopBar({ onBack }: TopBarProps) {
           </>
         )}
       </Flex>
-      <IconButton
-        icon={<Icon icon="Bell" color="gray8" size={24} />}
-        aria-label="Activities"
-        variant="link"
-        css={{ px: '0 !important' }}
-      />
       <IconButton
         icon={<Icon icon="List" color="gray8" size={24} />}
         aria-label="Open menu"
