@@ -3,8 +3,7 @@ import { Outlet, Route } from 'react-router-dom';
 import { Pages } from '../Core/types';
 import { FaucetDialog } from '../Faucet/components';
 
-import { Home } from './pages';
-import { Receive } from './pages/Receive';
+import { Home, Receive } from './pages';
 
 export const homeRoutes = (
   <Route path={Pages.wallet()}>
