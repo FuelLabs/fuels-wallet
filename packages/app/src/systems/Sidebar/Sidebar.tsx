@@ -11,7 +11,7 @@ import { sidebarItems } from './constants';
 export function Sidebar() {
   const { account } = useAccount();
 
-  const { networks, selectedNetwork } = useNetworks({
+  const { networks, selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
   return (
@@ -45,7 +45,11 @@ export function Sidebar() {
           ...styles.separator,
         }}
       >
-        <NetworkSelector selected={selectedNetwork} networks={networks} />
+        <NetworkSelector
+          onSelectNetwork={handlers.selectNetwork}
+          selected={selectedNetwork}
+          networks={networks}
+        />
       </Flex>
     </Flex>
   );
