@@ -15,20 +15,26 @@ const backgroundScriptConnection = chrome.runtime.connect(chrome.runtime.id, {
 });
 
 backgroundScriptConnection.onMessage.addListener((message) => {
-  console.log('message', message);
   if (message.target === CONTENT_SCRIPT_NAME && message.data) {
-    sendMessage(message.data);
+    sendMessage(message);
   }
 });
 
 function sendMessage(response: any) {
-  window.postMessage(
-    {
+  let message: any = {
+    target: PAGE_SCRIPT_NAME,
+    request: response.data,
+  };
+
+  if (response.type === EventTypes.event) {
+    message = {
       target: PAGE_SCRIPT_NAME,
-      request: response,
-    },
-    window.location.origin
-  );
+      type: EventTypes.event,
+      data: response.data,
+    };
+  }
+
+  window.postMessage(message, window.location.origin);
 }
 
 window.addEventListener(

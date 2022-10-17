@@ -1,9 +1,12 @@
 import type { JSONRPCResponse } from 'json-rpc-2.0';
 
-export type FuelEventMessage<T> = {
+export type FuelEventMessage = {
+  type: 'event';
   target: string;
-  event: string;
-  data?: T;
+  data: Array<{
+    event: string;
+    params: Array<any>;
+  }>;
 };
 
 export type FuelRPCMessage = {
@@ -11,6 +14,6 @@ export type FuelRPCMessage = {
   request: JSONRPCResponse;
 };
 
-export type FuelMessage<T = void> = FuelEventMessage<T> | FuelRPCMessage;
+export type FuelMessage = FuelEventMessage | FuelRPCMessage;
 
-export type EventCallback = <T = void>(event: FuelEventMessage<T>) => void;
+export type EventCallback = (event: FuelEventMessage) => void;

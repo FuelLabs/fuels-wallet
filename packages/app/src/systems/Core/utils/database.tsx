@@ -1,5 +1,6 @@
 import type { Table } from 'dexie';
 import Dexie from 'dexie';
+import 'dexie-observable';
 
 import type { Account, Vault } from '~/systems/Account';
 import type { Application } from '~/systems/Application/types';
@@ -13,7 +14,7 @@ export class FuelDB extends Dexie {
 
   constructor() {
     super('FuelDB');
-    this.version(4).stores({
+    this.version(5).stores({
       vaults: `key`,
       accounts: `address`,
       networks: `&id, &url, &name`,

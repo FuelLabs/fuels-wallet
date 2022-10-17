@@ -24,6 +24,46 @@ export class BackgroundService {
   }
 
   setupListeners() {
+    ApplicationService.db.on('changes', (changes) => {
+      changes.forEach((change) => {
+        switch (change.type) {
+          case 1: // CREATED
+            if (change.table === 'applications') {
+              this.communicationProtocol.broadcast(change.key, {
+                target: CONTENT_SCRIPT_NAME,
+                type: EventTypes.event,
+                data: [
+                  {
+                    event: 'accounts',
+                    params: [change.obj.accounts],
+                  },
+                  {
+                    event: 'connection',
+                    params: [true],
+                  },
+                ],
+              });
+            }
+            break;
+          case 3: // DELETED
+            if (change.table === 'applications') {
+              this.communicationProtocol.broadcast(change.key, {
+                target: CONTENT_SCRIPT_NAME,
+                type: EventTypes.event,
+                data: [
+                  {
+                    event: 'connection',
+                    params: [false],
+                  },
+                ],
+              });
+            }
+            break;
+          default:
+            break;
+        }
+      });
+    });
     this.communicationProtocol.on(
       EventTypes.request,
       async (event: CommunicationEvent) => {

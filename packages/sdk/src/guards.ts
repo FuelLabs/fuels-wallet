@@ -9,10 +9,10 @@ export function isFuelRPCMessage(
   return false;
 }
 
-export function isFuelEventMessage<T>(
-  eventMessage: FuelMessage<T>
-): eventMessage is FuelEventMessage<T> {
-  if ((eventMessage as FuelEventMessage<T>).event) {
+export function isFuelEventMessage(
+  eventMessage: FuelMessage
+): eventMessage is FuelEventMessage {
+  if ((eventMessage as FuelEventMessage).type === 'event') {
     return true;
   }
   return false;

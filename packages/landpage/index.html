@@ -12,9 +12,12 @@
     <button id="getAccounts">Get accounts</button>
     <script>
       function init() {
-        // FuelWeb3.onConnect((data) => {
-        //   console.log("connected", data);
-        // });
+        FuelWeb3.on("accounts", (data) => {
+          console.log("accounts", data);
+        });
+        FuelWeb3.on("connection", (data) => {
+          console.log("connection", data);
+        });
         async function connect() {
           console.log("connect");
           try {

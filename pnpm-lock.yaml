@@ -122,6 +122,7 @@ importers:
       cross-fetch: ^3.1.5
       decimal.js: ^10.4.1
       dexie: ^3.2.2
+      dexie-observable: 3.0.0-beta.11
       dexie-react-hooks: ^1.1.1
       events: ^3.3.0
       fake-indexeddb: ^4.0.0
@@ -172,6 +173,7 @@ importers:
       cross-fetch: 3.1.5
       decimal.js: 10.4.1
       dexie: 3.2.2
+      dexie-observable: 3.0.0-beta.11_dexie@3.2.2
       dexie-react-hooks: 1.1.1_bbz3477la5rogmola7edrq4k64
       events: 3.3.0
       fake-indexeddb: 4.0.0
@@ -10565,6 +10567,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /dexie-observable/3.0.0-beta.11_dexie@3.2.2:
+    resolution: {integrity: sha512-mKwSYy54Kj73Njp3Rs+GoldLxyDJK1LF7niBkZxSenGAlBCXB5RxafH2Mg6Ay0B1pLlDYvJCWH31s88/Uz0WSg==}
+    peerDependencies:
+      dexie: ^3.0.2
+    dependencies:
+      dexie: 3.2.2
+    dev: false
 
   /dexie-react-hooks/1.1.1_bbz3477la5rogmola7edrq4k64:
     resolution: {integrity: sha512-Cam5JP6PxHN564RvWEoe8cqLhosW0O4CAZ9XEVYeGHJBa6KEJlOpd9CUpV3kmU9dm2MrW97/lk7qkf1xpij7gA==}

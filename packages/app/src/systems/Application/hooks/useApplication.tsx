@@ -1,7 +1,4 @@
-import {
-  BACKGROUND_SCRIPT_NAME,
-  POPUP_SCRIPT_NAME,
-} from '@fuels-wallet/sdk/src/config';
+import { BACKGROUND_SCRIPT_NAME, POPUP_SCRIPT_NAME } from '@fuels-wallet/sdk';
 import { useInterpret, useSelector } from '@xstate/react';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { useCallback, useEffect } from 'react';
@@ -32,16 +29,13 @@ export function useApplication() {
       backgroundConnection.onMessage.addListener((message, port) => {
         if (message.target === POPUP_SCRIPT_NAME && message.data) {
           server.receive(message.data).then((response) => {
-            console.log('--->>> send', {
+            const message2 = {
+              id: message.id,
               target: BACKGROUND_SCRIPT_NAME,
               type: EventTypes.response,
               data: response,
-            });
-            port.postMessage({
-              target: BACKGROUND_SCRIPT_NAME,
-              type: EventTypes.response,
-              data: response,
-            });
+            };
+            port.postMessage(message2);
           });
         }
       });

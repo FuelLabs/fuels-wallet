@@ -158,7 +158,7 @@ export const applicationMachine = createMachine(
         isConnected: (_) => false,
       }),
       closeTab: () => {
-        // window.close();
+        window.close();
       },
     },
     services: {
@@ -168,10 +168,6 @@ export const applicationMachine = createMachine(
       },
       addApplication: async (ctx, ev) => {
         if (ctx.application && Array.isArray(ev.data)) {
-          console.log({
-            origin: ctx.application.origin,
-            accounts: ev.data,
-          });
           const app = await ApplicationService.addApplication({
             data: {
               origin: ctx.application.origin,

@@ -47,6 +47,14 @@ export class CommunicationProtocol extends EventEmitter {
     }
   };
 
+  broadcast = (origin: string, message: CommunicationMessage) => {
+    this.ports.forEach((port) => {
+      if (port.sender?.origin === origin) {
+        port.postMessage(message);
+      }
+    });
+  };
+
   getPortId = (port: chrome.runtime.Port) => {
     // eslint-disable-next-line no-restricted-syntax
     for (const [key, value] of this.ports.entries()) {
@@ -64,15 +72,6 @@ export class CommunicationProtocol extends EventEmitter {
     if (!Object.keys(EventTypes).includes(message.type)) return;
 
     const portId = this.getPortId(port);
-
-    console.log(
-      message.type,
-      Object.freeze({
-        id: portId,
-        message,
-        sender: port.sender,
-      })
-    );
 
     this.emit(
       message.type,

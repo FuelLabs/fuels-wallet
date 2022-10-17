@@ -19,7 +19,7 @@ export class FuelWeb3 extends EventEmitter {
     window.addEventListener(EVENT_MESSAGE, this.onMessage.bind(this));
   }
 
-  postMessage<T = void>(request: FuelMessage<T>) {
+  postMessage(request: FuelMessage) {
     window.postMessage(request, window.origin);
   }
 
@@ -32,7 +32,9 @@ export class FuelWeb3 extends EventEmitter {
       if (isFuelRPCMessage(frozenEvent.data)) {
         this.client.receive(frozenEvent.data.request);
       } else if (isFuelEventMessage(frozenEvent.data)) {
-        this.emit(frozenEvent.data.event, frozenEvent.data, frozenEvent);
+        frozenEvent.data.data.forEach((eventData) => {
+          this.emit(eventData.event, ...eventData.params);
+        });
       }
     }
   }

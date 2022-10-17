@@ -2,8 +2,6 @@ import { getPopUpPosition } from './position';
 
 import { TAB_BAR_HEIGHT, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 
-const popups = new Map<string, number>();
-
 export async function getPopUpId(windowId?: number) {
   const tabs = await chrome.tabs.query({ windowId });
   const tabId = tabs?.[0].id;
@@ -11,8 +9,7 @@ export async function getPopUpId(windowId?: number) {
   return tabId || null;
 }
 
-export async function getCurrentPopUp(origin: string) {
-  const windowId = popups.get(origin);
+export async function showPopUp(windowId: number | null | undefined) {
   if (!windowId) return null;
 
   try {
@@ -29,15 +26,9 @@ export async function getCurrentPopUp(origin: string) {
   return null;
 }
 
-export async function showPopUp(origin: string, url: string) {
-  const current = await getCurrentPopUp(origin);
-  if (current) return current;
-  return openPopUp(origin, url);
-}
-
-export async function openPopUp(origin: string, url: string) {
+export async function createPopUp(origin: string, url: string) {
   const { left, top } = await getPopUpPosition();
-  const popup = await chrome.windows.create({
+  const window = await chrome.windows.create({
     type: 'popup',
     url,
     width: WALLET_WIDTH,
@@ -45,10 +36,5 @@ export async function openPopUp(origin: string, url: string) {
     left,
     top,
   });
-
-  if (popup.id) {
-    popups.set(origin, popup.id);
-  }
-
-  return popup;
+  return window;
 }
