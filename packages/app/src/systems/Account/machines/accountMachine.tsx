@@ -18,10 +18,7 @@ type MachineServices = {
   };
 };
 
-type MachineEvents = {
-  type: 'UPDATE_ACCOUNT' | 'REFRESH_ACCOUNT';
-  data?: Account;
-};
+type MachineEvents = { type: 'UPDATE_ACCOUNT' };
 
 export const accountMachine = createMachine(
   {
@@ -36,28 +33,6 @@ export const accountMachine = createMachine(
     id: '(machine)',
     initial: 'fetchingAccount',
     states: {
-      refreshingAccount: {
-        invoke: {
-          src: 'fetchAccount',
-          onDone: [
-            {
-              target: 'done',
-              actions: ['assignAccount', 'setLocalStorage'],
-              cond: 'hasAccount',
-            },
-            {
-              actions: ['removeLocalStorage'],
-              target: 'done',
-            },
-          ],
-          onError: [
-            {
-              actions: 'assignError',
-              target: 'failed',
-            },
-          ],
-        },
-      },
       fetchingAccount: {
         invoke: {
           src: 'fetchAccount',
@@ -81,20 +56,25 @@ export const accountMachine = createMachine(
         },
         tags: 'loading',
       },
-      done: {},
-      failed: {},
+      done: {
+        after: {
+          TIMEOUT: 'fetchingAccount', // retry
+        },
+      },
+      failed: {
+        after: {
+          INTERVAL: 'fetchingAccount', // retry
+        },
+      },
     },
     on: {
       UPDATE_ACCOUNT: {
         target: 'fetchingAccount',
       },
-
-      REFRESH_ACCOUNT: {
-        target: 'refreshingAccount',
-      },
     },
   },
   {
+    delays: { INTERVAL: 2000, TIMEOUT: 15000, POOL_INTERVAL: 15000 },
     actions: {
       assignAccount: assign({
         data: (_, ev) => ev.data,
