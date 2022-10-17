@@ -4,7 +4,7 @@ import { TAB_BAR_HEIGHT, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 
 const popups = new Map<string, number>();
 
-export async function getPopUp(windowId?: number) {
+export async function getPopUpId(windowId?: number) {
   const tabs = await chrome.tabs.query({ windowId });
   const tabId = tabs?.[0].id;
 

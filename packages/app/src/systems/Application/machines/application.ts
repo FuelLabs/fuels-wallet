@@ -158,7 +158,7 @@ export const applicationMachine = createMachine(
         isConnected: (_) => false,
       }),
       closeTab: () => {
-        window.close();
+        // window.close();
       },
     },
     services: {

@@ -1,4 +1,4 @@
-import FuelWeb3 from '../FuelWeb3';
+import { FuelWeb3 } from '../FuelWeb3';
 
 import { createReadOnly } from './createReadOnly';
 

@@ -1,14 +1,16 @@
-import type { EventMessage } from '@fuels-wallet/sdk';
 import {
-  createExtensionPageConnector,
-  createUUID,
-  Events,
-} from '@fuels-wallet/sdk';
+  BACKGROUND_SCRIPT_NAME,
+  POPUP_SCRIPT_NAME,
+} from '@fuels-wallet/sdk/src/config';
 import { useInterpret, useSelector } from '@xstate/react';
+import { JSONRPCServer } from 'json-rpc-2.0';
 import { useCallback, useEffect } from 'react';
+import { waitFor } from 'xstate/lib/waitFor';
 
 import type { ApplicationMachineState } from '../machines';
 import { ExternalAppEvents, applicationMachine } from '../machines';
+
+import { EventTypes } from '~/systems/CRX/types';
 
 const selectors = {
   isConnecting: (state: ApplicationMachineState) => {
@@ -22,38 +24,58 @@ export function useApplication() {
 
   useEffect(() => {
     async function init() {
-      const currentId = (await chrome.tabs.getCurrent())!.id!;
-      const targetId = Number(
-        new URLSearchParams(window.location.search).get('targetId')
-      );
-      const events = new Events({
-        connector: createExtensionPageConnector({
-          tabId: targetId,
-          senderId: chrome.runtime.id,
-          namespace: String(currentId),
-        }),
-        id: createUUID(),
-        name: 'FuelWeb3',
+      const server = new JSONRPCServer();
+      const backgroundConnection = chrome.runtime.connect(chrome.runtime.id, {
+        name: BACKGROUND_SCRIPT_NAME,
       });
 
-      applicationService.onChange((state) => {
-        events.send('state', state);
-      });
-
-      applicationService.onTransition((state, event) => {
-        if (state.hasTag('emitEvent')) {
-          events.send('state', state.context);
-          events.send(
-            state.value.toString(),
-            state.context.error || event.data
-          );
+      backgroundConnection.onMessage.addListener((message, port) => {
+        if (message.target === POPUP_SCRIPT_NAME && message.data) {
+          server.receive(message.data).then((response) => {
+            console.log('--->>> send', {
+              target: BACKGROUND_SCRIPT_NAME,
+              type: EventTypes.response,
+              data: response,
+            });
+            port.postMessage({
+              target: BACKGROUND_SCRIPT_NAME,
+              type: EventTypes.response,
+              data: response,
+            });
+          });
         }
       });
 
-      Object.values(ExternalAppEvents).forEach((eventName) => {
-        events.on(eventName, (_, eventMessage: EventMessage) => {
-          applicationService.send(eventName, { data: eventMessage });
-        });
+      backgroundConnection.postMessage({
+        target: BACKGROUND_SCRIPT_NAME,
+        type: EventTypes.popup,
+      });
+
+      server.addMethod('requestAuthorization', async (params: any) => {
+        const origin = params?.origin;
+        if (origin) {
+          applicationService.send(ExternalAppEvents.connect, {
+            data: {
+              origin,
+            },
+          });
+          try {
+            const app = await waitFor(
+              applicationService,
+              (state) => {
+                return state.matches('connected');
+              },
+              {
+                timeout: 60 * 1000 * 5,
+              }
+            );
+            return !!app;
+          } catch (err: any) {
+            window.close();
+            throw new Error('User didnt reject in under than 5 minutes');
+          }
+        }
+        return false;
       });
     }
     init();

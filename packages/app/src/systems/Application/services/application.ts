@@ -22,7 +22,7 @@ export class ApplicationService {
     });
   }
 
-  static async getApplication(origin: string) {
+  static async getApplication(origin?: string) {
     return db.transaction('r', db.applications, async () => {
       return db.applications.get({ origin });
     });
