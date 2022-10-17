@@ -6,6 +6,7 @@ import {
   IconButton,
   Spinner,
   Text,
+  Drawer,
 } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +20,7 @@ import { useLayoutContext } from './Layout';
 import { NetworkDropdown } from '~/systems/Network/components/NetworkDropdown';
 import { useNetworks } from '~/systems/Network/hooks';
 import { NetworkScreen } from '~/systems/Network/machines';
+import { Sidebar } from '~/systems/Sidebar';
 
 type TopBarProps = {
   onBack?: () => void;
@@ -26,12 +28,13 @@ type TopBarProps = {
 };
 
 export function TopBar({ onBack }: TopBarProps) {
-  const { isLoading, title, isHome } = useLayoutContext();
+  const navigate = useNavigate();
+  const { isLoading, title, isHome, ref } = useLayoutContext();
+  const isInternal = !isHome;
+
   const { networks, selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
-  const navigate = useNavigate();
-  const isInternal = !isHome;
 
   return (
     <Flex as="nav" className={style({ isInternal })}>
@@ -69,12 +72,19 @@ export function TopBar({ onBack }: TopBarProps) {
         variant="link"
         css={{ px: '0 !important' }}
       />
-      <IconButton
-        icon={<Icon icon="List" color="gray8" size={24} />}
-        aria-label="Open menu"
-        variant="link"
-        css={{ px: '0 !important' }}
-      />
+      <Drawer type="menu" size={220} containerRef={ref}>
+        <Drawer.Trigger aria-label="drawer_trigger">
+          <IconButton
+            icon={<Icon icon="List" color="gray8" size={24} />}
+            aria-label="Menu"
+            variant="link"
+            css={{ px: '0 !important' }}
+          />
+        </Drawer.Trigger>
+        <Drawer.Content>
+          <Sidebar />
+        </Drawer.Content>
+      </Drawer>
     </Flex>
   );
 }

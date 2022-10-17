@@ -22,7 +22,7 @@ const selectors = {
   },
   selectedNetwork: (state: NetworksMachineState) => {
     const networks = state.context?.networks || [];
-    return networks.find((n) => n.isSelected);
+    return networks.find((n) => n.isSelected) as Network;
   },
 };
 
