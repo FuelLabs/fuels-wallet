@@ -9,8 +9,6 @@ export type ConnectInputs = {
 };
 
 export class ApplicationService {
-  static db = db;
-
   static async addApplication(input: ConnectInputs['application']) {
     return db.transaction('rw', db.applications, async () => {
       await db.applications.add(input.data);

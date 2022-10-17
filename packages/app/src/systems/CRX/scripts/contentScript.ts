@@ -1,10 +1,15 @@
 import {
   BACKGROUND_SCRIPT_NAME,
   CONTENT_SCRIPT_NAME,
+  EventType,
   EVENT_MESSAGE,
   PAGE_SCRIPT_NAME,
 } from '@fuels-wallet/sdk';
-import type { FuelMessage } from '@fuels-wallet/sdk';
+import type {
+  FuelWeb3Request,
+  FuelWeb3Event,
+  FuelWeb3Response,
+} from '@fuels-wallet/sdk';
 
 import { EventTypes } from '../types';
 
@@ -14,40 +19,37 @@ const backgroundScriptConnection = chrome.runtime.connect(chrome.runtime.id, {
   name: BACKGROUND_SCRIPT_NAME,
 });
 
-backgroundScriptConnection.onMessage.addListener((message) => {
-  if (message.target === CONTENT_SCRIPT_NAME && message.data) {
-    sendMessage(message);
-  }
-});
+backgroundScriptConnection.onMessage.addListener(
+  (message: FuelWeb3Response | FuelWeb3Event) => {
+    const shouldAcceptMessage = message.target === CONTENT_SCRIPT_NAME;
 
-function sendMessage(response: any) {
-  let message: any = {
+    if (shouldAcceptMessage) {
+      onMessage(message);
+    }
+  }
+);
+
+function onMessage(message: FuelWeb3Response | FuelWeb3Event) {
+  const postMessage = {
+    ...message,
     target: PAGE_SCRIPT_NAME,
-    request: response.data,
   };
-
-  if (response.type === EventTypes.event) {
-    message = {
-      target: PAGE_SCRIPT_NAME,
-      type: EventTypes.event,
-      data: response.data,
-    };
-  }
-
-  window.postMessage(message, window.location.origin);
+  window.postMessage(postMessage, window.location.origin);
 }
 
 window.addEventListener(
   EVENT_MESSAGE,
-  (messageEvent: MessageEvent<FuelMessage>) => {
+  (message: MessageEvent<FuelWeb3Request>) => {
+    const { data: event, origin } = message;
     if (
-      messageEvent.origin === window.location.origin &&
-      messageEvent.data.target === CONTENT_SCRIPT_NAME
+      origin === window.location.origin &&
+      event.target === CONTENT_SCRIPT_NAME &&
+      event.type === EventType.request
     ) {
       backgroundScriptConnection.postMessage({
         type: EventTypes.request,
-        ...messageEvent.data,
         target: BACKGROUND_SCRIPT_NAME,
+        request: event.request,
       });
     }
     return true;

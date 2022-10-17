@@ -2,7 +2,6 @@ import { CONTENT_SCRIPT_NAME } from '@fuels-wallet/sdk';
 import type { JSONRPCParams } from 'json-rpc-2.0';
 import { JSONRPCServer } from 'json-rpc-2.0';
 
-import type { CommunicationEvent } from '../../types';
 import { EventTypes } from '../../types';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
@@ -24,60 +23,19 @@ export class BackgroundService {
   }
 
   setupListeners() {
-    ApplicationService.db.on('changes', (changes) => {
-      changes.forEach((change) => {
-        switch (change.type) {
-          case 1: // CREATED
-            if (change.table === 'applications') {
-              this.communicationProtocol.broadcast(change.key, {
-                target: CONTENT_SCRIPT_NAME,
-                type: EventTypes.event,
-                data: [
-                  {
-                    event: 'accounts',
-                    params: [change.obj.accounts],
-                  },
-                  {
-                    event: 'connection',
-                    params: [true],
-                  },
-                ],
-              });
-            }
-            break;
-          case 3: // DELETED
-            if (change.table === 'applications') {
-              this.communicationProtocol.broadcast(change.key, {
-                target: CONTENT_SCRIPT_NAME,
-                type: EventTypes.event,
-                data: [
-                  {
-                    event: 'connection',
-                    params: [false],
-                  },
-                ],
-              });
-            }
-            break;
-          default:
-            break;
-        }
+    this.communicationProtocol.on(EventTypes.request, async (event) => {
+      const response = await this.server.receive(event.request, {
+        origin: event.sender!.origin!,
       });
-    });
-    this.communicationProtocol.on(
-      EventTypes.request,
-      async (event: CommunicationEvent) => {
-        const response = await this.server.receive(event.message.request, {
-          origin: event.sender!.origin!,
-        });
+      if (response) {
         this.communicationProtocol.postMessage({
           id: event.id,
           type: EventTypes.response,
           target: CONTENT_SCRIPT_NAME,
-          data: response,
+          response,
         });
       }
-    );
+    });
   }
 
   setupMethods(methods: Array<string>) {

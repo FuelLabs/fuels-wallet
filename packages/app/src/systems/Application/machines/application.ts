@@ -22,21 +22,18 @@ type MachineServices = {
   };
 };
 
-export enum ExternalAppEvents {
+export enum AppActions {
   connect = 'connect',
   disconnect = 'disconnect',
-}
-
-export enum InternalAppEvents {
   authorize = 'authorize',
   reject = 'reject',
 }
 
 type MachineEvents =
-  | { type: `${ExternalAppEvents.connect}`; data: Application }
-  | { type: `${ExternalAppEvents.disconnect}`; data: Application }
-  | { type: `${InternalAppEvents.authorize}`; data: Array<string> }
-  | { type: `${InternalAppEvents.reject}`; data: void };
+  | { type: `${AppActions.connect}`; data: Application }
+  | { type: `${AppActions.disconnect}`; data: Application }
+  | { type: `${AppActions.authorize}`; data: Array<string> }
+  | { type: `${AppActions.reject}`; data: void };
 
 export const applicationMachine = createMachine(
   {
@@ -57,8 +54,8 @@ export const applicationMachine = createMachine(
       disconnected: {
         tags: ['emitEvent'],
         on: {
-          [ExternalAppEvents.connect]: {
-            actions: 'setApplication',
+          [AppActions.connect]: {
+            actions: ['setApplication'],
             target: '#(machine).connect',
           },
         },
@@ -67,7 +64,7 @@ export const applicationMachine = createMachine(
         tags: ['emitEvent'],
         entry: ['closeTab'],
         on: {
-          [ExternalAppEvents.disconnect]: {
+          [AppActions.disconnect]: {
             actions: 'setApplication',
             target: '#(machine).disconnect',
           },
@@ -109,10 +106,10 @@ export const applicationMachine = createMachine(
           },
         },
         on: {
-          [InternalAppEvents.authorize]: {
+          [AppActions.authorize]: {
             target: '.authorizeApp',
           },
-          [InternalAppEvents.reject]: {
+          [AppActions.reject]: {
             actions: ['setConnectionRejected'],
             target: '#(machine).error',
           },

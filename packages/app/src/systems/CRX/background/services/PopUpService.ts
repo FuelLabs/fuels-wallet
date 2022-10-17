@@ -1,7 +1,7 @@
 import { POPUP_SCRIPT_NAME } from '@fuels-wallet/sdk';
 import { JSONRPCClient } from 'json-rpc-2.0';
 
-import type { CommunicationEvent } from '../../types';
+import type { ResponseMessage, UIEventMessage } from '../../types';
 import { EventTypes } from '../../types';
 import {
   createPopUp,
@@ -23,12 +23,26 @@ export class PopUpService {
   communicationProtocol: CommunicationProtocol;
   tabId: number | null = null;
   windowId: number | null = null;
-  open: boolean = false;
-  client?: JSONRPCClient;
+  eventId?: string;
+  client: JSONRPCClient;
 
   constructor(communicationProtocol: CommunicationProtocol) {
     this.communicationProtocol = communicationProtocol;
     this.defferPromise = defferPromise<PopUpService>();
+    this.client = new JSONRPCClient(async (rpcRequest) => {
+      if (this.eventId) {
+        this.communicationProtocol.postMessage({
+          type: EventTypes.request,
+          target: POPUP_SCRIPT_NAME,
+          id: this.eventId,
+          request: rpcRequest,
+        });
+      } else {
+        throw new Error('UI not connected!');
+      }
+    });
+    this.setupUIListeners();
+    this.setTimeout();
   }
 
   setTimeout(delay = 5000) {
@@ -37,16 +51,38 @@ export class PopUpService {
     }, delay);
   }
 
-  async requestAuthorization(origin: string) {
-    return this.client?.request('requestAuthorization', {
-      origin,
-    });
+  rejectAllRequests = (id: string) => {
+    if (id === this.eventId) {
+      this.client.rejectAllPendingRequests(
+        'Request cancelled without explicity response!'
+      );
+    }
+  };
+
+  onResponse = (cEvent: ResponseMessage) => {
+    if (cEvent.id === this.eventId && cEvent.response) {
+      this.client.receive(cEvent.response);
+    }
+  };
+
+  setupUIListeners() {
+    this.communicationProtocol.once(EventTypes.uiEvent, this.onUIEvent);
+    this.communicationProtocol.on(EventTypes.response, this.onResponse);
+    this.communicationProtocol.on(
+      EventTypes.removeConnection,
+      this.rejectAllRequests
+    );
   }
 
-  static async open(
-    origin: string,
-    communicationProtocol: CommunicationProtocol
-  ) {
+  onUIEvent = (message: UIEventMessage) => {
+    const tabId = getTabIdFromSender(message.sender);
+    if (tabId === this.tabId && message.ready) {
+      this.eventId = message.id;
+      this.defferPromise.resolve(this);
+    }
+  };
+
+  static async getCurrent(origin: string) {
     const currentService = popups.get(origin);
 
     if (currentService) {
@@ -54,48 +90,43 @@ export class PopUpService {
       if (showPopupId) return currentService;
     }
 
+    return null;
+  }
+
+  static create = async (
+    origin: string,
+    communicationProtocol: CommunicationProtocol
+  ) => {
     const popupService = new PopUpService(communicationProtocol);
+
+    // Set current instance to memory to avoid
+    // Multiple instances
     popups.set(origin, popupService);
+
     const win = await createPopUp(origin, CRXPages.popup);
-    popupService.windowId = win.id!;
     popupService.tabId = await getPopUpId(win.id);
-    const handler = (event: CommunicationEvent) => {
-      const tabId = getTabIdFromSender(event.sender);
-      if (tabId === popupService.tabId) {
-        popupService.communicationProtocol.off(EventTypes.popup, handler);
-        popupService.open = true;
-        popupService.client = new JSONRPCClient(async (rpcRequest) => {
-          popupService.communicationProtocol.postMessage({
-            type: EventTypes.request,
-            target: POPUP_SCRIPT_NAME,
-            id: event.id,
-            data: rpcRequest,
-          });
-        });
-        popupService.communicationProtocol.on(
-          EventTypes.response,
-          (cEvent: CommunicationEvent) => {
-            if (cEvent.id === event.id && cEvent.message.data) {
-              popupService.client?.receive(cEvent.message.data);
-            }
-          }
-        );
-        popupService.communicationProtocol.on(
-          EventTypes.removeConnection,
-          (id: string) => {
-            if (id === event.id) {
-              popupService.client?.rejectAllPendingRequests(
-                'Request cancelled without explicity response!'
-              );
-            }
-          }
-        );
-        popupService.defferPromise.resolve(popupService);
-      }
-    };
-    popupService.communicationProtocol.on(EventTypes.popup, handler);
-    popupService.setTimeout();
+    popupService.windowId = win.id!;
+
+    return popupService;
+  };
+
+  static open = async (
+    origin: string,
+    communicationProtocol: CommunicationProtocol
+  ) => {
+    let popupService = await this.getCurrent(origin);
+
+    if (!popupService) {
+      popupService = await PopUpService.create(origin, communicationProtocol);
+    }
 
     return popupService.defferPromise.promise;
+  };
+
+  // UI exposed methods
+  async requestAuthorization(origin: string) {
+    return this.client.request('requestAuthorization', {
+      origin,
+    });
   }
 }

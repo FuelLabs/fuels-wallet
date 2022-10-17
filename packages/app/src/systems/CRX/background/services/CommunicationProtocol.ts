@@ -2,8 +2,9 @@ import { BACKGROUND_SCRIPT_NAME, createUUID } from '@fuels-wallet/sdk';
 import EventEmitter from 'events';
 
 import type {
+  CommunicationEventNew,
   CommunicationMessage,
-  CommunicationPostMessage,
+  CommunicationPostMessageNew,
 } from '../../types';
 import { EventTypes } from '../../types';
 
@@ -40,7 +41,7 @@ export class CommunicationProtocol extends EventEmitter {
     }
   };
 
-  postMessage = (message: CommunicationPostMessage) => {
+  postMessage = (message: CommunicationPostMessageNew) => {
     const port = this.ports.get(message.id);
     if (port) {
       port.postMessage(message);
@@ -65,6 +66,13 @@ export class CommunicationProtocol extends EventEmitter {
     return null;
   };
 
+  on<E extends EventTypes>(
+    eventName: E,
+    listener: (message: CommunicationEventNew<E>) => void
+  ) {
+    return super.on(eventName, listener);
+  }
+
   onMessage = (message: CommunicationMessage, port: chrome.runtime.Port) => {
     const sender = port.sender;
     if (sender?.id !== chrome.runtime.id) return;
@@ -76,8 +84,8 @@ export class CommunicationProtocol extends EventEmitter {
     this.emit(
       message.type,
       Object.freeze({
+        ...message,
         id: portId,
-        message,
         sender: port.sender,
       })
     );

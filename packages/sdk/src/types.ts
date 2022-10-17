@@ -1,19 +1,34 @@
-import type { JSONRPCResponse } from 'json-rpc-2.0';
+import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
 
-export type FuelEventMessage = {
-  type: 'event';
+export enum EventType {
+  uiEvent = 'uiEvent',
+  event = 'event',
+  request = 'request',
+  response = 'response',
+}
+
+export type FuelWeb3Event<T = unknown> = {
+  type: EventType.event;
   target: string;
-  data: Array<{
+  events: Array<{
     event: string;
-    params: Array<any>;
+    params: Array<T>;
   }>;
 };
 
-export type FuelRPCMessage = {
+export type FuelWeb3Response = {
+  type: EventType.response;
   target: string;
-  request: JSONRPCResponse;
+  response: JSONRPCResponse;
 };
 
-export type FuelMessage = FuelEventMessage | FuelRPCMessage;
+export type FuelWeb3Request = {
+  type: EventType.request;
+  target: string;
+  request: JSONRPCRequest;
+};
 
-export type EventCallback = (event: FuelEventMessage) => void;
+export type FuelWeb3Message =
+  | FuelWeb3Response
+  | FuelWeb3Request
+  | FuelWeb3Event;
