@@ -51,7 +51,6 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.36.1",
     "react-router-dom": "^6.4.1",
-    "react-use-poll": "^1.1.5",
     "util": "^0.12.4",
     "xstate": "^4.33.6",
     "yup": "^0.32.11"

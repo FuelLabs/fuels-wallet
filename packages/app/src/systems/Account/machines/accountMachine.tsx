@@ -74,7 +74,7 @@ export const accountMachine = createMachine(
     },
   },
   {
-    delays: { INTERVAL: 2000, TIMEOUT: 15000, POOL_INTERVAL: 15000 },
+    delays: { INTERVAL: 2000, TIMEOUT: 15000 },
     actions: {
       assignAccount: assign({
         data: (_, ev) => ev.data,

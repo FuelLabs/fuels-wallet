@@ -136,7 +136,6 @@ importers:
       react-helmet: ^6.1.0
       react-hook-form: ^7.36.1
       react-router-dom: ^6.4.1
-      react-use-poll: ^1.1.5
       storybook-addon-react-router-v6: ^0.2.1
       storybook-dark-mode: ^1.1.2
       ts-jest-mock-import-meta: ^0.12.0
@@ -182,7 +181,6 @@ importers:
       react-helmet: 6.1.0_react@18.2.0
       react-hook-form: 7.36.1_react@18.2.0
       react-router-dom: 6.4.1_biqbaboplfbrettd7655fr4n2y
-      react-use-poll: 1.1.5_react@18.2.0
       util: 0.12.4
       xstate: 4.33.6
       yup: 0.32.11
@@ -16957,17 +16955,6 @@ packages:
     dependencies:
       react: 18.2.0
       tslib: 2.4.0
-    dev: false
-
-  /react-use-poll/1.1.5_react@18.2.0:
-    resolution: {integrity: sha512-MOU+GzuRatB7ejQdpTyBP38vzbemvavGCXGpx2jp3hnr6sEukC2QfD7UjiJqzI4Dw7jBOnHdn17ghO9xJvkFpQ==}
-    peerDependencies:
-      react: '*'
-    peerDependenciesMeta:
-      react:
-        optional: true
-    dependencies:
-      react: 18.2.0
     dev: false
 
   /react-use/17.4.0_biqbaboplfbrettd7655fr4n2y:
