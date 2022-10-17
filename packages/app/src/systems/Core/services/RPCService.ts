@@ -49,30 +49,3 @@ export class RPCService {
     this.connection.disconnect();
   }
 }
-
-//   server.addMethod('requestAuthorization', async (params: any) => {
-//     const origin = params?.origin;
-//     if (origin) {
-//       applicationService.send(ExternalAppEvents.connect, {
-//         data: {
-//           origin,
-//         },
-//       });
-//       try {
-//         const app = await waitFor(
-//           applicationService,
-//           (state) => {
-//             return state.matches('connected');
-//           },
-//           {
-//             timeout: 60 * 1000 * 5,
-//           }
-//         );
-//         return !!app;
-//       } catch (err: any) {
-//         window.close();
-//         throw new Error('User didnt reject in under than 5 minutes');
-//       }
-//     }
-//     return false;
-//   });
