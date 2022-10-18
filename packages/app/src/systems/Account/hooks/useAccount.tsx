@@ -29,9 +29,9 @@ export function useAccount() {
   }
 
   return {
+    isLoading: isLoading && !account,
     account,
     wallet,
-    isLoading,
     isLocked,
     handlers: {
       unlock,
