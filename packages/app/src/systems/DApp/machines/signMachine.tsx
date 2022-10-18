@@ -51,13 +51,14 @@ export const signMachine = createMachine(
           id: 'unlock',
           src: unlockMachine,
           data: (_: MachineContext, ev: MachineEvents) => ev.input,
-          onDone: { target: 'signingMessage' },
+          onDone: {
+            actions: ['stopLoadingUnlock'],
+            target: 'signingMessage',
+          },
         },
-
         on: {
           UNLOCK_WALLET: {
             // send to the child machine
-            // actions: send(
             actions: [
               send<MachineContext, UnlockMachineEvents>(
                 (_, ev) => ({
@@ -75,12 +76,11 @@ export const signMachine = createMachine(
         },
       },
       signingMessage: {
-        exit: ['stopLoadingUnlock'],
         invoke: {
           src: 'signMessage',
           data: {
             input: (_: MachineContext, ev: { data: Wallet }) => {
-              return { message: 'test message', wallet: ev.data };
+              return { message: _.message, wallet: ev.data };
             },
           },
           onDone: [

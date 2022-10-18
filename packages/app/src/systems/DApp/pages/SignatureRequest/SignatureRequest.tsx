@@ -1,7 +1,7 @@
 import { Button, Card, Flex, Icon, Text } from '@fuel-ui/react';
 
 import { ConnectInfo, UnlockDialog } from '../../components';
-import { useSignatureRequest } from '../../hooks/useSignatureRequest';
+import { useSignatureRequest } from '../../hooks';
 
 import { Layout } from '~/systems/Core';
 
@@ -36,12 +36,7 @@ export function SignatureRequest() {
           </Card>
         </Layout.Content>
         <Layout.BottomBar>
-          <Button
-            aria-label="Cancel"
-            // onPress={handlers.goToAdd}
-            variant="ghost"
-            color="gray"
-          >
+          <Button aria-label="Cancel" variant="ghost" color="gray">
             Cancel
           </Button>
           <Button aria-label="Sign" onPress={handlers.sign}>

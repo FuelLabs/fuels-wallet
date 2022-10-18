@@ -43,7 +43,6 @@ export const unlockMachine = createMachine(
         },
       },
       unlocking: {
-        tags: ['loading'],
         entry: sendParent('START_LOADING_UNLOCK'),
         invoke: {
           src: 'unlock',

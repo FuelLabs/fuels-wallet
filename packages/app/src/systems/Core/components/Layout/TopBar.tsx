@@ -67,29 +67,26 @@ export function TopBar({
                 onPress={handlers.goToList}
               />
             )}
-            {isLoading && <Spinner aria-label="Spinner" />}
           </>
         ) : (
-          <>
-            <Text css={{ fontWeight: '$semibold', color: '$gray12' }}>
-              {title}
-            </Text>
-            {isLoading && <Spinner />}
-          </>
+          <Text css={{ fontWeight: '$semibold', color: '$gray12' }}>
+            {title}
+          </Text>
         )}
+        {isLoading && <Spinner aria-label="Spinner" />}
       </Flex>
-      {/* <IconButton
-        icon={<Icon icon="Bell" color="gray8" size={24} />}
-        aria-label="Activities"
-        variant="link"
-        css={{ px: '0 !important' }}
-      /> */}
       {isSinglePage && networks && (
         <NetworkDropdown
           selected={selectedNetwork}
           onPress={handlers.goToList}
         />
       )}
+      {/* <IconButton
+        icon={<Icon icon="Bell" color="gray8" size={24} />}
+        aria-label="Activities"
+        variant="link"
+        css={{ px: '0 !important' }}
+      /> */}
       {showMenu && (
         <Drawer type="menu" size={220} containerRef={ref}>
           <Drawer.Trigger aria-label="drawer_trigger">

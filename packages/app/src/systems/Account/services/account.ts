@@ -34,9 +34,6 @@ export type AccountInputs = {
     account: Account;
     password: string;
   };
-  signMessage: {
-    message: string;
-  };
 };
 
 export class AccountService {

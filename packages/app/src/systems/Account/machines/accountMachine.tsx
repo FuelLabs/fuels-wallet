@@ -11,7 +11,6 @@ import { NetworkService } from '~/systems/Network';
 type MachineContext = {
   data?: Account;
   error?: unknown;
-  signedMessage?: string;
 };
 
 type MachineServices = {
