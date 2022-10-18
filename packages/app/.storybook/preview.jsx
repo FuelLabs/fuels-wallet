@@ -3,6 +3,7 @@ import { addDecorator } from '@storybook/react';
 import { themes } from '@storybook/theming';
 import { initializeWorker, mswDecorator } from 'msw-storybook-addon';
 import { withRouter } from 'storybook-addon-react-router-v6';
+import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 
 import theme from './theme';
 
@@ -32,6 +33,19 @@ export const parameters = {
     light: {
       ...themes.light,
       ...theme,
+    },
+  },
+  viewport: {
+    viewports: {
+      ...INITIAL_VIEWPORTS,
+      chromeExtension: {
+        name: 'Chrome Extension',
+        styles: {
+          height: '600px',
+          width: '350px',
+        },
+        type: 'mobile',
+      },
     },
   },
 };

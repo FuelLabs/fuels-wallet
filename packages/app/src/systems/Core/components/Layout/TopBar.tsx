@@ -136,8 +136,6 @@ const style = css({
   px: '$4',
   gap: '$3',
   minHeight: '50px',
-  borderTopLeftRadius: '$md',
-  borderTopRightRadius: '$md',
   boxShadow: '$sm',
   background:
     'linear-gradient(268.61deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.02) 87.23%)',
