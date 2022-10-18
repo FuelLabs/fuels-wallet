@@ -63,25 +63,3 @@ jobs:
           working-directory: ./packages/app
           coverage-file: ${{ env.COVERAGE_FILE }}
           base-coverage-file: ${{ env.COVERAGE_FILE }}
-
-  end-to-end-test:
-    name: Test E2E
-    runs-on: ubuntu-latest
-    continue-on-error: false
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/setup-docker
-        with:
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: "End-to-end tests"
-        uses: cypress-io/github-action@v4
-        with:
-          browser: chrome
-          install: false
-          command: pnpm ci:test-e2e
-          record: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_ENV: "test"
