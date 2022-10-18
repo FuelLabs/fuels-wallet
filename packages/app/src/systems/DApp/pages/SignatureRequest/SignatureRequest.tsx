@@ -1,0 +1,59 @@
+import { Button, Card, Flex, Icon, Text } from '@fuel-ui/react';
+
+import { ConnectInfo, UnlockDialog } from '../../components';
+import { useSignatureRequest } from '../../hooks/useSignatureRequest';
+
+import { Layout } from '~/systems/Core';
+
+export function SignatureRequest() {
+  const { isUnlocking, handlers, account, isUnlockingLoading } =
+    useSignatureRequest();
+
+  return (
+    <>
+      <Layout title={`Signature Request`} isSinglePage>
+        <Layout.TopBar />
+        <Layout.Content>
+          {account && <ConnectInfo url={'swayswap.io'} account={account} />}
+          <Card css={{ mt: '$4' }}>
+            <Card.Body css={{ p: '$3' }}>
+              <Flex css={{ alignItems: 'center', gap: '$3' }}>
+                <Text
+                  fontSize="sm"
+                  color="gray12"
+                  css={{ fontWeight: '$semibold' }}
+                >
+                  Signature Message
+                </Text>
+                <Icon icon="Question" color="gray8" />
+              </Flex>
+              <Text fontSize="sm" css={{ mt: '$3' }}>
+                Click to sign in and accept My App terms of service. This
+                request will not trigger a blockchain transaction or cost any
+                gass fee.
+              </Text>
+            </Card.Body>
+          </Card>
+        </Layout.Content>
+        <Layout.BottomBar>
+          <Button
+            aria-label="Cancel"
+            // onPress={handlers.goToAdd}
+            variant="ghost"
+            color="gray"
+          >
+            Cancel
+          </Button>
+          <Button aria-label="Sign" onPress={handlers.sign}>
+            Sign
+          </Button>
+        </Layout.BottomBar>
+      </Layout>
+      <UnlockDialog
+        isOpen={isUnlocking}
+        onUnlock={handlers.unlock}
+        isLoading={isUnlockingLoading}
+      />
+    </>
+  );
+}

@@ -1,12 +1,12 @@
 import type { Story } from '@storybook/react';
 
-import { createMockAccount } from '../../__mocks__';
+import { createMockAccount } from '../../../Account/__mocks__';
 
 import { UnlockDialog } from './UnlockDialog';
 
 export default {
   component: UnlockDialog,
-  title: 'Account/Components/UnlockDialog',
+  title: 'DApp/Components/UnlockDialog',
   parameters: {
     layout: 'fullscreen',
   },

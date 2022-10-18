@@ -2,38 +2,44 @@ import { cssObj } from '@fuel-ui/css';
 import { Alert, Button, Dialog, Flex, Icon, Stack } from '@fuel-ui/react';
 
 import type { UnlockFormValues } from '../../hooks';
-import { useAccount, useUnlockForm } from '../../hooks';
+import { useUnlockForm } from '../../hooks';
 import { UnlockForm } from '../UnlockForm';
 
 export type UnlockDialogProps = {
   isOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  onUnlock: (value: string) => void;
+  isLoading?: boolean;
 };
 
-export function UnlockDialog({ isOpen, onOpenChange }: UnlockDialogProps) {
+export function UnlockDialog({
+  isOpen,
+  onOpenChange,
+  onUnlock,
+  isLoading,
+}: UnlockDialogProps) {
   const form = useUnlockForm();
-  const { handlers, isLoading } = useAccount();
   const { formState } = form;
 
   function onSubmit(values: UnlockFormValues) {
-    handlers.unlock(values.password);
+    onUnlock(values.password);
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Dialog.Content css={styles.content}>
-          <Dialog.Heading>
-            <Flex css={{ alignItems: 'center' }}>
-              <Icon
-                color="gray8"
-                icon={Icon.is('LockKeyOpen')}
-                css={styles.headingIcon}
-              />
-              Unlock Wallet
-            </Flex>
-          </Dialog.Heading>
-          <Dialog.Description>
+      <Dialog.Content css={styles.content}>
+        <Dialog.Heading>
+          <Flex css={{ alignItems: 'center' }}>
+            <Icon
+              color="gray8"
+              icon={Icon.is('LockKeyOpen')}
+              css={styles.headingIcon}
+            />
+            Unlock Wallet
+          </Flex>
+        </Dialog.Heading>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <Dialog.Description as="div">
             <Stack gap="$3">
               <Alert status="info" css={styles.alert}>
                 You need to unlock your wallet to be able to make transactions
@@ -56,8 +62,8 @@ export function UnlockDialog({ isOpen, onOpenChange }: UnlockDialogProps) {
               </Button>
             </Dialog.Close>
           </Dialog.Footer>
-        </Dialog.Content>
-      </form>
+        </form>
+      </Dialog.Content>
     </Dialog>
   );
 }

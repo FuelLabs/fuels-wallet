@@ -21,6 +21,7 @@ export const Pages = {
   networks: route('/networks'),
   networkUpdate: route<'id'>('/networks/update/:id'),
   networkAdd: route('/networks/add'),
+  dapp: route('/dapp'),
 };
 
 export type AmountMap = Record<string, Maybe<BigNumberish>>;

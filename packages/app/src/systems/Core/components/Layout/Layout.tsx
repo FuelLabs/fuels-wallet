@@ -13,8 +13,11 @@ import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 type Context = {
   isLoading?: boolean;
   isHome?: boolean;
+  isSinglePage?: boolean;
   title?: string;
   ref?: React.RefObject<HTMLDivElement>;
+  showMenu?: boolean;
+  showBack?: boolean;
 };
 
 const ctx = createContext<Context>({});
@@ -39,6 +42,7 @@ export type LayoutProps = {
   isPublic?: boolean;
   isLoading?: boolean;
   isHome?: boolean;
+  isSinglePage?: boolean;
   title?: string;
   children: ReactNode;
 };
@@ -53,13 +57,14 @@ export const Layout: LayoutComponent = ({
   isPublic,
   isLoading,
   isHome,
+  isSinglePage,
   title,
   children,
 }: LayoutProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const titleText = title ? `${title} | Fuel` : 'Fuel';
   return (
-    <ctx.Provider value={{ isLoading, isHome, title, ref }}>
+    <ctx.Provider value={{ isLoading, isHome, isSinglePage, title, ref }}>
       <Helmet>
         <title>{titleText}</title>
       </Helmet>
