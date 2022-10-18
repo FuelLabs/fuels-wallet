@@ -125,8 +125,6 @@ export class PopUpService {
 
   // UI exposed methods
   async requestAuthorization(origin: string) {
-    return this.client.request('requestAuthorization', {
-      origin,
-    });
+    return this.client.request('requestAuthorization', { origin });
   }
 }

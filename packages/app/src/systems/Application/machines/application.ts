@@ -5,6 +5,7 @@ import { ApplicationService } from '../services';
 import type { Application } from '../types';
 
 export type MachineContext = {
+  origin?: string;
   application?: Application | null;
   isConnected: boolean;
   error?: string;
@@ -22,18 +23,11 @@ type MachineServices = {
   };
 };
 
-export enum AppActions {
-  connect = 'connect',
-  disconnect = 'disconnect',
-  authorize = 'authorize',
-  reject = 'reject',
-}
-
-type MachineEvents =
-  | { type: `${AppActions.connect}`; data: Application }
-  | { type: `${AppActions.disconnect}`; data: Application }
-  | { type: `${AppActions.authorize}`; data: Array<string> }
-  | { type: `${AppActions.reject}`; data: void };
+export type MachineEvents =
+  | { type: 'connect'; data: string }
+  | { type: 'disconnect'; data: Application }
+  | { type: 'authorize'; data: Array<string> }
+  | { type: 'reject'; data: void };
 
 export const applicationMachine = createMachine(
   {
@@ -49,29 +43,30 @@ export const applicationMachine = createMachine(
     },
     predictableActionArguments: true,
     id: '(machine)',
-    initial: 'disconnected',
+    initial: 'idle',
     states: {
-      disconnected: {
-        tags: ['emitEvent'],
+      idle: {
         on: {
-          [AppActions.connect]: {
-            actions: ['setApplication'],
+          connect: {
+            actions: ['setOrigin'],
             target: '#(machine).connect',
           },
-        },
-      },
-      connected: {
-        tags: ['emitEvent'],
-        entry: ['closeTab'],
-        on: {
-          [AppActions.disconnect]: {
-            actions: 'setApplication',
+          disconnect: {
             target: '#(machine).disconnect',
           },
         },
       },
+      connected: {
+        entry: ['closeWindow'],
+        on: {
+          disconnect: {
+            actions: 'setApplication',
+            target: '#(machine).idle',
+          },
+        },
+      },
       error: {
-        tags: ['emitEvent'],
+        entry: ['closeWindow'],
       },
       connect: {
         tags: 'connecting',
@@ -106,10 +101,10 @@ export const applicationMachine = createMachine(
           },
         },
         on: {
-          [AppActions.authorize]: {
+          authorize: {
             target: '.authorizeApp',
           },
-          [AppActions.reject]: {
+          reject: {
             actions: ['setConnectionRejected'],
             target: '#(machine).error',
           },
@@ -121,7 +116,7 @@ export const applicationMachine = createMachine(
           onDone: [
             {
               actions: 'setDisconnected',
-              target: 'disconnected',
+              target: 'idle',
             },
           ],
         },
@@ -134,11 +129,14 @@ export const applicationMachine = createMachine(
       setConnectionRejected: assign({
         error: (_) => 'Connection rejected!',
       }),
+      setOrigin: assign({
+        origin: (_, ev) => ev.data,
+      }),
       setApplication: assign({
-        application: (_, ev) => {
+        application: (ctx, ev) => {
           return {
             accounts: ev.data.accounts || [],
-            origin: ev.data.origin,
+            origin: ctx.origin!,
           };
         },
       }),
@@ -154,20 +152,20 @@ export const applicationMachine = createMachine(
       setDisconnected: assign({
         isConnected: (_) => false,
       }),
-      closeTab: () => {
+      closeWindow: () => {
         window.close();
       },
     },
     services: {
       fetchApplication: async (ctx, ev) => {
-        const app = await ApplicationService.getApplication(ev.data.origin);
+        const app = await ApplicationService.getApplication(ev.data);
         return app || null;
       },
       addApplication: async (ctx, ev) => {
-        if (ctx.application && Array.isArray(ev.data)) {
+        if (ctx.origin && Array.isArray(ev.data)) {
           const app = await ApplicationService.addApplication({
             data: {
-              origin: ctx.application.origin,
+              origin: ctx.origin,
               accounts: ev.data,
             },
           });

@@ -1,42 +1,26 @@
 import { useInterpret, useSelector } from '@xstate/react';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 
 import type { ApplicationMachineState } from '../machines';
 import { applicationMachine } from '../machines';
 
-import { RPCService } from '~/systems/Core/services/RPCService';
-import { waitForState } from '~/systems/Core/utils/machine';
+import { useApplicationRPC } from './useApplicationRPC';
 
 const selectors = {
   isConnecting: (state: ApplicationMachineState) => {
     return state.hasTag('connecting');
+  },
+  origin: (state: ApplicationMachineState) => {
+    return state.context.origin;
   },
 };
 
 export function useApplication() {
   const applicationService = useInterpret(() => applicationMachine);
   const isConnecting = useSelector(applicationService, selectors.isConnecting);
+  const origin = useSelector(applicationService, selectors.origin);
 
-  useEffect(() => {
-    const rpcService = new RPCService();
-    rpcService.server.addMethod('requestAuthorization', async (params: any) => {
-      if (!params?.origin) return false;
-
-      applicationService.send('connect', {
-        data: {
-          origin: params.origin,
-        },
-      });
-      const app = await waitForState(
-        applicationService,
-        'connected',
-        'disconnected'
-      );
-
-      return app.isConnected;
-    });
-    return () => rpcService.destroy();
-  }, [applicationService]);
+  useApplicationRPC(applicationService);
 
   const authorizeApplication = useCallback((accounts: Array<string>) => {
     applicationService.send({
@@ -46,6 +30,7 @@ export function useApplication() {
   }, []);
 
   return {
+    origin,
     isConnecting,
     authorizeApplication,
   };

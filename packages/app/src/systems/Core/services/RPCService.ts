@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BACKGROUND_SCRIPT_NAME, POPUP_SCRIPT_NAME } from '@fuels-wallet/sdk';
 import { JSONRPCServer } from 'json-rpc-2.0';
 
@@ -15,6 +16,12 @@ export class RPCService {
     });
     this.setupListeners();
     this.ready();
+  }
+
+  setupMethods(target: any, methods: Array<string>) {
+    methods.forEach((method) => {
+      this.server.addMethod(method, target[method].bind(target) as any);
+    });
   }
 
   ready() {

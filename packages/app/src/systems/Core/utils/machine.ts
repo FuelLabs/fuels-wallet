@@ -1,25 +1,22 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ActorRef } from 'xstate';
+import type { AnyInterpreter, StateFrom } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
-export async function waitForState<TActorRef extends ActorRef<any, any>>(
-  actor: TActorRef,
-  done: string,
-  failure: string,
-  timeout: number = 60 * 5 * 1000
-) {
+export async function waitForState<
+  I extends AnyInterpreter,
+  T extends StateFrom<I['machine']>,
+  D extends I['machine']['__TResolvedTypesMeta']['resolved']['matchesStates']
+>(service: I, done: D, failure: D, timeout: number = 60 * 5 * 1000) {
   try {
-    const appState: any = await waitFor(
-      actor,
-      (state) =>
-        (state as any).matches(done) || (state as any).matches(failure),
+    const appState: T = await waitFor<I>(
+      service,
+      (state: T) => state.matches(done) || state.matches(failure),
       {
         timeout,
       }
     );
-    return appState.context;
-  } catch (err: any) {
-    window.close();
+    return appState.context as T['context'];
+  } catch (err: unknown) {
+    // window.close();
     throw new Error(
       `Window closed by inactivity after ${timeout / 1000 / 60} minutes!`
     );
