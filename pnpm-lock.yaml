@@ -142,6 +142,7 @@ importers:
       ts-jest-mock-import-meta: ^0.12.0
       tsconfig-paths-webpack-plugin: ^4.0.0
       typescript: ^4.8.4
+      url-join-ts: ^1.0.5
       util: ^0.12.4
       vite: ^3.1.7
       vite-plugin-zip-pack: ^1.0.4
@@ -183,6 +184,7 @@ importers:
       react-hook-form: 7.37.0_react@18.2.0
       react-router-dom: 6.4.2_biqbaboplfbrettd7655fr4n2y
       short-unique-id: 4.4.4
+      url-join-ts: 1.0.5
       util: 0.12.4
       xstate: 4.33.6
       yup: 0.32.11
@@ -19367,6 +19369,10 @@ packages:
     resolution: {integrity: sha512-Am1ousAhSLBeB9cG/7k7r2R0zj50uDRlZHPGbazid5s9rlF1F/QKYObEKSIunSjIOkJZqwRRLpvewjEkM7pSqg==}
     deprecated: Please see https://github.com/lydell/urix#deprecated
     dev: true
+
+  /url-join-ts/1.0.5:
+    resolution: {integrity: sha512-u+5gi7JyOwhj58ZKwkmkzFGHuepTpmwjqfUDGVjsJJstsCz63CJAINixgJaDcMbmuyWPJIxbtBpIfaDgOQ9KMQ==}
+    dev: false
 
   /url-loader/4.1.1_lit45vopotvaqup7lrvlnvtxwy:
     resolution: {integrity: sha512-3BTV812+AVHHOJQO8O5MkWgZ5aosP7GnROJwvzLS9hWDj00lZ6Z0wNak423Lp9PBZN05N+Jk/N5Si8jRAlGyWA==}

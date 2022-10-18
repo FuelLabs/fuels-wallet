@@ -52,6 +52,7 @@
     "react-hook-form": "^7.37.0",
     "react-router-dom": "^6.4.2",
     "short-unique-id": "^4.4.4",
+    "url-join-ts": "^1.0.5",
     "util": "^0.12.4",
     "xstate": "^4.33.6",
     "yup": "^0.32.11"

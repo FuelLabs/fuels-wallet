@@ -1,14 +1,19 @@
 import { toast } from '@fuel-ui/react';
 import fetch from 'cross-fetch';
+import { urlJoin } from 'url-join-ts';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-import { VITE_FUEL_FAUCET_URL } from '~/config';
+import { IS_CRX_POPUP, VITE_FUEL_FAUCET_URL } from '~/config';
 import { store } from '~/store';
 import type { Maybe } from '~/systems/Core';
 
+const FAUCET_URL = IS_CRX_POPUP
+  ? urlJoin(VITE_FUEL_FAUCET_URL, '/dispense')
+  : VITE_FUEL_FAUCET_URL;
+
 async function fetchFaucet(input: RequestInit) {
-  const res = await fetch(VITE_FUEL_FAUCET_URL, {
+  const res = await fetch(FAUCET_URL, {
     ...input,
     headers: {
       Accept: 'application/json',

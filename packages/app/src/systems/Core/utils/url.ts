@@ -1,8 +1,6 @@
-export function joinUrl(...parts: Array<string>) {
-  const separator = '/';
-  const replace = new RegExp(`${separator}{1,}`, 'g');
-  return parts.join(separator).replace(replace, separator);
-}
+import { urlJoin } from 'url-join-ts';
+
+export const joinUrl = urlJoin;
 
 export function relativeUrl(path: string) {
   return joinUrl(import.meta.env.BASE_URL, path);
