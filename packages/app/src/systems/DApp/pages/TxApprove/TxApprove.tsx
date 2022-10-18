@@ -9,7 +9,7 @@ import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import {
   TxDetails,
-  getCoinInputsFromTx,
+  getCoinOutputsFromTx,
   useTransaction,
 } from '~/systems/Transaction';
 
@@ -41,7 +41,7 @@ export function TxApprove({ id, url }: TxApproveProps) {
                 Assets amount
               </HelperIcon>
               {txRequest?.outputs && (
-                <AssetsAmount amounts={getCoinInputsFromTx(txRequest)} />
+                <AssetsAmount amounts={getCoinOutputsFromTx(txRequest)} />
               )}
             </Stack>
             {simulateResult && <TxDetails receipts={simulateResult.receipts} />}
