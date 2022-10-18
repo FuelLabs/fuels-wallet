@@ -86,8 +86,15 @@ export const accountMachine = createMachine(
       },
       done: {
         entry: ['setIsLocked'],
+        after: {
+          TIMEOUT: 'fetchingAccount', // retry
+        },
       },
-      failed: {},
+      failed: {
+        after: {
+          INTERVAL: 'fetchingAccount', // retry
+        },
+      },
     },
     on: {
       UPDATE_ACCOUNT: {
@@ -99,6 +106,7 @@ export const accountMachine = createMachine(
     },
   },
   {
+    delays: { INTERVAL: 2000, TIMEOUT: 15000 },
     actions: {
       assignAccount: assign({
         data: (_, ev) => ev.data,
