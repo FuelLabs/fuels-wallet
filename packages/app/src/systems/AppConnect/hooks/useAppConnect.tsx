@@ -5,6 +5,8 @@ import type { AppConnectMachineState } from '../machines';
 import { appConnectMachine } from '../machines';
 import { AppConnectExternal } from '../methods';
 
+import { IS_CRX_POPUP } from '~/config';
+
 const selectors = {
   isConnecting: (state: AppConnectMachineState) => {
     return state.hasTag('connecting');
@@ -20,7 +22,9 @@ export function useAppConnect() {
   const origin = useSelector(applicationService, selectors.origin);
 
   useEffect(() => {
-    AppConnectExternal.start(applicationService);
+    if (IS_CRX_POPUP) {
+      AppConnectExternal.start(applicationService);
+    }
   }, [appConnectMachine]);
 
   const authorizeApplication = useCallback((accounts: Array<string>) => {
