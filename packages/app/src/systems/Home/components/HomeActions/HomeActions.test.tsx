@@ -1,4 +1,4 @@
-import { render, screen, testA11y } from '@fuel-ui/test-utils';
+import { act, render, screen, testA11y } from '@fuel-ui/test-utils';
 
 import { HomeActions } from './HomeActions';
 
@@ -24,20 +24,18 @@ describe('HomeActions', () => {
     const sendAction = jest.fn();
     render(
       <HomeActions
-        isDisabled
-        receiveAction={receiveAction}
-        sendAction={sendAction}
+        receiveAction={() => receiveAction()}
+        sendAction={() => sendAction()}
       />
     );
 
     const receiveButton = screen.getByText('Receive');
     const sendButton = screen.getByText('Send');
 
-    expect(receiveButton).toBeInTheDocument();
-    expect(sendButton).toBeInTheDocument();
-
-    sendButton.click();
-    receiveButton.click();
+    act(() => {
+      receiveButton.click();
+      sendButton.click();
+    });
 
     expect(receiveAction).toBeCalled();
     expect(sendAction).toBeCalled();
