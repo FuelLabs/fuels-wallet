@@ -1,8 +1,6 @@
 import { bn } from 'fuels';
 
-import type { Tx } from '../types';
-
-export const MOCK_TX: Tx = {
+export const MOCK_TX = {
   status: {
     type: 'success',
     programState: {
