@@ -1,6 +1,6 @@
 import { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Meta, Story } from '@storybook/react';
-import { Address, bn, ScriptTransactionRequest } from 'fuels';
+import { bn, ScriptTransactionRequest, Wallet } from 'fuels';
 
 import { TxApprove } from './TxApprove';
 
@@ -10,6 +10,8 @@ import { db } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 import { TxType } from '~/systems/Transaction';
 import { TxService } from '~/systems/Transaction/services';
+
+const OWNER = import.meta.env.VITE_ADDR_OWNER;
 
 async function loader() {
   /**
@@ -29,11 +31,7 @@ async function loader() {
   /**
    * Add ETH coin owner
    * */
-  await manager.addVault({
-    type: 'privateKey',
-    secret:
-      '0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298',
-  });
+  await manager.addVault({ type: 'privateKey', secret: OWNER });
   const accounts = manager.getAccounts();
   const walletAccount =
     accounts.find((a) => a.address.toString().startsWith('0x94')) ||
@@ -55,22 +53,16 @@ async function loader() {
    * Create a sample transaction request
    * */
   const wallet = manager.getWallet(walletAccount.address);
-  const coins = await wallet.getCoins();
   const amount = bn(1);
   const params = { gasLimit: bn(100000), gasPrice: bn(100000) };
+  const coins = await wallet.getCoins();
+  const newAddr = Wallet.generate().address;
+  const assetId = coins[0].assetId;
   const txRequest = new ScriptTransactionRequest(params);
-  txRequest.addCoinOutput(
-    Address.fromString(
-      '0x093829e4351649934f4d952de00d9f6696bc9099cf172994d3ee3bfc8e123a7e'
-    ),
-    amount,
-    coins[0].assetId
+  txRequest.addCoinOutput(newAddr, amount, assetId);
+  txRequest.addCoins(
+    await wallet.getCoinsToSpend([[amount, assetId], txRequest.calculateFee()])
   );
-  const newCoins = await wallet.getCoinsToSpend([
-    [amount, coins[0].assetId],
-    txRequest.calculateFee(),
-  ]);
-  txRequest.addCoins(newCoins);
 
   /** Add transaction on database */
   await TxService.clear();

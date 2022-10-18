@@ -30,6 +30,12 @@ export class TxService {
     });
   }
 
+  static getAll() {
+    return db.transaction('r', db.transactions, async () => {
+      return db.transactions.toArray();
+    });
+  }
+
   static get(input: TxInputs['get']) {
     return db.transaction('r', db.transactions, async () => {
       return db.transactions.where(input).first();
