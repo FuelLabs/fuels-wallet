@@ -30,7 +30,7 @@ export function SignatureRequest() {
               <Text fontSize="sm" css={{ mt: '$3' }}>
                 Click to sign in and accept My App terms of service. This
                 request will not trigger a blockchain transaction or cost any
-                gass fee.
+                gas fee.
               </Text>
             </Card.Body>
           </Card>
