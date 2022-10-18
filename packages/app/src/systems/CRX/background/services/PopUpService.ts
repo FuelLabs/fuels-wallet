@@ -1,8 +1,7 @@
-import { POPUP_SCRIPT_NAME } from '@fuels-wallet/sdk';
+import type { ResponseMessage, UIEventMessage } from '@fuels-wallet/sdk';
+import { POPUP_SCRIPT_NAME, MessageTypes } from '@fuels-wallet/sdk';
 import { JSONRPCClient } from 'json-rpc-2.0';
 
-import type { ResponseMessage, UIEventMessage } from '../../types';
-import { EventTypes } from '../../types';
 import {
   createPopUp,
   getPopUpId,
@@ -32,7 +31,7 @@ export class PopUpService {
     this.client = new JSONRPCClient(async (rpcRequest) => {
       if (this.eventId) {
         this.communicationProtocol.postMessage({
-          type: EventTypes.request,
+          type: MessageTypes.request,
           target: POPUP_SCRIPT_NAME,
           id: this.eventId,
           request: rpcRequest,
@@ -66,10 +65,10 @@ export class PopUpService {
   };
 
   setupUIListeners() {
-    this.communicationProtocol.once(EventTypes.uiEvent, this.onUIEvent);
-    this.communicationProtocol.on(EventTypes.response, this.onResponse);
+    this.communicationProtocol.once(MessageTypes.uiEvent, this.onUIEvent);
+    this.communicationProtocol.on(MessageTypes.response, this.onResponse);
     this.communicationProtocol.on(
-      EventTypes.removeConnection,
+      MessageTypes.removeConnection,
       this.rejectAllRequests
     );
   }

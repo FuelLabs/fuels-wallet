@@ -289,6 +289,7 @@ importers:
       '@fuels-wallet/types': workspace:*
       '@types/chrome': ^0.0.197
       '@types/uuid': ^8.3.4
+      dexie-observable: 3.0.0-beta.11
       events: ^3.3.0
       jest-webextension-mock: ^3.7.22
       json-rpc-2.0: ^1.4.1
@@ -297,6 +298,7 @@ importers:
       uuid: ^9.0.0
       xstate: ^4.33.6
     dependencies:
+      dexie-observable: 3.0.0-beta.11
       events: 3.3.0
       json-rpc-2.0: 1.4.1
       uuid: 9.0.0
@@ -10567,6 +10569,12 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /dexie-observable/3.0.0-beta.11:
+    resolution: {integrity: sha512-mKwSYy54Kj73Njp3Rs+GoldLxyDJK1LF7niBkZxSenGAlBCXB5RxafH2Mg6Ay0B1pLlDYvJCWH31s88/Uz0WSg==}
+    peerDependencies:
+      dexie: ^3.0.2
+    dev: false
 
   /dexie-observable/3.0.0-beta.11_dexie@3.2.2:
     resolution: {integrity: sha512-mKwSYy54Kj73Njp3Rs+GoldLxyDJK1LF7niBkZxSenGAlBCXB5RxafH2Mg6Ay0B1pLlDYvJCWH31s88/Uz0WSg==}

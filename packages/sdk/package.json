@@ -26,6 +26,7 @@
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
+    "dexie-observable": "3.0.0-beta.11",
     "events": "^3.3.0",
     "json-rpc-2.0": "^1.4.1",
     "uuid": "^9.0.0",

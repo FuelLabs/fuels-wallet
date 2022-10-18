@@ -29,10 +29,10 @@ export type MachineEvents =
   | { type: 'authorize'; data: Array<string> }
   | { type: 'reject'; data: void };
 
-export const applicationMachine = createMachine(
+export const appConnectMachine = createMachine(
   {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    tsTypes: {} as import('./application.typegen').Typegen0,
+    tsTypes: {} as import('./appConnectMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,
       services: {} as MachineServices,
@@ -186,6 +186,6 @@ export const applicationMachine = createMachine(
   }
 );
 
-export type ApplicationMachine = typeof applicationMachine;
-export type ApplicationMachineService = InterpreterFrom<ApplicationMachine>;
-export type ApplicationMachineState = StateFrom<ApplicationMachine>;
+export type AppConnectMachine = typeof appConnectMachine;
+export type AppConnectMachineService = InterpreterFrom<AppConnectMachine>;
+export type AppConnectMachineState = StateFrom<AppConnectMachine>;

@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 
-import { AuthorizeApp } from '~/systems/Application';
+import { AuthorizeApp } from '~/systems/AppConnect';
 
 type ProvidersProps = {
   children: ReactNode;

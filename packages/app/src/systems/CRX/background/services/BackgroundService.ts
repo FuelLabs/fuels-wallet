@@ -1,13 +1,11 @@
-import { CONTENT_SCRIPT_NAME } from '@fuels-wallet/sdk';
+import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuels-wallet/sdk';
 import type { JSONRPCParams } from 'json-rpc-2.0';
 import { JSONRPCServer } from 'json-rpc-2.0';
-
-import { EventTypes } from '../../types';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { PopUpService } from './PopUpService';
 
-import { ApplicationService } from '~/systems/Application/services';
+import { ApplicationService } from '~/systems/AppConnect/services';
 
 type EventOrigin = { origin: string };
 
@@ -19,18 +17,22 @@ export class BackgroundService {
     this.communicationProtocol = communicationProtocol;
     this.server = new JSONRPCServer<EventOrigin>();
     this.setupListeners();
-    this.setupMethods(['accounts', 'connect', 'disconnect']);
+    this.externalMethods([this.accounts, this.connect, this.disconnect]);
+  }
+
+  static start(communicationProtocol: CommunicationProtocol) {
+    return new BackgroundService(communicationProtocol);
   }
 
   setupListeners() {
-    this.communicationProtocol.on(EventTypes.request, async (event) => {
+    this.communicationProtocol.on(MessageTypes.request, async (event) => {
       const response = await this.server.receive(event.request, {
         origin: event.sender!.origin!,
       });
       if (response) {
         this.communicationProtocol.postMessage({
           id: event.id,
-          type: EventTypes.response,
+          type: MessageTypes.response,
           target: CONTENT_SCRIPT_NAME,
           response,
         });
@@ -38,10 +40,13 @@ export class BackgroundService {
     });
   }
 
-  setupMethods(methods: Array<string>) {
+  externalMethods(methods: Array<string | any>) {
     methods.forEach((method) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.server.addMethod(method, this[method].bind(this) as any);
+      let methodName = method;
+      if (method.name) {
+        methodName = method.name;
+      }
+      this.server.addMethod(methodName, this[methodName].bind(this) as any);
     });
   }
 

@@ -3,7 +3,7 @@ import Dexie from 'dexie';
 import 'dexie-observable';
 
 import type { Account, Vault } from '~/systems/Account';
-import type { Application } from '~/systems/Application/types';
+import type { Application } from '~/systems/AppConnect/types';
 import type { Network } from '~/systems/Network';
 
 export class FuelDB extends Dexie {

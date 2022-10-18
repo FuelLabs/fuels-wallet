@@ -1,20 +1,20 @@
-import { BACKGROUND_SCRIPT_NAME, createUUID } from '@fuels-wallet/sdk';
-import EventEmitter from 'events';
-
 import type {
-  CommunicationEventNew,
+  CommunicationEventArg,
   CommunicationMessage,
-  CommunicationPostMessageNew,
-} from '../../types';
-import { EventTypes } from '../../types';
+  EventMessage,
+} from '@fuels-wallet/sdk';
+import {
+  BACKGROUND_SCRIPT_NAME,
+  BaseConnection,
+  createUUID,
+  MessageTypes,
+} from '@fuels-wallet/sdk';
 
-export class CommunicationProtocol extends EventEmitter {
-  id: string;
+export class CommunicationProtocol extends BaseConnection {
   ports: Map<string, chrome.runtime.Port>;
 
   constructor() {
     super();
-    this.id = createUUID();
     this.ports = new Map();
   }
 
@@ -37,18 +37,18 @@ export class CommunicationProtocol extends EventEmitter {
     if (port) {
       port.onMessage.removeListener(this.onMessage);
       this.ports.delete(id);
-      this.emit(EventTypes.removeConnection, id);
+      this.emit(MessageTypes.removeConnection, id);
     }
   };
 
-  postMessage = (message: CommunicationPostMessageNew) => {
-    const port = this.ports.get(message.id);
+  postMessage = (message: CommunicationMessage) => {
+    const port = this.ports.get(message.id!);
     if (port) {
       port.postMessage(message);
     }
   };
 
-  broadcast = (origin: string, message: CommunicationMessage) => {
+  broadcast = (origin: string, message: EventMessage) => {
     this.ports.forEach((port) => {
       if (port.sender?.origin === origin) {
         port.postMessage(message);
@@ -66,9 +66,9 @@ export class CommunicationProtocol extends EventEmitter {
     return null;
   };
 
-  on<E extends EventTypes>(
+  on<E extends MessageTypes>(
     eventName: E,
-    listener: (message: CommunicationEventNew<E>) => void
+    listener: (message: CommunicationEventArg<E>) => void
   ) {
     return super.on(eventName, listener);
   }
@@ -77,7 +77,7 @@ export class CommunicationProtocol extends EventEmitter {
     const sender = port.sender;
     if (sender?.id !== chrome.runtime.id) return;
     if (message.target !== BACKGROUND_SCRIPT_NAME) return;
-    if (!Object.keys(EventTypes).includes(message.type)) return;
+    if (!Object.keys(MessageTypes).includes(message.type)) return;
 
     const portId = this.getPortId(port);
 

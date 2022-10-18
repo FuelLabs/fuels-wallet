@@ -1,26 +1,27 @@
 import { useInterpret, useSelector } from '@xstate/react';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
-import type { ApplicationMachineState } from '../machines';
-import { applicationMachine } from '../machines';
-
-import { useApplicationRPC } from './useApplicationRPC';
+import type { AppConnectMachineState } from '../machines';
+import { appConnectMachine } from '../machines';
+import { AppConnectExternal } from '../methods';
 
 const selectors = {
-  isConnecting: (state: ApplicationMachineState) => {
+  isConnecting: (state: AppConnectMachineState) => {
     return state.hasTag('connecting');
   },
-  origin: (state: ApplicationMachineState) => {
+  origin: (state: AppConnectMachineState) => {
     return state.context.origin;
   },
 };
 
-export function useApplication() {
-  const applicationService = useInterpret(() => applicationMachine);
+export function useAppConnect() {
+  const applicationService = useInterpret(() => appConnectMachine);
   const isConnecting = useSelector(applicationService, selectors.isConnecting);
   const origin = useSelector(applicationService, selectors.origin);
 
-  useApplicationRPC(applicationService);
+  useEffect(() => {
+    AppConnectExternal.start(applicationService);
+  }, [appConnectMachine]);
 
   const authorizeApplication = useCallback((accounts: Array<string>) => {
     applicationService.send({

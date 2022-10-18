@@ -1,12 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
 import { BoxCentered, Button, Flex, Text } from '@fuel-ui/react';
 
-import { useApplication } from '../hooks/useApplication';
+import { useAppConnect } from '../hooks/useAppConnect';
 
 import { useAccount } from '~/systems/Account';
 
 export function AuthorizeApp() {
-  const { authorizeApplication, isConnecting, origin } = useApplication();
+  const { authorizeApplication, isConnecting, origin } = useAppConnect();
   const { account } = useAccount();
 
   if (!account || !isConnecting) return null;

@@ -1,14 +1,14 @@
-import type { IDatabaseChange } from 'dexie-observable/api';
+import type {
+  DatabaseEventArg,
+  DatabaseObservableEvent,
+} from '@fuels-wallet/sdk';
 import EventEmitter from 'events';
 
 import { db } from '~/systems/Core/utils/database';
 
-type DatabaseObservableEvent<
-  T extends Array<string>,
-  O extends Array<string>
-> = `${T[number]}:${O[number]}`;
-
-export class DatabaseObservable extends EventEmitter {
+export class DatabaseObservable<
+  TableNames extends Array<string>
+> extends EventEmitter {
   constructor() {
     super();
     this.setupListeners();
@@ -31,12 +31,9 @@ export class DatabaseObservable extends EventEmitter {
     });
   }
 
-  on<T = IDatabaseChange>(
-    eventName: DatabaseObservableEvent<
-      ['applications'],
-      ['delete', 'create', 'update']
-    >,
-    listener: (event: T) => void
+  on<T extends DatabaseObservableEvent<TableNames>>(
+    eventName: T,
+    listener: (event: DatabaseEventArg<T>) => void
   ): this {
     return super.on(eventName, listener);
   }

@@ -6,10 +6,8 @@ import { DatabaseEvents } from './services/DatabaseEvents';
 
 const communicationProtocol = new CommunicationProtocol();
 
-// eslint-disable-next-line no-new
-new BackgroundService(communicationProtocol);
-// eslint-disable-next-line no-new
-new DatabaseEvents(communicationProtocol);
+BackgroundService.start(communicationProtocol);
+DatabaseEvents.start(communicationProtocol);
 
 chrome.runtime.onConnect.addListener((port) => {
   if (port.name === BACKGROUND_SCRIPT_NAME) {
