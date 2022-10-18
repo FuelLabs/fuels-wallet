@@ -6,10 +6,9 @@ import { assign, createMachine } from 'xstate';
 import { VITE_FUEL_FAUCET_URL } from '~/config';
 import { store } from '~/store';
 import type { Maybe } from '~/systems/Core';
-import { joinUrl } from '~/systems/Core';
 
 async function fetchFaucet(input: RequestInit) {
-  const res = await fetch(joinUrl(VITE_FUEL_FAUCET_URL, '/dispense'), {
+  const res = await fetch(VITE_FUEL_FAUCET_URL, {
     ...input,
     headers: {
       Accept: 'application/json',
