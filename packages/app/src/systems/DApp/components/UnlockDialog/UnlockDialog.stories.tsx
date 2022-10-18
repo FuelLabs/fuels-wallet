@@ -13,7 +13,7 @@ export default {
 };
 
 export const Usage: Story<never> = () => {
-  return <UnlockDialog isOpen />;
+  return <UnlockDialog isOpen onUnlock={() => {}} />;
 };
 
 Usage.loaders = [
