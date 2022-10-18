@@ -84,7 +84,7 @@ importers:
       '@fuel-ts/wallet-manager': ^0.17.0
       '@fuel-ui/config': ^0.7.0
       '@fuel-ui/css': ^0.7.0
-      '@fuel-ui/react': 0.8.0-dev-501df54
+      '@fuel-ui/react': ^0.8.0
       '@fuel-ui/test-utils': ^0.7.0
       '@fuels-wallet/xstore': workspace:*
       '@hookform/resolvers': ^2.9.8
@@ -160,7 +160,7 @@ importers:
       '@fuel-ts/wallet-manager': 0.17.0
       '@fuel-ui/config': 0.7.0_typescript@4.8.4
       '@fuel-ui/css': 0.7.0
-      '@fuel-ui/react': 0.8.0-dev-501df54_ql7f7l2f4kwefo6iz3wpl6gawq
+      '@fuel-ui/react': 0.8.0_ql7f7l2f4kwefo6iz3wpl6gawq
       '@fuel-ui/test-utils': 0.7.0_h3faktr45dkxr5osyfhpty4wke
       '@fuels-wallet/xstore': link:../store
       '@hookform/resolvers': 2.9.8_react-hook-form@7.36.1
@@ -2574,8 +2574,8 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
-  /@fuel-ui/css/0.8.0-dev-501df54:
-    resolution: {integrity: sha512-hHbSfLvUUPsOfb6SqFTTNUTJ79+3u2ioBBvqMcHdo2KGNPQU5KpNEwtIZXzedsVNHN7D5g+RYXCdvMQNaOfIfA==}
+  /@fuel-ui/css/0.8.0:
+    resolution: {integrity: sha512-7BYmirssWbaEyD1V+dl0gS1/n/FO9eB6zrZ/DFLHJXxzzTprs4bZOGSl/FD7KzXak3e7O4/4a6uK3B0f11jTng==}
     dependencies:
       '@radix-ui/colors': 0.1.8
       '@stitches/react': 1.2.8_react@18.2.0
@@ -2584,11 +2584,11 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
-  /@fuel-ui/react/0.8.0-dev-501df54_ql7f7l2f4kwefo6iz3wpl6gawq:
-    resolution: {integrity: sha512-gLMjlQ2nF6s7N66MzcKWMbLJ1dUbVahJJa0pZnpKkAwz3VuzhdexdmTQmcikGVDsWf7tn/05tvjZOAmqPeHReg==}
+  /@fuel-ui/react/0.8.0_ql7f7l2f4kwefo6iz3wpl6gawq:
+    resolution: {integrity: sha512-4As9g/Df3ucmm3Qs1iZalq8oJLs+rcQQA243I7p57WLtvennyKvwat+4jvOoF7MySFfhEk2IVKiFaCICmRq3jg==}
     dependencies:
-      '@fuel-ui/css': 0.8.0-dev-501df54
-      '@fuel-ui/test-utils': 0.8.0-dev-501df54_h3faktr45dkxr5osyfhpty4wke
+      '@fuel-ui/css': 0.8.0
+      '@fuel-ui/test-utils': 0.8.0_h3faktr45dkxr5osyfhpty4wke
       '@radix-ui/react-accordion': 1.0.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.0_rj7ozvcq3uehdlnj3cbwzbi5ce
       '@radix-ui/react-aspect-ratio': 1.0.0_biqbaboplfbrettd7655fr4n2y
@@ -2676,8 +2676,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.8.0-dev-501df54_h3faktr45dkxr5osyfhpty4wke:
-    resolution: {integrity: sha512-yca940qj3pZ/44Xm1hAJjqtMpi/hZtfyIFNmrbPDEWjet47QBUY+Jx23/OIOzeUxEBVVuxtKo2Kd4Ax9dcs9OQ==}
+  /@fuel-ui/test-utils/0.8.0_h3faktr45dkxr5osyfhpty4wke:
+    resolution: {integrity: sha512-mwAjBsCmWzXEpNoOzwTo0D3hwfEWjlAAhSC4TbYT5LD2Z7KBOjuPSO+EaGzzXyDgkVqRjw0KB9orjfu6NT6g6Q==}
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
