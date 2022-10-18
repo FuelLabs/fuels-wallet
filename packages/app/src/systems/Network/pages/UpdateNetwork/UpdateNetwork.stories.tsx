@@ -1,4 +1,4 @@
-import type { Story } from '@storybook/react';
+import type { Meta, Story } from '@storybook/react';
 
 import { MOCK_NETWORKS } from '../../__mocks__/networks';
 import { NetworkService } from '../../services';
@@ -13,18 +13,20 @@ export default {
   parameters: {
     reactRouter: {
       routePath: Pages.networkUpdate(),
-      routeParams: { id: '1' },
+      routeParams: { id: '3' },
+    },
+    layout: 'fullscreen',
+    viewport: {
+      defaultViewport: 'chromeExtension',
     },
   },
-};
+  loaders: [
+    async () => {
+      await NetworkService.clearNetworks();
+      await NetworkService.addNetwork({ data: MOCK_NETWORKS[0] });
+      return {};
+    },
+  ],
+} as Meta;
 
 export const Usage: Story<unknown> = () => <UpdateNetwork />;
-Usage.decorators = [
-  (Story) => {
-    NetworkService.addNetwork({
-      data: MOCK_NETWORKS[0],
-    });
-
-    return <Story />;
-  },
-];

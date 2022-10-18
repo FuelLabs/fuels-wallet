@@ -80,16 +80,15 @@ async function loader() {
 export default {
   component: TxApprove,
   title: 'DApp/Pages/TxApprove',
+  loaders: [loader],
+  parameters: {
+    layout: 'fullscreen',
+    viewport: {
+      defaultViewport: 'chromeExtension',
+    },
+  },
 } as Meta;
 
 export const Usage: Story<unknown> = (_args, { loaded: { id, url } }) => {
   return <TxApprove id={id} url={url} />;
-};
-
-Usage.loaders = [loader];
-Usage.parameters = {
-  layout: 'fullscreen',
-  viewport: {
-    defaultViewport: 'chromeExtension',
-  },
 };
