@@ -84,8 +84,16 @@ export const accountMachine = createMachine(
           ],
         },
       },
-      done: {},
-      failed: {},
+      done: {
+        after: {
+          TIMEOUT: 'fetchingAccount', // retry
+        },
+      },
+      failed: {
+        after: {
+          INTERVAL: 'fetchingAccount', // retry
+        },
+      },
     },
     on: {
       UPDATE_ACCOUNT: {
@@ -97,6 +105,7 @@ export const accountMachine = createMachine(
     },
   },
   {
+    delays: { INTERVAL: 2000, TIMEOUT: 15000 },
     actions: {
       assignAccount: assign({
         data: (_, ev) => ev.data,

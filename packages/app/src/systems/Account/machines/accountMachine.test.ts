@@ -40,4 +40,16 @@ describe('accountsMachine', () => {
     const { data } = state.context;
     expect(data).toEqual(MOCK_ACCOUNT);
   });
+
+  it('should should poll the account info', async () => {
+    jest.useFakeTimers();
+    const state = await waitFor(service, (state) => state.matches('done'));
+    const { data } = state.context;
+    expect(data).toEqual(MOCK_ACCOUNT);
+    jest.advanceTimersByTime(15000);
+    const { matches } = await waitFor(service, (state) =>
+      state.matches('fetchingAccount')
+    );
+    expect(matches('fetchingAccount')).toBeTruthy();
+  });
 });
