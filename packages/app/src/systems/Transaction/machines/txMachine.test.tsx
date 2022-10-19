@@ -8,6 +8,8 @@ import { TxType } from '../types';
 
 import { txMachine } from './txMachine';
 
+import { VITE_FUEL_PROVIDER_URL } from '~/config';
+
 const OWNER = import.meta.env.VITE_ADDR_OWNER;
 const amount = bn(1);
 const params = { gasLimit: bn(100000), gasPrice: bn(100000) };
@@ -18,9 +20,11 @@ describe('txMachine', () => {
   let tx: Transaction | undefined;
 
   beforeAll(async () => {
-    wallet = new Wallet(OWNER);
+    wallet = new Wallet(OWNER, VITE_FUEL_PROVIDER_URL);
     const coins = await wallet.getCoins();
-    const newAddr = Wallet.generate().address;
+    const newAddr = Wallet.generate({
+      provider: VITE_FUEL_PROVIDER_URL,
+    }).address;
     const assetId = coins[0].assetId;
     txRequest = new ScriptTransactionRequest(params);
     txRequest.addCoinOutput(newAddr, amount, assetId);

@@ -31,11 +31,9 @@ export function Sidebar() {
           </Flex>
           <Drawer.CloseButton
             css={{ position: 'unset' }}
-            data-testid="drawer_closeButton"
             aria-label="drawer_closeButton"
           />
         </Flex>
-
         <Menu items={sidebarItems as MenuItemObj[]} />
       </Flex>
       <Flex

@@ -4,6 +4,7 @@ import { bn, ScriptTransactionRequest, Wallet } from 'fuels';
 
 import { TxApprove } from './TxApprove';
 
+import { VITE_FUEL_PROVIDER_URL } from '~/config';
 import { AccountService } from '~/systems/Account';
 import { IndexedDBStorage } from '~/systems/Account/utils';
 import { db } from '~/systems/Core';
@@ -57,7 +58,9 @@ async function loader() {
   const amount = bn(1);
   const params = { gasLimit: bn(100000), gasPrice: bn(100000) };
   const coins = await wallet.getCoins();
-  const newAddr = Wallet.generate().address;
+  const newAddr = Wallet.generate({
+    provider: VITE_FUEL_PROVIDER_URL,
+  }).address;
   const assetId = coins[0].assetId;
   const txRequest = new ScriptTransactionRequest(params);
   txRequest.addCoinOutput(newAddr, amount, assetId);

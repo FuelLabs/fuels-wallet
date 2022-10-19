@@ -37,7 +37,7 @@
     "lint:check": "eslint . --ext .ts,.tsx,.js,.jsx",
     "lint:fix": "pnpm lint:check --fix",
     "node:dev": "fuelhat node",
-    "node:test": "fuelhat node --test",
+    "node:test": "fuelhat node start --test",
     "prettier:check": "prettier --check .",
     "prettier:format": "prettier --write .",
     "storybook": "pnpm -r --filter=app storybook",

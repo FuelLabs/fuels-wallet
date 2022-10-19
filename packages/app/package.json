@@ -51,8 +51,6 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.38.0",
     "react-router-dom": "^6.4.2",
-    "short-unique-id": "^4.4.4",
-    "url-join-ts": "^1.0.5",
     "util": "^0.12.5",
     "xstate": "^4.33.6",
     "yup": "^0.32.11"
@@ -86,6 +84,7 @@
     "@types/react-helmet": "^6.1.5",
     "@types/testing-library__jest-dom": "^5.14.5",
     "@vitejs/plugin-react": "^2.1.0",
+    "cypress-log-to-output": "^1.1.2",
     "msw": "^0.47.4",
     "msw-storybook-addon": "^1.6.3",
     "storybook-addon-react-router-v6": "^0.2.1",

@@ -1,5 +1,3 @@
-import ShortUniqueId from 'short-unique-id';
-
 export function getWordsFromValue(value?: string | string[]) {
   if (!Array.isArray(value)) {
     return value?.split(' ');
@@ -14,4 +12,4 @@ export function getPhraseFromValue(value?: string | string[]) {
   return value;
 }
 
-export const uniqueId = new ShortUniqueId();
+export const uniqueId = () => Math.random().toString(16).slice(2);

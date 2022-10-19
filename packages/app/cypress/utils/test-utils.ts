@@ -13,7 +13,9 @@ export const mockAccount = (account?: Account) => {
   localStorage.setItem(IS_LOGGED_KEY, 'true');
   cy.openIndexedDb('FuelDB', 17).as('db');
 
-  const wallet = Wallet.generate();
+  const wallet = Wallet.generate({
+    provider: VITE_FUEL_PROVIDER_URL,
+  });
   const accountData = account || {
     address: wallet.address.toAddress(),
     name: 'Random Account',

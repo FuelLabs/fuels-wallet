@@ -77,7 +77,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
         )}
       </Flex>
       <Drawer type="menu" size={220} containerRef={ref}>
-        <Drawer.Trigger aria-label="drawer_trigger">
+        <Drawer.Trigger>
           <IconButton
             icon={<Icon icon="List" color="gray8" size={24} />}
             aria-label="Menu"
