@@ -65,7 +65,7 @@ export const FetchMachine = {
           },
           retrying: {
             tags: ['loading'],
-            entry: ['logError', 'incrementAttemps'],
+            entry: ['logError', 'incrementAttempts'],
             after: {
               500: {
                 target: 'loading',
@@ -97,7 +97,7 @@ export const FetchMachine = {
             // eslint-disable-next-line no-console
             console.error(ev.data);
           },
-          incrementAttemps: assign({
+          incrementAttempts: assign({
             attempts: (ctx) => (ctx.attempts ?? 0) + 1,
           }),
         },
