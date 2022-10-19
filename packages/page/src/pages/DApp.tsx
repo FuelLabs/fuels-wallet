@@ -3,16 +3,35 @@ import { cssObj } from '@fuel-ui/css';
 import { Alert, Box, BoxCentered, Button, Text } from '@fuel-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 
-const { FuelWeb3 } = window;
+// This is not need if the developer
+// install FuelWeb3 and import as a package
+function useFuelWeb3() {
+  const [error, setError] = useState('');
+  const [fuelWeb3, setFuelWeb3] = useState<Window['FuelWeb3']>(window.FuelWeb3);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (window.FuelWeb3) {
+        setFuelWeb3(window.FuelWeb3);
+      } else {
+        setError('FuelWeb3 not detected on the window!');
+      }
+    }, 500);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  return [fuelWeb3, error] as const;
+}
 
 function useLoading(callback: () => Promise<void>) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>();
   const execute = useCallback(async () => {
+    setError(null);
     setLoading(true);
     callback()
       .catch((err) => {
-        setError(err);
+        setError(err.message);
       })
       .finally(() => {
         setLoading(false);
@@ -23,19 +42,19 @@ function useLoading(callback: () => Promise<void>) {
 }
 
 export function DApp() {
+  const [FuelWeb3, notDetected] = useFuelWeb3();
   const [connected, setConnected] = useState(false);
-  const [notDetected, setNotDetected] = useState('');
   const [accounts, setAccounts] = useState<string[]>([]);
-  const [handleConnect, isConnecting, error] = useLoading(async () => {
+  const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {
     console.debug('Request connection to Wallet!');
-    const isConnected = await FuelWeb3.connect();
+    const isConnected = await window.FuelWeb3.connect();
     setConnected(isConnected);
     console.debug('Connection response', isConnected);
   });
   const [handleDisconnect, isDisconnecting, errorDisconnect] = useLoading(
     async () => {
       console.debug('Request disconnection to Wallet!');
-      await FuelWeb3.disconnect();
+      await window.FuelWeb3.disconnect();
       setConnected(false);
       console.debug('Disconnection response');
     }
@@ -43,13 +62,13 @@ export function DApp() {
   const [handleGetAccounts, isLoadingAccounts, errorGetAccounts] = useLoading(
     async () => {
       console.debug('Request accounts to Wallet!');
-      const accounts = await FuelWeb3.accounts();
+      const accounts = await window.FuelWeb3.accounts();
       setAccounts(accounts);
       console.debug('Accounts ', accounts);
     }
   );
   const errorMessage =
-    error || errorDisconnect || notDetected || errorGetAccounts;
+    errorConnect || errorDisconnect || notDetected || errorGetAccounts;
 
   useEffect(() => {
     if (FuelWeb3) {
@@ -59,13 +78,11 @@ export function DApp() {
       FuelWeb3.on('connection', (isConnected) => {
         console.log('isConnected', isConnected);
       });
-    } else {
-      setNotDetected('FuelWeb3 not detected on the window!');
     }
     return () => {
       FuelWeb3?.removeAllListeners();
     };
-  }, []);
+  }, [FuelWeb3]);
 
   return (
     <Box>

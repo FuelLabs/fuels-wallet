@@ -9,7 +9,7 @@ export VITE_WALLET_PREVIEW_URL="/wallet/"
 export VITE_WALLET_DOWNLOAD_URL="/wallet/fuel-wallet.zip"
 export VITE_STORYBOOK_URL="/wallet/storybook/"
 
-# pnpm build:libs && pnpm exec turbo run build:preview
+pnpm build:libs && pnpm exec turbo run build:preview
 
 # Copy to inside folder
 cp $BUILD_PATH/index.html $BUILD_PATH/../404.html
