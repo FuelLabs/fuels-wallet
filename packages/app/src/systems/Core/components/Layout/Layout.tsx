@@ -2,7 +2,7 @@ import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Box, Flex } from '@fuel-ui/react';
 import type { FC, ReactNode } from 'react';
-import { useContext, createContext } from 'react';
+import { useRef, useContext, createContext } from 'react';
 import { Helmet } from 'react-helmet';
 
 import { BottomBar } from './BottomBar';
@@ -14,6 +14,7 @@ type Context = {
   isLoading?: boolean;
   isHome?: boolean;
   title?: string;
+  ref?: React.RefObject<HTMLDivElement>;
 };
 
 const ctx = createContext<Context>({});
@@ -55,9 +56,10 @@ export const Layout: LayoutComponent = ({
   title,
   children,
 }: LayoutProps) => {
+  const ref = useRef<HTMLDivElement>(null);
   const titleText = title ? `${title} | Fuel` : 'Fuel';
   return (
-    <ctx.Provider value={{ isLoading, isHome, title }}>
+    <ctx.Provider value={{ isLoading, isHome, title, ref }}>
       <Helmet>
         <title>{titleText}</title>
       </Helmet>
@@ -65,7 +67,9 @@ export const Layout: LayoutComponent = ({
         {isPublic ? (
           <>{children}</>
         ) : (
-          <Flex css={styles.wrapper}>{children}</Flex>
+          <Flex css={styles.wrapper} ref={ref}>
+            {children}
+          </Flex>
         )}
       </Flex>
       {import.meta.env.NODE_ENV === 'test' && (
@@ -95,7 +99,10 @@ const styles = {
       }),
     }),
   wrapper: cssObj({
+    overflow: 'hidden',
+    position: 'relative',
     flexDirection: 'column',
+
     width: WALLET_WIDTH,
     height: WALLET_HEIGHT,
     borderRadius: '$md',

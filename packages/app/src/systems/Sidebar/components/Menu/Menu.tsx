@@ -3,7 +3,7 @@ import type { Icons } from '@fuel-ui/react';
 import { Box, Flex, Icon, Menu as RootMenu } from '@fuel-ui/react';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useResolvedPath, useMatch } from 'react-router-dom';
 
 export type MenuItemObj = {
   key: string;
@@ -24,6 +24,12 @@ const IconMotion = motion(Icon);
 
 function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
   const navigate = useNavigate();
+  const path = useResolvedPath(item.path as string);
+  const match = useMatch({
+    path: path.pathname,
+    end: false,
+    caseSensitive: false,
+  });
 
   function handleAction(key: string | number) {
     const subItem = item.submenu?.find((i) => i.key === key);
@@ -42,17 +48,22 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
         css={styles.menuItemContent(Boolean(isOpened))}
         animate={{ height: isOpened ? '100%' : '24px' }}
       >
-        <Flex gap="$3">
+        <Flex
+          css={match && item.path ? styles.activeRoute : styles.route}
+          gap="$3"
+        >
           <Icon
             icon={item.icon}
-            css={{ color: '$gray8' }}
+            css={{
+              color: match && item.path ? '$accent11' : '$gray8',
+            }}
             className="main-icon"
           />
           <Box css={{ flex: 1 }}>{item.label}</Box>
           {item.submenu && (
             <IconMotion
               icon="CaretDown"
-              css={{ color: '$gray8' }}
+              css={{ color: match && item.path ? '$white' : '$gray8' }}
               animate={{ rotate: isOpened ? '180deg' : '0deg' }}
             />
           )}
@@ -119,6 +130,13 @@ export function Menu({ items }: MenuProps) {
 }
 
 const styles = {
+  route: cssObj({ p: '5px', px: '10px', borderRadius: 10 }),
+  activeRoute: cssObj({
+    bg: '$gray3',
+    p: '5px',
+    px: '10px',
+    borderRadius: 10,
+  }),
   root: cssObj({
     '.fuel_menu-list-item': {
       py: '$0',

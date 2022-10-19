@@ -20,4 +20,12 @@ describe('Home', () => {
     cy.visit('/wallet');
     cy.contains(/you don't have any assets/i);
   });
+
+  it('should open the side bar and close it', () => {
+    cy.visit('/wallet');
+    cy.get('[aria-label="drawer_trigger"]').eq(1).click();
+    cy.contains('Wallet');
+    cy.contains('Support');
+    cy.get('[aria-label="drawer_closeButton"]').eq(1).click();
+  });
 });

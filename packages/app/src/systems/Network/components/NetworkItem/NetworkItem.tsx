@@ -61,12 +61,12 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
         ref={ref}
         onClick={() => onPress?.(network)}
         css={{ ...styles.root, ...css }}
-        isActive={network.isSelected}
-        data-active={network.isSelected}
+        isActive={network?.isSelected}
+        data-active={network?.isSelected}
         {...(showActions && { rightEl: actions })}
       >
         {/* <NetworkStatus network={network} /> */}
-        <Text>{network.name}</Text>
+        <Text>{network?.name}</Text>
       </CardList.Item>
     );
   }
