@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, BoxCentered, Button, Text } from '@fuel-ui/react';
+import { Alert, Box, BoxCentered, Button, Text, Link } from '@fuel-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 
 // This is not need if the developer
@@ -91,12 +91,12 @@ export function DApp() {
           <Alert.Description>{errorMessage}</Alert.Description>
           {notDetected ? (
             <Alert.Actions>
-              <Alert.Button
-                variant="link"
+              <Link
+                download={true}
                 href={import.meta.env.VITE_WALLET_DOWNLOAD_URL}
               >
                 Download Wallet
-              </Alert.Button>
+              </Link>
             </Alert.Actions>
           ) : null}
         </Alert>
