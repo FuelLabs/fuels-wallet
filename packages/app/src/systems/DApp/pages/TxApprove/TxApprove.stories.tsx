@@ -1,5 +1,5 @@
 import { WalletManager } from '@fuel-ts/wallet-manager';
-import type { Meta, Story } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 import { bn, ScriptTransactionRequest, Wallet } from 'fuels';
 
 import { TxApprove } from './TxApprove';
@@ -11,7 +11,8 @@ import { NetworkService } from '~/systems/Network';
 import { TxType } from '~/systems/Transaction';
 import { TxService } from '~/systems/Transaction/services';
 
-const OWNER = import.meta.env.VITE_ADDR_OWNER;
+const OWNER =
+  '0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298';
 
 async function loader() {
   /**
@@ -89,6 +90,6 @@ export default {
   },
 } as Meta;
 
-export const Usage: Story<unknown> = (_args, { loaded: { id, url } }) => {
+export const Usage: StoryFn<unknown> = (_args, { loaded: { id, url } }) => {
   return <TxApprove id={id} url={url} />;
 };

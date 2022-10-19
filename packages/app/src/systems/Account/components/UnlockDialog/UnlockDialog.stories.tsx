@@ -1,5 +1,5 @@
 import { Button } from '@fuel-ui/react';
-import type { Story } from '@storybook/react';
+import type { StoryFn } from '@storybook/react';
 import { useEffect, useState } from 'react';
 
 import { createMockAccount } from '../../__mocks__';
@@ -15,7 +15,7 @@ export default {
   },
 };
 
-export const Usage: Story<never> = () => {
+export const Usage: StoryFn<never> = () => {
   const { isLocked } = useAccount();
   const [opened, setOpened] = useState(false);
 

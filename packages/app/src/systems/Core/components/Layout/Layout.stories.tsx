@@ -16,12 +16,11 @@ export default {
   parameters: {
     layout: 'fullscreen',
   },
-  decorators: [
-    (Story) => {
-      NetworkService.addNetwork({ data: MOCK_NETWORKS[0] });
-      NetworkService.addNetwork({ data: MOCK_NETWORKS[1] });
-
-      return <Story />;
+  loaders: [
+    async () => {
+      await NetworkService.addNetwork({ data: MOCK_NETWORKS[0] });
+      await NetworkService.addNetwork({ data: MOCK_NETWORKS[1] });
+      return {};
     },
   ],
 } as Meta;

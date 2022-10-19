@@ -1,4 +1,4 @@
-import type { Meta, Story } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 import { bn } from 'fuels';
 import { graphql } from 'msw';
 
@@ -46,8 +46,8 @@ export default {
   ],
 } as Meta;
 
-export const NoAssets: Story<unknown> = () => <Home />;
-export const WithAssets: Story<unknown> = () => <Home />;
+export const NoAssets: StoryFn<unknown> = () => <Home />;
+export const WithAssets: StoryFn<unknown> = () => <Home />;
 WithAssets.parameters = {
   msw: [
     graphql.query('getBalances', (req, res, ctx) => {

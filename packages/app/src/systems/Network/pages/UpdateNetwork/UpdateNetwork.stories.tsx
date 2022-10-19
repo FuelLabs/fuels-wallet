@@ -1,4 +1,4 @@
-import type { Meta, Story } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 
 import { MOCK_NETWORKS } from '../../__mocks__/networks';
 import { NetworkService } from '../../services';
@@ -29,4 +29,4 @@ export default {
   ],
 } as Meta;
 
-export const Usage: Story<unknown> = () => <UpdateNetwork />;
+export const Usage: StoryFn<unknown> = () => <UpdateNetwork />;

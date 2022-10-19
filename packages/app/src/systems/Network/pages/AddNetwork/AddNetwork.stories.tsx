@@ -1,4 +1,4 @@
-import type { Meta, Story } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 
 import { AddNetwork } from './AddNetwork';
 
@@ -18,4 +18,4 @@ export default {
   },
 } as Meta;
 
-export const Usage: Story<unknown> = () => <AddNetwork />;
+export const Usage: StoryFn<unknown> = () => <AddNetwork />;
