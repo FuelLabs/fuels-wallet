@@ -46,7 +46,6 @@ describe('signMachine', () => {
       },
     });
 
-    await waitFor(service, (state) => !!state.context.loadingUnlock);
     await waitFor(service, (state) => state.matches('signingMessage'));
     const { matches } = await waitFor(service, (state) =>
       state.matches('done')

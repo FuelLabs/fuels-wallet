@@ -11,7 +11,6 @@ import { FetchMachine } from '~/systems/Core';
 type MachineContext = {
   message?: string;
   signedMessage?: string;
-  loadingUnlock?: boolean;
 };
 
 type MachineServices = {
@@ -23,7 +22,7 @@ type MachineServices = {
 type MachineEvents =
   | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
   | { type: 'START_SIGN'; input: { message: string } }
-  | { type: 'START_LOADING_UNLOCK'; input?: null };
+  | { type: 'CLOSE_UNLOCK'; input?: null };
 
 export const signMachine = createMachine(
   {
@@ -52,7 +51,6 @@ export const signMachine = createMachine(
           src: unlockMachine,
           data: (_: MachineContext, ev: MachineEvents) => ev.input,
           onDone: {
-            actions: ['stopLoadingUnlock'],
             target: 'signingMessage',
           },
         },
@@ -69,9 +67,8 @@ export const signMachine = createMachine(
               ),
             ],
           },
-          // receive from the child machine
-          START_LOADING_UNLOCK: {
-            actions: ['startLoadingUnlock'],
+          CLOSE_UNLOCK: {
+            target: 'idle',
           },
         },
       },
@@ -109,12 +106,6 @@ export const signMachine = createMachine(
       assignMessage: assign({
         message: (_, ev) => ev.input.message,
       }),
-      startLoadingUnlock: assign({
-        loadingUnlock: (_) => true,
-      }),
-      stopLoadingUnlock: assign({
-        loadingUnlock: (_) => false,
-      }),
     },
     services: {
       signMessage: FetchMachine.create<
@@ -128,6 +119,7 @@ export const signMachine = createMachine(
           }
 
           const signedMessage = input?.wallet.signMessage(input.message);
+          console.log(`signedMessage`, signedMessage);
           return signedMessage;
         },
       }),

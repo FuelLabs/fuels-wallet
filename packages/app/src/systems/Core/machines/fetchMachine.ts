@@ -20,8 +20,11 @@ type MachineServices<R> = {
 
 type CreateFetchMachineOpts<I, R> = {
   showError?: boolean;
+  maxAttempts?: number;
   fetch: (ctx: MachineContext<I>) => Promise<R>;
 };
+
+const MAX_ATTEMPTS = 3;
 
 export const FetchMachine = {
   hasError(_: any, ev: { data: { error?: any } }) {
@@ -46,6 +49,7 @@ export const FetchMachine = {
         states: {
           loading: {
             tags: ['loading'],
+            entry: ['incrementAttemps'],
             invoke: {
               src: 'fetch',
               onDone: {
@@ -58,6 +62,7 @@ export const FetchMachine = {
                   cond: 'hasManyAttempts',
                 },
                 {
+                  actions: ['logError'],
                   target: 'retrying',
                 },
               ],
@@ -65,7 +70,6 @@ export const FetchMachine = {
           },
           retrying: {
             tags: ['loading'],
-            entry: ['logError', 'incrementAttemps'],
             after: {
               500: {
                 target: 'loading',
@@ -103,7 +107,9 @@ export const FetchMachine = {
         },
         guards: {
           hasManyAttempts: (ctx) => {
-            return Boolean((ctx?.attempts ?? 0) > 3);
+            return Boolean(
+              (ctx?.attempts ?? 0) >= (opts?.maxAttempts || MAX_ATTEMPTS)
+            );
           },
         },
         services: {

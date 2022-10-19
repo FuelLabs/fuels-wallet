@@ -1,6 +1,6 @@
 import type { Wallet } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
-import { sendParent, createMachine } from 'xstate';
+import { createMachine } from 'xstate';
 
 import type { Account, AccountInputs } from '~/systems/Account';
 import { AccountService } from '~/systems/Account';
@@ -43,7 +43,6 @@ export const unlockMachine = createMachine(
         },
       },
       unlocking: {
-        entry: sendParent('START_LOADING_UNLOCK'),
         invoke: {
           src: 'unlock',
           data: {
@@ -52,26 +51,29 @@ export const unlockMachine = createMachine(
           },
           onDone: [
             {
-              target: 'done',
+              target: 'waitingPassword',
               cond: FetchMachine.hasError,
             },
             {
               target: 'done',
             },
           ],
+          onError: {
+            target: 'waitingPassword',
+          },
         },
       },
       done: {
         type: 'final',
         data: (_, e: { data: Wallet }) => e.data,
       },
-      failed: {},
     },
   },
   {
     services: {
       unlock: FetchMachine.create<AccountInputs['unlock'], Wallet>({
         showError: true,
+        maxAttempts: 1,
         async fetch({ input }) {
           if (!input || !input?.password) {
             throw new Error('Invalid network input');

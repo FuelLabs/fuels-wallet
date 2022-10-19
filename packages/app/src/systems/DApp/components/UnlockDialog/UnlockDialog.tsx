@@ -7,14 +7,14 @@ import { UnlockForm } from '../UnlockForm';
 
 export type UnlockDialogProps = {
   isOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  onClose?: () => void;
   onUnlock: (value: string) => void;
   isLoading?: boolean;
 };
 
 export function UnlockDialog({
   isOpen,
-  onOpenChange,
+  onClose,
   onUnlock,
   isLoading,
 }: UnlockDialogProps) {
@@ -26,8 +26,12 @@ export function UnlockDialog({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <Dialog.Content css={styles.content}>
+    <Dialog open={isOpen}>
+      <Dialog.Content
+        css={styles.content}
+        onEscapeKeyDown={onClose}
+        onPointerDownOutside={onClose}
+      >
         <Dialog.Heading>
           <Flex css={{ alignItems: 'center' }}>
             <Icon

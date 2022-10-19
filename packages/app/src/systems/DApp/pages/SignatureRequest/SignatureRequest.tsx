@@ -48,6 +48,7 @@ export function SignatureRequest() {
         isOpen={isUnlocking}
         onUnlock={handlers.unlock}
         isLoading={isUnlockingLoading}
+        onClose={handlers.closeUnlock}
       />
     </>
   );

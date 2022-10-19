@@ -1,22 +1,26 @@
 import { useMachine, useSelector } from '@xstate/react';
 
-import type { SignMachineState } from '../machines';
+import type { SignMachineState, UnlockMachineState } from '../machines';
 import { signMachine } from '../machines';
 
 import { useAccount } from '~/systems/Account';
 
 const selectors = {
   isUnlocking: (state: SignMachineState) => state.matches('unlocking'),
-  isUnlockingLoading: (state: SignMachineState) => state.context.loadingUnlock,
   signedMessage: (state: SignMachineState) => state.context.signedMessage,
+  isUnlockingLoading: (state: UnlockMachineState) => state.matches('unlocking'),
 };
 
 export function useSignatureRequest() {
   const { account } = useAccount();
-  const [, send, service] = useMachine(signMachine);
+  const [state, send, service] = useMachine(signMachine);
 
   const isUnlocking = useSelector(service, selectors.isUnlocking);
-  const isUnlockingLoading = useSelector(service, selectors.isUnlockingLoading);
+  // not documented way of selecting child state/context
+  const isUnlockingLoading = useSelector(
+    state.children.unlock || service,
+    selectors.isUnlockingLoading
+  );
   const signedMessage = useSelector(service, selectors.signedMessage);
 
   function sign() {
@@ -27,10 +31,15 @@ export function useSignatureRequest() {
     send('UNLOCK_WALLET', { input: { password, account } });
   }
 
+  function closeUnlock() {
+    send('CLOSE_UNLOCK');
+  }
+
   return {
     handlers: {
       sign,
       unlock,
+      closeUnlock,
     },
     isUnlocking,
     isUnlockingLoading,
