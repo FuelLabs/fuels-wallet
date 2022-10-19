@@ -7,7 +7,6 @@ import { WalletCreatedPage } from './systems/SignUp/pages';
 import { PrivateRoute, PublicRoute } from '~/systems/Core';
 import { Pages } from '~/systems/Core/types';
 import { homeRoutes } from '~/systems/Home/routes';
-import { landingPageRoutes } from '~/systems/LandingPage/routes';
 import { networkRoutes } from '~/systems/Network/routes';
 import { signUpRoutes } from '~/systems/SignUp/routes';
 
@@ -21,7 +20,6 @@ const walletRoutes = (
 export const webAppRoutes = (
   <Routes>
     <Route>
-      {landingPageRoutes}
       <Route element={<PublicRoute />}>{signUpRoutes}</Route>
       <Route element={<PrivateRoute />}>{walletRoutes}</Route>
       <Route path="*" element={<Navigate to={Pages.wallet()} />} />

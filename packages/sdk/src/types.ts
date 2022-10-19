@@ -5,6 +5,21 @@ import type {
 } from 'dexie-observable/api';
 import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
 
+export type FuelWeb3Events =
+  | {
+      type: 'accounts';
+      data: Array<string>;
+    }
+  | {
+      type: 'connection';
+      data: boolean;
+    };
+
+export type FuelWeb3EventArg<T extends FuelWeb3Events['type']> = Extract<
+  FuelWeb3Events,
+  { type: T }
+>['data'];
+
 export enum MessageTypes {
   uiEvent = 'uiEvent',
   event = 'event',

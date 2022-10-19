@@ -2,7 +2,11 @@ import type { JSONRPCRequest } from 'json-rpc-2.0';
 
 import { CONTENT_SCRIPT_NAME, PAGE_SCRIPT_NAME } from './config';
 import { WindowConnection } from './connections/WindowConnection';
-import type { CommunicationMessage } from './types';
+import type {
+  CommunicationMessage,
+  FuelWeb3EventArg,
+  FuelWeb3Events,
+} from './types';
 import { MessageTypes } from './types';
 
 export class FuelWeb3 extends WindowConnection {
@@ -33,5 +37,12 @@ export class FuelWeb3 extends WindowConnection {
 
   async accounts(): Promise<Array<string>> {
     return this.client.request('accounts');
+  }
+
+  on<E extends FuelWeb3Events['type'], D extends FuelWeb3EventArg<E>>(
+    eventName: E,
+    listener: (data: D) => void
+  ): this {
+    return super.on(eventName, listener);
   }
 }

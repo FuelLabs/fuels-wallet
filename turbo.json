@@ -5,6 +5,7 @@
       "outputs": ["dist/**"]
     },
     "build:preview": {
+      "cache": false,
       "dependsOn": ["^build:preview"],
       "outputs": ["dist/**"]
     },

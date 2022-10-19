@@ -2,7 +2,6 @@ const { join } = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const { getPublicEnvs } = require('../load.envs');
 const webpack = require('webpack');
-const path = require('path');
 
 const config = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
