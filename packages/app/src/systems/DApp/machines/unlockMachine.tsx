@@ -2,14 +2,11 @@ import type { Wallet } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { createMachine } from 'xstate';
 
-import type { Account, AccountInputs } from '~/systems/Account';
+import type { AccountInputs } from '~/systems/Account';
 import { AccountService } from '~/systems/Account';
 import { FetchMachine } from '~/systems/Core';
 
-export type UnlockMachineContext = {
-  account?: Account;
-  password?: string;
-};
+export type UnlockMachineContext = Record<string, never>;
 
 type MachineServices = {
   unlock: {
