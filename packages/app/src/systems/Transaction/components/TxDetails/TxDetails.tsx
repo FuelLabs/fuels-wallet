@@ -1,21 +1,21 @@
 import { cssObj } from '@fuel-ui/css';
 import { Accordion, Text } from '@fuel-ui/react';
-import { getGasUsedFromReceipts } from 'fuels';
+import { bn, getGasUsedFromReceipts } from 'fuels';
 import { useMemo } from 'react';
 
-import type { Transaction } from '../../types';
+import type { TxSimulateResult } from '../../types';
 
+import { MAX_FRACTION_DIGITS } from '~/config';
 import type { Maybe } from '~/systems/Core';
-import { formatUnits } from '~/systems/Core';
 
 export type TxDetailsProps = {
-  tx?: Maybe<Transaction>;
+  receipts?: Maybe<TxSimulateResult['receipts']>;
 };
 
-export function TxDetails({ tx }: TxDetailsProps) {
+export function TxDetails({ receipts }: TxDetailsProps) {
   const gasUsed = useMemo(
-    () => getGasUsedFromReceipts(tx?.receipts || []),
-    [tx?.receipts]
+    () => getGasUsedFromReceipts(receipts || []),
+    receipts || []
   );
 
   return (
@@ -25,7 +25,7 @@ export function TxDetails({ tx }: TxDetailsProps) {
         <Accordion.Content css={styles.info}>
           <Text as="span">Gas Used</Text>
           <Text as="span" aria-label="Gas Value">
-            {formatUnits(gasUsed)} ETH
+            {bn(gasUsed).formatUnits(MAX_FRACTION_DIGITS)} ETH
           </Text>
         </Accordion.Content>
       </Accordion.Item>

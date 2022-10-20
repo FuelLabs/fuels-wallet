@@ -1,4 +1,4 @@
-import type { Story } from '@storybook/react';
+import type { StoryFn } from '@storybook/react';
 
 import { RecoverWallet } from './RecoverWallet';
 
@@ -10,4 +10,4 @@ export default {
   },
 };
 
-export const Usage: Story<unknown> = () => <RecoverWallet />;
+export const Usage: StoryFn<unknown> = () => <RecoverWallet />;

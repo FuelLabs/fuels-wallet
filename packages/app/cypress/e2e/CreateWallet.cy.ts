@@ -5,6 +5,8 @@ describe('CreateWallet', () => {
   });
 
   it('should be able to create wallet and see first account created', () => {
+    cy.clearIndexedDb('FuelDB');
+
     cy.visit('/wallet');
     cy.contains('button', /Create a wallet/i).click();
 
@@ -26,9 +28,8 @@ describe('CreateWallet', () => {
     cy.contains('button', /Next/i).click();
 
     /** Account created */
-    cy.contains(/Wallet created succesfully/i);
+    cy.contains(/Wallet created successfully/i);
     cy.contains(/Account 1/i);
-
     /**
      * Checking private and public routes
      * Need reload() in order to see if will redirect to the right place

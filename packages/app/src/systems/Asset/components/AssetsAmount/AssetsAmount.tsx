@@ -1,13 +1,16 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Card, Copyable, Flex, Grid, Text } from '@fuel-ui/react';
+import { bn } from 'fuels';
 
 import type { Asset } from '../../types';
 import { getAssetInfoById } from '../../utils';
 
-import { formatUnits, shortAddress } from '~/systems/Core';
+import { MAX_FRACTION_DIGITS } from '~/config';
+import { shortAddress } from '~/systems/Core';
+import type { TxInputCoin, TxOutputCoin } from '~/systems/Transaction';
 
 export type AssetsAmountProps = {
-  amounts: Asset[];
+  amounts: Asset[] | TxOutputCoin[] | TxInputCoin[];
 };
 
 export function AssetsAmount({ amounts }: AssetsAmountProps) {
@@ -15,9 +18,10 @@ export function AssetsAmount({ amounts }: AssetsAmountProps) {
     <Card css={styles.card}>
       {amounts.map((item) => {
         const asset = getAssetInfoById(item.assetId, item);
-        const isPositive = (asset?.amount ?? 0) > 0;
+        const amount = bn(asset.amount);
+
         return (
-          <Grid key={asset.assetId} css={styles.root}>
+          <Grid key={asset.assetId.toString()} css={styles.root}>
             <Flex css={styles.asset}>
               <Avatar
                 name={asset.name}
@@ -29,9 +33,8 @@ export function AssetsAmount({ amounts }: AssetsAmountProps) {
             <Copyable value={asset.assetId} css={styles.address}>
               {shortAddress(asset.assetId)}
             </Copyable>
-            <Flex css={styles.amount(isPositive)}>
-              {isPositive ? '+' : ''}
-              {formatUnits(asset.amount)} {asset.symbol}
+            <Flex css={styles.amount(false)}>
+              {amount.formatUnits(MAX_FRACTION_DIGITS)} {asset.symbol}
             </Flex>
           </Grid>
         );
