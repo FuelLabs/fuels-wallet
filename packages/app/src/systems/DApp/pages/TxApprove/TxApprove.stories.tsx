@@ -1,10 +1,20 @@
 import { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Meta, StoryFn } from '@storybook/react';
-import { bn, Provider, ScriptTransactionRequest, Wallet } from 'fuels';
+import {
+  bn,
+  NativeAssetId,
+  Provider,
+  ScriptTransactionRequest,
+  Wallet,
+} from 'fuels';
 
 import { TxApprove } from './TxApprove';
 
-import { VITE_FUEL_PROVIDER_URL } from '~/config';
+import {
+  IS_DEVELOPMENT,
+  VITE_FUEL_PROVIDER_URL,
+  VITE_ADDR_OWNER,
+} from '~/config';
 import { AccountService } from '~/systems/Account';
 import { IndexedDBStorage } from '~/systems/Account/utils';
 import { db } from '~/systems/Core';
@@ -12,10 +22,27 @@ import { NetworkService } from '~/systems/Network';
 import { TxType } from '~/systems/Transaction';
 import { TxService } from '~/systems/Transaction/services';
 
-const OWNER =
-  '0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298';
+async function getOwner() {
+  const OWNER = IS_DEVELOPMENT
+    ? VITE_ADDR_OWNER
+    : localStorage.getItem('storybook-privateKey') || '';
+
+  if (!OWNER) {
+    // eslint-disable-next-line no-alert
+    const privateKey = prompt('Enter a test privateKey');
+    if (!privateKey) {
+      throw Error('Private key is required!');
+    } else {
+      localStorage.setItem('storybook-privateKey', privateKey);
+    }
+  }
+
+  return OWNER;
+}
 
 async function loader() {
+  const secretKey = await getOwner();
+
   /**
    * Clear database and accounts
    * */
@@ -33,7 +60,7 @@ async function loader() {
   /**
    * Add ETH coin owner
    * */
-  await manager.addVault({ type: 'privateKey', secret: OWNER });
+  await manager.addVault({ type: 'privateKey', secret: secretKey });
   const accounts = manager.getAccounts();
   const walletAccount =
     accounts.find((a) => a.address.toString().startsWith('0x94')) ||
@@ -60,11 +87,10 @@ async function loader() {
   wallet.provider = new Provider(VITE_FUEL_PROVIDER_URL);
   const amount = bn(1);
   const params = { gasLimit: bn(100000), gasPrice: bn(100000) };
-  const coins = await wallet.getCoins();
   const newAddr = Wallet.generate({
     provider: VITE_FUEL_PROVIDER_URL,
   }).address;
-  const assetId = coins[0].assetId;
+  const assetId = NativeAssetId;
   const txRequest = new ScriptTransactionRequest(params);
   txRequest.addCoinOutput(newAddr, amount, assetId);
   txRequest.addCoins(

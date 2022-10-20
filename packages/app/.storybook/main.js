@@ -43,12 +43,13 @@ const config = {
     };
     config.resolve.plugins = [new TsconfigPathsPlugin()];
     config.plugins.push(
+      new webpack.DefinePlugin({
+        'import.meta.env': JSON.stringify(getPublicEnvs()),
+      })
+    );
+    config.plugins.push(
       new webpack.ProvidePlugin({
         Buffer: [require.resolve('buffer/'), 'Buffer'],
-      }),
-      importMetaEnv.webpack({
-        env: '.env',
-        example: '.env.example',
       })
     );
     return config;
