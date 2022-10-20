@@ -42,8 +42,16 @@ jobs:
       - name: Setup Node
         uses: ./.github/actions/setup-node
 
+      - name: Setup Docker
+        uses: ./.github/actions/setup-docker
+        with:
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
+
+      - name: Start Node
+        run: pnpm node:dev start --test --debug
 
       - name: Run lint
         run: |
@@ -63,3 +71,6 @@ jobs:
           working-directory: ./packages/app
           coverage-file: ${{ env.COVERAGE_FILE }}
           base-coverage-file: ${{ env.COVERAGE_FILE }}
+
+      - name: Stop
+        run: pnpm node:dev stop --test --debug
