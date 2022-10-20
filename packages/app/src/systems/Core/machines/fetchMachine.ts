@@ -18,7 +18,7 @@ type MachineServices<R> = {
   };
 };
 
-type CreateFetchMachineOpts<I, R> = {
+export type CreateFetchMachineOpts<I, R> = {
   showError?: boolean;
   maxAttempts?: number;
   fetch: (ctx: MachineContext<I>) => Promise<R>;

@@ -13,8 +13,9 @@ export const ASSET_MAP: Record<string, AssetWithInfo> = {
     symbol: 'ETH',
     imageUrl: relativeUrl('assets/eth.svg'),
   },
-  '0x6b175474e89094c44da98b954eedeac495271d0f': {
-    assetId: '0x6b175474e89094c44da98b954eedeac495271d0f',
+  '0xe90f62d5216f58ffaf19e6eba07f944cc2cd36f9800b89419d52b6927f53976701': {
+    assetId:
+      '0xe90f62d5216f58ffaf19e6eba07f944cc2cd36f9800b89419d52b6927f53976701',
     name: 'Dai',
     symbol: 'DAI',
     imageUrl: relativeUrl('assets/dai.svg'),

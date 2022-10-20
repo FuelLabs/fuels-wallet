@@ -1,4 +1,4 @@
-import type { Story } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 import { bn } from 'fuels';
 import { graphql } from 'msw';
 
@@ -7,32 +7,6 @@ import { Home } from './Home';
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 import { ASSET_LIST } from '~/systems/Asset';
 
-export default {
-  component: Home,
-  title: 'Home/Pages/Home',
-};
-
-export const Loading: Story<unknown> = () => <Home />;
-Loading.decorators = [
-  (Story) => {
-    AccountService.clearAccounts();
-    return <Story />;
-  },
-];
-
-export const NoAssets: Story<unknown> = () => <Home />;
-NoAssets.decorators = [
-  (Story) => {
-    AccountService.clearAccounts();
-    AccountService.addAccount({
-      data: MOCK_ACCOUNTS[0],
-    });
-
-    return <Story />;
-  },
-];
-
-export const WithAssets: Story<unknown> = () => <Home />;
 const ASSETS_MOCK = [
   {
     node: {
@@ -54,7 +28,26 @@ const ASSETS_MOCK = [
   },
 ];
 
-// mock api response for balances
+export default {
+  component: Home,
+  title: 'Home/Pages/Home',
+  parameters: {
+    layout: 'fullscreen',
+    viewport: {
+      defaultViewport: 'chromeExtension',
+    },
+  },
+  loaders: [
+    async () => {
+      await AccountService.clearAccounts();
+      await AccountService.addAccount({ data: MOCK_ACCOUNTS[0] });
+      return {};
+    },
+  ],
+} as Meta;
+
+export const NoAssets: StoryFn<unknown> = () => <Home />;
+export const WithAssets: StoryFn<unknown> = () => <Home />;
 WithAssets.parameters = {
   msw: [
     graphql.query('getBalances', (req, res, ctx) => {
@@ -68,13 +61,3 @@ WithAssets.parameters = {
     }),
   ],
 };
-WithAssets.decorators = [
-  (Story) => {
-    AccountService.clearAccounts();
-    AccountService.addAccount({
-      data: MOCK_ACCOUNTS[0],
-    });
-
-    return <Story />;
-  },
-];

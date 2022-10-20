@@ -4,6 +4,7 @@ import { Box, Flex } from '@fuel-ui/react';
 import type { FC, ReactNode } from 'react';
 import { useRef, useContext, createContext } from 'react';
 import { Helmet } from 'react-helmet';
+import { useLocation } from 'react-router-dom';
 
 import { BottomBar } from './BottomBar';
 import { TopBar } from './TopBar';
@@ -30,20 +31,15 @@ type ContentProps = {
 };
 
 function Content({ as, children, css }: ContentProps) {
-  const { isHome } = useLayoutContext();
   return (
-    <Box as={as} css={{ ...styles.content(Boolean(isHome)), ...css }}>
+    <Box as={as} css={{ ...styles.content, ...css }}>
       {children}
     </Box>
   );
 }
 
-export type LayoutProps = {
+export type LayoutProps = Context & {
   isPublic?: boolean;
-  isLoading?: boolean;
-  isHome?: boolean;
-  isSinglePage?: boolean;
-  title?: string;
   children: ReactNode;
 };
 
@@ -56,15 +52,16 @@ type LayoutComponent = FC<LayoutProps> & {
 export const Layout: LayoutComponent = ({
   isPublic,
   isLoading,
-  isHome,
-  isSinglePage,
   title,
   children,
 }: LayoutProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const titleText = title ? `${title} | Fuel` : 'Fuel';
+  const location = useLocation();
+  const isHome = location.pathname === '/wallet';
+
   return (
-    <ctx.Provider value={{ isLoading, isHome, isSinglePage, title, ref }}>
+    <ctx.Provider value={{ isLoading, title, isHome }}>
       <Helmet>
         <title>{titleText}</title>
       </Helmet>
@@ -110,16 +107,14 @@ const styles = {
 
     width: WALLET_WIDTH,
     height: WALLET_HEIGHT,
-    borderRadius: '$md',
     background:
       'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',
   }),
-  content: (isHome: boolean) =>
-    cssObj({
-      paddingTop: isHome ? '$1' : '$4',
-      px: '$6',
-      flex: 1,
-    }),
+  content: cssObj({
+    py: '$4',
+    px: '$4',
+    flex: 1,
+  }),
 };
 
 export function useLayoutContext() {

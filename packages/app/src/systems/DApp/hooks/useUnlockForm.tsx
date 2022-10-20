@@ -15,7 +15,7 @@ export type UnlockFormValues = {
 };
 
 export function useUnlockForm() {
-  const form = useForm<UnlockFormValues>({
+  return useForm<UnlockFormValues>({
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
     mode: 'onChange',
@@ -23,6 +23,4 @@ export function useUnlockForm() {
       password: '',
     },
   });
-
-  return form;
 }

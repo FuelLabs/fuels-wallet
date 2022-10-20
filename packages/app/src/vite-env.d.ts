@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly VITE_MNEMONIC_WORDS: number;
   readonly VITE_APP_VERSION: string;
   readonly VITE_CRX: string;
+  readonly VITE_ADDR_OWNER: string;
 }
 
 interface ImportMeta {

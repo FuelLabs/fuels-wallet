@@ -22,7 +22,6 @@ jobs:
 
       - name: Build Chrome Extension
         run: pnpm build:crx
-        
 
       - name: Run Playwright tests
         run: xvfb-run --auto-servernum -- pnpm crx:test

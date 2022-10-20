@@ -1,4 +1,6 @@
-import type { Story } from '@storybook/react';
+import { Button } from '@fuel-ui/react';
+import type { StoryFn } from '@storybook/react';
+import { useEffect, useState } from 'react';
 
 import { createMockAccount } from '../../../Account/__mocks__';
 
@@ -12,8 +14,21 @@ export default {
   },
 };
 
-export const Usage: Story<never> = () => {
-  return <UnlockDialog isOpen onUnlock={() => {}} />;
+export const Usage: StoryFn<never> = () => {
+  const [opened, setOpened] = useState(false);
+
+  useEffect(() => {
+    if (opened) {
+      setOpened(false);
+    }
+  }, [opened]);
+
+  return (
+    <>
+      <UnlockDialog isOpen={opened} onUnlock={() => {}} />
+      <Button onPress={() => setOpened(true)}>Open Unlock</Button>
+    </>
+  );
 };
 
 Usage.loaders = [

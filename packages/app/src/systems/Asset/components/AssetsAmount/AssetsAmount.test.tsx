@@ -17,6 +17,6 @@ describe('AssetsAmount', () => {
 
   it('should show positive values with plus', async () => {
     render(<AssetsAmount amounts={MOCK_ASSETS_AMOUNTS} />);
-    expect(screen.getByText('+14,564 ETH')).toBeInTheDocument();
+    expect(screen.getByText('14563943.834 ETH')).toBeInTheDocument();
   });
 });

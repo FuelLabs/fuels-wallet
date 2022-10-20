@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Button, Dialog, Flex, Icon, Stack } from '@fuel-ui/react';
+import { Alert, Box, Button, Dialog, Flex, Icon, Stack } from '@fuel-ui/react';
 
 import type { UnlockFormValues } from '../../hooks';
 import { useUnlockForm } from '../../hooks';
@@ -10,6 +10,7 @@ export type UnlockDialogProps = {
   onClose?: () => void;
   onUnlock: (value: string) => void;
   isLoading?: boolean;
+  isFullscreen?: boolean;
 };
 
 export function UnlockDialog({
@@ -17,9 +18,10 @@ export function UnlockDialog({
   onClose,
   onUnlock,
   isLoading,
+  isFullscreen,
 }: UnlockDialogProps) {
   const form = useUnlockForm();
-  const { formState } = form;
+  const { formState, handleSubmit } = form;
 
   function onSubmit(values: UnlockFormValues) {
     onUnlock(values.password);
@@ -28,7 +30,7 @@ export function UnlockDialog({
   return (
     <Dialog open={isOpen}>
       <Dialog.Content
-        css={styles.content}
+        css={styles.content(isFullscreen)}
         onEscapeKeyDown={onClose}
         onPointerDownOutside={onClose}
       >
@@ -42,8 +44,8 @@ export function UnlockDialog({
             Unlock Wallet
           </Flex>
         </Dialog.Heading>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Dialog.Description as="div">
+        <Box as="form" onSubmit={handleSubmit(onSubmit)} css={styles.form}>
+          <Dialog.Description as="div" css={styles.description}>
             <Stack gap="$3">
               <Alert status="info" css={styles.alert}>
                 You need to unlock your wallet to be able to make transactions
@@ -53,20 +55,18 @@ export function UnlockDialog({
             </Stack>
           </Dialog.Description>
           <Dialog.Footer>
-            <Dialog.Close>
-              <Button
-                type="submit"
-                color="accent"
-                isDisabled={!formState.isValid}
-                isLoading={isLoading}
-                leftIcon={Icon.is('LockKeyOpen')}
-                css={styles.button}
-              >
-                Unlock
-              </Button>
-            </Dialog.Close>
+            <Button
+              type="submit"
+              color="accent"
+              isDisabled={!formState.isValid}
+              isLoading={isLoading}
+              leftIcon={Icon.is('LockKeyOpen')}
+              css={styles.button}
+            >
+              Unlock
+            </Button>
           </Dialog.Footer>
-        </form>
+        </Box>
       </Dialog.Content>
     </Dialog>
   );
@@ -84,12 +84,27 @@ const styles = {
   button: cssObj({
     width: '100%',
   }),
-  content: cssObj({
-    maxWidth: 312,
+  content: (isFullscreen?: boolean) =>
+    cssObj({
+      ...(isFullscreen && {
+        borderRadius: '$none',
+        width: '100vw',
+        maxWidth: '100vw',
+        height: '100vh',
+        maxHeight: '100vh',
+      }),
 
-    /** This is temporary until have this option on @fuel-ui */
-    'button[aria-label="Close"]': {
-      display: 'none',
-    },
+      /** This is temporary until have this option on @fuel-ui */
+      'button[aria-label="Close"]': {
+        display: 'none',
+      },
+    }),
+  description: cssObj({
+    flex: 1,
+  }),
+  form: cssObj({
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
   }),
 };

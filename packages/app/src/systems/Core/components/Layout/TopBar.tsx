@@ -22,89 +22,124 @@ import { useNetworks } from '~/systems/Network/hooks';
 import { NetworkScreen } from '~/systems/Network/machines';
 import { Sidebar } from '~/systems/Sidebar';
 
+export enum TopBarType {
+  internal,
+  external,
+}
+
 type TopBarProps = {
+  type?: TopBarType;
   onBack?: () => void;
   children?: ReactNode;
   showBack?: boolean;
   showMenu?: boolean;
 };
 
-export function TopBar({
-  onBack,
-  showBack: showBackProp,
-  showMenu: showMenuProp,
-}: TopBarProps) {
-  const navigate = useNavigate();
-  const { isLoading, title, isHome, ref, isSinglePage } = useLayoutContext();
-  const isInternal = !isHome;
+// ----------------------------------------------------------------------------
+// TopBar used inside Application
+// ----------------------------------------------------------------------------
 
+function InternalTopBar({ onBack }: TopBarProps) {
+  const navigate = useNavigate();
+  const { isLoading, title, isHome, ref } = useLayoutContext();
   const { networks, selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
 
-  const showBack =
-    showBackProp != null ? showBackProp : !isHome && !isSinglePage;
-  const showMenu = showMenuProp != null ? showMenuProp : isHome;
-
   return (
-    <Flex as="nav" className={style({ isInternal, isSinglePage })}>
+    <Flex as="nav" className={style({ isHome })}>
       <Flex css={{ alignItems: 'center', gap: '$5', flex: 1 }}>
-        {showBack && (
-          <IconButton
-            icon={<Icon icon="CaretLeft" color="gray8" />}
-            aria-label="Back"
-            variant="link"
-            css={{ px: '0 !important' }}
-            onPress={() => (onBack ? onBack() : navigate(-1))}
-          />
-        )}
-        {isHome ? (
+        {!isHome ? (
+          <>
+            <IconButton
+              icon={<Icon icon="CaretLeft" color="gray8" />}
+              aria-label="Back"
+              variant="link"
+              css={{ px: '0 !important' }}
+              onPress={() => (onBack ? onBack() : navigate(-1))}
+            />
+            {isLoading && <Spinner />}
+            {!isLoading && (
+              <Text css={{ fontWeight: '$semibold', color: '$gray12' }}>
+                {title}
+              </Text>
+            )}
+          </>
+        ) : (
           <>
             <FuelLogo size={36} />
-            {networks && (
+            {isLoading && <Spinner aria-label="Spinner" />}
+            {networks && !isLoading && (
               <NetworkDropdown
                 selected={selectedNetwork}
                 onPress={handlers.goToList}
               />
             )}
           </>
-        ) : (
+        )}
+      </Flex>
+      <Drawer type="menu" size={220} containerRef={ref}>
+        <Drawer.Trigger>
+          <IconButton
+            icon={<Icon icon="List" color="gray8" size={24} />}
+            aria-label="Menu"
+            variant="link"
+            css={{ px: '0 !important' }}
+          />
+        </Drawer.Trigger>
+        <Drawer.Content>
+          <Sidebar />
+        </Drawer.Content>
+      </Drawer>
+    </Flex>
+  );
+}
+
+// ----------------------------------------------------------------------------
+// TopBar used outside Application
+// ----------------------------------------------------------------------------
+
+function ExternalTopBar() {
+  const { isLoading, title } = useLayoutContext();
+  const { networks, selectedNetwork, handlers } = useNetworks({
+    type: NetworkScreen.list,
+  });
+
+  return (
+    <Flex as="nav" className={style()}>
+      <Flex css={{ alignItems: 'center', gap: '$5', flex: 1, pl: '$2' }}>
+        {isLoading && <Spinner aria-label="Spinner" />}
+        {!isLoading && (
           <Text css={{ fontWeight: '$semibold', color: '$gray12' }}>
             {title}
           </Text>
         )}
-        {isLoading && <Spinner aria-label="Spinner" />}
       </Flex>
-      {isSinglePage && networks && (
+      {networks && (
         <NetworkDropdown
           selected={selectedNetwork}
           onPress={handlers.goToList}
         />
       )}
-      {/* <IconButton
-        icon={<Icon icon="Bell" color="gray8" size={24} />}
-        aria-label="Activities"
-        variant="link"
-        css={{ px: '0 !important' }}
-      /> */}
-      {showMenu && (
-        <Drawer type="menu" size={220} containerRef={ref}>
-          <Drawer.Trigger aria-label="drawer_trigger">
-            <IconButton
-              icon={<Icon icon="List" color="gray8" size={24} />}
-              aria-label="Menu"
-              variant="link"
-              css={{ px: '0 !important' }}
-            />
-          </Drawer.Trigger>
-          <Drawer.Content>
-            <Sidebar />
-          </Drawer.Content>
-        </Drawer>
-      )}
     </Flex>
   );
 }
+
+// ----------------------------------------------------------------------------
+// Main component
+// ----------------------------------------------------------------------------
+
+export function TopBar({ type = TopBarType.internal, ...props }: TopBarProps) {
+  return type === TopBarType.external ? (
+    <ExternalTopBar />
+  ) : (
+    <InternalTopBar {...props} />
+  );
+}
+
+// ----------------------------------------------------------------------------
+// Styles
+// ----------------------------------------------------------------------------
 
 const style = css({
   alignItems: 'center',
@@ -112,16 +147,15 @@ const style = css({
   px: '$4',
   gap: '$3',
   minHeight: '50px',
-  borderTopLeftRadius: '$md',
-  borderTopRightRadius: '$md',
-  background: 'transparent',
+  boxShadow: '$sm',
+  background:
+    'linear-gradient(268.61deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.02) 87.23%)',
 
   variants: {
-    isInternal: {
+    isHome: {
       true: {
-        boxShadow: '$sm',
-        background:
-          'linear-gradient(268.61deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.02) 87.23%)',
+        boxShadow: '$none',
+        background: 'transparent',
       },
     },
     isSinglePage: {
@@ -135,6 +169,6 @@ const style = css({
   },
 
   defaultVariants: {
-    isInternal: false,
+    isHome: false,
   },
 });

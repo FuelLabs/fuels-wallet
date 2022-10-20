@@ -3,11 +3,13 @@ import Dexie from 'dexie';
 
 import type { Account, Vault } from '~/systems/Account';
 import type { Network } from '~/systems/Network';
+import type { Transaction } from '~/systems/Transaction';
 
 export class FuelDB extends Dexie {
   vaults!: Table<Vault, string>;
   accounts!: Table<Account, string>;
   networks!: Table<Network, string>;
+  transactions!: Table<Transaction, string>;
 
   constructor() {
     super('FuelDB');
@@ -15,6 +17,7 @@ export class FuelDB extends Dexie {
       vaults: `key`,
       accounts: `address`,
       networks: `&id, &url, &name`,
+      transactions: `&id`,
     });
   }
 }
