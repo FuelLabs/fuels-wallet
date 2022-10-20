@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import type { AccountMachineState } from '../machines';
 
 import { Services, store } from '~/store';
@@ -23,6 +25,20 @@ export function useAccount() {
   const account = store.useSelector(Services.account, selectors.account);
   const isLocked = store.useSelector(Services.account, selectors.isLocked);
   const wallet = store.useSelector(Services.account, selectors.wallet);
+
+  useEffect(() => {
+    const listenerAccountFetcher = () => {
+      store.send(Services.account, {
+        type: 'UPDATE_ACCOUNT',
+      });
+    };
+
+    window.addEventListener('focus', listenerAccountFetcher);
+
+    return () => {
+      window.removeEventListener('focus', listenerAccountFetcher);
+    };
+  }, []);
 
   function unlock(password: string) {
     service.send('UNLOCK_WALLET', { input: { password, account } });
