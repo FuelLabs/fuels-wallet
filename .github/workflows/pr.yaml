@@ -57,6 +57,9 @@ jobs:
         run: |
           pnpm ts:check
           pnpm lint
+      
+      - name: Run test
+        run: |
           pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
 
       - name: Run tests with coverage
@@ -74,3 +77,25 @@ jobs:
 
       - name: Stop
         run: pnpm node:dev stop --test --debug
+
+  end-to-end-test:
+    name: Test E2E
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/setup-docker
+        with:
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "End-to-end tests"
+        uses: cypress-io/github-action@v4
+        with:
+          browser: chrome
+          install: false
+          command: pnpm ci:test-e2e
+          record: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_ENV: "test"
