@@ -1,12 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
 import { Icon, Box, Avatar, Flex, Drawer } from '@fuel-ui/react';
 
-import { useAccount } from '../Account';
-import { NetworkScreen, useNetworks } from '../Network';
-
-import type { MenuItemObj } from './components';
-import { Menu, NetworkSelector } from './components';
-import { sidebarItems } from './constants';
+import type { MenuItemObj } from '..';
+import { Menu, NetworkSelector } from '..';
+import { useAccount } from '../../../Account';
+import { NetworkScreen, useNetworks } from '../../../Network';
+import { sidebarItems } from '../../constants';
 
 export function Sidebar() {
   const { account } = useAccount();
@@ -32,11 +31,9 @@ export function Sidebar() {
           </Flex>
           <Drawer.CloseButton
             css={{ position: 'unset' }}
-            data-testid="drawer_closeButton"
             aria-label="drawer_closeButton"
           />
         </Flex>
-
         <Menu items={sidebarItems as MenuItemObj[]} />
       </Flex>
       <Flex
@@ -47,7 +44,7 @@ export function Sidebar() {
       >
         <NetworkSelector
           onSelectNetwork={handlers.selectNetwork}
-          selected={selectedNetwork}
+          selected={selectedNetwork!}
           networks={networks}
         />
       </Flex>

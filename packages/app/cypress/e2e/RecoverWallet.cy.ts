@@ -35,7 +35,7 @@ describe('RecoverWallet', () => {
     cy.contains('button', /Next/i).click();
 
     /** Account created */
-    cy.contains(/Wallet created succesfully/i);
+    cy.contains(/Wallet created successfully/i);
     cy.contains(/Account 1/i);
     cy.contains('fuel1r...xqqj');
   });

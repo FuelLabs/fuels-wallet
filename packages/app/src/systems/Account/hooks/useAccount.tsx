@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 import type { AccountMachineState } from '../machines';
 
+import { IS_LOCKED_KEY } from '~/config';
 import { Services, store } from '~/store';
 
 const selectors = {
@@ -11,8 +12,8 @@ const selectors = {
   account: (state: AccountMachineState) => {
     return state.context?.data;
   },
-  isLocked: (state: AccountMachineState) => {
-    return !state.context?.wallet;
+  isLocked: () => {
+    return localStorage.getItem(IS_LOCKED_KEY);
   },
   wallet: (state: AccountMachineState) => {
     return state.context?.wallet;

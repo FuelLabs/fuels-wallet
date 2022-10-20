@@ -1,4 +1,4 @@
-import type { Story } from '@storybook/react';
+import type { StoryFn } from '@storybook/react';
 
 import { WelcomeScreen } from './WelcomeScreen';
 
@@ -10,4 +10,4 @@ export default {
   },
 };
 
-export const Usage: Story<unknown> = () => <WelcomeScreen />;
+export const Usage: StoryFn<unknown> = () => <WelcomeScreen />;

@@ -1,8 +1,8 @@
 const { join } = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const { getPublicEnvs } = require('../load.envs');
+const importMetaEnv = require('@import-meta-env/unplugin');
 const webpack = require('webpack');
-const path = require('path');
 
 const config = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -12,14 +12,22 @@ const config = {
     '@storybook/addon-interactions',
     '@storybook/addon-a11y',
     '@storybook/addon-storysource',
-    '@storybook/addon-jest',
     'storybook-dark-mode',
     'storybook-addon-react-router-v6',
   ],
   staticDirs: ['../public'],
   framework: '@storybook/react',
   core: {
-    builder: '@storybook/builder-webpack5',
+    builder: {
+      name: 'webpack5',
+      options: {
+        lazyCompilation: true,
+        fsCache: true,
+      },
+    },
+  },
+  features: {
+    storyStoreV7: true,
   },
   env: (config) => ({ ...config, ...getPublicEnvs() }),
   webpackFinal: async (config) => {
@@ -35,10 +43,11 @@ const config = {
     };
     config.resolve.plugins = [new TsconfigPathsPlugin()];
     config.plugins.push(
-      require('@import-meta-env/unplugin').webpack({
-        env: '.env',
-        example: '.env.example',
-      }),
+      new webpack.DefinePlugin({
+        'import.meta.env': JSON.stringify(getPublicEnvs()),
+      })
+    );
+    config.plugins.push(
       new webpack.ProvidePlugin({
         Buffer: [require.resolve('buffer/'), 'Buffer'],
       })

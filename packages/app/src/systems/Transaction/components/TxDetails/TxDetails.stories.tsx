@@ -12,6 +12,6 @@ export default {
 
 export const Usage = (args: TxDetailsProps) => (
   <Box css={{ maxWidth: 300 }}>
-    <TxDetails {...args} tx={MOCK_TX} />
+    <TxDetails {...args} receipts={MOCK_TX.receipts} />
   </Box>
 );

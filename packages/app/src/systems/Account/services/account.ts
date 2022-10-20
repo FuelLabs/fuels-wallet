@@ -5,6 +5,7 @@ import { bn, Address, Provider } from 'fuels';
 import type { Account } from '../types';
 import { IndexedDBStorage } from '../utils';
 
+import { VITE_FUEL_PROVIDER_URL } from '~/config';
 import { isEth } from '~/systems/Asset';
 import type { Maybe } from '~/systems/Core';
 import { getPhraseFromValue, db } from '~/systems/Core';
@@ -142,7 +143,13 @@ export class AccountService {
     const storage = new IndexedDBStorage() as never;
     const manager = new WalletManager({ storage });
     await manager.unlock(input.password);
-    return manager.getWallet(Address.fromPublicKey(input.account.publicKey));
+    const wallet = manager.getWallet(
+      Address.fromPublicKey(input.account.publicKey)
+    );
+    // TODO: fix this on fuels-ts it should be possible to
+    // customize the ProviderURL on the manager level
+    wallet.provider = new Provider(VITE_FUEL_PROVIDER_URL);
+    return wallet;
   }
 }
 
