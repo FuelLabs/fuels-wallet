@@ -14,8 +14,6 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-      - name: Skip
-        run: echo 'skipping'
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-node
 
