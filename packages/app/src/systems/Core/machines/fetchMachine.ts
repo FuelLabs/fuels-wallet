@@ -49,7 +49,7 @@ export const FetchMachine = {
         states: {
           loading: {
             tags: ['loading'],
-            entry: ['incrementAttemps'],
+            entry: ['incrementAttempts'],
             invoke: {
               src: 'fetch',
               onDone: {
@@ -69,7 +69,7 @@ export const FetchMachine = {
             },
           },
           retrying: {
-            entry: ['logError', 'incrementAttempts'],
+            tags: ['loading'],
             after: {
               500: {
                 target: 'loading',
