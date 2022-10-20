@@ -15,6 +15,6 @@ const URL = 'fuellabs.github.io/swayswap';
 
 export const Usage: StoryFn<ConnectInfoProps> = (args) => (
   <Box css={{ width: 300 }}>
-    <ConnectInfo {...args} url={URL} account={MOCK_ACCOUNTS[0]} />
+    <ConnectInfo {...args} origin={URL} account={MOCK_ACCOUNTS[0]} />
   </Box>
 );

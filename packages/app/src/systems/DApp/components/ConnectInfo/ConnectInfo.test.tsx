@@ -8,7 +8,7 @@ import { TestWrapper } from '~/systems/Core';
 const URL = 'fuellabs.github.io/swayswap/';
 
 const PROPS = {
-  url: URL,
+  origin: URL,
   account: MOCK_ACCOUNTS[0],
 };
 
