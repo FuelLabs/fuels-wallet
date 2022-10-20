@@ -15,13 +15,13 @@ const errorToastSpy = jest.spyOn(toast, 'error');
 describe('fetchMachine', () => {
   const createService = (opts: CreateFetchMachineOpts<string, string>) => {
     jest.spyOn(console, 'error').mockImplementation();
-    const fetchService = { fetch: opts.fetch };
-    const fetchSpy = jest.spyOn(fetchService, 'fetch');
+    const fetchWrapper = { fetch: opts.fetch };
+    const fetchSpy = jest.spyOn(fetchWrapper, 'fetch');
     const machine = FetchMachine.create({
       showError: true,
       maxAttempts: 3,
       ...opts,
-      fetch: fetchService.fetch,
+      fetch: fetchWrapper.fetch,
     });
     const service = interpret(machine.withContext({})).start();
 
