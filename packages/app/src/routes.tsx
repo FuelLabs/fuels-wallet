@@ -21,7 +21,13 @@ export const webAppRoutes = (
   <Routes>
     <Route>
       <Route element={<PublicRoute />}>{signUpRoutes}</Route>
-      <Route element={<PrivateRoute />}>{walletRoutes}</Route>
+      <Route element={<PrivateRoute />}>
+        <Route
+          path={Pages.signUpWalletCreated()}
+          element={<WalletCreatedPage />}
+        />
+        {walletRoutes}
+      </Route>
       <Route path="*" element={<Navigate to={Pages.wallet()} />} />
     </Route>
   </Routes>

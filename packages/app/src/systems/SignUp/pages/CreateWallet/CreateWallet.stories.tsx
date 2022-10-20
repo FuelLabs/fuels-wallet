@@ -1,4 +1,4 @@
-import type { Story } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 
 import { CreateWallet } from './CreateWallet';
 
@@ -8,6 +8,6 @@ export default {
   parameters: {
     layout: 'fullscreen',
   },
-};
+} as Meta;
 
-export const Usage: Story<unknown> = () => <CreateWallet />;
+export const Usage: StoryFn<unknown> = () => <CreateWallet />;
