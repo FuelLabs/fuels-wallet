@@ -1,6 +1,6 @@
 import { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Meta, StoryFn } from '@storybook/react';
-import { bn, ScriptTransactionRequest, Wallet } from 'fuels';
+import { bn, Provider, ScriptTransactionRequest, Wallet } from 'fuels';
 
 import { TxApprove } from './TxApprove';
 
@@ -55,6 +55,9 @@ async function loader() {
    * Create a sample transaction request
    * */
   const wallet = manager.getWallet(walletAccount.address);
+  // TODO: fix this on fuels-ts it should be possible to
+  // customize the ProviderURL on the manager level
+  wallet.provider = new Provider(VITE_FUEL_PROVIDER_URL);
   const amount = bn(1);
   const params = { gasLimit: bn(100000), gasPrice: bn(100000) };
   const coins = await wallet.getCoins();
