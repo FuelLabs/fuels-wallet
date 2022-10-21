@@ -4,11 +4,9 @@ import type { CommunicationProtocol } from './CommunicationProtocol';
 import { DatabaseObservable } from './DatabaseObservable';
 
 export class DatabaseEvents {
-  readonly communicationProtocol: CommunicationProtocol;
   readonly databaseObservable: DatabaseObservable<['applications']>;
 
-  constructor(communicationProtocol: CommunicationProtocol) {
-    this.communicationProtocol = communicationProtocol;
+  constructor(readonly communicationProtocol: CommunicationProtocol) {
     this.databaseObservable = new DatabaseObservable();
     this.setupApplicationWatcher();
   }

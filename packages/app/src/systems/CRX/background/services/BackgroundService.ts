@@ -10,11 +10,9 @@ import { ApplicationService } from '~/systems/AppConnect/services';
 type EventOrigin = { origin: string };
 
 export class BackgroundService {
-  readonly communicationProtocol: CommunicationProtocol;
   readonly server: JSONRPCServer<EventOrigin>;
 
-  constructor(communicationProtocol: CommunicationProtocol) {
-    this.communicationProtocol = communicationProtocol;
+  constructor(readonly communicationProtocol: CommunicationProtocol) {
     this.server = new JSONRPCServer<EventOrigin>();
     this.setupListeners();
     this.externalMethods([this.accounts, this.connect, this.disconnect]);

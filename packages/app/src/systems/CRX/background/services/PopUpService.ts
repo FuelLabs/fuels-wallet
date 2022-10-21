@@ -19,14 +19,12 @@ const popups = new Map<string, PopUpService>();
 
 export class PopUpService {
   defferPromise: DefferPromise<PopUpService>;
-  communicationProtocol: CommunicationProtocol;
   tabId: number | null = null;
   windowId: number | null = null;
   eventId?: string;
   client: JSONRPCClient;
 
-  constructor(communicationProtocol: CommunicationProtocol) {
-    this.communicationProtocol = communicationProtocol;
+  constructor(readonly communicationProtocol: CommunicationProtocol) {
     this.defferPromise = defferPromise<PopUpService>();
     this.client = new JSONRPCClient(async (rpcRequest) => {
       if (this.eventId) {
