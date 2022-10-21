@@ -18,7 +18,7 @@ export class AppConnectExternal extends ExtensionPageConnection {
   }
 
   async requestAuthorization({ origin }: { origin: string }) {
-    this.service.send('connect', {
+    this.service.send('CONNECT', {
       data: origin,
     });
     const app = await waitForState(this.service, 'connected', 'error');

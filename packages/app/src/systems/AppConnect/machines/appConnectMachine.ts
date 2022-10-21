@@ -24,10 +24,10 @@ type MachineServices = {
 };
 
 export type MachineEvents =
-  | { type: 'connect'; data: string }
-  | { type: 'disconnect'; data: Application }
-  | { type: 'authorize'; data: Array<string> }
-  | { type: 'reject'; data: void };
+  | { type: 'CONNECT'; data: string }
+  | { type: 'DISCONNECT'; data: Application }
+  | { type: 'AUTHORIZE'; data: Array<string> }
+  | { type: 'REJECT'; data: void };
 
 export const appConnectMachine = createMachine(
   {
@@ -47,11 +47,11 @@ export const appConnectMachine = createMachine(
     states: {
       idle: {
         on: {
-          connect: {
+          CONNECT: {
             actions: ['setOrigin'],
             target: '#(machine).connect',
           },
-          disconnect: {
+          DISCONNECT: {
             target: '#(machine).disconnect',
           },
         },
@@ -59,7 +59,7 @@ export const appConnectMachine = createMachine(
       connected: {
         entry: ['closeWindow'],
         on: {
-          disconnect: {
+          DISCONNECT: {
             actions: 'setApplication',
             target: '#(machine).idle',
           },
@@ -101,10 +101,10 @@ export const appConnectMachine = createMachine(
           },
         },
         on: {
-          authorize: {
+          AUTHORIZE: {
             target: '.authorizeApp',
           },
-          reject: {
+          REJECT: {
             actions: ['setConnectionRejected'],
             target: '#(machine).error',
           },
