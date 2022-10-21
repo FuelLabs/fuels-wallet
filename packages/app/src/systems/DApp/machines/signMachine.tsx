@@ -14,8 +14,8 @@ type MachineContext = {
 };
 
 type MachineServices = {
-  sign: {
-    data: Wallet;
+  signMessage: {
+    data: string;
   };
 };
 
@@ -101,7 +101,7 @@ export const signMachine = createMachine(
   {
     actions: {
       assignSignedMessage: assign({
-        signedMessage: (_, ev) => ev.data as string,
+        signedMessage: (_, ev) => ev.data,
       }),
       assignMessage: assign({
         message: (_, ev) => ev.input.message,

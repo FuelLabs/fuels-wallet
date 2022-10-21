@@ -3,16 +3,19 @@ import { Button, Card, Flex, Icon, Text } from '@fuel-ui/react';
 import { ConnectInfo, UnlockDialog } from '../../components';
 import { useSignatureRequest } from '../../hooks';
 
+import { useAccount } from '~/systems/Account';
 import { Layout } from '~/systems/Core';
+import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 
 export function SignatureRequest() {
+  const { isLoading } = useAccount();
   const { isUnlocking, handlers, account, isUnlockingLoading } =
     useSignatureRequest();
 
   return (
     <>
-      <Layout title={`Signature Request`} isSinglePage>
-        <Layout.TopBar />
+      <Layout title={`Signature Request`} isLoading={isLoading}>
+        <Layout.TopBar type={TopBarType.external} />
         <Layout.Content>
           {account && <ConnectInfo url={'swayswap.io'} account={account} />}
           <Card css={{ mt: '$4' }}>

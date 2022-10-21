@@ -27,7 +27,7 @@ export const Usage: StoryFn<never> = () => {
 
 Usage.loaders = [
   async () => {
-    await createMockAccount('123123123');
+    await createMockAccount();
     return {};
   },
 ];
