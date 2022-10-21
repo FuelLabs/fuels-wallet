@@ -1,8 +1,8 @@
 /* eslint-disable consistent-return */
 import { WalletManager } from '@fuel-ts/wallet-manager';
+import type { Account } from '@fuels-wallet/types';
 import { bn, Address, Provider } from 'fuels';
 
-import type { Account } from '../types';
 import { IndexedDBStorage } from '../utils';
 
 import { VITE_FUEL_PROVIDER_URL } from '~/config';

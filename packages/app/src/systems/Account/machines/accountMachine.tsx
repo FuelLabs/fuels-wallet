@@ -1,10 +1,10 @@
+import type { Account } from '@fuels-wallet/types';
 import type { Wallet } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import type { AccountInputs } from '../services/account';
 import { AccountService } from '../services/account';
-import type { Account } from '../types';
 
 import { IS_LOCKED_KEY, IS_LOGGED_KEY } from '~/config';
 import { FetchMachine } from '~/systems/Core';

@@ -1,9 +1,8 @@
 import { Button, CardList, Stack } from '@fuel-ui/react';
+import type { Account } from '@fuels-wallet/types';
 import { useState } from 'react';
 
 import { AccountItem } from '../AccountItem';
-
-import type { Account } from '~/systems/Account';
 
 export type AccountListProps = {
   accounts: Account[];

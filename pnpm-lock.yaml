@@ -358,7 +358,10 @@ importers:
       tsup: 6.3.0
 
   packages/types:
-    specifiers: {}
+    specifiers:
+      fuels: ^0.17.0
+    dependencies:
+      fuels: 0.17.0
 
 packages:
 

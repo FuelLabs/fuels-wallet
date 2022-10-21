@@ -1,8 +1,8 @@
+import type { Application } from '@fuels-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { ApplicationService } from '../services';
-import type { Application } from '../types';
 
 export type MachineContext = {
   origin?: string;
