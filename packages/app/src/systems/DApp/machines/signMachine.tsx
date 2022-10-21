@@ -119,7 +119,6 @@ export const signMachine = createMachine(
           }
 
           const signedMessage = input?.wallet.signMessage(input.message);
-          console.log(`signedMessage`, signedMessage);
           return signedMessage;
         },
       }),
