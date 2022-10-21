@@ -1,5 +1,5 @@
 import { useInterpret, useSelector } from '@xstate/react';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import type { AppConnectMachineState } from '../machines';
 import { appConnectMachine } from '../machines';
@@ -27,12 +27,12 @@ export function useAppConnect() {
     }
   }, [appConnectMachine]);
 
-  const authorizeApplication = useCallback((accounts: Array<string>) => {
+  function authorizeApplication(accounts: Array<string>) {
     applicationService.send({
-      type: 'authorize',
+      type: 'AUTHORIZE',
       data: accounts,
     });
-  }, []);
+  }
 
   return {
     origin,
