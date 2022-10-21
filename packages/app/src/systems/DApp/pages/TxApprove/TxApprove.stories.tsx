@@ -17,7 +17,7 @@ import {
 } from '~/config';
 import { AccountService } from '~/systems/Account';
 import { IndexedDBStorage } from '~/systems/Account/utils';
-import { db } from '~/systems/Core';
+import { db, Pages } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 import { TxType } from '~/systems/Transaction';
 import { TxService } from '~/systems/Transaction/services';
@@ -104,10 +104,7 @@ async function loader() {
     data: txRequest,
   });
 
-  return {
-    id: tx?.id,
-    url: 'fuellabs.github.io/swayswap',
-  };
+  return { id: tx?.id };
 }
 
 export default {
@@ -115,6 +112,9 @@ export default {
   title: 'DApp/Pages/TxApprove',
   loaders: [loader],
   parameters: {
+    reactRouter: {
+      routePath: Pages.txApprove(),
+    },
     layout: 'fullscreen',
     viewport: {
       defaultViewport: 'chromeExtension',
@@ -122,6 +122,6 @@ export default {
   },
 } as Meta;
 
-export const Usage: StoryFn<unknown> = (_args, { loaded: { id, url } }) => {
-  return <TxApprove id={id} url={url} />;
+export const Usage: StoryFn<unknown> = (_args, { loaded: { id } }) => {
+  return <TxApprove id={id} />;
 };

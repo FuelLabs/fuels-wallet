@@ -15,10 +15,9 @@ import {
 
 export type TxApproveProps = {
   id: string;
-  url: string;
 };
 
-export function TxApprove({ id, url }: TxApproveProps) {
+export function TxApprove({ id }: TxApproveProps) {
   const { account, isLoading } = useAccount();
   const {
     txRequest,
@@ -35,7 +34,7 @@ export function TxApprove({ id, url }: TxApproveProps) {
         <UnlockDialog isFullscreen onUnlock={() => {}} isOpen={false} />
         {!isLoading && !isSent && (
           <Stack gap="$4">
-            {url && account && <ConnectInfo url={url} account={account} />}
+            {account && <ConnectInfo url={'swayswap.io'} account={account} />}
             <Stack gap="$2">
               <HelperIcon as="h2" message="Some message">
                 Assets amount

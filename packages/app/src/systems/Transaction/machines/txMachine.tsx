@@ -29,9 +29,6 @@ type MachineServices = {
   simulate: {
     data: TxSimulateResult | undefined;
   };
-  approve: {
-    data: TxResponse;
-  };
   replace: {
     data: Transaction | undefined;
   };
