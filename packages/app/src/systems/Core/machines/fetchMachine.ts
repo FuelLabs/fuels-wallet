@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { toast } from '@fuel-ui/react';
+import type { TransitionConfig } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 export type FetchResponse<T> = T & {
@@ -30,6 +31,18 @@ export const FetchMachine = {
   hasError(_: any, ev: { data: { error?: any } }) {
     return Boolean(ev.data?.error);
   },
+  errorState(state: string): TransitionConfig<any, any> {
+    return {
+      cond: FetchMachine.hasError,
+      target: state,
+      actions: [
+        assign((ctx: any, ev: { data: { error?: any } }) => ({
+          ...ctx,
+          error: ev.data.error.message,
+        })),
+      ],
+    };
+  },
 
   create<Input, Result>(opts: CreateFetchMachineOpts<Input, Result>) {
     return createMachine(
@@ -57,7 +70,6 @@ export const FetchMachine = {
               },
               onError: [
                 {
-                  actions: ['assignError'],
                   target: 'failed',
                   cond: 'hasManyAttempts',
                 },
@@ -77,9 +89,9 @@ export const FetchMachine = {
             },
           },
           failed: {
-            entry: ['showError'],
+            entry: ['assignError', 'showError'],
             type: 'final',
-            data: (ctx) => ({ error: ctx.error }),
+            data: (ctx, ev) => ({ error: ev.data }),
           },
           success: {
             type: 'final',

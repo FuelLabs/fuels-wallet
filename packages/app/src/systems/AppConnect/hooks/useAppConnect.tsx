@@ -30,7 +30,7 @@ export function useAppConnect() {
   function authorizeApplication(accounts: Array<string>) {
     applicationService.send({
       type: 'AUTHORIZE',
-      data: accounts,
+      input: accounts,
     });
   }
 
