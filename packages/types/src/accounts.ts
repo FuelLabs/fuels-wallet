@@ -1,6 +1,6 @@
 import type { BigNumberish } from 'fuels';
 
-import type { Asset } from '~/systems/Asset';
+import type { Coin } from './coin';
 
 export type Vault = {
   key: string;
@@ -14,7 +14,7 @@ export type Account = {
   isHidden?: boolean;
   balance?: BigNumberish;
   balanceSymbol?: string;
-  balances?: Asset[];
+  balances?: Coin[];
 };
 
 export enum AddressType {

@@ -1,11 +1,11 @@
-import type { AssetWithInfo } from '../types';
+import type { Asset } from '@fuels-wallet/types';
 
 import { relativeUrl } from '~/systems/Core';
 
 /**
  * TODO: change this for something automatic, this is here just for development purposes
  */
-export const ASSET_MAP: Record<string, AssetWithInfo> = {
+export const ASSET_MAP: Record<string, Asset> = {
   '0x0000000000000000000000000000000000000000000000000000000000000000': {
     assetId:
       '0x0000000000000000000000000000000000000000000000000000000000000000',

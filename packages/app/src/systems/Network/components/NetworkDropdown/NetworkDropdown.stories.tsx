@@ -1,11 +1,10 @@
 import { Box } from '@fuel-ui/react';
+import type { Network } from '@fuels-wallet/types';
 import { useState } from 'react';
 
 import { MOCK_NETWORKS } from '../../__mocks__/networks';
 
 import { NetworkDropdown } from './NetworkDropdown';
-
-import type { Network } from '~/systems/Network';
 
 export default {
   component: NetworkDropdown,

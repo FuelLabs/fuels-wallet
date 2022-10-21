@@ -8,10 +8,9 @@ import {
   IconButton,
   Text,
 } from '@fuel-ui/react';
+import type { Account } from '@fuels-wallet/types';
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
-
-import type { Account } from '../../types';
 
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
