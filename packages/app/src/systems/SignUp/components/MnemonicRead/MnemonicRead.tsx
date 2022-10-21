@@ -44,7 +44,6 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
       </Form.Control>
       <Flex gap="$4">
         <Button
-          size="sm"
           color="gray"
           variant="ghost"
           css={{ width: 130 }}
@@ -53,7 +52,6 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
           Cancel
         </Button>
         <Button
-          size="sm"
           color="accent"
           css={{ width: 130 }}
           onPress={onNext}
