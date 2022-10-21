@@ -7,13 +7,13 @@ import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { ConnectInfo } from '~/systems/DApp';
 
-const PermissionsList = [
+const PERMISSION_LIST = [
   'View your wallet address',
   'Request transactions approval',
   'Request message signature',
   'Read your transactions history',
 ];
-const NotAllowedList = ['View your private keys'];
+const NOT_ALLOWED_LIST = ['View your private keys'];
 
 export function ConnectionRequest() {
   const { account, isLoading } = useAccount();
@@ -35,14 +35,14 @@ export function ConnectionRequest() {
             This site will be able to:
           </Text>
           <List icon={Icon.is('Check')} iconColor="accent9">
-            {PermissionsList.map((permission) => (
+            {PERMISSION_LIST.map((permission) => (
               <List.Item css={styles.listItem} key={permission}>
                 {permission}
               </List.Item>
             ))}
           </List>
           <List icon={Icon.is('X')} iconColor="red10">
-            {NotAllowedList.map((permission) => (
+            {NOT_ALLOWED_LIST.map((permission) => (
               <List.Item css={styles.listItem} key={permission}>
                 {permission}
               </List.Item>
