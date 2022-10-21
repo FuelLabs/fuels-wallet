@@ -31,8 +31,6 @@ type TopBarProps = {
   type?: TopBarType;
   onBack?: () => void;
   children?: ReactNode;
-  showBack?: boolean;
-  showMenu?: boolean;
 };
 
 // ----------------------------------------------------------------------------
@@ -156,14 +154,6 @@ const style = css({
       true: {
         boxShadow: '$none',
         background: 'transparent',
-      },
-    },
-    isSinglePage: {
-      true: {
-        boxShadow: '$sm',
-        filter: 'drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.25))',
-        background:
-          'linear-gradient(268.61deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.01) 87.23%)',
       },
     },
   },

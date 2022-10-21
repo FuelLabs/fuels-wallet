@@ -14,11 +14,8 @@ import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 type Context = {
   isLoading?: boolean;
   isHome?: boolean;
-  isSinglePage?: boolean;
   title?: string;
   ref?: React.RefObject<HTMLDivElement>;
-  showMenu?: boolean;
-  showBack?: boolean;
 };
 
 const ctx = createContext<Context>({});
