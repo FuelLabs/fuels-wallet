@@ -55,7 +55,7 @@ export const Layout: LayoutComponent = ({
   const ref = useRef<HTMLDivElement>(null);
   const titleText = title ? `${title} | Fuel` : 'Fuel';
   const location = useLocation();
-  const isHome = location.pathname === '/wallet';
+  const isHome = location.pathname.includes('/wallet');
 
   return (
     <ctx.Provider value={{ isLoading, title, isHome }}>
@@ -71,7 +71,7 @@ export const Layout: LayoutComponent = ({
           </Flex>
         )}
       </Flex>
-      {import.meta.env.NODE_ENV === 'test' && (
+      {process.env.NODE_ENV === 'test' && (
         <Box css={{ visibility: 'hidden' }}>
           {isLoading ? 'is loading' : 'is loaded'}
         </Box>

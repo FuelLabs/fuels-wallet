@@ -10,6 +10,6 @@
       "~/*": ["./src/*"]
     }
   },
-  "include": ["./src"],
+  "include": ["./src", "./vite-utils"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -1,7 +1,6 @@
 const { join } = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const { getPublicEnvs } = require('../load.envs');
-const importMetaEnv = require('@import-meta-env/unplugin');
+const { getPublicEnvs } = require('../vite-utils/loadEnvs');
 const webpack = require('webpack');
 
 const config = {
@@ -28,8 +27,12 @@ const config = {
   },
   features: {
     storyStoreV7: true,
+    postcss: false,
   },
-  env: (config) => ({ ...config, ...getPublicEnvs() }),
+  env: (config) => ({
+    ...config,
+    ...getPublicEnvs(),
+  }),
   webpackFinal: async (config) => {
     if (config.build) {
       config.base = join(
@@ -41,10 +44,14 @@ const config = {
       ...config.resolve.fallback,
       buffer: require.resolve('buffer/'),
     };
-    config.resolve.plugins = [new TsconfigPathsPlugin()];
+    config.resolve.plugins = [
+      new TsconfigPathsPlugin({
+        baseUrl: join(__dirname, '../'),
+      }),
+    ];
     config.plugins.push(
       new webpack.DefinePlugin({
-        'import.meta.env': JSON.stringify(getPublicEnvs()),
+        'process.env': JSON.stringify(getPublicEnvs()),
       })
     );
     config.plugins.push(

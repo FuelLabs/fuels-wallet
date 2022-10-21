@@ -7,7 +7,7 @@ export const {
   VITE_ADDR_OWNER,
   VITE_CRX,
   NODE_ENV,
-} = import.meta.env;
+} = process.env;
 
 export const DECIMAL_UNITS = 9;
 export const FORMAT_LANGUAGE = 'es';

@@ -5,6 +5,7 @@ import { Layout, Pages, relativeUrl } from '~/systems/Core';
 
 export function LandingPage() {
   const navigate = useNavigate();
+
   return (
     <Layout title="Fuel Wallet" isPublic>
       <BoxCentered minHS minWS gap="$2" direction="column">
@@ -15,7 +16,7 @@ export function LandingPage() {
         <Button
           variant="link"
           onPress={() => {
-            window.location.href = import.meta.env.VITE_STORYBOOK_URL;
+            window.location.href = process.env.VITE_STORYBOOK_URL;
           }}
         >
           Check our Storybook

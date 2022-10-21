@@ -18,6 +18,7 @@ importers:
       '@types/react': ^18.0.21
       '@types/react-dom': ^18.0.6
       '@xstate/cli': ^0.3.3
+      cross-env: ^7.0.3
       cypress: ^10.10.0
       cypress-vite: ^1.2.0
       dotenv: ^16.0.3
@@ -51,6 +52,7 @@ importers:
       '@types/react': 18.0.21
       '@types/react-dom': 18.0.6
       '@xstate/cli': 0.3.3_prettier@2.7.1
+      cross-env: 7.0.3
       cypress: 10.10.0
       cypress-vite: 1.2.0
       dotenv: 16.0.3
@@ -88,7 +90,6 @@ importers:
       '@fuel-ui/test-utils': ^0.8.0
       '@fuels-wallet/xstore': workspace:*
       '@hookform/resolvers': ^2.9.9
-      '@import-meta-env/unplugin': ^0.2.1
       '@playwright/test': ^1.27.1
       '@react-aria/utils': ^3.14.0
       '@storybook/addon-a11y': ^6.5.12
@@ -98,10 +99,12 @@ importers:
       '@storybook/addon-jest': ^6.5.12
       '@storybook/addon-links': ^6.5.12
       '@storybook/addon-storysource': ^6.5.12
+      '@storybook/addon-viewport': ^6.5.12
       '@storybook/addons': ^6.5.12
       '@storybook/api': ^6.5.12
       '@storybook/builder-webpack5': ^6.5.12
       '@storybook/components': ^6.5.12
+      '@storybook/core-common': ^6.5.12
       '@storybook/core-events': ^6.5.12
       '@storybook/manager-webpack5': ^6.5.12
       '@storybook/react': ^6.5.12
@@ -139,11 +142,11 @@ importers:
       react-router-dom: ^6.4.2
       storybook-addon-react-router-v6: ^0.2.1
       storybook-dark-mode: ^1.1.2
-      ts-jest-mock-import-meta: ^0.12.0
       tsconfig-paths-webpack-plugin: ^4.0.0
       typescript: ^4.8.4
       util: ^0.12.5
       vite: ^3.1.8
+      vite-plugin-environment: ^1.1.3
       vite-plugin-zip-pack: ^1.0.4
       vite-tsconfig-paths: ^3.5.1
       webpack: ^5.74.0
@@ -188,7 +191,6 @@ importers:
     devDependencies:
       '@babel/core': 7.19.3
       '@crxjs/vite-plugin': 1.0.14_vite@3.1.8
-      '@import-meta-env/unplugin': 0.2.1
       '@playwright/test': 1.27.1
       '@storybook/addon-a11y': 6.5.12_biqbaboplfbrettd7655fr4n2y
       '@storybook/addon-actions': 6.5.12_biqbaboplfbrettd7655fr4n2y
@@ -197,10 +199,12 @@ importers:
       '@storybook/addon-jest': 6.5.12_biqbaboplfbrettd7655fr4n2y
       '@storybook/addon-links': 6.5.12_biqbaboplfbrettd7655fr4n2y
       '@storybook/addon-storysource': 6.5.12_biqbaboplfbrettd7655fr4n2y
+      '@storybook/addon-viewport': 6.5.12_biqbaboplfbrettd7655fr4n2y
       '@storybook/addons': 6.5.12_biqbaboplfbrettd7655fr4n2y
       '@storybook/api': 6.5.12_biqbaboplfbrettd7655fr4n2y
       '@storybook/builder-webpack5': 6.5.12_yalvw3r2waubxycyb7k7qsruca
       '@storybook/components': 6.5.12_biqbaboplfbrettd7655fr4n2y
+      '@storybook/core-common': 6.5.12_yalvw3r2waubxycyb7k7qsruca
       '@storybook/core-events': 6.5.12
       '@storybook/manager-webpack5': 6.5.12_yalvw3r2waubxycyb7k7qsruca
       '@storybook/react': 6.5.12_k3yxu2mvbthdjhmwp2roy5mt64
@@ -219,10 +223,10 @@ importers:
       msw-storybook-addon: 1.6.3_qsb57tqg53ukreau73dz5vfuc4
       storybook-addon-react-router-v6: 0.2.1_gpm423butzeme3ixvwymrpy7yy
       storybook-dark-mode: 1.1.2_biqbaboplfbrettd7655fr4n2y
-      ts-jest-mock-import-meta: 0.12.0
       tsconfig-paths-webpack-plugin: 4.0.0
       typescript: 4.8.4
       vite: 3.1.8
+      vite-plugin-environment: 1.1.3_vite@3.1.8
       vite-plugin-zip-pack: 1.0.4_vite@3.1.8
       vite-tsconfig-paths: 3.5.1_vite@3.1.8
       webpack: 5.74.0
@@ -786,7 +790,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.12.9
-      '@babel/helper-plugin-utils': 7.10.4
+      '@babel/helper-plugin-utils': 7.19.0
       '@babel/plugin-syntax-object-rest-spread': 7.8.3_@babel+core@7.12.9
       '@babel/plugin-transform-parameters': 7.18.8_@babel+core@7.12.9
     dev: true
@@ -2638,21 +2642,6 @@ packages:
 
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
-
-  /@import-meta-env/unplugin/0.2.1:
-    resolution: {integrity: sha512-a2B0QxYG2IZV7Vu8NsfuZrL6wO01GabvHxo+dCHYHSgQ9UHvujiv3guRYSJbU6TB2laDvmMak7vDWxpA8dtDWg==}
-    engines: {node: '>= 14'}
-    peerDependencies:
-      '@import-meta-env/cli': ^0.2.1
-      dotenv: ^11.0.0 || ^12.0.4 || ^13.0.1 || ^14.3.2 || ^15.0.1 || ^16.0.0
-    peerDependenciesMeta:
-      '@import-meta-env/cli':
-        optional: true
-    dependencies:
-      object-hash: 3.0.0
-      picocolors: 1.0.0
-      unplugin: 0.9.6
-    dev: true
 
   /@internationalized/date/3.0.1:
     resolution: {integrity: sha512-E/3lASs4mAeJ2Z2ye6ab7eUD0bPUfTeNVTAv6IS+ne9UtMu9Uepb9A1U2Ae0hDr6WAlBuvUtrakaxEdYB9TV6Q==}
@@ -7237,14 +7226,14 @@ packages:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 16.11.68
+      '@types/node': 18.11.2
     dev: true
 
   /@types/glob/8.0.0:
     resolution: {integrity: sha512-l6NQsDDyQUVeoTynNpC9uRvCUint/gSUXQA2euwmTuWGvPY5LSDUu6tkCtJB2SvGQlJQzLaKqcGZP4//7EDveA==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 16.11.68
+      '@types/node': 18.11.2
     dev: true
 
   /@types/graceful-fs/4.1.5:
@@ -7335,7 +7324,7 @@ packages:
   /@types/node-fetch/2.6.2:
     resolution: {integrity: sha512-DHqhlq5jeESLy19TYhLakJ07kNumXWjcDdxXsLUMJZ6ue8VZJj4kLPQVE/2mdHh3xZziNF1xppu5lwmS53HR+A==}
     dependencies:
-      '@types/node': 16.11.68
+      '@types/node': 18.11.2
       form-data: 3.0.1
     dev: true
 
@@ -7461,7 +7450,7 @@ packages:
   /@types/webpack-sources/3.2.0:
     resolution: {integrity: sha512-Ft7YH3lEVRQ6ls8k4Ff1oB4jN6oy/XmU6tQISKdhfh+1mR+viZFphS6WL0IrtDOzvefmJg5a0s7ZQoRXwqTEFg==}
     dependencies:
-      '@types/node': 16.11.68
+      '@types/node': 18.11.2
       '@types/source-list-map': 0.1.2
       source-map: 0.7.4
     dev: true
@@ -7469,7 +7458,7 @@ packages:
   /@types/webpack/4.41.33:
     resolution: {integrity: sha512-PPajH64Ft2vWevkerISMtnZ8rTs4YmRbs+23c402J0INmxDKCrhZNvwZYtzx96gY2wAtXdrK1BS2fiC8MlLr3g==}
     dependencies:
-      '@types/node': 16.11.68
+      '@types/node': 18.11.2
       '@types/tapable': 1.0.8
       '@types/uglify-js': 3.17.0
       '@types/webpack-sources': 3.2.0
@@ -9771,6 +9760,14 @@ packages:
 
   /create-require/1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
+    dev: true
+
+  /cross-env/7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
     dev: true
 
   /cross-fetch/3.1.5:
@@ -13827,7 +13824,7 @@ packages:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/node': 16.11.68
+      '@types/node': 18.11.2
       merge-stream: 2.0.0
       supports-color: 8.1.1
     dev: true
@@ -15058,11 +15055,6 @@ packages:
       copy-descriptor: 0.1.1
       define-property: 0.2.5
       kind-of: 3.2.2
-    dev: true
-
-  /object-hash/3.0.0:
-    resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
-    engines: {node: '>= 6'}
     dev: true
 
   /object-inspect/1.12.2:
@@ -18225,12 +18217,6 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
-  /ts-jest-mock-import-meta/0.12.0:
-    resolution: {integrity: sha512-LfuetNsQ6CDEAPekFOtMpCPRBBAgoA322IQ95eCa3x0mR++GwhZddlsmjOUhxRPLF3utbXUZpCEZiW+HP8jkiA==}
-    peerDependencies:
-      ts-jest: '>=20.0.0'
-    dev: true
-
   /ts-jest/29.0.3_glf2bimzsqkn7a7xd62cgjrage:
     resolution: {integrity: sha512-Ibygvmuyq1qp/z3yTh9QTwVVAbFdDy/+4BtIQR2sp6baF2SJU/8CKK/hhnGIDY2L90Az2jIqTwZPnN2p+BweiQ==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -18722,15 +18708,6 @@ packages:
     engines: {node: '>= 0.8'}
     dev: true
 
-  /unplugin/0.9.6:
-    resolution: {integrity: sha512-YYLtfoNiie/lxswy1GOsKXgnLJTE27la/PeCGznSItk+8METYZErO+zzV9KQ/hXhPwzIJsfJ4s0m1Rl7ZCWZ4Q==}
-    dependencies:
-      acorn: 8.8.0
-      chokidar: 3.5.3
-      webpack-sources: 3.2.3
-      webpack-virtual-modules: 0.4.5
-    dev: true
-
   /unset-value/1.0.0:
     resolution: {integrity: sha512-PcA2tsuGSF9cnySLHTLSh2qrQiJ70mn+r+Glzxv2TWZblxsxCC52BDlZoPCsz7STd9pN7EZetkWZBAvk4cgZdQ==}
     engines: {node: '>=0.10.0'}
@@ -18986,6 +18963,14 @@ packages:
       is-buffer: 2.0.5
       unist-util-stringify-position: 2.0.3
       vfile-message: 2.0.4
+    dev: true
+
+  /vite-plugin-environment/1.1.3_vite@3.1.8:
+    resolution: {integrity: sha512-9LBhB0lx+2lXVBEWxFZC+WO7PKEyE/ykJ7EPWCq95NEcCpblxamTbs5Dm3DLBGzwODpJMEnzQywJU8fw6XGGGA==}
+    peerDependencies:
+      vite: '>= 2.7'
+    dependencies:
+      vite: 3.1.8
     dev: true
 
   /vite-plugin-zip-pack/1.0.4_vite@3.1.8:

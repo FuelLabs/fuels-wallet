@@ -54,14 +54,15 @@
     "fuelhat": "workspace:*"
   },
   "devDependencies": {
-    "@playwright/test": "^1.27.1",
     "@babel/core": "^7.19.3",
     "@jest/types": "29.2.1",
+    "@playwright/test": "^1.27.1",
     "@types/jest": "^29.2.0",
     "@types/node": "^18.11.2",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "@xstate/cli": "^0.3.3",
+    "cross-env": "^7.0.3",
     "cypress": "^10.10.0",
     "cypress-vite": "^1.2.0",
     "dotenv": "^16.0.3",

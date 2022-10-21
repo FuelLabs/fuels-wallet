@@ -5,7 +5,7 @@ export const MOCK_NETWORKS = [
     id: uniqueId(),
     isSelected: true,
     name: 'Local',
-    url: import.meta.env.VITE_FUEL_PROVIDER_URL,
+    url: process.env.VITE_FUEL_PROVIDER_URL,
   },
   {
     id: uniqueId(),

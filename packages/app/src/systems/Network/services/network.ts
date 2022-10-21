@@ -106,12 +106,11 @@ export class NetworkService {
   }
 
   static addFirstNetwork() {
-    const isProd =
-      import.meta.env.PROD || import.meta.env.NODE_ENV === 'production';
+    const isProd = process.env.PROD || process.env.NODE_ENV === 'production';
     return NetworkService.addNetwork({
       data: {
         name: isProd ? 'Testnet' : 'Localhost',
-        url: import.meta.env.VITE_FUEL_PROVIDER_URL,
+        url: process.env.VITE_FUEL_PROVIDER_URL,
       },
     });
   }

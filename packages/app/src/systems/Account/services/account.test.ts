@@ -38,7 +38,7 @@ describe('AccountService', () => {
 
   it('should fetch balance from account', async () => {
     const account = await AccountService.addAccount({ data: MOCK_ACCOUNT });
-    const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
+    const providerUrl = process.env.VITE_FUEL_PROVIDER_URL;
     if (!account) return;
     const result = await AccountService.fetchBalance({ account, providerUrl });
     expect(result.balance).toBe(bn(1000).toString());

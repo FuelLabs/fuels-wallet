@@ -136,7 +136,7 @@ export const accountMachine = createMachine(
         showError: true,
         async fetch() {
           const selectedNetwork = await NetworkService.getSelectedNetwork();
-          const defaultProvider = import.meta.env.VITE_FUEL_PROVIDER_URL;
+          const defaultProvider = process.env.VITE_FUEL_PROVIDER_URL;
           const providerUrl = selectedNetwork?.url || defaultProvider;
           const accounts = await AccountService.getAccounts();
           const account = accounts[0];

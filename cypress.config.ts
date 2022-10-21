@@ -1,5 +1,5 @@
 /* eslint-disable import/no-relative-packages */
-import './packages/app/load.envs';
+import './packages/app/vite-utils/loadEnvs';
 import { defineConfig } from 'cypress';
 import vitePreprocessor from 'cypress-vite';
 import path from 'path';

@@ -6,7 +6,7 @@ import { TxService } from './transaction';
 
 import { VITE_FUEL_PROVIDER_URL } from '~/config';
 
-const OWNER = import.meta.env.VITE_ADDR_OWNER;
+const OWNER = process.env.VITE_ADDR_OWNER;
 const amount = bn(1);
 const params = { gasLimit: bn(100000), gasPrice: bn(100000) };
 

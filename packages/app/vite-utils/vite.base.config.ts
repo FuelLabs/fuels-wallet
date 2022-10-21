@@ -2,9 +2,11 @@ import GlobalPolyFill from '@esbuild-plugins/node-globals-polyfill';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import type { UserConfig } from 'vite';
+import EnvironmentPlugin from 'vite-plugin-environment';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 import { getVersion } from './getVersion';
+import { getPublicEnvs } from './loadEnvs';
 
 process.env.VITE_APP_VERSION = getVersion();
 
@@ -26,13 +28,12 @@ const baseConfig: UserConfig = {
       },
       plugins: [
         GlobalPolyFill({
-          process: true,
           buffer: true,
         }),
       ],
     },
   },
-  plugins: [react(), tsconfigPaths()],
+  plugins: [react(), tsconfigPaths(), EnvironmentPlugin(getPublicEnvs())],
   server: {
     port: process.env.NODE_ENV === 'test' ? 3001 : 3000,
   },
@@ -58,14 +59,6 @@ const baseConfig: UserConfig = {
   ...(Boolean(process.env.CI) && {
     logLevel: 'silent',
   }),
-  /**
-   * Need because of this issue:
-   * https://github.com/vitejs/vite/issues/1973
-   * Avoid "proccess is not defined" when compiling in Cypress side
-   */
-  define: {
-    'process.env': {},
-  },
   /**
    * Need because of this issue:
    * https://github.com/vitejs/vite/issues/8644#issuecomment-1159308803

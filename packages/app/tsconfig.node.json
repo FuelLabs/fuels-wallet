@@ -9,7 +9,7 @@
   },
   "include": [
     "vite.config.ts",
-    "vite-utils/*.ts",
+    "vite-utils/*",
     "./package.json",
     "manifest.config.ts"
   ]

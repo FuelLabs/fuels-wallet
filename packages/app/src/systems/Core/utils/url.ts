@@ -16,7 +16,7 @@ export function urlJoin(
 }
 
 export function relativeUrl(path: string) {
-  return urlJoin(import.meta.env.BASE_URL, path);
+  return urlJoin(process.env.BASE_URL, path);
 }
 
 export function parseUrl(url: string) {

@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable consistent-return */
 const { config } = require('dotenv');
 const { resolve } = require('path');
 
@@ -14,12 +16,12 @@ function getEnvName() {
 [getEnvName(), '.env'].forEach((envFile) => {
   if (!envFile) return;
   config({
-    path: resolve(__dirname, envFile),
+    path: resolve(__dirname, '../', envFile),
   });
 });
 
 function getPublicEnvs() {
-  const WHITELIST = ['NODE_ENV', 'PUBLIC_URL'];
+  const WHITELIST = ['NODE_ENV', 'PUBLIC_URL', 'BASE_URL'];
   return Object.fromEntries(
     Object.entries(process.env).filter(([key]) =>
       WHITELIST.some((k) => k === key || key.match(/^VITE_/))
@@ -27,4 +29,4 @@ function getPublicEnvs() {
   );
 }
 
-module.exports.getPublicEnvs = getPublicEnvs;
+exports.getPublicEnvs = getPublicEnvs;
