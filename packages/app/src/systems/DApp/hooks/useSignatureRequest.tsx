@@ -1,6 +1,6 @@
 import { useInterpret, useSelector } from '@xstate/react';
 
-import type { SignMachineState, UnlockMachineState } from '../machines';
+import type { SignMachineState } from '../machines';
 import { signMachine } from '../machines';
 
 import { useAccount } from '~/systems/Account';
@@ -8,21 +8,16 @@ import { useAccount } from '~/systems/Account';
 const selectors = {
   isUnlocking: (state: SignMachineState) => state.matches('unlocking'),
   signedMessage: (state: SignMachineState) => state.context.signedMessage,
-  isUnlockingLoading: (state: UnlockMachineState) => state.matches('unlocking'),
+  isUnlockingLoading: (state: SignMachineState) =>
+    state.children.unlock?.state.matches('unlocking'),
 };
 
 export function useSignatureRequest() {
   const { account } = useAccount();
-  const service = useInterpret(signMachine);
+  const service = useInterpret(() => signMachine);
   const { send } = service;
-  const state = service.getSnapshot();
-
   const isUnlocking = useSelector(service, selectors.isUnlocking);
-  // not documented way of selecting child state/context
-  const isUnlockingLoading = useSelector(
-    state.children.unlock || service,
-    selectors.isUnlockingLoading
-  );
+  const isUnlockingLoading = useSelector(service, selectors.isUnlockingLoading);
   const signedMessage = useSelector(service, selectors.signedMessage);
 
   function sign() {
