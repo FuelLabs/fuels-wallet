@@ -6,21 +6,13 @@ import {
   IconButton,
   Spinner,
   Text,
-  Drawer,
 } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useLayoutContext } from './Layout';
-
-/**
- * Because of some cycle-dependency error here, is not
- * possible to just import by using ~/systems/Network
- */
-import { NetworkDropdown } from '~/systems/Network/components/NetworkDropdown';
-import { useNetworks } from '~/systems/Network/hooks';
-import { NetworkScreen } from '~/systems/Network/machines';
-import { Sidebar } from '~/systems/Sidebar';
+import { NetworkButton } from './NetworkButton';
+import { SideBar } from './SideBar';
 
 export enum TopBarType {
   internal,
@@ -39,10 +31,7 @@ type TopBarProps = {
 
 function InternalTopBar({ onBack }: TopBarProps) {
   const navigate = useNavigate();
-  const { isLoading, title, isHome, ref } = useLayoutContext();
-  const { networks, selectedNetwork, handlers } = useNetworks({
-    type: NetworkScreen.list,
-  });
+  const { isLoading, title, isHome } = useLayoutContext();
 
   return (
     <Flex as="nav" className={style({ isHome })}>
@@ -67,28 +56,11 @@ function InternalTopBar({ onBack }: TopBarProps) {
           <>
             <FuelLogo size={36} />
             {isLoading && <Spinner aria-label="Spinner" />}
-            {networks && !isLoading && (
-              <NetworkDropdown
-                selected={selectedNetwork}
-                onPress={handlers.goToList}
-              />
-            )}
+            {!isLoading && <NetworkButton />}
           </>
         )}
       </Flex>
-      <Drawer type="menu" size={220} containerRef={ref}>
-        <Drawer.Trigger>
-          <IconButton
-            icon={<Icon icon="List" color="gray8" size={24} />}
-            aria-label="Menu"
-            variant="link"
-            css={{ px: '0 !important' }}
-          />
-        </Drawer.Trigger>
-        <Drawer.Content>
-          <Sidebar />
-        </Drawer.Content>
-      </Drawer>
+      {isHome && <SideBar />}
     </Flex>
   );
 }
@@ -99,9 +71,6 @@ function InternalTopBar({ onBack }: TopBarProps) {
 
 function ExternalTopBar() {
   const { isLoading, title } = useLayoutContext();
-  const { networks, selectedNetwork, handlers } = useNetworks({
-    type: NetworkScreen.list,
-  });
 
   return (
     <Flex as="nav" className={style()}>
@@ -113,12 +82,7 @@ function ExternalTopBar() {
           </Text>
         )}
       </Flex>
-      {networks && (
-        <NetworkDropdown
-          selected={selectedNetwork}
-          onPress={handlers.goToList}
-        />
-      )}
+      {!isLoading && <NetworkButton />}
     </Flex>
   );
 }

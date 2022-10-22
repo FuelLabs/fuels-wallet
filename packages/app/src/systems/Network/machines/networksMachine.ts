@@ -2,17 +2,11 @@
 import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
 
 import { NetworkInputs, NetworkService } from '../services';
-import type { Network } from '../types';
+import { Network, NetworkScreen } from '../types';
 
 import { store } from '~/store';
 import type { Maybe, FetchResponse } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
-
-export enum NetworkScreen {
-  list = 'list',
-  update = 'update',
-  add = 'add',
-}
 
 export type NetworkInitialInput = {
   type: NetworkScreen;

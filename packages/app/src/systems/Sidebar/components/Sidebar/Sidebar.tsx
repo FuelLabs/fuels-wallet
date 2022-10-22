@@ -9,10 +9,10 @@ import { sidebarItems } from '../../constants';
 
 export function Sidebar() {
   const { account } = useAccount();
-
   const { networks, selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
+
   return (
     <Flex css={styles.wrapper}>
       <Flex css={styles.column}>

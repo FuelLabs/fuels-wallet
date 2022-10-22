@@ -1,20 +1,20 @@
 import { Box } from '@fuel-ui/react';
 
-import { HomeActions } from './HomeActions';
+import { WalletActions } from './WalletActions';
 
 export default {
-  component: HomeActions,
-  title: 'Home/Components/HomeActions',
+  component: WalletActions,
+  title: 'Home/Components/WalletActions',
 };
 
 export const Usage = () => (
   <Box css={{ width: 300 }}>
-    <HomeActions />
+    <WalletActions />
   </Box>
 );
 
 export const Disabled = () => (
   <Box css={{ width: 300 }}>
-    <HomeActions isDisabled />
+    <WalletActions isDisabled />
   </Box>
 );

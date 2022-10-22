@@ -1,11 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Flex } from '@fuel-ui/react';
 
-export type HomeActionsProps = {
+export type WalletActionsProps = {
   isDisabled?: boolean;
 };
 
-export const HomeActions = ({ isDisabled }: HomeActionsProps) => {
+export const WalletActions = ({ isDisabled }: WalletActionsProps) => {
   return (
     <Flex css={styles.wrapper}>
       <Button isDisabled={isDisabled} css={styles.button}>

@@ -2,7 +2,7 @@ import type { Meta, StoryFn } from '@storybook/react';
 import { bn } from 'fuels';
 import { graphql } from 'msw';
 
-import { Home } from './Home';
+import { Wallet } from './Wallet';
 
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 import { ASSET_LIST } from '~/systems/Asset';
@@ -29,7 +29,7 @@ const ASSETS_MOCK = [
 ];
 
 export default {
-  component: Home,
+  component: Wallet,
   title: 'Home/Pages/Home',
   parameters: {
     layout: 'fullscreen',
@@ -46,8 +46,8 @@ export default {
   ],
 } as Meta;
 
-export const NoAssets: StoryFn<unknown> = () => <Home />;
-export const WithAssets: StoryFn<unknown> = () => <Home />;
+export const NoAssets: StoryFn<unknown> = () => <Wallet />;
+export const WithAssets: StoryFn<unknown> = () => <Wallet />;
 WithAssets.parameters = {
   msw: [
     graphql.query('getBalances', (req, res, ctx) => {

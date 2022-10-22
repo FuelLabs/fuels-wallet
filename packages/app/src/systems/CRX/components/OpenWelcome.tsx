@@ -3,8 +3,6 @@ import { useEffect } from 'react';
 import { welcomeLink } from '../config';
 import { openTab } from '../utils';
 
-import { PrivateRoute } from '~/systems/Core';
-
 export const OpenWelcome = () => {
   useEffect(() => {
     openTab(welcomeLink());
@@ -12,5 +10,3 @@ export const OpenWelcome = () => {
 
   return null;
 };
-
-export const CRXPrivateRoute = () => <PrivateRoute reject={<OpenWelcome />} />;

@@ -23,3 +23,5 @@ export const IS_LOCKED_KEY = 'fuel__isLocked';
 export const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 export const IS_CRX_POPUP =
   IS_CRX && globalThis.location.pathname === CRXPages.popup;
+export const IS_CRX_SIGN_UP =
+  IS_CRX && globalThis.location.pathname === CRXPages.signup;

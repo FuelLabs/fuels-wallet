@@ -1,61 +1,67 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import type { ReactNode } from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
-import { IS_CRX, IS_CRX_POPUP } from './config';
-import { CRXPrivateRoute, CRXPublicRoute } from './systems/CRX/components';
+import { IS_CRX_POPUP, IS_CRX_SIGN_UP } from './config';
+import { OpenWelcome } from './systems/CRX/components';
+import { Pages, PrivateRoute, PublicRoute } from './systems/Core';
+import { DrawerRoutes } from './systems/Core/components/DrawerRoutes';
+import { FaucetDialog } from './systems/Faucet';
+import { networkRoutes } from './systems/Network';
+import { signUpRoutes } from './systems/SignUp';
+import { WalletCreatedPage } from './systems/SignUp/pages';
 
-import { PrivateRoute, PublicRoute } from '~/systems/Core';
-import { Pages } from '~/systems/Core/types';
-import { homeRoutes } from '~/systems/Home';
-import { landingPageRoutes } from '~/systems/LandingPage';
-import { networkRoutes } from '~/systems/Network';
-import { signUpRoutes } from '~/systems/SignUp';
-import { WalletCreatedPage } from '~/systems/SignUp/pages';
+import { Wallet } from '~/systems/Wallet';
 
-const walletRoutes = (
+function PrivateRouterContent({ children }: { children: ReactNode }) {
+  if (IS_CRX_POPUP)
+    return <PrivateRoute reject={<OpenWelcome />}>{children}</PrivateRoute>;
+  return (
+    <PrivateRoute redirect={Pages.signUpWelcome()}>{children}</PrivateRoute>
+  );
+}
+
+export const SignUpRoutes = () => {
+  const { pathname } = useLocation();
+
+  if (!pathname.includes(Pages.signUp())) return null;
+
+  return (
+    <Routes>
+      <Route element={<PublicRoute redirect={Pages.signUpWalletCreated()} />}>
+        {signUpRoutes}
+      </Route>
+      <Route
+        path={Pages.signUpWalletCreated()}
+        element={
+          <PrivateRoute redirect={Pages.signUpWelcome()}>
+            <WalletCreatedPage />
+          </PrivateRoute>
+        }
+      />
+    </Routes>
+  );
+};
+
+export const WebAppRoutes = () => {
+  if (IS_CRX_SIGN_UP) return null;
+  return (
+    <DrawerRoutes
+      element={
+        <PrivateRouterContent>
+          <Wallet />
+        </PrivateRouterContent>
+      }
+      avoidDrawer={[Pages.faucet()]}
+    >
+      <Route path={Pages.faucet()} element={<FaucetDialog />} />
+      {networkRoutes}
+    </DrawerRoutes>
+  );
+};
+
+export const getRoutes = () => (
   <>
-    {homeRoutes}
-    {networkRoutes}
+    <WebAppRoutes />
+    <SignUpRoutes />
   </>
 );
-
-export const webAppRoutes = (
-  <Routes>
-    <Route>
-      {landingPageRoutes}
-      <Route element={<PublicRoute />}>{signUpRoutes}</Route>
-      <Route element={<PrivateRoute />}>
-        <Route
-          path={Pages.signUpWalletCreated()}
-          element={<WalletCreatedPage />}
-        />
-        {walletRoutes}
-      </Route>
-      <Route path="*" element={<Navigate to={Pages.wallet()} />} />
-    </Route>
-  </Routes>
-);
-
-export const crxPopupRoutes = (
-  <Routes>
-    <Route element={<CRXPrivateRoute />}>
-      {walletRoutes}
-      <Route path="*" element={<Navigate to={Pages.wallet()} />} />
-    </Route>
-  </Routes>
-);
-
-export const crxSignUpRoutes = (
-  <Routes>
-    <Route element={<CRXPublicRoute />}>
-      {signUpRoutes}
-      <Route path="*" element={<Navigate to={Pages.signUp()} />} />
-    </Route>
-    <Route path={Pages.signUpWalletCreated()} element={<WalletCreatedPage />} />
-  </Routes>
-);
-
-export const getRoutes = () => {
-  if (IS_CRX_POPUP) return crxPopupRoutes;
-  if (IS_CRX) return crxSignUpRoutes;
-  return webAppRoutes;
-};

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Header } from '../Header';
 
+import { IS_CRX } from '~/config';
 import type { Account } from '~/systems/Account';
 import { AccountItem } from '~/systems/Account';
 import type { Maybe } from '~/systems/Core';
@@ -33,9 +34,11 @@ export function WalletCreated({ account }: WalletCreatedProps) {
         subtitle="These are your Fuel wallet details"
       />
       {account && <AccountItem account={account} />}
-      <Button size="sm" color="accent" onPress={handleGoToWallet}>
-        Go to wallet
-      </Button>
+      {!IS_CRX && (
+        <Button size="sm" color="accent" onPress={handleGoToWallet}>
+          Go to wallet
+        </Button>
+      )}
     </Stack>
   );
 }

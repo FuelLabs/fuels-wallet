@@ -4,3 +4,9 @@ export type Network = {
   url: string;
   isSelected?: boolean;
 };
+
+export enum NetworkScreen {
+  list = 'list',
+  update = 'update',
+  add = 'add',
+}

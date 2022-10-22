@@ -4,12 +4,11 @@ import { Box, Flex } from '@fuel-ui/react';
 import type { FC, ReactNode } from 'react';
 import { useRef, useContext, createContext } from 'react';
 import { Helmet } from 'react-helmet';
-import { useLocation } from 'react-router-dom';
 
 import { BottomBar } from './BottomBar';
 import { TopBar } from './TopBar';
 
-import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
+import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 
 type Context = {
   isLoading?: boolean;
@@ -51,14 +50,13 @@ export const Layout: LayoutComponent = ({
   isLoading,
   title,
   children,
+  isHome,
 }: LayoutProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const titleText = title ? `${title} | Fuel` : 'Fuel';
-  const location = useLocation();
-  const isHome = location.pathname === '/wallet';
 
   return (
-    <ctx.Provider value={{ isLoading, title, isHome }}>
+    <ctx.Provider value={{ isLoading, title, isHome, ref }}>
       <Helmet>
         <title>{titleText}</title>
       </Helmet>
@@ -87,12 +85,12 @@ Layout.BottomBar = BottomBar;
 const styles = {
   root: ({ isPublic }: Partial<LayoutProps>) =>
     cssObj({
-      alignItems: 'center',
-      justifyContent: 'center',
       flexDirection: 'column',
-      minH: '100vh',
-      width: IS_CRX_POPUP ? WALLET_WIDTH : '100vw',
       ...(isPublic && {
+        height: '100vh',
+        width: '100vw',
+        justifyContent: 'center',
+        alignItems: 'center',
         background:
           'linear-gradient(197.05deg, #0E221B 0%, #071614 22.2%, #0C0E0D 40.7%);',
       }),
