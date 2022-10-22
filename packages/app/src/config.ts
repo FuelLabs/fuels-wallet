@@ -4,6 +4,7 @@ export const {
   VITE_FUEL_PROVIDER_URL,
   VITE_FAUCET_RECAPTCHA_KEY,
   VITE_FUEL_FAUCET_URL,
+  VITE_ADDR_OWNER,
   VITE_CRX,
   NODE_ENV,
 } = import.meta.env;
