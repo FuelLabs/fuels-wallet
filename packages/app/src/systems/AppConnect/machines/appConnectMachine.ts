@@ -60,7 +60,7 @@ export const appConnectMachine = createMachine(
         },
       },
       connect: {
-        tags: 'connecting',
+        tags: ['connecting'],
         initial: 'fetchAuthorizedApp',
         states: {
           idle: {},
@@ -163,7 +163,10 @@ export const appConnectMachine = createMachine(
         isConnected: (_) => false,
       }),
       closeWindow: () => {
-        window.close();
+        // Give time before closing for action respond with error;
+        setTimeout(() => {
+          window.close();
+        }, 100);
       },
     },
     services: {
@@ -171,14 +174,17 @@ export const appConnectMachine = createMachine(
         MachineContext,
         Application | undefined
       >({
-        showError: true,
+        showError: false,
         fetch: async ({ input }) => {
-          return ApplicationService.getApplication(input?.origin);
+          if (input?.origin) {
+            return ApplicationService.getApplication(input.origin);
+          }
+          return undefined;
         },
       }),
       addApplication: FetchMachine.create<Application, Application | undefined>(
         {
-          showError: true,
+          showError: false,
           fetch: async ({ input }) => {
             if (!input?.origin || !Array.isArray(input?.accounts)) {
               throw new Error('Origin or account not passed');
@@ -193,7 +199,7 @@ export const appConnectMachine = createMachine(
         }
       ),
       removeApplication: FetchMachine.create<MachineContext, boolean>({
-        showError: true,
+        showError: false,
         fetch: async ({ input }) => {
           await ApplicationService.removeApplication(input?.origin || '');
           return true;
