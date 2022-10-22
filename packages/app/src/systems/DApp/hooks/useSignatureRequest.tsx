@@ -1,4 +1,4 @@
-import { useMachine, useSelector } from '@xstate/react';
+import { useInterpret, useSelector } from '@xstate/react';
 
 import type { SignMachineState, UnlockMachineState } from '../machines';
 import { signMachine } from '../machines';
@@ -13,7 +13,9 @@ const selectors = {
 
 export function useSignatureRequest() {
   const { account } = useAccount();
-  const [state, send, service] = useMachine(signMachine);
+  const service = useInterpret(signMachine);
+  const { send } = service;
+  const state = service.getSnapshot();
 
   const isUnlocking = useSelector(service, selectors.isUnlocking);
   // not documented way of selecting child state/context
