@@ -15,9 +15,9 @@ export class WindowConnection extends BaseConnection {
   }
 
   onMessage = (message: MessageEvent<CommunicationMessage>) => {
-    const messageFreezed = Object.freeze(message);
-    if (!this.acceptMessage(messageFreezed)) return;
-    const { data: event } = messageFreezed;
+    const messageFroze = Object.freeze(message);
+    if (!this.acceptMessage(messageFroze)) return;
+    const { data: event } = messageFroze;
     this.onCommunicationMessage(event);
   };
 

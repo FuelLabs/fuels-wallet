@@ -50,24 +50,17 @@ export class BackgroundService {
 
   async connect(_: JSONRPCParams, serverParams: EventOrigin) {
     const origin = serverParams.origin;
+    if (!origin) return false;
 
-    if (origin) {
-      const app = await ApplicationService.getApplication(origin);
+    let authorizedApp = await ApplicationService.getApplication(origin);
+    if (authorizedApp) return true;
 
-      if (!app) {
-        const popupService = await PopUpService.open(
-          origin,
-          this.communicationProtocol
-        );
-        const app = await popupService.requestAuthorization(origin);
-
-        return !!app;
-      }
-
-      return !!app;
-    }
-
-    return false;
+    const popupService = await PopUpService.open(
+      origin,
+      this.communicationProtocol
+    );
+    authorizedApp = await popupService.requestAuthorization(origin);
+    return !!authorizedApp;
   }
 
   async disconnect(_: JSONRPCParams, serverParams: EventOrigin) {

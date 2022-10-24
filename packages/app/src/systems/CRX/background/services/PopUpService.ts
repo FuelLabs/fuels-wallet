@@ -8,8 +8,8 @@ import {
   getTabIdFromSender,
   showPopUp,
 } from '../../utils';
-import type { DefferPromise } from '../../utils/promise';
-import { defferPromise } from '../../utils/promise';
+import type { DeferPromise } from '../../utils/promise';
+import { deferPromise } from '../../utils/promise';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
 
@@ -18,14 +18,14 @@ import { CRXPages } from '~/systems/Core/types';
 const popups = new Map<string, PopUpService>();
 
 export class PopUpService {
-  defferPromise: DefferPromise<PopUpService>;
+  openingPromise: DeferPromise<PopUpService>;
   tabId: number | null = null;
   windowId: number | null = null;
   eventId?: string;
   client: JSONRPCClient;
 
   constructor(readonly communicationProtocol: CommunicationProtocol) {
-    this.defferPromise = defferPromise<PopUpService>();
+    this.openingPromise = deferPromise<PopUpService>();
     this.client = new JSONRPCClient(async (rpcRequest) => {
       if (this.eventId) {
         this.communicationProtocol.postMessage({
@@ -44,7 +44,7 @@ export class PopUpService {
 
   setTimeout(delay = 5000) {
     setTimeout(() => {
-      this.defferPromise.reject(new Error('PopUp not opened!'));
+      this.openingPromise.reject(new Error('PopUp not opened!'));
     }, delay);
   }
 
@@ -75,7 +75,7 @@ export class PopUpService {
     const tabId = getTabIdFromSender(message.sender);
     if (tabId === this.tabId && message.ready) {
       this.eventId = message.id;
-      this.defferPromise.resolve(this);
+      this.openingPromise.resolve(this);
     }
   };
 
@@ -117,7 +117,7 @@ export class PopUpService {
       popupService = await PopUpService.create(origin, communicationProtocol);
     }
 
-    return popupService.defferPromise.promise;
+    return popupService.openingPromise.promise;
   };
 
   // UI exposed methods

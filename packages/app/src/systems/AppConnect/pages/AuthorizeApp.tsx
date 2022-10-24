@@ -6,7 +6,7 @@ import { useAppConnect } from '../hooks/useAppConnect';
 import { useAccount } from '~/systems/Account';
 
 export function AuthorizeApp() {
-  const { authorizeApplication, isConnecting, origin } = useAppConnect();
+  const { handlers, isConnecting, origin } = useAppConnect();
   const { account } = useAccount();
 
   if (!account || !isConnecting) return null;
@@ -15,7 +15,9 @@ export function AuthorizeApp() {
     <BoxCentered minHS={true} minWS={true} css={styles.boxCentered}>
       <Flex direction="column" justify="center" align="center">
         <Text css={{ marginBottom: '$2' }}>{origin || ''}</Text>
-        <Button onPress={() => authorizeApplication([account.address])}>
+        <Button
+          onPress={() => handlers.authorizeApplication([account.address])}
+        >
           Authorize
         </Button>
       </Flex>

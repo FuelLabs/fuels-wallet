@@ -9,7 +9,7 @@ import { IS_CRX_POPUP } from '~/config';
 
 const selectors = {
   isConnecting: (state: AppConnectMachineState) => {
-    return state.hasTag('connecting');
+    return state.matches('connecting');
   },
   origin: (state: AppConnectMachineState) => {
     return state.context.origin;
@@ -17,7 +17,7 @@ const selectors = {
 };
 
 export function useAppConnect() {
-  const applicationService = useInterpret(() => appConnectMachine);
+  const applicationService = useInterpret(appConnectMachine);
   const isConnecting = useSelector(applicationService, selectors.isConnecting);
   const origin = useSelector(applicationService, selectors.origin);
 
@@ -37,6 +37,8 @@ export function useAppConnect() {
   return {
     origin,
     isConnecting,
-    authorizeApplication,
+    handlers: {
+      authorizeApplication,
+    },
   };
 }

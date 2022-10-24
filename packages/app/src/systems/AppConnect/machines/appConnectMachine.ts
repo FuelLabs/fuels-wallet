@@ -52,15 +52,14 @@ export const appConnectMachine = createMachine(
         on: {
           CONNECT: {
             actions: ['setOrigin'],
-            target: 'connect',
+            target: 'connecting',
           },
           DISCONNECT: {
-            target: 'disconnect',
+            target: 'disconnecting',
           },
         },
       },
-      connect: {
-        tags: ['connecting'],
+      connecting: {
         initial: 'fetchAuthorizedApp',
         states: {
           idle: {},
@@ -122,19 +121,15 @@ export const appConnectMachine = createMachine(
         entry: ['closeWindow'],
         on: {
           DISCONNECT: {
-            target: 'disconnect',
+            target: 'disconnecting',
           },
         },
       },
-      disconnect: {
-        tags: ['disconnecting'],
+      disconnecting: {
         invoke: {
           src: 'removeApplication',
           onDone: [
-            {
-              cond: FetchMachine.hasError,
-              target: 'error',
-            },
+            FetchMachine.errorState('error'),
             {
               actions: 'setDisconnected',
               target: 'idle',
