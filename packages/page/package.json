@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:crx": "vite",
     "build:preview": "vite build"
   },
   "dependencies": {
