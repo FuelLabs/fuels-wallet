@@ -58,7 +58,7 @@ export const Layout: LayoutComponent = ({
   const isHome = location.pathname.includes('/wallet');
 
   return (
-    <ctx.Provider value={{ isLoading, title, isHome }}>
+    <ctx.Provider value={{ isLoading, title, isHome, ref }}>
       <Helmet>
         <title>{titleText}</title>
       </Helmet>

@@ -4,7 +4,7 @@ import * as yup from 'yup';
 
 const schema = yup
   .object({
-    password: yup.string().min(8).required('Password is required'),
+    password: yup.string().required('Password is required'),
   })
   .required();
 

@@ -1,17 +1,14 @@
-import type { Wallet } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-import type { AccountInputs } from '../services/account';
 import { AccountService } from '../services/account';
 import type { Account } from '../types';
 
-import { IS_LOCKED_KEY, IS_LOGGED_KEY } from '~/config';
+import { IS_LOGGED_KEY } from '~/config';
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
 type MachineContext = {
-  wallet?: Wallet;
   data?: Account;
   error?: unknown;
 };
@@ -20,14 +17,9 @@ type MachineServices = {
   fetchAccount: {
     data: Account;
   };
-  unlock: {
-    data: Wallet;
-  };
 };
 
-type MachineEvents =
-  | { type: 'UPDATE_ACCOUNT'; input?: null }
-  | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] };
+type MachineEvents = { type: 'UPDATE_ACCOUNT'; input?: null };
 
 export const accountMachine = createMachine(
   {
@@ -65,27 +57,7 @@ export const accountMachine = createMachine(
           ],
         },
       },
-      unlocking: {
-        tags: ['loading'],
-        invoke: {
-          src: 'unlock',
-          data: {
-            input: (_: MachineContext, ev: MachineEvents) => ev.input,
-          },
-          onDone: [
-            {
-              target: 'done',
-              cond: FetchMachine.hasError,
-            },
-            {
-              actions: ['assignWallet'],
-              target: 'done',
-            },
-          ],
-        },
-      },
       done: {
-        entry: ['setIsLocked'],
         after: {
           TIMEOUT: 'fetchingAccount', // retry
         },
@@ -100,9 +72,6 @@ export const accountMachine = createMachine(
       UPDATE_ACCOUNT: {
         target: 'fetchingAccount',
       },
-      UNLOCK_WALLET: {
-        target: 'unlocking',
-      },
     },
   },
   {
@@ -110,9 +79,6 @@ export const accountMachine = createMachine(
     actions: {
       assignAccount: assign({
         data: (_, ev) => ev.data,
-      }),
-      assignWallet: assign({
-        wallet: (_, ev) => ev.data,
       }),
       assignError: assign({
         error: (_, ev) => ev.data,
@@ -122,13 +88,6 @@ export const accountMachine = createMachine(
       },
       removeLocalStorage: () => {
         localStorage.removeItem(IS_LOGGED_KEY);
-      },
-      setIsLocked: (ctx) => {
-        if (ctx.wallet) {
-          localStorage.removeItem(IS_LOCKED_KEY);
-        } else {
-          localStorage.setItem(IS_LOCKED_KEY, 'true');
-        }
       },
     },
     services: {
@@ -144,15 +103,6 @@ export const accountMachine = createMachine(
             throw new Error('Account not found');
           }
           return AccountService.fetchBalance({ account, providerUrl });
-        },
-      }),
-      unlock: FetchMachine.create<AccountInputs['unlock'], Wallet>({
-        showError: true,
-        async fetch({ input }) {
-          if (!input || !input?.password) {
-            throw new Error('Invalid network input');
-          }
-          return AccountService.unlock(input);
         },
       }),
     },
