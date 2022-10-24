@@ -23,7 +23,9 @@ const selectors = {
 };
 
 export function useTransaction(id: string) {
-  const { isLocked, isLoading, wallet } = useAccount();
+  const wallet = undefined;
+  const isLocked = true;
+  const { isLoading } = useAccount();
   const [, send, service] = useMachine(() => txMachine);
 
   const txRequest = useSelector(service, selectors.txRequest);

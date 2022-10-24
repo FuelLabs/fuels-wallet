@@ -2,31 +2,38 @@ import { cssObj } from '@fuel-ui/css';
 import { Alert, Box, Button, Dialog, Flex, Icon, Stack } from '@fuel-ui/react';
 
 import type { UnlockFormValues } from '../../hooks';
-import { useAccount, useUnlockForm } from '../../hooks';
+import { useUnlockForm } from '../../hooks';
 import { UnlockForm } from '../UnlockForm';
 
 export type UnlockDialogProps = {
   isOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  onClose?: () => void;
+  onUnlock: (value: string) => void;
+  isLoading?: boolean;
   isFullscreen?: boolean;
 };
 
 export function UnlockDialog({
   isOpen,
-  onOpenChange,
+  onClose,
+  onUnlock,
+  isLoading,
   isFullscreen,
 }: UnlockDialogProps) {
   const form = useUnlockForm();
-  const { handlers, isLoading } = useAccount();
   const { formState, handleSubmit } = form;
 
   function onSubmit(values: UnlockFormValues) {
-    handlers.unlock(values.password);
+    onUnlock(values.password);
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <Dialog.Content css={styles.content(isFullscreen)}>
+    <Dialog open={isOpen}>
+      <Dialog.Content
+        css={styles.content(isFullscreen)}
+        onEscapeKeyDown={onClose}
+        onPointerDownOutside={onClose}
+      >
         <Dialog.Heading>
           <Flex css={{ alignItems: 'center' }}>
             <Icon
