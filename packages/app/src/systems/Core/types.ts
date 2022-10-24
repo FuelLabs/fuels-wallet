@@ -23,8 +23,8 @@ export const Pages = {
   networkAdd: route('/networks/add'),
   dapp: route('/dapp'),
   signMessage: route('/dapp/sign-message'),
-  txs: route('/transactions'),
   txApprove: route('/dapp/tx-approve'),
+  txs: route('/transactions'),
 };
 
 export type AmountMap = Record<string, Maybe<BigNumberish>>;

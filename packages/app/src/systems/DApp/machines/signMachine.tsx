@@ -2,11 +2,12 @@ import type { Wallet } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { send, assign, createMachine } from 'xstate';
 
-import type { UnlockMachineEvents } from './unlockMachine';
+import type { UnlockMachineEvents, UnlockMachine } from './unlockMachine';
 import { unlockMachine } from './unlockMachine';
 
 import type { AccountInputs } from '~/systems/Account';
 import { FetchMachine } from '~/systems/Core';
+import type { ChildrenMachine } from '~/systems/Core';
 
 type MachineContext = {
   message?: string;
@@ -128,4 +129,7 @@ export const signMachine = createMachine(
 
 export type SignMachine = typeof signMachine;
 export type SignMachineService = InterpreterFrom<typeof signMachine>;
-export type SignMachineState = StateFrom<typeof signMachine>;
+export type SignMachineState = StateFrom<typeof signMachine> &
+  ChildrenMachine<{
+    unlock: UnlockMachine;
+  }>;

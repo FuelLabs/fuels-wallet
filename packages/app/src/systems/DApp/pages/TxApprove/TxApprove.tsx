@@ -17,7 +17,8 @@ export type TxApproveProps = {
   id: string;
 };
 
-export function TxApprove({ id }: TxApproveProps) {
+export function TxApprove() {
+  const id = 'aisdjadsijds';
   const { account, isLoading } = useAccount();
   const {
     txRequest,
