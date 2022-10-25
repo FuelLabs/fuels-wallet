@@ -8,7 +8,7 @@ export async function mockData(page: Page) {
   const wallet = Wallet.generate({
     provider: VITE_FUEL_PROVIDER_URL,
   });
-  const networks = await page.evaluate(
+  await page.evaluate(
     ([accountData, providerUrl]) => {
       return new Promise((resolve, reject) => {
         (async function main() {
@@ -63,6 +63,4 @@ export async function mockData(page: Page) {
       VITE_FUEL_PROVIDER_URL,
     ]
   );
-  console.log(networks);
-  await page.reload();
 }
