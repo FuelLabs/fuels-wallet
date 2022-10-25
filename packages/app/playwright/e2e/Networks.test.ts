@@ -64,14 +64,14 @@ test.describe('Networks', () => {
     const networkSelector = await getByAriaLabel(page, 'Selected Network');
     await expect(networkSelector).toHaveText('Local');
     await visit(page, '/networks');
-    const anotherNetwork = await hasText(page, /Another/i);
+    await hasText(page, /Another/i);
     const network1 = await getByAriaLabel(page, 'fuel_network-item-1');
     await expect(network1).toHaveAttribute('data-active', 'true');
+    const anotherNetwork = await getByAriaLabel(page, 'fuel_network-item-2');
     await anotherNetwork.click();
     await visit(page, '/wallet');
-    await expect(getByAriaLabel(page, 'Selected Network')).toHaveText(
-      /Another/i
-    );
+    const selector = await getByAriaLabel(page, 'Selected Network');
+    await expect(selector).toHaveText(/Another/i);
   });
 
   test('should be able to remove a network', async () => {
