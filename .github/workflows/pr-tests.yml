@@ -60,6 +60,7 @@ jobs:
         run: xvfb-run --auto-servernum -- pnpm test:e2e
         env:
           NODE_ENV: test
+          E2E_PORT: 3000
 
       - uses: actions/upload-artifact@v2
         if: always()
