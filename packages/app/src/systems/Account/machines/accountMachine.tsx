@@ -91,7 +91,7 @@ export const accountMachine = createMachine(
       },
     },
     services: {
-      fetchAccount: FetchMachine.create<never, Account>({
+      fetchAccount: FetchMachine.create<never, Account | undefined>({
         showError: true,
         async fetch() {
           const selectedNetwork = await NetworkService.getSelectedNetwork();
@@ -100,7 +100,7 @@ export const accountMachine = createMachine(
           const accounts = await AccountService.getAccounts();
           const account = accounts[0];
           if (!account) {
-            throw new Error('Account not found');
+            return undefined;
           }
           return AccountService.fetchBalance({ account, providerUrl });
         },
