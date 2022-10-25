@@ -7,7 +7,6 @@ import { dappRoutes } from './systems/DApp/routes';
 import { PrivateRoute, PublicRoute } from '~/systems/Core';
 import { Pages } from '~/systems/Core/types';
 import { homeRoutes } from '~/systems/Home';
-import { landingPageRoutes } from '~/systems/LandingPage';
 import { networkRoutes } from '~/systems/Network';
 import { signUpRoutes } from '~/systems/SignUp';
 import { WalletCreatedPage } from '~/systems/SignUp/pages';
@@ -23,7 +22,6 @@ const walletRoutes = (
 export const webAppRoutes = (
   <Routes>
     <Route>
-      {landingPageRoutes}
       <Route element={<PublicRoute />}>{signUpRoutes}</Route>
       <Route element={<PrivateRoute />}>
         <Route
