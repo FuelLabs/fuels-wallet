@@ -1,7 +1,13 @@
 import type { Browser, Page } from '@playwright/test';
-import test, { chromium, expect } from '@playwright/test';
+import test, { chromium } from '@playwright/test';
 
-import { getButtonByText, getByAriaLabel, hasText, visit } from '../commons';
+import {
+  getButtonByText,
+  getByAriaLabel,
+  hasText,
+  visit,
+  waitUrl,
+} from '../commons';
 
 test.describe('CreateWallet', () => {
   let browser: Browser;
@@ -14,7 +20,7 @@ test.describe('CreateWallet', () => {
 
   test('should be redirect to /signup by default', async () => {
     await visit(page, '/');
-    expect(page.url()).toContain('/sign-up');
+    await waitUrl(page, '/sign-up');
   });
 
   test('should be able to create wallet and see first account created', async () => {

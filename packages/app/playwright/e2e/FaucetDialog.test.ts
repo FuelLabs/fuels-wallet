@@ -13,10 +13,9 @@ test.describe('RecoverWallet', () => {
     page = await browser.newPage();
   });
 
-  test('should be able to recover a wallet', async () => {
+  test('should be able to faucet a wallet', async () => {
     await visit(page, '/wallet');
     await mockData(page);
-    await page.reload();
 
     /** Needs to have Faucet button */
     await getButtonByText(page, /Faucet/i).click();
