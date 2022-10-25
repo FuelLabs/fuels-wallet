@@ -8,7 +8,7 @@ export async function mockData(page: Page) {
   const wallet = Wallet.generate({
     provider: VITE_FUEL_PROVIDER_URL,
   });
-  await page.evaluate(
+  const networks = await page.evaluate(
     ([accountData, providerUrl]) => {
       return new Promise((resolve, reject) => {
         (async function main() {
@@ -42,7 +42,8 @@ export async function mockData(page: Page) {
                 name: 'Another',
                 url: 'https://another.network.fuel/graphql',
               });
-              resolve(true);
+              const networks = await database.networks.toArray();
+              resolve(networks);
             } catch (err: unknown) {
               reject(err);
             }
@@ -62,5 +63,6 @@ export async function mockData(page: Page) {
       VITE_FUEL_PROVIDER_URL,
     ]
   );
+  console.log(networks);
   await page.reload();
 }
