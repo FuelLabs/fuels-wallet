@@ -33,7 +33,7 @@ export function WalletCreated({ account }: WalletCreatedProps) {
         subtitle="These are your Fuel wallet details"
       />
       {account && <AccountItem account={account} />}
-      <Button size="sm" color="accent" onPress={handleGoToWallet}>
+      <Button color="accent" onPress={handleGoToWallet}>
         Go to wallet
       </Button>
     </Stack>

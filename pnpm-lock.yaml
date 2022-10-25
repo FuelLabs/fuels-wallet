@@ -83,9 +83,9 @@ importers:
       '@fuel-ts/wallet': ^0.17.0
       '@fuel-ts/wallet-manager': ^0.17.0
       '@fuel-ui/config': ^0.8.0
-      '@fuel-ui/css': ^0.8.0
-      '@fuel-ui/react': ^0.8.0
-      '@fuel-ui/test-utils': ^0.8.0
+      '@fuel-ui/css': ^0.9.0
+      '@fuel-ui/react': ^0.9.0
+      '@fuel-ui/test-utils': ^0.9.0
       '@fuels-wallet/sdk': workspace:*
       '@fuels-wallet/types': workspace:*
       '@fuels-wallet/xstore': workspace:*
@@ -161,9 +161,9 @@ importers:
       '@fuel-ts/wallet': 0.17.0
       '@fuel-ts/wallet-manager': 0.17.0
       '@fuel-ui/config': 0.8.0_typescript@4.8.4
-      '@fuel-ui/css': 0.8.0
-      '@fuel-ui/react': 0.8.0_6tik66iy7jhr6ml4nfkfiwduqm
-      '@fuel-ui/test-utils': 0.8.0_kufb3akraesyttxwneryre2ase
+      '@fuel-ui/css': 0.9.0
+      '@fuel-ui/react': 0.9.0_6tik66iy7jhr6ml4nfkfiwduqm
+      '@fuel-ui/test-utils': 0.9.0_kufb3akraesyttxwneryre2ase
       '@fuels-wallet/sdk': link:../sdk
       '@fuels-wallet/types': link:../types
       '@fuels-wallet/xstore': link:../store
@@ -2619,11 +2619,21 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
-  /@fuel-ui/react/0.8.0_6tik66iy7jhr6ml4nfkfiwduqm:
+  /@fuel-ui/css/0.9.0:
+    resolution: {integrity: sha512-5pFJ37fgXlic3kEf8wrCC8cSt+7ufkEWNPYWliy9+2eoAD2GjXUH/cEOYnPrPYTQpp5ZPvJticaLYSjdMZYgQw==}
+    dependencies:
+      '@radix-ui/colors': 0.1.8
+      '@stitches/react': 1.2.8_react@18.2.0
+      classnames: 2.3.2
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /@fuel-ui/react/0.8.0_brleimwi42sgjvd2q5ndckrqka:
     resolution: {integrity: sha512-4As9g/Df3ucmm3Qs1iZalq8oJLs+rcQQA243I7p57WLtvennyKvwat+4jvOoF7MySFfhEk2IVKiFaCICmRq3jg==}
     dependencies:
       '@fuel-ui/css': 0.8.0
-      '@fuel-ui/test-utils': 0.8.0_kufb3akraesyttxwneryre2ase
+      '@fuel-ui/test-utils': 0.8.0_gecc5cmia5rwveu3jbd2qltz4e
       '@radix-ui/react-accordion': 1.0.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.0_rj7ozvcq3uehdlnj3cbwzbi5ce
       '@radix-ui/react-aspect-ratio': 1.0.0_biqbaboplfbrettd7655fr4n2y
@@ -2670,11 +2680,11 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/react/0.8.0_brleimwi42sgjvd2q5ndckrqka:
-    resolution: {integrity: sha512-4As9g/Df3ucmm3Qs1iZalq8oJLs+rcQQA243I7p57WLtvennyKvwat+4jvOoF7MySFfhEk2IVKiFaCICmRq3jg==}
+  /@fuel-ui/react/0.9.0_6tik66iy7jhr6ml4nfkfiwduqm:
+    resolution: {integrity: sha512-pvaYia9Lrk06pjsrULMw4s0FDgd4vRo64YxlMhdXiUz53pQsQ02LuMsDRoJoBqaWsecz0SsvESnQWpR2URyltQ==}
     dependencies:
-      '@fuel-ui/css': 0.8.0
-      '@fuel-ui/test-utils': 0.8.0_gecc5cmia5rwveu3jbd2qltz4e
+      '@fuel-ui/css': 0.9.0
+      '@fuel-ui/test-utils': 0.9.0_kufb3akraesyttxwneryre2ase
       '@radix-ui/react-accordion': 1.0.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.0_rj7ozvcq3uehdlnj3cbwzbi5ce
       '@radix-ui/react-aspect-ratio': 1.0.0_biqbaboplfbrettd7655fr4n2y
@@ -2762,8 +2772,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.8.0_kufb3akraesyttxwneryre2ase:
-    resolution: {integrity: sha512-mwAjBsCmWzXEpNoOzwTo0D3hwfEWjlAAhSC4TbYT5LD2Z7KBOjuPSO+EaGzzXyDgkVqRjw0KB9orjfu6NT6g6Q==}
+  /@fuel-ui/test-utils/0.9.0_kufb3akraesyttxwneryre2ase:
+    resolution: {integrity: sha512-dMwrQK0ubkTi3B6DSscLZn0pUR/UHclsdIWWB3oEw9u0+UXwbbPCsr08TtGwF/aMqtUWJ416C/6qDGqN1Lbazg==}
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
@@ -2780,7 +2790,7 @@ packages:
       jest-axe: 6.0.0
       jest-environment-jsdom: 29.2.1
       jest-fail-on-console: 3.0.1
-      jest-matcher-utils: 29.1.2
+      jest-matcher-utils: 29.2.1
       jest-transform-stub: 2.0.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -14152,7 +14162,7 @@ packages:
     resolution: {integrity: sha512-m0NvkX55LDt9T4mctTEgnZk3fmEg3NRYutvMPWM/0iPnkFj2wIeF45O1718cMSOFO1vINkqmxqD8vE37uTEbqw==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
-      chalk: 4.1.0
+      chalk: 4.1.2
       diff-sequences: 27.5.1
       jest-get-type: 27.5.1
       pretty-format: 27.5.1
@@ -14305,7 +14315,7 @@ packages:
     resolution: {integrity: sha512-Qczi5xnTNjkhcIB0Yy75Txt+Ez51xdhOxsukN7awzq2auZQGPHcQrJ623PZj0ECDEMOk2soxWx05EXdXGd1CbA==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
-      chalk: 4.1.0
+      chalk: 4.1.2
       jest-diff: 27.5.1
       jest-get-type: 27.5.1
       pretty-format: 27.5.1
