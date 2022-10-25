@@ -27,6 +27,8 @@ jobs:
 
       - name: Build Application
         run: pnpm build:all
+        env:
+          NODE_ENV: test
 
       # Unit tests running with JEST
       # - name: Find PR number
