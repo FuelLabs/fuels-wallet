@@ -1,5 +1,7 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
+import { fetch } from 'cross-fetch';
+import { join } from 'path';
 
 import {
   getButtonByText,
@@ -9,6 +11,8 @@ import {
   waitUrl,
 } from '../commons';
 
+const { VITE_FUEL_PROVIDER_URL } = process.env;
+
 test.describe('CreateWallet', () => {
   let browser: Browser;
   let page: Page;
@@ -16,6 +20,15 @@ test.describe('CreateWallet', () => {
   test.beforeAll(async () => {
     browser = await chromium.launch();
     page = await browser.newPage();
+    console.log('fetch provider', VITE_FUEL_PROVIDER_URL);
+    await fetch(join('http://localhost:4001', '/playground'))
+      .then((data) => data.text())
+      .then((data) => {
+        console.log('return', data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   });
 
   test('should be redirect to /signup by default', async () => {
