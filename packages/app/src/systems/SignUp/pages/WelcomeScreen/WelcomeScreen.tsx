@@ -18,14 +18,12 @@ export function WelcomeScreen() {
         />
         <Flex direction="column" gap="$2">
           <Button
-            size="sm"
             color="accent"
             onPress={() => navigate(Pages.signUpCreateWallet())}
           >
             Create a Wallet
           </Button>
           <Button
-            size="sm"
             color="gray"
             variant="ghost"
             onPress={() => navigate(Pages.signUpRecoverWallet())}

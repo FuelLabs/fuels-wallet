@@ -48,7 +48,6 @@ export function MnemonicWrite({
       </Stack>
       <Flex gap="$4">
         <Button
-          size="sm"
           color="gray"
           variant="ghost"
           css={{ width: 130 }}
@@ -57,7 +56,6 @@ export function MnemonicWrite({
           Cancel
         </Button>
         <Button
-          size="sm"
           color="accent"
           css={{ width: 130 }}
           onPress={onNext}
