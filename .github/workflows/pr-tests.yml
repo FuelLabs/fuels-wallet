@@ -14,6 +14,7 @@ env:
 
 jobs:
   tests-jest:
+    name: JEST Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -56,6 +57,7 @@ jobs:
         run: pnpm node:dev stop --test --debug
 
   tests-e2e:
+    name: E2E Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
