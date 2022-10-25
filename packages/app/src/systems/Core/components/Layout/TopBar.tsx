@@ -46,7 +46,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
 
   return (
     <Flex as="nav" className={style({ isHome })}>
-      <Flex css={{ alignItems: 'center', gap: '$5', flex: 1 }}>
+      <Flex css={{ alignItems: 'center', gap: '$2', flex: 1 }}>
         {!isHome ? (
           <>
             <IconButton
@@ -65,7 +65,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
           </>
         ) : (
           <>
-            <FuelLogo size={36} />
+            <FuelLogo size={40} />
             {isLoading && <Spinner aria-label="Spinner" />}
             {networks && !isLoading && (
               <NetworkDropdown
@@ -79,7 +79,8 @@ function InternalTopBar({ onBack }: TopBarProps) {
       <Drawer type="menu" size={220} containerRef={ref}>
         <Drawer.Trigger>
           <IconButton
-            icon={<Icon icon="List" color="gray8" size={24} />}
+            iconSize={24}
+            icon={<Icon icon="List" color="gray8" />}
             aria-label="Menu"
             variant="link"
             css={{ px: '0 !important' }}

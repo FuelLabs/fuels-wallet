@@ -25,9 +25,7 @@ export function SignUpFailed({ error }: SignUpFailedProps) {
       <Alert status="error">
         <Alert.Description>{error?.toString()}</Alert.Description>
       </Alert>
-      <Button size="sm" color="accent">
-        Back
-      </Button>
+      <Button color="accent">Back</Button>
     </Stack>
   );
 }
