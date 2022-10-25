@@ -11,3 +11,5 @@ export function getPhraseFromValue(value?: string | string[]) {
   }
   return value;
 }
+
+export const uniqueId = () => Math.random().toString(16).slice(2);

@@ -1,7 +1,24 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { TransactionResult } from 'fuels';
+import type {
+  CallResult,
+  CoinTransactionRequestInput,
+  CoinTransactionRequestOutput,
+  TransactionRequestInput,
+  TransactionRequestLike,
+  TransactionResponse,
+} from 'fuels';
 
 import type { AddressType } from '../Account';
+
+export enum TxType {
+  request,
+  response,
+}
+
+export enum TxStatus {
+  pending,
+  success,
+  error,
+}
 
 export enum TxState {
   default,
@@ -15,4 +32,16 @@ export type TxRecipientAddress = {
   type: AddressType;
 };
 
-export type Transaction = TransactionResult<any>;
+export type TxRequest = TransactionRequestLike;
+export type TxSimulateResult = CallResult;
+export type TxInput = TransactionRequestInput;
+export type TxInputCoin = CoinTransactionRequestInput;
+export type TxOutputCoin = CoinTransactionRequestOutput;
+export type TxResponse = TransactionResponse;
+
+export type Transaction = {
+  id?: string;
+  type: TxType;
+  status?: TxStatus;
+  data?: TxRequest | TxResponse;
+};

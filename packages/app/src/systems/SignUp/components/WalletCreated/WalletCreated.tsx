@@ -29,7 +29,7 @@ export function WalletCreated({ account }: WalletCreatedProps) {
         />
       </Flex>
       <Header
-        title="Wallet created succesfully"
+        title="Wallet created successfully"
         subtitle="These are your Fuel wallet details"
       />
       {account && <AccountItem account={account} />}

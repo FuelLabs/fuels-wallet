@@ -4,6 +4,7 @@ export const {
   VITE_FUEL_PROVIDER_URL,
   VITE_FAUCET_RECAPTCHA_KEY,
   VITE_FUEL_FAUCET_URL,
+  VITE_ADDR_OWNER,
   VITE_CRX,
   NODE_ENV,
 } = import.meta.env;
@@ -18,7 +19,6 @@ export const WALLET_HEIGHT = 600;
 export const TAB_BAR_HEIGHT = 30;
 export const IS_CRX = VITE_CRX === 'true';
 export const IS_LOGGED_KEY = 'fuel__isLogged';
-export const IS_LOCKED_KEY = 'fuel__isLocked';
 export const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 export const IS_CRX_POPUP =
   IS_CRX && globalThis.location.pathname === CRXPages.popup;

@@ -1,0 +1,43 @@
+{
+  "name": "@fuels-wallet/sdk",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "main": "src/index.ts",
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "typings": "dist/index.d.ts",
+    "exports": {
+      ".": {
+        "require": "dist/index.js",
+        "default": "dist/index.mjs"
+      }
+    },
+    "files": [
+      "dist"
+    ]
+  },
+  "scripts": {
+    "build": "pnpm ts:check && tsup --dts",
+    "ts:check": "tsc --noEmit",
+    "test": "jest -c jest.config.json --passWithNoTests",
+    "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
+  },
+  "dependencies": {
+    "dexie-observable": "3.0.0-beta.11",
+    "events": "^3.3.0",
+    "json-rpc-2.0": "^1.4.1",
+    "uuid": "^9.0.0",
+    "xstate": "^4.33.6"
+  },
+  "devDependencies": {
+    "@fuels-wallet/types": "workspace:*",
+    "@types/chrome": "^0.0.197",
+    "@types/uuid": "^8.3.4",
+    "jest-webextension-mock": "^3.7.22",
+    "ts-jest": "^29.0.3",
+    "tsup": "^6.2.3"
+  }
+}
