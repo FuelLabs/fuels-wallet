@@ -13,7 +13,46 @@ env:
   COVERAGE_FILE: ./coverage/report.json
 
 jobs:
-  tests:
+  tests-jest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/setup-docker
+        with:
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Start Test Node
+        run: pnpm node:dev start --test --debug
+
+      # Unit tests running with JEST
+      - name: Find PR number
+        uses: jwalton/gh-find-current-pr@v1
+        id: findPr
+
+      - name: Run Jest Tests
+        run: |
+          pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
+
+      - name: Run tests with coverage
+        uses: artiomtr/jest-coverage-report-action@v2.0.5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          package-manager: pnpm
+          annotations: failed-tests
+          test-script: pnpm test:ci
+          prnumber: ${{ steps.findPr.outputs.number }}
+          skip-test: all
+          working-directory: ./packages/app
+          coverage-file: ${{ env.COVERAGE_FILE }}
+          base-coverage-file: ${{ env.COVERAGE_FILE }}
+        env:
+          NODE_ENV: test
+
+      - name: Stop Test Node
+        run: pnpm node:dev stop --test --debug
+
+  tests-e2e:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -29,30 +68,6 @@ jobs:
         run: pnpm build:all
         env:
           NODE_ENV: test
-
-      # Unit tests running with JEST
-      # - name: Find PR number
-      #   uses: jwalton/gh-find-current-pr@v1
-      #   id: findPr
-
-      # - name: Run Unit Tests
-      #   run: |
-      #     pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
-
-      # - name: Run tests with coverage
-      #   uses: artiomtr/jest-coverage-report-action@v2.0.5
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     package-manager: pnpm
-      #     annotations: failed-tests
-      #     test-script: pnpm test:ci
-      #     prnumber: ${{ steps.findPr.outputs.number }}
-      #     skip-test: all
-      #     working-directory: ./packages/app
-      #     coverage-file: ${{ env.COVERAGE_FILE }}
-      #     base-coverage-file: ${{ env.COVERAGE_FILE }}
-      #   env:
-      #     NODE_ENV: test
       
       # E2E tests running with Playwright
       - name: Install Playwright Browsers
