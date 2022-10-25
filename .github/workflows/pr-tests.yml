@@ -22,7 +22,6 @@ jobs:
         with:
           password: ${{ secrets.GITHUB_TOKEN }}
 
-
       - name: Start Test Node
         run: pnpm node:dev start --test --debug
 
@@ -50,6 +49,8 @@ jobs:
           working-directory: ./packages/app
           coverage-file: ${{ env.COVERAGE_FILE }}
           base-coverage-file: ${{ env.COVERAGE_FILE }}
+        env:
+          NODE_ENV: test
       
       # E2E tests running with Playwright
       - name: Install Playwright Browsers
@@ -57,6 +58,8 @@ jobs:
 
       - name: Run E2E Tests
         run: xvfb-run --auto-servernum -- pnpm test:e2e
+        env:
+          NODE_ENV: test
 
       - uses: actions/upload-artifact@v2
         if: always()
