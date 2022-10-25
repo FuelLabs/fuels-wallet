@@ -69,7 +69,9 @@ test.describe('Networks', () => {
     await expect(network1).toHaveAttribute('data-active', 'true');
     await anotherNetwork.click();
     await visit(page, '/wallet');
-    await expect(networkSelector).toHaveText(/Another/i);
+    await expect(getByAriaLabel(page, 'Selected Network')).toHaveText(
+      /Another/i
+    );
   });
 
   test('should be able to remove a network', async () => {
