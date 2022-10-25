@@ -40,7 +40,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
       )}
       {!isAccount && (
         <Box css={styles.iconWrapper}>
-          <Icon icon={Icon.is('Code')} size={18} />
+          <Icon icon={Icon.is('Code')} size={16} />
         </Box>
       )}
       <Flex css={styles.info}>
@@ -52,8 +52,9 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
 
 const styles = {
   root: cssObj({
-    minWidth: '130px',
-    py: '$4',
+    // minWidth: '130px',
+    flex: 1,
+    py: '$5',
     px: '$3',
     display: 'inline-flex',
     alignItems: 'center',
@@ -70,7 +71,7 @@ const styles = {
     fontWeight: '$semibold',
   }),
   iconWrapper: cssObj({
-    padding: '$4',
+    padding: '$5',
     background: '$gray3',
     borderRadius: '$full',
   }),

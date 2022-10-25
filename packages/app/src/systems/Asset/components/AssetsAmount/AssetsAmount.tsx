@@ -11,17 +11,22 @@ import type { TxInputCoin, TxOutputCoin } from '~/systems/Transaction';
 
 export type AssetsAmountProps = {
   amounts: Asset[] | TxOutputCoin[] | TxInputCoin[];
+  title?: string;
 };
 
-export function AssetsAmount({ amounts }: AssetsAmountProps) {
+export function AssetsAmount({ amounts, title }: AssetsAmountProps) {
   return (
     <Card css={styles.card}>
-      {amounts.map((item) => {
+      <Text as="h3" css={{ fontSize: '$sm', fontWeight: '$semibold' }}>
+        {title}
+      </Text>
+      {amounts.map((item, i) => {
         const asset = getAssetInfoById(item.assetId, item);
         const amount = bn(asset.amount);
+        const isLast = i === amounts.length - 1;
 
         return (
-          <Grid key={asset.assetId.toString()} css={styles.root}>
+          <Grid key={asset.assetId.toString()} css={styles.root(isLast)}>
             <Flex css={styles.asset}>
               <Avatar
                 name={asset.name}
@@ -31,7 +36,9 @@ export function AssetsAmount({ amounts }: AssetsAmountProps) {
               <Text as="span">{asset.name}</Text>
             </Flex>
             <Copyable value={asset.assetId} css={styles.address}>
-              {shortAddress(asset.assetId)}
+              <Text fontSize="xs" css={{ mt: '$1' }}>
+                {shortAddress(asset.assetId)}
+              </Text>
             </Copyable>
             <Flex css={styles.amount(false)}>
               {amount.formatUnits(MAX_FRACTION_DIGITS)} {asset.symbol}
@@ -50,12 +57,15 @@ const styles = {
     flexDirection: 'column',
     gap: '$2',
   }),
-  root: cssObj({
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gridTemplateRows: 'repeat(2, 1fr)',
-    fontWeight: '$semibold',
-    color: '$gray12',
-  }),
+  root: (isLast: boolean) =>
+    cssObj({
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gridTemplateRows: 'repeat(2, 1fr)',
+      fontWeight: '$semibold',
+      color: '$gray12',
+      borderBottom: isLast ? 'none' : '1px dashed $gray3',
+      pb: '$2',
+    }),
   asset: cssObj({
     alignItems: 'center',
     gap: '$2',
@@ -77,6 +87,10 @@ const styles = {
       gridColumn: '2 / 3',
       textAlign: 'right',
       fontSize: '$sm',
-      color: isPositive ? '$accent11' : '$gray11',
+      color: isPositive ? '$accent11' : '$gray12',
+      alignItems: 'center',
+      '&:before': {
+        content: isPositive ? "'+'" : "'-'",
+      },
     }),
 };
