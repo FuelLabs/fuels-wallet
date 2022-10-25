@@ -29,28 +29,28 @@ jobs:
         run: pnpm build:all
 
       # Unit tests running with JEST
-      - name: Find PR number
-        uses: jwalton/gh-find-current-pr@v1
-        id: findPr
+      # - name: Find PR number
+      #   uses: jwalton/gh-find-current-pr@v1
+      #   id: findPr
 
-      - name: Run Unit Tests
-        run: |
-          pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
+      # - name: Run Unit Tests
+      #   run: |
+      #     pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
 
-      - name: Run tests with coverage
-        uses: artiomtr/jest-coverage-report-action@v2.0.5
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          package-manager: pnpm
-          annotations: failed-tests
-          test-script: pnpm test:ci
-          prnumber: ${{ steps.findPr.outputs.number }}
-          skip-test: all
-          working-directory: ./packages/app
-          coverage-file: ${{ env.COVERAGE_FILE }}
-          base-coverage-file: ${{ env.COVERAGE_FILE }}
-        env:
-          NODE_ENV: test
+      # - name: Run tests with coverage
+      #   uses: artiomtr/jest-coverage-report-action@v2.0.5
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     package-manager: pnpm
+      #     annotations: failed-tests
+      #     test-script: pnpm test:ci
+      #     prnumber: ${{ steps.findPr.outputs.number }}
+      #     skip-test: all
+      #     working-directory: ./packages/app
+      #     coverage-file: ${{ env.COVERAGE_FILE }}
+      #     base-coverage-file: ${{ env.COVERAGE_FILE }}
+      #   env:
+      #     NODE_ENV: test
       
       # E2E tests running with Playwright
       - name: Install Playwright Browsers
