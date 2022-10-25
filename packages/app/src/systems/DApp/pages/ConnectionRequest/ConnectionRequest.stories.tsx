@@ -1,14 +1,14 @@
-import type { Meta, StoryFn } from '@storybook/react';
+import type { Meta, Story } from '@storybook/react';
 import { graphql } from 'msw';
 
-import { Home } from './Home';
+import { ConnectionRequest } from './ConnectionRequest';
 
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 import { MOCK_ASSETS_NODE } from '~/systems/Asset/__mocks__/assets';
 
 export default {
-  component: Home,
-  title: 'Home/Pages/Home',
+  component: ConnectionRequest,
+  title: 'DApp/Pages/ConnectionRequest',
   parameters: {
     layout: 'fullscreen',
     viewport: {
@@ -24,9 +24,8 @@ export default {
   ],
 } as Meta;
 
-export const NoAssets: StoryFn<unknown> = () => <Home />;
-export const WithAssets: StoryFn<unknown> = () => <Home />;
-WithAssets.parameters = {
+export const Usage: Story<unknown> = () => <ConnectionRequest />;
+Usage.parameters = {
   msw: [
     graphql.query('getBalances', (req, res, ctx) => {
       return res(
