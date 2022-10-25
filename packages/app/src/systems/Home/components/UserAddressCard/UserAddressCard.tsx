@@ -12,22 +12,8 @@ export function UserAddressCard({ account }: Props) {
   }, []);
 
   return (
-    <Card
-      css={{
-        p: '24px',
-        gap: '$3',
-        borderRadius: '$lg',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Avatar.Generated
-        css={{ width: 90, height: 90 }}
-        hash={account as string}
-        size="2xl"
-        background="fuel"
-      />
+    <Card css={styles.wrapper}>
+      <Avatar.Generated hash={account as string} size="2xl" background="fuel" />
       <Copyable
         css={styles.accountText}
         aria-label="account-preview"
@@ -49,6 +35,14 @@ export function UserAddressCard({ account }: Props) {
 }
 
 const styles = {
+  wrapper: cssObj({
+    p: '24px',
+    gap: '$3',
+    borderRadius: '$lg',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }),
   accountText: cssObj({
     fontSize: '$xs',
     fontWeight: '$bold',
