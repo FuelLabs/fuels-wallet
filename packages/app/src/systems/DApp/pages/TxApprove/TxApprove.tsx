@@ -35,7 +35,7 @@ export function TxApprove({ id, url }: TxApproveProps) {
         <UnlockDialog isFullscreen onUnlock={() => {}} isOpen={false} />
         {!isLoading && !isSent && (
           <Stack gap="$4">
-            {url && account && <ConnectInfo url={url} account={account} />}
+            {url && account && <ConnectInfo origin={url} account={account} />}
             <Stack gap="$2">
               <HelperIcon as="h2" message="Some message">
                 Assets amount
