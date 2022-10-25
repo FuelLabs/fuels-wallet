@@ -6,8 +6,8 @@ const { E2E_PORT = 9000 } = process.env;
 const distDirectory = join(__dirname, './dist');
 
 const config: PlaywrightTestConfig = {
-  testMatch: join(__dirname, './playwright/**/*.test.ts'),
-  testDir: join(__dirname, './playwright/'),
+  testMatch: join(__dirname, './playwright/e2e/**/*.test.ts'),
+  testDir: join(__dirname, './playwright/e2e/'),
   webServer: {
     command: `pnpm exec http-server -s -p ${E2E_PORT} ${distDirectory}`,
     port: Number(E2E_PORT),
@@ -16,7 +16,7 @@ const config: PlaywrightTestConfig = {
   use: {
     baseURL: `http://localhost:${E2E_PORT}/`,
     permissions: ['clipboard-read', 'clipboard-write'],
-    headless: false,
+    headless: true,
   },
 };
 

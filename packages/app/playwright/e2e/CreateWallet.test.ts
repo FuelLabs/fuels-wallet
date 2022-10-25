@@ -1,6 +1,5 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
-import { fetch } from 'cross-fetch';
 
 import {
   getButtonByText,
@@ -10,8 +9,6 @@ import {
   waitUrl,
 } from '../commons';
 
-const { E2E_PORT = 9000 } = process.env;
-
 test.describe('CreateWallet', () => {
   let browser: Browser;
   let page: Page;
@@ -19,15 +16,6 @@ test.describe('CreateWallet', () => {
   test.beforeAll(async () => {
     browser = await chromium.launch();
     page = await browser.newPage();
-    console.log('fetch provider', E2E_PORT);
-    await fetch(`http://localhost:${E2E_PORT}/wallet`)
-      .then((data) => data.text())
-      .then((data) => {
-        console.log('return', data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
   });
 
   test('should be redirect to /signup by default', async () => {
