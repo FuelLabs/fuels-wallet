@@ -1,4 +1,4 @@
-name: CRX E2E Tests
+name: Tests
 
 on:
   pull_request:
