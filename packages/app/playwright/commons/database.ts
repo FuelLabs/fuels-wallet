@@ -4,8 +4,6 @@ import { Wallet } from 'fuels';
 
 const { VITE_FUEL_PROVIDER_URL } = process.env;
 
-console.log('VITE_FUEL_PROVIDER_URL', VITE_FUEL_PROVIDER_URL);
-
 export async function injectIndexedDB(page: Page) {
   const wallet = Wallet.generate({
     provider: VITE_FUEL_PROVIDER_URL,

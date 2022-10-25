@@ -69,7 +69,8 @@ test.describe('Networks', () => {
     const network1 = await getByAriaLabel(page, 'fuel_network-item-1');
     await expect(network1).toHaveAttribute('data-active', 'true');
     await anotherNetwork.click();
-    await visit(page, '/wallet');
+    await visit(page, '/');
+    await page.reload();
     await expect(networkSelector).toHaveText('Another');
   });
 
