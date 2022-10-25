@@ -22,8 +22,12 @@ jobs:
         with:
           password: ${{ secrets.GITHUB_TOKEN }}
 
+
       - name: Start Test Node
         run: pnpm node:dev start --test --debug
+
+      - name: Build Application
+        run: pnpm build:all
 
       # Unit tests running with JEST
       - name: Find PR number
@@ -48,9 +52,6 @@ jobs:
           base-coverage-file: ${{ env.COVERAGE_FILE }}
       
       # E2E tests running with Playwright
-      - name: Build Application
-        run: pnpm build:all
-
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
