@@ -30,7 +30,7 @@ export type MachineEvents =
   | { type: 'CONNECT'; input: string }
   | { type: 'DISCONNECT'; input: Connection }
   | { type: 'AUTHORIZE'; input: Array<string> }
-  | { type: 'REJECT'; input: void };
+  | { type: 'REJECT' };
 
 export const connectMachine = createMachine(
   {
@@ -48,29 +48,28 @@ export const connectMachine = createMachine(
     id: '(machine)',
     initial: 'idle',
     states: {
-      idle: {
-        on: {
-          CONNECT: {
-            actions: ['setOrigin'],
-            target: 'connecting',
-          },
-          DISCONNECT: {
-            target: 'disconnecting',
-          },
-        },
-      },
+      idle: {},
       connecting: {
         initial: 'fetchAuthorizedConnection',
         states: {
-          idle: {},
+          authorizing: {
+            on: {
+              AUTHORIZE: {
+                target: 'authorizeApp',
+              },
+              REJECT: {
+                actions: [assignErrorMessage('Connection rejected!')],
+                target: '#(machine).failed',
+              },
+            },
+          },
           fetchAuthorizedConnection: {
             invoke: {
               src: 'fetchConnection',
               data: {
-                input: (
-                  _: MachineContext,
-                  ev: Extract<MachineEvents, { type: 'CONNECT' }>
-                ) => ev.input,
+                input: (ctx: MachineContext) => ({
+                  origin: ctx.origin,
+                }),
               },
               onDone: [
                 FetchMachine.errorState('#(machine).failed'),
@@ -80,7 +79,7 @@ export const connectMachine = createMachine(
                   target: '#(machine).done',
                 },
                 {
-                  target: 'idle',
+                  target: 'authorizing',
                 },
               ],
             },
@@ -107,37 +106,38 @@ export const connectMachine = createMachine(
             },
           },
         },
-        on: {
-          AUTHORIZE: {
-            target: '.authorizeApp',
-          },
-          REJECT: {
-            actions: [assignErrorMessage('Connection rejected!')],
-            target: '#(machine).failed',
-          },
-        },
       },
       disconnecting: {
         invoke: {
           src: 'removeConnection',
+          data: {
+            input: (
+              _: MachineContext,
+              ev: Extract<MachineEvents, { type: 'DISCONNECT' }>
+            ) => ev.input,
+          },
           onDone: [
             FetchMachine.errorState('failed'),
             {
               actions: 'setDisconnected',
-              target: 'idle',
+              target: 'done',
             },
           ],
         },
       },
       done: {
         type: 'final',
-        on: {
-          DISCONNECT: {
-            target: 'disconnecting',
-          },
-        },
       },
       failed: {},
+    },
+    on: {
+      CONNECT: {
+        actions: ['setOrigin'],
+        target: 'connecting',
+      },
+      DISCONNECT: {
+        target: 'disconnecting',
+      },
     },
   },
   {

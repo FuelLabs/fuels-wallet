@@ -29,13 +29,14 @@ describe('signMachine', () => {
   });
 
   it('should sign message', async () => {
+    const DATA = {
+      origin: 'foo.com',
+      message: 'test message',
+    };
     await waitFor(service, (state) => state.matches('idle'));
 
     service.send('START_SIGN', {
-      input: {
-        origin: 'foo.com',
-        message: 'test message',
-      },
+      input: DATA,
     });
 
     await waitFor(service, (state) => state.matches('reviewMessage'));
@@ -52,10 +53,11 @@ describe('signMachine', () => {
     });
 
     await waitFor(service, (state) => state.matches('signingMessage'));
-    const { matches } = await waitFor(service, (state) =>
+    const { context } = await waitFor(service, (state) =>
       state.matches('done')
     );
-    expect(matches('done')).toBeTruthy();
+    const signature = wallet.signMessage(DATA.message);
+    expect(context.signedMessage).toEqual(signature);
   });
 
   it('should reject sign message', async () => {

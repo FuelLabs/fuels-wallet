@@ -6,7 +6,7 @@ import { useConnectRequestMethods } from '../methods';
 
 const selectors = {
   isConnecting: (state: ConnectMachineState) => {
-    return state.matches('connecting');
+    return state.matches('connecting.authorizing');
   },
   origin: (state: ConnectMachineState) => {
     return state.context.origin;
