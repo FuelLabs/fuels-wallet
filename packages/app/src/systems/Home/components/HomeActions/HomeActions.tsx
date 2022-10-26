@@ -12,7 +12,6 @@ export const HomeActions = ({ isDisabled }: HomeActionsProps) => {
         Send
       </Button>
       <Button
-        size="sm"
         isDisabled={isDisabled}
         variant="outlined"
         color="gray"
@@ -33,7 +32,6 @@ const styles = {
   }),
   button: cssObj({
     borderRadius: 40,
-    marginLeft: '$1',
     flex: 1,
     py: '$5',
   }),
