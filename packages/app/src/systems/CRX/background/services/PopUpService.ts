@@ -130,4 +130,8 @@ export class PopUpService {
   async requestConnection(origin: string) {
     return this.client.request('requestConnection', { origin });
   }
+
+  async signMessage(origin: string, message: string) {
+    return this.client.request('signMessage', { origin, message });
+  }
 }

@@ -2,8 +2,7 @@ import { Route } from 'react-router-dom';
 
 import { Pages } from '../Core/types';
 
-import { SignatureRequest } from './pages';
-import { ConnectionRequest } from './pages/ConnectionRequest';
+import { SignatureRequest, ConnectionRequest } from './pages';
 
 export const dappRoutes = (
   <Route path={Pages.request()}>

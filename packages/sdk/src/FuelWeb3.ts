@@ -39,6 +39,16 @@ export class FuelWeb3 extends WindowConnection {
     return this.client.request('accounts');
   }
 
+  async signMessage(address: string, message: string): Promise<string> {
+    if (!message.trim()) {
+      throw new Error('Message is required');
+    }
+    return this.client.request('signMessage', {
+      address,
+      message,
+    });
+  }
+
   on<E extends FuelWeb3Events['type'], D extends FuelWeb3EventArg<E>>(
     eventName: E,
     listener: (data: D) => void

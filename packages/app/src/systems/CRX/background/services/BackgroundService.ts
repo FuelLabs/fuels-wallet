@@ -17,7 +17,12 @@ export class BackgroundService {
   constructor(readonly communicationProtocol: CommunicationProtocol) {
     this.server = new JSONRPCServer<EventOrigin>();
     this.setupListeners();
-    this.externalMethods([this.accounts, this.connect, this.disconnect]);
+    this.externalMethods([
+      this.accounts,
+      this.connect,
+      this.disconnect,
+      this.signMessage,
+    ]);
   }
 
   static start(communicationProtocol: CommunicationProtocol) {
@@ -52,7 +57,6 @@ export class BackgroundService {
 
   async connect(_: JSONRPCParams, serverParams: EventOrigin) {
     const origin = serverParams.origin;
-    if (!origin) return false;
 
     let authorizedApp = await ConnectionService.getConnection(origin);
     if (authorizedApp) return true;
@@ -86,5 +90,20 @@ export class BackgroundService {
     }
 
     return [];
+  }
+
+  async signMessage(
+    { message }: { message: string },
+    serverParams: EventOrigin
+  ) {
+    const origin = serverParams.origin;
+
+    const popupService = await PopUpService.open(
+      origin,
+      Pages.requestMessage(),
+      this.communicationProtocol
+    );
+    const signedMessage = await popupService.signMessage(origin, message);
+    return signedMessage;
   }
 }

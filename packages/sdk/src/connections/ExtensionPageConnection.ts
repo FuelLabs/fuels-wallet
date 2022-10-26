@@ -35,6 +35,11 @@ export class ExtensionPageConnection extends BaseConnection {
       response,
     };
     this.connection.postMessage(responseMessage);
+    this.onResponseSent();
+  }
+
+  onResponseSent() {
+    window.close();
   }
 
   ready() {

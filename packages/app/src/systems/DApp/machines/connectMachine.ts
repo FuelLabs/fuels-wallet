@@ -5,7 +5,7 @@ import { assign, createMachine } from 'xstate';
 import { ConnectionService } from '../services';
 
 import type { FetchResponse } from '~/systems/Core';
-import { FetchMachine } from '~/systems/Core';
+import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 
 export type MachineContext = {
   origin?: string;
@@ -73,11 +73,11 @@ export const connectMachine = createMachine(
                 ) => ev.input,
               },
               onDone: [
-                FetchMachine.errorState('#(machine).error'),
+                FetchMachine.errorState('#(machine).failed'),
                 {
                   cond: 'connectionConnected',
                   actions: ['setConnected'],
-                  target: '#(machine).connected',
+                  target: '#(machine).done',
                 },
                 {
                   target: 'idle',
@@ -98,10 +98,10 @@ export const connectMachine = createMachine(
                 }),
               },
               onDone: [
-                FetchMachine.errorState('#(machine).error'),
+                FetchMachine.errorState('#(machine).failed'),
                 {
                   actions: ['setConnected'],
-                  target: '#(machine).connected',
+                  target: '#(machine).done',
                 },
               ],
             },
@@ -112,16 +112,8 @@ export const connectMachine = createMachine(
             target: '.authorizeApp',
           },
           REJECT: {
-            actions: ['setConnectionRejected'],
-            target: '#(machine).error',
-          },
-        },
-      },
-      connected: {
-        entry: ['closeWindow'],
-        on: {
-          DISCONNECT: {
-            target: 'disconnecting',
+            actions: [assignErrorMessage('Connection rejected!')],
+            target: '#(machine).failed',
           },
         },
       },
@@ -129,7 +121,7 @@ export const connectMachine = createMachine(
         invoke: {
           src: 'removeConnection',
           onDone: [
-            FetchMachine.errorState('error'),
+            FetchMachine.errorState('failed'),
             {
               actions: 'setDisconnected',
               target: 'idle',
@@ -137,16 +129,19 @@ export const connectMachine = createMachine(
           ],
         },
       },
-      error: {
-        entry: ['closeWindow'],
+      done: {
+        type: 'final',
+        on: {
+          DISCONNECT: {
+            target: 'disconnecting',
+          },
+        },
       },
+      failed: {},
     },
   },
   {
     actions: {
-      setConnectionRejected: assign({
-        error: (_) => 'Connection rejected!',
-      }),
       setOrigin: assign({
         origin: (_, ev) => ev.input,
       }),
@@ -157,12 +152,6 @@ export const connectMachine = createMachine(
       setDisconnected: assign({
         isConnected: (_) => false,
       }),
-      closeWindow: () => {
-        // Give time before closing for action respond with error;
-        setTimeout(() => {
-          window.close();
-        }, 100);
-      },
     },
     services: {
       fetchConnection: FetchMachine.create<
