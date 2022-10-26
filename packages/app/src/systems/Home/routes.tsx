@@ -22,7 +22,6 @@ export const homeRoutes = (
       element={
         <>
           <Receive />
-          <Outlet />
         </>
       }
     />

@@ -4,10 +4,10 @@ import { useCallback } from 'react';
 import QRCode from 'react-qr-code';
 
 type Props = {
-  account: string;
+  address: string;
 };
 
-export function ReceiverQRCode({ account }: Props) {
+export function ReceiverQRCode({ address }: Props) {
   const downloadQrCode = useCallback(() => {
     const svg = document.getElementById('qrcode-receive');
     const svgData = new XMLSerializer().serializeToString(svg as HTMLElement);
@@ -37,7 +37,7 @@ export function ReceiverQRCode({ account }: Props) {
           color="#9BA1A6"
           bgColor="transparent"
           fgColor="#9BA1A6"
-          value={account as string}
+          value={address}
         />
       </Flex>
       <Button onClick={downloadQrCode} variant="ghost" size="sm">

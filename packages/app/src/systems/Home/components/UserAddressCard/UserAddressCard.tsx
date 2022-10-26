@@ -3,24 +3,24 @@ import { Avatar, Button, Card, Copyable } from '@fuel-ui/react';
 import { useCallback } from 'react';
 
 type Props = {
-  account: string;
+  address: string;
 };
 
-export function UserAddressCard({ account }: Props) {
+export function UserAddressCard({ address }: Props) {
   const copyAccount = useCallback(() => {
-    navigator.clipboard.writeText(account as string);
+    navigator.clipboard.writeText(address);
   }, []);
 
   return (
     <Card css={styles.wrapper}>
-      <Avatar.Generated hash={account as string} size="2xl" background="fuel" />
+      <Avatar.Generated hash={address} size="2xl" background="fuel" />
       <Copyable
         css={styles.accountText}
-        aria-label="account-preview"
-        value={account as string}
+        aria-label="address-preview"
+        value={address as string}
       >
-        {account.slice(0, 15)}...
-        {account.slice(account.length - 15, account.length - 1)}
+        {address.slice(0, 15)}...
+        {address.slice(address.length - 15, address.length - 1)}
       </Copyable>
       <Button
         aria-label="copy-account"

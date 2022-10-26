@@ -15,10 +15,12 @@ export function Receive() {
     <Layout title="Receive">
       <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
       <Layout.Content>
-        <Flex css={styles.contentWrapper}>
-          <UserAddressCard account={account?.address as string} />
-          <ReceiverQRCode account={account?.address as string} />
-        </Flex>
+        {account?.address && (
+          <Flex css={styles.contentWrapper}>
+            <UserAddressCard address={account?.address} />
+            <ReceiverQRCode address={account?.address} />
+          </Flex>
+        )}
       </Layout.Content>
     </Layout>
   );
