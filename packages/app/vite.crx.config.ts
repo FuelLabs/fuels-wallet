@@ -11,6 +11,7 @@ process.env.VITE_CRX = 'true';
 // https://vitejs.dev/config/
 export default defineConfig({
   ...baseConfig,
+  base: '/',
   build: {
     ...baseConfig.build,
     outDir: 'dist-crx',

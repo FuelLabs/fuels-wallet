@@ -23,6 +23,14 @@ export default defineManifest({
     service_worker: 'src/systems/CRX/background/index.ts',
     type: 'module',
   },
+  content_scripts: [
+    {
+      matches: ['<all_urls>'],
+      js: ['src/systems/CRX/scripts/contentScript.ts'],
+      run_at: 'document_start',
+      all_frames: true,
+    },
+  ],
   permissions: [
     'activeTab',
     'clipboardWrite',
