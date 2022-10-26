@@ -18,7 +18,6 @@ export const HomeActions = ({
         Send
       </Button>
       <Button
-        size="sm"
         isDisabled={isDisabled}
         onClick={receiveAction}
         variant="outlined"
@@ -40,7 +39,6 @@ const styles = {
   }),
   button: cssObj({
     borderRadius: 40,
-    marginLeft: '$1',
     flex: 1,
     py: '$5',
   }),

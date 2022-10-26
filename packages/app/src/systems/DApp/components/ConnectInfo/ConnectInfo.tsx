@@ -5,19 +5,19 @@ import type { Account } from '~/systems/Account';
 import { parseUrl, shortAddress } from '~/systems/Core';
 
 export type ConnectInfoProps = {
-  url: string;
+  origin: string;
   account: Account;
 };
 
-export function ConnectInfo({ url, account }: ConnectInfoProps) {
+export function ConnectInfo({ origin, account }: ConnectInfoProps) {
   return (
     <Card css={styles.root}>
       <Tag as="div" variant="outlined">
-        <Tooltip content={url} align="start" alignOffset={-10}>
-          <Text as="span">{parseUrl(url)}</Text>
+        <Tooltip content={origin} align="start" alignOffset={-10}>
+          <Text as="span">{parseUrl(origin)}</Text>
         </Tooltip>
       </Tag>
-      <Button variant="link" size="xs" css={styles.accountBtn} color="gray">
+      <Button variant="link" size="md" css={styles.accountBtn} color="gray">
         <Avatar.Generated
           role="img"
           size="sm"
@@ -35,16 +35,16 @@ export function ConnectInfo({ url, account }: ConnectInfoProps) {
 const styles = {
   root: cssObj({
     py: '$1',
-    px: '$2',
+    px: '$3',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
 
     '& .fuel_tag': {
-      width: 130,
+      maxWidth: 130,
       boxSizing: 'border-box',
       px: '$3',
-      borderColor: '$gray3',
+      borderColor: '$accent11',
       borderStyle: 'dashed',
       color: '$gray11',
     },
@@ -55,6 +55,7 @@ const styles = {
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
       textSize: 'xs',
+      color: '$accent11',
     },
   }),
   accountBtn: cssObj({
