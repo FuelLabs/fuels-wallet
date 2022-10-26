@@ -6,7 +6,8 @@ import { JSONRPCServer } from 'json-rpc-2.0';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { PopUpService } from './PopUpService';
 
-import { ApplicationService } from '~/systems/AppConnect/services';
+import { Pages } from '~/systems/Core/types';
+import { ConnectionService } from '~/systems/DApp/services';
 
 type EventOrigin = { origin: string };
 
@@ -53,14 +54,15 @@ export class BackgroundService {
     const origin = serverParams.origin;
     if (!origin) return false;
 
-    let authorizedApp = await ApplicationService.getApplication(origin);
+    let authorizedApp = await ConnectionService.getConnection(origin);
     if (authorizedApp) return true;
 
     const popupService = await PopUpService.open(
       origin,
+      Pages.requestConnection(),
       this.communicationProtocol
     );
-    authorizedApp = await popupService.requestAuthorization(origin);
+    authorizedApp = await popupService.requestConnection(origin);
     return !!authorizedApp;
   }
 
@@ -68,7 +70,7 @@ export class BackgroundService {
     const origin = serverParams.origin;
 
     if (origin) {
-      await ApplicationService.removeApplication(origin);
+      await ConnectionService.removeConnection(origin);
       return true;
     }
 
@@ -79,7 +81,7 @@ export class BackgroundService {
     const origin = serverParams.origin;
 
     if (origin) {
-      const app = await ApplicationService.getApplication(origin);
+      const app = await ConnectionService.getConnection(origin);
       return app?.accounts || [];
     }
 

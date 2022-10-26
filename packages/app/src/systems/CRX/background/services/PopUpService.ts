@@ -92,6 +92,7 @@ export class PopUpService {
 
   static create = async (
     origin: string,
+    pathname: string,
     communicationProtocol: CommunicationProtocol
   ) => {
     const popupService = new PopUpService(communicationProtocol);
@@ -100,7 +101,7 @@ export class PopUpService {
     // Multiple instances
     popups.set(origin, popupService);
 
-    const win = await createPopUp(origin, CRXPages.popup);
+    const win = await createPopUp(origin, `${CRXPages.popup}#${pathname}`);
     popupService.tabId = await getPopUpId(win.id);
     popupService.windowId = win.id!;
 
@@ -109,19 +110,24 @@ export class PopUpService {
 
   static open = async (
     origin: string,
+    pathname: string,
     communicationProtocol: CommunicationProtocol
   ) => {
     let popupService = await this.getCurrent(origin);
 
     if (!popupService) {
-      popupService = await PopUpService.create(origin, communicationProtocol);
+      popupService = await PopUpService.create(
+        origin,
+        pathname,
+        communicationProtocol
+      );
     }
 
     return popupService.openingPromise.promise;
   };
 
   // UI exposed methods
-  async requestAuthorization(origin: string) {
-    return this.client.request('requestAuthorization', { origin });
+  async requestConnection(origin: string) {
+    return this.client.request('requestConnection', { origin });
   }
 }

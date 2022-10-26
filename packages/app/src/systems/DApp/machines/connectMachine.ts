@@ -1,42 +1,42 @@
-import type { Application } from '@fuels-wallet/types';
+import type { Connection } from '@fuels-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-import { ApplicationService } from '../services';
+import { ConnectionService } from '../services';
 
 import type { FetchResponse } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
 
 export type MachineContext = {
   origin?: string;
-  application?: Application;
+  connection?: Connection;
   isConnected: boolean;
   error?: string;
 };
 
 type MachineServices = {
-  removeApplication: {
+  removeConnection: {
     data: FetchResponse<boolean>;
   };
-  fetchApplication: {
-    data: FetchResponse<Application | undefined>;
+  fetchConnection: {
+    data: FetchResponse<Connection | undefined>;
   };
-  addApplication: {
-    data: FetchResponse<Application | undefined>;
+  addConnection: {
+    data: FetchResponse<Connection | undefined>;
   };
 };
 
 export type MachineEvents =
   | { type: 'CONNECT'; input: string }
-  | { type: 'DISCONNECT'; input: Application }
+  | { type: 'DISCONNECT'; input: Connection }
   | { type: 'AUTHORIZE'; input: Array<string> }
   | { type: 'REJECT'; input: void };
 
-export const appConnectMachine = createMachine(
+export const connectMachine = createMachine(
   {
     predictableActionArguments: true,
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    tsTypes: {} as import('./appConnectMachine.typegen').Typegen0,
+    tsTypes: {} as import('./connectMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,
       services: {} as MachineServices,
@@ -60,12 +60,12 @@ export const appConnectMachine = createMachine(
         },
       },
       connecting: {
-        initial: 'fetchAuthorizedApp',
+        initial: 'fetchAuthorizedConnection',
         states: {
           idle: {},
-          fetchAuthorizedApp: {
+          fetchAuthorizedConnection: {
             invoke: {
-              src: 'fetchApplication',
+              src: 'fetchConnection',
               data: {
                 input: (
                   _: MachineContext,
@@ -75,7 +75,7 @@ export const appConnectMachine = createMachine(
               onDone: [
                 FetchMachine.errorState('#(machine).error'),
                 {
-                  cond: 'applicationConnected',
+                  cond: 'connectionConnected',
                   actions: ['setConnected'],
                   target: '#(machine).connected',
                 },
@@ -87,7 +87,7 @@ export const appConnectMachine = createMachine(
           },
           authorizeApp: {
             invoke: {
-              src: 'addApplication',
+              src: 'addConnection',
               data: {
                 input: (
                   ctx: MachineContext,
@@ -127,7 +127,7 @@ export const appConnectMachine = createMachine(
       },
       disconnecting: {
         invoke: {
-          src: 'removeApplication',
+          src: 'removeConnection',
           onDone: [
             FetchMachine.errorState('error'),
             {
@@ -152,7 +152,7 @@ export const appConnectMachine = createMachine(
       }),
       setConnected: assign({
         isConnected: (_) => true,
-        application: (_, ev) => ev.data,
+        connection: (_, ev) => ev.data,
       }),
       setDisconnected: assign({
         isConnected: (_) => false,
@@ -165,50 +165,48 @@ export const appConnectMachine = createMachine(
       },
     },
     services: {
-      fetchApplication: FetchMachine.create<
+      fetchConnection: FetchMachine.create<
         MachineContext,
-        Application | undefined
+        Connection | undefined
       >({
         showError: false,
         fetch: async ({ input }) => {
           if (input?.origin) {
-            return ApplicationService.getApplication(input.origin);
+            return ConnectionService.getConnection(input.origin);
           }
           return undefined;
         },
       }),
-      addApplication: FetchMachine.create<Application, Application | undefined>(
-        {
-          showError: false,
-          fetch: async ({ input }) => {
-            if (!input?.origin || !Array.isArray(input?.accounts)) {
-              throw new Error('Origin or account not passed');
-            }
-            return ApplicationService.addApplication({
-              data: {
-                origin: input.origin,
-                accounts: input.accounts,
-              },
-            });
-          },
-        }
-      ),
-      removeApplication: FetchMachine.create<MachineContext, boolean>({
+      addConnection: FetchMachine.create<Connection, Connection | undefined>({
         showError: false,
         fetch: async ({ input }) => {
-          await ApplicationService.removeApplication(input?.origin || '');
+          if (!input?.origin || !Array.isArray(input?.accounts)) {
+            throw new Error('Origin or account not passed');
+          }
+          return ConnectionService.addConnection({
+            data: {
+              origin: input.origin,
+              accounts: input.accounts,
+            },
+          });
+        },
+      }),
+      removeConnection: FetchMachine.create<MachineContext, boolean>({
+        showError: false,
+        fetch: async ({ input }) => {
+          await ConnectionService.removeConnection(input?.origin || '');
           return true;
         },
       }),
     },
     guards: {
-      applicationConnected: (_, ev) => {
+      connectionConnected: (_, ev) => {
         return !!((ev.data?.accounts.length || 0) >= 1);
       },
     },
   }
 );
 
-export type AppConnectMachine = typeof appConnectMachine;
-export type AppConnectMachineService = InterpreterFrom<AppConnectMachine>;
-export type AppConnectMachineState = StateFrom<AppConnectMachine>;
+export type ConnectMachine = typeof connectMachine;
+export type ConnectMachineService = InterpreterFrom<ConnectMachine>;
+export type ConnectMachineState = StateFrom<ConnectMachine>;
