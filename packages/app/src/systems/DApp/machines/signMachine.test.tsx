@@ -33,9 +33,14 @@ describe('signMachine', () => {
 
     service.send('START_SIGN', {
       input: {
+        origin: 'foo.com',
         message: 'test message',
       },
     });
+
+    await waitFor(service, (state) => state.matches('reviewMessage'));
+
+    service.send('SIGN_MESSAGE');
 
     await waitFor(service, (state) => state.matches('unlocking'));
 
@@ -51,5 +56,24 @@ describe('signMachine', () => {
       state.matches('done')
     );
     expect(matches('done')).toBeTruthy();
+  });
+
+  it('should reject sign message', async () => {
+    await waitFor(service, (state) => state.matches('idle'));
+
+    service.send('START_SIGN', {
+      input: {
+        origin: 'foo.com',
+        message: 'test message',
+      },
+    });
+
+    await waitFor(service, (state) => state.matches('reviewMessage'));
+
+    service.send('REJECT');
+
+    const state = await waitFor(service, (state) => state.matches('failed'));
+
+    expect(state.context.error).toBeTruthy();
   });
 });
