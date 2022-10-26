@@ -17,7 +17,7 @@ export function UserAddressCard({ address }: Props) {
       <Copyable
         css={styles.accountText}
         aria-label="address-preview"
-        value={address as string}
+        value={address}
       >
         {address.slice(0, 15)}...
         {address.slice(address.length - 15, address.length - 1)}
