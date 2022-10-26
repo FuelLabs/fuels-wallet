@@ -18,7 +18,7 @@ test.describe('CreateWallet', () => {
     page = await browser.newPage();
   });
 
-  test('should be redirect to /signup by default', async () => {
+  test('should be redirected to /signup by default', async () => {
     await visit(page, '/');
     await waitUrl(page, '/sign-up');
   });
