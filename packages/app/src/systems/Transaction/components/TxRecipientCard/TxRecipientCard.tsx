@@ -1,12 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
+import { AddressType } from '@fuels-wallet/types';
 import type { FC } from 'react';
 
 import type { TxRecipientAddress } from '../../types';
 
 import { TxRecipientCardLoader } from './TxRecipientCardLoader';
 
-import { AddressType } from '~/systems/Account';
 import { shortAddress } from '~/systems/Core';
 
 export type TxRecipientCardProps = {

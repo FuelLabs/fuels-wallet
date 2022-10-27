@@ -1,8 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Card, Copyable, Flex, Grid, Text } from '@fuel-ui/react';
+import type { Coin } from '@fuels-wallet/types';
 import { bn } from 'fuels';
 
-import type { Asset } from '../../types';
 import { getAssetInfoById } from '../../utils';
 
 import { MAX_FRACTION_DIGITS } from '~/config';
@@ -10,7 +10,7 @@ import { shortAddress } from '~/systems/Core';
 import type { TxInputCoin, TxOutputCoin } from '~/systems/Transaction';
 
 export type AssetsAmountProps = {
-  amounts: Asset[] | TxOutputCoin[] | TxInputCoin[];
+  amounts: Coin[] | TxOutputCoin[] | TxInputCoin[];
 };
 
 export function AssetsAmount({ amounts }: AssetsAmountProps) {

@@ -1,8 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, CardList, Flex, Heading, Text } from '@fuel-ui/react';
+import type { Coin } from '@fuels-wallet/types';
 import type { FC } from 'react';
 
-import type { Asset } from '../../types';
 import { getAssetInfoById } from '../../utils';
 
 import { AssetItemLoader } from './AssetItemLoader';
@@ -10,7 +10,7 @@ import { AssetItemLoader } from './AssetItemLoader';
 import { formatUnits } from '~/systems/Core';
 
 export type AssetItemProps = {
-  asset: Asset;
+  asset: Coin;
 };
 
 type AssetItemComponent = FC<AssetItemProps> & {

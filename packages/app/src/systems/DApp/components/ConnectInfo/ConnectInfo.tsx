@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Button, Card, Icon, Tag, Text, Tooltip } from '@fuel-ui/react';
+import type { Account } from '@fuels-wallet/types';
 
-import type { Account } from '~/systems/Account';
 import { parseUrl, shortAddress } from '~/systems/Core';
 
 export type ConnectInfoProps = {
