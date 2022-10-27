@@ -5,16 +5,20 @@ import { bn } from 'fuels';
 import type { Asset } from '../../types';
 import { getAssetInfoById } from '../../utils';
 
-import { MAX_FRACTION_DIGITS } from '~/config';
 import { shortAddress } from '~/systems/Core';
 import type { TxInputCoin, TxOutputCoin } from '~/systems/Transaction';
 
 export type AssetsAmountProps = {
   amounts: Asset[] | TxOutputCoin[] | TxInputCoin[];
   title?: string;
+  isPositive?: boolean;
 };
 
-export function AssetsAmount({ amounts, title }: AssetsAmountProps) {
+export function AssetsAmount({
+  amounts,
+  title,
+  isPositive,
+}: AssetsAmountProps) {
   return (
     <Card css={styles.card}>
       <Text as="h3" css={{ fontSize: '$sm', fontWeight: '$semibold' }}>
@@ -40,8 +44,8 @@ export function AssetsAmount({ amounts, title }: AssetsAmountProps) {
                 {shortAddress(asset.assetId)}
               </Text>
             </Copyable>
-            <Flex css={styles.amount(false)}>
-              {amount.formatUnits(MAX_FRACTION_DIGITS)} {asset.symbol}
+            <Flex css={styles.amount(isPositive)}>
+              {amount.format()} {asset.symbol}
             </Flex>
           </Grid>
         );
@@ -80,7 +84,7 @@ const styles = {
     color: '$gray9',
     fontSize: '$xs',
   }),
-  amount: (isPositive: boolean) =>
+  amount: (isPositive?: boolean) =>
     cssObj({
       justifyContent: 'flex-end',
       gridRow: '1 / 3',

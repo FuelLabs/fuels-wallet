@@ -1,123 +1,145 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Button,
-  Card,
-  Heading,
-  HelperIcon,
-  Stack,
-  Tag,
-  Text,
-} from '@fuel-ui/react';
+import { Button, Card, Heading, Stack, Tag, Text } from '@fuel-ui/react';
+import { bn } from 'fuels';
+import { useEffect } from 'react';
 
+import { getMockedTransaction } from '../../__mocks__/transaction';
 import { UnlockDialog } from '../../components';
+import { useTxApprove } from '../../hooks/useTxApprove';
 
 import { AddressType, useAccount } from '~/systems/Account';
 import { AssetsAmount } from '~/systems/Asset';
-import { MOCK_ASSETS_AMOUNTS } from '~/systems/Asset/__mocks__/assets';
-import { Layout } from '~/systems/Core';
+import { Layout, provider } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import {
-  TxDetails,
   getCoinOutputsFromTx,
-  useTransaction,
+  TxDetails,
   TxFromTo,
 } from '~/systems/Transaction';
-import { MOCK_TX_RECIPIENT } from '~/systems/Transaction/__mocks__/tx-recipient';
 
 export type TxApproveProps = {
   id: string;
 };
 
-const { contract: CONTRACT } = MOCK_TX_RECIPIENT;
-
 export function TxApprove() {
-  const id = 'aisdjadsijds';
-  const { account, isLoading } = useAccount();
+  const { isLoading } = useAccount();
   const {
-    txRequest,
-    simulateResult,
+    isUnlocking,
     handlers,
-    isSent,
-    isLoading: isLoadingTx,
-  } = useTransaction(id!);
+    account,
+    isUnlockingLoading,
+    tx,
+    receipts,
+    approvedTx,
+  } = useTxApprove();
+
+  useEffect(() => {
+    (async () => {
+      if (account) {
+        const txRequest = await getMockedTransaction(
+          account?.publicKey || '',
+          '0xc7862855b418ba8f58878db434b21053a61a2025209889cc115989e8040ff077',
+          provider
+        );
+
+        handlers.calculateGas(txRequest);
+      }
+    })();
+  }, [account]);
+
+  // const coinInputs = getCoinInputsFromTx(tx);
+  // const inputFromAccount = coinInputs.filter((value) => value.owner.toString() === account?.publicKey)[0];
+
+  const coinOutputs = getCoinOutputsFromTx(tx);
+  // const outputFromAccount = coinOutputs.filter((value) => value.to === account?.publicKey)[0];
+  const outputsToSend = coinOutputs.filter(
+    (value) => value.to !== account?.publicKey
+  );
+  const outputAmount = outputsToSend.reduce(
+    (acc, value) => acc.add(value.amount),
+    bn(0)
+  );
+
+  if (!tx || !receipts) return null;
 
   return (
-    <Layout title="Approve Transaction" isLoading={isLoading}>
-      <Layout.TopBar type={TopBarType.external} />
-      <Layout.Content css={styles.content}>
-        <UnlockDialog isFullscreen onUnlock={() => {}} isOpen={false} />
-        {!isLoading && !isSent && (
-          <Stack gap="$4">
-            <Card>
-              <Card.Body
-                css={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-evenly',
-                }}
-              >
-                <Tag css={styles.approveUrlTag} variant="outlined">
-                  <Text as="span" fontSize="sm" color="gray12">
-                    swayswap.io
-                  </Text>
-                </Tag>
-                <Text
-                  as="span"
-                  fontSize="sm"
-                  color="gray12"
-                  css={{ fontWeight: '$semibold' }}
+    <>
+      <Layout title="Approve Transaction" isLoading={isLoading}>
+        <Layout.TopBar type={TopBarType.external} />
+        <Layout.Content css={styles.content}>
+          <UnlockDialog isFullscreen onUnlock={() => {}} isOpen={false} />
+          {!isLoading && !approvedTx && (
+            <Stack gap="$4">
+              <Card>
+                <Card.Body
+                  css={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-evenly',
+                  }}
                 >
-                  wants to approve
-                </Text>
-              </Card.Body>
-            </Card>
-            {account && (
-              <TxFromTo
-                from={{ type: AddressType.account, address: account.address }}
-                to={CONTRACT}
-              />
-            )}
-            <AssetsAmount
-              title="Assets to send"
-              amounts={[...MOCK_ASSETS_AMOUNTS]}
-            />
-
-            <Stack gap="$2">
-              <HelperIcon as="h2" message="Some message">
-                Assets amount
-              </HelperIcon>
-              {txRequest?.outputs && (
-                <AssetsAmount amounts={getCoinOutputsFromTx(txRequest)} />
+                  <Tag css={styles.approveUrlTag} variant="outlined">
+                    <Text as="span" fontSize="sm" color="gray12">
+                      swayswap.io
+                    </Text>
+                  </Tag>
+                  <Text
+                    as="span"
+                    fontSize="sm"
+                    color="gray12"
+                    css={{ fontWeight: '$semibold' }}
+                  >
+                    wants to approve
+                  </Text>
+                </Card.Body>
+              </Card>
+              {account && (
+                <TxFromTo
+                  from={{
+                    type: AddressType.account,
+                    address: account.publicKey,
+                  }}
+                  to={{
+                    type: AddressType.account,
+                    address: outputsToSend[0]?.to.toString(),
+                  }}
+                />
               )}
+              <AssetsAmount amounts={outputsToSend} title="Assets to Send" />
+              <TxDetails receipts={receipts} outputAmount={outputAmount} />
             </Stack>
-            {simulateResult && <TxDetails receipts={simulateResult.receipts} />}
-          </Stack>
-        )}
-        {isSent && (
-          <Stack>
-            <Heading as="h4">Transaction sent</Heading>
-            <Text>
-              Transaction sent successfully, you can open your wallet and check
-              its status right now!
-            </Text>
-          </Stack>
-        )}
-      </Layout.Content>
-      <Layout.BottomBar>
-        <Button color="gray" variant="ghost">
-          Close
-        </Button>
-        <Button
-          type="submit"
-          color="accent"
-          onPress={handlers.approve}
-          isLoading={isLoadingTx}
-          isDisabled={isSent}
-        >
-          Send
-        </Button>
-      </Layout.BottomBar>
-    </Layout>
+          )}
+          {approvedTx && (
+            <Stack>
+              <Heading as="h4">Transaction sent</Heading>
+              <Text>
+                Transaction sent successfully, you can open your wallet and
+                check its status right now!
+              </Text>
+            </Stack>
+          )}
+        </Layout.Content>
+        <Layout.BottomBar>
+          <Button color="gray" variant="ghost">
+            Close
+          </Button>
+          <Button
+            color="accent"
+            onPress={handlers.startApprove}
+            isLoading={isLoading}
+            isDisabled={!!approvedTx}
+          >
+            Confirm
+          </Button>
+        </Layout.BottomBar>
+      </Layout>
+      <UnlockDialog
+        isOpen={isUnlocking}
+        onUnlock={handlers.unlock}
+        isLoading={isUnlockingLoading}
+        onClose={handlers.closeUnlock}
+      />
+    </>
   );
 }
 

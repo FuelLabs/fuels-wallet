@@ -1,32 +1,51 @@
 import { cssObj } from '@fuel-ui/css';
-import { Accordion, Text } from '@fuel-ui/react';
+import { Accordion, Flex, Text } from '@fuel-ui/react';
+import type { BN } from 'fuels';
 import { bn, getGasUsedFromReceipts } from 'fuels';
 import { useMemo } from 'react';
 
 import type { TxSimulateResult } from '../../types';
 
-import { MAX_FRACTION_DIGITS } from '~/config';
 import type { Maybe } from '~/systems/Core';
 
 export type TxDetailsProps = {
   receipts?: Maybe<TxSimulateResult['receipts']>;
+  outputAmount?: BN;
 };
 
-export function TxDetails({ receipts }: TxDetailsProps) {
+export function TxDetails({ receipts, outputAmount }: TxDetailsProps) {
   const gasUsed = useMemo(
     () => getGasUsedFromReceipts(receipts || []),
     receipts || []
   );
+  const total = useMemo(
+    () => gasUsed.add(bn(outputAmount)),
+    [gasUsed, outputAmount]
+  );
+
+  // console.log(`gasUsed`, gasUsed.format());
+  // console.log(`outputAmount`, outputAmount?.format());
+  // console.log(`total`, total.format());
 
   return (
     <Accordion type="multiple">
       <Accordion.Item value="tx-details" css={styles.item}>
         <Accordion.Trigger>Transaction Details</Accordion.Trigger>
         <Accordion.Content css={styles.info}>
-          <Text as="span">Gas Used</Text>
-          <Text as="span" aria-label="Gas Value">
-            {bn(gasUsed).formatUnits(MAX_FRACTION_DIGITS)} ETH
-          </Text>
+          <Flex css={styles.items}>
+            <Flex css={styles.item}>
+              <Text as="span">Fee (network)</Text>
+              <Text as="span" aria-label="Gas Value">
+                {gasUsed.format()} ETH
+              </Text>
+            </Flex>
+            <Flex css={styles.item}>
+              <Text as="span">Total (including Fee)</Text>
+              <Text as="span" aria-label="Gas Value">
+                {total.format()} ETH
+              </Text>
+            </Flex>
+          </Flex>
         </Accordion.Content>
       </Accordion.Item>
     </Accordion>
@@ -66,5 +85,15 @@ const styles = {
         color: '$gray12',
       },
     },
+  }),
+  items: cssObj({
+    flexDirection: 'column',
+    gap: '$2',
+  }),
+  item: cssObj({
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: '$2',
   }),
 };

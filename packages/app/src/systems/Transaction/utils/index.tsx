@@ -1,6 +1,11 @@
-import { OutputType } from 'fuels';
+import { InputType, OutputType } from 'fuels';
 
-import type { TxOutputCoin, TxRequest, TxResponse } from '../types';
+import type {
+  TxInputCoin,
+  TxOutputCoin,
+  TxRequest,
+  TxResponse,
+} from '../types';
 
 export function parseTransaction<T extends TxRequest | TxResponse>(tx: T) {
   return Object.entries(tx).reduce((obj, [key, value]) => {
@@ -10,7 +15,13 @@ export function parseTransaction<T extends TxRequest | TxResponse>(tx: T) {
   }, {} as T);
 }
 
-export function getCoinOutputsFromTx(tx: TxRequest) {
+export function getCoinInputsFromTx(tx?: TxRequest) {
+  return (tx?.inputs ?? []).filter(
+    (i) => i.type === InputType.Coin
+  ) as TxInputCoin[];
+}
+
+export function getCoinOutputsFromTx(tx?: TxRequest) {
   return (tx?.outputs ?? []).filter(
     (i) => i.type === OutputType.Coin
   ) as TxOutputCoin[];

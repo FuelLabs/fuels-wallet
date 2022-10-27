@@ -1,28 +1,43 @@
-import type { Wallet } from 'fuels';
+import type {
+  TransactionRequest,
+  TransactionResponse,
+  TransactionResultReceipt,
+  Wallet,
+} from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
+import { send } from 'xstate/lib/actions';
+
+import type { UnlockMachine, UnlockMachineEvents } from './unlockMachine';
+import { unlockMachine } from './unlockMachine';
 
 import type { AccountInputs } from '~/systems/Account';
-import { FetchMachine } from '~/systems/Core';
-import type { Transaction, TxResponse } from '~/systems/Transaction';
+import type { ChildrenMachine } from '~/systems/Core';
+import { FetchMachine, provider } from '~/systems/Core';
 
 type MachineContext = {
   id: string;
-  tx?: Transaction;
+  tx?: TransactionRequest;
+  receipts?: TransactionResultReceipt[];
+  approvedTx?: string;
 };
 
 type MachineServices = {
-  approve: {
-    data: TxResponse;
+  approveTx: {
+    data: TransactionResponse;
+  };
+  calculateGas: {
+    data: TransactionResultReceipt[];
   };
 };
 
 type MachineEvents =
   | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
-  | { type: 'START_SIGN'; input: { message: string } }
+  | { type: 'START_APPROVE'; input?: null }
+  | { type: 'CALCULATE_GAS'; input: { tx: TransactionRequest } }
   | { type: 'CLOSE_UNLOCK'; input?: null };
 
-export const txApprove = createMachine(
+export const txApproveMachine = createMachine(
   {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./txApproveMachine.typegen').Typegen0,
@@ -33,28 +48,79 @@ export const txApprove = createMachine(
     },
     predictableActionArguments: true,
     id: '(machine)',
-    initial: 'fetching',
+    initial: 'waitingTxRequest',
     states: {
-      fetching: {
-        tags: 'loading',
+      waitingTxRequest: {
+        on: {
+          CALCULATE_GAS: {
+            target: 'calculatingGas',
+            actions: ['assignTx'],
+          },
+        },
+      },
+      calculatingGas: {
         invoke: {
-          src: 'fetching',
+          src: 'calculateGas',
+          data: (_: MachineContext) => ({ input: { tx: _.tx } }),
+          onDone: {
+            target: 'idle',
+            actions: ['assignReceipts'],
+          },
+          onError: {
+            target: 'waitingTxRequest',
+          },
+        },
+      },
+      idle: {
+        on: {
+          START_APPROVE: {
+            target: 'unlocking',
+          },
+        },
+      },
+      unlocking: {
+        invoke: {
+          id: 'unlock',
+          src: unlockMachine,
+          data: (_: MachineContext, ev: MachineEvents) => ev.input,
+          onDone: {
+            target: 'approving',
+          },
+        },
+        on: {
+          UNLOCK_WALLET: {
+            // send to the child machine
+            actions: [
+              send<MachineContext, UnlockMachineEvents>(
+                (_, ev) => ({
+                  type: 'UNLOCK_WALLET',
+                  input: ev.input,
+                }),
+                { to: 'unlock' }
+              ),
+            ],
+          },
+          CLOSE_UNLOCK: {
+            target: 'idle',
+          },
+        },
+      },
+      approving: {
+        invoke: {
+          src: 'approveTx',
           data: {
-            input: (_: MachineContext) => _.id,
+            input: (_: MachineContext, ev: { data: Wallet }) => {
+              return { tx: _.tx, wallet: ev.data };
+            },
           },
           onDone: [
             {
-              target: 'failed',
+              target: 'done',
               cond: FetchMachine.hasError,
             },
             {
-              target: 'simulating',
-              cond: 'isTxRequest',
-              actions: ['assignTx'],
-            },
-            {
-              target: 'idle',
-              actions: ['assignTx'],
+              actions: ['assignApprovedTx'],
+              target: 'done',
             },
           ],
         },
@@ -67,32 +133,60 @@ export const txApprove = createMachine(
   },
   {
     actions: {
-      assignSignedMessage: assign({
-        signedMessage: (_, ev) => ev.data,
+      assignTx: assign({
+        tx: (_, ev: any) => ev.input?.tx,
       }),
-      assignMessage: assign({
-        message: (_, ev) => ev.input.message,
+      assignApprovedTx: assign({
+        approvedTx: (_, ev: any) => ev.data,
+      }),
+      assignReceipts: assign({
+        receipts: (_, ev: any) => ev.data,
       }),
     },
     services: {
-      signMessage: FetchMachine.create<
-        { message: string; wallet: Wallet },
-        string
+      approveTx: FetchMachine.create<
+        { tx: TransactionRequest; wallet: Wallet },
+        TransactionResponse
+      >({
+        showError: true,
+        async fetch(params) {
+          const { input } = params;
+          if (!input?.wallet || !input?.tx) {
+            throw new Error('Invalid approveTx input');
+          }
+
+          input.wallet.provider = provider;
+          const transactionResponse = await input?.wallet.sendTransaction(
+            input.tx
+          );
+
+          console.log(`transactionResponse`, transactionResponse);
+          return transactionResponse;
+        },
+      }),
+      calculateGas: FetchMachine.create<
+        { tx: TransactionRequest },
+        TransactionResultReceipt[]
       >({
         showError: true,
         async fetch({ input }) {
-          if (!input?.wallet || !input?.message) {
-            throw new Error('Invalid network input');
+          if (!input?.tx) {
+            throw new Error('Invalid calculateGas input');
           }
 
-          const signedMessage = input?.wallet.signMessage(input.message);
-          return signedMessage;
+          console.log(`input`, input);
+
+          const { receipts } = await provider.call(input.tx);
+          return receipts;
         },
       }),
     },
   }
 );
 
-export type SignMachine = typeof txApprove;
-export type SignMachineService = InterpreterFrom<typeof txApprove>;
-export type SignMachineState = StateFrom<typeof txApprove>;
+export type TxApproveMachine = typeof txApproveMachine;
+export type TxApproveMachineService = InterpreterFrom<typeof txApproveMachine>;
+export type TxApproveMachineState = StateFrom<typeof txApproveMachine> &
+  ChildrenMachine<{
+    unlock: UnlockMachine;
+  }>;

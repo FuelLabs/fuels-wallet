@@ -1,5 +1,5 @@
 import { WalletManager } from '@fuel-ts/wallet-manager';
-import type { Meta, StoryFn } from '@storybook/react';
+import type { Meta } from '@storybook/react';
 import {
   bn,
   NativeAssetId,
@@ -121,7 +121,3 @@ export default {
     },
   },
 } as Meta;
-
-export const Usage: StoryFn<unknown> = (_args, { loaded: { id } }) => {
-  return <TxApprove id={id} />;
-};
