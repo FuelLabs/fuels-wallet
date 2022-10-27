@@ -35,7 +35,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
 
   return (
     <Flex as="nav" className={style({ isHome })}>
-      <Flex css={{ alignItems: 'center', gap: '$5', flex: 1 }}>
+      <Flex css={{ alignItems: 'center', gap: '$2', flex: 1 }}>
         {!isHome ? (
           <>
             <IconButton
@@ -54,7 +54,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
           </>
         ) : (
           <>
-            <FuelLogo size={36} />
+            <FuelLogo size={40} />
             {isLoading && <Spinner aria-label="Spinner" />}
             {!isLoading && <NetworkButton />}
           </>

@@ -1,9 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Heading, HelperIcon, Stack, Text } from '@fuel-ui/react';
 
-import { ConnectInfo } from '../../components';
+import { ConnectInfo, UnlockDialog } from '../../components';
 
-import { UnlockDialog, useAccount } from '~/systems/Account';
+import { useAccount } from '~/systems/Account';
 import { AssetsAmount } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
@@ -19,7 +19,7 @@ export type TxApproveProps = {
 };
 
 export function TxApprove({ id, url }: TxApproveProps) {
-  const { account, isLoading, isLocked } = useAccount();
+  const { account, isLoading } = useAccount();
   const {
     txRequest,
     simulateResult,
@@ -32,10 +32,10 @@ export function TxApprove({ id, url }: TxApproveProps) {
     <Layout title="New Transaction" isLoading={isLoading}>
       <Layout.TopBar type={TopBarType.external} />
       <Layout.Content css={styles.content}>
-        <UnlockDialog isOpen={Boolean(isLocked)} isFullscreen />
+        <UnlockDialog isFullscreen onUnlock={() => {}} isOpen={false} />
         {!isLoading && !isSent && (
           <Stack gap="$4">
-            {url && account && <ConnectInfo url={url} account={account} />}
+            {url && account && <ConnectInfo origin={url} account={account} />}
             <Stack gap="$2">
               <HelperIcon as="h2" message="Some message">
                 Assets amount

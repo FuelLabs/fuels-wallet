@@ -1,0 +1,9 @@
+{
+  "name": "@fuels-wallet/types",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "main": "src/index.ts",
+  "dependencies": {
+    "fuels": "^0.17.0"
+  }
+}

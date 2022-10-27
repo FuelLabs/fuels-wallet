@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Network } from '@fuels-wallet/types';
+import { NetworkScreen } from '@fuels-wallet/types';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
 import { MOCK_NETWORKS } from '../__mocks__/networks';
 import { NetworkService } from '../services';
-import type { Network } from '../types';
-import { NetworkScreen } from '../types';
 
 import type { NetworksMachineService } from './networksMachine';
 import { networksMachine } from './networksMachine';
