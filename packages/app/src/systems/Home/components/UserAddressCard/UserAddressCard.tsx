@@ -16,7 +16,7 @@ export function UserAddressCard({ address }: Props) {
       <Avatar.Generated hash={address} size="2xl" background="fuel" />
       <Copyable
         css={styles.accountText}
-        aria-label="address-preview"
+        aria-label="account-preview"
         value={address}
       >
         {address.slice(0, 15)}...
