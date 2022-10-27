@@ -1,6 +1,5 @@
+import type { Network } from '@fuels-wallet/types';
 import { uniqueId } from 'xstate/lib/utils';
-
-import type { Network } from '../types';
 
 import { db } from '~/systems/Core';
 

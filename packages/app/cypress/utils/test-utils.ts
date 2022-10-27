@@ -1,7 +1,7 @@
+import type { Account } from '@fuels-wallet/types';
 import { Wallet } from 'fuels';
 
 import { IS_LOGGED_KEY, VITE_FUEL_PROVIDER_URL } from '~/config';
-import type { Account } from '~/systems/Account';
 
 export const clearMocks = () => {
   localStorage.removeItem(IS_LOGGED_KEY);

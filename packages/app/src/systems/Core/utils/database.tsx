@@ -1,10 +1,8 @@
+import type { Account, Vault, Application, Network } from '@fuels-wallet/types';
 import type { Table } from 'dexie';
 import Dexie from 'dexie';
 import 'dexie-observable';
 
-import type { Account, Vault } from '~/systems/Account';
-import type { Application } from '~/systems/AppConnect/types';
-import type { Network } from '~/systems/Network';
 import type { Transaction } from '~/systems/Transaction';
 
 export class FuelDB extends Dexie {
