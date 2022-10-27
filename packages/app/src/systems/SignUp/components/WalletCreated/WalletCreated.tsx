@@ -1,9 +1,9 @@
 import { Stack, Button, Flex } from '@fuel-ui/react';
+import type { Account } from '@fuels-wallet/types';
 import { useNavigate } from 'react-router-dom';
 
 import { Header } from '../Header';
 
-import type { Account } from '~/systems/Account';
 import { AccountItem } from '~/systems/Account';
 import type { Maybe } from '~/systems/Core';
 import { Pages, ImageLoader, relativeUrl } from '~/systems/Core';

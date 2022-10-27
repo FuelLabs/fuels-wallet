@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { cssObj } from '@fuel-ui/css';
 import { Dropdown, Flex, Icon, Text } from '@fuel-ui/react';
+import type { Network } from '@fuels-wallet/types';
 
-import type { Network } from '~/systems/Network';
 import { NetworkItem } from '~/systems/Network';
 
 export type NetworkSelectorProps = {

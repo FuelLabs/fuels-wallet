@@ -1,3 +1,4 @@
+import type { AddressType } from '@fuels-wallet/types';
 import type {
   CallResult,
   CoinTransactionRequestInput,
@@ -6,8 +7,6 @@ import type {
   TransactionRequestLike,
   TransactionResponse,
 } from 'fuels';
-
-import type { AddressType } from '../Account';
 
 export enum TxType {
   request,
