@@ -9,7 +9,7 @@ const TEST_ACCOUNT =
 
 describe('UserAddressCard', () => {
   it('should show infos and copy the address', async () => {
-    render(<UserAddressCard account={TEST_ACCOUNT} />, {
+    render(<UserAddressCard address={TEST_ACCOUNT} />, {
       wrapper: TestWrapper,
     });
     const accountPreview = screen.getByLabelText('account-preview');

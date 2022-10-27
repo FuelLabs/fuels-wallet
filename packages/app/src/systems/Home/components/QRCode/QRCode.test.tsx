@@ -11,13 +11,13 @@ const TEST_ACCOUNT =
 
 describe('QR Code Tests', () => {
   it('should show the qr code on screen', async () => {
-    render(<ReceiverQRCode account={TEST_ACCOUNT} />, { wrapper: TestWrapper });
+    render(<ReceiverQRCode address={TEST_ACCOUNT} />, { wrapper: TestWrapper });
     const qrCode = screen.getByLabelText('qrcode');
     expect(qrCode).toBeInTheDocument();
   });
 
   it('should be a valid qr code showing on the screen', async () => {
-    render(<ReceiverQRCode account={TEST_ACCOUNT} />, { wrapper: TestWrapper });
+    render(<ReceiverQRCode address={TEST_ACCOUNT} />, { wrapper: TestWrapper });
     const qrCode = screen.getByLabelText('qrcode');
 
     expect(qrCode).toBeInTheDocument();
