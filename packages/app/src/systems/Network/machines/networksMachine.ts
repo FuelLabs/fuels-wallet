@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
+import type { Network } from '@fuels-wallet/types';
 import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
 
 import { NetworkInputs, NetworkService } from '../services';
-import type { Network } from '../types';
 
 import { store } from '~/store';
 import type { Maybe, FetchResponse } from '~/systems/Core';

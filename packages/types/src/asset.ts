@@ -1,7 +1,12 @@
+import type { BNInput } from 'fuels';
+
 export type Asset = {
   name: string;
-  symbol: string;
   assetId: string;
   imageUrl: string;
-  balance: string;
+  symbol: string;
+};
+
+export type AssetAmount = Asset & {
+  amount?: BNInput;
 };
