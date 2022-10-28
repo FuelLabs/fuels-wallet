@@ -1,4 +1,4 @@
-import type { Application } from '../types';
+import type { Application } from '@fuels-wallet/types';
 
 import { ApplicationService } from './application';
 

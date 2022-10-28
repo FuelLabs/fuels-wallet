@@ -1,4 +1,4 @@
-import { AddressType } from '~/systems/Account';
+import { AddressType } from '@fuels-wallet/types';
 
 export const MOCK_TX_RECIPIENT = {
   account: {

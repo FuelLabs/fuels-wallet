@@ -1,3 +1,4 @@
+import type { Network } from '@fuels-wallet/types';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -5,7 +6,6 @@ import type {
   NetworkInitialInput,
   NetworksMachineState,
 } from '../machines/networksMachine';
-import type { Network } from '../types';
 
 import { store, Services } from '~/store';
 import { Pages } from '~/systems/Core';

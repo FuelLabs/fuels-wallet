@@ -29,6 +29,7 @@ export async function waitForState<
     }
 
     return appState.context as T['context'];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.cause === 'CustomState') throw err;
     throw new Error(

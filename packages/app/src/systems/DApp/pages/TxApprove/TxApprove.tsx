@@ -68,7 +68,6 @@ export function TxApprove() {
       <Layout title="Approve Transaction" isLoading={isLoading}>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
-          <UnlockDialog isFullscreen onUnlock={() => {}} isOpen={false} />
           {!isLoading && !approvedTx && (
             <Stack gap="$4">
               <Card>
