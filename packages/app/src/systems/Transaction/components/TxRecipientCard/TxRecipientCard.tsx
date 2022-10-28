@@ -43,16 +43,17 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
           <Icon icon={Icon.is('Code')} size={16} />
         </Box>
       )}
-      <Flex css={styles.info}>
-        <Copyable value={address}>{shortAddress(address)}</Copyable>
-      </Flex>
+      {address && (
+        <Flex css={styles.info}>
+          <Copyable value={address}>{shortAddress(address)}</Copyable>
+        </Flex>
+      )}
     </Card>
   );
 };
 
 const styles = {
   root: cssObj({
-    // minWidth: '130px',
     flex: 1,
     py: '$5',
     px: '$3',
