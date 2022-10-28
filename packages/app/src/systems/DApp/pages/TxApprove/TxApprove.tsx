@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Card, Heading, Stack, Tag, Text } from '@fuel-ui/react';
+import { Button, Card, Flex, Heading, Stack, Tag, Text } from '@fuel-ui/react';
 import { bn } from 'fuels';
 import { useEffect } from 'react';
 
@@ -16,6 +16,7 @@ import {
   TxDetails,
   TxFromTo,
 } from '~/systems/Transaction';
+import { getGroupedErrors } from '~/systems/Transaction/utils/error';
 
 export type TxApproveProps = {
   id: string;
@@ -31,6 +32,7 @@ export function TxApprove() {
     tx,
     receipts,
     approvedTx,
+    txDryRunError,
   } = useTxApprove();
 
   useEffect(() => {
@@ -47,11 +49,9 @@ export function TxApprove() {
     })();
   }, [account]);
 
-  // const coinInputs = getCoinInputsFromTx(tx);
-  // const inputFromAccount = coinInputs.filter((value) => value.owner.toString() === account?.publicKey)[0];
+  if (!tx) return null;
 
   const coinOutputs = getCoinOutputsFromTx(tx);
-  // const outputFromAccount = coinOutputs.filter((value) => value.to === account?.publicKey)[0];
   const outputsToSend = coinOutputs.filter(
     (value) => value.to !== account?.publicKey
   );
@@ -59,8 +59,9 @@ export function TxApprove() {
     (acc, value) => acc.add(value.amount),
     bn(0)
   );
-
-  if (!tx || !receipts) return null;
+  const groupedErrors = getGroupedErrors(
+    (txDryRunError as any)?.response?.errors
+  );
 
   return (
     <>
@@ -105,7 +106,11 @@ export function TxApprove() {
                   }}
                 />
               )}
-              <AssetsAmount amounts={outputsToSend} title="Assets to Send" />
+              <AssetsAmount
+                amounts={outputsToSend}
+                balanceErrors={groupedErrors?.InsufficientInputAmount}
+                title="Assets to Send"
+              />
               <TxDetails receipts={receipts} outputAmount={outputAmount} />
             </Stack>
           )}
@@ -120,17 +125,22 @@ export function TxApprove() {
           )}
         </Layout.Content>
         <Layout.BottomBar>
-          <Button color="gray" variant="ghost">
-            Close
-          </Button>
-          <Button
-            color="accent"
-            onPress={handlers.startApprove}
-            isLoading={isLoading}
-            isDisabled={!!approvedTx}
-          >
-            Confirm
-          </Button>
+          <Flex>
+            <Button color="gray" variant="ghost" css={{ flex: 1 }}>
+              Close
+            </Button>
+            {!approvedTx && (
+              <Button
+                color="accent"
+                onPress={handlers.startApprove}
+                isLoading={isLoading}
+                isDisabled={!!(approvedTx || txDryRunError)}
+                css={{ flex: 1, ml: '$2' }}
+              >
+                Confirm
+              </Button>
+            )}
+          </Flex>
         </Layout.BottomBar>
       </Layout>
       <UnlockDialog

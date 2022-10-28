@@ -2,7 +2,6 @@ import { cssObj } from '@fuel-ui/css';
 import { Accordion, Flex, Text } from '@fuel-ui/react';
 import type { BN } from 'fuels';
 import { bn, getGasUsedFromReceipts } from 'fuels';
-import { useMemo } from 'react';
 
 import type { TxSimulateResult } from '../../types';
 
@@ -14,32 +13,22 @@ export type TxDetailsProps = {
 };
 
 export function TxDetails({ receipts, outputAmount }: TxDetailsProps) {
-  const gasUsed = useMemo(
-    () => getGasUsedFromReceipts(receipts || []),
-    receipts || []
-  );
-  const total = useMemo(
-    () => gasUsed.add(bn(outputAmount)),
-    [gasUsed, outputAmount]
-  );
-
-  // console.log(`gasUsed`, gasUsed.format());
-  // console.log(`outputAmount`, outputAmount?.format());
-  // console.log(`total`, total.format());
+  const gasUsed = getGasUsedFromReceipts(receipts || []);
+  const total = gasUsed.add(bn(outputAmount));
 
   return (
     <Accordion type="multiple">
       <Accordion.Item value="tx-details" css={styles.item}>
         <Accordion.Trigger>Transaction Details</Accordion.Trigger>
         <Accordion.Content css={styles.info}>
-          <Flex css={styles.items}>
-            <Flex css={styles.item}>
+          <Flex css={styles.detailItems}>
+            <Flex css={styles.detailItem}>
               <Text as="span">Fee (network)</Text>
               <Text as="span" aria-label="Gas Value">
                 {gasUsed.format()} ETH
               </Text>
             </Flex>
-            <Flex css={styles.item}>
+            <Flex css={styles.detailItem}>
               <Text as="span">Total (including Fee)</Text>
               <Text as="span" aria-label="Gas Value">
                 {total.format()} ETH
@@ -86,11 +75,12 @@ const styles = {
       },
     },
   }),
-  items: cssObj({
+  detailItems: cssObj({
     flexDirection: 'column',
     gap: '$2',
+    flex: 1,
   }),
-  item: cssObj({
+  detailItem: cssObj({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

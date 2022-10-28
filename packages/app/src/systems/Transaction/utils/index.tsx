@@ -26,3 +26,5 @@ export function getCoinOutputsFromTx(tx?: TxRequest) {
     (i) => i.type === OutputType.Coin
   ) as TxOutputCoin[];
 }
+
+export * from './error';

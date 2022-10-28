@@ -11,6 +11,7 @@ const selectors = {
   approvedTx: (state: TxApproveMachineState) => state.context.approvedTx,
   tx: (state: TxApproveMachineState) => state.context.tx,
   receipts: (state: TxApproveMachineState) => state.context.receipts,
+  txDryRunError: (state: TxApproveMachineState) => state.context.txDryRunError,
   isUnlockingLoading: (state: TxApproveMachineState) =>
     state.children.unlock?.state.matches('unlocking'),
 };
@@ -24,6 +25,7 @@ export function useTxApprove() {
   const approvedTx = useSelector(service, selectors.approvedTx);
   const tx = useSelector(service, selectors.tx);
   const receipts = useSelector(service, selectors.receipts);
+  const txDryRunError = useSelector(service, selectors.txDryRunError);
 
   function startApprove() {
     send('START_APPROVE');
@@ -54,5 +56,6 @@ export function useTxApprove() {
     approvedTx,
     tx,
     receipts,
+    txDryRunError,
   };
 }

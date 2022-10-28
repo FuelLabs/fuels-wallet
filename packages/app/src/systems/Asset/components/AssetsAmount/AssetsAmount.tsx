@@ -6,24 +6,43 @@ import type { Asset } from '../../types';
 import { getAssetInfoById } from '../../utils';
 
 import { shortAddress } from '~/systems/Core';
-import type { TxInputCoin, TxOutputCoin } from '~/systems/Transaction';
+import type {
+  InsufficientInputAmountError,
+  TxInputCoin,
+  TxOutputCoin,
+} from '~/systems/Transaction';
 
 export type AssetsAmountProps = {
   amounts: Asset[] | TxOutputCoin[] | TxInputCoin[];
   title?: string;
   isPositive?: boolean;
+  isNegative?: boolean;
+  balanceErrors?: InsufficientInputAmountError[];
 };
 
 export function AssetsAmount({
   amounts,
   title,
   isPositive,
+  isNegative,
+  balanceErrors,
 }: AssetsAmountProps) {
+  const hasError = !!balanceErrors?.length;
+
   return (
-    <Card css={styles.card}>
-      <Text as="h3" css={{ fontSize: '$sm', fontWeight: '$semibold' }}>
-        {title}
-      </Text>
+    <Card css={styles.card(hasError)}>
+      <Flex css={styles.header}>
+        <Text as="h3" css={{ fontSize: '$sm', fontWeight: '$semibold' }}>
+          {title}
+        </Text>
+        {hasError && (
+          <Text
+            css={{ color: '$red10', fontSize: '$sm', fontWeight: '$semibold' }}
+          >
+            (not enough balance)
+          </Text>
+        )}
+      </Flex>
       {amounts.map((item, i) => {
         const asset = getAssetInfoById(item.assetId, item);
         const amount = bn(asset.amount);
@@ -44,7 +63,7 @@ export function AssetsAmount({
                 {shortAddress(asset.assetId)}
               </Text>
             </Copyable>
-            <Flex css={styles.amount(isPositive)}>
+            <Flex css={styles.amount(isPositive, isNegative)}>
               {amount.format()} {asset.symbol}
             </Flex>
           </Grid>
@@ -55,20 +74,33 @@ export function AssetsAmount({
 }
 
 const styles = {
-  card: cssObj({
-    px: '$3',
-    py: '$2',
-    flexDirection: 'column',
-    gap: '$2',
+  card: (isError?: boolean) =>
+    cssObj({
+      px: '$3',
+      py: '$2',
+      flexDirection: 'column',
+      gap: '$2',
+      ...(isError && {
+        backgroundColor: '$red3',
+      }),
+    }),
+  header: cssObj({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   }),
-  root: (isLast: boolean) =>
+  root: (isLast?: boolean) =>
     cssObj({
       gridTemplateColumns: 'repeat(2, 1fr)',
       gridTemplateRows: 'repeat(2, 1fr)',
       fontWeight: '$semibold',
       color: '$gray12',
-      borderBottom: isLast ? 'none' : '1px dashed $gray3',
       pb: '$2',
+      ...(isLast
+        ? {}
+        : {
+            borderBottom: '1px dashed $gray3',
+          }),
     }),
   asset: cssObj({
     alignItems: 'center',
@@ -84,8 +116,11 @@ const styles = {
     color: '$gray9',
     fontSize: '$xs',
   }),
-  amount: (isPositive?: boolean) =>
-    cssObj({
+  amount: (isPositive?: boolean, isNegative?: boolean) => {
+    const positiveSignal = isPositive ? "'+'" : '';
+    const negativeSignal = isNegative ? "'-'" : '';
+
+    return cssObj({
       justifyContent: 'flex-end',
       gridRow: '1 / 3',
       gridColumn: '2 / 3',
@@ -94,7 +129,8 @@ const styles = {
       color: isPositive ? '$accent11' : '$gray12',
       alignItems: 'center',
       '&:before': {
-        content: isPositive ? "'+'" : "'-'",
+        content: positiveSignal || negativeSignal,
       },
-    }),
+    });
+  },
 };

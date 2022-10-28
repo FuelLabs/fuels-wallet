@@ -16,10 +16,10 @@ import type { ChildrenMachine } from '~/systems/Core';
 import { FetchMachine, provider } from '~/systems/Core';
 
 type MachineContext = {
-  id: string;
   tx?: TransactionRequest;
   receipts?: TransactionResultReceipt[];
   approvedTx?: string;
+  txDryRunError?: any[];
 };
 
 type MachineServices = {
@@ -62,13 +62,17 @@ export const txApproveMachine = createMachine(
         invoke: {
           src: 'calculateGas',
           data: (_: MachineContext) => ({ input: { tx: _.tx } }),
-          onDone: {
-            target: 'idle',
-            actions: ['assignReceipts'],
-          },
-          onError: {
-            target: 'waitingTxRequest',
-          },
+          onDone: [
+            {
+              actions: ['assignTxDryRunError'],
+              target: 'idle',
+              cond: FetchMachine.hasError,
+            },
+            {
+              target: 'idle',
+              actions: ['assignReceipts'],
+            },
+          ],
         },
       },
       idle: {
@@ -139,6 +143,9 @@ export const txApproveMachine = createMachine(
       assignApprovedTx: assign({
         approvedTx: (_, ev: any) => ev.data,
       }),
+      assignTxDryRunError: assign({
+        txDryRunError: (_, ev: any) => ev.data.error,
+      }),
       assignReceipts: assign({
         receipts: (_, ev: any) => ev.data,
       }),
@@ -160,7 +167,6 @@ export const txApproveMachine = createMachine(
             input.tx
           );
 
-          console.log(`transactionResponse`, transactionResponse);
           return transactionResponse;
         },
       }),
@@ -168,13 +174,11 @@ export const txApproveMachine = createMachine(
         { tx: TransactionRequest },
         TransactionResultReceipt[]
       >({
-        showError: true,
+        showError: false,
         async fetch({ input }) {
           if (!input?.tx) {
             throw new Error('Invalid calculateGas input');
           }
-
-          console.log(`input`, input);
 
           const { receipts } = await provider.call(input.tx);
           return receipts;
