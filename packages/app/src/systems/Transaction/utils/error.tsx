@@ -6,6 +6,7 @@ export type InsufficientInputAmountError = {
 };
 
 export type GroupedError = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
   InsufficientInputAmount?: InsufficientInputAmountError[];
 };

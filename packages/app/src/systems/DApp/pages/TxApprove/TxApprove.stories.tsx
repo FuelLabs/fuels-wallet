@@ -30,6 +30,7 @@ export default {
 
 export const Usage = () => {
   useEffect(() => {
+    // eslint-disable-next-line no-alert
     alert(`use this password to unlock: ${passwordToUnlock}`);
   }, []);
 

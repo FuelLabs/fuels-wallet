@@ -18,7 +18,8 @@ import { FetchMachine, provider } from '~/systems/Core';
 type MachineContext = {
   tx?: TransactionRequest;
   receipts?: TransactionResultReceipt[];
-  approvedTx?: string;
+  approvedTx?: TransactionResponse;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   txDryRunError?: any[];
 };
 
@@ -138,16 +139,17 @@ export const txApproveMachine = createMachine(
   {
     actions: {
       assignTx: assign({
-        tx: (_, ev: any) => ev.input?.tx,
+        tx: (_, ev) => ev.input?.tx,
       }),
       assignApprovedTx: assign({
-        approvedTx: (_, ev: any) => ev.data,
+        approvedTx: (_, ev) => ev.data,
       }),
       assignTxDryRunError: assign({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         txDryRunError: (_, ev: any) => ev.data.error,
       }),
       assignReceipts: assign({
-        receipts: (_, ev: any) => ev.data,
+        receipts: (_, ev) => ev.data,
       }),
     },
     services: {

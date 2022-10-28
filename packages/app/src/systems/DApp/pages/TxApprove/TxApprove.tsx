@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Card, Flex, Heading, Stack, Tag, Text } from '@fuel-ui/react';
 import { AddressType } from '@fuels-wallet/types';
-import { bn } from 'fuels';
 import { useEffect } from 'react';
 
 import { getMockedTransaction } from '../../__mocks__/transaction';
@@ -12,12 +11,7 @@ import { useAccount } from '~/systems/Account';
 import { AssetsAmount } from '~/systems/Asset';
 import { Layout, provider } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
-import {
-  getCoinOutputsFromTx,
-  TxDetails,
-  TxFromTo,
-} from '~/systems/Transaction';
-import { getGroupedErrors } from '~/systems/Transaction/utils/error';
+import { TxDetails, TxFromTo } from '~/systems/Transaction';
 
 export type TxApproveProps = {
   id: string;
@@ -30,10 +24,12 @@ export function TxApprove() {
     handlers,
     account,
     isUnlockingLoading,
-    tx,
     receipts,
     approvedTx,
     txDryRunError,
+    outputAmount,
+    outputsToSend,
+    groupedErrors,
   } = useTxApprove();
 
   useEffect(() => {
@@ -49,20 +45,6 @@ export function TxApprove() {
       }
     })();
   }, [account]);
-
-  if (!tx) return null;
-
-  const coinOutputs = getCoinOutputsFromTx(tx);
-  const outputsToSend = coinOutputs.filter(
-    (value) => value.to !== account?.publicKey
-  );
-  const outputAmount = outputsToSend.reduce(
-    (acc, value) => acc.add(value.amount),
-    bn(0)
-  );
-  const groupedErrors = getGroupedErrors(
-    (txDryRunError as any)?.response?.errors
-  );
 
   return (
     <>
