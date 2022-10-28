@@ -1,5 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Card, Flex, Heading, Stack, Tag, Text } from '@fuel-ui/react';
+import { AddressType } from '@fuels-wallet/types';
 import { bn } from 'fuels';
 import { useEffect } from 'react';
 
@@ -7,7 +8,7 @@ import { getMockedTransaction } from '../../__mocks__/transaction';
 import { UnlockDialog } from '../../components';
 import { useTxApprove } from '../../hooks/useTxApprove';
 
-import { AddressType, useAccount } from '~/systems/Account';
+import { useAccount } from '~/systems/Account';
 import { AssetsAmount } from '~/systems/Asset';
 import { Layout, provider } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
