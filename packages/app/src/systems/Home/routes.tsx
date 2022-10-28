@@ -17,13 +17,6 @@ export const homeRoutes = (
       }
     />
     <Route path={Pages.faucet()} element={<FaucetDialog />} />
-    <Route
-      path={Pages.receive()}
-      element={
-        <>
-          <Receive />
-        </>
-      }
-    />
+    <Route path={Pages.receive()} element={<Receive />} />
   </Route>
 );
