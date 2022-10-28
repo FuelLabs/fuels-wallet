@@ -1,7 +1,7 @@
 import { Button, Flex, Input, Text } from '@fuel-ui/react';
 import type { Coin } from '@fuels-wallet/types';
 import { useState } from 'react';
-import type { FC } from 'react';
+import type { FC, ChangeEvent } from 'react';
 
 import { AmountInputLoader } from './AmountInputLoader';
 
@@ -18,9 +18,8 @@ type AmountInputComponent = FC<AmountInputProps> & {
 export const AmountInput: AmountInputComponent = ({ asset }) => {
   const [assetAmount, setAssetAmount] = useState<string>();
 
-  const handleAmountChange = () => {
-    // TODO
-    setAssetAmount('');
+  const handleAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setAssetAmount(event.target.value);
   };
 
   const handlePress = () => {
