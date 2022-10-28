@@ -13,6 +13,7 @@ export const Pages = {
   index: route('/'),
   wallet: route('/wallet'),
   faucet: route('/wallet/faucet'),
+  receive: route('/wallet/receive'),
   signUp: route('/sign-up'),
   signUpWelcome: route('/sign-up/welcome'),
   signUpCreateWallet: route('/sign-up/create-wallet'),
