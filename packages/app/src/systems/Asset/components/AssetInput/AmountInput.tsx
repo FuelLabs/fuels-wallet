@@ -3,19 +3,19 @@ import type { Coin } from '@fuels-wallet/types';
 import { useState } from 'react';
 import type { FC } from 'react';
 
-import { AssetInputLoader } from './AssetInputLoader';
+import { AmountInputLoader } from './AmountInputLoader';
 
 import { formatUnits } from '~/systems/Core';
 
-export type AssetInputProps = {
+export type AmountInputProps = {
   asset: Coin;
 };
 
-type AssetInputComponent = FC<AssetInputProps> & {
-  Loader: typeof AssetInputLoader;
+type AmountInputComponent = FC<AmountInputProps> & {
+  Loader: typeof AmountInputLoader;
 };
 
-export const AssetInput: AssetInputComponent = ({ asset }) => {
+export const AmountInput: AmountInputComponent = ({ asset }) => {
   const [assetAmount, setAssetAmount] = useState<string>();
 
   const handleAmountChange = () => {
@@ -50,4 +50,4 @@ export const AssetInput: AssetInputComponent = ({ asset }) => {
   );
 };
 
-AssetInput.Loader = AssetInputLoader;
+AmountInput.Loader = AmountInputLoader;

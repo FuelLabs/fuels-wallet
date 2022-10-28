@@ -3,17 +3,17 @@ import { bn } from 'fuels';
 
 import { ASSET_LIST } from '../../utils';
 
-import type { AssetInputProps } from './AssetInput';
-import { AssetInput } from './AssetInput';
+import type { AmountInputProps } from './AmountInput';
+import { AmountInput } from './AmountInput';
 
 export default {
-  component: AssetInput,
-  title: 'Asset/Components/AssetInput',
+  component: AmountInput,
+  title: 'Asset/Components/AmountInput',
 };
 
-export const Usage = (args: AssetInputProps) => (
+export const Usage = (args: AmountInputProps) => (
   <Box css={{ width: 300 }}>
-    <AssetInput
+    <AmountInput
       {...args}
       asset={{
         ...ASSET_LIST[0],
@@ -25,6 +25,6 @@ export const Usage = (args: AssetInputProps) => (
 
 export const Loader = () => (
   <Box css={{ width: 300 }}>
-    <AssetInput.Loader />
+    <AmountInput.Loader />
   </Box>
 );

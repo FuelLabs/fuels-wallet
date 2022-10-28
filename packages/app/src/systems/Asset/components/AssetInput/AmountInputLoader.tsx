@@ -3,7 +3,7 @@ import { CardList } from '@fuel-ui/react';
 import type { IContentLoaderProps } from 'react-content-loader';
 import ContentLoader from 'react-content-loader';
 
-export const AssetInputLoader = (props: IContentLoaderProps) => (
+export const AmountInputLoader = (props: IContentLoaderProps) => (
   <CardList.Item css={{ padding: 0 }}>
     <ContentLoader
       speed={2}
