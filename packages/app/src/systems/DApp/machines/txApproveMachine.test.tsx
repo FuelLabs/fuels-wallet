@@ -15,6 +15,12 @@ type Service = InterpreterFrom<typeof txApproveMachine>;
 
 const OWNER = import.meta.env.VITE_ADDR_OWNER;
 
+// mockServer([
+//   graphql.query('getBalances', (_req, res, ctx) => {
+//     return res(ctx.data({ balances: { edges: MOCK_BALANCES } }));
+//   }),
+// ]);
+
 describe('txApproveMachine', () => {
   let service: Service;
   let wallet: Wallet;

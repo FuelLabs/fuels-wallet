@@ -30,7 +30,7 @@ export function TxDetails({ receipts, outputAmount }: TxDetailsProps) {
             </Flex>
             <Flex css={styles.detailItem}>
               <Text as="span">Total (including Fee)</Text>
-              <Text as="span" aria-label="Gas Value">
+              <Text as="span" aria-label="Total Value">
                 {total.format()} ETH
               </Text>
             </Flex>
