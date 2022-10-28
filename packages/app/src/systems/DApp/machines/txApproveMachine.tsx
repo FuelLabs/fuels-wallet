@@ -14,13 +14,13 @@ import { unlockMachine } from './unlockMachine';
 import type { AccountInputs } from '~/systems/Account';
 import type { ChildrenMachine } from '~/systems/Core';
 import { FetchMachine, provider } from '~/systems/Core';
+import type { VMApiError } from '~/systems/Transaction';
 
 type MachineContext = {
   tx?: TransactionRequest;
   receipts?: TransactionResultReceipt[];
   approvedTx?: TransactionResponse;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  txDryRunError?: any[];
+  txDryRunError?: VMApiError;
 };
 
 type MachineServices = {

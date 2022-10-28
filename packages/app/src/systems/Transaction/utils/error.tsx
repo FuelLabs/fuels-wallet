@@ -1,3 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+export type VMApiError = {
+  request: any;
+  response: {
+    errors: {
+      locations: any;
+      message: string;
+      path: string[];
+    }[];
+  };
+};
+
 export type VmErrorType = 'InsufficientInputAmount';
 export type InsufficientInputAmountError = {
   asset: string;
@@ -6,7 +19,6 @@ export type InsufficientInputAmountError = {
 };
 
 export type GroupedError = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
   InsufficientInputAmount?: InsufficientInputAmountError[];
 };

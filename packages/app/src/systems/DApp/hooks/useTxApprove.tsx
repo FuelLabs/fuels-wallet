@@ -37,10 +37,7 @@ export function useTxApprove() {
     (acc, value) => acc.add(value.amount),
     bn(0)
   );
-  const groupedErrors = getGroupedErrors(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (txDryRunError as any)?.response?.errors
-  );
+  const groupedErrors = getGroupedErrors(txDryRunError?.response?.errors);
 
   function startApprove() {
     send('START_APPROVE');

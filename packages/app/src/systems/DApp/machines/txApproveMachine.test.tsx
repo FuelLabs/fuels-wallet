@@ -15,12 +15,6 @@ type Service = InterpreterFrom<typeof txApproveMachine>;
 
 const OWNER = import.meta.env.VITE_ADDR_OWNER;
 
-// mockServer([
-//   graphql.query('getBalances', (_req, res, ctx) => {
-//     return res(ctx.data({ balances: { edges: MOCK_BALANCES } }));
-//   }),
-// ]);
-
 describe('txApproveMachine', () => {
   let service: Service;
   let wallet: Wallet;
@@ -46,8 +40,6 @@ describe('txApproveMachine', () => {
 
   it('should approve/send transaction', async () => {
     await waitFor(service, (state) => state.matches('waitingTxRequest'));
-
-    // await wallet.fund(tx);
 
     service.send('CALCULATE_GAS', { input: { tx } });
 
