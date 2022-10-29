@@ -2,10 +2,13 @@ import { useInterpret, useSelector } from '@xstate/react';
 
 import type { SignMachineState } from '../machines';
 import { signMachine } from '../machines';
+import { useSignRequestMethods } from '../methods';
 
 import { useAccount } from '~/systems/Account';
 
 const selectors = {
+  origin: (state: SignMachineState) => state.context.origin,
+  message: (state: SignMachineState) => state.context.message,
   isUnlocking: (state: SignMachineState) => state.matches('unlocking'),
   signedMessage: (state: SignMachineState) => state.context.signedMessage,
   isUnlockingLoading: (state: SignMachineState) =>
@@ -19,9 +22,18 @@ export function useSignatureRequest() {
   const isUnlocking = useSelector(service, selectors.isUnlocking);
   const isUnlockingLoading = useSelector(service, selectors.isUnlockingLoading);
   const signedMessage = useSelector(service, selectors.signedMessage);
+  const message = useSelector(service, selectors.message);
+  const origin = useSelector(service, selectors.origin);
+
+  // Start Connect Request Methods
+  useSignRequestMethods(service);
 
   function sign() {
-    send('START_SIGN', { input: { message: 'test' } });
+    send('SIGN_MESSAGE');
+  }
+
+  function reject() {
+    send('REJECT');
   }
 
   function unlock(password: string) {
@@ -35,9 +47,12 @@ export function useSignatureRequest() {
   return {
     handlers: {
       sign,
+      reject,
       unlock,
       closeUnlock,
     },
+    origin,
+    message,
     isUnlocking,
     isUnlockingLoading,
     account,
