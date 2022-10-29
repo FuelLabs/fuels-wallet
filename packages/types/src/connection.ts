@@ -1,4 +1,4 @@
-export type Application = {
+export type Connection = {
   origin: string;
   accounts: Array<string>;
 };
