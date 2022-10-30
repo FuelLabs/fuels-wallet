@@ -1,3 +1,4 @@
+import { cssObj } from '@fuel-ui/css';
 import { Button, Flex, Input, Text } from '@fuel-ui/react';
 import type { Coin } from '@fuels-wallet/types';
 import { useState } from 'react';
@@ -27,10 +28,7 @@ export const AmountInput: AmountInputComponent = ({ asset }) => {
   };
 
   return (
-    <Input
-      size="lg"
-      css={{ height: 'auto', display: 'flex', alignItems: 'center' }}
-    >
+    <Input size="lg" css={styles.input}>
       <Input.Number
         inputMode="decimal"
         name="amount"
@@ -48,9 +46,7 @@ export const AmountInput: AmountInputComponent = ({ asset }) => {
           >
             Max
           </Button>
-          <Text css={{ fontSize: '$xs', whiteSpace: 'nowrap' }}>
-            Balance: {formatUnits(asset.amount)}
-          </Text>
+          <Text css={styles.text}>Balance: {formatUnits(asset.amount)}</Text>
         </Flex>
       </Input.ElementRight>
     </Input>
@@ -58,3 +54,15 @@ export const AmountInput: AmountInputComponent = ({ asset }) => {
 };
 
 AmountInput.Loader = AmountInputLoader;
+
+const styles = {
+  input: cssObj({
+    height: 'auto',
+    display: 'flex',
+    alignItems: 'center',
+  }),
+  text: cssObj({
+    fontSize: '$xs',
+    whiteSpace: 'nowrap',
+  }),
+};
