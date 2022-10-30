@@ -21,8 +21,33 @@ describe('AssetsAmount', () => {
 
   it('should show positive values with plus', async () => {
     render(
+      <AssetsAmount
+        amounts={MOCK_ASSETS_AMOUNTS}
+        title="Assets to Send"
+        isPositive
+      />
+    );
+    expect(screen.getByText('+14.5 ETH')).toBeInTheDocument();
+  });
+
+  it('should show negative values with substract signal', async () => {
+    render(
+      <AssetsAmount
+        amounts={MOCK_ASSETS_AMOUNTS}
+        title="Assets to Send"
+        isNegative
+      />
+    );
+    expect(screen.getByText('-14.5 ETH')).toBeInTheDocument();
+  });
+
+  it('should not show positive/negative signal', async () => {
+    render(
       <AssetsAmount amounts={MOCK_ASSETS_AMOUNTS} title="Assets to Send" />
     );
-    expect(screen.getByText('14.5 ETH')).toBeInTheDocument();
+    const el = screen.getByText('14.5 ETH');
+    expect(el.innerHTML.indexOf('+')).toEqual(-1);
+    expect(el.innerHTML.indexOf('-')).toEqual(-1);
+    expect(el).toBeInTheDocument();
   });
 });

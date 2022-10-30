@@ -22,3 +22,5 @@ export const IS_LOGGED_KEY = 'fuel__isLogged';
 export const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 export const IS_CRX_POPUP =
   IS_CRX && globalThis.location.pathname === CRXPages.popup;
+export const BLOCK_EXPLORER_URL =
+  'https://fuellabs.github.io/block-explorer-v2';

@@ -1,7 +1,18 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Card, Flex, Heading, Stack, Tag, Text } from '@fuel-ui/react';
+import {
+  Button,
+  Card,
+  Copyable,
+  Flex,
+  Heading,
+  Icon,
+  Link,
+  Stack,
+  Tag,
+  Text,
+} from '@fuel-ui/react';
 import { AddressType } from '@fuels-wallet/types';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { getMockedTransaction } from '../../__mocks__/transaction';
 import { UnlockDialog } from '../../components';
@@ -11,7 +22,13 @@ import { useAccount } from '~/systems/Account';
 import { AssetsAmount } from '~/systems/Asset';
 import { Layout, provider } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
-import { TxDetails, TxFromTo } from '~/systems/Transaction';
+import { NetworkScreen, useNetworks } from '~/systems/Network';
+import {
+  getBlockExplorerLink,
+  getFilteredErrors,
+  TxDetails,
+  TxFromTo,
+} from '~/systems/Transaction';
 
 export type TxApproveProps = {
   id: string;
@@ -19,6 +36,7 @@ export type TxApproveProps = {
 
 export function TxApprove() {
   const { isLoading } = useAccount();
+  const { selectedNetwork } = useNetworks({ type: NetworkScreen.list });
   const {
     isUnlocking,
     handlers,
@@ -26,12 +44,20 @@ export function TxApprove() {
     isUnlockingLoading,
     receipts,
     approvedTx,
-    txDryRunError,
+    txApproveError,
     outputAmount,
     outputsToSend,
     groupedErrors,
+    isIdle,
+    isApproving,
   } = useTxApprove();
 
+  const generalErrors = useMemo(
+    () => getFilteredErrors(groupedErrors, ['InsufficientInputAmount']),
+    [groupedErrors]
+  );
+
+  // TODO: this useEffect is just for mocking purposes. It should be removed when integrating the real input from wallet SDK
   useEffect(() => {
     (async () => {
       if (account) {
@@ -51,7 +77,7 @@ export function TxApprove() {
       <Layout title="Approve Transaction" isLoading={isLoading}>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
-          {!isLoading && !approvedTx && (
+          {!isLoading && !approvedTx && !txApproveError && (
             <Stack gap="$4">
               <Card>
                 <Card.Body
@@ -88,6 +114,27 @@ export function TxApprove() {
                   }}
                 />
               )}
+              {!!(generalErrors && Object.keys(generalErrors).length) && (
+                <Card css={styles.generalErrorCard}>
+                  <Copyable
+                    value={JSON.stringify(generalErrors)}
+                    tooltipMessage="Click to copy Error Logs"
+                    css={{ width: '100%', justifyContent: 'space-between' }}
+                  >
+                    <Icon
+                      icon={Icon.is('WarningOctagon')}
+                      color="red8"
+                      size={20}
+                    />
+                    <Text
+                      as="h3"
+                      css={{ fontSize: '$sm', fontWeight: '$semibold' }}
+                    >
+                      Invalid Transaction
+                    </Text>
+                  </Copyable>
+                </Card>
+              )}
               <AssetsAmount
                 amounts={outputsToSend}
                 balanceErrors={groupedErrors?.InsufficientInputAmount}
@@ -100,8 +147,25 @@ export function TxApprove() {
             <Stack>
               <Heading as="h4">Transaction sent</Heading>
               <Text>
-                Transaction sent successfully, you can open your wallet and
-                check its status right now!
+                Transaction sent successfully.
+                <Link
+                  isExternal
+                  href={getBlockExplorerLink({
+                    path: `/transaction/${approvedTx.id}`,
+                    provider: selectedNetwork?.url,
+                  })}
+                >
+                  Click here to view on Fuel Explorer
+                </Link>
+              </Text>
+            </Stack>
+          )}
+          {txApproveError && (
+            <Stack>
+              <Heading as="h4">Transaction failed</Heading>
+              <Text>
+                Transaction failed to run. Please try again or contact support
+                if the problem persists.
               </Text>
             </Stack>
           )}
@@ -111,12 +175,12 @@ export function TxApprove() {
             <Button color="gray" variant="ghost" css={{ flex: 1 }}>
               Close
             </Button>
-            {!approvedTx && (
+            {!approvedTx && !txApproveError && (
               <Button
                 color="accent"
                 onPress={handlers.startApprove}
-                isLoading={isLoading}
-                isDisabled={!!(approvedTx || txDryRunError)}
+                isLoading={isLoading || isApproving}
+                isDisabled={!isIdle}
                 css={{ flex: 1, ml: '$2' }}
               >
                 Confirm
@@ -151,5 +215,14 @@ const styles = {
     background: 'transparent',
     borderColor: '$gray8',
     borderStyle: 'dashed',
+  }),
+  generalErrorCard: cssObj({
+    px: '$3',
+    py: '$2',
+    gap: '$2',
+    backgroundColor: '$red3',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   }),
 };

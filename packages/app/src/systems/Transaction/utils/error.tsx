@@ -12,6 +12,7 @@ export type VMApiError = {
 };
 
 export type VmErrorType = 'InsufficientInputAmount';
+
 export type InsufficientInputAmountError = {
   asset: string;
   expected: string;
@@ -19,12 +20,16 @@ export type InsufficientInputAmountError = {
 };
 
 export type GroupedError = {
-  [key: string]: any;
-  InsufficientInputAmount?: InsufficientInputAmountError[];
+  errorMessage?: string;
+  error?: InsufficientInputAmountError | any;
+};
+
+export type GroupedErrors = {
+  [key: VmErrorType | string]: GroupedError[];
 };
 
 // typeguard
-const isVmErrorTypeKey = <K extends string & keyof GroupedError>(
+const isVmErrorTypeKey = <K extends string & keyof GroupedErrors>(
   properties: K[],
   vmError: string
 ): vmError is K => {
@@ -34,7 +39,7 @@ const isVmErrorTypeKey = <K extends string & keyof GroupedError>(
 export const getGroupedErrors = (rawErrors?: { message: string }[]) => {
   if (!rawErrors) return undefined;
 
-  const groupedErrors = rawErrors.reduce<GroupedError>(
+  const groupedErrors = rawErrors.reduce<GroupedErrors>(
     (prevGroupedError, rawError) => {
       const { message } = rawError;
       const [type, ...rest] = message.split(' ');
@@ -58,18 +63,50 @@ export const getGroupedErrors = (rawErrors?: { message: string }[]) => {
           ...prevGroupedError,
           [type]: [
             ...(prevGroupedError[type] || []),
-            error as InsufficientInputAmountError,
+            {
+              errorMessage: message,
+              error: error as InsufficientInputAmountError,
+            },
           ],
         };
       }
 
       return {
         ...prevGroupedError,
-        [type]: [...(prevGroupedError[type] || []), errorMessage],
+        [type]: [
+          ...(prevGroupedError[type] || []),
+          {
+            errorMessage: message,
+          },
+        ],
       };
     },
     {}
   );
 
   return groupedErrors;
+};
+
+export const getFilteredErrors = (
+  groupedErrors?: GroupedErrors,
+  filterOutKeys?: Array<VmErrorType | string>
+) => {
+  if (!groupedErrors) return undefined;
+  if (!filterOutKeys) return groupedErrors;
+
+  const filteredErrors = Object.keys(groupedErrors).reduce<GroupedErrors>(
+    (prevGroupedErrors, key) => {
+      if (!filterOutKeys.includes(key)) {
+        return {
+          ...prevGroupedErrors,
+          [key]: groupedErrors[key],
+        };
+      }
+
+      return prevGroupedErrors;
+    },
+    {}
+  );
+
+  return Object.keys(filteredErrors).length > 0 ? filteredErrors : undefined;
 };

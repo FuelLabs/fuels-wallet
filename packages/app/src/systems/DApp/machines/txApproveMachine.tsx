@@ -21,6 +21,7 @@ type MachineContext = {
   receipts?: TransactionResultReceipt[];
   approvedTx?: TransactionResponse;
   txDryRunError?: VMApiError;
+  txApproveError?: VMApiError;
 };
 
 type MachineServices = {
@@ -66,7 +67,7 @@ export const txApproveMachine = createMachine(
           onDone: [
             {
               actions: ['assignTxDryRunError'],
-              target: 'idle',
+              target: 'failed',
               cond: FetchMachine.hasError,
             },
             {
@@ -120,7 +121,8 @@ export const txApproveMachine = createMachine(
           },
           onDone: [
             {
-              target: 'done',
+              target: 'failed',
+              actions: ['assignTxApproveError'],
               cond: FetchMachine.hasError,
             },
             {
@@ -147,6 +149,10 @@ export const txApproveMachine = createMachine(
       assignTxDryRunError: assign({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         txDryRunError: (_, ev: any) => ev.data.error,
+      }),
+      assignTxApproveError: assign({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        txApproveError: (_, ev: any) => ev.data.error,
       }),
       assignReceipts: assign({
         receipts: (_, ev) => ev.data,

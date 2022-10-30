@@ -7,7 +7,7 @@ import { getAssetInfoById } from '../../utils';
 
 import { shortAddress } from '~/systems/Core';
 import type {
-  InsufficientInputAmountError,
+  GroupedError,
   TxInputCoin,
   TxOutputCoin,
 } from '~/systems/Transaction';
@@ -17,7 +17,7 @@ export type AssetsAmountProps = {
   title?: string;
   isPositive?: boolean;
   isNegative?: boolean;
-  balanceErrors?: InsufficientInputAmountError[];
+  balanceErrors?: GroupedError[];
 };
 
 export function AssetsAmount({
@@ -63,7 +63,9 @@ export function AssetsAmount({
                 {shortAddress(asset.assetId)}
               </Text>
             </Copyable>
-            <Flex css={styles.amount(isPositive, isNegative)}>
+            <Flex css={styles.amount(isPositive)}>
+              {isPositive && '+'}
+              {isNegative && '-'}
               {amount.format()} {asset.symbol}
             </Flex>
           </Grid>
@@ -116,11 +118,8 @@ const styles = {
     color: '$gray9',
     fontSize: '$xs',
   }),
-  amount: (isPositive?: boolean, isNegative?: boolean) => {
-    const positiveSignal = isPositive ? "'+'" : '';
-    const negativeSignal = isNegative ? "'-'" : '';
-
-    return cssObj({
+  amount: (isPositive?: boolean) =>
+    cssObj({
       justifyContent: 'flex-end',
       gridRow: '1 / 3',
       gridColumn: '2 / 3',
@@ -128,9 +127,5 @@ const styles = {
       fontSize: '$sm',
       color: isPositive ? '$accent11' : '$gray12',
       alignItems: 'center',
-      '&:before': {
-        content: positiveSignal || negativeSignal,
-      },
-    });
-  },
+    }),
 };

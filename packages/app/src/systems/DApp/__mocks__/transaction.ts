@@ -29,8 +29,11 @@ export const getMockedTransaction = async (
     quantities = [[amount, assetId], fee];
   }
 
-  const coins = await provider.getCoinsToSpend(ownerAddress, quantities);
-  txRequest.addCoins(coins);
+  try {
+    const coins = await provider.getCoinsToSpend(ownerAddress, quantities);
+    txRequest.addCoins(coins);
+    // eslint-disable-next-line no-empty
+  } catch (e) {}
 
   return txRequest;
 };
