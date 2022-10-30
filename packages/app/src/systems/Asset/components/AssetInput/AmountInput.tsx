@@ -27,7 +27,10 @@ export const AmountInput: AmountInputComponent = ({ asset }) => {
   };
 
   return (
-    <Input css={{ px: '$3', py: '$2' }}>
+    <Input
+      size="lg"
+      css={{ height: 'auto', display: 'flex', alignItems: 'center' }}
+    >
       <Input.Number
         inputMode="decimal"
         name="amount"
@@ -36,11 +39,16 @@ export const AmountInput: AmountInputComponent = ({ asset }) => {
         onChange={handleAmountChange}
       />
       <Input.ElementRight>
-        <Flex direction="column">
-          <Button css={{ height: 18, width: 36 }} onPress={handlePress}>
+        <Flex direction="column" align="end" basis="auto">
+          <Button
+            size="xs"
+            variant="ghost"
+            css={{ width: '75%' }}
+            onPress={handlePress}
+          >
             Max
           </Button>
-          <Text css={{ fontSize: '$xs' }}>
+          <Text css={{ fontSize: '$xs', whiteSpace: 'nowrap' }}>
             Balance: {formatUnits(asset.amount)}
           </Text>
         </Flex>
