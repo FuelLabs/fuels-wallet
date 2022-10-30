@@ -52,8 +52,8 @@ export function useTxApprove() {
 
   const groupedErrors = getGroupedErrors(txDryRunError?.response?.errors);
 
-  function startApprove() {
-    send('START_APPROVE');
+  function startApprove(providerUrl: string) {
+    send('START_APPROVE', { input: { providerUrl } });
   }
 
   function unlock(password: string) {
@@ -64,8 +64,8 @@ export function useTxApprove() {
     send('CLOSE_UNLOCK');
   }
 
-  function calculateGas(tx: TransactionRequest) {
-    send('CALCULATE_GAS', { input: { tx } });
+  function calculateGas(tx: TransactionRequest, providerUrl: string) {
+    send('CALCULATE_GAS', { input: { tx, providerUrl } });
   }
 
   return {

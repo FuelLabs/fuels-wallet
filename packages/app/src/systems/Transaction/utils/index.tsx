@@ -31,13 +31,13 @@ export function getCoinOutputsFromTx(tx?: TxRequest) {
 
 export function getBlockExplorerLink({
   path,
-  provider,
+  providerUrl,
 }: {
   path: string;
-  provider: string;
+  providerUrl: string;
 }) {
   return `${BLOCK_EXPLORER_URL}${path}?providerUrl=${encodeURIComponent(
-    provider
+    providerUrl
   )}`;
 }
 

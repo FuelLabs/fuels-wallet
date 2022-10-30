@@ -3,14 +3,15 @@ import {
   bn,
   hexlify,
   MAX_GAS_PER_TX,
+  Provider,
   ScriptTransactionRequest,
 } from 'fuels';
-import type { CoinQuantityLike, Provider } from 'fuels';
+import type { CoinQuantityLike } from 'fuels';
 
 export const getMockedTransaction = async (
   owner: string,
   destiny: string,
-  provider: Provider
+  providerUrl: string
 ) => {
   const params = { gasLimit: MAX_GAS_PER_TX, gasPrice: 1 };
   const txRequest = new ScriptTransactionRequest(params);
@@ -30,6 +31,7 @@ export const getMockedTransaction = async (
   }
 
   try {
+    const provider = new Provider(providerUrl);
     const coins = await provider.getCoinsToSpend(ownerAddress, quantities);
     txRequest.addCoins(coins);
     // eslint-disable-next-line no-empty

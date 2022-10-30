@@ -9,11 +9,11 @@ import { getMockedTransaction } from '../__mocks__/transaction';
 import { txApproveMachine } from './txApproveMachine';
 
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
-import { provider } from '~/systems/Core';
 
 type Service = InterpreterFrom<typeof txApproveMachine>;
 
 const OWNER = import.meta.env.VITE_ADDR_OWNER;
+const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
 
 describe('txApproveMachine', () => {
   let service: Service;
@@ -26,7 +26,7 @@ describe('txApproveMachine', () => {
     tx = await getMockedTransaction(
       wallet?.publicKey || '',
       '0xc7862855b418ba8f58878db434b21053a61a2025209889cc115989e8040ff077',
-      provider
+      providerUrl
     );
   });
 
@@ -41,12 +41,12 @@ describe('txApproveMachine', () => {
   it('should approve/send transaction', async () => {
     await waitFor(service, (state) => state.matches('waitingTxRequest'));
 
-    service.send('CALCULATE_GAS', { input: { tx } });
+    service.send('CALCULATE_GAS', { input: { tx, providerUrl } });
 
     await waitFor(service, (state) => state.matches('calculatingGas'));
     await waitFor(service, (state) => state.matches('idle'));
 
-    service.send('START_APPROVE');
+    service.send('START_APPROVE', { input: { providerUrl } });
 
     await waitFor(service, (state) => state.matches('unlocking'));
 

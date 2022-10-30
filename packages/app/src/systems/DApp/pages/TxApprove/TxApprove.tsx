@@ -20,7 +20,7 @@ import { useTxApprove } from '../../hooks/useTxApprove';
 
 import { useAccount } from '~/systems/Account';
 import { AssetsAmount } from '~/systems/Asset';
-import { Layout, provider } from '~/systems/Core';
+import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { NetworkScreen, useNetworks } from '~/systems/Network';
 import {
@@ -60,17 +60,17 @@ export function TxApprove() {
   // TODO: this useEffect is just for mocking purposes. It should be removed when integrating the real input from wallet SDK
   useEffect(() => {
     (async () => {
-      if (account) {
+      if (account && selectedNetwork?.url) {
         const txRequest = await getMockedTransaction(
           account?.publicKey || '',
           '0xc7862855b418ba8f58878db434b21053a61a2025209889cc115989e8040ff077',
-          provider
+          selectedNetwork?.url
         );
 
-        handlers.calculateGas(txRequest);
+        handlers.calculateGas(txRequest, selectedNetwork?.url);
       }
     })();
-  }, [account]);
+  }, [account, selectedNetwork?.url]);
 
   return (
     <>
@@ -152,7 +152,7 @@ export function TxApprove() {
                   isExternal
                   href={getBlockExplorerLink({
                     path: `/transaction/${approvedTx.id}`,
-                    provider: selectedNetwork?.url,
+                    providerUrl: selectedNetwork?.url,
                   })}
                 >
                   Click here to view on Fuel Explorer
@@ -178,7 +178,7 @@ export function TxApprove() {
             {!approvedTx && !txApproveError && (
               <Button
                 color="accent"
-                onPress={handlers.startApprove}
+                onPress={() => handlers.startApprove(selectedNetwork?.url)}
                 isLoading={isLoading || isApproving}
                 isDisabled={!isIdle}
                 css={{ flex: 1, ml: '$2' }}

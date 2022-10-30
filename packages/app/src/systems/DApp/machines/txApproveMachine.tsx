@@ -4,6 +4,7 @@ import type {
   TransactionResultReceipt,
   Wallet,
 } from 'fuels';
+import { Provider } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { send } from 'xstate/lib/actions';
@@ -13,7 +14,7 @@ import { unlockMachine } from './unlockMachine';
 
 import type { AccountInputs } from '~/systems/Account';
 import type { ChildrenMachine } from '~/systems/Core';
-import { FetchMachine, provider } from '~/systems/Core';
+import { FetchMachine } from '~/systems/Core';
 import type { VMApiError } from '~/systems/Transaction';
 
 type MachineContext = {
@@ -22,6 +23,7 @@ type MachineContext = {
   approvedTx?: TransactionResponse;
   txDryRunError?: VMApiError;
   txApproveError?: VMApiError;
+  providerUrl?: string;
 };
 
 type MachineServices = {
@@ -35,8 +37,11 @@ type MachineServices = {
 
 type MachineEvents =
   | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
-  | { type: 'START_APPROVE'; input?: null }
-  | { type: 'CALCULATE_GAS'; input: { tx: TransactionRequest } }
+  | { type: 'START_APPROVE'; input?: { providerUrl: string } }
+  | {
+      type: 'CALCULATE_GAS';
+      input: { tx: TransactionRequest; providerUrl: string };
+    }
   | { type: 'CLOSE_UNLOCK'; input?: null };
 
 export const txApproveMachine = createMachine(
@@ -56,14 +61,16 @@ export const txApproveMachine = createMachine(
         on: {
           CALCULATE_GAS: {
             target: 'calculatingGas',
-            actions: ['assignTx'],
+            actions: ['assignTx', 'assignProviderUrl'],
           },
         },
       },
       calculatingGas: {
         invoke: {
           src: 'calculateGas',
-          data: (_: MachineContext) => ({ input: { tx: _.tx } }),
+          data: (_: MachineContext) => ({
+            input: { tx: _.tx, providerUrl: _.providerUrl },
+          }),
           onDone: [
             {
               actions: ['assignTxDryRunError'],
@@ -80,6 +87,7 @@ export const txApproveMachine = createMachine(
       idle: {
         on: {
           START_APPROVE: {
+            actions: ['assignProviderUrl'],
             target: 'unlocking',
           },
         },
@@ -116,7 +124,7 @@ export const txApproveMachine = createMachine(
           src: 'approveTx',
           data: {
             input: (_: MachineContext, ev: { data: Wallet }) => {
-              return { tx: _.tx, wallet: ev.data };
+              return { tx: _.tx, wallet: ev.data, providerUrl: _.providerUrl };
             },
           },
           onDone: [
@@ -157,10 +165,13 @@ export const txApproveMachine = createMachine(
       assignReceipts: assign({
         receipts: (_, ev) => ev.data,
       }),
+      assignProviderUrl: assign({
+        providerUrl: (_, ev) => ev.input?.providerUrl,
+      }),
     },
     services: {
       approveTx: FetchMachine.create<
-        { tx: TransactionRequest; wallet: Wallet },
+        { tx: TransactionRequest; wallet: Wallet; providerUrl?: string },
         TransactionResponse
       >({
         showError: true,
@@ -170,7 +181,7 @@ export const txApproveMachine = createMachine(
             throw new Error('Invalid approveTx input');
           }
 
-          input.wallet.provider = provider;
+          input.wallet.provider = new Provider(input.providerUrl || '');
           const transactionResponse = await input?.wallet.sendTransaction(
             input.tx
           );
@@ -179,7 +190,7 @@ export const txApproveMachine = createMachine(
         },
       }),
       calculateGas: FetchMachine.create<
-        { tx: TransactionRequest },
+        { tx: TransactionRequest; providerUrl?: string },
         TransactionResultReceipt[]
       >({
         showError: false,
@@ -188,6 +199,7 @@ export const txApproveMachine = createMachine(
             throw new Error('Invalid calculateGas input');
           }
 
+          const provider = new Provider(input.providerUrl || '');
           const { receipts } = await provider.call(input.tx);
           return receipts;
         },
