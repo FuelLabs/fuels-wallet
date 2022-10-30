@@ -1,4 +1,4 @@
-import { render, screen, testA11y } from '@fuel-ui/test-utils';
+import { act, render, screen, testA11y } from '@fuel-ui/test-utils';
 
 import { HomeActions } from './HomeActions';
 
@@ -17,5 +17,27 @@ describe('HomeActions', () => {
     render(<HomeActions isDisabled />);
     expect(screen.getByText('Send')).toBeDisabled();
     expect(screen.getByText('Receive')).toBeDisabled();
+  });
+
+  it("should call 'Send' and 'Receive' actions when clicked", () => {
+    const receiveAction = jest.fn();
+    const sendAction = jest.fn();
+    render(
+      <HomeActions
+        receiveAction={() => receiveAction()}
+        sendAction={() => sendAction()}
+      />
+    );
+
+    const receiveButton = screen.getByText('Receive');
+    const sendButton = screen.getByText('Send');
+
+    act(() => {
+      receiveButton.click();
+      sendButton.click();
+    });
+
+    expect(receiveAction).toBeCalled();
+    expect(sendAction).toBeCalled();
   });
 });
