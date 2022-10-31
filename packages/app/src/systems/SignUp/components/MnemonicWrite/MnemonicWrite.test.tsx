@@ -1,5 +1,6 @@
 import { Mnemonic as FuelMnemonic } from '@fuel-ts/mnemonic';
 import { render, screen, waitFor } from '@fuel-ui/test-utils';
+import { act } from 'react-dom/test-utils';
 
 import { MnemonicWrite } from './MnemonicWrite';
 
@@ -16,7 +17,7 @@ const MNEMONIC = getPhraseFromValue(
 
 describe('MnemonicWrite', () => {
   it('should trigger onFilled after paste', async () => {
-    const { user } = render(
+    await render(
       <MnemonicWrite
         canProceed
         onFilled={onFilledHandler}
@@ -27,14 +28,18 @@ describe('MnemonicWrite', () => {
 
     await navigator.clipboard.writeText(MNEMONIC);
     const btn = screen.getByText('Paste');
-    await user.click(btn);
+
+    act(() => {
+      btn.click();
+    });
+
     await waitFor(async () => {
       expect(onFilledHandler).toBeCalledTimes(1);
     });
   });
 
   it('should be able to click on next if canProceed and isFilled', async () => {
-    const { user } = render(
+    render(
       <MnemonicWrite
         canProceed
         onFilled={onFilledHandler}
@@ -45,7 +50,10 @@ describe('MnemonicWrite', () => {
 
     await navigator.clipboard.writeText(MNEMONIC);
     const btnPaste = screen.getByText('Paste');
-    await user.click(btnPaste);
+
+    act(() => {
+      btnPaste.click();
+    });
 
     await waitFor(() => {
       const btnNext = screen.getByText('Next');
