@@ -1,0 +1,95 @@
+name: Tests
+
+on:
+  pull_request:
+    branches: [main, master]
+    types: [opened, synchronize]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  COVERAGE_FILE: ./coverage/report.json
+
+jobs:
+  tests-jest:
+    name: JEST Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/setup-docker
+        with:
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Start Test Node
+        run: pnpm node:dev start --test --debug
+
+      - name: Generate types
+        run: pnpm ts:check
+
+      # Unit tests running with JEST
+      - name: Find PR number
+        uses: jwalton/gh-find-current-pr@v1
+        id: findPr
+
+      - name: Run Jest Tests
+        run: |
+          pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
+
+      - name: Run tests with coverage
+        uses: artiomtr/jest-coverage-report-action@v2.0.5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          package-manager: pnpm
+          annotations: failed-tests
+          test-script: pnpm test:ci
+          prnumber: ${{ steps.findPr.outputs.number }}
+          skip-test: all
+          working-directory: ./packages/app
+          coverage-file: ${{ env.COVERAGE_FILE }}
+          base-coverage-file: ${{ env.COVERAGE_FILE }}
+        env:
+          NODE_ENV: test
+
+      - name: Stop Test Node
+        run: pnpm node:dev stop --test --debug
+
+  tests-e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-node
+      - uses: ./.github/actions/setup-docker
+        with:
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Start Test Node
+        run: pnpm node:dev start --test --debug
+
+      - name: Build Application
+        run: pnpm build:all
+        env:
+          NODE_ENV: test
+      
+      # E2E tests running with Playwright
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E Tests
+        run: xvfb-run --auto-servernum -- pnpm test:e2e
+        env:
+          NODE_ENV: test
+          E2E_PORT: 3000
+
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Stop Test Node
+        run: pnpm node:dev stop --test --debug
