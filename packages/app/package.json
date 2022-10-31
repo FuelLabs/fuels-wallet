@@ -60,7 +60,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3",
+    "@babel/core": "^7.19.6",
     "@crxjs/vite-plugin": "^1.0.14",
     "@import-meta-env/unplugin": "^0.2.1",
     "@playwright/test": "^1.27.1",
