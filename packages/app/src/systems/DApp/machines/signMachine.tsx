@@ -6,11 +6,13 @@ import type { UnlockMachineEvents, UnlockMachine } from './unlockMachine';
 import { unlockMachine } from './unlockMachine';
 
 import type { AccountInputs } from '~/systems/Account';
-import { FetchMachine } from '~/systems/Core';
+import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 import type { ChildrenMachine } from '~/systems/Core';
 
 type MachineContext = {
   message?: string;
+  origin?: string;
+  error?: string;
   signedMessage?: string;
 };
 
@@ -22,8 +24,10 @@ type MachineServices = {
 
 type MachineEvents =
   | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
-  | { type: 'START_SIGN'; input: { message: string } }
-  | { type: 'CLOSE_UNLOCK'; input?: null };
+  | { type: 'START_SIGN'; input: { origin: string; message: string } }
+  | { type: 'CLOSE_UNLOCK' }
+  | { type: 'SIGN_MESSAGE' }
+  | { type: 'REJECT' };
 
 export const signMachine = createMachine(
   {
@@ -41,16 +45,26 @@ export const signMachine = createMachine(
       idle: {
         on: {
           START_SIGN: {
-            actions: ['assignMessage'],
+            actions: ['assignMessage', 'assignOrigin'],
+            target: 'reviewMessage',
+          },
+        },
+      },
+      reviewMessage: {
+        on: {
+          SIGN_MESSAGE: {
             target: 'unlocking',
+          },
+          REJECT: {
+            actions: [assignErrorMessage('Rejected request!')],
+            target: 'failed',
           },
         },
       },
       unlocking: {
         invoke: {
           id: 'unlock',
-          src: unlockMachine,
-          data: (_: MachineContext, ev: MachineEvents) => ev.input,
+          src: unlockMachine as UnlockMachine,
           onDone: {
             target: 'signingMessage',
           },
@@ -69,7 +83,7 @@ export const signMachine = createMachine(
             ],
           },
           CLOSE_UNLOCK: {
-            target: 'idle',
+            target: 'reviewMessage',
           },
         },
       },
@@ -82,10 +96,7 @@ export const signMachine = createMachine(
             },
           },
           onDone: [
-            {
-              target: 'done',
-              cond: FetchMachine.hasError,
-            },
+            FetchMachine.errorState('failed'),
             {
               actions: ['assignSignedMessage'],
               target: 'done',
@@ -106,6 +117,9 @@ export const signMachine = createMachine(
       }),
       assignMessage: assign({
         message: (_, ev) => ev.input.message,
+      }),
+      assignOrigin: assign({
+        origin: (_, ev) => ev.input.origin,
       }),
     },
     services: {

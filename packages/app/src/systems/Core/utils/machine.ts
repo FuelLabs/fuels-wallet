@@ -1,4 +1,6 @@
-import type { AnyInterpreter, StateFrom } from 'xstate';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { AnyInterpreter, StateFrom, Action } from 'xstate';
+import { assign } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
 export async function waitForState<
@@ -8,32 +10,42 @@ export async function waitForState<
   FK extends keyof T['context']
 >(
   service: I,
-  done: D,
-  failure: D,
+  done?: D,
+  failure?: D,
   failureMessage?: FK,
   timeout: number = 60 * 5 * 1000
 ) {
   try {
+    const doneState = done || 'done';
+    const failureState = failure || 'failed';
+    const failureMessageField = failureMessage || 'error';
+
     const appState: T = await waitFor<I>(
       service,
-      (state: T) => state.matches(done) || state.matches(failure),
+      (state: T) => state.matches(doneState) || state.matches(failureState),
       {
         timeout,
       }
     );
 
-    if (appState.matches(failure)) {
-      throw new Error(appState.context[failureMessage || failure], {
+    if (appState.matches(failureState)) {
+      throw new Error(appState.context[failureMessageField], {
         cause: 'CustomState',
       });
     }
 
     return appState.context as T['context'];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.cause === 'CustomState') throw err;
     throw new Error(
       `Window closed by inactivity after ${timeout / 1000 / 60} minutes!`
     );
   }
+}
+
+export function assignErrorMessage(message: string): Action<any, any> {
+  return assign((ctx: any) => ({
+    ...ctx,
+    error: message,
+  }));
 }

@@ -5,8 +5,10 @@ import { DatabaseObservable } from './DatabaseObservable';
 
 export class DatabaseEvents {
   readonly databaseObservable: DatabaseObservable<['applications']>;
+  readonly communicationProtocol: CommunicationProtocol;
 
-  constructor(readonly communicationProtocol: CommunicationProtocol) {
+  constructor(communicationProtocol: CommunicationProtocol) {
+    this.communicationProtocol = communicationProtocol;
     this.databaseObservable = new DatabaseObservable();
     this.setupApplicationWatcher();
   }
