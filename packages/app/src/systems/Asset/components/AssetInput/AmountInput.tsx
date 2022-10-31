@@ -59,7 +59,7 @@ export const AmountInput: AmountInputComponent = ({ asset }) => {
           <Button
             size="xs"
             variant="ghost"
-            css={{ width: '75%' }}
+            css={styles.button}
             onPress={handlePress}
           >
             Max
@@ -78,6 +78,10 @@ const styles = {
     height: 'auto',
     display: 'flex',
     alignItems: 'center',
+  }),
+  button: cssObj({
+    width: '50%',
+    marginRight: '$10',
   }),
   text: cssObj({
     fontSize: '$xs',
