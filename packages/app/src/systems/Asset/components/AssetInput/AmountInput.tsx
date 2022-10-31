@@ -19,6 +19,9 @@ type AmountInputComponent = FC<AmountInputProps> & {
 
 export const AmountInput: AmountInputComponent = ({ asset }) => {
   const [assetAmount, setAssetAmount] = useState<string>();
+  const formatArgs = {
+    minPrecision: 2,
+  };
 
   const handleAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newAssetAmount = handleAmountLeadingZeros(event);
@@ -26,7 +29,7 @@ export const AmountInput: AmountInputComponent = ({ asset }) => {
   };
 
   const handlePress = () => {
-    setAssetAmount(asset.amount.formatUnits());
+    setAssetAmount(asset.amount.format(formatArgs));
   };
 
   const handleAmountLeadingZeros = (
@@ -57,6 +60,7 @@ export const AmountInput: AmountInputComponent = ({ asset }) => {
       <Input.ElementRight>
         <Flex direction="column" align="end" basis="auto">
           <Button
+            aria-label="Max"
             size="xs"
             variant="ghost"
             css={styles.button}
@@ -64,7 +68,9 @@ export const AmountInput: AmountInputComponent = ({ asset }) => {
           >
             Max
           </Button>
-          <Text css={styles.text}>Balance: {asset.amount.formatUnits()}</Text>
+          <Text css={styles.text}>
+            Balance: {asset.amount.format(formatArgs)}
+          </Text>
         </Flex>
       </Input.ElementRight>
     </Input>
@@ -81,7 +87,6 @@ const styles = {
   }),
   button: cssObj({
     width: '50%',
-    marginRight: '$10',
   }),
   text: cssObj({
     fontSize: '$xs',
