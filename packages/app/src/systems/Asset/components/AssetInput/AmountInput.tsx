@@ -20,19 +20,37 @@ export const AmountInput: AmountInputComponent = ({ asset }) => {
   const [assetAmount, setAssetAmount] = useState<string>();
 
   const handleAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setAssetAmount(event.target.value);
+    const newAssetAmount = handleAmountLeadingZeros(event);
+    setAssetAmount(newAssetAmount);
   };
 
   const handlePress = () => {
-    setAssetAmount(formatUnits(asset.amount));
+    const formattedAssetAmount = formatUnits(asset.amount);
+    setAssetAmount(formattedAssetAmount);
+  };
+
+  const handleAmountLeadingZeros = (
+    event: ChangeEvent<HTMLInputElement>
+  ): string => {
+    const valueWithoutLeadingZeros = event.target.value.replace(
+      /^0\d/,
+      (substring) => substring.replace(/^0+(?=[\d])/, '')
+    );
+    return valueWithoutLeadingZeros.startsWith('.')
+      ? `0${valueWithoutLeadingZeros}`
+      : valueWithoutLeadingZeros;
   };
 
   return (
     <Input size="lg" css={styles.input}>
       <Input.Number
+        autoComplete="off"
         inputMode="decimal"
         name="amount"
         placeholder="0.00"
+        allowedDecimalSeparators={['.', ',']}
+        allowNegative={false}
+        thousandSeparator={false}
         value={assetAmount}
         onChange={handleAmountChange}
       />
