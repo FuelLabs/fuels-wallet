@@ -8,6 +8,8 @@
     "resolveJsonModule": true
   },
   "include": [
+    "env.d.ts",
+    "playwright/**/*.ts",
     "vite.config.ts",
     "vite-utils/*.ts",
     "./package.json",

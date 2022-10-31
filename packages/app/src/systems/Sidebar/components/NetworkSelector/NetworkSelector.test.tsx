@@ -27,7 +27,7 @@ describe('NetworkSelector', () => {
     });
 
     expect(() => screen.getByText(NOT_SELECTED.name)).toThrow();
-    const selector = screen.getByTestId('fuel_network-item');
+    const selector = screen.getByLabelText('fuel_network-item-1');
     await user.click(selector);
     expect(screen.getByText(NOT_SELECTED.name)).toBeInTheDocument();
   });
@@ -38,7 +38,7 @@ describe('NetworkSelector', () => {
       wrapper: TestWrapper,
     });
 
-    const selector = await screen.findByTestId('fuel_network-item');
+    const selector = await screen.getByLabelText('fuel_network-item-1');
     fireEvent.click(selector);
 
     const item = await screen.findByText(NOT_SELECTED.name);
