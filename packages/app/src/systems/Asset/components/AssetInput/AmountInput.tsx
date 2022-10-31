@@ -1,15 +1,16 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Flex, Input, Text } from '@fuel-ui/react';
-import type { Coin } from '@fuels-wallet/types';
+import type { BN } from 'fuels';
 import { useState } from 'react';
 import type { FC, ChangeEvent } from 'react';
 
 import { AmountInputLoader } from './AmountInputLoader';
 
-import { formatUnits } from '~/systems/Core';
-
 export type AmountInputProps = {
-  asset: Coin;
+  asset: {
+    amount: BN;
+    assetId: string;
+  };
 };
 
 type AmountInputComponent = FC<AmountInputProps> & {
@@ -25,8 +26,7 @@ export const AmountInput: AmountInputComponent = ({ asset }) => {
   };
 
   const handlePress = () => {
-    const formattedAssetAmount = formatUnits(asset.amount);
-    setAssetAmount(formattedAssetAmount);
+    setAssetAmount(asset.amount.formatUnits());
   };
 
   const handleAmountLeadingZeros = (
@@ -64,7 +64,7 @@ export const AmountInput: AmountInputComponent = ({ asset }) => {
           >
             Max
           </Button>
-          <Text css={styles.text}>Balance: {formatUnits(asset.amount)}</Text>
+          <Text css={styles.text}>Balance: {asset.amount.formatUnits()}</Text>
         </Flex>
       </Input.ElementRight>
     </Input>
