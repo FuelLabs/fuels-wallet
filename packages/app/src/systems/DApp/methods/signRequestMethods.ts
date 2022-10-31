@@ -7,8 +7,11 @@ import { IS_CRX_POPUP } from '~/config';
 import { waitForState } from '~/systems/Core';
 
 export class SignRequestMethods extends ExtensionPageConnection {
-  constructor(readonly service: SignMachineService) {
+  readonly service: SignMachineService;
+
+  constructor(service: SignMachineService) {
     super();
+    this.service = service;
     super.externalMethods([this.signMessage]);
   }
 
