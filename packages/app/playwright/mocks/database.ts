@@ -12,44 +12,30 @@ export async function mockData(page: Page) {
     ([accountData, providerUrl]) => {
       return new Promise((resolve, reject) => {
         (async function main() {
-          const script = document.createElement('script');
-          // Inject Dexie to manage database on the same way we
-          // do on the application level
-          script.src = 'https://unpkg.com/dexie/dist/dexie.js';
-          script.onload = async () => {
-            try {
-              // @ts-ignore
-              const database = new Dexie('FuelDB');
-              database.version(6).stores({
-                vaults: `key`,
-                accounts: `address`,
-                networks: `&id, &url, &name`,
-                applications: 'origin',
-                transactions: `&id`,
-              });
-              await database.accounts.clear();
-              await database.accounts.add(accountData);
-              await database.networks.clear();
-              await database.networks.add({
-                id: '1',
-                isSelected: true,
-                name: 'Local',
-                url: providerUrl,
-              });
-              await database.networks.add({
-                id: '2',
-                isSelected: false,
-                name: 'Another',
-                url: 'https://another.network.fuel/graphql',
-              });
-              const networks = await database.networks.toArray();
-              resolve(networks);
-            } catch (err: unknown) {
-              reject(err);
-            }
-          };
-          document.body.append(script);
-          // Mock localStorage
+          try {
+            // @ts-ignore;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const fuelDB: any = window.fuelDB;
+            await fuelDB.accounts.clear();
+            await fuelDB.accounts.add(accountData);
+            await fuelDB.networks.clear();
+            await fuelDB.networks.add({
+              id: '1',
+              isSelected: true,
+              name: 'Local',
+              url: providerUrl,
+            });
+            await fuelDB.networks.add({
+              id: '2',
+              isSelected: false,
+              name: 'Another',
+              url: 'https://another.network.fuel/graphql',
+            });
+            const networks = await fuelDB.networks.toArray();
+            resolve(networks);
+          } catch (err: unknown) {
+            reject(err);
+          }
           localStorage.setItem('fuel__isLogged', 'true');
         })();
       });
@@ -57,6 +43,9 @@ export async function mockData(page: Page) {
     [
       {
         address: wallet.address.toAddress(),
+        balance: '0',
+        balanceSymbol: 'ETH',
+        balances: [],
         name: 'Random Account',
         publicKey: wallet.publicKey,
       },
