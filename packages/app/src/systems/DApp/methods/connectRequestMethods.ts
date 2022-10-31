@@ -7,8 +7,11 @@ import { IS_CRX_POPUP } from '~/config';
 import { waitForState } from '~/systems/Core';
 
 export class ConnectRequestMethods extends ExtensionPageConnection {
-  constructor(readonly service: ConnectMachineService) {
+  readonly service: ConnectMachineService;
+
+  constructor(service: ConnectMachineService) {
     super();
+    this.service = service;
     super.externalMethods([this.requestConnection]);
   }
 

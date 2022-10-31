@@ -13,8 +13,10 @@ type EventOrigin = { origin: string };
 
 export class BackgroundService {
   readonly server: JSONRPCServer<EventOrigin>;
+  readonly communicationProtocol: CommunicationProtocol;
 
-  constructor(readonly communicationProtocol: CommunicationProtocol) {
+  constructor(communicationProtocol: CommunicationProtocol) {
+    this.communicationProtocol = communicationProtocol;
     this.server = new JSONRPCServer<EventOrigin>();
     this.setupListeners();
     this.externalMethods([

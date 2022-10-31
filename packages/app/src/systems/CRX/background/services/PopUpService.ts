@@ -23,8 +23,10 @@ export class PopUpService {
   windowId: number | null = null;
   eventId?: string;
   client: JSONRPCClient;
+  readonly communicationProtocol: CommunicationProtocol;
 
-  constructor(readonly communicationProtocol: CommunicationProtocol) {
+  constructor(communicationProtocol: CommunicationProtocol) {
+    this.communicationProtocol = communicationProtocol;
     this.openingPromise = deferPromise<PopUpService>();
     this.client = new JSONRPCClient(async (rpcRequest) => {
       if (this.eventId) {
