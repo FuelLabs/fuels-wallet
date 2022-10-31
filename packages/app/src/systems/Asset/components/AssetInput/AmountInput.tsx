@@ -32,7 +32,7 @@ export const AmountInput: AmountInputComponent = ({ asset }) => {
       <Input.Number
         inputMode="decimal"
         name="amount"
-        placeholder="0.0"
+        placeholder="0.00"
         value={assetAmount}
         onChange={handleAmountChange}
       />

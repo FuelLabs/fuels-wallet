@@ -17,7 +17,7 @@ export const Usage = (args: AmountInputProps) => (
       {...args}
       asset={{
         ...ASSET_LIST[0],
-        amount: bn(14563943834),
+        amount: bn(1570000000),
       }}
     />
   </Box>
