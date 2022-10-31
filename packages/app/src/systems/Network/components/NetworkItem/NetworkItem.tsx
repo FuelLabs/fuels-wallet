@@ -57,7 +57,7 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
 
     return (
       <CardList.Item
-        data-testid="fuel_network-item"
+        aria-label={`fuel_network-item-${network?.id}`}
         ref={ref}
         onClick={() => onPress?.(network)}
         css={{ ...styles.root, ...css }}
