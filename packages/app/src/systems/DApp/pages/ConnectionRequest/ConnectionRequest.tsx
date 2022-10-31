@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Card, Flex, Icon, Link, List, Text } from '@fuel-ui/react';
-import { useCallback } from 'react';
+
+import { useConnectRequest } from '../../hooks/useConnectRequest';
 
 import { useAccount } from '~/systems/Account';
 import { Layout } from '~/systems/Core';
@@ -17,13 +18,9 @@ const NOT_ALLOWED_LIST = ['View your private keys'];
 
 export function ConnectionRequest() {
   const { account, isLoading } = useAccount();
-  const origin = 'dapp.com';
-  const authorize = useCallback((accounts: Array<string>) => {
-    // eslint-disable-next-line no-console
-    console.log(accounts);
-  }, []);
+  const { handlers, origin } = useConnectRequest();
 
-  if (!account) return null;
+  if (!account || !origin) return null;
 
   return (
     <Layout title="Connection Request" isLoading={isLoading}>
@@ -60,13 +57,17 @@ export function ConnectionRequest() {
         </Flex>
       </Layout.Content>
       <Layout.BottomBar>
-        <Button color="gray" variant="ghost">
+        <Button
+          color="gray"
+          variant="ghost"
+          onPress={() => handlers.rejectConnection()}
+        >
           Reject
         </Button>
         <Button
           type="submit"
           color="accent"
-          onPress={() => authorize([account.address])}
+          onPress={() => handlers.authorizeConnection([account.address])}
         >
           Connect
         </Button>
