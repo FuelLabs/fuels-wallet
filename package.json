@@ -26,6 +26,10 @@
     "build": "pnpm build:libs && turbo run build",
     "build:crx": "pnpm build:libs && turbo run build:crx",
     "build:all": "run-s build build:crx",
+    "changeset": "changeset",
+    "changeset:release": "changeset publish --no-git-tag",
+    "changeset:version": "changeset version",
+    "changeset:check": "changeset status --since=master",
     "deps:update": "updates -gu && pnpm -r exec updates -gu",
     "dev": "turbo run dev --parallel",
     "dev:crx": "turbo run dev:crx --parallel",
@@ -51,6 +55,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
+    "@changesets/cli": "^2.25.2",
     "@jest/types": "29.2.1",
     "@playwright/test": "^1.27.1",
     "@types/jest": "^29.2.0",

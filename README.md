@@ -36,17 +36,17 @@ The above button launches the latest stable version of the Wallet.
 
 - [x] Create a brand new and secure account
 - [x] Recover an account using a passphrase
-- [ ] Update account details
+- [x] DApps integration popups
 - [x] Check your asset's balance
-- [ ] Manage networks
+- [x] Manage networks
+- [x] Faucet for testnet
+- [x] Receive screen with QR Code
+- [ ] Update account details
 - [ ] Reveal your passphrase
 - [ ] Change password
-- [ ] Faucet for testnet
 - [ ] See a list of your recent activities
 - [ ] View transaction details
 - [ ] Send assets to another wallet
-- [ ] Receive screen with QR Code
-- [ ] DApps integration popups
 
 ## License
 

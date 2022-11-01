@@ -1,5 +1,5 @@
 {
-  "name": "fuelhat",
+  "name": "@fuels-wallet/fuelhat",
   "version": "0.0.1",
   "type": "module",
   "license": "Apache-2.0",
