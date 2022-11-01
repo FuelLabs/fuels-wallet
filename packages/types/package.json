@@ -4,6 +4,6 @@
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "dependencies": {
-    "fuels": "^0.17.0"
+    "fuels": "0.0.0-next-20221101162406"
   }
 }
