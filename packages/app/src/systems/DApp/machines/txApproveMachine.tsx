@@ -2,7 +2,7 @@ import type {
   TransactionRequest,
   TransactionResponse,
   TransactionResultReceipt,
-  Wallet,
+  WalletUnlocked,
 } from 'fuels';
 import { Provider } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
@@ -123,7 +123,7 @@ export const txApproveMachine = createMachine(
         invoke: {
           src: 'approveTx',
           data: {
-            input: (_: MachineContext, ev: { data: Wallet }) => {
+            input: (_: MachineContext, ev: { data: WalletUnlocked }) => {
               return { tx: _.tx, wallet: ev.data, providerUrl: _.providerUrl };
             },
           },
@@ -171,7 +171,11 @@ export const txApproveMachine = createMachine(
     },
     services: {
       approveTx: FetchMachine.create<
-        { tx: TransactionRequest; wallet: Wallet; providerUrl?: string },
+        {
+          tx: TransactionRequest;
+          wallet: WalletUnlocked;
+          providerUrl?: string;
+        },
         TransactionResponse
       >({
         showError: true,
