@@ -1,4 +1,4 @@
-import type { Asset } from '@fuels-wallet/types';
+import type { Asset } from '@fuel-wallet/types';
 
 import { relativeUrl } from '~/systems/Core';
 

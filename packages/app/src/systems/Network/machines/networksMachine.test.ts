@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Network } from '@fuels-wallet/types';
+import type { Network } from '@fuel-wallet/types';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 

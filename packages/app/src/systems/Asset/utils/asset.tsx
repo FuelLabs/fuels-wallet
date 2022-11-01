@@ -1,4 +1,4 @@
-import type { Coin, AssetAmount } from '@fuels-wallet/types';
+import type { Coin, AssetAmount } from '@fuel-wallet/types';
 import type { BytesLike } from 'fuels';
 
 import { ASSET_LIST, ASSET_MAP } from './constants';

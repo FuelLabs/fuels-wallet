@@ -21,7 +21,7 @@
     "./packages/*"
   ],
   "scripts": {
-    "build:libs": "turbo run build --filter=@fuels-wallet/* --no-cache",
+    "build:libs": "turbo run build --filter=@fuel-wallet/* --no-cache",
     "build:preview": "./scripts/build-preview.sh",
     "build": "pnpm build:libs && turbo run build",
     "build:crx": "pnpm build:libs && turbo run build:crx",

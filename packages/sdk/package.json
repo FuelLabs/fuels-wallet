@@ -1,5 +1,5 @@
 {
-  "name": "@fuels-wallet/sdk",
+  "name": "@fuel-wallet/sdk",
   "version": "0.0.1",
   "license": "Apache-2.0",
   "main": "src/index.ts",
@@ -33,7 +33,7 @@
     "xstate": "^4.33.6"
   },
   "devDependencies": {
-    "@fuels-wallet/types": "workspace:*",
+    "@fuel-wallet/types": "workspace:*",
     "@types/chrome": "^0.0.197",
     "@types/uuid": "^8.3.4",
     "jest-webextension-mock": "^3.7.22",

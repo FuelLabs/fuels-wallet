@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import type { FuelWeb3 } from '@fuels-wallet/sdk';
+import type { FuelWeb3 } from '@fuel-wallet/sdk';
 
 declare global {
   interface Window {

@@ -1,4 +1,4 @@
-import type { Account } from '@fuels-wallet/types';
+import type { Account } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 

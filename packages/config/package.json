@@ -1,5 +1,5 @@
 {
-  "name": "@fuels-wallet/config",
+  "name": "@fuel-wallet/config",
   "version": "0.0.1",
   "license": "Apache-2.0",
   "main": "./index.js",

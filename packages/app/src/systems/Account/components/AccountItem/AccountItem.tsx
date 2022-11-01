@@ -7,7 +7,7 @@ import {
   IconButton,
   Text,
 } from '@fuel-ui/react';
-import type { Account } from '@fuels-wallet/types';
+import type { Account } from '@fuel-wallet/types';
 
 import { shortAddress } from '~/systems/Core';
 

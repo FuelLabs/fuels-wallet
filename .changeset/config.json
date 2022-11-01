@@ -2,10 +2,10 @@
   "$schema": "https://unpkg.com/@changesets/config@2.0.0/schema.json",
   "changelog": [
     "@changesets/changelog-github",
-    { "repo": "FuelLabs/fuels-ts" }
+    { "repo": "FuelLabs/fuel-ts" }
   ],
   "commit": false,
-  "fixed": [],
+  "fixed": [["@fuel-wallet/*"]],
   "linked": [],
   "access": "public",
   "baseBranch": "master",
