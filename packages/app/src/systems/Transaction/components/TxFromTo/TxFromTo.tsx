@@ -51,7 +51,7 @@ const styles = {
   root: cssObj({
     gap: '$4',
     position: 'relative',
-    display: 'inline-flex',
+    display: 'flex',
   }),
   spinner: (state: TxState) =>
     cssObj({
