@@ -11,6 +11,20 @@ import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 type Service = InterpreterFrom<typeof signMachine>;
 
 const OWNER = import.meta.env.VITE_ADDR_OWNER;
+const WORDS = [
+  'strange',
+  'purple',
+  'adamant',
+  'crayons',
+  'entice',
+  'fun',
+  'eloquent',
+  'missiles',
+  'milk',
+  'ice',
+  'cream',
+  'apple',
+];
 
 describe('signMachine', () => {
   let service: Service;
@@ -18,7 +32,10 @@ describe('signMachine', () => {
 
   beforeAll(async () => {
     wallet = Wallet.fromPrivateKey(OWNER);
-    jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
+    jest.spyOn(AccountService, 'unlock').mockResolvedValue({
+      ...wallet,
+      exportVault: () => WORDS.join(' '),
+    });
   });
 
   beforeEach(async () => {
