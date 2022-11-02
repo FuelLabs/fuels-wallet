@@ -149,7 +149,20 @@ export class AccountService {
     // TODO: fix this on fuels-ts it should be possible to
     // customize the ProviderURL on the manager level
     wallet.provider = new Provider(VITE_FUEL_PROVIDER_URL);
-    return wallet;
+
+    return {
+      ...wallet,
+      ...(manager as Partial<typeof manager>),
+      exportVault: () => {
+        const { secret } = manager.exportVault(0);
+
+        if (!secret) {
+          throw new Error('Vault not found');
+        }
+
+        return secret;
+      },
+    };
   }
 }
 

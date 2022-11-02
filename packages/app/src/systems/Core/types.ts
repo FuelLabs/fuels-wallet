@@ -27,6 +27,8 @@ export const Pages = {
   requestTransaction: route('/request/transaction'),
   requestMessage: route('/request/message'),
   txs: route('/transactions'),
+  settings: route('/settings'),
+  recoverPassphrase: route('/settings/recover-passphrase'),
 };
 
 export type AmountMap = Record<string, Maybe<BigNumberish>>;

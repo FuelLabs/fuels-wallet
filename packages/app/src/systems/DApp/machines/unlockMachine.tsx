@@ -68,7 +68,10 @@ export const unlockMachine = createMachine(
   },
   {
     services: {
-      unlock: FetchMachine.create<AccountInputs['unlock'], WalletUnlocked>({
+      unlock: FetchMachine.create<
+        AccountInputs['unlock'],
+        Awaited<ReturnType<typeof AccountService['unlock']>>
+      >({
         showError: true,
         maxAttempts: 1,
         async fetch({ input }) {

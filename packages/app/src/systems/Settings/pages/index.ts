@@ -1,0 +1,1 @@
+export { RecoverPassphrase } from './RecoverPassphrase';

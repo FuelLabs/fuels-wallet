@@ -8,6 +8,19 @@ export const sidebarItems = [
     path: Pages.wallet(),
   },
   {
+    key: 'settings',
+    icon: 'Gear',
+    label: 'Settings',
+    submenu: [
+      {
+        key: 'recover-passphrase',
+        icon: 'Lock',
+        label: 'Recover Passphrase',
+        path: '/settings/recover-passphrase',
+      },
+    ],
+  },
+  {
     key: 'support',
     icon: 'Question',
     label: 'Support',
