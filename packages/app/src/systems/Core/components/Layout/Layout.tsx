@@ -111,6 +111,7 @@ const styles = {
     py: '$4',
     px: '$4',
     flex: 1,
+    overflow: 'auto',
   }),
 };
 
