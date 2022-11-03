@@ -51,3 +51,5 @@ export const MOCK_TX = {
   blockId: '0xffef250db6a72a00b03fbe91459bf4ce087de9883f6510414399d5441994b62b',
   time: '2022-10-05T00:51:22.383161296+00:00',
 };
+
+export const MOCK_OUTPUT_AMOUNT = bn.parseUnits('0.5');

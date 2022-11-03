@@ -22,11 +22,11 @@ export const Pages = {
   networks: route('/networks'),
   networkUpdate: route<'id'>('/networks/update/:id'),
   networkAdd: route('/networks/add'),
-  txs: route('/transactions'),
   request: route('/request'),
   requestConnection: route('/request/connection'),
   requestTransaction: route('/request/transaction'),
   requestMessage: route('/request/message'),
+  txs: route('/transactions'),
 };
 
 export type AmountMap = Record<string, Maybe<BigNumberish>>;

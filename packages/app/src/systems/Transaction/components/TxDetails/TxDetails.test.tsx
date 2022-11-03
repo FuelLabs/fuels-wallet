@@ -8,11 +8,9 @@ import {
 } from '@fuel-ui/test-utils';
 import { bn } from 'fuels';
 
-import { MOCK_TX } from '../../__mocks__/transaction';
+import { MOCK_OUTPUT_AMOUNT, MOCK_TX } from '../../__mocks__/transaction';
 
 import { TxDetails } from './TxDetails';
-
-import { MAX_FRACTION_DIGITS } from '~/config';
 
 describe('TxDetails', () => {
   it('a11y', async () => {
@@ -20,18 +18,26 @@ describe('TxDetails', () => {
   });
 
   it('should be able to show the transaction gas used', async () => {
-    render(<TxDetails receipts={MOCK_TX.receipts} />);
-    expect(() => screen.getByText(/Gas used/i)).toThrow();
+    render(
+      <TxDetails
+        receipts={MOCK_TX.receipts}
+        outputAmount={MOCK_OUTPUT_AMOUNT}
+      />
+    );
+    expect(() => screen.getByText(/Fee \(network\)/i)).toThrow();
     const btn = screen.getByText(/Transaction Details/i);
     fireEvent.click(btn);
 
     await waitFor(() => {
-      expect(screen.getByText(/Gas used/i)).toBeInTheDocument();
-      const val = screen.getByLabelText(/Gas value/i);
-      expect(val).toBeInTheDocument();
+      expect(screen.getByText(/Fee \(network\)/i)).toBeInTheDocument();
+      const valGas = screen.getByLabelText(/Gas value/i);
+      expect(valGas).toBeInTheDocument();
+      const valTotal = screen.getByLabelText(/Total value/i);
+      expect(valTotal).toBeInTheDocument();
       const gasUsed = (MOCK_TX.receipts[3] as any).gasUsed;
-      expect(val.innerHTML.trim()).toBe(
-        `${bn(gasUsed).formatUnits(MAX_FRACTION_DIGITS)} ETH`
+      expect(valGas.innerHTML.trim()).toBe(`${bn(gasUsed).format()} ETH`);
+      expect(valTotal.innerHTML.trim()).toBe(
+        `${bn(gasUsed).add(MOCK_OUTPUT_AMOUNT).format()} ETH`
       );
     });
   });
