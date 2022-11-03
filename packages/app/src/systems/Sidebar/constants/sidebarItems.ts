@@ -18,6 +18,12 @@ export const sidebarItems = [
         label: 'Recover Passphrase',
         path: '/settings/recover-passphrase',
       },
+      {
+        key: 'change-password',
+        icon: 'Lock',
+        label: 'Change Password',
+        path: '/settings/change-password',
+      },
     ],
   },
   {
