@@ -55,17 +55,21 @@ export const AmountInput: AmountInputComponent = ({ amount }) => {
         onChange={handleAmountChange}
       />
       <Input.ElementRight>
-        <Flex direction="column" align="end" basis="auto">
-          <Button
-            aria-label="Max"
-            size="xs"
-            variant="ghost"
-            css={styles.button}
-            onPress={handlePress}
-          >
-            Max
-          </Button>
-          <Text css={styles.text}>Balance: {amount.format(formatArgs)}</Text>
+        <Flex direction="column" align="end" css={styles.flexColumn}>
+          <Flex>
+            <Button
+              aria-label="Max"
+              size="xs"
+              variant="ghost"
+              onPress={handlePress}
+              css={styles.button}
+            >
+              Max
+            </Button>
+          </Flex>
+          <Flex>
+            <Text css={styles.text}>Balance: {amount.format(formatArgs)}</Text>
+          </Flex>
         </Flex>
       </Input.ElementRight>
     </Input>
@@ -81,13 +85,12 @@ const styles = {
     alignItems: 'center',
   }),
   button: cssObj({
-    width: '50%',
-    height: 'auto',
     marginTop: '$2',
     marginBottom: '$1',
+    height: '$5 !important',
   }),
   flexColumn: cssObj({
-    marginRight: '$2',
+    marginRight: '$1',
   }),
   text: cssObj({
     fontSize: '$xs',
