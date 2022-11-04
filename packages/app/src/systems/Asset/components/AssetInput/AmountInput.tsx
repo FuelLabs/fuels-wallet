@@ -7,17 +7,14 @@ import type { FC, ChangeEvent } from 'react';
 import { AmountInputLoader } from './AmountInputLoader';
 
 export type AmountInputProps = {
-  asset: {
-    amount: BN;
-    assetId: string;
-  };
+  amount: BN;
 };
 
 type AmountInputComponent = FC<AmountInputProps> & {
   Loader: typeof AmountInputLoader;
 };
 
-export const AmountInput: AmountInputComponent = ({ asset }) => {
+export const AmountInput: AmountInputComponent = ({ amount }) => {
   const [assetAmount, setAssetAmount] = useState<string>();
   const formatArgs = {
     minPrecision: 2,
@@ -29,7 +26,7 @@ export const AmountInput: AmountInputComponent = ({ asset }) => {
   };
 
   const handlePress = () => {
-    setAssetAmount(asset.amount.format(formatArgs));
+    setAssetAmount(amount.format(formatArgs));
   };
 
   const handleAmountLeadingZeros = (
@@ -68,9 +65,7 @@ export const AmountInput: AmountInputComponent = ({ asset }) => {
           >
             Max
           </Button>
-          <Text css={styles.text}>
-            Balance: {asset.amount.format(formatArgs)}
-          </Text>
+          <Text css={styles.text}>Balance: {amount.format(formatArgs)}</Text>
         </Flex>
       </Input.ElementRight>
     </Input>
