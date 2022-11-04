@@ -87,9 +87,15 @@ const styles = {
   }),
   button: cssObj({
     width: '50%',
+    marginTop: '$2',
+    marginBottom: '$1',
+  }),
+  flexColumn: cssObj({
+    marginRight: '$2',
   }),
   text: cssObj({
     fontSize: '$xs',
     whiteSpace: 'nowrap',
+    marginBottom: '$2',
   }),
 };
