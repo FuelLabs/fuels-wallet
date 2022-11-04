@@ -6,18 +6,18 @@ import { AmountInput } from './AmountInput';
 
 describe('AmountInput', () => {
   it('a11y', async () => {
-    await testA11y(<AmountInput asset={MOCK_ASSETS[0]} />);
+    await testA11y(<AmountInput amount={MOCK_ASSETS[0].amount} />);
   });
   it('should show placeholder', () => {
-    render(<AmountInput asset={MOCK_ASSETS[0]} />);
+    render(<AmountInput amount={MOCK_ASSETS[0].amount} />);
     expect(screen.getByPlaceholderText('0.00')).toBeInTheDocument();
   });
   it('should show balance formatted', () => {
-    render(<AmountInput asset={MOCK_ASSETS[0]} />);
+    render(<AmountInput amount={MOCK_ASSETS[0].amount} />);
     expect(screen.getByText('Balance: 14.56')).toBeInTheDocument();
   });
   it('should display balance in input when click on max button', async () => {
-    const { user } = render(<AmountInput asset={MOCK_ASSETS[0]} />);
+    const { user } = render(<AmountInput amount={MOCK_ASSETS[0].amount} />);
     const maxBtn = screen.getByLabelText('Max');
     expect(maxBtn).toBeInTheDocument();
 

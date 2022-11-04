@@ -82,6 +82,7 @@ const styles = {
   }),
   button: cssObj({
     width: '50%',
+    height: 'auto',
     marginTop: '$2',
     marginBottom: '$1',
   }),
