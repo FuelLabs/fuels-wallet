@@ -4,7 +4,7 @@ import type { InterpreterFrom } from 'xstate';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
-import { getMockedTransaction } from '../__mocks__/transaction';
+import { getMockedTransaction } from '../__mocks__/dapp-transaction';
 
 import { txApproveMachine } from './txApproveMachine';
 
