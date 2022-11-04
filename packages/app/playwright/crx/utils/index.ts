@@ -3,7 +3,7 @@ import type { BrowserContext } from '@playwright/test';
 import { test as base, chromium } from '@playwright/test';
 import path from 'path';
 
-const pathToExtension = path.join(__dirname, '../../dist-crx');
+const pathToExtension = path.join(__dirname, '../../../dist-crx');
 
 export const test = base.extend<{
   extensionId: string;

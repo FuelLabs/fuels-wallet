@@ -1,6 +1,13 @@
-import { OutputType } from 'fuels';
+import { InputType, OutputType } from 'fuels';
 
-import type { TxOutputCoin, TxRequest, TxResponse } from '../types';
+import type {
+  TxInputCoin,
+  TxOutputCoin,
+  TxRequest,
+  TxResponse,
+} from '../types';
+
+import { BLOCK_EXPLORER_URL } from '~/config';
 
 export function parseTransaction<T extends TxRequest | TxResponse>(tx: T) {
   return Object.entries(tx).reduce((obj, [key, value]) => {
@@ -10,8 +17,28 @@ export function parseTransaction<T extends TxRequest | TxResponse>(tx: T) {
   }, {} as T);
 }
 
-export function getCoinOutputsFromTx(tx: TxRequest) {
+export function getCoinInputsFromTx(tx?: TxRequest) {
+  return (tx?.inputs ?? []).filter(
+    (i) => i.type === InputType.Coin
+  ) as TxInputCoin[];
+}
+
+export function getCoinOutputsFromTx(tx?: TxRequest) {
   return (tx?.outputs ?? []).filter(
     (i) => i.type === OutputType.Coin
   ) as TxOutputCoin[];
 }
+
+export function getBlockExplorerLink({
+  path,
+  providerUrl,
+}: {
+  path: string;
+  providerUrl: string;
+}) {
+  return `${BLOCK_EXPLORER_URL}${path}?providerUrl=${encodeURIComponent(
+    providerUrl
+  )}`;
+}
+
+export * from './error';

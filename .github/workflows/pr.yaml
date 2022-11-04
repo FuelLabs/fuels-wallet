@@ -8,9 +8,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-env:
-  COVERAGE_FILE: ./coverage/report.json
-
 jobs:
   validate-title:
     name: Validate PR Title
@@ -29,7 +26,7 @@ jobs:
       - run: pnpm audit --prod
 
   lint:
-    name: Lint & Test
+    name: Lint
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -42,60 +39,7 @@ jobs:
       - name: Setup Node
         uses: ./.github/actions/setup-node
 
-      - name: Setup Docker
-        uses: ./.github/actions/setup-docker
-        with:
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: jwalton/gh-find-current-pr@v1
-        id: findPr
-
-      - name: Start Node
-        run: pnpm node:dev start --test --debug
-
       - name: Run lint
         run: |
           pnpm ts:check
           pnpm lint
-      
-      - name: Run test
-        run: |
-          pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
-
-      - name: Run tests with coverage
-        uses: artiomtr/jest-coverage-report-action@v2.0.5
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          package-manager: pnpm
-          annotations: failed-tests
-          test-script: pnpm test:ci
-          prnumber: ${{ steps.findPr.outputs.number }}
-          skip-test: all
-          working-directory: ./packages/app
-          coverage-file: ${{ env.COVERAGE_FILE }}
-          base-coverage-file: ${{ env.COVERAGE_FILE }}
-
-      - name: Stop
-        run: pnpm node:dev stop --test --debug
-
-  end-to-end-test:
-    name: Test E2E
-    runs-on: ubuntu-latest
-    continue-on-error: false
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/setup-docker
-        with:
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: "End-to-end tests"
-        uses: cypress-io/github-action@v4
-        with:
-          browser: chrome
-          install: false
-          command: pnpm ci:test-e2e
-          record: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_ENV: "test"
