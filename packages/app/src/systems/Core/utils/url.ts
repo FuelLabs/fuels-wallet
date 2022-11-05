@@ -7,7 +7,7 @@ export function urlJoin(
   ...paths: Array<string>
 ): string {
   const hasBaseUrl = baseUrl !== null && baseUrl !== undefined;
-  const rootPath = baseUrl?.[0] === '/';
+  const rootPath = baseUrl?.[0] === '/' && baseUrl.length > 1;
   const allPaths = [baseUrl, ...paths].filter(Boolean).map(trimPath);
   if (rootPath && hasBaseUrl) {
     allPaths.unshift('');

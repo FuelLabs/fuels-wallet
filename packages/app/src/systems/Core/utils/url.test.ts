@@ -20,5 +20,8 @@ describe('Url', () => {
       '/test2'
     );
     expect(value5).toBe('http://localhost:3000/foo/bar/test/test2');
+
+    const value6 = urlJoin('/', '/test2');
+    expect(value6).toBe('/test2');
   });
 });

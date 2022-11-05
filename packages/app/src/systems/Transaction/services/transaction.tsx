@@ -1,4 +1,4 @@
-import type { Wallet } from 'fuels';
+import type { WalletUnlocked } from 'fuels';
 
 import type { Transaction, TxRequest } from '../types';
 import { parseTransaction } from '../utils';
@@ -14,11 +14,11 @@ export type TxInputs = {
     id: string;
   };
   simulate: {
-    wallet: Wallet;
+    wallet: WalletUnlocked;
     tx: TxRequest;
   };
   send: {
-    wallet: Wallet;
+    wallet: WalletUnlocked;
     tx: TxRequest;
   };
 };

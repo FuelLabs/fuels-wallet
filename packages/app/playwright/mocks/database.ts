@@ -4,6 +4,16 @@ import { Wallet } from 'fuels';
 
 const { VITE_FUEL_PROVIDER_URL } = process.env;
 
+export async function getAccount(page: Page) {
+  return page.evaluate(async () => {
+    // @ts-ignore;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const fuelDB: any = window.fuelDB;
+    const accounts = await fuelDB.accounts.toArray();
+    return accounts[0];
+  });
+}
+
 export async function mockData(page: Page) {
   const wallet = Wallet.generate({
     provider: VITE_FUEL_PROVIDER_URL,
