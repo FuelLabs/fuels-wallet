@@ -4,7 +4,7 @@ import test, { chromium } from '@playwright/test';
 import { getButtonByText, hasText, visit } from '../commons';
 import { mockData } from '../mocks';
 
-test.describe.skip('RecoverWallet', () => {
+test.describe('RecoverWallet', () => {
   let browser: Browser;
   let page: Page;
 
