@@ -5,6 +5,7 @@ import { bn, getGasUsedFromReceipts } from 'fuels';
 
 import type { TxSimulateResult } from '../../types';
 
+import { DECIMAL_UNITS } from '~/config';
 import type { Maybe } from '~/systems/Core';
 
 export type TxDetailsProps = {
@@ -25,13 +26,13 @@ export function TxDetails({ receipts, outputAmount }: TxDetailsProps) {
             <Flex css={styles.detailItem}>
               <Text as="span">Fee (network)</Text>
               <Text as="span" aria-label="Gas Value">
-                {gasUsed.format()} ETH
+                {gasUsed.format({ precision: DECIMAL_UNITS })} ETH
               </Text>
             </Flex>
             <Flex css={styles.detailItem}>
               <Text as="span">Total (including Fee)</Text>
               <Text as="span" aria-label="Total Value">
-                {total.format()} ETH
+                {total.format({ precision: DECIMAL_UNITS })} ETH
               </Text>
             </Flex>
           </Flex>
