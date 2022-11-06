@@ -4,22 +4,32 @@
 
 # ⚡️ Fuel Wallet
 
-The official wallet of the fastest modular execution layer: [Fuel](https://fuel.network/).
+The official wallet of the fastest modular execution layer: [Fuel](https://fuel.network/)
 
-## Installing
+## 💻 Installing
 
-Download [Fuel Wallet](https://fuels-wallet.vercel.app/preview/fuel-wallet.zip). \* Save in a place you will remember, you will need this file soon.
+First of all: Download [Fuel Wallet](https://fuels-wallet.vercel.app/preview/fuel-wallet.zip)
+
+Then follow next steps.
+
+#### Steps in video:
+
+
+https://user-images.githubusercontent.com/8636507/200192945-1aa4cd60-2f09-4bc1-86b2-b836bc22ed23.mov
+
+
+
+#### Steps in a written way:
 
 In your web browser (Brave, Chrome)
-
 - Open Menu -> Click in "Extensions"
-- Enable "Developer mode" toggle
+- Enable switch "Developer mode"
 - Drag your downloaded Fuel Wallet file, and Drop it in the Extensions page
-- If all went right, an onboarding page will instantly appear.
+- If all went right, an onboarding page will instantly appear
 
-Follow the instructions and create/import your wallet.
+In the opened page, follow the instructions to create/import your wallet
 
-⚡️ Fuel Wallet extension is now installed and ready for your best use. ✅
+⚡️ Fuel Wallet extension is now ready for your best use. ✅
 
 ## 🧰 Features
 
@@ -56,6 +66,6 @@ Follow the instructions and create/import your wallet.
   - [Contribution Flow](./docs/CONTRIBUTING.md#contribution-flow)
 - [License](#license)
 
-## License
+## 📜 License
 
 The primary license for this repo is `Apache-2.0`, see [`LICENSE`](./LICENSE).
