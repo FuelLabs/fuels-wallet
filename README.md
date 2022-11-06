@@ -14,17 +14,12 @@ Then follow next steps.
 
 #### Steps in video:
 
-
-
 https://user-images.githubusercontent.com/8636507/200193094-4b6a6c80-5063-4a92-94fe-1b80c8274778.mov
-
-
-
-
 
 #### Steps in a written way:
 
 In your web browser (Brave, Chrome)
+
 - Open Menu -> Click in "Extensions"
 - Enable switch "Developer mode"
 - Drag your downloaded Fuel Wallet file, and Drop it in the Extensions page
