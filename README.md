@@ -8,14 +8,17 @@ The official wallet of the fastest modular execution layer: [Fuel](https://fuel.
 
 ## 💻 Installing
 
-First of all: Download [Fuel Wallet](https://fuels-wallet.vercel.app/preview/fuel-wallet.zip)
+First of all: [Download Fuel Wallet](https://fuels-wallet.vercel.app/preview/fuel-wallet.zip)
 
 Then follow next steps.
 
 #### Steps in video:
 
 
-https://user-images.githubusercontent.com/8636507/200192945-1aa4cd60-2f09-4bc1-86b2-b836bc22ed23.mov
+
+https://user-images.githubusercontent.com/8636507/200193094-4b6a6c80-5063-4a92-94fe-1b80c8274778.mov
+
+
 
 
 
@@ -64,7 +67,6 @@ In the opened page, follow the instructions to create/import your wallet
 - [Contribution Guide](./docs/CONTRIBUTING.md)
   - [Finding Something to Work On](./docs/CONTRIBUTING.md#finding-something-to-work-on)
   - [Contribution Flow](./docs/CONTRIBUTING.md#contribution-flow)
-- [License](#license)
 
 ## 📜 License
 
