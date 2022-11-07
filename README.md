@@ -23,11 +23,82 @@ In your web browser (Brave, Chrome)
 - Open Menu -> Click in "Extensions"
 - Enable switch "Developer mode"
 - Drag your downloaded Fuel Wallet file, and Drop it in the Extensions page
-- If all went right, an onboarding page will instantly appear
+- If all went right, an onboarding page will instantly open
 
 In the opened page, follow the instructions to create/import your wallet
 
 ⚡️ Fuel Wallet extension is now ready for your best use. ✅
+
+## 🎸 Integrating
+
+Integrate Fuel Wallet with your dapp is easy.
+
+Install the wallet SDK in your project.
+
+```
+TOOD: REPLACE
+npm install --save @fuel-wallet/sdk
+```
+
+### Action Promise Methods
+
+To communicate with Fuel Wallet extension, the SDK provides action promise methods.
+
+`connect` - Request permission to start a connection between the project and the wallet
+
+```
+const connect = async () => {
+  const isConnected = await window.FuelWeb3.connect();
+  console.log('Connection response', isConnected);
+}
+```
+
+`disconnect` - Disconnect your project
+
+```
+const disconnect = async () => {
+  const accounts = await window.FuelWeb3.accounts();
+  console.log('Accounts response', accounts);
+}
+```
+
+`accounts` - List accounts in the wallet
+
+```
+const accounts = async () => {
+  await window.FuelWeb3.accounts();
+  console.log('Disconnected');
+}
+```
+
+`signMessage` - Request permission to sign a message for a specific account
+
+```
+const signMessage = async () => {
+  const account = '0x00001000000'; // example address
+  const signedMessage = await window.FuelWeb3.signMessage(account, message);
+}
+```
+
+### Listeners
+
+There's also a way to listen to events that will be triggering when extension data changes
+
+`accounts` - Listen to changes to accounts. Returns `Array<string>`
+
+```
+window.FuelWeb3.on('accounts', (data) => {
+  console.log('accounts', data);
+});
+```
+
+`connection` - Listen to changes in connection status. Returns `boolean`
+
+```
+window.FuelWeb3.on('connection', (isConnected) => {
+  console.log('isConnected', isConnected);
+});
+```
 
 ## 🧰 Features
 
