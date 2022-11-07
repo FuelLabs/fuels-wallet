@@ -27,10 +27,10 @@
   "dependencies": {
     "@xstate/react": "^3.0.1",
     "react": "^18.2.0",
-    "xstate": "^4.33.6"
+    "xstate": "^4.34.0"
   },
   "devDependencies": {
-    "@types/react": "^18.0.21",
+    "@types/react": "^18.0.24",
     "tsup": "^6.3.0"
   }
 }

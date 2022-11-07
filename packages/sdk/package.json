@@ -30,7 +30,7 @@
     "events": "^3.3.0",
     "json-rpc-2.0": "^1.4.1",
     "uuid": "^9.0.0",
-    "xstate": "^4.33.6"
+    "xstate": "^4.34.0"
   },
   "devDependencies": {
     "@fuels-wallet/types": "workspace:*",
@@ -38,6 +38,6 @@
     "@types/uuid": "^8.3.4",
     "jest-webextension-mock": "^3.7.22",
     "ts-jest": "^29.0.3",
-    "tsup": "^6.2.3"
+    "tsup": "^6.3.0"
   }
 }

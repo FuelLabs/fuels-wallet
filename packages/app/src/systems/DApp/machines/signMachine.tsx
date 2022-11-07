@@ -1,4 +1,4 @@
-import type { Wallet } from 'fuels';
+import type { WalletUnlocked } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { send, assign, createMachine } from 'xstate';
 
@@ -91,7 +91,7 @@ export const signMachine = createMachine(
         invoke: {
           src: 'signMessage',
           data: {
-            input: (_: MachineContext, ev: { data: Wallet }) => {
+            input: (_: MachineContext, ev: { data: WalletUnlocked }) => {
               return { message: _.message, wallet: ev.data };
             },
           },
@@ -124,7 +124,7 @@ export const signMachine = createMachine(
     },
     services: {
       signMessage: FetchMachine.create<
-        { message: string; wallet: Wallet },
+        { message: string; wallet: WalletUnlocked },
         string
       >({
         showError: true,

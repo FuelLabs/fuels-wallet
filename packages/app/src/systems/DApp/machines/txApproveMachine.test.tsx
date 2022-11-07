@@ -1,10 +1,10 @@
-import type { ScriptTransactionRequest } from 'fuels';
+import type { ScriptTransactionRequest, WalletUnlocked } from 'fuels';
 import { Wallet } from 'fuels';
 import type { InterpreterFrom } from 'xstate';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
-import { getMockedTransaction } from '../__mocks__/transaction';
+import { getMockedTransaction } from '../__mocks__/dapp-transaction';
 
 import { txApproveMachine } from './txApproveMachine';
 
@@ -17,11 +17,11 @@ const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
 
 describe('txApproveMachine', () => {
   let service: Service;
-  let wallet: Wallet;
+  let wallet: WalletUnlocked;
   let tx: ScriptTransactionRequest;
 
   beforeAll(async () => {
-    wallet = new Wallet(OWNER);
+    wallet = Wallet.fromPrivateKey(OWNER);
     jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
     tx = await getMockedTransaction(
       wallet?.publicKey || '',

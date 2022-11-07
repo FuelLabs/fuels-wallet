@@ -1,16 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
-import { Text, BoxCentered, Heading, Button, Icon } from '@fuel-ui/react';
+import { BoxCentered, Heading } from '@fuel-ui/react';
 
 import { ImageLoader, relativeUrl } from '~/systems/Core';
-import { useOpenFaucet } from '~/systems/Faucet';
 
 type AssetsEmptyProps = {
   isDevnet?: boolean;
 };
 
-export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
-  const openFaucet = useOpenFaucet();
-
+export function AssetListEmpty(_: AssetsEmptyProps) {
   return (
     <BoxCentered css={styles.empty}>
       <ImageLoader
@@ -21,16 +18,6 @@ export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
         wrapperCSS={{ mb: '$5' }}
       />
       <Heading as="h5">You don&apos;t have any assets</Heading>
-      {!isDevnet ? (
-        <Text fontSize="sm">Start depositing some assets</Text>
-      ) : (
-        /**
-         * TODO: need to add right faucet icon on @fuel-ui
-         */
-        <Button size="sm" leftIcon={Icon.is('Coffee')} onPress={openFaucet}>
-          Faucet
-        </Button>
-      )}
     </BoxCentered>
   );
 }
