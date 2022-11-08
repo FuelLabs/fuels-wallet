@@ -14,7 +14,7 @@ describe('AmountInput', () => {
   });
   it('should show balance formatted', () => {
     render(<AmountInput amount={MOCK_ASSETS[0].amount} />);
-    expect(screen.getByText('Balance: 14.56')).toBeInTheDocument();
+    expect(screen.getByText('Balance: 14.563')).toBeInTheDocument();
   });
   it('should display balance in input when click on max button', async () => {
     const { user } = render(<AmountInput amount={MOCK_ASSETS[0].amount} />);
@@ -23,6 +23,6 @@ describe('AmountInput', () => {
 
     expect(screen.getByPlaceholderText('0.00')).toBeInTheDocument();
     await user.click(maxBtn);
-    expect(screen.getByDisplayValue('14.56')).toBeInTheDocument();
+    expect(screen.getByText('14.563')).toBeInTheDocument();
   });
 });
