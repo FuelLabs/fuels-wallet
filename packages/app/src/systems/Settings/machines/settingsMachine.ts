@@ -3,7 +3,8 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { send } from 'xstate/lib/actions';
 
-import type { AccountInputs, AccountService } from '~/systems/Account';
+import { AccountService } from '~/systems/Account';
+import type { AccountInputs } from '~/systems/Account';
 import type { ChildrenMachine } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
 import type { UnlockMachine } from '~/systems/DApp';
@@ -20,8 +21,8 @@ type MachineContext = {
 };
 
 type MachineEvents = {
-  type: 'UNLOCK_WALLET' | 'CLOSE_UNLOCK';
-  input?: AccountInputs['unlock'];
+  type: 'UNLOCK_WALLET' | 'CLOSE_UNLOCK' | 'CHANGE_PASSWORD';
+  input?: AccountInputs['unlock'] | AccountInputs['changePassword'];
   data?: string[];
 };
 
@@ -38,6 +39,18 @@ export const settingsMachine = createMachine(
     id: '(settings-machine)',
     initial: 'unlocking',
     states: {
+      changingPassword: {
+        invoke: {
+          src: 'changePassword',
+          data: (_: MachineContext, ev: MachineEvents) => {
+            return ev.input;
+          },
+          onDone: {
+            cond: FetchMachine.hasError,
+            target: 'unlocking',
+          },
+        },
+      },
       unlocking: {
         invoke: {
           id: 'unlock',
@@ -51,7 +64,6 @@ export const settingsMachine = createMachine(
         },
         on: {
           UNLOCK_WALLET: {
-            // send to the child machine
             actions: [
               send<MachineContext, MachineEvents>(
                 (_, ev) => ({
@@ -89,6 +101,11 @@ export const settingsMachine = createMachine(
       },
       failed: {},
     },
+    on: {
+      CHANGE_PASSWORD: {
+        target: 'changingPassword',
+      },
+    },
   },
   {
     actions: {
@@ -97,6 +114,23 @@ export const settingsMachine = createMachine(
       }),
     },
     services: {
+      changePassword: FetchMachine.create<
+        AccountInputs['changePassword'],
+        void
+      >({
+        showError: true,
+        maxAttempts: 1,
+        fetch: async ({ input }) => {
+          if (!input?.oldPassword || !input.newPassword) {
+            throw new Error('Invalid Input');
+          }
+
+          await AccountService.changePassword({
+            oldPassword: input.oldPassword,
+            newPassword: input.newPassword,
+          });
+        },
+      }),
       getMnenmonic: FetchMachine.create<
         {
           wallet: Awaited<ReturnType<typeof AccountService['unlock']>>;

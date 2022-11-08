@@ -5,6 +5,7 @@ import { waitFor } from 'xstate/lib/waitFor';
 
 import { settingsMachine } from './settingsMachine';
 
+import type { AccountInputs } from '~/systems/Account';
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 
 const OWNER = import.meta.env.VITE_ADDR_OWNER;
@@ -51,6 +52,31 @@ describe('settingsMachine', () => {
     });
 
     await waitFor(service, (state) => state.matches('gettingMnemonic'));
+
+    const { matches } = await waitFor(service, (state) =>
+      state.matches('done')
+    );
+
+    const { event } = service.getSnapshot();
+
+    expect(event.data?.length).toBeGreaterThan(1);
+    expect(matches('done')).toBeTruthy();
+  });
+
+  it('should change the password of the user and we should be able to unlock it agan', async () => {
+    service.send('CHANGE_PASSWORD', {
+      newPassword: '12345678',
+      oldPassword: '123123',
+    } as AccountInputs['changePassword']);
+
+    await waitFor(service, (state) => state.matches('unlocking'));
+
+    service.send('UNLOCK_WALLET', {
+      input: {
+        account: MOCK_ACCOUNTS[0],
+        password: '12345678',
+      },
+    });
 
     const { matches } = await waitFor(service, (state) =>
       state.matches('done')

@@ -35,6 +35,10 @@ export type AccountInputs = {
     account: Account;
     password: string;
   };
+  changePassword: {
+    oldPassword: string;
+    newPassword: string;
+  };
 };
 
 export class AccountService {
@@ -163,6 +167,20 @@ export class AccountService {
         return secret;
       },
     };
+  }
+
+  static async changePassword(input: AccountInputs['changePassword']) {
+    const storage = new IndexedDBStorage() as never;
+    const manager = new WalletManager({ storage });
+    await manager.unlock(input.oldPassword);
+    const vaultSecret = manager.exportVault(0);
+    await manager.removeVault(0);
+    await manager.unlock(input.newPassword);
+    await manager.addVault({
+      type: 'mnemonic',
+      secret: vaultSecret.secret,
+    });
+    await manager.lock();
   }
 }
 
