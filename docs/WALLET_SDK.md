@@ -56,12 +56,12 @@ const signedMessage = await window.FuelWeb3.signMessage(account, message);
 
 ## SDK API
 
-| name          | signature                                                            |
-| ------------- | -------------------------------------------------------------------- |
-| [connect]     | async connect(): Promise<boolean>                                    |
-| [disconnect]  | async disconnect(): Promise<boolean>                                 |
-| [accounts]    | async accounts(): Promise<Array<string>>                             |
-| [signMessage] | async signMessage(address: string, message: string): Promise<string> |
+| name                                      | signature                                                            |
+| ----------------------------------------- | -------------------------------------------------------------------- |
+| [connect](#connect)                       | async connect(): Promise<boolean>                                    |
+| [disconnect](#disconnect)                 | async disconnect(): Promise<boolean>                                 |
+| [accounts](#list-user-accounts)           | async accounts(): Promise<Array<string>>                             |
+| [signMessage](#request-signature-message) | async signMessage(address: string, message: string): Promise<string> |
 
 ### Methods
 
