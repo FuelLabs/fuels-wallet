@@ -2,111 +2,49 @@
 [![discord](https://img.shields.io/badge/chat%20on-discord-orange?&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/xfpK4Pe)
 ![twitter](https://img.shields.io/twitter/follow/SwayLang?style=social)
 
-# ⚡️ Fuel Wallet
+## ⚡️ Fuel Wallet
 
-The official wallet of the fastest modular execution layer: [Fuel](https://fuel.network/)
+The official wallet of the fastest modular execution layer: [Fuel](https://fuel.network).
 
-## 💻 Installing
+FuelWallet is a crypto wallet, used to interact with Fuel Network. This project, enable users to access their assets and interacting with decentralized application, through a browser extension.
 
-First of all: [Download Fuel Wallet](https://fuels-wallet.vercel.app/preview/fuel-wallet.zip)
+[![Install Wallet](docs/assets/install-button.png)](./docs/INSTALL.md)
 
-Then follow next steps.
+Integrate your **DApp** using the [Wallet SDK](./docs/WALLET_SDK.md)
 
-#### Steps in video:
+## 📗 Table of contents
 
-https://user-images.githubusercontent.com/8636507/200193094-4b6a6c80-5063-4a92-94fe-1b80c8274778.mov
+- [📦 Install Wallet](./docs/INSTALL.md)
+- [🧰 Fuel Wallet SDK](./docs/WALLET_SDK.md)
+  - [👨‍💻 - Quickstart](./docs/WALLET_SDK.md#quickstart)
+  - [🔗 - Request connection](./docs/WALLET_SDK.md#request-connection)
+  - [📗 - List user accounts](./docs/WALLET_SDK.md#list-user-accounts)
+  - [✍️ - Signing a message](./docs/WALLET_SDK.md#signing-a-message)
+- [Contributing](./docs/GETTING_STARTED.md)
+  - [Requirements](./docs/GETTING_STARTED.md#requirements)
+  - [Running Project Locally](./docs/GETTING_STARTED.md#running-project-locally)
+    - [Getting the Repository](./docs/GETTING_STARTED.md#---getting-the-repository)
+    - [Install Dependencies](./docs/GETTING_STARTED.md#---install-dependencies)
+    - [Run Local Node](./docs/GETTING_STARTED.md#---run-local-node)
+    - [Run Web App](./docs/GETTING_STARTED.md#---run-web-app)
+  - [Project Overview](./docs/GETTING_STARTED.md#-project-overview)
+  - [Useful Scripts](./docs/GETTING_STARTED.md#-useful-scripts)
+  - [Running Tests](./docs/GETTING_STARTED.md#running-tests)
+    - [Run Tests in Development Mode](./docs/GETTING_STARTED.md#run-tests-in-development-mode)
+    - [Run Tests on a Local Test Environment](./docs/GETTING_STARTED.md#run-tests-on-a-local-test-environment)
+- [Contribution Guide](./docs/CONTRIBUTING.md)
+  - [Finding Something to Work On](./docs/CONTRIBUTING.md#finding-something-to-work-on)
+  - [Contribution Flow](./docs/CONTRIBUTING.md#contribution-flow)
 
-#### Steps in a written way:
+| This project is under active development. Do not treat as production ready Wallet.
 
-In your web browser (Brave, Chrome)
-
-- Open Menu -> Click in "Extensions"
-- Enable switch "Developer mode"
-- Drag your downloaded Fuel Wallet file, and Drop it in the Extensions page
-- If all went right, an onboarding page will instantly open
-
-In the opened page, follow the instructions to create/import your wallet
-
-⚡️ Fuel Wallet extension is now ready for your best use. ✅
-
-## 🎸 Integrating
-
-Integrate Fuel Wallet with your dapp is easy.
-
-Install the wallet SDK in your project.
-
-```
-TOOD: REPLACE
-npm install --save @fuel-wallet/sdk
-```
-
-### Action Promise Methods
-
-To communicate with Fuel Wallet extension, the SDK provides action promise methods.
-
-`connect` - Request permission to start a connection between the project and the wallet
-
-```
-const connect = async () => {
-  const isConnected = await window.FuelWeb3.connect();
-  console.log('Connection response', isConnected);
-}
-```
-
-`disconnect` - Disconnect your project
-
-```
-const disconnect = async () => {
-  const accounts = await window.FuelWeb3.accounts();
-  console.log('Accounts response', accounts);
-}
-```
-
-`accounts` - List accounts in the wallet
-
-```
-const accounts = async () => {
-  await window.FuelWeb3.accounts();
-  console.log('Disconnected');
-}
-```
-
-`signMessage` - Request permission to sign a message for a specific account
-
-```
-const signMessage = async () => {
-  const account = '0x00001000000'; // example address
-  const signedMessage = await window.FuelWeb3.signMessage(account, message);
-}
-```
-
-### Listeners
-
-There's also a way to listen to events that will be triggering when extension data changes
-
-`accounts` - Listen to changes to accounts. Returns `Array<string>`
-
-```
-window.FuelWeb3.on('accounts', (data) => {
-  console.log('accounts', data);
-});
-```
-
-`connection` - Listen to changes in connection status. Returns `boolean`
-
-```
-window.FuelWeb3.on('connection', (isConnected) => {
-  console.log('isConnected', isConnected);
-});
-```
-
-## 🧰 Features
+## Features
 
 - [x] Create a brand new and secure account
 - [x] Recover an account using a passphrase
 - [ ] Update account details
 - [x] Check your asset's balance
-- [ ] Manage networks
+- [x] Manage networks
 - [ ] Reveal your passphrase
 - [ ] Change password
 - [ ] Faucet for testnet
@@ -114,25 +52,11 @@ window.FuelWeb3.on('connection', (isConnected) => {
 - [ ] View transaction details
 - [ ] Send assets to another wallet
 - [ ] Receive screen with QR Code
-- [ ] DApps integration popups
-
-## 🦸‍♀️ Contributing 🦸‍♂️
-
-- [Getting Started](./docs/GETTING_STARTED.md)
-  - [Requirements](./docs/GETTING_STARTED.md#requirements)
-  - [Running Project Locally](./docs/GETTING_STARTED.md#running-project-locally)
-    - [📚 - Getting the Repository](./docs/GETTING_STARTED.md#---getting-the-repository)
-    - [📦 - Install Dependencies](./docs/GETTING_STARTED.md#---install-dependencies)
-    - [📒 - Run Local Node](./docs/GETTING_STARTED.md#---run-local-node)
-    - [💻 - Run Web App](./docs/GETTING_STARTED.md#---run-web-app)
-  - [📗 Project Overview](./docs/GETTING_STARTED.md#-project-overview)
-  - [🧰 Useful Scripts](./docs/GETTING_STARTED.md#-useful-scripts)
-  - [Running Tests](./docs/GETTING_STARTED.md#running-tests)
-    - [Run Tests in Development Mode](./docs/GETTING_STARTED.md#run-tests-in-development-mode)
-    - [Run Tests on a Local Test Environment](./docs/GETTING_STARTED.md#run-tests-on-a-local-test-environment)
-- [Contribution Guide](./docs/CONTRIBUTING.md)
-  - [Finding Something to Work On](./docs/CONTRIBUTING.md#finding-something-to-work-on)
-  - [Contribution Flow](./docs/CONTRIBUTING.md#contribution-flow)
+- [x] DApps integration
+  - [x] Request connection
+  - [x] List accounts
+  - [x] Sign messages
+  - [ ] Send transactions
 
 ## 📜 License
 
