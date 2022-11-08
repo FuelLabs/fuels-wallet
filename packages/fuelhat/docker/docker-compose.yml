@@ -5,7 +5,6 @@ services:
     container_name: "${PROJECT:-fuelhat}_fuel-core"
     environment:
       MIN_GAS_PRICE: ${GAS_PRICE}
-      MIN_BYTE_PRICE: ${BYTE_PRICE}
     build: ../fuel-core
     ports:
       - "${FUEL_CORE_PORT:-4000}:4000"
@@ -16,24 +15,6 @@ services:
       interval: 1s
       timeout: 5s
       retries: 10
-  faucet:
-    container_name: "${PROJECT:-fuelhat}_faucet"
-    environment:
-      MIN_GAS_PRICE: ${GAS_PRICE}
-      MIN_BYTE_PRICE: ${BYTE_PRICE}
-      WALLET_SECRET_KEY: ${WALLET_SECRET}
-      DISPENSE_AMOUNT: ${DISPENSE_AMOUNT}
-      FUEL_NODE_URL: http://${PROJECT:-fuelhat}_fuel-core:4000/graphql
-    # Other configurations can be found at;
-    # https://github.com/FuelLabs/faucet#configuration
-    image: ghcr.io/fuellabs/faucet:v0.1.4
-    ports:
-      - "${FUEL_FAUCET_PORT:-4040}:3000"
-    links:
-      - fuel-core
-    depends_on:
-      fuel-core:
-        condition: service_healthy
 
 volumes:
   fuel-core-db:

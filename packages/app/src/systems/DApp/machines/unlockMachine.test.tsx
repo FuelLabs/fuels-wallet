@@ -14,7 +14,7 @@ const OWNER = import.meta.env.VITE_ADDR_OWNER;
 describe('unlockMachine', () => {
   let service: Service;
   const account = MOCK_ACCOUNTS[0];
-  const wallet = new Wallet(OWNER);
+  const wallet = Wallet.fromPrivateKey(OWNER);
 
   beforeEach(async () => {
     service = interpret(

@@ -1,3 +1,4 @@
+import type { WalletUnlocked } from 'fuels';
 import { Wallet } from 'fuels';
 import type { InterpreterFrom } from 'xstate';
 import { interpret } from 'xstate';
@@ -13,10 +14,10 @@ const OWNER = import.meta.env.VITE_ADDR_OWNER;
 
 describe('signMachine', () => {
   let service: Service;
-  let wallet: Wallet;
+  let wallet: WalletUnlocked;
 
   beforeAll(async () => {
-    wallet = new Wallet(OWNER);
+    wallet = Wallet.fromPrivateKey(OWNER);
     jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
   });
 
@@ -56,7 +57,7 @@ describe('signMachine', () => {
     const { context } = await waitFor(service, (state) =>
       state.matches('done')
     );
-    const signature = wallet.signMessage(DATA.message);
+    const signature = await wallet.signMessage(DATA.message);
     expect(context.signedMessage).toEqual(signature);
   });
 
