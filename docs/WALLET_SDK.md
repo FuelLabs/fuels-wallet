@@ -108,11 +108,11 @@ const signedMessage = await window.FuelWeb3.signMessage(account, message);
 
 ### Events
 
-Events are trigger when the state of the repective scope is updated.
+Events are triggered when the state of the repective scope is updated.
 
 #### Accounts
 
-`accounts` - Listen to changes to the list of authorized accounts. Params `Array<string>`
+`accounts` - Listen to changes in to the list of authorized accounts. Params `Array<string>`
 
 ```ts
 window.FuelWeb3.on("accounts", (data) => {
