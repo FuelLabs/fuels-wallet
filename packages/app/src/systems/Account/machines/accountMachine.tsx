@@ -1,8 +1,8 @@
+import type { Account } from '@fuels-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { AccountService } from '../services/account';
-import type { Account } from '../types';
 
 import { IS_LOGGED_KEY } from '~/config';
 import { FetchMachine } from '~/systems/Core';

@@ -1,3 +1,4 @@
+import type { WalletUnlocked } from 'fuels';
 import { bn, ScriptTransactionRequest, Wallet } from 'fuels';
 
 import { TxType } from '../types';
@@ -11,24 +12,19 @@ const amount = bn(1);
 const params = { gasLimit: bn(100000), gasPrice: bn(100000) };
 
 describe('TxService', () => {
-  let wallet: Wallet;
+  let wallet: WalletUnlocked;
   let txRequest: ScriptTransactionRequest;
 
   beforeAll(async () => {
-    wallet = new Wallet(OWNER, VITE_FUEL_PROVIDER_URL);
+    wallet = Wallet.fromPrivateKey(OWNER, VITE_FUEL_PROVIDER_URL);
     const coins = await wallet.getCoins();
     const newAddr = Wallet.generate({
       provider: VITE_FUEL_PROVIDER_URL,
     }).address;
-    const assetId = coins[0].assetId;
     txRequest = new ScriptTransactionRequest(params);
+    const assetId = coins[0].assetId;
     txRequest.addCoinOutput(newAddr, amount, assetId);
-    txRequest.addCoins(
-      await wallet.getCoinsToSpend([
-        [amount, assetId],
-        txRequest.calculateFee(),
-      ])
-    );
+    wallet.fund(txRequest);
   });
 
   beforeEach(async () => {

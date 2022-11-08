@@ -1,4 +1,3 @@
-export * from './types';
 export * from './__mocks__';
 export * from './services';
 export * from './machines';

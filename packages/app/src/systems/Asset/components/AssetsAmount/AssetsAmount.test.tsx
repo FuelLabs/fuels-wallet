@@ -6,17 +6,48 @@ import { AssetsAmount } from './AssetsAmount';
 
 describe('AssetsAmount', () => {
   it('a11y', async () => {
-    await testA11y(<AssetsAmount amounts={MOCK_ASSETS_AMOUNTS} />);
+    await testA11y(
+      <AssetsAmount amounts={MOCK_ASSETS_AMOUNTS} title="Assets to Send" />
+    );
   });
 
   it('should show multiple assets', async () => {
-    render(<AssetsAmount amounts={MOCK_ASSETS_AMOUNTS} />);
+    render(
+      <AssetsAmount amounts={MOCK_ASSETS_AMOUNTS} title="Assets to Send" />
+    );
     expect(screen.getByText('Ethereum')).toBeInTheDocument();
     expect(screen.getByText('Dai')).toBeInTheDocument();
   });
 
   it('should show positive values with plus', async () => {
-    render(<AssetsAmount amounts={MOCK_ASSETS_AMOUNTS} />);
-    expect(screen.getByText('14563943.834 ETH')).toBeInTheDocument();
+    render(
+      <AssetsAmount
+        amounts={MOCK_ASSETS_AMOUNTS}
+        title="Assets to Send"
+        isPositive
+      />
+    );
+    expect(screen.getByText('+14.563 ETH')).toBeInTheDocument();
+  });
+
+  it('should show negative values with substract signal', async () => {
+    render(
+      <AssetsAmount
+        amounts={MOCK_ASSETS_AMOUNTS}
+        title="Assets to Send"
+        isNegative
+      />
+    );
+    expect(screen.getByText('-14.563 ETH')).toBeInTheDocument();
+  });
+
+  it('should not show positive/negative signal', async () => {
+    render(
+      <AssetsAmount amounts={MOCK_ASSETS_AMOUNTS} title="Assets to Send" />
+    );
+    const el = screen.getByText('14.563 ETH');
+    expect(el.innerHTML.indexOf('+')).toEqual(-1);
+    expect(el.innerHTML.indexOf('-')).toEqual(-1);
+    expect(el).toBeInTheDocument();
   });
 });

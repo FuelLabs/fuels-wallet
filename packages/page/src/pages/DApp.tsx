@@ -1,6 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, BoxCentered, Button, Text, Link } from '@fuel-ui/react';
+import {
+  Alert,
+  Box,
+  BoxCentered,
+  Button,
+  Text,
+  Link,
+  Input,
+} from '@fuel-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 
 // This is not need if the developer
@@ -23,28 +32,36 @@ function useFuelWeb3() {
   return [fuelWeb3, error] as const;
 }
 
-function useLoading(callback: () => Promise<void>) {
+function useLoading<T extends (...args: any) => Promise<void>>(
+  callback: T,
+  deps: any = []
+) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>();
-  const execute = useCallback(async () => {
-    setError(null);
-    setLoading(true);
-    callback()
-      .catch((err) => {
-        setError(err.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+  const execute = useCallback(
+    async (...args: any) => {
+      setError(null);
+      setLoading(true);
+      callback(...args)
+        .catch((err) => {
+          setError(err.message);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+    [...deps]
+  );
 
-  return [execute, loading, error] as const;
+  return [execute as T, loading, error] as const;
 }
 
 export function DApp() {
   const [FuelWeb3, notDetected] = useFuelWeb3();
   const [connected, setConnected] = useState(false);
   const [accounts, setAccounts] = useState<string[]>([]);
+  const [signedMessage, setSignedMessage] = useState<string>('');
+  const [message, setMessage] = useState<string>('Message to sign');
   const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {
     console.debug('Request connection to Wallet!');
     const isConnected = await window.FuelWeb3.connect();
@@ -67,8 +84,22 @@ export function DApp() {
       console.debug('Accounts ', accounts);
     }
   );
+  const [handleSignMessage, isSingingMessage, errorSigningMessage] = useLoading(
+    async (message: string) => {
+      console.debug('Request signature of message!');
+      const account = accounts[0];
+      const signedMessage = await window.FuelWeb3.signMessage(account, message);
+      setSignedMessage(signedMessage);
+      console.debug('Message signature', signedMessage);
+    },
+    [accounts]
+  );
   const errorMessage =
-    errorConnect || errorDisconnect || notDetected || errorGetAccounts;
+    errorConnect ||
+    errorDisconnect ||
+    notDetected ||
+    errorGetAccounts ||
+    errorSigningMessage;
 
   useEffect(() => {
     if (FuelWeb3) {
@@ -102,6 +133,7 @@ export function DApp() {
         </Alert>
       ) : null}
       <BoxCentered minHS minWS gap="$2" direction="column">
+        <Text as="h1">Connection</Text>
         <Button
           onPress={handleConnect}
           isLoading={isConnecting}
@@ -130,6 +162,30 @@ export function DApp() {
             ))}
           </Box>
         ) : null}
+        <Text as="h1" css={{ marginTop: '$4' }}>
+          Sign Message
+        </Text>
+        <Input isDisabled={!connected} css={{ width: 300, height: 100 }}>
+          <Input.Field
+            as="textarea"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Type your title"
+            css={{ color: '$whiteA11', padding: '$2' }}
+          />
+        </Input>
+        <Button
+          onPress={() => handleSignMessage(message)}
+          isLoading={isSingingMessage}
+          isDisabled={isSingingMessage || !connected}
+        >
+          Sign Message
+        </Button>
+        {signedMessage ? (
+          <Box css={styles.accounts}>
+            <Text>{signedMessage}</Text>
+          </Box>
+        ) : null}
       </BoxCentered>
     </Box>
   );
@@ -141,6 +197,8 @@ const styles = {
     padding: '$2',
     borderRadius: '$lg',
     backgroundColor: '$gray4',
+    maxWidth: 300,
+    wordWrap: 'break-word',
   }),
   alert: cssObj({
     position: 'absolute',

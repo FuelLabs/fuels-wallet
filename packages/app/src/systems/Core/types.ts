@@ -13,6 +13,7 @@ export const Pages = {
   index: route('/'),
   wallet: route('/wallet'),
   faucet: route('/wallet/faucet'),
+  receive: route('/wallet/receive'),
   signUp: route('/sign-up'),
   signUpWelcome: route('/sign-up/welcome'),
   signUpCreateWallet: route('/sign-up/create-wallet'),
@@ -21,9 +22,11 @@ export const Pages = {
   networks: route('/networks'),
   networkUpdate: route<'id'>('/networks/update/:id'),
   networkAdd: route('/networks/add'),
-  signMessage: route('/sign-message'),
+  request: route('/request'),
+  requestConnection: route('/request/connection'),
+  requestTransaction: route('/request/transaction'),
+  requestMessage: route('/request/message'),
   txs: route('/transactions'),
-  txApprove: route('/transactions/approve'),
 };
 
 export type AmountMap = Record<string, Maybe<BigNumberish>>;

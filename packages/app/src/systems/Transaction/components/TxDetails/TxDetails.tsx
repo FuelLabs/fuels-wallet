@@ -1,32 +1,40 @@
 import { cssObj } from '@fuel-ui/css';
-import { Accordion, Text } from '@fuel-ui/react';
+import { Accordion, Flex, Text } from '@fuel-ui/react';
+import type { BN } from 'fuels';
 import { bn, getGasUsedFromReceipts } from 'fuels';
-import { useMemo } from 'react';
 
 import type { TxSimulateResult } from '../../types';
 
-import { MAX_FRACTION_DIGITS } from '~/config';
 import type { Maybe } from '~/systems/Core';
 
 export type TxDetailsProps = {
   receipts?: Maybe<TxSimulateResult['receipts']>;
+  outputAmount?: BN;
 };
 
-export function TxDetails({ receipts }: TxDetailsProps) {
-  const gasUsed = useMemo(
-    () => getGasUsedFromReceipts(receipts || []),
-    receipts || []
-  );
+export function TxDetails({ receipts, outputAmount }: TxDetailsProps) {
+  const gasUsed = getGasUsedFromReceipts(receipts || []);
+  const total = gasUsed.add(bn(outputAmount));
 
   return (
     <Accordion type="multiple">
       <Accordion.Item value="tx-details" css={styles.item}>
         <Accordion.Trigger>Transaction Details</Accordion.Trigger>
         <Accordion.Content css={styles.info}>
-          <Text as="span">Gas Used</Text>
-          <Text as="span" aria-label="Gas Value">
-            {bn(gasUsed).formatUnits(MAX_FRACTION_DIGITS)} ETH
-          </Text>
+          <Flex css={styles.detailItems}>
+            <Flex css={styles.detailItem}>
+              <Text as="span">Fee (network)</Text>
+              <Text as="span" aria-label="Gas Value">
+                {gasUsed.format()} ETH
+              </Text>
+            </Flex>
+            <Flex css={styles.detailItem}>
+              <Text as="span">Total (including Fee)</Text>
+              <Text as="span" aria-label="Total Value">
+                {total.format()} ETH
+              </Text>
+            </Flex>
+          </Flex>
         </Accordion.Content>
       </Accordion.Item>
     </Accordion>
@@ -66,5 +74,16 @@ const styles = {
         color: '$gray12',
       },
     },
+  }),
+  detailItems: cssObj({
+    flexDirection: 'column',
+    gap: '$2',
+    flex: 1,
+  }),
+  detailItem: cssObj({
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: '$2',
   }),
 };

@@ -1,9 +1,9 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Text, CardList, Flex, IconButton, Icon } from '@fuel-ui/react';
+import type { Network } from '@fuels-wallet/types';
 import { forwardRef } from 'react';
 
-import type { Network } from '../../types';
 import { RemoveNetworkDialog } from '../RemoveNetworkDialog/RemoveNetworkDialog';
 
 export function NetworkStatus({ network: _network }: { network: Network }) {
@@ -57,7 +57,7 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
 
     return (
       <CardList.Item
-        data-testid="fuel_network-item"
+        aria-label={`fuel_network-item-${network?.id}`}
         ref={ref}
         onClick={() => onPress?.(network)}
         css={{ ...styles.root, ...css }}

@@ -1,3 +1,4 @@
+import type { WalletUnlocked } from 'fuels';
 import { Wallet } from 'fuels';
 import type { InterpreterFrom } from 'xstate';
 import { interpret } from 'xstate';
@@ -13,10 +14,10 @@ const OWNER = import.meta.env.VITE_ADDR_OWNER;
 
 describe('signMachine', () => {
   let service: Service;
-  let wallet: Wallet;
+  let wallet: WalletUnlocked;
 
   beforeAll(async () => {
-    wallet = new Wallet(OWNER);
+    wallet = Wallet.fromPrivateKey(OWNER);
     jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
   });
 
@@ -29,13 +30,19 @@ describe('signMachine', () => {
   });
 
   it('should sign message', async () => {
+    const DATA = {
+      origin: 'foo.com',
+      message: 'test message',
+    };
     await waitFor(service, (state) => state.matches('idle'));
 
     service.send('START_SIGN', {
-      input: {
-        message: 'test message',
-      },
+      input: DATA,
     });
+
+    await waitFor(service, (state) => state.matches('reviewMessage'));
+
+    service.send('SIGN_MESSAGE');
 
     await waitFor(service, (state) => state.matches('unlocking'));
 
@@ -47,9 +54,29 @@ describe('signMachine', () => {
     });
 
     await waitFor(service, (state) => state.matches('signingMessage'));
-    const { matches } = await waitFor(service, (state) =>
+    const { context } = await waitFor(service, (state) =>
       state.matches('done')
     );
-    expect(matches('done')).toBeTruthy();
+    const signature = await wallet.signMessage(DATA.message);
+    expect(context.signedMessage).toEqual(signature);
+  });
+
+  it('should reject sign message', async () => {
+    await waitFor(service, (state) => state.matches('idle'));
+
+    service.send('START_SIGN', {
+      input: {
+        origin: 'foo.com',
+        message: 'test message',
+      },
+    });
+
+    await waitFor(service, (state) => state.matches('reviewMessage'));
+
+    service.send('REJECT');
+
+    const state = await waitFor(service, (state) => state.matches('failed'));
+
+    expect(state.context.error).toBeTruthy();
   });
 });

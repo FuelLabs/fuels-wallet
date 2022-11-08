@@ -1,4 +1,4 @@
-import type { Wallet } from 'fuels';
+import type { WalletUnlocked } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { createMachine } from 'xstate';
 
@@ -10,7 +10,7 @@ export type UnlockMachineContext = Record<string, never>;
 
 type MachineServices = {
   unlock: {
-    data: Wallet;
+    data: WalletUnlocked;
   };
 };
 
@@ -62,13 +62,13 @@ export const unlockMachine = createMachine(
       },
       done: {
         type: 'final',
-        data: (_, e: { data: Wallet }) => e.data,
+        data: (_, e: { data: WalletUnlocked }) => e.data,
       },
     },
   },
   {
     services: {
-      unlock: FetchMachine.create<AccountInputs['unlock'], Wallet>({
+      unlock: FetchMachine.create<AccountInputs['unlock'], WalletUnlocked>({
         showError: true,
         maxAttempts: 1,
         async fetch({ input }) {
