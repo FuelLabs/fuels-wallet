@@ -1,5 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Flex, Input, Text } from '@fuel-ui/react';
+import { DECIMAL_UNITS } from 'fuels';
 import type { BN } from 'fuels';
 import { useState } from 'react';
 import type { FC, ChangeEvent } from 'react';
@@ -23,7 +24,7 @@ export const AmountInput: AmountInputComponent = ({ amount }) => {
   };
 
   const handlePress = () => {
-    setAssetAmount(amount.format());
+    setAssetAmount(amount.format({ precision: DECIMAL_UNITS }));
   };
 
   const handleAmountLeadingZeros = (
@@ -50,6 +51,7 @@ export const AmountInput: AmountInputComponent = ({ amount }) => {
         thousandSeparator={false}
         value={assetAmount}
         onChange={handleAmountChange}
+        decimalScale={DECIMAL_UNITS}
       />
       <Input.ElementRight>
         <Flex direction="column" align="end" css={styles.flexColumn}>
@@ -65,7 +67,9 @@ export const AmountInput: AmountInputComponent = ({ amount }) => {
             </Button>
           </Flex>
           <Flex>
-            <Text css={styles.text}>Balance: {amount.format()}</Text>
+            <Text css={styles.text}>
+              Balance: {amount.format({ precision: DECIMAL_UNITS })}
+            </Text>
           </Flex>
         </Flex>
       </Input.ElementRight>
