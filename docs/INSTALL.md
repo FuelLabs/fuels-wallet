@@ -2,11 +2,11 @@
 
 For installing the Fuel Wallet you need to download [FuelWallet zip file](https://fuels-wallet.vercel.app/preview/fuel-wallet.zip) and import directly on your extensions management page, on chrome or brave.
 
-<div style="text-align: center">
-<video style="width:720px" controls>
-  <source src="https://user-images.githubusercontent.com/3941923/196786368-8accd2a0-e7b6-4ae2-a6e6-dace918b3266.mp4">
-</video>
-</div>
+<p align="center">
+<img src="./assets/install-extension.gif" alt="Install instructions" width="80%">
+<br/>
+<a href="https://user-images.githubusercontent.com/3941923/196786368-8accd2a0-e7b6-4ae2-a6e6-dace918b3266.mp4">Open video</a>
+</p>
 
 1. Inside Chrome or Brave
 2. Open the extensions page, it can be done by;
