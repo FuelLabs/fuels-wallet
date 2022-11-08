@@ -23,6 +23,6 @@ describe('AmountInput', () => {
 
     expect(screen.getByPlaceholderText('0.00')).toBeInTheDocument();
     await user.click(maxBtn);
-    expect(screen.getByText('14.563')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('14.563')).toBeInTheDocument();
   });
 });
