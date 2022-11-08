@@ -14,10 +14,9 @@ export const AmountInputLoader = (props: IContentLoaderProps) => (
       foregroundColor={darkColors.gray4}
       {...props}
     >
-      <circle cx="26" cy="30" r="18" />
-      <rect x="56" y="12" rx="4" ry="4" width="92" height="14" />
-      <rect x="56" y="36" rx="4" ry="4" width="62" height="14" />
-      <rect x="194" y="24" rx="4" ry="4" width="92" height="14" />
+      <rect x="246" y="12" rx="4" ry="4" width="36" height="14" />
+      <rect x="194" y="36" rx="4" ry="4" width="92" height="14" />
+      <rect x="10" y="18" rx="4" ry="4" width="92" height="24" />
     </ContentLoader>
   </CardList.Item>
 );

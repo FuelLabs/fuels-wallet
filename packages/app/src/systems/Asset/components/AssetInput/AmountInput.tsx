@@ -1,5 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Flex, Input, Text } from '@fuel-ui/react';
+import { DECIMAL_UNITS } from 'fuels';
 import type { BN } from 'fuels';
 import { useState } from 'react';
 import type { FC, ChangeEvent } from 'react';
@@ -18,6 +19,7 @@ export const AmountInput: AmountInputComponent = ({ amount }) => {
   const [assetAmount, setAssetAmount] = useState<string>();
   const formatArgs = {
     minPrecision: 2,
+    precision: DECIMAL_UNITS,
   };
 
   const handleAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
