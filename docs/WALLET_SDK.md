@@ -18,14 +18,20 @@
 
 ## How to use?
 
-When a user has the FuelWallet extension already installed on the browser you will be able to,
-interact with the Wallet API by access our SDK on `window.FuelWeb3`.
+If the Fuel Wallet extension corrrectly installed on the user's browser, the Wallet SDK will be inject automatically on the
+`window` object on property `FuelWeb3`. To access it you can use `window.FuelWeb3`.
+
+```ts
+window.FuelWeb3.connect();
+```
+
+You can try this code directly on the developer console.
 
 ## Quickstart
 
 ### Request connection
 
-Before any action you need to request the user to connect and authorized your application, via the wallet.
+First of all, you need to connect and authorized your application, this will authorize your application to execute other actions.
 This can be done by acessing `FuelWeb3.connect()`.
 
 ```ts
@@ -33,12 +39,12 @@ const isConnected = await window.FuelWeb3.connect();
 console.log("Connection response", isConnected);
 ```
 
-The `connect()` method returns a promise, if you prefer to do in a async way you can use `FuelWeb3.on('connection', () => void)` to
+The `connect()` method returns a promise, if you prefer to do in an async way, you can use `FuelWeb3.on('connection', () => void)` to
 listen for changes on the connection.
 
 ### List user accounts
 
-After connection is authorized you can list the user accounts using `window.FuelWeb3.accounts()`.
+Once connection is authorized you can list the user accounts using `window.FuelWeb3.accounts()`.
 
 ```ts
 const accounts = await window.FuelWeb3.accounts();
