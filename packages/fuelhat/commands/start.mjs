@@ -16,7 +16,12 @@ function label(str) {
 }
 
 export const handler = async (argv) => {
-  const { filepath: envPath, port, projectName } = await createEnv(argv);
+  const {
+    filepath: envPath,
+    port,
+    faucetPort,
+    projectName,
+  } = await createEnv(argv);
 
   const isTest = argv.t;
   const isDebug = argv.d;
@@ -56,6 +61,9 @@ export const handler = async (argv) => {
       `${label("⇢ Environment:")} ${isTest ? "Test" : "Development"}`
     );
     console.log(`${label("⇢ Provider URL:")} http://localhost:${port}/graphql`);
+    console.log(
+      `${label("⇢ Faucet URL:")} http://localhost:${faucetPort}/dispense`
+    );
   });
 };
 
