@@ -136,4 +136,8 @@ export class PopUpService {
   async signMessage(origin: string, message: string) {
     return this.client.request('signMessage', { origin, message });
   }
+
+  async sendTransaction(origin: string, transaction: string) {
+    return this.client.request('sendTransaction', { origin, transaction });
+  }
 }

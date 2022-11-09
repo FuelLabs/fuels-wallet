@@ -24,6 +24,7 @@ export class BackgroundService {
       this.connect,
       this.disconnect,
       this.signMessage,
+      this.sendTransaction,
     ]);
   }
 
@@ -106,6 +107,25 @@ export class BackgroundService {
       this.communicationProtocol
     );
     const signedMessage = await popupService.signMessage(origin, message);
+    return signedMessage;
+  }
+
+  async sendTransaction(
+    { transaction }: { transaction: string },
+    serverParams: EventOrigin
+  ) {
+    console.log('sendTransaction ==>>>');
+    const origin = serverParams.origin;
+
+    const popupService = await PopUpService.open(
+      origin,
+      Pages.requestTransaction(),
+      this.communicationProtocol
+    );
+    const signedMessage = await popupService.sendTransaction(
+      origin,
+      transaction
+    );
     return signedMessage;
   }
 }

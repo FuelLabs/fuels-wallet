@@ -10,6 +10,9 @@ import {
   Link,
   Input,
 } from '@fuel-ui/react';
+import { FuelWeb3Provider } from '@fuels-wallet/sdk';
+import type { BN } from 'fuels';
+import { Address, Wallet, bn } from 'fuels';
 import { useCallback, useEffect, useState } from 'react';
 
 // This is not need if the developer
@@ -62,6 +65,7 @@ export function DApp() {
   const [accounts, setAccounts] = useState<string[]>([]);
   const [signedMessage, setSignedMessage] = useState<string>('');
   const [message, setMessage] = useState<string>('Message to sign');
+  const [amount, setAmount] = useState<string>('');
   const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {
     console.debug('Request connection to Wallet!');
     const isConnected = await window.FuelWeb3.connect();
@@ -87,6 +91,7 @@ export function DApp() {
   const [handleSignMessage, isSingingMessage, errorSigningMessage] = useLoading(
     async (message: string) => {
       console.debug('Request signature of message!');
+      const accounts = await window.FuelWeb3.accounts();
       const account = accounts[0];
       const signedMessage = await window.FuelWeb3.signMessage(account, message);
       setSignedMessage(signedMessage);
@@ -94,12 +99,39 @@ export function DApp() {
     },
     [accounts]
   );
+  const [sendTransaction, sendingTransaction, errorSendingTransaction] =
+    useLoading(
+      async (amount: BN) => {
+        console.debug('Request signature transaction!');
+        const accounts = await window.FuelWeb3.accounts();
+        const account = accounts[0];
+        console.log('account', account);
+        console.log('amount', amount);
+        const provider = new FuelWeb3Provider(window.FuelWeb3);
+        const wallet = Wallet.fromAddress(account, provider);
+        const response = await wallet.transfer(
+          Address.fromString(
+            'fuel1r3u2qfn00cgwk3u89uxuvz5cgcjaq934cfer6cwuew0424cz5sgq4yldul'
+          ),
+          amount
+        );
+        const results = await response.waitForResult();
+
+        console.log(results);
+
+        // const signedMessage = await window.FuelWeb3.se;
+        // setSignedMessage(signedMessage);
+        // console.debug('Message signature', signedMessage);
+      },
+      [accounts]
+    );
   const errorMessage =
     errorConnect ||
     errorDisconnect ||
     notDetected ||
     errorGetAccounts ||
-    errorSigningMessage;
+    errorSigningMessage ||
+    errorSendingTransaction;
 
   useEffect(() => {
     if (FuelWeb3) {
@@ -178,6 +210,28 @@ export function DApp() {
           onPress={() => handleSignMessage(message)}
           isLoading={isSingingMessage}
           isDisabled={isSingingMessage || !connected}
+        >
+          Sign Message
+        </Button>
+        {signedMessage ? (
+          <Box css={styles.accounts}>
+            <Text>{signedMessage}</Text>
+          </Box>
+        ) : null}
+        <Text as="h1" css={{ marginTop: '$4' }}>
+          Transfer
+        </Text>
+        <Input isDisabled={!connected}>
+          <Input.Field
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            css={{ color: '$whiteA11', padding: '$2' }}
+          />
+        </Input>
+        <Button
+          onPress={() => sendTransaction(bn.parseUnits(amount))}
+          isLoading={sendingTransaction}
+          isDisabled={sendingTransaction || !connected}
         >
           Sign Message
         </Button>

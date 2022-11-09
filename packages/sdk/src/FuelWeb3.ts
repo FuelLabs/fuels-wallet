@@ -1,3 +1,4 @@
+import type { TransactionRequestLike } from 'fuels';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 
 import { CONTENT_SCRIPT_NAME, PAGE_SCRIPT_NAME } from './config';
@@ -46,6 +47,15 @@ export class FuelWeb3 extends WindowConnection {
     return this.client.request('signMessage', {
       address,
       message,
+    });
+  }
+
+  async sendTransaction(transaction: TransactionRequestLike): Promise<string> {
+    if (!transaction) {
+      throw new Error('Transaction is required');
+    }
+    return this.client.request('sendTransaction', {
+      transaction: JSON.stringify(transaction),
     });
   }
 
