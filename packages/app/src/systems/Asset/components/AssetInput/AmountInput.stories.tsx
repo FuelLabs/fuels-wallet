@@ -11,7 +11,12 @@ export default {
 
 export const Usage = (args: AmountInputProps) => (
   <Box css={{ width: 300 }}>
-    <AmountInput {...args} amount={bn.parseUnits('1.57')} />
+    <AmountInput
+      {...args}
+      balance={bn.parseUnits('1.57')}
+      onChange={() => {}}
+      value=""
+    />
   </Box>
 );
 

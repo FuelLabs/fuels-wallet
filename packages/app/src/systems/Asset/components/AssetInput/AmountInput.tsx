@@ -8,23 +8,31 @@ import type { FC, ChangeEvent } from 'react';
 import { AmountInputLoader } from './AmountInputLoader';
 
 export type AmountInputProps = {
-  amount: BN;
+  balance: BN;
+  value: string;
+  onChange: (val: string) => void;
 };
 
 type AmountInputComponent = FC<AmountInputProps> & {
   Loader: typeof AmountInputLoader;
 };
 
-export const AmountInput: AmountInputComponent = ({ amount }) => {
-  const [assetAmount, setAssetAmount] = useState<string>();
+export const AmountInput: AmountInputComponent = ({
+  balance,
+  value,
+  onChange,
+}) => {
+  const [assetAmount, setAssetAmount] = useState<string>(value);
 
   const handleAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newAssetAmount = handleAmountLeadingZeros(event);
+    onChange(event.target.value);
     setAssetAmount(newAssetAmount);
   };
 
   const handlePress = () => {
-    setAssetAmount(amount.format({ precision: DECIMAL_UNITS }));
+    onChange(balance.format({ precision: DECIMAL_UNITS }));
+    setAssetAmount(balance.format({ precision: DECIMAL_UNITS }));
   };
 
   const handleAmountLeadingZeros = (
@@ -68,7 +76,7 @@ export const AmountInput: AmountInputComponent = ({ amount }) => {
           </Flex>
           <Flex>
             <Text css={styles.text}>
-              Balance: {amount.format({ precision: DECIMAL_UNITS })}
+              Balance: {balance.format({ precision: DECIMAL_UNITS })}
             </Text>
           </Flex>
         </Flex>
