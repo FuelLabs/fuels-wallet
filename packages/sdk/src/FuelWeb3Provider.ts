@@ -7,7 +7,7 @@ export class FuelWeb3Provider extends Provider {
   fuelWeb3: FuelWeb3;
 
   constructor(fuelWeb3: FuelWeb3) {
-    super('http://localhost:4000/graphql');
+    super(fuelWeb3.providerConfig.url);
     this.fuelWeb3 = fuelWeb3;
   }
 
@@ -21,7 +21,7 @@ export class FuelWeb3Provider extends Provider {
     const response = new TransactionResponse(
       transactionId,
       transactionRequest,
-      new Provider('http://localhost:4000/graphql')
+      this
     );
     return response;
   }

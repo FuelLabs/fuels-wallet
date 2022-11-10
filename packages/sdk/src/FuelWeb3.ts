@@ -1,16 +1,24 @@
-import type { TransactionRequestLike } from 'fuels';
-import type { JSONRPCRequest } from 'json-rpc-2.0';
-
-import { CONTENT_SCRIPT_NAME, PAGE_SCRIPT_NAME } from './config';
-import { WindowConnection } from './connections/WindowConnection';
 import type {
   CommunicationMessage,
   FuelWeb3EventArg,
   FuelWeb3Events,
-} from './types';
-import { MessageTypes } from './types';
+  FuelWeb3ProviderConfig,
+} from '@fuels-wallet/types';
+import {
+  CONTENT_SCRIPT_NAME,
+  PAGE_SCRIPT_NAME,
+  MessageTypes,
+} from '@fuels-wallet/types';
+import type { TransactionRequestLike } from 'fuels';
+import type { JSONRPCRequest } from 'json-rpc-2.0';
+
+import { WindowConnection } from './connections/WindowConnection';
 
 export class FuelWeb3 extends WindowConnection {
+  providerConfig: FuelWeb3ProviderConfig = {
+    url: 'http://localhost:4000/graphql',
+  };
+
   acceptMessage(message: MessageEvent<CommunicationMessage>): boolean {
     const { data: event } = message;
     return (
@@ -28,7 +36,16 @@ export class FuelWeb3 extends WindowConnection {
     }
   }
 
-  async connect(): Promise<boolean> {
+  async selectNetwork(network: FuelWeb3ProviderConfig) {
+    this.providerConfig = network;
+  }
+
+  async network(): Promise<FuelWeb3ProviderConfig> {
+    return this.client.request('network');
+  }
+
+  async connect(network?: FuelWeb3ProviderConfig): Promise<boolean> {
+    if (network) this.selectNetwork(network);
     return this.client.request('connect');
   }
 
@@ -55,6 +72,7 @@ export class FuelWeb3 extends WindowConnection {
       throw new Error('Transaction is required');
     }
     return this.client.request('sendTransaction', {
+      provider: this.providerConfig,
       transaction: JSON.stringify(transaction),
     });
   }

@@ -1,4 +1,5 @@
 import { ExtensionPageConnection } from '@fuels-wallet/sdk';
+import type { FuelWeb3ProviderConfig } from '@fuels-wallet/types';
 import { transactionRequestify } from 'fuels';
 import { useEffect } from 'react';
 
@@ -22,12 +23,14 @@ export class TransactionRequestMethods extends ExtensionPageConnection {
 
   async sendTransaction({
     origin,
+    provider,
     transaction,
   }: {
     origin: string;
+    provider: FuelWeb3ProviderConfig;
     transaction: string;
   }) {
-    const providerUrl = 'http://localhost:4000/graphql';
+    const providerUrl = provider.url;
     const tx = transactionRequestify(JSON.parse(transaction));
     this.service.send('START_REQUEST', {
       input: { origin, tx, providerUrl },

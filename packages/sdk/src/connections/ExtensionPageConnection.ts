@@ -1,12 +1,14 @@
-import type { JSONRPCResponse } from 'json-rpc-2.0';
-
-import { BACKGROUND_SCRIPT_NAME, POPUP_SCRIPT_NAME } from '../config';
 import type {
   CommunicationMessage,
   RequestMessage,
   ResponseMessage,
-} from '../types';
-import { MessageTypes } from '../types';
+} from '@fuels-wallet/types';
+import {
+  BACKGROUND_SCRIPT_NAME,
+  POPUP_SCRIPT_NAME,
+  MessageTypes,
+} from '@fuels-wallet/types';
+import type { JSONRPCResponse } from 'json-rpc-2.0';
 
 import { BaseConnection } from './BaseConnection';
 
@@ -39,7 +41,7 @@ export class ExtensionPageConnection extends BaseConnection {
   }
 
   onResponseSent() {
-    window.close();
+    // window.close();
   }
 
   ready() {

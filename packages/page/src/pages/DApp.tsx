@@ -15,6 +15,9 @@ import type { BN } from 'fuels';
 import { Address, Wallet, bn } from 'fuels';
 import { useCallback, useEffect, useState } from 'react';
 
+const FUEL_BLOCKEXPLORER_URL =
+  'https://fuellabs.github.io/block-explorer-v2/transaction/';
+
 // This is not need if the developer
 // install FuelWeb3 and import as a package
 function useFuelWeb3() {
@@ -65,7 +68,8 @@ export function DApp() {
   const [accounts, setAccounts] = useState<string[]>([]);
   const [signedMessage, setSignedMessage] = useState<string>('');
   const [message, setMessage] = useState<string>('Message to sign');
-  const [amount, setAmount] = useState<string>('');
+  const [amount, setAmount] = useState<string>('0.00001');
+  const [txId, setTxId] = useState<string>('');
   const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {
     console.debug('Request connection to Wallet!');
     const isConnected = await window.FuelWeb3.connect();
@@ -105,8 +109,6 @@ export function DApp() {
         console.debug('Request signature transaction!');
         const accounts = await window.FuelWeb3.accounts();
         const account = accounts[0];
-        console.log('account', account);
-        console.log('amount', amount);
         const provider = new FuelWeb3Provider(window.FuelWeb3);
         const wallet = Wallet.fromAddress(account, provider);
         const response = await wallet.transfer(
@@ -115,13 +117,7 @@ export function DApp() {
           ),
           amount
         );
-        const results = await response.waitForResult();
-
-        console.log(results);
-
-        // const signedMessage = await window.FuelWeb3.se;
-        // setSignedMessage(signedMessage);
-        // console.debug('Message signature', signedMessage);
+        setTxId(response.id);
       },
       [accounts]
     );
@@ -225,7 +221,7 @@ export function DApp() {
           <Input.Field
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            css={{ color: '$whiteA11', padding: '$2' }}
+            css={{ color: '$whiteA11' }}
           />
         </Input>
         <Button
@@ -233,11 +229,19 @@ export function DApp() {
           isLoading={sendingTransaction}
           isDisabled={sendingTransaction || !connected}
         >
-          Sign Message
+          Transfer
         </Button>
-        {signedMessage ? (
+        {txId ? (
           <Box css={styles.accounts}>
-            <Text>{signedMessage}</Text>
+            <Text>{txId}</Text>
+            <Link
+              target={'_blank'}
+              href={`${FUEL_BLOCKEXPLORER_URL}/${txId}?providelUrl=${encodeURIComponent(
+                FuelWeb3.providerConfig.url
+              )}`}
+            >
+              See on BlockExplorer
+            </Link>
           </Box>
         ) : null}
       </BoxCentered>

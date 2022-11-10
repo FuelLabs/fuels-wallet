@@ -8,13 +8,12 @@ import {
   Icon,
   Link,
   Stack,
-  Tag,
   Text,
 } from '@fuel-ui/react';
 import { AddressType } from '@fuels-wallet/types';
 import { useMemo } from 'react';
 
-import { UnlockDialog } from '../../components';
+import { ConnectInfo, UnlockDialog } from '../../components';
 import { useTransactionRequest } from '../../hooks';
 
 import { useAccount } from '~/systems/Account';
@@ -33,6 +32,7 @@ export function TransactionRequest() {
   const { isLoading } = useAccount();
   const { selectedNetwork } = useNetworks({ type: NetworkScreen.list });
   const {
+    origin,
     isUnlocking,
     handlers,
     account,
@@ -44,7 +44,8 @@ export function TransactionRequest() {
     outputsToSend,
     groupedErrors,
     waitingApproval,
-    isApproving,
+    sendingTx,
+    unlockError,
   } = useTransactionRequest();
 
   const generalErrors = useMemo(
@@ -57,31 +58,13 @@ export function TransactionRequest() {
       <Layout title="Approve Transaction" isLoading={isLoading}>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
-          {!isLoading && !approvedTx && !txApproveError && (
+          {!isLoading && !approvedTx && !txApproveError && origin && account && (
             <Stack gap="$4">
-              <Card>
-                <Card.Body
-                  css={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-evenly',
-                  }}
-                >
-                  <Tag css={styles.approveUrlTag} variant="outlined">
-                    <Text as="span" fontSize="sm" color="gray12">
-                      swayswap.io
-                    </Text>
-                  </Tag>
-                  <Text
-                    as="span"
-                    fontSize="sm"
-                    color="gray12"
-                    css={{ fontWeight: '$semibold' }}
-                  >
-                    wants to approve
-                  </Text>
-                </Card.Body>
-              </Card>
+              <ConnectInfo
+                origin={origin}
+                account={account}
+                isReadOnly={true}
+              />
               {account && (
                 <TxFromTo
                   from={{
@@ -152,14 +135,19 @@ export function TransactionRequest() {
         </Layout.Content>
         <Layout.BottomBar>
           <Flex>
-            <Button color="gray" variant="ghost" css={{ flex: 1 }}>
-              Close
+            <Button
+              onPress={handlers.reject}
+              color="gray"
+              variant="ghost"
+              css={{ flex: 1 }}
+            >
+              Reject
             </Button>
             {!approvedTx && !txApproveError && (
               <Button
                 color="accent"
-                onPress={() => handlers.approve()}
-                isLoading={isLoading || isApproving}
+                onPress={handlers.approve}
+                isLoading={isLoading || sendingTx}
                 isDisabled={!waitingApproval}
                 css={{ flex: 1, ml: '$2' }}
               >
@@ -170,6 +158,9 @@ export function TransactionRequest() {
         </Layout.BottomBar>
       </Layout>
       <UnlockDialog
+        unlockText="Confirm Transaction"
+        unlockError={unlockError}
+        isFullscreen={true}
         isOpen={isUnlocking}
         onUnlock={handlers.unlock}
         isLoading={isUnlockingLoading}

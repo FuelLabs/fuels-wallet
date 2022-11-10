@@ -11,10 +11,12 @@ import { useAccount } from '~/systems/Account';
 import { getCoinOutputsFromTx, getGroupedErrors } from '~/systems/Transaction';
 
 const selectors = {
+  origin: (state: TransactionMachineState) => state.context.origin,
+  unlockError: (state: TransactionMachineState) => state.context.unlockError,
   isUnlocking: (state: TransactionMachineState) => state.matches('unlocking'),
   waitingApproval: (state: TransactionMachineState) =>
     state.matches('waitingApproval'),
-  isApproving: (state: TransactionMachineState) => state.matches('approving'),
+  sendingTx: (state: TransactionMachineState) => state.matches('sendingTx'),
   approvedTx: (state: TransactionMachineState) => state.context.approvedTx,
   tx: (state: TransactionMachineState) => state.context.tx,
   receipts: (state: TransactionMachineState) => state.context.receipts,
@@ -38,7 +40,9 @@ export function useTransactionRequest() {
   const txDryRunError = useSelector(service, selectors.txDryRunError);
   const txApproveError = useSelector(service, selectors.txApproveError);
   const waitingApproval = useSelector(service, selectors.waitingApproval);
-  const isApproving = useSelector(service, selectors.isApproving);
+  const sendingTx = useSelector(service, selectors.sendingTx);
+  const origin = useSelector(service, selectors.origin);
+  const unlockError = useSelector(service, selectors.unlockError);
 
   const { coinOutputs, outputsToSend, outputAmount } = useMemo(() => {
     const coinOutputs = getCoinOutputsFromTx(tx);
@@ -61,6 +65,10 @@ export function useTransactionRequest() {
     send('APPROVE');
   }
 
+  function reject() {
+    send('REJECT');
+  }
+
   function unlock(password: string) {
     send('UNLOCK_WALLET', { input: { password, account } });
   }
@@ -79,6 +87,7 @@ export function useTransactionRequest() {
       unlock,
       closeUnlock,
       calculateGas,
+      reject,
     },
     isUnlocking,
     isUnlockingLoading,
@@ -93,6 +102,8 @@ export function useTransactionRequest() {
     outputAmount,
     groupedErrors,
     waitingApproval,
-    isApproving,
+    sendingTx,
+    origin,
+    unlockError,
   };
 }

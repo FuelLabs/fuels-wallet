@@ -3,6 +3,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Flex } from '@fuel-ui/react';
 import type { FC, ReactNode } from 'react';
 import { useRef, useContext, createContext } from 'react';
+import CustomScroll from 'react-custom-scroll';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 
@@ -30,7 +31,9 @@ type ContentProps = {
 function Content({ as, children, css }: ContentProps) {
   return (
     <Box as={as} css={{ ...styles.content, ...css }}>
-      {children}
+      <CustomScroll heightRelativeToParent="100%" className="layout-scroll">
+        <Box css={styles.insideScrolContent}>{children}</Box>
+      </CustomScroll>
     </Box>
   );
 }
@@ -108,11 +111,20 @@ const styles = {
       'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',
   }),
   content: cssObj({
+    flex: 1,
+    overflow: 'hidden',
+    '.rcs-inner-handle': {
+      backgroundColor: '$gray12',
+      opacity: 0.6,
+      zIndex: 9999,
+    },
+    '.rcs-inner-container': {
+      scrollBehavior: 'smooth',
+    },
+  }),
+  insideScrolContent: cssObj({
     py: '$4',
     px: '$4',
-    flex: 1,
-    overflowY: 'auto',
-    overflowX: 'hidden',
   }),
 };
 

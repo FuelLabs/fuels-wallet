@@ -7,9 +7,10 @@ import { parseUrl, shortAddress } from '~/systems/Core';
 export type ConnectInfoProps = {
   origin: string;
   account: Account;
+  isReadOnly?: boolean;
 };
 
-export function ConnectInfo({ origin, account }: ConnectInfoProps) {
+export function ConnectInfo({ origin, account, isReadOnly }: ConnectInfoProps) {
   return (
     <Card css={styles.root}>
       <Tag as="div" variant="outlined">
@@ -17,7 +18,13 @@ export function ConnectInfo({ origin, account }: ConnectInfoProps) {
           <Text as="span">{parseUrl(origin)}</Text>
         </Tooltip>
       </Tag>
-      <Button variant="link" size="md" css={styles.accountBtn} color="gray">
+      <Button
+        variant="link"
+        size="md"
+        css={styles.accountBtn}
+        color="gray"
+        isDisabled={isReadOnly}
+      >
         <Avatar.Generated
           role="img"
           size="sm"
@@ -26,7 +33,7 @@ export function ConnectInfo({ origin, account }: ConnectInfoProps) {
           background="fuel"
         />
         <Text>{shortAddress(account.address)}</Text>
-        <Icon icon={Icon.is('CaretDown')} size={14} />
+        {!isReadOnly && <Icon icon={Icon.is('CaretDown')} size={14} />}
       </Button>
     </Card>
   );

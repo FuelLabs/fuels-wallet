@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { EVENT_MESSAGE } from '../config';
-import type { CommunicationMessage } from '../types';
+import { EVENT_MESSAGE } from '@fuels-wallet/types';
+import type { CommunicationMessage } from '@fuels-wallet/types';
 
 import { BaseConnection } from './BaseConnection';
 

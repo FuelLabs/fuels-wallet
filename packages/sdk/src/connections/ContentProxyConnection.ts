@@ -3,8 +3,8 @@ import {
   BACKGROUND_SCRIPT_NAME,
   CONTENT_SCRIPT_NAME,
   EVENT_MESSAGE,
-} from '../config';
-import type { CommunicationMessage } from '../types';
+} from '@fuels-wallet/types';
+import type { CommunicationMessage } from '@fuels-wallet/types';
 
 export class ContentProxyConnection {
   connection: chrome.runtime.Port;

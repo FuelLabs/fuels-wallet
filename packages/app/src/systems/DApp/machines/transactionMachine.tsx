@@ -11,17 +11,19 @@ import { assign, createMachine } from 'xstate';
 import { send } from 'xstate/lib/actions';
 
 import type { UnlockMachine, UnlockMachineEvents } from './unlockMachine';
-import { unlockMachine } from './unlockMachine';
+import { unlockMachineErrorAction, unlockMachine } from './unlockMachine';
 
 import type { AccountInputs } from '~/systems/Account';
 import type { ChildrenMachine } from '~/systems/Core';
-import { FetchMachine } from '~/systems/Core';
+import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 import type { VMApiError } from '~/systems/Transaction';
 
 type MachineContext = {
+  unlockError?: string;
   tx?: TransactionRequest;
   origin?: string;
   providerUrl?: string;
+  error?: string;
   receipts?: TransactionResultReceipt[];
   approvedTx?: TransactionResponse;
   txDryRunError?: VMApiError;
@@ -55,6 +57,10 @@ type MachineEvents =
     }
   | {
       type: 'APPROVE';
+      input?: void;
+    }
+  | {
+      type: 'REJECT';
       input?: void;
     }
   | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
@@ -127,9 +133,12 @@ export const transactionMachine = createMachine(
             _: MachineContext,
             ev: Extract<MachineEvents, { type: 'UNLOCK_WALLET' }>
           ) => ev.input,
-          onDone: {
-            target: 'sendingTx',
-          },
+          onDone: [
+            unlockMachineErrorAction('unlocking', 'unlockError'),
+            {
+              target: 'sendingTx',
+            },
+          ],
         },
         on: {
           UNLOCK_WALLET: {
@@ -174,6 +183,12 @@ export const transactionMachine = createMachine(
         type: 'final',
       },
       failed: {},
+    },
+    on: {
+      REJECT: {
+        actions: [assignErrorMessage('User rejected the transaction!')],
+        target: 'failed',
+      },
     },
   },
   {
