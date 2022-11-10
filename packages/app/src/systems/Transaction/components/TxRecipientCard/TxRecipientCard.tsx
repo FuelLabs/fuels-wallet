@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
-import { AddressType } from '@fuels-wallet/types';
+import { AddressType } from '@fuel-wallet/types';
 import type { FC } from 'react';
 
 import type { TxRecipientAddress } from '../../types';

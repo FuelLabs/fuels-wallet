@@ -1,7 +1,7 @@
 import type {
   DatabaseEventArg,
   DatabaseObservableEvent,
-} from '@fuels-wallet/sdk';
+} from '@fuel-wallet/sdk';
 import EventEmitter from 'events';
 
 import { db } from '~/systems/Core/utils/database';

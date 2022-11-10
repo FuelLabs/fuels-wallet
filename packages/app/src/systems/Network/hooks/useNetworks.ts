@@ -1,4 +1,4 @@
-import type { Network } from '@fuels-wallet/types';
+import type { Network } from '@fuel-wallet/types';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 

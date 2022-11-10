@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Card, Copyable, Flex, Grid, Text } from '@fuel-ui/react';
-import type { Coin } from '@fuels-wallet/types';
+import type { Coin } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 
 import { getAssetInfoById } from '../../utils';

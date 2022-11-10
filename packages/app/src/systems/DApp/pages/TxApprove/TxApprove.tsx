@@ -11,7 +11,7 @@ import {
   Tag,
   Text,
 } from '@fuel-ui/react';
-import { AddressType } from '@fuels-wallet/types';
+import { AddressType } from '@fuel-wallet/types';
 import { useEffect, useMemo } from 'react';
 
 import { getMockedTransaction } from '../../__mocks__/dapp-transaction';
