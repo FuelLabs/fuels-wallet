@@ -57,7 +57,7 @@ describe('signMachine', () => {
     const { context } = await waitFor(service, (state) =>
       state.matches('done')
     );
-    const signature = wallet.signMessage(DATA.message);
+    const signature = await wallet.signMessage(DATA.message);
     expect(context.signedMessage).toEqual(signature);
   });
 

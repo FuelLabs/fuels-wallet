@@ -21,15 +21,10 @@ describe('TxService', () => {
     const newAddr = Wallet.generate({
       provider: VITE_FUEL_PROVIDER_URL,
     }).address;
-    const assetId = coins[0].assetId;
     txRequest = new ScriptTransactionRequest(params);
+    const assetId = coins[0].assetId;
     txRequest.addCoinOutput(newAddr, amount, assetId);
-    txRequest.addCoins(
-      await wallet.getCoinsToSpend([
-        [amount, assetId],
-        txRequest.calculateFee(),
-      ])
-    );
+    wallet.fund(txRequest);
   });
 
   beforeEach(async () => {

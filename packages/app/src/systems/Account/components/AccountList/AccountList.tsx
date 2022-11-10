@@ -1,5 +1,5 @@
 import { Button, CardList, Stack } from '@fuel-ui/react';
-import type { Account } from '@fuels-wallet/types';
+import type { Account } from '@fuel-wallet/types';
 import { useState } from 'react';
 
 import { AccountItem } from '../AccountItem';

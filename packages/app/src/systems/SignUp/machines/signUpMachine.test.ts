@@ -50,7 +50,7 @@ describe('signUpMachine', () => {
 
   /**
    * TODO: I'm not able to create this scenario yet because of a lot of errors
-   * from fuels-ts is happening here.
+   * from fuel-ts is happening here.
    */
   it('should be able to assign password and create wallet manager', () => {
     expect(true).toBe(true);

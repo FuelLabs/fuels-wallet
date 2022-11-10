@@ -1,0 +1,76 @@
+name: "Release"
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release-changesets:
+    name: Changesets Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # need this to get full git-history/clone in order to build changelogs and check changesets
+          fetch-depth: 0
+
+      - name: CI Setup
+        uses: ./.github/actions/setup-node
+
+      - name: Configure npm
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          EOF
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Bump and Collect Version
+        run: |
+          pnpm changeset version
+          echo "BUILD_VERSION=$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' design-system/react/package.json)" >> $GITHUB_ENV
+          git reset --hard
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Ensure NPM access
+        run: npm whoami
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Setup git user (for changelog step)
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Build
+        run: pnpm build:libs
+
+      - name: Create Release Pull Request or Publish to NPM
+        id: changesets
+        uses: FuelLabs/changesets-action@main
+        with:
+          publish: pnpm changeset:release
+          commit: "ci(changesets): versioning packages"
+          title: "ci(changesets): versioning packages"
+          createGithubReleases: aggregate
+          githubReleaseName: v${{ env.BUILD_VERSION }}
+          githubTagName: v${{ env.BUILD_VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Release to @next tag
+        if: steps.changesets.outputs.published != 'true'
+        run: |
+          git checkout master
+          pnpm changeset version --snapshot next
+          pnpm changeset publish --tag next
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

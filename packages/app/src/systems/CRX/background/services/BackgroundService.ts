@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuels-wallet/sdk';
+import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/sdk';
 import type { JSONRPCParams } from 'json-rpc-2.0';
 import { JSONRPCServer } from 'json-rpc-2.0';
 

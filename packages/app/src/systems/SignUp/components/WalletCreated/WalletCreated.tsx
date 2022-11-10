@@ -1,5 +1,5 @@
 import { Stack, Button, Flex } from '@fuel-ui/react';
-import type { Account } from '@fuels-wallet/types';
+import type { Account } from '@fuel-wallet/types';
 import { useNavigate } from 'react-router-dom';
 
 import { Header } from '../Header';

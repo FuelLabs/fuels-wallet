@@ -1,4 +1,4 @@
-import { ExtensionPageConnection } from '@fuels-wallet/sdk';
+import { ExtensionPageConnection } from '@fuel-wallet/sdk';
 import { useEffect } from 'react';
 
 import type { SignMachineService } from '../machines';

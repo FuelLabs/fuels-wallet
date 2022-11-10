@@ -10,7 +10,7 @@
   "dependencies": {
     "@fuel-ui/css": "^0.8.0",
     "@fuel-ui/react": "^0.8.0",
-    "@fuels-wallet/sdk": "workspace:*",
+    "@fuel-wallet/sdk": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.4.3",

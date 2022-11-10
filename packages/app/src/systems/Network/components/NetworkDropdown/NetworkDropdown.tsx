@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
-import type { Network } from '@fuels-wallet/types';
+import type { Network } from '@fuel-wallet/types';
 
 export type NetworkDropdownProps = {
   selected?: Network;

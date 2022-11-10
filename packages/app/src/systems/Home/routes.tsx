@@ -1,7 +1,7 @@
 import { Outlet, Route } from 'react-router-dom';
 
 import { Pages } from '../Core/types';
-import { FaucetDialog } from '../Faucet/components';
+import { FaucetDialog } from '../Faucet';
 
 import { Home, Receive } from './pages';
 

@@ -1,5 +1,5 @@
-import type { ResponseMessage, UIEventMessage } from '@fuels-wallet/sdk';
-import { POPUP_SCRIPT_NAME, MessageTypes } from '@fuels-wallet/sdk';
+import type { ResponseMessage, UIEventMessage } from '@fuel-wallet/sdk';
+import { POPUP_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/sdk';
 import { JSONRPCClient } from 'json-rpc-2.0';
 
 import {
