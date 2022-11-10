@@ -2,7 +2,7 @@
 /* eslint-disable consistent-return */
 import type { WalletUnlocked } from '@fuel-ts/wallet';
 import { WalletManager } from '@fuel-ts/wallet-manager';
-import type { Account } from '@fuels-wallet/types';
+import type { Account } from '@fuel-wallet/types';
 import { bn, Address, Provider } from 'fuels';
 
 import { IndexedDBStorage } from '../utils';
@@ -122,7 +122,7 @@ export class AccountService {
     await db.vaults.clear();
 
     /**
-     * TODO: this is needed because of a typing error with StorageAbstract from fuels-ts
+     * TODO: this is needed because of a typing error with StorageAbstract from fuel-ts
      */
     const storage = new IndexedDBStorage() as never;
     const manager = new WalletManager({ storage });

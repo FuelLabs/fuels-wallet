@@ -1,0 +1,24 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@2.0.0/schema.json",
+  "changelog": [
+    "@changesets/changelog-github",
+    { "repo": "FuelLabs/fuels-wallet" }
+  ],
+  "commit": false,
+  "fixed": [["@fuel-wallet/*"]],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "master",
+  "updateInternalDependencies": "patch",
+  "ignore": [
+    "app",
+    "page",
+    "@fuel-wallet/config",
+    "fuelhat",
+    "@fuel-wallet/xstore"
+  ],
+  "snapshot": {
+    "useCalculatedVersion": true,
+    "prereleaseTemplate": "{tag}-{commit}"
+  }
+}

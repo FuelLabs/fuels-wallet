@@ -1,4 +1,4 @@
-import { BACKGROUND_SCRIPT_NAME } from '@fuels-wallet/types';
+import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
 
 import { BackgroundService } from './services/BackgroundService';
 import { CommunicationProtocol } from './services/CommunicationProtocol';

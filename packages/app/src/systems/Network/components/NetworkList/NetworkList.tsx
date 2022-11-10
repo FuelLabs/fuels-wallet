@@ -1,5 +1,5 @@
 import { CardList } from '@fuel-ui/react';
-import type { Network } from '@fuels-wallet/types';
+import type { Network } from '@fuel-wallet/types';
 
 import type { NetworkItemProps } from '../NetworkItem';
 import { NetworkItem } from '../NetworkItem';

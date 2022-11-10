@@ -1,9 +1,9 @@
-import { POPUP_SCRIPT_NAME, MessageTypes } from '@fuels-wallet/types';
+import { POPUP_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
 import type {
   FuelWeb3ProviderConfig,
   ResponseMessage,
   UIEventMessage,
-} from '@fuels-wallet/types';
+} from '@fuel-wallet/types';
 import { JSONRPCClient } from 'json-rpc-2.0';
 
 import {

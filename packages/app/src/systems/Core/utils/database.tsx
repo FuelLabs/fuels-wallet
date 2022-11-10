@@ -1,4 +1,4 @@
-import type { Account, Vault, Connection, Network } from '@fuels-wallet/types';
+import type { Account, Vault, Connection, Network } from '@fuel-wallet/types';
 import type { Table } from 'dexie';
 import Dexie from 'dexie';
 

@@ -10,7 +10,7 @@ import {
   Stack,
   Text,
 } from '@fuel-ui/react';
-import { AddressType } from '@fuels-wallet/types';
+import { AddressType } from '@fuel-wallet/types';
 import { useMemo } from 'react';
 
 import { ConnectInfo, UnlockDialog } from '../../components';
