@@ -2,12 +2,12 @@ import type {
   CommunicationMessage,
   RequestMessage,
   ResponseMessage,
-} from '@fuels-wallet/types';
+} from '@fuel-wallet/types';
 import {
   BACKGROUND_SCRIPT_NAME,
   POPUP_SCRIPT_NAME,
   MessageTypes,
-} from '@fuels-wallet/types';
+} from '@fuel-wallet/types';
 import type { JSONRPCResponse } from 'json-rpc-2.0';
 
 import { BaseConnection } from './BaseConnection';

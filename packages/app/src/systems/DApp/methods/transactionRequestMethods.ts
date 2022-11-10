@@ -1,5 +1,5 @@
+import type { FuelWeb3ProviderConfig } from '@fuel-wallet/types';
 import { ExtensionPageConnection } from '@fuels-wallet/sdk';
-import type { FuelWeb3ProviderConfig } from '@fuels-wallet/types';
 import { transactionRequestify } from 'fuels';
 import { useEffect } from 'react';
 

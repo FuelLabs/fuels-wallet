@@ -6,8 +6,8 @@ import type {
   RequestMessage,
   ResponseMessage,
   UIEventMessage,
-} from '@fuels-wallet/types';
-import { MessageTypes } from '@fuels-wallet/types';
+} from '@fuel-wallet/types';
+import { MessageTypes } from '@fuel-wallet/types';
 import EventEmitter from 'events';
 import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
 import { JSONRPCServer, JSONRPCClient } from 'json-rpc-2.0';

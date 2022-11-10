@@ -3,12 +3,12 @@ import type {
   FuelWeb3EventArg,
   FuelWeb3Events,
   FuelWeb3ProviderConfig,
-} from '@fuels-wallet/types';
+} from '@fuel-wallet/types';
 import {
   CONTENT_SCRIPT_NAME,
   PAGE_SCRIPT_NAME,
   MessageTypes,
-} from '@fuels-wallet/types';
+} from '@fuel-wallet/types';
 import type { TransactionRequestLike } from 'fuels';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 
