@@ -1,7 +1,7 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
 
-import { getByAriaLabel, getButtonByText, hasText, visit } from '../commons';
+import { getButtonByText, getByAriaLabel, hasText, visit } from '../commons';
 import { mockData } from '../mocks';
 
 test.describe('HomeWallet', () => {
