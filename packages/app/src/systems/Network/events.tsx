@@ -1,5 +1,5 @@
-import type { Network } from '@fuels-wallet/types';
-import type { StoreClass } from '@fuels-wallet/xstore';
+import type { Network } from '@fuel-wallet/types';
+import type { StoreClass } from '@fuel-wallet/xstore';
 
 import type { NetworkInitialInput } from './machines';
 import type { NetworkInputs } from './services';

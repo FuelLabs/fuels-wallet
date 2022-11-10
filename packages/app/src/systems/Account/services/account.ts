@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import { WalletManager } from '@fuel-ts/wallet-manager';
-import type { Account } from '@fuels-wallet/types';
+import type { Account } from '@fuel-wallet/types';
 import { bn, Address, Provider } from 'fuels';
 
 import { IndexedDBStorage } from '../utils';
@@ -120,7 +120,7 @@ export class AccountService {
     await db.vaults.clear();
 
     /**
-     * TODO: this is needed because of a typing error with StorageAbstract from fuels-ts
+     * TODO: this is needed because of a typing error with StorageAbstract from fuel-ts
      */
     const storage = new IndexedDBStorage() as never;
     const manager = new WalletManager({ storage });
@@ -146,7 +146,7 @@ export class AccountService {
     const wallet = manager.getWallet(
       Address.fromPublicKey(input.account.publicKey)
     );
-    // TODO: fix this on fuels-ts it should be possible to
+    // TODO: fix this on fuel-ts it should be possible to
     // customize the ProviderURL on the manager level
     wallet.provider = new Provider(VITE_FUEL_PROVIDER_URL);
     return wallet;

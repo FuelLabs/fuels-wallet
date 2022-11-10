@@ -1,4 +1,4 @@
-import { ContentProxyConnection } from '@fuels-wallet/sdk';
+import { ContentProxyConnection } from '@fuel-wallet/sdk';
 
 import fileName from './pageScript?script&module';
 

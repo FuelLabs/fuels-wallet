@@ -1,4 +1,4 @@
-import type { Connection } from '@fuels-wallet/types';
+import type { Connection } from '@fuel-wallet/types';
 
 import { db } from '~/systems/Core/utils/database';
 
