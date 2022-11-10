@@ -10,7 +10,7 @@ import {
   Link,
   Input,
 } from '@fuel-ui/react';
-import { FuelWeb3Provider } from '@fuels-wallet/sdk';
+import { FuelWeb3Provider } from '@fuel-wallet/sdk';
 import type { BN } from 'fuels';
 import { Address, Wallet, bn } from 'fuels';
 import { useCallback, useEffect, useState } from 'react';
