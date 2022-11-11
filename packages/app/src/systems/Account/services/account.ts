@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable consistent-return */
 import type { WalletUnlocked } from '@fuel-ts/wallet';
 import { WalletManager } from '@fuel-ts/wallet-manager';
@@ -149,8 +148,10 @@ export class AccountService {
       Address.fromPublicKey(input.account.publicKey)
     );
     const network = await NetworkService.getSelectedNetwork();
-    // @ts-ignore
-    wallet.provider = new Provider(network.url);
+    if (!network) {
+      throw new Error('Network not found!');
+    }
+    wallet.connect(network.url);
     return wallet;
   }
 }
