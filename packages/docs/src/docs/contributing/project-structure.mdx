@@ -1,10 +1,15 @@
 ---
-title: Getting Started
+title: Project Structure
+slug: contributing/project-structure
 ---
 
-# Getting Started
+# Project Structure
 
-## Requirements
+This is a guide that will show you how you can run this project locally if you want to test or make contributions to our Fuel Wallet SDK.
+
+## Running the project
+
+### Requirements
 
 This project includes frontend. To begin, install dependencies:
 
@@ -12,8 +17,6 @@ This project includes frontend. To begin, install dependencies:
 - [PNPM v7.1.7 or latest stable](https://pnpm.io/installation/)
 - [Docker v0.8.2 or latest stable](https://docs.docker.com/get-docker/)
 - [Docker Compose v2.6.0 or latest stable](https://docs.docker.com/get-docker/)
-
-## Running Project Locally
 
 ### Getting the Repository
 
@@ -59,7 +62,7 @@ This section has a brief description of each directory. More details can be foun
 - [packages/fuelhat](../packages/fuelhat/) Fuel Wallet scripts CLI
 - [packages/mediator](../packages/mediator/) Mediator is a PubSub library we use to better integrate XState machines and also other relevant event-driven issues.
 
-## Useful Scripts
+### Useful Scripts
 
 To make life easier we added as many useful scripts as possible to our [package.json](../package.json). These are some of the most used during development:
 
@@ -76,7 +79,7 @@ pnpm <command name>
 
 > Other scripts can be found in [package.json](../package.json).
 
-## Running Tests
+### Running Tests
 
 Please make sure you have done these steps first:
 
@@ -84,7 +87,7 @@ Please make sure you have done these steps first:
 - [📦 - Install Dependencies](#---install-dependencies)
 - [📒 - Run Local Node](#---run-local-node)
 
-## Run Tests in Development Mode
+### Run Tests in Development Mode
 
 All tests are run against the local node configured in the files `packages/app/.env` (or `packages/app/.env.test` if the file exists).
 

@@ -1,22 +1,9 @@
 import { Layout } from '../components/Layout';
-import { getAllDocs } from '../lib/api';
-import type { DocType } from '../types';
 
-type HomeProps = {
-  allDocs: DocType[];
-};
-
-export default function Home({ allDocs }: HomeProps) {
+export default function Home() {
   return (
-    <Layout title="Home" allDocs={allDocs}>
+    <Layout title="Home">
       <article>Hello world</article>
     </Layout>
   );
 }
-
-export const getStaticProps = async () => {
-  const allDocs = getAllDocs(['title', 'slug']);
-  return {
-    props: { allDocs },
-  };
-};

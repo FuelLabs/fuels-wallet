@@ -1,4 +1,5 @@
 import '../styles/index.css';
+import 'dracula-prism/dist/css/dracula-prism.css';
 
 import { ThemeProvider } from '@fuel-ui/react';
 import type { AppProps } from 'next/app.js';

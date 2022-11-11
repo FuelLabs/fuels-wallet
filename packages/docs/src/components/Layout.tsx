@@ -1,18 +1,21 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
 import Head from 'next/head';
-import Link from 'next/link';
 import type { ReactNode } from 'react';
 
-import type { DocType } from '../types';
+import type { NodeHeading } from '../types';
+
+import { Header } from './Header';
+import { Sidebar } from './Sidebar';
+import { TableOfContent } from './TableOfContent';
 
 type LayoutProps = {
   title?: string;
   children: ReactNode;
-  allDocs: DocType[];
+  headings: NodeHeading[];
 };
 
-export function Layout({ title, children, allDocs }: LayoutProps) {
+export function Layout({ title, children, headings }: LayoutProps) {
   const titleText = title ? `${title} | Fuel Wallet` : 'Fuel Wallet';
   return (
     <>
@@ -20,15 +23,10 @@ export function Layout({ title, children, allDocs }: LayoutProps) {
         <title>{titleText}</title>
       </Head>
       <Box css={styles.root}>
-        <Box as="nav">
-          <Link href="/">Home</Link>
-          {allDocs.map((doc) => (
-            <Link key={doc.slug} href={`/docs/${doc.slug}`}>
-              {doc.title}
-            </Link>
-          ))}
-        </Box>
+        <Header />
+        <Sidebar />
         <Box as="section">{children}</Box>
+        {headings && <TableOfContent headings={headings} />}
       </Box>
     </>
   );
@@ -37,18 +35,22 @@ export function Layout({ title, children, allDocs }: LayoutProps) {
 const styles = {
   root: cssObj({
     display: 'grid',
+    maxW: '100vw',
     height: '100vh',
-    gridTemplateColumns: '200px 1fr',
+    gridTemplateColumns: '0.75fr 2.5fr 0.75fr',
+    gridTemplateRows: '80px auto',
+    gridColumnGap: '$14',
 
     nav: {
-      padding: '$8',
+      pl: '$8',
+      py: '$8',
       display: 'flex',
       flexDirection: 'column',
       gap: '$2',
     },
 
     section: {
-      padding: '$8',
+      py: '$8',
     },
   }),
 };

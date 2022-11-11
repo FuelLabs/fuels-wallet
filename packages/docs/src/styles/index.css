@@ -19,8 +19,16 @@ h6 {
   border-radius: 5px;
 }
 
-a,
-a:visited {
+a {
   color: #03c399;
   text-decoration: none;
+}
+
+tr > th {
+  text-align: left;
+}
+
+tr > th,
+tr > td {
+  padding: 0 20px 0 0;
 }
