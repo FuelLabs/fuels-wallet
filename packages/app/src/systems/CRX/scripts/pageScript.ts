@@ -1,3 +1,3 @@
-import { injectFuelWeb3 } from '@fuels-wallet/sdk';
+import { injectFuelWeb3 } from '@fuel-wallet/sdk';
 
 injectFuelWeb3(window);

@@ -42,21 +42,21 @@ Integrate your **DApp** using the [Wallet SDK](./docs/WALLET_SDK.md)
 
 - [x] Create a brand new and secure account
 - [x] Recover an account using a passphrase
-- [ ] Update account details
-- [x] Check your asset's balance
-- [x] Manage networks
-- [ ] Reveal your passphrase
-- [ ] Change password
-- [ ] Faucet for testnet
-- [ ] See a list of your recent activities
-- [ ] View transaction details
-- [ ] Send assets to another wallet
-- [ ] Receive screen with QR Code
 - [x] DApps integration
   - [x] Request connection
   - [x] List accounts
   - [x] Sign messages
   - [ ] Send transactions
+- [x] Check your asset's balance
+- [x] Manage networks
+- [x] Faucet for testnet
+- [ ] Receive screen with QR Code
+- [ ] Update account details
+- [ ] Reveal your passphrase
+- [ ] Change password
+- [ ] See a list of your recent activities
+- [ ] View transaction details
+- [ ] Send assets to another wallet
 
 ## 📜 License
 

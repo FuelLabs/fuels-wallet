@@ -1,4 +1,4 @@
-import type { StoreClass } from '@fuels-wallet/xstore';
+import type { StoreClass } from '@fuel-wallet/xstore';
 
 import type { StoreMachines } from '~/store';
 import { Services } from '~/store';

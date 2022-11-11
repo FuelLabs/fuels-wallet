@@ -1,7 +1,7 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Text, CardList, Flex, IconButton, Icon } from '@fuel-ui/react';
-import type { Network } from '@fuels-wallet/types';
+import type { Network } from '@fuel-wallet/types';
 import { forwardRef } from 'react';
 
 import { RemoveNetworkDialog } from '../RemoveNetworkDialog/RemoveNetworkDialog';

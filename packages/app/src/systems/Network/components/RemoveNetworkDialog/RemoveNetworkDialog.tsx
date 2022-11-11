@@ -1,5 +1,5 @@
 import { AlertDialog, Button } from '@fuel-ui/react';
-import type { Network } from '@fuels-wallet/types';
+import type { Network } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
