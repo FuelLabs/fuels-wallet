@@ -1,12 +1,12 @@
 import type { TransactionRequestLike } from 'fuels';
 import { transactionRequestify, TransactionResponse, Provider } from 'fuels';
 
-import type { FuelWeb3 } from './FuelWeb3';
+import type { FuelWeb3SDK } from './FuelWeb3SDK';
 
 export class FuelWeb3Provider extends Provider {
-  fuelWeb3: FuelWeb3;
+  fuelWeb3: FuelWeb3SDK;
 
-  constructor(fuelWeb3: FuelWeb3) {
+  constructor(fuelWeb3: FuelWeb3SDK) {
     super(fuelWeb3.providerConfig.url);
     this.fuelWeb3 = fuelWeb3;
   }

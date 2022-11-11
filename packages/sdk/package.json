@@ -22,7 +22,7 @@
   "scripts": {
     "build": "pnpm ts:check && tsup --dts",
     "ts:check": "tsc --noEmit",
-    "test": "jest -c jest.config.json --passWithNoTests",
+    "test": "jest -c jest.config.js --passWithNoTests",
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {

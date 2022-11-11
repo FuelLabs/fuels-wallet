@@ -1,4 +1,5 @@
 import { defineConfig } from 'tsup';
+import { getPublicEnvs } from './load.envs';
 
 export default defineConfig({
   format: ['cjs', 'esm'],
@@ -8,6 +9,6 @@ export default defineConfig({
   minify: process.env.NODE_ENV === 'production',
   entry: ['src/index.ts'],
   define: {
-    'process.env': '{}',
+    'process.env': JSON.stringify(getPublicEnvs()),
   },
 });
