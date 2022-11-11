@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 import { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account } from '@fuel-wallet/types';
+import type { WalletUnlocked } from 'fuels';
 import { bn, Address, Provider } from 'fuels';
 
 import { IndexedDBStorage } from '../utils';
@@ -9,6 +10,10 @@ import { VITE_FUEL_PROVIDER_URL } from '~/config';
 import { isEth } from '~/systems/Asset';
 import type { Maybe } from '~/systems/Core';
 import { getPhraseFromValue, db } from '~/systems/Core';
+
+interface WalletWithExport extends WalletUnlocked {
+  exportVault?: () => string;
+}
 
 export type AccountInputs = {
   addAccount: {
@@ -143,7 +148,9 @@ export class AccountService {
     }
   }
 
-  static async unlock(input: AccountInputs['unlock']) {
+  static async unlock(
+    input: AccountInputs['unlock']
+  ): Promise<WalletWithExport> {
     const storage = new IndexedDBStorage() as never;
     const manager = new WalletManager({ storage });
     await manager.unlock(input.password);
@@ -155,9 +162,8 @@ export class AccountService {
     wallet.provider = new Provider(VITE_FUEL_PROVIDER_URL);
 
     return {
-      ...wallet,
-      ...(manager as Partial<typeof manager>),
-      exportVault: () => {
+      ...(wallet as WalletUnlocked),
+      exportVault() {
         const { secret } = manager.exportVault(0);
 
         if (!secret) {
@@ -166,7 +172,7 @@ export class AccountService {
 
         return secret;
       },
-    };
+    } as WalletWithExport;
   }
 
   static async changePassword(input: AccountInputs['changePassword']) {

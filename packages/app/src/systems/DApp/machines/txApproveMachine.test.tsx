@@ -22,10 +22,7 @@ describe('txApproveMachine', () => {
 
   beforeAll(async () => {
     wallet = Wallet.fromPrivateKey(OWNER);
-    jest.spyOn(AccountService, 'unlock').mockResolvedValue({
-      ...wallet,
-      exportVault: () => '',
-    });
+    jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
     tx = await getMockedTransaction(
       wallet?.publicKey || '',
       '0xc7862855b418ba8f58878db434b21053a61a2025209889cc115989e8040ff077',

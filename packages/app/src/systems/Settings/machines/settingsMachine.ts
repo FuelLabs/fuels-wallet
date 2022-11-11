@@ -140,7 +140,7 @@ export const settingsMachine = createMachine(
         showError: true,
         maxAttempts: 1,
         fetch: async ({ input }) => {
-          if (!input?.wallet) {
+          if (!input?.wallet?.exportVault) {
             throw new Error('Invalid Wallet');
           }
           return input.wallet.exportVault().split(' ');
