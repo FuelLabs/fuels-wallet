@@ -13,6 +13,6 @@
   "dependencies": {
     "chalk": "^5.1.2",
     "spinnies": "^0.5.1",
-    "yargs": "^17.6.0"
+    "yargs": "^17.6.2"
   }
 }
