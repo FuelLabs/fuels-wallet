@@ -183,8 +183,11 @@ console.log(nodeInfo.nodeVersion);
 ```ts
 import { Address, NativeAssetId, bn } from "fuels";
 
-const walletLocked = Wallet.fromAddress(account, window.FuelWeb3.getProvider());
-const toAddress = Address.fromString(toAccount);
+const walletLocked = Wallet.fromAddress(
+  "fuel1<from account address>",
+  window.FuelWeb3.getProvider()
+);
+const toAddress = Address.fromString("fuel1<to account address>");
 const response = await walletLocked.transfer(
   toAddress,
   bn.parseUnits("0.1"),
