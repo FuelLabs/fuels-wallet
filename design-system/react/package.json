@@ -1,0 +1,103 @@
+{
+  "name": "@fuel-ui/react",
+  "version": "0.9.1",
+  "main": "./dist/index.js",
+  "scripts": {
+    "add:component": "node ./scripts/generateComponent",
+    "build:storybook": "build-storybook",
+    "build": "tsup --dts",
+    "dev": "start-storybook -p 6006",
+    "test": "jest --verbose",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
+    "ts:check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fuel-ui/css": "workspace:*",
+    "@fuel-ui/test-utils": "workspace:*",
+    "@radix-ui/react-accordion": "^1.0.1",
+    "@radix-ui/react-alert-dialog": "^1.0.2",
+    "@radix-ui/react-aspect-ratio": "^1.0.1",
+    "@radix-ui/react-avatar": "^1.0.1",
+    "@radix-ui/react-checkbox": "^1.0.1",
+    "@radix-ui/react-dialog": "^1.0.2",
+    "@radix-ui/react-label": "^2.0.0",
+    "@radix-ui/react-popover": "^1.0.2",
+    "@radix-ui/react-radio-group": "^1.1.0",
+    "@radix-ui/react-switch": "^1.0.1",
+    "@radix-ui/react-tabs": "^1.0.1",
+    "@radix-ui/react-tooltip": "^1.0.2",
+    "@radix-ui/react-visually-hidden": "^1.0.1",
+    "@react-aria/utils": "^3.14.0",
+    "@stitches/react": "^1.2.8",
+    "@xstate/react": "^3.0.1",
+    "framer-motion": "^7.6.5",
+    "jdenticon": "^3.2.0",
+    "phosphor-react": "^1.4.1",
+    "react": "^18.2.0",
+    "react-aria": "^3.20.0",
+    "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.0",
+    "react-number-format": "^5.1.1",
+    "react-stately": "^3.18.0",
+    "react-use": "^17.4.0",
+    "xstate": "^4.34.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "@react-types/button": "^3.6.2",
+    "@react-types/shared": "^3.15.0",
+    "@storybook/addon-a11y": "^6.5.13",
+    "@storybook/addon-actions": "^6.5.13",
+    "@storybook/addon-essentials": "^6.5.13",
+    "@storybook/addon-interactions": "^6.5.13",
+    "@storybook/addon-links": "^6.5.13",
+    "@storybook/addon-storysource": "^6.5.13",
+    "@storybook/addons": "^6.5.13",
+    "@storybook/api": "^6.5.13",
+    "@storybook/builder-webpack5": "^6.5.13",
+    "@storybook/components": "^6.5.13",
+    "@storybook/core-events": "^6.5.13",
+    "@storybook/manager-webpack5": "^6.5.13",
+    "@storybook/react": "^6.5.13",
+    "@storybook/testing-library": "^0.0.13",
+    "@storybook/theming": "^6.5.13",
+    "@types/color": "^3.0.3",
+    "@types/fs-extra": "^9.0.13",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.8",
+    "babel-loader": "^9.1.0",
+    "fs-extra": "^10.1.0",
+    "lodash": "^4.17.21",
+    "storybook-dark-mode": "^1.1.2",
+    "tsconfig-paths-webpack-plugin": "^4.0.0",
+    "typescript": "^4.8.4",
+    "webpack": "5",
+    "yargs": "^17.6.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "webpack": "^5.0.0",
+      "css-loader": "^5.0.0",
+      "dotenv-webpack": "^6.0.0",
+      "html-webpack-plugin": "^5.0.0",
+      "style-loader": "^2.0.0",
+      "terser-webpack-plugin": "^5.0.0",
+      "webpack-dev-middleware": "^4.1.0",
+      "webpack-virtual-modules": "^0.4.2"
+    }
+  },
+  "access": "public",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "typings": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist"
+  ]
+}
