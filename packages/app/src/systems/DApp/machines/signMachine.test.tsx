@@ -18,7 +18,10 @@ describe('signMachine', () => {
 
   beforeAll(async () => {
     wallet = Wallet.fromPrivateKey(OWNER);
-    jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
+    jest.spyOn(AccountService, 'unlock').mockResolvedValue({
+      ...wallet,
+      exportVault: () => '',
+    });
   });
 
   beforeEach(async () => {
