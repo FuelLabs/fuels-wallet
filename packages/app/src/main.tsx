@@ -1,5 +1,4 @@
 import '@fontsource/source-code-pro';
-import 'react-custom-scroll/dist/customScroll.css';
 import { createRoot } from 'react-dom/client';
 
 import { App } from './App';

@@ -3,7 +3,6 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Flex } from '@fuel-ui/react';
 import type { FC, ReactNode } from 'react';
 import { useRef, useContext, createContext } from 'react';
-import CustomScroll from 'react-custom-scroll';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 
@@ -31,9 +30,9 @@ type ContentProps = {
 function Content({ as, children, css }: ContentProps) {
   return (
     <Box as={as} css={{ ...styles.content, ...css }}>
-      <CustomScroll heightRelativeToParent="100%" className="layout-scroll">
+      <Box css={styles.scrollContainer}>
         <Box css={styles.insideScrolContent}>{children}</Box>
-      </CustomScroll>
+      </Box>
     </Box>
   );
 }
@@ -113,18 +112,33 @@ const styles = {
   content: cssObj({
     flex: 1,
     overflow: 'hidden',
-    '.rcs-inner-handle': {
-      backgroundColor: '$gray12',
-      opacity: 0.6,
-      zIndex: 9999,
-    },
-    '.rcs-inner-container': {
-      scrollBehavior: 'smooth',
-    },
   }),
   insideScrolContent: cssObj({
     py: '$4',
     px: '$4',
+  }),
+  scrollContainer: cssObj({
+    height: '100%',
+    overflowY: 'overlay',
+    overflowX: 'hidden',
+    scrollBehavior: 'smooth',
+    '&::-webkit-scrollbar': {
+      width: '14px',
+      backgroundColor: 'transparent',
+    },
+    '&::-webkit-scrollbar-track': {
+      backgroundColor: 'transparent',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '$gray1',
+      opacity: 0.5,
+      border: '4px solid transparent',
+      borderRadius: '12px',
+      backgroundClip: 'content-box',
+    },
+    '&::-webkit-scrollbar-thumb:hover': {
+      backgroundColor: '$gray10',
+    },
   }),
 };
 

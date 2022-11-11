@@ -49,7 +49,6 @@
     "query-string": "^7.1.1",
     "react": "^18.2.0",
     "react-content-loader": "^6.2.0",
-    "react-custom-scroll": "^4.4.0",
     "react-dom": "^18.2.0",
     "react-google-recaptcha": "^2.1.0",
     "react-helmet": "^6.1.0",
