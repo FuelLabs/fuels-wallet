@@ -10,6 +10,7 @@ importers:
   .:
     specifiers:
       '@babel/core': ^7.19.6
+      '@changesets/changelog-github': ^0.4.7
       '@changesets/cli': ^2.25.2
       '@fuel-ui/config': ^0.8.0
       '@jest/types': 29.2.1
@@ -43,6 +44,7 @@ importers:
       fuelhat: link:packages/fuelhat
     devDependencies:
       '@babel/core': 7.20.2
+      '@changesets/changelog-github': 0.4.7
       '@changesets/cli': 2.25.2
       '@jest/types': 29.2.1
       '@playwright/test': 1.27.1
@@ -1865,6 +1867,16 @@ packages:
       '@changesets/types': 5.2.0
     dev: true
 
+  /@changesets/changelog-github/0.4.7:
+    resolution: {integrity: sha512-UUG5sKwShs5ha1GFnayUpZNcDGWoY7F5XxhOEHS62sDPOtoHQZsG3j1nC5RxZ3M1URHA321cwVZHeXgu99Y3ew==}
+    dependencies:
+      '@changesets/get-github-info': 0.5.1
+      '@changesets/types': 5.2.0
+      dotenv: 8.6.0
+    transitivePeerDependencies:
+      - encoding
+    dev: true
+
   /@changesets/cli/2.25.2:
     resolution: {integrity: sha512-ACScBJXI3kRyMd2R8n8SzfttDHi4tmKSwVwXBazJOylQItSRSF4cGmej2E4FVf/eNfGy6THkL9GzAahU9ErZrA==}
     hasBin: true
@@ -1930,6 +1942,15 @@ packages:
       chalk: 2.4.2
       fs-extra: 7.0.1
       semver: 5.7.1
+    dev: true
+
+  /@changesets/get-github-info/0.5.1:
+    resolution: {integrity: sha512-w2yl3AuG+hFuEEmT6j1zDlg7GQLM/J2UxTmk0uJBMdRqHni4zXGe/vUlPfLom5KfX3cRfHc0hzGvloDPjWFNZw==}
+    dependencies:
+      dataloader: 1.4.0
+      node-fetch: 2.6.7
+    transitivePeerDependencies:
+      - encoding
     dev: true
 
   /@changesets/get-release-plan/3.0.15:
@@ -10341,6 +10362,10 @@ packages:
       abab: 2.0.6
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
+
+  /dataloader/1.4.0:
+    resolution: {integrity: sha512-68s5jYdlvasItOJnCuI2Q9s4q98g0pCyL3HrcKJu8KNugUl8ahgmZYg38ysLTgQjjXX3H8CJLkAvWrclWfcalw==}
+    dev: true
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
