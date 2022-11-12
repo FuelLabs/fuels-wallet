@@ -28,20 +28,24 @@ const MENU: SidebarLinkItem[] = [
 
 export function Sidebar() {
   return (
-    <Box as="nav" css={styles.root}>
-      {MENU.map((doc, idx) => {
-        return doc.slug ? (
-          <SidebarLink key={doc.slug} item={doc} />
-        ) : (
-          <SidebarSubmenu key={idx} {...doc} />
-        );
-      })}
+    <Box css={styles.root}>
+      <Box as="nav" css={{ position: 'sticky', top: 0 }}>
+        {MENU.map((doc, idx) => {
+          return doc.slug ? (
+            <SidebarLink key={doc.slug} item={doc} />
+          ) : (
+            <SidebarSubmenu key={idx} {...doc} />
+          );
+        })}
+      </Box>
     </Box>
   );
 }
 
 const styles = {
   root: cssObj({
+    position: 'sticky',
+    top: 20,
     a: {
       color: '$gray8',
     },
