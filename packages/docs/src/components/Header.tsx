@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Flex, FuelLogo, Text } from '@fuel-ui/react';
+import { Flex, FuelLogo, Icon, Text } from '@fuel-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -7,8 +7,8 @@ import { Search } from './Search';
 
 export function Header() {
   const { asPath } = useRouter();
-  const isDocsActive = asPath === '/' || asPath.startsWith('/docs');
-  const isExamplesActive = asPath.startsWith('/examples');
+  const isHomeActive = asPath === '/';
+  const isDocsActive = asPath.startsWith('/docs');
   return (
     <Flex as="header" css={styles.root}>
       <FuelLogo size={40} />
@@ -16,12 +16,20 @@ export function Header() {
         Fuel Wallet SDK
       </Text>
       <Flex css={styles.menu}>
-        <Link href="/" className={isDocsActive ? 'active' : ''}>
+        <Link href="/" className={isHomeActive ? 'active' : ''}>
+          Home
+        </Link>
+        <Link href="/docs/install" className={isDocsActive ? 'active' : ''}>
           Docs
         </Link>
-        <Link href="/examples" className={isExamplesActive ? 'active' : ''}>
-          Examples
-        </Link>
+        <Link href="/storybook">Storybook</Link>
+        <a
+          href="https://github.com/fuellabs/fuels-wallet"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Icon icon={Icon.is('GithubLogo')} size={24} />
+        </a>
       </Flex>
       <Search />
     </Flex>

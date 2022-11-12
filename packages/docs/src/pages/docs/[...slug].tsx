@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Heading } from '@fuel-ui/react';
+import { Box, Heading } from '@fuel-ui/react';
 import matter from 'gray-matter';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
 import { MDXRemote } from 'next-mdx-remote';
@@ -48,7 +48,9 @@ export default function DocPage({
   }
   return (
     <Layout title={frontmatter.title} headings={headings}>
-      <MDXRemote {...source} components={components} />
+      <Box as="section">
+        <MDXRemote {...source} components={components} />
+      </Box>
     </Layout>
   );
 }

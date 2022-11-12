@@ -13,9 +13,10 @@ type LayoutProps = {
   title?: string;
   children: ReactNode;
   headings?: NodeHeading[];
+  isHome?: boolean;
 };
 
-export function Layout({ title, children, headings }: LayoutProps) {
+export function Layout({ title, children, headings, isHome }: LayoutProps) {
   const titleText = title ? `${title} | Fuel Wallet` : 'Fuel Wallet';
   return (
     <>
@@ -24,8 +25,8 @@ export function Layout({ title, children, headings }: LayoutProps) {
       </Head>
       <Box css={styles.root}>
         <Header />
-        <Sidebar />
-        <Box as="section">{children}</Box>
+        {!isHome && <Sidebar />}
+        {children}
         {headings && <TableOfContent headings={headings} />}
       </Box>
     </>

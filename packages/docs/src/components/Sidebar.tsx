@@ -7,7 +7,6 @@ import { SidebarLink } from './SidebarLink';
 import { SidebarSubmenu } from './SidebarSubmenu';
 
 const MENU: SidebarLinkItem[] = [
-  { slug: '/', label: 'Home' },
   { slug: '/docs/install', label: 'Install' },
   { slug: '/docs/how-to-use', label: 'How to use' },
   {
