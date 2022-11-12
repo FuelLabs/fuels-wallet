@@ -37,12 +37,9 @@ export function useSettings() {
   }
 
   /** @description - This will change the password of the wallet */
-  function changePassword(params: AccountInputs['changePassword']) {
+  function changePassword(changePassword: AccountInputs['changePassword']) {
     send('CHANGE_PASSWORD', {
-      input: {
-        oldPassword: params.oldPassword,
-        newPassword: params.newPassword,
-      },
+      input: changePassword,
     });
   }
 

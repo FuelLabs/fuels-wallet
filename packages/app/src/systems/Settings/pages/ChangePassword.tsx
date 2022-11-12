@@ -39,6 +39,13 @@ export function ChangePassword() {
     resolver: yupResolver(schema),
   });
 
+  function onSubmit({ newPassword, oldPassword }: ChangePasswordFormValues) {
+    changePassword({
+      oldPassword,
+      newPassword,
+    });
+  }
+
   useEffect(() => {
     if (hasChangedPassword) {
       navigate(Pages.wallet());
@@ -46,20 +53,11 @@ export function ChangePassword() {
   }, [hasChangedPassword]);
 
   const goBack = () => navigate(Pages.wallet());
+
   return (
-    <Layout title="Change Password">
-      <Layout.TopBar onBack={() => goBack()} />
-      <form
-        style={{ flex: 1 }}
-        onSubmit={() =>
-          handleSubmit(({ newPassword, oldPassword }) =>
-            changePassword({
-              oldPassword,
-              newPassword,
-            })
-          )
-        }
-      >
+    <form style={{ flex: 1 }} onSubmit={handleSubmit(onSubmit)}>
+      <Layout title="Change Password">
+        <Layout.TopBar onBack={() => goBack()} />
         <Layout.Content css={styles.wrapper}>
           <Alert direction="row" status={'warning'}>
             <Alert.Description>
@@ -107,25 +105,25 @@ export function ChangePassword() {
             )}
           />
         </Layout.Content>
-      </form>
-      <Layout.BottomBar>
-        <Button
-          onPress={() => goBack()}
-          variant="ghost"
-          isLoading={isChangingPassword}
-          isDisabled={isChangingPassword}
-        >
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          isLoading={isChangingPassword}
-          isDisabled={isChangingPassword}
-        >
-          Save
-        </Button>
-      </Layout.BottomBar>
-    </Layout>
+        <Layout.BottomBar>
+          <Button
+            onPress={() => goBack()}
+            variant="ghost"
+            isLoading={isChangingPassword}
+            isDisabled={isChangingPassword}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            isLoading={isChangingPassword}
+            isDisabled={isChangingPassword}
+          >
+            Save
+          </Button>
+        </Layout.BottomBar>
+      </Layout>
+    </form>
   );
 }
 

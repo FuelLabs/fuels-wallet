@@ -43,7 +43,7 @@ export const settingsMachine = createMachine(
         invoke: {
           src: 'changePassword',
           data: (_: MachineContext, ev: MachineEvents) => {
-            return ev.input;
+            return { input: ev.input };
           },
           onDone: {
             cond: FetchMachine.hasError,

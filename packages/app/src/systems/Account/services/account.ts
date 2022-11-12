@@ -179,14 +179,18 @@ export class AccountService {
     const storage = new IndexedDBStorage() as never;
     const manager = new WalletManager({ storage });
     await manager.unlock(input.oldPassword);
-    const vaultSecret = manager.exportVault(0);
-    await manager.removeVault(0);
-    await manager.unlock(input.newPassword);
-    await manager.addVault({
-      type: 'mnemonic',
-      secret: vaultSecret.secret,
-    });
-    await manager.lock();
+
+    // TODO: implement a fix on fuels-ts to correctly
+    // update the passphrase
+    try {
+      await manager.unlock(input.newPassword);
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      await manager.saveState();
+    }
+
+    return manager.lock();
   }
 }
 
