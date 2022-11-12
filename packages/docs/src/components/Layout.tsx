@@ -12,7 +12,7 @@ import { TableOfContent } from './TableOfContent';
 type LayoutProps = {
   title?: string;
   children: ReactNode;
-  headings: NodeHeading[];
+  headings?: NodeHeading[];
 };
 
 export function Layout({ title, children, headings }: LayoutProps) {

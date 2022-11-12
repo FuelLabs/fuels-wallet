@@ -9,12 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@docsearch/css": "^3.3.0",
+    "@docsearch/react": "3",
     "@fuel-ui/css": "workspace:*",
     "@fuel-ui/react": "workspace:*",
-    "@mdx-js/loader": "^2.1.5",
-    "@mdx-js/mdx": "^2.1.5",
-    "@mdx-js/react": "^2.1.5",
     "@next/mdx": "^13.0.2",
+    "dotenv": "^16.0.3",
     "dracula-prism": "^2.1.13",
     "globby": "^13.1.2",
     "gray-matter": "^4.0.3",

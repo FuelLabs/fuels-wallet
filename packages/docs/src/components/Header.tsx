@@ -3,6 +3,8 @@ import { Flex, FuelLogo, Text } from '@fuel-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import { Search } from './Search';
+
 export function Header() {
   const { asPath } = useRouter();
   const isDocsActive = asPath === '/' || asPath.startsWith('/docs');
@@ -21,6 +23,7 @@ export function Header() {
           Examples
         </Link>
       </Flex>
+      <Search />
     </Flex>
   );
 }
