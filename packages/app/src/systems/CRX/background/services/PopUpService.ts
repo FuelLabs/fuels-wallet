@@ -151,6 +151,7 @@ export class PopUpService {
     if (selectedNetwork?.url !== provider.url) {
       // TODO: Show for the user to add new network before
       // finishing the transaction
+      // https://github.com/FuelLabs/fuels-wallet/issues/200
       throw new Error(
         [
           `${provider.url} is different from the user current network!`,

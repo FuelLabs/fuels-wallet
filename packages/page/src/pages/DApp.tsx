@@ -10,13 +10,10 @@ import {
   Link,
   Input,
 } from '@fuel-ui/react';
-import { FuelWeb3Provider } from '@fuel-wallet/sdk';
+import { FuelWeb3Provider, getBlockExplorerLink } from '@fuel-wallet/sdk';
 import type { BN } from 'fuels';
 import { Address, Wallet, bn } from 'fuels';
 import { useCallback, useEffect, useState } from 'react';
-
-const FUEL_BLOCKEXPLORER_URL =
-  'https://fuellabs.github.io/block-explorer-v2/transaction/';
 
 // This is not need if the developer
 // install FuelWeb3 and import as a package
@@ -236,9 +233,10 @@ export function DApp() {
             <Text>{txId}</Text>
             <Link
               target={'_blank'}
-              href={`${FUEL_BLOCKEXPLORER_URL}/${txId}?providelUrl=${encodeURIComponent(
-                FuelWeb3.providerConfig.url
-              )}`}
+              href={getBlockExplorerLink({
+                path: `transaction/${txId}`,
+                providerUrl: FuelWeb3.providerConfig.url,
+              })}
             >
               See on BlockExplorer
             </Link>

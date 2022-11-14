@@ -10,6 +10,7 @@ import {
   Stack,
   Text,
 } from '@fuel-ui/react';
+import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import { AddressType } from '@fuel-wallet/types';
 import { useMemo } from 'react';
 
@@ -21,12 +22,7 @@ import { AssetsAmount } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { NetworkScreen, useNetworks } from '~/systems/Network';
-import {
-  getBlockExplorerLink,
-  getFilteredErrors,
-  TxDetails,
-  TxFromTo,
-} from '~/systems/Transaction';
+import { getFilteredErrors, TxDetails, TxFromTo } from '~/systems/Transaction';
 
 export function TransactionRequest() {
   const { isLoading } = useAccount();
