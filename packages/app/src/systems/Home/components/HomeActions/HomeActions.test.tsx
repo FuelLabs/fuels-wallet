@@ -15,8 +15,8 @@ describe('HomeActions', () => {
 
   it("should show 'Send' and 'Receive' button disabled", async () => {
     render(<HomeActions isDisabled />);
-    expect(screen.getByText('Send')).toBeDisabled();
-    expect(screen.getByText('Receive')).toBeDisabled();
+    expect(screen.getByText('Send')).toHaveAttribute('aria-disabled');
+    expect(screen.getByText('Receive')).toHaveAttribute('aria-disabled');
   });
 
   it("should call 'Send' and 'Receive' actions when clicked", () => {

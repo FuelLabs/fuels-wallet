@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import EventEmitter from 'events';
-import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
-import { JSONRPCServer, JSONRPCClient } from 'json-rpc-2.0';
-
 import type {
   CommunicationMessage,
   EventMessage,
   RequestMessage,
   ResponseMessage,
   UIEventMessage,
-} from '../types';
-import { MessageTypes } from '../types';
+} from '@fuel-wallet/types';
+import { MessageTypes } from '@fuel-wallet/types';
+import EventEmitter from 'events';
+import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
+import { JSONRPCServer, JSONRPCClient } from 'json-rpc-2.0';
 
 export class BaseConnection extends EventEmitter {
   readonly client: JSONRPCClient;

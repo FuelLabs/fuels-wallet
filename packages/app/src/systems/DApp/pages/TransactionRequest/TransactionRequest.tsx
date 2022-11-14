@@ -8,36 +8,27 @@ import {
   Icon,
   Link,
   Stack,
-  Tag,
   Text,
 } from '@fuel-ui/react';
+import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import { AddressType } from '@fuel-wallet/types';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
-import { getMockedTransaction } from '../../__mocks__/dapp-transaction';
-import { UnlockDialog } from '../../components';
-import { useTxApprove } from '../../hooks/useTxApprove';
+import { ConnectInfo, UnlockDialog } from '../../components';
+import { useTransactionRequest } from '../../hooks';
 
 import { useAccount } from '~/systems/Account';
 import { AssetsAmount } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { NetworkScreen, useNetworks } from '~/systems/Network';
-import {
-  getBlockExplorerLink,
-  getFilteredErrors,
-  TxDetails,
-  TxFromTo,
-} from '~/systems/Transaction';
+import { getFilteredErrors, TxDetails, TxFromTo } from '~/systems/Transaction';
 
-export type TxApproveProps = {
-  id: string;
-};
-
-export function TxApprove() {
+export function TransactionRequest() {
   const { isLoading } = useAccount();
   const { selectedNetwork } = useNetworks({ type: NetworkScreen.list });
   const {
+    origin,
     isUnlocking,
     handlers,
     account,
@@ -48,60 +39,28 @@ export function TxApprove() {
     outputAmount,
     outputsToSend,
     groupedErrors,
-    isIdle,
-    isApproving,
-  } = useTxApprove();
+    waitingApproval,
+    sendingTx,
+    unlockError,
+  } = useTransactionRequest();
 
   const generalErrors = useMemo(
     () => getFilteredErrors(groupedErrors, ['InsufficientInputAmount']),
     [groupedErrors]
   );
 
-  // TODO: this useEffect is just for mocking purposes. It should be removed when integrating the real input from wallet SDK
-  useEffect(() => {
-    (async () => {
-      if (account && selectedNetwork?.url) {
-        const txRequest = await getMockedTransaction(
-          account?.publicKey || '',
-          '0xc7862855b418ba8f58878db434b21053a61a2025209889cc115989e8040ff077',
-          selectedNetwork?.url
-        );
-
-        handlers.calculateGas(txRequest, selectedNetwork?.url);
-      }
-    })();
-  }, [account, selectedNetwork?.url]);
-
   return (
     <>
       <Layout title="Approve Transaction" isLoading={isLoading}>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
-          {!isLoading && !approvedTx && !txApproveError && (
+          {!isLoading && !approvedTx && !txApproveError && origin && account && (
             <Stack gap="$4">
-              <Card>
-                <Card.Body
-                  css={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-evenly',
-                  }}
-                >
-                  <Tag css={styles.approveUrlTag} variant="outlined">
-                    <Text as="span" fontSize="sm" color="gray12">
-                      swayswap.io
-                    </Text>
-                  </Tag>
-                  <Text
-                    as="span"
-                    fontSize="sm"
-                    color="gray12"
-                    css={{ fontWeight: '$semibold' }}
-                  >
-                    wants to approve
-                  </Text>
-                </Card.Body>
-              </Card>
+              <ConnectInfo
+                origin={origin}
+                account={account}
+                isReadOnly={true}
+              />
               {account && (
                 <TxFromTo
                   from={{
@@ -172,15 +131,20 @@ export function TxApprove() {
         </Layout.Content>
         <Layout.BottomBar>
           <Flex>
-            <Button color="gray" variant="ghost" css={{ flex: 1 }}>
-              Close
+            <Button
+              onPress={handlers.reject}
+              color="gray"
+              variant="ghost"
+              css={{ flex: 1 }}
+            >
+              Reject
             </Button>
             {!approvedTx && !txApproveError && (
               <Button
                 color="accent"
-                onPress={() => handlers.startApprove(selectedNetwork?.url)}
-                isLoading={isLoading || isApproving}
-                isDisabled={!isIdle}
+                onPress={handlers.approve}
+                isLoading={isLoading || sendingTx}
+                isDisabled={!waitingApproval}
                 css={{ flex: 1, ml: '$2' }}
               >
                 Confirm
@@ -190,6 +154,9 @@ export function TxApprove() {
         </Layout.BottomBar>
       </Layout>
       <UnlockDialog
+        unlockText="Confirm Transaction"
+        unlockError={unlockError}
+        isFullscreen={true}
         isOpen={isUnlocking}
         onUnlock={handlers.unlock}
         isLoading={isUnlockingLoading}

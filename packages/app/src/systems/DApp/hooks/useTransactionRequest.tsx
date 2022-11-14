@@ -3,29 +3,34 @@ import type { TransactionRequest } from 'fuels';
 import { bn } from 'fuels';
 import { useMemo } from 'react';
 
-import type { TxApproveMachineState } from '../machines';
-import { txApproveMachine } from '../machines';
+import type { TransactionMachineState } from '../machines';
+import { transactionMachine } from '../machines';
+import { useTransactionRequestMethods } from '../methods';
 
 import { useAccount } from '~/systems/Account';
 import { getCoinOutputsFromTx, getGroupedErrors } from '~/systems/Transaction';
 
 const selectors = {
-  isUnlocking: (state: TxApproveMachineState) => state.matches('unlocking'),
-  isIdle: (state: TxApproveMachineState) => state.matches('idle'),
-  isApproving: (state: TxApproveMachineState) => state.matches('approving'),
-  approvedTx: (state: TxApproveMachineState) => state.context.approvedTx,
-  tx: (state: TxApproveMachineState) => state.context.tx,
-  receipts: (state: TxApproveMachineState) => state.context.receipts,
-  txDryRunError: (state: TxApproveMachineState) => state.context.txDryRunError,
-  txApproveError: (state: TxApproveMachineState) =>
+  origin: (state: TransactionMachineState) => state.context.origin,
+  unlockError: (state: TransactionMachineState) => state.context.unlockError,
+  isUnlocking: (state: TransactionMachineState) => state.matches('unlocking'),
+  waitingApproval: (state: TransactionMachineState) =>
+    state.matches('waitingApproval'),
+  sendingTx: (state: TransactionMachineState) => state.matches('sendingTx'),
+  approvedTx: (state: TransactionMachineState) => state.context.approvedTx,
+  tx: (state: TransactionMachineState) => state.context.tx,
+  receipts: (state: TransactionMachineState) => state.context.receipts,
+  txDryRunError: (state: TransactionMachineState) =>
+    state.context.txDryRunError,
+  txApproveError: (state: TransactionMachineState) =>
     state.context.txApproveError,
-  isUnlockingLoading: (state: TxApproveMachineState) =>
+  isUnlockingLoading: (state: TransactionMachineState) =>
     state.children.unlock?.state.matches('unlocking'),
 };
 
-export function useTxApprove() {
+export function useTransactionRequest() {
   const { account } = useAccount();
-  const service = useInterpret(txApproveMachine);
+  const service = useInterpret(transactionMachine);
   const { send } = service;
   const isUnlocking = useSelector(service, selectors.isUnlocking);
   const isUnlockingLoading = useSelector(service, selectors.isUnlockingLoading);
@@ -34,8 +39,10 @@ export function useTxApprove() {
   const receipts = useSelector(service, selectors.receipts);
   const txDryRunError = useSelector(service, selectors.txDryRunError);
   const txApproveError = useSelector(service, selectors.txApproveError);
-  const isIdle = useSelector(service, selectors.isIdle);
-  const isApproving = useSelector(service, selectors.isApproving);
+  const waitingApproval = useSelector(service, selectors.waitingApproval);
+  const sendingTx = useSelector(service, selectors.sendingTx);
+  const origin = useSelector(service, selectors.origin);
+  const unlockError = useSelector(service, selectors.unlockError);
 
   const { coinOutputs, outputsToSend, outputAmount } = useMemo(() => {
     const coinOutputs = getCoinOutputsFromTx(tx);
@@ -52,8 +59,14 @@ export function useTxApprove() {
 
   const groupedErrors = getGroupedErrors(txDryRunError?.response?.errors);
 
-  function startApprove(providerUrl: string) {
-    send('START_APPROVE', { input: { providerUrl } });
+  useTransactionRequestMethods(service);
+
+  function approve() {
+    send('APPROVE');
+  }
+
+  function reject() {
+    send('REJECT');
   }
 
   function unlock(password: string) {
@@ -70,10 +83,11 @@ export function useTxApprove() {
 
   return {
     handlers: {
-      startApprove,
+      approve,
       unlock,
       closeUnlock,
       calculateGas,
+      reject,
     },
     isUnlocking,
     isUnlockingLoading,
@@ -87,7 +101,9 @@ export function useTxApprove() {
     outputsToSend,
     outputAmount,
     groupedErrors,
-    isIdle,
-    isApproving,
+    waitingApproval,
+    sendingTx,
+    origin,
+    unlockError,
   };
 }

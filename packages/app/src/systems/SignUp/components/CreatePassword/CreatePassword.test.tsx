@@ -39,7 +39,7 @@ describe('CreatePassword', () => {
     render(<Content />, { wrapper: TestWrapper });
     const btn = screen.getByText('Next');
     expect(btn).toBeInTheDocument();
-    expect(btn).toBeDisabled();
+    expect(btn).toHaveAttribute('aria-disabled');
   });
 
   it("should validate if password don't have min length equals 8", async () => {

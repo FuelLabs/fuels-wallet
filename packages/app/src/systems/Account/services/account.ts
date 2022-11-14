@@ -1,15 +1,15 @@
 /* eslint-disable consistent-return */
+import type { WalletUnlocked } from '@fuel-ts/wallet';
 import { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account } from '@fuel-wallet/types';
-import type { WalletUnlocked } from 'fuels';
 import { bn, Address, Provider } from 'fuels';
 
 import { IndexedDBStorage } from '../utils';
 
-import { VITE_FUEL_PROVIDER_URL } from '~/config';
 import { isEth } from '~/systems/Asset';
 import type { Maybe } from '~/systems/Core';
 import { getPhraseFromValue, db } from '~/systems/Core';
+import { NetworkService } from '~/systems/Network';
 
 export type AccountInputs = {
   addAccount: {
@@ -155,11 +155,12 @@ export class AccountService {
     const wallet = manager.getWallet(
       Address.fromPublicKey(input.account.publicKey)
     );
-    // TODO: fix this on fuel-ts it should be possible to
-    // customize the ProviderURL on the manager level
-    wallet.provider = new Provider(VITE_FUEL_PROVIDER_URL);
-
-    return wallet as WalletUnlocked;
+    const network = await NetworkService.getSelectedNetwork();
+    if (!network) {
+      throw new Error('Network not found!');
+    }
+    wallet.connect(network.url);
+    return wallet;
   }
 }
 

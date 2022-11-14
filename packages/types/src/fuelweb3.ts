@@ -84,3 +84,8 @@ export type DatabaseEventArg<T extends string> = T extends `${string}:create`
   : T extends `${string}:delete`
   ? IDeleteChange
   : unknown;
+
+export type FuelWeb3ProviderConfig = {
+  id?: string;
+  url: string;
+};

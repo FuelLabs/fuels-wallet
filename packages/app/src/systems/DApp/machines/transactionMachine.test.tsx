@@ -1,22 +1,21 @@
-import type { ScriptTransactionRequest, WalletUnlocked } from 'fuels';
-import { Wallet } from 'fuels';
-import type { InterpreterFrom } from 'xstate';
+import { Wallet } from '@fuel-ts/wallet';
+import type { WalletUnlocked } from '@fuel-ts/wallet';
+import type { ScriptTransactionRequest } from 'fuels';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
 import { getMockedTransaction } from '../__mocks__/dapp-transaction';
 
-import { txApproveMachine } from './txApproveMachine';
+import type { TransactionMachineService } from './transactionMachine';
+import { transactionMachine } from './transactionMachine';
 
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
-
-type Service = InterpreterFrom<typeof txApproveMachine>;
 
 const OWNER = import.meta.env.VITE_ADDR_OWNER;
 const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
 
 describe('txApproveMachine', () => {
-  let service: Service;
+  let service: TransactionMachineService;
   let wallet: WalletUnlocked;
   let tx: ScriptTransactionRequest;
 
@@ -31,7 +30,7 @@ describe('txApproveMachine', () => {
   });
 
   beforeEach(async () => {
-    service = interpret(txApproveMachine.withContext({})).start();
+    service = interpret(transactionMachine.withContext({})).start();
   });
 
   afterEach(() => {
@@ -39,14 +38,16 @@ describe('txApproveMachine', () => {
   });
 
   it('should approve/send transaction', async () => {
-    await waitFor(service, (state) => state.matches('waitingTxRequest'));
-
-    service.send('CALCULATE_GAS', { input: { tx, providerUrl } });
-
-    await waitFor(service, (state) => state.matches('calculatingGas'));
     await waitFor(service, (state) => state.matches('idle'));
 
-    service.send('START_APPROVE', { input: { providerUrl } });
+    service.send('START_REQUEST', {
+      input: { tx, providerUrl, origin: 'foo.com' },
+    });
+
+    await waitFor(service, (state) => state.matches('calculatingGas'));
+    await waitFor(service, (state) => state.matches('waitingApproval'));
+
+    service.send('APPROVE');
 
     await waitFor(service, (state) => state.matches('unlocking'));
 
@@ -57,7 +58,7 @@ describe('txApproveMachine', () => {
       },
     });
 
-    await waitFor(service, (state) => state.matches('approving'));
+    await waitFor(service, (state) => state.matches('sendingTx'));
     const { matches } = await waitFor(service, (state) =>
       state.matches('done')
     );

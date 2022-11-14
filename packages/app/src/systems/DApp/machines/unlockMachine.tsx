@@ -1,6 +1,7 @@
-import type { WalletUnlocked } from 'fuels';
-import type { InterpreterFrom, StateFrom } from 'xstate';
-import { createMachine } from 'xstate';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { WalletUnlocked } from '@fuel-ts/wallet';
+import type { InterpreterFrom, StateFrom, TransitionConfig } from 'xstate';
+import { assign, createMachine } from 'xstate';
 
 import type { AccountInputs } from '~/systems/Account';
 import { AccountService } from '~/systems/Account';
@@ -17,6 +18,26 @@ type MachineServices = {
 export type UnlockMachineEvents = {
   type: 'UNLOCK_WALLET';
   input: AccountInputs['unlock'];
+};
+
+export const unlockMachineError = (_: any, ev: { data: { error?: any } }) => {
+  return Boolean(ev.data?.error);
+};
+
+export const unlockMachineErrorAction = (
+  state: string,
+  field: string
+): TransitionConfig<any, any> => {
+  return {
+    cond: FetchMachine.hasError,
+    target: state,
+    actions: [
+      assign((ctx: any, ev: { data: { error?: any } }) => ({
+        ...ctx,
+        [field || 'error']: ev.data.error.message,
+      })),
+    ],
+  };
 };
 
 export const unlockMachine = createMachine(
@@ -48,17 +69,18 @@ export const unlockMachine = createMachine(
           },
           onDone: [
             {
-              target: 'waitingPassword',
+              target: 'failed',
               cond: FetchMachine.hasError,
             },
             {
               target: 'done',
             },
           ],
-          onError: {
-            target: 'waitingPassword',
-          },
         },
+      },
+      failed: {
+        type: 'final',
+        data: (_, ev: { data: Error }) => ev.data,
       },
       done: {
         type: 'final',
@@ -68,15 +90,12 @@ export const unlockMachine = createMachine(
   },
   {
     services: {
-      unlock: FetchMachine.create<
-        AccountInputs['unlock'],
-        Awaited<ReturnType<typeof AccountService['unlock']>>
-      >({
-        showError: true,
+      unlock: FetchMachine.create<AccountInputs['unlock'], WalletUnlocked>({
+        showError: false,
         maxAttempts: 1,
         async fetch({ input }) {
           if (!input || !input?.password) {
-            throw new Error('Invalid network input');
+            throw new Error('Password is required to unlock wallet');
           }
           return AccountService.unlock(input);
         },
