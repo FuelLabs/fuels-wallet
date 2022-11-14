@@ -69,12 +69,9 @@ export const settingsMachine = createMachine(
               return ev.input;
             },
           },
-          onError: {
-            target: 'unlocking',
-          },
           onDone: [
             {
-              target: 'done',
+              target: 'unlocking',
               cond: FetchMachine.hasError,
             },
             {
