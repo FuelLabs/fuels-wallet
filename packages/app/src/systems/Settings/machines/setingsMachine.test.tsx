@@ -25,6 +25,8 @@ const WORDS = [
 describe('settingsMachine', () => {
   let service: InterpreterFrom<typeof settingsMachine>;
 
+  const redirectToWallet = jest.fn();
+
   beforeAll(async () => {
     jest
       .spyOn(AccountService, 'exportVault')
@@ -32,7 +34,13 @@ describe('settingsMachine', () => {
   });
 
   beforeEach(async () => {
-    service = interpret(settingsMachine).start();
+    service = interpret(
+      settingsMachine.withConfig({
+        actions: {
+          goToWallet: redirectToWallet,
+        },
+      })
+    ).start();
   });
 
   it('should get mnemonic phrase', async () => {

@@ -32,8 +32,8 @@ export const getMockedTransaction = async (
 
   try {
     const provider = new Provider(providerUrl);
-    const coins = await provider.getCoinsToSpend(ownerAddress, quantities);
-    txRequest.addCoins(coins);
+    const coins = await provider.getResourcesToSpend(ownerAddress, quantities);
+    txRequest.addResources(coins);
     // eslint-disable-next-line no-empty
   } catch (e) {}
 
