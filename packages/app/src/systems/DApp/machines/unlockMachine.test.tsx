@@ -1,4 +1,4 @@
-import { Wallet } from 'fuels';
+import { Wallet } from '@fuel-ts/wallet';
 import type { InterpreterFrom } from 'xstate';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';

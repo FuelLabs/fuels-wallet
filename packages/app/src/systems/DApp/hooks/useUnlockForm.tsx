@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -14,8 +15,10 @@ export type UnlockFormValues = {
   password: string;
 };
 
-export function useUnlockForm() {
-  return useForm<UnlockFormValues>({
+export type UnlockFormValuesErrors = Partial<UnlockFormValues>;
+
+export function useUnlockForm(formErrors?: UnlockFormValuesErrors) {
+  const form = useForm<UnlockFormValues>({
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
     mode: 'onChange',
@@ -23,4 +26,19 @@ export function useUnlockForm() {
       password: '',
     },
   });
+
+  useEffect(() => {
+    const errors = formErrors || {};
+    Object.keys(errors).forEach((key) => {
+      if (errors[key]) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        form.setError(key as any, {
+          type: 'manual',
+          message: errors[key],
+        });
+      }
+    });
+  }, [formErrors]);
+
+  return form;
 }
