@@ -168,7 +168,7 @@ console.log("to address balance", balance);
 
 #### Get Provider
 
-`getProvider` - Return a FuelWeb3Provider this class extends fuels-ts SDK Provider, enabling to execute any of the methods available, but using FuelWeb3SDK on signature poitns, to request user permissions.
+`getProvider` - Return a FuelWeb3Provider this class extends fuels-ts SDK Provider, enabling to execute any of the methods available, but using FuelWeb3SDK on signature points, to request user permissions.
 
 ##### Using provider to query node info
 
