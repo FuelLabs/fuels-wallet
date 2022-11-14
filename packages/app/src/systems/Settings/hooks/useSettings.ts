@@ -1,10 +1,12 @@
 import { useInterpret, useSelector } from '@xstate/react';
+import { useNavigate } from 'react-router-dom';
 
 import type { SettingsMachineState } from '../machines/settingsMachine';
 import { settingsMachine } from '../machines/settingsMachine';
 
 import type { AccountInputs } from '~/systems/Account';
 import { useAccount } from '~/systems/Account';
+import { Pages } from '~/systems/Core';
 
 const selectors = {
   isChangingPassword: (state: SettingsMachineState) =>
@@ -19,8 +21,17 @@ const selectors = {
 };
 
 export function useSettings() {
+  const navigate = useNavigate();
   const { account } = useAccount();
-  const service = useInterpret(() => settingsMachine);
+  const service = useInterpret(() =>
+    settingsMachine.withConfig({
+      actions: {
+        goToWallet() {
+          navigate(Pages.wallet());
+        },
+      },
+    })
+  );
   const { send } = service;
 
   const isUnlocking = useSelector(service, selectors.isUnlocking);

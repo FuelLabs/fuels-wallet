@@ -23,7 +23,7 @@
     "@fuel-ts/mnemonic": "0.19.0",
     "@fuel-ts/providers": "0.19.0",
     "@fuel-ts/wallet": "0.19.0",
-    "@fuel-ts/wallet-manager": "0.19.0",
+    "@fuel-ts/wallet-manager": "0.0.0-next-20221114173221",
     "@fuel-ui/config": "^0.9.0",
     "@fuel-ui/css": "^0.9.0",
     "@fuel-ui/react": "^0.9.0",

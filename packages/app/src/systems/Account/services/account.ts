@@ -1,7 +1,6 @@
 /* eslint-disable consistent-return */
 import { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account } from '@fuel-wallet/types';
-import type { WalletUnlocked } from 'fuels';
 import { bn, Address, Provider } from 'fuels';
 
 import { IndexedDBStorage } from '../utils';
@@ -152,7 +151,7 @@ export class AccountService {
     return secret;
   }
 
-  static async unlock(input: AccountInputs['unlock']): Promise<WalletUnlocked> {
+  static async unlock(input: AccountInputs['unlock']) {
     const storage = new IndexedDBStorage() as never;
     const manager = new WalletManager({ storage });
     await manager.unlock(input.password);
@@ -161,26 +160,18 @@ export class AccountService {
     );
     // TODO: fix this on fuel-ts it should be possible to
     // customize the ProviderURL on the manager level
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     wallet.provider = new Provider(VITE_FUEL_PROVIDER_URL);
 
-    return wallet as WalletUnlocked;
+    return wallet;
   }
 
   static async changePassword(input: AccountInputs['changePassword']) {
     const storage = new IndexedDBStorage() as never;
     const manager = new WalletManager({ storage });
     await manager.unlock(input.oldPassword);
-
-    // TODO: implement a fix on fuels-ts to correctly
-    // update the passphrase
-    try {
-      await manager.unlock(input.newPassword);
-    } catch (err) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      await manager.saveState();
-    }
-
+    await manager.updatePassphrase(input.oldPassword, input.newPassword);
     return manager.lock();
   }
 }
