@@ -1,14 +1,11 @@
-import type { Wallet } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-import { send } from 'xstate/lib/actions';
 
-import { AccountService } from '~/systems/Account';
 import type { AccountInputs } from '~/systems/Account';
+import { AccountService } from '~/systems/Account';
 import type { ChildrenMachine } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
 import type { UnlockMachine } from '~/systems/DApp';
-import { unlockMachine } from '~/systems/DApp';
 
 type MachineServices = {
   getMnemonicPhrase: {
@@ -21,8 +18,8 @@ type MachineContext = {
 };
 
 type MachineEvents = {
-  type: 'UNLOCK_WALLET' | 'CLOSE_UNLOCK' | 'CHANGE_PASSWORD';
-  input?: AccountInputs['unlock'] | AccountInputs['changePassword'];
+  type: 'UNLOCK_WALLET' | 'CHANGE_PASSWORD';
+  input?: AccountInputs['unlock'];
   data?: string[];
 };
 
@@ -36,7 +33,7 @@ export const settingsMachine = createMachine(
       events: {} as MachineEvents,
     },
     predictableActionArguments: true,
-    id: '(settings-machine)',
+    id: '(machine)',
     initial: 'unlocking',
     states: {
       changingPassword: {
@@ -52,37 +49,22 @@ export const settingsMachine = createMachine(
         },
       },
       unlocking: {
-        invoke: {
-          id: 'unlock',
-          src: unlockMachine,
-          data: (_: MachineContext, ev: MachineEvents) => {
-            return ev.input;
-          },
-          onDone: {
-            target: 'gettingMnemonic',
-          },
-        },
         on: {
           UNLOCK_WALLET: {
-            actions: [
-              send<MachineContext, MachineEvents>(
-                (_, ev) => ({
-                  type: 'UNLOCK_WALLET',
-                  input: ev.input,
-                }),
-                { to: 'unlock' }
-              ),
-            ],
+            target: 'gettingMnemonic',
           },
         },
       },
       gettingMnemonic: {
         invoke: {
-          src: 'getMnenmonic',
+          src: 'unlockAndGetMnemonic',
           data: {
-            input: (_: MachineContext, ev: { data: Wallet }) => {
-              return { wallet: ev.data };
+            input: (_: MachineContext, ev: MachineEvents) => {
+              return ev.input;
             },
+          },
+          onError: {
+            target: 'unlocking',
           },
           onDone: [
             {
@@ -131,19 +113,23 @@ export const settingsMachine = createMachine(
           });
         },
       }),
-      getMnenmonic: FetchMachine.create<
-        {
-          wallet: Awaited<ReturnType<typeof AccountService['unlock']>>;
-        },
-        unknown
+      unlockAndGetMnemonic: FetchMachine.create<
+        AccountInputs['unlock'],
+        string[]
       >({
         showError: true,
         maxAttempts: 1,
         fetch: async ({ input }) => {
-          if (!input?.wallet?.exportVault) {
-            throw new Error('Invalid Wallet');
+          if (!input?.account || !input.password) {
+            throw new Error('Invalid Input');
           }
-          return input.wallet.exportVault().split(' ');
+          const secret = await AccountService.exportVault(input);
+
+          if (!secret) {
+            throw new Error('No Secret Found');
+          }
+
+          return secret?.split(' ') as string[];
         },
       }),
     },
