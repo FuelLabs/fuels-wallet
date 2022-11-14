@@ -145,7 +145,7 @@ console.log("to address balance", balance);
 #### Get Wallet
 
 `getWallet` - Return a FuelWeb3Wallet this class extends the fuels-ts SDK, WalletLocked,
-enabling to excute any of the methods available, but using a FuelWeb3Provider on the connection point,
+enabling to execute any of the methods available, but using a FuelWeb3Provider on the connection point,
 to request signed actions.
 
 ```ts
@@ -168,7 +168,7 @@ console.log("to address balance", balance);
 
 #### Get Provider
 
-`getProvider` - Return a FuelWeb3Provider this class extends fuels-ts SDK Provider, enabling to execute any of the methods available, but using FuelWeb3SDK on signature poitns, to request user permissions.
+`getProvider` - Return a FuelWeb3Provider this class extends fuels-ts SDK Provider, enabling to execute any of the methods available, but using FuelWeb3SDK on signature points, to request user permissions.
 
 ##### Using provider to query node info
 
