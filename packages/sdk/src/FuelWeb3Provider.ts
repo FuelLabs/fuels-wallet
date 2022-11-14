@@ -1,5 +1,5 @@
 import type { TransactionRequestLike } from 'fuels';
-import { transactionRequestify, TransactionResponse, Provider } from 'fuels';
+import { TransactionResponse, Provider } from 'fuels';
 
 import type { FuelWeb3SDK } from './FuelWeb3SDK';
 
@@ -17,12 +17,7 @@ export class FuelWeb3Provider extends Provider {
     const transactionId = await this.fuelWeb3.sendTransaction(
       transactionRequestLike
     );
-    const transactionRequest = transactionRequestify(transactionRequestLike);
-    const response = new TransactionResponse(
-      transactionId,
-      transactionRequest,
-      this
-    );
+    const response = new TransactionResponse(transactionId, this);
     return response;
   }
 }

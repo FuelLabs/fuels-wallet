@@ -11,7 +11,7 @@
     "@fuel-ui/css": "^0.8.0",
     "@fuel-ui/react": "^0.8.0",
     "@fuel-wallet/sdk": "workspace:*",
-    "fuels": "0.20",
+    "fuels": "0.21.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.4.3",

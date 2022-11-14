@@ -134,7 +134,7 @@ const coins = await provider.getCoinsToSpend(fromAddress, [
 ]);
 txRequest.addCoins(coins);
 const transactionId = await window.FuelWeb3.sendTransaction(txRequest);
-const response = new TransactionResponse(transactionId, txRequest, provider);
+const response = new TransactionResponse(transactionId, provider);
 // wait for transaction to be completed
 await response.wait();
 // query the balance of the destination wallet
