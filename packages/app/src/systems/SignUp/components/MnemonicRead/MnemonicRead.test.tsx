@@ -47,7 +47,7 @@ describe('MnemonicRead', () => {
   it('should next be disabled by default', async () => {
     const btn = screen.getByText('Next');
     expect(btn).toBeInTheDocument();
-    expect(btn).toBeDisabled();
+    expect(btn).toHaveAttribute('aria-disabled');
   });
 
   it('should next be enable when confirm checkbox', async () => {
