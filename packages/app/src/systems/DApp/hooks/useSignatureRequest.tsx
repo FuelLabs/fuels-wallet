@@ -8,6 +8,7 @@ import { useAccount } from '~/systems/Account';
 
 const selectors = {
   origin: (state: SignMachineState) => state.context.origin,
+  unlockError: (state: SignMachineState) => state.context.unlockError,
   message: (state: SignMachineState) => state.context.message,
   isUnlocking: (state: SignMachineState) => state.matches('unlocking'),
   signedMessage: (state: SignMachineState) => state.context.signedMessage,
@@ -23,6 +24,7 @@ export function useSignatureRequest() {
   const isUnlockingLoading = useSelector(service, selectors.isUnlockingLoading);
   const signedMessage = useSelector(service, selectors.signedMessage);
   const message = useSelector(service, selectors.message);
+  const unlockError = useSelector(service, selectors.unlockError);
   const origin = useSelector(service, selectors.origin);
 
   // Start Connect Request Methods
@@ -57,5 +59,6 @@ export function useSignatureRequest() {
     isUnlockingLoading,
     account,
     signedMessage,
+    unlockError,
   };
 }

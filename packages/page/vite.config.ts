@@ -8,4 +8,7 @@ export default defineConfig({
     open: true,
     port: 9000,
   },
+  define: {
+    'process.env': {},
+  },
 });

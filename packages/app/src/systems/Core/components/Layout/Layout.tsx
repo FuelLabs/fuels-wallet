@@ -30,7 +30,9 @@ type ContentProps = {
 function Content({ as, children, css }: ContentProps) {
   return (
     <Box as={as} css={{ ...styles.content, ...css }}>
-      {children}
+      <Box css={styles.scrollContainer}>
+        <Box css={styles.insideScrolContent}>{children}</Box>
+      </Box>
     </Box>
   );
 }
@@ -108,11 +110,35 @@ const styles = {
       'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',
   }),
   content: cssObj({
+    flex: 1,
+    overflow: 'hidden',
+  }),
+  insideScrolContent: cssObj({
     py: '$4',
     px: '$4',
-    flex: 1,
-    overflowY: 'auto',
+  }),
+  scrollContainer: cssObj({
+    height: '100%',
+    overflowY: 'overlay',
     overflowX: 'hidden',
+    scrollBehavior: 'smooth',
+    '&::-webkit-scrollbar': {
+      width: '14px',
+      backgroundColor: 'transparent',
+    },
+    '&::-webkit-scrollbar-track': {
+      backgroundColor: 'transparent',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '$gray1',
+      opacity: 0.5,
+      border: '4px solid transparent',
+      borderRadius: '12px',
+      backgroundClip: 'content-box',
+    },
+    '&::-webkit-scrollbar-thumb:hover': {
+      backgroundColor: '$gray10',
+    },
   }),
 };
 
