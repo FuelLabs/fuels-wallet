@@ -145,7 +145,7 @@ console.log("to address balance", balance);
 #### Get Wallet
 
 `getWallet` - Return a FuelWeb3Wallet this class extends the fuels-ts SDK, WalletLocked,
-enabling to excute any of the methods available, but using a FuelWeb3Provider on the connection point,
+enabling to execute any of the methods available, but using a FuelWeb3Provider on the connection point,
 to request signed actions.
 
 ```ts
