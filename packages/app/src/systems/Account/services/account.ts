@@ -11,10 +11,6 @@ import { isEth } from '~/systems/Asset';
 import type { Maybe } from '~/systems/Core';
 import { getPhraseFromValue, db } from '~/systems/Core';
 
-interface WalletWithExport extends WalletUnlocked {
-  exportVault?: () => string;
-}
-
 export type AccountInputs = {
   addAccount: {
     data: {
@@ -144,9 +140,15 @@ export class AccountService {
     }
   }
 
-  static async unlock(
-    input: AccountInputs['unlock']
-  ): Promise<WalletWithExport> {
+  static async exportVault(input: AccountInputs['unlock']) {
+    const storage = new IndexedDBStorage() as never;
+    const manager = new WalletManager({ storage });
+    manager.unlock(input.password);
+    const { secret } = manager.exportVault(0);
+    return secret;
+  }
+
+  static async unlock(input: AccountInputs['unlock']): Promise<WalletUnlocked> {
     const storage = new IndexedDBStorage() as never;
     const manager = new WalletManager({ storage });
     await manager.unlock(input.password);
@@ -157,18 +159,7 @@ export class AccountService {
     // customize the ProviderURL on the manager level
     wallet.provider = new Provider(VITE_FUEL_PROVIDER_URL);
 
-    return {
-      ...(wallet as WalletUnlocked),
-      exportVault() {
-        const { secret } = manager.exportVault(0);
-
-        if (!secret) {
-          throw new Error('Vault not found');
-        }
-
-        return secret;
-      },
-    } as WalletWithExport;
+    return wallet as WalletUnlocked;
   }
 }
 

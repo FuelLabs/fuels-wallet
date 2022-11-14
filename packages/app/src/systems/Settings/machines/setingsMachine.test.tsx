@@ -1,4 +1,3 @@
-import { Wallet } from 'fuels';
 import type { InterpreterFrom } from 'xstate';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
@@ -6,8 +5,6 @@ import { waitFor } from 'xstate/lib/waitFor';
 import { settingsMachine } from './settingsMachine';
 
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
-
-const OWNER = import.meta.env.VITE_ADDR_OWNER;
 
 const WORDS = [
   'strange',
@@ -26,16 +23,11 @@ const WORDS = [
 
 describe('settingsMachine', () => {
   let service: InterpreterFrom<typeof settingsMachine>;
-  let wallet: Wallet;
 
   beforeAll(async () => {
-    wallet = Wallet.fromAddress(OWNER as string);
-    jest.spyOn(AccountService, 'unlock').mockResolvedValue(
-      wallet &&
-        ({
-          exportVault: () => WORDS.join(' '),
-        } as Awaited<ReturnType<typeof AccountService['unlock']>>)
-    );
+    jest
+      .spyOn(AccountService, 'exportVault')
+      .mockResolvedValue(WORDS.join(' '));
   });
 
   beforeEach(async () => {
