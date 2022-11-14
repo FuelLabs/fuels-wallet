@@ -143,7 +143,7 @@ export class AccountService {
   static async exportVault(input: AccountInputs['unlock']) {
     const storage = new IndexedDBStorage() as never;
     const manager = new WalletManager({ storage });
-    manager.unlock(input.password);
+    await manager.unlock(input.password);
     const { secret } = manager.exportVault(0);
     return secret;
   }
