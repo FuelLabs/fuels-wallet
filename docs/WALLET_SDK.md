@@ -129,10 +129,10 @@ const fromAddress = Address.fromString("fuel1<from account address>");
 const amount = bn.parseUnits("0.1");
 txRequest.addCoinOutput(toAddress, amount);
 const provider = window.FuelWeb3.getProvider();
-const coins = await provider.getCoinsToSpend(fromAddress, [
+const resources = await provider.getResourcesToSpend(fromAddress, [
   [amount, NativeAssetId],
 ]);
-txRequest.addCoins(coins);
+txRequest.addResources(resources);
 const transactionId = await window.FuelWeb3.sendTransaction(txRequest);
 const response = new TransactionResponse(transactionId, provider);
 // wait for transaction to be completed
