@@ -523,7 +523,6 @@ importers:
       '@types/react': ^18.0.25
       '@types/react-dom': ^18.0.8
       dotenv: ^16.0.3
-      dracula-prism: ^2.1.13
       eslint: ^8.27.0
       eslint-config-next: 13.0.2
       globby: ^13.1.2
@@ -532,7 +531,7 @@ importers:
       hast-util-to-string: ^2.0.0
       next: 13.0.2
       next-mdx-remote: ^4.2.0
-      prismjs: ^1.29.0
+      prism-react-renderer: ^1.3.5
       react: ^18.2.0
       react-dom: ^18.2.0
       remark: ^14.0.2
@@ -547,14 +546,13 @@ importers:
       '@fuel-ui/react': link:../../design-system/react
       '@next/mdx': 13.0.2
       dotenv: 16.0.3
-      dracula-prism: 2.1.13
       globby: 13.1.2
       gray-matter: 4.0.3
       hast-util-heading-rank: 2.1.0
       hast-util-to-string: 2.0.0
       next: 13.0.2_biqbaboplfbrettd7655fr4n2y
       next-mdx-remote: 4.2.0_biqbaboplfbrettd7655fr4n2y
-      prismjs: 1.29.0
+      prism-react-renderer: 1.3.5_react@18.2.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       remark: 14.0.2
@@ -11289,10 +11287,6 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /dracula-prism/2.1.13:
-    resolution: {integrity: sha512-mgm8Nr/X0RGUz/wpha88dKN/xw0QIGK8BQmWXrzgtOp9be+qcKiFEa2J5SQ3+/WNvL5sPPtNQXPL+Vy//Q8+dg==}
-    dev: false
-
   /duplexify/3.7.1:
     resolution: {integrity: sha512-07z8uv2wMyS51kKhD1KsdXJg5WQ6t93RneqRxUHnskXVtlYYkLqM0gqStQZ3pj073g687jPCHrqNfCzawLYh5g==}
     dependencies:
@@ -17689,6 +17683,17 @@ packages:
     engines: {node: '>= 0.8'}
     dev: true
 
+  /prism-react-renderer/1.3.5_react@18.2.0:
+    resolution: {integrity: sha512-IJ+MSwBWKG+SM3b2SUfdrhC+gu01QkV2KmRQgREThBfSQRoufqRfxfHUxpG1WcaFjP+kojcFyO9Qqtpgt3qLCg==}
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /prismjs/1.27.0:
     resolution: {integrity: sha512-t13BGPUlFDR7wRB5kQDG4jjl7XeuH6jbJGt11JHPL96qwsEHNX2+68tFXqc1/k+/jALsbSWJKUOT/hcYAZ5LkA==}
     engines: {node: '>=6'}
@@ -17697,6 +17702,7 @@ packages:
   /prismjs/1.29.0:
     resolution: {integrity: sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==}
     engines: {node: '>=6'}
+    dev: true
 
   /process-nextick-args/2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
