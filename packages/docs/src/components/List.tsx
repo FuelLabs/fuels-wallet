@@ -22,8 +22,11 @@ export function UL({ children, ...props }: any) {
 
 const styles = {
   root: cssObj({
-    '& ul': {
-      ml: '$6',
+    ml: '$4',
+    listStyle: 'outside',
+    li: {
+      pl: '$2',
+      lineHeight: '1.7',
     },
   }),
 };

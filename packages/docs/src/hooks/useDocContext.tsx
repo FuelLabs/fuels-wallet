@@ -3,7 +3,11 @@ import { createContext, useContext } from 'react';
 
 import type { SidebarLinkItem, DocType } from '../types';
 
-export type DocCtx = { links: SidebarLinkItem[]; doc: DocType };
+export type DocCtx = {
+  doc: DocType;
+  docLink: SidebarLinkItem;
+  links: SidebarLinkItem[];
+};
 const ctx = createContext<DocCtx>({} as DocCtx);
 
 export function useDocContext() {

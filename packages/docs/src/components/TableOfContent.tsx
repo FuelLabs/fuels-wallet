@@ -63,7 +63,7 @@ const styles = {
     '.fuel_list > .fuel_list-item > .fuel_list > .fuel_list-item': {
       a: {
         fontWeight: '$normal',
-        color: '$gray8',
+        color: '$gray9',
       },
     },
     '.fuel_list > .fuel_list-item > .fuel_list > .fuel_list-item:nth-child(1)':

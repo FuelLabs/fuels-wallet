@@ -5,7 +5,7 @@ import { Layout } from '../components/Layout';
 
 export default function Home() {
   return (
-    <Layout title="Home" isHome>
+    <Layout title="Home">
       <Box css={styles.root}>Hello world</Box>
     </Layout>
   );

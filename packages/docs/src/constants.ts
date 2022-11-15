@@ -5,3 +5,5 @@ export const MENU_ORDER = [
   'Contributing/Project Structure',
   'Contributing/Contributing Guide',
 ];
+
+export const FIELDS = ['title', 'slug', 'content', 'category'];

@@ -13,9 +13,9 @@ const Line = styled(Box, {
 const LineNo = styled(Box, {
   display: 'table-cell',
   textAlign: 'right',
-  pr: '$2',
+  pr: '$3',
   userSelect: 'none',
-  opacity: '0.5',
+  opacity: '0.2',
 });
 
 const LineContent = styled(Box, {
@@ -69,6 +69,9 @@ export function Pre(props: any) {
 const styles = {
   pre: cssObj({
     mb: '$5 !important',
+    padding: '$4',
+    borderRadius: '$lg',
+
     '.token.plain': {
       color: '$gray11',
     },

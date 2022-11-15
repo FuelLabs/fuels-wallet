@@ -15,6 +15,6 @@ const styles = {
     fontFamily: 'monospace',
     background: '$gray3',
     color: '$gray10',
-    fontSize: '0.8rem',
+    fontSize: '0.9rem',
   }),
 };
