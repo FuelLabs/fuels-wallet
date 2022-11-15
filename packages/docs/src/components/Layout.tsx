@@ -34,14 +34,6 @@ const styles = {
     gridTemplateRows: '80px auto',
     gridColumnGap: '$14',
 
-    nav: {
-      pl: '$8',
-      py: '$8',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '$2',
-    },
-
     section: {
       py: '$8',
     },

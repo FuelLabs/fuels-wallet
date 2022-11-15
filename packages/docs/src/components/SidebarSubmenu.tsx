@@ -14,9 +14,9 @@ export function SidebarSubmenu({
   submenu,
   subpath,
 }: SidebarSubmenuProps) {
-  const [isOpened, setIsOpened] = useState(false);
   const { asPath } = useRouter();
   const isActive = asPath.startsWith(`/docs/${subpath}`);
+  const [isOpened, setIsOpened] = useState(Boolean(isActive));
 
   function toggle() {
     setIsOpened((s) => !s);
@@ -35,7 +35,12 @@ export function SidebarSubmenu({
       {isOpened && (
         <List>
           {submenu?.map((item) => (
-            <List.Item key={item.slug} icon={Icon.is('Minus')}>
+            <List.Item
+              key={item.slug}
+              icon={Icon.is('ArrowRight')}
+              iconSize={10}
+              iconColor="gray6"
+            >
               <SidebarLink item={item} />
             </List.Item>
           ))}
@@ -47,6 +52,7 @@ export function SidebarSubmenu({
 
 const styles = {
   root: cssObj({
+    px: '$2',
     flexDirection: 'column',
 
     '.fuel_button': {
@@ -57,6 +63,7 @@ const styles = {
     },
     '.fuel_button:focus': {
       outline: 'none',
+      color: '$gray12',
     },
     '.fuel_button.active': {
       color: '$gray12',
@@ -70,6 +77,8 @@ const styles = {
       display: 'flex',
       flexDirection: 'column',
       mt: '$2',
+    },
+    '.fuel_list-item': {
       gap: '$1',
     },
     '.fuel_list-item a': {

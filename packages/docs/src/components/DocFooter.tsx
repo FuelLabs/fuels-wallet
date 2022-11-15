@@ -39,6 +39,10 @@ const styles = {
       alignItems: 'center',
       fontSize: '$xl',
       gap: '$4',
+      color: '$gray9',
+    },
+    'a:hover': {
+      color: '$accent11',
     },
   }),
 };

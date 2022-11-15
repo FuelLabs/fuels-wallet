@@ -27,11 +27,13 @@ const styles = {
   root: cssObj({
     position: 'sticky',
     top: 20,
-    a: {
-      color: '$gray10',
-    },
-    'a.active, a:hover': {
-      color: '$accent11',
+
+    nav: {
+      pl: '$6',
+      py: '$8',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '$1',
     },
   }),
 };
