@@ -22,14 +22,14 @@ export const sidebarItems = [
         key: 'github',
         icon: 'GithubLogo',
         label: 'Github',
-        ahref: 'https://github.com/FuelLabs/fuel-wallet',
+        ahref: 'https://github.com/FuelLabs/fuels-wallet',
       },
       {
         key: 'bugs',
         icon: 'Bug',
         label: 'Report a Bug',
         /** This page isn't created yet */
-        ahref: 'https://github.com/FuelLabs/fuel-wallet/issues/new/choose',
+        ahref: 'https://github.com/FuelLabs/fuels-wallet/issues/new/choose',
       },
     ],
   },
