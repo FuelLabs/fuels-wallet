@@ -13,7 +13,7 @@ export function Header() {
     <Flex as="header" css={styles.root}>
       <FuelLogo size={40} />
       <Flex css={styles.logoText}>
-        <span>Fuel Wallet SDK</span>
+        <span>Fuel Wallet</span>
         <Box as="span" css={styles.version}>
           alpha
         </Box>
@@ -22,10 +22,16 @@ export function Header() {
         <Link href="/" className={isHomeActive ? 'active' : ''}>
           Home
         </Link>
-        <Link href="/docs/install" className={isDocsActive ? 'active' : ''}>
-          Docs
+        <Link href="/docs/sdk/install" className={isDocsActive ? 'active' : ''}>
+          Documentation
         </Link>
-        <Link href="/storybook">Storybook</Link>
+        <a
+          href={process.env.NEXT_PUBLIC_STORYBOOK_URL}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Storybook
+        </a>
         <a
           href="https://github.com/fuellabs/fuels-wallet"
           target="_blank"

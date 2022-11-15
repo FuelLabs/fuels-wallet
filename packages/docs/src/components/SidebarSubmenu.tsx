@@ -53,6 +53,7 @@ export function SidebarSubmenu({
 const styles = {
   root: cssObj({
     px: '$2',
+    mt: '$2',
     flexDirection: 'column',
 
     '.fuel_button': {
@@ -76,10 +77,11 @@ const styles = {
     '.fuel_list': {
       display: 'flex',
       flexDirection: 'column',
+      gap: '$1',
       mt: '$2',
     },
     '.fuel_list-item': {
-      gap: '$1',
+      gap: '$2',
     },
     '.fuel_list-item a': {
       flex: 1,

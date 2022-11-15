@@ -5,7 +5,6 @@ export type DocType = {
   slug: string;
   category?: string;
   pageLink: string;
-  content: string;
   headings: NodeHeading[];
   source: MDXRemoteSerializeResult;
 };

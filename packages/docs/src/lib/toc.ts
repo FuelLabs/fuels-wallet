@@ -18,13 +18,13 @@ export function rehypeExtractHeadings({ headings }: Params) {
       if (rank) {
         node.properties['data-rank'] = `h${rank}`;
       }
-      if (rank === 2 && node.type === 'element') {
+      if (rank === 2 && node?.type === 'element') {
         headings.push({
           title: toString(node),
           id: node.properties.id.toString(),
         });
       }
-      if (rank === 3 && node.type === 'element') {
+      if (rank === 3 && node?.type === 'element') {
         const last = headings[headings.length - 1];
         if (last) {
           last.children = last?.children || [];

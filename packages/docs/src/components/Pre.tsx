@@ -24,7 +24,7 @@ const LineContent = styled(Box, {
 
 export function Pre(props: any) {
   const codeEl: any = Children.toArray(props.children).find((child: any) => {
-    return child.type.name === 'Code';
+    return child?.type.name === 'Code';
   });
 
   const code = codeEl?.props.children;

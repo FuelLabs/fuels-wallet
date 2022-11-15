@@ -6,6 +6,7 @@ import { join } from 'path';
 import remarkGfm from 'remark-gfm';
 import remarkSlug from 'remark-slug';
 
+import { FIELDS } from '../constants';
 import type { DocType, NodeHeading, SidebarLinkItem } from '../types';
 
 import { rehypeExtractHeadings } from './toc';
@@ -73,36 +74,43 @@ export async function getAllDocs(fields: string[] = []) {
 }
 
 export async function getSidebarLinks(order: string[]) {
-  const docs = await getAllDocs(['title', 'slug', 'category']);
-  const links: SidebarLinkItem[] = [];
-
-  docs.forEach((doc) => {
-    /** Insert based on order prop if there's no category */
+  const docs = await getAllDocs(FIELDS);
+  const links = docs.reduce((list, doc) => {
     if (!doc.category) {
-      links.push({ slug: doc.slug, label: doc.title });
-      return;
+      return list.concat({ slug: doc.slug, label: doc.title });
     }
 
-    /** Insert inside category submenu if category is already on array */
-    const categoryIdx = links.findIndex((l) => l.label === doc.category);
-    const categorySlug = doc.category.replace(' ', '-').toLowerCase();
-    if (categoryIdx > 0) {
-      const submenu = links[categoryIdx].submenu || [];
-      submenu.push({ slug: doc.slug, label: doc.title });
-      return;
-    }
-
+    const categoryIdx = list.findIndex((l) => l?.label === doc.category);
     /** Insert category item based on order prop */
+    if (categoryIdx > 0) {
+      const submenu = list[categoryIdx]?.submenu || [];
+      submenu.push({ slug: doc.slug, label: doc.title });
+      return list;
+    }
+
+    const categorySlug = doc.slug.split('/')[0];
     const submenu = [{ slug: doc.slug, label: doc.title }];
-    links.push({ subpath: categorySlug, label: doc.category, submenu });
-  });
+    return list.concat({
+      subpath: categorySlug,
+      label: doc.category,
+      submenu,
+    });
+    /** Insert inside category submenu if category is already on array */
+  }, [] as SidebarLinkItem[]);
 
   const sortedLinks = links
     /** Sort first level links */
     .sort((a, b) => {
       const aIdx = order.indexOf(a.label);
       const bIdx = order.indexOf(b.label);
-      if (!a.subpath && !b.subpath) return aIdx - bIdx;
+      if (!a.subpath && !b.subpath) {
+        return bIdx - aIdx;
+      }
+      if (a.subpath && b.subpath) {
+        const aFirst = order.filter((i) => i.startsWith(a.label))?.[0];
+        const bFirst = order.filter((i) => i.startsWith(b.label))?.[0];
+        return order.indexOf(aFirst) - order.indexOf(bFirst);
+      }
       const category = a.subpath ? a.label : b.label;
       const first = order.filter((i) => i.startsWith(category))?.[0];
       const idx = order.indexOf(first);
@@ -120,15 +128,19 @@ export async function getSidebarLinks(order: string[]) {
       return { ...link, submenu };
     });
 
-  return [...sortedLinks].map((doc, idx) => {
+  const withNextAndPrev = [...sortedLinks].map((doc, idx) => {
     if (doc.submenu) {
       return {
         ...doc,
-        submenu: doc.submenu.map((childDoc, childIdx) => ({
-          ...childDoc,
-          prev: doc.submenu?.[childIdx - 1] ?? sortedLinks[idx - 1] ?? null,
-          next: doc.submenu?.[childIdx + 1] ?? sortedLinks[idx + 1] ?? null,
-        })),
+        submenu: doc.submenu.map((childDoc, cIdx) => {
+          const prev = doc.submenu?.[cIdx - 1] ?? sortedLinks[idx - 1] ?? null;
+          const next = doc.submenu?.[cIdx + 1] ?? sortedLinks[idx + 1] ?? null;
+          return {
+            ...childDoc,
+            prev: prev?.submenu ? prev.submenu[prev.submenu.length - 1] : prev,
+            next: next?.submenu ? next.submenu[0] : next,
+          };
+        }),
       };
     }
     const prev = sortedLinks[idx - 1] ?? null;
@@ -139,4 +151,6 @@ export async function getSidebarLinks(order: string[]) {
       next: next?.submenu ? next.submenu[0] : next,
     };
   });
+
+  return withNextAndPrev;
 }
