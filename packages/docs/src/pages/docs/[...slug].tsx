@@ -1,55 +1,47 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Box, Heading } from '@fuel-ui/react';
-import matter from 'gray-matter';
-import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
+import { Box } from '@fuel-ui/react';
 import { MDXRemote } from 'next-mdx-remote';
-import { serialize } from 'next-mdx-remote/serialize';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
-import remarkGfm from 'remark-gfm';
-import remarkSlug from 'remark-slug';
 
 import { Blockquote } from '../../components/Blockquote';
 import { Code } from '../../components/Code';
+import { Heading } from '../../components/Heading';
 import { Layout } from '../../components/Layout';
+import { UL } from '../../components/List';
 import { Pre } from '../../components/Pre';
-import { getAllDocs, getDocBySlug } from '../../lib/api';
-import { rehypeExtractHeadings } from '../../lib/toc';
-import type { DocType, NodeHeading } from '../../types';
+import { Table } from '../../components/Table';
+import { MENU_ORDER } from '../../constants';
+import { getAllDocs, getDocBySlug, getSidebarLinks } from '../../lib/api';
+import type { DocType, SidebarLinkItem } from '../../types';
 
 const components = {
-  h1: (props: any) => <Heading as="h1" {...props} />,
-  h2: (props: any) => <Heading as="h2" {...props} />,
-  h3: (props: any) => <Heading as="h3" {...props} />,
-  h4: (props: any) => <Heading as="h4" {...props} />,
-  h5: (props: any) => <Heading as="h5" {...props} />,
-  h6: (props: any) => <Heading as="h6" {...props} />,
+  h1: Heading,
+  h2: Heading,
+  h3: Heading,
+  h4: Heading,
+  h5: Heading,
+  h6: Heading,
   pre: Pre,
   code: Code,
   blockquote: Blockquote,
+  table: Table,
+  ul: UL,
 };
 
 type DocPageProps = {
-  source: MDXRemoteSerializeResult;
   doc: DocType;
-  frontmatter: any;
-  headings: NodeHeading[];
+  links: SidebarLinkItem[];
 };
 
-export default function DocPage({
-  source,
-  doc,
-  frontmatter,
-  headings,
-}: DocPageProps) {
+export default function DocPage({ doc, links }: DocPageProps) {
   const router = useRouter();
   if (!router.isFallback && !doc?.slug) {
     return <ErrorPage statusCode={404} />;
   }
   return (
-    <Layout title={frontmatter.title} headings={headings}>
+    <Layout title={doc.title} doc={doc} links={links}>
       <Box as="section">
-        <MDXRemote {...source} components={components} />
+        <MDXRemote {...doc.source} components={components} />
       </Box>
     </Layout>
   );
@@ -64,24 +56,8 @@ type Params = {
 export async function getStaticProps({ params }: Params) {
   const slug = params.slug.join('/');
   const doc = await getDocBySlug(slug, ['title', 'slug', 'content']);
-  const { content, data } = matter(doc.content);
-  const headings: NodeHeading[] = [];
-  const mdxSource = await serialize(content, {
-    scope: data,
-    mdxOptions: {
-      remarkPlugins: [remarkSlug, remarkGfm],
-      rehypePlugins: [[rehypeExtractHeadings, { headings }]],
-    },
-  });
-
-  return {
-    props: {
-      doc,
-      headings,
-      frontmatter: data,
-      source: mdxSource,
-    },
-  };
+  const links = await getSidebarLinks(MENU_ORDER);
+  return { props: { doc, links } };
 }
 
 export async function getStaticPaths() {

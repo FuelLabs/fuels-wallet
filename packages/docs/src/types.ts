@@ -1,6 +1,13 @@
+import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
+
 export type DocType = {
   title: string;
   slug: string;
+  category?: string;
+  pageLink: string;
+  content: string;
+  headings: NodeHeading[];
+  source: MDXRemoteSerializeResult;
 };
 
 export type SidebarLinkItem = {

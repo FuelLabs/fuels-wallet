@@ -4,7 +4,6 @@ import '../styles/docsearch/button.css';
 import '../styles/docsearch/modal.css';
 import '../styles/docsearch/style.css';
 import 'dracula-prism/dist/css/dracula-prism.css';
-
 import { ThemeProvider } from '@fuel-ui/react';
 import type { AppProps } from 'next/app.js';
 

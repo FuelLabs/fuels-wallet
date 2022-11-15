@@ -1,39 +1,21 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
 
-import type { SidebarLinkItem } from '../types';
+import { useDocContext } from '../hooks/useDocContext';
 
 import { SidebarLink } from './SidebarLink';
 import { SidebarSubmenu } from './SidebarSubmenu';
 
-const MENU: SidebarLinkItem[] = [
-  { slug: '/docs/install', label: 'Install' },
-  { slug: '/docs/how-to-use', label: 'How to use' },
-  {
-    subpath: '/docs/contributing',
-    label: 'Contributing',
-    submenu: [
-      {
-        slug: '/docs/contributing/project-structure',
-        label: 'Project Structure',
-      },
-      {
-        slug: '/docs/contributing/guide',
-        label: 'Contributing Guide',
-      },
-    ],
-  },
-];
-
 export function Sidebar() {
+  const { links } = useDocContext();
   return (
     <Box css={styles.root}>
       <Box as="nav" css={{ position: 'sticky', top: 0 }}>
-        {MENU.map((doc, idx) => {
-          return doc.slug ? (
-            <SidebarLink key={doc.slug} item={doc} />
+        {links.map((link) => {
+          return link.slug ? (
+            <SidebarLink key={link.slug} item={link} />
           ) : (
-            <SidebarSubmenu key={idx} {...doc} />
+            <SidebarSubmenu key={link.subpath} {...link} />
           );
         })}
       </Box>
@@ -46,7 +28,7 @@ const styles = {
     position: 'sticky',
     top: 20,
     a: {
-      color: '$gray8',
+      color: '$gray10',
     },
     'a.active, a:hover': {
       color: '$accent11',

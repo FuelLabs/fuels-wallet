@@ -16,6 +16,7 @@ export function SidebarSubmenu({
 }: SidebarSubmenuProps) {
   const [isOpened, setIsOpened] = useState(false);
   const { asPath } = useRouter();
+  const isActive = asPath.startsWith(`/docs/${subpath}`);
 
   function toggle() {
     setIsOpened((s) => !s);
@@ -27,7 +28,7 @@ export function SidebarSubmenu({
         variant="link"
         rightIcon={isOpened ? Icon.is('CaretUp') : Icon.is('CaretDown')}
         onPress={toggle}
-        className={cx({ active: asPath.startsWith(subpath!) })}
+        className={cx({ active: isActive })}
       >
         {label}
       </Button>
@@ -51,14 +52,18 @@ const styles = {
     '.fuel_button': {
       padding: '$0',
       justifyContent: 'space-between',
-      color: '$gray8',
+      color: '$gray10',
       fontWeight: '$normal',
     },
     '.fuel_button:focus': {
       outline: 'none',
     },
     '.fuel_button.active': {
+      color: '$gray12',
+    },
+    '.fuel_button:hover': {
       color: '$gray11',
+      textDecoration: 'none',
     },
 
     '.fuel_list': {
@@ -66,6 +71,9 @@ const styles = {
       flexDirection: 'column',
       mt: '$2',
       gap: '$1',
+    },
+    '.fuel_list-item a': {
+      flex: 1,
     },
   }),
 };

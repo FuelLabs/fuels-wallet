@@ -9,7 +9,8 @@ export type SidebarLinkProps = {
 };
 export function SidebarLink({ item }: SidebarLinkProps) {
   const router = useRouter();
-  const isActive = cx({ active: router.asPath === item.slug });
+  const fullSlug = `/docs/${item.slug}`;
+  const isActive = cx({ active: router.asPath === fullSlug });
   return (
     <Link href={item.slug!} className={isActive}>
       {item.label}
