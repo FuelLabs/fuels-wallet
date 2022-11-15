@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Flex, FuelLogo, Icon, Text } from '@fuel-ui/react';
+import { Box, Flex, FuelLogo, Icon } from '@fuel-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -12,9 +12,12 @@ export function Header() {
   return (
     <Flex as="header" css={styles.root}>
       <FuelLogo size={40} />
-      <Text as="span" css={styles.logoText}>
-        Fuel Wallet SDK
-      </Text>
+      <Flex css={styles.logoText}>
+        <span>Fuel Wallet SDK</span>
+        <Box as="span" css={styles.version}>
+          alpha
+        </Box>
+      </Flex>
       <Flex css={styles.menu}>
         <Link href="/" className={isHomeActive ? 'active' : ''}>
           Home
@@ -46,14 +49,21 @@ const styles = {
     gridColumn: '1 / 4',
   }),
   logoText: cssObj({
+    alignItems: 'center',
     flex: 1,
     fontSize: '$lg',
     fontWeight: '$semibold',
   }),
+  version: cssObj({
+    ml: '$2',
+    color: '$gray8',
+    fontSize: '$xs',
+    fontStyle: 'italic',
+  }),
   menu: cssObj({
     gap: '$6',
     a: {
-      color: '$gray12',
+      color: '$gray10',
       transition: 'all 0.3s',
     },
     'a.active, a:hover': {

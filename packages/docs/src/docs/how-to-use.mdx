@@ -46,18 +46,12 @@ const signedMessage = await window.FuelWeb3.signMessage(account, message);
 
 ## SDK API
 
-| name                                      | signature                                                              |
-| ----------------------------------------- | ---------------------------------------------------------------------- |
-| [connect](#connect)                       | `async connect(): Promise<boolean>`                                    |
-| [disconnect](#disconnect)                 | `async disconnect(): Promise<boolean>`                                 |
-| [accounts](#list-user-accounts)           | `async accounts(): Promise<Array<string>>`                             |
-| [signMessage](#request-signature-message) | `async signMessage(address: string, message: string): Promise<string>` |
-
 ### Methods
 
 #### Connect
 
-`connect` - Request permission to start a connection between the project and the wallet
+`async connect(): Promise<boolean>`<br />
+Request permission to start a connection between the project and the wallet
 
 ```ts
 const isConnected = await window.FuelWeb3.connect();
@@ -66,7 +60,8 @@ console.log("connection status", isConnected);
 
 #### Disconnect
 
-`disconnect` - Disconnect your project
+`async disconnect(): Promise<boolean>`<br />
+Disconnect your project
 
 ```ts
 await window.FuelWeb3.disconnect();
@@ -74,7 +69,8 @@ await window.FuelWeb3.disconnect();
 
 #### List Accounts
 
-`accounts` - List accounts in the wallet
+`async accounts(): Promise<Array<string>>`<br />
+List accounts in the wallet
 
 ```ts
 const accounts = await window.FuelWeb3.accounts();
@@ -83,7 +79,8 @@ console.log(accounts);
 
 #### Request signature message
 
-`signMessage` - Request a message signature for one specific account
+`async signMessage(address: string, message: string): Promise<string>`<br />
+Request a message signature for one specific account
 
 ```ts
 const account = "fuel1<address>";

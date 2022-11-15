@@ -1,3 +1,16 @@
+@font-face {
+  font-family: "Calling Code";
+  src: url("/fonts/callingcode.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Calling Code";
+  src: url("/fonts/callingcode.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: italic;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -35,4 +48,10 @@ tr > th {
 tr > th,
 tr > td {
   padding: 0 20px 0 0;
+}
+
+pre span,
+code {
+  font-family: "Calling Code", monospace !important;
+  letter-spacing: -0.02em;
 }

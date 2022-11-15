@@ -3,7 +3,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
 
 export function Blockquote(props: any) {
-  return <Box as="Blockquote" css={styles.root} {...props} />;
+  return <Box as="blockquote" css={styles.root} {...props} />;
 }
 
 const styles = {

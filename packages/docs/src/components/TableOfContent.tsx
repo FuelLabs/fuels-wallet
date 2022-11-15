@@ -1,13 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Heading, List } from '@fuel-ui/react';
+import { Box, Heading, Link, List, Text } from '@fuel-ui/react';
 
-import type { NodeHeading } from '../types';
+import { useDocContext } from '../hooks/useDocContext';
 
-type TableOfContentProps = {
-  headings: NodeHeading[];
-};
-
-export function TableOfContent({ headings }: TableOfContentProps) {
+export function TableOfContent() {
+  const { doc } = useDocContext();
+  const { headings } = doc;
   return (
     <Box>
       <Box css={styles.root}>
@@ -28,6 +26,17 @@ export function TableOfContent({ headings }: TableOfContentProps) {
             </List.Item>
           ))}
         </List>
+        <Text as="div" css={styles.feedback}>
+          <Link
+            isExternal
+            href="https://github.com/fuellabs/fuels-wallet/issues/new/choose"
+          >
+            Questions? Give us a feedback
+          </Link>
+          <Link isExternal href={doc.pageLink}>
+            Edit this page
+          </Link>
+        </Text>
       </Box>
     </Box>
   );
@@ -61,5 +70,16 @@ const styles = {
       {
         pt: '$2',
       },
+  }),
+  feedback: cssObj({
+    display: 'flex',
+    flexDirection: 'column',
+    pt: '$3',
+    borderTop: '1px solid $gray4',
+    fontSize: '$xs',
+
+    'a, a:visited': {
+      color: '$gray10',
+    },
   }),
 };
