@@ -1,5 +1,4 @@
 import { useInterpret, useSelector } from '@xstate/react';
-import type { TransactionRequest } from 'fuels';
 import { bn } from 'fuels';
 import { useMemo } from 'react';
 
@@ -19,7 +18,7 @@ const selectors = {
   sendingTx: (state: TransactionMachineState) => state.matches('sendingTx'),
   approvedTx: (state: TransactionMachineState) => state.context.approvedTx,
   tx: (state: TransactionMachineState) => state.context.tx,
-  receipts: (state: TransactionMachineState) => state.context.receipts,
+  fee: (state: TransactionMachineState) => state.context.fee,
   txDryRunError: (state: TransactionMachineState) =>
     state.context.txDryRunError,
   txApproveError: (state: TransactionMachineState) =>
@@ -36,7 +35,7 @@ export function useTransactionRequest() {
   const isUnlockingLoading = useSelector(service, selectors.isUnlockingLoading);
   const approvedTx = useSelector(service, selectors.approvedTx);
   const tx = useSelector(service, selectors.tx);
-  const receipts = useSelector(service, selectors.receipts);
+  const fee = useSelector(service, selectors.fee);
   const txDryRunError = useSelector(service, selectors.txDryRunError);
   const txApproveError = useSelector(service, selectors.txApproveError);
   const waitingApproval = useSelector(service, selectors.waitingApproval);
@@ -77,16 +76,11 @@ export function useTransactionRequest() {
     send('CLOSE_UNLOCK');
   }
 
-  function calculateGas(tx: TransactionRequest, providerUrl: string) {
-    send('CALCULATE_GAS', { input: { tx, providerUrl } });
-  }
-
   return {
     handlers: {
       approve,
       unlock,
       closeUnlock,
-      calculateGas,
       reject,
     },
     isUnlocking,
@@ -94,7 +88,7 @@ export function useTransactionRequest() {
     account,
     approvedTx,
     tx,
-    receipts,
+    fee,
     txDryRunError,
     txApproveError,
     coinOutputs,

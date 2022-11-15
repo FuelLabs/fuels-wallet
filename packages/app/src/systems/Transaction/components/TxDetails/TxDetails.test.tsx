@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   fireEvent,
   render,
@@ -6,24 +5,20 @@ import {
   testA11y,
   waitFor,
 } from '@fuel-ui/test-utils';
-import { bn } from 'fuels';
+import { bn, DECIMAL_UNITS } from 'fuels';
 
-import { MOCK_OUTPUT_AMOUNT, MOCK_TX } from '../../__mocks__/transaction';
+import { MOCK_OUTPUT_AMOUNT } from '../../__mocks__/transaction';
 
 import { TxDetails } from './TxDetails';
 
 describe('TxDetails', () => {
   it('a11y', async () => {
-    await testA11y(<TxDetails receipts={MOCK_TX.receipts} />);
+    await testA11y(<TxDetails fee={bn(6)} />);
   });
 
   it('should be able to show the transaction gas used', async () => {
-    render(
-      <TxDetails
-        receipts={MOCK_TX.receipts}
-        outputAmount={MOCK_OUTPUT_AMOUNT}
-      />
-    );
+    const feeCost = bn(6);
+    render(<TxDetails fee={feeCost} outputAmount={MOCK_OUTPUT_AMOUNT} />);
     expect(() => screen.getByText(/Fee \(network\)/i)).toThrow();
     const btn = screen.getByText(/Transaction Details/i);
     fireEvent.click(btn);
@@ -34,10 +29,13 @@ describe('TxDetails', () => {
       expect(valGas).toBeInTheDocument();
       const valTotal = screen.getByLabelText(/Total value/i);
       expect(valTotal).toBeInTheDocument();
-      const gasUsed = (MOCK_TX.receipts[3] as any).gasUsed;
-      expect(valGas.innerHTML.trim()).toBe(`${bn(gasUsed).format()} ETH`);
+      expect(valGas.innerHTML.trim()).toBe(
+        `${feeCost.format({ precision: DECIMAL_UNITS })} ETH`
+      );
       expect(valTotal.innerHTML.trim()).toBe(
-        `${bn(gasUsed).add(MOCK_OUTPUT_AMOUNT).format()} ETH`
+        `${feeCost
+          .add(MOCK_OUTPUT_AMOUNT)
+          .format({ precision: DECIMAL_UNITS })} ETH`
       );
     });
   });
