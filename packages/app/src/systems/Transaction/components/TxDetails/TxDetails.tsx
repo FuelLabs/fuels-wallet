@@ -1,20 +1,17 @@
 import { cssObj } from '@fuel-ui/css';
 import { Accordion, Flex, Text } from '@fuel-ui/react';
 import type { BN } from 'fuels';
-import { bn, getGasUsedFromReceipts } from 'fuels';
+import { bn } from 'fuels';
 
-import type { TxSimulateResult } from '../../types';
-
-import type { Maybe } from '~/systems/Core';
+import { DECIMAL_UNITS } from '~/config';
 
 export type TxDetailsProps = {
-  receipts?: Maybe<TxSimulateResult['receipts']>;
+  fee?: BN;
   outputAmount?: BN;
 };
 
-export function TxDetails({ receipts, outputAmount }: TxDetailsProps) {
-  const gasUsed = getGasUsedFromReceipts(receipts || []);
-  const total = gasUsed.add(bn(outputAmount));
+export function TxDetails({ fee, outputAmount }: TxDetailsProps) {
+  const total = fee?.add(bn(outputAmount));
 
   return (
     <Accordion type="multiple">
@@ -25,13 +22,13 @@ export function TxDetails({ receipts, outputAmount }: TxDetailsProps) {
             <Flex css={styles.detailItem}>
               <Text as="span">Fee (network)</Text>
               <Text as="span" aria-label="Gas Value">
-                {gasUsed.format()} ETH
+                {fee?.format({ precision: DECIMAL_UNITS })} ETH
               </Text>
             </Flex>
             <Flex css={styles.detailItem}>
               <Text as="span">Total (including Fee)</Text>
               <Text as="span" aria-label="Total Value">
-                {total.format()} ETH
+                {total?.format({ precision: DECIMAL_UNITS })} ETH
               </Text>
             </Flex>
           </Flex>
