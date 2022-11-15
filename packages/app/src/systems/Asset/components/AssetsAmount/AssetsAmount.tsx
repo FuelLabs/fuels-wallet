@@ -5,6 +5,7 @@ import { bn } from 'fuels';
 
 import { getAssetInfoById } from '../../utils';
 
+import { DECIMAL_UNITS } from '~/config';
 import { shortAddress } from '~/systems/Core';
 import type {
   GroupedError,
@@ -66,7 +67,7 @@ export function AssetsAmount({
             <Flex css={styles.amount(isPositive)}>
               {isPositive && '+'}
               {isNegative && '-'}
-              {amount.format()} {asset.symbol}
+              {amount.format({ precision: DECIMAL_UNITS })} {asset.symbol}
             </Flex>
           </Grid>
         );

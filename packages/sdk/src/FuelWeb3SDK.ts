@@ -14,9 +14,11 @@ import type { JSONRPCRequest } from 'json-rpc-2.0';
 
 import { WindowConnection } from './connections/WindowConnection';
 
+const { PUBLIC_PROVIDER_URL } = process.env;
+
 export class FuelWeb3SDK extends WindowConnection {
   providerConfig: FuelWeb3ProviderConfig = {
-    url: process?.env?.PUBLIC_PROVIDER_URL || 'http://localhost:4000/graphql',
+    url: PUBLIC_PROVIDER_URL || 'http://localhost:4000/graphql',
   };
 
   acceptMessage(message: MessageEvent<CommunicationMessage>): boolean {
