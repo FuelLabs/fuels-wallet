@@ -1,13 +1,12 @@
 import { CRXPages } from './systems/Core/types';
 
-export const {
-  VITE_FUEL_PROVIDER_URL,
-  VITE_FAUCET_RECAPTCHA_KEY,
-  VITE_FUEL_FAUCET_URL,
-  VITE_ADDR_OWNER,
-  VITE_CRX,
-  NODE_ENV,
-} = import.meta.env;
+export const VITE_FUEL_PROVIDER_URL = import.meta.env.VITE_FUEL_PROVIDER_URL;
+export const VITE_FAUCET_RECAPTCHA_KEY = import.meta.env
+  .VITE_FAUCET_RECAPTCHA_KEY;
+export const VITE_FUEL_FAUCET_URL = import.meta.env.VITE_FUEL_FAUCET_URL;
+export const VITE_ADDR_OWNER = import.meta.env.VITE_ADDR_OWNER;
+export const VITE_CRX = import.meta.env.VITE_CRX;
+export const NODE_ENV = import.meta.env.NODE_ENV;
 
 export const DECIMAL_UNITS = 9;
 export const FORMAT_LANGUAGE = 'es';
