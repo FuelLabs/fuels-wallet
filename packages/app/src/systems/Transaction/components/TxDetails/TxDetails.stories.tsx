@@ -1,6 +1,5 @@
 import { Box } from '@fuel-ui/react';
-
-import { MOCK_TX } from '../../__mocks__/transaction';
+import { bn } from 'fuels';
 
 import type { TxDetailsProps } from './TxDetails';
 import { TxDetails } from './TxDetails';
@@ -12,6 +11,6 @@ export default {
 
 export const Usage = (args: TxDetailsProps) => (
   <Box css={{ maxWidth: 300 }}>
-    <TxDetails {...args} receipts={MOCK_TX.receipts} />
+    <TxDetails {...args} fee={bn(10)} />
   </Box>
 );

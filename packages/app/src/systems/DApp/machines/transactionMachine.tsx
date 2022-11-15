@@ -2,10 +2,9 @@ import type {
   BN,
   TransactionRequest,
   TransactionResponse,
-  TransactionResultReceipt,
   WalletUnlocked,
 } from 'fuels';
-import { Provider } from 'fuels';
+import { calculateTransactionFee, Provider } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { send } from 'xstate/lib/actions';
@@ -24,7 +23,7 @@ type MachineContext = {
   origin?: string;
   providerUrl?: string;
   error?: string;
-  receipts?: TransactionResultReceipt[];
+  fee?: BN;
   approvedTx?: TransactionResponse;
   txDryRunError?: VMApiError;
   txApproveError?: VMApiError;
@@ -34,8 +33,8 @@ type MachineServices = {
   sendTransaction: {
     data: TransactionResponse;
   };
-  calculateGas: {
-    data: TransactionResultReceipt[];
+  calculateFee: {
+    data: BN;
   };
   fetchGasPrice: {
     data: BN;
@@ -50,10 +49,6 @@ type MachineEvents =
         origin: string;
         providerUrl: string;
       };
-    }
-  | {
-      type: 'CALCULATE_GAS';
-      input?: void;
     }
   | {
       type: 'APPROVE';
@@ -103,7 +98,7 @@ export const transactionMachine = createMachine(
       },
       calculatingGas: {
         invoke: {
-          src: 'calculateGas',
+          src: 'calculateFee',
           data: (ctx: MachineContext) => ({
             input: { tx: ctx.tx, providerUrl: ctx.providerUrl },
           }),
@@ -115,7 +110,7 @@ export const transactionMachine = createMachine(
             },
             {
               target: 'waitingApproval',
-              actions: ['assignReceipts'],
+              actions: ['assignFee'],
             },
           ],
         },
@@ -232,8 +227,8 @@ export const transactionMachine = createMachine(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         txApproveError: (_, ev: any) => ev.data.error,
       }),
-      assignReceipts: assign({
-        receipts: (_, ev) => ev.data,
+      assignFee: assign({
+        fee: (_, ev) => ev.data,
       }),
     },
     services: {
@@ -260,18 +255,25 @@ export const transactionMachine = createMachine(
           return transactionResponse;
         },
       }),
-      calculateGas: FetchMachine.create<
+      calculateFee: FetchMachine.create<
         { tx: TransactionRequest; providerUrl?: string },
-        MachineServices['calculateGas']['data']
+        MachineServices['calculateFee']['data']
       >({
         showError: false,
         async fetch({ input }) {
           if (!input?.tx) {
-            throw new Error('Invalid calculateGas input');
+            throw new Error('Invalid calculateFee input');
           }
+
           const provider = new Provider(input.providerUrl || '');
           const { receipts } = await provider.call(input.tx);
-          return receipts;
+
+          const { fee } = calculateTransactionFee({
+            receipts,
+            gasPrice: input.tx.gasPrice,
+          });
+
+          return fee;
         },
       }),
       fetchGasPrice: FetchMachine.create<
