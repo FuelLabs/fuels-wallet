@@ -15,6 +15,8 @@ export type SidebarLinkItem = {
   submenu?: SidebarLinkItem[];
   subpath?: string;
   label: string;
+  prev?: SidebarLinkItem;
+  next?: SidebarLinkItem;
 };
 
 export type NodeHeading = {

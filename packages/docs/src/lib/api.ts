@@ -120,5 +120,23 @@ export async function getSidebarLinks(order: string[]) {
       return { ...link, submenu };
     });
 
-  return sortedLinks;
+  return [...sortedLinks].map((doc, idx) => {
+    if (doc.submenu) {
+      return {
+        ...doc,
+        submenu: doc.submenu.map((childDoc, childIdx) => ({
+          ...childDoc,
+          prev: doc.submenu?.[childIdx - 1] ?? sortedLinks[idx - 1] ?? null,
+          next: doc.submenu?.[childIdx + 1] ?? sortedLinks[idx + 1] ?? null,
+        })),
+      };
+    }
+    const prev = sortedLinks[idx - 1] ?? null;
+    const next = sortedLinks[idx + 1] ?? null;
+    return {
+      ...doc,
+      prev: prev?.submenu ? prev.submenu[prev.submenu.length - 1] : prev,
+      next: next?.submenu ? next.submenu[0] : next,
+    };
+  });
 }
