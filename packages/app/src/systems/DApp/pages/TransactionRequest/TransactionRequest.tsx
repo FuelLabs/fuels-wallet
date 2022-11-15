@@ -33,7 +33,7 @@ export function TransactionRequest() {
     handlers,
     account,
     isUnlockingLoading,
-    receipts,
+    fee,
     approvedTx,
     txApproveError,
     outputAmount,
@@ -99,7 +99,7 @@ export function TransactionRequest() {
                 balanceErrors={groupedErrors?.InsufficientInputAmount}
                 title="Assets to Send"
               />
-              <TxDetails receipts={receipts} outputAmount={outputAmount} />
+              <TxDetails fee={fee} outputAmount={outputAmount} />
             </Stack>
           )}
           {approvedTx && (
