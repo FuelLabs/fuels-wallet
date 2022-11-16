@@ -15,7 +15,7 @@ export const Usage = (args: AmountInputProps) => (
       {...args}
       balance={bn.parseUnits('1.57')}
       onChange={() => {}}
-      value=""
+      value={bn()}
     />
   </Box>
 );

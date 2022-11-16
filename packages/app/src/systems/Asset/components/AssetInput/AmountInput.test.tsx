@@ -1,4 +1,5 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
+import { bn } from 'fuels';
 
 import { MOCK_ASSETS } from '../../__mocks__/assets';
 
@@ -10,7 +11,7 @@ describe('AmountInput', () => {
       <AmountInput
         balance={MOCK_ASSETS[0].amount}
         onChange={() => {}}
-        value=""
+        value={bn()}
       />
     );
   });
@@ -19,7 +20,7 @@ describe('AmountInput', () => {
       <AmountInput
         balance={MOCK_ASSETS[0].amount}
         onChange={() => {}}
-        value=""
+        value={bn()}
       />
     );
     expect(screen.getByPlaceholderText('0.00')).toBeInTheDocument();
@@ -29,7 +30,7 @@ describe('AmountInput', () => {
       <AmountInput
         balance={MOCK_ASSETS[0].amount}
         onChange={() => {}}
-        value=""
+        value={bn()}
       />
     );
     expect(screen.getByText('Balance: 14.563943834')).toBeInTheDocument();
@@ -39,7 +40,7 @@ describe('AmountInput', () => {
       <AmountInput
         balance={MOCK_ASSETS[0].amount}
         onChange={() => {}}
-        value=""
+        value={bn()}
       />
     );
     const maxBtn = screen.getByLabelText('Max');
