@@ -26,11 +26,5 @@ test.describe('HomeWallet', () => {
     await getButtonByText(page, 'Reveal secret phrase').click();
     // should get here and contain data
     await hasText(page, 'Your private Secret Recovery Phrase');
-    // Copies the seed phrase
-    await getByAriaLabel(page, 'Copy button').click();
-    const seedPhrase = await page.evaluate(async () =>
-      navigator.clipboard.readText()
-    );
-    expect(seedPhrase.length).toBeGreaterThan(0);
   });
 });
