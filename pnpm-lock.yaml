@@ -37,7 +37,6 @@ importers:
       npm-run-all: ^4.1.5
       playwright: ^1.27.1
       prettier: ^2.7.1
-      shelljs: ^0.8.5
       ts-jest: ^29.0.3
       ts-node: ^10.9.1
       turbo: ^1.6.3
@@ -49,7 +48,6 @@ importers:
       '@fuel-ui/react': link:design-system/react
       execa: 6.1.0
       fuelhat: link:packages/fuelhat
-      shelljs: 0.8.5
     devDependencies:
       '@babel/core': 7.20.2
       '@changesets/changelog-github': 0.4.7
@@ -325,7 +323,6 @@ importers:
       '@fuel-wallet/types': workspace:*
       '@fuel-wallet/xstore': workspace:*
       '@hookform/resolvers': ^2.9.10
-      '@import-meta-env/unplugin': ^0.3.0
       '@playwright/test': ^1.27.1
       '@react-aria/utils': ^3.14.0
       '@storybook/addon-a11y': ^6.5.13
@@ -434,7 +431,6 @@ importers:
     devDependencies:
       '@babel/core': 7.20.2
       '@crxjs/vite-plugin': 1.0.14_vite@3.2.3
-      '@import-meta-env/unplugin': 0.3.0
       '@playwright/test': 1.27.1
       '@storybook/addon-a11y': 6.5.13_biqbaboplfbrettd7655fr4n2y
       '@storybook/addon-actions': 6.5.13_biqbaboplfbrettd7655fr4n2y
@@ -3161,22 +3157,6 @@ packages:
 
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
-
-  /@import-meta-env/unplugin/0.3.0:
-    resolution: {integrity: sha512-+9Rr5gJBLMJVlDWzS69r/rnpocZXXg/tnJHyJ2KMKf73WK0BQJZUJrcE+x6O9WRVm+QtcXwSOifTdeNRzs2dqA==}
-    engines: {node: '>= 14'}
-    peerDependencies:
-      '@import-meta-env/cli': ^0.3.0
-      dotenv: ^11.0.0 || ^12.0.4 || ^13.0.1 || ^14.3.2 || ^15.0.1 || ^16.0.0
-    peerDependenciesMeta:
-      '@import-meta-env/cli':
-        optional: true
-    dependencies:
-      magic-string: 0.26.7
-      object-hash: 3.0.0
-      picocolors: 1.0.0
-      unplugin: 0.10.2
-    dev: true
 
   /@internationalized/date/3.0.1:
     resolution: {integrity: sha512-E/3lASs4mAeJ2Z2ye6ab7eUD0bPUfTeNVTAv6IS+ne9UtMu9Uepb9A1U2Ae0hDr6WAlBuvUtrakaxEdYB9TV6Q==}
@@ -13776,11 +13756,6 @@ packages:
       has: 1.0.3
       side-channel: 1.0.4
 
-  /interpret/1.4.0:
-    resolution: {integrity: sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==}
-    engines: {node: '>= 0.10'}
-    dev: false
-
   /interpret/2.2.0:
     resolution: {integrity: sha512-Ju0Bz/cEia55xDwUWEa8+olFpCiQoypjnQySseKtmjNrnps3P+xfpUmGr90T7yjlVJmOtybRvPXhKMbHr+fWnw==}
     engines: {node: '>= 0.10'}
@@ -16797,11 +16772,6 @@ packages:
       kind-of: 3.2.2
     dev: true
 
-  /object-hash/3.0.0:
-    resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
-    engines: {node: '>= 6'}
-    dev: true
-
   /object-inspect/1.12.2:
     resolution: {integrity: sha512-z+cPxW0QGUp0mcqcsgQyLVRDoXFQbXOwBaqyF7VIgI4TWNQsDHrBpUQslRmIfAoYWdYzs6UlKJtB2XJpTaNSpQ==}
 
@@ -18500,13 +18470,6 @@ packages:
       typeson-registry: 1.0.0-alpha.39
     dev: false
 
-  /rechoir/0.6.2:
-    resolution: {integrity: sha512-HFM8rkZ+i3zrV+4LQjwQ0W+ez98pApMGM3HUrN04j3CqzPOzl9nmP15Y8YXNm8QHGv/eacOVEjqhmWpkRV0NAw==}
-    engines: {node: '>= 0.10'}
-    dependencies:
-      resolve: 1.22.1
-    dev: false
-
   /recrawl-sync/2.2.3:
     resolution: {integrity: sha512-vSaTR9t+cpxlskkdUFrsEpnf67kSmPk66yAGT1fZPrDudxQjoMzPgQhSMImQ0pAw5k0NPirefQfhopSjhdUtpQ==}
     dependencies:
@@ -19203,16 +19166,6 @@ packages:
   /shell-quote/1.7.4:
     resolution: {integrity: sha512-8o/QEhSSRb1a5i7TFR0iM4G16Z0vYB2OQVs4G3aAFXjn3T6yEx8AZxy1PgDF7I00LZHYA3WxaSYIf5e5sAX8Rw==}
     dev: true
-
-  /shelljs/0.8.5:
-    resolution: {integrity: sha512-TiwcRcrkhHvbrZbnRcFYMLl30Dfov3HKqzp5tO5b4pt6G/SezKcYhmDg15zXVBswHmctSAQKznqNW2LO5tTDow==}
-    engines: {node: '>=4'}
-    hasBin: true
-    dependencies:
-      glob: 7.2.3
-      interpret: 1.4.0
-      rechoir: 0.6.2
-    dev: false
 
   /side-channel/1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}
@@ -20870,15 +20823,6 @@ packages:
   /unpipe/1.0.0:
     resolution: {integrity: sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==}
     engines: {node: '>= 0.8'}
-    dev: true
-
-  /unplugin/0.10.2:
-    resolution: {integrity: sha512-6rk7GUa4ICYjae5PrAllvcDeuT8pA9+j5J5EkxbMFaV+SalHhxZ7X2dohMzu6C3XzsMT+6jwR/+pwPNR3uK9MA==}
-    dependencies:
-      acorn: 8.8.1
-      chokidar: 3.5.3
-      webpack-sources: 3.2.3
-      webpack-virtual-modules: 0.4.6
     dev: true
 
   /unset-value/1.0.0:
