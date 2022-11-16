@@ -22,7 +22,7 @@
     "./design-system/*"
   ],
   "scripts": {
-    "build:website": "node ./scripts/build-website.mjs",
+    "build:preview": "node ./scripts/build-website.mjs",
     "build:all": "run-s build:libs build:docs build:app",
     "build:libs": "turbo run build --filter=@fuel-wallet/*",
     "build:docs": "turbo run build --filter=docs",

@@ -26,7 +26,7 @@ jobs:
           NEXT_PUBLIC_WALLET_DOWNLOAD_URL: "https://fuels-wallet.vercel.app/app/fuel-wallet.zip"
         run: |
           pnpm install
-          pnpm build:website
+          pnpm build:preview
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.3.3
