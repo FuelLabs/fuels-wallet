@@ -313,6 +313,7 @@ importers:
       hast-util-to-string: ^2.0.0
       next: 13.0.2
       next-mdx-remote: ^4.2.0
+      plyr-react: ^5.1.0
       react: ^18.2.0
       react-dom: ^18.2.0
       react-syntax-highlighter: ^15.5.0
@@ -337,6 +338,7 @@ importers:
       hast-util-to-string: 2.0.0
       next: 13.0.2_biqbaboplfbrettd7655fr4n2y
       next-mdx-remote: 4.2.0_biqbaboplfbrettd7655fr4n2y
+      plyr-react: 5.1.0_react@18.2.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-syntax-highlighter: 15.5.0_react@18.2.0
@@ -10622,7 +10624,6 @@ packages:
   /core-js/3.26.0:
     resolution: {integrity: sha512-+DkDrhoR4Y0PxDz6rurahuB+I45OsEUv8E1maPTB6OuHRohMMcznBq9TMpdpDMm/hUPob/mJJS3PqgbHpMTQgw==}
     requiresBuild: true
-    dev: true
 
   /core-util-is/1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -10899,6 +10900,10 @@ packages:
       array-find-index: 1.0.2
     dev: true
     optional: true
+
+  /custom-event-polyfill/1.0.7:
+    resolution: {integrity: sha512-TDDkd5DkaZxZFM8p+1I3yAlvM3rSr1wbrOliG4yJiwinMZN8z/iGL7BTlDkrJcYTmgUSb4ywVCc3ZaUtOtC76w==}
+    dev: false
 
   /cyclist/1.0.1:
     resolution: {integrity: sha512-NJGVKPS81XejHcLhaLJS7plab0fK3slPh11mESeeDq2W4ZI5kUKK/LRRdVDvjJseojbPB7ZwjnyOybg3Igea/A==}
@@ -15502,6 +15507,10 @@ packages:
       json5: 2.2.1
     dev: true
 
+  /loadjs/4.2.0:
+    resolution: {integrity: sha512-AgQGZisAlTPbTEzrHPb6q+NYBMD+DP9uvGSIjSUM5uG+0jG15cb8axWpxuOIqrmQjn6scaaH8JwloiP27b2KXA==}
+    dev: false
+
   /locate-path/3.0.0:
     resolution: {integrity: sha512-7AO748wWnIhNqAuaty2ZWHkQHRSNfPVIsPIfwEOWO22AmaoVrWavlOcMR5nzTLNYvp36X220/maaRsrec1G65A==}
     engines: {node: '>=6'}
@@ -17528,6 +17537,30 @@ packages:
       playwright-core: 1.27.1
     dev: true
 
+  /plyr-react/5.1.0_react@18.2.0:
+    resolution: {integrity: sha512-N0qIuN1wZZzpKUXngtNeZwTiWqvOb6qAzqcfMI48rLkRJGM5xM5MRWILd3hW1PWPbVBKsAH4Ged32ZZhkJVbXA==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      plyr: 3.7.2
+      react: 18.2.0
+      react-aptor: 2.0.0-alpha.1_react@18.2.0
+    dev: false
+
+  /plyr/3.7.2:
+    resolution: {integrity: sha512-I0ZC/OI4oJ0iWG9s2rrnO0YFO6aLyrPiQBq9kum0FqITYljwTPBbYL3TZZu8UJQJUq7tUWN18Q7ACwNCkGKABQ==}
+    dependencies:
+      core-js: 3.26.0
+      custom-event-polyfill: 1.0.7
+      loadjs: 4.2.0
+      rangetouch: 2.0.1
+      url-polyfill: 1.1.12
+    dev: false
+
   /pnp-webpack-plugin/1.6.4_typescript@4.8.4:
     resolution: {integrity: sha512-7Wjy+9E3WwLOEL30D+m8TSTF7qJJUJLONBnwQp0518siuMxUQUbgZwssaFX+QKlZkjHZcw/IpZCt/H0srrntSg==}
     engines: {node: '>=6'}
@@ -18007,6 +18040,10 @@ packages:
     engines: {node: '>= 0.6'}
     dev: true
 
+  /rangetouch/2.0.1:
+    resolution: {integrity: sha512-sln+pNSc8NGaHoLzwNBssFSf/rSYkqeBXzX1AtJlkJiUaVSJSbRAWJk+4omsXkN+EJalzkZhWQ3th1m0FpR5xA==}
+    dev: false
+
   /raw-body/2.5.1:
     resolution: {integrity: sha512-qqJBtEyVgS0ZmPGdCFPWJ3FreoqvG4MVQln/kCgF7Olq95IbOp0/BWyMwbdtn4VTvkM8Y7khCQ2Xgk/tcrCXig==}
     engines: {node: '>= 0.8'}
@@ -18027,6 +18064,18 @@ packages:
       schema-utils: 3.1.1
       webpack: 4.46.0
     dev: true
+
+  /react-aptor/2.0.0-alpha.1_react@18.2.0:
+    resolution: {integrity: sha512-FbvxQKsZMUZcLr2WdrQEmxH0kifsN4N+v6YdL1g3At03zouJCEcPXv+o+bhP3Ci3ya4QPvNHK/bpbrCzuKWOMw==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /react-aria/3.20.0_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-X3Gt46A7ViDoD0xbEfUdvD/2bhchSoodOYLltykXkMIQZ4x57q3dGUygoepL6Xc97l5IVelsapuEMHFLN/WTIw==}
@@ -21028,6 +21077,10 @@ packages:
     dependencies:
       querystringify: 2.2.0
       requires-port: 1.0.0
+
+  /url-polyfill/1.1.12:
+    resolution: {integrity: sha512-mYFmBHCapZjtcNHW0MDq9967t+z4Dmg5CJ0KqysK3+ZbyoNOWQHksGCTWwDhxGXllkWlOc10Xfko6v4a3ucM6A==}
+    dev: false
 
   /url/0.11.0:
     resolution: {integrity: sha512-kbailJa29QrtXnxgq+DdCEGlbTeYM2eJUxsz6vjZavrCYPMIFHMKQmSKYAIuUK2i7hgPm28a8piX5NTUtM/LKQ==}

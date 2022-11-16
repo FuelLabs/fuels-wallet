@@ -4,6 +4,7 @@ import '../styles/docsearch/_variables.css';
 import '../styles/docsearch/button.css';
 import '../styles/docsearch/modal.css';
 import '../styles/docsearch/style.css';
+import 'plyr-react/plyr.css';
 
 import { ThemeProvider } from '@fuel-ui/react';
 import { MDXProvider } from '@mdx-js/react';
@@ -14,6 +15,7 @@ import { Code } from '../components/Code';
 import { Heading } from '../components/Heading';
 import { UL } from '../components/List';
 import { Paragraph } from '../components/Paragraph';
+import Player from '../components/Player';
 import { Pre } from '../components/Pre';
 import { Table } from '../components/Table';
 import { Testing } from '../components/Testing';
@@ -32,6 +34,7 @@ const components = {
   table: Table,
   ul: UL,
   Testing,
+  Player,
 };
 
 export default function App({ Component, pageProps }: AppProps) {
