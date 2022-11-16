@@ -17,6 +17,7 @@ html {
 
 body,
 #__next {
+  background: #090a0a;
   min-height: 100vh;
 }
 
