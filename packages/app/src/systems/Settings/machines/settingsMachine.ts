@@ -17,9 +17,10 @@ type MachineContext = {
   words: string[];
 };
 
-type MachineEvents =
-  | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock']; data?: string[] }
-  | { type: 'CHANGE_PASSWORD'; input: AccountInputs['changePassword'] };
+type MachineEvents = (
+  | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
+  | { type: 'CHANGE_PASSWORD'; input: AccountInputs['changePassword'] }
+) & { data?: string[] };
 
 export const settingsMachine = createMachine(
   {
