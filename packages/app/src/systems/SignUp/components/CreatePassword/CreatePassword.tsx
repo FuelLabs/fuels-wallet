@@ -60,7 +60,7 @@ export function CreatePassword({
         />
         <Header
           title="Create your password"
-          subtitle="Add a safe password for access your wallet"
+          subtitle="Add a safe password to access your wallet"
         />
         <Stack css={{ width: '100%' }} gap="$4">
           <ControlledField
