@@ -1,12 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Button, InputPassword } from '@fuel-ui/react';
+import { Alert, Button, Flex, InputPassword } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 
-import { useSettings } from '../hooks/useSettings';
+import { useSettings } from '../../hooks/useSettings';
 
 import { ControlledField, Layout, Pages } from '~/systems/Core';
 
@@ -58,58 +58,62 @@ export function ChangePassword() {
     <form style={{ flex: 1 }} onSubmit={handleSubmit(onSubmit)}>
       <Layout title="Change Password">
         <Layout.TopBar onBack={() => goBack()} />
-        <Layout.Content css={styles.wrapper}>
-          <Alert direction="row" status={'warning'}>
-            <Alert.Description>
-              If you lose your password and your seed phrase, all you funds can
-              be lost forever.
-            </Alert.Description>
-          </Alert>
-          <ControlledField
-            control={control}
-            name="oldPassword"
-            label="Old Password"
-            render={({ field }) => (
-              <InputPassword
-                {...field}
-                css={styles.input}
-                size="sm"
-                placeholder="Type your old password"
-              />
-            )}
-          />
-          <ControlledField
-            control={control}
-            name="newPassword"
-            label="New Password"
-            render={({ field }) => (
-              <InputPassword
-                {...field}
-                css={styles.input}
-                size="sm"
-                placeholder="Type your new password"
-              />
-            )}
-          />
-          <ControlledField
-            control={control}
-            name="confirmPassword"
-            label="Confirm Password"
-            render={({ field }) => (
-              <InputPassword
-                {...field}
-                css={styles.input}
-                size="sm"
-                placeholder="Confirm your new password"
-              />
-            )}
-          />
+        <Layout.Content>
+          <Flex css={styles.wrapper}>
+            <Alert direction="row" status={'warning'}>
+              <Alert.Description>
+                If you lose your password and your seed phrase, all you funds
+                can be lost forever.
+              </Alert.Description>
+            </Alert>
+            <ControlledField
+              control={control}
+              name="oldPassword"
+              label="Old Password"
+              render={({ field }) => (
+                <InputPassword
+                  {...field}
+                  css={styles.input}
+                  size="sm"
+                  aria-label="Old Password"
+                  placeholder="Type your old password"
+                />
+              )}
+            />
+            <ControlledField
+              control={control}
+              name="newPassword"
+              label="New Password"
+              render={({ field }) => (
+                <InputPassword
+                  {...field}
+                  css={styles.input}
+                  size="sm"
+                  aria-label="New Password"
+                  placeholder="Type your new password"
+                />
+              )}
+            />
+            <ControlledField
+              control={control}
+              name="confirmPassword"
+              label="Confirm Password"
+              render={({ field }) => (
+                <InputPassword
+                  {...field}
+                  css={styles.input}
+                  size="sm"
+                  aria-label="Confirm Password"
+                  placeholder="Confirm your new password"
+                />
+              )}
+            />
+          </Flex>
         </Layout.Content>
         <Layout.BottomBar>
           <Button
             onPress={() => goBack()}
             variant="ghost"
-            isLoading={isChangingPassword}
             isDisabled={isChangingPassword}
           >
             Cancel
@@ -133,8 +137,9 @@ const styles = {
   }),
   wrapper: cssObj({
     display: 'flex',
-    gap: '$6',
+    gap: '$4',
     flex: 1,
+    height: '$screenH',
     alignItems: 'center',
     flexDirection: 'column',
   }),

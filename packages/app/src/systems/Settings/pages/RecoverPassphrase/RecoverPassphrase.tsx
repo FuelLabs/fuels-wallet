@@ -2,7 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
-import { useSettings } from '../hooks/useSettings';
+import { useSettings } from '../../hooks/useSettings';
 
 import { Layout, Mnemonic, Pages } from '~/systems/Core';
 import { UnlockDialog } from '~/systems/DApp';
