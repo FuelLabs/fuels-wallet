@@ -1,6 +1,6 @@
 import type { StoryFn } from '@storybook/react';
 
-import { RecoverPassphrase } from './RecoverPassphrase';
+import { RecoverPassphrase } from './RevealPassphrase';
 
 export default {
   component: RecoverPassphrase,

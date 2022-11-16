@@ -15,14 +15,14 @@ import { useSettings } from '../../hooks/useSettings';
 
 import { Layout, Mnemonic, Pages } from '~/systems/Core';
 
-export function RecoverPassphrase() {
+export function RevealPassphrase() {
   const navigate = useNavigate();
   const { isUnlocking, unlockAndGetMnemonic, words, isGettingMnemonic } =
     useSettings();
   const [password, setPassword] = useState('');
 
   return (
-    <Layout title="Recover Passphrase">
+    <Layout title="Reveal Passphrase">
       <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
       <Layout.Content>
         {isUnlocking ? (
@@ -30,6 +30,7 @@ export function RecoverPassphrase() {
             <Form.Control>
               <Form.Label>Enter your password to reveal</Form.Label>
               <InputPassword
+                aria-label="Current Password"
                 value={password}
                 onChange={(ev) => setPassword(ev.target.value)}
               />

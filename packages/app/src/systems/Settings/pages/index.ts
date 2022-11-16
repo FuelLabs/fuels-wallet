@@ -1,2 +1,2 @@
-export { RecoverPassphrase } from './RecoverPassphrase';
+export { RevealPassphrase } from './RevealPassphrase';
 export { ChangePassword } from './ChangePassword';
