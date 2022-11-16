@@ -13,10 +13,10 @@ export const sidebarItems = [
     label: 'Settings',
     submenu: [
       {
-        key: 'recover-passphrase',
+        key: 'reveal-passphrase',
         icon: 'Lock',
-        label: 'Recover Passphrase',
-        path: '/settings/recover-passphrase',
+        label: 'Reveal Passphrase',
+        path: '/settings/reveal-passphrase',
       },
       {
         key: 'change-password',
