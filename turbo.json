@@ -4,6 +4,9 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "export": {
+      "dependsOn": []
+    },
     "test": {
       "dependsOn": []
     },

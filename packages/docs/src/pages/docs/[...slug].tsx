@@ -3,39 +3,15 @@ import { MDXRemote } from 'next-mdx-remote';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 
-import { Blockquote } from '../../components/Blockquote';
 import { Breadcrumb } from '../../components/Breadcrumb';
-import { Code } from '../../components/Code';
 import { DocFooter } from '../../components/DocFooter';
-import { Heading } from '../../components/Heading';
 import { Layout } from '../../components/Layout';
-import { UL } from '../../components/List';
-import { Paragraph } from '../../components/Paragraph';
-import { Pre } from '../../components/Pre';
 import { Sidebar } from '../../components/Sidebar';
-import { Table } from '../../components/Table';
 import { TableOfContent } from '../../components/TableOfContent';
-import { Testing } from '../../components/Testing';
 import { FIELDS, MENU_ORDER } from '../../constants';
 import { DocProvider } from '../../hooks/useDocContext';
 import { getAllDocs, getDocBySlug, getSidebarLinks } from '../../lib/api';
 import type { DocType, SidebarLinkItem } from '../../types';
-
-const components = {
-  h1: Heading,
-  h2: Heading,
-  h3: Heading,
-  h4: Heading,
-  h5: Heading,
-  h6: Heading,
-  pre: Pre,
-  p: Paragraph,
-  code: Code,
-  blockquote: Blockquote,
-  table: Table,
-  ul: UL,
-  Testing,
-};
 
 type DocPageProps = {
   doc: DocType;
@@ -56,7 +32,7 @@ export default function DocPage(props: DocPageProps) {
         <Sidebar />
         <Box as="section">
           <Breadcrumb doc={doc} />
-          <MDXRemote {...doc.source} components={components} />
+          <MDXRemote {...doc.source} scope={{}} />
           <DocFooter />
         </Box>
         <TableOfContent />

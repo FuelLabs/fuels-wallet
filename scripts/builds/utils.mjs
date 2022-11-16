@@ -4,8 +4,7 @@ import fs from "node:fs";
 import { join } from "path";
 
 const ROOT_PATH = process.cwd();
-const DIST_FOLDER = join(ROOT_PATH, "dist");
-const DOCS_BASE_URL = "/fuels-wallet";
+const DIST_FOLDER = join(ROOT_PATH, "./dist");
 const APP_PATH = "/app/";
 const STORYBOOK_PATH = "/storybook/";
 const DOWNLOAD_URL = join(APP_PATH, "/fuel-wallet.zip");
@@ -17,8 +16,8 @@ function setEnvVar(key, value) {
 export function setEnv() {
   setEnvVar("BASE_URL", APP_PATH);
   setEnvVar("APP_DIST", join(DIST_FOLDER, APP_PATH));
-  setEnvVar("DOCS_BASE_URL", DOCS_BASE_URL);
-  setEnvVar("DOCS_DIST", join(DIST_FOLDER, process.env.DOCS_BASE_URL));
+  setEnvVar("DOCS_BASE_URL", process.env.DOCS_BASE_URL || "");
+  setEnvVar("DOCS_DIST", join(DIST_FOLDER, process.env.DOCS_BASE_URL || ""));
   setEnvVar("STORYBOOK_BASE_URL", STORYBOOK_PATH);
   setEnvVar("STORYBOOK_DIST", join(DIST_FOLDER, STORYBOOK_PATH));
 
@@ -51,15 +50,7 @@ export async function runPnpmCmd(cmds) {
 export async function buildWebsite() {
   fs.rmSync(DIST_FOLDER, { recursive: true, force: true });
   await runPnpmCmd(["build:libs", "--force", "--no-cache"]);
-  await Promise.all([
-    runPnpmCmd(["build:docs", "--force", "--no-cache"]),
-    runPnpmCmd(["build:app", "--force", "--no-cache"]),
-  ]);
-
-  const { APP_DIST } = process.env;
-  fs.copyFileSync(join(APP_DIST, "404.html"), join(DIST_FOLDER, "404.html"));
-  fs.copyFileSync(
-    join(APP_DIST, "index.html"),
-    join(DIST_FOLDER, "index.html")
-  );
+  await runPnpmCmd(["build:docs-build", "--force", "--no-cache"]);
+  await runPnpmCmd(["build:docs-export", "--force", "--no-cache"]);
+  await runPnpmCmd(["build:app", "--force", "--no-cache"]);
 }

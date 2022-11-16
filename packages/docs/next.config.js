@@ -7,6 +7,7 @@ const nextConfig = {
     esmExternals: false,
     externalDir: true,
   },
+  trailingSlash: true,
 };
 
 module.exports = nextConfig;

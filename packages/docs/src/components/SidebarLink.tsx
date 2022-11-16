@@ -28,18 +28,18 @@ const Link = styled(Box, {
 export type SidebarLinkProps = {
   item: SidebarLinkItem;
 };
+
 export const SidebarLink = forwardRef<unknown, SidebarLinkProps>(
   ({ item }, ref) => {
     const router = useRouter();
     const fullSlug = `/docs/${item.slug}`;
-    const isActive = cx({ active: router.asPath === fullSlug });
+    const isActive = cx({
+      active:
+        (router.asPath === '/' && fullSlug === '/docs/install') ||
+        router.asPath.includes(fullSlug),
+    });
     return (
-      <Link
-        ref={ref}
-        as={NextLink as any}
-        href={item.slug!}
-        className={isActive}
-      >
+      <Link ref={ref} as={NextLink as any} href={fullSlug} className={isActive}>
         {item.label}
       </Link>
     );

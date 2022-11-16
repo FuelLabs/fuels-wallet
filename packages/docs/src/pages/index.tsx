@@ -1,17 +1,21 @@
+/* eslint-disable import/no-named-default */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cssObj } from '@fuel-ui/css';
-import { Box } from '@fuel-ui/react';
 
-import { Layout } from '../components/Layout';
+import {
+  default as DocPage,
+  getStaticProps as docsGetStaticProps,
+} from './docs/[...slug]';
 
-export default function Home() {
-  return (
-    <Layout title="Home">
-      <Box css={styles.root}>Hello world</Box>
-    </Layout>
-  );
+export default function Home(props: any) {
+  return <DocPage {...props} />;
 }
 
-const styles = {
+export async function getStaticProps() {
+  return docsGetStaticProps({ params: { slug: ['install'] } });
+}
+
+export const styles = {
   root: cssObj({
     px: '$10',
     py: '$8',

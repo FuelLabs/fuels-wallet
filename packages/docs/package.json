@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "DOCS_DIST=${DOCS_DIST:=test} next build && next export -o $DOCS_DIST",
+    "build": "next build",
+    "export": "DOCS_DIST=${DOCS_DIST:=dist} next export -o $DOCS_DIST",
     "start": "next start",
     "lint": "next lint"
   },
@@ -14,6 +15,7 @@
     "@fuel-ui/css": "^0.9.1",
     "@fuel-ui/react": "^0.9.1",
     "@fuel-wallet/sdk": "workspace:*",
+    "@mdx-js/react": "^2.1.5",
     "@next/mdx": "^13.0.2",
     "dotenv": "^16.0.3",
     "fuels": "0.21.0",
@@ -23,9 +25,9 @@
     "hast-util-to-string": "^2.0.0",
     "next": "13.0.2",
     "next-mdx-remote": "^4.2.0",
-    "prism-react-renderer": "^1.3.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-syntax-highlighter": "^15.5.0",
     "remark": "^14.0.2",
     "remark-gfm": "^3.0.1",
     "remark-slug": "^7.0.1",
@@ -37,6 +39,7 @@
     "@types/prismjs": "^1.26.0",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
+    "@types/react-syntax-highlighter": "^15.5.5",
     "eslint": "^8.27.0",
     "eslint-config-next": "13.0.2",
     "typescript": "^4.8.4"

@@ -9,7 +9,6 @@ const globalWindow = typeof window !== 'undefined' ? window : ({} as Window);
 
 export function Header() {
   const { asPath } = useRouter();
-  const isHomeActive = asPath === '/';
   const isDocsActive = asPath.startsWith('/docs');
   return (
     <Flex as="header" css={styles.root}>
@@ -21,9 +20,6 @@ export function Header() {
         </Box>
       </Flex>
       <Flex css={styles.menu}>
-        <Link href="/" className={isHomeActive ? 'active' : ''}>
-          Home
-        </Link>
         <Link href="/docs/install" className={isDocsActive ? 'active' : ''}>
           Documentation
         </Link>
