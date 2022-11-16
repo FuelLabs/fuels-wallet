@@ -10,7 +10,7 @@ export const {
 } = import.meta.env;
 
 export const DECIMAL_UNITS = 9;
-export const FORMAT_LANGUAGE = 'es';
+export const FORMAT_LANGUAGE = 'en-US';
 export const MIN_FRACTION_DIGITS = 1;
 export const MAX_FRACTION_DIGITS = 3;
 export const MNEMONIC_SIZE = 16;
@@ -23,5 +23,3 @@ export const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 export const IS_TEST = process.env.NODE_ENV === 'test';
 export const IS_CRX_POPUP =
   IS_CRX && globalThis.location.pathname === CRXPages.popup;
-export const BLOCK_EXPLORER_URL =
-  'https://fuellabs.github.io/block-explorer-v2';

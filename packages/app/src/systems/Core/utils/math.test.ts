@@ -40,21 +40,21 @@ describe('Math', () => {
 
   describe('formatUnits()', () => {
     it('should format units to string using string', () => {
-      expect(formatUnits('1500000000')).toBe('1,5');
+      expect(formatUnits('1500000000')).toBe('1.5');
     });
     it('should format units to string using number', () => {
-      expect(formatUnits(1500000000)).toBe('1,5');
+      expect(formatUnits(1500000000)).toBe('1.5');
     });
     it('should format units to string using BigNumberish', () => {
-      expect(formatUnits(1500000000n)).toBe('1,5');
+      expect(formatUnits(1500000000n)).toBe('1.5');
     });
     it('should be able to set minimum and max fraction digits', () => {
       const opts = { minDigits: 4, maxDigits: 4 };
-      expect(formatUnits(1512345678n, opts)).toBe('1,5123');
+      expect(formatUnits(1512345678n, opts)).toBe('1.5123');
     });
     it('should be round digits when necessary', () => {
       const opts = { minDigits: 3 };
-      expect(formatUnits(1512500000n, opts)).toBe('1,513');
+      expect(formatUnits(1512500000n, opts)).toBe('1.513');
     });
   });
 });

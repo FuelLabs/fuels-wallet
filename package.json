@@ -43,6 +43,7 @@
     "prettier:format": "prettier --write .",
     "storybook": "pnpm -r --filter=app storybook",
     "test": "pnpm run --filter=app test",
+    "test:sdk": "pnpm run --filter=sdk test",
     "test:ci": "pnpm test -- --ci --testLocationInResults --json --coverage",
     "test:clear": "pnpm -r exec jest --clearCache",
     "test:coverage": "pnpm run --filter=app test --coverage",

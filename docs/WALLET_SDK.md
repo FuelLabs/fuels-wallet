@@ -1,7 +1,7 @@
 # Fuel Wallet SDK
 
 - [Fuel Wallet SDK](#fuel-wallet-sdk)
-  - [How to use?](#how-to-use)
+  - [How to use](#how-to-use)
   - [Quickstart](#quickstart)
     - [Request connection](#request-connection)
     - [List user accounts](#list-user-accounts)
@@ -10,8 +10,13 @@
     - [Methods](#methods)
       - [Connect](#connect)
       - [Disconnect](#disconnect)
-      - [List accounts](#list-accounts)
+      - [List Accounts](#list-accounts)
       - [Request signature message](#request-signature-message)
+      - [Send transaction](#send-transaction)
+      - [Get Wallet](#get-wallet)
+      - [Get Provider](#get-provider)
+        - [Using provider to query node info](#using-provider-to-query-node-info)
+        - [Using provider on a fuels-ts Wallet](#using-provider-on-a-fuels-ts-wallet)
     - [Events](#events)
       - [Accounts](#accounts)
       - [Connection](#connection)
@@ -60,12 +65,15 @@ const signedMessage = await window.FuelWeb3.signMessage(account, message);
 
 ## SDK API
 
-| name                                      | signature                                                            |
-| ----------------------------------------- | -------------------------------------------------------------------- |
-| [connect](#connect)                       | async connect(): Promise<boolean>                                    |
-| [disconnect](#disconnect)                 | async disconnect(): Promise<boolean>                                 |
-| [accounts](#list-user-accounts)           | async accounts(): Promise<Array<string>>                             |
-| [signMessage](#request-signature-message) | async signMessage(address: string, message: string): Promise<string> |
+| name                                      | signature                                                                   |
+| ----------------------------------------- | --------------------------------------------------------------------------- |
+| [connect](#connect)                       | async connect(): Promise<boolean>                                           |
+| [disconnect](#disconnect)                 | async disconnect(): Promise<boolean>                                        |
+| [accounts](#list-user-accounts)           | async accounts(): Promise<Array<string>>                                    |
+| [signMessage](#request-signature-message) | async signMessage(address: string, message: string): Promise<string>        |
+| [sendTransaction](#send-transaction)      | async sendTransaction(transaction: TransactionRequestLike): Promise<string> |
+| [getWallet](#get-wallet)                  | getWallet(address: string \| AbstractAddress): FuelWeb3Wallet               |
+| [getProvider](#get-provider)              | getProvider(): FuelWeb3Provider                                             |
 
 ### Methods
 
@@ -102,6 +110,90 @@ console.log(accounts);
 ```ts
 const account = "fuel1<address>";
 const signedMessage = await window.FuelWeb3.signMessage(account, message);
+```
+
+#### Send transaction
+
+`sendTransaction` - Send a transaction, this will request the user selected account to review,
+sign, and send the transaction.
+
+```ts
+import { ScriptTransactionRequest, Address, bn, NativeAssetId } from "fuels";
+
+const txRequest = new ScriptTransactionRequest({
+  gasLimit: 50_000,
+  gasPrice: 1,
+});
+const toAddress = Address.fromString("fuel1<to account address>");
+const fromAddress = Address.fromString("fuel1<from account address>");
+const amount = bn.parseUnits("0.1");
+txRequest.addCoinOutput(toAddress, amount);
+const provider = window.FuelWeb3.getProvider();
+const resources = await provider.getResourcesToSpend(fromAddress, [
+  [amount, NativeAssetId],
+]);
+txRequest.addResources(resources);
+const transactionId = await window.FuelWeb3.sendTransaction(txRequest);
+const response = new TransactionResponse(transactionId, provider);
+// wait for transaction to be completed
+await response.wait();
+// query the balance of the destination wallet
+const balance = await fuelWeb3.getWallet(toAddress).getBalance(NativeAssetId);
+console.log("to address balance", balance);
+```
+
+#### Get Wallet
+
+`getWallet` - Return a FuelWeb3Wallet this class extends the fuels-ts SDK, WalletLocked,
+enabling to execute any of the methods available, but using a FuelWeb3Provider on the connection point,
+to request signed actions.
+
+```ts
+import { Address, NativeAssetId, bn } from "fuels";
+
+const wallet = window.FuelWeb3.getWallet("fuel1<from account address>");
+const toAddress = Address.fromString("fuel1<to account address>");
+const amount = bn.parseUnits("0.1");
+const response = await wallet.transfer(toAddress, amount, NativeAssetId, {
+  gasPrice: 1,
+});
+// wait for transaction to be completed
+await response.wait();
+// query the balance of the destination wallet
+const balance = await window.FuelWeb3.getWallet(toAddress).getBalance(
+  NativeAssetId
+);
+console.log("to address balance", balance);
+```
+
+#### Get Provider
+
+`getProvider` - Return a FuelWeb3Provider this class extends fuels-ts SDK Provider, enabling to execute any of the methods available, but using FuelWeb3SDK on signature points, to request user permissions.
+
+##### Using provider to query node info
+
+```ts
+const provider = window.FuelWeb3.getProvider();
+const nodeInfo = await provider.getNodeInfo();
+console.log(nodeInfo.nodeVersion);
+```
+
+##### Using provider on a fuels-ts Wallet
+
+```ts
+import { Address, NativeAssetId, bn } from "fuels";
+
+const walletLocked = Wallet.fromAddress(
+  "fuel1<from account address>",
+  window.FuelWeb3.getProvider()
+);
+const toAddress = Address.fromString("fuel1<to account address>");
+const response = await walletLocked.transfer(
+  toAddress,
+  bn.parseUnits("0.1"),
+  NativeAssetId,
+  { gasPrice: 1 }
+);
 ```
 
 ### Events

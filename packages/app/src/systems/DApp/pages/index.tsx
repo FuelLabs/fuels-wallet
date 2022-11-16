@@ -1,3 +1,3 @@
 export * from './ConnectionRequest';
 export * from './SignatureRequest';
-export * from './TxApprove';
+export * from './TransactionRequest';

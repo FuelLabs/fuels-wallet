@@ -3,7 +3,7 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { send, assign, createMachine } from 'xstate';
 
 import type { UnlockMachineEvents, UnlockMachine } from './unlockMachine';
-import { unlockMachine } from './unlockMachine';
+import { unlockMachineErrorAction, unlockMachine } from './unlockMachine';
 
 import type { AccountInputs } from '~/systems/Account';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
@@ -13,6 +13,7 @@ type MachineContext = {
   message?: string;
   origin?: string;
   error?: string;
+  unlockError?: string;
   signedMessage?: string;
 };
 
@@ -65,9 +66,12 @@ export const signMachine = createMachine(
         invoke: {
           id: 'unlock',
           src: unlockMachine as UnlockMachine,
-          onDone: {
-            target: 'signingMessage',
-          },
+          onDone: [
+            unlockMachineErrorAction('unlocking', 'unlockError'),
+            {
+              target: 'signingMessage',
+            },
+          ],
         },
         on: {
           UNLOCK_WALLET: {
