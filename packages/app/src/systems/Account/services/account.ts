@@ -1,10 +1,9 @@
 /* eslint-disable consistent-return */
 import type { WalletUnlocked } from '@fuel-ts/wallet';
-import { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account } from '@fuel-wallet/types';
 import { bn, Address, Provider } from 'fuels';
 
-import { IndexedDBStorage } from '../utils';
+import { unlockManager } from '../utils/manager';
 
 import { isEth } from '~/systems/Asset';
 import type { Maybe } from '~/systems/Core';
@@ -124,14 +123,8 @@ export class AccountService {
 
     await db.vaults.clear();
 
-    /**
-     * TODO: this is needed because of a typing error with StorageAbstract from fuel-ts
-     */
-    const storage = new IndexedDBStorage() as never;
-    const manager = new WalletManager({ storage });
-
     try {
-      await manager.unlock(data.password);
+      const manager = await unlockManager(data.password);
       await manager.addVault({
         type: 'mnemonic',
         secret: getPhraseFromValue(data.mnemonic),
@@ -145,17 +138,13 @@ export class AccountService {
   }
 
   static async exportVault(input: AccountInputs['unlock']) {
-    const storage = new IndexedDBStorage() as never;
-    const manager = new WalletManager({ storage });
-    await manager.unlock(input.password);
+    const manager = await unlockManager(input.password);
     const { secret } = manager.exportVault(0);
     return secret;
   }
 
   static async unlock(input: AccountInputs['unlock']): Promise<WalletUnlocked> {
-    const storage = new IndexedDBStorage() as never;
-    const manager = new WalletManager({ storage });
-    await manager.unlock(input.password);
+    const manager = await unlockManager(input.password);
     const wallet = manager.getWallet(
       Address.fromPublicKey(input.account.publicKey)
     );
@@ -168,9 +157,7 @@ export class AccountService {
   }
 
   static async changePassword(input: AccountInputs['changePassword']) {
-    const storage = new IndexedDBStorage() as never;
-    const manager = new WalletManager({ storage });
-    await manager.unlock(input.oldPassword);
+    const manager = await unlockManager(input.oldPassword);
     await manager.updatePassphrase(input.oldPassword, input.newPassword);
     return manager.lock();
   }
