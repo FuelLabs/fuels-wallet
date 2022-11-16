@@ -22,12 +22,13 @@
   "scripts": {
     "build": "pnpm ts:check && tsup --dts",
     "ts:check": "tsc --noEmit",
-    "test": "jest -c jest.config.json --passWithNoTests",
+    "test": "jest -c jest.config.js --passWithNoTests",
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
     "dexie-observable": "4.0.0-beta.13",
     "events": "^3.3.0",
+    "fuels": "0.21.0",
     "json-rpc-2.0": "^1.4.1",
     "uuid": "^9.0.0",
     "xstate": "^4.34.0"

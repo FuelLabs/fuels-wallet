@@ -13,9 +13,7 @@ window.FuelWeb3.connect();
 
 You can try this code directly on the developer console.
 
-## Quickstart
-
-### Request connection
+## Request connection
 
 First of all, you need to connect and authorize your application; this will authorize your application to execute other actions. You can do this by accessing `FuelWeb3.connect()`.
 
@@ -27,7 +25,7 @@ console.log("Connection response", isConnected);
 The `connect()` method returns a promise; if you prefer to do it in an async way, you can use `FuelWeb3.on('connection', () => void)` to
 listen for changes in the connection.
 
-### List user accounts
+## List user accounts
 
 Once the connection is authorized, you can list the user accounts using `window.FuelWeb3.accounts()`.
 
@@ -36,7 +34,7 @@ const accounts = await window.FuelWeb3.accounts();
 console.log(accounts);
 ```
 
-### Signing a message
+## Signing a message
 
 Having access to the user address and the connection authorized, you can now request the user for signatures using `FuelWeb3.signMessage`.
 

@@ -32,9 +32,11 @@ export const getMockedTransaction = async (
 
   try {
     const provider = new Provider(providerUrl);
-    const coins = await provider.getResourcesToSpend(ownerAddress, quantities);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    txRequest.addCoins(coins as any);
+    const resources = await provider.getResourcesToSpend(
+      ownerAddress,
+      quantities
+    );
+    txRequest.addResources(resources);
     // eslint-disable-next-line no-empty
   } catch (e) {}
 

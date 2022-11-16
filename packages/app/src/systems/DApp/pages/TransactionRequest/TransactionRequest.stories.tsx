@@ -1,7 +1,7 @@
 import { Box } from '@fuel-ui/react';
 import { useEffect } from 'react';
 
-import { TxApprove } from './TxApprove';
+import { TransactionRequest } from './TransactionRequest';
 
 import { createMockAccount } from '~/systems/Account';
 import { NetworkService } from '~/systems/Network';
@@ -17,8 +17,8 @@ async function loader() {
 }
 
 export default {
-  component: TxApprove,
-  title: 'DApp/Pages/TxApprove',
+  component: TransactionRequest,
+  title: 'DApp/Pages/TransactionRequest',
   loaders: [loader],
   parameters: {
     layout: 'fullscreen',
@@ -36,7 +36,7 @@ export const Usage = () => {
 
   return (
     <Box css={{ width: 300 }}>
-      <TxApprove />
+      <TransactionRequest />
     </Box>
   );
 };

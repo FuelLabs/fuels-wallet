@@ -1,9 +1,9 @@
-import type { FuelWeb3 } from '@fuel-wallet/sdk';
+import type { FuelWeb3SDK } from '@fuel-wallet/sdk';
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
 
 declare global {
   interface Window {
-    FuelWeb3: FuelWeb3;
+    FuelWeb3: FuelWeb3SDK;
   }
 }
 

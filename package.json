@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "description": "Fuel Wallet",
-  "author": "Fuel Labs <contact@fuel-ui.sh> (https://fuel.network/)",
+  "author": "Fuel Labs <contact@fuel.sh> (https://fuel.network/)",
   "engines": {
     "node": ">=16",
     "pnpm": ">=7"
@@ -23,7 +23,7 @@
   ],
   "scripts": {
     "build:website": "node ./scripts/build-website.mjs",
-    "build:all": "run-s build:libs build:docs build:apps",
+    "build:all": "run-s build:libs build:docs build:app",
     "build:libs": "turbo run build --filter=@fuel-wallet/*",
     "build:docs": "turbo run build --filter=docs",
     "build:app": "turbo run build --filter=app",
@@ -44,6 +44,7 @@
     "prettier:format": "prettier --write .",
     "storybook": "pnpm -r --filter=app storybook",
     "test": "pnpm run --filter=app test",
+    "test:sdk": "pnpm run --filter=sdk test",
     "test:ci": "pnpm test -- --ci --testLocationInResults --json --coverage",
     "test:clear": "pnpm -r exec jest --clearCache",
     "test:coverage": "pnpm run --filter=app test --coverage",
@@ -52,9 +53,9 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@fuel-ui/config": "workspace:*",
-    "@fuel-ui/css": "workspace:*",
-    "@fuel-ui/react": "workspace:*",
+    "@fuel-ui/config": "^0.9.1",
+    "@fuel-ui/css": "^0.9.1",
+    "@fuel-ui/react": "^0.9.1",
     "execa": "^6.1.0",
     "fuelhat": "workspace:*"
   },
