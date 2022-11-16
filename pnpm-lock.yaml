@@ -24,6 +24,7 @@ importers:
       '@xstate/cli': ^0.3.3
       dotenv: ^16.0.3
       eslint: ^8.27.0
+      execa: ^6.1.0
       fs-extra: ^10.1.0
       fuelhat: workspace:*
       http-server: ^14.1.1
@@ -36,6 +37,7 @@ importers:
       npm-run-all: ^4.1.5
       playwright: ^1.27.1
       prettier: ^2.7.1
+      shelljs: ^0.8.5
       ts-jest: ^29.0.3
       ts-node: ^10.9.1
       turbo: ^1.6.3
@@ -45,7 +47,9 @@ importers:
       '@fuel-ui/config': link:design-system/config
       '@fuel-ui/css': link:design-system/css
       '@fuel-ui/react': link:design-system/react
+      execa: 6.1.0
       fuelhat: link:packages/fuelhat
+      shelljs: 0.8.5
     devDependencies:
       '@babel/core': 7.20.2
       '@changesets/changelog-github': 0.4.7
@@ -517,7 +521,9 @@ importers:
       '@docsearch/react': '3'
       '@fuel-ui/css': workspace:*
       '@fuel-ui/react': workspace:*
+      '@fuel-wallet/sdk': workspace:*
       '@next/mdx': ^13.0.2
+      '@types/chrome': ^0.0.200
       '@types/node': ^18.11.9
       '@types/prismjs': ^1.26.0
       '@types/react': ^18.0.25
@@ -544,6 +550,7 @@ importers:
       '@docsearch/react': 3.3.0_2zx2umvpluuhvlq44va5bta2da
       '@fuel-ui/css': link:../../design-system/css
       '@fuel-ui/react': link:../../design-system/react
+      '@fuel-wallet/sdk': link:../sdk
       '@next/mdx': 13.0.2
       dotenv: 16.0.3
       globby: 13.1.2
@@ -560,6 +567,7 @@ importers:
       remark-slug: 7.0.1
       unist-util-visit: 4.1.1
     devDependencies:
+      '@types/chrome': 0.0.200
       '@types/node': 18.11.9
       '@types/prismjs': 1.26.0
       '@types/react': 18.0.25
@@ -577,35 +585,6 @@ importers:
       chalk: 5.1.2
       spinnies: 0.5.1
       yargs: 17.6.2
-
-  packages/page:
-    specifiers:
-      '@fuel-ui/css': workspace:*
-      '@fuel-ui/react': workspace:*
-      '@fuel-wallet/sdk': workspace:*
-      '@types/react': ^18.0.25
-      '@types/react-dom': ^18.0.8
-      '@vitejs/plugin-react': ^2.2.0
-      react: ^18.2.0
-      react-dom: ^18.2.0
-      react-router: ^6.4.3
-      react-router-dom: ^6.4.3
-      typescript: ^4.8.4
-      vite: ^3.2.3
-    dependencies:
-      '@fuel-ui/css': link:../../design-system/css
-      '@fuel-ui/react': link:../../design-system/react
-      '@fuel-wallet/sdk': link:../sdk
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      react-router: 6.4.3_react@18.2.0
-      react-router-dom: 6.4.3_biqbaboplfbrettd7655fr4n2y
-    devDependencies:
-      '@types/react': 18.0.25
-      '@types/react-dom': 18.0.8
-      '@vitejs/plugin-react': 2.2.0_vite@3.2.3
-      typescript: 4.8.4
-      vite: 3.2.3
 
   packages/sdk:
     specifiers:
@@ -12295,7 +12274,6 @@ packages:
       onetime: 6.0.0
       signal-exit: 3.0.7
       strip-final-newline: 3.0.0
-    dev: true
 
   /exit/0.1.2:
     resolution: {integrity: sha512-Zk/eNKV2zbjpKzrsQ+n1G6poVbErQxJ0LBOJXaKZ1EViLzH+hrLu9cdXI4zw9dBQJslwBEpbQ2P1oS7nDxs6jQ==}
@@ -13642,7 +13620,6 @@ packages:
   /human-signals/3.0.1:
     resolution: {integrity: sha512-rQLskxnM/5OCldHo+wNXbpVgDn5A17CUoKX+7Sokwaknlq7CdSnphy0W39GU8dw59XiCXmFXDg4fRuckQRKewQ==}
     engines: {node: '>=12.20.0'}
-    dev: true
 
   /husky/8.0.2:
     resolution: {integrity: sha512-Tkv80jtvbnkK3mYWxPZePGFpQ/tT3HNSs/sasF9P2YfkMezDl3ON37YN6jUUI4eTg5LcyVynlb6r4eyvOmspvg==}
@@ -13798,6 +13775,11 @@ packages:
       get-intrinsic: 1.1.3
       has: 1.0.3
       side-channel: 1.0.4
+
+  /interpret/1.4.0:
+    resolution: {integrity: sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==}
+    engines: {node: '>= 0.10'}
+    dev: false
 
   /interpret/2.2.0:
     resolution: {integrity: sha512-Ju0Bz/cEia55xDwUWEa8+olFpCiQoypjnQySseKtmjNrnps3P+xfpUmGr90T7yjlVJmOtybRvPXhKMbHr+fWnw==}
@@ -14164,7 +14146,6 @@ packages:
   /is-stream/3.0.0:
     resolution: {integrity: sha512-LnQR4bZ9IADDRSkvpqMGvt/tEJWclzklNgSw48V5EAaAeDd6qGvN8ei6k5p0tvxSR171VmGyHuTiAOfxAbr8kA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-    dev: true
 
   /is-string/1.0.7:
     resolution: {integrity: sha512-tE2UXzivje6ofPW7l23cjDOMa09gb7xlAqG6jG5ej6uPV32TlWP3NKPigtaGeHNu9fohccRYvIiZMfOOnOYUtg==}
@@ -16296,7 +16277,6 @@ packages:
   /mimic-fn/4.0.0:
     resolution: {integrity: sha512-vqiC06CuhBTUdZH+RYl8sFrL096vA45Ok5ISO6sE/Mr1jRbGH4Csnhi8f3wKVl7x8mO4Au7Ir9D3Oyv1VYMFJw==}
     engines: {node: '>=12'}
-    dev: true
 
   /mimic-response/2.1.0:
     resolution: {integrity: sha512-wXqjST+SLt7R009ySCglWBCFpjUygmCIfD790/kVbiGmUgfYGuB14PiTd5DwVxSV4NcYHjzMkoj5LjQZwTQLEA==}
@@ -16781,7 +16761,6 @@ packages:
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       path-key: 4.0.0
-    dev: true
 
   /npmlog/5.0.1:
     resolution: {integrity: sha512-AqZtDUWOMKs1G/8lwylVjrdYgqA4d9nu8hc+0gzRxlDb1I10+FHBGMXs6aiQHFdCUUlqH99MUMuLfzWDNDtfxw==}
@@ -16932,7 +16911,6 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       mimic-fn: 4.0.0
-    dev: true
 
   /open/7.4.2:
     resolution: {integrity: sha512-MVHddDVweXZF3awtlAS+6pgKLlm/JgxZ90+/NBurBoQctVOOB/zDdVjcyPzQ+0laDGbsWgrRkflI65sQeOgT9Q==}
@@ -17266,7 +17244,6 @@ packages:
   /path-key/4.0.0:
     resolution: {integrity: sha512-haREypq7xkM7ErfgIyA0z+Bj4AGKlMSdlQE2jvJo6huWD1EdkKYV+G/T4nq0YEF2vgTT8kqMFKo1uHn950r4SQ==}
     engines: {node: '>=12'}
-    dev: true
 
   /path-parse/1.0.7:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
@@ -18523,6 +18500,13 @@ packages:
       typeson-registry: 1.0.0-alpha.39
     dev: false
 
+  /rechoir/0.6.2:
+    resolution: {integrity: sha512-HFM8rkZ+i3zrV+4LQjwQ0W+ez98pApMGM3HUrN04j3CqzPOzl9nmP15Y8YXNm8QHGv/eacOVEjqhmWpkRV0NAw==}
+    engines: {node: '>= 0.10'}
+    dependencies:
+      resolve: 1.22.1
+    dev: false
+
   /recrawl-sync/2.2.3:
     resolution: {integrity: sha512-vSaTR9t+cpxlskkdUFrsEpnf67kSmPk66yAGT1fZPrDudxQjoMzPgQhSMImQ0pAw5k0NPirefQfhopSjhdUtpQ==}
     dependencies:
@@ -19220,6 +19204,16 @@ packages:
     resolution: {integrity: sha512-8o/QEhSSRb1a5i7TFR0iM4G16Z0vYB2OQVs4G3aAFXjn3T6yEx8AZxy1PgDF7I00LZHYA3WxaSYIf5e5sAX8Rw==}
     dev: true
 
+  /shelljs/0.8.5:
+    resolution: {integrity: sha512-TiwcRcrkhHvbrZbnRcFYMLl30Dfov3HKqzp5tO5b4pt6G/SezKcYhmDg15zXVBswHmctSAQKznqNW2LO5tTDow==}
+    engines: {node: '>=4'}
+    hasBin: true
+    dependencies:
+      glob: 7.2.3
+      interpret: 1.4.0
+      rechoir: 0.6.2
+    dev: false
+
   /side-channel/1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}
     dependencies:
@@ -19778,7 +19772,6 @@ packages:
   /strip-final-newline/3.0.0:
     resolution: {integrity: sha512-dOESqjYr96iWYylGObzd39EuNTa5VJxyvVAEm5Jnh7KGo75V43Hk1odPQkNDyXNmUR6k+gEiDVXnjB8HJ3crXw==}
     engines: {node: '>=12'}
-    dev: true
 
   /strip-indent/1.0.1:
     resolution: {integrity: sha512-I5iQq6aFMM62fBEAIB/hXzwJD6EEZ0xEGCX2t7oXqaKPIRgt4WruAQ285BISgdkP+HLGWyeGmNJcpIwFeRYRUA==}

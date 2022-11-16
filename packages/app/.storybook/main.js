@@ -1,7 +1,6 @@
 const { join } = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const { getPublicEnvs } = require('../load.envs');
-const importMetaEnv = require('@import-meta-env/unplugin');
 const webpack = require('webpack');
 
 const config = {
@@ -32,10 +31,7 @@ const config = {
   env: (config) => ({ ...config, ...getPublicEnvs() }),
   webpackFinal: async (config) => {
     if (config.build) {
-      config.base = join(
-        process.env.BASE_URL || config.base || '',
-        'storybook'
-      );
+      config.base = join(process.env.STORYBOOK_BASE_URL || config.base || '');
     }
     config.resolve.fallback = {
       ...config.resolve.fallback,

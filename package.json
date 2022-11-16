@@ -22,11 +22,11 @@
     "./design-system/*"
   ],
   "scripts": {
-    "build:libs": "turbo run build --filter=@fuel-wallet/* --no-cache",
-    "build:preview": "./scripts/build-preview.sh",
-    "build": "pnpm build:libs && turbo run build",
-    "build:crx": "pnpm build:libs && turbo run build:crx",
-    "build:all": "run-s build build:crx",
+    "build:website": "node ./scripts/build-website.mjs",
+    "build:all": "run-s build:libs build:docs build:apps",
+    "build:libs": "turbo run build --filter=@fuel-wallet/*",
+    "build:docs": "turbo run build --filter=docs",
+    "build:app": "turbo run build --filter=app",
     "changeset": "changeset",
     "changeset:release": "changeset publish --no-git-tag",
     "changeset:version": "changeset version",
@@ -34,6 +34,7 @@
     "deps:update": "updates -gu && pnpm -r exec updates -gu",
     "dev": "turbo run dev --parallel",
     "dev:crx": "turbo run dev:crx --parallel",
+    "gh:preview": "node ./scripts/gh-pages-preview.mjs",
     "lint": "run-s lint:check prettier:check",
     "lint:check": "eslint . --ext .ts,.tsx,.js,.jsx",
     "lint:fix": "pnpm lint:check --fix",
@@ -54,6 +55,7 @@
     "@fuel-ui/config": "workspace:*",
     "@fuel-ui/css": "workspace:*",
     "@fuel-ui/react": "workspace:*",
+    "execa": "^6.1.0",
     "fuelhat": "workspace:*"
   },
   "devDependencies": {

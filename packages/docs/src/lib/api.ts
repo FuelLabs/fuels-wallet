@@ -56,6 +56,7 @@ export async function getDocBySlug(
   const source = await serialize(content, {
     scope: data,
     mdxOptions: {
+      format: 'mdx',
       remarkPlugins: [remarkSlug, remarkGfm],
       rehypePlugins: [[rehypeExtractHeadings, { headings }]],
     },
@@ -104,7 +105,7 @@ export async function getSidebarLinks(order: string[]) {
       const aIdx = order.indexOf(a.label);
       const bIdx = order.indexOf(b.label);
       if (!a.subpath && !b.subpath) {
-        return bIdx - aIdx;
+        return aIdx - bIdx;
       }
       if (a.subpath && b.subpath) {
         const aFirst = order.filter((i) => i.startsWith(a.label))?.[0];

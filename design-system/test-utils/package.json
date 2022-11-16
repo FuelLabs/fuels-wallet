@@ -3,9 +3,6 @@
   "version": "0.9.1",
   "license": "Apache-2.0",
   "main": "./dist/src/index.js",
-  "scripts": {
-    "build": "tsup --dts"
-  },
   "dependencies": {
     "@testing-library/dom": "^8.18.1",
     "@testing-library/jest-dom": "^5.16.5",
@@ -31,9 +28,7 @@
     "@types/testing-library__jest-dom": "^5.14.5",
     "typescript": "^4.8.4"
   },
-  "peerDependencies": {
-    "react": ">=18"
-  },
+  "peerDependencies": { "react": ">=18" },
   "access": "public",
   "module": "./dist/src/index.mjs",
   "types": "./dist/src/index.d.ts",
@@ -47,14 +42,7 @@
       "require": "./dist/config.js",
       "default": "./dist/config.mjs"
     },
-    "./setup": {
-      "require": "./dist/setup.js",
-      "default": "./dist/setup.mjs"
-    }
+    "./setup": { "require": "./dist/setup.js", "default": "./dist/setup.mjs" }
   },
-  "files": [
-    "dist",
-    "config.ts",
-    "setup.ts"
-  ]
+  "files": ["dist", "config.ts", "setup.ts"]
 }

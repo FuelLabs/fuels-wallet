@@ -1,10 +1,10 @@
 {
-  "name": "@fuel-wallet/docs",
+  "name": "docs",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "DOCS_DIST=${DOCS_DIST:=test} next build && next export -o $DOCS_DIST",
     "start": "next start",
     "lint": "next lint"
   },
@@ -13,6 +13,7 @@
     "@docsearch/react": "3",
     "@fuel-ui/css": "workspace:*",
     "@fuel-ui/react": "workspace:*",
+    "@fuel-wallet/sdk": "workspace:*",
     "@next/mdx": "^13.0.2",
     "dotenv": "^16.0.3",
     "globby": "^13.1.2",
@@ -30,6 +31,7 @@
     "unist-util-visit": "^4.1.1"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.200",
     "@types/node": "^18.11.9",
     "@types/prismjs": "^1.26.0",
     "@types/react": "^18.0.25",

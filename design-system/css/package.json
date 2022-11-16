@@ -3,10 +3,6 @@
   "version": "0.9.1",
   "license": "Apache-2.0",
   "main": "./dist/index.js",
-  "scripts": {
-    "build": "tsup --dts",
-    "ts:check": "tsc --noEmit"
-  },
   "dependencies": {
     "@radix-ui/colors": "^0.1.8",
     "@stitches/react": "^1.2.8",
@@ -19,12 +15,7 @@
   "types": "./dist/index.d.ts",
   "typings": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "default": "./dist/index.mjs"
-    }
+    ".": { "require": "./dist/index.js", "default": "./dist/index.mjs" }
   },
-  "files": [
-    "dist"
-  ]
+  "files": ["dist"]
 }

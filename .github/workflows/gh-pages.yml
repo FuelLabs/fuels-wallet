@@ -16,19 +16,21 @@ jobs:
       - name: Build
         env:
           CI: false
-          BASE_URL: "/${{ github.event.repository.name }}"
-          VITE_STORYBOOK_URL: "https://fuels-wallet.vercel.app/storybook/"
           VITE_FUEL_PROVIDER_URL: "https://node-beta-1.fuel.network/graphql"
           VITE_FUEL_FAUCET_URL: "https://faucet-beta-1.fuel.network/dispense"
           VITE_FAUCET_RECAPTCHA_KEY: "6Ld3cEwfAAAAAMd4QTs7aO85LyKGdgj0bFsdBfre"
           VITE_MNEMONIC_WORDS: 12
+          DOCS_BASE_URL: "/${{ github.event.repository.name }}"
+          NEXT_PUBLIC_APP_URL: "https://fuels-wallet.vercel.app/app/"
+          NEXT_PUBLIC_STORYBOOK_URL: "https://fuels-wallet.vercel.app/storybook/"
+          NEXT_PUBLIC_WALLET_DOWNLOAD_URL: "https://fuels-wallet.vercel.app/app/fuel-wallet.zip"
         run: |
           pnpm install
-          pnpm build
+          pnpm build:website
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
           clean: true
           branch: gh-pages
-          folder: packages/app/dist
+          folder: ./dist

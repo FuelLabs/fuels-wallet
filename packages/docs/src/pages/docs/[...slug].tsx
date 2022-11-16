@@ -15,6 +15,7 @@ import { Pre } from '../../components/Pre';
 import { Sidebar } from '../../components/Sidebar';
 import { Table } from '../../components/Table';
 import { TableOfContent } from '../../components/TableOfContent';
+import { Testing } from '../../components/Testing';
 import { FIELDS, MENU_ORDER } from '../../constants';
 import { DocProvider } from '../../hooks/useDocContext';
 import { getAllDocs, getDocBySlug, getSidebarLinks } from '../../lib/api';
@@ -33,6 +34,7 @@ const components = {
   blockquote: Blockquote,
   table: Table,
   ul: UL,
+  Testing,
 };
 
 type DocPageProps = {

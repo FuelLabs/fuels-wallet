@@ -2,16 +2,6 @@
   "name": "@fuel-ui/react",
   "version": "0.9.1",
   "main": "./dist/index.js",
-  "scripts": {
-    "add:component": "node ./scripts/generateComponent",
-    "build:storybook": "build-storybook",
-    "build": "tsup --dts",
-    "dev": "start-storybook -p 6006",
-    "test": "jest --verbose",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
-    "ts:check": "tsc --noEmit"
-  },
   "dependencies": {
     "@fuel-ui/css": "workspace:*",
     "@fuel-ui/test-utils": "workspace:*",
@@ -92,12 +82,7 @@
   "types": "./dist/index.d.ts",
   "typings": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "default": "./dist/index.mjs"
-    }
+    ".": { "require": "./dist/index.js", "default": "./dist/index.mjs" }
   },
-  "files": [
-    "dist"
-  ]
+  "files": ["dist"]
 }

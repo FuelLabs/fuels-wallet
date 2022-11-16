@@ -42,6 +42,8 @@ export function TableOfContent() {
   );
 }
 
+const LIST_ITEM = '.fuel_list > .fuel_list-item';
+
 const styles = {
   root: cssObj({
     position: 'sticky',
@@ -53,29 +55,28 @@ const styles = {
       mt: 0,
     },
 
-    '.fuel_list > .fuel_list-item': {
+    [LIST_ITEM]: {
       pb: '$2',
       a: {
         fontWeight: '$semibold',
         color: '$gray11',
       },
     },
-    '.fuel_list > .fuel_list-item > .fuel_list > .fuel_list-item': {
+    [`${LIST_ITEM} > ${LIST_ITEM}:nth-child(1)`]: {
+      pt: '$2',
+    },
+    [`${LIST_ITEM} > ${LIST_ITEM}`]: {
       a: {
         fontWeight: '$normal',
         color: '$gray9',
       },
     },
-    '.fuel_list > .fuel_list-item > .fuel_list > .fuel_list-item:nth-child(1)':
-      {
-        pt: '$2',
-      },
   }),
   feedback: cssObj({
     display: 'flex',
     flexDirection: 'column',
     pt: '$3',
-    borderTop: '1px solid $gray4',
+    borderTop: '1px dashed $gray4',
     fontSize: '$xs',
 
     'a, a:visited': {

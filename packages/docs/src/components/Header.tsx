@@ -1,9 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Flex, FuelLogo, Icon } from '@fuel-ui/react';
+import { Box, Button, Flex, FuelLogo, Icon } from '@fuel-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { Search } from './Search';
+
+const globalWindow = typeof window !== 'undefined' ? window : ({} as Window);
 
 export function Header() {
   const { asPath } = useRouter();
@@ -22,7 +24,7 @@ export function Header() {
         <Link href="/" className={isHomeActive ? 'active' : ''}>
           Home
         </Link>
-        <Link href="/docs/sdk/install" className={isDocsActive ? 'active' : ''}>
+        <Link href="/docs/install" className={isDocsActive ? 'active' : ''}>
           Documentation
         </Link>
         <a
@@ -41,6 +43,15 @@ export function Header() {
         </a>
       </Flex>
       <Search />
+      {!globalWindow?.FuelWeb3 && (
+        <Button
+          as="a"
+          css={{ ml: '$8' }}
+          href={process.env.NEXT_PUBLIC_APP_URL}
+        >
+          Open Wallet
+        </Button>
+      )}
     </Flex>
   );
 }

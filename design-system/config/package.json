@@ -22,14 +22,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
-  "devDependencies": {
-    "tsup": "^6.2.3",
-    "typescript": "^4.8.4"
-  },
+  "devDependencies": { "tsup": "^6.2.3", "typescript": "^4.8.4" },
   "access": "public",
-  "files": [
-    "./index.js",
-    "./react-imports.js",
-    "./tsup.js"
-  ]
+  "files": ["./index.js", "./react-imports.js", "./tsup.js"]
 }

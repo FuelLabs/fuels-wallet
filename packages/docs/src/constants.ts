@@ -1,5 +1,6 @@
 export const MENU_ORDER = [
   'Install',
+  'Testing',
   'SDK/How to Use',
   'SDK/API',
   'Contributing/Project Structure',

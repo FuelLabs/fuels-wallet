@@ -1,27 +1,24 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import {
-  Alert,
-  Box,
-  BoxCentered,
-  Button,
-  Text,
-  Link,
-  Input,
-} from '@fuel-ui/react';
+import { Alert, Box, Button, Text, Link, Input, Flex } from '@fuel-ui/react';
 import { useCallback, useEffect, useState } from 'react';
+
+const globalWindow = typeof window !== 'undefined' ? window : ({} as Window);
 
 // This is not need if the developer
 // install FuelWeb3 and import as a package
 function useFuelWeb3() {
   const [error, setError] = useState('');
-  const [fuelWeb3, setFuelWeb3] = useState<Window['FuelWeb3']>(window.FuelWeb3);
+  const [fuelWeb3, setFuelWeb3] = useState<Window['FuelWeb3']>(
+    globalWindow.FuelWeb3
+  );
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (window.FuelWeb3) {
-        setFuelWeb3(window.FuelWeb3);
+      if (globalWindow.FuelWeb3) {
+        setFuelWeb3(globalWindow.FuelWeb3);
       } else {
         setError('FuelWeb3 not detected on the window!');
       }
@@ -56,44 +53,52 @@ function useLoading<T extends (...args: any) => Promise<void>>(
   return [execute as T, loading, error] as const;
 }
 
-export function DApp() {
+export function Testing() {
   const [FuelWeb3, notDetected] = useFuelWeb3();
   const [connected, setConnected] = useState(false);
   const [accounts, setAccounts] = useState<string[]>([]);
   const [signedMessage, setSignedMessage] = useState<string>('');
   const [message, setMessage] = useState<string>('Message to sign');
+
   const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {
     console.debug('Request connection to Wallet!');
-    const isConnected = await window.FuelWeb3.connect();
+    const isConnected = await globalWindow.FuelWeb3.connect();
     setConnected(isConnected);
     console.debug('Connection response', isConnected);
   });
+
   const [handleDisconnect, isDisconnecting, errorDisconnect] = useLoading(
     async () => {
       console.debug('Request disconnection to Wallet!');
-      await window.FuelWeb3.disconnect();
+      await globalWindow.FuelWeb3.disconnect();
       setConnected(false);
       console.debug('Disconnection response');
     }
   );
+
   const [handleGetAccounts, isLoadingAccounts, errorGetAccounts] = useLoading(
     async () => {
       console.debug('Request accounts to Wallet!');
-      const accounts = await window.FuelWeb3.accounts();
+      const accounts = await globalWindow.FuelWeb3.accounts();
       setAccounts(accounts);
       console.debug('Accounts ', accounts);
     }
   );
+
   const [handleSignMessage, isSingingMessage, errorSigningMessage] = useLoading(
     async (message: string) => {
       console.debug('Request signature of message!');
       const account = accounts[0];
-      const signedMessage = await window.FuelWeb3.signMessage(account, message);
+      const signedMessage = await globalWindow.FuelWeb3.signMessage(
+        account,
+        message
+      );
       setSignedMessage(signedMessage);
       console.debug('Message signature', signedMessage);
     },
     [accounts]
   );
+
   const errorMessage =
     errorConnect ||
     errorDisconnect ||
@@ -116,7 +121,7 @@ export function DApp() {
   }, [FuelWeb3]);
 
   return (
-    <Box>
+    <Box css={styles.page}>
       {errorMessage ? (
         <Alert status="warning" css={styles.alert}>
           <Alert.Description>{errorMessage}</Alert.Description>
@@ -124,7 +129,7 @@ export function DApp() {
             <Alert.Actions>
               <Link
                 download={true}
-                href={import.meta.env.VITE_WALLET_DOWNLOAD_URL}
+                href={process.env.NEXT_PUBLIC_WALLET_DOWNLOAD_URL}
               >
                 Download Wallet
               </Link>
@@ -132,29 +137,31 @@ export function DApp() {
           ) : null}
         </Alert>
       ) : null}
-      <BoxCentered minHS minWS gap="$2" direction="column">
+      <Flex gap="$2" direction="column">
         <Text as="h1">Connection</Text>
-        <Button
-          onPress={handleConnect}
-          isLoading={isConnecting}
-          isDisabled={isConnecting || connected}
-        >
-          {connected ? 'Connected' : 'Connect'}
-        </Button>
-        <Button
-          onPress={handleDisconnect}
-          isLoading={isDisconnecting}
-          isDisabled={isDisconnecting || !connected}
-        >
-          {connected ? 'Disconnect' : 'Disconnected'}
-        </Button>
-        <Button
-          onPress={handleGetAccounts}
-          isLoading={isLoadingAccounts}
-          isDisabled={isLoadingAccounts || !connected}
-        >
-          Get accounts
-        </Button>
+        <Flex gap="$4">
+          <Button
+            onPress={handleConnect}
+            isLoading={isConnecting}
+            isDisabled={isConnecting || connected}
+          >
+            {connected ? 'Connected' : 'Connect'}
+          </Button>
+          <Button
+            onPress={handleDisconnect}
+            isLoading={isDisconnecting}
+            isDisabled={isDisconnecting || !connected}
+          >
+            {connected ? 'Disconnect' : 'Disconnected'}
+          </Button>
+          <Button
+            onPress={handleGetAccounts}
+            isLoading={isLoadingAccounts}
+            isDisabled={isLoadingAccounts || !connected}
+          >
+            Get accounts
+          </Button>
+        </Flex>
         {accounts.length ? (
           <Box css={styles.accounts}>
             {accounts.map((account) => (
@@ -174,24 +181,35 @@ export function DApp() {
             css={{ color: '$whiteA11', padding: '$2' }}
           />
         </Input>
-        <Button
-          onPress={() => handleSignMessage(message)}
-          isLoading={isSingingMessage}
-          isDisabled={isSingingMessage || !connected}
-        >
-          Sign Message
-        </Button>
+        <Box>
+          <Button
+            onPress={() => handleSignMessage(message)}
+            isLoading={isSingingMessage}
+            isDisabled={isSingingMessage || !connected}
+          >
+            Sign Message
+          </Button>
+        </Box>
         {signedMessage ? (
           <Box css={styles.accounts}>
             <Text>{signedMessage}</Text>
           </Box>
         ) : null}
-      </BoxCentered>
+      </Flex>
     </Box>
   );
 }
 
 const styles = {
+  page: cssObj({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '$8',
+
+    '.fuel_alert--content': {
+      gap: '$1',
+    },
+  }),
   accounts: cssObj({
     marginTop: '$2',
     padding: '$2',
@@ -201,11 +219,7 @@ const styles = {
     wordWrap: 'break-word',
   }),
   alert: cssObj({
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100vw',
-    boxShadow: '$lg',
+    boxShadow: '$none',
     boxSizing: 'border-box',
 
     '&, &::after': {
