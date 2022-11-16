@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Alert, Button, Flex, InputPassword } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -31,26 +30,16 @@ type ChangePasswordFormValues = {
 
 export function ChangePassword() {
   const navigate = useNavigate();
-  const { changePassword, isChangingPassword, hasChangedPassword } =
-    useSettings();
+  const { changePassword, isChangingPassword } = useSettings();
   const { handleSubmit, control } = useForm<ChangePasswordFormValues>({
     mode: 'onChange',
     reValidateMode: 'onChange',
     resolver: yupResolver(schema),
   });
 
-  function onSubmit({ newPassword, oldPassword }: ChangePasswordFormValues) {
-    changePassword({
-      oldPassword,
-      newPassword,
-    });
+  function onSubmit(values: ChangePasswordFormValues) {
+    changePassword(values);
   }
-
-  useEffect(() => {
-    if (hasChangedPassword) {
-      navigate(Pages.wallet());
-    }
-  }, [hasChangedPassword]);
 
   const goBack = () => navigate(Pages.wallet());
 

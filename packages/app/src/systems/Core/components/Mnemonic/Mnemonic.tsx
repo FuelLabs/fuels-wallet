@@ -39,10 +39,8 @@ export function Mnemonic({
   });
 
   async function handleCopy() {
-    if (type === 'read') {
-      return navigator.clipboard.writeText(initialValue.join(' '));
-    }
-    return navigator.clipboard.writeText(value.join(' '));
+    const val = type === 'read' ? initialValue : value;
+    return navigator.clipboard.writeText(val.join(' '));
   }
 
   function handlePastInput(ev: React.ClipboardEvent<HTMLInputElement>) {

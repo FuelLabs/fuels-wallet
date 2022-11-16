@@ -1,4 +1,3 @@
-import { toast } from '@fuel-ui/react';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
@@ -18,11 +17,9 @@ type MachineContext = {
   words: string[];
 };
 
-type MachineEvents = {
-  type: 'UNLOCK_WALLET' | 'CHANGE_PASSWORD';
-  input?: AccountInputs['unlock'];
-  data?: string[];
-};
+type MachineEvents =
+  | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock']; data: string[] }
+  | { type: 'CHANGE_PASSWORD'; input: AccountInputs['changePassword'] };
 
 export const settingsMachine = createMachine(
   {
@@ -55,6 +52,7 @@ export const settingsMachine = createMachine(
         },
       },
       unlocking: {
+        tags: ['unlocking'],
         on: {
           UNLOCK_WALLET: {
             target: 'gettingMnemonic',
@@ -62,6 +60,7 @@ export const settingsMachine = createMachine(
         },
       },
       gettingMnemonic: {
+        tags: ['unlocking'],
         invoke: {
           src: 'unlockAndGetMnemonic',
           data: {
@@ -88,7 +87,6 @@ export const settingsMachine = createMachine(
         type: 'final',
         entry: 'goToWallet',
       },
-      failed: {},
     },
     on: {
       CHANGE_PASSWORD: {
@@ -118,7 +116,6 @@ export const settingsMachine = createMachine(
             oldPassword: input.oldPassword,
             newPassword: input.newPassword,
           });
-          toast.success('Password Changed');
         },
       }),
       unlockAndGetMnemonic: FetchMachine.create<

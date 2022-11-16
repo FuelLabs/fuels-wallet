@@ -1,3 +1,4 @@
+import { toast } from '@fuel-ui/react';
 import { useInterpret, useSelector } from '@xstate/react';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,12 +12,7 @@ import { Pages } from '~/systems/Core';
 const selectors = {
   isChangingPassword: (state: SettingsMachineState) =>
     state.matches('changingPassword'),
-
-  hasChangedPassword: (state: SettingsMachineState) => state.matches('done'),
-
-  isUnlocking: (state: SettingsMachineState) =>
-    state.matches('unlocking') || state.matches('gettingMnemonic'),
-
+  isUnlocking: (state: SettingsMachineState) => state.hasTag('unlocking'),
   words: (state: SettingsMachineState) => state.context.words,
 };
 
@@ -27,19 +23,15 @@ export function useSettings() {
     settingsMachine.withConfig({
       actions: {
         goToWallet() {
+          toast.success('Password Changed');
           navigate(Pages.wallet());
         },
       },
     })
   );
   const { send } = service;
-
   const isUnlocking = useSelector(service, selectors.isUnlocking);
-
   const isChangingPassword = useSelector(service, selectors.isChangingPassword);
-
-  const hasChangedPassword = useSelector(service, selectors.hasChangedPassword);
-
   const words = useSelector(service, selectors.words);
 
   /** @description - This will unlock the wallet and get the mnemonic phrase */
@@ -60,6 +52,5 @@ export function useSettings() {
     isUnlocking,
     isChangingPassword,
     words,
-    hasChangedPassword,
   };
 }

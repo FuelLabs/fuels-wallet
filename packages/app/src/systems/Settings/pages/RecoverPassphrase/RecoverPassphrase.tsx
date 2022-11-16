@@ -10,7 +10,6 @@ import { Header } from '~/systems/SignUp/components';
 
 export function RecoverPassphrase() {
   const navigate = useNavigate();
-
   const { isUnlocking, unlockAndGetMnemonic, words } = useSettings();
 
   return (
