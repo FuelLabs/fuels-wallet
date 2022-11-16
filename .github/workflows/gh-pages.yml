@@ -16,6 +16,9 @@ jobs:
       - name: Build
         env:
           CI: false
+          NEXT_PUBLIC_ALGOLIA_APP_ID: ${{ secret.ALGOLIA_APP_ID }}
+          NEXT_PUBLIC_ALGOLIA_SEARCH_API_KEY: ${{ secret.ALGOLIA_SEARCH_API_KEY }}
+          ALGOLIA_SEARCH_ADMIN_KEY: ${{ secret.ALGOLIA_API_KEY }}
           VITE_FUEL_PROVIDER_URL: "https://node-beta-1.fuel.network/graphql"
           VITE_FUEL_FAUCET_URL: "https://faucet-beta-1.fuel.network/dispense"
           VITE_FAUCET_RECAPTCHA_KEY: "6Ld3cEwfAAAAAMd4QTs7aO85LyKGdgj0bFsdBfre"
