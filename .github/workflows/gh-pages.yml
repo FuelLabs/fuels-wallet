@@ -25,8 +25,8 @@ jobs:
           VITE_MNEMONIC_WORDS: 12
           DOCS_BASE_URL: "/${{ github.event.repository.name }}"
           NEXT_PUBLIC_APP_URL: "https://fuels-wallet.vercel.app/app/"
-          NEXT_PUBLIC_STORYBOOK_URL: "https://fuels-wallet.vercel.app/storybook/"
           NEXT_PUBLIC_WALLET_DOWNLOAD_URL: "https://fuels-wallet.vercel.app/app/fuel-wallet.zip"
+          NEXT_PUBLIC_STORYBOOK_URL: "https://fuels-wallet.vercel.app/storybook/"
         run: |
           pnpm install
           pnpm build:preview
