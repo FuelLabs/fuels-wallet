@@ -13,6 +13,8 @@ const selectors = {
   isChangingPassword: (state: SettingsMachineState) =>
     state.matches('changingPassword'),
   isUnlocking: (state: SettingsMachineState) => state.hasTag('unlocking'),
+  isGettingMnemonic: (state: SettingsMachineState) =>
+    state.matches('gettingMnemonic'),
   words: (state: SettingsMachineState) => state.context.words,
 };
 
@@ -32,6 +34,7 @@ export function useSettings() {
   const { send } = service;
   const isUnlocking = useSelector(service, selectors.isUnlocking);
   const isChangingPassword = useSelector(service, selectors.isChangingPassword);
+  const isGettingMnemonic = useSelector(service, selectors.isGettingMnemonic);
   const words = useSelector(service, selectors.words);
 
   /** @description - This will unlock the wallet and get the mnemonic phrase */
@@ -51,6 +54,7 @@ export function useSettings() {
     unlockAndGetMnemonic,
     isUnlocking,
     isChangingPassword,
+    isGettingMnemonic,
     words,
   };
 }
