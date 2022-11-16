@@ -46,15 +46,16 @@ Integrate your **DApp** using the [Wallet SDK](./docs/WALLET_SDK.md)
   - [x] Request connection
   - [x] List accounts
   - [x] Sign messages
-  - [ ] Send transactions
+  - [x] Send transactions
+  - [ ] Disconnect applications
 - [x] Check your asset's balance
 - [x] Manage networks
 - [x] Faucet for testnet
-- [ ] Receive screen with QR Code
+- [x] Receive screen with QR Code
 - [ ] Update account details
 - [ ] Reveal your passphrase
 - [ ] Change password
-- [ ] See a list of your recent activities
+- [ ] See a list of your recent activities (Transaction History)
 - [ ] View transaction details
 - [ ] Send assets to another wallet
 
