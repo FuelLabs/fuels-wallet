@@ -22,7 +22,7 @@ describe('BalanceWidget', () => {
 
   it('should show formatted balance', () => {
     render(<BalanceWidget account={ACCOUNT} />);
-    expect(screen.getByText(/12,009/)).toBeInTheDocument();
+    expect(screen.getByText(/12.009/)).toBeInTheDocument();
   });
 
   it('should hide balance when click on toggle button', async () => {
@@ -30,9 +30,9 @@ describe('BalanceWidget', () => {
     const btn = screen.getByLabelText(/Hide balance/i);
     expect(btn).toBeInTheDocument();
 
-    expect(screen.getByText(/12,009/)).toBeInTheDocument();
+    expect(screen.getByText(/12.009/)).toBeInTheDocument();
     await user.click(btn);
-    expect(() => screen.getByText(/12,009/)).toThrow();
+    expect(() => screen.getByText(/12.009/)).toThrow();
   });
 
   it('should copy full address when click on copy icon', async () => {

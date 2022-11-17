@@ -22,7 +22,7 @@ function getPublicEnvs() {
   const WHITELIST = ['NODE_ENV', 'PUBLIC_URL'];
   return Object.fromEntries(
     Object.entries(process.env).filter(([key]) =>
-      WHITELIST.some((k) => k === key || key.match(/^VITE_/))
+      WHITELIST.some((k) => k === key || key.match(/^PUBLIC_/))
     )
   );
 }
