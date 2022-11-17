@@ -18,6 +18,6 @@ describe('AssetItem', () => {
   });
   it('should show asset amount formatted', () => {
     render(<AssetItem asset={MOCK_ASSETS[0]} />);
-    expect(screen.getByText('14,564 ETH')).toBeInTheDocument();
+    expect(screen.getByText('14.564 ETH')).toBeInTheDocument();
   });
 });
