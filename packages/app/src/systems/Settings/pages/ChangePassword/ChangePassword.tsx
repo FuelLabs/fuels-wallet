@@ -63,9 +63,8 @@ export function ChangePassword() {
                 <InputPassword
                   {...field}
                   css={styles.input}
-                  size="sm"
                   aria-label="Old Password"
-                  placeholder="Type your old password"
+                  placeholder="Type your current password"
                 />
               )}
             />
@@ -77,7 +76,6 @@ export function ChangePassword() {
                 <InputPassword
                   {...field}
                   css={styles.input}
-                  size="sm"
                   aria-label="New Password"
                   placeholder="Type your new password"
                 />
@@ -91,7 +89,6 @@ export function ChangePassword() {
                 <InputPassword
                   {...field}
                   css={styles.input}
-                  size="sm"
                   aria-label="Confirm Password"
                   placeholder="Confirm your new password"
                 />
@@ -101,8 +98,8 @@ export function ChangePassword() {
         </Layout.Content>
         <Layout.BottomBar>
           <Button
+            css={styles.cancelButton}
             onPress={() => goBack()}
-            variant="ghost"
             isDisabled={isChangingPassword}
           >
             Cancel
@@ -121,14 +118,18 @@ export function ChangePassword() {
 }
 
 const styles = {
+  cancelButton: cssObj({
+    background: '$gray2 !important',
+    color: '$gray11 !important',
+  }),
   input: cssObj({
-    w: '245px !important',
+    w: '235px !important',
   }),
   wrapper: cssObj({
     display: 'flex',
     gap: '$4',
     flex: 1,
-    height: '$screenH',
+
     alignItems: 'center',
     flexDirection: 'column',
   }),
