@@ -1,4 +1,4 @@
-import { cssObj, getCssText } from '@fuel-ui/css';
+import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
 import Head from 'next/head';
 import type { ReactNode } from 'react';
@@ -16,10 +16,6 @@ export function Layout({ title, children }: LayoutProps) {
     <>
       <Head>
         <title>{titleText}</title>
-        <style
-          id="stitches"
-          dangerouslySetInnerHTML={{ __html: getCssText() }}
-        />
       </Head>
       <Box css={styles.root}>
         <Header />

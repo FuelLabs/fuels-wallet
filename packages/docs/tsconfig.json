@@ -6,7 +6,12 @@
     "incremental": true,
     "plugins": [{ "name": "next" }],
     "noEmit": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "rootDir": ".",
+    "paths": {
+      "~/*": ["./*"]
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"]
 }

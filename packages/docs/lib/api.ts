@@ -6,10 +6,10 @@ import { join } from 'path';
 import remarkGfm from 'remark-gfm';
 import remarkSlug from 'remark-slug';
 
-import { FIELDS } from '../utils/constants';
-import type { DocType, NodeHeading, SidebarLinkItem } from '../utils/types';
-
 import { rehypeExtractHeadings } from './toc';
+
+import { FIELDS } from '~/utils/constants';
+import type { DocType, NodeHeading, SidebarLinkItem } from '~/utils/types';
 
 const DOCS_DIRECTORY = join(process.cwd(), './docs');
 const REPO_LINK =

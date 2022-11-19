@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext } from 'react';
 
-import type { SidebarLinkItem, DocType } from '../utils/types';
+import type { SidebarLinkItem, DocType } from '~/utils/types';
 
 export type DocCtx = {
   doc: DocType;

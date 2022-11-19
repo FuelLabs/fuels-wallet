@@ -9,9 +9,9 @@ import {
   Breadcrumb,
   DocFooter,
   TableOfContent,
-} from '../components';
-import { DocProvider } from '../hooks/useDocContext';
-import type { DocType, SidebarLinkItem } from '../utils/types';
+} from '~/components';
+import { DocProvider } from '~/hooks/useDocContext';
+import type { DocType, SidebarLinkItem } from '~/utils/types';
 
 type DocPageProps = {
   doc: DocType;

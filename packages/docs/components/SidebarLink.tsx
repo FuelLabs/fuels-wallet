@@ -6,7 +6,7 @@ import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { forwardRef } from 'react';
 
-import type { SidebarLinkItem } from '../utils/types';
+import type { SidebarLinkItem } from '~/utils/types';
 
 const Link = styled(Box, {
   py: '$1',

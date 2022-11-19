@@ -2,7 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Icon } from '@fuel-ui/react';
 import Link from 'next/link';
 
-import { useDocContext } from '../hooks/useDocContext';
+import { useDocContext } from '~/hooks/useDocContext';
 
 export function DocFooter() {
   const { docLink } = useDocContext();

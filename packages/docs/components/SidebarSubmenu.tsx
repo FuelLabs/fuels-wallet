@@ -3,9 +3,9 @@ import { Button, Flex, Icon, List } from '@fuel-ui/react';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
-import type { SidebarLinkItem } from '../utils/types';
-
 import { SidebarLink } from './SidebarLink';
+
+import type { SidebarLinkItem } from '~/utils/types';
 
 type SidebarSubmenuProps = SidebarLinkItem;
 
