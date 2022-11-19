@@ -12,13 +12,17 @@ export function Header() {
   const isDocsActive = pathname?.startsWith('/docs');
   return (
     <Flex as="header" css={styles.root}>
-      <FuelLogo size={40} />
-      <Flex css={styles.logoText}>
-        <span>Fuel Wallet</span>
-        <Box as="span" css={styles.version}>
-          alpha
-        </Box>
-      </Flex>
+      <Box css={{ flex: 1 }}>
+        <Link href="/" className="logo">
+          <FuelLogo size={40} />
+          <Flex css={styles.logoText}>
+            <span>Fuel Wallet</span>
+            <Box as="span" css={styles.version}>
+              alpha
+            </Box>
+          </Flex>
+        </Link>
+      </Box>
       <Flex css={styles.menu}>
         <Link href="/docs/install" className={isDocsActive ? 'active' : ''}>
           Documentation
@@ -60,6 +64,11 @@ const styles = {
     px: '$8',
     borderBottom: '1px solid $gray2',
     gridColumn: '1 / 4',
+
+    '.logo': {
+      display: 'flex',
+      color: '$gray9',
+    },
   }),
   logoText: cssObj({
     alignItems: 'center',

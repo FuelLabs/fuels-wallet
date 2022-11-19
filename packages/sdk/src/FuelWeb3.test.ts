@@ -40,53 +40,63 @@ describe('FuelWeb3', () => {
   });
 
   test('sendTransaction', async () => {
-    const accounts = await window.FuelWeb3.accounts();
+    const { FuelWeb3 } = window;
+    const accounts = await FuelWeb3.accounts();
     const account = accounts[0];
     const toAccount = toWallet.address.toAddress();
+
     // Seed wallet with funds
     await seedWallet(account, bn.parseUnits('1'));
+
     // Test example like docs
     const txRequest = new ScriptTransactionRequest({
       gasLimit: 50_000,
       gasPrice: 1,
     });
+
     const toAddress = Address.fromString(toAccount);
     const fromAddress = Address.fromString(account);
     const amount = bn.parseUnits('0.1');
     txRequest.addCoinOutput(toAddress, amount);
-    const provider = window.FuelWeb3.getProvider();
+
+    const provider = FuelWeb3.getProvider();
     const resources = await provider.getResourcesToSpend(fromAddress, [
       [amount, NativeAssetId],
     ]);
+
     txRequest.addResources(resources);
-    const transactionId = await window.FuelWeb3.sendTransaction(txRequest);
+    const transactionId = await FuelWeb3.sendTransaction(txRequest);
     const response = new TransactionResponse(transactionId, provider);
+
     // wait for transaction to be completed
     await response.wait();
+
     // query the balance of the destination wallet
-    const balance = await window.FuelWeb3.getWallet(toAddress).getBalance(
-      NativeAssetId
-    );
+    const addrWallet = FuelWeb3.getWallet(toAddress);
+    const balance = await addrWallet.getBalance(NativeAssetId);
     expect(balance.toNumber()).toBeGreaterThanOrEqual(amount.toNumber());
   });
 
   test('getWallet', async () => {
-    const accounts = await window.FuelWeb3.accounts();
+    const { FuelWeb3 } = window;
+    const accounts = await FuelWeb3.accounts();
     const account = accounts[0];
     const toAccount = toWallet.address.toString();
+
     // Test example like docs
-    const wallet = window.FuelWeb3.getWallet(account);
+    const wallet = FuelWeb3.getWallet(account);
     const toAddress = Address.fromString(toAccount);
     const amount = bn.parseUnits('0.1');
     const response = await wallet.transfer(toAddress, amount, NativeAssetId, {
       gasPrice: 1,
     });
+
     // wait for transaction to be completed
     await response.wait();
+
     // query the balance of the destination wallet
-    const balance = await window.FuelWeb3.getWallet(toAddress).getBalance(
-      NativeAssetId
-    );
+    const addrWallet = FuelWeb3.getWallet(toAddress);
+    const balance = await addrWallet.getBalance(NativeAssetId);
     expect(balance.toNumber()).toBeGreaterThanOrEqual(amount.toNumber());
   });
 

@@ -303,9 +303,14 @@ importers:
       '@types/react': ^18.0.25
       '@types/react-dom': ^18.0.9
       '@types/react-syntax-highlighter': ^15.5.5
+      acorn: ^8.8.1
+      acorn-walk: ^8.2.0
+      ast-traverse: ^0.1.1
       dotenv: ^16.0.3
       eslint: ^8.28.0
       eslint-config-next: 13.0.4
+      espree: ^9.4.1
+      estree-walker: ^3.0.1
       fuels: 0.21.1
       globby: ^13.1.2
       gray-matter: ^4.0.3
@@ -314,14 +319,17 @@ importers:
       next: 13.0.4
       next-mdx-remote: ^4.2.0
       plyr-react: ^5.1.0
+      prettier: ^2.7.1
       react: ^18.2.0
       react-dom: ^18.2.0
       react-syntax-highlighter: ^15.5.0
       remark: ^14.0.2
       remark-gfm: ^3.0.1
       remark-slug: ^7.0.1
+      strip-indent: ^4.0.0
       typescript: ^4.9.3
       unist-util-visit: ^4.1.1
+      vfile: ^5.3.6
     dependencies:
       '@docsearch/css': 3.3.0
       '@docsearch/react': 3.3.0_2zx2umvpluuhvlq44va5bta2da
@@ -330,7 +338,12 @@ importers:
       '@fuel-wallet/sdk': link:../sdk
       '@mdx-js/react': 2.1.5_react@18.2.0
       '@next/mdx': 13.0.4_@mdx-js+react@2.1.5
+      acorn: 8.8.1
+      acorn-walk: 8.2.0
+      ast-traverse: 0.1.1
       dotenv: 16.0.3
+      espree: 9.4.1
+      estree-walker: 3.0.1
       fuels: 0.21.1
       globby: 13.1.2
       gray-matter: 4.0.3
@@ -339,13 +352,16 @@ importers:
       next: 13.0.4_biqbaboplfbrettd7655fr4n2y
       next-mdx-remote: 4.2.0_biqbaboplfbrettd7655fr4n2y
       plyr-react: 5.1.0_react@18.2.0
+      prettier: 2.7.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-syntax-highlighter: 15.5.0_react@18.2.0
       remark: 14.0.2
       remark-gfm: 3.0.1
       remark-slug: 7.0.1
+      strip-indent: 4.0.0
       unist-util-visit: 4.1.1
+      vfile: 5.3.6
     devDependencies:
       '@types/chrome': 0.0.202
       '@types/node': 18.11.9
@@ -2409,7 +2425,7 @@ packages:
     dependencies:
       ajv: 6.12.6
       debug: 4.3.4
-      espree: 9.4.0
+      espree: 9.4.1
       globals: 13.17.0
       ignore: 5.2.0
       import-fresh: 3.3.0
@@ -3715,7 +3731,7 @@ packages:
       unist-util-position-from-estree: 1.1.1
       unist-util-stringify-position: 3.0.2
       unist-util-visit: 4.1.1
-      vfile: 5.3.5
+      vfile: 5.3.6
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -9517,6 +9533,10 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
+  /ast-traverse/0.1.1:
+    resolution: {integrity: sha512-CPuE4BWIhJjsNMvFkrzjiBgOl56NJTuBPBkBqyRyfq/nZtx1Z1f5I+qx7G/Zt+FAOS+ABhghkEuWJrfW9Njjog==}
+    dev: false
+
   /ast-types-flow/0.0.7:
     resolution: {integrity: sha512-eBvWn1lvIApYMhzQMsu9ciLfkBY499mFZlNqG+/9WR7PVlroQw0vG30cOQQbaKz3sCEc44TAOu2ykzqXSNnwag==}
 
@@ -12590,7 +12610,7 @@ packages:
       eslint-scope: 7.1.1
       eslint-utils: 3.0.0_eslint@8.28.0
       eslint-visitor-keys: 3.3.0
-      espree: 9.4.0
+      espree: 9.4.1
       esquery: 1.4.0
       esutils: 2.0.3
       fast-deep-equal: 3.1.3
@@ -12621,6 +12641,15 @@ packages:
 
   /espree/9.4.0:
     resolution: {integrity: sha512-DQmnRpLj7f6TgN/NYb0MTzJXL+vJF9h3pHy4JhCIs3zwcgez8xmGg3sXHcEO97BrmO2OSvCwMdfdlyl+E9KjOw==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dependencies:
+      acorn: 8.8.1
+      acorn-jsx: 5.3.2_acorn@8.8.1
+      eslint-visitor-keys: 3.3.0
+    dev: false
+
+  /espree/9.4.1:
+    resolution: {integrity: sha512-XwctdmTO6SIvCzd9810yyNzIrOrqNYV9Koizx4C/mRhf9uq0o4yHoCEU/670pOxOL/MSraektvSAji79kX90Vg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       acorn: 8.8.1
@@ -17176,7 +17205,7 @@ packages:
       '@mdx-js/react': 2.1.5_react@18.2.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      vfile: 5.3.5
+      vfile: 5.3.6
       vfile-matter: 3.0.1
     transitivePeerDependencies:
       - supports-color
@@ -20425,6 +20454,13 @@ packages:
     dependencies:
       min-indent: 1.0.1
 
+  /strip-indent/4.0.0:
+    resolution: {integrity: sha512-mnVSV2l+Zv6BLpSD/8V87CW/y9EmmbYzGCIavsnsI6/nwn26DwffM/yztm30Z/I2DY9wdS3vXVCMnHDgZaVNoA==}
+    engines: {node: '>=12'}
+    dependencies:
+      min-indent: 1.0.1
+    dev: false
+
   /strip-json-comments/3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
@@ -21352,7 +21388,7 @@ packages:
       is-buffer: 2.0.5
       is-plain-obj: 4.1.0
       trough: 2.1.0
-      vfile: 5.3.5
+      vfile: 5.3.6
     dev: false
 
   /unified/9.2.0:
@@ -21766,7 +21802,7 @@ packages:
     resolution: {integrity: sha512-JDxPlTbZrZCQXogGheBHjbRWjESSPEak770XwWPfw5mTc1v1nWGLB/apzZxsx8a0SJVfF8HK8ql8RD308vXRUw==}
     dependencies:
       '@types/unist': 2.0.6
-      vfile: 5.3.5
+      vfile: 5.3.6
     dev: false
 
   /vfile-matter/3.0.1:
@@ -21800,8 +21836,8 @@ packages:
       vfile-message: 2.0.4
     dev: true
 
-  /vfile/5.3.5:
-    resolution: {integrity: sha512-U1ho2ga33eZ8y8pkbQLH54uKqGhFJ6GYIHnnG5AhRpAh3OWjkrRHKa/KogbmQn8We+c0KVV3rTOgR9V/WowbXQ==}
+  /vfile/5.3.6:
+    resolution: {integrity: sha512-ADBsmerdGBs2WYckrLBEmuETSPyTD4TuLxTrw0DvjirxW1ra4ZwkbzG8ndsv3Q57smvHxo677MHaQrY9yxH8cA==}
     dependencies:
       '@types/unist': 2.0.6
       is-buffer: 2.0.5

@@ -56,3 +56,7 @@ code {
   font-family: "Calling Code", monospace !important;
   letter-spacing: -0.02em;
 }
+
+.fuel_logo {
+  width: 40px;
+}

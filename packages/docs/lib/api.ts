@@ -6,6 +6,7 @@ import { join } from 'path';
 import remarkGfm from 'remark-gfm';
 import remarkSlug from 'remark-slug';
 
+import { codeImport } from './code-import';
 import { rehypeExtractHeadings } from './toc';
 
 import { FIELDS } from '~/utils/constants';
@@ -57,7 +58,11 @@ export async function getDocBySlug(
     scope: data,
     mdxOptions: {
       format: 'mdx',
-      remarkPlugins: [remarkSlug, remarkGfm],
+      remarkPlugins: [
+        remarkSlug,
+        remarkGfm,
+        [codeImport, { allowImportingFromOutside: true }],
+      ],
       rehypePlugins: [[rehypeExtractHeadings, { headings }]],
     },
   });
