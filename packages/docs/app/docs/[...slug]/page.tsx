@@ -1,9 +1,9 @@
-import { getAllDocs, getDocBySlug, getSidebarLinks } from '../../../lib/api';
-import { DocScreen } from '../../../screens/DocPage';
-import { FIELDS, MENU_ORDER } from '../../../utils/constants';
-import type { SidebarLinkItem } from '../../../utils/types';
+import { getAllDocs, getDocBySlug, getSidebarLinks } from '~/lib/api';
+import { DocScreen } from '~/screens/DocPage';
+import { FIELDS, MENU_ORDER } from '~/utils/constants';
+import type { SidebarLinkItem } from '~/utils/types';
 
-type DocPageProps = {
+export type DocPageProps = {
   params: {
     slug: string[];
   };
