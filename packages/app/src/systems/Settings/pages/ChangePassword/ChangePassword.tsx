@@ -18,7 +18,7 @@ const schema = yup
     confirmPassword: yup
       .string()
       .oneOf([yup.ref('newPassword'), null], 'Passwords must match'),
-    oldPassword: yup.string().required('Old Password is required'),
+    oldPassword: yup.string().required('Current Password is required'),
   })
   .required();
 
@@ -58,12 +58,12 @@ export function ChangePassword() {
             <ControlledField
               control={control}
               name="oldPassword"
-              label="Old Password"
+              label="Current Password"
               render={({ field }) => (
                 <InputPassword
                   {...field}
                   css={styles.input}
-                  aria-label="Old Password"
+                  aria-label="Current Password"
                   placeholder="Type your current password"
                 />
               )}

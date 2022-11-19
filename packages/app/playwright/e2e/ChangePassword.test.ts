@@ -23,7 +23,7 @@ test.describe('HomeWallet', () => {
     await hasText(page, /Change Password/i);
 
     // fills form data
-    await getByAriaLabel(page, 'Old Password').type('12345678');
+    await getByAriaLabel(page, 'Current Password').type('12345678');
     await getByAriaLabel(page, 'New Password').type('newPass12345');
     await getByAriaLabel(page, 'Confirm Password').type('newPass12345');
 
