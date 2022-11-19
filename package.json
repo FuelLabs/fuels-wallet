@@ -18,8 +18,7 @@
     "url": "https://github.com/FuelLabs/fuels-wallet/issues"
   },
   "workspaces": [
-    "./packages/*",
-    "./design-system/*"
+    "./packages/*"
   ],
   "scripts": {
     "build:preview": "node ./scripts/build-website.mjs",
