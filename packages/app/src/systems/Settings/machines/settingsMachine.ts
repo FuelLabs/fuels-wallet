@@ -1,3 +1,4 @@
+import { toast } from '@fuel-ui/react';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
@@ -8,7 +9,7 @@ import { FetchMachine } from '~/systems/Core';
 import type { UnlockMachine } from '~/systems/DApp';
 
 type MachineServices = {
-  getMnemonicPhrase: {
+  unlockAndGetMnemonic: {
     data: string[];
   };
 };
@@ -20,7 +21,7 @@ type MachineContext = {
 type MachineEvents = (
   | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
   | { type: 'CHANGE_PASSWORD'; input: AccountInputs['changePassword'] }
-) & { data?: string[] };
+) & { data: string[] };
 
 export const settingsMachine = createMachine(
   {
@@ -32,18 +33,18 @@ export const settingsMachine = createMachine(
       events: {} as MachineEvents,
     },
     predictableActionArguments: true,
-    id: '(machine)',
-    initial: 'unlocking',
+    id: 'settingsMachine',
+    initial: 'idle',
     states: {
       changingPassword: {
         invoke: {
-          src: 'changePassword',
-          data: (_: MachineContext, ev: MachineEvents) => {
-            return { input: ev.input };
+          data: {
+            input: (_: MachineContext, ev: MachineEvents) => ev.input,
           },
+          src: 'changePassword',
           onDone: [
             {
-              target: 'unlocking',
+              target: 'idle',
               cond: FetchMachine.hasError,
             },
             {
@@ -52,9 +53,12 @@ export const settingsMachine = createMachine(
           ],
         },
       },
-      unlocking: {
+      idle: {
         tags: ['unlocking'],
         on: {
+          CHANGE_PASSWORD: {
+            target: 'changingPassword',
+          },
           UNLOCK_WALLET: {
             target: 'gettingMnemonic',
           },
@@ -64,14 +68,9 @@ export const settingsMachine = createMachine(
         tags: ['unlocking'],
         invoke: {
           src: 'unlockAndGetMnemonic',
-          data: {
-            input: (_: MachineContext, ev: MachineEvents) => {
-              return ev.input;
-            },
-          },
           onDone: [
             {
-              target: 'unlocking',
+              target: 'idle',
               cond: FetchMachine.hasError,
             },
             {
@@ -79,6 +78,9 @@ export const settingsMachine = createMachine(
               target: 'done',
             },
           ],
+          data: {
+            input: (_: MachineContext, ev: MachineEvents) => ev.input,
+          },
         },
       },
       done: {
@@ -89,16 +91,11 @@ export const settingsMachine = createMachine(
         entry: 'goToWallet',
       },
     },
-    on: {
-      CHANGE_PASSWORD: {
-        target: 'changingPassword',
-      },
-    },
   },
   {
     actions: {
       assignWords: assign({
-        words: (_, ev) => ev.data as string[],
+        words: (_, ev) => ev.data,
       }),
     },
     services: {
@@ -117,6 +114,8 @@ export const settingsMachine = createMachine(
             oldPassword: input.oldPassword,
             newPassword: input.newPassword,
           });
+
+          toast.success('Password Changed');
         },
       }),
       unlockAndGetMnemonic: FetchMachine.create<
@@ -135,7 +134,7 @@ export const settingsMachine = createMachine(
             throw new Error('No Secret Found');
           }
 
-          return secret?.split(' ') as string[];
+          return secret.split(' ');
         },
       }),
     },

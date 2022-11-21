@@ -6,7 +6,6 @@ import {
   Button,
   Flex,
   Heading,
-  // Icon,
 } from '@fuel-ui/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -17,8 +16,7 @@ import { Layout, Mnemonic, Pages } from '~/systems/Core';
 
 export function RevealPassphrase() {
   const navigate = useNavigate();
-  const { isUnlocking, unlockAndGetMnemonic, words, isGettingMnemonic } =
-    useSettings();
+  const { isUnlocking, handlers, words, isGettingMnemonic } = useSettings();
   const [password, setPassword] = useState('');
 
   return (
@@ -39,7 +37,7 @@ export function RevealPassphrase() {
             <Button
               leftIcon="Eye"
               isLoading={isGettingMnemonic}
-              onPress={() => unlockAndGetMnemonic(password)}
+              onPress={() => handlers.unlockAndGetMnemonic(password)}
             >
               Reveal secret phrase
             </Button>

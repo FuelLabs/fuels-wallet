@@ -1,9 +1,8 @@
-import { toast } from '@fuel-ui/react';
 import { useInterpret, useSelector } from '@xstate/react';
 import { useNavigate } from 'react-router-dom';
 
+import { settingsMachine } from '../machines';
 import type { SettingsMachineState } from '../machines/settingsMachine';
-import { settingsMachine } from '../machines/settingsMachine';
 
 import type { AccountInputs } from '~/systems/Account';
 import { useAccount } from '~/systems/Account';
@@ -25,7 +24,6 @@ export function useSettings() {
     settingsMachine.withConfig({
       actions: {
         goToWallet() {
-          toast.success('Password Changed');
           navigate(Pages.wallet());
         },
       },
@@ -50,8 +48,10 @@ export function useSettings() {
   }
 
   return {
-    changePassword,
-    unlockAndGetMnemonic,
+    handlers: {
+      unlockAndGetMnemonic,
+      changePassword,
+    },
     isUnlocking,
     isChangingPassword,
     isGettingMnemonic,

@@ -69,7 +69,7 @@ describe('settingsMachine', () => {
       oldPassword: '123123',
     } as AccountInputs['changePassword']);
 
-    await waitFor(service, (state) => state.matches('unlocking'));
+    await waitFor(service, (state) => state.matches('idle'));
 
     service.send('UNLOCK_WALLET', {
       input: {

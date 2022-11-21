@@ -30,7 +30,7 @@ type ChangePasswordFormValues = {
 
 export function ChangePassword() {
   const navigate = useNavigate();
-  const { changePassword, isChangingPassword } = useSettings();
+  const { handlers, isChangingPassword } = useSettings();
   const { handleSubmit, control } = useForm<ChangePasswordFormValues>({
     mode: 'onChange',
     reValidateMode: 'onChange',
@@ -38,7 +38,7 @@ export function ChangePassword() {
   });
 
   function onSubmit(values: ChangePasswordFormValues) {
-    changePassword(values);
+    handlers.changePassword(values);
   }
 
   const goBack = () => navigate(Pages.wallet());
@@ -46,7 +46,7 @@ export function ChangePassword() {
   return (
     <form style={{ flex: 1 }} onSubmit={handleSubmit(onSubmit)}>
       <Layout title="Change Password">
-        <Layout.TopBar onBack={() => goBack()} />
+        <Layout.TopBar onBack={goBack} />
         <Layout.Content>
           <Flex css={styles.wrapper}>
             <Alert direction="row" status={'warning'}>
@@ -99,7 +99,7 @@ export function ChangePassword() {
         <Layout.BottomBar>
           <Button
             css={styles.cancelButton}
-            onPress={() => goBack()}
+            onPress={goBack}
             isDisabled={isChangingPassword}
           >
             Cancel
@@ -129,7 +129,6 @@ const styles = {
     display: 'flex',
     gap: '$4',
     flex: 1,
-
     alignItems: 'center',
     flexDirection: 'column',
   }),

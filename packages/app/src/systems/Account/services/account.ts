@@ -3,7 +3,7 @@ import type { WalletUnlocked } from '@fuel-ts/wallet';
 import type { Account } from '@fuel-wallet/types';
 import { bn, Address, Provider } from 'fuels';
 
-import { unlockManager } from '../utils/manager';
+import { unlockManager } from '../utils';
 
 import { isEth } from '~/systems/Asset';
 import type { Maybe } from '~/systems/Core';
