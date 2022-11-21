@@ -2,7 +2,7 @@ import { useInterpret, useSelector } from '@xstate/react';
 import { useNavigate } from 'react-router-dom';
 
 import { settingsMachine } from '../machines';
-import type { SettingsMachineState } from '../machines/settingsMachine';
+import type { SettingsMachineState } from '../machines';
 
 import type { AccountInputs } from '~/systems/Account';
 import { useAccount } from '~/systems/Account';
