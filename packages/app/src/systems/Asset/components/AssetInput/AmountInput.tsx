@@ -9,6 +9,7 @@ import { AmountInputLoader } from './AmountInputLoader';
 import { createAmount } from './utils';
 
 export type AmountInputProps = {
+  name?: string;
   balance: BN;
   value: BN;
   onChange: (val: BN) => void;
@@ -19,6 +20,7 @@ type AmountInputComponent = FC<AmountInputProps> & {
 };
 
 export const AmountInput: AmountInputComponent = ({
+  name,
   balance,
   value,
   onChange,
@@ -49,7 +51,7 @@ export const AmountInput: AmountInputComponent = ({
       <Input.Number
         autoComplete="off"
         inputMode="decimal"
-        name="amount"
+        name={name}
         placeholder="0.00"
         allowedDecimalSeparators={['.', ',']}
         allowNegative={false}
