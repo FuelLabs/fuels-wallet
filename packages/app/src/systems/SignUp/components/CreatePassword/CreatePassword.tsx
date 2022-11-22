@@ -70,6 +70,10 @@ export function CreatePassword({
             render={({ field }) => (
               <InputPassword
                 {...field}
+                onBlur={() => {
+                  form.trigger();
+                  field.onBlur();
+                }}
                 placeholder="Type your password"
                 aria-label="Your Password"
               />
