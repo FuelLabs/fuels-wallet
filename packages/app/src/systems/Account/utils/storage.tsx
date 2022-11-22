@@ -10,7 +10,7 @@ export class IndexedDBStorage {
 
   async setItem(key: string, data: string) {
     return db.transaction('rw', db.vaults, db.accounts, async () => {
-      await db.vaults.add({ key, data });
+      await db.vaults.put({ key, data });
       return data as unknown;
     });
   }

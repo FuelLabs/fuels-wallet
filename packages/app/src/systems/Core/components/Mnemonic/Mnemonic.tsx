@@ -27,7 +27,7 @@ export type MnemonicProps = {
 };
 
 export function Mnemonic({
-  value: initialValue,
+  value: initialValue = [],
   type,
   onFilled,
 }: MnemonicProps) {
@@ -39,7 +39,8 @@ export function Mnemonic({
   });
 
   async function handleCopy() {
-    await navigator.clipboard.writeText(value.join(' '));
+    const val = type === 'read' ? initialValue : value;
+    return navigator.clipboard.writeText(val.join(' '));
   }
 
   function handlePastInput(ev: React.ClipboardEvent<HTMLInputElement>) {
@@ -72,7 +73,7 @@ export function Mnemonic({
     <Box css={styles.root}>
       {type === 'read' ? (
         <Grid css={styles.words}>
-          {value.map((word, idx) => (
+          {initialValue?.map((word, idx) => (
             <Box as="span" key={idx} css={styles.word} data-idx={idx + 1}>
               {word}
             </Box>
