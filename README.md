@@ -4,6 +4,9 @@
 
 ## ⚡️ Fuel Wallet
 
+> **Warning**
+> This project is under active development, some features are not implemented or can apresent bugs/issues. Do not treat it as a production-ready wallet.
+
 The official wallet of the fastest modular execution layer: [Fuel](https://fuel.network).
 
 FuelWallet is a crypto wallet used to interact with the Fuel Network. This project enables users to access their assets and interact with decentralized applications through a browser extension.
@@ -35,8 +38,6 @@ Integrate your **DApp** using the [Wallet SDK](./docs/WALLET_SDK.md)
 - [Contribution Guide](./docs/CONTRIBUTING.md)
   - [Finding Something to Work On](./docs/CONTRIBUTING.md#finding-something-to-work-on)
   - [Contribution Flow](./docs/CONTRIBUTING.md#contribution-flow)
-
-| This project is under active development. Please do not treat it as a production-ready wallet.
 
 ## Features
 
