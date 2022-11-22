@@ -41,8 +41,8 @@ Integrate your **DApp** using the [Wallet SDK](./docs/WALLET_SDK.md)
 
 ## Features
 
-- [x] Create a brand new and secure account
-- [x] Recover an account using a passphrase
+- [x] Create a new mnemonic phrase account
+- [x] Recover an account using mnemonic phrase
 - [x] DApps integration
   - [x] Request connection
   - [x] List accounts
@@ -52,13 +52,21 @@ Integrate your **DApp** using the [Wallet SDK](./docs/WALLET_SDK.md)
 - [x] Check your asset's balance
 - [x] Manage networks
 - [x] Faucet for testnet
-- [x] Receive screen with QR Code
-- [ ] Update account details
-- [ ] Reveal your passphrase
-- [ ] Change password
-- [ ] See a list of your recent activities (Transaction History)
-- [ ] View transaction details
-- [ ] Send assets to another wallet
+- [ ] Account
+  - [ ] Add new account
+  - [ ] Update account name
+  - [ ] List all account
+- [ ] Applications
+  - [ ] List connections
+  - [ ] Remove connections
+- [ ] Settings
+  - [ ] Reveal your passphrase
+  - [ ] Change password
+- [ ] Transactions
+  - [x] Receive Assets via address or QR Code
+  - [ ] Send Assets to another wallet
+  - [ ] Transaction History
+  - [ ] View transaction details
 
 ## 📜 License
 
