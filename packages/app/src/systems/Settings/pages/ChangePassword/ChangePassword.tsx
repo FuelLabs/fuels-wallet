@@ -31,14 +31,21 @@ type ChangePasswordFormValues = {
 export function ChangePassword() {
   const navigate = useNavigate();
   const { handlers, isChangingPassword } = useSettings();
-  const { handleSubmit, control } = useForm<ChangePasswordFormValues>({
-    mode: 'onChange',
-    reValidateMode: 'onChange',
-    resolver: yupResolver(schema),
-  });
+  const { handleSubmit, control, setError } = useForm<ChangePasswordFormValues>(
+    {
+      mode: 'onChange',
+      reValidateMode: 'onChange',
+      resolver: yupResolver(schema),
+    }
+  );
 
   function onSubmit(values: ChangePasswordFormValues) {
-    handlers.changePassword(values);
+    if (values.confirmPassword !== values.newPassword) {
+      return setError('confirmPassword', {
+        message: 'Passwords must match',
+      });
+    }
+    return handlers.changePassword(values);
   }
 
   const goBack = () => navigate(Pages.wallet());
