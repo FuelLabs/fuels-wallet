@@ -66,13 +66,16 @@ const styles = {
       margin: 0,
       padding: '$1 $3',
       background: '$gray2',
-      color: '$gray8',
+      color: '$gray10',
       borderTopLeftRadius: '$lg',
       borderTopRightRadius: '$lg',
       borderBottom: '2px solid $bodyColor',
 
       span: {
         fontSize: '$sm',
+      },
+      a: {
+        color: '$gray10',
       },
     },
 

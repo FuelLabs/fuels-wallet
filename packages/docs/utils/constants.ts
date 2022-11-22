@@ -1,8 +1,7 @@
 export const MENU_ORDER = [
   'Install',
-  'Testing',
-  'SDK/How to Use',
-  'SDK/API',
+  'How to Use',
+  'API',
   'Contributing/Project Structure',
   'Contributing/Contributing Guide',
 ];

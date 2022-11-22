@@ -1,9 +1,10 @@
 ---
 title: How to Use
-category: SDK
 ---
 
 # How to use
+
+<ConnectionAlert />
 
 If you've correctly installed the Fuel wallet extension, the wallet SDK will be injected automatically on the `window` object on property `FuelWeb3`. To access it, you can use `window.FuelWeb3`
 
@@ -25,6 +26,8 @@ console.log("Connection response", isConnected);
 The `connect()` method returns a promise; if you prefer to do it in an async way, you can use `FuelWeb3.on('connection', () => void)` to
 listen for changes in the connection.
 
+<Examples.Connect />
+
 ## List user accounts
 
 Once the connection is authorized, you can list the user accounts using `window.FuelWeb3.accounts()`.
@@ -34,6 +37,8 @@ const accounts = await window.FuelWeb3.accounts();
 console.log(accounts);
 ```
 
+<Examples.ListAccounts />
+
 ## Signing a message
 
 Having access to the user address and the connection authorized, you can now request the user for signatures using `FuelWeb3.signMessage`.
@@ -42,3 +47,23 @@ Having access to the user address and the connection authorized, you can now req
 const account = "fuel1<address>"; // example account
 const signedMessage = await window.FuelWeb3.signMessage(account, message);
 ```
+
+<Examples.SignMessage />
+
+## Transfering assets
+
+To transfer an amount to other address is very simple, you just need to use the `wallet.transfer` method passing the address you want to send and the amount
+
+```ts
+const accounts = await window.FuelWeb3.accounts();
+const account = accounts[0];
+const provider = new FuelWeb3Provider(window.FuelWeb3);
+const wallet = Wallet.fromAddress(account, provider);
+const toAddress = Address.fromString(
+  "fuel1r3u2qfn00cgwk3u89uxuvz5cgcjaq934cfer6cwuew0424cz5sgq4yldul"
+);
+
+const response = await wallet.transfer(toAddress, amount);
+```
+
+<Examples.Transfer />

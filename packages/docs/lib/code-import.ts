@@ -80,10 +80,6 @@ function extractTestCase(source: string, testCase: string) {
   };
 }
 
-interface CodeImportOptions {
-  filepath: string;
-}
-
 const files = new Map<string, string>();
 const attrsList = new Map<string, any[]>();
 
@@ -93,7 +89,11 @@ function getFilesOnCache(filepath: string) {
   return files.get(filepath);
 }
 
-function codeImport(options: CodeImportOptions = { filepath: '' }) {
+interface Options {
+  filepath: string;
+}
+
+export function codeImport(options: Options = { filepath: '' }) {
   const rootDir = process.cwd();
   const { filepath } = options;
   const dirname = path.relative(rootDir, path.dirname(filepath));
@@ -184,5 +184,3 @@ function codeImport(options: CodeImportOptions = { filepath: '' }) {
     });
   };
 }
-
-export { codeImport };

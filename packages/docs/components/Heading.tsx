@@ -24,8 +24,13 @@ const styles = {
       color: '$gray12',
       borderBottom: '1px dashed $gray3',
     },
-    '&[data-rank=h3], &[data-rank=h4], &[data-rank=h5], &[data-rank=h6]': {
-      mt: '$5',
+    '&[data-rank=h3]': {
+      mt: '$8',
+      mb: '$4',
+      color: '$gray11',
+    },
+    '&[data-rank=h4], &[data-rank=h5], &[data-rank=h6]': {
+      mt: '$6',
       mb: '$2',
       color: '$gray11',
     },
