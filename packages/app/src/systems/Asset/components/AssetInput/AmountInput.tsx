@@ -1,11 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Flex, Input, Text } from '@fuel-ui/react';
-import { DECIMAL_UNITS, bn } from 'fuels';
+import { DECIMAL_UNITS } from 'fuels';
 import type { BN } from 'fuels';
-import { useState } from 'react';
-import type { FC, ChangeEvent } from 'react';
+import { useEffect, useState } from 'react';
+import type { FC } from 'react';
 
 import { AmountInputLoader } from './AmountInputLoader';
+import { createAmount } from './utils';
 
 export type AmountInputProps = {
   balance: BN;
@@ -23,30 +24,24 @@ export const AmountInput: AmountInputComponent = ({
   onChange,
 }) => {
   const [assetAmount, setAssetAmount] = useState<string>(
-    value.eq(0) ? '' : value.toString()
+    value.eq(0) ? '' : value.formatUnits()
   );
 
-  const handleAmountChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newAssetAmount = handleAmountLeadingZeros(event);
-    onChange(bn.parseUnits(event.target.value, DECIMAL_UNITS));
-    setAssetAmount(newAssetAmount);
+  useEffect(() => {
+    handleAmountChange(value.format({ precision: DECIMAL_UNITS }));
+  }, [value.toString()]);
+
+  const handleAmountChange = (text: string) => {
+    const { text: newText, amount } = createAmount(text);
+    const { amount: currentAmount } = createAmount(assetAmount);
+    if (!currentAmount.eq(amount)) {
+      onChange(amount);
+      setAssetAmount(newText);
+    }
   };
 
-  const handlePress = () => {
-    onChange(balance);
-    setAssetAmount(balance.format({ precision: DECIMAL_UNITS }));
-  };
-
-  const handleAmountLeadingZeros = (
-    event: ChangeEvent<HTMLInputElement>
-  ): string => {
-    const valueWithoutLeadingZeros = event.target.value.replace(
-      /^0\d/,
-      (substring) => substring.replace(/^0+(?=[\d])/, '')
-    );
-    return valueWithoutLeadingZeros.startsWith('.')
-      ? `0${valueWithoutLeadingZeros}`
-      : valueWithoutLeadingZeros;
+  const handleSetBalance = () => {
+    handleAmountChange(balance.format({ precision: DECIMAL_UNITS }));
   };
 
   return (
@@ -60,7 +55,7 @@ export const AmountInput: AmountInputComponent = ({
         allowNegative={false}
         thousandSeparator={false}
         value={assetAmount}
-        onChange={handleAmountChange}
+        onChange={(e) => handleAmountChange(e.target.value)}
         decimalScale={DECIMAL_UNITS}
       />
       <Input.ElementRight>
@@ -70,7 +65,7 @@ export const AmountInput: AmountInputComponent = ({
               aria-label="Max"
               size="xs"
               variant="ghost"
-              onPress={handlePress}
+              onPress={handleSetBalance}
               css={styles.button}
             >
               Max
