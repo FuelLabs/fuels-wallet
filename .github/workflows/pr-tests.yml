@@ -38,7 +38,7 @@ jobs:
         run: |
           pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
 
-      - name: Run tests and publish coverage
+      - name: Publish coverage
         uses: artiomtr/jest-coverage-report-action@v2.0.5
         if: ${{ steps.findPr.outputs.number }}
         with:
@@ -51,12 +51,6 @@ jobs:
           working-directory: ./packages/app
           coverage-file: ${{ env.COVERAGE_FILE }}
           base-coverage-file: ${{ env.COVERAGE_FILE }}
-
-      - name: Run tests not publish coverage
-        if: ${{ !steps.findPr.outputs.number }}
-        working-directory: ./packages/app
-        run: |
-          pnpm ci:test
 
       - name: Run Jest Tests on SDK
         run: |
