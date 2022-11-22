@@ -26,19 +26,40 @@ body:
       required: true
   - type: textarea
     attributes:
-      label: Steps to Reproduce
+      label: What is happening?
+      description: A concise description of what you're experiencing.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: steps to reproduce
       description: Steps to reproduce the behavior.
     validations:
       required: true
   - type: textarea
     attributes:
-      label: Expected Behavior
+      label: How it should behave?
       description: A concise description of what you expected to happen.
     validations:
       required: true
-  - type: textarea
+  - type: dropdown
     attributes:
-      label: Actual Behavior
-      description: A concise description of what you're experiencing.
-    validations:
-      required: true
+      label: What os are you seeing the problem on?
+      description: Android, iOS, Windows, Mac
+      options:
+        - Android Mobile
+        - iOS Mobile
+        - Windows Desktop
+        - Mac/Apple Desktop
+  - type: dropdown
+    attributes:
+      label: What browser?
+      options:
+        - Brave
+        - Chrome
+        - Firefox
+        - Safari
+        - Other
+  - type: input
+    attributes:
+      label: What is your browser version?
