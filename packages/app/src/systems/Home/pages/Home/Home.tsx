@@ -12,10 +12,6 @@ export function Home() {
   const { isLoading, account } = useAccount();
   const navigate = useNavigate();
 
-  const sendAction = useCallback(() => {
-    window.alert('Send is not implemeted yet');
-  }, []);
-
   const goToReceive = useCallback(() => {
     navigate(Pages.receive());
   }, [navigate]);
@@ -26,11 +22,7 @@ export function Home() {
       <Layout.Content>
         <Flex css={{ height: '100%', flexDirection: 'column' }}>
           <BalanceWidget account={account} isLoading={isLoading} />
-          <HomeActions
-            receiveAction={goToReceive}
-            sendAction={sendAction}
-            isDisabled={isLoading}
-          />
+          <HomeActions receiveAction={goToReceive} isDisabled={isLoading} />
           <AssetsTitle />
           <AssetList
             assets={account?.balances}

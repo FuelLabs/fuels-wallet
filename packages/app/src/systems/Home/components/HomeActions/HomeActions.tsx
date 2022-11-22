@@ -10,13 +10,12 @@ export type HomeActionsProps = {
 export const HomeActions = ({
   isDisabled,
   receiveAction = () => {},
-  sendAction = () => {},
 }: HomeActionsProps) => {
   return (
     <Flex css={styles.wrapper}>
-      <Button onClick={sendAction} isDisabled={isDisabled} css={styles.button}>
+      {/* <Button onClick={sendAction} isDisabled={isDisabled} css={styles.button}>
         Send
-      </Button>
+      </Button> */}
       <Button
         isDisabled={isDisabled}
         onClick={receiveAction}
