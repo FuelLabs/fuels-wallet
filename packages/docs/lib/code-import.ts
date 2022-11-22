@@ -1,42 +1,35 @@
-/* eslint-disable no-continue */
-/* eslint-disable consistent-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-restricted-syntax */
+
 import * as acorn from 'acorn';
 import * as walk from 'acorn-walk';
 import fs from 'node:fs';
-import { EOL } from 'node:os';
-import path from 'node:path';
+import { EOL } from 'os';
+import path from 'path';
 import * as prettier from 'prettier';
 import type { Root } from 'remark-gfm';
-import stripIndent from 'strip-indent';
 import type { Parent } from 'unist-util-visit';
 import { visit } from 'unist-util-visit';
-import type { VFile } from 'vfile';
 
-interface CodeImportOptions {
-  async?: boolean;
-  preserveTrailingNewline?: boolean;
-  removeRedundantIndentations?: boolean;
-  rootDir?: string;
-  allowImportingFromOutside?: boolean;
+const ROOT_DIR = path.resolve(__dirname, '../../../../../../../');
+
+function toAST(content: string) {
+  return acorn.parse(content, {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+  });
 }
 
 function extractLines(
   content: string,
   fromLine: number | undefined,
-  hasDash: boolean,
-  toLine: number | undefined,
-  preserveTrailingNewline: boolean = false
+  toLine: number | undefined
 ) {
   const lines = content.split(EOL);
   const start = fromLine || 1;
   let end;
-  if (!hasDash) {
-    end = start;
-  } else if (toLine) {
+  if (toLine) {
     end = toLine;
-  } else if (lines[lines.length - 1] === '' && !preserveTrailingNewline) {
+  } else if (lines[lines.length - 1] === '') {
     end = lines.length - 1;
   } else {
     end = lines.length;
@@ -44,14 +37,22 @@ function extractLines(
   return lines.slice(start - 1, end).join('\n');
 }
 
-function extractTestCase(content: string, testCase: string) {
-  const ast = acorn.parse(content, {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-  });
+function getLineOffsets(str: string) {
+  const regex = /\r?\n/g;
+  const offsets = [0];
+  while (regex.exec(str)) offsets.push(regex.lastIndex);
+  offsets.push(str.length);
+  return offsets;
+}
 
-  let result = '';
-  const lines = content.split('');
+function extractTestCase(source: string, testCase: string) {
+  const ast = toAST(source);
+
+  let charStart = 0;
+  let charEnd = 0;
+  let content = '';
+  const chars = source.split('');
+  const linesOffset = getLineOffsets(source);
 
   walk.fullAncestor(ast, (node: any, _state, ancestors) => {
     if (node.name === 'test') {
@@ -61,99 +62,126 @@ function extractTestCase(content: string, testCase: string) {
 
       if (val && val === testCase) {
         const body = args[1]?.body;
-        result = lines.slice(body.start, body.end).join('').slice(1, -1);
-        result = prettier.format(result, { parser: 'babel' }).trimEnd();
+        content = chars.slice(body.start, body.end).join('').slice(1, -1);
+        content = prettier.format(content, { parser: 'babel' }).trimEnd();
+        charStart = body.start;
+        charEnd = body.end;
       }
     }
   });
 
-  return result;
+  const lineStart = linesOffset.findIndex((i) => i >= charStart);
+  const lineEnd = linesOffset.findIndex((i) => i >= charEnd);
+
+  return {
+    content,
+    lineStart,
+    lineEnd: lineEnd !== lineStart ? lineEnd : undefined,
+  };
 }
 
-function codeImport(options: CodeImportOptions = {}) {
-  const rootDir = options.rootDir || process.cwd();
+interface CodeImportOptions {
+  filepath: string;
+}
 
-  if (!path.isAbsolute(rootDir)) {
-    throw new Error(`"rootDir" has to be an absolute path`);
-  }
+const files = new Map<string, string>();
+const attrsList = new Map<string, any[]>();
 
-  return function transformer(tree: Root, file: VFile) {
-    const codes: [any, number | null, Parent][] = [];
-    const promises: Promise<void>[] = [];
+function getFilesOnCache(filepath: string) {
+  const oldResults = files.get(filepath);
+  if (!oldResults) files.set(filepath, String(fs.readFileSync(filepath)));
+  return files.get(filepath);
+}
 
-    visit(tree, 'code', (node, index, parent) => {
-      codes.push([node as any, index, parent as Parent]);
+function codeImport(options: CodeImportOptions = { filepath: '' }) {
+  const rootDir = process.cwd();
+  const { filepath } = options;
+  const dirname = path.relative(rootDir, path.dirname(filepath));
+
+  return function transformer(tree: Root) {
+    const nodes: [any, number | null, Parent][] = [];
+
+    visit(tree, 'mdxJsxFlowElement', (node: any, idx, parent) => {
+      if (node.name === 'CodeImport') {
+        nodes.push([node as any, idx, parent as Parent]);
+      }
     });
 
-    for (const [node] of codes) {
-      const fileMeta = node.meta;
+    nodes.forEach(([node]) => {
+      const attr = node.attributes;
+      let content = '';
 
-      if (!fileMeta) {
-        continue;
+      if (!attr.length) {
+        throw new Error('CodeImport need to have properties defined');
       }
 
-      if (!file?.cwd) {
-        throw new Error('"file" should be an instance of VFile');
-      }
-
-      const regexp =
-        /(file=("(?<path>.+)")(#((?<from>L\d+)-?((?<to>L\d+))))?)?(\s)(testCase=("(?<case>.+)"))?/;
-      const res = regexp.exec(fileMeta);
-      if (!res || !res.groups || !res.groups.path) {
-        throw new Error(`Unable to parse file path ${fileMeta}`);
-      }
-
-      const filePath = res.groups.path.replaceAll('"', '');
-      const fromLine = res.groups.from
-        ? parseInt(res.groups.from, 10)
-        : undefined;
-
-      const hasDash = !!res.groups.dash || fromLine === undefined;
-      const toLine = res.groups.to ? parseInt(res.groups.to, 10) : undefined;
-      const normalizedFilePath = filePath
-        .replace(/^<rootDir>/, rootDir)
-        .replace(/\\ /g, ' ');
-
-      const fileAbsPath = path.resolve(file.cwd, normalizedFilePath);
-      const testCase = res.groups.case;
-
-      if (!options.allowImportingFromOutside) {
-        const relFromDir = path.relative(rootDir, fileAbsPath);
-        if (
-          !rootDir ||
-          relFromDir.startsWith(`..${path.sep}`) ||
-          path.isAbsolute(relFromDir)
-        ) {
-          throw new Error(
-            `Attempted to import code from "${fileAbsPath}", which is outside from the rootDir "${rootDir}"`
-          );
-        }
-      }
-
+      const file = attr.find((i: any) => i.name === 'file')?.value;
+      const lines = attr.find((i: any) => i.name === 'lines')?.value || [];
+      const testCase = attr.find((i: any) => i.name === 'testCase')?.value;
+      const fileAbsPath = path.resolve(path.join(rootDir, dirname), file);
+      let [lineStart, lineEnd] = lines as any[];
       const fileContent = fs.readFileSync(fileAbsPath, 'utf8');
+      const cachedFile = getFilesOnCache(fileAbsPath);
+      const attrId = `${fileAbsPath}${testCase || ''}${lineStart || ''}${
+        lineEnd || ''
+      }`;
+      const oldList = attrsList.get(attrId);
 
-      if (fromLine || toLine) {
-        node.value = extractLines(
-          fileContent,
-          fromLine,
-          hasDash,
-          toLine,
-          options.preserveTrailingNewline
-        );
+      /** Return result from cache if file content is the same */
+      if (fileContent === cachedFile && oldList) {
+        node.attributes.push(...attrsList.get(attrId)!);
+        return;
+      }
+
+      if (lineStart || lineEnd) {
+        content = extractLines(fileContent, lineStart, lineEnd);
       }
 
       if (testCase) {
-        node.value = extractTestCase(fileContent, testCase);
+        const testResult = extractTestCase(fileContent, testCase);
+        lineStart = testResult.lineStart;
+        lineEnd = testResult.lineEnd;
+        content = testResult.content;
       }
 
-      if (options.removeRedundantIndentations) {
-        node.value = stripIndent(node.value);
-      }
-    }
+      const newAttrs = [
+        {
+          name: '__content',
+          type: 'mdxJsxAttribute',
+          value: content,
+        },
+        {
+          name: '__filepath',
+          type: 'mdxJsxAttribute',
+          value: path.resolve(dirname, file).replace(`${ROOT_DIR}/`, ''),
+        },
+        {
+          name: '__filename',
+          type: 'mdxJsxAttribute',
+          value: path.parse(file).base,
+        },
+        {
+          name: '__language',
+          type: 'mdxJsxAttribute',
+          value: path.extname(fileAbsPath).replace('.', ''),
+        },
+        {
+          name: '__lineStart',
+          type: 'mdxJsxAttribute',
+          value: lineStart,
+        },
+        lineEnd && {
+          name: '__lineEnd',
+          type: 'mdxJsxAttribute',
+          value: lineEnd,
+        },
+      ];
 
-    if (promises.length) {
-      return Promise.all(promises);
-    }
+      node.attributes.push(...newAttrs);
+
+      /** Add results on cache */
+      attrsList.set(attrId, newAttrs);
+    });
   };
 }
 

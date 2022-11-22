@@ -33,6 +33,7 @@ describe('FuelWeb3', () => {
   test('signMessage', async () => {
     const accounts = await window.FuelWeb3.accounts();
     const account = accounts[0];
+
     // Test example like docs
     const signedMessage = await window.FuelWeb3.signMessage(account, 'test');
     const signedMesageSpec = await userWallet.signMessage('test');

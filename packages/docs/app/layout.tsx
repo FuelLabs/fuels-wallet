@@ -5,7 +5,7 @@ import '../styles/docsearch/modal.css';
 import '../styles/docsearch/style.css';
 import 'plyr-react/plyr.css';
 
-import { Provider } from '~/components';
+import { Provider } from '~/components/Provider';
 import { StyleProvider } from '~/components/StyleProvider';
 
 type RootLayoutProps = {

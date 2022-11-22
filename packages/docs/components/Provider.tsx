@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+'use client';
+
 import { ThemeProvider } from '@fuel-ui/react';
 import { MDXProvider } from '@mdx-js/react';
 import type { ReactNode } from 'react';
 
 import { Blockquote } from './Blockquote';
 import { Code } from './Code';
+import { CodeImport } from './CodeImport';
 import { Heading } from './Heading';
 import { UL } from './List';
 import { Paragraph } from './Paragraph';
@@ -12,7 +17,7 @@ import { Pre } from './Pre';
 import { Table } from './Table';
 import { Testing } from './Testing';
 
-const components = {
+export const defaultComponents = {
   h1: Heading,
   h2: Heading,
   h3: Heading,
@@ -25,14 +30,18 @@ const components = {
   blockquote: Blockquote,
   table: Table,
   ul: UL,
+  CodeImport,
   Testing,
   Player,
 };
 
-export function Provider({ children }: { children: ReactNode }) {
+type ProviderProps = {
+  children: ReactNode;
+};
+
+export function Provider({ children }: ProviderProps) {
   return (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    <MDXProvider components={components as any}>
+    <MDXProvider components={defaultComponents as any}>
       <ThemeProvider>{children}</ThemeProvider>
     </MDXProvider>
   );

@@ -1,3 +1,5 @@
+'use client';
+
 import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
 import type { PlyrProps } from 'plyr-react';

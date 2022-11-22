@@ -2,6 +2,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 
+'use client';
+
 import { cssObj } from '@fuel-ui/css';
 import { Alert, Box, Button, Text, Link, Input, Flex } from '@fuel-ui/react';
 import { FuelWeb3Provider, getBlockExplorerLink } from '@fuel-wallet/sdk';

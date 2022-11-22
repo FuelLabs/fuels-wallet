@@ -10,36 +10,28 @@ category: SDK
 `async connect(): Promise<boolean>`<br />
 Request permission to start a connection between the project and the wallet
 
-```tsx file="../sdk/src/FuelWeb3.test.ts" testCase="connect"
-
-```
+<CodeImport file="../../../sdk/src/FuelWeb3.test.ts" testCase="connect" />
 
 ### Disconnect
 
 `async disconnect(): Promise<boolean>`<br />
 Disconnect your project
 
-```tsx file="../sdk/src/FuelWeb3.test.ts" testCase="disconnect"
-
-```
+<CodeImport file="../../../sdk/src/FuelWeb3.test.ts" testCase="disconnect" />
 
 ### List Accounts
 
 `async accounts(): Promise<Array<string>>`<br />
 List accounts in the wallet
 
-```tsx file="../sdk/src/FuelWeb3.test.ts" testCase="accounts"
-
-```
+<CodeImport file="../../../sdk/src/FuelWeb3.test.ts" testCase="accounts" />
 
 ### Request signature message
 
 `async signMessage(address: string, message: string): Promise<string>`<br />
 Request a message signature for one specific account
 
-```tsx file="../sdk/src/FuelWeb3.test.ts" testCase="signMessage"
-
-```
+<CodeImport file="../../../sdk/src/FuelWeb3.test.ts" testCase="signMessage" />
 
 ### Send transaction
 
@@ -47,9 +39,10 @@ Request a message signature for one specific account
 Send a transaction, this will request the user selected account to review,
 sign, and send the transaction.
 
-```tsx file="../sdk/src/FuelWeb3.test.ts" testCase="sendTransaction"
-
-```
+<CodeImport
+  file="../../../sdk/src/FuelWeb3.test.ts"
+  testCase="sendTransaction"
+/>
 
 ### Get Wallet
 
@@ -58,6 +51,4 @@ Return a FuelWeb3Wallet this class extends the fuels-ts SDK, WalletLocked,
 enabling to execute any of the methods available, but using a FuelWeb3Provider on the connection point,
 to request signed actions.
 
-```tsx file="../sdk/src/FuelWeb3.test.ts" testCase="getWallet"
-
-```
+<CodeImport file="../../../sdk/src/FuelWeb3.test.ts" testCase="getWallet" />

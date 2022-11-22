@@ -9,12 +9,10 @@ import remarkSlug from 'remark-slug';
 import { codeImport } from './code-import';
 import { rehypeExtractHeadings } from './toc';
 
-import { FIELDS } from '~/utils/constants';
+import { DOCS_REPO_LINK, FIELDS } from '~/utils/constants';
 import type { DocType, NodeHeading, SidebarLinkItem } from '~/utils/types';
 
 const DOCS_DIRECTORY = join(process.cwd(), './docs');
-const REPO_LINK =
-  'https://github.com/FuelLabs/fuels-wallet/blob/master/packages/docs';
 
 export async function getDocsSlugs() {
   const paths = await globby(['**.mdx']);
@@ -34,7 +32,7 @@ export async function getDocBySlug(
   const fullpath = getDocFullPath(slug);
   const fileContents = fs.readFileSync(fullpath, 'utf8');
   const { data, content } = matter(fileContents);
-  const pageLink = join(REPO_LINK, fullpath.replace(process.cwd(), ''));
+  const pageLink = join(DOCS_REPO_LINK, fullpath.replace(process.cwd(), ''));
 
   const doc = {
     pageLink,
@@ -61,7 +59,7 @@ export async function getDocBySlug(
       remarkPlugins: [
         remarkSlug,
         remarkGfm,
-        [codeImport, { allowImportingFromOutside: true }],
+        [codeImport, { filepath: fullpath }],
       ],
       rehypePlugins: [[rehypeExtractHeadings, { headings }]],
     },
