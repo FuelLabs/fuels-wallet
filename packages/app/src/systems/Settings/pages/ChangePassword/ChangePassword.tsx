@@ -31,15 +31,16 @@ type ChangePasswordFormValues = {
 export function ChangePassword() {
   const navigate = useNavigate();
   const { handlers, isChangingPassword } = useSettings();
-  const { handleSubmit, control, setError } = useForm<ChangePasswordFormValues>(
-    {
+  const { handleSubmit, control, setError, trigger } =
+    useForm<ChangePasswordFormValues>({
       mode: 'onChange',
       reValidateMode: 'onChange',
       resolver: yupResolver(schema),
-    }
-  );
+    });
 
   function onSubmit(values: ChangePasswordFormValues) {
+    console.log(values);
+
     if (values.confirmPassword !== values.newPassword) {
       return setError('confirmPassword', {
         message: 'Passwords must match',
@@ -82,6 +83,10 @@ export function ChangePassword() {
               render={({ field }) => (
                 <InputPassword
                   {...field}
+                  onBlur={() => {
+                    trigger();
+                    field.onBlur();
+                  }}
                   css={styles.input}
                   aria-label="New Password"
                   placeholder="Type your new password"
