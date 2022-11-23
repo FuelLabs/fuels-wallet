@@ -20,7 +20,7 @@
     "acorn": "^8.8.1",
     "acorn-walk": "^8.2.0",
     "dotenv": "^16.0.3",
-    "fuels": "0.21.1",
+    "fuels": "0.21.2",
     "globby": "^13.1.2",
     "gray-matter": "^4.0.3",
     "hast-util-heading-rank": "^2.1.0",
