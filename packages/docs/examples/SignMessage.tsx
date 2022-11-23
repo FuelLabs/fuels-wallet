@@ -1,15 +1,16 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import { Box, Stack, Text, Button, Input } from '@fuel-ui/react';
+import { Box, Stack, Button, Input, Tag } from '@fuel-ui/react';
 import { useState } from 'react';
 
 import { ExampleBox } from '~/components/ExampleBox';
 import { useFuelWeb3 } from '~/hooks/useFuelWeb3';
+import { useIsConnected } from '~/hooks/useIsConnected';
 import { useLoading } from '~/hooks/useLoading';
 
 export function SignMessage() {
   const [FuelWeb3, notDetected] = useFuelWeb3();
-  const [connected] = useState(false);
+  const [isConnected] = useIsConnected();
   const [signedMessage, setSignedMessage] = useState<string>('');
   const [message, setMessage] = useState<string>('Message to sign');
 
@@ -29,7 +30,7 @@ export function SignMessage() {
   return (
     <ExampleBox error={errorMessage}>
       <Stack css={{ gap: '$4' }}>
-        <Input isDisabled={!connected} css={{ width: 300, height: 100 }}>
+        <Input isDisabled={!isConnected} css={{ width: 300, height: 100 }}>
           <Input.Field
             as="textarea"
             value={message}
@@ -42,15 +43,15 @@ export function SignMessage() {
           <Button
             onPress={() => handleSignMessage(message)}
             isLoading={isSingingMessage}
-            isDisabled={isSingingMessage || !connected}
+            isDisabled={isSingingMessage || !isConnected}
           >
             Sign Message
           </Button>
         </Box>
         {signedMessage && (
-          <Box css={styles.accounts}>
-            <Text>{signedMessage}</Text>
-          </Box>
+          <Tag size="xs" color="gray" variant="ghost" css={styles.msg}>
+            {signedMessage}
+          </Tag>
         )}
       </Stack>
     </ExampleBox>
@@ -58,12 +59,10 @@ export function SignMessage() {
 }
 
 const styles = {
-  accounts: cssObj({
-    marginTop: '$2',
-    padding: '$2',
-    borderRadius: '$lg',
-    backgroundColor: '$gray4',
-    maxWidth: 300,
-    wordWrap: 'break-word',
+  msg: cssObj({
+    borderRadius: '$md',
+    height: 'auto',
+    maxWidth: 320,
+    wordBreak: 'break-all',
   }),
 };

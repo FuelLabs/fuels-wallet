@@ -18,7 +18,6 @@ import { Paragraph } from './Paragraph';
 import Player from './Player';
 import { Pre } from './Pre';
 import { Table } from './Table';
-import { Testing } from './Testing';
 
 export const defaultComponents = {
   h1: Heading,
@@ -35,7 +34,6 @@ export const defaultComponents = {
   ul: UL,
   ConnectionAlert,
   CodeImport,
-  Testing,
   Player,
   Examples,
 };

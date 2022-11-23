@@ -8,11 +8,12 @@ import { useState } from 'react';
 import { FuelWeb3Provider, getBlockExplorerLink } from '~/../sdk/src';
 import { ExampleBox } from '~/components/ExampleBox';
 import { useFuelWeb3 } from '~/hooks/useFuelWeb3';
+import { useIsConnected } from '~/hooks/useIsConnected';
 import { useLoading } from '~/hooks/useLoading';
 
 export function Transfer() {
   const [FuelWeb3, notDetected] = useFuelWeb3();
-  const [connected] = useState(false);
+  const [isConnected] = useIsConnected();
   const [txId, setTxId] = useState<string>('');
   const [amount, setAmount] = useState<string>('0.00001');
 
@@ -38,7 +39,7 @@ export function Transfer() {
     <ExampleBox error={errorMessage}>
       <Stack css={{ gap: '$4' }}>
         <Flex gap="$4" align="center">
-          <Input isDisabled={!connected}>
+          <Input isDisabled={!isConnected}>
             <Input.Field
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
@@ -48,7 +49,7 @@ export function Transfer() {
           <Button
             onPress={() => sendTransaction(bn.parseUnits(amount))}
             isLoading={sendingTransaction}
-            isDisabled={sendingTransaction || !connected}
+            isDisabled={sendingTransaction || !isConnected}
           >
             Transfer
           </Button>
