@@ -6,7 +6,6 @@ const nextConfig = {
   experimental: {
     esmExternals: false,
     externalDir: true,
-    appDir: true,
   },
   trailingSlash: true,
 };

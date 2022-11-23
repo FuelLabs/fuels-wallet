@@ -19,7 +19,7 @@ import Player from './Player';
 import { Pre } from './Pre';
 import { Table } from './Table';
 
-export const defaultComponents = {
+const components = {
   h1: Heading,
   h2: Heading,
   h3: Heading,
@@ -44,7 +44,7 @@ type ProviderProps = {
 
 export function Provider({ children }: ProviderProps) {
   return (
-    <MDXProvider components={defaultComponents as any}>
+    <MDXProvider components={components as any}>
       <ThemeProvider>{children}</ThemeProvider>
     </MDXProvider>
   );
