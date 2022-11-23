@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 
 import { Heading } from './Heading';
 
-import { useFuelWeb3 } from '~/hooks/useFuelWeb3';
+import { useFuelWeb3 } from '~/src/hooks/useFuelWeb3';
 
 export function ExampleBox({
   children,

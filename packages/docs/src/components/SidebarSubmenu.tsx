@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import { SidebarLink } from './SidebarLink';
 
-import type { SidebarLinkItem } from '~/utils/types';
+import type { SidebarLinkItem } from '~/src/types';
 
 type SidebarSubmenuProps = SidebarLinkItem;
 

@@ -1,12 +1,12 @@
 @font-face {
   font-family: "Calling Code";
-  src: url("../public/fonts/callingcode.woff2") format("woff2");
+  src: url("../../public/fonts/callingcode.woff2") format("woff2");
   font-weight: 300 900;
   font-style: normal;
 }
 @font-face {
   font-family: "Calling Code";
-  src: url("../public/fonts/callingcode.woff2") format("woff2");
+  src: url("../../public/fonts/callingcode.woff2") format("woff2");
   font-weight: 300 900;
   font-style: italic;
 }

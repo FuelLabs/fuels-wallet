@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Flex, Icon, Text } from '@fuel-ui/react';
 
-import type { DocType } from '~/utils/types';
+import type { DocType } from '~/src/types';
 
 type BreadcrumbProps = {
   doc: DocType;

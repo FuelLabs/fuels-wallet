@@ -1,7 +1,7 @@
-import { getAllDocs, getDocBySlug, getSidebarLinks } from '~/lib/api';
-import { DocScreen } from '~/screens/DocPage';
-import { FIELDS, MENU_ORDER } from '~/utils/constants';
-import type { SidebarLinkItem } from '~/utils/types';
+import { DEFAULT_SLUG, FIELDS, MENU_ORDER } from '~/src/constants';
+import { getAllDocs, getDocBySlug, getSidebarLinks } from '~/src/lib/api';
+import { DocScreen } from '~/src/screens/DocPage';
+import type { SidebarLinkItem } from '~/src/types';
 
 export type DocPageProps = {
   params: {
@@ -10,7 +10,7 @@ export type DocPageProps = {
 };
 
 export default async function DocPage({ params }: DocPageProps) {
-  const slug = params.slug.join('/');
+  const slug = (params.slug || DEFAULT_SLUG)?.join('/');
   const doc = await getDocBySlug(slug, FIELDS);
   const links = await getSidebarLinks(MENU_ORDER);
   const docLink = links

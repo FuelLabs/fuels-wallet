@@ -2,8 +2,8 @@
 
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon, IconButton, Text } from '@fuel-ui/react';
-import type { ReactNode } from 'react';
 import { Children } from 'react';
+import type { ReactNode } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import theme from 'react-syntax-highlighter/dist/cjs/styles/prism/night-owl';
 

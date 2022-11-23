@@ -1,7 +1,7 @@
 import type { DocPageProps } from './page';
 
-import { getDocBySlug } from '~/lib/api';
-import { FIELDS } from '~/utils/constants';
+import { FIELDS } from '~/src/constants';
+import { getDocBySlug } from '~/src/lib/api';
 
 export default async function Head({ params }: DocPageProps) {
   const slug = params.slug.join('/');

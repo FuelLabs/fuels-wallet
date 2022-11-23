@@ -7,8 +7,8 @@ import { EOL } from 'os';
 import path from 'path';
 import * as prettier from 'prettier';
 import type { Root } from 'remark-gfm';
-import type { Parent } from 'unist-util-visit';
 import { visit } from 'unist-util-visit';
+import type { Parent } from 'unist-util-visit';
 
 const ROOT_DIR = path.resolve(__dirname, '../../../../../../../');
 

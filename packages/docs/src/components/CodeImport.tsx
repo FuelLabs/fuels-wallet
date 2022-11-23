@@ -3,7 +3,7 @@ import { Link } from '@fuel-ui/react';
 
 import { Pre } from './Pre';
 
-import { REPO_LINK } from '~/utils/constants';
+import { REPO_LINK } from '~/src/constants';
 
 export type CodeImportProps = {
   file: string;

@@ -6,10 +6,10 @@ import { bn, Wallet, Address } from 'fuels';
 import { useState } from 'react';
 
 import { FuelWeb3Provider, getBlockExplorerLink } from '~/../sdk/src';
-import { ExampleBox } from '~/components/ExampleBox';
-import { useFuelWeb3 } from '~/hooks/useFuelWeb3';
-import { useIsConnected } from '~/hooks/useIsConnected';
-import { useLoading } from '~/hooks/useLoading';
+import { ExampleBox } from '~/src/components/ExampleBox';
+import { useFuelWeb3 } from '~/src/hooks/useFuelWeb3';
+import { useIsConnected } from '~/src/hooks/useIsConnected';
+import { useLoading } from '~/src/hooks/useLoading';
 
 export function Transfer() {
   const [FuelWeb3, notDetected] = useFuelWeb3();

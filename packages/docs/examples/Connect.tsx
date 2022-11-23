@@ -2,9 +2,9 @@
 import { Flex, Button } from '@fuel-ui/react';
 import { useState } from 'react';
 
-import { ExampleBox } from '~/components/ExampleBox';
-import { useFuelWeb3 } from '~/hooks/useFuelWeb3';
-import { useLoading } from '~/hooks/useLoading';
+import { ExampleBox } from '~/src/components/ExampleBox';
+import { useFuelWeb3 } from '~/src/hooks/useFuelWeb3';
+import { useLoading } from '~/src/hooks/useLoading';
 
 export function Connect() {
   const [FuelWeb3, notDetected] = useFuelWeb3();

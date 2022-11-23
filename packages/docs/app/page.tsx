@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+/* eslint-disable import/no-named-default */
 
-export default function HomePage() {
-  redirect('/docs/install');
-}
+import { default as DocPage } from './docs/[...slug]/page';
+
+export default DocPage;

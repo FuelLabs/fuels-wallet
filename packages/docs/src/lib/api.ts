@@ -9,8 +9,8 @@ import remarkSlug from 'remark-slug';
 import { codeImport } from './code-import';
 import { rehypeExtractHeadings } from './toc';
 
-import { DOCS_REPO_LINK, FIELDS } from '~/utils/constants';
-import type { DocType, NodeHeading, SidebarLinkItem } from '~/utils/types';
+import { DOCS_REPO_LINK, FIELDS } from '~/src/constants';
+import type { DocType, NodeHeading, SidebarLinkItem } from '~/src/types';
 
 const DOCS_DIRECTORY = join(process.cwd(), './docs');
 

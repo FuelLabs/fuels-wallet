@@ -3,10 +3,10 @@ import { cssObj } from '@fuel-ui/css';
 import { Button, Stack, Tag, Text } from '@fuel-ui/react';
 import { useState } from 'react';
 
-import { ExampleBox } from '~/components/ExampleBox';
-import { useFuelWeb3 } from '~/hooks/useFuelWeb3';
-import { useIsConnected } from '~/hooks/useIsConnected';
-import { useLoading } from '~/hooks/useLoading';
+import { ExampleBox } from '~/src/components/ExampleBox';
+import { useFuelWeb3 } from '~/src/hooks/useFuelWeb3';
+import { useIsConnected } from '~/src/hooks/useIsConnected';
+import { useLoading } from '~/src/hooks/useLoading';
 
 export function ListAccounts() {
   const [FuelWeb3, notDetected] = useFuelWeb3();

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cssObj } from '@fuel-ui/css';
 import { Box, IconButton, Icon, Flex, Link, FuelLogo } from '@fuel-ui/react';
-import type { AnimationProps } from 'framer-motion';
 import { AnimatePresence, motion } from 'framer-motion';
+import type { AnimationProps } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 import { Search } from './Search';

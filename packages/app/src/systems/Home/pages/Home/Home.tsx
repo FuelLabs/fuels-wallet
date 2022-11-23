@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import { Flex } from '@fuel-ui/react';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';

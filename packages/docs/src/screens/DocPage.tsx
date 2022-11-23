@@ -4,13 +4,13 @@ import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
 import { MDXRemote } from 'next-mdx-remote';
 
-import { Breadcrumb } from '~/components/Breadcrumb';
-import { DocFooter } from '~/components/DocFooter';
-import { Layout } from '~/components/Layout';
-import { Sidebar } from '~/components/Sidebar';
-import { TableOfContent } from '~/components/TableOfContent';
-import { DocProvider } from '~/hooks/useDocContext';
-import type { DocType, SidebarLinkItem } from '~/utils/types';
+import { Breadcrumb } from '~/src/components/Breadcrumb';
+import { DocFooter } from '~/src/components/DocFooter';
+import { Layout } from '~/src/components/Layout';
+import { Sidebar } from '~/src/components/Sidebar';
+import { TableOfContent } from '~/src/components/TableOfContent';
+import { DocProvider } from '~/src/hooks/useDocContext';
+import type { DocType, SidebarLinkItem } from '~/src/types';
 
 type DocPageProps = {
   doc: DocType;

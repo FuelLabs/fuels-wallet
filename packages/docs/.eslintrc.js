@@ -17,4 +17,9 @@ module.exports = {
       resolveRoot('./tsconfig.json'),
     ],
   },
+  rules: {
+    ...config.rules,
+    'import/no-cycle': 'off',
+    'import/order': config.rules['import/order'],
+  },
 };

@@ -2,8 +2,8 @@
 
 import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
-import type { PlyrProps } from 'plyr-react';
 import Plyr from 'plyr-react';
+import type { PlyrProps } from 'plyr-react';
 import { useEffect, useState } from 'react';
 
 type PlayerProps = PlyrProps & {

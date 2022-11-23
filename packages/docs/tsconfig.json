@@ -8,7 +8,6 @@
     "noEmit": true,
     "isolatedModules": true,
     "baseUrl": ".",
-    "rootDir": ".",
     "paths": {
       "~/*": ["./*"]
     }

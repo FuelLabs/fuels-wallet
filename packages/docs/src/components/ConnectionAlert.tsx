@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Alert, Link } from '@fuel-ui/react';
 
-import { useFuelWeb3 } from '~/hooks/useFuelWeb3';
+import { useFuelWeb3 } from '~/src/hooks/useFuelWeb3';
 
 export function ConnectionAlert() {
   const [, notDetected] = useFuelWeb3();
