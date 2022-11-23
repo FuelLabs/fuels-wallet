@@ -24,6 +24,7 @@
     "build:preview": "node ./scripts/build-website.mjs",
     "build:all": "run-s build:libs build:docs build:app",
     "build:libs": "turbo run build --filter=@fuel-wallet/*",
+    "build:docs": "run-s build:docs-build build:docs-export",
     "build:docs-build": "turbo run build --filter=docs",
     "build:docs-export": "turbo run export --filter=docs",
     "build:app": "turbo run build --filter=app",
