@@ -1,11 +1,23 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Button, Dialog, Flex, Icon, Stack } from '@fuel-ui/react';
+import {
+  Alert,
+  Box,
+  Button,
+  Dialog,
+  Flex,
+  Icon,
+  IconButton,
+  Stack,
+} from '@fuel-ui/react';
 
 import type { UnlockFormValues } from '../../hooks';
 import { useUnlockForm } from '../../hooks';
 import { UnlockForm } from '../UnlockForm';
 
 export type UnlockDialogProps = {
+  title?: string;
+  unlockText?: string;
+  unlockError?: string;
   isOpen?: boolean;
   onClose?: () => void;
   onUnlock: (value: string) => void;
@@ -14,14 +26,19 @@ export type UnlockDialogProps = {
 };
 
 export function UnlockDialog({
+  title,
+  unlockText,
+  unlockError,
   isOpen,
   onClose,
   onUnlock,
   isLoading,
   isFullscreen,
 }: UnlockDialogProps) {
-  const form = useUnlockForm();
-  const { formState, handleSubmit } = form;
+  const form = useUnlockForm({
+    password: unlockError,
+  });
+  const { handleSubmit } = form;
 
   function onSubmit(values: UnlockFormValues) {
     onUnlock(values.password);
@@ -36,12 +53,20 @@ export function UnlockDialog({
       >
         <Dialog.Heading>
           <Flex css={{ alignItems: 'center' }}>
-            <Icon
-              color="gray8"
-              icon={Icon.is('LockKeyOpen')}
-              css={styles.headingIcon}
+            <Flex css={{ flex: 1 }}>
+              <Icon
+                color="gray8"
+                icon={Icon.is('LockKeyOpen')}
+                css={styles.headingIcon}
+              />
+              {title ?? 'Unlock Wallet'}
+            </Flex>
+            <IconButton
+              variant="link"
+              icon={<Icon icon="X" color="gray8" />}
+              aria-label="Close unlock window"
+              onPress={onClose}
             />
-            Unlock Wallet
           </Flex>
         </Dialog.Heading>
         <Box as="form" onSubmit={handleSubmit(onSubmit)} css={styles.form}>
@@ -58,12 +83,11 @@ export function UnlockDialog({
             <Button
               type="submit"
               color="accent"
-              isDisabled={!formState.isValid}
               isLoading={isLoading}
               leftIcon={Icon.is('LockKeyOpen')}
               css={styles.button}
             >
-              Unlock
+              {unlockText ?? 'Unlock'}
             </Button>
           </Dialog.Footer>
         </Box>

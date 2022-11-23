@@ -1,4 +1,4 @@
-import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuels-wallet/sdk';
+import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { DatabaseObservable } from './DatabaseObservable';

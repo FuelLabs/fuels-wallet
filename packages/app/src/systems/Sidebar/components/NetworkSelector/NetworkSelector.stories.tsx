@@ -1,5 +1,5 @@
 import { Box } from '@fuel-ui/react';
-import type { Network } from '@fuels-wallet/types';
+import type { Network } from '@fuel-wallet/types';
 import { useState } from 'react';
 
 import type { NetworkSelectorProps } from './NetworkSelector';

@@ -1,4 +1,4 @@
-import { createStore } from '@fuels-wallet/xstore';
+import { createStore } from '@fuel-wallet/xstore';
 
 import { accountEvents } from './systems/Account/events';
 import { networkEvents } from './systems/Network/events';

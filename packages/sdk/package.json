@@ -1,5 +1,5 @@
 {
-  "name": "@fuels-wallet/sdk",
+  "name": "@fuel-wallet/sdk",
   "version": "0.0.1",
   "license": "Apache-2.0",
   "main": "src/index.ts",
@@ -22,22 +22,23 @@
   "scripts": {
     "build": "pnpm ts:check && tsup --dts",
     "ts:check": "tsc --noEmit",
-    "test": "jest -c jest.config.json --passWithNoTests",
+    "test": "jest -c jest.config.js --passWithNoTests",
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
-    "dexie-observable": "3.0.0-beta.11",
+    "dexie-observable": "4.0.0-beta.13",
     "events": "^3.3.0",
+    "fuels": "0.21.1",
     "json-rpc-2.0": "^1.4.1",
     "uuid": "^9.0.0",
     "xstate": "^4.34.0"
   },
   "devDependencies": {
-    "@fuels-wallet/types": "workspace:*",
-    "@types/chrome": "^0.0.197",
+    "@fuel-wallet/types": "workspace:*",
+    "@types/chrome": "^0.0.202",
     "@types/uuid": "^8.3.4",
     "jest-webextension-mock": "^3.7.22",
     "ts-jest": "^29.0.3",
-    "tsup": "^6.3.0"
+    "tsup": "^6.5.0"
   }
 }

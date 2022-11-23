@@ -1,8 +1,7 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
 
-import { getByAriaLabel, hasText, visit } from '../commons';
-import { seedCurretAccount } from '../commons/seedWallet';
+import { getButtonByText, getByAriaLabel, hasText, visit } from '../commons';
 import { mockData } from '../mocks';
 
 test.describe('HomeWallet', () => {
@@ -18,7 +17,8 @@ test.describe('HomeWallet', () => {
 
   test('should change balance when select a new network', async () => {
     await visit(page, '/wallet');
-    await seedCurretAccount(page, 5_000_000);
+    await getButtonByText(page, 'Faucet').click();
+    await getButtonByText(page, 'Give me ETH').click();
     await hasText(page, /Ethereum/i);
     await hasText(page, /0,5 ETH/i);
 

@@ -1,14 +1,14 @@
 /* eslint-disable consistent-return */
-import { WalletManager } from '@fuel-ts/wallet-manager';
-import type { Account } from '@fuels-wallet/types';
+import type { WalletUnlocked } from '@fuel-ts/wallet';
+import type { Account } from '@fuel-wallet/types';
 import { bn, Address, Provider } from 'fuels';
 
-import { IndexedDBStorage } from '../utils';
+import { unlockManager } from '../utils';
 
-import { VITE_FUEL_PROVIDER_URL } from '~/config';
 import { isEth } from '~/systems/Asset';
 import type { Maybe } from '~/systems/Core';
 import { getPhraseFromValue, db } from '~/systems/Core';
+import { NetworkService } from '~/systems/Network';
 
 export type AccountInputs = {
   addAccount: {
@@ -34,6 +34,10 @@ export type AccountInputs = {
   unlock: {
     account: Account;
     password: string;
+  };
+  changePassword: {
+    oldPassword: string;
+    newPassword: string;
   };
 };
 
@@ -119,14 +123,8 @@ export class AccountService {
 
     await db.vaults.clear();
 
-    /**
-     * TODO: this is needed because of a typing error with StorageAbstract from fuels-ts
-     */
-    const storage = new IndexedDBStorage() as never;
-    const manager = new WalletManager({ storage });
-
     try {
-      await manager.unlock(data.password);
+      const manager = await unlockManager(data.password);
       await manager.addVault({
         type: 'mnemonic',
         secret: getPhraseFromValue(data.mnemonic),
@@ -139,17 +137,29 @@ export class AccountService {
     }
   }
 
-  static async unlock(input: AccountInputs['unlock']) {
-    const storage = new IndexedDBStorage() as never;
-    const manager = new WalletManager({ storage });
-    await manager.unlock(input.password);
+  static async exportVault(input: AccountInputs['unlock']) {
+    const manager = await unlockManager(input.password);
+    const { secret } = manager.exportVault(0);
+    return secret;
+  }
+
+  static async unlock(input: AccountInputs['unlock']): Promise<WalletUnlocked> {
+    const manager = await unlockManager(input.password);
     const wallet = manager.getWallet(
       Address.fromPublicKey(input.account.publicKey)
     );
-    // TODO: fix this on fuels-ts it should be possible to
-    // customize the ProviderURL on the manager level
-    wallet.provider = new Provider(VITE_FUEL_PROVIDER_URL);
+    const network = await NetworkService.getSelectedNetwork();
+    if (!network) {
+      throw new Error('Network not found!');
+    }
+    wallet.connect(network.url);
     return wallet;
+  }
+
+  static async changePassword(input: AccountInputs['changePassword']) {
+    const manager = await unlockManager(input.oldPassword);
+    await manager.updatePassphrase(input.oldPassword, input.newPassword);
+    return manager.lock();
   }
 }
 

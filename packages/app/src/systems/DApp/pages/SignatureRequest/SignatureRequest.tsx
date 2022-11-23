@@ -15,6 +15,7 @@ export function SignatureRequest() {
     account,
     origin,
     message,
+    unlockError,
     isUnlockingLoading,
   } = useSignatureRequest();
 
@@ -61,7 +62,9 @@ export function SignatureRequest() {
         </Layout.BottomBar>
       </Layout>
       <UnlockDialog
+        isFullscreen={true}
         isOpen={isUnlocking}
+        unlockError={unlockError}
         onUnlock={handlers.unlock}
         isLoading={isUnlockingLoading}
         onClose={handlers.closeUnlock}

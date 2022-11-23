@@ -1,5 +1,5 @@
 import { CardList } from '@fuel-ui/react';
-import type { Coin } from '@fuels-wallet/types';
+import type { Coin } from '@fuel-wallet/types';
 import type { FC } from 'react';
 
 import { AssetItem } from '../AssetItem';

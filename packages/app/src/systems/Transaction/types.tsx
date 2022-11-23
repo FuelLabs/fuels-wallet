@@ -1,4 +1,4 @@
-import type { AddressType } from '@fuels-wallet/types';
+import type { AddressType } from '@fuel-wallet/types';
 import type {
   CallResult,
   CoinTransactionRequestInput,

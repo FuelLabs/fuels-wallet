@@ -1,5 +1,9 @@
-import type { ResponseMessage, UIEventMessage } from '@fuels-wallet/sdk';
-import { POPUP_SCRIPT_NAME, MessageTypes } from '@fuels-wallet/sdk';
+import { POPUP_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
+import type {
+  FuelWeb3ProviderConfig,
+  ResponseMessage,
+  UIEventMessage,
+} from '@fuel-wallet/types';
 import { JSONRPCClient } from 'json-rpc-2.0';
 
 import {
@@ -14,6 +18,7 @@ import { deferPromise } from '../../utils/promise';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 
 import { CRXPages } from '~/systems/Core/types';
+import { NetworkService } from '~/systems/Network/services';
 
 const popups = new Map<string, PopUpService>();
 
@@ -135,5 +140,29 @@ export class PopUpService {
 
   async signMessage(origin: string, message: string) {
     return this.client.request('signMessage', { origin, message });
+  }
+
+  async sendTransaction(
+    origin: string,
+    provider: FuelWeb3ProviderConfig,
+    transaction: string
+  ) {
+    const selectedNetwork = await NetworkService.getSelectedNetwork();
+    if (selectedNetwork?.url !== provider.url) {
+      // TODO: Show for the user to add new network before
+      // finishing the transaction
+      // https://github.com/FuelLabs/fuels-wallet/issues/200
+      throw new Error(
+        [
+          `${provider.url} is different from the user current network!`,
+          'Request the user to add the new network. FuelWeb3.addNetwork([...]).',
+        ].join('\n')
+      );
+    }
+    return this.client.request('sendTransaction', {
+      origin,
+      transaction,
+      provider,
+    });
   }
 }

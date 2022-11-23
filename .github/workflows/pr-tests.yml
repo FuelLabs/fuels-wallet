@@ -53,6 +53,10 @@ jobs:
         env:
           NODE_ENV: test
 
+      - name: Run Jest Tests on SDK
+        run: |
+          pnpm test:sdk
+
       - name: Stop Test Node
         run: pnpm node:dev stop --test --debug
 
