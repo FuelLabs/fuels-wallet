@@ -1,5 +1,6 @@
 'use client';
 
+import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
 import { MDXRemote } from 'next-mdx-remote';
 
@@ -23,8 +24,12 @@ export function DocScreen(props: DocPageProps) {
   return (
     <DocProvider {...props}>
       <Layout title={doc.title}>
-        <Sidebar />
-        <Box as="section">
+        <Box css={styles.sidebar}>
+          <Box css={{ position: 'sticky', top: 20 }}>
+            <Sidebar />
+          </Box>
+        </Box>
+        <Box as="section" css={styles.section}>
           <Breadcrumb doc={doc} />
           <MDXRemote {...doc.source} scope={doc} />
           <DocFooter />
@@ -34,3 +39,29 @@ export function DocScreen(props: DocPageProps) {
     </DocProvider>
   );
 }
+
+const styles = {
+  sidebar: cssObj({
+    display: 'none',
+    padding: '$8 $0 $0 $6',
+    position: 'sticky',
+    top: 20,
+
+    '@xl': {
+      display: 'block',
+    },
+  }),
+  section: cssObj({
+    py: '$4',
+    px: '$4',
+
+    '@md': {
+      px: '$10',
+    },
+
+    '@xl': {
+      py: '$8',
+      px: '$0',
+    },
+  }),
+};

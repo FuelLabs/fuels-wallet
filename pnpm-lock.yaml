@@ -308,6 +308,7 @@ importers:
       dotenv: ^16.0.3
       eslint: ^8.28.0
       eslint-config-next: 13.0.4
+      framer-motion: ^7.6.9
       fuels: 0.21.2
       globby: ^13.1.2
       gray-matter: ^4.0.3
@@ -337,6 +338,7 @@ importers:
       acorn: 8.8.1
       acorn-walk: 8.2.0
       dotenv: 16.0.3
+      framer-motion: 7.6.9_biqbaboplfbrettd7655fr4n2y
       fuels: 0.21.2
       globby: 13.1.2
       gray-matter: 4.0.3

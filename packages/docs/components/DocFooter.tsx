@@ -28,21 +28,31 @@ export function DocFooter() {
 
 const styles = {
   root: cssObj({
-    display: 'flex',
-    pt: '$12',
     pb: '$4',
-    mt: '$14',
+    pt: '$4',
+    mt: '$6',
+    display: 'flex',
     borderTop: '1px dashed $gray3',
 
     a: {
       display: 'inline-flex',
       alignItems: 'center',
-      fontSize: '$xl',
       gap: '$4',
       color: '$gray9',
     },
     'a:hover': {
       color: '$accent11',
+    },
+
+    '@xl': {
+      pt: '$12',
+      mt: '$14',
+    },
+
+    '@md': {
+      a: {
+        fontSize: '$xl',
+      },
     },
   }),
 };

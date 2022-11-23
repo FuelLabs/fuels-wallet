@@ -21,9 +21,10 @@ export function Pre({ children, title }: PreProps) {
   return (
     <Box css={styles.root}>
       <IconButton
+        size="xs"
         icon={Icon.is('ClipboardText')}
         css={styles.copyIcon}
-        variant="link"
+        variant="ghost"
         color="gray"
         aria-label="Copy to Clipborad"
         onPress={() =>
@@ -45,9 +46,12 @@ export function Pre({ children, title }: PreProps) {
 
 const styles = {
   root: cssObj({
+    boxSizing: 'border-box',
     position: 'relative',
+    maxWidth: 'calc(100vw - $8)',
 
     pre: {
+      pr: '50px',
       mb: '$5 !important',
       padding: '$4 $2 !important',
       borderRadius: '$lg',
@@ -85,21 +89,21 @@ const styles = {
 
     '.linenumber': {
       boxSizing: 'border-box',
-      minWidth: '40px !important',
+      minWidth: '30px !important',
       color: '$gray8 !important',
-      mr: '$2',
+      mr: '$1',
     },
   }),
   copyIcon: cssObj({
-    padding: '$0 !important',
     position: 'absolute',
-    right: 10,
-    bottom: 10,
-    color: '$gray7',
+    right: 0,
+    bottom: 0,
+    color: '$gray7 !important',
     transition: 'all .3s',
+    background: '$gray1 !important',
 
     '&:hover': {
-      color: '$gray10',
+      color: '$gray9 !important',
     },
   }),
 };

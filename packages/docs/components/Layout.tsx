@@ -27,15 +27,16 @@ export function Layout({ title, children }: LayoutProps) {
 
 const styles = {
   root: cssObj({
-    display: 'grid',
     maxW: '100vw',
     height: '100vh',
-    gridTemplateColumns: '0.75fr 2.5fr 0.75fr',
+    display: 'grid',
+    gridTemplateColumns: '1fr',
     gridTemplateRows: '80px auto',
-    gridColumnGap: '$14',
 
-    section: {
-      py: '$8',
+    '@xl': {
+      gridTemplateColumns: '0.75fr 2.5fr 0.75fr',
+      gridTemplateRows: '80px auto',
+      gridColumnGap: '$14',
     },
   }),
 };

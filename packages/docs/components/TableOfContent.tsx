@@ -7,7 +7,7 @@ export function TableOfContent() {
   const { doc } = useDocContext();
   const { headings } = doc;
   return (
-    <Box>
+    <Box css={styles.queries}>
       <Box css={styles.root}>
         <Heading as="h6">On this page</Heading>
         <List>
@@ -45,6 +45,13 @@ export function TableOfContent() {
 const LIST_ITEM = '.fuel_list > .fuel_list-item';
 
 const styles = {
+  queries: cssObj({
+    display: 'none',
+
+    '@xl': {
+      display: 'block',
+    },
+  }),
   root: cssObj({
     position: 'sticky',
     top: 0,

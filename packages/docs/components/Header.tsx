@@ -3,13 +3,13 @@ import { Box, Button, Flex, FuelLogo, Icon } from '@fuel-ui/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { MobileMenu } from './MobileMenu';
 import { Search } from './Search';
-
-const globalWindow = typeof window !== 'undefined' ? window : ({} as Window);
 
 export function Header() {
   const pathname = usePathname();
   const isDocsActive = pathname?.startsWith('/docs');
+
   return (
     <Flex as="header" css={styles.root}>
       <Box css={{ flex: 1 }}>
@@ -23,27 +23,27 @@ export function Header() {
           </Flex>
         </Link>
       </Box>
-      <Flex css={styles.menu}>
-        <Link href="/docs/install" className={isDocsActive ? 'active' : ''}>
-          Documentation
-        </Link>
-        <a
-          href={process.env.NEXT_PUBLIC_STORYBOOK_URL}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Storybook
-        </a>
-        <a
-          href="https://github.com/fuellabs/fuels-wallet"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <Icon icon={Icon.is('GithubLogo')} size={24} />
-        </a>
-      </Flex>
-      <Search />
-      {!globalWindow?.FuelWeb3 && (
+      <Box css={styles.desktop}>
+        <Flex css={styles.menu}>
+          <Link href="/docs/install" className={isDocsActive ? 'active' : ''}>
+            Docs
+          </Link>
+          <a
+            href={process.env.NEXT_PUBLIC_STORYBOOK_URL}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Storybook
+          </a>
+          <a
+            href="https://github.com/fuellabs/fuels-wallet"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Icon icon={Icon.is('GithubLogo')} size={24} />
+          </a>
+        </Flex>
+        <Search />
         <Button
           as="a"
           css={{ ml: '$8' }}
@@ -51,23 +51,38 @@ export function Header() {
         >
           Open Wallet
         </Button>
-      )}
+      </Box>
+      <MobileMenu />
     </Flex>
   );
 }
 
 const styles = {
   root: cssObj({
+    zIndex: '$10',
+    position: 'sticky',
+    top: 0,
+    background: '#090a0a',
     gap: '$2',
-    alignItems: 'center',
     py: '$4',
-    px: '$8',
+    px: '$4',
+    alignItems: 'center',
     borderBottom: '1px solid $gray2',
     gridColumn: '1 / 4',
 
     '.logo': {
       display: 'flex',
       color: '$gray9',
+    },
+
+    '@md': {
+      px: '$8',
+    },
+
+    '@xl': {
+      position: 'relative',
+      py: '$4',
+      px: '$8',
     },
   }),
   logoText: cssObj({
@@ -82,12 +97,34 @@ const styles = {
     fontSize: '$xs',
     fontStyle: 'italic',
   }),
+  desktop: cssObj({
+    display: 'none',
+
+    '@xl': {
+      display: 'flex',
+      alignItems: 'center',
+    },
+  }),
+  mobile: cssObj({
+    display: 'flex',
+    alignItems: 'center',
+    '.fuel_button': {
+      height: 'auto !important',
+      padding: '$0 !important',
+    },
+
+    '@xl': {
+      display: 'none',
+    },
+  }),
   menu: cssObj({
     gap: '$6',
+
     a: {
       color: '$gray10',
       transition: 'all 0.3s',
     },
+
     'a.active, a:hover': {
       color: '$accent11',
     },
