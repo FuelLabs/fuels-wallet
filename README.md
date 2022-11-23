@@ -4,6 +4,9 @@
 
 ## ⚡️ Fuel Wallet
 
+> **Warning**
+> This project is under active development, some features are not implemented or can apresent bugs/issues. Do not treat it as a production-ready wallet.
+
 The official wallet of the fastest modular execution layer: [Fuel](https://fuel.network).
 
 FuelWallet is a crypto wallet used to interact with the Fuel Network. This project enables users to access their assets and interact with decentralized applications through a browser extension.
@@ -36,27 +39,34 @@ Integrate your **DApp** using the [Wallet SDK](./docs/WALLET_SDK.md)
   - [Finding Something to Work On](./docs/CONTRIBUTING.md#finding-something-to-work-on)
   - [Contribution Flow](./docs/CONTRIBUTING.md#contribution-flow)
 
-| This project is under active development. Please do not treat it as a production-ready wallet.
-
 ## Features
 
-- [x] Create a brand new and secure account
-- [x] Recover an account using a passphrase
+- [x] Create a new mnemonic phrase account
+- [x] Recover an account using mnemonic phrase
 - [x] DApps integration
   - [x] Request connection
   - [x] List accounts
   - [x] Sign messages
-  - [ ] Send transactions
+  - [x] Send transactions
+  - [ ] Disconnect applications
 - [x] Check your asset's balance
 - [x] Manage networks
 - [x] Faucet for testnet
-- [ ] Receive screen with QR Code
-- [ ] Update account details
-- [ ] Reveal your passphrase
-- [ ] Change password
-- [ ] See a list of your recent activities
-- [ ] View transaction details
-- [ ] Send assets to another wallet
+- [ ] Account
+  - [ ] Add new account
+  - [ ] Update account name
+  - [ ] List all account
+- [ ] Applications
+  - [ ] List connections
+  - [ ] Remove connections
+- [ ] Settings
+  - [ ] Reveal your passphrase
+  - [ ] Change password
+- [ ] Transactions
+  - [x] Receive Assets via address or QR Code
+  - [ ] Send Assets to another wallet
+  - [ ] Transaction History
+  - [ ] View transaction details
 
 ## 📜 License
 
