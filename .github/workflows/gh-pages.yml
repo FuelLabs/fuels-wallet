@@ -23,6 +23,7 @@ jobs:
           VITE_FUEL_FAUCET_URL: "https://faucet-beta-1.fuel.network/dispense"
           VITE_FAUCET_RECAPTCHA_KEY: "6Ld3cEwfAAAAAMd4QTs7aO85LyKGdgj0bFsdBfre"
           VITE_MNEMONIC_WORDS: 12
+          DOCS_DIST: ./dist
           DOCS_BASE_URL: "/${{ github.event.repository.name }}"
           NEXT_PUBLIC_APP_URL: "https://fuels-wallet.vercel.app/app/"
           NEXT_PUBLIC_WALLET_DOWNLOAD_URL: "https://fuels-wallet.vercel.app/app/fuel-wallet.zip"
