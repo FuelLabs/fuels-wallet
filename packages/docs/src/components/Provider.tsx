@@ -13,6 +13,7 @@ import { Code } from './Code';
 import { CodeImport } from './CodeImport';
 import { ConnectionAlert } from './ConnectionAlert';
 import { Heading } from './Heading';
+import { Link } from './Link';
 import { UL } from './List';
 import { Paragraph } from './Paragraph';
 import Player from './Player';
@@ -20,6 +21,7 @@ import { Pre } from './Pre';
 import { Table } from './Table';
 
 const components = {
+  a: Link,
   h1: Heading,
   h2: Heading,
   h3: Heading,
