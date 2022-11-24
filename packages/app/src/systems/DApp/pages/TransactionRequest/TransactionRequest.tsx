@@ -54,54 +54,58 @@ export function TransactionRequest() {
       <Layout title="Approve Transaction" isLoading={isLoading}>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
-          {!isLoading && !approvedTx && !txApproveError && origin && account && (
-            <Stack gap="$4">
-              <ConnectInfo
-                origin={origin}
-                account={account}
-                isReadOnly={true}
-              />
-              {account && (
-                <TxFromTo
-                  from={{
-                    type: AddressType.account,
-                    address: account.publicKey,
-                  }}
-                  to={{
-                    type: AddressType.account,
-                    address: outputsToSend[0]?.to.toString(),
-                  }}
+          {!isLoading &&
+            !approvedTx &&
+            !txApproveError &&
+            origin &&
+            account && (
+              <Stack gap="$4">
+                <ConnectInfo
+                  origin={origin}
+                  account={account}
+                  isReadOnly={true}
                 />
-              )}
-              {!!(generalErrors && Object.keys(generalErrors).length) && (
-                <Card css={styles.generalErrorCard}>
-                  <Copyable
-                    value={JSON.stringify(generalErrors)}
-                    tooltipMessage="Click to copy Error Logs"
-                    css={{ width: '100%', justifyContent: 'space-between' }}
-                  >
-                    <Icon
-                      icon={Icon.is('WarningOctagon')}
-                      color="red8"
-                      size={20}
-                    />
-                    <Text
-                      as="h3"
-                      css={{ fontSize: '$sm', fontWeight: '$semibold' }}
+                {account && (
+                  <TxFromTo
+                    from={{
+                      type: AddressType.account,
+                      address: account.publicKey,
+                    }}
+                    to={{
+                      type: AddressType.account,
+                      address: outputsToSend[0]?.to.toString(),
+                    }}
+                  />
+                )}
+                {!!(generalErrors && Object.keys(generalErrors).length) && (
+                  <Card css={styles.generalErrorCard}>
+                    <Copyable
+                      value={JSON.stringify(generalErrors)}
+                      tooltipMessage="Click to copy Error Logs"
+                      css={{ width: '100%', justifyContent: 'space-between' }}
                     >
-                      Invalid Transaction
-                    </Text>
-                  </Copyable>
-                </Card>
-              )}
-              <AssetsAmount
-                amounts={outputsToSend}
-                balanceErrors={groupedErrors?.InsufficientInputAmount}
-                title="Assets to Send"
-              />
-              <TxDetails fee={fee} outputAmount={outputAmount} />
-            </Stack>
-          )}
+                      <Icon
+                        icon={Icon.is('WarningOctagon')}
+                        color="red8"
+                        size={20}
+                      />
+                      <Text
+                        as="h3"
+                        css={{ fontSize: '$sm', fontWeight: '$semibold' }}
+                      >
+                        Invalid Transaction
+                      </Text>
+                    </Copyable>
+                  </Card>
+                )}
+                <AssetsAmount
+                  amounts={outputsToSend}
+                  balanceErrors={groupedErrors?.InsufficientInputAmount}
+                  title="Assets to Send"
+                />
+                <TxDetails fee={fee} outputAmount={outputAmount} />
+              </Stack>
+            )}
           {approvedTx && (
             <Stack>
               <Heading as="h4">Transaction sent</Heading>
