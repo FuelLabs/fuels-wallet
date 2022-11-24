@@ -6,6 +6,9 @@ import { useDocContext } from '~/src/hooks/useDocContext';
 export function TableOfContent() {
   const { doc } = useDocContext();
   const { headings } = doc;
+
+  console.log(doc.pageLink);
+
   return (
     <Box css={styles.queries}>
       <Box css={styles.root}>
