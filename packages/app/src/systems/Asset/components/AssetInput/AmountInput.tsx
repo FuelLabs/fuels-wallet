@@ -26,11 +26,11 @@ export const AmountInput: AmountInputComponent = ({
   onChange,
 }) => {
   const [assetAmount, setAssetAmount] = useState<string>(
-    value.eq(0) ? '' : value.formatUnits()
+    value.eq(0) ? '' : value.formatUnits(DECIMAL_UNITS)
   );
 
   useEffect(() => {
-    handleAmountChange(value.format({ precision: DECIMAL_UNITS }));
+    handleAmountChange(value.formatUnits(DECIMAL_UNITS));
   }, [value.toString()]);
 
   const handleAmountChange = (text: string) => {
@@ -43,7 +43,7 @@ export const AmountInput: AmountInputComponent = ({
   };
 
   const handleSetBalance = () => {
-    handleAmountChange(balance.format({ precision: DECIMAL_UNITS }));
+    handleAmountChange(balance.formatUnits(DECIMAL_UNITS));
   };
 
   return (
