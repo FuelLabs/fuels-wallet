@@ -10,14 +10,14 @@ export function DocFooter() {
     <Box as="footer" css={styles.root}>
       <Box css={{ flex: 1 }}>
         {docLink.prev && (
-          <Link href={`docs/${docLink.prev.slug}`}>
+          <Link href={docLink.prev.slug!}>
             <Icon icon={Icon.is('ArrowLeft')} size={24} /> {docLink.prev.label}
           </Link>
         )}
       </Box>
       <Box>
         {docLink.next && (
-          <Link href={`docs/${docLink.next.slug}`}>
+          <Link href={docLink.next.slug!}>
             {docLink.next.label} <Icon icon={Icon.is('ArrowRight')} size={24} />
           </Link>
         )}
