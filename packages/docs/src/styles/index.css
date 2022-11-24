@@ -36,7 +36,7 @@ h6 {
   font-feature-settings: "pnum" on, "onum" on, "ss04" on;
 }
 
-*:focus:not(input) {
+*:focus-visible:not(input) {
   outline: 2px solid #03c399;
   border-radius: 5px;
 }
