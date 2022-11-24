@@ -13,6 +13,7 @@ export function Home() {
   const navigate = useNavigate();
 
   const sendAction = useCallback(() => {
+    // eslint-disable-next-line no-alert
     window.alert('Send is not implemeted yet');
   }, []);
 
