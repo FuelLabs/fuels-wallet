@@ -15,7 +15,7 @@ type PreProps = {
 export function Pre({ children, title }: PreProps) {
   const codeEl: any = Children.toArray(children)[0];
   const codeStr = codeEl?.props.children || '';
-  const code = codeStr.endsWith('\n') ? codeStr.slice(0, -2) : codeStr;
+  const code = codeStr.endsWith('\n') ? codeStr.slice(0, -1) : codeStr;
   const language = codeEl?.props.className.replace('language-', '');
 
   return (
