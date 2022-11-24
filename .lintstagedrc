@@ -1,3 +1,9 @@
 {
-  "*.{js,jsx,ts,tsx,html}": ["pnpm prettier:check", "pnpm lint:check"]
+  "*.{js,jsx,ts,tsx,html}": [
+    "prettier --check",
+    "eslint"
+  ],
+  ".{ts,tsx}": [
+    "tsc --noEmit"
+  ]
 }
