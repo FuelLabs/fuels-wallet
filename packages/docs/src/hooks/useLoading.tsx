@@ -13,7 +13,7 @@ export function useLoading<T extends (...args: any) => Promise<void>>(
       setLoading(true);
       callback(...args)
         .catch((err) => {
-          setError(err.message);
+          setError(err);
         })
         .finally(() => {
           setLoading(false);
