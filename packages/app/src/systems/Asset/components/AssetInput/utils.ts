@@ -6,9 +6,15 @@ export function formatAmountLeadingZeros(text: string): string {
   const valueWithoutLeadingZeros = text.replace(/^0\d/, (substring) =>
     substring.replace(/^0+(?=[\d])/, '')
   );
-  return valueWithoutLeadingZeros.startsWith('.')
-    ? `0${valueWithoutLeadingZeros}`
-    : valueWithoutLeadingZeros;
+  const startsWithPoint = valueWithoutLeadingZeros.startsWith('.');
+
+  if (!startsWithPoint) {
+    return valueWithoutLeadingZeros;
+  }
+  if (valueWithoutLeadingZeros.length < 3) {
+    return `0${valueWithoutLeadingZeros}`;
+  }
+  return text;
 }
 
 export function createAmount(text: string) {
