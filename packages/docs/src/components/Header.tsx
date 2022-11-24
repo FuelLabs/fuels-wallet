@@ -71,7 +71,7 @@ const styles = {
     gridColumn: '1 / 4',
 
     '.logo': {
-      display: 'flex',
+      display: 'inline-flex',
       color: '$gray9',
     },
 
