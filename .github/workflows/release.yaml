@@ -33,7 +33,7 @@ jobs:
       - name: Bump and Collect Version
         run: |
           pnpm changeset version
-          echo "BUILD_VERSION=$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' design-system/react/package.json)" >> $GITHUB_ENV
+          echo "BUILD_VERSION=$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' packages/app/package.json)" >> $GITHUB_ENV
           git reset --hard
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
