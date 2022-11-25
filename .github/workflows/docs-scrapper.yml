@@ -9,9 +9,7 @@ on:
 
       # This needs to match the location where
       # you store your documentation code and content
-      - './packages/docs/src/docs/**'
-    branches:
-      - master
+      - './packages/docs/docs/**'
 
 jobs:
   update-docsearch:
