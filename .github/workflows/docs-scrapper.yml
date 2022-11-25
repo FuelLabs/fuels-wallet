@@ -12,6 +12,7 @@ on:
       - './packages/docs/src/docs/**'
     branches:
       - master
+
 jobs:
   update-docsearch:
     name: Update DocSearch
@@ -20,14 +21,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Setup Docker
+        uses: ./.github/actions/setup-docker
+        with:
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Update DocSearch
-        working-directory: ./packages/docs
-				env:
-		      ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
-		      ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
         run: |
+          cd ./packages/docs
           docker run \
             --env ALGOLIA_APP_ID=${ALGOLIA_APP_ID} \
             --env ALGOLIA_API_KEY=${ALGOLIA_API_KEY} \
             --env "CONFIG=$(cat docsearch.json | jq -r tostring)" \
             algolia/docsearch-scraper
+        env:
+          ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
+          ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
