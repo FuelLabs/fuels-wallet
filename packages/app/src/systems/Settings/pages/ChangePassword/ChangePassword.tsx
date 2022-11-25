@@ -39,8 +39,6 @@ export function ChangePassword() {
     });
 
   function onSubmit(values: ChangePasswordFormValues) {
-    console.log(values);
-
     if (values.confirmPassword !== values.newPassword) {
       return setError('confirmPassword', {
         message: 'Passwords must match',
