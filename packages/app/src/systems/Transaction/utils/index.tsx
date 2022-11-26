@@ -28,3 +28,4 @@ export function getCoinOutputsFromTx(tx?: TxRequest) {
 }
 
 export * from './error';
+export * from './tx';

@@ -3,12 +3,12 @@ import { Card } from '@fuel-ui/react';
 import type { IContentLoaderProps } from 'react-content-loader';
 import ContentLoader from 'react-content-loader';
 
-export const TxStatusLoader = (props: IContentLoaderProps) => (
+export const TxHeaderLoader = (props: IContentLoaderProps) => (
   <Card>
     <ContentLoader
       speed={2}
       width={300}
-      height={100}
+      height={98}
       viewBox="0 0 300 100"
       backgroundColor={darkColors.gray2}
       foregroundColor={darkColors.gray3}

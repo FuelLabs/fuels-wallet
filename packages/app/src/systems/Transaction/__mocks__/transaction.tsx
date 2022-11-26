@@ -57,9 +57,16 @@ export const MOCK_TX = {
 
 export const MOCK_OUTPUT_AMOUNT = bn.parseUnits('0.5');
 
-export const MOCK_TRANSACTION: Transaction = {
+export const MOCK_TRANSACTION_SCRIPT: Transaction = {
   id: '12132213231231',
   type: TransactionType.Script,
+  status: TxStatus.pending,
+  data: undefined,
+};
+
+export const MOCK_TRANSACTION_CREATE: Transaction = {
+  id: '12132213231231',
+  type: TransactionType.Create,
   status: TxStatus.pending,
   data: undefined,
 };
