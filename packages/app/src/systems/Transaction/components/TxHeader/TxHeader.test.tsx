@@ -14,26 +14,26 @@ describe('TxDetails', () => {
     await testA11y(<TxHeader transaction={MOCK_TRANSACTION_SCRIPT} />);
   });
 
-  it('should be able to show info of transaction Script', async () => {
+  it('should show transaction Script', async () => {
     render(<TxHeader transaction={MOCK_TRANSACTION_SCRIPT} />);
 
     expect(screen.getByText(/Script/i)).toBeInTheDocument();
   });
 
-  it('should be able to show info of transaction Create', async () => {
+  it('should show transaction Create', async () => {
     render(<TxHeader transaction={MOCK_TRANSACTION_CREATE} />);
 
     expect(screen.getByText(/Create/i)).toBeInTheDocument();
   });
 
-  it('should be able to show info of transaction Pending', async () => {
+  it('should show transaction Pending', async () => {
     render(<TxHeader transaction={MOCK_TRANSACTION_CREATE} />);
 
     expect(screen.getByText(/Pending/i)).toBeInTheDocument();
     expect(screen.getByLabelText('Status Color: amber9')).toBeInTheDocument();
   });
 
-  it('should be able to show info of transaction Success', async () => {
+  it('should show transaction Success', async () => {
     render(
       <TxHeader
         transaction={{ ...MOCK_TRANSACTION_CREATE, status: TxStatus.success }}
@@ -44,7 +44,7 @@ describe('TxDetails', () => {
     expect(screen.getByLabelText('Status Color: mint9')).toBeInTheDocument();
   });
 
-  it('should be able to show info of transaction Error', async () => {
+  it('should show transaction Error', async () => {
     render(
       <TxHeader
         transaction={{ ...MOCK_TRANSACTION_CREATE, status: TxStatus.error }}
@@ -55,7 +55,7 @@ describe('TxDetails', () => {
     expect(screen.getByLabelText('Status Color: crimson9')).toBeInTheDocument();
   });
 
-  it('should be able to copy transaction link', async () => {
+  it('should copy transaction link', async () => {
     const { user } = render(
       <TxHeader
         transaction={MOCK_TRANSACTION_CREATE}
@@ -73,11 +73,10 @@ describe('TxDetails', () => {
       }?providerUrl=${encodeURIComponent(
         process.env.VITE_FUEL_PROVIDER_URL || ''
       )}`
-      // 'https://fuellabs.github.io/block-explorer-v2/transaction/12132213231231?providerUrl=http%3A%2F%2Flocalhost%3A4001%2Fgraphql'
     );
   });
 
-  it('should be able to copy transaction id', async () => {
+  it('should copy transaction id', async () => {
     const { user } = render(
       <TxHeader
         transaction={MOCK_TRANSACTION_CREATE}
