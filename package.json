@@ -27,6 +27,7 @@
     "build:crx": "pnpm build:libs && turbo run build:crx",
     "build:all": "run-s build build:crx",
     "changeset": "changeset",
+    "changeset:empty": "changeset --empty",
     "changeset:release": "changeset publish --no-git-tag",
     "changeset:version": "changeset version",
     "changeset:check": "changeset status --since=master",
