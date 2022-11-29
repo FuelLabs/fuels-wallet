@@ -1,9 +1,4 @@
 {
-  "*.{js,jsx,ts,tsx,html}": [
-    "prettier --check",
-    "eslint"
-  ],
-  ".{ts,tsx}": [
-    "tsc --noEmit"
-  ]
+  "*.{js,jsx,ts,tsx,html}": ["prettier --check", "eslint"],
+  ".{ts,tsx}": ["tsc --noEmit"]
 }
