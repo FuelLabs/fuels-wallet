@@ -1,3 +1,4 @@
+import type { Transaction, TransactionRequestInput } from 'fuels';
 import { InputType, OutputType } from 'fuels';
 
 import type {
@@ -15,13 +16,13 @@ export function parseTransaction<T extends TxRequest | TxResponse>(tx: T) {
   }, {} as T);
 }
 
-export function getCoinInputsFromTx(tx?: TxRequest) {
-  return (tx?.inputs ?? []).filter(
+export function getCoinInputsFromTx(tx?: TxRequest | Transaction) {
+  return ((tx?.inputs as TransactionRequestInput[]) ?? []).filter(
     (i) => i.type === InputType.Coin
   ) as TxInputCoin[];
 }
 
-export function getCoinOutputsFromTx(tx?: TxRequest) {
+export function getCoinOutputsFromTx(tx?: TxRequest | Transaction) {
   return (tx?.outputs ?? []).filter(
     (i) => i.type === OutputType.Coin
   ) as TxOutputCoin[];

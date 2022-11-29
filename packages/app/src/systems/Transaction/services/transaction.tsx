@@ -1,4 +1,5 @@
 import type { WalletUnlocked } from 'fuels';
+import { Provider, TransactionResponse } from 'fuels';
 
 import type { Transaction, TxRequest } from '../types';
 import { parseTransaction } from '../utils';
@@ -20,6 +21,10 @@ export type TxInputs = {
   send: {
     wallet: WalletUnlocked;
     tx: TxRequest;
+  };
+  fetch: {
+    txId: string;
+    providerUrl?: string;
   };
 };
 
@@ -65,5 +70,12 @@ export class TxService {
 
   static async send({ wallet, tx }: TxInputs['send']) {
     return wallet.sendTransaction(tx);
+  }
+
+  static async fetch({ txId, providerUrl = '' }: TxInputs['fetch']) {
+    const provider = new Provider(providerUrl);
+    const txResponse = new TransactionResponse(txId, provider);
+
+    return txResponse;
   }
 }

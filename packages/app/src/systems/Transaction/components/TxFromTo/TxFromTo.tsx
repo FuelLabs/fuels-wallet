@@ -24,7 +24,7 @@ function TxSpinner({ state = TxState.default }: TxSpinnerProps) {
 
 export type TxFromToProps = {
   state?: TxState;
-  from: TxRecipientAddress;
+  from?: TxRecipientAddress;
   to: TxRecipientAddress;
 };
 
@@ -36,12 +36,12 @@ export function TxFromTo({ from, to, state = TxState.default }: TxFromToProps) {
       {isLoading ? (
         <TxRecipientCard.Loader />
       ) : (
-        <TxRecipientCard recipient={from} />
+        from && <TxRecipientCard recipient={from} />
       )}
       {isLoading ? (
         <TxRecipientCard.Loader />
       ) : (
-        <TxRecipientCard recipient={to} isReceiver />
+        to && <TxRecipientCard recipient={to} isReceiver />
       )}
     </Flex>
   );

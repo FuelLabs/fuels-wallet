@@ -27,6 +27,7 @@ export const Pages = {
   requestTransaction: route('/request/transaction'),
   requestMessage: route('/request/message'),
   txs: route('/transactions'),
+  tx: route<'txId'>('/transactions/view/:txId'),
   settings: route('/settings'),
   revealPassphrase: route('/settings/reveal-passphrase'),
   changePassword: route('/settings/change-password'),

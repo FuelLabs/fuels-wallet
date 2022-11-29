@@ -1,7 +1,18 @@
 import type { Colors } from '@fuel-ui/css';
-import { TransactionType } from 'fuels';
+import { isBech32, TransactionType } from 'fuels';
 
 import { TxStatus } from '../types';
+
+export const getTxStatus = (status: string = '') => {
+  switch (status) {
+    case 'FailureStatus':
+      return TxStatus.error;
+    case 'SuccessStatus':
+      return TxStatus.success;
+    default:
+      return TxStatus.pending;
+  }
+};
 
 export const getTxStatusText = (status?: TxStatus) => {
   switch (status) {
@@ -40,4 +51,12 @@ export const getTransactionTypeText = (type: TransactionType) => {
     default:
       return '';
   }
+};
+
+export const isValidTxId = (txId: string = '') => {
+  return isBech32(txId) || isB256(txId);
+};
+
+export const isB256 = (val: string) => {
+  return /(0x)?[0-9a-f]{64}$/i.test(val);
 };
