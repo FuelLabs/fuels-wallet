@@ -44,15 +44,17 @@ export function Header() {
           </a>
         </Flex>
         <Search />
-        {process.env.NEXT_PUBLIC_PREVIEW && (
-          <Button
-            as="a"
-            css={{ ml: '$8' }}
-            href={process.env.NEXT_PUBLIC_APP_URL}
-          >
-            Open Wallet
-          </Button>
-        )}
+        <Box css={{ ml: '$8' }}>
+          {process.env.NEXT_PUBLIC_PREVIEW ? (
+            <Button as="a" href={process.env.NEXT_PUBLIC_APP_URL}>
+              Open Wallet
+            </Button>
+          ) : (
+            <a href={process.env.NEXT_PUBLIC_WALLET_DOWNLOAD_URL} download>
+              <Button>Download Fuel Wallet</Button>
+            </a>
+          )}
+        </Box>
       </Box>
       <MobileMenu />
     </Flex>

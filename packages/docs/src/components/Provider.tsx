@@ -12,6 +12,7 @@ import { Blockquote } from './Blockquote';
 import { Code } from './Code';
 import { CodeImport } from './CodeImport';
 import { ConnectionAlert } from './ConnectionAlert';
+import { DownloadFuelWallet } from './DownloadFuelWallet';
 import { Heading } from './Heading';
 import { Link } from './Link';
 import { UL } from './List';
@@ -37,6 +38,7 @@ const components = {
   ConnectionAlert,
   CodeImport,
   Player,
+  DownloadFuelWallet,
   Examples,
 };
 
