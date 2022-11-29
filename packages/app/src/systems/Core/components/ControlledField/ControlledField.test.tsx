@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Input } from '@fuel-ui/react';
 import { fireEvent, render, screen } from '@fuel-ui/test-utils';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -72,7 +73,7 @@ describe('ControlledField', () => {
     const classList = Array.from(label.classList);
 
     expect(label).toBeInTheDocument();
-    expect(classList.some((c) => c.includes('required'))).toBe(true);
+    expect(classList.some((c: any) => c.includes('required'))).toBe(true);
     expect(field).toBeDisabled();
   });
 });

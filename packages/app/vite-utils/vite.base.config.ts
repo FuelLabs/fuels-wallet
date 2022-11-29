@@ -13,7 +13,7 @@ const baseConfig: UserConfig = {
   base: process.env.BASE_URL || '/',
   build: {
     target: 'es2020',
-    outDir: process.env.BUILD_PATH || 'dist',
+    outDir: process.env.APP_DIST || 'dist',
   },
   optimizeDeps: {
     esbuildOptions: {

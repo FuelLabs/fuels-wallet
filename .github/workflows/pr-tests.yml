@@ -76,7 +76,8 @@ jobs:
         run: pnpm build:all
         env:
           NODE_ENV: test
-      
+          DOCS_DIST: ./dist
+
       # E2E tests running with Playwright
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium

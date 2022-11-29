@@ -4,7 +4,7 @@ const LOGO =
 
 export default {
   brandTitle: 'Fuel',
-  brandUrl: 'https://fuel.sh',
+  brandUrl: 'https://fuels-wallet.vercel.app/',
   brandImage: LOGO,
   colorPrimary: PRIMARY_COLOR,
   colorSecondary: PRIMARY_COLOR,
