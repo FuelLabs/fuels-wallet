@@ -1,5 +1,5 @@
 {
-  "outputDirectory": "./packages/page/dist",
+  "outputDirectory": "./dist",
   "github": {
     "silent": true
   },

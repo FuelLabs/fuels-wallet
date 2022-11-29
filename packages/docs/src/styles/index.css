@@ -1,0 +1,66 @@
+@font-face {
+  font-family: "Calling Code";
+  src: url("../../public/fonts/callingcode.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Calling Code";
+  src: url("../../public/fonts/callingcode.woff2") format("woff2");
+  font-weight: 300 900;
+  font-style: italic;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body,
+#__next {
+  background: #090a0a !important;
+  min-height: 100vh;
+}
+
+body.no-scroll {
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  font-feature-settings: "pnum" on, "onum" on, "ss04" on;
+}
+
+*:focus-visible:not(input) {
+  outline: 2px solid #03c399;
+  border-radius: 5px;
+}
+
+a {
+  color: #03c399;
+  text-decoration: none;
+}
+
+tr > th {
+  text-align: left;
+}
+
+tr > th,
+tr > td {
+  padding: 0 20px 0 0;
+}
+
+pre span,
+code {
+  font-family: "Calling Code", monospace !important;
+  letter-spacing: -0.02em;
+}
+
+.fuel_logo {
+  width: 40px;
+}
