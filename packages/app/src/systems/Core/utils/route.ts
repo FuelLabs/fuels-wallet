@@ -48,12 +48,16 @@ export function route<P extends string = any>(path: string) {
       ?.map((str) => params?.[str.replace(':', '')] || str)
       .join('/');
 
-    return stringifyUrl(`/${parsed ?? ''}`, query);
+    return `/${parsed ?? ''}${searchStringify(query)}`;
   };
 }
 
-export function stringifyUrl(url: string, query?: Record<any, any>) {
+export function searchStringify(query?: Record<any, any>) {
   const qs = new URLSearchParams(query).toString();
-  const { pathname } = new URL(url, 'https://fuel.network/');
-  return `${pathname}${qs.length ? `?${qs}` : ''}`;
+  return qs.length ? `?${qs}` : '';
+}
+
+export function stringifyUrl(url: string, query?: Record<any, any>) {
+  const { href } = new URL(url, 'https://fuel.network/');
+  return `${href}${searchStringify(query)}`;
 }
