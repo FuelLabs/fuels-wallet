@@ -23,7 +23,7 @@ export function FaucetDialog() {
 
   return (
     <Dialog
-      open={true}
+      isOpen={true}
       onOpenChange={(open) => !open && navigate(Pages.wallet())}
     >
       <Dialog.Content css={{ maxWidth: 334 }}>
