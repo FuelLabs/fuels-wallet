@@ -1,6 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, Link, Spinner, Stack, Tag, Tooltip } from '@fuel-ui/react';
+import {
+  Alert,
+  Box,
+  Link,
+  Spinner,
+  Stack,
+  Tag,
+  Text,
+  Tooltip,
+} from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 
 import { capitalize } from '../lib/str';
@@ -70,6 +79,7 @@ export function ExampleBox({
             </Tag>
           )}
         </Heading>
+        {error && <Text color="red10">{error.message}</Text>}
         {children}
       </Box>
     </Stack>

@@ -11,33 +11,24 @@ The official wallet of the fastest modular execution layer: [Fuel](https://fuel.
 
 FuelWallet is a crypto wallet used to interact with the Fuel Network. This project enables users to access their assets and interact with decentralized applications through a browser extension.
 
-[![Install Wallet](docs/assets/install-button.png)](./docs/INSTALL.md)
+[![Install Wallet](packages/docs/public/install-button.png)](https://fuels-wallet.vercel.app/docs/install/)
 
-Integrate your **DApp** using the [Wallet SDK](./docs/WALLET_SDK.md)
+Integrate your **DApp** using the [Wallet SDK](https://fuels-wallet.vercel.app/docs/api/)
 
 ## 📗 Table of contents
 
-- [📦 Install Wallet](./docs/INSTALL.md)
-- [🧰 Fuel Wallet SDK](./docs/WALLET_SDK.md)
-  - [👨‍💻 - Quickstart](./docs/WALLET_SDK.md#quickstart)
-  - [🔗 - Request connection](./docs/WALLET_SDK.md#request-connection)
-  - [📗 - List user accounts](./docs/WALLET_SDK.md#list-user-accounts)
-  - [✍️ - Signing a message](./docs/WALLET_SDK.md#signing-a-message)
-- [Contributing](./docs/GETTING_STARTED.md)
-  - [Requirements](./docs/GETTING_STARTED.md#requirements)
-  - [Running Project Locally](./docs/GETTING_STARTED.md#running-project-locally)
-    - [Getting the repository](./docs/GETTING_STARTED.md#---getting-the-repository)
-    - [Install dependencies](./docs/GETTING_STARTED.md#---install-dependencies)
-    - [Run a local node](./docs/GETTING_STARTED.md#---run-local-node)
-    - [Run the web app](./docs/GETTING_STARTED.md#---run-web-app)
-  - [Project overview](./docs/GETTING_STARTED.md#-project-overview)
-  - [Useful scripts](./docs/GETTING_STARTED.md#-useful-scripts)
-  - [Running Tests](./docs/GETTING_STARTED.md#running-tests)
-    - [Run Tests in Development Mode](./docs/GETTING_STARTED.md#run-tests-in-development-mode)
-    - [Run Tests on a Local Test Environment](./docs/GETTING_STARTED.md#run-tests-on-a-local-test-environment)
-- [Contribution Guide](./docs/CONTRIBUTING.md)
-  - [Finding Something to Work On](./docs/CONTRIBUTING.md#finding-something-to-work-on)
-  - [Contribution Flow](./docs/CONTRIBUTING.md#contribution-flow)
+- [📗 Documentation](https://fuels-wallet.vercel.app/)
+- [📦 Install Wallet](https://fuels-wallet.vercel.app/docs/install/)
+- [🧰 Fuel Wallet SDK](https://fuels-wallet.vercel.app/docs/how-to-use/)
+  - [👨‍💻 - Quickstart](https://fuels-wallet.vercel.app/docs/how-to-use/)
+  - [🔗 - Request connection](https://fuels-wallet.vercel.app/docs/how-to-use/#request-connection)
+  - [📒 - List user accounts](https://fuels-wallet.vercel.app/docs/how-to-use/#list-user-accounts)
+  - [✍️ - Signing a message](https://fuels-wallet.vercel.app/docs/how-to-use/#signing-a-message)
+  - [✍️ - Transfering assets](https://fuels-wallet.vercel.app/docs/how-to-use/#transfering-assets)
+  - [📗 SDK API](https://fuels-wallet.vercel.app/docs/api/)
+- [Contributing](https://fuels-wallet.vercel.app/docs/contributing/guide/)
+  - [Contribution Guide](https://fuels-wallet.vercel.app/docs/contributing/guide/)
+  - [Running Locally](https://fuels-wallet.vercel.app/docs/contributing/running-locally)
 
 ## Features
 
