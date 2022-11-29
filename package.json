@@ -55,9 +55,9 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@fuel-ui/config": "^0.9.2",
-    "@fuel-ui/css": "^0.9.2",
-    "@fuel-ui/react": "^0.9.2",
+    "@fuel-ui/config": "^0.9.1",
+    "@fuel-ui/css": "^0.9.1",
+    "@fuel-ui/react": "^0.9.1",
     "execa": "^6.1.0",
     "fuelhat": "workspace:*"
   },

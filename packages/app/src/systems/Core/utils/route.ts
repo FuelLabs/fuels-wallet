@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import qs from 'query-string';
 
 export class Route<P extends string> {
   path!: string;
@@ -45,10 +44,16 @@ export function route<P extends string = any>(path: string) {
     query?: Record<string, any>
   ): string {
     const split = item.path.match(/[^/]+/g);
-    const val = split
+    const parsed = split
       ?.map((str) => params?.[str.replace(':', '')] || str)
       .join('/');
-    const url = `/${val ?? ''}`;
-    return qs.stringifyUrl({ url, query });
+
+    return stringifyUrl(`/${parsed ?? ''}`, query);
   };
+}
+
+export function stringifyUrl(url: string, query?: Record<any, any>) {
+  const qs = new URLSearchParams(query).toString();
+  const { pathname } = new URL(url, 'https://fuel.network/');
+  return `${pathname}${qs.length ? `?${qs}` : ''}`;
 }
