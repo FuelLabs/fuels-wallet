@@ -54,18 +54,18 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@fuel-ui/config": "^0.9.1",
-    "@fuel-ui/css": "^0.9.1",
-    "@fuel-ui/react": "^0.9.1",
+    "@fuel-ui/config": "^0.9.2",
+    "@fuel-ui/css": "^0.9.2",
+    "@fuel-ui/react": "^0.9.2",
     "execa": "^6.1.0",
     "fuelhat": "workspace:*"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.2",
+    "@babel/core": "^7.20.5",
     "@changesets/changelog-github": "^0.4.7",
     "@changesets/cli": "^2.25.2",
     "@jest/types": "29.3.1",
-    "@playwright/test": "^1.28.0",
+    "@playwright/test": "^1.28.1",
     "@types/jest": "^29.2.3",
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.25",
@@ -73,22 +73,22 @@
     "@xstate/cli": "^0.3.3",
     "dotenv": "^16.0.3",
     "eslint": "^8.28.0",
-    "fs-extra": "^10.1.0",
+    "fs-extra": "^11.0.0",
     "http-server": "^14.1.1",
     "husky": "^8.0.2",
     "identity-obj-proxy": "^3.0.0",
     "jest": "29.3.1",
     "jest-environment-jsdom": "29.3.1",
     "jest-transform-stub": "^2.0.0",
-    "lint-staged": "^13.0.3",
+    "lint-staged": "^13.0.4",
     "npm-run-all": "^4.1.5",
-    "playwright": "^1.28.0",
-    "prettier": "^2.7.1",
+    "playwright": "^1.28.1",
+    "prettier": "^2.8.0",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
     "turbo": "^1.6.3",
     "typescript": "^4.9.3",
-    "updates": "^13.2.1"
+    "updates": "^13.2.2"
   },
   "pnpm": {
     "peerDependencyRules": {
@@ -104,7 +104,10 @@
     "overrides": {
       "trim@<0.0.3": ">=0.0.3",
       "trim-newlines@<3.0.1": ">=3.0.1",
-      "glob-parent@<5.1.2": ">=5.1.2"
+      "glob-parent@<5.1.2": ">=5.1.2",
+      "loader-utils@<1.4.1": ">=1.4.1",
+      "loader-utils@>=2.0.0 <2.0.4": ">=2.0.4",
+      "loader-utils@>=1.0.0 <1.4.2": ">=1.4.2"
     }
   }
 }
