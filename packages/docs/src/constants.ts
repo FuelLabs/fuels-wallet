@@ -13,3 +13,5 @@ export const DEFAULT_SLUG = ['install'];
 
 export const META_DESC =
   'Native wallet for Fuel, the fatest modular execution layer';
+
+export const META_OGIMG = 'https://i.imgur.com/AmD3k6X.png';
