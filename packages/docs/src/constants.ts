@@ -1,3 +1,7 @@
+import ogImage from '../public/og-image.png';
+
+const { NEXT_PUBLIC_URL } = process.env;
+
 export const MENU_ORDER = [
   'Install',
   'How to Use',
@@ -14,4 +18,4 @@ export const DEFAULT_SLUG = ['install'];
 export const META_DESC =
   'Native wallet for Fuel, the fatest modular execution layer';
 
-export const META_OGIMG = 'https://i.imgur.com/AmD3k6X.png';
+export const META_OGIMG = `${NEXT_PUBLIC_URL}${ogImage.src}`;
