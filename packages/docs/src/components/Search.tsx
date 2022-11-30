@@ -1,7 +1,6 @@
 import { DocSearch } from '@docsearch/react';
 
 export function Search() {
-  return null;
   return (
     <DocSearch
       indexName="wallet_docs"
