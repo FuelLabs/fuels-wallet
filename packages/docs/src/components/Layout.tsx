@@ -16,8 +16,8 @@ type LayoutProps = {
 };
 
 const imageUrl = VERCEL_URL?.endsWith('/')
-  ? `${VERCEL_URL.slice(0, -1)}${ogImage}`
-  : `${VERCEL_URL}${ogImage}`;
+  ? `https://${VERCEL_URL.slice(0, -1)}${ogImage.src}`
+  : `https://${VERCEL_URL}${ogImage.src}`;
 
 export function Layout({ title, children }: LayoutProps) {
   const titleText = title ? `${title} | Fuel Wallet` : 'Fuel Wallet';
