@@ -8,10 +8,16 @@ import { META_DESC } from '../constants';
 
 import { Header } from './Header';
 
+const { VERCEL_URL } = process.env;
+
 type LayoutProps = {
   title?: string;
   children: ReactNode;
 };
+
+const imageUrl = VERCEL_URL?.endsWith('/')
+  ? `${VERCEL_URL.slice(0, -1)}${ogImage}`
+  : `${VERCEL_URL}${ogImage}`;
 
 export function Layout({ title, children }: LayoutProps) {
   const titleText = title ? `${title} | Fuel Wallet` : 'Fuel Wallet';
@@ -22,7 +28,7 @@ export function Layout({ title, children }: LayoutProps) {
         <meta name="description" content={META_DESC} key="desc" />
         <meta property="og:title" content={titleText} />
         <meta property="og:description" content={META_DESC} />
-        <meta property="og:image" content={ogImage.src} />
+        <meta property="og:image" content={imageUrl} />
       </Head>
       <Box css={styles.root}>
         <Header />
