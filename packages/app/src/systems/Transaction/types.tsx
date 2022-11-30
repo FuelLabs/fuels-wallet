@@ -6,12 +6,8 @@ import type {
   TransactionRequestInput,
   TransactionRequestLike,
   TransactionResponse,
+  TransactionType,
 } from 'fuels';
-
-export enum TxType {
-  request,
-  response,
-}
 
 export enum TxStatus {
   pending,
@@ -40,7 +36,7 @@ export type TxResponse = TransactionResponse;
 
 export type Transaction = {
   id?: string;
-  type: TxType;
+  type: TransactionType;
   status?: TxStatus;
   data?: TxRequest | TxResponse;
 };
