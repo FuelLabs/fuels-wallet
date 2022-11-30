@@ -1,5 +1,5 @@
 {
-  "index_name": "wallet_docs",
+  "index_name": "fuel_wallet_docs",
   "start_urls": ["https://fuels-wallet.vercel.app/"],
   "selectors": {
     "lvl0": "h1",
