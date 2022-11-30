@@ -30,7 +30,7 @@ export function Home() {
             isHidden={account?.isHidden ?? true}
             account={account}
             isLoading={isLoading}
-            onToggleVisibility={handlers.setBalanceVisibility}
+            onSetBalanceVisibility={handlers.setBalanceVisibility}
           />
           <HomeActions
             receiveAction={goToReceive}
