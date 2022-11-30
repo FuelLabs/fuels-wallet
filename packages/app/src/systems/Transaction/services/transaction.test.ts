@@ -1,7 +1,5 @@
 import type { WalletUnlocked } from 'fuels';
-import { bn, ScriptTransactionRequest, Wallet } from 'fuels';
-
-import { TxType } from '../types';
+import { TransactionType, bn, ScriptTransactionRequest, Wallet } from 'fuels';
 
 import { TxService } from './transaction';
 
@@ -34,7 +32,7 @@ describe('TxService', () => {
   it('should add a new tx on database', async () => {
     let txs = await TxService.getAll();
     expect(txs.length).toBe(0);
-    await TxService.add({ data: txRequest, type: TxType.request });
+    await TxService.add({ data: txRequest, type: TransactionType.Script });
     txs = await TxService.getAll();
     expect(txs.length).toBe(1);
   });
@@ -42,7 +40,10 @@ describe('TxService', () => {
   it('should remove a new tx on database', async () => {
     const txs = await TxService.getAll();
     expect(txs.length).toBe(0);
-    const tx = await TxService.add({ data: txRequest, type: TxType.request });
+    const tx = await TxService.add({
+      data: txRequest,
+      type: TransactionType.Script,
+    });
     if (tx) {
       await TxService.remove({ id: tx.id! });
       expect(txs.length).toBe(0);
