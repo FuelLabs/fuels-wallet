@@ -12,10 +12,9 @@ import type { Account } from '@fuel-wallet/types';
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 
-import type { AccountInputs } from '../..';
-
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
+import type { AccountInputs } from '~/systems/Account';
 import { formatUnits, shortAddress, VisibilityButton } from '~/systems/Core';
 
 type BalanceWidgetWrapperProps = {
@@ -51,7 +50,7 @@ export function BalanceWidget({
     setIsHidden(_isHidden);
   }, [_isHidden]);
 
-  const toggleBalanceVisibility = (isHidden: boolean) => {
+  const setBalanceVisibility = (isHidden: boolean) => {
     setIsHidden(isHidden);
     if (account) {
       onToggleVisibility?.({
@@ -100,8 +99,8 @@ export function BalanceWidget({
           <VisibilityButton
             aria-label={isHidden ? 'Show balance' : 'Hide balance'}
             isHidden={isHidden}
-            onHide={() => toggleBalanceVisibility(true)}
-            onShow={() => toggleBalanceVisibility(false)}
+            onHide={() => setBalanceVisibility(true)}
+            onShow={() => setBalanceVisibility(false)}
           />
         </Box>
       </Flex>
