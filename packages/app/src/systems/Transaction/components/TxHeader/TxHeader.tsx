@@ -81,11 +81,12 @@ export const TxHeader: TxHeaderComponent = ({
 const styles = {
   root: cssObj({
     flex: 1,
-    py: '$5',
+    pt: '$2',
+    pb: '$3',
     px: '$3',
     display: 'flex',
     flexDirection: 'column',
-    gap: '$3',
+    gap: '$2',
     fontWeight: '$semibold',
 
     '.fuel_copyable-icon': {

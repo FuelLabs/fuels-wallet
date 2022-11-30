@@ -9,8 +9,10 @@ export const getTxStatus = (status: string = '') => {
       return TxStatus.error;
     case 'SuccessStatus':
       return TxStatus.success;
-    default:
+    case 'SubmittedStatus':
       return TxStatus.pending;
+    default:
+      return TxStatus.unknown;
   }
 };
 

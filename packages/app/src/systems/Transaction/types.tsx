@@ -13,6 +13,7 @@ export enum TxStatus {
   pending,
   success,
   error,
+  unknown,
 }
 
 export enum TxState {

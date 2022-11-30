@@ -8,7 +8,9 @@ import type { TxInputs } from '../services';
 import { getCoinInputsFromTx, getCoinOutputsFromTx } from '../utils';
 
 const selectors = {
-  isLoading: (state: TransactionMachineState) => state.matches('fetching'),
+  isFetching: (state: TransactionMachineState) => state.matches('fetching'),
+  isFetchingResult: (state: TransactionMachineState) =>
+    state.matches('fetchingResult'),
   txResponse: (state: TransactionMachineState) => state.context?.txResponse,
   isInvalidTxId: (state: TransactionMachineState) =>
     state.context?.error === INVALID_TX_ID_ERROR,
@@ -16,18 +18,31 @@ const selectors = {
   tx: (state: TransactionMachineState) => state.context?.tx,
   txResult: (state: TransactionMachineState) => state.context?.txResult,
   fee: (state: TransactionMachineState) => state.context?.fee,
+  txId: (state: TransactionMachineState) => state.context?.txId,
 };
 
-export function useTransaction(txId: string = '') {
+type UseTransactionProps = {
+  txId?: string;
+  providerUrl?: string;
+  waitProviderUrl?: boolean;
+};
+
+export function useTransaction({
+  txId: txIdInput,
+  providerUrl,
+  waitProviderUrl,
+}: UseTransactionProps) {
   const service = useInterpret(() => transactionMachine);
   const { send } = service;
-  const isLoading = useSelector(service, selectors.isLoading);
+  const isFetching = useSelector(service, selectors.isFetching);
+  const isFetchingResult = useSelector(service, selectors.isFetchingResult);
   const txResponse = useSelector(service, selectors.txResponse);
   const isInvalidTxId = useSelector(service, selectors.isInvalidTxId);
   const txStatus = useSelector(service, selectors.txStatus);
   const tx = useSelector(service, selectors.tx);
   const txResult = useSelector(service, selectors.txResult);
   const fee = useSelector(service, selectors.fee);
+  const txId = useSelector(service, selectors.txId);
 
   const { coinInputs, coinOutputs, outputsToSend, outputAmount } =
     useMemo(() => {
@@ -50,25 +65,21 @@ export function useTransaction(txId: string = '') {
 
   function getTransaction(input: TxInputs['fetch']) {
     // TODO: remove providerUrl before finishing. this one is for testing
-    send('GET_TRANSACTION', {
-      input: {
-        ...input,
-        providerUrl: 'https://node-beta-2.fuel.network/graphql',
-      },
-    });
+    send('GET_TRANSACTION', { input });
   }
 
   useEffect(() => {
-    if (txId) {
-      getTransaction({ txId });
+    if (txIdInput && (providerUrl || !waitProviderUrl)) {
+      getTransaction({ txId: txIdInput, providerUrl });
     }
-  }, [txId]);
+  }, [txIdInput, providerUrl, waitProviderUrl]);
 
   return {
     handlers: {
       getTransaction,
     },
-    isLoading,
+    isFetching,
+    isFetchingResult,
     txResponse,
     isInvalidTxId,
     txStatus,
@@ -79,5 +90,6 @@ export function useTransaction(txId: string = '') {
     outputsToSend,
     outputAmount,
     fee,
+    txId,
   };
 }

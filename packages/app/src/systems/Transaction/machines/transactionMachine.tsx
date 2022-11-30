@@ -8,7 +8,7 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { TxService } from '../services';
-import type { TxStatus } from '../types';
+import { TxStatus } from '../types';
 import { getTxStatus, isValidTxId } from '../utils';
 
 import { FetchMachine } from '~/systems/Core';
@@ -20,6 +20,7 @@ type GetTransactionResponse = {
   txResponse: TransactionResponse;
   tx: Transaction;
   status: TxStatus;
+  txId?: string;
 };
 
 type MachineContext = {
@@ -29,6 +30,7 @@ type MachineContext = {
   tx?: Transaction;
   txResult?: TransactionResult<any>;
   fee?: BN;
+  txId?: string;
 };
 
 type MachineServices = {
@@ -48,7 +50,7 @@ type MachineEvents = {
 export const transactionMachine = createMachine(
   {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    tsTypes: {} as import('./TransactionMachine.typegen').Typegen0,
+    tsTypes: {} as import('./transactionMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,
       services: {} as MachineServices,
@@ -115,6 +117,7 @@ export const transactionMachine = createMachine(
           txResponse: data.txResponse,
           tx: data.tx,
           txStatus: data.status,
+          txId: data.txId,
         };
       }),
       assignGetTransactionResult: assign((_, event) => {
@@ -123,7 +126,10 @@ export const transactionMachine = createMachine(
         return {
           txResult,
           transaction: txResult.transaction,
-          txStatus: getTxStatus(txResult.status.type),
+          txStatus:
+            txResult.status.type === 'success'
+              ? TxStatus.success
+              : TxStatus.error,
           fee: txResult.fee,
         };
       }),
@@ -158,7 +164,16 @@ export const transactionMachine = createMachine(
 
           const status = getTxStatus(transactionWithReceipts.status?.type);
 
-          return { tx: transaction, txResponse, status };
+          // await new Promise<void>((resolve) => {
+          //   setTimeout(() => resolve(), 10000);
+          // });
+
+          return {
+            tx: transaction,
+            txResponse,
+            status,
+            txId: transactionWithReceipts.id,
+          };
         },
       }),
       getTransactionResult: FetchMachine.create<
@@ -170,7 +185,11 @@ export const transactionMachine = createMachine(
           if (!input?.txResponse) {
             throw new Error('Invalid tx response');
           }
+
           const txResult = await input?.txResponse?.waitForResult();
+          // await new Promise<void>((resolve) => {
+          //   setTimeout(() => resolve(), 10000);
+          // });
 
           return txResult;
         },
