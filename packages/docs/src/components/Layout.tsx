@@ -3,6 +3,9 @@ import { Box } from '@fuel-ui/react';
 import Head from 'next/head';
 import type { ReactNode } from 'react';
 
+import ogImage from '../../public/og-image.png';
+import { META_DESC } from '../constants';
+
 import { Header } from './Header';
 
 type LayoutProps = {
@@ -16,6 +19,10 @@ export function Layout({ title, children }: LayoutProps) {
     <>
       <Head>
         <title>{titleText}</title>
+        <meta name="description" content={META_DESC} key="desc" />
+        <meta property="og:title" content={titleText} />
+        <meta property="og:description" content={META_DESC} />
+        <meta property="og:image" content={ogImage.src} />
       </Head>
       <Box css={styles.root}>
         <Header />
