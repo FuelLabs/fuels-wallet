@@ -12,4 +12,4 @@ export const DOCS_REPO_LINK = `${REPO_LINK}/packages/docs`;
 export const DEFAULT_SLUG = ['install'];
 
 export const META_DESC =
-  'Official wallet of Fuel, the fatest modular execution layer';
+  'Native wallet for Fuel, the fatest modular execution layer';
