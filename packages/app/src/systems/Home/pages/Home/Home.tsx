@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import { Flex } from '@fuel-ui/react';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +14,6 @@ export function Home() {
   const navigate = useNavigate();
 
   const sendAction = useCallback(() => {
-    // eslint-disable-next-line no-alert
     window.alert('Send is not implemeted yet');
   }, []);
 

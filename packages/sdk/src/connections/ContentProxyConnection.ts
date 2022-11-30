@@ -1,3 +1,4 @@
+/// <reference types="chrome"/>
 import {
   PAGE_SCRIPT_NAME,
   BACKGROUND_SCRIPT_NAME,

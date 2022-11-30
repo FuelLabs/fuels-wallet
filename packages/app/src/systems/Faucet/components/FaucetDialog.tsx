@@ -22,10 +22,7 @@ export function FaucetDialog() {
   }, [captcha.isLoaded]);
 
   return (
-    <Dialog
-      open={true}
-      onOpenChange={(open) => !open && navigate(Pages.wallet())}
-    >
+    <Dialog isOpen onOpenChange={(open) => !open && navigate(Pages.wallet())}>
       <Dialog.Content css={{ maxWidth: 334 }}>
         <Dialog.Heading>
           <Flex css={{ alignItems: 'center' }}>

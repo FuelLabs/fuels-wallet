@@ -1,0 +1,30 @@
+name: DocSearch Scrap
+
+on:
+  # Allow to run manually
+  workflow_dispatch:
+
+jobs:
+  update-docsearch:
+    name: Update DocSearch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Docker
+        uses: ./.github/actions/setup-docker
+        with:
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update DocSearch
+        run: |
+          cd ./packages/docs
+          docker run \
+            --env ALGOLIA_APP_ID=${ALGOLIA_APP_ID} \
+            --env ALGOLIA_API_KEY=${ALGOLIA_API_KEY} \
+            --env "CONFIG=$(cat docsearch.json | jq -r tostring)" \
+            algolia/docsearch-scraper
+        env:
+          ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
+          ALGOLIA_API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
