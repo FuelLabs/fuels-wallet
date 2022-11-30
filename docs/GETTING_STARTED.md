@@ -27,12 +27,20 @@ cd fuels-wallet
 pnpm install
 ```
 
+### ⚙️ - Setup Environment Variables
+
+```sh
+cp packages/app/.env.example packages/app/.env
+```
+
 ### 📒 - Run Local Node
 
 In this step, we are going to;
 
 - launch a local `fuel-core` node;
 - launch a local `faucet` API;
+
+Make sure you have docker installed and running, before running the command below
 
 ```sh
 pnpm node:dev start
