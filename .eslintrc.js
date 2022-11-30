@@ -13,4 +13,8 @@ module.exports = {
       resolveRoot('./**/**/tsconfig.json'),
     ],
   },
+  rules: {
+    ...config.rules,
+    'import/order': config.rules['import/order'],
+  },
 };

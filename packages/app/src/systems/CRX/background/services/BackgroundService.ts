@@ -71,18 +71,37 @@ export class BackgroundService {
     }
   }
 
+  async sendEvent(origin: string, eventName: string, params: any[]) {
+    this.communicationProtocol.broadcast(origin, {
+      target: CONTENT_SCRIPT_NAME,
+      type: MessageTypes.event,
+      events: [
+        {
+          event: eventName,
+          params,
+        },
+      ],
+    });
+  }
+
   async connect(_: JSONRPCParams, serverParams: EventOrigin) {
     const origin = serverParams.origin;
 
     let authorizedApp = await ConnectionService.getConnection(origin);
-    if (authorizedApp) return true;
 
-    const popupService = await PopUpService.open(
-      origin,
-      Pages.requestConnection(),
-      this.communicationProtocol
-    );
-    authorizedApp = await popupService.requestConnection(origin);
+    if (!authorizedApp) {
+      const popupService = await PopUpService.open(
+        origin,
+        Pages.requestConnection(),
+        this.communicationProtocol
+      );
+      authorizedApp = await popupService.requestConnection(origin);
+    }
+
+    if (authorizedApp) {
+      this.sendEvent(origin, 'connection', [!!authorizedApp]);
+    }
+
     return !!authorizedApp;
   }
 
@@ -91,6 +110,7 @@ export class BackgroundService {
 
     if (origin) {
       await ConnectionService.removeConnection(origin);
+      this.sendEvent(origin, 'connection', [false]);
       return true;
     }
 

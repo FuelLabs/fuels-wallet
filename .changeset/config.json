@@ -12,7 +12,7 @@
   "updateInternalDependencies": "patch",
   "ignore": [
     "app",
-    "page",
+    "docs",
     "@fuel-wallet/config",
     "fuelhat",
     "@fuel-wallet/xstore"

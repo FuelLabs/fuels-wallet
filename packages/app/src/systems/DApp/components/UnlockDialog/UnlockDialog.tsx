@@ -45,12 +45,8 @@ export function UnlockDialog({
   }
 
   return (
-    <Dialog open={isOpen}>
-      <Dialog.Content
-        css={styles.content(isFullscreen)}
-        onEscapeKeyDown={onClose}
-        onPointerDownOutside={onClose}
-      >
+    <Dialog isOpen={isOpen}>
+      <Dialog.Content css={styles.content(isFullscreen)}>
         <Dialog.Heading>
           <Flex css={{ alignItems: 'center' }}>
             <Flex css={{ flex: 1 }}>
