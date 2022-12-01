@@ -37,7 +37,7 @@ export type TxResponse = TransactionResponse;
 
 export type Transaction = {
   id?: string;
-  type: TransactionType;
+  type?: TransactionType;
   status?: TxStatus;
   data?: TxRequest | TxResponse;
 };

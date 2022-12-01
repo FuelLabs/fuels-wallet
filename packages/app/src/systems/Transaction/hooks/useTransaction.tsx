@@ -3,7 +3,7 @@ import { bn } from 'fuels';
 import { useEffect, useMemo } from 'react';
 
 import type { TransactionMachineState } from '../machines';
-import { INVALID_TX_ID_ERROR, transactionMachine } from '../machines';
+import { TRANSACTION_ERRORS, transactionMachine } from '../machines';
 import type { TxInputs } from '../services';
 import { getCoinInputsFromTx, getCoinOutputsFromTx } from '../utils';
 
@@ -13,7 +13,11 @@ const selectors = {
     state.matches('fetchingResult'),
   txResponse: (state: TransactionMachineState) => state.context?.txResponse,
   isInvalidTxId: (state: TransactionMachineState) =>
-    state.context?.error === INVALID_TX_ID_ERROR,
+    state.context?.error === TRANSACTION_ERRORS.INVALID_ID,
+  isTxNotFound: (state: TransactionMachineState) =>
+    state.context?.error === TRANSACTION_ERRORS.NOT_FOUND,
+  isTxReceiptsNotFound: (state: TransactionMachineState) =>
+    state.context?.error === TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND,
   txStatus: (state: TransactionMachineState) => state.context?.txStatus,
   tx: (state: TransactionMachineState) => state.context?.tx,
   txResult: (state: TransactionMachineState) => state.context?.txResult,
@@ -38,6 +42,11 @@ export function useTransaction({
   const isFetchingResult = useSelector(service, selectors.isFetchingResult);
   const txResponse = useSelector(service, selectors.txResponse);
   const isInvalidTxId = useSelector(service, selectors.isInvalidTxId);
+  const isTxNotFound = useSelector(service, selectors.isTxNotFound);
+  const isTxReceiptsNotFound = useSelector(
+    service,
+    selectors.isTxReceiptsNotFound
+  );
   const txStatus = useSelector(service, selectors.txStatus);
   const tx = useSelector(service, selectors.tx);
   const txResult = useSelector(service, selectors.txResult);
@@ -82,6 +91,8 @@ export function useTransaction({
     isFetchingResult,
     txResponse,
     isInvalidTxId,
+    isTxNotFound,
+    isTxReceiptsNotFound,
     txStatus,
     tx,
     txResult,

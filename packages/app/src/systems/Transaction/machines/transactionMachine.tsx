@@ -14,7 +14,11 @@ import { getTxStatus, isValidTxId } from '../utils';
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
-export const INVALID_TX_ID_ERROR = 'Invalid transaction ID';
+export const TRANSACTION_ERRORS = {
+  INVALID_ID: 'Invalid transaction ID',
+  NOT_FOUND: 'Transaction not found',
+  RECEIPTS_NOT_FOUND: 'Receipts not found for this transaction',
+};
 
 type GetTransactionResponse = {
   txResponse: TransactionResponse;
@@ -81,6 +85,11 @@ export const transactionMachine = createMachine(
           }),
           onDone: [
             {
+              actions: ['assignGetTransactionError'],
+              target: 'idle',
+              cond: FetchMachine.hasError,
+            },
+            {
               actions: ['assignGetTransactionResponse'],
               target: 'fetchingResult',
             },
@@ -97,6 +106,11 @@ export const transactionMachine = createMachine(
           }),
           onDone: [
             {
+              actions: ['assignGetTransactionResultError'],
+              target: 'idle',
+              cond: FetchMachine.hasError,
+            },
+            {
               actions: ['assignGetTransactionResult'],
               target: 'idle',
             },
@@ -108,7 +122,13 @@ export const transactionMachine = createMachine(
   {
     actions: {
       assignInvalidTxIdError: assign({
-        error: (_) => INVALID_TX_ID_ERROR,
+        error: (_) => TRANSACTION_ERRORS.INVALID_ID,
+      }),
+      assignGetTransactionError: assign({
+        error: (_) => TRANSACTION_ERRORS.NOT_FOUND,
+      }),
+      assignGetTransactionResultError: assign({
+        error: (_) => TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND,
       }),
       assignGetTransactionResponse: assign((_, event) => {
         const data = event.data as GetTransactionResponse;

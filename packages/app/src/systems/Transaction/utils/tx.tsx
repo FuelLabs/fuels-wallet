@@ -42,7 +42,7 @@ export const getTxStatusColor = (status?: TxStatus): Colors => {
   }
 };
 
-export const getTransactionTypeText = (type: TransactionType) => {
+export const getTransactionTypeText = (type?: TransactionType) => {
   switch (type) {
     case TransactionType.Script:
       return 'Script';

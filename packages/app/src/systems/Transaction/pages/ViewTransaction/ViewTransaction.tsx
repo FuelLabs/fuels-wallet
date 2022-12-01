@@ -1,6 +1,5 @@
 import { Stack } from '@fuel-ui/react';
 import { AddressType } from '@fuel-wallet/types';
-import { TransactionType } from 'fuels';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { TxDetails, TxFromTo } from '../../components';
@@ -9,13 +8,12 @@ import { useTransaction } from '../../hooks';
 
 import { AssetsAmount } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
+import { NetworkScreen, useNetworks } from '~/systems/Network';
 
 export function ViewTransaction() {
   const txIdQueryParam = useParams<{ txId: string }>().txId;
-  // const networks = useNetworks({ type: NetworkScreen.list });
-  // const providerUrl = networks?.selectedNetwork?.url;
-  // TODO: Remove this mocked providerUrl before pushing, and use selectedNetwork instead
-  const providerUrl = 'https://node-beta-2.fuel.network/graphql';
+  const networks = useNetworks({ type: NetworkScreen.list });
+  const providerUrl = networks?.selectedNetwork?.url;
   const {
     isFetching,
     isFetchingResult,
@@ -25,6 +23,10 @@ export function ViewTransaction() {
     outputAmount,
     txStatus,
     txId,
+    tx,
+    // isInvalidTxId,
+    // isTxNotFound,
+    // isTxReceiptsNotFound,
   } = useTransaction({
     txId: txIdQueryParam,
     providerUrl,
@@ -51,9 +53,10 @@ export function ViewTransaction() {
             <TxHeader
               transaction={{
                 id: txId,
-                type: TransactionType.Create,
+                type: tx?.type,
                 status: txStatus,
               }}
+              providerUrl={providerUrl}
             />
           )}
           {isFetching ? (
@@ -65,6 +68,8 @@ export function ViewTransaction() {
                 type: AddressType.account,
                 address: outputsToSend[0]?.to.toString(),
               }}
+              // TODO: should include below line (status) after merging https://github.com/FuelLabs/fuels-wallet/pull/297
+              // status={txStatus}
             />
           )}
           {isFetching ? (
