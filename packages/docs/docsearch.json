@@ -1,13 +1,12 @@
 {
-  "index_name": "wallet_docs",
+  "index_name": "fuel_wallet_docs",
   "start_urls": ["https://fuels-wallet.vercel.app/"],
   "selectors": {
-    "lvl0": ".page-heading",
-    "lvl1": "h1",
-    "lvl2": "h2",
-    "lvl3": "h3",
-    "lvl4": "h4",
-    "lvl5": "h5",
+    "lvl0": "h1",
+    "lvl1": "h2",
+    "lvl2": "h3",
+    "lvl3": "h4",
+    "lvl4": "h5",
     "text": "p"
   }
 }
