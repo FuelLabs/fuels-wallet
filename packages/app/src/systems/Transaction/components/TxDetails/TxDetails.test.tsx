@@ -16,6 +16,10 @@ describe('TxDetails', () => {
     await testA11y(<TxDetails fee={bn(6)} />);
   });
 
+  it('a11y Loader', async () => {
+    await testA11y(<TxDetails.Loader />);
+  });
+
   it('should be able to show the transaction gas used', async () => {
     const feeCost = bn(6);
     render(<TxDetails fee={feeCost} outputAmount={MOCK_OUTPUT_AMOUNT} />);
