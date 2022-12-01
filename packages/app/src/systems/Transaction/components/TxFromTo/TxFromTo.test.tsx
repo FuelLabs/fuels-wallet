@@ -30,7 +30,7 @@ describe('TxFromTo', () => {
     expect(() => screen.getByText('fuel1y...y6wk')).toThrow();
     expect(() => screen.getByText('To (Contract)')).toThrow();
     expect(() => screen.getByText('0x277f...207c')).toThrow();
-    expect(() => screen.getByLabelText('Loading Spinner')).toBeInTheDocument();
+    expect(screen.getByLabelText('Loading Spinner')).toBeInTheDocument();
   });
 
   it('should show address info and show spinner when status is pending', async () => {
@@ -39,11 +39,11 @@ describe('TxFromTo', () => {
     expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
     expect(screen.getByText('0x277f...207c')).toBeInTheDocument();
-    expect(() => screen.getByLabelText('Loading Spinner')).toBeInTheDocument();
+    expect(screen.getByLabelText('Loading Spinner')).toBeInTheDocument();
   });
 
   it('should show address info and not have spinner when status is success', async () => {
-    render(<TxFromTo {...PROPS} status={TxStatus.pending} />);
+    render(<TxFromTo {...PROPS} status={TxStatus.success} />);
     expect(screen.getByText('From')).toBeInTheDocument();
     expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('TxFromTo', () => {
   });
 
   it('should show address info and not have spinner when status is error', async () => {
-    render(<TxFromTo {...PROPS} status={TxStatus.pending} />);
+    render(<TxFromTo {...PROPS} status={TxStatus.error} />);
     expect(screen.getByText('From')).toBeInTheDocument();
     expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
