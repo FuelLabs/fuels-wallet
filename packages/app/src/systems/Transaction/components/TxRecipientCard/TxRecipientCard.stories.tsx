@@ -1,3 +1,5 @@
+import { Box } from '@fuel-ui/react';
+
 import { MOCK_TX_RECIPIENT } from '../../__mocks__/tx-recipient';
 
 import type { TxRecipientCardProps } from './TxRecipientCard';
@@ -11,13 +13,25 @@ export default {
 const { account: ACCOUNT, contract: CONTRACT } = MOCK_TX_RECIPIENT;
 
 export const TypeAccount = (args: TxRecipientCardProps) => (
-  <TxRecipientCard {...args} recipient={ACCOUNT} />
+  <Box
+    css={{ maxWidth: 151, display: 'flex', flexDirection: 'column', gap: '$4' }}
+  >
+    <TxRecipientCard {...args} recipient={ACCOUNT} />
+  </Box>
 );
 
 export const TypeContract = (args: TxRecipientCardProps) => (
-  <TxRecipientCard {...args} recipient={CONTRACT} />
+  <Box
+    css={{ maxWidth: 151, display: 'flex', flexDirection: 'column', gap: '$4' }}
+  >
+    <TxRecipientCard {...args} recipient={CONTRACT} />
+  </Box>
 );
 
-export const Loader = () => {
-  return <TxRecipientCard.Loader />;
-};
+export const Loader = () => (
+  <Box
+    css={{ maxWidth: 151, display: 'flex', flexDirection: 'column', gap: '$4' }}
+  >
+    <TxRecipientCard.Loader />
+  </Box>
+);

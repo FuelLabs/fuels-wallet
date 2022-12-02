@@ -11,6 +11,10 @@ describe('TxRecipientCard', () => {
     await testA11y(<TxRecipientCard recipient={ACCOUNT} />);
   });
 
+  it('a11yLoader ', async () => {
+    await testA11y(<TxRecipientCard.Loader />);
+  });
+
   it('should render account correctly', () => {
     render(<TxRecipientCard recipient={ACCOUNT} />);
     expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
