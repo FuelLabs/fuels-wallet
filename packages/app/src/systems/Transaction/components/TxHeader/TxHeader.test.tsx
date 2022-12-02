@@ -9,7 +9,7 @@ import { TxStatus } from '../../types';
 
 import { TxHeader } from './TxHeader';
 
-describe('TxDetails', () => {
+describe('TxHeader', () => {
   it('a11y', async () => {
     await testA11y(<TxHeader transaction={MOCK_TRANSACTION_SCRIPT} />);
   });
