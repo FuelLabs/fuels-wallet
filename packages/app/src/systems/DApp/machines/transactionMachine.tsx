@@ -1,36 +1,42 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
   BN,
   TransactionRequest,
   TransactionResponse,
   WalletUnlocked,
 } from 'fuels';
-import { calculateTransactionFee, Provider } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { send } from 'xstate/lib/actions';
 
-import type { UnlockMachine, UnlockMachineEvents } from './unlockMachine';
-import { unlockMachineErrorAction, unlockMachine } from './unlockMachine';
-
-import type { AccountInputs } from '~/systems/Account';
+import { unlockMachineErrorAction, unlockMachine } from '~/systems/Account';
+import type {
+  UnlockMachine,
+  UnlockMachineEvents,
+  AccountInputs,
+} from '~/systems/Account';
 import type { ChildrenMachine } from '~/systems/Core';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
-import type { VMApiError } from '~/systems/Transaction';
+import type { GroupedErrors, VMApiError } from '~/systems/Transaction';
+import { getGroupedErrors } from '~/systems/Transaction';
+import type { TxInputs } from '~/systems/Transaction/services';
+import { TxService } from '~/systems/Transaction/services';
 
 type MachineContext = {
-  unlockError?: string;
-  tx?: TransactionRequest;
   origin?: string;
-  providerUrl?: string;
+  isOriginRequired?: boolean;
+  unlockError?: string;
   error?: string;
+  providerUrl?: string;
   fee?: BN;
+  tx?: TransactionRequest;
   approvedTx?: TransactionResponse;
-  txDryRunError?: VMApiError;
   txApproveError?: VMApiError;
+  txDryRunGroupedErrors?: GroupedErrors;
 };
 
 type MachineServices = {
-  sendTransaction: {
+  send: {
     data: TransactionResponse;
   };
   calculateFee: {
@@ -44,11 +50,7 @@ type MachineServices = {
 type MachineEvents =
   | {
       type: 'START_REQUEST';
-      input?: {
-        tx: TransactionRequest;
-        origin: string;
-        providerUrl: string;
-      };
+      input?: TxInputs['request'];
     }
   | {
       type: 'APPROVE';
@@ -58,11 +60,18 @@ type MachineEvents =
       type: 'REJECT';
       input?: void;
     }
-  | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
-  | { type: 'CLOSE_UNLOCK'; input?: void };
+  | {
+      type: 'UNLOCK_WALLET';
+      input: AccountInputs['unlock'];
+    }
+  | {
+      type: 'CLOSE_UNLOCK';
+      input?: void;
+    };
 
 export const transactionMachine = createMachine(
   {
+    predictableActionArguments: true,
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./transactionMachine.typegen').Typegen0,
     schema: {
@@ -70,7 +79,6 @@ export const transactionMachine = createMachine(
       services: {} as MachineServices,
       events: {} as MachineEvents,
     },
-    predictableActionArguments: true,
     id: '(machine)',
     initial: 'idle',
     states: {
@@ -124,15 +132,10 @@ export const transactionMachine = createMachine(
         invoke: {
           id: 'unlock',
           src: unlockMachine,
-          data: (
-            _: MachineContext,
-            ev: Extract<MachineEvents, { type: 'UNLOCK_WALLET' }>
-          ) => ev.input,
+          data: (_: MachineContext, ev: MachineEvents) => ev.input,
           onDone: [
             unlockMachineErrorAction('unlocking', 'unlockError'),
-            {
-              target: 'sendingTx',
-            },
+            { target: 'sendingTx' },
           ],
         },
         on: {
@@ -140,10 +143,7 @@ export const transactionMachine = createMachine(
             // send to the child machine
             actions: [
               send<MachineContext, UnlockMachineEvents>(
-                (_, ev) => ({
-                  type: 'UNLOCK_WALLET',
-                  input: ev.input,
-                }),
+                (_, ev) => ({ type: 'UNLOCK_WALLET', input: ev.input }),
                 { to: 'unlock' }
               ),
             ],
@@ -155,7 +155,7 @@ export const transactionMachine = createMachine(
       },
       sendingTx: {
         invoke: {
-          src: 'sendTransaction',
+          src: 'send',
           data: {
             input: (_: MachineContext, ev: { data: WalletUnlocked }) => {
               return { tx: _.tx, wallet: ev.data, providerUrl: _.providerUrl };
@@ -188,7 +188,7 @@ export const transactionMachine = createMachine(
   },
   {
     actions: {
-      assignTxRequestData: assign((_, ev) => {
+      assignTxRequestData: assign((ctx, ev) => {
         const { tx, origin, providerUrl } = ev.input || {};
 
         if (!providerUrl) {
@@ -197,7 +197,7 @@ export const transactionMachine = createMachine(
         if (!tx) {
           throw new Error('transaction is required');
         }
-        if (!origin) {
+        if (ctx.isOriginRequired && !origin) {
           throw new Error('origin is required');
         }
 
@@ -211,20 +211,19 @@ export const transactionMachine = createMachine(
         if (!ctx.tx) {
           throw new Error('Transaction is required');
         }
-
         ctx.tx.gasPrice = ev.data;
-
         return ctx;
       }),
       assignApprovedTx: assign({
         approvedTx: (_, ev) => ev.data,
       }),
       assignTxDryRunError: assign({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        txDryRunError: (_, ev: any) => ev.data.error,
+        txDryRunGroupedErrors: (_, ev: any) => {
+          const error = ev.data.error;
+          return getGroupedErrors(error?.response?.errors);
+        },
       }),
       assignTransactionRequestError: assign({
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         txApproveError: (_, ev: any) => ev.data.error,
       }),
       assignFee: assign({
@@ -232,62 +231,32 @@ export const transactionMachine = createMachine(
       }),
     },
     services: {
-      sendTransaction: FetchMachine.create<
-        {
-          tx: TransactionRequest;
-          wallet: WalletUnlocked;
-          providerUrl?: string;
+      fetchGasPrice: FetchMachine.create<TxInputs['fetchGasPrice'], BN>({
+        showError: false,
+        async fetch({ input }) {
+          if (!input?.providerUrl) {
+            throw new Error('providerUrl is required');
+          }
+          return TxService.fetchGasPrice(input);
         },
-        MachineServices['sendTransaction']['data']
-      >({
+      }),
+      calculateFee: FetchMachine.create<TxInputs['calculateFee'], BN>({
+        showError: false,
+        async fetch({ input }) {
+          if (!input?.tx) {
+            throw new Error('Invalid calculateFee input');
+          }
+          return TxService.calculateFee(input);
+        },
+      }),
+      send: FetchMachine.create<TxInputs['send'], TransactionResponse>({
         showError: true,
         async fetch(params) {
           const { input } = params;
           if (!input?.wallet || !input?.tx) {
             throw new Error('Invalid approveTx input');
           }
-
-          input.wallet.provider = new Provider(input.providerUrl || '');
-          const transactionResponse = await input?.wallet.sendTransaction(
-            input.tx
-          );
-
-          return transactionResponse;
-        },
-      }),
-      calculateFee: FetchMachine.create<
-        { tx: TransactionRequest; providerUrl?: string },
-        MachineServices['calculateFee']['data']
-      >({
-        showError: false,
-        async fetch({ input }) {
-          if (!input?.tx) {
-            throw new Error('Invalid calculateFee input');
-          }
-
-          const provider = new Provider(input.providerUrl || '');
-          const { receipts } = await provider.call(input.tx);
-
-          const { fee } = calculateTransactionFee({
-            receipts,
-            gasPrice: input.tx.gasPrice,
-          });
-
-          return fee;
-        },
-      }),
-      fetchGasPrice: FetchMachine.create<
-        { providerUrl?: string },
-        MachineServices['fetchGasPrice']['data']
-      >({
-        showError: false,
-        async fetch({ input }) {
-          if (!input?.providerUrl) {
-            throw new Error('providerUrl is required');
-          }
-          const provider = new Provider(input.providerUrl || '');
-          const { minGasPrice } = await provider.getNodeInfo();
-          return minGasPrice;
+          return TxService.send(input);
         },
       }),
     },
@@ -295,10 +264,8 @@ export const transactionMachine = createMachine(
 );
 
 export type TransactionMachine = typeof transactionMachine;
-export type TransactionMachineService = InterpreterFrom<
-  typeof transactionMachine
->;
-export type TransactionMachineState = StateFrom<typeof transactionMachine> &
+export type TransactionMachineService = InterpreterFrom<TransactionMachine>;
+export type TransactionMachineState = StateFrom<TransactionMachine> &
   ChildrenMachine<{
     unlock: UnlockMachine;
   }>;

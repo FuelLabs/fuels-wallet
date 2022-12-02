@@ -1,4 +1,4 @@
-import type { BigNumberish } from 'fuels';
+import type { BigNumberish, BN } from 'fuels';
 
 import type { Coin } from './coin';
 
@@ -12,7 +12,7 @@ export type Account = {
   address: string;
   publicKey: string;
   isHidden?: boolean;
-  balance?: BigNumberish;
+  balance?: BigNumberish | BN;
   balanceSymbol?: string;
   balances?: Coin[];
 };

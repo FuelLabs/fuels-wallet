@@ -1,103 +1,107 @@
 import { useInterpret, useSelector } from '@xstate/react';
-import { bn } from 'fuels';
-import { useMemo } from 'react';
 
-import type { TransactionMachineState } from '../machines';
-import { transactionMachine } from '../machines';
-import { useTransactionRequestMethods } from '../methods';
+import type { TransactionMachineState } from '../machines/transactionMachine';
+import { transactionMachine } from '../machines/transactionMachine';
+import { useTransactionRequestMethods } from '../methods/transactionRequestMethods';
 
 import { useAccount } from '~/systems/Account';
-import { getCoinOutputsFromTx, getGroupedErrors } from '~/systems/Transaction';
+import { getFilteredErrors, useTxOutputs } from '~/systems/Transaction';
+import type { TxInputs } from '~/systems/Transaction/services';
 
 const selectors = {
-  origin: (state: TransactionMachineState) => state.context.origin,
-  unlockError: (state: TransactionMachineState) => state.context.unlockError,
-  isUnlocking: (state: TransactionMachineState) => state.matches('unlocking'),
-  waitingApproval: (state: TransactionMachineState) =>
-    state.matches('waitingApproval'),
-  sendingTx: (state: TransactionMachineState) => state.matches('sendingTx'),
-  approvedTx: (state: TransactionMachineState) => state.context.approvedTx,
-  tx: (state: TransactionMachineState) => state.context.tx,
-  fee: (state: TransactionMachineState) => state.context.fee,
-  txDryRunError: (state: TransactionMachineState) =>
-    state.context.txDryRunError,
-  txApproveError: (state: TransactionMachineState) =>
-    state.context.txApproveError,
-  isUnlockingLoading: (state: TransactionMachineState) =>
-    state.children.unlock?.state.matches('unlocking'),
+  isUnlocking(state: TransactionMachineState) {
+    return state.matches('unlocking');
+  },
+  waitingApproval(state: TransactionMachineState) {
+    return state.matches('waitingApproval');
+  },
+  sendingTx(state: TransactionMachineState) {
+    return state.matches('sendingTx');
+  },
+  isUnlockingLoading(state: TransactionMachineState) {
+    return state.children.unlock?.state.matches('unlocking');
+  },
+  context(state: TransactionMachineState) {
+    return state.context;
+  },
+  isShowingInfo({ account, isLoading }: ReturnType<typeof useAccount>) {
+    return (state: TransactionMachineState) =>
+      !isLoading &&
+      !state.context.approvedTx &&
+      !state.context.txApproveError &&
+      state.context.origin &&
+      account;
+  },
+  generalErrors(state: TransactionMachineState) {
+    const groupedErrors = state.context.txDryRunGroupedErrors;
+    return getFilteredErrors(groupedErrors, ['InsufficientInputAmount']);
+  },
 };
 
-export function useTransactionRequest() {
-  const { account } = useAccount();
-  const service = useInterpret(transactionMachine);
+type UseTransactionRequestOpts = {
+  isOriginRequired?: boolean;
+};
+
+export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
+  const { account, isLoading } = useAccount();
+  const service = useInterpret(() =>
+    transactionMachine.withContext({
+      isOriginRequired: opts.isOriginRequired,
+    })
+  );
+
   const { send } = service;
+  const ctx = useSelector(service, selectors.context);
   const isUnlocking = useSelector(service, selectors.isUnlocking);
   const isUnlockingLoading = useSelector(service, selectors.isUnlockingLoading);
-  const approvedTx = useSelector(service, selectors.approvedTx);
-  const tx = useSelector(service, selectors.tx);
-  const fee = useSelector(service, selectors.fee);
-  const txDryRunError = useSelector(service, selectors.txDryRunError);
-  const txApproveError = useSelector(service, selectors.txApproveError);
   const waitingApproval = useSelector(service, selectors.waitingApproval);
   const sendingTx = useSelector(service, selectors.sendingTx);
-  const origin = useSelector(service, selectors.origin);
-  const unlockError = useSelector(service, selectors.unlockError);
-
-  const { coinOutputs, outputsToSend, outputAmount } = useMemo(() => {
-    const coinOutputs = getCoinOutputsFromTx(tx);
-    const outputsToSend = coinOutputs.filter(
-      (value) => value.to !== account?.publicKey
-    );
-    const outputAmount = outputsToSend.reduce(
-      (acc, value) => acc.add(value.amount),
-      bn(0)
-    );
-
-    return { coinOutputs, outputsToSend, outputAmount };
-  }, [tx]);
-
-  const groupedErrors = getGroupedErrors(txDryRunError?.response?.errors);
-
-  useTransactionRequestMethods(service);
+  const generalErrors = useSelector(service, selectors.generalErrors);
+  const groupedErrors = ctx.txDryRunGroupedErrors;
+  const hasGeneralErrors = Boolean(Object.keys(generalErrors || {}).length);
+  const isShowingSelector = selectors.isShowingInfo({ account, isLoading });
+  const isShowingInfo = useSelector(service, isShowingSelector);
+  const { coinOutputs, outputsToSend, outputAmount } = useTxOutputs(ctx.tx);
 
   function approve() {
     send('APPROVE');
   }
-
   function reject() {
     send('REJECT');
   }
-
   function unlock(password: string) {
     send('UNLOCK_WALLET', { input: { password, account } });
   }
-
   function closeUnlock() {
     send('CLOSE_UNLOCK');
   }
+  function request(input: TxInputs['request']) {
+    send('START_REQUEST', { input });
+  }
+
+  useTransactionRequestMethods(service);
 
   return {
     handlers: {
+      request,
       approve,
       unlock,
       closeUnlock,
       reject,
     },
+    account,
+    isLoading,
     isUnlocking,
     isUnlockingLoading,
-    account,
-    approvedTx,
-    tx,
-    fee,
-    txDryRunError,
-    txApproveError,
+    sendingTx,
+    waitingApproval,
+    isShowingInfo,
     coinOutputs,
     outputsToSend,
     outputAmount,
     groupedErrors,
-    waitingApproval,
-    sendingTx,
-    origin,
-    unlockError,
+    generalErrors,
+    hasGeneralErrors,
+    ...ctx,
   };
 }

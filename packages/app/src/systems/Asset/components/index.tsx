@@ -1,4 +1,4 @@
 export * from './AssetItem';
 export * from './AssetList';
 export * from './AssetsAmount';
-export * from './AssetInput';
+export * from './AmountInput';

@@ -6,7 +6,10 @@ import { ChangePassword, RevealPassphrase } from './pages';
 
 export const settingsRoutes = (
   <Route path={Pages.settings()}>
-    <Route element={<RevealPassphrase />} path={Pages.revealPassphrase()} />
-    <Route element={<ChangePassword />} path={Pages.changePassword()} />
+    <Route
+      element={<RevealPassphrase />}
+      path={Pages.settingsRevealPassphrase()}
+    />
+    <Route element={<ChangePassword />} path={Pages.settingsChangePassword()} />
   </Route>
 );
