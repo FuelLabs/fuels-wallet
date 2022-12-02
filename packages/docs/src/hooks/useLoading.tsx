@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useCallback } from 'react';
 
+import { useFuelWeb3 } from './useFuelWeb3';
+
 export function useLoading<T extends (...args: any) => Promise<void>>(
   callback: T,
   deps: any = []
 ) {
+  const [FuelWeb3] = useFuelWeb3();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>();
   const execute = useCallback(
@@ -19,7 +22,7 @@ export function useLoading<T extends (...args: any) => Promise<void>>(
           setLoading(false);
         });
     },
-    [...deps]
+    [FuelWeb3, ...deps]
   );
 
   return [execute as T, loading, error] as const;
