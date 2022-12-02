@@ -14,7 +14,7 @@ import type { ReactNode } from 'react';
 
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
-import type { AccountInputs } from '~/systems/Account';
+import type { AccountInputs } from '~/systems/Account/services';
 import { formatUnits, shortAddress, VisibilityButton } from '~/systems/Core';
 
 type BalanceWidgetWrapperProps = {
