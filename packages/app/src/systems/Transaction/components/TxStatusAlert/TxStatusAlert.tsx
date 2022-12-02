@@ -27,6 +27,7 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
 
     return 'info';
   }, [txStatus, error]);
+
   const txColor = error
     ? getTxStatusColor(TxStatus.error)
     : getTxStatusColor(txStatus);
@@ -56,12 +57,7 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
                 path: `transaction/${txId}`,
                 providerUrl,
               })}
-              css={{
-                '&:focus-visible': {
-                  outline: 'none',
-                },
-                fontSize: '$sm',
-              }}
+              css={styles.link}
             >
               Show on Fuel Explorer
             </Link>
@@ -98,4 +94,10 @@ const styles = {
       },
     });
   },
+  link: cssObj({
+    '&:focus-visible': {
+      outline: 'none',
+    },
+    fontSize: '$sm',
+  }),
 };
