@@ -3,7 +3,7 @@ import type { FuelWeb3ProviderConfig } from '@fuel-wallet/types';
 import { transactionRequestify } from 'fuels';
 import { useEffect } from 'react';
 
-import type { TransactionMachineService } from '../machines';
+import type { TransactionMachineService } from '../machines/transactionMachine';
 
 import { IS_CRX_POPUP } from '~/config';
 import { waitForState } from '~/systems/Core';

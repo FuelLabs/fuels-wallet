@@ -2,10 +2,12 @@ import type { WalletUnlocked } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { send, assign, createMachine } from 'xstate';
 
-import type { UnlockMachineEvents, UnlockMachine } from './unlockMachine';
-import { unlockMachineErrorAction, unlockMachine } from './unlockMachine';
-
-import type { AccountInputs } from '~/systems/Account';
+import { unlockMachineErrorAction, unlockMachine } from '~/systems/Account';
+import type {
+  UnlockMachineEvents,
+  UnlockMachine,
+  AccountInputs,
+} from '~/systems/Account';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 import type { ChildrenMachine } from '~/systems/Core';
 

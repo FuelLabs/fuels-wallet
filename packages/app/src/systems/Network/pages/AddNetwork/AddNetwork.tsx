@@ -28,7 +28,7 @@ export function AddNetwork() {
             <NetworkForm form={form} />
           </Layout.Content>
           <Layout.BottomBar>
-            <Button color="gray" variant="ghost" onClick={handlers.goToList}>
+            <Button color="gray" variant="ghost" onPress={handlers.goToList}>
               Cancel
             </Button>
             <Button

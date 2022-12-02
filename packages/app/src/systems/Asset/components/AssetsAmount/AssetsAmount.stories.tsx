@@ -18,6 +18,18 @@ export const Single = (args: AssetsAmountProps) => (
 
 export const Multiple = (args: AssetsAmountProps) => (
   <Box css={{ maxWidth: 300 }}>
-    <AssetsAmount {...args} amounts={MOCK_ASSETS_AMOUNTS} />
+    <AssetsAmount
+      {...args}
+      title="Assets to send"
+      amounts={MOCK_ASSETS_AMOUNTS}
+    />
+  </Box>
+);
+
+export const Loader = () => (
+  <Box
+    css={{ maxWidth: 300, display: 'flex', flexDirection: 'column', gap: '$4' }}
+  >
+    <AssetsAmount.Loader />
   </Box>
 );

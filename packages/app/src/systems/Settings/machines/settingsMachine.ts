@@ -2,11 +2,10 @@ import { toast } from '@fuel-ui/react';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-import type { AccountInputs } from '~/systems/Account';
 import { AccountService } from '~/systems/Account';
+import type { AccountInputs, UnlockMachine } from '~/systems/Account';
 import type { ChildrenMachine } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
-import type { UnlockMachine } from '~/systems/DApp';
 
 type MachineServices = {
   unlockAndGetMnemonic: {

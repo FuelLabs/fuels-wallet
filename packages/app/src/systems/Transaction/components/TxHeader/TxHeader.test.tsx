@@ -14,6 +14,10 @@ describe('TxHeader', () => {
     await testA11y(<TxHeader transaction={MOCK_TRANSACTION_SCRIPT} />);
   });
 
+  it('a11y Loader', async () => {
+    await testA11y(<TxHeader.Loader />);
+  });
+
   it('should show transaction Script', async () => {
     render(<TxHeader transaction={MOCK_TRANSACTION_SCRIPT} />);
 
