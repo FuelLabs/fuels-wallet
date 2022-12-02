@@ -75,6 +75,7 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
 const styles = {
   root: (color: string) => {
     const cssColor = color ? `$${color}` : undefined;
+    // TODO: remove this overrides when https://github.com/FuelLabs/fuel-ui/issues/180 gets fixed in fuel-ui side
     return cssObj({
       '.fuel_alert--icon': {
         alignSelf: 'flex-start',
