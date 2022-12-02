@@ -12,158 +12,137 @@ import {
 } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import { AddressType } from '@fuel-wallet/types';
-import { useMemo } from 'react';
 
 import { ConnectInfo, UnlockDialog } from '../../components';
-import { useTransactionRequest } from '../../hooks';
+import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
-import { useAccount } from '~/systems/Account';
 import { AssetsAmount } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { NetworkScreen, useNetworks } from '~/systems/Network';
-import { getFilteredErrors, TxDetails, TxFromTo } from '~/systems/Transaction';
+import { TxDetails, TxFromTo } from '~/systems/Transaction';
 
 export function TransactionRequest() {
-  const { isLoading } = useAccount();
   const { selectedNetwork } = useNetworks({ type: NetworkScreen.list });
-  const {
-    origin,
-    isUnlocking,
-    handlers,
-    account,
-    isUnlockingLoading,
-    fee,
-    approvedTx,
-    txApproveError,
-    outputAmount,
-    outputsToSend,
-    groupedErrors,
-    waitingApproval,
-    sendingTx,
-    unlockError,
-  } = useTransactionRequest();
+  const { handlers, ...ctx } = useTransactionRequest({
+    isOriginRequired: true,
+  });
 
-  const generalErrors = useMemo(
-    () => getFilteredErrors(groupedErrors, ['InsufficientInputAmount']),
-    [groupedErrors]
+  const content = (
+    <Layout.Content css={styles.content}>
+      {ctx.isShowingInfo && (
+        <Stack gap="$4">
+          <ConnectInfo
+            origin={ctx.origin!}
+            account={ctx.account!}
+            isReadOnly={true}
+          />
+          {ctx.account && (
+            <TxFromTo
+              from={{
+                type: AddressType.account,
+                address: ctx.account.publicKey,
+              }}
+              to={{
+                type: AddressType.account,
+                address: ctx.outputsToSend[0]?.to.toString(),
+              }}
+            />
+          )}
+          {ctx.hasGeneralErrors && (
+            <Card css={styles.generalErrorCard}>
+              <Copyable
+                value={JSON.stringify(ctx.generalErrors)}
+                tooltipMessage="Click to copy Error Logs"
+                css={{ width: '100%', justifyContent: 'space-between' }}
+              >
+                <Icon icon={Icon.is('WarningOctagon')} color="red8" size={20} />
+                <Text
+                  as="h3"
+                  css={{ fontSize: '$sm', fontWeight: '$semibold' }}
+                >
+                  Invalid Transaction
+                </Text>
+              </Copyable>
+            </Card>
+          )}
+          <AssetsAmount
+            amounts={ctx.outputsToSend}
+            balanceErrors={ctx.groupedErrors?.InsufficientInputAmount}
+            title="Assets to Send"
+          />
+          <TxDetails fee={ctx.fee} outputAmount={ctx.outputAmount} />
+        </Stack>
+      )}
+      {ctx.approvedTx && (
+        <Stack>
+          <Heading as="h4">Transaction sent</Heading>
+          <Text>
+            Transaction sent successfully.
+            <Link
+              isExternal
+              href={getBlockExplorerLink({
+                path: `/transaction/${ctx.approvedTx.id}`,
+                providerUrl: selectedNetwork?.url,
+              })}
+            >
+              Click here to view on Fuel Explorer
+            </Link>
+          </Text>
+        </Stack>
+      )}
+      {ctx.txApproveError && (
+        <Stack>
+          <Heading as="h4">Transaction failed</Heading>
+          <Text>
+            Transaction failed to run. Please try again or contact support if
+            the problem persists.
+          </Text>
+        </Stack>
+      )}
+    </Layout.Content>
+  );
+
+  const footer = (
+    <Layout.BottomBar>
+      <Flex>
+        <Button
+          onPress={handlers.reject}
+          color="gray"
+          variant="ghost"
+          css={{ flex: 1 }}
+        >
+          Reject
+        </Button>
+        {!ctx.approvedTx && !ctx.txApproveError && (
+          <Button
+            color="accent"
+            onPress={handlers.approve}
+            isLoading={ctx.isLoading || ctx.sendingTx}
+            isDisabled={!ctx.waitingApproval}
+            css={{ flex: 1, ml: '$2' }}
+          >
+            Confirm
+          </Button>
+        )}
+      </Flex>
+    </Layout.BottomBar>
   );
 
   return (
     <>
-      <Layout title="Approve Transaction" isLoading={isLoading}>
+      <Layout title="Approve Transaction" isLoading={ctx.isLoading}>
         <Layout.TopBar type={TopBarType.external} />
-        <Layout.Content css={styles.content}>
-          {!isLoading &&
-            !approvedTx &&
-            !txApproveError &&
-            origin &&
-            account && (
-              <Stack gap="$4">
-                <ConnectInfo
-                  origin={origin}
-                  account={account}
-                  isReadOnly={true}
-                />
-                {account && (
-                  <TxFromTo
-                    from={{
-                      type: AddressType.account,
-                      address: account.publicKey,
-                    }}
-                    to={{
-                      type: AddressType.account,
-                      address: outputsToSend[0]?.to.toString(),
-                    }}
-                  />
-                )}
-                {!!(generalErrors && Object.keys(generalErrors).length) && (
-                  <Card css={styles.generalErrorCard}>
-                    <Copyable
-                      value={JSON.stringify(generalErrors)}
-                      tooltipMessage="Click to copy Error Logs"
-                      css={{ width: '100%', justifyContent: 'space-between' }}
-                    >
-                      <Icon
-                        icon={Icon.is('WarningOctagon')}
-                        color="red8"
-                        size={20}
-                      />
-                      <Text
-                        as="h3"
-                        css={{ fontSize: '$sm', fontWeight: '$semibold' }}
-                      >
-                        Invalid Transaction
-                      </Text>
-                    </Copyable>
-                  </Card>
-                )}
-                <AssetsAmount
-                  amounts={outputsToSend}
-                  balanceErrors={groupedErrors?.InsufficientInputAmount}
-                  title="Assets to Send"
-                />
-                <TxDetails fee={fee} outputAmount={outputAmount} />
-              </Stack>
-            )}
-          {approvedTx && (
-            <Stack>
-              <Heading as="h4">Transaction sent</Heading>
-              <Text>
-                Transaction sent successfully.
-                <Link
-                  isExternal
-                  href={getBlockExplorerLink({
-                    path: `/transaction/${approvedTx.id}`,
-                    providerUrl: selectedNetwork?.url,
-                  })}
-                >
-                  Click here to view on Fuel Explorer
-                </Link>
-              </Text>
-            </Stack>
-          )}
-          {txApproveError && (
-            <Stack>
-              <Heading as="h4">Transaction failed</Heading>
-              <Text>
-                Transaction failed to run. Please try again or contact support
-                if the problem persists.
-              </Text>
-            </Stack>
-          )}
-        </Layout.Content>
-        <Layout.BottomBar>
-          <Flex>
-            <Button
-              onPress={handlers.reject}
-              color="gray"
-              variant="ghost"
-              css={{ flex: 1 }}
-            >
-              Reject
-            </Button>
-            {!approvedTx && !txApproveError && (
-              <Button
-                color="accent"
-                onPress={handlers.approve}
-                isLoading={isLoading || sendingTx}
-                isDisabled={!waitingApproval}
-                css={{ flex: 1, ml: '$2' }}
-              >
-                Confirm
-              </Button>
-            )}
-          </Flex>
-        </Layout.BottomBar>
+        {content}
+        {footer}
       </Layout>
       <UnlockDialog
         unlockText="Confirm Transaction"
-        unlockError={unlockError}
+        unlockError={ctx.unlockError}
         isFullscreen={true}
-        isOpen={isUnlocking}
+        isOpen={ctx.isUnlocking}
         onUnlock={handlers.unlock}
-        isLoading={isUnlockingLoading}
+        isLoading={ctx.isUnlockingLoading}
         onClose={handlers.closeUnlock}
       />
     </>

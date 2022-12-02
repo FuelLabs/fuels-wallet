@@ -14,3 +14,11 @@ export const Usage = (args: TxDetailsProps) => (
     <TxDetails {...args} fee={bn(10)} />
   </Box>
 );
+
+export const Loader = () => (
+  <Box
+    css={{ maxWidth: 300, display: 'flex', flexDirection: 'column', gap: '$4' }}
+  >
+    <TxDetails.Loader />
+  </Box>
+);
