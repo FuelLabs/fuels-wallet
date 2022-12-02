@@ -55,8 +55,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
 const styles = {
   root: cssObj({
     flex: 1,
-    py: '$5',
-    px: '$3',
+    p: '$3',
     display: 'inline-flex',
     alignItems: 'center',
     gap: '$3',
@@ -65,6 +64,14 @@ const styles = {
       color: '$gray12',
       fontSize: '$sm',
       fontWeight: '$semibold',
+    },
+    '.fuel_avatar-generated': {
+      width: 56,
+      height: 56,
+      '& svg': {
+        width: 56,
+        height: 56,
+      },
     },
   }),
   from: cssObj({
