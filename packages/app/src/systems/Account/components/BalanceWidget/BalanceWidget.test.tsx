@@ -20,7 +20,7 @@ describe('BalanceWidget', () => {
     expect(screen.getByText('fuel0x...74ef')).toBeInTheDocument();
   });
 
-  it('should show formatted balance', () => {
+  it('should show formatted balance', async () => {
     render(<BalanceWidget account={ACCOUNT} />);
     expect(screen.getByText(/12.009/)).toBeInTheDocument();
   });
@@ -33,6 +33,24 @@ describe('BalanceWidget', () => {
     expect(screen.getByText(/12.009/)).toBeInTheDocument();
     await user.click(btn);
     expect(() => screen.getByText(/12.009/)).toThrow();
+  });
+
+  it('should hide balalnce when user sets his balance to hidden', async () => {
+    const onSetBalanceVisibility = jest.fn();
+    const { user } = render(
+      <BalanceWidget
+        account={ACCOUNT}
+        isHidden={true}
+        onSetBalanceVisibility={onSetBalanceVisibility}
+      />
+    );
+    const btn = screen.getByLabelText(/Show balance/i);
+    expect(btn).toBeInTheDocument();
+
+    expect(() => screen.getByText(/12.009/)).toThrow();
+    await user.click(btn);
+    expect(onSetBalanceVisibility).toBeCalledTimes(1);
+    expect(screen.getByText(/12.009/)).toBeInTheDocument();
   });
 
   it('should copy full address when click on copy icon', async () => {

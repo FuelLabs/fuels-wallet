@@ -36,4 +36,13 @@ test.describe('HomeWallet', () => {
     await hasText(page, 'Support');
     await getByAriaLabel(page, 'drawer_closeButton').click();
   });
+
+  test('should not show user balance when user sets it to hidden', async () => {
+    await visit(page, '/wallet');
+    await hasText(page, /0,5 ETH/i); // should show balance
+    await getByAriaLabel(page, 'Hide Balance').click(); // click on the hide balance
+    await hasText(page, /•••••/i); // should hide balance
+    await page.reload(); // reload the page
+    await hasText(page, /•••••/i); // should not show balance
+  });
 });
