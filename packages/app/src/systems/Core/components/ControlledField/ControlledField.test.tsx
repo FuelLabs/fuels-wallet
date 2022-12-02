@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Input } from '@fuel-ui/react';
-import { fireEvent, render, screen } from '@fuel-ui/test-utils';
+import { waitFor, fireEvent, render, screen } from '@fuel-ui/test-utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -52,10 +52,12 @@ describe('ControlledField', () => {
     expect(field).toBeInTheDocument();
     expect(value.innerText).toBeFalsy();
 
-    fireEvent.input(field, { target: { value: 'Fuel' } });
-    expect(await screen.findByText('Fuel')).toBeInTheDocument();
-    await user.click(btn);
-    expect(onSubmitHandler).toBeCalledTimes(1);
+    await waitFor(async () => {
+      fireEvent.input(field, { target: { value: 'Fuel' } });
+      expect(await screen.findByText('Fuel')).toBeInTheDocument();
+      await user.click(btn);
+      expect(onSubmitHandler).toBeCalledTimes(1);
+    });
   });
 
   it('should render field error message', async () => {

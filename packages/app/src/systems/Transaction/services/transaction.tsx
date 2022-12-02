@@ -1,7 +1,10 @@
-import type { WalletUnlocked } from 'fuels';
+/* eslint-disable no-param-reassign */
+import type { Account } from '@fuel-wallet/types';
+import type { TransactionRequest, WalletUnlocked } from 'fuels';
+import { bn, calculateTransactionFee, Provider } from 'fuels';
 
-import type { Transaction, TxRequest } from '../types';
-import { parseTransaction } from '../utils';
+import type { Transaction } from '../types';
+import { getCoinOutputsFromTx, parseTransaction } from '../utils';
 
 import { db, uniqueId } from '~/systems/Core';
 
@@ -13,13 +16,26 @@ export type TxInputs = {
   remove: {
     id: string;
   };
-  simulate: {
-    wallet: WalletUnlocked;
-    tx: TxRequest;
+  request: {
+    tx: TransactionRequest;
+    origin: string;
+    providerUrl: string;
   };
   send: {
+    tx: TransactionRequest;
     wallet: WalletUnlocked;
-    tx: TxRequest;
+    providerUrl?: string;
+  };
+  calculateFee: {
+    tx: TransactionRequest;
+    providerUrl?: string;
+  };
+  fetchGasPrice: {
+    providerUrl?: string;
+  };
+  getOutputs: {
+    tx?: TransactionRequest;
+    account?: Account | null;
   };
 };
 
@@ -59,11 +75,35 @@ export class TxService {
     });
   }
 
-  static async simulate({ wallet, tx }: TxInputs['simulate']) {
-    return wallet.simulateTransaction(tx);
+  static async send({ wallet, tx, providerUrl }: TxInputs['send']) {
+    wallet.provider = new Provider(providerUrl || '');
+    return wallet.sendTransaction(tx);
   }
 
-  static async send({ wallet, tx }: TxInputs['send']) {
-    return wallet.sendTransaction(tx);
+  static async calculateFee({ tx, providerUrl }: TxInputs['calculateFee']) {
+    const { gasPrice } = tx;
+    const provider = new Provider(providerUrl || '');
+    const { receipts } = await provider.call(tx);
+    const result = calculateTransactionFee({ receipts, gasPrice });
+    return result.fee;
+  }
+
+  static async fetchGasPrice({ providerUrl }: TxInputs['fetchGasPrice']) {
+    const provider = new Provider(providerUrl || '');
+    const { minGasPrice } = await provider.getNodeInfo();
+    return minGasPrice;
+  }
+
+  static getOutputs({ tx, account }: TxInputs['getOutputs']) {
+    const coinOutputs = getCoinOutputsFromTx(tx);
+    const outputsToSend = coinOutputs.filter(
+      (value) => value.to !== account?.publicKey
+    );
+    const outputAmount = outputsToSend.reduce(
+      (acc, value) => acc.add(value.amount),
+      bn(0)
+    );
+
+    return { coinOutputs, outputsToSend, outputAmount };
   }
 }

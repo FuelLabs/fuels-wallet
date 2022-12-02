@@ -14,12 +14,12 @@ export const HomeActions = ({
 }: HomeActionsProps) => {
   return (
     <Flex css={styles.wrapper}>
-      <Button onClick={sendAction} isDisabled={isDisabled} css={styles.button}>
+      <Button onPress={sendAction} isDisabled={isDisabled} css={styles.button}>
         Send
       </Button>
       <Button
         isDisabled={isDisabled}
-        onClick={receiveAction}
+        onPress={receiveAction}
         variant="outlined"
         color="gray"
         css={styles.button}
