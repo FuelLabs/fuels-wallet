@@ -35,16 +35,14 @@ export type BalanceWidgetProps = {
   account?: Account;
   isHidden?: boolean;
   isLoading?: boolean;
-  onSetBalanceVisibility?: (
-    input: AccountInputs['setBalanceVisibility']
-  ) => void;
+  onChangeVisibility?: (input: AccountInputs['setBalanceVisibility']) => void;
 };
 
 export function BalanceWidget({
   account,
   isHidden: _isHidden,
   isLoading,
-  onSetBalanceVisibility,
+  onChangeVisibility,
 }: BalanceWidgetProps) {
   const [isHidden, setIsHidden] = useState(_isHidden);
 
@@ -55,7 +53,7 @@ export function BalanceWidget({
   const setBalanceVisibility = (isHidden: boolean) => {
     setIsHidden(isHidden);
     if (account) {
-      onSetBalanceVisibility?.({
+      onChangeVisibility?.({
         data: { isHidden, address: account.address },
       });
     }
