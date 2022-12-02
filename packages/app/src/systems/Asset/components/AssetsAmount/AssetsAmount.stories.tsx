@@ -18,6 +18,10 @@ export const Single = (args: AssetsAmountProps) => (
 
 export const Multiple = (args: AssetsAmountProps) => (
   <Box css={{ maxWidth: 300 }}>
-    <AssetsAmount {...args} amounts={MOCK_ASSETS_AMOUNTS} />
+    <AssetsAmount
+      {...args}
+      title="Assets to send"
+      amounts={MOCK_ASSETS_AMOUNTS}
+    />
   </Box>
 );

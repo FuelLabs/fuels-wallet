@@ -74,7 +74,7 @@ export const AmountInput: AmountInputComponent = ({
             </Button>
           </Flex>
           <Flex>
-            <Text css={styles.text}>
+            <Text css={styles.balance}>
               Balance: {balance.format({ precision: DECIMAL_UNITS })}
             </Text>
           </Flex>
@@ -91,6 +91,11 @@ const styles = {
     height: 'auto',
     display: 'flex',
     alignItems: 'center',
+
+    input: {
+      fontFamily: '$sans',
+      fontWeight: '$medium',
+    },
   }),
   button: cssObj({
     marginTop: '$2',
@@ -100,9 +105,11 @@ const styles = {
   flexColumn: cssObj({
     marginRight: '$1',
   }),
-  text: cssObj({
-    fontSize: '$xs',
+  balance: cssObj({
     whiteSpace: 'nowrap',
     marginBottom: '$2',
+    fontSize: '$xs',
+    fontWeight: '$medium',
+    color: '$gray10',
   }),
 };

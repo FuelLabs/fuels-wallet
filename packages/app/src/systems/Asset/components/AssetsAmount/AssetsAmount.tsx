@@ -1,5 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Card, Copyable, Flex, Grid, Text } from '@fuel-ui/react';
+import {
+  Avatar,
+  Card,
+  Copyable,
+  Flex,
+  Grid,
+  Stack,
+  Text,
+} from '@fuel-ui/react';
 import type { Coin } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 
@@ -32,46 +40,55 @@ export function AssetsAmount({
 
   return (
     <Card css={styles.card(hasError)}>
-      <Flex css={styles.header}>
-        <Text as="h3" css={{ fontSize: '$sm', fontWeight: '$semibold' }}>
-          {title}
-        </Text>
-        {hasError && (
-          <Text
-            css={{ color: '$red10', fontSize: '$sm', fontWeight: '$semibold' }}
-          >
-            (not enough balance)
-          </Text>
-        )}
-      </Flex>
-      {amounts.map((item, i) => {
-        const asset = getAssetInfoById(item.assetId, item);
-        const amount = bn(asset.amount);
-        const isLast = i === amounts.length - 1;
+      {(title || hasError) && (
+        <Flex css={styles.header}>
+          {title && (
+            <Text as="h3" css={{ fontSize: '$sm', fontWeight: '$semibold' }}>
+              {title}
+            </Text>
+          )}
+          {hasError && (
+            <Text
+              css={{
+                color: '$red10',
+                fontSize: '$sm',
+                fontWeight: '$semibold',
+              }}
+            >
+              (not enough balance)
+            </Text>
+          )}
+        </Flex>
+      )}
+      <Stack gap="$2">
+        {amounts.map((item) => {
+          const asset = getAssetInfoById(item.assetId, item);
+          const amount = bn(asset.amount);
 
-        return (
-          <Grid key={asset.assetId.toString()} css={styles.root(isLast)}>
-            <Flex css={styles.asset}>
-              <Avatar
-                name={asset.name}
-                src={asset.imageUrl}
-                css={{ height: 18, width: 18 }}
-              />
-              <Text as="span">{asset.name}</Text>
-            </Flex>
-            <Copyable value={asset.assetId} css={styles.address}>
-              <Text fontSize="xs" css={{ mt: '$1' }}>
-                {shortAddress(asset.assetId)}
-              </Text>
-            </Copyable>
-            <Flex css={styles.amount(isPositive)}>
-              {isPositive && '+'}
-              {isNegative && '-'}
-              {amount.format({ precision: DECIMAL_UNITS })} {asset.symbol}
-            </Flex>
-          </Grid>
-        );
-      })}
+          return (
+            <Grid key={asset.assetId.toString()} css={styles.root}>
+              <Flex css={styles.asset}>
+                <Avatar
+                  name={asset.name}
+                  src={asset.imageUrl}
+                  css={{ height: 18, width: 18 }}
+                />
+                <Text as="span">{asset.name}</Text>
+              </Flex>
+              <Copyable value={asset.assetId} css={styles.address}>
+                <Text fontSize="xs" css={{ mt: '$1' }}>
+                  {shortAddress(asset.assetId)}
+                </Text>
+              </Copyable>
+              <Flex css={styles.amount(isPositive)}>
+                {isPositive && '+'}
+                {isNegative && '-'}
+                {amount.format({ precision: DECIMAL_UNITS })} {asset.symbol}
+              </Flex>
+            </Grid>
+          );
+        })}
+      </Stack>
     </Card>
   );
 }
@@ -81,30 +98,27 @@ const styles = {
     cssObj({
       px: '$3',
       py: '$2',
-      flexDirection: 'column',
-      gap: '$2',
       ...(isError && {
         backgroundColor: '$red3',
       }),
     }),
   header: cssObj({
+    mb: '$3',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
   }),
-  root: (isLast?: boolean) =>
-    cssObj({
-      gridTemplateColumns: 'repeat(2, 1fr)',
-      gridTemplateRows: 'repeat(2, 1fr)',
-      fontWeight: '$semibold',
-      color: '$gray12',
-      pb: '$2',
-      ...(isLast
-        ? {}
-        : {
-            borderBottom: '1px dashed $gray3',
-          }),
-    }),
+  root: cssObj({
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gridTemplateRows: 'repeat(2, 1fr)',
+    fontWeight: '$semibold',
+    color: '$gray12',
+
+    '& ~ & ': {
+      pt: '$2',
+      borderTop: '1px dashed $gray3',
+    },
+  }),
   asset: cssObj({
     alignItems: 'center',
     gap: '$2',

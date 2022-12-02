@@ -1,4 +1,4 @@
-import type { BigNumberish } from 'fuels';
+import type { BN } from 'fuels';
 
 import { route } from './utils/route';
 
@@ -28,8 +28,10 @@ export const Pages = {
   requestMessage: route('/request/message'),
   txs: route('/transactions'),
   settings: route('/settings'),
-  revealPassphrase: route('/settings/reveal-passphrase'),
-  changePassword: route('/settings/change-password'),
+  settingsRevealPassphrase: route('/settings/reveal-passphrase'),
+  settingsChangePassword: route('/settings/change-password'),
+  send: route('/send'),
+  sendConfirm: route('/send/confirm'),
 };
 
-export type AmountMap = Record<string, Maybe<BigNumberish>>;
+export type AmountMap = Record<string, Maybe<BN>>;

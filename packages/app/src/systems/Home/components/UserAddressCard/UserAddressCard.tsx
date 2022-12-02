@@ -24,7 +24,7 @@ export function UserAddressCard({ address }: Props) {
       </Copyable>
       <Button
         aria-label="copy-account"
-        onClick={copyAccount}
+        onPress={copyAccount}
         size="sm"
         css={{ w: '100%' }}
       >

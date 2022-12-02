@@ -49,14 +49,4 @@ describe('TxService', () => {
       expect(txs.length).toBe(0);
     }
   });
-
-  it('should simulate a tx', async () => {
-    const tx = await TxService.simulate({ wallet, tx: txRequest });
-    expect(tx.receipts.length).toBeGreaterThan(0);
-  });
-
-  it('should send a tx', async () => {
-    const tx = await TxService.send({ wallet, tx: txRequest });
-    expect(tx.id).toBeDefined();
-  });
 });
