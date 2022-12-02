@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useCallback } from 'react';
 
+import { useFuelWeb3 } from './useFuelWeb3';
+
 export function useLoading<T extends (...args: any) => Promise<void>>(
   callback: T,
   deps: any = []
