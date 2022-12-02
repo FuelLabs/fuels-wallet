@@ -47,7 +47,7 @@ export type AccountInputs = {
 export class AccountService {
   static async addAccount(input: AccountInputs['addAccount']) {
     return db.transaction('rw', db.accounts, async () => {
-      await db.accounts.add(input.data);
+      await db.accounts.add({ ...input.data, isHidden: false });
       return db.accounts.get({ address: input.data.address });
     });
   }
