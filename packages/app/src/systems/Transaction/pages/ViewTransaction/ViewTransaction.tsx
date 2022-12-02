@@ -2,7 +2,7 @@ import { Stack } from '@fuel-ui/react';
 import { AddressType } from '@fuel-wallet/types';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { TxDetails, TxFromTo } from '../../components';
+import { TxDetails, TxFromTo, TxStatusAlert } from '../../components';
 import { TxHeader } from '../../components/TxHeader/TxHeader';
 import { useTransaction } from '../../hooks';
 
@@ -24,9 +24,10 @@ export function ViewTransaction() {
     txStatus,
     txId,
     tx,
-    // isInvalidTxId,
-    // isTxNotFound,
-    // isTxReceiptsNotFound,
+    error,
+    shouldShowAlert,
+    shouldShowTx,
+    shouldShowTxDetails,
   } = useTransaction({
     txId: txIdQueryParam,
     providerUrl,
@@ -43,43 +44,42 @@ export function ViewTransaction() {
     : undefined;
 
   return (
-    <Layout title="Transaction" isLoading={isFetching}>
+    <Layout title="Transaction" isLoading={isFetching || isFetchingResult}>
       <Layout.TopBar onBack={() => navigate(-1)} />
       <Layout.Content>
         <Stack gap="$4">
-          {isFetching ? (
-            <TxHeader.Loader />
-          ) : (
-            <TxHeader
-              transaction={{
-                id: txId,
-                type: tx?.type,
-                status: txStatus,
-              }}
-              providerUrl={providerUrl}
-            />
+          {shouldShowAlert && (
+            <TxStatusAlert txStatus={txStatus} error={error} />
           )}
-          {isFetching ? (
-            <div>XX Loader XX</div>
-          ) : (
-            <TxFromTo
-              from={transactionFrom}
-              to={{
-                type: AddressType.account,
-                address: outputsToSend[0]?.to.toString(),
-              }}
-              // TODO: should include below line (status) after merging https://github.com/FuelLabs/fuels-wallet/pull/297
-              // status={txStatus}
-            />
+          {shouldShowTx && (
+            <>
+              <TxHeader
+                transaction={{
+                  id: txId,
+                  type: tx?.type,
+                  status: txStatus,
+                }}
+                providerUrl={providerUrl}
+              />
+              <TxFromTo
+                from={transactionFrom}
+                to={{
+                  type: AddressType.account,
+                  address: outputsToSend[0]?.to.toString(),
+                }}
+                // TODO: should include below line (status) after merging https://github.com/FuelLabs/fuels-wallet/pull/297
+                // status={txStatus}
+              />
+              <AssetsAmount amounts={outputsToSend} title="Assets Sent" />
+            </>
           )}
-          {isFetching ? (
-            <div>XX Loader XX</div>
-          ) : (
-            <AssetsAmount amounts={outputsToSend} title="Assets Sent" />
+          {isFetching && (
+            <>
+              <TxHeader.Loader />
+            </>
           )}
-          {isFetching || isFetchingResult ? (
-            <div>XX Loader XX</div>
-          ) : (
+          {(isFetching || isFetchingResult) && <div>XX Loader XX</div>}
+          {shouldShowTxDetails && (
             <TxDetails fee={fee} outputAmount={outputAmount} />
           )}
         </Stack>

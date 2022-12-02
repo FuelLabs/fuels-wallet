@@ -5,6 +5,7 @@ import { useEffect, useMemo } from 'react';
 import type { TransactionMachineState } from '../machines';
 import { TRANSACTION_ERRORS, transactionMachine } from '../machines';
 import type { TxInputs } from '../services';
+import { TxStatus } from '../types';
 import { getCoinInputsFromTx, getCoinOutputsFromTx } from '../utils';
 
 const selectors = {
@@ -12,12 +13,7 @@ const selectors = {
   isFetchingResult: (state: TransactionMachineState) =>
     state.matches('fetchingResult'),
   txResponse: (state: TransactionMachineState) => state.context?.txResponse,
-  isInvalidTxId: (state: TransactionMachineState) =>
-    state.context?.error === TRANSACTION_ERRORS.INVALID_ID,
-  isTxNotFound: (state: TransactionMachineState) =>
-    state.context?.error === TRANSACTION_ERRORS.NOT_FOUND,
-  isTxReceiptsNotFound: (state: TransactionMachineState) =>
-    state.context?.error === TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND,
+  error: (state: TransactionMachineState) => state.context?.error,
   txStatus: (state: TransactionMachineState) => state.context?.txStatus,
   tx: (state: TransactionMachineState) => state.context?.tx,
   txResult: (state: TransactionMachineState) => state.context?.txResult,
@@ -41,17 +37,12 @@ export function useTransaction({
   const isFetching = useSelector(service, selectors.isFetching);
   const isFetchingResult = useSelector(service, selectors.isFetchingResult);
   const txResponse = useSelector(service, selectors.txResponse);
-  const isInvalidTxId = useSelector(service, selectors.isInvalidTxId);
-  const isTxNotFound = useSelector(service, selectors.isTxNotFound);
-  const isTxReceiptsNotFound = useSelector(
-    service,
-    selectors.isTxReceiptsNotFound
-  );
   const txStatus = useSelector(service, selectors.txStatus);
   const tx = useSelector(service, selectors.tx);
   const txResult = useSelector(service, selectors.txResult);
   const fee = useSelector(service, selectors.fee);
   const txId = useSelector(service, selectors.txId);
+  const error = useSelector(service, selectors.error);
 
   const { coinInputs, coinOutputs, outputsToSend, outputAmount } =
     useMemo(() => {
@@ -71,6 +62,16 @@ export function useTransaction({
 
       return { coinInputs, coinOutputs, outputsToSend, outputAmount };
     }, [tx]);
+
+  const isTxPending = txStatus === TxStatus.pending;
+  const isTxFailed = txStatus === TxStatus.error;
+  const isInvalidTxId = error === TRANSACTION_ERRORS.INVALID_ID;
+  const isTxNotFound = error === TRANSACTION_ERRORS.NOT_FOUND;
+  const isTxReceiptsNotFound = error === TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND;
+  const shouldShowAlert =
+    isTxNotFound || isInvalidTxId || isTxPending || isTxFailed;
+  const shouldShowTx = tx && !isFetching && !isInvalidTxId && !isTxNotFound;
+  const shouldShowTxDetails = tx && !isFetching && !isFetchingResult;
 
   function getTransaction(input: TxInputs['fetch']) {
     // TODO: remove providerUrl before finishing. this one is for testing
@@ -102,5 +103,9 @@ export function useTransaction({
     outputAmount,
     fee,
     txId,
+    error,
+    shouldShowAlert,
+    shouldShowTx,
+    shouldShowTxDetails,
   };
 }
