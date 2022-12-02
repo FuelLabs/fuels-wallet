@@ -10,8 +10,11 @@ import {
 } from '@fuel-ui/react';
 import type { Coin } from '@fuel-wallet/types';
 import { bn } from 'fuels';
+import type { FC } from 'react';
 
 import { getAssetInfoById } from '../../utils';
+
+import { AssetsAmountLoader } from './AssetsAmountLoader';
 
 import { DECIMAL_UNITS } from '~/config';
 import { shortAddress } from '~/systems/Core';
@@ -29,13 +32,17 @@ export type AssetsAmountProps = {
   balanceErrors?: GroupedError[];
 };
 
-export function AssetsAmount({
+type AssetsAmountComponent = FC<AssetsAmountProps> & {
+  Loader: typeof AssetsAmountLoader;
+};
+
+export const AssetsAmount: AssetsAmountComponent = ({
   amounts,
   title,
   isPositive,
   isNegative,
   balanceErrors,
-}: AssetsAmountProps) {
+}: AssetsAmountProps) => {
   const hasError = !!balanceErrors?.length;
 
   return (
@@ -91,7 +98,7 @@ export function AssetsAmount({
       </Stack>
     </Card>
   );
-}
+};
 
 const styles = {
   card: (isError?: boolean) =>
@@ -144,3 +151,5 @@ const styles = {
       alignItems: 'center',
     }),
 };
+
+AssetsAmount.Loader = AssetsAmountLoader;

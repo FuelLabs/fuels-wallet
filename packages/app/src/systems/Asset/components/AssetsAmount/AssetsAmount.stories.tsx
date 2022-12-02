@@ -25,3 +25,11 @@ export const Multiple = (args: AssetsAmountProps) => (
     />
   </Box>
 );
+
+export const Loader = () => (
+  <Box
+    css={{ maxWidth: 300, display: 'flex', flexDirection: 'column', gap: '$4' }}
+  >
+    <AssetsAmount.Loader />
+  </Box>
+);
