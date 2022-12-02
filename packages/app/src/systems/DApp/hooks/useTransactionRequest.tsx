@@ -24,7 +24,10 @@ const selectors = {
   context(state: TransactionMachineState) {
     return state.context;
   },
-  isShowingInfo({ account, isLoading }: ReturnType<typeof useAccount>) {
+  isShowingInfo({
+    account,
+    isLoading,
+  }: Omit<ReturnType<typeof useAccount>, 'handlers'>) {
     return (state: TransactionMachineState) =>
       !isLoading &&
       !state.context.approvedTx &&
