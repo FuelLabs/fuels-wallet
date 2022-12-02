@@ -11,6 +11,10 @@ describe('AssetsAmount', () => {
     );
   });
 
+  it('a11y Loader', async () => {
+    await testA11y(<AssetsAmount.Loader />);
+  });
+
   it('should show multiple assets', async () => {
     render(
       <AssetsAmount amounts={MOCK_ASSETS_AMOUNTS} title="Assets to Send" />
