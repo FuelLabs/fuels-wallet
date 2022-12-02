@@ -2,6 +2,9 @@ import { cssObj } from '@fuel-ui/css';
 import { Accordion, Flex, Text } from '@fuel-ui/react';
 import type { BN } from 'fuels';
 import { bn } from 'fuels';
+import type { FC } from 'react';
+
+import { TxDetailsLoader } from './TxDetailsLoader';
 
 import { DECIMAL_UNITS } from '~/config';
 
@@ -10,7 +13,14 @@ export type TxDetailsProps = {
   outputAmount?: BN;
 };
 
-export function TxDetails({ fee, outputAmount }: TxDetailsProps) {
+type TxDetailsComponent = FC<TxDetailsProps> & {
+  Loader: typeof TxDetailsLoader;
+};
+
+export const TxDetails: TxDetailsComponent = ({
+  fee,
+  outputAmount,
+}: TxDetailsProps) => {
   const total = fee?.add(bn(outputAmount));
 
   return (
@@ -36,7 +46,7 @@ export function TxDetails({ fee, outputAmount }: TxDetailsProps) {
       </Accordion.Item>
     </Accordion>
   );
-}
+};
 
 const styles = {
   item: cssObj({
@@ -84,3 +94,5 @@ const styles = {
     gap: '$2',
   }),
 };
+
+TxDetails.Loader = TxDetailsLoader;
