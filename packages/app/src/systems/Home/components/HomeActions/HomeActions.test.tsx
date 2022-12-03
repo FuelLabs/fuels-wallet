@@ -1,4 +1,4 @@
-import { act, render, screen, testA11y } from '@fuel-ui/test-utils';
+import { render, screen, testA11y } from '@fuel-ui/test-utils';
 
 import { HomeActions } from './HomeActions';
 
@@ -17,27 +17,5 @@ describe('HomeActions', () => {
     render(<HomeActions isDisabled />);
     expect(screen.getByText('Send')).toHaveAttribute('aria-disabled');
     expect(screen.getByText('Receive')).toHaveAttribute('aria-disabled');
-  });
-
-  it("should call 'Send' and 'Receive' actions when clicked", () => {
-    const receiveAction = jest.fn();
-    const sendAction = jest.fn();
-    render(
-      <HomeActions
-        receiveAction={() => receiveAction()}
-        sendAction={() => sendAction()}
-      />
-    );
-
-    const receiveButton = screen.getByText('Receive');
-    const sendButton = screen.getByText('Send');
-
-    act(() => {
-      receiveButton.click();
-      sendButton.click();
-    });
-
-    expect(receiveAction).toBeCalled();
-    expect(sendAction).toBeCalled();
   });
 });
