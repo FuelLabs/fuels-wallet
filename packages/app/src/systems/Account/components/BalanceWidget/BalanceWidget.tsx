@@ -14,6 +14,7 @@ import type { ReactNode } from 'react';
 
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
+import type { AccountInputs } from '~/systems/Account/services';
 import { formatUnits, shortAddress, VisibilityButton } from '~/systems/Core';
 
 type BalanceWidgetWrapperProps = {
@@ -34,18 +35,29 @@ export type BalanceWidgetProps = {
   account?: Account;
   isHidden?: boolean;
   isLoading?: boolean;
+  onChangeVisibility?: (input: AccountInputs['setBalanceVisibility']) => void;
 };
 
 export function BalanceWidget({
   account,
   isHidden: _isHidden,
   isLoading,
+  onChangeVisibility,
 }: BalanceWidgetProps) {
   const [isHidden, setIsHidden] = useState(_isHidden);
 
   useEffect(() => {
     setIsHidden(_isHidden);
   }, [_isHidden]);
+
+  const setBalanceVisibility = (isHidden: boolean) => {
+    setIsHidden(isHidden);
+    if (account) {
+      onChangeVisibility?.({
+        data: { isHidden, address: account.address },
+      });
+    }
+  };
 
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
@@ -87,8 +99,8 @@ export function BalanceWidget({
           <VisibilityButton
             aria-label={isHidden ? 'Show balance' : 'Hide balance'}
             isHidden={isHidden}
-            onHide={() => setIsHidden(true)}
-            onShow={() => setIsHidden(false)}
+            onHide={() => setBalanceVisibility(true)}
+            onShow={() => setBalanceVisibility(false)}
           />
         </Box>
       </Flex>

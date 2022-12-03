@@ -9,7 +9,7 @@ import { AssetList } from '~/systems/Asset';
 import { Layout, Pages } from '~/systems/Core';
 
 export function Home() {
-  const { isLoading, account } = useAccount();
+  const { isLoading, account, handlers } = useAccount();
   const navigate = useNavigate();
 
   function sendAction() {
@@ -25,7 +25,12 @@ export function Home() {
       <Layout.TopBar />
       <Layout.Content>
         <Flex css={{ height: '100%', flexDirection: 'column' }}>
-          <BalanceWidget account={account} isLoading={isLoading} />
+          <BalanceWidget
+            isHidden={account?.isHidden ?? true}
+            account={account}
+            isLoading={isLoading}
+            onChangeVisibility={handlers.setBalanceVisibility}
+          />
           <HomeActions
             receiveAction={goToReceive}
             sendAction={sendAction}
