@@ -54,12 +54,13 @@ export function AssetSelect({ items, selected, onSelect }: AssetSelectProps) {
     >
       <Dropdown.Trigger>
         <Button
-          as="div"
+          as={asset ? 'div' : 'button'}
           color="gray"
           size="md"
           data-opened={opened}
           css={styles.trigger}
           id="fuel_asset-select"
+          aria-label="Select Asset"
           rightIcon={Icon.is('CaretDown')}
         >
           <Flex css={styles.input}>

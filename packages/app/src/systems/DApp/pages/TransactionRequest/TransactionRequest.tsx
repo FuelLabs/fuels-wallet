@@ -1,15 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Button,
-  Card,
-  Copyable,
-  Flex,
-  Heading,
-  Icon,
-  Link,
-  Stack,
-  Text,
-} from '@fuel-ui/react';
+import { Button, Flex, Heading, Link, Stack, Text } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import { AddressType } from '@fuel-wallet/types';
 
@@ -20,7 +10,7 @@ import { AssetsAmount } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { NetworkScreen, useNetworks } from '~/systems/Network';
-import { TxDetails, TxFromTo } from '~/systems/Transaction';
+import { TxDetails, TxErrors, TxFromTo } from '~/systems/Transaction';
 
 export function TransactionRequest() {
   const { selectedNetwork } = useNetworks({ type: NetworkScreen.list });
@@ -49,23 +39,7 @@ export function TransactionRequest() {
               }}
             />
           )}
-          {ctx.hasGeneralErrors && (
-            <Card css={styles.generalErrorCard}>
-              <Copyable
-                value={JSON.stringify(ctx.generalErrors)}
-                tooltipMessage="Click to copy Error Logs"
-                css={{ width: '100%', justifyContent: 'space-between' }}
-              >
-                <Icon icon={Icon.is('WarningOctagon')} color="red8" size={20} />
-                <Text
-                  as="h3"
-                  css={{ fontSize: '$sm', fontWeight: '$semibold' }}
-                >
-                  Invalid Transaction
-                </Text>
-              </Copyable>
-            </Card>
-          )}
+          {ctx.hasGeneralErrors && <TxErrors errors={ctx.generalErrors} />}
           <AssetsAmount
             amounts={ctx.outputsToSend}
             balanceErrors={ctx.groupedErrors?.InsufficientInputAmount}
@@ -165,14 +139,5 @@ const styles = {
     background: 'transparent',
     borderColor: '$gray8',
     borderStyle: 'dashed',
-  }),
-  generalErrorCard: cssObj({
-    px: '$3',
-    py: '$2',
-    gap: '$2',
-    backgroundColor: '$red3',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
   }),
 };

@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 import { Flex } from '@fuel-ui/react';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -13,9 +12,9 @@ export function Home() {
   const { isLoading, account } = useAccount();
   const navigate = useNavigate();
 
-  const sendAction = useCallback(() => {
-    window.alert('Send is not implemeted yet');
-  }, []);
+  function sendAction() {
+    navigate(Pages.send());
+  }
 
   const goToReceive = useCallback(() => {
     navigate(Pages.receive());

@@ -1,4 +1,5 @@
 /* eslint-disable consistent-return */
+import { bn } from 'fuels';
 import { useEffect, useRef } from 'react';
 
 import type { AccountMachineState } from '../machines';
@@ -6,11 +7,15 @@ import type { AccountMachineState } from '../machines';
 import { Services, store } from '~/store';
 
 const selectors = {
-  isLoading: (state: AccountMachineState) => {
+  isLoading(state: AccountMachineState) {
     return state.hasTag('loading');
   },
-  account: (state: AccountMachineState) => {
+  account(state: AccountMachineState) {
     return state.context?.data;
+  },
+  hasBalance(state: AccountMachineState) {
+    const acc = state.context?.data;
+    return bn(acc?.balance ?? 0).gt(0);
   },
 };
 
@@ -24,6 +29,7 @@ export function useAccount() {
   const shouldListen = useRef(true);
   const isLoading = store.useSelector(Services.account, selectors.isLoading);
   const account = store.useSelector(Services.account, selectors.account);
+  const hasBalance = store.useSelector(Services.account, selectors.hasBalance);
 
   useEffect(() => {
     if (shouldListen.current) {
@@ -38,5 +44,6 @@ export function useAccount() {
   return {
     isLoading: isLoading && !account,
     account,
+    hasBalance,
   };
 }

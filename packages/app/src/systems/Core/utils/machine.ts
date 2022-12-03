@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { AnyInterpreter, StateFrom, Action } from 'xstate';
+import * as R from 'rambda/immutable';
+import type { AnyInterpreter, StateFrom, Action, AnyEventObject } from 'xstate';
 import { assign } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
@@ -48,4 +49,50 @@ export function assignErrorMessage(message: string): Action<any, any> {
     ...ctx,
     error: message,
   }));
+}
+
+export function assignWith<
+  C extends Record<string, unknown> = any,
+  E extends AnyEventObject = AnyEventObject,
+  P = any
+>(
+  path: string,
+  prop: P extends string ? string : (c: C, E: E) => any,
+  merge?: boolean
+) {
+  return assign<C, E>((ctx, ev) => {
+    const value = typeof prop === 'string' ? ev[prop] : ev[prop(ctx, ev)];
+    const old = R.path(path, ctx);
+    const next = merge ? R.mergeRight(old, value) : value;
+    return R.assocPath(path, next, ctx);
+  });
+}
+export function assignWithInput<
+  C extends Record<string, any> = any,
+  E extends AnyEventObject = AnyEventObject
+>(path: string, merge?: boolean) {
+  return assignWith<C, E>(path, 'input', merge);
+}
+export function assignWithData<
+  C extends Record<string, any> = any,
+  E extends AnyEventObject = AnyEventObject
+>(path: string, merge?: boolean) {
+  return assignWith<C, E>(path, 'data', merge);
+}
+
+export function assignErrors<
+  C extends Record<string, any> = any,
+  E extends AnyEventObject = AnyEventObject
+>(prop: string) {
+  return assign<C, E>((ctx, ev) => {
+    const error = ev.data.error;
+    return R.assocPath(`errors.${prop}`, error, ctx);
+  });
+}
+
+export function resetContext<
+  C extends Record<string, any> = any,
+  E extends AnyEventObject = AnyEventObject
+>() {
+  return assign((_ctx: C, _ev: E) => ({}));
 }

@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "DOCS_DIST=${DOCS_DIST:=dist} next export -o $DOCS_DIST",
+    "export": "next export",
     "start": "next start",
     "lint": "next lint"
   },

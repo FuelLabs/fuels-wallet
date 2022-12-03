@@ -24,17 +24,20 @@ const selectors = {
   context(state: TransactionMachineState) {
     return state.context;
   },
-  isShowingInfo({ account, isLoading }: ReturnType<typeof useAccount>) {
+  generalErrors(state: TransactionMachineState) {
+    const groupedErrors = state.context.txDryRunGroupedErrors;
+    return getFilteredErrors(groupedErrors, ['InsufficientInputAmount']);
+  },
+  isShowingInfo({
+    account,
+    isLoading,
+  }: Partial<ReturnType<typeof useAccount>>) {
     return (state: TransactionMachineState) =>
       !isLoading &&
       !state.context.approvedTx &&
       !state.context.txApproveError &&
       state.context.origin &&
       account;
-  },
-  generalErrors(state: TransactionMachineState) {
-    const groupedErrors = state.context.txDryRunGroupedErrors;
-    return getFilteredErrors(groupedErrors, ['InsufficientInputAmount']);
   },
 };
 

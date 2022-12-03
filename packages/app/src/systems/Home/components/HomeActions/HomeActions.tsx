@@ -1,5 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Flex } from '@fuel-ui/react';
+import { Button, Flex, Tooltip } from '@fuel-ui/react';
+
+import { useAccount } from '~/systems/Account';
 
 export type HomeActionsProps = {
   isDisabled?: boolean;
@@ -12,11 +14,26 @@ export const HomeActions = ({
   receiveAction = () => {},
   sendAction = () => {},
 }: HomeActionsProps) => {
+  const { hasBalance, isLoading } = useAccount();
+
+  const sendButton = (
+    <Button
+      onPress={sendAction}
+      isDisabled={isDisabled || !hasBalance}
+      css={styles.button}
+      isLoading={isLoading}
+    >
+      Send
+    </Button>
+  );
+
   return (
     <Flex css={styles.wrapper}>
-      <Button onPress={sendAction} isDisabled={isDisabled} css={styles.button}>
-        Send
-      </Button>
+      {hasBalance ? (
+        sendButton
+      ) : (
+        <Tooltip content="You don't have balance to send">{sendButton}</Tooltip>
+      )}
       <Button
         isDisabled={isDisabled}
         onPress={receiveAction}

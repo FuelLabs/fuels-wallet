@@ -15,9 +15,7 @@ export async function getAccount(page: Page) {
 }
 
 export async function mockData(page: Page) {
-  const wallet = Wallet.generate({
-    provider: VITE_FUEL_PROVIDER_URL,
-  });
+  const wallet = Wallet.generate({ provider: VITE_FUEL_PROVIDER_URL });
   await page.evaluate(
     ([accountData, providerUrl]) => {
       return new Promise((resolve, reject) => {

@@ -1,7 +1,20 @@
 /* eslint-disable no-param-reassign */
 import type { Account } from '@fuel-wallet/types';
-import type { TransactionRequest, WalletUnlocked } from 'fuels';
-import { bn, calculateTransactionFee, Provider } from 'fuels';
+import type {
+  BN,
+  CoinQuantityLike,
+  TransactionRequest,
+  WalletUnlocked,
+} from 'fuels';
+import {
+  Address,
+  hexlify,
+  MAX_GAS_PER_TX,
+  ScriptTransactionRequest,
+  bn,
+  calculateTransactionFee,
+  Provider,
+} from 'fuels';
 
 import type { Transaction } from '../types';
 import { getCoinOutputsFromTx, parseTransaction } from '../utils';
@@ -36,6 +49,12 @@ export type TxInputs = {
   getOutputs: {
     tx?: TransactionRequest;
     account?: Account | null;
+  };
+  createTransfer: {
+    wallet: WalletUnlocked;
+    dest: string;
+    amount: BN;
+    assetId: string;
   };
 };
 
@@ -105,5 +124,25 @@ export class TxService {
     );
 
     return { coinOutputs, outputsToSend, outputAmount };
+  }
+
+  static async createTransfer(input: TxInputs['createTransfer']) {
+    const params = { gasLimit: MAX_GAS_PER_TX };
+    const request = new ScriptTransactionRequest(params);
+    const dest = Address.fromAddressOrString(input.dest);
+    const { assetId, amount, wallet } = input;
+
+    request.addCoinOutput(dest, amount, assetId);
+    const fee = request.calculateFee();
+    let quantities: CoinQuantityLike[] = [];
+    if (fee && fee.assetId === hexlify(assetId)) {
+      fee.amount.add(amount);
+      quantities = [fee];
+    } else {
+      quantities = [[amount, assetId], fee];
+    }
+    const resources = await wallet.getResourcesToSpend(quantities);
+    request.addResources(resources);
+    return request;
   }
 }

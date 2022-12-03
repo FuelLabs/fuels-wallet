@@ -35,9 +35,7 @@ export function UnlockDialog({
   isLoading,
   isFullscreen,
 }: UnlockDialogProps) {
-  const form = useUnlockForm({
-    password: unlockError,
-  });
+  const form = useUnlockForm({ password: unlockError });
   const { handleSubmit } = form;
 
   function onSubmit(values: UnlockFormValues) {
@@ -57,12 +55,14 @@ export function UnlockDialog({
               />
               {title ?? 'Unlock Wallet'}
             </Flex>
-            <IconButton
-              variant="link"
-              icon={<Icon icon="X" color="gray8" />}
-              aria-label="Close unlock window"
-              onPress={onClose}
-            />
+            {onClose && (
+              <IconButton
+                variant="link"
+                icon={<Icon icon="X" color="gray8" />}
+                aria-label="Close unlock window"
+                onPress={onClose}
+              />
+            )}
           </Flex>
         </Dialog.Heading>
         <Box as="form" onSubmit={handleSubmit(onSubmit)} css={styles.form}>
@@ -104,21 +104,22 @@ const styles = {
   button: cssObj({
     width: '100%',
   }),
-  content: (isFullscreen?: boolean) =>
-    cssObj({
-      ...(isFullscreen && {
-        borderRadius: '$none',
-        width: '100vw',
-        maxWidth: '100vw',
-        height: '100vh',
-        maxHeight: '100vh',
-      }),
-
-      /** This is temporary until have this option on @fuel-ui */
-      'button[aria-label="Close"]': {
-        display: 'none',
-      },
-    }),
+  content: (isFullscreen?: boolean) => {
+    return cssObj({
+      ...(isFullscreen
+        ? {
+            borderRadius: '$none',
+            width: '100vw',
+            maxWidth: '100vw',
+            height: '100vh',
+            maxHeight: '100vh',
+          }
+        : {
+            width: '350px',
+            height: '650px',
+          }),
+    });
+  },
   description: cssObj({
     flex: 1,
   }),
