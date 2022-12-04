@@ -2,6 +2,7 @@ import type { Account } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
+import type { AccountInputs } from '../services/account';
 import { AccountService } from '../services/account';
 
 import { IS_LOGGED_KEY } from '~/config';
@@ -19,7 +20,12 @@ type MachineServices = {
   };
 };
 
-type MachineEvents = { type: 'UPDATE_ACCOUNT'; input?: null };
+type MachineEvents =
+  | { type: 'UPDATE_ACCOUNT'; input?: null }
+  | {
+      type: 'SET_BALANCE_VISIBILITY';
+      input: AccountInputs['setBalanceVisibility'];
+    };
 
 export const accountMachine = createMachine(
   {
@@ -72,6 +78,10 @@ export const accountMachine = createMachine(
       UPDATE_ACCOUNT: {
         target: 'fetchingAccount',
       },
+      SET_BALANCE_VISIBILITY: {
+        actions: ['setBalanceVisibility'],
+        target: 'done',
+      },
     },
   },
   {
@@ -89,6 +99,19 @@ export const accountMachine = createMachine(
       removeLocalStorage: () => {
         localStorage.removeItem(IS_LOGGED_KEY);
       },
+      setBalanceVisibility: assign({
+        data: (ctx, ev) => {
+          const account = ctx.data;
+          const { isHidden, address } = ev.input.data;
+          if (account) {
+            account.isHidden = isHidden;
+            AccountService.setBalanceVisbility({
+              data: { address, isHidden },
+            });
+          }
+          return account;
+        },
+      }),
     },
     services: {
       fetchAccount: FetchMachine.create<never, Account | undefined>({
