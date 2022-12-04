@@ -14,6 +14,7 @@ export function ViewTransaction() {
   const txIdQueryParam = useParams<{ txId: string }>().txId;
   const networks = useNetworks({ type: NetworkScreen.list });
   const providerUrl = networks?.selectedNetwork?.url;
+
   const {
     isFetching,
     isFetchingResult,
@@ -67,8 +68,7 @@ export function ViewTransaction() {
                   type: AddressType.account,
                   address: outputsToSend[0]?.to.toString(),
                 }}
-                // TODO: should include below line (status) after merging https://github.com/FuelLabs/fuels-wallet/pull/297
-                // status={txStatus}
+                status={txStatus}
               />
               <AssetsAmount amounts={outputsToSend} title="Assets Sent" />
             </>
@@ -76,9 +76,11 @@ export function ViewTransaction() {
           {isFetching && (
             <>
               <TxHeader.Loader />
+              <TxFromTo isLoading={true} />
+              <AssetsAmount.Loader />
             </>
           )}
-          {(isFetching || isFetchingResult) && <div>XX Loader XX</div>}
+          {(isFetching || isFetchingResult) && <TxDetails.Loader />}
           {shouldShowTxDetails && (
             <TxDetails fee={fee} outputAmount={outputAmount} />
           )}

@@ -184,10 +184,6 @@ export const transactionMachine = createMachine(
 
           const status = getTxStatus(transactionWithReceipts.status?.type);
 
-          // await new Promise<void>((resolve) => {
-          //   setTimeout(() => resolve(), 10000);
-          // });
-
           return {
             tx: transaction,
             txResponse,
@@ -207,9 +203,6 @@ export const transactionMachine = createMachine(
           }
 
           const txResult = await input?.txResponse?.waitForResult();
-          // await new Promise<void>((resolve) => {
-          //   setTimeout(() => resolve(), 10000);
-          // });
 
           return txResult;
         },

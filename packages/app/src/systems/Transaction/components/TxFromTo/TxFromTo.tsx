@@ -30,7 +30,7 @@ function TxSpinner({ status, isLoading }: TxSpinnerProps) {
 export type TxFromToProps = {
   status?: TxStatus;
   from?: TxRecipientAddress;
-  to: TxRecipientAddress;
+  to?: TxRecipientAddress;
   isLoading?: boolean;
 };
 
