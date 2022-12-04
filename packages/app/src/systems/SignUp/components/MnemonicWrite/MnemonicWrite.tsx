@@ -35,7 +35,7 @@ export function MnemonicWrite({
         height={116}
       />
       <Header
-        title="Write down your Recover Phrase "
+        title="Write down your Recovery Phrase "
         subtitle="You will need it on the next step"
       />
       <Stack gap="$3" css={{ width: 400 }}>

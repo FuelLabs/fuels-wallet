@@ -36,6 +36,9 @@ export function useAccount() {
   }, []);
 
   return {
+    handlers: {
+      setBalanceVisibility: store.setBalanceVisibility,
+    },
     isLoading: isLoading && !account,
     account,
   };
