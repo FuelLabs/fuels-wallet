@@ -6,7 +6,7 @@
   "dependencies": {
     "@types/chrome": "^0.0.203",
     "dexie-observable": "4.0.0-beta.13",
-    "fuels": "next",
+    "fuels": "0.22.2",
     "json-rpc-2.0": "^1.4.1"
   }
 }
