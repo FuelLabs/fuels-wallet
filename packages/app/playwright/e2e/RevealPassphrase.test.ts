@@ -26,7 +26,7 @@ test.describe('HomeWallet', () => {
     await getButtonByText(page, /Paste/i).click();
 
     /** Confirm Mnemonic */
-    await hasText(page, /Write down your Recover Phrase/i);
+    await hasText(page, /Write down your Recovery Phrase/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
 
