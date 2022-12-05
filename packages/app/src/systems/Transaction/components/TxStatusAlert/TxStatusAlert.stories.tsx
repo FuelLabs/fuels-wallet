@@ -1,4 +1,3 @@
-import { TRANSACTION_ERRORS } from '../../machines';
 import { TxStatus } from '../../types';
 
 import type { TxStatusAlertProps } from './TxStatusAlert';
@@ -17,10 +16,6 @@ export const Pending = (args: TxStatusAlertProps) => (
   <TxStatusAlert {...args} txStatus={TxStatus.pending} txId={'0xoaskokaes'} />
 );
 
-export const InvalidTxId = (args: TxStatusAlertProps) => (
-  <TxStatusAlert {...args} error={TRANSACTION_ERRORS.INVALID_ID} />
-);
-
-export const TxNotFound = (args: TxStatusAlertProps) => (
-  <TxStatusAlert {...args} error={TRANSACTION_ERRORS.NOT_FOUND} />
+export const Error = (args: TxStatusAlertProps) => (
+  <TxStatusAlert {...args} error={'Invalid Transaction ID'} />
 );

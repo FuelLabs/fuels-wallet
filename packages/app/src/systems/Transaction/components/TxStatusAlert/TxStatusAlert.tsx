@@ -27,6 +27,7 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
 
     return 'info';
   }, [txStatus, error]);
+
   const txColor = error
     ? getTxStatusColor(TxStatus.error)
     : getTxStatusColor(txStatus);
@@ -56,12 +57,7 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
                 path: `transaction/${txId}`,
                 providerUrl,
               })}
-              css={{
-                '&:focus-visible': {
-                  outline: 'none',
-                },
-                fontSize: '$sm',
-              }}
+              css={styles.link}
             >
               Show on Fuel Explorer
             </Link>
@@ -75,6 +71,7 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
 const styles = {
   root: (color: string) => {
     const cssColor = color ? `$${color}` : undefined;
+    // TODO: remove this overrides when https://github.com/FuelLabs/fuel-ui/issues/180 gets fixed in fuel-ui side
     return cssObj({
       '.fuel_alert--icon': {
         alignSelf: 'flex-start',
@@ -97,4 +94,10 @@ const styles = {
       },
     });
   },
+  link: cssObj({
+    '&:focus-visible': {
+      outline: 'none',
+    },
+    fontSize: '$sm',
+  }),
 };
