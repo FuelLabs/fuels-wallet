@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Input } from '@fuel-ui/react';
-import { waitFor, fireEvent, render, screen, act } from '@fuel-ui/test-utils';
+import { waitFor, fireEvent, render, screen } from '@fuel-ui/test-utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -43,8 +43,8 @@ const Content = (props: Partial<ControlledFieldProps>) => {
 };
 
 describe('ControlledField', () => {
-  it('should render a valid input using react-hook-form', async () => {
-    render(<Content />);
+  it.only('should render a valid input using react-hook-form', async () => {
+    const { user } = render(<Content />);
     const field = screen.getByPlaceholderText('Type your title');
     const value = screen.getByTestId('value');
     const btn = screen.getByText('Send');
@@ -55,9 +55,7 @@ describe('ControlledField', () => {
     await waitFor(async () => {
       fireEvent.input(field, { target: { value: 'Fuel' } });
       expect(await screen.findByText('Fuel')).toBeInTheDocument();
-      act(() => {
-        btn.click();
-      });
+      user.click(btn);
       expect(onSubmitHandler).toBeCalledTimes(1);
     });
   });
