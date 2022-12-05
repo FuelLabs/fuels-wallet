@@ -29,6 +29,6 @@ test.describe('RecoverWallet', () => {
 
     /** Checks if Balance in assets list refreshed */
     await hasText(page, /Ethereum/i);
-    await hasText(page, /0,5 ETH/i);
+    await hasText(page, /ETH.0\.5/i);
   });
 });

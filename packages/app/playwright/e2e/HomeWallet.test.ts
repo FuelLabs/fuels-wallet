@@ -24,7 +24,7 @@ test.describe('HomeWallet', () => {
 
     /** Select a new network */
     await getByAriaLabel(page, 'Selected Network').click();
-    await getByAriaLabel(page, 'fuel_network-item-1').click();
+    await getByAriaLabel(page, 'fuel_network-item-2').click();
 
     await hasText(page, "You don't have any assets");
   });
