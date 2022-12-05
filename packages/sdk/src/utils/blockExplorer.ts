@@ -6,9 +6,9 @@ export function getBlockExplorerLink({
   providerUrl,
 }: {
   path: string;
-  providerUrl: string;
+  providerUrl?: string;
 }) {
-  return `${BLOCK_EXPLORER_URL}${path}?providerUrl=${encodeURIComponent(
-    providerUrl
-  )}`;
+  return `${BLOCK_EXPLORER_URL}${path}${
+    providerUrl ? `?providerUrl=${encodeURIComponent(providerUrl)}` : ''
+  }`;
 }

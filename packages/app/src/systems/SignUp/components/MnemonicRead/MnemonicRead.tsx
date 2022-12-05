@@ -23,7 +23,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
         alt="Showing your Mnemonic"
       />
       <Header
-        title="Write down your Recover Phrase"
+        title="Write down your Recovery Phrase"
         subtitle="You will need it on the next step"
       />
       <Box css={{ width: 400 }}>
