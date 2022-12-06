@@ -10,7 +10,7 @@ import { assign, createMachine } from 'xstate';
 
 import { TxService } from '../services';
 import { TxStatus } from '../types';
-import { getTxStatus, isValidTxId } from '../utils';
+import { getTxStatus, isB256 } from '../utils';
 
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
@@ -160,7 +160,7 @@ export const transactionMachine = createMachine(
       }),
     },
     guards: {
-      isInvalidTxId: (ctx, ev) => !isValidTxId(ev.input?.txId),
+      isInvalidTxId: (ctx, ev) => !isB256(ev.input?.txId),
     },
     services: {
       getTransaction: FetchMachine.create<
@@ -169,7 +169,7 @@ export const transactionMachine = createMachine(
       >({
         showError: true,
         async fetch({ input }) {
-          if (!input?.txId || !isValidTxId(input?.txId)) {
+          if (!input?.txId || !isB256(input?.txId)) {
             throw new Error('Invalid tx ID');
           }
 

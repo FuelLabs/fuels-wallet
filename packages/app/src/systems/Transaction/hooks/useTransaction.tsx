@@ -7,7 +7,12 @@ import type { TransactionMachineState } from '../machines';
 import { TRANSACTION_ERRORS, transactionMachine } from '../machines';
 import type { TxInputs } from '../services';
 import { TxStatus } from '../types';
-import { getCoinInputsFromTx, getCoinOutputsFromTx } from '../utils';
+import {
+  getCoinInputsFromTx,
+  getCoinOutputsFromTx,
+  getContractInputFromIndex,
+  getContractOutputsFromTx,
+} from '../utils';
 
 const selectors = {
   isFetching: (state: TransactionMachineState) => state.matches('fetching'),
@@ -34,13 +39,19 @@ export function useTransaction({
   const context = useSelector(service, selectors.context);
 
   const { txResponse, error, txStatus, tx, txResult, fee, txId } = context;
-  const { coinInputs, coinOutputs, outputsToSend, outputAmount, txFrom, txTo } =
-    useMemo(() => {
-      if (!tx)
-        return { coinOutputs: [], outputsToSend: [], outputAmount: bn(0) };
 
-      const coinInputs = getCoinInputsFromTx(tx);
-      const coinOutputs = getCoinOutputsFromTx(tx);
+  const { coinInputs, coinOutputs, contractOutputs } = useMemo(() => {
+    if (!tx) return { coinInputs: [], coinOutputs: [], contractOutputs: [] };
+
+    const coinInputs = getCoinInputsFromTx(tx);
+    const coinOutputs = getCoinOutputsFromTx(tx);
+    const contractOutputs = getContractOutputsFromTx(tx);
+
+    return { coinInputs, coinOutputs, contractOutputs };
+  }, [tx]);
+
+  const { outputsToSend, outputAmount, txFrom, txTo, contractInput } =
+    useMemo(() => {
       const inputPublicKey = coinInputs[0]?.owner;
       const outputsToSend = coinOutputs.filter(
         (value) => value.to !== inputPublicKey
@@ -49,29 +60,37 @@ export function useTransaction({
         (acc, value) => acc.add(value.amount),
         bn(0)
       );
-
-      const txFrom = coinInputs?.[0]?.owner.toString()
+      const contractInput = getContractInputFromIndex({
+        tx,
+        inputIndex: contractOutputs?.[0]?.inputIndex,
+      });
+      const txFrom = inputPublicKey?.toString()
         ? {
             type: AddressType.account,
-            address: coinInputs[0].owner.toString(),
+            address: inputPublicKey?.toString(),
           }
         : undefined;
-      const txTo = outputsToSend[0]?.to.toString()
-        ? {
-            type: AddressType.account,
-            address: outputsToSend[0]?.to.toString(),
-          }
-        : undefined;
+      let txTo;
+      if (contractInput) {
+        txTo = {
+          type: AddressType.contract,
+          address: contractInput.contractID,
+        };
+      } else if (outputsToSend[0]?.to.toString()) {
+        txTo = {
+          type: AddressType.account,
+          address: outputsToSend[0]?.to.toString(),
+        };
+      }
 
       return {
-        coinInputs,
-        coinOutputs,
         outputsToSend,
         outputAmount,
+        contractInput,
         txFrom,
         txTo,
       };
-    }, [tx]);
+    }, [coinInputs, coinOutputs, contractOutputs]);
 
   const isTxPending = txStatus === TxStatus.pending;
   const isTxFailed = txStatus === TxStatus.error;
@@ -82,6 +101,8 @@ export function useTransaction({
     isTxNotFound || isInvalidTxId || isTxPending || isTxFailed;
   const shouldShowTx = tx && !isFetching && !isInvalidTxId && !isTxNotFound;
   const shouldShowTxDetails = shouldShowTx && !isFetchingResult;
+  const isFetchingDetails = isFetching || isFetchingResult;
+  const shouldShowAssetsAmount = Boolean(outputsToSend?.length);
 
   function getTransaction(input: TxInputs['fetch']) {
     send('GET_TRANSACTION', { input });
@@ -98,6 +119,7 @@ export function useTransaction({
       getTransaction,
     },
     isFetching,
+    isFetchingDetails,
     isFetchingResult,
     txResponse,
     isInvalidTxId,
@@ -106,6 +128,7 @@ export function useTransaction({
     txStatus,
     tx,
     txResult,
+    contractInput,
     coinInputs,
     coinOutputs,
     outputsToSend,
@@ -118,5 +141,6 @@ export function useTransaction({
     shouldShowTxDetails,
     txFrom,
     txTo,
+    shouldShowAssetsAmount,
   };
 }

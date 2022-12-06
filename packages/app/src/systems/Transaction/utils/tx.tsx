@@ -1,5 +1,5 @@
 import type { Colors } from '@fuel-ui/css';
-import { isBech32, TransactionType } from 'fuels';
+import { TransactionType } from 'fuels';
 
 import { TxStatus } from '../types';
 
@@ -55,11 +55,7 @@ export const getTransactionTypeText = (type?: TransactionType) => {
   }
 };
 
-export const isValidTxId = (txId: string = '') => {
-  return isBech32(txId) || isB256(txId);
-};
-
 // TODO: should be removed when https://github.com/FuelLabs/fuels-ts/issues/626 gets closed/merged/released
-export const isB256 = (val: string) => {
-  return /(0x)?[0-9a-f]{64}$/i.test(val);
+export const isB256 = (val?: string) => {
+  return val && /(0x)?[0-9a-f]{64}$/i.test(val);
 };

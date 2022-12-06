@@ -22,6 +22,7 @@ export const TxDetails: TxDetailsComponent = ({
   outputAmount,
 }: TxDetailsProps) => {
   const total = fee?.add(bn(outputAmount));
+  const shouldShowTotal = total?.gt(bn(fee));
 
   return (
     <Accordion type="multiple">
@@ -35,12 +36,14 @@ export const TxDetails: TxDetailsComponent = ({
                 {fee?.format({ precision: DECIMAL_UNITS })} ETH
               </Text>
             </Flex>
-            <Flex css={styles.detailItem}>
-              <Text as="span">Total (including Fee)</Text>
-              <Text as="span" aria-label="Total Value">
-                {total?.format({ precision: DECIMAL_UNITS })} ETH
-              </Text>
-            </Flex>
+            {shouldShowTotal && (
+              <Flex css={styles.detailItem}>
+                <Text as="span">Total (including Fee)</Text>
+                <Text as="span" aria-label="Total Value">
+                  {total?.format({ precision: DECIMAL_UNITS })} ETH
+                </Text>
+              </Flex>
+            )}
           </Flex>
         </Accordion.Content>
       </Accordion.Item>

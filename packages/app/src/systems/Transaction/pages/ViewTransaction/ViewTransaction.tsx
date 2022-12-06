@@ -26,8 +26,10 @@ export function ViewTransaction() {
     shouldShowAlert,
     shouldShowTx,
     shouldShowTxDetails,
+    shouldShowAssetsAmount,
     txFrom,
     txTo,
+    isFetchingDetails,
   } = useTransaction({
     txId: txIdQueryParam,
     providerUrl,
@@ -55,7 +57,9 @@ export function ViewTransaction() {
                 providerUrl={providerUrl}
               />
               <TxFromTo from={txFrom} to={txTo} status={txStatus} />
-              <AssetsAmount amounts={outputsToSend} title="Assets Sent" />
+              {shouldShowAssetsAmount && (
+                <AssetsAmount amounts={outputsToSend} title="Assets Sent" />
+              )}
             </>
           )}
           {isFetching && (
@@ -65,7 +69,7 @@ export function ViewTransaction() {
               <AssetsAmount.Loader />
             </>
           )}
-          {(isFetching || isFetchingResult) && <TxDetails.Loader />}
+          {isFetchingDetails && <TxDetails.Loader />}
           {shouldShowTxDetails && (
             <TxDetails fee={fee} outputAmount={outputAmount} />
           )}
