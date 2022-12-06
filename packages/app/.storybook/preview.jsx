@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@fuel-ui/react';
 import { themes } from '@storybook/theming';
-import { initialize, mswDecorator } from 'msw-storybook-addon';
+import { mswDecorator, initialize } from 'msw-storybook-addon';
 import { withRouter } from 'storybook-addon-react-router-v6';
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 
@@ -61,6 +61,7 @@ export const decorators = [
 ];
 
 initialize({
+  onUnhandledRequest: 'bypass',
   serviceWorker: {
     url: join(process.env.STORYBOOK_BASE_URL || '', '/mockServiceWorker.js'),
   },

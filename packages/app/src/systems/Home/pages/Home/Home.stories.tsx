@@ -25,6 +25,19 @@ export default {
 } as Meta;
 
 export const NoAssets: StoryFn<unknown> = () => <Home />;
+NoAssets.parameters = {
+  msw: [
+    graphql.query('getBalances', (req, res, ctx) => {
+      return res(
+        ctx.data({
+          balances: {
+            edges: [],
+          },
+        })
+      );
+    }),
+  ],
+};
 export const WithAssets: StoryFn<unknown> = () => <Home />;
 WithAssets.parameters = {
   msw: [
