@@ -41,12 +41,12 @@ test.describe('HomeWallet', () => {
     await visit(page, '/wallet');
     await hasText(page, /ETH.0\.0/i);
     await getByAriaLabel(page, 'Hide balance').click(); // click on the hide balance
-    await hasText(page, /ETH.•••••/); // should hide balance
+    await hasText(page, /ETH.•••••/i); // should hide balance
     await page.reload(); // reload the page
-    await hasText(page, /ETH.•••••/); // should not show balance
+    await hasText(page, /ETH.•••••/i); // should not show balance
     await getByAriaLabel(page, 'Show balance').click();
-    await hasText(page, /ETH.0\.0/);
+    await hasText(page, /ETH.0\.0/i);
     await page.reload(); // reload the page
-    await hasText(page, /ETH.0\.0/);
+    await hasText(page, /ETH.0\.0/i);
   });
 });
