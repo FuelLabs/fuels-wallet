@@ -30,7 +30,6 @@ export function Sidebar() {
               <Avatar.Generated size={'sm'} hash={account?.address as string} />
             </Box>
 
-            {/* <Icon icon="CaretDown" size={18}></Icon> */}
             <IconButton
               size="xs"
               variant="outlined"
