@@ -4,11 +4,16 @@ import type { Account } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-import { IS_LOGGED_KEY, MNEMONIC_SIZE } from '~/config';
+import { IS_LOGGED_KEY, MNEMONIC_SIZE, VITE_MNEMONIC_WORDS } from '~/config';
 import { store } from '~/store';
 import { AccountService } from '~/systems/Account';
-import { getPhraseFromValue, getWordsFromValue } from '~/systems/Core';
+import {
+  assignErrorMessage,
+  getPhraseFromValue,
+  getWordsFromValue,
+} from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
+import { isValidMnemonic } from '~/systems/Core/utils/mnemonic';
 import { NetworkService } from '~/systems/Network';
 
 // ----------------------------------------------------------------------------
@@ -27,8 +32,7 @@ type FormValues = {
 
 type MachineContext = {
   type: SignUpType;
-  attempts: number;
-  isConfirmed?: boolean;
+  isFilled?: boolean;
   error?: string;
   data?: Maybe<FormValues>;
   account?: Maybe<Account>;
@@ -86,20 +90,48 @@ export const signUpMachine = createMachine(
         },
       },
       waitingMnemonic: {
+        initial: 'invalidMnemonic',
+        states: {
+          invalidMnemonic: {
+            entry: [
+              assignErrorMessage(
+                'The seed phrase is not valid check the words for typos or missing words'
+              ),
+            ],
+          },
+          mnemonicNotMatch: {
+            entry: [
+              assignErrorMessage(
+                'The seed phrase not match check the words for typos or missing words'
+              ),
+            ],
+          },
+          validMnemonic: {
+            entry: ['cleanError'],
+            on: {
+              NEXT: {
+                target: '#(machine).addingPassword',
+              },
+            },
+          },
+        },
         on: {
           CONFIRM_MNEMONIC: [
             {
-              actions: ['confirmMnemonic', 'assignMnemonicWhenRecovering'],
-              cond: 'hasEnoughAttempts',
+              actions: ['assignIsFilled', 'assignMnemonicWhenRecovering'],
+              target: '.validMnemonic',
+              cond: 'isValidAndConfirmed',
             },
             {
-              target: 'failed',
+              actions: ['assignIsFilled'],
+              target: '.mnemonicNotMatch',
+              cond: 'isValidMnemonic',
+            },
+            {
+              actions: ['assignIsFilled'],
+              target: '.invalidMnemonic',
             },
           ],
-          NEXT: {
-            target: 'addingPassword',
-            cond: 'isMnemonicConfirmed',
-          },
         },
       },
       addingPassword: {
@@ -134,22 +166,18 @@ export const signUpMachine = createMachine(
   },
   {
     actions: {
+      assignIsFilled: assign({
+        isFilled: (_, ev) => {
+          return ev.data.words.length === Number(VITE_MNEMONIC_WORDS);
+        },
+      }),
+      cleanError: assign({
+        error: (_) => undefined,
+      }),
       createMnemonic: assign({
         data: (_) => ({
           mnemonic: getWordsFromValue(Mnemonic.generate(MNEMONIC_SIZE)),
         }),
-      }),
-      confirmMnemonic: assign({
-        attempts: (ctx) => {
-          return ctx.attempts + 1;
-        },
-        isConfirmed: (ctx, ev) => {
-          if (ctx.type === SignUpType.recover) return true;
-          return (
-            getPhraseFromValue(ev.data.words) ===
-            getPhraseFromValue(ctx.data?.mnemonic)
-          );
-        },
       }),
       assignMnemonicWhenRecovering: assign({
         data: (ctx, ev) => {
@@ -183,11 +211,18 @@ export const signUpMachine = createMachine(
       isCreatingWallet: (ctx) => {
         return ctx.type === SignUpType.create;
       },
-      isMnemonicConfirmed: (ctx) => {
-        return Boolean(ctx.isConfirmed);
+      isValidMnemonic: (_, ev) => {
+        return isValidMnemonic(getPhraseFromValue(ev.data.words) || '');
       },
-      hasEnoughAttempts: (ctx) => {
-        return Boolean(ctx.attempts < 5);
+      isValidAndConfirmed: (ctx, ev) => {
+        const isValid = isValidMnemonic(
+          getPhraseFromValue(ev.data.words) || ''
+        );
+        if (ctx.type === SignUpType.recover) return true && isValid;
+        return (
+          getPhraseFromValue(ev.data.words) ===
+            getPhraseFromValue(ctx.data?.mnemonic) && isValid
+        );
       },
     },
     services: {
