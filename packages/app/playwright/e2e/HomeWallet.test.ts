@@ -38,7 +38,7 @@ test.describe('HomeWallet', () => {
   test('should open the side bar and close it', async () => {
     await visit(page, '/wallet');
     await getByAriaLabel(page, 'Menu').click();
-    await hasText(page, 'Wallet');
+    await hasText(page, 'Settings');
     await hasText(page, 'Support');
     await getByAriaLabel(page, 'drawer_closeButton').click();
   });
