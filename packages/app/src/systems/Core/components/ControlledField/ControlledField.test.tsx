@@ -52,10 +52,10 @@ describe('ControlledField', () => {
     expect(field).toBeInTheDocument();
     expect(value.innerText).toBeFalsy();
 
-    fireEvent.input(field, { target: { value: 'Fuel' } });
-    expect(await screen.findByText('Fuel')).toBeInTheDocument();
-    user.click(btn);
     await waitFor(async () => {
+      fireEvent.input(field, { target: { value: 'Fuel' } });
+      expect(await screen.findByText('Fuel')).toBeInTheDocument();
+      await user.click(btn);
       expect(onSubmitHandler).toBeCalledTimes(1);
     });
   });

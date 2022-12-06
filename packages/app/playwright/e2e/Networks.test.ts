@@ -27,6 +27,7 @@ test.describe('Networks', () => {
   });
 
   test('should be able to see network list', async () => {
+    await visit(page, '/networks');
     await hasText(page, 'Local');
     await hasText(page, 'Another');
   });
