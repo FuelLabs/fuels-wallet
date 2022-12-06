@@ -20,7 +20,7 @@ export default {
     reactRouter: {
       routePath: Pages.tx(),
       routeParams: {
-        txId: '0xc7862855b418ba8f58878db434b21053a61a2025209889cc115989e8040ff077',
+        txId: '0xc019789a1d43f6ed799bcd4abf6b5a69ce91e60710e3bc6ab3b2ca0996cdef4d',
       },
     },
     msw: [
