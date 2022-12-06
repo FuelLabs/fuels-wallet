@@ -23,11 +23,13 @@ export default {
         txId: '0xc7862855b418ba8f58878db434b21053a61a2025209889cc115989e8040ff077',
       },
     },
-    msw: [
-      graphql.query('getTransactionWithReceipts', (req, res, ctx) => {
-        return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
-      }),
-    ],
+    msw: {
+      handlers: [
+        graphql.query('getTransactionWithReceipts', (req, res, ctx) => {
+          return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
+        }),
+      ],
+    },
   },
   loaders: [
     async () => {
