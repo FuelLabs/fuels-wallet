@@ -6,8 +6,8 @@ import { BalanceWidget } from './BalanceWidget';
 
 const ACCOUNT = {
   ...MOCK_ACCOUNTS[0],
-  balance: '12008943834',
-  balanceSymbol: '$',
+  balance: '4999989994',
+  balanceSymbol: 'ETH',
 };
 
 describe('BalanceWidget', () => {
@@ -22,7 +22,7 @@ describe('BalanceWidget', () => {
 
   it('should show formatted balance', async () => {
     render(<BalanceWidget account={ACCOUNT} />);
-    expect(screen.getByText(/12.009/)).toBeInTheDocument();
+    expect(screen.getByText(/4\.999/)).toBeInTheDocument();
   });
 
   it('should hide balance when click on toggle button', async () => {
@@ -30,9 +30,9 @@ describe('BalanceWidget', () => {
     const btn = screen.getByLabelText(/Hide balance/i);
     expect(btn).toBeInTheDocument();
 
-    expect(screen.getByText(/12.009/)).toBeInTheDocument();
+    expect(screen.getByText(/4\.999/)).toBeInTheDocument();
     await user.click(btn);
-    expect(() => screen.getByText(/12.009/)).toThrow();
+    expect(() => screen.getByText(/4\.999/)).toThrow();
   });
 
   it('should hide balalnce when user sets his balance to hidden', async () => {
@@ -47,10 +47,10 @@ describe('BalanceWidget', () => {
     const btn = screen.getByLabelText(/Show balance/i);
     expect(btn).toBeInTheDocument();
 
-    expect(() => screen.getByText(/12.009/)).toThrow();
+    expect(() => screen.getByText(/4\.999/)).toThrow();
     await user.click(btn);
     expect(onChangeVisibility).toBeCalledTimes(1);
-    expect(screen.getByText(/12.009/)).toBeInTheDocument();
+    expect(screen.getByText(/4\.999/)).toBeInTheDocument();
   });
 
   it('should copy full address when click on copy icon', async () => {
