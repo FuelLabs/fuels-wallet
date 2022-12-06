@@ -40,6 +40,6 @@ test.describe('RecoverWallet', () => {
     /** Account created */
     await hasText(page, /Wallet created successfully/i);
     await hasText(page, /Account 1/i);
-    await hasText(page, 'uel1r...xqqj');
+    await hasText(page, 'fuel1r...xqqj');
   });
 });

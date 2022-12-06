@@ -54,6 +54,7 @@ describe('ControlledField', () => {
 
     fireEvent.input(field, { target: { value: 'Fuel' } });
     expect(await screen.findByText('Fuel')).toBeInTheDocument();
+
     user.click(btn);
     await waitFor(async () => {
       expect(onSubmitHandler).toBeCalledTimes(1);
