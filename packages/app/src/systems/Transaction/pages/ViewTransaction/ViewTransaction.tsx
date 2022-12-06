@@ -1,9 +1,7 @@
 import { Stack } from '@fuel-ui/react';
-import { AddressType } from '@fuel-wallet/types';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { TxDetails, TxFromTo, TxStatusAlert } from '../../components';
-import { TxHeader } from '../../components/TxHeader/TxHeader';
+import { TxDetails, TxFromTo, TxHeader, TxStatusAlert } from '../../components';
 import { useTransaction } from '../../hooks';
 
 import { AssetsAmount } from '~/systems/Asset';
@@ -19,7 +17,6 @@ export function ViewTransaction() {
     isFetching,
     isFetchingResult,
     fee,
-    coinInputs,
     outputsToSend,
     outputAmount,
     txStatus,
@@ -29,6 +26,8 @@ export function ViewTransaction() {
     shouldShowAlert,
     shouldShowTx,
     shouldShowTxDetails,
+    txFrom,
+    txTo,
   } = useTransaction({
     txId: txIdQueryParam,
     providerUrl,
@@ -36,13 +35,6 @@ export function ViewTransaction() {
   });
 
   const navigate = useNavigate();
-
-  const transactionFrom = coinInputs?.[0]?.owner.toString()
-    ? {
-        type: AddressType.account,
-        address: coinInputs[0].owner.toString(),
-      }
-    : undefined;
 
   return (
     <Layout title="Transaction" isLoading={isFetching || isFetchingResult}>
@@ -62,14 +54,7 @@ export function ViewTransaction() {
                 }}
                 providerUrl={providerUrl}
               />
-              <TxFromTo
-                from={transactionFrom}
-                to={{
-                  type: AddressType.account,
-                  address: outputsToSend[0]?.to.toString(),
-                }}
-                status={txStatus}
-              />
+              <TxFromTo from={txFrom} to={txTo} status={txStatus} />
               <AssetsAmount amounts={outputsToSend} title="Assets Sent" />
             </>
           )}

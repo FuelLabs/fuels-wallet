@@ -1,3 +1,4 @@
+import { AddressType } from '@fuel-wallet/types';
 import { useInterpret, useSelector } from '@xstate/react';
 import { bn } from 'fuels';
 import { useEffect, useMemo } from 'react';
@@ -12,13 +13,7 @@ const selectors = {
   isFetching: (state: TransactionMachineState) => state.matches('fetching'),
   isFetchingResult: (state: TransactionMachineState) =>
     state.matches('fetchingResult'),
-  txResponse: (state: TransactionMachineState) => state.context?.txResponse,
-  error: (state: TransactionMachineState) => state.context?.error,
-  txStatus: (state: TransactionMachineState) => state.context?.txStatus,
-  tx: (state: TransactionMachineState) => state.context?.tx,
-  txResult: (state: TransactionMachineState) => state.context?.txResult,
-  fee: (state: TransactionMachineState) => state.context?.fee,
-  txId: (state: TransactionMachineState) => state.context?.txId,
+  context: (state: TransactionMachineState) => state.context,
 };
 
 type UseTransactionProps = {
@@ -36,15 +31,10 @@ export function useTransaction({
   const { send } = service;
   const isFetching = useSelector(service, selectors.isFetching);
   const isFetchingResult = useSelector(service, selectors.isFetchingResult);
-  const txResponse = useSelector(service, selectors.txResponse);
-  const txStatus = useSelector(service, selectors.txStatus);
-  const tx = useSelector(service, selectors.tx);
-  const txResult = useSelector(service, selectors.txResult);
-  const fee = useSelector(service, selectors.fee);
-  const txId = useSelector(service, selectors.txId);
-  const error = useSelector(service, selectors.error);
+  const context = useSelector(service, selectors.context);
 
-  const { coinInputs, coinOutputs, outputsToSend, outputAmount } =
+  const { txResponse, error, txStatus, tx, txResult, fee, txId } = context;
+  const { coinInputs, coinOutputs, outputsToSend, outputAmount, txFrom, txTo } =
     useMemo(() => {
       if (!tx)
         return { coinOutputs: [], outputsToSend: [], outputAmount: bn(0) };
@@ -60,7 +50,27 @@ export function useTransaction({
         bn(0)
       );
 
-      return { coinInputs, coinOutputs, outputsToSend, outputAmount };
+      const txFrom = coinInputs?.[0]?.owner.toString()
+        ? {
+            type: AddressType.account,
+            address: coinInputs[0].owner.toString(),
+          }
+        : undefined;
+      const txTo = outputsToSend[0]?.to.toString()
+        ? {
+            type: AddressType.account,
+            address: outputsToSend[0]?.to.toString(),
+          }
+        : undefined;
+
+      return {
+        coinInputs,
+        coinOutputs,
+        outputsToSend,
+        outputAmount,
+        txFrom,
+        txTo,
+      };
     }, [tx]);
 
   const isTxPending = txStatus === TxStatus.pending;
@@ -74,7 +84,6 @@ export function useTransaction({
   const shouldShowTxDetails = tx && !isFetching && !isFetchingResult;
 
   function getTransaction(input: TxInputs['fetch']) {
-    // TODO: remove providerUrl before finishing. this one is for testing
     send('GET_TRANSACTION', { input });
   }
 
@@ -107,5 +116,7 @@ export function useTransaction({
     shouldShowAlert,
     shouldShowTx,
     shouldShowTxDetails,
+    txFrom,
+    txTo,
   };
 }

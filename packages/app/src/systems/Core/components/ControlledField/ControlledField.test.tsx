@@ -43,7 +43,7 @@ const Content = (props: Partial<ControlledFieldProps>) => {
 };
 
 describe('ControlledField', () => {
-  it.only('should render a valid input using react-hook-form', async () => {
+  it('should render a valid input using react-hook-form', async () => {
     const { user } = render(<Content />);
     const field = screen.getByPlaceholderText('Type your title');
     const value = screen.getByTestId('value');

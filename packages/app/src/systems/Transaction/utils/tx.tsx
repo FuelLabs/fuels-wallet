@@ -12,7 +12,7 @@ export const getTxStatus = (status: string = '') => {
     case 'SubmittedStatus':
       return TxStatus.pending;
     default:
-      return TxStatus.unknown;
+      return undefined;
   }
 };
 
@@ -59,6 +59,7 @@ export const isValidTxId = (txId: string = '') => {
   return isBech32(txId) || isB256(txId);
 };
 
+// TODO: should be removed when https://github.com/FuelLabs/fuels-ts/issues/626 gets closed/merged/released
 export const isB256 = (val: string) => {
   return /(0x)?[0-9a-f]{64}$/i.test(val);
 };

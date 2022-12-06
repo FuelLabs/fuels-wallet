@@ -13,7 +13,6 @@ export enum TxStatus {
   pending,
   success,
   error,
-  unknown,
 }
 
 export type TxRecipientAddress = {

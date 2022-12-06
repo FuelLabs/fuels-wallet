@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
   BN,
   Transaction,
@@ -23,7 +24,7 @@ export const TRANSACTION_ERRORS = {
 type GetTransactionResponse = {
   txResponse: TransactionResponse;
   tx: Transaction;
-  status: TxStatus;
+  status?: TxStatus;
   txId?: string;
 };
 
@@ -99,9 +100,9 @@ export const transactionMachine = createMachine(
       fetchingResult: {
         invoke: {
           src: 'getTransactionResult',
-          data: (_) => ({
+          data: (ctx) => ({
             input: {
-              txResponse: _.txResponse,
+              txResponse: ctx.txResponse,
             },
           }),
           onDone: [
