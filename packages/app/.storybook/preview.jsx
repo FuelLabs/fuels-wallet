@@ -59,4 +59,8 @@ export const decorators = [
   ),
 ];
 
-initialize();
+initialize({
+  serviceWorker: {
+    url: `${process.env.NEXT_PUBLIC_STORYBOOK_URL || ''}/mockServiceWorker.js`,
+  },
+});
