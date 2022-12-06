@@ -1,5 +1,5 @@
-import type { Meta, Story } from '@storybook/react';
 import { graphql } from 'msw';
+import { Route, Routes } from 'react-router-dom';
 
 import { MOCK_TRANSACTION_WITH_RECEIPTS_GQL } from '../../__mocks__/transaction';
 
@@ -9,19 +9,28 @@ import { Pages } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
+const ViewTransactionStory = ({ txId }: { txId: string }) => {
+  return (
+    <Routes location={Pages.tx({ txId })}>
+      <Route path={Pages.tx()} element={<ViewTransaction />} />
+    </Routes>
+  );
+};
+
 export default {
-  component: ViewTransaction,
+  component: ViewTransactionStory,
   title: 'Transaction/Components/ViewTransaction',
+  argTypes: {
+    txId: {
+      defaultValue:
+        '0xc019789a1d43f6ed799bcd4abf6b5a69ce91e60710e3bc6ab3b2ca0996cdef4d',
+      type: 'string',
+    },
+  },
   parameters: {
     layout: 'fullscreen',
     viewport: {
       defaultViewport: 'chromeExtension',
-    },
-    reactRouter: {
-      routePath: Pages.tx(),
-      routeParams: {
-        txId: '0xc019789a1d43f6ed799bcd4abf6b5a69ce91e60710e3bc6ab3b2ca0996cdef4d',
-      },
     },
     msw: [
       graphql.query('getTransactionWithReceipts', (req, res, ctx) => {
@@ -36,6 +45,8 @@ export default {
       return {};
     },
   ],
-} as Meta;
+};
 
-export const Usage: Story<unknown> = () => <ViewTransaction />;
+export const Usage = ({ txId }: { txId: string }) => (
+  <ViewTransactionStory txId={txId} />
+);

@@ -79,6 +79,7 @@ export const transactionMachine = createMachine(
         },
       },
       fetching: {
+        entry: 'clearError',
         invoke: {
           src: 'getTransaction',
           data: (_, event: MachineEvents) => ({
@@ -129,6 +130,9 @@ export const transactionMachine = createMachine(
         error: (_) => TRANSACTION_ERRORS.NOT_FOUND,
       }),
       assignGetTransactionResultError: assign({
+        error: (_) => TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND,
+      }),
+      clearError: assign({
         error: (_) => TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND,
       }),
       assignGetTransactionResponse: assign((_, event) => {

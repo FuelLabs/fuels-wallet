@@ -81,7 +81,7 @@ export function useTransaction({
   const shouldShowAlert =
     isTxNotFound || isInvalidTxId || isTxPending || isTxFailed;
   const shouldShowTx = tx && !isFetching && !isInvalidTxId && !isTxNotFound;
-  const shouldShowTxDetails = tx && !isFetching && !isFetchingResult;
+  const shouldShowTxDetails = shouldShowTx && !isFetchingResult;
 
   function getTransaction(input: TxInputs['fetch']) {
     send('GET_TRANSACTION', { input });
