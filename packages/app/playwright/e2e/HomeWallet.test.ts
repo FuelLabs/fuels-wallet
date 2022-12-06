@@ -1,7 +1,13 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
 
-import { getButtonByText, getByAriaLabel, hasText, visit } from '../commons';
+import {
+  getButtonByText,
+  getByAriaLabel,
+  hasText,
+  visit,
+  reload,
+} from '../commons';
 import { mockData } from '../mocks';
 
 test.describe('HomeWallet', () => {
@@ -20,19 +26,19 @@ test.describe('HomeWallet', () => {
     await getButtonByText(page, 'Faucet').click();
     await getButtonByText(page, 'Give me ETH').click();
     await hasText(page, /Ethereum/i);
-    await hasText(page, /0,5 ETH/i);
+    await hasText(page, /ETH.0\.5/i);
 
     /** Select a new network */
     await getByAriaLabel(page, 'Selected Network').click();
-    await getByAriaLabel(page, 'fuel_network-item-1').click();
+    await getByAriaLabel(page, 'fuel_network-item-2').click();
 
-    await hasText(page, /you don't have any assets/i);
+    await hasText(page, "You don't have any assets");
   });
 
   test('should open the side bar and close it', async () => {
     await visit(page, '/wallet');
     await getByAriaLabel(page, 'Menu').click();
-    await hasText(page, 'Wallet');
+    await hasText(page, 'Settings');
     await hasText(page, 'Support');
     await getByAriaLabel(page, 'drawer_closeButton').click();
   });
@@ -41,12 +47,12 @@ test.describe('HomeWallet', () => {
     await visit(page, '/wallet');
     await hasText(page, /ETH.0\.0/i);
     await getByAriaLabel(page, 'Hide balance').click(); // click on the hide balance
-    await hasText(page, /ETH.•••••/); // should hide balance
-    await page.reload(); // reload the page
-    await hasText(page, /ETH.•••••/); // should not show balance
+    await hasText(page, /ETH.•••••/i); // should hide balance
+    await reload(page); // reload the page
+    await hasText(page, /ETH.•••••/i); // should not show balance
     await getByAriaLabel(page, 'Show balance').click();
-    await hasText(page, /ETH.0\.0/);
-    await page.reload(); // reload the page
-    await hasText(page, /ETH.0\.0/);
+    await hasText(page, /ETH.0\.0/i);
+    await reload(page); // reload the page
+    await hasText(page, /ETH.0\.0/i);
   });
 });

@@ -12,3 +12,9 @@ export async function waitUrl(page: Page, pathname: string) {
     return url.pathname.includes(pathname);
   });
 }
+
+export async function reload(page: Page) {
+  await page.reload();
+  await page.waitForTimeout(500);
+  return page;
+}

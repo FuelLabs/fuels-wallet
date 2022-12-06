@@ -49,6 +49,6 @@ test.describe('CreateWallet', () => {
     await hasText(page, /Account 1/i);
     await page.reload();
     await visit(page, '/wallet');
-    await hasText(page, /assets/i);
+    await hasText(page, /assets/i, 1);
   });
 });
