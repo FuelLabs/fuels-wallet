@@ -1,9 +1,12 @@
 import { Mnemonic } from '@fuel-ts/mnemonic';
 
+import { VITE_MNEMONIC_WORDS } from '~/config';
+
 export function isValidMnemonic(phrase: string): boolean {
-  try {
-    return !!Mnemonic.mnemonicToEntropy(phrase);
-  } catch (e) {
-    return false;
-  }
+  const words = phrase.split(' ');
+  const mnemonic = new Mnemonic();
+  return (
+    words.filter((w) => mnemonic.wordlist.includes(w)).length ===
+    Number(VITE_MNEMONIC_WORDS)
+  );
 }
