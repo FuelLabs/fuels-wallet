@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Icon, Box, Avatar, Flex, Drawer } from '@fuel-ui/react';
+import { Icon, Box, Avatar, Flex, Drawer, IconButton } from '@fuel-ui/react';
 
 import type { MenuItemObj } from '..';
 import { Menu, NetworkSelector } from '..';
@@ -13,6 +13,9 @@ export function Sidebar() {
   const { networks, selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
+
+  const { handlers: accountHandlers } = useAccount();
+
   return (
     <Flex css={styles.wrapper}>
       <Flex css={styles.column}>
@@ -27,7 +30,15 @@ export function Sidebar() {
               <Avatar.Generated size={'sm'} hash={account?.address as string} />
             </Box>
 
-            <Icon icon="CaretDown" size={18}></Icon>
+            {/* <Icon icon="CaretDown" size={18}></Icon> */}
+            <IconButton
+              size="xs"
+              variant="ghost"
+              color="gray"
+              icon={<Icon icon="CaretDown" size={18} color="gray8" />}
+              aria-label="Expand"
+              onClick={accountHandlers.goToList}
+            />
           </Flex>
           <Drawer.CloseButton
             css={{ position: 'unset' }}

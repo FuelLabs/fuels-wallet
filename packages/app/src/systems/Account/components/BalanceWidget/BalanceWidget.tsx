@@ -12,6 +12,8 @@ import type { Account } from '@fuel-wallet/types';
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 
+import { useAccount } from '../../hooks';
+
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 import type { AccountInputs } from '~/systems/Account/services';
@@ -45,6 +47,7 @@ export function BalanceWidget({
   onChangeVisibility,
 }: BalanceWidgetProps) {
   const [isHidden, setIsHidden] = useState(_isHidden);
+  const { handlers } = useAccount();
 
   useEffect(() => {
     setIsHidden(_isHidden);
@@ -71,6 +74,7 @@ export function BalanceWidget({
           color="gray"
           icon={<Icon icon="CaretDown" color="gray8" />}
           aria-label="Expand"
+          onClick={handlers.goToList}
           css={styles.caretDownIcon}
         />
       </Flex>

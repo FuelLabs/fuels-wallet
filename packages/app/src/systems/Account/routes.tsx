@@ -1,6 +1,6 @@
 import { Route } from 'react-router-dom';
 
-import { Pages } from '../Core';
+import { Pages } from '../Core/types';
 
 import { Accounts } from './pages';
 

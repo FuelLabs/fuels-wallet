@@ -1,9 +1,11 @@
 /* eslint-disable consistent-return */
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import type { AccountMachineState } from '../machines';
 
 import { Services, store } from '~/store';
+import { Pages } from '~/systems/Core';
 
 const selectors = {
   isLoading: (state: AccountMachineState) => {
@@ -22,8 +24,16 @@ const listenerAccountFetcher = () => {
 
 export function useAccount() {
   const shouldListen = useRef(true);
+  const navigate = useNavigate();
   const isLoading = store.useSelector(Services.account, selectors.isLoading);
   const account = store.useSelector(Services.account, selectors.account);
+
+  function goToAdd() {
+    navigate(Pages.accountsAdd());
+  }
+  function goToList() {
+    navigate(Pages.accounts());
+  }
 
   useEffect(() => {
     if (shouldListen.current) {
@@ -37,6 +47,8 @@ export function useAccount() {
 
   return {
     handlers: {
+      goToAdd,
+      goToList,
       setBalanceVisibility: store.setBalanceVisibility,
     },
     isLoading: isLoading && !account,
