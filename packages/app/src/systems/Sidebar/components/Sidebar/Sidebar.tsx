@@ -33,9 +33,9 @@ export function Sidebar() {
             {/* <Icon icon="CaretDown" size={18}></Icon> */}
             <IconButton
               size="xs"
-              variant="ghost"
+              variant="outlined"
               color="gray"
-              icon={<Icon icon="CaretDown" size={18} color="gray8" />}
+              icon={<Icon icon="CaretDown" size={18} />}
               aria-label="Expand"
               onClick={accountHandlers.goToList}
             />
