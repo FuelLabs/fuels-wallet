@@ -1,7 +1,13 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
 
-import { getButtonByText, getByAriaLabel, hasText, visit } from '../commons';
+import {
+  getButtonByText,
+  getByAriaLabel,
+  hasText,
+  visit,
+  reload,
+} from '../commons';
 import { mockData } from '../mocks';
 
 test.describe('HomeWallet', () => {
@@ -42,11 +48,11 @@ test.describe('HomeWallet', () => {
     await hasText(page, /ETH.0\.0/i);
     await getByAriaLabel(page, 'Hide balance').click(); // click on the hide balance
     await hasText(page, /ETH.•••••/i); // should hide balance
-    await page.reload(); // reload the page
+    await reload(page); // reload the page
     await hasText(page, /ETH.•••••/i); // should not show balance
     await getByAriaLabel(page, 'Show balance').click();
     await hasText(page, /ETH.0\.0/i);
-    await page.reload(); // reload the page
+    await reload(page); // reload the page
     await hasText(page, /ETH.0\.0/i);
   });
 });
