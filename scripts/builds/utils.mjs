@@ -16,6 +16,7 @@ function setEnvVar(key, value) {
 export function setEnv() {
   setEnvVar("BASE_URL", APP_PATH);
   setEnvVar("DOCS_BASE_URL", process.env.DOCS_BASE_URL || "");
+  setEnvVar("STORYBOOK_BASE_URL", STORYBOOK_PATH);
   // Dist folders
   setEnvVar("DOCS_DIST", join(DIST_FOLDER, process.env.DOCS_BASE_URL || ""));
   setEnvVar("APP_DIST", join(DIST_FOLDER, APP_PATH));
@@ -34,6 +35,7 @@ export function setEnv() {
   console.log("Output dist folders:");
   console.log("BASE_URL", process.env.BASE_URL);
   console.log("DOCS_BASE_URL", process.env.DOCS_BASE_URL);
+  console.log("STORYBOOK_BASE_URL", process.env.STORYBOOK_BASE_URL);
   console.log("NEXT_PUBLIC_APP_URL", process.env.NEXT_PUBLIC_APP_URL);
   console.log(
     "NEXT_PUBLIC_WALLET_DOWNLOAD_URL",

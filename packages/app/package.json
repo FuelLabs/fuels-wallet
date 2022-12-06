@@ -115,6 +115,6 @@
     }
   },
   "msw": {
-    "workerDirectory": ""
+    "workerDirectory": "public"
   }
 }
