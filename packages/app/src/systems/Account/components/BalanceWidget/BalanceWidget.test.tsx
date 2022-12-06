@@ -14,7 +14,11 @@ const ACCOUNT = {
 
 describe('BalanceWidget', () => {
   it('a11y', async () => {
-    await testA11y(<BalanceWidget account={ACCOUNT} />);
+    await testA11y(
+      <RouterProvider>
+        <BalanceWidget account={ACCOUNT} />
+      </RouterProvider>
+    );
   });
 
   it('should show user address', () => {
