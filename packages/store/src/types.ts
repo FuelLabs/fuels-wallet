@@ -19,31 +19,31 @@ export type Events = {
   [K in string]: (...args: any[]) => any;
 };
 
-export type MachinesObj = Record<string, AnyStateMachine>;
+export type MachinesObj = Record<string, () => AnyStateMachine>;
 export type ServicesObj = Record<string, AnyInterpreter>;
 export type StateObj<T extends MachinesObj> = Record<
   keyof T,
   StateFrom<
     StateMachine<
-      ValueOf<T>['__TContext'],
-      ValueOf<T>['__TStateSchema'],
-      ValueOf<T>['__TEvent'],
-      ValueOf<T>['__TTypestate'],
-      ValueOf<T>['__TAction'],
-      ValueOf<T>['__TServiceMap'],
-      ValueOf<T>['__TResolvedTypesMeta']
+      ReturnType<ValueOf<T>>['__TContext'],
+      ReturnType<ValueOf<T>>['__TStateSchema'],
+      ReturnType<ValueOf<T>>['__TEvent'],
+      ReturnType<ValueOf<T>>['__TTypestate'],
+      ReturnType<ValueOf<T>>['__TAction'],
+      ReturnType<ValueOf<T>>['__TServiceMap'],
+      ReturnType<ValueOf<T>>['__TResolvedTypesMeta']
     >
   >
 >;
 export type Service<T extends MachinesObj> = InterpreterFrom<
   StateMachine<
-    ValueOf<T>['__TContext'],
-    ValueOf<T>['__TStateSchema'],
-    ValueOf<T>['__TEvent'],
-    ValueOf<T>['__TTypestate'],
-    ValueOf<T>['__TAction'],
-    ValueOf<T>['__TServiceMap'],
-    ValueOf<T>['__TResolvedTypesMeta']
+    ReturnType<ValueOf<T>>['__TContext'],
+    ReturnType<ValueOf<T>>['__TStateSchema'],
+    ReturnType<ValueOf<T>>['__TEvent'],
+    ReturnType<ValueOf<T>>['__TTypestate'],
+    ReturnType<ValueOf<T>>['__TAction'],
+    ReturnType<ValueOf<T>>['__TServiceMap'],
+    ReturnType<ValueOf<T>>['__TResolvedTypesMeta']
   >
 > & {
   __storeKey: keyof T;
