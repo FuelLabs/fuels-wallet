@@ -26,7 +26,9 @@ export function ExampleBox({
   error?: any;
 }) {
   const [, notDetected, isLoading] = useFuelWeb3();
-  const errorMsg = error?.response?.errors?.[0]?.message;
+  const errorMsg = error?.response?.errors?.[0]?.message || error?.message;
+  const shouldShowRawError = errorMsg !== error?.message;
+
   const downloadContent = (
     <>
       {notDetected && (
@@ -79,7 +81,7 @@ export function ExampleBox({
             </Tag>
           )}
         </Heading>
-        {error && (
+        {shouldShowRawError && (
           <Input css={{ width: '100%', height: 200 }}>
             <Input.Field
               as="textarea"
