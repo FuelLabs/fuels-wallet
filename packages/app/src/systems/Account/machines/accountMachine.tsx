@@ -122,9 +122,7 @@ export const accountMachine = createMachine(
           const providerUrl = selectedNetwork?.url || defaultProvider;
           const accounts = await AccountService.getAccounts();
           const account = accounts[0];
-          if (!account) {
-            return undefined;
-          }
+          if (!account) return undefined;
           return AccountService.fetchBalance({ account, providerUrl });
         },
       }),
