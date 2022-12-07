@@ -30,9 +30,9 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
   #currentState!: StateObj<T>;
   #initialState: StateObj<T> = {} as StateObj<T>;
 
-  constructor(machines: T) {
-    Object.entries(machines).forEach(([key, machine]) => {
-      const item = this.createMachine(key, machine);
+  constructor(services: T) {
+    Object.entries(services).forEach(([key, machine]) => {
+      const item = this.createMachine(key, machine());
       this.createService(key, item);
     });
   }
@@ -56,12 +56,12 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
     };
   }
 
-  public send<K extends keyof T>(key: K, ev: T[K]['__TEvent']) {
+  public send<K extends keyof T>(key: K, ev: ReturnType<T[K]>['__TEvent']) {
     const service = this.services.get(key);
     service?.send(ev);
   }
 
-  public broadcast(ev: ValueOf<T>['__TEvent']) {
+  public broadcast(ev: ReturnType<ValueOf<T>>['__TEvent']) {
     Array.from(this.services.values()).forEach((service) => {
       service.send(ev);
     });
@@ -90,7 +90,7 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
       delays,
     };
     const newMachine = machine?.withConfig(machineConfig as any, () => ({
-      ...machine.context,
+      ...(machine?.context ?? {}),
       ...context,
     }));
     this.machines.set(key, newMachine);
@@ -116,14 +116,25 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
     this.services.set(key, service as Service<T>);
     return service as Service<T>;
   }
+
+  reset() {
+    this.#prevState = this.#initialState;
+    this.#currentState = this.#initialState;
+    this.listeners.clear();
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [, service] of this.services.entries()) {
+      service.stop();
+      service.start();
+    }
+  }
 }
 
 export function createStore<T extends MachinesObj, E extends Events>(
-  machines: T,
+  services: T,
   opts?: { events(store: StoreClass<T>): E }
 ) {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const _store = new StoreClass<T>(machines);
+  const _store = new StoreClass<T>(services);
 
   const store = {
     /** @deprecated */
@@ -132,6 +143,7 @@ export function createStore<T extends MachinesObj, E extends Events>(
     broadcast: _store.broadcast.bind(_store),
     subscribe: _store.subscribe.bind(_store),
     getState: _store.getState.bind(_store),
+    reset: _store.reset.bind(_store),
     useSelector<K extends keyof T, R>(
       key: K,
       selector: (state: StateFrom<T[K]>) => R
@@ -150,12 +162,13 @@ export function createStore<T extends MachinesObj, E extends Events>(
     },
     useSetMachineConfig<K extends keyof T>(
       machineKey: K,
-      ...[opts = {}]: RestParams<T[K]>
+      ...[opts = {}]: RestParams<ReturnType<T[K]>>
     ) {
       useConstant(() => {
         const service = _store.services.get(machineKey) as Service<T>;
         const key = service?.__storeKey;
         const machine = _store.machines.get(key);
+        if (!machine) return;
         const newMachine = _store.createMachine(key, machine!, opts as any);
         _store.createService(key, newMachine, opts as any);
       });
