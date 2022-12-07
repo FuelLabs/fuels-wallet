@@ -22,9 +22,6 @@ export const Accounts = () => {
       <Layout.BottomBar>
         <Button
           arial-label="Add account"
-          onPress={() => {
-            console.log('FIXME');
-          }}
           leftIcon={Icon.is('Plus')}
           variant="ghost"
         >
