@@ -73,7 +73,7 @@ jobs:
         run: pnpm node:dev start --test --debug
 
       - name: Build Application
-        run: pnpm build:all
+        run: pnpm build:app
         env:
           NODE_ENV: test
           DOCS_DIST: ./dist
