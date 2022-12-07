@@ -3,24 +3,19 @@ import { createStore } from '@fuel-wallet/xstore';
 import { accountEvents } from './systems/Account/events';
 import { networkEvents } from './systems/Network/events';
 
-import type { AccountMachine } from '~/systems/Account';
-import { accountMachine } from '~/systems/Account';
-import type { NetworksMachine } from '~/systems/Network';
-import { networksMachine } from '~/systems/Network';
+import { accountMachine } from '~/systems/Account/machines';
+import { networksMachine } from '~/systems/Network/machines';
 
 export enum Services {
   account = 'account',
   networks = 'networks',
 }
 
-export type StoreMachines = {
-  account: AccountMachine;
-  networks: NetworksMachine;
-};
+export type StoreMachines = typeof services;
 
 const services = {
-  account: accountMachine,
-  networks: networksMachine,
+  account: () => accountMachine,
+  networks: () => networksMachine,
 };
 
 export const store = createStore(services, {
