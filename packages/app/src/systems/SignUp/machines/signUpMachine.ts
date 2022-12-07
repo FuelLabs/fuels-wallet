@@ -102,7 +102,7 @@ export const signUpMachine = createMachine(
           mnemonicNotMatch: {
             entry: [
               assignErrorMessage(
-                'The seed phrase doesn't match. Check the phrase for typos or missing words'
+                "The seed phrase doesn't match. Check the phrase for typos or missing words"
               ),
             ],
           },
