@@ -28,7 +28,11 @@ const config = {
   features: {
     storyStoreV7: true,
   },
-  env: (config) => ({ ...config, ...getPublicEnvs() }),
+  env: (config) => ({
+    ...config,
+    ...getPublicEnvs(),
+    STORYBOOK_BASE_URL: process.env.STORYBOOK_BASE_URL,
+  }),
   webpackFinal: async (config) => {
     if (config.build) {
       config.base = join(process.env.STORYBOOK_BASE_URL || config.base || '');
