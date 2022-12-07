@@ -1,4 +1,3 @@
-import { Button, Icon } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { MOCK_ACCOUNTS } from '../../__mocks__';
@@ -19,15 +18,6 @@ export const Accounts = () => {
       <Layout.Content>
         {account && <AccountList accounts={MOCK_ACCOUNTS} />}
       </Layout.Content>
-      <Layout.BottomBar>
-        <Button
-          arial-label="Add account"
-          leftIcon={Icon.is('Plus')}
-          variant="ghost"
-        >
-          Create account
-        </Button>
-      </Layout.BottomBar>
     </Layout>
   );
 };

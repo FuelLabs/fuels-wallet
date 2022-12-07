@@ -28,9 +28,6 @@ export function useAccount() {
   const isLoading = store.useSelector(Services.account, selectors.isLoading);
   const account = store.useSelector(Services.account, selectors.account);
 
-  function goToAdd() {
-    navigate(Pages.accountsAdd());
-  }
   function goToList() {
     navigate(Pages.accounts());
   }
@@ -47,7 +44,6 @@ export function useAccount() {
 
   return {
     handlers: {
-      goToAdd,
       goToList,
       setBalanceVisibility: store.setBalanceVisibility,
     },
