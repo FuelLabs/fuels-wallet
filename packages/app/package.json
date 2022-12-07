@@ -55,7 +55,7 @@
     "react-qr-code": "^2.0.8",
     "react-router-dom": "^6.4.4",
     "util": "^0.12.5",
-    "xstate": "^4.35.0",
+    "xstate": "4.34.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
