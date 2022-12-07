@@ -34,7 +34,14 @@ export default {
     },
     msw: [
       graphql.query('getTransactionWithReceipts', (req, res, ctx) => {
-        return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
+        if (
+          req.variables.transactionId ===
+          MOCK_TRANSACTION_WITH_RECEIPTS_GQL.transaction.id
+        ) {
+          return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
+        }
+
+        return undefined;
       }),
     ],
   },
