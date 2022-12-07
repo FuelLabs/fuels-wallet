@@ -31,10 +31,10 @@
     "fuels": "0.22.1",
     "json-rpc-2.0": "^1.4.1",
     "uuid": "^9.0.0",
-    "xstate": "^4.34.0"
+    "xstate": "^4.35.0"
   },
   "devDependencies": {
-    "@fuel-wallet/types": "workspace:*",
+    "@fuel-wallet/types": "workspace:0.1.0",
     "@types/chrome": "^0.0.203",
     "@types/uuid": "^9.0.0",
     "jest-webextension-mock": "^3.8.6",

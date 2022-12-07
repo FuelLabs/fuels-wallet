@@ -74,9 +74,7 @@ export const AmountInput: AmountInputComponent = ({
             </Button>
           </Flex>
           <Flex>
-            <Text css={styles.balance}>
-              Balance: {balance.format({ precision: DECIMAL_UNITS })}
-            </Text>
+            <Text css={styles.balance}>Balance: {balance.format()}</Text>
           </Flex>
         </Flex>
       </Input.ElementRight>

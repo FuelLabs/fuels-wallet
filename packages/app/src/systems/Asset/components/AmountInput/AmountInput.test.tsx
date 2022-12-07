@@ -33,7 +33,7 @@ describe('AmountInput', () => {
         value={bn()}
       />
     );
-    expect(screen.getByText('Balance: 14.563943834')).toBeInTheDocument();
+    expect(screen.getByText('Balance: 14.563')).toBeInTheDocument();
   });
   it('should display balance in input when click on max button', async () => {
     const { user } = render(
