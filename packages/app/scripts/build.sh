@@ -1,5 +1,5 @@
 export NODE_ENV=${NODE_ENV:=production}
-export STORYBOOK_DIST=${STORYBOOK_DIST:=./storybook}
+export STORYBOOK_DIST=${STORYBOOK_DIST:=./dist/storybook}
 
 if [ "$1" = "--app=vite" ]; then
   pnpm ts:check && pnpm vite build --mode $NODE_ENV
