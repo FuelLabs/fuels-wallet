@@ -28,10 +28,10 @@
   "dependencies": {
     "dexie-observable": "4.0.0-beta.13",
     "events": "^3.3.0",
-    "fuels": "0.22.1",
+    "fuels": "0.23.0",
     "json-rpc-2.0": "^1.4.1",
     "uuid": "^9.0.0",
-    "xstate": "^4.34.0"
+    "xstate": "^4.35.0"
   },
   "devDependencies": {
     "@fuel-wallet/types": "workspace:*",

@@ -3,11 +3,11 @@ import { cssObj } from '@fuel-ui/css';
 import {
   Alert,
   Box,
+  Input,
   Link,
   Spinner,
   Stack,
   Tag,
-  Text,
   Tooltip,
 } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
@@ -79,7 +79,15 @@ export function ExampleBox({
             </Tag>
           )}
         </Heading>
-        {error && <Text color="red10">{error.message}</Text>}
+        {error && (
+          <Input css={{ width: '100%', height: 200 }}>
+            <Input.Field
+              as="textarea"
+              value={error.message}
+              css={{ color: '$red10', padding: '$2', height: '$full' }}
+            />
+          </Input>
+        )}
         {children}
       </Box>
     </Stack>
