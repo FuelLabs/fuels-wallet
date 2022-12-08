@@ -22,8 +22,8 @@ export function RecoverWallet() {
       </Alert>
       {state.matches('waitingMnemonic') && (
         <MnemonicWrite
-          error={handlers.checkMnemonicError()}
-          canProceed={context.isConfirmed}
+          error={context.isFilled ? context.error : ''}
+          canProceed={state.matches('waitingMnemonic.validMnemonic')}
           onFilled={handlers.confirmMnemonic}
           onNext={handlers.next}
           onCancel={() => navigate(Pages.signUp())}

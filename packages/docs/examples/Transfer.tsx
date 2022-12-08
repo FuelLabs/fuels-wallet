@@ -1,11 +1,19 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Flex, Input, Link, Stack, Text } from '@fuel-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Link,
+  Stack,
+  Text,
+  InputAmount,
+} from '@fuel-ui/react';
+import { FuelWeb3Provider, getBlockExplorerLink } from '@fuel-wallet/sdk';
 import type { BN } from 'fuels';
 import { bn, Wallet, Address } from 'fuels';
 import { useState } from 'react';
 
-import { FuelWeb3Provider, getBlockExplorerLink } from '~/../sdk/src';
 import { ExampleBox } from '~/src/components/ExampleBox';
 import { useFuelWeb3 } from '~/src/hooks/useFuelWeb3';
 import { useIsConnected } from '~/src/hooks/useIsConnected';
@@ -15,7 +23,7 @@ export function Transfer() {
   const [FuelWeb3, notDetected] = useFuelWeb3();
   const [isConnected] = useIsConnected();
   const [txId, setTxId] = useState<string>('');
-  const [amount, setAmount] = useState<string>('0.00001');
+  const [amount, setAmount] = useState<BN>(bn.parseUnits('0.00001'));
 
   const [sendTransaction, sendingTransaction, errorSendingTransaction] =
     useLoading(async (amount: BN) => {
@@ -38,21 +46,22 @@ export function Transfer() {
   return (
     <ExampleBox error={errorMessage}>
       <Stack css={{ gap: '$4' }}>
-        <Flex gap="$4" align="center">
-          <Input isDisabled={!isConnected}>
-            <Input.Field
+        <Flex gap="$4" direction={'column'}>
+          <Box css={{ width: 300 }}>
+            <InputAmount
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              css={{ color: '$whiteA11' }}
+              onChange={(value) => setAmount(value)}
             />
-          </Input>
-          <Button
-            onPress={() => sendTransaction(bn.parseUnits(amount))}
-            isLoading={sendingTransaction}
-            isDisabled={sendingTransaction || !isConnected}
-          >
-            Transfer
-          </Button>
+          </Box>
+          <Box>
+            <Button
+              onPress={() => sendTransaction(amount)}
+              isLoading={sendingTransaction}
+              isDisabled={sendingTransaction || !isConnected}
+            >
+              Transfer
+            </Button>
+          </Box>
         </Flex>
         {txId ? (
           <Box css={styles.accounts}>

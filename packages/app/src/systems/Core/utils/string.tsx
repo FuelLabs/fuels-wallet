@@ -9,7 +9,7 @@ export function getPhraseFromValue(value?: string | string[]) {
   if (Array.isArray(value)) {
     return value.join(' ');
   }
-  return value;
+  return value || '';
 }
 
 export const uniqueId = () => Math.random().toString(16).slice(2);
