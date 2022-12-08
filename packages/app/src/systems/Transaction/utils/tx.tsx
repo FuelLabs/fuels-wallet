@@ -42,6 +42,33 @@ export const getTxStatusColor = (status?: TxStatus): Colors => {
   }
 };
 
+export const getTxIconColor = (
+  status?: TxStatus
+): { color: Colors; backgroundColor: Colors } => {
+  switch (status) {
+    case TxStatus.pending:
+      return {
+        color: 'amber8',
+        backgroundColor: 'amber2',
+      };
+    case TxStatus.success:
+      return {
+        color: 'mint8',
+        backgroundColor: 'mint2',
+      };
+    case TxStatus.error:
+      return {
+        color: 'crimson8',
+        backgroundColor: 'crimson2',
+      };
+    default:
+      return {
+        color: 'gray8',
+        backgroundColor: 'gray2',
+      };
+  }
+};
+
 export const getTransactionTypeText = (type?: TransactionType) => {
   switch (type) {
     case TransactionType.Script:
