@@ -15,9 +15,9 @@ importers:
       '@babel/core': ^7.20.5
       '@changesets/changelog-github': ^0.4.7
       '@changesets/cli': ^2.25.2
-      '@fuel-ui/config': ^0.9.3
-      '@fuel-ui/css': ^0.9.3
-      '@fuel-ui/react': ^0.9.3
+      '@fuel-ui/config': ^0.10.1
+      '@fuel-ui/css': ^0.10.1
+      '@fuel-ui/react': ^0.10.1
       '@jest/types': 29.3.1
       '@playwright/test': ^1.28.1
       '@types/jest': ^29.2.3
@@ -46,9 +46,9 @@ importers:
       typescript: ^4.9.3
       updates: ^13.2.2
     dependencies:
-      '@fuel-ui/config': 0.9.3_typescript@4.9.4
-      '@fuel-ui/css': 0.9.3
-      '@fuel-ui/react': 0.9.3_xz4vctvudrzzxxauisw4why26m
+      '@fuel-ui/config': 0.10.1_typescript@4.9.4
+      '@fuel-ui/css': 0.10.1
+      '@fuel-ui/react': 0.10.1_xz4vctvudrzzxxauisw4why26m
       execa: 6.1.0
       fuelhat: link:packages/fuelhat
     devDependencies:
@@ -91,10 +91,10 @@ importers:
       '@fuel-ts/providers': 0.23.0
       '@fuel-ts/wallet': 0.23.0
       '@fuel-ts/wallet-manager': 0.23.0
-      '@fuel-ui/config': ^0.9.3
-      '@fuel-ui/css': ^0.9.3
-      '@fuel-ui/react': ^0.9.3
-      '@fuel-ui/test-utils': ^0.9.3
+      '@fuel-ui/config': ^0.10.1
+      '@fuel-ui/css': ^0.10.1
+      '@fuel-ui/react': ^0.10.1
+      '@fuel-ui/test-utils': ^0.10.1
       '@fuel-wallet/sdk': workspace:*
       '@fuel-wallet/types': workspace:*
       '@fuel-wallet/xstore': workspace:*
@@ -169,10 +169,10 @@ importers:
       '@fuel-ts/providers': 0.23.0
       '@fuel-ts/wallet': 0.23.0
       '@fuel-ts/wallet-manager': 0.23.0
-      '@fuel-ui/config': 0.9.3_typescript@4.9.4
-      '@fuel-ui/css': 0.9.3
-      '@fuel-ui/react': 0.9.3_mhlf2sen2giht73q7bzannutnm
-      '@fuel-ui/test-utils': 0.9.3_mhlf2sen2giht73q7bzannutnm
+      '@fuel-ui/config': 0.10.1_typescript@4.9.4
+      '@fuel-ui/css': 0.10.1
+      '@fuel-ui/react': 0.10.1_mhlf2sen2giht73q7bzannutnm
+      '@fuel-ui/test-utils': 0.10.1_mhlf2sen2giht73q7bzannutnm
       '@fuel-wallet/sdk': link:../sdk
       '@fuel-wallet/types': link:../types
       '@fuel-wallet/xstore': link:../store
@@ -289,8 +289,8 @@ importers:
     specifiers:
       '@docsearch/css': ^3.3.0
       '@docsearch/react': 3.3.0
-      '@fuel-ui/css': ^0.9.3
-      '@fuel-ui/react': ^0.9.3
+      '@fuel-ui/css': ^0.10.1
+      '@fuel-ui/react': ^0.10.1
       '@fuel-wallet/sdk': workspace:*
       '@mdx-js/react': ^2.1.5
       '@next/mdx': ^13.0.5
@@ -327,8 +327,8 @@ importers:
     dependencies:
       '@docsearch/css': 3.3.0
       '@docsearch/react': 3.3.0_ib3m5ricvtkl2cll7qpr2f6lvq
-      '@fuel-ui/css': 0.9.3
-      '@fuel-ui/react': 0.9.3_g4afod7d35cb4tip475jfegeau
+      '@fuel-ui/css': 0.10.1
+      '@fuel-ui/react': 0.10.1_g4afod7d35cb4tip475jfegeau
       '@fuel-wallet/sdk': link:../sdk
       '@mdx-js/react': 2.1.5_react@18.2.0
       '@next/mdx': 13.0.6_@mdx-js+react@2.1.5
@@ -2763,6 +2763,13 @@ packages:
       '@ethersproject/pbkdf2': 5.7.0
     dev: false
 
+  /@fuel-ts/math/0.22.2:
+    resolution: {integrity: sha512-PPcN5Q+3LnouYJ2xBKUHbfAqXw399f070miHPu5Dg2Lcy3li+zD0FE+r7cS4wM2b1Sxv6wYOQ9hYEqz1/0ozqQ==}
+    dependencies:
+      '@types/bn.js': 5.1.1
+      bn.js: 5.2.1
+    dev: false
+
   /@fuel-ts/math/0.23.0:
     resolution: {integrity: sha512-ZKmzCNc5DahQf0x0QrueqKw1+XkkzVMkKtxMykHLdHAl0dNjGlbPyK+nvC3Uk7d7MHP7xKJrvYbkdtCtcTtGeA==}
     dependencies:
@@ -2920,8 +2927,8 @@ packages:
     resolution: {integrity: sha512-GHZhnljRuDKoOxo5RWBZSflfb7DwwVgVh8nR3zDFeYMKT/xPvABbalgkL7ODy4PmMVJkjKVvr8KICbXExQl1FQ==}
     dev: false
 
-  /@fuel-ui/config/0.9.3_typescript@4.9.4:
-    resolution: {integrity: sha512-YAQjtutzd94w0bqPqy9p8xQyHY1ILUk9mnIs85Cm3PCRvln8QPNv1dSeD9Bkgrza8Hu7wkd+I3KkXWcb78MlqA==}
+  /@fuel-ui/config/0.10.1_typescript@4.9.4:
+    resolution: {integrity: sha512-Ub0MdQzPk6+62j6LVtjNetqs1+Il6C9hk2DRpIkCHPEegMZmzrsHuSJ0QC34YOxHV+kNLijWbopNpsAkAalNFQ==}
     dependencies:
       '@typescript-eslint/eslint-plugin': 5.45.1_f3ripjxnrcbcxlztumpiegdjha
       '@typescript-eslint/parser': 5.45.1_ha6vam6werchizxrnqvarmz2zu
@@ -2947,8 +2954,8 @@ packages:
       - typescript
     dev: false
 
-  /@fuel-ui/css/0.9.3:
-    resolution: {integrity: sha512-EPqKMCxZqE2S9DUl3CP5pECqNRSRmLhQ0Jcl5+ClXVeai3rWSxfGoqSvf1woqaEkDJ+mBTRYJbdBI3cqY1HuxQ==}
+  /@fuel-ui/css/0.10.1:
+    resolution: {integrity: sha512-SKctXf4VLdiq+1Q7DXWzDRY9HUDkgukJAmOZ2egQ84EfkNOAxYeFb4ewyij8h1WrYY4QF2PbWRmghrOFfpsW/Q==}
     dependencies:
       '@radix-ui/colors': 0.1.8
       '@stitches/react': 1.2.8_react@18.2.0
@@ -2957,11 +2964,12 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
-  /@fuel-ui/react/0.9.3_g4afod7d35cb4tip475jfegeau:
-    resolution: {integrity: sha512-koHY/sgUt9iav2xEftyCUCIjyGhgRE47py16mvr0+SdmdDcn7UsTmLdziiFNEpKppVrhV2z+uXp8wJ+k/KoxnA==}
+  /@fuel-ui/react/0.10.1_g4afod7d35cb4tip475jfegeau:
+    resolution: {integrity: sha512-PLIfpVqz4rkbJ6yTWHXnHpzEXyxoC86OeGAa87RuyT1gce3PMFZa9cqFlrvkvqaOOA57Rih/XdQbNHkoAmVLJA==}
     dependencies:
-      '@fuel-ui/css': 0.9.3
-      '@fuel-ui/test-utils': 0.9.3_g4afod7d35cb4tip475jfegeau
+      '@fuel-ts/math': 0.22.2
+      '@fuel-ui/css': 0.10.1
+      '@fuel-ui/test-utils': 0.10.1_g4afod7d35cb4tip475jfegeau
       '@radix-ui/react-accordion': 1.0.1_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_ib3m5ricvtkl2cll7qpr2f6lvq
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -2984,6 +2992,7 @@ packages:
       phosphor-react: 1.4.1_react@18.2.0
       react: 18.2.0
       react-aria: 3.21.0_biqbaboplfbrettd7655fr4n2y
+      react-content-loader: 6.2.0_react@18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-hot-toast: 2.4.0_biqbaboplfbrettd7655fr4n2y
       react-number-format: 5.1.2_biqbaboplfbrettd7655fr4n2y
@@ -3009,11 +3018,12 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/react/0.9.3_mhlf2sen2giht73q7bzannutnm:
-    resolution: {integrity: sha512-koHY/sgUt9iav2xEftyCUCIjyGhgRE47py16mvr0+SdmdDcn7UsTmLdziiFNEpKppVrhV2z+uXp8wJ+k/KoxnA==}
+  /@fuel-ui/react/0.10.1_mhlf2sen2giht73q7bzannutnm:
+    resolution: {integrity: sha512-PLIfpVqz4rkbJ6yTWHXnHpzEXyxoC86OeGAa87RuyT1gce3PMFZa9cqFlrvkvqaOOA57Rih/XdQbNHkoAmVLJA==}
     dependencies:
-      '@fuel-ui/css': 0.9.3
-      '@fuel-ui/test-utils': 0.9.3_mhlf2sen2giht73q7bzannutnm
+      '@fuel-ts/math': 0.22.2
+      '@fuel-ui/css': 0.10.1
+      '@fuel-ui/test-utils': 0.10.1_mhlf2sen2giht73q7bzannutnm
       '@radix-ui/react-accordion': 1.0.1_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_ib3m5ricvtkl2cll7qpr2f6lvq
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3036,6 +3046,7 @@ packages:
       phosphor-react: 1.4.1_react@18.2.0
       react: 18.2.0
       react-aria: 3.21.0_biqbaboplfbrettd7655fr4n2y
+      react-content-loader: 6.2.0_react@18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-hot-toast: 2.4.0_biqbaboplfbrettd7655fr4n2y
       react-number-format: 5.1.2_biqbaboplfbrettd7655fr4n2y
@@ -3061,11 +3072,12 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/react/0.9.3_xz4vctvudrzzxxauisw4why26m:
-    resolution: {integrity: sha512-koHY/sgUt9iav2xEftyCUCIjyGhgRE47py16mvr0+SdmdDcn7UsTmLdziiFNEpKppVrhV2z+uXp8wJ+k/KoxnA==}
+  /@fuel-ui/react/0.10.1_xz4vctvudrzzxxauisw4why26m:
+    resolution: {integrity: sha512-PLIfpVqz4rkbJ6yTWHXnHpzEXyxoC86OeGAa87RuyT1gce3PMFZa9cqFlrvkvqaOOA57Rih/XdQbNHkoAmVLJA==}
     dependencies:
-      '@fuel-ui/css': 0.9.3
-      '@fuel-ui/test-utils': 0.9.3_xz4vctvudrzzxxauisw4why26m
+      '@fuel-ts/math': 0.22.2
+      '@fuel-ui/css': 0.10.1
+      '@fuel-ui/test-utils': 0.10.1_xz4vctvudrzzxxauisw4why26m
       '@radix-ui/react-accordion': 1.0.1_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_ib3m5ricvtkl2cll7qpr2f6lvq
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3088,6 +3100,7 @@ packages:
       phosphor-react: 1.4.1_react@18.2.0
       react: 18.2.0
       react-aria: 3.21.0_biqbaboplfbrettd7655fr4n2y
+      react-content-loader: 6.2.0_react@18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-hot-toast: 2.4.0_biqbaboplfbrettd7655fr4n2y
       react-number-format: 5.1.2_biqbaboplfbrettd7655fr4n2y
@@ -3113,8 +3126,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.9.3_g4afod7d35cb4tip475jfegeau:
-    resolution: {integrity: sha512-KSFwEH8NJfCmysxodFqXaLiKwMyI7z4DzXGl7JVnzltV/MG8b++s9s6oAsoJ9Zmd7g0tvbI+RmIs/MouEx7p1g==}
+  /@fuel-ui/test-utils/0.10.1_g4afod7d35cb4tip475jfegeau:
+    resolution: {integrity: sha512-awlsb5iasOq3S2oEdKOc0VbI49XW+e2UmcHeOgawzHHgtIbAhf12gBKKOIIWrHcw3mGi2gRl1Lt5w420Rw4Y6Q==}
     peerDependenciesMeta:
       react:
         optional: true
@@ -3152,8 +3165,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.9.3_mhlf2sen2giht73q7bzannutnm:
-    resolution: {integrity: sha512-KSFwEH8NJfCmysxodFqXaLiKwMyI7z4DzXGl7JVnzltV/MG8b++s9s6oAsoJ9Zmd7g0tvbI+RmIs/MouEx7p1g==}
+  /@fuel-ui/test-utils/0.10.1_mhlf2sen2giht73q7bzannutnm:
+    resolution: {integrity: sha512-awlsb5iasOq3S2oEdKOc0VbI49XW+e2UmcHeOgawzHHgtIbAhf12gBKKOIIWrHcw3mGi2gRl1Lt5w420Rw4Y6Q==}
     peerDependenciesMeta:
       react:
         optional: true
@@ -3191,8 +3204,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.9.3_xz4vctvudrzzxxauisw4why26m:
-    resolution: {integrity: sha512-KSFwEH8NJfCmysxodFqXaLiKwMyI7z4DzXGl7JVnzltV/MG8b++s9s6oAsoJ9Zmd7g0tvbI+RmIs/MouEx7p1g==}
+  /@fuel-ui/test-utils/0.10.1_xz4vctvudrzzxxauisw4why26m:
+    resolution: {integrity: sha512-awlsb5iasOq3S2oEdKOc0VbI49XW+e2UmcHeOgawzHHgtIbAhf12gBKKOIIWrHcw3mGi2gRl1Lt5w420Rw4Y6Q==}
     peerDependenciesMeta:
       react:
         optional: true
