@@ -34,14 +34,14 @@ export function TransactionRequest() {
         <Stack gap="$4">
           <ConnectInfo
             origin={ctx.origin!}
-            account={ctx.account!}
+            account={ctx.selectedAccount}
             isReadOnly={true}
           />
-          {ctx.account && (
+          {ctx.selectedAccount && (
             <TxFromTo
               from={{
                 type: AddressType.account,
-                address: ctx.account.publicKey,
+                address: ctx.selectedAccount.publicKey,
               }}
               to={{
                 type: AddressType.account,

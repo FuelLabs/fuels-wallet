@@ -42,6 +42,9 @@ export type AccountInputs = {
     oldPassword: string;
     newPassword: string;
   };
+  selectAccount: {
+    address: string;
+  };
 };
 
 export class AccountService {
@@ -174,6 +177,25 @@ export class AccountService {
     const manager = await unlockManager(input.oldPassword);
     await manager.updatePassphrase(input.oldPassword, input.newPassword);
     return manager.lock();
+  }
+
+  static getSelectedAccount() {
+    return db.transaction('r', db.accounts, async () => {
+      return (await db.accounts.toArray()).find(
+        (account) => account.isSelected
+      );
+    });
+  }
+
+  static selectAccount(input: AccountInputs['selectAccount']) {
+    return db.transaction('rw', db.accounts, async () => {
+      // const selectedAccount = await db.accounts
+      //   .filter((account) => !!account.isSelected)
+      //   .first();
+
+      // TODO add call to AccountService.updateAccount ???
+      return db.accounts.get(input.address);
+    });
   }
 }
 

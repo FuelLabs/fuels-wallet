@@ -6,26 +6,35 @@ import type { AccountInputs } from '../services/account';
 import { AccountService } from '../services/account';
 
 import { IS_LOGGED_KEY } from '~/config';
+import { store } from '~/store';
 import { FetchMachine } from '~/systems/Core';
-import { NetworkService } from '~/systems/Network';
+import type { Maybe } from '~/systems/Core';
 
 type MachineContext = {
-  data?: Account;
+  accounts?: Account[];
+  account?: Maybe<Account>;
+  accountAddress?: string;
   error?: unknown;
 };
 
 type MachineServices = {
-  fetchAccount: {
+  fetchAccounts: {
+    data: Account[];
+  };
+  selectAccount: {
     data: Account;
   };
 };
+
+// edit service to machine and do state stuff for selected account and add to state then add get that info in new useAccounts hook then add test
 
 type MachineEvents =
   | { type: 'UPDATE_ACCOUNT'; input?: null }
   | {
       type: 'SET_BALANCE_VISIBILITY';
       input: AccountInputs['setBalanceVisibility'];
-    };
+    }
+  | { type: 'SELECT_ACCOUNT'; input: AccountInputs['selectAccount'] };
 
 export const accountMachine = createMachine(
   {
@@ -38,21 +47,21 @@ export const accountMachine = createMachine(
     },
     predictableActionArguments: true,
     id: '(machine)',
-    initial: 'fetchingAccount',
+    initial: 'fetchingAccounts',
     states: {
-      fetchingAccount: {
+      fetchingAccounts: {
         tags: ['loading'],
         invoke: {
-          src: 'fetchAccount',
+          src: 'fetchAccounts',
           onDone: [
             {
               target: 'done',
-              actions: ['assignAccount', 'setLocalStorage'],
+              actions: ['assignAccounts', 'assignAccount', 'setLocalStorage'],
               cond: 'hasAccount',
             },
             {
-              actions: ['removeLocalStorage'],
               target: 'done',
+              actions: ['removeLocalStorage'],
             },
           ],
           onError: [
@@ -63,20 +72,34 @@ export const accountMachine = createMachine(
           ],
         },
       },
+      selectingAccount: {
+        invoke: {
+          src: 'selectAccount',
+          data: {
+            input: (_: MachineContext, ev: MachineEvents) => ev.input,
+          },
+          onDone: [
+            {
+              actions: ['notifyUpdateAccounts', 'redirectToHome'],
+              target: 'fetchingAccounts',
+            },
+          ],
+        },
+      },
       done: {
         after: {
-          TIMEOUT: 'fetchingAccount', // retry
+          TIMEOUT: 'fetchingAccounts', // retry
         },
       },
       failed: {
         after: {
-          INTERVAL: 'fetchingAccount', // retry
+          INTERVAL: 'fetchingAccounts', // retry
         },
       },
     },
     on: {
       UPDATE_ACCOUNT: {
-        target: 'fetchingAccount',
+        target: 'fetchingAccounts',
       },
       SET_BALANCE_VISIBILITY: {
         actions: ['setBalanceVisibility'],
@@ -87,8 +110,14 @@ export const accountMachine = createMachine(
   {
     delays: { INTERVAL: 2000, TIMEOUT: 15000 },
     actions: {
+      assignAccounts: assign({
+        accounts: (_, ev) => ev.data,
+      }),
       assignAccount: assign({
-        data: (_, ev) => ev.data,
+        account: (ctx, ev) =>
+          ctx.accountAddress
+            ? ev.data.find((account) => account.address === ctx.accountAddress)
+            : null,
       }),
       assignError: assign({
         error: (_, ev) => ev.data,
@@ -100,8 +129,8 @@ export const accountMachine = createMachine(
         localStorage.removeItem(IS_LOGGED_KEY);
       },
       setBalanceVisibility: assign({
-        data: (ctx, ev) => {
-          const account = ctx.data;
+        account: (ctx, ev) => {
+          const account = ctx.account;
           const { isHidden, address } = ev.input.data;
           if (account) {
             account.isHidden = isHidden;
@@ -112,29 +141,41 @@ export const accountMachine = createMachine(
           return account;
         },
       }),
+      notifyUpdateAccounts: () => {
+        store.updateAccounts();
+      },
     },
     services: {
-      fetchAccount: FetchMachine.create<never, Account | undefined>({
+      fetchAccounts: FetchMachine.create<never, Account[]>({
         showError: true,
         async fetch() {
-          const selectedNetwork = await NetworkService.getSelectedNetwork();
-          const defaultProvider = import.meta.env.VITE_FUEL_PROVIDER_URL;
-          const providerUrl = selectedNetwork?.url || defaultProvider;
-          const accounts = await AccountService.getAccounts();
-          const account = accounts[0];
-          if (!account) return undefined;
-          return AccountService.fetchBalance({ account, providerUrl });
+          return AccountService.getAccounts();
+        },
+      }),
+      selectAccount: FetchMachine.create<
+        AccountInputs['selectAccount'],
+        Account
+      >({
+        async fetch({ input }) {
+          if (!input?.address) {
+            throw new Error('Invalid account address');
+          }
+          const account = await AccountService.selectAccount(input);
+          if (!account) {
+            throw new Error('Failed to select account');
+          }
+          return account;
         },
       }),
     },
     guards: {
       hasAccount: (ctx, ev) => {
-        return Boolean(ctx?.data || ev?.data);
+        return Boolean(ctx?.account || ev?.data);
       },
     },
   }
 );
 
 export type AccountMachine = typeof accountMachine;
-export type AccountMachineService = InterpreterFrom<typeof accountMachine>;
-export type AccountMachineState = StateFrom<typeof accountMachine>;
+export type AccountMachineService = InterpreterFrom<AccountMachine>;
+export type AccountMachineState = StateFrom<AccountMachine>;

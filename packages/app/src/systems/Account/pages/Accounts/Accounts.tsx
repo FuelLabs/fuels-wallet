@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 
-import { MOCK_ACCOUNTS } from '../../__mocks__';
 import { AccountList } from '../../components';
 import { useAccount } from '../../hooks';
 
@@ -9,14 +8,14 @@ import { Layout, Pages } from '~/systems/Core';
 export const Accounts = () => {
   const navigate = useNavigate();
   // TODO fix: change to grab multiple accounts
-  const { account, isLoading } = useAccount();
+  const { accounts, isLoading } = useAccount();
 
   return (
     <Layout title="Accounts" isLoading={isLoading}>
       <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
 
       <Layout.Content>
-        {account && <AccountList accounts={MOCK_ACCOUNTS} />}
+        {accounts && <AccountList accounts={accounts} />}
       </Layout.Content>
     </Layout>
   );

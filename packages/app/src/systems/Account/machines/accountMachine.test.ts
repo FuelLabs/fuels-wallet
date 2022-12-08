@@ -22,9 +22,12 @@ describe('accountsMachine', () => {
   beforeEach(() => {
     const machine = accountMachine.withContext({}).withConfig({
       services: {
-        async fetchAccount() {
-          return MOCK_ACCOUNT;
+        async fetchAccounts() {
+          return MOCK_ACCOUNTS;
         },
+      },
+      actions: {
+        redirectToHome() {},
       },
     });
 
@@ -37,19 +40,19 @@ describe('accountsMachine', () => {
 
   it('should have just one account added', async () => {
     const state = await waitFor(service, (state) => state.matches('done'));
-    const { data } = state.context;
-    expect(data).toEqual(MOCK_ACCOUNT);
+    const { account } = state.context;
+    expect(account).toEqual(MOCK_ACCOUNT);
   });
 
   it('should should poll the account info', async () => {
     jest.useFakeTimers();
     const state = await waitFor(service, (state) => state.matches('done'));
-    const { data } = state.context;
-    expect(data).toEqual(MOCK_ACCOUNT);
+    const { account } = state.context;
+    expect(account).toEqual(MOCK_ACCOUNT);
     jest.advanceTimersByTime(15000);
     const { matches } = await waitFor(service, (state) =>
-      state.matches('fetchingAccount')
+      state.matches('fetchingAccounts')
     );
-    expect(matches('fetchingAccount')).toBeTruthy();
+    expect(matches('fetchingAccounts')).toBeTruthy();
   });
 });
