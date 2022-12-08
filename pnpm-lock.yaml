@@ -48,7 +48,7 @@ importers:
     dependencies:
       '@fuel-ui/config': 0.10.1_typescript@4.9.3
       '@fuel-ui/css': 0.10.1
-      '@fuel-ui/react': 0.10.1_els4vn63zb3qd5rx7xdjgoxz2i
+      '@fuel-ui/react': 0.10.1_3r4iijiq64n2q6da676p7762xe
       execa: 6.1.0
       fuelhat: link:packages/fuelhat
     devDependencies:
@@ -171,8 +171,8 @@ importers:
       '@fuel-ts/wallet-manager': 0.23.0
       '@fuel-ui/config': 0.10.1_typescript@4.9.3
       '@fuel-ui/css': 0.10.1
-      '@fuel-ui/react': 0.10.1_di6kev53fady7v3z5hobcimcey
-      '@fuel-ui/test-utils': 0.10.1_5hm77qq6x5bclr7un5r3ado7la
+      '@fuel-ui/react': 0.10.1_gpp3dtm56lfqjwryuiamvcxrxu
+      '@fuel-ui/test-utils': 0.10.1_g2mjmgvnwemjquqs2ecdyjqq3u
       '@fuel-wallet/sdk': link:../sdk
       '@fuel-wallet/types': link:../types
       '@fuel-wallet/xstore': link:../store
@@ -187,7 +187,7 @@ importers:
       dexie-react-hooks: 1.1.1_3imspw4mgx25623dxsqc7dbkja
       events: 3.3.0
       fake-indexeddb: 4.0.1
-      framer-motion: 7.6.17_biqbaboplfbrettd7655fr4n2y
+      framer-motion: 7.6.19_biqbaboplfbrettd7655fr4n2y
       fuels: 0.23.0
       json-rpc-2.0: 1.4.1
       process: 0.11.10
@@ -326,16 +326,16 @@ importers:
       vfile: ^5.3.6
     dependencies:
       '@docsearch/css': 3.3.0
-      '@docsearch/react': 3.3.0_2zx2umvpluuhvlq44va5bta2da
+      '@docsearch/react': 3.3.0_ib3m5ricvtkl2cll7qpr2f6lvq
       '@fuel-ui/css': 0.10.1
-      '@fuel-ui/react': 0.10.1_q3s7nynvfr7x4sazcq2dlvczay
+      '@fuel-ui/react': 0.10.1_g4afod7d35cb4tip475jfegeau
       '@fuel-wallet/sdk': link:../sdk
       '@mdx-js/react': 2.1.5_react@18.2.0
       '@next/mdx': 13.0.6_@mdx-js+react@2.1.5
       acorn: 8.8.1
       acorn-walk: 8.2.0
       dotenv: 16.0.3
-      framer-motion: 7.6.17_biqbaboplfbrettd7655fr4n2y
+      framer-motion: 7.6.19_biqbaboplfbrettd7655fr4n2y
       fuels: 0.23.0
       globby: 13.1.2
       gray-matter: 4.0.3
@@ -2272,7 +2272,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.20.6
-      '@types/react': 18.0.25
+      '@types/react': 18.0.26
       clsx: 1.2.1
       focus-lock: 0.8.1
       react: 18.2.0
@@ -2964,12 +2964,12 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
-  /@fuel-ui/react/0.10.1_di6kev53fady7v3z5hobcimcey:
+  /@fuel-ui/react/0.10.1_3r4iijiq64n2q6da676p7762xe:
     resolution: {integrity: sha512-PLIfpVqz4rkbJ6yTWHXnHpzEXyxoC86OeGAa87RuyT1gce3PMFZa9cqFlrvkvqaOOA57Rih/XdQbNHkoAmVLJA==}
     dependencies:
       '@fuel-ts/math': 0.22.2
       '@fuel-ui/css': 0.10.1
-      '@fuel-ui/test-utils': 0.10.1_5hm77qq6x5bclr7un5r3ado7la
+      '@fuel-ui/test-utils': 0.10.1_eu6sjocyekyjwbzdo7nuc22wiu
       '@radix-ui/react-accordion': 1.0.1_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_ib3m5ricvtkl2cll7qpr2f6lvq
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3018,12 +3018,12 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/react/0.10.1_els4vn63zb3qd5rx7xdjgoxz2i:
+  /@fuel-ui/react/0.10.1_g4afod7d35cb4tip475jfegeau:
     resolution: {integrity: sha512-PLIfpVqz4rkbJ6yTWHXnHpzEXyxoC86OeGAa87RuyT1gce3PMFZa9cqFlrvkvqaOOA57Rih/XdQbNHkoAmVLJA==}
     dependencies:
       '@fuel-ts/math': 0.22.2
       '@fuel-ui/css': 0.10.1
-      '@fuel-ui/test-utils': 0.10.1_ug6shun5izyso6v7gxn22dzewe
+      '@fuel-ui/test-utils': 0.10.1_dffuszfxkcgaxpkjdrbb3vhoye
       '@radix-ui/react-accordion': 1.0.1_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_ib3m5ricvtkl2cll7qpr2f6lvq
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3072,12 +3072,12 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/react/0.10.1_q3s7nynvfr7x4sazcq2dlvczay:
+  /@fuel-ui/react/0.10.1_gpp3dtm56lfqjwryuiamvcxrxu:
     resolution: {integrity: sha512-PLIfpVqz4rkbJ6yTWHXnHpzEXyxoC86OeGAa87RuyT1gce3PMFZa9cqFlrvkvqaOOA57Rih/XdQbNHkoAmVLJA==}
     dependencies:
       '@fuel-ts/math': 0.22.2
       '@fuel-ui/css': 0.10.1
-      '@fuel-ui/test-utils': 0.10.1_gvsf4ccvy4f25vssxc5zdagz74
+      '@fuel-ui/test-utils': 0.10.1_g2mjmgvnwemjquqs2ecdyjqq3u
       '@radix-ui/react-accordion': 1.0.1_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_ib3m5ricvtkl2cll7qpr2f6lvq
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3126,7 +3126,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.10.1_5hm77qq6x5bclr7un5r3ado7la:
+  /@fuel-ui/test-utils/0.10.1_dffuszfxkcgaxpkjdrbb3vhoye:
     resolution: {integrity: sha512-awlsb5iasOq3S2oEdKOc0VbI49XW+e2UmcHeOgawzHHgtIbAhf12gBKKOIIWrHcw3mGi2gRl1Lt5w420Rw4Y6Q==}
     peerDependencies:
       react: '*'
@@ -3140,48 +3140,7 @@ packages:
       '@testing-library/react-hooks': 8.0.1_ib3m5ricvtkl2cll7qpr2f6lvq
       '@testing-library/user-event': 14.4.3_aaq3sbffpfe3jnxzm2zngsddei
       identity-obj-proxy: 3.0.0
-      jest: 29.3.1
-      jest-axe: 7.0.0
-      jest-environment-jsdom: 29.3.1
-      jest-fail-on-console: 3.0.2
-      jest-matcher-utils: 29.3.1
-      jest-transform-stub: 2.0.0
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      resize-observer-polyfill: 1.5.1
-      ts-jest: 29.0.3_gruvivcimsmdfhnjphbo3uejz4
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@jest/types'
-      - '@types/node'
-      - '@types/react'
-      - babel-jest
-      - bufferutil
-      - canvas
-      - esbuild
-      - node-notifier
-      - react-test-renderer
-      - supports-color
-      - ts-node
-      - typescript
-      - utf-8-validate
-    dev: false
-
-  /@fuel-ui/test-utils/0.10.1_gvsf4ccvy4f25vssxc5zdagz74:
-    resolution: {integrity: sha512-awlsb5iasOq3S2oEdKOc0VbI49XW+e2UmcHeOgawzHHgtIbAhf12gBKKOIIWrHcw3mGi2gRl1Lt5w420Rw4Y6Q==}
-    peerDependencies:
-      react: '*'
-    peerDependenciesMeta:
-      react:
-        optional: true
-    dependencies:
-      '@testing-library/dom': 8.19.0
-      '@testing-library/jest-dom': 5.16.5
-      '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
-      '@testing-library/react-hooks': 8.0.1_2zx2umvpluuhvlq44va5bta2da
-      '@testing-library/user-event': 14.4.3_aaq3sbffpfe3jnxzm2zngsddei
-      identity-obj-proxy: 3.0.0
-      jest: 29.3.1_@types+node@18.11.10
+      jest: 29.3.1_@types+node@18.11.11
       jest-axe: 7.0.0
       jest-environment-jsdom: 29.3.1
       jest-fail-on-console: 3.0.2
@@ -3208,7 +3167,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.10.1_ug6shun5izyso6v7gxn22dzewe:
+  /@fuel-ui/test-utils/0.10.1_eu6sjocyekyjwbzdo7nuc22wiu:
     resolution: {integrity: sha512-awlsb5iasOq3S2oEdKOc0VbI49XW+e2UmcHeOgawzHHgtIbAhf12gBKKOIIWrHcw3mGi2gRl1Lt5w420Rw4Y6Q==}
     peerDependencies:
       react: '*'
@@ -3249,8 +3208,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.9.3_g2mjmgvnwemjquqs2ecdyjqq3u:
-    resolution: {integrity: sha512-KSFwEH8NJfCmysxodFqXaLiKwMyI7z4DzXGl7JVnzltV/MG8b++s9s6oAsoJ9Zmd7g0tvbI+RmIs/MouEx7p1g==}
+  /@fuel-ui/test-utils/0.10.1_g2mjmgvnwemjquqs2ecdyjqq3u:
+    resolution: {integrity: sha512-awlsb5iasOq3S2oEdKOc0VbI49XW+e2UmcHeOgawzHHgtIbAhf12gBKKOIIWrHcw3mGi2gRl1Lt5w420Rw4Y6Q==}
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
@@ -3798,9 +3757,9 @@ packages:
   /@motionone/animation/10.15.0:
     resolution: {integrity: sha512-FllQ9ogoATxEEiq7TFKuh2uPEvcw9658IYCpOTGnu53HYCrFQS61eKwsn7TqR4NEnTql2I+NGNipFqw3UZo1AA==}
     dependencies:
-      '@motionone/easing': 10.14.0
-      '@motionone/types': 10.14.0
-      '@motionone/utils': 10.14.0
+      '@motionone/easing': 10.15.0
+      '@motionone/types': 10.15.0
+      '@motionone/utils': 10.15.0
       tslib: 2.4.1
     dev: false
 
@@ -3812,21 +3771,21 @@ packages:
       '@motionone/types': 10.15.0
       '@motionone/utils': 10.15.0
       hey-listen: 1.0.8
-      tslib: 2.4.0
+      tslib: 2.4.1
     dev: false
 
   /@motionone/easing/10.15.0:
     resolution: {integrity: sha512-VA1a0sa81euSeki2JgVl/t4MygeqfJn7GsMfewoGCln7gp/iZR12HbSo6RaWsHxPkUBRxSRUo+8zeuYRxv6oZQ==}
     dependencies:
-      '@motionone/utils': 10.14.0
+      '@motionone/utils': 10.15.0
       tslib: 2.4.1
     dev: false
 
   /@motionone/generators/10.15.0:
     resolution: {integrity: sha512-bE4lEd/RIQ+DwlLC2IfF/FBOSPwjxV5AbwQuatMg/bWtndps66YMvX1NbvD0wzg+EIpPwi8i8YnYy7usdb8apg==}
     dependencies:
-      '@motionone/types': 10.14.0
-      '@motionone/utils': 10.14.0
+      '@motionone/types': 10.15.0
+      '@motionone/utils': 10.15.0
       tslib: 2.4.1
     dev: false
 
