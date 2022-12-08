@@ -31,7 +31,7 @@ describe('AssetsAmount', () => {
         isPositive
       />
     );
-    expect(screen.getByText('+14.563 ETH')).toBeInTheDocument();
+    expect(screen.getByText('+14.563943834 ETH')).toBeInTheDocument();
   });
 
   it('should show negative values with substract signal', async () => {
@@ -42,14 +42,14 @@ describe('AssetsAmount', () => {
         isNegative
       />
     );
-    expect(screen.getByText('-14.563 ETH')).toBeInTheDocument();
+    expect(screen.getByText('-14.563943834 ETH')).toBeInTheDocument();
   });
 
   it('should not show positive/negative signal', async () => {
     render(
       <AssetsAmount amounts={MOCK_ASSETS_AMOUNTS} title="Assets to Send" />
     );
-    const el = screen.getByText('14.563 ETH');
+    const el = screen.getByText('14.563943834 ETH');
     expect(el.innerHTML.indexOf('+')).toEqual(-1);
     expect(el.innerHTML.indexOf('-')).toEqual(-1);
     expect(el).toBeInTheDocument();
