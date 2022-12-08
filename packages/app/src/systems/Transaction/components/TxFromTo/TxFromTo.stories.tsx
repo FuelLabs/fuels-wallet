@@ -20,6 +20,13 @@ export const Default = (args: TxFromToProps) => (
     <TxFromTo {...args} from={ACCOUNT} to={CONTRACT} />
   </Box>
 );
+export const OnlyTo = (args: TxFromToProps) => (
+  <Box
+    css={{ maxWidth: 318, display: 'flex', flexDirection: 'column', gap: '$4' }}
+  >
+    <TxFromTo {...args} to={CONTRACT} />
+  </Box>
+);
 export const Pending = (args: TxFromToProps) => (
   <Box
     css={{ maxWidth: 318, display: 'flex', flexDirection: 'column', gap: '$4' }}

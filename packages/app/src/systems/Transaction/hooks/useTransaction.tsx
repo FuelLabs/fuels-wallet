@@ -1,6 +1,6 @@
 import { AddressType } from '@fuel-wallet/types';
 import { useInterpret, useSelector } from '@xstate/react';
-import { bn } from 'fuels';
+import { bn, TransactionType } from 'fuels';
 import { useEffect, useMemo } from 'react';
 
 import type { TransactionMachineState } from '../machines';
@@ -100,7 +100,8 @@ export function useTransaction({
   const shouldShowAlert =
     isTxNotFound || isInvalidTxId || isTxPending || isTxFailed;
   const shouldShowTx = tx && !isFetching && !isInvalidTxId && !isTxNotFound;
-  const shouldShowTxDetails = shouldShowTx && !isFetchingResult;
+  const shouldShowTxDetails =
+    shouldShowTx && !isFetchingResult && tx.type !== TransactionType.Mint;
   const isFetchingDetails = isFetching || isFetchingResult;
   const shouldShowAssetsAmount = Boolean(outputsToSend?.length);
 

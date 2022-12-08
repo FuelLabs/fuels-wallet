@@ -41,12 +41,12 @@ export function TxFromTo({ from, to, status, isLoading }: TxFromToProps) {
       {isLoading ? (
         <TxRecipientCard.Loader />
       ) : (
-        from && <TxRecipientCard recipient={from} />
+        <TxRecipientCard recipient={from} />
       )}
       {isLoading ? (
         <TxRecipientCard.Loader />
       ) : (
-        to && <TxRecipientCard recipient={to} isReceiver />
+        <TxRecipientCard recipient={to} isReceiver />
       )}
     </Flex>
   );
