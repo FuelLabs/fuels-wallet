@@ -10,7 +10,7 @@ import { DECIMAL_UNITS } from '~/config';
 
 export type TxDetailsProps = {
   fee?: BN;
-  outputAmount?: BN;
+  amountSent?: BN;
 };
 
 type TxDetailsComponent = FC<TxDetailsProps> & {
@@ -19,9 +19,9 @@ type TxDetailsComponent = FC<TxDetailsProps> & {
 
 export const TxDetails: TxDetailsComponent = ({
   fee,
-  outputAmount,
+  amountSent,
 }: TxDetailsProps) => {
-  const total = fee?.add(bn(outputAmount));
+  const total = fee?.add(bn(amountSent));
   const shouldShowTotal = total?.gt(bn(fee));
 
   return (

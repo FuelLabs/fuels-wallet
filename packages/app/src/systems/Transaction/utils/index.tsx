@@ -65,5 +65,12 @@ export function getContractOutputsFromTx(tx?: TxRequest | Transaction) {
   });
 }
 
+export function getChangeOutputFromTx(tx?: TxRequest | Transaction) {
+  return getOutputsFromTx<TxOutputCoin>({
+    tx,
+    type: OutputType.Change,
+  })?.[0];
+}
+
 export * from './error';
 export * from './tx';

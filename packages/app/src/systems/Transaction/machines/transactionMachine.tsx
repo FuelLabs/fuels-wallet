@@ -34,7 +34,7 @@ type MachineContext = {
   txStatus?: TxStatus;
   tx?: Transaction;
   txResult?: TransactionResult<any>;
-  fee?: BN;
+  receiptsFee?: BN;
   txId?: string;
 };
 
@@ -133,7 +133,7 @@ export const transactionMachine = createMachine(
         error: (_) => TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND,
       }),
       clearError: assign({
-        error: (_) => TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND,
+        error: (_) => undefined,
       }),
       assignGetTransactionResponse: assign((_, event) => {
         const data = event.data as GetTransactionResponse;
@@ -155,7 +155,7 @@ export const transactionMachine = createMachine(
             txResult.status.type === 'success'
               ? TxStatus.success
               : TxStatus.error,
-          fee: txResult.fee,
+          receiptsFee: txResult.fee,
         };
       }),
     },

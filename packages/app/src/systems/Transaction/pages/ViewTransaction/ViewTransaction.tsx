@@ -16,9 +16,7 @@ export function ViewTransaction() {
   const {
     isFetching,
     isFetchingResult,
-    fee,
-    outputsToSend,
-    outputAmount,
+    txFee,
     txStatus,
     txId,
     tx,
@@ -26,10 +24,11 @@ export function ViewTransaction() {
     shouldShowAlert,
     shouldShowTx,
     shouldShowTxDetails,
-    shouldShowAssetsAmount,
     txFrom,
     txTo,
     isFetchingDetails,
+    toAssetAmounts,
+    amountSent,
   } = useTransaction({
     txId: txIdQueryParam,
     providerUrl,
@@ -57,8 +56,8 @@ export function ViewTransaction() {
                 providerUrl={providerUrl}
               />
               <TxFromTo from={txFrom} to={txTo} status={txStatus} />
-              {shouldShowAssetsAmount && (
-                <AssetsAmount amounts={outputsToSend} title="Assets Sent" />
+              {Boolean(toAssetAmounts?.length) && (
+                <AssetsAmount amounts={toAssetAmounts} title="Assets Sent" />
               )}
             </>
           )}
@@ -71,7 +70,7 @@ export function ViewTransaction() {
           )}
           {isFetchingDetails && <TxDetails.Loader />}
           {shouldShowTxDetails && (
-            <TxDetails fee={fee} outputAmount={outputAmount} />
+            <TxDetails fee={txFee} amountSent={amountSent} />
           )}
         </Stack>
       </Layout.Content>
