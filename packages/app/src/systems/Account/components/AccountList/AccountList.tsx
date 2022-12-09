@@ -3,12 +3,13 @@ import type { Account } from '@fuel-wallet/types';
 import { useState } from 'react';
 
 import { AccountItem } from '../AccountItem';
+import type { AccountItemProps } from '../AccountItem';
 
-export type AccountListProps = {
+export type AccountListProps = Omit<AccountItemProps, 'account'> & {
   accounts: Account[];
 };
 
-export function AccountList({ accounts }: AccountListProps) {
+export function AccountList({ accounts, ...props }: AccountListProps) {
   const [showHidden, setShowHidden] = useState(() => false);
 
   function toggle() {
@@ -21,6 +22,7 @@ export function AccountList({ accounts }: AccountListProps) {
         {accounts.map((account) => {
           return (
             <AccountItem
+              {...props}
               key={account.address}
               account={account}
               isHidden={!showHidden && account.isHidden}

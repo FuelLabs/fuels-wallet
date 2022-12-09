@@ -66,6 +66,7 @@ export function useAccount(
     handlers: {
       goToList,
       setBalanceVisibility: store.setBalanceVisibility,
+      selectAccount: store.selectAccount,
     },
     isLoading: isLoading && !accounts,
     accounts,

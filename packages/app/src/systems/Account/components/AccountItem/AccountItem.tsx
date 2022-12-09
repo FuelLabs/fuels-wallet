@@ -7,12 +7,14 @@ export type AccountItemProps = {
   account: Account;
   isSelected?: boolean;
   isHidden?: boolean;
+  onPress?: (account: Account) => Promise<void> | void;
 };
 
 export function AccountItem({
   account,
   isSelected,
   isHidden,
+  onPress,
 }: AccountItemProps) {
   if (isHidden) return null;
   /**
@@ -32,7 +34,7 @@ export function AccountItem({
   //   />
   // );
   return (
-    <CardList.Item isActive={isSelected}>
+    <CardList.Item isActive={isSelected} onClick={() => onPress?.(account)}>
       <Avatar.Generated size="md" background="fuel" hash={account.address} />
       <Flex direction="column">
         <Heading as="h5" css={{ margin: 0 }}>
