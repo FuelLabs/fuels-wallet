@@ -5,7 +5,7 @@ import { waitFor } from 'xstate/lib/waitFor';
 
 import { MOCK_ACCOUNTS } from '../__mocks__';
 
-import { accountMachine } from './accountMachine';
+import { accountMachine, AccountScreen } from './accountMachine';
 
 type Service = InterpreterFrom<typeof accountMachine>;
 
@@ -36,6 +36,22 @@ describe('accountsMachine', () => {
 
   afterEach(() => {
     service.stop();
+  });
+
+  describe('list', () => {
+    const initialEv: any = {
+      type: 'SET_INITIAL_DATA',
+      input: { type: AccountScreen.list },
+    };
+
+    it('should fetch a list of accounts', async () => {
+      const nextState = service.nextState(initialEv);
+      expect(nextState.value).toBe('fetchingAccounts');
+
+      service.send(initialEv);
+      const state = await waitFor(service, (state) => state.matches('done'));
+      expect(state.context.accounts?.length).toBe(3);
+    });
   });
 
   it('should have just one account added', async () => {
