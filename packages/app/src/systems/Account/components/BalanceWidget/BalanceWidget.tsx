@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 
 import { useAccount } from '../../hooks';
+import { AccountScreen } from '../../machines';
 
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
@@ -47,7 +48,7 @@ export function BalanceWidget({
   onChangeVisibility,
 }: BalanceWidgetProps) {
   const [isHidden, setIsHidden] = useState(_isHidden);
-  const { handlers } = useAccount();
+  const { handlers } = useAccount({ type: AccountScreen.list });
 
   useEffect(() => {
     setIsHidden(_isHidden);

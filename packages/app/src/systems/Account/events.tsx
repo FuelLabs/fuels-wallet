@@ -1,6 +1,7 @@
 import type { Account } from '@fuel-wallet/types';
 import type { StoreClass } from '@fuel-wallet/xstore';
 
+import type { AccountInitialInput } from './machines';
 import type { AccountInputs } from './services';
 
 import type { StoreMachines } from '~/store';
@@ -21,6 +22,12 @@ export function accountEvents(store: StoreClass<StoreMachines>) {
       store.send(Services.accounts, {
         type: 'SELECT_ACCOUNT',
         input: { address: account.address },
+      });
+    },
+    initAccounts(input: AccountInitialInput) {
+      store.send(Services.accounts, {
+        type: 'SET_INITIAL_DATA',
+        input,
       });
     },
   };

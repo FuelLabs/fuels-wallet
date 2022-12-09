@@ -3,7 +3,8 @@ import type { Account } from '@fuel-wallet/types';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import type { AccountMachineState } from '../machines';
+import { AccountScreen } from '../machines';
+import type { AccountInitialInput, AccountMachineState } from '../machines';
 
 import { Services, store } from '~/store';
 import { Pages } from '~/systems/Core';
@@ -30,7 +31,9 @@ const listenerAccountFetcher = () => {
   });
 };
 
-export function useAccount() {
+export function useAccount(
+  opts: AccountInitialInput = { type: AccountScreen.list }
+) {
   const shouldListen = useRef(true);
   const navigate = useNavigate();
   const isLoading = store.useSelector(Services.accounts, selectors.isLoading);
@@ -54,6 +57,10 @@ export function useAccount() {
       };
     }
   }, []);
+
+  useEffect(() => {
+    store.initAccounts(opts);
+  }, [opts.accountAddress, opts.type]);
 
   return {
     handlers: {

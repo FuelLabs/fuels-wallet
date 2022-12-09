@@ -8,13 +8,11 @@ import { NetworkScreen, useNetworks } from '../../../Network';
 import { sidebarItems } from '../../constants';
 
 export function Sidebar() {
-  const { account } = useAccount();
-
   const { networks, selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
 
-  const { handlers: accountHandlers } = useAccount();
+  const { handlers: accountHandlers, account } = useAccount();
 
   return (
     <Flex css={styles.wrapper}>

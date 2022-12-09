@@ -40,6 +40,7 @@ describe('accountsMachine', () => {
 
   it('should have just one account added', async () => {
     const state = await waitFor(service, (state) => state.matches('done'));
+    console.log('here ', state.context);
     const { account } = state.context;
     expect(account).toEqual(MOCK_ACCOUNT);
   });

@@ -10,6 +10,16 @@ import { store } from '~/store';
 import { FetchMachine } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
 
+export enum AccountScreen {
+  list = 'list',
+  add = 'add',
+}
+
+export type AccountInitialInput = {
+  type: AccountScreen;
+  accountAddress?: string;
+};
+
 type MachineContext = {
   accounts?: Account[];
   account?: Maybe<Account>;
@@ -29,6 +39,7 @@ type MachineServices = {
 // edit service to machine and do state stuff for selected account and add to state then add get that info in new useAccounts hook then add test
 
 type MachineEvents =
+  | { type: 'SET_INITIAL_DATA'; input: AccountInitialInput }
   | { type: 'UPDATE_ACCOUNT'; input?: null }
   | {
       type: 'SET_BALANCE_VISIBILITY';
@@ -98,6 +109,12 @@ export const accountMachine = createMachine(
       },
     },
     on: {
+      SET_INITIAL_DATA: [
+        {
+          actions: ['assignAccountAddress'],
+          target: 'fetchingAccounts',
+        },
+      ],
       UPDATE_ACCOUNT: {
         target: 'fetchingAccounts',
       },
@@ -110,14 +127,23 @@ export const accountMachine = createMachine(
   {
     delays: { INTERVAL: 2000, TIMEOUT: 15000 },
     actions: {
+      assignAccountAddress: assign({
+        accountAddress: (_, ev) => {
+          console.log('here again', ev.input);
+          return ev.input.accountAddress;
+        },
+      }),
       assignAccounts: assign({
         accounts: (_, ev) => ev.data,
       }),
       assignAccount: assign({
-        account: (ctx, ev) =>
-          ctx.accountAddress
+        account: (ctx, ev) => {
+          console.log('ctx', ctx);
+          console.log('data', ev.data);
+          return ctx.accountAddress
             ? ev.data.find((account) => account.address === ctx.accountAddress)
-            : null,
+            : null;
+        },
       }),
       assignError: assign({
         error: (_, ev) => ev.data,
