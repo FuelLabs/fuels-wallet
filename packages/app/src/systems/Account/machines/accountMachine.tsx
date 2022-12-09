@@ -122,6 +122,9 @@ export const accountMachine = createMachine(
         actions: ['setBalanceVisibility'],
         target: 'done',
       },
+      SELECT_ACCOUNT: {
+        target: 'selectingAccount',
+      },
     },
   },
   {
