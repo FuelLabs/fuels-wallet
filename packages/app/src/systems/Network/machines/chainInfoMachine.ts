@@ -32,6 +32,15 @@ export const chainInfoMachine = createMachine(
     id: '(machine)',
     initial: 'idle',
     states: {
+      idle: {
+        on: {
+          FETCH_CHAIN_INFO: [
+            {
+              target: 'fetchingChainInfo',
+            },
+          ],
+        },
+      },
       fetchingChainInfo: {
         tags: ['loading'],
         invoke: {
@@ -47,15 +56,6 @@ export const chainInfoMachine = createMachine(
             {
               actions: ['assignChainInfo'],
               target: 'idle',
-            },
-          ],
-        },
-      },
-      idle: {
-        on: {
-          FETCH_CHAIN_INFO: [
-            {
-              target: 'fetchingChainInfo',
             },
           ],
         },
