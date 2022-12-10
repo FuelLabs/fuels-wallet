@@ -7,10 +7,8 @@ import { MOCK_CHAIN_INFO } from '../__mocks__/chainInfo';
 import type { ChainInfoMachineService } from './chainInfoMachine';
 import { chainInfoMachine } from './chainInfoMachine';
 
+import { VITE_FUEL_PROVIDER_URL } from '~/config';
 import { mockServer } from '~/mocks/server';
-
-const CHAIN_INFO_ID =
-  '0xc7862855b418ba8f58878db434b21053a61a2025209889cc115989e8040ff077';
 
 mockServer([
   graphql.query('getChain', (_req, res, ctx) => {
@@ -32,7 +30,9 @@ describe('chainInfoMachine', () => {
   it('should fetch chainInfo', async () => {
     await waitFor(service, (state) => state.matches('idle'));
 
-    service.send('FETCH_CHAIN_INFO', { input: { txId: CHAIN_INFO_ID } });
+    service.send('FETCH_CHAIN_INFO', {
+      input: { providerUrl: VITE_FUEL_PROVIDER_URL },
+    });
 
     await waitFor(service, (state) => state.matches('fetchingChainInfo'));
     await waitFor(service, (state) => state.matches('idle'));
