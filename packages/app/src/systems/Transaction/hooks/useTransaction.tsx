@@ -15,7 +15,7 @@ import {
   getCoinOutputsFromTx,
   getContractInputFromIndex,
   getContractOutputsFromTx,
-  getGasUsedContractCreated,
+  getTxFeeContractCreated,
 } from '../utils';
 
 import { useChainInfo } from '~/systems/Network';
@@ -136,7 +136,7 @@ export function useTransaction({
     }
 
     const txFee = isTxTypeCreate
-      ? getGasUsedContractCreated(tx, {
+      ? getTxFeeContractCreated(tx, {
           gasPerByte: bn(chainInfo?.consensusParameters.gasPerByte),
           gasPriceFacor: bn(chainInfo?.consensusParameters.gasPriceFactor),
         })
@@ -161,6 +161,7 @@ export function useTransaction({
     changeOutput,
     contractInput,
     isTxTypeCreate,
+    tx?.gasPrice,
     chainInfo?.consensusParameters.gasPerByte,
     chainInfo?.consensusParameters.gasPriceFactor,
   ]);
