@@ -37,6 +37,5 @@ describe('chainInfoMachine', () => {
     await waitFor(service, (state) => state.matches('fetchingChainInfo'));
     await waitFor(service, (state) => state.matches('idle'));
     await waitFor(service, (state) => Boolean(state.context.chainInfo));
-    console.log(``);
   });
 });
