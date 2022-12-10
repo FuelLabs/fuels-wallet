@@ -1,5 +1,11 @@
-import type { Transaction, TransactionRequestInput } from 'fuels';
-import { InputType, OutputType } from 'fuels';
+import type { BN, Transaction, TransactionRequestInput } from 'fuels';
+import {
+  bn,
+  calculatePriceWithFactor,
+  TransactionCoder,
+  InputType,
+  OutputType,
+} from 'fuels';
 
 import type {
   TxInputCoin,
@@ -70,6 +76,28 @@ export function getChangeOutputFromTx(tx?: TxRequest | Transaction) {
     tx,
     type: OutputType.Change,
   })?.[0];
+}
+
+export function getGasUsedContractCreated(
+  tx?: Transaction,
+  options: { gasPerByte: BN; gasPriceFacor: BN } = {
+    gasPerByte: bn(0),
+    gasPriceFacor: bn(0),
+  }
+) {
+  const { gasPerByte, gasPriceFacor } = options;
+  const transactionBytes = tx ? new TransactionCoder().encode(tx) : [];
+  const witnessSize =
+    tx?.witnesses?.reduce((total, w) => total + w.dataLength, 0) || 0;
+  const txChargeableBytes = bn(transactionBytes.length - witnessSize);
+
+  const contractGasUsed = calculatePriceWithFactor(
+    txChargeableBytes,
+    gasPerByte,
+    gasPriceFacor
+  );
+
+  return contractGasUsed;
 }
 
 export * from './error';

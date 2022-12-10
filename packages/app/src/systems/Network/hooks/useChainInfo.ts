@@ -1,8 +1,8 @@
 import { useInterpret, useSelector } from '@xstate/react';
 import { useEffect } from 'react';
 
-import type { ChainInfoMachineState } from '../machines';
-import { chainInfoMachine } from '../machines';
+import type { ChainInfoMachineState } from '../machines/chainInfoMachine';
+import { chainInfoMachine } from '../machines/chainInfoMachine';
 
 const selectors = {
   context: (state: ChainInfoMachineState) => state.context,

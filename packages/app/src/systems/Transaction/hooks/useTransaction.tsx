@@ -1,13 +1,7 @@
 import type { Coin } from '@fuel-wallet/types';
 import { AddressType } from '@fuel-wallet/types';
 import { useInterpret, useSelector } from '@xstate/react';
-import {
-  bn,
-  calculatePriceWithFactor,
-  GAS_PRICE_FACTOR,
-  TransactionCoder,
-  TransactionType,
-} from 'fuels';
+import { bn, TransactionType } from 'fuels';
 import { useEffect, useMemo } from 'react';
 
 import type { TransactionMachineState } from '../machines';
@@ -21,7 +15,10 @@ import {
   getCoinOutputsFromTx,
   getContractInputFromIndex,
   getContractOutputsFromTx,
+  getGasUsedContractCreated,
 } from '../utils';
+
+import { useChainInfo } from '~/systems/Network';
 
 const selectors = {
   isFetching: (state: TransactionMachineState) => state.matches('fetching'),
@@ -41,8 +38,7 @@ export function useTransaction({
   providerUrl,
   waitProviderUrl,
 }: UseTransactionProps) {
-  // const { chainInfo } = useChainInfo(providerUrl);
-  // console.log(`chainInfo`, chainInfo);
+  const { chainInfo } = useChainInfo(providerUrl);
   const service = useInterpret(() => transactionMachine);
   const { send } = service;
   const isFetching = useSelector(service, selectors.isFetching);
@@ -51,6 +47,15 @@ export function useTransaction({
 
   const { txResponse, error, txStatus, tx, txResult, receiptsFee, txId } =
     context;
+
+  const isTxTypeMint = tx?.type === TransactionType.Mint;
+  const isTxTypeCreate = tx?.type === TransactionType.Create;
+  const isTxPending = txStatus === TxStatus.pending;
+  const isTxFailed = txStatus === TxStatus.error;
+  const isInvalidTxId = error === TRANSACTION_ERRORS.INVALID_ID;
+  const isTxNotFound = error === TRANSACTION_ERRORS.NOT_FOUND;
+  const isTxReceiptsNotFound = error === TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND;
+  const isFetchingDetails = isFetching || isFetchingResult;
 
   const {
     coinInputs,
@@ -87,6 +92,7 @@ export function useTransaction({
     forwardedAmount,
     toAssetAmounts,
     amountSent,
+    txFee,
   } = useMemo(() => {
     const inputPublicKey = coinInputs[0]?.owner;
     const outputsToSend = coinOutputs.filter(
@@ -129,8 +135,12 @@ export function useTransaction({
       };
     }
 
-    // if (tx?.type === TransactionType.Create) {
-    // }
+    const txFee = isTxTypeCreate
+      ? getGasUsedContractCreated(tx, {
+          gasPerByte: bn(chainInfo?.consensusParameters.gasPerByte),
+          gasPriceFacor: bn(chainInfo?.consensusParameters.gasPriceFactor),
+        })
+      : receiptsFee;
 
     return {
       outputsToSend,
@@ -141,6 +151,7 @@ export function useTransaction({
       forwardedAmount,
       toAssetAmounts,
       amountSent,
+      txFee,
     };
   }, [
     coinInputs,
@@ -149,41 +160,16 @@ export function useTransaction({
     receiptsFee,
     changeOutput,
     contractInput,
+    isTxTypeCreate,
+    chainInfo?.consensusParameters.gasPerByte,
+    chainInfo?.consensusParameters.gasPriceFactor,
   ]);
 
-  const isTxTypeMint = tx?.type === TransactionType.Mint;
-  const isTxTypeCreate = tx?.type === TransactionType.Create;
-  const isTxPending = txStatus === TxStatus.pending;
-  const isTxFailed = txStatus === TxStatus.error;
-  const isInvalidTxId = error === TRANSACTION_ERRORS.INVALID_ID;
-  const isTxNotFound = error === TRANSACTION_ERRORS.NOT_FOUND;
-  const isTxReceiptsNotFound = error === TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND;
   const shouldShowAlert =
     isTxNotFound || isInvalidTxId || isTxPending || isTxFailed;
   const shouldShowTx = tx && !isFetching && !isInvalidTxId && !isTxNotFound;
   const shouldShowTxDetails =
     shouldShowTx && !isFetchingResult && !isTxTypeMint;
-  const isFetchingDetails = isFetching || isFetchingResult;
-
-  const transactionBytes = tx ? new TransactionCoder().encode(tx) : [];
-  const witnessSize =
-    tx?.witnesses?.reduce((total, w) => total + w.dataLength, 0) || 0;
-  const txChargeableBytes = bn(transactionBytes.length - witnessSize);
-
-  const contractGasUsed = calculatePriceWithFactor(
-    txChargeableBytes,
-    bn(4),
-    // gasPerByte,
-    GAS_PRICE_FACTOR
-  );
-
-  const txFee = isTxTypeCreate
-    ? calculatePriceWithFactor(
-        contractGasUsed,
-        bn(tx?.gasPrice),
-        GAS_PRICE_FACTOR
-      )
-    : receiptsFee;
 
   function getTransaction(input: TxInputs['fetch']) {
     send('GET_TRANSACTION', { input });
