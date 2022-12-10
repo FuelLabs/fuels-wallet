@@ -41,6 +41,8 @@ export function useTransaction({
   providerUrl,
   waitProviderUrl,
 }: UseTransactionProps) {
+  // const { chainInfo } = useChainInfo(providerUrl);
+  // console.log(`chainInfo`, chainInfo);
   const service = useInterpret(() => transactionMachine);
   const { send } = service;
   const isFetching = useSelector(service, selectors.isFetching);
