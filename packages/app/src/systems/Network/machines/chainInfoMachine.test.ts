@@ -22,7 +22,7 @@ describe('chainInfoMachine', () => {
   let service: ChainInfoMachineService;
 
   beforeEach(async () => {
-    service = interpret(chainInfoMachine).start();
+    service = interpret(chainInfoMachine.withContext({})).start();
   });
 
   afterEach(() => {
