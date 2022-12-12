@@ -29,7 +29,7 @@ importers:
       eslint: ^8.29.0
       execa: ^6.1.0
       fs-extra: ^11.1.0
-      fuelhat: workspace:0.0.1
+      fuelhat: workspace:*
       http-server: ^14.1.1
       husky: ^8.0.2
       identity-obj-proxy: ^3.0.0
@@ -129,7 +129,6 @@ importers:
       '@xstate/react': ^3.0.1
       buffer: ^6.0.3
       cross-fetch: ^3.1.5
-      decimal.js: ^10.4.3
       dexie: ^3.2.2
       dexie-observable: 4.0.0-beta.13
       dexie-react-hooks: ^1.1.1
@@ -181,7 +180,6 @@ importers:
       '@xstate/react': 3.0.1_jxlbbcdnowciznag5x5yc5bb5i
       buffer: 6.0.3
       cross-fetch: 3.1.5
-      decimal.js: 10.4.3
       dexie: 3.2.2
       dexie-observable: 4.0.0-beta.13_dexie@3.2.2
       dexie-react-hooks: 1.1.1_3imspw4mgx25623dxsqc7dbkja
