@@ -10,6 +10,7 @@ import { Services } from '~/store';
 export function accountEvents(store: StoreClass<StoreMachines>) {
   return {
     updateAccounts() {
+      console.log('in update thing');
       store.send(Services.accounts, { type: 'UPDATE_ACCOUNT' });
     },
     setBalanceVisibility(input: AccountInputs['setBalanceVisibility']) {

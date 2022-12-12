@@ -9,6 +9,7 @@ import { IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
 import { FetchMachine } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
+import { NetworkService } from '~/systems/Network';
 
 export enum AccountScreen {
   list = 'list',
@@ -30,6 +31,9 @@ type MachineContext = {
 type MachineServices = {
   fetchAccounts: {
     data: Account[];
+  };
+  fetchAccount: {
+    data: Account;
   };
   selectAccount: {
     data: Account;
@@ -58,7 +62,7 @@ export const accountMachine = createMachine(
     },
     predictableActionArguments: true,
     id: '(machine)',
-    initial: 'fetchingAccounts',
+    initial: 'fetchingAccount',
     states: {
       fetchingAccounts: {
         tags: ['loading'],
@@ -73,6 +77,29 @@ export const accountMachine = createMachine(
             {
               target: 'done',
               actions: ['removeLocalStorage'],
+            },
+          ],
+          onError: [
+            {
+              actions: 'assignError',
+              target: 'failed',
+            },
+          ],
+        },
+      },
+      fetchingAccount: {
+        tags: ['loading'],
+        invoke: {
+          src: 'fetchAccount',
+          onDone: [
+            {
+              target: 'done',
+              actions: ['setLocalStorage'],
+              cond: 'hasAccount',
+            },
+            {
+              actions: ['removeLocalStorage'],
+              target: 'done',
             },
           ],
           onError: [
@@ -116,7 +143,7 @@ export const accountMachine = createMachine(
         },
       ],
       UPDATE_ACCOUNT: {
-        target: 'fetchingAccounts',
+        target: 'fetchingAccount',
       },
       SET_BALANCE_VISIBILITY: {
         actions: ['setBalanceVisibility'],
@@ -176,6 +203,22 @@ export const accountMachine = createMachine(
         showError: true,
         async fetch() {
           return AccountService.getAccounts();
+        },
+      }),
+      fetchAccount: FetchMachine.create<never, Account | undefined>({
+        showError: true,
+        async fetch() {
+          console.log('one');
+          const accountToFetch = await AccountService.getSelectedAccount();
+          if (!accountToFetch) return undefined;
+          const selectedNetwork = await NetworkService.getSelectedNetwork();
+          const providerUrl =
+            selectedNetwork?.url || import.meta.env.VITE_FUEL_PROVIDER_URL;
+          console.log('fetching balance...');
+          return AccountService.fetchBalance({
+            account: accountToFetch,
+            providerUrl,
+          });
         },
       }),
       selectAccount: FetchMachine.create<

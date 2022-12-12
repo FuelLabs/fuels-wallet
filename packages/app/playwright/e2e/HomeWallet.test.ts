@@ -25,6 +25,7 @@ test.describe('HomeWallet', () => {
     await visit(page, '/wallet');
     await getButtonByText(page, 'Faucet').click();
     await getButtonByText(page, 'Give me ETH').click();
+    await page.screenshot({ path: '.test_1.png' });
     await hasText(page, /Ethereum/i);
     await hasText(page, /ETH.0\.5/i);
 
