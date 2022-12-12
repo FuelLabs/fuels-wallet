@@ -30,7 +30,7 @@ function TxSpinner({ status, isLoading }: TxSpinnerProps) {
 export type TxFromToProps = {
   status?: TxStatus;
   from?: TxRecipientAddress;
-  to: TxRecipientAddress;
+  to?: TxRecipientAddress;
   isLoading?: boolean;
 };
 
@@ -41,7 +41,7 @@ export function TxFromTo({ from, to, status, isLoading }: TxFromToProps) {
       {isLoading ? (
         <TxRecipientCard.Loader />
       ) : (
-        from && <TxRecipientCard recipient={from} />
+        <TxRecipientCard recipient={from} />
       )}
       {isLoading ? (
         <TxRecipientCard.Loader />

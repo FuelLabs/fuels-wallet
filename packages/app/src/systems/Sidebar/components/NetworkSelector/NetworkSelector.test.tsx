@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, testA11y } from '@fuel-ui/test-utils';
+import { act, fireEvent, render, screen, testA11y } from '@fuel-ui/test-utils';
 
 import { MOCK_NETWORKS } from '../../../Network/__mocks__/networks';
 
@@ -28,7 +28,10 @@ describe('NetworkSelector', () => {
 
     expect(() => screen.getByText(NOT_SELECTED.name)).toThrow();
     const selector = screen.getByLabelText('fuel_network-item-1');
-    await user.click(selector);
+
+    await act(async () => {
+      await user.click(selector);
+    });
     expect(screen.getByText(NOT_SELECTED.name)).toBeInTheDocument();
   });
 

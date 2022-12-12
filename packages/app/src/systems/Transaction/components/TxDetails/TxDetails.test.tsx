@@ -5,7 +5,7 @@ import {
   testA11y,
   waitFor,
 } from '@fuel-ui/test-utils';
-import { bn, DECIMAL_UNITS } from 'fuels';
+import { bn } from 'fuels';
 
 import { MOCK_OUTPUT_AMOUNT } from '../../__mocks__/transaction';
 
@@ -22,7 +22,7 @@ describe('TxDetails', () => {
 
   it('should be able to show the transaction gas used', async () => {
     const feeCost = bn(6);
-    render(<TxDetails fee={feeCost} outputAmount={MOCK_OUTPUT_AMOUNT} />);
+    render(<TxDetails fee={feeCost} amountSent={MOCK_OUTPUT_AMOUNT} />);
     expect(() => screen.getByText(/Fee \(network\)/i)).toThrow();
     const btn = screen.getByText(/Transaction Details/i);
     fireEvent.click(btn);
@@ -33,13 +33,9 @@ describe('TxDetails', () => {
       expect(valGas).toBeInTheDocument();
       const valTotal = screen.getByLabelText(/Total value/i);
       expect(valTotal).toBeInTheDocument();
-      expect(valGas.innerHTML.trim()).toBe(
-        `${feeCost.format({ precision: DECIMAL_UNITS })} ETH`
-      );
+      expect(valGas.innerHTML.trim()).toBe(`${feeCost.format()} ETH`);
       expect(valTotal.innerHTML.trim()).toBe(
-        `${feeCost
-          .add(MOCK_OUTPUT_AMOUNT)
-          .format({ precision: DECIMAL_UNITS })} ETH`
+        `${feeCost.add(MOCK_OUTPUT_AMOUNT).format()} ETH`
       );
     });
   });

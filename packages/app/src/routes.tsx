@@ -4,6 +4,7 @@ import { IS_CRX, IS_CRX_POPUP } from './config';
 import { CRXPrivateRoute, CRXPublicRoute } from './systems/CRX/components';
 import { dappRoutes } from './systems/DApp/routes';
 import { settingsRoutes } from './systems/Settings';
+import { transactionRoutes } from './systems/Transaction/routes';
 
 import { accountRoutes } from '~/systems/Account/routes';
 import { PrivateRoute, PublicRoute } from '~/systems/Core';
@@ -20,6 +21,7 @@ const walletRoutes = (
     {settingsRoutes}
     {dappRoutes}
     {accountRoutes}
+    {transactionRoutes}
   </>
 );
 

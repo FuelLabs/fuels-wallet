@@ -18,7 +18,7 @@ import { AccountScreen } from '../../machines';
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 import type { AccountInputs } from '~/systems/Account/services';
-import { formatUnits, shortAddress, VisibilityButton } from '~/systems/Core';
+import { formatAmount, shortAddress, VisibilityButton } from '~/systems/Core';
 
 type BalanceWidgetWrapperProps = {
   children: ReactNode;
@@ -96,7 +96,7 @@ export function BalanceWidget({
           >
             <>
               {account.balanceSymbol || '$'}&nbsp;
-              {isHidden ? '•••••' : formatUnits(account.balance)}
+              {isHidden ? '•••••' : formatAmount(account.balance)}
             </>
           </Text>
         </Flex>

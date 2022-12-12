@@ -6,11 +6,9 @@ import type { FC } from 'react';
 
 import { TxDetailsLoader } from './TxDetailsLoader';
 
-import { DECIMAL_UNITS } from '~/config';
-
 export type TxDetailsProps = {
   fee?: BN;
-  outputAmount?: BN;
+  amountSent?: BN;
 };
 
 type TxDetailsComponent = FC<TxDetailsProps> & {
@@ -19,9 +17,10 @@ type TxDetailsComponent = FC<TxDetailsProps> & {
 
 export const TxDetails: TxDetailsComponent = ({
   fee,
-  outputAmount,
+  amountSent,
 }: TxDetailsProps) => {
-  const total = fee?.add(bn(outputAmount));
+  const total = fee?.add(bn(amountSent));
+  const shouldShowTotal = total?.gt(bn(fee));
 
   return (
     <Accordion type="multiple">
@@ -32,15 +31,17 @@ export const TxDetails: TxDetailsComponent = ({
             <Flex css={styles.detailItem}>
               <Text as="span">Fee (network)</Text>
               <Text as="span" aria-label="Gas Value">
-                {fee?.format({ precision: DECIMAL_UNITS })} ETH
+                {fee?.format()} ETH
               </Text>
             </Flex>
-            <Flex css={styles.detailItem}>
-              <Text as="span">Total (including Fee)</Text>
-              <Text as="span" aria-label="Total Value">
-                {total?.format({ precision: DECIMAL_UNITS })} ETH
-              </Text>
-            </Flex>
+            {shouldShowTotal && (
+              <Flex css={styles.detailItem}>
+                <Text as="span">Total (including Fee)</Text>
+                <Text as="span" aria-label="Total Value">
+                  {total?.format()} ETH
+                </Text>
+              </Flex>
+            )}
           </Flex>
         </Accordion.Content>
       </Accordion.Item>
