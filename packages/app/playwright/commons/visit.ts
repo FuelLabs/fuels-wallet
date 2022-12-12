@@ -15,6 +15,6 @@ export async function waitUrl(page: Page, pathname: string) {
 
 export async function reload(page: Page) {
   await page.reload();
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(1000);
   return page;
 }
