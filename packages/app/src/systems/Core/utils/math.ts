@@ -8,7 +8,3 @@ export function formatAmount(amount?: BNInput) {
     precision: MAX_FRACTION_DIGITS,
   });
 }
-
-export function formatFullAmount(amount?: BNInput) {
-  return bn(amount).format();
-}
