@@ -5,12 +5,12 @@ import { useNavigate } from 'react-router-dom';
 
 import { AssetsTitle, HomeActions } from '../../components';
 
-import { BalanceWidget, useAccount } from '~/systems/Account';
+import { BalanceWidget, useAccounts } from '~/systems/Account';
 import { AssetList } from '~/systems/Asset';
 import { Layout, Pages } from '~/systems/Core';
 
 export function Home() {
-  const { isLoading, selectedAccount, handlers } = useAccount();
+  const { isLoading, selectedAccount, handlers } = useAccounts();
   const navigate = useNavigate();
 
   const sendAction = useCallback(() => {

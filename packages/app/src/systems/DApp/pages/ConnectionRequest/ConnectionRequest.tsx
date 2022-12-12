@@ -3,7 +3,7 @@ import { Button, Card, Flex, Icon, Link, List, Text } from '@fuel-ui/react';
 
 import { useConnectRequest } from '../../hooks/useConnectRequest';
 
-import { useAccount } from '~/systems/Account';
+import { useAccounts } from '~/systems/Account';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { ConnectInfo } from '~/systems/DApp';
@@ -17,16 +17,16 @@ const PERMISSION_LIST = [
 const NOT_ALLOWED_LIST = ['View your private keys'];
 
 export function ConnectionRequest() {
-  const { account, isLoading } = useAccount();
+  const { selectedAccount, isLoading } = useAccounts();
   const { handlers, origin } = useConnectRequest();
 
-  if (!account || !origin) return null;
+  if (!selectedAccount || !origin) return null;
 
   return (
     <Layout title="Connection Request" isLoading={isLoading}>
       <Layout.TopBar type={TopBarType.external} />
       <Layout.Content css={styles.content}>
-        <ConnectInfo origin={origin} account={account} />
+        <ConnectInfo origin={origin} account={selectedAccount} />
         <Card css={styles.connectionDetails}>
           <Text as="h2" color="gray12" css={{ mb: '$2' }}>
             This site will be able to:
@@ -67,7 +67,9 @@ export function ConnectionRequest() {
         <Button
           type="submit"
           color="accent"
-          onPress={() => handlers.authorizeConnection([account.address])}
+          onPress={() =>
+            handlers.authorizeConnection([selectedAccount.address])
+          }
         >
           Connect
         </Button>

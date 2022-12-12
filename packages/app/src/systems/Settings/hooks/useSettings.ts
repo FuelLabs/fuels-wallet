@@ -5,7 +5,7 @@ import { settingsMachine } from '../machines';
 import type { SettingsMachineState } from '../machines';
 
 import type { AccountInputs } from '~/systems/Account';
-import { useAccount } from '~/systems/Account';
+import { useAccounts } from '~/systems/Account';
 import { Pages } from '~/systems/Core';
 
 const selectors = {
@@ -19,7 +19,7 @@ const selectors = {
 
 export function useSettings() {
   const navigate = useNavigate();
-  const { account } = useAccount();
+  const { selectedAccount } = useAccounts();
   const service = useInterpret(() =>
     settingsMachine.withConfig({
       actions: {
@@ -37,7 +37,7 @@ export function useSettings() {
 
   /** @description - This will unlock the wallet and get the mnemonic phrase */
   function unlockAndGetMnemonic(password: string) {
-    send('UNLOCK_WALLET', { input: { password, account } });
+    send('UNLOCK_WALLET', { input: { password, account: selectedAccount } });
   }
 
   /** @description - This will change the password of the wallet */

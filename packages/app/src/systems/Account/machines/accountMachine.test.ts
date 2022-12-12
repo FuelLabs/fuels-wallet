@@ -73,6 +73,7 @@ describe('accountsMachine', () => {
     };
 
     it('should be able to select a new network', async () => {
+      // TODO refactor: change to service.send(addEvent) when it is added to the accountMachine
       await AccountService.addAccount({ data: MOCK_ACCOUNT_TWO });
 
       service.send(initialEv);

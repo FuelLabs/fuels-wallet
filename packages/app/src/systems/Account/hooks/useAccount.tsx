@@ -31,7 +31,7 @@ const listenerAccountFetcher = () => {
   });
 };
 
-export function useAccount(
+export function useAccounts(
   opts: AccountInitialInput = { type: AccountScreen.list }
 ) {
   const shouldListen = useRef(true);

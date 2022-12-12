@@ -3,7 +3,7 @@ import { Icon, Box, Avatar, Flex, Drawer, IconButton } from '@fuel-ui/react';
 
 import type { MenuItemObj } from '..';
 import { Menu, NetworkSelector } from '..';
-import { useAccount } from '../../../Account';
+import { useAccounts } from '../../../Account';
 import { NetworkScreen, useNetworks } from '../../../Network';
 import { sidebarItems } from '../../constants';
 
@@ -12,7 +12,7 @@ export function Sidebar() {
     type: NetworkScreen.list,
   });
 
-  const { handlers: accountHandlers, account } = useAccount();
+  const { handlers: accountHandlers, selectedAccount } = useAccounts();
 
   return (
     <Flex css={styles.wrapper}>
@@ -25,7 +25,10 @@ export function Sidebar() {
         >
           <Flex css={styles.accountDropdownWrapper}>
             <Box css={styles.avatarWrapper}>
-              <Avatar.Generated size={'sm'} hash={account?.address as string} />
+              <Avatar.Generated
+                size={'sm'}
+                hash={selectedAccount.address as string}
+              />
             </Box>
 
             <IconButton

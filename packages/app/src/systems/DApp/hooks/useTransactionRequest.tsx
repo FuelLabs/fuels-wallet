@@ -4,7 +4,7 @@ import type { TransactionMachineState } from '../machines/transactionMachine';
 import { transactionMachine } from '../machines/transactionMachine';
 import { useTransactionRequestMethods } from '../methods/transactionRequestMethods';
 
-import { useAccount } from '~/systems/Account';
+import { useAccounts } from '~/systems/Account';
 import { getFilteredErrors, useTxOutputs } from '~/systems/Transaction';
 import type { TxInputs } from '~/systems/Transaction/services';
 
@@ -27,7 +27,10 @@ const selectors = {
   isShowingInfo({
     selectedAccount,
     isLoading,
-  }: Omit<ReturnType<typeof useAccount>, 'handlers' | 'accounts' | 'account'>) {
+  }: Omit<
+    ReturnType<typeof useAccounts>,
+    'handlers' | 'accounts' | 'account'
+  >) {
     return (state: TransactionMachineState) =>
       !isLoading &&
       !state.context.approvedTx &&
@@ -46,7 +49,7 @@ type UseTransactionRequestOpts = {
 };
 
 export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
-  const { selectedAccount, isLoading } = useAccount();
+  const { selectedAccount, isLoading } = useAccounts();
   const service = useInterpret(() =>
     transactionMachine.withContext({
       isOriginRequired: opts.isOriginRequired,

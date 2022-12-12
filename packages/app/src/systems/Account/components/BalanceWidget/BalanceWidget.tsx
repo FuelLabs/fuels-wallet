@@ -12,7 +12,7 @@ import type { Account } from '@fuel-wallet/types';
 import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 
-import { useAccount } from '../../hooks';
+import { useAccounts } from '../../hooks';
 import { AccountScreen } from '../../machines';
 
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
@@ -48,7 +48,7 @@ export function BalanceWidget({
   onChangeVisibility,
 }: BalanceWidgetProps) {
   const [isHidden, setIsHidden] = useState(_isHidden);
-  const { handlers } = useAccount({ type: AccountScreen.list });
+  const { handlers } = useAccounts({ type: AccountScreen.list });
 
   useEffect(() => {
     setIsHidden(_isHidden);

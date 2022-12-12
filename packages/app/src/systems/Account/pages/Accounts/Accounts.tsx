@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import { AccountList } from '../../components';
-import { useAccount } from '../../hooks';
+import { useAccounts } from '../../hooks';
 import { AccountScreen } from '../../machines';
 
 import { Layout, Pages } from '~/systems/Core';
@@ -9,7 +9,7 @@ import { Layout, Pages } from '~/systems/Core';
 export const Accounts = () => {
   const navigate = useNavigate();
   // TODO fix: change to grab multiple accounts
-  const { accounts, isLoading, handlers } = useAccount({
+  const { accounts, isLoading, handlers } = useAccounts({
     type: AccountScreen.list,
   });
 
