@@ -3,6 +3,8 @@ import type {
   CallResult,
   CoinTransactionRequestInput,
   CoinTransactionRequestOutput,
+  InputContract,
+  OutputContract,
   TransactionRequestInput,
   TransactionRequestLike,
   TransactionResponse,
@@ -24,12 +26,14 @@ export type TxRequest = TransactionRequestLike;
 export type TxSimulateResult = CallResult;
 export type TxInput = TransactionRequestInput;
 export type TxInputCoin = CoinTransactionRequestInput;
+export type TxInputContract = InputContract;
 export type TxOutputCoin = CoinTransactionRequestOutput;
+export type TxOutputContract = OutputContract;
 export type TxResponse = TransactionResponse;
 
 export type Transaction = {
   id?: string;
-  type: TransactionType;
+  type?: TransactionType;
   status?: TxStatus;
   data?: TxRequest | TxResponse;
 };

@@ -10,7 +10,7 @@ import { TxRecipientCardLoader } from './TxRecipientCardLoader';
 import { shortAddress } from '~/systems/Core';
 
 export type TxRecipientCardProps = {
-  recipient: TxRecipientAddress;
+  recipient?: TxRecipientAddress;
   isReceiver?: boolean;
 };
 
@@ -22,31 +22,33 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   recipient,
   isReceiver,
 }) => {
-  const { address } = recipient;
-  const isAccount = recipient.type === AddressType.account;
+  const address = recipient?.address;
+  const isContract = recipient?.type === AddressType.contract;
   return (
     <Card css={styles.root}>
       <Text css={styles.from}>
-        {isReceiver ? 'To' : 'From'} {!isAccount && '(Contract)'}
+        {isReceiver ? 'To' : 'From'} {isContract && '(Contract)'}
       </Text>
-      {isAccount && (
-        <Avatar.Generated
-          role="img"
-          size="lg"
-          hash={address}
-          aria-label="Generated Address"
-          background="fuel"
-        />
-      )}
-      {!isAccount && (
-        <Box css={styles.iconWrapper}>
-          <Icon icon={Icon.is('Code')} size={16} />
-        </Box>
-      )}
       {address && (
-        <Flex css={styles.info}>
-          <Copyable value={address}>{shortAddress(address)}</Copyable>
-        </Flex>
+        <>
+          {!isContract && (
+            <Avatar.Generated
+              role="img"
+              size="lg"
+              hash={address}
+              aria-label="Generated Address"
+              background="fuel"
+            />
+          )}
+          {isContract && (
+            <Box css={styles.iconWrapper}>
+              <Icon icon={Icon.is('Code')} size={16} />
+            </Box>
+          )}
+          <Flex css={styles.info}>
+            <Copyable value={address}>{shortAddress(address)}</Copyable>
+          </Flex>
+        </>
       )}
     </Card>
   );
