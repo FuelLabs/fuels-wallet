@@ -132,7 +132,6 @@ export const accountMachine = createMachine(
     actions: {
       assignAccountAddress: assign({
         accountAddress: (_, ev) => {
-          console.log('here again', ev.input);
           return ev.input.accountAddress;
         },
       }),
@@ -141,8 +140,6 @@ export const accountMachine = createMachine(
       }),
       assignAccount: assign({
         account: (ctx, ev) => {
-          console.log('ctx', ctx);
-          console.log('data', ev.data);
           return ctx.accountAddress
             ? ev.data.find((account) => account.address === ctx.accountAddress)
             : null;

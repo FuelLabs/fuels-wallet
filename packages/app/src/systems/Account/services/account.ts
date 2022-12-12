@@ -45,12 +45,21 @@ export type AccountInputs = {
   selectAccount: {
     address: string;
   };
+  updateAccount: {
+    address: string;
+    data: Partial<Account>;
+  };
 };
 
 export class AccountService {
   static async addAccount(input: AccountInputs['addAccount']) {
     return db.transaction('rw', db.accounts, async () => {
-      await db.accounts.add({ ...input.data, isHidden: false });
+      const count = await db.accounts.count();
+      await db.accounts.add({
+        ...input.data,
+        ...(count === 0 ? { isSelected: true } : { isSelected: false }),
+        isHidden: false,
+      });
       return db.accounts.get({ address: input.data.address });
     });
   }
@@ -189,11 +198,32 @@ export class AccountService {
 
   static selectAccount(input: AccountInputs['selectAccount']) {
     return db.transaction('rw', db.accounts, async () => {
-      // const selectedAccount = await db.accounts
-      //   .filter((account) => !!account.isSelected)
-      //   .first();
+      const selectedAccount = await db.accounts
+        .filter((account) => !!account.isSelected)
+        .first();
+      if (selectedAccount?.address) {
+        await AccountService.updateAccount({
+          address: selectedAccount.address,
+          data: { isSelected: false },
+        });
+      }
+      await AccountService.updateAccount({
+        address: input.address,
+        data: { isSelected: true },
+      });
+      return db.accounts.get(input.address);
+    });
+  }
 
-      // TODO add call to AccountService.updateAccount ???
+  static updateAccount(input: AccountInputs['updateAccount']) {
+    if (!input.data) {
+      throw new Error('Account.data undefined');
+    }
+    if (!input.address) {
+      throw new Error('Account.address undefined');
+    }
+    return db.transaction('rw', db.accounts, async () => {
+      await db.accounts.update(input.address, input.data);
       return db.accounts.get(input.address);
     });
   }
