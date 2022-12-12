@@ -60,7 +60,7 @@
     "@fuel-ui/css": "^0.10.1",
     "@fuel-ui/react": "^0.10.1",
     "execa": "^6.1.0",
-    "fuelhat": "workspace:0.0.1"
+    "fuelhat": "workspace:*"
   },
   "devDependencies": {
     "@babel/core": "^7.20.5",

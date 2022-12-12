@@ -18,6 +18,7 @@ Integrate your **DApp** using the [Wallet SDK](https://fuels-wallet.vercel.app/d
 ## 📗 Table of contents
 
 - [📗 Documentation](https://fuels-wallet.vercel.app/)
+- [🌐 Browser Support](https://fuels-wallet.vercel.app/docs/browser-support)
 - [📦 Install Wallet](https://fuels-wallet.vercel.app/docs/install/)
 - [🧰 Fuel Wallet SDK](https://fuels-wallet.vercel.app/docs/how-to-use/)
   - [👨‍💻 - Quickstart](https://fuels-wallet.vercel.app/docs/how-to-use/)
