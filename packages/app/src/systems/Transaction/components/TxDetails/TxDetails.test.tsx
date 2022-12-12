@@ -22,7 +22,7 @@ describe('TxDetails', () => {
 
   it('should be able to show the transaction gas used', async () => {
     const feeCost = bn(6);
-    render(<TxDetails fee={feeCost} outputAmount={MOCK_OUTPUT_AMOUNT} />);
+    render(<TxDetails fee={feeCost} amountSent={MOCK_OUTPUT_AMOUNT} />);
     expect(() => screen.getByText(/Fee \(network\)/i)).toThrow();
     const btn = screen.getByText(/Transaction Details/i);
     fireEvent.click(btn);
