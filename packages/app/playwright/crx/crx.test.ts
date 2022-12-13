@@ -3,6 +3,9 @@ import { expect } from '@playwright/test';
 import { test } from './utils';
 
 test.describe('CRX FuelWallet', () => {
+  test.afterAll(({ context }) => {
+    context.close();
+  });
   test('On install sign-up page is open', async ({ context }) => {
     const page = await context.waitForEvent('page', {
       predicate: (page) => page.url().includes('sign-up'),
