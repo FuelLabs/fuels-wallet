@@ -6,9 +6,6 @@ import { TxService } from '../services';
 import { useAccounts } from '~/systems/Account';
 
 export function useTxOutputs(tx: TransactionRequest | undefined) {
-  const { selectedAccount } = useAccounts();
-  return useMemo(
-    () => TxService.getOutputs({ tx, account: selectedAccount }),
-    [tx]
-  );
+  const { account } = useAccounts();
+  return useMemo(() => TxService.getOutputs({ tx, account }), [tx]);
 }

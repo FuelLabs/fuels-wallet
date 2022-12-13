@@ -25,7 +25,6 @@ const selectors = {
     return state.context;
   },
   isShowingInfo({
-    selectedAccount,
     isLoading,
   }: Omit<
     ReturnType<typeof useAccounts>,
@@ -35,8 +34,7 @@ const selectors = {
       !isLoading &&
       !state.context.approvedTx &&
       !state.context.txApproveError &&
-      state.context.origin &&
-      selectedAccount;
+      state.context.origin;
   },
   generalErrors(state: TransactionMachineState) {
     const groupedErrors = state.context.txDryRunGroupedErrors;
@@ -49,7 +47,7 @@ type UseTransactionRequestOpts = {
 };
 
 export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
-  const { selectedAccount, isLoading } = useAccounts();
+  const { account, isLoading } = useAccounts();
   const service = useInterpret(() =>
     transactionMachine.withContext({
       isOriginRequired: opts.isOriginRequired,
@@ -66,7 +64,6 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const groupedErrors = ctx.txDryRunGroupedErrors;
   const hasGeneralErrors = Boolean(Object.keys(generalErrors || {}).length);
   const isShowingSelector = selectors.isShowingInfo({
-    selectedAccount,
     isLoading,
   });
   const isShowingInfo = useSelector(service, isShowingSelector);
@@ -79,7 +76,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     send('REJECT');
   }
   function unlock(password: string) {
-    send('UNLOCK_WALLET', { input: { password, selectedAccount } });
+    send('UNLOCK_WALLET', { input: { password, account } });
   }
   function closeUnlock() {
     send('CLOSE_UNLOCK');
@@ -98,7 +95,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
       closeUnlock,
       reject,
     },
-    selectedAccount,
+    account,
     isLoading,
     isUnlocking,
     isUnlockingLoading,

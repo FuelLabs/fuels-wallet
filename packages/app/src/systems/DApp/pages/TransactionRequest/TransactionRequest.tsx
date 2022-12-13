@@ -28,20 +28,22 @@ export function TransactionRequest() {
     isOriginRequired: true,
   });
 
+  if (!ctx.account) return null;
+
   const content = (
     <Layout.Content css={styles.content}>
       {ctx.isShowingInfo && (
         <Stack gap="$4">
           <ConnectInfo
             origin={ctx.origin!}
-            account={ctx.selectedAccount}
+            account={ctx.account}
             isReadOnly={true}
           />
-          {ctx.selectedAccount && (
+          {ctx.account && (
             <TxFromTo
               from={{
                 type: AddressType.account,
-                address: ctx.selectedAccount.publicKey,
+                address: ctx.account.publicKey,
               }}
               to={{
                 type: AddressType.account,

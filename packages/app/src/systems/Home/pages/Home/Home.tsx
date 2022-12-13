@@ -10,7 +10,7 @@ import { AssetList } from '~/systems/Asset';
 import { Layout, Pages } from '~/systems/Core';
 
 export function Home() {
-  const { isLoading, selectedAccount, handlers } = useAccounts();
+  const { isLoading, account, handlers } = useAccounts();
   const navigate = useNavigate();
 
   const sendAction = useCallback(() => {
@@ -27,8 +27,8 @@ export function Home() {
       <Layout.Content>
         <Flex css={{ height: '100%', flexDirection: 'column' }}>
           <BalanceWidget
-            isHidden={selectedAccount?.isHidden ?? true}
-            account={selectedAccount}
+            isHidden={account?.isHidden ?? true}
+            account={account}
             isLoading={isLoading}
             onChangeVisibility={handlers.setBalanceVisibility}
           />
@@ -39,7 +39,7 @@ export function Home() {
           />
           <AssetsTitle />
           <AssetList
-            assets={selectedAccount?.balances}
+            assets={account?.balances}
             isLoading={isLoading}
             isDevnet
           />

@@ -16,15 +16,14 @@ export enum AccountScreen {
   add = 'add',
 }
 
-export type AccountInitialInput = {
-  type: AccountScreen;
-  accountAddress?: string;
-};
+// export type AccountInitialInput = {
+//   type: AccountScreen;
+//   accountAddress?: string;
+// };
 
 type MachineContext = {
   accounts?: Account[];
   account?: Maybe<Account>;
-  accountAddress?: string;
   error?: unknown;
 };
 
@@ -43,8 +42,8 @@ type MachineServices = {
 // edit service to machine and do state stuff for selected account and add to state then add get that info in new useAccounts hook then add test
 
 type MachineEvents =
-  | { type: 'SET_INITIAL_DATA'; input: AccountInitialInput }
   | { type: 'UPDATE_ACCOUNT'; input?: null }
+  | { type: 'UPDATE_ACCOUNTS'; input?: null }
   | {
       type: 'SET_BALANCE_VISIBILITY';
       input: AccountInputs['setBalanceVisibility'];
@@ -62,7 +61,7 @@ export const accountMachine = createMachine(
     },
     predictableActionArguments: true,
     id: '(machine)',
-    initial: 'fetchingAccount',
+    initial: 'fetchingAccounts',
     states: {
       fetchingAccounts: {
         tags: ['loading'],
@@ -70,13 +69,13 @@ export const accountMachine = createMachine(
           src: 'fetchAccounts',
           onDone: [
             {
-              target: 'done',
-              actions: ['assignAccounts', 'assignAccount', 'setLocalStorage'],
-              cond: 'hasAccount',
+              target: 'fetchingAccount',
+              actions: ['assignAccounts', 'setLocalStorage'],
+              cond: 'hasAccounts',
             },
             {
               target: 'done',
-              actions: ['removeLocalStorage'],
+              actions: ['assignAccounts', 'removeLocalStorage'],
             },
           ],
           onError: [
@@ -94,12 +93,12 @@ export const accountMachine = createMachine(
           onDone: [
             {
               target: 'done',
-              actions: ['setLocalStorage'],
+              actions: ['assignAccount'],
               cond: 'hasAccount',
             },
             {
-              actions: ['removeLocalStorage'],
               target: 'done',
+              actions: ['assignAccount'],
             },
           ],
           onError: [
@@ -122,6 +121,12 @@ export const accountMachine = createMachine(
               target: 'fetchingAccounts',
             },
           ],
+          onError: [
+            {
+              actions: 'assignError',
+              target: 'failed',
+            },
+          ],
         },
       },
       done: {
@@ -136,12 +141,9 @@ export const accountMachine = createMachine(
       },
     },
     on: {
-      SET_INITIAL_DATA: [
-        {
-          actions: ['assignAccountAddress'],
-          target: 'fetchingAccounts',
-        },
-      ],
+      UPDATE_ACCOUNTS: {
+        target: 'fetchingAccounts',
+      },
       UPDATE_ACCOUNT: {
         target: 'fetchingAccount',
       },
@@ -157,20 +159,11 @@ export const accountMachine = createMachine(
   {
     delays: { INTERVAL: 2000, TIMEOUT: 15000 },
     actions: {
-      assignAccountAddress: assign({
-        accountAddress: (_, ev) => {
-          return ev.input.accountAddress;
-        },
-      }),
       assignAccounts: assign({
         accounts: (_, ev) => ev.data,
       }),
       assignAccount: assign({
-        account: (ctx, ev) => {
-          return ctx.accountAddress
-            ? ev.data.find((account) => account.address === ctx.accountAddress)
-            : null;
-        },
+        account: (ctx, ev) => ev.data,
       }),
       assignError: assign({
         error: (_, ev) => ev.data,
@@ -208,17 +201,17 @@ export const accountMachine = createMachine(
       fetchAccount: FetchMachine.create<never, Account | undefined>({
         showError: true,
         async fetch() {
-          console.log('one');
           const accountToFetch = await AccountService.getSelectedAccount();
           if (!accountToFetch) return undefined;
           const selectedNetwork = await NetworkService.getSelectedNetwork();
           const providerUrl =
             selectedNetwork?.url || import.meta.env.VITE_FUEL_PROVIDER_URL;
-          console.log('fetching balance...');
-          return AccountService.fetchBalance({
+          const accountWithBalance = await AccountService.fetchBalance({
             account: accountToFetch,
             providerUrl,
           });
+          console.log(accountWithBalance);
+          return accountWithBalance;
         },
       }),
       selectAccount: FetchMachine.create<
@@ -240,6 +233,9 @@ export const accountMachine = createMachine(
     guards: {
       hasAccount: (ctx, ev) => {
         return Boolean(ctx?.account || ev?.data);
+      },
+      hasAccounts: (ctx, ev) => {
+        return Boolean((ctx?.accounts || ev.data || []).length);
       },
     },
   }

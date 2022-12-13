@@ -8,14 +8,14 @@ import { Pages, stringifyUrl } from '~/systems/Core';
 
 export function useOpenFaucet() {
   const navigate = useNavigate();
-  const { selectedAccount } = useAccounts();
+  const { account } = useAccounts();
 
   // it's not possible to open reCaptcha inside
   // the extension for security reasons
   const openFaucet = useCallback(() => {
     if (IS_CRX) {
       const url = stringifyUrl(VITE_FUEL_FAUCET_URL, {
-        address: selectedAccount.address,
+        address: account!.address,
       });
       openTab(url);
     } else {

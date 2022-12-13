@@ -12,7 +12,7 @@ export function Sidebar() {
     type: NetworkScreen.list,
   });
 
-  const { handlers: accountHandlers, selectedAccount } = useAccounts();
+  const { handlers: accountHandlers, account } = useAccounts();
 
   return (
     <Flex css={styles.wrapper}>
@@ -25,10 +25,7 @@ export function Sidebar() {
         >
           <Flex css={styles.accountDropdownWrapper}>
             <Box css={styles.avatarWrapper}>
-              <Avatar.Generated
-                size={'sm'}
-                hash={selectedAccount.address as string}
-              />
+              <Avatar.Generated size={'sm'} hash={account!.address as string} />
             </Box>
 
             <IconButton

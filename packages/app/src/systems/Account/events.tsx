@@ -1,7 +1,6 @@
 import type { Account } from '@fuel-wallet/types';
 import type { StoreClass } from '@fuel-wallet/xstore';
 
-import type { AccountInitialInput } from './machines';
 import type { AccountInputs } from './services';
 
 import type { StoreMachines } from '~/store';
@@ -10,8 +9,7 @@ import { Services } from '~/store';
 export function accountEvents(store: StoreClass<StoreMachines>) {
   return {
     updateAccounts() {
-      console.log('in update thing');
-      store.send(Services.accounts, { type: 'UPDATE_ACCOUNT' });
+      store.send(Services.accounts, { type: 'UPDATE_ACCOUNTS' });
     },
     setBalanceVisibility(input: AccountInputs['setBalanceVisibility']) {
       store.send(Services.accounts, {
@@ -23,12 +21,6 @@ export function accountEvents(store: StoreClass<StoreMachines>) {
       store.send(Services.accounts, {
         type: 'SELECT_ACCOUNT',
         input: { address: account.address },
-      });
-    },
-    initAccounts(input: AccountInitialInput) {
-      store.send(Services.accounts, {
-        type: 'SET_INITIAL_DATA',
-        input,
       });
     },
   };

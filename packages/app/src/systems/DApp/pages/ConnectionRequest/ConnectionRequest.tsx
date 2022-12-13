@@ -17,16 +17,16 @@ const PERMISSION_LIST = [
 const NOT_ALLOWED_LIST = ['View your private keys'];
 
 export function ConnectionRequest() {
-  const { selectedAccount, isLoading } = useAccounts();
+  const { account, isLoading } = useAccounts();
   const { handlers, origin } = useConnectRequest();
 
-  if (!selectedAccount || !origin) return null;
+  if (!account || !origin) return null;
 
   return (
     <Layout title="Connection Request" isLoading={isLoading}>
       <Layout.TopBar type={TopBarType.external} />
       <Layout.Content css={styles.content}>
-        <ConnectInfo origin={origin} account={selectedAccount} />
+        <ConnectInfo origin={origin} account={account} />
         <Card css={styles.connectionDetails}>
           <Text as="h2" color="gray12" css={{ mb: '$2' }}>
             This site will be able to:
@@ -67,9 +67,7 @@ export function ConnectionRequest() {
         <Button
           type="submit"
           color="accent"
-          onPress={() =>
-            handlers.authorizeConnection([selectedAccount.address])
-          }
+          onPress={() => handlers.authorizeConnection([account.address])}
         >
           Connect
         </Button>

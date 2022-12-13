@@ -13,11 +13,11 @@ import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 
 import { useAccounts } from '../../hooks';
-import { AccountScreen } from '../../machines';
 
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 import type { AccountInputs } from '~/systems/Account/services';
+import type { Maybe } from '~/systems/Core';
 import { formatAmount, shortAddress, VisibilityButton } from '~/systems/Core';
 
 type BalanceWidgetWrapperProps = {
@@ -35,7 +35,7 @@ export function BalanceWidgetWrapper({ children }: BalanceWidgetWrapperProps) {
 }
 
 export type BalanceWidgetProps = {
-  account?: Account;
+  account?: Maybe<Account>;
   isHidden?: boolean;
   isLoading?: boolean;
   onChangeVisibility?: (input: AccountInputs['setBalanceVisibility']) => void;
@@ -48,7 +48,7 @@ export function BalanceWidget({
   onChangeVisibility,
 }: BalanceWidgetProps) {
   const [isHidden, setIsHidden] = useState(_isHidden);
-  const { handlers } = useAccounts({ type: AccountScreen.list });
+  const { handlers } = useAccounts();
 
   useEffect(() => {
     setIsHidden(_isHidden);

@@ -55,11 +55,12 @@ export class AccountService {
   static async addAccount(input: AccountInputs['addAccount']) {
     return db.transaction('rw', db.accounts, async () => {
       const count = await db.accounts.count();
-      await db.accounts.add({
+      const account = {
         ...input.data,
         ...(count === 0 ? { isSelected: true } : { isSelected: false }),
         isHidden: false,
-      });
+      };
+      await db.accounts.add(account);
       return db.accounts.get({ address: input.data.address });
     });
   }
@@ -198,18 +199,11 @@ export class AccountService {
 
   static selectAccount(input: AccountInputs['selectAccount']) {
     return db.transaction('rw', db.accounts, async () => {
-      const selectedAccount = await db.accounts
-        .filter((account) => !!account.isSelected)
-        .first();
-      if (selectedAccount?.address) {
-        await AccountService.updateAccount({
-          address: selectedAccount.address,
-          data: { isSelected: false },
-        });
-      }
-      await AccountService.updateAccount({
-        address: input.address,
-        data: { isSelected: true },
+      await db.accounts.where('isSelected').equals('true').modify({
+        isSelect: false,
+      });
+      await db.accounts.update(input.address, {
+        isSelected: true,
       });
       return db.accounts.get(input.address);
     });

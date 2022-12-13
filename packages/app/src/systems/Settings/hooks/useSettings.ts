@@ -19,7 +19,7 @@ const selectors = {
 
 export function useSettings() {
   const navigate = useNavigate();
-  const { selectedAccount } = useAccounts();
+  const { account } = useAccounts();
   const service = useInterpret(() =>
     settingsMachine.withConfig({
       actions: {
@@ -37,7 +37,7 @@ export function useSettings() {
 
   /** @description - This will unlock the wallet and get the mnemonic phrase */
   function unlockAndGetMnemonic(password: string) {
-    send('UNLOCK_WALLET', { input: { password, account: selectedAccount } });
+    send('UNLOCK_WALLET', { input: { password, account } });
   }
 
   /** @description - This will change the password of the wallet */

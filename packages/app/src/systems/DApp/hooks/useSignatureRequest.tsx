@@ -17,7 +17,7 @@ const selectors = {
 };
 
 export function useSignatureRequest() {
-  const { selectedAccount } = useAccounts();
+  const { account } = useAccounts();
   const service = useInterpret(() => signMachine);
   const { send } = service;
   const isUnlocking = useSelector(service, selectors.isUnlocking);
@@ -39,7 +39,7 @@ export function useSignatureRequest() {
   }
 
   function unlock(password: string) {
-    send('UNLOCK_WALLET', { input: { password, account: selectedAccount } });
+    send('UNLOCK_WALLET', { input: { password, account } });
   }
 
   function closeUnlock() {
@@ -57,7 +57,7 @@ export function useSignatureRequest() {
     message,
     isUnlocking,
     isUnlockingLoading,
-    account: selectedAccount,
+    account,
     signedMessage,
     unlockError,
   };
