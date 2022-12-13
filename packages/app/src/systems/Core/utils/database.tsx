@@ -4,7 +4,7 @@ import Dexie from 'dexie';
 
 import 'dexie-observable';
 import { IS_TEST } from '~/config';
-import type { Transaction } from '~/systems/Transaction';
+import type { Transaction } from '~/systems/Transaction/types';
 
 export class FuelDB extends Dexie {
   vaults!: Table<Vault, string>;
