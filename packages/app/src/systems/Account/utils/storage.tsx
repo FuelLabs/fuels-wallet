@@ -1,4 +1,4 @@
-import { db } from '~/systems/Core';
+import { db } from '~/systems/Core/utils/database';
 
 export class IndexedDBStorage {
   async getItem(key: string) {
