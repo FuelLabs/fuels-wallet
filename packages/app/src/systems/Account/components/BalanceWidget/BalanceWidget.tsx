@@ -75,7 +75,7 @@ export function BalanceWidget({
           color="gray"
           icon={<Icon icon="CaretDown" color="gray8" />}
           aria-label="Expand"
-          onClick={handlers.goToList}
+          onPress={handlers.goToList}
           css={styles.caretDownIcon}
         />
       </Flex>

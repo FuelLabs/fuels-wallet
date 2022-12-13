@@ -57,7 +57,7 @@ export class AccountService {
       const count = await db.accounts.count();
       const account = {
         ...input.data,
-        ...(count === 0 ? { isSelected: true } : { isSelected: false }),
+        isSelected: count === 0,
         isHidden: false,
       };
       await db.accounts.add(account);

@@ -16,11 +16,6 @@ export enum AccountScreen {
   add = 'add',
 }
 
-// export type AccountInitialInput = {
-//   type: AccountScreen;
-//   accountAddress?: string;
-// };
-
 type MachineContext = {
   accounts?: Account[];
   account?: Maybe<Account>;

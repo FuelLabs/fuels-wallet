@@ -7,7 +7,6 @@ import { Layout, Pages } from '~/systems/Core';
 
 export const Accounts = () => {
   const navigate = useNavigate();
-  // TODO fix: change to grab multiple accounts
   const { accounts, isLoading, handlers } = useAccounts();
 
   return (

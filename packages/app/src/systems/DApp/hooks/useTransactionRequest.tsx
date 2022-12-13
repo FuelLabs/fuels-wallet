@@ -26,15 +26,14 @@ const selectors = {
   },
   isShowingInfo({
     isLoading,
-  }: Omit<
-    ReturnType<typeof useAccounts>,
-    'handlers' | 'accounts' | 'account'
-  >) {
+    account,
+  }: Omit<ReturnType<typeof useAccounts>, 'handlers' | 'accounts'>) {
     return (state: TransactionMachineState) =>
       !isLoading &&
       !state.context.approvedTx &&
       !state.context.txApproveError &&
-      state.context.origin;
+      state.context.origin &&
+      account;
   },
   generalErrors(state: TransactionMachineState) {
     const groupedErrors = state.context.txDryRunGroupedErrors;
@@ -65,6 +64,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const hasGeneralErrors = Boolean(Object.keys(generalErrors || {}).length);
   const isShowingSelector = selectors.isShowingInfo({
     isLoading,
+    account,
   });
   const isShowingInfo = useSelector(service, isShowingSelector);
   const { coinOutputs, outputsToSend, outputAmount } = useTxOutputs(ctx.tx);
