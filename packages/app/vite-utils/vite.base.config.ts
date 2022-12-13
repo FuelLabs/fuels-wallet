@@ -1,6 +1,4 @@
-import GlobalPolyFill from '@esbuild-plugins/node-globals-polyfill';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
 import type { UserConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
@@ -24,36 +22,11 @@ const baseConfig: UserConfig = {
       define: {
         global: 'globalThis',
       },
-      plugins: [
-        GlobalPolyFill({
-          process: true,
-          buffer: true,
-        }),
-      ],
     },
   },
   plugins: [react(), tsconfigPaths()],
   server: {
     port: process.env.NODE_ENV === 'test' ? 3001 : 3000,
-  },
-  resolve: {
-    /**
-     * We need this to get right build script and use PNPM link correctly
-     */
-    alias: {
-      '@fuel-ui/react': resolve(
-        __dirname,
-        '../node_modules/@fuel-ui/react/dist/index.mjs'
-      ),
-      '@fuel-ui/css': resolve(
-        __dirname,
-        '../node_modules/@fuel-ui/css/dist/index.mjs'
-      ),
-      process: 'process/browser',
-      stream: 'stream-browserify',
-      zlib: 'browserify-zlib',
-      util: 'util',
-    },
   },
   ...(Boolean(process.env.CI) && {
     logLevel: 'silent',
