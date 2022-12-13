@@ -19,7 +19,7 @@ import { UL } from './List';
 import { Paragraph } from './Paragraph';
 import Player from './Player';
 import { Pre } from './Pre';
-import { Table } from './Table';
+import { Table, TD, TH } from './Table';
 
 const components = {
   a: Link,
@@ -34,6 +34,8 @@ const components = {
   code: Code,
   blockquote: Blockquote,
   table: Table,
+  td: TD,
+  th: TH,
   ul: UL,
   ConnectionAlert,
   CodeImport,
