@@ -18,6 +18,7 @@ export const HomeActions = ({
 
   const sendButton = (
     <Button
+      aria-label="Send Button"
       onPress={sendAction}
       isDisabled={isDisabled || !hasBalance}
       css={styles.button}

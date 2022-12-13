@@ -68,12 +68,14 @@ export function assignWith<
     return assocPath(ctx, path, next);
   });
 }
+
 export function assignWithInput<
   C extends Record<string, any> = any,
   E extends AnyEventObject = AnyEventObject
 >(path: string, merge?: boolean) {
   return assignWith<C, E>(path, 'input', merge);
 }
+
 export function assignWithData<
   C extends Record<string, any> = any,
   E extends AnyEventObject = AnyEventObject

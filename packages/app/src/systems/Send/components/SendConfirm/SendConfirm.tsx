@@ -36,7 +36,9 @@ export function SendConfirm({ inputs, response, errors }: SendConfirmProps) {
         balanceErrors={errors?.txApprove.all?.InsufficientInputAmount}
         title="Amount Spent"
       />
-      <TxDetails fee={response?.fee} outputAmount={inputs?.amount} />
+      {response?.fee && (
+        <TxDetails fee={response?.fee} amountSent={inputs?.amount} />
+      )}
     </Stack>
   );
 }

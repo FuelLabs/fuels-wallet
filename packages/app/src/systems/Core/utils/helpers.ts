@@ -6,6 +6,33 @@ type DeepPartial<T> = {
 };
 
 /**
+ * Check if a value is primitive.
+ *
+ * @param value - The value to check.
+ * @returns `true` if the value is primitive, `false` otherwise.
+ *
+ * @example
+ * isPrimitive("Hello, world!"); // returns: true
+ * isPrimitive(12345); // returns: true
+ * isPrimitive(true); // returns: true
+ * isPrimitive(Symbol("my symbol")); // returns: true
+ * isPrimitive(null); // returns: true
+ * isPrimitive(undefined); // returns: true
+ * isPrimitive({}); // returns: false
+ * isPrimitive([]); // returns: false
+ */
+export function isPrimitive<T>(value: T) {
+  return (
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean' ||
+    typeof value === 'symbol' ||
+    value === null ||
+    value === undefined
+  );
+}
+
+/**
  * Returns the value at a given path in an object, or a default value if the path does not exist.
  *
  * @param obj - The object to extract the value from.
@@ -57,12 +84,13 @@ export function mergeRight<T1 extends Dictionary, T2 extends Dictionary>(
 ): DeepPartial<T1 & T2> {
   return Object.entries(b).reduce(
     (acc, [key, value]) => {
-      if (Array.isArray(value) && Array.isArray(acc?.[key])) {
-        const arr = acc?.[key] as unknown[];
+      const item = acc?.[key];
+      if (Array.isArray(value) && Array.isArray(item)) {
+        const arr = item as unknown[];
         return { ...acc, [key]: arr.concat(value) };
       }
-      if (value && typeof value === 'object') {
-        const obj = acc?.[key] as Dictionary;
+      if (!isPrimitive(value) && !isPrimitive(item)) {
+        const obj = item as Dictionary;
         return { ...acc, [key]: mergeRight(obj, value) };
       }
       return { ...acc, [key]: value };

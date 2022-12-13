@@ -9,13 +9,13 @@ describe('HomeActions', () => {
 
   it("should show 'Send' and 'Receive' button", async () => {
     render(<HomeActions />);
-    expect(screen.getByText('Send')).toBeInTheDocument();
-    expect(screen.getByText('Receive')).toBeInTheDocument();
+    expect(await screen.findByLabelText('Send Button')).toBeInTheDocument();
+    expect(await screen.findByText('Receive')).toBeInTheDocument();
   });
 
   it("should show 'Send' and 'Receive' button disabled", async () => {
     render(<HomeActions isDisabled />);
-    expect(screen.getByText('Send')).toHaveAttribute('aria-disabled');
-    expect(screen.getByText('Receive')).toHaveAttribute('aria-disabled');
+    expect(await screen.findByText('Send')).toHaveAttribute('aria-disabled');
+    expect(await screen.findByText('Receive')).toHaveAttribute('aria-disabled');
   });
 });

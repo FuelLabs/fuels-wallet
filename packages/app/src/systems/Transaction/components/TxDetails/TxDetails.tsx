@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Accordion, Flex, Text } from '@fuel-ui/react';
 import type { BN } from 'fuels';
-import { bn } from 'fuels';
+import { DECIMAL_UNITS, bn } from 'fuels';
 import type { FC } from 'react';
 
 import { TxDetailsLoader } from './TxDetailsLoader';
@@ -16,10 +16,11 @@ type TxDetailsComponent = FC<TxDetailsProps> & {
 };
 
 export const TxDetails: TxDetailsComponent = ({
-  fee,
+  fee: initialFee,
   amountSent,
 }: TxDetailsProps) => {
-  const total = fee?.add(bn(amountSent));
+  const fee = bn(initialFee || 0);
+  const total = fee.add(bn(amountSent));
   const shouldShowTotal = total?.gt(bn(fee));
 
   return (
@@ -31,7 +32,7 @@ export const TxDetails: TxDetailsComponent = ({
             <Flex css={styles.detailItem}>
               <Text as="span">Fee (network)</Text>
               <Text as="span" aria-label="Gas Value">
-                {fee?.format()} ETH
+                {fee?.format({ precision: DECIMAL_UNITS })} ETH
               </Text>
             </Flex>
             {shouldShowTotal && (

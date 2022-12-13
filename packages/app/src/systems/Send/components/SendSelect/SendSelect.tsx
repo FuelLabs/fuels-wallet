@@ -1,10 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
-import { Flex, Input, Stack, Text } from '@fuel-ui/react';
+import { Flex, Input, InputAmount, Stack, Text } from '@fuel-ui/react';
 import { bn } from 'fuels';
 
 import type { UseSendReturn } from '../../hooks/useSend';
 
-import { AmountInput, AssetSelect } from '~/systems/Asset';
+import { AssetSelect } from '~/systems/Asset';
 import type { useTransactionRequest } from '~/systems/DApp';
 import { TxDetails, TxErrors } from '~/systems/Transaction';
 
@@ -48,14 +48,14 @@ export function SendSelect({ send, tx }: SendSelectProps) {
         <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
           Which amount?
         </Text>
-        <AmountInput
+        <InputAmount
           value={send.inputs?.amount || bn(0)}
           onChange={send.handlers.setAmount}
           balance={bn(tx.account?.balance || 0)}
         />
       </Stack>
       {send.response?.fee && (
-        <TxDetails fee={send.response.fee} outputAmount={send.inputs?.amount} />
+        <TxDetails fee={send.response.fee} amountSent={send.inputs?.amount} />
       )}
     </Stack>
   );
