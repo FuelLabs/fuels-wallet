@@ -4,7 +4,7 @@ import test, { chromium } from '@playwright/test';
 import { getButtonByText, getByAriaLabel, hasText, visit } from '../commons';
 import { mockData } from '../mocks';
 
-test.describe('HomeWallet', () => {
+test.describe('ChangePassword', () => {
   let browser: Browser;
   let page: Page;
 
@@ -29,7 +29,7 @@ test.describe('HomeWallet', () => {
 
     // submit data
     await getButtonByText(page, 'Save').click();
-    await hasText(page, "You don't have any assets");
+    await hasText(page, /assets/i, 1);
   });
 
   test('should not change the user password when passwords not the same', async () => {
