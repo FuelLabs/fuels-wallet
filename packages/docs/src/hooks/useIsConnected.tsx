@@ -8,8 +8,12 @@ export function useIsConnected() {
 
   useEffect(() => {
     async function main() {
-      const accounts = await FuelWeb3.accounts();
-      setIsConnected(Boolean(accounts.length));
+      try {
+        const accounts = await FuelWeb3.accounts();
+        setIsConnected(Boolean(accounts.length));
+      } catch (err) {
+        setIsConnected(false);
+      }
     }
 
     if (FuelWeb3) {

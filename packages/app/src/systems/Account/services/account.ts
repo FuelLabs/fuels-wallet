@@ -3,12 +3,13 @@ import type { WalletUnlocked } from '@fuel-ts/wallet';
 import type { Account } from '@fuel-wallet/types';
 import { bn, Address, Provider } from 'fuels';
 
-import { unlockManager } from '../utils';
+import { unlockManager } from '../utils/manager';
 
-import { isEth } from '~/systems/Asset';
-import type { Maybe } from '~/systems/Core';
-import { getPhraseFromValue, db } from '~/systems/Core';
-import { NetworkService } from '~/systems/Network';
+import { isEth } from '~/systems/Asset/utils/asset';
+import type { Maybe } from '~/systems/Core/types';
+import { db } from '~/systems/Core/utils/database';
+import { getPhraseFromValue } from '~/systems/Core/utils/string';
+import { NetworkService } from '~/systems/Network/services';
 
 export type AccountInputs = {
   addAccount: {
