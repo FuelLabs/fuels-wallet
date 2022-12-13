@@ -45,7 +45,7 @@ export function TransactionRequest() {
             balanceErrors={ctx.groupedErrors?.InsufficientInputAmount}
             title="Assets to Send"
           />
-          <TxDetails fee={ctx.fee} outputAmount={ctx.outputAmount} />
+          <TxDetails fee={ctx.fee} amountSent={ctx.outputAmount} />
         </Stack>
       )}
       {ctx.approvedTx && (

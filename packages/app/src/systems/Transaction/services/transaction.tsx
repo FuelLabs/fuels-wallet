@@ -1,19 +1,20 @@
 /* eslint-disable no-param-reassign */
 import type { Account } from '@fuel-wallet/types';
-import type {
-  BN,
-  CoinQuantityLike,
-  TransactionRequest,
-  WalletUnlocked,
-} from 'fuels';
 import {
   Address,
   hexlify,
   MAX_GAS_PER_TX,
   ScriptTransactionRequest,
+  Provider,
+  TransactionResponse,
   bn,
   calculateTransactionFee,
-  Provider,
+} from 'fuels';
+import type {
+  BN,
+  CoinQuantityLike,
+  TransactionRequest,
+  WalletUnlocked,
 } from 'fuels';
 
 import type { Transaction } from '../types';
@@ -56,6 +57,10 @@ export type TxInputs = {
     amount: BN;
     assetId: string;
   };
+  fetch: {
+    txId: string;
+    providerUrl?: string;
+  };
 };
 
 export class TxService {
@@ -97,6 +102,13 @@ export class TxService {
   static async send({ wallet, tx, providerUrl }: TxInputs['send']) {
     wallet.provider = new Provider(providerUrl || '');
     return wallet.sendTransaction(tx);
+  }
+
+  static async fetch({ txId, providerUrl = '' }: TxInputs['fetch']) {
+    const provider = new Provider(providerUrl);
+    const txResponse = new TransactionResponse(txId, provider);
+
+    return txResponse;
   }
 
   static async calculateFee({ tx, providerUrl }: TxInputs['calculateFee']) {

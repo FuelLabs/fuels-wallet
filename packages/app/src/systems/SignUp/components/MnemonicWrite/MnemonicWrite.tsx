@@ -1,5 +1,4 @@
 import { Stack, Flex, Button, Alert } from '@fuel-ui/react';
-import { useState } from 'react';
 
 import { Header } from '../Header';
 
@@ -20,10 +19,7 @@ export function MnemonicWrite({
   onCancel,
   onNext,
 }: MnemonicWriteProps) {
-  const [isFilled, setFilled] = useState(false);
-
   function handleFill(val: string[]) {
-    setFilled(true);
     onFilled(val);
   }
 
@@ -35,7 +31,7 @@ export function MnemonicWrite({
         height={116}
       />
       <Header
-        title="Write down your Recover Phrase "
+        title="Write down your Recovery Phrase "
         subtitle="You will need it on the next step"
       />
       <Stack gap="$3" css={{ width: 400 }}>
@@ -59,7 +55,7 @@ export function MnemonicWrite({
           color="accent"
           css={{ width: 130 }}
           onPress={onNext}
-          isDisabled={!isFilled || !canProceed}
+          isDisabled={!canProceed}
         >
           Next
         </Button>

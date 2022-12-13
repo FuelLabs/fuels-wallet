@@ -1,13 +1,14 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, CardList, Flex, Heading, Text } from '@fuel-ui/react';
+import { Avatar, CardList, Flex, Heading, Text, Tooltip } from '@fuel-ui/react';
 import type { Coin } from '@fuel-wallet/types';
+import { bn } from 'fuels';
 import type { FC } from 'react';
 
 import { getAssetInfoById } from '../../utils';
 
 import { AssetItemLoader } from './AssetItemLoader';
 
-import { formatUnits } from '~/systems/Core';
+import { formatAmount } from '~/systems/Core';
 
 export type AssetItemProps = {
   asset: Coin;
@@ -21,9 +22,11 @@ export const AssetItem: AssetItemComponent = ({ asset }) => {
   const { symbol, name, imageUrl } = getAssetInfoById(asset.assetId, asset);
 
   const rightEl = (
-    <Text css={{ fontSize: '$sm', fontWeight: '$semibold' }}>
-      {formatUnits(asset.amount)} {symbol}
-    </Text>
+    <Tooltip content={bn(asset.amount).format()}>
+      <Text css={{ fontSize: '$sm', fontWeight: '$semibold' }}>
+        {formatAmount(asset.amount)} {symbol}
+      </Text>
+    </Tooltip>
   );
 
   return (

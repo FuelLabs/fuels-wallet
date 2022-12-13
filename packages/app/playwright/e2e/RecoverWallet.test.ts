@@ -26,7 +26,7 @@ test.describe('RecoverWallet', () => {
     await getButtonByText(page, /Paste/i).click();
 
     /** Confirm Mnemonic */
-    await hasText(page, /Write down your Recover Phrase/i);
+    await hasText(page, /Write down your Recovery Phrase/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
 
@@ -40,6 +40,6 @@ test.describe('RecoverWallet', () => {
     /** Account created */
     await hasText(page, /Wallet created successfully/i);
     await hasText(page, /Account 1/i);
-    await hasText(page, 'uel1r...xqqj');
+    await hasText(page, 'fuel1r...xqqj');
   });
 });

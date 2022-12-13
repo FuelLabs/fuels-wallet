@@ -33,7 +33,7 @@ test.describe('CreateWallet', () => {
     await getButtonByText(page, /Next/i).click();
 
     /** Confirm Mnemonic */
-    await hasText(page, /Write down your Recover Phrase/i);
+    await hasText(page, /Write down your Recovery Phrase/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
 
@@ -49,6 +49,6 @@ test.describe('CreateWallet', () => {
     await hasText(page, /Account 1/i);
     await page.reload();
     await visit(page, '/wallet');
-    await hasText(page, /assets/i);
+    await hasText(page, /assets/i, 1);
   });
 });

@@ -25,7 +25,6 @@ export function useSignUp(type: SignUpType) {
       })
       .withContext({
         type,
-        attempts: 0,
       })
   );
 
@@ -37,14 +36,6 @@ export function useSignUp(type: SignUpType) {
 
   function confirmMnemonic(words: string[]) {
     send('CONFIRM_MNEMONIC', { data: { words } });
-  }
-
-  function checkMnemonicError() {
-    return (
-      ctx.attempts > 0 &&
-      !ctx.isConfirmed &&
-      "Sorry your mnemonic phrase doesn't match"
-    );
   }
 
   function createManager({ password }: CreatePasswordValues) {
@@ -60,7 +51,6 @@ export function useSignUp(type: SignUpType) {
     handlers: {
       next,
       confirmMnemonic,
-      checkMnemonicError,
       createManager,
     },
     context: {
