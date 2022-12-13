@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as R from 'rambda/immutable';
 import type { AnyInterpreter, StateFrom, Action, AnyEventObject } from 'xstate';
 import { assign } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
+
+import { assocPath, mergeRight, pathOr } from './helpers';
 
 export async function waitForState<
   I extends AnyInterpreter,
@@ -62,9 +63,9 @@ export function assignWith<
 ) {
   return assign<C, E>((ctx, ev) => {
     const value = typeof prop === 'string' ? ev[prop] : ev[prop(ctx, ev)];
-    const old = R.path(path, ctx);
-    const next = merge ? R.mergeRight(old, value) : value;
-    return R.assocPath(path, next, ctx);
+    const old = pathOr(ctx, path);
+    const next = merge ? mergeRight(old, value) : value;
+    return assocPath(ctx, path, next);
   });
 }
 export function assignWithInput<
@@ -86,7 +87,7 @@ export function assignErrors<
 >(prop: string) {
   return assign<C, E>((ctx, ev) => {
     const error = ev.data.error;
-    return R.assocPath(`errors.${prop}`, error, ctx);
+    return assocPath(ctx, `errors.${prop}`, error);
   });
 }
 
