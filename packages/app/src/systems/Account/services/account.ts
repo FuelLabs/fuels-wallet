@@ -199,9 +199,9 @@ export class AccountService {
 
   static selectAccount(input: AccountInputs['selectAccount']) {
     return db.transaction('rw', db.accounts, async () => {
-      await db.accounts.where('isSelected').equals('true').modify({
-        isSelect: false,
-      });
+      await db.accounts
+        .filter((account) => !!account.isSelected)
+        .modify({ isSelected: false });
       await db.accounts.update(input.address, {
         isSelected: true,
       });

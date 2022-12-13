@@ -6,7 +6,7 @@ import { MOCK_ACCOUNTS } from '../__mocks__';
 import { AccountService } from '../services';
 
 import type { AccountMachineService } from './accountMachine';
-import { accountMachine, AccountScreen } from './accountMachine';
+import { accountMachine } from './accountMachine';
 
 const MOCK_ACCOUNT = {
   ...MOCK_ACCOUNTS[0],
@@ -45,42 +45,36 @@ describe('accountsMachine', () => {
   });
 
   describe('list', () => {
-    const initialEv: any = {
-      type: 'SET_INITIAL_DATA',
-      input: { type: AccountScreen.list },
-    };
-
-    it('should fetch a list of accounts', async () => {
-      const nextState = service.nextState(initialEv);
-      expect(nextState.value).toBe('fetchingAccounts');
-
-      service.send(initialEv);
+    it('should fetch an initial account', async () => {
       state = await waitFor(service, (state) => state.matches('done'));
       expect(state.context.accounts?.length).toBe(1);
     });
 
-    it('should not have any account selected in context', async () => {
-      service.send(initialEv);
+    it('should fetch a list of accounts', async () => {
       state = await waitFor(service, (state) => state.matches('done'));
-      expect(state.context.account).toBeFalsy();
+      // TODO refactor: change to service.send(addEvent) when it is added to the accountMachine
+      await AccountService.addAccount({ data: MOCK_ACCOUNT_TWO });
+      const accounts = await AccountService.getAccounts();
+
+      const idx = accounts.findIndex((account) => account.isSelected);
+      const invertIdx = idx === 0 ? 1 : 0;
+
+      expect(accounts.length).toBe(2);
+      expect(accounts[idx].isSelected).toBeTruthy();
+      expect(accounts[invertIdx].isSelected).toBeFalsy();
     });
   });
 
   describe('select', () => {
-    const initialEv: any = {
-      type: 'SET_INITIAL_DATA',
-      input: { type: AccountScreen.list },
-    };
-
     it('should be able to select a new network', async () => {
+      state = await waitFor(service, (state) => state.matches('done'));
       // TODO refactor: change to service.send(addEvent) when it is added to the accountMachine
       await AccountService.addAccount({ data: MOCK_ACCOUNT_TWO });
+      let accounts = await AccountService.getAccounts();
 
-      service.send(initialEv);
-      state = await waitFor(service, (state) => state.matches('done'));
-      let accounts = state.context.accounts || [];
       const idx = accounts.findIndex((account) => account.isSelected);
       const invertIdx = idx === 0 ? 1 : 0;
+
       expect(accounts.length).toBe(2);
       expect(accounts[idx].isSelected).toBeTruthy();
       expect(accounts[invertIdx].isSelected).toBeFalsy();
@@ -96,7 +90,9 @@ describe('accountsMachine', () => {
       service.send(selectEv);
       await waitFor(service, (state) => state.matches('selectingAccount'));
       state = await waitFor(service, (state) => state.matches('done'));
-      accounts = state.context.accounts || [];
+
+      accounts = await AccountService.getAccounts();
+
       expect(accounts[idx].isSelected).toBeFalsy();
       expect(accounts[invertIdx].isSelected).toBeTruthy();
     });

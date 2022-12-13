@@ -210,7 +210,6 @@ export const accountMachine = createMachine(
             account: accountToFetch,
             providerUrl,
           });
-          console.log(accountWithBalance);
           return accountWithBalance;
         },
       }),
