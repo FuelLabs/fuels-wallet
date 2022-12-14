@@ -34,7 +34,7 @@ type MachineServices = {
   };
 };
 
-type MachineEvents =
+export type MachineEvents =
   | { type: 'UPDATE_ACCOUNT'; input?: null }
   | { type: 'UPDATE_ACCOUNTS'; input?: null }
   | {
