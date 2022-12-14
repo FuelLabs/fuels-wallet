@@ -34,8 +34,6 @@ type MachineServices = {
   };
 };
 
-// edit service to machine and do state stuff for selected account and add to state then add get that info in new useAccounts hook then add test
-
 type MachineEvents =
   | { type: 'UPDATE_ACCOUNT'; input?: null }
   | { type: 'UPDATE_ACCOUNTS'; input?: null }

@@ -5,7 +5,7 @@ import { waitFor } from 'xstate/lib/waitFor';
 import { MOCK_ACCOUNTS } from '../__mocks__';
 import { AccountService } from '../services';
 
-import type { AccountMachineService } from './accountMachine';
+import type { AccountMachineService, MachineEvents } from './accountMachine';
 import { accountMachine } from './accountMachine';
 
 const MOCK_ACCOUNT = {
@@ -79,7 +79,7 @@ describe('accountsMachine', () => {
       expect(accounts[idx].isSelected).toBeTruthy();
       expect(accounts[invertIdx].isSelected).toBeFalsy();
 
-      const selectEv: any = {
+      const selectEv: MachineEvents = {
         type: 'SELECT_ACCOUNT',
         input: { address: accounts[invertIdx].address },
       };
