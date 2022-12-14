@@ -6,6 +6,7 @@ const { E2E_PORT = 9000 } = process.env;
 const distDirectory = join(__dirname, './dist');
 
 const config: PlaywrightTestConfig = {
+  workers: 1,
   testMatch: join(__dirname, './playwright/**/*.test.ts'),
   testDir: join(__dirname, './playwright/'),
   webServer: {
