@@ -1,7 +1,7 @@
 import { Box } from '@fuel-ui/react';
 
 import { MOCK_TX_RECIPIENT } from '../../__mocks__/tx-recipient';
-import { TxStatus } from '../../types';
+import { Status } from '../../utils';
 
 import type { TxFromToProps } from './TxFromTo';
 import { TxFromTo } from './TxFromTo';
@@ -31,31 +31,21 @@ export const Pending = (args: TxFromToProps) => (
   <Box
     css={{ maxWidth: 318, display: 'flex', flexDirection: 'column', gap: '$4' }}
   >
-    <TxFromTo
-      {...args}
-      from={ACCOUNT}
-      to={CONTRACT}
-      status={TxStatus.pending}
-    />
+    <TxFromTo {...args} from={ACCOUNT} to={CONTRACT} status={Status.pending} />
   </Box>
 );
 export const Success = (args: TxFromToProps) => (
   <Box
     css={{ maxWidth: 318, display: 'flex', flexDirection: 'column', gap: '$4' }}
   >
-    <TxFromTo
-      {...args}
-      from={ACCOUNT}
-      to={CONTRACT}
-      status={TxStatus.success}
-    />
+    <TxFromTo {...args} from={ACCOUNT} to={CONTRACT} status={Status.success} />
   </Box>
 );
 export const Failed = (args: TxFromToProps) => (
   <Box
     css={{ maxWidth: 318, display: 'flex', flexDirection: 'column', gap: '$4' }}
   >
-    <TxFromTo {...args} from={ACCOUNT} to={CONTRACT} status={TxStatus.error} />
+    <TxFromTo {...args} from={ACCOUNT} to={CONTRACT} status={Status.failure} />
   </Box>
 );
 

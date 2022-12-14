@@ -1,7 +1,14 @@
 import { Stack } from '@fuel-ui/react';
+import { Fragment } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { TxDetails, TxFromTo, TxHeader, TxStatusAlert } from '../../components';
+import {
+  TxDetails,
+  TxFromTo,
+  TxHeader,
+  TxOperations,
+  TxStatusAlert,
+} from '../../components';
 import { useTransaction } from '../../hooks';
 
 import { AssetsAmount } from '~/systems/Asset';
@@ -15,19 +22,13 @@ export function ViewTransaction() {
 
   const {
     isFetching,
+    isFetchingDetails,
     isFetchingResult,
-    txFee,
-    txStatus,
-    txId,
-    tx,
-    error,
     shouldShowAlert,
     shouldShowTx,
     shouldShowTxDetails,
-    txFrom,
-    txTo,
-    isFetchingDetails,
-    toAssetAmounts,
+    tx,
+    error,
     amountSent,
   } = useTransaction({
     txId: txIdQueryParam,
@@ -43,22 +44,17 @@ export function ViewTransaction() {
       <Layout.Content>
         <Stack gap="$4">
           {shouldShowAlert && (
-            <TxStatusAlert txStatus={txStatus} error={error} />
+            <TxStatusAlert txStatus={tx.status} error={error} />
           )}
           {shouldShowTx && (
             <>
               <TxHeader
-                transaction={{
-                  id: txId,
-                  type: tx?.type,
-                  status: txStatus,
-                }}
+                id={tx?.id}
+                type={tx?.type}
+                status={tx?.status}
                 providerUrl={providerUrl}
               />
-              <TxFromTo from={txFrom} to={txTo} status={txStatus} />
-              {Boolean(toAssetAmounts?.length) && (
-                <AssetsAmount amounts={toAssetAmounts} title="Assets Sent" />
-              )}
+              <TxOperations operations={tx.operations} status={tx?.status} />
             </>
           )}
           {isFetching && (
@@ -70,7 +66,7 @@ export function ViewTransaction() {
           )}
           {isFetchingDetails && <TxDetails.Loader />}
           {shouldShowTxDetails && (
-            <TxDetails fee={txFee} amountSent={amountSent} />
+            <TxDetails fee={tx.fee} amountSent={amountSent} />
           )}
         </Stack>
       </Layout.Content>

@@ -2,11 +2,11 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Flex, Icon, Spinner } from '@fuel-ui/react';
 
 import type { TxRecipientAddress } from '../../types';
-import { TxStatus } from '../../types';
+import { Status } from '../../utils';
 import { TxRecipientCard } from '../TxRecipientCard';
 
 type TxSpinnerProps = {
-  status?: TxStatus;
+  status?: Status;
   isLoading?: boolean;
 };
 
@@ -16,19 +16,17 @@ function TxSpinner({ status, isLoading }: TxSpinnerProps) {
       {status == null && !isLoading && (
         <Icon icon={Icon.is('ArrowRight')} size={18} />
       )}
-      {(status === TxStatus.pending || isLoading) && (
+      {(status === Status.pending || isLoading) && (
         <Spinner color="$amber3" size={18} aria-label="Loading Spinner" />
       )}
-      {status === TxStatus.success && (
-        <Icon icon={Icon.is('Check')} size={18} />
-      )}
-      {status === TxStatus.error && <Icon icon={Icon.is('X')} size={18} />}
+      {status === Status.success && <Icon icon={Icon.is('Check')} size={18} />}
+      {status === Status.failure && <Icon icon={Icon.is('X')} size={18} />}
     </Box>
   );
 }
 
 export type TxFromToProps = {
-  status?: TxStatus;
+  status?: Status;
   from?: TxRecipientAddress;
   to?: TxRecipientAddress;
   isLoading?: boolean;
@@ -58,13 +56,7 @@ const styles = {
     position: 'relative',
     display: 'flex',
   }),
-  spinner: ({
-    status,
-    isLoading,
-  }: {
-    status?: TxStatus;
-    isLoading?: boolean;
-  }) =>
+  spinner: ({ status, isLoading }: { status?: Status; isLoading?: boolean }) =>
     cssObj({
       display: 'flex',
       alignItems: 'center',
@@ -82,15 +74,15 @@ const styles = {
         background: '$gray1',
         color: '$gray8',
       }),
-      ...(status === TxStatus.success && {
+      ...(status === Status.success && {
         background: '$accent11',
         color: '$accent3',
       }),
-      ...(status === TxStatus.error && {
+      ...(status === Status.failure && {
         background: '$red9',
         color: '$red3',
       }),
-      ...((status === TxStatus.pending || isLoading) && {
+      ...((status === Status.pending || isLoading) && {
         background: '$amber9',
         color: '$amber3',
       }),

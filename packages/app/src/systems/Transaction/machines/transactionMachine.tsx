@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
-  BN,
   Transaction,
   TransactionResponse,
   TransactionResult,
 } from 'fuels';
+import { isB256 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { TxService } from '../services';
-import { TxStatus } from '../types';
-import { getTxStatus, isB256 } from '../utils';
+import type { GqlTransactionStatus } from '../utils';
 
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
@@ -22,19 +21,22 @@ export const TRANSACTION_ERRORS = {
 };
 
 type GetTransactionResponse = {
-  txResponse: TransactionResponse;
-  tx: Transaction;
-  status?: TxStatus;
+  transactionResponse: TransactionResponse;
+  transaction: Transaction;
+  gqlTransactionStatus?: GqlTransactionStatus;
   txId?: string;
 };
 
 type MachineContext = {
   error?: string;
-  txResponse?: TransactionResponse;
-  txStatus?: TxStatus;
-  tx?: Transaction;
-  txResult?: TransactionResult<any>;
-  receiptsFee?: BN;
+  transactionResponse?: TransactionResponse;
+  // ANCHOR: START
+  // TODO: for now using only status here, but should be whole gqlTransaction.
+  // Will do it when sdk provides correct typing for gqlTransaction
+  gqlTransactionStatus?: GqlTransactionStatus;
+  // ANCHOR: END
+  transaction?: Transaction;
+  transactionResult?: TransactionResult<any>;
   txId?: string;
 };
 
@@ -103,7 +105,7 @@ export const transactionMachine = createMachine(
           src: 'getTransactionResult',
           data: (ctx) => ({
             input: {
-              txResponse: ctx.txResponse,
+              transactionResponse: ctx.transactionResponse,
             },
           }),
           onDone: [
@@ -139,28 +141,31 @@ export const transactionMachine = createMachine(
         const data = event.data as GetTransactionResponse;
 
         return {
-          txResponse: data.txResponse,
-          tx: data.tx,
-          txStatus: data.status,
+          transactionResponse: data.transactionResponse,
+          tx: data.transaction,
+          gqlTransactionStatus: data.gqlTransactionStatus,
           txId: data.txId,
         };
       }),
       assignGetTransactionResult: assign((_, event) => {
-        const txResult = event.data as TransactionResult<any>;
+        const transactionResult = event.data as TransactionResult<any>;
 
         return {
-          txResult,
-          transaction: txResult.transaction,
-          txStatus:
-            txResult.status.type === 'success'
-              ? TxStatus.success
-              : TxStatus.error,
-          receiptsFee: txResult.fee,
+          transactionResult,
+          transaction: transactionResult.transaction,
+          // ANCHOR: START
+          // for now we force type to be either SuccessStatus or FailureStatus. 'success' and 'failure' are coming only
+          // from waitForResult function. this transaction part in SDK will be refactored and return consistent value.
+          // TODO: should replace this with equivalent gqlTransaction that will come from SDK.
+          gqlTransactionStatus: (transactionResult.status.type === 'success'
+            ? 'SuccessStatus'
+            : 'FailureStatus') as GqlTransactionStatus,
+          // ANCHOR: END
         };
       }),
     },
     guards: {
-      isInvalidTxId: (ctx, ev) => !isB256(ev.input?.txId),
+      isInvalidTxId: (ctx, ev) => !isB256(ev.input?.txId || ''),
     },
     services: {
       getTransaction: FetchMachine.create<
@@ -179,37 +184,36 @@ export const transactionMachine = createMachine(
           const providerUrl =
             input?.providerUrl || selectedNetwork?.url || defaultProvider;
 
-          const txResponse = await TxService.fetch({
+          const transactionResponse = await TxService.fetch({
             providerUrl,
             txId: input.txId,
           });
 
-          const { transaction, transactionWithReceipts } =
-            await txResponse.fetch();
-
-          const status = getTxStatus(transactionWithReceipts.status?.type);
+          const { transaction, transactionWithReceipts: gqlTransaction } =
+            await transactionResponse.fetch();
 
           return {
-            tx: transaction,
-            txResponse,
-            status,
-            txId: transactionWithReceipts.id,
+            transaction,
+            transactionResponse,
+            gqlTransactionStatus: gqlTransaction.status?.type,
+            txId: gqlTransaction.id,
           };
         },
       }),
       getTransactionResult: FetchMachine.create<
-        { txResponse: TransactionResponse },
+        { transactionResponse: TransactionResponse },
         TransactionResult<any>
       >({
         showError: true,
         async fetch({ input }) {
-          if (!input?.txResponse) {
+          if (!input?.transactionResponse) {
             throw new Error('Invalid tx response');
           }
 
-          const txResult = await input?.txResponse?.waitForResult();
+          const transactionResult =
+            await input?.transactionResponse?.waitForResult();
 
-          return txResult;
+          return transactionResult;
         },
       }),
     },

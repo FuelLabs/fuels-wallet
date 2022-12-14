@@ -18,6 +18,6 @@ export type Account = {
 };
 
 export enum AddressType {
-  contract,
-  account,
+  contract = 'Contract',
+  account = 'Account',
 }

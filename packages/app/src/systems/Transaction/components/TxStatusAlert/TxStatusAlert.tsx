@@ -4,11 +4,10 @@ import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import type { FC } from 'react';
 import { useMemo } from 'react';
 
-import { TxStatus } from '../../types';
-import { getTxStatusColor } from '../../utils';
+import { getTxStatusColor, Status } from '../../utils';
 
 export type TxStatusAlertProps = {
-  txStatus?: TxStatus;
+  txStatus?: Status;
   error?: string;
   txId?: string;
   providerUrl?: string;
@@ -21,15 +20,15 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
   providerUrl,
 }) => {
   const alertStatus = useMemo(() => {
-    if (txStatus === TxStatus.pending) return 'warning';
-    if (txStatus === TxStatus.success) return 'success';
-    if (txStatus === TxStatus.error || error) return 'error';
+    if (txStatus === Status.pending) return 'warning';
+    if (txStatus === Status.success) return 'success';
+    if (txStatus === Status.failure || error) return 'error';
 
     return 'info';
   }, [txStatus, error]);
 
   const txColor = error
-    ? getTxStatusColor(TxStatus.error)
+    ? getTxStatusColor(Status.failure)
     : getTxStatusColor(txStatus);
 
   return (
@@ -42,9 +41,9 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
       <Alert.Description>
         <Stack gap="$4">
           <Text fontSize="sm">
-            {txStatus === TxStatus.pending &&
+            {txStatus === Status.pending &&
               'Your transaction is still pending, you can close this window if you want.'}
-            {txStatus === TxStatus.error &&
+            {txStatus === Status.failure &&
               'Sorry, something wrong happened with your transaction.'}
             {error}
           </Text>

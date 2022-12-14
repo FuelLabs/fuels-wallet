@@ -3,18 +3,16 @@ import { Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import type { FC } from 'react';
 
-import type { Transaction } from '../../types';
-import {
-  getTransactionTypeText,
-  getTxStatusColor,
-  getTxStatusText,
-} from '../../utils';
+import type { Status, Type } from '../../utils';
+import { getTxStatusColor } from '../../utils';
 
 import { TxHeaderLoader } from './TxHeaderLoader';
 
 export type TxHeaderProps = {
-  transaction: Omit<Transaction, 'data'>;
+  status?: Status;
+  id?: string;
   providerUrl?: string;
+  type?: Type;
 };
 
 type TxHeaderComponent = FC<TxHeaderProps> & {
@@ -22,10 +20,12 @@ type TxHeaderComponent = FC<TxHeaderProps> & {
 };
 
 export const TxHeader: TxHeaderComponent = ({
-  transaction,
+  status,
+  id,
+  type,
   providerUrl = '',
 }) => {
-  const txColor = getTxStatusColor(transaction.status);
+  const txColor = getTxStatusColor(status);
 
   return (
     <Card css={styles.root}>
@@ -33,7 +33,7 @@ export const TxHeader: TxHeaderComponent = ({
         <Flex css={styles.item}>
           <Text fontSize="sm">Status: </Text>
           <Text fontSize="sm" css={{ color: '$gray12', mx: '$2' }}>
-            {getTxStatusText(transaction.status)}
+            {status}
           </Text>
           <Text
             color={txColor}
@@ -46,7 +46,7 @@ export const TxHeader: TxHeaderComponent = ({
         <Flex css={styles.item}>
           <Copyable
             value={getBlockExplorerLink({
-              path: `transaction/${transaction.id || ''}`,
+              path: `transaction/${id || ''}`,
               providerUrl,
             })}
             tooltipMessage="Copy Transaction Link"
@@ -56,7 +56,7 @@ export const TxHeader: TxHeaderComponent = ({
             }}
           />
           <Copyable
-            value={transaction.id || ''}
+            value={id || ''}
             css={{ mx: '$2' }}
             iconProps={{
               icon: Icon.is('CopySimple'),
@@ -70,7 +70,7 @@ export const TxHeader: TxHeaderComponent = ({
         <Flex css={styles.item}>
           <Text fontSize="sm">Type: </Text>
           <Text fontSize="sm" css={{ color: '$gray12', mx: '$2' }}>
-            {getTransactionTypeText(transaction.type)}
+            {type}
           </Text>
         </Flex>
       </Flex>

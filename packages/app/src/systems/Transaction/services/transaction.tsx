@@ -9,7 +9,7 @@ import {
 } from 'fuels';
 
 import type { Transaction } from '../types';
-import { getCoinOutputsFromTx, parseTransaction } from '../utils';
+import { getOutputsCoin, toJSON } from '../utils';
 
 import { db, uniqueId } from '~/systems/Core';
 
@@ -69,7 +69,7 @@ export class TxService {
 
   static add(input: TxInputs['add']) {
     const { type } = input;
-    const data = parseTransaction(input.data!);
+    const data = toJSON(input.data!);
     return db.transaction('rw', db.transactions, async () => {
       const id = await db.transactions.add({ type, data, id: uniqueId() });
       return db.transactions.get(id);
@@ -111,7 +111,7 @@ export class TxService {
   }
 
   static getOutputs({ tx, account }: TxInputs['getOutputs']) {
-    const coinOutputs = getCoinOutputsFromTx(tx);
+    const coinOutputs = getOutputsCoin(tx);
     const outputsToSend = coinOutputs.filter(
       (value) => value.to !== account?.publicKey
     );
