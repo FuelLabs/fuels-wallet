@@ -16,7 +16,6 @@ import { getAssetInfoById } from '../../utils';
 
 import { AssetsAmountLoader } from './AssetsAmountLoader';
 
-import { DECIMAL_UNITS } from '~/config';
 import { shortAddress } from '~/systems/Core';
 import type {
   GroupedError,
@@ -95,7 +94,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
               <Flex css={styles.amount(isPositive)}>
                 {isPositive && '+'}
                 {isNegative && '-'}
-                {amount.format({ precision: DECIMAL_UNITS })} {asset.symbol}
+                {amount.format()} {asset.symbol}
               </Flex>
             </Grid>
           );
