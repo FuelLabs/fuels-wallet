@@ -4,6 +4,8 @@ import { AccountService, MOCK_ACCOUNTS } from '../..';
 
 import { Accounts } from './Accounts';
 
+import { store } from '~/store';
+
 export default {
   component: Accounts,
   title: 'Account/Pages/1. Accounts',
@@ -12,6 +14,7 @@ export default {
       await AccountService.clearAccounts();
       await AccountService.addAccount({ data: MOCK_ACCOUNTS[0] });
       await AccountService.addAccount({ data: MOCK_ACCOUNTS[1] });
+      store.reset();
       return {};
     },
   ],
@@ -24,3 +27,11 @@ export default {
 } as Meta;
 
 export const Usage: StoryFn<unknown> = () => <Accounts />;
+
+export const UsageWithHiddenAccounts: StoryFn<unknown> = () => <Accounts />;
+UsageWithHiddenAccounts.loaders = [
+  async () => {
+    await AccountService.addAccount({ data: MOCK_ACCOUNTS[2] });
+    return {};
+  },
+];

@@ -66,7 +66,7 @@ describe('accountsMachine', () => {
   });
 
   describe('select', () => {
-    it('should be able to select a new network', async () => {
+    it('should be able to select a new account', async () => {
       state = await waitFor(service, (state) => state.matches('done'));
       // TODO refactor: change to service.send(addEvent) when it is added to the accountMachine
       await AccountService.addAccount({ data: MOCK_ACCOUNT_TWO });

@@ -63,12 +63,12 @@ export const accountMachine = createMachine(
           onDone: [
             {
               target: 'fetchingAccount',
-              actions: ['assignAccounts', 'setLocalStorage'],
+              actions: ['assignAccounts', 'setIsLogged'],
               cond: 'hasAccounts',
             },
             {
               target: 'done',
-              actions: ['assignAccounts', 'removeLocalStorage'],
+              actions: ['assignAccounts', 'setIsUnlogged'],
             },
           ],
           onError: [
@@ -161,10 +161,10 @@ export const accountMachine = createMachine(
       assignError: assign({
         error: (_, ev) => ev.data,
       }),
-      setLocalStorage: () => {
+      setIsLogged: () => {
         localStorage.setItem(IS_LOGGED_KEY, 'true');
       },
-      removeLocalStorage: () => {
+      setIsUnlogged: () => {
         localStorage.removeItem(IS_LOGGED_KEY);
       },
       setBalanceVisibility: assign({

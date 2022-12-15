@@ -17,6 +17,7 @@ export type AccountInputs = {
       name: string;
       address: string;
       publicKey: string;
+      isHidden?: boolean;
     };
   };
   fetchBalance: {
@@ -59,7 +60,7 @@ export class AccountService {
       const account = {
         ...input.data,
         isSelected: count === 0,
-        isHidden: false,
+        isHidden: !!input.data.isHidden,
       };
       await db.accounts.add(account);
       return db.accounts.get({ address: input.data.address });

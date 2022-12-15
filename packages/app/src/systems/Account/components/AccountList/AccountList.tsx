@@ -1,20 +1,28 @@
 import { Button, CardList, Stack } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { AccountItem } from '../AccountItem';
-import type { AccountItemProps } from '../AccountItem';
 
-export type AccountListProps = Omit<AccountItemProps, 'account'> & {
+export type AccountListProps = {
+  onPress: (account: Account) => void;
   accounts: Account[];
 };
 
-export function AccountList({ accounts, ...props }: AccountListProps) {
+export function AccountList({ accounts, onPress }: AccountListProps) {
   const [showHidden, setShowHidden] = useState(() => false);
+  const [anyHiddenAccounts, setAnyHiddenAccounts] = useState(false);
 
   function toggle() {
     setShowHidden((s) => !s);
   }
+
+  useEffect(() => {
+    const hiddenAccounts = accounts.some((account) => {
+      return account.isHidden;
+    });
+    setAnyHiddenAccounts(hiddenAccounts);
+  }, [accounts]);
 
   return (
     <Stack gap="$3">
@@ -22,7 +30,7 @@ export function AccountList({ accounts, ...props }: AccountListProps) {
         {accounts.map((account) => {
           return (
             <AccountItem
-              {...props}
+              onPress={() => onPress(account)}
               key={account.address}
               account={account}
               isHidden={!showHidden && account.isHidden}
@@ -30,9 +38,11 @@ export function AccountList({ accounts, ...props }: AccountListProps) {
           );
         })}
       </CardList>
-      <Button size="xs" color="gray" variant="link" onPress={toggle}>
-        {showHidden ? 'Hide' : 'Show'} hidden accounts
-      </Button>
+      {anyHiddenAccounts && (
+        <Button size="xs" color="gray" variant="link" onPress={toggle}>
+          {showHidden ? 'Hide' : 'Show'} hidden accounts
+        </Button>
+      )}
     </Stack>
   );
 }
