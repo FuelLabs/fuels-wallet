@@ -19,7 +19,7 @@ const ViewTransactionStory = ({ txId }: { txId: string }) => {
 
 export default {
   component: ViewTransactionStory,
-  title: 'Transaction/Components/ViewTransaction',
+  title: 'Transaction/Pages/ViewTransaction',
   argTypes: {
     txId: {
       defaultValue:

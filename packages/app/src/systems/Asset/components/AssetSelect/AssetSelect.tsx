@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import {
   Avatar,
+  Box,
   Button,
   Dropdown,
   Flex,
@@ -8,6 +9,7 @@ import {
   IconButton,
   Stack,
   Text,
+  Tooltip,
 } from '@fuel-ui/react';
 import type { AssetAmount, Coin } from '@fuel-wallet/types';
 import { bn } from 'fuels';
@@ -101,9 +103,12 @@ export function AssetSelect({ items, selected, onSelect }: AssetSelectProps) {
         {(items || []).map((item) => {
           const asset = getAssetInfoById(item.assetId, item);
           const amount = bn(asset.amount);
+          const amountStr = `${amount.format({
+            precision: MAX_FRACTION_DIGITS,
+          })} ${asset.symbol}`;
           return (
             <Dropdown.MenuItem key={asset.assetId} textValue={asset.name}>
-              <Avatar size="sm" name={asset?.name} src={asset?.imageUrl} />
+              <Avatar size="xsm" name={asset?.name} src={asset?.imageUrl} />
               <Stack gap="$0" className="asset-info">
                 <Text as="span" className="asset-name">
                   {asset?.name}
@@ -113,8 +118,11 @@ export function AssetSelect({ items, selected, onSelect }: AssetSelectProps) {
                 </Text>
               </Stack>
               <Flex className="asset-amount">
-                {amount.format({ precision: MAX_FRACTION_DIGITS })}{' '}
-                {asset.symbol}
+                <Tooltip content={amountStr}>
+                  <Box as="span" className="value">
+                    {amountStr}
+                  </Box>
+                </Tooltip>
               </Flex>
             </Dropdown.MenuItem>
           );
@@ -204,6 +212,12 @@ const styles = {
       '.asset-symbol': {
         color: '$gray8',
         textTransform: 'uppercase',
+      },
+      '.asset-amount > .value': {
+        width: '100px',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
       },
     });
   },

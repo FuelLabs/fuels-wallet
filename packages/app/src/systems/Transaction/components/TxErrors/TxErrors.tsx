@@ -1,20 +1,32 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Copyable } from '@fuel-ui/react';
+import { Alert, Icon } from '@fuel-ui/react';
 
 import type { GroupedErrors } from '../../utils';
 
-export function TxErrors({ errors }: { errors?: GroupedErrors }) {
+export type TxErrorsProps = {
+  errors?: GroupedErrors;
+};
+
+export function TxErrors({ errors }: TxErrorsProps) {
+  /**
+   * I didn't use Copyable component here because it's with some wrong
+   * behavior for this case that need to be fixed. Since it's fixed on @fuel-ui
+   * we can use it here.
+   */
+  async function handleCopy() {
+    await navigator.clipboard.writeText(JSON.stringify(errors, null, 2));
+  }
+
   return (
     <Alert status="error" css={styles.root}>
       <Alert.Description>Invalid Transaction</Alert.Description>
       <Alert.Actions>
-        <Alert.Button size="sm">
-          <Copyable
-            value={JSON.stringify(errors)}
-            tooltipMessage="Click to copy Error Logs"
-          >
-            Copy Error Message
-          </Copyable>
+        <Alert.Button
+          size="sm"
+          rightIcon={Icon.is('CopySimple')}
+          onPress={handleCopy}
+        >
+          Copy Error Message
         </Alert.Button>
       </Alert.Actions>
     </Alert>

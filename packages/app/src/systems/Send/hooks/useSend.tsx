@@ -26,13 +26,17 @@ const selectors = {
   },
   isLoading(state: SendMachineState) {
     return (
-      state.matches('idle.creatingTx') ||
+      state.matches('selecting.creatingTx') ||
       state.matches('confirming.sendingTx') ||
       state.children.unlock?.state.matches('unlocking')
     );
   },
   canConfirm(state: SendMachineState) {
-    return state.matches('idle.waitingConfirm') || state.matches('confirming');
+    const errors = state.context.errors || {};
+    const hasErrors = Object.values(errors).some(Boolean);
+    const isWaitingConfirm = state.matches('selecting.waitingConfirm');
+    const isConfirming = state.matches('confirming');
+    return !hasErrors && (isWaitingConfirm || isConfirming);
   },
   inputs(state: SendMachineState) {
     return state.context.inputs;
@@ -43,9 +47,14 @@ const selectors = {
   errors(state: SendMachineState) {
     return {
       unlock: state.context.errors?.unlockError,
+      isAddressInvalid: state.context.errors?.isAddressInvalid,
       txRequest: filterGeneralErrors(state, 'txRequestErrors'),
       txApprove: filterGeneralErrors(state, 'txApproveErrors'),
     };
+  },
+  showTxDetails(state: SendMachineState) {
+    const { response, inputs } = state.context;
+    return response?.fee?.gt(0) || inputs?.amount?.gt(0);
   },
 };
 
@@ -69,6 +78,7 @@ export function useSend() {
   const screen = useSelector(service, selectors.screen);
   const isLoading = useSelector(service, selectors.isLoading);
   const errors = useSelector(service, selectors.errors);
+  const showTxDetails = useSelector(service, selectors.showTxDetails);
 
   function reset() {
     service.send('RESET');
@@ -99,6 +109,7 @@ export function useSend() {
     errors,
     screen,
     canConfirm,
+    showTxDetails,
     isLoading: isLoading || isLoadingAccount,
     handlers: {
       cancel,

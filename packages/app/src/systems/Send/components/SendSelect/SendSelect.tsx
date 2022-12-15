@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Flex, Input, InputAmount, Stack, Text } from '@fuel-ui/react';
+import { Box, Flex, Input, InputAmount, Stack, Text } from '@fuel-ui/react';
 import { bn } from 'fuels';
 
 import type { UseSendReturn } from '../../hooks/useSend';
@@ -33,29 +33,36 @@ export function SendSelect({ send, tx }: SendSelectProps) {
         <Text as="span" css={styles.title}>
           To
         </Text>
-        <Input size="sm">
-          <Input.Field
-            aria-label="Address Input"
-            id="address"
-            name="address"
-            placeholder="Write a fuel address"
-            value={send.inputs?.address || ''}
-            onChange={(e) => send.handlers.setAddress(e.target.value)}
-          />
-        </Input>
+        <Box css={styles.addressRow}>
+          <Input size="sm">
+            <Input.Field
+              aria-label="Address Input"
+              id="address"
+              name="address"
+              placeholder="Write a fuel address"
+              value={send.inputs?.address || ''}
+              onChange={(e) => send.handlers.setAddress(e.target.value)}
+            />
+          </Input>
+          {send.errors.isAddressInvalid && (
+            <Text className="error-msg">
+              Address is not a bech32 valid address
+            </Text>
+          )}
+        </Box>
       </Flex>
       <Stack gap="$3">
         <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
           Which amount?
         </Text>
         <InputAmount
-          value={send.inputs?.amount || bn(0)}
+          value={send.inputs?.amount}
           onChange={send.handlers.setAmount}
-          balance={bn(tx.account?.balance || 0)}
+          balance={bn(tx.account?.balance)}
         />
       </Stack>
-      {send.response?.fee && (
-        <TxDetails fee={send.response.fee} amountSent={send.inputs?.amount} />
+      {send.showTxDetails && (
+        <TxDetails fee={send.response?.fee} amountSent={send.inputs?.amount} />
       )}
     </Stack>
   );
@@ -63,10 +70,10 @@ export function SendSelect({ send, tx }: SendSelectProps) {
 
 const styles = {
   row: cssObj({
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: '$4',
 
-    '.fuel_asset-select, .fuel_input': {
+    '.fuel_asset-select': {
       flex: 1,
     },
     '.fuel_input > input': {
@@ -76,11 +83,22 @@ const styles = {
     },
   }),
   title: cssObj({
+    pt: '$2',
     color: '$gray12',
     fontSize: '$xl',
     fontWeight: '$semibold',
   }),
   amountTitle: cssObj({
     fontSize: '$md',
+  }),
+  addressRow: cssObj({
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+
+    '.error-msg': {
+      fontSize: '$xs',
+      color: '$red9',
+    },
   }),
 };

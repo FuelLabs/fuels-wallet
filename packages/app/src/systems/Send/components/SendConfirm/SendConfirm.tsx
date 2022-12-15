@@ -15,10 +15,9 @@ export function SendConfirm({ inputs, response, errors }: SendConfirmProps) {
   return (
     <Stack gap="$3" css={styles.root}>
       <Stack as="header" gap="$1">
-        <Heading as="h3">Confirm before send</Heading>
+        <Heading as="h3">Confirm before approving</Heading>
         <Text>
-          Check your transaction summary and confirm all details is right before
-          send
+          Carefully check if all details in your transaction are correct
         </Text>
       </Stack>
       <TxFromTo

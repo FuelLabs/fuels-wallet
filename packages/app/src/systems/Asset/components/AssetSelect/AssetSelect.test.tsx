@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, screen, waitFor } from '@fuel-ui/test-utils';
 import { useState } from 'react';
 
@@ -9,8 +8,14 @@ import { AssetSelect } from './AssetSelect';
 
 const onSelect = jest.fn();
 
-function Content() {
-  const [selected, setSelected] = useState<AssetSelectInput>(null as any);
+type ContentProps = {
+  initialSelected?: AssetSelectInput | null;
+};
+
+function Content({ initialSelected = null }: ContentProps) {
+  const [selected, setSelected] = useState<AssetSelectInput>(
+    initialSelected as AssetSelectInput
+  );
 
   function handleSelect(asset?: AssetSelectInput | null) {
     onSelect(asset);
@@ -42,6 +47,15 @@ describe('AssetSelect', () => {
     expect(() => screen.getByText('Select one asset')).toThrow();
     expect(trigger?.textContent?.includes('Ethereum')).toBe(true);
     expect(onSelect).toBeCalledWith(MOCK_ASSETS_AMOUNTS[0]);
+  });
+
+  it('should can have an initial selected item', async () => {
+    const { container } = render(
+      <Content initialSelected={MOCK_ASSETS_AMOUNTS[0]} />
+    );
+    expect(() => screen.getByText('Select one asset')).toThrow();
+    const trigger = container.querySelector('#fuel_asset-select');
+    expect(trigger?.textContent?.includes('Ethereum')).toBe(true);
   });
 
   it('should clear on click on clear button', async () => {

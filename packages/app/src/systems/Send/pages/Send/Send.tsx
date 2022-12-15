@@ -14,6 +14,7 @@ export function Send() {
   const send = useSend();
   const { handlers, ...ctx } = send;
   const isSelectScreen = ctx.screen === SendScreens.select;
+  const isConfirmScreen = ctx.screen === SendScreens.confirm;
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -25,11 +26,8 @@ export function Send() {
       <Layout title="Send" isLoading={ctx.isLoading}>
         <Layout.TopBar onBack={handlers.cancel} />
         <Layout.Content>
-          {isSelectScreen ? (
-            <SendSelect tx={tx} send={send} />
-          ) : (
-            <SendConfirm {...send} />
-          )}
+          {isSelectScreen && <SendSelect tx={tx} send={send} />}
+          {isConfirmScreen && <SendConfirm {...send} />}
         </Layout.Content>
         <Layout.BottomBar>
           <Button color="gray" variant="ghost" onPress={handlers.cancel}>

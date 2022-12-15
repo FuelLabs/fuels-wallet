@@ -24,3 +24,18 @@ export const Usage = (_args: AssetSelectProps) => {
     </Box>
   );
 };
+
+export const Selected = (_args: AssetSelectProps) => {
+  const [selected, setSelected] = useState<AssetSelectInput>(
+    MOCK_ASSETS_AMOUNTS[0]
+  );
+  return (
+    <Box css={{ maxWidth: 300 }}>
+      <AssetSelect
+        selected={selected}
+        onSelect={(asset) => setSelected(asset!)}
+        items={MOCK_ASSETS_AMOUNTS}
+      />
+    </Box>
+  );
+};

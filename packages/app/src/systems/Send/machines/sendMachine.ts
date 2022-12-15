@@ -1,13 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 import { toast } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/types';
 import {
   BN,
+  isBech32,
   ScriptTransactionRequest,
   TransactionResponse,
   WalletUnlocked,
 } from 'fuels';
-import { createMachine, InterpreterFrom, send, StateFrom } from 'xstate';
+import {
+  assign,
+  createMachine,
+  InterpreterFrom,
+  send,
+  StateFrom,
+} from 'xstate';
 
 import {
   AccountInputs,
@@ -16,14 +24,7 @@ import {
   unlockMachineErrorAction,
   UnlockMachineEvents,
 } from '~/systems/Account';
-import {
-  assignWithData,
-  assignWithInput,
-  assignErrors,
-  ChildrenMachine,
-  FetchMachine,
-  resetContext,
-} from '~/systems/Core';
+import { ChildrenMachine, FetchMachine } from '~/systems/Core';
 import { GroupedErrors } from '~/systems/Transaction';
 import { TxService } from '~/systems/Transaction/services';
 
@@ -33,7 +34,7 @@ export enum SendScreens {
   confirm,
 }
 
-type MachineContext = {
+export type MachineContext = {
   inputs?: {
     asset?: Asset;
     address?: string;
@@ -49,6 +50,7 @@ type MachineContext = {
     unlockError?: string;
     txRequestError?: GroupedErrors;
     txApproveError?: GroupedErrors;
+    isAddressInvalid?: boolean;
   };
 };
 
@@ -103,7 +105,7 @@ export const sendMachine = createMachine(
           data: (_: MachineContext, ev: MachineEvents) => ev.input,
           onDone: [
             unlockMachineErrorAction('unlocking', 'unlockError'),
-            { target: 'idle', actions: 'assignWallet' },
+            { target: 'selecting', actions: 'assignWallet' },
           ],
         },
         on: {
@@ -117,7 +119,7 @@ export const sendMachine = createMachine(
           },
         },
       },
-      idle: {
+      selecting: {
         initial: 'checking',
         on: {
           BACK: {
@@ -141,10 +143,10 @@ export const sendMachine = createMachine(
                 {
                   target: 'failed',
                   actions: ['assignTxRequestError'],
-                  cond: FetchMachine.hasError,
+                  cond: 'hasError',
                 },
                 {
-                  actions: ['assignTxRequest'],
+                  actions: ['assignResponse'],
                   target: 'waitingConfirm',
                 },
               ],
@@ -166,7 +168,7 @@ export const sendMachine = createMachine(
         initial: 'idle',
         on: {
           BACK: {
-            target: 'idle.waitingConfirm',
+            target: 'selecting.waitingConfirm',
           },
         },
         states: {
@@ -185,10 +187,10 @@ export const sendMachine = createMachine(
                 {
                   target: 'idle',
                   actions: ['assignTxApproveError'],
-                  cond: FetchMachine.hasError,
+                  cond: 'hasError',
                 },
                 {
-                  actions: ['assignTxApprove'],
+                  actions: ['assignResponse'],
                   target: 'success',
                 },
               ],
@@ -204,41 +206,69 @@ export const sendMachine = createMachine(
     on: {
       SET_ASSET: {
         actions: ['assignAsset'],
-        target: 'idle',
+        target: 'selecting',
       },
       SET_ADDRESS: {
-        actions: ['assignAddress'],
-        target: 'idle',
+        actions: ['assignAddress', 'validateAddress'],
+        target: 'selecting',
       },
       SET_AMOUNT: {
         actions: ['assignAmount'],
-        target: 'idle',
+        target: 'selecting',
       },
       RESET: {
         actions: ['reset'],
-        target: 'idle',
+        target: 'selecting',
       },
     },
   },
   {
     actions: {
-      reset: resetContext(),
-      assignAsset: assignWithInput('inputs.asset'),
-      assignAddress: assignWithInput('inputs.address'),
-      assignAmount: assignWithInput('inputs.amount'),
-      assignWallet: assignWithData('inputs.wallet'),
-      assignTxRequest: assignWithData('response', true),
-      assignTxApprove: assignWithData('response', true),
-      assignTxRequestError: assignErrors('txRequestError'),
-      assignTxApproveError: assignErrors('txApproveError'),
+      reset: assign(() => ({})),
+      assignAsset: assign({
+        inputs: (ctx, ev) => ({ ...ctx.inputs, asset: ev.input }),
+      }),
+      assignAddress: assign({
+        inputs: (ctx, ev) => ({ ...ctx.inputs, address: ev.input }),
+      }),
+      assignAmount: assign({
+        inputs: (ctx, ev) => ({ ...ctx.inputs, amount: ev.input }),
+      }),
+      assignWallet: assign({
+        inputs: (ctx, ev) => ({ ...ctx.inputs, wallet: ev.data }),
+      }),
+      assignResponse: assign({
+        response: (ctx, ev) => ({ ...ctx.response, ...ev.data }),
+      }),
+      validateAddress: assign({
+        errors: (ctx) => {
+          const address = ctx.inputs?.address;
+          const isAddressInvalid = Boolean(address && !isBech32(address));
+          return { ...ctx.errors, isAddressInvalid };
+        },
+      }),
+      assignTxRequestError: assign({
+        errors: (ctx, ev) => ({
+          ...ctx.errors,
+          txRequestError: (ev.data as any).error,
+        }),
+      }),
+      assignTxApproveError: assign({
+        errors: (ctx, ev) => ({
+          ...ctx.errors,
+          txApproveError: (ev.data as any).error,
+        }),
+      }),
       showSuccessMessage() {
         toast.success('Transaction sent successfully');
       },
     },
     guards: {
+      hasError: FetchMachine.hasError as any,
       canCalcFee(ctx) {
         const { address, asset, amount } = ctx.inputs || {};
-        return Boolean(address && asset && amount?.gt(0));
+        const { isAddressInvalid } = ctx.errors || {};
+        return Boolean(address && asset && amount?.gt(0) && !isAddressInvalid);
       },
     },
     services: {
