@@ -28,7 +28,7 @@ export const AccountForm = ({ form }: AccountFormProps) => {
             <Input.Field
               {...field}
               aria-label="Account Name"
-              placeholder="Type your name"
+              placeholder="Type account name"
             />
           </Input>
         )}
