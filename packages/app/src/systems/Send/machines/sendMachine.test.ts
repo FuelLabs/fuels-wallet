@@ -71,11 +71,19 @@ describe('sendMachine', () => {
     await initMachine();
     service.send('BACK');
     expect(goToHome).toBeCalled();
-
     service.send('CONFIRM');
-    await waitFor(service, (state) => state.matches('confirming.idle'));
 
+    await waitFor(service, (state) => state.matches('unlocking'));
+    service.send('UNLOCK_WALLET', {
+      input: {
+        account: wallet,
+        password: '123123',
+      },
+    });
+
+    await waitFor(service, (state) => state.matches('confirming.idle'));
     service.send('BACK');
+
     await waitFor(service, (state) => state.matches('idle'));
     expect(service.getSnapshot().matches('idle')).toBe(true);
   });
