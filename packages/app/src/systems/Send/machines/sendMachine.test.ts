@@ -39,38 +39,23 @@ describe('sendMachine', () => {
   });
 
   async function initMachine() {
-    service.send('UNLOCK_WALLET', {
-      input: {
-        account: wallet,
-        password: '123123',
-      },
-    });
-
     await waitFor(service, (state) => state.matches('idle'));
     service.send('SET_ASSET', { input: MOCK_ASSETS[0] });
     service.send('SET_ADDRESS', { input: to.address.toString() });
     service.send('SET_AMOUNT', { input: bn(10000) });
   }
 
-  it('should create a transaction request before approve', async () => {
-    await initMachine();
-    context = service.getSnapshot().context;
-    expect(context.inputs?.asset?.assetId).toBe(MOCK_ASSETS[0].assetId);
-    expect(context.inputs?.address).toBe(to.address.toString());
-    expect(context.inputs?.amount).toEqual(bn(10000));
-
-    await waitFor(service, (state) => state.matches('idle.waitingConfirm'));
-    context = service.getSnapshot().context;
-    expect(context.response?.fee).toBeDefined();
-    expect(context.response?.txRequest).toBeDefined();
-    expect(context.errors?.txRequestError).toBeUndefined();
-  });
-
   it('should send a transaction after approve', async () => {
     await initMachine();
-
-    await waitFor(service, (state) => state.matches('idle.waitingConfirm'));
     service.send('CONFIRM');
+
+    await waitFor(service, (state) => state.matches('unlocking'));
+    service.send('UNLOCK_WALLET', {
+      input: {
+        account: wallet,
+        password: '123123',
+      },
+    });
 
     await waitFor(service, (state) => state.matches('confirming.idle'));
     service.send('CONFIRM');
@@ -84,7 +69,6 @@ describe('sendMachine', () => {
 
   it('should cancel/back work correctly', async () => {
     await initMachine();
-    await waitFor(service, (state) => state.matches('idle.waitingConfirm'));
     service.send('BACK');
     expect(goToHome).toBeCalled();
 
@@ -92,7 +76,7 @@ describe('sendMachine', () => {
     await waitFor(service, (state) => state.matches('confirming.idle'));
 
     service.send('BACK');
-    await waitFor(service, (state) => state.matches('idle.waitingConfirm'));
-    expect(service.getSnapshot().matches('idle.waitingConfirm')).toBe(true);
+    await waitFor(service, (state) => state.matches('idle'));
+    expect(service.getSnapshot().matches('idle')).toBe(true);
   });
 });

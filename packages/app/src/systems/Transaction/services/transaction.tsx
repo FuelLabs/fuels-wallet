@@ -9,6 +9,7 @@ import {
   TransactionResponse,
   bn,
   calculateTransactionFee,
+  Wallet,
 } from 'fuels';
 import type {
   BN,
@@ -20,6 +21,7 @@ import type {
 import type { Transaction } from '../types';
 import { getCoinOutputsFromTx, parseTransaction } from '../utils';
 
+import { ASSET_MAP } from '~/systems/Asset';
 import { db, uniqueId } from '~/systems/Core';
 
 export type TxInputs = {
@@ -156,5 +158,21 @@ export class TxService {
     const resources = await wallet.getResourcesToSpend(quantities);
     request.addResources(resources);
     return request;
+  }
+
+  static async createFakeTx() {
+    const toWallet = Wallet.generate();
+    const params = { gasLimit: MAX_GAS_PER_TX };
+    const request = new ScriptTransactionRequest(params);
+    const dest = toWallet.address;
+    const assetId = Object.values(ASSET_MAP)[0].assetId;
+    const amount = bn(1);
+
+    request.addCoinOutput(dest, amount, assetId);
+    const fee = request.calculateFee();
+    if (fee && fee.assetId === hexlify(assetId)) {
+      fee.amount.add(amount);
+    }
+    return fee.amount;
   }
 }

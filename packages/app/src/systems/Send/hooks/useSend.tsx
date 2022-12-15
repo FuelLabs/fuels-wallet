@@ -19,6 +19,12 @@ function filterGeneralErrors(state: SendMachineState, prop: string) {
 }
 
 const selectors = {
+  inputs(state: SendMachineState) {
+    return state.context.inputs;
+  },
+  response(state: SendMachineState) {
+    return state.context.response;
+  },
   screen(state: SendMachineState) {
     if (state.matches('unlocking')) return SendScreens.unlocking;
     if (state.matches('confirming')) return SendScreens.confirm;
@@ -26,23 +32,18 @@ const selectors = {
   },
   isLoading(state: SendMachineState) {
     return (
-      state.matches('selecting.creatingTx') ||
+      state.matches('fetchingFakeTx') ||
+      state.matches('confirming.creatingTx') ||
       state.matches('confirming.sendingTx') ||
       state.children.unlock?.state.matches('unlocking')
     );
   },
   canConfirm(state: SendMachineState) {
+    const { address, amount, asset } = state.context.inputs || {};
     const errors = state.context.errors || {};
     const hasErrors = Object.values(errors).some(Boolean);
-    const isWaitingConfirm = state.matches('selecting.waitingConfirm');
-    const isConfirming = state.matches('confirming');
-    return !hasErrors && (isWaitingConfirm || isConfirming);
-  },
-  inputs(state: SendMachineState) {
-    return state.context.inputs;
-  },
-  response(state: SendMachineState) {
-    return state.context.response;
+    const isFilled = Boolean(asset && address && amount);
+    return !hasErrors && isFilled;
   },
   errors(state: SendMachineState) {
     return {
@@ -54,7 +55,8 @@ const selectors = {
   },
   showTxDetails(state: SendMachineState) {
     const { response, inputs } = state.context;
-    return response?.fee?.gt(0) || inputs?.amount?.gt(0);
+    const { amount } = inputs || {};
+    return response?.fee?.gt(0) || amount?.gt(0);
   },
 };
 

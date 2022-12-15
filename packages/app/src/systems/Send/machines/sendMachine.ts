@@ -66,6 +66,9 @@ type TxApproveReturn = {
 };
 
 type MachineServices = {
+  fetchFakeTx: {
+    data: BN;
+  };
   unlock: {
     data: WalletUnlocked;
   };
@@ -96,8 +99,27 @@ export const sendMachine = createMachine(
       services: {} as MachineServices,
     },
     id: '(machine)',
-    initial: 'unlocking',
+    initial: 'fetchingFakeTx',
     states: {
+      fetchingFakeTx: {
+        invoke: {
+          src: 'fetchFakeTx',
+          onDone: {
+            target: 'idle',
+            actions: 'assignInitialFee',
+          },
+        },
+      },
+      idle: {
+        on: {
+          BACK: {
+            actions: ['goToHome'],
+          },
+          CONFIRM: {
+            target: 'unlocking',
+          },
+        },
+      },
       unlocking: {
         invoke: {
           id: 'unlock',
@@ -105,7 +127,7 @@ export const sendMachine = createMachine(
           data: (_: MachineContext, ev: MachineEvents) => ev.input,
           onDone: [
             unlockMachineErrorAction('unlocking', 'unlockError'),
-            { target: 'selecting', actions: 'assignWallet' },
+            { target: 'confirming', actions: 'assignWallet' },
           ],
         },
         on: {
@@ -119,59 +141,31 @@ export const sendMachine = createMachine(
           },
         },
       },
-      selecting: {
-        initial: 'checking',
+      confirming: {
+        initial: 'creatingTx',
         on: {
           BACK: {
-            actions: ['goToHome'],
+            target: 'idle',
           },
         },
         states: {
-          checking: {
-            always: [{ target: 'delay', cond: 'canCalcFee' }],
-          },
-          delay: {
-            after: {
-              600: 'creatingTx',
-            },
-          },
           creatingTx: {
             invoke: {
               src: 'createTx',
               data: (ctx: MachineContext) => ({ input: ctx.inputs }),
               onDone: [
                 {
-                  target: 'failed',
+                  target: 'idle',
                   actions: ['assignTxRequestError'],
                   cond: 'hasError',
                 },
                 {
                   actions: ['assignResponse'],
-                  target: 'waitingConfirm',
+                  target: 'idle',
                 },
               ],
             },
           },
-          waitingConfirm: {
-            on: {
-              CONFIRM: {
-                target: '#(machine).confirming',
-              },
-            },
-          },
-          failed: {
-            type: 'final',
-          },
-        },
-      },
-      confirming: {
-        initial: 'idle',
-        on: {
-          BACK: {
-            target: 'selecting.waitingConfirm',
-          },
-        },
-        states: {
           idle: {
             on: {
               CONFIRM: {
@@ -206,25 +200,28 @@ export const sendMachine = createMachine(
     on: {
       SET_ASSET: {
         actions: ['assignAsset'],
-        target: 'selecting',
+        target: 'idle',
       },
       SET_ADDRESS: {
         actions: ['assignAddress', 'validateAddress'],
-        target: 'selecting',
+        target: 'idle',
       },
       SET_AMOUNT: {
         actions: ['assignAmount'],
-        target: 'selecting',
+        target: 'idle',
       },
       RESET: {
         actions: ['reset'],
-        target: 'selecting',
+        target: 'idle',
       },
     },
   },
   {
     actions: {
       reset: assign(() => ({})),
+      assignInitialFee: assign({
+        response: (ctx, ev) => ({ ...ctx.response, fee: ev.data }),
+      }),
       assignAsset: assign({
         inputs: (ctx, ev) => ({ ...ctx.inputs, asset: ev.input }),
       }),
@@ -265,14 +262,15 @@ export const sendMachine = createMachine(
     },
     guards: {
       hasError: FetchMachine.hasError as any,
-      canCalcFee(ctx) {
-        const { address, asset, amount } = ctx.inputs || {};
-        const { isAddressInvalid } = ctx.errors || {};
-        return Boolean(address && asset && amount?.gt(0) && !isAddressInvalid);
-      },
     },
     services: {
       unlock: unlockMachine,
+      fetchFakeTx: FetchMachine.create<null, BN>({
+        showError: false,
+        async fetch() {
+          return TxService.createFakeTx();
+        },
+      }),
       createTx: FetchMachine.create<Inputs, TxRequestReturn>({
         showError: false,
         async fetch({ input = {} }) {
