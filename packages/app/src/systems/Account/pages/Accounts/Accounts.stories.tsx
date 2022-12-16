@@ -9,15 +9,6 @@ import { store } from '~/store';
 export default {
   component: Accounts,
   title: 'Account/Pages/1. Accounts',
-  loaders: [
-    async () => {
-      await AccountService.clearAccounts();
-      await AccountService.addAccount({ data: MOCK_ACCOUNTS[0] });
-      await AccountService.addAccount({ data: MOCK_ACCOUNTS[1] });
-      store.reset();
-      return {};
-    },
-  ],
   parameters: {
     layout: 'fullscreen',
     viewport: {
@@ -27,11 +18,24 @@ export default {
 } as Meta;
 
 export const Usage: StoryFn<unknown> = () => <Accounts />;
+Usage.loaders = [
+  async () => {
+    await AccountService.clearAccounts();
+    await AccountService.addAccount({ data: MOCK_ACCOUNTS[0] });
+    await AccountService.addAccount({ data: MOCK_ACCOUNTS[1] });
+    store.reset();
+    return {};
+  },
+];
 
 export const UsageWithHiddenAccounts: StoryFn<unknown> = () => <Accounts />;
 UsageWithHiddenAccounts.loaders = [
   async () => {
+    await AccountService.clearAccounts();
+    await AccountService.addAccount({ data: MOCK_ACCOUNTS[0] });
+    await AccountService.addAccount({ data: MOCK_ACCOUNTS[1] });
     await AccountService.addAccount({ data: MOCK_ACCOUNTS[2] });
+    store.reset();
     return {};
   },
 ];
