@@ -57,6 +57,7 @@ export async function mockData(page: Page) {
         name: 'Random Account',
         publicKey: wallet.publicKey,
         isHidden: false,
+        isSelected: true,
       },
       VITE_FUEL_PROVIDER_URL,
     ]

@@ -14,11 +14,11 @@
         "require": "dist/index.js",
         "default": "dist/index.mjs"
       }
-    },
-    "files": [
-      "dist"
-    ]
+    }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "pnpm ts:check && tsup --dts",
     "ts:check": "tsc --noEmit",
@@ -26,16 +26,19 @@
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
+    "@types/chrome": "^0.0.203",
     "dexie-observable": "4.0.0-beta.13",
     "events": "^3.3.0",
-    "fuels": "0.24.2",
     "json-rpc-2.0": "^1.4.1",
     "uuid": "^9.0.0",
     "xstate": "^4.35.0"
   },
+  "peerDependencies": {
+    "fuels": ">=0.23.0"
+  },
   "devDependencies": {
-    "@fuel-wallet/types": "workspace:0.1.0",
-    "@types/chrome": "^0.0.203",
+    "@fuel-wallet/types": "workspace:*",
+    "fuels": "0.24.2",
     "@types/uuid": "^9.0.0",
     "jest-webextension-mock": "^3.8.6",
     "ts-jest": "^29.0.3",

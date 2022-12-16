@@ -4,6 +4,8 @@ import { MOCK_ACCOUNTS } from '../../__mocks__';
 
 import { BalanceWidget } from './BalanceWidget';
 
+import { RouterProvider } from '~/systems/Core';
+
 const ACCOUNT = {
   ...MOCK_ACCOUNTS[0],
   balance: '4999989994',
@@ -12,21 +14,37 @@ const ACCOUNT = {
 
 describe('BalanceWidget', () => {
   it('a11y', async () => {
-    await testA11y(<BalanceWidget account={ACCOUNT} />);
+    await testA11y(
+      <RouterProvider>
+        <BalanceWidget account={ACCOUNT} />
+      </RouterProvider>
+    );
   });
 
   it('should show user address', () => {
-    render(<BalanceWidget account={ACCOUNT} />);
+    render(
+      <RouterProvider>
+        <BalanceWidget account={ACCOUNT} />
+      </RouterProvider>
+    );
     expect(screen.getByText('fuel0x...74ef')).toBeInTheDocument();
   });
 
   it('should show formatted balance', async () => {
-    render(<BalanceWidget account={ACCOUNT} />);
+    render(
+      <RouterProvider>
+        <BalanceWidget account={ACCOUNT} />
+      </RouterProvider>
+    );
     expect(screen.getByText(/4\.999/)).toBeInTheDocument();
   });
 
   it('should hide balance when click on toggle button', async () => {
-    const { user } = render(<BalanceWidget account={ACCOUNT} />);
+    const { user } = render(
+      <RouterProvider>
+        <BalanceWidget account={ACCOUNT} />
+      </RouterProvider>
+    );
     const btn = screen.getByLabelText(/Hide balance/i);
     expect(btn).toBeInTheDocument();
 
@@ -38,11 +56,13 @@ describe('BalanceWidget', () => {
   it('should hide balalnce when user sets his balance to hidden', async () => {
     const onChangeVisibility = jest.fn();
     const { user } = render(
-      <BalanceWidget
-        account={ACCOUNT}
-        isHidden={true}
-        onChangeVisibility={onChangeVisibility}
-      />
+      <RouterProvider>
+        <BalanceWidget
+          account={ACCOUNT}
+          isHidden={true}
+          onChangeVisibility={onChangeVisibility}
+        />
+      </RouterProvider>
     );
     const btn = screen.getByLabelText(/Show balance/i);
     expect(btn).toBeInTheDocument();
@@ -54,7 +74,11 @@ describe('BalanceWidget', () => {
   });
 
   it('should copy full address when click on copy icon', async () => {
-    const { user } = render(<BalanceWidget account={ACCOUNT} />);
+    const { user } = render(
+      <RouterProvider>
+        <BalanceWidget account={ACCOUNT} />
+      </RouterProvider>
+    );
     const btn = screen.getByLabelText(/copy to clipboard/i);
     expect(btn).toBeInTheDocument();
 

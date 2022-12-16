@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import type { SendMachineState } from '../machines/sendMachine';
 import { SendScreens, sendMachine } from '../machines/sendMachine';
 
-import { useAccount } from '~/systems/Account';
+import { useAccounts } from '~/systems/Account';
 import type { AssetSelectInput } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
 import { getFilteredErrors, getGroupedErrors } from '~/systems/Transaction';
@@ -62,7 +62,7 @@ const selectors = {
 
 export function useSend() {
   const navigate = useNavigate();
-  const { account, isLoading: isLoadingAccount } = useAccount();
+  const { account, isLoading: isLoadingAccount } = useAccounts();
   const service = useInterpret(() =>
     sendMachine.withConfig({
       actions: {

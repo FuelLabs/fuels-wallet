@@ -5,14 +5,14 @@ import { useNavigate } from 'react-router-dom';
 
 import { useCaptcha, useFaucetDialog } from '../hooks';
 
-import { useAccount } from '~/systems/Account';
+import { useAccounts } from '~/systems/Account';
 import { Pages } from '~/systems/Core';
 
 export function FaucetDialog() {
   const navigate = useNavigate();
   const { handlers, isLoading } = useFaucetDialog();
   const captcha = useCaptcha();
-  const { account } = useAccount();
+  const { account } = useAccounts();
 
   useEffect(() => {
     if (captcha.isLoaded) {
@@ -75,7 +75,7 @@ export function FaucetDialog() {
             variant="solid"
             onPress={() =>
               handlers.startFaucet({
-                address: account?.address || '',
+                address: account!.address || '',
                 captcha: captcha.value,
               })
             }

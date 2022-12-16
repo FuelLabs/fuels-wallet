@@ -32,6 +32,8 @@ export const Pages = {
   settingsRevealPassphrase: route('/settings/reveal-passphrase'),
   settingsChangePassword: route('/settings/change-password'),
   send: route('/send'),
+  sendConfirm: route('/send/confirm'),
+  accounts: route('/accounts'),
 };
 
 export type AmountMap = Record<string, Maybe<BN>>;

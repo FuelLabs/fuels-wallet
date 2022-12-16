@@ -7,14 +7,14 @@ import { accountMachine } from '~/systems/Account/machines';
 import { networksMachine } from '~/systems/Network/machines';
 
 export enum Services {
-  account = 'account',
+  accounts = 'accounts',
   networks = 'networks',
 }
 
 export type StoreMachines = typeof services;
 
 const services = {
-  account: () => accountMachine,
+  accounts: () => accountMachine,
   networks: () => networksMachine,
 };
 

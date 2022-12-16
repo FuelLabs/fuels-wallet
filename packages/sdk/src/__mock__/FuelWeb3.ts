@@ -5,7 +5,7 @@ import EventEmitter from 'events';
 import { transactionRequestify, Wallet } from 'fuels';
 import type { JSONRPCResponse } from 'json-rpc-2.0';
 
-import { FuelWeb3 } from '../FuelWeb3';
+import { FuelWeb3 as FuelWeb3SDK } from '../FuelWeb3';
 import { BaseConnection } from '../connections/BaseConnection';
 
 const generateOptions = {
@@ -74,11 +74,4 @@ global.window = {
   },
 } as any;
 
-declare global {
-  interface Window {
-    FuelWeb3: FuelWeb3;
-  }
-}
-
-const fuelWeb3 = new FuelWeb3();
-window.FuelWeb3 = fuelWeb3;
+export const FuelWeb3 = new FuelWeb3SDK();

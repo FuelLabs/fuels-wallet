@@ -15,6 +15,7 @@ export type Account = {
   balance?: BigNumberish | BN;
   balanceSymbol?: string;
   balances?: Coin[];
+  isSelected?: boolean;
 };
 
 export enum AddressType {

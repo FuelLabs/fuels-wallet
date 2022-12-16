@@ -5,12 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import { ReceiverQRCode } from '../../components/QRCode';
 import { UserAddressCard } from '../../components/UserAddressCard';
 
-import { useAccount } from '~/systems/Account';
+import { useAccounts } from '~/systems/Account';
 import { Layout, Pages } from '~/systems/Core';
 
 export function Receive() {
   const navigate = useNavigate();
-  const { account } = useAccount();
+  const { account } = useAccounts();
   return (
     <Layout title="Receive">
       <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
