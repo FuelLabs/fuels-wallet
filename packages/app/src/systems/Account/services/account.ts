@@ -69,7 +69,7 @@ export class AccountService {
 
   static async getAccounts() {
     return db.transaction('r', db.accounts, async () => {
-      return db.accounts.toArray();
+      return db.accounts.toCollection().sortBy('name');
     });
   }
 
