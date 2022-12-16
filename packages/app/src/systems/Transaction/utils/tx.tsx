@@ -1,4 +1,5 @@
 import type { Colors } from '@fuel-ui/css';
+import { Icon } from '@fuel-ui/react';
 import { TransactionType } from 'fuels';
 
 import { TxStatus } from '../types';
@@ -52,6 +53,19 @@ export const getTransactionTypeText = (type?: TransactionType) => {
       return 'Mint';
     default:
       return '';
+  }
+};
+
+export const getTxIcon = (type?: TransactionType) => {
+  switch (type) {
+    case TransactionType.Create:
+      return Icon.is('UploadSimple');
+    case TransactionType.Mint:
+      return Icon.is('DownloadSimple');
+    case TransactionType.Script:
+      return Icon.is('MagicWand');
+    default:
+      return 'ArrowRight';
   }
 };
 
