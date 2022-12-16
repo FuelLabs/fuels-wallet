@@ -34,6 +34,7 @@ export function AccountList({ accounts, onPress }: AccountListProps) {
               key={account.address}
               account={account}
               isHidden={!showHidden && account.isHidden}
+              isSelected={account.isSelected}
             />
           );
         })}
