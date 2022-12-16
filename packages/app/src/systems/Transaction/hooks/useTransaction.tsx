@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import type { TransactionMachineState } from '../machines';
 import { TRANSACTION_ERRORS, transactionMachine } from '../machines';
 import type { TxInputs } from '../services';
-import { processTx } from '../utils';
+import { parseTx } from '../utils';
 
 import { ASSET_LIST } from '~/systems/Asset';
 import { useChainInfo } from '~/systems/Network';
@@ -38,7 +38,7 @@ export function useTransaction({
   const { error, gqlTransactionStatus, transaction, transactionResult, txId } =
     context;
 
-  const tx = processTx({
+  const tx = parseTx({
     transaction,
     receipts: transactionResult?.receipts,
     gasPerByte: chainInfo?.consensusParameters.gasPerByte,
@@ -58,8 +58,8 @@ export function useTransaction({
     transaction && !isFetching && !isInvalidTxId && !isTxNotFound;
   const shouldShowTxDetails = shouldShowTx && !isFetchingResult && !isTypeMint;
 
-  const amountSent = bn(
-    tx.totalAssetsSent.find(({ assetId }) => assetId === ASSET_LIST[0].assetId)
+  const ethAmountSent = bn(
+    tx.totalAssetsSent?.find(({ assetId }) => assetId === ASSET_LIST[0].assetId)
       ?.amount
   );
 
@@ -88,6 +88,6 @@ export function useTransaction({
     shouldShowTxDetails,
     tx,
     error,
-    amountSent,
+    ethAmountSent,
   };
 }

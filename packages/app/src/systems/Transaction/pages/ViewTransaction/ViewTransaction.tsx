@@ -29,7 +29,7 @@ export function ViewTransaction() {
     shouldShowTxDetails,
     tx,
     error,
-    amountSent,
+    ethAmountSent,
   } = useTransaction({
     txId: txIdQueryParam,
     providerUrl,
@@ -66,7 +66,7 @@ export function ViewTransaction() {
           )}
           {isFetchingDetails && <TxDetails.Loader />}
           {shouldShowTxDetails && (
-            <TxDetails fee={tx.fee} amountSent={amountSent} />
+            <TxDetails fee={tx.fee} amountSent={ethAmountSent} />
           )}
         </Stack>
       </Layout.Content>
