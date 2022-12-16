@@ -6,10 +6,12 @@
   "dependencies": {
     "@types/chrome": "^0.0.203",
     "dexie-observable": "4.0.0-beta.13",
-    "fuels": "0.24.2",
     "json-rpc-2.0": "^1.4.1"
   },
   "peerDependencies": {
     "fuels": ">=0.23.0"
+  },
+  "devDependencies": {
+    "fuels": "0.24.2"
   }
 }

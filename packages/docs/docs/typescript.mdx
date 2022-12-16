@@ -5,16 +5,17 @@ title: TypeScript
 ## TypeScript
 
 The Fuel wallet SDK, provides also a package on npm making more convenient to use it on TypeScript projects.
+To use it we also required to install [`fuels`](https://www.npmjs.com/package/fuels) package as a dependency.
 
 ### Installation
 
 ```bash
-npm install @fuel-wallet/sdk
+npm install fuels @fuel-wallet/sdk
 ```
 
 ### Usage
 
-You can import the SDK on your project by adding the following line to your `tsconfig.json` file.
+Import the Fuel Wallet SDK on your project by adding the following line to your `tsconfig.json` file.
 
 ```ts
 {
@@ -24,7 +25,7 @@ You can import the SDK on your project by adding the following line to your `tsc
 }
 ```
 
-Or you can add the following line to your `<name>.d.ts` files.
+Or using [TypeScript reference](https://www.typescriptlang.org/docs/handbook/triple-slash-directives.html) on any typescript file.
 
 ```ts
 /// <reference types="@fuel-wallet/sdk" />
