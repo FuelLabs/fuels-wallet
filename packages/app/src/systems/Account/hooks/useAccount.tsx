@@ -1,29 +1,40 @@
 /* eslint-disable consistent-return */
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import type { AccountMachineState } from '../machines';
 
 import { Services, store } from '~/store';
+import { Pages } from '~/systems/Core';
 
 const selectors = {
   isLoading: (state: AccountMachineState) => {
     return state.hasTag('loading');
   },
+  accounts: (state: AccountMachineState) => {
+    return state.context?.accounts;
+  },
   account: (state: AccountMachineState) => {
-    return state.context?.data;
+    return state.context?.account;
   },
 };
 
 const listenerAccountFetcher = () => {
-  store.send(Services.account, {
+  store.send(Services.accounts, {
     type: 'UPDATE_ACCOUNT',
   });
 };
 
-export function useAccount() {
+export function useAccounts() {
   const shouldListen = useRef(true);
-  const isLoading = store.useSelector(Services.account, selectors.isLoading);
-  const account = store.useSelector(Services.account, selectors.account);
+  const navigate = useNavigate();
+  const isLoading = store.useSelector(Services.accounts, selectors.isLoading);
+  const accounts = store.useSelector(Services.accounts, selectors.accounts);
+  const account = store.useSelector(Services.accounts, selectors.account);
+
+  function goToList() {
+    navigate(Pages.accounts());
+  }
 
   useEffect(() => {
     if (shouldListen.current) {
@@ -37,9 +48,12 @@ export function useAccount() {
 
   return {
     handlers: {
+      goToList,
       setBalanceVisibility: store.setBalanceVisibility,
+      selectAccount: store.selectAccount,
     },
-    isLoading: isLoading && !account,
+    isLoading: isLoading && !accounts,
+    accounts,
     account,
   };
 }
