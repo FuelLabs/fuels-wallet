@@ -39,7 +39,7 @@ Integrate your **DApp** using the [Wallet SDK](https://fuels-wallet.vercel.app/d
   - [x] List accounts
   - [x] Sign messages
   - [x] Send transactions
-  - [ ] Disconnect applications
+  - [x] Disconnect applications
 - [x] Check your asset's balance
 - [x] Manage networks
 - [x] Faucet for testnet
@@ -51,8 +51,9 @@ Integrate your **DApp** using the [Wallet SDK](https://fuels-wallet.vercel.app/d
   - [ ] List connections
   - [ ] Remove connections
 - [ ] Settings
-  - [ ] Reveal your passphrase
-  - [ ] Change password
+  - [x] Reveal your passphrase
+  - [x] Change password
+  - [ ] Export accout privateKey
 - [ ] Transactions
   - [x] Receive Assets via address or QR Code
   - [ ] Send Assets to another wallet
