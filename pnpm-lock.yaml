@@ -6914,7 +6914,7 @@ packages:
       '@storybook/store': 6.5.14_biqbaboplfbrettd7655fr4n2y
       '@storybook/theming': 6.5.14_biqbaboplfbrettd7655fr4n2y
       '@storybook/ui': 6.5.14_biqbaboplfbrettd7655fr4n2y
-      '@types/node': 16.18.4
+      '@types/node': 16.18.9
       '@types/webpack': 4.41.33
       autoprefixer: 9.8.8
       babel-loader: 8.3.0_em3sh5kto35xuanci4cvhzqfay
@@ -7252,7 +7252,7 @@ packages:
       '@babel/register': 7.18.9_@babel+core@7.20.5
       '@storybook/node-logger': 6.5.14
       '@storybook/semver': 7.3.2
-      '@types/node': 16.18.4
+      '@types/node': 16.18.9
       '@types/pretty-hrtime': 1.0.1
       babel-loader: 8.3.0_em3sh5kto35xuanci4cvhzqfay
       babel-plugin-macros: 3.1.0
@@ -7335,7 +7335,7 @@ packages:
       '@storybook/semver': 7.3.2
       '@storybook/store': 6.5.14_biqbaboplfbrettd7655fr4n2y
       '@storybook/telemetry': 6.5.14_lb6du3saekb5anf2gjv3wxj3oq
-      '@types/node': 16.18.4
+      '@types/node': 16.18.9
       '@types/node-fetch': 2.6.2
       '@types/pretty-hrtime': 1.0.1
       '@types/webpack': 4.41.33
@@ -7523,7 +7523,7 @@ packages:
       '@storybook/node-logger': 6.5.14
       '@storybook/theming': 6.5.14_biqbaboplfbrettd7655fr4n2y
       '@storybook/ui': 6.5.14_biqbaboplfbrettd7655fr4n2y
-      '@types/node': 16.18.4
+      '@types/node': 16.18.9
       '@types/webpack': 4.41.33
       babel-loader: 8.3.0_em3sh5kto35xuanci4cvhzqfay
       case-sensitive-paths-webpack-plugin: 2.4.0
@@ -8353,6 +8353,10 @@ packages:
 
   /@types/node/16.18.4:
     resolution: {integrity: sha512-9qGjJ5GyShZjUfx2ArBIGM+xExdfLvvaCyQR0t6yRXKPcWCVYF/WemtX/uIU3r7FYECXRXkIiw2Vnhn6y8d+pw==}
+    dev: true
+
+  /@types/node/16.18.9:
+    resolution: {integrity: sha512-nhrqXYxiQ+5B/tPorWum37VgAiefi/wmfJ1QZKGKKecC8/3HqcTTJD0O+VABSPwtseMMF7NCPVT9uGgwn0YqsQ==}
     dev: true
 
   /@types/node/18.11.10:

@@ -1,0 +1,39 @@
+---
+title: TypeScript
+---
+
+## TypeScript
+
+The Fuel wallet SDK, provides also a package on npm making more convenient to use it on TypeScript projects.
+
+### Installation
+
+```bash
+npm install @fuel-wallet/sdk
+```
+
+### Usage
+
+You can import the SDK on your project by adding the following line to your `tsconfig.json` file.
+
+```ts
+{
+  "compilerOptions": {
+    "types": ["@fuel-wallet/sdk"]
+  }
+}
+```
+
+Or you can add the following line to your `<name>.d.ts` files.
+
+```ts
+/// <reference types="@fuel-wallet/sdk" />
+```
+
+### Example
+
+With the SDK imported, the FuelWeb3 will be convinient typed and accessible on the `window` object.
+
+```ts
+window.FuelWeb3?.connect();
+```

@@ -28,9 +28,9 @@ export function Transfer() {
   const [sendTransaction, sendingTransaction, errorSendingTransaction] =
     useLoading(async (amount: BN) => {
       console.debug('Request signature transaction!');
-      const accounts = await window.FuelWeb3.accounts();
+      const accounts = await FuelWeb3.accounts();
       const account = accounts[0];
-      const provider = new FuelWeb3Provider(window.FuelWeb3);
+      const provider = new FuelWeb3Provider(FuelWeb3);
       const wallet = Wallet.fromAddress(account, provider);
       const response = await wallet.transfer(
         Address.fromString(
@@ -70,7 +70,7 @@ export function Transfer() {
               target={'_blank'}
               href={getBlockExplorerLink({
                 path: `transaction/${txId}`,
-                providerUrl: FuelWeb3.providerConfig.url,
+                providerUrl: FuelWeb3?.providerConfig.url,
               })}
             >
               See on BlockExplorer

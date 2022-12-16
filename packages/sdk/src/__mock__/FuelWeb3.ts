@@ -74,11 +74,5 @@ global.window = {
   },
 } as any;
 
-declare global {
-  interface Window {
-    FuelWeb3: FuelWeb3;
-  }
-}
-
 const fuelWeb3 = new FuelWeb3();
-window.FuelWeb3 = fuelWeb3;
+window.FuelWeb3 = fuelWeb3 as any;
