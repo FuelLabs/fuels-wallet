@@ -9,9 +9,9 @@ import {
   Text,
   InputAmount,
 } from '@fuel-ui/react';
-import { FuelWeb3Provider, getBlockExplorerLink } from '@fuel-wallet/sdk';
+import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import type { BN } from 'fuels';
-import { bn, Wallet, Address } from 'fuels';
+import { bn, Address } from 'fuels';
 import { useState } from 'react';
 
 import { ExampleBox } from '~/src/components/ExampleBox';
@@ -30,8 +30,7 @@ export function Transfer() {
       console.debug('Request signature transaction!');
       const accounts = await FuelWeb3.accounts();
       const account = accounts[0];
-      const provider = new FuelWeb3Provider(FuelWeb3);
-      const wallet = Wallet.fromAddress(account, provider);
+      const wallet = FuelWeb3.getWallet(account);
       const response = await wallet.transfer(
         Address.fromString(
           'fuel1r3u2qfn00cgwk3u89uxuvz5cgcjaq934cfer6cwuew0424cz5sgq4yldul'
