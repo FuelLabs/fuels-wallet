@@ -1,11 +1,5 @@
-import type { FuelWeb3SDK } from '@fuel-wallet/sdk';
+/// <reference types="@fuel-wallet/sdk/dist" />
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
-
-declare global {
-  interface Window {
-    FuelWeb3: FuelWeb3SDK;
-  }
-}
 
 export type DocType = {
   title: string;
