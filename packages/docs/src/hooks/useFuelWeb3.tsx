@@ -1,5 +1,4 @@
-// This is not need if the developer
-
+// This is not need if the developer is using the FuelWeb3 package
 import { useState, useEffect } from 'react';
 
 const globalWindow = typeof window !== 'undefined' ? window : ({} as Window);
@@ -25,5 +24,9 @@ export function useFuelWeb3() {
     return () => clearTimeout(timeout);
   }, []);
 
-  return [fuelWeb3, error, isLoading] as const;
+  return [
+    fuelWeb3 as NonNullable<Window['FuelWeb3']>,
+    error,
+    isLoading,
+  ] as const;
 }
