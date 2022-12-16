@@ -17,6 +17,7 @@ export type AccountInputs = {
       name: string;
       address: string;
       publicKey: string;
+      isHidden?: boolean;
     };
   };
   fetchBalance: {
@@ -43,19 +44,32 @@ export type AccountInputs = {
     oldPassword: string;
     newPassword: string;
   };
+  selectAccount: {
+    address: string;
+  };
+  updateAccount: {
+    address: string;
+    data: Partial<Account>;
+  };
 };
 
 export class AccountService {
   static async addAccount(input: AccountInputs['addAccount']) {
     return db.transaction('rw', db.accounts, async () => {
-      await db.accounts.add({ ...input.data, isHidden: false });
+      const count = await db.accounts.count();
+      const account = {
+        ...input.data,
+        isSelected: count === 0,
+        isHidden: !!input.data.isHidden,
+      };
+      await db.accounts.add(account);
       return db.accounts.get({ address: input.data.address });
     });
   }
 
   static async getAccounts() {
     return db.transaction('r', db.accounts, async () => {
-      return db.accounts.toArray();
+      return db.accounts.toCollection().sortBy('name');
     });
   }
 
@@ -175,6 +189,39 @@ export class AccountService {
     const manager = await unlockManager(input.oldPassword);
     await manager.updatePassphrase(input.oldPassword, input.newPassword);
     return manager.lock();
+  }
+
+  static getSelectedAccount() {
+    return db.transaction('r', db.accounts, async () => {
+      return (await db.accounts.toArray()).find(
+        (account) => account.isSelected
+      );
+    });
+  }
+
+  static selectAccount(input: AccountInputs['selectAccount']) {
+    return db.transaction('rw', db.accounts, async () => {
+      await db.accounts
+        .filter((account) => !!account.isSelected)
+        .modify({ isSelected: false });
+      await db.accounts.update(input.address, {
+        isSelected: true,
+      });
+      return db.accounts.get(input.address);
+    });
+  }
+
+  static updateAccount(input: AccountInputs['updateAccount']) {
+    if (!input.data) {
+      throw new Error('Account.data undefined');
+    }
+    if (!input.address) {
+      throw new Error('Account.address undefined');
+    }
+    return db.transaction('rw', db.accounts, async () => {
+      await db.accounts.update(input.address, input.data);
+      return db.accounts.get(input.address);
+    });
   }
 }
 

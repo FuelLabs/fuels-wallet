@@ -4,7 +4,7 @@ import type { SignMachineState } from '../machines';
 import { signMachine } from '../machines';
 import { useSignRequestMethods } from '../methods';
 
-import { useAccount } from '~/systems/Account';
+import { useAccounts } from '~/systems/Account';
 
 const selectors = {
   origin: (state: SignMachineState) => state.context.origin,
@@ -17,7 +17,7 @@ const selectors = {
 };
 
 export function useSignatureRequest() {
-  const { account } = useAccount();
+  const { account } = useAccounts();
   const service = useInterpret(() => signMachine);
   const { send } = service;
   const isUnlocking = useSelector(service, selectors.isUnlocking);

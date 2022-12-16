@@ -3,7 +3,7 @@ import { Button, Card, Flex, Icon, Link, List, Text } from '@fuel-ui/react';
 
 import { useConnectRequest } from '../../hooks/useConnectRequest';
 
-import { useAccount } from '~/systems/Account';
+import { useAccounts } from '~/systems/Account';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { ConnectInfo } from '~/systems/DApp';
@@ -17,7 +17,7 @@ const PERMISSION_LIST = [
 const NOT_ALLOWED_LIST = ['View your private keys'];
 
 export function ConnectionRequest() {
-  const { account, isLoading } = useAccount();
+  const { account, isLoading } = useAccounts();
   const { handlers, origin } = useConnectRequest();
 
   if (!account || !origin) return null;
