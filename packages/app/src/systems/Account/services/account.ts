@@ -177,14 +177,14 @@ export class AccountService {
     await manager.addAccount();
     const newAccount = manager.getAccounts().slice(-1)[0];
     // Add new account to database
-    await this.addAccount({
+    const dbAccount = await this.addAccount({
       data: {
         name: data.name,
         address: newAccount.address.toString(),
         publicKey: newAccount.publicKey,
       },
     });
-    return newAccount;
+    return dbAccount;
   }
 
   static async exportVault(input: AccountInputs['unlock']) {

@@ -295,7 +295,7 @@ export const accountMachine = createMachine(
             throw new Error('Failed to add account');
           }
           account = await AccountService.selectAccount({
-            address: account.address,
+            address: account.address.toString(),
           });
           return account as Account;
         },
