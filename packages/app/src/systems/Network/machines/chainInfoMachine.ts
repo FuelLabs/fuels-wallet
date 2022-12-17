@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
-import { ChainInfo, Provider } from 'fuels';
+import { ChainInfo } from 'fuels';
 import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
+
+import { NetworkService } from '../services';
 
 import type { FetchResponse } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
@@ -76,9 +78,7 @@ export const chainInfoMachine = createMachine(
             throw new Error('No chain URL');
           }
 
-          const chainInfo = await new Provider(input.providerUrl).getChain();
-
-          return chainInfo;
+          return NetworkService.getChainInfo(input.providerUrl);
         },
       }),
     },

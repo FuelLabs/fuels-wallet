@@ -1,11 +1,14 @@
 import { useInterpret, useSelector } from '@xstate/react';
+import { bn } from 'fuels';
 
 import type { TransactionMachineState } from '../machines/transactionMachine';
 import { transactionMachine } from '../machines/transactionMachine';
 import { useTransactionRequestMethods } from '../methods/transactionRequestMethods';
 
 import { useAccount } from '~/systems/Account';
-import { getFilteredErrors, useTxOutputs } from '~/systems/Transaction';
+import { ASSET_LIST } from '~/systems/Asset';
+import { useChainInfo } from '~/systems/Network';
+import { getFilteredErrors, parseTx } from '~/systems/Transaction';
 import type { TxInputs } from '~/systems/Transaction/services';
 
 const selectors = {
@@ -64,7 +67,18 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const hasGeneralErrors = Boolean(Object.keys(generalErrors || {}).length);
   const isShowingSelector = selectors.isShowingInfo({ account, isLoading });
   const isShowingInfo = useSelector(service, isShowingSelector);
-  const { coinOutputs, outputsToSend, outputAmount } = useTxOutputs(ctx.tx);
+
+  const { chainInfo } = useChainInfo(ctx.providerUrl);
+  const tx = parseTx({
+    transaction: ctx.transactionRequest?.toTransaction(),
+    receipts: ctx.receipts,
+    gasPerByte: chainInfo?.consensusParameters.gasPerByte,
+    gasPriceFacor: chainInfo?.consensusParameters.gasPriceFactor,
+  });
+  const ethAmountSent = bn(
+    tx.totalAssetsSent?.find(({ assetId }) => assetId === ASSET_LIST[0].assetId)
+      ?.amount
+  );
 
   function approve() {
     send('APPROVE');
@@ -99,12 +113,11 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     sendingTx,
     waitingApproval,
     isShowingInfo,
-    coinOutputs,
-    outputsToSend,
-    outputAmount,
     groupedErrors,
     generalErrors,
     hasGeneralErrors,
+    tx,
+    ethAmountSent,
     ...ctx,
   };
 }

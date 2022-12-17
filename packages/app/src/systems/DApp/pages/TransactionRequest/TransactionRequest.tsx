@@ -11,20 +11,18 @@ import {
   Text,
 } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
-import { AddressType } from '@fuel-wallet/types';
 
 import { ConnectInfo, UnlockDialog } from '../../components';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
-import { AssetsAmount } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { NetworkScreen, useNetworks } from '~/systems/Network';
-import { TxDetails, TxFromTo } from '~/systems/Transaction';
+import { TxDetails, TxOperations } from '~/systems/Transaction';
 
 export function TransactionRequest() {
   const { selectedNetwork } = useNetworks({ type: NetworkScreen.list });
-  const { handlers, ...ctx } = useTransactionRequest({
+  const { handlers, tx, ethAmountSent, ...ctx } = useTransactionRequest({
     isOriginRequired: true,
   });
 
@@ -37,7 +35,8 @@ export function TransactionRequest() {
             account={ctx.account!}
             isReadOnly={true}
           />
-          {ctx.account && (
+          <TxOperations operations={tx.operations} />
+          {/* {ctx.account && (
             <TxFromTo
               from={{
                 type: AddressType.account,
@@ -48,7 +47,7 @@ export function TransactionRequest() {
                 address: ctx.outputsToSend[0]?.to.toString(),
               }}
             />
-          )}
+          )} */}
           {ctx.hasGeneralErrors && (
             <Card css={styles.generalErrorCard}>
               <Copyable
@@ -66,12 +65,12 @@ export function TransactionRequest() {
               </Copyable>
             </Card>
           )}
-          <AssetsAmount
+          {/* <AssetsAmount
             amounts={ctx.outputsToSend}
             balanceErrors={ctx.groupedErrors?.InsufficientInputAmount}
             title="Assets to Send"
-          />
-          <TxDetails fee={ctx.fee} amountSent={ctx.outputAmount} />
+          /> */}
+          <TxDetails fee={tx.fee} amountSent={ethAmountSent} />
         </Stack>
       )}
       {ctx.approvedTx && (

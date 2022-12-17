@@ -17,9 +17,11 @@ import {
 import {
   addOperation,
   getFee,
+  getFeeFromReceipts,
   getFlags,
   getFromAddress,
   getGasUsed,
+  getGasUsedFromReceipts,
   getInputContractFromIndex,
   getInputsCoin,
   getInputsContract,
@@ -474,6 +476,11 @@ describe('Tx util', () => {
   });
 
   describe('getGasUsed', () => {
+    // add gas used tests for created contract situations
+    it('should getGasUsedFromReceipts return gasUsed from tx', () => {
+      const gasUsed = getGasUsedFromReceipts(MOCK_RECEIPTS_CONTRACT_CALL);
+      expect(gasUsed.valueOf()).toEqual(bn(167824).valueOf());
+    });
     it('should getGasUsed return gasUsed from tx', () => {
       const gasUsed = getGasUsed(
         MOCK_TRANSACTION_CONTRACT_CALL,
@@ -489,6 +496,14 @@ describe('Tx util', () => {
     // add other fee situations
     // fee from bytes of contract created transaction
     // fee from transfer operations
+    it('should getFeeFromReceipts return fee from receipts', () => {
+      const fee = getFeeFromReceipts(
+        MOCK_TRANSACTION_CONTRACT_CALL.gasPrice,
+        MOCK_RECEIPTS_CONTRACT_CALL,
+        MOCK_GAS_PRICE_FACTOR
+      );
+      expect(fee.valueOf()).toEqual(bn(1).valueOf());
+    });
     it('should getFee return fee from tx', () => {
       const fee = getFee(
         MOCK_TRANSACTION_CONTRACT_CALL,

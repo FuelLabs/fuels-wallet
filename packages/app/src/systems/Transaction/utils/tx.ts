@@ -28,7 +28,6 @@ import type {
 } from 'fuels';
 import {
   calculatePriceWithFactor,
-  getGasUsedFromReceipts,
   ReceiptType,
   TransactionType,
   bn,
@@ -527,7 +526,7 @@ export function getTotalAssetsSent(
   return assetsSent;
 }
 
-export function getContractCreatedGasUsed(
+export function getGasUsedContractCreated(
   tx?: Transaction,
   gasPerByte?: BN,
   gasPriceFacor?: BN
@@ -549,15 +548,14 @@ export function getContractCreatedGasUsed(
   return gasUsed;
 }
 
-export function getContractCreatedFee(
-  tx?: Transaction,
-  gasPerByte?: BN,
-  gasPriceFacor?: BN
-) {
-  const gasUsed = getContractCreatedGasUsed(tx, gasPerByte, gasPriceFacor);
-  const txFee = gasUsed.mul(bn(tx?.gasPrice));
+export function getGasUsedFromReceipts(receipts?: TransactionResultReceipt[]) {
+  const scriptReceipts = getReceiptsScriptResult(receipts);
+  const gasUsed = scriptReceipts.reduce(
+    (prev, receipt) => prev.add(receipt.gasUsed),
+    bn(0)
+  );
 
-  return txFee;
+  return gasUsed;
 }
 
 export function getGasUsed(
@@ -569,25 +567,32 @@ export function getGasUsed(
   const { isTypeCreate, isTypeScript } = getFlags(tx);
 
   if (isTypeCreate) {
-    return getContractCreatedGasUsed(tx, gasPerByte, gasPriceFacor);
+    return getGasUsedContractCreated(tx, gasPerByte, gasPriceFacor);
   }
   if (isTypeScript) return getGasUsedFromReceipts(receipts ?? []);
 
   return bn(0);
 }
 
-export function getFeeFromReceipts(
+export function getContractCreatedFee(
   tx?: Transaction,
+  gasPerByte?: BN,
+  gasPriceFacor?: BN
+) {
+  const gasUsed = getGasUsedContractCreated(tx, gasPerByte, gasPriceFacor);
+  const txFee = gasUsed.mul(bn(tx?.gasPrice));
+
+  return txFee;
+}
+
+export function getFeeFromReceipts(
+  gasPrice?: BN,
   receipts?: TransactionResultReceipt[],
   gasPriceFacor?: BN
 ) {
-  if (tx?.gasPrice?.toNumber() && gasPriceFacor?.toNumber()) {
+  if (gasPrice?.toNumber() && gasPriceFacor?.toNumber()) {
     const gasUsed = getGasUsedFromReceipts(receipts ?? []);
-    const fee = calculatePriceWithFactor(
-      gasUsed,
-      bn(tx?.gasPrice),
-      bn(gasPriceFacor)
-    );
+    const fee = calculatePriceWithFactor(gasUsed, gasPrice, bn(gasPriceFacor));
 
     return fee;
   }
@@ -604,7 +609,9 @@ export function getFee(
   const { isTypeCreate, isTypeScript } = getFlags(tx);
 
   if (isTypeCreate) return getContractCreatedFee(tx, gasPerByte, gasPriceFacor);
-  if (isTypeScript) return getFeeFromReceipts(tx, receipts, gasPriceFacor);
+  if (isTypeScript) {
+    return getFeeFromReceipts(tx?.gasPrice, receipts, gasPriceFacor);
+  }
 
   return bn(0);
 }
@@ -659,5 +666,3 @@ export function parseTx({
     ...flags,
   };
 }
-
-export * from './error';

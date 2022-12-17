@@ -44,7 +44,7 @@ describe('txApproveMachine', () => {
       input: { tx, providerUrl, origin: 'foo.com' },
     });
 
-    await waitFor(service, (state) => state.matches('calculatingGas'));
+    await waitFor(service, (state) => state.matches('simulatingTransaction'));
     await waitFor(service, (state) => state.matches('waitingApproval'));
 
     service.send('APPROVE');

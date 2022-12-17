@@ -1,15 +1,10 @@
 /* eslint-disable no-param-reassign */
 import type { Account } from '@fuel-wallet/types';
 import type { TransactionRequest, WalletUnlocked } from 'fuels';
-import {
-  Provider,
-  TransactionResponse,
-  bn,
-  calculateTransactionFee,
-} from 'fuels';
+import { Provider, TransactionResponse } from 'fuels';
 
 import type { Transaction } from '../types';
-import { getOutputsCoin, toJSON } from '../utils';
+import { toJSON } from '../utils';
 
 import { db, uniqueId } from '~/systems/Core';
 
@@ -22,24 +17,21 @@ export type TxInputs = {
     id: string;
   };
   request: {
-    tx: TransactionRequest;
+    transactionRequest: TransactionRequest;
     origin: string;
     providerUrl: string;
   };
   send: {
-    tx: TransactionRequest;
+    transactionRequest: TransactionRequest;
     wallet: WalletUnlocked;
     providerUrl?: string;
   };
-  calculateFee: {
-    tx: TransactionRequest;
-    providerUrl?: string;
-  };
-  fetchGasPrice: {
+  simulateTransaction: {
+    transactionRequest: TransactionRequest;
     providerUrl?: string;
   };
   getOutputs: {
-    tx?: TransactionRequest;
+    transactionRequest?: TransactionRequest;
     account?: Account | null;
   };
   fetch: {
@@ -84,9 +76,13 @@ export class TxService {
     });
   }
 
-  static async send({ wallet, tx, providerUrl }: TxInputs['send']) {
+  static async send({
+    wallet,
+    transactionRequest,
+    providerUrl,
+  }: TxInputs['send']) {
     wallet.provider = new Provider(providerUrl || '');
-    return wallet.sendTransaction(tx);
+    return wallet.sendTransaction(transactionRequest);
   }
 
   static async fetch({ txId, providerUrl = '' }: TxInputs['fetch']) {
@@ -96,30 +92,13 @@ export class TxService {
     return txResponse;
   }
 
-  static async calculateFee({ tx, providerUrl }: TxInputs['calculateFee']) {
-    const { gasPrice } = tx;
+  static async simulateTransaction({
+    transactionRequest,
+    providerUrl,
+  }: TxInputs['simulateTransaction']) {
     const provider = new Provider(providerUrl || '');
-    const { receipts } = await provider.call(tx);
-    const result = calculateTransactionFee({ receipts, gasPrice });
-    return result.fee;
-  }
+    const { receipts } = await provider.call(transactionRequest);
 
-  static async fetchGasPrice({ providerUrl }: TxInputs['fetchGasPrice']) {
-    const provider = new Provider(providerUrl || '');
-    const { minGasPrice } = await provider.getNodeInfo();
-    return minGasPrice;
-  }
-
-  static getOutputs({ tx, account }: TxInputs['getOutputs']) {
-    const coinOutputs = getOutputsCoin(tx);
-    const outputsToSend = coinOutputs.filter(
-      (value) => value.to !== account?.publicKey
-    );
-    const outputAmount = outputsToSend.reduce(
-      (acc, value) => acc.add(value.amount),
-      bn(0)
-    );
-
-    return { coinOutputs, outputsToSend, outputAmount };
+    return receipts;
   }
 }
