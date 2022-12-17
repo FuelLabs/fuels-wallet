@@ -24,7 +24,7 @@ const MOCK_ACCOUNT_TWO = {
 
 const machine = accountMachine.withContext({}).withConfig({
   actions: {
-    redirectToHome() {},
+    notifyUpdateAccounts() {},
   },
 });
 
@@ -95,6 +95,25 @@ describe('accountsMachine', () => {
 
       expect(accounts[idx].isSelected).toBeFalsy();
       expect(accounts[invertIdx].isSelected).toBeTruthy();
+    });
+  });
+
+  describe('add', () => {
+    it('should be able to add an account', async () => {
+      await waitFor(service, (state) => state.matches('done'));
+
+      service.send('UNLOCK_WALLET', {
+        input: {
+          account: MOCK_ACCOUNTS[0],
+          password: '123123',
+        },
+      });
+
+      await waitFor(service, (state) => state.matches('addingAccount'));
+      const { matches } = await waitFor(service, (state) =>
+        state.matches('done')
+      );
+      expect(matches('done')).toBeTruthy();
     });
   });
 });

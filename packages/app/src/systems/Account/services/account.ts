@@ -36,6 +36,12 @@ export type AccountInputs = {
       mnemonic?: string[];
     };
   };
+  addVaultAccount: {
+    data: {
+      name: string;
+      password: string;
+    };
+  };
   unlock: {
     account: Account;
     password: string;
@@ -164,6 +170,21 @@ export class AccountService {
       console.log(error);
       throw error;
     }
+  }
+
+  static async addVaultAccount({ data }: AccountInputs['addVaultAccount']) {
+    const manager = await unlockManager(data.password);
+    await manager.addAccount();
+    const newAccount = manager.getAccounts().slice(-1)[0];
+    // Add new account to database
+    await this.addAccount({
+      data: {
+        name: data.name,
+        address: newAccount.address.toString(),
+        publicKey: newAccount.publicKey,
+      },
+    });
+    return newAccount;
   }
 
   static async exportVault(input: AccountInputs['unlock']) {

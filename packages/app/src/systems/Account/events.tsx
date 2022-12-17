@@ -23,7 +23,7 @@ export function accountEvents(store: StoreClass<StoreMachines>) {
         input: { address: account.address },
       });
     },
-    addAccount(input: AccountInputs['addAccount']) {
+    addAccount(input: AccountInputs['addVaultAccount']) {
       store.send(Services.accounts, {
         type: 'ADD_ACCOUNT',
         input,

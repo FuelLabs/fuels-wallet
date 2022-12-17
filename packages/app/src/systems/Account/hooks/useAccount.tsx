@@ -17,6 +17,12 @@ const selectors = {
   account: (state: AccountMachineState) => {
     return state.context?.account;
   },
+  isUnlocking: (state: AccountMachineState) => {
+    return state.matches('unlocking');
+  },
+  isUnlockingLoading: (state: AccountMachineState) => {
+    return state.children.unlock?.state.matches('unlocking');
+  },
 };
 
 const listenerAccountFetcher = () => {
@@ -31,6 +37,14 @@ export function useAccounts() {
   const isLoading = store.useSelector(Services.accounts, selectors.isLoading);
   const accounts = store.useSelector(Services.accounts, selectors.accounts);
   const account = store.useSelector(Services.accounts, selectors.account);
+  const isUnlocking = store.useSelector(
+    Services.accounts,
+    selectors.isUnlocking
+  );
+  const isUnlockingLoading = store.useSelector(
+    Services.accounts,
+    selectors.isUnlockingLoading
+  );
 
   function goToList() {
     navigate(Pages.accounts());
@@ -38,6 +52,19 @@ export function useAccounts() {
 
   function goToAdd() {
     navigate(Pages.accountAdd());
+  }
+
+  function unlock(password: string) {
+    store.send(Services.accounts, {
+      type: 'UNLOCK_WALLET',
+      input: { password, account: account! },
+    });
+  }
+
+  function closeUnlock() {
+    store.send(Services.accounts, {
+      type: 'CLOSE_UNLOCK',
+    });
   }
 
   useEffect(() => {
@@ -54,6 +81,8 @@ export function useAccounts() {
     handlers: {
       goToList,
       goToAdd,
+      unlock,
+      closeUnlock,
       setBalanceVisibility: store.setBalanceVisibility,
       selectAccount: store.selectAccount,
       addAccount: store.addAccount,
@@ -61,5 +90,7 @@ export function useAccounts() {
     isLoading: isLoading && !accounts,
     accounts,
     account,
+    isUnlocking,
+    isUnlockingLoading,
   };
 }

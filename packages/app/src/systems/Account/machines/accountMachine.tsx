@@ -1,14 +1,18 @@
 import type { Account } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
+import { send } from 'xstate/lib/actions';
 
 import type { AccountInputs } from '../services/account';
 import { AccountService } from '../services/account';
 
+import { unlockMachine, unlockMachineErrorAction } from './unlockMachine';
+import type { UnlockMachine, UnlockMachineEvents } from './unlockMachine';
+
 import { IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
 import { FetchMachine } from '~/systems/Core';
-import type { Maybe } from '~/systems/Core';
+import type { ChildrenMachine, Maybe } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
 export enum AccountScreen {
@@ -19,6 +23,7 @@ export enum AccountScreen {
 type MachineContext = {
   accounts?: Account[];
   account?: Maybe<Account>;
+  unlockError?: string;
   error?: unknown;
 };
 
@@ -45,7 +50,9 @@ export type MachineEvents =
       input: AccountInputs['setBalanceVisibility'];
     }
   | { type: 'SELECT_ACCOUNT'; input: AccountInputs['selectAccount'] }
-  | { type: 'ADD_ACCOUNT'; input: AccountInputs['addAccount'] };
+  | { type: 'ADD_ACCOUNT'; input: AccountInputs['addVaultAccount'] }
+  | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
+  | { type: 'CLOSE_UNLOCK'; input?: void };
 
 export const accountMachine = createMachine(
   {
@@ -114,7 +121,7 @@ export const accountMachine = createMachine(
           },
           onDone: [
             {
-              actions: ['notifyUpdateAccounts', 'redirectToHome'],
+              actions: ['notifyUpdateAccounts'],
               target: 'fetchingAccounts',
             },
           ],
@@ -135,7 +142,7 @@ export const accountMachine = createMachine(
           },
           onDone: [
             {
-              actions: ['notifyUpdateAccounts', 'redirectToHome'],
+              actions: ['notifyUpdateAccounts'],
               target: 'fetchingAccounts',
             },
           ],
@@ -145,6 +152,31 @@ export const accountMachine = createMachine(
               target: 'failed',
             },
           ],
+        },
+      },
+      unlocking: {
+        invoke: {
+          id: 'unlock',
+          src: unlockMachine,
+          data: (_: MachineContext, ev: MachineEvents) => ev.input,
+          onDone: [
+            unlockMachineErrorAction('unlocking', 'unlockError'),
+            { target: 'addingAccount' },
+          ],
+        },
+        on: {
+          UNLOCK_WALLET: {
+            // send to the child machine
+            actions: [
+              send<MachineContext, UnlockMachineEvents>(
+                (_, ev) => ({ type: 'UNLOCK_WALLET', input: ev.input }),
+                { to: 'unlock' }
+              ),
+            ],
+          },
+          CLOSE_UNLOCK: {
+            target: 'fetchingAccount',
+          },
         },
       },
       done: {
@@ -249,13 +281,16 @@ export const accountMachine = createMachine(
           return account;
         },
       }),
-      addAccount: FetchMachine.create<AccountInputs['addAccount'], Account>({
+      addAccount: FetchMachine.create<
+        AccountInputs['addVaultAccount'],
+        Account
+      >({
         showError: true,
         async fetch({ input }) {
           if (!input?.data) {
             throw new Error('Invalid account input');
           }
-          let account = await AccountService.addAccount(input);
+          let account = await AccountService.addVaultAccount(input);
           if (!account) {
             throw new Error('Failed to add account');
           }
@@ -279,4 +314,7 @@ export const accountMachine = createMachine(
 
 export type AccountMachine = typeof accountMachine;
 export type AccountMachineService = InterpreterFrom<AccountMachine>;
-export type AccountMachineState = StateFrom<AccountMachine>;
+export type AccountMachineState = StateFrom<AccountMachine> &
+  ChildrenMachine<{
+    unlock: UnlockMachine;
+  }>;
