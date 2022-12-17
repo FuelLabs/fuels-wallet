@@ -41,7 +41,7 @@ describe('txApproveMachine', () => {
     await waitFor(service, (state) => state.matches('idle'));
 
     service.send('START_REQUEST', {
-      input: { tx: transactionRequest, providerUrl, origin: 'foo.com' },
+      input: { transactionRequest, providerUrl, origin: 'foo.com' },
     });
 
     await waitFor(service, (state) => state.matches('simulatingTransaction'));
