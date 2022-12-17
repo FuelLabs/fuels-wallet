@@ -26,8 +26,8 @@ const selectors = {
     return state.context.response;
   },
   screen(state: SendMachineState) {
-    if (state.matches('unlocking')) return SendScreens.unlocking;
-    if (state.matches('confirming')) return SendScreens.confirm;
+    if (state.matches('confirming.unlocking')) return SendScreens.unlocking;
+    if (state.matches('confirming.idle')) return SendScreens.confirm;
     return SendScreens.select;
   },
   isLoading(state: SendMachineState) {
@@ -62,7 +62,7 @@ const selectors = {
 
 export function useSend() {
   const navigate = useNavigate();
-  const { account, isLoading: isLoadingAccount } = useAccounts();
+  const { account } = useAccounts();
   const service = useInterpret(() =>
     sendMachine.withConfig({
       actions: {
@@ -112,7 +112,7 @@ export function useSend() {
     screen,
     canConfirm,
     showTxDetails,
-    isLoading: isLoading || isLoadingAccount,
+    isLoading,
     handlers: {
       cancel,
       confirm,

@@ -5,12 +5,14 @@ import { AddressType } from '@fuel-wallet/types';
 
 import type { UseSendReturn } from '../../hooks/useSend';
 
+import { useAccounts } from '~/systems/Account';
 import { AssetsAmount } from '~/systems/Asset';
 import { TxDetails, TxFromTo, useTxOutputs } from '~/systems/Transaction';
 
 type SendConfirmProps = UseSendReturn;
 
 export function SendConfirm({ inputs, response, errors }: SendConfirmProps) {
+  const { account } = useAccounts();
   const { outputsToSend } = useTxOutputs(response?.txRequest);
   return (
     <Stack gap="$3" css={styles.root}>
@@ -23,7 +25,7 @@ export function SendConfirm({ inputs, response, errors }: SendConfirmProps) {
       <TxFromTo
         from={{
           type: AddressType.account,
-          address: inputs?.wallet?.address.toString()!,
+          address: account?.address!,
         }}
         to={{
           type: AddressType.account,

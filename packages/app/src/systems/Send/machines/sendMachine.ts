@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 import { toast } from '@fuel-ui/react';
-import type { Asset } from '@fuel-wallet/types';
+import type { Account, Asset } from '@fuel-wallet/types';
 import {
+  bn,
   BN,
   isBech32,
-  ScriptTransactionRequest,
+  NativeAssetId,
+  TransactionRequest,
   TransactionResponse,
+  WalletLocked,
   WalletUnlocked,
 } from 'fuels';
 import {
@@ -17,14 +20,19 @@ import {
   StateFrom,
 } from 'xstate';
 
+import { store } from '~/store';
 import {
   AccountInputs,
+  AccountService,
   UnlockMachine,
   unlockMachine,
   unlockMachineErrorAction,
   UnlockMachineEvents,
 } from '~/systems/Account';
+import { getBalance } from '~/systems/Account/utils/balance';
+import { isEth } from '~/systems/Asset';
 import { ChildrenMachine, FetchMachine } from '~/systems/Core';
+import { NetworkService } from '~/systems/Network';
 import { GroupedErrors } from '~/systems/Transaction';
 import { TxService } from '~/systems/Transaction/services';
 
@@ -40,10 +48,12 @@ export type MachineContext = {
     address?: string;
     amount?: BN;
     wallet?: WalletUnlocked;
+    accountInfo?: TxAccountInfoReturn;
+    gasFee?: BN;
   };
   response?: {
     fee?: BN;
-    txRequest?: ScriptTransactionRequest;
+    txRequest?: TransactionRequest;
     txApprove?: TransactionResponse;
   };
   errors?: {
@@ -58,16 +68,24 @@ type Inputs = MachineContext['inputs'];
 
 type TxRequestReturn = {
   fee: BN;
-  txRequest: ScriptTransactionRequest;
+  txRequest: TransactionRequest;
 };
 
 type TxApproveReturn = {
   txApprove: TransactionResponse;
 };
 
+type TxAccountInfoReturn = {
+  wallet: WalletLocked;
+  account: Account;
+};
+
 type MachineServices = {
   fetchFakeTx: {
     data: BN;
+  };
+  fetchAccountInfo: {
+    data: TxAccountInfoReturn;
   };
   unlock: {
     data: WalletUnlocked;
@@ -116,31 +134,26 @@ export const sendMachine = createMachine(
             actions: ['goToHome'],
           },
           CONFIRM: {
-            target: 'unlocking',
+            target: 'fetchingAccountInfo',
           },
         },
       },
-      unlocking: {
+      fetchingAccountInfo: {
         invoke: {
-          id: 'unlock',
-          src: 'unlock',
-          data: (_: MachineContext, ev: MachineEvents) => ev.input,
+          src: 'fetchAccountInfo',
           onDone: [
-            unlockMachineErrorAction('unlocking', 'unlockError'),
-            { target: 'confirming', actions: 'assignWallet' },
+            {
+              target: 'invalid',
+              cond: 'isInValidTransaction',
+            },
+            {
+              actions: ['assignAccountInfo'],
+              target: 'confirming',
+            },
           ],
         },
-        on: {
-          UNLOCK_WALLET: {
-            actions: [
-              send<MachineContext, UnlockMachineEvents>(
-                (_, ev) => ({ type: 'UNLOCK_WALLET', input: ev.input }),
-                { to: 'unlock' }
-              ),
-            ],
-          },
-        },
       },
+      invalid: {},
       confirming: {
         initial: 'creatingTx',
         on: {
@@ -152,7 +165,12 @@ export const sendMachine = createMachine(
           creatingTx: {
             invoke: {
               src: 'createTx',
-              data: (ctx: MachineContext) => ({ input: ctx.inputs }),
+              data: (ctx: MachineContext) => ({
+                input: {
+                  ...ctx.inputs,
+                  gasFee: ctx.response?.fee,
+                },
+              }),
               onDone: [
                 {
                   target: 'idle',
@@ -169,7 +187,27 @@ export const sendMachine = createMachine(
           idle: {
             on: {
               CONFIRM: {
-                target: 'sendingTx',
+                target: 'unlocking',
+              },
+            },
+          },
+          unlocking: {
+            invoke: {
+              id: 'unlock',
+              src: 'unlock',
+              onDone: [
+                unlockMachineErrorAction('unlocking', 'unlockError'),
+                { target: 'sendingTx', actions: 'assignWallet' },
+              ],
+            },
+            on: {
+              UNLOCK_WALLET: {
+                actions: [
+                  send<MachineContext, UnlockMachineEvents>(
+                    (_, ev) => ({ type: 'UNLOCK_WALLET', input: ev.input }),
+                    { to: 'unlock' }
+                  ),
+                ],
               },
             },
           },
@@ -192,7 +230,7 @@ export const sendMachine = createMachine(
           },
           success: {
             type: 'final',
-            entry: ['showSuccessMessage', 'goToHome'],
+            entry: ['notifyUpdateAccounts', 'showSuccessMessage', 'goToHome'],
           },
         },
       },
@@ -237,10 +275,18 @@ export const sendMachine = createMachine(
       assignResponse: assign({
         response: (ctx, ev) => ({ ...ctx.response, ...ev.data }),
       }),
+      assignAccountInfo: assign({
+        inputs: (ctx, ev) => ({ ...ctx.inputs, accountInfo: ev.data }),
+      }),
       validateAddress: assign({
         errors: (ctx) => {
-          const address = ctx.inputs?.address;
-          const isAddressInvalid = Boolean(address && !isBech32(address));
+          let isAddressInvalid;
+          try {
+            const address = ctx.inputs?.address;
+            isAddressInvalid = Boolean(address && !isBech32(address));
+          } catch {
+            isAddressInvalid = true;
+          }
           return { ...ctx.errors, isAddressInvalid };
         },
       }),
@@ -259,9 +305,33 @@ export const sendMachine = createMachine(
       showSuccessMessage() {
         toast.success('Transaction sent successfully');
       },
+      notifyUpdateAccounts: () => {
+        store.updateAccounts();
+      },
     },
     guards: {
       hasError: FetchMachine.hasError as any,
+      isInValidTransaction: (ctx, ev) => {
+        if (!ev.data || !ctx.inputs?.asset || !ctx.response?.fee) {
+          return true;
+        }
+        const assetBalance = getBalance(
+          ev.data.account,
+          ctx.inputs.asset?.assetId
+        );
+        let hasBalance = false;
+        if (isEth(ctx.inputs.asset)) {
+          hasBalance = assetBalance.gte(
+            bn(ctx.inputs.amount).add(ctx.response.fee)
+          );
+        } else {
+          const ethBalance = getBalance(ev.data.account, NativeAssetId);
+          const hasAssetBalance = assetBalance.gte(bn(ctx.inputs.amount));
+          const hasGasFeeBalance = ethBalance.gte(bn(ctx.response.fee));
+          hasBalance = hasAssetBalance && hasGasFeeBalance;
+        }
+        return !hasBalance;
+      },
     },
     services: {
       unlock: unlockMachine,
@@ -271,26 +341,41 @@ export const sendMachine = createMachine(
           return TxService.createFakeTx();
         },
       }),
+      fetchAccountInfo: FetchMachine.create<null, TxAccountInfoReturn>({
+        showError: false,
+        async fetch() {
+          const selectedAccount = await AccountService.getSelectedAccount();
+          const provier = await NetworkService.getSelectedNetwork();
+          if (!provier || !selectedAccount) {
+            throw new Error('Missing provider or account');
+          }
+          const account = await AccountService.fetchBalance({
+            providerUrl: provier.url,
+            account: selectedAccount,
+          });
+          const wallet = new WalletLocked(selectedAccount.address, provier.url);
+
+          return { wallet, account };
+        },
+      }),
       createTx: FetchMachine.create<Inputs, TxRequestReturn>({
         showError: false,
         async fetch({ input = {} }) {
-          const { wallet, asset, amount, address } = input;
-          if (!wallet || !asset || !amount || !address) {
+          const { asset, amount, address, accountInfo, gasFee } = input;
+          if (!asset || !amount || !address || !accountInfo || !gasFee) {
             throw new Error('Missing params for transaction');
           }
-
-          const providerUrl = wallet.provider.url;
-          const gasPrice = await TxService.fetchGasPrice({ providerUrl });
+          const wallet = accountInfo.wallet;
           const tx = await TxService.createTransfer({
             amount,
-            wallet,
             assetId: asset.assetId,
-            dest: address,
+            to: address,
           });
-
-          tx.gasPrice = gasPrice;
-          const fee = await TxService.calculateFee({ tx, providerUrl });
-          return { fee, txRequest: tx };
+          const { txCost, request } = await TxService.fundTransaction(
+            wallet,
+            tx
+          );
+          return { fee: txCost.fee, txRequest: request };
         },
       }),
       sendTx: FetchMachine.create<MachineContext, TxApproveReturn>({
