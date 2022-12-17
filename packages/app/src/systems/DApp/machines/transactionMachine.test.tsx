@@ -17,12 +17,12 @@ const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
 describe('txApproveMachine', () => {
   let service: TransactionMachineService;
   let wallet: WalletUnlocked;
-  let tx: ScriptTransactionRequest;
+  let transactionRequest: ScriptTransactionRequest;
 
   beforeAll(async () => {
     wallet = Wallet.fromPrivateKey(OWNER);
     jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
-    tx = await getMockedTransaction(
+    transactionRequest = await getMockedTransaction(
       wallet?.publicKey || '',
       '0xc7862855b418ba8f58878db434b21053a61a2025209889cc115989e8040ff077',
       providerUrl
@@ -41,7 +41,7 @@ describe('txApproveMachine', () => {
     await waitFor(service, (state) => state.matches('idle'));
 
     service.send('START_REQUEST', {
-      input: { tx, providerUrl, origin: 'foo.com' },
+      input: { tx: transactionRequest, providerUrl, origin: 'foo.com' },
     });
 
     await waitFor(service, (state) => state.matches('simulatingTransaction'));

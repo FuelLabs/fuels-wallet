@@ -20,5 +20,18 @@ describe('TxOperation', () => {
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
     expect(screen.getByText('0x277f...207c')).toBeInTheDocument();
     expect(() => screen.getByLabelText('Loading Spinner')).toThrow();
+    expect(screen.getByText('Ethereum')).toBeInTheDocument();
+  });
+
+  it('should not render assets amount card', async () => {
+    render(
+      <TxOperation operation={{ ...MOCK_OPERATION, assetsSent: undefined }} />
+    );
+    expect(screen.getByText('From')).toBeInTheDocument();
+    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
+    expect(screen.getByText('To (Contract)')).toBeInTheDocument();
+    expect(screen.getByText('0x277f...207c')).toBeInTheDocument();
+    expect(() => screen.getByLabelText('Loading Spinner')).toThrow();
+    expect(screen.getByText('Ethereum')).toBeInTheDocument();
   });
 });

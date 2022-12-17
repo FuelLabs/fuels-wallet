@@ -47,7 +47,7 @@ describe('TxHeader', () => {
   it('should show transaction Error', async () => {
     render(<TxHeader {...MOCK_TRANSACTION_CREATE} status={Status.failure} />);
 
-    expect(screen.getByText(/Error/i)).toBeInTheDocument();
+    expect(screen.getByText(/Failure/i)).toBeInTheDocument();
     expect(screen.getByLabelText('Status Color: crimson9')).toBeInTheDocument();
   });
 
