@@ -32,6 +32,6 @@ describe('TxOperation', () => {
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
     expect(screen.getByText('0x277f...207c')).toBeInTheDocument();
     expect(() => screen.getByLabelText('Loading Spinner')).toThrow();
-    expect(screen.getByText('Ethereum')).toThrow();
+    expect(() => screen.getByText('Ethereum')).toThrow();
   });
 });
