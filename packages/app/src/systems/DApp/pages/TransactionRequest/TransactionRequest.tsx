@@ -26,13 +26,15 @@ export function TransactionRequest() {
     isOriginRequired: true,
   });
 
+  if (!ctx.account) return null;
+
   const content = (
     <Layout.Content css={styles.content}>
       {ctx.isShowingInfo && (
         <Stack gap="$4">
           <ConnectInfo
             origin={ctx.origin!}
-            account={ctx.account!}
+            account={ctx.account}
             isReadOnly={true}
           />
           <TxOperations operations={tx.operations} />

@@ -7,7 +7,12 @@ import {
   Wallet,
 } from 'fuels';
 
-import { MockConnection, toWallet, userWallet } from './__mock__/FuelWeb3';
+import {
+  FuelWeb3,
+  MockConnection,
+  toWallet,
+  userWallet,
+} from './__mock__/FuelWeb3';
 import { seedWallet } from './__mock__/utils';
 
 describe('FuelWeb3', () => {
@@ -16,32 +21,31 @@ describe('FuelWeb3', () => {
   });
 
   test('connect', async () => {
-    const isConnected = await window.FuelWeb3.connect();
+    const isConnected = await FuelWeb3.connect();
     expect(isConnected).toBeTruthy();
   });
 
   test('disconnect', async () => {
-    const isConnected = await window.FuelWeb3.disconnect();
+    const isConnected = await FuelWeb3.disconnect();
     expect(isConnected).toBeFalsy();
   });
 
   test('accounts', async () => {
-    const accounts = await window.FuelWeb3.accounts();
+    const accounts = await FuelWeb3.accounts();
     expect(accounts).toEqual([userWallet.address.toAddress()]);
   });
 
   test('signMessage', async () => {
-    const accounts = await window.FuelWeb3.accounts();
+    const accounts = await FuelWeb3.accounts();
     const account = accounts[0];
 
     // Test example like docs
-    const signedMessage = await window.FuelWeb3.signMessage(account, 'test');
+    const signedMessage = await FuelWeb3.signMessage(account, 'test');
     const signedMesageSpec = await userWallet.signMessage('test');
     expect(signedMessage).toEqual(signedMesageSpec);
   });
 
   test('sendTransaction', async () => {
-    const { FuelWeb3 } = window;
     const accounts = await FuelWeb3.accounts();
     const account = accounts[0];
     const toAccount = toWallet.address.toAddress();
@@ -79,7 +83,6 @@ describe('FuelWeb3', () => {
   });
 
   test('getWallet', async () => {
-    const { FuelWeb3 } = window;
     const accounts = await FuelWeb3.accounts();
     const account = accounts[0];
     const toAccount = toWallet.address.toString();
@@ -102,18 +105,18 @@ describe('FuelWeb3', () => {
   });
 
   test('getProvider', async () => {
-    const provider = window.FuelWeb3.getProvider();
+    const provider = FuelWeb3.getProvider();
     const nodeInfo = await provider.getNodeInfo();
     expect(nodeInfo.nodeVersion).toBeTruthy();
   });
 
   test('User getProvider on fuels-ts Wallet', async () => {
-    const accounts = await window.FuelWeb3.accounts();
+    const accounts = await FuelWeb3.accounts();
     const account = accounts[0];
     const toAccount = toWallet.address.toString();
 
     // Test example like docs
-    const provider = window.FuelWeb3.getProvider();
+    const provider = FuelWeb3.getProvider();
     const walletLocked = Wallet.fromAddress(account, provider);
     const toAddress = Address.fromString(toAccount);
     const response = await walletLocked.transfer(

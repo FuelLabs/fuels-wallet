@@ -16,3 +16,11 @@ export class FuelWeb3 extends FuelWeb3SDK {
     return new FuelWeb3Provider(this);
   }
 }
+
+declare global {
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    FuelWeb3: FuelWeb3 | undefined;
+  }
+}
