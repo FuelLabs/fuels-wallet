@@ -37,19 +37,6 @@ export function TransactionRequest() {
             account={ctx.account}
             isReadOnly={true}
           />
-          <TxOperations operations={tx.operations} />
-          {/* {ctx.account && (
-            <TxFromTo
-              from={{
-                type: AddressType.account,
-                address: ctx.account.publicKey,
-              }}
-              to={{
-                type: AddressType.account,
-                address: ctx.outputsToSend[0]?.to.toString(),
-              }}
-            />
-          )} */}
           {ctx.hasGeneralErrors && (
             <Card css={styles.generalErrorCard}>
               <Copyable
@@ -67,11 +54,7 @@ export function TransactionRequest() {
               </Copyable>
             </Card>
           )}
-          {/* <AssetsAmount
-            amounts={ctx.outputsToSend}
-            balanceErrors={ctx.groupedErrors?.InsufficientInputAmount}
-            title="Assets to Send"
-          /> */}
+          <TxOperations operations={tx.operations} />
           <TxDetails fee={tx.fee} amountSent={ethAmountSent} />
         </Stack>
       )}
