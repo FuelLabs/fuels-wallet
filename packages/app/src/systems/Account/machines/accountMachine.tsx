@@ -32,6 +32,9 @@ type MachineServices = {
   selectAccount: {
     data: Account;
   };
+  addAccount: {
+    data: Account;
+  };
 };
 
 export type MachineEvents =
@@ -41,7 +44,8 @@ export type MachineEvents =
       type: 'SET_BALANCE_VISIBILITY';
       input: AccountInputs['setBalanceVisibility'];
     }
-  | { type: 'SELECT_ACCOUNT'; input: AccountInputs['selectAccount'] };
+  | { type: 'SELECT_ACCOUNT'; input: AccountInputs['selectAccount'] }
+  | { type: 'ADD_ACCOUNT'; input: AccountInputs['addAccount'] };
 
 export const accountMachine = createMachine(
   {
@@ -122,6 +126,27 @@ export const accountMachine = createMachine(
           ],
         },
       },
+      addingAccount: {
+        tags: ['loading'],
+        invoke: {
+          src: 'addAccount',
+          data: {
+            input: (_: MachineContext, ev: MachineEvents) => ev.input,
+          },
+          onDone: [
+            {
+              actions: ['notifyUpdateAccounts', 'redirectToHome'],
+              target: 'fetchingAccounts',
+            },
+          ],
+          onError: [
+            {
+              actions: 'assignError',
+              target: 'failed',
+            },
+          ],
+        },
+      },
       done: {
         after: {
           TIMEOUT: 'fetchingAccounts', // retry
@@ -146,6 +171,9 @@ export const accountMachine = createMachine(
       },
       SELECT_ACCOUNT: {
         target: 'selectingAccount',
+      },
+      ADD_ACCOUNT: {
+        target: 'addingAccount',
       },
     },
   },
@@ -219,6 +247,22 @@ export const accountMachine = createMachine(
             throw new Error('Failed to select account');
           }
           return account;
+        },
+      }),
+      addAccount: FetchMachine.create<AccountInputs['addAccount'], Account>({
+        showError: true,
+        async fetch({ input }) {
+          if (!input?.data) {
+            throw new Error('Invalid account input');
+          }
+          let account = await AccountService.addAccount(input);
+          if (!account) {
+            throw new Error('Failed to add account');
+          }
+          account = await AccountService.selectAccount({
+            address: account.address,
+          });
+          return account as Account;
         },
       }),
     },

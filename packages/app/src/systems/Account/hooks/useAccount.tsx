@@ -36,6 +36,10 @@ export function useAccounts() {
     navigate(Pages.accounts());
   }
 
+  function goToAdd() {
+    navigate(Pages.accountAdd());
+  }
+
   useEffect(() => {
     if (shouldListen.current) {
       shouldListen.current = false;
@@ -49,8 +53,10 @@ export function useAccounts() {
   return {
     handlers: {
       goToList,
+      goToAdd,
       setBalanceVisibility: store.setBalanceVisibility,
       selectAccount: store.selectAccount,
+      addAccount: store.addAccount,
     },
     isLoading: isLoading && !accounts,
     accounts,
