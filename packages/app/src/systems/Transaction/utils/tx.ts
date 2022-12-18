@@ -34,13 +34,20 @@ import {
 } from 'fuels';
 
 import type {
+  Coin,
+  GetFeeFromReceiptsParams,
   GetFeeParams,
+  GetGasUsedContractCreatedParams,
+  GetGasUsedParams,
+  GetOperationParams,
   GqlTransactionStatus,
+  InputOutputParam,
   Operation,
   ParseTxParams,
+  ReceiptParam,
   Tx,
 } from './tx.types';
-import { Type, Status } from './tx.types';
+import { Operations, Type, Status } from './tx.types';
 
 export const getStatus = (
   gqlStatus?: GqlTransactionStatus
