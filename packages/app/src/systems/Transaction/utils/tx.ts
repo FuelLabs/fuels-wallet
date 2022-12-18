@@ -219,7 +219,7 @@ export function getReceiptsMessageOut(receipts: TransactionResultReceipt[]) {
   );
 }
 
-export function getType(transactionType?: TransactionType): Type | undefined {
+export function getType(transactionType: TransactionType): Type {
   switch (transactionType) {
     case TransactionType.Mint:
       return Type.mint;
@@ -228,7 +228,7 @@ export function getType(transactionType?: TransactionType): Type | undefined {
     case TransactionType.Script:
       return Type.script;
     default:
-      return undefined;
+      throw new Error('Unknown transaction type');
   }
 }
 
