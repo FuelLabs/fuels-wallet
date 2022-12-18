@@ -511,7 +511,7 @@ describe('Tx util', () => {
     // fee from transfer operations
     it('should getFeeFromReceipts return fee from receipts', () => {
       const fee = getFeeFromReceipts({
-        gasPrice: MOCK_TRANSACTION_CONTRACT_CALL.gasPrice,
+        gasPrice: bn(MOCK_TRANSACTION_CONTRACT_CALL.gasPrice),
         receipts: MOCK_RECEIPTS_CONTRACT_CALL,
         gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
       });
