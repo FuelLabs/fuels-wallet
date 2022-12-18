@@ -16,11 +16,10 @@ export enum Operations {
   contractCall = 'Contract call',
 }
 
-export enum GqlTransactionStatus {
-  failure = 'FailureStatus',
-  pending = 'SubmittedStatus',
-  success = 'SuccessStatus',
-}
+export type GqlTransactionStatus =
+  | 'FailureStatus'
+  | 'SubmittedStatus'
+  | 'SuccessStatus';
 
 export enum Status {
   pending = 'Pending',

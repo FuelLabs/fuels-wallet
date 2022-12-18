@@ -44,51 +44,39 @@ import {
   isTypeScript,
   parseTx,
 } from './tx';
-import { GqlTransactionStatus, Operations, Status, Type } from './tx.types';
+import { Operations, Status, Type } from './tx.types';
 
 describe('Tx util', () => {
   describe('getStatus', () => {
     it('should return correct status', () => {
-      expect(getStatus(GqlTransactionStatus.failure)).toEqual(Status.failure);
-      expect(getStatus(GqlTransactionStatus.success)).toEqual(Status.success);
-      expect(getStatus(GqlTransactionStatus.pending)).toEqual(Status.pending);
+      expect(getStatus('FailureStatus')).toEqual(Status.failure);
+      expect(getStatus('SuccessStatus')).toEqual(Status.success);
+      expect(getStatus('SubmittedStatus')).toEqual(Status.pending);
       expect(getStatus()).toBeUndefined();
     });
     it('should isStatus return by type', () => {
-      expect(
-        isStatus(GqlTransactionStatus.success, Status.success)
-      ).toBeTruthy();
-      expect(
-        isStatus(GqlTransactionStatus.pending, Status.pending)
-      ).toBeTruthy();
-      expect(
-        isStatus(GqlTransactionStatus.failure, Status.failure)
-      ).toBeTruthy();
+      expect(isStatus('SuccessStatus', Status.success)).toBeTruthy();
+      expect(isStatus('SubmittedStatus', Status.pending)).toBeTruthy();
+      expect(isStatus('FailureStatus', Status.failure)).toBeTruthy();
 
-      expect(
-        isStatus(GqlTransactionStatus.success, Status.pending)
-      ).toBeFalsy();
-      expect(
-        isStatus(GqlTransactionStatus.pending, Status.failure)
-      ).toBeFalsy();
-      expect(
-        isStatus(GqlTransactionStatus.failure, Status.success)
-      ).toBeFalsy();
+      expect(isStatus('SuccessStatus', Status.pending)).toBeFalsy();
+      expect(isStatus('SubmittedStatus', Status.failure)).toBeFalsy();
+      expect(isStatus('FailureStatus', Status.success)).toBeFalsy();
     });
     it('should isStatusSuccess return if is success', () => {
-      expect(isStatusSuccess(GqlTransactionStatus.success)).toBeTruthy();
-      expect(isStatusSuccess(GqlTransactionStatus.pending)).toBeFalsy();
-      expect(isStatusSuccess(GqlTransactionStatus.failure)).toBeFalsy();
+      expect(isStatusSuccess('SuccessStatus')).toBeTruthy();
+      expect(isStatusSuccess('SubmittedStatus')).toBeFalsy();
+      expect(isStatusSuccess('FailureStatus')).toBeFalsy();
     });
     it('should isStatusPending return if is pending', () => {
-      expect(isStatusPending(GqlTransactionStatus.pending)).toBeTruthy();
-      expect(isStatusPending(GqlTransactionStatus.success)).toBeFalsy();
-      expect(isStatusPending(GqlTransactionStatus.failure)).toBeFalsy();
+      expect(isStatusPending('SubmittedStatus')).toBeTruthy();
+      expect(isStatusPending('SuccessStatus')).toBeFalsy();
+      expect(isStatusPending('FailureStatus')).toBeFalsy();
     });
     it('should isStatusFailure return if is script', () => {
-      expect(isStatusFailure(GqlTransactionStatus.failure)).toBeTruthy();
-      expect(isStatusFailure(GqlTransactionStatus.success)).toBeFalsy();
-      expect(isStatusFailure(GqlTransactionStatus.pending)).toBeFalsy();
+      expect(isStatusFailure('FailureStatus')).toBeTruthy();
+      expect(isStatusFailure('SuccessStatus')).toBeFalsy();
+      expect(isStatusFailure('SubmittedStatus')).toBeFalsy();
     });
   });
 
@@ -535,7 +523,7 @@ describe('Tx util', () => {
         receipts: MOCK_RECEIPTS_CONTRACT_CALL,
         gasPerByte: MOCK_GAS_PER_BYTE,
         gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
-        gqlStatus: GqlTransactionStatus.success,
+        gqlStatus: 'SuccessStatus',
         id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7',
       });
 
