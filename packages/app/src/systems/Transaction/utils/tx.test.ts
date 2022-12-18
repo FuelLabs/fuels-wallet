@@ -253,7 +253,6 @@ describe('Tx util', () => {
       expect(getType(TransactionType.Create)).toEqual(Type.create);
       expect(getType(TransactionType.Script)).toEqual(Type.script);
       expect(getType(TransactionType.Mint)).toEqual(Type.mint);
-      expect(getType()).toBeUndefined();
     });
     it('should isType return by type', () => {
       expect(isType(TransactionType.Create, Type.create)).toBeTruthy();
