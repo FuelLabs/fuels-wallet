@@ -11,7 +11,6 @@ import {
   MOCK_RECEIPT_CALL,
   MOCK_GAS_PER_BYTE,
   MOCK_GAS_PRICE_FACTOR,
-  MOCK_PARSED_TX_CONTRACT_CALL,
 } from '../__mocks__/tx';
 
 import {
@@ -560,10 +559,6 @@ describe('Tx util', () => {
       expect(tx.totalAssetsSent[0]?.assetId).toEqual(MOCK_RECEIPT_CALL.assetId);
       expect(tx.totalAssetsSent[0]?.amount.valueOf()).toEqual(
         MOCK_RECEIPT_CALL.amount.valueOf()
-      );
-
-      expect(JSON.stringify(tx)).toEqual(
-        JSON.stringify(MOCK_PARSED_TX_CONTRACT_CALL)
       );
     });
   });
