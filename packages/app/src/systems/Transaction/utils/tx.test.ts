@@ -536,9 +536,9 @@ describe('Tx util', () => {
         '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7'
       );
       expect(tx.status).toEqual(Status.success);
-      expect(tx.isStatusFailure).toEqual(false);
+      expect(tx.isStatusSuccess).toEqual(true);
       expect(tx.isStatusPending).toEqual(false);
-      expect(tx.isStatusFailure).toEqual(true);
+      expect(tx.isStatusFailure).toEqual(false);
       expect(tx.type).toEqual(Type.script);
       expect(tx.isTypeScript).toEqual(true);
       expect(tx.isTypeCreate).toEqual(false);
