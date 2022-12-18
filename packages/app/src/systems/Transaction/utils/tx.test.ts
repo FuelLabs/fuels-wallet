@@ -18,7 +18,6 @@ import {
   addOperation,
   getFee,
   getFeeFromReceipts,
-  getFlags,
   getFromAddress,
   getGasUsed,
   getGasUsedFromReceipts,
@@ -32,109 +31,139 @@ import {
   getOutputsContract,
   getOutputsContractCreated,
   getOutputsMessage,
-  getReceiptsCall,
-  getReceiptsLog,
-  getReceiptsLogData,
-  getReceiptsMessageOut,
-  getReceiptsPanic,
-  getReceiptsReturn,
-  getReceiptsReturnData,
-  getReceiptsRevert,
-  getReceiptsScriptResult,
-  getReceiptsTransfer,
-  getReceiptsTransferOut,
   getStatus,
   getTotalAssetsSent,
   getType,
-  Operations,
+  isStatus,
+  isStatusFailure,
+  isStatusPending,
+  isStatusSuccess,
+  isType,
+  isTypeCreate,
+  isTypeMint,
+  isTypeScript,
   parseTx,
-  Status,
-  Type,
 } from './tx';
+import { GqlTransactionStatus, Operations, Status, Type } from './tx.types';
 
 describe('Tx util', () => {
-  describe('getTxStatus', () => {
+  describe('getStatus', () => {
     it('should return correct status', () => {
-      expect(getStatus('FailureStatus')).toEqual(Status.failure);
-      expect(getStatus('SuccessStatus')).toEqual(Status.success);
-      expect(getStatus('SubmittedStatus')).toEqual(Status.pending);
+      expect(getStatus(GqlTransactionStatus.failure)).toEqual(Status.failure);
+      expect(getStatus(GqlTransactionStatus.success)).toEqual(Status.success);
+      expect(getStatus(GqlTransactionStatus.pending)).toEqual(Status.pending);
       expect(getStatus()).toBeUndefined();
+    });
+    it('should isStatus return by type', () => {
+      expect(
+        isStatus(GqlTransactionStatus.success, Status.success)
+      ).toBeTruthy();
+      expect(
+        isStatus(GqlTransactionStatus.pending, Status.pending)
+      ).toBeTruthy();
+      expect(
+        isStatus(GqlTransactionStatus.failure, Status.failure)
+      ).toBeTruthy();
+
+      expect(
+        isStatus(GqlTransactionStatus.success, Status.pending)
+      ).toBeFalsy();
+      expect(
+        isStatus(GqlTransactionStatus.pending, Status.failure)
+      ).toBeFalsy();
+      expect(
+        isStatus(GqlTransactionStatus.failure, Status.success)
+      ).toBeFalsy();
+    });
+    it('should isStatusSuccess return if is success', () => {
+      expect(isStatusSuccess(GqlTransactionStatus.success)).toBeTruthy();
+      expect(isStatusSuccess(GqlTransactionStatus.pending)).toBeFalsy();
+      expect(isStatusSuccess(GqlTransactionStatus.failure)).toBeFalsy();
+    });
+    it('should isStatusPending return if is pending', () => {
+      expect(isStatusPending(GqlTransactionStatus.pending)).toBeTruthy();
+      expect(isStatusPending(GqlTransactionStatus.success)).toBeFalsy();
+      expect(isStatusPending(GqlTransactionStatus.failure)).toBeFalsy();
+    });
+    it('should isStatusFailure return if is script', () => {
+      expect(isStatusFailure(GqlTransactionStatus.failure)).toBeTruthy();
+      expect(isStatusFailure(GqlTransactionStatus.success)).toBeFalsy();
+      expect(isStatusFailure(GqlTransactionStatus.pending)).toBeFalsy();
     });
   });
 
   describe('getInputs', () => {
     it('should getInputsCoin return correct inputs', () => {
-      const inputs = getInputsCoin(MOCK_TRANSACTION_CONTRACT_CALL);
+      const inputs = getInputsCoin(MOCK_TRANSACTION_CONTRACT_CALL.inputs || []);
       expect(JSON.stringify(inputs)).toEqual(JSON.stringify([MOCK_INPUT_COIN]));
-      expect(getInputsCoin()).toEqual([]);
     });
 
     it('should getInputsContract return correct inputs', () => {
-      const inputs = getInputsContract(MOCK_TRANSACTION_CONTRACT_CALL);
+      const inputs = getInputsContract(
+        MOCK_TRANSACTION_CONTRACT_CALL.inputs || []
+      );
       expect(JSON.stringify(inputs)).toEqual(
         JSON.stringify([MOCK_INPUT_CONTRACT])
       );
-      expect(getInputsContract()).toEqual([]);
     });
 
     it('should getInputsMessage return correct inputs', () => {
-      const inputs = getInputsMessage(MOCK_TRANSACTION_CONTRACT_CALL);
+      const inputs = getInputsMessage(
+        MOCK_TRANSACTION_CONTRACT_CALL.inputs || []
+      );
       // TODO: add a real test here... for now we don't even support message inputs in screens
       expect(JSON.stringify(inputs)).toEqual(JSON.stringify([]));
-      expect(getInputsMessage()).toEqual([]);
     });
 
     it('should getInputContractFromIndex return correct inputs', () => {
       const contractOutput = getOutputsContract(
-        MOCK_TRANSACTION_CONTRACT_CALL
+        MOCK_TRANSACTION_CONTRACT_CALL.outputs || []
       )?.[0];
       const input = getInputContractFromIndex(
-        MOCK_TRANSACTION_CONTRACT_CALL,
+        MOCK_TRANSACTION_CONTRACT_CALL.inputs || [],
         contractOutput.inputIndex
       );
       // TODO: add a real test here... for now we don't even support message inputs in screens
       expect(JSON.stringify(input)).toEqual(
         JSON.stringify(MOCK_INPUT_CONTRACT)
       );
-      expect(getInputContractFromIndex()).toBeUndefined();
-      expect(
-        getInputContractFromIndex(MOCK_TRANSACTION_CONTRACT_CALL)
-      ).toBeUndefined();
     });
   });
 
   describe('getFromAddress', () => {
     it('should return correct fromAddress', () => {
       const fromAddress = MOCK_INPUT_COIN.owner;
-      expect(getFromAddress(MOCK_TRANSACTION_CONTRACT_CALL)).toEqual(
-        fromAddress
-      );
-      expect(getFromAddress()).toBeUndefined();
+      expect(
+        getFromAddress(MOCK_TRANSACTION_CONTRACT_CALL.inputs || [])
+      ).toEqual(fromAddress);
     });
   });
 
   describe('getOutputs', () => {
     it('should getOutputsCoin return correct outputs', () => {
-      const outputs = getOutputsCoin(MOCK_TRANSACTION_CONTRACT_CALL);
+      const outputs = getOutputsCoin(
+        MOCK_TRANSACTION_CONTRACT_CALL.outputs || []
+      );
       // TODO: add a real test here...
       expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-      expect(getInputsCoin()).toEqual([]);
     });
 
     it('should getOutputsContract return correct outputs', () => {
-      const outputs = getOutputsContract(MOCK_TRANSACTION_CONTRACT_CALL);
+      const outputs = getOutputsContract(
+        MOCK_TRANSACTION_CONTRACT_CALL.outputs || []
+      );
       // TODO: add a real test here...
       expect(JSON.stringify(outputs)).toEqual(
         JSON.stringify([MOCK_OUTPUT_CONTRACT])
       );
-      expect(getInputsCoin()).toEqual([]);
     });
 
     it('should getOutputsMessage return correct outputs', () => {
-      const outputs = getOutputsMessage(MOCK_TRANSACTION_CONTRACT_CALL);
+      const outputs = getOutputsMessage(
+        MOCK_TRANSACTION_CONTRACT_CALL.outputs || []
+      );
       // TODO: add a real test here... for now we don't even support message outputs in screens
       expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-      expect(getOutputsMessage()).toEqual([]);
     });
 
     it('should getOutputsVariable return correct outputs', () => {
@@ -145,98 +174,90 @@ describe('Tx util', () => {
     });
 
     it('should getOutputsChange return correct outputs', () => {
-      const outputs = getOutputsChange(MOCK_TRANSACTION_CONTRACT_CALL);
+      const outputs = getOutputsChange(
+        MOCK_TRANSACTION_CONTRACT_CALL.outputs || []
+      );
       expect(JSON.stringify(outputs)).toEqual(
         JSON.stringify([MOCK_OUTPUT_CHANGE])
       );
-      expect(getOutputsChange()).toEqual([]);
     });
 
     it('should getOutputsContractCreated return correct outputs', () => {
-      const outputs = getOutputsContractCreated(MOCK_TRANSACTION_CONTRACT_CALL);
+      const outputs = getOutputsContractCreated(
+        MOCK_TRANSACTION_CONTRACT_CALL.outputs || []
+      );
       // TODO: add a real test here... for now we don't have this mocked transaction YET
       expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-      expect(getOutputsContractCreated()).toEqual([]);
     });
   });
 
   describe('getReceipts', () => {
-    it('should getReceiptsCall return correct receipts', () => {
-      const outputs = getReceiptsCall();
-      // TODO: add a real test here... for now we don't have this mocked transaction YET
-      expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-      expect(getReceiptsCall()).toEqual([]);
-    });
-
-    it('should getReceiptsReturn return correct receipts', () => {
-      const outputs = getReceiptsReturn();
-      // TODO: add a real test here... for now we don't have this mocked transaction YET
-      expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-      expect(getReceiptsReturn()).toEqual([]);
-    });
-
-    it('should getReceiptsReturnData return correct receipts', () => {
-      const outputs = getReceiptsReturnData();
-      // TODO: add a real test here... for now we don't have this mocked transaction YET
-      expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-      expect(getReceiptsReturnData()).toEqual([]);
-    });
-
-    it('should getReceiptsPanic return correct receipts', () => {
-      const outputs = getReceiptsPanic();
-      // TODO: add a real test here... for now we don't have this mocked transaction YET
-      expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-      expect(getReceiptsPanic()).toEqual([]);
-    });
-
-    it('should getReceiptsRevert return correct receipts', () => {
-      const outputs = getReceiptsRevert();
-      // TODO: add a real test here... for now we don't have this mocked transaction YET
-      expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-      expect(getReceiptsRevert()).toEqual([]);
-    });
-
-    it('should getReceiptsLog return correct receipts', () => {
-      const outputs = getReceiptsLog();
-      // TODO: add a real test here... for now we don't have this mocked transaction YET
-      expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-      expect(getReceiptsLog()).toEqual([]);
-    });
-
-    it('should getReceiptsLogData return correct receipts', () => {
-      const outputs = getReceiptsLogData();
-      // TODO: add a real test here... for now we don't have this mocked transaction YET
-      expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-      expect(getReceiptsLogData()).toEqual([]);
-    });
-
-    it('should getReceiptsTransfer return correct receipts', () => {
-      const outputs = getReceiptsTransfer();
-      // TODO: add a real test here... for now we don't have this mocked transaction YET
-      expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-      expect(getReceiptsTransfer()).toEqual([]);
-    });
-
-    it('should getReceiptsTransferOut return correct receipts', () => {
-      const outputs = getReceiptsTransferOut();
-      // TODO: add a real test here... for now we don't have this mocked transaction YET
-      expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-      expect(getReceiptsTransferOut()).toEqual([]);
-    });
-
-    it('should getReceiptsScriptResult return correct receipts', () => {
-      const outputs = getReceiptsScriptResult();
-      // TODO: add a real test here... for now we don't have this mocked transaction YET
-      expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-      expect(getReceiptsScriptResult()).toEqual([]);
-    });
-
-    it('should getReceiptsMessageOut return correct receipts', () => {
-      const outputs = getReceiptsMessageOut();
-      // TODO: add a real test here... for now we don't have this mocked transaction YET
-      expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-      expect(getReceiptsMessageOut()).toEqual([]);
-    });
+    // it('should getReceiptsCall return correct receipts', () => {
+    //   const outputs = getReceiptsCall();
+    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
+    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
+    //   expect(getReceiptsCall()).toEqual([]);
+    // });
+    // it('should getReceiptsReturn return correct receipts', () => {
+    //   const outputs = getReceiptsReturn();
+    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
+    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
+    //   expect(getReceiptsReturn()).toEqual([]);
+    // });
+    // it('should getReceiptsReturnData return correct receipts', () => {
+    //   const outputs = getReceiptsReturnData();
+    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
+    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
+    //   expect(getReceiptsReturnData()).toEqual([]);
+    // });
+    // it('should getReceiptsPanic return correct receipts', () => {
+    //   const outputs = getReceiptsPanic();
+    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
+    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
+    //   expect(getReceiptsPanic()).toEqual([]);
+    // });
+    // it('should getReceiptsRevert return correct receipts', () => {
+    //   const outputs = getReceiptsRevert();
+    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
+    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
+    //   expect(getReceiptsRevert()).toEqual([]);
+    // });
+    // it('should getReceiptsLog return correct receipts', () => {
+    //   const outputs = getReceiptsLog();
+    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
+    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
+    //   expect(getReceiptsLog()).toEqual([]);
+    // });
+    // it('should getReceiptsLogData return correct receipts', () => {
+    //   const outputs = getReceiptsLogData();
+    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
+    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
+    //   expect(getReceiptsLogData()).toEqual([]);
+    // });
+    // it('should getReceiptsTransfer return correct receipts', () => {
+    //   const outputs = getReceiptsTransfer();
+    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
+    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
+    //   expect(getReceiptsTransfer()).toEqual([]);
+    // });
+    // it('should getReceiptsTransferOut return correct receipts', () => {
+    //   const outputs = getReceiptsTransferOut();
+    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
+    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
+    //   expect(getReceiptsTransferOut()).toEqual([]);
+    // });
+    // it('should getReceiptsScriptResult return correct receipts', () => {
+    //   const outputs = getReceiptsScriptResult();
+    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
+    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
+    //   expect(getReceiptsScriptResult()).toEqual([]);
+    // });
+    // it('should getReceiptsMessageOut return correct receipts', () => {
+    //   const outputs = getReceiptsMessageOut();
+    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
+    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
+    //   expect(getReceiptsMessageOut()).toEqual([]);
+    // });
   });
 
   describe('getType', () => {
@@ -246,49 +267,35 @@ describe('Tx util', () => {
       expect(getType(TransactionType.Mint)).toEqual(Type.mint);
       expect(getType()).toBeUndefined();
     });
-  });
-
-  describe('getFlags', () => {
-    it('should getFlags return all false with no inputs', () => {
-      const flags = getFlags();
-      expect(flags.isStatusFailure).toEqual(false);
-      expect(flags.isStatusPending).toEqual(false);
-      expect(flags.isStatusSuccess).toEqual(false);
-      expect(flags.isTypeCreate).toEqual(false);
-      expect(flags.isTypeMint).toEqual(false);
-      expect(flags.isTypeScript).toEqual(false);
+    it('should isType return by type', () => {
+      expect(isType(TransactionType.Create, Type.create)).toBeTruthy();
+      expect(isType(TransactionType.Script, Type.script)).toBeTruthy();
+      expect(isType(TransactionType.Mint, Type.mint)).toBeTruthy();
+      expect(isType(TransactionType.Script, Type.create)).toBeFalsy();
+      expect(isType(TransactionType.Mint, Type.script)).toBeFalsy();
+      expect(isType(TransactionType.Create, Type.mint)).toBeFalsy();
     });
-
-    it('should getFlags return correct flags regarding status', () => {
-      const successFlags = getFlags(
-        MOCK_TRANSACTION_CONTRACT_CALL,
-        Status.success
-      );
-      expect(successFlags.isStatusFailure).toEqual(false);
-      expect(successFlags.isStatusPending).toEqual(false);
-      expect(successFlags.isStatusSuccess).toEqual(true);
+    it('should isTypeMint return if is mint', () => {
+      expect(isTypeMint(TransactionType.Mint)).toBeTruthy();
+      expect(isTypeMint(TransactionType.Script)).toBeFalsy();
+      expect(isTypeMint(TransactionType.Create)).toBeFalsy();
     });
-
-    it('should getFlags return correct flags regarding transaction type', () => {
-      const scriptFlags = getFlags({ type: TransactionType.Script });
-      expect(scriptFlags.isTypeCreate).toEqual(false);
-      expect(scriptFlags.isTypeMint).toEqual(false);
-      expect(scriptFlags.isTypeScript).toEqual(true);
-
-      const createFlags = getFlags({ type: TransactionType.Create });
-      expect(createFlags.isTypeCreate).toEqual(true);
-      expect(createFlags.isTypeMint).toEqual(false);
-      expect(createFlags.isTypeScript).toEqual(false);
-
-      const mintFlags = getFlags({ type: TransactionType.Mint });
-      expect(mintFlags.isTypeCreate).toEqual(false);
-      expect(mintFlags.isTypeMint).toEqual(true);
-      expect(mintFlags.isTypeScript).toEqual(false);
+    it('should isTypeCreate return if is create', () => {
+      expect(isTypeCreate(TransactionType.Create)).toBeTruthy();
+      expect(isTypeCreate(TransactionType.Script)).toBeFalsy();
+      expect(isTypeCreate(TransactionType.Mint)).toBeFalsy();
+    });
+    it('should isTypeScript return if is script', () => {
+      expect(isTypeScript(TransactionType.Script)).toBeTruthy();
+      expect(isTypeScript(TransactionType.Mint)).toBeFalsy();
+      expect(isTypeScript(TransactionType.Create)).toBeFalsy();
     });
   });
 
   describe('addOperation', () => {
-    const fromAddress = getFromAddress(MOCK_TRANSACTION_CONTRACT_CALL);
+    const fromAddress = getFromAddress(
+      MOCK_TRANSACTION_CONTRACT_CALL.inputs || []
+    );
     const OPERATION_CONTRACT_CALL = {
       name: Operations.contractCall,
       from: {
@@ -427,19 +434,23 @@ describe('Tx util', () => {
     // getTransferOperations
     // getPayProducerOperations
     it('should getOperations return contract call operations', () => {
-      const fromAddress = getFromAddress(MOCK_TRANSACTION_CONTRACT_CALL);
+      const fromAddress = getFromAddress(
+        MOCK_TRANSACTION_CONTRACT_CALL?.inputs || []
+      );
       const contractOutputs = getOutputsContract(
-        MOCK_TRANSACTION_CONTRACT_CALL
+        MOCK_TRANSACTION_CONTRACT_CALL.outputs || []
       );
       const contractInput = getInputContractFromIndex(
-        MOCK_TRANSACTION_CONTRACT_CALL,
+        MOCK_TRANSACTION_CONTRACT_CALL.inputs || [],
         contractOutputs[0].inputIndex
       );
 
-      const operations = getOperations(
-        MOCK_TRANSACTION_CONTRACT_CALL,
-        MOCK_RECEIPTS_CONTRACT_CALL
-      );
+      const operations = getOperations({
+        transactionType: MOCK_TRANSACTION_CONTRACT_CALL.type,
+        inputs: MOCK_TRANSACTION_CONTRACT_CALL.inputs || [],
+        outputs: MOCK_TRANSACTION_CONTRACT_CALL.outputs || [],
+        receipts: MOCK_RECEIPTS_CONTRACT_CALL,
+      });
       expect(operations.length).toEqual(1);
       expect(operations[0].name).toEqual(Operations.contractCall);
       expect(operations[0]?.from?.type).toEqual(AddressType.account);
@@ -464,10 +475,12 @@ describe('Tx util', () => {
   describe('getTotalAssetsSent', () => {
     // TODO: add other combinations of only 1 asset, 2 asset equals, different assets. check sums etcv
     it('should getTotalAssetsSent return total assets from contract call', () => {
-      const totalAssetsSent = getTotalAssetsSent(
-        MOCK_TRANSACTION_CONTRACT_CALL,
-        MOCK_RECEIPTS_CONTRACT_CALL
-      );
+      const totalAssetsSent = getTotalAssetsSent({
+        transactionType: MOCK_TRANSACTION_CONTRACT_CALL.type,
+        inputs: MOCK_TRANSACTION_CONTRACT_CALL.inputs || [],
+        outputs: MOCK_TRANSACTION_CONTRACT_CALL.outputs || [],
+        receipts: MOCK_RECEIPTS_CONTRACT_CALL,
+      });
       expect(totalAssetsSent[0]?.assetId).toEqual(MOCK_RECEIPT_CALL.assetId);
       expect(totalAssetsSent[0]?.amount.valueOf()).toEqual(
         MOCK_RECEIPT_CALL.amount.valueOf()
@@ -482,12 +495,12 @@ describe('Tx util', () => {
       expect(gasUsed.valueOf()).toEqual(bn(167824).valueOf());
     });
     it('should getGasUsed return gasUsed from tx', () => {
-      const gasUsed = getGasUsed(
-        MOCK_TRANSACTION_CONTRACT_CALL,
-        MOCK_RECEIPTS_CONTRACT_CALL,
-        MOCK_GAS_PER_BYTE,
-        MOCK_GAS_PRICE_FACTOR
-      );
+      const gasUsed = getGasUsed({
+        transaction: MOCK_TRANSACTION_CONTRACT_CALL,
+        receipts: MOCK_RECEIPTS_CONTRACT_CALL,
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
       expect(gasUsed.valueOf()).toEqual(bn(167824).valueOf());
     });
   });
@@ -497,20 +510,20 @@ describe('Tx util', () => {
     // fee from bytes of contract created transaction
     // fee from transfer operations
     it('should getFeeFromReceipts return fee from receipts', () => {
-      const fee = getFeeFromReceipts(
-        MOCK_TRANSACTION_CONTRACT_CALL.gasPrice,
-        MOCK_RECEIPTS_CONTRACT_CALL,
-        MOCK_GAS_PRICE_FACTOR
-      );
+      const fee = getFeeFromReceipts({
+        gasPrice: MOCK_TRANSACTION_CONTRACT_CALL.gasPrice,
+        receipts: MOCK_RECEIPTS_CONTRACT_CALL,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
       expect(fee.valueOf()).toEqual(bn(1).valueOf());
     });
     it('should getFee return fee from tx', () => {
-      const fee = getFee(
-        MOCK_TRANSACTION_CONTRACT_CALL,
-        MOCK_RECEIPTS_CONTRACT_CALL,
-        MOCK_GAS_PER_BYTE,
-        MOCK_GAS_PRICE_FACTOR
-      );
+      const fee = getFee({
+        transaction: MOCK_TRANSACTION_CONTRACT_CALL,
+        receipts: MOCK_RECEIPTS_CONTRACT_CALL,
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
       expect(fee.valueOf()).toEqual(bn(1).valueOf());
     });
   });
@@ -521,8 +534,8 @@ describe('Tx util', () => {
         transaction: MOCK_TRANSACTION_CONTRACT_CALL,
         receipts: MOCK_RECEIPTS_CONTRACT_CALL,
         gasPerByte: MOCK_GAS_PER_BYTE,
-        gasPriceFacor: MOCK_GAS_PRICE_FACTOR,
-        gqlStatus: 'SuccessStatus',
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+        gqlStatus: GqlTransactionStatus.success,
         id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7',
       });
 

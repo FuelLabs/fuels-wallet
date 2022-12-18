@@ -1,7 +1,5 @@
 import { AddressType } from '@fuel-wallet/types';
 import type {
-  BN,
-  BNInput,
   Input,
   InputCoin,
   InputContract,
@@ -12,7 +10,6 @@ import type {
   OutputContractCreated,
   OutputMessage,
   OutputVariable,
-  Transaction,
   TransactionResultCallReceipt,
   TransactionResultLogDataReceipt,
   TransactionResultLogReceipt,
@@ -36,57 +33,14 @@ import {
   OutputType,
 } from 'fuels';
 
-export enum Operations {
-  payBlockProducer = 'Pay network fee to block producer',
-  contractCreated = 'Contract created',
-  transfer = 'Transfer asset',
-  contractCall = 'Contract call',
-}
-
-// ANCHOR: START
-// TODO: this GqlTransactionStatus is temporary, should be replaced once TS SDK starts to return correct type
-export type GqlTransactionStatus =
-  | 'FailureStatus'
-  | 'SubmittedStatus'
-  | 'SuccessStatus';
-// ANCHOR: END
-
-export enum Status {
-  pending = 'Pending',
-  success = 'Success',
-  failure = 'Failure',
-}
-export enum Type {
-  create = 'Create',
-  mint = 'Mint',
-  script = 'Script',
-}
-
-export type Address = {
-  address: string;
-  type: AddressType;
-};
-
-export type Coin = {
-  assetId: string;
-  amount: BNInput;
-};
-
-export type Flags = {
-  isTypeMint?: boolean;
-  isTypeCreate?: boolean;
-  isTypeScript?: boolean;
-  isStatusPending?: boolean;
-  isStatusSuccess?: boolean;
-  isStatusFailure?: boolean;
-};
-
-export type Operation = {
-  name?: string;
-  from?: Address;
-  to?: Address;
-  assetsSent?: Array<Coin>;
-};
+import type {
+  GetFeeParams,
+  GqlTransactionStatus,
+  Operation,
+  ParseTxParams,
+  Tx,
+} from './tx.types';
+import { Type, Status } from './tx.types';
 
 export const getStatus = (
   gqlStatus?: GqlTransactionStatus
@@ -103,29 +57,29 @@ export const getStatus = (
   }
 };
 
-export function getInputsByType<T = Input>(tx?: Transaction, type?: InputType) {
-  return (tx?.inputs ?? []).filter((i) => i.type === type) as T[];
+export function getInputsByType<T = Input>(inputs: Input[], type: InputType) {
+  return (inputs ?? []).filter((i) => i.type === type) as T[];
 }
 
-export function getInputsCoin(tx?: Transaction) {
-  return getInputsByType<InputCoin>(tx, InputType.Coin);
+export function getInputsCoin(inputs: Input[]) {
+  return getInputsByType<InputCoin>(inputs, InputType.Coin);
 }
 
-export function getInputsContract(tx?: Transaction) {
-  return getInputsByType<InputContract>(tx, InputType.Contract);
+export function getInputsContract(inputs: Input[]) {
+  return getInputsByType<InputContract>(inputs, InputType.Contract);
 }
 
-export function getInputsMessage(tx?: Transaction) {
-  return getInputsByType<InputMessage>(tx, InputType.Message);
+export function getInputsMessage(inputs: Input[]) {
+  return getInputsByType<InputMessage>(inputs, InputType.Message);
 }
 
 export function getInputContractFromIndex(
-  tx?: Transaction,
-  inputIndex?: number
+  inputs: Input[],
+  inputIndex: number
 ): InputContract | undefined {
   if (inputIndex == null) return undefined;
 
-  const contractInput = tx?.inputs?.[inputIndex];
+  const contractInput = inputs?.[inputIndex];
 
   if (!contractInput) return undefined;
   if (contractInput.type !== InputType.Contract) {
@@ -135,122 +89,123 @@ export function getInputContractFromIndex(
   return contractInput as InputContract;
 }
 
-export function getFromAddress(tx?: Transaction) {
-  return getInputsCoin(tx)[0]?.owner.toString();
+export function getFromAddress(inputs: Input[]) {
+  // considering only one address will send coin inputs, we can safely get first one
+  return getInputsCoin(inputs)[0]?.owner.toString();
 }
 
 export function getOutputsByType<T = Output>(
-  tx?: Transaction,
-  type?: OutputType
+  outputs: Output[],
+  type: OutputType
 ) {
-  return (tx?.outputs ?? []).filter((o) => o.type === type) as T[];
+  return (outputs ?? []).filter((o) => o.type === type) as T[];
 }
 
-export function getOutputsCoin(tx?: Transaction) {
-  return getOutputsByType<OutputCoin>(tx, OutputType.Coin);
+export function getOutputsCoin(outputs: Output[]) {
+  return getOutputsByType<OutputCoin>(outputs, OutputType.Coin);
 }
 
-export function getOutputsContract(tx?: Transaction) {
-  return getOutputsByType<OutputContract>(tx, OutputType.Contract);
+export function getOutputsContract(outputs: Output[]) {
+  return getOutputsByType<OutputContract>(outputs, OutputType.Contract);
 }
 
-export function getOutputsMessage(tx?: Transaction) {
-  return getOutputsByType<OutputMessage>(tx, OutputType.Message);
+export function getOutputsMessage(outputs: Output[]) {
+  return getOutputsByType<OutputMessage>(outputs, OutputType.Message);
 }
 
-export function getOutputsChange(tx?: Transaction) {
-  return getOutputsByType<OutputCoin>(tx, OutputType.Change);
+export function getOutputsChange(outputs: Output[]) {
+  return getOutputsByType<OutputCoin>(outputs, OutputType.Change);
 }
 
-export function getOutputsVariable(tx?: Transaction) {
-  return getOutputsByType<OutputVariable>(tx, OutputType.Variable);
+export function getOutputsVariable(outputs: Output[]) {
+  return getOutputsByType<OutputVariable>(outputs, OutputType.Variable);
 }
 
-export function getOutputsContractCreated(tx?: Transaction) {
+export function getOutputsContractCreated(outputs: Output[]) {
   return getOutputsByType<OutputContractCreated>(
-    tx,
+    outputs,
     OutputType.ContractCreated
   );
 }
 
 export function getReceiptsByType<T = TransactionResultReceipt>(
-  receipts?: TransactionResultReceipt[],
-  type?: ReceiptType
+  receipts: TransactionResultReceipt[],
+  type: ReceiptType
 ) {
   return (receipts ?? []).filter((r) => r.type === type) as T[];
 }
 
-export function getReceiptsCall(receipts?: TransactionResultReceipt[]) {
+export function getReceiptsCall(receipts: TransactionResultReceipt[]) {
   return getReceiptsByType<TransactionResultCallReceipt>(
     receipts,
     ReceiptType.Call
   );
 }
 
-export function getReceiptsReturn(receipts?: TransactionResultReceipt[]) {
+export function getReceiptsReturn(receipts: TransactionResultReceipt[]) {
   return getReceiptsByType<TransactionResultReturnReceipt>(
     receipts,
     ReceiptType.Return
   );
 }
 
-export function getReceiptsReturnData(receipts?: TransactionResultReceipt[]) {
+export function getReceiptsReturnData(receipts: TransactionResultReceipt[]) {
   return getReceiptsByType<TransactionResultReturnDataReceipt>(
     receipts,
     ReceiptType.ReturnData
   );
 }
 
-export function getReceiptsPanic(receipts?: TransactionResultReceipt[]) {
+export function getReceiptsPanic(receipts: TransactionResultReceipt[]) {
   return getReceiptsByType<TransactionResultPanicReceipt>(
     receipts,
     ReceiptType.Panic
   );
 }
 
-export function getReceiptsRevert(receipts?: TransactionResultReceipt[]) {
+export function getReceiptsRevert(receipts: TransactionResultReceipt[]) {
   return getReceiptsByType<TransactionResultRevertReceipt>(
     receipts,
     ReceiptType.Revert
   );
 }
 
-export function getReceiptsLog(receipts?: TransactionResultReceipt[]) {
+export function getReceiptsLog(receipts: TransactionResultReceipt[]) {
   return getReceiptsByType<TransactionResultLogReceipt>(
     receipts,
     ReceiptType.Log
   );
 }
 
-export function getReceiptsLogData(receipts?: TransactionResultReceipt[]) {
+export function getReceiptsLogData(receipts: TransactionResultReceipt[]) {
   return getReceiptsByType<TransactionResultLogDataReceipt>(
     receipts,
     ReceiptType.LogData
   );
 }
 
-export function getReceiptsTransfer(receipts?: TransactionResultReceipt[]) {
+export function getReceiptsTransfer(receipts: TransactionResultReceipt[]) {
   return getReceiptsByType<TransactionResultTransferReceipt>(
     receipts,
     ReceiptType.Transfer
   );
 }
 
-export function getReceiptsTransferOut(receipts?: TransactionResultReceipt[]) {
+export function getReceiptsTransferOut(receipts: TransactionResultReceipt[]) {
   return getReceiptsByType<TransactionResultTransferOutReceipt>(
     receipts,
     ReceiptType.TransferOut
   );
 }
 
-export function getReceiptsScriptResult(receipts?: TransactionResultReceipt[]) {
+export function getReceiptsScriptResult(receipts: TransactionResultReceipt[]) {
   return getReceiptsByType<TransactionResultScriptResultReceipt>(
     receipts,
     ReceiptType.ScriptResult
   );
 }
 
-export function getReceiptsMessageOut(receipts?: TransactionResultReceipt[]) {
+export function getReceiptsMessageOut(receipts: TransactionResultReceipt[]) {
   return getReceiptsByType<TransactionResultMessageOutReceipt>(
     receipts,
     ReceiptType.MessageOut
@@ -270,17 +225,43 @@ export function getType(transactionType?: TransactionType): Type | undefined {
   }
 }
 
-export function getFlags(tx?: Transaction, status?: Status): Flags {
-  const type = getType(tx?.type);
+export function isType(transactionType: TransactionType, type: Type) {
+  const txType = getType(transactionType);
 
-  return {
-    isTypeMint: type === Type.mint,
-    isTypeCreate: type === Type.create,
-    isTypeScript: type === Type.script,
-    isStatusPending: status === Status.pending,
-    isStatusSuccess: status === Status.success,
-    isStatusFailure: status === Status.failure,
-  };
+  return txType === type;
+}
+
+export function isTypeMint(transactionType: TransactionType) {
+  return isType(transactionType, Type.mint);
+}
+
+export function isTypeCreate(transactionType: TransactionType) {
+  return isType(transactionType, Type.create);
+}
+
+export function isTypeScript(transactionType: TransactionType) {
+  return isType(transactionType, Type.script);
+}
+
+export function isStatus(
+  transactionStatus?: GqlTransactionStatus,
+  status?: Status
+) {
+  const txStatus = getStatus(transactionStatus);
+
+  return transactionStatus && status === txStatus;
+}
+
+export function isStatusPending(transactionStatus?: GqlTransactionStatus) {
+  return isStatus(transactionStatus, Status.pending);
+}
+
+export function isStatusSuccess(transactionStatus?: GqlTransactionStatus) {
+  return isStatus(transactionStatus, Status.success);
+}
+
+export function isStatusFailure(transactionStatus?: GqlTransactionStatus) {
+  return isStatus(transactionStatus, Status.failure);
 }
 
 export function addOperation(operations: Operation[], toAdd: Operation) {
@@ -335,16 +316,18 @@ export function addOperation(operations: Operation[], toAdd: Operation) {
 
   return [...operations, toAdd];
 }
-
-export function getContractCreatedOperations(tx?: Transaction): Operation[] {
-  const contractCreatedOutputs = getOutputsContractCreated(tx);
+export function getContractCreatedOperations({
+  inputs,
+  outputs,
+}: InputOutputParam): Operation[] {
+  const contractCreatedOutputs = getOutputsContractCreated(outputs);
   const contractCreatedOperations = contractCreatedOutputs.reduce(
     (prev, contractCreatedOutput) => {
       const operations = addOperation(prev, {
         name: Operations.contractCreated,
         from: {
           type: AddressType.account,
-          address: getFromAddress(tx),
+          address: getFromAddress(inputs),
         },
         to: {
           type: AddressType.contract,
@@ -360,9 +343,12 @@ export function getContractCreatedOperations(tx?: Transaction): Operation[] {
   return contractCreatedOperations;
 }
 
-export function getTransferOperations(tx?: Transaction): Operation[] {
-  const coinInputs = getInputsCoin(tx);
-  const coinOutputs = getOutputsCoin(tx);
+export function getTransferOperations({
+  inputs,
+  outputs,
+}: InputOutputParam): Operation[] {
+  const coinInputs = getInputsCoin(inputs);
+  const coinOutputs = getOutputsCoin(outputs);
 
   const operations = coinInputs.reduce((prevInput, input) => {
     const outputOps = coinOutputs.reduce((prevOutput, output) => {
@@ -398,8 +384,8 @@ export function getTransferOperations(tx?: Transaction): Operation[] {
   return operations;
 }
 
-export function getPayProducerOperations(tx?: Transaction): Operation[] {
-  const coinOutputs = getOutputsCoin(tx);
+export function getPayProducerOperations(outputs: Output[]): Operation[] {
+  const coinOutputs = getOutputsCoin(outputs);
   const payProducerOperations = coinOutputs.reduce((prev, output) => {
     const operations = addOperation(prev, {
       name: Operations.payBlockProducer,
@@ -425,17 +411,21 @@ export function getPayProducerOperations(tx?: Transaction): Operation[] {
   return payProducerOperations;
 }
 
-export function getContractCallOperations(
-  tx?: Transaction,
-  receipts?: TransactionResultReceipt[]
-): Operation[] {
+export function getContractCallOperations({
+  inputs,
+  outputs,
+  receipts,
+}: InputOutputParam & ReceiptParam): Operation[] {
   const contractCallReceipts = getReceiptsCall(receipts);
-  const fromAddress = getFromAddress(tx);
-  const contractOutputs = getOutputsContract(tx);
+  const fromAddress = getFromAddress(inputs);
+  const contractOutputs = getOutputsContract(outputs);
 
   const contractCallOperations = contractOutputs.reduce(
     (prevOutputCallOps, output) => {
-      const contractInput = getInputContractFromIndex(tx, output.inputIndex);
+      const contractInput = getInputContractFromIndex(
+        inputs,
+        output.inputIndex
+      );
 
       if (contractInput) {
         const newCallOps = contractCallReceipts.reduce(
@@ -478,35 +468,45 @@ export function getContractCallOperations(
   return contractCallOperations;
 }
 
-export function getOperations(
-  tx?: Transaction,
-  receipts?: TransactionResultReceipt[]
-): Operation[] {
-  const { isTypeCreate, isTypeMint, isTypeScript } = getFlags(tx);
-
-  if (isTypeCreate) {
-    return [...getContractCreatedOperations(tx), ...getTransferOperations(tx)];
-  }
-
-  if (isTypeMint) {
-    return [...getPayProducerOperations(tx)];
-  }
-
-  if (isTypeScript) {
+export function getOperations({
+  transactionType,
+  inputs,
+  outputs,
+  receipts,
+}: GetOperationParams): Operation[] {
+  if (isTypeCreate(transactionType)) {
     return [
-      ...getTransferOperations(tx),
-      ...getContractCallOperations(tx, receipts),
+      ...getContractCreatedOperations({ inputs, outputs }),
+      ...getTransferOperations({ inputs, outputs }),
+    ];
+  }
+
+  if (isTypeMint(transactionType)) {
+    return [...getPayProducerOperations(outputs)];
+  }
+
+  if (isTypeScript(transactionType)) {
+    return [
+      ...getTransferOperations({ inputs, outputs }),
+      ...getContractCallOperations({ inputs, outputs, receipts }),
     ];
   }
 
   return [];
 }
 
-export function getTotalAssetsSent(
-  tx?: Transaction,
-  receipts?: TransactionResultReceipt[]
-): Coin[] {
-  const operations = getOperations(tx, receipts);
+export function getTotalAssetsSent({
+  transactionType,
+  inputs,
+  outputs,
+  receipts,
+}: GetOperationParams): Coin[] {
+  const operations = getOperations({
+    transactionType,
+    inputs,
+    outputs,
+    receipts,
+  });
   const assetsSent = operations.reduce((prev, op) => {
     const newAssetsSent = (op.assetsSent ?? []).reduce((prevOp, asset) => {
       const assetExists = prevOp.find((a) => a.assetId === asset.assetId);
@@ -526,29 +526,31 @@ export function getTotalAssetsSent(
   return assetsSent;
 }
 
-export function getGasUsedContractCreated(
-  tx?: Transaction,
-  gasPerByte?: BN,
-  gasPriceFacor?: BN
-) {
-  if (!getFlags(tx).isTypeCreate) return bn(0);
+export function getGasUsedContractCreated({
+  transaction,
+  gasPerByte,
+  gasPriceFactor,
+}: GetGasUsedContractCreatedParams) {
+  if (!isTypeCreate(transaction.type)) return bn(0);
 
-  const transactionBytes = tx ? new TransactionCoder().encode(tx) : [];
+  const transactionBytes = transaction
+    ? new TransactionCoder().encode(transaction)
+    : [];
   const witnessSize =
-    tx?.witnesses?.reduce((total, w) => total + w.dataLength, 0) || 0;
+    transaction?.witnesses?.reduce((total, w) => total + w.dataLength, 0) || 0;
   const txChargeableBytes = bn(transactionBytes.length - witnessSize);
 
   const gasUsed = bn(
     Math.ceil(
       (txChargeableBytes.toNumber() * bn(gasPerByte).toNumber()) /
-        bn(gasPriceFacor).toNumber()
+        bn(gasPriceFactor).toNumber()
     )
   );
 
   return gasUsed;
 }
 
-export function getGasUsedFromReceipts(receipts?: TransactionResultReceipt[]) {
+export function getGasUsedFromReceipts(receipts: TransactionResultReceipt[]) {
   const scriptReceipts = getReceiptsScriptResult(receipts);
   const gasUsed = scriptReceipts.reduce(
     (prev, receipt) => prev.add(receipt.gasUsed),
@@ -558,41 +560,48 @@ export function getGasUsedFromReceipts(receipts?: TransactionResultReceipt[]) {
   return gasUsed;
 }
 
-export function getGasUsed(
-  tx?: Transaction,
-  receipts?: TransactionResultReceipt[],
-  gasPerByte?: BN,
-  gasPriceFacor?: BN
-) {
-  const { isTypeCreate, isTypeScript } = getFlags(tx);
-
-  if (isTypeCreate) {
-    return getGasUsedContractCreated(tx, gasPerByte, gasPriceFacor);
+export function getGasUsed({
+  transaction,
+  receipts,
+  gasPerByte,
+  gasPriceFactor,
+}: GetGasUsedParams) {
+  if (isTypeCreate(transaction.type)) {
+    return getGasUsedContractCreated({
+      transaction,
+      gasPerByte,
+      gasPriceFactor,
+    });
   }
-  if (isTypeScript) return getGasUsedFromReceipts(receipts ?? []);
+  if (isTypeScript(transaction.type))
+    return getGasUsedFromReceipts(receipts ?? []);
 
   return bn(0);
 }
 
-export function getContractCreatedFee(
-  tx?: Transaction,
-  gasPerByte?: BN,
-  gasPriceFacor?: BN
-) {
-  const gasUsed = getGasUsedContractCreated(tx, gasPerByte, gasPriceFacor);
-  const txFee = gasUsed.mul(bn(tx?.gasPrice));
+export function getContractCreatedFee({
+  transaction,
+  gasPerByte,
+  gasPriceFactor,
+}: GetGasUsedContractCreatedParams) {
+  const gasUsed = getGasUsedContractCreated({
+    transaction,
+    gasPerByte,
+    gasPriceFactor,
+  });
+  const txFee = gasUsed.mul(bn(transaction.gasPrice));
 
   return txFee;
 }
 
-export function getFeeFromReceipts(
-  gasPrice?: BN,
-  receipts?: TransactionResultReceipt[],
-  gasPriceFacor?: BN
-) {
-  if (gasPrice?.toNumber() && gasPriceFacor?.toNumber()) {
+export function getFeeFromReceipts({
+  gasPrice,
+  receipts,
+  gasPriceFactor,
+}: GetFeeFromReceiptsParams) {
+  if (gasPrice.gt(0)) {
     const gasUsed = getGasUsedFromReceipts(receipts ?? []);
-    const fee = calculatePriceWithFactor(gasUsed, gasPrice, bn(gasPriceFacor));
+    const fee = calculatePriceWithFactor(gasUsed, gasPrice, gasPriceFactor);
 
     return fee;
   }
@@ -600,60 +609,56 @@ export function getFeeFromReceipts(
   return bn(0);
 }
 
-export function getFee(
-  tx?: Transaction,
-  receipts?: TransactionResultReceipt[],
-  gasPerByte?: BN,
-  gasPriceFacor?: BN
-) {
-  const { isTypeCreate, isTypeScript } = getFlags(tx);
+export function getFee({
+  transaction,
+  receipts,
+  gasPerByte,
+  gasPriceFactor,
+}: GetFeeParams) {
+  if (isTypeCreate(transaction.type)) {
+    return getContractCreatedFee({ transaction, gasPerByte, gasPriceFactor });
+  }
 
-  if (isTypeCreate) return getContractCreatedFee(tx, gasPerByte, gasPriceFacor);
-  if (isTypeScript) {
-    return getFeeFromReceipts(tx?.gasPrice, receipts, gasPriceFacor);
+  if (isTypeScript(transaction.type)) {
+    return getFeeFromReceipts({
+      gasPrice: bn(transaction.gasPrice),
+      receipts,
+      gasPriceFactor,
+    });
   }
 
   return bn(0);
 }
 
-export type ParseTxParams = {
-  transaction?: Transaction;
-  receipts?: TransactionResultReceipt[];
-  gqlStatus?: GqlTransactionStatus;
-  gasPerByte?: BN;
-  gasPriceFacor?: BN;
-  // ANCHOR: START
-  // TODO: for now we're receiving the id from the outside, but we should
-  // get it from gqlTransaction, which will be returned after refactor in SDK side
-  id?: string;
-  // ANCHOR: END
-};
-
-export type Tx = {
-  id?: string;
-  operations?: Operation[];
-  gasUsed?: BN;
-  fee?: BN;
-  type?: Type;
-  status?: Status;
-  totalAssetsSent?: Coin[];
-} & Flags;
-
 export function parseTx({
   transaction,
   receipts,
   gasPerByte,
-  gasPriceFacor,
+  gasPriceFactor,
   gqlStatus,
   id,
 }: ParseTxParams): Tx {
-  const type = getType(transaction?.type);
+  const type = getType(transaction.type);
   const status = getStatus(gqlStatus);
-  const flags = getFlags(transaction, status);
-  const gasUsed = getGasUsed(transaction, receipts, gasPerByte, gasPriceFacor);
-  const fee = getFee(transaction, receipts, gasPerByte, gasPriceFacor);
-  const operations = getOperations(transaction, receipts);
-  const totalAssetsSent = getTotalAssetsSent(transaction, receipts);
+  const gasUsed = getGasUsed({
+    transaction,
+    receipts,
+    gasPerByte,
+    gasPriceFactor,
+  });
+  const fee = getFee({ transaction, receipts, gasPerByte, gasPriceFactor });
+  const operations = getOperations({
+    transactionType: transaction.type,
+    inputs: transaction.inputs || [],
+    outputs: transaction.outputs || [],
+    receipts,
+  });
+  const totalAssetsSent = getTotalAssetsSent({
+    transactionType: transaction.type,
+    inputs: transaction.inputs || [],
+    outputs: transaction.outputs || [],
+    receipts,
+  });
 
   return {
     id,
@@ -663,6 +668,11 @@ export function parseTx({
     type,
     status,
     totalAssetsSent,
-    ...flags,
+    isTypeCreate: isTypeCreate(transaction.type),
+    isTypeScript: isTypeScript(transaction.type),
+    isTypeMint: isTypeMint(transaction.type),
+    isStatusFailure: isStatusFailure(gqlStatus),
+    isStatusSuccess: isStatusSuccess(gqlStatus),
+    isStatusPending: isStatusPending(gqlStatus),
   };
 }

@@ -5,7 +5,8 @@ import { useEffect } from 'react';
 import type { TransactionMachineState } from '../machines';
 import { TRANSACTION_ERRORS, transactionMachine } from '../machines';
 import type { TxInputs } from '../services';
-import { parseTx } from '../utils';
+
+import { useParseTx } from './useParseTx';
 
 import { ASSET_LIST } from '~/systems/Asset';
 import { useChainInfo } from '~/systems/Network';
@@ -38,15 +39,15 @@ export function useTransaction({
   const { error, gqlTransactionStatus, transaction, transactionResult, txId } =
     context;
 
-  const tx = parseTx({
+  const tx = useParseTx({
     transaction,
     receipts: transactionResult?.receipts,
     gasPerByte: chainInfo?.consensusParameters.gasPerByte,
-    gasPriceFacor: chainInfo?.consensusParameters.gasPriceFactor,
+    gasPriceFactor: chainInfo?.consensusParameters.gasPriceFactor,
     gqlStatus: gqlTransactionStatus,
     id: txId,
   });
-  const { isTypeMint, isStatusFailure, isStatusPending } = tx;
+  const { isTypeMint, isStatusFailure, isStatusPending } = tx!;
 
   const isInvalidTxId = error === TRANSACTION_ERRORS.INVALID_ID;
   const isTxNotFound = error === TRANSACTION_ERRORS.NOT_FOUND;
@@ -59,8 +60,9 @@ export function useTransaction({
   const shouldShowTxDetails = shouldShowTx && !isFetchingResult && !isTypeMint;
 
   const ethAmountSent = bn(
-    tx.totalAssetsSent?.find(({ assetId }) => assetId === ASSET_LIST[0].assetId)
-      ?.amount
+    tx?.totalAssetsSent?.find(
+      ({ assetId }) => assetId === ASSET_LIST[0].assetId
+    )?.amount
   );
 
   function getTransaction(input: TxInputs['fetch']) {

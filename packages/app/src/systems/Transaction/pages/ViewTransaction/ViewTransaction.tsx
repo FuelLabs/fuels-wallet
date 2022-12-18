@@ -44,7 +44,7 @@ export function ViewTransaction() {
       <Layout.Content>
         <Stack gap="$4">
           {shouldShowAlert && (
-            <TxStatusAlert txStatus={tx.status} error={error} />
+            <TxStatusAlert txStatus={tx?.status} error={error} />
           )}
           {shouldShowTx && (
             <>
@@ -54,7 +54,7 @@ export function ViewTransaction() {
                 status={tx?.status}
                 providerUrl={providerUrl}
               />
-              <TxOperations operations={tx.operations} status={tx?.status} />
+              <TxOperations operations={tx?.operations} status={tx?.status} />
             </>
           )}
           {isFetching && (
@@ -66,7 +66,7 @@ export function ViewTransaction() {
           )}
           {isFetchingDetails && <TxDetails.Loader />}
           {shouldShowTxDetails && (
-            <TxDetails fee={tx.fee} amountSent={ethAmountSent} />
+            <TxDetails fee={tx?.fee} amountSent={ethAmountSent} />
           )}
         </Stack>
       </Layout.Content>

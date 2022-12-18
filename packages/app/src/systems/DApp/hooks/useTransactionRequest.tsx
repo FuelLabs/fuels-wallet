@@ -8,7 +8,8 @@ import { useTransactionRequestMethods } from '../methods/transactionRequestMetho
 import { useAccounts } from '~/systems/Account';
 import { ASSET_LIST } from '~/systems/Asset';
 import { useChainInfo } from '~/systems/Network';
-import { getFilteredErrors, parseTx } from '~/systems/Transaction';
+import { getFilteredErrors } from '~/systems/Transaction';
+import { useParseTx } from '~/systems/Transaction/hooks/useParseTx';
 import type { TxInputs } from '~/systems/Transaction/services';
 
 const selectors = {
@@ -72,15 +73,16 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const isShowingInfo = useSelector(service, isShowingSelector);
 
   const { chainInfo } = useChainInfo(ctx.providerUrl);
-  const tx = parseTx({
+  const tx = useParseTx({
     transaction: ctx.transactionRequest?.toTransaction(),
     receipts: ctx.receipts,
     gasPerByte: chainInfo?.consensusParameters.gasPerByte,
-    gasPriceFacor: chainInfo?.consensusParameters.gasPriceFactor,
+    gasPriceFactor: chainInfo?.consensusParameters.gasPriceFactor,
   });
   const ethAmountSent = bn(
-    tx.totalAssetsSent?.find(({ assetId }) => assetId === ASSET_LIST[0].assetId)
-      ?.amount
+    tx?.totalAssetsSent?.find(
+      ({ assetId }) => assetId === ASSET_LIST[0].assetId
+    )?.amount
   );
 
   function approve() {

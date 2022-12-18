@@ -54,8 +54,8 @@ export function TransactionRequest() {
               </Copyable>
             </Card>
           )}
-          <TxOperations operations={tx.operations} />
-          <TxDetails fee={tx.fee} amountSent={ethAmountSent} />
+          <TxOperations operations={tx?.operations} />
+          <TxDetails fee={tx?.fee} amountSent={ethAmountSent} />
         </Stack>
       )}
       {ctx.approvedTx && (
