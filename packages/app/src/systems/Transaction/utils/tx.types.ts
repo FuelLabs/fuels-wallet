@@ -98,17 +98,17 @@ export type ParseTxParams = {
 };
 
 export type Tx = {
-  id?: string;
-  operations?: Operation[];
-  gasUsed?: BN;
-  fee?: BN;
-  type?: Type;
+  operations: Operation[];
+  gasUsed: BN;
+  fee: BN;
+  type: Type;
+  totalAssetsSent: Coin[];
+  isTypeMint: boolean;
+  isTypeCreate: boolean;
+  isTypeScript: boolean;
   status?: Status;
-  totalAssetsSent?: Coin[];
-  isTypeMint?: boolean;
-  isTypeCreate?: boolean;
-  isTypeScript?: boolean;
   isStatusPending?: boolean;
   isStatusSuccess?: boolean;
   isStatusFailure?: boolean;
+  id?: string;
 };

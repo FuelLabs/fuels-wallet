@@ -518,6 +518,10 @@ describe('Tx util', () => {
 
   describe('parseTx', () => {
     it('should parseTx return correct data for contract call transaction', () => {
+      const fromAddress = getFromAddress(
+        MOCK_TRANSACTION_CONTRACT_CALL.inputs || []
+      );
+
       const tx = parseTx({
         transaction: MOCK_TRANSACTION_CONTRACT_CALL,
         receipts: MOCK_RECEIPTS_CONTRACT_CALL,
@@ -526,6 +530,38 @@ describe('Tx util', () => {
         gqlStatus: 'SuccessStatus',
         id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7',
       });
+
+      expect(tx.fee?.toNumber()).toEqual(bn(1).toNumber());
+      expect(tx.gasUsed?.toNumber()).toEqual(bn(167824).toNumber());
+      expect(tx.id).toEqual(
+        '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7'
+      );
+      expect(tx.status).toEqual(Status.success);
+      expect(tx.isStatusFailure).toEqual(false);
+      expect(tx.isStatusPending).toEqual(false);
+      expect(tx.isStatusFailure).toEqual(true);
+      expect(tx.type).toEqual(Type.script);
+      expect(tx.isTypeScript).toEqual(true);
+      expect(tx.isTypeCreate).toEqual(false);
+      expect(tx.isTypeMint).toEqual(false);
+      expect(tx.operations.length).toEqual(1);
+      expect(tx.operations[0].name).toEqual(Operations.contractCall);
+      expect(tx.operations[0]?.from?.type).toEqual(AddressType.account);
+      expect(tx.operations[0]?.from?.address).toEqual(fromAddress);
+      expect(tx.operations[0]?.to?.type).toEqual(AddressType.contract);
+      expect(tx.operations[0]?.to?.address).toEqual(
+        '0x0a98320d39c03337401a4e46263972a9af6ce69ec2f35a5420b1bd35784c74b1'
+      );
+      expect(tx.operations[0].assetsSent?.[0]?.assetId).toEqual(
+        MOCK_RECEIPT_CALL.assetId
+      );
+      expect(tx.operations[0].assetsSent?.[0]?.amount.valueOf()).toEqual(
+        MOCK_RECEIPT_CALL.amount.valueOf()
+      );
+      expect(tx.totalAssetsSent[0]?.assetId).toEqual(MOCK_RECEIPT_CALL.assetId);
+      expect(tx.totalAssetsSent[0]?.amount.valueOf()).toEqual(
+        MOCK_RECEIPT_CALL.amount.valueOf()
+      );
 
       expect(JSON.stringify(tx)).toEqual(
         JSON.stringify(MOCK_PARSED_TX_CONTRACT_CALL)
