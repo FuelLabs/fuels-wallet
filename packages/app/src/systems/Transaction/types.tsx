@@ -17,6 +17,14 @@ export enum TxStatus {
   error,
 }
 
+export enum TxType {
+  SEND = 'send',
+  RECEIVE = 'receive',
+  CONTRACTCALL = 'contractcall',
+  SCRIPT = 'script',
+  PREDICATE = 'predicate',
+}
+
 export type TxRecipientAddress = {
   address: string;
   type: AddressType;

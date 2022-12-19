@@ -3,7 +3,7 @@ import { Card } from '@fuel-ui/react';
 import type { IContentLoaderProps } from 'react-content-loader';
 import ContentLoader from 'react-content-loader';
 
-export const TxItemLoader = (props: IContentLoaderProps) => (
+export const ActivityItemLoader = (props: IContentLoaderProps) => (
   <Card>
     <ContentLoader
       speed={2}

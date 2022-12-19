@@ -2,7 +2,7 @@ import type { Colors } from '@fuel-ui/css';
 import { Icon } from '@fuel-ui/react';
 import { TransactionType } from 'fuels';
 
-import { TxStatus } from '../types';
+import { TxStatus, TxType } from '../types';
 
 export const getTxStatus = (status: string = '') => {
   switch (status) {
@@ -56,14 +56,17 @@ export const getTransactionTypeText = (type?: TransactionType) => {
   }
 };
 
-export const getTxIcon = (type?: TransactionType) => {
+export const getTxIcon = (type?: TxType) => {
   switch (type) {
-    case TransactionType.Create:
+    case TxType.SEND:
       return Icon.is('UploadSimple');
-    case TransactionType.Mint:
+    case TxType.RECEIVE:
       return Icon.is('DownloadSimple');
-    case TransactionType.Script:
+    case TxType.SCRIPT:
+    case TxType.PREDICATE:
       return Icon.is('MagicWand');
+    case TxType.CONTRACTCALL:
+      return Icon.is('ArrowsLeftRight');
     default:
       return 'ArrowRight';
   }

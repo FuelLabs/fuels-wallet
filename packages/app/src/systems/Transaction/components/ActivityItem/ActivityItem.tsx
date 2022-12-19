@@ -1,56 +1,75 @@
 import { cssObj } from '@fuel-ui/css';
 import { Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
-import { getBlockExplorerLink } from '@fuel-wallet/sdk';
+import type { Address, BN } from 'fuels';
 import type { FC } from 'react';
 
-import type { Transaction } from '../../types';
+import { TxType } from '../../types';
+import type { Transaction, TxStatus } from '../../types';
 import { getTransactionTypeText, getTxStatusColor } from '../../utils';
 import { TxIcon } from '../TxIcon';
 
-import { TxItemLoader } from './TxActivityItemLoader';
+import { ActivityItemLoader } from './ActivityItemLoader';
+
+import { shortAddress } from '~/systems/Core';
 
 export type TxItemProps = {
   transaction: Transaction;
   providerUrl?: string;
+  amount?: BN;
+  date?: string;
+  to?: Address;
+  from?: Address;
+  asset?: string;
+  txType?: TxType;
+  txStatus?: TxStatus;
 };
 
 type TxItemComponent = FC<TxItemProps> & {
-  Loader: typeof TxItemLoader;
+  Loader: typeof ActivityItemLoader;
 };
 
-export const TxItem: TxItemComponent = ({ transaction, providerUrl = '' }) => {
-  const txColor = getTxStatusColor(transaction.status);
-  const txExplorerLink = getBlockExplorerLink({
-    path: `transaction/${transaction.id || ''}`,
-    providerUrl,
-  });
+export const ActivityItem: TxItemComponent = ({
+  transaction,
+  txStatus,
+  amount,
+  asset,
+  date,
+  to,
+  from,
+  txType,
+}) => {
+  const txColor = getTxStatusColor(txStatus);
+
+  const toOrFromText = txType === TxType.SEND ? 'From' : 'To';
+
+  const toOrFromAddress = txType === TxType.SEND ? from : to;
 
   return (
     <Card css={styles.root}>
-      <TxIcon transactionType={transaction.type} />
+      <TxIcon transactionType={txType} />
       <Flex direction="column" css={styles.contentWrapper}>
         <Flex css={styles.row}>
           <Flex css={styles.item}>
             <Text fontSize="sm">
-              {' '}
-              {getTransactionTypeText(transaction.type)}{' '}
+              {getTransactionTypeText(transaction.type)}
             </Text>
           </Flex>
 
           <Flex css={styles.item}>
             <Text color={txColor} fontSize="sm">
-              {' '}
-              0.245 ETH
+              {amount?.format()} {asset}
             </Text>
           </Flex>
         </Flex>
         <Flex css={styles.row}>
           <Flex css={styles.item}>
-            <Text fontSize="sm">To: </Text>
-            <Text fontSize="sm">0x00...0000</Text>
+            <Text fontSize="sm">{toOrFromText}: </Text>
+            <Text fontSize="sm">
+              {shortAddress(toOrFromAddress?.toString() || '')}
+            </Text>
             <Flex css={styles.item}>
               <Copyable
-                value={txExplorerLink}
+                value={transaction.id || ''}
                 css={{ mx: '$2' }}
                 iconProps={{
                   icon: Icon.is('CopySimple'),
@@ -61,7 +80,7 @@ export const TxItem: TxItemComponent = ({ transaction, providerUrl = '' }) => {
             </Flex>
           </Flex>
           <Flex css={styles.item}>
-            <Text fontSize="sm">Jun 27</Text>
+            <Text fontSize="sm">{date}</Text>
           </Flex>
         </Flex>
       </Flex>
@@ -101,4 +120,4 @@ const styles = {
   }),
 };
 
-TxItem.Loader = TxItemLoader;
+ActivityItem.Loader = ActivityItemLoader;
