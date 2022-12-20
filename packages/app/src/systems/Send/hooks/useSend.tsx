@@ -124,8 +124,6 @@ export function useSend() {
     service.send('CONFIRM', { input: { asset, amount, address } });
   }
 
-  console.log(service.getSnapshot().value);
-
   return {
     form,
     inputs,
