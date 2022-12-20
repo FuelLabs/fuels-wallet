@@ -9,20 +9,33 @@ import { sendMachine } from './sendMachine';
 
 import { AccountService } from '~/systems/Account';
 import { MOCK_ASSETS } from '~/systems/Asset/__mocks__/assets';
+import { NetworkService } from '~/systems/Network';
 
 const OWNER = import.meta.env.VITE_ADDR_OWNER;
 const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
+
+const MOCK_INPUTS = {
+  asset: MOCK_ASSETS[0],
+  address: Wallet.generate().address.toString(),
+  amount: bn(10000),
+};
 
 describe('sendMachine', () => {
   let context: SendMachineState['context'];
   let service: SendMachineService;
   let wallet: WalletUnlocked;
-  const to = Wallet.generate();
   const goToHome = jest.fn();
 
   beforeAll(async () => {
     wallet = Wallet.fromPrivateKey(OWNER);
     wallet.provider = new Provider(providerUrl);
+    const acc = {
+      name: 'account',
+      address: wallet.address.toString(),
+      publicKey: wallet.publicKey,
+    };
+    await AccountService.addAccount({ data: acc });
+    await NetworkService.addFirstNetwork();
     jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
   });
 
@@ -38,27 +51,20 @@ describe('sendMachine', () => {
     service.stop();
   });
 
-  async function initMachine() {
-    await waitFor(service, (state) => state.matches('idle'));
-    service.send('SET_ASSET', { input: MOCK_ASSETS[0] });
-    service.send('SET_ADDRESS', { input: to.address.toString() });
-    service.send('SET_AMOUNT', { input: bn(10000) });
-  }
-
   it('should send a transaction after approve', async () => {
-    await initMachine();
+    await waitFor(service, (state) => state.matches('idle'));
+    service.send('CONFIRM', { input: MOCK_INPUTS });
+
+    await waitFor(service, (state) => state.matches('confirming.idle'));
     service.send('CONFIRM');
 
-    await waitFor(service, (state) => state.matches('unlocking'));
+    await waitFor(service, (state) => state.matches('confirming.unlocking'));
     service.send('UNLOCK_WALLET', {
       input: {
         account: wallet,
         password: '123123',
       },
     });
-
-    await waitFor(service, (state) => state.matches('confirming.idle'));
-    service.send('CONFIRM');
 
     await waitFor(service, (state) => state.matches('confirming.success'));
     context = service.getSnapshot().context;
@@ -68,18 +74,10 @@ describe('sendMachine', () => {
   });
 
   it('should cancel/back work correctly', async () => {
-    await initMachine();
+    await waitFor(service, (state) => state.matches('idle'));
     service.send('BACK');
     expect(goToHome).toBeCalled();
-    service.send('CONFIRM');
-
-    await waitFor(service, (state) => state.matches('unlocking'));
-    service.send('UNLOCK_WALLET', {
-      input: {
-        account: wallet,
-        password: '123123',
-      },
-    });
+    service.send('CONFIRM', { input: MOCK_INPUTS });
 
     await waitFor(service, (state) => state.matches('confirming.idle'));
     service.send('BACK');

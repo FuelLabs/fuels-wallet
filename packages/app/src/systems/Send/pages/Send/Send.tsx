@@ -1,5 +1,4 @@
 import { Button } from '@fuel-ui/react';
-import type { FormEvent } from 'react';
 
 import { SendConfirm, SendSelect } from '../../components';
 import { useSend } from '../../hooks/useSend';
@@ -12,17 +11,16 @@ import { UnlockDialog, useTransactionRequest } from '~/systems/DApp';
 export function Send() {
   const tx = useTransactionRequest();
   const send = useSend();
-  const { handlers, ...ctx } = send;
+  const { handlers, form, ...ctx } = send;
   const isSelectScreen = ctx.screen === SendScreens.select;
   const isConfirmScreen = ctx.screen === SendScreens.confirm;
 
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  function onSubmit() {
     handlers.confirm();
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={form.handleSubmit(onSubmit)}>
       <Layout title="Send" isLoading={ctx.isLoading}>
         <Layout.TopBar onBack={handlers.cancel} />
         <Layout.Content>
@@ -36,7 +34,7 @@ export function Send() {
           <Button
             type="submit"
             color="accent"
-            isDisabled={!ctx.canConfirm}
+            isDisabled={!ctx.canConfirm || !form.formState.isValid}
             isLoading={ctx.isLoading}
           >
             {isSelectScreen ? 'Confirm' : 'Approve'}

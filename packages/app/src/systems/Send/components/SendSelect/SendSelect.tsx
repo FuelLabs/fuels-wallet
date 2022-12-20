@@ -4,7 +4,8 @@ import { bn } from 'fuels';
 
 import type { UseSendReturn } from '../../hooks/useSend';
 
-import { AssetSelect } from '~/systems/Asset';
+import { AssetSelect, ASSET_MAP } from '~/systems/Asset';
+import { ControlledField } from '~/systems/Core';
 import type { useTransactionRequest } from '~/systems/DApp';
 import { TxDetails, TxErrors } from '~/systems/Transaction';
 
@@ -14,19 +15,35 @@ type SendSelectProps = {
 };
 
 export function SendSelect({ send, tx }: SendSelectProps) {
+  const { form, errors, showTxDetails, response } = send;
   return (
     <Stack gap="$4">
-      {send.errors.txRequest.hasGeneral && (
-        <TxErrors errors={send.errors.txRequest.general} />
+      {errors.txRequest.hasGeneral && (
+        <TxErrors errors={errors.txRequest.general} />
       )}
       <Flex css={styles.row}>
         <Text as="span" css={styles.title}>
           Send
         </Text>
-        <AssetSelect
-          selected={send.inputs?.asset}
-          onSelect={send.handlers.setAsset}
-          items={tx.account?.balances}
+        <ControlledField
+          isRequired
+          name="asset"
+          control={form.control}
+          render={({ field }) => {
+            const selected = ASSET_MAP[field.value];
+            return (
+              <AssetSelect
+                items={tx.account?.balances}
+                selected={selected}
+                onSelect={(asset) => {
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+                  form.setValue('asset', asset?.assetId.toString()!, {
+                    shouldValidate: true,
+                  });
+                }}
+              />
+            );
+          }}
         />
       </Flex>
       <Flex css={styles.row}>
@@ -34,35 +51,48 @@ export function SendSelect({ send, tx }: SendSelectProps) {
           To
         </Text>
         <Box css={styles.addressRow}>
-          <Input size="sm">
-            <Input.Field
-              aria-label="Address Input"
-              id="address"
-              name="address"
-              placeholder="Write a fuel address"
-              value={send.inputs?.address || ''}
-              onChange={(e) => send.handlers.setAddress(e.target.value)}
-            />
-          </Input>
-          {send.errors.isAddressInvalid && (
-            <Text className="error-msg">
-              Address is not a bech32 valid address
-            </Text>
-          )}
+          <ControlledField
+            isRequired
+            name="address"
+            control={form.control}
+            isInvalid={Boolean(form.formState.errors?.address)}
+            render={({ field }) => (
+              <Input size="sm">
+                <Input.Field
+                  {...field}
+                  id="address"
+                  aria-label="Address Input"
+                  placeholder="Write a fuel address"
+                />
+              </Input>
+            )}
+          />
         </Box>
       </Flex>
       <Stack gap="$3">
         <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
           Which amount?
         </Text>
-        <InputAmount
-          value={send.inputs?.amount}
-          onChange={send.handlers.setAmount}
-          balance={bn(tx.account?.balance)}
+        <ControlledField
+          isRequired
+          name="amount"
+          control={form.control}
+          isInvalid={Boolean(form.formState.errors?.amount)}
+          render={({ field }) => (
+            <InputAmount
+              balance={bn(tx.account?.balance)}
+              value={bn(field.value)}
+              onChange={(value) => {
+                form.setValue('amount', value.toString(), {
+                  shouldValidate: true,
+                });
+              }}
+            />
+          )}
         />
       </Stack>
-      {send.showTxDetails && (
-        <TxDetails fee={send.response?.fee} amountSent={send.inputs?.amount} />
+      {showTxDetails && (
+        <TxDetails fee={response?.fee} amountSent={bn(form.watch('amount'))} />
       )}
     </Stack>
   );
@@ -73,7 +103,7 @@ const styles = {
     alignItems: 'flex-start',
     gap: '$4',
 
-    '.fuel_asset-select': {
+    '.fuel_form--control': {
       flex: 1,
     },
     '.fuel_input > input': {

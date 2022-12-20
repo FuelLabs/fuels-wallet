@@ -3,10 +3,7 @@
 import { toast } from '@fuel-ui/react';
 import type { Account, Asset } from '@fuel-wallet/types';
 import {
-  bn,
   BN,
-  isBech32,
-  NativeAssetId,
   TransactionRequest,
   TransactionResponse,
   WalletLocked,
@@ -21,16 +18,13 @@ import {
 } from 'xstate';
 
 import { store } from '~/store';
+import { AccountInputs, AccountService } from '~/systems/Account';
 import {
-  AccountInputs,
-  AccountService,
   UnlockMachine,
   unlockMachine,
   unlockMachineErrorAction,
   UnlockMachineEvents,
-} from '~/systems/Account';
-import { getBalance } from '~/systems/Account/utils/balance';
-import { isEth } from '~/systems/Asset';
+} from '~/systems/Account/machines/unlockMachine';
 import { ChildrenMachine, FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 import { GroupedErrors } from '~/systems/Transaction';
@@ -60,7 +54,6 @@ export type MachineContext = {
     unlockError?: string;
     txRequestError?: GroupedErrors;
     txApproveError?: GroupedErrors;
-    isAddressInvalid?: boolean;
   };
 };
 
@@ -105,7 +98,7 @@ type MachineEvents =
   | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
   | { type: 'RESET'; input: null }
   | { type: 'BACK'; input: null }
-  | { type: 'CONFIRM'; input: null };
+  | { type: 'CONFIRM'; input: { asset: Asset; amount: BN; address: string } };
 
 export const sendMachine = createMachine(
   {
@@ -120,11 +113,12 @@ export const sendMachine = createMachine(
     initial: 'fetchingFakeTx',
     states: {
       fetchingFakeTx: {
+        tags: ['loading'],
         invoke: {
           src: 'fetchFakeTx',
           onDone: {
             target: 'idle',
-            actions: 'assignInitialFee',
+            actions: ['assignInitialFee'],
           },
         },
       },
@@ -134,11 +128,24 @@ export const sendMachine = createMachine(
             actions: ['goToHome'],
           },
           CONFIRM: {
+            actions: ['assignInputs'],
+            target: 'fetchingAccountInfo',
+          },
+        },
+      },
+      invalid: {
+        on: {
+          BACK: {
+            actions: ['goToHome'],
+          },
+          CONFIRM: {
+            actions: ['assignInputs'],
             target: 'fetchingAccountInfo',
           },
         },
       },
       fetchingAccountInfo: {
+        tags: ['loading'],
         invoke: {
           src: 'fetchAccountInfo',
           onDone: [
@@ -153,7 +160,6 @@ export const sendMachine = createMachine(
           ],
         },
       },
-      invalid: {},
       confirming: {
         initial: 'creatingTx',
         on: {
@@ -163,6 +169,7 @@ export const sendMachine = createMachine(
         },
         states: {
           creatingTx: {
+            tags: ['loading'],
             invoke: {
               src: 'createTx',
               data: (ctx: MachineContext) => ({
@@ -212,6 +219,7 @@ export const sendMachine = createMachine(
             },
           },
           sendingTx: {
+            tags: ['loading'],
             invoke: {
               src: 'sendTx',
               data: (ctx: MachineContext) => ({ input: ctx }),
@@ -236,18 +244,6 @@ export const sendMachine = createMachine(
       },
     },
     on: {
-      SET_ASSET: {
-        actions: ['assignAsset'],
-        target: 'idle',
-      },
-      SET_ADDRESS: {
-        actions: ['assignAddress', 'validateAddress'],
-        target: 'idle',
-      },
-      SET_AMOUNT: {
-        actions: ['assignAmount'],
-        target: 'idle',
-      },
       RESET: {
         actions: ['reset'],
         target: 'idle',
@@ -260,14 +256,8 @@ export const sendMachine = createMachine(
       assignInitialFee: assign({
         response: (ctx, ev) => ({ ...ctx.response, fee: ev.data }),
       }),
-      assignAsset: assign({
-        inputs: (ctx, ev) => ({ ...ctx.inputs, asset: ev.input }),
-      }),
-      assignAddress: assign({
-        inputs: (ctx, ev) => ({ ...ctx.inputs, address: ev.input }),
-      }),
-      assignAmount: assign({
-        inputs: (ctx, ev) => ({ ...ctx.inputs, amount: ev.input }),
+      assignInputs: assign({
+        inputs: (ctx, ev) => ({ ...ctx.inputs, ...ev.input }),
       }),
       assignWallet: assign({
         inputs: (ctx, ev) => ({ ...ctx.inputs, wallet: ev.data }),
@@ -277,18 +267,6 @@ export const sendMachine = createMachine(
       }),
       assignAccountInfo: assign({
         inputs: (ctx, ev) => ({ ...ctx.inputs, accountInfo: ev.data }),
-      }),
-      validateAddress: assign({
-        errors: (ctx) => {
-          let isAddressInvalid;
-          try {
-            const address = ctx.inputs?.address;
-            isAddressInvalid = Boolean(address && !isBech32(address));
-          } catch {
-            isAddressInvalid = true;
-          }
-          return { ...ctx.errors, isAddressInvalid };
-        },
       }),
       assignTxRequestError: assign({
         errors: (ctx, ev) => ({
@@ -312,25 +290,12 @@ export const sendMachine = createMachine(
     guards: {
       hasError: FetchMachine.hasError as any,
       isInValidTransaction: (ctx, ev) => {
-        if (!ev.data || !ctx.inputs?.asset || !ctx.response?.fee) {
-          return true;
-        }
-        const assetBalance = getBalance(
+        return !TxService.checkIsValid(
           ev.data.account,
-          ctx.inputs.asset?.assetId
+          ctx.inputs?.asset,
+          ctx.inputs?.amount,
+          ctx.response?.fee
         );
-        let hasBalance = false;
-        if (isEth(ctx.inputs.asset)) {
-          hasBalance = assetBalance.gte(
-            bn(ctx.inputs.amount).add(ctx.response.fee)
-          );
-        } else {
-          const ethBalance = getBalance(ev.data.account, NativeAssetId);
-          const hasAssetBalance = assetBalance.gte(bn(ctx.inputs.amount));
-          const hasGasFeeBalance = ethBalance.gte(bn(ctx.response.fee));
-          hasBalance = hasAssetBalance && hasGasFeeBalance;
-        }
-        return !hasBalance;
       },
     },
     services: {
@@ -345,37 +310,33 @@ export const sendMachine = createMachine(
         showError: false,
         async fetch() {
           const selectedAccount = await AccountService.getSelectedAccount();
-          const provier = await NetworkService.getSelectedNetwork();
-          if (!provier || !selectedAccount) {
+          const provider = await NetworkService.getSelectedNetwork();
+          if (!provider || !selectedAccount) {
             throw new Error('Missing provider or account');
           }
           const account = await AccountService.fetchBalance({
-            providerUrl: provier.url,
+            providerUrl: provider.url,
             account: selectedAccount,
           });
-          const wallet = new WalletLocked(selectedAccount.address, provier.url);
-
+          const wallet = new WalletLocked(
+            selectedAccount.address,
+            provider.url
+          );
           return { wallet, account };
         },
       }),
       createTx: FetchMachine.create<Inputs, TxRequestReturn>({
         showError: false,
         async fetch({ input = {} }) {
-          const { asset, amount, address, accountInfo, gasFee } = input;
-          if (!asset || !amount || !address || !accountInfo || !gasFee) {
+          const { asset, amount, address: to, accountInfo, gasFee } = input;
+          if (!asset || !amount || !to || !accountInfo || !gasFee) {
             throw new Error('Missing params for transaction');
           }
+          const { assetId } = asset;
           const wallet = accountInfo.wallet;
-          const tx = await TxService.createTransfer({
-            amount,
-            assetId: asset.assetId,
-            to: address,
-          });
-          const { txCost, request } = await TxService.fundTransaction(
-            wallet,
-            tx
-          );
-          return { fee: txCost.fee, txRequest: request };
+          const tx = await TxService.createTransfer({ amount, assetId, to });
+          const res = await TxService.fundTransaction(wallet, tx);
+          return { fee: res.txCost.fee, txRequest: res.request };
         },
       }),
       sendTx: FetchMachine.create<MachineContext, TxApproveReturn>({

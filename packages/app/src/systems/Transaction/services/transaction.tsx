@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import type { Account } from '@fuel-wallet/types';
+import type { Account, Asset } from '@fuel-wallet/types';
 import {
   Address,
   hexlify,
@@ -24,7 +24,8 @@ import type {
 import type { Transaction } from '../types';
 import { getCoinOutputsFromTx, parseTransaction } from '../utils';
 
-import { ASSET_MAP } from '~/systems/Asset';
+import { getBalance } from '~/systems/Account/utils';
+import { ASSET_MAP, isEth } from '~/systems/Asset';
 import { db, uniqueId } from '~/systems/Core';
 import { provider } from '~/systems/DApp/__mocks__/dapp-provider';
 
@@ -66,6 +67,13 @@ export type TxInputs = {
     txId: string;
     providerUrl?: string;
   };
+};
+
+type GetTxWithResourcesOpts = {
+  wallet: WalletLocked;
+  tx: TransactionRequestLike;
+  gasFee?: BN;
+  needToAddResources?: boolean;
 };
 
 export class TxService {
@@ -144,58 +152,50 @@ export class TxService {
   }
 
   static async createTransfer(input: TxInputs['createTransfer']) {
-    const request = new ScriptTransactionRequest({
-      gasPrice: 0,
-    });
+    const request = new ScriptTransactionRequest({ gasPrice: 0 });
     const to = Address.fromAddressOrString(input.to);
     const { assetId, amount } = input;
     request.addCoinOutput(to, amount, assetId);
     return request;
   }
 
-  static async getTxWithResources(
-    wallet: WalletLocked,
-    transaction: TransactionRequestLike,
-    gasFee: BN = bn(0)
-  ) {
-    const request = transactionRequestify(transaction);
+  static async getTxWithResources(opts: GetTxWithResourcesOpts) {
+    const { needToAddResources = true, gasFee = bn(0) } = opts || {};
+    const request = transactionRequestify(opts.tx);
     const coins = request.getCoinOutputs();
     const requiredCoins = coins.map((coin) => {
       let amount = bn(coin.amount);
-
       if (coin.assetId === NativeAssetId) {
-        amount = amount.add(gasFee);
+        amount = amount.add(gasFee || bn(0));
       }
-
-      return {
-        assetId: coin.assetId,
-        amount,
-      };
+      return { assetId: coin.assetId, amount };
     });
-    const resources = await provider.getResourcesToSpend(
-      wallet.address,
-      requiredCoins
-    );
 
-    request.addResources(resources);
-
+    if (needToAddResources) {
+      const resources = await provider.getResourcesToSpend(
+        opts.wallet.address,
+        requiredCoins
+      );
+      request.addResources(resources);
+    }
     return request;
   }
 
   static async fundTransaction(
     wallet: WalletLocked,
-    transaction: TransactionRequestLike
+    tx: TransactionRequestLike
   ) {
-    const preRequest = await TxService.getTxWithResources(wallet, transaction);
+    const preRequest = await TxService.getTxWithResources({ wallet, tx });
     const txCost = await wallet.provider.getTransactionCost(preRequest);
-    const request = transactionRequestify(transaction);
+    const request = transactionRequestify(tx);
     request.gasLimit = txCost.gasUsed;
     request.gasPrice = txCost.gasPrice;
-    const finalRequest = await TxService.getTxWithResources(
+    const finalRequest = await TxService.getTxWithResources({
       wallet,
-      request,
-      txCost.fee
-    );
+      tx: request,
+      gasFee: txCost.fee,
+      needToAddResources: false,
+    });
     return {
       request: finalRequest,
       txCost,
@@ -216,5 +216,15 @@ export class TxService {
       fee.amount.add(amount);
     }
     return fee.amount;
+  }
+
+  static checkIsValid(account: Account, asset?: Asset, amount?: BN, fee?: BN) {
+    if (!account || !asset || !fee || !amount) return true;
+    const assetBalance = getBalance(account, asset?.assetId);
+    if (isEth(asset)) assetBalance.gte(bn(amount).add(fee));
+    const ethBalance = getBalance(account, NativeAssetId);
+    const hasAssetBalance = assetBalance.gte(bn(amount));
+    const hasGasFeeBalance = ethBalance.gte(bn(fee));
+    return hasAssetBalance && hasGasFeeBalance;
   }
 }
