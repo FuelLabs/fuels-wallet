@@ -117,6 +117,18 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
     return service as Service<T>;
   }
 
+  public updateService<K extends keyof T>(
+    key: K,
+    ...[opts = {}]: RestParams<ReturnType<T[K]>>
+  ) {
+    const service = this.services.get(key);
+    if (!service) return;
+    Object.assign(service.machine.options.actions!, opts.actions);
+    Object.assign(service.machine.options.guards!, opts.guards);
+    Object.assign(service.machine.options.services!, opts.services);
+    Object.assign(service.machine.options.delays!, opts.delays);
+  }
+
   reset() {
     this.#prevState = this.#initialState;
     this.#currentState = this.#initialState;
@@ -165,12 +177,7 @@ export function createStore<T extends MachinesObj, E extends Events>(
       ...[opts = {}]: RestParams<ReturnType<T[K]>>
     ) {
       useConstant(() => {
-        const service = _store.services.get(machineKey) as Service<T>;
-        const key = service?.__storeKey;
-        const machine = _store.machines.get(key);
-        if (!machine) return;
-        const newMachine = _store.createMachine(key, machine!, opts as any);
-        _store.createService(key, newMachine, opts as any);
+        _store.updateService(machineKey, opts);
       });
     },
   };

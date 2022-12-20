@@ -12,7 +12,7 @@
     "fuelhat": "./index.mjs"
   },
   "dependencies": {
-    "chalk": "^5.1.2",
+    "chalk": "^5.2.0",
     "spinnies": "^0.5.1",
     "yargs": "^17.6.2"
   }

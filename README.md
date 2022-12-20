@@ -11,24 +11,24 @@ The official wallet of the fastest modular execution layer: [Fuel](https://fuel.
 
 FuelWallet is a crypto wallet used to interact with the Fuel Network. This project enables users to access their assets and interact with decentralized applications through a browser extension.
 
-[![Install Wallet](packages/docs/public/install-button.png)](https://fuels-wallet.vercel.app/docs/install/)
+[![Install Wallet](packages/docs/public/install-button.png)](https://wallet.fuel.network/docs/install/)
 
-Integrate your **DApp** using the [Wallet SDK](https://fuels-wallet.vercel.app/docs/api/)
+Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/api/)
 
 ## 📗 Table of contents
 
-- [📗 Documentation](https://fuels-wallet.vercel.app/)
-- [📦 Install Wallet](https://fuels-wallet.vercel.app/docs/install/)
-- [🧰 Fuel Wallet SDK](https://fuels-wallet.vercel.app/docs/how-to-use/)
-  - [👨‍💻 - Quickstart](https://fuels-wallet.vercel.app/docs/how-to-use/)
-  - [🔗 - Request connection](https://fuels-wallet.vercel.app/docs/how-to-use/#request-connection)
-  - [📒 - List user accounts](https://fuels-wallet.vercel.app/docs/how-to-use/#list-user-accounts)
-  - [✍️ - Signing a message](https://fuels-wallet.vercel.app/docs/how-to-use/#signing-a-message)
-  - [✍️ - Transfering assets](https://fuels-wallet.vercel.app/docs/how-to-use/#transfering-assets)
-  - [📗 SDK API](https://fuels-wallet.vercel.app/docs/api/)
-- [Contributing](https://fuels-wallet.vercel.app/docs/contributing/guide/)
-  - [Contribution Guide](https://fuels-wallet.vercel.app/docs/contributing/guide/)
-  - [Running Locally](https://fuels-wallet.vercel.app/docs/contributing/running-locally)
+- [📗 Documentation](https://wallet.fuel.network/)
+- [📦 Install Wallet](https://wallet.fuel.network/docs/install/)
+- [🧰 Fuel Wallet SDK](https://wallet.fuel.network/docs/how-to-use/)
+  - [👨‍💻 - Quickstart](https://wallet.fuel.network/docs/how-to-use/)
+  - [🔗 - Request connection](https://wallet.fuel.network/docs/how-to-use/#request-connection)
+  - [📒 - List user accounts](https://wallet.fuel.network/docs/how-to-use/#list-user-accounts)
+  - [✍️ - Signing a message](https://wallet.fuel.network/docs/how-to-use/#signing-a-message)
+  - [✍️ - Transfering assets](https://wallet.fuel.network/docs/how-to-use/#transfering-assets)
+  - [📗 SDK API](https://wallet.fuel.network/docs/api/)
+- [Contributing](https://wallet.fuel.network/docs/contributing/guide/)
+  - [Contribution Guide](https://wallet.fuel.network/docs/contributing/guide/)
+  - [Running Locally](https://wallet.fuel.network/docs/contributing/running-locally)
 
 ## Features
 
