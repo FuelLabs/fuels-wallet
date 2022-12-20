@@ -1,10 +1,10 @@
 import { Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
 
-import { ConnectInfo, UnlockDialog } from '../../components';
+import { ConnectInfo } from '../../components';
 import { useSignatureRequest } from '../../hooks';
 
 import { useAccounts } from '~/systems/Account';
-import { Layout } from '~/systems/Core';
+import { Layout, UnlockDialog } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 
 export function SignatureRequest() {

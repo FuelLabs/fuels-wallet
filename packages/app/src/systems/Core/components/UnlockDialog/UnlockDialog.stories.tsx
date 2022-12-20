@@ -2,9 +2,9 @@ import { Button } from '@fuel-ui/react';
 import type { StoryFn } from '@storybook/react';
 import { useState } from 'react';
 
-import { createMockAccount } from '../../../Account/__mocks__';
-
 import { UnlockDialog } from './UnlockDialog';
+
+import { createMockAccount } from '~/systems/Account/__mocks__';
 
 export default {
   component: UnlockDialog,
