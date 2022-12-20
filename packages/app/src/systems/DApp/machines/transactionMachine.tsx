@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type {
-  BN,
-  TransactionRequest,
-  TransactionResponse,
-  WalletUnlocked,
-} from 'fuels';
+import type { BN, TransactionRequest, TransactionResponse } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { send } from 'xstate/lib/actions';
@@ -14,6 +9,7 @@ import type {
   UnlockMachine,
   UnlockMachineEvents,
   AccountInputs,
+  UnlockEventReturn,
 } from '~/systems/Account';
 import type { ChildrenMachine } from '~/systems/Core';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
@@ -157,7 +153,7 @@ export const transactionMachine = createMachine(
         invoke: {
           src: 'send',
           data: {
-            input: (_: MachineContext, ev: { data: WalletUnlocked }) => {
+            input: (_: MachineContext, ev: UnlockEventReturn) => {
               return { tx: _.tx, wallet: ev.data, providerUrl: _.providerUrl };
             },
           },

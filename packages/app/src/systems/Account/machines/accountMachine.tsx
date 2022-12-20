@@ -7,7 +7,11 @@ import type { AccountInputs } from '../services/account';
 import { AccountService } from '../services/account';
 
 import { unlockMachine, unlockMachineErrorAction } from './unlockMachine';
-import type { UnlockMachine, UnlockMachineEvents } from './unlockMachine';
+import type {
+  UnlockMachine,
+  UnlockMachineEvents,
+  UnlockEventReturn,
+} from './unlockMachine';
 
 import { IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
@@ -22,6 +26,7 @@ export enum AccountScreen {
 
 type MachineContext = {
   accounts?: Account[];
+  accountName?: string;
   account?: Maybe<Account>;
   unlockError?: string;
   error?: unknown;
@@ -50,7 +55,10 @@ export type MachineEvents =
       input: AccountInputs['setBalanceVisibility'];
     }
   | { type: 'SELECT_ACCOUNT'; input: AccountInputs['selectAccount'] }
-  | { type: 'ADD_ACCOUNT'; input: AccountInputs['addVaultAccount'] }
+  | {
+      type: 'ADD_ACCOUNT';
+      input: string;
+    }
   | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
   | { type: 'CLOSE_UNLOCK'; input?: void };
 
@@ -69,6 +77,7 @@ export const accountMachine = createMachine(
     states: {
       fetchingAccounts: {
         tags: ['loading'],
+        entry: ['redirectToHome'],
         invoke: {
           src: 'fetchAccounts',
           onDone: [
@@ -135,14 +144,22 @@ export const accountMachine = createMachine(
       },
       addingAccount: {
         tags: ['loading'],
+        exit: ['clearAccountName'],
         invoke: {
           src: 'addAccount',
           data: {
-            input: (_: MachineContext, ev: MachineEvents) => ev.input,
+            input: (ctx: MachineContext, ev: UnlockEventReturn) => {
+              return {
+                data: {
+                  manager: ev.data,
+                  name: ctx.accountName,
+                },
+              };
+            },
           },
           onDone: [
             {
-              actions: ['notifyUpdateAccounts'],
+              actions: ['notifyUpdateAccounts', 'redirectToHome'],
               target: 'fetchingAccounts',
             },
           ],
@@ -157,8 +174,7 @@ export const accountMachine = createMachine(
       unlocking: {
         invoke: {
           id: 'unlock',
-          src: unlockMachine,
-          data: (_: MachineContext, ev: MachineEvents) => ev.input,
+          src: 'unlock',
           onDone: [
             unlockMachineErrorAction('unlocking', 'unlockError'),
             { target: 'addingAccount' },
@@ -169,7 +185,13 @@ export const accountMachine = createMachine(
             // send to the child machine
             actions: [
               send<MachineContext, UnlockMachineEvents>(
-                (_, ev) => ({ type: 'UNLOCK_WALLET', input: ev.input }),
+                (_, ev) => ({
+                  type: 'UNLOCK_WALLET',
+                  input: {
+                    ...ev.input,
+                    manager: true,
+                  },
+                }),
                 { to: 'unlock' }
               ),
             ],
@@ -205,7 +227,8 @@ export const accountMachine = createMachine(
         target: 'selectingAccount',
       },
       ADD_ACCOUNT: {
-        target: 'addingAccount',
+        actions: ['assignAccountName'],
+        target: 'unlocking',
       },
     },
   },
@@ -240,11 +263,18 @@ export const accountMachine = createMachine(
           return account;
         },
       }),
+      assignAccountName: assign({
+        accountName: (_, ev) => ev.input,
+      }),
+      clearAccountName: assign({
+        accountName: (_) => undefined,
+      }),
       notifyUpdateAccounts: () => {
         store.updateAccounts();
       },
     },
     services: {
+      unlock: unlockMachine,
       fetchAccounts: FetchMachine.create<never, Account[]>({
         showError: true,
         async fetch() {
@@ -281,16 +311,16 @@ export const accountMachine = createMachine(
           return account;
         },
       }),
-      addAccount: FetchMachine.create<
-        AccountInputs['addVaultAccount'],
-        Account
-      >({
+      addAccount: FetchMachine.create<AccountInputs['addNewAccount'], Account>({
         showError: true,
         async fetch({ input }) {
-          if (!input?.data) {
-            throw new Error('Invalid account input');
+          if (!input?.data.name.trim()) {
+            throw new Error('Name cannot be empty');
           }
-          let account = await AccountService.addVaultAccount(input);
+          if (!input?.data.manager) {
+            throw new Error('Manager is not unlocked');
+          }
+          let account = await AccountService.addNewAccount(input);
           if (!account) {
             throw new Error('Failed to add account');
           }

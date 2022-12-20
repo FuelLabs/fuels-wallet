@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import type { AccountMachineState } from '../machines';
 
-import { Services, store } from '~/store';
+import { store, Services } from '~/store';
 import { Pages } from '~/systems/Core';
 
 const selectors = {
@@ -66,6 +66,13 @@ export function useAccounts() {
       type: 'CLOSE_UNLOCK',
     });
   }
+  // store.useSetMachineConfig(Services.accounts, {
+  //   actions: {
+  //     redirectToHome() {
+  //       navigate(Pages.wallet());
+  //     },
+  //   },
+  // });
 
   useEffect(() => {
     if (shouldListen.current) {

@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 import type { WalletUnlocked } from '@fuel-ts/wallet';
+import type { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account } from '@fuel-wallet/types';
 import { bn, Address, Provider } from 'fuels';
 
@@ -36,14 +37,17 @@ export type AccountInputs = {
       mnemonic?: string[];
     };
   };
-  addVaultAccount: {
+  addNewAccount: {
     data: {
       name: string;
-      password: string;
+      manager: WalletManager;
     };
   };
   unlock: {
     account: Account;
+    password: string;
+  };
+  unlockVault: {
     password: string;
   };
   changePassword: {
@@ -172,10 +176,10 @@ export class AccountService {
     }
   }
 
-  static async addVaultAccount({ data }: AccountInputs['addVaultAccount']) {
-    const manager = await unlockManager(data.password);
+  static async addNewAccount({ data }: AccountInputs['addNewAccount']) {
+    const manager = data.manager;
     await manager.addAccount();
-    const newAccount = manager.getAccounts().slice(-1)[0];
+    const [newAccount] = manager.getAccounts().slice(-1);
     // Add new account to database
     const dbAccount = await this.addAccount({
       data: {
@@ -204,6 +208,13 @@ export class AccountService {
     }
     wallet.connect(network.url);
     return wallet;
+  }
+
+  static async unlockVault(
+    input: AccountInputs['unlockVault']
+  ): Promise<WalletManager> {
+    const manager = await unlockManager(input.password);
+    return manager;
   }
 
   static async changePassword(input: AccountInputs['changePassword']) {

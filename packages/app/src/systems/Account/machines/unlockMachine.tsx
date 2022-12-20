@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { WalletUnlocked } from '@fuel-ts/wallet';
+import type { WalletManager } from '@fuel-ts/wallet-manager';
 import type { InterpreterFrom, StateFrom, TransitionConfig } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-import type { AccountInputs } from '~/systems/Account';
-import { AccountService } from '~/systems/Account';
+import { AccountService } from '~/systems/Account/services';
+import type { AccountInputs } from '~/systems/Account/services';
 import { FetchMachine } from '~/systems/Core';
 
 export type UnlockMachineContext = Record<string, never>;
@@ -15,10 +16,16 @@ type MachineServices = {
   };
 };
 
+type UnlockInput = AccountInputs['unlock'] & {
+  manager?: boolean;
+};
+
 export type UnlockMachineEvents = {
   type: 'UNLOCK_WALLET';
-  input: AccountInputs['unlock'];
+  input: UnlockInput;
 };
+
+export type UnlockEventReturn = MachineServices['unlock'];
 
 export const unlockMachineError = (_: any, ev: { data: { error?: any } }) => {
   return Boolean(ev.data?.error);
@@ -84,18 +91,21 @@ export const unlockMachine = createMachine(
       },
       done: {
         type: 'final',
-        data: (_, e: { data: WalletUnlocked }) => e.data,
+        data: (_, e: { data: WalletUnlocked | WalletManager }) => e.data,
       },
     },
   },
   {
     services: {
-      unlock: FetchMachine.create<AccountInputs['unlock'], WalletUnlocked>({
+      unlock: FetchMachine.create<UnlockInput, WalletUnlocked | WalletManager>({
         showError: false,
         maxAttempts: 1,
         async fetch({ input }) {
           if (!input || !input?.password) {
             throw new Error('Password is required to unlock wallet');
+          }
+          if (input.manager) {
+            return AccountService.unlockVault(input);
           }
           return AccountService.unlock(input);
         },

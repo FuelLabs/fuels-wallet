@@ -14,10 +14,7 @@ export const AddAccount = () => {
     useAccounts();
 
   function onSubmit(data: AccountFormValues) {
-    console.log(data);
-    // handlers.addAccount({
-    //   data: { name: data.name, password: "" },
-    // });
+    handlers.addAccount(data.name);
   }
 
   return (
