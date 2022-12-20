@@ -4,7 +4,7 @@ import { MOCK_ACCOUNTS } from '../../__mocks__';
 
 import { BalanceWidget } from './BalanceWidget';
 
-import { RouterProvider } from '~/systems/Core';
+import { RouterProvider, shortAddress } from '~/systems/Core';
 
 const ACCOUNT = {
   ...MOCK_ACCOUNTS[0],
@@ -27,7 +27,7 @@ describe('BalanceWidget', () => {
         <BalanceWidget account={ACCOUNT} />
       </RouterProvider>
     );
-    expect(screen.getByText('fuel0x...74ef')).toBeInTheDocument();
+    expect(screen.getByText(shortAddress(ACCOUNT.address))).toBeInTheDocument();
   });
 
   it('should show formatted balance', async () => {
