@@ -6,7 +6,7 @@ import { assign, createMachine } from 'xstate';
 
 import { AccountService } from '~/systems/Account/services';
 import type { AccountInputs } from '~/systems/Account/services';
-import { FetchMachine } from '~/systems/Core';
+import { FetchMachine } from '~/systems/Core/machines/fetchMachine';
 
 export type UnlockMachineContext = Record<string, never>;
 

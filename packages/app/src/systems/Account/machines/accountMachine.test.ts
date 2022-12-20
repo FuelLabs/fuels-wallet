@@ -2,11 +2,13 @@ import { bn } from 'fuels';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
-import { MOCK_ACCOUNTS } from '../__mocks__';
+import { MOCK_ACCOUNTS, createMockAccount } from '../__mocks__';
 import { AccountService } from '../services';
 
 import type { AccountMachineService, MachineEvents } from './accountMachine';
 import { accountMachine } from './accountMachine';
+
+import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 const MOCK_ACCOUNT = {
   ...MOCK_ACCOUNTS[0],
@@ -101,20 +103,21 @@ describe('accountsMachine', () => {
 
   describe('add', () => {
     it('should be able to add an account', async () => {
+      const { password } = await createMockAccount();
       await waitFor(service, (state) => state.matches('done'));
 
+      service.send('ADD_ACCOUNT', {
+        input: 'Account Go',
+      });
+      await expectStateMatch(service, 'unlocking');
       service.send('UNLOCK_WALLET', {
         input: {
-          account: MOCK_ACCOUNTS[0],
-          password: '123123',
+          password,
         },
       });
-
-      await waitFor(service, (state) => state.matches('addingAccount'));
-      const { matches } = await waitFor(service, (state) =>
-        state.matches('done')
-      );
-      expect(matches('done')).toBeTruthy();
+      await expectStateMatch(service, 'addingAccount');
+      await expectStateMatch(service, 'fetchingAccounts');
+      await expectStateMatch(service, 'done');
     });
   });
 });

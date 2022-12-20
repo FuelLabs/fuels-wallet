@@ -5,8 +5,7 @@ import { useAccounts } from '../../hooks';
 import { useAccountForm } from '../../hooks/useAccountForm';
 import type { AccountFormValues } from '../../hooks/useAccountForm';
 
-import { Layout } from '~/systems/Core';
-import { UnlockDialog } from '~/systems/DApp';
+import { Layout, UnlockDialog } from '~/systems/Core';
 
 export const AddAccount = () => {
   const form = useAccountForm();

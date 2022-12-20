@@ -5,7 +5,7 @@ import { waitFor } from 'xstate/lib/waitFor';
 
 import { unlockMachine } from './unlockMachine';
 
-import { MOCK_ACCOUNTS } from '~/systems/Account';
+import { MOCK_ACCOUNTS } from '~/systems/Account/__mocks__/accounts';
 
 type Service = InterpreterFrom<typeof unlockMachine>;
 
