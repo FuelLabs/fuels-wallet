@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { AnyInterpreter, StateFrom, Action, AnyEventObject } from 'xstate';
+import type { AnyInterpreter, StateFrom, Action } from 'xstate';
 import { assign } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
-
-import { assocPath, mergeRight, pathOr } from './helpers';
 
 export async function waitForState<
   I extends AnyInterpreter,
@@ -50,52 +48,4 @@ export function assignErrorMessage(message: string): Action<any, any> {
     ...ctx,
     error: message,
   }));
-}
-
-export function assignWith<
-  C extends Record<string, unknown> = any,
-  E extends AnyEventObject = AnyEventObject,
-  P = any
->(
-  path: string,
-  prop: P extends string ? string : (c: C, E: E) => any,
-  merge?: boolean
-) {
-  return assign<C, E>((ctx, ev) => {
-    const value = typeof prop === 'string' ? ev[prop] : ev[prop(ctx, ev)];
-    const old = pathOr(ctx, path);
-    const next = merge ? mergeRight(old, value) : value;
-    return assocPath(ctx, path, next);
-  });
-}
-
-export function assignWithInput<
-  C extends Record<string, any> = any,
-  E extends AnyEventObject = AnyEventObject
->(path: string, merge?: boolean) {
-  return assignWith<C, E>(path, 'input', merge);
-}
-
-export function assignWithData<
-  C extends Record<string, any> = any,
-  E extends AnyEventObject = AnyEventObject
->(path: string, merge?: boolean) {
-  return assignWith<C, E>(path, 'data', merge);
-}
-
-export function assignErrors<
-  C extends Record<string, any> = any,
-  E extends AnyEventObject = AnyEventObject
->(prop: string) {
-  return assign<C, E>((ctx, ev) => {
-    const error = ev.data.error;
-    return assocPath(ctx, `errors.${prop}`, error);
-  });
-}
-
-export function resetContext<
-  C extends Record<string, any> = any,
-  E extends AnyEventObject = AnyEventObject
->() {
-  return assign((_ctx: C, _ev: E) => ({}));
 }

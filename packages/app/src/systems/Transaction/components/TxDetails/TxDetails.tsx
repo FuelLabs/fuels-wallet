@@ -24,7 +24,16 @@ export const TxDetails: TxDetailsComponent = ({
   const shouldShowTotal = total?.gt(bn(fee));
 
   return (
-    <Accordion type="multiple">
+    <Accordion
+      type="single"
+      defaultValue="tx-details"
+      // TODO: remove ts ignore when collapsible is exposed from the fuel-ui
+      // collapsible is a valid property from radix accordion but
+      // is not exposed by the fuel-ui Accordion component
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      collapsible={true}
+    >
       <Accordion.Item value="tx-details" css={styles.item}>
         <Accordion.Trigger>Transaction Details</Accordion.Trigger>
         <Accordion.Content css={styles.info}>
