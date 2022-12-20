@@ -77,7 +77,6 @@ export const accountMachine = createMachine(
     states: {
       fetchingAccounts: {
         tags: ['loading'],
-        entry: ['redirectToHome'],
         invoke: {
           src: 'fetchAccounts',
           onDone: [
@@ -130,7 +129,7 @@ export const accountMachine = createMachine(
           },
           onDone: [
             {
-              actions: ['notifyUpdateAccounts'],
+              actions: ['notifyUpdateAccounts', 'redirectToHome'],
               target: 'fetchingAccounts',
             },
           ],

@@ -11,6 +11,9 @@ const selectors = {
   isLoading: (state: AccountMachineState) => {
     return state.hasTag('loading');
   },
+  isAddingAccount: (state: AccountMachineState) => {
+    return state.matches('addingAccount');
+  },
   accounts: (state: AccountMachineState) => {
     return state.context?.accounts;
   },
@@ -34,6 +37,10 @@ const listenerAccountFetcher = () => {
 export function useAccounts() {
   const shouldListen = useRef(true);
   const navigate = useNavigate();
+  const isAddingAccount = store.useSelector(
+    Services.accounts,
+    selectors.isAddingAccount
+  );
   const isLoading = store.useSelector(Services.accounts, selectors.isLoading);
   const accounts = store.useSelector(Services.accounts, selectors.accounts);
   const account = store.useSelector(Services.accounts, selectors.account);
@@ -66,13 +73,14 @@ export function useAccounts() {
       type: 'CLOSE_UNLOCK',
     });
   }
-  // store.useSetMachineConfig(Services.accounts, {
-  //   actions: {
-  //     redirectToHome() {
-  //       navigate(Pages.wallet());
-  //     },
-  //   },
-  // });
+
+  store.useSetMachineConfig(Services.accounts, {
+    actions: {
+      redirectToHome() {
+        navigate(Pages.wallet());
+      },
+    },
+  });
 
   useEffect(() => {
     if (shouldListen.current) {
@@ -99,5 +107,6 @@ export function useAccounts() {
     account,
     isUnlocking,
     isUnlockingLoading,
+    isAddingAccount,
   };
 }

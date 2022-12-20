@@ -13,7 +13,6 @@ export const Accounts = () => {
   return (
     <Layout title="Accounts" isLoading={isLoading}>
       <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
-
       <Layout.Content>
         {accounts && (
           <AccountList accounts={accounts} onPress={handlers.selectAccount} />

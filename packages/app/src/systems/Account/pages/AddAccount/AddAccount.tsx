@@ -10,7 +10,7 @@ import { UnlockDialog } from '~/systems/DApp';
 
 export const AddAccount = () => {
   const form = useAccountForm();
-  const { handlers, isLoading, isUnlocking, isUnlockingLoading } =
+  const { handlers, isAddingAccount, isUnlocking, isUnlockingLoading } =
     useAccounts();
 
   function onSubmit(data: AccountFormValues) {
@@ -34,7 +34,7 @@ export const AddAccount = () => {
                 type="submit"
                 color="accent"
                 isDisabled={!form.formState.isValid}
-                isLoading={isLoading}
+                isLoading={isAddingAccount}
                 leftIcon={Icon.is('Plus')}
               >
                 Create
@@ -46,6 +46,7 @@ export const AddAccount = () => {
       <UnlockDialog
         unlockText="Add Account"
         isOpen={isUnlocking}
+        isFullscreen={true}
         onUnlock={handlers.unlock}
         isLoading={isUnlockingLoading}
         onClose={handlers.closeUnlock}

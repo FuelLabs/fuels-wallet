@@ -25,6 +25,7 @@ const MOCK_ACCOUNT_TWO = {
 const machine = accountMachine.withContext({}).withConfig({
   actions: {
     notifyUpdateAccounts() {},
+    redirectToHome() {},
   },
 });
 
