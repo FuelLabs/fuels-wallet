@@ -9,7 +9,7 @@ export function useParseTx(props: Partial<ParseTxParams>) {
 
   const tx = useMemo(() => {
     if (!transaction || !receipts || !gasPerByte || !gasPriceFactor)
-      return null;
+      return undefined;
 
     return parseTx({
       transaction,

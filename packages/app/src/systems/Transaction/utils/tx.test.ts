@@ -1,24 +1,26 @@
 import { AddressType } from '@fuel-wallet/types';
-import { bn, TransactionType } from 'fuels';
+import { bn, ReceiptType, TransactionType } from 'fuels';
 
 import {
-  MOCK_TRANSACTION_CONTRACT_CALL,
-  MOCK_INPUT_COIN,
-  MOCK_INPUT_CONTRACT,
-  MOCK_OUTPUT_CHANGE,
-  MOCK_OUTPUT_CONTRACT,
-  MOCK_RECEIPTS_CONTRACT_CALL,
-  MOCK_RECEIPT_CALL,
+  MOCK_TRANSACTION_CONTRACT_CALL_PARTS,
   MOCK_GAS_PER_BYTE,
   MOCK_GAS_PRICE_FACTOR,
+  MOCK_TRANSACTION_CONTRACT_CALL,
+  MOCK_TRANSACTION_CREATE_CONTRACT,
+  MOCK_TRANSACTION_CREATE_CONTRACT_PARTS,
+  MOCK_TRANSACTION_MINT,
+  MOCK_TRANSACTION_MINT_PARTS,
 } from '../__mocks__/tx';
 
 import {
   addOperation,
+  getContractCreatedFee,
+  getContractCreatedOperations,
   getFee,
   getFeeFromReceipts,
   getFromAddress,
   getGasUsed,
+  getGasUsedContractCreated,
   getGasUsedFromReceipts,
   getInputContractFromIndex,
   getInputsCoin,
@@ -30,8 +32,22 @@ import {
   getOutputsContract,
   getOutputsContractCreated,
   getOutputsMessage,
+  getOutputsVariable,
+  getPayProducerOperations,
+  getReceiptsCall,
+  getReceiptsLog,
+  getReceiptsLogData,
+  getReceiptsMessageOut,
+  getReceiptsPanic,
+  getReceiptsReturn,
+  getReceiptsReturnData,
+  getReceiptsRevert,
+  getReceiptsScriptResult,
+  getReceiptsTransfer,
+  getReceiptsTransferOut,
   getStatus,
   getTotalAssetsSent,
+  getTransferOperations,
   getType,
   isStatus,
   isStatusFailure,
@@ -81,170 +97,327 @@ describe('Tx util', () => {
 
   describe('getInputs', () => {
     it('should getInputsCoin return correct inputs', () => {
-      const inputs = getInputsCoin(MOCK_TRANSACTION_CONTRACT_CALL.inputs || []);
-      expect(JSON.stringify(inputs)).toEqual(JSON.stringify([MOCK_INPUT_COIN]));
+      const inputs = getInputsCoin(
+        MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || []
+      );
+
+      expect(inputs.length).toEqual(1);
+      expect(inputs[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin
+      );
+    });
+
+    it('should getInputsCoin return empty', () => {
+      const inputs = getInputsCoin(
+        MOCK_TRANSACTION_MINT.transaction.inputs || []
+      );
+      expect(inputs.length).toEqual(0);
     });
 
     it('should getInputsContract return correct inputs', () => {
       const inputs = getInputsContract(
-        MOCK_TRANSACTION_CONTRACT_CALL.inputs || []
+        MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || []
       );
-      expect(JSON.stringify(inputs)).toEqual(
-        JSON.stringify([MOCK_INPUT_CONTRACT])
+      expect(inputs.length).toEqual(1);
+      expect(inputs[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputContract
       );
     });
 
-    it('should getInputsMessage return correct inputs', () => {
-      const inputs = getInputsMessage(
-        MOCK_TRANSACTION_CONTRACT_CALL.inputs || []
+    it('should getInputsContract return empty', () => {
+      const inputs = getInputsContract(
+        MOCK_TRANSACTION_CREATE_CONTRACT.transaction.inputs || []
       );
-      // TODO: add a real test here... for now we don't even support message inputs in screens
-      expect(JSON.stringify(inputs)).toEqual(JSON.stringify([]));
+      expect(inputs.length).toEqual(0);
+    });
+
+    it('should getInputsMessage return correct inputs', () => {
+      // TODO: add test here.. not sure how to test this as we don't support message inputs/outputs in screens yet
+      expect(false);
+    });
+
+    it('should getInputsMessage return empty', () => {
+      const inputs = getInputsMessage(
+        MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || []
+      );
+      expect(inputs.length).toEqual(0);
     });
 
     it('should getInputContractFromIndex return correct inputs', () => {
       const contractOutput = getOutputsContract(
-        MOCK_TRANSACTION_CONTRACT_CALL.outputs || []
+        MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || []
       )?.[0];
       const input = getInputContractFromIndex(
-        MOCK_TRANSACTION_CONTRACT_CALL.inputs || [],
+        MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || [],
         contractOutput.inputIndex
       );
-      // TODO: add a real test here... for now we don't even support message inputs in screens
-      expect(JSON.stringify(input)).toEqual(
-        JSON.stringify(MOCK_INPUT_CONTRACT)
+      expect(input).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputContract
       );
+    });
+
+    it('should getInputContractFromIndex return empty', () => {
+      const contractOutput = getOutputsContract(
+        MOCK_TRANSACTION_CREATE_CONTRACT.transaction.outputs || []
+      )?.[0];
+      const input = getInputContractFromIndex(
+        MOCK_TRANSACTION_CREATE_CONTRACT.transaction.inputs || [],
+        contractOutput.inputIndex
+      );
+      expect(input).toBeUndefined();
     });
   });
 
   describe('getFromAddress', () => {
     it('should return correct fromAddress', () => {
-      const fromAddress = MOCK_INPUT_COIN.owner;
+      const fromAddress = MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin?.owner;
       expect(
-        getFromAddress(MOCK_TRANSACTION_CONTRACT_CALL.inputs || [])
+        getFromAddress(MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || [])
       ).toEqual(fromAddress);
+    });
+
+    it('should return fromAddress from Mint transaction', () => {
+      expect(
+        getFromAddress(MOCK_TRANSACTION_MINT.transaction.inputs || [])
+      ).toBeUndefined();
     });
   });
 
   describe('getOutputs', () => {
     it('should getOutputsCoin return correct outputs', () => {
       const outputs = getOutputsCoin(
-        MOCK_TRANSACTION_CONTRACT_CALL.outputs || []
+        MOCK_TRANSACTION_MINT.transaction.outputs || []
       );
-      // TODO: add a real test here...
-      expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
+
+      expect(outputs.length).toEqual(1);
+      expect(outputs[0]).toStrictEqual(MOCK_TRANSACTION_MINT_PARTS.outputCoin);
+    });
+
+    it('should getOutputsCoin return empty', () => {
+      const outputs = getOutputsCoin(
+        MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || []
+      );
+      expect(outputs.length).toEqual(0);
     });
 
     it('should getOutputsContract return correct outputs', () => {
       const outputs = getOutputsContract(
-        MOCK_TRANSACTION_CONTRACT_CALL.outputs || []
+        MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || []
       );
-      // TODO: add a real test here...
-      expect(JSON.stringify(outputs)).toEqual(
-        JSON.stringify([MOCK_OUTPUT_CONTRACT])
+
+      expect(outputs.length).toEqual(1);
+      expect(outputs[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.outputContract
       );
+    });
+
+    it('should getOutputsContract return empty', () => {
+      const outputs = getOutputsContract(
+        MOCK_TRANSACTION_CREATE_CONTRACT.transaction.outputs || []
+      );
+      expect(outputs.length).toEqual(0);
     });
 
     it('should getOutputsMessage return correct outputs', () => {
+      // TODO: add test here.. not sure how to test this as we don't support message inputs/outputs in screens yet
+      expect(false);
+    });
+
+    it('should getOutputsMessage return empty', () => {
       const outputs = getOutputsMessage(
-        MOCK_TRANSACTION_CONTRACT_CALL.outputs || []
+        MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || []
       );
-      // TODO: add a real test here... for now we don't even support message outputs in screens
-      expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
+      expect(outputs.length).toEqual(0);
     });
 
     it('should getOutputsVariable return correct outputs', () => {
-      // const outputs = getOutputsVariable(MOCK_TRANSACTION_CONTRACT_CALL);
-      // TODO: add a real test here... for now we don't even support message outputs in screens
-      // expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-      // expect(getOutputsVariable()).toEqual([]);
+      const outputs = getOutputsVariable(
+        MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || []
+      );
+
+      expect(outputs.length).toEqual(1);
+      expect(outputs[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.outputVariable
+      );
+    });
+
+    it('should getOutputsVariable return empty', () => {
+      const outputs = getOutputsVariable(
+        MOCK_TRANSACTION_CREATE_CONTRACT.transaction.outputs || []
+      );
+      expect(outputs.length).toEqual(0);
     });
 
     it('should getOutputsChange return correct outputs', () => {
       const outputs = getOutputsChange(
-        MOCK_TRANSACTION_CONTRACT_CALL.outputs || []
+        MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || []
       );
-      expect(JSON.stringify(outputs)).toEqual(
-        JSON.stringify([MOCK_OUTPUT_CHANGE])
+
+      expect(outputs.length).toEqual(1);
+      expect(outputs[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.outputChange
       );
+    });
+
+    it('should getOutputsChange return empty', () => {
+      const outputs = getOutputsChange(
+        MOCK_TRANSACTION_MINT.transaction.outputs || []
+      );
+      expect(outputs.length).toEqual(0);
     });
 
     it('should getOutputsContractCreated return correct outputs', () => {
       const outputs = getOutputsContractCreated(
-        MOCK_TRANSACTION_CONTRACT_CALL.outputs || []
+        MOCK_TRANSACTION_CREATE_CONTRACT.transaction.outputs || []
       );
-      // TODO: add a real test here... for now we don't have this mocked transaction YET
-      expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
+
+      expect(outputs.length).toEqual(1);
+      expect(outputs[0]).toStrictEqual(
+        MOCK_TRANSACTION_CREATE_CONTRACT_PARTS.outputContractCreated
+      );
+    });
+
+    it('should getOutputsContractCreated return empty', () => {
+      const outputs = getOutputsContractCreated(
+        MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || []
+      );
+      expect(outputs.length).toEqual(0);
     });
   });
 
   describe('getReceipts', () => {
-    // it('should getReceiptsCall return correct receipts', () => {
-    //   const outputs = getReceiptsCall();
-    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
-    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-    //   expect(getReceiptsCall()).toEqual([]);
-    // });
-    // it('should getReceiptsReturn return correct receipts', () => {
-    //   const outputs = getReceiptsReturn();
-    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
-    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-    //   expect(getReceiptsReturn()).toEqual([]);
-    // });
-    // it('should getReceiptsReturnData return correct receipts', () => {
-    //   const outputs = getReceiptsReturnData();
-    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
-    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-    //   expect(getReceiptsReturnData()).toEqual([]);
-    // });
-    // it('should getReceiptsPanic return correct receipts', () => {
-    //   const outputs = getReceiptsPanic();
-    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
-    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-    //   expect(getReceiptsPanic()).toEqual([]);
-    // });
-    // it('should getReceiptsRevert return correct receipts', () => {
-    //   const outputs = getReceiptsRevert();
-    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
-    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-    //   expect(getReceiptsRevert()).toEqual([]);
-    // });
-    // it('should getReceiptsLog return correct receipts', () => {
-    //   const outputs = getReceiptsLog();
-    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
-    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-    //   expect(getReceiptsLog()).toEqual([]);
-    // });
-    // it('should getReceiptsLogData return correct receipts', () => {
-    //   const outputs = getReceiptsLogData();
-    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
-    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-    //   expect(getReceiptsLogData()).toEqual([]);
-    // });
-    // it('should getReceiptsTransfer return correct receipts', () => {
-    //   const outputs = getReceiptsTransfer();
-    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
-    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-    //   expect(getReceiptsTransfer()).toEqual([]);
-    // });
-    // it('should getReceiptsTransferOut return correct receipts', () => {
-    //   const outputs = getReceiptsTransferOut();
-    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
-    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-    //   expect(getReceiptsTransferOut()).toEqual([]);
-    // });
-    // it('should getReceiptsScriptResult return correct receipts', () => {
-    //   const outputs = getReceiptsScriptResult();
-    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
-    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-    //   expect(getReceiptsScriptResult()).toEqual([]);
-    // });
-    // it('should getReceiptsMessageOut return correct receipts', () => {
-    //   const outputs = getReceiptsMessageOut();
-    //   // TODO: add a real test here... for now we don't have this mocked transaction YET
-    //   expect(JSON.stringify(outputs)).toEqual(JSON.stringify([]));
-    //   expect(getReceiptsMessageOut()).toEqual([]);
-    // });
+    it('should getReceiptsCall return correct receipts', () => {
+      const receipts = getReceiptsCall(MOCK_TRANSACTION_CONTRACT_CALL.receipts);
+
+      expect(receipts.length).toEqual(1);
+      expect(receipts[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall
+      );
+    });
+
+    it('should getReceiptsCall return empty', () => {
+      expect(false);
+    });
+
+    it('should getReceiptsReturn return correct receipts', () => {
+      expect(false);
+    });
+
+    it('should getReceiptsReturn return empty', () => {
+      const receipts = getReceiptsReturn(
+        MOCK_TRANSACTION_CONTRACT_CALL.receipts
+      );
+      expect(receipts.length).toEqual(0);
+    });
+
+    it('should getReceiptsReturnData return correct receipts', () => {
+      const receipts = getReceiptsReturnData(
+        MOCK_TRANSACTION_CONTRACT_CALL.receipts
+      );
+
+      expect(receipts.length).toEqual(1);
+      expect(receipts[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptReturnData
+      );
+    });
+
+    it('should getReceiptsReturnData return empty', () => {
+      expect(false);
+    });
+
+    it('should getReceiptsPanic return correct receipts', () => {
+      expect(false);
+    });
+
+    it('should getReceiptsPanic return empty', () => {
+      const receipts = getReceiptsPanic(
+        MOCK_TRANSACTION_CONTRACT_CALL.receipts
+      );
+      expect(receipts.length).toEqual(0);
+    });
+
+    it('should getReceiptsRevert return correct receipts', () => {
+      expect(false);
+    });
+
+    it('should getReceiptsRevert return empty', () => {
+      const receipts = getReceiptsRevert(
+        MOCK_TRANSACTION_CONTRACT_CALL.receipts
+      );
+      expect(receipts.length).toEqual(0);
+    });
+
+    it('should getReceiptsLog return correct receipts', () => {
+      expect(false);
+    });
+
+    it('should getReceiptsLog return empty', () => {
+      const receipts = getReceiptsLog(MOCK_TRANSACTION_CONTRACT_CALL.receipts);
+      expect(receipts.length).toEqual(0);
+    });
+
+    it('should getReceiptsLogData return correct receipts', () => {
+      expect(false);
+    });
+
+    it('should getReceiptsLogData return empty', () => {
+      const receipts = getReceiptsLogData(
+        MOCK_TRANSACTION_CONTRACT_CALL.receipts
+      );
+      expect(receipts.length).toEqual(0);
+    });
+
+    it('should getReceiptsTransfer return correct receipts', () => {
+      expect(false);
+    });
+
+    it('should getReceiptsTransfer return empty', () => {
+      const receipts = getReceiptsTransfer(
+        MOCK_TRANSACTION_CONTRACT_CALL.receipts
+      );
+      expect(receipts.length).toEqual(0);
+    });
+
+    it('should getReceiptsTransferOut return correct receipts', () => {
+      const receipts = getReceiptsTransferOut(
+        MOCK_TRANSACTION_CONTRACT_CALL.receipts
+      );
+
+      expect(receipts.length).toEqual(1);
+      expect(receipts[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptTransferOut
+      );
+    });
+
+    it('should getReceiptsTransferOut return empty', () => {
+      expect(false);
+    });
+
+    it('should getReceiptsScriptResult return correct receipts', () => {
+      const receipts = getReceiptsScriptResult(
+        MOCK_TRANSACTION_CONTRACT_CALL.receipts
+      );
+
+      expect(receipts.length).toEqual(1);
+      expect(receipts[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptScriptResult
+      );
+    });
+
+    it('should getReceiptsScriptResult return empty', () => {
+      expect(false);
+    });
+
+    it('should getReceiptsMessageOut return correct receipts', () => {
+      expect(false);
+    });
+
+    it('should getReceiptsMessageOut return empty', () => {
+      const receipts = getReceiptsMessageOut(
+        MOCK_TRANSACTION_CONTRACT_CALL.receipts
+      );
+      expect(receipts.length).toEqual(0);
+    });
   });
 
   describe('getType', () => {
@@ -280,7 +453,7 @@ describe('Tx util', () => {
 
   describe('addOperation', () => {
     const fromAddress = getFromAddress(
-      MOCK_TRANSACTION_CONTRACT_CALL.inputs || []
+      MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || []
     );
     const OPERATION_CONTRACT_CALL = {
       name: Operations.contractCall,
@@ -302,9 +475,8 @@ describe('Tx util', () => {
 
     it('should just add operation when its the first one', () => {
       const operations = addOperation([], OPERATION_CONTRACT_CALL);
-      expect(JSON.stringify(operations)).toEqual(
-        JSON.stringify([OPERATION_CONTRACT_CALL])
-      );
+      expect(operations.length).toEqual(1);
+      expect(operations[0]).toStrictEqual(OPERATION_CONTRACT_CALL);
     });
 
     it('should not stack operations with different name / from / to', () => {
@@ -416,150 +588,368 @@ describe('Tx util', () => {
   });
 
   describe('getOperation', () => {
-    // getContractCreatedOperations
-    // getTransferOperations
-    // getPayProducerOperations
-    it('should getOperations return contract call operations', () => {
-      const fromAddress = getFromAddress(
-        MOCK_TRANSACTION_CONTRACT_CALL?.inputs || []
-      );
-      const contractOutputs = getOutputsContract(
-        MOCK_TRANSACTION_CONTRACT_CALL.outputs || []
-      );
-      const contractInput = getInputContractFromIndex(
-        MOCK_TRANSACTION_CONTRACT_CALL.inputs || [],
-        contractOutputs[0].inputIndex
-      );
-
-      const operations = getOperations({
-        transactionType: MOCK_TRANSACTION_CONTRACT_CALL.type,
-        inputs: MOCK_TRANSACTION_CONTRACT_CALL.inputs || [],
-        outputs: MOCK_TRANSACTION_CONTRACT_CALL.outputs || [],
-        receipts: MOCK_RECEIPTS_CONTRACT_CALL,
+    it('should getContractCreatedOperations return operations from transaction Create', () => {
+      const operations = getContractCreatedOperations({
+        inputs: MOCK_TRANSACTION_CREATE_CONTRACT.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_CREATE_CONTRACT.transaction.outputs || [],
       });
       expect(operations.length).toEqual(1);
-      expect(operations[0].name).toEqual(Operations.contractCall);
-      expect(operations[0]?.from?.type).toEqual(AddressType.account);
-      expect(operations[0]?.from?.address).toEqual(fromAddress);
-      expect(operations[0]?.to?.type).toEqual(AddressType.contract);
-      expect(operations[0]?.to?.address).toEqual(contractInput?.contractID);
-      expect(operations[0].assetsSent?.[0]?.assetId).toEqual(
-        MOCK_RECEIPT_CALL.assetId
-      );
-      expect(operations[0].assetsSent?.[0]?.amount.valueOf()).toEqual(
-        MOCK_RECEIPT_CALL.amount.valueOf()
+      expect(operations[0]).toStrictEqual(
+        MOCK_TRANSACTION_CREATE_CONTRACT.tx.operations[0]
       );
     });
 
-    it('should getOperations return transfer operations', () => {});
+    it('should getContractCreatedOperations return empty', () => {
+      const operations = getContractCreatedOperations({
+        inputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || [],
+      });
+      expect(operations.length).toEqual(0);
+    });
 
-    it('should getOperations return mint operations', () => {});
+    it('should getPayProducerOperations return operations from transaction Create', () => {
+      const operations = getPayProducerOperations(
+        MOCK_TRANSACTION_MINT.transaction.outputs || []
+      );
+      expect(operations.length).toEqual(1);
+      expect(operations[0]).toStrictEqual(
+        MOCK_TRANSACTION_MINT.tx.operations[0]
+      );
+    });
 
-    it('should getOperations return contract created operations', () => {});
+    it('should getPayProducerOperations return empty', () => {
+      const operations = getPayProducerOperations(
+        MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || []
+      );
+      expect(operations.length).toEqual(0);
+    });
+
+    it('should getOperations return contract call operations', () => {
+      const operations = getOperations({
+        transactionType:
+          MOCK_TRANSACTION_CONTRACT_CALL.transaction.type ||
+          TransactionType.Script,
+        inputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || [],
+        receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
+      });
+      expect(operations.length).toEqual(1);
+      expect(operations[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0]
+      );
+    });
+
+    it('should getPayProducerOperations return empty', () => {
+      const operations = getPayProducerOperations(
+        MOCK_TRANSACTION_CREATE_CONTRACT.transaction.outputs || []
+      );
+      expect(operations.length).toEqual(0);
+    });
+
+    it('should getTransferOperations return contract call operations', () => {
+      // add transfer operations
+      expect(false);
+    });
+
+    it('should getTransferOperations return empty', () => {
+      const operations = getTransferOperations({
+        inputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || [],
+      });
+      expect(operations.length).toEqual(0);
+    });
+
+    it('should getOperations return transfer operations', () => {
+      expect(false);
+    });
+
+    it('should getOperations return mint operations', () => {
+      const operations = getOperations({
+        transactionType: MOCK_TRANSACTION_MINT.transaction.type,
+        inputs: MOCK_TRANSACTION_MINT.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_MINT.transaction.outputs || [],
+        receipts: MOCK_TRANSACTION_MINT.receipts || [],
+      });
+
+      expect(operations.length).toEqual(1);
+      expect(operations[0]).toStrictEqual(
+        MOCK_TRANSACTION_MINT.tx.operations[0]
+      );
+    });
+
+    it('should getOperations return contract created operations', () => {
+      const operations = getOperations({
+        transactionType: MOCK_TRANSACTION_CREATE_CONTRACT.transaction.type,
+        inputs: MOCK_TRANSACTION_CREATE_CONTRACT.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_CREATE_CONTRACT.transaction.outputs || [],
+        receipts: MOCK_TRANSACTION_CREATE_CONTRACT.receipts || [],
+      });
+
+      expect(operations.length).toEqual(1);
+      expect(operations[0]).toStrictEqual(
+        MOCK_TRANSACTION_CREATE_CONTRACT.tx.operations[0]
+      );
+    });
   });
 
   describe('getTotalAssetsSent', () => {
     // TODO: add other combinations of only 1 asset, 2 asset equals, different assets. check sums etcv
     it('should getTotalAssetsSent return total assets from contract call', () => {
       const totalAssetsSent = getTotalAssetsSent({
-        transactionType: MOCK_TRANSACTION_CONTRACT_CALL.type,
-        inputs: MOCK_TRANSACTION_CONTRACT_CALL.inputs || [],
-        outputs: MOCK_TRANSACTION_CONTRACT_CALL.outputs || [],
-        receipts: MOCK_RECEIPTS_CONTRACT_CALL,
+        transactionType:
+          MOCK_TRANSACTION_CONTRACT_CALL.transaction.type ||
+          TransactionType.Script,
+        inputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || [],
+        receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
       });
-      expect(totalAssetsSent[0]?.assetId).toEqual(MOCK_RECEIPT_CALL.assetId);
+      expect(totalAssetsSent[0]?.assetId).toEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall?.assetId
+      );
       expect(totalAssetsSent[0]?.amount.valueOf()).toEqual(
-        MOCK_RECEIPT_CALL.amount.valueOf()
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall?.amount.valueOf()
       );
     });
   });
 
   describe('getGasUsed', () => {
-    // add gas used tests for created contract situations
-    it('should getGasUsedFromReceipts return gasUsed from tx', () => {
-      const gasUsed = getGasUsedFromReceipts(MOCK_RECEIPTS_CONTRACT_CALL);
-      expect(gasUsed.valueOf()).toEqual(bn(167824).valueOf());
+    it('should getGasUsedFromReceipts return gasUsed from contract call transaction', () => {
+      const gasUsed = getGasUsedFromReceipts(
+        MOCK_TRANSACTION_CONTRACT_CALL.receipts || []
+      );
+      expect(gasUsed.valueOf()).toEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptScriptResult.gasUsed.valueOf()
+      );
     });
-    it('should getGasUsed return gasUsed from tx', () => {
-      const gasUsed = getGasUsed({
-        transaction: MOCK_TRANSACTION_CONTRACT_CALL,
-        receipts: MOCK_RECEIPTS_CONTRACT_CALL,
+
+    it('should getGasUsedFromReceipts return empty', () => {
+      const gasUsed = getGasUsedFromReceipts(
+        MOCK_TRANSACTION_CONTRACT_CALL.receipts?.filter(
+          (r) => r.type !== ReceiptType.ScriptResult
+        ) || []
+      );
+      expect(gasUsed.valueOf()).toEqual(bn(0).valueOf());
+
+      const gasUsedEmpty = getGasUsedFromReceipts([]);
+      expect(gasUsedEmpty.valueOf()).toEqual(bn(0).valueOf());
+    });
+
+    it('should getGasUsedContractCreated return gasUsed from contract call transaction', () => {
+      const gasUsed = getGasUsedContractCreated({
+        transaction: MOCK_TRANSACTION_CREATE_CONTRACT.transaction,
         gasPerByte: MOCK_GAS_PER_BYTE,
         gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
       });
-      expect(gasUsed.valueOf()).toEqual(bn(167824).valueOf());
+
+      expect(gasUsed.valueOf()).toEqual(
+        MOCK_TRANSACTION_CREATE_CONTRACT.tx.gasUsed.valueOf()
+      );
+    });
+
+    it('should getGasUsedContractCreated return empty', () => {
+      const gasUsed = getGasUsedContractCreated({
+        transaction: MOCK_TRANSACTION_CONTRACT_CALL.transaction,
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
+      expect(gasUsed.valueOf()).toEqual(bn(0).valueOf());
+    });
+
+    it('should getGasUsed return gasUsed from regular transactions', () => {
+      const gasUsed = getGasUsed({
+        transaction: MOCK_TRANSACTION_CONTRACT_CALL.transaction,
+        receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
+      expect(gasUsed.valueOf()).toEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptScriptResult.gasUsed.valueOf()
+      );
+    });
+
+    it('should getGasUsed return gasUsed from create contract transaction bytes', () => {
+      const gasUsed = getGasUsed({
+        transaction: MOCK_TRANSACTION_CREATE_CONTRACT.transaction,
+        receipts: MOCK_TRANSACTION_CREATE_CONTRACT.receipts || [],
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
+      expect(gasUsed.valueOf()).toEqual(
+        MOCK_TRANSACTION_CREATE_CONTRACT.tx.gasUsed.valueOf()
+      );
+    });
+
+    it('should getGasUsed return empty for mint transaction', () => {
+      const gasUsed = getGasUsed({
+        transaction: MOCK_TRANSACTION_MINT.transaction,
+        receipts: MOCK_TRANSACTION_MINT.receipts || [],
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
+      expect(gasUsed.valueOf()).toEqual(
+        MOCK_TRANSACTION_MINT.tx.gasUsed.valueOf()
+      );
     });
   });
 
   describe('getFee', () => {
-    // add other fee situations
-    // fee from bytes of contract created transaction
     // fee from transfer operations
-    it('should getFeeFromReceipts return fee from receipts', () => {
-      const fee = getFeeFromReceipts({
-        gasPrice: bn(MOCK_TRANSACTION_CONTRACT_CALL.gasPrice),
-        receipts: MOCK_RECEIPTS_CONTRACT_CALL,
-        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
-      });
-      expect(fee.valueOf()).toEqual(bn(1).valueOf());
-    });
-    it('should getFee return fee from tx', () => {
-      const fee = getFee({
-        transaction: MOCK_TRANSACTION_CONTRACT_CALL,
-        receipts: MOCK_RECEIPTS_CONTRACT_CALL,
+    it('should getContractCreatedFee return fee from contract created transaction', () => {
+      const fee = getContractCreatedFee({
+        transaction: MOCK_TRANSACTION_CREATE_CONTRACT.transaction,
         gasPerByte: MOCK_GAS_PER_BYTE,
         gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
       });
-      expect(fee.valueOf()).toEqual(bn(1).valueOf());
+      expect(fee.valueOf()).toEqual(
+        MOCK_TRANSACTION_CREATE_CONTRACT.tx.fee.valueOf()
+      );
+    });
+
+    it('should getContractCreatedFee return zero for mint / script transaction', () => {
+      const feeContractCall = getContractCreatedFee({
+        transaction: MOCK_TRANSACTION_CONTRACT_CALL.transaction,
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
+      expect(feeContractCall.valueOf()).toEqual(bn(0).valueOf());
+
+      const feeMint = getContractCreatedFee({
+        transaction: MOCK_TRANSACTION_MINT.transaction,
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
+      expect(feeMint.valueOf()).toEqual(bn(0).valueOf());
+    });
+
+    it('should getFeeFromReceipts return fee from receipts', () => {
+      const fee = getFeeFromReceipts({
+        gasPrice: bn(MOCK_TRANSACTION_CONTRACT_CALL.transaction.gasPrice),
+        receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
+      expect(fee.valueOf()).toEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL.tx.fee.valueOf()
+      );
+    });
+
+    it('should getFeeFromReceipts return zero', () => {
+      const fee = getFeeFromReceipts({
+        gasPrice: bn(MOCK_TRANSACTION_CONTRACT_CALL.transaction.gasPrice),
+        receipts: [],
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
+      expect(fee.valueOf()).toEqual(bn(0).valueOf());
+    });
+
+    it('should getFee return fee from create contract transaction (from bytes)', () => {
+      const fee = getFee({
+        transaction: MOCK_TRANSACTION_CREATE_CONTRACT.transaction,
+        receipts: MOCK_TRANSACTION_CREATE_CONTRACT.receipts || [],
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
+      expect(fee.valueOf()).toEqual(
+        MOCK_TRANSACTION_CREATE_CONTRACT.tx.fee.valueOf()
+      );
+    });
+
+    it('should getFee return fee from contract call transaction', () => {
+      const fee = getFee({
+        transaction: MOCK_TRANSACTION_CONTRACT_CALL.transaction,
+        receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
+      expect(fee.valueOf()).toEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL.tx.fee.valueOf()
+      );
+    });
+
+    it('should getFee return fee from mint transaction (zero)', () => {
+      const fee = getFee({
+        transaction: MOCK_TRANSACTION_MINT.transaction,
+        receipts: MOCK_TRANSACTION_MINT.receipts || [],
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
+      expect(fee.valueOf()).toEqual(MOCK_TRANSACTION_MINT.tx.fee.valueOf());
     });
   });
 
   describe('parseTx', () => {
     it('should parseTx return correct data for contract call transaction', () => {
-      const fromAddress = getFromAddress(
-        MOCK_TRANSACTION_CONTRACT_CALL.inputs || []
-      );
+      // const fromAddress = getFromAddress(
+      //   MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || []
+      // );
 
       const tx = parseTx({
-        transaction: MOCK_TRANSACTION_CONTRACT_CALL,
-        receipts: MOCK_RECEIPTS_CONTRACT_CALL,
+        transaction: MOCK_TRANSACTION_CONTRACT_CALL.transaction,
+        receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
         gasPerByte: MOCK_GAS_PER_BYTE,
         gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
         gqlStatus: 'SuccessStatus',
         id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7',
       });
 
-      expect(tx.fee?.toNumber()).toEqual(bn(1).toNumber());
-      expect(tx.gasUsed?.toNumber()).toEqual(bn(167824).toNumber());
-      expect(tx.id).toEqual(
-        '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7'
-      );
-      expect(tx.status).toEqual(Status.success);
-      expect(tx.isStatusSuccess).toEqual(true);
-      expect(tx.isStatusPending).toEqual(false);
-      expect(tx.isStatusFailure).toEqual(false);
-      expect(tx.type).toEqual(Type.script);
-      expect(tx.isTypeScript).toEqual(true);
-      expect(tx.isTypeCreate).toEqual(false);
-      expect(tx.isTypeMint).toEqual(false);
-      expect(tx.operations.length).toEqual(1);
-      expect(tx.operations[0].name).toEqual(Operations.contractCall);
-      expect(tx.operations[0]?.from?.type).toEqual(AddressType.account);
-      expect(tx.operations[0]?.from?.address).toEqual(fromAddress);
-      expect(tx.operations[0]?.to?.type).toEqual(AddressType.contract);
-      expect(tx.operations[0]?.to?.address).toEqual(
-        '0x0a98320d39c03337401a4e46263972a9af6ce69ec2f35a5420b1bd35784c74b1'
-      );
-      expect(tx.operations[0].assetsSent?.[0]?.assetId).toEqual(
-        MOCK_RECEIPT_CALL.assetId
-      );
-      expect(tx.operations[0].assetsSent?.[0]?.amount.valueOf()).toEqual(
-        MOCK_RECEIPT_CALL.amount.valueOf()
-      );
-      expect(tx.totalAssetsSent[0]?.assetId).toEqual(MOCK_RECEIPT_CALL.assetId);
-      expect(tx.totalAssetsSent[0]?.amount.valueOf()).toEqual(
-        MOCK_RECEIPT_CALL.amount.valueOf()
-      );
+      expect(tx).toStrictEqual(MOCK_TRANSACTION_CONTRACT_CALL.tx);
+
+      // expect(tx.fee?.toNumber()).toEqual(bn(1).toNumber());
+      // expect(tx.gasUsed?.toNumber()).toEqual(bn(167824).toNumber());
+      // expect(tx.id).toEqual(
+      //   '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7'
+      // );
+      // expect(tx.status).toEqual(Status.success);
+      // expect(tx.isStatusSuccess).toEqual(true);
+      // expect(tx.isStatusPending).toEqual(false);
+      // expect(tx.isStatusFailure).toEqual(false);
+      // expect(tx.type).toEqual(Type.script);
+      // expect(tx.isTypeScript).toEqual(true);
+      // expect(tx.isTypeCreate).toEqual(false);
+      // expect(tx.isTypeMint).toEqual(false);
+      // expect(tx.operations.length).toEqual(1);
+      // expect(tx.operations[0].name).toEqual(Operations.contractCall);
+      // expect(tx.operations[0]?.from?.type).toEqual(AddressType.account);
+      // expect(tx.operations[0]?.from?.address).toEqual(fromAddress);
+      // expect(tx.operations[0]?.to?.type).toEqual(AddressType.contract);
+      // expect(tx.operations[0]?.to?.address).toEqual(
+      //   '0x0a98320d39c03337401a4e46263972a9af6ce69ec2f35a5420b1bd35784c74b1'
+      // );
+      // expect(tx.operations[0].assetsSent?.[0]?.assetId).toEqual(
+      //   MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall?.assetId
+      // );
+      // expect(tx.operations[0].assetsSent?.[0]?.amount.valueOf()).toEqual(
+      //   MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall?.amount.valueOf()
+      // );
+      // expect(tx.totalAssetsSent[0]?.assetId).toEqual(
+      //   MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall?.assetId
+      // );
+      // expect(tx.totalAssetsSent[0]?.amount.valueOf()).toEqual(
+      //   MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall?.amount.valueOf()
+      // );
+    });
+
+    it('should parseTx return correct data for create contract transaction', () => {
+      const tx = parseTx({
+        transaction: MOCK_TRANSACTION_CREATE_CONTRACT.transaction,
+        receipts: MOCK_TRANSACTION_CREATE_CONTRACT.receipts || [],
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+        gqlStatus: 'SuccessStatus',
+        id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7',
+      });
+      expect(tx).toStrictEqual(MOCK_TRANSACTION_CREATE_CONTRACT.tx);
+    });
+
+    it('should parseTx return correct data for create contract transaction', () => {
+      const tx = parseTx({
+        transaction: MOCK_TRANSACTION_MINT.transaction,
+        receipts: MOCK_TRANSACTION_MINT.receipts || [],
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+        gqlStatus: 'SuccessStatus',
+        id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7',
+      });
+      expect(tx).toStrictEqual(MOCK_TRANSACTION_MINT.tx);
     });
   });
 });

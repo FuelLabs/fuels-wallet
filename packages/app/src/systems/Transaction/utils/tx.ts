@@ -672,8 +672,6 @@ export function parseTx({
     operations,
     gasUsed,
     fee,
-    type,
-    status,
     totalAssetsSent,
     isTypeCreate: isTypeCreate(transaction.type),
     isTypeScript: isTypeScript(transaction.type),
@@ -681,5 +679,7 @@ export function parseTx({
     isStatusFailure: isStatusFailure(gqlStatus),
     isStatusSuccess: isStatusSuccess(gqlStatus),
     isStatusPending: isStatusPending(gqlStatus),
+    type,
+    status,
   };
 }

@@ -47,17 +47,17 @@ export function useTransaction({
     gqlStatus: gqlTransactionStatus,
     id: txId,
   });
-  const { isTypeMint, isStatusFailure, isStatusPending } = tx!;
 
   const isInvalidTxId = error === TRANSACTION_ERRORS.INVALID_ID;
   const isTxNotFound = error === TRANSACTION_ERRORS.NOT_FOUND;
   const isTxReceiptsNotFound = error === TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND;
   const isFetchingDetails = isFetching || isFetchingResult;
   const shouldShowAlert =
-    isTxNotFound || isInvalidTxId || isStatusPending || isStatusFailure;
+    isTxNotFound || isInvalidTxId || tx?.isStatusPending || tx?.isStatusFailure;
   const shouldShowTx =
     transaction && !isFetching && !isInvalidTxId && !isTxNotFound;
-  const shouldShowTxDetails = shouldShowTx && !isFetchingResult && !isTypeMint;
+  const shouldShowTxDetails =
+    shouldShowTx && !isFetchingResult && !tx?.isTypeMint;
 
   const ethAmountSent = bn(
     tx?.totalAssetsSent?.find(
