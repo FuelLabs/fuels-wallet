@@ -61,6 +61,8 @@ import {
 } from './tx';
 import { Operations, Status, Type } from './tx.types';
 
+import { reparse } from '~/systems/Core/__tests__/utils';
+
 describe('Tx util', () => {
   describe('getStatus', () => {
     it('should return correct status', () => {
@@ -162,7 +164,7 @@ describe('Tx util', () => {
       )?.[0];
       const input = getInputContractFromIndex(
         MOCK_TRANSACTION_CREATE_CONTRACT.transaction.inputs || [],
-        contractOutput.inputIndex
+        contractOutput?.inputIndex
       );
       expect(input).toBeUndefined();
     });
@@ -315,9 +317,12 @@ describe('Tx util', () => {
         MOCK_TRANSACTION_CONTRACT_CALL.receipts
       );
 
-      expect(receipts.length).toEqual(1);
+      expect(receipts.length).toEqual(2);
       expect(receipts[0]).toStrictEqual(
-        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptReturnData
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptReturnData[0]
+      );
+      expect(receipts[1]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptReturnData[1]
       );
     });
 
@@ -878,54 +883,18 @@ describe('Tx util', () => {
 
   describe('parseTx', () => {
     it('should parseTx return correct data for contract call transaction', () => {
-      // const fromAddress = getFromAddress(
-      //   MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || []
-      // );
-
       const tx = parseTx({
         transaction: MOCK_TRANSACTION_CONTRACT_CALL.transaction,
         receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
         gasPerByte: MOCK_GAS_PER_BYTE,
         gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
         gqlStatus: 'SuccessStatus',
-        id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7',
+        id: MOCK_TRANSACTION_CONTRACT_CALL.tx.id,
       });
 
-      expect(tx).toStrictEqual(MOCK_TRANSACTION_CONTRACT_CALL.tx);
-
-      // expect(tx.fee?.toNumber()).toEqual(bn(1).toNumber());
-      // expect(tx.gasUsed?.toNumber()).toEqual(bn(167824).toNumber());
-      // expect(tx.id).toEqual(
-      //   '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7'
-      // );
-      // expect(tx.status).toEqual(Status.success);
-      // expect(tx.isStatusSuccess).toEqual(true);
-      // expect(tx.isStatusPending).toEqual(false);
-      // expect(tx.isStatusFailure).toEqual(false);
-      // expect(tx.type).toEqual(Type.script);
-      // expect(tx.isTypeScript).toEqual(true);
-      // expect(tx.isTypeCreate).toEqual(false);
-      // expect(tx.isTypeMint).toEqual(false);
-      // expect(tx.operations.length).toEqual(1);
-      // expect(tx.operations[0].name).toEqual(Operations.contractCall);
-      // expect(tx.operations[0]?.from?.type).toEqual(AddressType.account);
-      // expect(tx.operations[0]?.from?.address).toEqual(fromAddress);
-      // expect(tx.operations[0]?.to?.type).toEqual(AddressType.contract);
-      // expect(tx.operations[0]?.to?.address).toEqual(
-      //   '0x0a98320d39c03337401a4e46263972a9af6ce69ec2f35a5420b1bd35784c74b1'
-      // );
-      // expect(tx.operations[0].assetsSent?.[0]?.assetId).toEqual(
-      //   MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall?.assetId
-      // );
-      // expect(tx.operations[0].assetsSent?.[0]?.amount.valueOf()).toEqual(
-      //   MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall?.amount.valueOf()
-      // );
-      // expect(tx.totalAssetsSent[0]?.assetId).toEqual(
-      //   MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall?.assetId
-      // );
-      // expect(tx.totalAssetsSent[0]?.amount.valueOf()).toEqual(
-      //   MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall?.amount.valueOf()
-      // );
+      expect(reparse(tx)).toStrictEqual(
+        reparse(MOCK_TRANSACTION_CONTRACT_CALL.tx)
+      );
     });
 
     it('should parseTx return correct data for create contract transaction', () => {
@@ -935,21 +904,23 @@ describe('Tx util', () => {
         gasPerByte: MOCK_GAS_PER_BYTE,
         gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
         gqlStatus: 'SuccessStatus',
-        id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7',
+        id: MOCK_TRANSACTION_CREATE_CONTRACT.tx.id,
       });
-      expect(tx).toStrictEqual(MOCK_TRANSACTION_CREATE_CONTRACT.tx);
+      expect(reparse(tx)).toStrictEqual(
+        reparse(MOCK_TRANSACTION_CREATE_CONTRACT.tx)
+      );
     });
 
-    it('should parseTx return correct data for create contract transaction', () => {
+    it('should parseTx return correct data for mint transaction', () => {
       const tx = parseTx({
         transaction: MOCK_TRANSACTION_MINT.transaction,
         receipts: MOCK_TRANSACTION_MINT.receipts || [],
         gasPerByte: MOCK_GAS_PER_BYTE,
         gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
         gqlStatus: 'SuccessStatus',
-        id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7',
+        id: MOCK_TRANSACTION_MINT.tx.id,
       });
-      expect(tx).toStrictEqual(MOCK_TRANSACTION_MINT.tx);
+      expect(reparse(tx)).toStrictEqual(reparse(MOCK_TRANSACTION_MINT.tx));
     });
   });
 });

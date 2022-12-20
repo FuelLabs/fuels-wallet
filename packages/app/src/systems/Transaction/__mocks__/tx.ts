@@ -191,7 +191,7 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
         },
         assetsSent: [
           {
-            amount: '0x5f5e100',
+            amount: bn(100000000),
             assetId:
               '0x0000000000000000000000000000000000000000000000000000000000000000',
           },
@@ -204,7 +204,7 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
     status: Status.success,
     totalAssetsSent: [
       {
-        amount: '0x5f5e100',
+        amount: bn(100000000),
         assetId:
           '0x0000000000000000000000000000000000000000000000000000000000000000',
       },
@@ -366,7 +366,7 @@ export const MOCK_TRANSACTION_MINT: MockTransaction = {
           {
             assetId:
               '0x0000000000000000000000000000000000000000000000000000000000000000',
-            amount: '0x1',
+            amount: bn(1),
           },
         ],
       },
@@ -377,7 +377,7 @@ export const MOCK_TRANSACTION_MINT: MockTransaction = {
       {
         assetId:
           '0x0000000000000000000000000000000000000000000000000000000000000000',
-        amount: '0x1',
+        amount: bn(1),
       },
     ],
     isTypeCreate: false,
