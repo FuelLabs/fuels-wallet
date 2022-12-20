@@ -127,7 +127,7 @@ export const transactionMachine = createMachine(
       unlocking: {
         invoke: {
           id: 'unlock',
-          src: unlockMachine,
+          src: 'unlock',
           data: (_: MachineContext, ev: MachineEvents) => ev.input,
           onDone: [
             unlockMachineErrorAction('unlocking', 'unlockError'),
@@ -227,6 +227,7 @@ export const transactionMachine = createMachine(
       }),
     },
     services: {
+      unlock: unlockMachine,
       fetchGasPrice: FetchMachine.create<TxInputs['fetchGasPrice'], BN>({
         showError: false,
         async fetch({ input }) {
