@@ -48,6 +48,11 @@ export function useTransaction({
     id: txId,
   });
 
+  console.log(
+    `JSON.stringify(transactionResult?.receipts)`,
+    JSON.stringify(transactionResult?.receipts)
+  );
+
   const isInvalidTxId = error === TRANSACTION_ERRORS.INVALID_ID;
   const isTxNotFound = error === TRANSACTION_ERRORS.NOT_FOUND;
   const isTxReceiptsNotFound = error === TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND;

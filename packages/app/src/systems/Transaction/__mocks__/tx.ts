@@ -7,6 +7,8 @@ import type {
   OutputContract,
   OutputContractCreated,
   OutputVariable,
+  ReceiptReturn,
+  ReceiptScriptResult,
   Transaction,
   TransactionResultCallReceipt,
   TransactionResultReceipt,
@@ -390,6 +392,135 @@ export const MOCK_TRANSACTION_MINT: MockTransaction = {
     status: Status.success,
   },
   receipts: [],
+};
+
+export const MOCK_TRANSACTION_TRANSFER_PARTS: {
+  inputCoin: InputCoin;
+  outputCoin: OutputCoin;
+  outputChange: OutputChange;
+  receiptReturn: ReceiptReturn;
+  receiptScriptResult: ReceiptScriptResult;
+} = {
+  inputCoin: {
+    type: InputType.Coin,
+    utxoID: {
+      transactionId:
+        '0x0dbd3bd53580b647a74ca5825b5b70a44b9b780e8fc6fa40faa080f0da971ec4',
+      outputIndex: 0,
+    },
+    owner: '0x06300e686a5511c7ba0399fc68dcbe0ca2d8f54f7e6afea73c505dd3bcacf33b',
+    amount: bn('500000000'),
+    assetId:
+      '0x0000000000000000000000000000000000000000000000000000000000000000',
+    txPointer: { blockHeight: 0, txIndex: 0 },
+    witnessIndex: 0,
+    maturity: 0,
+    predicateLength: 0,
+    predicateDataLength: 0,
+    predicate: '0x',
+    predicateData: '0x',
+  },
+  outputCoin: {
+    type: OutputType.Coin,
+    to: '0x1c78a0266f7e10eb47872f0dc60a984625d01635c2723d61dccb9f555702a410',
+    amount: bn(10000),
+    assetId:
+      '0x0000000000000000000000000000000000000000000000000000000000000000',
+  },
+  outputChange: {
+    type: OutputType.Change,
+    to: '0x06300e686a5511c7ba0399fc68dcbe0ca2d8f54f7e6afea73c505dd3bcacf33b',
+    amount: bn('499989999'),
+    assetId:
+      '0x0000000000000000000000000000000000000000000000000000000000000000',
+  },
+  receiptReturn: {
+    type: ReceiptType.Return,
+    id: '0x0000000000000000000000000000000000000000000000000000000000000000',
+    val: bn(0),
+    pc: bn('0x2868'),
+    is: bn('0x2868'),
+  },
+  receiptScriptResult: {
+    type: ReceiptType.ScriptResult,
+    result: bn(0),
+    gasUsed: bn(1335),
+  },
+};
+
+export const MOCK_TRANSACTION_TRANSFER: MockTransaction = {
+  transaction: {
+    type: 0,
+    gasPrice: bn(1),
+    gasLimit: bn(100000000),
+    maturity: 0,
+    scriptLength: 4,
+    scriptDataLength: 0,
+    inputsCount: 1,
+    outputsCount: 2,
+    witnessesCount: 1,
+    receiptsRoot:
+      '0x38f46cc362f2ec2df7d2691a6dd07594eeb4c6ffa7f3cbd7ccacab9eacb56ca1',
+    script: '0x24000000',
+    scriptData: '0x',
+    inputs: [MOCK_TRANSACTION_TRANSFER_PARTS.inputCoin],
+    outputs: [
+      MOCK_TRANSACTION_TRANSFER_PARTS.outputCoin,
+      MOCK_TRANSACTION_TRANSFER_PARTS.outputChange,
+    ],
+    witnesses: [
+      {
+        dataLength: 64,
+        data: '0x1ba88dd34e7ed26312f88de00fa23761ce26aafe963e171011d9e8f8b47a5ac154ee2def875fb0c4b3cab7428deedfd54e38ff4a61ac38ee7f9da72523e31a6b',
+      },
+    ],
+  },
+  tx: {
+    id: '0xdcbd3117aab0ec4a9a00f4a0f81616878140dccc3046b8fc4510fa2181d955e7',
+    operations: [
+      {
+        name: 'Transfer asset',
+        from: {
+          type: AddressType.account,
+          address:
+            '0x06300e686a5511c7ba0399fc68dcbe0ca2d8f54f7e6afea73c505dd3bcacf33b',
+        },
+        to: {
+          type: AddressType.account,
+          address:
+            '0x1c78a0266f7e10eb47872f0dc60a984625d01635c2723d61dccb9f555702a410',
+        },
+        assetsSent: [
+          {
+            assetId:
+              '0x0000000000000000000000000000000000000000000000000000000000000000',
+            amount: bn(10000),
+          },
+        ],
+      },
+    ],
+    gasUsed: bn(1335),
+    fee: bn(1),
+    totalAssetsSent: [
+      {
+        assetId:
+          '0x0000000000000000000000000000000000000000000000000000000000000000',
+        amount: bn(10000),
+      },
+    ],
+    isTypeCreate: false,
+    isTypeScript: true,
+    isTypeMint: false,
+    isStatusFailure: false,
+    isStatusSuccess: true,
+    isStatusPending: false,
+    type: Type.script,
+    status: Status.success,
+  },
+  receipts: [
+    MOCK_TRANSACTION_TRANSFER_PARTS.receiptReturn,
+    MOCK_TRANSACTION_TRANSFER_PARTS.receiptScriptResult,
+  ],
 };
 
 export const MOCK_GAS_PER_BYTE = bn(4);

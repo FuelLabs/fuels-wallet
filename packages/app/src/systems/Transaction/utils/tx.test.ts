@@ -10,6 +10,8 @@ import {
   MOCK_TRANSACTION_CREATE_CONTRACT_PARTS,
   MOCK_TRANSACTION_MINT,
   MOCK_TRANSACTION_MINT_PARTS,
+  MOCK_TRANSACTION_TRANSFER,
+  MOCK_TRANSACTION_TRANSFER_PARTS,
 } from '../__mocks__/tx';
 
 import {
@@ -298,11 +300,18 @@ describe('Tx util', () => {
     });
 
     it('should getReceiptsCall return empty', () => {
-      expect(false);
+      const receipts = getReceiptsCall(MOCK_TRANSACTION_TRANSFER.receipts);
+
+      expect(receipts.length).toEqual(0);
     });
 
     it('should getReceiptsReturn return correct receipts', () => {
-      expect(false);
+      const receipts = getReceiptsReturn(MOCK_TRANSACTION_TRANSFER.receipts);
+
+      expect(receipts.length).toEqual(1);
+      expect(receipts[0]).toStrictEqual(
+        MOCK_TRANSACTION_TRANSFER_PARTS.receiptReturn
+      );
     });
 
     it('should getReceiptsReturn return empty', () => {
@@ -327,7 +336,11 @@ describe('Tx util', () => {
     });
 
     it('should getReceiptsReturnData return empty', () => {
-      expect(false);
+      const receipts = getReceiptsReturnData(
+        MOCK_TRANSACTION_TRANSFER.receipts
+      );
+
+      expect(receipts.length).toEqual(0);
     });
 
     it('should getReceiptsPanic return correct receipts', () => {
@@ -395,7 +408,11 @@ describe('Tx util', () => {
     });
 
     it('should getReceiptsTransferOut return empty', () => {
-      expect(false);
+      const receipts = getReceiptsTransferOut(
+        MOCK_TRANSACTION_TRANSFER.receipts
+      );
+
+      expect(receipts.length).toEqual(0);
     });
 
     it('should getReceiptsScriptResult return correct receipts', () => {
@@ -623,37 +640,25 @@ describe('Tx util', () => {
     });
 
     it('should getPayProducerOperations return empty', () => {
-      const operations = getPayProducerOperations(
+      const operationsContract = getPayProducerOperations(
         MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || []
       );
-      expect(operations.length).toEqual(0);
+      expect(operationsContract.length).toEqual(0);
+      const operationsCreate = getPayProducerOperations(
+        MOCK_TRANSACTION_CREATE_CONTRACT.transaction.outputs || []
+      );
+      expect(operationsCreate.length).toEqual(0);
     });
 
-    it('should getOperations return contract call operations', () => {
-      const operations = getOperations({
-        transactionType:
-          MOCK_TRANSACTION_CONTRACT_CALL.transaction.type ||
-          TransactionType.Script,
-        inputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || [],
-        outputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || [],
-        receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
+    it('should getTransferOperations return transfer operations', () => {
+      const operations = getTransferOperations({
+        inputs: MOCK_TRANSACTION_TRANSFER.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_TRANSFER.transaction.outputs || [],
       });
       expect(operations.length).toEqual(1);
       expect(operations[0]).toStrictEqual(
-        MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0]
+        MOCK_TRANSACTION_TRANSFER.tx.operations[0]
       );
-    });
-
-    it('should getPayProducerOperations return empty', () => {
-      const operations = getPayProducerOperations(
-        MOCK_TRANSACTION_CREATE_CONTRACT.transaction.outputs || []
-      );
-      expect(operations.length).toEqual(0);
-    });
-
-    it('should getTransferOperations return contract call operations', () => {
-      // add transfer operations
-      expect(false);
     });
 
     it('should getTransferOperations return empty', () => {
@@ -664,8 +669,30 @@ describe('Tx util', () => {
       expect(operations.length).toEqual(0);
     });
 
+    it('should getOperations return contract call operations', () => {
+      const operations = getOperations({
+        transactionType: MOCK_TRANSACTION_CONTRACT_CALL.transaction.type,
+        inputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || [],
+        receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
+      });
+      expect(operations.length).toEqual(1);
+      expect(operations[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0]
+      );
+    });
+
     it('should getOperations return transfer operations', () => {
-      expect(false);
+      const operations = getOperations({
+        transactionType: MOCK_TRANSACTION_TRANSFER.transaction.type,
+        inputs: MOCK_TRANSACTION_TRANSFER.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_TRANSFER.transaction.outputs || [],
+        receipts: MOCK_TRANSACTION_TRANSFER.receipts || [],
+      });
+      expect(operations.length).toEqual(1);
+      expect(operations[0]).toStrictEqual(
+        MOCK_TRANSACTION_TRANSFER.tx.operations[0]
+      );
     });
 
     it('should getOperations return mint operations', () => {
@@ -760,7 +787,7 @@ describe('Tx util', () => {
       expect(gasUsed.valueOf()).toEqual(bn(0).valueOf());
     });
 
-    it('should getGasUsed return gasUsed from regular transactions', () => {
+    it('should getGasUsed return gasUsed from receipts for script transactions', () => {
       const gasUsed = getGasUsed({
         transaction: MOCK_TRANSACTION_CONTRACT_CALL.transaction,
         receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
@@ -772,7 +799,7 @@ describe('Tx util', () => {
       );
     });
 
-    it('should getGasUsed return gasUsed from create contract transaction bytes', () => {
+    it('should getGasUsed return gasUsed from create contract transaction (bytes)', () => {
       const gasUsed = getGasUsed({
         transaction: MOCK_TRANSACTION_CREATE_CONTRACT.transaction,
         receipts: MOCK_TRANSACTION_CREATE_CONTRACT.receipts || [],
@@ -798,7 +825,6 @@ describe('Tx util', () => {
   });
 
   describe('getFee', () => {
-    // fee from transfer operations
     it('should getContractCreatedFee return fee from contract created transaction', () => {
       const fee = getContractCreatedFee({
         transaction: MOCK_TRANSACTION_CREATE_CONTRACT.transaction,
@@ -837,7 +863,7 @@ describe('Tx util', () => {
       );
     });
 
-    it('should getFeeFromReceipts return zero', () => {
+    it('should getFeeFromReceipts return zero when has no receipts', () => {
       const fee = getFeeFromReceipts({
         gasPrice: bn(MOCK_TRANSACTION_CONTRACT_CALL.transaction.gasPrice),
         receipts: [],
@@ -870,6 +896,16 @@ describe('Tx util', () => {
       );
     });
 
+    it('should getFee return fee from transfer transaction', () => {
+      const fee = getFee({
+        transaction: MOCK_TRANSACTION_TRANSFER.transaction,
+        receipts: MOCK_TRANSACTION_TRANSFER.receipts || [],
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
+      expect(fee.valueOf()).toEqual(MOCK_TRANSACTION_TRANSFER.tx.fee.valueOf());
+    });
+
     it('should getFee return fee from mint transaction (zero)', () => {
       const fee = getFee({
         transaction: MOCK_TRANSACTION_MINT.transaction,
@@ -895,6 +931,19 @@ describe('Tx util', () => {
       expect(reparse(tx)).toStrictEqual(
         reparse(MOCK_TRANSACTION_CONTRACT_CALL.tx)
       );
+    });
+
+    it('should parseTx return correct data for transfer transaction', () => {
+      const tx = parseTx({
+        transaction: MOCK_TRANSACTION_TRANSFER.transaction,
+        receipts: MOCK_TRANSACTION_TRANSFER.receipts || [],
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+        gqlStatus: 'SuccessStatus',
+        id: MOCK_TRANSACTION_TRANSFER.tx.id,
+      });
+
+      expect(reparse(tx)).toStrictEqual(reparse(MOCK_TRANSACTION_TRANSFER.tx));
     });
 
     it('should parseTx return correct data for create contract transaction', () => {
