@@ -85,7 +85,7 @@ export class BackgroundService {
   async connectionMiddlware(
     next: JSONRPCServerMiddlewareNext<EventOrigin>,
     request: JSONRPCRequest,
-    serverParams: EventOrigin | undefined
+    serverParams: EventOrigin
   ) {
     // If the method is not connect check if connection is already established
     if (request.method !== 'connect') {
@@ -93,7 +93,7 @@ export class BackgroundService {
     } else {
       await this.requireAccounts();
     }
-    return next(request, serverParams!);
+    return next(request, serverParams);
   }
 
   async sendEvent(origin: string, eventName: string, params: any[]) {
