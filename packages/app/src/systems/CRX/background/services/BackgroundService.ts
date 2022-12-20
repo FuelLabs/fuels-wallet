@@ -93,7 +93,7 @@ export class BackgroundService {
     } else {
       await this.requireAccounts();
     }
-    return next(request, serverParams);
+    return next(request, serverParams!);
   }
 
   async sendEvent(origin: string, eventName: string, params: any[]) {
