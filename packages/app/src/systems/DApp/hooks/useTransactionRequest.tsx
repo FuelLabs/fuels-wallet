@@ -29,7 +29,11 @@ const selectors = {
     account,
   }: Omit<
     ReturnType<typeof useAccounts>,
-    'handlers' | 'accounts' | 'isUnlocking' | 'isUnlockingLoading'
+    | 'handlers'
+    | 'accounts'
+    | 'isUnlocking'
+    | 'isUnlockingLoading'
+    | 'isAddingAccount'
   >) {
     return (state: TransactionMachineState) =>
       !isLoading &&
