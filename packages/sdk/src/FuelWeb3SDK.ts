@@ -43,20 +43,20 @@ export class FuelWeb3SDK extends WindowConnection {
   }
 
   async network(): Promise<FuelWeb3ProviderConfig> {
-    return this.client.request('network');
+    return this.client.request('network', {});
   }
 
   async connect(network?: FuelWeb3ProviderConfig): Promise<boolean> {
     if (network) this.selectNetwork(network);
-    return this.client.request('connect');
+    return this.client.request('connect', {});
   }
 
   async disconnect(): Promise<boolean> {
-    return this.client.request('disconnect');
+    return this.client.request('disconnect', {});
   }
 
   async accounts(): Promise<Array<string>> {
-    return this.client.request('accounts');
+    return this.client.request('accounts', {});
   }
 
   async signMessage(address: string, message: string): Promise<string> {
