@@ -30,11 +30,7 @@ type GetTransactionResponse = {
 type MachineContext = {
   error?: string;
   transactionResponse?: TransactionResponse;
-  // ANCHOR: START
-  // TODO: for now using only status here, but should be whole gqlTransaction.
-  // Will do it when sdk provides correct typing for gqlTransaction
   gqlTransactionStatus?: GqlTransactionStatus;
-  // ANCHOR: END
   transaction?: Transaction;
   transactionResult?: TransactionResult<any>;
   txId?: string;
@@ -153,14 +149,9 @@ export const transactionMachine = createMachine(
         return {
           transactionResult,
           transaction: transactionResult.transaction,
-          // ANCHOR: START
-          // for now we force type to be either SuccessStatus or FailureStatus. 'success' and 'failure' are coming only
-          // from waitForResult function. this transaction part in SDK will be refactored and return consistent value.
-          // TODO: should replace this with equivalent gqlTransaction that will come from SDK.
           gqlTransactionStatus: (transactionResult.status.type === 'success'
             ? 'SuccessStatus'
             : 'FailureStatus') as GqlTransactionStatus,
-          // ANCHOR: END
         };
       }),
     },
