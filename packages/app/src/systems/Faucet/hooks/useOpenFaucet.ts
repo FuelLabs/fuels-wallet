@@ -21,7 +21,7 @@ export function useOpenFaucet() {
     } else {
       navigate(Pages.faucet());
     }
-  }, [navigate]);
+  }, [account, navigate]);
 
   return openFaucet;
 }
