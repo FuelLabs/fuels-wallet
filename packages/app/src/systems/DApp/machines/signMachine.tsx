@@ -34,6 +34,7 @@ type MachineEvents =
 
 export const signMachine = createMachine(
   {
+    predictableActionArguments: true,
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./signMachine.typegen').Typegen0,
     schema: {
@@ -41,7 +42,6 @@ export const signMachine = createMachine(
       services: {} as MachineServices,
       events: {} as MachineEvents,
     },
-    predictableActionArguments: true,
     id: '(machine)',
     initial: 'idle',
     states: {
@@ -67,7 +67,7 @@ export const signMachine = createMachine(
       unlocking: {
         invoke: {
           id: 'unlock',
-          src: unlockMachine as UnlockMachine,
+          src: 'unlock',
           onDone: [
             unlockMachineErrorAction('unlocking', 'unlockError'),
             {
@@ -129,6 +129,7 @@ export const signMachine = createMachine(
       }),
     },
     services: {
+      unlock: unlockMachine,
       signMessage: FetchMachine.create<
         { message: string; wallet: WalletUnlocked },
         string

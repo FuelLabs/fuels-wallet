@@ -4,7 +4,7 @@ import type { TransactionMachineState } from '../machines/transactionMachine';
 import { transactionMachine } from '../machines/transactionMachine';
 import { useTransactionRequestMethods } from '../methods/transactionRequestMethods';
 
-import { useAccount } from '~/systems/Account';
+import { useAccounts } from '~/systems/Account';
 import { getFilteredErrors, useTxOutputs } from '~/systems/Transaction';
 import type { TxInputs } from '~/systems/Transaction/services';
 
@@ -25,9 +25,9 @@ const selectors = {
     return state.context;
   },
   isShowingInfo({
-    account,
     isLoading,
-  }: Omit<ReturnType<typeof useAccount>, 'handlers'>) {
+    account,
+  }: Omit<ReturnType<typeof useAccounts>, 'handlers' | 'accounts'>) {
     return (state: TransactionMachineState) =>
       !isLoading &&
       !state.context.approvedTx &&
@@ -46,7 +46,7 @@ type UseTransactionRequestOpts = {
 };
 
 export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
-  const { account, isLoading } = useAccount();
+  const { account, isLoading } = useAccounts();
   const service = useInterpret(() =>
     transactionMachine.withContext({
       isOriginRequired: opts.isOriginRequired,
@@ -62,7 +62,10 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const generalErrors = useSelector(service, selectors.generalErrors);
   const groupedErrors = ctx.txDryRunGroupedErrors;
   const hasGeneralErrors = Boolean(Object.keys(generalErrors || {}).length);
-  const isShowingSelector = selectors.isShowingInfo({ account, isLoading });
+  const isShowingSelector = selectors.isShowingInfo({
+    isLoading,
+    account,
+  });
   const isShowingInfo = useSelector(service, isShowingSelector);
   const { coinOutputs, outputsToSend, outputAmount } = useTxOutputs(ctx.tx);
 

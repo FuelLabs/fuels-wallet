@@ -6,6 +6,7 @@ export const MENU_ORDER = [
   'Install',
   'How to Use',
   'API',
+  'TypeScript',
   'Contributing/Project Structure',
   'Contributing/Contributing Guide',
 ];
