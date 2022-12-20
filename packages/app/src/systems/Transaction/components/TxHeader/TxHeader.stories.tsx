@@ -25,7 +25,7 @@ export const Usage = (args: TxHeaderProps) => (
     />
     <TxHeader
       {...args}
-      transaction={{ ...MOCK_TRANSACTION_CREATE, status: TxStatus.success }}
+      transaction={{ ...MOCK_TRANSACTION_CREATE, status: TxStatus.SUCCESS }}
       providerUrl={process.env.VITE_FUEL_PROVIDER_URL}
     />
   </Box>

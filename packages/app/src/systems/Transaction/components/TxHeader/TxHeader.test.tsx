@@ -40,7 +40,7 @@ describe('TxHeader', () => {
   it('should show transaction Success', async () => {
     render(
       <TxHeader
-        transaction={{ ...MOCK_TRANSACTION_CREATE, status: TxStatus.success }}
+        transaction={{ ...MOCK_TRANSACTION_CREATE, status: TxStatus.SUCCESS }}
       />
     );
 
@@ -51,7 +51,7 @@ describe('TxHeader', () => {
   it('should show transaction Error', async () => {
     render(
       <TxHeader
-        transaction={{ ...MOCK_TRANSACTION_CREATE, status: TxStatus.error }}
+        transaction={{ ...MOCK_TRANSACTION_CREATE, status: TxStatus.ERROR }}
       />
     );
 

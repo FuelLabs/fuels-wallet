@@ -16,13 +16,13 @@ function TxSpinner({ status, isLoading }: TxSpinnerProps) {
       {status == null && !isLoading && (
         <Icon icon={Icon.is('ArrowRight')} size={18} />
       )}
-      {(status === TxStatus.pending || isLoading) && (
+      {(status === TxStatus.PENDING || isLoading) && (
         <Spinner color="$amber3" size={18} aria-label="Loading Spinner" />
       )}
-      {status === TxStatus.success && (
+      {status === TxStatus.SUCCESS && (
         <Icon icon={Icon.is('Check')} size={18} />
       )}
-      {status === TxStatus.error && <Icon icon={Icon.is('X')} size={18} />}
+      {status === TxStatus.ERROR && <Icon icon={Icon.is('X')} size={18} />}
     </Box>
   );
 }
@@ -82,15 +82,15 @@ const styles = {
         background: '$gray1',
         color: '$gray8',
       }),
-      ...(status === TxStatus.success && {
+      ...(status === TxStatus.SUCCESS && {
         background: '$accent11',
         color: '$accent3',
       }),
-      ...(status === TxStatus.error && {
+      ...(status === TxStatus.ERROR && {
         background: '$red9',
         color: '$red3',
       }),
-      ...((status === TxStatus.pending || isLoading) && {
+      ...((status === TxStatus.PENDING || isLoading) && {
         background: '$amber9',
         color: '$amber3',
       }),

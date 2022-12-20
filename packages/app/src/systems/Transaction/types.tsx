@@ -12,9 +12,9 @@ import type {
 } from 'fuels';
 
 export enum TxStatus {
-  pending,
-  success,
-  error,
+  PENDING = 'pending',
+  SUCCESS = 'success',
+  ERROR = 'error',
 }
 
 export enum TxType {

@@ -7,11 +7,11 @@ import { TxStatus, TxType } from '../types';
 export const getTxStatus = (status: string = '') => {
   switch (status) {
     case 'FailureStatus':
-      return TxStatus.error;
+      return TxStatus.ERROR;
     case 'SuccessStatus':
-      return TxStatus.success;
+      return TxStatus.SUCCESS;
     case 'SubmittedStatus':
-      return TxStatus.pending;
+      return TxStatus.PENDING;
     default:
       return undefined;
   }
@@ -19,11 +19,11 @@ export const getTxStatus = (status: string = '') => {
 
 export const getTxStatusText = (status?: TxStatus) => {
   switch (status) {
-    case TxStatus.pending:
+    case TxStatus.PENDING:
       return 'Pending';
-    case TxStatus.success:
+    case TxStatus.SUCCESS:
       return 'Success';
-    case TxStatus.error:
+    case TxStatus.ERROR:
       return 'Error';
     default:
       return 'Unknown';
@@ -32,11 +32,11 @@ export const getTxStatusText = (status?: TxStatus) => {
 
 export const getTxStatusColor = (status?: TxStatus): Colors => {
   switch (status) {
-    case TxStatus.pending:
+    case TxStatus.PENDING:
       return 'amber9';
-    case TxStatus.success:
+    case TxStatus.SUCCESS:
       return 'mint9';
-    case TxStatus.error:
+    case TxStatus.ERROR:
       return 'crimson9';
     default:
       return 'gray9';

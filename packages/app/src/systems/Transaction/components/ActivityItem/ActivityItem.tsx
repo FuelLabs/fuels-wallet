@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
-import type { Address, BN } from 'fuels';
+import type { AssetAmount } from '@fuel-wallet/types';
+import type { Address } from 'fuels';
 import type { FC } from 'react';
 
 import { TxType } from '../../types';
@@ -15,11 +16,10 @@ import { shortAddress } from '~/systems/Core';
 export type TxItemProps = {
   transaction: Transaction;
   providerUrl?: string;
-  amount?: BN;
+  amount?: AssetAmount;
   date?: string;
   to?: Address;
   from?: Address;
-  asset?: string;
   txType?: TxType;
   txStatus?: TxStatus;
 };
@@ -32,7 +32,6 @@ export const ActivityItem: TxItemComponent = ({
   transaction,
   txStatus,
   amount,
-  asset,
   date,
   to,
   from,
@@ -57,7 +56,7 @@ export const ActivityItem: TxItemComponent = ({
 
           <Flex css={styles.item}>
             <Text color={txColor} fontSize="sm">
-              {amount?.format()} {asset}
+              {`${amount?.amount} ${amount?.symbol}`}
             </Text>
           </Flex>
         </Flex>

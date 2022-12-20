@@ -21,15 +21,15 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
   providerUrl,
 }) => {
   const alertStatus = useMemo(() => {
-    if (txStatus === TxStatus.pending) return 'warning';
-    if (txStatus === TxStatus.success) return 'success';
-    if (txStatus === TxStatus.error || error) return 'error';
+    if (txStatus === TxStatus.PENDING) return 'warning';
+    if (txStatus === TxStatus.SUCCESS) return 'success';
+    if (txStatus === TxStatus.ERROR || error) return 'error';
 
     return 'info';
   }, [txStatus, error]);
 
   const txColor = error
-    ? getTxStatusColor(TxStatus.error)
+    ? getTxStatusColor(TxStatus.ERROR)
     : getTxStatusColor(txStatus);
 
   return (
@@ -42,9 +42,9 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
       <Alert.Description>
         <Stack gap="$4">
           <Text fontSize="sm">
-            {txStatus === TxStatus.pending &&
+            {txStatus === TxStatus.PENDING &&
               'Your transaction is still pending, you can close this window if you want.'}
-            {txStatus === TxStatus.error &&
+            {txStatus === TxStatus.ERROR &&
               'Sorry, something wrong happened with your transaction.'}
             {error}
           </Text>

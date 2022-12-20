@@ -35,7 +35,7 @@ export const Pending = (args: TxFromToProps) => (
       {...args}
       from={ACCOUNT}
       to={CONTRACT}
-      status={TxStatus.pending}
+      status={TxStatus.PENDING}
     />
   </Box>
 );
@@ -47,7 +47,7 @@ export const Success = (args: TxFromToProps) => (
       {...args}
       from={ACCOUNT}
       to={CONTRACT}
-      status={TxStatus.success}
+      status={TxStatus.SUCCESS}
     />
   </Box>
 );
@@ -55,7 +55,7 @@ export const Failed = (args: TxFromToProps) => (
   <Box
     css={{ maxWidth: 318, display: 'flex', flexDirection: 'column', gap: '$4' }}
   >
-    <TxFromTo {...args} from={ACCOUNT} to={CONTRACT} status={TxStatus.error} />
+    <TxFromTo {...args} from={ACCOUNT} to={CONTRACT} status={TxStatus.ERROR} />
   </Box>
 );
 

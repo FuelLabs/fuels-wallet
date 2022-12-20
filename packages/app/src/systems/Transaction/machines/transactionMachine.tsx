@@ -153,8 +153,8 @@ export const transactionMachine = createMachine(
           transaction: txResult.transaction,
           txStatus:
             txResult.status.type === 'success'
-              ? TxStatus.success
-              : TxStatus.error,
+              ? TxStatus.SUCCESS
+              : TxStatus.ERROR,
           receiptsFee: txResult.fee,
         };
       }),

@@ -50,8 +50,8 @@ export function useTransaction({
 
   const isTxTypeMint = tx?.type === TransactionType.Mint;
   const isTxTypeCreate = tx?.type === TransactionType.Create;
-  const isTxPending = txStatus === TxStatus.pending;
-  const isTxFailed = txStatus === TxStatus.error;
+  const isTxPending = txStatus === TxStatus.PENDING;
+  const isTxFailed = txStatus === TxStatus.ERROR;
   const isInvalidTxId = error === TRANSACTION_ERRORS.INVALID_ID;
   const isTxNotFound = error === TRANSACTION_ERRORS.NOT_FOUND;
   const isTxReceiptsNotFound = error === TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND;
