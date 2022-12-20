@@ -13,11 +13,11 @@ import {
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import { AddressType } from '@fuel-wallet/types';
 
-import { ConnectInfo, UnlockDialog } from '../../components';
+import { ConnectInfo } from '../../components';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
 import { AssetsAmount } from '~/systems/Asset';
-import { Layout } from '~/systems/Core';
+import { Layout, UnlockDialog } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { NetworkScreen, useNetworks } from '~/systems/Network';
 import { TxDetails, TxFromTo } from '~/systems/Transaction';
