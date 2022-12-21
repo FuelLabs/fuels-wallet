@@ -19,7 +19,7 @@ export const WALLET_WIDTH = 350;
 export const WALLET_HEIGHT = 600;
 export const TAB_BAR_HEIGHT = 30;
 export const IS_CRX = VITE_CRX === 'true';
-export const IS_LOGGED_KEY = 'fuel__isLogged';
+export const IS_LOGGED_KEY = 'isLogged';
 export const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 export const IS_TEST = process.env.NODE_ENV === 'test';
 export const IS_CRX_POPUP =
