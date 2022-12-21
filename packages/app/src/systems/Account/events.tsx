@@ -11,9 +11,9 @@ export function accountEvents(store: StoreClass<StoreMachines>) {
     updateAccounts() {
       store.send(Services.accounts, { type: 'UPDATE_ACCOUNTS' });
     },
-    setBalanceVisibility(input: AccountInputs['setBalanceVisibility']) {
+    hideAccount(input: AccountInputs['hideAccount']) {
       store.send(Services.accounts, {
-        type: 'SET_BALANCE_VISIBILITY',
+        type: 'HIDE_ACCOUNT',
         input,
       });
     },

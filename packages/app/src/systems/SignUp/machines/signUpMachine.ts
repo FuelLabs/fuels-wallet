@@ -11,6 +11,7 @@ import {
   assignErrorMessage,
   getPhraseFromValue,
   getWordsFromValue,
+  Storage,
 } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
 import { isValidMnemonic } from '~/systems/Core/utils/mnemonic';
@@ -202,7 +203,7 @@ export const signUpMachine = createMachine(
         data: (_) => null,
       }),
       sendAccountCreated: () => {
-        localStorage.setItem(IS_LOGGED_KEY, 'true');
+        Storage.setItem(IS_LOGGED_KEY, true);
         store.updateAccounts();
       },
       redirectToWalletCreated: () => {},
