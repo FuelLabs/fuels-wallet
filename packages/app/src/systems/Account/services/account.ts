@@ -178,14 +178,13 @@ export class AccountService {
 
   static async addNewAccount({ data }: AccountInputs['addNewAccount']) {
     const manager = data.manager;
-    await manager.addAccount();
-    const [newAccount] = manager.getAccounts().slice(-1);
+    const account = await manager.addAccount();
     // Add new account to database
     const dbAccount = await this.addAccount({
       data: {
         name: data.name,
-        address: newAccount.address.toString(),
-        publicKey: newAccount.publicKey,
+        address: account.address.toString(),
+        publicKey: account.publicKey,
       },
     });
     return dbAccount;

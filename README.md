@@ -43,10 +43,10 @@ Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/
 - [x] Check your asset's balance
 - [x] Manage networks
 - [x] Faucet for testnet
-- [ ] Account
-  - [ ] Add new account
+- [x] Account
+  - [x] Add new account
   - [ ] Update account name
-  - [ ] List all account
+  - [x] List all account
 - [ ] Applications
   - [ ] List connections
   - [ ] Remove connections
