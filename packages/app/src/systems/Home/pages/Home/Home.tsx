@@ -1,6 +1,5 @@
 /* eslint-disable no-alert */
 import { Flex } from '@fuel-ui/react';
-import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { AssetsTitle, HomeActions } from '../../components';
@@ -15,17 +14,17 @@ export function Home() {
   const { isLoading, account } = useAccounts();
   const navigate = useNavigate();
 
-  const sendAction = useCallback(() => {
+  const sendAction = () => {
     window.alert('Send is not implemeted yet');
-  }, []);
+  };
 
-  const goToReceive = useCallback(() => {
+  const goToReceive = () => {
     navigate(Pages.receive());
-  }, [navigate]);
+  };
 
-  const goToAccounts = useCallback(() => {
+  const goToAccounts = () => {
     navigate(Pages.accounts());
-  }, [navigate]);
+  };
 
   return (
     <Layout title="Home" isLoading={isLoading} isHome>
