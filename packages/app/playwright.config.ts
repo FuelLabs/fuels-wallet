@@ -15,7 +15,7 @@ const config: PlaywrightTestConfig = {
     reuseExistingServer: false,
   },
   use: {
-    baseURL: `http://localhost:${E2E_PORT}/`,
+    baseURL: `http://localhost:${E2E_PORT}/#`,
     permissions: ['clipboard-read', 'clipboard-write'],
     headless: true,
   },
