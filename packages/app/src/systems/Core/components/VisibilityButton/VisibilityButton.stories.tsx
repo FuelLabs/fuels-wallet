@@ -16,6 +16,10 @@ export const Usage = (args: VisibilityButtonProps) => (
 
 export const Hidden = (args: VisibilityButtonProps) => (
   <Box css={{ width: 320 }}>
-    <VisibilityButton {...args} isHidden />
+    <VisibilityButton {...args} />
   </Box>
 );
+
+Hidden.args = {
+  visibility: false,
+};

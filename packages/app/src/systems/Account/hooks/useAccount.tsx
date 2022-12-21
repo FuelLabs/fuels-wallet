@@ -98,7 +98,7 @@ export function useAccounts() {
       goToAdd,
       unlock,
       closeUnlock,
-      setBalanceVisibility: store.setBalanceVisibility,
+      hideAccount: store.hideAccount,
       selectAccount: store.selectAccount,
       addAccount: store.addAccount,
     },

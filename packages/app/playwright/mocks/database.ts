@@ -67,7 +67,7 @@ export async function mockData(page: Page, numberOfAccounts: number = 1) {
           } catch (err: unknown) {
             reject(err);
           }
-          localStorage.setItem('fuel__isLogged', 'true');
+          localStorage.setItem('fuel_isLogged', JSON.stringify(true));
         })();
       });
     },
