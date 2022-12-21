@@ -74,7 +74,7 @@ export function BalanceWidget({
           variant="ghost"
           color="gray"
           icon={<Icon icon="CaretDown" color="gray8" />}
-          aria-label="Expand"
+          aria-label="Accounts"
           onPress={handlers.goToList}
           css={styles.caretDownIcon}
         />
@@ -85,7 +85,12 @@ export function BalanceWidget({
           css={{ mt: '$2', ml: '$4', alignSelf: 'center' }}
         >
           <Copyable value={account.address}>
-            <Text fontSize="sm" color="gray11" css={{ fontWeight: 'bold' }}>
+            <Text
+              fontSize="sm"
+              color="gray11"
+              css={{ fontWeight: 'bold' }}
+              aria-label={account.address}
+            >
               {shortAddress(account.address)}
             </Text>
           </Copyable>

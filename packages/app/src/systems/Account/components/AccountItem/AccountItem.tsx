@@ -34,7 +34,11 @@ export function AccountItem({
   //   />
   // );
   return (
-    <CardList.Item isActive={isSelected} onClick={onPress}>
+    <CardList.Item
+      isActive={isSelected}
+      onClick={onPress}
+      aria-label={account.name}
+    >
       <Avatar.Generated size="md" background="fuel" hash={account.address} />
       <Flex direction="column">
         <Heading as="h5" css={{ margin: 0 }}>
