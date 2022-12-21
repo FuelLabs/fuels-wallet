@@ -66,25 +66,18 @@ export function BalanceWidget({
         />
       </Flex>
       <Flex justify="space-between" css={{ flex: '1 0' }}>
-        <Flex
-          direction="column"
-          css={{ mt: '$2', ml: '$4', alignSelf: 'center' }}
-        >
+        <Flex direction="column" css={styles.balanceContainer}>
           <Copyable value={account.address}>
             <Text fontSize="sm" color="gray11" css={{ fontWeight: 'bold' }}>
               {shortAddress(account.address)}
             </Text>
           </Copyable>
-          <Text
-            color={visibility ? 'gray12' : 'gray10'}
-            fontSize="2xl"
-            css={{ fontWeight: 'bold' }}
-          >
+          <Text fontSize="2xl" css={styles.balance} aria-hidden={visibility}>
             {account.balanceSymbol || '$'}&nbsp;
             <AmountVisibility value={account.balance} visibility={visibility} />
           </Text>
         </Flex>
-        <Box css={{ marginRight: 6, marginTop: 8 }}>
+        <Box css={styles.visibilityContainer}>
           <VisibilityButton
             aria-label={visibility ? 'Hide balance' : 'Show balance'}
             visibility={visibility}
@@ -111,6 +104,17 @@ const backgroundCss = {
 };
 
 const styles = {
+  visibilityContainer: cssObj({ marginRight: 6, marginTop: 8 }),
+  balanceContainer: cssObj({ mt: '$2', ml: '$4', alignSelf: 'center' }),
+  balance: cssObj({
+    '&[aria-hidden="true"]': {
+      color: '$gray12',
+    },
+    '&[aria-hidden="false"]': {
+      color: '$gray10',
+    },
+    fontWeight: 'bold',
+  }),
   backgroundFront: cssObj({
     ...backgroundCss,
     background:
