@@ -12,13 +12,13 @@ import {
 } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 
-import { ConnectInfo, UnlockDialog } from '../../components';
+import { ConnectInfo } from '../../components';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
-import { Layout } from '~/systems/Core';
+import { Layout, UnlockDialog } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { NetworkScreen, useNetworks } from '~/systems/Network';
-import { TxDetails, OperationName } from '~/systems/Transaction';
+import { TxDetails, TxOperations } from '~/systems/Transaction';
 
 export function TransactionRequest() {
   const { selectedNetwork } = useNetworks({ type: NetworkScreen.list });
@@ -54,7 +54,7 @@ export function TransactionRequest() {
               </Copyable>
             </Card>
           )}
-          <OperationName operations={tx?.operations} />
+          <TxOperations operations={tx?.operations} />
           <TxDetails fee={tx?.fee} amountSent={ethAmountSent} />
         </Stack>
       )}
