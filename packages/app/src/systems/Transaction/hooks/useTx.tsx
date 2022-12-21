@@ -1,6 +1,6 @@
 import { useInterpret, useSelector } from '@xstate/react';
 import { bn } from 'fuels';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import type { TransactionMachineState } from '../machines';
 import { TRANSACTION_ERRORS, transactionMachine } from '../machines';
@@ -16,6 +16,12 @@ const selectors = {
   isFetchingResult: (state: TransactionMachineState) =>
     state.matches('fetchingResult'),
   context: (state: TransactionMachineState) => state.context,
+  isInvalidTxId: (state: TransactionMachineState) =>
+    state.context.error === TRANSACTION_ERRORS.INVALID_ID,
+  isTxNotFound: (state: TransactionMachineState) =>
+    state.context.error === TRANSACTION_ERRORS.NOT_FOUND,
+  isTxReceiptsNotFound: (state: TransactionMachineState) =>
+    state.context.error === TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND,
 };
 
 type UseTxProps = {
@@ -36,6 +42,12 @@ export function useTx({
   const isFetching = useSelector(service, selectors.isFetching);
   const isFetchingResult = useSelector(service, selectors.isFetchingResult);
   const context = useSelector(service, selectors.context);
+  const isInvalidTxId = useSelector(service, selectors.isInvalidTxId);
+  const isTxNotFound = useSelector(service, selectors.isTxNotFound);
+  const isTxReceiptsNotFound = useSelector(
+    service,
+    selectors.isTxReceiptsNotFound
+  );
 
   const { error, gqlTransactionStatus, transaction, transactionResult, txId } =
     context;
@@ -49,17 +61,39 @@ export function useTx({
     id: txId,
   });
 
-  const isInvalidTxId = error === TRANSACTION_ERRORS.INVALID_ID;
-  const isTxNotFound = error === TRANSACTION_ERRORS.NOT_FOUND;
-  const isTxReceiptsNotFound = error === TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND;
   const isLoadingTx = isFetching || isFetchingResult || isLoadingChainInfo;
-  const shouldShowAlert =
-    isTxNotFound || isInvalidTxId || tx?.isStatusPending || tx?.isStatusFailure;
-  const shouldShowTx =
-    tx && !isFetching && !isLoadingChainInfo && !isInvalidTxId && !isTxNotFound;
-  const shouldShowTxDetails = shouldShowTx && !tx?.isTypeMint;
+  const { shouldShowAlert, shouldShowTx, shouldShowTxDetails, ethAmountSent } =
+    useMemo(() => {
+      const shouldShowAlert =
+        isTxNotFound ||
+        isInvalidTxId ||
+        tx?.isStatusPending ||
+        tx?.isStatusFailure;
+      const shouldShowTx =
+        tx &&
+        !isLoadingTx &&
+        !isLoadingChainInfo &&
+        !isInvalidTxId &&
+        !isTxNotFound;
+      const shouldShowTxDetails = shouldShowTx && !tx?.isTypeMint;
 
-  const ethAmountSent = bn(tx?.totalAssetsSent?.find(isEth)?.amount);
+      const ethAmountSent = bn(tx?.totalAssetsSent?.find(isEth)?.amount);
+
+      return {
+        shouldShowAlert,
+        shouldShowTx,
+        shouldShowTxDetails,
+        ethAmountSent,
+      };
+    }, [
+      isTxNotFound,
+      isInvalidTxId,
+      isLoadingTx,
+      tx?.isStatusPending,
+      tx?.isStatusFailure,
+      tx?.isTypeMint,
+      tx?.totalAssetsSent,
+    ]);
 
   function getTransaction(input: TxInputs['fetch']) {
     send('GET_TRANSACTION', { input });
