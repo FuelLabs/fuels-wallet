@@ -38,8 +38,8 @@ export type MachineEvents =
   | { type: 'UPDATE_ACCOUNT'; input?: null }
   | { type: 'UPDATE_ACCOUNTS'; input?: null }
   | {
-      type: 'SET_BALANCE_VISIBILITY';
-      input: AccountInputs['setBalanceVisibility'];
+      type: 'HIDE_ACCOUNT';
+      input: AccountInputs['hideAccount'];
     }
   | { type: 'SELECT_ACCOUNT'; input: AccountInputs['selectAccount'] };
 
@@ -140,8 +140,8 @@ export const accountMachine = createMachine(
       UPDATE_ACCOUNT: {
         target: 'fetchingAccount',
       },
-      SET_BALANCE_VISIBILITY: {
-        actions: ['setBalanceVisibility'],
+      HIDE_ACCOUNT: {
+        actions: ['hideAccount'],
         target: 'done',
       },
       SELECT_ACCOUNT: {
@@ -167,13 +167,13 @@ export const accountMachine = createMachine(
       setIsUnlogged: () => {
         localStorage.removeItem(IS_LOGGED_KEY);
       },
-      setBalanceVisibility: assign({
+      hideAccount: assign({
         account: (ctx, ev) => {
           const account = ctx.account;
           const { isHidden, address } = ev.input.data;
           if (account) {
             account.isHidden = isHidden;
-            AccountService.setBalanceVisbility({
+            AccountService.hideAccount({
               data: { address, isHidden },
             });
           }
