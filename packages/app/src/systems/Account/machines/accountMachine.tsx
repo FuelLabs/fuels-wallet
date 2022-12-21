@@ -7,7 +7,7 @@ import { AccountService } from '../services/account';
 
 import { IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
-import { FetchMachine } from '~/systems/Core';
+import { FetchMachine, Storage } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
@@ -162,10 +162,10 @@ export const accountMachine = createMachine(
         error: (_, ev) => ev.data,
       }),
       setIsLogged: () => {
-        localStorage.setItem(IS_LOGGED_KEY, 'true');
+        Storage.setItem(IS_LOGGED_KEY, true);
       },
       setIsUnlogged: () => {
-        localStorage.removeItem(IS_LOGGED_KEY);
+        Storage.removeItem(IS_LOGGED_KEY);
       },
       hideAccount: assign({
         account: (ctx, ev) => {
