@@ -8,7 +8,7 @@ import type { TxInputs } from '../services';
 
 import { useParseTx } from './useParseTx';
 
-import { ASSET_LIST } from '~/systems/Asset';
+import { isEth } from '~/systems/Asset';
 import { useChainInfo } from '~/systems/Network';
 
 const selectors = {
@@ -18,18 +18,19 @@ const selectors = {
   context: (state: TransactionMachineState) => state.context,
 };
 
-type UseTransactionProps = {
+type UseTxProps = {
   txId?: string;
   providerUrl?: string;
   waitProviderUrl?: boolean;
 };
 
-export function useTransaction({
+export function useTx({
   txId: txIdInput,
   providerUrl,
   waitProviderUrl,
-}: UseTransactionProps) {
-  const { chainInfo } = useChainInfo(providerUrl);
+}: UseTxProps) {
+  const { chainInfo, isLoading: isLoadingChainInfo } =
+    useChainInfo(providerUrl);
   const service = useInterpret(() => transactionMachine);
   const { send } = service;
   const isFetching = useSelector(service, selectors.isFetching);
@@ -51,19 +52,14 @@ export function useTransaction({
   const isInvalidTxId = error === TRANSACTION_ERRORS.INVALID_ID;
   const isTxNotFound = error === TRANSACTION_ERRORS.NOT_FOUND;
   const isTxReceiptsNotFound = error === TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND;
-  const isFetchingDetails = isFetching || isFetchingResult;
+  const isLoadingTx = isFetching || isFetchingResult || isLoadingChainInfo;
   const shouldShowAlert =
     isTxNotFound || isInvalidTxId || tx?.isStatusPending || tx?.isStatusFailure;
   const shouldShowTx =
-    transaction && !isFetching && !isInvalidTxId && !isTxNotFound;
-  const shouldShowTxDetails =
-    shouldShowTx && !isFetchingResult && !tx?.isTypeMint;
+    tx && !isFetching && !isLoadingChainInfo && !isInvalidTxId && !isTxNotFound;
+  const shouldShowTxDetails = shouldShowTx && !tx?.isTypeMint;
 
-  const ethAmountSent = bn(
-    tx?.totalAssetsSent?.find(
-      ({ assetId }) => assetId === ASSET_LIST[0].assetId
-    )?.amount
-  );
+  const ethAmountSent = bn(tx?.totalAssetsSent?.find(isEth)?.amount);
 
   function getTransaction(input: TxInputs['fetch']) {
     send('GET_TRANSACTION', { input });
@@ -79,9 +75,10 @@ export function useTransaction({
     handlers: {
       getTransaction,
     },
+    isLoadingTx,
     isFetching,
-    isFetchingDetails,
     isFetchingResult,
+    isLoadingChainInfo,
     isInvalidTxId,
     isTxNotFound,
     isTxReceiptsNotFound,

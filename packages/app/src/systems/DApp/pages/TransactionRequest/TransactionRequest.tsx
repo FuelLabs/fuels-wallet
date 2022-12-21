@@ -18,7 +18,7 @@ import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { NetworkScreen, useNetworks } from '~/systems/Network';
-import { TxDetails, TxOperations } from '~/systems/Transaction';
+import { TxDetails, OperationName } from '~/systems/Transaction';
 
 export function TransactionRequest() {
   const { selectedNetwork } = useNetworks({ type: NetworkScreen.list });
@@ -54,7 +54,7 @@ export function TransactionRequest() {
               </Copyable>
             </Card>
           )}
-          <TxOperations operations={tx?.operations} />
+          <OperationName operations={tx?.operations} />
           <TxDetails fee={tx?.fee} amountSent={ethAmountSent} />
         </Stack>
       )}

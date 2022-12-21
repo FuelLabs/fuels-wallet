@@ -5,7 +5,7 @@ import {
   MOCK_TRANSACTION_CREATE,
   MOCK_TRANSACTION_SCRIPT,
 } from '../../__mocks__/transaction';
-import { Status } from '../../utils';
+import { TxStatus } from '../../utils';
 
 import { TxHeader } from './TxHeader';
 
@@ -34,21 +34,30 @@ describe('TxHeader', () => {
     render(<TxHeader {...MOCK_TRANSACTION_CREATE} />);
 
     expect(screen.getByText(/Pending/i)).toBeInTheDocument();
-    expect(screen.getByLabelText('Status Color: amber9')).toBeInTheDocument();
+    expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
+      'data-status',
+      TxStatus.pending
+    );
   });
 
   it('should show transaction Success', async () => {
-    render(<TxHeader {...MOCK_TRANSACTION_CREATE} status={Status.success} />);
+    render(<TxHeader {...MOCK_TRANSACTION_CREATE} status={TxStatus.success} />);
 
     expect(screen.getByText(/Success/i)).toBeInTheDocument();
-    expect(screen.getByLabelText('Status Color: mint9')).toBeInTheDocument();
+    expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
+      'data-status',
+      TxStatus.success
+    );
   });
 
   it('should show transaction Error', async () => {
-    render(<TxHeader {...MOCK_TRANSACTION_CREATE} status={Status.failure} />);
+    render(<TxHeader {...MOCK_TRANSACTION_CREATE} status={TxStatus.failure} />);
 
     expect(screen.getByText(/Failure/i)).toBeInTheDocument();
-    expect(screen.getByLabelText('Status Color: crimson9')).toBeInTheDocument();
+    expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
+      'data-status',
+      TxStatus.failure
+    );
   });
 
   it('should copy transaction link', async () => {

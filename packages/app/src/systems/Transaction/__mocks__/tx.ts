@@ -19,7 +19,7 @@ import type {
 import { ReceiptType, TransactionType, OutputType, InputType, bn } from 'fuels';
 
 import type { Tx } from '../utils';
-import { Status, Type } from '../utils';
+import { TxStatus, TxType } from '../utils';
 
 type MockTransaction = {
   transaction: Transaction;
@@ -202,8 +202,8 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
     ],
     gasUsed: bn('0x28f90'),
     fee: bn('0x1'),
-    type: Type.script,
-    status: Status.success,
+    type: TxType.script,
+    status: TxStatus.success,
     totalAssetsSent: [
       {
         amount: bn(100000000),
@@ -328,8 +328,8 @@ export const MOCK_TRANSACTION_CREATE_CONTRACT: MockTransaction = {
     isStatusFailure: false,
     isStatusSuccess: true,
     isStatusPending: false,
-    type: Type.create,
-    status: Status.success,
+    type: TxType.create,
+    status: TxStatus.success,
   },
   receipts: [],
 };
@@ -388,8 +388,8 @@ export const MOCK_TRANSACTION_MINT: MockTransaction = {
     isStatusFailure: false,
     isStatusSuccess: true,
     isStatusPending: false,
-    type: Type.mint,
-    status: Status.success,
+    type: TxType.mint,
+    status: TxStatus.success,
   },
   receipts: [],
 };
@@ -514,8 +514,8 @@ export const MOCK_TRANSACTION_TRANSFER: MockTransaction = {
     isStatusFailure: false,
     isStatusSuccess: true,
     isStatusPending: false,
-    type: Type.script,
-    status: Status.success,
+    type: TxType.script,
+    status: TxStatus.success,
   },
   receipts: [
     MOCK_TRANSACTION_TRANSFER_PARTS.receiptReturn,

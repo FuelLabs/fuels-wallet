@@ -1,14 +1,14 @@
 import { cssObj } from '@fuel-ui/css';
 import { Card } from '@fuel-ui/react';
 
-import type { Operation, Status } from '../../utils';
+import type { Operation, TxStatus } from '../../utils';
 import { TxFromTo } from '../TxFromTo/TxFromTo';
 
 import { AssetsAmount } from '~/systems/Asset';
 
 export type TxOperationProps = {
   operation?: Operation;
-  status?: Status;
+  status?: TxStatus;
 };
 
 export function TxOperation({ operation, status }: TxOperationProps) {
@@ -20,6 +20,13 @@ export function TxOperation({ operation, status }: TxOperationProps) {
     </Card>
   );
 }
+
+TxOperation.Loader = () => (
+  <Card css={styles.root}>
+    <TxFromTo isLoading={true} />
+    <AssetsAmount.Loader />
+  </Card>
+);
 
 const styles = {
   root: cssObj({

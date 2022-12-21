@@ -1,3 +1,4 @@
+// TODO: this whole tx utils need be moved to SDK
 import type { AddressType } from '@fuel-wallet/types';
 import type {
   BN,
@@ -9,7 +10,7 @@ import type {
   TransactionType,
 } from 'fuels';
 
-export enum Operations {
+export enum OperationName {
   payBlockProducer = 'Pay network fee to block producer',
   contractCreated = 'Contract created',
   transfer = 'Transfer asset',
@@ -21,12 +22,12 @@ export type GqlTransactionStatus =
   | 'SubmittedStatus'
   | 'SuccessStatus';
 
-export enum Status {
+export enum TxStatus {
   pending = 'Pending',
   success = 'Success',
   failure = 'Failure',
 }
-export enum Type {
+export enum TxType {
   create = 'Create',
   mint = 'Mint',
   script = 'Script',
@@ -48,6 +49,7 @@ export type Operation = {
   to?: Address;
   assetsSent?: Array<Coin>;
 };
+
 export type InputOutputParam = {
   inputs: Input[];
   outputs: Output[];
@@ -101,12 +103,12 @@ export type Tx = {
   operations: Operation[];
   gasUsed: BN;
   fee: BN;
-  type: Type;
+  type: TxType;
   totalAssetsSent: Coin[];
   isTypeMint: boolean;
   isTypeCreate: boolean;
   isTypeScript: boolean;
-  status?: Status;
+  status?: TxStatus;
   isStatusPending?: boolean;
   isStatusSuccess?: boolean;
   isStatusFailure?: boolean;

@@ -1,3 +1,4 @@
+// TODO: this whole tx utils need be moved to SDK
 import { AddressType } from '@fuel-wallet/types';
 import type {
   Input,
@@ -47,18 +48,18 @@ import type {
   ReceiptParam,
   Tx,
 } from './tx.types';
-import { Operations, Type, Status } from './tx.types';
+import { OperationName, TxType, TxStatus } from './tx.types';
 
 export const getStatus = (
   gqlStatus?: GqlTransactionStatus
-): Status | undefined => {
+): TxStatus | undefined => {
   switch (gqlStatus) {
     case 'FailureStatus':
-      return Status.failure;
+      return TxStatus.failure;
     case 'SuccessStatus':
-      return Status.success;
+      return TxStatus.success;
     case 'SubmittedStatus':
-      return Status.pending;
+      return TxStatus.pending;
     default:
       return undefined;
   }
@@ -219,40 +220,40 @@ export function getReceiptsMessageOut(receipts: TransactionResultReceipt[]) {
   );
 }
 
-export function getType(transactionType: TransactionType): Type {
+export function getType(transactionType: TransactionType): TxType {
   switch (transactionType) {
     case TransactionType.Mint:
-      return Type.mint;
+      return TxType.mint;
     case TransactionType.Create:
-      return Type.create;
+      return TxType.create;
     case TransactionType.Script:
-      return Type.script;
+      return TxType.script;
     default:
       throw new Error('Unknown transaction type');
   }
 }
 
-export function isType(transactionType: TransactionType, type: Type) {
+export function isType(transactionType: TransactionType, type: TxType) {
   const txType = getType(transactionType);
 
   return txType === type;
 }
 
 export function isTypeMint(transactionType: TransactionType) {
-  return isType(transactionType, Type.mint);
+  return isType(transactionType, TxType.mint);
 }
 
 export function isTypeCreate(transactionType: TransactionType) {
-  return isType(transactionType, Type.create);
+  return isType(transactionType, TxType.create);
 }
 
 export function isTypeScript(transactionType: TransactionType) {
-  return isType(transactionType, Type.script);
+  return isType(transactionType, TxType.script);
 }
 
 export function isStatus(
   transactionStatus?: GqlTransactionStatus,
-  status?: Status
+  status?: TxStatus
 ) {
   const txStatus = getStatus(transactionStatus);
 
@@ -260,15 +261,15 @@ export function isStatus(
 }
 
 export function isStatusPending(transactionStatus?: GqlTransactionStatus) {
-  return isStatus(transactionStatus, Status.pending);
+  return isStatus(transactionStatus, TxStatus.pending);
 }
 
 export function isStatusSuccess(transactionStatus?: GqlTransactionStatus) {
-  return isStatus(transactionStatus, Status.success);
+  return isStatus(transactionStatus, TxStatus.success);
 }
 
 export function isStatusFailure(transactionStatus?: GqlTransactionStatus) {
-  return isStatus(transactionStatus, Status.failure);
+  return isStatus(transactionStatus, TxStatus.failure);
 }
 
 export function addOperation(operations: Operation[], toAdd: Operation) {
@@ -331,7 +332,7 @@ export function getContractCreatedOperations({
   const contractCreatedOperations = contractCreatedOutputs.reduce(
     (prev, contractCreatedOutput) => {
       const operations = addOperation(prev, {
-        name: Operations.contractCreated,
+        name: OperationName.contractCreated,
         from: {
           type: AddressType.account,
           address: getFromAddress(inputs),
@@ -364,7 +365,7 @@ export function getTransferOperations({
 
       if (isSameAsset && isDifPublicKey) {
         return addOperation(prevOutput, {
-          name: Operations.transfer,
+          name: OperationName.transfer,
           from: {
             type: AddressType.account,
             address: input.owner.toString(),
@@ -395,7 +396,7 @@ export function getPayProducerOperations(outputs: Output[]): Operation[] {
   const coinOutputs = getOutputsCoin(outputs);
   const payProducerOperations = coinOutputs.reduce((prev, output) => {
     const operations = addOperation(prev, {
-      name: Operations.payBlockProducer,
+      name: OperationName.payBlockProducer,
       from: {
         type: AddressType.account,
         address: 'Network',
@@ -439,7 +440,7 @@ export function getContractCallOperations({
           (prevContractCallOps, receipt) => {
             if (receipt.to === contractInput.contractID) {
               const newContractCallOps = addOperation(prevOutputCallOps, {
-                name: Operations.contractCall,
+                name: OperationName.contractCall,
                 from: {
                   type: AddressType.account,
                   address: fromAddress,

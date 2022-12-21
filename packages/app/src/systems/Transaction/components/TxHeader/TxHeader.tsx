@@ -3,16 +3,16 @@ import { Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import type { FC } from 'react';
 
-import type { Status, Type } from '../../utils';
-import { getTxStatusColor } from '../../utils';
+import type { TxType } from '../../utils';
+import { TxStatus, getTxStatusColor } from '../../utils';
 
 import { TxHeaderLoader } from './TxHeaderLoader';
 
 export type TxHeaderProps = {
-  status?: Status;
+  status?: TxStatus;
   id?: string;
   providerUrl?: string;
-  type?: Type;
+  type?: TxType;
 };
 
 type TxHeaderComponent = FC<TxHeaderProps> & {
@@ -25,20 +25,18 @@ export const TxHeader: TxHeaderComponent = ({
   type,
   providerUrl = '',
 }) => {
-  const txColor = getTxStatusColor(status);
-
   return (
     <Card css={styles.root}>
       <Flex css={styles.row}>
         <Flex css={styles.item}>
           <Text fontSize="sm">Status: </Text>
-          <Text fontSize="sm" css={{ color: '$gray12', mx: '$2' }}>
+          <Text fontSize="sm" className="status">
             {status}
           </Text>
           <Text
-            color={txColor}
-            aria-label={`Status Color: ${txColor}`}
-            css={{ borderRadius: '100%', fontSize: 9, cursor: 'default' }}
+            aria-label="Status Circle"
+            className="circle"
+            data-status={status}
           >
             ●
           </Text>
@@ -69,7 +67,7 @@ export const TxHeader: TxHeaderComponent = ({
       <Flex css={styles.row}>
         <Flex css={styles.item}>
           <Text fontSize="sm">Type: </Text>
-          <Text fontSize="sm" css={{ color: '$gray12', mx: '$2' }}>
+          <Text fontSize="sm" className="type">
             {type}
           </Text>
         </Flex>
@@ -99,6 +97,26 @@ const styles = {
   }),
   item: cssObj({
     alignItems: 'center',
+
+    '.status, .type': {
+      color: '$gray12',
+      mx: '$2',
+    },
+
+    '.circle': {
+      borderRadius: '100%',
+      fontSize: 9,
+      cursor: 'default',
+      [`&[data-status="${TxStatus.success}"]`]: {
+        color: `$${getTxStatusColor(TxStatus.success)}`,
+      },
+      [`&[data-status="${TxStatus.failure}"]`]: {
+        color: `$${getTxStatusColor(TxStatus.failure)}`,
+      },
+      [`&[data-status="${TxStatus.pending}"]`]: {
+        color: `$${getTxStatusColor(TxStatus.pending)}`,
+      },
+    },
   }),
   icon: cssObj({
     color: '$brand',

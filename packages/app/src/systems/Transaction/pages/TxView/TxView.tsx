@@ -4,25 +4,23 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   TxDetails,
-  TxFromTo,
   TxHeader,
   TxOperations,
   TxStatusAlert,
 } from '../../components';
-import { useTransaction } from '../../hooks';
+import { useTx } from '../../hooks';
 
-import { AssetsAmount } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { NetworkScreen, useNetworks } from '~/systems/Network';
 
-export function ViewTransaction() {
+export function TxView() {
   const txIdQueryParam = useParams<{ txId: string }>().txId;
   const networks = useNetworks({ type: NetworkScreen.list });
   const providerUrl = networks?.selectedNetwork?.url;
 
   const {
     isFetching,
-    isFetchingDetails,
+    isLoadingTx,
     isFetchingResult,
     shouldShowAlert,
     shouldShowTx,
@@ -30,7 +28,7 @@ export function ViewTransaction() {
     tx,
     error,
     ethAmountSent,
-  } = useTransaction({
+  } = useTx({
     txId: txIdQueryParam,
     providerUrl,
     waitProviderUrl: true,
@@ -57,14 +55,13 @@ export function ViewTransaction() {
               <TxOperations operations={tx?.operations} status={tx?.status} />
             </>
           )}
-          {isFetching && (
+          {isLoadingTx && (
             <>
               <TxHeader.Loader />
-              <TxFromTo isLoading={true} />
-              <AssetsAmount.Loader />
+              <TxOperations.Loader />
+              <TxDetails.Loader />
             </>
           )}
-          {isFetchingDetails && <TxDetails.Loader />}
           {shouldShowTxDetails && (
             <TxDetails fee={tx?.fee} amountSent={ethAmountSent} />
           )}

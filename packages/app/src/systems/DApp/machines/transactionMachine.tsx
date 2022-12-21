@@ -18,6 +18,7 @@ import type {
 } from '~/systems/Account';
 import type { ChildrenMachine } from '~/systems/Core';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
+import type { NetworkInputs } from '~/systems/Network';
 import { NetworkService } from '~/systems/Network';
 import type { GroupedErrors, VMApiError } from '~/systems/Transaction';
 import { getGroupedErrors } from '~/systems/Transaction';
@@ -162,11 +163,11 @@ export const transactionMachine = createMachine(
         invoke: {
           src: 'send',
           data: {
-            input: (_: MachineContext, ev: { data: WalletUnlocked }) => {
+            input: (ctx: MachineContext, ev: { data: WalletUnlocked }) => {
               return {
-                transactionRequest: _.transactionRequest,
+                transactionRequest: ctx.transactionRequest,
                 wallet: ev.data,
-                providerUrl: _.providerUrl,
+                providerUrl: ctx.providerUrl,
               };
             },
           },
@@ -241,22 +242,14 @@ export const transactionMachine = createMachine(
     },
     services: {
       unlock: unlockMachine,
-      fetchGasPrice: FetchMachine.create<
-        {
-          providerUrl?: string;
-        },
-        BN
-      >({
+      fetchGasPrice: FetchMachine.create<NetworkInputs['getNodeInfo'], BN>({
         showError: false,
         async fetch({ input }) {
           if (!input?.providerUrl) {
             throw new Error('providerUrl is required');
           }
 
-          const { minGasPrice } = await NetworkService.getNodeInfo(
-            input.providerUrl
-          );
-
+          const { minGasPrice } = await NetworkService.getNodeInfo(input);
           return minGasPrice;
         },
       }),

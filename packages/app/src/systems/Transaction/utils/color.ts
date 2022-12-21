@@ -1,14 +1,14 @@
 import type { Colors } from '@fuel-ui/css';
 
-import { Status } from '.';
+import { TxStatus } from '.';
 
-export const getTxStatusColor = (status?: Status): Colors => {
+export const getTxStatusColor = (status?: TxStatus): Colors => {
   switch (status) {
-    case Status.pending:
+    case TxStatus.pending:
       return 'amber9';
-    case Status.success:
+    case TxStatus.success:
       return 'mint9';
-    case Status.failure:
+    case TxStatus.failure:
       return 'crimson9';
     default:
       return 'gray9';

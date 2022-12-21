@@ -1,12 +1,14 @@
 import { bn } from 'fuels';
 
 import type { Operation } from '../utils';
+import { OperationName } from '../utils';
 
 import { MOCK_TX_RECIPIENT } from './tx-recipient';
 
 import { ASSET_LIST } from '~/systems/Asset';
 
-export const MOCK_OPERATION: Operation = {
+export const MOCK_OPERATION_CONTRACT_CALL: Operation = {
+  name: OperationName.contractCall,
   from: MOCK_TX_RECIPIENT.account,
   to: MOCK_TX_RECIPIENT.contract,
   assetsSent: [
@@ -17,6 +19,46 @@ export const MOCK_OPERATION: Operation = {
     {
       amount: bn.parseUnits('2014.001200917'),
       assetId: ASSET_LIST[1].assetId,
+    },
+  ],
+};
+
+export const MOCK_OPERATION_TRANSFER: Operation = {
+  name: OperationName.transfer,
+  from: MOCK_TX_RECIPIENT.account,
+  to: {
+    ...MOCK_TX_RECIPIENT.account,
+    address: 'fuel1auahknz6mjuu0am034mlggh55f0tgp9j7fkzrc6xl48zuy5zv7vqa07n30',
+  },
+  assetsSent: [
+    {
+      amount: bn.parseUnits('0.52'),
+      assetId: ASSET_LIST[0].assetId,
+    },
+  ],
+};
+
+export const MOCK_OPERATION_CONTRACT_CREATED: Operation = {
+  name: OperationName.contractCreated,
+  from: MOCK_TX_RECIPIENT.account,
+  to: {
+    ...MOCK_TX_RECIPIENT.account,
+    address: 'fuel1auahknz6mjuu0am034mlggh55f0tgp9j7fkzrc6xl48zuy5zv7vqa07n30',
+  },
+};
+
+export const MOCK_OPERATION_MINT: Operation = {
+  name: OperationName.payBlockProducer,
+  from: { ...MOCK_TX_RECIPIENT.account, address: 'Network' },
+  to: {
+    ...MOCK_TX_RECIPIENT.account,
+    address: 'fuel1auahknz6mjuu0am034mlggh55f0tgp9j7fkzrc6xl48zuy5zv7vqa07n30',
+  },
+  assetsSent: [
+    {
+      assetId:
+        '0x0000000000000000000000000000000000000000000000000000000000000000',
+      amount: bn(1),
     },
   ],
 };

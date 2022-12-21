@@ -2,7 +2,7 @@
 import { ChainInfo } from 'fuels';
 import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
 
-import { NetworkService } from '../services';
+import { NetworkInputs, NetworkService } from '../services';
 
 import type { FetchResponse } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
@@ -71,14 +71,17 @@ export const chainInfoMachine = createMachine(
       }),
     },
     services: {
-      fetchChainInfo: FetchMachine.create<{ providerUrl?: string }, ChainInfo>({
+      fetchChainInfo: FetchMachine.create<
+        NetworkInputs['getChainInfo'],
+        ChainInfo
+      >({
         showError: true,
         async fetch({ input }) {
           if (!input?.providerUrl) {
             throw new Error('No chain URL');
           }
 
-          return NetworkService.getChainInfo(input.providerUrl);
+          return NetworkService.getChainInfo(input);
         },
       }),
     },

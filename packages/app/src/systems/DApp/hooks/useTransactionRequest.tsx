@@ -6,7 +6,7 @@ import { transactionMachine } from '../machines/transactionMachine';
 import { useTransactionRequestMethods } from '../methods/transactionRequestMethods';
 
 import { useAccounts } from '~/systems/Account';
-import { ASSET_LIST } from '~/systems/Asset';
+import { isEth } from '~/systems/Asset';
 import { useChainInfo } from '~/systems/Network';
 import { getFilteredErrors } from '~/systems/Transaction';
 import { useParseTx } from '~/systems/Transaction/hooks/useParseTx';
@@ -79,11 +79,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     gasPerByte: chainInfo?.consensusParameters.gasPerByte,
     gasPriceFactor: chainInfo?.consensusParameters.gasPriceFactor,
   });
-  const ethAmountSent = bn(
-    tx?.totalAssetsSent?.find(
-      ({ assetId }) => assetId === ASSET_LIST[0].assetId
-    )?.amount
-  );
+  const ethAmountSent = bn(tx?.totalAssetsSent?.find(isEth)?.amount);
 
   function approve() {
     send('APPROVE');

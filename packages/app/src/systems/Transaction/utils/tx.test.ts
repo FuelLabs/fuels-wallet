@@ -61,26 +61,26 @@ import {
   isTypeScript,
   parseTx,
 } from './tx';
-import { Operations, Status, Type } from './tx.types';
+import { OperationName, TxStatus, TxType } from './tx.types';
 
-import { reparse } from '~/systems/Core/__tests__/utils';
+import { reparse } from '~/systems/Core';
 
 describe('Tx util', () => {
   describe('getStatus', () => {
     it('should return correct status', () => {
-      expect(getStatus('FailureStatus')).toEqual(Status.failure);
-      expect(getStatus('SuccessStatus')).toEqual(Status.success);
-      expect(getStatus('SubmittedStatus')).toEqual(Status.pending);
+      expect(getStatus('FailureStatus')).toEqual(TxStatus.failure);
+      expect(getStatus('SuccessStatus')).toEqual(TxStatus.success);
+      expect(getStatus('SubmittedStatus')).toEqual(TxStatus.pending);
       expect(getStatus()).toBeUndefined();
     });
     it('should isStatus return by type', () => {
-      expect(isStatus('SuccessStatus', Status.success)).toBeTruthy();
-      expect(isStatus('SubmittedStatus', Status.pending)).toBeTruthy();
-      expect(isStatus('FailureStatus', Status.failure)).toBeTruthy();
+      expect(isStatus('SuccessStatus', TxStatus.success)).toBeTruthy();
+      expect(isStatus('SubmittedStatus', TxStatus.pending)).toBeTruthy();
+      expect(isStatus('FailureStatus', TxStatus.failure)).toBeTruthy();
 
-      expect(isStatus('SuccessStatus', Status.pending)).toBeFalsy();
-      expect(isStatus('SubmittedStatus', Status.failure)).toBeFalsy();
-      expect(isStatus('FailureStatus', Status.success)).toBeFalsy();
+      expect(isStatus('SuccessStatus', TxStatus.pending)).toBeFalsy();
+      expect(isStatus('SubmittedStatus', TxStatus.failure)).toBeFalsy();
+      expect(isStatus('FailureStatus', TxStatus.success)).toBeFalsy();
     });
     it('should isStatusSuccess return if is success', () => {
       expect(isStatusSuccess('SuccessStatus')).toBeTruthy();
@@ -444,17 +444,17 @@ describe('Tx util', () => {
 
   describe('getType', () => {
     it('should getType return correct type', () => {
-      expect(getType(TransactionType.Create)).toEqual(Type.create);
-      expect(getType(TransactionType.Script)).toEqual(Type.script);
-      expect(getType(TransactionType.Mint)).toEqual(Type.mint);
+      expect(getType(TransactionType.Create)).toEqual(TxType.create);
+      expect(getType(TransactionType.Script)).toEqual(TxType.script);
+      expect(getType(TransactionType.Mint)).toEqual(TxType.mint);
     });
     it('should isType return by type', () => {
-      expect(isType(TransactionType.Create, Type.create)).toBeTruthy();
-      expect(isType(TransactionType.Script, Type.script)).toBeTruthy();
-      expect(isType(TransactionType.Mint, Type.mint)).toBeTruthy();
-      expect(isType(TransactionType.Script, Type.create)).toBeFalsy();
-      expect(isType(TransactionType.Mint, Type.script)).toBeFalsy();
-      expect(isType(TransactionType.Create, Type.mint)).toBeFalsy();
+      expect(isType(TransactionType.Create, TxType.create)).toBeTruthy();
+      expect(isType(TransactionType.Script, TxType.script)).toBeTruthy();
+      expect(isType(TransactionType.Mint, TxType.mint)).toBeTruthy();
+      expect(isType(TransactionType.Script, TxType.create)).toBeFalsy();
+      expect(isType(TransactionType.Mint, TxType.script)).toBeFalsy();
+      expect(isType(TransactionType.Create, TxType.mint)).toBeFalsy();
     });
     it('should isTypeMint return if is mint', () => {
       expect(isTypeMint(TransactionType.Mint)).toBeTruthy();
@@ -478,7 +478,7 @@ describe('Tx util', () => {
       MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || []
     );
     const OPERATION_CONTRACT_CALL = {
-      name: Operations.contractCall,
+      name: OperationName.contractCall,
       from: {
         type: AddressType.account,
         address: fromAddress,
@@ -505,7 +505,7 @@ describe('Tx util', () => {
       const baseOperations = addOperation([], OPERATION_CONTRACT_CALL);
       const operationsDifName = addOperation(baseOperations, {
         ...OPERATION_CONTRACT_CALL,
-        name: Operations.contractCreated,
+        name: OperationName.contractCreated,
       });
       const operationsEmptyName = addOperation(baseOperations, {
         ...OPERATION_CONTRACT_CALL,

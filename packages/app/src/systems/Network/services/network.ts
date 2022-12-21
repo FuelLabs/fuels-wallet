@@ -24,6 +24,12 @@ export type NetworkInputs = {
   removeNetwork: {
     id: string;
   };
+  getNodeInfo: {
+    providerUrl: string;
+  };
+  getChainInfo: {
+    providerUrl: string;
+  };
 };
 
 export class NetworkService {
@@ -122,17 +128,13 @@ export class NetworkService {
     });
   }
 
-  static async getChainInfo(url: string) {
-    const provider = new Provider(url);
-    const chainInfo = provider.getChain();
-
-    return chainInfo;
+  static async getChainInfo(input: NetworkInputs['getChainInfo']) {
+    const provider = new Provider(input.providerUrl);
+    return provider.getChain();
   }
 
-  static async getNodeInfo(url: string) {
-    const provider = new Provider(url);
-    const nodeInfo = provider.getNodeInfo();
-
-    return nodeInfo;
+  static async getNodeInfo(input: NetworkInputs['getNodeInfo']) {
+    const provider = new Provider(input.providerUrl);
+    return provider.getNodeInfo();
   }
 }

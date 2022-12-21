@@ -1,12 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
 import { Flex } from '@fuel-ui/react';
 
-import type { Operation, Status } from '../../utils';
+import type { Operation, TxStatus } from '../../utils';
 import { TxOperation } from '../TxOperation/TxOperation';
 
 export type TxOperationsProps = {
   operations?: Operation[];
-  status?: Status;
+  status?: TxStatus;
 };
 
 export function TxOperations({ operations, status }: TxOperationsProps) {
@@ -18,6 +18,12 @@ export function TxOperations({ operations, status }: TxOperationsProps) {
     </Flex>
   );
 }
+
+TxOperations.Loader = () => (
+  <Flex css={styles.root}>
+    <TxOperation.Loader />
+  </Flex>
+);
 
 const styles = {
   root: cssObj({

@@ -19,7 +19,7 @@ export function useParseTx(props: Partial<ParseTxParams>) {
       gqlStatus,
       id,
     });
-  }, [transaction, receipts, gasPerByte, gasPriceFactor, gqlStatus, id]);
+  }, Object.values(props));
 
   return tx;
 }

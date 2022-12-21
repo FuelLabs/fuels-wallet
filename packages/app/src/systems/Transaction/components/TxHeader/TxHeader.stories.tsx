@@ -4,7 +4,7 @@ import {
   MOCK_TRANSACTION_CREATE,
   MOCK_TRANSACTION_SCRIPT,
 } from '../../__mocks__/transaction';
-import { Status } from '../../utils';
+import { TxStatus } from '../../utils';
 
 import type { TxHeaderProps } from './TxHeader';
 import { TxHeader } from './TxHeader';
@@ -26,7 +26,7 @@ export const Usage = (args: TxHeaderProps) => (
     <TxHeader
       {...args}
       {...MOCK_TRANSACTION_CREATE}
-      status={Status.success}
+      status={TxStatus.success}
       providerUrl={process.env.VITE_FUEL_PROVIDER_URL}
     />
   </Box>

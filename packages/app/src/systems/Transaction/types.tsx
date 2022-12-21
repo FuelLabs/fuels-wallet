@@ -12,7 +12,7 @@ import type {
   TransactionType,
 } from 'fuels';
 
-import type { Status } from './utils';
+import type { TxStatus } from './utils';
 
 export type TxRecipientAddress = {
   address: string;
@@ -31,6 +31,6 @@ export type TxOutputContractCreated = OutputContractCreated;
 export type Transaction = {
   id?: string;
   type?: TransactionType;
-  status?: Status;
+  status?: TxStatus;
   data?: TxRequest | TransactionResponse;
 };
