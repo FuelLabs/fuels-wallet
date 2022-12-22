@@ -1,4 +1,5 @@
 import type { Network } from '@fuel-wallet/types';
+import { Provider } from 'fuels';
 import { uniqueId } from 'xstate/lib/utils';
 
 import { db } from '~/systems/Core/utils/database';
@@ -22,6 +23,12 @@ export type NetworkInputs = {
   };
   removeNetwork: {
     id: string;
+  };
+  getNodeInfo: {
+    providerUrl: string;
+  };
+  getChainInfo: {
+    providerUrl: string;
   };
 };
 
@@ -119,5 +126,15 @@ export class NetworkService {
     return db.transaction('rw', db.networks, async () => {
       return db.networks.clear();
     });
+  }
+
+  static async getChainInfo(input: NetworkInputs['getChainInfo']) {
+    const provider = new Provider(input.providerUrl);
+    return provider.getChain();
+  }
+
+  static async getNodeInfo(input: NetworkInputs['getNodeInfo']) {
+    const provider = new Provider(input.providerUrl);
+    return provider.getNodeInfo();
   }
 }
