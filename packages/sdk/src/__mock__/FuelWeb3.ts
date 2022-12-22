@@ -23,6 +23,7 @@ export class MockConnection extends BaseConnection {
       this.connect,
       this.disconnect,
       this.accounts,
+      this.network,
       this.signMessage,
       this.sendTransaction,
     ]);
@@ -40,6 +41,12 @@ export class MockConnection extends BaseConnection {
         response,
       },
     });
+  }
+
+  async network() {
+    return {
+      url: process.env.PUBLIC_PROVIDER_URL,
+    };
   }
 
   async connect() {
