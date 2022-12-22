@@ -7,6 +7,8 @@ import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
 
 import type { Network } from './network';
 
+export type FuelWeb3EventsUnsubscribe = () => void;
+
 export type FuelWeb3Events =
   | {
       type: 'accounts';

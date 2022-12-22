@@ -12,7 +12,13 @@ export class FuelWeb3 extends FuelWeb3SDK {
     const provider = await this.getProvider();
     const wallet = new FuelWeb3Wallet(address, provider);
     // TODO: remove this when the .connect is supported on fuels-ts SDK
-    this.on('network', (network) => {
+    // once implemented, we can just do provider.connect(provider)
+    // and save a have a single instance of the provider
+    //
+    // Having a event listenr here can cause a memory leak
+    // if the wallet instance is destroyed but the event listener
+    // is not removed.
+    this.once('network', (network) => {
       wallet.connect(new FuelWeb3Provider(network.url, this));
     });
     return wallet;
