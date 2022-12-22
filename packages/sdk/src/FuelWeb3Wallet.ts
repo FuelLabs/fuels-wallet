@@ -1,11 +1,16 @@
 import type { AbstractAddress } from 'fuels';
 import { WalletLocked } from 'fuels';
 
-import { FuelWeb3Provider } from './FuelWeb3Provider';
-import type { FuelWeb3SDK } from './FuelWeb3SDK';
+import type { FuelWeb3Provider } from './FuelWeb3Provider';
 
 export class FuelWeb3Wallet extends WalletLocked {
-  constructor(publicKey: string | AbstractAddress, fuelWeb3: FuelWeb3SDK) {
-    super(publicKey, new FuelWeb3Provider(fuelWeb3));
+  provider: FuelWeb3Provider;
+
+  constructor(
+    publicKey: string | AbstractAddress,
+    fuelWeb3Provider: FuelWeb3Provider
+  ) {
+    super(publicKey, fuelWeb3Provider);
+    this.provider = fuelWeb3Provider;
   }
 }

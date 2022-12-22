@@ -64,7 +64,7 @@ describe('FuelWeb3', () => {
     const amount = bn.parseUnits('0.1');
     txRequest.addCoinOutput(toAddress, amount);
 
-    const provider = FuelWeb3.getProvider();
+    const provider = await FuelWeb3.getProvider();
     const resources = await provider.getResourcesToSpend(fromAddress, [
       [amount, NativeAssetId],
     ]);
@@ -77,7 +77,7 @@ describe('FuelWeb3', () => {
     await response.wait();
 
     // query the balance of the destination wallet
-    const addrWallet = FuelWeb3.getWallet(toAddress);
+    const addrWallet = await FuelWeb3.getWallet(toAddress);
     const balance = await addrWallet.getBalance(NativeAssetId);
     expect(balance.toNumber()).toBeGreaterThanOrEqual(amount.toNumber());
   });
@@ -88,7 +88,7 @@ describe('FuelWeb3', () => {
     const toAccount = toWallet.address.toString();
 
     // Test example like docs
-    const wallet = FuelWeb3.getWallet(account);
+    const wallet = await FuelWeb3.getWallet(account);
     const toAddress = Address.fromString(toAccount);
     const amount = bn.parseUnits('0.1');
     const response = await wallet.transfer(toAddress, amount, NativeAssetId, {
@@ -99,13 +99,13 @@ describe('FuelWeb3', () => {
     await response.wait();
 
     // query the balance of the destination wallet
-    const addrWallet = FuelWeb3.getWallet(toAddress);
+    const addrWallet = await FuelWeb3.getWallet(toAddress);
     const balance = await addrWallet.getBalance(NativeAssetId);
     expect(balance.toNumber()).toBeGreaterThanOrEqual(amount.toNumber());
   });
 
   test('getProvider', async () => {
-    const provider = FuelWeb3.getProvider();
+    const provider = await FuelWeb3.getProvider();
     const nodeInfo = await provider.getNodeInfo();
     expect(nodeInfo.nodeVersion).toBeTruthy();
   });
@@ -116,7 +116,7 @@ describe('FuelWeb3', () => {
     const toAccount = toWallet.address.toString();
 
     // Test example like docs
-    const provider = FuelWeb3.getProvider();
+    const provider = await FuelWeb3.getProvider();
     const walletLocked = Wallet.fromAddress(account, provider);
     const toAddress = Address.fromString(toAccount);
     const response = await walletLocked.transfer(

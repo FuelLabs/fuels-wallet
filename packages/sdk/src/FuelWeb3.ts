@@ -8,12 +8,20 @@ export class FuelWeb3 extends FuelWeb3SDK {
   static FuelWeb3Provider = FuelWeb3Provider;
   static FuelWeb3Wallet = FuelWeb3Wallet;
 
-  getWallet(address: string | AbstractAddress): FuelWeb3Wallet {
-    return new FuelWeb3Wallet(address, this);
+  async getWallet(address: string | AbstractAddress): Promise<FuelWeb3Wallet> {
+    const provider = await this.getProvider();
+    const wallet = new FuelWeb3Wallet(address, provider);
+    // TODO: remove this when the .connect is supported on fuels-ts SDK
+    this.on('network', (network) => {
+      wallet.connect(new FuelWeb3Provider(network.url, this));
+    });
+    return wallet;
   }
 
-  getProvider(): FuelWeb3Provider {
-    return new FuelWeb3Provider(this);
+  async getProvider(): Promise<FuelWeb3Provider> {
+    const network = await this.network();
+    const provider = new FuelWeb3Provider(network.url, this);
+    return provider;
   }
 }
 

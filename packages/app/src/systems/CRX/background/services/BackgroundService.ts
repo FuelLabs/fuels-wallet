@@ -14,6 +14,7 @@ import { PopUpService } from './PopUpService';
 import { AccountService } from '~/systems/Account/services';
 import { Pages } from '~/systems/Core/types';
 import { ConnectionService } from '~/systems/DApp/services';
+import { NetworkService } from '~/systems/Network/services';
 
 type EventOrigin = { origin: string };
 
@@ -32,6 +33,7 @@ export class BackgroundService {
       this.disconnect,
       this.signMessage,
       this.sendTransaction,
+      this.network,
     ]);
   }
 
@@ -97,7 +99,7 @@ export class BackgroundService {
   }
 
   async sendEvent(origin: string, eventName: string, params: any[]) {
-    this.communicationProtocol.broadcast(origin, {
+    this.communicationProtocol.broadcast([origin], {
       target: CONTENT_SCRIPT_NAME,
       type: MessageTypes.event,
       events: [
@@ -107,6 +109,16 @@ export class BackgroundService {
         },
       ],
     });
+  }
+
+  async network() {
+    const network = await NetworkService.getSelectedNetwork();
+    return network
+      ? {
+          url: network.url,
+          id: network.id,
+        }
+      : null;
   }
 
   async connect(_: JSONRPCParams, serverParams: EventOrigin) {

@@ -6,8 +6,8 @@ import type { FuelWeb3SDK } from './FuelWeb3SDK';
 export class FuelWeb3Provider extends Provider {
   fuelWeb3: FuelWeb3SDK;
 
-  constructor(fuelWeb3: FuelWeb3SDK) {
-    super(fuelWeb3.providerConfig.url);
+  constructor(providerUrl: string, fuelWeb3: FuelWeb3SDK) {
+    super(providerUrl);
     this.fuelWeb3 = fuelWeb3;
   }
 

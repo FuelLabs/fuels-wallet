@@ -30,7 +30,7 @@ export function Transfer() {
       console.debug('Request signature transaction!');
       const accounts = await FuelWeb3.accounts();
       const account = accounts[0];
-      const wallet = FuelWeb3.getWallet(account);
+      const wallet = await FuelWeb3.getWallet(account);
       const response = await wallet.transfer(
         Address.fromString(
           'fuel1r3u2qfn00cgwk3u89uxuvz5cgcjaq934cfer6cwuew0424cz5sgq4yldul'

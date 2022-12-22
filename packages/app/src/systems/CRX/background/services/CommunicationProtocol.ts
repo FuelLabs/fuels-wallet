@@ -44,9 +44,10 @@ export class CommunicationProtocol extends BaseConnection {
     }
   };
 
-  broadcast = (origin: string, message: EventMessage) => {
+  broadcast = (origins: Array<string>, message: EventMessage) => {
     this.ports.forEach((port) => {
-      if (port.sender?.origin === origin) {
+      if (origins.includes(port.sender?.origin || '')) {
+        console.log('send event', port.sender?.origin, message);
         port.postMessage(message);
       }
     });

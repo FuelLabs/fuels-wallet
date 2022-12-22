@@ -11,7 +11,7 @@ export const createReadOnly = (fuelWeb3: FuelWeb3) => {
       // extends from.
       if (
         Object.hasOwn(target, key) &&
-        ['_eventsCount', '_events'].includes(key as string)
+        ['_eventsCount', '_events', 'providerConfig'].includes(key as string)
       ) {
         // eslint-disable-next-line no-param-reassign
         target[key] = value;
