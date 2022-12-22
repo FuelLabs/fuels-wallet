@@ -28,7 +28,19 @@ export function ViewActivity() {
     [data]
   );
 
-  // @TODO: replace this with the transaction transform function with
+  // @TODO: replace this with the transaction transform function from the SDK
+  const getTransactionAmount = (tx: ActivityPageTransaction) => {
+    if (
+      tx.outputs[0].__typename === 'ChangeOutput' ||
+      tx.outputs[0].__typename === 'CoinOutput' ||
+      tx.outputs[0].__typename === 'VariableOutput'
+    ) {
+      return tx.outputs[0].amount;
+    }
+    return '0';
+  };
+
+  // @TODO: replace this with the transaction transform function from the SDK
   const transactions = useMemo<Transaction[]>(
     () =>
       transactionsData.map((transaction) => ({
@@ -49,7 +61,9 @@ export function ViewActivity() {
           imageUrl: '',
           name: 'ETH',
           symbol: 'ETH',
-          amount: transaction.outputs ? bn(transaction.outputs[0].amount) : '',
+          amount: transaction.outputs
+            ? bn(getTransactionAmount(transaction))
+            : '',
         },
         category: TxCategory.SCRIPT,
         status: TxStatus.SUCCESS,
