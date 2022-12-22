@@ -3,25 +3,25 @@ import { Flex, Button } from '@fuel-ui/react';
 import { useState } from 'react';
 
 import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuelWeb3 } from '~/src/hooks/useFuelWeb3';
+import { useFuel } from '~/src/hooks/useFuel';
 import { useLoading } from '~/src/hooks/useLoading';
 
 export function Connect() {
-  const [FuelWeb3, notDetected] = useFuelWeb3();
+  const [fuel, notDetected] = useFuel();
   const [connected, setConnected] = useState(false);
 
   const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {
     console.debug('Request connection to Wallet!');
-    const isConnected = await FuelWeb3.connect();
-    setConnected(isConnected);
+    const isConnected = await fuel.connect();
     console.debug('Connection response', isConnected);
+    setConnected(isConnected);
   });
 
   const [handleDisconnect, isDisconnecting, errorDisconnect] = useLoading(
     async () => {
       console.debug('Request disconnection to Wallet!');
-      await FuelWeb3.disconnect();
-      setConnected(false);
+      const isConnected = await fuel.disconnect();
+      setConnected(isConnected);
       console.debug('Disconnection response');
     }
   );
