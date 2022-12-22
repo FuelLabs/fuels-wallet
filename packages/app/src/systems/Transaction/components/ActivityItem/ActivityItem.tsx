@@ -1,11 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
-import type { AssetAmount } from '@fuel-wallet/types';
-import type { Address } from 'fuels';
+import { bn } from 'fuels';
 import type { FC } from 'react';
 
-import { TxType } from '../../types';
-import type { Transaction, TxStatus } from '../../types';
+import { TxCategory } from '../../types';
+import type { Transaction } from '../../types';
 import { getTransactionTypeText, getTxStatusColor } from '../../utils';
 import { TxIcon } from '../TxIcon';
 
@@ -16,36 +15,32 @@ import { shortAddress } from '~/systems/Core';
 export type TxItemProps = {
   transaction: Transaction;
   providerUrl?: string;
-  amount?: AssetAmount;
-  date?: string;
-  to?: Address;
-  from?: Address;
-  txType?: TxType;
-  txStatus?: TxStatus;
 };
 
 type TxItemComponent = FC<TxItemProps> & {
   Loader: typeof ActivityItemLoader;
 };
 
-export const ActivityItem: TxItemComponent = ({
-  transaction,
-  txStatus,
-  amount,
-  date,
-  to,
-  from,
-  txType,
-}) => {
+export const ActivityItem: TxItemComponent = ({ transaction }) => {
+  const {
+    amount,
+    date,
+    from,
+    to,
+    category: txCategory,
+    status: txStatus,
+  } = transaction;
   const txColor = getTxStatusColor(txStatus);
 
-  const toOrFromText = txType === TxType.SEND ? 'From' : 'To';
+  const toOrFromText = txCategory === TxCategory.SEND ? 'From' : 'To';
 
-  const toOrFromAddress = txType === TxType.SEND ? from : to;
+  const toOrFromAddress = txCategory === TxCategory.SEND ? from : to;
+
+  const formatDate = (date: Date) => `${date.getMonth()} ${date.getDate()}`;
 
   return (
     <Card css={styles.root}>
-      <TxIcon transactionType={txType} />
+      <TxIcon transactionType={txCategory} />
       <Flex direction="column" css={styles.contentWrapper}>
         <Flex css={styles.row}>
           <Flex css={styles.item}>
@@ -56,7 +51,7 @@ export const ActivityItem: TxItemComponent = ({
 
           <Flex css={styles.item}>
             <Text color={txColor} fontSize="sm">
-              {`${amount?.amount} ${amount?.symbol}`}
+              {`${bn(amount?.amount).format()} ${amount?.symbol}`}
             </Text>
           </Flex>
         </Flex>
@@ -64,7 +59,7 @@ export const ActivityItem: TxItemComponent = ({
           <Flex css={styles.item}>
             <Text fontSize="sm">{toOrFromText}: </Text>
             <Text fontSize="sm">
-              {shortAddress(toOrFromAddress?.toString() || '')}
+              {shortAddress(toOrFromAddress?.address || '')}
             </Text>
             <Flex css={styles.item}>
               <Copyable
@@ -79,7 +74,7 @@ export const ActivityItem: TxItemComponent = ({
             </Flex>
           </Flex>
           <Flex css={styles.item}>
-            <Text fontSize="sm">{date}</Text>
+            <Text fontSize="sm">{formatDate(date || new Date())}</Text>
           </Flex>
         </Flex>
       </Flex>

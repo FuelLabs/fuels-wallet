@@ -1,4 +1,4 @@
-import type { AddressType } from '@fuel-wallet/types';
+import type { AddressType, AssetAmount } from '@fuel-wallet/types';
 import type {
   CallResult,
   CoinTransactionRequestInput,
@@ -17,7 +17,7 @@ export enum TxStatus {
   ERROR = 'error',
 }
 
-export enum TxType {
+export enum TxCategory {
   SEND = 'send',
   RECEIVE = 'receive',
   CONTRACTCALL = 'contractcall',
@@ -43,5 +43,10 @@ export type Transaction = {
   id?: string;
   type?: TransactionType;
   status?: TxStatus;
+  category?: TxCategory;
+  date?: Date;
+  from?: TxRecipientAddress;
+  to?: TxRecipientAddress;
+  amount?: AssetAmount;
   data?: TxRequest | TxResponse;
 };

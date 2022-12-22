@@ -8,3 +8,4 @@ packages/app/src/types
 contracts
 **/*.typegen.ts
 .eslintrc.js
+**/__generated__/

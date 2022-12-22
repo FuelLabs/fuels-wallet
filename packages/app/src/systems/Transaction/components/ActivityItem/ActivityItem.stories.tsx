@@ -2,7 +2,7 @@ import { Box } from '@fuel-ui/react';
 import { bn, Address } from 'fuels';
 
 import { MOCK_TRANSACTION_SCRIPT } from '../../__mocks__/transaction';
-import { TxStatus, TxType } from '../../types';
+import { TxStatus, TxCategory } from '../../types';
 
 import type { TxItemProps } from './ActivityItem';
 import { ActivityItem } from './ActivityItem';
@@ -29,7 +29,7 @@ const MOCK_PROPS: TxItemProps = {
     imageUrl:
       'https://assets.coingecko.com/coins/images/279/large/ethereum.png',
   },
-  txType: TxType.PREDICATE,
+  txCategory: TxCategory.PREDICATE,
   txStatus: TxStatus.SUCCESS,
   date: 'Jun 03',
 };

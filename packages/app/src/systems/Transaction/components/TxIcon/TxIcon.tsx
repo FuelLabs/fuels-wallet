@@ -1,13 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
 import { Flex, Icon } from '@fuel-ui/react';
 
-import type { TxType } from '../../types';
+import type { TxCategory } from '../../types';
 import { getTxIcon } from '../../utils';
 
 import { TxIconLoader } from './TxIconLoader';
 
 export type TxIconProps = {
-  transactionType?: TxType;
+  transactionType?: TxCategory;
 };
 
 export function TxIcon({ transactionType }: TxIconProps) {

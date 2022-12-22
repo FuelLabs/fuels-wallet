@@ -1,0 +1,100 @@
+query AddressPageQuery($first: Int, $owner: Address!) {
+  coins(filter: { owner: $owner }, first: 9999) {
+    edges {
+      node {
+        ...AddressPageCoin
+      }
+    }
+  }
+  transactionsByOwner(first: $first, owner: $owner) {
+    edges {
+      node {
+        ...AddressPageTransaction
+      }
+    }
+  }
+}
+
+fragment AddressPageCoin on Coin {
+  utxoId
+  owner
+  amount
+  assetId
+  maturity
+  status
+  blockCreated
+}
+
+fragment AddressPageTransaction on Transaction {
+  id
+  inputContracts {
+    id
+  }
+  inputAssetIds
+  gasPrice
+  gasLimit
+  maturity
+  isScript
+  receiptsRoot
+  witnesses
+  outputs {
+    __typename
+    ... on CoinOutput {
+      to
+      amount
+      assetId
+    }
+    ... on ContractOutput {
+      inputIndex
+      balanceRoot
+      stateRoot
+    }
+    ... on ChangeOutput {
+      to
+      amount
+      assetId
+    }
+    ... on VariableOutput {
+      to
+      amount
+      assetId
+    }
+    ... on ContractCreated {
+      contract {
+        id
+      }
+    }
+  }
+  inputs {
+    __typename
+    ... on InputCoin {
+      utxoId
+      owner
+      amount
+      assetId
+      witnessIndex
+      maturity
+      predicate
+      predicateData
+    }
+    ... on InputContract {
+      utxoId
+      balanceRoot
+      stateRoot
+      contract {
+        id
+      }
+    }
+  }
+  status {
+    ... on SubmittedStatus {
+      time
+    }
+    ... on SuccessStatus {
+      time
+    }
+    ... on FailureStatus {
+      time
+    }
+  }
+}

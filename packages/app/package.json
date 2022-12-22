@@ -15,10 +15,13 @@
     "test:ci": "pnpm ts:check && pnpm test",
     "test:watch": "jest --watch",
     "ts:check": "pnpm xstate:typegen && tsc --noEmit",
-    "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
+    "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'",
+    "build-operations": "graphql-codegen && prettier --write src/api/__generated__/types.ts",
+    "update-schema": "get-graphql-schema http://localhost:4000/graphql > fuel-core-schema.graphql"
   },
   "dependencies": {
     "@fontsource/source-code-pro": "^4.5.12",
+    "@apollo/client": "^3.4.13",
     "@fuel-ts/mnemonic": "0.26.0",
     "@fuel-ts/wallet": "0.26.0",
     "@fuel-ts/wallet-manager": "0.26.0",
@@ -40,6 +43,7 @@
     "fake-indexeddb": "^4.0.1",
     "framer-motion": "^7.10.2",
     "fuels": "0.26.0",
+    "graphql": "^16.6.0",
     "json-rpc-2.0": "^1.4.2",
     "react": "^18.2.0",
     "react-content-loader": "^6.2.0",
@@ -55,6 +59,11 @@
   "devDependencies": {
     "@babel/core": "^7.20.5",
     "@crxjs/vite-plugin": "^1.0.14",
+    "@graphql-codegen/cli": "^2.16.1",
+    "@graphql-codegen/near-operation-file-preset": "^2.2.6",
+    "@graphql-codegen/typescript": "^2.4.5",
+    "@graphql-codegen/typescript-operations": "^2.3.2",
+    "@graphql-codegen/typescript-react-apollo": "^3.2.8",
     "@playwright/test": "^1.29.0",
     "@storybook/addon-a11y": "^6.5.14",
     "@storybook/addon-actions": "^6.5.14",
