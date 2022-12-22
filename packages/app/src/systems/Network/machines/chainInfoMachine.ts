@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
-import { ChainInfo, Provider } from 'fuels';
+import { ChainInfo } from 'fuels';
 import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
+
+import { NetworkInputs, NetworkService } from '../services';
 
 import type { FetchResponse } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
@@ -69,16 +71,17 @@ export const chainInfoMachine = createMachine(
       }),
     },
     services: {
-      fetchChainInfo: FetchMachine.create<{ providerUrl?: string }, ChainInfo>({
+      fetchChainInfo: FetchMachine.create<
+        NetworkInputs['getChainInfo'],
+        ChainInfo
+      >({
         showError: true,
         async fetch({ input }) {
           if (!input?.providerUrl) {
             throw new Error('No chain URL');
           }
 
-          const chainInfo = await new Provider(input.providerUrl).getChain();
-
-          return chainInfo;
+          return NetworkService.getChainInfo(input);
         },
       }),
     },
