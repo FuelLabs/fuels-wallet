@@ -3,18 +3,16 @@ import { Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import type { FC } from 'react';
 
-import type { Transaction } from '../../types';
-import {
-  getTransactionTypeText,
-  getTxStatusColor,
-  getTxStatusText,
-} from '../../utils';
+import type { TxType } from '../../utils';
+import { TxStatus, getTxStatusColor } from '../../utils';
 
 import { TxHeaderLoader } from './TxHeaderLoader';
 
 export type TxHeaderProps = {
-  transaction: Omit<Transaction, 'data'>;
+  status?: TxStatus;
+  id?: string;
   providerUrl?: string;
+  type?: TxType;
 };
 
 type TxHeaderComponent = FC<TxHeaderProps> & {
@@ -22,23 +20,23 @@ type TxHeaderComponent = FC<TxHeaderProps> & {
 };
 
 export const TxHeader: TxHeaderComponent = ({
-  transaction,
+  status,
+  id,
+  type,
   providerUrl = '',
 }) => {
-  const txColor = getTxStatusColor(transaction.status);
-
   return (
     <Card css={styles.root}>
       <Flex css={styles.row}>
         <Flex css={styles.item}>
           <Text fontSize="sm">Status: </Text>
-          <Text fontSize="sm" css={{ color: '$gray12', mx: '$2' }}>
-            {getTxStatusText(transaction.status)}
+          <Text fontSize="sm" className="status">
+            {status}
           </Text>
           <Text
-            color={txColor}
-            aria-label={`Status Color: ${txColor}`}
-            css={{ borderRadius: '100%', fontSize: 9, cursor: 'default' }}
+            aria-label="Status Circle"
+            className="circle"
+            data-status={status}
           >
             ●
           </Text>
@@ -46,7 +44,7 @@ export const TxHeader: TxHeaderComponent = ({
         <Flex css={styles.item}>
           <Copyable
             value={getBlockExplorerLink({
-              path: `transaction/${transaction.id || ''}`,
+              path: `transaction/${id || ''}`,
               providerUrl,
             })}
             tooltipMessage="Copy Transaction Link"
@@ -56,7 +54,7 @@ export const TxHeader: TxHeaderComponent = ({
             }}
           />
           <Copyable
-            value={transaction.id || ''}
+            value={id || ''}
             css={{ mx: '$2' }}
             iconProps={{
               icon: Icon.is('CopySimple'),
@@ -69,8 +67,8 @@ export const TxHeader: TxHeaderComponent = ({
       <Flex css={styles.row}>
         <Flex css={styles.item}>
           <Text fontSize="sm">Type: </Text>
-          <Text fontSize="sm" css={{ color: '$gray12', mx: '$2' }}>
-            {getTransactionTypeText(transaction.type)}
+          <Text fontSize="sm" className="type">
+            {type}
           </Text>
         </Flex>
       </Flex>
@@ -99,6 +97,26 @@ const styles = {
   }),
   item: cssObj({
     alignItems: 'center',
+
+    '.status, .type': {
+      color: '$gray12',
+      mx: '$2',
+    },
+
+    '.circle': {
+      borderRadius: '100%',
+      fontSize: 9,
+      cursor: 'default',
+      [`&[data-status="${TxStatus.success}"]`]: {
+        color: `$${getTxStatusColor(TxStatus.success)}`,
+      },
+      [`&[data-status="${TxStatus.failure}"]`]: {
+        color: `$${getTxStatusColor(TxStatus.failure)}`,
+      },
+      [`&[data-status="${TxStatus.pending}"]`]: {
+        color: `$${getTxStatusColor(TxStatus.pending)}`,
+      },
+    },
   }),
   icon: cssObj({
     color: '$brand',
