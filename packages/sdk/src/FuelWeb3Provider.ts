@@ -15,9 +15,9 @@ export class FuelWeb3Provider extends Provider {
     transactionRequestLike: TransactionRequestLike
   ): Promise<TransactionResponse> {
     const transactionId = await this.fuelWeb3.sendTransaction(
+      this.url,
       transactionRequestLike
     );
-    const response = new TransactionResponse(transactionId, this);
-    return response;
+    return new TransactionResponse(transactionId, this);
   }
 }

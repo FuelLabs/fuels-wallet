@@ -30,6 +30,7 @@ export class BackgroundService {
     this.externalMethods([
       this.accounts,
       this.connect,
+      this.isConnected,
       this.disconnect,
       this.signMessage,
       this.sendTransaction,
@@ -76,7 +77,7 @@ export class BackgroundService {
   }
 
   async requireConnection(origin: string) {
-    const authorizedApp = await ConnectionService.getConnection(origin);
+    const authorizedApp = await this.isConnected(origin);
     if (!authorizedApp) {
       throw new Error(
         'Connection not established. Please call connect() first to request a connection'
@@ -89,8 +90,9 @@ export class BackgroundService {
     request: JSONRPCRequest,
     serverParams: EventOrigin
   ) {
-    // If the method is not connect check if connection is already established
-    if (request.method !== 'connect') {
+    // If the method is not connect or isConnected
+    // check if connection is already established
+    if (!['connect', 'isConnected'].includes(request.method)) {
       await this.requireConnection(serverParams!.origin);
     } else {
       await this.requireAccounts();
@@ -109,6 +111,11 @@ export class BackgroundService {
         },
       ],
     });
+  }
+
+  async isConnected(origin: string) {
+    const isConnected = await ConnectionService.getConnection(origin);
+    return !!isConnected;
   }
 
   async network() {

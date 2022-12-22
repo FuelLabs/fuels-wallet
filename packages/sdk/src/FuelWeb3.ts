@@ -4,30 +4,39 @@ import { FuelWeb3Provider } from './FuelWeb3Provider';
 import { FuelWeb3SDK } from './FuelWeb3SDK';
 import { FuelWeb3Wallet } from './FuelWeb3Wallet';
 
+// Isolate the provider instance to prevent
+// developers from replacing the provider
+// instance with a new one
+const FuelWeb3Privates: {
+  provider?: FuelWeb3Provider;
+} = {};
+
 export class FuelWeb3 extends FuelWeb3SDK {
   static FuelWeb3Provider = FuelWeb3Provider;
   static FuelWeb3Wallet = FuelWeb3Wallet;
 
-  async getWallet(address: string | AbstractAddress): Promise<FuelWeb3Wallet> {
-    const provider = await this.getProvider();
-    const wallet = new FuelWeb3Wallet(address, provider);
-    // TODO: remove this when the .connect is supported on fuels-ts SDK
-    // once implemented, we can just do provider.connect(provider)
-    // and save a have a single instance of the provider
-    //
-    // Having a event listenr here can cause a memory leak
-    // if the wallet instance is destroyed but the event listener
-    // is not removed.
-    this.once('network', (network) => {
-      wallet.connect(new FuelWeb3Provider(network.url, this));
+  private async getProvider(): Promise<FuelWeb3Provider> {
+    // Return the current provider instance if it exists
+    if (FuelWeb3Privates.provider) {
+      return FuelWeb3Privates.provider;
+    }
+    // Otherwise, create a new provider instance
+    // fetch the current network and connect the provider
+    const network = await this.network();
+    FuelWeb3Privates.provider = new FuelWeb3Provider(network.url, this);
+
+    // Listen for network changes and connect the provider
+    // selected network from the user
+    this.on('network', async (network) => {
+      FuelWeb3Privates.provider?.connect(network.url);
     });
-    return wallet;
+
+    return FuelWeb3Privates.provider;
   }
 
-  async getProvider(): Promise<FuelWeb3Provider> {
-    const network = await this.network();
-    const provider = new FuelWeb3Provider(network.url, this);
-    return provider;
+  async getWallet(address: string | AbstractAddress): Promise<FuelWeb3Wallet> {
+    const provider = await this.getProvider();
+    return new FuelWeb3Wallet(address, provider);
   }
 }
 

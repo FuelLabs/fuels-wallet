@@ -40,6 +40,10 @@ export class FuelWeb3SDK extends WindowConnection {
     return this.client.request('connect', {});
   }
 
+  async isConnected(): Promise<boolean> {
+    return this.client.request('isConnected', {});
+  }
+
   async disconnect(): Promise<boolean> {
     return this.client.request('disconnect', {});
   }
@@ -58,12 +62,16 @@ export class FuelWeb3SDK extends WindowConnection {
     });
   }
 
-  async sendTransaction(transaction: TransactionRequestLike): Promise<string> {
+  async sendTransaction(
+    url: string,
+    transaction: TransactionRequestLike
+  ): Promise<string> {
     if (!transaction) {
       throw new Error('Transaction is required');
     }
     return this.client.request('sendTransaction', {
       transaction: JSON.stringify(transaction),
+      provider: { url },
     });
   }
 

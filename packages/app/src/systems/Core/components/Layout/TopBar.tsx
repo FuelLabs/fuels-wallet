@@ -100,7 +100,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
 
 function ExternalTopBar() {
   const { isLoading, title } = useLayoutContext();
-  const { networks, selectedNetwork, handlers } = useNetworks({
+  const { selectedNetwork } = useNetworks({
     type: NetworkScreen.list,
   });
 
@@ -114,11 +114,8 @@ function ExternalTopBar() {
           </Text>
         )}
       </Flex>
-      {networks && (
-        <NetworkDropdown
-          selected={selectedNetwork}
-          onPress={handlers.goToList}
-        />
+      {selectedNetwork && (
+        <NetworkDropdown selected={selectedNetwork} isDisabled={true} />
       )}
     </Flex>
   );
