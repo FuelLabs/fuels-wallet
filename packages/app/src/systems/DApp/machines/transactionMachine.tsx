@@ -94,6 +94,7 @@ export const transactionMachine = createMachine(
         },
       },
       settingGasPrice: {
+        tags: ['loading'],
         invoke: {
           src: 'fetchGasPrice',
           data: ({ transactionRequest, providerUrl }: MachineContext) => ({
@@ -108,6 +109,7 @@ export const transactionMachine = createMachine(
         },
       },
       simulatingTransaction: {
+        tags: ['loading'],
         invoke: {
           src: 'simulateTransaction',
           data: (ctx: MachineContext) => ({

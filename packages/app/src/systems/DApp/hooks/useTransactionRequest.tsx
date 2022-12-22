@@ -1,5 +1,6 @@
 import { useInterpret, useSelector } from '@xstate/react';
 import { bn } from 'fuels';
+import { useMemo } from 'react';
 
 import type { TransactionMachineState } from '../machines/transactionMachine';
 import { transactionMachine } from '../machines/transactionMachine';
@@ -24,6 +25,9 @@ const selectors = {
   },
   isUnlockingLoading(state: TransactionMachineState) {
     return state.children.unlock?.state.matches('unlocking');
+  },
+  isLoadingTransaction(state: TransactionMachineState) {
+    return state.hasTag('loading');
   },
   context(state: TransactionMachineState) {
     return state.context;
@@ -50,7 +54,7 @@ type UseTransactionRequestOpts = {
 };
 
 export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
-  const { account, isLoading } = useAccounts();
+  const { account, isLoading: isLoadingAccounts } = useAccounts();
   const service = useInterpret(() =>
     transactionMachine.withContext({
       isOriginRequired: opts.isOriginRequired,
@@ -64,22 +68,34 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const waitingApproval = useSelector(service, selectors.waitingApproval);
   const sendingTx = useSelector(service, selectors.sendingTx);
   const generalErrors = useSelector(service, selectors.generalErrors);
+  const isLoadingTransaction = useSelector(
+    service,
+    selectors.isLoadingTransaction
+  );
+  const { chainInfo, isLoading: isLoadingChainInfo } = useChainInfo(
+    ctx.providerUrl
+  );
   const groupedErrors = ctx.txDryRunGroupedErrors;
   const hasGeneralErrors = Boolean(Object.keys(generalErrors || {}).length);
+  const isLoadingTx =
+    isLoadingTransaction || isLoadingAccounts || isLoadingChainInfo;
+
   const isShowingSelector = selectors.isShowingInfo({
-    isLoading,
+    isLoading: isLoadingTx,
     account,
   });
   const isShowingInfo = useSelector(service, isShowingSelector);
 
-  const { chainInfo } = useChainInfo(ctx.providerUrl);
   const tx = useParseTx({
     transaction: ctx.transactionRequest?.toTransaction(),
     receipts: ctx.receipts,
     gasPerByte: chainInfo?.consensusParameters.gasPerByte,
     gasPriceFactor: chainInfo?.consensusParameters.gasPriceFactor,
   });
-  const ethAmountSent = bn(tx?.totalAssetsSent?.find(isEth)?.amount);
+  const ethAmountSent = useMemo(
+    () => bn(tx?.totalAssetsSent?.find(isEth)?.amount),
+    [tx?.totalAssetsSent]
+  );
 
   function approve() {
     send('APPROVE');
@@ -108,7 +124,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
       reject,
     },
     account,
-    isLoading,
+    isLoadingTx,
     isUnlocking,
     isUnlockingLoading,
     sendingTx,

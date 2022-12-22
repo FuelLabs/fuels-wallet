@@ -30,6 +30,13 @@ export function TransactionRequest() {
 
   const content = (
     <Layout.Content css={styles.content}>
+      {ctx.isLoadingTx && (
+        <Stack gap="$4">
+          <ConnectInfo.Loader />
+          <TxOperations.Loader />
+          <TxDetails.Loader />
+        </Stack>
+      )}
       {ctx.isShowingInfo && (
         <Stack gap="$4">
           <ConnectInfo
@@ -102,7 +109,7 @@ export function TransactionRequest() {
           <Button
             color="accent"
             onPress={handlers.approve}
-            isLoading={ctx.isLoading || ctx.sendingTx}
+            isLoading={ctx.isLoadingTx || ctx.sendingTx}
             isDisabled={!ctx.waitingApproval}
             css={{ flex: 1, ml: '$2' }}
           >
@@ -115,7 +122,7 @@ export function TransactionRequest() {
 
   return (
     <>
-      <Layout title="Approve Transaction" isLoading={ctx.isLoading}>
+      <Layout title="Approve Transaction" isLoading={ctx.isLoadingTx}>
         <Layout.TopBar type={TopBarType.external} />
         {content}
         {footer}
