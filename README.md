@@ -5,7 +5,7 @@
 ## ⚡️ Fuel Wallet
 
 > **Warning**
-> This project is under active development, some features are not implemented or can apresent bugs/issues. Do not treat it as a production-ready wallet.
+> This project is under active development, some features are not implemented or can present bugs/issues. Do not treat it as a production-ready wallet.
 
 The official wallet of the fastest modular execution layer: [Fuel](https://fuel.network).
 
