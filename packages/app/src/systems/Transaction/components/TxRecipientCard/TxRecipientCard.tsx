@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
 import { AddressType } from '@fuel-wallet/types';
+import { isB256, isBech32 } from 'fuels';
 import type { FC } from 'react';
 
 import type { TxRecipientAddress } from '../../types';
@@ -22,8 +23,10 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   recipient,
   isReceiver,
 }) => {
-  const address = recipient?.address;
+  const address = recipient?.address || '';
   const isContract = recipient?.type === AddressType.contract;
+  const isValidAddress = isB256(address) || isBech32(address);
+
   return (
     <Card css={styles.root}>
       <Text css={styles.from}>
@@ -46,7 +49,9 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
             </Box>
           )}
           <Flex css={styles.info}>
-            <Copyable value={address}>{shortAddress(address)}</Copyable>
+            <Copyable value={address} data-invalid-address={!isValidAddress}>
+              {shortAddress(address)}
+            </Copyable>
           </Flex>
         </>
       )}
@@ -92,6 +97,12 @@ const styles = {
 
     '.fuel_copyable': {
       fontSize: '$xs',
+      // to make sure we're using same text format, we just hide the copy icon but still use Copyable.
+      '&[data-invalid-address="true"]': {
+        '.fuel_copyable-icon': {
+          display: 'none',
+        },
+      },
     },
   }),
 };
