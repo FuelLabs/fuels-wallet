@@ -2,6 +2,8 @@ import { cssObj } from '@fuel-ui/css';
 import { Avatar, Button, Card, Icon, Tag, Text, Tooltip } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 
+import { ConnectInfoLoader } from './ConnectInfoLoader';
+
 import { parseUrl, shortAddress } from '~/systems/Core';
 
 export type ConnectInfoProps = {
@@ -38,6 +40,8 @@ export function ConnectInfo({ origin, account, isReadOnly }: ConnectInfoProps) {
     </Card>
   );
 }
+
+ConnectInfo.Loader = ConnectInfoLoader;
 
 const styles = {
   root: cssObj({

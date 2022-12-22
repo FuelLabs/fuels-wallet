@@ -1,35 +1,34 @@
 import { Stack } from '@fuel-ui/react';
+import { Fragment } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { TxDetails, TxFromTo, TxHeader, TxStatusAlert } from '../../components';
-import { useTransaction } from '../../hooks';
+import {
+  TxDetails,
+  TxHeader,
+  TxOperations,
+  TxStatusAlert,
+} from '../../components';
+import { useTx } from '../../hooks';
 
-import { AssetsAmount } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { NetworkScreen, useNetworks } from '~/systems/Network';
 
-export function ViewTransaction() {
+export function TxView() {
   const txIdQueryParam = useParams<{ txId: string }>().txId;
   const networks = useNetworks({ type: NetworkScreen.list });
   const providerUrl = networks?.selectedNetwork?.url;
 
   const {
     isFetching,
+    isLoadingTx,
     isFetchingResult,
-    txFee,
-    txStatus,
-    txId,
-    tx,
-    error,
     shouldShowAlert,
     shouldShowTx,
     shouldShowTxDetails,
-    txFrom,
-    txTo,
-    isFetchingDetails,
-    toAssetAmounts,
-    amountSent,
-  } = useTransaction({
+    tx,
+    error,
+    ethAmountSent,
+  } = useTx({
     txId: txIdQueryParam,
     providerUrl,
     waitProviderUrl: true,
@@ -43,34 +42,28 @@ export function ViewTransaction() {
       <Layout.Content>
         <Stack gap="$4">
           {shouldShowAlert && (
-            <TxStatusAlert txStatus={txStatus} error={error} />
+            <TxStatusAlert txStatus={tx?.status} error={error} />
           )}
           {shouldShowTx && (
             <>
               <TxHeader
-                transaction={{
-                  id: txId,
-                  type: tx?.type,
-                  status: txStatus,
-                }}
+                id={tx?.id}
+                type={tx?.type}
+                status={tx?.status}
                 providerUrl={providerUrl}
               />
-              <TxFromTo from={txFrom} to={txTo} status={txStatus} />
-              {Boolean(toAssetAmounts?.length) && (
-                <AssetsAmount amounts={toAssetAmounts} title="Assets Sent" />
-              )}
+              <TxOperations operations={tx?.operations} status={tx?.status} />
             </>
           )}
-          {isFetching && (
+          {isLoadingTx && (
             <>
               <TxHeader.Loader />
-              <TxFromTo isLoading={true} />
-              <AssetsAmount.Loader />
+              <TxOperations.Loader />
+              <TxDetails.Loader />
             </>
           )}
-          {isFetchingDetails && <TxDetails.Loader />}
           {shouldShowTxDetails && (
-            <TxDetails fee={txFee} amountSent={amountSent} />
+            <TxDetails fee={tx?.fee} amountSent={ethAmountSent} />
           )}
         </Stack>
       </Layout.Content>

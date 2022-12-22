@@ -3,23 +3,23 @@ import { Route, Routes } from 'react-router-dom';
 
 import { MOCK_TRANSACTION_WITH_RECEIPTS_GQL } from '../../__mocks__/transaction';
 
-import { ViewTransaction } from './ViewTransaction';
+import { TxView } from './TxView';
 
 import { Pages } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
-const ViewTransactionStory = ({ txId }: { txId: string }) => {
+const TxViewStory = ({ txId }: { txId: string }) => {
   return (
     <Routes location={Pages.tx({ txId })}>
-      <Route path={Pages.tx()} element={<ViewTransaction />} />
+      <Route path={Pages.tx()} element={<TxView />} />
     </Routes>
   );
 };
 
 export default {
-  component: ViewTransactionStory,
-  title: 'Transaction/Components/ViewTransaction',
+  component: TxViewStory,
+  title: 'Transaction/Components/TxView',
   argTypes: {
     txId: {
       defaultValue:
@@ -55,5 +55,5 @@ export default {
 };
 
 export const Usage = ({ txId }: { txId: string }) => (
-  <ViewTransactionStory txId={txId} />
+  <TxViewStory txId={txId} />
 );
