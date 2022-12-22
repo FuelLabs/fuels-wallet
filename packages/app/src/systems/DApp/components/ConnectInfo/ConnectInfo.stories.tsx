@@ -18,3 +18,9 @@ export const Usage: StoryFn<ConnectInfoProps> = (args) => (
     <ConnectInfo {...args} origin={URL} account={MOCK_ACCOUNTS[0]} />
   </Box>
 );
+
+export const Loader: StoryFn<ConnectInfoProps> = () => (
+  <Box css={{ width: 300 }}>
+    <ConnectInfo.Loader />
+  </Box>
+);
