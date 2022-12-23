@@ -19,16 +19,15 @@ type MachineServices = {
   };
 };
 
-export type UnlockMachineEvents =
-  | {
-      type: 'UNLOCK_WALLET';
-      input: AccountInputs['unlock'];
-    }
-  | {
-      type: 'UNLOCK_VAULT';
-      input: AccountInputs['unlockVault'];
-    };
-
+export type UnlockVaultEvent = {
+  type: 'UNLOCK_VAULT';
+  input: AccountInputs['unlockVault'];
+};
+export type UnlockWalletEvent = {
+  type: 'UNLOCK_WALLET';
+  input: AccountInputs['unlock'];
+};
+export type UnlockMachineEvents = UnlockWalletEvent | UnlockVaultEvent;
 export type UnlockWalletReturn = MachineServices['unlock'];
 export type UnlockVaultReturn = MachineServices['unlockVault'];
 
@@ -141,7 +140,7 @@ export const unlockMachine = createMachine(
         maxAttempts: 1,
         async fetch({ input }) {
           if (!input || !input?.password) {
-            throw new Error('Password is required to unlock wallet');
+            throw new Error('Password is required to unlock vault');
           }
           return AccountService.unlockVault(input);
         },

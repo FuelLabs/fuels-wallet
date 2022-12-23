@@ -9,8 +9,8 @@ import { AccountService } from '../services/account';
 import { unlockMachine, unlockMachineErrorAction } from './unlockMachine';
 import type {
   UnlockMachine,
-  UnlockMachineEvents,
   UnlockVaultReturn,
+  UnlockVaultEvent,
 } from './unlockMachine';
 
 import { IS_LOGGED_KEY } from '~/config';
@@ -183,7 +183,7 @@ export const accountMachine = createMachine(
           UNLOCK_VAULT: {
             // send to the child machine
             actions: [
-              send<MachineContext, UnlockMachineEvents>(
+              send<MachineContext, UnlockVaultEvent>(
                 (_, ev) => ({
                   type: 'UNLOCK_VAULT',
                   input: ev.input,
