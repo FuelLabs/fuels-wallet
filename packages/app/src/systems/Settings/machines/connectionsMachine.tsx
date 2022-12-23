@@ -153,7 +153,7 @@ export const connectionsMachine = createMachine(
               },
               CANCEL: {
                 actions: ['removeOriginParam', 'resetInputs'],
-                target: '#(machine).idle',
+                target: '#(machine).fetchingConnections',
               },
             },
           },
@@ -169,8 +169,8 @@ export const connectionsMachine = createMachine(
                   cond: FetchMachine.hasError,
                 },
                 {
-                  actions: ['resetAccountSelected'],
-                  target: '#(machine).fetchingConnections',
+                  actions: ['resetAccountSelected', 'updateConnection'],
+                  target: 'idle',
                 },
               ],
             },
@@ -187,8 +187,8 @@ export const connectionsMachine = createMachine(
                   cond: FetchMachine.hasError,
                 },
                 {
-                  actions: ['resetAccountSelected'],
-                  target: '#(machine).fetchingConnections',
+                  actions: ['resetAccountSelected', 'updateConnection'],
+                  target: 'idle',
                 },
               ],
             },
@@ -293,6 +293,12 @@ export const connectionsMachine = createMachine(
             response?.connections || [],
             inputs.origin || ''
           ),
+        }),
+      }),
+      updateConnection: assign({
+        inputs: ({ inputs }, ev) => ({
+          ...inputs,
+          connection: ev.data,
         }),
       }),
       assignAccounts: assign({
