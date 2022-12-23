@@ -29,9 +29,11 @@ type ContentProps = {
 
 function Content({ as, children, css }: ContentProps) {
   return (
-    <Box as={as} css={{ ...styles.content, ...css }}>
-      <Box css={styles.scrollContainer}>
-        <Box css={styles.insideScrolContent}>{children}</Box>
+    <Box as={as} css={{ ...styles.content, ...css }} className="layout_content">
+      <Box css={styles.scrollContainer} className="layout_content-scroll">
+        <Box css={styles.insideScrolContent} className="layout_content-inside">
+          {children}
+        </Box>
       </Box>
     </Box>
   );
@@ -68,7 +70,7 @@ export const Layout: LayoutComponent = ({
         {isPublic ? (
           <>{children}</>
         ) : (
-          <Flex css={styles.wrapper} ref={ref}>
+          <Flex css={styles.wrapper} ref={ref} className="layout_wrapper">
             {children}
           </Flex>
         )}
