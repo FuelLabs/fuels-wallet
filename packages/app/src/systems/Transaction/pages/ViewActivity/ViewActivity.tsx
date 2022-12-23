@@ -14,6 +14,18 @@ import { useActivityPageQuery } from './__generated__/operations';
 import { useAccounts } from '~/systems/Account';
 import { Layout } from '~/systems/Core';
 
+// @TODO: replace this with the transaction transform function from the SDK
+const getTransactionAmount = (tx: ActivityPageTransaction) => {
+  if (
+    tx.outputs[0].__typename === 'ChangeOutput' ||
+    tx.outputs[0].__typename === 'CoinOutput' ||
+    tx.outputs[0].__typename === 'VariableOutput'
+  ) {
+    return tx.outputs[0].amount;
+  }
+  return '0';
+};
+
 export function ViewActivity() {
   const navigate = useNavigate();
   const { account, isLoading } = useAccounts();
@@ -27,18 +39,6 @@ export function ViewActivity() {
     () => data?.transactionsByOwner!.edges!.map((edge) => edge!.node) ?? [],
     [data]
   );
-
-  // @TODO: replace this with the transaction transform function from the SDK
-  const getTransactionAmount = (tx: ActivityPageTransaction) => {
-    if (
-      tx.outputs[0].__typename === 'ChangeOutput' ||
-      tx.outputs[0].__typename === 'CoinOutput' ||
-      tx.outputs[0].__typename === 'VariableOutput'
-    ) {
-      return tx.outputs[0].amount;
-    }
-    return '0';
-  };
 
   // @TODO: replace this with the transaction transform function from the SDK
   const transactions = useMemo<Transaction[]>(

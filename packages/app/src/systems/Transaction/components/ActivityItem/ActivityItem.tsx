@@ -36,7 +36,8 @@ export const ActivityItem: TxItemComponent = ({ transaction }) => {
 
   const toOrFromAddress = txCategory === TxCategory.SEND ? from : to;
 
-  const formatDate = (date: Date) => `${date.getMonth()} ${date.getDate()}`;
+  const formatDate = (date: Date) =>
+    `${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}`;
 
   return (
     <Card css={styles.root}>
