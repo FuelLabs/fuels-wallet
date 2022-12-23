@@ -7,6 +7,7 @@ import {
   hasText,
   reload,
   visit,
+  waitUrl,
 } from '../commons';
 import type { MockData } from '../mocks';
 import { mockData } from '../mocks';
@@ -33,7 +34,7 @@ test.describe('SelectWallet', () => {
     await hasText(page, data.accounts[0].name);
     await hasText(page, data.accounts[1].name);
     await getByAriaLabel(page, data.accounts[1].name).click();
-    await page.waitForURL('/wallet');
+    await waitUrl(page, '/wallet');
     const address = data.accounts[1].address.toString();
     await hasAriaLabel(page, address);
   });
