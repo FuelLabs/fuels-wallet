@@ -14,7 +14,7 @@ import type {
   UnlockMachine,
   UnlockMachineEvents,
   AccountInputs,
-  UnlockEventReturn,
+  UnlockWalletReturn,
 } from '~/systems/Account';
 import type { ChildrenMachine } from '~/systems/Core';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
@@ -165,7 +165,7 @@ export const transactionMachine = createMachine(
         invoke: {
           src: 'send',
           data: {
-            input: (ctx: MachineContext, ev: UnlockEventReturn) => {
+            input: (ctx: MachineContext, ev: UnlockWalletReturn) => {
               return {
                 transactionRequest: ctx.transactionRequest,
                 wallet: ev.data,

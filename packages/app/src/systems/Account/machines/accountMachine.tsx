@@ -10,7 +10,7 @@ import { unlockMachine, unlockMachineErrorAction } from './unlockMachine';
 import type {
   UnlockMachine,
   UnlockMachineEvents,
-  UnlockEventReturn,
+  UnlockVaultReturn,
 } from './unlockMachine';
 
 import { IS_LOGGED_KEY } from '~/config';
@@ -59,7 +59,7 @@ export type MachineEvents =
       type: 'ADD_ACCOUNT';
       input: string;
     }
-  | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
+  | { type: 'UNLOCK_VAULT'; input: AccountInputs['unlockVault'] }
   | { type: 'CLOSE_UNLOCK'; input?: void };
 
 export const accountMachine = createMachine(
@@ -147,7 +147,7 @@ export const accountMachine = createMachine(
         invoke: {
           src: 'addAccount',
           data: {
-            input: (ctx: MachineContext, ev: UnlockEventReturn) => {
+            input: (ctx: MachineContext, ev: UnlockVaultReturn) => {
               return {
                 data: {
                   manager: ev.data,
@@ -180,16 +180,13 @@ export const accountMachine = createMachine(
           ],
         },
         on: {
-          UNLOCK_WALLET: {
+          UNLOCK_VAULT: {
             // send to the child machine
             actions: [
               send<MachineContext, UnlockMachineEvents>(
                 (_, ev) => ({
-                  type: 'UNLOCK_WALLET',
-                  input: {
-                    ...ev.input,
-                    manager: true,
-                  },
+                  type: 'UNLOCK_VAULT',
+                  input: ev.input,
                 }),
                 { to: 'unlock' }
               ),

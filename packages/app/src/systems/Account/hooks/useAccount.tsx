@@ -24,7 +24,7 @@ const selectors = {
     return state.matches('unlocking');
   },
   isUnlockingLoading: (state: AccountMachineState) => {
-    return state.children.unlock?.state.matches('unlocking');
+    return state.children.unlock?.state.matches('unlockingVault');
   },
 };
 
@@ -63,8 +63,8 @@ export function useAccounts() {
 
   function unlock(password: string) {
     store.send(Services.accounts, {
-      type: 'UNLOCK_WALLET',
-      input: { password, account: account! },
+      type: 'UNLOCK_VAULT',
+      input: { password },
     });
   }
 
