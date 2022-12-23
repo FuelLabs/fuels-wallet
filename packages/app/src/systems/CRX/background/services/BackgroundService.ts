@@ -134,7 +134,7 @@ export class BackgroundService {
     const origin = serverParams.origin;
 
     if (origin) {
-      await ConnectionService.removeConnection(origin);
+      await ConnectionService.removeConnection({ origin });
       this.sendEvent(origin, 'connection', [false]);
       return true;
     }
