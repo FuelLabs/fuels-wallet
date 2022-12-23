@@ -24,6 +24,12 @@ export const sidebarItems = [
         label: 'Change Password',
         path: Pages.settingsChangePassword(),
       },
+      {
+        key: 'connected-apps',
+        icon: 'PlugsConnected',
+        label: 'Connected Apps',
+        path: Pages.settingsConnectedApps(),
+      },
     ],
   },
   {
