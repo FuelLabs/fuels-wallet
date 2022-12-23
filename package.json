@@ -42,7 +42,9 @@
     "lint:check": "eslint . --ext .ts,.tsx,.js,.jsx",
     "lint:fix": "pnpm lint:check --fix",
     "node:dev": "fuelhat node",
-    "node:test": "fuelhat node start --test",
+    "nodes:start": "fuelhat node start -d && fuelhat node start -t -d",
+    "nodes:stop": "fuelhat node stop -d && fuelhat node stop -t -d",
+    "nodes:reset": "pnpm nodes:start && pnpm nodes:stop",
     "prettier:check": "prettier --check .",
     "prettier:format": "prettier --write .",
     "storybook": "pnpm -r --filter=app storybook",
@@ -63,11 +65,11 @@
     "fuelhat": "workspace:*"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.5",
+    "@babel/core": "^7.20.7",
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.0",
     "@jest/types": "29.3.1",
-    "@playwright/test": "^1.29.0",
+    "@playwright/test": "^1.29.1",
     "@types/jest": "^29.2.4",
     "@types/node": "^18.11.17",
     "@types/react": "^18.0.26",
@@ -84,13 +86,13 @@
     "jest-transform-stub": "^2.0.0",
     "lint-staged": "^13.1.0",
     "npm-run-all": "^4.1.5",
-    "playwright": "^1.29.0",
+    "playwright": "^1.29.1",
     "prettier": "^2.8.1",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
     "turbo": "^1.6.3",
     "typescript": "^4.9.4",
-    "updates": "^13.2.4"
+    "updates": "^13.2.6"
   },
   "pnpm": {
     "peerDependencyRules": {
