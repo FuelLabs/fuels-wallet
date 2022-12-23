@@ -1,11 +1,11 @@
-import type { Transaction } from '../../types';
+import type { Tx } from '../../utils';
 import { ActivityItem } from '../ActivityItem';
 
 import { ActivityListEmpty } from './ActivityListEmpty';
 import { ActivityListLoading } from './ActivityListLoading';
 
 interface ActivityListProps {
-  transactions: Transaction[];
+  transactions: Tx[];
   providerUrl?: string;
   isLoading?: boolean;
   isDevnet?: boolean;

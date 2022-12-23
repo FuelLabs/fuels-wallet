@@ -21,16 +21,11 @@ export type Scalars = {
   BlockId: string;
   Bytes32: string;
   ContractId: string;
-  /**
-   * Implement the DateTime<Utc> scalar
-   *
-   * The input/output is a string in RFC3339 format.
-   */
-  DateTime: string;
   HexString: string;
   MessageId: string;
   Salt: string;
   Signature: string;
+  Tai64Timestamp: string;
   TransactionId: string;
   TxPointer: string;
   U64: string;
@@ -70,6 +65,7 @@ export type BalanceFilterInput = {
 
 export type Block = {
   __typename: 'Block';
+  consensus: Consensus;
   header: Header;
   id: Scalars['BlockId'];
   transactions: Array<Transaction>;
@@ -164,6 +160,8 @@ export enum CoinStatus {
   Unspent = 'UNSPENT',
 }
 
+export type Consensus = Genesis | PoAConsensus | { __typename?: '%other' };
+
 export type ConsensusParameters = {
   __typename: 'ConsensusParameters';
   contractMaxSize: Scalars['U64'];
@@ -244,7 +242,22 @@ export type FailureStatus = {
   block: Block;
   programState?: Maybe<ProgramState>;
   reason: Scalars['String'];
-  time: Scalars['DateTime'];
+  time: Scalars['Tai64Timestamp'];
+};
+
+export type Genesis = {
+  __typename: 'Genesis';
+  /**
+   * The chain configs define what consensus type to use, what settlement layer to use,
+   * rules of block validity, etc.
+   */
+  chainConfigHash: Scalars['Bytes32'];
+  /** The Binary Merkle Tree root of all genesis coins. */
+  coinsRoot: Scalars['Bytes32'];
+  /** The Binary Merkle Tree root of state, balances, contracts code hash of each contract. */
+  contractsRoot: Scalars['Bytes32'];
+  /** The Binary Merkle Tree root of all genesis messages. */
+  messagesRoot: Scalars['Bytes32'];
 };
 
 export type Header = {
@@ -264,7 +277,7 @@ export type Header = {
   /** Merkle root of all previous block header hashes. */
   prevRoot: Scalars['Bytes32'];
   /** The block producer time. */
-  time: Scalars['DateTime'];
+  time: Scalars['Tai64Timestamp'];
   /** Number of transactions in this block. */
   transactionsCount: Scalars['U64'];
   /** Merkle root of transactions. */
@@ -465,6 +478,12 @@ export type PageInfo = {
   hasPreviousPage: Scalars['Boolean'];
   /** When paginating backwards, the cursor to continue. */
   startCursor?: Maybe<Scalars['String']>;
+};
+
+export type PoAConsensus = {
+  __typename: 'PoAConsensus';
+  /** Gets the signature of the block produced by `PoA` consensus. */
+  signature: Scalars['Signature'];
 };
 
 export type ProgramState = {
@@ -691,16 +710,44 @@ export type SpendQueryElementInput = {
   max?: InputMaybe<Scalars['U64']>;
 };
 
+export type SqueezedOutStatus = {
+  __typename: 'SqueezedOutStatus';
+  reason: Scalars['String'];
+};
+
 export type SubmittedStatus = {
   __typename: 'SubmittedStatus';
-  time: Scalars['DateTime'];
+  time: Scalars['Tai64Timestamp'];
+};
+
+export type Subscription = {
+  __typename: 'Subscription';
+  /**
+   * Returns a stream of status updates for the given transaction id.
+   * If the current status is [`TransactionStatus::Success`], [`TransactionStatus::SqueezedOut`]
+   * or [`TransactionStatus::Failed`] the stream will return that and end immediately.
+   * If the current status is [`TransactionStatus::Submitted`] this will be returned
+   * and the stream will wait for a future update.
+   *
+   * This stream will wait forever so it's advised to use within a timeout.
+   *
+   * It is possible for the stream to miss an update if it is polled slower
+   * then the updates arrive. In such a case the stream will close without
+   * a status. If this occurs the stream can simply be restarted to return
+   * the latest status.
+   */
+  statusChange: TransactionStatus;
+};
+
+export type SubscriptionStatusChangeArgs = {
+  id: Scalars['TransactionId'];
 };
 
 export type SuccessStatus = {
   __typename: 'SuccessStatus';
   block: Block;
   programState?: Maybe<ProgramState>;
-  time: Scalars['DateTime'];
+  time: Scalars['Tai64Timestamp'];
 };
 
 export type TimeParameters = {
@@ -759,6 +806,7 @@ export type TransactionEdge = {
 
 export type TransactionStatus =
   | FailureStatus
+  | SqueezedOutStatus
   | SubmittedStatus
   | SuccessStatus
   | { __typename?: '%other' };

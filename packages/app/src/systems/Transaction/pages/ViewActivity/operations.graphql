@@ -9,7 +9,10 @@ query ActivityPageQuery($first: Int, $owner: Address!) {
   transactionsByOwner(first: $first, owner: $owner) {
     edges {
       node {
-        ...ActivityPageTransaction
+        ...transactionFragment
+        receipts {
+          ...receiptFragment
+        }
       }
     }
   }
@@ -97,4 +100,38 @@ fragment ActivityPageTransaction on Transaction {
       time
     }
   }
+}
+
+fragment transactionFragment on Transaction {
+  id
+  rawPayload
+  gasPrice
+  status {
+    type: __typename
+    ... on SubmittedStatus {
+      time
+    }
+    ... on SuccessStatus {
+      block {
+        id
+      }
+      time
+      programState {
+        returnType
+        data
+      }
+    }
+    ... on FailureStatus {
+      block {
+        id
+      }
+      time
+      reason
+    }
+  }
+}
+
+fragment receiptFragment on Receipt {
+  data
+  rawPayload
 }

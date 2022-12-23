@@ -17,7 +17,7 @@
     "ts:check": "pnpm xstate:typegen && tsc --noEmit",
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'",
     "build-operations": "graphql-codegen && prettier --write src/api/__generated__/types.ts",
-    "update-schema": "get-graphql-schema http://localhost:4000/graphql > fuel-core-schema.graphql"
+    "update-schema": "get-graphql-schema http://localhost:4000/graphql > fuel-core-schema.graphql && prettier --write fuel-core-schema.graphql"
   },
   "dependencies": {
     "@fontsource/source-code-pro": "^4.5.12",
@@ -64,6 +64,9 @@
     "@graphql-codegen/typescript": "^2.4.5",
     "@graphql-codegen/typescript-operations": "^2.3.2",
     "@graphql-codegen/typescript-react-apollo": "^3.2.8",
+    "@graphql-codegen/typescript-graphql-request": "^4.5.7",
+    "@types/lodash.clonedeep": "^4.5.7",
+    "get-graphql-schema": "^2.1.2",
     "@playwright/test": "^1.29.0",
     "@storybook/addon-a11y": "^6.5.14",
     "@storybook/addon-actions": "^6.5.14",

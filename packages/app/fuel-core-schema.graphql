@@ -50,6 +50,7 @@ input BalanceFilterInput {
 type Block {
   id: BlockId!
   header: Header!
+  consensus: Consensus!
   transactions: [Transaction!]!
 }
 
@@ -173,6 +174,8 @@ enum CoinStatus {
   SPENT
 }
 
+union Consensus = Genesis | PoAConsensus
+
 type ConsensusParameters {
   contractMaxSize: U64!
   maxInputs: U64!
@@ -253,13 +256,6 @@ type ContractOutput {
   stateRoot: Bytes32!
 }
 
-"""
-Implement the DateTime<Utc> scalar
-
-The input/output is a string in RFC3339 format.
-"""
-scalar DateTime
-
 input ExcludeInput {
   """
   Utxos to exclude from the selection.
@@ -274,9 +270,32 @@ input ExcludeInput {
 
 type FailureStatus {
   block: Block!
-  time: DateTime!
+  time: Tai64Timestamp!
   reason: String!
   programState: ProgramState
+}
+
+type Genesis {
+  """
+  The chain configs define what consensus type to use, what settlement layer to use,
+  rules of block validity, etc.
+  """
+  chainConfigHash: Bytes32!
+
+  """
+  The Binary Merkle Tree root of all genesis coins.
+  """
+  coinsRoot: Bytes32!
+
+  """
+  The Binary Merkle Tree root of state, balances, contracts code hash of each contract.
+  """
+  contractsRoot: Bytes32!
+
+  """
+  The Binary Merkle Tree root of all genesis messages.
+  """
+  messagesRoot: Bytes32!
 }
 
 type Header {
@@ -323,7 +342,7 @@ type Header {
   """
   The block producer time.
   """
-  time: DateTime!
+  time: Tai64Timestamp!
 
   """
   Hash of the application header.
@@ -500,6 +519,13 @@ type PageInfo {
   When paginating forwards, the cursor to continue.
   """
   endCursor: String
+}
+
+type PoAConsensus {
+  """
+  Gets the signature of the block produced by `PoA` consensus.
+  """
+  signature: Signature!
 }
 
 type ProgramState {
@@ -735,15 +761,44 @@ input SpendQueryElementInput {
   max: U64
 }
 
+type SqueezedOutStatus {
+  reason: String!
+}
+
 type SubmittedStatus {
-  time: DateTime!
+  time: Tai64Timestamp!
+}
+
+type Subscription {
+  """
+  Returns a stream of status updates for the given transaction id.
+  If the current status is [`TransactionStatus::Success`], [`TransactionStatus::SqueezedOut`]
+  or [`TransactionStatus::Failed`] the stream will return that and end immediately.
+  If the current status is [`TransactionStatus::Submitted`] this will be returned
+  and the stream will wait for a future update.
+
+  This stream will wait forever so it's advised to use within a timeout.
+
+  It is possible for the stream to miss an update if it is polled slower
+  then the updates arrive. In such a case the stream will close without
+  a status. If this occurs the stream can simply be restarted to return
+  the latest status.
+  """
+  statusChange(
+    """
+    The ID of the transaction
+    """
+    id: TransactionId!
+  ): TransactionStatus!
 }
 
 type SuccessStatus {
   block: Block!
-  time: DateTime!
+  time: Tai64Timestamp!
   programState: ProgramState
 }
+
+scalar Tai64Timestamp
 
 input TimeParameters {
   """
@@ -821,7 +876,11 @@ type TransactionEdge {
 
 scalar TransactionId
 
-union TransactionStatus = SubmittedStatus | SuccessStatus | FailureStatus
+union TransactionStatus =
+    SubmittedStatus
+  | SuccessStatus
+  | SqueezedOutStatus
+  | FailureStatus
 
 scalar TxPointer
 

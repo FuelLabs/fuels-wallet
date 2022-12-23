@@ -3,9 +3,8 @@ import { Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
 import { bn } from 'fuels';
 import type { FC } from 'react';
 
-import { TxCategory } from '../../types';
-import type { Transaction } from '../../types';
-import { getTransactionTypeText, getTxStatusColor } from '../../utils';
+import type { Tx } from '../../utils';
+import { getTxStatusColor } from '../../utils';
 import { TxIcon } from '../TxIcon';
 
 import { ActivityItemLoader } from './ActivityItemLoader';
@@ -13,8 +12,7 @@ import { ActivityItemLoader } from './ActivityItemLoader';
 import { shortAddress } from '~/systems/Core';
 
 export type TxItemProps = {
-  transaction: Transaction;
-  providerUrl?: string;
+  transaction: Tx;
 };
 
 type TxItemComponent = FC<TxItemProps> & {
@@ -23,36 +21,37 @@ type TxItemComponent = FC<TxItemProps> & {
 
 export const ActivityItem: TxItemComponent = ({ transaction }) => {
   const {
-    amount,
-    date,
-    from,
-    to,
-    category: txCategory,
     status: txStatus,
+    id,
+    totalAssetsSent,
+    operations,
+    time,
   } = transaction;
   const txColor = getTxStatusColor(txStatus);
 
-  const toOrFromText = txCategory === TxCategory.SEND ? 'From' : 'To';
-
-  const toOrFromAddress = txCategory === TxCategory.SEND ? from : to;
+  const mainOperation = operations[0];
+  const label = mainOperation.name;
+  const amount = totalAssetsSent[0];
+  const toOrFromText = mainOperation.to ? 'To' : 'From';
+  const toOrFromAddress = mainOperation.to || mainOperation.from;
+  const date = time ? new Date(time) : null;
 
   const formatDate = (date: Date) =>
     `${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}`;
 
   return (
     <Card css={styles.root}>
-      <TxIcon transactionType={txCategory} />
+      <TxIcon operationName={mainOperation.name} />
       <Flex direction="column" css={styles.contentWrapper}>
         <Flex css={styles.row}>
           <Flex css={styles.item}>
-            <Text fontSize="sm">
-              {getTransactionTypeText(transaction.type)}
-            </Text>
+            <Text fontSize="sm">{label}</Text>
           </Flex>
 
           <Flex css={styles.item}>
             <Text color={txColor} fontSize="sm">
-              {`${bn(amount?.amount).format()} ${amount?.symbol}`}
+              {/* @TODO: figure out a way to fetch the asset ID */}
+              {`${bn(amount?.amount).format()}`}
             </Text>
           </Flex>
         </Flex>
@@ -64,7 +63,7 @@ export const ActivityItem: TxItemComponent = ({ transaction }) => {
             </Text>
             <Flex css={styles.item}>
               <Copyable
-                value={transaction.id || ''}
+                value={id || ''}
                 css={{ mx: '$2' }}
                 iconProps={{
                   icon: Icon.is('CopySimple'),

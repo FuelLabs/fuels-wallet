@@ -1,9 +1,7 @@
+import type * as Types from '../../../../../api/__generated__/types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-
-import type * as Types from '../../../../../api/__generated__/types';
-
 const defaultOptions = {} as const;
 export type AddressPageQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -97,6 +95,7 @@ export type AddressPageQuery = {
         > | null;
         status?:
           | { __typename: 'FailureStatus'; time: string }
+          | { __typename: 'SqueezedOutStatus' }
           | { __typename: 'SubmittedStatus'; time: string }
           | { __typename: 'SuccessStatus'; time: string }
           | null;
@@ -176,6 +175,7 @@ export type AddressPageTransaction = {
   > | null;
   status?:
     | { __typename: 'FailureStatus'; time: string }
+    | { __typename: 'SqueezedOutStatus' }
     | { __typename: 'SubmittedStatus'; time: string }
     | { __typename: 'SuccessStatus'; time: string }
     | null;

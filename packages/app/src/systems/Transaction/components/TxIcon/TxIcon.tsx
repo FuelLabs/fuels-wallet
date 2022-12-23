@@ -1,19 +1,19 @@
 import { cssObj } from '@fuel-ui/css';
 import { Flex, Icon } from '@fuel-ui/react';
 
-import type { TxCategory } from '../../types';
+import type { OperationName } from '../../utils';
 import { getTxIcon } from '../../utils';
 
 import { TxIconLoader } from './TxIconLoader';
 
 export type TxIconProps = {
-  transactionType?: TxCategory;
+  operationName?: OperationName;
 };
 
-export function TxIcon({ transactionType }: TxIconProps) {
+export function TxIcon({ operationName }: TxIconProps) {
   return (
     <Flex css={styles.root}>
-      <Icon icon={getTxIcon(transactionType)} />
+      <Icon icon={getTxIcon(operationName)} />
     </Flex>
   );
 }

@@ -1,14 +1,17 @@
 import { render, testA11y, screen } from '@fuel-ui/test-utils';
 
-import { ActivityItem } from './ActivityItem';
 import {
-  MOCK_TRANSACTION,
-  MOCK_TRANSACTION_CREATE,
-} from './__mocks__/transaction';
+  MOCK_TRANSACTION_CONTRACT_CALL,
+  MOCK_TRANSACTION_CREATE_CONTRACT,
+} from '../../__mocks__/tx';
+
+import { ActivityItem } from './ActivityItem';
 
 describe('TxItem', () => {
   it('a11y', async () => {
-    await testA11y(<ActivityItem transaction={MOCK_TRANSACTION} />);
+    await testA11y(
+      <ActivityItem transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx} />
+    );
   });
 
   it('a11y Loader', async () => {
@@ -16,29 +19,28 @@ describe('TxItem', () => {
   });
 
   it('should show transaction Script', async () => {
-    render(<ActivityItem transaction={MOCK_TRANSACTION} />);
+    render(<ActivityItem transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx} />);
 
     expect(screen.getByText(/Script/i)).toBeInTheDocument();
   });
 
   it('should show transaction Create', async () => {
-    render(<ActivityItem transaction={MOCK_TRANSACTION_CREATE} />);
+    render(<ActivityItem transaction={MOCK_TRANSACTION_CREATE_CONTRACT.tx} />);
 
     expect(screen.getByText(/Create/i)).toBeInTheDocument();
   });
 
   it('should copy transaction id', async () => {
     const { user } = render(
-      <ActivityItem
-        transaction={MOCK_TRANSACTION}
-        providerUrl={process.env.VITE_FUEL_PROVIDER_URL}
-      />
+      <ActivityItem transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx} />
     );
 
     const btn = await screen.findByLabelText(/Copy Transaction ID/i);
     expect(btn).toBeInTheDocument();
 
     await user.click(btn);
-    expect(await navigator.clipboard.readText()).toBe(MOCK_TRANSACTION.id);
+    expect(await navigator.clipboard.readText()).toBe(
+      MOCK_TRANSACTION_CONTRACT_CALL.tx.id
+    );
   });
 });

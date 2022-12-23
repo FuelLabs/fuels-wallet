@@ -1,9 +1,7 @@
+import type * as Types from '../../../../../api/__generated__/types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
-
-import type * as Types from '../../../../../api/__generated__/types';
-
 const defaultOptions = {} as const;
 export type ActivityPageQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>;
@@ -35,70 +33,38 @@ export type ActivityPageQuery = {
       node: {
         __typename: 'Transaction';
         id: string;
-        inputAssetIds?: Array<string> | null;
+        rawPayload: string;
         gasPrice?: string | null;
-        gasLimit?: string | null;
-        maturity?: string | null;
-        isScript: boolean;
-        receiptsRoot?: string | null;
-        witnesses?: Array<string> | null;
-        inputContracts?: Array<{ __typename: 'Contract'; id: string }> | null;
-        outputs: Array<
-          | {
-              __typename: 'ChangeOutput';
-              to: string;
-              amount: string;
-              assetId: string;
-            }
-          | {
-              __typename: 'CoinOutput';
-              to: string;
-              amount: string;
-              assetId: string;
-            }
-          | {
-              __typename: 'ContractCreated';
-              contract: { __typename: 'Contract'; id: string };
-            }
-          | {
-              __typename: 'ContractOutput';
-              inputIndex: number;
-              balanceRoot: string;
-              stateRoot: string;
-            }
-          | { __typename: 'MessageOutput' }
-          | {
-              __typename: 'VariableOutput';
-              to: string;
-              amount: string;
-              assetId: string;
-            }
-        >;
-        inputs?: Array<
-          | {
-              __typename: 'InputCoin';
-              utxoId: string;
-              owner: string;
-              amount: string;
-              assetId: string;
-              witnessIndex: number;
-              maturity: string;
-              predicate: string;
-              predicateData: string;
-            }
-          | {
-              __typename: 'InputContract';
-              utxoId: string;
-              balanceRoot: string;
-              stateRoot: string;
-              contract: { __typename: 'Contract'; id: string };
-            }
-          | { __typename: 'InputMessage' }
-        > | null;
+        receipts?: Array<{
+          __typename: 'Receipt';
+          data?: string | null;
+          rawPayload: string;
+        }> | null;
         status?:
-          | { __typename: 'FailureStatus'; time: string }
-          | { __typename: 'SubmittedStatus'; time: string }
-          | { __typename: 'SuccessStatus'; time: string }
+          | {
+              __typename: 'FailureStatus';
+              time: string;
+              reason: string;
+              type: 'FailureStatus';
+              block: { __typename: 'Block'; id: string };
+            }
+          | { __typename: 'SqueezedOutStatus'; type: 'SqueezedOutStatus' }
+          | {
+              __typename: 'SubmittedStatus';
+              time: string;
+              type: 'SubmittedStatus';
+            }
+          | {
+              __typename: 'SuccessStatus';
+              time: string;
+              type: 'SuccessStatus';
+              block: { __typename: 'Block'; id: string };
+              programState?: {
+                __typename: 'ProgramState';
+                returnType: Types.ReturnType;
+                data: string;
+              } | null;
+            }
           | null;
       };
     }>;
@@ -176,9 +142,45 @@ export type ActivityPageTransaction = {
   > | null;
   status?:
     | { __typename: 'FailureStatus'; time: string }
+    | { __typename: 'SqueezedOutStatus' }
     | { __typename: 'SubmittedStatus'; time: string }
     | { __typename: 'SuccessStatus'; time: string }
     | null;
+};
+
+export type TransactionFragment = {
+  __typename: 'Transaction';
+  id: string;
+  rawPayload: string;
+  gasPrice?: string | null;
+  status?:
+    | {
+        __typename: 'FailureStatus';
+        time: string;
+        reason: string;
+        type: 'FailureStatus';
+        block: { __typename: 'Block'; id: string };
+      }
+    | { __typename: 'SqueezedOutStatus'; type: 'SqueezedOutStatus' }
+    | { __typename: 'SubmittedStatus'; time: string; type: 'SubmittedStatus' }
+    | {
+        __typename: 'SuccessStatus';
+        time: string;
+        type: 'SuccessStatus';
+        block: { __typename: 'Block'; id: string };
+        programState?: {
+          __typename: 'ProgramState';
+          returnType: Types.ReturnType;
+          data: string;
+        } | null;
+      }
+    | null;
+};
+
+export type ReceiptFragment = {
+  __typename: 'Receipt';
+  data?: string | null;
+  rawPayload: string;
 };
 
 export const ActivityPageCoinFragmentDoc = gql`
@@ -267,6 +269,42 @@ export const ActivityPageTransactionFragmentDoc = gql`
     }
   }
 `;
+export const TransactionFragmentDoc = gql`
+  fragment transactionFragment on Transaction {
+    id
+    rawPayload
+    gasPrice
+    status {
+      type: __typename
+      ... on SubmittedStatus {
+        time
+      }
+      ... on SuccessStatus {
+        block {
+          id
+        }
+        time
+        programState {
+          returnType
+          data
+        }
+      }
+      ... on FailureStatus {
+        block {
+          id
+        }
+        time
+        reason
+      }
+    }
+  }
+`;
+export const ReceiptFragmentDoc = gql`
+  fragment receiptFragment on Receipt {
+    data
+    rawPayload
+  }
+`;
 export const ActivityPageQueryDocument = gql`
   query ActivityPageQuery($first: Int, $owner: Address!) {
     coins(filter: { owner: $owner }, first: 9999) {
@@ -279,13 +317,17 @@ export const ActivityPageQueryDocument = gql`
     transactionsByOwner(first: $first, owner: $owner) {
       edges {
         node {
-          ...ActivityPageTransaction
+          ...transactionFragment
+          receipts {
+            ...receiptFragment
+          }
         }
       }
     }
   }
   ${ActivityPageCoinFragmentDoc}
-  ${ActivityPageTransactionFragmentDoc}
+  ${TransactionFragmentDoc}
+  ${ReceiptFragmentDoc}
 `;
 
 /**

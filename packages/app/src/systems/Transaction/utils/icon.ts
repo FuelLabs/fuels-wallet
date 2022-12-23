@@ -1,17 +1,17 @@
 import { Icon } from '@fuel-ui/react';
 
-import { TxCategory } from '../types';
+import { OperationName } from './tx.types';
 
-export const getTxIcon = (type?: TxCategory) => {
+export const getTxIcon = (type?: OperationName) => {
   switch (type) {
-    case TxCategory.SEND:
+    case OperationName.transfer:
       return Icon.is('UploadSimple');
-    case TxCategory.RECEIVE:
+    case OperationName.receive:
       return Icon.is('DownloadSimple');
-    case TxCategory.SCRIPT:
-    case TxCategory.PREDICATE:
+    case OperationName.mint:
+    case OperationName.predicatecall:
       return Icon.is('MagicWand');
-    case TxCategory.CONTRACTCALL:
+    case OperationName.contractCall:
       return Icon.is('ArrowsLeftRight');
     default:
       return 'ArrowRight';
