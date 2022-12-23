@@ -70,7 +70,10 @@ describe('FuelWeb3', () => {
     ]);
 
     txRequest.addResources(resources);
-    const transactionId = await FuelWeb3.sendTransaction(txRequest);
+    const transactionId = await FuelWeb3.sendTransaction(
+      provider.url,
+      txRequest
+    );
     const response = new TransactionResponse(transactionId, provider);
 
     // wait for transaction to be completed

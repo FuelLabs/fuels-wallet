@@ -44,7 +44,7 @@ sign, and send the transaction.
 
 ### Get Wallet
 
-`getWallet(address: string | AbstractAddress): FuelWeb3Wallet`<br />
+`getWallet(address: string | AbstractAddress): Promise<FuelWeb3Wallet>`<br />
 Return a FuelWeb3Wallet. This class extends the fuels-ts SDK's `WalletLocked`,
 enabling all of the methods available for `WalletLocked` while using a FuelWeb3Provider on the connection point to request signed actions.
 
@@ -52,7 +52,7 @@ enabling all of the methods available for `WalletLocked` while using a FuelWeb3P
 
 ### Get Provider
 
-`getProvider(): FuelWeb3Provider`<br />
+`getProvider(): Promise<FuelWeb3Provider>`<br />
 Return a FuelWeb3Provider. This class extends the fuels-ts SDK's `Provider`,
 enabling all of the methods available for `Provider` while using the FuelWeb3SDK on signature points to request user permissions.
 

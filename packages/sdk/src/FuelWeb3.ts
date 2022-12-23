@@ -15,15 +15,15 @@ export class FuelWeb3 extends FuelWeb3SDK {
   static FuelWeb3Provider = FuelWeb3Provider;
   static FuelWeb3Wallet = FuelWeb3Wallet;
 
-  private async getProvider(): Promise<FuelWeb3Provider> {
+  private async getCurrentProvider(): Promise<FuelWeb3Provider> {
     // Return the current provider instance if it exists
     if (FuelWeb3Privates.provider) {
       return FuelWeb3Privates.provider;
     }
     // Otherwise, create a new provider instance
     // fetch the current network and connect the provider
-    const network = await this.network();
-    FuelWeb3Privates.provider = new FuelWeb3Provider(network.url, this);
+    const provider = await this.getProvider();
+    FuelWeb3Privates.provider = provider;
 
     // Listen for network changes and connect the provider
     // selected network from the user
@@ -34,8 +34,13 @@ export class FuelWeb3 extends FuelWeb3SDK {
     return FuelWeb3Privates.provider;
   }
 
+  async getProvider(): Promise<FuelWeb3Provider> {
+    const network = await this.network();
+    return new FuelWeb3Provider(network.url, this);
+  }
+
   async getWallet(address: string | AbstractAddress): Promise<FuelWeb3Wallet> {
-    const provider = await this.getProvider();
+    const provider = await this.getCurrentProvider();
     return new FuelWeb3Wallet(address, provider);
   }
 }
