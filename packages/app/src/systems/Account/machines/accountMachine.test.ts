@@ -110,7 +110,7 @@ describe('accountsMachine', () => {
         input: 'Account Go',
       });
       await expectStateMatch(service, 'unlocking');
-      service.send('UNLOCK_WALLET', {
+      service.send('UNLOCK_VAULT', {
         input: {
           password,
         },
