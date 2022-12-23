@@ -3,6 +3,7 @@ import type {
   BN,
   TransactionRequest,
   TransactionResponse,
+  TransactionResultReceipt,
   WalletUnlocked,
 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
@@ -17,6 +18,8 @@ import type {
 } from '~/systems/Account';
 import type { ChildrenMachine } from '~/systems/Core';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
+import type { NetworkInputs } from '~/systems/Network';
+import { NetworkService } from '~/systems/Network';
 import type { GroupedErrors, VMApiError } from '~/systems/Transaction';
 import { getGroupedErrors } from '~/systems/Transaction';
 import type { TxInputs } from '~/systems/Transaction/services';
@@ -28,8 +31,8 @@ type MachineContext = {
   unlockError?: string;
   error?: string;
   providerUrl?: string;
-  fee?: BN;
-  tx?: TransactionRequest;
+  receipts?: TransactionResultReceipt[];
+  transactionRequest?: TransactionRequest;
   approvedTx?: TransactionResponse;
   txApproveError?: VMApiError;
   txDryRunGroupedErrors?: GroupedErrors;
@@ -39,8 +42,8 @@ type MachineServices = {
   send: {
     data: TransactionResponse;
   };
-  calculateFee: {
-    data: BN;
+  simulateTransaction: {
+    data: TransactionResultReceipt[];
   };
   fetchGasPrice: {
     data: BN;
@@ -91,24 +94,29 @@ export const transactionMachine = createMachine(
         },
       },
       settingGasPrice: {
+        tags: ['loading'],
         invoke: {
           src: 'fetchGasPrice',
-          data: (ctx: MachineContext) => ({
-            input: { tx: ctx.tx, providerUrl: ctx.providerUrl },
+          data: ({ transactionRequest, providerUrl }: MachineContext) => ({
+            input: { transactionRequest, providerUrl },
           }),
           onDone: [
             {
-              target: 'calculatingGas',
+              target: 'simulatingTransaction',
               actions: ['assignGasPrice'],
             },
           ],
         },
       },
-      calculatingGas: {
+      simulatingTransaction: {
+        tags: ['loading'],
         invoke: {
-          src: 'calculateFee',
+          src: 'simulateTransaction',
           data: (ctx: MachineContext) => ({
-            input: { tx: ctx.tx, providerUrl: ctx.providerUrl },
+            input: {
+              transactionRequest: ctx.transactionRequest,
+              providerUrl: ctx.providerUrl,
+            },
           }),
           onDone: [
             {
@@ -118,7 +126,7 @@ export const transactionMachine = createMachine(
             },
             {
               target: 'waitingApproval',
-              actions: ['assignFee'],
+              actions: ['assignReceipts'],
             },
           ],
         },
@@ -157,8 +165,12 @@ export const transactionMachine = createMachine(
         invoke: {
           src: 'send',
           data: {
-            input: (_: MachineContext, ev: { data: WalletUnlocked }) => {
-              return { tx: _.tx, wallet: ev.data, providerUrl: _.providerUrl };
+            input: (ctx: MachineContext, ev: { data: WalletUnlocked }) => {
+              return {
+                transactionRequest: ctx.transactionRequest,
+                wallet: ev.data,
+                providerUrl: ctx.providerUrl,
+              };
             },
           },
           onDone: [
@@ -189,12 +201,12 @@ export const transactionMachine = createMachine(
   {
     actions: {
       assignTxRequestData: assign((ctx, ev) => {
-        const { tx, origin, providerUrl } = ev.input || {};
+        const { transactionRequest, origin, providerUrl } = ev.input || {};
 
         if (!providerUrl) {
           throw new Error('providerUrl is required');
         }
-        if (!tx) {
+        if (!transactionRequest) {
           throw new Error('transaction is required');
         }
         if (ctx.isOriginRequired && !origin) {
@@ -202,16 +214,16 @@ export const transactionMachine = createMachine(
         }
 
         return {
-          tx,
+          transactionRequest,
           origin,
           providerUrl,
         };
       }),
       assignGasPrice: assign((ctx, ev) => {
-        if (!ctx.tx) {
+        if (!ctx.transactionRequest) {
           throw new Error('Transaction is required');
         }
-        ctx.tx.gasPrice = ev.data;
+        ctx.transactionRequest.gasPrice = ev.data;
         return ctx;
       }),
       assignApprovedTx: assign({
@@ -226,35 +238,45 @@ export const transactionMachine = createMachine(
       assignTransactionRequestError: assign({
         txApproveError: (_, ev: any) => ev.data.error,
       }),
-      assignFee: assign({
-        fee: (_, ev) => ev.data,
+      assignReceipts: assign({
+        receipts: (_, ev) => ev.data,
       }),
     },
     services: {
       unlock: unlockMachine,
-      fetchGasPrice: FetchMachine.create<TxInputs['fetchGasPrice'], BN>({
+      fetchGasPrice: FetchMachine.create<NetworkInputs['getNodeInfo'], BN>({
         showError: false,
         async fetch({ input }) {
           if (!input?.providerUrl) {
             throw new Error('providerUrl is required');
           }
-          return TxService.fetchGasPrice(input);
+
+          const { minGasPrice } = await NetworkService.getNodeInfo(input);
+          return minGasPrice;
         },
       }),
-      calculateFee: FetchMachine.create<TxInputs['calculateFee'], BN>({
+      simulateTransaction: FetchMachine.create<
+        TxInputs['simulateTransaction'],
+        MachineServices['simulateTransaction']['data']
+      >({
         showError: false,
         async fetch({ input }) {
-          if (!input?.tx) {
-            throw new Error('Invalid calculateFee input');
+          if (!input?.transactionRequest) {
+            throw new Error('Invalid simulateTransaction input');
           }
-          return TxService.calculateFee(input);
+
+          const receipts = await TxService.simulateTransaction(input);
+          return receipts;
         },
       }),
-      send: FetchMachine.create<TxInputs['send'], TransactionResponse>({
+      send: FetchMachine.create<
+        TxInputs['send'],
+        MachineServices['send']['data']
+      >({
         showError: true,
         async fetch(params) {
           const { input } = params;
-          if (!input?.wallet || !input?.tx) {
+          if (!input?.wallet || !input?.transactionRequest) {
             throw new Error('Invalid approveTx input');
           }
           return TxService.send(input);

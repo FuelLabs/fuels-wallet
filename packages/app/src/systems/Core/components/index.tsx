@@ -13,3 +13,4 @@ export * from './VisibilityButton';
 export * from './RouterProvider';
 export * from './UnlockDialog';
 export * from './UnlockForm';
+export * from './AmountVisibility';

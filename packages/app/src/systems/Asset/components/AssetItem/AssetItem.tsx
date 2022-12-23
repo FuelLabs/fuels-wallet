@@ -8,7 +8,8 @@ import { getAssetInfoById } from '../../utils';
 
 import { AssetItemLoader } from './AssetItemLoader';
 
-import { formatAmount } from '~/systems/Core';
+import { AmountVisibility } from '~/systems/Core';
+import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 export type AssetItemProps = {
   asset: Coin;
@@ -20,11 +21,13 @@ type AssetItemComponent = FC<AssetItemProps> & {
 
 export const AssetItem: AssetItemComponent = ({ asset }) => {
   const { symbol, name, imageUrl } = getAssetInfoById(asset.assetId, asset);
+  const { visibility } = useBalanceVisibility();
 
   const rightEl = (
     <Tooltip content={bn(asset.amount).format()}>
       <Text css={{ fontSize: '$sm', fontWeight: '$semibold' }}>
-        {formatAmount(asset.amount)} {symbol}
+        <AmountVisibility value={asset.amount} visibility={visibility} />{' '}
+        {symbol}
       </Text>
     </Tooltip>
   );

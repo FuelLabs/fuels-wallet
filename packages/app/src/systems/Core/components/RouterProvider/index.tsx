@@ -1,13 +1,6 @@
 import type { ReactNode } from 'react';
-import { BrowserRouter, HashRouter } from 'react-router-dom';
-
-import { IS_CRX } from '~/config';
+import { HashRouter } from 'react-router-dom';
 
 export const RouterProvider = ({ children }: { children: ReactNode }) => {
-  if (IS_CRX) return <HashRouter>{children}</HashRouter>;
-  return (
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
-      {children}
-    </BrowserRouter>
-  );
+  return <HashRouter>{children}</HashRouter>;
 };

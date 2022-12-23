@@ -27,7 +27,7 @@ export type AccountInputs = {
   setBalance: {
     data: Pick<Account, 'address' | 'balance' | 'balanceSymbol' | 'balances'>;
   };
-  setBalanceVisibility: {
+  hideAccount: {
     data: Pick<Account, 'address' | 'isHidden'>;
   };
   createManager: {
@@ -126,9 +126,7 @@ export class AccountService {
     });
   }
 
-  static async setBalanceVisbility(
-    input: AccountInputs['setBalanceVisibility']
-  ) {
+  static async hideAccount(input: AccountInputs['hideAccount']) {
     if (!db.isOpen()) return;
     return db.transaction('rw!', db.accounts, async () => {
       const { address, ...updateData } = input.data;
