@@ -8,9 +8,17 @@ import type { AccountFormValues } from '../../hooks/useAccountForm';
 import { Layout, UnlockDialog } from '~/systems/Core';
 
 export const AddAccount = () => {
-  const form = useAccountForm();
-  const { handlers, isAddingAccount, isUnlocking, isUnlockingLoading } =
-    useAccounts();
+  const {
+    handlers,
+    accounts,
+    isAddingAccount,
+    isUnlocking,
+    isUnlockingLoading,
+    unlockError,
+  } = useAccounts();
+  const form = useAccountForm({
+    accounts,
+  });
 
   function onSubmit(data: AccountFormValues) {
     handlers.addAccount(data.name);
@@ -44,6 +52,7 @@ export const AddAccount = () => {
       </form>
       <UnlockDialog
         unlockText="Add Account"
+        unlockError={unlockError}
         isOpen={isUnlocking}
         isFullscreen={true}
         onUnlock={handlers.unlock}

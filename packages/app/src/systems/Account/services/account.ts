@@ -175,6 +175,13 @@ export class AccountService {
   }
 
   static async addNewAccount({ data }: AccountInputs['addNewAccount']) {
+    const accounts = await this.getAccounts();
+    const existingAccount = accounts.find((a) => a.name === data.name);
+
+    if (existingAccount) {
+      throw new Error('Account name already exists');
+    }
+
     const manager = data.manager;
     const account = await manager.addAccount();
     // Add new account to database

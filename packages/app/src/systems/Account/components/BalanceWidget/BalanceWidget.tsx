@@ -65,13 +65,13 @@ export function BalanceWidget({
           css={styles.caretDownIcon}
         />
       </Flex>
-      <Flex justify="space-between" css={{ flex: '1 0' }}>
+      <Flex justify="space-between" css={styles.balanceDetails}>
         <Flex direction="column" css={styles.balanceContainer}>
           <Copyable value={account.address}>
             <Text
               fontSize="sm"
               color="gray11"
-              css={{ fontWeight: 'bold' }}
+              css={styles.balanceAddress}
               aria-label={account.address}
             >
               {shortAddress(account.address)}
@@ -109,6 +109,10 @@ const backgroundCss = {
 };
 
 const styles = {
+  balanceDetails: cssObj({ flex: '1 0' }),
+  balanceAddress: cssObj({
+    fontWeight: 'bold',
+  }),
   visibilityContainer: cssObj({ marginRight: 6, marginTop: 8 }),
   balanceContainer: cssObj({ mt: '$2', ml: '$4', alignSelf: 'center' }),
   balance: cssObj({

@@ -15,9 +15,9 @@ export class FuelDB extends Dexie {
 
   constructor() {
     super('FuelDB');
-    this.version(7).stores({
+    this.version(8).stores({
       vaults: `key`,
-      accounts: `address`,
+      accounts: `&address, &name`,
       networks: `&id, &url, &name`,
       connections: 'origin',
       transactions: `&id`,

@@ -153,14 +153,13 @@ export const accountMachine = createMachine(
           },
           onDone: [
             {
-              actions: ['notifyUpdateAccounts', 'redirectToHome'],
-              target: 'fetchingAccounts',
-            },
-          ],
-          onError: [
-            {
               actions: 'assignError',
               target: 'failed',
+              cond: FetchMachine.hasError,
+            },
+            {
+              actions: ['notifyUpdateAccounts', 'redirectToHome'],
+              target: 'fetchingAccounts',
             },
           ],
         },
@@ -182,14 +181,13 @@ export const accountMachine = createMachine(
           },
           onDone: [
             {
-              actions: ['notifyUpdateAccounts', 'redirectToHome'],
-              target: 'fetchingAccounts',
-            },
-          ],
-          onError: [
-            {
+              cond: FetchMachine.hasError,
               actions: 'assignError',
               target: 'failed',
+            },
+            {
+              actions: ['notifyUpdateAccounts', 'redirectToHome'],
+              target: 'fetchingAccounts',
             },
           ],
         },
@@ -200,7 +198,10 @@ export const accountMachine = createMachine(
           src: 'unlock',
           onDone: [
             unlockMachineErrorAction('unlocking', 'unlockError'),
-            { target: 'addingAccount' },
+            {
+              actions: ['clearUnlockError'],
+              target: 'addingAccount',
+            },
           ],
         },
         on: {
@@ -222,6 +223,12 @@ export const accountMachine = createMachine(
         },
       },
       failed: {
+        on: {
+          ADD_ACCOUNT: {
+            actions: ['assignAccountName'],
+            target: 'unlocking',
+          },
+        },
         after: {
           INTERVAL: 'fetchingAccounts', // retry
         },
@@ -231,6 +238,9 @@ export const accountMachine = createMachine(
   {
     delays: { INTERVAL: 2000, TIMEOUT: 15000 },
     actions: {
+      clearUnlockError: assign({
+        unlockError: () => undefined,
+      }),
       assignAccounts: assign({
         accounts: (_, ev) => ev.data,
       }),
@@ -279,6 +289,7 @@ export const accountMachine = createMachine(
       }),
       fetchAccount: FetchMachine.create<never, Account | undefined>({
         showError: true,
+        maxAttempts: 1,
         async fetch() {
           const accountToFetch = await AccountService.getSelectedAccount();
           if (!accountToFetch) return undefined;
@@ -296,6 +307,7 @@ export const accountMachine = createMachine(
         AccountInputs['selectAccount'],
         Account
       >({
+        maxAttempts: 1,
         async fetch({ input }) {
           if (!input?.address) {
             throw new Error('Invalid account address');
@@ -309,6 +321,7 @@ export const accountMachine = createMachine(
       }),
       addAccount: FetchMachine.create<AccountInputs['addNewAccount'], Account>({
         showError: true,
+        maxAttempts: 1,
         async fetch({ input }) {
           if (!input?.data.name.trim()) {
             throw new Error('Name cannot be empty');

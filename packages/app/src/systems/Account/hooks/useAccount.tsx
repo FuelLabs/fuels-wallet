@@ -20,6 +20,9 @@ const selectors = {
   account: (state: AccountMachineState) => {
     return state.context?.account;
   },
+  unlockError: (state: AccountMachineState) => {
+    return state.context?.unlockError;
+  },
   isUnlocking: (state: AccountMachineState) => {
     return state.matches('unlocking');
   },
@@ -44,6 +47,10 @@ export function useAccounts() {
   const isLoading = store.useSelector(Services.accounts, selectors.isLoading);
   const accounts = store.useSelector(Services.accounts, selectors.accounts);
   const account = store.useSelector(Services.accounts, selectors.account);
+  const unlockError = store.useSelector(
+    Services.accounts,
+    selectors.unlockError
+  );
   const isUnlocking = store.useSelector(
     Services.accounts,
     selectors.isUnlocking
@@ -105,6 +112,7 @@ export function useAccounts() {
     isLoading: isLoading && !accounts,
     accounts,
     account,
+    unlockError,
     isUnlocking,
     isUnlockingLoading,
     isAddingAccount,
