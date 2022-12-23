@@ -32,7 +32,7 @@ export function RemoveConnectionDialog({
     <AlertDialog open={opened} onOpenChange={setOpened}>
       <AlertDialog.Trigger>{children}</AlertDialog.Trigger>
       <AlertDialog.Content css={styles.root}>
-        <AlertDialog.Heading>Disconnected App</AlertDialog.Heading>
+        <AlertDialog.Heading>Disconnecting App</AlertDialog.Heading>
         <AlertDialog.Description as="div">
           <Text className="from">{connection.origin}</Text>
           <Text className="message">

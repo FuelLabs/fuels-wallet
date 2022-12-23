@@ -1,7 +1,8 @@
-import { fireEvent, screen, waitFor } from '@fuel-ui/test-utils';
+import { screen } from '@fuel-ui/test-utils';
 
 import { connectionsLoader } from '../../__mocks__/connection';
 import { useConnections } from '../../hooks';
+import { testQueries } from '../../utils';
 
 import { Usage } from './ConnectionEdit.stories';
 
@@ -25,30 +26,19 @@ describe('ConnectionEdit', () => {
 
   it('should render accounts connected', async () => {
     renderWithRouter(<Content />, opts);
-    await waitFor(() => {
-      expect(screen.getByText('Account 1')).toBeInTheDocument();
-      expect(screen.getByText('Account 2')).toBeInTheDocument();
-      expect(screen.getByText('2 connected')).toBeInTheDocument();
-    });
+    await testQueries.waitShowingAccounts();
   });
 
   it('should disconnect account', async () => {
-    const { user } = renderWithRouter(<Content />, opts);
-    await waitFor(() => screen.getByText('Account 1'));
+    renderWithRouter(<Content />, opts);
+    await testQueries.waitShowingAccounts();
     expect(await screen.findByText('2 connected')).toBeInTheDocument();
-    const check = screen.getAllByRole('switch')[0];
-    await user.click(check);
-    expect(await screen.findByText('1 connected')).toBeInTheDocument();
+    await testQueries.clickToDisconnectAccount();
   });
 
   it('should see an empty list when not found', async () => {
     renderWithRouter(<Content />, opts);
-    await waitFor(() => screen.getByText('Account 1'));
-    const search = screen.getByLabelText('Search');
-    expect(search).toBeInTheDocument();
-    fireEvent.change(search, { target: { value: 'not found' } });
-    await waitFor(() => {
-      expect(screen.getByText('No account found')).toBeInTheDocument();
-    });
+    await testQueries.waitShowingAccounts();
+    await testQueries.testSearch('No account found');
   });
 });

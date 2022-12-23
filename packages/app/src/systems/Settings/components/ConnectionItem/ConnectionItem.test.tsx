@@ -1,6 +1,7 @@
-import { render, screen, testA11y } from '@fuel-ui/test-utils';
+import { fireEvent, render, screen, testA11y } from '@fuel-ui/test-utils';
 
 import { MOCK_CONNECTION } from '../../__mocks__/connection';
+import { testQueries } from '../../utils';
 
 import { ConnectionItem } from './ConnectionItem';
 
@@ -38,12 +39,8 @@ describe('ConnectionItem', () => {
   });
 
   it('should show a dialog before onDelete', async () => {
-    const { user } = render(<Content />);
-    const btn = screen.getByLabelText('Delete');
-    await user.click(btn);
-    expect(await screen.findByText('Disconnected App')).toBeInTheDocument();
-    const confirm = screen.getByText('Confirm');
-    await user.click(confirm);
-    expect(onDelete).toHaveBeenCalled();
+    render(<Content />);
+    fireEvent.click(screen.getByLabelText('Delete'));
+    await testQueries.testRemovingConnection(MOCK_CONNECTION, onDelete);
   });
 });
