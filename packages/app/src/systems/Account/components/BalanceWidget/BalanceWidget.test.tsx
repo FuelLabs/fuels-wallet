@@ -4,8 +4,6 @@ import { MOCK_ACCOUNTS } from '../../__mocks__';
 
 import { BalanceWidget } from './BalanceWidget';
 
-import { RouterProvider, shortAddress } from '~/systems/Core';
-
 const ACCOUNT = {
   ...MOCK_ACCOUNTS[0],
   balance: '4999989994',
@@ -14,71 +12,50 @@ const ACCOUNT = {
 
 describe('BalanceWidget', () => {
   it('a11y', async () => {
-    await testA11y(
-      <RouterProvider>
-        <BalanceWidget account={ACCOUNT} />
-      </RouterProvider>
-    );
+    await testA11y(<BalanceWidget account={ACCOUNT} />);
   });
 
   it('should show user address', () => {
-    render(
-      <RouterProvider>
-        <BalanceWidget account={ACCOUNT} />
-      </RouterProvider>
-    );
-    expect(screen.getByText(shortAddress(ACCOUNT.address))).toBeInTheDocument();
+    render(<BalanceWidget account={ACCOUNT} />);
+    expect(screen.getByText('fuel0x...74ef')).toBeInTheDocument();
   });
 
   it('should show formatted balance', async () => {
-    render(
-      <RouterProvider>
-        <BalanceWidget account={ACCOUNT} />
-      </RouterProvider>
-    );
+    render(<BalanceWidget account={ACCOUNT} />);
     expect(screen.getByText(/4\.999/)).toBeInTheDocument();
   });
 
-  it('should hide balance when click on toggle button', async () => {
+  it('should hide balance  when user sets his balance to hide', async () => {
+    const onChangeVisibility = jest.fn();
     const { user } = render(
-      <RouterProvider>
-        <BalanceWidget account={ACCOUNT} />
-      </RouterProvider>
+      <BalanceWidget
+        onChangeVisibility={onChangeVisibility}
+        account={ACCOUNT}
+      />
     );
     const btn = screen.getByLabelText(/Hide balance/i);
     expect(btn).toBeInTheDocument();
-
-    expect(screen.getByText(/4\.999/)).toBeInTheDocument();
     await user.click(btn);
-    expect(() => screen.getByText(/4\.999/)).toThrow();
+    expect(onChangeVisibility).toHaveBeenNthCalledWith(1, false);
   });
 
-  it('should hide balalnce when user sets his balance to hidden', async () => {
+  it('should show balalnce when user sets his balance to show', async () => {
     const onChangeVisibility = jest.fn();
     const { user } = render(
-      <RouterProvider>
-        <BalanceWidget
-          account={ACCOUNT}
-          isHidden={true}
-          onChangeVisibility={onChangeVisibility}
-        />
-      </RouterProvider>
+      <BalanceWidget
+        account={ACCOUNT}
+        visibility={false}
+        onChangeVisibility={onChangeVisibility}
+      />
     );
     const btn = screen.getByLabelText(/Show balance/i);
     expect(btn).toBeInTheDocument();
-
-    expect(() => screen.getByText(/4\.999/)).toThrow();
     await user.click(btn);
-    expect(onChangeVisibility).toBeCalledTimes(1);
-    expect(screen.getByText(/4\.999/)).toBeInTheDocument();
+    expect(onChangeVisibility).toHaveBeenNthCalledWith(1, true);
   });
 
   it('should copy full address when click on copy icon', async () => {
-    const { user } = render(
-      <RouterProvider>
-        <BalanceWidget account={ACCOUNT} />
-      </RouterProvider>
-    );
+    const { user } = render(<BalanceWidget account={ACCOUNT} />);
     const btn = screen.getByLabelText(/copy to clipboard/i);
     expect(btn).toBeInTheDocument();
 

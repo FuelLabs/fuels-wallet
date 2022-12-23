@@ -14,14 +14,14 @@ export const getMockedTransaction = async (
   providerUrl: string
 ) => {
   const params = { gasLimit: MAX_GAS_PER_TX, gasPrice: 1 };
-  const txRequest = new ScriptTransactionRequest(params);
+  const transactionRequest = new ScriptTransactionRequest(params);
   const destinyAddress = Address.fromPublicKey(destiny);
   const ownerAddress = Address.fromPublicKey(owner);
   const assetId =
     '0x0000000000000000000000000000000000000000000000000000000000000000';
   const amount = bn.parseUnits('0.1').toNumber();
-  txRequest.addCoinOutput(destinyAddress, amount, assetId);
-  const fee = txRequest.calculateFee();
+  transactionRequest.addCoinOutput(destinyAddress, amount, assetId);
+  const fee = transactionRequest.calculateFee();
   let quantities: CoinQuantityLike[] = [];
   if (fee.assetId === hexlify(assetId)) {
     fee.amount.add(amount);
@@ -36,9 +36,9 @@ export const getMockedTransaction = async (
       ownerAddress,
       quantities
     );
-    txRequest.addResources(resources);
+    transactionRequest.addResources(resources);
     // eslint-disable-next-line no-empty
   } catch (e) {}
 
-  return txRequest;
+  return transactionRequest;
 };

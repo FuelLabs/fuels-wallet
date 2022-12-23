@@ -5,3 +5,5 @@ export * from './url';
 export * from './route';
 export * from './string';
 export * from './machine';
+export * from './json';
+export * from './storage';

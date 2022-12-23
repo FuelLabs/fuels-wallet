@@ -18,8 +18,8 @@ export function SendSelect({ send, tx }: SendSelectProps) {
   const { form, errors, showTxDetails, response } = send;
   return (
     <Stack gap="$4">
-      {errors.txRequest.hasGeneral && (
-        <TxErrors errors={errors.txRequest.general} />
+      {errors.transactionRequest.hasGeneral && (
+        <TxErrors errors={errors.transactionRequest.general} />
       )}
       <Flex css={styles.row}>
         <Text as="span" css={styles.title}>

@@ -1,5 +1,4 @@
 import { Flex } from '@fuel-ui/react';
-import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { AssetsTitle, HomeActions } from '../../components';
@@ -7,18 +6,24 @@ import { AssetsTitle, HomeActions } from '../../components';
 import { BalanceWidget, useAccounts } from '~/systems/Account';
 import { AssetList } from '~/systems/Asset';
 import { Layout, Pages } from '~/systems/Core';
+import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 export function Home() {
-  const { isLoading, account, handlers } = useAccounts();
+  const { visibility, setVisibility } = useBalanceVisibility();
+  const { isLoading, account } = useAccounts();
   const navigate = useNavigate();
 
   function sendAction() {
     navigate(Pages.send());
   }
 
-  const goToReceive = useCallback(() => {
+  const goToReceive = () => {
     navigate(Pages.receive());
-  }, [navigate]);
+  };
+
+  const goToAccounts = () => {
+    navigate(Pages.accounts());
+  };
 
   return (
     <Layout title="Home" isLoading={isLoading} isHome>
@@ -26,10 +31,11 @@ export function Home() {
       <Layout.Content>
         <Flex css={{ height: '100%', flexDirection: 'column' }}>
           <BalanceWidget
-            isHidden={account?.isHidden ?? true}
+            visibility={visibility}
             account={account}
             isLoading={isLoading}
-            onChangeVisibility={handlers.setBalanceVisibility}
+            onChangeVisibility={setVisibility}
+            onPressAccounts={goToAccounts}
           />
           <HomeActions
             receiveAction={goToReceive}

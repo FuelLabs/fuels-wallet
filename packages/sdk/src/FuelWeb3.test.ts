@@ -54,7 +54,7 @@ describe('FuelWeb3', () => {
     await seedWallet(account, bn.parseUnits('1'));
 
     // Test example like docs
-    const txRequest = new ScriptTransactionRequest({
+    const transactionRequest = new ScriptTransactionRequest({
       gasLimit: 50_000,
       gasPrice: 1,
     });
@@ -62,15 +62,15 @@ describe('FuelWeb3', () => {
     const toAddress = Address.fromString(toAccount);
     const fromAddress = Address.fromString(account);
     const amount = bn.parseUnits('0.1');
-    txRequest.addCoinOutput(toAddress, amount);
+    transactionRequest.addCoinOutput(toAddress, amount);
 
     const provider = FuelWeb3.getProvider();
     const resources = await provider.getResourcesToSpend(fromAddress, [
       [amount, NativeAssetId],
     ]);
 
-    txRequest.addResources(resources);
-    const transactionId = await FuelWeb3.sendTransaction(txRequest);
+    transactionRequest.addResources(resources);
+    const transactionId = await FuelWeb3.sendTransaction(transactionRequest);
     const response = new TransactionResponse(transactionId, provider);
 
     // wait for transaction to be completed

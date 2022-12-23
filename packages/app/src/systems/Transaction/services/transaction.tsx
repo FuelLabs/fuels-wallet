@@ -1,28 +1,27 @@
 /* eslint-disable no-param-reassign */
 import type { Account, Asset } from '@fuel-wallet/types';
-import {
-  Address,
-  hexlify,
-  MAX_GAS_PER_TX,
-  ScriptTransactionRequest,
-  Provider,
-  TransactionResponse,
-  bn,
-  calculateTransactionFee,
-  Wallet,
-  transactionRequestify,
-  NativeAssetId,
-} from 'fuels';
 import type {
   BN,
   TransactionRequest,
-  WalletUnlocked,
   TransactionRequestLike,
   WalletLocked,
+  WalletUnlocked,
+} from 'fuels';
+import {
+  Address,
+  bn,
+  hexlify,
+  MAX_GAS_PER_TX,
+  NativeAssetId,
+  ScriptTransactionRequest,
+  transactionRequestify,
+  Wallet,
+  Provider,
+  TransactionResponse,
 } from 'fuels';
 
 import type { Transaction } from '../types';
-import { getCoinOutputsFromTx, parseTransaction } from '../utils';
+import { toJSON } from '../utils';
 
 import { getBalance } from '~/systems/Account/utils';
 import { ASSET_MAP, isEth } from '~/systems/Asset';
@@ -38,24 +37,21 @@ export type TxInputs = {
     id: string;
   };
   request: {
-    tx: TransactionRequest;
+    transactionRequest: TransactionRequest;
     origin: string;
     providerUrl: string;
   };
   send: {
-    tx: TransactionRequest;
+    transactionRequest: TransactionRequest;
     wallet: WalletUnlocked;
     providerUrl?: string;
   };
-  calculateFee: {
-    tx: TransactionRequest;
-    providerUrl?: string;
-  };
-  fetchGasPrice: {
+  simulateTransaction: {
+    transactionRequest: TransactionRequest;
     providerUrl?: string;
   };
   getOutputs: {
-    tx?: TransactionRequest;
+    transactionRequest?: TransactionRequest;
     account?: Account | null;
   };
   createTransfer: {
@@ -67,13 +63,22 @@ export type TxInputs = {
     txId: string;
     providerUrl?: string;
   };
-};
-
-type GetTxWithResourcesOpts = {
-  wallet: WalletLocked;
-  tx: TransactionRequestLike;
-  gasFee?: BN;
-  needToAddResources?: boolean;
+  getTxWithResources: {
+    wallet: WalletLocked;
+    tx: TransactionRequestLike;
+    gasFee?: BN;
+    needToAddResources?: boolean;
+  };
+  fundTransaction: {
+    wallet: WalletLocked;
+    tx: TransactionRequest;
+  };
+  checkIsValid: {
+    account: Account;
+    asset?: Asset;
+    amount?: BN;
+    fee?: BN;
+  };
 };
 
 export class TxService {
@@ -97,7 +102,7 @@ export class TxService {
 
   static add(input: TxInputs['add']) {
     const { type } = input;
-    const data = parseTransaction(input.data!);
+    const data = toJSON(input.data!);
     return db.transaction('rw', db.transactions, async () => {
       const id = await db.transactions.add({ type, data, id: uniqueId() });
       return db.transactions.get(id);
@@ -112,9 +117,13 @@ export class TxService {
     });
   }
 
-  static async send({ wallet, tx, providerUrl }: TxInputs['send']) {
+  static async send({
+    wallet,
+    transactionRequest,
+    providerUrl,
+  }: TxInputs['send']) {
     wallet.provider = new Provider(providerUrl || '');
-    return wallet.sendTransaction(tx);
+    return wallet.sendTransaction(transactionRequest);
   }
 
   static async fetch({ txId, providerUrl = '' }: TxInputs['fetch']) {
@@ -124,31 +133,13 @@ export class TxService {
     return txResponse;
   }
 
-  static async calculateFee({ tx, providerUrl }: TxInputs['calculateFee']) {
-    const { gasPrice } = tx;
+  static async simulateTransaction({
+    transactionRequest,
+    providerUrl,
+  }: TxInputs['simulateTransaction']) {
     const provider = new Provider(providerUrl || '');
-    const { receipts } = await provider.call(tx, { utxoValidation: false });
-    const result = calculateTransactionFee({ receipts, gasPrice });
-    return result.fee;
-  }
-
-  static async fetchGasPrice({ providerUrl }: TxInputs['fetchGasPrice']) {
-    const provider = new Provider(providerUrl || '');
-    const { minGasPrice } = await provider.getNodeInfo();
-    return minGasPrice;
-  }
-
-  static getOutputs({ tx, account }: TxInputs['getOutputs']) {
-    const coinOutputs = getCoinOutputsFromTx(tx);
-    const outputsToSend = coinOutputs.filter(
-      (value) => value.to !== account?.publicKey
-    );
-    const outputAmount = outputsToSend.reduce(
-      (acc, value) => acc.add(value.amount),
-      bn(0)
-    );
-
-    return { coinOutputs, outputsToSend, outputAmount };
+    const { receipts } = await provider.call(transactionRequest);
+    return receipts;
   }
 
   static async createTransfer(input: TxInputs['createTransfer']) {
@@ -159,9 +150,9 @@ export class TxService {
     return request;
   }
 
-  static async getTxWithResources(opts: GetTxWithResourcesOpts) {
-    const { needToAddResources = true, gasFee = bn(0) } = opts || {};
-    const request = transactionRequestify(opts.tx);
+  static async getTxWithResources(input: TxInputs['getTxWithResources']) {
+    const { needToAddResources = true, gasFee = bn(0) } = input || {};
+    const request = transactionRequestify(input.tx);
     const coins = request.getCoinOutputs();
     const requiredCoins = coins.map((coin) => {
       let amount = bn(coin.amount);
@@ -173,7 +164,7 @@ export class TxService {
 
     if (needToAddResources) {
       const resources = await provider.getResourcesToSpend(
-        opts.wallet.address,
+        input.wallet.address,
         requiredCoins
       );
       request.addResources(resources);
@@ -181,10 +172,8 @@ export class TxService {
     return request;
   }
 
-  static async fundTransaction(
-    wallet: WalletLocked,
-    tx: TransactionRequestLike
-  ) {
+  static async fundTransaction(input: TxInputs['fundTransaction']) {
+    const { wallet, tx } = input;
     const preRequest = await TxService.getTxWithResources({ wallet, tx });
     const txCost = await wallet.provider.getTransactionCost(preRequest);
     const request = transactionRequestify(tx);
@@ -218,7 +207,8 @@ export class TxService {
     return fee.amount;
   }
 
-  static checkIsValid(account: Account, asset?: Asset, amount?: BN, fee?: BN) {
+  static checkIsValid(input: TxInputs['checkIsValid']) {
+    const { account, asset, fee, amount } = input;
     if (!account || !asset || !fee || !amount) return true;
     const assetBalance = getBalance(account, asset?.assetId);
     if (isEth(asset)) assetBalance.gte(bn(amount).add(fee));

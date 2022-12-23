@@ -25,12 +25,16 @@ export const Usage = (args: BalanceWidgetProps) => (
 
 export const Hidden = (args: BalanceWidgetProps) => (
   <Box css={{ width: 320 }}>
-    <BalanceWidget {...args} account={ACCOUNT} isHidden />
+    <BalanceWidget {...args} account={ACCOUNT} />
   </Box>
 );
 
+Hidden.args = {
+  visibility: false,
+};
+
 export const Loader = () => (
   <Box css={{ width: 320 }}>
-    <BalanceWidget.Loader />
+    <BalanceWidget />
   </Box>
 );

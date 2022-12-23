@@ -55,7 +55,7 @@ export function useAccounts() {
   return {
     handlers: {
       goToList,
-      setBalanceVisibility: store.setBalanceVisibility,
+      hideAccount: store.hideAccount,
       selectAccount: store.selectAccount,
     },
     isLoading: isLoading && !accounts,

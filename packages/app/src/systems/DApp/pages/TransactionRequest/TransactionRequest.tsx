@@ -1,20 +1,18 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Flex, Heading, Link, Stack, Text } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
-import { AddressType } from '@fuel-wallet/types';
 
-import { ConnectInfo, UnlockDialog } from '../../components';
+import { ConnectInfo } from '../../components';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
-import { AssetsAmount } from '~/systems/Asset';
-import { Layout } from '~/systems/Core';
+import { Layout, UnlockDialog } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { NetworkScreen, useNetworks } from '~/systems/Network';
-import { TxDetails, TxErrors, TxFromTo } from '~/systems/Transaction';
+import { TxDetails, TxErrors, TxOperations } from '~/systems/Transaction';
 
 export function TransactionRequest() {
   const { selectedNetwork } = useNetworks({ type: NetworkScreen.list });
-  const { handlers, ...ctx } = useTransactionRequest({
+  const { handlers, tx, ethAmountSent, ...ctx } = useTransactionRequest({
     isOriginRequired: true,
   });
 
@@ -22,6 +20,13 @@ export function TransactionRequest() {
 
   const content = (
     <Layout.Content css={styles.content}>
+      {ctx.isLoadingTx && (
+        <Stack gap="$4">
+          <ConnectInfo.Loader />
+          <TxOperations.Loader />
+          <TxDetails.Loader />
+        </Stack>
+      )}
       {ctx.isShowingInfo && (
         <Stack gap="$4">
           <ConnectInfo
@@ -29,25 +34,9 @@ export function TransactionRequest() {
             account={ctx.account}
             isReadOnly={true}
           />
-          {ctx.account && (
-            <TxFromTo
-              from={{
-                type: AddressType.account,
-                address: ctx.account.publicKey,
-              }}
-              to={{
-                type: AddressType.account,
-                address: ctx.outputsToSend[0]?.to.toString(),
-              }}
-            />
-          )}
           {ctx.hasGeneralErrors && <TxErrors errors={ctx.generalErrors} />}
-          <AssetsAmount
-            amounts={ctx.outputsToSend}
-            balanceErrors={ctx.groupedErrors?.InsufficientInputAmount}
-            title="Assets to Send"
-          />
-          <TxDetails fee={ctx.fee} amountSent={ctx.outputAmount} />
+          <TxOperations operations={tx?.operations} />
+          <TxDetails fee={tx?.fee} amountSent={ethAmountSent} />
         </Stack>
       )}
       {ctx.approvedTx && (
@@ -94,7 +83,7 @@ export function TransactionRequest() {
           <Button
             color="accent"
             onPress={handlers.approve}
-            isLoading={ctx.isLoading || ctx.sendingTx}
+            isLoading={ctx.isLoadingTx || ctx.sendingTx}
             isDisabled={!ctx.waitingApproval}
             css={{ flex: 1, ml: '$2' }}
           >
@@ -107,7 +96,7 @@ export function TransactionRequest() {
 
   return (
     <>
-      <Layout title="Approve Transaction" isLoading={ctx.isLoading}>
+      <Layout title="Approve Transaction" isLoading={ctx.isLoadingTx}>
         <Layout.TopBar type={TopBarType.external} />
         {content}
         {footer}

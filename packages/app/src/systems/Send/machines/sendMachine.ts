@@ -6,6 +6,7 @@ import {
   BN,
   TransactionRequest,
   TransactionResponse,
+  TransactionResultReceipt,
   WalletLocked,
   WalletUnlocked,
 } from 'fuels';
@@ -47,8 +48,9 @@ export type MachineContext = {
   };
   response?: {
     fee?: BN;
-    txRequest?: TransactionRequest;
-    txApprove?: TransactionResponse;
+    receipts?: TransactionResultReceipt[];
+    transactionRequest?: TransactionRequest;
+    transactionResponse?: TransactionResponse;
   };
   errors?: {
     unlockError?: string;
@@ -61,11 +63,11 @@ type Inputs = MachineContext['inputs'];
 
 type TxRequestReturn = {
   fee: BN;
-  txRequest: TransactionRequest;
+  transactionRequest: TransactionRequest;
 };
 
 type TxApproveReturn = {
-  txApprove: TransactionResponse;
+  transactionResponse: TransactionResponse;
 };
 
 type TxAccountInfoReturn = {
@@ -290,12 +292,12 @@ export const sendMachine = createMachine(
     guards: {
       hasError: FetchMachine.hasError as any,
       isInValidTransaction: (ctx, ev) => {
-        return !TxService.checkIsValid(
-          ev.data.account,
-          ctx.inputs?.asset,
-          ctx.inputs?.amount,
-          ctx.response?.fee
-        );
+        return !TxService.checkIsValid({
+          account: ev.data.account,
+          asset: ctx.inputs?.asset,
+          amount: ctx.inputs?.amount,
+          fee: ctx.response?.fee,
+        });
       },
     },
     services: {
@@ -335,8 +337,16 @@ export const sendMachine = createMachine(
           const { assetId } = asset;
           const wallet = accountInfo.wallet;
           const tx = await TxService.createTransfer({ amount, assetId, to });
-          const res = await TxService.fundTransaction(wallet, tx);
-          return { fee: res.txCost.fee, txRequest: res.request };
+          const res = await TxService.fundTransaction({ wallet, tx });
+          const receipts = await TxService.simulateTransaction({
+            providerUrl: wallet.provider.url,
+            transactionRequest: res.request,
+          });
+          return {
+            fee: res.txCost.fee,
+            transactionRequest: res.request,
+            receipts,
+          };
         },
       }),
       sendTx: FetchMachine.create<MachineContext, TxApproveReturn>({
@@ -344,20 +354,19 @@ export const sendMachine = createMachine(
         async fetch(params) {
           const { input } = params;
           const wallet = input?.inputs?.wallet;
-          const txRequest = input?.response?.txRequest;
+          const transactionRequest = input?.response?.transactionRequest;
 
-          if (!wallet || !txRequest) {
+          if (!wallet || !transactionRequest) {
             throw new Error('Invalid approveTx input');
           }
 
           const providerUrl = wallet.provider.url;
-          const txApprove = await TxService.send({
+          const transactionResponse = await TxService.send({
             wallet,
             providerUrl,
-            tx: txRequest,
+            transactionRequest,
           });
-
-          return { txApprove };
+          return { transactionResponse };
         },
       }),
     },

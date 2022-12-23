@@ -5,7 +5,7 @@
 ## ⚡️ Fuel Wallet
 
 > **Warning**
-> This project is under active development, some features are not implemented or can apresent bugs/issues. Do not treat it as a production-ready wallet.
+> This project is under active development, some features are not implemented or can present bugs/issues. Do not treat it as a production-ready wallet.
 
 The official wallet of the fastest modular execution layer: [Fuel](https://fuel.network).
 
@@ -39,7 +39,7 @@ Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/
   - [x] List accounts
   - [x] Sign messages
   - [x] Send transactions
-  - [ ] Disconnect applications
+  - [x] Disconnect applications
 - [x] Check your asset's balance
 - [x] Manage networks
 - [x] Faucet for testnet
@@ -51,8 +51,9 @@ Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/
   - [ ] List connections
   - [ ] Remove connections
 - [ ] Settings
-  - [ ] Reveal your passphrase
-  - [ ] Change password
+  - [x] Reveal your passphrase
+  - [x] Change password
+  - [ ] Export accout privateKey
 - [ ] Transactions
   - [x] Receive Assets via address or QR Code
   - [ ] Send Assets to another wallet

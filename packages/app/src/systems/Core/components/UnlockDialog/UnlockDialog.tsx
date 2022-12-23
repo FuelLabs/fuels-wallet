@@ -10,8 +10,8 @@ import {
   Stack,
 } from '@fuel-ui/react';
 
-import type { UnlockFormValues } from '../../hooks';
 import { useUnlockForm } from '../../hooks';
+import type { UnlockFormValues } from '../../hooks';
 import { UnlockForm } from '../UnlockForm';
 
 export type UnlockDialogProps = {

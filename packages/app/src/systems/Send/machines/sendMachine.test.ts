@@ -68,7 +68,7 @@ describe('sendMachine', () => {
 
     await waitFor(service, (state) => state.matches('confirming.success'));
     context = service.getSnapshot().context;
-    expect(context.response?.txApprove).toBeDefined();
+    expect(context.response?.transactionResponse).toBeDefined();
     expect(context.errors?.txApproveError).toBeUndefined();
     expect(goToHome).toBeCalled();
   });

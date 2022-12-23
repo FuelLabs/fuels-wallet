@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import { bn, isBech32 } from 'fuels';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -9,9 +10,14 @@ import type { SendMachineState } from '../machines/sendMachine';
 import { SendScreens, sendMachine } from '../machines/sendMachine';
 
 import { useAccounts } from '~/systems/Account';
-import { ASSET_MAP } from '~/systems/Asset';
+import { ASSET_MAP, isEth } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
-import { getFilteredErrors, getGroupedErrors } from '~/systems/Transaction';
+import { useChainInfo } from '~/systems/Network';
+import {
+  getFilteredErrors,
+  getGroupedErrors,
+  useParseTx,
+} from '~/systems/Transaction';
 
 function filterGeneralErrors(state: SendMachineState, prop: string) {
   if (!state.context.errors) return {};
@@ -47,8 +53,8 @@ const selectors = {
   errors(state: SendMachineState) {
     return {
       unlock: state.context.errors?.unlockError,
-      txRequest: filterGeneralErrors(state, 'txRequestErrors'),
-      txApprove: filterGeneralErrors(state, 'txApproveErrors'),
+      transactionRequest: filterGeneralErrors(state, 'txRequestErrors'),
+      transactionResponse: filterGeneralErrors(state, 'txApproveErrors'),
     };
   },
   showTxDetails(state: SendMachineState) {
@@ -108,6 +114,20 @@ export function useSend() {
   const errors = useSelector(service, selectors.errors);
   const showTxDetails = useSelector(service, selectors.showTxDetails);
 
+  const { chainInfo, isLoading: isLoadingChainInfo } = useChainInfo(
+    inputs?.wallet?.provider.url
+  );
+  const tx = useParseTx({
+    transaction: response?.transactionRequest?.toTransaction(),
+    receipts: response?.receipts,
+    gasPerByte: chainInfo?.consensusParameters.gasPerByte,
+    gasPriceFactor: chainInfo?.consensusParameters.gasPriceFactor,
+  });
+  const ethAmountSent = useMemo(
+    () => bn(tx?.totalAssetsSent?.find(isEth)?.amount),
+    [tx?.totalAssetsSent]
+  );
+
   function reset() {
     service.send('RESET');
   }
@@ -131,8 +151,10 @@ export function useSend() {
     errors,
     screen,
     canConfirm,
+    tx,
     showTxDetails,
-    isLoading,
+    ethAmountSent,
+    isLoading: isLoading || isLoadingChainInfo,
     handlers: {
       cancel,
       confirm,
