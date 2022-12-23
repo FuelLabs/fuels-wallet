@@ -1,4 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
+import { cssObj, cx } from '@fuel-ui/css';
 import {
   Avatar,
   Card,
@@ -43,6 +43,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
   balanceErrors,
 }: AssetsAmountProps) => {
   const hasError = !!balanceErrors?.length;
+  const assetAmountClass = cx('asset_amount');
 
   return (
     <Card css={styles.card(hasError)}>
@@ -72,7 +73,11 @@ export const AssetsAmount: AssetsAmountComponent = ({
           const amount = bn(asset.amount);
 
           return (
-            <Grid key={asset.assetId.toString()} css={styles.root}>
+            <Grid
+              key={asset.assetId.toString()}
+              css={styles.root}
+              className={assetAmountClass}
+            >
               <Flex css={styles.asset}>
                 <Avatar
                   name={asset.name}

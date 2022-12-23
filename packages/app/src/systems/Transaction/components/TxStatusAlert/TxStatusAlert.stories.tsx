@@ -1,4 +1,4 @@
-import { TxStatus } from '../../types';
+import { TxStatus } from '../../utils';
 
 import type { TxStatusAlertProps } from './TxStatusAlert';
 import { TxStatusAlert } from './TxStatusAlert';
@@ -9,11 +9,11 @@ export default {
 };
 
 export const Failed = (args: TxStatusAlertProps) => (
-  <TxStatusAlert {...args} txStatus={TxStatus.ERROR} txId={'0xoaskokaes'} />
+  <TxStatusAlert {...args} txStatus={TxStatus.failure} txId={'0xoaskokaes'} />
 );
 
 export const Pending = (args: TxStatusAlertProps) => (
-  <TxStatusAlert {...args} txStatus={TxStatus.PENDING} txId={'0xoaskokaes'} />
+  <TxStatusAlert {...args} txStatus={TxStatus.pending} txId={'0xoaskokaes'} />
 );
 
 export const Error = (args: TxStatusAlertProps) => (

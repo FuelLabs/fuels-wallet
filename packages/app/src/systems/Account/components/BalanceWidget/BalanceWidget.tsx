@@ -9,16 +9,16 @@ import {
   Text,
 } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
-import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
-
-import { useAccounts } from '../../hooks';
 
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
-import type { AccountInputs } from '~/systems/Account/services';
 import type { Maybe } from '~/systems/Core';
-import { formatAmount, shortAddress, VisibilityButton } from '~/systems/Core';
+import {
+  shortAddress,
+  VisibilityButton,
+  AmountVisibility,
+} from '~/systems/Core';
 
 type BalanceWidgetWrapperProps = {
   children: ReactNode;
@@ -36,33 +36,19 @@ export function BalanceWidgetWrapper({ children }: BalanceWidgetWrapperProps) {
 
 export type BalanceWidgetProps = {
   account?: Maybe<Account>;
-  isHidden?: boolean;
   isLoading?: boolean;
-  onChangeVisibility?: (input: AccountInputs['setBalanceVisibility']) => void;
+  visibility?: boolean;
+  onPressAccounts?: () => void;
+  onChangeVisibility?: (visibility: boolean) => void;
 };
 
 export function BalanceWidget({
   account,
-  isHidden: _isHidden,
   isLoading,
+  visibility = true,
+  onPressAccounts,
   onChangeVisibility,
 }: BalanceWidgetProps) {
-  const [isHidden, setIsHidden] = useState(_isHidden);
-  const { handlers } = useAccounts();
-
-  useEffect(() => {
-    setIsHidden(_isHidden);
-  }, [_isHidden]);
-
-  const setBalanceVisibility = (isHidden: boolean) => {
-    setIsHidden(isHidden);
-    if (account) {
-      onChangeVisibility?.({
-        data: { isHidden, address: account.address },
-      });
-    }
-  };
-
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
   return (
@@ -75,37 +61,27 @@ export function BalanceWidget({
           color="gray"
           icon={<Icon icon="CaretDown" color="gray8" />}
           aria-label="Expand"
-          onPress={handlers.goToList}
+          onPress={onPressAccounts}
           css={styles.caretDownIcon}
         />
       </Flex>
       <Flex justify="space-between" css={{ flex: '1 0' }}>
-        <Flex
-          direction="column"
-          css={{ mt: '$2', ml: '$4', alignSelf: 'center' }}
-        >
+        <Flex direction="column" css={styles.balanceContainer}>
           <Copyable value={account.address}>
             <Text fontSize="sm" color="gray11" css={{ fontWeight: 'bold' }}>
               {shortAddress(account.address)}
             </Text>
           </Copyable>
-          <Text
-            color={isHidden ? 'gray10' : 'gray12'}
-            fontSize="2xl"
-            css={{ fontWeight: 'bold' }}
-          >
-            <>
-              {account.balanceSymbol || '$'}&nbsp;
-              {isHidden ? '•••••' : formatAmount(account.balance)}
-            </>
+          <Text fontSize="2xl" css={styles.balance} aria-hidden={visibility}>
+            {account.balanceSymbol || '$'}&nbsp;
+            <AmountVisibility value={account.balance} visibility={visibility} />
           </Text>
         </Flex>
-        <Box css={{ marginRight: 6, marginTop: 8 }}>
+        <Box css={styles.visibilityContainer}>
           <VisibilityButton
-            aria-label={isHidden ? 'Show balance' : 'Hide balance'}
-            isHidden={isHidden}
-            onHide={() => setBalanceVisibility(true)}
-            onShow={() => setBalanceVisibility(false)}
+            aria-label={visibility ? 'Hide balance' : 'Show balance'}
+            visibility={visibility}
+            onChangeVisibility={onChangeVisibility}
           />
         </Box>
       </Flex>
@@ -128,6 +104,17 @@ const backgroundCss = {
 };
 
 const styles = {
+  visibilityContainer: cssObj({ marginRight: 6, marginTop: 8 }),
+  balanceContainer: cssObj({ mt: '$2', ml: '$4', alignSelf: 'center' }),
+  balance: cssObj({
+    '&[aria-hidden="true"]': {
+      color: '$gray12',
+    },
+    '&[aria-hidden="false"]': {
+      color: '$gray10',
+    },
+    fontWeight: 'bold',
+  }),
   backgroundFront: cssObj({
     ...backgroundCss,
     background:

@@ -1,7 +1,7 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
 
 import { MOCK_TX_RECIPIENT } from '../../__mocks__/tx-recipient';
-import { TxStatus } from '../../types';
+import { TxStatus } from '../../utils';
 
 import { TxFromTo } from './TxFromTo';
 
@@ -34,7 +34,7 @@ describe('TxFromTo', () => {
   });
 
   it('should show address info and show spinner when status is pending', async () => {
-    render(<TxFromTo {...PROPS} status={TxStatus.PENDING} />);
+    render(<TxFromTo {...PROPS} status={TxStatus.pending} />);
     expect(screen.getByText('From')).toBeInTheDocument();
     expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
@@ -43,7 +43,7 @@ describe('TxFromTo', () => {
   });
 
   it('should show address info and not have spinner when status is success', async () => {
-    render(<TxFromTo {...PROPS} status={TxStatus.SUCCESS} />);
+    render(<TxFromTo {...PROPS} status={TxStatus.success} />);
     expect(screen.getByText('From')).toBeInTheDocument();
     expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('TxFromTo', () => {
   });
 
   it('should show address info and not have spinner when status is error', async () => {
-    render(<TxFromTo {...PROPS} status={TxStatus.ERROR} />);
+    render(<TxFromTo {...PROPS} status={TxStatus.failure} />);
     expect(screen.getByText('From')).toBeInTheDocument();
     expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();

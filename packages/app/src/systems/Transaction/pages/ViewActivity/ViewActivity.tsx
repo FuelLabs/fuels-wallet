@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { ActivityList } from '../../components/ActivityList/ActivityList';
 import type { Transaction } from '../../types';
-import { TxCategory, TxStatus } from '../../types';
+import { TxCategory } from '../../types';
+import { TxStatus } from '../../utils';
 
 import type { ActivityPageTransaction } from './__generated__/operations';
 import { useActivityPageQuery } from './__generated__/operations';
@@ -66,7 +67,7 @@ export function ViewActivity() {
             : '',
         },
         category: TxCategory.SCRIPT,
-        status: TxStatus.SUCCESS,
+        status: TxStatus.success,
       })),
     [transactionsData]
   );

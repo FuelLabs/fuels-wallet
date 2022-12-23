@@ -5,13 +5,13 @@ import {
   MOCK_TRANSACTION_CREATE,
   MOCK_TRANSACTION_SCRIPT,
 } from '../../__mocks__/transaction';
-import { TxStatus } from '../../types';
+import { TxStatus } from '../../utils';
 
 import { TxHeader } from './TxHeader';
 
 describe('TxHeader', () => {
   it('a11y', async () => {
-    await testA11y(<TxHeader transaction={MOCK_TRANSACTION_SCRIPT} />);
+    await testA11y(<TxHeader {...MOCK_TRANSACTION_SCRIPT} />);
   });
 
   it('a11y Loader', async () => {
@@ -19,50 +19,51 @@ describe('TxHeader', () => {
   });
 
   it('should show transaction Script', async () => {
-    render(<TxHeader transaction={MOCK_TRANSACTION_SCRIPT} />);
+    render(<TxHeader {...MOCK_TRANSACTION_SCRIPT} />);
 
     expect(screen.getByText(/Script/i)).toBeInTheDocument();
   });
 
   it('should show transaction Create', async () => {
-    render(<TxHeader transaction={MOCK_TRANSACTION_CREATE} />);
+    render(<TxHeader {...MOCK_TRANSACTION_CREATE} />);
 
     expect(screen.getByText(/Create/i)).toBeInTheDocument();
   });
 
   it('should show transaction Pending', async () => {
-    render(<TxHeader transaction={MOCK_TRANSACTION_CREATE} />);
+    render(<TxHeader {...MOCK_TRANSACTION_CREATE} />);
 
     expect(screen.getByText(/Pending/i)).toBeInTheDocument();
-    expect(screen.getByLabelText('Status Color: amber9')).toBeInTheDocument();
+    expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
+      'data-status',
+      TxStatus.pending
+    );
   });
 
   it('should show transaction Success', async () => {
-    render(
-      <TxHeader
-        transaction={{ ...MOCK_TRANSACTION_CREATE, status: TxStatus.SUCCESS }}
-      />
-    );
+    render(<TxHeader {...MOCK_TRANSACTION_CREATE} status={TxStatus.success} />);
 
     expect(screen.getByText(/Success/i)).toBeInTheDocument();
-    expect(screen.getByLabelText('Status Color: mint9')).toBeInTheDocument();
+    expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
+      'data-status',
+      TxStatus.success
+    );
   });
 
   it('should show transaction Error', async () => {
-    render(
-      <TxHeader
-        transaction={{ ...MOCK_TRANSACTION_CREATE, status: TxStatus.ERROR }}
-      />
-    );
+    render(<TxHeader {...MOCK_TRANSACTION_CREATE} status={TxStatus.failure} />);
 
-    expect(screen.getByText(/Error/i)).toBeInTheDocument();
-    expect(screen.getByLabelText('Status Color: crimson9')).toBeInTheDocument();
+    expect(screen.getByText(/Failure/i)).toBeInTheDocument();
+    expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
+      'data-status',
+      TxStatus.failure
+    );
   });
 
   it('should copy transaction link', async () => {
     const { user } = render(
       <TxHeader
-        transaction={MOCK_TRANSACTION_CREATE}
+        {...MOCK_TRANSACTION_CREATE}
         providerUrl={process.env.VITE_FUEL_PROVIDER_URL}
       />
     );
@@ -83,7 +84,7 @@ describe('TxHeader', () => {
   it('should copy transaction id', async () => {
     const { user } = render(
       <TxHeader
-        transaction={MOCK_TRANSACTION_CREATE}
+        {...MOCK_TRANSACTION_CREATE}
         providerUrl={process.env.VITE_FUEL_PROVIDER_URL}
       />
     );

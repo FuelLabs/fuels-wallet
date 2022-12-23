@@ -5,17 +5,14 @@ import type {
   CoinTransactionRequestOutput,
   InputContract,
   OutputContract,
+  OutputContractCreated,
   TransactionRequestInput,
   TransactionRequestLike,
   TransactionResponse,
   TransactionType,
 } from 'fuels';
 
-export enum TxStatus {
-  PENDING = 'pending',
-  SUCCESS = 'success',
-  ERROR = 'error',
-}
+import type { TxStatus } from './utils';
 
 export enum TxCategory {
   SEND = 'send',
@@ -37,7 +34,7 @@ export type TxInputCoin = CoinTransactionRequestInput;
 export type TxInputContract = InputContract;
 export type TxOutputCoin = CoinTransactionRequestOutput;
 export type TxOutputContract = OutputContract;
-export type TxResponse = TransactionResponse;
+export type TxOutputContractCreated = OutputContractCreated;
 
 export type Transaction = {
   id?: string;
@@ -48,5 +45,5 @@ export type Transaction = {
   from?: TxRecipientAddress;
   to?: TxRecipientAddress;
   amount?: AssetAmount;
-  data?: TxRequest | TxResponse;
+  data?: TxRequest | TransactionResponse;
 };

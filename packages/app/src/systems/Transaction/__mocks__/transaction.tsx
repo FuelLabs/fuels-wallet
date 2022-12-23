@@ -1,7 +1,6 @@
-import { bn, TransactionType } from 'fuels';
+import { bn } from 'fuels';
 
-import type { Transaction } from '../types';
-import { TxStatus } from '../types';
+import { TxStatus, TxType } from '../utils';
 
 export const MOCK_TX = {
   status: {
@@ -57,17 +56,17 @@ export const MOCK_TX = {
 
 export const MOCK_OUTPUT_AMOUNT = bn.parseUnits('0.5');
 
-export const MOCK_TRANSACTION_SCRIPT: Transaction = {
+export const MOCK_TRANSACTION_SCRIPT = {
   id: '12132213231231',
-  type: TransactionType.Script,
-  status: TxStatus.PENDING,
+  type: TxType.script,
+  status: TxStatus.pending,
   data: undefined,
 };
 
-export const MOCK_TRANSACTION_CREATE: Transaction = {
+export const MOCK_TRANSACTION_CREATE = {
   id: '12132213231231',
-  type: TransactionType.Create,
-  status: TxStatus.PENDING,
+  type: TxType.create,
+  status: TxStatus.pending,
   data: undefined,
 };
 

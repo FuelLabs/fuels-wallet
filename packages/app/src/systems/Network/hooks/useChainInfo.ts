@@ -6,12 +6,14 @@ import { chainInfoMachine } from '../machines/chainInfoMachine';
 
 const selectors = {
   context: (state: ChainInfoMachineState) => state.context,
+  loading: (state: ChainInfoMachineState) => state.hasTag('loading'),
 };
 
 export function useChainInfo(providerUrl?: string) {
   const service = useInterpret(() => chainInfoMachine);
   const { send } = service;
   const context = useSelector(service, selectors.context);
+  const isLoading = useSelector(service, selectors.loading);
 
   const { chainInfo } = context;
 
@@ -21,5 +23,5 @@ export function useChainInfo(providerUrl?: string) {
     }
   }, [providerUrl]);
 
-  return { chainInfo };
+  return { chainInfo, isLoading };
 }
