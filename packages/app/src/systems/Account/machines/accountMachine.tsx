@@ -239,13 +239,13 @@ export const accountMachine = createMachine(
     delays: { INTERVAL: 2000, TIMEOUT: 15000 },
     actions: {
       clearUnlockError: assign({
-        unlockError: () => undefined,
+        unlockError: (_) => undefined,
       }),
       assignAccounts: assign({
         accounts: (_, ev) => ev.data,
       }),
       assignAccount: assign({
-        account: (ctx, ev) => ev.data,
+        account: (_, ev) => ev.data,
       }),
       assignError: assign({
         error: (_, ev) => ev.data,

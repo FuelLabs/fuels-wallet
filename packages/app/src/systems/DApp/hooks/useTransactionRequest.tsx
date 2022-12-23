@@ -42,6 +42,7 @@ const selectors = {
     | 'isUnlocking'
     | 'isUnlockingLoading'
     | 'isAddingAccount'
+    | 'unlockError'
   >) {
     return (state: TransactionMachineState) =>
       !isLoading &&
