@@ -15,7 +15,11 @@ export const Accounts = () => {
       <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
       <Layout.Content>
         {accounts && (
-          <AccountList accounts={accounts} onPress={handlers.selectAccount} />
+          <AccountList
+            isLoading={isLoading}
+            accounts={accounts}
+            onPress={handlers.selectAccount}
+          />
         )}
       </Layout.Content>
       <Layout.BottomBar>

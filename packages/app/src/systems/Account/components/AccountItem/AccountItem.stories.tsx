@@ -21,3 +21,9 @@ export const Selected = (args: AccountItemProps) => (
     <AccountItem {...args} account={MOCK_ACCOUNTS[0]} isSelected />
   </Box>
 );
+
+export const Loader = () => (
+  <Box css={{ width: 320 }}>
+    <AccountItem.Loader />
+  </Box>
+);
