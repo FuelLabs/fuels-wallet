@@ -1,3 +1,4 @@
+import { cssObj } from '@fuel-ui/css';
 import { Avatar, CardList, Flex, Heading, Text } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 
@@ -8,6 +9,8 @@ export type AccountItemProps = {
   isSelected?: boolean;
   isHidden?: boolean;
   onPress?: () => void;
+  rightEl?: JSX.Element;
+  isDisabled?: boolean;
 };
 
 export function AccountItem({
@@ -15,6 +18,8 @@ export function AccountItem({
   isSelected,
   isHidden,
   onPress,
+  rightEl,
+  isDisabled,
 }: AccountItemProps) {
   if (isHidden) return null;
   /**
@@ -34,7 +39,13 @@ export function AccountItem({
   //   />
   // );
   return (
-    <CardList.Item isActive={isSelected} onClick={onPress}>
+    <CardList.Item
+      isActive={isSelected}
+      onClick={onPress}
+      rightEl={rightEl}
+      css={styles.root}
+      aria-disabled={isDisabled}
+    >
       <Avatar.Generated size="md" background="fuel" hash={account.address} />
       <Flex direction="column">
         <Heading as="h5" css={{ margin: 0 }}>
@@ -45,3 +56,12 @@ export function AccountItem({
     </CardList.Item>
   );
 }
+
+const styles = {
+  root: cssObj({
+    '&[aria-disabled="true"]': {
+      opacity: 0.5,
+      cursor: 'default',
+    },
+  }),
+};

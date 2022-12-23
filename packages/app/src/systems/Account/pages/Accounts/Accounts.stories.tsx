@@ -12,7 +12,7 @@ export default {
   parameters: {
     layout: 'fullscreen',
     viewport: {
-      defaultViewport: 'chromeExtenstion',
+      defaultViewport: 'chromeExtension',
     },
   },
 } as Meta;
