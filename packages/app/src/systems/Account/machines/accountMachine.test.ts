@@ -49,12 +49,12 @@ describe('accountsMachine', () => {
 
   describe('list', () => {
     it('should fetch an initial account', async () => {
-      state = await waitFor(service, (state) => state.matches('done'));
+      state = await waitFor(service, (state) => state.matches('idle'));
       expect(state.context.accounts?.length).toBe(1);
     });
 
     it('should fetch a list of accounts', async () => {
-      state = await waitFor(service, (state) => state.matches('done'));
+      state = await waitFor(service, (state) => state.matches('idle'));
       // TODO refactor: change to service.send(addEvent) when it is added to the accountMachine
       await AccountService.addAccount({ data: MOCK_ACCOUNT_TWO });
       const accounts = await AccountService.getAccounts();
@@ -70,7 +70,7 @@ describe('accountsMachine', () => {
 
   describe('select', () => {
     it('should be able to select a new account', async () => {
-      state = await waitFor(service, (state) => state.matches('done'));
+      state = await waitFor(service, (state) => state.matches('idle'));
       // TODO refactor: change to service.send(addEvent) when it is added to the accountMachine
       await AccountService.addAccount({ data: MOCK_ACCOUNT_TWO });
       let accounts = await AccountService.getAccounts();
@@ -92,7 +92,7 @@ describe('accountsMachine', () => {
 
       service.send(selectEv);
       await waitFor(service, (state) => state.matches('selectingAccount'));
-      state = await waitFor(service, (state) => state.matches('done'));
+      state = await waitFor(service, (state) => state.matches('idle'));
 
       accounts = await AccountService.getAccounts();
 
@@ -104,7 +104,7 @@ describe('accountsMachine', () => {
   describe('add', () => {
     it('should be able to add an account', async () => {
       const { password } = await createMockAccount();
-      await waitFor(service, (state) => state.matches('done'));
+      await waitFor(service, (state) => state.matches('idle'));
 
       service.send('ADD_ACCOUNT', {
         input: 'Account Go',
@@ -117,7 +117,7 @@ describe('accountsMachine', () => {
       });
       await expectStateMatch(service, 'addingAccount');
       await expectStateMatch(service, 'fetchingAccounts');
-      await expectStateMatch(service, 'done');
+      await expectStateMatch(service, 'idle');
     });
   });
 });
