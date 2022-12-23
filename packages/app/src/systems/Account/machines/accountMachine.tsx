@@ -75,6 +75,30 @@ export const accountMachine = createMachine(
     id: '(machine)',
     initial: 'fetchingAccounts',
     states: {
+      idle: {
+        on: {
+          UPDATE_ACCOUNTS: {
+            target: 'fetchingAccounts',
+          },
+          UPDATE_ACCOUNT: {
+            target: 'fetchingAccount',
+          },
+          HIDE_ACCOUNT: {
+            actions: ['hideAccount'],
+            target: 'idle',
+          },
+          SELECT_ACCOUNT: {
+            target: 'selectingAccount',
+          },
+          ADD_ACCOUNT: {
+            actions: ['assignAccountName'],
+            target: 'unlocking',
+          },
+        },
+        after: {
+          TIMEOUT: 'fetchingAccounts', // retry
+        },
+      },
       fetchingAccounts: {
         tags: ['loading'],
         invoke: {
@@ -86,7 +110,7 @@ export const accountMachine = createMachine(
               cond: 'hasAccounts',
             },
             {
-              target: 'done',
+              target: 'idle',
               actions: ['assignAccounts', 'setIsUnlogged'],
             },
           ],
@@ -104,12 +128,12 @@ export const accountMachine = createMachine(
           src: 'fetchAccount',
           onDone: [
             {
-              target: 'done',
+              target: 'idle',
               actions: ['assignAccount'],
               cond: 'hasAccount',
             },
             {
-              target: 'done',
+              target: 'idle',
               actions: ['assignAccount'],
             },
           ],
@@ -197,34 +221,10 @@ export const accountMachine = createMachine(
           },
         },
       },
-      done: {
-        after: {
-          TIMEOUT: 'fetchingAccounts', // retry
-        },
-      },
       failed: {
         after: {
           INTERVAL: 'fetchingAccounts', // retry
         },
-      },
-    },
-    on: {
-      UPDATE_ACCOUNTS: {
-        target: 'fetchingAccounts',
-      },
-      UPDATE_ACCOUNT: {
-        target: 'fetchingAccount',
-      },
-      HIDE_ACCOUNT: {
-        actions: ['hideAccount'],
-        target: 'done',
-      },
-      SELECT_ACCOUNT: {
-        target: 'selectingAccount',
-      },
-      ADD_ACCOUNT: {
-        actions: ['assignAccountName'],
-        target: 'unlocking',
       },
     },
   },
