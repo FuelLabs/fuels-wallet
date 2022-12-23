@@ -11,28 +11,28 @@ title: API
 `async connect(): Promise<boolean>`<br />
 Request permission to start a connection between the project and the wallet
 
-<CodeImport file="../../sdk/src/Fuel.test.ts" testCase="connect" />
+<CodeImport file="../../sdk/src/FuelWeb3.test.ts" testCase="connect" />
 
 ### Disconnect
 
 `async disconnect(): Promise<boolean>`<br />
 Disconnect your project
 
-<CodeImport file="../../sdk/src/Fuel.test.ts" testCase="disconnect" />
+<CodeImport file="../../sdk/src/FuelWeb3.test.ts" testCase="disconnect" />
 
 ### List Accounts
 
 `async accounts(): Promise<Array<string>>`<br />
 List accounts in the wallet
 
-<CodeImport file="../../sdk/src/Fuel.test.ts" testCase="accounts" />
+<CodeImport file="../../sdk/src/FuelWeb3.test.ts" testCase="accounts" />
 
 ### Request signature message
 
 `async signMessage(address: string, message: string): Promise<string>`<br />
 Request a message signature for one specific account
 
-<CodeImport file="../../sdk/src/Fuel.test.ts" testCase="signMessage" />
+<CodeImport file="../../sdk/src/FuelWeb3.test.ts" testCase="signMessage" />
 
 ### Send transaction
 
@@ -40,29 +40,29 @@ Request a message signature for one specific account
 Send a transaction, this will request the user selected account to review,
 sign, and send the transaction.
 
-<CodeImport file="../../sdk/src/Fuel.test.ts" testCase="sendTransaction" />
+<CodeImport file="../../sdk/src/FuelWeb3.test.ts" testCase="sendTransaction" />
 
 ### Get Wallet
 
-`getWallet(address: string | AbstractAddress): FuelWalletLocked`<br />
-Return a FuelWalletLocked this class extends the fuels-ts SDK, WalletLocked,
-enabling to execute any of the methods available, but using a FuelWalletProvider on the connection point,
-to request signed actions.
+`getWallet(address: string | AbstractAddress): FuelWeb3Wallet`<br />
+Return a FuelWeb3Wallet. This class extends the fuels-ts SDK's `WalletLocked`,
+enabling all of the methods available for `WalletLocked` while using a FuelWeb3Provider on the connection point to request signed actions.
 
-<CodeImport file="../../sdk/src/Fuel.test.ts" testCase="getWallet" />
+<CodeImport file="../../sdk/src/FuelWeb3.test.ts" testCase="getWallet" />
 
 ### Get Provider
 
-`getProvider(): FuelWalletProvider`<br />
-Return a FuelWalletProvider this class extends fuels-ts SDK Provider, enabling to execute any of the methods available, but using FuelWallet on signature points, to request user permissions.
+`getProvider(): FuelWeb3Provider`<br />
+Return a FuelWeb3Provider. This class extends the fuels-ts SDK's `Provider`,
+enabling all of the methods available for `Provider` while using the FuelWeb3SDK on signature points to request user permissions.
 
 #### Using provider to query node info
 
-<CodeImport file="../../sdk/src/Fuel.test.ts" testCase="getProvider" />
+<CodeImport file="../../sdk/src/FuelWeb3.test.ts" testCase="getProvider" />
 
 #### Using provider on a fuels-ts Wallet
 
 <CodeImport
-  file="../../sdk/src/Fuel.test.ts"
+  file="../../sdk/src/FuelWeb3.test.ts"
   testCase="User getProvider on fuels-ts Wallet"
 />
