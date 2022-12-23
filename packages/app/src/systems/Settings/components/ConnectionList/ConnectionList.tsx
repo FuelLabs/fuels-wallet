@@ -42,7 +42,7 @@ export function ConnectionList({ handlers, ...ctx }: ConnectionListProps) {
         )}
         {ctx.noConnections && (
           <MotionBox {...animations.slideInTop()} css={styles.empty}>
-            <EmptyList label="No account found" />
+            <EmptyList label="No connection found" />
           </MotionBox>
         )}
         {ctx.showConnections && (
