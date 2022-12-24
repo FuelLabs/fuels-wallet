@@ -67,5 +67,5 @@ export async function createMockAccount() {
     },
   });
 
-  return { account, password };
+  return { account, password, manager };
 }

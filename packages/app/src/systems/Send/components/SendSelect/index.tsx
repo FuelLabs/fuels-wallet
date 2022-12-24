@@ -1,1 +1,1 @@
-export { SendSelect } from './SendSelect';
+export * from './SendSelect';

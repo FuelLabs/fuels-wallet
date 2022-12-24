@@ -1,40 +1,37 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Flex, Input, InputAmount, Stack, Text } from '@fuel-ui/react';
+import { motion } from 'framer-motion';
 import { bn } from 'fuels';
 
-import type { UseSendReturn } from '../../hooks/useSend';
+import type { UseSendReturn } from '../../hooks';
 
 import { AssetSelect, ASSET_MAP } from '~/systems/Asset';
-import { ControlledField } from '~/systems/Core';
-import type { useTransactionRequest } from '~/systems/DApp';
+import { animations, ControlledField, Layout } from '~/systems/Core';
 import { TxDetails, TxErrors } from '~/systems/Transaction';
 
-type SendSelectProps = {
-  tx: ReturnType<typeof useTransactionRequest>;
-  send: UseSendReturn;
-};
+const MotionContent = motion(Layout.Content);
 
-export function SendSelect({ send, tx }: SendSelectProps) {
-  const { form, errors, showTxDetails, response } = send;
+type SendSelectProps = UseSendReturn;
+
+export function SendSelect({ form, fee, txRequest }: SendSelectProps) {
   return (
-    <Stack gap="$4">
-      {errors.transactionRequest.hasGeneral && (
-        <TxErrors errors={errors.transactionRequest.general} />
-      )}
-      <Flex css={styles.row}>
-        <Text as="span" css={styles.title}>
-          Send
-        </Text>
-        <ControlledField
-          isRequired
-          name="asset"
-          control={form.control}
-          render={({ field }) => {
-            const selected = ASSET_MAP[field.value];
-            return (
+    <MotionContent {...animations.slideInTop()}>
+      <Stack gap="$4">
+        {txRequest.errors.hasGeneral && (
+          <TxErrors errors={txRequest.errors.general} />
+        )}
+        <Flex css={styles.row}>
+          <Text as="span" css={styles.title}>
+            Send
+          </Text>
+          <ControlledField
+            isRequired
+            name="asset"
+            control={form.control}
+            render={({ field }) => (
               <AssetSelect
-                items={tx.account?.balances}
-                selected={selected}
+                items={txRequest.account?.balances}
+                selected={ASSET_MAP[field.value]}
                 onSelect={(asset) => {
                   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
                   form.setValue('asset', asset?.assetId.toString()!, {
@@ -42,59 +39,58 @@ export function SendSelect({ send, tx }: SendSelectProps) {
                   });
                 }}
               />
-            );
-          }}
-        />
-      </Flex>
-      <Flex css={styles.row}>
-        <Text as="span" css={styles.title}>
-          To
-        </Text>
-        <Box css={styles.addressRow}>
-          <ControlledField
-            isRequired
-            name="address"
-            control={form.control}
-            isInvalid={Boolean(form.formState.errors?.address)}
-            render={({ field }) => (
-              <Input size="sm">
-                <Input.Field
-                  {...field}
-                  id="address"
-                  aria-label="Address Input"
-                  placeholder="Write a fuel address"
-                />
-              </Input>
             )}
           />
-        </Box>
-      </Flex>
-      <Stack gap="$3">
-        <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
-          Which amount?
-        </Text>
-        <ControlledField
-          isRequired
-          name="amount"
-          control={form.control}
-          isInvalid={Boolean(form.formState.errors?.amount)}
-          render={({ field }) => (
-            <InputAmount
-              balance={bn(tx.account?.balance)}
-              value={bn(field.value)}
-              onChange={(value) => {
-                form.setValue('amount', value.toString(), {
-                  shouldValidate: true,
-                });
-              }}
+        </Flex>
+        <Flex css={styles.row}>
+          <Text as="span" css={styles.title}>
+            To
+          </Text>
+          <Box css={styles.addressRow}>
+            <ControlledField
+              isRequired
+              name="address"
+              control={form.control}
+              isInvalid={Boolean(form.formState.errors?.address)}
+              render={({ field }) => (
+                <Input size="sm">
+                  <Input.Field
+                    {...field}
+                    id="address"
+                    aria-label="Address Input"
+                    placeholder="Write a fuel address"
+                  />
+                </Input>
+              )}
             />
-          )}
-        />
+          </Box>
+        </Flex>
+        <Stack gap="$3">
+          <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
+            Which amount?
+          </Text>
+          <ControlledField
+            isRequired
+            name="amount"
+            control={form.control}
+            isInvalid={Boolean(form.formState.errors?.amount)}
+            render={({ field }) => (
+              <InputAmount
+                name={field.name}
+                balance={bn(txRequest.account?.balance)}
+                value={bn(field.value)}
+                onChange={(value) => {
+                  form.setValue('amount', value.toString(), {
+                    shouldValidate: true,
+                  });
+                }}
+              />
+            )}
+          />
+        </Stack>
+        <TxDetails fee={fee} amountSent={txRequest.ethAmountSent} />
       </Stack>
-      {showTxDetails && (
-        <TxDetails fee={response?.fee} amountSent={bn(form.watch('amount'))} />
-      )}
-    </Stack>
+    </MotionContent>
   );
 }
 

@@ -1,4 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
+import type { DropdownProps } from '@fuel-ui/react';
 import {
   Avatar,
   Box,
@@ -23,13 +24,18 @@ import type { TxInputCoin, TxOutputCoin } from '~/systems/Transaction';
 
 export type AssetSelectInput = AssetAmount | Coin | TxOutputCoin | TxInputCoin;
 
-export type AssetSelectProps = {
+export type AssetSelectProps = DropdownProps & {
   items?: Maybe<AssetSelectInput[]>;
   onSelect: (asset?: AssetSelectInput | null) => void;
   selected?: Maybe<AssetSelectInput>;
 };
 
-export function AssetSelect({ items, selected, onSelect }: AssetSelectProps) {
+export function AssetSelect({
+  items,
+  selected,
+  onSelect,
+  ...props
+}: AssetSelectProps) {
   const [opened, setOpened] = useState(false);
   const [width, setWidth] = useState<Maybe<number>>(null);
   const asset = selected && getAssetInfoById(selected?.assetId, selected);
@@ -50,6 +56,7 @@ export function AssetSelect({ items, selected, onSelect }: AssetSelectProps) {
 
   return (
     <Dropdown
+      {...props}
       isOpen={opened}
       onOpenChange={setOpened}
       className="fuel_asset-select"

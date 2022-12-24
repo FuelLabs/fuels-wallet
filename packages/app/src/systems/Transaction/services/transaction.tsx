@@ -37,8 +37,8 @@ export type TxInputs = {
     id: string;
   };
   request: {
+    origin?: string;
     transactionRequest: TransactionRequest;
-    origin: string;
     providerUrl: string;
   };
   send: {
@@ -73,7 +73,7 @@ export type TxInputs = {
     wallet: WalletLocked;
     tx: TransactionRequest;
   };
-  checkIsValid: {
+  isValidTransaction: {
     account: Account;
     asset?: Asset;
     amount?: BN;
@@ -207,7 +207,7 @@ export class TxService {
     return fee.amount;
   }
 
-  static checkIsValid(input: TxInputs['checkIsValid']) {
+  static isValidTransaction(input: TxInputs['isValidTransaction']) {
     const { account, asset, fee, amount } = input;
     if (!account || !asset || !fee || !amount) return true;
     const assetBalance = getBalance(account, asset?.assetId);

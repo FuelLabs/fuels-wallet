@@ -1,37 +1,35 @@
 import { cssObj } from '@fuel-ui/css';
-import { Heading, Stack, Text } from '@fuel-ui/react';
+import { Text } from '@fuel-ui/react';
 
-import type { UseSendReturn } from '../../hooks/useSend';
+import { ContentHeader, Layout } from '~/systems/Core';
+import type { UseTransactionRequestReturn } from '~/systems/DApp';
+import { TxContent } from '~/systems/DApp';
 
-import { TxDetails, TxErrors, TxOperations } from '~/systems/Transaction';
+export type SendConfirmProps = {
+  txRequest: UseTransactionRequestReturn;
+};
 
-type SendConfirmProps = UseSendReturn;
-
-export function SendConfirm(ctx: SendConfirmProps) {
+export function SendConfirm({ txRequest }: SendConfirmProps) {
+  const amountSent = txRequest.ethAmountSent;
   return (
-    <Stack gap="$3" css={styles.root}>
-      <Stack as="header" gap="$1">
-        <Heading as="h3">Confirm before approving</Heading>
-        <Text>
-          Carefully check if all details in your transaction are correct
-        </Text>
-      </Stack>
-      {ctx.errors.transactionResponse.hasGeneral && (
-        <TxErrors errors={ctx.errors.transactionResponse.general} />
-      )}
-      <TxOperations operations={ctx.tx?.operations} />
-      <TxDetails fee={ctx.tx?.fee} amountSent={ctx.ethAmountSent} />
-    </Stack>
+    <Layout.Content>
+      <TxContent.Info
+        tx={txRequest.tx}
+        amountSent={amountSent}
+        header={
+          <ContentHeader title="Confirm before approving" css={styles.header}>
+            <Text>
+              Carefully check if all details in your transaction are correct
+            </Text>
+          </ContentHeader>
+        }
+      />
+    </Layout.Content>
   );
 }
 
 const styles = {
-  root: cssObj({
-    header: {
-      textAlign: 'center',
-    },
-    h3: {
-      margin: 0,
-    },
+  header: cssObj({
+    mb: '$4',
   }),
 };

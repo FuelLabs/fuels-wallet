@@ -1,3 +1,4 @@
+export * from './animations';
 export * from './database';
 export * from './address';
 export * from './math';
