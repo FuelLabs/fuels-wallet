@@ -4,9 +4,9 @@ import { send, assign, createMachine } from 'xstate';
 
 import { unlockMachineErrorAction, unlockMachine } from '~/systems/Account';
 import type {
-  UnlockMachineEvents,
   UnlockMachine,
   AccountInputs,
+  UnlockWalletEvent,
 } from '~/systems/Account';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 import type { ChildrenMachine } from '~/systems/Core';
@@ -79,7 +79,7 @@ export const signMachine = createMachine(
           UNLOCK_WALLET: {
             // send to the child machine
             actions: [
-              send<MachineContext, UnlockMachineEvents>(
+              send<MachineContext, UnlockWalletEvent>(
                 (_, ev) => ({
                   type: 'UNLOCK_WALLET',
                   input: ev.input,

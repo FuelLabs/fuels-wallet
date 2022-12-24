@@ -15,3 +15,9 @@ export const Usage = (args: AccountListProps) => (
     <AccountList {...args} accounts={MOCK_ACCOUNTS} />
   </Box>
 );
+
+export const Loading = (args: AccountListProps) => (
+  <Box css={{ width: 320 }}>
+    <AccountList {...args} accounts={MOCK_ACCOUNTS} isLoading />
+  </Box>
+);

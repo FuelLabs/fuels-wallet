@@ -15,12 +15,12 @@ import { bn, Address } from 'fuels';
 import { useState } from 'react';
 
 import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuelWeb3 } from '~/src/hooks/useFuelWeb3';
+import { useFuel } from '~/src/hooks/useFuel';
 import { useIsConnected } from '~/src/hooks/useIsConnected';
 import { useLoading } from '~/src/hooks/useLoading';
 
 export function Transfer() {
-  const [FuelWeb3, notDetected] = useFuelWeb3();
+  const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
   const [txId, setTxId] = useState<string>('');
   const [amount, setAmount] = useState<BN>(bn.parseUnits('0.00001'));
@@ -28,15 +28,15 @@ export function Transfer() {
   const [sendTransaction, sendingTransaction, errorSendingTransaction] =
     useLoading(async (amount: BN) => {
       console.debug('Request signature transaction!');
-      const accounts = await FuelWeb3.accounts();
+      const accounts = await fuel.accounts();
       const account = accounts[0];
-      const wallet = FuelWeb3.getWallet(account);
-      const response = await wallet.transfer(
-        Address.fromString(
-          'fuel1r3u2qfn00cgwk3u89uxuvz5cgcjaq934cfer6cwuew0424cz5sgq4yldul'
-        ),
-        amount
+      const wallet = await fuel.getWallet(account);
+      const toAddress = Address.fromString(
+        'fuel1r3u2qfn00cgwk3u89uxuvz5cgcjaq934cfer6cwuew0424cz5sgq4yldul'
       );
+
+      const response = await wallet.transfer(toAddress, amount);
+      console.debug('Transaction created!', response.id);
       setTxId(response.id);
     });
 
@@ -69,7 +69,7 @@ export function Transfer() {
               target={'_blank'}
               href={getBlockExplorerLink({
                 path: `transaction/${txId}`,
-                providerUrl: FuelWeb3?.providerConfig.url,
+                providerUrl: fuel?.providerConfig.url,
               })}
             >
               See on BlockExplorer

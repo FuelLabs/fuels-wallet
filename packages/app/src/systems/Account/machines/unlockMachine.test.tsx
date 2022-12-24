@@ -1,11 +1,12 @@
 import { Wallet } from '@fuel-ts/wallet';
+import { WalletManager } from '@fuel-ts/wallet-manager';
 import type { InterpreterFrom } from 'xstate';
 import { interpret } from 'xstate';
-import { waitFor } from 'xstate/lib/waitFor';
 
 import { unlockMachine } from './unlockMachine';
 
-import { MOCK_ACCOUNTS } from '~/systems/Account';
+import { MOCK_ACCOUNTS } from '~/systems/Account/__mocks__/accounts';
+import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 type Service = InterpreterFrom<typeof unlockMachine>;
 
@@ -21,6 +22,7 @@ describe('unlockMachine', () => {
       unlockMachine.withContext({}).withConfig({
         services: {
           unlock: () => Promise.resolve(wallet),
+          unlockVault: () => Promise.resolve(new WalletManager()),
         },
       })
     ).start();
@@ -30,18 +32,27 @@ describe('unlockMachine', () => {
     service.stop();
   });
 
-  it('should unlock message', async () => {
-    await waitFor(service, (state) => state.matches('waitingPassword'));
+  it('should unlock wallet', async () => {
+    await expectStateMatch(service, 'waitingPassword');
     service.send('UNLOCK_WALLET', {
       input: {
         password: 'qwe123',
         account,
       },
     });
-    await waitFor(service, (state) => state.matches('unlocking'));
-    const { matches } = await waitFor(service, (state) =>
-      state.matches('done')
-    );
-    expect(matches('done')).toBeTruthy();
+    await expectStateMatch(service, 'unlocking');
+    await expectStateMatch(service, 'done');
+  });
+
+  it('should unlock vault', async () => {
+    await expectStateMatch(service, 'waitingPassword');
+    service.send({
+      type: 'UNLOCK_VAULT',
+      input: {
+        password: 'qwe123',
+      },
+    });
+    await expectStateMatch(service, 'unlockingVault');
+    await expectStateMatch(service, 'done');
   });
 });

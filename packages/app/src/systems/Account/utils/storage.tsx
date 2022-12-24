@@ -1,6 +1,8 @@
+import type { StorageAbstract } from '@fuel-ts/wallet-manager';
+
 import { db } from '~/systems/Core/utils/database';
 
-export class IndexedDBStorage {
+export class IndexedDBStorage implements StorageAbstract {
   async getItem(key: string) {
     return db.transaction('r', db.vaults, async () => {
       const vault = await db.vaults.get({ key });
@@ -9,20 +11,19 @@ export class IndexedDBStorage {
   }
 
   async setItem(key: string, data: string) {
-    return db.transaction('rw', db.vaults, db.accounts, async () => {
+    await db.transaction('rw', db.vaults, db.accounts, async () => {
       await db.vaults.put({ key, data });
-      return data as unknown;
     });
   }
 
   async removeItem(key: string) {
-    return db.transaction('rw', db.vaults, db.accounts, async () => {
-      return db.vaults.where({ key }).delete();
+    await db.transaction('rw', db.vaults, db.accounts, async () => {
+      await db.vaults.where({ key }).delete();
     });
   }
 
   async clear() {
-    return db.transaction('rw', db.vaults, db.accounts, async () => {
+    await db.transaction('rw', db.vaults, db.accounts, async () => {
       await db.vaults.clear();
       await db.accounts.clear();
     });

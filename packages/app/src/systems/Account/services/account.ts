@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 import type { WalletUnlocked } from '@fuel-ts/wallet';
 import { WalletLocked } from '@fuel-ts/wallet';
+import type { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account } from '@fuel-wallet/types';
 import { bn, Address, Provider } from 'fuels';
 
@@ -37,8 +38,17 @@ export type AccountInputs = {
       mnemonic?: string[];
     };
   };
+  addNewAccount: {
+    data: {
+      name: string;
+      manager: WalletManager;
+    };
+  };
   unlock: {
     account: Account;
+    password: string;
+  };
+  unlockVault: {
     password: string;
   };
   changePassword: {
@@ -165,6 +175,27 @@ export class AccountService {
     }
   }
 
+  static async addNewAccount({ data }: AccountInputs['addNewAccount']) {
+    const accounts = await this.getAccounts();
+    const existingAccount = accounts.find((a) => a.name === data.name);
+
+    if (existingAccount) {
+      throw new Error('Account name already exists');
+    }
+
+    const manager = data.manager;
+    const account = await manager.addAccount();
+    // Add new account to database
+    const dbAccount = await this.addAccount({
+      data: {
+        name: data.name,
+        address: account.address.toString(),
+        publicKey: account.publicKey,
+      },
+    });
+    return dbAccount;
+  }
+
   static async exportVault(input: AccountInputs['unlock']) {
     const manager = await unlockManager(input.password);
     const { secret } = manager.exportVault(0);
@@ -192,6 +223,13 @@ export class AccountService {
       throw new Error('Account not found!');
     }
     return new WalletLocked(Address.fromString(account.address), network.url);
+  }
+
+  static async unlockVault(
+    input: AccountInputs['unlockVault']
+  ): Promise<WalletManager> {
+    const manager = await unlockManager(input.password);
+    return manager;
   }
 
   static async changePassword(input: AccountInputs['changePassword']) {
