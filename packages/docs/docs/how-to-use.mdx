@@ -6,34 +6,34 @@ title: How to Use
 
 <ConnectionAlert />
 
-If you've correctly installed the Fuel wallet extension, the wallet SDK will be injected automatically on the `window` object on the property `FuelWeb3`. To access it, you can use `window.FuelWeb3`
+If you've correctly installed the Fuel wallet extension, the wallet SDK will be injected automatically on the `window` object on the property `fuel`. To access it, you can use `window.fuel`
 
 ```ts
-window.FuelWeb3.connect();
+window.fuel.connect();
 ```
 
 You can try this code directly in the developer console.
 
 ## Request connection
 
-First, you need to request a connection with the wallet, which will authorize your application to execute other actions. You can do this by accessing `FuelWeb3.connect()`.
+First, you need to request a connection with the wallet, which will authorize your application to execute other actions. You can do this by accessing `fuel.connect()`.
 
 ```ts
-const isConnected = await window.FuelWeb3.connect();
+const isConnected = await window.fuel.connect();
 console.log("Connection response", isConnected);
 ```
 
-The `connect()` method returns a promise. If you prefer to do it in an async way, you can use `FuelWeb3.on('connection', () => void)` to
+The `connect()` method returns a promise. If you prefer to do it in an async way, you can use `fuel.on('connection', () => void)` to
 listen for changes in the connection.
 
 <Examples.Connect />
 
 ## List user accounts
 
-Once the connection is authorized, you can list the user accounts using `window.FuelWeb3.accounts()`.
+Once the connection is authorized, you can list the user accounts using `window.fuel.accounts()`.
 
 ```ts
-const accounts = await window.FuelWeb3.accounts();
+const accounts = await window.fuel.accounts();
 console.log(accounts);
 ```
 
@@ -41,11 +41,11 @@ console.log(accounts);
 
 ## Signing a message
 
-With access to the user address and the connection authorized, you can request the user's signature using `FuelWeb3.signMessage`.
+With access to the user address and the connection authorized, you can request the user's signature using `fuel.signMessage`.
 
 ```ts
 const account = "fuel1<address>"; // example account
-const signedMessage = await window.FuelWeb3.signMessage(account, message);
+const signedMessage = await window.fuel.signMessage(account, message);
 ```
 
 <Examples.SignMessage />
@@ -55,10 +55,9 @@ const signedMessage = await window.FuelWeb3.signMessage(account, message);
 To transfer an amount to other address, use the `wallet.transfer` method and pass in the address you want to send to and the amount to send.
 
 ```ts
-const accounts = await window.FuelWeb3.accounts();
+const accounts = await window.fuel.accounts();
 const account = accounts[0];
-const provider = new FuelWeb3Provider(window.FuelWeb3);
-const wallet = Wallet.fromAddress(account, provider);
+const wallet = window.fuel.getWallet(account);
 const toAddress = Address.fromString(
   "fuel1r3u2qfn00cgwk3u89uxuvz5cgcjaq934cfer6cwuew0424cz5sgq4yldul"
 );
