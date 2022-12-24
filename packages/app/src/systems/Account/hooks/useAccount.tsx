@@ -4,18 +4,30 @@ import { useNavigate } from 'react-router-dom';
 
 import type { AccountMachineState } from '../machines';
 
-import { Services, store } from '~/store';
+import { store, Services } from '~/store';
 import { Pages } from '~/systems/Core';
 
 const selectors = {
   isLoading: (state: AccountMachineState) => {
     return state.hasTag('loading');
   },
+  isAddingAccount: (state: AccountMachineState) => {
+    return state.matches('addingAccount');
+  },
   accounts: (state: AccountMachineState) => {
     return state.context?.accounts;
   },
   account: (state: AccountMachineState) => {
     return state.context?.account;
+  },
+  unlockError: (state: AccountMachineState) => {
+    return state.context?.unlockError;
+  },
+  isUnlocking: (state: AccountMachineState) => {
+    return state.matches('unlocking');
+  },
+  isUnlockingLoading: (state: AccountMachineState) => {
+    return state.children.unlock?.state.matches('unlockingVault');
   },
 };
 
@@ -28,13 +40,54 @@ const listenerAccountFetcher = () => {
 export function useAccounts() {
   const shouldListen = useRef(true);
   const navigate = useNavigate();
+  const isAddingAccount = store.useSelector(
+    Services.accounts,
+    selectors.isAddingAccount
+  );
   const isLoading = store.useSelector(Services.accounts, selectors.isLoading);
   const accounts = store.useSelector(Services.accounts, selectors.accounts);
   const account = store.useSelector(Services.accounts, selectors.account);
+  const unlockError = store.useSelector(
+    Services.accounts,
+    selectors.unlockError
+  );
+  const isUnlocking = store.useSelector(
+    Services.accounts,
+    selectors.isUnlocking
+  );
+  const isUnlockingLoading = store.useSelector(
+    Services.accounts,
+    selectors.isUnlockingLoading
+  );
 
   function goToList() {
     navigate(Pages.accounts());
   }
+
+  function goToAdd() {
+    navigate(Pages.accountAdd());
+  }
+
+  function unlock(password: string) {
+    store.send(Services.accounts, {
+      type: 'UNLOCK_VAULT',
+      input: { password },
+    });
+  }
+
+  function closeUnlock() {
+    store.send(Services.accounts, {
+      type: 'CLOSE_UNLOCK',
+    });
+  }
+
+  store.useSetMachineConfig(Services.accounts, {
+    actions: {
+      redirectToHome() {
+        navigate(Pages.wallet());
+      },
+    },
+  });
 
   useEffect(() => {
     if (shouldListen.current) {
@@ -49,11 +102,19 @@ export function useAccounts() {
   return {
     handlers: {
       goToList,
+      goToAdd,
+      unlock,
+      closeUnlock,
       hideAccount: store.hideAccount,
       selectAccount: store.selectAccount,
+      addAccount: store.addAccount,
     },
     isLoading: isLoading && !accounts,
     accounts,
     account,
+    unlockError,
+    isUnlocking,
+    isUnlockingLoading,
+    isAddingAccount,
   };
 }

@@ -10,4 +10,5 @@ export async function expectStateMatch<
     state.matches(stateName)
   );
   expect(state.matches(stateName)).toBeTruthy();
+  return state;
 }
