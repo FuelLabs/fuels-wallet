@@ -1,10 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Alert, Link } from '@fuel-ui/react';
 
-import { useFuelWeb3 } from '~/src/hooks/useFuelWeb3';
+import { useFuel } from '~/src/hooks/useFuel';
 
 export function ConnectionAlert() {
-  const [, notDetected] = useFuelWeb3();
+  const [, notDetected] = useFuel();
   if (!notDetected) return null;
   return (
     <Alert status="warning" css={styles.alert}>

@@ -1,13 +1,13 @@
-import type { FuelWeb3 } from '../FuelWeb3';
+import type { Fuel } from '../Fuel';
 
-export const createReadOnly = (fuelWeb3: FuelWeb3) => {
-  return new Proxy(fuelWeb3, {
+export const createReadOnly = (fuel: Fuel) => {
+  return new Proxy(fuel, {
     get(target, prop) {
       return target[prop];
     },
     set(target, key, value) {
-      // Avoid change keys of FuelWeb3, except _eventsCount and _events
-      // This keys are constantly updated by the EventEmitter witch FuelWeb3
+      // Avoid change keys of Fuel, except _eventsCount and _events
+      // This keys are constantly updated by the EventEmitter witch Fuel
       // extends from.
       if (
         Object.hasOwn(target, key) &&
