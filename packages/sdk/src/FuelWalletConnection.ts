@@ -1,8 +1,8 @@
 import type {
   CommunicationMessage,
-  FuelWeb3EventArg,
-  FuelWeb3Events,
-  FuelWeb3ProviderConfig,
+  FuelEventArg,
+  FuelEvents,
+  FuelProviderConfig,
 } from '@fuel-wallet/types';
 import {
   CONTENT_SCRIPT_NAME,
@@ -16,8 +16,8 @@ import { WindowConnection } from './connections/WindowConnection';
 
 const { PUBLIC_PROVIDER_URL } = process.env;
 
-export class FuelWeb3SDK extends WindowConnection {
-  providerConfig: FuelWeb3ProviderConfig = {
+export class FuelWalletConnection extends WindowConnection {
+  providerConfig: FuelProviderConfig = {
     url: PUBLIC_PROVIDER_URL || 'http://localhost:4000/graphql',
   };
 
@@ -38,15 +38,15 @@ export class FuelWeb3SDK extends WindowConnection {
     }
   }
 
-  async selectNetwork(network: FuelWeb3ProviderConfig) {
+  async selectNetwork(network: FuelProviderConfig) {
     this.providerConfig = network;
   }
 
-  async network(): Promise<FuelWeb3ProviderConfig> {
+  async network(): Promise<FuelProviderConfig> {
     return this.client.request('network', {});
   }
 
-  async connect(network?: FuelWeb3ProviderConfig): Promise<boolean> {
+  async connect(network?: FuelProviderConfig): Promise<boolean> {
     if (network) this.selectNetwork(network);
     return this.client.request('connect', {});
   }
@@ -79,7 +79,7 @@ export class FuelWeb3SDK extends WindowConnection {
     });
   }
 
-  on<E extends FuelWeb3Events['type'], D extends FuelWeb3EventArg<E>>(
+  on<E extends FuelEvents['type'], D extends FuelEventArg<E>>(
     eventName: E,
     listener: (data: D) => void
   ): this {

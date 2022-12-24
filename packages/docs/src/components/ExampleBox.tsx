@@ -16,7 +16,7 @@ import { capitalize } from '../lib/str';
 
 import { Heading } from './Heading';
 
-import { useFuelWeb3 } from '~/src/hooks/useFuelWeb3';
+import { useFuel } from '~/src/hooks/useFuel';
 
 export function ExampleBox({
   children,
@@ -25,7 +25,7 @@ export function ExampleBox({
   children: ReactNode;
   error?: any;
 }) {
-  const [, notDetected, isLoading] = useFuelWeb3();
+  const [, notDetected, isLoading] = useFuel();
   const errorMsg = error?.response?.errors?.[0]?.message || error?.message;
   const shouldShowRawError = errorMsg !== error?.message;
 

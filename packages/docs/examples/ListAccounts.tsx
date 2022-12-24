@@ -4,20 +4,20 @@ import { Button, Stack, Tag, Text } from '@fuel-ui/react';
 import { useState } from 'react';
 
 import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuelWeb3 } from '~/src/hooks/useFuelWeb3';
+import { useFuel } from '~/src/hooks/useFuel';
 import { useIsConnected } from '~/src/hooks/useIsConnected';
 import { useLoading } from '~/src/hooks/useLoading';
 
 export function ListAccounts() {
-  const [FuelWeb3, notDetected] = useFuelWeb3();
+  const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
   const [accounts, setAccounts] = useState<string[]>([]);
   const [handleGetAccounts, isLoadingAccounts, errorGetAccounts] = useLoading(
     async () => {
       console.debug('Request accounts to Wallet!');
-      const accounts = await FuelWeb3.accounts();
-      setAccounts(accounts);
+      const accounts = await fuel.accounts();
       console.debug('Accounts ', accounts);
+      setAccounts(accounts);
     }
   );
 
