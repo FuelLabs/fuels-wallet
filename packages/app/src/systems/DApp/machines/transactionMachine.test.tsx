@@ -30,7 +30,9 @@ describe('txApproveMachine', () => {
   });
 
   beforeEach(async () => {
-    service = interpret(transactionMachine.withContext({})).start();
+    service = interpret(
+      transactionMachine.withContext({ input: {}, response: {} })
+    ).start();
   });
 
   afterEach(() => {

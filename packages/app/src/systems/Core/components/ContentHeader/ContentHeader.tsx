@@ -4,7 +4,7 @@ import type { StackProps } from '@fuel-ui/react';
 import { Stack, Heading } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 
-export type ContentHeadProps = StackProps & {
+export type ContentHeaderProps = StackProps & {
   title: ReactNode;
   children: ReactNode;
   css?: ThemeUtilsCSS;
@@ -17,7 +17,7 @@ export function ContentHeader({
   css,
   className,
   ...props
-}: ContentHeadProps) {
+}: ContentHeaderProps) {
   return (
     <Stack
       gap="$1"

@@ -15,7 +15,7 @@ export function SendConfirm({ txRequest }: SendConfirmProps) {
     <Layout.Content>
       <TxContent.Info
         tx={txRequest.tx}
-        amountSent={amountSent}
+        amount={amountSent}
         header={
           <ContentHeader title="Confirm before approving" css={styles.header}>
             <Text>

@@ -133,7 +133,7 @@ export const sendMachine = createMachine(
         },
       }),
       createTransactionRequest: FetchMachine.create<CreateInput, CreateReturn>({
-        showError: false,
+        showError: true,
         async fetch({ input }) {
           const to = input?.address;
           const assetId = input?.asset?.assetId;

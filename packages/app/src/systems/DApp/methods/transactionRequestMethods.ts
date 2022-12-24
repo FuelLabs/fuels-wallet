@@ -36,7 +36,7 @@ export class TransactionRequestMethods extends ExtensionPageConnection {
       input: { origin, transactionRequest, providerUrl },
     });
     const state = await waitForState(this.service);
-    return state.approvedTx?.id;
+    return state.response?.approvedTx?.id;
   }
 }
 

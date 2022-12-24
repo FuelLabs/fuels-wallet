@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
 
-import { TxContent } from '../../components';
+import { ConnectInfo, TxContent } from '../../components';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
 import { IS_CRX_POPUP } from '~/config';
@@ -20,20 +20,24 @@ export function TransactionRequest() {
       <Layout title="Approve Transaction" isLoading={ctx.isLoading}>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
-          {ctx.isLoading && <TxContent.Loader />}
+          {ctx.isLoading && (
+            <TxContent.Loader header={<ConnectInfo.Loader />} />
+          )}
+          {status('idle') && (
+            <TxContent.Info
+              showDetails
+              tx={txRequest.tx}
+              amount={txRequest.ethAmountSent}
+              header={
+                <ConnectInfo account={ctx.account} origin={ctx.input.origin!} />
+              }
+            />
+          )}
           {status('success') && <TxContent.Failed />}
           {status('failed') && (
             <TxContent.Success
               txHash={txRequest.response?.approvedTx?.id}
               providerUrl={selectedNetwork?.url}
-            />
-          )}
-          {status('idle') && (
-            <TxContent.Info
-              tx={txRequest.tx}
-              origin={txRequest.input.origin}
-              account={txRequest.account}
-              amountSent={txRequest.ethAmountSent}
             />
           )}
         </Layout.Content>

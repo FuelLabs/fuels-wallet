@@ -1,2 +1,2 @@
 export * from './ConnectInfo';
-export * from './TxContent';
+export * from '../../Transaction/components/TxContent';

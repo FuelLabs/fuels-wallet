@@ -23,7 +23,6 @@ import {
 import type { Transaction } from '../types';
 import { toJSON } from '../utils';
 
-import { getBalance } from '~/systems/Account/utils';
 import { ASSET_MAP, isEth } from '~/systems/Asset';
 import { db, uniqueId } from '~/systems/Core';
 import { provider } from '~/systems/DApp/__mocks__/dapp-provider';
@@ -210,11 +209,17 @@ export class TxService {
   static isValidTransaction(input: TxInputs['isValidTransaction']) {
     const { account, asset, fee, amount } = input;
     if (!account || !asset || !fee || !amount) return true;
-    const assetBalance = getBalance(account, asset?.assetId);
+    const assetBalance = getAssetAccountBalance(account, asset?.assetId);
     if (isEth(asset)) assetBalance.gte(bn(amount).add(fee));
-    const ethBalance = getBalance(account, NativeAssetId);
+    const ethBalance = getAssetAccountBalance(account, NativeAssetId);
     const hasAssetBalance = assetBalance.gte(bn(amount));
     const hasGasFeeBalance = ethBalance.gte(bn(fee));
     return hasAssetBalance && hasGasFeeBalance;
   }
+}
+
+function getAssetAccountBalance(account: Account, assetId: string) {
+  const balances = account.balances || [];
+  const asset = balances.find((balance) => balance.assetId === assetId);
+  return bn(asset?.amount);
 }

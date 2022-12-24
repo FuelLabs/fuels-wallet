@@ -1,12 +1,9 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Stack, Text } from '@fuel-ui/react';
-import type { Account } from '@fuel-wallet/sdk';
 import { motion } from 'framer-motion';
 import type { BN } from 'fuels';
 import type { ReactNode } from 'react';
-
-import { ConnectInfo } from '../ConnectInfo';
 
 import type { Maybe } from '~/systems/Core';
 import {
@@ -21,13 +18,13 @@ import { TxOperations, TxDetails, TxLink } from '~/systems/Transaction';
 const MotionStack = motion(Stack);
 
 type TxContentLoaderProps = {
-  hideInfo?: boolean;
+  header?: ReactNode;
 };
 
-function TxContentLoader({ hideInfo }: TxContentLoaderProps) {
+function TxContentLoader({ header }: TxContentLoaderProps) {
   return (
     <MotionStack {...animations.slideInTop()} gap="$4">
-      {!hideInfo && <ConnectInfo.Loader />}
+      {header}
       <TxOperations.Loader />
       <TxDetails.Loader />
     </MotionStack>
@@ -35,28 +32,23 @@ function TxContentLoader({ hideInfo }: TxContentLoaderProps) {
 }
 
 type TxContentInfoProps = {
-  tx?: Maybe<Tx>;
-  amountSent?: Maybe<BN>;
-  account?: Maybe<Account>;
-  origin?: string;
   header?: ReactNode;
+  tx?: Maybe<Tx>;
+  amount?: Maybe<BN>;
+  showDetails?: boolean;
 };
 
 function TxContentInfo({
   tx,
-  amountSent,
-  origin,
-  account,
+  amount,
   header,
+  showDetails,
 }: TxContentInfoProps) {
   return (
     <MotionStack {...animations.slideInTop()} gap="$4">
       {header}
-      {origin && account && (
-        <ConnectInfo origin={origin!} account={account!} isReadOnly />
-      )}
       <TxOperations operations={tx?.operations} />
-      {amountSent && <TxDetails fee={tx?.fee} amountSent={amountSent} />}
+      {showDetails && <TxDetails fee={tx?.fee} amountSent={amount!} />}
     </MotionStack>
   );
 }

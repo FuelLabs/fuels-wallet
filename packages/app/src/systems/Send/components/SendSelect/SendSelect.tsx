@@ -7,19 +7,15 @@ import type { UseSendReturn } from '../../hooks';
 
 import { AssetSelect, ASSET_MAP } from '~/systems/Asset';
 import { animations, ControlledField, Layout } from '~/systems/Core';
-import { TxDetails, TxErrors } from '~/systems/Transaction';
+import { TxDetails } from '~/systems/Transaction';
 
 const MotionContent = motion(Layout.Content);
-
 type SendSelectProps = UseSendReturn;
 
 export function SendSelect({ form, fee, txRequest }: SendSelectProps) {
   return (
     <MotionContent {...animations.slideInTop()}>
       <Stack gap="$4">
-        {txRequest.errors.hasGeneral && (
-          <TxErrors errors={txRequest.errors.general} />
-        )}
         <Flex css={styles.row}>
           <Text as="span" css={styles.title}>
             Send
