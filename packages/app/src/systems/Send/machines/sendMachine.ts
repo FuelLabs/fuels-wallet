@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
-import type { Account, Asset } from '@fuel-wallet/types';
 import { BN, TransactionRequest } from 'fuels';
 import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
 
@@ -7,7 +6,7 @@ import { AccountService } from '~/systems/Account';
 import { ASSET_MAP } from '~/systems/Asset';
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
-import { TxService } from '~/systems/Transaction/services';
+import { TxInputs, TxService } from '~/systems/Transaction/services';
 
 export enum SendScreens {
   select,
@@ -18,13 +17,6 @@ export enum SendScreens {
 
 export type MachineContext = {
   fee?: BN;
-};
-
-type CreateInput = {
-  asset?: Asset;
-  address?: string;
-  amount?: BN;
-  account?: Account;
 };
 
 type CreateReturn = {
@@ -44,7 +36,7 @@ type MachineServices = {
 type MachineEvents =
   | { type: 'RESET'; input: null }
   | { type: 'BACK'; input: null }
-  | { type: 'CONFIRM'; input: CreateInput };
+  | { type: 'CONFIRM'; input: TxInputs['isValidTransaction'] };
 
 const IDLE_STATE = {
   on: {
@@ -114,10 +106,9 @@ export const sendMachine = createMachine(
         { fee }: MachineContext,
         { input }: MachineEvents
       ) => {
-        const { amount, account } = input || {};
-        if (!input?.asset || !amount || !account) return false;
-        const asset = ASSET_MAP[input.asset.assetId];
-        return TxService.isValidTransaction({ amount, account, asset, fee });
+        if (!input?.asset) return false;
+        const asset = ASSET_MAP[input.asset?.assetId];
+        return TxService.isValidTransaction({ ...input, asset, fee });
       },
     },
     actions: {
@@ -132,7 +123,10 @@ export const sendMachine = createMachine(
           return TxService.createFakeTx();
         },
       }),
-      createTransactionRequest: FetchMachine.create<CreateInput, CreateReturn>({
+      createTransactionRequest: FetchMachine.create<
+        TxInputs['isValidTransaction'],
+        CreateReturn | null
+      >({
         showError: true,
         async fetch({ input }) {
           const to = input?.address;

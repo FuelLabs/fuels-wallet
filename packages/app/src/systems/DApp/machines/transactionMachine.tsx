@@ -68,6 +68,7 @@ type MachineServices = {
 
 type MachineEvents =
   | { type: 'START_REQUEST'; input?: TxInputs['request'] }
+  | { type: 'RESET'; input?: null }
   | { type: 'APPROVE'; input?: null }
   | { type: 'REJECT'; input?: null }
   | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
@@ -129,6 +130,10 @@ export const transactionMachine = createMachine(
       waitingApproval: {
         on: {
           APPROVE: 'unlocking',
+          RESET: {
+            actions: ['reset'],
+            target: 'idle',
+          },
         },
       },
       unlocking: {
@@ -205,6 +210,7 @@ export const transactionMachine = createMachine(
   },
   {
     actions: {
+      reset: assign(() => ({})),
       assignTxRequestData: assign({
         input: (ctx, ev) => {
           const { transactionRequest, origin, providerUrl } = ev.input || {};

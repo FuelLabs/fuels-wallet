@@ -6,9 +6,8 @@ import type { ReactNode } from 'react';
 
 export type ContentHeaderProps = StackProps & {
   title: ReactNode;
-  children: ReactNode;
   css?: ThemeUtilsCSS;
-  className?: string;
+  children?: ReactNode;
 };
 
 export function ContentHeader({

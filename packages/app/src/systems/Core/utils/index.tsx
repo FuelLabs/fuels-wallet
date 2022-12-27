@@ -8,3 +8,4 @@ export * from './string';
 export * from './machine';
 export * from './json';
 export * from './storage';
+export * from './storybook';

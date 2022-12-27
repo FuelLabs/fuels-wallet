@@ -6,13 +6,15 @@ import { sendLoader } from '../../__mocks__/send';
 
 import { SendPage } from './SendPage';
 
+const wallet = Wallet.generate();
+
 export default {
   component: SendPage,
   title: 'Send/Pages/SendPage',
   viewport: {
     defaultViewport: 'chromeExtension',
   },
-  loaders: [sendLoader],
+  loaders: [sendLoader(wallet)],
 } as Meta;
 
 const Template: ComponentStory<typeof SendPage> = () => {
@@ -26,7 +28,6 @@ Usage.parameters = {
 Usage.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement);
   await waitFor(() => canvas.findByText('Which amount?'));
-  const wallet = Wallet.generate();
   const select = canvas.getByLabelText('Select Asset');
   userEvent.click(select);
   userEvent.keyboard('{Enter}');

@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { animations, Layout, Pages } from '~/systems/Core';
 import type { UseTransactionRequestReturn } from '~/systems/DApp';
 import { TxContent } from '~/systems/DApp';
-import { NetworkScreen, useNetworks } from '~/systems/Network';
+import { useNetworks } from '~/systems/Network/hooks';
+import { NetworkScreen } from '~/systems/Network/machines';
 
 export type SendSuccessProps = {
   txRequest: UseTransactionRequestReturn;

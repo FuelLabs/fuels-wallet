@@ -12,9 +12,13 @@ export function SendPage() {
   const { handlers, txRequest, form, ...ctx } = send;
   const { status } = txRequest;
   const isIdle = status('idle');
+  const isUnlocking = status('unlocking');
 
   return (
-    <form onSubmit={form.handleSubmit(handlers.submit)}>
+    <form
+      onSubmit={form.handleSubmit(handlers.submit)}
+      data-testid={txRequest.txStatus}
+    >
       <Layout title="Send" isLoading={ctx.isLoading}>
         <Layout.TopBar onBack={handlers.cancel} />
         <AnimatePresence initial={false} mode="sync">
@@ -40,8 +44,8 @@ export function SendPage() {
         )}
         <UnlockDialog
           isFullscreen={IS_CRX_POPUP}
-          isOpen={status('unlocking') || status('waitingUnlock')}
-          isLoading={status('unlocking')}
+          isOpen={isUnlocking || status('waitingUnlock')}
+          isLoading={isUnlocking}
           unlockText="Confirm Transaction"
           unlockError={txRequest.errors.unlockError}
           onUnlock={txRequest.handlers.unlock}

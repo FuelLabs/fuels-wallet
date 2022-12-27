@@ -76,7 +76,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const { chainInfo, isLoading: isLoadingChainInfo } = useChainInfo(provider);
   const externalLoading = isLoadingAccounts || isLoadingChainInfo;
   const txStatusSelector = selectors.status(externalLoading);
-  const txStatusCurr = useSelector(service, txStatusSelector);
+  const txStatus = useSelector(service, txStatusSelector);
   const isLoading = status('loading');
   const showActions = !status('failed') && !status('success');
 
@@ -93,11 +93,14 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   );
 
   function status(status: keyof typeof TxRequestStatus) {
-    return txStatusCurr === status;
+    return txStatus === status;
   }
 
   function approve() {
     send('APPROVE');
+  }
+  function reset() {
+    send('RESET');
   }
   function reject() {
     send('REJECT');
@@ -120,6 +123,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   return {
     ...ctx,
     tx,
+    txStatus,
     status,
     account,
     ethAmountSent,
@@ -128,6 +132,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     showActions,
     handlers: {
       request,
+      reset,
       approve,
       unlock,
       closeUnlock,

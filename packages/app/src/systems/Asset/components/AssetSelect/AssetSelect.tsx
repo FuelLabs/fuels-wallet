@@ -63,6 +63,7 @@ export function AssetSelect({
     >
       <Dropdown.Trigger>
         <Button
+          role={asset ? 'button' : 'combobox'}
           as={asset ? 'div' : 'button'}
           color="gray"
           size="md"
@@ -71,6 +72,7 @@ export function AssetSelect({
           id="fuel_asset-select"
           aria-label="Select Asset"
           rightIcon={Icon.is('CaretDown')}
+          data-value={asset?.name}
         >
           <Flex css={styles.input}>
             {asset ? (

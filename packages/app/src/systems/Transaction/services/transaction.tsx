@@ -73,7 +73,8 @@ export type TxInputs = {
     tx: TransactionRequest;
   };
   isValidTransaction: {
-    account: Account;
+    address?: string;
+    account?: Account;
     asset?: Asset;
     amount?: BN;
     fee?: BN;
@@ -207,10 +208,10 @@ export class TxService {
   }
 
   static isValidTransaction(input: TxInputs['isValidTransaction']) {
-    const { account, asset, fee, amount } = input;
-    if (!account || !asset || !fee || !amount) return true;
+    const { account, asset, fee, amount, address } = input;
+    if (!account || !asset || !fee || !amount || !address) return false;
     const assetBalance = getAssetAccountBalance(account, asset?.assetId);
-    if (isEth(asset)) assetBalance.gte(bn(amount).add(fee));
+    if (isEth(asset)) return assetBalance.gte(bn(amount).add(fee));
     const ethBalance = getAssetAccountBalance(account, NativeAssetId);
     const hasAssetBalance = assetBalance.gte(bn(amount));
     const hasGasFeeBalance = ethBalance.gte(bn(fee));

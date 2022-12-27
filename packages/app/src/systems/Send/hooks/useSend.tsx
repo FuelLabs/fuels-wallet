@@ -12,6 +12,16 @@ import { useAccounts } from '~/systems/Account';
 import { ASSET_MAP } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
 import { useTransactionRequest } from '~/systems/DApp';
+import type { TxInputs } from '~/systems/Transaction/services';
+
+export enum SendStatus {
+  loading = 'loading',
+  selecting = 'selecting',
+  invalid = 'invalid',
+  confirming = 'confirming',
+  failed = 'failed',
+  success = 'success',
+}
 
 const selectors = {
   fee(state: SendMachineState) {
@@ -81,6 +91,7 @@ export function useSend() {
       navigate(Pages.index());
       return;
     }
+    txRequest.handlers.reset();
     service.send('BACK');
   }
   function submit() {
@@ -88,7 +99,13 @@ export function useSend() {
       const asset = ASSET_MAP[form.getValues('asset')];
       const amount = bn(form.getValues('amount'));
       const address = form.getValues('address');
-      service.send('CONFIRM', { input: { account, asset, amount, address } });
+      const input = {
+        account,
+        asset,
+        amount,
+        address,
+      } as TxInputs['isValidTransaction'];
+      service.send('CONFIRM', { input });
     } else {
       txRequest.handlers.approve();
     }
