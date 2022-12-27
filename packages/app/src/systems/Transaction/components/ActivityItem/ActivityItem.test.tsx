@@ -1,9 +1,6 @@
 import { render, testA11y, screen } from '@fuel-ui/test-utils';
 
-import {
-  MOCK_TRANSACTION_CONTRACT_CALL,
-  MOCK_TRANSACTION_CREATE_CONTRACT,
-} from '../../__mocks__/tx';
+import { MOCK_TRANSACTION_CONTRACT_CALL } from '../../__mocks__/tx';
 
 import { ActivityItem } from './ActivityItem';
 
@@ -16,18 +13,6 @@ describe('TxItem', () => {
 
   it('a11y Loader', async () => {
     await testA11y(<ActivityItem.Loader />);
-  });
-
-  it('should show transaction Script', async () => {
-    render(<ActivityItem transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx} />);
-
-    expect(screen.getByText(/Script/i)).toBeInTheDocument();
-  });
-
-  it('should show transaction Create', async () => {
-    render(<ActivityItem transaction={MOCK_TRANSACTION_CREATE_CONTRACT.tx} />);
-
-    expect(screen.getByText(/Create/i)).toBeInTheDocument();
   });
 
   it('should copy transaction id', async () => {

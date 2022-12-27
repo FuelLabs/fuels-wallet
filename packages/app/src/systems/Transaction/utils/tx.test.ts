@@ -83,7 +83,7 @@ describe('Tx util', () => {
       expect(isStatus('SuccessStatus', TxStatus.pending)).toBeFalsy();
       expect(isStatus('SubmittedStatus', TxStatus.failure)).toBeFalsy();
       expect(isStatus('FailureStatus', TxStatus.success)).toBeFalsy();
-      expect(isStatus('SqueezedOutStatus', TxStatus.squeezedOut)).toBeFalsy();
+      expect(isStatus('SqueezedOutStatus', TxStatus.success)).toBeFalsy();
     });
     it('should isStatusSuccess return if is success', () => {
       expect(isStatusSuccess('SuccessStatus')).toBeTruthy();
