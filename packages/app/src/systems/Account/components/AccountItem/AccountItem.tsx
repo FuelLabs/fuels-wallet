@@ -1,6 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, CardList, Flex, Heading, Text } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
+import type { FC } from 'react';
+
+import { AccountItemLoader } from './AccountItemLoader';
 
 import { shortAddress } from '~/systems/Core';
 
@@ -13,14 +16,18 @@ export type AccountItemProps = {
   isDisabled?: boolean;
 };
 
-export function AccountItem({
+type AccountItemComponent = FC<AccountItemProps> & {
+  Loader: typeof AccountItemLoader;
+};
+
+export const AccountItem: AccountItemComponent = ({
   account,
   isSelected,
   isHidden,
   onPress,
   rightEl,
   isDisabled,
-}: AccountItemProps) {
+}: AccountItemProps) => {
   if (isHidden) return null;
   /**
    * TODO: add DropdownMenu here with actions after it's done on @fuel-ui
@@ -45,17 +52,18 @@ export function AccountItem({
       rightEl={rightEl}
       css={styles.root}
       aria-disabled={isDisabled}
+      aria-label={account.name}
     >
       <Avatar.Generated size="md" background="fuel" hash={account.address} />
       <Flex direction="column">
-        <Heading as="h5" css={{ margin: 0 }}>
+        <Heading as="h6" css={styles.name}>
           {account.name}
         </Heading>
-        <Text fontSize="xs">{shortAddress(account.address)}</Text>
+        <Text css={styles.address}>{shortAddress(account.address)}</Text>
       </Flex>
     </CardList.Item>
   );
-}
+};
 
 const styles = {
   root: cssObj({
@@ -64,4 +72,13 @@ const styles = {
       cursor: 'default',
     },
   }),
+  name: cssObj({
+    margin: 0,
+  }),
+  address: cssObj({
+    textSize: 'sm',
+    fontWeight: '$semibold',
+  }),
 };
+
+AccountItem.Loader = AccountItemLoader;

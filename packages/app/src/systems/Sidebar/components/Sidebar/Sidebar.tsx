@@ -27,13 +27,12 @@ export function Sidebar() {
             <Box css={styles.avatarWrapper}>
               <Avatar.Generated size={'sm'} hash={account!.address as string} />
             </Box>
-
             <IconButton
               size="xs"
-              variant="outlined"
+              variant="link"
               color="gray"
               icon={<Icon icon="CaretDown" size={18} />}
-              aria-label="Expand"
+              aria-label="Accounts"
               onClick={accountHandlers.goToList}
             />
           </Flex>

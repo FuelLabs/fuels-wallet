@@ -4,6 +4,21 @@ import { Wallet } from 'fuels';
 
 const { VITE_FUEL_PROVIDER_URL } = process.env;
 
+const networks = [
+  {
+    id: '1',
+    isSelected: true,
+    name: 'Local',
+    url: VITE_FUEL_PROVIDER_URL,
+  },
+  {
+    id: '2',
+    isSelected: false,
+    name: 'Another',
+    url: 'https://another.network.fuel/graphql',
+  },
+];
+
 export async function getAccount(page: Page) {
   return page.evaluate(async () => {
     // @ts-ignore;
@@ -14,12 +29,30 @@ export async function getAccount(page: Page) {
   });
 }
 
-export async function mockData(page: Page) {
-  const wallet = Wallet.generate({
-    provider: VITE_FUEL_PROVIDER_URL,
-  });
+export function createAccount(index: number = 0) {
+  const wallet = Wallet.generate();
+  return {
+    address: wallet.address.toAddress(),
+    balance: '0',
+    balanceSymbol: 'ETH',
+    balances: [],
+    name: `Account ${index}`,
+    publicKey: wallet.publicKey,
+    isHidden: false,
+    isSelected: index === 0,
+  };
+}
+
+export function createAccounts(numberOfAccounts: number = 1) {
+  return new Array(numberOfAccounts)
+    .fill(0)
+    .map((_, index) => createAccount(index));
+}
+
+export async function mockData(page: Page, numberOfAccounts: number = 1) {
+  const accounts = createAccounts(numberOfAccounts);
   await page.evaluate(
-    ([accountData, providerUrl]) => {
+    ([accounts, networks]) => {
       return new Promise((resolve, reject) => {
         (async function main() {
           try {
@@ -27,22 +60,10 @@ export async function mockData(page: Page) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const fuelDB: any = window.fuelDB;
             await fuelDB.accounts.clear();
-            await fuelDB.accounts.add(accountData);
+            await fuelDB.accounts.bulkAdd(accounts);
             await fuelDB.networks.clear();
-            await fuelDB.networks.add({
-              id: '1',
-              isSelected: true,
-              name: 'Local',
-              url: providerUrl,
-            });
-            await fuelDB.networks.add({
-              id: '2',
-              isSelected: false,
-              name: 'Another',
-              url: 'https://another.network.fuel/graphql',
-            });
-            const networks = await fuelDB.networks.toArray();
-            resolve(networks);
+            await fuelDB.networks.bulkAdd(networks);
+            resolve(await fuelDB.networks.toArray());
           } catch (err: unknown) {
             reject(err);
           }
@@ -50,18 +71,13 @@ export async function mockData(page: Page) {
         })();
       });
     },
-    [
-      {
-        address: wallet.address.toAddress(),
-        balance: '0',
-        balanceSymbol: 'ETH',
-        balances: [],
-        name: 'Random Account',
-        publicKey: wallet.publicKey,
-        isHidden: false,
-        isSelected: true,
-      },
-      VITE_FUEL_PROVIDER_URL,
-    ]
+    [accounts, networks]
   );
+
+  return {
+    accounts,
+    networks,
+  };
 }
+
+export type MockData = Awaited<ReturnType<typeof mockData>>;
