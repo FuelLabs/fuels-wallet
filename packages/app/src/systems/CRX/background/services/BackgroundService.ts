@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
-import type { FuelWeb3ProviderConfig } from '@fuel-wallet/types';
+import type { FuelProviderConfig } from '@fuel-wallet/types';
 import type {
   JSONRPCParams,
   JSONRPCRequest,
@@ -172,7 +172,7 @@ export class BackgroundService {
     {
       provider,
       transaction,
-    }: { provider: FuelWeb3ProviderConfig; transaction: string },
+    }: { provider: FuelProviderConfig; transaction: string },
     serverParams: EventOrigin
   ) {
     const origin = serverParams.origin;

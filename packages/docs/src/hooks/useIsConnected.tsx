@@ -1,30 +1,30 @@
 import { useEffect, useState } from 'react';
 
-import { useFuelWeb3 } from './useFuelWeb3';
+import { useFuel } from './useFuel';
 
 export function useIsConnected() {
-  const [FuelWeb3] = useFuelWeb3();
+  const [fuel] = useFuel();
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     async function main() {
       try {
-        const accounts = await FuelWeb3.accounts();
+        const accounts = await fuel.accounts();
         setIsConnected(Boolean(accounts.length));
       } catch (err) {
         setIsConnected(false);
       }
     }
 
-    if (FuelWeb3) {
+    if (fuel) {
       main();
     }
 
-    FuelWeb3?.on('connection', main);
+    fuel?.on('connection', main);
     return () => {
-      FuelWeb3?.off('connection', main);
+      fuel?.off('connection', main);
     };
-  }, [FuelWeb3]);
+  }, [fuel]);
 
   return [isConnected];
 }

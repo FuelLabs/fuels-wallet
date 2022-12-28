@@ -4,12 +4,12 @@ import { Box, Stack, Button, Input, Tag } from '@fuel-ui/react';
 import { useState } from 'react';
 
 import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuelWeb3 } from '~/src/hooks/useFuelWeb3';
+import { useFuel } from '~/src/hooks/useFuel';
 import { useIsConnected } from '~/src/hooks/useIsConnected';
 import { useLoading } from '~/src/hooks/useLoading';
 
 export function SignMessage() {
-  const [FuelWeb3, notDetected] = useFuelWeb3();
+  const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
   const [signedMessage, setSignedMessage] = useState<string>('');
   const [message, setMessage] = useState<string>('Message to sign');
@@ -17,11 +17,11 @@ export function SignMessage() {
   const [handleSignMessage, isSingingMessage, errorSigningMessage] = useLoading(
     async (message: string) => {
       console.debug('Request signature of message!');
-      const accounts = await FuelWeb3.accounts();
+      const accounts = await fuel.accounts();
       const account = accounts[0];
-      const signedMessage = await FuelWeb3.signMessage(account, message);
-      setSignedMessage(signedMessage);
+      const signedMessage = await fuel.signMessage(account, message);
       console.debug('Message signature', signedMessage);
+      setSignedMessage(signedMessage);
     }
   );
 

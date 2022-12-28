@@ -1,5 +1,5 @@
 import { ExtensionPageConnection } from '@fuel-wallet/sdk';
-import type { FuelWeb3ProviderConfig } from '@fuel-wallet/types';
+import type { FuelProviderConfig } from '@fuel-wallet/types';
 import { transactionRequestify } from 'fuels';
 import { useEffect } from 'react';
 
@@ -27,7 +27,7 @@ export class TransactionRequestMethods extends ExtensionPageConnection {
     transaction,
   }: {
     origin: string;
-    provider: FuelWeb3ProviderConfig;
+    provider: FuelProviderConfig;
     transaction: string;
   }) {
     const providerUrl = provider.url;

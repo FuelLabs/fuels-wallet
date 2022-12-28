@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { injectFuelWeb3 } from '@fuel-wallet/sdk/dist';
+import { injectFuel } from '@fuel-wallet/sdk/dist';
 
-injectFuelWeb3(window);
+injectFuel(window);
