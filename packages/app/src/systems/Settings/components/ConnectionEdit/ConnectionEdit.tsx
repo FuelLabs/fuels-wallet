@@ -12,7 +12,11 @@ export type ConnectionEditProps = ReturnType<typeof useConnections>;
 const MotionBox = motion(Box);
 const MotionCardList = motion(CardList);
 
-export function ConnectionEdit({ handlers, ...ctx }: ConnectionEditProps) {
+export function ConnectionEdit({
+  handlers,
+  status,
+  ...ctx
+}: ConnectionEditProps) {
   return (
     <Layout.Content>
       <Stack gap="$3">
@@ -25,12 +29,12 @@ export function ConnectionEdit({ handlers, ...ctx }: ConnectionEditProps) {
             {ctx.numConnected} connected
           </Text>
         </Flex>
-        {ctx.noAccounts && (
+        {status('noResults') && (
           <MotionBox {...animations.slideInTop()} css={styles.empty}>
             <EmptyList label="No account found" />
           </MotionBox>
         )}
-        {ctx.showAccounts && (
+        {status('idle') && (
           <MotionCardList {...animations.slideInTop()} gap="$3">
             <AnimatePresence initial={false}>
               {ctx.accounts.map((account) => {
@@ -52,7 +56,7 @@ export function ConnectionEdit({ handlers, ...ctx }: ConnectionEditProps) {
                     <AccountItem
                       account={account!}
                       rightEl={rightEl}
-                      isDisabled={ctx.isUpdatingAccount === address}
+                      isDisabled={ctx.accountToUpdate === address}
                     />
                   </motion.div>
                 );

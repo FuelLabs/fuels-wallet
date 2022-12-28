@@ -12,7 +12,11 @@ export type ConnectionListProps = ReturnType<typeof useConnections>;
 const MotionBox = motion(Box);
 const MotionCardList = motion(CardList);
 
-export function ConnectionList({ handlers, ...ctx }: ConnectionListProps) {
+export function ConnectionList({
+  handlers,
+  status,
+  ...ctx
+}: ConnectionListProps) {
   const tooltipContent = (
     <Box css={styles.tooltipContent}>
       FuelWallet is connected to these sites. They can view your account
@@ -27,32 +31,32 @@ export function ConnectionList({ handlers, ...ctx }: ConnectionListProps) {
           <SearchInput
             value={ctx.inputs?.searchText}
             onChange={handlers.search}
-            isDisabled={ctx.isLoading}
+            isDisabled={status('loading')}
           />
           <Tooltip content={tooltipContent}>
             <Icon icon={Icon.is('Warning')} aria-label="Connection Alert" />
           </Tooltip>
         </Flex>
-        {ctx.isLoading && (
+        {status('loading') && (
           <CardList>
             {[1, 2, 3].map((i) => (
               <ConnectionItem.Loader key={i} />
             ))}
           </CardList>
         )}
-        {ctx.noConnections && (
+        {status('noResults') && (
           <MotionBox {...animations.slideInTop()} css={styles.empty}>
             <EmptyList label="No connection found" />
           </MotionBox>
         )}
-        {ctx.showConnections && (
+        {(status('idle') || status('removing')) && (
           <MotionCardList {...animations.slideInTop()} gap="$3">
             <AnimatePresence initial={false} mode="sync">
               {ctx.connections.map((connection) => (
                 <ConnectionItem
                   key={connection.origin}
                   connection={connection}
-                  isDeleting={ctx.isRemoving}
+                  isDeleting={status('removing')}
                   onEdit={() => {
                     handlers.editConnection(connection);
                   }}

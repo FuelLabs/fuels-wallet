@@ -3,7 +3,11 @@ import { useInterpret, useSelector } from '@xstate/react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import type { ConnectionsMachineState } from '../machines';
-import { ConnectionScreen, connectionsMachine } from '../machines';
+import {
+  ConnectionStatus,
+  ConnectionScreen,
+  connectionsMachine,
+} from '../machines';
 
 // ----------------------------------------------------------------------------
 // Selectors
@@ -47,14 +51,24 @@ const selectors = {
       ? ConnectionScreen.edit
       : ConnectionScreen.list;
   },
-  isLoading(state: ConnectionsMachineState) {
-    return state.hasTag('loading');
-  },
-  isRemoving(state: ConnectionsMachineState) {
-    return state.matches('removing');
-  },
-  isUpdatingAccount(state: ConnectionsMachineState) {
+  accountToUpdate(state: ConnectionsMachineState) {
     return state.context.inputs.account;
+  },
+  status(state: ConnectionsMachineState) {
+    const isLoading = state.hasTag('loading');
+    const accounts = selectors.accounts(state);
+    const connections = selectors.connections(state);
+    const screen = selectors.screen(state);
+    const noAccounts = !isLoading && !accounts?.length;
+    const noConnections = !isLoading && !connections?.length;
+    const noResults =
+      (screen === ConnectionScreen.list && noConnections) ||
+      (screen === ConnectionScreen.edit && noAccounts);
+
+    if (noResults) return ConnectionStatus.noResults;
+    if (isLoading) return ConnectionStatus.loading;
+    if (state.matches('removing')) return ConnectionStatus.removing;
+    return ConnectionStatus.idle;
   },
 };
 
@@ -89,17 +103,15 @@ export function useConnections() {
   const connections = useSelector(service, selectors.connections);
   const accounts = useSelector(service, selectors.accounts);
   const connectedAccounts = useSelector(service, selectors.connectedAccounts);
-  const isLoading = useSelector(service, selectors.isLoading);
-  const isRemoving = useSelector(service, selectors.isRemoving);
-  const isUpdatingAccount = useSelector(service, selectors.isUpdatingAccount);
+  const accountToUpdate = useSelector(service, selectors.accountToUpdate);
   const screen = useSelector(service, selectors.screen);
-
   const numConnected = connectedAccounts?.length ?? 0;
-  const noAccounts = !isLoading && !accounts?.length;
-  const noConnections = !isLoading && !connections?.length;
-  const showConnections = !isLoading && !noConnections;
-  const showAccounts = !isLoading && !noAccounts;
   const title = inputs.origin.length ? inputs.origin : 'Connected Apps';
+  const connStatus = useSelector(service, selectors.status);
+
+  function status(status: keyof typeof ConnectionStatus) {
+    return connStatus === ConnectionStatus[status];
+  }
 
   function search(text: string) {
     service.send({ type: 'SEARCH', input: text });
@@ -132,21 +144,16 @@ export function useConnections() {
   }
 
   return {
-    inputs,
+    accounts,
+    accountToUpdate,
+    connectedAccounts,
     connection,
     connections,
-    accounts,
-    connectedAccounts,
-    screen,
-    title,
-    noAccounts,
+    inputs,
     numConnected,
-    noConnections,
-    showConnections,
-    showAccounts,
-    isLoading,
-    isRemoving,
-    isUpdatingAccount,
+    screen,
+    status,
+    title,
     handlers: {
       search,
       clearSearch,

@@ -14,6 +14,13 @@ export enum ConnectionScreen {
   edit = 'edit',
 }
 
+export enum ConnectionStatus {
+  loading = 'loading',
+  idle = 'idle',
+  noResults = 'noResults',
+  removing = 'removing',
+}
+
 export type MachineContext = {
   inputs: {
     origin?: Maybe<string>;
@@ -103,11 +110,16 @@ export const connectionsMachine = createMachine(
             actions: ['assignSearchText', 'filterConnections'],
           },
           CLEAR_SEARCH: {
-            actions: ['clearSearchText', 'resetFilteredConnections'],
+            actions: ['resetSearch'],
           },
           EDIT_CONNECTION: {
-            actions: ['setOriginParam', 'assignOrigin'],
             target: 'editing',
+            actions: [
+              'resetInputs',
+              'resetSearch',
+              'setOriginParam',
+              'assignOrigin',
+            ],
           },
           REMOVE_CONNECTION: {
             target: 'removing',
@@ -141,7 +153,7 @@ export const connectionsMachine = createMachine(
                 actions: ['assignSearchText', 'filterAccounts'],
               },
               CLEAR_SEARCH: {
-                actions: ['clearSearchText', 'resetFilteredAccounts'],
+                actions: ['resetSearch'],
               },
               ADD_ACCOUNT: {
                 actions: ['assignAccountSelected'],
@@ -152,7 +164,7 @@ export const connectionsMachine = createMachine(
                 target: 'removingAccount',
               },
               CANCEL: {
-                actions: ['removeOriginParam', 'resetInputs'],
+                actions: ['removeOriginParam', 'resetInputs', 'resetSearch'],
                 target: '#(machine).fetchingConnections',
               },
             },
@@ -187,6 +199,10 @@ export const connectionsMachine = createMachine(
                   cond: FetchMachine.hasError,
                 },
                 {
+                  target: '#(machine).removing',
+                  cond: 'hasNoConnections',
+                },
+                {
                   actions: ['resetAccountSelected', 'updateConnection'],
                   target: 'idle',
                 },
@@ -199,7 +215,9 @@ export const connectionsMachine = createMachine(
         invoke: {
           src: 'removeConnection',
           data: {
-            input: (_: MachineContext, ev: MachineEvents) => ev.input,
+            input: (ctx: MachineContext, ev: MachineEvents) => {
+              return ev.input || ctx.inputs;
+            },
           },
           onDone: [
             {
@@ -207,8 +225,12 @@ export const connectionsMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['removeSuccess', 'removeFromConnections'],
               target: 'idle',
+              actions: [
+                'removeSuccess',
+                'removeFromConnections',
+                'resetInputs',
+              ],
             },
           ],
         },
@@ -220,19 +242,27 @@ export const connectionsMachine = createMachine(
       hasOriginParam: (ctx) => {
         return !!ctx.inputs.origin?.length;
       },
+      hasNoConnections(_, ev) {
+        return !ev.data?.accounts.length;
+      },
     },
     actions: {
       resetInputs: assign({ inputs: () => ({}) }),
+      resetSearch: assign({
+        inputs: ({ inputs }) => ({
+          ...inputs,
+          searchText: '',
+        }),
+        response: ({ response }) => ({
+          ...response,
+          filteredConnections: null,
+          filteredAccounts: null,
+        }),
+      }),
       assignSearchText: assign({
         inputs: ({ inputs }, ev) => ({
           ...inputs,
           searchText: ev.input,
-        }),
-      }),
-      clearSearchText: assign({
-        inputs: ({ inputs }) => ({
-          ...inputs,
-          searchText: '',
         }),
       }),
       assignOrigin: assign({
@@ -272,18 +302,6 @@ export const connectionsMachine = createMachine(
             response?.accounts || [],
             inputs.searchText
           ),
-        }),
-      }),
-      resetFilteredConnections: assign({
-        response: ({ response }) => ({
-          ...response,
-          filteredConnections: null,
-        }),
-      }),
-      resetFilteredAccounts: assign({
-        response: ({ response }) => ({
-          ...response,
-          filteredAccounts: null,
         }),
       }),
       assignConnectionSelected: assign({

@@ -5,6 +5,7 @@ import { waitFor, within, userEvent } from '@storybook/testing-library';
 
 import { connectionsLoader } from '../../__mocks__/connection';
 import { useConnections } from '../../hooks';
+import type { ConnectionStatus } from '../../machines';
 
 import { ConnectionList } from './ConnectionList';
 
@@ -36,8 +37,10 @@ export const Usage = Template.bind({});
 
 export const Loading = Template.bind({});
 Loading.args = {
-  isLoading: true,
-  showConnections: false,
+  status: (val: keyof typeof ConnectionStatus) => {
+    if (val === 'loading') return true;
+    return false;
+  },
 };
 
 export const Empty = Template.bind({});

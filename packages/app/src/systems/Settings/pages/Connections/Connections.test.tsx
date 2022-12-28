@@ -2,12 +2,12 @@ import { fireEvent, screen } from '@fuel-ui/test-utils';
 import type { Connection } from '@fuel-wallet/types';
 
 import { connectionsLoader } from '../../__mocks__/connection';
-import { testQueries } from '../../utils';
+import { testQueries } from '../../__test__';
 
 import { List } from './Connections.stories';
 
 import { TestWrapper } from '~/systems/Core';
-import { renderWithRouter } from '~/systems/Core/utils/jest';
+import { renderWithRouter } from '~/systems/Core/__tests__/utils';
 import { ConnectionService } from '~/systems/DApp/services';
 
 const opts = {

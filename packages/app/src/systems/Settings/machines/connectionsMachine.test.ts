@@ -149,10 +149,15 @@ describe('connectionsMachine', () => {
     });
 
     it('should remove an account from connection', async () => {
+      const machine = createMachine({
+        inputs: { origin: 'fuellabs.github.io/swayswap' },
+      });
+      service = interpret(machine).start();
+      await waitFor(service, (state) => state.matches('editing.idle'));
       const removeFn = jest.spyOn(ConnectionService, 'removeAccountFrom');
       let state = service.getSnapshot();
       let connected = state.context.response?.connectedAccounts;
-      expect(connected?.length).toBe(1);
+      expect(connected?.length).toBe(2);
       service.send('REMOVE_ACCOUNT', { input: acc1?.address });
       await waitFor(service, (state) =>
         state.matches('editing.removingAccount')
@@ -161,7 +166,19 @@ describe('connectionsMachine', () => {
       expect(removeFn).toBeCalled();
       state = service.getSnapshot();
       connected = state.context.response?.connectedAccounts;
-      expect(connected?.length).toBe(0);
+      expect(connected?.length).toBe(1);
+    });
+
+    it('should remove the entire connection when disconnect all accounts', async () => {
+      let state = service.getSnapshot();
+      let connections = state.context.response?.connections;
+      expect(connections?.length).toBe(2);
+      service.send('REMOVE_ACCOUNT', { input: acc1?.address });
+      await waitFor(service, (state) => state.matches('removing'));
+      await waitFor(service, (state) => state.matches('idle'));
+      state = service.getSnapshot();
+      connections = state.context.response?.connections;
+      expect(connections?.length).toBe(1);
     });
   });
 });

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, testA11y } from '@fuel-ui/test-utils';
 
 import { MOCK_CONNECTION } from '../../__mocks__/connection';
-import { testQueries } from '../../utils';
+import { testQueries } from '../../__test__';
 
 import { ConnectionItem } from './ConnectionItem';
 

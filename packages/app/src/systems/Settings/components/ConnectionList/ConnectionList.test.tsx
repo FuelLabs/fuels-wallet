@@ -2,13 +2,13 @@ import { fireEvent, screen } from '@fuel-ui/test-utils';
 import type { Connection } from '@fuel-wallet/types';
 
 import { connectionsLoader } from '../../__mocks__/connection';
+import { testQueries } from '../../__test__';
 import { useConnections } from '../../hooks';
-import { testQueries } from '../../utils';
 
 import { Usage } from './ConnectionList.stories';
 
 import { TestWrapper } from '~/systems/Core';
-import { renderWithRouter } from '~/systems/Core/utils/jest';
+import { renderWithRouter } from '~/systems/Core/__tests__/utils';
 
 function Content() {
   const state = useConnections();
