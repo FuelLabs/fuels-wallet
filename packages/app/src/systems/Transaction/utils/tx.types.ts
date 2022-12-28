@@ -21,6 +21,12 @@ export enum OperationName {
   script = 'Script',
 }
 
+export enum OperationDirection {
+  to = 'To',
+  from = 'From',
+  unknown = 'Unknown',
+}
+
 export type GqlTransactionStatus =
   | 'FailureStatus'
   | 'SubmittedStatus'

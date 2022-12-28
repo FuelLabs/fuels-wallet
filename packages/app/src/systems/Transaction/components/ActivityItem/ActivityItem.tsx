@@ -2,9 +2,14 @@ import { cssObj } from '@fuel-ui/css';
 import { Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
 import { bn } from 'fuels';
 import type { FC } from 'react';
+import { useMemo } from 'react';
 
 import type { Tx } from '../../utils';
-import { getTxStatusColor } from '../../utils';
+import {
+  OperationDirection,
+  getOperationDirection,
+  getTxStatusColor,
+} from '../../utils';
 import { TxIcon } from '../TxIcon';
 
 import { ActivityItemLoader } from './ActivityItemLoader';
@@ -13,16 +18,20 @@ import { shortAddress } from '~/systems/Core';
 
 export type TxItemProps = {
   transaction: Tx;
+  ownerAddress: string;
 };
 
 type TxItemComponent = FC<TxItemProps> & {
   Loader: typeof ActivityItemLoader;
 };
 
-export const ActivityItem: TxItemComponent = ({ transaction }) => {
+export const ActivityItem: TxItemComponent = ({
+  transaction,
+  ownerAddress,
+}) => {
   const {
     status: txStatus,
-    id,
+    id = '',
     totalAssetsSent,
     operations,
     time,
@@ -32,15 +41,29 @@ export const ActivityItem: TxItemComponent = ({ transaction }) => {
   const mainOperation = operations[0];
   const label = mainOperation.name;
   const amount = totalAssetsSent[0];
-  const toOrFromText = mainOperation.to ? 'To' : 'From';
-  const toOrFromAddress = mainOperation.to || mainOperation.from;
   const date = time ? new Date(time) : null;
+
+  const toOrFromText = useMemo(() => {
+    const opDirection = getOperationDirection(mainOperation, ownerAddress);
+    if (opDirection === OperationDirection.to) return 'To: ';
+    if (opDirection === OperationDirection.from) return 'From: ';
+    return '';
+  }, [ownerAddress, mainOperation]);
+
+  const toOrFromAddress = useMemo(() => {
+    const opDirection = getOperationDirection(mainOperation, ownerAddress);
+    if (opDirection === OperationDirection.to)
+      return mainOperation.to?.address || '';
+    if (opDirection === OperationDirection.from)
+      return mainOperation.from?.address || '';
+    return '';
+  }, [ownerAddress, mainOperation]);
 
   const formatDate = (date: Date) =>
     `${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}`;
 
   return (
-    <Card css={styles.root}>
+    <Card css={styles.root} data-testid="activity-item">
       <TxIcon operationName={mainOperation.name} />
       <Flex direction="column" css={styles.contentWrapper}>
         <Flex css={styles.row}>
@@ -57,13 +80,11 @@ export const ActivityItem: TxItemComponent = ({ transaction }) => {
         </Flex>
         <Flex css={styles.row}>
           <Flex css={styles.item}>
-            <Text fontSize="sm">{toOrFromText}: </Text>
-            <Text fontSize="sm">
-              {shortAddress(toOrFromAddress?.address || '')}
-            </Text>
+            <Text fontSize="sm">{toOrFromText}</Text>
+            <Text fontSize="sm">{shortAddress(toOrFromAddress)}</Text>
             <Flex css={styles.item}>
               <Copyable
-                value={id || ''}
+                value={id}
                 css={{ mx: '$2' }}
                 iconProps={{
                   icon: Icon.is('CopySimple'),

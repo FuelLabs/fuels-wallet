@@ -1,20 +1,24 @@
+import { Flex } from '@fuel-ui/react';
+
 import type { Tx } from '../../utils';
 import { ActivityItem } from '../ActivityItem';
 
 import { ActivityListEmpty } from './ActivityListEmpty';
 import { ActivityListLoading } from './ActivityListLoading';
 
-interface ActivityListProps {
+export interface ActivityListProps {
   transactions: Tx[];
   providerUrl?: string;
   isLoading?: boolean;
   isDevnet?: boolean;
+  ownerAddress: string;
 }
 
 export const ActivityList = ({
   transactions,
-  isDevnet,
+  isDevnet = false,
   isLoading,
+  ownerAddress,
 }: ActivityListProps) => {
   if (isLoading) return <ActivityList.Loading />;
 
@@ -23,11 +27,15 @@ export const ActivityList = ({
   if (isEmpty) return <ActivityList.Empty isDevnet={isDevnet} />;
 
   return (
-    <div>
+    <Flex gap={'$2'} direction={'column'}>
       {transactions.map((transaction) => (
-        <ActivityItem key={transaction.id} transaction={transaction} />
+        <ActivityItem
+          ownerAddress={ownerAddress}
+          key={transaction.id}
+          transaction={transaction}
+        />
       ))}
-    </div>
+    </Flex>
   );
 };
 

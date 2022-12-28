@@ -10,7 +10,7 @@ import type { ReactNode } from 'react';
 
 const VITE_FUEL_PROVIDER_URL = import.meta.env.VITE_FUEL_PROVIDER_URL;
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
   link: ApolloLink.from([
     new HttpLink({
       uri: VITE_FUEL_PROVIDER_URL,
