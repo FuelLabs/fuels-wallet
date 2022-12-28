@@ -23,9 +23,8 @@ export function SearchInput({
       <Input.ElementLeft element={<Icon icon={Icon.is('MagnifyingGlass')} />} />
       <Input.Field
         {...props}
-        /** TODO: add option to set a custom role inside fuel-ui */
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        role={null as any}
+        type="search"
+        role="search"
         aria-label="Search"
         value={value || ''}
         onChange={(e) => onChange?.(e.target.value)}
