@@ -1,8 +1,8 @@
-query ActivityPageQuery($first: Int, $owner: Address!) {
+query AddressTransactionsQuery($first: Int, $owner: Address!) {
   coins(filter: { owner: $owner }, first: 9999) {
     edges {
       node {
-        ...ActivityPageCoin
+        ...AddressCoin
       }
     }
   }
@@ -18,7 +18,7 @@ query ActivityPageQuery($first: Int, $owner: Address!) {
   }
 }
 
-fragment ActivityPageCoin on Coin {
+fragment AddressCoin on Coin {
   utxoId
   owner
   amount
@@ -28,7 +28,7 @@ fragment ActivityPageCoin on Coin {
   blockCreated
 }
 
-fragment ActivityPageTransaction on Transaction {
+fragment AddressTransaction on Transaction {
   id
   inputContracts {
     id

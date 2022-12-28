@@ -1,14 +1,14 @@
-import type * as Types from '../../../../../api/__generated__/types';
+import type * as Types from '../../../../api/__generated__/types';
 
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type ActivityPageQueryVariables = Types.Exact<{
+export type AddressTransactionsQueryVariables = Types.Exact<{
   first?: Types.InputMaybe<Types.Scalars['Int']>;
   owner: Types.Scalars['Address'];
 }>;
 
-export type ActivityPageQuery = {
+export type AddressTransactionsQuery = {
   __typename: 'Query';
   coins: {
     __typename: 'CoinConnection';
@@ -71,7 +71,7 @@ export type ActivityPageQuery = {
   };
 };
 
-export type ActivityPageCoin = {
+export type AddressCoin = {
   __typename: 'Coin';
   utxoId: string;
   owner: string;
@@ -82,7 +82,7 @@ export type ActivityPageCoin = {
   blockCreated: string;
 };
 
-export type ActivityPageTransaction = {
+export type AddressTransaction = {
   __typename: 'Transaction';
   id: string;
   inputAssetIds?: Array<string> | null;
@@ -183,8 +183,8 @@ export type ReceiptFragment = {
   rawPayload: string;
 };
 
-export const ActivityPageCoinFragmentDoc = gql`
-  fragment ActivityPageCoin on Coin {
+export const AddressCoinFragmentDoc = gql`
+  fragment AddressCoin on Coin {
     utxoId
     owner
     amount
@@ -194,8 +194,8 @@ export const ActivityPageCoinFragmentDoc = gql`
     blockCreated
   }
 `;
-export const ActivityPageTransactionFragmentDoc = gql`
-  fragment ActivityPageTransaction on Transaction {
+export const AddressTransactionFragmentDoc = gql`
+  fragment AddressTransaction on Transaction {
     id
     inputContracts {
       id
@@ -305,12 +305,12 @@ export const ReceiptFragmentDoc = gql`
     rawPayload
   }
 `;
-export const ActivityPageQueryDocument = gql`
-  query ActivityPageQuery($first: Int, $owner: Address!) {
+export const AddressTransactionsQueryDocument = gql`
+  query AddressTransactionsQuery($first: Int, $owner: Address!) {
     coins(filter: { owner: $owner }, first: 9999) {
       edges {
         node {
-          ...ActivityPageCoin
+          ...AddressCoin
         }
       }
     }
@@ -325,59 +325,59 @@ export const ActivityPageQueryDocument = gql`
       }
     }
   }
-  ${ActivityPageCoinFragmentDoc}
+  ${AddressCoinFragmentDoc}
   ${TransactionFragmentDoc}
   ${ReceiptFragmentDoc}
 `;
 
 /**
- * __useActivityPageQuery__
+ * __useAddressTransactionsQuery__
  *
- * To run a query within a React component, call `useActivityPageQuery` and pass it any options that fit your needs.
- * When your component renders, `useActivityPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useAddressTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAddressTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useActivityPageQuery({
+ * const { data, loading, error } = useAddressTransactionsQuery({
  *   variables: {
  *      first: // value for 'first'
  *      owner: // value for 'owner'
  *   },
  * });
  */
-export function useActivityPageQuery(
+export function useAddressTransactionsQuery(
   baseOptions: Apollo.QueryHookOptions<
-    ActivityPageQuery,
-    ActivityPageQueryVariables
+    AddressTransactionsQuery,
+    AddressTransactionsQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<ActivityPageQuery, ActivityPageQueryVariables>(
-    ActivityPageQueryDocument,
-    options
-  );
+  return Apollo.useQuery<
+    AddressTransactionsQuery,
+    AddressTransactionsQueryVariables
+  >(AddressTransactionsQueryDocument, options);
 }
-export function useActivityPageQueryLazyQuery(
+export function useAddressTransactionsQueryLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    ActivityPageQuery,
-    ActivityPageQueryVariables
+    AddressTransactionsQuery,
+    AddressTransactionsQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<ActivityPageQuery, ActivityPageQueryVariables>(
-    ActivityPageQueryDocument,
-    options
-  );
+  return Apollo.useLazyQuery<
+    AddressTransactionsQuery,
+    AddressTransactionsQueryVariables
+  >(AddressTransactionsQueryDocument, options);
 }
-export type ActivityPageQueryHookResult = ReturnType<
-  typeof useActivityPageQuery
+export type AddressTransactionsQueryHookResult = ReturnType<
+  typeof useAddressTransactionsQuery
 >;
-export type ActivityPageQueryLazyQueryHookResult = ReturnType<
-  typeof useActivityPageQueryLazyQuery
+export type AddressTransactionsQueryLazyQueryHookResult = ReturnType<
+  typeof useAddressTransactionsQueryLazyQuery
 >;
-export type ActivityPageQueryQueryResult = Apollo.QueryResult<
-  ActivityPageQuery,
-  ActivityPageQueryVariables
+export type AddressTransactionsQueryQueryResult = Apollo.QueryResult<
+  AddressTransactionsQuery,
+  AddressTransactionsQueryVariables
 >;
