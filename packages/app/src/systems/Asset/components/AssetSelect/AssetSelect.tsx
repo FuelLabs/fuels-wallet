@@ -122,7 +122,11 @@ export function AssetSelect({
             precision: MAX_FRACTION_DIGITS,
           })} ${asset.symbol}`;
           return (
-            <Dropdown.MenuItem key={asset.assetId} textValue={asset.name}>
+            <Dropdown.MenuItem
+              key={asset.assetId}
+              textValue={asset.name}
+              aria-label={asset.name}
+            >
               <Avatar size="xsm" name={asset?.name} src={asset?.imageUrl} />
               <Stack gap="$0" className="asset-info">
                 <Text as="span" className="asset-name">

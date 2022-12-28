@@ -23,7 +23,7 @@ export async function selectEthereumAsAsset(opts: ReturnType<typeof render>) {
   });
 
   await waitFor(async () => {
-    const etherItem = screen.getByText('Ethereum');
+    const etherItem = await screen.findByLabelText(/Ethereum/i);
     expect(etherItem).toBeInTheDocument();
     await user.press('Enter');
     const trigger = container.querySelector('#fuel_asset-select');
