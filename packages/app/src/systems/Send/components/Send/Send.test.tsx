@@ -5,7 +5,7 @@ import type { Account } from '@fuel-wallet/types';
 import { Address, Wallet } from 'fuels';
 
 import { sendLoader } from '../../__mocks__/send';
-import { findAssetSelect, selectEthereumAsAsset } from '../../__tests__/utils';
+import { findAssetSelect } from '../../__tests__/utils';
 
 import { Select, Confirm } from './Send.stories';
 
@@ -28,11 +28,6 @@ describe('Send', () => {
       expect(await findAssetSelect()).toBeInTheDocument();
       expect(await screen.findByLabelText('Address Input')).toBeInTheDocument();
       expect(await screen.findByLabelText('amount')).toBeInTheDocument();
-    });
-
-    it('should select one asset', async () => {
-      const opts = render(<Select />, { wrapper: TestWrapper });
-      await selectEthereumAsAsset(opts);
     });
 
     it('should validate address', async () => {
