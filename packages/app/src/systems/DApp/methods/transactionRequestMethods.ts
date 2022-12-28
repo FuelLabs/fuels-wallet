@@ -32,10 +32,9 @@ export class TransactionRequestMethods extends ExtensionPageConnection {
   }) {
     const providerUrl = provider.url;
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
-    this.service.send('START_REQUEST', {
-      input: { origin, transactionRequest, providerUrl },
-    });
-    const state = await waitForState(this.service);
+    const input = { origin, transactionRequest, providerUrl };
+    this.service.send('START_REQUEST', { input });
+    const state = await waitForState(this.service, 'idle' || 'done');
     return state.response?.approvedTx?.id;
   }
 }

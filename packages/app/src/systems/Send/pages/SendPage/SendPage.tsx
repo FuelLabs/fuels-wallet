@@ -9,42 +9,40 @@ import { Layout, UnlockDialog } from '~/systems/Core';
 
 export function SendPage() {
   const send = useSend();
-  const { handlers, txRequest, form, ...ctx } = send;
-  const { status } = txRequest;
-  const isIdle = status('idle');
-  const isUnlocking = status('unlocking');
+  const { handlers, txRequest, status, form, ...ctx } = send;
+  const isUnlocking = txRequest.status('unlocking');
+  const isSelecting = status('selecting');
 
   return (
     <form
       onSubmit={form.handleSubmit(handlers.submit)}
       data-testid={txRequest.txStatus}
     >
-      <Layout title="Send" isLoading={ctx.isLoading}>
+      <Layout title={ctx.title} isLoading={status('loading')}>
         <Layout.TopBar onBack={handlers.cancel} />
         <AnimatePresence initial={false} mode="sync">
-          {isIdle && <Send.Select {...send} />}
-          {status('waitingApproval') && <Send.Confirm txRequest={txRequest} />}
-          {status('success') && <Send.Success txRequest={txRequest} />}
-          {status('failed') && <Send.Failed txRequest={txRequest} />}
+          {isSelecting && <Send.Select {...send} />}
+          {status('loadingTx') && <Send.Loading />}
+          {status('confirming') && <Send.Confirm txRequest={txRequest} />}
         </AnimatePresence>
         {txRequest.showActions && (
           <Layout.BottomBar>
             <Button color="gray" variant="ghost" onPress={handlers.cancel}>
-              {isIdle ? 'Cancel' : 'Back'}
+              {isSelecting ? 'Cancel' : 'Back'}
             </Button>
             <Button
               type="submit"
               color="accent"
               isDisabled={ctx.isInvalid || !form.formState.isValid}
-              isLoading={ctx.isLoading || status('loading')}
+              isLoading={status('loading') || status('loadingTx')}
             >
-              {isIdle ? 'Confirm' : 'Approve'}
+              {isSelecting ? 'Confirm' : 'Approve'}
             </Button>
           </Layout.BottomBar>
         )}
         <UnlockDialog
           isFullscreen={IS_CRX_POPUP}
-          isOpen={isUnlocking || status('waitingUnlock')}
+          isOpen={isUnlocking || txRequest.status('waitingUnlock')}
           isLoading={isUnlocking}
           unlockText="Confirm Transaction"
           unlockError={txRequest.errors.unlockError}

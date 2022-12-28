@@ -31,9 +31,8 @@ describe('Send', () => {
     });
 
     it('should select one asset', async () => {
-      render(<Select />, { wrapper: TestWrapper });
-      await waitFor(() => findAssetSelect());
-      await selectEthereumAsAsset();
+      const opts = render(<Select />, { wrapper: TestWrapper });
+      await selectEthereumAsAsset(opts);
     });
 
     it('should validate address', async () => {

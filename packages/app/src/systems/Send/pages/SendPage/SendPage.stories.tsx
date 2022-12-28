@@ -27,7 +27,7 @@ Usage.parameters = {
 };
 Usage.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement);
-  await waitFor(() => canvas.findByText('Which amount?'));
+  await waitFor(() => canvas.findByLabelText('Select Asset'));
   const select = canvas.getByLabelText('Select Asset');
   userEvent.click(select);
   userEvent.keyboard('{Enter}');

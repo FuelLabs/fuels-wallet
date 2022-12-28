@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import { bn, isBech32 } from 'fuels';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -12,26 +13,51 @@ import { useAccounts } from '~/systems/Account';
 import { ASSET_MAP } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
 import { useTransactionRequest } from '~/systems/DApp';
+import { TxRequestStatus } from '~/systems/DApp/machines/transactionMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
 
 export enum SendStatus {
   loading = 'loading',
   selecting = 'selecting',
-  invalid = 'invalid',
+  loadingTx = 'loadingTx',
   confirming = 'confirming',
-  failed = 'failed',
-  success = 'success',
 }
 
 const selectors = {
   fee(state: SendMachineState) {
     return state.context.fee;
   },
-  isLoading(state: SendMachineState) {
-    return state.hasTag('loading');
-  },
   isInvalid(state: SendMachineState) {
     return state.matches('invalid');
+  },
+  status(txStatus?: TxRequestStatus) {
+    return useCallback(
+      (state: SendMachineState) => {
+        const isLoadingTx =
+          state.matches('creatingTx') ||
+          txStatus === TxRequestStatus.loading ||
+          txStatus === TxRequestStatus.sending;
+
+        if (state.matches('fetchingFakeTx')) return SendStatus.loading;
+        if (isLoadingTx) return SendStatus.loadingTx;
+        if (state.matches('confirming')) return SendStatus.confirming;
+        return SendStatus.selecting;
+      },
+      [txStatus]
+    );
+  },
+  title(txStatus?: TxRequestStatus) {
+    return useCallback(
+      (state: SendMachineState) => {
+        if (txStatus === TxRequestStatus.success) return 'Transaction sent';
+        if (txStatus === TxRequestStatus.failed) return 'Transaction failed';
+        if (state.matches('creatingTx')) return 'Creating transaction';
+        if (state.matches('confirming')) return 'Approve Transaction';
+        if (state.matches('invalid')) return 'Invalid transaction';
+        return 'Send';
+      },
+      [txStatus]
+    );
   },
 };
 
@@ -48,7 +74,11 @@ const schema = yup
       .string()
       .required('Address is required')
       .test('is-address', 'Invalid bech32 address', (value) => {
-        return Boolean(value && isBech32(value));
+        try {
+          return Boolean(value && isBech32(value));
+        } catch (error) {
+          return false;
+        }
       }),
   })
   .required();
@@ -83,8 +113,15 @@ export function useSend() {
   );
 
   const fee = useSelector(service, selectors.fee);
-  const isLoading = useSelector(service, selectors.isLoading);
+  const sendStatusSelector = selectors.status(txRequest.txStatus);
+  const sendStatus = useSelector(service, sendStatusSelector);
   const isInvalid = useSelector(service, selectors.isInvalid);
+  const titleSelector = selectors.title(txRequest.txStatus);
+  const title = useSelector(service, titleSelector);
+
+  function status(status: keyof typeof SendStatus) {
+    return sendStatus === status;
+  }
 
   function cancel() {
     if (txRequest.status('success')) {
@@ -120,9 +157,10 @@ export function useSend() {
   return {
     form,
     fee,
-    txRequest,
+    title,
+    status,
     isInvalid,
-    isLoading: isLoading || txRequest.status('loading'),
+    txRequest,
     handlers: {
       cancel,
       submit,

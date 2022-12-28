@@ -26,7 +26,7 @@ const selectors = {
   },
 };
 
-export function useNetworks(opts: NetworkInitialInput) {
+export function useNetworks(opts: NetworkInitialInput = {}) {
   const navigate = useNavigate();
   const networks = store.useSelector(Services.networks, selectors.networks);
   const network = store.useSelector(Services.networks, selectors.network);

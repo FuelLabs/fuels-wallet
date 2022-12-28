@@ -41,18 +41,15 @@ describe('txApproveMachine', () => {
 
   it('should approve/send transaction', async () => {
     await waitFor(service, (state) => state.matches('idle'));
-
     service.send('START_REQUEST', {
       input: { transactionRequest, providerUrl, origin: 'foo.com' },
     });
 
     await waitFor(service, (state) => state.matches('simulatingTransaction'));
     await waitFor(service, (state) => state.matches('waitingApproval'));
-
     service.send('APPROVE');
 
     await waitFor(service, (state) => state.matches('unlocking'));
-
     service.send('UNLOCK_WALLET', {
       input: {
         account: MOCK_ACCOUNTS[0],
@@ -61,9 +58,7 @@ describe('txApproveMachine', () => {
     });
 
     await waitFor(service, (state) => state.matches('sendingTx'));
-    const { matches } = await waitFor(service, (state) =>
-      state.matches('done')
-    );
-    expect(matches('done')).toBeTruthy();
+    const state = await waitFor(service, (state) => state.matches('txSuccess'));
+    expect(state.matches('txSuccess')).toBeTruthy();
   });
 });

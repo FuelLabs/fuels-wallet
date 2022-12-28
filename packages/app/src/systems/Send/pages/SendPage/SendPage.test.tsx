@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@fuel-ui/test-utils';
+import { fireEvent, render, screen, waitFor } from '@fuel-ui/test-utils';
 import { Wallet } from 'fuels';
 
 import { sendLoader } from '../../__mocks__/send';
@@ -21,31 +21,39 @@ describe('SendPage()', () => {
   });
 
   it('should send a transaction', async () => {
-    render(<SendPage />, { wrapper: TestWrapper });
+    const opts = render(<SendPage />, { wrapper: TestWrapper });
 
     /** Select all transaction info needed */
-    await selectEthereumAsAsset();
+    await selectEthereumAsAsset(opts);
     await setAddressInput(wallet);
     await setAmountInput('10');
 
     /** Click on confirm */
-    const confirm = await screen.findByText('Confirm');
-    expect(confirm.getAttribute('aria-disabled')).toBe('false');
-    await act(() => fireEvent.click(confirm));
+    await waitFor(async () => {
+      const confirm = screen.getByText('Confirm');
+      expect(confirm.getAttribute('aria-disabled')).toBe('false');
+      fireEvent.click(confirm);
+    });
 
     /** Click on approve */
-    const approve = await screen.findByText('Approve');
-    expect(approve).toBeInTheDocument();
-    await act(() => fireEvent.click(approve));
+    await waitFor(async () => {
+      const approve = screen.getByText('Approve');
+      expect(approve).toBeInTheDocument();
+      fireEvent.click(approve);
+    });
 
     /** Unlock after approve */
-    await waitFor(() => screen.findAllByText('Confirm Transaction'));
-    const input = await screen.findByLabelText('Your Password');
-    fireEvent.input(input, { target: { value: '123123123' } });
-    const confirmUnlock = await screen.findByText('Confirm Transaction');
-    await act(() => fireEvent.click(confirmUnlock));
+    await waitFor(async () => {
+      screen.findAllByText('Confirm Transaction');
+      const input = await screen.findByLabelText('Your Password');
+      fireEvent.input(input, { target: { value: '123123123' } });
+      const confirmUnlock = screen.getByText('Confirm Transaction');
+      fireEvent.click(confirmUnlock);
+    });
 
     /** See transaction success msg */
-    await waitFor(() => screen.findByText('Transaction sent'));
+    await waitFor(async () => {
+      expect(screen.getByText('Transaction sent')).toBeInTheDocument();
+    });
   });
 });

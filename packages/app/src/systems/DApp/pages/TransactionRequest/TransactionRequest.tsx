@@ -7,23 +7,22 @@ import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 import { IS_CRX_POPUP } from '~/config';
 import { Layout, UnlockDialog } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
-import { NetworkScreen, useNetworks } from '~/systems/Network';
+import { TxHeader } from '~/systems/Transaction';
 
 export function TransactionRequest() {
-  const { selectedNetwork } = useNetworks({ type: NetworkScreen.list });
   const txRequest = useTransactionRequest({ isOriginRequired: true });
   const { handlers, status, ...ctx } = txRequest;
   if (!ctx.account) return null;
 
   return (
     <>
-      <Layout title="Approve Transaction" isLoading={ctx.isLoading}>
+      <Layout title={ctx.title} isLoading={ctx.isLoading}>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
           {ctx.isLoading && (
             <TxContent.Loader header={<ConnectInfo.Loader />} />
           )}
-          {status('idle') && (
+          {status('waitingApproval') && (
             <TxContent.Info
               showDetails
               tx={txRequest.tx}
@@ -33,17 +32,43 @@ export function TransactionRequest() {
               }
             />
           )}
-          {status('success') && <TxContent.Failed />}
-          {status('failed') && (
-            <TxContent.Success
-              txHash={txRequest.response?.approvedTx?.id}
-              providerUrl={selectedNetwork?.url}
+          {(status('success') || status('failed')) && (
+            <TxContent.Info
+              showDetails
+              tx={txRequest.tx}
+              txStatus={txRequest.approveStatus()}
+              amount={txRequest.ethAmountSent}
+              header={
+                <TxHeader
+                  id={txRequest.tx?.id}
+                  type={txRequest.tx?.type}
+                  status={txRequest.tx?.status}
+                  providerUrl={txRequest.providerUrl}
+                />
+              }
+              footer={
+                status('failed') && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    color="red"
+                    onPress={txRequest.handlers.tryAgain}
+                  >
+                    Try again
+                  </Button>
+                )
+              }
             />
           )}
         </Layout.Content>
         {ctx.showActions && (
           <Layout.BottomBar>
-            <Button onPress={handlers.reject} color="gray" variant="ghost">
+            <Button
+              onPress={handlers.reject}
+              color="gray"
+              variant="ghost"
+              isDisabled={ctx.isLoading || status('sending')}
+            >
               Reject
             </Button>
             <Button
@@ -70,6 +95,9 @@ export function TransactionRequest() {
 }
 
 const styles = {
+  actionBtn: cssObj({
+    mt: '$4',
+  }),
   content: cssObj({
     '& h2': {
       m: '$0',

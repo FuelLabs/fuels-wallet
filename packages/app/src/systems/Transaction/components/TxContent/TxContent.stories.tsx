@@ -1,4 +1,3 @@
-import { Button } from '@fuel-ui/react';
 import type { Meta } from '@storybook/react';
 import { bn } from 'fuels';
 
@@ -38,30 +37,4 @@ export const Info = () => {
 
 export const Loading = () => {
   return <TxContent.Loader header={<TxHeader.Loader />} />;
-};
-
-export const Success = () => {
-  return (
-    <TxContent.Success
-      txHash={TX.id}
-      providerUrl={PROVIDER_URL}
-      footer={
-        <Button color="accent" variant="ghost" css={{ mt: '$4' }}>
-          Go back to Wallet
-        </Button>
-      }
-    />
-  );
-};
-
-export const Failed = () => {
-  return (
-    <TxContent.Failed
-      footer={
-        <Button color="red" variant="ghost" css={{ mt: '$4' }}>
-          Try again
-        </Button>
-      }
-    />
-  );
 };

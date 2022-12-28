@@ -5,8 +5,10 @@ import type { TxRecipientAddress } from '../../types';
 import { TxStatus } from '../../utils';
 import { TxRecipientCard } from '../TxRecipientCard';
 
+import type { Maybe } from '~/systems/Core';
+
 type TxSpinnerProps = {
-  status?: TxStatus;
+  status?: Maybe<TxStatus>;
   isLoading?: boolean;
 };
 
@@ -39,7 +41,7 @@ function TxSpinner({ status, isLoading }: TxSpinnerProps) {
 }
 
 export type TxFromToProps = {
-  status?: TxStatus;
+  status?: Maybe<TxStatus>;
   from?: TxRecipientAddress;
   to?: TxRecipientAddress;
   isLoading?: boolean;

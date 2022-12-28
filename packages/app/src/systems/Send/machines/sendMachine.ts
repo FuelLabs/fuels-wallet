@@ -39,6 +39,7 @@ type MachineEvents =
   | { type: 'CONFIRM'; input: TxInputs['isValidTransaction'] };
 
 const IDLE_STATE = {
+  tags: ['selecting'],
   on: {
     BACK: {
       actions: ['goToHome'],
@@ -63,7 +64,6 @@ export const sendMachine = createMachine(
     initial: 'fetchingFakeTx',
     states: {
       fetchingFakeTx: {
-        tags: ['loading'],
         invoke: {
           src: 'fetchFakeTx',
           onDone: {
@@ -75,7 +75,6 @@ export const sendMachine = createMachine(
       idle: IDLE_STATE,
       invalid: IDLE_STATE,
       creatingTx: {
-        tags: ['loading'],
         invoke: {
           src: 'createTransactionRequest',
           data: (_: MachineContext, { input }: MachineEvents) => ({ input }),

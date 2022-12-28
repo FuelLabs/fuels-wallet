@@ -26,6 +26,7 @@ import type { TxInputs } from '~/systems/Transaction/services';
 import { TxService } from '~/systems/Transaction/services';
 
 export enum TxRequestStatus {
+  inactive = 'inactive',
   idle = 'idle',
   loading = 'loading',
   waitingApproval = 'waitingApproval',
@@ -73,7 +74,8 @@ type MachineEvents =
   | { type: 'REJECT'; input?: null }
   | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
   | { type: 'CLOSE_UNLOCK'; input?: null }
-  | { type: 'TRY_AGAIN'; input?: null };
+  | { type: 'TRY_AGAIN'; input?: null }
+  | { type: 'CLOSE'; input?: null };
 
 export const transactionMachine = createMachine(
   {
@@ -129,7 +131,13 @@ export const transactionMachine = createMachine(
       },
       waitingApproval: {
         on: {
-          APPROVE: 'unlocking',
+          APPROVE: {
+            target: 'unlocking',
+          },
+          REJECT: {
+            actions: [assignErrorMessage('User rejected the transaction!')],
+            target: 'failed',
+          },
           RESET: {
             actions: ['reset'],
             target: 'idle',
@@ -185,26 +193,33 @@ export const transactionMachine = createMachine(
             },
             {
               actions: ['assignApprovedTx'],
-              target: 'done',
+              target: 'txSuccess',
             },
           ],
+        },
+      },
+      txSuccess: {
+        on: {
+          CLOSE: {
+            target: 'done',
+          },
+        },
+      },
+      txFailed: {
+        on: {
+          TRY_AGAIN: {
+            target: 'waitingApproval',
+          },
+          CLOSE: {
+            target: 'failed',
+          },
         },
       },
       done: {
         type: 'final',
       },
       failed: {
-        on: {
-          TRY_AGAIN: {
-            target: 'sendingTx',
-          },
-        },
-      },
-    },
-    on: {
-      REJECT: {
-        actions: [assignErrorMessage('User rejected the transaction!')],
-        target: 'failed',
+        type: 'final',
       },
     },
   },

@@ -10,7 +10,6 @@ const wallet = Wallet.generate();
 
 export default {
   title: 'Send/Components/Send',
-  loaders: [sendLoader(wallet)],
   decorators: [(Story) => <Story />],
   parameters: {
     viewport: {
@@ -19,10 +18,18 @@ export default {
   },
 } as Meta;
 
+export const Loading: StoryFn = (_args) => {
+  return <Send.Loading />;
+};
+Loading.parameters = {
+  layout: 'fullscreen',
+};
+
 export const Select: StoryFn = (_args) => {
   const send = useSend();
   return <Send.Select {...send} />;
 };
+Select.loaders = [sendLoader(wallet)];
 Select.parameters = {
   layout: 'fullscreen',
 };
@@ -31,22 +38,7 @@ export const Confirm: StoryFn = (_args, { loaded }) => {
   const txRequest = useTxRequestMock(loaded);
   return <Send.Confirm txRequest={txRequest} />;
 };
+Confirm.loaders = [sendLoader(wallet)];
 Confirm.parameters = {
-  layout: 'fullscreen',
-};
-
-export const Success: StoryFn = (_args, { loaded }) => {
-  const txRequest = useTxRequestMock(loaded);
-  return <Send.Success txRequest={txRequest} />;
-};
-Success.parameters = {
-  layout: 'fullscreen',
-};
-
-export const Failed: StoryFn = (_args, { loaded }) => {
-  const txRequest = useTxRequestMock(loaded);
-  return <Send.Failed txRequest={txRequest} />;
-};
-Failed.parameters = {
   layout: 'fullscreen',
 };

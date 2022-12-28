@@ -14,7 +14,7 @@ import {
 } from '@fuel-ui/react';
 import type { AssetAmount, Coin } from '@fuel-wallet/types';
 import { bn } from 'fuels';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { getAssetInfoById } from '../../utils';
 
@@ -36,7 +36,7 @@ export function AssetSelect({
   onSelect,
   ...props
 }: AssetSelectProps) {
-  const [opened, setOpened] = useState(false);
+  /** i'm using a ref here instead of a state in order to don't trigger a new re-render */
   const [width, setWidth] = useState<Maybe<number>>(null);
   const asset = selected && getAssetInfoById(selected?.assetId, selected);
 
@@ -49,17 +49,24 @@ export function AssetSelect({
     onSelect(null);
   }
 
-  useEffect(() => {
-    const item = document.querySelector('#fuel_asset-select');
-    setWidth(item?.clientWidth ?? null);
-  }, [opened]);
+  function handleSetWidth(isOpen: boolean) {
+    if (isOpen) {
+      const item = document.querySelector('#fuel_asset-select');
+      setWidth(item?.clientWidth ?? null);
+    }
+    /**
+     * I did this using dom manipulation instead of useState in order
+     * to avoid an unnecessary re-render
+     */
+    const arrow = document.querySelector('#fuel_asset-select > .fuel_icon');
+    arrow?.classList.toggle('rotate');
+  }
 
   return (
     <Dropdown
       {...props}
-      isOpen={opened}
-      onOpenChange={setOpened}
       className="fuel_asset-select"
+      onOpenChange={handleSetWidth}
     >
       <Dropdown.Trigger>
         <Button
@@ -67,11 +74,10 @@ export function AssetSelect({
           as={asset ? 'div' : 'button'}
           color="gray"
           size="md"
-          data-opened={opened}
           css={styles.trigger}
           id="fuel_asset-select"
           aria-label="Select Asset"
-          rightIcon={Icon.is('CaretDown')}
+          rightIcon={<Icon icon="CaretDown" aria-label="Button Caret" />}
           data-value={asset?.name}
         >
           <Flex css={styles.input}>
@@ -179,7 +185,7 @@ const styles = {
       transition: 'all .3s',
       color: '$gray7',
     },
-    '&[data-opened=true] > .fuel_icon': {
+    '.fuel_icon.rotate': {
       transform: 'rotate(-180deg)',
     },
   }),
