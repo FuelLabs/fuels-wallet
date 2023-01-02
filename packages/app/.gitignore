@@ -13,8 +13,7 @@ dist
 dist-crx
 dist-ssr
 *.local
-
-__generated__
+**/__generated__/**
 
 # Editor directories and files
 .vscode/*
@@ -26,6 +25,5 @@ __generated__
 *.njsproj
 *.sln
 *.sw?
-
 
 cypress/videos
