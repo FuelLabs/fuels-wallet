@@ -5,8 +5,8 @@ if [ "$1" = "--app=vite" ]; then
   pnpm ts:check && pnpm build-operations && pnpm vite build --mode $NODE_ENV
 fi;
 if [ "$1" = "--app=crx" ]; then
-  pnpm ts:check && pnpm vite build --config vite.crx.config.ts --mode $NODE_ENV
+  pnpm ts:check && pnpm build-operations && pnpm vite build --config vite.crx.config.ts --mode $NODE_ENV
 fi;
 if [ "$1" = "--app=storybook" ]; then
-  pnpm ts:check && pnpm build-storybook -o $STORYBOOK_DIST
+  pnpm ts:check && pnpm build-operations && pnpm build-storybook -o $STORYBOOK_DIST
 fi;
