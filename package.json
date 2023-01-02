@@ -54,8 +54,8 @@
     "test:e2e": "playwright test --config=packages/app/playwright.config.ts",
     "ts:check": "pnpm -r ts:check",
     "prepare": "husky install",
-    "graphql-build:app": "pnpm run --filter=app build-operations",
-    "graphql-schema:app": "pnpm run --filter=app update-schema"
+    "graphql-codegen:app": "pnpm run --filter=app graphql:codegen",
+    "graphql-schema:app": "pnpm run --filter=app graphql:schema"
   },
   "dependencies": {
     "@fuel-ui/config": "^0.10.1",
