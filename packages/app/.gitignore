@@ -14,6 +14,8 @@ dist-crx
 dist-ssr
 *.local
 
+__generated__
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -24,5 +26,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
 
 cypress/videos

@@ -1,0 +1,137 @@
+query AddressTransactionsQuery($first: Int, $owner: Address!) {
+  coins(filter: { owner: $owner }, first: 9999) {
+    edges {
+      node {
+        ...AddressCoin
+      }
+    }
+  }
+  transactionsByOwner(first: $first, owner: $owner) {
+    edges {
+      node {
+        ...transactionFragment
+        receipts {
+          ...receiptFragment
+        }
+      }
+    }
+  }
+}
+
+fragment AddressCoin on Coin {
+  utxoId
+  owner
+  amount
+  assetId
+  maturity
+  status
+  blockCreated
+}
+
+fragment AddressTransaction on Transaction {
+  id
+  inputContracts {
+    id
+  }
+  inputAssetIds
+  gasPrice
+  gasLimit
+  maturity
+  isScript
+  receiptsRoot
+  witnesses
+  outputs {
+    __typename
+    ... on CoinOutput {
+      to
+      amount
+      assetId
+    }
+    ... on ContractOutput {
+      inputIndex
+      balanceRoot
+      stateRoot
+    }
+    ... on ChangeOutput {
+      to
+      amount
+      assetId
+    }
+    ... on VariableOutput {
+      to
+      amount
+      assetId
+    }
+    ... on ContractCreated {
+      contract {
+        id
+      }
+    }
+  }
+  inputs {
+    __typename
+    ... on InputCoin {
+      utxoId
+      owner
+      amount
+      assetId
+      witnessIndex
+      maturity
+      predicate
+      predicateData
+    }
+    ... on InputContract {
+      utxoId
+      balanceRoot
+      stateRoot
+      contract {
+        id
+      }
+    }
+  }
+  status {
+    ... on SubmittedStatus {
+      time
+    }
+    ... on SuccessStatus {
+      time
+    }
+    ... on FailureStatus {
+      time
+    }
+  }
+}
+
+fragment transactionFragment on Transaction {
+  id
+  rawPayload
+  gasPrice
+  status {
+    type: __typename
+    ... on SubmittedStatus {
+      time
+    }
+    ... on SuccessStatus {
+      block {
+        id
+      }
+      time
+      programState {
+        returnType
+        data
+      }
+    }
+    ... on FailureStatus {
+      block {
+        id
+      }
+      time
+      reason
+    }
+  }
+}
+
+fragment receiptFragment on Receipt {
+  data
+  rawPayload
+}

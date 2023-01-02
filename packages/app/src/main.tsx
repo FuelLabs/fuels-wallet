@@ -2,10 +2,12 @@ import '@fontsource/source-code-pro';
 import { createRoot } from 'react-dom/client';
 
 import { App } from './App';
-import { RouterProvider } from './systems/Core';
+import { RouterProvider, GraphqlProvider } from './systems/Core';
 
 createRoot(document.getElementById('root')!).render(
-  <RouterProvider>
-    <App />
-  </RouterProvider>
+  <GraphqlProvider>
+    <RouterProvider>
+      <App />
+    </RouterProvider>
+  </GraphqlProvider>
 );

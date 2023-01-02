@@ -38,6 +38,10 @@ export type TxInputs = {
     txId: string;
     providerUrl?: string;
   };
+  fetchAllByAddress: {
+    address: string;
+    providerUrl?: string;
+  };
 };
 
 export class TxService {

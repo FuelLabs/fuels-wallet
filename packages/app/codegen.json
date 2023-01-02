@@ -1,0 +1,76 @@
+{
+  "$schema": "https://www.graphql-code-generator.com/config.schema.json",
+  "schema": "./fuel-core-schema.graphql",
+  "documents": "./src/**/*.graphql",
+  "config": {
+    "strictScalars": {
+      "DateTime": "string",
+      "HexString": "string",
+      "Bytes32": "string",
+      "UtxoId": "string",
+      "U64": "string",
+      "Address": "string",
+      "BlockId": "string",
+      "MessageId": "string",
+      "TransactionId": "string",
+      "TxPointer": "string",
+      "AssetId": "string",
+      "ContractId": "string",
+      "Salt": "string",
+      "Signature": "string"
+    },
+    "scalars": {
+      "DateTime": "string",
+      "HexString": "string",
+      "Bytes32": "string",
+      "UtxoId": "string",
+      "U64": "string",
+      "Address": "string",
+      "BlockId": "string",
+      "MessageId": "string",
+      "TransactionId": "string",
+      "TxPointer": "string",
+      "AssetId": "string",
+      "ContractId": "string",
+      "Salt": "string",
+      "Signature": "string",
+      "Tai64Timestamp": "string"
+    },
+    "useTypeImports": true,
+    "nonOptionalTypename": true,
+    "omitOperationSuffix": true,
+    "futureProofEnums": true,
+    "futureProofUnions": true
+  },
+  "generates": {
+    "./src/api/__generated__/types.ts": {
+      "plugins": [
+        {
+          "typescript": {}
+        }
+      ]
+    },
+    "./src/": {
+      "preset": "near-operation-file",
+      "presetConfig": {
+        "extension": ".ts",
+        "baseTypesPath": "./api/__generated__/types.ts",
+        "folder": "__generated__"
+      },
+      "plugins": [
+        {
+          "typescript-operations": {}
+        },
+        {
+          "typescript-react-apollo": {
+            "omitOperationSuffix": false,
+            "dedupeOperationSuffix": true
+          }
+        }
+      ]
+    }
+  },
+  "hooks": {
+    "afterAllFileWrite": ["npx prettier --write"]
+  }
+}
