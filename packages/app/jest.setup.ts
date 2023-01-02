@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { webcrypto } from 'crypto';
 import { TextEncoder, TextDecoder } from 'util';
 
 import { localStorageMock } from './src/mocks/localStorage';
@@ -11,3 +12,4 @@ import { localStorageMock } from './src/mocks/localStorage';
 const noop = () => {};
 Object.defineProperty(window, 'scrollTo', { value: noop, writable: true });
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+Object.defineProperty(window, 'crypto', { value: webcrypto });

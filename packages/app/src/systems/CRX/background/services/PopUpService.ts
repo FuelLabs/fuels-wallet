@@ -1,6 +1,6 @@
 import { POPUP_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
 import type {
-  FuelWeb3ProviderConfig,
+  FuelProviderConfig,
   ResponseMessage,
   UIEventMessage,
 } from '@fuel-wallet/types';
@@ -144,7 +144,7 @@ export class PopUpService {
 
   async sendTransaction(
     origin: string,
-    provider: FuelWeb3ProviderConfig,
+    provider: FuelProviderConfig,
     transaction: string
   ) {
     const selectedNetwork = await NetworkService.getSelectedNetwork();
@@ -155,7 +155,7 @@ export class PopUpService {
       throw new Error(
         [
           `${provider.url} is different from the user current network!`,
-          'Request the user to add the new network. FuelWeb3.addNetwork([...]).',
+          'Request the user to add the new network. fuel.addNetwork([...]).',
         ].join('\n')
       );
     }

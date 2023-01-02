@@ -35,7 +35,15 @@ const selectors = {
   isShowingInfo({
     isLoading,
     account,
-  }: Omit<ReturnType<typeof useAccounts>, 'handlers' | 'accounts'>) {
+  }: Omit<
+    ReturnType<typeof useAccounts>,
+    | 'handlers'
+    | 'accounts'
+    | 'isUnlocking'
+    | 'isUnlockingLoading'
+    | 'isAddingAccount'
+    | 'unlockError'
+  >) {
     return (state: TransactionMachineState) =>
       !isLoading &&
       !state.context.approvedTx &&

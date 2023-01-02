@@ -34,7 +34,8 @@ function extractLines(
   } else {
     end = lines.length;
   }
-  return lines.slice(start - 1, end).join('\n');
+  const linesContent = lines.slice(start - 1, end).join('\n');
+  return prettier.format(linesContent, { parser: 'babel' }).trimEnd();
 }
 
 function getLineOffsets(str: string) {
@@ -115,11 +116,11 @@ export function codeImport(options: Options = { filepath: '' }) {
         throw new Error('CodeImport need to have properties defined');
       }
 
+      let lineStart = attr.find((i: any) => i.name === 'lineStart')?.value;
+      let lineEnd = attr.find((i: any) => i.name === 'lineEnd')?.value;
       const file = attr.find((i: any) => i.name === 'file')?.value;
-      const lines = attr.find((i: any) => i.name === 'lines')?.value || [];
       const testCase = attr.find((i: any) => i.name === 'testCase')?.value;
       const fileAbsPath = path.resolve(path.join(rootDir, dirname), file);
-      let [lineStart, lineEnd] = lines as any[];
       const fileContent = fs.readFileSync(fileAbsPath, 'utf8');
       const cachedFile = getFilesOnCache(fileAbsPath);
       const attrId = `${fileAbsPath}${testCase || ''}${lineStart || ''}${
@@ -133,8 +134,8 @@ export function codeImport(options: Options = { filepath: '' }) {
         return;
       }
 
-      if (lineStart || lineEnd) {
-        content = extractLines(fileContent, lineStart, lineEnd);
+      if (lineStart && lineEnd) {
+        content = extractLines(fileContent, lineStart.value, lineEnd.value);
       }
 
       if (testCase) {

@@ -12,3 +12,8 @@ export async function hasText(
   });
   return textFound;
 }
+
+export async function hasAriaLabel(page: Page, value: string) {
+  const selector = await page.waitForSelector(`[aria-label="${value}"]`);
+  await expect(await selector.getAttribute('aria-label')).toBe(value);
+}

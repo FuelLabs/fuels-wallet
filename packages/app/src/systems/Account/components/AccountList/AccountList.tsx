@@ -1,3 +1,4 @@
+import { cssObj } from '@fuel-ui/css';
 import { Button, CardList, Stack } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import { useEffect, useState } from 'react';
@@ -5,11 +6,16 @@ import { useEffect, useState } from 'react';
 import { AccountItem } from '../AccountItem';
 
 export type AccountListProps = {
-  onPress: (account: Account) => void;
   accounts: Account[];
+  isLoading?: boolean;
+  onPress: (account: Account) => void;
 };
 
-export function AccountList({ accounts, onPress }: AccountListProps) {
+export function AccountList({
+  accounts,
+  isLoading,
+  onPress,
+}: AccountListProps) {
   const [showHidden, setShowHidden] = useState(() => false);
   const [anyHiddenAccounts, setAnyHiddenAccounts] = useState(false);
 
@@ -18,32 +24,46 @@ export function AccountList({ accounts, onPress }: AccountListProps) {
   }
 
   useEffect(() => {
-    const hiddenAccounts = accounts.some((account) => {
-      return account.isHidden;
-    });
+    const hiddenAccounts = accounts.some((acc) => acc.isHidden);
     setAnyHiddenAccounts(hiddenAccounts);
   }, [accounts]);
 
   return (
     <Stack gap="$3">
       <CardList isClickable>
-        {accounts.map((account) => {
-          return (
-            <AccountItem
-              onPress={() => onPress(account)}
-              key={account.address}
-              account={account}
-              isHidden={!showHidden && account.isHidden}
-              isSelected={account.isSelected}
-            />
-          );
-        })}
+        {isLoading
+          ? [...Array(3)].map((_, i) => {
+              return <AccountItem.Loader key={i} />;
+            })
+          : accounts.map((account) => {
+              return (
+                <AccountItem
+                  onPress={() => onPress(account)}
+                  key={account.address}
+                  account={account}
+                  isHidden={!showHidden && account.isHidden}
+                  isSelected={account.isSelected}
+                />
+              );
+            })}
       </CardList>
-      {anyHiddenAccounts && (
-        <Button size="xs" color="gray" variant="link" onPress={toggle}>
+      {!isLoading && anyHiddenAccounts && (
+        <Button
+          size="xs"
+          color="gray"
+          variant="link"
+          onPress={toggle}
+          css={styles.hiddenBtn}
+        >
           {showHidden ? 'Hide' : 'Show'} hidden accounts
         </Button>
       )}
     </Stack>
   );
 }
+
+const styles = {
+  hiddenBtn: cssObj({
+    color: '$gray8',
+  }),
+};

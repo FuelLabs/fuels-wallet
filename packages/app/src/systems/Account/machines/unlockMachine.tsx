@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { WalletUnlocked } from '@fuel-ts/wallet';
+import type { WalletManager } from '@fuel-ts/wallet-manager';
 import type { InterpreterFrom, StateFrom, TransitionConfig } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-import type { AccountInputs } from '~/systems/Account';
-import { AccountService } from '~/systems/Account';
-import { FetchMachine } from '~/systems/Core';
+import { AccountService } from '~/systems/Account/services';
+import type { AccountInputs } from '~/systems/Account/services';
+import { FetchMachine } from '~/systems/Core/machines/fetchMachine';
 
 export type UnlockMachineContext = Record<string, never>;
 
@@ -13,12 +14,22 @@ type MachineServices = {
   unlock: {
     data: WalletUnlocked;
   };
+  unlockVault: {
+    data: WalletManager;
+  };
 };
 
-export type UnlockMachineEvents = {
+export type UnlockVaultEvent = {
+  type: 'UNLOCK_VAULT';
+  input: AccountInputs['unlockVault'];
+};
+export type UnlockWalletEvent = {
   type: 'UNLOCK_WALLET';
   input: AccountInputs['unlock'];
 };
+export type UnlockMachineEvents = UnlockWalletEvent | UnlockVaultEvent;
+export type UnlockWalletReturn = MachineServices['unlock'];
+export type UnlockVaultReturn = MachineServices['unlockVault'];
 
 export const unlockMachineError = (_: any, ev: { data: { error?: any } }) => {
   return Boolean(ev.data?.error);
@@ -58,11 +69,32 @@ export const unlockMachine = createMachine(
           UNLOCK_WALLET: {
             target: 'unlocking',
           },
+          UNLOCK_VAULT: {
+            target: 'unlockingVault',
+          },
         },
       },
       unlocking: {
         invoke: {
           src: 'unlock',
+          data: {
+            input: (_: UnlockMachineContext, ev: UnlockMachineEvents) =>
+              ev.input,
+          },
+          onDone: [
+            {
+              target: 'failed',
+              cond: FetchMachine.hasError,
+            },
+            {
+              target: 'done',
+            },
+          ],
+        },
+      },
+      unlockingVault: {
+        invoke: {
+          src: 'unlockVault',
           data: {
             input: (_: UnlockMachineContext, ev: UnlockMachineEvents) =>
               ev.input,
@@ -84,7 +116,7 @@ export const unlockMachine = createMachine(
       },
       done: {
         type: 'final',
-        data: (_, e: { data: WalletUnlocked }) => e.data,
+        data: (_, e: { data: WalletUnlocked | WalletManager }) => e.data,
       },
     },
   },
@@ -98,6 +130,19 @@ export const unlockMachine = createMachine(
             throw new Error('Password is required to unlock wallet');
           }
           return AccountService.unlock(input);
+        },
+      }),
+      unlockVault: FetchMachine.create<
+        AccountInputs['unlockVault'],
+        WalletManager
+      >({
+        showError: false,
+        maxAttempts: 1,
+        async fetch({ input }) {
+          if (!input || !input?.password) {
+            throw new Error('Password is required to unlock vault');
+          }
+          return AccountService.unlockVault(input);
         },
       }),
     },
