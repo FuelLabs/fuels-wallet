@@ -11,6 +11,9 @@ export default {
   title: 'Transaction/Components/ActivityItem',
 };
 
+const ownerAddress =
+  MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].from?.address || '';
+
 export const Success = (args: TxItemProps) => {
   MOCK_TRANSACTION_CONTRACT_CALL.tx.status = TxStatus.success;
   return (
@@ -22,8 +25,16 @@ export const Success = (args: TxItemProps) => {
         gap: '$4',
       }}
     >
-      <ActivityItem {...args} transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx} />
-      <ActivityItem {...args} transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx} />
+      <ActivityItem
+        {...args}
+        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
+        ownerAddress={ownerAddress}
+      />
+      <ActivityItem
+        {...args}
+        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
+        ownerAddress={ownerAddress}
+      />
     </Box>
   );
 };
@@ -39,8 +50,16 @@ export const Pending = (args: TxItemProps) => {
         gap: '$4',
       }}
     >
-      <ActivityItem {...args} transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx} />
-      <ActivityItem {...args} transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx} />
+      <ActivityItem
+        {...args}
+        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
+        ownerAddress={ownerAddress}
+      />
+      <ActivityItem
+        {...args}
+        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
+        ownerAddress={ownerAddress}
+      />
     </Box>
   );
 };
@@ -56,8 +75,16 @@ export const Error = (args: TxItemProps) => {
         gap: '$4',
       }}
     >
-      <ActivityItem {...args} transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx} />
-      <ActivityItem {...args} transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx} />
+      <ActivityItem
+        {...args}
+        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
+        ownerAddress={ownerAddress}
+      />
+      <ActivityItem
+        {...args}
+        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
+        ownerAddress={ownerAddress}
+      />
     </Box>
   );
 };
