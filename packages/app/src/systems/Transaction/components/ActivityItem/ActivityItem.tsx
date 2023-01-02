@@ -14,6 +14,7 @@ import { TxIcon } from '../TxIcon';
 
 import { ActivityItemLoader } from './ActivityItemLoader';
 
+import { getAssetInfoById } from '~/systems/Asset';
 import { shortAddress } from '~/systems/Core';
 
 export type TxItemProps = {
@@ -62,6 +63,8 @@ export const ActivityItem: TxItemComponent = ({
   const formatDate = (date: Date) =>
     `${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}`;
 
+  const assetInfo = getAssetInfoById(amount?.assetId, amount);
+
   return (
     <Card css={styles.root} data-testid="activity-item">
       <TxIcon operationName={mainOperation.name} />
@@ -73,8 +76,7 @@ export const ActivityItem: TxItemComponent = ({
 
           <Flex css={styles.item}>
             <Text color={txColor} fontSize="sm">
-              {/* @TODO: figure out a way to fetch the asset ID */}
-              {`${bn(amount?.amount).format()}`}
+              {`${bn(amount?.amount).format()} ${assetInfo.symbol}`}
             </Text>
           </Flex>
         </Flex>
