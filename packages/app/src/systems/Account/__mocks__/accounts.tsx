@@ -22,6 +22,11 @@ export const MOCK_ACCOUNTS = [
     isHidden: true,
     publicKey: '0x00',
   },
+  {
+    name: 'Account 4',
+    address: 'fuel10va6297tkerdcn5u8mxjm9emudsmkj85pq5x7t7stkmzmc4nvs3qvn99qz',
+    publicKey: '0x00',
+  },
 ];
 
 export async function createMockAccount() {
