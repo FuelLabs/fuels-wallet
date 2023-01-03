@@ -46,6 +46,10 @@ export class FuelWalletConnection extends WindowConnection {
     return this.client.request('network', {});
   }
 
+  async isConnected(): Promise<boolean> {
+    return this.client.request('isConnected', {});
+  }
+
   async connect(network?: FuelProviderConfig): Promise<boolean> {
     if (network) this.selectNetwork(network);
     return this.client.request('connect', {});

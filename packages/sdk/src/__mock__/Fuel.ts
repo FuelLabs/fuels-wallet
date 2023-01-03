@@ -22,6 +22,7 @@ export class MockConnection extends BaseConnection {
     this.externalMethods([
       this.connect,
       this.disconnect,
+      this.isConnected,
       this.accounts,
       this.signMessage,
       this.sendTransaction,
@@ -40,6 +41,10 @@ export class MockConnection extends BaseConnection {
         response,
       },
     });
+  }
+
+  async isConnected() {
+    return true;
   }
 
   async connect() {
