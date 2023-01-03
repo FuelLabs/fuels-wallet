@@ -1,4 +1,5 @@
 import type {
+  Account,
   CommunicationMessage,
   FuelEventArg,
   FuelEvents,
@@ -77,6 +78,10 @@ export class FuelWalletConnection extends WindowConnection {
       provider: this.providerConfig,
       transaction: JSON.stringify(transaction),
     });
+  }
+
+  async getSelectedAccount(): Promise<Account> {
+    return this.client.request('getSelectedAccount', {});
   }
 
   on<E extends FuelEvents['type'], D extends FuelEventArg<E>>(

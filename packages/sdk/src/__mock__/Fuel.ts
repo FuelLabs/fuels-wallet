@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { PAGE_SCRIPT_NAME } from '@fuel-wallet/types';
+import type { Account } from '@fuel-wallet/types';
 import EventEmitter from 'events';
 import { transactionRequestify, Wallet } from 'fuels';
 import type { JSONRPCResponse } from 'json-rpc-2.0';
@@ -25,6 +26,7 @@ export class MockConnection extends BaseConnection {
       this.accounts,
       this.signMessage,
       this.sendTransaction,
+      this.getSelectedAccount,
     ]);
   }
 
@@ -62,6 +64,15 @@ export class MockConnection extends BaseConnection {
     const transaction = transactionRequestify(JSON.parse(params.transaction));
     const response = await userWallet.sendTransaction(transaction);
     return response.id;
+  }
+
+  async getSelectedAccount() {
+    const mockSelectedAccount: Account = {
+      name: 'Account1',
+      address: userWallet.address.toAddress(),
+      publicKey: userWallet.publicKey,
+    };
+    return mockSelectedAccount;
   }
 }
 

@@ -124,4 +124,9 @@ describe('Fuel', () => {
     // wait for transaction to be completed
     await response.wait();
   });
+
+  test('getSelectedAccount', async () => {
+    const selectedAccount = await fuel.getSelectedAccount();
+    expect(selectedAccount.address).toBe(userWallet.address.toAddress());
+  });
 });
