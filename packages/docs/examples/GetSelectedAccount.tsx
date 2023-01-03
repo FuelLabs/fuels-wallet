@@ -3,43 +3,42 @@ import { cssObj } from '@fuel-ui/css';
 import { Button, Stack, Tag, Text } from '@fuel-ui/react';
 import { useState } from 'react';
 
-import type { Account } from '~/../types/src';
 import { ExampleBox } from '~/src/components/ExampleBox';
 import { useFuel } from '~/src/hooks/useFuel';
 import { useIsConnected } from '~/src/hooks/useIsConnected';
 import { useLoading } from '~/src/hooks/useLoading';
 
-export function ListAccounts() {
+export function GetSelectedAccount() {
   const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
-  const [selectedAccount, setSelectedAccount] = useState<Account>();
-  const [handleGetAccounts, isLoadingAccounts, errorGetAccounts] = useLoading(
-    async () => {
-      console.debug('Request getSelectedAccount to Wallet!');
-      const selectedAccount = await fuel.getSelectedAccount();
-      console.debug('Selected Account ', selectedAccount);
-      setSelectedAccount(selectedAccount);
-    }
-  );
+  const [selectedAccount, setSelectedAccount] = useState<string>('');
+  const [
+    handleGetSelectedAccount,
+    isLoadingSelectedAccount,
+    errorGetSelectedAccount,
+  ] = useLoading(async () => {
+    console.debug('Request getSelectedAccount to Wallet!');
+    const selectedAccount = await fuel.getSelectedAccount();
+    console.debug('Selected Account ', selectedAccount);
+    setSelectedAccount(selectedAccount.address);
+  });
 
-  const errorMessage = errorGetAccounts || notDetected;
+  const errorMessage = errorGetSelectedAccount || notDetected;
 
   return (
     <ExampleBox error={errorMessage}>
       <Stack css={styles.root}>
         <Button
-          onPress={handleGetAccounts}
-          isLoading={isLoadingAccounts}
-          isDisabled={isLoadingAccounts || !isConnected}
+          onPress={handleGetSelectedAccount}
+          isLoading={isLoadingSelectedAccount}
+          isDisabled={isLoadingSelectedAccount || !isConnected}
         >
           Get accounts
         </Button>
         <Stack gap="$3" css={{ mt: '$2' }}>
           <Tag size="xs" color="gray" variant="ghost">
             {!!selectedAccount && (
-              <Text key={selectedAccount.address}>
-                {selectedAccount.address}
-              </Text>
+              <Text key={selectedAccount}>{selectedAccount}</Text>
             )}
           </Tag>
         </Stack>
