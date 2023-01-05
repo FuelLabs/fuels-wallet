@@ -193,6 +193,6 @@ export class BackgroundService {
 
   async getSelectedAccount() {
     const selectedAccount = await AccountService.getSelectedAccount();
-    return selectedAccount;
+    return selectedAccount?.address;
   }
 }

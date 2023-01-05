@@ -127,6 +127,6 @@ describe('Fuel', () => {
 
   test('getSelectedAccount', async () => {
     const selectedAccount = await fuel.getSelectedAccount();
-    expect(selectedAccount.address).toBe(userWallet.address.toAddress());
+    expect(selectedAccount).toBe(userWallet.address.toAddress());
   });
 });
