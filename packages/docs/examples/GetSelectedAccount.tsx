@@ -20,7 +20,7 @@ export function GetSelectedAccount() {
     console.debug('Request getSelectedAccount to Wallet!');
     const selectedAccount = await fuel.getSelectedAccount();
     console.debug('Selected Account ', selectedAccount);
-    setSelectedAccount(selectedAccount.address);
+    setSelectedAccount(selectedAccount);
   });
 
   const errorMessage = errorGetSelectedAccount || notDetected;
