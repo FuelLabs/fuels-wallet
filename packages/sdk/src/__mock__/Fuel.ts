@@ -25,6 +25,7 @@ export class MockConnection extends BaseConnection {
       this.accounts,
       this.signMessage,
       this.sendTransaction,
+      this.getSelectedAccount,
     ]);
   }
 
@@ -62,6 +63,10 @@ export class MockConnection extends BaseConnection {
     const transaction = transactionRequestify(JSON.parse(params.transaction));
     const response = await userWallet.sendTransaction(transaction);
     return response.id;
+  }
+
+  async getSelectedAccount() {
+    return userWallet.address.toAddress();
   }
 }
 

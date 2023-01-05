@@ -32,6 +32,7 @@ export class BackgroundService {
       this.disconnect,
       this.signMessage,
       this.sendTransaction,
+      this.getSelectedAccount,
     ]);
   }
 
@@ -188,5 +189,10 @@ export class BackgroundService {
       transaction
     );
     return signedMessage;
+  }
+
+  async getSelectedAccount() {
+    const selectedAccount = await AccountService.getSelectedAccount();
+    return selectedAccount?.address;
   }
 }
