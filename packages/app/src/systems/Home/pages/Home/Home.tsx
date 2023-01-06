@@ -15,7 +15,7 @@ export function Home() {
   const navigate = useNavigate();
 
   const sendAction = () => {
-    window.alert('Send is not implemeted yet');
+    window.alert('Send is not implemented yet');
   };
 
   const goToReceive = () => {
