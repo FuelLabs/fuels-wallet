@@ -15,6 +15,11 @@ describe('Fuel', () => {
     MockConnection.start();
   });
 
+  test('isConnected', async () => {
+    const isConnected = await fuel.isConnected();
+    expect(isConnected).toBeTruthy();
+  });
+
   test('connect', async () => {
     const isConnected = await fuel.connect();
     expect(isConnected).toBeTruthy();

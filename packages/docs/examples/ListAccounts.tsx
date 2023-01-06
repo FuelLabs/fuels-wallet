@@ -11,7 +11,7 @@ import { useLoading } from '~/src/hooks/useLoading';
 export function ListAccounts() {
   const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
-  const [accounts, setAccounts] = useState<string[]>([]);
+  const [accounts, setAccounts] = useState<Array<string>>([]);
   const [handleGetAccounts, isLoadingAccounts, errorGetAccounts] = useLoading(
     async () => {
       console.debug('Request accounts to Wallet!');
