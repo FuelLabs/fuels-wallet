@@ -15,6 +15,11 @@ describe('Fuel', () => {
     MockConnection.start();
   });
 
+  test('isConnected', async () => {
+    const isConnected = await fuel.isConnected();
+    expect(isConnected).toBeTruthy();
+  });
+
   test('connect', async () => {
     const isConnected = await fuel.connect();
     expect(isConnected).toBeTruthy();
@@ -123,5 +128,10 @@ describe('Fuel', () => {
 
     // wait for transaction to be completed
     await response.wait();
+  });
+
+  test('getSelectedAccount', async () => {
+    const selectedAccount = await fuel.getSelectedAccount();
+    expect(selectedAccount).toBe(userWallet.address.toAddress());
   });
 });
