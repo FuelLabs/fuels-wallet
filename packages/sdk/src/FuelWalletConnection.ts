@@ -83,6 +83,10 @@ export class FuelWalletConnection extends WindowConnection {
     });
   }
 
+  async getSelectedAccount(): Promise<string> {
+    return this.client.request('getSelectedAccount', {});
+  }
+
   on<E extends FuelEvents['type'], D extends FuelEventArg<E>>(
     eventName: E,
     listener: (data: D) => void
