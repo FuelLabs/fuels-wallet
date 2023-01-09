@@ -41,13 +41,11 @@ function TxContentInfo({
   footer,
   showDetails,
 }: TxContentInfoProps) {
+  const status = tx?.status || txStatus;
   return (
     <MotionStack {...animations.slideInTop()} gap="$3">
       {header}
-      <TxOperations
-        operations={tx?.operations}
-        status={tx?.status || txStatus}
-      />
+      <TxOperations operations={tx?.operations} status={status} />
       {showDetails && <TxDetails fee={tx?.fee} amountSent={amount!} />}
       {footer}
     </MotionStack>

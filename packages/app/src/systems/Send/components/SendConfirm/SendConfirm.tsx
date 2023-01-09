@@ -34,7 +34,7 @@ export function SendConfirm({ txRequest }: SendConfirmProps) {
               <TxHeader
                 id={txRequest.tx?.id}
                 type={txRequest.tx?.type}
-                status={txRequest.tx?.status}
+                status={txRequest.tx?.status || txRequest.approveStatus()}
                 providerUrl={txRequest.providerUrl}
               />
             )}

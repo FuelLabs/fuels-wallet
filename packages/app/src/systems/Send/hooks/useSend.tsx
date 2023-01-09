@@ -51,6 +51,7 @@ const selectors = {
       (state: SendMachineState) => {
         if (txStatus === TxRequestStatus.success) return 'Transaction sent';
         if (txStatus === TxRequestStatus.failed) return 'Transaction failed';
+        if (txStatus === TxRequestStatus.sending) return 'Sending transaction';
         if (state.matches('creatingTx')) return 'Creating transaction';
         if (state.matches('confirming')) return 'Approve Transaction';
         if (state.matches('invalid')) return 'Invalid transaction';
