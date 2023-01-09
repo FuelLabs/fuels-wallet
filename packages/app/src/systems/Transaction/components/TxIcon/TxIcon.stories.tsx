@@ -10,7 +10,7 @@ export default {
   title: 'Transaction/Components/TxIcon',
 } as ComponentMeta<typeof TxIcon>;
 
-export const Template: ComponentStory<typeof TxIcon> = (args: TxIconProps) => (
+const Template: ComponentStory<typeof TxIcon> = (args: TxIconProps) => (
   <TxIcon {...args} />
 );
 

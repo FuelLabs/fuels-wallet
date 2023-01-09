@@ -12,6 +12,6 @@ export const TxIconLoader = (props: IContentLoaderProps) => (
     foregroundColor={darkColors.gray3}
     {...props}
   >
-    <circle cx="24" cy="36" r="20" />
+    <circle cx="20" cy="20" r="20" />
   </ContentLoader>
 );
