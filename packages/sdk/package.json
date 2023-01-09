@@ -38,10 +38,9 @@
   },
   "devDependencies": {
     "@fuel-wallet/types": "workspace:*",
-    "fuels": "0.28.1",
     "@types/uuid": "^9.0.0",
+    "fuels": "0.28.1",
     "jest-webextension-mock": "^3.8.7",
-    "ts-jest": "^29.0.3",
     "tsup": "^6.5.0"
   }
 }
