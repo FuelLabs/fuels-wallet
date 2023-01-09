@@ -19,7 +19,7 @@ import type {
 import { ReceiptType, TransactionType, OutputType, InputType, bn } from 'fuels';
 
 import type { Tx } from '../utils';
-import { TxStatus, TxType } from '../utils';
+import { OperationName, TxStatus, TxType } from '../utils';
 
 type MockTransaction = {
   transaction: Transaction;
@@ -180,7 +180,7 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
     id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7',
     operations: [
       {
-        name: 'Contract call',
+        name: OperationName.contractCall,
         from: {
           type: AddressType.account,
           address:
@@ -306,7 +306,7 @@ export const MOCK_TRANSACTION_CREATE_CONTRACT: MockTransaction = {
     id: '0x755fecd0059b835efbcd0e647590c38f87b95ca062ec978f28a085042c05e3a9',
     operations: [
       {
-        name: 'Contract created',
+        name: OperationName.contractCreated,
         from: {
           type: AddressType.account,
           address:
@@ -357,7 +357,7 @@ export const MOCK_TRANSACTION_MINT: MockTransaction = {
     id: '0xc321cc16ea5c387c780d5d3061e1ddb5a94574dac0f79215f3ff3abf9c2fb3a0',
     operations: [
       {
-        name: 'Pay network fee to block producer',
+        name: OperationName.payBlockProducer,
         from: { type: AddressType.account, address: 'Network' },
         to: {
           type: AddressType.account,
@@ -479,7 +479,7 @@ export const MOCK_TRANSACTION_TRANSFER: MockTransaction = {
     id: '0xdcbd3117aab0ec4a9a00f4a0f81616878140dccc3046b8fc4510fa2181d955e7',
     operations: [
       {
-        name: 'Transfer asset',
+        name: OperationName.transfer,
         from: {
           type: AddressType.account,
           address:
