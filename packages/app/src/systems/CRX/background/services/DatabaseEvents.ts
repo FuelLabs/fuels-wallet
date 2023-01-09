@@ -1,10 +1,13 @@
+import type { EventMessage, EventMessageEvents } from '@fuel-wallet/types';
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { DatabaseObservable } from './DatabaseObservable';
 
+import { ConnectionService } from '~/systems/DApp/services';
+
 export class DatabaseEvents {
-  readonly databaseObservable: DatabaseObservable<['applications']>;
+  readonly databaseObservable: DatabaseObservable<['networks']>;
   readonly communicationProtocol: CommunicationProtocol;
 
   constructor(communicationProtocol: CommunicationProtocol) {
@@ -17,34 +20,36 @@ export class DatabaseEvents {
     return new DatabaseEvents(communicationProtocol);
   }
 
+  createEvents(events: EventMessageEvents): EventMessage {
+    return {
+      target: CONTENT_SCRIPT_NAME,
+      type: MessageTypes.event,
+      events,
+    };
+  }
+
   setupApplicationWatcher() {
-    this.databaseObservable.on('applications:create', (createEvent) => {
-      this.communicationProtocol.broadcast(createEvent.key, {
-        target: CONTENT_SCRIPT_NAME,
-        type: MessageTypes.event,
-        events: [
+    this.databaseObservable.on('networks:update', async (updateEvent) => {
+      const connections = await ConnectionService.getConnections();
+      const origins = connections.map((connection) => connection.origin);
+
+      // Broadcast only if the network is selected
+      if (!updateEvent.obj.isSelected) return;
+
+      this.communicationProtocol.broadcast(
+        origins,
+        this.createEvents([
           {
-            event: 'accounts',
-            params: [createEvent.obj.accounts],
+            event: 'network',
+            params: [
+              {
+                id: updateEvent.obj.id,
+                url: updateEvent.obj.url,
+              },
+            ],
           },
-          {
-            event: 'connection',
-            params: [true],
-          },
-        ],
-      });
-    });
-    this.databaseObservable.on('applications:delete', (deleteEvent) => {
-      this.communicationProtocol.broadcast(deleteEvent.key, {
-        target: CONTENT_SCRIPT_NAME,
-        type: MessageTypes.event,
-        events: [
-          {
-            event: 'connection',
-            params: [false],
-          },
-        ],
-      });
+        ])
+      );
     });
   }
 }

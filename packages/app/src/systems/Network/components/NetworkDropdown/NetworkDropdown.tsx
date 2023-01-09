@@ -4,16 +4,22 @@ import type { Network } from '@fuel-wallet/types';
 
 export type NetworkDropdownProps = {
   selected?: Network;
+  isDisabled?: boolean;
   onPress?: (network: Network) => void;
 };
 
-export function NetworkDropdown({ selected, onPress }: NetworkDropdownProps) {
+export function NetworkDropdown({
+  selected,
+  isDisabled,
+  onPress,
+}: NetworkDropdownProps) {
   return (
     <Button
       size="xs"
       css={styles.trigger}
       onPress={() => onPress?.(selected!)}
       aria-label="Selected Network"
+      isDisabled={isDisabled}
     >
       {/* {selected && <NetworkStatus network={selected} />} */}
       {selected?.name}
@@ -35,6 +41,9 @@ const styles = {
     },
     '&:focus': {
       outlineColor: '$gray2 !important',
+    },
+    '&[aria-disabled="true"]': {
+      opacity: 1,
     },
   }),
 };
