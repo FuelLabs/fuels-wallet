@@ -24,7 +24,13 @@ export function SearchInput({
       <Input.Field
         {...props}
         type="search"
-        role="search"
+        /**
+         * Since we already have type="search" we don't need role here, but
+         * @fuel-ui automatically add role to input. So, we need to pass
+         * role="null" in order to remove it and pass a11y tests
+         * */
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        role={null as any}
         aria-label="Search"
         value={value || ''}
         onChange={(e) => onChange?.(e.target.value)}

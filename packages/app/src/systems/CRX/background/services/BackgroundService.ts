@@ -27,11 +27,13 @@ export class BackgroundService {
     this.server.applyMiddleware(this.connectionMiddlware.bind(this));
     this.setupListeners();
     this.externalMethods([
+      this.isConnected,
       this.accounts,
       this.connect,
       this.disconnect,
       this.signMessage,
       this.sendTransaction,
+      this.getSelectedAccount,
     ]);
   }
 
@@ -66,6 +68,11 @@ export class BackgroundService {
     });
   }
 
+  async isConnected(origin: string) {
+    const isConnected = await ConnectionService.getConnection(origin);
+    return !!isConnected;
+  }
+
   async requireAccounts() {
     const accounts = await AccountService.getAccounts();
     if (accounts.length === 0) {
@@ -74,8 +81,8 @@ export class BackgroundService {
   }
 
   async requireConnection(origin: string) {
-    const authorizedApp = await ConnectionService.getConnection(origin);
-    if (!authorizedApp) {
+    const isConnected = await this.isConnected(origin);
+    if (!isConnected) {
       throw new Error(
         'Connection not established. Please call connect() first to request a connection'
       );
@@ -87,8 +94,9 @@ export class BackgroundService {
     request: JSONRPCRequest,
     serverParams: EventOrigin
   ) {
-    // If the method is not connect check if connection is already established
-    if (request.method !== 'connect') {
+    // If the method is not connect or isConnected
+    // check if connection is already established
+    if (!['connect', 'isConnected'].includes(request.method)) {
       await this.requireConnection(serverParams!.origin);
     } else {
       await this.requireAccounts();
@@ -188,5 +196,10 @@ export class BackgroundService {
       transaction
     );
     return signedMessage;
+  }
+
+  async getSelectedAccount() {
+    const selectedAccount = await AccountService.getSelectedAccount();
+    return selectedAccount?.address;
   }
 }

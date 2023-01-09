@@ -31,14 +31,14 @@
     "events": "^3.3.0",
     "json-rpc-2.0": "^1.4.2",
     "uuid": "^9.0.0",
-    "xstate": "^4.35.1"
+    "xstate": "^4.35.2"
   },
   "peerDependencies": {
-    "fuels": ">=0.28.0"
+    "fuels": ">=0.28.1"
   },
   "devDependencies": {
     "@fuel-wallet/types": "workspace:*",
-    "fuels": "0.28.0",
+    "fuels": "0.28.1",
     "@types/uuid": "^9.0.0",
     "jest-webextension-mock": "^3.8.7",
     "ts-jest": "^29.0.3",
