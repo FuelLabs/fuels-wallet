@@ -28,13 +28,15 @@ export function Header() {
           <Link href="/docs/install" className={isDocsActive ? 'active' : ''}>
             Docs
           </Link>
-          <a
-            href={process.env.NEXT_PUBLIC_STORYBOOK_URL}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Storybook
-          </a>
+          {process.env.NEXT_PUBLIC_PREVIEW && (
+            <a
+              href={process.env.NEXT_PUBLIC_STORYBOOK_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Storybook
+            </a>
+          )}
           <a
             href="https://github.com/fuellabs/fuels-wallet"
             target="_blank"
