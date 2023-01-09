@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@fuel-ui/test-utils';
+import { act, fireEvent, render, screen, waitFor } from '@fuel-ui/test-utils';
 import { useState } from 'react';
 
 import { MOCK_ASSETS_AMOUNTS } from '../../__mocks__/assets';
@@ -33,16 +33,16 @@ function Content({ initialSelected = null }: ContentProps) {
 
 describe('AssetSelect', () => {
   it('should select an asset when click', async () => {
-    const { user, container } = render(<Content />);
+    const { container } = render(<Content />);
 
     const input = screen.getByText('Select one asset');
     expect(input).toBeInTheDocument();
-    await user.click(input);
+    await act(() => fireEvent.click(input));
 
     const etherItem = await screen.findByText('Ethereum');
     expect(etherItem).toBeInTheDocument();
+    await act(() => fireEvent.click(etherItem));
 
-    await user.press('Enter');
     const trigger = container.querySelector('#fuel_asset-select');
     expect(() => screen.getByText('Select one asset')).toThrow();
     expect(trigger?.textContent?.includes('Ethereum')).toBe(true);
