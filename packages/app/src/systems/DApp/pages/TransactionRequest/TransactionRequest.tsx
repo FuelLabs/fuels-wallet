@@ -1,13 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
 
-import { ConnectInfo, TxContent } from '../../components';
+import { ConnectInfo } from '../../components';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
 import { IS_CRX_POPUP } from '~/config';
 import { Layout, UnlockDialog } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
-import { TxHeader } from '~/systems/Transaction';
+import { TxContent, TxHeader } from '~/systems/Transaction';
 
 export function TransactionRequest() {
   const txRequest = useTransactionRequest({ isOriginRequired: true });

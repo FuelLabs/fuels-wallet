@@ -1,5 +1,5 @@
 import { Layout } from '~/systems/Core';
-import { TxContent } from '~/systems/DApp';
+import { TxContent } from '~/systems/Transaction';
 
 export function SendLoading() {
   return (

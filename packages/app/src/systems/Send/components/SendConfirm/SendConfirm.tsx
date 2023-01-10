@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ContentHeader, Layout, Pages } from '~/systems/Core';
 import type { UseTransactionRequestReturn } from '~/systems/DApp';
-import { TxContent } from '~/systems/DApp';
-import { TxHeader } from '~/systems/Transaction';
+import { TxContent, TxHeader } from '~/systems/Transaction';
 
 export type SendConfirmProps = {
   txRequest: UseTransactionRequestReturn;

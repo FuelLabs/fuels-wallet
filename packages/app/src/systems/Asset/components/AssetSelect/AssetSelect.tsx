@@ -1,4 +1,4 @@
-import { cssObj } from '@fuel-ui/css';
+import { cssObj, cx } from '@fuel-ui/css';
 import type { DropdownProps } from '@fuel-ui/react';
 import {
   Avatar,
@@ -18,8 +18,8 @@ import React, { useState } from 'react';
 
 import { getAssetInfoById } from '../../utils';
 
-import { MAX_FRACTION_DIGITS } from '~/config';
 import type { Maybe } from '~/systems/Core';
+import { formatAmount } from '~/systems/Core';
 import type { TxInputCoin, TxOutputCoin } from '~/systems/Transaction';
 
 export type AssetSelectInput = AssetAmount | Coin | TxOutputCoin | TxInputCoin;
@@ -36,8 +36,8 @@ export function AssetSelect({
   onSelect,
   ...props
 }: AssetSelectProps) {
-  /** i'm using a ref here instead of a state in order to don't trigger a new re-render */
   const [width, setWidth] = useState<Maybe<number>>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const asset = selected && getAssetInfoById(selected?.assetId, selected);
 
   function handleSelect(assetId: React.Key) {
@@ -54,12 +54,7 @@ export function AssetSelect({
       const item = document.querySelector('#fuel_asset-select');
       setWidth(item?.clientWidth ?? null);
     }
-    /**
-     * I did this using dom manipulation instead of useState in order
-     * to avoid an unnecessary re-render
-     */
-    const arrow = document.querySelector('#fuel_asset-select > .fuel_icon');
-    arrow?.classList.toggle('rotate');
+    setIsOpen(isOpen);
   }
 
   return (
@@ -77,8 +72,14 @@ export function AssetSelect({
           css={styles.trigger}
           id="fuel_asset-select"
           aria-label="Select Asset"
-          rightIcon={<Icon icon="CaretDown" aria-label="Button Caret" />}
           data-value={asset?.name}
+          rightIcon={
+            <Icon
+              icon="CaretDown"
+              aria-label="Button Caret"
+              className={cx({ rotate: isOpen })}
+            />
+          }
         >
           <Flex css={styles.input}>
             {asset ? (
@@ -118,9 +119,7 @@ export function AssetSelect({
         {(items || []).map((item) => {
           const asset = getAssetInfoById(item.assetId, item);
           const amount = bn(asset.amount);
-          const amountStr = `${amount.format({
-            precision: MAX_FRACTION_DIGITS,
-          })} ${asset.symbol}`;
+          const amountStr = `${formatAmount(amount)} ${asset.symbol}`;
           return (
             <Dropdown.MenuItem
               key={asset.assetId}
