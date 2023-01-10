@@ -10,6 +10,7 @@ import { BottomBar } from './BottomBar';
 import { TopBar } from './TopBar';
 
 import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
+import { UnlockDialog } from '~/systems/Account';
 
 type Context = {
   isLoading?: boolean;
@@ -69,6 +70,7 @@ export const Layout: LayoutComponent = ({
           <>{children}</>
         ) : (
           <Flex css={styles.wrapper} ref={ref}>
+            <UnlockDialog />
             {children}
           </Flex>
         )}

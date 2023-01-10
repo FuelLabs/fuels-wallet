@@ -10,43 +10,35 @@ import {
   Stack,
 } from '@fuel-ui/react';
 
-import { useUnlockForm } from '../../hooks';
-import type { UnlockFormValues } from '../../hooks';
+import type { UnlockFormValues } from '../../hooks/useUnlockForm';
+import { useUnlockForm } from '../../hooks/useUnlockForm';
 import { UnlockForm } from '../UnlockForm';
 
+import { IS_CRX_POPUP } from '~/config';
+import { Services, store } from '~/store';
+import { useUnlock } from '~/systems/Account/hooks/useUnlock';
+
 export type UnlockDialogProps = {
-  title?: string;
-  unlockText?: string;
-  unlockError?: string;
-  isOpen?: boolean;
-  onClose?: () => void;
-  onUnlock: (value: string) => void;
-  isLoading?: boolean;
   isFullscreen?: boolean;
 };
 
 export function UnlockDialog({
-  title,
-  unlockText,
-  unlockError,
-  isOpen,
-  onClose,
-  onUnlock,
-  isLoading,
-  isFullscreen,
+  isFullscreen = IS_CRX_POPUP,
 }: UnlockDialogProps) {
-  const form = useUnlockForm({
-    password: unlockError,
-  });
+  const unlock = useUnlock();
+  const { unlockError, isUnlocking, isUnlockingLoading } = unlock;
+  const isLoading = isUnlockingLoading;
+
+  const form = useUnlockForm({ password: unlockError });
   const { handleSubmit } = form;
 
-  function onSubmit(values: UnlockFormValues) {
-    onUnlock(values.password);
+  function onSubmit({ password }: UnlockFormValues) {
+    store.send(Services.unlock, { type: 'UNLOCK', input: { password } });
   }
 
   return (
-    <Dialog isOpen={isOpen}>
-      <Dialog.Content css={styles.content(isFullscreen)}>
+    <Dialog isOpen={isUnlocking}>
+      <Dialog.Content css={styles.content} data-fullscreen={isFullscreen}>
         <Dialog.Heading>
           <Flex css={{ alignItems: 'center' }}>
             <Flex css={{ flex: 1 }}>
@@ -55,13 +47,13 @@ export function UnlockDialog({
                 icon={Icon.is('LockKeyOpen')}
                 css={styles.headingIcon}
               />
-              {title ?? 'Unlock Wallet'}
+              Unlocking Wallet
             </Flex>
             <IconButton
               variant="link"
               icon={<Icon icon="X" color="gray8" />}
               aria-label="Close unlock window"
-              onPress={onClose}
+              onPress={store.closeUnlock}
             />
           </Flex>
         </Dialog.Heading>
@@ -83,7 +75,7 @@ export function UnlockDialog({
               leftIcon={Icon.is('LockKeyOpen')}
               css={styles.button}
             >
-              {unlockText ?? 'Unlock'}
+              Unlock
             </Button>
           </Dialog.Footer>
         </Box>
@@ -104,21 +96,20 @@ const styles = {
   button: cssObj({
     width: '100%',
   }),
-  content: (isFullscreen?: boolean) =>
-    cssObj({
-      ...(isFullscreen && {
-        borderRadius: '$none',
-        width: '100vw',
-        maxWidth: '100vw',
-        height: '100vh',
-        maxHeight: '100vh',
-      }),
+  content: cssObj({
+    /** This is temporary until have this option on @fuel-ui */
+    'button[aria-label="Close"]': {
+      display: 'none',
+    },
 
-      /** This is temporary until have this option on @fuel-ui */
-      'button[aria-label="Close"]': {
-        display: 'none',
-      },
-    }),
+    '&[data-fullscreen="true"]': {
+      borderRadius: '$none',
+      width: '100vw',
+      maxWidth: '100vw',
+      height: '100vh',
+      maxHeight: '100vh',
+    },
+  }),
   description: cssObj({
     flex: 1,
   }),

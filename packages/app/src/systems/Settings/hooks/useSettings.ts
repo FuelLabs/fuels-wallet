@@ -9,12 +9,15 @@ import { useAccounts } from '~/systems/Account';
 import { Pages } from '~/systems/Core';
 
 const selectors = {
-  isChangingPassword: (state: SettingsMachineState) =>
-    state.matches('changingPassword'),
-  isUnlocking: (state: SettingsMachineState) => state.hasTag('unlocking'),
-  isGettingMnemonic: (state: SettingsMachineState) =>
-    state.matches('gettingMnemonic'),
-  words: (state: SettingsMachineState) => state.context.words,
+  words(state: SettingsMachineState) {
+    return state.context.words;
+  },
+  waitingPass(state: SettingsMachineState) {
+    return state.matches('idle');
+  },
+  isLoading(state: SettingsMachineState) {
+    return state.hasTag('loading');
+  },
 };
 
 export function useSettings() {
@@ -29,32 +32,30 @@ export function useSettings() {
       },
     })
   );
-  const { send } = service;
-  const isUnlocking = useSelector(service, selectors.isUnlocking);
-  const isChangingPassword = useSelector(service, selectors.isChangingPassword);
-  const isGettingMnemonic = useSelector(service, selectors.isGettingMnemonic);
-  const words = useSelector(service, selectors.words);
 
-  /** @description - This will unlock the wallet and get the mnemonic phrase */
-  function unlockAndGetMnemonic(password: string) {
-    send('UNLOCK_WALLET', { input: { password, account } });
-  }
+  const words = useSelector(service, selectors.words);
+  const waitingPass = useSelector(service, selectors.waitingPass);
+  const isLoading = useSelector(service, selectors.isLoading);
 
   /** @description - This will change the password of the wallet */
-  function changePassword(changePassword: AccountInputs['changePassword']) {
-    send('CHANGE_PASSWORD', {
-      input: changePassword,
-    });
+  function changePassword(input: AccountInputs['changePassword']) {
+    service.send('CHANGE_PASSWORD', { input });
+  }
+  function revealPassphrase(password: string) {
+    service.send('REVEAL_PASSPHRASE', { input: { account, password } });
+  }
+  function goBack() {
+    navigate(Pages.wallet());
   }
 
   return {
-    handlers: {
-      unlockAndGetMnemonic,
-      changePassword,
-    },
-    isUnlocking,
-    isChangingPassword,
-    isGettingMnemonic,
     words,
+    waitingPass,
+    isLoading,
+    handlers: {
+      changePassword,
+      revealPassphrase,
+      goBack,
+    },
   };
 }

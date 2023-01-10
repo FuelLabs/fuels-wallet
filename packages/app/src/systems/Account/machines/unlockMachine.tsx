@@ -1,55 +1,64 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { WalletUnlocked } from '@fuel-ts/wallet';
 import type { WalletManager } from '@fuel-ts/wallet-manager';
-import type { InterpreterFrom, StateFrom, TransitionConfig } from 'xstate';
+import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { AccountService } from '~/systems/Account/services';
 import type { AccountInputs } from '~/systems/Account/services';
+import type { Maybe } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core/machines/fetchMachine';
 
-export type UnlockMachineContext = Record<string, never>;
+export enum UnlockType {
+  wallet = 'wallet',
+  vault = 'vault',
+}
+
+export type UnlockHandlers = {
+  onCancel?: () => void;
+  onSuccess?: (ctx: UnlockMachineContext) => void;
+  onError?: (error: Error) => void;
+};
+
+export type UnlockInput = UnlockHandlers & {
+  type?: keyof typeof UnlockType;
+};
+
+export type UnlockResponse = {
+  error?: string;
+  wallet?: Maybe<WalletUnlocked>;
+  manager?: Maybe<WalletManager>;
+};
+
+type UnlockServiceReturn = Omit<UnlockResponse, 'error'>;
+
+export type UnlockMachineContext = {
+  input?: UnlockInput;
+  response?: UnlockResponse;
+};
 
 type MachineServices = {
   unlock: {
-    data: WalletUnlocked;
-  };
-  unlockVault: {
-    data: WalletManager;
+    data: WalletUnlocked | WalletManager;
   };
 };
 
-export type UnlockVaultEvent = {
-  type: 'UNLOCK_VAULT';
-  input: AccountInputs['unlockVault'];
-};
-export type UnlockWalletEvent = {
-  type: 'UNLOCK_WALLET';
-  input: AccountInputs['unlock'];
-};
-export type UnlockMachineEvents = UnlockWalletEvent | UnlockVaultEvent;
-export type UnlockWalletReturn = MachineServices['unlock'];
-export type UnlockVaultReturn = MachineServices['unlockVault'];
-
-export const unlockMachineError = (_: any, ev: { data: { error?: any } }) => {
-  return Boolean(ev.data?.error);
-};
-
-export const unlockMachineErrorAction = (
-  state: string,
-  field: string
-): TransitionConfig<any, any> => {
-  return {
-    cond: FetchMachine.hasError,
-    target: state,
-    actions: [
-      assign((ctx: any, ev: { data: { error?: any } }) => ({
-        ...ctx,
-        [field || 'error']: ev.data.error.message,
-      })),
-    ],
-  };
-};
+type InternalEvents =
+  | {
+      type: 'UNLOCK';
+      input: Pick<AccountInputs['unlock'], 'password'>;
+    }
+  | {
+      type: 'OPEN_UNLOCK';
+      input: UnlockInput;
+    }
+  | {
+      type: 'CLOSE_UNLOCK';
+      input?: null;
+    }
+  | {
+      type: 'RESET_UNLOCK';
+      input?: null;
+    };
 
 export const unlockMachine = createMachine(
   {
@@ -58,93 +67,108 @@ export const unlockMachine = createMachine(
     schema: {
       context: {} as UnlockMachineContext,
       services: {} as MachineServices,
-      events: {} as UnlockMachineEvents,
+      events: {} as InternalEvents,
     },
     predictableActionArguments: true,
     id: '(machine)',
-    initial: 'waitingPassword',
+    initial: 'closed',
     states: {
-      waitingPassword: {
+      closed: {
         on: {
-          UNLOCK_WALLET: {
+          OPEN_UNLOCK: {
+            target: 'waitingPassword',
+            actions: ['assignInput'],
+          },
+        },
+      },
+      waitingPassword: {
+        tags: ['opened'],
+        on: {
+          UNLOCK: {
             target: 'unlocking',
           },
-          UNLOCK_VAULT: {
-            target: 'unlockingVault',
+          CLOSE_UNLOCK: {
+            actions: ['resetInput', 'onCancel'],
+            target: 'closed',
           },
         },
       },
       unlocking: {
+        tags: ['loading', 'opened'],
         invoke: {
           src: 'unlock',
           data: {
-            input: (_: UnlockMachineContext, ev: UnlockMachineEvents) =>
-              ev.input,
+            input: (_: UnlockMachineContext, ev: InternalEvents) => ev.input,
           },
           onDone: [
             {
-              target: 'failed',
+              actions: ['assignError', 'onError'],
+              target: 'closed',
               cond: FetchMachine.hasError,
             },
             {
-              target: 'done',
+              actions: ['assignResponse', 'onSuccess'],
+              target: 'unlocked',
             },
           ],
         },
       },
-      unlockingVault: {
-        invoke: {
-          src: 'unlockVault',
-          data: {
-            input: (_: UnlockMachineContext, ev: UnlockMachineEvents) =>
-              ev.input,
+      unlocked: {
+        on: {
+          OPEN_UNLOCK: {
+            actions: ['bypassHandlers'],
           },
-          onDone: [
-            {
-              target: 'failed',
-              cond: FetchMachine.hasError,
-            },
-            {
-              target: 'done',
-            },
-          ],
+          RESET_UNLOCK: {
+            actions: ['reset'],
+            target: 'closed',
+          },
         },
-      },
-      failed: {
-        type: 'final',
-        data: (_, ev: { data: Error }) => ev.data,
-      },
-      done: {
-        type: 'final',
-        data: (_, e: { data: WalletUnlocked | WalletManager }) => e.data,
       },
     },
   },
   {
+    actions: {
+      reset: assign(() => ({})),
+      assignError: assign({
+        response: (_, ev) => ({
+          error: (ev.data as unknown as Error).message,
+        }),
+      }),
+      assignResponse: assign({
+        response: (_, ev) => ev.data as UnlockResponse,
+      }),
+      assignInput: assign({
+        input: (_, ev) => ev.input,
+      }),
+      resetInput: assign({
+        input: (_) => undefined,
+      }),
+      onCancel: ({ input }) => {
+        input?.onCancel?.();
+      },
+      onSuccess: (ctx) => {
+        ctx.input?.onSuccess?.(ctx);
+      },
+      onError: ({ input }, ev) => {
+        input?.onError?.(ev.data as unknown as Error);
+      },
+      bypassHandlers(ctx, ev) {
+        ev.input?.onSuccess?.(ctx);
+      },
+    },
     services: {
-      unlock: FetchMachine.create<AccountInputs['unlock'], WalletUnlocked>({
-        showError: false,
-        maxAttempts: 1,
-        async fetch({ input }) {
-          if (!input || !input?.password) {
-            throw new Error('Password is required to unlock wallet');
-          }
-          return AccountService.unlock(input);
-        },
-      }),
-      unlockVault: FetchMachine.create<
-        AccountInputs['unlockVault'],
-        WalletManager
-      >({
-        showError: false,
-        maxAttempts: 1,
-        async fetch({ input }) {
-          if (!input || !input?.password) {
-            throw new Error('Password is required to unlock vault');
-          }
-          return AccountService.unlockVault(input);
-        },
-      }),
+      unlock: FetchMachine.create<AccountInputs['unlock'], UnlockServiceReturn>(
+        {
+          showError: false,
+          maxAttempts: 1,
+          async fetch({ input }) {
+            if (!input?.password) {
+              throw new Error('Password is required to unlock wallet');
+            }
+            return AccountService.unlock(input);
+          },
+        }
+      ),
     },
   }
 );

@@ -1,21 +1,14 @@
+import { toast } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-import { send } from 'xstate/lib/actions';
 
 import type { AccountInputs } from '../services/account';
 import { AccountService } from '../services/account';
 
-import { unlockMachine, unlockMachineErrorAction } from './unlockMachine';
-import type {
-  UnlockMachine,
-  UnlockVaultReturn,
-  UnlockVaultEvent,
-} from './unlockMachine';
-
 import { IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
-import type { ChildrenMachine, Maybe } from '~/systems/Core';
+import type { Maybe } from '~/systems/Core';
 import { FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
@@ -28,7 +21,6 @@ type MachineContext = {
   accounts?: Account[];
   accountName?: string;
   account?: Maybe<Account>;
-  unlockError?: string;
   error?: unknown;
 };
 
@@ -50,17 +42,9 @@ type MachineServices = {
 export type MachineEvents =
   | { type: 'UPDATE_ACCOUNT'; input?: null }
   | { type: 'UPDATE_ACCOUNTS'; input?: null }
-  | {
-      type: 'HIDE_ACCOUNT';
-      input: AccountInputs['hideAccount'];
-    }
+  | { type: 'HIDE_ACCOUNT'; input: AccountInputs['hideAccount'] }
   | { type: 'SELECT_ACCOUNT'; input: AccountInputs['selectAccount'] }
-  | {
-      type: 'ADD_ACCOUNT';
-      input: string;
-    }
-  | { type: 'UNLOCK_VAULT'; input: AccountInputs['unlockVault'] }
-  | { type: 'CLOSE_UNLOCK'; input?: void };
+  | { type: 'ADD_ACCOUNT'; input: string };
 
 export const accountMachine = createMachine(
   {
@@ -92,7 +76,7 @@ export const accountMachine = createMachine(
           },
           ADD_ACCOUNT: {
             actions: ['assignAccountName'],
-            target: 'unlocking',
+            target: 'addingAccount',
           },
         },
         after: {
@@ -170,14 +154,11 @@ export const accountMachine = createMachine(
         invoke: {
           src: 'addAccount',
           data: {
-            input: (ctx: MachineContext, ev: UnlockVaultReturn) => {
-              return {
-                data: {
-                  manager: ev.data,
-                  name: ctx.accountName,
-                },
-              };
-            },
+            input: (ctx: MachineContext) => ({
+              data: {
+                name: ctx.accountName,
+              },
+            }),
           },
           onDone: [
             {
@@ -192,41 +173,11 @@ export const accountMachine = createMachine(
           ],
         },
       },
-      unlocking: {
-        invoke: {
-          id: 'unlock',
-          src: 'unlock',
-          onDone: [
-            unlockMachineErrorAction('unlocking', 'unlockError'),
-            {
-              actions: ['clearUnlockError'],
-              target: 'addingAccount',
-            },
-          ],
-        },
-        on: {
-          UNLOCK_VAULT: {
-            // send to the child machine
-            actions: [
-              send<MachineContext, UnlockVaultEvent>(
-                (_, ev) => ({
-                  type: 'UNLOCK_VAULT',
-                  input: ev.input,
-                }),
-                { to: 'unlock' }
-              ),
-            ],
-          },
-          CLOSE_UNLOCK: {
-            target: 'fetchingAccount',
-          },
-        },
-      },
       failed: {
         on: {
           ADD_ACCOUNT: {
             actions: ['assignAccountName'],
-            target: 'unlocking',
+            target: 'addingAccount',
           },
         },
         after: {
@@ -238,9 +189,6 @@ export const accountMachine = createMachine(
   {
     delays: { INTERVAL: 2000, TIMEOUT: 15000 },
     actions: {
-      clearUnlockError: assign({
-        unlockError: (_) => undefined,
-      }),
       assignAccounts: assign({
         accounts: (_, ev) => ev.data,
       }),
@@ -276,11 +224,11 @@ export const accountMachine = createMachine(
         accountName: (_) => undefined,
       }),
       notifyUpdateAccounts: () => {
+        toast.success('Account added successfully');
         store.updateAccounts();
       },
     },
     services: {
-      unlock: unlockMachine,
       fetchAccounts: FetchMachine.create<never, Account[]>({
         showError: true,
         async fetch() {
@@ -323,13 +271,19 @@ export const accountMachine = createMachine(
         showError: true,
         maxAttempts: 1,
         async fetch({ input }) {
+          const manager = await AccountService.getManagerUnlocked();
+          if (!manager) {
+            throw new Error('Manager is not unlocked');
+          }
           if (!input?.data.name.trim()) {
             throw new Error('Name cannot be empty');
           }
-          if (!input?.data.manager) {
-            throw new Error('Manager is not unlocked');
-          }
-          let account = await AccountService.addNewAccount(input);
+          let account = await AccountService.addNewAccount({
+            data: {
+              manager,
+              name: input.data.name,
+            },
+          });
           if (!account) {
             throw new Error('Failed to add account');
           }
@@ -353,7 +307,4 @@ export const accountMachine = createMachine(
 
 export type AccountMachine = typeof accountMachine;
 export type AccountMachineService = InterpreterFrom<AccountMachine>;
-export type AccountMachineState = StateFrom<AccountMachine> &
-  ChildrenMachine<{
-    unlock: UnlockMachine;
-  }>;
+export type AccountMachineState = StateFrom<AccountMachine>;

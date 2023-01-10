@@ -1,15 +1,8 @@
-import type { WalletUnlocked } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
-import { send, assign, createMachine } from 'xstate';
+import { assign, createMachine } from 'xstate';
 
-import { unlockMachineErrorAction, unlockMachine } from '~/systems/Account';
-import type {
-  UnlockMachine,
-  AccountInputs,
-  UnlockWalletEvent,
-} from '~/systems/Account';
+import { AccountService } from '~/systems/Account';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
-import type { ChildrenMachine } from '~/systems/Core';
 
 type MachineContext = {
   message?: string;
@@ -26,9 +19,7 @@ type MachineServices = {
 };
 
 type MachineEvents =
-  | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
   | { type: 'START_SIGN'; input: { origin: string; message: string } }
-  | { type: 'CLOSE_UNLOCK' }
   | { type: 'SIGN_MESSAGE' }
   | { type: 'REJECT' };
 
@@ -56,7 +47,7 @@ export const signMachine = createMachine(
       reviewMessage: {
         on: {
           SIGN_MESSAGE: {
-            target: 'unlocking',
+            target: 'signingMessage',
           },
           REJECT: {
             actions: [assignErrorMessage('Rejected request!')],
@@ -64,42 +55,11 @@ export const signMachine = createMachine(
           },
         },
       },
-      unlocking: {
-        invoke: {
-          id: 'unlock',
-          src: 'unlock',
-          onDone: [
-            unlockMachineErrorAction('unlocking', 'unlockError'),
-            {
-              target: 'signingMessage',
-            },
-          ],
-        },
-        on: {
-          UNLOCK_WALLET: {
-            // send to the child machine
-            actions: [
-              send<MachineContext, UnlockWalletEvent>(
-                (_, ev) => ({
-                  type: 'UNLOCK_WALLET',
-                  input: ev.input,
-                }),
-                { to: 'unlock' }
-              ),
-            ],
-          },
-          CLOSE_UNLOCK: {
-            target: 'reviewMessage',
-          },
-        },
-      },
       signingMessage: {
         invoke: {
           src: 'signMessage',
           data: {
-            input: (_: MachineContext, ev: { data: WalletUnlocked }) => {
-              return { message: _.message, wallet: ev.data };
-            },
+            input: (ctx: MachineContext) => ctx,
           },
           onDone: [
             FetchMachine.errorState('failed'),
@@ -129,19 +89,17 @@ export const signMachine = createMachine(
       }),
     },
     services: {
-      unlock: unlockMachine,
-      signMessage: FetchMachine.create<
-        { message: string; wallet: WalletUnlocked },
-        string
-      >({
+      signMessage: FetchMachine.create<{ message: string }, string>({
         showError: true,
         async fetch({ input }) {
-          if (!input?.wallet || !input?.message) {
+          const wallet = await AccountService.getWalletUnlocked();
+          if (!wallet) {
+            throw new Error('Wallet is required');
+          }
+          if (!input?.message) {
             throw new Error('Invalid network input');
           }
-
-          const signedMessage = input?.wallet.signMessage(input.message);
-          return signedMessage;
+          return wallet.signMessage(input.message);
         },
       }),
     },
@@ -150,7 +108,4 @@ export const signMachine = createMachine(
 
 export type SignMachine = typeof signMachine;
 export type SignMachineService = InterpreterFrom<typeof signMachine>;
-export type SignMachineState = StateFrom<typeof signMachine> &
-  ChildrenMachine<{
-    unlock: UnlockMachine;
-  }>;
+export type SignMachineState = StateFrom<typeof signMachine>;

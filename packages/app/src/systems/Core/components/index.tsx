@@ -9,6 +9,4 @@ export * from './RouteGuard';
 export * from './TestWrapper';
 export * from './VisibilityButton';
 export * from './RouterProvider';
-export * from './UnlockDialog';
-export * from './UnlockForm';
 export * from './AmountVisibility';

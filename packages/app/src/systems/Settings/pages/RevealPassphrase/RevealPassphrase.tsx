@@ -16,14 +16,14 @@ import { Layout, Mnemonic, Pages } from '~/systems/Core';
 
 export function RevealPassphrase() {
   const navigate = useNavigate();
-  const { isUnlocking, handlers, words, isGettingMnemonic } = useSettings();
   const [password, setPassword] = useState('');
+  const { handlers, ...ctx } = useSettings();
 
   return (
     <Layout title="Reveal Passphrase">
       <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
       <Layout.Content>
-        {isUnlocking ? (
+        {ctx.waitingPass || ctx.isLoading ? (
           <Flex gap="$4" direction="column">
             <Form.Control>
               <Form.Label>Enter your password to reveal</Form.Label>
@@ -33,22 +33,21 @@ export function RevealPassphrase() {
                 onChange={(ev) => setPassword(ev.target.value)}
               />
             </Form.Control>
-
             <Button
               leftIcon="Eye"
-              isLoading={isGettingMnemonic}
-              onPress={() => handlers.unlockAndGetMnemonic(password)}
+              isLoading={ctx.isLoading}
+              onPress={() => handlers.revealPassphrase(password)}
             >
               Reveal secret phrase
             </Button>
           </Flex>
         ) : (
           <Flex gap="$4" direction="column" align="center">
-            <Heading css={styles.heading} fontSize="lg" as="h4">
+            <Heading css={styles.heading} as="h4">
               Your private Secret Recovery Phrase
             </Heading>
             <Box css={styles.mnemonicWrapper}>
-              <Mnemonic type="read" value={words} />
+              <Mnemonic type="read" value={ctx.words} />
             </Box>
           </Flex>
         )}
@@ -59,9 +58,11 @@ export function RevealPassphrase() {
 
 const styles = {
   mnemonicWrapper: cssObj({
-    width: '330px',
+    mx: '$0',
   }),
   heading: cssObj({
     margin: '0',
+    fontSize: '$lg',
+    textAlign: 'center',
   }),
 };

@@ -1,6 +1,7 @@
 import type { Account } from '@fuel-wallet/types';
 import type { StoreClass } from '@fuel-wallet/xstore';
 
+import type { UnlockInput } from './machines';
 import type { AccountInputs } from './services';
 
 import type { StoreMachines } from '~/store';
@@ -24,10 +25,21 @@ export function accountEvents(store: StoreClass<StoreMachines>) {
       });
     },
     addAccount(input: string) {
-      store.send(Services.accounts, {
-        type: 'ADD_ACCOUNT',
-        input,
-      });
+      store.send(Services.accounts, { type: 'ADD_ACCOUNT', input });
+    },
+  };
+}
+
+export function unlockEvents(store: StoreClass<StoreMachines>) {
+  return {
+    unlock(input: UnlockInput) {
+      store.send(Services.unlock, { type: 'OPEN_UNLOCK', input });
+    },
+    closeUnlock() {
+      store.send(Services.unlock, { type: 'CLOSE_UNLOCK' });
+    },
+    resetUnlock() {
+      store.send(Services.unlock, { type: 'RESET_UNLOCK' });
     },
   };
 }

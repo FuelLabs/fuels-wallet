@@ -1,11 +1,13 @@
 /* eslint-disable consistent-return */
-import type { WalletUnlocked } from '@fuel-ts/wallet';
 import type { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account } from '@fuel-wallet/types';
 import { bn, Address, Provider } from 'fuels';
+import { waitFor } from 'xstate/lib/waitFor';
 
+import type { UnlockMachineService } from '../machines';
 import { unlockManager } from '../utils/manager';
 
+import { Services, store } from '~/store';
 import { isEth } from '~/systems/Asset/utils/asset';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
@@ -44,10 +46,7 @@ export type AccountInputs = {
     };
   };
   unlock: {
-    account: Account;
-    password: string;
-  };
-  unlockVault: {
+    account?: Account;
     password: string;
   };
   changePassword: {
@@ -201,24 +200,17 @@ export class AccountService {
     return secret;
   }
 
-  static async unlock(input: AccountInputs['unlock']): Promise<WalletUnlocked> {
+  static async unlock(input: AccountInputs['unlock']) {
+    const account = await AccountService.getSelectedAccount();
     const manager = await unlockManager(input.password);
-    const wallet = manager.getWallet(
-      Address.fromPublicKey(input.account.publicKey)
-    );
+    if (!account) return { wallet: null, manager };
+    const wallet = manager.getWallet(Address.fromPublicKey(account.publicKey));
     const network = await NetworkService.getSelectedNetwork();
     if (!network) {
       throw new Error('Network not found!');
     }
     wallet.connect(network.url);
-    return wallet;
-  }
-
-  static async unlockVault(
-    input: AccountInputs['unlockVault']
-  ): Promise<WalletManager> {
-    const manager = await unlockManager(input.password);
-    return manager;
+    return { manager, wallet };
   }
 
   static async changePassword(input: AccountInputs['changePassword']) {
@@ -259,6 +251,16 @@ export class AccountService {
       return db.accounts.get(input.address);
     });
   }
+
+  static async getWalletUnlocked() {
+    const ctx = await getUnlockContext();
+    return ctx.response?.wallet;
+  }
+
+  static async getManagerUnlocked() {
+    const ctx = await getUnlockContext();
+    return ctx.response?.manager;
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -269,4 +271,15 @@ function getBalances(providerUrl: string, publicKey: string = '0x00') {
   const provider = new Provider(providerUrl!);
   const address = Address.fromPublicKey(publicKey);
   return provider.getBalances(address);
+}
+
+async function getUnlockContext() {
+  const service = store.services.get(Services.unlock) as UnlockMachineService;
+  if (!service) {
+    throw new Error('Unlock service not found');
+  }
+  const state = await waitFor(service, (state) => state.matches('unlocked'), {
+    timeout: 5000,
+  });
+  return state.context;
 }

@@ -2,25 +2,24 @@ import { toast } from '@fuel-ui/react';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
+import { store } from '~/store';
 import { AccountService } from '~/systems/Account';
-import type { AccountInputs, UnlockMachine } from '~/systems/Account';
-import type { ChildrenMachine } from '~/systems/Core';
+import type { AccountInputs } from '~/systems/Account';
 import { FetchMachine } from '~/systems/Core';
 
 type MachineServices = {
-  unlockAndGetMnemonic: {
+  getMnemonic: {
     data: string[];
   };
 };
 
 type MachineContext = {
-  words: string[];
+  words?: string[];
 };
 
-type MachineEvents = (
-  | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
+type MachineEvents =
   | { type: 'CHANGE_PASSWORD'; input: AccountInputs['changePassword'] }
-) & { data: string[] };
+  | { type: 'REVEAL_PASSPHRASE'; input: AccountInputs['unlock'] };
 
 export const settingsMachine = createMachine(
   {
@@ -35,38 +34,39 @@ export const settingsMachine = createMachine(
     id: 'settingsMachine',
     initial: 'idle',
     states: {
+      idle: {
+        on: {
+          REVEAL_PASSPHRASE: {
+            target: 'gettingMnemonic',
+          },
+          CHANGE_PASSWORD: {
+            target: 'changingPassword',
+          },
+        },
+      },
       changingPassword: {
+        tags: ['loading'],
         invoke: {
+          src: 'changePassword',
           data: {
             input: (_: MachineContext, ev: MachineEvents) => ev.input,
           },
-          src: 'changePassword',
           onDone: [
             {
               target: 'idle',
               cond: FetchMachine.hasError,
             },
             {
-              target: 'passwordChanged',
+              target: 'done',
+              actions: ['goToWallet', 'passwordChangeSuccess'],
             },
           ],
         },
       },
-      idle: {
-        tags: ['unlocking'],
-        on: {
-          CHANGE_PASSWORD: {
-            target: 'changingPassword',
-          },
-          UNLOCK_WALLET: {
-            target: 'gettingMnemonic',
-          },
-        },
-      },
       gettingMnemonic: {
-        tags: ['unlocking'],
+        tags: ['loading'],
         invoke: {
-          src: 'unlockAndGetMnemonic',
+          src: 'getMnemonic',
           onDone: [
             {
               target: 'idle',
@@ -85,10 +85,6 @@ export const settingsMachine = createMachine(
       done: {
         type: 'final',
       },
-      passwordChanged: {
-        type: 'final',
-        entry: 'goToWallet',
-      },
     },
   },
   {
@@ -96,6 +92,10 @@ export const settingsMachine = createMachine(
       assignWords: assign({
         words: (_, ev) => ev.data,
       }),
+      passwordChangeSuccess: () => {
+        toast.success('Password Changed');
+        store.resetUnlock();
+      },
     },
     services: {
       changePassword: FetchMachine.create<
@@ -108,19 +108,13 @@ export const settingsMachine = createMachine(
           if (!input?.oldPassword || !input.newPassword) {
             throw new Error('Invalid Input');
           }
-
-          await AccountService.changePassword({
+          return AccountService.changePassword({
             oldPassword: input.oldPassword,
             newPassword: input.newPassword,
           });
-
-          toast.success('Password Changed');
         },
       }),
-      unlockAndGetMnemonic: FetchMachine.create<
-        AccountInputs['unlock'],
-        string[]
-      >({
+      getMnemonic: FetchMachine.create<AccountInputs['unlock'], string[]>({
         showError: true,
         maxAttempts: 1,
         fetch: async ({ input }) => {
@@ -128,11 +122,9 @@ export const settingsMachine = createMachine(
             throw new Error('Invalid Input');
           }
           const secret = await AccountService.exportVault(input);
-
           if (!secret) {
             throw new Error('No Secret Found');
           }
-
           return secret.split(' ');
         },
       }),
@@ -142,7 +134,4 @@ export const settingsMachine = createMachine(
 
 export type SettingsMachine = typeof settingsMachine;
 export type SettingsMachineService = InterpreterFrom<typeof settingsMachine>;
-export type SettingsMachineState = StateFrom<typeof settingsMachine> &
-  ChildrenMachine<{
-    unlock: UnlockMachine;
-  }>;
+export type SettingsMachineState = StateFrom<typeof settingsMachine>;

@@ -33,7 +33,10 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
   constructor(services: T) {
     Object.entries(services).forEach(([key, machine]) => {
       const item = this.createMachine(key, machine());
-      this.createService(key, item);
+      const service = this.createService(key, item);
+      if (!service?.initialized) {
+        service?.start();
+      }
     });
   }
 
@@ -129,6 +132,11 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
     Object.assign(service.machine.options.delays!, opts.delays);
   }
 
+  getSnapshot<K extends keyof T>(key: K) {
+    const service = this.services.get(key);
+    return service?.getSnapshot() as StateFrom<T[K]>;
+  }
+
   reset() {
     this.#prevState = this.#initialState;
     this.#currentState = this.#initialState;
@@ -151,10 +159,12 @@ export function createStore<T extends MachinesObj, E extends Events>(
   const store = {
     /** @deprecated */
     __store: _store,
+    services: _store.services,
     send: _store.send.bind(_store),
     broadcast: _store.broadcast.bind(_store),
     subscribe: _store.subscribe.bind(_store),
     getState: _store.getState.bind(_store),
+    getSnapshot: _store.getSnapshot.bind(_store),
     reset: _store.reset.bind(_store),
     useSelector<K extends keyof T, R>(
       key: K,
@@ -165,11 +175,7 @@ export function createStore<T extends MachinesObj, E extends Events>(
     },
     useService(key: keyof T) {
       return useSyncExternalStore(_store.subscribe.bind(_store), () => {
-        const service = _store.services.get(key) as Service<T>;
-        if (!service?.initialized) {
-          service?.start();
-        }
-        return service!;
+        return _store.services.get(key) as Service<T>;
       });
     },
     useSetMachineConfig<K extends keyof T>(

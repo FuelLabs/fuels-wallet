@@ -7,16 +7,8 @@ import type {
 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-import { send } from 'xstate/lib/actions';
 
-import { unlockMachineErrorAction, unlockMachine } from '~/systems/Account';
-import type {
-  UnlockMachine,
-  AccountInputs,
-  UnlockWalletReturn,
-  UnlockWalletEvent,
-} from '~/systems/Account';
-import type { ChildrenMachine } from '~/systems/Core';
+import { AccountService } from '~/systems/Account';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 import type { NetworkInputs } from '~/systems/Network';
 import { NetworkService } from '~/systems/Network';
@@ -51,26 +43,9 @@ type MachineServices = {
 };
 
 type MachineEvents =
-  | {
-      type: 'START_REQUEST';
-      input?: TxInputs['request'];
-    }
-  | {
-      type: 'APPROVE';
-      input?: void;
-    }
-  | {
-      type: 'REJECT';
-      input?: void;
-    }
-  | {
-      type: 'UNLOCK_WALLET';
-      input: AccountInputs['unlock'];
-    }
-  | {
-      type: 'CLOSE_UNLOCK';
-      input?: void;
-    };
+  | { type: 'START_REQUEST'; input?: TxInputs['request'] }
+  | { type: 'APPROVE'; input?: void }
+  | { type: 'REJECT'; input?: void };
 
 export const transactionMachine = createMachine(
   {
@@ -133,42 +108,16 @@ export const transactionMachine = createMachine(
       },
       waitingApproval: {
         on: {
-          APPROVE: 'unlocking',
-        },
-      },
-      unlocking: {
-        invoke: {
-          id: 'unlock',
-          src: 'unlock',
-          data: (_: MachineContext, ev: MachineEvents) => ev.input,
-          onDone: [
-            unlockMachineErrorAction('unlocking', 'unlockError'),
-            { target: 'sendingTx' },
-          ],
-        },
-        on: {
-          UNLOCK_WALLET: {
-            // send to the child machine
-            actions: [
-              send<MachineContext, UnlockWalletEvent>(
-                (_, ev) => ({ type: 'UNLOCK_WALLET', input: ev.input }),
-                { to: 'unlock' }
-              ),
-            ],
-          },
-          CLOSE_UNLOCK: {
-            target: 'waitingApproval',
-          },
+          APPROVE: 'sendingTx',
         },
       },
       sendingTx: {
         invoke: {
           src: 'send',
           data: {
-            input: (ctx: MachineContext, ev: UnlockWalletReturn) => {
+            input: (ctx: MachineContext) => {
               return {
                 transactionRequest: ctx.transactionRequest,
-                wallet: ev.data,
                 providerUrl: ctx.providerUrl,
               };
             },
@@ -243,7 +192,6 @@ export const transactionMachine = createMachine(
       }),
     },
     services: {
-      unlock: unlockMachine,
       fetchGasPrice: FetchMachine.create<NetworkInputs['getNodeInfo'], BN>({
         showError: false,
         async fetch({ input }) {
@@ -276,10 +224,14 @@ export const transactionMachine = createMachine(
         showError: true,
         async fetch(params) {
           const { input } = params;
-          if (!input?.wallet || !input?.transactionRequest) {
+          const wallet = await AccountService.getWalletUnlocked();
+          if (!wallet) {
+            throw new Error('Wallet is required');
+          }
+          if (!input?.transactionRequest) {
             throw new Error('Invalid approveTx input');
           }
-          return TxService.send(input);
+          return TxService.send({ ...input, wallet });
         },
       }),
     },
@@ -288,7 +240,4 @@ export const transactionMachine = createMachine(
 
 export type TransactionMachine = typeof transactionMachine;
 export type TransactionMachineService = InterpreterFrom<TransactionMachine>;
-export type TransactionMachineState = StateFrom<TransactionMachine> &
-  ChildrenMachine<{
-    unlock: UnlockMachine;
-  }>;
+export type TransactionMachineState = StateFrom<TransactionMachine>;

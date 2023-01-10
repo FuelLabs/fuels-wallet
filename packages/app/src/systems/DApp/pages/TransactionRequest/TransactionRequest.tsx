@@ -15,7 +15,7 @@ import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import { ConnectInfo } from '../../components';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
-import { Layout, UnlockDialog } from '~/systems/Core';
+import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { NetworkScreen, useNetworks } from '~/systems/Network';
 import { TxDetails, TxOperations } from '~/systems/Transaction';
@@ -127,15 +127,6 @@ export function TransactionRequest() {
         {content}
         {footer}
       </Layout>
-      <UnlockDialog
-        unlockText="Confirm Transaction"
-        unlockError={ctx.unlockError}
-        isFullscreen={true}
-        isOpen={ctx.isUnlocking}
-        onUnlock={handlers.unlock}
-        isLoading={ctx.isUnlockingLoading}
-        onClose={handlers.closeUnlock}
-      />
     </>
   );
 }

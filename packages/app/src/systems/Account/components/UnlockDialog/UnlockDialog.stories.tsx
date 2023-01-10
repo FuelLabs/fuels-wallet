@@ -1,9 +1,10 @@
 import { Button } from '@fuel-ui/react';
+import { action } from '@storybook/addon-actions';
 import type { StoryFn } from '@storybook/react';
-import { useState } from 'react';
 
 import { UnlockDialog } from './UnlockDialog';
 
+import { store } from '~/store';
 import { createMockAccount } from '~/systems/Account/__mocks__';
 
 export default {
@@ -15,12 +16,14 @@ export default {
 };
 
 export const Usage: StoryFn<never> = () => {
-  const [opened, setOpened] = useState(false);
-
   return (
     <>
-      <UnlockDialog isOpen={opened} onUnlock={() => setOpened(false)} />
-      <Button onPress={() => setOpened(true)}>Open Unlock</Button>
+      <Button onPress={() => store.openUnlock()}>Open Unlock</Button>
+      <UnlockDialog
+        onCancel={action('onCancel')}
+        onSuccess={action('onSuccess')}
+        onError={action('onError')}
+      />
     </>
   );
 };

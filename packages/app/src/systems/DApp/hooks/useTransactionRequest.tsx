@@ -6,6 +6,7 @@ import type { TransactionMachineState } from '../machines/transactionMachine';
 import { transactionMachine } from '../machines/transactionMachine';
 import { useTransactionRequestMethods } from '../methods/transactionRequestMethods';
 
+import { store } from '~/store';
 import { useAccounts } from '~/systems/Account';
 import { isEth } from '~/systems/Asset';
 import { useChainInfo } from '~/systems/Network';
@@ -14,17 +15,11 @@ import { useParseTx } from '~/systems/Transaction/hooks/useParseTx';
 import type { TxInputs } from '~/systems/Transaction/services';
 
 const selectors = {
-  isUnlocking(state: TransactionMachineState) {
-    return state.matches('unlocking');
-  },
   waitingApproval(state: TransactionMachineState) {
     return state.matches('waitingApproval');
   },
   sendingTx(state: TransactionMachineState) {
     return state.matches('sendingTx');
-  },
-  isUnlockingLoading(state: TransactionMachineState) {
-    return state.children.unlock?.state.matches('unlocking');
   },
   isLoadingTransaction(state: TransactionMachineState) {
     return state.hasTag('loading');
@@ -35,15 +30,7 @@ const selectors = {
   isShowingInfo({
     isLoading,
     account,
-  }: Omit<
-    ReturnType<typeof useAccounts>,
-    | 'handlers'
-    | 'accounts'
-    | 'isUnlocking'
-    | 'isUnlockingLoading'
-    | 'isAddingAccount'
-    | 'unlockError'
-  >) {
+  }: Partial<ReturnType<typeof useAccounts>>) {
     return (state: TransactionMachineState) =>
       !isLoading &&
       !state.context.approvedTx &&
@@ -71,8 +58,6 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
 
   const { send } = service;
   const ctx = useSelector(service, selectors.context);
-  const isUnlocking = useSelector(service, selectors.isUnlocking);
-  const isUnlockingLoading = useSelector(service, selectors.isUnlockingLoading);
   const waitingApproval = useSelector(service, selectors.waitingApproval);
   const sendingTx = useSelector(service, selectors.sendingTx);
   const generalErrors = useSelector(service, selectors.generalErrors);
@@ -100,22 +85,21 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     gasPerByte: chainInfo?.consensusParameters.gasPerByte,
     gasPriceFactor: chainInfo?.consensusParameters.gasPriceFactor,
   });
+
   const ethAmountSent = useMemo(
     () => bn(tx?.totalAssetsSent?.find(isEth)?.amount),
     [tx?.totalAssetsSent]
   );
 
   function approve() {
-    send('APPROVE');
+    store.unlock({
+      onSuccess() {
+        send('APPROVE');
+      },
+    });
   }
   function reject() {
     send('REJECT');
-  }
-  function unlock(password: string) {
-    send('UNLOCK_WALLET', { input: { password, account } });
-  }
-  function closeUnlock() {
-    send('CLOSE_UNLOCK');
   }
   function request(input: TxInputs['request']) {
     send('START_REQUEST', { input });
@@ -127,14 +111,10 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     handlers: {
       request,
       approve,
-      unlock,
-      closeUnlock,
       reject,
     },
     account,
     isLoadingTx,
-    isUnlocking,
-    isUnlockingLoading,
     sendingTx,
     waitingApproval,
     isShowingInfo,
