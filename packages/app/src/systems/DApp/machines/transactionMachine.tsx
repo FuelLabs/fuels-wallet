@@ -8,7 +8,7 @@ import type {
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-import { AccountService } from '~/systems/Account';
+import { UnlockService } from '~/systems/Account/services';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 import type { NetworkInputs } from '~/systems/Network';
 import { NetworkService } from '~/systems/Network';
@@ -224,7 +224,7 @@ export const transactionMachine = createMachine(
         showError: true,
         async fetch(params) {
           const { input } = params;
-          const wallet = await AccountService.getWalletUnlocked();
+          const wallet = await UnlockService.getWalletUnlocked();
           if (!wallet) {
             throw new Error('Wallet is required');
           }

@@ -1,18 +1,21 @@
 /* eslint-disable consistent-return */
 import type { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account } from '@fuel-wallet/types';
+import type { WalletUnlocked } from 'fuels';
 import { bn, Address, Provider } from 'fuels';
-import { waitFor } from 'xstate/lib/waitFor';
 
-import type { UnlockMachineService } from '../machines';
 import { unlockManager } from '../utils/manager';
 
-import { Services, store } from '~/store';
 import { isEth } from '~/systems/Asset/utils/asset';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
 import { getPhraseFromValue } from '~/systems/Core/utils/string';
 import { NetworkService } from '~/systems/Network/services';
+
+type UnlockReturn = {
+  wallet?: Maybe<WalletUnlocked>;
+  manager?: Maybe<WalletManager>;
+};
 
 export type AccountInputs = {
   addAccount: {
@@ -200,11 +203,12 @@ export class AccountService {
     return secret;
   }
 
-  static async unlock(input: AccountInputs['unlock']) {
-    const account = await AccountService.getSelectedAccount();
+  static async unlock(input: AccountInputs['unlock']): Promise<UnlockReturn> {
     const manager = await unlockManager(input.password);
-    if (!account) return { wallet: null, manager };
-    const wallet = manager.getWallet(Address.fromPublicKey(account.publicKey));
+    if (!input.account) return { wallet: null, manager };
+    const wallet = manager.getWallet(
+      Address.fromPublicKey(input.account.publicKey)
+    );
     const network = await NetworkService.getSelectedNetwork();
     if (!network) {
       throw new Error('Network not found!');
@@ -251,16 +255,6 @@ export class AccountService {
       return db.accounts.get(input.address);
     });
   }
-
-  static async getWalletUnlocked() {
-    const ctx = await getUnlockContext();
-    return ctx.response?.wallet;
-  }
-
-  static async getManagerUnlocked() {
-    const ctx = await getUnlockContext();
-    return ctx.response?.manager;
-  }
 }
 
 // ----------------------------------------------------------------------------
@@ -271,15 +265,4 @@ function getBalances(providerUrl: string, publicKey: string = '0x00') {
   const provider = new Provider(providerUrl!);
   const address = Address.fromPublicKey(publicKey);
   return provider.getBalances(address);
-}
-
-async function getUnlockContext() {
-  const service = store.services.get(Services.unlock) as UnlockMachineService;
-  if (!service) {
-    throw new Error('Unlock service not found');
-  }
-  const state = await waitFor(service, (state) => state.matches('unlocked'), {
-    timeout: 5000,
-  });
-  return state.context;
 }

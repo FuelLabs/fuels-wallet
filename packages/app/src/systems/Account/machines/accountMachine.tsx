@@ -5,6 +5,7 @@ import { assign, createMachine } from 'xstate';
 
 import type { AccountInputs } from '../services/account';
 import { AccountService } from '../services/account';
+import { UnlockService } from '../services/unlock';
 
 import { IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
@@ -223,9 +224,9 @@ export const accountMachine = createMachine(
       clearAccountName: assign({
         accountName: (_) => undefined,
       }),
-      notifyUpdateAccounts: () => {
-        toast.success('Account added successfully');
+      notifyUpdateAccounts() {
         store.updateAccounts();
+        toast.success('Account added successfully');
       },
     },
     services: {
@@ -271,7 +272,7 @@ export const accountMachine = createMachine(
         showError: true,
         maxAttempts: 1,
         async fetch({ input }) {
-          const manager = await AccountService.getManagerUnlocked();
+          const manager = await UnlockService.getManagerUnlocked();
           if (!manager) {
             throw new Error('Manager is not unlocked');
           }

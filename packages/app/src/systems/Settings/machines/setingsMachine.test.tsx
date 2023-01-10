@@ -4,7 +4,6 @@ import { waitFor } from 'xstate/lib/waitFor';
 
 import { settingsMachine } from './settingsMachine';
 
-import type { AccountInputs } from '~/systems/Account';
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 
 const WORDS = [
@@ -24,7 +23,6 @@ const WORDS = [
 
 describe('settingsMachine', () => {
   let service: InterpreterFrom<typeof settingsMachine>;
-
   const redirectToWallet = jest.fn();
 
   beforeAll(async () => {
@@ -35,7 +33,7 @@ describe('settingsMachine', () => {
 
   beforeEach(async () => {
     service = interpret(
-      settingsMachine.withConfig({
+      settingsMachine.withContext({}).withConfig({
         actions: {
           goToWallet: redirectToWallet,
         },
@@ -43,8 +41,12 @@ describe('settingsMachine', () => {
     ).start();
   });
 
+  afterEach(() => {
+    service.stop();
+  });
+
   it('should get mnemonic phrase', async () => {
-    service.send('UNLOCK_WALLET', {
+    service.send('REVEAL_PASSPHRASE', {
       input: {
         account: MOCK_ACCOUNTS[0],
         password: '123123',
@@ -52,39 +54,20 @@ describe('settingsMachine', () => {
     });
 
     await waitFor(service, (state) => state.matches('gettingMnemonic'));
-
-    const { matches } = await waitFor(service, (state) =>
-      state.matches('done')
-    );
-
-    const { event } = service.getSnapshot();
-
-    expect(event.data?.length).toBeGreaterThan(1);
-    expect(matches('done')).toBeTruthy();
+    const state = await waitFor(service, (state) => state.matches('done'));
+    expect(state.context.words?.length).toBeGreaterThan(1);
   });
 
-  it('should change the password of the user and we should be able to unlock it agan', async () => {
+  it('should change the password and redirect to home after', async () => {
     service.send('CHANGE_PASSWORD', {
-      newPassword: '12345678',
-      oldPassword: '123123',
-    } as AccountInputs['changePassword']);
-
-    await waitFor(service, (state) => state.matches('idle'));
-
-    service.send('UNLOCK_WALLET', {
       input: {
-        account: MOCK_ACCOUNTS[0],
-        password: '12345678',
+        newPassword: '12345678',
+        oldPassword: '123123',
       },
     });
 
-    const { matches } = await waitFor(service, (state) =>
-      state.matches('done')
-    );
-
-    const { event } = service.getSnapshot();
-
-    expect(event.data?.length).toBeGreaterThan(1);
-    expect(matches('done')).toBeTruthy();
+    await waitFor(service, (state) => state.matches('changingPassword'));
+    await waitFor(service, (state) => state.matches('done'));
+    expect(redirectToWallet).toBeCalled();
   });
 });

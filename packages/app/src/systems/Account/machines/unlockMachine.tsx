@@ -8,19 +8,10 @@ import type { AccountInputs } from '~/systems/Account/services';
 import type { Maybe } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core/machines/fetchMachine';
 
-export enum UnlockType {
-  wallet = 'wallet',
-  vault = 'vault',
-}
-
 export type UnlockHandlers = {
   onCancel?: () => void;
   onSuccess?: (ctx: UnlockMachineContext) => void;
   onError?: (error: Error) => void;
-};
-
-export type UnlockInput = UnlockHandlers & {
-  type?: keyof typeof UnlockType;
 };
 
 export type UnlockResponse = {
@@ -32,7 +23,7 @@ export type UnlockResponse = {
 type UnlockServiceReturn = Omit<UnlockResponse, 'error'>;
 
 export type UnlockMachineContext = {
-  input?: UnlockInput;
+  input?: UnlockHandlers;
   response?: UnlockResponse;
 };
 
@@ -49,7 +40,7 @@ type InternalEvents =
     }
   | {
       type: 'OPEN_UNLOCK';
-      input: UnlockInput;
+      input: UnlockHandlers;
     }
   | {
       type: 'CLOSE_UNLOCK';
@@ -88,7 +79,7 @@ export const unlockMachine = createMachine(
             target: 'unlocking',
           },
           CLOSE_UNLOCK: {
-            actions: ['resetInput', 'onCancel'],
+            actions: ['onCancel'],
             target: 'closed',
           },
         },
@@ -140,9 +131,6 @@ export const unlockMachine = createMachine(
       assignInput: assign({
         input: (_, ev) => ev.input,
       }),
-      resetInput: assign({
-        input: (_) => undefined,
-      }),
       onCancel: ({ input }) => {
         input?.onCancel?.();
       },
@@ -159,7 +147,7 @@ export const unlockMachine = createMachine(
     services: {
       unlock: FetchMachine.create<AccountInputs['unlock'], UnlockServiceReturn>(
         {
-          showError: false,
+          showError: true,
           maxAttempts: 1,
           async fetch({ input }) {
             if (!input?.password) {

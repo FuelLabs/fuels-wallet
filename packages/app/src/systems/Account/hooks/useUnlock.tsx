@@ -26,6 +26,9 @@ export function useUnlock() {
     selectors.isUnlockingLoading
   );
 
+  console.log(store.getSnapshot(Services.unlock).value);
+  console.log(store.getSnapshot(Services.unlock).context);
+
   return {
     unlockError,
     isUnlocking,

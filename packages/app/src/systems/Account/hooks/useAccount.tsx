@@ -49,7 +49,6 @@ export function useAccounts() {
 
   function addAccount(input: string) {
     store.unlock({
-      type: 'vault',
       onSuccess() {
         store.addAccount(input);
       },

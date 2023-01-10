@@ -9,7 +9,7 @@ import { getMockedTransaction } from '../__mocks__/dapp-transaction';
 import type { TransactionMachineService } from './transactionMachine';
 import { transactionMachine } from './transactionMachine';
 
-import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
+import { UnlockService } from '~/systems/Account/services/unlock';
 
 const OWNER = import.meta.env.VITE_ADDR_OWNER;
 const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
@@ -21,7 +21,7 @@ describe('txApproveMachine', () => {
 
   beforeAll(async () => {
     wallet = Wallet.fromPrivateKey(OWNER);
-    jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
+    jest.spyOn(UnlockService, 'getWalletUnlocked').mockResolvedValue(wallet);
     transactionRequest = await getMockedTransaction(
       wallet?.publicKey || '',
       '0xc7862855b418ba8f58878db434b21053a61a2025209889cc115989e8040ff077',
@@ -48,15 +48,6 @@ describe('txApproveMachine', () => {
     await waitFor(service, (state) => state.matches('waitingApproval'));
 
     service.send('APPROVE');
-
-    await waitFor(service, (state) => state.matches('unlocking'));
-
-    service.send('UNLOCK_WALLET', {
-      input: {
-        account: MOCK_ACCOUNTS[0],
-        password: '123123',
-      },
-    });
 
     await waitFor(service, (state) => state.matches('sendingTx'));
     const { matches } = await waitFor(service, (state) =>

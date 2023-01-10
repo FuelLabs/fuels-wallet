@@ -3,8 +3,9 @@ import { createStore } from '@fuel-wallet/xstore';
 import { accountEvents, unlockEvents } from './systems/Account/events';
 import { networkEvents } from './systems/Network/events';
 
-import { accountMachine, unlockMachine } from '~/systems/Account/machines';
-import { networksMachine } from '~/systems/Network/machines';
+import { accountMachine } from '~/systems/Account/machines/accountMachine';
+import { unlockMachine } from '~/systems/Account/machines/unlockMachine';
+import { networksMachine } from '~/systems/Network/machines/networksMachine';
 
 export enum Services {
   unlock = 'unlock',

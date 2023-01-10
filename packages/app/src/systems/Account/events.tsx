@@ -1,7 +1,7 @@
 import type { Account } from '@fuel-wallet/types';
 import type { StoreClass } from '@fuel-wallet/xstore';
 
-import type { UnlockInput } from './machines';
+import type { UnlockHandlers } from './machines';
 import type { AccountInputs } from './services';
 
 import type { StoreMachines } from '~/store';
@@ -32,7 +32,7 @@ export function accountEvents(store: StoreClass<StoreMachines>) {
 
 export function unlockEvents(store: StoreClass<StoreMachines>) {
   return {
-    unlock(input: UnlockInput) {
+    unlock(input: UnlockHandlers) {
       store.send(Services.unlock, { type: 'OPEN_UNLOCK', input });
     },
     closeUnlock() {

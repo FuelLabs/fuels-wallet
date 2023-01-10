@@ -6,7 +6,7 @@ import { waitFor } from 'xstate/lib/waitFor';
 
 import { signMachine } from './signMachine';
 
-import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
+import { UnlockService } from '~/systems/Account/services/unlock';
 
 type Service = InterpreterFrom<typeof signMachine>;
 
@@ -16,17 +16,15 @@ describe('signMachine', () => {
   let service: Service;
   let wallet: WalletUnlocked;
 
-  beforeAll(async () => {
-    wallet = Wallet.fromPrivateKey(OWNER);
-    jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
-  });
-
   beforeEach(async () => {
+    wallet = Wallet.fromPrivateKey(OWNER);
+    jest.spyOn(UnlockService, 'getWalletUnlocked').mockResolvedValue(wallet);
     service = interpret(signMachine.withContext({})).start();
   });
 
   afterEach(() => {
     service.stop();
+    jest.clearAllMocks();
   });
 
   it('should sign message', async () => {
@@ -43,15 +41,6 @@ describe('signMachine', () => {
     await waitFor(service, (state) => state.matches('reviewMessage'));
 
     service.send('SIGN_MESSAGE');
-
-    await waitFor(service, (state) => state.matches('unlocking'));
-
-    service.send('UNLOCK_WALLET', {
-      input: {
-        account: MOCK_ACCOUNTS[0],
-        password: '123123',
-      },
-    });
 
     await waitFor(service, (state) => state.matches('signingMessage'));
     const { context } = await waitFor(service, (state) =>
