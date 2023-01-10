@@ -7,9 +7,13 @@ import { Services, store } from '~/store';
 export class UnlockService {
   static async getResponse() {
     const service = store.services.get(Services.unlock) as UnlockMachineService;
-    await waitFor(service, (state) => state.matches('unlocked'));
-    const { response } = service?.getSnapshot().context || {};
-    return response || { manager: null, wallet: null };
+    const state = service.getSnapshot();
+    if (state.matches('unlocking') || state.matches('unlocked')) {
+      await waitFor(service, (state) => state.matches('unlocked'));
+      const { response } = service?.getSnapshot().context || {};
+      return response || { manager: null, wallet: null };
+    }
+    return { manager: null, wallet: null };
   }
 
   static async getWalletUnlocked() {
