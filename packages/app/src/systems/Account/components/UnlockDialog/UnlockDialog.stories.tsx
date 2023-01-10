@@ -18,12 +18,10 @@ export default {
 export const Usage: StoryFn<never> = () => {
   return (
     <>
-      <Button onPress={() => store.openUnlock()}>Open Unlock</Button>
-      <UnlockDialog
-        onCancel={action('onCancel')}
-        onSuccess={action('onSuccess')}
-        onError={action('onError')}
-      />
+      <Button onPress={() => store.unlock({ onSuccess: action('onSuccess') })}>
+        Open Unlock
+      </Button>
+      <UnlockDialog />
     </>
   );
 };
