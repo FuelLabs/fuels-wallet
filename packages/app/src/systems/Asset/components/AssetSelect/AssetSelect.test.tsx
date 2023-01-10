@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@fuel-ui/test-utils';
+import { act, fireEvent, render, screen } from '@fuel-ui/test-utils';
 import { useState } from 'react';
 
 import { MOCK_ASSETS_AMOUNTS } from '../../__mocks__/assets';
@@ -59,21 +59,20 @@ describe('AssetSelect', () => {
   });
 
   it('should clear on click on clear button', async () => {
-    const { user, container } = render(<Content />);
+    const { container } = render(<Content />);
 
     const input = screen.getByText('Select one asset');
-    await user.click(input);
-    await user.press('Enter');
+    await act(() => fireEvent.click(input));
+    const etherItem = await screen.findByText('Ethereum');
+    await act(() => fireEvent.click(etherItem));
     expect(onSelect).toBeCalledWith(MOCK_ASSETS_AMOUNTS[0]);
 
     const trigger = container.querySelector('#fuel_asset-select');
     expect(trigger?.textContent?.includes('Ethereum')).toBe(true);
 
-    await waitFor(async () => {
-      const clearBtn = await screen.findByLabelText('Clear');
-      await user.click(clearBtn);
-      expect(await screen.findByText('Select one asset')).toBeInTheDocument();
-      expect(onSelect).toBeCalledWith(null);
-    });
+    const clearBtn = await screen.findByLabelText('Clear');
+    await act(() => fireEvent.click(clearBtn));
+    expect(await screen.findByText('Select one asset')).toBeInTheDocument();
+    expect(onSelect).toBeCalledWith(null);
   });
 });
