@@ -135,7 +135,7 @@ export function codeImport(options: Options = { filepath: '' }) {
       }
 
       if (lineStart && lineEnd) {
-        content = extractLines(fileContent, lineStart.value, lineEnd.value);
+        content = extractLines(fileContent, lineStart, lineEnd);
       }
 
       if (testCase) {

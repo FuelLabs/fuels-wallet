@@ -22,9 +22,11 @@ export class MockConnection extends BaseConnection {
     this.externalMethods([
       this.connect,
       this.disconnect,
+      this.isConnected,
       this.accounts,
       this.signMessage,
       this.sendTransaction,
+      this.getSelectedAccount,
     ]);
   }
 
@@ -40,6 +42,10 @@ export class MockConnection extends BaseConnection {
         response,
       },
     });
+  }
+
+  async isConnected() {
+    return true;
   }
 
   async connect() {
@@ -62,6 +68,10 @@ export class MockConnection extends BaseConnection {
     const transaction = transactionRequestify(JSON.parse(params.transaction));
     const response = await userWallet.sendTransaction(transaction);
     return response.id;
+  }
+
+  async getSelectedAccount() {
+    return userWallet.address.toAddress();
   }
 }
 
