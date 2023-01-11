@@ -217,6 +217,7 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
     isStatusPending: false,
     isStatusSuccess: true,
     isStatusFailure: false,
+    time: '2022-10-05T00:51:22.383161296+00:00',
   },
   receipts: [
     MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall,
