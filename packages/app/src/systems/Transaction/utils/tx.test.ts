@@ -929,6 +929,7 @@ describe('Tx util', () => {
         gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
         gqlStatus: 'SuccessStatus',
         id: MOCK_TRANSACTION_CONTRACT_CALL.tx.id,
+        time: MOCK_TRANSACTION_CONTRACT_CALL.tx.time,
       });
 
       expect(reparse(tx)).toStrictEqual(

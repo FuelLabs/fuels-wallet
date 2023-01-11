@@ -1,4 +1,4 @@
-import { Flex } from '@fuel-ui/react';
+import { Stack } from '@fuel-ui/react';
 
 import type { Tx } from '../../utils';
 import { ActivityItem } from '../ActivityItem';
@@ -22,12 +22,12 @@ export const ActivityList = ({
 }: ActivityListProps) => {
   if (isLoading) return <ActivityList.Loading />;
 
-  const isEmpty = !transactions || !transactions.length;
+  const isEmpty = !transactions?.length;
 
   if (isEmpty) return <ActivityList.Empty isDevnet={isDevnet} />;
 
   return (
-    <Flex gap={'$2'} direction={'column'}>
+    <Stack gap="$2">
       {transactions.map((transaction) => (
         <ActivityItem
           ownerAddress={ownerAddress}
@@ -35,7 +35,7 @@ export const ActivityList = ({
           transaction={transaction}
         />
       ))}
-    </Flex>
+    </Stack>
   );
 };
 

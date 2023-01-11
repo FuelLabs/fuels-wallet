@@ -1,3 +1,4 @@
+import { Box } from '@fuel-ui/react';
 import type { Story } from '@storybook/react';
 
 import { MOCK_TXS } from '../../__mocks__/transactions';
@@ -12,24 +13,29 @@ export default {
   title: 'Transaction/Components/ActivityList',
 };
 
-export const Usage: Story<ActivityListProps> = (args) => (
-  <ActivityList {...args} />
+const Template: Story<ActivityListProps> = (args) => (
+  <Box css={{ maxWidth: 320 }}>
+    {' '}
+    <ActivityList {...args} />{' '}
+  </Box>
 );
-Usage.args = {
+
+export const Default = Template.bind({});
+Default.args = {
   transactions: MOCK_TXS,
   ownerAddress: MOCK_ACCOUNTS[3].address,
 };
-export const Loader = () => (
-  <ActivityList
-    transactions={[]}
-    isLoading={true}
-    ownerAddress={MOCK_ACCOUNTS[3].address}
-  />
-);
-export const Empty = () => (
-  <ActivityList
-    transactions={[]}
-    isLoading={false}
-    ownerAddress={MOCK_ACCOUNTS[3].address}
-  />
-);
+
+export const Loader = Template.bind({});
+Loader.args = {
+  transactions: [],
+  isLoading: true,
+  ownerAddress: MOCK_ACCOUNTS[3].address,
+};
+
+export const Empty = Template.bind({});
+Empty.args = {
+  transactions: [],
+  isLoading: false,
+  ownerAddress: MOCK_ACCOUNTS[3].address,
+};

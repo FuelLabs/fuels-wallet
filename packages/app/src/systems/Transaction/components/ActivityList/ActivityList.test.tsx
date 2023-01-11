@@ -57,15 +57,13 @@ describe('ActivityList', () => {
   });
 
   it('should render the same amount of activity items as transactions', async () => {
-    render(
+    const { container } = await render(
       <ActivityList
         transactions={MOCK_TXS}
         isLoading={false}
         ownerAddress={MOCK_ACCOUNTS[3].address}
       />
     );
-    expect(screen.getAllByTestId('activity-item')).toHaveLength(
-      MOCK_TXS.length
-    );
+    expect(container.firstChild?.childNodes.length).toBe(MOCK_TXS.length);
   });
 });

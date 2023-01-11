@@ -1,34 +1,41 @@
 import { cssObj } from '@fuel-ui/css';
 import { Flex, Icon } from '@fuel-ui/react';
 
-import type { OperationName } from '../../utils';
-import { getTxIcon } from '../../utils';
-
-import { TxIconLoader } from './TxIconLoader';
+import type { TxStatus } from '../../utils';
+import {
+  getTxIconBgColor,
+  getTxIconColor,
+  getTxIcon,
+  OperationName,
+} from '../../utils';
 
 export type TxIconProps = {
   operationName?: OperationName;
+  status?: TxStatus;
 };
 
-export function TxIcon({ operationName }: TxIconProps) {
+export function TxIcon({ operationName, status }: TxIconProps) {
   return (
-    <Flex css={styles.root}>
-      <Icon icon={getTxIcon(operationName)} />
+    <Flex css={styles.root(status)}>
+      <Icon
+        size="22px"
+        icon={getTxIcon(operationName ?? OperationName.transfer)}
+        color={getTxIconColor(status)}
+      />
     </Flex>
   );
 }
 
 const styles = {
-  root: cssObj({
-    alignItems: 'center',
-    justifyContent: 'center',
-    display: 'flex',
-    backgroundColor: '$gray4',
-    padding: '$2',
-    height: '$6',
-    width: '$6',
-    borderRadius: '$full',
-  }),
+  root: (status: TxStatus | undefined) =>
+    cssObj({
+      alignItems: 'center',
+      justifyContent: 'center',
+      display: 'flex',
+      backgroundColor: getTxIconBgColor(status),
+      padding: '$2',
+      height: '$6',
+      width: '$6',
+      borderRadius: '$full',
+    }),
 };
-
-TxIcon.Loader = TxIconLoader;
