@@ -1,11 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
-import { Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
-import { bn } from 'fuels';
+import { Card, Copyable, Flex, Icon, Stack, Text } from '@fuel-ui/react';
+import { Address, bn } from 'fuels';
 import type { FC } from 'react';
 import { useMemo } from 'react';
 
 import type { Tx } from '../../utils';
 import {
+  getTimeFromNow,
   OperationDirection,
   getOperationDirection,
   getTxStatusColor,
@@ -26,6 +27,9 @@ type TxItemComponent = FC<TxItemProps> & {
   Loader: typeof ActivityItemLoader;
 };
 
+const formatDate = (date: Date | undefined) =>
+  date ? getTimeFromNow(date) : '';
+
 export const ActivityItem: TxItemComponent = ({
   transaction,
   ownerAddress,
@@ -42,65 +46,71 @@ export const ActivityItem: TxItemComponent = ({
   const mainOperation = operations[0];
   const label = mainOperation.name;
   const amount = totalAssetsSent[0];
-  const date = time ? new Date(time) : null;
+  const date = time ? new Date(time) : undefined;
 
   const toOrFromText = useMemo(() => {
     const opDirection = getOperationDirection(mainOperation, ownerAddress);
-    if (opDirection === OperationDirection.to) return 'To: ';
-    if (opDirection === OperationDirection.from) return 'From: ';
-    return '';
+    switch (opDirection) {
+      case OperationDirection.to:
+        return 'To: ';
+      case OperationDirection.from:
+        return 'From: ';
+      default:
+        return '';
+    }
   }, [ownerAddress, mainOperation]);
 
   const toOrFromAddress = useMemo(() => {
     const opDirection = getOperationDirection(mainOperation, ownerAddress);
-    if (opDirection === OperationDirection.to)
-      return mainOperation.to?.address || '';
-    if (opDirection === OperationDirection.from)
-      return mainOperation.from?.address || '';
-    return '';
+    const address =
+      opDirection === OperationDirection.to
+        ? mainOperation.to?.address
+        : mainOperation.from?.address;
+    return address ? Address.fromString(address).bech32Address : '';
   }, [ownerAddress, mainOperation]);
 
-  const formatDate = (date: Date) =>
-    `${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}`;
-
-  const assetInfo = getAssetInfoById(amount?.assetId, amount);
+  const assetInfo = useMemo(
+    () => getAssetInfoById(amount?.assetId, amount),
+    [amount]
+  );
 
   return (
     <Card css={styles.root} data-testid="activity-item">
-      <TxIcon operationName={mainOperation.name} />
-      <Flex direction="column" css={styles.contentWrapper}>
+      <TxIcon operationName={mainOperation.name} status={txStatus} />
+      <Stack css={styles.contentWrapper}>
         <Flex css={styles.row}>
           <Flex css={styles.item}>
-            <Text fontSize="sm">{label}</Text>
+            <Text fontSize="sm" css={styles.label}>
+              {label}
+            </Text>
           </Flex>
 
           <Flex css={styles.item}>
-            <Text color={txColor} fontSize="sm">
+            <Text color={txColor} fontSize="sm" css={styles.amount}>
               {`${bn(amount?.amount).format()} ${assetInfo.symbol}`}
             </Text>
           </Flex>
         </Flex>
         <Flex css={styles.row}>
-          <Flex css={styles.item}>
-            <Text fontSize="sm">{toOrFromText}</Text>
-            <Text fontSize="sm">{shortAddress(toOrFromAddress)}</Text>
-            <Flex css={styles.item}>
-              <Copyable
-                value={id}
-                css={{ mx: '$2' }}
-                iconProps={{
-                  icon: Icon.is('CopySimple'),
-                  'aria-label': 'Copy Transaction ID',
-                }}
-                tooltipMessage="Copy Transaction ID"
-              />
-            </Flex>
+          <Flex css={styles.fromToTextWrapper}>
+            <Text fontSize="xs" css={styles.fromToText}>
+              {toOrFromText}
+            </Text>
+            <Text fontSize="xs">{shortAddress(toOrFromAddress)}</Text>
+            <Copyable
+              value={id}
+              iconProps={{
+                icon: Icon.is('CopySimple'),
+                'aria-label': 'Copy Transaction ID',
+              }}
+              tooltipMessage="Copy Transaction ID"
+            />
           </Flex>
           <Flex css={styles.item}>
-            <Text fontSize="sm">{formatDate(date || new Date())}</Text>
+            <Text fontSize="xs">{formatDate(date)}</Text>
           </Flex>
         </Flex>
-      </Flex>
+      </Stack>
     </Card>
   );
 };
@@ -108,13 +118,13 @@ export const ActivityItem: TxItemComponent = ({
 const styles = {
   root: cssObj({
     flex: 1,
-    pt: '$2',
+    pt: '$3',
     pb: '$3',
     px: '$3',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: '$2',
+    gap: '$3',
     fontWeight: '$semibold',
     flexDirection: 'row',
   }),
@@ -134,6 +144,22 @@ const styles = {
   }),
   contentWrapper: cssObj({
     flex: 1,
+    gap: '$0',
+  }),
+  fromToTextWrapper: cssObj({
+    gap: '$1',
+    alignItems: 'center',
+  }),
+  fromToText: cssObj({
+    fontWeight: '$bold',
+    color: '$whiteA12',
+  }),
+  label: cssObj({
+    fontWeight: '$bold',
+    color: '$whiteA12',
+  }),
+  amount: cssObj({
+    fontWeight: '$bold',
   }),
 };
 

@@ -19,7 +19,7 @@ export const Success = (args: TxItemProps) => {
   return (
     <Box
       css={{
-        maxWidth: 300,
+        maxWidth: 312,
         display: 'flex',
         flexDirection: 'column',
         gap: '$4',
@@ -44,7 +44,7 @@ export const Pending = (args: TxItemProps) => {
   return (
     <Box
       css={{
-        maxWidth: 300,
+        maxWidth: 312,
         display: 'flex',
         flexDirection: 'column',
         gap: '$4',
@@ -69,7 +69,7 @@ export const Error = (args: TxItemProps) => {
   return (
     <Box
       css={{
-        maxWidth: 300,
+        maxWidth: 312,
         display: 'flex',
         flexDirection: 'column',
         gap: '$4',
@@ -91,7 +91,7 @@ export const Error = (args: TxItemProps) => {
 
 export const Loader = () => (
   <Box
-    css={{ maxWidth: 300, display: 'flex', flexDirection: 'column', gap: '$4' }}
+    css={{ maxWidth: 312, display: 'flex', flexDirection: 'column', gap: '$4' }}
   >
     <ActivityItem.Loader />
     <ActivityItem.Loader />

@@ -695,28 +695,16 @@ export function parseTx({
   };
 }
 
-export function getOperationDirection(
-  operation: Operation,
-  ownerAddress: string
-): OperationDirection {
-  if (!ownerAddress || ownerAddress.length < 1)
+export function getOperationDirection(operation: Operation, owner: string) {
+  const operationAddr = operation?.to?.address ?? operation?.from?.address;
+
+  if (!owner?.length || !operationAddr) {
     return OperationDirection.unknown;
-  if (operation?.to) {
-    if (
-      Address.fromString(ownerAddress).equals(
-        Address.fromString(operation.to.address)
-      )
-    )
-      return OperationDirection.from;
-  }
-  if (operation?.from) {
-    if (
-      Address.fromString(ownerAddress).equals(
-        Address.fromString(operation.from.address)
-      )
-    )
-      return OperationDirection.to;
   }
 
-  return OperationDirection.unknown;
+  const ownerAddr = Address.fromString(owner);
+
+  return ownerAddr.equals(Address.fromString(operation?.to?.address ?? ''))
+    ? OperationDirection.from
+    : OperationDirection.to;
 }

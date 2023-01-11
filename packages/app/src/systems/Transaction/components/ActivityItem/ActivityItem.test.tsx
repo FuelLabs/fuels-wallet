@@ -1,4 +1,5 @@
 import { render, testA11y, screen } from '@fuel-ui/test-utils';
+import { Address } from 'fuels';
 
 import { MOCK_TRANSACTION_CONTRACT_CALL } from '../../__mocks__/tx';
 
@@ -49,7 +50,8 @@ describe('TxItem', () => {
     );
     const address = MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].to?.address;
     if (address) {
-      const to = await screen.findByText(shortAddress(address));
+      const addressBech32 = Address.fromString(address ?? '').bech32Address;
+      const to = await screen.findByText(shortAddress(addressBech32));
       expect(to).toBeInTheDocument();
 
       const label = await screen.findByText(/To/i);
