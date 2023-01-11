@@ -66,7 +66,7 @@ export const ActivityItem: TxItemComponent = ({
       opDirection === OperationDirection.to
         ? mainOperation.to?.address
         : mainOperation.from?.address;
-    return Address.fromString(address ?? '').bech32Address;
+    return address ? Address.fromString(address).bech32Address : '';
   }, [ownerAddress, mainOperation]);
 
   const assetInfo = useMemo(

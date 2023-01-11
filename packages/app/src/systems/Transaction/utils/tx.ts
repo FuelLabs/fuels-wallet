@@ -696,14 +696,15 @@ export function parseTx({
 }
 
 export function getOperationDirection(operation: Operation, owner: string) {
-  const ownerAddr = Address.fromString(owner);
   const operationAddr = operation?.to?.address ?? operation?.from?.address;
 
   if (!owner?.length || !operationAddr) {
     return OperationDirection.unknown;
   }
 
+  const ownerAddr = Address.fromString(owner);
+
   return ownerAddr.equals(Address.fromString(operation?.to?.address ?? ''))
-    ? OperationDirection.to
-    : OperationDirection.from;
+    ? OperationDirection.from
+    : OperationDirection.to;
 }
