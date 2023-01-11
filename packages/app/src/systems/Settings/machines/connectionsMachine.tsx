@@ -16,6 +16,7 @@ export enum ConnectionScreen {
 
 export enum ConnectionStatus {
   loading = 'loading',
+  isEmpty = 'isEmpty',
   idle = 'idle',
   noResults = 'noResults',
   removing = 'removing',

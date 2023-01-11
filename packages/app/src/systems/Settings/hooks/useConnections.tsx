@@ -59,16 +59,25 @@ const selectors = {
     const accounts = selectors.accounts(state);
     const connections = selectors.connections(state);
     const screen = selectors.screen(state);
-    const noAccounts = !isLoading && !accounts?.length;
+    const initialConnections = state.context.response?.connections;
+    const noInitialConnections = !isLoading && !initialConnections?.length;
     const noConnections = !isLoading && !connections?.length;
+    const noAccounts = !isLoading && !accounts?.length;
     const noResults =
       (screen === ConnectionScreen.list && noConnections) ||
       (screen === ConnectionScreen.edit && noAccounts);
 
-    if (noResults) return ConnectionStatus.noResults;
+    if (noInitialConnections) return ConnectionStatus.isEmpty;
     if (isLoading) return ConnectionStatus.loading;
+    if (noResults) return ConnectionStatus.noResults;
     if (state.matches('removing')) return ConnectionStatus.removing;
     return ConnectionStatus.idle;
+  },
+  title(state: ConnectionsMachineState) {
+    const screen = selectors.screen(state);
+    return screen === ConnectionScreen.list
+      ? 'Connected Apps'
+      : 'Editting Connection';
   },
 };
 
@@ -106,7 +115,7 @@ export function useConnections() {
   const accountToUpdate = useSelector(service, selectors.accountToUpdate);
   const screen = useSelector(service, selectors.screen);
   const numConnected = connectedAccounts?.length ?? 0;
-  const title = inputs.origin.length ? inputs.origin : 'Connected Apps';
+  const title = useSelector(service, selectors.title);
   const connStatus = useSelector(service, selectors.status);
 
   function status(status: keyof typeof ConnectionStatus) {

@@ -20,6 +20,9 @@ export function ConnectionEdit({
   return (
     <Layout.Content>
       <Stack gap="$3">
+        <Text leftIcon={Icon.is('Globe')} css={styles.title}>
+          {ctx.inputs.origin}
+        </Text>
         <Flex css={styles.searchBar}>
           <SearchInput
             value={ctx.inputs?.searchText}
@@ -70,6 +73,16 @@ export function ConnectionEdit({
 }
 
 const styles = {
+  title: cssObj({
+    fontSize: '$sm',
+    pb: '$2',
+    borderBottom: '1px dashed $gray2',
+    wordBreak: 'break-all',
+
+    '.fuel_icon': {
+      color: '$accent9',
+    },
+  }),
   searchBar: cssObj({
     justifyContent: 'space-between',
   }),

@@ -27,16 +27,18 @@ export function ConnectionList({
   return (
     <Layout.Content css={styles.root}>
       <Stack gap="$3">
-        <Flex css={styles.topbar}>
-          <SearchInput
-            value={ctx.inputs?.searchText}
-            onChange={handlers.search}
-            isDisabled={status('loading')}
-          />
-          <Tooltip content={tooltipContent}>
-            <Icon icon={Icon.is('Warning')} aria-label="Connection Alert" />
-          </Tooltip>
-        </Flex>
+        {!status('isEmpty') && (
+          <Flex css={styles.topbar}>
+            <SearchInput
+              value={ctx.inputs?.searchText}
+              onChange={handlers.search}
+              isDisabled={status('loading')}
+            />
+            <Tooltip content={tooltipContent}>
+              <Icon icon={Icon.is('Warning')} aria-label="Connection Alert" />
+            </Tooltip>
+          </Flex>
+        )}
         {status('loading') && (
           <CardList>
             {[1, 2, 3].map((i) => (
@@ -44,7 +46,7 @@ export function ConnectionList({
             ))}
           </CardList>
         )}
-        {status('noResults') && (
+        {(status('noResults') || status('isEmpty')) && (
           <MotionBox {...animations.slideInTop()} css={styles.empty}>
             <EmptyList label="No connection found" />
           </MotionBox>
