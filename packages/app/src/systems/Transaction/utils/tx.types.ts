@@ -15,17 +15,29 @@ export enum OperationName {
   contractCreated = 'Contract created',
   transfer = 'Transfer asset',
   contractCall = 'Contract call',
+  receive = 'Receive asset',
+  mint = 'Mint asset',
+  predicatecall = 'Predicate call',
+  script = 'Script',
+}
+
+export enum OperationDirection {
+  to = 'To',
+  from = 'From',
+  unknown = 'Unknown',
 }
 
 export type GqlTransactionStatus =
   | 'FailureStatus'
   | 'SubmittedStatus'
-  | 'SuccessStatus';
+  | 'SuccessStatus'
+  | 'SqueezedOutStatus';
 
 export enum TxStatus {
   pending = 'Pending',
   success = 'Success',
   failure = 'Failure',
+  squeezedOut = 'SqueezedOut',
 }
 export enum TxType {
   create = 'Create',
@@ -44,7 +56,7 @@ export type Coin = {
 };
 
 export type Operation = {
-  name?: string;
+  name?: OperationName;
   from?: Address;
   to?: Address;
   assetsSent?: Array<Coin>;
@@ -97,6 +109,7 @@ export type ParseTxParams = {
   gasPriceFactor: BN;
   gqlStatus?: GqlTransactionStatus;
   id?: string;
+  time?: string;
 };
 
 export type Tx = {
@@ -113,4 +126,5 @@ export type Tx = {
   isStatusSuccess?: boolean;
   isStatusFailure?: boolean;
   id?: string;
+  time?: string;
 };
