@@ -75,7 +75,7 @@ export const ActivityItem: TxItemComponent = ({
   );
 
   return (
-    <Card css={styles.root} data-testid="activity-item">
+    <Card css={styles.root}>
       <TxIcon operationName={mainOperation.name} status={txStatus} />
       <Stack css={styles.contentWrapper}>
         <Flex css={styles.row}>

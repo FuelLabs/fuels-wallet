@@ -30,5 +30,3 @@ export const PredicateCall = Template.bind({});
 PredicateCall.args = {
   operationName: OperationName.predicatecall,
 };
-
-export const Loader = () => <TxIcon.Loader />;

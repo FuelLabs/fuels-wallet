@@ -19,8 +19,8 @@ export function ActivityListEmpty({
       <ImageLoader
         src={relativeUrl('/empty-activity.png')}
         alt="No activity"
-        width={189}
-        height={159}
+        width={250}
+        height={208}
         wrapperCSS={{ mb: '$5', mt: '$16' }}
       />
       <Heading as="h5">You don&apos;t have any activity yet</Heading>
