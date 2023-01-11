@@ -12,7 +12,12 @@ import { TxDetails } from '~/systems/Transaction';
 const MotionContent = motion(Layout.Content);
 type SendSelectProps = UseSendReturn;
 
-export function SendSelect({ form, fee, txRequest }: SendSelectProps) {
+export function SendSelect({
+  form,
+  txRequest,
+  handlers,
+  ...ctx
+}: SendSelectProps) {
   return (
     <MotionContent {...animations.slideInTop()}>
       <Stack gap="$4">
@@ -73,18 +78,17 @@ export function SendSelect({ form, fee, txRequest }: SendSelectProps) {
             render={({ field }) => (
               <InputAmount
                 name={field.name}
-                balance={bn(txRequest.account?.balance)}
+                balance={ctx.accountBalance}
                 value={bn(field.value)}
                 onChange={(value) => {
-                  form.setValue('amount', value.toString(), {
-                    shouldValidate: true,
-                  });
+                  form.setValue('amount', value.toString());
+                  handlers.handleValidateAmount(value);
                 }}
               />
             )}
           />
         </Stack>
-        <TxDetails fee={fee} amountSent={txRequest.ethAmountSent} />
+        <TxDetails fee={ctx.fee} amountSent={txRequest.ethAmountSent} />
       </Stack>
     </MotionContent>
   );

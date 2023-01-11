@@ -219,7 +219,7 @@ export class TxService {
   }
 }
 
-function getAssetAccountBalance(account: Account, assetId: string) {
+export function getAssetAccountBalance(account: Account, assetId: string) {
   const balances = account.balances || [];
   const asset = balances.find((balance) => balance.assetId === assetId);
   return bn(asset?.amount);

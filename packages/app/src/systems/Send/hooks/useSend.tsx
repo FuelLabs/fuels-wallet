@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
+import type { BigNumberish } from 'fuels';
 import { bn, isBech32 } from 'fuels';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
@@ -65,12 +66,7 @@ const selectors = {
 const schema = yup
   .object({
     asset: yup.string().required('Asset is required'),
-    amount: yup
-      .string()
-      .required('Amount is required')
-      .test('is-number', 'Invalid amount value', (value) => {
-        return bn(value).gt(0);
-      }),
+    amount: yup.string().required('Amount is required'),
     address: yup
       .string()
       .required('Address is required')
@@ -119,6 +115,8 @@ export function useSend() {
   const isInvalid = useSelector(service, selectors.isInvalid);
   const titleSelector = selectors.title(txRequest.txStatus);
   const title = useSelector(service, titleSelector);
+  const accountBalance = bn(txRequest.account?.balance);
+  const accountBalanceLessFee = accountBalance.sub(fee!);
 
   function status(status: keyof typeof SendStatus) {
     return sendStatus === status;
@@ -155,18 +153,39 @@ export function useSend() {
     txRequest.handlers.tryAgain();
   }
 
+  function handleValidateAmount(amount?: BigNumberish) {
+    if (bn(amount).lte(0)) {
+      form.setError('amount', {
+        type: 'pattern',
+        message: 'Amount is required',
+      });
+      return;
+    }
+    if (accountBalanceLessFee.lt(amount!)) {
+      form.setError('amount', {
+        type: 'pattern',
+        message: 'Insufficient funds',
+      });
+      return;
+    }
+    form.clearErrors('amount');
+    form.trigger('amount');
+  }
+
   return {
     form,
     fee,
     title,
     status,
     isInvalid,
+    accountBalance,
     txRequest,
     handlers: {
       cancel,
       submit,
       goHome,
       tryAgain,
+      handleValidateAmount,
     },
   };
 }
