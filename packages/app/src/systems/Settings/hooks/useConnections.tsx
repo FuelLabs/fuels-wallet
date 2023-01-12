@@ -13,17 +13,12 @@ import {
 // Selectors
 // ----------------------------------------------------------------------------
 
-function filteredOrAll<T>(
-  state: ConnectionsMachineState,
-  entity: 'accounts' | 'connections'
-): T {
-  const isAccounts = entity === 'accounts';
-  const { searchText = '' } = state.context.inputs;
-  const hasSearch = Boolean(searchText.length);
-  const response = state.context.response || {};
-  const all = response?.[isAccounts ? 'accounts' : 'connections'] || [];
-  const filteredProp = `filtered${isAccounts ? 'Accounts' : 'Connections'}`;
-  const filtered = response?.[filteredProp];
+function filteredOrAll<T = Account | Connection>(
+  all: T[],
+  filtered: T[],
+  searchText?: string
+): T[] {
+  const hasSearch = Boolean(searchText?.length);
   return hasSearch ? filtered : filtered || all;
 }
 
@@ -34,17 +29,25 @@ const selectors = {
       origin: state.context?.inputs?.origin || '',
     };
   },
-  accounts(state: ConnectionsMachineState) {
-    return filteredOrAll<Account[]>(state, 'accounts');
+  accounts({ context }: ConnectionsMachineState) {
+    return filteredOrAll(
+      context.response?.accounts || [],
+      context.response?.filteredAccounts || [],
+      context.inputs.searchText
+    );
+  },
+  connections({ context }: ConnectionsMachineState) {
+    return filteredOrAll(
+      context.response?.connections || [],
+      context.response?.filteredConnections || [],
+      context.inputs.searchText
+    );
   },
   connectedAccounts(state: ConnectionsMachineState) {
     return state.context.response?.connectedAccounts || [];
   },
   connection(state: ConnectionsMachineState) {
     return state.context.inputs.connection;
-  },
-  connections(state: ConnectionsMachineState) {
-    return filteredOrAll<Connection[]>(state, 'connections');
   },
   screen(state: ConnectionsMachineState) {
     return state.matches('editing')

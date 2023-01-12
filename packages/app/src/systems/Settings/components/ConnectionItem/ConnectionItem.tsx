@@ -12,13 +12,13 @@ import type { Connection } from '@fuel-wallet/types';
 import { motion } from 'framer-motion';
 import type { FC } from 'react';
 
-import { RemoveConnectionDialog } from '../RemoveConnectionDialog';
+import { ConnectionRemoveDialog } from '../ConnectionRemoveDialog';
 
 import { ConnectionItemLoader } from './ConnectionItemLoader';
 
 import { animations } from '~/systems/Core';
 
-function getFavicon(url: string, size = 32) {
+function getFaviconUrl(url: string, size = 32) {
   return `https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${url}&size=${size}`;
 }
 
@@ -61,7 +61,7 @@ export const ConnectionItem: ConnectionItemComponent = ({
             aria-label="Edit"
             onPress={() => onEdit(origin)}
           />
-          <RemoveConnectionDialog
+          <ConnectionRemoveDialog
             isConfirming={Boolean(isDeleting)}
             connection={connection}
             onConfirm={handleConfirm}
@@ -73,11 +73,11 @@ export const ConnectionItem: ConnectionItemComponent = ({
               color="gray"
               aria-label="Delete"
             />
-          </RemoveConnectionDialog>
+          </ConnectionRemoveDialog>
         </Flex>
       }
     >
-      <Avatar name={origin} src={getFavicon(origin)} css={styles.avatar} />
+      <Avatar name={origin} src={getFaviconUrl(origin)} css={styles.avatar} />
       <Box css={styles.text}>
         <Text>{origin}</Text>
         <Text>{accounts} account(s) connected</Text>

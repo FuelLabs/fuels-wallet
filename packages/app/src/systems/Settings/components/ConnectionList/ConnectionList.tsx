@@ -48,7 +48,11 @@ export function ConnectionList({
         )}
         {(status('noResults') || status('isEmpty')) && (
           <MotionBox {...animations.slideInTop()} css={styles.empty}>
-            <EmptyList label="No connection found" />
+            <EmptyList
+              label={
+                status('isEmpty') ? 'No apps connected' : 'No connection found'
+              }
+            />
           </MotionBox>
         )}
         {(status('idle') || status('removing')) && (

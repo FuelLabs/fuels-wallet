@@ -4,19 +4,19 @@ import type { Connection } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
-type RemoveConnectionDialogProps = {
+type ConnectionRemoveDialogProps = {
   children: ReactNode;
   connection: Connection;
   onConfirm: () => void;
   isConfirming: boolean;
 };
 
-export function RemoveConnectionDialog({
+export function ConnectionRemoveDialog({
   connection,
   onConfirm,
   children,
   isConfirming,
-}: RemoveConnectionDialogProps) {
+}: ConnectionRemoveDialogProps) {
   const [opened, setOpened] = useState(false);
 
   function handleCancel() {
