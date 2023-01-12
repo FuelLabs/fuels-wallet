@@ -44,6 +44,7 @@ const styles = {
     },
     '&[aria-disabled="true"]': {
       opacity: 1,
+      cursor: 'default',
     },
   }),
 };
