@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Card, Copyable, Flex, Icon, Stack, Text } from '@fuel-ui/react';
-import { Address, bn } from 'fuels';
+import { Address } from 'fuels';
 import type { FC } from 'react';
 import { useMemo } from 'react';
 
@@ -9,13 +9,11 @@ import {
   getTimeFromNow,
   OperationDirection,
   getOperationDirection,
-  getTxStatusColor,
 } from '../../utils';
 import { TxIcon } from '../TxIcon';
 
 import { ActivityItemLoader } from './ActivityItemLoader';
 
-import { getAssetInfoById } from '~/systems/Asset';
 import { shortAddress } from '~/systems/Core';
 
 export type TxItemProps = {
@@ -34,18 +32,10 @@ export const ActivityItem: TxItemComponent = ({
   transaction,
   ownerAddress,
 }) => {
-  const {
-    status: txStatus,
-    id = '',
-    totalAssetsSent,
-    operations,
-    time,
-  } = transaction;
-  const txColor = getTxStatusColor(txStatus);
+  const { status: txStatus, id = '', operations, time } = transaction;
 
   const mainOperation = operations[0];
   const label = mainOperation.name;
-  const amount = totalAssetsSent[0];
   const date = time ? new Date(time) : undefined;
 
   const toOrFromText = useMemo(() => {
@@ -69,11 +59,6 @@ export const ActivityItem: TxItemComponent = ({
     return address ? Address.fromString(address).bech32Address : '';
   }, [ownerAddress, mainOperation]);
 
-  const assetInfo = useMemo(
-    () => getAssetInfoById(amount?.assetId, amount),
-    [amount]
-  );
-
   return (
     <Card css={styles.root} data-testid="activity-item">
       <TxIcon operationName={mainOperation.name} status={txStatus} />
@@ -84,16 +69,10 @@ export const ActivityItem: TxItemComponent = ({
               {label}
             </Text>
           </Flex>
-
-          <Flex css={styles.item}>
-            <Text color={txColor} fontSize="sm" css={styles.amount}>
-              {`${bn(amount?.amount).format()} ${assetInfo.symbol}`}
-            </Text>
-          </Flex>
         </Flex>
         <Flex css={styles.row}>
           <Flex css={styles.fromToTextWrapper}>
-            <Text fontSize="xs" css={styles.fromToText}>
+            <Text fontSize="xs" css={styles.label}>
               {toOrFromText}
             </Text>
             <Text fontSize="xs">{shortAddress(toOrFromAddress)}</Text>
@@ -150,16 +129,9 @@ const styles = {
     gap: '$1',
     alignItems: 'center',
   }),
-  fromToText: cssObj({
-    fontWeight: '$bold',
-    color: '$whiteA12',
-  }),
   label: cssObj({
     fontWeight: '$bold',
     color: '$whiteA12',
-  }),
-  amount: cssObj({
-    fontWeight: '$bold',
   }),
 };
 

@@ -151,6 +151,9 @@ export const MOCK_TRANSACTION_CONTRACT_CALL_PARTS: {
   },
 };
 
+const thirtyFourDaysAgo = new Date(
+  new Date().getTime() - 34 * 24 * 60 * 60 * 1000
+);
 export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
   transaction: {
     gasLimit: bn(100000000),
@@ -217,7 +220,7 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
     isStatusPending: false,
     isStatusSuccess: true,
     isStatusFailure: false,
-    time: '2022-10-05T00:51:22.383161296+00:00',
+    time: thirtyFourDaysAgo.toString(),
   },
   receipts: [
     MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall,
@@ -226,6 +229,61 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
     MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptScriptResult,
   ],
 };
+
+const tenSecondsAgo = new Date(new Date().getTime() - 10 * 1000);
+export const MOCK_TRANSACTION_CONTRACT_CALL_SECONDS_AGO: MockTransaction = {
+  transaction: MOCK_TRANSACTION_CONTRACT_CALL.transaction,
+  tx: {
+    ...MOCK_TRANSACTION_CONTRACT_CALL.tx,
+    operations: [
+      {
+        ...MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0],
+        name: OperationName.mint,
+      },
+    ],
+    time: tenSecondsAgo.toString(),
+    id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade8',
+    status: TxStatus.pending,
+    type: TxType.script,
+  },
+  receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts,
+};
+
+const fourMinutesAgo = new Date(new Date().getTime() - 4 * 60 * 1000);
+export const MOCK_TRANSACTION_CONTRACT_CALL_MINUTES_AGO: MockTransaction = {
+  transaction: MOCK_TRANSACTION_CONTRACT_CALL.transaction,
+  tx: {
+    ...MOCK_TRANSACTION_CONTRACT_CALL.tx,
+    time: fourMinutesAgo.toString(),
+    id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade9',
+    status: TxStatus.failure,
+  },
+  receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts,
+};
+
+const twoHoursAgo = new Date(new Date().getTime() - 2 * 60 * 60 * 1000);
+export const MOCK_TRANSACTION_CONTRACT_CALL_HOURS_AGO: MockTransaction = {
+  transaction: MOCK_TRANSACTION_CONTRACT_CALL.transaction,
+  tx: {
+    ...MOCK_TRANSACTION_CONTRACT_CALL.tx,
+    operations: [
+      {
+        ...MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0],
+        name: OperationName.receive,
+      },
+    ],
+    time: twoHoursAgo.toString(),
+    id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6adea',
+  },
+  receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts,
+};
+
+export const MOCK_TRANSACTION_CONTRACT_CALLS: MockTransaction[] = [
+  MOCK_TRANSACTION_CONTRACT_CALL_SECONDS_AGO,
+  MOCK_TRANSACTION_CONTRACT_CALL_MINUTES_AGO,
+  MOCK_TRANSACTION_CONTRACT_CALL_HOURS_AGO,
+  MOCK_TRANSACTION_CONTRACT_CALL,
+];
 
 export const MOCK_TRANSACTION_CREATE_CONTRACT_PARTS: {
   inputCoin: InputCoin;

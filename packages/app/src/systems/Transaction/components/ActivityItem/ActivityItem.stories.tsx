@@ -1,6 +1,11 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-return-assign */
 import { Box } from '@fuel-ui/react';
 
-import { MOCK_TRANSACTION_CONTRACT_CALL } from '../../__mocks__/tx';
+import {
+  MOCK_TRANSACTION_CONTRACT_CALL,
+  MOCK_TRANSACTION_CONTRACT_CALLS,
+} from '../../__mocks__/tx';
 import { TxStatus } from '../../utils';
 
 import type { TxItemProps } from './ActivityItem';
@@ -15,7 +20,9 @@ const ownerAddress =
   MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].from?.address || '';
 
 export const Success = (args: TxItemProps) => {
-  MOCK_TRANSACTION_CONTRACT_CALL.tx.status = TxStatus.success;
+  MOCK_TRANSACTION_CONTRACT_CALLS.map(
+    (tx) => (tx.tx.status = TxStatus.success)
+  );
   return (
     <Box
       css={{
@@ -25,22 +32,22 @@ export const Success = (args: TxItemProps) => {
         gap: '$4',
       }}
     >
-      <ActivityItem
-        {...args}
-        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
-        ownerAddress={ownerAddress}
-      />
-      <ActivityItem
-        {...args}
-        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
-        ownerAddress={ownerAddress}
-      />
+      {MOCK_TRANSACTION_CONTRACT_CALLS.map((tx) => (
+        <ActivityItem
+          key={tx.tx.id}
+          {...args}
+          transaction={tx.tx}
+          ownerAddress={ownerAddress}
+        />
+      ))}
     </Box>
   );
 };
 
 export const Pending = (args: TxItemProps) => {
-  MOCK_TRANSACTION_CONTRACT_CALL.tx.status = TxStatus.pending;
+  MOCK_TRANSACTION_CONTRACT_CALLS.map(
+    (tx) => (tx.tx.status = TxStatus.pending)
+  );
   return (
     <Box
       css={{
@@ -50,22 +57,22 @@ export const Pending = (args: TxItemProps) => {
         gap: '$4',
       }}
     >
-      <ActivityItem
-        {...args}
-        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
-        ownerAddress={ownerAddress}
-      />
-      <ActivityItem
-        {...args}
-        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
-        ownerAddress={ownerAddress}
-      />
+      {MOCK_TRANSACTION_CONTRACT_CALLS.map((tx) => (
+        <ActivityItem
+          key={tx.tx.id}
+          {...args}
+          transaction={tx.tx}
+          ownerAddress={ownerAddress}
+        />
+      ))}
     </Box>
   );
 };
 
 export const Error = (args: TxItemProps) => {
-  MOCK_TRANSACTION_CONTRACT_CALL.tx.status = TxStatus.failure;
+  MOCK_TRANSACTION_CONTRACT_CALLS.map(
+    (tx) => (tx.tx.status = TxStatus.failure)
+  );
   return (
     <Box
       css={{
@@ -75,16 +82,14 @@ export const Error = (args: TxItemProps) => {
         gap: '$4',
       }}
     >
-      <ActivityItem
-        {...args}
-        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
-        ownerAddress={ownerAddress}
-      />
-      <ActivityItem
-        {...args}
-        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
-        ownerAddress={ownerAddress}
-      />
+      {MOCK_TRANSACTION_CONTRACT_CALLS.map((tx) => (
+        <ActivityItem
+          key={tx.tx.id}
+          {...args}
+          transaction={tx.tx}
+          ownerAddress={ownerAddress}
+        />
+      ))}
     </Box>
   );
 };
