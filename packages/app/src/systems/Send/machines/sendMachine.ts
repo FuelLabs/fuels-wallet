@@ -119,7 +119,8 @@ export const sendMachine = createMachine(
       fetchFakeTx: FetchMachine.create<null, BN>({
         showError: false,
         async fetch() {
-          return TxService.createFakeTx();
+          const tx = await TxService.createFakeTx();
+          return tx.request.calculateFee().amount;
         },
       }),
       createTransactionRequest: FetchMachine.create<

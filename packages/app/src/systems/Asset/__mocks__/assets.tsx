@@ -1,4 +1,4 @@
-import { bn } from 'fuels';
+import { bn, NativeAssetId } from 'fuels';
 
 import { ASSET_LIST } from '../utils';
 
@@ -15,7 +15,7 @@ export const MOCK_ASSETS_AMOUNTS = ASSET_LIST.map((item, idx) => ({
 export const MOCK_ASSETS_NODE = [
   {
     node: {
-      assetId: ASSET_LIST[0].assetId,
+      assetId: NativeAssetId,
       amount: bn(30000000000),
     },
   },

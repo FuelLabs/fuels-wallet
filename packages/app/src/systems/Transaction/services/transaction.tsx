@@ -9,8 +9,9 @@ import type {
 } from 'fuels';
 import {
   Address,
+  GAS_PER_BYTE,
+  GAS_PRICE_FACTOR,
   bn,
-  hexlify,
   MAX_GAS_PER_TX,
   NativeAssetId,
   ScriptTransactionRequest,
@@ -21,11 +22,11 @@ import {
 } from 'fuels';
 
 import type { Transaction } from '../types';
-import { toJSON } from '../utils';
+import { getFee, getGasUsed, toJSON } from '../utils';
 
-import { ASSET_MAP, isEth } from '~/systems/Asset';
+import { isEth } from '~/systems/Asset';
 import { db, uniqueId } from '~/systems/Core';
-import { provider } from '~/systems/DApp/__mocks__/dapp-provider';
+import { NetworkService } from '~/systems/Network';
 
 export type TxInputs = {
   get: {
@@ -142,8 +143,33 @@ export class TxService {
     return receipts;
   }
 
+  static async createFakeTx() {
+    const network = await NetworkService.getSelectedNetwork();
+    const toWallet = Wallet.generate();
+    const params = { gasLimit: MAX_GAS_PER_TX };
+    const request = new ScriptTransactionRequest(params);
+    const dest = toWallet.address;
+    const amount = bn(1);
+    const receipts = await TxService.simulateTransaction({
+      transactionRequest: request,
+      providerUrl: network?.url,
+    });
+
+    request.addCoinOutput(dest, amount, NativeAssetId);
+    const gasFee = getFee({
+      receipts,
+      transaction: request.toTransaction(),
+      gasPerByte: GAS_PER_BYTE,
+      gasPriceFactor: GAS_PRICE_FACTOR,
+    });
+    return {
+      request,
+      gasFee,
+    };
+  }
+
   static async createTransfer(input: TxInputs['createTransfer']) {
-    const request = new ScriptTransactionRequest({ gasPrice: 0 });
+    const request = new ScriptTransactionRequest({ gasLimit: MAX_GAS_PER_TX });
     const to = Address.fromAddressOrString(input.to);
     const { assetId, amount } = input;
     request.addCoinOutput(to, amount, assetId);
@@ -154,19 +180,15 @@ export class TxService {
     const { needToAddResources = true, gasFee = bn(0) } = input || {};
     const request = transactionRequestify(input.tx);
     const coins = request.getCoinOutputs();
-    const requiredCoins = coins.map((coin) => {
-      let amount = bn(coin.amount);
-      if (coin.assetId === NativeAssetId) {
-        amount = amount.add(gasFee || bn(0));
-      }
-      return { assetId: coin.assetId, amount };
-    });
+    const requiredCoins = coins.map((coin) => ({
+      assetId: coin.assetId,
+      amount: isEth(coin) ? bn(coin.amount).add(gasFee) : bn(coin.amount),
+    }));
 
     if (needToAddResources) {
-      const resources = await provider.getResourcesToSpend(
-        input.wallet.address,
-        requiredCoins
-      );
+      const addr = input.wallet.address;
+      const provider = input.wallet.provider;
+      const resources = await provider.getResourcesToSpend(addr, requiredCoins);
       request.addResources(resources);
     }
     return request;
@@ -175,43 +197,40 @@ export class TxService {
   static async fundTransaction(input: TxInputs['fundTransaction']) {
     const { wallet, tx } = input;
     const preRequest = await TxService.getTxWithResources({ wallet, tx });
-    const txCost = await wallet.provider.getTransactionCost(preRequest);
     const request = transactionRequestify(tx);
-    request.gasLimit = txCost.gasUsed;
-    request.gasPrice = txCost.gasPrice;
+    const gasPrice = preRequest.gasPrice;
+    const transaction = preRequest.toTransaction();
+    const receipts = await TxService.simulateTransaction({
+      transactionRequest: request,
+      providerUrl: wallet.provider.url,
+    });
+
+    const getOpts = {
+      receipts,
+      gasPerByte: GAS_PER_BYTE,
+      gasPriceFactor: GAS_PRICE_FACTOR,
+    };
+    const fee = getFee({ transaction, ...getOpts });
+    const gasUsed = getGasUsed({ transaction, ...getOpts });
+
+    request.gasLimit = gasUsed;
+    request.gasPrice = gasPrice;
     const finalRequest = await TxService.getTxWithResources({
       wallet,
       tx: request,
-      gasFee: txCost.fee,
+      gasFee: fee,
       needToAddResources: false,
     });
     return {
       request: finalRequest,
-      txCost,
     };
-  }
-
-  static async createFakeTx() {
-    const toWallet = Wallet.generate();
-    const params = { gasLimit: MAX_GAS_PER_TX };
-    const request = new ScriptTransactionRequest(params);
-    const dest = toWallet.address;
-    const assetId = Object.values(ASSET_MAP)[0].assetId;
-    const amount = bn(1);
-
-    request.addCoinOutput(dest, amount, assetId);
-    const fee = request.calculateFee();
-    if (fee && fee.assetId === hexlify(assetId)) {
-      fee.amount.add(amount);
-    }
-    return fee.amount;
   }
 
   static isValidTransaction(input: TxInputs['isValidTransaction']) {
     const { account, asset, fee, amount, address } = input;
     if (!account || !asset || !fee || !amount || !address) return false;
     const assetBalance = getAssetAccountBalance(account, asset?.assetId);
-    if (isEth(asset)) return assetBalance.gte(bn(amount).add(fee));
+    if (isEth(asset.assetId)) return assetBalance.gte(bn(amount).add(fee));
     const ethBalance = getAssetAccountBalance(account, NativeAssetId);
     const hasAssetBalance = assetBalance.gte(bn(amount));
     const hasGasFeeBalance = ethBalance.gte(bn(fee));

@@ -30,6 +30,7 @@ export const TxDetails: TxDetailsComponent = ({
       // TODO: remove ts ignore when collapsible is exposed from the fuel-ui
       // collapsible is a valid property from radix accordion but
       // is not exposed by the fuel-ui Accordion component
+      // issue: https://github.com/FuelLabs/fuel-ui/issues/185
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       collapsible={true}
