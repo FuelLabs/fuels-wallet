@@ -58,7 +58,7 @@ export function ConnectionList({
         {(status('idle') || status('removing')) && (
           <MotionCardList {...animations.slideInTop()} gap="$3">
             <AnimatePresence initial={false} mode="sync">
-              {ctx.connections.map((connection) => (
+              {ctx.connections?.map((connection) => (
                 <ConnectionItem
                   key={connection.origin}
                   connection={connection}

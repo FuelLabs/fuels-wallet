@@ -40,7 +40,7 @@ export function ConnectionEdit({
         {status('idle') && (
           <MotionCardList {...animations.slideInTop()} gap="$3">
             <AnimatePresence initial={false}>
-              {ctx.accounts.map((account) => {
+              {ctx.accounts?.map((account) => {
                 const { address } = account;
                 const isConnected = handlers.isConnected(address);
                 const rightEl = (

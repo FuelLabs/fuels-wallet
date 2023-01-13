@@ -1,4 +1,4 @@
-import type { Account, Connection } from '@fuel-wallet/types';
+import type { Connection } from '@fuel-wallet/types';
 import { useInterpret, useSelector } from '@xstate/react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -13,11 +13,11 @@ import {
 // Selectors
 // ----------------------------------------------------------------------------
 
-function filteredOrAll<T = Account | Connection>(
+function filteredOrAll<T>(
   all: T[],
-  filtered: T[],
+  filtered?: T[] | null,
   searchText?: string
-): T[] {
+) {
   const hasSearch = Boolean(searchText?.length);
   return hasSearch ? filtered : filtered || all;
 }
@@ -32,14 +32,14 @@ const selectors = {
   accounts({ context }: ConnectionsMachineState) {
     return filteredOrAll(
       context.response?.accounts || [],
-      context.response?.filteredAccounts || [],
+      context.response?.filteredAccounts,
       context.inputs.searchText
     );
   },
   connections({ context }: ConnectionsMachineState) {
     return filteredOrAll(
       context.response?.connections || [],
-      context.response?.filteredConnections || [],
+      context.response?.filteredConnections,
       context.inputs.searchText
     );
   },
