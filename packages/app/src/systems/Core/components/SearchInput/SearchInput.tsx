@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Icon, Input } from '@fuel-ui/react';
+import { Icon, IconButton, Input } from '@fuel-ui/react';
 
 type HTMLInputProps = React.InputHTMLAttributes<HTMLInputElement>;
 export type InputFieldProps = Omit<HTMLInputProps, 'size'> & {
@@ -33,8 +33,25 @@ export function SearchInput({
         role={null as any}
         aria-label="Search"
         value={value || ''}
-        onChange={(e) => onChange?.(e.target.value)}
         placeholder="Search..."
+        data-has-value={Boolean(value?.length)}
+        onChange={(e) => {
+          onChange?.(e.target.value);
+        }}
+      />
+      <Input.ElementRight
+        element={
+          <IconButton
+            variant="link"
+            icon={Icon.is('X')}
+            iconSize={16}
+            aria-label="Clear search"
+            onClick={(e) => {
+              console.log(e);
+              onChange?.('');
+            }}
+          />
+        }
       />
     </Input>
   );
@@ -48,14 +65,29 @@ const styles = {
     '&:focus-within': {
       borderColor: 'transparent',
     },
-    '&:has(.fuel_input--field:focus-visible) .fuel_input--element': {
-      color: '$accent11',
-    },
     '.fuel_input--element': {
       padding: 0,
     },
+    '.fuel_input-element--right > button': {
+      padding: '$0 !important',
+      display: 'none',
+      mr: '$3',
+    },
+
+    '&:has(.fuel_input:focus-visible) .fuel-icon': {
+      color: '$accent9',
+    },
+    '&:has(.fuel_input--field[data-has-value="true"])': {
+      '.fuel_input-element--right > button': {
+        display: 'block',
+      },
+    },
+
     '.fuel_input--field': {
       fontSize: '$sm',
+    },
+    'input[type="search" i]::-webkit-search-cancel-button': {
+      display: 'none !important',
     },
   }),
 };
