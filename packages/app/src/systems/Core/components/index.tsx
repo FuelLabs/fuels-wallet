@@ -3,6 +3,7 @@ export * from './EmptyList';
 export * from './ImageLoader';
 export * from './Layout';
 export * from './Mnemonic';
+export * from './OriginTag';
 export * from './PrivateRoute';
 export * from './Providers';
 export * from './PublicRoute';

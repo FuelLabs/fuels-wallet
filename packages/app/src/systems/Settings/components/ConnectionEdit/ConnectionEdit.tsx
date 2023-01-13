@@ -5,7 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { useConnections } from '../../hooks';
 
 import { AccountItem } from '~/systems/Account';
-import { animations, EmptyList, Layout, SearchInput } from '~/systems/Core';
+import {
+  animations,
+  EmptyList,
+  Layout,
+  OriginTag,
+  SearchInput,
+} from '~/systems/Core';
 
 export type ConnectionEditProps = ReturnType<typeof useConnections>;
 
@@ -21,7 +27,7 @@ export function ConnectionEdit({
     <Layout.Content>
       <Stack gap="$3">
         <Text leftIcon={Icon.is('Globe')} css={styles.title}>
-          {ctx.inputs.origin}
+          <OriginTag origin={ctx.inputs.origin} />
         </Text>
         <Flex css={styles.searchBar}>
           <SearchInput
@@ -75,7 +81,7 @@ export function ConnectionEdit({
 const styles = {
   title: cssObj({
     fontSize: '$sm',
-    pb: '$2',
+    pb: '$3',
     borderBottom: '1px dashed $gray2',
     wordBreak: 'break-all',
 
