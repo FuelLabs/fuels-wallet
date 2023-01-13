@@ -128,6 +128,7 @@ importers:
       '@xstate/inspect': ^0.7.0
       '@xstate/react': ^3.0.1
       cross-fetch: ^3.1.5
+      dayjs: ^1.11.7
       dexie: ^3.2.2
       dexie-observable: 4.0.0-beta.13
       dexie-react-hooks: ^1.1.1
@@ -175,6 +176,7 @@ importers:
       '@react-aria/utils': 3.14.2_react@18.2.0
       '@xstate/react': 3.0.1_usupc6fv4xloi57sjg5n7lyavq
       cross-fetch: 3.1.5
+      dayjs: 1.11.7
       dexie: 3.2.2
       dexie-observable: 4.0.0-beta.13_dexie@3.2.2
       dexie-react-hooks: 1.1.1_3imspw4mgx25623dxsqc7dbkja
@@ -11101,6 +11103,10 @@ packages:
   /dataloader/1.4.0:
     resolution: {integrity: sha512-68s5jYdlvasItOJnCuI2Q9s4q98g0pCyL3HrcKJu8KNugUl8ahgmZYg38ysLTgQjjXX3H8CJLkAvWrclWfcalw==}
     dev: true
+
+  /dayjs/1.11.7:
+    resolution: {integrity: sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==}
+    dev: false
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}

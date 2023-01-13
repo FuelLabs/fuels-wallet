@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 
 import type { Tx } from '../../utils';
 import {
-  getTimeFromNow,
+  getTimeTillNow,
   OperationDirection,
   getOperationDirection,
 } from '../../utils';
@@ -26,7 +26,7 @@ type TxItemComponent = FC<TxItemProps> & {
 };
 
 const formatDate = (date: Date | undefined) =>
-  date ? getTimeFromNow(date) : '';
+  date ? getTimeTillNow(date) : '';
 
 export const ActivityItem: TxItemComponent = ({
   transaction,

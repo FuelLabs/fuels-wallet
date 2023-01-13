@@ -2,10 +2,7 @@
 /* eslint-disable no-return-assign */
 import { Box } from '@fuel-ui/react';
 
-import {
-  MOCK_TRANSACTION_CONTRACT_CALL,
-  MOCK_TRANSACTION_CONTRACT_CALLS,
-} from '../../__mocks__/tx';
+import { createMockTx } from '../../__mocks__/tx';
 import { TxStatus } from '../../utils';
 
 import type { TxItemProps } from './ActivityItem';
@@ -16,13 +13,38 @@ export default {
   title: 'Transaction/Components/ActivityItem',
 };
 
+const MOCK_TRANSACTION_CONTRACT_CALL_DAYS_AGO = createMockTx({
+  time: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
+  id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6adeb',
+  status: TxStatus.success,
+});
+const MOCK_TRANSACTION_CONTRACT_CALL_HOURS_AGO = createMockTx({
+  time: new Date(Date.now() - 1000 * 60 * 60 * 6),
+  id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6adea',
+  status: TxStatus.pending,
+});
+const MOCK_TRANSACTION_CONTRACT_CALL_MINUTE_AGO = createMockTx({
+  time: new Date(Date.now() - 1000 * 60 * 23),
+  id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade9',
+  status: TxStatus.failure,
+});
+const MOCK_TRANSACTION_CONTRACT_CALL_SECONDS_AGO = createMockTx({
+  time: new Date(Date.now() - 1000 * 2),
+  id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade8',
+  status: TxStatus.pending,
+});
+const MOCK_TRANSACTION_CONTRACT_CALLS = [
+  MOCK_TRANSACTION_CONTRACT_CALL_SECONDS_AGO,
+  MOCK_TRANSACTION_CONTRACT_CALL_MINUTE_AGO,
+  MOCK_TRANSACTION_CONTRACT_CALL_HOURS_AGO,
+  MOCK_TRANSACTION_CONTRACT_CALL_DAYS_AGO,
+];
+
 const ownerAddress =
-  MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].from?.address || '';
+  MOCK_TRANSACTION_CONTRACT_CALL_DAYS_AGO.operations[0].from?.address || '';
 
 export const Success = (args: TxItemProps) => {
-  MOCK_TRANSACTION_CONTRACT_CALLS.map(
-    (tx) => (tx.tx.status = TxStatus.success)
-  );
+  MOCK_TRANSACTION_CONTRACT_CALLS.map((tx) => (tx.status = TxStatus.success));
   return (
     <Box
       css={{
@@ -34,9 +56,9 @@ export const Success = (args: TxItemProps) => {
     >
       {MOCK_TRANSACTION_CONTRACT_CALLS.map((tx) => (
         <ActivityItem
-          key={tx.tx.id}
+          key={tx.id}
           {...args}
-          transaction={tx.tx}
+          transaction={tx}
           ownerAddress={ownerAddress}
         />
       ))}
@@ -45,9 +67,7 @@ export const Success = (args: TxItemProps) => {
 };
 
 export const Pending = (args: TxItemProps) => {
-  MOCK_TRANSACTION_CONTRACT_CALLS.map(
-    (tx) => (tx.tx.status = TxStatus.pending)
-  );
+  MOCK_TRANSACTION_CONTRACT_CALLS.map((tx) => (tx.status = TxStatus.pending));
   return (
     <Box
       css={{
@@ -59,9 +79,9 @@ export const Pending = (args: TxItemProps) => {
     >
       {MOCK_TRANSACTION_CONTRACT_CALLS.map((tx) => (
         <ActivityItem
-          key={tx.tx.id}
+          key={tx.id}
           {...args}
-          transaction={tx.tx}
+          transaction={tx}
           ownerAddress={ownerAddress}
         />
       ))}
@@ -70,9 +90,7 @@ export const Pending = (args: TxItemProps) => {
 };
 
 export const Error = (args: TxItemProps) => {
-  MOCK_TRANSACTION_CONTRACT_CALLS.map(
-    (tx) => (tx.tx.status = TxStatus.failure)
-  );
+  MOCK_TRANSACTION_CONTRACT_CALLS.map((tx) => (tx.status = TxStatus.failure));
   return (
     <Box
       css={{
@@ -84,9 +102,9 @@ export const Error = (args: TxItemProps) => {
     >
       {MOCK_TRANSACTION_CONTRACT_CALLS.map((tx) => (
         <ActivityItem
-          key={tx.tx.id}
+          key={tx.id}
           {...args}
-          transaction={tx.tx}
+          transaction={tx}
           ownerAddress={ownerAddress}
         />
       ))}
