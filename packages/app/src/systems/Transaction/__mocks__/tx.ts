@@ -155,16 +155,25 @@ export const createMockTx = ({
   status,
   time,
   id,
+  operation,
 }: {
   status?: TxStatus;
   time?: Date;
   id?: string;
+  operation?: OperationName;
 }) => {
   return {
     ...MOCK_TRANSACTION_CONTRACT_CALL.tx,
     time: time?.toString() ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.time,
     id: id ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.id,
     status: status ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.status,
+    operations: [
+      {
+        ...MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0],
+        name: operation ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].name,
+      },
+      ...MOCK_TRANSACTION_CONTRACT_CALL.tx.operations.slice(1),
+    ],
   };
 };
 
