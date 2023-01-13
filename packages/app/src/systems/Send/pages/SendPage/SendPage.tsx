@@ -21,7 +21,7 @@ export function SendPage() {
       <Layout title={ctx.title} isLoading={status('loading')}>
         <Layout.TopBar onBack={handlers.cancel} />
         <AnimatePresence initial={false} mode="sync">
-          {isSelecting && <Send.Select {...send} />}
+          {(isSelecting || status('loading')) && <Send.Select {...send} />}
           {status('loadingTx') && <Send.Loading />}
           {status('confirming') && <Send.Confirm txRequest={txRequest} />}
         </AnimatePresence>
