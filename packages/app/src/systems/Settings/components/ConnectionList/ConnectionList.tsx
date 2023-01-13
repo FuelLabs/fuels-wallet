@@ -40,7 +40,7 @@ export function ConnectionList({
           </Flex>
         )}
         {status('loading') && (
-          <CardList>
+          <CardList gap="$3">
             {[1, 2, 3].map((i) => (
               <ConnectionItem.Loader key={i} />
             ))}
