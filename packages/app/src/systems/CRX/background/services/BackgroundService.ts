@@ -72,7 +72,7 @@ export class BackgroundService {
 
   async isConnected(origin: string) {
     const isConnected = await ConnectionService.getConnection(origin);
-    return !!isConnected;
+    return (isConnected?.accounts || []).length > 0;
   }
 
   async requireAccounts() {
