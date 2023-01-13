@@ -116,7 +116,7 @@ export function useSend() {
   const titleSelector = selectors.title(txRequest.txStatus);
   const title = useSelector(service, titleSelector);
   const accountBalance = bn(txRequest.account?.balance);
-  const accountBalanceLessFee = accountBalance.sub(fee!);
+  const maxAmountToSend = accountBalance.sub(fee!);
 
   function status(status: keyof typeof SendStatus) {
     return sendStatus === status;
@@ -161,7 +161,7 @@ export function useSend() {
       });
       return;
     }
-    if (accountBalanceLessFee.lt(amount!)) {
+    if (maxAmountToSend.lt(amount!)) {
       form.setError('amount', {
         type: 'pattern',
         message: 'Insufficient funds',
