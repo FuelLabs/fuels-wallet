@@ -6,6 +6,11 @@ import { useSend } from '../../hooks';
 
 import { Send } from '.';
 
+import {
+  mockBalancesOnGraphQL,
+  MOCK_ASSETS_NODE,
+} from '~/systems/Asset/__mocks__/assets';
+
 const wallet = Wallet.generate();
 
 export default {
@@ -32,6 +37,7 @@ export const Select: StoryFn = (_args) => {
 Select.loaders = [sendLoader(wallet)];
 Select.parameters = {
   layout: 'fullscreen',
+  msw: [mockBalancesOnGraphQL(MOCK_ASSETS_NODE.slice(0, 1))],
 };
 
 export const Confirm: StoryFn = (_args, { loaded }) => {

@@ -1,11 +1,11 @@
 import { bn, NativeAssetId } from 'fuels';
-import { graphql } from 'msw';
 
 import { MOCK_ACCOUNTS } from '../__mocks__';
 
 import { AccountService } from './account';
 
 import { mockServer } from '~/mocks/server';
+import { mockBalancesOnGraphQL } from '~/systems/Asset/__mocks__/assets';
 
 const MOCK_ACCOUNT = MOCK_ACCOUNTS[0];
 const MOCK_BALANCES = [
@@ -17,11 +17,7 @@ const MOCK_BALANCES = [
   },
 ];
 
-mockServer([
-  graphql.query('getBalances', (_req, res, ctx) => {
-    return res(ctx.data({ balances: { edges: MOCK_BALANCES } }));
-  }),
-]);
+mockServer([mockBalancesOnGraphQL(MOCK_BALANCES)]);
 
 describe('AccountService', () => {
   beforeEach(async () => {

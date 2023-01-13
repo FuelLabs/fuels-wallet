@@ -6,6 +6,11 @@ import { sendLoader } from '../../__mocks__/send';
 
 import { SendPage } from './SendPage';
 
+import {
+  mockBalancesOnGraphQL,
+  MOCK_ASSETS_NODE,
+} from '~/systems/Asset/__mocks__/assets';
+
 const wallet = Wallet.generate();
 
 export default {
@@ -24,6 +29,7 @@ const Template: ComponentStory<typeof SendPage> = () => {
 export const Usage = Template.bind({});
 Usage.parameters = {
   layout: 'fullscreen',
+  msw: [mockBalancesOnGraphQL(MOCK_ASSETS_NODE.slice(0, 1))],
 };
 Usage.play = async ({ canvasElement }) => {
   const canvas = within(canvasElement);

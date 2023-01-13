@@ -1,4 +1,6 @@
+import type { BigNumberish } from 'fuels';
 import { bn, NativeAssetId } from 'fuels';
+import { graphql } from 'msw';
 
 import { ASSET_LIST } from '../utils';
 
@@ -31,4 +33,17 @@ export const MOCK_ASSETS_NODE = [
       amount: bn(120000000),
     },
   },
-];
+] as BalanceNode[];
+
+type BalanceNode = {
+  node: {
+    assetId: string;
+    amount: BigNumberish;
+  };
+};
+
+export function mockBalancesOnGraphQL(nodes: BalanceNode[] = MOCK_ASSETS_NODE) {
+  return graphql.query('getBalances', (req, res, ctx) => {
+    return res(ctx.data({ balances: { edges: nodes } }));
+  });
+}
