@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { arrayify, ReceiptCoder, ReceiptType, TransactionCoder } from 'fuels';
 import type { TransactionResultReceipt, Address, BN } from 'fuels';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
+import { TxService } from '../services';
 import { parseTx } from '../utils';
 
 import type {
   AddressTransactionsQuery,
   ReceiptFragment,
-} from './__generated__/operations';
-import { useAddressTransactionsQuery } from './__generated__/operations';
-
+} from '~/generated/graphql';
 import { useChainInfo } from '~/systems/Network';
 
 /** @TODO: Move this logic to the SDK */
@@ -22,22 +21,16 @@ const processGqlReceipt = (
     0
   )[0];
 
-  switch (receipt.type) {
-    case ReceiptType.ReturnData: {
-      return {
-        ...receipt,
-        data: gqlReceipt.data!,
-      };
-    }
-    case ReceiptType.LogData: {
-      return {
-        ...receipt,
-        data: gqlReceipt.data!,
-      };
-    }
-    default:
-      return receipt;
+  if (
+    receipt.type === ReceiptType.LogData ||
+    receipt.type === ReceiptType.ReturnData
+  ) {
+    return {
+      ...receipt,
+      data: gqlReceipt.data!,
+    };
   }
+  return receipt;
 };
 
 /** @TODO: Move this logic to the SDK */
@@ -87,9 +80,26 @@ export function useTxs({ address, providerUrl }: UseTxsProps) {
   const { chainInfo, isLoading: isLoadingChainInfo } =
     useChainInfo(providerUrl);
 
-  const { loading, data, error } = useAddressTransactionsQuery({
-    variables: { first: 10, owner: address?.toString() || '' },
-  });
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<AddressTransactionsQuery>();
+  const [error, setError] = useState();
+
+  useEffect(() => {
+    if (data || !address) return;
+
+    setLoading(true);
+    TxService.getTransactionHistory({
+      address: address?.toString() || '',
+    })
+      .then((data) => {
+        setData(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+        setLoading(false);
+      });
+  }, [data, address]);
 
   const isLoadingTx = isLoadingChainInfo || loading;
 

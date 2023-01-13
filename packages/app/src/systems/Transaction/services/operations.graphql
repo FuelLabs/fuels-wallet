@@ -1,0 +1,63 @@
+query AddressTransactions($first: Int, $owner: Address!) {
+  coins(filter: { owner: $owner }, first: 9999) {
+    edges {
+      node {
+        ...AddressCoin
+      }
+    }
+  }
+  transactionsByOwner(first: $first, owner: $owner) {
+    edges {
+      node {
+        ...transaction
+        receipts {
+          ...receipt
+        }
+      }
+    }
+  }
+}
+
+fragment AddressCoin on Coin {
+  utxoId
+  owner
+  amount
+  assetId
+  maturity
+  status
+  blockCreated
+}
+
+fragment transaction on Transaction {
+  id
+  rawPayload
+  gasPrice
+  status {
+    type: __typename
+    ... on SubmittedStatus {
+      time
+    }
+    ... on SuccessStatus {
+      block {
+        id
+      }
+      time
+      programState {
+        returnType
+        data
+      }
+    }
+    ... on FailureStatus {
+      block {
+        id
+      }
+      time
+      reason
+    }
+  }
+}
+
+fragment receipt on Receipt {
+  data
+  rawPayload
+}

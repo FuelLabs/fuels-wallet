@@ -1,2 +1,2 @@
 export * from './transactionMachine';
-export * from './transactionsMachine';
+export * from './transactionHistoryMachine';

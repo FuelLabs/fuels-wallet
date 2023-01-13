@@ -7,6 +7,7 @@ import type { Transaction } from '../types';
 import { toJSON } from '../utils';
 
 import { db, uniqueId } from '~/systems/Core';
+import { graphqlSDK } from '~/systems/Core/utils/graphql';
 
 export type TxInputs = {
   get: {
@@ -38,9 +39,8 @@ export type TxInputs = {
     txId: string;
     providerUrl?: string;
   };
-  fetchAllByAddress: {
+  getTransactionHistory: {
     address: string;
-    providerUrl?: string;
   };
 };
 
@@ -104,5 +104,14 @@ export class TxService {
     const { receipts } = await provider.call(transactionRequest);
 
     return receipts;
+  }
+
+  static async getTransactionHistory({
+    address,
+  }: TxInputs['getTransactionHistory']) {
+    return graphqlSDK.AddressTransactions({
+      owner: address,
+      first: 10,
+    });
   }
 }

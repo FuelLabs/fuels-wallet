@@ -100,9 +100,10 @@ importers:
       '@fuel-wallet/types': workspace:*
       '@fuel-wallet/xstore': workspace:*
       '@graphql-codegen/cli': ^2.16.1
+      '@graphql-codegen/named-operations-object': ^2.3.1
       '@graphql-codegen/near-operation-file-preset': ^2.2.6
       '@graphql-codegen/typescript': ^2.4.5
-      '@graphql-codegen/typescript-graphql-request': ^4.5.7
+      '@graphql-codegen/typescript-graphql-request': ^4.5.8
       '@graphql-codegen/typescript-operations': ^2.3.2
       '@graphql-codegen/typescript-react-apollo': ^3.2.8
       '@hookform/resolvers': ^2.9.10
@@ -145,6 +146,8 @@ importers:
       fuels: 0.28.0
       get-graphql-schema: ^2.1.2
       graphql: ^16.6.0
+      graphql-request: ^5.1.0
+      graphql-tag: ^2.12.6
       json-rpc-2.0: ^1.4.2
       msw: ^0.49.2
       msw-storybook-addon: ^1.6.3
@@ -194,6 +197,8 @@ importers:
       framer-motion: 7.10.3_biqbaboplfbrettd7655fr4n2y
       fuels: 0.28.0
       graphql: 16.6.0
+      graphql-request: 5.1.0_graphql@16.6.0
+      graphql-tag: 2.12.6_graphql@16.6.0
       json-rpc-2.0: 1.4.2
       react: 18.2.0
       react-content-loader: 6.2.0_react@18.2.0
@@ -209,11 +214,12 @@ importers:
       '@babel/core': 7.20.7
       '@crxjs/vite-plugin': 1.0.14_vite@4.0.3
       '@graphql-codegen/cli': 2.16.4_4jue5btbwdslf52mhjlscns6fu
+      '@graphql-codegen/named-operations-object': 2.3.1_sy4knu3obj4ys7pjcqbyfxmqle
       '@graphql-codegen/near-operation-file-preset': 2.5.0_graphql@16.6.0
       '@graphql-codegen/typescript': 2.8.7_graphql@16.6.0
-      '@graphql-codegen/typescript-graphql-request': 4.5.8_graphql@16.6.0
+      '@graphql-codegen/typescript-graphql-request': 4.5.8_f45c35xnr66et7kv43kezet7ie
       '@graphql-codegen/typescript-operations': 2.5.12_graphql@16.6.0
-      '@graphql-codegen/typescript-react-apollo': 3.3.7_graphql@16.6.0
+      '@graphql-codegen/typescript-react-apollo': 3.3.7_sy4knu3obj4ys7pjcqbyfxmqle
       '@playwright/test': 1.29.1
       '@storybook/addon-a11y': 6.5.15_biqbaboplfbrettd7655fr4n2y
       '@storybook/addon-actions': 6.5.15_biqbaboplfbrettd7655fr4n2y
@@ -3592,6 +3598,19 @@ packages:
       tslib: 2.4.1
     dev: true
 
+  /@graphql-codegen/named-operations-object/2.3.1_sy4knu3obj4ys7pjcqbyfxmqle:
+    resolution: {integrity: sha512-RVjt+1CbVzFUsWerWZaywkYJexeccwDYtPotnZODCem7fTkdBbto6q82jhXRMbsknnjRx/yeFlVkaG9PqrBZZw==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+      graphql-tag: ^2.0.0
+    dependencies:
+      '@graphql-codegen/plugin-helpers': 2.7.2_graphql@16.6.0
+      change-case-all: 1.0.14
+      graphql: 16.6.0
+      graphql-tag: 2.12.6_graphql@16.6.0
+      tslib: 2.4.1
+    dev: true
+
   /@graphql-codegen/near-operation-file-preset/2.5.0_graphql@16.6.0:
     resolution: {integrity: sha512-S9PNJP5tTkUWBQ6inbviOsTREzsMxYVqJGrtPcIdMWkKLZAAItAfAb60klB1T64vt6Oru+nUf8IYUNrchJ8MYg==}
     peerDependencies:
@@ -3648,7 +3667,7 @@ packages:
       tslib: 2.4.1
     dev: true
 
-  /@graphql-codegen/typescript-graphql-request/4.5.8_graphql@16.6.0:
+  /@graphql-codegen/typescript-graphql-request/4.5.8_f45c35xnr66et7kv43kezet7ie:
     resolution: {integrity: sha512-XsuAA35Ou03LsklNgnIWXZ5HOHsJ5w1dBuDKtvqM9rD0cAI8x0f4TY0n6O1EraSBSvyHLP3npb1lOTPZzG2TjA==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
@@ -3659,6 +3678,8 @@ packages:
       '@graphql-codegen/visitor-plugin-common': 2.13.1_graphql@16.6.0
       auto-bind: 4.0.0
       graphql: 16.6.0
+      graphql-request: 5.1.0_graphql@16.6.0
+      graphql-tag: 2.12.6_graphql@16.6.0
       tslib: 2.4.1
     transitivePeerDependencies:
       - encoding
@@ -3681,7 +3702,7 @@ packages:
       - supports-color
     dev: true
 
-  /@graphql-codegen/typescript-react-apollo/3.3.7_graphql@16.6.0:
+  /@graphql-codegen/typescript-react-apollo/3.3.7_sy4knu3obj4ys7pjcqbyfxmqle:
     resolution: {integrity: sha512-9DUiGE8rcwwEkf/S1kpBT/Py/UUs9Qak14bOnTT1JHWs1MWhiDA7vml+A8opU7YFI1EVbSSaE5jjRv11WHoikQ==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
@@ -3692,6 +3713,7 @@ packages:
       auto-bind: 4.0.0
       change-case-all: 1.0.14
       graphql: 16.6.0
+      graphql-tag: 2.12.6_graphql@16.6.0
       tslib: 2.4.1
     transitivePeerDependencies:
       - encoding

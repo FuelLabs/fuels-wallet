@@ -1,0 +1,26 @@
+overwrite: true
+schema:
+  - "http://localhost:4000/graphql"
+documents: "./src/**/*.graphql"
+generates:
+  src/generated/graphql.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - named-operations-object
+      - typescript-graphql-request
+    config:
+      fetcher: fetch
+      reactApolloVersion: 3
+      withHooks: false
+      withHOC: false
+      withComponent: false
+      exportFragmentSpreadSubTypes: true
+      documentMode: graphQLTag
+      avoidOptionals: true
+      useImplementingTypes: true
+      useTypeImports: true
+      identifierName: "gqlOperations"
+hooks:
+  afterOneFileWrite:
+    - pnpm eslint --fix
