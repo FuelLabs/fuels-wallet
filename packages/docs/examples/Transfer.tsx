@@ -35,7 +35,7 @@ export function Transfer() {
       console.debug('Request signature transaction!');
       const accounts = await fuel.accounts();
       const account = accounts[0];
-      const wallet = fuel.getWallet(account);
+      const wallet = await fuel.getWallet(account);
       const toAddress = Address.fromString(addr);
       const response = await wallet.transfer(toAddress, amount);
       console.debug('Transaction created!', response.id);
