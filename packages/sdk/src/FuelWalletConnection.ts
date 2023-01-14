@@ -14,13 +14,7 @@ import type { JSONRPCRequest } from 'json-rpc-2.0';
 
 import { WindowConnection } from './connections/WindowConnection';
 
-const { PUBLIC_PROVIDER_URL } = process.env;
-
 export class FuelWalletConnection extends WindowConnection {
-  providerConfig: FuelProviderConfig = {
-    url: PUBLIC_PROVIDER_URL || 'http://localhost:4000/graphql',
-  };
-
   acceptMessage(message: MessageEvent<CommunicationMessage>): boolean {
     const { data: event } = message;
     return (
@@ -38,10 +32,6 @@ export class FuelWalletConnection extends WindowConnection {
     }
   }
 
-  async selectNetwork(network: FuelProviderConfig) {
-    this.providerConfig = network;
-  }
-
   async network(): Promise<FuelProviderConfig> {
     return this.client.request('network', {});
   }
@@ -50,8 +40,7 @@ export class FuelWalletConnection extends WindowConnection {
     return this.client.request('isConnected', {});
   }
 
-  async connect(network?: FuelProviderConfig): Promise<boolean> {
-    if (network) this.selectNetwork(network);
+  async connect(): Promise<boolean> {
     return this.client.request('connect', {});
   }
 
@@ -73,12 +62,15 @@ export class FuelWalletConnection extends WindowConnection {
     });
   }
 
-  async sendTransaction(transaction: TransactionRequestLike): Promise<string> {
+  async sendTransaction(
+    transaction: TransactionRequestLike,
+    providerConfig: FuelProviderConfig
+  ): Promise<string> {
     if (!transaction) {
       throw new Error('Transaction is required');
     }
     return this.client.request('sendTransaction', {
-      provider: this.providerConfig,
+      provider: providerConfig,
       transaction: JSON.stringify(transaction),
     });
   }
