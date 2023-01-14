@@ -6,8 +6,8 @@ import type { FuelWalletConnection } from './FuelWalletConnection';
 export class FuelWalletProvider extends Provider {
   walletConnection: FuelWalletConnection;
 
-  constructor(walletConnection: FuelWalletConnection) {
-    super(walletConnection.providerConfig.url);
+  constructor(providerUrl: string, walletConnection: FuelWalletConnection) {
+    super(providerUrl);
     this.walletConnection = walletConnection;
   }
 
@@ -15,7 +15,8 @@ export class FuelWalletProvider extends Provider {
     transactionRequestLike: TransactionRequestLike
   ): Promise<TransactionResponse> {
     const transactionId = await this.walletConnection.sendTransaction(
-      transactionRequestLike
+      transactionRequestLike,
+      { url: this.url }
     );
     const response = new TransactionResponse(transactionId, this);
     return response;

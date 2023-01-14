@@ -20,8 +20,8 @@ export function Connect() {
   const [handleDisconnect, isDisconnecting, errorDisconnect] = useLoading(
     async () => {
       console.debug('Request disconnection to Wallet!');
-      const isConnected = await fuel.disconnect();
-      setConnected(isConnected);
+      await fuel.disconnect();
+      setConnected(false);
       console.debug('Disconnection response');
     }
   );

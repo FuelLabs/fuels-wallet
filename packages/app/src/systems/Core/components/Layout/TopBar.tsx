@@ -40,7 +40,7 @@ type TopBarProps = {
 function InternalTopBar({ onBack }: TopBarProps) {
   const navigate = useNavigate();
   const { isLoading, title, isHome, ref } = useLayoutContext();
-  const { networks, selectedNetwork, handlers } = useNetworks({
+  const { selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
 
@@ -67,7 +67,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
           <>
             <FuelLogo size={40} />
             {isLoading && <Spinner aria-label="Spinner" />}
-            {networks && !isLoading && (
+            {selectedNetwork && !isLoading && (
               <NetworkDropdown
                 selected={selectedNetwork}
                 onPress={handlers.goToList}
@@ -100,7 +100,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
 
 function ExternalTopBar() {
   const { isLoading, title } = useLayoutContext();
-  const { networks, selectedNetwork, handlers } = useNetworks({
+  const { selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
 
@@ -114,10 +114,11 @@ function ExternalTopBar() {
           </Text>
         )}
       </Flex>
-      {networks && (
+      {selectedNetwork && (
         <NetworkDropdown
           selected={selectedNetwork}
           onPress={handlers.goToList}
+          isDisabled={true}
         />
       )}
     </Flex>

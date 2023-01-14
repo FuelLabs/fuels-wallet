@@ -58,17 +58,19 @@ sign, and send the transaction.
 
 ### Get Wallet
 
-`getWallet(address: string | AbstractAddress): FuelWalletLocked`<br />
-Return a FuelWalletLocked. This class extends the fuels-ts SDK's `WalletLocked`,
-enabling all of the methods available for `WalletLocked` while using a FuelWalletProvider on the connection point to request signed actions.
+`getWallet(address: string | AbstractAddress): Promise<WalletLocked>`<br />
+Return `WalletLocked` using a FuelWalletProvider on the connection point to request signed actions.
 
 <CodeImport file="../../sdk/src/Fuel.test.ts" testCase="getWallet" />
 
 ### Get Provider
 
-`getProvider(): FuelWalletProvider`<br />
+`getProvider(): Promise<FuelWalletProvider>`<br />
 Return a FuelWalletProvider. This class extends the fuels-ts SDK's `Provider`,
 enabling all of the methods available for `Provider` while using the FuelSDK on signature points to request user permissions.
+
+Note: The provider returned is tied to the current network selected by the user in their wallet. This means that if the user changes the network within their wallet,
+the DApp will also switch to that network. Support for specific DApp networks will be available in the future.
 
 #### Using provider to query node info
 
