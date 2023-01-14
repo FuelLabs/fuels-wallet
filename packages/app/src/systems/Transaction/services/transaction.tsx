@@ -3,7 +3,6 @@ import type { Account, Asset } from '@fuel-wallet/types';
 import type {
   BN,
   TransactionRequest,
-  TransactionRequestLike,
   WalletLocked,
   WalletUnlocked,
 } from 'fuels';
@@ -62,15 +61,15 @@ export type TxInputs = {
     txId: string;
     providerUrl?: string;
   };
-  getTxWithResources: {
+  addResources: {
     wallet: WalletLocked;
-    tx: TransactionRequestLike;
     gasFee?: BN;
+    transactionRequest: TransactionRequest;
     needToAddResources?: boolean;
   };
   fundTransaction: {
     wallet: WalletLocked;
-    tx: TransactionRequest;
+    transactionRequest: TransactionRequest;
   };
   isValidTransaction: {
     address?: string;
@@ -161,43 +160,28 @@ export class TxService {
     const to = Address.fromAddressOrString(input.to);
     const { assetId, amount } = input;
     request.addCoinOutput(to, amount, assetId);
-    return request;
+    return transactionRequestify(request);
   }
 
-  static async getTxWithResources(input: TxInputs['getTxWithResources']) {
-    const { needToAddResources = true, gasFee = bn(0) } = input || {};
-    const request = transactionRequestify(input.tx);
-    const coins = request.getCoinOutputs();
-    const requiredCoins = coins.map((coin) => ({
+  static async addResources(input: TxInputs['addResources']) {
+    const { gasFee = bn(0), wallet } = input || {};
+    const request = input.transactionRequest;
+    const coins = request.getCoinOutputs().map((coin) => ({
       assetId: coin.assetId,
       amount: isEth(coin) ? bn(coin.amount).add(gasFee) : bn(coin.amount),
     }));
 
-    if (needToAddResources) {
-      const addr = input.wallet.address;
-      const provider = input.wallet.provider;
-      const resources = await provider.getResourcesToSpend(addr, requiredCoins);
-      request.addResources(resources);
-    }
+    const resources = await wallet.getResourcesToSpend(coins);
+    request.addResources(resources);
     return request;
   }
 
   static async fundTransaction(input: TxInputs['fundTransaction']) {
-    const { wallet, tx } = input;
-    const preRequest = await TxService.getTxWithResources({ wallet, tx });
-    const request = transactionRequestify(tx);
-    const txCost = await getTxCost(preRequest, wallet);
-    request.gasLimit = txCost.gasUsed;
-    request.gasPrice = txCost.gasPrice;
-    const finalRequest = await TxService.getTxWithResources({
-      wallet,
-      tx: request,
-      gasFee: txCost.fee,
-      needToAddResources: false,
-    });
-    return {
-      request: finalRequest,
-    };
+    const transactionRequest = await TxService.addResources(input);
+    const txCost = await getTxCost(transactionRequest, input.wallet);
+    transactionRequest.gasLimit = txCost.gasUsed;
+    transactionRequest.gasPrice = txCost.gasPrice;
+    return transactionRequest;
   }
 
   static isValidTransaction(input: TxInputs['isValidTransaction']) {

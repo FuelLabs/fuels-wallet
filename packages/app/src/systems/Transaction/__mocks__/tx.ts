@@ -159,6 +159,7 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
     inputs: [
       MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputContract,
       MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin,
+      MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin,
     ],
     outputsCount: 3,
     outputs: [

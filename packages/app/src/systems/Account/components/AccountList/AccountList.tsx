@@ -35,17 +35,15 @@ export function AccountList({
           ? [...Array(3)].map((_, i) => {
               return <AccountItem.Loader key={i} />;
             })
-          : accounts.map((account) => {
-              return (
-                <AccountItem
-                  onPress={() => onPress(account)}
-                  key={account.address}
-                  account={account}
-                  isHidden={!showHidden && account.isHidden}
-                  isSelected={account.isSelected}
-                />
-              );
-            })}
+          : accounts.map((account) => (
+              <AccountItem
+                onPress={() => onPress(account)}
+                key={account.address}
+                account={account}
+                isHidden={!showHidden && account.isHidden}
+                isSelected={account.isSelected}
+              />
+            ))}
       </CardList>
       {!isLoading && anyHiddenAccounts && (
         <Button

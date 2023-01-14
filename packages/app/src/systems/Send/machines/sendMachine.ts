@@ -139,10 +139,14 @@ export const sendMachine = createMachine(
             throw new Error('Missing params for transaction request');
           }
 
-          const tx = await TxService.createTransfer({ amount, assetId, to });
-          const res = await TxService.fundTransaction({ wallet, tx });
+          const createOpts = { to, amount, assetId };
+          const transactionRequest = await TxService.fundTransaction({
+            transactionRequest: await TxService.createTransfer(createOpts),
+            wallet,
+          });
+
           return {
-            transactionRequest: res.request,
+            transactionRequest,
             providerUrl: network.url,
           };
         },
