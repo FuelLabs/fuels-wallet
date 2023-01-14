@@ -9,7 +9,7 @@ export type OriginTagProps = {
 
 export function OriginTag({ origin }: OriginTagProps) {
   return (
-    <Tag as="div" variant="outlined" css={styles.root}>
+    <Tag as="span" variant="outlined" css={styles.root}>
       <Tooltip content={origin} align="start" alignOffset={-10}>
         <Text as="span">{parseUrl(origin)}</Text>
       </Tooltip>
