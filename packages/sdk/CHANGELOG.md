@@ -1,5 +1,21 @@
 # @fuel-wallet/sdk
 
+## 0.3.0
+
+### Minor Changes
+
+- [#413](https://github.com/FuelLabs/fuels-wallet/pull/413) [`0631e75`](https://github.com/FuelLabs/fuels-wallet/commit/0631e751d3324cfa76a564b628e300b39d4cfe4c) Thanks [@luizstacio](https://github.com/luizstacio)! - Add method isConnected to SDK
+
+- [#390](https://github.com/FuelLabs/fuels-wallet/pull/390) [`d791507`](https://github.com/FuelLabs/fuels-wallet/commit/d79150729829f6083f3143bdc035ee95596d3440) Thanks [@luizstacio](https://github.com/luizstacio)! - Rename FuelWeb3 object window to fuel
+
+- [#424](https://github.com/FuelLabs/fuels-wallet/pull/424) [`4adcfe9`](https://github.com/FuelLabs/fuels-wallet/commit/4adcfe9f6024eba8f47068a0484aad22b7998008) Thanks [@luizstacio](https://github.com/luizstacio)! - Sync provider url with wallet provider url
+
+### Patch Changes
+
+- [#376](https://github.com/FuelLabs/fuels-wallet/pull/376) [`75b8951`](https://github.com/FuelLabs/fuels-wallet/commit/75b8951b01e45e8d61d307c5432f03e2e91906e4) Thanks [@pedronauck](https://github.com/pedronauck)! - Fix(sdk): ts and eslint warnings after update deps
+
+- [#373](https://github.com/FuelLabs/fuels-wallet/pull/373) [`f9b56e6`](https://github.com/FuelLabs/fuels-wallet/commit/f9b56e6d8479454cc64820524659d439a147f4b6) Thanks [@matt-user](https://github.com/matt-user)! - Update fuels to version 0.27.0
+
 ## 0.2.0
 
 ### Minor Changes

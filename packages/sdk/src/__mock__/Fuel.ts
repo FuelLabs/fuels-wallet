@@ -24,6 +24,7 @@ export class MockConnection extends BaseConnection {
       this.disconnect,
       this.isConnected,
       this.accounts,
+      this.network,
       this.signMessage,
       this.sendTransaction,
       this.getSelectedAccount,
@@ -42,6 +43,12 @@ export class MockConnection extends BaseConnection {
         response,
       },
     });
+  }
+
+  async network() {
+    return {
+      url: process.env.PUBLIC_PROVIDER_URL!,
+    };
   }
 
   async isConnected() {

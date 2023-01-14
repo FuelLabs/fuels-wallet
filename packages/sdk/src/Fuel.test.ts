@@ -64,20 +64,22 @@ describe('Fuel', () => {
     const amount = bn.parseUnits('0.1');
     transactionRequest.addCoinOutput(toAddress, amount);
 
-    const provider = fuel.getProvider();
+    const provider = await fuel.getProvider();
     const resources = await provider.getResourcesToSpend(fromAddress, [
       [amount, NativeAssetId],
     ]);
 
     transactionRequest.addResources(resources);
-    const transactionId = await fuel.sendTransaction(transactionRequest);
+    const transactionId = await fuel.sendTransaction(transactionRequest, {
+      url: provider.url,
+    });
     const response = new TransactionResponse(transactionId, provider);
 
     // wait for transaction to be completed
     await response.wait();
 
     // query the balance of the destination wallet
-    const addrWallet = fuel.getWallet(toAddress);
+    const addrWallet = await fuel.getWallet(toAddress);
     const balance = await addrWallet.getBalance(NativeAssetId);
     expect(balance.toNumber()).toBeGreaterThanOrEqual(amount.toNumber());
   });
@@ -88,7 +90,7 @@ describe('Fuel', () => {
     const toAccount = toWallet.address.toString();
 
     // Test example like docs
-    const wallet = fuel.getWallet(account);
+    const wallet = await fuel.getWallet(account);
     const toAddress = Address.fromString(toAccount);
     const amount = bn.parseUnits('0.1');
     const response = await wallet.transfer(toAddress, amount, NativeAssetId, {
@@ -99,13 +101,13 @@ describe('Fuel', () => {
     await response.wait();
 
     // query the balance of the destination wallet
-    const addrWallet = fuel.getWallet(toAddress);
+    const addrWallet = await fuel.getWallet(toAddress);
     const balance = await addrWallet.getBalance(NativeAssetId);
     expect(balance.toNumber()).toBeGreaterThanOrEqual(amount.toNumber());
   });
 
   test('getProvider', async () => {
-    const provider = fuel.getProvider();
+    const provider = await fuel.getProvider();
     const nodeInfo = await provider.getNodeInfo();
     expect(nodeInfo.nodeVersion).toBeTruthy();
   });
@@ -116,7 +118,7 @@ describe('Fuel', () => {
     const toAccount = toWallet.address.toString();
 
     // Test example like docs
-    const provider = fuel.getProvider();
+    const provider = await fuel.getProvider();
     const walletLocked = Wallet.fromAddress(account, provider);
     const toAddress = Address.fromString(toAccount);
     const response = await walletLocked.transfer(
