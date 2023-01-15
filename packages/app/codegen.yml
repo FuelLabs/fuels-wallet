@@ -1,6 +1,6 @@
 overwrite: true
 schema:
-  - "http://localhost:4000/graphql"
+  - ${VITE_FUEL_PROVIDER_URL}
 documents: "./src/**/*.graphql"
 generates:
   src/generated/graphql.ts:

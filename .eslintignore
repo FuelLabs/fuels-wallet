@@ -9,3 +9,4 @@ contracts
 **/*.typegen.ts
 .eslintrc.js
 **/__generated__/
+**/generated/*
