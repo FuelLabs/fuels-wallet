@@ -21,6 +21,9 @@ export class DatabaseObservable<
           case 1:
             super.emit(`${change.table}:create`, change);
             break;
+          case 2:
+            super.emit(`${change.table}:update`, change);
+            break;
           case 3:
             super.emit(`${change.table}:delete`, change);
             break;
@@ -29,6 +32,7 @@ export class DatabaseObservable<
         }
       });
     });
+    db.open();
   }
 
   on<T extends DatabaseObservableEvent<TableNames>>(
