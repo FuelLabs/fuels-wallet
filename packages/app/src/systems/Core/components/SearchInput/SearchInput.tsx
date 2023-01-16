@@ -46,8 +46,7 @@ export function SearchInput({
             icon={Icon.is('X')}
             iconSize={16}
             aria-label="Clear search"
-            onClick={(e) => {
-              console.log(e);
+            onClick={() => {
               onChange?.('');
             }}
           />
