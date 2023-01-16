@@ -60,6 +60,8 @@ export const getStatus = (
       return TxStatus.success;
     case 'SubmittedStatus':
       return TxStatus.pending;
+    case 'SqueezedOutStatus':
+      return TxStatus.squeezedOut;
     default:
       return undefined;
   }
@@ -645,6 +647,7 @@ export function parseTx({
   gasPriceFactor,
   gqlStatus,
   id,
+  time,
 }: ParseTxParams): Tx {
   const type = getType(transaction.type);
   const status = getStatus(gqlStatus);
@@ -682,5 +685,6 @@ export function parseTx({
     isStatusPending: isStatusPending(gqlStatus),
     type,
     status,
+    time,
   };
 }

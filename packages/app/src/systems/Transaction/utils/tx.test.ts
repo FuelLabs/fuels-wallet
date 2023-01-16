@@ -71,16 +71,19 @@ describe('Tx util', () => {
       expect(getStatus('FailureStatus')).toEqual(TxStatus.failure);
       expect(getStatus('SuccessStatus')).toEqual(TxStatus.success);
       expect(getStatus('SubmittedStatus')).toEqual(TxStatus.pending);
+      expect(getStatus('SqueezedOutStatus')).toEqual(TxStatus.squeezedOut);
       expect(getStatus()).toBeUndefined();
     });
     it('should isStatus return by type', () => {
       expect(isStatus('SuccessStatus', TxStatus.success)).toBeTruthy();
       expect(isStatus('SubmittedStatus', TxStatus.pending)).toBeTruthy();
       expect(isStatus('FailureStatus', TxStatus.failure)).toBeTruthy();
+      expect(isStatus('SqueezedOutStatus', TxStatus.squeezedOut)).toBeTruthy();
 
       expect(isStatus('SuccessStatus', TxStatus.pending)).toBeFalsy();
       expect(isStatus('SubmittedStatus', TxStatus.failure)).toBeFalsy();
       expect(isStatus('FailureStatus', TxStatus.success)).toBeFalsy();
+      expect(isStatus('SqueezedOutStatus', TxStatus.success)).toBeFalsy();
     });
     it('should isStatusSuccess return if is success', () => {
       expect(isStatusSuccess('SuccessStatus')).toBeTruthy();
@@ -926,6 +929,7 @@ describe('Tx util', () => {
         gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
         gqlStatus: 'SuccessStatus',
         id: MOCK_TRANSACTION_CONTRACT_CALL.tx.id,
+        time: MOCK_TRANSACTION_CONTRACT_CALL.tx.time,
       });
 
       expect(reparse(tx)).toStrictEqual(
