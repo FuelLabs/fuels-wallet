@@ -1046,4 +1046,4 @@ export function getSdk(
     },
   };
 }
-export type Sdk = ReturnType<typeof getSdk>;
+export type Sdk = typeof getSdk;

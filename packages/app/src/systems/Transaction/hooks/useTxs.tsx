@@ -1,9 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useInterpret, useSelector } from '@xstate/react';
 import { arrayify, ReceiptCoder, ReceiptType, TransactionCoder } from 'fuels';
 import type { TransactionResultReceipt, Address, BN } from 'fuels';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 
-import { TxService } from '../services';
+import type { TransactionHistoryMachineState } from '../machines';
+import {
+  transactionHistoryMachine,
+  TRANSACTION_HISTORY_ERRORS,
+} from '../machines';
+import type { TxInputs } from '../services';
 import { parseTx } from '../utils';
 
 import type {
@@ -46,8 +52,10 @@ const processTransactionToTx = (
       arrayify(gqlTransaction.rawPayload),
       0
     )?.[0];
+
     const receipts = gqlTransaction.receipts?.map(processGqlReceipt) || [];
     const gqlStatus = gqlTransaction.status?.type;
+    const time = gqlTransaction.status?.time;
     const dataNeededForTx = {
       transaction,
       receipts,
@@ -55,6 +63,7 @@ const processTransactionToTx = (
       id: gqlTransaction.id,
       gasPerByte,
       gasPriceFactor,
+      time,
     };
     const tx = parseTx(dataNeededForTx);
     return tx;
@@ -70,42 +79,41 @@ const getGQLTransactionsFromData = (
   return data?.transactionsByOwner!.edges!.map((edge) => edge!.node) ?? [];
 };
 
+const selectors = {
+  isFetching: (state: TransactionHistoryMachineState) =>
+    state.matches('fetching'),
+  context: (state: TransactionHistoryMachineState) => state.context,
+  isInvalidAddress: (state: TransactionHistoryMachineState) =>
+    state.context.error === TRANSACTION_HISTORY_ERRORS.INVALID_ADDRESS,
+  isNotFound: (state: TransactionHistoryMachineState) =>
+    state.context.error === TRANSACTION_HISTORY_ERRORS.NOT_FOUND,
+};
+
 type UseTxsProps = {
   address?: string | Address;
   providerUrl?: string;
-  waitProviderUrl?: boolean;
 };
 
 export function useTxs({ address, providerUrl }: UseTxsProps) {
   const { chainInfo, isLoading: isLoadingChainInfo } =
     useChainInfo(providerUrl);
 
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<AddressTransactionsQuery>();
-  const [error, setError] = useState();
+  const service = useInterpret(() => transactionHistoryMachine);
+  const { send } = service;
+  const isFetching = useSelector(service, selectors.isFetching);
+  const context = useSelector(service, selectors.context);
+  const isInvalidAddress = useSelector(service, selectors.isInvalidAddress);
+  const isNotFound = useSelector(service, selectors.isNotFound);
 
-  useEffect(() => {
-    if (data || !address) return;
+  const { walletAddress, addressTransactionsQuery, error } = context;
 
-    setLoading(true);
-    TxService.getTransactionHistory({
-      address: address?.toString() || '',
-    })
-      .then((data) => {
-        setData(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error);
-        setLoading(false);
-      });
-  }, [data, address]);
-
-  const isLoadingTx = isLoadingChainInfo || loading;
+  const isLoadingTx = isLoadingChainInfo || isFetching;
 
   const txs = useMemo(() => {
     /** @TODO: Move this logic to the SDK */
-    const gqlTransactions = getGQLTransactionsFromData(data);
+    const gqlTransactions = getGQLTransactionsFromData(
+      addressTransactionsQuery
+    );
     const gasPerByte = chainInfo?.consensusParameters.gasPerByte;
     const gasPriceFactor = chainInfo?.consensusParameters.gasPriceFactor;
     const transactions = processTransactionToTx(
@@ -114,11 +122,25 @@ export function useTxs({ address, providerUrl }: UseTxsProps) {
       gasPriceFactor
     );
     return transactions;
-  }, [data]);
+  }, [addressTransactionsQuery]);
+
+  function getTransactionHistory(input: TxInputs['getTransactionHistory']) {
+    send('GET_TRANSACTION_HISTORY', { input });
+  }
+
+  useEffect(() => {
+    if (address && providerUrl) {
+      getTransactionHistory({ address: address.toString() });
+    }
+  }, [address, providerUrl]);
 
   return {
     isLoadingTx,
     txs,
     error,
+    walletAddress,
+    isFetching,
+    isInvalidAddress,
+    isNotFound,
   };
 }

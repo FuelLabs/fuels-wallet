@@ -82,8 +82,9 @@ export const transactionHistoryMachine = createMachine(
   },
   {
     guards: {
-      isInvalidAddress: (_, ev) =>
-        isB256(ev.input?.address) || isBech32(ev.input?.address),
+      isInvalidAddress: (_, ev) => {
+        return !isB256(ev.input?.address) && !isBech32(ev.input?.address);
+      },
     },
     actions: {
       assignInvalidAddressError: assign({

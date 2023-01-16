@@ -18,8 +18,10 @@ export function ViewActivity() {
   const address = account
     ? Address.fromAddressOrString(account?.address).toB256()
     : '';
-
-  const { isLoadingTx, txs } = useTxs({ address, providerUrl });
+  const { isLoadingTx, txs } = useTxs({
+    address,
+    providerUrl,
+  });
 
   return (
     <Layout title="Activity" isLoading={isLoading}>
