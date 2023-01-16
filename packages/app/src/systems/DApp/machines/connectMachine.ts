@@ -183,7 +183,8 @@ export const connectMachine = createMachine(
       removeConnection: FetchMachine.create<MachineContext, boolean>({
         showError: false,
         fetch: async ({ input }) => {
-          await ConnectionService.removeConnection(input?.origin || '');
+          const origin = input?.origin || '';
+          await ConnectionService.removeConnection({ origin });
           return true;
         },
       }),

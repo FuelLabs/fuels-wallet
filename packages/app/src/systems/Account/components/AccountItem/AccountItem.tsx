@@ -12,6 +12,8 @@ export type AccountItemProps = {
   isSelected?: boolean;
   isHidden?: boolean;
   onPress?: () => void;
+  rightEl?: JSX.Element;
+  isDisabled?: boolean;
 };
 
 type AccountItemComponent = FC<AccountItemProps> & {
@@ -23,7 +25,9 @@ export const AccountItem: AccountItemComponent = ({
   isSelected,
   isHidden,
   onPress,
-}) => {
+  rightEl,
+  isDisabled,
+}: AccountItemProps) => {
   if (isHidden) return null;
   /**
    * TODO: add DropdownMenu here with actions after it's done on @fuel-ui
@@ -45,6 +49,9 @@ export const AccountItem: AccountItemComponent = ({
     <CardList.Item
       isActive={isSelected}
       onClick={onPress}
+      rightEl={rightEl}
+      css={styles.root}
+      aria-disabled={isDisabled}
       aria-label={account.name}
     >
       <Avatar.Generated size="md" background="fuel" hash={account.address} />
@@ -58,9 +65,13 @@ export const AccountItem: AccountItemComponent = ({
   );
 };
 
-AccountItem.Loader = AccountItemLoader;
-
 const styles = {
+  root: cssObj({
+    '&[aria-disabled="true"]': {
+      opacity: 0.5,
+      cursor: 'default',
+    },
+  }),
   name: cssObj({
     margin: 0,
   }),
@@ -69,3 +80,5 @@ const styles = {
     fontWeight: '$semibold',
   }),
 };
+
+AccountItem.Loader = AccountItemLoader;

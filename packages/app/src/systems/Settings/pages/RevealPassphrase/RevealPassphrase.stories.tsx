@@ -8,7 +8,7 @@ import { MOCK_ASSETS_NODE } from '~/systems/Asset/__mocks__/assets';
 
 export default {
   component: RevealPassphrase,
-  title: 'Settings/Pages/1. RevealPassphrase',
+  title: 'Settings/Pages/2. RevealPassphrase',
   parameters: {
     layout: 'fullscreen',
   },
