@@ -259,6 +259,12 @@ export class AccountService {
       return db.accounts.get(input.address);
     });
   }
+
+  static filterByName(accounts: Account[], name: string = '') {
+    return accounts.filter((account) =>
+      account.name.toLowerCase().includes(name.toLowerCase())
+    );
+  }
 }
 
 // ----------------------------------------------------------------------------

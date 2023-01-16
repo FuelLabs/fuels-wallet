@@ -4,7 +4,7 @@ import { Text, CardList, Flex, IconButton, Icon } from '@fuel-ui/react';
 import type { Network } from '@fuel-wallet/types';
 import { forwardRef } from 'react';
 
-import { RemoveNetworkDialog } from '../RemoveNetworkDialog/RemoveNetworkDialog';
+import { NetworkRemoveDialog } from '../NetworkRemoveDialog/NetworkRemoveDialog';
 
 export function NetworkStatus({ network: _network }: { network: Network }) {
   return (
@@ -41,7 +41,7 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
           />
         )}
         {onRemove && (
-          <RemoveNetworkDialog
+          <NetworkRemoveDialog
             network={network}
             onConfirm={() => onRemove?.(network)}
           >
@@ -50,7 +50,7 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
               icon={<Icon icon={Icon.is('Trash')} />}
               aria-label="Remove"
             />
-          </RemoveNetworkDialog>
+          </NetworkRemoveDialog>
         )}
       </Flex>
     );

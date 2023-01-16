@@ -151,6 +151,35 @@ export const MOCK_TRANSACTION_CONTRACT_CALL_PARTS: {
   },
 };
 
+export const createMockTx = ({
+  status,
+  time,
+  id,
+  operation,
+}: {
+  status?: TxStatus;
+  time?: Date;
+  id?: string;
+  operation?: OperationName;
+}) => {
+  return {
+    ...MOCK_TRANSACTION_CONTRACT_CALL.tx,
+    time: time?.toString() ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.time,
+    id: id ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.id,
+    status: status ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.status,
+    operations: [
+      {
+        ...MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0],
+        name: operation ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].name,
+      },
+      ...MOCK_TRANSACTION_CONTRACT_CALL.tx.operations.slice(1),
+    ],
+  };
+};
+
+const thirtyFourDaysAgo = new Date(
+  new Date().getTime() - 34 * 24 * 60 * 60 * 1000
+);
 export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
   transaction: {
     gasLimit: bn(100000000),
@@ -217,7 +246,7 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
     isStatusPending: false,
     isStatusSuccess: true,
     isStatusFailure: false,
-    time: '2022-10-05T00:51:22.383161296+00:00',
+    time: thirtyFourDaysAgo.toString(),
   },
   receipts: [
     MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall,

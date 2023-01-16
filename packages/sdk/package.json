@@ -1,6 +1,6 @@
 {
   "name": "@fuel-wallet/sdk",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
@@ -26,22 +26,21 @@
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
-    "@types/chrome": "^0.0.204",
+    "@types/chrome": "^0.0.208",
     "dexie-observable": "4.0.0-beta.13",
     "events": "^3.3.0",
     "json-rpc-2.0": "^1.4.2",
     "uuid": "^9.0.0",
-    "xstate": "^4.35.1"
+    "xstate": "^4.35.2"
   },
   "peerDependencies": {
-    "fuels": ">=0.28.0"
+    "fuels": ">=0.28.1"
   },
   "devDependencies": {
     "@fuel-wallet/types": "workspace:*",
-    "fuels": "0.28.0",
     "@types/uuid": "^9.0.0",
+    "fuels": "0.28.1",
     "jest-webextension-mock": "^3.8.7",
-    "ts-jest": "^29.0.3",
     "tsup": "^6.5.0"
   }
 }

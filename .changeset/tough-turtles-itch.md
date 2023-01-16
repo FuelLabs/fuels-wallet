@@ -3,4 +3,4 @@
 "@fuel-wallet/sdk": patch
 ---
 
-Fix(sdk): ts and eslint warnings after update deps
+Chore(sdk): small adjustments to adapt to connection service

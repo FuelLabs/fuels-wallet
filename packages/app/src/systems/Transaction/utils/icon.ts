@@ -10,6 +10,6 @@ const ICON_MAP = {
   [OperationName.contractCall]: 'ArrowsLeftRight',
 };
 
-export const getTxIcon = (type: OperationName): Icons => {
-  return ICON_MAP[type] ?? 'ArrowRight';
+export const getTxIcon = (type?: OperationName): Icons => {
+  return type ? ICON_MAP[type] ?? 'ArrowRight' : 'ArrowRight';
 };

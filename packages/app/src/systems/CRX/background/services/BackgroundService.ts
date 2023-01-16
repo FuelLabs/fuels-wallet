@@ -14,6 +14,7 @@ import { PopUpService } from './PopUpService';
 import { AccountService } from '~/systems/Account/services';
 import { Pages } from '~/systems/Core/types';
 import { ConnectionService } from '~/systems/DApp/services';
+import { NetworkService } from '~/systems/Network/services';
 
 type EventOrigin = { origin: string };
 
@@ -30,6 +31,7 @@ export class BackgroundService {
       this.isConnected,
       this.accounts,
       this.connect,
+      this.network,
       this.disconnect,
       this.signMessage,
       this.sendTransaction,
@@ -70,7 +72,7 @@ export class BackgroundService {
 
   async isConnected(origin: string) {
     const isConnected = await ConnectionService.getConnection(origin);
-    return !!isConnected;
+    return (isConnected?.accounts || []).length > 0;
   }
 
   async requireAccounts() {
@@ -142,7 +144,7 @@ export class BackgroundService {
     const origin = serverParams.origin;
 
     if (origin) {
-      await ConnectionService.removeConnection(origin);
+      await ConnectionService.removeConnection({ origin });
       this.sendEvent(origin, 'connection', [false]);
       return true;
     }
@@ -201,5 +203,12 @@ export class BackgroundService {
   async getSelectedAccount() {
     const selectedAccount = await AccountService.getSelectedAccount();
     return selectedAccount?.address;
+  }
+
+  async network() {
+    const selectedNetwork = await NetworkService.getSelectedNetwork();
+    return {
+      url: selectedNetwork?.url,
+    };
   }
 }

@@ -44,12 +44,12 @@ Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/
 - [x] Manage networks
 - [x] Faucet for testnet
 - [x] Account
+  - [x] List all account
   - [x] Add new account
   - [ ] Update account name
-  - [x] List all account
-- [ ] Applications
-  - [ ] List connections
-  - [ ] Remove connections
+- [x] Applications
+  - [x] List connections
+  - [x] Remove connections
 - [ ] Settings
   - [x] Reveal your passphrase
   - [x] Change password

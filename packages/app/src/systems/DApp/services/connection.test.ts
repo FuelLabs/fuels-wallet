@@ -2,6 +2,8 @@ import type { Connection } from '@fuel-wallet/types';
 
 import { ConnectionService } from './connection';
 
+import { MOCK_ACCOUNTS } from '~/systems/Account';
+
 const MOCK_APP: Connection = {
   origin: 'foo.com',
   accounts: ['fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef'],
@@ -61,9 +63,29 @@ describe('ConnectionService', () => {
     await ConnectionService.addConnection({ data: MOCK_APP });
     await ConnectionService.addConnection({ data: MOCK_APP_2 });
     expect((await ConnectionService.getConnections()).length).toBe(2);
-    await ConnectionService.removeConnection(MOCK_APP.origin);
+    await ConnectionService.removeConnection({ origin: MOCK_APP.origin });
     const app = await ConnectionService.getConnection(MOCK_APP.origin);
     expect(app).toBeFalsy();
     expect((await ConnectionService.getConnections()).length).toBe(1);
+  });
+
+  it('should add an account to connection', async () => {
+    await ConnectionService.addConnection({ data: MOCK_APP });
+    await ConnectionService.addAccountTo({
+      origin: MOCK_APP.origin,
+      account: MOCK_ACCOUNTS[2].address,
+    });
+    const app = await ConnectionService.getConnection(MOCK_APP.origin);
+    expect(app?.accounts.length).toBe(2);
+  });
+
+  it('should remove an account from connection', async () => {
+    await ConnectionService.addConnection({ data: MOCK_APP });
+    await ConnectionService.removeAccountFrom({
+      origin: MOCK_APP.origin,
+      account: MOCK_APP.accounts[0],
+    });
+    const app = await ConnectionService.getConnection(MOCK_APP.origin);
+    expect(app?.accounts.length).toBe(0);
   });
 });
