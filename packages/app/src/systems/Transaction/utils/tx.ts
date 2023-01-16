@@ -25,7 +25,6 @@ import type {
   TransactionResultTransferReceipt,
 } from 'fuels';
 import {
-  Address,
   calculatePriceWithFactor,
   ReceiptType,
   TransactionType,
@@ -49,12 +48,7 @@ import type {
   ReceiptParam,
   Tx,
 } from './tx.types';
-import {
-  OperationName,
-  TxType,
-  TxStatus,
-  OperationDirection,
-} from './tx.types';
+import { OperationName, TxType, TxStatus } from './tx.types';
 
 export const getStatus = (
   gqlStatus?: GqlTransactionStatus
@@ -693,18 +687,4 @@ export function parseTx({
     status,
     time,
   };
-}
-
-export function getOperationDirection(operation: Operation, owner: string) {
-  const operationAddr = operation?.to?.address ?? operation?.from?.address;
-
-  if (!owner?.length || !operationAddr) {
-    return OperationDirection.unknown;
-  }
-
-  const ownerAddr = Address.fromString(owner);
-
-  return ownerAddr.equals(Address.fromString(operation?.to?.address ?? ''))
-    ? OperationDirection.from
-    : OperationDirection.to;
 }
