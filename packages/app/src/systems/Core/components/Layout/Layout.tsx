@@ -30,9 +30,17 @@ type ContentProps = {
 const Content = forwardRef<HTMLDivElement, ContentProps>(
   ({ as, children, css }, ref) => {
     return (
-      <Box as={as} css={{ ...styles.content, ...css }}>
-        <Box css={styles.scrollContainer}>
-          <Box ref={ref} css={styles.insideScrolContent}>
+      <Box
+        as={as}
+        css={{ ...styles.content, ...css }}
+        className="layout_content"
+      >
+        <Box css={styles.scrollContainer} className="layout_content-scroll">
+          <Box
+            ref={ref}
+            css={styles.insideScrolContent}
+            className="layout_content-inside"
+          >
             {children}
           </Box>
         </Box>
@@ -72,7 +80,7 @@ export const Layout: LayoutComponent = ({
         {isPublic ? (
           <>{children}</>
         ) : (
-          <Flex css={styles.wrapper} ref={ref}>
+          <Flex css={styles.wrapper} ref={ref} className="layout_wrapper">
             {children}
           </Flex>
         )}

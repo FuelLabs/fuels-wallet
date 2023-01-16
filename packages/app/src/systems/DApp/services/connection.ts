@@ -1,10 +1,22 @@
-import type { Connection } from '@fuel-wallet/types';
+import type { Account, Connection } from '@fuel-wallet/types';
 
+import type { Maybe } from '~/systems/Core';
 import { db } from '~/systems/Core/utils/database';
 
 export type ConnectInputs = {
   connection: {
     data: Connection;
+  };
+  removeConnection: {
+    origin: string;
+  };
+  addAccount: {
+    origin: string;
+    account: string;
+  };
+  removeAccount: {
+    origin: string;
+    account: string;
   };
 };
 
@@ -16,9 +28,11 @@ export class ConnectionService {
     });
   }
 
-  static async removeConnection(origin: string) {
+  static async removeConnection({ origin }: ConnectInputs['removeConnection']) {
     return db.transaction('rw', db.connections, async () => {
-      return db.connections.delete(origin);
+      const connection = await db.connections.get({ origin });
+      await db.connections.delete(origin);
+      return connection;
     });
   }
 
@@ -39,4 +53,58 @@ export class ConnectionService {
       return db.connections.toArray();
     });
   }
+
+  static getConnectedAccounts(
+    connection: Maybe<Connection>,
+    accounts: Account[]
+  ) {
+    const addrs = connection?.accounts || [];
+    return addrs.map((a) => accounts.find((acc) => acc.address === a));
+  }
+
+  static async removeAccountFrom(input: ConnectInputs['removeAccount']) {
+    const { origin, account } = input;
+    return db.transaction('rw', db.connections, async () => {
+      const connection = await db.connections.get({ origin });
+      if (connection) {
+        connection.accounts = connection.accounts.filter(
+          (acc) => acc !== account
+        );
+        await db.connections.put(connection);
+      }
+      return connection;
+    });
+  }
+
+  static async addAccountTo(input: ConnectInputs['addAccount']) {
+    const { origin, account } = input;
+    return db.transaction('rw', db.connections, async () => {
+      const connection = await db.connections.get({ origin });
+      if (connection) {
+        connection.accounts = connection.accounts.concat(account);
+        await db.connections.put(connection);
+      }
+      return connection;
+    });
+  }
+
+  static filterByOrigin(connections: Connection[], origin: string = '') {
+    if (!origin.length) return null;
+    return connections.filter(hasOriginIncluded(origin));
+  }
+
+  static findByOrigin(connections: Connection[], origin: string = '') {
+    return connections.find(hasOriginIncluded(origin));
+  }
+
+  static excludeByOrigin(connections: Connection[], origin: string = '') {
+    if (!origin.length) return connections;
+    return connections.filter((c) => !hasOriginIncluded(origin)(c));
+  }
+}
+
+function hasOriginIncluded(origin: string) {
+  return (connection: Connection) => {
+    return connection.origin.toLowerCase().includes(origin.toLowerCase() || '');
+  };
 }

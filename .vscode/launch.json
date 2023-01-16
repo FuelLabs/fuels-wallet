@@ -7,10 +7,19 @@
     {
       "type": "chrome",
       "request": "launch",
-      "name": "Launch Brave against localhost",
+      "name": "Vite on Brave",
       "runtimeExecutable": "${input:braverPath}",
       "userDataDir": true,
       "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Storybook on Brave",
+      "runtimeExecutable": "${input:braverPath}",
+      "userDataDir": true,
+      "url": "http://localhost:6006",
       "webRoot": "${workspaceFolder}"
     }
   ],

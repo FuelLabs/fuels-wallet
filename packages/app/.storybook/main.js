@@ -11,6 +11,7 @@ const config = {
     '@storybook/addon-a11y',
     '@storybook/addon-storysource',
     'storybook-dark-mode',
+    '@storybook/addon-interactions',
     'storybook-addon-react-router-v6',
     '@storybook/addon-interactions',
   ],
