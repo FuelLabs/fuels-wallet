@@ -5,6 +5,8 @@ import type {
 } from 'dexie-observable/api';
 import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
 
+import type { Network } from './network';
+
 export type FuelEvents =
   | {
       type: 'accounts';
@@ -13,6 +15,10 @@ export type FuelEvents =
   | {
       type: 'connection';
       data: boolean;
+    }
+  | {
+      type: 'network';
+      data: Network;
     };
 
 export type FuelEventArg<T extends FuelEvents['type']> = Extract<
@@ -49,11 +55,15 @@ export type ResponseMessage = BaseEvent<{
   readonly response: JSONRPCResponse;
 }>;
 
-export type EventMessage<T = Array<{ event: string; params: Array<unknown> }>> =
-  BaseEvent<{
-    readonly type: MessageTypes.event;
-    readonly events: T;
-  }>;
+export type EventMessageEvents = Array<{
+  event: string;
+  params: Array<unknown>;
+}>;
+
+export type EventMessage<T = EventMessageEvents> = BaseEvent<{
+  readonly type: MessageTypes.event;
+  readonly events: T;
+}>;
 
 export type CommunicationEventArg<T> = T extends MessageTypes.request
   ? RequestMessage

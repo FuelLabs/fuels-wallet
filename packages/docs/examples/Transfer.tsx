@@ -23,6 +23,7 @@ export function Transfer() {
   const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
   const [txId, setTxId] = useState<string>('');
+  const [providerUrl, setProviderUrl] = useState<string>('');
   const [amount, setAmount] = useState<BN>(bn.parseUnits('0.00001'));
 
   const [sendTransaction, sendingTransaction, errorSendingTransaction] =
@@ -37,6 +38,7 @@ export function Transfer() {
 
       const response = await wallet.transfer(toAddress, amount);
       console.debug('Transaction created!', response.id);
+      setProviderUrl(wallet.provider.url);
       setTxId(response.id);
     });
 
@@ -69,7 +71,7 @@ export function Transfer() {
               target={'_blank'}
               href={getBlockExplorerLink({
                 path: `transaction/${txId}`,
-                providerUrl: fuel?.providerConfig.url,
+                providerUrl,
               })}
             >
               See on BlockExplorer
