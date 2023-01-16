@@ -3,17 +3,17 @@ import type { Network } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
-type RemoveNetworkDialogProps = {
+type NetworkRemoveDialogProps = {
   children: ReactNode;
   network: Network;
   onConfirm: () => void;
 };
 
-export function RemoveNetworkDialog({
+export function NetworkRemoveDialog({
   network,
   onConfirm,
   children,
-}: RemoveNetworkDialogProps) {
+}: NetworkRemoveDialogProps) {
   const [opened, setOpened] = useState(false);
 
   function handleCancel() {

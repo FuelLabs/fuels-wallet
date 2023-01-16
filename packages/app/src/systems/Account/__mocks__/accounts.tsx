@@ -54,7 +54,7 @@ export async function createMockAccount() {
   /**
    * Add account on database
    * */
-  await AccountService.addAccount({
+  const account = await AccountService.addAccount({
     data: {
       name: 'Account 1',
       address: walletAccount.address.toAddress(),
@@ -62,5 +62,5 @@ export async function createMockAccount() {
     },
   });
 
-  return { password };
+  return { account, password };
 }

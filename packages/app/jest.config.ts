@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import baseDefaultConfig from '@fuel-ui/test-utils/config';
-import type { InitialOptionsTsJest } from 'ts-jest';
+import type { JestConfigWithTsJest } from 'ts-jest';
 import { defaultsESM as tsjPreset } from 'ts-jest/presets';
 
 import { getPublicEnvs } from './load.envs';
@@ -9,7 +9,7 @@ import pkg from './package.json';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { globals, preset, ...baseConfig } = baseDefaultConfig;
 
-const config: InitialOptionsTsJest = {
+const config: JestConfigWithTsJest = {
   ...baseConfig,
   transform: {
     '^.+\\.[tj]sx?$': [
