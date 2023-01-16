@@ -34,6 +34,7 @@
     "@storybook/jest": "^0.0.10",
     "@xstate/react": "^3.0.1",
     "cross-fetch": "^3.1.5",
+    "dayjs": "^1.11.7",
     "dexie": "^3.2.2",
     "dexie-observable": "4.0.0-beta.13",
     "dexie-react-hooks": "^1.1.1",
