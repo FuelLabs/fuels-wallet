@@ -28,7 +28,12 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   const isValidAddress = isB256(address) || isBech32(address);
 
   return (
-    <Card css={styles.root}>
+    <Card
+      css={styles.root}
+      className="tx-recipient-card"
+      data-recipient={address}
+      data-type={isContract ? 'contract' : 'user'}
+    >
       <Text css={styles.from}>
         {isReceiver ? 'To' : 'From'} {isContract && '(Contract)'}
       </Text>

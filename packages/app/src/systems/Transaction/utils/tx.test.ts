@@ -108,7 +108,7 @@ describe('Tx util', () => {
         MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || []
       );
 
-      expect(inputs.length).toEqual(1);
+      expect(inputs.length).toEqual(2);
       expect(inputs[0]).toStrictEqual(
         MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin
       );

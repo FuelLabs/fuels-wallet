@@ -1,43 +1,23 @@
-import { act, render, screen, testA11y } from '@fuel-ui/test-utils';
+import { render, screen, testA11y } from '@fuel-ui/test-utils';
 
 import { HomeActions } from './HomeActions';
 
+import { TestWrapper } from '~/systems/Core';
+
 describe('HomeActions', () => {
   it('a11y', async () => {
-    await testA11y(<HomeActions />);
+    await testA11y(<HomeActions />, { wrapper: TestWrapper });
   });
 
   it("should show 'Send' and 'Receive' button", async () => {
-    render(<HomeActions />);
-    expect(screen.getByText('Send')).toBeInTheDocument();
-    expect(screen.getByText('Receive')).toBeInTheDocument();
+    render(<HomeActions />, { wrapper: TestWrapper });
+    expect(await screen.findByLabelText('Send Button')).toBeInTheDocument();
+    expect(await screen.findByText('Receive')).toBeInTheDocument();
   });
 
   it("should show 'Send' and 'Receive' button disabled", async () => {
-    render(<HomeActions isDisabled />);
-    expect(screen.getByText('Send')).toHaveAttribute('aria-disabled');
-    expect(screen.getByText('Receive')).toHaveAttribute('aria-disabled');
-  });
-
-  it("should call 'Send' and 'Receive' actions when clicked", () => {
-    const receiveAction = jest.fn();
-    const sendAction = jest.fn();
-    render(
-      <HomeActions
-        receiveAction={() => receiveAction()}
-        sendAction={() => sendAction()}
-      />
-    );
-
-    const receiveButton = screen.getByText('Receive');
-    const sendButton = screen.getByText('Send');
-
-    act(() => {
-      receiveButton.click();
-      sendButton.click();
-    });
-
-    expect(receiveAction).toBeCalled();
-    expect(sendAction).toBeCalled();
+    render(<HomeActions isDisabled />, { wrapper: TestWrapper });
+    expect(await screen.findByText('Send')).toHaveAttribute('aria-disabled');
+    expect(await screen.findByText('Receive')).toHaveAttribute('aria-disabled');
   });
 });

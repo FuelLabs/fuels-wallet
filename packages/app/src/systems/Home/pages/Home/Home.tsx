@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 import { Flex } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,9 +13,9 @@ export function Home() {
   const { isLoading, account } = useAccounts();
   const navigate = useNavigate();
 
-  const sendAction = () => {
-    window.alert('Send is not implemented yet');
-  };
+  function sendAction() {
+    navigate(Pages.send());
+  }
 
   const goToReceive = () => {
     navigate(Pages.receive());

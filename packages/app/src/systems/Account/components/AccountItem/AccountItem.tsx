@@ -1,5 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, CardList, Flex, Heading, Text } from '@fuel-ui/react';
+import {
+  Avatar,
+  CardList,
+  Copyable,
+  Flex,
+  Heading,
+  Text,
+} from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { FC } from 'react';
 
@@ -59,7 +66,9 @@ export const AccountItem: AccountItemComponent = ({
         <Heading as="h6" css={styles.name}>
           {account.name}
         </Heading>
-        <Text css={styles.address}>{shortAddress(account.address)}</Text>
+        <Copyable value={account.address}>
+          <Text css={styles.address}>{shortAddress(account.address)}</Text>
+        </Copyable>
       </Flex>
     </CardList.Item>
   );

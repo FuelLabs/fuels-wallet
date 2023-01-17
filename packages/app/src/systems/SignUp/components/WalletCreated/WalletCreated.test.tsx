@@ -3,14 +3,16 @@ import { render, screen } from '@fuel-ui/test-utils';
 import { WalletCreated } from './WalletCreated';
 
 import { MOCK_ACCOUNTS } from '~/systems/Account';
-import { TestWrapper } from '~/systems/Core';
+import { shortAddress, TestWrapper } from '~/systems/Core';
+
+const ACCOUNT = MOCK_ACCOUNTS[0];
 
 describe('WalletCreated', () => {
   it('should show account item component', () => {
-    render(<WalletCreated account={MOCK_ACCOUNTS[0]} />, {
+    render(<WalletCreated account={ACCOUNT} />, {
       wrapper: TestWrapper,
     });
     expect(screen.getByText('Account 1')).toBeInTheDocument();
-    expect(screen.getByText('fuel0x...74ef')).toBeInTheDocument();
+    expect(screen.getByText(shortAddress(ACCOUNT.address))).toBeInTheDocument();
   });
 });

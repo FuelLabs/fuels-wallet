@@ -4,6 +4,8 @@ import { MOCK_ACCOUNTS } from '../../__mocks__';
 
 import { BalanceWidget } from './BalanceWidget';
 
+import { shortAddress } from '~/systems/Core';
+
 const ACCOUNT = {
   ...MOCK_ACCOUNTS[0],
   balance: '4999989994',
@@ -17,7 +19,7 @@ describe('BalanceWidget', () => {
 
   it('should show user address', () => {
     render(<BalanceWidget account={ACCOUNT} />);
-    expect(screen.getByText('fuel0x...74ef')).toBeInTheDocument();
+    expect(screen.getByText(shortAddress(ACCOUNT.address))).toBeInTheDocument();
   });
 
   it('should show formatted balance', async () => {

@@ -26,7 +26,7 @@
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
-    "@xstate/react": "^3.0.1",
+    "@xstate/react": "^3.0.2",
     "react": "^18.2.0",
     "xstate": "^4.35.2"
   },

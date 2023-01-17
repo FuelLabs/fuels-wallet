@@ -8,6 +8,7 @@ import {
   Stack,
   Text,
   InputAmount,
+  Input,
 } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import type { BN } from 'fuels';
@@ -25,6 +26,9 @@ export function Transfer() {
   const [txId, setTxId] = useState<string>('');
   const [providerUrl, setProviderUrl] = useState<string>('');
   const [amount, setAmount] = useState<BN>(bn.parseUnits('0.00001'));
+  const [addr, setAddr] = useState<string>(
+    'fuel1a6msn9zmjpvv84g08y3t6x6flykw622s48k2lqg257pf9924pnfq50tdmw'
+  );
 
   const [sendTransaction, sendingTransaction, errorSendingTransaction] =
     useLoading(async (amount: BN) => {
@@ -32,10 +36,7 @@ export function Transfer() {
       const accounts = await fuel.accounts();
       const account = accounts[0];
       const wallet = await fuel.getWallet(account);
-      const toAddress = Address.fromString(
-        'fuel1r3u2qfn00cgwk3u89uxuvz5cgcjaq934cfer6cwuew0424cz5sgq4yldul'
-      );
-
+      const toAddress = Address.fromString(addr);
       const response = await wallet.transfer(toAddress, amount);
       console.debug('Transaction created!', response.id);
       setProviderUrl(wallet.provider.url);
@@ -48,6 +49,15 @@ export function Transfer() {
     <ExampleBox error={errorMessage}>
       <Stack css={{ gap: '$4' }}>
         <Flex gap="$4" direction={'column'}>
+          <Box css={{ width: 300 }}>
+            <Input css={{ width: '100%' }}>
+              <Input.Field
+                value={addr}
+                onChange={(e) => setAddr(e.target.value)}
+              />
+            </Input>
+          </Box>
+
           <Box css={{ width: 300 }}>
             <InputAmount
               value={amount}

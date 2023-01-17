@@ -4,9 +4,11 @@ import { Flex } from '@fuel-ui/react';
 import type { Operation, TxStatus } from '../../utils';
 import { TxOperation } from '../TxOperation/TxOperation';
 
+import type { Maybe } from '~/systems/Core';
+
 export type TxOperationsProps = {
   operations?: Operation[];
-  status?: TxStatus;
+  status?: Maybe<TxStatus>;
 };
 
 export function TxOperations({ operations, status }: TxOperationsProps) {

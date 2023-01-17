@@ -1,13 +1,8 @@
-import { Stack } from '@fuel-ui/react';
-import { Fragment } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import {
-  TxDetails,
-  TxHeader,
-  TxOperations,
-  TxStatusAlert,
-} from '../../components';
+import { TxHeader, TxStatusAlert } from '../../components';
+import { TxContent } from '../../components/TxContent';
 import { useTx } from '../../hooks';
 
 import { Layout } from '~/systems/Core';
@@ -17,55 +12,41 @@ export function TxView() {
   const txIdQueryParam = useParams<{ txId: string }>().txId;
   const networks = useNetworks({ type: NetworkScreen.list });
   const providerUrl = networks?.selectedNetwork?.url;
-
-  const {
-    isFetching,
-    isLoadingTx,
-    isFetchingResult,
-    shouldShowAlert,
-    shouldShowTx,
-    shouldShowTxDetails,
-    tx,
-    error,
-    ethAmountSent,
-  } = useTx({
-    txId: txIdQueryParam,
+  const navigate = useNavigate();
+  const { tx, ...ctx } = useTx({
     providerUrl,
+    txId: txIdQueryParam,
     waitProviderUrl: true,
   });
 
-  const navigate = useNavigate();
-
   return (
-    <Layout title="Transaction" isLoading={isFetching || isFetchingResult}>
+    <Layout
+      title="Transaction"
+      isLoading={ctx.isFetching || ctx.isFetchingResult}
+    >
       <Layout.TopBar onBack={() => navigate(-1)} />
       <Layout.Content>
-        <Stack gap="$4">
-          {shouldShowAlert && (
-            <TxStatusAlert txStatus={tx?.status} error={error} />
+        <AnimatePresence initial={false} mode="sync">
+          {ctx.isLoadingTx && <TxContent.Loader header={<TxHeader.Loader />} />}
+          {ctx.shouldShowAlert && (
+            <TxStatusAlert txStatus={tx?.status} error={ctx.error} />
           )}
-          {shouldShowTx && (
-            <>
-              <TxHeader
-                id={tx?.id}
-                type={tx?.type}
-                status={tx?.status}
-                providerUrl={providerUrl}
-              />
-              <TxOperations operations={tx?.operations} status={tx?.status} />
-            </>
+          {ctx.shouldShowTx && (
+            <TxContent.Info
+              tx={tx}
+              amount={ctx.ethAmountSent}
+              showDetails={ctx.shouldShowTxDetails}
+              header={
+                <TxHeader
+                  id={tx?.id}
+                  type={tx?.type}
+                  status={tx?.status}
+                  providerUrl={providerUrl}
+                />
+              }
+            />
           )}
-          {isLoadingTx && (
-            <>
-              <TxHeader.Loader />
-              <TxOperations.Loader />
-              <TxDetails.Loader />
-            </>
-          )}
-          {shouldShowTxDetails && (
-            <TxDetails fee={tx?.fee} amountSent={ethAmountSent} />
-          )}
-        </Stack>
+        </AnimatePresence>
       </Layout.Content>
     </Layout>
   );
