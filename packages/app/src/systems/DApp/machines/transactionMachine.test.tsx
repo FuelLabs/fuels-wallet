@@ -1,6 +1,6 @@
 import { Wallet } from '@fuel-ts/wallet';
 import type { WalletUnlocked } from '@fuel-ts/wallet';
-import type { ScriptTransactionRequest } from 'fuels';
+import type { TransactionRequest } from 'fuels';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
@@ -17,7 +17,7 @@ const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
 describe('txApproveMachine', () => {
   let service: TransactionMachineService;
   let wallet: WalletUnlocked;
-  let transactionRequest: ScriptTransactionRequest;
+  let transactionRequest: TransactionRequest;
 
   beforeAll(async () => {
     wallet = Wallet.fromPrivateKey(OWNER);
