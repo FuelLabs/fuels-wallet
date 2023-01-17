@@ -1,19 +1,16 @@
-import { Icon } from '@fuel-ui/react';
+import type { Icons } from '@fuel-ui/react';
 
 import { OperationName } from './tx.types';
 
-export const getTxIcon = (type?: OperationName) => {
-  switch (type) {
-    case OperationName.transfer:
-      return Icon.is('UploadSimple');
-    case OperationName.receive:
-      return Icon.is('DownloadSimple');
-    case OperationName.mint:
-    case OperationName.predicatecall:
-      return Icon.is('MagicWand');
-    case OperationName.contractCall:
-      return Icon.is('ArrowsLeftRight');
-    default:
-      return 'ArrowRight';
-  }
+const ICON_MAP = {
+  [OperationName.transfer]: 'UploadSimple',
+  [OperationName.receive]: 'DownloadSimple',
+  [OperationName.mint]: 'ArrowRight',
+  [OperationName.predicatecall]: 'MagicWand',
+  [OperationName.contractCall]: 'ArrowsLeftRight',
+};
+
+export const getTxIcon = (type?: OperationName): Icons => {
+  if (!type || !ICON_MAP[type]) return 'ArrowRight';
+  return ICON_MAP[type];
 };
