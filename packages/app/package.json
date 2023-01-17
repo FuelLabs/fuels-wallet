@@ -16,9 +16,8 @@
     "test:watch": "jest --watch",
     "ts:check": "pnpm xstate:typegen && tsc --noEmit",
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'",
-    "graphql:codegen": "DOTENV_CONFIG_PATH='./.env' graphql-codegen --require dotenv/config --config codegen.yml",
-    "graphql:schema": "get-graphql-schema http://localhost:4000/graphql > fuel-core-schema.graphql && prettier --write fuel-core-schema.graphql",
-    "postinstall": "pnpm graphql:codegen"
+    "codegen": "DOTENV_CONFIG_PATH='./.env' graphql-codegen --require dotenv/config --config codegen.yml",
+    "codegen:ci": "graphql-codegen codegen.yml"
   },
   "dependencies": {
     "@apollo/client": "^3.4.13",

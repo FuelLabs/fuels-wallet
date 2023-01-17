@@ -11,6 +11,7 @@ concurrency:
 
 env:
   COVERAGE_FILE: ./coverage/report.json
+  VITE_FUEL_PROVIDER_URL: http://localhost:4001/graphql
 
 jobs:
   tests-jest:
@@ -28,6 +29,9 @@ jobs:
 
       - name: Generate types
         run: pnpm ts:check
+
+      - name: Graphql Codegen
+        run: pnpm codegen:ci
 
       # Unit tests running with JEST
       - name: Find PR number
@@ -71,6 +75,9 @@ jobs:
 
       - name: Start Test Node
         run: pnpm node:dev start --test --debug
+
+      - name: Graphql Codegen
+        run: pnpm codegen:ci
 
       - name: Build Application
         run: pnpm build:all
