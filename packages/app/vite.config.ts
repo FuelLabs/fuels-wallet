@@ -11,6 +11,7 @@ export default defineConfig({
     ...baseConfig.build,
     rollupOptions: {
       input: {
+        index: 'index.html',
         e2e: 'e2e.html',
       },
     },
