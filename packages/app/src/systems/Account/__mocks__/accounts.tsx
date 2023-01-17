@@ -27,6 +27,11 @@ export const MOCK_ACCOUNTS = [
     address: wallet3.address.toString(),
     publicKey: wallet3.publicKey,
   },
+  {
+    name: 'Account 4',
+    address: 'fuel10va6297tkerdcn5u8mxjm9emudsmkj85pq5x7t7stkmzmc4nvs3qvn99qz',
+    publicKey: '0x00',
+  },
 ];
 
 export async function createMockAccount() {

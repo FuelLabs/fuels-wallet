@@ -4,8 +4,6 @@ import { Flex, Icon } from '@fuel-ui/react';
 import type { OperationName, TxStatus } from '../../utils';
 import { getTxIconBgColor, getTxIconColor, getTxIcon } from '../../utils';
 
-import { TxIconLoader } from './TxIconLoader';
-
 export type TxIconProps = {
   operationName?: OperationName;
   status?: TxStatus;
@@ -36,5 +34,3 @@ const styles = {
       borderRadius: '$full',
     }),
 };
-
-TxIcon.Loader = TxIconLoader;
