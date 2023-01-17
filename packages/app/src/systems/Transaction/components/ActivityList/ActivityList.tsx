@@ -7,7 +7,7 @@ import { ActivityListEmpty } from './ActivityListEmpty';
 import { ActivityListLoading } from './ActivityListLoading';
 
 export interface ActivityListProps {
-  transactions: Tx[];
+  txs: Tx[];
   providerUrl?: string;
   isLoading?: boolean;
   isDevnet?: boolean;
@@ -15,24 +15,24 @@ export interface ActivityListProps {
 }
 
 export const ActivityList = ({
-  transactions,
+  txs,
   isDevnet = false,
   isLoading,
   ownerAddress,
 }: ActivityListProps) => {
   if (isLoading) return <ActivityList.Loading />;
 
-  const isEmpty = !transactions?.length;
+  const isEmpty = !txs?.length;
 
   if (isEmpty) return <ActivityList.Empty isDevnet={isDevnet} />;
 
   return (
     <Stack gap="$2">
-      {transactions.map((transaction) => (
+      {txs.map((tx) => (
         <ActivityItem
           ownerAddress={ownerAddress}
-          key={transaction.id}
-          transaction={transaction}
+          key={tx.id}
+          transaction={tx}
         />
       ))}
     </Stack>
