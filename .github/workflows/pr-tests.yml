@@ -27,11 +27,11 @@ jobs:
       - name: Start Test Node
         run: pnpm node:dev start --test --debug
 
-      - name: Generate types
-        run: pnpm ts:check
-
       - name: Graphql Codegen
         run: pnpm codegen:ci
+
+      - name: Generate types
+        run: pnpm ts:check
 
       # Unit tests running with JEST
       - name: Find PR number
