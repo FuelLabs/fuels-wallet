@@ -7,6 +7,14 @@ import baseConfig from './vite-utils/vite.base.config';
 // https://vitejs.dev/config/
 export default defineConfig({
   ...baseConfig,
+  build: {
+    ...baseConfig.build,
+    rollupOptions: {
+      input: {
+        e2e: 'e2e.html',
+      },
+    },
+  },
   plugins: [
     ...baseConfig.plugins,
     viteStaticCopy({
