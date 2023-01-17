@@ -60,7 +60,7 @@ export const ActivityItem: TxItemComponent = ({
   }, [ownerAddress, mainOperation]);
 
   return (
-    <Card css={styles.root} data-testid="activity-item">
+    <Card css={styles.root} aria-label="activity-item">
       <TxIcon operationName={mainOperation.name} status={txStatus} />
       <Stack css={styles.contentWrapper}>
         <Flex css={styles.row}>

@@ -54,13 +54,15 @@ describe('ActivityList', () => {
   });
 
   it('should render the same amount of activity items as transactions', async () => {
-    const { container } = await render(
+    render(
       <ActivityList
         txs={MOCK_TXS}
         isLoading={false}
         ownerAddress={MOCK_ACCOUNTS[3].address}
       />
     );
-    expect(container.firstChild?.childNodes.length).toBe(MOCK_TXS.length);
+    expect(screen.getAllByLabelText('activity-item').length).toBe(
+      MOCK_TXS.length
+    );
   });
 });
