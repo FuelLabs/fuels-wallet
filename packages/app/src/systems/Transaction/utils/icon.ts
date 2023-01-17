@@ -11,5 +11,6 @@ const ICON_MAP = {
 };
 
 export const getTxIcon = (type?: OperationName): Icons => {
-  return type ? ICON_MAP[type] ?? 'ArrowRight' : 'ArrowRight';
+  if (!type || !ICON_MAP[type]) return 'ArrowRight';
+  return ICON_MAP[type];
 };
