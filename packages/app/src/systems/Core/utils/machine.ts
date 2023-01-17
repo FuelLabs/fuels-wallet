@@ -23,9 +23,7 @@ export async function waitForState<
     const appState: T = await waitFor<I>(
       service,
       (state: T) => state.matches(doneState) || state.matches(failureState),
-      {
-        timeout,
-      }
+      { timeout }
     );
 
     if (appState.matches(failureState)) {

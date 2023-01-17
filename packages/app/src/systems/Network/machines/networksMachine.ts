@@ -15,7 +15,7 @@ export enum NetworkScreen {
 }
 
 export type NetworkInitialInput = {
-  type: NetworkScreen;
+  type?: NetworkScreen;
   networkId?: string;
 };
 

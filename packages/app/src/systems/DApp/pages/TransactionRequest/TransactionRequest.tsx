@@ -1,146 +1,103 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Button,
-  Card,
-  Copyable,
-  Flex,
-  Heading,
-  Icon,
-  Link,
-  Stack,
-  Text,
-} from '@fuel-ui/react';
-import { getBlockExplorerLink } from '@fuel-wallet/sdk';
+import { Button } from '@fuel-ui/react';
 
 import { ConnectInfo } from '../../components';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
+import { IS_CRX_POPUP } from '~/config';
 import { Layout, UnlockDialog } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
-import { NetworkScreen, useNetworks } from '~/systems/Network';
-import { TxDetails, TxOperations } from '~/systems/Transaction';
+import { TxContent, TxHeader } from '~/systems/Transaction';
 
 export function TransactionRequest() {
-  const { selectedNetwork } = useNetworks({ type: NetworkScreen.list });
-  const { handlers, tx, ethAmountSent, ...ctx } = useTransactionRequest({
-    isOriginRequired: true,
-  });
-
+  const txRequest = useTransactionRequest({ isOriginRequired: true });
+  const { handlers, status, ...ctx } = txRequest;
   if (!ctx.account) return null;
-
-  const content = (
-    <Layout.Content css={styles.content}>
-      {ctx.isLoadingTx && (
-        <Stack gap="$4">
-          <ConnectInfo.Loader />
-          <TxOperations.Loader />
-          <TxDetails.Loader />
-        </Stack>
-      )}
-      {ctx.isShowingInfo && (
-        <Stack gap="$4">
-          <ConnectInfo
-            origin={ctx.origin!}
-            account={ctx.account}
-            isReadOnly={true}
-          />
-          {ctx.hasGeneralErrors && (
-            <Card css={styles.generalErrorCard}>
-              <Copyable
-                value={JSON.stringify(ctx.generalErrors)}
-                tooltipMessage="Click to copy Error Logs"
-                css={{ width: '100%', justifyContent: 'space-between' }}
-              >
-                <Icon icon={Icon.is('WarningOctagon')} color="red8" size={20} />
-                <Text
-                  as="h3"
-                  css={{ fontSize: '$sm', fontWeight: '$semibold' }}
-                >
-                  Invalid Transaction
-                </Text>
-              </Copyable>
-            </Card>
-          )}
-          <TxOperations operations={tx?.operations} />
-          <TxDetails fee={tx?.fee} amountSent={ethAmountSent} />
-        </Stack>
-      )}
-      {ctx.approvedTx && (
-        <Stack>
-          <Heading as="h4">Transaction sent</Heading>
-          <Text>
-            Transaction sent successfully.
-            <Link
-              isExternal
-              href={getBlockExplorerLink({
-                path: `/transaction/${ctx.approvedTx.id}`,
-                providerUrl: selectedNetwork?.url,
-              })}
-            >
-              Click here to view on Fuel Explorer
-            </Link>
-          </Text>
-        </Stack>
-      )}
-      {ctx.txApproveError && (
-        <Stack>
-          <Heading as="h4">Transaction failed</Heading>
-          <Text>
-            Transaction failed to run. Please try again or contact support if
-            the problem persists.
-          </Text>
-        </Stack>
-      )}
-    </Layout.Content>
-  );
-
-  const footer = (
-    <Layout.BottomBar>
-      <Flex>
-        <Button
-          onPress={handlers.reject}
-          color="gray"
-          variant="ghost"
-          css={{ flex: 1 }}
-        >
-          Reject
-        </Button>
-        {!ctx.approvedTx && !ctx.txApproveError && (
-          <Button
-            color="accent"
-            onPress={handlers.approve}
-            isLoading={ctx.isLoadingTx || ctx.sendingTx}
-            isDisabled={!ctx.waitingApproval}
-            css={{ flex: 1, ml: '$2' }}
-          >
-            Confirm
-          </Button>
-        )}
-      </Flex>
-    </Layout.BottomBar>
-  );
 
   return (
     <>
-      <Layout title="Approve Transaction" isLoading={ctx.isLoadingTx}>
+      <Layout title={ctx.title} isLoading={ctx.isLoading}>
         <Layout.TopBar type={TopBarType.external} />
-        {content}
-        {footer}
+        <Layout.Content css={styles.content}>
+          {ctx.isLoading && (
+            <TxContent.Loader header={<ConnectInfo.Loader />} />
+          )}
+          {status('waitingApproval') && (
+            <TxContent.Info
+              showDetails
+              tx={txRequest.tx}
+              amount={txRequest.ethAmountSent}
+              header={
+                <ConnectInfo account={ctx.account} origin={ctx.input.origin!} />
+              }
+            />
+          )}
+          {(status('success') || status('failed')) && (
+            <TxContent.Info
+              showDetails
+              tx={txRequest.tx}
+              txStatus={txRequest.approveStatus()}
+              amount={txRequest.ethAmountSent}
+              header={
+                <TxHeader
+                  id={txRequest.tx?.id}
+                  type={txRequest.tx?.type}
+                  status={txRequest.tx?.status}
+                  providerUrl={txRequest.providerUrl}
+                />
+              }
+              footer={
+                status('failed') && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    color="red"
+                    onPress={txRequest.handlers.tryAgain}
+                  >
+                    Try again
+                  </Button>
+                )
+              }
+            />
+          )}
+        </Layout.Content>
+        {ctx.showActions && (
+          <Layout.BottomBar>
+            <Button
+              onPress={handlers.reject}
+              color="gray"
+              variant="ghost"
+              isDisabled={ctx.isLoading || status('sending')}
+            >
+              Reject
+            </Button>
+            <Button
+              color="accent"
+              onPress={handlers.approve}
+              isLoading={ctx.isLoading || status('sending')}
+            >
+              Confirm
+            </Button>
+          </Layout.BottomBar>
+        )}
       </Layout>
       <UnlockDialog
+        isFullscreen={IS_CRX_POPUP}
+        isOpen={status('unlocking') || status('waitingUnlock')}
+        isLoading={status('unlocking')}
         unlockText="Confirm Transaction"
-        unlockError={ctx.unlockError}
-        isFullscreen={true}
-        isOpen={ctx.isUnlocking}
-        onUnlock={handlers.unlock}
-        isLoading={ctx.isUnlockingLoading}
-        onClose={handlers.closeUnlock}
+        unlockError={txRequest.errors.unlockError}
+        onUnlock={txRequest.handlers.unlock}
+        onClose={txRequest.handlers.closeUnlock}
       />
     </>
   );
 }
 
 const styles = {
+  actionBtn: cssObj({
+    mt: '$4',
+  }),
   content: cssObj({
     '& h2': {
       m: '$0',
@@ -156,14 +113,5 @@ const styles = {
     background: 'transparent',
     borderColor: '$gray8',
     borderStyle: 'dashed',
-  }),
-  generalErrorCard: cssObj({
-    px: '$3',
-    py: '$2',
-    gap: '$2',
-    backgroundColor: '$red3',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
   }),
 };

@@ -4,16 +4,16 @@ import type {
   TransactionRequest,
   TransactionResponse,
   TransactionResultReceipt,
+  WalletUnlocked,
 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { send } from 'xstate/lib/actions';
 
-import { unlockMachineErrorAction, unlockMachine } from '~/systems/Account';
+import { unlockMachine } from '~/systems/Account';
 import type {
   UnlockMachine,
   AccountInputs,
-  UnlockWalletReturn,
   UnlockWalletEvent,
 } from '~/systems/Account';
 import type { ChildrenMachine } from '~/systems/Core';
@@ -25,17 +25,34 @@ import { getGroupedErrors } from '~/systems/Transaction';
 import type { TxInputs } from '~/systems/Transaction/services';
 import { TxService } from '~/systems/Transaction/services';
 
+export enum TxRequestStatus {
+  inactive = 'inactive',
+  idle = 'idle',
+  loading = 'loading',
+  waitingApproval = 'waitingApproval',
+  waitingUnlock = 'waitingUnlock',
+  unlocking = 'unlocking',
+  sending = 'sending',
+  success = 'success',
+  failed = 'failed',
+}
+
 type MachineContext = {
-  origin?: string;
-  isOriginRequired?: boolean;
-  unlockError?: string;
-  error?: string;
-  providerUrl?: string;
-  receipts?: TransactionResultReceipt[];
-  transactionRequest?: TransactionRequest;
-  approvedTx?: TransactionResponse;
-  txApproveError?: VMApiError;
-  txDryRunGroupedErrors?: GroupedErrors;
+  input: {
+    origin?: string;
+    isOriginRequired?: boolean;
+    providerUrl?: string;
+    transactionRequest?: TransactionRequest;
+  };
+  response?: {
+    receipts?: TransactionResultReceipt[];
+    approvedTx?: TransactionResponse;
+  };
+  errors?: {
+    unlockError?: string;
+    txApproveError?: VMApiError;
+    txDryRunGroupedErrors?: GroupedErrors;
+  };
 };
 
 type MachineServices = {
@@ -51,26 +68,14 @@ type MachineServices = {
 };
 
 type MachineEvents =
-  | {
-      type: 'START_REQUEST';
-      input?: TxInputs['request'];
-    }
-  | {
-      type: 'APPROVE';
-      input?: void;
-    }
-  | {
-      type: 'REJECT';
-      input?: void;
-    }
-  | {
-      type: 'UNLOCK_WALLET';
-      input: AccountInputs['unlock'];
-    }
-  | {
-      type: 'CLOSE_UNLOCK';
-      input?: void;
-    };
+  | { type: 'START_REQUEST'; input?: TxInputs['request'] }
+  | { type: 'RESET'; input?: null }
+  | { type: 'APPROVE'; input?: null }
+  | { type: 'REJECT'; input?: null }
+  | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
+  | { type: 'CLOSE_UNLOCK'; input?: null }
+  | { type: 'TRY_AGAIN'; input?: null }
+  | { type: 'CLOSE'; input?: null };
 
 export const transactionMachine = createMachine(
   {
@@ -97,9 +102,7 @@ export const transactionMachine = createMachine(
         tags: ['loading'],
         invoke: {
           src: 'fetchGasPrice',
-          data: ({ transactionRequest, providerUrl }: MachineContext) => ({
-            input: { transactionRequest, providerUrl },
-          }),
+          data: ({ input }: MachineContext) => ({ input }),
           onDone: [
             {
               target: 'simulatingTransaction',
@@ -112,12 +115,7 @@ export const transactionMachine = createMachine(
         tags: ['loading'],
         invoke: {
           src: 'simulateTransaction',
-          data: (ctx: MachineContext) => ({
-            input: {
-              transactionRequest: ctx.transactionRequest,
-              providerUrl: ctx.providerUrl,
-            },
-          }),
+          data: ({ input }: MachineContext) => ({ input }),
           onDone: [
             {
               actions: ['assignTxDryRunError'],
@@ -133,7 +131,17 @@ export const transactionMachine = createMachine(
       },
       waitingApproval: {
         on: {
-          APPROVE: 'unlocking',
+          APPROVE: {
+            target: 'unlocking',
+          },
+          REJECT: {
+            actions: [assignErrorMessage('User rejected the transaction!')],
+            target: 'failed',
+          },
+          RESET: {
+            actions: ['reset'],
+            target: 'idle',
+          },
         },
       },
       unlocking: {
@@ -142,8 +150,14 @@ export const transactionMachine = createMachine(
           src: 'unlock',
           data: (_: MachineContext, ev: MachineEvents) => ev.input,
           onDone: [
-            unlockMachineErrorAction('unlocking', 'unlockError'),
-            { target: 'sendingTx' },
+            {
+              target: 'unlocking',
+              cond: FetchMachine.hasError,
+              actions: ['assignUnlockError'],
+            },
+            {
+              target: 'sendingTx',
+            },
           ],
         },
         on: {
@@ -162,84 +176,109 @@ export const transactionMachine = createMachine(
         },
       },
       sendingTx: {
+        tags: ['loading'],
         invoke: {
           src: 'send',
           data: {
-            input: (ctx: MachineContext, ev: UnlockWalletReturn) => {
-              return {
-                transactionRequest: ctx.transactionRequest,
-                wallet: ev.data,
-                providerUrl: ctx.providerUrl,
-              };
-            },
+            input: (ctx: MachineContext, ev: { data: WalletUnlocked }) => ({
+              ...ctx.input,
+              wallet: ev.data,
+            }),
           },
           onDone: [
             {
               target: 'failed',
-              actions: ['assignTransactionRequestError'],
+              actions: ['assignTxApproveError'],
               cond: FetchMachine.hasError,
             },
             {
               actions: ['assignApprovedTx'],
-              target: 'done',
+              target: 'txSuccess',
             },
           ],
+        },
+      },
+      txSuccess: {
+        on: {
+          CLOSE: {
+            target: 'done',
+          },
+        },
+      },
+      txFailed: {
+        on: {
+          TRY_AGAIN: {
+            target: 'waitingApproval',
+          },
+          CLOSE: {
+            target: 'failed',
+          },
         },
       },
       done: {
         type: 'final',
       },
-      failed: {},
-    },
-    on: {
-      REJECT: {
-        actions: [assignErrorMessage('User rejected the transaction!')],
-        target: 'failed',
+      failed: {
+        type: 'final',
       },
     },
   },
   {
     actions: {
-      assignTxRequestData: assign((ctx, ev) => {
-        const { transactionRequest, origin, providerUrl } = ev.input || {};
+      reset: assign(() => ({})),
+      assignTxRequestData: assign({
+        input: (ctx, ev) => {
+          const { transactionRequest, origin, providerUrl } = ev.input || {};
 
-        if (!providerUrl) {
-          throw new Error('providerUrl is required');
-        }
-        if (!transactionRequest) {
-          throw new Error('transaction is required');
-        }
-        if (ctx.isOriginRequired && !origin) {
-          throw new Error('origin is required');
-        }
+          if (!providerUrl) {
+            throw new Error('providerUrl is required');
+          }
+          if (!transactionRequest) {
+            throw new Error('transaction is required');
+          }
+          if (ctx.input.isOriginRequired && !origin) {
+            throw new Error('origin is required');
+          }
 
-        return {
-          transactionRequest,
-          origin,
-          providerUrl,
-        };
+          return {
+            transactionRequest,
+            origin,
+            providerUrl,
+          };
+        },
       }),
       assignGasPrice: assign((ctx, ev) => {
-        if (!ctx.transactionRequest) {
+        if (!ctx.input.transactionRequest) {
           throw new Error('Transaction is required');
         }
-        ctx.transactionRequest.gasPrice = ev.data;
+        ctx.input.transactionRequest.gasPrice = ev.data;
         return ctx;
       }),
       assignApprovedTx: assign({
-        approvedTx: (_, ev) => ev.data,
-      }),
-      assignTxDryRunError: assign({
-        txDryRunGroupedErrors: (_, ev: any) => {
-          const error = ev.data.error;
-          return getGroupedErrors(error?.response?.errors);
-        },
-      }),
-      assignTransactionRequestError: assign({
-        txApproveError: (_, ev: any) => ev.data.error,
+        response: (ctx, ev) => ({ ...ctx.response, approvedTx: ev.data }),
       }),
       assignReceipts: assign({
-        receipts: (_, ev) => ev.data,
+        response: (ctx, ev) => ({ ...ctx.response, receipts: ev.data }),
+      }),
+      assignTxDryRunError: assign({
+        errors: (ctx, ev) => ({
+          ...ctx.errors,
+          txDryRunGroupedErrors: getGroupedErrors(
+            (ev.data as any)?.error?.response?.errors
+          ),
+        }),
+      }),
+      assignTxApproveError: assign({
+        errors: (ctx, ev) => ({
+          ...ctx.errors,
+          txApproveError: (ev.data as any)?.error,
+        }),
+      }),
+      assignUnlockError: assign({
+        errors: (ctx, ev) => ({
+          ...ctx.errors,
+          unlockError: (ev.data as any)?.error?.message,
+        }),
       }),
     },
     services: {

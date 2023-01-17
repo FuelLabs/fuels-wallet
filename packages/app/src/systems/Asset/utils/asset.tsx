@@ -1,12 +1,19 @@
-import type { Coin, AssetAmount } from '@fuel-wallet/types';
-import type { BytesLike } from 'fuels';
+import type { AssetAmount } from '@fuel-wallet/types';
+import type { BytesLike, CoinQuantity } from 'fuels';
+import { NativeAssetId, hexlify } from 'fuels';
 
-import { ASSET_LIST, ASSET_MAP } from './constants';
+import { ASSET_MAP } from './constants';
 
 export function getAssetInfoById<T>(id: BytesLike, rest: T): AssetAmount {
   return { ...ASSET_MAP[id.toString()], ...rest };
 }
 
-export function isEth(asset: Coin) {
-  return ASSET_LIST[0].assetId === asset.assetId;
+type CoinLike = {
+  assetId?: BytesLike;
+};
+
+export function isEth(asset: BytesLike | CoinLike) {
+  const assetId =
+    typeof asset === 'string' ? asset : (asset as CoinQuantity).assetId;
+  return NativeAssetId === hexlify(assetId);
 }

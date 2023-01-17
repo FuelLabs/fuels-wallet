@@ -1,28 +1,23 @@
-import { bn } from 'fuels';
-import { graphql } from 'msw';
+import { bn, NativeAssetId } from 'fuels';
 
 import { MOCK_ACCOUNTS } from '../__mocks__';
 
 import { AccountService } from './account';
 
 import { mockServer } from '~/mocks/server';
-import { ASSET_LIST } from '~/systems/Asset';
+import { mockBalancesOnGraphQL } from '~/systems/Asset/__mocks__/assets';
 
 const MOCK_ACCOUNT = MOCK_ACCOUNTS[0];
 const MOCK_BALANCES = [
   {
     node: {
-      assetId: ASSET_LIST[0].assetId,
+      assetId: NativeAssetId,
       amount: bn(1000),
     },
   },
 ];
 
-mockServer([
-  graphql.query('getBalances', (_req, res, ctx) => {
-    return res(ctx.data({ balances: { edges: MOCK_BALANCES } }));
-  }),
-]);
+mockServer([mockBalancesOnGraphQL(MOCK_BALANCES)]);
 
 describe('AccountService', () => {
   beforeEach(async () => {
@@ -43,7 +38,7 @@ describe('AccountService', () => {
     const result = await AccountService.fetchBalance({ account, providerUrl });
     expect(result.balance).toBe(bn(1000).toString());
     expect(result.address).toBe(MOCK_ACCOUNT.address);
-    expect(result.balances?.[0].assetId).toBe(ASSET_LIST[0].assetId);
+    expect(result.balances?.[0].assetId).toBe(NativeAssetId);
   });
 
   it('should convert an array of accounts into a map', async () => {

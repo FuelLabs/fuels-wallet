@@ -9,9 +9,9 @@
     "json-rpc-2.0": "^1.4.2"
   },
   "peerDependencies": {
-    "fuels": ">=0.28.1"
+    "fuels": ">=0.29.0"
   },
   "devDependencies": {
-    "fuels": "0.28.1"
+    "fuels": "0.29.0"
   }
 }
