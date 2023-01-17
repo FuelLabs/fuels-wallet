@@ -11,7 +11,7 @@ const params = { gasLimit: bn(100000), gasPrice: bn(100000) };
 
 describe('TxService', () => {
   let wallet: WalletUnlocked;
-  let txRequest: ScriptTransactionRequest;
+  let transactionRequest: ScriptTransactionRequest;
 
   beforeAll(async () => {
     wallet = Wallet.fromPrivateKey(OWNER, VITE_FUEL_PROVIDER_URL);
@@ -19,10 +19,10 @@ describe('TxService', () => {
     const newAddr = Wallet.generate({
       provider: VITE_FUEL_PROVIDER_URL,
     }).address;
-    txRequest = new ScriptTransactionRequest(params);
+    transactionRequest = new ScriptTransactionRequest(params);
     const assetId = coins[0].assetId;
-    txRequest.addCoinOutput(newAddr, amount, assetId);
-    wallet.fund(txRequest);
+    transactionRequest.addCoinOutput(newAddr, amount, assetId);
+    wallet.fund(transactionRequest);
   });
 
   beforeEach(async () => {
@@ -32,7 +32,10 @@ describe('TxService', () => {
   it('should add a new tx on database', async () => {
     let txs = await TxService.getAll();
     expect(txs.length).toBe(0);
-    await TxService.add({ data: txRequest, type: TransactionType.Script });
+    await TxService.add({
+      data: transactionRequest,
+      type: TransactionType.Script,
+    });
     txs = await TxService.getAll();
     expect(txs.length).toBe(1);
   });
@@ -41,7 +44,7 @@ describe('TxService', () => {
     const txs = await TxService.getAll();
     expect(txs.length).toBe(0);
     const tx = await TxService.add({
-      data: txRequest,
+      data: transactionRequest,
       type: TransactionType.Script,
     });
     if (tx) {

@@ -1,5 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, CardList, Flex, Heading, Text } from '@fuel-ui/react';
+import {
+  Avatar,
+  CardList,
+  Copyable,
+  Flex,
+  Heading,
+  Text,
+} from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { FC } from 'react';
 
@@ -12,6 +19,8 @@ export type AccountItemProps = {
   isSelected?: boolean;
   isHidden?: boolean;
   onPress?: () => void;
+  rightEl?: JSX.Element;
+  isDisabled?: boolean;
 };
 
 type AccountItemComponent = FC<AccountItemProps> & {
@@ -23,7 +32,9 @@ export const AccountItem: AccountItemComponent = ({
   isSelected,
   isHidden,
   onPress,
-}) => {
+  rightEl,
+  isDisabled,
+}: AccountItemProps) => {
   if (isHidden) return null;
   /**
    * TODO: add DropdownMenu here with actions after it's done on @fuel-ui
@@ -45,6 +56,9 @@ export const AccountItem: AccountItemComponent = ({
     <CardList.Item
       isActive={isSelected}
       onClick={onPress}
+      rightEl={rightEl}
+      css={styles.root}
+      aria-disabled={isDisabled}
       aria-label={account.name}
     >
       <Avatar.Generated size="md" background="fuel" hash={account.address} />
@@ -52,15 +66,21 @@ export const AccountItem: AccountItemComponent = ({
         <Heading as="h6" css={styles.name}>
           {account.name}
         </Heading>
-        <Text css={styles.address}>{shortAddress(account.address)}</Text>
+        <Copyable value={account.address}>
+          <Text css={styles.address}>{shortAddress(account.address)}</Text>
+        </Copyable>
       </Flex>
     </CardList.Item>
   );
 };
 
-AccountItem.Loader = AccountItemLoader;
-
 const styles = {
+  root: cssObj({
+    '&[aria-disabled="true"]': {
+      opacity: 0.5,
+      cursor: 'default',
+    },
+  }),
   name: cssObj({
     margin: 0,
   }),
@@ -69,3 +89,5 @@ const styles = {
     fontWeight: '$semibold',
   }),
 };
+
+AccountItem.Loader = AccountItemLoader;

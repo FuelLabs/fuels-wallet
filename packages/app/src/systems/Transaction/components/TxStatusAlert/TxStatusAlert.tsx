@@ -39,7 +39,7 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
       css={styles.root(txColor)}
     >
       <Alert.Description>
-        <Stack gap="$4">
+        <Stack gap="$1">
           <Text fontSize="sm">
             {txStatus === TxStatus.pending &&
               'Your transaction is still pending, you can close this window if you want.'}
@@ -94,9 +94,9 @@ const styles = {
     });
   },
   link: cssObj({
+    fontSize: '$sm',
     '&:focus-visible': {
       outline: 'none',
     },
-    fontSize: '$sm',
   }),
 };

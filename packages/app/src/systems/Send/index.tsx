@@ -1,0 +1,1 @@
+export { sendRoutes } from './routes';

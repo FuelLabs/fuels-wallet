@@ -1,13 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
 import { Flex, Icon } from '@fuel-ui/react';
 
-import type { TxStatus } from '../../utils';
-import {
-  getTxIconBgColor,
-  getTxIconColor,
-  getTxIcon,
-  OperationName,
-} from '../../utils';
+import type { OperationName, TxStatus } from '../../utils';
+import { getTxIconBgColor, getTxIconColor, getTxIcon } from '../../utils';
 
 export type TxIconProps = {
   operationName?: OperationName;
@@ -19,7 +14,7 @@ export function TxIcon({ operationName, status }: TxIconProps) {
     <Flex css={styles.root(status)}>
       <Icon
         size="22px"
-        icon={getTxIcon(operationName ?? OperationName.transfer)}
+        icon={getTxIcon(operationName)}
         color={getTxIconColor(status)}
       />
     </Flex>

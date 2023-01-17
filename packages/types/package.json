@@ -4,14 +4,14 @@
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "dependencies": {
-    "@types/chrome": "^0.0.204",
+    "@types/chrome": "^0.0.208",
     "dexie-observable": "4.0.0-beta.13",
     "json-rpc-2.0": "^1.4.2"
   },
   "peerDependencies": {
-    "fuels": ">=0.28.0"
+    "fuels": ">=0.29.0"
   },
   "devDependencies": {
-    "fuels": "0.28.0"
+    "fuels": "0.29.0"
   }
 }

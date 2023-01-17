@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 // TODO: this whole tx utils need be moved to SDK
 import { AddressType } from '@fuel-wallet/types';
 import type {
@@ -25,7 +26,6 @@ import type {
   TransactionResultTransferReceipt,
 } from 'fuels';
 import {
-  Address,
   calculatePriceWithFactor,
   ReceiptType,
   TransactionType,
@@ -49,12 +49,7 @@ import type {
   ReceiptParam,
   Tx,
 } from './tx.types';
-import {
-  OperationName,
-  TxType,
-  TxStatus,
-  OperationDirection,
-} from './tx.types';
+import { OperationName, TxType, TxStatus } from './tx.types';
 
 export const getStatus = (
   gqlStatus?: GqlTransactionStatus
@@ -280,58 +275,51 @@ export function isStatusFailure(transactionStatus?: GqlTransactionStatus) {
   return isStatus(transactionStatus, TxStatus.failure);
 }
 
+function isSameOperation(a: Operation, b: Operation) {
+  return (
+    a.name === b.name &&
+    a.from?.address === b.from?.address &&
+    a.to?.address === b.to?.address &&
+    a.from?.type === b.from?.type &&
+    a.to?.type === b.to?.type
+  );
+}
+
+function hasSameAssetId(a: Coin) {
+  return (b: Coin) => a.assetId === b.assetId;
+}
+
+const mergeAssets = (op1: Operation, op2: Operation) => {
+  const assets1 = op1.assetsSent || [];
+  const assets2 = op2.assetsSent || [];
+  const filtered = assets2.filter((c) => !assets1.some(hasSameAssetId(c)));
+  return assets1
+    .map((coin) => {
+      const asset = assets2.find(hasSameAssetId(coin));
+      if (!asset) return coin;
+      return { ...coin, amount: bn(coin.amount).add(asset.amount) };
+    })
+    .concat(filtered);
+};
+
 export function addOperation(operations: Operation[], toAdd: Operation) {
-  // control if the added operation is stacked or not
-  let isStacked;
-  const ops = operations.map((op) => {
-    const isAddingSameOperation =
-      (!op.name && !toAdd.name) || op.name === toAdd.name;
-    const isAddingSameFrom =
-      op.from?.address === toAdd.from?.address &&
-      op.from?.type === toAdd.from?.type;
-    const isAddingSameTo =
-      op.to?.address === toAdd.to?.address && op.to?.type === toAdd.to?.type;
-
-    if (isAddingSameOperation && isAddingSameFrom && isAddingSameTo) {
-      isStacked = true;
-
+  const ops = operations
+    .map((op) => {
+      if (!isSameOperation(op, toAdd)) return null;
       // if it's not adding any assets, just return the original operation
       if (!toAdd.assetsSent?.length) return op;
-
       // if the original operation doesn't have any assets, just return the toAdd assets
-      if (!op.assetsSent?.length)
+      if (!op.assetsSent?.length) {
         return { ...op, assetsSent: toAdd.assetsSent };
-
+      }
       // if both have assets, merge them
-      const opAssetsSent = op.assetsSent.map((opAsset) => {
-        const toAddAsset = toAdd.assetsSent?.find(
-          (b) => b.assetId === opAsset.assetId
-        );
-        if (!toAddAsset) return opAsset;
+      return { ...op, assetsSent: mergeAssets(op, toAdd) };
+    })
+    .filter(Boolean) as Operation[];
 
-        return {
-          ...opAsset,
-          amount: bn(opAsset.amount).add(toAddAsset.amount),
-        };
-      });
-      const newAssetsSent = toAdd.assetsSent.filter(
-        (b) => !opAssetsSent.find((a) => a.assetId === b.assetId)
-      );
-      const mergedAssetsSent = [...opAssetsSent, ...newAssetsSent];
-
-      return {
-        ...op,
-        assetsSent: mergedAssetsSent,
-      };
-    }
-
-    return op;
-  });
-
-  if (isStacked) return ops;
-
-  return [...operations, toAdd];
+  return ops.length ? ops : [...operations, toAdd];
 }
+
 export function getContractCreatedOperations({
   inputs,
   outputs,
@@ -366,13 +354,14 @@ export function getTransferOperations({
   const coinInputs = getInputsCoin(inputs);
   const coinOutputs = getOutputsCoin(outputs);
 
-  const operations = coinInputs.reduce((prevInput, input) => {
-    const outputOps = coinOutputs.reduce((prevOutput, output) => {
+  let operations: Operation[] = [];
+  for (const output of coinOutputs) {
+    for (const input of coinInputs) {
       const isSameAsset = input.assetId === output.assetId;
       const isDifPublicKey = input.owner.toString() !== output.to.toString();
 
       if (isSameAsset && isDifPublicKey) {
-        return addOperation(prevOutput, {
+        operations = addOperation(operations, {
           name: OperationName.transfer,
           from: {
             type: AddressType.account,
@@ -390,12 +379,8 @@ export function getTransferOperations({
           ],
         });
       }
-
-      return prevOutput;
-    }, prevInput);
-
-    return outputOps;
-  }, [] as Operation[]);
+    }
+  }
 
   return operations;
 }
@@ -523,6 +508,7 @@ export function getTotalAssetsSent({
     outputs,
     receipts,
   });
+
   const assetsSent = operations.reduce((prev, op) => {
     const newAssetsSent = (op.assetsSent ?? []).reduce((prevOp, asset) => {
       const assetExists = prevOp.find((a) => a.assetId === asset.assetId);
@@ -693,18 +679,4 @@ export function parseTx({
     status,
     time,
   };
-}
-
-export function getOperationDirection(operation: Operation, owner: string) {
-  const operationAddr = operation?.to?.address ?? operation?.from?.address;
-
-  if (!owner?.length || !operationAddr) {
-    return OperationDirection.unknown;
-  }
-
-  const ownerAddr = Address.fromString(owner);
-
-  return ownerAddr.equals(Address.fromString(operation?.to?.address ?? ''))
-    ? OperationDirection.from
-    : OperationDirection.to;
 }

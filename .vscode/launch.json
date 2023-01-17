@@ -1,0 +1,34 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Vite on Brave",
+      "runtimeExecutable": "${input:braverPath}",
+      "userDataDir": true,
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Storybook on Brave",
+      "runtimeExecutable": "${input:braverPath}",
+      "userDataDir": true,
+      "url": "http://localhost:6006",
+      "webRoot": "${workspaceFolder}"
+    }
+  ],
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "braverPath",
+      "description": "Brave app path on your machine",
+      "default": "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser"
+    }
+  ]
+}

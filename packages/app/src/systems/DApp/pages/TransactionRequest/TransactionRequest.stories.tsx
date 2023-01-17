@@ -1,37 +1,47 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Box } from '@fuel-ui/react';
+import type { Meta, Story } from '@storybook/react';
+import { Wallet } from 'fuels';
 import { useEffect } from 'react';
+
+import { getMockedTransaction } from '../../__mocks__/dapp-transaction';
 
 import { TransactionRequest } from './TransactionRequest';
 
 import { createMockAccount } from '~/systems/Account';
 import { NetworkService } from '~/systems/Network';
 
-let passwordToUnlock: string;
 async function loader() {
-  const { password } = await createMockAccount();
-
+  const { account, password } = await createMockAccount();
   await NetworkService.clearNetworks();
-  await NetworkService.addFirstNetwork();
+  const network = await NetworkService.addFirstNetwork();
+  const wallet = Wallet.generate();
+  const transactionRequest = await getMockedTransaction(
+    account?.publicKey || '',
+    wallet.publicKey,
+    network?.url!
+  );
 
-  passwordToUnlock = password;
+  return { transactionRequest, network, password };
 }
 
 export default {
   component: TransactionRequest,
   title: 'DApp/Pages/TransactionRequest',
   loaders: [loader],
+  decorators: [(Story) => <Story />],
   parameters: {
     layout: 'fullscreen',
     viewport: {
       defaultViewport: 'chromeExtension',
     },
   },
-};
+} as Meta;
 
-export const Usage = () => {
+export const Usage: Story = (_args, { loaded }) => {
   useEffect(() => {
     // eslint-disable-next-line no-alert
-    alert(`use this password to unlock: ${passwordToUnlock}`);
+    alert(`use this password to unlock: ${loaded.password}`);
   }, []);
 
   return (

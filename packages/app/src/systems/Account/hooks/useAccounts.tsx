@@ -1,4 +1,5 @@
 /* eslint-disable consistent-return */
+import { bn } from 'fuels';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +9,7 @@ import { store, Services } from '~/store';
 import { Pages } from '~/systems/Core';
 
 const selectors = {
-  isLoading: (state: AccountMachineState) => {
+  isLoading(state: AccountMachineState) {
     return state.hasTag('loading');
   },
   isAddingAccount: (state: AccountMachineState) => {
@@ -19,6 +20,10 @@ const selectors = {
   },
   account: (state: AccountMachineState) => {
     return state.context?.account;
+  },
+  hasBalance(state: AccountMachineState) {
+    const acc = state.context?.account;
+    return bn(acc?.balance ?? 0).gt(0);
   },
   unlockError: (state: AccountMachineState) => {
     return state.context?.unlockError;
@@ -47,6 +52,7 @@ export function useAccounts() {
   const isLoading = store.useSelector(Services.accounts, selectors.isLoading);
   const accounts = store.useSelector(Services.accounts, selectors.accounts);
   const account = store.useSelector(Services.accounts, selectors.account);
+  const hasBalance = store.useSelector(Services.accounts, selectors.hasBalance);
   const unlockError = store.useSelector(
     Services.accounts,
     selectors.unlockError
@@ -100,6 +106,14 @@ export function useAccounts() {
   }, []);
 
   return {
+    accounts,
+    account,
+    hasBalance,
+    unlockError,
+    isUnlocking,
+    isUnlockingLoading,
+    isAddingAccount,
+    isLoading: isLoading && !accounts,
     handlers: {
       goToList,
       goToAdd,
@@ -109,12 +123,5 @@ export function useAccounts() {
       selectAccount: store.selectAccount,
       addAccount: store.addAccount,
     },
-    isLoading: isLoading && !accounts,
-    accounts,
-    account,
-    unlockError,
-    isUnlocking,
-    isUnlockingLoading,
-    isAddingAccount,
   };
 }
