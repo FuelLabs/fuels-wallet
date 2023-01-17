@@ -35,7 +35,7 @@
     "changeset:check": "changeset status --since=master",
     "deps:update": "updates -gu && pnpm -r exec updates -gu",
     "dev": "turbo run dev --filter=app",
-    "dev:docs": "NODE_ENV=dev turbo run dev --filter=docs",
+    "dev:docs": "NODE_ENV=development turbo run dev --filter=docs",
     "dev:crx": "turbo run dev:crx --parallel",
     "gh:preview": "node ./scripts/gh-pages-preview.mjs",
     "lint": "run-s lint:check prettier:check",
