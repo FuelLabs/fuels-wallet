@@ -1,8 +1,9 @@
 /* eslint-disable consistent-return */
 import type { WalletUnlocked } from '@fuel-ts/wallet';
+import { WalletLocked } from '@fuel-ts/wallet';
 import type { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account } from '@fuel-wallet/types';
-import { bn, Address, Provider } from 'fuels';
+import { Address, bn, Provider } from 'fuels';
 
 import { unlockManager } from '../utils/manager';
 
@@ -203,15 +204,25 @@ export class AccountService {
 
   static async unlock(input: AccountInputs['unlock']): Promise<WalletUnlocked> {
     const manager = await unlockManager(input.password);
-    const wallet = manager.getWallet(
-      Address.fromPublicKey(input.account.publicKey)
-    );
+    const wallet = manager.getWallet(Address.fromString(input.account.address));
     const network = await NetworkService.getSelectedNetwork();
     if (!network) {
       throw new Error('Network not found!');
     }
     wallet.connect(network.url);
     return wallet;
+  }
+
+  static async getWalletLocked(): Promise<WalletLocked> {
+    const network = await NetworkService.getSelectedNetwork();
+    const account = await AccountService.getSelectedAccount();
+    if (!network) {
+      throw new Error('Network not found!');
+    }
+    if (!account) {
+      throw new Error('Account not found!');
+    }
+    return new WalletLocked(Address.fromString(account.address), network.url);
   }
 
   static async unlockVault(

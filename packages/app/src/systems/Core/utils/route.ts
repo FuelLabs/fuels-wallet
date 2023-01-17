@@ -1,20 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-export class Route<P extends string> {
-  path!: string;
-  constructor(path: string) {
-    this.path = path;
-  }
-
-  public get params(): Record<P, any> {
-    const matches = Array.from(this.path.matchAll(/:([^/]+)/g));
-    return matches.reduce(
-      (obj, match) => ({ ...obj, [match[1]]: null }),
-      {}
-    ) as Record<P, any>;
-  }
-}
-
 /**
  * Create a route that can be parsed using a typed-obj as param
  *
@@ -38,12 +22,11 @@ export class Route<P extends string> {
  * ```
  */
 export function route<P extends string = any>(path: string) {
-  const item = new Route<P>(path);
   return function parse(
     params?: Record<P, any>,
     query?: Record<string, any>
   ): string {
-    const split = item.path.match(/[^/]+/g);
+    const split = path.match(/[^/]+/g);
     const parsed = split
       ?.map((str) => params?.[str.replace(':', '')] || str)
       .join('/');
@@ -52,11 +35,32 @@ export function route<P extends string = any>(path: string) {
   };
 }
 
+/**
+ * Converts an object into a query string.
+ *
+ * @param query An object to convert into a query string.
+ * @returns A query string.
+ *
+ * @example
+ * searchStringify({ foo: 'bar', baz: 'qux' });
+ * // returns '?foo=bar&baz=qux'
+ */
 export function searchStringify(query?: Record<any, any>) {
   const qs = new URLSearchParams(query).toString();
   return qs.length ? `?${qs}` : '';
 }
 
+/**
+ * Converts a URL and an optional query object into a full URL string.
+ *
+ * @param url A URL.
+ * @param query An optional object to convert into a query string and append to the URL.
+ * @returns A full URL string.
+ *
+ * @example
+ * stringifyUrl('https://example.com', { foo: 'bar', baz: 'qux' });
+ * // returns 'https://example.com/?foo=bar&baz=qux'
+ */
 export function stringifyUrl(url: string, query?: Record<any, any>) {
   const { href } = new URL(url, 'https://fuel.network/');
   return `${href}${searchStringify(query)}`;

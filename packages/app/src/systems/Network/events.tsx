@@ -2,6 +2,7 @@ import type { Network } from '@fuel-wallet/types';
 import type { StoreClass } from '@fuel-wallet/xstore';
 
 import type { NetworkInitialInput } from './machines';
+import { NetworkScreen } from './machines';
 import type { NetworkInputs } from './services';
 
 import type { StoreMachines } from '~/store';
@@ -36,7 +37,10 @@ export function networkEvents(store: StoreClass<StoreMachines>) {
     initNetworks(input: NetworkInitialInput) {
       store.send('networks', {
         type: 'SET_INITIAL_DATA',
-        input,
+        input: {
+          networkId: input.networkId,
+          type: input.type || NetworkScreen.list,
+        },
       });
     },
   };

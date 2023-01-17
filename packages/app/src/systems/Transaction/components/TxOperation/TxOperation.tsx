@@ -5,10 +5,11 @@ import type { Operation, TxStatus } from '../../utils';
 import { TxFromTo } from '../TxFromTo/TxFromTo';
 
 import { AssetsAmount } from '~/systems/Asset';
+import type { Maybe } from '~/systems/Core';
 
 export type TxOperationProps = {
   operation?: Operation;
-  status?: TxStatus;
+  status?: Maybe<TxStatus>;
 };
 
 export function TxOperation({ operation, status }: TxOperationProps) {

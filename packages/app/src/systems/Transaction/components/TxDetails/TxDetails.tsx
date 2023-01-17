@@ -16,14 +16,25 @@ type TxDetailsComponent = FC<TxDetailsProps> & {
 };
 
 export const TxDetails: TxDetailsComponent = ({
-  fee,
+  fee: initialFee,
   amountSent,
 }: TxDetailsProps) => {
-  const total = fee?.add(bn(amountSent));
+  const fee = bn(initialFee);
+  const total = fee.add(bn(amountSent));
   const shouldShowTotal = total?.gt(bn(fee));
 
   return (
-    <Accordion type="multiple">
+    <Accordion
+      type="single"
+      defaultValue="tx-details"
+      // TODO: remove ts ignore when collapsible is exposed from the fuel-ui
+      // collapsible is a valid property from radix accordion but
+      // is not exposed by the fuel-ui Accordion component
+      // issue: https://github.com/FuelLabs/fuel-ui/issues/185
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      collapsible={true}
+    >
       <Accordion.Item value="tx-details" css={styles.item}>
         <Accordion.Trigger>Transaction Details</Accordion.Trigger>
         <Accordion.Content css={styles.info}>

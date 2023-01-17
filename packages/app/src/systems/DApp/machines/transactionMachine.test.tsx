@@ -1,6 +1,6 @@
 import { Wallet } from '@fuel-ts/wallet';
 import type { WalletUnlocked } from '@fuel-ts/wallet';
-import type { ScriptTransactionRequest } from 'fuels';
+import type { TransactionRequest } from 'fuels';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
@@ -17,7 +17,7 @@ const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
 describe('txApproveMachine', () => {
   let service: TransactionMachineService;
   let wallet: WalletUnlocked;
-  let transactionRequest: ScriptTransactionRequest;
+  let transactionRequest: TransactionRequest;
 
   beforeAll(async () => {
     wallet = Wallet.fromPrivateKey(OWNER);
@@ -30,7 +30,9 @@ describe('txApproveMachine', () => {
   });
 
   beforeEach(async () => {
-    service = interpret(transactionMachine.withContext({})).start();
+    service = interpret(
+      transactionMachine.withContext({ input: {}, response: {} })
+    ).start();
   });
 
   afterEach(() => {
@@ -39,18 +41,15 @@ describe('txApproveMachine', () => {
 
   it('should approve/send transaction', async () => {
     await waitFor(service, (state) => state.matches('idle'));
-
     service.send('START_REQUEST', {
       input: { transactionRequest, providerUrl, origin: 'foo.com' },
     });
 
     await waitFor(service, (state) => state.matches('simulatingTransaction'));
     await waitFor(service, (state) => state.matches('waitingApproval'));
-
     service.send('APPROVE');
 
     await waitFor(service, (state) => state.matches('unlocking'));
-
     service.send('UNLOCK_WALLET', {
       input: {
         account: MOCK_ACCOUNTS[0],
@@ -59,9 +58,7 @@ describe('txApproveMachine', () => {
     });
 
     await waitFor(service, (state) => state.matches('sendingTx'));
-    const { matches } = await waitFor(service, (state) =>
-      state.matches('done')
-    );
-    expect(matches('done')).toBeTruthy();
+    const state = await waitFor(service, (state) => state.matches('txSuccess'));
+    expect(state.matches('txSuccess')).toBeTruthy();
   });
 });

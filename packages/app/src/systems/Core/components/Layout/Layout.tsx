@@ -2,7 +2,7 @@ import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Box, Flex } from '@fuel-ui/react';
 import type { FC, ReactNode } from 'react';
-import { useRef, useContext, createContext } from 'react';
+import { forwardRef, useRef, useContext, createContext } from 'react';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 
@@ -27,17 +27,27 @@ type ContentProps = {
   css?: ThemeUtilsCSS;
 };
 
-function Content({ as, children, css }: ContentProps) {
-  return (
-    <Box as={as} css={{ ...styles.content, ...css }} className="layout_content">
-      <Box css={styles.scrollContainer} className="layout_content-scroll">
-        <Box css={styles.insideScrolContent} className="layout_content-inside">
-          {children}
+const Content = forwardRef<HTMLDivElement, ContentProps>(
+  ({ as, children, css }, ref) => {
+    return (
+      <Box
+        as={as}
+        css={{ ...styles.content, ...css }}
+        className="layout_content"
+      >
+        <Box css={styles.scrollContainer} className="layout_content-scroll">
+          <Box
+            ref={ref}
+            css={styles.insideScrolContent}
+            className="layout_content-inside"
+          >
+            {children}
+          </Box>
         </Box>
       </Box>
-    </Box>
-  );
-}
+    );
+  }
+);
 
 export type LayoutProps = Context & {
   isPublic?: boolean;
