@@ -12,3 +12,7 @@ export const tai64toDate = (tai64Timestamp: string) => {
 export const formatDate = (tai64Timestamp: string) => {
   return tai64toDate(tai64Timestamp).fromNow();
 };
+
+export const dateToTai64 = (date: Date) => {
+  return TAI64.fromUnix(Math.floor(date.getTime() / 1000)).toString(10);
+};

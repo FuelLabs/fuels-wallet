@@ -17,10 +17,9 @@ import type {
   TransactionResultTransferOutReceipt,
 } from 'fuels';
 import { ReceiptType, TransactionType, OutputType, InputType, bn } from 'fuels';
-import { TAI64 } from 'tai64';
 
 import type { Tx } from '../utils';
-import { OperationName, TxStatus, TxType } from '../utils';
+import { dateToTai64, OperationName, TxStatus, TxType } from '../utils';
 
 type MockTransaction = {
   transaction: Transaction;
@@ -178,8 +177,8 @@ export const createMockTx = ({
   };
 };
 
-const thirtyFourDaysAgo = TAI64.fromUnix(
-  Math.floor(new Date().getTime() - 34 * 24 * 60 * 60)
+const thirtyFourDaysAgo = dateToTai64(
+  new Date(Date.now() - 1000 * 60 * 60 * 24 * 34)
 );
 export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
   transaction: {
@@ -248,7 +247,7 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
     isStatusPending: false,
     isStatusSuccess: true,
     isStatusFailure: false,
-    time: thirtyFourDaysAgo.toString(),
+    time: thirtyFourDaysAgo,
   },
   receipts: [
     MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall,
