@@ -28,6 +28,8 @@ jobs:
 
       - name: Graphql Codegen
         run: pnpm codegen:app
+        env:
+          NODE_ENV: test
 
       - name: Generate types
         run: pnpm ts:check
@@ -77,6 +79,8 @@ jobs:
 
       - name: Graphql Codegen
         run: pnpm codegen:app
+        env:
+          NODE_ENV: test
 
       - name: Build Application
         run: pnpm build:all
