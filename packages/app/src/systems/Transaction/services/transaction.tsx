@@ -20,7 +20,7 @@ import {
 } from 'fuels';
 
 import type { Transaction } from '../types';
-import { getFee, getGasUsed, toJSON } from '../utils';
+import { getFee, getGasUsed, toJSON, processTransactionToTx } from '../utils';
 
 import { AccountService } from '~/systems/Account';
 import { isEth } from '~/systems/Asset';
@@ -148,10 +148,20 @@ export class TxService {
   static async getTransactionHistory({
     address,
   }: TxInputs['getTransactionHistory']) {
-    return graphqlSDK.AddressTransactions({
-      owner: address,
-      first: 10,
-    });
+    const { transactionsByOwner, chain } = await graphqlSDK.AddressTransactions(
+      {
+        owner: address,
+        first: 10,
+      }
+    );
+    const gasPerByte = chain.consensusParameters.gasPerByte;
+    const gasPriceFactor = chain.consensusParameters.gasPriceFactor;
+    const transactions = processTransactionToTx(
+      transactionsByOwner,
+      bn(gasPerByte),
+      bn(gasPriceFactor)
+    );
+    return transactions || [];
   }
 
   static async createFakeTx() {

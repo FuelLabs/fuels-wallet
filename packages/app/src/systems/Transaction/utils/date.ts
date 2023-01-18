@@ -1,12 +1,14 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { TAI64 } from 'tai64';
 
 dayjs.extend(relativeTime);
 
-export const getTimeFromNow = (date: Date) => {
-  return dayjs().from(dayjs(date));
+export const tai64toDate = (tai64Timestamp: string) => {
+  const timestamp = TAI64.fromString(tai64Timestamp, 10).toUnix();
+  return dayjs(timestamp * 1000);
 };
 
-export const getTimeTillNow = (date: Date) => {
-  return dayjs().to(dayjs(date));
+export const formatDate = (tai64Timestamp: string) => {
+  return tai64toDate(tai64Timestamp).fromNow();
 };

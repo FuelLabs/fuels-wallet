@@ -1,9 +1,8 @@
 query AddressTransactions($first: Int, $owner: Address!) {
-  coins(filter: { owner: $owner }, first: 9999) {
-    edges {
-      node {
-        ...AddressCoin
-      }
+  chain {
+    consensusParameters {
+      gasPriceFactor
+      gasPerByte
     }
   }
   transactionsByOwner(first: $first, owner: $owner) {
@@ -16,16 +15,6 @@ query AddressTransactions($first: Int, $owner: Address!) {
       }
     }
   }
-}
-
-fragment AddressCoin on Coin {
-  utxoId
-  owner
-  amount
-  assetId
-  maturity
-  status
-  blockCreated
 }
 
 fragment transaction on Transaction {

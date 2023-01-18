@@ -1,11 +1,10 @@
-import type { Transaction } from 'fuels';
 import { isB256, isBech32 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { TxService } from '../services';
+import type { Tx } from '../utils';
 
-import type { IAddressTransactionsQuery } from '~/generated/graphql';
 import { FetchMachine } from '~/systems/Core';
 
 export const TRANSACTION_HISTORY_ERRORS = {
@@ -15,14 +14,13 @@ export const TRANSACTION_HISTORY_ERRORS = {
 
 type MachineContext = {
   walletAddress: string;
-  txs: Transaction[];
   error?: string;
-  addressTransactionsQuery?: IAddressTransactionsQuery;
+  transactions?: Tx[];
 };
 
 type MachineServices = {
   getTransactionHistory: {
-    data: IAddressTransactionsQuery;
+    data: Tx[];
   };
 };
 
@@ -93,11 +91,8 @@ export const transactionHistoryMachine = createMachine(
       assignGetTransactionHistoryError: assign({
         error: (_) => TRANSACTION_HISTORY_ERRORS.NOT_FOUND,
       }),
-      assignGetTransactionHistoryResponse: assign((_, event) => {
-        const { data } = event;
-        return {
-          addressTransactionsQuery: data,
-        };
+      assignGetTransactionHistoryResponse: assign({
+        transactions: (_, event) => event.data,
       }),
       clearError: assign({
         error: (_) => undefined,
@@ -106,15 +101,15 @@ export const transactionHistoryMachine = createMachine(
     services: {
       getTransactionHistory: FetchMachine.create<
         { address: string },
-        IAddressTransactionsQuery
+        MachineServices['getTransactionHistory']['data']
       >({
         showError: true,
         async fetch({ input }) {
           const address = input?.address;
-          const data = await TxService.getTransactionHistory({
+          const transactions = await TxService.getTransactionHistory({
             address: address?.toString() || '',
           });
-          return data;
+          return transactions;
         },
       }),
     },

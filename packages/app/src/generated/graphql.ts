@@ -20,20 +20,20 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Address: any;
-  AssetId: any;
-  BlockId: any;
-  Bytes32: any;
-  ContractId: any;
-  HexString: any;
-  MessageId: any;
-  Salt: any;
-  Signature: any;
-  Tai64Timestamp: any;
-  TransactionId: any;
-  TxPointer: any;
-  U64: any;
-  UtxoId: any;
+  Address: string;
+  AssetId: string;
+  BlockId: string;
+  Bytes32: string;
+  ContractId: string;
+  HexString: string;
+  MessageId: string;
+  Salt: string;
+  Signature: string;
+  Tai64Timestamp: string;
+  TransactionId: string;
+  TxPointer: string;
+  U64: string;
+  UtxoId: string;
 };
 
 export type IBalance = {
@@ -823,21 +823,13 @@ export type IAddressTransactionsQueryVariables = Exact<{
 
 export type IAddressTransactionsQuery = {
   __typename?: 'Query';
-  coins: {
-    __typename?: 'CoinConnection';
-    edges: Array<{
-      __typename?: 'CoinEdge';
-      node: {
-        __typename?: 'Coin';
-        utxoId: any;
-        owner: any;
-        amount: any;
-        assetId: any;
-        maturity: any;
-        status: ICoinStatus;
-        blockCreated: any;
-      };
-    }>;
+  chain: {
+    __typename?: 'ChainInfo';
+    consensusParameters: {
+      __typename?: 'ConsensusParameters';
+      gasPriceFactor: string;
+      gasPerByte: string;
+    };
   };
   transactionsByOwner: {
     __typename?: 'TransactionConnection';
@@ -845,37 +837,37 @@ export type IAddressTransactionsQuery = {
       __typename?: 'TransactionEdge';
       node: {
         __typename?: 'Transaction';
-        id: any;
-        rawPayload: any;
-        gasPrice: any | null;
+        id: string;
+        rawPayload: string;
+        gasPrice: string | null;
         receipts: Array<{
           __typename?: 'Receipt';
-          data: any | null;
-          rawPayload: any;
+          data: string | null;
+          rawPayload: string;
         }> | null;
         status:
           | {
               __typename?: 'FailureStatus';
-              time: any;
+              time: string;
               reason: string;
               type: 'FailureStatus';
-              block: { __typename?: 'Block'; id: any };
+              block: { __typename?: 'Block'; id: string };
             }
           | { __typename?: 'SqueezedOutStatus'; type: 'SqueezedOutStatus' }
           | {
               __typename?: 'SubmittedStatus';
-              time: any;
+              time: string;
               type: 'SubmittedStatus';
             }
           | {
               __typename?: 'SuccessStatus';
-              time: any;
+              time: string;
               type: 'SuccessStatus';
-              block: { __typename?: 'Block'; id: any };
+              block: { __typename?: 'Block'; id: string };
               programState: {
                 __typename?: 'ProgramState';
                 returnType: IReturnType;
-                data: any;
+                data: string;
               } | null;
             }
           | null;
@@ -884,41 +876,30 @@ export type IAddressTransactionsQuery = {
   };
 };
 
-export type IAddressCoinFragment = {
-  __typename?: 'Coin';
-  utxoId: any;
-  owner: any;
-  amount: any;
-  assetId: any;
-  maturity: any;
-  status: ICoinStatus;
-  blockCreated: any;
-};
-
 export type ITransactionFragment = {
   __typename?: 'Transaction';
-  id: any;
-  rawPayload: any;
-  gasPrice: any | null;
+  id: string;
+  rawPayload: string;
+  gasPrice: string | null;
   status:
     | {
         __typename?: 'FailureStatus';
-        time: any;
+        time: string;
         reason: string;
         type: 'FailureStatus';
-        block: { __typename?: 'Block'; id: any };
+        block: { __typename?: 'Block'; id: string };
       }
     | { __typename?: 'SqueezedOutStatus'; type: 'SqueezedOutStatus' }
-    | { __typename?: 'SubmittedStatus'; time: any; type: 'SubmittedStatus' }
+    | { __typename?: 'SubmittedStatus'; time: string; type: 'SubmittedStatus' }
     | {
         __typename?: 'SuccessStatus';
-        time: any;
+        time: string;
         type: 'SuccessStatus';
-        block: { __typename?: 'Block'; id: any };
+        block: { __typename?: 'Block'; id: string };
         programState: {
           __typename?: 'ProgramState';
           returnType: IReturnType;
-          data: any;
+          data: string;
         } | null;
       }
     | null;
@@ -926,8 +907,8 @@ export type ITransactionFragment = {
 
 export type IReceiptFragment = {
   __typename?: 'Receipt';
-  data: any | null;
-  rawPayload: any;
+  data: string | null;
+  rawPayload: string;
 };
 
 export const gqlOperations = {
@@ -935,22 +916,10 @@ export const gqlOperations = {
     AddressTransactions: 'AddressTransactions',
   },
   Fragment: {
-    AddressCoin: 'AddressCoin',
     transaction: 'transaction',
     receipt: 'receipt',
   },
 };
-export const AddressCoinFragmentDoc = gql`
-  fragment AddressCoin on Coin {
-    utxoId
-    owner
-    amount
-    assetId
-    maturity
-    status
-    blockCreated
-  }
-`;
 export const TransactionFragmentDoc = gql`
   fragment transaction on Transaction {
     id
@@ -989,11 +958,10 @@ export const ReceiptFragmentDoc = gql`
 `;
 export const AddressTransactionsDocument = gql`
   query AddressTransactions($first: Int, $owner: Address!) {
-    coins(filter: { owner: $owner }, first: 9999) {
-      edges {
-        node {
-          ...AddressCoin
-        }
+    chain {
+      consensusParameters {
+        gasPriceFactor
+        gasPerByte
       }
     }
     transactionsByOwner(first: $first, owner: $owner) {
@@ -1007,7 +975,6 @@ export const AddressTransactionsDocument = gql`
       }
     }
   }
-  ${AddressCoinFragmentDoc}
   ${TransactionFragmentDoc}
   ${ReceiptFragmentDoc}
 `;

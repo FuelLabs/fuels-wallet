@@ -1,15 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
 import { Card, Copyable, Flex, Icon, Stack, Text } from '@fuel-ui/react';
-import { Address } from 'fuels';
 import type { FC } from 'react';
-import { useMemo } from 'react';
 
+import { useTxMetadata } from '../../hooks/useTxMetadata';
 import type { Tx } from '../../utils';
-import {
-  getTimeTillNow,
-  OperationDirection,
-  getOperationDirection,
-} from '../../utils';
 import { TxIcon } from '../TxIcon';
 
 import { ActivityItemLoader } from './ActivityItemLoader';
@@ -25,43 +19,16 @@ type TxItemComponent = FC<TxItemProps> & {
   Loader: typeof ActivityItemLoader;
 };
 
-const formatDate = (date: Date | undefined) =>
-  date ? getTimeTillNow(date) : '';
-
 export const ActivityItem: TxItemComponent = ({
   transaction,
   ownerAddress,
 }) => {
-  const { status: txStatus, id = '', operations, time } = transaction;
-
-  const mainOperation = operations[0];
-  const label = mainOperation.name;
-  const date = time ? new Date(time) : undefined;
-
-  const toOrFromText = useMemo(() => {
-    const opDirection = getOperationDirection(mainOperation, ownerAddress);
-    switch (opDirection) {
-      case OperationDirection.to:
-        return 'To: ';
-      case OperationDirection.from:
-        return 'From: ';
-      default:
-        return '';
-    }
-  }, [ownerAddress, mainOperation]);
-
-  const toOrFromAddress = useMemo(() => {
-    const opDirection = getOperationDirection(mainOperation, ownerAddress);
-    const address =
-      opDirection === OperationDirection.to
-        ? mainOperation.to?.address
-        : mainOperation.from?.address;
-    return address ? Address.fromString(address).bech32Address : '';
-  }, [ownerAddress, mainOperation]);
+  const { label, toOrFromAddress, toOrFromText, timeFormatted, id, status } =
+    useTxMetadata({ ownerAddress, transaction });
 
   return (
     <Card css={styles.root} aria-label="activity-item">
-      <TxIcon operationName={mainOperation.name} status={txStatus} />
+      <TxIcon operationName={label} status={status} />
       <Stack css={styles.contentWrapper}>
         <Flex css={styles.row}>
           <Flex css={styles.item}>
@@ -85,9 +52,11 @@ export const ActivityItem: TxItemComponent = ({
               tooltipMessage="Copy Transaction ID"
             />
           </Flex>
-          <Flex css={styles.item}>
-            <Text fontSize="xs">{formatDate(date)}</Text>
-          </Flex>
+          {timeFormatted && (
+            <Flex css={styles.item}>
+              <Text fontSize="xs">{timeFormatted}</Text>
+            </Flex>
+          )}
         </Flex>
       </Stack>
     </Card>

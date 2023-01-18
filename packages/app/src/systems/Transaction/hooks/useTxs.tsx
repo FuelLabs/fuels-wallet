@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useInterpret, useSelector } from '@xstate/react';
-import { arrayify, ReceiptCoder, ReceiptType, TransactionCoder } from 'fuels';
-import type { TransactionResultReceipt, Address, BN } from 'fuels';
-import { useMemo, useEffect } from 'react';
+import type { Address } from 'fuels';
+import { useEffect } from 'react';
 
 import type { TransactionHistoryMachineState } from '../machines';
 import {
@@ -10,74 +8,6 @@ import {
   TRANSACTION_HISTORY_ERRORS,
 } from '../machines';
 import type { TxInputs } from '../services';
-import { parseTx } from '../utils';
-
-import type {
-  IAddressTransactionsQuery,
-  IReceiptFragment,
-} from '~/generated/graphql';
-import { useChainInfo } from '~/systems/Network';
-
-/** @TODO: Move this logic to the SDK */
-const processGqlReceipt = (
-  gqlReceipt: IReceiptFragment
-): TransactionResultReceipt => {
-  const receipt = new ReceiptCoder().decode(
-    arrayify(gqlReceipt.rawPayload),
-    0
-  )[0];
-
-  if (
-    receipt.type === ReceiptType.LogData ||
-    receipt.type === ReceiptType.ReturnData
-  ) {
-    return {
-      ...receipt,
-      data: gqlReceipt.data!,
-    };
-  }
-  return receipt;
-};
-
-/** @TODO: Move this logic to the SDK */
-const processTransactionToTx = (
-  gqlTransactions: any[],
-  gasPerByte: BN | undefined,
-  gasPriceFactor: BN | undefined
-) => {
-  if (gqlTransactions.length === 0 || !gasPerByte || !gasPriceFactor)
-    return undefined;
-  const txs = gqlTransactions.map((gqlTransaction) => {
-    const transaction = new TransactionCoder().decode(
-      arrayify(gqlTransaction.rawPayload),
-      0
-    )?.[0];
-
-    const receipts = gqlTransaction.receipts?.map(processGqlReceipt) || [];
-    const gqlStatus = gqlTransaction.status?.type;
-    const time = gqlTransaction.status?.time;
-    const dataNeededForTx = {
-      transaction,
-      receipts,
-      gqlStatus,
-      id: gqlTransaction.id,
-      gasPerByte,
-      gasPriceFactor,
-      time,
-    };
-    const tx = parseTx(dataNeededForTx);
-    return tx;
-  });
-
-  return txs;
-};
-
-/** @TODO: Move this logic to the SDK */
-const getGQLTransactionsFromData = (
-  data: IAddressTransactionsQuery | undefined
-) => {
-  return data?.transactionsByOwner!.edges!.map((edge) => edge!.node) ?? [];
-};
 
 const selectors = {
   isFetching: (state: TransactionHistoryMachineState) =>
@@ -95,9 +25,6 @@ type UseTxsProps = {
 };
 
 export function useTxs({ address, providerUrl }: UseTxsProps) {
-  const { chainInfo, isLoading: isLoadingChainInfo } =
-    useChainInfo(providerUrl);
-
   const service = useInterpret(() => transactionHistoryMachine);
   const { send } = service;
   const isFetching = useSelector(service, selectors.isFetching);
@@ -105,29 +32,13 @@ export function useTxs({ address, providerUrl }: UseTxsProps) {
   const isInvalidAddress = useSelector(service, selectors.isInvalidAddress);
   const isNotFound = useSelector(service, selectors.isNotFound);
 
-  const { walletAddress, addressTransactionsQuery, error } = context;
-
-  const isLoadingTx = isLoadingChainInfo || isFetching;
-
-  const txs = useMemo(() => {
-    /** @TODO: Move this logic to the SDK */
-    const gqlTransactions = getGQLTransactionsFromData(
-      addressTransactionsQuery
-    );
-    const gasPerByte = chainInfo?.consensusParameters.gasPerByte;
-    const gasPriceFactor = chainInfo?.consensusParameters.gasPriceFactor;
-    const transactions = processTransactionToTx(
-      gqlTransactions,
-      gasPerByte,
-      gasPriceFactor
-    );
-    return transactions;
-  }, [addressTransactionsQuery]);
+  const { walletAddress, transactions, error } = context;
 
   function getTransactionHistory(input: TxInputs['getTransactionHistory']) {
     send('GET_TRANSACTION_HISTORY', { input });
   }
 
+  // TODO: remove the useEffect and add it to the Account Machine
   useEffect(() => {
     if (address && providerUrl) {
       getTransactionHistory({ address: address.toString() });
@@ -135,8 +46,8 @@ export function useTxs({ address, providerUrl }: UseTxsProps) {
   }, [address, providerUrl]);
 
   return {
-    isLoadingTx,
-    txs,
+    isLoadingTx: isFetching,
+    txs: transactions,
     error,
     walletAddress,
     isFetching,

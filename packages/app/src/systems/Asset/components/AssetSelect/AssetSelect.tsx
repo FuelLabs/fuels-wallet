@@ -20,7 +20,7 @@ import { getAssetInfoById } from '../../utils';
 
 import type { Maybe } from '~/systems/Core';
 import { formatAmount } from '~/systems/Core';
-import type { TxInputCoin, TxOutputCoin } from '~/systems/Transaction/types';
+import type { TxInputCoin, TxOutputCoin } from '~/systems/Transaction';
 
 export type AssetSelectInput = AssetAmount | Coin | TxOutputCoin | TxInputCoin;
 
