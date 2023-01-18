@@ -23,5 +23,6 @@ generates:
       identifierName: "gqlOperations"
 hooks:
   afterOneFileWrite:
+    - node ./scripts/codegen-fix-generated.js
     - pnpm eslint --fix
-    - pnpm prettier:format
+    - pnpm prettier --write

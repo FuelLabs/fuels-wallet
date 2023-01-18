@@ -488,7 +488,7 @@ export type PoAConsensus = {
 export type ProgramState = {
   __typename?: 'ProgramState';
   data: Scalars['HexString'];
-  returnType: ReturnType;
+  returnType: TxReturnType;
 };
 
 export type Query = {
@@ -680,7 +680,7 @@ export enum ReceiptType {
 /** The schema analog of the [`crate::database::utils::Resource`]. */
 export type Resource = Coin | Message;
 
-export enum ReturnType {
+export enum TxReturnType {
   Return = 'RETURN',
   ReturnData = 'RETURN_DATA',
   Revert = 'REVERT',
@@ -872,6 +872,11 @@ export type AddressTransactionsQuery = {
               time: any;
               type: 'SuccessStatus';
               block: { __typename?: 'Block'; id: any };
+              programState: {
+                __typename?: 'ProgramState';
+                returnType: TxReturnType;
+                data: any;
+              } | null;
             }
           | null;
       };
@@ -910,6 +915,11 @@ export type TransactionFragment = {
         time: any;
         type: 'SuccessStatus';
         block: { __typename?: 'Block'; id: any };
+        programState: {
+          __typename?: 'ProgramState';
+          returnType: TxReturnType;
+          data: any;
+        } | null;
       }
     | null;
 };
@@ -956,6 +966,10 @@ export const TransactionFragmentDoc = gql`
           id
         }
         time
+        programState {
+          returnType
+          data
+        }
       }
       ... on FailureStatus {
         block {
