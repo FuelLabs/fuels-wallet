@@ -3,14 +3,15 @@ import type { WalletUnlocked } from '@fuel-ts/wallet';
 import { WalletLocked } from '@fuel-ts/wallet';
 import type { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account } from '@fuel-wallet/types';
+import Dexie from 'dexie';
 import { Address, bn, Provider } from 'fuels';
 
 import { unlockManager } from '../utils/manager';
 
 import { isEth } from '~/systems/Asset/utils/asset';
-import { Storage } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
+import { Storage } from '~/systems/Core/utils/storage';
 import { getPhraseFromValue } from '~/systems/Core/utils/string';
 import { NetworkService } from '~/systems/Network/services';
 
@@ -280,7 +281,7 @@ export class AccountService {
 
   static async logout() {
     await db.close();
-    await db.delete();
+    await Dexie.delete('FuelDB');
     await Storage.clear();
   }
 }
