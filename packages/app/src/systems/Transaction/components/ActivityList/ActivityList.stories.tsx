@@ -22,20 +22,20 @@ const Template: Story<ActivityListProps> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  transactions: MOCK_TXS,
+  txs: MOCK_TXS,
   ownerAddress: MOCK_ACCOUNTS[3].address,
 };
 
 export const Loader = Template.bind({});
 Loader.args = {
-  transactions: [],
+  txs: [],
   isLoading: true,
   ownerAddress: MOCK_ACCOUNTS[3].address,
 };
 
 export const Empty = Template.bind({});
 Empty.args = {
-  transactions: [],
+  txs: [],
   isLoading: false,
   ownerAddress: MOCK_ACCOUNTS[3].address,
 };

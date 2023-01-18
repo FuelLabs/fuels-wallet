@@ -10,17 +10,14 @@ import { TestWrapper } from '~/systems/Core/components/TestWrapper';
 describe('ActivityList', () => {
   it('a11y', async () => {
     await testA11y(
-      <ActivityList
-        transactions={MOCK_TXS}
-        ownerAddress={MOCK_ACCOUNTS[3].address}
-      />
+      <ActivityList txs={MOCK_TXS} ownerAddress={MOCK_ACCOUNTS[3].address} />
     );
   });
 
   it('a11y Loader', async () => {
     await testA11y(
       <ActivityList
-        transactions={[]}
+        txs={[]}
         isLoading={true}
         ownerAddress={MOCK_ACCOUNTS[3].address}
       />
@@ -30,7 +27,7 @@ describe('ActivityList', () => {
   it('a11y Empty', async () => {
     await testA11y(
       <ActivityList
-        transactions={[]}
+        txs={[]}
         isLoading={false}
         ownerAddress={MOCK_ACCOUNTS[3].address}
       />,
@@ -43,7 +40,7 @@ describe('ActivityList', () => {
   it('Should show empty state when there are no transactions', async () => {
     render(
       <ActivityList
-        transactions={[]}
+        txs={[]}
         isLoading={false}
         ownerAddress={MOCK_ACCOUNTS[3].address}
       />,
@@ -57,13 +54,15 @@ describe('ActivityList', () => {
   });
 
   it('should render the same amount of activity items as transactions', async () => {
-    const { container } = await render(
+    render(
       <ActivityList
-        transactions={MOCK_TXS}
+        txs={MOCK_TXS}
         isLoading={false}
         ownerAddress={MOCK_ACCOUNTS[3].address}
       />
     );
-    expect(container.firstChild?.childNodes.length).toBe(MOCK_TXS.length);
+    expect(screen.getAllByLabelText('activity-item').length).toBe(
+      MOCK_TXS.length
+    );
   });
 });

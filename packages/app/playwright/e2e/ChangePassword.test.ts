@@ -28,6 +28,7 @@ test.describe('ChangePassword', () => {
     await getByAriaLabel(page, 'Confirm Password').type('newPass12345');
 
     // submit data
+    await hasText(page, 'Save');
     await getButtonByText(page, 'Save').click();
     await hasText(page, /assets/i, 1);
   });

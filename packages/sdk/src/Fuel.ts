@@ -1,4 +1,4 @@
-import { WalletLocked } from 'fuels';
+import { Address, WalletLocked } from 'fuels';
 import type { AbstractAddress } from 'fuels';
 
 import { FuelWalletConnection } from './FuelWalletConnection';
@@ -12,6 +12,19 @@ const FuelWeb3Privates: {
 } = {};
 
 export class Fuel extends FuelWalletConnection {
+  readonly utils = {
+    // TODO: remove createAddress once fuels-ts replace input
+    // class address with string. The warn message is to avoid
+    // developers to use this method.
+    createAddress: (address: string) => {
+      // eslint-disable-next-line no-console
+      console.warn(
+        'Do not use this method! It will be removed in the next release.'
+      );
+      return Address.fromString(address);
+    },
+  };
+
   async getProvider(): Promise<FuelWalletProvider> {
     const providerConfig = await this.network();
     // Return the current provider instance if it exists

@@ -9,6 +9,7 @@ const config: PlaywrightTestConfig = {
   workers: 1,
   testMatch: join(__dirname, './playwright/**/*.test.ts'),
   testDir: join(__dirname, './playwright/'),
+  reporter: [['list', { printSteps: true }]],
   webServer: {
     command: `pnpm exec http-server -s -p ${E2E_PORT} ${distDirectory}`,
     port: Number(E2E_PORT),
