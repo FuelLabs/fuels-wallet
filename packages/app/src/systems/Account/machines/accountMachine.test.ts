@@ -27,6 +27,7 @@ const machine = accountMachine.withContext({}).withConfig({
   actions: {
     notifyUpdateAccounts() {},
     redirectToHome() {},
+    refreshApplication() {},
   },
 });
 

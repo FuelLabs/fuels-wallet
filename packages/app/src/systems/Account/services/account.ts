@@ -8,6 +8,7 @@ import { Address, bn, Provider } from 'fuels';
 import { unlockManager } from '../utils/manager';
 
 import { isEth } from '~/systems/Asset/utils/asset';
+import { Storage } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
 import { getPhraseFromValue } from '~/systems/Core/utils/string';
@@ -275,6 +276,12 @@ export class AccountService {
     return accounts.filter((account) =>
       account.name.toLowerCase().includes(name.toLowerCase())
     );
+  }
+
+  static async logout() {
+    await db.close();
+    await db.delete();
+    await Storage.clear();
   }
 }
 

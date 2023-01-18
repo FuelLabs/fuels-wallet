@@ -92,6 +92,9 @@ export function useAccounts() {
       redirectToHome() {
         navigate(Pages.wallet());
       },
+      refreshApplication() {
+        window.location.reload();
+      },
     },
   });
 
@@ -119,6 +122,7 @@ export function useAccounts() {
       goToAdd,
       unlock,
       closeUnlock,
+      logout: store.logout,
       hideAccount: store.hideAccount,
       selectAccount: store.selectAccount,
       addAccount: store.addAccount,
