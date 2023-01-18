@@ -28,7 +28,7 @@ jobs:
         run: pnpm node:dev start --test --debug
 
       - name: Graphql Codegen
-        run: pnpm codegen:ci
+        run: pnpm codegen-ci:app
 
       - name: Generate types
         run: pnpm ts:check
@@ -77,7 +77,7 @@ jobs:
         run: pnpm node:dev start --test --debug
 
       - name: Graphql Codegen
-        run: pnpm codegen:ci
+        run: pnpm codegen-ci:app
 
       - name: Build Application
         run: pnpm build:all
