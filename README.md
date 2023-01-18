@@ -56,7 +56,7 @@ Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/
   - [ ] Export accout privateKey
 - [ ] Transactions
   - [x] Receive Assets via address or QR Code
-  - [ ] Send Assets to another wallet
+  - [x] Send Assets to another wallet
   - [ ] Transaction History
   - [ ] View transaction details
 
