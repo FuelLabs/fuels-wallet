@@ -1,4 +1,5 @@
 import { bn } from 'fuels';
+import { TAI64 } from 'tai64';
 
 import type { Tx } from '../utils';
 import { OperationName, TxStatus, TxType } from '../utils';
@@ -114,7 +115,11 @@ export const MOCK_TXS: Tx[] = [
     isStatusPending: false,
     type: TxType.script,
     status: TxStatus.success,
-    time: '2022-12-05T00:51:22.383161296+00:00',
+    time: TAI64.fromUnix(
+      Math.floor(
+        new Date('2022-12-05T00:51:22.383161296+00:00').getTime() / 1000
+      )
+    ).toString(),
   },
   {
     id: '0x8f3e1c5b6bed5880748bbfcd534d61632c55c025dd20769a8bb4d8da8e69b965',
@@ -157,6 +162,10 @@ export const MOCK_TXS: Tx[] = [
     isStatusPending: false,
     type: TxType.script,
     status: TxStatus.success,
-    time: '2022-11-05T00:51:22.383161296+00:00',
+    time: TAI64.fromUnix(
+      Math.floor(
+        new Date('2022-11-05T00:51:22.383161296+00:00').getTime() / 1000
+      )
+    ).toString(),
   },
 ];

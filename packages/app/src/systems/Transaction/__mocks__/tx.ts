@@ -17,6 +17,7 @@ import type {
   TransactionResultTransferOutReceipt,
 } from 'fuels';
 import { ReceiptType, TransactionType, OutputType, InputType, bn } from 'fuels';
+import { TAI64 } from 'tai64';
 
 import type { Tx } from '../utils';
 import { OperationName, TxStatus, TxType } from '../utils';
@@ -158,13 +159,13 @@ export const createMockTx = ({
   operation,
 }: {
   status?: TxStatus;
-  time?: Date;
+  time?: string;
   id?: string;
   operation?: OperationName;
 }) => {
   return {
     ...MOCK_TRANSACTION_CONTRACT_CALL.tx,
-    time: time?.toString() ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.time,
+    time: time ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.time,
     id: id ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.id,
     status: status ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.status,
     operations: [
@@ -177,8 +178,8 @@ export const createMockTx = ({
   };
 };
 
-const thirtyFourDaysAgo = new Date(
-  new Date().getTime() - 34 * 24 * 60 * 60 * 1000
+const thirtyFourDaysAgo = TAI64.fromUnix(
+  Math.floor(new Date().getTime() - 34 * 24 * 60 * 60)
 );
 export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
   transaction: {
