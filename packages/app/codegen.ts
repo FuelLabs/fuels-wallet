@@ -3,6 +3,8 @@ import type { CodegenConfig } from '@graphql-codegen/cli';
 import { getPublicEnvs } from './load.envs.js';
 
 const env = getPublicEnvs();
+// eslint-disable-next-line no-console
+console.log(env);
 
 const config: CodegenConfig = {
   overwrite: true,
