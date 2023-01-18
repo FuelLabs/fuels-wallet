@@ -3,29 +3,13 @@
   "description": "Integrate DApps with Fuel Wallet Extension.",
   "version": "0.3.0",
   "license": "Apache-2.0",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "publishConfig": {
-    "access": "public",
-    "main": "dist/index.js",
-    "module": "dist/index.mjs",
-    "types": "dist/index.d.ts",
-    "typings": "dist/index.d.ts",
-    "exports": {
-      ".": {
-        "require": "dist/index.js",
-        "default": "dist/index.mjs"
-      }
-    }
+    "access": "public"
   },
   "files": [
     "dist"
   ],
-  "scripts": {
-    "build": "pnpm ts:check && tsup --dts",
-    "ts:check": "tsc --noEmit",
-    "test": "jest -c jest.config.js --passWithNoTests",
-    "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
-  },
   "dependencies": {
     "@types/chrome": "^0.0.208",
     "dexie-observable": "4.0.0-beta.13",
@@ -38,10 +22,25 @@
     "fuels": ">=0.29.0"
   },
   "devDependencies": {
-    "@fuel-wallet/types": "workspace:*",
     "@types/uuid": "^9.0.0",
     "fuels": "0.29.0",
     "jest-webextension-mock": "^3.8.8",
-    "tsup": "^6.5.0"
+    "tsup": "^6.5.0",
+    "@fuel-wallet/types": "0.3.0"
+  },
+  "scripts": {
+    "build": "pnpm ts:check && tsup --dts",
+    "ts:check": "tsc --noEmit",
+    "test": "jest -c jest.config.js --passWithNoTests",
+    "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
+  },
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "typings": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "dist/index.js",
+      "default": "dist/index.mjs"
+    }
   }
 }
