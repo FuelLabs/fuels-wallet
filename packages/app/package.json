@@ -16,7 +16,7 @@
     "test:watch": "jest --watch",
     "ts:check": "pnpm xstate:typegen && tsc --noEmit",
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'",
-    "codegen": "graphql-codegen"
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
     "@fontsource/source-code-pro": "^4.5.12",
