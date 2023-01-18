@@ -5,7 +5,7 @@ import { assign, createMachine } from 'xstate';
 
 import { TxService } from '../services';
 
-import type { AddressTransactionsQuery } from '~/generated/graphql';
+import type { IAddressTransactionsQuery } from '~/generated/graphql';
 import { FetchMachine } from '~/systems/Core';
 
 export const TRANSACTION_HISTORY_ERRORS = {
@@ -17,12 +17,12 @@ type MachineContext = {
   walletAddress: string;
   txs: Transaction[];
   error?: string;
-  addressTransactionsQuery?: AddressTransactionsQuery;
+  addressTransactionsQuery?: IAddressTransactionsQuery;
 };
 
 type MachineServices = {
   getTransactionHistory: {
-    data: AddressTransactionsQuery;
+    data: IAddressTransactionsQuery;
   };
 };
 
@@ -106,7 +106,7 @@ export const transactionHistoryMachine = createMachine(
     services: {
       getTransactionHistory: FetchMachine.create<
         { address: string },
-        AddressTransactionsQuery
+        IAddressTransactionsQuery
       >({
         showError: true,
         async fetch({ input }) {

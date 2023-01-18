@@ -21,8 +21,8 @@ generates:
       useImplementingTypes: true
       useTypeImports: true
       identifierName: "gqlOperations"
+      typesPrefix: "I"
 hooks:
   afterOneFileWrite:
-    - node ./scripts/codegen-fix-generated.js
     - pnpm eslint --fix
     - pnpm prettier --write

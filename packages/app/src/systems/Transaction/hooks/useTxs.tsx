@@ -13,14 +13,14 @@ import type { TxInputs } from '../services';
 import { parseTx } from '../utils';
 
 import type {
-  AddressTransactionsQuery,
-  ReceiptFragment,
+  IAddressTransactionsQuery,
+  IReceiptFragment,
 } from '~/generated/graphql';
 import { useChainInfo } from '~/systems/Network';
 
 /** @TODO: Move this logic to the SDK */
 const processGqlReceipt = (
-  gqlReceipt: ReceiptFragment
+  gqlReceipt: IReceiptFragment
 ): TransactionResultReceipt => {
   const receipt = new ReceiptCoder().decode(
     arrayify(gqlReceipt.rawPayload),
@@ -74,7 +74,7 @@ const processTransactionToTx = (
 
 /** @TODO: Move this logic to the SDK */
 const getGQLTransactionsFromData = (
-  data: AddressTransactionsQuery | undefined
+  data: IAddressTransactionsQuery | undefined
 ) => {
   return data?.transactionsByOwner!.edges!.map((edge) => edge!.node) ?? [];
 };
