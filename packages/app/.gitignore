@@ -16,7 +16,7 @@ dist-crx
 dist-ssr
 *.local
 **/__generated__/**
-**/generated/*
+
 
 # Editor directories and files
 .vscode/*

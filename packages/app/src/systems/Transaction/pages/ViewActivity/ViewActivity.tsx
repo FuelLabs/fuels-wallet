@@ -29,7 +29,7 @@ export function ViewActivity() {
       <Layout.Content>
         <Stack gap="$4">
           <ActivityList
-            transactions={txs ?? []}
+            txs={txs ?? []}
             isLoading={isLoadingTx || isLoading || !account}
             ownerAddress={address}
           />
