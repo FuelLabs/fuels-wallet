@@ -5,7 +5,6 @@ import { MOCK_TRANSACTIONS_BY_OWNER } from '../../__mocks__/transactions';
 import { ViewActivity } from './ViewActivity';
 
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
-import { GraphqlProvider } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
@@ -31,8 +30,4 @@ export default {
   ],
 };
 
-export const Usage = () => (
-  <GraphqlProvider>
-    <ViewActivity />
-  </GraphqlProvider>
-);
+export const Usage = () => <ViewActivity />;
