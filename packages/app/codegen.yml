@@ -24,3 +24,4 @@ generates:
 hooks:
   afterOneFileWrite:
     - pnpm eslint --fix
+    - pnpm prettier:format

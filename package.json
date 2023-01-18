@@ -56,7 +56,7 @@
     "test:e2e": "NODE_ENV=test playwright test --config=packages/app/playwright.config.ts",
     "ts:check": "pnpm -r ts:check",
     "prepare": "husky install",
-    "codegen:app": "pnpm run --filter=app codegen",
+    "codegen:app": "pnpm  run --filter=app codegen",
     "codegen-ci:app": "pnpm run --filter=app codegen:ci"
   },
   "dependencies": {

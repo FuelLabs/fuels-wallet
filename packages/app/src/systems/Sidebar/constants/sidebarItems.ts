@@ -8,6 +8,12 @@ export const sidebarItems = [
     path: Pages.wallet(),
   },
   {
+    key: 'activity',
+    icon: 'Bell',
+    label: 'Activity',
+    path: Pages.txs(),
+  },
+  {
     key: 'settings',
     icon: 'Gear',
     label: 'Settings',

@@ -872,11 +872,6 @@ export type AddressTransactionsQuery = {
               time: any;
               type: 'SuccessStatus';
               block: { __typename?: 'Block'; id: any };
-              programState: {
-                __typename?: 'ProgramState';
-                returnType: ReturnType;
-                data: any;
-              } | null;
             }
           | null;
       };
@@ -915,11 +910,6 @@ export type TransactionFragment = {
         time: any;
         type: 'SuccessStatus';
         block: { __typename?: 'Block'; id: any };
-        programState: {
-          __typename?: 'ProgramState';
-          returnType: ReturnType;
-          data: any;
-        } | null;
       }
     | null;
 };
@@ -966,10 +956,6 @@ export const TransactionFragmentDoc = gql`
           id
         }
         time
-        programState {
-          returnType
-          data
-        }
       }
       ... on FailureStatus {
         block {
@@ -1046,4 +1032,4 @@ export function getSdk(
     },
   };
 }
-export type Sdk = typeof getSdk;
+export type Sdk = ReturnType<typeof getSdk>;
