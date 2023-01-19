@@ -157,7 +157,9 @@ export class TxService {
       network.url
     ).AddressTransactions({
       owner: address,
-      first: 10,
+      // TODO: remove hardcode size when we add
+      // pagination for transactions page
+      first: 100,
     });
     const gasPerByte = chain.consensusParameters.gasPerByte;
     const gasPriceFactor = chain.consensusParameters.gasPriceFactor;
@@ -166,6 +168,13 @@ export class TxService {
       bn(gasPerByte),
       bn(gasPriceFactor)
     );
+    // TODO: remove this when fuel-client returns
+    // the txs sort by date
+    transactions?.sort((a, b) => {
+      const aTime = bn(a.time, 10);
+      const bTime = bn(b.time, 10);
+      return aTime.gt(bTime) ? -1 : 1;
+    });
     return transactions || [];
   }
 
