@@ -25,7 +25,8 @@ import { getFee, getGasUsed, toJSON, processTransactionToTx } from '../utils';
 import { AccountService } from '~/systems/Account';
 import { isEth } from '~/systems/Asset';
 import { db, uniqueId } from '~/systems/Core';
-import { graphqlSDK } from '~/systems/Core/utils/graphql';
+import { getGraphqlClient } from '~/systems/Core/utils/graphql';
+import { NetworkService } from '~/systems/Network';
 
 export type TxInputs = {
   get: {
@@ -148,12 +149,16 @@ export class TxService {
   static async getTransactionHistory({
     address,
   }: TxInputs['getTransactionHistory']) {
-    const { transactionsByOwner, chain } = await graphqlSDK.AddressTransactions(
-      {
-        owner: address,
-        first: 10,
-      }
-    );
+    const network = await NetworkService.getSelectedNetwork();
+    if (!network) {
+      throw new Error('No network selected');
+    }
+    const { transactionsByOwner, chain } = await getGraphqlClient(
+      network.url
+    ).AddressTransactions({
+      owner: address,
+      first: 10,
+    });
     const gasPerByte = chain.consensusParameters.gasPerByte;
     const gasPriceFactor = chain.consensusParameters.gasPriceFactor;
     const transactions = processTransactionToTx(

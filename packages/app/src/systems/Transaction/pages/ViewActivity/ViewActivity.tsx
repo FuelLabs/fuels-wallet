@@ -6,7 +6,7 @@ import { ActivityList } from '../../components/ActivityList/ActivityList';
 import { useTxs } from '../../hooks/useTxs';
 
 import { useAccounts } from '~/systems/Account';
-import { Layout } from '~/systems/Core';
+import { Layout, Pages } from '~/systems/Core';
 import { NetworkScreen, useNetworks } from '~/systems/Network';
 
 export function ViewActivity() {
@@ -25,7 +25,7 @@ export function ViewActivity() {
 
   return (
     <Layout title="Activity" isLoading={isLoading}>
-      <Layout.TopBar onBack={() => navigate(-1)} />
+      <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
       <Layout.Content>
         <Stack gap="$4">
           <ActivityList
