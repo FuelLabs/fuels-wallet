@@ -1,20 +1,23 @@
 class LocalStorageMock {
-  store = new Map();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
 
   clear() {
-    this.store.clear();
+    Object.keys(this).forEach((key) => {
+      delete this[key];
+    });
   }
 
   getItem(key: string) {
-    return this.store.get(key);
+    return this[key] || null;
   }
 
   setItem(key: string, value: string) {
-    this.store.set(key, value.toString());
+    this[key] = value.toString();
   }
 
   removeItem(key: string) {
-    this.store.delete(key);
+    delete this[key];
   }
 }
 
