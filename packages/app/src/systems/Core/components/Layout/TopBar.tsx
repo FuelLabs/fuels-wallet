@@ -44,6 +44,10 @@ function InternalTopBar({ onBack }: TopBarProps) {
     type: NetworkScreen.list,
   });
 
+  const goToActivityPage = () => {
+    navigate('/transactions');
+  };
+
   return (
     <Flex as="nav" className={style({ isHome })}>
       <Flex css={{ alignItems: 'center', gap: '$2', flex: 1 }}>
@@ -76,20 +80,29 @@ function InternalTopBar({ onBack }: TopBarProps) {
           </>
         )}
       </Flex>
-      <Drawer type="menu" size={220} containerRef={ref}>
-        <Drawer.Trigger>
-          <IconButton
-            iconSize={24}
-            icon={<Icon icon="List" color="gray8" />}
-            aria-label="Menu"
-            variant="link"
-            css={{ px: '0 !important' }}
-          />
-        </Drawer.Trigger>
-        <Drawer.Content>
-          <Sidebar />
-        </Drawer.Content>
-      </Drawer>
+      <Flex>
+        <IconButton
+          iconSize={24}
+          icon={<Icon icon="Bell" color="gray8" />}
+          variant="link"
+          aria-label="activity"
+          onPress={goToActivityPage}
+        />
+        <Drawer type="menu" size={220} containerRef={ref}>
+          <Drawer.Trigger>
+            <IconButton
+              iconSize={24}
+              icon={<Icon icon="List" color="gray8" />}
+              aria-label="Menu"
+              variant="link"
+              css={{ px: '0 !important' }}
+            />
+          </Drawer.Trigger>
+          <Drawer.Content>
+            <Sidebar />
+          </Drawer.Content>
+        </Drawer>
+      </Flex>
     </Flex>
   );
 }
