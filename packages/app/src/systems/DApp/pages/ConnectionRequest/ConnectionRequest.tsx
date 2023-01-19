@@ -131,25 +131,19 @@ export function ConnectionRequest() {
                   </motion.div>
                 );
               })}
-              <motion.div {...animations.slideInTop()}>
-                <Flex
-                  css={styles.disclaimer}
-                  justify="center"
-                  align={'flex-end'}
-                >
-                  <Text fontSize="sm" as={'h2'} className="warning">
-                    Only connect with sites you trust.{' '}
-                    <Link href="#" color="accent11">
-                      Learn more
-                    </Link>
-                    .
-                  </Text>
-                </Flex>
-              </motion.div>
             </AnimatePresence>
           )}
         </MotionCardList>
       </Layout.Content>
+      <Flex css={styles.disclaimer} justify="center" align={'flex-end'}>
+        <Text fontSize="sm" as={'h2'} className="warning">
+          Only connect with sites you trust.{' '}
+          <Link href="#" color="accent11">
+            Learn more
+          </Link>
+          .
+        </Text>
+      </Flex>
       <Layout.BottomBar>
         <Button
           color="gray"
@@ -212,7 +206,8 @@ const styles = {
     paddingBottom: '$4',
   }),
   disclaimer: cssObj({
-    flex: '1 0',
+    mb: '-10px',
+    pt: '$1',
   }),
   switchWrapper: cssObj({
     alignItems: 'center',
