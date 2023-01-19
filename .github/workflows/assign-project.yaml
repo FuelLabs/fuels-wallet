@@ -1,0 +1,20 @@
+name: "Assign project to issue"
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  assign-project:
+    name: Assign project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: FuelLabs/github-actions/gh-projects/assign-to-project@master
+        with:
+          app_id: ${{ secrets.PROJECTS_GITHUB_APP_ID }}
+          private_key: ${{ secrets.PROJECTS_GITHUB_APP_PEM }}
+          organization: FuelLabs
+          project_number: 15
+          object_id: ${{ github.event.issue.node_id }}
+          fields: "Status"
+          values: "🩺 Triage"
