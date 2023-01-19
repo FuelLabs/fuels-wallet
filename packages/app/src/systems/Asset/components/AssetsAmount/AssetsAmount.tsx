@@ -17,11 +17,8 @@ import { getAssetInfoById } from '../../utils';
 import { AssetsAmountLoader } from './AssetsAmountLoader';
 
 import { shortAddress } from '~/systems/Core';
-import type {
-  GroupedError,
-  TxInputCoin,
-  TxOutputCoin,
-} from '~/systems/Transaction';
+import type { GroupedError } from '~/systems/Transaction';
+import type { TxOutputCoin, TxInputCoin } from '~/systems/Transaction/types';
 
 export type AssetsAmountProps = {
   amounts: Coin[] | TxOutputCoin[] | TxInputCoin[];

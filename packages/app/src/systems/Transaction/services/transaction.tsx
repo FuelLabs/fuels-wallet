@@ -20,11 +20,13 @@ import {
 } from 'fuels';
 
 import type { Transaction } from '../types';
-import { getFee, getGasUsed, toJSON } from '../utils';
+import { getFee, getGasUsed, toJSON, processTransactionToTx } from '../utils';
 
 import { AccountService } from '~/systems/Account';
 import { isEth } from '~/systems/Asset';
 import { db, uniqueId } from '~/systems/Core';
+import { getGraphqlClient } from '~/systems/Core/utils/graphql';
+import { NetworkService } from '~/systems/Network';
 
 export type TxInputs = {
   get: {
@@ -60,6 +62,9 @@ export type TxInputs = {
   fetch: {
     txId: string;
     providerUrl?: string;
+  };
+  getTransactionHistory: {
+    address: string;
   };
   addResources: {
     wallet: WalletLocked;
@@ -139,6 +144,38 @@ export class TxService {
     const provider = new Provider(providerUrl || '');
     const { receipts } = await provider.call(transactionRequest);
     return receipts;
+  }
+
+  static async getTransactionHistory({
+    address,
+  }: TxInputs['getTransactionHistory']) {
+    const network = await NetworkService.getSelectedNetwork();
+    if (!network) {
+      throw new Error('No network selected');
+    }
+    const { transactionsByOwner, chain } = await getGraphqlClient(
+      network.url
+    ).AddressTransactions({
+      owner: address,
+      // TODO: remove hardcode size when we add
+      // pagination for transactions page
+      first: 100,
+    });
+    const gasPerByte = chain.consensusParameters.gasPerByte;
+    const gasPriceFactor = chain.consensusParameters.gasPriceFactor;
+    const transactions = processTransactionToTx(
+      transactionsByOwner,
+      bn(gasPerByte),
+      bn(gasPriceFactor)
+    );
+    // TODO: remove this when fuel-client returns
+    // the txs sort by date
+    transactions?.sort((a, b) => {
+      const aTime = bn(a.time, 10);
+      const bTime = bn(b.time, 10);
+      return aTime.gt(bTime) ? -1 : 1;
+    });
+    return transactions || [];
   }
 
   static async createFakeTx() {
