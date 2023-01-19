@@ -1,0 +1,4 @@
+{
+  "schema": "./fuel-core-schema.graphql",
+  "documents": "./src/**/*.graphql"
+}

@@ -1,3 +1,4 @@
+
 **/node_modules/
 **/coverage/
 *.js
@@ -8,3 +9,5 @@ packages/app/src/types
 contracts
 **/*.typegen.ts
 .eslintrc.js
+**/__generated__/
+**/generated/*

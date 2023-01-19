@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Icon, Box, Avatar, Flex, Drawer, IconButton } from '@fuel-ui/react';
 
-import type { MenuItemObj } from '..';
 import { Menu, NetworkSelector } from '..';
 import { useAccounts } from '../../../Account';
 import { NetworkScreen, useNetworks } from '../../../Network';
@@ -41,7 +40,7 @@ export function Sidebar() {
             aria-label="drawer_closeButton"
           />
         </Flex>
-        <Menu items={sidebarItems as MenuItemObj[]} />
+        <Menu items={sidebarItems} />
       </Flex>
       <Flex
         css={{

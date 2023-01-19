@@ -29,6 +29,10 @@ test.beforeAll(async () => {
   });
 });
 
+test.afterAll(({ context }) => {
+  context.close();
+});
+
 test.use({
   context: ({}, use) => {
     use(context);

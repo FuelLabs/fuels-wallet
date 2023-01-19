@@ -4,7 +4,7 @@ import { Wallet } from 'fuels';
 import { AccountService } from '../services';
 import { IndexedDBStorage } from '../utils';
 
-import { db } from '~/systems/Core';
+import { db, Storage } from '~/systems/Core';
 
 const wallet1 = Wallet.generate();
 const wallet2 = Wallet.generate();
@@ -26,6 +26,11 @@ export const MOCK_ACCOUNTS = [
     name: 'Account 3',
     address: wallet3.address.toString(),
     publicKey: wallet3.publicKey,
+  },
+  {
+    name: 'Account 4',
+    address: 'fuel10va6297tkerdcn5u8mxjm9emudsmkj85pq5x7t7stkmzmc4nvs3qvn99qz',
+    publicKey: '0x00',
   },
 ];
 
@@ -66,6 +71,11 @@ export async function createMockAccount() {
       publicKey: walletAccount.publicKey,
     },
   });
+
+  /**
+   * Set account as logged
+   */
+  Storage.setItem('isLogged', true);
 
   return { account, password, manager };
 }
