@@ -56,10 +56,10 @@ Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/
   - [ ] Export accout privateKey
 - [ ] Transactions
   - [x] Receive Assets via address or QR Code
-  - [ ] Send Assets to another wallet
+  - [x] Send Assets to another wallet
   - [ ] Transaction History
   - [ ] View transaction details
 
 ## 📜 License
 
-The primary license for this repo is `Apache-2.0`, see [`LICENSE`](./LICENSE).
+This repo is licensed under the `Apache-2.0` license. See [`LICENSE`](./LICENSE) for more information.
