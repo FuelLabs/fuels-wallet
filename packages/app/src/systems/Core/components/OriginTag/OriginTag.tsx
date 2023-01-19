@@ -19,7 +19,7 @@ export function OriginTag({ origin }: OriginTagProps) {
 
 const styles = {
   root: cssObj({
-    maxWidth: 200,
+    maxWidth: 130,
     boxSizing: 'border-box',
     px: '$3',
     borderColor: '$accent11',
