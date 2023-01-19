@@ -7,6 +7,7 @@ import { AccountService } from '../services';
 import type { AccountMachineService, MachineEvents } from './accountMachine';
 import { accountMachine } from './accountMachine';
 
+import { db, Storage } from '~/systems/Core';
 import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 const MOCK_ACCOUNT = {
@@ -27,6 +28,7 @@ const machine = accountMachine.withContext({}).withConfig({
   actions: {
     notifyUpdateAccounts() {},
     redirectToHome() {},
+    refreshApplication() {},
   },
 });
 
@@ -148,6 +150,25 @@ describe('accountsMachine', () => {
         },
       });
       await expectStateMatch(service, 'failed');
+    });
+
+    it('logout should clean indexdb and localstorage', async () => {
+      await createMockAccount();
+
+      // Check if indexdb is not empty
+      const accountsBefore = await AccountService.getAccounts();
+      expect(accountsBefore.length).toBeGreaterThanOrEqual(1);
+
+      // Execute logout
+      await expectStateMatch(service, 'idle');
+      service.send('LOGOUT');
+      await db.open();
+
+      // Check if indexdb is empty
+      const accountsAfter = await AccountService.getAccounts();
+      const isLogged = Storage.getItem('isLogged');
+      expect(accountsAfter.length).toBe(0);
+      expect(isLogged).toBe(null);
     });
   });
 });

@@ -30,11 +30,13 @@ test.describe('SelectWallet', () => {
 
   test('should be able to switch between accounts', async () => {
     await visit(page, '/wallet');
+    await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
     await hasText(page, data.accounts[0].name);
     await hasText(page, data.accounts[1].name);
     await getByAriaLabel(page, data.accounts[1].name).click();
     await waitUrl(page, '/wallet');
+    await hasText(page, /Assets/i);
     const address = data.accounts[1].address.toString();
     await hasAriaLabel(page, address);
   });
