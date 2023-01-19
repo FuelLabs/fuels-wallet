@@ -185,7 +185,6 @@ const styles = {
   }),
   listItemDisallowed: cssObj({
     fontSize: '$sm',
-    textDecoration: 'line-through',
   }),
   content: cssObj({
     display: 'flex',
@@ -200,7 +199,7 @@ const styles = {
     },
   }),
   connectionDetails: cssObj({
-    marginTop: '$4',
+    marginTop: '$3',
     px: '$3',
     paddingTop: '$2',
     paddingBottom: '$4',

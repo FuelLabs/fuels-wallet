@@ -40,18 +40,19 @@ export function useConnectRequest() {
       selectedAddresses?.includes(account.address)
     );
   }, [selectedAddresses, accounts]);
+  const hasSelectedAccounts = !!selectedAddresses?.length;
 
   // Start Connect Request Methods
   useConnectRequestMethods(connectionService);
 
   useEffect(() => {
-    if (account) {
+    if (account && !hasSelectedAccounts) {
       connectionService.send({
         type: 'TOGGLE_ADDRESS',
         input: account.address,
       });
     }
-  }, [account]);
+  }, [account, hasSelectedAccounts]);
 
   function authorizeConnection() {
     connectionService.send({
@@ -91,7 +92,7 @@ export function useConnectRequest() {
     account,
     accounts,
     selectedAddresses,
-    hasSelectedAccounts: !!selectedAddresses?.length,
+    hasSelectedAccounts,
     selectedAccounts,
     handlers: {
       rejectConnection,
