@@ -4,7 +4,7 @@ import { Wallet } from 'fuels';
 import { AccountService } from '../services';
 import { IndexedDBStorage } from '../utils';
 
-import { db } from '~/systems/Core';
+import { db, Storage } from '~/systems/Core';
 
 const wallet1 = Wallet.generate();
 const wallet2 = Wallet.generate();
@@ -71,6 +71,11 @@ export async function createMockAccount() {
       publicKey: walletAccount.publicKey,
     },
   });
+
+  /**
+   * Set account as logged
+   */
+  Storage.setItem('isLogged', true);
 
   return { account, password, manager };
 }
