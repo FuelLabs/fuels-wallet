@@ -90,6 +90,8 @@ test.describe('FuelWallet Extension', () => {
       });
 
       await hasText(authorizeRequest, /connect/i);
+      await getButtonByText(authorizeRequest, /next/i).click();
+      await hasText(authorizeRequest, /accounts/i);
       await getButtonByText(authorizeRequest, /connect/i).click();
 
       expect(await isConnected).toBeTruthy();

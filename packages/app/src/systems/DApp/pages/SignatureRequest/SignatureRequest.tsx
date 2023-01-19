@@ -26,7 +26,9 @@ export function SignatureRequest() {
       <Layout title={`Signature Request`} isLoading={isLoading}>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content>
-          {account && <ConnectInfo origin={origin} account={account} />}
+          {account && (
+            <ConnectInfo origin={origin} account={account} isReadOnly />
+          )}
           <Card css={{ mt: '$4' }}>
             <Card.Body css={{ p: '$3' }}>
               <Flex css={{ alignItems: 'center', gap: '$3' }}>
