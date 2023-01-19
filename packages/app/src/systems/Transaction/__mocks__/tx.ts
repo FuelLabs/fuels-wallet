@@ -184,7 +184,7 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
   transaction: {
     gasLimit: bn(100000000),
     gasPrice: bn(1),
-    inputsCount: 2,
+    inputsCount: 3,
     inputs: [
       MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputContract,
       MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin,
@@ -306,7 +306,7 @@ export const MOCK_TRANSACTION_CREATE_CONTRACT: MockTransaction = {
     bytecodeLength: 65,
     bytecodeWitnessIndex: 0,
     storageSlotsCount: 1,
-    inputsCount: 1,
+    inputsCount: 2,
     outputsCount: 2,
     witnessesCount: 2,
     salt: '0x0000000000000000000000000000000000000000000000000000000000000000',
@@ -317,7 +317,10 @@ export const MOCK_TRANSACTION_CREATE_CONTRACT: MockTransaction = {
           '0x0000000000000000000000000000000000000000000000000000000000000000',
       },
     ],
-    inputs: [MOCK_TRANSACTION_CREATE_CONTRACT_PARTS.inputCoin],
+    inputs: [
+      MOCK_TRANSACTION_CREATE_CONTRACT_PARTS.inputCoin,
+      MOCK_TRANSACTION_CREATE_CONTRACT_PARTS.inputCoin,
+    ],
     outputs: [
       MOCK_TRANSACTION_CREATE_CONTRACT_PARTS.outputContractCreated,
       MOCK_TRANSACTION_CREATE_CONTRACT_PARTS.outputChange,
@@ -487,14 +490,17 @@ export const MOCK_TRANSACTION_TRANSFER: MockTransaction = {
     maturity: 0,
     scriptLength: 4,
     scriptDataLength: 0,
-    inputsCount: 1,
+    inputsCount: 2,
     outputsCount: 2,
     witnessesCount: 1,
     receiptsRoot:
       '0x38f46cc362f2ec2df7d2691a6dd07594eeb4c6ffa7f3cbd7ccacab9eacb56ca1',
     script: '0x24000000',
     scriptData: '0x',
-    inputs: [MOCK_TRANSACTION_TRANSFER_PARTS.inputCoin],
+    inputs: [
+      MOCK_TRANSACTION_TRANSFER_PARTS.inputCoin,
+      MOCK_TRANSACTION_TRANSFER_PARTS.inputCoin,
+    ],
     outputs: [
       MOCK_TRANSACTION_TRANSFER_PARTS.outputCoin,
       MOCK_TRANSACTION_TRANSFER_PARTS.outputChange,
