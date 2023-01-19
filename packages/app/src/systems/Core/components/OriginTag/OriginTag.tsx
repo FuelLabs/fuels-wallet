@@ -19,13 +19,8 @@ export function OriginTag({ origin }: OriginTagProps) {
 
 const styles = {
   root: cssObj({
-    boxSizing: 'content-box',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    maxWidth: 130,
-    pb: '2px',
-    height: '$6',
+    maxWidth: 200,
+    boxSizing: 'border-box',
     px: '$3',
     borderColor: '$accent11',
     borderStyle: 'dashed',

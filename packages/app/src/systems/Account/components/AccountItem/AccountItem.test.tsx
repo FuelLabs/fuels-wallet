@@ -25,4 +25,10 @@ describe('AccountItem', () => {
     expect(() => screen.getByText('Account 1')).toThrow();
     expect(() => screen.getByText(SHORT_ADDRESS)).toThrow();
   });
+
+  it('should render in compact mode', async () => {
+    render(<AccountItem account={ACCOUNT} compact={true} />);
+    const accountItem = await screen.findByLabelText('Account 1');
+    await expect(accountItem).toHaveAttribute('data-compact', 'true');
+  });
 });
