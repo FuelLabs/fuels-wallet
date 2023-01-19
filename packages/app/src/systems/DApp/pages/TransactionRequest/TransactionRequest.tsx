@@ -28,7 +28,11 @@ export function TransactionRequest() {
               tx={txRequest.tx}
               amount={txRequest.ethAmountSent}
               header={
-                <ConnectInfo account={ctx.account} origin={ctx.input.origin!} />
+                <ConnectInfo
+                  account={ctx.account}
+                  origin={ctx.input.origin!}
+                  isReadOnly
+                />
               }
             />
           )}

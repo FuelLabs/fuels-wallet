@@ -12,6 +12,7 @@ export type MachineContext = {
   connection?: Connection;
   isConnected: boolean;
   error?: string;
+  selectedAddresses?: string[];
 };
 
 type MachineServices = {
@@ -28,8 +29,10 @@ type MachineServices = {
 
 export type MachineEvents =
   | { type: 'CONNECT'; input: string }
-  | { type: 'DISCONNECT'; input: Connection }
-  | { type: 'AUTHORIZE'; input: Array<string> }
+  | { type: 'TOGGLE_ADDRESS'; input: string }
+  | { type: 'AUTHORIZE' }
+  | { type: 'NEXT' }
+  | { type: 'BACK' }
   | { type: 'REJECT' };
 
 export const connectMachine = createMachine(
@@ -48,18 +51,34 @@ export const connectMachine = createMachine(
     id: '(machine)',
     initial: 'idle',
     states: {
-      idle: {},
+      idle: {
+        on: {
+          CONNECT: {
+            actions: ['setOrigin'],
+            target: 'connecting',
+          },
+        },
+      },
       connecting: {
         initial: 'fetchAuthorizedConnection',
         states: {
+          selectingAccounts: {
+            on: {
+              TOGGLE_ADDRESS: {
+                actions: ['toggleAddress'],
+              },
+              NEXT: {
+                target: 'authorizing',
+              },
+            },
+          },
           authorizing: {
             on: {
               AUTHORIZE: {
                 target: 'authorizeApp',
               },
-              REJECT: {
-                actions: [assignErrorMessage('Connection rejected!')],
-                target: '#(machine).failed',
+              BACK: {
+                target: 'selectingAccounts',
               },
             },
           },
@@ -79,7 +98,7 @@ export const connectMachine = createMachine(
                   target: '#(machine).done',
                 },
                 {
-                  target: 'authorizing',
+                  target: 'selectingAccounts',
                 },
               ],
             },
@@ -88,12 +107,9 @@ export const connectMachine = createMachine(
             invoke: {
               src: 'addConnection',
               data: {
-                input: (
-                  ctx: MachineContext,
-                  ev: Extract<MachineEvents, { type: 'AUTHORIZE' }>
-                ) => ({
+                input: (ctx: MachineContext) => ({
                   origin: ctx.origin!,
-                  accounts: ev.input,
+                  accounts: ctx.selectedAddresses,
                 }),
               },
               onDone: [
@@ -107,36 +123,15 @@ export const connectMachine = createMachine(
           },
         },
       },
-      disconnecting: {
-        invoke: {
-          src: 'removeConnection',
-          data: {
-            input: (
-              _: MachineContext,
-              ev: Extract<MachineEvents, { type: 'DISCONNECT' }>
-            ) => ev.input,
-          },
-          onDone: [
-            FetchMachine.errorState('failed'),
-            {
-              actions: 'setDisconnected',
-              target: 'done',
-            },
-          ],
-        },
-      },
       done: {
         type: 'final',
       },
       failed: {},
     },
     on: {
-      CONNECT: {
-        actions: ['setOrigin'],
-        target: 'connecting',
-      },
-      DISCONNECT: {
-        target: 'disconnecting',
+      REJECT: {
+        actions: [assignErrorMessage('Connection rejected!')],
+        target: '#(machine).failed',
       },
     },
   },
@@ -149,8 +144,15 @@ export const connectMachine = createMachine(
         isConnected: (_) => true,
         connection: (_, ev) => ev.data,
       }),
-      setDisconnected: assign({
-        isConnected: (_) => false,
+      toggleAddress: assign({
+        selectedAddresses: (ctx, ev) => {
+          const { selectedAddresses = [] } = ctx;
+          const { input } = ev;
+          if (selectedAddresses.includes(input)) {
+            return selectedAddresses.filter((a) => a !== input);
+          }
+          return [...selectedAddresses, input];
+        },
       }),
     },
     services: {
@@ -178,14 +180,6 @@ export const connectMachine = createMachine(
               accounts: input.accounts,
             },
           });
-        },
-      }),
-      removeConnection: FetchMachine.create<MachineContext, boolean>({
-        showError: false,
-        fetch: async ({ input }) => {
-          const origin = input?.origin || '';
-          await ConnectionService.removeConnection({ origin });
-          return true;
         },
       }),
     },
