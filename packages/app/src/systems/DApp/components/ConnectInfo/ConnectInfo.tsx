@@ -1,10 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Button, Card, Icon, Tag, Text, Tooltip } from '@fuel-ui/react';
+import { Avatar, Button, Card, Icon, Text } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 
 import { ConnectInfoLoader } from './ConnectInfoLoader';
 
-import { parseUrl, shortAddress } from '~/systems/Core';
+import { OriginTag, shortAddress } from '~/systems/Core';
 
 export type ConnectInfoProps = {
   origin: string;
@@ -15,11 +15,7 @@ export type ConnectInfoProps = {
 export function ConnectInfo({ origin, account, isReadOnly }: ConnectInfoProps) {
   return (
     <Card css={styles.root}>
-      <Tag as="div" variant="outlined">
-        <Tooltip content={origin} align="start" alignOffset={-10}>
-          <Text as="span">{parseUrl(origin)}</Text>
-        </Tooltip>
-      </Tag>
+      <OriginTag origin={origin} />
       <Button
         variant="link"
         size="md"
@@ -50,24 +46,6 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-
-    '& .fuel_tag': {
-      maxWidth: 130,
-      boxSizing: 'border-box',
-      px: '$3',
-      borderColor: '$accent11',
-      borderStyle: 'dashed',
-      color: '$gray11',
-    },
-
-    '& .fuel_tag span': {
-      width: '100%',
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
-      textOverflow: 'ellipsis',
-      textSize: 'xs',
-      color: '$accent11',
-    },
   }),
   accountBtn: cssObj({
     alignItems: 'center',

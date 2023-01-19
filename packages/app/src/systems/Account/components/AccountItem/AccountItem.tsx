@@ -21,6 +21,7 @@ export type AccountItemProps = {
   onPress?: () => void;
   rightEl?: JSX.Element;
   isDisabled?: boolean;
+  compact?: boolean;
 };
 
 type AccountItemComponent = FC<AccountItemProps> & {
@@ -34,6 +35,7 @@ export const AccountItem: AccountItemComponent = ({
   onPress,
   rightEl,
   isDisabled,
+  compact,
 }: AccountItemProps) => {
   if (isHidden) return null;
   /**
@@ -60,9 +62,14 @@ export const AccountItem: AccountItemComponent = ({
       css={styles.root}
       aria-disabled={isDisabled}
       aria-label={account.name}
+      data-compact={compact}
     >
-      <Avatar.Generated size="md" background="fuel" hash={account.address} />
-      <Flex direction="column">
+      <Avatar.Generated
+        size={compact ? 'xsm' : 'md'}
+        background="fuel"
+        hash={account.address}
+      />
+      <Flex className="wrapper">
         <Heading as="h6" css={styles.name}>
           {account.name}
         </Heading>
@@ -79,6 +86,19 @@ const styles = {
     '&[aria-disabled="true"]': {
       opacity: 0.5,
       cursor: 'default',
+    },
+    '.wrapper': {
+      flexDirection: 'column',
+    },
+    '&[data-compact="true"]': {
+      '.wrapper': {
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: 'space-between',
+      },
+      '.fuel_avatar-generated': {
+        flexShrink: 0,
+      },
     },
   }),
   name: cssObj({

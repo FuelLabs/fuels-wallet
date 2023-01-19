@@ -34,12 +34,12 @@ export function ListAccounts() {
           Get accounts
         </Button>
         {Boolean(accounts.length) && (
-          <Stack gap="$3" css={{ mt: '$2' }}>
-            <Tag size="xs" color="gray" variant="ghost">
-              {accounts.map((account) => (
-                <Text key={account}>{account}</Text>
-              ))}
-            </Tag>
+          <Stack gap="$1" css={{ mt: '$2' }}>
+            {accounts.map((account) => (
+              <Tag size="xs" color="gray" variant="ghost" key={account}>
+                <Text>{account}</Text>
+              </Tag>
+            ))}
           </Stack>
         )}
       </Stack>
