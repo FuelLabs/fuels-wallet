@@ -1,5 +1,13 @@
 # @fuel-wallet/types
 
+## 0.4.0
+
+### Patch Changes
+
+- [#449](https://github.com/FuelLabs/fuels-wallet/pull/449) [`c59d9d7`](https://github.com/FuelLabs/fuels-wallet/commit/c59d9d700e45f6c27eed3842c6968bd87210e39e) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix InsufficientInputAmount error due to lake of utxos
+
+- [#399](https://github.com/FuelLabs/fuels-wallet/pull/399) [`f7c690f`](https://github.com/FuelLabs/fuels-wallet/commit/f7c690f299e9c6c6bbcac448760996ba6b116c96) Thanks [@pedronauck](https://github.com/pedronauck)! - Chore(sdk): small adjustments to adapt to connection service
+
 ## 0.3.0
 
 ### Minor Changes

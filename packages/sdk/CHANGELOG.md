@@ -1,5 +1,19 @@
 # @fuel-wallet/sdk
 
+## 0.4.0
+
+### Minor Changes
+
+- [#446](https://github.com/FuelLabs/fuels-wallet/pull/446) [`de4ee29`](https://github.com/FuelLabs/fuels-wallet/commit/de4ee29b0a19e0cd6b45e0445801043cc6e38a8f) Thanks [@luizstacio](https://github.com/luizstacio)! - Update docs and description
+
+### Patch Changes
+
+- [#440](https://github.com/FuelLabs/fuels-wallet/pull/440) [`d626c72`](https://github.com/FuelLabs/fuels-wallet/commit/d626c723af7449e4298cacc66b71b095cce24f82) Thanks [@luizstacio](https://github.com/luizstacio)! - Add utils to create address on fuel sdk
+
+- [#449](https://github.com/FuelLabs/fuels-wallet/pull/449) [`c59d9d7`](https://github.com/FuelLabs/fuels-wallet/commit/c59d9d700e45f6c27eed3842c6968bd87210e39e) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix InsufficientInputAmount error due to lake of utxos
+
+- [#399](https://github.com/FuelLabs/fuels-wallet/pull/399) [`f7c690f`](https://github.com/FuelLabs/fuels-wallet/commit/f7c690f299e9c6c6bbcac448760996ba6b116c96) Thanks [@pedronauck](https://github.com/pedronauck)! - Chore(sdk): small adjustments to adapt to connection service
+
 ## 0.3.0
 
 ### Minor Changes
