@@ -10,6 +10,12 @@ export const sidebarItems: Array<MenuItemObj> = [
     path: Pages.wallet(),
   },
   {
+    key: 'activity',
+    icon: 'Bell',
+    label: 'Activity',
+    path: Pages.txs(),
+  },
+  {
     key: 'connected-apps',
     icon: 'PlugsConnected',
     label: 'Connected Apps',
