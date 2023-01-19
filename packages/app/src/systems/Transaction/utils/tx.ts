@@ -356,29 +356,28 @@ export function getTransferOperations({
 
   let operations: Operation[] = [];
   for (const output of coinOutputs) {
-    for (const input of coinInputs) {
-      const isSameAsset = input.assetId === output.assetId;
-      const isDifPublicKey = input.owner.toString() !== output.to.toString();
+    const input = coinInputs.find((i) => i.assetId === output.assetId)!;
+    const isSameAsset = input.assetId === output.assetId;
+    const isDifPublicKey = input.owner.toString() !== output.to.toString();
 
-      if (isSameAsset && isDifPublicKey) {
-        operations = addOperation(operations, {
-          name: OperationName.transfer,
-          from: {
-            type: AddressType.account,
-            address: input.owner.toString(),
+    if (isSameAsset && isDifPublicKey) {
+      operations = addOperation(operations, {
+        name: OperationName.transfer,
+        from: {
+          type: AddressType.account,
+          address: input.owner.toString(),
+        },
+        to: {
+          type: AddressType.account,
+          address: output.to.toString(),
+        },
+        assetsSent: [
+          {
+            assetId: output.assetId.toString(),
+            amount: output.amount,
           },
-          to: {
-            type: AddressType.account,
-            address: output.to.toString(),
-          },
-          assetsSent: [
-            {
-              assetId: output.assetId.toString(),
-              amount: output.amount,
-            },
-          ],
-        });
-      }
+        ],
+      });
     }
   }
 
