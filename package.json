@@ -28,6 +28,7 @@
     "build:docs-build": "turbo run build --filter=docs",
     "build:docs-export": "turbo run export --filter=docs",
     "build:app": "turbo run build --filter=app",
+    "build:app:test": "NODE_ENV=test run-s build:app",
     "changeset": "changeset",
     "changeset:empty": "changeset --empty",
     "changeset:release": "changeset publish --no-git-tag",
@@ -55,7 +56,8 @@
     "test:coverage": "pnpm run --filter=app test --coverage",
     "test:e2e": "NODE_ENV=test playwright test --config=packages/app/playwright.config.ts",
     "ts:check": "pnpm -r ts:check",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "codegen:app": "pnpm run --filter=app codegen"
   },
   "dependencies": {
     "@fuel-ui/config": "^0.10.1",

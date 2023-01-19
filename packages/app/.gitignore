@@ -7,13 +7,13 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 /storybook
-__generated__/*
 
 node_modules
 dist
 dist-crx
 dist-ssr
 *.local
+
 
 # Editor directories and files
 .vscode/*

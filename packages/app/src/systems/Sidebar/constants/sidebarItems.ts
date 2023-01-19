@@ -1,11 +1,25 @@
+import type { MenuItemObj } from '../components';
+
 import { Pages } from '~/systems/Core';
 
-export const sidebarItems = [
+export const sidebarItems: Array<MenuItemObj> = [
   {
     key: 'wallet',
     icon: 'Wallet',
     label: 'Wallet',
     path: Pages.wallet(),
+  },
+  {
+    key: 'activity',
+    icon: 'Bell',
+    label: 'Activity',
+    path: Pages.txs(),
+  },
+  {
+    key: 'connected-apps',
+    icon: 'PlugsConnected',
+    label: 'Connected Apps',
+    path: Pages.settingsConnectedApps(),
   },
   {
     key: 'settings',
@@ -25,10 +39,10 @@ export const sidebarItems = [
         path: Pages.settingsChangePassword(),
       },
       {
-        key: 'connected-apps',
-        icon: 'PlugsConnected',
-        label: 'Connected Apps',
-        path: Pages.settingsConnectedApps(),
+        key: 'logout',
+        icon: 'SignOut',
+        label: 'Logout',
+        path: Pages.logout(),
       },
     ],
   },
