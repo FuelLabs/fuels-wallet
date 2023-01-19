@@ -49,7 +49,7 @@ describe('ActivityList', () => {
       }
     );
     expect(
-      screen.getByText(/You don't have any activity yet/i)
+      screen.getByText(/You don't have activities yet/i)
     ).toBeInTheDocument();
   });
 
