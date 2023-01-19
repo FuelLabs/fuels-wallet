@@ -36,6 +36,7 @@ export const Pages = {
   sendConfirm: route('/send/confirm'),
   accounts: route('/accounts'),
   accountAdd: route('/accounts/add'),
+  logout: route('/accounts/logout'),
 };
 
 export type AmountMap = Record<string, Maybe<BN>>;

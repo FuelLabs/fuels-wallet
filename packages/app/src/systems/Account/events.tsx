@@ -29,5 +29,10 @@ export function accountEvents(store: StoreClass<StoreMachines>) {
         input,
       });
     },
+    logout() {
+      store.send(Services.accounts, {
+        type: 'LOGOUT',
+      });
+    },
   };
 }

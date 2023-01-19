@@ -60,7 +60,8 @@ export type MachineEvents =
       input: string;
     }
   | { type: 'UNLOCK_VAULT'; input: AccountInputs['unlockVault'] }
-  | { type: 'CLOSE_UNLOCK'; input?: void };
+  | { type: 'CLOSE_UNLOCK'; input?: void }
+  | { type: 'LOGOUT'; input?: void };
 
 export const accountMachine = createMachine(
   {
@@ -222,6 +223,23 @@ export const accountMachine = createMachine(
           },
         },
       },
+      loggingout: {
+        tags: ['loading'],
+        invoke: {
+          src: 'logout',
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              actions: 'assignError',
+              target: 'failed',
+            },
+            {
+              actions: ['refreshApplication'],
+              target: 'idle',
+            },
+          ],
+        },
+      },
       failed: {
         on: {
           ADD_ACCOUNT: {
@@ -233,6 +251,9 @@ export const accountMachine = createMachine(
           INTERVAL: 'fetchingAccounts', // retry
         },
       },
+    },
+    on: {
+      LOGOUT: 'loggingout',
     },
   },
   {
@@ -337,6 +358,13 @@ export const accountMachine = createMachine(
             address: account.address.toString(),
           });
           return account as Account;
+        },
+      }),
+      logout: FetchMachine.create<never, void>({
+        showError: true,
+        maxAttempts: 1,
+        async fetch() {
+          return AccountService.logout();
         },
       }),
     },
