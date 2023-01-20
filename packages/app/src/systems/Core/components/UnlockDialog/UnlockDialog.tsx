@@ -14,6 +14,8 @@ import { useUnlockForm } from '../../hooks';
 import type { UnlockFormValues } from '../../hooks';
 import { UnlockForm } from '../UnlockForm';
 
+import { IS_CRX_POPUP } from '~/config';
+
 export type UnlockDialogProps = {
   title?: string;
   unlockText?: string;
@@ -22,7 +24,6 @@ export type UnlockDialogProps = {
   onClose?: () => void;
   onUnlock: (value: string) => void;
   isLoading?: boolean;
-  isFullscreen?: boolean;
 };
 
 export function UnlockDialog({
@@ -33,7 +34,6 @@ export function UnlockDialog({
   onClose,
   onUnlock,
   isLoading,
-  isFullscreen,
 }: UnlockDialogProps) {
   const form = useUnlockForm({ password: unlockError });
   const { handleSubmit } = form;
@@ -41,6 +41,10 @@ export function UnlockDialog({
   function onSubmit(values: UnlockFormValues) {
     onUnlock(values.password);
   }
+
+  const isBrowserFullScreenMode =
+    IS_CRX_POPUP && window.outerHeight === window.screen.height;
+  const isFullscreen = !isBrowserFullScreenMode;
 
   return (
     <Dialog isOpen={isOpen}>
@@ -116,7 +120,6 @@ const styles = {
           }
         : {
             width: '350px',
-            height: '600px',
           }),
     });
   },
