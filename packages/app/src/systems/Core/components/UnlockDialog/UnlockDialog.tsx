@@ -120,6 +120,7 @@ const styles = {
           }
         : {
             width: '350px',
+            height: '600px',
           }),
     });
   },
