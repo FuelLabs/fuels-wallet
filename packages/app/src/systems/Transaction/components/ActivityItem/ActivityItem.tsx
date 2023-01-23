@@ -37,12 +37,18 @@ export const ActivityItem: TxItemComponent = ({
     >
       <TxIcon operationName={label} status={status} />
       <Stack css={styles.contentWrapper}>
-        <Flex css={styles.row}>
-          <Flex css={styles.item}>
-            <Text fontSize="sm" css={styles.label}>
-              {label}
-            </Text>
-          </Flex>
+        <Flex css={styles.item} gap={5}>
+          <Text fontSize="sm" css={styles.label}>
+            {label}
+          </Text>
+          <Copyable
+            value={id}
+            iconProps={{
+              icon: Icon.is('CopySimple'),
+              'aria-label': 'Copy Transaction ID',
+            }}
+            tooltipMessage="Copy Transaction ID"
+          />
         </Flex>
         <Flex css={styles.row}>
           <Flex css={styles.fromToTextWrapper}>
@@ -50,14 +56,6 @@ export const ActivityItem: TxItemComponent = ({
               {toOrFromText}
             </Text>
             <Text fontSize="xs">{shortAddress(toOrFromAddress)}</Text>
-            <Copyable
-              value={id}
-              iconProps={{
-                icon: Icon.is('CopySimple'),
-                'aria-label': 'Copy Transaction ID',
-              }}
-              tooltipMessage="Copy Transaction ID"
-            />
           </Flex>
           {timeFormatted && (
             <Flex css={styles.item}>
