@@ -7,13 +7,13 @@ const { VITE_FUEL_PROVIDER_URL } = process.env;
 const networks = [
   {
     id: '1',
-    isSelected: true,
+    isCurrent: true,
     name: 'Local',
     url: VITE_FUEL_PROVIDER_URL,
   },
   {
     id: '2',
-    isSelected: false,
+    isCurrent: false,
     name: 'Another',
     url: 'https://another.network.fuel/graphql',
   },
@@ -39,7 +39,7 @@ export function createAccount(index: number = 0) {
     name: `Account ${index}`,
     publicKey: wallet.publicKey,
     isHidden: false,
-    isSelected: index === 0,
+    isCurrent: index === 0,
   };
 }
 

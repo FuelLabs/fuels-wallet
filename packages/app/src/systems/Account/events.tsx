@@ -17,9 +17,9 @@ export function accountEvents(store: StoreClass<StoreMachines>) {
         input,
       });
     },
-    selectAccount(account: Account) {
+    setCurrentAccount(account: Account) {
       store.send(Services.accounts, {
-        type: 'SELECT_ACCOUNT',
+        type: 'SET_CURRENT_ACCOUNT',
         input: { address: account.address },
       });
     },

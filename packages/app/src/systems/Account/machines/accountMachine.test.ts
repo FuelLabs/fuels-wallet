@@ -60,12 +60,12 @@ describe('accountsMachine', () => {
       await AccountService.addAccount({ data: MOCK_ACCOUNT_TWO });
       const accounts = await AccountService.getAccounts();
 
-      const idx = accounts.findIndex((account) => account.isSelected);
+      const idx = accounts.findIndex((account) => account.isCurrent);
       const invertIdx = idx === 0 ? 1 : 0;
 
       expect(accounts.length).toBe(2);
-      expect(accounts[idx].isSelected).toBeTruthy();
-      expect(accounts[invertIdx].isSelected).toBeFalsy();
+      expect(accounts[idx].isCurrent).toBeTruthy();
+      expect(accounts[invertIdx].isCurrent).toBeFalsy();
     });
   });
 
@@ -76,15 +76,15 @@ describe('accountsMachine', () => {
       await AccountService.addAccount({ data: MOCK_ACCOUNT_TWO });
       let accounts = await AccountService.getAccounts();
 
-      const idx = accounts.findIndex((account) => account.isSelected);
+      const idx = accounts.findIndex((account) => account.isCurrent);
       const invertIdx = idx === 0 ? 1 : 0;
 
       expect(accounts.length).toBe(2);
-      expect(accounts[idx].isSelected).toBeTruthy();
-      expect(accounts[invertIdx].isSelected).toBeFalsy();
+      expect(accounts[idx].isCurrent).toBeTruthy();
+      expect(accounts[invertIdx].isCurrent).toBeFalsy();
 
       const selectEv: MachineEvents = {
-        type: 'SELECT_ACCOUNT',
+        type: 'SET_CURRENT_ACCOUNT',
         input: { address: accounts[invertIdx].address },
       };
 
@@ -97,8 +97,8 @@ describe('accountsMachine', () => {
 
       accounts = await AccountService.getAccounts();
 
-      expect(accounts[idx].isSelected).toBeFalsy();
-      expect(accounts[invertIdx].isSelected).toBeTruthy();
+      expect(accounts[idx].isCurrent).toBeFalsy();
+      expect(accounts[invertIdx].isCurrent).toBeTruthy();
     });
   });
 

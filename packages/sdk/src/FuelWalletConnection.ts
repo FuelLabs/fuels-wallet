@@ -52,6 +52,10 @@ export class FuelWalletConnection extends WindowConnection {
     return this.client.request('accounts', {});
   }
 
+  async currentAccount(): Promise<string> {
+    return this.client.request('currentAccount', {});
+  }
+
   async signMessage(address: string, message: string): Promise<string> {
     if (!message.trim()) {
       throw new Error('Message is required');
@@ -73,10 +77,6 @@ export class FuelWalletConnection extends WindowConnection {
       provider: providerConfig,
       transaction: JSON.stringify(transaction),
     });
-  }
-
-  async getSelectedAccount(): Promise<string> {
-    return this.client.request('getSelectedAccount', {});
   }
 
   on<E extends FuelEvents['type'], D extends FuelEventArg<E>>(

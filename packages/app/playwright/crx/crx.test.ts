@@ -104,19 +104,19 @@ test.describe('FuelWallet Extension', () => {
       expect(accounts).toHaveLength(1);
     });
 
-    await test.step('window.fuel.getSelectedAccount()', async () => {
-      const selectedAccount = await blankPage.evaluate(async () => {
-        return window.fuel.getSelectedAccount();
+    await test.step('window.fuel.currentAccount()', async () => {
+      const currentAccount = await blankPage.evaluate(async () => {
+        return window.fuel.currentAccount();
       });
-      expect(selectedAccount).toBeTruthy();
+      expect(currentAccount).toBeTruthy();
     });
 
     await test.step('window.fuel.signMessage()', async () => {
       const message = 'Hello World';
       const signedMessage = blankPage.evaluate(
         async ([message]) => {
-          const selectedAccount = await window.fuel.getSelectedAccount();
-          return window.fuel.signMessage(selectedAccount, message);
+          const currentAccount = await window.fuel.currentAccount();
+          return window.fuel.signMessage(currentAccount, message);
         },
         [message]
       );
@@ -137,9 +137,9 @@ test.describe('FuelWallet Extension', () => {
 
     await test.step('window.fuel.getWallet()', async () => {
       const isCorrectAddress = await blankPage.evaluate(async () => {
-        const selectedAccount = await window.fuel.getSelectedAccount();
-        const wallet = await window.fuel.getWallet(selectedAccount);
-        return wallet.address.toString() === selectedAccount;
+        const currentAccount = await window.fuel.currentAccount();
+        const wallet = await window.fuel.getWallet(currentAccount);
+        return wallet.address.toString() === currentAccount;
       });
       expect(isCorrectAddress).toBeTruthy();
     });
@@ -148,21 +148,21 @@ test.describe('FuelWallet Extension', () => {
       const receiverWallet = Wallet.generate({
         provider: process.env.VITE_FUEL_PROVIDER_URL,
       });
-      const selectedAccount = await blankPage.evaluate(async () => {
-        return window.fuel.getSelectedAccount();
+      const currentAccount = await blankPage.evaluate(async () => {
+        return window.fuel.currentAccount();
       });
       // Add some coins to the account
-      await seedWallet(selectedAccount, bn(1000));
+      await seedWallet(currentAccount, bn(1000));
       // Create transfer
       const transferStatus = blankPage.evaluate(
-        async ([selectedAccount, address]) => {
+        async ([currentAccount, address]) => {
           const receiver = await window.fuel.utils.createAddress(address);
-          const wallet = await window.fuel.getWallet(selectedAccount);
+          const wallet = await window.fuel.getWallet(currentAccount);
           const response = await wallet.transfer(receiver, 100);
           const result = await response.waitForResult();
           return result.status.type;
         },
-        [selectedAccount, receiverWallet.address.toString()]
+        [currentAccount, receiverWallet.address.toString()]
       );
       // Wait confirmation page to show
       const confirmTransactionPage = await context.waitForEvent('page', {

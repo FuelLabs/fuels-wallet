@@ -4,10 +4,11 @@ import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { DatabaseObservable } from './DatabaseObservable';
 
+import { AccountService } from '~/systems/Account/services/account';
 import { ConnectionService } from '~/systems/DApp/services';
 
 export class DatabaseEvents {
-  readonly databaseObservable: DatabaseObservable<['networks']>;
+  readonly databaseObservable: DatabaseObservable<['networks', 'accounts']>;
   readonly communicationProtocol: CommunicationProtocol;
 
   constructor(communicationProtocol: CommunicationProtocol) {
@@ -30,11 +31,11 @@ export class DatabaseEvents {
 
   setupApplicationWatcher() {
     this.databaseObservable.on('networks:update', async (updateEvent) => {
-      const connections = await ConnectionService.getConnections();
-      const origins = connections.map((connection) => connection.origin);
-
       // Broadcast only if the network is selected
       if (!updateEvent.obj.isSelected) return;
+
+      const connections = await ConnectionService.getConnections();
+      const origins = connections.map((connection) => connection.origin);
 
       this.communicationProtocol.broadcast(
         origins,
@@ -45,6 +46,36 @@ export class DatabaseEvents {
               {
                 id: updateEvent.obj.id,
                 url: updateEvent.obj.url,
+              },
+            ],
+          },
+        ])
+      );
+    });
+
+    this.databaseObservable.on('accounts:update', async (updateEvent) => {
+      // Broadcast only if it's the current account
+      if (!updateEvent.obj.isCurrent) return;
+
+      const [currentAccount, connections] = await Promise.all([
+        AccountService.getCurrentAccount(),
+        ConnectionService.getConnections(),
+      ]);
+      const origins = connections
+        .filter(
+          (connection) =>
+            connection.accounts.indexOf(currentAccount?.address || '') !== -1
+        )
+        .map((connection) => connection.origin);
+
+      this.communicationProtocol.broadcast(
+        origins,
+        this.createEvents([
+          {
+            event: 'currentAccount',
+            params: [
+              {
+                id: updateEvent.obj.address,
               },
             ],
           },

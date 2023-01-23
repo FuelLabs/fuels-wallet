@@ -57,7 +57,7 @@ export type AccountInputs = {
     oldPassword: string;
     newPassword: string;
   };
-  selectAccount: {
+  setCurrentAccount: {
     address: string;
   };
   updateAccount: {
@@ -72,7 +72,7 @@ export class AccountService {
       const count = await db.accounts.count();
       const account = {
         ...input.data,
-        isSelected: count === 0,
+        isCurrent: count === 0,
         isHidden: !!input.data.isHidden,
       };
       await db.accounts.add(account);
@@ -217,7 +217,7 @@ export class AccountService {
 
   static async getWalletLocked(): Promise<WalletLocked> {
     const network = await NetworkService.getSelectedNetwork();
-    const account = await AccountService.getSelectedAccount();
+    const account = await AccountService.getCurrentAccount();
     if (!network) {
       throw new Error('Network not found!');
     }
@@ -240,21 +240,19 @@ export class AccountService {
     return manager.lock();
   }
 
-  static getSelectedAccount() {
+  static getCurrentAccount() {
     return db.transaction('r', db.accounts, async () => {
-      return (await db.accounts.toArray()).find(
-        (account) => account.isSelected
-      );
+      return (await db.accounts.toArray()).find((account) => account.isCurrent);
     });
   }
 
-  static selectAccount(input: AccountInputs['selectAccount']) {
+  static setCurrentAccount(input: AccountInputs['setCurrentAccount']) {
     return db.transaction('rw', db.accounts, async () => {
       await db.accounts
-        .filter((account) => !!account.isSelected)
-        .modify({ isSelected: false });
+        .filter((account) => !!account.isCurrent)
+        .modify({ isCurrent: false });
       await db.accounts.update(input.address, {
-        isSelected: true,
+        isCurrent: true,
       });
       return db.accounts.get(input.address);
     });
