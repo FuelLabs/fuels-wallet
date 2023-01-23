@@ -9,7 +9,7 @@ import { TxIcon } from '../TxIcon';
 
 import { ActivityItemLoader } from './ActivityItemLoader';
 
-import { shortAddress } from '~/systems/Core';
+import { Pages, shortAddress } from '~/systems/Core';
 
 export type TxItemProps = {
   transaction: Tx;
@@ -33,7 +33,7 @@ export const ActivityItem: TxItemComponent = ({
     <Card
       css={styles.root}
       aria-label="activity-item"
-      onClick={() => navigate(`/transactions/view/${id}`)}
+      onClick={() => navigate(Pages.tx({ txId: id }))}
     >
       <TxIcon operationName={label} status={status} />
       <Stack css={styles.contentWrapper}>
