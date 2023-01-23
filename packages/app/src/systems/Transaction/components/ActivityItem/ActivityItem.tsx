@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Card, Copyable, Flex, Icon, Stack, Text } from '@fuel-ui/react';
 import type { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useTxMetadata } from '../../hooks/useTxMetadata';
 import type { Tx } from '../../utils';
@@ -26,8 +27,14 @@ export const ActivityItem: TxItemComponent = ({
   const { label, toOrFromAddress, toOrFromText, timeFormatted, id, status } =
     useTxMetadata({ ownerAddress, transaction });
 
+  const navigate = useNavigate();
+
   return (
-    <Card css={styles.root} aria-label="activity-item">
+    <Card
+      css={styles.root}
+      aria-label="activity-item"
+      onClick={() => navigate(`/transactions/view/${id}`)}
+    >
       <TxIcon operationName={label} status={status} />
       <Stack css={styles.contentWrapper}>
         <Flex css={styles.row}>
@@ -75,6 +82,7 @@ const styles = {
     gap: '$3',
     fontWeight: '$semibold',
     flexDirection: 'row',
+    cursor: 'pointer',
   }),
   txIconWrapper: cssObj({
     color: '$gray12',
