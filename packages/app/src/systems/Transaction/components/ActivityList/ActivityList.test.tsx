@@ -10,7 +10,10 @@ import { TestWrapper } from '~/systems/Core/components/TestWrapper';
 describe('ActivityList', () => {
   it('a11y', async () => {
     await testA11y(
-      <ActivityList txs={MOCK_TXS} ownerAddress={MOCK_ACCOUNTS[3].address} />
+      <ActivityList txs={MOCK_TXS} ownerAddress={MOCK_ACCOUNTS[3].address} />,
+      {
+        wrapper: TestWrapper,
+      }
     );
   });
 
@@ -20,7 +23,10 @@ describe('ActivityList', () => {
         txs={[]}
         isLoading={true}
         ownerAddress={MOCK_ACCOUNTS[3].address}
-      />
+      />,
+      {
+        wrapper: TestWrapper,
+      }
     );
   });
 
@@ -59,7 +65,10 @@ describe('ActivityList', () => {
         txs={MOCK_TXS}
         isLoading={false}
         ownerAddress={MOCK_ACCOUNTS[3].address}
-      />
+      />,
+      {
+        wrapper: TestWrapper,
+      }
     );
     expect(screen.getAllByLabelText('activity-item').length).toBe(
       MOCK_TXS.length

@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Card, Copyable, Flex, Icon, Stack, Text } from '@fuel-ui/react';
 import type { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useTxMetadata } from '../../hooks/useTxMetadata';
 import type { Tx } from '../../utils';
@@ -8,7 +9,7 @@ import { TxIcon } from '../TxIcon';
 
 import { ActivityItemLoader } from './ActivityItemLoader';
 
-import { shortAddress } from '~/systems/Core';
+import { Pages, shortAddress } from '~/systems/Core';
 
 export type TxItemProps = {
   transaction: Tx;
@@ -26,16 +27,28 @@ export const ActivityItem: TxItemComponent = ({
   const { label, toOrFromAddress, toOrFromText, timeFormatted, id, status } =
     useTxMetadata({ ownerAddress, transaction });
 
+  const navigate = useNavigate();
+
   return (
-    <Card css={styles.root} aria-label="activity-item">
+    <Card
+      css={styles.root}
+      aria-label="activity-item"
+      onClick={() => navigate(Pages.tx({ txId: id }))}
+    >
       <TxIcon operationName={label} status={status} />
       <Stack css={styles.contentWrapper}>
-        <Flex css={styles.row}>
-          <Flex css={styles.item}>
-            <Text fontSize="sm" css={styles.label}>
-              {label}
-            </Text>
-          </Flex>
+        <Flex css={styles.item} gap={5}>
+          <Text fontSize="sm" css={styles.label}>
+            {label}
+          </Text>
+          <Copyable
+            value={id}
+            iconProps={{
+              icon: Icon.is('CopySimple'),
+              'aria-label': 'Copy Transaction ID',
+            }}
+            tooltipMessage="Copy Transaction ID"
+          />
         </Flex>
         <Flex css={styles.row}>
           <Flex css={styles.fromToTextWrapper}>
@@ -43,14 +56,6 @@ export const ActivityItem: TxItemComponent = ({
               {toOrFromText}
             </Text>
             <Text fontSize="xs">{shortAddress(toOrFromAddress)}</Text>
-            <Copyable
-              value={id}
-              iconProps={{
-                icon: Icon.is('CopySimple'),
-                'aria-label': 'Copy Transaction ID',
-              }}
-              tooltipMessage="Copy Transaction ID"
-            />
           </Flex>
           {timeFormatted && (
             <Flex css={styles.item}>
@@ -75,6 +80,7 @@ const styles = {
     gap: '$3',
     fontWeight: '$semibold',
     flexDirection: 'row',
+    cursor: 'pointer',
   }),
   txIconWrapper: cssObj({
     color: '$gray12',
