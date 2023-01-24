@@ -7,13 +7,13 @@ const { VITE_FUEL_PROVIDER_URL } = process.env;
 const networks = [
   {
     id: '1',
-    isCurrent: true,
+    isSelected: true,
     name: 'Local',
     url: VITE_FUEL_PROVIDER_URL,
   },
   {
     id: '2',
-    isCurrent: false,
+    isSelected: false,
     name: 'Another',
     url: 'https://another.network.fuel/graphql',
   },
