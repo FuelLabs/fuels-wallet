@@ -1,6 +1,7 @@
 import { Button, Text } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
+import { store } from '~/store';
 import { ContentHeader, Layout, Pages } from '~/systems/Core';
 import type { UseTransactionRequestReturn } from '~/systems/DApp';
 import { TxContent, TxHeader } from '~/systems/Transaction';
@@ -13,6 +14,12 @@ export function SendConfirm({ txRequest }: SendConfirmProps) {
   const amountSent = txRequest.ethAmountSent;
   const isDone = txRequest.status('success') || txRequest.status('failed');
   const navigate = useNavigate();
+
+  const goToHome = () => {
+    store.updateAccounts();
+    navigate(Pages.index());
+  };
+
   return (
     <Layout.Content>
       <TxContent.Info
@@ -46,7 +53,7 @@ export function SendConfirm({ txRequest }: SendConfirmProps) {
                 size="sm"
                 variant="ghost"
                 color="accent"
-                onPress={() => navigate(Pages.index())}
+                onPress={goToHome}
               >
                 Back to wallet
               </Button>
