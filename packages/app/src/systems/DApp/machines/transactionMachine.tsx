@@ -10,6 +10,7 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { send } from 'xstate/lib/actions';
 
+import { store } from '~/store';
 import { unlockMachine } from '~/systems/Account';
 import type {
   UnlockMachine,
@@ -201,6 +202,7 @@ export const transactionMachine = createMachine(
       txSuccess: {
         on: {
           CLOSE: {
+            actions: ['updateAccounts'],
             target: 'done',
           },
         },
@@ -211,6 +213,7 @@ export const transactionMachine = createMachine(
             target: 'waitingApproval',
           },
           CLOSE: {
+            actions: ['updateAccounts'],
             target: 'failed',
           },
         },
@@ -280,6 +283,9 @@ export const transactionMachine = createMachine(
           unlockError: (ev.data as any)?.error?.message,
         }),
       }),
+      updateAccounts: () => {
+        store.updateAccounts();
+      },
     },
     services: {
       unlock: unlockMachine,
