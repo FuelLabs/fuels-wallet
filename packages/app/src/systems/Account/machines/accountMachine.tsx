@@ -89,7 +89,7 @@ export const accountMachine = createMachine(
             target: 'idle',
           },
           SET_CURRENT_ACCOUNT: {
-            target: 'selectingAccount',
+            target: 'settingCurrentAccount',
           },
           ADD_ACCOUNT: {
             actions: ['assignAccountName'],
@@ -146,7 +146,7 @@ export const accountMachine = createMachine(
           ],
         },
       },
-      selectingAccount: {
+      settingCurrentAccount: {
         invoke: {
           src: 'setCurrentAccount',
           data: {

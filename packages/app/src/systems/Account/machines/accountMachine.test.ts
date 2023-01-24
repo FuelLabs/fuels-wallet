@@ -89,10 +89,10 @@ describe('accountsMachine', () => {
       };
 
       const nextState = service.nextState(selectEv);
-      expect(nextState.value).toBe('selectingAccount');
+      expect(nextState.value).toBe('settingCurrentAccount');
 
       service.send(selectEv);
-      await expectStateMatch(service, 'selectingAccount');
+      await expectStateMatch(service, 'settingCurrentAccount');
       state = await expectStateMatch(service, 'idle');
 
       accounts = await AccountService.getAccounts();
