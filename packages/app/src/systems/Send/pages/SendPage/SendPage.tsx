@@ -4,7 +4,6 @@ import { AnimatePresence } from 'framer-motion';
 import { Send } from '../../components';
 import { useSend } from '../../hooks';
 
-import { IS_CRX_POPUP } from '~/config';
 import { Layout, UnlockDialog } from '~/systems/Core';
 
 export function SendPage() {
@@ -41,7 +40,6 @@ export function SendPage() {
           </Layout.BottomBar>
         )}
         <UnlockDialog
-          isFullscreen={IS_CRX_POPUP}
           isOpen={isUnlocking || txRequest.status('waitingUnlock')}
           isLoading={isUnlocking}
           unlockText="Confirm Transaction"

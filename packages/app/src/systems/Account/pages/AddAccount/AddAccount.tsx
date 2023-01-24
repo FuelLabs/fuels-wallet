@@ -54,7 +54,6 @@ export const AddAccount = () => {
         unlockText="Add Account"
         unlockError={unlockError}
         isOpen={isUnlocking}
-        isFullscreen={true}
         onUnlock={handlers.unlock}
         isLoading={isUnlockingLoading}
         onClose={handlers.closeUnlock}
