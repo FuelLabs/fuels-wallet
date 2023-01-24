@@ -64,7 +64,6 @@ export function SignatureRequest() {
         </Layout.BottomBar>
       </Layout>
       <UnlockDialog
-        isFullscreen={true}
         isOpen={isUnlocking}
         unlockError={unlockError}
         onUnlock={handlers.unlock}
