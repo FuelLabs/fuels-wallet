@@ -1,4 +1,3 @@
-import { AnimatePresence } from 'framer-motion';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { TxHeader, TxStatusAlert } from '../../components';
@@ -26,27 +25,25 @@ export function TxView() {
     >
       <Layout.TopBar onBack={() => navigate(-1)} />
       <Layout.Content>
-        <AnimatePresence initial={false} mode="sync">
-          {ctx.isLoadingTx && <TxContent.Loader header={<TxHeader.Loader />} />}
-          {ctx.shouldShowAlert && (
-            <TxStatusAlert txStatus={tx?.status} error={ctx.error} />
-          )}
-          {ctx.shouldShowTx && (
-            <TxContent.Info
-              tx={tx}
-              amount={ctx.ethAmountSent}
-              showDetails={ctx.shouldShowTxDetails}
-              header={
-                <TxHeader
-                  id={tx?.id}
-                  type={tx?.type}
-                  status={tx?.status}
-                  providerUrl={providerUrl}
-                />
-              }
-            />
-          )}
-        </AnimatePresence>
+        {ctx.isLoadingTx && <TxContent.Loader header={<TxHeader.Loader />} />}
+        {ctx.shouldShowAlert && (
+          <TxStatusAlert txStatus={tx?.status} error={ctx.error} />
+        )}
+        {ctx.shouldShowTx && (
+          <TxContent.Info
+            tx={tx}
+            amount={ctx.ethAmountSent}
+            showDetails={ctx.shouldShowTxDetails}
+            header={
+              <TxHeader
+                id={tx?.id}
+                type={tx?.type}
+                status={tx?.status}
+                providerUrl={providerUrl}
+              />
+            }
+          />
+        )}
       </Layout.Content>
     </Layout>
   );

@@ -5,10 +5,15 @@ import { MOCK_TRANSACTION_CONTRACT_CALL } from '../../__mocks__/tx';
 
 import { ActivityItem } from './ActivityItem';
 
-import { shortAddress } from '~/systems/Core';
+import { Pages, shortAddress, TestWrapper } from '~/systems/Core';
 
 const ownerAddress =
   MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].from?.address || '';
+
+const opts = {
+  route: Pages.txs(),
+  wrapper: TestWrapper,
+};
 
 describe('TxItem', () => {
   it('a11y', async () => {
@@ -16,7 +21,8 @@ describe('TxItem', () => {
       <ActivityItem
         transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
         ownerAddress={ownerAddress}
-      />
+      />,
+      opts
     );
   });
 
@@ -29,7 +35,8 @@ describe('TxItem', () => {
       <ActivityItem
         transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
         ownerAddress={ownerAddress}
-      />
+      />,
+      opts
     );
 
     const btn = await screen.findByLabelText(/Copy Transaction ID/i);
@@ -46,7 +53,8 @@ describe('TxItem', () => {
       <ActivityItem
         transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
         ownerAddress={ownerAddress}
-      />
+      />,
+      opts
     );
     const address = MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].to?.address;
     if (address) {
@@ -64,7 +72,8 @@ describe('TxItem', () => {
       <ActivityItem
         transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
         ownerAddress={''}
-      />
+      />,
+      opts
     );
     const address = MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].to?.address;
     if (address) {
