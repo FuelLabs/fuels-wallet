@@ -14,8 +14,6 @@ import { useUnlockForm } from '../../hooks';
 import type { UnlockFormValues } from '../../hooks';
 import { UnlockForm } from '../UnlockForm';
 
-import { IS_CRX_POPUP } from '~/config';
-
 export type UnlockDialogProps = {
   title?: string;
   unlockText?: string;
@@ -42,13 +40,9 @@ export function UnlockDialog({
     onUnlock(values.password);
   }
 
-  const isBrowserFullScreenMode =
-    IS_CRX_POPUP && window.outerHeight === window.screen.height;
-  const isFullscreen = !isBrowserFullScreenMode;
-
   return (
     <Dialog isOpen={isOpen}>
-      <Dialog.Content css={styles.content(isFullscreen)}>
+      <Dialog.Content css={styles.content}>
         <Dialog.Heading>
           <Flex css={{ alignItems: 'center' }}>
             <Flex css={{ flex: 1 }}>
@@ -108,22 +102,12 @@ const styles = {
   button: cssObj({
     width: '100%',
   }),
-  content: (isFullscreen?: boolean) => {
-    return cssObj({
-      ...(isFullscreen
-        ? {
-            borderRadius: '$none',
-            width: '100vw',
-            maxWidth: '100vw',
-            height: '100vh',
-            maxHeight: '100vh',
-          }
-        : {
-            width: '350px',
-            height: '600px',
-          }),
-    });
-  },
+  content: cssObj({
+    width: '350px',
+    height: '600px',
+    maxWidth: '350px',
+    maxHeight: 'none',
+  }),
   description: cssObj({
     flex: 1,
   }),
