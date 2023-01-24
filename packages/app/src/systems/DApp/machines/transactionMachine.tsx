@@ -200,20 +200,20 @@ export const transactionMachine = createMachine(
         },
       },
       txSuccess: {
+        entry: ['updateAccounts'],
         on: {
           CLOSE: {
-            actions: ['updateAccounts'],
             target: 'done',
           },
         },
       },
       txFailed: {
+        entry: ['updateAccounts'],
         on: {
           TRY_AGAIN: {
             target: 'waitingApproval',
           },
           CLOSE: {
-            actions: ['updateAccounts'],
             target: 'failed',
           },
         },
