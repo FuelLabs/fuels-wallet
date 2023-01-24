@@ -9,6 +9,7 @@ import { Address, bn, Provider } from 'fuels';
 import { unlockManager } from '../utils/manager';
 
 import { isEth } from '~/systems/Asset/utils/asset';
+import { ASSET_MAP } from '~/systems/Asset/utils/constants';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
 import { Storage } from '~/systems/Core/utils/storage';
@@ -288,8 +289,9 @@ export class AccountService {
 // Private methods
 // ----------------------------------------------------------------------------
 
-function getBalances(providerUrl: string, publicKey: string = '0x00') {
+async function getBalances(providerUrl: string, publicKey: string = '0x00') {
   const provider = new Provider(providerUrl!);
   const address = Address.fromPublicKey(publicKey);
-  return provider.getBalances(address);
+  const balances = await provider.getBalances(address);
+  return balances.filter((balance) => !!ASSET_MAP[balance.assetId]);
 }
