@@ -97,7 +97,7 @@ export const accountMachine = createMachine(
           },
         },
         after: {
-          TIMEOUT: 'fetchingAccounts', // retry
+          TIMEOUT: 'fetchingAccount', // retry
         },
       },
       fetchingAccounts: {
@@ -257,7 +257,7 @@ export const accountMachine = createMachine(
     },
   },
   {
-    delays: { INTERVAL: 2000, TIMEOUT: 15000 },
+    delays: { INTERVAL: 2000, TIMEOUT: 5000 },
     actions: {
       clearUnlockError: assign({
         unlockError: (_) => undefined,

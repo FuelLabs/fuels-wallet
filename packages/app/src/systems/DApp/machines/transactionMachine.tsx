@@ -10,7 +10,6 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { send } from 'xstate/lib/actions';
 
-import { store } from '~/store';
 import { unlockMachine } from '~/systems/Account';
 import type {
   UnlockMachine,
@@ -200,7 +199,6 @@ export const transactionMachine = createMachine(
         },
       },
       txSuccess: {
-        entry: ['updateAccounts'],
         on: {
           CLOSE: {
             target: 'done',
@@ -208,7 +206,6 @@ export const transactionMachine = createMachine(
         },
       },
       txFailed: {
-        entry: ['updateAccounts'],
         on: {
           TRY_AGAIN: {
             target: 'waitingApproval',
@@ -283,10 +280,6 @@ export const transactionMachine = createMachine(
           unlockError: (ev.data as any)?.error?.message,
         }),
       }),
-      updateAccounts: () => {
-        // Wait a second to update accounts, so the node has enough time to update.
-        setTimeout(() => store.updateAccounts(), 1000);
-      },
     },
     services: {
       unlock: unlockMachine,
