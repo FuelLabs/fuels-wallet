@@ -284,8 +284,7 @@ export const transactionMachine = createMachine(
         }),
       }),
       updateAccounts: () => {
-        // TODO: this is a hack to update the accounts in the store after a tx
-        // is done. I'm waiting for a second for the node to update the account balances
+        // Wait a second to update accounts, so the node has enough time to update.
         setTimeout(() => store.updateAccounts(), 1000);
       },
     },
