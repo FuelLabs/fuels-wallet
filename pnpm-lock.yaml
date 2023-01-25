@@ -14,9 +14,9 @@ importers:
       '@babel/core': ^7.20.12
       '@changesets/changelog-github': ^0.4.8
       '@changesets/cli': ^2.26.0
-      '@fuel-ui/config': ^0.10.1
-      '@fuel-ui/css': ^0.10.1
-      '@fuel-ui/react': ^0.10.1
+      '@fuel-ui/config': ^0.10.2
+      '@fuel-ui/css': ^0.10.2
+      '@fuel-ui/react': ^0.10.2
       '@jest/types': 29.3.1
       '@playwright/test': ^1.29.2
       '@types/jest': ^29.2.5
@@ -45,9 +45,9 @@ importers:
       typescript: ^4.9.4
       updates: ^13.2.7
     dependencies:
-      '@fuel-ui/config': 0.10.1_typescript@4.9.4
-      '@fuel-ui/css': 0.10.1
-      '@fuel-ui/react': 0.10.1_ywyjsyldpsilpxlrglc2pch2mm
+      '@fuel-ui/config': 0.10.2_typescript@4.9.4
+      '@fuel-ui/css': 0.10.2
+      '@fuel-ui/react': 0.10.2_ywyjsyldpsilpxlrglc2pch2mm
       execa: 6.1.0
       fuelhat: link:packages/fuelhat
     devDependencies:
@@ -180,7 +180,7 @@ importers:
       '@fuel-ui/config': 0.10.1_typescript@4.9.4
       '@fuel-ui/css': 0.10.1
       '@fuel-ui/react': 0.10.1_txv527irue6n5v522dyrrgoi5e
-      '@fuel-ui/test-utils': 0.10.1_ysqhj3banali5uwvkrrilmbn4e
+      '@fuel-ui/test-utils': 0.10.1_txv527irue6n5v522dyrrgoi5e
       '@fuel-wallet/sdk': link:../sdk
       '@fuel-wallet/types': link:../types
       '@fuel-wallet/xstore': link:../store
@@ -3178,8 +3178,45 @@ packages:
       - typescript
     dev: false
 
+  /@fuel-ui/config/0.10.2_typescript@4.9.4:
+    resolution: {integrity: sha512-ZPh1L0lr6s35m4XS7NGrsgrpjcUj1yAHfbbjoGy07sf/3Eivv9/NAGcdAO1Kt848dss2ZIsCD2dykA3fGNQWhQ==}
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 5.48.2_caon6io6stgpr7lz2rtbhekxqy
+      '@typescript-eslint/parser': 5.48.2_7uibuqfxkfaozanbtbziikiqje
+      eslint: 8.32.0
+      eslint-config-airbnb-base: 15.0.0_ps7hf4l2dvbuxvtusmrfhmzsba
+      eslint-config-airbnb-typescript: 17.0.0_4uspdq5wyqa45em4fomihl4hbu
+      eslint-config-prettier: 8.6.0_eslint@8.32.0
+      eslint-plugin-eslint-comments: 3.2.0_eslint@8.32.0
+      eslint-plugin-import: 2.27.5_2l6piu6guil2f63lj3qmhzbnn4
+      eslint-plugin-jest-dom: 4.0.3_eslint@8.32.0
+      eslint-plugin-jsx-a11y: 6.7.1_eslint@8.32.0
+      eslint-plugin-prettier: 4.2.1_cn4lalcyadplruoxa5mhp7j3dq
+      eslint-plugin-react: 7.32.1_eslint@8.32.0
+      eslint-plugin-react-hooks: 4.6.0_eslint@8.32.0
+      eslint-plugin-testing-library: 5.9.1_7uibuqfxkfaozanbtbziikiqje
+      prettier: 2.8.3
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    transitivePeerDependencies:
+      - eslint-import-resolver-typescript
+      - eslint-import-resolver-webpack
+      - supports-color
+      - typescript
+    dev: false
+
   /@fuel-ui/css/0.10.1:
     resolution: {integrity: sha512-SKctXf4VLdiq+1Q7DXWzDRY9HUDkgukJAmOZ2egQ84EfkNOAxYeFb4ewyij8h1WrYY4QF2PbWRmghrOFfpsW/Q==}
+    dependencies:
+      '@radix-ui/colors': 0.1.8
+      '@stitches/react': 1.2.8_react@18.2.0
+      classnames: 2.3.2
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /@fuel-ui/css/0.10.2:
+    resolution: {integrity: sha512-VL10T7EUUGPiG7vnIgKU52LDgmiTJgvvdCNi5OOeBApGCSFrLE/DQlEbyUpw9AYeZQEdGjVLeZ1UY/LOCKDS7A==}
     dependencies:
       '@radix-ui/colors': 0.1.8
       '@stitches/react': 1.2.8_react@18.2.0
@@ -3193,7 +3230,7 @@ packages:
     dependencies:
       '@fuel-ts/math': 0.22.2
       '@fuel-ui/css': 0.10.1
-      '@fuel-ui/test-utils': 0.10.1_glye3pnrizqg4gu2xfqsafbxou
+      '@fuel-ui/test-utils': 0.10.1_bkqoopcwnnk6xd32x7bdyhtmea
       '@radix-ui/react-accordion': 1.1.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_ib3m5ricvtkl2cll7qpr2f6lvq
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3247,7 +3284,7 @@ packages:
     dependencies:
       '@fuel-ts/math': 0.22.2
       '@fuel-ui/css': 0.10.1
-      '@fuel-ui/test-utils': 0.10.1_ysqhj3banali5uwvkrrilmbn4e
+      '@fuel-ui/test-utils': 0.10.1_txv527irue6n5v522dyrrgoi5e
       '@radix-ui/react-accordion': 1.1.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_ib3m5ricvtkl2cll7qpr2f6lvq
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3296,12 +3333,12 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/react/0.10.1_ywyjsyldpsilpxlrglc2pch2mm:
-    resolution: {integrity: sha512-PLIfpVqz4rkbJ6yTWHXnHpzEXyxoC86OeGAa87RuyT1gce3PMFZa9cqFlrvkvqaOOA57Rih/XdQbNHkoAmVLJA==}
+  /@fuel-ui/react/0.10.2_ywyjsyldpsilpxlrglc2pch2mm:
+    resolution: {integrity: sha512-dKARH8zdQpOINZjKj+7C44/qRXY2Q+yfTe4AKzp/vFwOrHUzfVESWLvyKS0GnT55JGOjC7W/ytaDdKjOHdUI0A==}
     dependencies:
-      '@fuel-ts/math': 0.22.2
-      '@fuel-ui/css': 0.10.1
-      '@fuel-ui/test-utils': 0.10.1_paihepyu6xhfcxeuhqdpcvitn4
+      '@fuel-ts/math': 0.29.1
+      '@fuel-ui/css': 0.10.2
+      '@fuel-ui/test-utils': 0.10.2_ywyjsyldpsilpxlrglc2pch2mm
       '@radix-ui/react-accordion': 1.1.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_ib3m5ricvtkl2cll7qpr2f6lvq
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3319,7 +3356,7 @@ packages:
       '@react-aria/utils': 3.14.2_react@18.2.0
       '@stitches/react': 1.2.8_react@18.2.0
       '@xstate/react': 3.0.2_o5u6bh43w5rmf7t7erwjktck7q
-      framer-motion: 7.10.3_biqbaboplfbrettd7655fr4n2y
+      framer-motion: 8.4.6_biqbaboplfbrettd7655fr4n2y
       jdenticon: 3.2.0
       phosphor-react: 1.4.1_react@18.2.0
       react: 18.2.0
@@ -3350,10 +3387,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.10.1_glye3pnrizqg4gu2xfqsafbxou:
+  /@fuel-ui/test-utils/0.10.1_bkqoopcwnnk6xd32x7bdyhtmea:
     resolution: {integrity: sha512-awlsb5iasOq3S2oEdKOc0VbI49XW+e2UmcHeOgawzHHgtIbAhf12gBKKOIIWrHcw3mGi2gRl1Lt5w420Rw4Y6Q==}
-    peerDependencies:
-      react: '*'
     peerDependenciesMeta:
       react:
         optional: true
@@ -3391,51 +3426,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.10.1_paihepyu6xhfcxeuhqdpcvitn4:
+  /@fuel-ui/test-utils/0.10.1_txv527irue6n5v522dyrrgoi5e:
     resolution: {integrity: sha512-awlsb5iasOq3S2oEdKOc0VbI49XW+e2UmcHeOgawzHHgtIbAhf12gBKKOIIWrHcw3mGi2gRl1Lt5w420Rw4Y6Q==}
-    peerDependencies:
-      react: '*'
-    peerDependenciesMeta:
-      react:
-        optional: true
-    dependencies:
-      '@testing-library/dom': 8.20.0
-      '@testing-library/jest-dom': 5.16.5
-      '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
-      '@testing-library/react-hooks': 8.0.1_ib3m5ricvtkl2cll7qpr2f6lvq
-      '@testing-library/user-event': 14.4.3_yxlyej73nftwmh2fiao7paxmlm
-      identity-obj-proxy: 3.0.0
-      jest: 29.3.1_zfha7dvnw4nti6zkbsmhmn6xo4
-      jest-axe: 7.0.0
-      jest-environment-jsdom: 29.3.1
-      jest-fail-on-console: 3.0.2
-      jest-matcher-utils: 29.3.1
-      jest-transform-stub: 2.0.0
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      resize-observer-polyfill: 1.5.1
-      ts-jest: 29.0.5_fbnxxcyiwhbarsilcfkcgo7ieu
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@jest/types'
-      - '@types/node'
-      - '@types/react'
-      - babel-jest
-      - bufferutil
-      - canvas
-      - esbuild
-      - node-notifier
-      - react-test-renderer
-      - supports-color
-      - ts-node
-      - typescript
-      - utf-8-validate
-    dev: false
-
-  /@fuel-ui/test-utils/0.10.1_ysqhj3banali5uwvkrrilmbn4e:
-    resolution: {integrity: sha512-awlsb5iasOq3S2oEdKOc0VbI49XW+e2UmcHeOgawzHHgtIbAhf12gBKKOIIWrHcw3mGi2gRl1Lt5w420Rw4Y6Q==}
-    peerDependencies:
-      react: '*'
     peerDependenciesMeta:
       react:
         optional: true
@@ -3456,6 +3448,45 @@ packages:
       react-dom: 18.2.0_react@18.2.0
       resize-observer-polyfill: 1.5.1
       ts-jest: 29.0.5_b6ud3wjfzxmze5tmlpgpdpo43e
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@jest/types'
+      - '@types/node'
+      - '@types/react'
+      - babel-jest
+      - bufferutil
+      - canvas
+      - esbuild
+      - node-notifier
+      - react-test-renderer
+      - supports-color
+      - ts-node
+      - typescript
+      - utf-8-validate
+    dev: false
+
+  /@fuel-ui/test-utils/0.10.2_ywyjsyldpsilpxlrglc2pch2mm:
+    resolution: {integrity: sha512-wGTDIxC0qLvYvCUNN6m/iwQ1hZ+6heyrgQua7P0F0pzcJew6t3GCMoXkVbDthyuLndP0EA+E3PevbV3zyuEp6w==}
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      '@testing-library/dom': 8.20.0
+      '@testing-library/jest-dom': 5.16.5
+      '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
+      '@testing-library/react-hooks': 8.0.1_ib3m5ricvtkl2cll7qpr2f6lvq
+      '@testing-library/user-event': 14.4.3_yxlyej73nftwmh2fiao7paxmlm
+      identity-obj-proxy: 3.0.0
+      jest: 29.3.1_zfha7dvnw4nti6zkbsmhmn6xo4
+      jest-axe: 7.0.0
+      jest-environment-jsdom: 29.3.1
+      jest-fail-on-console: 3.0.2
+      jest-matcher-utils: 29.3.1
+      jest-transform-stub: 2.0.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      resize-observer-polyfill: 1.5.1
+      ts-jest: 29.0.5_fbnxxcyiwhbarsilcfkcgo7ieu
     transitivePeerDependencies:
       - '@babel/core'
       - '@jest/types'

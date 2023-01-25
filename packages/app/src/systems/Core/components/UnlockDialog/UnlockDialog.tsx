@@ -22,7 +22,6 @@ export type UnlockDialogProps = {
   onClose?: () => void;
   onUnlock: (value: string) => void;
   isLoading?: boolean;
-  isFullscreen?: boolean;
 };
 
 export function UnlockDialog({
@@ -33,7 +32,6 @@ export function UnlockDialog({
   onClose,
   onUnlock,
   isLoading,
-  isFullscreen,
 }: UnlockDialogProps) {
   const form = useUnlockForm({ password: unlockError });
   const { handleSubmit } = form;
@@ -44,7 +42,7 @@ export function UnlockDialog({
 
   return (
     <Dialog isOpen={isOpen}>
-      <Dialog.Content css={styles.content(isFullscreen)}>
+      <Dialog.Content css={styles.content}>
         <Dialog.Heading>
           <Flex css={{ alignItems: 'center' }}>
             <Flex css={{ flex: 1 }}>
@@ -104,22 +102,12 @@ const styles = {
   button: cssObj({
     width: '100%',
   }),
-  content: (isFullscreen?: boolean) => {
-    return cssObj({
-      ...(isFullscreen
-        ? {
-            borderRadius: '$none',
-            width: '100vw',
-            maxWidth: '100vw',
-            height: '100vh',
-            maxHeight: '100vh',
-          }
-        : {
-            width: '350px',
-            height: '600px',
-          }),
-    });
-  },
+  content: cssObj({
+    width: '350px',
+    height: '600px',
+    maxWidth: '350px',
+    maxHeight: 'none',
+  }),
   description: cssObj({
     flex: 1,
   }),
