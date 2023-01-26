@@ -230,6 +230,8 @@ test.describe('FuelWallet Extension', () => {
       /** Check result */
       const currentAccount = await evtHold;
       expect(currentAccount).toEqual(walletAddress);
+
+      await popupPage.close();
     });
   });
 });
