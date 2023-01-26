@@ -13,6 +13,7 @@ export function SendConfirm({ txRequest }: SendConfirmProps) {
   const amountSent = txRequest.ethAmountSent;
   const isDone = txRequest.status('success') || txRequest.status('failed');
   const navigate = useNavigate();
+
   return (
     <Layout.Content>
       <TxContent.Info
