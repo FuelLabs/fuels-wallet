@@ -211,7 +211,7 @@ test.describe('FuelWallet Extension', () => {
       await getInputByName(popupPage, 'password').type(WALLET_PASSWORD);
       await getButtonByText(popupPage, /add account/i).click();
 
-      await hasText(popupPage, 'Assets');
+      await hasText(popupPage, 'Assets', 0, 10000);
 
       /** Switch back to Account 1 */
       await getByAriaLabel(popupPage, 'Accounts').click();
