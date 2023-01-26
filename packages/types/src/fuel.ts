@@ -13,6 +13,10 @@ export type FuelEvents =
       data: Array<string>;
     }
   | {
+      type: 'currentAccount';
+      data: string;
+    }
+  | {
       type: 'connection';
       data: boolean;
     }

@@ -124,7 +124,7 @@ export function useAccounts() {
       closeUnlock,
       logout: store.logout,
       hideAccount: store.hideAccount,
-      selectAccount: store.selectAccount,
+      setCurrentAccount: store.setCurrentAccount,
       addAccount: store.addAccount,
     },
   };

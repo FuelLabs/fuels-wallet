@@ -16,7 +16,7 @@ import { shortAddress } from '~/systems/Core';
 
 export type AccountItemProps = {
   account: Account;
-  isSelected?: boolean;
+  isCurrent?: boolean;
   isHidden?: boolean;
   onPress?: () => void;
   rightEl?: JSX.Element;
@@ -30,7 +30,7 @@ type AccountItemComponent = FC<AccountItemProps> & {
 
 export const AccountItem: AccountItemComponent = ({
   account,
-  isSelected,
+  isCurrent,
   isHidden,
   onPress,
   rightEl,
@@ -56,7 +56,7 @@ export const AccountItem: AccountItemComponent = ({
   // );
   return (
     <CardList.Item
-      isActive={isSelected}
+      isActive={isCurrent}
       onClick={onPress}
       rightEl={rightEl}
       css={styles.root}

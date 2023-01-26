@@ -22,9 +22,9 @@ export const Compact = (args: AccountItemProps) => (
   </Box>
 );
 
-export const Selected = (args: AccountItemProps) => (
+export const Current = (args: AccountItemProps) => (
   <Box css={{ width: 320 }}>
-    <AccountItem {...args} account={MOCK_ACCOUNTS[0]} isSelected />
+    <AccountItem {...args} account={MOCK_ACCOUNTS[0]} isCurrent />
   </Box>
 );
 

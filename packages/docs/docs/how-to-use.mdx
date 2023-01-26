@@ -33,6 +33,14 @@ Once the connection is authorized, you can list the user accounts using `window.
 
 <Examples.ListAccounts />
 
+## Get current account
+
+You can also get the current account being used in the wallet using `window.fuel.currentAccount()`.
+
+<CodeImport file="../examples/CurrentAccount.tsx" lineStart="18" lineEnd="19" />
+
+<Examples.CurrentAccount />
+
 ## Signing a message
 
 With access to the user address and the connection authorized, you can request the user's signature using `fuel.signMessage`.

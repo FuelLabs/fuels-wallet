@@ -35,24 +35,24 @@ export function useConnectRequest() {
     connectionService,
     selectors.selectedAddresses
   );
-  const selectedAccounts = useMemo(() => {
+  const currentAccounts = useMemo(() => {
     return (accounts ?? []).filter((account) =>
       selectedAddresses?.includes(account.address)
     );
   }, [selectedAddresses, accounts]);
-  const hasSelectedAccounts = !!selectedAddresses?.length;
+  const hasCurrentAccounts = !!selectedAddresses?.length;
 
   // Start Connect Request Methods
   useConnectRequestMethods(connectionService);
 
   useEffect(() => {
-    if (account && !hasSelectedAccounts) {
+    if (account && !hasCurrentAccounts) {
       connectionService.send({
         type: 'TOGGLE_ADDRESS',
         input: account.address,
       });
     }
-  }, [account, hasSelectedAccounts]);
+  }, [account, hasCurrentAccounts]);
 
   function authorizeConnection() {
     connectionService.send({
@@ -92,8 +92,8 @@ export function useConnectRequest() {
     account,
     accounts,
     selectedAddresses,
-    hasSelectedAccounts,
-    selectedAccounts,
+    hasCurrentAccounts,
+    currentAccounts,
     handlers: {
       rejectConnection,
       authorizeConnection,
