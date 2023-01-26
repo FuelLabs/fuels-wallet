@@ -166,9 +166,6 @@ export const connectMachine = createMachine(
           return [...selectedAddresses, input];
         },
       }),
-      closeWindow: () => {
-        window.close();
-      },
     },
     services: {
       fetchConnection: FetchMachine.create<

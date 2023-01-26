@@ -292,9 +292,6 @@ export const transactionMachine = createMachine(
           unlockError: (ev.data as any)?.error?.message,
         }),
       }),
-      closeWindow: () => {
-        window.close();
-      },
     },
     services: {
       unlock: unlockMachine,

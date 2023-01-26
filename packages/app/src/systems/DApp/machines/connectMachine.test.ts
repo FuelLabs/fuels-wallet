@@ -8,9 +8,11 @@ import { MOCK_ACCOUNTS } from '~/systems/Account';
 
 describe('connectMachine', () => {
   let service: ConnectMachineService;
-
+  const closeWindow = jest.fn();
   beforeEach(async () => {
-    service = interpret(connectMachine).start();
+    service = interpret(
+      connectMachine.withConfig({ actions: { closeWindow } })
+    ).start();
   });
 
   afterEach(() => {

@@ -21,8 +21,12 @@ describe('signMachine', () => {
     jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
   });
 
+  const closeWindow = jest.fn();
+
   beforeEach(async () => {
-    service = interpret(signMachine.withContext({})).start();
+    service = interpret(
+      signMachine.withConfig({ actions: { closeWindow } }).withContext({})
+    ).start();
   });
 
   afterEach(() => {

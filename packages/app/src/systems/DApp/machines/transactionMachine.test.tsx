@@ -28,10 +28,13 @@ describe('txApproveMachine', () => {
       providerUrl
     );
   });
+  const closeWindow = jest.fn();
 
   beforeEach(async () => {
     service = interpret(
-      transactionMachine.withContext({ input: {}, response: {} })
+      transactionMachine
+        .withConfig({ actions: { closeWindow } })
+        .withContext({ input: {}, response: {} })
     ).start();
   });
 

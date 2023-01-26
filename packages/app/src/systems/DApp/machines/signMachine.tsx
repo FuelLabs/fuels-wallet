@@ -139,9 +139,6 @@ export const signMachine = createMachine(
       assignOrigin: assign({
         origin: (_, ev) => ev.input.origin,
       }),
-      closeWindow: () => {
-        window.close();
-      },
     },
     services: {
       unlock: unlockMachine,
