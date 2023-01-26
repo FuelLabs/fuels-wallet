@@ -97,6 +97,17 @@ export const transactionMachine = createMachine(
             target: 'settingGasPrice',
           },
         },
+        after: {
+          /** connection should start quickly, if not, it's probably an error or reloading.
+           * to avoid stuck black screen, should close the window and let user retry */
+          TIMEOUT: '#(machine).closing', // retry
+        },
+      },
+      closing: {
+        entry: ['closeWindow'],
+        always: {
+          target: '#(machine).failed',
+        },
       },
       settingGasPrice: {
         tags: ['loading'],
@@ -224,6 +235,7 @@ export const transactionMachine = createMachine(
     },
   },
   {
+    delays: { TIMEOUT: 1300 },
     actions: {
       reset: assign(() => ({})),
       assignTxRequestData: assign({
@@ -280,6 +292,9 @@ export const transactionMachine = createMachine(
           unlockError: (ev.data as any)?.error?.message,
         }),
       }),
+      closeWindow: () => {
+        window.close();
+      },
     },
     services: {
       unlock: unlockMachine,

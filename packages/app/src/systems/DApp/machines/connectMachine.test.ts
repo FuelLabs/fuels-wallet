@@ -110,4 +110,9 @@ describe('connectMachine', () => {
 
     expect(state.context.isConnected).toBeTruthy();
   });
+
+  it('should fail if take too much time to connect', async () => {
+    await waitFor(service, (state) => state.matches('idle'));
+    await waitFor(service, (state) => state.matches('failed'));
+  });
 });

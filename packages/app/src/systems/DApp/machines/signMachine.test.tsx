@@ -79,4 +79,9 @@ describe('signMachine', () => {
 
     expect(state.context.error).toBeTruthy();
   });
+
+  it('should fail if take too much time to connect', async () => {
+    await waitFor(service, (state) => state.matches('idle'));
+    await waitFor(service, (state) => state.matches('failed'));
+  });
 });

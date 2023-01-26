@@ -61,4 +61,9 @@ describe('txApproveMachine', () => {
     const state = await waitFor(service, (state) => state.matches('txSuccess'));
     expect(state.matches('txSuccess')).toBeTruthy();
   });
+
+  it('should fail if take too much time to connect', async () => {
+    await waitFor(service, (state) => state.matches('idle'));
+    await waitFor(service, (state) => state.matches('failed'));
+  });
 });
