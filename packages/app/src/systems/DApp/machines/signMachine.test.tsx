@@ -15,13 +15,12 @@ const OWNER = import.meta.env.VITE_ADDR_OWNER;
 describe('signMachine', () => {
   let service: Service;
   let wallet: WalletUnlocked;
+  const closeWindow = jest.fn();
 
   beforeAll(async () => {
     wallet = Wallet.fromPrivateKey(OWNER);
     jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
   });
-
-  const closeWindow = jest.fn();
 
   beforeEach(async () => {
     service = interpret(

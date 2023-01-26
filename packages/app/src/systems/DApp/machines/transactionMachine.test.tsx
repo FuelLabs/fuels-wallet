@@ -18,6 +18,7 @@ describe('txApproveMachine', () => {
   let service: TransactionMachineService;
   let wallet: WalletUnlocked;
   let transactionRequest: TransactionRequest;
+  const closeWindow = jest.fn();
 
   beforeAll(async () => {
     wallet = Wallet.fromPrivateKey(OWNER);
@@ -28,7 +29,6 @@ describe('txApproveMachine', () => {
       providerUrl
     );
   });
-  const closeWindow = jest.fn();
 
   beforeEach(async () => {
     service = interpret(
