@@ -18,7 +18,7 @@ export const Accounts = () => {
           <AccountList
             isLoading={isLoading}
             accounts={accounts}
-            onPress={handlers.selectAccount}
+            onPress={handlers.setCurrentAccount}
           />
         )}
       </Layout.Content>

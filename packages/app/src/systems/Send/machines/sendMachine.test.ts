@@ -38,7 +38,7 @@ describe('sendMachine', () => {
     };
     account = await AccountService.addAccount({ data: acc });
     if (account) {
-      account.isSelected = true;
+      account.isCurrent = true;
       account.balances = MOCK_ASSETS;
       await NetworkService.addFirstNetwork();
       jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);

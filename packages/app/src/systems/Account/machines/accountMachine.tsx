@@ -39,7 +39,7 @@ type MachineServices = {
   fetchAccount: {
     data: Account;
   };
-  selectAccount: {
+  setCurrentAccount: {
     data: Account;
   };
   addAccount: {
@@ -54,7 +54,7 @@ export type MachineEvents =
       type: 'HIDE_ACCOUNT';
       input: AccountInputs['hideAccount'];
     }
-  | { type: 'SELECT_ACCOUNT'; input: AccountInputs['selectAccount'] }
+  | { type: 'SET_CURRENT_ACCOUNT'; input: AccountInputs['setCurrentAccount'] }
   | {
       type: 'ADD_ACCOUNT';
       input: string;
@@ -88,8 +88,8 @@ export const accountMachine = createMachine(
             actions: ['hideAccount'],
             target: 'idle',
           },
-          SELECT_ACCOUNT: {
-            target: 'selectingAccount',
+          SET_CURRENT_ACCOUNT: {
+            target: 'settingCurrentAccount',
           },
           ADD_ACCOUNT: {
             actions: ['assignAccountName'],
@@ -146,9 +146,9 @@ export const accountMachine = createMachine(
           ],
         },
       },
-      selectingAccount: {
+      settingCurrentAccount: {
         invoke: {
-          src: 'selectAccount',
+          src: 'setCurrentAccount',
           data: {
             input: (_: MachineContext, ev: MachineEvents) => ev.input,
           },
@@ -312,7 +312,7 @@ export const accountMachine = createMachine(
         showError: true,
         maxAttempts: 1,
         async fetch() {
-          const accountToFetch = await AccountService.getSelectedAccount();
+          const accountToFetch = await AccountService.getCurrentAccount();
           if (!accountToFetch) return undefined;
           const selectedNetwork = await NetworkService.getSelectedNetwork();
           const providerUrl =
@@ -324,8 +324,8 @@ export const accountMachine = createMachine(
           return accountWithBalance;
         },
       }),
-      selectAccount: FetchMachine.create<
-        AccountInputs['selectAccount'],
+      setCurrentAccount: FetchMachine.create<
+        AccountInputs['setCurrentAccount'],
         Account
       >({
         maxAttempts: 1,
@@ -333,7 +333,7 @@ export const accountMachine = createMachine(
           if (!input?.address) {
             throw new Error('Invalid account address');
           }
-          const account = await AccountService.selectAccount(input);
+          const account = await AccountService.setCurrentAccount(input);
           if (!account) {
             throw new Error('Failed to select account');
           }
@@ -354,7 +354,7 @@ export const accountMachine = createMachine(
           if (!account) {
             throw new Error('Failed to add account');
           }
-          account = await AccountService.selectAccount({
+          account = await AccountService.setCurrentAccount({
             address: account.address.toString(),
           });
           return account as Account;

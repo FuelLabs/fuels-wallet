@@ -43,6 +43,7 @@ export const AddAccount = () => {
                 isDisabled={!form.formState.isValid}
                 isLoading={isAddingAccount}
                 leftIcon={Icon.is('Plus')}
+                aria-label="Create new account"
               >
                 Create
               </Button>
