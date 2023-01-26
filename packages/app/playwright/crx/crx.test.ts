@@ -183,5 +183,53 @@ test.describe('FuelWallet Extension', () => {
       expect(await transferStatus).toBe('success');
       expect((await receiverWallet.getBalance()).toNumber()).toBe(100);
     });
+
+    await test.step('window.fuel.on("currentAccount")', async () => {
+      const evtHold = blankPage.evaluate(() => {
+        return new Promise((resolve) => {
+          window.fuel.on('currentAccount', (account) => {
+            resolve(account);
+          });
+        });
+      });
+
+      const popupPage = await context.newPage();
+      await popupPage.goto(`chrome-extension://${extensionId}/popup.html`);
+
+      /** Open Accounts */
+      await getByAriaLabel(popupPage, 'Accounts').click();
+
+      /** Get addess of connected account */
+      await hasText(popupPage, 'Account 1');
+
+      /** Create Account 2 (not connected) */
+      await getByAriaLabel(popupPage, 'Add account').click();
+      await getByAriaLabel(popupPage, 'Account Name').type('Account 2');
+      await getByAriaLabel(popupPage, 'Create new account').click();
+
+      /** Unlock wallet */
+      await getInputByName(popupPage, 'password').type(WALLET_PASSWORD);
+      await getButtonByText(popupPage, /add account/i).click();
+
+      await hasText(popupPage, 'Assets');
+
+      /** Switch back to Account 1 */
+      await getByAriaLabel(popupPage, 'Accounts').click();
+      // need to include position because sometimes test click on copy to clipboard icon and fails
+      await getByAriaLabel(popupPage, 'Account 1').click({
+        position: { x: 1, y: 1 },
+      });
+      await hasText(popupPage, 'Assets');
+
+      /** Fire copy address of Account 1 to clipboard */
+      await getByAriaLabel(popupPage, 'Copy to clipboard').click();
+      const walletAddress = await popupPage.evaluate(() =>
+        navigator.clipboard.readText()
+      );
+
+      /** Check result */
+      const currentAccount = await evtHold;
+      expect(currentAccount).toEqual(walletAddress);
+    });
   });
 });

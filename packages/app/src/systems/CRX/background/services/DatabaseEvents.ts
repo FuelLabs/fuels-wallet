@@ -1,10 +1,13 @@
-import type { EventMessage, EventMessageEvents } from '@fuel-wallet/types';
+import type {
+  Account,
+  EventMessage,
+  EventMessageEvents,
+} from '@fuel-wallet/types';
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { DatabaseObservable } from './DatabaseObservable';
 
-import { AccountService } from '~/systems/Account/services/account';
 import { ConnectionService } from '~/systems/DApp/services';
 
 export class DatabaseEvents {
@@ -57,14 +60,11 @@ export class DatabaseEvents {
       // Broadcast only if it's the current account
       if (!updateEvent.obj.isCurrent) return;
 
-      const [currentAccount, connections] = await Promise.all([
-        AccountService.getCurrentAccount(),
-        ConnectionService.getConnections(),
-      ]);
+      const currentAccount = updateEvent.obj as Account;
+      const connections = await ConnectionService.getConnections();
       const origins = connections
-        .filter(
-          (connection) =>
-            connection.accounts.indexOf(currentAccount?.address || '') !== -1
+        .filter((connection) =>
+          connection.accounts.includes(currentAccount?.address || '')
         )
         .map((connection) => connection.origin);
 
@@ -73,11 +73,7 @@ export class DatabaseEvents {
         this.createEvents([
           {
             event: 'currentAccount',
-            params: [
-              {
-                id: updateEvent.obj.address,
-              },
-            ],
+            params: [updateEvent.obj.address],
           },
         ])
       );
