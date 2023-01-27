@@ -222,10 +222,11 @@ test.describe('FuelWallet Extension', () => {
       await getByAriaLabel(popupPage, 'Accounts').click();
       await getByAriaLabel(popupPage, 'Account 1').click();
 
-      const account = await popupPage.evaluate(async () => {
+      const jsHandle = await popupPage.waitForFunction(async () => {
         const accounts = await window.fuelDB.accounts.toArray();
         return accounts.find((account) => account.name === 'Account 1');
       });
+      const account = await jsHandle.jsonValue();
 
       /** Check result */
       const currentAccount = await evtHold;
