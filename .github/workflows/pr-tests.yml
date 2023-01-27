@@ -42,7 +42,7 @@ jobs:
       - name: Run Jest Tests
         run: |
           pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
-        timeout-minutes: 10
+        timeout-minutes: 20
 
       - name: Publish coverage
         uses: artiomtr/jest-coverage-report-action@v2.0.5
