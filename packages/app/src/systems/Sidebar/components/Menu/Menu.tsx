@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import type { Icons } from '@fuel-ui/react';
 import { Box, Flex, Icon, Menu as RootMenu } from '@fuel-ui/react';
-import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { useState } from 'react';
 import { useNavigate, useResolvedPath, useMatch } from 'react-router-dom';
 
@@ -18,9 +17,6 @@ type MenuItemContentProps = {
   item: MenuItemObj;
   isOpened?: boolean;
 };
-
-const FlexMotion = motion(Flex);
-const IconMotion = motion(Icon);
 
 function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
   const navigate = useNavigate();
@@ -42,58 +38,43 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
   }
 
   return (
-    <MotionConfig transition={{ ease: 'linear', duration: 0.2 }}>
-      <FlexMotion
-        direction="column"
-        css={styles.menuItemContent(Boolean(isOpened))}
-        animate={{ height: isOpened ? '100%' : '24px' }}
+    <Flex direction="column" css={styles.menuItemContent(Boolean(isOpened))}>
+      <Flex
+        css={match && item.path ? styles.activeRoute : styles.route}
+        gap="$3"
       >
-        <Flex
-          css={match && item.path ? styles.activeRoute : styles.route}
-          gap="$3"
-        >
+        <Icon
+          icon={item.icon}
+          css={{
+            color: match && item.path ? '$accent11' : '$gray8',
+          }}
+          className="main-icon"
+        />
+        <Box css={{ flex: 1 }}>{item.label}</Box>
+        {item.submenu && (
           <Icon
-            icon={item.icon}
-            css={{
-              color: match && item.path ? '$accent11' : '$gray8',
-            }}
-            className="main-icon"
+            icon="CaretDown"
+            css={{ color: match && item.path ? '$white' : '$gray8' }}
           />
-          <Box css={{ flex: 1 }}>{item.label}</Box>
-          {item.submenu && (
-            <IconMotion
-              icon="CaretDown"
-              css={{ color: match && item.path ? '$white' : '$gray8' }}
-              animate={{ rotate: isOpened ? '180deg' : '0deg' }}
-            />
-          )}
-        </Flex>
-        <AnimatePresence mode="wait" initial={false}>
-          {isOpened && item.submenu && (
-            <Box css={{ overflow: 'hidden' }}>
-              <motion.div
-                initial={{ opacity: 0, y: -30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -30 }}
-              >
-                <RootMenu
-                  css={styles.submenu}
-                  onAction={handleAction}
-                  aria-label="Submenu"
-                >
-                  {item.submenu.map((subItem) => (
-                    <RootMenu.Item key={subItem.key} textValue={subItem.label}>
-                      <Icon icon={subItem.icon} css={{ color: '$gray8' }} />
-                      {subItem.label}
-                    </RootMenu.Item>
-                  ))}
-                </RootMenu>
-              </motion.div>
-            </Box>
-          )}
-        </AnimatePresence>
-      </FlexMotion>
-    </MotionConfig>
+        )}
+      </Flex>
+      {isOpened && item.submenu && (
+        <Box css={{ overflow: 'hidden' }}>
+          <RootMenu
+            css={styles.submenu}
+            onAction={handleAction}
+            aria-label="Submenu"
+          >
+            {item.submenu.map((subItem) => (
+              <RootMenu.Item key={subItem.key} textValue={subItem.label}>
+                <Icon icon={subItem.icon} css={{ color: '$gray8' }} />
+                {subItem.label}
+              </RootMenu.Item>
+            ))}
+          </RootMenu>
+        </Box>
+      )}
+    </Flex>
   );
 }
 
@@ -111,6 +92,8 @@ export function Menu({ items }: MenuProps) {
       setOpened(opened !== item.key ? item.key : null);
     } else if (item?.path) {
       navigate(item.path);
+    } else if (item?.ahref) {
+      window.open(item.ahref);
     }
   }
 
