@@ -1,5 +1,5 @@
 {
+  "**/*.(md|mdx|json|yml|yaml|css|html)": ["prettier --write"],
   "*.{js,jsx,ts,tsx,html}": ["prettier --write", "eslint --fix"],
-  ".{ts,tsx}": ["tsc --noEmit"],
-  "**/*.(md|json)": ["prettier --write"]
+  ".{ts,tsx}": ["tsc --noEmit"]
 }
