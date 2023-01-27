@@ -57,12 +57,14 @@
     "test:e2e": "NODE_ENV=test playwright test --config=packages/app/playwright.config.ts",
     "ts:check": "pnpm -r ts:check",
     "prepare": "husky install",
-    "codegen:app": "pnpm run --filter=app codegen"
+    "codegen:app": "pnpm run --filter=app codegen",
+    "link:fuel-ui": "./scripts/link-fuel-ui.sh"
   },
   "dependencies": {
     "@fuel-ui/config": "^0.10.2",
     "@fuel-ui/css": "^0.10.2",
     "@fuel-ui/react": "^0.10.2",
+    "@fuel-ui/test-utils": "^0.10.2",
     "execa": "^6.1.0",
     "fuelhat": "workspace:*"
   },

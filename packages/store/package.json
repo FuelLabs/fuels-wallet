@@ -26,6 +26,10 @@
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
+    "@fuel-ui/config": "^0.10.2",
+    "@fuel-ui/css": "^0.10.2",
+    "@fuel-ui/react": "^0.10.2",
+    "@fuel-ui/test-utils": "^0.10.2",
     "@xstate/react": "^3.0.2",
     "react": "^18.2.0",
     "xstate": "^4.35.2"

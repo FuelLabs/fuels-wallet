@@ -13,6 +13,10 @@
     ]
   },
   "dependencies": {
+    "@fuel-ui/config": "^0.10.2",
+    "@fuel-ui/css": "^0.10.2",
+    "@fuel-ui/react": "^0.10.2",
+    "@fuel-ui/test-utils": "^0.10.2",
     "@typescript-eslint/eslint-plugin": "^5.48.2",
     "@typescript-eslint/parser": "^5.48.2",
     "eslint": "^8.32.0",
