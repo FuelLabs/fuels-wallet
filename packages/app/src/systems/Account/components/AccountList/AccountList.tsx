@@ -41,7 +41,7 @@ export function AccountList({
                 key={account.address}
                 account={account}
                 isHidden={!showHidden && account.isHidden}
-                isSelected={account.isSelected}
+                isCurrent={account.isCurrent}
               />
             ))}
       </CardList>
