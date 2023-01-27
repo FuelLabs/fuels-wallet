@@ -1,6 +1,6 @@
 ---
-"@fuel-wallet/types": minor
-"@fuel-wallet/sdk": minor
+'@fuel-wallet/types': minor
+'@fuel-wallet/sdk': minor
 ---
 
 introduce `currentAccount` function/event

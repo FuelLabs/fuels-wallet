@@ -30,7 +30,7 @@
   --docsearch-footer-shadow: 0 -1px 0 0 #e0e3e8,
     0 -3px 6px 0 rgba(69, 98, 155, 0.12);
 }
-html[data-theme="dark"] {
+html[data-theme='dark'] {
   --docsearch-text-color: #f5f6f7;
   --docsearch-container-background: rgba(9, 10, 17, 0.8);
   --docsearch-modal-background: #131516;
@@ -378,10 +378,10 @@ html[data-theme="dark"] {
   stroke-width: var(--docsearch-icon-stroke-width);
   width: 24px;
 }
-.DocSearch-Hit[aria-selected="true"] a {
+.DocSearch-Hit[aria-selected='true'] a {
   background-color: var(--docsearch-highlight-color);
 }
-.DocSearch-Hit[aria-selected="true"] mark {
+.DocSearch-Hit[aria-selected='true'] mark {
   text-decoration: underline;
 }
 .DocSearch-Hit-Container {
@@ -427,7 +427,7 @@ html[data-theme="dark"] {
 svg.DocSearch-Hit-Select-Icon {
   display: none;
 }
-.DocSearch-Hit[aria-selected="true"] .DocSearch-Hit-Select-Icon {
+.DocSearch-Hit[aria-selected='true'] .DocSearch-Hit-Select-Icon {
   display: block;
 }
 .DocSearch-Hit-action-button:focus,
@@ -466,13 +466,13 @@ svg.DocSearch-Hit-Select-Icon {
   color: var(--docsearch-muted-color);
   font-size: 0.75em;
 }
-.DocSearch-Hit[aria-selected="true"] .DocSearch-Hit-action,
-.DocSearch-Hit[aria-selected="true"] .DocSearch-Hit-icon,
-.DocSearch-Hit[aria-selected="true"] .DocSearch-Hit-path,
-.DocSearch-Hit[aria-selected="true"] .DocSearch-Hit-text,
-.DocSearch-Hit[aria-selected="true"] .DocSearch-Hit-title,
-.DocSearch-Hit[aria-selected="true"] .DocSearch-Hit-Tree,
-.DocSearch-Hit[aria-selected="true"] mark {
+.DocSearch-Hit[aria-selected='true'] .DocSearch-Hit-action,
+.DocSearch-Hit[aria-selected='true'] .DocSearch-Hit-icon,
+.DocSearch-Hit[aria-selected='true'] .DocSearch-Hit-path,
+.DocSearch-Hit[aria-selected='true'] .DocSearch-Hit-text,
+.DocSearch-Hit[aria-selected='true'] .DocSearch-Hit-title,
+.DocSearch-Hit[aria-selected='true'] .DocSearch-Hit-Tree,
+.DocSearch-Hit[aria-selected='true'] mark {
   color: var(--docsearch-hit-active-color) !important;
 }
 @media screen and (prefers-reduced-motion: reduce) {
@@ -506,7 +506,7 @@ svg.DocSearch-Hit-Select-Icon {
 }
 .DocSearch-NoResults-Prefill-List li {
   list-style-position: inside;
-  list-style-type: "» ";
+  list-style-type: '» ';
 }
 .DocSearch-Prefill {
   appearance: none;
