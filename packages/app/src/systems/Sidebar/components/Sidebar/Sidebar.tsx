@@ -40,7 +40,7 @@ export function Sidebar() {
             aria-label="drawer_closeButton"
           />
         </Flex>
-        <Menu items={sidebarItems} />
+        <Menu items={sidebarItems(selectedNetwork.url)} />
       </Flex>
       <Flex
         css={{
