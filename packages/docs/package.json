@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3030",
     "build": "next build",
     "export": "DOCS_DIST=${DOCS_DIST:=dist} && next export -o $DOCS_DIST",
     "start": "next start",
