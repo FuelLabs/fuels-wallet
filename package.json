@@ -36,8 +36,8 @@
     "changeset:check": "changeset status --since=master",
     "deps:update": "updates -gu && pnpm -r exec updates -gu",
     "dev": "turbo run dev --filter=app",
+    "dev:crx": "turbo run dev:crx --filter=app",
     "dev:docs": "NODE_ENV=development turbo run dev --filter=docs",
-    "dev:crx": "turbo run dev:crx --parallel",
     "gh:preview": "node ./scripts/gh-pages-preview.mjs",
     "lint": "run-s lint:check prettier:check",
     "lint:check": "eslint . --ext .ts,.tsx,.js,.jsx",
@@ -54,7 +54,7 @@
     "test:ci": "pnpm test -- --ci --testLocationInResults --json --coverage",
     "test:clear": "pnpm -r exec jest --clearCache",
     "test:coverage": "pnpm run --filter=app test --coverage",
-    "test:e2e": "NODE_ENV=test playwright test --config=packages/app/playwright.config.ts",
+    "test:e2e": "playwright test --config=packages/app/playwright.config.ts",
     "ts:check": "pnpm -r ts:check",
     "prepare": "husky install",
     "codegen:app": "pnpm run --filter=app codegen"
