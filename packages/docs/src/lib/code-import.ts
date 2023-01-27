@@ -8,7 +8,6 @@ import path from 'path';
 import * as prettier from 'prettier';
 import type { Root } from 'remark-gfm';
 import { visit } from 'unist-util-visit';
-import type { Parent } from 'unist-util-visit';
 
 const ROOT_DIR = path.resolve(__dirname, '../../../../../../../');
 
@@ -100,11 +99,11 @@ export function codeImport(options: Options = { filepath: '' }) {
   const dirname = path.relative(rootDir, path.dirname(filepath));
 
   return function transformer(tree: Root) {
-    const nodes: [any, number | null, Parent][] = [];
+    const nodes: [any, number | null, any][] = [];
 
     visit(tree, 'mdxJsxFlowElement', (node: any, idx, parent) => {
       if (node.name === 'CodeImport') {
-        nodes.push([node as any, idx, parent as Parent]);
+        nodes.push([node as any, idx, parent as any]);
       }
     });
 
