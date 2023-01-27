@@ -50,7 +50,7 @@ describe('fetchMachine', () => {
     expect(fetchSpy).toHaveBeenCalledTimes(3);
   });
 
-  it.only('should fail after attempting 5 times', async () => {
+  it('should fail after attempting 5 times', async () => {
     const { fetchSpy, service } = createService({
       maxAttempts: 5,
       fetch: fetchForceError,
