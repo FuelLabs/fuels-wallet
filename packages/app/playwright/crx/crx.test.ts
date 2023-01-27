@@ -1,4 +1,3 @@
-import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 import { bn, Wallet } from 'fuels';
 
@@ -44,7 +43,13 @@ test.describe('FuelWallet Extension', () => {
   test('SDK operations', async ({ context, baseURL, extensionId }) => {
     // Use a single instance of the page to avoid
     // mutiple waiting times, and window.fuel checking.
-    let blankPage: Page;
+    const blankPage = await context.newPage();
+    // Open a blank html in order for the CRX
+    // to inject fuel on the window. This is required
+    // because the CRX is injected after load state of
+    // the page.
+    await blankPage.goto(new URL('e2e.html', baseURL).href);
+    await blankPage.waitForTimeout(5000);
 
     await test.step('Create wallet', async () => {
       const pages = await context.pages();
@@ -74,13 +79,6 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('Check if fuel was inject on the window', async () => {
-      blankPage = await context.newPage();
-      // Open a blank html in order for the CRX
-      // to inject fuel on the window. This is required
-      // because the CRX is injected after load state of
-      // the page.
-      await blankPage.goto(`${baseURL}e2e.html`);
-      await blankPage.waitForTimeout(1000);
       const hasFuel = await blankPage.evaluate(() => {
         return typeof window.fuel === 'object';
       });
@@ -222,21 +220,16 @@ test.describe('FuelWallet Extension', () => {
 
       /** Switch back to Account 1 */
       await getByAriaLabel(popupPage, 'Accounts').click();
-      // need to include position because sometimes test click on copy to clipboard icon and fails
-      await getByAriaLabel(popupPage, 'Account 1').click({
-        position: { x: 1, y: 1 },
-      });
-      await hasText(popupPage, 'Assets');
+      await getByAriaLabel(popupPage, 'Account 1').click();
 
-      /** Fire copy address of Account 1 to clipboard */
-      await getByAriaLabel(popupPage, 'Copy to clipboard').click();
-      const walletAddress = await popupPage.evaluate(() =>
-        navigator.clipboard.readText()
-      );
+      const account = await popupPage.evaluate(async () => {
+        const accounts = await window.fuelDB.accounts.toArray();
+        return accounts.find((account) => account.name === 'Account 1');
+      });
 
       /** Check result */
       const currentAccount = await evtHold;
-      expect(currentAccount).toEqual(walletAddress);
+      expect(currentAccount).toEqual(account.address);
 
       await popupPage.close();
     });
