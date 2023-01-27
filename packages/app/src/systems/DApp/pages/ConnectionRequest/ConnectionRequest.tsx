@@ -35,8 +35,8 @@ export function ConnectionRequest() {
     accounts,
     isSelectingAccounts,
     isConnecting,
-    hasSelectedAccounts,
-    selectedAccounts,
+    hasCurrentAccounts,
+    currentAccounts,
   } = useConnectRequest();
 
   if (!accounts || !origin) return null;
@@ -122,7 +122,7 @@ export function ConnectionRequest() {
                   </Button>
                 </Flex>
               </motion.div>
-              {selectedAccounts?.map((account) => {
+              {currentAccounts?.map((account) => {
                 const { address } = account;
 
                 return (
@@ -158,7 +158,7 @@ export function ConnectionRequest() {
               type="submit"
               color="accent"
               onPress={() => handlers.next()}
-              isDisabled={!hasSelectedAccounts}
+              isDisabled={!hasCurrentAccounts}
             >
               Next
             </Button>

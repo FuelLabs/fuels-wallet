@@ -35,6 +35,11 @@ describe('Fuel', () => {
     expect(accounts).toEqual([userWallet.address.toAddress()]);
   });
 
+  test('currentAccount', async () => {
+    const currentAccount = await fuel.currentAccount();
+    expect(currentAccount).toEqual(userWallet.address.toAddress());
+  });
+
   test('signMessage', async () => {
     const accounts = await fuel.accounts();
     const account = accounts[0];
@@ -130,10 +135,5 @@ describe('Fuel', () => {
 
     // wait for transaction to be completed
     await response.wait();
-  });
-
-  test('getSelectedAccount', async () => {
-    const selectedAccount = await fuel.getSelectedAccount();
-    expect(selectedAccount).toBe(userWallet.address.toAddress());
   });
 });

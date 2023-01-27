@@ -39,7 +39,7 @@ export function createAccount(index: number = 0) {
     name: `Account ${index}`,
     publicKey: wallet.publicKey,
     isHidden: false,
-    isSelected: index === 0,
+    isCurrent: index === 0,
   };
 }
 

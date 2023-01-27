@@ -52,6 +52,17 @@ export const signMachine = createMachine(
             target: 'reviewMessage',
           },
         },
+        after: {
+          /** connection should start quickly, if not, it's probably an error or reloading.
+           * to avoid stuck black screen, should close the window and let user retry */
+          TIMEOUT: '#(machine).closing', // retry
+        },
+      },
+      closing: {
+        entry: ['closeWindow'],
+        always: {
+          target: '#(machine).failed',
+        },
       },
       reviewMessage: {
         on: {
@@ -117,6 +128,7 @@ export const signMachine = createMachine(
     },
   },
   {
+    delays: { TIMEOUT: 1300 },
     actions: {
       assignSignedMessage: assign({
         signedMessage: (_, ev) => ev.data,

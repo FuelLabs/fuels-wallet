@@ -27,7 +27,7 @@ export class MockConnection extends BaseConnection {
       this.network,
       this.signMessage,
       this.sendTransaction,
-      this.getSelectedAccount,
+      this.currentAccount,
     ]);
   }
 
@@ -77,7 +77,7 @@ export class MockConnection extends BaseConnection {
     return response.id;
   }
 
-  async getSelectedAccount() {
+  async currentAccount() {
     return userWallet.address.toAddress();
   }
 }
