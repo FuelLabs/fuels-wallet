@@ -16,8 +16,14 @@ const WALLET_PASSWORD = '12345678';
 
 test.describe('FuelWallet Extension', () => {
   test('On install sign-up page is open', async ({ context }) => {
+    // In development mode files are render dynamically
+    // making this first page to throw a error File not found.
+    if (process.env.NODE_ENV !== 'test') return;
+
     const page = await context.waitForEvent('page', {
-      predicate: (page) => page.url().includes('sign-up'),
+      predicate: (page) => {
+        return page.url().includes('sign-up');
+      },
     });
     await expect(page.url()).toContain('sign-up');
     await page.close();
@@ -153,6 +159,7 @@ test.describe('FuelWallet Extension', () => {
       });
       // Add some coins to the account
       await seedWallet(currentAccount, bn(1000));
+
       // Create transfer
       const transferStatus = blankPage.evaluate(
         async ([currentAccount, address]) => {
