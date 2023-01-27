@@ -18,6 +18,7 @@ describe('txApproveMachine', () => {
   let service: TransactionMachineService;
   let wallet: WalletUnlocked;
   let transactionRequest: TransactionRequest;
+  const closeWindow = jest.fn();
 
   beforeAll(async () => {
     wallet = Wallet.fromPrivateKey(OWNER);
@@ -31,7 +32,9 @@ describe('txApproveMachine', () => {
 
   beforeEach(async () => {
     service = interpret(
-      transactionMachine.withContext({ input: {}, response: {} })
+      transactionMachine
+        .withConfig({ actions: { closeWindow } })
+        .withContext({ input: {}, response: {} })
     ).start();
   });
 
@@ -60,5 +63,10 @@ describe('txApproveMachine', () => {
     await waitFor(service, (state) => state.matches('sendingTx'));
     const state = await waitFor(service, (state) => state.matches('txSuccess'));
     expect(state.matches('txSuccess')).toBeTruthy();
+  });
+
+  it('should fail if take too much time to connect', async () => {
+    await waitFor(service, (state) => state.matches('idle'));
+    await waitFor(service, (state) => state.matches('failed'));
   });
 });

@@ -2,21 +2,25 @@ import type { PlaywrightTestConfig } from '@playwright/test';
 import { join } from 'path';
 import './load.envs';
 
-const { E2E_PORT = 9000 } = process.env;
 const distDirectory = join(__dirname, './dist');
+
+const IS_CI = !!process.env.CI;
+const PORT = process.env.PORT;
 
 const config: PlaywrightTestConfig = {
   workers: 1,
   testMatch: join(__dirname, './playwright/**/*.test.ts'),
   testDir: join(__dirname, './playwright/'),
   reporter: [['list', { printSteps: true }]],
+  // Retry tests on CI if they fail
+  retries: IS_CI ? 2 : 0,
   webServer: {
-    command: `pnpm exec http-server -s -p ${E2E_PORT} ${distDirectory}`,
-    port: Number(E2E_PORT),
-    reuseExistingServer: false,
+    command: `pnpm exec http-server -s -p ${PORT} ${distDirectory}`,
+    port: Number(PORT),
+    reuseExistingServer: true,
   },
   use: {
-    baseURL: `http://localhost:${E2E_PORT}/`,
+    baseURL: `http://localhost:${PORT}/`,
     permissions: ['clipboard-read', 'clipboard-write'],
     headless: true,
   },

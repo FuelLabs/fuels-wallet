@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
+import type { Account, Network } from '@fuel-wallet/types';
 import type { Page } from '@playwright/test';
 import { Wallet } from 'fuels';
 
@@ -21,9 +21,7 @@ const networks = [
 
 export async function getAccount(page: Page) {
   return page.evaluate(async () => {
-    // @ts-ignore;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const fuelDB: any = window.fuelDB;
+    const fuelDB = window.fuelDB;
     const accounts = await fuelDB.accounts.toArray();
     return accounts[0];
   });
@@ -52,13 +50,11 @@ export function createAccounts(numberOfAccounts: number = 1) {
 export async function mockData(page: Page, numberOfAccounts: number = 1) {
   const accounts = createAccounts(numberOfAccounts);
   await page.evaluate(
-    ([accounts, networks]) => {
+    ([accounts, networks]: [Array<Account>, Array<Network>]) => {
       return new Promise((resolve, reject) => {
         (async function main() {
           try {
-            // @ts-ignore;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const fuelDB: any = window.fuelDB;
+            const fuelDB = window.fuelDB;
             await fuelDB.accounts.clear();
             await fuelDB.accounts.bulkAdd(accounts);
             await fuelDB.networks.clear();
