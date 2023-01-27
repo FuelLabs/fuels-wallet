@@ -97,12 +97,7 @@ export const accountMachine = createMachine(
           },
         },
         after: {
-          TIMEOUT: [
-            {
-              target: 'fetchingAccount', // retry
-              cond: 'enableTimeout',
-            },
-          ],
+          TIMEOUT: 'fetchingAccount', // retry
         },
       },
       fetchingAccounts: {
@@ -253,12 +248,7 @@ export const accountMachine = createMachine(
           },
         },
         after: {
-          INTERVAL: [
-            {
-              target: 'fetchingAccounts', // retry
-              cond: 'enableTimeout',
-            },
-          ],
+          INTERVAL: 'fetchingAccounts', // retry
         },
       },
     },
@@ -379,9 +369,6 @@ export const accountMachine = createMachine(
       }),
     },
     guards: {
-      enableTimeout: (_ctx, _ev) => {
-        return process.env.NODE_ENV !== 'test';
-      },
       hasAccount: (ctx, ev) => {
         return Boolean(ctx?.account || ev?.data);
       },
