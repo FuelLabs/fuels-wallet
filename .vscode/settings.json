@@ -1,11 +1,6 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "prettier.prettierPath": "./node_modules/prettier",
-  "editor.formatOnPaste": false,
-  "editor.formatOnType": false,
-  "editor.formatOnSave": true,
-  "editor.formatOnSaveMode": "file",
-  "files.autoSave": "onFocusChange",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   }
