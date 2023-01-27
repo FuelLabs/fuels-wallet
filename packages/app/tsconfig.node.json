@@ -9,6 +9,8 @@
     "types": ["@fuel-wallet/sdk/dist"]
   },
   "include": [
+    "load.envs.js",
+    "./src/exports.ts",
     "env.d.ts",
     "playwright/**/*.ts",
     "vite.config.ts",
