@@ -57,7 +57,6 @@ export class DatabaseEvents {
     });
 
     this.databaseObservable.on('accounts:update', async (updateEvent) => {
-      console.log(updateEvent.obj);
       // Broadcast only if it's the current account
       if (!updateEvent.obj.isCurrent) return;
 
