@@ -16,7 +16,7 @@ import type {
 import { IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
 import type { ChildrenMachine, Maybe } from '~/systems/Core';
-import { FetchMachine, Storage } from '~/systems/Core';
+import { enableTimeout, FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
 export enum AccountScreen {
@@ -97,7 +97,10 @@ export const accountMachine = createMachine(
           },
         },
         after: {
-          TIMEOUT: 'fetchingAccount', // retry
+          TIMEOUT: {
+            target: 'fetchingAccount', // retry,
+            cond: enableTimeout,
+          },
         },
       },
       fetchingAccounts: {
@@ -248,7 +251,10 @@ export const accountMachine = createMachine(
           },
         },
         after: {
-          INTERVAL: 'fetchingAccounts', // retry
+          INTERVAL: {
+            target: 'fetchingAccounts', // retry
+            cond: enableTimeout,
+          },
         },
       },
     },
