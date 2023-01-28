@@ -41,7 +41,7 @@ jobs:
 
       - name: Run Jest Tests
         run: |
-          pnpm test:ci --forceExit --outputFile="${{ env.COVERAGE_FILE }}"
+          pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
         timeout-minutes: 20
 
       - name: Publish coverage
@@ -51,7 +51,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           package-manager: pnpm
           annotations: failed-tests
-          test-script: pnpm test:ci --forceExit
+          test-script: pnpm test:ci
           prnumber: ${{ steps.findPr.outputs.number }}
           skip-test: all
           working-directory: ./packages/app
