@@ -133,7 +133,12 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     service.send('CLOSE_UNLOCK');
   }
   function request(input: TxInputs['request']) {
-    service.send('START_REQUEST', { input });
+    try {
+      service.send('START_REQUEST', { input });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.log(err.stack);
+    }
   }
   function tryAgain() {
     service.send('TRY_AGAIN');
