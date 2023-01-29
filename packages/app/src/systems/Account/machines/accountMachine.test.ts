@@ -7,7 +7,7 @@ import { AccountService } from '../services';
 import type { AccountMachineService, MachineEvents } from './accountMachine';
 import { accountMachine } from './accountMachine';
 
-import { db, Storage } from '~/systems/Core';
+import { Storage } from '~/systems/Core';
 import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 const MOCK_ACCOUNT = {
@@ -160,9 +160,8 @@ describe('accountsMachine', () => {
       expect(accountsBefore.length).toBeGreaterThanOrEqual(1);
 
       // Execute logout
-      await expectStateMatch(service, 'idle');
       service.send('LOGOUT');
-      await db.open();
+      await expectStateMatch(service, 'idle');
 
       // Check if indexdb is empty
       const accountsAfter = await AccountService.getAccounts();

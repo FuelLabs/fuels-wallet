@@ -3,8 +3,6 @@ import type { AnyInterpreter, StateFrom, Action } from 'xstate';
 import { assign } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
-import { IS_TEST } from '~/config';
-
 export async function waitForState<
   I extends AnyInterpreter,
   T extends StateFrom<I['machine']>,
@@ -48,8 +46,4 @@ export function assignErrorMessage(message: string): Action<any, any> {
     ...ctx,
     error: message,
   }));
-}
-
-export function enableTimeout() {
-  return IS_TEST;
 }
