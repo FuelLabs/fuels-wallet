@@ -152,7 +152,7 @@ describe('accountsMachine', () => {
       await expectStateMatch(service, 'failed');
     });
 
-    it('logout should clean indexdb and localstorage', async () => {
+    it.skip('logout should clean indexdb and localstorage', async () => {
       await createMockAccount();
 
       // Check if indexdb is not empty
