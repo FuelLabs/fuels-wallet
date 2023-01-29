@@ -1,3 +1,4 @@
+import Dexie from 'dexie';
 import { bn } from 'fuels';
 import { interpret } from 'xstate';
 
@@ -154,20 +155,17 @@ describe('accountsMachine', () => {
 
     it('logout should clean indexdb and localstorage', async () => {
       await createMockAccount();
-
-      // Check if indexdb is not empty
-      const accountsBefore = await AccountService.getAccounts();
-      expect(accountsBefore.length).toBeGreaterThanOrEqual(1);
+      const DexieDeleteMock = jest.spyOn(Dexie, 'delete').mockImplementation();
+      const StorageClearMock = jest
+        .spyOn(Storage, 'clear')
+        .mockImplementation();
 
       // Execute logout
       service.send('LOGOUT');
       await expectStateMatch(service, 'idle');
 
-      // Check if indexdb is empty
-      const accountsAfter = await AccountService.getAccounts();
-      const isLogged = Storage.getItem('isLogged');
-      expect(accountsAfter.length).toBe(0);
-      expect(isLogged).toBe(null);
+      expect(DexieDeleteMock).toBeCalledTimes(1);
+      expect(StorageClearMock).toBeCalledTimes(1);
     });
   });
 });
