@@ -54,11 +54,11 @@ Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/
   - [x] Reveal your passphrase
   - [x] Change password
   - [ ] Export accout privateKey
-- [ ] Transactions
+- [x] Transactions
   - [x] Receive Assets via address or QR Code
   - [x] Send Assets to another wallet
-  - [ ] Transaction History
-  - [ ] View transaction details
+  - [x] Transaction History
+  - [x] View transaction details
 
 ## 📜 License
 
