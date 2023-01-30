@@ -47,7 +47,8 @@ test.describe('Networks', () => {
   });
 
   test('should be able to add a new network', async () => {
-    getByAriaLabel(page, 'Add network').click();
+    await visit(page, '/networks');
+    await getByAriaLabel(page, 'Add network').click();
     const buttonCreate = await getButtonByText(page, /create/i);
     await expect(buttonCreate).toBeDisabled();
     const inputName = await getInputByName(page, 'name');

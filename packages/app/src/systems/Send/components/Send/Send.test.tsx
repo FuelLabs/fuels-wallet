@@ -5,7 +5,6 @@ import type { Account } from '@fuel-wallet/types';
 import { Address, Wallet } from 'fuels';
 
 import { sendLoader } from '../../__mocks__/send';
-import { findAssetSelect } from '../../__tests__/utils';
 
 import { Select, Confirm } from './Send.stories';
 
@@ -16,6 +15,10 @@ describe('Send', () => {
   let acc: Account | undefined;
   const wallet = Wallet.generate();
   const loader = sendLoader(wallet);
+
+  function findAssetSelect() {
+    return screen.findByLabelText('Select Asset');
+  }
 
   beforeEach(async () => {
     loaded = await loader();

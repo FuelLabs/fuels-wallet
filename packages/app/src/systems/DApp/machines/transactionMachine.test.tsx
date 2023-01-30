@@ -66,7 +66,15 @@ describe('txApproveMachine', () => {
   });
 
   it('should fail if take too much time to connect', async () => {
-    await waitFor(service, (state) => state.matches('idle'));
-    await waitFor(service, (state) => state.matches('failed'));
+    const serviceClose = interpret(
+      transactionMachine.withConfig({ actions: { closeWindow } }).withContext({
+        input: {
+          isOriginRequired: true,
+        },
+        response: {},
+      })
+    ).start();
+    await waitFor(serviceClose, (state) => state.matches('idle'));
+    await waitFor(serviceClose, (state) => state.matches('failed'));
   });
 });

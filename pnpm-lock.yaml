@@ -85,7 +85,9 @@ importers:
       '@babel/core': ^7.20.12
       '@crxjs/vite-plugin': ^1.0.14
       '@fontsource/source-code-pro': ^4.5.14
+      '@fuel-ts/keystore': ^0.29.1
       '@fuel-ts/mnemonic': 0.29.1
+      '@fuel-ts/signer': ^0.29.1
       '@fuel-ts/wallet': 0.29.1
       '@fuel-ts/wallet-manager': 0.29.1
       '@fuel-ui/config': ^0.10.2
@@ -215,6 +217,8 @@ importers:
     devDependencies:
       '@babel/core': 7.20.12
       '@crxjs/vite-plugin': 1.0.14_vite@4.0.4
+      '@fuel-ts/keystore': 0.29.1
+      '@fuel-ts/signer': 0.29.1
       '@graphql-codegen/cli': 2.16.4_r7fwkaijkfxnsrxgur6y2uf7s4
       '@graphql-codegen/named-operations-object': 2.3.1_sy4knu3obj4ys7pjcqbyfxmqle
       '@graphql-codegen/near-operation-file-preset': 2.5.0_graphql@16.6.0
