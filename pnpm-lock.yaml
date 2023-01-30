@@ -85,7 +85,9 @@ importers:
       '@babel/core': ^7.20.12
       '@crxjs/vite-plugin': ^1.0.14
       '@fontsource/source-code-pro': ^4.5.12
+      '@fuel-ts/keystore': ^0.29.1
       '@fuel-ts/mnemonic': 0.29.1
+      '@fuel-ts/signer': ^0.29.1
       '@fuel-ts/wallet': 0.29.1
       '@fuel-ts/wallet-manager': 0.29.1
       '@fuel-ui/config': ^0.10.1
@@ -180,7 +182,7 @@ importers:
       '@fuel-ui/config': 0.10.1_typescript@4.9.4
       '@fuel-ui/css': 0.10.1
       '@fuel-ui/react': 0.10.1_txv527irue6n5v522dyrrgoi5e
-      '@fuel-ui/test-utils': 0.10.1_txv527irue6n5v522dyrrgoi5e
+      '@fuel-ui/test-utils': 0.10.1_ysqhj3banali5uwvkrrilmbn4e
       '@fuel-wallet/sdk': link:../sdk
       '@fuel-wallet/types': link:../types
       '@fuel-wallet/xstore': link:../store
@@ -215,6 +217,8 @@ importers:
     devDependencies:
       '@babel/core': 7.20.12
       '@crxjs/vite-plugin': 1.0.14_vite@4.0.4
+      '@fuel-ts/keystore': 0.29.1
+      '@fuel-ts/signer': 0.29.1
       '@graphql-codegen/cli': 2.16.4_r7fwkaijkfxnsrxgur6y2uf7s4
       '@graphql-codegen/named-operations-object': 2.3.1_sy4knu3obj4ys7pjcqbyfxmqle
       '@graphql-codegen/near-operation-file-preset': 2.5.0_graphql@16.6.0
@@ -3230,7 +3234,7 @@ packages:
     dependencies:
       '@fuel-ts/math': 0.22.2
       '@fuel-ui/css': 0.10.1
-      '@fuel-ui/test-utils': 0.10.1_bkqoopcwnnk6xd32x7bdyhtmea
+      '@fuel-ui/test-utils': 0.10.1_glye3pnrizqg4gu2xfqsafbxou
       '@radix-ui/react-accordion': 1.1.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_ib3m5ricvtkl2cll7qpr2f6lvq
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3284,7 +3288,7 @@ packages:
     dependencies:
       '@fuel-ts/math': 0.22.2
       '@fuel-ui/css': 0.10.1
-      '@fuel-ui/test-utils': 0.10.1_txv527irue6n5v522dyrrgoi5e
+      '@fuel-ui/test-utils': 0.10.1_ysqhj3banali5uwvkrrilmbn4e
       '@radix-ui/react-accordion': 1.1.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_ib3m5ricvtkl2cll7qpr2f6lvq
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3387,8 +3391,10 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.10.1_bkqoopcwnnk6xd32x7bdyhtmea:
+  /@fuel-ui/test-utils/0.10.1_glye3pnrizqg4gu2xfqsafbxou:
     resolution: {integrity: sha512-awlsb5iasOq3S2oEdKOc0VbI49XW+e2UmcHeOgawzHHgtIbAhf12gBKKOIIWrHcw3mGi2gRl1Lt5w420Rw4Y6Q==}
+    peerDependencies:
+      react: '*'
     peerDependenciesMeta:
       react:
         optional: true
@@ -3426,8 +3432,10 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.10.1_txv527irue6n5v522dyrrgoi5e:
+  /@fuel-ui/test-utils/0.10.1_ysqhj3banali5uwvkrrilmbn4e:
     resolution: {integrity: sha512-awlsb5iasOq3S2oEdKOc0VbI49XW+e2UmcHeOgawzHHgtIbAhf12gBKKOIIWrHcw3mGi2gRl1Lt5w420Rw4Y6Q==}
+    peerDependencies:
+      react: '*'
     peerDependenciesMeta:
       react:
         optional: true

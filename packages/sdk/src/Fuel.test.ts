@@ -1,5 +1,4 @@
 import {
-  TransactionResponse,
   Address,
   bn,
   NativeAssetId,
@@ -65,20 +64,16 @@ describe('Fuel', () => {
     });
 
     const toAddress = Address.fromString(toAccount);
-    const fromAddress = Address.fromString(account);
     const amount = bn.parseUnits('0.1');
     transactionRequest.addCoinOutput(toAddress, amount);
 
-    const provider = await fuel.getProvider();
-    const resources = await provider.getResourcesToSpend(fromAddress, [
+    const wallet = await fuel.getWallet(account);
+    const resources = await wallet.getResourcesToSpend([
       [amount, NativeAssetId],
     ]);
 
     transactionRequest.addResources(resources);
-    const transactionId = await fuel.sendTransaction(transactionRequest, {
-      url: provider.url,
-    });
-    const response = new TransactionResponse(transactionId, provider);
+    const response = await wallet.sendTransaction(transactionRequest);
 
     // wait for transaction to be completed
     await response.wait();

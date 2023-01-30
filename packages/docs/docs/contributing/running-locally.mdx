@@ -115,13 +115,29 @@ pnpm test
 
 To run E2E tests, follow these steps:
 
-#### Build the project
+#### Run Tests E2E in Development Mode
 
 ```sh
-NODE_ENV=test pnpm build:all
+pnpm node:dev start
 ```
 
-#### Run the test
+```sh
+pnpm dev:crx
+```
+
+```sh
+pnpm test:e2e
+```
+
+#### Run Tests E2E in CI/TEST env Mode
+
+```sh
+pnpm node:dev start --test
+```
+
+```sh
+NODE_ENV=test pnpm build:app
+```
 
 ```sh
 NODE_ENV=test pnpm test:e2e

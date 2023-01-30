@@ -42,6 +42,7 @@ jobs:
       - name: Run Jest Tests
         run: |
           pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
+        timeout-minutes: 20
 
       - name: Publish coverage
         uses: artiomtr/jest-coverage-report-action@v2.0.5
@@ -83,7 +84,7 @@ jobs:
           NODE_ENV: test
 
       - name: Build Application
-        run: pnpm build:all
+        run: pnpm build:app
         env:
           NODE_ENV: test
           DOCS_DIST: ./dist
@@ -96,7 +97,6 @@ jobs:
         run: xvfb-run --auto-servernum -- pnpm test:e2e
         env:
           NODE_ENV: test
-          E2E_PORT: 3000
 
       - uses: actions/upload-artifact@v2
         if: always()

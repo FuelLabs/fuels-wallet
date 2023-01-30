@@ -1,10 +1,17 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { encrypt } from '@fuel-ts/keystore';
+import { Mnemonic } from '@fuel-ts/mnemonic';
+import type { Account as WalletAccount } from '@fuel-ts/wallet-manager';
+import { WalletManager } from '@fuel-ts/wallet-manager';
+import type { Account, Network } from '@fuel-wallet/types';
 import type { Page } from '@playwright/test';
-import { Wallet } from 'fuels';
+
+import { visit } from '../commons/visit';
 
 const { VITE_FUEL_PROVIDER_URL } = process.env;
 
-const networks = [
+export const WALLET_PASSWORD = '12345678';
+
+const DEFAULT_NETWORKS: Array<Network> = [
   {
     id: '1',
     isSelected: true,
@@ -21,16 +28,25 @@ const networks = [
 
 export async function getAccount(page: Page) {
   return page.evaluate(async () => {
-    // @ts-ignore;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const fuelDB: any = window.fuelDB;
+    const fuelDB = window.fuelDB;
     const accounts = await fuelDB.accounts.toArray();
     return accounts[0];
   });
 }
 
-export function createAccount(index: number = 0) {
-  const wallet = Wallet.generate();
+export async function createManager(mnemonic: string) {
+  const walletManager = new WalletManager();
+  // Unlock manager
+  await walletManager.unlock(WALLET_PASSWORD);
+  await walletManager.addVault({
+    type: 'mnemonic',
+    secret: mnemonic,
+  });
+
+  return walletManager;
+}
+
+export function createAccount(wallet: WalletAccount, index: number = 0) {
   return {
     address: wallet.address.toAddress(),
     balance: '0',
@@ -43,22 +59,64 @@ export function createAccount(index: number = 0) {
   };
 }
 
-export function createAccounts(numberOfAccounts: number = 1) {
-  return new Array(numberOfAccounts)
-    .fill(0)
-    .map((_, index) => createAccount(index));
+export function createAccounts(
+  manager: WalletManager,
+  numberOfAccounts: number = 1
+) {
+  return Promise.all(
+    new Array(numberOfAccounts).fill(0).map(async (_, index) => {
+      const walletAccount = await manager.addAccount();
+      const acounnt = await createAccount(walletAccount, index);
+      return acounnt;
+    })
+  );
 }
 
-export async function mockData(page: Page, numberOfAccounts: number = 1) {
-  const accounts = createAccounts(numberOfAccounts);
+type SerializedVault = {
+  key: string;
+  data: string;
+};
+
+export async function serializeVault(
+  manager: WalletManager
+): Promise<SerializedVault> {
+  const vaultKey = manager.STORAGE_KEY;
+  const vaultData = await manager.exportVault(0);
+  const encryptedData = await encrypt(WALLET_PASSWORD, {
+    vaults: [
+      {
+        type: 'mnemonic',
+        data: vaultData,
+      },
+    ],
+  });
+
+  return { key: vaultKey, data: JSON.stringify(encryptedData) };
+}
+
+export async function mockData(
+  page: Page,
+  numberOfAccounts: number = 1,
+  networks: Array<Network> = DEFAULT_NETWORKS
+) {
+  await visit(page, '/');
+  const mnemonic = Mnemonic.generate(16);
+  const manager = await createManager(mnemonic);
+  const accounts = await createAccounts(manager, numberOfAccounts);
+  const vault = await serializeVault(manager);
+
   await page.evaluate(
-    ([accounts, networks]) => {
+    ([accounts, networks, vault]: [
+      Array<Account>,
+      Array<Network>,
+      SerializedVault
+    ]) => {
       return new Promise((resolve, reject) => {
         (async function main() {
           try {
-            // @ts-ignore;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const fuelDB: any = window.fuelDB;
+            const fuelDB = window.fuelDB;
+            await fuelDB.vaults.clear();
+            await fuelDB.vaults.add(vault);
             await fuelDB.accounts.clear();
             await fuelDB.accounts.bulkAdd(accounts);
             await fuelDB.networks.clear();
@@ -71,10 +129,12 @@ export async function mockData(page: Page, numberOfAccounts: number = 1) {
         })();
       });
     },
-    [accounts, networks]
+    [accounts, networks, vault]
   );
 
   return {
+    mnemonic,
+    manager,
     accounts,
     networks,
   };

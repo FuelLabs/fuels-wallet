@@ -2,6 +2,8 @@ import react from '@vitejs/plugin-react';
 import type { UserConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
+import '../load.envs.js';
+
 import { getVersion } from './getVersion';
 
 process.env.VITE_APP_VERSION = getVersion();
@@ -12,6 +14,16 @@ const baseConfig: UserConfig = {
   build: {
     target: 'es2020',
     outDir: process.env.APP_DIST || 'dist',
+    rollupOptions: {
+      input: {
+        index: 'index.html',
+        e2e: 'e2e.html',
+      },
+    },
+  },
+  server: {
+    port: Number(process.env.PORT),
+    strictPort: true,
   },
   optimizeDeps: {
     esbuildOptions: {
@@ -25,9 +37,6 @@ const baseConfig: UserConfig = {
     },
   },
   plugins: [react(), tsconfigPaths()],
-  server: {
-    port: process.env.NODE_ENV === 'test' ? 3001 : 3000,
-  },
   ...(Boolean(process.env.CI) && {
     logLevel: 'silent',
   }),
