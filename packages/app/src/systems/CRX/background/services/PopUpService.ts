@@ -16,6 +16,7 @@ import type { DeferPromise } from '../../utils/promise';
 import { deferPromise } from '../../utils/promise';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
+import type { MessageInputs } from './types';
 
 import { CRXPages } from '~/systems/Core/types';
 import { NetworkService } from '~/systems/Network/services';
@@ -138,8 +139,8 @@ export class PopUpService {
     return this.client.request('requestConnection', { origin });
   }
 
-  async signMessage(origin: string, message: string) {
-    return this.client.request('signMessage', { origin, message });
+  async signMessage(input: MessageInputs['signMessage']) {
+    return this.client.request('signMessage', input);
   }
 
   async sendTransaction(
