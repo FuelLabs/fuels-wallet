@@ -73,6 +73,7 @@ export function BalanceWidget({
               color="gray11"
               css={styles.balanceAddress}
               aria-label={account.address}
+              data-account-name={account.name}
             >
               {shortAddress(account.address)}
             </Text>
