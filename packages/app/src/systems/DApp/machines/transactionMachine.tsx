@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Account } from '@fuel-wallet/types';
 import type {
   BN,
   TransactionRequest,
@@ -10,7 +11,7 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { send } from 'xstate/lib/actions';
 
-import { unlockMachine } from '~/systems/Account';
+import { AccountService, unlockMachine } from '~/systems/Account';
 import type {
   UnlockMachine,
   AccountInputs,
@@ -41,9 +42,11 @@ type MachineContext = {
   disableAutoClose?: boolean;
   input: {
     origin?: string;
+    address?: string;
     isOriginRequired?: boolean;
     providerUrl?: string;
     transactionRequest?: TransactionRequest;
+    account?: Account;
   };
   response?: {
     receipts?: TransactionResultReceipt[];
@@ -65,6 +68,9 @@ type MachineServices = {
   };
   fetchGasPrice: {
     data: BN;
+  };
+  fetchAccount: {
+    data: Account;
   };
 };
 
@@ -95,7 +101,7 @@ export const transactionMachine = createMachine(
         on: {
           START_REQUEST: {
             actions: ['assignTxRequestData'],
-            target: 'settingGasPrice',
+            target: 'fetchingAccount',
           },
         },
         after: {
@@ -111,6 +117,27 @@ export const transactionMachine = createMachine(
         entry: ['closeWindow'],
         always: {
           target: '#(machine).failed',
+        },
+      },
+      fetchingAccount: {
+        invoke: {
+          src: 'fetchAccount',
+          data: {
+            input: (ctx: MachineContext) => ({
+              address: ctx.input.address,
+              providerUrl: ctx.input.providerUrl,
+            }),
+          },
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              target: 'failed',
+            },
+            {
+              actions: ['assignAccount'],
+              target: 'settingGasPrice',
+            },
+          ],
         },
       },
       settingGasPrice: {
@@ -242,12 +269,22 @@ export const transactionMachine = createMachine(
     delays: { TIMEOUT: 1300 },
     actions: {
       reset: assign(() => ({})),
+      assignAccount: assign({
+        input: (ctx, ev) => ({
+          ...ctx.input,
+          account: ev.data,
+        }),
+      }),
       assignTxRequestData: assign({
         input: (ctx, ev) => {
-          const { transactionRequest, origin, providerUrl } = ev.input || {};
+          const { transactionRequest, origin, address, providerUrl } =
+            ev.input || {};
 
           if (!providerUrl) {
             throw new Error('providerUrl is required');
+          }
+          if (!address) {
+            throw new Error('address is required');
           }
           if (!transactionRequest) {
             throw new Error('transaction is required');
@@ -259,6 +296,7 @@ export const transactionMachine = createMachine(
           return {
             transactionRequest,
             origin,
+            address,
             providerUrl,
           };
         },
@@ -335,6 +373,26 @@ export const transactionMachine = createMachine(
             throw new Error('Invalid approveTx input');
           }
           return TxService.send(input);
+        },
+      }),
+      fetchAccount: FetchMachine.create<
+        { address: string; providerUrl: string },
+        Account
+      >({
+        showError: true,
+        async fetch({ input }) {
+          if (!input?.address || !input?.providerUrl) {
+            throw new Error('Invalid fetchAccount input');
+          }
+          const account = await AccountService.fetchAccount({
+            address: input.address,
+          });
+          const accountWithBalances = await AccountService.fetchBalance({
+            account,
+            providerUrl: input.providerUrl,
+          });
+
+          return accountWithBalances;
         },
       }),
     },

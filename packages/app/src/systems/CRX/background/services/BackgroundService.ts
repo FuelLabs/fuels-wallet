@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
-import type { FuelProviderConfig, Connection } from '@fuel-wallet/types';
+import type { Connection } from '@fuel-wallet/types';
 import { Address } from 'fuels';
 import type {
   JSONRPCParams,
@@ -214,27 +214,22 @@ export class BackgroundService {
   }
 
   async sendTransaction(
-    {
-      provider,
-      transaction,
-      address,
-    }: { provider: FuelProviderConfig; transaction: string; address: string },
+    input: Exclude<MessageInputs['sendTransaction'], 'origin'>,
     serverParams: EventOrigin
   ) {
     const origin = serverParams.origin;
 
-    await this.requireAccountConnecton(serverParams.connection, address);
+    await this.requireAccountConnecton(serverParams.connection, input.address);
 
     const popupService = await PopUpService.open(
       origin,
       Pages.requestTransaction(),
       this.communicationProtocol
     );
-    const signedMessage = await popupService.sendTransaction(
+    const signedMessage = await popupService.sendTransaction({
+      ...input,
       origin,
-      provider,
-      transaction
-    );
+    });
     return signedMessage;
   }
 
