@@ -2,7 +2,7 @@ import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
 
 import { getButtonByText, getByAriaLabel, hasText, visit } from '../commons';
-import { mockData } from '../mocks';
+import { mockData, WALLET_PASSWORD } from '../mocks';
 
 test.describe('ChangePassword', () => {
   let browser: Browser;
@@ -23,14 +23,14 @@ test.describe('ChangePassword', () => {
     await hasText(page, /Change Password/i);
 
     // fills form data
-    await getByAriaLabel(page, 'Current Password').type('12345678');
+    await getByAriaLabel(page, 'Current Password').type(WALLET_PASSWORD);
     await getByAriaLabel(page, 'New Password').type('newPass12345');
     await getByAriaLabel(page, 'Confirm Password').type('newPass12345');
 
     // submit data
     await hasText(page, 'Save');
     await getButtonByText(page, 'Save').click();
-    await hasText(page, /assets/i, 1);
+    await hasText(page, 'Password Changed', 0, 30000);
   });
 
   test('should not change the user password when passwords not the same', async () => {
