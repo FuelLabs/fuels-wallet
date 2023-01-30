@@ -82,6 +82,17 @@ describe('CreatePassword', () => {
   //   });
   // });
 
+  it('should show popover with password strength when focus in password field', async () => {
+    const { container, user } = render(<Content />, { wrapper: TestWrapper });
+
+    const password = await screen.findByPlaceholderText('Type your password');
+    await user.click(password);
+    const fuelPopoverContent = await container.querySelector(
+      '.fuel_popover--content'
+    );
+    expect(fuelPopoverContent).toBeVisible();
+  });
+
   it('should be able to click on cancel button', async () => {
     const { user } = render(<Content />, { wrapper: TestWrapper });
     const btn = screen.getByText('Cancel');

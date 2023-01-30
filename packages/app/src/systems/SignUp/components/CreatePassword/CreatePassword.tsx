@@ -1,5 +1,13 @@
-import { Stack, Flex, Button, Checkbox, InputPassword } from '@fuel-ui/react';
+import {
+  Stack,
+  Flex,
+  Button,
+  Checkbox,
+  InputPassword,
+  PasswordStrength,
+} from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -43,6 +51,7 @@ export function CreatePassword({
       confirmPassword: '',
     },
   });
+  const [passwordTooltipOpened, setPasswordTooltipOpened] = useState(false);
 
   const {
     control,
@@ -68,15 +77,24 @@ export function CreatePassword({
             name="password"
             label="Password"
             render={({ field }) => (
-              <InputPassword
-                {...field}
-                onBlur={() => {
-                  form.trigger();
-                  field.onBlur();
-                }}
-                placeholder="Type your password"
-                aria-label="Your Password"
-              />
+              <PasswordStrength
+                onOpenChange={() => setPasswordTooltipOpened(true)}
+                password={field.value || ''}
+                open={passwordTooltipOpened}
+                minLength={8}
+              >
+                <InputPassword
+                  {...field}
+                  onBlur={() => {
+                    form.trigger();
+                    field.onBlur();
+                    setPasswordTooltipOpened(false);
+                  }}
+                  onFocus={() => setPasswordTooltipOpened(true)}
+                  placeholder="Type your password"
+                  aria-label="Your Password"
+                />
+              </PasswordStrength>
             )}
           />
           <ControlledField

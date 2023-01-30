@@ -1,6 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Button, Flex, InputPassword } from '@fuel-ui/react';
+import {
+  Alert,
+  Button,
+  Flex,
+  InputPassword,
+  PasswordStrength,
+} from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -37,6 +44,7 @@ export function ChangePassword() {
       reValidateMode: 'onChange',
       resolver: yupResolver(schema),
     });
+  const [passwordTooltipOpened, setPasswordTooltipOpened] = useState(false);
 
   function onSubmit(values: ChangePasswordFormValues) {
     if (values.confirmPassword !== values.newPassword) {
@@ -79,16 +87,25 @@ export function ChangePassword() {
               name="newPassword"
               label="New Password"
               render={({ field }) => (
-                <InputPassword
-                  {...field}
-                  onBlur={() => {
-                    trigger();
-                    field.onBlur();
-                  }}
-                  css={styles.input}
-                  aria-label="New Password"
-                  placeholder="Type your new password"
-                />
+                <PasswordStrength
+                  onOpenChange={() => setPasswordTooltipOpened(true)}
+                  password={field.value || ''}
+                  open={passwordTooltipOpened}
+                  minLength={8}
+                >
+                  <InputPassword
+                    {...field}
+                    onBlur={() => {
+                      trigger();
+                      field.onBlur();
+                      setPasswordTooltipOpened(false);
+                    }}
+                    onFocus={() => setPasswordTooltipOpened(true)}
+                    css={styles.input}
+                    aria-label="New Password"
+                    placeholder="Type your new password"
+                  />
+                </PasswordStrength>
               )}
             />
             <ControlledField
