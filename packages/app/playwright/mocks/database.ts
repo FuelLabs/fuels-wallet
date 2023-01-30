@@ -5,7 +5,7 @@ import { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account, Network } from '@fuel-wallet/types';
 import type { Page } from '@playwright/test';
 
-import { visit } from '../commons';
+import { visit } from '../commons/visit';
 
 const { VITE_FUEL_PROVIDER_URL } = process.env;
 
