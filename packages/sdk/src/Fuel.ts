@@ -26,6 +26,8 @@ export class Fuel extends FuelWalletConnection {
   };
 
   async getProvider(): Promise<FuelWalletProvider> {
+    // TODO: This solution should be improved by issue #506
+    // by moving all connection throw events
     const providerConfig = await this.network();
     // Return the current provider instance if it exists
     if (FuelWeb3Privates.provider) {
