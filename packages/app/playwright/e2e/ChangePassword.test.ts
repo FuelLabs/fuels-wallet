@@ -30,7 +30,7 @@ test.describe('ChangePassword', () => {
     // submit data
     await hasText(page, 'Save');
     await getButtonByText(page, 'Save').click();
-    await hasText(page, /assets/i, 1);
+    await hasText(page, 'Password Changed');
   });
 
   test('should not change the user password when passwords not the same', async () => {
