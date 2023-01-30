@@ -84,7 +84,7 @@ jobs:
           NODE_ENV: test
 
       - name: Build Application
-        run: pnpm build:all
+        run: pnpm build:app
         env:
           NODE_ENV: test
           DOCS_DIST: ./dist
