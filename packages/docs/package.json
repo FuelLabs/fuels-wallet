@@ -16,17 +16,17 @@
     "@fuel-ui/react": "^0.10.2",
     "@fuel-wallet/sdk": "workspace:*",
     "@mdx-js/react": "^2.2.1",
-    "@next/mdx": "^13.1.5",
+    "@next/mdx": "^13.1.6",
     "acorn": "^8.8.2",
     "acorn-walk": "^8.2.0",
     "dotenv": "^16.0.3",
-    "framer-motion": "^8.5.3",
+    "framer-motion": "^8.5.5",
     "fuels": "0.29.1",
     "globby": "^13.1.3",
     "gray-matter": "^4.0.3",
     "hast-util-heading-rank": "^2.1.1",
     "hast-util-to-string": "^2.0.0",
-    "next": "13.1.5",
+    "next": "13.1.6",
     "next-mdx-remote": "^4.3.0",
     "plyr-react": "^5.1.2",
     "prettier": "^2.8.3",
@@ -47,7 +47,7 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@types/react-syntax-highlighter": "^15.5.6",
-    "eslint": "^8.32.0",
-    "eslint-config-next": "13.1.5"
+    "eslint": "^8.33.0",
+    "eslint-config-next": "13.1.6"
   }
 }
