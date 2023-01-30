@@ -62,6 +62,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.12",
     "@crxjs/vite-plugin": "^1.0.14",
+    "@fuel-ts/keystore": "^0.29.1",
     "@graphql-codegen/cli": "^2.16.1",
     "@graphql-codegen/named-operations-object": "^2.3.1",
     "@graphql-codegen/near-operation-file-preset": "^2.2.6",

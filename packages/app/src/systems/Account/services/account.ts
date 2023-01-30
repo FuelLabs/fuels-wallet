@@ -282,6 +282,7 @@ export class AccountService {
     await db.close();
     await Dexie.delete('FuelDB');
     await Storage.clear();
+    await db.open();
   }
 }
 
