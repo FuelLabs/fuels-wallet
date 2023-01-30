@@ -38,6 +38,7 @@ export enum TxRequestStatus {
 }
 
 type MachineContext = {
+  disableAutoClose?: boolean;
   input: {
     origin?: string;
     isOriginRequired?: boolean;
@@ -100,7 +101,10 @@ export const transactionMachine = createMachine(
         after: {
           /** connection should start quickly, if not, it's probably an error or reloading.
            * to avoid stuck black screen, should close the window and let user retry */
-          TIMEOUT: '#(machine).closing', // retry
+          TIMEOUT: {
+            target: '#(machine).closing', // retry
+            cond: 'enableAutoClose',
+          },
         },
       },
       closing: {
@@ -333,6 +337,11 @@ export const transactionMachine = createMachine(
           return TxService.send(input);
         },
       }),
+    },
+    guards: {
+      enableAutoClose: (ctx) => {
+        return !!ctx.input.isOriginRequired;
+      },
     },
   }
 );

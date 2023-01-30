@@ -80,6 +80,7 @@ export function UnlockDialog({
               isLoading={isLoading}
               leftIcon={Icon.is('LockKeyOpen')}
               css={styles.button}
+              aria-label="Unlock wallet"
             >
               {unlockText ?? 'Unlock'}
             </Button>

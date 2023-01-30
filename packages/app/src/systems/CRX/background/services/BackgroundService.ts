@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
-import type { FuelProviderConfig } from '@fuel-wallet/types';
+import type { FuelProviderConfig, Connection } from '@fuel-wallet/types';
+import { Address } from 'fuels';
 import type {
   JSONRPCParams,
   JSONRPCRequest,
@@ -16,7 +17,10 @@ import { Pages } from '~/systems/Core/types';
 import { ConnectionService } from '~/systems/DApp/services';
 import { NetworkService } from '~/systems/Network/services';
 
-type EventOrigin = { origin: string };
+type EventOrigin = {
+  origin: string;
+  connection?: Connection;
+};
 
 export class BackgroundService {
   readonly server: JSONRPCServer<EventOrigin>;
@@ -70,11 +74,6 @@ export class BackgroundService {
     });
   }
 
-  async isConnected(origin: string) {
-    const isConnected = await ConnectionService.getConnection(origin);
-    return (isConnected?.accounts || []).length > 0;
-  }
-
   async requireAccounts() {
     const accounts = await AccountService.getAccounts();
     if (accounts.length === 0) {
@@ -82,8 +81,23 @@ export class BackgroundService {
     }
   }
 
-  async requireConnection(origin: string) {
-    const isConnected = await this.isConnected(origin);
+  async requireAccountConnecton(
+    connection: Connection | undefined,
+    address?: string
+  ) {
+    if (!connection) {
+      throw new Error('connection not found');
+    }
+    const hasAccessToAddress = connection.accounts.includes(
+      Address.fromString(address || '0x00').toString()
+    );
+    if (!hasAccessToAddress) {
+      throw new Error(`address is not authorized for this connection.`);
+    }
+  }
+
+  async requireConnection(connection?: Connection) {
+    const isConnected = (connection?.accounts || []).length > 0;
     if (!isConnected) {
       throw new Error(
         'Connection not established. Please call connect() first to request a connection'
@@ -96,14 +110,22 @@ export class BackgroundService {
     request: JSONRPCRequest,
     serverParams: EventOrigin
   ) {
+    // Retrive connection for use on accounts
+    const connection = await ConnectionService.getConnection(
+      serverParams!.origin
+    );
+
     // If the method is not connect or isConnected
     // check if connection is already established
     if (!['connect', 'isConnected'].includes(request.method)) {
-      await this.requireConnection(serverParams!.origin);
+      await this.requireConnection(connection);
     } else {
       await this.requireAccounts();
     }
-    return next(request, serverParams);
+    return next(request, {
+      connection,
+      origin: serverParams.origin,
+    });
   }
 
   async sendEvent(origin: string, eventName: string, params: any[]) {
@@ -117,6 +139,13 @@ export class BackgroundService {
         },
       ],
     });
+  }
+
+  /**
+   * JSON RPC Methods
+   */
+  async isConnected(_: unknown, serverParams: EventOrigin) {
+    return !!serverParams.connection;
   }
 
   async connect(_: JSONRPCParams, serverParams: EventOrigin) {
@@ -164,10 +193,12 @@ export class BackgroundService {
   }
 
   async signMessage(
-    { message }: { message: string },
+    { message, address }: { message: string; address: string },
     serverParams: EventOrigin
   ) {
     const origin = serverParams.origin;
+
+    await this.requireAccountConnecton(serverParams.connection, address);
 
     const popupService = await PopUpService.open(
       origin,
@@ -182,10 +213,13 @@ export class BackgroundService {
     {
       provider,
       transaction,
-    }: { provider: FuelProviderConfig; transaction: string },
+      address,
+    }: { provider: FuelProviderConfig; transaction: string; address: string },
     serverParams: EventOrigin
   ) {
     const origin = serverParams.origin;
+
+    await this.requireAccountConnecton(serverParams.connection, address);
 
     const popupService = await PopUpService.open(
       origin,
@@ -200,8 +234,14 @@ export class BackgroundService {
     return signedMessage;
   }
 
-  async currentAccount() {
+  async currentAccount(_: unknown, serverParams: EventOrigin) {
     const currentAccount = await AccountService.getCurrentAccount();
+
+    await this.requireAccountConnecton(
+      serverParams.connection,
+      currentAccount?.address
+    );
+
     return currentAccount?.address;
   }
 
