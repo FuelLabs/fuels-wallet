@@ -76,6 +76,7 @@ export function CreatePassword({
             control={control}
             name="password"
             label="Password"
+            hideError
             render={({ field }) => (
               <PasswordStrength
                 onOpenChange={() => setPasswordTooltipOpened(true)}
