@@ -14,6 +14,7 @@ type SendSelectProps = UseSendReturn;
 
 export function SendSelect({
   form,
+  account,
   txRequest,
   handlers,
   ...ctx
@@ -31,7 +32,7 @@ export function SendSelect({
             control={form.control}
             render={({ field }) => (
               <AssetSelect
-                items={txRequest.account?.balances}
+                items={account?.balances}
                 selected={ASSET_MAP[field.value]}
                 onSelect={(asset) => {
                   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain

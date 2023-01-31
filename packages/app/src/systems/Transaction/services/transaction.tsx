@@ -37,6 +37,7 @@ export type TxInputs = {
     id: string;
   };
   request: {
+    address?: string;
     origin?: string;
     transactionRequest: TransactionRequest;
     providerUrl: string;

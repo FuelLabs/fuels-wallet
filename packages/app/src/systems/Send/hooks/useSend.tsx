@@ -115,7 +115,7 @@ export function useSend() {
   const isInvalid = useSelector(service, selectors.isInvalid);
   const titleSelector = selectors.title(txRequest.txStatus);
   const title = useSelector(service, titleSelector);
-  const accountBalance = bn(txRequest.account?.balance);
+  const accountBalance = bn(account?.balance);
   const maxAmountToSend = accountBalance.sub(fee!);
 
   function status(status: keyof typeof SendStatus) {
@@ -178,6 +178,7 @@ export function useSend() {
     title,
     status,
     isInvalid,
+    account,
     accountBalance,
     txRequest,
     handlers: {

@@ -9,7 +9,6 @@ import {
 } from '../machines/transactionMachine';
 import { useTransactionRequestMethods } from '../methods/transactionRequestMethods';
 
-import { useAccounts } from '~/systems/Account';
 import { isEth } from '~/systems/Asset';
 import { useChainInfo } from '~/systems/Network';
 import { getFilteredErrors, TxStatus } from '~/systems/Transaction';
@@ -20,8 +19,14 @@ const selectors = {
   context(state: TransactionMachineState) {
     return state.context;
   },
+  account(state: TransactionMachineState) {
+    return state.context.input.account;
+  },
   isUnlocking(state: TransactionMachineState) {
     return state.children.unlock?.state.matches('unlocking');
+  },
+  isLoadingAccounts(state: TransactionMachineState) {
+    return state.matches('fetchingAccount');
   },
   errors(state: TransactionMachineState) {
     if (!state.context.errors) return {};
@@ -67,7 +72,6 @@ export type UseTransactionRequestReturn = ReturnType<
 >;
 
 export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
-  const { account, isLoading: isLoadingAccounts } = useAccounts();
   const service = useInterpret(() =>
     transactionMachine
       .withConfig({
@@ -84,6 +88,8 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
       })
   );
 
+  const isLoadingAccounts = useSelector(service, selectors.isLoadingAccounts);
+  const account = useSelector(service, selectors.account);
   const ctx = useSelector(service, selectors.context);
   const errors = useSelector(service, selectors.errors);
   const providerUrl = ctx.input.providerUrl;
