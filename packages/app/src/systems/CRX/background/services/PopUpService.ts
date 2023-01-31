@@ -1,9 +1,5 @@
 import { POPUP_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
-import type {
-  FuelProviderConfig,
-  ResponseMessage,
-  UIEventMessage,
-} from '@fuel-wallet/types';
+import type { ResponseMessage, UIEventMessage } from '@fuel-wallet/types';
 import { JSONRPCClient } from 'json-rpc-2.0';
 
 import {
@@ -16,6 +12,7 @@ import type { DeferPromise } from '../../utils/promise';
 import { deferPromise } from '../../utils/promise';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
+import type { MessageInputs } from './types';
 
 import { CRXPages } from '~/systems/Core/types';
 import { NetworkService } from '~/systems/Network/services';
@@ -138,31 +135,23 @@ export class PopUpService {
     return this.client.request('requestConnection', { origin });
   }
 
-  async signMessage(origin: string, message: string) {
-    return this.client.request('signMessage', { origin, message });
+  async signMessage(input: MessageInputs['signMessage']) {
+    return this.client.request('signMessage', input);
   }
 
-  async sendTransaction(
-    origin: string,
-    provider: FuelProviderConfig,
-    transaction: string
-  ) {
+  async sendTransaction(input: MessageInputs['sendTransaction']) {
     const selectedNetwork = await NetworkService.getSelectedNetwork();
-    if (selectedNetwork?.url !== provider.url) {
+    if (selectedNetwork?.url !== input.provider.url) {
       // TODO: Show for the user to add new network before
       // finishing the transaction
       // https://github.com/FuelLabs/fuels-wallet/issues/200
       throw new Error(
         [
-          `${provider.url} is different from the user current network!`,
+          `${input.provider.url} is different from the user current network!`,
           'Request the user to add the new network. fuel.addNetwork([...]).',
         ].join('\n')
       );
     }
-    return this.client.request('sendTransaction', {
-      origin,
-      transaction,
-      provider,
-    });
+    return this.client.request('sendTransaction', input);
   }
 }

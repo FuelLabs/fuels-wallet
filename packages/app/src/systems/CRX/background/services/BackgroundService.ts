@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
-import type { FuelProviderConfig, Connection } from '@fuel-wallet/types';
+import type { Connection } from '@fuel-wallet/types';
 import { Address } from 'fuels';
 import type {
   JSONRPCParams,
@@ -11,6 +11,7 @@ import { JSONRPCServer } from 'json-rpc-2.0';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { PopUpService } from './PopUpService';
+import type { MessageInputs } from './types';
 
 import { AccountService } from '~/systems/Account/services';
 import { Pages } from '~/systems/Core/types';
@@ -193,44 +194,42 @@ export class BackgroundService {
   }
 
   async signMessage(
-    { message, address }: { message: string; address: string },
+    input: Exclude<MessageInputs['signMessage'], 'origin'>,
     serverParams: EventOrigin
   ) {
     const origin = serverParams.origin;
 
-    await this.requireAccountConnecton(serverParams.connection, address);
+    await this.requireAccountConnecton(serverParams.connection, input.address);
 
     const popupService = await PopUpService.open(
       origin,
       Pages.requestMessage(),
       this.communicationProtocol
     );
-    const signedMessage = await popupService.signMessage(origin, message);
+    const signedMessage = await popupService.signMessage({
+      ...input,
+      origin,
+    });
     return signedMessage;
   }
 
   async sendTransaction(
-    {
-      provider,
-      transaction,
-      address,
-    }: { provider: FuelProviderConfig; transaction: string; address: string },
+    input: Exclude<MessageInputs['sendTransaction'], 'origin'>,
     serverParams: EventOrigin
   ) {
     const origin = serverParams.origin;
 
-    await this.requireAccountConnecton(serverParams.connection, address);
+    await this.requireAccountConnecton(serverParams.connection, input.address);
 
     const popupService = await PopUpService.open(
       origin,
       Pages.requestTransaction(),
       this.communicationProtocol
     );
-    const signedMessage = await popupService.sendTransaction(
+    const signedMessage = await popupService.sendTransaction({
+      ...input,
       origin,
-      provider,
-      transaction
-    );
+    });
     return signedMessage;
   }
 

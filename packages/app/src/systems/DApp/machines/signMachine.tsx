@@ -1,8 +1,13 @@
+import type { Account } from '@fuel-wallet/types';
 import type { WalletUnlocked } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { send, assign, createMachine } from 'xstate';
 
-import { unlockMachineErrorAction, unlockMachine } from '~/systems/Account';
+import {
+  unlockMachineErrorAction,
+  unlockMachine,
+  AccountService,
+} from '~/systems/Account';
 import type {
   UnlockMachine,
   AccountInputs,
@@ -12,7 +17,9 @@ import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 import type { ChildrenMachine } from '~/systems/Core';
 
 type MachineContext = {
+  account?: Account;
   message?: string;
+  address?: string;
   origin?: string;
   error?: string;
   unlockError?: string;
@@ -23,11 +30,17 @@ type MachineServices = {
   signMessage: {
     data: string;
   };
+  fetchAccount: {
+    data: Account;
+  };
 };
 
 type MachineEvents =
   | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
-  | { type: 'START_SIGN'; input: { origin: string; message: string } }
+  | {
+      type: 'START_SIGN';
+      input: { origin: string; message: string; address: string };
+    }
   | { type: 'CLOSE_UNLOCK' }
   | { type: 'SIGN_MESSAGE' }
   | { type: 'REJECT' };
@@ -48,8 +61,8 @@ export const signMachine = createMachine(
       idle: {
         on: {
           START_SIGN: {
-            actions: ['assignMessage', 'assignOrigin'],
-            target: 'reviewMessage',
+            actions: ['assignSignData'],
+            target: 'fetchingAccount',
           },
         },
         after: {
@@ -62,6 +75,24 @@ export const signMachine = createMachine(
         entry: ['closeWindow'],
         always: {
           target: '#(machine).failed',
+        },
+      },
+      fetchingAccount: {
+        invoke: {
+          src: 'fetchAccount',
+          data: {
+            input: (ctx: MachineContext) => ({ address: ctx.address }),
+          },
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              target: 'failed',
+            },
+            {
+              actions: ['assignAccount'],
+              target: 'reviewMessage',
+            },
+          ],
         },
       },
       reviewMessage: {
@@ -128,16 +159,19 @@ export const signMachine = createMachine(
     },
   },
   {
-    delays: { TIMEOUT: 1300 },
+    delays: { TIMEOUT: 10000 },
     actions: {
       assignSignedMessage: assign({
         signedMessage: (_, ev) => ev.data,
       }),
-      assignMessage: assign({
-        message: (_, ev) => ev.input.message,
-      }),
-      assignOrigin: assign({
-        origin: (_, ev) => ev.input.origin,
+      assignSignData: assign((ctx, ev) => ({
+        ...ctx,
+        message: ev.input.message,
+        address: ev.input.address,
+        origin: ev.input.origin,
+      })),
+      assignAccount: assign({
+        account: (_, ev) => ev.data,
       }),
     },
     services: {
@@ -154,6 +188,17 @@ export const signMachine = createMachine(
 
           const signedMessage = input?.wallet.signMessage(input.message);
           return signedMessage;
+        },
+      }),
+      fetchAccount: FetchMachine.create<{ address: string }, Account>({
+        showError: true,
+        async fetch({ input }) {
+          if (!input?.address) {
+            throw new Error('Invalid fetchAccount input');
+          }
+          return AccountService.fetchAccount({
+            address: input.address,
+          });
         },
       }),
     },
