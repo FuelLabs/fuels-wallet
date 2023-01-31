@@ -24,6 +24,12 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
     path: Pages.networks(),
   },
   {
+    key: 'accounts',
+    icon: 'Users',
+    label: 'Accounts',
+    path: Pages.accounts(),
+  },
+  {
     key: 'connected-apps',
     icon: 'PlugsConnected',
     label: 'Connected Apps',
