@@ -19,7 +19,7 @@ export function SignatureRequest() {
     isUnlockingLoading,
   } = useSignatureRequest();
 
-  if (!origin || !message) return null;
+  if (!origin || !message || !account) return null;
 
   return (
     <>
