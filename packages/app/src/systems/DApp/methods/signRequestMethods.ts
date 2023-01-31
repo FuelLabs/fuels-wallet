@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import type { SignMachineService } from '../machines';
 
 import { IS_CRX_POPUP } from '~/config';
+import type { MessageInputs } from '~/systems/CRX/background/services/types';
 import { waitForState } from '~/systems/Core';
 
 export class SignRequestMethods extends ExtensionPageConnection {
@@ -19,9 +20,9 @@ export class SignRequestMethods extends ExtensionPageConnection {
     return new SignRequestMethods(service);
   }
 
-  async signMessage({ origin, message }: { origin: string; message: string }) {
+  async signMessage(input: MessageInputs['signMessage']) {
     this.service.send('START_SIGN', {
-      input: { origin, message },
+      input,
     });
     const state = await waitForState(this.service);
     return state.signedMessage;

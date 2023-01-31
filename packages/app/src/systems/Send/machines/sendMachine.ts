@@ -146,6 +146,7 @@ export const sendMachine = createMachine(
           });
 
           return {
+            address: wallet.address.toString(),
             transactionRequest,
             providerUrl: network.url,
           };
