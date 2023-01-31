@@ -51,24 +51,10 @@ const baseConfig: UserConfig = {
   },
   ...(process.env.WITH_PNPM_LINKS && {
     resolve: {
-      alias: {
-        '@fuel-ui/react': path.resolve(
-          __dirname,
-          '../node_modules/@fuel-ui/react/dist/index.mjs'
-        ),
-        '@fuel-ui/css': path.resolve(
-          __dirname,
-          '../node_modules/@fuel-ui/css/dist/index.mjs'
-        ),
-        '@fuel-ui/config': path.resolve(
-          __dirname,
-          '../node_modules/@fuel-ui/config/dist/index.mjs'
-        ),
-        '@fuel-ui/test-utils': path.resolve(
-          __dirname,
-          '../node_modules/@fuel-ui/test-utils/dist/index.mjs'
-        ),
-      },
+      alias: [{
+        find: /(@?fuels?-?[^\s]*)/,
+        replacement: path.resolve(__dirname, '../node_modules/$1/dist/index.mjs'
+      }],
     },
   }),
   /**
