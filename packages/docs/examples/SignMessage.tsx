@@ -19,7 +19,8 @@ export function SignMessage() {
       console.debug('Request signature of message!');
       const accounts = await fuel.accounts();
       const account = accounts[0];
-      const signedMessage = await fuel.signMessage(account, message);
+      const wallet = await fuel.getWallet(account);
+      const signedMessage = await wallet.signMessage(message);
       console.debug('Message signature', signedMessage);
       setSignedMessage(signedMessage);
     }
