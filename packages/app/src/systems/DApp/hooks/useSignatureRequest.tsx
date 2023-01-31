@@ -4,9 +4,8 @@ import type { SignMachineState } from '../machines';
 import { signMachine } from '../machines';
 import { useSignRequestMethods } from '../methods';
 
-import { useAccounts } from '~/systems/Account';
-
 const selectors = {
+  account: (state: SignMachineState) => state.context.account,
   origin: (state: SignMachineState) => state.context.origin,
   unlockError: (state: SignMachineState) => state.context.unlockError,
   message: (state: SignMachineState) => state.context.message,
@@ -17,7 +16,6 @@ const selectors = {
 };
 
 export function useSignatureRequest() {
-  const { account } = useAccounts();
   const service = useInterpret(
     signMachine.withConfig({
       actions: {
@@ -34,6 +32,7 @@ export function useSignatureRequest() {
   const message = useSelector(service, selectors.message);
   const unlockError = useSelector(service, selectors.unlockError);
   const origin = useSelector(service, selectors.origin);
+  const account = useSelector(service, selectors.account);
 
   // Start Connect Request Methods
   useSignRequestMethods(service);
