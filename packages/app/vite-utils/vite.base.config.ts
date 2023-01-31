@@ -51,10 +51,15 @@ const baseConfig: UserConfig = {
   },
   ...(process.env.WITH_PNPM_LINKS && {
     resolve: {
-      alias: [{
-        find: /(@?fuels?-?[^\s]*)/,
-        replacement: path.resolve(__dirname, '../node_modules/$1/dist/index.mjs'
-      }],
+      alias: [
+        {
+          find: /(@?fuels?-?[^\s]*)/,
+          replacement: path.resolve(
+            __dirname,
+            '../node_modules/$1/dist/index.mjs'
+          ),
+        },
+      ],
     },
   }),
   /**
