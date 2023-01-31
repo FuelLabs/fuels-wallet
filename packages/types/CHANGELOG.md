@@ -1,5 +1,12 @@
 # @fuel-wallet/types
 
+## 0.5.0
+
+### Minor Changes
+
+- [#473](https://github.com/FuelLabs/fuels-wallet/pull/473) [`503430b`](https://github.com/FuelLabs/fuels-wallet/commit/503430b8b1512b970efa8d39762118f6ece4ab40) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - introduce `currentAccount` function/event
+  rename `selectedAccount` to `currentAccount` across app
+
 ## 0.4.0
 
 ### Patch Changes
