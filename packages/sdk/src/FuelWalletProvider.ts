@@ -12,7 +12,7 @@ export class FuelWalletProvider extends Provider {
   }
 
   async sendTransaction(
-    transactionRequestLike: TransactionRequestLike
+    transactionRequestLike: TransactionRequestLike & { signer?: string }
   ): Promise<TransactionResponse> {
     const transactionId = await this.walletConnection.sendTransaction(
       transactionRequestLike,

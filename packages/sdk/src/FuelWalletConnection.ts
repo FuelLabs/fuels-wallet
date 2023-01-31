@@ -71,7 +71,7 @@ export class FuelWalletConnection extends WindowConnection {
   }
 
   async sendTransaction(
-    transaction: TransactionRequestLike,
+    transaction: TransactionRequestLike & { signer?: string },
     providerConfig: FuelProviderConfig,
     signer?: string
   ): Promise<string> {
@@ -79,7 +79,8 @@ export class FuelWalletConnection extends WindowConnection {
       throw new Error('Transaction is required');
     }
 
-    const address = signer || getTransactionSigner(transaction);
+    const address =
+      signer || transaction.signer || getTransactionSigner(transaction);
 
     return this.client.request('sendTransaction', {
       address,
