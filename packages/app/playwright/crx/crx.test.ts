@@ -1,4 +1,5 @@
 import { Signer } from '@fuel-ts/signer';
+import type { Account } from '@fuel-wallet/types';
 import { expect } from '@playwright/test';
 import { bn, hashMessage, Wallet } from 'fuels';
 
@@ -8,6 +9,7 @@ import {
   getByAriaLabel,
   getInputByName,
   hasText,
+  waitAriaLabel,
 } from '../commons';
 
 import {
@@ -93,23 +95,6 @@ test.describe('FuelWallet Extension', () => {
       await page.close();
     });
 
-    // Connect Account 1 to the DApp.
-    await test.step('window.fuel.connect()', async () => {
-      const isConnected = blankPage.evaluate(async () => {
-        return window.fuel.connect();
-      });
-      const authorizeRequest = await context.waitForEvent('page', {
-        predicate: (page) => page.url().includes(extensionId),
-      });
-
-      await hasText(authorizeRequest, /connect/i);
-      await getButtonByText(authorizeRequest, /next/i).click();
-      await hasText(authorizeRequest, /accounts/i);
-      await getButtonByText(authorizeRequest, /connect/i).click();
-
-      await expect(await isConnected).toBeTruthy();
-    });
-
     const popupPage = await test.step('Open wallet', async () => {
       const page = await context.newPage();
       await page.goto(`chrome-extension://${extensionId}/popup.html`);
@@ -134,6 +119,26 @@ test.describe('FuelWallet Extension', () => {
       await switchAccount(popupPage, 'Account 1');
     });
 
+    // Connect Account 1 to the DApp.
+    await test.step('window.fuel.connect()', async () => {
+      const isConnected = blankPage.evaluate(async () => {
+        return window.fuel.connect();
+      });
+      const authorizeRequest = await context.waitForEvent('page', {
+        predicate: (page) => page.url().includes(extensionId),
+      });
+
+      // Add Account 3 to the DApp connection
+      await getByAriaLabel(authorizeRequest, 'Toggle Account 3').click();
+
+      await hasText(authorizeRequest, /connect/i);
+      await getButtonByText(authorizeRequest, /next/i).click();
+      await hasText(authorizeRequest, /accounts/i);
+      await getButtonByText(authorizeRequest, /connect/i).click();
+
+      await expect(await isConnected).toBeTruthy();
+    });
+
     await test.step('window.fuel.getWallet()', async () => {
       const isCorrectAddress = await blankPage.evaluate(async () => {
         const currentAccount = await window.fuel.currentAccount();
@@ -145,10 +150,14 @@ test.describe('FuelWallet Extension', () => {
 
     await test.step('window.fuel.accounts()', async () => {
       const authorizedAccount = await getAccountByName(popupPage, 'Account 1');
+      const authorizedAccount2 = await getAccountByName(popupPage, 'Account 3');
       const accounts = await blankPage.evaluate(async () => {
         return window.fuel.accounts();
       });
-      await expect(accounts).toEqual([authorizedAccount.address]);
+      await expect(accounts).toEqual([
+        authorizedAccount.address,
+        authorizedAccount2.address,
+      ]);
     });
 
     await test.step('window.fuel.currentAccount()', async () => {
@@ -172,7 +181,6 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.signMessage()', async () => {
-      const authorizedAccount = await switchAccount(popupPage, 'Account 1');
       const message = 'Hello World';
 
       function signMessage(address: string) {
@@ -184,13 +192,14 @@ test.describe('FuelWallet Extension', () => {
         );
       }
 
-      await test.step('Signed message using authorized account', async () => {
+      async function approveMessageSignCheck(authorizedAccount: Account) {
         const signedMessagePromise = signMessage(authorizedAccount.address);
         const signMessageRequest = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
         });
         // Confirm signature
         await hasText(signMessageRequest, message);
+        await waitAriaLabel(signMessageRequest, authorizedAccount.name);
         await getButtonByText(signMessageRequest, /sign/i).click();
         await unlockWallet(signMessageRequest, WALLET_PASSWORD);
 
@@ -203,6 +212,19 @@ test.describe('FuelWallet Extension', () => {
 
         // Verify signature is from the account selected
         await expect(addressSigner.toString()).toBe(authorizedAccount.address);
+      }
+
+      await test.step('Signed message using authorized Account 1', async () => {
+        const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+        await approveMessageSignCheck(authorizedAccount);
+      });
+
+      await test.step('Signed message using authorized Account 3', async () => {
+        const authorizedAccount = await getAccountByName(
+          popupPage,
+          'Account 3'
+        );
+        await approveMessageSignCheck(authorizedAccount);
       });
 
       await test.step('Throw on not Authorized Account', async () => {
@@ -220,7 +242,7 @@ test.describe('FuelWallet Extension', () => {
 
     await test.step('window.fuel.sendTransaction()', async () => {
       // Create transfer function
-      function transfer(
+      async function transfer(
         senderAddress: string,
         receiverAddress: string,
         amount: number
@@ -237,19 +259,18 @@ test.describe('FuelWallet Extension', () => {
         );
       }
 
-      await test.step('Send transfer using authorized Account', async () => {
-        const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+      async function approveTxCheck(senderAccount: Account) {
         const receiverWallet = Wallet.generate({
           provider: process.env.VITE_FUEL_PROVIDER_URL,
         });
         const AMOUNT_TRANSFER = 100;
 
         // Add some coins to the account
-        await seedWallet(authorizedAccount.address, bn(100_000_000));
+        await seedWallet(senderAccount.address, bn(100_000_000));
 
         // Create transfer
         const transferStatus = transfer(
-          authorizedAccount.address,
+          senderAccount.address,
           receiverWallet.address.toString(),
           AMOUNT_TRANSFER
         );
@@ -261,12 +282,26 @@ test.describe('FuelWallet Extension', () => {
 
         // Confirm transaction
         await hasText(confirmTransactionPage, /0\.0000001.ETH/i);
+        await waitAriaLabel(confirmTransactionPage, senderAccount.name);
         await getButtonByText(confirmTransactionPage, /confirm/i).click();
         await unlockWallet(confirmTransactionPage, WALLET_PASSWORD);
 
         await expect(transferStatus).resolves.toBe('success');
         const balance = await receiverWallet.getBalance();
         await expect(balance.toNumber()).toBe(AMOUNT_TRANSFER);
+      }
+
+      await test.step('Send transfer using authorized Account', async () => {
+        const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+        await approveTxCheck(authorizedAccount);
+      });
+
+      await test.step('Send transfer using authorized Account 3', async () => {
+        const authorizedAccount = await getAccountByName(
+          popupPage,
+          'Account 3'
+        );
+        await approveTxCheck(authorizedAccount);
       });
 
       await test.step('Send transfer should block anauthorized account', async () => {
@@ -293,26 +328,26 @@ test.describe('FuelWallet Extension', () => {
           'address is not authorized for this connection.'
         );
       });
+    });
 
-      await test.step('window.fuel.on("currentAccount")', async () => {
-        // Switch to account 2
-        await switchAccount(popupPage, 'Account 2');
+    await test.step('window.fuel.on("currentAccount")', async () => {
+      // Switch to account 2
+      await switchAccount(popupPage, 'Account 2');
 
-        const onChangeAccountPromise = blankPage.evaluate(() => {
-          return new Promise((resolve) => {
-            window.fuel.on('currentAccount', (account) => {
-              resolve(account);
-            });
+      const onChangeAccountPromise = blankPage.evaluate(() => {
+        return new Promise((resolve) => {
+          window.fuel.on('currentAccount', (account) => {
+            resolve(account);
           });
         });
-
-        // Switch to account 1
-        const currentAccount = await switchAccount(popupPage, 'Account 1');
-
-        /** Check result */
-        const currentAccountEventResult = await onChangeAccountPromise;
-        expect(currentAccountEventResult).toEqual(currentAccount.address);
       });
+
+      // Switch to account 1
+      const currentAccount = await switchAccount(popupPage, 'Account 1');
+
+      /** Check result */
+      const currentAccountEventResult = await onChangeAccountPromise;
+      expect(currentAccountEventResult).toEqual(currentAccount.address);
     });
   });
 });

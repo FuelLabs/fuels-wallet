@@ -22,6 +22,13 @@ describe('txApproveMachine', () => {
 
   beforeAll(async () => {
     wallet = Wallet.fromPrivateKey(OWNER);
+    jest.spyOn(AccountService, 'fetchAccount').mockResolvedValue(
+      Promise.resolve({
+        name: 'Account 1',
+        address: wallet.address.toString(),
+        publicKey: wallet.publicKey,
+      })
+    );
     jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
     transactionRequest = await getMockedTransaction(
       wallet?.publicKey || '',
@@ -45,7 +52,12 @@ describe('txApproveMachine', () => {
   it('should approve/send transaction', async () => {
     await waitFor(service, (state) => state.matches('idle'));
     service.send('START_REQUEST', {
-      input: { transactionRequest, providerUrl, origin: 'foo.com' },
+      input: {
+        transactionRequest,
+        providerUrl,
+        origin: 'foo.com',
+        address: wallet.address.toString(),
+      },
     });
 
     await waitFor(service, (state) => state.matches('simulatingTransaction'));
