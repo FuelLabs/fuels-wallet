@@ -1,7 +1,8 @@
-import { Address, WalletLocked } from 'fuels';
+import { Address } from 'fuels';
 import type { AbstractAddress } from 'fuels';
 
 import { FuelWalletConnection } from './FuelWalletConnection';
+import { FuelWalletLocked } from './FuelWalletLocked';
 import { FuelWalletProvider } from './FuelWalletProvider';
 
 // Isolate the provider instance to prevent
@@ -47,9 +48,11 @@ export class Fuel extends FuelWalletConnection {
     return FuelWeb3Privates.provider;
   }
 
-  async getWallet(address: string | AbstractAddress): Promise<WalletLocked> {
+  async getWallet(
+    address: string | AbstractAddress
+  ): Promise<FuelWalletLocked> {
     const provider = await this.getProvider();
-    return new WalletLocked(address, provider);
+    return new FuelWalletLocked(address, provider);
   }
 }
 
