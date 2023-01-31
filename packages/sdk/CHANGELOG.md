@@ -1,5 +1,16 @@
 # @fuel-wallet/sdk
 
+## 0.5.0
+
+### Minor Changes
+
+- [#517](https://github.com/FuelLabs/fuels-wallet/pull/517) [`eac034e`](https://github.com/FuelLabs/fuels-wallet/commit/eac034e53a9107e798de0006f77245413c87dce8) Thanks [@luizstacio](https://github.com/luizstacio)! - Add signer address on window.fuel.sendTransaction
+
+- [#473](https://github.com/FuelLabs/fuels-wallet/pull/473) [`503430b`](https://github.com/FuelLabs/fuels-wallet/commit/503430b8b1512b970efa8d39762118f6ece4ab40) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - introduce `currentAccount` function/event
+  rename `selectedAccount` to `currentAccount` across app
+
+- [#525](https://github.com/FuelLabs/fuels-wallet/pull/525) [`c2a82f8`](https://github.com/FuelLabs/fuels-wallet/commit/c2a82f898dea5b0ea5674a7a6a1474573cedb62d) Thanks [@luizstacio](https://github.com/luizstacio)! - Add FuelWalletLocked on the fuel instance and fix issue with detect siner
+
 ## 0.4.0
 
 ### Minor Changes
