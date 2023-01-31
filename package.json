@@ -60,9 +60,9 @@
     "codegen:app": "pnpm run --filter=app codegen"
   },
   "dependencies": {
-    "@fuel-ui/config": "^0.10.2",
-    "@fuel-ui/css": "^0.10.2",
-    "@fuel-ui/react": "^0.10.2",
+    "@fuel-ui/config": "^0.12.0",
+    "@fuel-ui/css": "^0.12.0",
+    "@fuel-ui/react": "^0.12.0",
     "execa": "^6.1.0",
     "fuelhat": "workspace:*"
   },
