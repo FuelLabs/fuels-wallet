@@ -65,13 +65,14 @@ export function ConnectionRequest() {
                 </Flex>
               </motion.div>
               {accounts?.map((account) => {
-                const { address } = account;
+                const { address, name } = account;
                 const isConnected = handlers.isAccountSelected(address);
                 const rightEl = (
                   <Flex css={styles.switchWrapper}>
                     <Switch
                       size="sm"
                       checked={isConnected}
+                      aria-label={`Toggle ${name}`}
                       onCheckedChange={() => handlers.toggleAccount(address)}
                     />
                   </Flex>

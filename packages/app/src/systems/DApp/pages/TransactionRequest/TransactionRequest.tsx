@@ -11,6 +11,7 @@ import { TxContent, TxHeader } from '~/systems/Transaction';
 export function TransactionRequest() {
   const txRequest = useTransactionRequest({ isOriginRequired: true });
   const { handlers, status, ...ctx } = txRequest;
+
   if (!ctx.account) return null;
 
   return (
