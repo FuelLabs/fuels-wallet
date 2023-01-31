@@ -19,6 +19,13 @@ describe('signMachine', () => {
 
   beforeAll(async () => {
     wallet = Wallet.fromPrivateKey(OWNER);
+    jest.spyOn(AccountService, 'fetchAccount').mockResolvedValue(
+      Promise.resolve({
+        name: 'Account 1',
+        address: wallet.address.toString(),
+        publicKey: wallet.publicKey,
+      })
+    );
     jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
   });
 
@@ -36,6 +43,7 @@ describe('signMachine', () => {
     const DATA = {
       origin: 'foo.com',
       message: 'test message',
+      address: wallet.address.toString(),
     };
     await waitFor(service, (state) => state.matches('idle'));
 
@@ -71,6 +79,7 @@ describe('signMachine', () => {
       input: {
         origin: 'foo.com',
         message: 'test message',
+        address: wallet.address.toString(),
       },
     });
 

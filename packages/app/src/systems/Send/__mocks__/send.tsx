@@ -18,16 +18,17 @@ export function sendLoader(wallet: WalletUnlocked) {
       wallet.publicKey,
       network?.url!
     );
-    return { acc1, network, transactionRequest };
+    return { acc1, network, transactionRequest, address: acc1?.address };
   };
 }
 
 export function useTxRequestMock(loaded: any) {
-  const { transactionRequest, network } = loaded || {};
+  const { transactionRequest, network, address } = loaded || {};
   const txRequest = useTransactionRequest();
 
   useEffect(() => {
     txRequest.handlers.request({
+      address,
       transactionRequest,
       providerUrl: network?.url,
     });
