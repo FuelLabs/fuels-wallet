@@ -29,6 +29,9 @@ export type AccountInputs = {
     providerUrl: string;
     account?: Maybe<Account>;
   };
+  fetchAccount: {
+    address: string;
+  };
   setBalance: {
     data: Pick<Account, 'address' | 'balance' | 'balanceSymbol' | 'balances'>;
   };
@@ -91,6 +94,19 @@ export class AccountService {
     return db.transaction('rw', db.accounts, async () => {
       return db.accounts.clear();
     });
+  }
+
+  static async fetchAccount(input: AccountInputs['fetchAccount']) {
+    const { address } = input;
+    const account = await db.transaction('r', db.accounts, async () => {
+      return db.accounts.get({ address });
+    });
+
+    if (!account) {
+      throw new Error('Account not found!');
+    }
+
+    return account;
   }
 
   static async fetchBalance(input: AccountInputs['fetchBalance']) {
@@ -282,6 +298,7 @@ export class AccountService {
     await db.close();
     await Dexie.delete('FuelDB');
     await Storage.clear();
+    await db.open();
   }
 }
 

@@ -13,6 +13,7 @@ import type { TransactionRequestLike } from 'fuels';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 
 import { WindowConnection } from './connections/WindowConnection';
+import { getTransactionSigner } from './utils/getTransactionSigner';
 
 export class FuelWalletConnection extends WindowConnection {
   acceptMessage(message: MessageEvent<CommunicationMessage>): boolean {
@@ -68,12 +69,17 @@ export class FuelWalletConnection extends WindowConnection {
 
   async sendTransaction(
     transaction: TransactionRequestLike,
-    providerConfig: FuelProviderConfig
+    providerConfig: FuelProviderConfig,
+    signer?: string
   ): Promise<string> {
     if (!transaction) {
       throw new Error('Transaction is required');
     }
+
+    const address = signer || getTransactionSigner(transaction);
+
     return this.client.request('sendTransaction', {
+      address,
       provider: providerConfig,
       transaction: JSON.stringify(transaction),
     });

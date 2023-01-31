@@ -31,6 +31,8 @@ const config: JestConfigWithTsJest = {
       },
     ],
   },
+  forceExit: true,
+  detectOpenHandles: true,
   modulePathIgnorePatterns: ['/dist/', 'playwright'],
   maxWorkers: 1,
   rootDir: __dirname,

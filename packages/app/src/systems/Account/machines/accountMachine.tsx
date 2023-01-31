@@ -97,7 +97,10 @@ export const accountMachine = createMachine(
           },
         },
         after: {
-          TIMEOUT: 'fetchingAccount', // retry
+          TIMEOUT: {
+            target: 'fetchingAccount',
+            cond: 'isLoggedIn',
+          }, // retry
         },
       },
       fetchingAccounts: {
@@ -135,7 +138,7 @@ export const accountMachine = createMachine(
             },
             {
               target: 'idle',
-              actions: ['assignAccount'],
+              actions: ['assignAccount', 'setIsUnlogged'],
             },
           ],
           onError: [
@@ -234,7 +237,7 @@ export const accountMachine = createMachine(
               target: 'failed',
             },
             {
-              actions: ['refreshApplication'],
+              actions: ['clearContext', 'refreshApplication'],
               target: 'idle',
             },
           ],
@@ -248,7 +251,10 @@ export const accountMachine = createMachine(
           },
         },
         after: {
-          INTERVAL: 'fetchingAccounts', // retry
+          INTERVAL: {
+            target: 'fetchingAccounts', // retry
+            cond: 'isLoggedIn',
+          },
         },
       },
     },
@@ -271,6 +277,7 @@ export const accountMachine = createMachine(
       assignError: assign({
         error: (_, ev) => ev.data,
       }),
+      clearContext: assign(() => ({})),
       setIsLogged: () => {
         Storage.setItem(IS_LOGGED_KEY, true);
       },
@@ -364,11 +371,14 @@ export const accountMachine = createMachine(
         showError: true,
         maxAttempts: 1,
         async fetch() {
-          return AccountService.logout();
+          await AccountService.logout();
         },
       }),
     },
     guards: {
+      isLoggedIn: () => {
+        return !!Storage.getItem(IS_LOGGED_KEY);
+      },
       hasAccount: (ctx, ev) => {
         return Boolean(ctx?.account || ev?.data);
       },

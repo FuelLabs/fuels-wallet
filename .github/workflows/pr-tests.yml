@@ -41,7 +41,8 @@ jobs:
 
       - name: Run Jest Tests
         run: |
-          pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}" --forceExit
+          pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
+        timeout-minutes: 20
 
       - name: Publish coverage
         uses: artiomtr/jest-coverage-report-action@v2.0.5
@@ -50,7 +51,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           package-manager: pnpm
           annotations: failed-tests
-          test-script: pnpm test:ci --forceExit
+          test-script: pnpm test:ci
           prnumber: ${{ steps.findPr.outputs.number }}
           skip-test: all
           working-directory: ./packages/app
@@ -83,7 +84,7 @@ jobs:
           NODE_ENV: test
 
       - name: Build Application
-        run: pnpm build:all
+        run: pnpm build:app
         env:
           NODE_ENV: test
           DOCS_DIST: ./dist
