@@ -82,3 +82,44 @@ the DApp will also switch to that network. Support for specific DApp networks wi
   file="../../sdk/src/Fuel.test.ts"
   testCase="User getProvider on fuels-ts Wallet"
 />
+
+## Events
+
+The Fuel client emits events when certain actions occur. These events can be listened to by using the `on` method.
+
+### Usage
+
+The `fuel` object has an `events` property which is an enum of all the events that can be listened to. <br />
+The `on` method takes two arguments, the event name and a callback function. The callback function is passed the data associated with the event.
+
+### Connection
+
+We can listen for a new connection to a node. The callback is passed the connection object.
+
+```js
+fuel.on(fuel.events.CONNECTION, async (connection) => {});
+```
+
+### Accounts
+
+We can listen for when the client connects his accounts. The callback is passed the account object.
+
+```js
+fuel.on(fuel.events.ACCOUNTS, async (account) => {});
+```
+
+### Current Account
+
+We can listen for when the client is authorized to use an account. If there are multiple accounts, the current account on the wallet is returned. The callback is passed the account object.
+
+```js
+fuel.on(fuel.events.CURRENT_ACCOUNT, async (account) => {});
+```
+
+### Network
+
+We can listen for when the client connects to a network. The callback is passed the network object.
+
+```js
+fuel.on(fuel.events.NETWORK, async (network) => {});
+```

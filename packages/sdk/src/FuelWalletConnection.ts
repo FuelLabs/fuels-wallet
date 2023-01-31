@@ -5,6 +5,7 @@ import type {
   FuelProviderConfig,
 } from '@fuel-wallet/types';
 import {
+  FuelEventTypes,
   CONTENT_SCRIPT_NAME,
   PAGE_SCRIPT_NAME,
   MessageTypes,
@@ -16,6 +17,8 @@ import { WindowConnection } from './connections/WindowConnection';
 import { getTransactionSigner } from './utils/getTransactionSigner';
 
 export class FuelWalletConnection extends WindowConnection {
+  readonly events = FuelEventTypes;
+
   acceptMessage(message: MessageEvent<CommunicationMessage>): boolean {
     const { data: event } = message;
     return (

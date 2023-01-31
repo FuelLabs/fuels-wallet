@@ -20,9 +20,9 @@ export function useIsConnected() {
       main();
     }
 
-    fuel?.on('connection', main);
+    fuel?.on(fuel.events.CONNECTION, main);
     return () => {
-      fuel?.off('connection', main);
+      fuel?.off(fuel.events.CONNECTION, main);
     };
   }, [fuel]);
 

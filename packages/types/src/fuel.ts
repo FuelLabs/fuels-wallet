@@ -7,21 +7,28 @@ import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
 
 import type { Network } from './network';
 
+export enum FuelEventTypes {
+  ACCOUNTS = 'accounts',
+  CURRENT_ACCOUNT = 'currentAccount',
+  CONNECTION = 'connection',
+  NETWORK = 'network',
+}
+
 export type FuelEvents =
   | {
-      type: 'accounts';
+      type: FuelEventTypes.ACCOUNTS;
       data: Array<string>;
     }
   | {
-      type: 'currentAccount';
+      type: FuelEventTypes.CURRENT_ACCOUNT;
       data: string;
     }
   | {
-      type: 'connection';
+      type: FuelEventTypes.CONNECTION;
       data: boolean;
     }
   | {
-      type: 'network';
+      type: FuelEventTypes.NETWORK;
       data: Network;
     };
 
