@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
-import type { UserConfig } from 'vite';
+import type { PluginOption, UserConfig } from 'vite';
+import cleanPlugin from 'vite-plugin-clean';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 import '../load.envs.js';
@@ -37,7 +38,16 @@ const baseConfig: UserConfig = {
       },
     },
   },
-  plugins: [react(), tsconfigPaths()],
+  plugins: [
+    react(),
+    tsconfigPaths(),
+    {
+      ...cleanPlugin({
+        targetFiles: ['dist', 'dist-crx'],
+      }),
+      apply: 'serve',
+    } as PluginOption,
+  ],
   ...(Boolean(process.env.CI) && {
     logLevel: 'silent',
   }),
