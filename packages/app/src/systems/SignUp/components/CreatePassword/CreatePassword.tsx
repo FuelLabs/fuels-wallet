@@ -1,3 +1,4 @@
+import { cssObj } from '@fuel-ui/css';
 import {
   Stack,
   Flex,
@@ -17,7 +18,11 @@ import { ControlledField, ImageLoader, relativeUrl } from '~/systems/Core';
 
 const schema = yup
   .object({
-    password: yup.string().min(8).required('Password is required'),
+    password: yup.string().test({
+      name: 'is-strong',
+      message: 'Password must be strong',
+      test: (_, ctx) => ctx.parent.strength === 'strong',
+    }),
     confirmPassword: yup
       .string()
       .oneOf([yup.ref('password'), null], 'Passwords must match'),
@@ -29,6 +34,7 @@ export type CreatePasswordValues = {
   password: string;
   confirmPassword: string;
   accepted: boolean;
+  strength: string;
 };
 
 export type CreatePasswordProps = {
@@ -57,11 +63,12 @@ export function CreatePassword({
     control,
     handleSubmit,
     formState: { isValid },
+    setValue,
   } = form;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack gap="$6" align="center">
+      <Stack gap="$6" align="center" css={styles.root}>
         <ImageLoader
           src={relativeUrl('/signup-illustration-2.svg')}
           width={129}
@@ -83,6 +90,9 @@ export function CreatePassword({
                 password={field.value || ''}
                 open={passwordTooltipOpened}
                 minLength={8}
+                onChangeStrength={(strength: string) =>
+                  setValue('strength', strength)
+                }
               >
                 <InputPassword
                   {...field}
@@ -155,3 +165,11 @@ export function CreatePassword({
     </form>
   );
 }
+
+const styles = {
+  root: cssObj({
+    '[data-radix-popper-content-wrapper]': {
+      zIndex: '1 !important',
+    },
+  }),
+};

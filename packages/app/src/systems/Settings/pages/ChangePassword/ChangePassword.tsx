@@ -18,10 +18,11 @@ import { ControlledField, Layout, Pages } from '~/systems/Core';
 
 const schema = yup
   .object({
-    newPassword: yup
-      .string()
-      .min(8, 'Your new password must to have at least 8 characters')
-      .required('New Password is required'),
+    newPassword: yup.string().test({
+      name: 'is-strong',
+      message: 'Password must be strong',
+      test: (_, ctx) => ctx.parent.strength === 'strong',
+    }),
     confirmPassword: yup
       .string()
       .oneOf([yup.ref('newPassword'), null], 'Passwords must match'),
@@ -33,17 +34,29 @@ type ChangePasswordFormValues = {
   confirmPassword: string;
   newPassword: string;
   oldPassword: string;
+  strength: string;
 };
 
 export function ChangePassword() {
   const navigate = useNavigate();
   const { handlers, isChangingPassword } = useSettings();
-  const { handleSubmit, control, setError, trigger } =
-    useForm<ChangePasswordFormValues>({
-      mode: 'onChange',
-      reValidateMode: 'onChange',
-      resolver: yupResolver(schema),
-    });
+  const {
+    handleSubmit,
+    control,
+    setError,
+    trigger,
+    setValue,
+    formState: { isValid },
+  } = useForm<ChangePasswordFormValues>({
+    resolver: yupResolver(schema),
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      confirmPassword: '',
+      newPassword: '',
+      oldPassword: '',
+    },
+  });
   const [passwordTooltipOpened, setPasswordTooltipOpened] = useState(false);
 
   function onSubmit(values: ChangePasswordFormValues) {
@@ -86,12 +99,16 @@ export function ChangePassword() {
               control={control}
               name="newPassword"
               label="New Password"
+              hideError
               render={({ field }) => (
                 <PasswordStrength
                   onOpenChange={() => setPasswordTooltipOpened(true)}
                   password={field.value || ''}
                   open={passwordTooltipOpened}
                   minLength={8}
+                  onChangeStrength={(strength: string) =>
+                    setValue('strength', strength)
+                  }
                 >
                   <InputPassword
                     {...field}
@@ -134,7 +151,7 @@ export function ChangePassword() {
           <Button
             type="submit"
             isLoading={isChangingPassword}
-            isDisabled={isChangingPassword}
+            isDisabled={!isValid}
           >
             Save
           </Button>
