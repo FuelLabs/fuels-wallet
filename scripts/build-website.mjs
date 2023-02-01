@@ -1,4 +1,4 @@
-import { buildWebsite, setEnv } from "./builds/utils.mjs";
+import { buildWebsite, setEnv } from './builds/utils.mjs';
 
 setEnv();
 buildWebsite();

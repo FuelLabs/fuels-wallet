@@ -11,3 +11,4 @@ contracts
 .eslintrc.js
 **/__generated__/
 **/generated/*
+.changeset/**.md

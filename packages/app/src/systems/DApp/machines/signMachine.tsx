@@ -139,9 +139,10 @@ export const signMachine = createMachine(
         invoke: {
           src: 'signMessage',
           data: {
-            input: (_: MachineContext, ev: { data: WalletUnlocked }) => {
-              return { message: _.message, wallet: ev.data };
-            },
+            input: (ctx: MachineContext, ev: { data: WalletUnlocked }) => ({
+              message: ctx.message,
+              wallet: ev.data,
+            }),
           },
           onDone: [
             FetchMachine.errorState('failed'),
