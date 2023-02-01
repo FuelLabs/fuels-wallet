@@ -5,7 +5,7 @@ import { motion, MotionConfig } from 'framer-motion';
 import { useState } from 'react';
 import { useNavigate, useResolvedPath, useMatch } from 'react-router-dom';
 
-import { coreStyles } from '~/systems/Core';
+import { coreStyles } from '~/systems/Core/components/styles';
 
 export type MenuItemObj = {
   key: string;
