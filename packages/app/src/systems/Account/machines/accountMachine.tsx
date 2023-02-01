@@ -96,12 +96,6 @@ export const accountMachine = createMachine(
             target: 'unlocking',
           },
         },
-        after: {
-          TIMEOUT: {
-            target: 'fetchingAccount',
-            cond: 'isLoggedIn',
-          }, // retry
-        },
       },
       fetchingAccounts: {
         tags: ['loading'],
@@ -263,7 +257,9 @@ export const accountMachine = createMachine(
     },
   },
   {
-    delays: { INTERVAL: 2000, TIMEOUT: 5000 },
+    delays: {
+      INTERVAL: 2000,
+    },
     actions: {
       clearUnlockError: assign({
         unlockError: (_) => undefined,

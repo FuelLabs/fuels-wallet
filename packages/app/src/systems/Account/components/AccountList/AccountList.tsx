@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { AccountItem } from '../AccountItem';
 
 export type AccountListProps = {
-  accounts: Account[];
+  accounts?: Account[];
   isLoading?: boolean;
   onPress: (account: Account) => void;
 };
@@ -24,27 +24,32 @@ export function AccountList({
   }
 
   useEffect(() => {
-    const hiddenAccounts = accounts.some((acc) => acc.isHidden);
+    const hiddenAccounts = (accounts ?? []).some((acc) => acc.isHidden);
     setAnyHiddenAccounts(hiddenAccounts);
   }, [accounts]);
 
   return (
     <Stack gap="$3">
-      <CardList isClickable>
-        {isLoading
-          ? [...Array(3)].map((_, i) => {
-              return <AccountItem.Loader key={i} />;
-            })
-          : accounts.map((account) => (
-              <AccountItem
-                onPress={() => onPress(account)}
-                key={account.address}
-                account={account}
-                isHidden={!showHidden && account.isHidden}
-                isCurrent={account.isCurrent}
-              />
-            ))}
-      </CardList>
+      {isLoading && (
+        <CardList>
+          {[...Array(3)].map((_, i) => {
+            return <AccountItem.Loader key={i} />;
+          })}
+        </CardList>
+      )}
+      {!isLoading && (
+        <CardList isClickable>
+          {(accounts ?? []).map((account) => (
+            <AccountItem
+              onPress={() => onPress(account)}
+              key={account.address}
+              account={account}
+              isHidden={!showHidden && account.isHidden}
+              isCurrent={account.isCurrent}
+            />
+          ))}
+        </CardList>
+      )}
       {!isLoading && anyHiddenAccounts && (
         <Button
           size="xs"

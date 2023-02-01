@@ -1,5 +1,6 @@
 import type { MenuItemObj } from '../components';
 
+import { store } from '~/store';
 import { Pages } from '~/systems/Core';
 
 export const sidebarItems: Array<MenuItemObj> = [
@@ -42,7 +43,9 @@ export const sidebarItems: Array<MenuItemObj> = [
         key: 'logout',
         icon: 'SignOut',
         label: 'Logout',
-        path: Pages.logout(),
+        onPress() {
+          store.goTo('logout');
+        },
       },
     ],
   },

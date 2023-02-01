@@ -12,6 +12,7 @@ export type MenuItemObj = {
   path?: string;
   ahref?: string;
   submenu?: MenuItemObj[];
+  onPress?: () => void;
 };
 
 type MenuItemContentProps = {
@@ -33,6 +34,10 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
 
   function handleAction(key: string | number) {
     const subItem = item.submenu?.find((i) => i.key === key);
+    if (subItem?.onPress) {
+      subItem.onPress();
+      navigate('/');
+    }
     if (subItem?.path) {
       navigate(subItem.path);
     }

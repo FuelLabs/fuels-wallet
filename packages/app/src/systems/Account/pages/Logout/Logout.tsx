@@ -1,18 +1,23 @@
-import { Button, Card, Icon, Text } from '@fuel-ui/react';
-import { useNavigate } from 'react-router-dom';
+import { Button, Card, Dialog, Icon, IconButton, Text } from '@fuel-ui/react';
 
 import { useAccounts } from '../../hooks';
 
-import { Layout, Pages } from '~/systems/Core';
-
 export const Logout = () => {
-  const navigate = useNavigate();
   const { isLoading, handlers } = useAccounts();
 
   return (
-    <Layout title="Logout" isLoading={isLoading}>
-      <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
-      <Layout.Content>
+    <>
+      <Dialog.Heading>
+        Logout
+        <IconButton
+          data-action="closed"
+          variant="link"
+          icon={<Icon icon="X" color="gray8" />}
+          aria-label="Close unlock window"
+          onPress={handlers.closeModal}
+        />
+      </Dialog.Heading>
+      <Dialog.Description as="div">
         <Card css={{ padding: '$4' }}>
           <Text
             as="h2"
@@ -36,8 +41,8 @@ export const Logout = () => {
           </Text>
           <Text color="gray11" css={{ mb: '$2' }}></Text>
         </Card>
-      </Layout.Content>
-      <Layout.BottomBar>
+      </Dialog.Description>
+      <Dialog.Footer>
         <Button
           aria-label="Logout"
           onPress={handlers.logout}
@@ -48,7 +53,7 @@ export const Logout = () => {
         >
           Logout
         </Button>
-      </Layout.BottomBar>
-    </Layout>
+      </Dialog.Footer>
+    </>
   );
 };

@@ -10,6 +10,7 @@ import { BottomBar } from './BottomBar';
 import { TopBar } from './TopBar';
 
 import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
+import { AccountsDialog } from '~/systems/Account';
 
 type Context = {
   isLoading?: boolean;
@@ -72,25 +73,28 @@ export const Layout: LayoutComponent = ({
   const isHome = location.pathname === '/wallet';
 
   return (
-    <ctx.Provider value={{ isLoading, title, isHome, ref }}>
-      <Helmet>
-        <title>{titleText}</title>
-      </Helmet>
-      <Flex as="main" css={styles.root({ isPublic })}>
-        {isPublic ? (
-          <>{children}</>
-        ) : (
-          <Flex css={styles.wrapper} ref={ref} className="layout_wrapper">
-            {children}
-          </Flex>
+    <>
+      <AccountsDialog />
+      <ctx.Provider value={{ isLoading, title, isHome, ref }}>
+        <Helmet>
+          <title>{titleText}</title>
+        </Helmet>
+        <Flex as="main" css={styles.root({ isPublic })}>
+          {isPublic ? (
+            <>{children}</>
+          ) : (
+            <Flex css={styles.wrapper} ref={ref} className="layout_wrapper">
+              {children}
+            </Flex>
+          )}
+        </Flex>
+        {import.meta.env.NODE_ENV === 'test' && (
+          <Box css={{ visibility: 'hidden' }}>
+            {isLoading ? 'is loading' : 'is loaded'}
+          </Box>
         )}
-      </Flex>
-      {import.meta.env.NODE_ENV === 'test' && (
-        <Box css={{ visibility: 'hidden' }}>
-          {isLoading ? 'is loading' : 'is loaded'}
-        </Box>
-      )}
-    </ctx.Provider>
+      </ctx.Provider>
+    </>
   );
 };
 

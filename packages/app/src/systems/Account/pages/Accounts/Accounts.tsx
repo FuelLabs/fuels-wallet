@@ -1,28 +1,30 @@
-import { Button, Icon } from '@fuel-ui/react';
-import { useNavigate } from 'react-router-dom';
+import { Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
 
 import { AccountList } from '../../components';
 import { useAccounts } from '../../hooks';
 
-import { Layout, Pages } from '~/systems/Core';
-
 export const Accounts = () => {
-  const navigate = useNavigate();
   const { accounts, isLoading, handlers } = useAccounts();
-
   return (
-    <Layout title="Accounts" isLoading={isLoading}>
-      <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
-      <Layout.Content>
-        {accounts && (
-          <AccountList
-            isLoading={isLoading}
-            accounts={accounts}
-            onPress={handlers.setCurrentAccount}
-          />
-        )}
-      </Layout.Content>
-      <Layout.BottomBar>
+    <>
+      <Dialog.Heading>
+        Accounts
+        <IconButton
+          data-action="closed"
+          variant="link"
+          icon={<Icon icon="X" color="gray8" />}
+          aria-label="Close unlock window"
+          onPress={handlers.closeModal}
+        />
+      </Dialog.Heading>
+      <Dialog.Description as="div">
+        <AccountList
+          isLoading={isLoading}
+          accounts={accounts}
+          onPress={handlers.setCurrentAccount}
+        />
+      </Dialog.Description>
+      <Dialog.Footer>
         <Button
           aria-label="Add account"
           onPress={handlers.goToAdd}
@@ -31,7 +33,7 @@ export const Accounts = () => {
         >
           Add new account
         </Button>
-      </Layout.BottomBar>
-    </Layout>
+      </Dialog.Footer>
+    </>
   );
 };
