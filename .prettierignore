@@ -10,3 +10,4 @@ pnpm-lock.yaml
 .next
 **/storybook/**/*
 **/__generated__/
+.changeset/**.md

@@ -19,11 +19,11 @@ describe('fetchMachine', () => {
     const fetchSpy = jest.spyOn(fetchWrapper, 'fetch');
     const machine = FetchMachine.create({
       showError: true,
-      maxAttempts: 3,
+      maxAttempts: opts.maxAttempts ?? 3,
       ...opts,
       fetch: fetchWrapper.fetch,
     });
-    const service = interpret(machine.withContext({})).start();
+    const service = interpret(machine).start();
 
     return { fetchSpy, service };
   };

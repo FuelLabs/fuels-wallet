@@ -30,7 +30,7 @@
   --docsearch-footer-shadow: 0 -1px 0 0 #e0e3e8,
     0 -3px 6px 0 rgba(69, 98, 155, 0.12);
 }
-html[data-theme="dark"] {
+html[data-theme='dark'] {
   --docsearch-text-color: #f5f6f7;
   --docsearch-container-background: rgba(9, 10, 17, 0.8);
   --docsearch-modal-background: #17181d;
