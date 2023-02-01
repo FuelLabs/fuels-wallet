@@ -1,5 +1,7 @@
 import react from '@vitejs/plugin-react';
-import type { UserConfig } from 'vite';
+import path from 'node:path';
+import type { PluginOption, UserConfig } from 'vite';
+import cleanPlugin from 'vite-plugin-clean';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 import '../load.envs.js';
@@ -36,7 +38,16 @@ const baseConfig: UserConfig = {
       },
     },
   },
-  plugins: [react(), tsconfigPaths()],
+  plugins: [
+    react(),
+    tsconfigPaths(),
+    {
+      ...cleanPlugin({
+        targetFiles: ['dist', 'dist-crx'],
+      }),
+      apply: 'serve',
+    } as PluginOption,
+  ],
   ...(Boolean(process.env.CI) && {
     logLevel: 'silent',
   }),
@@ -48,6 +59,19 @@ const baseConfig: UserConfig = {
   define: {
     'process.env': {},
   },
+  ...(process.env.WITH_PNPM_LINKS && {
+    resolve: {
+      alias: [
+        {
+          find: /(@?fuels?-?[^\s]*)/,
+          replacement: path.resolve(
+            __dirname,
+            '../node_modules/$1/dist/index.mjs'
+          ),
+        },
+      ],
+    },
+  }),
   /**
    * Need because of this issue:
    * https://github.com/vitejs/vite/issues/8644#issuecomment-1159308803

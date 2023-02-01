@@ -1,9 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
 import type { Icons } from '@fuel-ui/react';
 import { Box, Flex, Icon, Menu as RootMenu } from '@fuel-ui/react';
-import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
+import { motion, MotionConfig } from 'framer-motion';
 import { useState } from 'react';
 import { useNavigate, useResolvedPath, useMatch } from 'react-router-dom';
+
+import { coreStyles } from '~/systems/Core/components/styles';
 
 export type MenuItemObj = {
   key: string;
@@ -21,7 +23,6 @@ type MenuItemContentProps = {
 };
 
 const FlexMotion = motion(Flex);
-const IconMotion = motion(Icon);
 
 function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
   const navigate = useNavigate();
@@ -51,7 +52,6 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
       <FlexMotion
         direction="column"
         css={styles.menuItemContent(Boolean(isOpened))}
-        animate={{ height: isOpened ? '100%' : '24px' }}
       >
         <Flex
           css={match && item.path ? styles.activeRoute : styles.route}
@@ -66,37 +66,34 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
           />
           <Box css={{ flex: 1 }}>{item.label}</Box>
           {item.submenu && (
-            <IconMotion
+            <Icon
               icon="CaretDown"
               css={{ color: match && item.path ? '$white' : '$gray8' }}
-              animate={{ rotate: isOpened ? '180deg' : '0deg' }}
             />
           )}
         </Flex>
-        <AnimatePresence mode="wait" initial={false}>
-          {isOpened && item.submenu && (
-            <Box css={{ overflow: 'hidden' }}>
-              <motion.div
-                initial={{ opacity: 0, y: -30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -30 }}
+        {isOpened && item.submenu && (
+          <Box css={{ overflow: 'hidden' }}>
+            <motion.div
+              initial={{ opacity: 0, y: -30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+            >
+              <RootMenu
+                css={styles.submenu}
+                onAction={handleAction}
+                aria-label="Submenu"
               >
-                <RootMenu
-                  css={styles.submenu}
-                  onAction={handleAction}
-                  aria-label="Submenu"
-                >
-                  {item.submenu.map((subItem) => (
-                    <RootMenu.Item key={subItem.key} textValue={subItem.label}>
-                      <Icon icon={subItem.icon} css={{ color: '$gray8' }} />
-                      {subItem.label}
-                    </RootMenu.Item>
-                  ))}
-                </RootMenu>
-              </motion.div>
-            </Box>
-          )}
-        </AnimatePresence>
+                {item.submenu.map((subItem) => (
+                  <RootMenu.Item key={subItem.key} textValue={subItem.label}>
+                    <Icon icon={subItem.icon} css={{ color: '$gray8' }} />
+                    {subItem.label}
+                  </RootMenu.Item>
+                ))}
+              </RootMenu>
+            </motion.div>
+          </Box>
+        )}
       </FlexMotion>
     </MotionConfig>
   );
@@ -116,6 +113,8 @@ export function Menu({ items }: MenuProps) {
       setOpened(opened !== item.key ? item.key : null);
     } else if (item?.path) {
       navigate(item.path);
+    } else if (item?.ahref) {
+      window.open(item.ahref);
     }
   }
 
@@ -143,8 +142,9 @@ const styles = {
     borderRadius: 10,
   }),
   root: cssObj({
+    ...coreStyles.scrollable('$gray2'),
+    flex: 1,
     '.fuel_menu-list-item': {
-      py: '$0',
       height: 'auto',
     },
     '.fuel_menu-list-item:hover, .fuel_menu-list-item:focus': {
@@ -161,24 +161,23 @@ const styles = {
     return cssObj({
       transition: 'all',
       flex: 1,
-      py: '$2',
+      py: '$1',
       ...(opened && { pb: '$0' }),
     });
   },
   submenu: cssObj({
     position: 'relative',
     fontSize: '$xs',
-    pb: '$0',
-    pt: '$2',
+    py: '$0',
 
     '&::before': {
       display: 'block',
       content: '""',
       position: 'absolute',
-      top: 10,
+      top: 4,
       left: 7,
       width: 1,
-      height: 'calc(100% - 24px)',
+      height: 'calc(100% - 18px)',
       background: '$gray6',
     },
 
