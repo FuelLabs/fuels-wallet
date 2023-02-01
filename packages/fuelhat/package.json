@@ -12,10 +12,6 @@
     "fuelhat": "./index.mjs"
   },
   "dependencies": {
-    "@fuel-ui/config": "^0.10.2",
-    "@fuel-ui/css": "^0.10.2",
-    "@fuel-ui/react": "^0.10.2",
-    "@fuel-ui/test-utils": "^0.10.2",
     "chalk": "^5.2.0",
     "spinnies": "^0.5.1",
     "yargs": "^17.6.2"
