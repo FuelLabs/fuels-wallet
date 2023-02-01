@@ -24,7 +24,7 @@ export function ViewActivity() {
   });
 
   return (
-    <Layout title="Activity" isLoading={isLoading}>
+    <Layout title="History" isLoading={isLoading}>
       <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
       <Layout.Content>
         <Stack gap="$4">
