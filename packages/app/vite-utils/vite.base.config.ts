@@ -9,6 +9,7 @@ import '../load.envs.js';
 import { getVersion } from './getVersion';
 
 process.env.VITE_APP_VERSION = getVersion();
+const linkDeps = process.env.LINK_DEPS?.split(',') || [];
 
 // https://vitejs.dev/config/
 const baseConfig: UserConfig = {
@@ -61,15 +62,14 @@ const baseConfig: UserConfig = {
   },
   ...(process.env.WITH_PNPM_LINKS && {
     resolve: {
-      alias: [
-        {
-          find: /(@?fuels?-?[^\s]*)/,
-          replacement: path.resolve(
-            __dirname,
-            '../node_modules/$1/dist/index.mjs'
-          ),
-        },
-      ],
+      alias: linkDeps.reduce((obj, dep) => {
+        // eslint-disable-next-line no-param-reassign
+        obj[dep] = path.resolve(
+          __dirname,
+          `../node_modules/${dep}/dist/index.mjs`
+        );
+        return obj;
+      }, {}),
     },
   }),
   /**

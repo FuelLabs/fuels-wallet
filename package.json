@@ -38,7 +38,7 @@
     "dev": "turbo run dev --filter=app",
     "dev:docs": "NODE_ENV=development turbo run dev --filter=docs",
     "dev:crx": "turbo run dev:crx --parallel",
-    "dev:with-links": "turbo run dev:with-links --filter=app",
+    "dev:link-deps": "./scripts/deps.sh",
     "gh:preview": "node ./scripts/gh-pages-preview.mjs",
     "lint": "run-s lint:check prettier:check",
     "lint:check": "eslint . --ext .ts,.tsx,.js,.jsx",
