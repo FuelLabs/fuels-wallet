@@ -4,12 +4,8 @@
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "dependencies": {
-    "@fuel-ui/config": "^0.10.2",
-    "@fuel-ui/css": "^0.10.2",
-    "@fuel-ui/react": "^0.10.2",
-    "@fuel-ui/test-utils": "^0.10.2",
-    "@types/chrome": "^0.0.208",
-    "dexie-observable": "4.0.0-beta.13",
+    "@types/chrome": "^0.0.210",
+    "dexie-observable": "4.0.1-beta.13",
     "json-rpc-2.0": "^1.4.2"
   },
   "peerDependencies": {
