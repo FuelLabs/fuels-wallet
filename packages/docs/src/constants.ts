@@ -9,6 +9,7 @@ export const MENU_ORDER = [
   'TypeScript',
   'Contributing/Project Structure',
   'Contributing/Contributing Guide',
+  'Contributing/Linking local @fuel-ui',
 ];
 
 export const FIELDS = ['title', 'slug', 'content', 'category'];

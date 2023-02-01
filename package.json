@@ -36,8 +36,9 @@
     "changeset:check": "changeset status --since=master",
     "deps:update": "updates -gu && pnpm -r exec updates -gu",
     "dev": "turbo run dev --filter=app",
-    "dev:crx": "turbo run dev:crx --filter=app",
     "dev:docs": "NODE_ENV=development turbo run dev --filter=docs",
+    "dev:crx": "turbo run dev:crx --parallel",
+    "dev:with-links": "turbo run dev:with-links --filter=app",
     "gh:preview": "node ./scripts/gh-pages-preview.mjs",
     "lint": "run-s lint:check prettier:check",
     "lint:check": "eslint . --ext .ts,.tsx,.js,.jsx",
@@ -57,7 +58,8 @@
     "test:e2e": "playwright test --config=packages/app/playwright.config.ts",
     "ts:check": "pnpm -r ts:check",
     "prepare": "husky install",
-    "codegen:app": "pnpm run --filter=app codegen"
+    "codegen:app": "pnpm run --filter=app codegen",
+    "link:fuel-ui": "./scripts/link-fuel-ui.sh"
   },
   "dependencies": {
     "@fuel-ui/config": "^0.12.0",
