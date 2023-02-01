@@ -37,8 +37,6 @@ pnpm dev:link-deps
 > - run dev server with linked dependencies
 >   - command is different from the usual `pnpm dev` because it uses `@fuel-ui` packages in an alias configuration inside Vite. By default, PNPM doesn't change `publishConfig` when linking packages, and this can generate an error because Vite tries to get the `package.json:main` property on `@fuel-ui` packages, and locally they are pointing to the `.tsx` files
 
-4. Now that you've globally linked using pnpm inside the `@fuel-ui` folder and also inside the `fuels-wallet` folder, you can go to the `./packages/app` directory in this repository and run the following command to run Vite using the linked packages:
-
 ### Troubleshooting
 
 If you're linking for the first time, you might need:
