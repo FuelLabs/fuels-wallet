@@ -19,7 +19,7 @@
     "dev:crx": {
       "cache": false
     },
-    "dev:deps-link": {
+    "dev:link-deps": {
       "cache": false
     }
   }

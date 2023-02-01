@@ -19,23 +19,25 @@ pnpm -r exec pnpm link --global --dir ./
 pnpm build:watch
 ```
 
-3. Inside the `fuels-wallet` repository, run this command:
+3. Inside `fuels-wallet` repository, edit (if you need) the `scrips/deps.sh`.
+
+- locate `deps` variable
+- insert your desired local dependencies to link, splitting by white space
+
+4. Run this command:
 
 ```sh
-pnpm link:fuel-ui
+pnpm dev:link-deps
 ```
 
 > **Note**
-> This command links all `@fuel-ui` packages across all monorepo packages, including the root
+> This command:
+>
+> - links all `@fuel-ui` packages across all monorepo packages, including the root
+> - run dev server with linked dependencies
+>   - command is different from the usual `pnpm dev` because it uses `@fuel-ui` packages in an alias configuration inside Vite. By default, PNPM doesn't change `publishConfig` when linking packages, and this can generate an error because Vite tries to get the `package.json:main` property on `@fuel-ui` packages, and locally they are pointing to the `.tsx` files
 
 4. Now that you've globally linked using pnpm inside the `@fuel-ui` folder and also inside the `fuels-wallet` folder, you can go to the `./packages/app` directory in this repository and run the following command to run Vite using the linked packages:
-
-```sh
-pnpm dev:with-links
-```
-
-> **Note**
-> This command is different from the usual `pnpm dev` because it uses `@fuel-ui` packages in an alias configuration inside Vite. By default, PNPM doesn't change `publishConfig` when linking packages, and this can generate an error because Vite tries to get the `package.json:main` property on `@fuel-ui` packages, and locally they are pointing to the `.tsx` files.
 
 ### Troubleshooting
 
