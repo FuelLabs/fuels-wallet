@@ -5,6 +5,8 @@ import { motion, MotionConfig } from 'framer-motion';
 import { useState } from 'react';
 import { useNavigate, useResolvedPath, useMatch } from 'react-router-dom';
 
+import { coreStyles } from '~/systems/Core';
+
 export type MenuItemObj = {
   key: string;
   icon: Icons;
@@ -135,8 +137,8 @@ const styles = {
     borderRadius: 10,
   }),
   root: cssObj({
+    ...coreStyles.scrollable('$gray2'),
     flex: 1,
-    overflowY: 'auto',
     '.fuel_menu-list-item': {
       height: 'auto',
     },
