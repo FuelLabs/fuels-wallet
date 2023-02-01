@@ -1,13 +1,13 @@
-version: "3"
+version: '3'
 
 services:
   fuel-core:
-    container_name: "${PROJECT:-fuelhat}_fuel-core"
+    container_name: '${PROJECT:-fuelhat}_fuel-core'
     environment:
       MIN_GAS_PRICE: ${GAS_PRICE}
     build: ../fuel-core
     ports:
-      - "${FUEL_CORE_PORT:-4000}:4000"
+      - '${FUEL_CORE_PORT:-4000}:4000'
     volumes:
       - fuel-core-db:/mnt/db
     healthcheck:
@@ -16,7 +16,7 @@ services:
       timeout: 5s
       retries: 10
   faucet:
-    container_name: "${PROJECT:-fuelhat}_faucet"
+    container_name: '${PROJECT:-fuelhat}_faucet'
     environment:
       MIN_GAS_PRICE: ${GAS_PRICE}
       WALLET_SECRET_KEY: ${WALLET_SECRET}
@@ -26,7 +26,7 @@ services:
     # https://github.com/FuelLabs/faucet#configuration
     image: ghcr.io/fuellabs/faucet:v0.3.0
     ports:
-      - "${FUEL_FAUCET_PORT:-4040}:3000"
+      - '${FUEL_FAUCET_PORT:-4040}:3000'
     links:
       - fuel-core
     depends_on:
@@ -35,4 +35,4 @@ services:
 
 volumes:
   fuel-core-db:
-    name: "${PROJECT:-fuelhat}_fuel-core-db"
+    name: '${PROJECT:-fuelhat}_fuel-core-db'

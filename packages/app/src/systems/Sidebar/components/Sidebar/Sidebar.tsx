@@ -1,5 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
-import { Icon, Box, Avatar, Flex, Drawer, IconButton } from '@fuel-ui/react';
+import {
+  Icon,
+  Box,
+  Avatar,
+  Flex,
+  Drawer,
+  IconButton,
+  Stack,
+} from '@fuel-ui/react';
 
 import { Menu, NetworkSelector } from '..';
 import { useAccounts } from '../../../Account';
@@ -14,34 +22,32 @@ export function Sidebar() {
   const { handlers: accountHandlers, account } = useAccounts();
 
   return (
-    <Flex css={styles.wrapper}>
-      <Flex css={styles.column}>
-        <Flex
-          css={{
-            ...styles.topBorder,
-            ...styles.separator,
-          }}
-        >
-          <Flex css={styles.accountDropdownWrapper}>
-            <Box css={styles.avatarWrapper}>
-              <Avatar.Generated size={'sm'} hash={account?.address as string} />
-            </Box>
-            <IconButton
-              size="xs"
-              variant="link"
-              color="gray"
-              icon={<Icon icon="CaretDown" size={18} />}
-              aria-label="Accounts"
-              onClick={accountHandlers.goToList}
-            />
-          </Flex>
-          <Drawer.CloseButton
-            css={{ position: 'unset' }}
-            aria-label="drawer_closeButton"
+    <Stack css={styles.wrapper} gap={0}>
+      <Flex
+        css={{
+          ...styles.topBorder,
+          ...styles.separator,
+        }}
+      >
+        <Flex css={styles.accountDropdownWrapper}>
+          <Box css={styles.avatarWrapper}>
+            <Avatar.Generated size={'sm'} hash={account!.address as string} />
+          </Box>
+          <IconButton
+            size="xs"
+            variant="link"
+            color="gray"
+            icon={<Icon icon="CaretDown" size={18} />}
+            aria-label="Accounts"
+            onClick={accountHandlers.goToList}
           />
         </Flex>
-        <Menu items={sidebarItems} />
+        <Drawer.CloseButton
+          css={{ position: 'unset' }}
+          aria-label="drawer_closeButton"
+        />
       </Flex>
+      <Menu items={sidebarItems(selectedNetwork.url)} />
       <Flex
         css={{
           ...styles.bottomBorder,
@@ -54,7 +60,7 @@ export function Sidebar() {
           networks={networks}
         />
       </Flex>
-    </Flex>
+    </Stack>
   );
 }
 
@@ -68,20 +74,15 @@ const styles = {
   }),
   wrapper: cssObj({
     flex: 1,
-    height: 'flex',
-    flexDirection: 'column',
+    height: '100%',
   }),
   bottomBorder: cssObj({
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    flex: 'none',
     alignItems: 'center',
     justifyContent: 'center',
     borderTopWidth: 'thin',
     borderTopStyle: 'dashed',
     px: '$1',
-    mt: '$4',
   }),
   accountDropdownWrapper: cssObj({
     flexDirection: 'row',
@@ -92,11 +93,10 @@ const styles = {
     padding: '$4',
     py: '$3',
     justifyContent: 'space-between',
-    flex: 1,
+    flex: 'none',
     borderBottomWidth: 'thin',
     borderBottomStyle: 'dashed',
   }),
-  column: cssObj({ flex: 1, flexDirection: 'column' }),
   sidebarWrapper: cssObj({
     overflow: 'hidden',
     position: 'relative',

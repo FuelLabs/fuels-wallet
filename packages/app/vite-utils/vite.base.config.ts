@@ -1,4 +1,5 @@
 import react from '@vitejs/plugin-react';
+import path from 'node:path';
 import type { UserConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
@@ -48,6 +49,19 @@ const baseConfig: UserConfig = {
   define: {
     'process.env': {},
   },
+  ...(process.env.WITH_PNPM_LINKS && {
+    resolve: {
+      alias: [
+        {
+          find: /(@?fuels?-?[^\s]*)/,
+          replacement: path.resolve(
+            __dirname,
+            '../node_modules/$1/dist/index.mjs'
+          ),
+        },
+      ],
+    },
+  }),
   /**
    * Need because of this issue:
    * https://github.com/vitejs/vite/issues/8644#issuecomment-1159308803

@@ -18,6 +18,9 @@
     },
     "dev:crx": {
       "cache": false
+    },
+    "dev:with-links": {
+      "cache": false
     }
   }
 }
