@@ -94,7 +94,7 @@ The `on` method takes two arguments, the event name and a callback function. The
 
 ### Connection
 
-We can listen for a new connection to a node. The callback is passed the connection object.
+Listen for a new connection to a node. Callback function receives the `connection` object.
 
 ```js
 fuel.on(fuel.events.CONNECTION, async (connection) => {});
@@ -102,7 +102,7 @@ fuel.on(fuel.events.CONNECTION, async (connection) => {});
 
 ### Accounts
 
-We can listen for when the client connects his accounts. The callback is passed the account object.
+Listen for when the client connects his accounts. Callback function receives the `account` object.
 
 ```js
 fuel.on(fuel.events.ACCOUNTS, async (account) => {});
@@ -110,7 +110,7 @@ fuel.on(fuel.events.ACCOUNTS, async (account) => {});
 
 ### Current Account
 
-We can listen for when the client is authorized to use an account. If there are multiple accounts, the current account on the wallet is returned. The callback is passed the account object.
+Listen for when the current account is changed in the Fuel Wallet Extension. Callback function receives `account` address.
 
 ```js
 fuel.on(fuel.events.CURRENT_ACCOUNT, async (account) => {});
@@ -118,7 +118,7 @@ fuel.on(fuel.events.CURRENT_ACCOUNT, async (account) => {});
 
 ### Network
 
-We can listen for when the client connects to a network. The callback is passed the network object.
+Listen for when the client connects to a network. Callback function receives the `network` object.
 
 ```js
 fuel.on(fuel.events.NETWORK, async (network) => {});

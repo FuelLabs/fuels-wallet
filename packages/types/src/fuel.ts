@@ -7,7 +7,7 @@ import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
 
 import type { Network } from './network';
 
-export enum FuelEventTypes {
+export enum FuelWalletEvents {
   ACCOUNTS = 'accounts',
   CURRENT_ACCOUNT = 'currentAccount',
   CONNECTION = 'connection',
@@ -16,19 +16,19 @@ export enum FuelEventTypes {
 
 export type FuelEvents =
   | {
-      type: FuelEventTypes.ACCOUNTS;
+      type: FuelWalletEvents.ACCOUNTS;
       data: Array<string>;
     }
   | {
-      type: FuelEventTypes.CURRENT_ACCOUNT;
+      type: FuelWalletEvents.CURRENT_ACCOUNT;
       data: string;
     }
   | {
-      type: FuelEventTypes.CONNECTION;
+      type: FuelWalletEvents.CONNECTION;
       data: boolean;
     }
   | {
-      type: FuelEventTypes.NETWORK;
+      type: FuelWalletEvents.NETWORK;
       data: Network;
     };
 
