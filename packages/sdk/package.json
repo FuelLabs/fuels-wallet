@@ -27,12 +27,12 @@
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
-    "@types/chrome": "^0.0.208",
-    "dexie-observable": "4.0.0-beta.13",
+    "@types/chrome": "^0.0.210",
+    "dexie-observable": "4.0.1-beta.13",
     "events": "^3.3.0",
     "json-rpc-2.0": "^1.4.2",
     "uuid": "^9.0.0",
-    "xstate": "^4.35.2"
+    "xstate": "^4.35.4"
   },
   "peerDependencies": {
     "fuels": ">=0.29.1"

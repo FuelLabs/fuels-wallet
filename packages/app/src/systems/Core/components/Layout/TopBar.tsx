@@ -88,7 +88,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
           aria-label="activity"
           onPress={goToActivityPage}
         />
-        <Drawer type="menu" size={220} containerRef={ref}>
+        <Drawer type="menu" size={220} containerRef={ref} isDismissable={true}>
           <Drawer.Trigger>
             <IconButton
               iconSize={24}
