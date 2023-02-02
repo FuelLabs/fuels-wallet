@@ -51,8 +51,7 @@ export function CurrentAccount() {
               </Tag>
               <Text>
                 <em>
-                  {' '}
-                  Change the account in your Fuel wallet to test the event{' '}
+                  Change the account in your Fuel wallet to test the event
                 </em>
               </Text>
             </Stack>
@@ -60,8 +59,7 @@ export function CurrentAccount() {
           {currentAccount.length < 1 && <Text> No account connected </Text>}
           {!isConnected && (
             <Button onPress={handleConnect} isLoading={isConnecting}>
-              {' '}
-              Connect wallet to view your account{' '}
+              Connect wallet to view your account
             </Button>
           )}
         </Stack>

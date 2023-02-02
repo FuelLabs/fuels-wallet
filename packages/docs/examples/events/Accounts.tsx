@@ -53,9 +53,8 @@ export function Accounts() {
                 </Tag>
                 <Text>
                   <em>
-                    {' '}
                     Connect / Disconnect accounts in your Fuel wallet to test
-                    the event.{' '}
+                    the event.
                   </em>
                 </Text>
               </>
@@ -65,8 +64,7 @@ export function Accounts() {
           )}
           {!isConnected && (
             <Button onPress={handleConnect} isLoading={isConnecting}>
-              {' '}
-              Connect wallet to view your accounts{' '}
+              Connect wallet to view your accounts
             </Button>
           )}
         </Stack>

@@ -54,9 +54,8 @@ export function NetworkExample() {
               <Code> {JSON.stringify(currentNetwork)} </Code>
               <Text>
                 <em>
-                  {' '}
                   Change the account in your Fuel wallet to see the event
-                  triggered.{' '}
+                  triggered.
                 </em>
               </Text>
             </>
@@ -65,8 +64,7 @@ export function NetworkExample() {
           )}
           {!isConnected && (
             <Button onPress={handleConnect} isLoading={isConnecting}>
-              {' '}
-              Connect wallet to view your network{' '}
+              Connect wallet to view your network
             </Button>
           )}
         </Stack>
