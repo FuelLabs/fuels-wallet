@@ -1,4 +1,4 @@
 ---
 ---
 
-add enum to sdk event types
+- add enum to sdk event types

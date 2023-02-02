@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import { Stack, Tag, Button, Text } from '@fuel-ui/react';
+import { Button, Stack, Tag, Text } from '@fuel-ui/react';
 import { FuelWalletEvents } from '@fuel-wallet/sdk';
 import { useEffect, useState } from 'react';
 
@@ -13,47 +13,62 @@ export function Accounts() {
   const [fuel, notDetected] = useFuel();
   const [accounts, setAccounts] = useState<string[]>([]);
   const [isConnected] = useIsConnected();
-  const [handleAccounts, isLoadingAccounts, errorAccounts] = useLoading(
-    async () => {
-      console.debug('Request accounts from Wallet!');
-      const accounts = await fuel.accounts();
-      setAccounts(accounts);
-      console.debug('Accounts', accounts);
-    }
-  );
+  const [handleAccounts, errorAccounts] = useLoading(async () => {
+    console.debug('Request accounts from Wallet!');
+    const accounts = await fuel.accounts();
+    setAccounts(accounts);
+    console.debug('Accounts', accounts);
+  });
+
+  const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {
+    await fuel.connect();
+  });
 
   const handleAccountsEvent = (accounts: string[]) => {
+    console.debug('Accounts event', accounts);
     setAccounts(accounts);
   };
 
   useEffect(() => {
-    handleAccounts();
+    if (isConnected) handleAccounts();
     fuel?.on(FuelWalletEvents.ACCOUNTS, handleAccountsEvent);
 
     return () => {
       fuel?.off(FuelWalletEvents.ACCOUNTS, handleAccountsEvent);
     };
-  }, [fuel]);
+  }, [fuel, isConnected]);
 
-  const errorMessage = errorAccounts || notDetected;
+  const errorMessage = errorAccounts || notDetected || errorConnect;
 
   return (
     <ExampleBox error={errorMessage}>
       <Stack css={styles.root}>
-        <Button
-          onPress={handleAccounts}
-          isLoading={isLoadingAccounts}
-          isDisabled={isLoadingAccounts || !isConnected}
-        >
-          Get Accounts
-        </Button>
         <Stack gap="$3" css={{ mt: '$2' }}>
-          {accounts.length > 0 &&
+          <Text> All connected accounts: </Text>
+          {accounts.length > 0 ? (
             accounts.map((account) => (
-              <Tag size="xs" color="gray" variant="ghost" key={account}>
-                <Text key={account}>{account}</Text>
-              </Tag>
-            ))}
+              <>
+                <Tag size="xs" color="gray" variant="ghost" key={account}>
+                  <Text key={account}>{account}</Text>
+                </Tag>
+                <Text>
+                  <em>
+                    {' '}
+                    Connect / Disconnect accounts in your Fuel wallet to test
+                    the event.{' '}
+                  </em>
+                </Text>
+              </>
+            ))
+          ) : (
+            <Text> No accounts connected </Text>
+          )}
+          {!isConnected && (
+            <Button onPress={handleConnect} isLoading={isConnecting}>
+              {' '}
+              Connect wallet to view your accounts{' '}
+            </Button>
+          )}
         </Stack>
       </Stack>
     </ExampleBox>

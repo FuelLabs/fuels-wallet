@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { Flex, Button, Text, Stack } from '@fuel-ui/react';
+import { Flex, Text, Stack, Button } from '@fuel-ui/react';
 import type { FuelProviderConfig } from '@fuel-wallet/sdk';
 import { FuelWalletEvents } from '@fuel-wallet/sdk';
 import { useEffect, useState } from 'react';
@@ -17,50 +17,59 @@ export function NetworkExample() {
     null
   );
 
-  const [handleNetwork, isLoadingNetwork, errorNetwork] = useLoading(
-    async () => {
-      console.debug('Request Wallet!');
-      const network = await fuel.network();
-      setNetwork(network);
-      console.debug('Connection response', network);
-    }
-  );
+  const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {
+    await fuel.connect();
+  });
+
+  const [handleNetwork, errorNetwork] = useLoading(async () => {
+    console.debug('Request Wallet!');
+    const network = await fuel.network();
+    setNetwork(network);
+    console.debug('Connection response', network);
+  });
 
   const handleNetworkChange = (network: FuelProviderConfig) => {
+    console.debug('Network event', network);
     setNetwork(network);
   };
 
   useEffect(() => {
+    if (isConnected) handleNetwork();
     fuel?.on(FuelWalletEvents.NETWORK, handleNetworkChange);
-    handleNetwork();
 
     return () => {
       fuel?.off(FuelWalletEvents.NETWORK, handleNetworkChange);
     };
-  }, [fuel]);
+  }, [fuel, isConnected]);
 
-  const errorMessage = errorNetwork || notDetected;
+  const errorMessage = errorNetwork || notDetected || errorConnect;
 
   return (
     <ExampleBox error={errorMessage}>
       <Flex>
-        {currentNetwork ? (
-          <Stack>
-            <Text>Current network config </Text>
-            <Code> {JSON.stringify(currentNetwork)} </Code>
-          </Stack>
-        ) : null}
-      </Flex>
-      <Flex gap="$4">
-        {!currentNetwork ? (
-          <Button
-            onPress={handleNetwork}
-            isLoading={isLoadingNetwork}
-            isDisabled={isLoadingNetwork || !isConnected}
-          >
-            Change Network
-          </Button>
-        ) : null}
+        <Stack>
+          {currentNetwork ? (
+            <>
+              <Text>Current network config </Text>
+              <Code> {JSON.stringify(currentNetwork)} </Code>
+              <Text>
+                <em>
+                  {' '}
+                  Change the account in your Fuel wallet to see the event
+                  triggered.{' '}
+                </em>
+              </Text>
+            </>
+          ) : (
+            <Text> No network connected </Text>
+          )}
+          {!isConnected && (
+            <Button onPress={handleConnect} isLoading={isConnecting}>
+              {' '}
+              Connect wallet to view your network{' '}
+            </Button>
+          )}
+        </Stack>
       </Flex>
     </ExampleBox>
   );
