@@ -1,5 +1,11 @@
 # @fuel-wallet/sdk
 
+## 0.5.1
+
+### Patch Changes
+
+- [#536](https://github.com/FuelLabs/fuels-wallet/pull/536) [`1530c42`](https://github.com/FuelLabs/fuels-wallet/commit/1530c42db7ef9f76a7449b73ed01363722c0e579) Thanks [@luizstacio](https://github.com/luizstacio)! - Export FuelWalletLocked on package sdk
+
 ## 0.5.0
 
 ### Minor Changes
