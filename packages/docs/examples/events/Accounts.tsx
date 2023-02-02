@@ -46,19 +46,19 @@ export function Accounts() {
         <Stack gap="$3" css={{ mt: '$2' }}>
           <Text> All connected accounts: </Text>
           {accounts.length > 0 ? (
-            accounts.map((account) => (
-              <>
+            <>
+              {accounts.map((account) => (
                 <Tag size="xs" color="gray" variant="ghost" key={account}>
                   <Text key={account}>{account}</Text>
                 </Tag>
-                <Text>
-                  <em>
-                    Connect / Disconnect accounts in your Fuel wallet to test
-                    the event.
-                  </em>
-                </Text>
-              </>
-            ))
+              ))}
+              <Text>
+                <em>
+                  Connect / Disconnect accounts in your Fuel wallet to test the
+                  event.
+                </em>
+              </Text>
+            </>
           ) : (
             <Text> No accounts connected </Text>
           )}
