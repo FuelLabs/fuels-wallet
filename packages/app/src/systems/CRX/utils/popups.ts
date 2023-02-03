@@ -2,21 +2,21 @@ import { getPopUpPosition } from './position';
 
 import { TAB_BAR_HEIGHT, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 
-export type PopUpInfo = {
+export type ShowPopUp = {
   windowId?: number;
   tabId?: number;
 };
 
-export async function showPopUp(popUpInfo?: PopUpInfo | null) {
-  if (!popUpInfo?.windowId || !popUpInfo?.tabId) return false;
+export async function showPopUp(params?: ShowPopUp | null) {
+  if (!params?.windowId || !params?.tabId) return false;
 
   try {
-    const current = await chrome.windows.get(popUpInfo.windowId);
+    const current = await chrome.windows.get(params.windowId);
     if (current) {
-      await chrome.tabs.update(popUpInfo.tabId, {
+      await chrome.tabs.update(params.tabId, {
         selected: true,
       });
-      await chrome.windows.update(popUpInfo.windowId, {
+      await chrome.windows.update(params.windowId, {
         focused: true,
       });
       return true;
