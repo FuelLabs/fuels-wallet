@@ -47,6 +47,7 @@ export type BaseEvent<T> = {
 export type UIEventMessage = BaseEvent<{
   readonly type: MessageTypes.uiEvent;
   readonly ready: boolean;
+  readonly session: string;
 }>;
 
 export type RequestMessage = BaseEvent<{
