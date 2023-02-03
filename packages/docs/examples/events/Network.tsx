@@ -67,7 +67,7 @@ export function NetworkExample() {
               isLoading={isConnecting}
               isDisabled={!fuel || isConnecting}
             >
-              Connect wallet to view your network
+              View your network
             </Button>
           )}
         </Stack>
