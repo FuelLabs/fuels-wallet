@@ -1,4 +1,3 @@
- 
 import { Flex, Text, Stack, Button } from '@fuel-ui/react';
 import type { FuelProviderConfig } from '@fuel-wallet/sdk';
 import { FuelWalletEvents } from '@fuel-wallet/sdk';

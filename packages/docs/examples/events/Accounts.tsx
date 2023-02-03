@@ -1,4 +1,3 @@
- 
 import { cssObj } from '@fuel-ui/css';
 import { Button, Stack, Tag, Text } from '@fuel-ui/react';
 import { FuelWalletEvents } from '@fuel-wallet/sdk';
