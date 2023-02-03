@@ -12,21 +12,21 @@ We support locally link with [@fuel-ui](https://github.com/FuelLabs/fuel-ui) and
 This will link dependencies within wallet monorepo to your global `pnpm` store, enabling you to use `@fuel-ui` and/or `@fuel-ts` packages via links in your local projects.
 This task may be tedious, but you can accomplish it by following these steps:
 
-1. In the root directory of the repositories(`@fuel-ui` and/or `@fuel-ts`) you want to link:
+1. In the root directory of the repositories(`@fuel-ui` and/or `@fuel-ts`):
 
-- Link your project to global pnpm store, by running this command:
+- Link dependency to global pnpm store:
 
 ```sh
 pnpm -r exec pnpm link --global --dir ./
 ```
 
-- Watch your changes and make sure your local changes will be reflected in wallet, by running this command:
+- Watch your changes and make sure they will reflect in wallet:
 
 ```sh
 pnpm build:watch
 ```
 
-2. Inside `fuels-wallet` repository, edit `scripts/deps.sh`.
+2. Inside `fuels-wallet` root directory, edit `scripts/deps.sh`.
 
 - If you're enabling link to `@fuel-ui`, enable this configuration:
 
@@ -47,11 +47,14 @@ pnpm dev:deps
 ```
 
 > **Note**
+>
 > This command will:
 >
 > - Link dependency repos across all wallet monorepo packages, including the root
 > - Run dev server with linked dependencies
->   - Dev command is different from the usual `pnpm dev` because it inject an alias configuration inside Vite to use build module files, instead of using default pnpm behavior and get `package:main`
+>   - Dev command is different from the usual `pnpm dev` because it inject an alias configuration inside Vite to use build module files `index.mjs`, instead of using default pnpm behavior and get `package:main`
+
+Done! Now your changes in `@fuel-ui` and/or `@fuel-ts` will reflect in wallet project. Test with a simple `console.log` to make sure it worked.
 
 ### Troubleshooting
 
