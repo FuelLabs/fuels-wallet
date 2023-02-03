@@ -1,4 +1,6 @@
 ---
+'@fuel-wallet/types': patch
+'@fuel-wallet/sdk': patch
 ---
 
-- add enum to sdk event types
+Add enum to sdk event types

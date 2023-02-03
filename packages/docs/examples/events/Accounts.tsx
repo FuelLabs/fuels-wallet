@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+ 
 import { cssObj } from '@fuel-ui/css';
 import { Button, Stack, Tag, Text } from '@fuel-ui/react';
 import { FuelWalletEvents } from '@fuel-wallet/sdk';
@@ -14,10 +14,8 @@ export function Accounts() {
   const [accounts, setAccounts] = useState<string[]>([]);
   const [isConnected] = useIsConnected();
   const [handleAccounts, errorAccounts] = useLoading(async () => {
-    console.debug('Request accounts from Wallet!');
     const accounts = await fuel.accounts();
     setAccounts(accounts);
-    console.debug('Accounts', accounts);
   });
 
   const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {
@@ -25,18 +23,19 @@ export function Accounts() {
   });
 
   const handleAccountsEvent = (accounts: string[]) => {
-    console.debug('Accounts event', accounts);
     setAccounts(accounts);
   };
 
   useEffect(() => {
-    if (isConnected) handleAccounts();
     fuel?.on(FuelWalletEvents.ACCOUNTS, handleAccountsEvent);
-
     return () => {
       fuel?.off(FuelWalletEvents.ACCOUNTS, handleAccountsEvent);
     };
-  }, [fuel, isConnected]);
+  }, [fuel]);
+
+  useEffect(() => {
+    if (isConnected) handleAccounts();
+  }, [isConnected]);
 
   const errorMessage = errorAccounts || notDetected || errorConnect;
 
@@ -63,8 +62,12 @@ export function Accounts() {
             <Text> No accounts connected </Text>
           )}
           {!isConnected && (
-            <Button onPress={handleConnect} isLoading={isConnecting}>
-              Connect wallet to view your accounts
+            <Button
+              onPress={handleConnect}
+              isLoading={isConnecting}
+              isDisabled={!fuel || isConnecting}
+            >
+              View your accounts
             </Button>
           )}
         </Stack>

@@ -34,14 +34,14 @@ export function Connect() {
         <Button
           onPress={handleConnect}
           isLoading={isConnecting}
-          isDisabled={isConnecting || connected}
+          isDisabled={isConnecting || connected || !fuel}
         >
           {connected ? 'Connected' : 'Connect'}
         </Button>
         <Button
           onPress={handleDisconnect}
           isLoading={isDisconnecting}
-          isDisabled={isDisconnecting || !connected}
+          isDisabled={isDisconnecting || !connected || !fuel}
         >
           {connected ? 'Disconnect' : 'Disconnected'}
         </Button>

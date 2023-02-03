@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+ 
 import { Flex, Text, Stack, Button } from '@fuel-ui/react';
 import type { FuelProviderConfig } from '@fuel-wallet/sdk';
 import { FuelWalletEvents } from '@fuel-wallet/sdk';
@@ -22,25 +22,25 @@ export function NetworkExample() {
   });
 
   const [handleNetwork, errorNetwork] = useLoading(async () => {
-    console.debug('Request Wallet!');
     const network = await fuel.network();
     setNetwork(network);
-    console.debug('Connection response', network);
   });
 
   const handleNetworkChange = (network: FuelProviderConfig) => {
-    console.debug('Network event', network);
     setNetwork(network);
   };
 
   useEffect(() => {
-    if (isConnected) handleNetwork();
     fuel?.on(FuelWalletEvents.NETWORK, handleNetworkChange);
 
     return () => {
       fuel?.off(FuelWalletEvents.NETWORK, handleNetworkChange);
     };
-  }, [fuel, isConnected]);
+  }, [fuel]);
+
+  useEffect(() => {
+    if (isConnected) handleNetwork();
+  }, [isConnected]);
 
   const errorMessage = errorNetwork || notDetected || errorConnect;
 
@@ -63,7 +63,11 @@ export function NetworkExample() {
             <Text> No network connected </Text>
           )}
           {!isConnected && (
-            <Button onPress={handleConnect} isLoading={isConnecting}>
+            <Button
+              onPress={handleConnect}
+              isLoading={isConnecting}
+              isDisabled={!fuel || isConnecting}
+            >
               Connect wallet to view your network
             </Button>
           )}

@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+ 
 import { cssObj } from '@fuel-ui/css';
 import { Button, Stack, Tag, Text } from '@fuel-ui/react';
 import { FuelWalletEvents } from '@fuel-wallet/sdk';
@@ -14,10 +14,8 @@ export function CurrentAccount() {
   const [currentAccount, setCurrentAccount] = useState<string>('');
   const [isConnected] = useIsConnected();
   const [handleCurrentAccount, errorCurrentAccount] = useLoading(async () => {
-    console.debug('Request currentAccount to Wallet!');
     const currentAccount = await fuel.currentAccount();
     setCurrentAccount(currentAccount);
-    console.debug('Current Account ', currentAccount);
   });
 
   const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {
@@ -25,17 +23,21 @@ export function CurrentAccount() {
   });
 
   const handleAccountEvent = (account: string) => {
-    console.debug('Account event', account);
     setCurrentAccount(account);
   };
 
   useEffect(() => {
-    if (isConnected) handleCurrentAccount();
+    // listen to the current event account, and call the handleAccountEvent
     fuel?.on(FuelWalletEvents.CURRENT_ACCOUNT, handleAccountEvent);
     return () => {
+      // remove the listener when the component is unmounted
       fuel?.off(FuelWalletEvents.CURRENT_ACCOUNT, handleAccountEvent);
     };
-  }, [fuel, isConnected]);
+  }, [fuel]);
+
+  useEffect(() => {
+    if (isConnected) handleCurrentAccount();
+  }, [isConnected]);
 
   const errorMessage = errorCurrentAccount || notDetected || errorConnect;
 
@@ -58,8 +60,12 @@ export function CurrentAccount() {
           )}
           {currentAccount.length < 1 && <Text> No account connected </Text>}
           {!isConnected && (
-            <Button onPress={handleConnect} isLoading={isConnecting}>
-              Connect wallet to view your account
+            <Button
+              onPress={handleConnect}
+              isLoading={isConnecting}
+              isDisabled={!fuel || isConnecting}
+            >
+              View your account
             </Button>
           )}
         </Stack>
