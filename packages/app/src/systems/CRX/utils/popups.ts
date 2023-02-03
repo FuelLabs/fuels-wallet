@@ -2,33 +2,34 @@ import { getPopUpPosition } from './position';
 
 import { TAB_BAR_HEIGHT, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 
-export async function getPopUpId(windowId?: number) {
-  const tabs = await chrome.tabs.query({ windowId });
-  const tabId = tabs?.[0].id;
+export type PopUpInfo = {
+  windowId?: number;
+  tabId?: number;
+};
 
-  return tabId || null;
-}
-
-export async function showPopUp(windowId: number | null | undefined) {
-  if (!windowId) return null;
+export async function showPopUp(popUpInfo?: PopUpInfo | null) {
+  if (!popUpInfo?.windowId || !popUpInfo?.tabId) return false;
 
   try {
-    const current = await chrome.windows.get(windowId);
+    const current = await chrome.windows.get(popUpInfo.windowId);
     if (current) {
-      const window = await chrome.windows.update(windowId, {
+      await chrome.tabs.update(popUpInfo.tabId, {
+        selected: true,
+      });
+      await chrome.windows.update(popUpInfo.windowId, {
         focused: true,
       });
-      return window;
+      return true;
     }
     // eslint-disable-next-line no-empty
   } catch (err) {}
 
-  return null;
+  return false;
 }
 
-export async function createPopUp(origin: string, url: string) {
+export async function createPopUp(url: string) {
   const { left, top } = await getPopUpPosition();
-  const window = await chrome.windows.create({
+  const win = await chrome.windows.create({
     type: 'popup',
     url,
     width: WALLET_WIDTH,
@@ -36,5 +37,5 @@ export async function createPopUp(origin: string, url: string) {
     left,
     top,
   });
-  return window;
+  return win?.id;
 }
