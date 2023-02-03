@@ -2,12 +2,7 @@ import { POPUP_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
 import type { ResponseMessage, UIEventMessage } from '@fuel-wallet/types';
 import { JSONRPCClient } from 'json-rpc-2.0';
 
-import {
-  createPopUp,
-  getPopUpId,
-  getTabIdFromSender,
-  showPopUp,
-} from '../../utils';
+import { createPopUp, getTabIdFromSender, showPopUp } from '../../utils';
 import type { DeferPromise } from '../../utils/promise';
 import { deferPromise } from '../../utils/promise';
 
@@ -15,12 +10,14 @@ import type { CommunicationProtocol } from './CommunicationProtocol';
 import type { MessageInputs } from './types';
 
 import { CRXPages } from '~/systems/Core/types';
+import { uniqueId } from '~/systems/Core/utils/string';
 import { NetworkService } from '~/systems/Network/services';
 
 const popups = new Map<string, PopUpService>();
 
 export class PopUpService {
   openingPromise: DeferPromise<PopUpService>;
+  session: string | null = null;
   tabId: number | null = null;
   windowId: number | null = null;
   eventId?: string;
@@ -76,8 +73,9 @@ export class PopUpService {
   }
 
   onUIEvent = (message: UIEventMessage) => {
-    const tabId = getTabIdFromSender(message.sender);
-    if (tabId === this.tabId && message.ready) {
+    if (this.session === message.session && message.ready) {
+      const tabId = getTabIdFromSender(message.sender);
+      this.tabId = tabId!;
       this.eventId = message.id;
       this.openingPromise.resolve(this);
     }
@@ -87,7 +85,10 @@ export class PopUpService {
     const currentService = popups.get(origin);
 
     if (currentService) {
-      const showPopupId = await showPopUp(currentService.windowId);
+      const showPopupId = await showPopUp({
+        tabId: currentService.tabId!,
+        windowId: currentService.windowId!,
+      });
       if (showPopupId) return currentService;
     }
 
@@ -99,15 +100,19 @@ export class PopUpService {
     pathname: string,
     communicationProtocol: CommunicationProtocol
   ) => {
+    const session = uniqueId(4);
     const popupService = new PopUpService(communicationProtocol);
 
     // Set current instance to memory to avoid
     // Multiple instances
     popups.set(origin, popupService);
 
-    const win = await createPopUp(origin, `${CRXPages.popup}#${pathname}`);
-    popupService.tabId = await getPopUpId(win.id);
-    popupService.windowId = win.id!;
+    const windowId = await createPopUp(
+      `${CRXPages.popup}?s=${session}#${pathname}`
+    );
+
+    popupService.session = session;
+    popupService.windowId = windowId!;
 
     return popupService;
   };
