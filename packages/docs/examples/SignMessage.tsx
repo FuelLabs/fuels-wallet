@@ -17,11 +17,13 @@ export function SignMessage() {
   const [handleSignMessage, isSingingMessage, errorSigningMessage] = useLoading(
     async (message: string) => {
       console.debug('Request signature of message!');
+      /* example:start */
       const accounts = await fuel.accounts();
       const account = accounts[0];
       const wallet = await fuel.getWallet(account);
       const signedMessage = await wallet.signMessage(message);
       console.debug('Message signature', signedMessage);
+      /* example:end */
       setSignedMessage(signedMessage);
     }
   );
