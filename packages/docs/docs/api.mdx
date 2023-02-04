@@ -116,7 +116,9 @@ This event is triggered when the list of connected accounts to the application c
 
 ### Current Account
 
-Listen for when the current account is changed in the Fuel Wallet Extension. Callback function receives `account` address.
+This event is triggered when the current account is changed in the Fuel Wallet Extension. The callback function receives the `account` address.
+
+This event is only triggered if the application has access to the current account address. Otherwise, it is not triggered.
 
 <CodeImport
   file="../examples/events/CurrentAccount.tsx"
