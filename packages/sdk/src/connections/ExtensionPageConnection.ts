@@ -45,10 +45,13 @@ export class ExtensionPageConnection extends BaseConnection {
   }
 
   ready() {
+    // Get session from query params
+    const session = new URLSearchParams(window.location.search).get('s');
     this.connection.postMessage({
       target: BACKGROUND_SCRIPT_NAME,
       type: MessageTypes.uiEvent,
       ready: true,
+      session,
     });
   }
 
