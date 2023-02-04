@@ -15,6 +15,20 @@ export class ContentProxyConnection {
       name: BACKGROUND_SCRIPT_NAME,
     });
     this.connection.onMessage.addListener(this.onMessageFromExtension);
+    this.connection.onDisconnect.addListener(() => {
+      const tryReconect = setInterval(() => {
+        console.log('Try to reconnect...');
+        try {
+          this.connection = chrome.runtime.connect(chrome.runtime.id, {
+            name: BACKGROUND_SCRIPT_NAME,
+          });
+          console.log('Reconnected!');
+          clearInterval(tryReconect);
+        } catch (err) {
+          console.log('Reconnect failed');
+        }
+      }, 300);
+    });
     window.addEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
   }
 

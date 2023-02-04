@@ -32,6 +32,7 @@ export default defineManifest({
     },
   ],
   permissions: [
+    'alarms',
     'activeTab',
     'clipboardWrite',
     'notifications',
