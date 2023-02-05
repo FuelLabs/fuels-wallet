@@ -26,12 +26,19 @@
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
+    "@fuel-ts/keystore": "^0.29.1",
+    "@xstate/inspect": "^0.7.1",
     "@xstate/react": "^3.1.1",
+    "fast-equals": "^4.0.3",
+    "jotai": "^2.0.0",
+    "pnpm": "^7.26.3",
     "react": "^18.2.0",
+    "uuid": "^9.0.0",
     "xstate": "^4.35.4"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",
+    "@types/uuid": "^9.0.0",
     "tsup": "^6.5.0"
   }
 }
