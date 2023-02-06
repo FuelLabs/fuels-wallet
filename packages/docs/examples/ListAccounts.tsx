@@ -15,8 +15,10 @@ export function ListAccounts() {
   const [handleGetAccounts, isLoadingAccounts, errorGetAccounts] = useLoading(
     async () => {
       console.debug('Request accounts to Wallet!');
+      /* example:start */
       const accounts = await fuel.accounts();
       console.debug('Accounts ', accounts);
+      /* example:end */
       setAccounts(accounts);
     }
   );
