@@ -20,7 +20,7 @@ export function FuelLoaded() {
     // Listen for the fuelLoaded event
     document.addEventListener('FuelLoaded', onFuelLoaded);
 
-    // On unmount, remove the event listener and clear the timeout
+    // On unmount, remove the event listener
     return () => {
       document.removeEventListener('FuelLoaded', onFuelLoaded);
     };
