@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { MaybeLazy } from '@xstate/react/lib/types';
+import type { WritableAtom } from 'jotai';
 import type {
   AnyStateMachine,
   AreAllImplementationsAssumedToBeProvided,
@@ -78,9 +79,13 @@ export type AddMachineInput<T extends MachinesObj> = {
   hasStorage?: boolean;
 };
 
-export type Listener<T = unknown> = {
-  key: string;
-  listener(...args: T extends unknown[] ? T : T[]): void;
+export type Listener<Args extends unknown[] = unknown[]> = (
+  ...args: Args
+) => void;
+
+export type StateListener<K, Args extends unknown[] = unknown[]> = {
+  service: K extends string ? string : K;
+  listener: Listener<Args>;
 };
 
 export type WaitForStateParam<M extends AnyStateMachine> =
@@ -97,3 +102,9 @@ export type WaitForArgs<
   state: WaitForStateParam<M>,
   timeout?: number
 ];
+
+export type WriteAtom<Value, Args extends unknown[]> = WritableAtom<
+  Value,
+  Args,
+  Value
+>;

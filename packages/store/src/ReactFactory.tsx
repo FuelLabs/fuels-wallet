@@ -70,10 +70,10 @@ export class ReactFactory<T extends MachinesObj> {
      * @param key The key of the service to get.
      * @returns The service.
      * @example
-     * const [service, updateService] = useService('counter');
+     * const service = useService('counter');
      */
     return function useService(key: keyof T) {
-      return useAtom(serviceAtom(key.toString()));
+      return useAtomValue(serviceAtom(key.toString()));
     };
   }
 

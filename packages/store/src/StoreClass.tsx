@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import type { InterpreterFrom, StateFrom } from 'xstate';
+import type { AnyState, InterpreterFrom, StateFrom } from 'xstate';
 
 import { ReactFactory } from './ReactFactory';
 import { atoms } from './atoms';
@@ -9,7 +9,6 @@ import type {
   MachinesObj,
   ValueOf,
   Listener,
-  Service,
   WaitForArgs,
 } from './types';
 import { createHandlers, waitFor } from './utils';
@@ -57,9 +56,9 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * @param cb - a callback that receives the `send` and `broadcast` functions
    * @returns the store instance
    * @example
-   * store.addHandlers((send, broadcast) => ({
-   *   increment: () => send('counter', { type: 'INCREMENT' }),
-   *   reset: () => broadcast('RESET'),
+   * store.addHandlers(store => ({
+   *   increment: () => store.send('counter', { type: 'INCREMENT' }),
+   *   reset: () => store.broadcast('RESET'),
    * }));
    */
   addHandlers<H extends Handlers>(cb: (store: StoreClass<T>) => H) {
@@ -138,12 +137,13 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    */
   onStateChange<K extends keyof T>(
     key: K,
-    listener: Listener<StateFrom<T[K]>>['listener']
+    listener: Listener<[StateFrom<T[K]>]>
   ) {
     const { store, onStateChangeAtom } = atoms;
+    const service = this.getService(key);
     store.set(onStateChangeAtom, {
       type: 'subscribe',
-      input: { key: key.toString(), listener },
+      input: { service, listener: listener as Listener<[AnyState]> },
     });
   }
 
@@ -155,8 +155,7 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * store.send('counter', { type: 'INCREMENT' });
    */
   send<K extends keyof T>(key: K, ev: ValueOf<T>['__TEvent']) {
-    const { store, serviceAtom } = atoms;
-    const service = store.get(serviceAtom(key.toString()));
+    const service = this.getService(key);
     service.send(ev);
     return this;
   }
@@ -168,10 +167,10 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * store.broadcast('RESET');
    */
   broadcast(ev: ValueOf<T>['__TEvent']) {
-    const { store, keysAtom, serviceAtom } = atoms;
+    const { store, keysAtom } = atoms;
     const keys = store.get(keysAtom);
     for (const key of keys) {
-      const service = store.get(serviceAtom(key));
+      const service = this.getService(key);
       service.send(ev);
     }
     return this;
@@ -184,9 +183,9 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * @example
    * const counterService = store.getService('counter');
    */
-  getService<K extends keyof T>(key: K): InterpreterFrom<T[K]> {
+  getService<K extends keyof T>(key: K) {
     const { store, serviceAtom } = atoms;
-    return store.get(serviceAtom(key.toString())) as Service<T>;
+    return store.get(serviceAtom(key.toString())) as InterpreterFrom<T[K]>;
   }
 
   /**

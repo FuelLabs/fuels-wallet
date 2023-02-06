@@ -13,6 +13,7 @@ import type {
   Service,
   StoreServiceObj,
   WaitForArgs,
+  StateListener,
 } from '../types';
 import { updateService, waitFor } from '../utils';
 
@@ -100,6 +101,9 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
         const machineAtom = get(machinesAtom)[key.toString()];
         const serviceAtom = get(machineAtom).atoms.service;
         const service = get(serviceAtom);
+        if (!service) {
+          throw new Error(`Service ${key.toString()} does not exist`);
+        }
         updateService(service, opts);
       }
     );
@@ -131,8 +135,7 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
     ...[key, givenState, timeout]: WaitForArgs<T, K>
   ) {
     const asyncAtom = atom(async (get) => {
-      const service = get(serviceAtom(key)) as InterpreterFrom<T[K]>;
-      return waitFor<T>(service, givenState, timeout);
+      return waitFor<T>(get(serviceAtom(key)), givenState, timeout);
     });
     return loadable(asyncAtom);
   }
@@ -151,9 +154,7 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
         return get(get(machineAtom).atoms.state);
       },
       (get, _set, ev: Parameters<Service<T>['send']>[0]) => {
-        const machineAtom = get(machinesAtom)[key.toString()];
-        const serviceAtom = get(machineAtom).atoms.service;
-        const service = get(serviceAtom);
+        const service = get(serviceAtom(key));
         service.send(ev);
       }
     );
@@ -173,21 +174,20 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
    *   }
    * })
    */
-  const onStateChangeAtom = atomWithSubcription<null, Listener>(
+  const onStateChangeAtom = atomWithSubcription<
     null,
-    (get, _set, cleanup, action) => {
-      if (!action.input) return;
-      const { key, listener } = action.input;
-      const service = get(serviceAtom(key));
-      cleanup(
-        service.subscribe(
-          toObserver((state) => {
-            listener(state as StateItem<T>);
-          })
-        )
-      );
-    }
-  );
+    StateListener<Service<T>, [StateItem<T>]>
+  >(null, (_get, _set, cleanup, action) => {
+    if (!action.input) return;
+    const { service, listener } = action.input;
+    cleanup(
+      service.subscribe(
+        toObserver((state) => {
+          listener(state as StateItem<T>);
+        })
+      )
+    );
+  });
 
   /**
    * An atom to subscribe to store start.
@@ -200,7 +200,7 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
    *   }
    * })
    */
-  const onStoreStartAtom = atomWithSubcription<null, Listener['listener']>(
+  const onStoreStartAtom = atomWithSubcription<null, Listener>(
     null,
     (_get, _set, _cleanup, { input: listener }) => {
       listener?.();
