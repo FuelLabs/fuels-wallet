@@ -1,2 +1,2 @@
 export * from './StoreClass';
-export * from './utils/types';
+export * from './types';

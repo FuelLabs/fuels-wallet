@@ -21,12 +21,4 @@ export const store = store$
   .addHandlers(networkEvents)
   .setup();
 
-store.onStoreStart(() => {
-  console.log('stored started');
-});
-
-store.onStateChange('networks', (state) => {
-  console.log(state);
-});
-
 export const { StoreProvider } = store;

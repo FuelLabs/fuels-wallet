@@ -12,7 +12,7 @@ import type {
   MachinesObj,
   Service,
   InterpreterOptions,
-} from './types';
+} from '../types';
 
 /**
  * Create store handlers. Functions that will be available on the store object and

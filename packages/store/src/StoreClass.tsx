@@ -1,16 +1,16 @@
 /* eslint-disable no-restricted-syntax */
+import type { StateFrom } from 'xstate';
 
 import { ReactFactory } from './ReactFactory';
-import { StateStorage } from './StateStorage';
-import type { StartListener, StateListener } from './subscriberMachine';
-import type { CreateStoreAtomsReturn } from './utils';
-import { createHandlers, createStoreAtoms } from './utils';
+import { atoms } from './atoms';
 import type {
   Handlers,
   AddMachineParams,
   MachinesObj,
   ValueOf,
-} from './utils/types';
+  Listener,
+} from './types';
+import { createHandlers } from './utils';
 
 interface IStore<T extends MachinesObj> {
   /** @deprecated an internal property acting as a "phantom" type, not meant to be used at runtime */
@@ -22,18 +22,10 @@ export type CreateStoreOpts<T> = {
   storageBlacklist?: (keyof T)[];
 };
 
-export type StoreClassOpts<T extends MachinesObj> = CreateStoreOpts<T> &
-  CreateStoreAtomsReturn<T>;
-
+export type StoreClassOpts<T extends MachinesObj> = CreateStoreOpts<T>;
 export class StoreClass<T extends MachinesObj> implements IStore<T> {
-  readonly onStartListeners = new Set<StartListener>();
-  readonly onStateListeners = new Map<keyof T, Set<StateListener<T>>>();
-  #stateStorage: StateStorage<T>;
   __TMachines = {} as T;
-
-  constructor(readonly opts: StoreClassOpts<T>) {
-    this.#stateStorage = new StateStorage<T>(opts.id, opts.storageBlacklist);
-  }
+  constructor(readonly opts: StoreClassOpts<T>) {}
 
   /**
    * Add a new machine to the global store.
@@ -47,14 +39,14 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
     machine: AddMachineParams<T, K>[1],
     opts: AddMachineParams<T, K>[2] = {}
   ) {
-    const stateStorage = this.#stateStorage;
-    const { store, machinesAtom } = this.opts;
-    const rehydratedState = stateStorage.getStateOf(key);
-    const newOpts = {
-      ...opts,
-      ...(rehydratedState ? { state: rehydratedState } : {}),
-    };
-    store.set(machinesAtom, { key, machine, opts: newOpts });
+    const { store, machinesAtom } = atoms;
+    const isBlackListed = this.opts.storageBlacklist?.includes(key);
+    store.set(machinesAtom, {
+      isBlackListed,
+      key: key.toString(),
+      getMachine: machine,
+      getOptions: opts,
+    });
     return this;
   }
 
@@ -69,7 +61,7 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * }));
    */
   addHandlers<H extends Handlers>(cb: (store: StoreClass<T>) => H) {
-    const { store, keysAtom } = this.opts;
+    const { store, keysAtom } = atoms;
     const keys = Object.keys(store.get(keysAtom));
     const handlers = createHandlers(keys, cb(this));
     Object.assign(this, handlers);
@@ -85,13 +77,7 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * store.setup();
    */
   setup() {
-    const factory = new ReactFactory({
-      ...this.opts,
-      stateStorage: this.#stateStorage,
-      onStartListeners: this.onStartListeners,
-      onStateListeners: this.onStateListeners,
-    });
-
+    const factory = new ReactFactory();
     const hooks = factory.createHooks();
     const StoreProvider = factory.createProvider();
     Object.assign(this, { StoreProvider });
@@ -103,14 +89,26 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
     } & {
       StoreProvider: typeof StoreProvider;
     };
-
     return this as Omit<StoreReturn, 'setup' | 'states'>;
   }
 
   /**
-   * TODO: implement
+   * Reset the store. Stops and starts all the services.
+   * @returns the store instance
+   * @example
+   *
+   * store.reset();
    */
-  reset() {}
+  reset() {
+    const { store, keysAtom, serviceAtom } = atoms;
+    const keys = store.get(keysAtom);
+    for (const key of keys) {
+      const service = store.get(serviceAtom(key));
+      service.stop();
+      service.start();
+    }
+    return this;
+  }
 
   /**
    * Add a listener that is called when the store is started.
@@ -122,7 +120,8 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * });
    */
   onStoreStart(listener: () => void) {
-    this.onStartListeners.add(listener);
+    const { store, onStoreStartAtom } = atoms;
+    store.set(onStoreStartAtom, { type: 'subscribe', input: listener });
   }
 
   /**
@@ -135,13 +134,15 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    *   console.log('counter state changed', state);
    * });
    */
-  onStateChange<K extends keyof T>(key: K, listener: StateListener<T>) {
-    const listeners = this.onStateListeners.get(key);
-    if (listeners) {
-      listeners.add(listener);
-    } else {
-      this.onStateListeners.set(key, new Set([listener]));
-    }
+  onStateChange<K extends keyof T>(
+    key: K,
+    listener: Listener<StateFrom<T[K]>>['listener']
+  ) {
+    const { store, onStateChangeAtom } = atoms;
+    store.set(onStateChangeAtom, {
+      type: 'subscribe',
+      input: { key: key.toString(), listener },
+    });
   }
 
   /**
@@ -152,8 +153,8 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * store.send('counter', { type: 'INCREMENT' });
    */
   send<K extends keyof T>(key: K, ev: ValueOf<T>['__TEvent']) {
-    const { store, serviceAtom } = this.opts;
-    const service = store.get(serviceAtom(key));
+    const { store, serviceAtom } = atoms;
+    const service = store.get(serviceAtom(key.toString()));
     service.send(ev);
     return this;
   }
@@ -165,7 +166,7 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * store.broadcast('RESET');
    */
   broadcast(ev: ValueOf<T>['__TEvent']) {
-    const { store, serviceAtom, keysAtom } = this.opts;
+    const { store, keysAtom, serviceAtom } = atoms;
     const keys = store.get(keysAtom);
     for (const key of keys) {
       const service = store.get(serviceAtom(key));
@@ -199,6 +200,5 @@ export type StoreBroadcast<T extends MachinesObj> = StoreClass<T>['broadcast'];
  *
  */
 export function createStore<T extends MachinesObj>(opts: CreateStoreOpts<T>) {
-  const atoms = createStoreAtoms<T>();
-  return new StoreClass<T>({ ...opts, ...atoms });
+  return new StoreClass<T>(opts);
 }
