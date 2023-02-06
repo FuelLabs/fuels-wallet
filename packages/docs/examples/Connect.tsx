@@ -12,8 +12,10 @@ export function Connect() {
 
   const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {
     console.debug('Request connection to Wallet!');
+    /* example:start */
     const isConnected = await fuel.connect();
     console.debug('Connection response', isConnected);
+    /* example:end */
     setConnected(isConnected);
   });
 
