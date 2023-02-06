@@ -9,7 +9,9 @@ import * as prettier from 'prettier';
 import type { Root } from 'remark-gfm';
 import { visit } from 'unist-util-visit';
 
-const ROOT_DIR = path.resolve(__dirname, '../../../../../../../');
+const PACKAGE_FOLDER = 'packages';
+const COMMENT_BLOCK_START = '/* example:start */';
+const COMMENT_BLOCK_END = '/* example:end */';
 
 function toAST(content: string) {
   return acorn.parse(content, {
@@ -35,6 +37,30 @@ function extractLines(
   }
   const linesContent = lines.slice(start - 1, end).join('\n');
   return prettier.format(linesContent, { parser: 'babel' }).trimEnd();
+}
+
+function extractCommentBlock(content: string) {
+  const lines = content.split(EOL);
+  let lineStart = lines.findIndex((l) => l.includes(COMMENT_BLOCK_START)) + 1;
+  let lineEnd = lines.findIndex((l) => l.includes(COMMENT_BLOCK_END));
+
+  if (lineStart < 0) {
+    lineStart = 0;
+  }
+  if (lineEnd < 0) {
+    lineEnd = lines.length;
+  }
+
+  const linesContent = lines.slice(lineStart, lineEnd).join('\n');
+  const contentFormatted = prettier
+    .format(linesContent, { parser: 'babel' })
+    .trimEnd();
+
+  return {
+    content: contentFormatted,
+    lineStart,
+    lineEnd,
+  };
 }
 
 function getLineOffsets(str: string) {
@@ -144,6 +170,16 @@ export function codeImport(options: Options = { filepath: '' }) {
         content = testResult.content;
       }
 
+      if (!testCase && !lineStart && !lineEnd) {
+        const commentResult = extractCommentBlock(fileContent);
+        lineStart = commentResult.lineStart;
+        lineEnd = commentResult.lineEnd;
+        content = commentResult.content;
+      }
+
+      const fullPath = path.resolve(dirname, file);
+      const relativePath = fullPath.slice(fullPath.indexOf(PACKAGE_FOLDER));
+
       const newAttrs = [
         {
           name: '__content',
@@ -153,7 +189,7 @@ export function codeImport(options: Options = { filepath: '' }) {
         {
           name: '__filepath',
           type: 'mdxJsxAttribute',
-          value: path.resolve(dirname, file).replace(`${ROOT_DIR}/`, ''),
+          value: relativePath,
         },
         {
           name: '__filename',
