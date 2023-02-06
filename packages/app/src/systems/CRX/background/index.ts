@@ -1,4 +1,4 @@
 import './actions/onInstall';
 import './actions/createMenu';
-import './actions/KeepAwake';
+import './actions/keepAwake';
 import './communication';
