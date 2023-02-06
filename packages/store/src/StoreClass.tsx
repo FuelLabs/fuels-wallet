@@ -184,19 +184,18 @@ export type StoreBroadcast<T extends MachinesObj> = StoreClass<T>['broadcast'];
  * @param opts - StoreClassOpts
  * @returns a store instance
  * @example
- * const store = createStore({
- *  id: 'my-store',
- * })
+ * const store$ = createStore<StoreMachines>({
+ *   id: 'fuelStore',
+ * });
  *
- * store.setup((send) => ({
- *   handlers: {
- *     increment: () => send('INCREMENT'),
- *     decrement: () => send('DECREMENT'),
- *   },
- * }));
+ * export const store = store$
+ *   .addMachine(Services.accounts, () => accountMachine)
+ *   .addMachine(Services.networks, () => networksMachine)
+ *   .addHandlers(accountEvents)
+ *   .addHandlers(networkEvents)
+ *   .setup();
  *
- * store.increment();
- * store.decrement();
+ * export const { StoreProvider } = store;
  *
  */
 export function createStore<T extends MachinesObj>(opts: CreateStoreOpts<T>) {

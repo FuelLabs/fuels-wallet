@@ -29,7 +29,7 @@ export type Machine<T extends MachinesObj> = StateMachine<
 export type StateItem<T extends MachinesObj> = StateFrom<ValueOf<T>>;
 export type Service<T extends MachinesObj> = InterpreterFrom<ValueOf<T>>;
 
-interface MachineAtomOptions<TContext, TEvent extends EventObject> {
+export interface MachineAtomOptions<TContext, TEvent extends EventObject> {
   context?: Partial<TContext>;
   state?: StateConfig<TContext, TEvent>;
 }

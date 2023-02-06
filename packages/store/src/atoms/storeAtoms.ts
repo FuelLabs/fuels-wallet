@@ -183,5 +183,3 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
     onStoreStartAtom,
   };
 }
-
-export const atoms = createStoreAtoms();
