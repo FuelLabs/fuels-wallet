@@ -54,12 +54,28 @@ test.describe('FuelWallet Extension', () => {
     // Use a single instance of the page to avoid
     // mutiple waiting times, and window.fuel checking.
     const blankPage = await context.newPage();
+
     // Open a blank html in order for the CRX
     // to inject fuel on the window. This is required
     // because the CRX is injected after load state of
     // the page.
     await blankPage.goto(new URL('e2e.html', baseURL).href);
-    await blankPage.waitForTimeout(5000);
+
+    await test.step('Should trigger event FuelLoaded', async () => {
+      // Reload and don't wait for laodstate to go to evalute
+      // This is required in order to get the FuelLoaded event
+      await blankPage.reload({
+        waitUntil: 'commit',
+      });
+      const hasTriggerFuelLoaded = await blankPage.evaluate(async () => {
+        return new Promise((resolve) => {
+          document.addEventListener('FuelLoaded', () => {
+            resolve(typeof window.fuel !== 'undefined');
+          });
+        });
+      });
+      await expect(hasTriggerFuelLoaded).toBeTruthy();
+    });
 
     await test.step('Has window.fuel', async () => {
       const hasFuel = await blankPage.evaluate(async () => {

@@ -57,7 +57,19 @@ export class Fuel extends FuelWalletConnection {
   }
 }
 
+interface FuelDocumentEvents {
+  FuelLoaded: CustomEvent<Fuel>;
+}
 declare global {
+  interface Document {
+    addEventListener<K extends keyof FuelDocumentEvents>(
+      type: K,
+      listener: (this: Document, ev: FuelDocumentEvents[K]) => void
+    ): void;
+    dispatchEvent<K extends keyof FuelDocumentEvents>(
+      ev: FuelDocumentEvents[K]
+    ): void;
+  }
   interface Window {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
