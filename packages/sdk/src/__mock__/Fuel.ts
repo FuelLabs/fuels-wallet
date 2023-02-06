@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { PAGE_SCRIPT_NAME } from '@fuel-wallet/types';
+import { FuelWalletEvents, PAGE_SCRIPT_NAME } from '@fuel-wallet/types';
 import EventEmitter from 'events';
 import { transactionRequestify, Wallet } from 'fuels';
 import type { JSONRPCResponse } from 'json-rpc-2.0';
@@ -46,9 +46,11 @@ export class MockConnection extends BaseConnection {
   }
 
   async network() {
-    return {
+    const network = {
       url: process.env.PUBLIC_PROVIDER_URL!,
     };
+    events.emit(FuelWalletEvents.NETWORK, network);
+    return network;
   }
 
   async isConnected() {
@@ -56,15 +58,19 @@ export class MockConnection extends BaseConnection {
   }
 
   async connect() {
+    events.emit(FuelWalletEvents.CONNECTION, true);
     return true;
   }
 
   async disconnect() {
+    events.emit(FuelWalletEvents.CONNECTION, false);
     return false;
   }
 
   async accounts() {
-    return [userWallet.address.toAddress()];
+    const accounts = [userWallet.address.toAddress()];
+    events.emit(FuelWalletEvents.ACCOUNTS, accounts);
+    return accounts;
   }
 
   async signMessage(params: {
@@ -86,7 +92,9 @@ export class MockConnection extends BaseConnection {
   }
 
   async currentAccount() {
-    return userWallet.address.toAddress();
+    const account = userWallet.address.toAddress();
+    events.emit(FuelWalletEvents.CURRENT_ACCOUNT, account);
+    return account;
   }
 }
 
