@@ -27,7 +27,17 @@ export type Machine<T extends MachinesObj> = StateMachine<
 >;
 
 export type StateItem<T extends MachinesObj> = StateFrom<ValueOf<T>>;
+export type MatchesState<M extends AnyStateMachine> =
+  AreAllImplementationsAssumedToBeProvided<
+    M['__TResolvedTypesMeta']
+  > extends true
+    ? keyof M['__TResolvedTypesMeta']['resolved']['matchesStates']
+    : string;
+
 export type Service<T extends MachinesObj> = InterpreterFrom<ValueOf<T>>;
+export type StoreServiceObj<T extends MachinesObj> = {
+  [K in keyof T]: Service<T>;
+};
 
 export interface MachineAtomOptions<TContext, TEvent extends EventObject> {
   context?: Partial<TContext>;
@@ -65,10 +75,25 @@ export type AddMachineInput<T extends MachinesObj> = {
   key: keyof T;
   getMachine: AddMachineParams<T, keyof T>[1];
   getOptions: AddMachineParams<T, keyof T>[2];
-  isBlackListed?: boolean;
+  hasStorage?: boolean;
 };
 
 export type Listener<T = unknown> = {
   key: string;
   listener(...args: T extends unknown[] ? T : T[]): void;
 };
+
+export type WaitForStateParam<M extends AnyStateMachine> =
+  | MatchesState<M>
+  | ((state: StateFrom<M>) => boolean);
+
+export type WaitForArgs<
+  T extends MachinesObj,
+  K extends keyof T = keyof T,
+  S extends Service<T> = Service<T>,
+  M extends AnyStateMachine = S['machine']
+> = [
+  key: K extends string ? string : K,
+  state: WaitForStateParam<M>,
+  timeout?: number
+];

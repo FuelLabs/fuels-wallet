@@ -1,4 +1,4 @@
-import { atomFamily } from 'jotai/utils';
+import { atomFamily, loadable } from 'jotai/utils';
 import { createStore, atom } from 'jotai/vanilla';
 import type { AnyInterpreter, AnyStateMachine, InterpreterFrom } from 'xstate';
 import { toObserver } from 'xstate';
@@ -11,8 +11,10 @@ import type {
   StateItem,
   ValueOf,
   Service,
+  StoreServiceObj,
+  WaitForArgs,
 } from '../types';
-import { updateService } from '../utils';
+import { updateService, waitFor } from '../utils';
 
 import { atomWithMachine } from './atomWithMachine';
 import { atomWithSubcription } from './atomWithSubscription';
@@ -50,7 +52,7 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
    *   key: 'conter',
    *   getMachine: counterMachine,
    *   getOptions: {},
-   *   isBlackListed: false
+   *   hasStorage: false
    * })
    */
   const machinesObjAtom = atom<Obj>({});
@@ -102,6 +104,38 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
       }
     );
   });
+
+  /**
+   * An atom to get the services of the machines.
+   * @returns An atom to get the services of the machines.
+   * @example
+   * const services = useAtom(servicesAtom);
+   * const counterService = services.counter;
+   */
+  const servicesAtom = atom((get) => {
+    const keys = get(keysAtom);
+    return keys.reduce((acc, key) => {
+      const service = get(serviceAtom(key));
+      return { ...acc, [key]: service };
+    }, {} as StoreServiceObj<T>);
+  });
+
+  /**
+   * An atom to use waitFor method from XState inside a component.
+   * @param params WaitForParams<T> - The params to use waitFor method.
+   * @returns an loadable atom that can be used with useAtom.
+   * @example
+   * const [state, send] = useAtom(waitForAtom({ key: 'counter', state: 'idle' }));
+   */
+  function waitForAtom<K extends keyof T>(
+    ...[key, givenState, timeout]: WaitForArgs<T, K>
+  ) {
+    const asyncAtom = atom(async (get) => {
+      const service = get(serviceAtom(key)) as InterpreterFrom<T[K]>;
+      return waitFor<T>(service, givenState, timeout);
+    });
+    return loadable(asyncAtom);
+  }
 
   /**
    * An atom family to get the state of a machine.
@@ -178,7 +212,9 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
     keysAtom,
     machinesAtom,
     serviceAtom,
+    servicesAtom,
     stateAtom,
+    waitForAtom,
     onStateChangeAtom,
     onStoreStartAtom,
   };

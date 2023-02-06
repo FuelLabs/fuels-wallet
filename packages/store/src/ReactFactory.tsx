@@ -1,11 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useSelector as useSelectorRef } from '@xstate/react';
 import { Provider, useAtom, useAtomValue } from 'jotai';
 import type { ReactNode } from 'react';
-import { useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 import type { StateFrom } from 'xstate';
 
 import { atoms } from './atoms';
-import type { Service, MachinesObj, AddMachineParams } from './types';
+import type {
+  Service,
+  MachinesObj,
+  AddMachineParams,
+  WaitForArgs,
+} from './types';
 
 export class ReactFactory<T extends MachinesObj> {
   readonly listeners = new Set<(state: Service<T>) => void>();
@@ -15,10 +21,12 @@ export class ReactFactory<T extends MachinesObj> {
     const useService = this.createUseService();
     const useState = this.createUseState();
     const useUpdateMachineConfig = this.createUseUpdateMachineConfig();
+    const useWaitFor = this.createUseWaitFor();
     return {
       useState,
       useSelector,
       useService,
+      useWaitFor,
       useUpdateMachineConfig,
     };
   }
@@ -103,6 +111,39 @@ export class ReactFactory<T extends MachinesObj> {
       useEffect(() => {
         updateService(opts);
       }, [opts, key]);
+    };
+  }
+
+  private createUseWaitFor() {
+    const { waitForAtom } = atoms;
+    /**
+     * A hook to be used to wait for a specific service state.
+     * @param key The key of the service to wait for.
+     * @param givenState The state to wait for.
+     * @param timeout The timeout to wait for.
+     * @returns The service state.
+     * @example
+     * const { data, status, error } = useWaitFor('counter', 'counting');
+     * if (status === 'loading') return <div>Loading...</div>;
+     * if (status === 'hasError') return <div>Error: {error}</div>;
+     * return <div>Count: {data.context.value}</div>;
+     */
+    return function useWaitFor<K extends keyof T>(
+      key: K,
+      givenState: WaitForArgs<T>[1],
+      timeout?: WaitForArgs<T>[2]
+    ) {
+      const atom = useMemo(() => {
+        return waitForAtom(key.toString(), givenState as any, timeout);
+      }, [key, givenState, timeout]);
+      const value = useAtomValue(atom);
+      return {
+        status: value.state,
+        isLoading: value.state === 'loading',
+        isError: value.state === 'hasError',
+        data: value.state === 'hasData' ? value.data : null,
+        error: value.state === 'hasError' ? value.error : null,
+      };
     };
   }
 }

@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import type { StateFrom } from 'xstate';
+import type { InterpreterFrom, StateFrom } from 'xstate';
 
 import { ReactFactory } from './ReactFactory';
 import { atoms } from './atoms';
@@ -9,8 +9,10 @@ import type {
   MachinesObj,
   ValueOf,
   Listener,
+  Service,
+  WaitForArgs,
 } from './types';
-import { createHandlers } from './utils';
+import { createHandlers, waitFor } from './utils';
 
 interface IStore<T extends MachinesObj> {
   /** @deprecated an internal property acting as a "phantom" type, not meant to be used at runtime */
@@ -19,7 +21,7 @@ interface IStore<T extends MachinesObj> {
 
 export type CreateStoreOpts<T> = {
   id: string;
-  storageBlacklist?: (keyof T)[];
+  storageStates?: (keyof T)[];
 };
 
 export type StoreClassOpts<T extends MachinesObj> = CreateStoreOpts<T>;
@@ -40,9 +42,9 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
     opts: AddMachineParams<T, K>[2] = {}
   ) {
     const { store, machinesAtom } = atoms;
-    const isBlackListed = this.opts.storageBlacklist?.includes(key);
+    const hasStorage = this.opts.storageStates?.includes(key);
     store.set(machinesAtom, {
-      isBlackListed,
+      hasStorage,
       key: key.toString(),
       getMachine: machine,
       getOptions: opts,
@@ -173,6 +175,47 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
       service.send(ev);
     }
     return this;
+  }
+
+  /**
+   * Get a specific service from the store.
+   * @param key - the key of the service
+   * @returns the service
+   * @example
+   * const counterService = store.getService('counter');
+   */
+  getService<K extends keyof T>(key: K): InterpreterFrom<T[K]> {
+    const { store, serviceAtom } = atoms;
+    return store.get(serviceAtom(key.toString())) as Service<T>;
+  }
+
+  /**
+   * Get all the services from the store.
+   * @returns an object with all the services
+   * @example
+   * const { counter, accounts } = store.services;
+   */
+  get services() {
+    const { store, servicesAtom } = atoms;
+    return store.get(servicesAtom);
+  }
+
+  /**
+   * Wait for a specific state to be reached.
+   * @param key - the key of the service
+   * @param selectedState - the name of the state to wait for
+   * @param timeout - the timeout in milliseconds (default: 5 minutes)
+   * @returns the current state value
+   * @example
+   * await store.waitForState('counter', 'active');
+   * // or
+   * await store.waitForState('counter', (state) => state.matches('active'));
+   */
+  async waitFor<K extends keyof T>(
+    ...[key, givenState, timeout = 60 * 5 * 1000]: WaitForArgs<T, K>
+  ) {
+    const service = this.getService(key);
+    return waitFor<T>(service, givenState, timeout);
   }
 }
 

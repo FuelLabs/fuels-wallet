@@ -25,18 +25,13 @@ export type AtomWithMachineOpts<M extends AnyStateMachine> = {
   key: string;
   getMachine: M | ((get: Getter) => M);
   getOptions?: GetOptions<M>;
-  isBlackListed?: boolean;
+  hasStorage?: boolean;
 };
 
 export function atomWithMachine<
   M extends AnyStateMachine,
   S extends AnyInterpreter = InterpreterFrom<M>
->({
-  key,
-  getMachine,
-  getOptions,
-  isBlackListed = false,
-}: AtomWithMachineOpts<M>) {
+>({ key, getMachine, getOptions, hasStorage }: AtomWithMachineOpts<M>) {
   let initialized = false;
 
   /**
@@ -96,7 +91,7 @@ export function atomWithMachine<
    */
   function startService(get: Getter, service: S) {
     const { options } = getSafeMachineAndOpts(get);
-    const stateStorage = !isBlackListed ? Storage.getItem(key) : null;
+    const stateStorage = hasStorage ? Storage.getItem(key) : null;
     const rehydrate = options?.state ?? stateStorage;
     if (!service.initialized && !initialized) {
       const state = rehydrate ? State.create(rehydrate as any) : undefined;
@@ -113,7 +108,7 @@ export function atomWithMachine<
    * storage. If it is not, we need to clear the state storage.
    */
   function updateStateStorage(state: AnyState) {
-    if (!isBlackListed) {
+    if (hasStorage) {
       Storage.setItem(key, state);
       return;
     }

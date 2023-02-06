@@ -3,8 +3,14 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { MaybeLazy } from '@xstate/react/lib/types';
-import type { AnyStateMachine } from 'xstate';
+import type {
+  AnyInterpreter,
+  AnyState,
+  AnyStateMachine,
+  StateFrom,
+} from 'xstate';
 import { interpret } from 'xstate';
+import { waitFor as waitForRef } from 'xstate/lib/waitFor';
 
 import type {
   Handlers,
@@ -12,6 +18,7 @@ import type {
   MachinesObj,
   Service,
   InterpreterOptions,
+  WaitForArgs,
 } from '../types';
 
 /**
@@ -130,4 +137,32 @@ export function updateService<
   Object.assign(service.machine.options.services ?? {}, opts.services ?? {});
   Object.assign(service.machine.options.delays ?? {}, opts.delays ?? {});
   return service;
+}
+
+export async function waitFor<
+  T extends MachinesObj,
+  I extends AnyInterpreter = Service<T>,
+  TState extends AnyState = StateFrom<I['machine']>
+>(
+  service: I,
+  givenState: WaitForArgs<T>[1],
+  timeout: WaitForArgs<T>[2] = 60 * 5 * 1000
+) {
+  try {
+    const state = await waitForRef<I>(
+      service,
+      (state) => {
+        return typeof givenState === 'function'
+          ? givenState(state)
+          : (state as TState).matches(givenState);
+      },
+      { timeout }
+    );
+    return state;
+  } catch (err: any) {
+    if (err.cause === 'CustomState') throw err;
+    throw new Error(
+      `Window closed by inactivity after ${timeout / 1000 / 60} minutes!`
+    );
+  }
 }
