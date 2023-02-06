@@ -12,6 +12,7 @@ export * from './types';
 
 export const store$ = createStore<StoreMachines>({
   id: 'fuelStore',
+  storageBlacklist: ['accounts'],
 });
 
 export const store = store$
