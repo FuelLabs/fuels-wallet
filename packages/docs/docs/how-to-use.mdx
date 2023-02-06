@@ -27,7 +27,7 @@ If you are using react take a look on the source code of the example bellow to s
 
 First, you need to request a connection with the wallet, which will authorize your application to execute other actions. You can do this by accessing `fuel.connect()`.
 
-<CodeImport file="../examples/Connect.tsx" lineStart="15" lineEnd="16" />
+<CodeImport file="../examples/Connect.tsx" />
 
 The `connect()` method returns a promise. If you prefer to do it in an async way, you can use `fuel.on('connection', () => void)` to
 listen for changes in the connection.
@@ -38,7 +38,7 @@ listen for changes in the connection.
 
 Once the connection is authorized, you can list the user accounts using `window.fuel.accounts()`.
 
-<CodeImport file="../examples/ListAccounts.tsx" lineStart="18" lineEnd="19" />
+<CodeImport file="../examples/ListAccounts.tsx" />
 
 <Examples.ListAccounts />
 
@@ -46,7 +46,7 @@ Once the connection is authorized, you can list the user accounts using `window.
 
 You can also get the current account being used in the wallet using `window.fuel.currentAccount()`.
 
-<CodeImport file="../examples/CurrentAccount.tsx" lineStart="18" lineEnd="19" />
+<CodeImport file="../examples/CurrentAccount.tsx" />
 
 <Examples.CurrentAccount />
 
@@ -54,7 +54,7 @@ You can also get the current account being used in the wallet using `window.fuel
 
 With access to the user address and the connection authorized, you can request the user's signature using `fuel.signMessage`.
 
-<CodeImport file="../examples/SignMessage.tsx" lineStart="20" lineEnd="24" />
+<CodeImport file="../examples/SignMessage.tsx" />
 
 <Examples.SignMessage />
 
@@ -62,6 +62,6 @@ With access to the user address and the connection authorized, you can request t
 
 To transfer an amount to other address, use the `wallet.transfer` method and pass in the address you want to send to and the amount to send.
 
-<CodeImport file="../examples/Transfer.tsx" lineStart="36" lineEnd="41" />
+<CodeImport file="../examples/Transfer.tsx" />
 
 <Examples.Transfer />
