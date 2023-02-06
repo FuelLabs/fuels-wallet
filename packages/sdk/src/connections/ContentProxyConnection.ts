@@ -1,36 +1,66 @@
-/// <reference types="chrome"/>
+/* eslint-disable no-console */
 import {
   PAGE_SCRIPT_NAME,
   BACKGROUND_SCRIPT_NAME,
   CONTENT_SCRIPT_NAME,
   EVENT_MESSAGE,
+  MessageTypes,
 } from '@fuel-wallet/types';
 import type { CommunicationMessage } from '@fuel-wallet/types';
 
+const PING_TIMEOUT = 1000;
+const RECONNECT_TIMEOUT = 300;
+
 export class ContentProxyConnection {
   connection: chrome.runtime.Port;
+  _tryReconect?: NodeJS.Timer;
 
   constructor() {
-    this.connection = chrome.runtime.connect(chrome.runtime.id, {
+    this.connection = this.connect();
+    window.addEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
+    this.keepAlive();
+  }
+
+  connect() {
+    const connection = chrome.runtime.connect(chrome.runtime.id, {
       name: BACKGROUND_SCRIPT_NAME,
     });
-    this.connection.onMessage.addListener(this.onMessageFromExtension);
-    this.connection.onDisconnect.addListener(() => {
-      const tryReconect = setInterval(() => {
-        console.log('Try to reconnect...');
-        try {
-          this.connection = chrome.runtime.connect(chrome.runtime.id, {
-            name: BACKGROUND_SCRIPT_NAME,
-          });
-          console.log('Reconnected!');
-          clearInterval(tryReconect);
-        } catch (err) {
-          console.log('Reconnect failed');
-        }
-      }, 300);
-    });
-    window.addEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
+    connection.onMessage.addListener(this.onMessageFromExtension);
+    connection.onDisconnect.addListener(this.onDisconnect);
+    return connection;
   }
+
+  onDisconnect = () => {
+    clearInterval(this._tryReconect);
+    this._tryReconect = setInterval(() => {
+      console.debug('[FUEL WALLET] reconnecting!');
+      try {
+        this.connection = this.connect();
+        console.debug('[FUEL WALLET] reconnected!');
+        clearInterval(this._tryReconect);
+        // If fails it will try to reconnect
+        // It should not throw an error to avoid
+        // uncessary error reporting as it is expected
+        // to fail if background script is not available.
+        // eslint-disable-next-line no-empty
+      } catch {}
+    }, RECONNECT_TIMEOUT);
+  };
+
+  keepAlive = () => {
+    // Send ping message to background script
+    // If background script is not available,
+    // it will throw an error and we will try to reconnect.
+    try {
+      this.connection.postMessage({
+        target: BACKGROUND_SCRIPT_NAME,
+        type: MessageTypes.ping,
+      });
+      setTimeout(this.keepAlive, PING_TIMEOUT);
+    } catch (err) {
+      this.onDisconnect();
+    }
+  };
 
   static start() {
     return new ContentProxyConnection();

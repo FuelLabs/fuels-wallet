@@ -31,6 +31,7 @@ export type FuelEventArg<T extends FuelEvents['type']> = Extract<
 >['data'];
 
 export enum MessageTypes {
+  ping = 'ping',
   uiEvent = 'uiEvent',
   event = 'event',
   request = 'request',
