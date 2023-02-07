@@ -50,8 +50,8 @@ export function CreatePassword({
 }: CreatePasswordProps) {
   const form = useForm<CreatePasswordValues>({
     resolver: yupResolver(schema),
-    reValidateMode: 'onChange',
-    mode: 'onChange',
+    reValidateMode: 'onBlur',
+    mode: 'onBlur',
     defaultValues: {
       password: '',
       confirmPassword: '',
