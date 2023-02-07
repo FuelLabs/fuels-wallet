@@ -9,7 +9,7 @@ import { visit } from '../commons/visit';
 
 const { VITE_FUEL_PROVIDER_URL } = process.env;
 
-export const WALLET_PASSWORD = '12345678';
+export const WALLET_PASSWORD = 'Qwe123456$';
 
 const DEFAULT_NETWORKS: Array<Network> = [
   {

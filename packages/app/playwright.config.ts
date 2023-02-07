@@ -24,6 +24,7 @@ const config: PlaywrightTestConfig = {
     permissions: ['clipboard-read', 'clipboard-write'],
     headless: true,
   },
+  maxFailures: 1,
 };
 
 export default config;

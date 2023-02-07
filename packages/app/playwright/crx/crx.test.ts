@@ -21,7 +21,7 @@ import {
   waitAccountPage,
 } from './utils';
 
-const WALLET_PASSWORD = '12345678';
+const WALLET_PASSWORD = 'Qwe123456$';
 
 test.describe('FuelWallet Extension', () => {
   test('On install sign-up page is open', async ({ context }) => {

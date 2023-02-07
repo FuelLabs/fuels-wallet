@@ -42,11 +42,14 @@ describe('CreatePassword', () => {
     expect(btn).toHaveAttribute('aria-disabled');
   });
 
-  it("should validate if password don't have min length equals 8", async () => {
-    const { user } = render(<Content />, { wrapper: TestWrapper });
+  it('should show "password strength: Weak" when focus in password field', async () => {
+    const { user } = await render(<Content />, { wrapper: TestWrapper });
 
-    await fillInputs(user, '123456');
-    expect(screen.getByText(/at least 8 characters/)).toBeInTheDocument();
+    const password = await screen.findByPlaceholderText('Type your password');
+    await user.click(password);
+
+    const fuelPopoverContent = await screen.findByText('Weak');
+    expect(fuelPopoverContent).toBeVisible();
   });
 
   it("should validate if password and confirmPassword doesn't match", async () => {
@@ -81,17 +84,6 @@ describe('CreatePassword', () => {
   //     expect(onSubmitHandler).toBeCalledTimes(1);
   //   });
   // });
-
-  it('should show popover with password strength when focus in password field', async () => {
-    const { container, user } = render(<Content />, { wrapper: TestWrapper });
-
-    const password = await screen.findByPlaceholderText('Type your password');
-    await user.click(password);
-    const fuelPopoverContent = await container.querySelector(
-      '.fuel_popover--content'
-    );
-    expect(fuelPopoverContent).toBeVisible();
-  });
 
   it('should be able to click on cancel button', async () => {
     const { user } = render(<Content />, { wrapper: TestWrapper });
