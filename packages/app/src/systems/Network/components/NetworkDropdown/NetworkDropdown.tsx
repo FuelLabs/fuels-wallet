@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
 import type { Network } from '@fuel-wallet/types';
+import { forwardRef } from 'react';
 
 export type NetworkDropdownProps = {
   selected?: Network;
@@ -8,24 +9,23 @@ export type NetworkDropdownProps = {
   onPress?: (network: Network) => void;
 };
 
-export function NetworkDropdown({
-  selected,
-  isDisabled,
-  onPress,
-}: NetworkDropdownProps) {
-  return (
-    <Button
-      size="xs"
-      css={styles.trigger}
-      onPress={() => onPress?.(selected!)}
-      aria-label="Selected Network"
-      isDisabled={isDisabled}
-    >
-      {/* {selected && <NetworkStatus network={selected} />} */}
-      {selected?.name}
-    </Button>
-  );
-}
+export const NetworkDropdown = forwardRef<HTMLDivElement, NetworkDropdownProps>(
+  ({ selected, isDisabled, onPress }, ref) => {
+    return (
+      <Button
+        ref={ref}
+        size="xs"
+        css={styles.trigger}
+        onPress={() => onPress?.(selected!)}
+        aria-label="Selected Network"
+        isDisabled={isDisabled}
+      >
+        {/* {selected && <NetworkStatus network={selected} />} */}
+        {selected?.name}
+      </Button>
+    );
+  }
+);
 
 const styles = {
   trigger: cssObj({

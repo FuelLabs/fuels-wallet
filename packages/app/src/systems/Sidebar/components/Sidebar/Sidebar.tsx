@@ -9,13 +9,13 @@ import {
   Stack,
 } from '@fuel-ui/react';
 
-import { Menu, NetworkSelector } from '..';
+import { Menu } from '..';
 import { useAccounts } from '../../../Account';
 import { NetworkScreen, useNetworks } from '../../../Network';
 import { sidebarItems } from '../../constants';
 
 export function Sidebar() {
-  const { networks, selectedNetwork, handlers } = useNetworks({
+  const { selectedNetwork } = useNetworks({
     type: NetworkScreen.list,
   });
 
@@ -48,18 +48,6 @@ export function Sidebar() {
         />
       </Flex>
       <Menu items={sidebarItems(selectedNetwork.url)} />
-      <Flex
-        css={{
-          ...styles.bottomBorder,
-          ...styles.separator,
-        }}
-      >
-        <NetworkSelector
-          onSelectNetwork={handlers.selectNetwork}
-          selected={selectedNetwork!}
-          networks={networks}
-        />
-      </Flex>
     </Stack>
   );
 }

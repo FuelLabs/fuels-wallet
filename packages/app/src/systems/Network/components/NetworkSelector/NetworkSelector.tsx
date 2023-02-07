@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { cssObj } from '@fuel-ui/css';
-import { Dropdown, Flex, Icon, Text } from '@fuel-ui/react';
+import { Dropdown, Flex } from '@fuel-ui/react';
 import type { Network } from '@fuel-wallet/types';
 
-import { NetworkItem } from '~/systems/Network';
+import { NetworkDropdown } from '..';
 
 export type NetworkSelectorProps = {
   selected: Network;
@@ -18,12 +18,11 @@ export function NetworkSelector({
 }: NetworkSelectorProps) {
   return (
     <Flex css={styles.root}>
-      <Text as="div" leftIcon={Icon.is('ShareNetwork')}>
-        Network selected
-      </Text>
-      <Dropdown popoverProps={{ side: 'top' }}>
+      <Dropdown
+        popoverProps={{ side: 'bottom', align: 'start', alignOffset: 10 }}
+      >
         <Dropdown.Trigger>
-          <NetworkItem network={selected!} css={styles.button} />
+          <NetworkDropdown selected={selected!} />
         </Dropdown.Trigger>
         <Dropdown.Menu
           autoFocus
@@ -52,6 +51,7 @@ const styles = {
     gap: '$3',
     w: '$full',
     padding: '$3',
+    zIndex: '$10',
 
     '& > .fuel_text': {
       fontSize: '$sm',

@@ -1,10 +1,9 @@
 import { act, fireEvent, render, screen, testA11y } from '@fuel-ui/test-utils';
 
-import { MOCK_NETWORKS } from '../../../Network/__mocks__/networks';
-
 import { NetworkSelector } from './NetworkSelector';
 
 import { TestWrapper } from '~/systems/Core/components/TestWrapper';
+import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
 const SELECTED = MOCK_NETWORKS[0];
 const NOT_SELECTED = MOCK_NETWORKS[1];
@@ -27,7 +26,7 @@ describe('NetworkSelector', () => {
     });
 
     expect(() => screen.getByText(NOT_SELECTED.name)).toThrow();
-    const selector = screen.getByLabelText('fuel_network-item-1');
+    const selector = screen.getByLabelText('Selected Network');
 
     await act(async () => {
       await user.click(selector);
@@ -41,7 +40,7 @@ describe('NetworkSelector', () => {
       wrapper: TestWrapper,
     });
 
-    const selector = await screen.getByLabelText('fuel_network-item-1');
+    const selector = await screen.getByLabelText('Selected Network');
     fireEvent.click(selector);
 
     const item = await screen.findByText(NOT_SELECTED.name);
