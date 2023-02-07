@@ -42,12 +42,11 @@ describe('CreatePassword', () => {
     expect(btn).toHaveAttribute('aria-disabled');
   });
 
-  // this is conflicting with other test. because they're using same screen and doing actions with user I guess
-  it.skip('should show "password strength: Weak" when focus in password field', async () => {
-    const { user } = await render(<Content />, { wrapper: TestWrapper });
+  it('should show "password strength: Weak" when focus in password field', async () => {
+    await render(<Content />, { wrapper: TestWrapper });
 
     const password = await screen.findByPlaceholderText('Type your password');
-    await user.click(password);
+    await fireEvent.focus(password);
 
     const fuelPopoverContent = await screen.findByText('Weak');
     expect(fuelPopoverContent).toBeVisible();

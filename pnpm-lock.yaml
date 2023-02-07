@@ -14,9 +14,9 @@ importers:
       '@babel/core': ^7.20.12
       '@changesets/changelog-github': ^0.4.8
       '@changesets/cli': ^2.26.0
-      '@fuel-ui/config': ^0.12.1
-      '@fuel-ui/css': ^0.12.1
-      '@fuel-ui/react': ^0.12.1
+      '@fuel-ui/config': ^0.12.2
+      '@fuel-ui/css': ^0.12.2
+      '@fuel-ui/react': ^0.12.2
       '@jest/types': 29.4.1
       '@playwright/test': ^1.30.0
       '@types/jest': ^29.4.0
@@ -45,9 +45,9 @@ importers:
       typescript: ^4.9.5
       updates: ^13.2.8
     dependencies:
-      '@fuel-ui/config': 0.12.1_typescript@4.9.5
-      '@fuel-ui/css': 0.12.1
-      '@fuel-ui/react': 0.12.1_23ichh5526h7tcnahb67zfkwvy
+      '@fuel-ui/config': 0.12.2_typescript@4.9.5
+      '@fuel-ui/css': 0.12.2
+      '@fuel-ui/react': 0.12.2_23ichh5526h7tcnahb67zfkwvy
       execa: 6.1.0
       fuelhat: link:packages/fuelhat
     devDependencies:
@@ -90,10 +90,10 @@ importers:
       '@fuel-ts/signer': ^0.29.1
       '@fuel-ts/wallet': 0.29.1
       '@fuel-ts/wallet-manager': 0.29.1
-      '@fuel-ui/config': ^0.12.1
-      '@fuel-ui/css': ^0.12.1
-      '@fuel-ui/react': ^0.12.1
-      '@fuel-ui/test-utils': ^0.12.1
+      '@fuel-ui/config': ^0.12.2
+      '@fuel-ui/css': ^0.12.2
+      '@fuel-ui/react': ^0.12.2
+      '@fuel-ui/test-utils': ^0.12.2
       '@fuel-wallet/sdk': workspace:*
       '@fuel-wallet/types': workspace:*
       '@fuel-wallet/xstore': workspace:*
@@ -180,10 +180,10 @@ importers:
       '@fuel-ts/mnemonic': 0.29.1
       '@fuel-ts/wallet': 0.29.1
       '@fuel-ts/wallet-manager': 0.29.1
-      '@fuel-ui/config': 0.12.1_typescript@4.9.5
-      '@fuel-ui/css': 0.12.1
-      '@fuel-ui/react': 0.12.1_3rmrz26lo2xcg2m7re5kmkpfii
-      '@fuel-ui/test-utils': 0.12.1_3rmrz26lo2xcg2m7re5kmkpfii
+      '@fuel-ui/config': 0.12.2_typescript@4.9.5
+      '@fuel-ui/css': 0.12.2
+      '@fuel-ui/react': 0.12.2_3rmrz26lo2xcg2m7re5kmkpfii
+      '@fuel-ui/test-utils': 0.12.2_3rmrz26lo2xcg2m7re5kmkpfii
       '@fuel-wallet/sdk': link:../sdk
       '@fuel-wallet/types': link:../types
       '@fuel-wallet/xstore': link:../store
@@ -316,8 +316,8 @@ importers:
     specifiers:
       '@docsearch/css': ^3.3.2
       '@docsearch/react': 3.3.2
-      '@fuel-ui/css': ^0.12.1
-      '@fuel-ui/react': ^0.12.1
+      '@fuel-ui/css': ^0.12.2
+      '@fuel-ui/react': ^0.12.2
       '@fuel-wallet/sdk': workspace:*
       '@mdx-js/react': ^2.2.1
       '@next/mdx': ^13.1.6
@@ -354,8 +354,8 @@ importers:
     dependencies:
       '@docsearch/css': 3.3.2
       '@docsearch/react': 3.3.2_5ndqzdd6t4rivxsukjv3i3ak2q
-      '@fuel-ui/css': 0.12.1
-      '@fuel-ui/react': 0.12.1_c7qcy4ub4rpcctt7jglj3qg3v4
+      '@fuel-ui/css': 0.12.2
+      '@fuel-ui/react': 0.12.2_c7qcy4ub4rpcctt7jglj3qg3v4
       '@fuel-wallet/sdk': link:../sdk
       '@mdx-js/react': 2.2.1_react@18.2.0
       '@next/mdx': 13.1.6_@mdx-js+react@2.2.1
@@ -3159,8 +3159,8 @@ packages:
   /@fuel-ts/wordlists/0.29.1:
     resolution: {integrity: sha512-gH2Lyc13p6vDryd7024KsFc7IdnGt5VXd/dr+4OUqhy+xk6Rvma6UVnUUXEhunEgpfW/nBnUPwQAjwj7aDz4OA==}
 
-  /@fuel-ui/config/0.12.1_typescript@4.9.5:
-    resolution: {integrity: sha512-hhV83UVBBVCviXn+8qnqpTl3YNGTc8xjvei6PSMAUt+jZ/loOrCxxCNyT7bihWukFxDczUNmG8ym69NV+dDGgA==}
+  /@fuel-ui/config/0.12.2_typescript@4.9.5:
+    resolution: {integrity: sha512-5n0Us3pZx10elI9A/bfGhJiGZDad5dLIM2sB8lvB12ITEyQ/VoG/j7sBKj52PE3S3zP9hPLMYUztJk89Ce0xgg==}
     dependencies:
       '@typescript-eslint/eslint-plugin': 5.50.0_go4drrxstycfikanvu45pi4vgq
       '@typescript-eslint/parser': 5.50.0_4vsywjlpuriuw3tl5oq6zy5a64
@@ -3186,8 +3186,8 @@ packages:
       - typescript
     dev: false
 
-  /@fuel-ui/css/0.12.1:
-    resolution: {integrity: sha512-njpxyJIIcs+E/vi8oXlPc6nFjBVL5RIrg2MvvZrInBs0X0/8LoJjU3jgDSfivnXz9cKYbNj5glwsUciXw6QN4A==}
+  /@fuel-ui/css/0.12.2:
+    resolution: {integrity: sha512-ryyJN1UaRTSUBEM2a4+BCny+m3ZH+IFtXNKVg9PEiKZsTNTRMoYyn/JHrZj7zqb7nJzka2bMdB1qny4Fu+WsGA==}
     dependencies:
       '@radix-ui/colors': 0.1.8
       '@stitches/react': 1.2.8_react@18.2.0
@@ -3196,12 +3196,12 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
-  /@fuel-ui/react/0.12.1_23ichh5526h7tcnahb67zfkwvy:
-    resolution: {integrity: sha512-Y8cwoW51VOlXY8ATYfxryiMJMpECKue6O6hJ+lQQAUaiUJwkU4jqo3xCyQFgycM/RSj8s/AfDvi6kYUzunPQdA==}
+  /@fuel-ui/react/0.12.2_23ichh5526h7tcnahb67zfkwvy:
+    resolution: {integrity: sha512-sIhbFy7olOCOohRelS6T7INSDsKWPX6krSTg3yEs6ic3k9J0agkY2dcdWnUv1f32dU54rGXy9NHavYP3uyca6w==}
     dependencies:
       '@fuel-ts/math': 0.29.1
-      '@fuel-ui/css': 0.12.1
-      '@fuel-ui/test-utils': 0.12.1_23ichh5526h7tcnahb67zfkwvy
+      '@fuel-ui/css': 0.12.2
+      '@fuel-ui/test-utils': 0.12.2_23ichh5526h7tcnahb67zfkwvy
       '@radix-ui/react-accordion': 1.1.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_5ndqzdd6t4rivxsukjv3i3ak2q
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3251,12 +3251,12 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/react/0.12.1_3rmrz26lo2xcg2m7re5kmkpfii:
-    resolution: {integrity: sha512-Y8cwoW51VOlXY8ATYfxryiMJMpECKue6O6hJ+lQQAUaiUJwkU4jqo3xCyQFgycM/RSj8s/AfDvi6kYUzunPQdA==}
+  /@fuel-ui/react/0.12.2_3rmrz26lo2xcg2m7re5kmkpfii:
+    resolution: {integrity: sha512-sIhbFy7olOCOohRelS6T7INSDsKWPX6krSTg3yEs6ic3k9J0agkY2dcdWnUv1f32dU54rGXy9NHavYP3uyca6w==}
     dependencies:
       '@fuel-ts/math': 0.29.1
-      '@fuel-ui/css': 0.12.1
-      '@fuel-ui/test-utils': 0.12.1_3rmrz26lo2xcg2m7re5kmkpfii
+      '@fuel-ui/css': 0.12.2
+      '@fuel-ui/test-utils': 0.12.2_3rmrz26lo2xcg2m7re5kmkpfii
       '@radix-ui/react-accordion': 1.1.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_5ndqzdd6t4rivxsukjv3i3ak2q
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3306,12 +3306,12 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/react/0.12.1_c7qcy4ub4rpcctt7jglj3qg3v4:
-    resolution: {integrity: sha512-Y8cwoW51VOlXY8ATYfxryiMJMpECKue6O6hJ+lQQAUaiUJwkU4jqo3xCyQFgycM/RSj8s/AfDvi6kYUzunPQdA==}
+  /@fuel-ui/react/0.12.2_c7qcy4ub4rpcctt7jglj3qg3v4:
+    resolution: {integrity: sha512-sIhbFy7olOCOohRelS6T7INSDsKWPX6krSTg3yEs6ic3k9J0agkY2dcdWnUv1f32dU54rGXy9NHavYP3uyca6w==}
     dependencies:
       '@fuel-ts/math': 0.29.1
-      '@fuel-ui/css': 0.12.1
-      '@fuel-ui/test-utils': 0.12.1_c7qcy4ub4rpcctt7jglj3qg3v4
+      '@fuel-ui/css': 0.12.2
+      '@fuel-ui/test-utils': 0.12.2_c7qcy4ub4rpcctt7jglj3qg3v4
       '@radix-ui/react-accordion': 1.1.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_5ndqzdd6t4rivxsukjv3i3ak2q
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3361,8 +3361,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.12.1_23ichh5526h7tcnahb67zfkwvy:
-    resolution: {integrity: sha512-RfMTgtheLqqxLj3u0/05kc57SZaF9fZ3YXA4zWjRkmxxfZJ2drDSEbvEDbgZprFeQ67618ric83ghRbhLJzUuQ==}
+  /@fuel-ui/test-utils/0.12.2_23ichh5526h7tcnahb67zfkwvy:
+    resolution: {integrity: sha512-q/DRuHT+D9p9J0Io36XSv4JudhIG8Ve9wKl//HgvvWuPpPXBRQJ09VxWxGLIdqlfsEj+Y1EnAKKZwZqNY0iaig==}
     peerDependenciesMeta:
       react:
         optional: true
@@ -3400,8 +3400,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.12.1_3rmrz26lo2xcg2m7re5kmkpfii:
-    resolution: {integrity: sha512-RfMTgtheLqqxLj3u0/05kc57SZaF9fZ3YXA4zWjRkmxxfZJ2drDSEbvEDbgZprFeQ67618ric83ghRbhLJzUuQ==}
+  /@fuel-ui/test-utils/0.12.2_3rmrz26lo2xcg2m7re5kmkpfii:
+    resolution: {integrity: sha512-q/DRuHT+D9p9J0Io36XSv4JudhIG8Ve9wKl//HgvvWuPpPXBRQJ09VxWxGLIdqlfsEj+Y1EnAKKZwZqNY0iaig==}
     peerDependenciesMeta:
       react:
         optional: true
@@ -3439,8 +3439,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.12.1_c7qcy4ub4rpcctt7jglj3qg3v4:
-    resolution: {integrity: sha512-RfMTgtheLqqxLj3u0/05kc57SZaF9fZ3YXA4zWjRkmxxfZJ2drDSEbvEDbgZprFeQ67618ric83ghRbhLJzUuQ==}
+  /@fuel-ui/test-utils/0.12.2_c7qcy4ub4rpcctt7jglj3qg3v4:
+    resolution: {integrity: sha512-q/DRuHT+D9p9J0Io36XSv4JudhIG8Ve9wKl//HgvvWuPpPXBRQJ09VxWxGLIdqlfsEj+Y1EnAKKZwZqNY0iaig==}
     peerDependenciesMeta:
       react:
         optional: true

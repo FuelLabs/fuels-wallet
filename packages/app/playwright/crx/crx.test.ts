@@ -10,7 +10,6 @@ import {
   getInputByName,
   hasText,
   waitAriaLabel,
-  hasAriaLabel,
 } from '../commons';
 
 import {
@@ -102,21 +101,8 @@ test.describe('FuelWallet Extension', () => {
 
       /** Adding password */
       await hasText(page, /Create your password/i);
-      await hasAriaLabel(page, 'Your Password');
-      await hasAriaLabel(page, 'Confirm Password');
-      const passwordInput = await getByAriaLabel(page, 'Your Password');
-      await passwordInput.click();
-      await passwordInput.type(WALLET_PASSWORD);
-      await passwordInput.blur();
-      await passwordInput.click();
-
-      const confirmPasswordInput = await getByAriaLabel(
-        page,
-        'Confirm Password'
-      );
-      await confirmPasswordInput.click({ position: { x: 270, y: 10 } });
-      await confirmPasswordInput.type(WALLET_PASSWORD);
-      await confirmPasswordInput.blur();
+      await getByAriaLabel(page, 'Your Password').type(WALLET_PASSWORD);
+      await getByAriaLabel(page, 'Confirm Password').type(WALLET_PASSWORD);
 
       await page.getByRole('checkbox').click();
       await getButtonByText(page, /Next/i).click();
