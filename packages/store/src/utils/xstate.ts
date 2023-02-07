@@ -7,13 +7,7 @@ import type { AnyInterpreter, AnyStateMachine, StateFrom } from 'xstate';
 import { interpret } from 'xstate';
 import { waitFor as waitForRef } from 'xstate/lib/waitFor';
 
-import type {
-  Handlers,
-  AddMachineParams,
-  MachinesObj,
-  Service,
-  InterpreterOptions,
-} from '../types';
+import type { Handlers, InterpreterOptions } from '../types';
 
 /**
  * Create store handlers. Functions that will be available on the store object and
@@ -121,10 +115,10 @@ export function createIdleService<M extends AnyStateMachine>(
  * @param opts Options
  * @returns void
  */
-export function updateService<
-  T extends MachinesObj,
-  K extends keyof T = keyof T
->(service: Service<T> | undefined, opts: AddMachineParams<T, K>[2]) {
+export function updateService<I extends AnyInterpreter>(
+  service: I | undefined,
+  opts: InterpreterOptions<I['machine']> = {}
+) {
   if (!service) return;
   Object.assign(service.machine.options.actions ?? {}, opts.actions ?? {});
   Object.assign(service.machine.options.guards ?? {}, opts.guards ?? {});

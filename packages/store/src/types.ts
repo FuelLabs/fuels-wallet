@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { MaybeLazy } from '@xstate/react/lib/types';
+import type { MaybeLazy } from '@xstate/inspect';
 import type { WritableAtom } from 'jotai';
 import type {
   AnyStateMachine,
@@ -26,17 +26,21 @@ export type MachinesObj = {
   [K in string]: AnyStateMachine;
 };
 
-export type Machine<T extends MachinesObj> = StateMachine<
-  ValueOf<T>['__TContext'],
-  ValueOf<T>['__TStateSchema'],
-  ValueOf<T>['__TEvent'],
-  ValueOf<T>['__TTypestate'],
-  ValueOf<T>['__TAction'],
-  ValueOf<T>['__TServiceMap'],
-  ValueOf<T>['__TResolvedTypesMeta']
+export type Machine<M extends AnyStateMachine> = StateMachine<
+  M['__TContext'],
+  M['__TStateSchema'],
+  M['__TEvent'],
+  M['__TTypestate'],
+  M['__TAction'],
+  M['__TServiceMap'],
+  M['__TResolvedTypesMeta']
 >;
 
-export type StateItem<T extends MachinesObj> = StateFrom<ValueOf<T>>;
+export type StateItem<
+  T extends MachinesObj,
+  K extends keyof T = keyof T
+> = StateFrom<T[K]>;
+
 export type MatchesState<M extends AnyStateMachine> =
   AreAllImplementationsAssumedToBeProvided<
     M['__TResolvedTypesMeta']
@@ -44,7 +48,11 @@ export type MatchesState<M extends AnyStateMachine> =
     ? keyof M['__TResolvedTypesMeta']['resolved']['matchesStates']
     : string;
 
-export type Service<T extends MachinesObj> = InterpreterFrom<ValueOf<T>>;
+export type Service<
+  T extends MachinesObj,
+  K extends keyof T = keyof T
+> = InterpreterFrom<T[K]>;
+
 export type StoreServiceObj<
   T extends MachinesObj,
   K extends keyof T = keyof T
@@ -57,37 +65,35 @@ export interface MachineAtomOptions<TContext, TEvent extends EventObject> {
   state?: StateConfig<TContext, TEvent>;
 }
 
-export type InterpreterOptions<
-  TMachine extends AnyStateMachine = AnyStateMachine
-> = AreAllImplementationsAssumedToBeProvided<
-  TMachine['__TResolvedTypesMeta']
-> extends false
-  ? InterpreterOptsRef &
-      MachineAtomOptions<TMachine['__TContext'], TMachine['__TEvent']> &
-      InternalMachineOptions<
-        TMachine['__TContext'],
-        TMachine['__TEvent'],
-        TMachine['__TResolvedTypesMeta'],
-        true
-      >
-  : InterpreterOptsRef &
-      MachineAtomOptions<TMachine['__TContext'], TMachine['__TEvent']> &
-      InternalMachineOptions<
-        TMachine['__TContext'],
-        TMachine['__TEvent'],
-        TMachine['__TResolvedTypesMeta']
+export type InterpreterOptions<TMachine extends AnyStateMachine> =
+  AreAllImplementationsAssumedToBeProvided<
+    TMachine['__TResolvedTypesMeta']
+  > extends false
+    ? InterpreterOptsRef &
+        MachineAtomOptions<TMachine['__TContext'], TMachine['__TEvent']> &
+        InternalMachineOptions<
+          TMachine['__TContext'],
+          TMachine['__TEvent'],
+          TMachine['__TResolvedTypesMeta'],
+          true
+        >
+    : Partial<
+        InterpreterOptsRef &
+          MachineAtomOptions<TMachine['__TContext'], TMachine['__TEvent']> &
+          InternalMachineOptions<
+            TMachine['__TContext'],
+            TMachine['__TEvent'],
+            TMachine['__TResolvedTypesMeta']
+          >
       >;
 
-export type AddMachineParams<
-  T extends MachinesObj,
-  K extends keyof T = keyof T,
-  M extends AnyStateMachine = ValueOf<T>
-> = [id: K, machine: MaybeLazy<M>, opts: InterpreterOptions<ValueOf<T>>];
-
-export type AddMachineInput<T extends MachinesObj> = {
-  key: keyof T;
-  getMachine: AddMachineParams<T, keyof T>[1];
-  getOptions: AddMachineParams<T, keyof T>[2];
+export type AddMachineInput<
+  T extends MachinesObj = MachinesObj,
+  K extends keyof T = keyof T
+> = {
+  key: K;
+  getMachine: MaybeLazy<T[K]>;
+  getOptions?: InterpreterOptions<T[K]>;
   hasStorage?: boolean;
 };
 

@@ -6,7 +6,7 @@ import type { StoreClass } from '../StoreClass';
 import type { StoreMachines } from '.';
 
 type Todo = {
-  id: string;
+  id: number;
   text: string;
   completed?: boolean;
 };
@@ -22,11 +22,11 @@ type MachineEvents =
     }
   | {
       type: 'REMOVE_TODO';
-      input: { id: string };
+      input: { id: number };
     }
   | {
       type: 'COMPLETE_TODO';
-      input: { id: string };
+      input: { id: number };
     }
   | {
       type: 'CLEAR_COMPLETED';
@@ -126,10 +126,10 @@ export function todosHandlers(store: StoreClass<StoreMachines>) {
     addTodo: (todo: Todo) => {
       store.send('todos', { type: 'ADD_TODO', input: todo });
     },
-    removeTodo: (id: string) => {
+    removeTodo: (id: number) => {
       store.send('todos', { type: 'REMOVE_TODO', input: { id } });
     },
-    completeTodo: (id: string) => {
+    completeTodo: (id: number) => {
       store.send('todos', { type: 'COMPLETE_TODO', input: { id } });
     },
     clearCompleted: () => {

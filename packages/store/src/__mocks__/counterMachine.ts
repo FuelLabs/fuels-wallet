@@ -63,11 +63,11 @@ export const counterMachine = createMachine(
     on: {
       INCREMENT: {
         target: 'idle',
-        actions: ['increment'],
+        actions: ['increment', 'log'],
       },
       DECREMENT: {
         target: 'idle',
-        actions: ['decrement'],
+        actions: ['decrement', 'log'],
       },
       RESET: {
         target: 'idle',
@@ -90,6 +90,7 @@ export const counterMachine = createMachine(
         incValue,
         count: 0,
       })),
+      log: () => ({}),
     },
   }
 );

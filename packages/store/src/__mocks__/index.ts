@@ -13,24 +13,28 @@ export type StoreMachines = {
   todos: TodosMachine;
 };
 
-export const store$ = createStore<StoreMachines>({
-  id: 'testStore',
-  persistedStates: ['todos'],
-});
+export function createMockStore(id: string) {
+  const store$ = createStore<StoreMachines>({
+    id,
+    persistedStates: ['todos'],
+  });
 
-export const mockStore = store$
-  .addMachine('todos', () =>
-    todosMachine.withContext({
-      todos: [],
-    })
-  )
-  .addMachine('counter', () =>
-    counterMachine.withContext({
-      count: 0,
-      incValue: 2,
-      type: 'manual',
-    })
-  )
-  .addHandlers(counterHandlers)
-  .addHandlers(todosHandlers)
-  .setup();
+  const mockStore = store$
+    .addMachine('todos', () =>
+      todosMachine.withContext({
+        todos: [],
+      })
+    )
+    .addMachine('counter', () =>
+      counterMachine.withContext({
+        count: 0,
+        incValue: 2,
+        type: 'manual',
+      })
+    )
+    .addHandlers(counterHandlers)
+    .addHandlers(todosHandlers)
+    .setup();
+
+  return { mockStore, store$ };
+}

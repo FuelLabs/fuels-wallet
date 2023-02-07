@@ -6,6 +6,7 @@ import type {
   AnyState,
   AnyStateMachine,
   InterpreterFrom,
+  StateFrom,
 } from 'xstate';
 import { InterpreterStatus, State } from 'xstate';
 
@@ -15,7 +16,10 @@ import { createIdleService, setMachine, Storage } from '../utils';
 import { atomWithSubcription } from './atomWithSubscription';
 
 const cachedMachine = new Map<string, AnyStateMachine>();
-const cachedOptions = new Map<string, InterpreterOptions | undefined>();
+const cachedOptions = new Map<
+  string,
+  InterpreterOptions<AnyStateMachine> | undefined
+>();
 
 export type GetOptions<M extends AnyStateMachine = AnyStateMachine> =
   | InterpreterOptions<M>
@@ -140,7 +144,7 @@ export function atomWithMachine<
    * Create the state atom. This atom is used to get the state.
    */
   const stateAtom = atom((get) => {
-    return get(serviceAtom).getSnapshot();
+    return get(serviceAtom).getSnapshot() as StateFrom<M>;
   });
 
   /**
@@ -149,7 +153,7 @@ export function atomWithMachine<
    * and unsubscribe from the service.
    */
   const machineStateAtom = atomWithSubcription(
-    (get) => get(stateAtom),
+    (get) => get(stateAtom) as StateFrom<M>,
     (get, _set, cleanup) => {
       const service = get(serviceAtom);
       const sub = service.subscribe(updateStateStorage);
@@ -166,8 +170,8 @@ export function atomWithMachine<
 
   return atom((get) => {
     const state = get(machineStateAtom);
-    const machine = get(machineAtom);
-    const service = get(serviceAtom);
+    const machine = get(machineAtom) as M;
+    const service = get(serviceAtom) as S;
     return {
       state,
       machine,

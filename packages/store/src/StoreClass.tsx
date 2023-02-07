@@ -2,14 +2,15 @@
 import type { AnyState, StateFrom } from 'xstate';
 
 import { ReactFactory } from './ReactFactory';
-import { atoms } from './atoms';
+import type { CreateStoreAtomsReturn } from './atoms';
+import { createStoreAtoms } from './atoms';
 import type {
   Handlers,
-  AddMachineParams,
   MachinesObj,
   ValueOf,
   Listener,
   StoreServiceObj,
+  AddMachineInput,
 } from './types';
 import { createHandlers, waitFor } from './utils';
 
@@ -23,15 +24,15 @@ export type CreateStoreOpts<T> = {
   persistedStates?: (keyof T)[];
 };
 
-export type StoreClassOpts<T extends MachinesObj> = CreateStoreOpts<T>;
-
 export type StoreClassReturn<T> = Omit<T, 'setup'>;
+export type StoreClassOpts<T extends MachinesObj> = CreateStoreOpts<T> & {
+  atoms: CreateStoreAtomsReturn<T>;
+};
 
 export class StoreClass<T extends MachinesObj> implements IStore<T> {
   __TMachines = {} as T;
-  #opts: StoreClassOpts<T>;
-  constructor(opts: StoreClassOpts<T>) {
-    this.#opts = opts;
+  constructor(readonly opts: StoreClassOpts<T>) {
+    this.opts = opts;
   }
 
   // ---------------------------------------------------------------------------
@@ -45,7 +46,7 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * const { counter, accounts } = store.services;
    */
   get services() {
-    const { store, servicesAtom } = atoms;
+    const { store, servicesAtom } = this.opts.atoms;
     return store.get(servicesAtom) as StoreServiceObj<T>;
   }
 
@@ -54,14 +55,14 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * in the Local Storage.
    */
   get persistedStates() {
-    return this.#opts.persistedStates;
+    return this.opts.persistedStates;
   }
 
   /**
    * Get the store id.
    */
   get id() {
-    return this.#opts.id;
+    return this.opts.id;
   }
 
   // ---------------------------------------------------------------------------
@@ -77,11 +78,11 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    */
   addMachine<K extends keyof T>(
     key: K,
-    machine: AddMachineParams<T, K>[1],
-    opts: AddMachineParams<T, K>[2] = {}
+    machine: AddMachineInput<T, K>['getMachine'],
+    opts: AddMachineInput<T, K>['getOptions'] = {}
   ) {
-    const { store, machinesAtom } = atoms;
-    const hasStorage = this.#opts.persistedStates?.includes(key);
+    const { store, machinesAtom } = this.opts.atoms;
+    const hasStorage = this.opts.persistedStates?.includes(key);
     store.set(machinesAtom, {
       hasStorage,
       key,
@@ -106,7 +107,7 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
       store: S
     ) => { [P in keyof H]: P extends keyof StoreClass<T> ? never : H[P] }
   ) {
-    const { store, keysAtom } = atoms;
+    const { store, keysAtom } = this.opts.atoms;
     const keys = Object.keys(store.get(keysAtom));
     const handlers = createHandlers(keys, cb(this));
     Object.assign(this, handlers);
@@ -122,11 +123,15 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * store.setup();
    */
   setup() {
-    const factory = new ReactFactory();
+    const factory = new ReactFactory(this.opts.atoms);
     const hooks = factory.createHooks();
     const StoreProvider = factory.createProvider();
-    Object.assign(this, { StoreProvider });
+    const getStateFrom = this.getStateFrom.bind(this);
+    const waitFor = this.waitFor.bind(this);
     Object.assign(this, hooks);
+    Object.assign(this, { StoreProvider });
+    Object.assign(this, { getStateFrom });
+    Object.assign(this, { waitFor });
 
     type Hooks = typeof hooks;
     type Return = typeof this & {
@@ -172,7 +177,7 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * store.reset();
    */
   reset() {
-    const { store, keysAtom, serviceAtom } = atoms;
+    const { store, keysAtom, serviceAtom } = this.opts.atoms;
     const keys = store.get(keysAtom);
     for (const key of keys) {
       const service = store.get(serviceAtom(key));
@@ -192,7 +197,7 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * });
    */
   onStoreStart(listener: () => void) {
-    const { store, onStoreStartAtom } = atoms;
+    const { store, onStoreStartAtom } = this.opts.atoms;
     store.set(onStoreStartAtom, { type: 'subscribe', input: listener });
     return this as StoreClassReturn<typeof this>;
   }
@@ -211,7 +216,7 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
     key: K,
     listener: Listener<[StateFrom<T[K]>]>
   ) {
-    const { store, onStateChangeAtom } = atoms;
+    const { store, onStateChangeAtom } = this.opts.atoms;
     const service = this.services[key];
     store.set(onStateChangeAtom, {
       type: 'subscribe',
@@ -228,7 +233,7 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * const { context } = store.getState('counter');
    */
   getStateFrom<K extends keyof T>(key: K) {
-    const { store, serviceAtom } = atoms;
+    const { store, serviceAtom } = this.opts.atoms;
     const service = store.get(serviceAtom(key));
     return service.getSnapshot() as StateFrom<T[K]>;
   }
@@ -277,5 +282,6 @@ export type StoreBroadcast<T extends MachinesObj> = StoreClass<T>['broadcast'];
  *
  */
 export function createStore<T extends MachinesObj>(opts: CreateStoreOpts<T>) {
-  return new StoreClass<T>(opts);
+  const atoms = createStoreAtoms<T>(opts.id);
+  return new StoreClass<T>({ ...opts, atoms });
 }

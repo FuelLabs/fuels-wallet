@@ -1,53 +1,49 @@
 import { atomFamily, loadable } from 'jotai/utils';
-import { createStore, atom } from 'jotai/vanilla';
-import type {
-  AnyInterpreter,
-  AnyStateMachine,
-  InterpreterFrom,
-  StateFrom,
-} from 'xstate';
+import { createStore as createJotaiStore, atom } from 'jotai/vanilla';
+import type { InterpreterFrom, StateFrom } from 'xstate';
 import { toObserver } from 'xstate';
 
 import type {
   MachinesObj,
-  AddMachineInput,
-  AddMachineParams,
   Listener,
   StateItem,
-  ValueOf,
   Service,
   StoreServiceObj,
   StateListener,
+  AddMachineInput,
 } from '../types';
 import { updateService, waitFor } from '../utils';
 
 import { atomWithMachine } from './atomWithMachine';
 import { atomWithSubcription } from './atomWithSubscription';
 
-type MachinesAtomObj<
-  M extends AnyStateMachine = AnyStateMachine,
-  S extends AnyInterpreter = InterpreterFrom<M>
-> = Record<string, ReturnType<typeof atomWithMachine<M, S>>>;
-
-export type JotaiStore = ReturnType<typeof createStore>;
+export type JotaiStore = ReturnType<typeof createJotaiStore>;
 export type CreateStoreAtomsReturn<T extends MachinesObj = MachinesObj> =
   ReturnType<typeof createStoreAtoms<T>>;
 
 /**
  * Creates atoms to store machines.
+ * @param id The id of the store.
  * @returns An object with atoms to store machines.
- * - `machinesAtom`: An atom to store the machines.
- * - `keysAtom`: An atom to get the keys of the machines.
- * - `serviceAtom`: An atom family to get an service from a machine.
- * - `onStateChangeAtom`: An atom to subscribe to state changes.
- * - `stateAtom`: An atom family to get the state of a machine.
+ *   - `store`: The global store.
+ *   - `keysAtom`: An atom to get the keys of the machines.
+ *   - `machinesAtom`: An atom to store the machines.
+ *   - `serviceAtom`: An atom family to get an service from a machine.
+ *   - `servicesAtom`: An atom to get all the services.
+ *   - `stateAtom`: An atom family to get the state of a machine.
+ *   - `waitForAtom`: An atom family to wait for a machine to reach a state.
+ *   - `onStateChangeAtom`: An atom family to listen to state changes.
+ *   - `onStoreStartAtom`: An atom to listen to the store start.
  */
-export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
-  type Input = AddMachineInput<T>;
-  type TMachine = ValueOf<T>;
-  type TService = InterpreterFrom<ValueOf<T>>;
-  type Obj = MachinesAtomObj<TMachine, TService>;
-  const store = createStore();
+export function createStoreAtoms<T extends MachinesObj = MachinesObj>(
+  id: string
+) {
+  type Obj = {
+    [K in keyof T]: ReturnType<
+      typeof atomWithMachine<T[K], InterpreterFrom<T[K]>>
+    >;
+  };
+  const store = createGlobalStore(id);
 
   /**
    * An atom to store the machines and their services.
@@ -60,15 +56,15 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
    *   hasStorage: false
    * })
    */
-  const machinesObjAtom = atom<Obj>({});
+  const machinesObjAtom = atom<Obj>({} as Obj);
   const machinesAtom = atom(
     (get) => get(machinesObjAtom),
-    (get, set, input: Input) => {
+    (get, set, input: AddMachineInput<T, keyof T>) => {
       const curr = get(machinesObjAtom);
       const machineAtom = atomWithMachine(input);
       const machinesObj = { ...curr, [input.key]: machineAtom };
       set(machinesObjAtom, machinesObj);
-      return machinesObj;
+      return machinesObj as Obj;
     }
   );
 
@@ -90,27 +86,28 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
    * @example
    * const [service, updateService] = useAtom(serviceAtom('counter'));
    */
-  const serviceAtom = atomFamily((key: keyof T) => {
+  function serviceAtom<K extends keyof T>(key: K) {
     return atom(
       (get) => {
         const machineAtom = get(machinesAtom)[key];
-        const service = get(machineAtom).service;
+        const service = get(machineAtom).service as InterpreterFrom<T[K]>;
         if (!service) {
           throw new Error(`Service ${key} does not exist`);
         }
         return service;
       },
-      (get, _set, opts: AddMachineParams<T>[2]) => {
+      (get, _set, opts: AddMachineInput<T, K>['getOptions'] = {}) => {
         const machineAtom = get(machinesAtom)[key];
         const serviceAtom = get(machineAtom).atoms.service;
-        const service = get(serviceAtom);
+        const service = get(serviceAtom) as InterpreterFrom<T[K]>;
         if (!service) {
           throw new Error(`Service ${key} does not exist`);
         }
         updateService(service, opts);
+        return service;
       }
     );
-  });
+  }
 
   /**
    * An atom to get the services of the machines.
@@ -227,4 +224,20 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
     onStateChangeAtom,
     onStoreStartAtom,
   };
+}
+
+const stores = new Map<string, JotaiStore>();
+/**
+ * If a store exist in the global store map, return it.
+ * Otherwise, create a new store and add it to the map.
+ * @param id The id of the store.
+ * @returns The store.
+ * @example
+ * const store = createGlobalStore('myStore');
+ */
+function createGlobalStore<S extends JotaiStore>(id: string) {
+  if (stores.has(id)) return stores.get(id) as S;
+  const store = createJotaiStore();
+  stores.set(id, store);
+  return store;
 }
