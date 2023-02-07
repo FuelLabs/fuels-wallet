@@ -141,7 +141,7 @@ describe('Fuel Events', () => {
 
   test('Events: Connection events', async () => {
     const handleConnectionEvent = jest.fn();
-    window.addEventListener(FuelWalletEvents.CONNECTION, handleConnectionEvent);
+    fuel.on(FuelWalletEvents.CONNECTION, handleConnectionEvent);
     await fuel.connect();
     expect(handleConnectionEvent).toBeCalledWith(true);
     await fuel.disconnect();
@@ -150,24 +150,21 @@ describe('Fuel Events', () => {
 
   test('Events: Accounts events', async () => {
     const handleAccountsEvent = jest.fn();
-    window.addEventListener(FuelWalletEvents.ACCOUNTS, handleAccountsEvent);
+    fuel.on(FuelWalletEvents.ACCOUNTS, handleAccountsEvent);
     const accounts = await fuel.accounts();
     expect(handleAccountsEvent).toBeCalledWith(accounts);
   });
 
   test('Events: CurrentAccount events', async () => {
     const handleCurrentAccountEvent = jest.fn();
-    window.addEventListener(
-      FuelWalletEvents.CURRENT_ACCOUNT,
-      handleCurrentAccountEvent
-    );
+    fuel.on(FuelWalletEvents.CURRENT_ACCOUNT, handleCurrentAccountEvent);
     const currentAccount = await fuel.currentAccount();
     expect(handleCurrentAccountEvent).toBeCalledWith(currentAccount);
   });
 
   test('Events: Network events', async () => {
     const handleNetworkEvent = jest.fn();
-    window.addEventListener(FuelWalletEvents.NETWORK, handleNetworkEvent);
+    fuel.on(FuelWalletEvents.NETWORK, handleNetworkEvent);
     const network = await fuel.network();
     expect(handleNetworkEvent).toBeCalledWith(network);
   });

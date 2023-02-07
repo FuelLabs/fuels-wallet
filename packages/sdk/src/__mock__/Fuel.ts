@@ -49,7 +49,7 @@ export class MockConnection extends BaseConnection {
     const network = {
       url: process.env.PUBLIC_PROVIDER_URL!,
     };
-    events.emit(FuelWalletEvents.NETWORK, network);
+    fuel.emit(FuelWalletEvents.NETWORK, network);
     return network;
   }
 
@@ -58,18 +58,18 @@ export class MockConnection extends BaseConnection {
   }
 
   async connect() {
-    events.emit(FuelWalletEvents.CONNECTION, true);
+    fuel.emit(FuelWalletEvents.CONNECTION, true);
     return true;
   }
 
   async disconnect() {
-    events.emit(FuelWalletEvents.CONNECTION, false);
+    fuel.emit(FuelWalletEvents.CONNECTION, false);
     return false;
   }
 
   async accounts() {
     const accounts = [userWallet.address.toAddress()];
-    events.emit(FuelWalletEvents.ACCOUNTS, accounts);
+    fuel.emit(FuelWalletEvents.ACCOUNTS, accounts);
     return accounts;
   }
 
@@ -93,7 +93,7 @@ export class MockConnection extends BaseConnection {
 
   async currentAccount() {
     const account = userWallet.address.toAddress();
-    events.emit(FuelWalletEvents.CURRENT_ACCOUNT, account);
+    fuel.emit(FuelWalletEvents.CURRENT_ACCOUNT, account);
     return account;
   }
 }
