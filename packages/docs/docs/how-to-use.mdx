@@ -65,3 +65,53 @@ To transfer an amount to other address, use the `wallet.transfer` method and pas
 <CodeImport file="../examples/Transfer.tsx" />
 
 <Examples.Transfer />
+
+## Listening to events
+
+To listen to events, you can use the `fuel.on` method. <br />
+The first parameter is the event name and the second is the callback function. <br/ >
+The events enum `FuelWalletEvents` can be imported from the `@fuel-wallet/sdk` package.
+
+### Connection
+
+To listen to connection events, you can use the `FuelWalletEvents.CONNECTION` event.
+
+<CodeImport
+  file="../src/hooks/useIsConnected.tsx"
+  lineStart="10"
+  lineEnd="28"
+/>
+<Examples.Events.Connection />
+
+### Accounts
+
+To listen to accounts events, you can use the `FuelWalletEvents.ACCOUNTS` event.
+
+<CodeImport
+  file="../examples/events/Accounts.tsx"
+  lineStart="24"
+  lineEnd="33"
+/>
+<Examples.Events.Accounts />
+
+### Current Account
+
+To listen to current account events, you can use the `FuelWalletEvents.CURRENT_ACCOUNT` event.
+
+<CodeImport
+  file="../examples/events/CurrentAccount.tsx"
+  lineStart="24"
+  lineEnd="35"
+/>
+
+<Examples.Events.CurrentAccount />
+
+### Network Change
+
+To listen to network events, you can use the `FuelWalletEvents.NETWORK` event.
+
+<CodeImport file="../examples/events/Network.tsx" lineStart="28" lineEnd="38" />
+
+Switch the network in your wallet to see the event triggered.
+
+<Examples.Events.Network />
