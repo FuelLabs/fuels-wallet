@@ -3,7 +3,8 @@ import { cssObj } from '@fuel-ui/css';
 import { Dropdown, Flex } from '@fuel-ui/react';
 import type { Network } from '@fuel-wallet/types';
 
-import { NetworkDropdown } from '..';
+import { NetworkDropdown } from '../NetworkDropdown';
+import { NetworkStatus } from '../NetworkItem';
 
 export type NetworkSelectorProps = {
   selected: Network;
@@ -35,7 +36,14 @@ export function NetworkSelector({
           }}
         >
           {networks.map((network) => (
-            <Dropdown.MenuItem key={network.id} textValue={network.name}>
+            <Dropdown.MenuItem
+              key={network.id}
+              textValue={network.name}
+              aria-label={`fuel_network-dropdown-item-${network.id}`}
+            >
+              {selected && selected.id === network.id && (
+                <NetworkStatus network={selected} />
+              )}
               {network.name}
             </Dropdown.MenuItem>
           ))}
