@@ -3,12 +3,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { MaybeLazy } from '@xstate/react/lib/types';
-import type {
-  AnyInterpreter,
-  AnyState,
-  AnyStateMachine,
-  StateFrom,
-} from 'xstate';
+import type { AnyInterpreter, AnyStateMachine, StateFrom } from 'xstate';
 import { interpret } from 'xstate';
 import { waitFor as waitForRef } from 'xstate/lib/waitFor';
 
@@ -18,7 +13,6 @@ import type {
   MachinesObj,
   Service,
   InterpreterOptions,
-  WaitForArgs,
 } from '../types';
 
 /**
@@ -29,7 +23,7 @@ import type {
  * @returns an object with the handlers
  * @throws if a handler has the same name as a service key
  */
-export function createHandlers<H extends Handlers, Keys extends any[]>(
+export function createHandlers<Keys extends unknown[], H extends Handlers>(
   keys: Keys,
   handlers?: H
 ) {
@@ -140,25 +134,12 @@ export function updateService<
 }
 
 export async function waitFor<
-  T extends MachinesObj,
-  I extends AnyInterpreter = Service<T>,
-  TState extends AnyState = StateFrom<I['machine']>
->(
-  service: I,
-  givenState: WaitForArgs<T>[1],
-  timeout: WaitForArgs<T>[2] = 60 * 5 * 1000
-) {
+  I extends AnyInterpreter,
+  S = StateFrom<I['machine']>
+>(service: I, givenState: (state: S) => boolean, timeout = 60 * 5 * 1000) {
   try {
-    const state = await waitForRef<I>(
-      service,
-      (state) => {
-        return typeof givenState === 'function'
-          ? givenState(state)
-          : (state as TState).matches(givenState);
-      },
-      { timeout }
-    );
-    return state;
+    const state = await waitForRef<I>(service, givenState, { timeout });
+    return state as S;
   } catch (err: any) {
     if (err.cause === 'CustomState') throw err;
     throw new Error(

@@ -23,7 +23,9 @@
   "scripts": {
     "build": "pnpm ts:check && tsup --dts",
     "ts:check": "pnpm xstate:typegen && tsc --noEmit",
-    "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
+    "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'",
+    "test": "jest --verbose",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@fuel-ts/keystore": "^0.29.1",
@@ -37,6 +39,8 @@
     "xstate": "^4.35.4"
   },
   "devDependencies": {
+    "@fuel-wallet/config": "workspace:*",
+    "@fuel-ui/test-utils": "^0.12.0",
     "@types/react": "^18.0.27",
     "@types/uuid": "^9.0.0",
     "tsup": "^6.5.0"

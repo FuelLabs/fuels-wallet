@@ -14,8 +14,17 @@ import type {
 } from 'xstate';
 
 export type ValueOf<T> = T[keyof T];
-export type Handlers = Record<any, (...args: any[]) => any>;
-export type MachinesObj = Record<string, AnyStateMachine>;
+export type Handler = <Args extends any[]>(
+  ...args: Args extends (infer T)[] ? T : []
+) => any;
+
+export type Handlers = {
+  [K in string]: Handler;
+};
+
+export type MachinesObj = {
+  [K in string]: AnyStateMachine;
+};
 
 export type Machine<T extends MachinesObj> = StateMachine<
   ValueOf<T>['__TContext'],
@@ -36,8 +45,11 @@ export type MatchesState<M extends AnyStateMachine> =
     : string;
 
 export type Service<T extends MachinesObj> = InterpreterFrom<ValueOf<T>>;
-export type StoreServiceObj<T extends MachinesObj> = {
-  [K in keyof T]: Service<T>;
+export type StoreServiceObj<
+  T extends MachinesObj,
+  K extends keyof T = keyof T
+> = {
+  [P in K]: InterpreterFrom<T[P]>;
 };
 
 export interface MachineAtomOptions<TContext, TEvent extends EventObject> {
@@ -84,24 +96,13 @@ export type Listener<Args extends unknown[] = unknown[]> = (
 ) => void;
 
 export type StateListener<K, Args extends unknown[] = unknown[]> = {
-  service: K extends string ? string : K;
+  service: K;
   listener: Listener<Args>;
 };
 
-export type WaitForStateParam<M extends AnyStateMachine> =
-  | MatchesState<M>
-  | ((state: StateFrom<M>) => boolean);
-
-export type WaitForArgs<
-  T extends MachinesObj,
-  K extends keyof T = keyof T,
-  S extends Service<T> = Service<T>,
-  M extends AnyStateMachine = S['machine']
-> = [
-  key: K extends string ? string : K,
-  state: WaitForStateParam<M>,
-  timeout?: number
-];
+export type WaitForStateParam<M extends AnyStateMachine> = (
+  state: StateFrom<M>
+) => boolean;
 
 export type WriteAtom<Value, Args extends unknown[]> = WritableAtom<
   Value,

@@ -1,6 +1,11 @@
 import { atomFamily, loadable } from 'jotai/utils';
 import { createStore, atom } from 'jotai/vanilla';
-import type { AnyInterpreter, AnyStateMachine, InterpreterFrom } from 'xstate';
+import type {
+  AnyInterpreter,
+  AnyStateMachine,
+  InterpreterFrom,
+  StateFrom,
+} from 'xstate';
 import { toObserver } from 'xstate';
 
 import type {
@@ -12,7 +17,6 @@ import type {
   ValueOf,
   Service,
   StoreServiceObj,
-  WaitForArgs,
   StateListener,
 } from '../types';
 import { updateService, waitFor } from '../utils';
@@ -61,8 +65,7 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
     (get) => get(machinesObjAtom),
     (get, set, input: Input) => {
       const curr = get(machinesObjAtom);
-      const key = input.key.toString();
-      const machineAtom = atomWithMachine({ ...input, key });
+      const machineAtom = atomWithMachine(input);
       const machinesObj = { ...curr, [input.key]: machineAtom };
       set(machinesObjAtom, machinesObj);
       return machinesObj;
@@ -90,19 +93,19 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
   const serviceAtom = atomFamily((key: keyof T) => {
     return atom(
       (get) => {
-        const machineAtom = get(machinesAtom)[key.toString()];
+        const machineAtom = get(machinesAtom)[key];
         const service = get(machineAtom).service;
         if (!service) {
-          throw new Error(`Service ${key.toString()} does not exist`);
+          throw new Error(`Service ${key} does not exist`);
         }
         return service;
       },
       (get, _set, opts: AddMachineParams<T>[2]) => {
-        const machineAtom = get(machinesAtom)[key.toString()];
+        const machineAtom = get(machinesAtom)[key];
         const serviceAtom = get(machineAtom).atoms.service;
         const service = get(serviceAtom);
         if (!service) {
-          throw new Error(`Service ${key.toString()} does not exist`);
+          throw new Error(`Service ${key} does not exist`);
         }
         updateService(service, opts);
       }
@@ -126,18 +129,24 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
 
   /**
    * An atom to use waitFor method from XState inside a component.
-   * @param params WaitForParams<T> - The params to use waitFor method.
+   * @param key The key of the machine.
+   * @param givenState - a predicate function that returns a boolean
+   * @param timeout The timeout to wait for.
    * @returns an loadable atom that can be used with useAtom.
    * @example
    * const [state, send] = useAtom(waitForAtom({ key: 'counter', state: 'idle' }));
    */
   function waitForAtom<K extends keyof T>(
-    ...[key, givenState, timeout]: WaitForArgs<T, K>
+    key: K,
+    givenState: (state: StateFrom<T[K]>) => boolean,
+    timeout?: number
   ) {
-    const asyncAtom = atom(async (get) => {
-      return waitFor<T>(get(serviceAtom(key)), givenState, timeout);
-    });
-    return loadable(asyncAtom);
+    return loadable(
+      atom(async (get) => {
+        const service = get(serviceAtom(key));
+        return waitFor(service, givenState, timeout);
+      })
+    );
   }
 
   /**
@@ -150,7 +159,7 @@ export function createStoreAtoms<T extends MachinesObj = MachinesObj>() {
   const stateAtom = atomFamily((key: keyof T) => {
     return atom(
       (get) => {
-        const machineAtom = get(machinesAtom)[key.toString()];
+        const machineAtom = get(machinesAtom)[key];
         return get(get(machineAtom).atoms.state);
       },
       (get, _set, ev: Parameters<Service<T>['send']>[0]) => {

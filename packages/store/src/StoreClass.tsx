@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import type { AnyState, InterpreterFrom, StateFrom } from 'xstate';
+import type { AnyState, StateFrom } from 'xstate';
 
 import { ReactFactory } from './ReactFactory';
 import { atoms } from './atoms';
@@ -9,7 +9,7 @@ import type {
   MachinesObj,
   ValueOf,
   Listener,
-  WaitForArgs,
+  StoreServiceObj,
 } from './types';
 import { createHandlers, waitFor } from './utils';
 
@@ -20,13 +20,53 @@ interface IStore<T extends MachinesObj> {
 
 export type CreateStoreOpts<T> = {
   id: string;
-  storageStates?: (keyof T)[];
+  persistedStates?: (keyof T)[];
 };
 
 export type StoreClassOpts<T extends MachinesObj> = CreateStoreOpts<T>;
+
+export type StoreClassReturn<T> = Omit<T, 'setup'>;
+
 export class StoreClass<T extends MachinesObj> implements IStore<T> {
   __TMachines = {} as T;
-  constructor(readonly opts: StoreClassOpts<T>) {}
+  #opts: StoreClassOpts<T>;
+  constructor(opts: StoreClassOpts<T>) {
+    this.#opts = opts;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Getters
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Get all the services from the store.
+   * @returns an object with all the services
+   * @example
+   * const { counter, accounts } = store.services;
+   */
+  get services() {
+    const { store, servicesAtom } = atoms;
+    return store.get(servicesAtom) as StoreServiceObj<T>;
+  }
+
+  /**
+   * Get a list of all the keys of the services that are being save
+   * in the Local Storage.
+   */
+  get persistedStates() {
+    return this.#opts.persistedStates;
+  }
+
+  /**
+   * Get the store id.
+   */
+  get id() {
+    return this.#opts.id;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Public methods
+  // ---------------------------------------------------------------------------
 
   /**
    * Add a new machine to the global store.
@@ -41,10 +81,10 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
     opts: AddMachineParams<T, K>[2] = {}
   ) {
     const { store, machinesAtom } = atoms;
-    const hasStorage = this.opts.storageStates?.includes(key);
+    const hasStorage = this.#opts.persistedStates?.includes(key);
     store.set(machinesAtom, {
       hasStorage,
-      key: key.toString(),
+      key,
       getMachine: machine,
       getOptions: opts,
     });
@@ -58,16 +98,20 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * @example
    * store.addHandlers(store => ({
    *   increment: () => store.send('counter', { type: 'INCREMENT' }),
-   *   reset: () => store.broadcast('RESET'),
+   *   resetCounter: () => store.broadcast('RESET'),
    * }));
    */
-  addHandlers<H extends Handlers>(cb: (store: StoreClass<T>) => H) {
+  addHandlers<H extends Handlers>(
+    cb: <S extends StoreClass<T>>(
+      store: S
+    ) => { [P in keyof H]: P extends keyof StoreClass<T> ? never : H[P] }
+  ) {
     const { store, keysAtom } = atoms;
     const keys = Object.keys(store.get(keysAtom));
     const handlers = createHandlers(keys, cb(this));
     Object.assign(this, handlers);
     return this as typeof this & {
-      [K in keyof H]: H[K];
+      [P in keyof H]: H[P];
     };
   }
 
@@ -85,12 +129,39 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
     Object.assign(this, hooks);
 
     type Hooks = typeof hooks;
-    type StoreReturn = typeof this & {
-      [K in keyof Hooks]: Hooks[K];
+    type Return = typeof this & {
+      [P in keyof Hooks]: Hooks[P];
     } & {
       StoreProvider: typeof StoreProvider;
     };
-    return this as Omit<StoreReturn, 'setup' | 'states'>;
+
+    return this as StoreClassReturn<Return>;
+  }
+
+  /**
+   * Send an event to a specific service.
+   * @param key - the key of the service
+   * @param ev - the event to send
+   * @example
+   * store.send('counter', { type: 'INCREMENT' });
+   */
+  send<K extends keyof T>(key: K, ev: T[K]['__TEvent']) {
+    const service = this.services[key];
+    service.send(ev);
+    return this as StoreClassReturn<typeof this>;
+  }
+
+  /**
+   * Broadcast an event to all services.
+   * @param ev - the event to broadcast
+   * @example
+   * store.broadcast('RESET');
+   */
+  broadcast<E extends ValueOf<T>['__TEvent']>(ev: E) {
+    for (const service of Object.values(this.services)) {
+      service.send(ev);
+    }
+    return this as StoreClassReturn<typeof this>;
   }
 
   /**
@@ -108,7 +179,7 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
       service.stop();
       service.start();
     }
-    return this;
+    return this as StoreClassReturn<typeof this>;
   }
 
   /**
@@ -123,6 +194,7 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
   onStoreStart(listener: () => void) {
     const { store, onStoreStartAtom } = atoms;
     store.set(onStoreStartAtom, { type: 'subscribe', input: listener });
+    return this as StoreClassReturn<typeof this>;
   }
 
   /**
@@ -140,69 +212,31 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
     listener: Listener<[StateFrom<T[K]>]>
   ) {
     const { store, onStateChangeAtom } = atoms;
-    const service = this.getService(key);
+    const service = this.services[key];
     store.set(onStateChangeAtom, {
       type: 'subscribe',
       input: { service, listener: listener as Listener<[AnyState]> },
     });
+    return this as StoreClassReturn<typeof this>;
   }
 
   /**
-   * Send an event to a specific service.
+   * Get the current state of a specific service.
    * @param key - the key of the service
-   * @param ev - the event to send
+   * @returns the current state
    * @example
-   * store.send('counter', { type: 'INCREMENT' });
+   * const { context } = store.getState('counter');
    */
-  send<K extends keyof T>(key: K, ev: ValueOf<T>['__TEvent']) {
-    const service = this.getService(key);
-    service.send(ev);
-    return this;
-  }
-
-  /**
-   * Broadcast an event to all services.
-   * @param ev - the event to broadcast
-   * @example
-   * store.broadcast('RESET');
-   */
-  broadcast(ev: ValueOf<T>['__TEvent']) {
-    const { store, keysAtom } = atoms;
-    const keys = store.get(keysAtom);
-    for (const key of keys) {
-      const service = this.getService(key);
-      service.send(ev);
-    }
-    return this;
-  }
-
-  /**
-   * Get a specific service from the store.
-   * @param key - the key of the service
-   * @returns the service
-   * @example
-   * const counterService = store.getService('counter');
-   */
-  getService<K extends keyof T>(key: K) {
+  getStateFrom<K extends keyof T>(key: K) {
     const { store, serviceAtom } = atoms;
-    return store.get(serviceAtom(key.toString())) as InterpreterFrom<T[K]>;
-  }
-
-  /**
-   * Get all the services from the store.
-   * @returns an object with all the services
-   * @example
-   * const { counter, accounts } = store.services;
-   */
-  get services() {
-    const { store, servicesAtom } = atoms;
-    return store.get(servicesAtom);
+    const service = store.get(serviceAtom(key));
+    return service.getSnapshot() as StateFrom<T[K]>;
   }
 
   /**
    * Wait for a specific state to be reached.
    * @param key - the key of the service
-   * @param selectedState - the name of the state to wait for
+   * @param givenState - a predicate function that returns a boolean
    * @param timeout - the timeout in milliseconds (default: 5 minutes)
    * @returns the current state value
    * @example
@@ -211,10 +245,12 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * await store.waitForState('counter', (state) => state.matches('active'));
    */
   async waitFor<K extends keyof T>(
-    ...[key, givenState, timeout = 60 * 5 * 1000]: WaitForArgs<T, K>
+    key: K,
+    givenState: (state: StateFrom<T[K]>) => boolean,
+    timeout = 60 * 5 * 1000
   ) {
-    const service = this.getService(key);
-    return waitFor<T>(service, givenState, timeout);
+    const service = this.services[key];
+    return waitFor(service, givenState, timeout);
   }
 }
 
