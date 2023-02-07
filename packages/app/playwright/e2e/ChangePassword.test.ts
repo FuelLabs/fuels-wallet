@@ -1,7 +1,13 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
 
-import { getButtonByText, getByAriaLabel, hasText, visit } from '../commons';
+import {
+  getButtonByText,
+  getByAriaLabel,
+  hasAriaLabel,
+  hasText,
+  visit,
+} from '../commons';
 import { mockData, WALLET_PASSWORD } from '../mocks';
 
 test.describe('ChangePassword', () => {
@@ -21,11 +27,21 @@ test.describe('ChangePassword', () => {
 
     // ensure that the page has changed
     await hasText(page, /Change Password/i);
+    await hasAriaLabel(page, 'New Password');
+    await hasAriaLabel(page, 'Confirm Password');
 
     // fills form data
     await getByAriaLabel(page, 'Current Password').type(WALLET_PASSWORD);
-    await getByAriaLabel(page, 'New Password').type('newPass12345$');
-    await getByAriaLabel(page, 'Confirm Password').type('newPass12345$');
+    const newPasswordInput = await getByAriaLabel(page, 'New Password');
+    await newPasswordInput.click();
+    await newPasswordInput.type('newPass12345$');
+    await newPasswordInput.blur();
+    await newPasswordInput.click();
+
+    const confirmPasswordInput = await getByAriaLabel(page, 'Confirm Password');
+    await confirmPasswordInput.click({ position: { x: 240, y: 10 } });
+    await confirmPasswordInput.type('newPass12345$');
+    await confirmPasswordInput.blur();
 
     // submit data
     await hasText(page, 'Save');
@@ -42,11 +58,17 @@ test.describe('ChangePassword', () => {
 
     // fills form data
     await getByAriaLabel(page, 'Current Password').type('12345678');
-    await getByAriaLabel(page, 'New Password').type('newPass12345$');
-    await getByAriaLabel(page, 'Confirm Password').type('newPass12344$');
+    const newPasswordInput = await getByAriaLabel(page, 'New Password');
+    await newPasswordInput.click();
+    await newPasswordInput.type('newPass12345$');
+    await newPasswordInput.blur();
+    await newPasswordInput.click();
 
-    // submit data
-    await getButtonByText(page, 'Save').click();
+    const confirmPasswordInput = await getByAriaLabel(page, 'Confirm Password');
+    await confirmPasswordInput.click({ position: { x: 240, y: 10 } });
+    await confirmPasswordInput.type('newPass12344$');
+    await confirmPasswordInput.blur();
+
     await hasText(page, 'Passwords must match');
   });
 });

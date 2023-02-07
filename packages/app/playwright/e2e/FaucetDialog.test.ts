@@ -4,7 +4,7 @@ import test, { chromium } from '@playwright/test';
 import { getButtonByText, hasText, visit, reload } from '../commons';
 import { mockData } from '../mocks';
 
-test.describe('RecoverWallet', () => {
+test.describe('FaucetDialog', () => {
   let browser: Browser;
   let page: Page;
 
