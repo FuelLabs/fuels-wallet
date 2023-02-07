@@ -31,7 +31,8 @@ export type StoreClassOpts<T extends MachinesObj> = CreateStoreOpts<T> & {
 
 export class StoreClass<T extends MachinesObj> implements IStore<T> {
   __TMachines = {} as T;
-  constructor(readonly opts: StoreClassOpts<T>) {
+  readonly opts = {} as StoreClassOpts<T>;
+  constructor(opts: StoreClassOpts<T>) {
     this.opts = opts;
   }
 

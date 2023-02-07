@@ -8,7 +8,10 @@ import type { CreateStoreAtomsReturn } from './atoms';
 import type { MachinesObj, AddMachineInput } from './types';
 
 export class ReactFactory<T extends MachinesObj> {
-  constructor(readonly atoms: CreateStoreAtomsReturn<T>) {}
+  readonly atoms!: CreateStoreAtomsReturn<T>;
+  constructor(atoms: CreateStoreAtomsReturn<T>) {
+    this.atoms = atoms;
+  }
 
   createHooks() {
     const useSelector = this.createUseSelector();
