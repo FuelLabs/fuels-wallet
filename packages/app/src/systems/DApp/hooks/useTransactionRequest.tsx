@@ -6,6 +6,7 @@ import { TxRequestStatus } from '../machines/transactionRequestMachine';
 
 import { Services, store } from '~/store';
 import { useChainInfo } from '~/systems/Network';
+import { useOverlay } from '~/systems/Overlay';
 import { getFilteredErrors, TxStatus } from '~/systems/Transaction';
 import { useParseTx } from '~/systems/Transaction/hooks/useParseTx';
 import type { TxInputs } from '~/systems/Transaction/services';
@@ -49,6 +50,7 @@ const selectors = {
   title(state: TransactionRequestState) {
     if (state.matches('txSuccess')) return 'Transaction sent';
     if (state.matches('txFailed')) return 'Transaction failed';
+    if (state.matches('sendingTx')) return 'Sending transaction';
     return 'Approve Transaction';
   },
 };
@@ -63,6 +65,7 @@ export type UseTransactionRequestReturn = ReturnType<
 
 export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const service = store.useService(Services.txRequest);
+  const overlay = useOverlay();
 
   store.useUpdateMachineConfig(Services.txRequest, {
     context: {
@@ -91,6 +94,11 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     gasPerByte: chainInfo?.consensusParameters.gasPerByte,
     gasPriceFactor: chainInfo?.consensusParameters.gasPriceFactor,
   });
+
+  function closeDialog() {
+    reset();
+    overlay.close();
+  }
 
   function status(status: keyof typeof TxRequestStatus) {
     return txStatus === status;
@@ -140,6 +148,8 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
       reject,
       tryAgain,
       close,
+      closeDialog,
+      openDialog: store.openTransactionApprove,
     },
   };
 }

@@ -63,5 +63,11 @@ export function accountEvents(store: Store) {
         input: 'networks.add',
       });
     },
+    openTransactionApprove() {
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: 'transactions.approve',
+      });
+    },
   };
 }

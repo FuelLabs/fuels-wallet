@@ -19,6 +19,7 @@ import { AccountsDialog } from '~/systems/Account';
  */
 import { NetworksDialog } from '~/systems/Network/components';
 import { Sidebar } from '~/systems/Sidebar';
+import { TransactionDialog } from '~/systems/Transaction';
 
 type Context = {
   isLoading?: boolean;
@@ -88,6 +89,7 @@ export const Layout: LayoutComponent = ({
             <Box css={styles.wrapper} className="layout__wrapper">
               <AccountsDialog />
               <NetworksDialog />
+              <TransactionDialog />
               <Sidebar ref={ref} />
               <Box ref={ref} css={styles.inner} className="layout__inner">
                 {children}
