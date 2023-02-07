@@ -14,6 +14,15 @@ window.fuel.connect();
 
 You can try this code directly in the developer console.
 
+## Detect when fuel is loaded
+
+It's possible that your application loads before `window.fuel` is injected. To detect when the `fuel` is loaded and ready to use, you can listen to the event `FuelLoaded` on the document.
+If you are using react take a look on the source code of the example bellow to see how we implement it.
+
+<CodeImport file="../examples/FuelLoaded.tsx" lineStart="10" lineEnd="21" />
+
+<Examples.FuelLoaded />
+
 ## Request connection
 
 First, you need to request a connection with the wallet, which will authorize your application to execute other actions. You can do this by accessing `fuel.connect()`.
