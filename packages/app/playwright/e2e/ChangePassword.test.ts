@@ -24,8 +24,8 @@ test.describe('ChangePassword', () => {
 
     // fills form data
     await getByAriaLabel(page, 'Current Password').type(WALLET_PASSWORD);
-    await getByAriaLabel(page, 'New Password').type('newPass12345');
-    await getByAriaLabel(page, 'Confirm Password').type('newPass12345');
+    await getByAriaLabel(page, 'New Password').type('newPass12345$');
+    await getByAriaLabel(page, 'Confirm Password').type('newPass12345$');
 
     // submit data
     await hasText(page, 'Save');
@@ -42,8 +42,8 @@ test.describe('ChangePassword', () => {
 
     // fills form data
     await getByAriaLabel(page, 'Current Password').type('12345678');
-    await getByAriaLabel(page, 'New Password').type('newPass12345');
-    await getByAriaLabel(page, 'Confirm Password').type('newPass12344');
+    await getByAriaLabel(page, 'New Password').type('newPass12345$');
+    await getByAriaLabel(page, 'Confirm Password').type('newPass12344$');
 
     // submit data
     await getButtonByText(page, 'Save').click();
