@@ -56,7 +56,7 @@ describe('CreatePassword', () => {
   it("should validate if password and confirmPassword doesn't match", async () => {
     const { user } = render(<Content />, { wrapper: TestWrapper });
 
-    await fillInputs(user, '12345678', '12345679');
+    await fillInputs(user, 'Qwe123456$', 'Qwe1234567$');
     await waitFor(() =>
       expect(screen.getByLabelText('Error message')).toBeInTheDocument()
     );
