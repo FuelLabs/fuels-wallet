@@ -101,8 +101,15 @@ test.describe('FuelWallet Extension', () => {
 
       /** Adding password */
       await hasText(page, /Create your password/i);
-      await getByAriaLabel(page, 'Your Password').type(WALLET_PASSWORD);
-      await getByAriaLabel(page, 'Confirm Password').type(WALLET_PASSWORD);
+      const passwordInput = await getByAriaLabel(page, 'Your Password');
+      await passwordInput.type(WALLET_PASSWORD);
+      await passwordInput.press('Tab');
+      const confirmPasswordInput = await getByAriaLabel(
+        page,
+        'Confirm Password'
+      );
+      await confirmPasswordInput.type(WALLET_PASSWORD);
+      await confirmPasswordInput.press('Tab');
 
       await page.getByRole('checkbox').click();
       await getButtonByText(page, /Next/i).click();
