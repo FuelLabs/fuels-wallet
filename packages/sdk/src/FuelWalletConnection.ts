@@ -33,6 +33,10 @@ export class FuelWalletConnection extends WindowConnection {
     }
   }
 
+  async ping(): Promise<boolean> {
+    return this.client.timeout(1000).request('ping', {});
+  }
+
   async network(): Promise<FuelProviderConfig> {
     return this.client.request('network', {});
   }
