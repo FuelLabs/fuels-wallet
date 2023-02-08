@@ -159,6 +159,7 @@ export function atomWithMachine<
     (get, _set) => {
       const service = get(serviceAtom);
       const sub = service.subscribe(updateStateStorage);
+      startService(get, service);
       return () => {
         if (service.initialized) {
           service.stop();
