@@ -33,6 +33,7 @@ export default defineManifest({
   ],
   host_permissions: ['<all_urls>'],
   permissions: [
+    'alarms',
     'tabs',
     'activeTab',
     'clipboardWrite',
