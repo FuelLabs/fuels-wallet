@@ -84,6 +84,30 @@ test.describe('FuelWallet Extension', () => {
       await expect(hasFuel).toBeTruthy();
     });
 
+    await test.step('Should reconnect if service worker stops', async () => {
+      // Stop service worker
+      const swPage = await context.newPage();
+      await swPage.goto('chrome://serviceworker-internals', {
+        waitUntil: 'domcontentloaded',
+      });
+      await swPage.getByRole('button', { name: 'Stop' }).click();
+      // Wait service worker to reconnect
+      const pingRet = await blankPage.waitForFunction(async () => {
+        async function testConnection() {
+          try {
+            await window.fuel.ping();
+            return true;
+          } catch (err) {
+            return testConnection();
+          }
+        }
+        return testConnection();
+      });
+      const connectionStatus = await pingRet.jsonValue();
+      await expect(connectionStatus).toBeTruthy();
+      await swPage.close();
+    });
+
     await test.step('Create wallet', async () => {
       const pages = await context.pages();
       const [page] = pages.filter((page) => page.url().includes('sign-up'));
@@ -368,4 +392,8 @@ test.describe('FuelWallet Extension', () => {
   });
 });
 
-test.setTimeout(60_000);
+// Increase timeout for this test
+// The timeout is set for 2 minutes
+// because some tests like reconnect
+// can take up to 1 minute before it's reconnected
+test.setTimeout(120_000);
