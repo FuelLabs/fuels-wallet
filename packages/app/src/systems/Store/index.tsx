@@ -1,6 +1,6 @@
 import { createStore } from '@fuel-wallet/xstore';
 
-import { accountMachine, accountsDialogMachine } from '../Account';
+import { accountsMachine, accountsDialogMachine } from '../Account';
 import { accountDialogEvents, accountEvents } from '../Account/events';
 import { networksMachine } from '../Network';
 import { networkEvents } from '../Network/events';
@@ -16,7 +16,7 @@ export const store$ = createStore<StoreMachines>({
 });
 
 export const store = store$
-  .addMachine(Services.accounts, () => accountMachine)
+  .addMachine(Services.accounts, () => accountsMachine)
   .addMachine(Services.networks, () => networksMachine)
   .addMachine(Services.accountsDialog, () => accountsDialogMachine)
   .addHandlers(accountEvents)

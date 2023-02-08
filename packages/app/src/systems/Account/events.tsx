@@ -40,21 +40,32 @@ export function accountEvents(store: StoreClass<StoreMachines>) {
 
 export function accountDialogEvents(store: StoreClass<StoreMachines>) {
   return {
-    openModal() {
+    openAccountsModal() {
       store.send(Services.accountsDialog, {
         type: 'OPEN_MODAL',
       });
     },
-    closeModal() {
+    closeAccountsModal() {
       store.send(Services.accountsDialog, {
         type: 'CLOSE_MODAL',
       });
     },
-    goTo(screenKey: keyof typeof AccountScreen) {
-      const screen = AccountScreen[screenKey];
+    viewAccountsList() {
       store.send(Services.accountsDialog, {
         type: 'GO_TO',
-        input: screen,
+        input: AccountScreen.list,
+      });
+    },
+    viewAccountsAdd() {
+      store.send(Services.accountsDialog, {
+        type: 'GO_TO',
+        input: AccountScreen.add,
+      });
+    },
+    viewAccountsLogout() {
+      store.send(Services.accountsDialog, {
+        type: 'GO_TO',
+        input: AccountScreen.logout,
       });
     },
   };

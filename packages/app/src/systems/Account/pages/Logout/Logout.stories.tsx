@@ -25,7 +25,7 @@ const Template: ComponentStoryFn<typeof Logout> = () => {
   return (
     <Layout isLoading={isLoading}>
       <BoxCentered css={{ minW: '100%', minH: '100%' }}>
-        <Button onPress={handlers.goToLogout} isLoading={isLoading}>
+        <Button onPress={handlers.logout} isLoading={isLoading}>
           Toggle Modal
         </Button>
       </BoxCentered>
@@ -36,7 +36,7 @@ const Template: ComponentStoryFn<typeof Logout> = () => {
 export const Usage = Template.bind({});
 Usage.loaders = [
   async () => {
-    store.closeModal();
+    store.closeAccountsModal();
     await AccountService.clearAccounts();
     await AccountService.addAccount({ data: MOCK_ACCOUNTS[0] });
     return {};

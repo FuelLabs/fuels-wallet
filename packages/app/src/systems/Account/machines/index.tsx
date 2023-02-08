@@ -1,3 +1,3 @@
 export * from './accountsDialogMachine';
-export * from './accountMachine';
+export * from './accountsMachine';
 export * from './unlockMachine';

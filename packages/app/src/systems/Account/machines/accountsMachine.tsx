@@ -58,10 +58,10 @@ export type MachineEvents =
   | { type: 'CLOSE_UNLOCK'; input?: void }
   | { type: 'LOGOUT'; input?: void };
 
-export const accountMachine = createMachine(
+export const accountsMachine = createMachine(
   {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    tsTypes: {} as import('./accountMachine.typegen').Typegen0,
+    tsTypes: {} as import('./accountsMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,
       services: {} as MachineServices,
@@ -380,9 +380,9 @@ export const accountMachine = createMachine(
   }
 );
 
-export type AccountMachine = typeof accountMachine;
-export type AccountMachineService = InterpreterFrom<AccountMachine>;
-export type AccountMachineState = StateFrom<AccountMachine> &
+export type AccountsMachine = typeof accountsMachine;
+export type AccountsMachineService = InterpreterFrom<AccountsMachine>;
+export type AccountsMachineState = StateFrom<AccountsMachine> &
   ChildrenMachine<{
     unlock: UnlockMachine;
   }>;

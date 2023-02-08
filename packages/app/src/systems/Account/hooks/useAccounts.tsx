@@ -4,9 +4,8 @@ import { useEffect, useRef } from 'react';
 
 import type {
   AccountsDialogMachineState,
-  AccountMachineState,
+  AccountsMachineState,
 } from '../machines';
-import { AccountScreen } from '../machines';
 
 import { store, Services } from '~/store';
 
@@ -18,14 +17,14 @@ enum AccountStatus {
 }
 
 const selectors = {
-  hasBalance(state: AccountMachineState) {
+  hasBalance(state: AccountsMachineState) {
     const acc = state.context?.account;
     return bn(acc?.balance ?? 0).gt(0);
   },
-  isUnlockingLoading: (state: AccountMachineState) => {
+  isUnlockingLoading: (state: AccountsMachineState) => {
     return state.children.unlock?.state.matches('unlockingVault');
   },
-  status(state: AccountMachineState) {
+  status(state: AccountsMachineState) {
     if (state.hasTag('loading')) return AccountStatus.loading;
     if (state.matches('unlocking')) return AccountStatus.unlocking;
     if (selectors.isUnlockingLoading(state)) {
@@ -33,10 +32,10 @@ const selectors = {
     }
     return AccountStatus.idle;
   },
-  context(state: AccountMachineState) {
+  context(state: AccountsMachineState) {
     return state.context;
   },
-  account(state: AccountMachineState) {
+  account(state: AccountsMachineState) {
     return state.context.account;
   },
   screen(state: AccountsDialogMachineState) {
@@ -82,31 +81,6 @@ export function useAccounts() {
     return accountStatus === status;
   }
 
-  function goToList() {
-    store.send(Services.accountsDialog, {
-      type: 'GO_TO',
-      input: AccountScreen.list,
-    });
-  }
-  function goToAdd() {
-    store.send(Services.accountsDialog, {
-      type: 'GO_TO',
-      input: AccountScreen.add,
-    });
-  }
-  function goToLogout() {
-    store.send(Services.accountsDialog, {
-      type: 'GO_TO',
-      input: AccountScreen.logout,
-    });
-  }
-
-  function closeModal() {
-    store.send(Services.accountsDialog, {
-      type: 'CLOSE_MODAL',
-    });
-  }
-
   store.useUpdateMachineConfig(Services.accounts, {
     actions: {
       redirectToHome() {
@@ -117,7 +91,6 @@ export function useAccounts() {
       refreshApplication() {
         window.location.reload();
       },
-      redirectToList() {},
     },
   });
 
@@ -142,14 +115,13 @@ export function useAccounts() {
     handlers: {
       unlock,
       closeUnlock,
-      goToList,
-      goToAdd,
-      goToLogout,
-      closeModal,
-      logout: store.logout,
-      hideAccount: store.hideAccount,
-      setCurrentAccount: store.setCurrentAccount,
       addAccount: store.addAccount,
+      closeModal: store.closeAccountsModal,
+      goToAdd: store.viewAccountsAdd,
+      goToList: store.viewAccountsList,
+      hideAccount: store.hideAccount,
+      logout: store.viewAccountsLogout,
+      setCurrentAccount: store.setCurrentAccount,
     },
   };
 }

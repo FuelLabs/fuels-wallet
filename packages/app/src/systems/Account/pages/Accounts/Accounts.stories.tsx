@@ -36,7 +36,7 @@ const Template: ComponentStoryFn<typeof Accounts> = () => {
 export const Usage = Template.bind({});
 Usage.loaders = [
   async () => {
-    store.closeModal();
+    store.closeAccountsModal();
     await AccountService.clearAccounts();
     await AccountService.addAccount({ data: MOCK_ACCOUNTS[0] });
     await AccountService.addAccount({ data: MOCK_ACCOUNTS[1] });

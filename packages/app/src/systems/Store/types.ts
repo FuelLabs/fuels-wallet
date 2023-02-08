@@ -1,4 +1,4 @@
-import type { AccountMachine } from '../Account';
+import type { AccountsDialogMachine, AccountsMachine } from '../Account';
 import type { NetworksMachine } from '../Network';
 
 export enum Services {
@@ -8,7 +8,7 @@ export enum Services {
 }
 
 export type StoreMachines = {
-  accounts: AccountMachine;
-  accountsDialog: AccountMachine;
+  accounts: AccountsMachine;
+  accountsDialog: AccountsDialogMachine;
   networks: NetworksMachine;
 };
