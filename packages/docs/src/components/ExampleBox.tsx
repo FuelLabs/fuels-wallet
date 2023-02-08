@@ -9,6 +9,7 @@ import {
   Stack,
   Tag,
   Tooltip,
+  Text,
 } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 
@@ -21,9 +22,11 @@ import { useFuel } from '~/src/hooks/useFuel';
 export function ExampleBox({
   children,
   error,
+  showNotDetectedOverlay = true,
 }: {
   children: ReactNode;
   error?: any;
+  showNotDetectedOverlay?: boolean;
 }) {
   const [, notDetected, isLoading] = useFuel();
   const errorMsg = error?.response?.errors?.[0]?.message || error?.message;
@@ -44,6 +47,14 @@ export function ExampleBox({
     </>
   );
 
+  const NotDetectedOverlayDefault = (
+    <Stack css={styles.overlay} justify="center" align="center">
+      <Heading as="h6">Wallet not detected</Heading>
+      <Text>Please install the Fuel Wallet to use this demo.</Text>
+      {downloadContent}
+    </Stack>
+  );
+
   if (isLoading) {
     return (
       <Box
@@ -62,7 +73,7 @@ export function ExampleBox({
       )}
       <Box css={styles.root}>
         <Heading as="h6">
-          Check it working{' '}
+          Check it working
           {notDetected && !error && (
             <Tooltip content={downloadContent} side="left">
               <Tag size="xs" color="amber" variant="ghost" leftIcon="Warning">
@@ -91,6 +102,7 @@ export function ExampleBox({
           </Input>
         )}
         {children}
+        {showNotDetectedOverlay && notDetected && NotDetectedOverlayDefault}
       </Box>
     </Stack>
   );
@@ -104,6 +116,8 @@ const styles = {
     padding: '$4',
     borderRadius: '$md',
     border: '1px dashed $gray3',
+    position: 'relative',
+    overflow: 'hidden',
 
     h6: {
       display: 'flex',
@@ -120,5 +134,13 @@ const styles = {
   }),
   alert: cssObj({
     maxWidth: '100%',
+  }),
+  overlay: cssObj({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
   }),
 };
