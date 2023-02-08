@@ -7,21 +7,28 @@ import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
 
 import type { Network } from './network';
 
+export enum FuelWalletEvents {
+  ACCOUNTS = 'accounts',
+  CURRENT_ACCOUNT = 'currentAccount',
+  CONNECTION = 'connection',
+  NETWORK = 'network',
+}
+
 export type FuelEvents =
   | {
-      type: 'accounts';
+      type: FuelWalletEvents.ACCOUNTS;
       data: Array<string>;
     }
   | {
-      type: 'currentAccount';
+      type: FuelWalletEvents.CURRENT_ACCOUNT;
       data: string;
     }
   | {
-      type: 'connection';
+      type: FuelWalletEvents.CONNECTION;
       data: boolean;
     }
   | {
-      type: 'network';
+      type: FuelWalletEvents.NETWORK;
       data: Network;
     };
 
@@ -31,6 +38,7 @@ export type FuelEventArg<T extends FuelEvents['type']> = Extract<
 >['data'];
 
 export enum MessageTypes {
+  ping = 'ping',
   uiEvent = 'uiEvent',
   event = 'event',
   request = 'request',
@@ -47,6 +55,7 @@ export type BaseEvent<T> = {
 export type UIEventMessage = BaseEvent<{
   readonly type: MessageTypes.uiEvent;
   readonly ready: boolean;
+  readonly session: string;
 }>;
 
 export type RequestMessage = BaseEvent<{

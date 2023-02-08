@@ -1,3 +1,4 @@
+import { FuelWalletEvents } from '@fuel-wallet/types';
 import { Address } from 'fuels';
 import type { AbstractAddress } from 'fuels';
 
@@ -41,7 +42,7 @@ export class Fuel extends FuelWalletConnection {
 
     // Listen for network changes and connect the provider
     // selected network from the user
-    this.on('network', async (network) => {
+    this.on(FuelWalletEvents.NETWORK, async (network) => {
       FuelWeb3Privates.provider?.connect(network.url);
     });
 
@@ -56,7 +57,19 @@ export class Fuel extends FuelWalletConnection {
   }
 }
 
+interface FuelDocumentEvents {
+  FuelLoaded: CustomEvent<Fuel>;
+}
 declare global {
+  interface Document {
+    addEventListener<K extends keyof FuelDocumentEvents>(
+      type: K,
+      listener: (this: Document, ev: FuelDocumentEvents[K]) => void
+    ): void;
+    dispatchEvent<K extends keyof FuelDocumentEvents>(
+      ev: FuelDocumentEvents[K]
+    ): void;
+  }
   interface Window {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

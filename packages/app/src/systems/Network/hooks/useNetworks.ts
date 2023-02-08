@@ -36,7 +36,7 @@ export function useNetworks(opts: NetworkInitialInput = {}) {
     selectors.selectedNetwork
   );
 
-  store.useSetMachineConfig(Services.networks, {
+  store.useUpdateMachineConfig(Services.networks, {
     actions: {
       redirectToList() {
         navigate(Pages.networks());

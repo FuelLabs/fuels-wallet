@@ -107,7 +107,7 @@ export function useAccounts() {
     });
   }
 
-  store.useSetMachineConfig(Services.accounts, {
+  store.useUpdateMachineConfig(Services.accounts, {
     actions: {
       redirectToHome() {
         store.send(Services.accountsDialog, {

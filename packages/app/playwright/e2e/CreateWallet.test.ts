@@ -8,6 +8,7 @@ import {
   visit,
   waitUrl,
 } from '../commons';
+import { WALLET_PASSWORD } from '../mocks';
 
 test.describe('CreateWallet', () => {
   let browser: Browser;
@@ -39,8 +40,13 @@ test.describe('CreateWallet', () => {
 
     /** Adding password */
     await hasText(page, /Create your password/i);
-    await getByAriaLabel(page, 'Your Password').type('12345678');
-    await getByAriaLabel(page, 'Confirm Password').type('12345678');
+    const passwordInput = await getByAriaLabel(page, 'Your Password');
+    await passwordInput.type(WALLET_PASSWORD);
+    await passwordInput.press('Tab');
+    const confirmPasswordInput = await getByAriaLabel(page, 'Confirm Password');
+    await confirmPasswordInput.type(WALLET_PASSWORD);
+    await confirmPasswordInput.press('Tab');
+
     await page.getByRole('checkbox').click();
     await getButtonByText(page, /Next/i).click();
 

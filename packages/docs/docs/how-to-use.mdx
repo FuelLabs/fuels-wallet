@@ -14,11 +14,20 @@ window.fuel.connect();
 
 You can try this code directly in the developer console.
 
+## Detect when fuel is loaded
+
+It's possible that your application loads before `window.fuel` is injected. To detect when the `fuel` is loaded and ready to use, you can listen to the event `FuelLoaded` on the document.
+If you are using react take a look on the source code of the example bellow to see how we implement it.
+
+<CodeImport file="../examples/FuelLoaded.tsx" lineStart="10" lineEnd="21" />
+
+<Examples.FuelLoaded />
+
 ## Request connection
 
 First, you need to request a connection with the wallet, which will authorize your application to execute other actions. You can do this by accessing `fuel.connect()`.
 
-<CodeImport file="../examples/Connect.tsx" lineStart="15" lineEnd="16" />
+<CodeImport file="../examples/Connect.tsx" />
 
 The `connect()` method returns a promise. If you prefer to do it in an async way, you can use `fuel.on('connection', () => void)` to
 listen for changes in the connection.
@@ -29,7 +38,7 @@ listen for changes in the connection.
 
 Once the connection is authorized, you can list the user accounts using `window.fuel.accounts()`.
 
-<CodeImport file="../examples/ListAccounts.tsx" lineStart="18" lineEnd="19" />
+<CodeImport file="../examples/ListAccounts.tsx" />
 
 <Examples.ListAccounts />
 
@@ -37,7 +46,7 @@ Once the connection is authorized, you can list the user accounts using `window.
 
 You can also get the current account being used in the wallet using `window.fuel.currentAccount()`.
 
-<CodeImport file="../examples/CurrentAccount.tsx" lineStart="18" lineEnd="19" />
+<CodeImport file="../examples/CurrentAccount.tsx" />
 
 <Examples.CurrentAccount />
 
@@ -45,7 +54,7 @@ You can also get the current account being used in the wallet using `window.fuel
 
 With access to the user address and the connection authorized, you can request the user's signature using `fuel.signMessage`.
 
-<CodeImport file="../examples/SignMessage.tsx" lineStart="20" lineEnd="24" />
+<CodeImport file="../examples/SignMessage.tsx" />
 
 <Examples.SignMessage />
 
@@ -53,6 +62,56 @@ With access to the user address and the connection authorized, you can request t
 
 To transfer an amount to other address, use the `wallet.transfer` method and pass in the address you want to send to and the amount to send.
 
-<CodeImport file="../examples/Transfer.tsx" lineStart="36" lineEnd="41" />
+<CodeImport file="../examples/Transfer.tsx" />
 
 <Examples.Transfer />
+
+## Listening to events
+
+To listen to events, you can use the `fuel.on` method. <br />
+The first parameter is the event name and the second is the callback function. <br/ >
+The events enum `FuelWalletEvents` can be imported from the `@fuel-wallet/sdk` package.
+
+### Connection
+
+To listen to connection events, you can use the `FuelWalletEvents.CONNECTION` event.
+
+<CodeImport
+  file="../src/hooks/useIsConnected.tsx"
+  lineStart="10"
+  lineEnd="28"
+/>
+<Examples.Events.Connection />
+
+### Accounts
+
+To listen to accounts events, you can use the `FuelWalletEvents.ACCOUNTS` event.
+
+<CodeImport
+  file="../examples/events/Accounts.tsx"
+  lineStart="24"
+  lineEnd="33"
+/>
+<Examples.Events.Accounts />
+
+### Current Account
+
+To listen to current account events, you can use the `FuelWalletEvents.CURRENT_ACCOUNT` event.
+
+<CodeImport
+  file="../examples/events/CurrentAccount.tsx"
+  lineStart="24"
+  lineEnd="35"
+/>
+
+<Examples.Events.CurrentAccount />
+
+### Network Change
+
+To listen to network events, you can use the `FuelWalletEvents.NETWORK` event.
+
+<CodeImport file="../examples/events/Network.tsx" lineStart="28" lineEnd="38" />
+
+Switch the network in your wallet to see the event triggered.
+
+<Examples.Events.Network />

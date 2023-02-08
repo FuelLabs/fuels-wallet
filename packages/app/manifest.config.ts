@@ -31,7 +31,10 @@ export default defineManifest({
       all_frames: true,
     },
   ],
+  host_permissions: ['<all_urls>'],
   permissions: [
+    'alarms',
+    'tabs',
     'activeTab',
     'clipboardWrite',
     'notifications',

@@ -12,8 +12,10 @@ export function Connect() {
 
   const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {
     console.debug('Request connection to Wallet!');
+    /* example:start */
     const isConnected = await fuel.connect();
     console.debug('Connection response', isConnected);
+    /* example:end */
     setConnected(isConnected);
   });
 
@@ -34,14 +36,14 @@ export function Connect() {
         <Button
           onPress={handleConnect}
           isLoading={isConnecting}
-          isDisabled={isConnecting || connected}
+          isDisabled={isConnecting || connected || !fuel}
         >
           {connected ? 'Connected' : 'Connect'}
         </Button>
         <Button
           onPress={handleDisconnect}
           isLoading={isDisconnecting}
-          isDisabled={isDisconnecting || !connected}
+          isDisabled={isDisconnecting || !connected || !fuel}
         >
           {connected ? 'Disconnect' : 'Disconnected'}
         </Button>

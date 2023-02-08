@@ -21,7 +21,7 @@ import {
   waitAccountPage,
 } from './utils';
 
-const WALLET_PASSWORD = '12345678';
+const WALLET_PASSWORD = 'Qwe123456$';
 
 test.describe('FuelWallet Extension', () => {
   test('On install sign-up page is open', async ({ context }) => {
@@ -54,18 +54,58 @@ test.describe('FuelWallet Extension', () => {
     // Use a single instance of the page to avoid
     // mutiple waiting times, and window.fuel checking.
     const blankPage = await context.newPage();
+
     // Open a blank html in order for the CRX
     // to inject fuel on the window. This is required
     // because the CRX is injected after load state of
     // the page.
     await blankPage.goto(new URL('e2e.html', baseURL).href);
-    await blankPage.waitForTimeout(5000);
+
+    await test.step('Should trigger event FuelLoaded', async () => {
+      // Reload and don't wait for laodstate to go to evalute
+      // This is required in order to get the FuelLoaded event
+      await blankPage.reload({
+        waitUntil: 'commit',
+      });
+      const hasTriggerFuelLoaded = await blankPage.evaluate(async () => {
+        return new Promise((resolve) => {
+          document.addEventListener('FuelLoaded', () => {
+            resolve(typeof window.fuel !== 'undefined');
+          });
+        });
+      });
+      await expect(hasTriggerFuelLoaded).toBeTruthy();
+    });
 
     await test.step('Has window.fuel', async () => {
       const hasFuel = await blankPage.evaluate(async () => {
         return typeof window.fuel === 'object';
       });
       await expect(hasFuel).toBeTruthy();
+    });
+
+    await test.step('Should reconnect if service worker stops', async () => {
+      // Stop service worker
+      const swPage = await context.newPage();
+      await swPage.goto('chrome://serviceworker-internals', {
+        waitUntil: 'domcontentloaded',
+      });
+      await swPage.getByRole('button', { name: 'Stop' }).click();
+      // Wait service worker to reconnect
+      const pingRet = await blankPage.waitForFunction(async () => {
+        async function testConnection() {
+          try {
+            await window.fuel.ping();
+            return true;
+          } catch (err) {
+            return testConnection();
+          }
+        }
+        return testConnection();
+      });
+      const connectionStatus = await pingRet.jsonValue();
+      await expect(connectionStatus).toBeTruthy();
+      await swPage.close();
     });
 
     await test.step('Create wallet', async () => {
@@ -85,8 +125,16 @@ test.describe('FuelWallet Extension', () => {
 
       /** Adding password */
       await hasText(page, /Create your password/i);
-      await getByAriaLabel(page, 'Your Password').type(WALLET_PASSWORD);
-      await getByAriaLabel(page, 'Confirm Password').type(WALLET_PASSWORD);
+      const passwordInput = await getByAriaLabel(page, 'Your Password');
+      await passwordInput.type(WALLET_PASSWORD);
+      await passwordInput.press('Tab');
+      const confirmPasswordInput = await getByAriaLabel(
+        page,
+        'Confirm Password'
+      );
+      await confirmPasswordInput.type(WALLET_PASSWORD);
+      await confirmPasswordInput.press('Tab');
+
       await page.getByRole('checkbox').click();
       await getButtonByText(page, /Next/i).click();
 
@@ -352,4 +400,8 @@ test.describe('FuelWallet Extension', () => {
   });
 });
 
-test.setTimeout(60_000);
+// Increase timeout for this test
+// The timeout is set for 2 minutes
+// because some tests like reconnect
+// can take up to 1 minute before it's reconnected
+test.setTimeout(120_000);
