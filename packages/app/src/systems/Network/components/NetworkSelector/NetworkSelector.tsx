@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { cssObj } from '@fuel-ui/css';
-import { Dropdown, Flex } from '@fuel-ui/react';
+import { Box, Dropdown, Flex } from '@fuel-ui/react';
 import type { Network } from '@fuel-wallet/types';
 
 import { NetworkDropdown } from '../NetworkDropdown';
-import { NetworkStatus } from '../NetworkItem';
 
 export type NetworkSelectorProps = {
   selected: Network;
@@ -41,10 +40,9 @@ export function NetworkSelector({
               textValue={network.name}
               aria-label={`fuel_network-dropdown-item-${network.id}`}
             >
-              {selected && selected.id === network.id && (
-                <NetworkStatus network={selected} />
-              )}
-              {network.name}
+              <Box css={styles.networkItem(selected.id === network.id)}>
+                {network.name}
+              </Box>
             </Dropdown.MenuItem>
           ))}
         </Dropdown.Menu>
@@ -80,4 +78,21 @@ const styles = {
       background: 'transparent',
     },
   }),
+  networkItem: (active: boolean) =>
+    cssObj({
+      position: 'relative',
+
+      ...(active && {
+        '&::after': {
+          position: 'absolute',
+          display: 'block',
+          content: '""',
+          top: '-11px',
+          left: '-16px',
+          width: '3px',
+          height: '$9',
+          background: '$accent11',
+        },
+      }),
+    }),
 };
