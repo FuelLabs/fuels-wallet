@@ -3,7 +3,7 @@ import { bn } from 'fuels';
 import { useEffect, useRef } from 'react';
 
 import type {
-  AccountDialogMachineState,
+  AccountsDialogMachineState,
   AccountMachineState,
 } from '../machines';
 import { AccountScreen } from '../machines';
@@ -36,10 +36,13 @@ const selectors = {
   context(state: AccountMachineState) {
     return state.context;
   },
-  screen(state: AccountDialogMachineState) {
+  account(state: AccountMachineState) {
+    return state.context.account;
+  },
+  screen(state: AccountsDialogMachineState) {
     return state.context.screen;
   },
-  isOpened(state: AccountDialogMachineState) {
+  isOpened(state: AccountsDialogMachineState) {
     return !state.matches('closed');
   },
 };
@@ -56,6 +59,7 @@ export function useAccounts() {
   const accountStatus = store.useSelector(Services.accounts, selectors.status);
   const ctx = store.useSelector(Services.accounts, selectors.context);
   const screen = store.useSelector(Services.accountsDialog, selectors.screen);
+  const account = store.useSelector(Services.accounts, selectors.account);
   const isOpened = store.useSelector(
     Services.accountsDialog,
     selectors.isOpened
@@ -113,6 +117,7 @@ export function useAccounts() {
       refreshApplication() {
         window.location.reload();
       },
+      redirectToList() {},
     },
   });
 
@@ -128,6 +133,7 @@ export function useAccounts() {
 
   return {
     ...ctx,
+    account,
     status,
     screen,
     isOpened,

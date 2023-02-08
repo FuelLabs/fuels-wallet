@@ -19,11 +19,6 @@ import type { ChildrenMachine, Maybe } from '~/systems/Core';
 import { FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
-export enum AccountScreen {
-  list = 'list',
-  add = 'add',
-}
-
 type MachineContext = {
   accounts?: Account[];
   accountName?: string;

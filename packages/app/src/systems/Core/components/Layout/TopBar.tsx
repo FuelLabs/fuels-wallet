@@ -1,4 +1,4 @@
-import { css } from '@fuel-ui/css';
+import { cssObj } from '@fuel-ui/css';
 import {
   FuelLogo,
   Flex,
@@ -49,8 +49,8 @@ function InternalTopBar({ onBack }: TopBarProps) {
   };
 
   return (
-    <Flex as="nav" className={style({ isHome })}>
-      <Flex css={{ alignItems: 'center', gap: '$2', flex: 1 }}>
+    <Flex as="nav" css={styles.root}>
+      <Flex css={{ gap: '$2', alignItems: 'center', flex: 1 }}>
         {!isHome ? (
           <>
             <IconButton
@@ -88,7 +88,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
           aria-label="activity"
           onPress={goToActivityPage}
         />
-        <Drawer type="menu" size={220} containerRef={ref} isDismissable={true}>
+        <Drawer type="menu" size={220} containerRef={ref} isDismissable>
           <Drawer.Trigger>
             <IconButton
               iconSize={24}
@@ -112,13 +112,13 @@ function InternalTopBar({ onBack }: TopBarProps) {
 // ----------------------------------------------------------------------------
 
 function ExternalTopBar() {
-  const { isLoading, title } = useLayoutContext();
+  const { isLoading, title, isHome } = useLayoutContext();
   const { selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
 
   return (
-    <Flex as="nav" className={style()}>
+    <Flex as="nav" css={styles.root} data-home={isHome}>
       <Flex css={{ alignItems: 'center', gap: '$5', flex: 1, pl: '$2' }}>
         {isLoading && <Spinner aria-label="Spinner" />}
         {!isLoading && (
@@ -154,26 +154,21 @@ export function TopBar({ type = TopBarType.internal, ...props }: TopBarProps) {
 // Styles
 // ----------------------------------------------------------------------------
 
-const style = css({
-  alignItems: 'center',
-  py: '$2',
-  px: '$4',
-  gap: '$3',
-  minHeight: '50px',
-  boxShadow: '$sm',
-  background:
-    'linear-gradient(268.61deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.02) 87.23%)',
+const styles = {
+  root: cssObj({
+    py: '$2',
+    px: '$4',
+    gap: '$3',
+    alignItems: 'center',
+    minHeight: '50px',
+    boxShadow: '$sm',
+    transition: 'none',
+    background:
+      'linear-gradient(268.61deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.02) 87.23%)',
 
-  variants: {
-    isHome: {
-      true: {
-        boxShadow: '$none',
-        background: 'transparent',
-      },
+    '&[data-home="true"]': {
+      boxShadow: '$none',
+      background: 'transparent',
     },
-  },
-
-  defaultVariants: {
-    isHome: false,
-  },
-});
+  }),
+};

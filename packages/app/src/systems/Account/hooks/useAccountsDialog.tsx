@@ -1,13 +1,13 @@
-import type { AccountDialogMachineState } from '../machines';
+import type { AccountsDialogMachineState } from '../machines';
 import { AccountScreen } from '../machines';
 
 import { Services, store } from '~/store';
 
 const selectors = {
-  screen(state: AccountDialogMachineState) {
+  screen(state: AccountsDialogMachineState) {
     return state.context.screen;
   },
-  isOpened(state: AccountDialogMachineState) {
+  isOpened(state: AccountsDialogMachineState) {
     return state.matches('opened');
   },
 };

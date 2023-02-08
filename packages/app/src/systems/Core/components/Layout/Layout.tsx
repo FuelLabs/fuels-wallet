@@ -81,7 +81,7 @@ export const Layout: LayoutComponent = ({
         <Helmet>
           <title>{titleText}</title>
         </Helmet>
-        <Flex as="main" css={styles.root({ isPublic })}>
+        <Flex as="main" css={styles.root} data-public={isPublic}>
           {isPublic ? (
             <>{children}</>
           ) : (
@@ -105,18 +105,18 @@ Layout.TopBar = TopBar;
 Layout.BottomBar = BottomBar;
 
 const styles = {
-  root: ({ isPublic }: Partial<LayoutProps>) =>
-    cssObj({
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexDirection: 'column',
-      minH: '100vh',
-      width: IS_CRX_POPUP ? WALLET_WIDTH : '100vw',
-      ...(isPublic && {
-        background:
-          'linear-gradient(197.05deg, #0E221B 0%, #071614 22.2%, #0C0E0D 40.7%);',
-      }),
-    }),
+  root: cssObj({
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    minH: '100vh',
+    width: IS_CRX_POPUP ? WALLET_WIDTH : '100vw',
+
+    '&[data-public="true"]': {
+      background:
+        'linear-gradient(197.05deg, #0E221B 0%, #071614 22.2%, #0C0E0D 40.7%);',
+    },
+  }),
   wrapper: cssObj({
     overflow: 'hidden',
     position: 'relative',

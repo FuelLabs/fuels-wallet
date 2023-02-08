@@ -44,6 +44,7 @@ export function useNetworks(opts: NetworkInitialInput = {}) {
       redirectToHome() {
         navigate(Pages.wallet());
       },
+      refreshApplication() {},
     },
   });
 

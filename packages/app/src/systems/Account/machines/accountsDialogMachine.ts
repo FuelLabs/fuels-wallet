@@ -16,10 +16,10 @@ type MachineEvents =
   | { type: 'CLOSE_MODAL'; input?: null }
   | { type: 'GO_TO'; input?: AccountScreen };
 
-export const accountDialogMachine = createMachine(
+export const accountsDialogMachine = createMachine(
   {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    tsTypes: {} as import('./accountDialogMachine.typegen').Typegen0,
+    tsTypes: {} as import('./accountsDialogMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,
       events: {} as MachineEvents,
@@ -61,6 +61,7 @@ export const accountDialogMachine = createMachine(
   }
 );
 
-export type AccountDialogMachine = typeof accountDialogMachine;
-export type AccountDialogMachineService = InterpreterFrom<AccountDialogMachine>;
-export type AccountDialogMachineState = StateFrom<AccountDialogMachine>;
+export type AccountsDialogMachine = typeof accountsDialogMachine;
+export type AccountsDialogMachineService =
+  InterpreterFrom<AccountsDialogMachine>;
+export type AccountsDialogMachineState = StateFrom<AccountsDialogMachine>;

@@ -1,6 +1,7 @@
 import { buildBlockExplorerUrl } from 'fuels';
 
 import type { MenuItemObj } from '../components';
+import { closeDrawer } from '../utils';
 
 import { store } from '~/store';
 import { Pages } from '~/systems/Core';
@@ -28,7 +29,10 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
     key: 'accounts',
     icon: 'Users',
     label: 'Accounts',
-    path: Pages.accounts(),
+    onPress() {
+      store.goTo('list');
+      closeDrawer();
+    },
   },
   {
     key: 'connected-apps',
@@ -68,6 +72,7 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
         label: 'Logout',
         onPress() {
           store.goTo('logout');
+          closeDrawer();
         },
       },
     ],
