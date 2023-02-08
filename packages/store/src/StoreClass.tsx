@@ -11,8 +11,9 @@ import type {
   Listener,
   StoreServiceObj,
   AddMachineInput,
+  WaitForArgs,
 } from './types';
-import { createHandlers, waitFor } from './utils';
+import { createHandlers, waitFor } from './utils/xstate';
 
 interface IStore<T extends MachinesObj> {
   /** @deprecated an internal property acting as a "phantom" type, not meant to be used at runtime */
@@ -199,7 +200,7 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    */
   onStoreStart(listener: () => void) {
     const { store, onStoreStartAtom } = this.opts.atoms;
-    store.set(onStoreStartAtom, { type: 'subscribe', input: listener });
+    store.set(onStoreStartAtom, listener);
     return this as StoreClassReturn<typeof this>;
   }
 
@@ -215,14 +216,12 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    */
   onStateChange<K extends keyof T>(
     key: K,
-    listener: Listener<[StateFrom<T[K]>]>
+    givenListener: Listener<[StateFrom<T[K]>]>
   ) {
     const { store, onStateChangeAtom } = this.opts.atoms;
     const service = this.services[key];
-    store.set(onStateChangeAtom, {
-      type: 'subscribe',
-      input: { service, listener: listener as Listener<[AnyState]> },
-    });
+    const listener = givenListener as Listener<[AnyState]>;
+    store.set(onStateChangeAtom, { service, listener });
     return this as StoreClassReturn<typeof this>;
   }
 
@@ -250,13 +249,9 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
    * // or
    * await store.waitForState('counter', (state) => state.matches('active'));
    */
-  async waitFor<K extends keyof T>(
-    key: K,
-    givenState: (state: StateFrom<T[K]>) => boolean,
-    timeout = 60 * 5 * 1000
-  ) {
+  async waitFor<K extends keyof T>(...[key, ...args]: WaitForArgs<T, K>) {
     const service = this.services[key];
-    return waitFor(service, givenState, timeout);
+    return waitFor(service, ...args);
   }
 }
 

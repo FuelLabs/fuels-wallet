@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { MaybeLazy } from '@xstate/inspect';
-import type { WritableAtom } from 'jotai';
 import type {
   AnyStateMachine,
   AreAllImplementationsAssumedToBeProvided,
@@ -106,12 +105,8 @@ export type StateListener<K, Args extends unknown[] = unknown[]> = {
   listener: Listener<Args>;
 };
 
-export type WaitForStateParam<M extends AnyStateMachine> = (
-  state: StateFrom<M>
-) => boolean;
-
-export type WriteAtom<Value, Args extends unknown[]> = WritableAtom<
-  Value,
-  Args,
-  Value
->;
+export type WaitForArgs<T extends MachinesObj, K extends keyof T> = [
+  key: K,
+  givenState: (state: StateFrom<T[K]>) => boolean,
+  timeout?: number
+];

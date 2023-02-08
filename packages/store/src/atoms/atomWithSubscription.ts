@@ -1,51 +1,46 @@
-import type { Getter, Setter } from 'jotai/vanilla';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { WritableAtom } from 'jotai/vanilla';
 import { atom } from 'jotai/vanilla';
-import type { Subscription } from 'xstate';
-
-type Action<Input> =
-  | {
-      type: 'init';
-      input?: null;
-    }
-  | {
-      type: 'unsubscribe';
-      input?: null;
-    }
-  | {
-      type: 'subscribe';
-      input: Input;
-    };
-
-type CallbackFn<Input, Result> = (
-  get: Getter,
-  set: Setter,
-  cleanup: (sub: Subscription) => Set<Subscription> | null,
-  action: Action<Input>
-) => Result;
 
 /**
  * An atom that attaches handle subscriptions logic.
- * @param getter A getter function to get the initial value.
- * @param fn A callback function to handle the subscription logic.
- * @returns An atom that handles subscriptions.
+ * @param subscribe - A function that takes a `get` function, a `set`,
+ * an input and returns a function that unsubscribes.
+ * @returns An atom that attaches handle subscriptions logic.
+ * @example
+ * const countAtom = atom(0)
+ * const subscriptionAtom = atomWithSubscription((get, set, input: number) => {
+ *   const id = setInterval(() => {
+ *     set(countAtom, (count) => count + input)
+ *   }, 1000)
+ *   return () => {
+ *     clearInterval(id)
+ *   }
+ * })
  */
-export function atomWithSubcription<Value, Input, Result = unknown>(
-  getter: ((get: Getter) => Value) | null,
-  fn: CallbackFn<Input, Result>
+type Return<I> = WritableAtom<null, [input: I], void>;
+type Args<I> = Parameters<Return<I>['write']>;
+
+export function atomWithSubscription<I>(
+  subscribe: (...[get, set, input]: Args<I>) => void
+): Return<I>;
+export function atomWithSubscription<I>(
+  subscribe: (...[get, set, input]: Args<I>) => () => void
+): Return<I>;
+export function atomWithSubscription<I>(
+  subscribe: (...[get, set, input]: Args<I>) => unknown
 ) {
-  const firstParam = getter ? (get: Getter) => getter(get) : null;
-  const subs = new Set<Subscription>([]);
-  const subscriptionAtom = atom<Value, [Action<Input>], Result>(
-    firstParam as never,
-    (get, set, action) => {
-      const cleanup = (sub?: Subscription) => (sub ? subs.add(sub) : null);
-      return fn(get, set, cleanup, action);
+  const subs = new Set<() => void>([]);
+  const subscriptionAtom = atom(null, (...args: Args<I>) => {
+    const sub = subscribe(...args) as () => void | undefined;
+    if (typeof sub !== 'undefined') {
+      subs.add(sub);
     }
-  );
+  });
   subscriptionAtom.onMount = (init) => {
-    init({ type: 'init' });
+    init({} as any);
     return () => {
-      subs.forEach((sub) => sub.unsubscribe());
+      subs.forEach((sub) => sub());
       subs.clear();
     };
   };
