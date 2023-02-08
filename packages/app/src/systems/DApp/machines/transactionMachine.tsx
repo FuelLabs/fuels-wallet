@@ -39,7 +39,6 @@ export enum TxRequestStatus {
 }
 
 type MachineContext = {
-  disableAutoClose?: boolean;
   input: {
     origin?: string;
     address?: string;
@@ -96,6 +95,9 @@ export const transactionMachine = createMachine(
     },
     id: '(machine)',
     initial: 'idle',
+    context: {
+      input: {},
+    },
     states: {
       idle: {
         on: {
@@ -104,17 +106,8 @@ export const transactionMachine = createMachine(
             target: 'fetchingAccount',
           },
         },
-        after: {
-          /** connection should start quickly, if not, it's probably an error or reloading.
-           * to avoid stuck black screen, should close the window and let user retry */
-          TIMEOUT: {
-            target: '#(machine).closing', // retry
-            cond: 'enableAutoClose',
-          },
-        },
       },
       closing: {
-        entry: ['closeWindow'],
         always: {
           target: '#(machine).failed',
         },
@@ -395,11 +388,6 @@ export const transactionMachine = createMachine(
           return accountWithBalances;
         },
       }),
-    },
-    guards: {
-      enableAutoClose: (ctx) => {
-        return !!ctx.input.isOriginRequired;
-      },
     },
   }
 );
