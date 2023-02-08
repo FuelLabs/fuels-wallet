@@ -20,6 +20,7 @@ describe('StoreClass', () => {
   it('should have todos configured on state storage', async () => {
     expect(store.persistedStates).toEqual(['todos']);
   });
+
   describe('addMachine()', () => {
     it('should create all services inside store', async () => {
       const { services } = store;

@@ -21,6 +21,25 @@ describe('ReactFactory', () => {
     jest.clearAllMocks();
   });
 
+  it('should persis todos state on local storage', async () => {
+    expect(store.persistedStates).toEqual(['todos']);
+    const spy = jest.spyOn(localStorage, 'setItem');
+    const payload = { id: 1, text: 'test' };
+    store.addTodo(payload);
+
+    const { result } = hooks.render(() => {
+      return store.useSelector('todos', (state) => state.context.todos);
+    }, opts);
+    expect(result.current).toEqual([payload]);
+    expect(spy).toBeCalledTimes(1);
+
+    let storageState: ReturnType<typeof store.services.todos.getSnapshot>;
+    expect(() => {
+      storageState = JSON.parse(localStorage.getItem('@xstate/store_todos')!);
+      expect(storageState.context.todos).toEqual([payload]);
+    }).not.toThrow();
+  });
+
   describe('useSelector()', () => {
     it('should return the correct value', async () => {
       const selector = jest.fn((state) => state.context.todos);

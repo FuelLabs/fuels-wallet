@@ -10,15 +10,16 @@ const { globals, preset, ...baseConfig } = baseDefaultConfig;
 
 const config: JestConfigWithTsJest = {
   ...baseConfig,
-  transform: tsjPreset.transform,
-  testTimeout: 10000,
-  modulePathIgnorePatterns: ['/dist/'],
-  rootDir: __dirname,
   displayName: pkg.name,
-  setupFilesAfterEnv: [require.resolve('@fuel-ui/test-utils/setup')],
-  setupFiles: ['jest-localstorage-mock'],
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
   injectGlobals: true,
+  modulePathIgnorePatterns: ['/dist/'],
+  resetMocks: false,
+  rootDir: __dirname,
+  setupFiles: ['jest-localstorage-mock'],
+  setupFilesAfterEnv: [require.resolve('@fuel-ui/test-utils/setup')],
+  testTimeout: 10000,
+  transform: tsjPreset.transform,
 };
 
 export default config;

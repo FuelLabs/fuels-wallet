@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { LocalStorage } from '@fuel-wallet/storage';
 import { atom } from 'jotai/vanilla';
 import type { Getter } from 'jotai/vanilla';
 import type {
@@ -11,7 +12,6 @@ import type {
 import { InterpreterStatus, State } from 'xstate';
 
 import type { InterpreterOptions } from '../types';
-import { Storage } from '../utils/storage';
 import { createIdleService, setMachine } from '../utils/xstate';
 
 import { atomWithSubscription } from './atomWithSubscription';
@@ -38,6 +38,7 @@ export function atomWithMachine<
   S extends AnyInterpreter = InterpreterFrom<M>
 >({ key, getMachine, getOptions, hasStorage }: AtomWithMachineOpts<M>) {
   let initialized = false;
+  const storage = new LocalStorage(`@xstate/store_`);
 
   /**
    * Check if the machine are a getter or not.
@@ -96,7 +97,7 @@ export function atomWithMachine<
    */
   function startService(get: Getter, service: S) {
     const { options } = getSafeMachineAndOpts(get);
-    const stateStorage = hasStorage ? Storage.getItem(key) : null;
+    const stateStorage = hasStorage ? storage.getItem(key) : null;
     const rehydrate = options?.state ?? stateStorage;
     if (!service.initialized && !initialized) {
       const state = rehydrate ? State.create(rehydrate as any) : undefined;
@@ -112,13 +113,13 @@ export function atomWithMachine<
    * Check if the machine is blacklisted, if it is, we need to update the state
    * storage. If it is not, we need to clear the state storage.
    */
-  function updateStateStorage(state: AnyState) {
+  function updateStateStorage<S extends AnyState>(state: S) {
     if (hasStorage) {
-      Storage.setItem(key, state);
+      storage.setItem(key, state);
       return;
     }
-    const curr = Storage.getItem(key);
-    if (curr) Storage.removeItem(key);
+    const curr = storage.getItem(key);
+    if (curr) storage.removeItem(key);
   }
 
   /**
