@@ -73,12 +73,6 @@ export const accountsMachine = createMachine(
     states: {
       idle: {
         on: {
-          UPDATE_ACCOUNTS: {
-            target: 'fetchingAccounts',
-          },
-          UPDATE_ACCOUNT: {
-            target: 'fetchingAccount',
-          },
           HIDE_ACCOUNT: {
             actions: ['hideAccount'],
             target: 'idle',
@@ -248,7 +242,15 @@ export const accountsMachine = createMachine(
       },
     },
     on: {
-      LOGOUT: 'loggingout',
+      LOGOUT: {
+        target: 'loggingout',
+      },
+      UPDATE_ACCOUNTS: {
+        target: 'fetchingAccounts',
+      },
+      UPDATE_ACCOUNT: {
+        target: 'fetchingAccount',
+      },
     },
   },
   {
