@@ -24,15 +24,7 @@ const selectors = {
 
 export function useConnectRequest() {
   const { account, accounts, isLoading } = useAccounts();
-  const connectionService = useInterpret(
-    connectMachine.withConfig({
-      actions: {
-        closeWindow: () => {
-          window.close();
-        },
-      },
-    })
-  );
+  const connectionService = useInterpret(connectMachine);
   const isConnecting = useSelector(connectionService, selectors.isConnecting);
   const isSelectingAccounts = useSelector(
     connectionService,

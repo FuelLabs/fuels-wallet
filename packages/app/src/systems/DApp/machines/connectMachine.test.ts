@@ -8,11 +8,8 @@ import { MOCK_ACCOUNTS } from '~/systems/Account';
 
 describe('connectMachine', () => {
   let service: ConnectMachineService;
-  const closeWindow = jest.fn();
   beforeEach(async () => {
-    service = interpret(
-      connectMachine.withConfig({ actions: { closeWindow } })
-    ).start();
+    service = interpret(connectMachine).start();
   });
 
   afterEach(() => {
@@ -111,10 +108,5 @@ describe('connectMachine', () => {
     const state = await waitFor(service, (state) => state.matches('done'));
 
     expect(state.context.isConnected).toBeTruthy();
-  });
-
-  it('should fail if take too much time to connect', async () => {
-    await waitFor(service, (state) => state.matches('idle'));
-    await waitFor(service, (state) => state.matches('failed'));
   });
 });

@@ -3,7 +3,12 @@ import type { ResponseMessage, UIEventMessage } from '@fuel-wallet/types';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 import { JSONRPCClient } from 'json-rpc-2.0';
 
-import { createPopUp, getTabIdFromSender, showPopUp } from '../../utils';
+import {
+  closePopUp,
+  createPopUp,
+  getTabIdFromSender,
+  showPopUp,
+} from '../../utils';
 import type { DeferPromise } from '../../utils/promise';
 import { deferPromise } from '../../utils/promise';
 
@@ -40,6 +45,9 @@ export class PopUpService {
 
   rejectAllRequests = (id: string) => {
     if (id === this.eventId) {
+      // Close popup on rejecting connection
+      closePopUp(this.tabId);
+      // Reject all pending requests
       this.client.rejectAllPendingRequests(
         'Request cancelled without explicity response!'
       );
