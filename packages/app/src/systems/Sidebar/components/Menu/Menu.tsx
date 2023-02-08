@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import type { Icons } from '@fuel-ui/react';
 import { Box, Flex, Icon, Menu as RootMenu } from '@fuel-ui/react';
-import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useNavigate, useResolvedPath, useMatch } from 'react-router-dom';
 
@@ -63,26 +62,18 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
         {item.submenu && <Icon icon="CaretDown" aria-label="Caret Icon" />}
       </Flex>
       {isOpened && item.submenu && (
-        <Box css={{ overflow: 'hidden' }}>
-          <motion.div
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-          >
-            <RootMenu
-              css={styles.submenu}
-              onAction={handleAction}
-              aria-label="Submenu"
-            >
-              {item.submenu.map((subItem) => (
-                <RootMenu.Item key={subItem.key} textValue={subItem.label}>
-                  <Icon icon={subItem.icon} css={{ color: '$gray8' }} />
-                  {subItem.label}
-                </RootMenu.Item>
-              ))}
-            </RootMenu>
-          </motion.div>
-        </Box>
+        <RootMenu
+          css={styles.submenu}
+          onAction={handleAction}
+          aria-label="Submenu"
+        >
+          {item.submenu.map((subItem) => (
+            <RootMenu.Item key={subItem.key} textValue={subItem.label}>
+              <Icon icon={subItem.icon} css={{ color: '$gray8' }} />
+              {subItem.label}
+            </RootMenu.Item>
+          ))}
+        </RootMenu>
       )}
     </Box>
   );
@@ -154,7 +145,6 @@ const styles = {
   route: cssObj({
     flex: 1,
     gap: '$2',
-    transition: 'all',
     py: '$1',
     px: '$2',
     borderRadius: '$lg',
