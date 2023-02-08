@@ -7,8 +7,11 @@
     "export": {
       "dependsOn": []
     },
-    "test": {
+    "ts:check": {
       "dependsOn": []
+    },
+    "test": {
+      "dependsOn": ["ts:check"]
     },
     "test:e2e": {
       "dependsOn": []

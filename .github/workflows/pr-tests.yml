@@ -31,9 +31,6 @@ jobs:
         env:
           NODE_ENV: test
 
-      - name: Generate types
-        run: pnpm ts:check
-
       # Unit tests running with JEST
       - name: Find PR number
         uses: jwalton/gh-find-current-pr@v1
@@ -57,10 +54,6 @@ jobs:
           working-directory: ./packages/app
           coverage-file: ${{ env.COVERAGE_FILE }}
           base-coverage-file: ${{ env.COVERAGE_FILE }}
-
-      - name: Run Jest Tests on SDK
-        run: |
-          pnpm test:sdk
 
       - name: Stop Test Node
         run: pnpm node:dev stop --test --debug

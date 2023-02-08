@@ -1,5 +1,6 @@
 import { atom } from 'jotai';
-import type { MachinesObj, StoreServiceObj } from 'src/types';
+
+import type { MachinesObj, StoreServiceObj } from '../types';
 
 import type { KeysAtom } from './keysAtom';
 import type { ServiceAtom } from './serviceAtom';
