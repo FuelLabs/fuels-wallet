@@ -1,20 +1,16 @@
-import { cssObj } from '@fuel-ui/css';
-import {
-  Stack,
-  Flex,
-  Button,
-  Checkbox,
-  InputPassword,
-  PasswordStrength,
-} from '@fuel-ui/react';
+import { Stack, Flex, Button, Checkbox, InputPassword } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { Header } from '../Header';
 
-import { ControlledField, ImageLoader, relativeUrl } from '~/systems/Core';
+import {
+  ControlledField,
+  ImageLoader,
+  InputSecurePassword,
+  relativeUrl,
+} from '~/systems/Core';
 
 const schema = yup
   .object({
@@ -57,7 +53,6 @@ export function CreatePassword({
       confirmPassword: '',
     },
   });
-  const [passwordTooltipOpened, setPasswordTooltipOpened] = useState(false);
 
   const {
     control,
@@ -68,7 +63,7 @@ export function CreatePassword({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack gap="$6" align="center" css={styles.root}>
+      <Stack gap="$6" align="center">
         <ImageLoader
           src={relativeUrl('/signup-illustration-2.svg')}
           width={129}
@@ -85,27 +80,16 @@ export function CreatePassword({
             label="Password"
             hideError
             render={({ field }) => (
-              <PasswordStrength
-                onOpenChange={() => setPasswordTooltipOpened(true)}
-                password={field.value || ''}
-                open={passwordTooltipOpened}
-                minLength={8}
+              <InputSecurePassword
+                field={field}
                 onChangeStrength={(strength: string) =>
                   setValue('strength', strength)
                 }
-              >
-                <InputPassword
-                  {...field}
-                  onBlur={() => {
-                    form.trigger();
-                    field.onBlur();
-                    setPasswordTooltipOpened(false);
-                  }}
-                  onFocus={() => setPasswordTooltipOpened(true)}
-                  placeholder="Type your password"
-                  aria-label="Your Password"
-                />
-              </PasswordStrength>
+                onBlur={() => {
+                  form.trigger();
+                  field.onBlur();
+                }}
+              />
             )}
           />
           <ControlledField
@@ -165,11 +149,3 @@ export function CreatePassword({
     </form>
   );
 }
-
-const styles = {
-  root: cssObj({
-    '[data-radix-popper-content-wrapper]': {
-      zIndex: '1 !important',
-    },
-  }),
-};

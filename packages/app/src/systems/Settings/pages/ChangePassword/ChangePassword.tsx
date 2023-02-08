@@ -1,20 +1,18 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Alert,
-  Button,
-  Flex,
-  InputPassword,
-  PasswordStrength,
-} from '@fuel-ui/react';
+import { Alert, Button, Flex, InputPassword } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 
 import { useSettings } from '../../hooks/useSettings';
 
-import { ControlledField, Layout, Pages } from '~/systems/Core';
+import {
+  ControlledField,
+  InputSecurePassword,
+  Layout,
+  Pages,
+} from '~/systems/Core';
 
 const schema = yup
   .object({
@@ -40,14 +38,7 @@ type ChangePasswordFormValues = {
 export function ChangePassword() {
   const navigate = useNavigate();
   const { handlers, isChangingPassword } = useSettings();
-  const {
-    handleSubmit,
-    control,
-    setError,
-    trigger,
-    setValue,
-    formState: { isValid },
-  } = useForm<ChangePasswordFormValues>({
+  const form = useForm<ChangePasswordFormValues>({
     resolver: yupResolver(schema),
     mode: 'onChange',
     reValidateMode: 'onChange',
@@ -57,7 +48,13 @@ export function ChangePassword() {
       oldPassword: '',
     },
   });
-  const [passwordTooltipOpened, setPasswordTooltipOpened] = useState(false);
+  const {
+    handleSubmit,
+    control,
+    setError,
+    setValue,
+    formState: { isValid },
+  } = form;
 
   function onSubmit(values: ChangePasswordFormValues) {
     if (values.confirmPassword !== values.newPassword) {
@@ -101,28 +98,19 @@ export function ChangePassword() {
               label="New Password"
               hideError
               render={({ field }) => (
-                <PasswordStrength
-                  onOpenChange={() => setPasswordTooltipOpened(true)}
-                  password={field.value || ''}
-                  open={passwordTooltipOpened}
-                  minLength={8}
+                <InputSecurePassword
+                  field={field}
                   onChangeStrength={(strength: string) =>
                     setValue('strength', strength)
                   }
-                >
-                  <InputPassword
-                    {...field}
-                    onBlur={() => {
-                      trigger();
-                      field.onBlur();
-                      setPasswordTooltipOpened(false);
-                    }}
-                    onFocus={() => setPasswordTooltipOpened(true)}
-                    css={styles.input}
-                    aria-label="New Password"
-                    placeholder="Type your new password"
-                  />
-                </PasswordStrength>
+                  onBlur={() => {
+                    form.trigger();
+                    field.onBlur();
+                  }}
+                  ariaLabel="New Password"
+                  placeholder="Type your new password"
+                  css={styles.input}
+                />
               )}
             />
             <ControlledField
@@ -167,7 +155,9 @@ const styles = {
     color: '$gray11 !important',
   }),
   input: cssObj({
-    w: '235px !important',
+    '&.fuel_input--field, & .fuel_input--field': {
+      w: '235px !important',
+    },
   }),
   wrapper: cssObj({
     display: 'flex',
