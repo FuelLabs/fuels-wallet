@@ -1,4 +1,3 @@
-import { FuelWalletEvents } from '@fuel-wallet/types';
 import {
   Address,
   bn,
@@ -141,7 +140,7 @@ describe('Fuel Events', () => {
 
   test('Events: Connection events', async () => {
     const handleConnectionEvent = jest.fn();
-    fuel.on(FuelWalletEvents.CONNECTION, handleConnectionEvent);
+    fuel.on(fuel.events.connection, handleConnectionEvent);
     await fuel.connect();
     expect(handleConnectionEvent).toBeCalledWith(true);
     await fuel.disconnect();
@@ -150,21 +149,21 @@ describe('Fuel Events', () => {
 
   test('Events: Accounts events', async () => {
     const handleAccountsEvent = jest.fn();
-    fuel.on(FuelWalletEvents.ACCOUNTS, handleAccountsEvent);
+    fuel.on(fuel.events.accounts, handleAccountsEvent);
     const accounts = await fuel.accounts();
     expect(handleAccountsEvent).toBeCalledWith(accounts);
   });
 
   test('Events: CurrentAccount events', async () => {
     const handleCurrentAccountEvent = jest.fn();
-    fuel.on(FuelWalletEvents.CURRENT_ACCOUNT, handleCurrentAccountEvent);
+    fuel.on(fuel.events.currentAccount, handleCurrentAccountEvent);
     const currentAccount = await fuel.currentAccount();
     expect(handleCurrentAccountEvent).toBeCalledWith(currentAccount);
   });
 
   test('Events: Network events', async () => {
     const handleNetworkEvent = jest.fn();
-    fuel.on(FuelWalletEvents.NETWORK, handleNetworkEvent);
+    fuel.on(fuel.events.network, handleNetworkEvent);
     const network = await fuel.network();
     expect(handleNetworkEvent).toBeCalledWith(network);
   });
