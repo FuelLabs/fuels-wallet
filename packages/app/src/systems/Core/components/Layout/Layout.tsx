@@ -76,7 +76,6 @@ export const Layout: LayoutComponent = ({
 
   return (
     <>
-      <AccountsDialog />
       <ctx.Provider value={{ isLoading, title, isHome, ref }}>
         <Helmet>
           <title>{titleText}</title>
@@ -86,6 +85,7 @@ export const Layout: LayoutComponent = ({
             <>{children}</>
           ) : (
             <Flex css={styles.wrapper} ref={ref} className="layout_wrapper">
+              <AccountsDialog />
               {children}
             </Flex>
           )}
