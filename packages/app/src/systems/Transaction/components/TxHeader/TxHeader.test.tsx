@@ -1,4 +1,4 @@
-import { render, testA11y, screen } from '@fuel-ui/test-utils';
+import { render, testA11y, screen, act, fireEvent } from '@fuel-ui/test-utils';
 import { BLOCK_EXPLORER_URL } from '@fuel-wallet/sdk';
 
 import {
@@ -61,7 +61,7 @@ describe('TxHeader', () => {
   });
 
   it('should copy transaction link', async () => {
-    const { user } = render(
+    render(
       <TxHeader
         {...MOCK_TRANSACTION_CREATE}
         providerUrl={process.env.VITE_FUEL_PROVIDER_URL}
@@ -71,7 +71,7 @@ describe('TxHeader', () => {
     const btn = await screen.findByLabelText(/Copy Transaction Link/i);
     expect(btn).toBeInTheDocument();
 
-    await user.click(btn);
+    await act(() => fireEvent.click(btn));
     expect(await navigator.clipboard.readText()).toBe(
       `${BLOCK_EXPLORER_URL}transaction/${
         MOCK_TRANSACTION_CREATE.id

@@ -7,9 +7,7 @@
   "publishConfig": {
     "access": "public",
     "files": [
-      "./index.js",
-      "./react-imports.js",
-      "./tsup.js"
+      "./index.js"
     ]
   },
   "dependencies": {

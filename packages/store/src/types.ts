@@ -1,89 +1,112 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { UseMachineOptions } from '@xstate/react/lib/types';
+import type { MaybeLazy } from '@xstate/inspect';
 import type {
-  AnyInterpreter,
   AnyStateMachine,
   AreAllImplementationsAssumedToBeProvided,
+  EventObject,
   InternalMachineOptions,
   InterpreterFrom,
-  InterpreterOptions,
-  MachineOptions,
+  InterpreterOptions as InterpreterOptsRef,
+  StateConfig,
   StateFrom,
   StateMachine,
 } from 'xstate';
 
-export type ArrayType<T> = T extends (infer Item)[] ? Item[] : T;
 export type ValueOf<T> = T[keyof T];
+export type Handler = <Args extends any[]>(
+  ...args: Args extends (infer T)[] ? T : []
+) => any;
 
-export type Events = {
-  [K in string]: (...args: any[]) => any;
+export type Handlers = {
+  [K in string]: Handler;
 };
 
-export type MachinesObj = Record<string, () => AnyStateMachine>;
-export type ServicesObj = Record<string, AnyInterpreter>;
-export type StateObj<T extends MachinesObj> = Record<
-  keyof T,
-  StateFrom<
-    StateMachine<
-      ReturnType<ValueOf<T>>['__TContext'],
-      ReturnType<ValueOf<T>>['__TStateSchema'],
-      ReturnType<ValueOf<T>>['__TEvent'],
-      ReturnType<ValueOf<T>>['__TTypestate'],
-      ReturnType<ValueOf<T>>['__TAction'],
-      ReturnType<ValueOf<T>>['__TServiceMap'],
-      ReturnType<ValueOf<T>>['__TResolvedTypesMeta']
-    >
-  >
+export type MachinesObj = {
+  [K in string]: AnyStateMachine;
+};
+
+export type Machine<M extends AnyStateMachine> = StateMachine<
+  M['__TContext'],
+  M['__TStateSchema'],
+  M['__TEvent'],
+  M['__TTypestate'],
+  M['__TAction'],
+  M['__TServiceMap'],
+  M['__TResolvedTypesMeta']
 >;
-export type Service<T extends MachinesObj> = InterpreterFrom<
-  StateMachine<
-    ReturnType<ValueOf<T>>['__TContext'],
-    ReturnType<ValueOf<T>>['__TStateSchema'],
-    ReturnType<ValueOf<T>>['__TEvent'],
-    ReturnType<ValueOf<T>>['__TTypestate'],
-    ReturnType<ValueOf<T>>['__TAction'],
-    ReturnType<ValueOf<T>>['__TServiceMap'],
-    ReturnType<ValueOf<T>>['__TResolvedTypesMeta']
-  >
-> & {
-  __storeKey: keyof T;
+
+export type StateItem<
+  T extends MachinesObj,
+  K extends keyof T = keyof T
+> = StateFrom<T[K]>;
+
+export type MatchesState<M extends AnyStateMachine> =
+  AreAllImplementationsAssumedToBeProvided<
+    M['__TResolvedTypesMeta']
+  > extends true
+    ? keyof M['__TResolvedTypesMeta']['resolved']['matchesStates']
+    : string;
+
+export type Service<
+  T extends MachinesObj,
+  K extends keyof T = keyof T
+> = InterpreterFrom<T[K]>;
+
+export type StoreServiceObj<
+  T extends MachinesObj,
+  K extends keyof T = keyof T
+> = {
+  [P in K]: InterpreterFrom<T[P]>;
 };
 
-/**
- * This types were heavylly inspired copied on @xstate/react types
- */
-export type Opts<T extends AnyStateMachine> = Partial<InterpreterOptions> &
-  Partial<UseMachineOptions<T['__TContext'], T['__TEvent']>> &
-  Partial<
-    MachineOptions<
-      T['__TContext'],
-      T['__TEvent'],
-      T['__TAction'],
-      T['__TServiceMap'],
-      T['__TResolvedTypesMeta']
-    >
-  >;
+export interface MachineAtomOptions<TContext, TEvent extends EventObject> {
+  context?: Partial<TContext>;
+  state?: StateConfig<TContext, TEvent>;
+}
 
-export type RestParams<TMachine extends AnyStateMachine> =
+export type InterpreterOptions<TMachine extends AnyStateMachine> =
   AreAllImplementationsAssumedToBeProvided<
     TMachine['__TResolvedTypesMeta']
   > extends false
-    ? [
-        options: InterpreterOptions &
-          UseMachineOptions<TMachine['__TContext'], TMachine['__TEvent']> &
-          InternalMachineOptions<
-            TMachine['__TContext'],
-            TMachine['__TEvent'],
-            TMachine['__TResolvedTypesMeta'],
-            true
-          >
-      ]
-    : [
-        options?: InterpreterOptions &
-          UseMachineOptions<TMachine['__TContext'], TMachine['__TEvent']> &
+    ? InterpreterOptsRef &
+        MachineAtomOptions<TMachine['__TContext'], TMachine['__TEvent']> &
+        InternalMachineOptions<
+          TMachine['__TContext'],
+          TMachine['__TEvent'],
+          TMachine['__TResolvedTypesMeta'],
+          true
+        >
+    : Partial<
+        InterpreterOptsRef &
+          MachineAtomOptions<TMachine['__TContext'], TMachine['__TEvent']> &
           InternalMachineOptions<
             TMachine['__TContext'],
             TMachine['__TEvent'],
             TMachine['__TResolvedTypesMeta']
           >
-      ];
+      >;
+
+export type AddMachineInput<
+  T extends MachinesObj = MachinesObj,
+  K extends keyof T = keyof T
+> = {
+  key: K;
+  getMachine: MaybeLazy<T[K]>;
+  getOptions?: InterpreterOptions<T[K]>;
+  hasStorage?: boolean;
+};
+
+export type Listener<Args extends unknown[] = unknown[]> = (
+  ...args: Args
+) => void;
+
+export type StateListener<K, Args extends unknown[] = unknown[]> = {
+  service: K;
+  listener: Listener<Args>;
+};
+
+export type WaitForArgs<T extends MachinesObj, K extends keyof T> = [
+  key: K,
+  givenState: (state: StateFrom<T[K]>) => boolean,
+  timeout?: number
+];
