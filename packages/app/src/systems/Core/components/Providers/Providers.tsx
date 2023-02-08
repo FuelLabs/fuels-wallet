@@ -2,6 +2,8 @@ import { globalCss } from '@fuel-ui/css';
 import { ThemeProvider } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 
+import { StoreProvider } from '~/store';
+
 type ProvidersProps = {
   children: ReactNode;
 };
@@ -14,9 +16,11 @@ const customStyles = {
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <ThemeProvider>
-      {globalCss(customStyles)()}
-      {children}
-    </ThemeProvider>
+    <StoreProvider>
+      <ThemeProvider>
+        {globalCss(customStyles)()}
+        {children}
+      </ThemeProvider>
+    </StoreProvider>
   );
 }
