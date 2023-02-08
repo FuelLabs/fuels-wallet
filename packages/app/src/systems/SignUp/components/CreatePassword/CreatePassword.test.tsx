@@ -42,17 +42,20 @@ describe('CreatePassword', () => {
     expect(btn).toHaveAttribute('aria-disabled');
   });
 
-  it("should validate if password don't have min length equals 8", async () => {
-    const { user } = render(<Content />, { wrapper: TestWrapper });
+  it('should show "password strength: Weak" when focus in password field', async () => {
+    await render(<Content />, { wrapper: TestWrapper });
 
-    await fillInputs(user, '123456');
-    expect(screen.getByText(/at least 8 characters/)).toBeInTheDocument();
+    const password = await screen.findByPlaceholderText('Type your password');
+    await fireEvent.focus(password);
+
+    const fuelPopoverContent = await screen.findByText('Weak');
+    expect(fuelPopoverContent).toBeVisible();
   });
 
   it("should validate if password and confirmPassword doesn't match", async () => {
     const { user } = render(<Content />, { wrapper: TestWrapper });
 
-    await fillInputs(user, '12345678', '12345679');
+    await fillInputs(user, 'Qwe123456$', 'Qwe1234567$');
     await waitFor(() =>
       expect(screen.getByLabelText('Error message')).toBeInTheDocument()
     );

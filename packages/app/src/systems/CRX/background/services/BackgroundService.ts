@@ -33,6 +33,7 @@ export class BackgroundService {
     this.server.applyMiddleware(this.connectionMiddlware.bind(this));
     this.setupListeners();
     this.externalMethods([
+      this.ping,
       this.isConnected,
       this.accounts,
       this.connect,
@@ -111,6 +112,13 @@ export class BackgroundService {
     request: JSONRPCRequest,
     serverParams: EventOrigin
   ) {
+    // If the method is ping, by pass checks
+    if (request.method === 'ping') {
+      return next(request, {
+        origin: serverParams.origin,
+      });
+    }
+
     // Retrive connection for use on accounts
     const connection = await ConnectionService.getConnection(
       serverParams!.origin
@@ -145,6 +153,10 @@ export class BackgroundService {
   /**
    * JSON RPC Methods
    */
+  async ping() {
+    return true;
+  }
+
   async isConnected(_: unknown, serverParams: EventOrigin) {
     return !!serverParams.connection;
   }
