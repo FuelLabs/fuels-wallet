@@ -92,6 +92,7 @@ const styles = {
           width: '3px',
           height: '$9',
           background: '$accent11',
+          borderRadius: '$md 0 0 $md',
         },
       }),
     }),
