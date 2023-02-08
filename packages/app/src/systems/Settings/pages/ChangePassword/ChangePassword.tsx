@@ -7,14 +7,20 @@ import * as yup from 'yup';
 
 import { useSettings } from '../../hooks/useSettings';
 
-import { ControlledField, Layout, Pages } from '~/systems/Core';
+import {
+  ControlledField,
+  InputSecurePassword,
+  Layout,
+  Pages,
+} from '~/systems/Core';
 
 const schema = yup
   .object({
-    newPassword: yup
-      .string()
-      .min(8, 'Your new password must to have at least 8 characters')
-      .required('New Password is required'),
+    newPassword: yup.string().test({
+      name: 'is-strong',
+      message: 'Password must be strong',
+      test: (_, ctx) => ctx.parent.strength === 'strong',
+    }),
     confirmPassword: yup
       .string()
       .oneOf([yup.ref('newPassword'), null], 'Passwords must match'),
@@ -26,17 +32,29 @@ type ChangePasswordFormValues = {
   confirmPassword: string;
   newPassword: string;
   oldPassword: string;
+  strength: string;
 };
 
 export function ChangePassword() {
   const navigate = useNavigate();
   const { handlers, isChangingPassword } = useSettings();
-  const { handleSubmit, control, setError, trigger } =
-    useForm<ChangePasswordFormValues>({
-      mode: 'onChange',
-      reValidateMode: 'onChange',
-      resolver: yupResolver(schema),
-    });
+  const form = useForm<ChangePasswordFormValues>({
+    resolver: yupResolver(schema),
+    mode: 'onChange',
+    reValidateMode: 'onChange',
+    defaultValues: {
+      confirmPassword: '',
+      newPassword: '',
+      oldPassword: '',
+    },
+  });
+  const {
+    handleSubmit,
+    control,
+    setError,
+    setValue,
+    formState: { isValid },
+  } = form;
 
   function onSubmit(values: ChangePasswordFormValues) {
     if (values.confirmPassword !== values.newPassword) {
@@ -78,16 +96,20 @@ export function ChangePassword() {
               control={control}
               name="newPassword"
               label="New Password"
+              hideError
               render={({ field }) => (
-                <InputPassword
-                  {...field}
+                <InputSecurePassword
+                  field={field}
+                  onChangeStrength={(strength: string) =>
+                    setValue('strength', strength)
+                  }
                   onBlur={() => {
-                    trigger();
+                    form.trigger();
                     field.onBlur();
                   }}
-                  css={styles.input}
-                  aria-label="New Password"
+                  ariaLabel="New Password"
                   placeholder="Type your new password"
+                  css={styles.input}
                 />
               )}
             />
@@ -117,7 +139,7 @@ export function ChangePassword() {
           <Button
             type="submit"
             isLoading={isChangingPassword}
-            isDisabled={isChangingPassword}
+            isDisabled={!isValid}
           >
             Save
           </Button>
@@ -133,7 +155,9 @@ const styles = {
     color: '$gray11 !important',
   }),
   input: cssObj({
-    w: '235px !important',
+    '&.fuel_input--field, & .fuel_input--field': {
+      w: '235px !important',
+    },
   }),
   wrapper: cssObj({
     display: 'flex',

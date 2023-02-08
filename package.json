@@ -57,8 +57,7 @@
     "test:e2e": "playwright test --config=packages/app/playwright.config.ts",
     "ts:check": "turbo run ts:check",
     "prepare": "husky install",
-    "codegen:app": "pnpm run --filter=app codegen",
-    "link:fuel-ui": "./scripts/link-fuel-ui.sh"
+    "codegen:app": "pnpm run --filter=app codegen"
   },
   "dependencies": {
     "@fuel-ui/config": "^0.12.2",

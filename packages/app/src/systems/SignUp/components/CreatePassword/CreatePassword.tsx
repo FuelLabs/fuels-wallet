@@ -5,11 +5,20 @@ import * as yup from 'yup';
 
 import { Header } from '../Header';
 
-import { ControlledField, ImageLoader, relativeUrl } from '~/systems/Core';
+import {
+  ControlledField,
+  ImageLoader,
+  InputSecurePassword,
+  relativeUrl,
+} from '~/systems/Core';
 
 const schema = yup
   .object({
-    password: yup.string().min(8).required('Password is required'),
+    password: yup.string().test({
+      name: 'is-strong',
+      message: 'Password must be strong',
+      test: (_, ctx) => ctx.parent.strength === 'strong',
+    }),
     confirmPassword: yup
       .string()
       .oneOf([yup.ref('password'), null], 'Passwords must match'),
@@ -21,6 +30,7 @@ export type CreatePasswordValues = {
   password: string;
   confirmPassword: string;
   accepted: boolean;
+  strength: string;
 };
 
 export type CreatePasswordProps = {
@@ -36,8 +46,8 @@ export function CreatePassword({
 }: CreatePasswordProps) {
   const form = useForm<CreatePasswordValues>({
     resolver: yupResolver(schema),
-    reValidateMode: 'onChange',
-    mode: 'onChange',
+    reValidateMode: 'onBlur',
+    mode: 'onBlur',
     defaultValues: {
       password: '',
       confirmPassword: '',
@@ -48,6 +58,7 @@ export function CreatePassword({
     control,
     handleSubmit,
     formState: { isValid },
+    setValue,
   } = form;
 
   return (
@@ -67,15 +78,17 @@ export function CreatePassword({
             control={control}
             name="password"
             label="Password"
+            hideError
             render={({ field }) => (
-              <InputPassword
-                {...field}
+              <InputSecurePassword
+                field={field}
+                onChangeStrength={(strength: string) =>
+                  setValue('strength', strength)
+                }
                 onBlur={() => {
                   form.trigger();
                   field.onBlur();
                 }}
-                placeholder="Type your password"
-                aria-label="Your Password"
               />
             )}
           />
