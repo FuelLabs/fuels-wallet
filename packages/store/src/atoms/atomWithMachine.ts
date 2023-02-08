@@ -153,21 +153,24 @@ export function atomWithMachine<
    * start the service, update the state on storage and cache,
    * and unsubscribe from the service.
    */
-  const cleanUpAtom = atomWithSubscription((get, _set) => {
-    const service = get(serviceAtom);
-    const sub = service.subscribe(updateStateStorage);
-    startService(get, service);
-    return () => {
-      service.stop();
-      service.status = InterpreterStatus.Stopped;
-      sub.unsubscribe();
-    };
-  });
+  const machineStateAtom = atomWithSubscription(
+    (get) => get(stateAtom),
+    (get, _set) => {
+      const service = get(serviceAtom);
+      const sub = service.subscribe(updateStateStorage);
+      return () => {
+        if (service.initialized) {
+          service.stop();
+          service.status = InterpreterStatus.Stopped;
+        }
+        sub.unsubscribe();
+      };
+    }
+  );
 
   return atom((get) => {
-    get(cleanUpAtom);
     return {
-      state: get(stateAtom) as StateFrom<M>,
+      state: get(machineStateAtom) as StateFrom<M>,
       machine: get(machineAtom) as M,
       service: get(serviceAtom) as S,
       atoms: {

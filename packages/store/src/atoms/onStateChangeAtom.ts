@@ -24,9 +24,10 @@ export function createOnStateChangeAtom<T extends MachinesObj>() {
     service: InterpreterFrom<T[keyof T]>;
     listener: <S extends StateFrom<AnyStateMachine>>(state: S) => void;
   };
-  return atomWithSubscription<Input>((_get, _set, input) => {
+  return atomWithSubscription<null, Input>(null, (_get, _set, input) => {
     const { service, listener } = input;
-    return service.subscribe(toObserver(listener));
+    const sub = service.subscribe(toObserver(listener));
+    return sub.unsubscribe;
   });
 }
 export type OnStateChangeAtom<T extends MachinesObj> = ReturnType<

@@ -14,7 +14,7 @@ import { atomWithSubscription } from './atomWithSubscription';
  * })
  */
 export function createStoreStartAtom() {
-  return atomWithSubscription<Listener>((_get, _set, listener) => {
+  return atomWithSubscription<null, Listener>(null, (_get, _set, listener) => {
     listener?.();
   });
 }

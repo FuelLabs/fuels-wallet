@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { WritableAtom } from 'jotai/vanilla';
+import type { Getter, WritableAtom } from 'jotai/vanilla';
 import { atom } from 'jotai/vanilla';
 
 /**
@@ -18,25 +19,30 @@ import { atom } from 'jotai/vanilla';
  *   }
  * })
  */
-type Return<I> = WritableAtom<null, [input: I], void>;
-type Args<I> = Parameters<Return<I>['write']>;
+type Return<Value, Input> = WritableAtom<Value, [input: Input], void>;
+type WriteArgs<Value, Input> = Parameters<Return<Value, Input>['write']>;
 
-export function atomWithSubscription<I>(
-  subscribe: (...[get, set, input]: Args<I>) => void
-): Return<I>;
-export function atomWithSubscription<I>(
-  subscribe: (...[get, set, input]: Args<I>) => () => void
-): Return<I>;
-export function atomWithSubscription<I>(
-  subscribe: (...[get, set, input]: Args<I>) => unknown
+export function atomWithSubscription<Value, Input>(
+  getter: ((get: Getter) => Value) | null,
+  subscribe: (...args: WriteArgs<Value, Input>) => void
+): Return<Value, Input>;
+export function atomWithSubscription<Value, Input>(
+  getter: ((get: Getter) => Value) | null,
+  subscribe: (...args: WriteArgs<Value, Input>) => () => void
+): Return<Value, Input>;
+export function atomWithSubscription<Value, Input>(
+  getter: ((get: Getter) => Value) | null,
+  subscribe: (...args: WriteArgs<Value, Input>) => unknown
 ) {
   const subs = new Set<() => void>([]);
-  const subscriptionAtom = atom(null, (...args: Args<I>) => {
-    const sub = subscribe(...args) as () => void | undefined;
-    if (typeof sub !== 'undefined') {
-      subs.add(sub);
+  const subscriptionAtom = atom<Value, [Input], void>(
+    getter as any,
+    (get, set, action) => {
+      if (!action) return;
+      const sub = subscribe(get, set, action);
+      sub && subs.add(sub as any);
     }
-  });
+  );
   subscriptionAtom.onMount = (init) => {
     init({} as any);
     return () => {
