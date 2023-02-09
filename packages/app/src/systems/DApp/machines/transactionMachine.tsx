@@ -107,11 +107,6 @@ export const transactionMachine = createMachine(
           },
         },
       },
-      closing: {
-        always: {
-          target: '#(machine).failed',
-        },
-      },
       fetchingAccount: {
         invoke: {
           src: 'fetchAccount',
@@ -307,13 +302,18 @@ export const transactionMachine = createMachine(
       assignReceipts: assign({
         response: (ctx, ev) => ({ ...ctx.response, receipts: ev.data }),
       }),
-      assignTxDryRunError: assign({
-        errors: (ctx, ev) => ({
-          ...ctx.errors,
-          txDryRunGroupedErrors: getGroupedErrors(
-            (ev.data as any)?.error?.response?.errors
-          ),
-        }),
+      assignTxDryRunError: assign((ctx, ev) => {
+        const txDryRunGroupedErrors = getGroupedErrors(
+          (ev.data as any)?.error?.response?.errors
+        );
+        return {
+          ...ctx,
+          errors: {
+            ...ctx.errors,
+            txDryRunGroupedErrors,
+          },
+          error: JSON.stringify(txDryRunGroupedErrors),
+        };
       }),
       assignTxApproveError: assign({
         errors: (ctx, ev) => ({
