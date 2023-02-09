@@ -16,15 +16,7 @@ const selectors = {
 };
 
 export function useSignatureRequest() {
-  const service = useInterpret(
-    signMachine.withConfig({
-      actions: {
-        closeWindow: () => {
-          window.close();
-        },
-      },
-    })
-  );
+  const service = useInterpret(signMachine);
   const { send } = service;
   const isUnlocking = useSelector(service, selectors.isUnlocking);
   const isUnlockingLoading = useSelector(service, selectors.isUnlockingLoading);

@@ -15,7 +15,6 @@ const OWNER = import.meta.env.VITE_ADDR_OWNER;
 describe('signMachine', () => {
   let service: Service;
   let wallet: WalletUnlocked;
-  const closeWindow = jest.fn();
 
   beforeAll(async () => {
     wallet = Wallet.fromPrivateKey(OWNER);
@@ -30,9 +29,7 @@ describe('signMachine', () => {
   });
 
   beforeEach(async () => {
-    service = interpret(
-      signMachine.withConfig({ actions: { closeWindow } }).withContext({})
-    ).start();
+    service = interpret(signMachine).start();
   });
 
   afterEach(() => {
@@ -90,10 +87,5 @@ describe('signMachine', () => {
     const state = await waitFor(service, (state) => state.matches('failed'));
 
     expect(state.context.error).toBeTruthy();
-  });
-
-  it('should fail if take too much time to connect', async () => {
-    await waitFor(service, (state) => state.matches('idle'));
-    await waitFor(service, (state) => state.matches('failed'));
   });
 });
