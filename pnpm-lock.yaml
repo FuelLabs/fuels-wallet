@@ -4739,7 +4739,7 @@ packages:
     resolution: {integrity: sha512-ZxKJP5DTUNF2XkpJeZIzvnzF1KkfrhEF6Rz0HGG69fHl6Bgx5/GoU3XyaeFYEjuuKSOOsbqD/k72wFvFxc3iTw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      expect: 29.4.1
+      expect: 29.4.2
       jest-snapshot: 29.4.2
     transitivePeerDependencies:
       - supports-color
@@ -9825,8 +9825,8 @@ packages:
   /@types/jest/29.4.0:
     resolution: {integrity: sha512-VaywcGQ9tPorCX/Jkkni7RWGFfI11whqzs8dvxF41P17Z+z872thvEvlIbznjPJ02kl1HMX3LmLOonsj2n7HeQ==}
     dependencies:
-      expect: 29.4.1
-      pretty-format: 29.4.1
+      expect: 29.4.2
+      pretty-format: 29.4.2
 
   /@types/js-cookie/2.2.7:
     resolution: {integrity: sha512-aLkWa0C0vO5b4Sr798E26QgOkss68Un0bLjs7u9qxzPT5CG+8DuNTffWES58YzJs3hrVAOs1wonycqEBqNJubA==}
@@ -14207,7 +14207,7 @@ packages:
     dependencies:
       confusing-browser-globals: 1.0.11
       eslint: 8.33.0
-      eslint-plugin-import: 2.27.5_yzj2n2b43wonjwaifya6xmk2zy
+      eslint-plugin-import: 2.27.5_ufewo3pl5nnmz6lltvjrdi2hii
       object.assign: 4.1.4
       object.entries: 1.1.6
       semver: 6.3.0
@@ -14896,16 +14896,6 @@ packages:
 
   /expect/29.3.1:
     resolution: {integrity: sha512-gGb1yTgU30Q0O/tQq+z30KBWv24ApkMgFUpvKBkyLUBL68Wv8dHdJxTBZFl/iT8K/bqDHvUYRH6IIN3rToopPA==}
-    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
-    dependencies:
-      '@jest/expect-utils': 29.4.1
-      jest-get-type: 29.2.0
-      jest-matcher-utils: 29.4.1
-      jest-message-util: 29.4.1
-      jest-util: 29.4.1
-
-  /expect/29.4.1:
-    resolution: {integrity: sha512-OKrGESHOaMxK3b6zxIq9SOW8kEXztKff/Dvg88j4xIJxur1hspEbedVkR3GpHe5LO+WB2Qw7OWN0RMTdp6as5A==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/expect-utils': 29.4.1
@@ -17788,7 +17778,7 @@ packages:
       chalk: 4.1.2
       graceful-fs: 4.2.10
       micromatch: 4.0.5
-      pretty-format: 29.4.1
+      pretty-format: 29.4.2
       slash: 3.0.0
       stack-utils: 2.0.6
 
@@ -18051,7 +18041,7 @@ packages:
       '@types/prettier': 2.7.2
       babel-preset-current-node-syntax: 1.0.1_@babel+core@7.20.12
       chalk: 4.1.2
-      expect: 29.4.1
+      expect: 29.4.2
       graceful-fs: 4.2.10
       jest-diff: 29.4.1
       jest-get-type: 29.2.0
