@@ -7,6 +7,12 @@ export type ShowPopUp = {
   tabId?: number;
 };
 
+export async function closePopUp(tabId: number | null) {
+  if (tabId) {
+    chrome.tabs.remove(tabId);
+  }
+}
+
 export async function showPopUp(params?: ShowPopUp | null) {
   if (!params?.windowId || !params?.tabId) return false;
 
