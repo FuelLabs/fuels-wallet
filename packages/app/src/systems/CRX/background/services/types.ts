@@ -12,4 +12,7 @@ export type MessageInputs = {
     provider: FuelProviderConfig;
     transaction: string;
   };
+  requestConnection: {
+    origin: string;
+  };
 };
