@@ -1,4 +1,3 @@
-import { FuelWalletEvents } from '@fuel-wallet/sdk';
 import { useEffect, useState } from 'react';
 
 import { useFuel } from './useFuel';
@@ -21,9 +20,9 @@ export function useIsConnected() {
       main();
     }
 
-    fuel?.on(FuelWalletEvents.CONNECTION, main);
+    fuel?.on(fuel.events.connection, main);
     return () => {
-      fuel?.off(FuelWalletEvents.CONNECTION, main);
+      fuel?.off(fuel.events.connection, main);
     };
   }, [fuel]);
 

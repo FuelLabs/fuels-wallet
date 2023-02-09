@@ -98,11 +98,7 @@ The `on` method takes two arguments, the event name and a callback function. The
 
 This event is triggered when the connection status change between the Wallet and the application. The callback function receives the `connection` object.
 
-<CodeImport
-  file="../src/hooks/useIsConnected.tsx"
-  lineStart="10"
-  lineEnd="28"
-/>
+<CodeImport file="../src/hooks/useIsConnected.tsx" lineStart="9" lineEnd="27" />
 
 ### Accounts
 
@@ -110,7 +106,7 @@ This event is triggered when the list of connected accounts to the application c
 
 <CodeImport
   file="../examples/events/Accounts.tsx"
-  lineStart="24"
+  lineStart="23"
   lineEnd="33"
 />
 
@@ -122,7 +118,7 @@ This event is only triggered if the application has access to the current accoun
 
 <CodeImport
   file="../examples/events/CurrentAccount.tsx"
-  lineStart="24"
+  lineStart="23"
   lineEnd="35"
 />
 
@@ -130,4 +126,4 @@ This event is only triggered if the application has access to the current accoun
 
 This event is triggered when the client connects to a different network. The callback function receives the `network` object.
 
-<CodeImport file="../examples/events/Network.tsx" lineStart="28" lineEnd="38" />
+<CodeImport file="../examples/events/Network.tsx" lineStart="27" lineEnd="38" />

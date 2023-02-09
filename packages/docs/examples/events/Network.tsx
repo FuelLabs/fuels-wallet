@@ -1,6 +1,5 @@
 import { Flex, Text, Stack, Button } from '@fuel-ui/react';
 import type { FuelProviderConfig } from '@fuel-wallet/sdk';
-import { FuelWalletEvents } from '@fuel-wallet/sdk';
 import { useEffect, useState } from 'react';
 
 import { Code } from '~/src/components/Code';
@@ -30,10 +29,10 @@ export function NetworkExample() {
   };
 
   useEffect(() => {
-    fuel?.on(FuelWalletEvents.NETWORK, handleNetworkChange);
+    fuel?.on(fuel.events.network, handleNetworkChange);
 
     return () => {
-      fuel?.off(FuelWalletEvents.NETWORK, handleNetworkChange);
+      fuel?.off(fuel.events.network, handleNetworkChange);
     };
   }, [fuel]);
 
