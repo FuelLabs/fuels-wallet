@@ -58,6 +58,29 @@ export type MachineEvents =
   | { type: 'CLOSE_UNLOCK'; input?: void }
   | { type: 'LOGOUT'; input?: void };
 
+const fetchAccount = {
+  invoke: {
+    src: 'fetchAccount',
+    onDone: [
+      {
+        target: 'idle',
+        actions: ['assignAccount'],
+        cond: 'hasAccount',
+      },
+      {
+        target: 'idle',
+        actions: ['assignAccount', 'setIsUnlogged'],
+      },
+    ],
+    onError: [
+      {
+        actions: 'assignError',
+        target: 'failed',
+      },
+    ],
+  },
+};
+
 export const accountsMachine = createMachine(
   {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -83,6 +106,15 @@ export const accountsMachine = createMachine(
           ADD_ACCOUNT: {
             actions: ['assignAccountName'],
             target: 'unlocking',
+          },
+        },
+        after: {
+          /**
+           * Update accounts every 5 minutes
+           */
+          TIMEOUT: {
+            target: 'updateAccount',
+            cond: 'isLoggedIn',
           },
         },
       },
@@ -111,26 +143,10 @@ export const accountsMachine = createMachine(
       },
       fetchingAccount: {
         tags: ['loading'],
-        invoke: {
-          src: 'fetchAccount',
-          onDone: [
-            {
-              target: 'idle',
-              actions: ['assignAccount'],
-              cond: 'hasAccount',
-            },
-            {
-              target: 'idle',
-              actions: ['assignAccount', 'setIsUnlogged'],
-            },
-          ],
-          onError: [
-            {
-              actions: 'assignError',
-              target: 'failed',
-            },
-          ],
-        },
+        ...fetchAccount,
+      },
+      updateAccount: {
+        ...fetchAccount,
       },
       settingCurrentAccount: {
         invoke: {
@@ -249,7 +265,7 @@ export const accountsMachine = createMachine(
         target: 'fetchingAccounts',
       },
       UPDATE_ACCOUNT: {
-        target: 'fetchingAccount',
+        target: 'updateAccount',
       },
     },
   },
