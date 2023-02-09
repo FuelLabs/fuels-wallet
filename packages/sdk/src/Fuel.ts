@@ -27,6 +27,9 @@ export class Fuel extends FuelWalletConnection {
     },
   };
 
+  // Externalize events names
+  readonly events = FuelWalletEvents;
+
   async getProvider(): Promise<FuelWalletProvider> {
     // TODO: This solution should be improved by issue #506
     // by moving all connection throw events
@@ -42,7 +45,7 @@ export class Fuel extends FuelWalletConnection {
 
     // Listen for network changes and connect the provider
     // selected network from the user
-    this.on(FuelWalletEvents.NETWORK, async (network) => {
+    this.on(FuelWalletEvents.network, async (network) => {
       FuelWeb3Privates.provider?.connect(network.url);
     });
 
