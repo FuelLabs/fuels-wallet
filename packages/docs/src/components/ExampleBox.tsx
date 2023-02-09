@@ -9,7 +9,6 @@ import {
   Stack,
   Tag,
   Tooltip,
-  Text,
 } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 
@@ -50,8 +49,9 @@ export function ExampleBox({
   const NotDetectedOverlayDefault = (
     <Stack css={styles.overlay} justify="center" align="center">
       <Heading as="h6">Wallet not detected</Heading>
-      <Text>Please install the Fuel Wallet to use this demo.</Text>
-      {downloadContent}
+      <Link href="/docs/install">
+        Please install the Fuel Wallet to use this demo.
+      </Link>
     </Stack>
   );
 
