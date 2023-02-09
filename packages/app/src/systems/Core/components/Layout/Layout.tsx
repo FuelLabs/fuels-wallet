@@ -112,6 +112,10 @@ export const styles = {
       background:
         'linear-gradient(197.05deg, #0E221B 0%, #071614 22.2%, #0C0E0D 40.7%);',
     },
+
+    '&:has(.layout__bottom) .layout__content': {
+      pb: '$0',
+    },
   }),
   wrapper: cssObj({
     overflow: 'clip',
