@@ -26,10 +26,9 @@ test.describe('Logout', () => {
   });
 
   test('Should logout and redirect to create new wallet', async () => {
-    await visit(page, '/');
     await getByAriaLabel(page, 'Menu').click();
-    await getButtonByText(page, 'Settings').click();
-    await getButtonByText(page, 'Logout').click();
+    await page.locator(`[data-key="settings"]`).click();
+    await page.locator(`[data-key="logout"]`).click();
     await hasText(page, 'Logout');
     await getButtonByText(page, 'Logout').click();
     await hasText(page, 'Create a new Fuel Wallet');
