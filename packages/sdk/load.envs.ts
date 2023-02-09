@@ -1,5 +1,7 @@
-const { config } = require('dotenv');
-const { resolve } = require('path');
+/* eslint-disable consistent-return */
+/* eslint-disable import/no-extraneous-dependencies */
+import { config } from 'dotenv';
+import { resolve } from 'path';
 
 function getEnvName() {
   if (process.env.NODE_ENV === 'production') {
@@ -18,7 +20,7 @@ function getEnvName() {
   });
 });
 
-function getPublicEnvs() {
+export function getPublicEnvs() {
   const WHITELIST = ['NODE_ENV', 'PUBLIC_URL'];
   return Object.fromEntries(
     Object.entries(process.env).filter(([key]) =>
@@ -26,5 +28,3 @@ function getPublicEnvs() {
     )
   );
 }
-
-module.exports.getPublicEnvs = getPublicEnvs;

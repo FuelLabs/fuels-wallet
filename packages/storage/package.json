@@ -30,6 +30,7 @@
     "@fuel-ui/test-utils": "^0.12.2",
     "@fuel-wallet/config": "workspace:*",
     "jest-localstorage-mock": "^2.4.26",
-    "tsup": "^6.6.0"
+    "tsup": "^6.5.0",
+    "typescript": "^4.9.5"
   }
 }

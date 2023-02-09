@@ -42,6 +42,6 @@
     "@types/uuid": "^9.0.0",
     "fuels": "0.29.1",
     "jest-webextension-mock": "^3.8.8",
-    "tsup": "^6.6.0"
+    "tsup": "^6.5.0"
   }
 }
