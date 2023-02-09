@@ -384,7 +384,7 @@ test.describe('FuelWallet Extension', () => {
 
       const onChangeAccountPromise = blankPage.evaluate(() => {
         return new Promise((resolve) => {
-          window.fuel.on('currentAccount', (account) => {
+          window.fuel.on(window.fuel.events.currentAccount, (account) => {
             resolve(account);
           });
         });
