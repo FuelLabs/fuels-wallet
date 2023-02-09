@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useNavigate, useResolvedPath, useMatch } from 'react-router-dom';
 
 import { store } from '~/store';
-import { coreStyles } from '~/systems/Core/components/styles';
+import { coreStyles } from '~/systems/Core/styles';
 
 export type MenuItemObj = {
   key: string;

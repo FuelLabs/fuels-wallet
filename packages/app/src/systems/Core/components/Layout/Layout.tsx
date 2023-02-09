@@ -6,7 +6,7 @@ import { forwardRef, useRef, useContext, createContext } from 'react';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 
-import { coreStyles } from '../styles';
+import { coreStyles } from '../../styles/core';
 
 import { BottomBar } from './BottomBar';
 import { TopBar } from './TopBar';
@@ -34,7 +34,12 @@ type ContentProps = {
 const Content = forwardRef<HTMLDivElement, ContentProps>(
   ({ as, children, css }, ref) => {
     return (
-      <Box as={as} ref={ref} css={css} className="layout__content">
+      <Box
+        as={as}
+        ref={ref}
+        css={{ ...styles.content, ...css }}
+        className="layout__content"
+      >
         {children}
       </Box>
     );
@@ -75,10 +80,10 @@ export const Layout: LayoutComponent = ({
           </BoxCentered>
         ) : (
           <BoxCentered as="main" css={styles.root}>
-            <Box className="layout__wrapper">
+            <Box css={styles.wrapper} className="layout__wrapper">
               <AccountsDialog />
               <Sidebar ref={ref} />
-              <Box ref={ref} className="layout__inner">
+              <Box ref={ref} css={styles.inner} className="layout__inner">
                 {children}
               </Box>
             </Box>
@@ -98,7 +103,7 @@ Layout.Content = Content;
 Layout.TopBar = TopBar;
 Layout.BottomBar = BottomBar;
 
-const styles = {
+export const styles = {
   root: cssObj({
     minH: '100vh',
     width: IS_CRX_POPUP ? WALLET_WIDTH : '100vw',
@@ -107,30 +112,20 @@ const styles = {
       background:
         'linear-gradient(197.05deg, #0E221B 0%, #071614 22.2%, #0C0E0D 40.7%);',
     },
-
-    '.layout__wrapper': {
-      overflow: 'clip',
-      position: 'relative',
-      width: WALLET_WIDTH,
-      height: WALLET_HEIGHT,
-      background:
-        'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',
-    },
-
-    '.layout__inner': {
-      display: 'flex',
-      flexDirection: 'column',
-      width: WALLET_WIDTH,
-      height: WALLET_HEIGHT,
-    },
-
-    '.layout__content': {
-      ...coreStyles.scrollable(),
-      overflow: 'hidden',
-      flex: 1,
-      py: '$5',
-      px: '$5',
-    },
+  }),
+  wrapper: cssObj({
+    overflow: 'clip',
+    position: 'relative',
+    width: WALLET_WIDTH,
+    height: WALLET_HEIGHT,
+    background:
+      'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',
+  }),
+  inner: coreStyles.fullscreen,
+  content: cssObj({
+    ...coreStyles.scrollable(),
+    padding: '$4',
+    flex: 1,
   }),
 };
 

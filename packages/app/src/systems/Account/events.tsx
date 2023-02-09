@@ -33,19 +33,19 @@ export function accountEvents(store: Store) {
         type: 'LOGOUT',
       });
     },
-    viewAccountsList() {
+    openAccountList() {
       store.send(Services.overlay, {
         type: 'OPEN',
         input: 'accounts.list',
       });
     },
-    viewAccountsAdd() {
+    openAccountsAdd() {
       store.send(Services.overlay, {
         type: 'OPEN',
         input: 'accounts.add',
       });
     },
-    viewAccountsLogout() {
+    openAccountsLogout() {
       store.send(Services.overlay, {
         type: 'OPEN',
         input: 'accounts.logout',

@@ -5,6 +5,7 @@ import { useAccounts } from '../../hooks';
 import { AddAccount, Logout } from '../../pages';
 import { Accounts } from '../../pages/Accounts';
 
+import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { UnlockContent } from '~/systems/Core';
 import { useOverlay } from '~/systems/Overlay';
 
@@ -35,9 +36,9 @@ export function AccountsDialog() {
 
 const styles = {
   content: cssObj({
-    width: '330px',
-    height: '580px',
-    maxWidth: '330px',
+    width: WALLET_WIDTH,
+    height: WALLET_HEIGHT,
+    maxWidth: WALLET_WIDTH,
     maxHeight: 'none',
 
     '.fuel_dialog--heading, .fuel_dialog--footer': {

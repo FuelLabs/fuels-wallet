@@ -12,6 +12,7 @@ import {
 
 import { useUnlockForm } from '../../hooks';
 import type { UnlockFormValues } from '../../hooks';
+import { coreStyles } from '../../styles/core';
 import { UnlockForm } from '../UnlockForm';
 
 export type UnlockDialogProps = {
@@ -100,6 +101,7 @@ export function UnlockDialog(props: UnlockDialogProps) {
 const styles = {
   heading: cssObj({
     display: 'flex',
+
     'button[data-action="closed"]': {
       px: '$1',
       top: '0',
@@ -117,12 +119,7 @@ const styles = {
   button: cssObj({
     width: '100%',
   }),
-  content: cssObj({
-    width: '330px',
-    height: '580px',
-    maxWidth: '330px',
-    maxHeight: 'none',
-  }),
+  content: coreStyles.fullscreen,
   description: cssObj({
     flex: 1,
   }),

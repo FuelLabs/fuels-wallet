@@ -4,6 +4,9 @@ import { mswDecorator, initialize } from 'msw-storybook-addon';
 import { withRouter } from 'storybook-addon-react-router-v6';
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 
+import { StoreProvider } from '../src/store';
+import { WALLET_WIDTH, WALLET_HEIGHT } from '../src/config';
+
 import theme from './theme';
 import { join } from 'path';
 
@@ -39,8 +42,8 @@ export const parameters = {
       chromeExtension: {
         name: 'Chrome Extension',
         styles: {
-          height: '600px',
-          width: '350px',
+          width: WALLET_WIDTH,
+          height: WALLET_HEIGHT,
         },
         type: 'mobile',
       },
@@ -52,9 +55,11 @@ export const decorators = [
   mswDecorator,
   withRouter,
   (Story) => (
-    <ThemeProvider>
-      <Story />
-    </ThemeProvider>
+    <StoreProvider>
+      <ThemeProvider>
+        <Story />
+      </ThemeProvider>
+    </StoreProvider>
   ),
 ];
 

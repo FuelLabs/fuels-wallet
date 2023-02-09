@@ -29,7 +29,7 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
     icon: 'Users',
     label: 'Accounts',
     onPress() {
-      store.viewAccountsList();
+      store.openAccountList();
     },
   },
   {
@@ -69,7 +69,7 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
         icon: 'SignOut',
         label: 'Logout',
         onPress() {
-          store.viewAccountsLogout();
+          store.openAccountsLogout();
         },
       },
     ],
