@@ -272,6 +272,7 @@ export const accountsMachine = createMachine(
   {
     delays: {
       INTERVAL: 2000,
+      TIMEOUT: 5000,
     },
     actions: {
       clearUnlockError: assign({
