@@ -403,6 +403,7 @@ importers:
 
   packages/sdk:
     specifiers:
+      '@fuel-ui/test-utils': ^0.12.2
       '@fuel-wallet/types': workspace:*
       '@types/chrome': ^0.0.212
       '@types/uuid': ^9.0.0
@@ -422,6 +423,7 @@ importers:
       uuid: 9.0.0
       xstate: 4.35.4
     devDependencies:
+      '@fuel-ui/test-utils': 0.12.2
       '@fuel-wallet/types': link:../types
       '@types/uuid': 9.0.0
       fuels: 0.29.1
@@ -3575,6 +3577,46 @@ packages:
       - typescript
       - utf-8-validate
     dev: false
+
+  /@fuel-ui/test-utils/0.12.2:
+    resolution: {integrity: sha512-q/DRuHT+D9p9J0Io36XSv4JudhIG8Ve9wKl//HgvvWuPpPXBRQJ09VxWxGLIdqlfsEj+Y1EnAKKZwZqNY0iaig==}
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      '@testing-library/dom': 8.20.0
+      '@testing-library/jest-dom': 5.16.5
+      '@testing-library/react': 13.4.0_react-dom@18.2.0
+      '@testing-library/react-hooks': 8.0.1_react-dom@18.2.0
+      '@testing-library/user-event': 14.4.3_yxlyej73nftwmh2fiao7paxmlm
+      identity-obj-proxy: 3.0.0
+      jest: 29.4.1
+      jest-axe: 7.0.0
+      jest-environment-jsdom: 29.4.1
+      jest-fail-on-console: 3.0.2
+      jest-matcher-utils: 29.4.1
+      jest-transform-stub: 2.0.0
+      react-dom: 18.2.0
+      resize-observer-polyfill: 1.5.1
+      ts-jest: 29.0.5_jest@29.4.1
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@jest/types'
+      - '@types/node'
+      - '@types/react'
+      - babel-jest
+      - bufferutil
+      - canvas
+      - esbuild
+      - node-notifier
+      - react-test-renderer
+      - supports-color
+      - ts-node
+      - typescript
+      - utf-8-validate
+    dev: true
 
   /@fuel-ui/test-utils/0.12.2_3stiutgnnbnfnf3uowm5cip22i:
     resolution: {integrity: sha512-q/DRuHT+D9p9J0Io36XSv4JudhIG8Ve9wKl//HgvvWuPpPXBRQJ09VxWxGLIdqlfsEj+Y1EnAKKZwZqNY0iaig==}
