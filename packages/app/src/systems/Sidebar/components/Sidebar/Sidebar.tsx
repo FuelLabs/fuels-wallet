@@ -18,12 +18,12 @@ function SidebarContent() {
   });
 
   return (
-    <Stack css={styles.wrapper}>
+    <>
       <Flex css={styles.header}>
         <Stack gap="$2" css={styles.accountSelector}>
           <Avatar.Generated
             size="sm"
-            hash={account!.address as string}
+            hash={account?.address as string}
             background="fuel"
           />
           <IconButton
@@ -49,11 +49,11 @@ function SidebarContent() {
       <Flex css={styles.networkSelector}>
         <NetworkSelector
           onSelectNetwork={handlers.selectNetwork}
-          selected={selectedNetwork!}
+          selected={selectedNetwork}
           networks={networks}
         />
       </Flex>
-    </Stack>
+    </>
   );
 }
 
@@ -61,14 +61,17 @@ export const Sidebar = forwardRef<HTMLDivElement>((_props, ref) => {
   const overlay = useOverlay();
   return (
     <Drawer
-      type="menu"
-      size={220}
-      containerRef={ref as any}
       isDismissable
+      type="menu"
+      size={230}
+      side="right"
+      containerRef={ref as any}
       isOpen={overlay.is('sidebar')}
     >
       <Drawer.Content>
-        <SidebarContent />
+        <Drawer.Body css={styles.wrapper}>
+          <SidebarContent />
+        </Drawer.Body>
       </Drawer.Content>
     </Drawer>
   );
@@ -76,8 +79,9 @@ export const Sidebar = forwardRef<HTMLDivElement>((_props, ref) => {
 
 const styles = {
   wrapper: cssObj({
-    flex: 1,
+    display: 'grid',
     height: '100%',
+    gridTemplateRows: '60px 1fr auto',
   }),
   header: cssObj({
     padding: '$3 $4',
@@ -98,19 +102,6 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     borderTop: '1px dashed $gray4',
-  }),
-  sidebarWrapper: cssObj({
-    overflow: 'hidden',
-    position: 'relative',
-    maxWidth: '350px',
-    flex: 1,
-    maxHeight: '615px',
-    borderRadius: '$md',
-    w: '100%',
-    h: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
   }),
   closeBtn: cssObj({
     position: 'initial',

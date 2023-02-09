@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import type { Icons } from '@fuel-ui/react';
 import { Box, Flex, Icon, Menu as RootMenu } from '@fuel-ui/react';
+import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useNavigate, useResolvedPath, useMatch } from 'react-router-dom';
 
@@ -42,6 +43,8 @@ function commonActions(
   }
 }
 
+const MotionRootMenu = motion(RootMenu);
+
 function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
   const navigate = useNavigate();
   const path = useResolvedPath(item.path as string);
@@ -60,16 +63,23 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
 
   return (
     <Box css={styles.routeContent}>
-      <Flex css={styles.route} data-active={Boolean(match && item.path)}>
+      <Flex
+        css={styles.route}
+        data-active={Boolean(match && item.path)}
+        data-opened={isOpened}
+      >
         <Icon icon={item.icon} className="main-icon" aria-label="Menu Icon" />
         <Box css={{ flex: 1 }}>{item.label}</Box>
         {item.submenu && <Icon icon="CaretDown" aria-label="Caret Icon" />}
       </Flex>
       {isOpened && item.submenu && (
-        <RootMenu
+        <MotionRootMenu
           css={styles.submenu}
           onAction={handleAction}
           aria-label="Submenu"
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -30 }}
         >
           {item.submenu.map((subItem) => (
             <RootMenu.Item key={subItem.key} textValue={subItem.label}>
@@ -77,7 +87,7 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
               {subItem.label}
             </RootMenu.Item>
           ))}
-        </RootMenu>
+        </MotionRootMenu>
       )}
     </Box>
   );
@@ -159,7 +169,12 @@ const styles = {
       my: '2px',
     },
 
-    '.fuel_icon': {
+    '&[data-opened="true"] .fuel_icon--CaretDown': {
+      transform: 'rotate(180deg)',
+    },
+
+    '.fuel_icon, .fuel_icon--CaretDown': {
+      transition: 'transform .3s',
       color: '$gray7',
     },
   }),

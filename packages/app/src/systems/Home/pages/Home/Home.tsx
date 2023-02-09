@@ -10,7 +10,7 @@ import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 export function Home() {
   const { visibility, setVisibility } = useBalanceVisibility();
-  const { isLoading, account, handlers } = useAccounts();
+  const { isLoading, account } = useAccounts();
   const navigate = useNavigate();
 
   function sendAction() {
@@ -31,7 +31,6 @@ export function Home() {
             account={account}
             isLoading={isLoading}
             onChangeVisibility={setVisibility}
-            onPressAccounts={handlers.goToList}
           />
           <HomeActions
             receiveAction={goToReceive}

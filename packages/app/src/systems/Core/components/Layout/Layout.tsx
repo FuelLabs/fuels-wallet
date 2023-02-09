@@ -1,6 +1,6 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
-import { Box, Flex } from '@fuel-ui/react';
+import { Box, BoxCentered } from '@fuel-ui/react';
 import type { FC, ReactNode } from 'react';
 import { forwardRef, useRef, useContext, createContext } from 'react';
 import { Helmet } from 'react-helmet';
@@ -34,20 +34,8 @@ type ContentProps = {
 const Content = forwardRef<HTMLDivElement, ContentProps>(
   ({ as, children, css }, ref) => {
     return (
-      <Box
-        as={as}
-        css={{ ...styles.content, ...css }}
-        className="layout_content"
-      >
-        <Box css={styles.scrollContainer} className="layout_content-scroll">
-          <Box
-            ref={ref}
-            css={styles.insideScrolContent}
-            className="layout_content-inside"
-          >
-            {children}
-          </Box>
-        </Box>
+      <Box as={as} ref={ref} css={css} className="layout__content">
+        {children}
       </Box>
     );
   }
@@ -81,17 +69,21 @@ export const Layout: LayoutComponent = ({
         <Helmet>
           <title>{titleText}</title>
         </Helmet>
-        <Flex as="main" css={styles.root} data-public={isPublic}>
-          {isPublic ? (
+        {isPublic ? (
+          <BoxCentered as="main" css={styles.root} data-public>
             <>{children}</>
-          ) : (
-            <Flex css={styles.wrapper} ref={ref} className="layout_wrapper">
+          </BoxCentered>
+        ) : (
+          <BoxCentered as="main" css={styles.root}>
+            <Box className="layout__wrapper">
               <AccountsDialog />
               <Sidebar ref={ref} />
-              {children}
-            </Flex>
-          )}
-        </Flex>
+              <Box ref={ref} className="layout__inner">
+                {children}
+              </Box>
+            </Box>
+          </BoxCentered>
+        )}
         {import.meta.env.NODE_ENV === 'test' && (
           <Box css={{ visibility: 'hidden' }}>
             {isLoading ? 'is loading' : 'is loaded'}
@@ -108,9 +100,6 @@ Layout.BottomBar = BottomBar;
 
 const styles = {
   root: cssObj({
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
     minH: '100vh',
     width: IS_CRX_POPUP ? WALLET_WIDTH : '100vw',
 
@@ -118,28 +107,30 @@ const styles = {
       background:
         'linear-gradient(197.05deg, #0E221B 0%, #071614 22.2%, #0C0E0D 40.7%);',
     },
-  }),
-  wrapper: cssObj({
-    overflow: 'hidden',
-    position: 'relative',
-    flexDirection: 'column',
 
-    width: WALLET_WIDTH,
-    height: WALLET_HEIGHT,
-    background:
-      'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',
-  }),
-  content: cssObj({
-    flex: 1,
-    overflow: 'hidden',
-  }),
-  insideScrolContent: cssObj({
-    py: '$4',
-    px: '$4',
-  }),
-  scrollContainer: cssObj({
-    ...coreStyles.scrollable(),
-    height: '100%',
+    '.layout__wrapper': {
+      overflow: 'clip',
+      position: 'relative',
+      width: WALLET_WIDTH,
+      height: WALLET_HEIGHT,
+      background:
+        'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',
+    },
+
+    '.layout__inner': {
+      display: 'flex',
+      flexDirection: 'column',
+      width: WALLET_WIDTH,
+      height: WALLET_HEIGHT,
+    },
+
+    '.layout__content': {
+      ...coreStyles.scrollable(),
+      overflow: 'hidden',
+      flex: 1,
+      py: '$5',
+      px: '$5',
+    },
   }),
 };
 

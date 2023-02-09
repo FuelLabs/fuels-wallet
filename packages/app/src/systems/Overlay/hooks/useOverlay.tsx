@@ -7,7 +7,7 @@ import { Services, store } from '~/store';
 
 const selectors = {
   overlay(state: OverlayMachineState) {
-    return state.context.overlay;
+    return state.matches('opened') && state.context.overlay;
   },
 };
 

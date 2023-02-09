@@ -69,11 +69,6 @@ export function useAccounts() {
 
   store.useUpdateMachineConfig(Services.accounts, {
     actions: {
-      redirectToHome() {
-        store.send(Services.overlay, {
-          type: 'CLOSE',
-        });
-      },
       refreshApplication() {
         window.location.reload();
       },
@@ -103,7 +98,7 @@ export function useAccounts() {
       goToAdd: store.viewAccountsAdd,
       goToList: store.viewAccountsList,
       hideAccount: store.hideAccount,
-      logout: store.viewAccountsLogout,
+      logout: store.logout,
       setCurrentAccount: store.setCurrentAccount,
     },
   };

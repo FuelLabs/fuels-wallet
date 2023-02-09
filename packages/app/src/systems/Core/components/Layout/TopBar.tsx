@@ -6,6 +6,7 @@ import {
   IconButton,
   Spinner,
   Text,
+  Stack,
 } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -80,8 +81,9 @@ function InternalTopBar({ onBack }: TopBarProps) {
           </>
         )}
       </Flex>
-      <Flex>
+      <Stack direction="row" gap="$2">
         <IconButton
+          css={{ px: '0 !important' }}
           iconSize={24}
           icon={<Icon icon="Bell" color="gray8" />}
           variant="link"
@@ -98,7 +100,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
             overlay.open('sidebar');
           }}
         />
-      </Flex>
+      </Stack>
     </Flex>
   );
 }

@@ -299,6 +299,9 @@ export const accountsMachine = createMachine(
       notifyUpdateAccounts: () => {
         store.updateAccounts();
       },
+      redirectToHome() {
+        store.closeOverlay();
+      },
     },
     services: {
       unlock: unlockMachine,

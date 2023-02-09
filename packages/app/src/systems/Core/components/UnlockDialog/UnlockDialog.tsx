@@ -99,8 +99,11 @@ export function UnlockDialog(props: UnlockDialogProps) {
 
 const styles = {
   heading: cssObj({
+    display: 'flex',
     'button[data-action="closed"]': {
       px: '$1',
+      top: '0',
+      right: '0',
     },
   }),
   headingIcon: cssObj({

@@ -23,17 +23,22 @@ export const overlayMachine = createMachine(
     },
     predictableActionArguments: true,
     id: '(machine)',
-    initial: 'idle',
+    initial: 'closed',
     states: {
-      idle: {
+      closed: {},
+      opened: {
         on: {
           CLOSE: {
             actions: ['close'],
-          },
-          OPEN: {
-            actions: ['open'],
+            target: 'closed',
           },
         },
+      },
+    },
+    on: {
+      OPEN: {
+        actions: ['open'],
+        target: 'opened',
       },
     },
   },
