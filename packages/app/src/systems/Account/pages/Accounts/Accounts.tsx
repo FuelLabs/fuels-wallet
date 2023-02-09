@@ -3,7 +3,10 @@ import { Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
 import { AccountList } from '../../components';
 import { useAccounts } from '../../hooks';
 
+import { useOverlay } from '~/systems/Overlay';
+
 export const Accounts = () => {
+  const overlay = useOverlay();
   const { accounts, isLoading, handlers } = useAccounts();
   return (
     <>
@@ -14,7 +17,7 @@ export const Accounts = () => {
           variant="link"
           icon={<Icon icon="X" color="gray8" />}
           aria-label="Close unlock window"
-          onPress={handlers.closeModal}
+          onPress={overlay.close}
         />
       </Dialog.Heading>
       <Dialog.Description as="div">

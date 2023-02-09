@@ -5,9 +5,12 @@ import { useAccounts } from '../../hooks';
 import { useAccountForm } from '../../hooks/useAccountForm';
 import type { AccountFormValues } from '../../hooks/useAccountForm';
 
+import { useOverlay } from '~/systems/Overlay';
+
 export const AddAccount = () => {
   const { handlers, accounts, isLoading } = useAccounts();
   const form = useAccountForm({ accounts });
+  const overlay = useOverlay();
 
   function onSubmit(data: AccountFormValues) {
     handlers.addAccount(data.name);
@@ -22,7 +25,7 @@ export const AddAccount = () => {
           variant="link"
           icon={<Icon icon="X" color="gray8" />}
           aria-label="Close unlock window"
-          onPress={handlers.closeModal}
+          onPress={overlay.close}
         />
       </Dialog.Heading>
       <Dialog.Description as="div">

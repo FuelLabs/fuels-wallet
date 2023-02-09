@@ -4,6 +4,7 @@ import { Box, Flex, Icon, Menu as RootMenu } from '@fuel-ui/react';
 import { useState } from 'react';
 import { useNavigate, useResolvedPath, useMatch } from 'react-router-dom';
 
+import { store } from '~/store';
 import { coreStyles } from '~/systems/Core/components/styles';
 
 export type MenuItemObj = {
@@ -26,14 +27,17 @@ function commonActions(
   navigate: ReturnType<typeof useNavigate>
 ) {
   if (item?.onPress) {
+    store.closeOverlay();
     item.onPress();
     return;
   }
   if (item?.path) {
+    store.closeOverlay();
     navigate(item.path);
     return;
   }
   if (item?.ahref) {
+    store.closeOverlay();
     window.open(item.ahref);
   }
 }

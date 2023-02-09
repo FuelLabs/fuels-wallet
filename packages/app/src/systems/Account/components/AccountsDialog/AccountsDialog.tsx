@@ -2,18 +2,19 @@ import { cssObj } from '@fuel-ui/css';
 import { Dialog } from '@fuel-ui/react';
 
 import { useAccounts } from '../../hooks';
-import { AccountScreen } from '../../machines';
 import { AddAccount, Logout } from '../../pages';
 import { Accounts } from '../../pages/Accounts';
 
 import { UnlockContent } from '~/systems/Core';
+import { useOverlay } from '~/systems/Overlay';
 
 export function AccountsDialog() {
+  const overlay = useOverlay();
   const { status, handlers, ...ctx } = useAccounts();
   const isUnlocking = status('unlocking') || status('unlockingLoading');
 
   return (
-    <Dialog isOpen={ctx.isOpened}>
+    <Dialog isOpen={overlay.is((val) => val.includes('accounts'))}>
       <Dialog.Content css={styles.content}>
         {isUnlocking && (
           <UnlockContent
@@ -21,12 +22,12 @@ export function AccountsDialog() {
             unlockError={ctx.unlockError}
             onUnlock={handlers.unlock}
             isLoading={status('unlockingLoading')}
-            onClose={handlers.closeModal}
+            onClose={overlay.close}
           />
         )}
-        {!isUnlocking && ctx.screen === AccountScreen.list && <Accounts />}
-        {!isUnlocking && ctx.screen === AccountScreen.add && <AddAccount />}
-        {!isUnlocking && ctx.screen === AccountScreen.logout && <Logout />}
+        {!isUnlocking && overlay.is('accounts.list') && <Accounts />}
+        {!isUnlocking && overlay.is('accounts.add') && <AddAccount />}
+        {!isUnlocking && overlay.is('accounts.logout') && <Logout />}
       </Dialog.Content>
     </Dialog>
   );

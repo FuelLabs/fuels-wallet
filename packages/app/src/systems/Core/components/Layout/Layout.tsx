@@ -13,6 +13,7 @@ import { TopBar } from './TopBar';
 
 import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { AccountsDialog } from '~/systems/Account';
+import { Sidebar } from '~/systems/Sidebar';
 
 type Context = {
   isLoading?: boolean;
@@ -86,6 +87,7 @@ export const Layout: LayoutComponent = ({
           ) : (
             <Flex css={styles.wrapper} ref={ref} className="layout_wrapper">
               <AccountsDialog />
+              <Sidebar ref={ref} />
               {children}
             </Flex>
           )}

@@ -103,7 +103,7 @@ export class ReactFactory<T extends MachinesObj> {
      */
     return function useUpdateMachineConfig<K extends keyof T>(
       key: K,
-      opts: AddMachineInput<T, K>['getOptions'] = {}
+      opts: Partial<AddMachineInput<T, K>['getOptions']> = {}
     ) {
       const atom = useMemo(() => serviceAtom(key), [key]);
       const [service, updateService] = useAtom(atom);

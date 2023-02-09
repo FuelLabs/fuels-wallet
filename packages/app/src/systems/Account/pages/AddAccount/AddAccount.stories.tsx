@@ -36,7 +36,7 @@ const Template: ComponentStoryFn<typeof AddAccount> = () => {
 export const Usage = Template.bind({});
 Usage.loaders = [
   async () => {
-    store.closeAccountsModal();
+    store.closeOverlay();
     return {};
   },
 ];

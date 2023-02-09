@@ -1,13 +1,11 @@
 import type { Account } from '@fuel-wallet/types';
-import type { StoreClass } from '@fuel-wallet/xstore';
 
-import { AccountScreen } from './machines';
 import type { AccountInputs } from './services';
 
-import type { StoreMachines } from '~/store';
+import type { Store } from '~/store';
 import { Services } from '~/store';
 
-export function accountEvents(store: StoreClass<StoreMachines>) {
+export function accountEvents(store: Store) {
   return {
     updateAccounts() {
       store.send(Services.accounts, { type: 'UPDATE_ACCOUNTS' });
@@ -35,37 +33,22 @@ export function accountEvents(store: StoreClass<StoreMachines>) {
         type: 'LOGOUT',
       });
     },
-  };
-}
-
-export function accountDialogEvents(store: StoreClass<StoreMachines>) {
-  return {
-    openAccountsModal() {
-      store.send(Services.accountsDialog, {
-        type: 'OPEN_MODAL',
-      });
-    },
-    closeAccountsModal() {
-      store.send(Services.accountsDialog, {
-        type: 'CLOSE_MODAL',
-      });
-    },
     viewAccountsList() {
-      store.send(Services.accountsDialog, {
-        type: 'GO_TO',
-        input: AccountScreen.list,
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: 'accounts.list',
       });
     },
     viewAccountsAdd() {
-      store.send(Services.accountsDialog, {
-        type: 'GO_TO',
-        input: AccountScreen.add,
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: 'accounts.add',
       });
     },
     viewAccountsLogout() {
-      store.send(Services.accountsDialog, {
-        type: 'GO_TO',
-        input: AccountScreen.logout,
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: 'accounts.logout',
       });
     },
   };

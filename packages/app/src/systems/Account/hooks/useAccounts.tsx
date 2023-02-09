@@ -2,10 +2,7 @@
 import { bn } from 'fuels';
 import { useEffect, useRef } from 'react';
 
-import type {
-  AccountsDialogMachineState,
-  AccountsMachineState,
-} from '../machines';
+import type { AccountsMachineState } from '../machines';
 
 import { store, Services } from '~/store';
 
@@ -38,12 +35,6 @@ const selectors = {
   account(state: AccountsMachineState) {
     return state.context.account;
   },
-  screen(state: AccountsDialogMachineState) {
-    return state.context.screen;
-  },
-  isOpened(state: AccountsDialogMachineState) {
-    return !state.matches('closed');
-  },
 };
 
 const listenerAccountFetcher = () => {
@@ -57,12 +48,7 @@ export function useAccounts() {
   const hasBalance = store.useSelector(Services.accounts, selectors.hasBalance);
   const accountStatus = store.useSelector(Services.accounts, selectors.status);
   const ctx = store.useSelector(Services.accounts, selectors.context);
-  const screen = store.useSelector(Services.accountsDialog, selectors.screen);
   const account = store.useSelector(Services.accounts, selectors.account);
-  const isOpened = store.useSelector(
-    Services.accountsDialog,
-    selectors.isOpened
-  );
 
   function unlock(password: string) {
     store.send(Services.accounts, {
@@ -84,8 +70,8 @@ export function useAccounts() {
   store.useUpdateMachineConfig(Services.accounts, {
     actions: {
       redirectToHome() {
-        store.send(Services.accountsDialog, {
-          type: 'CLOSE_MODAL',
+        store.send(Services.overlay, {
+          type: 'CLOSE',
         });
       },
       refreshApplication() {
@@ -108,15 +94,12 @@ export function useAccounts() {
     ...ctx,
     account,
     status,
-    screen,
-    isOpened,
     hasBalance,
     isLoading: status('loading'),
     handlers: {
       unlock,
       closeUnlock,
       addAccount: store.addAccount,
-      closeModal: store.closeAccountsModal,
       goToAdd: store.viewAccountsAdd,
       goToList: store.viewAccountsList,
       hideAccount: store.hideAccount,

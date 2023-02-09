@@ -1,13 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cssObj } from '@fuel-ui/css';
 import { Icon, Avatar, Flex, Drawer, IconButton, Stack } from '@fuel-ui/react';
+import { forwardRef } from 'react';
 
 import { Menu, NetworkSelector } from '..';
 import { useAccounts } from '../../../Account';
 import { NetworkScreen, useNetworks } from '../../../Network';
 import { sidebarItems } from '../../constants';
-import { closeDrawer } from '../../utils';
 
-export function Sidebar() {
+import { useOverlay } from '~/systems/Overlay';
+
+function SidebarContent() {
+  const overlay = useOverlay();
   const { handlers: accountHandlers, account } = useAccounts();
   const { networks, selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
@@ -28,17 +32,17 @@ export function Sidebar() {
             color="gray"
             icon={<Icon icon="CaretDown" size={18} />}
             aria-label="Accounts"
-            onClick={() => {
-              accountHandlers.goToList();
-              closeDrawer();
-            }}
+            onClick={accountHandlers.goToList}
           />
         </Stack>
-        <Drawer.CloseButton
+        <IconButton
           autoFocus
           size="sm"
+          icon={Icon.is('X')}
+          variant="link"
           css={styles.closeBtn}
           aria-label="drawer_closeButton"
+          onPress={overlay.close}
         />
       </Flex>
       <Menu items={sidebarItems(selectedNetwork?.url)} />
@@ -52,6 +56,23 @@ export function Sidebar() {
     </Stack>
   );
 }
+
+export const Sidebar = forwardRef<HTMLDivElement>((_props, ref) => {
+  const overlay = useOverlay();
+  return (
+    <Drawer
+      type="menu"
+      size={220}
+      containerRef={ref as any}
+      isDismissable
+      isOpen={overlay.is('sidebar')}
+    >
+      <Drawer.Content>
+        <SidebarContent />
+      </Drawer.Content>
+    </Drawer>
+  );
+});
 
 const styles = {
   wrapper: cssObj({
@@ -95,5 +116,7 @@ const styles = {
     position: 'initial',
     height: '$6',
     padding: '$1',
+    top: '$2',
+    right: '$2',
   }),
 };

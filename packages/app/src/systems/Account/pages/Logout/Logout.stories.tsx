@@ -36,7 +36,7 @@ const Template: ComponentStoryFn<typeof Logout> = () => {
 export const Usage = Template.bind({});
 Usage.loaders = [
   async () => {
-    store.closeAccountsModal();
+    store.closeOverlay();
     await AccountService.clearAccounts();
     await AccountService.addAccount({ data: MOCK_ACCOUNTS[0] });
     return {};
