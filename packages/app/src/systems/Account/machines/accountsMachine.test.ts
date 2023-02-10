@@ -1,4 +1,3 @@
-import Dexie from 'dexie';
 import { bn } from 'fuels';
 import { interpret } from 'xstate';
 
@@ -8,7 +7,7 @@ import { AccountService } from '../services';
 import type { AccountsMachineService, MachineEvents } from './accountsMachine';
 import { accountsMachine } from './accountsMachine';
 
-import { Storage } from '~/systems/Core';
+import { db, Storage } from '~/systems/Core';
 import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 const MOCK_ACCOUNT = {
@@ -154,7 +153,7 @@ describe('accountsMachine', () => {
 
     it('logout should clean indexdb and localstorage', async () => {
       await createMockAccount();
-      const DexieDeleteMock = jest.spyOn(Dexie, 'delete').mockImplementation();
+      const DatabaseMock = jest.spyOn(db, 'clear').mockImplementation();
       const StorageClearMock = jest
         .spyOn(Storage, 'clear')
         .mockImplementation();
@@ -163,7 +162,7 @@ describe('accountsMachine', () => {
       service.send('LOGOUT');
       await expectStateMatch(service, 'idle');
 
-      expect(DexieDeleteMock).toBeCalledTimes(1);
+      expect(DatabaseMock).toBeCalledTimes(1);
       expect(StorageClearMock).toBeCalledTimes(1);
     });
   });
