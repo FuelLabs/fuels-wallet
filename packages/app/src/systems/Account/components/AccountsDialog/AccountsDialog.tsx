@@ -12,7 +12,8 @@ import { useOverlay } from '~/systems/Overlay';
 export function AccountsDialog() {
   const overlay = useOverlay();
   const { status, handlers, ...ctx } = useAccounts();
-  const isUnlocking = status('unlocking') || status('unlockingLoading');
+  const isUnlockingLoading = status('unlockingLoading');
+  const isUnlocking = status('unlocking') || isUnlockingLoading;
 
   return (
     <Dialog isOpen={overlay.is((val) => val.includes('accounts'))}>
@@ -22,7 +23,7 @@ export function AccountsDialog() {
             unlockText="Add Account"
             unlockError={ctx.unlockError}
             onUnlock={handlers.unlock}
-            isLoading={status('unlockingLoading')}
+            isLoading={isUnlockingLoading}
             onClose={handlers.closeDialog}
           />
         )}

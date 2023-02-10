@@ -6,8 +6,13 @@ import { useAccountForm } from '../../hooks/useAccountForm';
 import type { AccountFormValues } from '../../hooks/useAccountForm';
 
 export const AddAccount = () => {
-  const { handlers, accounts, isLoading } = useAccounts();
-  const form = useAccountForm({ accounts });
+  const { handlers, isLoading, status, ...ctx } = useAccounts();
+  const form = useAccountForm({
+    accounts: ctx.accounts,
+    defaultValues: {
+      name: ctx.accountName || '',
+    },
+  });
 
   function onSubmit(data: AccountFormValues) {
     handlers.addAccount(data.name);
@@ -26,7 +31,7 @@ export const AddAccount = () => {
         />
       </Dialog.Heading>
       <Dialog.Description as="div">
-        <AccountForm form={form} />
+        <AccountForm form={form} isLoading={status('loading')} />
       </Dialog.Description>
       <Dialog.Footer>
         <Button color="gray" variant="ghost" onPress={handlers.goToList}>

@@ -23,11 +23,11 @@ const selectors = {
     return state.children.unlock?.state.matches('unlockingVault');
   },
   status(state: AccountsMachineState) {
-    if (state.hasTag('loading')) return AccountStatus.loading;
-    if (state.matches('unlocking')) return AccountStatus.unlocking;
     if (selectors.isUnlockingLoading(state)) {
       return AccountStatus.unlockingLoading;
     }
+    if (state.hasTag('loading')) return AccountStatus.loading;
+    if (state.matches('unlocking')) return AccountStatus.unlocking;
     return AccountStatus.idle;
   },
   context(state: AccountsMachineState) {
