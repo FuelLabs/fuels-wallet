@@ -3,7 +3,6 @@ import type { WalletUnlocked } from '@fuel-ts/wallet';
 import { WalletLocked } from '@fuel-ts/wallet';
 import type { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account } from '@fuel-wallet/types';
-import Dexie from 'dexie';
 import { Address, bn, Provider } from 'fuels';
 
 import { unlockManager } from '../utils/manager';
@@ -295,10 +294,8 @@ export class AccountService {
   }
 
   static async logout() {
-    await db.close();
-    await Dexie.delete('FuelDB');
+    await db.clear();
     await Storage.clear();
-    await db.open();
   }
 }
 
