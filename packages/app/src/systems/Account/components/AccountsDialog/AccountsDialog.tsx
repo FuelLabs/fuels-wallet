@@ -23,7 +23,7 @@ export function AccountsDialog() {
             unlockError={ctx.unlockError}
             onUnlock={handlers.unlock}
             isLoading={status('unlockingLoading')}
-            onClose={overlay.close}
+            onClose={handlers.closeDialog}
           />
         )}
         {!isUnlocking && overlay.is('accounts.list') && <Accounts />}

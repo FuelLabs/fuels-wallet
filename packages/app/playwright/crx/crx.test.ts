@@ -23,7 +23,7 @@ import {
 
 const WALLET_PASSWORD = 'Qwe123456$';
 
-test.describe('FuelWallet Extension', () => {
+test.describe.only('FuelWallet Extension', () => {
   test('On install sign-up page is open', async ({ context }) => {
     // In development mode files are render dynamically
     // making this first page to throw a error File not found.

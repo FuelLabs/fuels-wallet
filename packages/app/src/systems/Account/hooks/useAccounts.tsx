@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react';
 import type { AccountsMachineState } from '../machines';
 
 import { store, Services } from '~/store';
+import { useOverlay } from '~/systems/Overlay';
 
 enum AccountStatus {
   idle = 'idle',
@@ -49,6 +50,7 @@ export function useAccounts() {
   const accountStatus = store.useSelector(Services.accounts, selectors.status);
   const ctx = store.useSelector(Services.accounts, selectors.context);
   const account = store.useSelector(Services.accounts, selectors.account);
+  const overlay = useOverlay();
 
   function unlock(password: string) {
     store.send(Services.accounts, {
@@ -61,6 +63,13 @@ export function useAccounts() {
     store.send(Services.accounts, {
       type: 'CLOSE_UNLOCK',
     });
+  }
+
+  function closeDialog() {
+    overlay.close();
+    if (status('unlocking')) {
+      closeUnlock();
+    }
   }
 
   function status(status: keyof typeof AccountStatus) {
@@ -94,6 +103,7 @@ export function useAccounts() {
     handlers: {
       unlock,
       closeUnlock,
+      closeDialog,
       addAccount: store.addAccount,
       goToAdd: store.openAccountsAdd,
       goToList: store.openAccountList,
