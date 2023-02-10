@@ -23,11 +23,11 @@
   "scripts": {
     "build": "pnpm ts:check && tsup --dts",
     "ts:check": "tsc --noEmit",
-    "test": "jest -c jest.config.js --passWithNoTests",
+    "test": "jest --verbose",
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
-    "@types/chrome": "^0.0.210",
+    "@types/chrome": "^0.0.212",
     "dexie-observable": "4.0.1-beta.13",
     "events": "^3.3.0",
     "json-rpc-2.0": "^1.4.2",

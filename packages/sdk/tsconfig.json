@@ -5,6 +5,6 @@
     "baseUrl": ".",
     "rootDir": "."
   },
-  "include": ["**/*.ts", "jest.config.js"],
+  "include": ["**/*.ts"],
   "exclude": ["**/*.test.ts"]
 }

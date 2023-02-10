@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "dependencies": {
-    "@types/chrome": "^0.0.210",
+    "@types/chrome": "^0.0.212",
     "dexie-observable": "4.0.1-beta.13",
     "json-rpc-2.0": "^1.4.2"
   },

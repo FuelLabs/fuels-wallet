@@ -83,6 +83,8 @@ export const AccountItem: AccountItemComponent = ({
 
 const styles = {
   root: cssObj({
+    background: '$whiteA2',
+
     '&[aria-disabled="true"]': {
       opacity: 0.5,
       cursor: 'default',

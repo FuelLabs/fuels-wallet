@@ -1,4 +1,4 @@
-import { css } from '@fuel-ui/css';
+import { cssObj } from '@fuel-ui/css';
 import {
   FuelLogo,
   Flex,
@@ -6,7 +6,7 @@ import {
   IconButton,
   Spinner,
   Text,
-  Drawer,
+  Stack,
 } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +20,7 @@ import { useLayoutContext } from './Layout';
 import { NetworkDropdown } from '~/systems/Network/components/NetworkDropdown';
 import { useNetworks } from '~/systems/Network/hooks';
 import { NetworkScreen } from '~/systems/Network/machines';
-import { Sidebar } from '~/systems/Sidebar';
+import { useOverlay } from '~/systems/Overlay';
 
 export enum TopBarType {
   internal,
@@ -39,7 +39,8 @@ type TopBarProps = {
 
 function InternalTopBar({ onBack }: TopBarProps) {
   const navigate = useNavigate();
-  const { isLoading, title, isHome, ref } = useLayoutContext();
+  const overlay = useOverlay();
+  const { isLoading, title, isHome } = useLayoutContext();
   const { selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
@@ -49,8 +50,8 @@ function InternalTopBar({ onBack }: TopBarProps) {
   };
 
   return (
-    <Flex as="nav" className={style({ isHome })}>
-      <Flex css={{ alignItems: 'center', gap: '$2', flex: 1 }}>
+    <Flex as="nav" css={styles.root}>
+      <Flex css={{ gap: '$2', alignItems: 'center', flex: 1 }}>
         {!isHome ? (
           <>
             <IconButton
@@ -80,29 +81,26 @@ function InternalTopBar({ onBack }: TopBarProps) {
           </>
         )}
       </Flex>
-      <Flex>
+      <Stack direction="row" gap="$2">
         <IconButton
+          css={{ px: '0 !important' }}
           iconSize={24}
           icon={<Icon icon="Bell" color="gray8" />}
           variant="link"
           aria-label="activity"
           onPress={goToActivityPage}
         />
-        <Drawer type="menu" size={220} containerRef={ref} isDismissable={true}>
-          <Drawer.Trigger>
-            <IconButton
-              iconSize={24}
-              icon={<Icon icon="List" color="gray8" />}
-              aria-label="Menu"
-              variant="link"
-              css={{ px: '0 !important' }}
-            />
-          </Drawer.Trigger>
-          <Drawer.Content>
-            <Sidebar />
-          </Drawer.Content>
-        </Drawer>
-      </Flex>
+        <IconButton
+          iconSize={24}
+          icon={<Icon icon="List" color="gray8" />}
+          aria-label="Menu"
+          variant="link"
+          css={{ px: '0 !important' }}
+          onPress={() => {
+            overlay.open('sidebar');
+          }}
+        />
+      </Stack>
     </Flex>
   );
 }
@@ -112,13 +110,13 @@ function InternalTopBar({ onBack }: TopBarProps) {
 // ----------------------------------------------------------------------------
 
 function ExternalTopBar() {
-  const { isLoading, title } = useLayoutContext();
+  const { isLoading, title, isHome } = useLayoutContext();
   const { selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
 
   return (
-    <Flex as="nav" className={style()}>
+    <Flex as="nav" css={styles.root} data-home={isHome}>
       <Flex css={{ alignItems: 'center', gap: '$5', flex: 1, pl: '$2' }}>
         {isLoading && <Spinner aria-label="Spinner" />}
         {!isLoading && (
@@ -154,26 +152,21 @@ export function TopBar({ type = TopBarType.internal, ...props }: TopBarProps) {
 // Styles
 // ----------------------------------------------------------------------------
 
-const style = css({
-  alignItems: 'center',
-  py: '$2',
-  px: '$4',
-  gap: '$3',
-  minHeight: '50px',
-  boxShadow: '$sm',
-  background:
-    'linear-gradient(268.61deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.02) 87.23%)',
+const styles = {
+  root: cssObj({
+    py: '$2',
+    px: '$4',
+    gap: '$3',
+    alignItems: 'center',
+    minHeight: '50px',
+    boxShadow: '$sm',
+    transition: 'none',
+    background:
+      'linear-gradient(268.61deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.02) 87.23%)',
 
-  variants: {
-    isHome: {
-      true: {
-        boxShadow: '$none',
-        background: 'transparent',
-      },
+    '&[data-home="true"]': {
+      boxShadow: '$none',
+      background: 'transparent',
     },
-  },
-
-  defaultVariants: {
-    isHome: false,
-  },
-});
+  }),
+};
