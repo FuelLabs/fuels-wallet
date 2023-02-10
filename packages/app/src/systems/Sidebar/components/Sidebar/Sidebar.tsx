@@ -66,6 +66,7 @@ export const Sidebar = forwardRef<HTMLDivElement>((_props, ref) => {
       size={230}
       side="right"
       containerRef={ref as any}
+      onClose={overlay.close}
       isOpen={overlay.is('sidebar')}
     >
       <Drawer.Content>
