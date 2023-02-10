@@ -8,6 +8,7 @@ import { coreStyles } from '~/systems/Core/styles';
 
 export const Accounts = () => {
   const { accounts, isLoading, handlers } = useAccounts();
+
   return (
     <>
       <Dialog.Heading>

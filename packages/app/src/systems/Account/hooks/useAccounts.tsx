@@ -19,6 +19,9 @@ const selectors = {
     const acc = state.context?.account;
     return bn(acc?.balance ?? 0).gt(0);
   },
+  accounts(state: AccountsMachineState) {
+    return state.context?.accounts;
+  },
   isUnlockingLoading: (state: AccountsMachineState) => {
     return state.children.unlock?.state.matches('unlockingVault');
   },
@@ -49,6 +52,7 @@ export function useAccounts() {
   const hasBalance = store.useSelector(Services.accounts, selectors.hasBalance);
   const accountStatus = store.useSelector(Services.accounts, selectors.status);
   const ctx = store.useSelector(Services.accounts, selectors.context);
+  const accounts = store.useSelector(Services.accounts, selectors.accounts);
   const account = store.useSelector(Services.accounts, selectors.account);
   const overlay = useOverlay();
 
@@ -96,6 +100,7 @@ export function useAccounts() {
 
   return {
     ...ctx,
+    accounts,
     account,
     status,
     hasBalance,

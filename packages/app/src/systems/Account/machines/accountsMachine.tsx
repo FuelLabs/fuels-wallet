@@ -107,10 +107,16 @@ export const accountsMachine = createMachine(
             actions: ['assignAccountName'],
             target: 'unlocking',
           },
+          UPDATE_ACCOUNTS: {
+            target: 'fetchingAccounts',
+          },
+          UPDATE_ACCOUNT: {
+            target: 'updateAccount',
+          },
         },
         after: {
           /**
-           * Update accounts every 5 minutes
+           * Update accounts every 5 seconds
            */
           TIMEOUT: {
             target: 'updateAccount',
@@ -261,12 +267,6 @@ export const accountsMachine = createMachine(
       LOGOUT: {
         target: 'loggingout',
       },
-      UPDATE_ACCOUNTS: {
-        target: 'fetchingAccounts',
-      },
-      UPDATE_ACCOUNT: {
-        target: 'updateAccount',
-      },
     },
   },
   {
@@ -393,10 +393,10 @@ export const accountsMachine = createMachine(
         return !!Storage.getItem(IS_LOGGED_KEY);
       },
       hasAccount: (ctx, ev) => {
-        return Boolean(ctx?.account || ev?.data);
+        return Boolean(ev?.data || ctx?.account);
       },
       hasAccounts: (ctx, ev) => {
-        return Boolean((ctx?.accounts || ev.data || []).length);
+        return Boolean((ev.data || ctx?.accounts || []).length);
       },
     },
   }
