@@ -28,7 +28,6 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@fuel-ts/keystore": "^0.29.1",
     "@fuel-wallet/storage": "^0.0.1",
     "@xstate/inspect": "^0.7.1",
     "@xstate/react": "^3.1.1",

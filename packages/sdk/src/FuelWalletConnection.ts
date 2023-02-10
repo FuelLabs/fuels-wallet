@@ -10,6 +10,7 @@ import type {
   FuelEvents,
 } from '@fuel-wallet/types';
 import type { TransactionRequestLike } from 'fuels';
+import { transactionRequestify } from 'fuels';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 
 import { WindowConnection } from './connections/WindowConnection';
@@ -79,14 +80,16 @@ export class FuelWalletConnection extends WindowConnection {
     if (!transaction) {
       throw new Error('Transaction is required');
     }
+    // Transform transaction object to a transaction request
+    const txRequest = transactionRequestify(transaction);
 
     const address =
-      signer || transaction.signer || getTransactionSigner(transaction);
+      signer || transaction.signer || getTransactionSigner(txRequest);
 
     return this.client.request('sendTransaction', {
       address,
       provider: providerConfig,
-      transaction: JSON.stringify(transaction),
+      transaction: JSON.stringify(txRequest),
     });
   }
 
