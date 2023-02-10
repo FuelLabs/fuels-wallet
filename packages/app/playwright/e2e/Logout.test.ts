@@ -29,8 +29,7 @@ test.describe('Logout', () => {
     await getByAriaLabel(page, 'Menu').click();
     await page.locator(`[data-key="settings"]`).click();
     await page.locator(`[data-key="logout"]`).click();
-    await hasText(page, 'Logout');
-    await getButtonByText(page, 'Logout').click();
+    await getButtonByText(page, /Logout/).click();
     await hasText(page, 'Create a new Fuel Wallet');
   });
 });
