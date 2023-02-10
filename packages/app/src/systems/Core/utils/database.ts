@@ -22,6 +22,16 @@ export class FuelDB extends Dexie {
       transactions: `&id`,
     });
   }
+
+  clear() {
+    return Promise.all([
+      this.vaults.clear(),
+      this.accounts.clear(),
+      this.transactions.clear(),
+      this.connections.clear(),
+      this.networks.clear(),
+    ]);
+  }
 }
 
 export const db = new FuelDB();

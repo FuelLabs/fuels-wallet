@@ -172,7 +172,7 @@ export class BackgroundService {
         Pages.requestConnection(),
         this.communicationProtocol
       );
-      authorizedApp = await popupService.requestConnection(origin);
+      authorizedApp = await popupService.requestConnection({ origin });
     }
 
     if (authorizedApp) {
@@ -229,9 +229,18 @@ export class BackgroundService {
     input: Exclude<MessageInputs['sendTransaction'], 'origin'>,
     serverParams: EventOrigin
   ) {
-    const origin = serverParams.origin;
-
     await this.requireAccountConnecton(serverParams.connection, input.address);
+    const origin = serverParams.origin;
+    const selectedNetwork = await NetworkService.getSelectedNetwork();
+
+    if (selectedNetwork?.url !== input.provider.url) {
+      throw new Error(
+        [
+          `${input.provider.url} is different from the user current network!`,
+          'Request the user to add the new network. fuel.addNetwork([...]).',
+        ].join('\n')
+      );
+    }
 
     const popupService = await PopUpService.open(
       origin,

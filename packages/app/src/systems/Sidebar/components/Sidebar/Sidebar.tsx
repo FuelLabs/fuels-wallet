@@ -31,7 +31,7 @@ export function Sidebar() {
       >
         <Flex css={styles.accountDropdownWrapper}>
           <Box css={styles.avatarWrapper}>
-            <Avatar.Generated size={'sm'} hash={account!.address as string} />
+            <Avatar.Generated size={'sm'} hash={account?.address as string} />
           </Box>
           <IconButton
             size="xs"

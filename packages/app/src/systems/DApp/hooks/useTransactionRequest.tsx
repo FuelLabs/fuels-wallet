@@ -73,19 +73,11 @@ export type UseTransactionRequestReturn = ReturnType<
 
 export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const service = useInterpret(() =>
-    transactionMachine
-      .withConfig({
-        actions: {
-          closeWindow: () => {
-            window.close();
-          },
-        },
-      })
-      .withContext({
-        input: {
-          isOriginRequired: opts.isOriginRequired,
-        },
-      })
+    transactionMachine.withContext({
+      input: {
+        isOriginRequired: opts.isOriginRequired,
+      },
+    })
   );
 
   const isLoadingAccounts = useSelector(service, selectors.isLoadingAccounts);

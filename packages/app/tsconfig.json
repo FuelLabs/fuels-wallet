@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "keyofStringsOnly": true,
     "allowJs": true,
     "outDir": "./dist",
     "baseUrl": ".",

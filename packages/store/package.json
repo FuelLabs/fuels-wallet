@@ -23,15 +23,28 @@
   "scripts": {
     "build": "pnpm ts:check && tsup --dts",
     "ts:check": "pnpm xstate:typegen && tsc --noEmit",
-    "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
+    "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'",
+    "test": "jest --verbose",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@fuel-ts/keystore": "^0.29.1",
+    "@fuel-wallet/storage": "^0.0.1",
+    "@xstate/inspect": "^0.7.1",
     "@xstate/react": "^3.1.1",
+    "fast-equals": "^4.0.3",
+    "jotai": "^2.0.0",
+    "pnpm": "^7.26.3",
     "react": "^18.2.0",
+    "uuid": "^9.0.0",
     "xstate": "^4.35.4"
   },
   "devDependencies": {
+    "@fuel-ui/test-utils": "^0.12.2",
+    "@fuel-wallet/config": "workspace:*",
     "@types/react": "^18.0.27",
+    "@types/uuid": "^9.0.0",
+    "jest-localstorage-mock": "^2.4.26",
     "tsup": "^6.5.0"
   }
 }

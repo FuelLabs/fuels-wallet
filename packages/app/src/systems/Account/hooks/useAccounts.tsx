@@ -87,7 +87,7 @@ export function useAccounts() {
     });
   }
 
-  store.useSetMachineConfig(Services.accounts, {
+  store.useUpdateMachineConfig(Services.accounts, {
     actions: {
       redirectToHome() {
         navigate(Pages.wallet());

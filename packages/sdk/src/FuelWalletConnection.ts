@@ -1,13 +1,13 @@
-import type {
-  CommunicationMessage,
-  FuelEventArg,
-  FuelEvents,
-  FuelProviderConfig,
-} from '@fuel-wallet/types';
 import {
   CONTENT_SCRIPT_NAME,
   PAGE_SCRIPT_NAME,
   MessageTypes,
+} from '@fuel-wallet/types';
+import type {
+  CommunicationMessage,
+  FuelEventArg,
+  FuelProviderConfig,
+  FuelEvents,
 } from '@fuel-wallet/types';
 import type { TransactionRequestLike } from 'fuels';
 import type { JSONRPCRequest } from 'json-rpc-2.0';

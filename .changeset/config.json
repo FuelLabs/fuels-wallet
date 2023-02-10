@@ -13,9 +13,10 @@
   "ignore": [
     "app",
     "docs",
-    "@fuel-wallet/config",
     "fuelhat",
-    "@fuel-wallet/xstore"
+    "@fuel-wallet/config",
+    "@fuel-wallet/xstore",
+    "@fuel-wallet/storage"
   ],
   "snapshot": {
     "useCalculatedVersion": true,
