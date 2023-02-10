@@ -6,18 +6,18 @@ import { AssetItem } from './AssetItem';
 
 describe('AssetItem', () => {
   it('a11y', async () => {
-    await testA11y(<AssetItem asset={MOCK_ASSETS[0]} />);
+    await testA11y(<AssetItem coin={MOCK_ASSETS[0]} />);
   });
   it('should show asset name', () => {
-    render(<AssetItem asset={MOCK_ASSETS[0]} />);
+    render(<AssetItem coin={MOCK_ASSETS[0]} />);
     expect(screen.getByText('Ethereum')).toBeInTheDocument();
   });
   it('should show asset symbol', () => {
-    render(<AssetItem asset={MOCK_ASSETS[0]} />);
+    render(<AssetItem coin={MOCK_ASSETS[0]} />);
     expect(screen.getByText('ETH')).toBeInTheDocument();
   });
   it('should show asset amount formatted', () => {
-    render(<AssetItem asset={MOCK_ASSETS[0]} />);
+    render(<AssetItem coin={MOCK_ASSETS[0]} />);
     expect(screen.getByText('14.563 ETH')).toBeInTheDocument();
   });
 });

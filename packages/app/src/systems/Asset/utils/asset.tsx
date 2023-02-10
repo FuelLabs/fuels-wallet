@@ -4,8 +4,9 @@ import { NativeAssetId, hexlify } from 'fuels';
 
 import { ASSET_MAP } from './constants';
 
+// TODO: remove this completely, should use useAssets now
 export function getAssetInfoById<T>(id: BytesLike, rest: T): AssetAmount {
-  return { ...ASSET_MAP[id.toString()], ...rest };
+  return { ...(ASSET_MAP[id.toString()] || {}), ...rest };
 }
 
 type CoinLike = {

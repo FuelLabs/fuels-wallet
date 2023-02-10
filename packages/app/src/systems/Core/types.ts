@@ -37,6 +37,9 @@ export const Pages = {
   accounts: route('/accounts'),
   accountAdd: route('/accounts/add'),
   logout: route('/accounts/logout'),
+  assets: route('/assets'),
+  assetsEdit: route<'id'>('/assets/edit/:id'),
+  assetsAdd: route('/assets/add'),
 };
 
 export type AmountMap = Record<string, Maybe<BN>>;

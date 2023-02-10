@@ -136,6 +136,7 @@ importers:
       '@vitejs/plugin-react': ^3.0.1
       '@xstate/inspect': ^0.7.1
       '@xstate/react': ^3.1.1
+      assets-listed: workspace:*
       cross-fetch: ^3.1.5
       dayjs: ^1.11.7
       dexie: ^3.2.3
@@ -191,6 +192,7 @@ importers:
       '@react-aria/utils': 3.14.2_react@18.2.0
       '@storybook/jest': 0.0.10_biqbaboplfbrettd7655fr4n2y
       '@xstate/react': 3.1.1_7p5wdez77vm2n5hldoeso3aqoi
+      assets-listed: link:../assets-listed
       cross-fetch: 3.1.5
       dayjs: 1.11.7
       dexie: 3.2.3
@@ -270,6 +272,9 @@ importers:
       vite-plugin-zip-pack: 1.0.5_vite@4.0.4
       vite-tsconfig-paths: 4.0.5_typescript@4.9.5
       webpack: 5.75.0
+
+  packages/assets-listed:
+    specifiers: {}
 
   packages/config:
     specifiers:

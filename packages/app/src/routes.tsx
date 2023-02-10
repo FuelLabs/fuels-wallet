@@ -8,6 +8,7 @@ import { settingsRoutes } from './systems/Settings';
 import { transactionRoutes } from './systems/Transaction/routes';
 
 import { accountRoutes } from '~/systems/Account/routes';
+import { assetRoutes } from '~/systems/Asset';
 import { PrivateRoute, PublicRoute } from '~/systems/Core';
 import { Pages } from '~/systems/Core/types';
 import { homeRoutes } from '~/systems/Home';
@@ -24,8 +25,11 @@ const walletRoutes = (
     {sendRoutes}
     {accountRoutes}
     {transactionRoutes}
+    {assetRoutes}
   </>
 );
+
+const initialPage = Pages.wallet();
 
 export const webAppRoutes = (
   <Routes>
@@ -38,7 +42,7 @@ export const webAppRoutes = (
         />
         {walletRoutes}
       </Route>
-      <Route path="*" element={<Navigate to={Pages.wallet()} />} />
+      <Route path="*" element={<Navigate to={initialPage} />} />
     </Route>
   </Routes>
 );
@@ -47,7 +51,7 @@ export const crxPopupRoutes = (
   <Routes>
     <Route element={<CRXPrivateRoute />}>
       {walletRoutes}
-      <Route path="*" element={<Navigate to={Pages.wallet()} />} />
+      <Route path="*" element={<Navigate to={initialPage} />} />
     </Route>
   </Routes>
 );

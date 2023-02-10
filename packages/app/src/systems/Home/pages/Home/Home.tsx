@@ -43,11 +43,7 @@ export function Home() {
             isDisabled={isLoading}
           />
           <AssetsTitle />
-          <AssetList
-            assets={account?.balances}
-            isLoading={isLoading}
-            isDevnet
-          />
+          <AssetList coins={account?.balances} isLoading={isLoading} isDevnet />
         </Flex>
       </Layout.Content>
     </Layout>

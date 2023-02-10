@@ -12,7 +12,7 @@ export default {
 
 export const Usage = (args: AssetListProps) => (
   <Box css={{ width: 300 }}>
-    <AssetList {...args} assets={MOCK_ASSETS} />
+    <AssetList {...args} coins={MOCK_ASSETS} />
   </Box>
 );
 

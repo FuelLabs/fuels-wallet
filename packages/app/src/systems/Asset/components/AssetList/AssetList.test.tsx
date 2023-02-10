@@ -8,11 +8,11 @@ import { TestWrapper } from '~/systems/Core';
 
 describe('AssetList', () => {
   it('a11y', async () => {
-    await testA11y(<AssetList assets={MOCK_ASSETS} />);
+    await testA11y(<AssetList coins={MOCK_ASSETS} />);
   });
 
   it('should show tree assets', () => {
-    render(<AssetList assets={MOCK_ASSETS} />);
+    render(<AssetList coins={MOCK_ASSETS} />);
     expect(screen.getByText('Ethereum')).toBeInTheDocument();
     expect(screen.getByText('Dai')).toBeInTheDocument();
     expect(screen.getByText('Bitcoin')).toBeInTheDocument();

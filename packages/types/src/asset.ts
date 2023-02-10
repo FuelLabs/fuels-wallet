@@ -5,6 +5,7 @@ export type Asset = {
   assetId: string;
   imageUrl: string;
   symbol: string;
+  isCustom?: boolean;
 };
 
 export type AssetAmount = Asset & {
