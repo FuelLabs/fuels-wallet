@@ -4,7 +4,7 @@ import { Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
 import { AccountList } from '../../components';
 import { useAccounts } from '../../hooks';
 
-import { coreStyles } from '~/systems/Core';
+import { coreStyles } from '~/systems/Core/styles';
 
 export const Accounts = () => {
   const { accounts, isLoading, handlers } = useAccounts();
