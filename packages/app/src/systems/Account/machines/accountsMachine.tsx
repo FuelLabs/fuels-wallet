@@ -1,17 +1,11 @@
 import type { Account } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-import { send } from 'xstate/lib/actions';
 
 import type { AccountInputs } from '../services/account';
 import { AccountService } from '../services/account';
 
-import { unlockMachine } from './unlockMachine';
-import type {
-  UnlockMachine,
-  UnlockVaultReturn,
-  UnlockVaultEvent,
-} from './unlockMachine';
+import type { UnlockMachine, UnlockVaultReturn } from './unlockMachine';
 
 import { IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
@@ -23,7 +17,6 @@ type MachineContext = {
   accounts?: Account[];
   accountName?: string;
   account?: Maybe<Account>;
-  unlockError?: string;
   error?: unknown;
 };
 
@@ -54,8 +47,6 @@ export type MachineEvents =
       type: 'ADD_ACCOUNT';
       input: string;
     }
-  | { type: 'UNLOCK_VAULT'; input: AccountInputs['unlockVault'] }
-  | { type: 'CLOSE_UNLOCK'; input?: void }
   | { type: 'LOGOUT'; input?: void };
 
 const fetchAccount = {
@@ -105,7 +96,7 @@ export const accountsMachine = createMachine(
           },
           ADD_ACCOUNT: {
             actions: ['assignAccountName'],
-            target: 'unlocking',
+            target: 'addingAccount',
           },
           UPDATE_ACCOUNTS: {
             target: 'fetchingAccounts',
@@ -201,35 +192,6 @@ export const accountsMachine = createMachine(
           ],
         },
       },
-      unlocking: {
-        invoke: {
-          id: 'unlock',
-          src: 'unlock',
-          onDone: [
-            {
-              actions: ['clearUnlockError'],
-              target: 'addingAccount',
-            },
-          ],
-        },
-        on: {
-          UNLOCK_VAULT: {
-            // send to the child machine
-            actions: [
-              send<MachineContext, UnlockVaultEvent>(
-                (_, ev) => ({
-                  type: 'UNLOCK_VAULT',
-                  input: ev.input,
-                }),
-                { to: 'unlock' }
-              ),
-            ],
-          },
-          CLOSE_UNLOCK: {
-            target: 'fetchingAccount',
-          },
-        },
-      },
       loggingout: {
         tags: ['loading'],
         invoke: {
@@ -248,12 +210,6 @@ export const accountsMachine = createMachine(
         },
       },
       failed: {
-        on: {
-          ADD_ACCOUNT: {
-            actions: ['assignAccountName'],
-            target: 'unlocking',
-          },
-        },
         after: {
           INTERVAL: {
             target: 'fetchingAccounts', // retry
@@ -274,9 +230,6 @@ export const accountsMachine = createMachine(
       TIMEOUT: 5000,
     },
     actions: {
-      clearUnlockError: assign({
-        unlockError: (_) => undefined,
-      }),
       assignAccounts: assign({
         accounts: (_, ev) => ev.data,
       }),
@@ -320,7 +273,6 @@ export const accountsMachine = createMachine(
       },
     },
     services: {
-      unlock: unlockMachine,
       fetchAccounts: FetchMachine.create<never, Account[]>({
         showError: true,
         async fetch() {
@@ -365,9 +317,6 @@ export const accountsMachine = createMachine(
         async fetch({ input }) {
           if (!input?.data.name.trim()) {
             throw new Error('Name cannot be empty');
-          }
-          if (!input?.data.manager) {
-            throw new Error('Manager is not unlocked');
           }
           let account = await AccountService.addNewAccount(input);
           if (!account) {

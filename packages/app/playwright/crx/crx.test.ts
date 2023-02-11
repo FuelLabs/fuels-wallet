@@ -7,9 +7,9 @@ import {
   seedWallet,
   getButtonByText,
   getByAriaLabel,
-  getInputByName,
   hasText,
   waitAriaLabel,
+  reload,
 } from '../commons';
 import { CUSTOM_ASSET } from '../mocks';
 
@@ -112,6 +112,7 @@ test.describe('FuelWallet Extension', () => {
     await test.step('Create wallet', async () => {
       const pages = await context.pages();
       const [page] = pages.filter((page) => page.url().includes('sign-up'));
+      await reload(page);
       await getButtonByText(page, /Create a Wallet/i).click();
 
       /** Copy Mnemonic */
@@ -158,8 +159,6 @@ test.describe('FuelWallet Extension', () => {
         await getByAriaLabel(popupPage, 'Add account').click();
         await getByAriaLabel(popupPage, 'Account Name').type(name);
         await getByAriaLabel(popupPage, 'Create new account').click();
-        await getInputByName(popupPage, 'password').type(WALLET_PASSWORD);
-        await getButtonByText(popupPage, /add account/i).click();
         await waitAccountPage(popupPage, name);
       }
 
@@ -340,8 +339,8 @@ test.describe('FuelWallet Extension', () => {
         await hasText(confirmTransactionPage, /0\.0000001.ETH/i);
         await waitAriaLabel(confirmTransactionPage, senderAccount.name);
         await getButtonByText(confirmTransactionPage, /confirm/i).click();
-        await unlockWallet(confirmTransactionPage, WALLET_PASSWORD);
 
+        await confirmTransactionPage.pause();
         await expect(transferStatus).resolves.toBe('success');
         const balance = await receiverWallet.getBalance();
         await expect(balance.toNumber()).toBe(AMOUNT_TRANSFER);

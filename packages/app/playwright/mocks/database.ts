@@ -5,7 +5,9 @@ import { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account, Network } from '@fuel-wallet/types';
 import type { Page } from '@playwright/test';
 
-import { visit } from '../commons/visit';
+import { getByAriaLabel } from '../commons/locator';
+import { hasText } from '../commons/text';
+import { reload, visit } from '../commons/visit';
 
 const { VITE_FUEL_PROVIDER_URL } = process.env;
 
@@ -115,10 +117,11 @@ export async function mockData(
   const vault = await serializeVault(manager);
 
   await page.evaluate(
-    ([accounts, networks, vault]: [
+    ([accounts, networks, vault, password]: [
       Array<Account>,
       Array<Network>,
-      SerializedVault
+      SerializedVault,
+      string
     ]) => {
       return new Promise((resolve, reject) => {
         (async function main() {
@@ -135,11 +138,13 @@ export async function mockData(
             reject(err);
           }
           localStorage.setItem('fuel_isLogged', JSON.stringify(true));
+          localStorage.setItem('password', password);
         })();
       });
     },
-    [accounts, networks, vault]
+    [accounts, networks, vault, WALLET_PASSWORD]
   );
+  await reload(page);
 
   return {
     mnemonic,
@@ -147,6 +152,17 @@ export async function mockData(
     accounts,
     networks,
   };
+}
+
+export async function unlock(page, password = WALLET_PASSWORD) {
+  await reload(page);
+  try {
+    await hasText(page, 'Welcome back');
+    await getByAriaLabel(page, 'Your Password').type(password);
+    await getByAriaLabel(page, 'Unlock wallet').click();
+  } catch (err) {
+    // Ignore
+  }
 }
 
 export type MockData = Awaited<ReturnType<typeof mockData>>;

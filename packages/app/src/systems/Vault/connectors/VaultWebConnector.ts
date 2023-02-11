@@ -1,17 +1,25 @@
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 
+import { mockUnlock } from '../__mocks__/mockUnlock';
 import type { VaultClient } from '../services/VaultClient';
 
-import { Vault } from '~/systems/Vault/services/VaultServer';
+import { IS_DEVELOPMENT, IS_TEST } from '~/config';
+import { VaultServer } from '~/systems/Vault/services/VaultServer';
 
 export class VaultWebConnector {
-  vault: Vault;
+  vault: VaultServer;
   readonly clientVault: VaultClient;
 
   constructor(clientVault: VaultClient) {
     this.clientVault = clientVault;
-    this.vault = new Vault();
+    this.vault = new VaultServer();
     this.clientVault.onRequest = this.onRequest.bind(this);
+
+    // Mock unlock in development to save password
+    // on sesstion Storage
+    if (IS_DEVELOPMENT || IS_TEST) {
+      mockUnlock(this);
+    }
   }
 
   async onRequest(request: JSONRPCRequest) {

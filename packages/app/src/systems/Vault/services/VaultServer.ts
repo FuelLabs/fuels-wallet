@@ -40,7 +40,7 @@ export type VaultInputs = {
   };
 };
 
-export class Vault extends EventEmitter {
+export class VaultServer extends EventEmitter {
   readonly server: JSONRPCServer;
   readonly manager: WalletManager;
   static readonly methods: Array<string> = [
@@ -67,7 +67,7 @@ export class Vault extends EventEmitter {
   }
 
   setupMethods() {
-    Vault.methods.forEach((methodName) => {
+    VaultServer.methods.forEach((methodName) => {
       if (!this[methodName]) {
         throw new Error('Method not exists!');
       }
@@ -134,7 +134,7 @@ export class Vault extends EventEmitter {
   }: VaultInputs['signTransaction']): Promise<string> {
     const wallet = await this.manager.getWallet(Address.fromString(address));
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
-    const signature = wallet.signTransaction(transactionRequest);
+    const signature = await wallet.signTransaction(transactionRequest);
     return signature;
   }
 
@@ -161,5 +161,5 @@ export class Vault extends EventEmitter {
 }
 
 export type VaultMethods = {
-  [Method in keyof Vault]: Vault[Method];
+  [Method in keyof VaultServer]: VaultServer[Method];
 };

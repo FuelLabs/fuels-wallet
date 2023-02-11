@@ -313,6 +313,7 @@ export const transactionMachine = createMachine(
         MachineServices['send']['data']
       >({
         showError: true,
+        maxAttempts: 1,
         async fetch(params) {
           const { input } = params;
           if (!input?.address || !input?.transactionRequest) {

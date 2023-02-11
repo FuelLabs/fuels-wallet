@@ -3,7 +3,7 @@ import { JSONRPCClient } from 'json-rpc-2.0';
 
 import { VaultCRXConnector, VaultWebConnector } from '../connectors';
 
-import { Vault } from './VaultServer';
+import { VaultServer } from './VaultServer';
 
 import { IS_CRX } from '~/config';
 
@@ -22,7 +22,7 @@ export class VaultClient {
   }
 
   setupMethods = () => {
-    Vault.methods.forEach((methodName) => {
+    VaultServer.methods.forEach((methodName) => {
       this[methodName] = this.createRequest(methodName);
     });
   };
