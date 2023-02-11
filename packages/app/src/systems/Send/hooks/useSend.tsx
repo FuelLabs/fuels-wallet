@@ -11,7 +11,7 @@ import type { SendMachineState } from '../machines/sendMachine';
 import { sendMachine } from '../machines/sendMachine';
 
 import { useAccounts } from '~/systems/Account';
-import { ASSET_MAP } from '~/systems/Asset';
+import { useAssets } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
 import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionMachine';
@@ -84,6 +84,7 @@ export function useSend() {
   const navigate = useNavigate();
   const txRequest = useTransactionRequest();
   const { account } = useAccounts();
+  const { assets } = useAssets();
 
   const form = useForm({
     resolver: yupResolver(schema),
@@ -132,7 +133,9 @@ export function useSend() {
   }
   function submit() {
     if (txRequest.status('idle')) {
-      const asset = ASSET_MAP[form.getValues('asset')];
+      const asset = assets.find(
+        ({ assetId }) => assetId === form.getValues('asset')
+      );
       const amount = bn(form.getValues('amount'));
       const address = form.getValues('address');
       const input = {

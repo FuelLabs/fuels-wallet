@@ -9,10 +9,11 @@ import {
   Text,
 } from '@fuel-ui/react';
 import type { Coin } from '@fuel-wallet/types';
+import type { BN } from 'fuels';
 import { bn } from 'fuels';
 import type { FC } from 'react';
 
-import { getAssetInfoById } from '../../utils';
+import { useAsset } from '../../hooks';
 
 import { AssetsAmountLoader } from './AssetsAmountLoader';
 
@@ -40,7 +41,6 @@ export const AssetsAmount: AssetsAmountComponent = ({
   balanceErrors,
 }: AssetsAmountProps) => {
   const hasError = !!balanceErrors?.length;
-  const assetAmountClass = cx('asset_amount');
 
   return (
     <Card css={styles.card(hasError)}>
@@ -65,39 +65,59 @@ export const AssetsAmount: AssetsAmountComponent = ({
         </Flex>
       )}
       <Stack gap="$2">
-        {amounts.map((item) => {
-          const asset = getAssetInfoById(item.assetId, item);
-          const amount = bn(asset.amount);
-
-          return (
-            <Grid
-              key={asset.assetId.toString()}
-              css={styles.root}
-              className={assetAmountClass}
-            >
-              <Flex css={styles.asset}>
-                <Avatar
-                  name={asset.name}
-                  src={asset.imageUrl}
-                  css={{ height: 18, width: 18 }}
-                />
-                <Text as="span">{asset.name}</Text>
-              </Flex>
-              <Copyable value={asset.assetId} css={styles.address}>
-                <Text fontSize="xs" css={{ mt: '$1' }}>
-                  {shortAddress(asset.assetId)}
-                </Text>
-              </Copyable>
-              <Flex css={styles.amount(isPositive)}>
-                {isPositive && '+'}
-                {isNegative && '-'}
-                {amount.format()} {asset.symbol}
-              </Flex>
-            </Grid>
-          );
-        })}
+        {amounts.map(({ assetId, amount }) => (
+          <AssetsAmountItem
+            key={assetId.toString()}
+            assetId={assetId.toString()}
+            amount={bn(amount)}
+            isPositive={isPositive}
+            isNegative={isNegative}
+          />
+        ))}
       </Stack>
     </Card>
+  );
+};
+
+type AssetsAmountItemProps = {
+  assetId: string;
+  amount: BN;
+  isPositive?: boolean;
+  isNegative?: boolean;
+};
+
+const AssetsAmountItem = ({
+  assetId,
+  amount,
+  isPositive,
+  isNegative,
+}: AssetsAmountItemProps) => {
+  const asset = useAsset(assetId);
+  const assetAmountClass = cx('asset_amount');
+
+  const { name = '', symbol = '', imageUrl = '' } = asset || {};
+
+  return (
+    <Grid
+      key={asset?.assetId.toString()}
+      css={styles.root}
+      className={assetAmountClass}
+    >
+      <Flex css={styles.asset}>
+        <Avatar name={name} src={imageUrl} css={{ height: 18, width: 18 }} />
+        <Text as="span">{name}</Text>
+      </Flex>
+      <Copyable value={assetId} css={styles.address}>
+        <Text fontSize="xs" css={{ mt: '$1' }}>
+          {shortAddress(assetId)}
+        </Text>
+      </Copyable>
+      <Flex css={styles.amount(isPositive)}>
+        {isPositive && '+'}
+        {isNegative && '-'}
+        {amount.format()} {symbol}
+      </Flex>
+    </Grid>
   );
 };
 

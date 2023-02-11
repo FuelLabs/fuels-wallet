@@ -5,7 +5,7 @@ import { bn } from 'fuels';
 
 import type { UseSendReturn } from '../../hooks';
 
-import { AssetSelect, ASSET_MAP } from '~/systems/Asset';
+import { AssetSelect } from '~/systems/Asset';
 import { animations, ControlledField, Layout } from '~/systems/Core';
 import { TxDetails } from '~/systems/Transaction';
 
@@ -33,7 +33,7 @@ export function SendSelect({
             render={({ field }) => (
               <AssetSelect
                 items={account?.balances}
-                selected={ASSET_MAP[field.value]}
+                selected={field.value}
                 onSelect={(asset) => {
                   // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
                   form.setValue('asset', asset?.assetId.toString()!, {

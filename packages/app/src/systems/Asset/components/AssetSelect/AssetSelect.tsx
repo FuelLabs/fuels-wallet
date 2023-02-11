@@ -16,7 +16,7 @@ import type { AssetAmount, Coin } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import React, { useState } from 'react';
 
-import { getAssetInfoById } from '../../utils';
+import { useAsset } from '../../hooks';
 
 import type { Maybe } from '~/systems/Core';
 import { formatAmount } from '~/systems/Core';
@@ -27,7 +27,7 @@ export type AssetSelectInput = AssetAmount | Coin | TxOutputCoin | TxInputCoin;
 export type AssetSelectProps = DropdownProps & {
   items?: Maybe<AssetSelectInput[]>;
   onSelect: (asset?: AssetSelectInput | null) => void;
-  selected?: Maybe<AssetSelectInput>;
+  selected?: Maybe<string>;
 };
 
 export function AssetSelect({
@@ -38,7 +38,7 @@ export function AssetSelect({
 }: AssetSelectProps) {
   const [width, setWidth] = useState<Maybe<number>>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const asset = selected && getAssetInfoById(selected?.assetId, selected);
+  const asset = useAsset(selected || '');
 
   function handleSelect(assetId: React.Key) {
     const asset = (items || [])?.find((i) => i.assetId === assetId);
@@ -116,37 +116,47 @@ export function AssetSelect({
         css={styles.menu(width)}
         onAction={handleSelect}
       >
-        {(items || []).map((item) => {
-          const asset = getAssetInfoById(item.assetId, item);
-          const amount = bn(asset.amount);
-          const amountStr = `${formatAmount(amount)} ${asset.symbol}`;
-          return (
-            <Dropdown.MenuItem
-              key={asset.assetId}
-              textValue={asset.name}
-              aria-label={asset.name}
-            >
-              <Avatar size="xsm" name={asset?.name} src={asset?.imageUrl} />
-              <Stack gap="$0" className="asset-info">
-                <Text as="span" className="asset-name">
-                  {asset?.name}
-                </Text>
-                <Text as="span" className="asset-symbol">
-                  {asset?.symbol}
-                </Text>
-              </Stack>
-              <Flex className="asset-amount">
-                <Tooltip content={amountStr}>
-                  <Box as="span" className="value">
-                    {amountStr}
-                  </Box>
-                </Tooltip>
-              </Flex>
-            </Dropdown.MenuItem>
-          );
-        })}
+        {(items || []).map((item) => (
+          <AssetSelectItem key={item.assetId.toString()} item={item} />
+        ))}
       </Dropdown.Menu>
     </Dropdown>
+  );
+}
+
+type AssetSelectItemProps = {
+  item: AssetSelectInput;
+};
+
+function AssetSelectItem({ item }: AssetSelectItemProps) {
+  const asset = useAsset(item.assetId.toString());
+  const amount = bn(item.amount);
+
+  const { name, symbol, imageUrl } = asset || {};
+  const amountStr = `${formatAmount(amount)} ${symbol}`;
+  return (
+    <Dropdown.MenuItem
+      key={item.assetId.toString()}
+      textValue={name}
+      aria-label={name}
+    >
+      <Avatar size="xsm" name={name || ''} src={imageUrl} />
+      <Stack gap="$0" className="asset-info">
+        <Text as="span" className="asset-name">
+          {name}
+        </Text>
+        <Text as="span" className="asset-symbol">
+          {symbol}
+        </Text>
+      </Stack>
+      <Flex className="asset-amount">
+        <Tooltip content={amountStr}>
+          <Box as="span" className="value">
+            {amountStr}
+          </Box>
+        </Tooltip>
+      </Flex>
+    </Dropdown.MenuItem>
   );
 }
 
