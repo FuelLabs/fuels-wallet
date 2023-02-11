@@ -3,15 +3,15 @@ import { interpret } from 'xstate';
 
 import { getMockedTransaction } from '../__mocks__/dapp-transaction';
 
-import type { TransactionMachineService } from './transactionMachine';
-import { transactionMachine } from './transactionMachine';
+import type { TransactionRequestService } from './transactionMachine';
+import { transactionRequestMachine } from './transactionMachine';
 
 import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 import type { MockVaultData } from '~/systems/Core/__tests__/utils/mockVault';
 import { mockVault } from '~/systems/Core/__tests__/utils/mockVault';
 
 describe('txApproveMachine', () => {
-  let service: TransactionMachineService;
+  let service: TransactionRequestService;
   let transactionRequest: TransactionRequest;
   let data: MockVaultData;
 
@@ -26,7 +26,7 @@ describe('txApproveMachine', () => {
 
   beforeEach(async () => {
     service = interpret(
-      transactionMachine.withContext({ input: {}, response: {} })
+      transactionRequestMachine.withContext({ input: {}, response: {} })
     ).start();
   });
 
@@ -37,7 +37,7 @@ describe('txApproveMachine', () => {
   it.only('should approve/send transaction', async () => {
     await expectStateMatch(service, 'idle');
 
-    service.send('START_REQUEST', {
+    service.send('START', {
       input: {
         address: data.account?.address,
         transactionRequest,

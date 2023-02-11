@@ -28,7 +28,7 @@ type MachineServices = {
 };
 
 export type MachineEvents =
-  | { type: 'CONNECT'; input: string }
+  | { type: 'START'; input: string }
   | { type: 'TOGGLE_ADDRESS'; input: string }
   | { type: 'AUTHORIZE' }
   | { type: 'NEXT' }
@@ -53,7 +53,7 @@ export const connectMachine = createMachine(
     states: {
       idle: {
         on: {
-          CONNECT: {
+          START: {
             actions: ['setOrigin'],
             target: 'connecting',
           },
@@ -192,6 +192,6 @@ export const connectMachine = createMachine(
   }
 );
 
-export type ConnectMachine = typeof connectMachine;
-export type ConnectMachineService = InterpreterFrom<ConnectMachine>;
-export type ConnectMachineState = StateFrom<ConnectMachine>;
+export type ConnectRequestMachine = typeof connectMachine;
+export type ConnectRequestService = InterpreterFrom<ConnectRequestMachine>;
+export type ConnectRequestState = StateFrom<ConnectRequestMachine>;

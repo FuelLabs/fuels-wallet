@@ -16,10 +16,10 @@ export async function mockVault() {
   const network = await NetworkService.addFirstNetwork();
 
   return {
-    account,
+    account: account!,
+    network: network!,
     mnemonic,
     password,
-    network,
   };
 }
 

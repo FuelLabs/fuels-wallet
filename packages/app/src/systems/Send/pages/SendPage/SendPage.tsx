@@ -4,12 +4,11 @@ import { AnimatePresence } from 'framer-motion';
 import { Send } from '../../components';
 import { useSend } from '../../hooks';
 
-import { Layout, UnlockDialog } from '~/systems/Core';
+import { Layout } from '~/systems/Core';
 
 export function SendPage() {
   const send = useSend();
   const { handlers, txRequest, status, form, ...ctx } = send;
-  const isUnlocking = txRequest.status('unlocking');
   const isSelecting = status('selecting');
 
   return (
@@ -39,14 +38,6 @@ export function SendPage() {
             </Button>
           </Layout.BottomBar>
         )}
-        <UnlockDialog
-          isOpen={isUnlocking || txRequest.status('waitingUnlock')}
-          isLoading={isUnlocking}
-          unlockText="Confirm Transaction"
-          unlockError={txRequest.errors.unlockError}
-          onUnlock={txRequest.handlers.unlock}
-          onClose={txRequest.handlers.closeUnlock}
-        />
       </Layout>
     </form>
   );

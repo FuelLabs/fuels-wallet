@@ -1,20 +1,11 @@
 import type { Account } from '@fuel-wallet/types';
-import type { WalletUnlocked } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
-import { send, assign, createMachine } from 'xstate';
+import { assign, createMachine } from 'xstate';
 
-import {
-  unlockMachineErrorAction,
-  unlockMachine,
-  AccountService,
-} from '~/systems/Account';
-import type {
-  UnlockMachine,
-  AccountInputs,
-  UnlockWalletEvent,
-} from '~/systems/Account';
+import { AccountService } from '~/systems/Account';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
-import type { ChildrenMachine } from '~/systems/Core';
+import type { VaultInputs } from '~/systems/Vault';
+import { VaultService } from '~/systems/Vault';
 
 type MachineContext = {
   account?: Account;
@@ -22,7 +13,6 @@ type MachineContext = {
   address?: string;
   origin?: string;
   error?: string;
-  unlockError?: string;
   signedMessage?: string;
 };
 
@@ -35,17 +25,23 @@ type MachineServices = {
   };
 };
 
+export type SignInputs = {
+  startSign: {
+    origin: string;
+    message: string;
+    address: string;
+  };
+};
+
 type MachineEvents =
-  | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
   | {
-      type: 'START_SIGN';
-      input: { origin: string; message: string; address: string };
+      type: 'START';
+      input: SignInputs['startSign'];
     }
-  | { type: 'CLOSE_UNLOCK' }
   | { type: 'SIGN_MESSAGE' }
   | { type: 'REJECT' };
 
-export const signMachine = createMachine(
+export const messageRequestMachine = createMachine(
   {
     predictableActionArguments: true,
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -61,7 +57,7 @@ export const signMachine = createMachine(
     states: {
       idle: {
         on: {
-          START_SIGN: {
+          START: {
             actions: ['assignSignData'],
             target: 'fetchingAccount',
           },
@@ -88,7 +84,7 @@ export const signMachine = createMachine(
       reviewMessage: {
         on: {
           SIGN_MESSAGE: {
-            target: 'unlocking',
+            target: 'signingMessage',
           },
           REJECT: {
             actions: [assignErrorMessage('Rejected request!')],
@@ -96,42 +92,13 @@ export const signMachine = createMachine(
           },
         },
       },
-      unlocking: {
-        invoke: {
-          id: 'unlock',
-          src: 'unlock',
-          onDone: [
-            unlockMachineErrorAction('unlocking', 'unlockError'),
-            {
-              target: 'signingMessage',
-            },
-          ],
-        },
-        on: {
-          UNLOCK_WALLET: {
-            // send to the child machine
-            actions: [
-              send<MachineContext, UnlockWalletEvent>(
-                (_, ev) => ({
-                  type: 'UNLOCK_WALLET',
-                  input: ev.input,
-                }),
-                { to: 'unlock' }
-              ),
-            ],
-          },
-          CLOSE_UNLOCK: {
-            target: 'reviewMessage',
-          },
-        },
-      },
       signingMessage: {
         invoke: {
           src: 'signMessage',
           data: {
-            input: (ctx: MachineContext, ev: { data: WalletUnlocked }) => ({
+            input: (ctx: MachineContext) => ({
               message: ctx.message,
-              wallet: ev.data,
+              address: ctx.address,
             }),
           },
           onDone: [
@@ -166,19 +133,13 @@ export const signMachine = createMachine(
       }),
     },
     services: {
-      unlock: unlockMachine,
-      signMessage: FetchMachine.create<
-        { message: string; wallet: WalletUnlocked },
-        string
-      >({
+      signMessage: FetchMachine.create<VaultInputs['signMessage'], string>({
         showError: true,
         async fetch({ input }) {
-          if (!input?.wallet || !input?.message) {
+          if (!input?.address || !input?.message) {
             throw new Error('Invalid network input');
           }
-
-          const signedMessage = input?.wallet.signMessage(input.message);
-          return signedMessage;
+          return VaultService.signMessage(input);
         },
       }),
       fetchAccount: FetchMachine.create<{ address: string }, Account>({
@@ -196,9 +157,8 @@ export const signMachine = createMachine(
   }
 );
 
-export type SignMachine = typeof signMachine;
-export type SignMachineService = InterpreterFrom<typeof signMachine>;
-export type SignMachineState = StateFrom<typeof signMachine> &
-  ChildrenMachine<{
-    unlock: UnlockMachine;
-  }>;
+export type MessageRequestMachine = typeof messageRequestMachine;
+export type MessageRequestService = InterpreterFrom<
+  typeof messageRequestMachine
+>;
+export type MessageRequestState = StateFrom<typeof messageRequestMachine>;

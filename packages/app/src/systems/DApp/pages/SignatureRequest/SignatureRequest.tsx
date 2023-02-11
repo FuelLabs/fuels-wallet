@@ -4,20 +4,12 @@ import { ConnectInfo } from '../../components';
 import { useSignatureRequest } from '../../hooks';
 
 import { useAccounts } from '~/systems/Account';
-import { Layout, UnlockDialog } from '~/systems/Core';
+import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 
 export function SignatureRequest() {
   const { isLoading } = useAccounts();
-  const {
-    isUnlocking,
-    handlers,
-    account,
-    origin,
-    message,
-    unlockError,
-    isUnlockingLoading,
-  } = useSignatureRequest();
+  const { handlers, account, origin, message } = useSignatureRequest();
 
   if (!origin || !message || !account) return null;
 
@@ -63,13 +55,6 @@ export function SignatureRequest() {
           </Button>
         </Layout.BottomBar>
       </Layout>
-      <UnlockDialog
-        isOpen={isUnlocking}
-        unlockError={unlockError}
-        onUnlock={handlers.unlock}
-        isLoading={isUnlockingLoading}
-        onClose={handlers.closeUnlock}
-      />
     </>
   );
 }

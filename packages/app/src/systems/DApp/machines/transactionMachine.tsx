@@ -10,8 +10,6 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { AccountService } from '~/systems/Account';
-import type { UnlockMachine, AccountInputs } from '~/systems/Account';
-import type { ChildrenMachine } from '~/systems/Core';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 import type { NetworkInputs } from '~/systems/Network';
 import { NetworkService } from '~/systems/Network';
@@ -68,16 +66,14 @@ type MachineServices = {
 };
 
 type MachineEvents =
-  | { type: 'START_REQUEST'; input?: TxInputs['request'] }
+  | { type: 'START'; input?: TxInputs['request'] }
   | { type: 'RESET'; input?: null }
   | { type: 'APPROVE'; input?: null }
   | { type: 'REJECT'; input?: null }
-  | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
-  | { type: 'CLOSE_UNLOCK'; input?: null }
   | { type: 'TRY_AGAIN'; input?: null }
   | { type: 'CLOSE'; input?: null };
 
-export const transactionMachine = createMachine(
+export const transactionRequestMachine = createMachine(
   {
     predictableActionArguments: true,
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
@@ -95,7 +91,7 @@ export const transactionMachine = createMachine(
     states: {
       idle: {
         on: {
-          START_REQUEST: {
+          START: {
             actions: ['assignTxRequestData'],
             target: 'fetchingAccount',
           },
@@ -346,9 +342,7 @@ export const transactionMachine = createMachine(
   }
 );
 
-export type TransactionMachine = typeof transactionMachine;
-export type TransactionMachineService = InterpreterFrom<TransactionMachine>;
-export type TransactionMachineState = StateFrom<TransactionMachine> &
-  ChildrenMachine<{
-    unlock: UnlockMachine;
-  }>;
+export type TransactionRequestMachine = typeof transactionRequestMachine;
+export type TransactionRequestService =
+  InterpreterFrom<TransactionRequestMachine>;
+export type TransactionRequestState = StateFrom<TransactionRequestMachine>;

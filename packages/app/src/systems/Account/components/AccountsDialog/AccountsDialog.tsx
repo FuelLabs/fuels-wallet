@@ -1,35 +1,21 @@
 import { cssObj } from '@fuel-ui/css';
 import { Dialog } from '@fuel-ui/react';
 
-import { useAccounts } from '../../hooks';
 import { AddAccount, Logout } from '../../pages';
 import { Accounts } from '../../pages/Accounts';
 
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
-import { UnlockContent } from '~/systems/Core';
 import { useOverlay } from '~/systems/Overlay';
 
 export function AccountsDialog() {
   const overlay = useOverlay();
-  const { status, handlers, ...ctx } = useAccounts();
-  const isUnlockingLoading = status('unlockingLoading');
-  const isUnlocking = status('unlocking') || isUnlockingLoading;
 
   return (
     <Dialog isOpen={overlay.is((val) => val.includes('accounts'))}>
       <Dialog.Content css={styles.content}>
-        {isUnlocking && (
-          <UnlockContent
-            unlockText="Add Account"
-            unlockError={ctx.unlockError}
-            onUnlock={handlers.unlock}
-            isLoading={isUnlockingLoading}
-            onClose={handlers.closeDialog}
-          />
-        )}
-        {!isUnlocking && overlay.is('accounts.list') && <Accounts />}
-        {!isUnlocking && overlay.is('accounts.add') && <AddAccount />}
-        {!isUnlocking && overlay.is('accounts.logout') && <Logout />}
+        {overlay.is('accounts.list') && <Accounts />}
+        {overlay.is('accounts.add') && <AddAccount />}
+        {overlay.is('accounts.logout') && <Logout />}
       </Dialog.Content>
     </Dialog>
   );

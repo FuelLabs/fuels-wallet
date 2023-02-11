@@ -1,35 +1,22 @@
-import type { WalletUnlocked } from 'fuels';
-import { Wallet } from 'fuels';
-import type { InterpreterFrom } from 'xstate';
+import { hashMessage, Signer } from 'fuels';
 import { interpret } from 'xstate';
-import { waitFor } from 'xstate/lib/waitFor';
 
-import { signMachine } from './signMachine';
+import type { MessageRequestService } from './signMachine';
+import { messageRequestMachine } from './signMachine';
 
-import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
-
-type Service = InterpreterFrom<typeof signMachine>;
-
-const OWNER = import.meta.env.VITE_ADDR_OWNER;
+import type { MockVaultData } from '~/systems/Core/__tests__';
+import { expectStateMatch, mockVault } from '~/systems/Core/__tests__';
 
 describe('signMachine', () => {
-  let service: Service;
-  let wallet: WalletUnlocked;
+  let data: MockVaultData;
+  let service: MessageRequestService;
 
   beforeAll(async () => {
-    wallet = Wallet.fromPrivateKey(OWNER);
-    jest.spyOn(AccountService, 'fetchAccount').mockResolvedValue(
-      Promise.resolve({
-        name: 'Account 1',
-        address: wallet.address.toString(),
-        publicKey: wallet.publicKey,
-      })
-    );
-    jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
+    data = await mockVault();
   });
 
   beforeEach(async () => {
-    service = interpret(signMachine).start();
+    service = interpret(messageRequestMachine).start();
   });
 
   afterEach(() => {
@@ -40,51 +27,43 @@ describe('signMachine', () => {
     const DATA = {
       origin: 'foo.com',
       message: 'test message',
-      address: wallet.address.toString(),
+      address: data.account.address.toString(),
     };
-    await waitFor(service, (state) => state.matches('idle'));
+    await expectStateMatch(service, 'idle');
 
-    service.send('START_SIGN', {
+    service.send('START', {
       input: DATA,
     });
 
-    await waitFor(service, (state) => state.matches('reviewMessage'));
+    await expectStateMatch(service, 'reviewMessage');
 
     service.send('SIGN_MESSAGE');
 
-    await waitFor(service, (state) => state.matches('unlocking'));
-
-    service.send('UNLOCK_WALLET', {
-      input: {
-        account: MOCK_ACCOUNTS[0],
-        password: '123123',
-      },
-    });
-
-    await waitFor(service, (state) => state.matches('signingMessage'));
-    const { context } = await waitFor(service, (state) =>
-      state.matches('done')
+    await expectStateMatch(service, 'signingMessage');
+    const { context } = await expectStateMatch(service, 'done');
+    const recoveredAddress = Signer.recoverAddress(
+      hashMessage(DATA.message),
+      context.signedMessage!
     );
-    const signature = await wallet.signMessage(DATA.message);
-    expect(context.signedMessage).toEqual(signature);
+    expect(context.signedMessage).toEqual(recoveredAddress);
   });
 
   it('should reject sign message', async () => {
-    await waitFor(service, (state) => state.matches('idle'));
+    await expectStateMatch(service, 'idle');
 
-    service.send('START_SIGN', {
+    service.send('START', {
       input: {
         origin: 'foo.com',
         message: 'test message',
-        address: wallet.address.toString(),
+        address: data.account.address.toString(),
       },
     });
 
-    await waitFor(service, (state) => state.matches('reviewMessage'));
+    await expectStateMatch(service, 'reviewMessage');
 
     service.send('REJECT');
 
-    const state = await waitFor(service, (state) => state.matches('failed'));
+    const state = await expectStateMatch(service, 'failed');
 
     expect(state.context.error).toBeTruthy();
   });

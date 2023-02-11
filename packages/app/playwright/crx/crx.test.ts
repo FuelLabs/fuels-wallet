@@ -18,7 +18,6 @@ import {
   waitWalletToLoad,
   getAccountByName,
   switchAccount,
-  unlockWallet,
   waitAccountPage,
 } from './utils';
 
@@ -256,7 +255,6 @@ test.describe('FuelWallet Extension', () => {
         await hasText(signMessageRequest, message);
         await waitAriaLabel(signMessageRequest, authorizedAccount.name);
         await getButtonByText(signMessageRequest, /sign/i).click();
-        await unlockWallet(signMessageRequest, WALLET_PASSWORD);
 
         // Recover signer address
         const messageSigned = await signedMessagePromise;
@@ -340,7 +338,6 @@ test.describe('FuelWallet Extension', () => {
         await waitAriaLabel(confirmTransactionPage, senderAccount.name);
         await getButtonByText(confirmTransactionPage, /confirm/i).click();
 
-        await confirmTransactionPage.pause();
         await expect(transferStatus).resolves.toBe('success');
         const balance = await receiverWallet.getBalance();
         await expect(balance.toNumber()).toBe(AMOUNT_TRANSFER);

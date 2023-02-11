@@ -1,13 +1,13 @@
 import { interpret } from 'xstate';
-import { waitFor } from 'xstate/lib/waitFor';
 
-import type { ConnectMachineService } from './connectMachine';
+import type { ConnectRequestService } from './connectMachine';
 import { connectMachine } from './connectMachine';
 
 import { MOCK_ACCOUNTS } from '~/systems/Account';
+import { expectStateMatch } from '~/systems/Core/__tests__';
 
 describe('connectMachine', () => {
-  let service: ConnectMachineService;
+  let service: ConnectRequestService;
   beforeEach(async () => {
     service = interpret(connectMachine).start();
   });
@@ -17,37 +17,32 @@ describe('connectMachine', () => {
   });
 
   it('should reject connection in selectingAccounts stage', async () => {
-    await waitFor(service, (state) => state.matches('idle'));
+    await expectStateMatch(service, 'idle');
 
     service.send({
-      type: 'CONNECT',
+      type: 'START',
       input: 'foo.com',
     });
 
-    await waitFor(service, (state) =>
-      state.matches('connecting.selectingAccounts')
-    );
+    await expectStateMatch(service, 'connecting.selectingAccounts');
 
     service.send({
       type: 'REJECT',
     });
 
-    const state = await waitFor(service, (state) => state.matches('failed'));
-
+    const state = await expectStateMatch(service, 'failed');
     expect(state.context.error).toBeTruthy();
   });
 
   it('should reject connection in authorizing stage', async () => {
-    await waitFor(service, (state) => state.matches('idle'));
+    await expectStateMatch(service, 'idle');
 
     service.send({
-      type: 'CONNECT',
+      type: 'START',
       input: 'foo.com',
     });
 
-    await waitFor(service, (state) =>
-      state.matches('connecting.selectingAccounts')
-    );
+    await expectStateMatch(service, 'connecting.selectingAccounts');
 
     service.send({
       type: 'TOGGLE_ADDRESS',
@@ -57,28 +52,26 @@ describe('connectMachine', () => {
       type: 'NEXT',
     });
 
-    await waitFor(service, (state) => state.matches('connecting.authorizing'));
+    await expectStateMatch(service, 'connecting.authorizing');
 
     service.send({
       type: 'REJECT',
     });
 
-    const state = await waitFor(service, (state) => state.matches('failed'));
-
+    const state = await expectStateMatch(service, 'failed');
     expect(state.context.error).toBeTruthy();
   });
 
   it('should add connection', async () => {
-    await waitFor(service, (state) => state.matches('idle'));
+    await expectStateMatch(service, 'idle');
 
     service.send({
-      type: 'CONNECT',
+      type: 'START',
       input: 'foo.com',
     });
 
-    await waitFor(service, (state) =>
-      state.matches('connecting.selectingAccounts')
-    );
+    await expectStateMatch(service, 'connecting.selectingAccounts');
+
     service.send({
       type: 'TOGGLE_ADDRESS',
       input: MOCK_ACCOUNTS[0].address,
@@ -87,25 +80,25 @@ describe('connectMachine', () => {
       type: 'NEXT',
     });
 
-    await waitFor(service, (state) => state.matches('connecting.authorizing'));
+    await expectStateMatch(service, 'connecting.authorizing');
 
     service.send({
       type: 'AUTHORIZE',
     });
 
-    const state = await waitFor(service, (state) => state.matches('done'));
+    const state = await expectStateMatch(service, 'done');
     expect(state.context.isConnected).toBeTruthy();
   });
 
   it('foo.com should already be connected', async () => {
-    await waitFor(service, (state) => state.matches('idle'));
+    await expectStateMatch(service, 'idle');
 
     service.send({
-      type: 'CONNECT',
+      type: 'START',
       input: 'foo.com',
     });
 
-    const state = await waitFor(service, (state) => state.matches('done'));
+    const state = await expectStateMatch(service, 'done');
 
     expect(state.context.isConnected).toBeTruthy();
   });
