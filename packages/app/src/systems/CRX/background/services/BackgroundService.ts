@@ -43,7 +43,7 @@ export class BackgroundService {
       this.sendTransaction,
       this.currentAccount,
       this.addAsset,
-      // this.assets,
+      this.assets,
     ]);
   }
 
@@ -266,7 +266,7 @@ export class BackgroundService {
   }
 
   async assets(_: JSONRPCParams) {
-    const assets = {};
+    const assets = [];
     // TODO: this line is breaking the code because of circular dependencies. service worker doesnt start
     // const assets = await AssetService.getAssets();
 

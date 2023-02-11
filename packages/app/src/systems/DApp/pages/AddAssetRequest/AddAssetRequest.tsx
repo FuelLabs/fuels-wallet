@@ -56,7 +56,7 @@ export function AddAssetRequest() {
           Reject
         </Button>
         <Button type="submit" color="accent" onPress={handlers.addAsset}>
-          Connect
+          Add Asset
         </Button>
       </Layout.BottomBar>
     </Layout>
