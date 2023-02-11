@@ -39,7 +39,6 @@ export enum TxRequestStatus {
 }
 
 type MachineContext = {
-  disableAutoClose?: boolean;
   input: {
     origin?: string;
     address?: string;
@@ -96,6 +95,9 @@ export const transactionMachine = createMachine(
     },
     id: '(machine)',
     initial: 'idle',
+    context: {
+      input: {},
+    },
     states: {
       idle: {
         on: {
@@ -103,20 +105,6 @@ export const transactionMachine = createMachine(
             actions: ['assignTxRequestData'],
             target: 'fetchingAccount',
           },
-        },
-        after: {
-          /** connection should start quickly, if not, it's probably an error or reloading.
-           * to avoid stuck black screen, should close the window and let user retry */
-          TIMEOUT: {
-            target: '#(machine).closing', // retry
-            cond: 'enableAutoClose',
-          },
-        },
-      },
-      closing: {
-        entry: ['closeWindow'],
-        always: {
-          target: '#(machine).failed',
         },
       },
       fetchingAccount: {
@@ -314,13 +302,18 @@ export const transactionMachine = createMachine(
       assignReceipts: assign({
         response: (ctx, ev) => ({ ...ctx.response, receipts: ev.data }),
       }),
-      assignTxDryRunError: assign({
-        errors: (ctx, ev) => ({
-          ...ctx.errors,
-          txDryRunGroupedErrors: getGroupedErrors(
-            (ev.data as any)?.error?.response?.errors
-          ),
-        }),
+      assignTxDryRunError: assign((ctx, ev) => {
+        const txDryRunGroupedErrors = getGroupedErrors(
+          (ev.data as any)?.error?.response?.errors
+        );
+        return {
+          ...ctx,
+          errors: {
+            ...ctx.errors,
+            txDryRunGroupedErrors,
+          },
+          error: JSON.stringify(txDryRunGroupedErrors),
+        };
       }),
       assignTxApproveError: assign({
         errors: (ctx, ev) => ({
@@ -395,11 +388,6 @@ export const transactionMachine = createMachine(
           return accountWithBalances;
         },
       }),
-    },
-    guards: {
-      enableAutoClose: (ctx) => {
-        return !!ctx.input.isOriginRequired;
-      },
     },
   }
 );

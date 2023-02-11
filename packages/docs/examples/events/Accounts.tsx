@@ -1,6 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Stack, Tag, Text } from '@fuel-ui/react';
-import { FuelWalletEvents } from '@fuel-wallet/sdk';
 import { useEffect, useState } from 'react';
 
 import { ExampleBox } from '~/src/components/ExampleBox';
@@ -26,9 +25,9 @@ export function Accounts() {
   };
 
   useEffect(() => {
-    fuel?.on(FuelWalletEvents.ACCOUNTS, handleAccountsEvent);
+    fuel?.on(fuel.events.accounts, handleAccountsEvent);
     return () => {
-      fuel?.off(FuelWalletEvents.ACCOUNTS, handleAccountsEvent);
+      fuel?.off(fuel.events.accounts, handleAccountsEvent);
     };
   }, [fuel]);
 

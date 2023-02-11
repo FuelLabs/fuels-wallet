@@ -1,6 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Stack, Tag, Text } from '@fuel-ui/react';
-import { FuelWalletEvents } from '@fuel-wallet/sdk';
 import { useEffect, useState } from 'react';
 
 import { ExampleBox } from '~/src/components/ExampleBox';
@@ -27,10 +26,10 @@ export function CurrentAccount() {
 
   useEffect(() => {
     // listen to the current event account, and call the handleAccountEvent
-    fuel?.on(FuelWalletEvents.CURRENT_ACCOUNT, handleAccountEvent);
+    fuel?.on(fuel.events.currentAccount, handleAccountEvent);
     return () => {
       // remove the listener when the component is unmounted
-      fuel?.off(FuelWalletEvents.CURRENT_ACCOUNT, handleAccountEvent);
+      fuel?.off(fuel.events.currentAccount, handleAccountEvent);
     };
   }, [fuel]);
 

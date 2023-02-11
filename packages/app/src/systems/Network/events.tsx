@@ -1,14 +1,13 @@
 import type { Network } from '@fuel-wallet/types';
-import type { StoreClass } from '@fuel-wallet/xstore';
 
 import type { NetworkInitialInput } from './machines';
 import { NetworkScreen } from './machines';
 import type { NetworkInputs } from './services';
 
-import type { StoreMachines } from '~/store';
+import type { Store } from '~/store';
 import { Services } from '~/store';
 
-export function networkEvents(store: StoreClass<StoreMachines>) {
+export function networkEvents(store: Store) {
   return {
     addNetwork(input: NetworkInputs['addNetwork']) {
       store.send(Services.networks, {

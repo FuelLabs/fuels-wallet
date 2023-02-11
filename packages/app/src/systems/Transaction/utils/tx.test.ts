@@ -63,7 +63,7 @@ import {
 } from './tx';
 import { OperationName, TxStatus, TxType } from './tx.types';
 
-import { reparse } from '~/systems/Core';
+import { reparse } from '~/systems/Core/utils/json';
 
 describe('Tx util', () => {
   describe('getStatus', () => {

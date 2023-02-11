@@ -7,7 +7,6 @@ import { sendRoutes } from './systems/Send';
 import { settingsRoutes } from './systems/Settings';
 import { transactionRoutes } from './systems/Transaction/routes';
 
-import { accountRoutes } from '~/systems/Account/routes';
 import { assetRoutes } from '~/systems/Asset';
 import { PrivateRoute, PublicRoute } from '~/systems/Core';
 import { Pages } from '~/systems/Core/types';
@@ -23,7 +22,6 @@ const walletRoutes = (
     {settingsRoutes}
     {dappRoutes}
     {sendRoutes}
-    {accountRoutes}
     {transactionRoutes}
     {assetRoutes}
   </>

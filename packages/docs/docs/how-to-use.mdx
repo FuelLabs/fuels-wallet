@@ -90,42 +90,38 @@ The events enum `FuelWalletEvents` can be imported from the `@fuel-wallet/sdk` p
 
 ### Connection
 
-To listen to connection events, you can use the `FuelWalletEvents.CONNECTION` event.
+To listen to connection events, you can use the `fuel.events.connection` event.
 
-<CodeImport
-  file="../src/hooks/useIsConnected.tsx"
-  lineStart="10"
-  lineEnd="28"
-/>
+<CodeImport file="../src/hooks/useIsConnected.tsx" lineStart="9" lineEnd="27" />
 <Examples.Events.Connection />
 
 ### Accounts
 
-To listen to accounts events, you can use the `FuelWalletEvents.ACCOUNTS` event.
+To listen to accounts events, you can use the `fuel.events.accounts` event.
 
 <CodeImport
   file="../examples/events/Accounts.tsx"
-  lineStart="24"
+  lineStart="23"
   lineEnd="33"
 />
 <Examples.Events.Accounts />
 
 ### Current Account
 
-To listen to current account events, you can use the `FuelWalletEvents.CURRENT_ACCOUNT` event.
+To listen to current account events, you can use the `fuel.events.currentAccount` event.
 
 <CodeImport
   file="../examples/events/CurrentAccount.tsx"
-  lineStart="24"
+  lineStart="23"
   lineEnd="35"
 />
 <Examples.Events.CurrentAccount />
 
 ### Network Change
 
-To listen to network events, you can use the `FuelWalletEvents.NETWORK` event.
+To listen to network events, you can use the `fuel.events.network` event.
 
-<CodeImport file="../examples/events/Network.tsx" lineStart="28" lineEnd="38" />
+<CodeImport file="../examples/events/Network.tsx" lineStart="27" lineEnd="38" />
 
 Switch the network in your wallet to see the event triggered.
 
@@ -133,7 +129,7 @@ Switch the network in your wallet to see the event triggered.
 
 ### Assets
 
-To listen to assets events, you can use the `FuelWalletEvents.ASSETS` event.
+To listen to assets events, you can use the `fuel.events.assets` event.
 
 <CodeImport file="../examples/events/Assets.tsx" lineStart="25" lineEnd="35" />
 <Examples.Events.Assets />

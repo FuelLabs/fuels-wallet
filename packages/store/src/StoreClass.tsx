@@ -268,7 +268,7 @@ export type StoreBroadcast<T extends MachinesObj> = StoreClass<T>['broadcast'];
  * });
  *
  * export const store = store$
- *   .addMachine(Services.accounts, () => accountMachine)
+ *   .addMachine(Services.accounts, () => accountsMachine)
  *   .addMachine(Services.networks, () => networksMachine)
  *   .addHandlers(accountEvents)
  *   .addHandlers(networkEvents)

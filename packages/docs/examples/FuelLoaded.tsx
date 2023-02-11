@@ -27,7 +27,7 @@ export function FuelLoaded() {
   }, []);
 
   return (
-    <ExampleBox>
+    <ExampleBox showNotDetectedOverlay={false}>
       <Flex gap="$4">
         {fuel ? (
           <Text>

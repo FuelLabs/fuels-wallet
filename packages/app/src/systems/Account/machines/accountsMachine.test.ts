@@ -1,14 +1,13 @@
-import Dexie from 'dexie';
 import { bn } from 'fuels';
 import { interpret } from 'xstate';
 
 import { MOCK_ACCOUNTS, createMockAccount } from '../__mocks__';
 import { AccountService } from '../services';
 
-import type { AccountMachineService, MachineEvents } from './accountMachine';
-import { accountMachine } from './accountMachine';
+import type { AccountsMachineService, MachineEvents } from './accountsMachine';
+import { accountsMachine } from './accountsMachine';
 
-import { Storage } from '~/systems/Core';
+import { db, Storage } from '~/systems/Core';
 import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 const MOCK_ACCOUNT = {
@@ -25,17 +24,16 @@ const MOCK_ACCOUNT_TWO = {
   balances: [{ amount: bn(100000), assetId: '0x0000000000' }],
 };
 
-const machine = accountMachine.withContext({}).withConfig({
+const machine = accountsMachine.withContext({}).withConfig({
   actions: {
     notifyUpdateAccounts() {},
-    redirectToHome() {},
     refreshApplication() {},
   },
 });
 
 describe('accountsMachine', () => {
-  let service: AccountMachineService;
-  let state: ReturnType<AccountMachineService['getSnapshot']>;
+  let service: AccountsMachineService;
+  let state: ReturnType<AccountsMachineService['getSnapshot']>;
 
   beforeEach(async () => {
     await AccountService.clearAccounts();
@@ -57,7 +55,7 @@ describe('accountsMachine', () => {
 
     it('should fetch a list of accounts', async () => {
       state = await expectStateMatch(service, 'idle');
-      // TODO refactor: change to service.send(addEvent) when it is added to the accountMachine
+      // TODO refactor: change to service.send(addEvent) when it is added to the accountsMachine
       await AccountService.addAccount({ data: MOCK_ACCOUNT_TWO });
       const accounts = await AccountService.getAccounts();
 
@@ -73,7 +71,7 @@ describe('accountsMachine', () => {
   describe('select', () => {
     it('should be able to select a new account', async () => {
       state = await expectStateMatch(service, 'idle');
-      // TODO refactor: change to service.send(addEvent) when it is added to the accountMachine
+      // TODO refactor: change to service.send(addEvent) when it is added to the accountsMachine
       await AccountService.addAccount({ data: MOCK_ACCOUNT_TWO });
       let accounts = await AccountService.getAccounts();
 
@@ -155,7 +153,7 @@ describe('accountsMachine', () => {
 
     it('logout should clean indexdb and localstorage', async () => {
       await createMockAccount();
-      const DexieDeleteMock = jest.spyOn(Dexie, 'delete').mockImplementation();
+      const DatabaseMock = jest.spyOn(db, 'clear').mockImplementation();
       const StorageClearMock = jest
         .spyOn(Storage, 'clear')
         .mockImplementation();
@@ -164,7 +162,7 @@ describe('accountsMachine', () => {
       service.send('LOGOUT');
       await expectStateMatch(service, 'idle');
 
-      expect(DexieDeleteMock).toBeCalledTimes(1);
+      expect(DatabaseMock).toBeCalledTimes(1);
       expect(StorageClearMock).toBeCalledTimes(1);
     });
   });

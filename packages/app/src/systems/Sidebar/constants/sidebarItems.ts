@@ -2,6 +2,7 @@ import { buildBlockExplorerUrl } from 'fuels';
 
 import type { MenuItemObj } from '../components';
 
+import { store } from '~/store';
 import { Pages } from '~/systems/Core';
 
 export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
@@ -27,7 +28,9 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
     key: 'accounts',
     icon: 'Users',
     label: 'Accounts',
-    path: Pages.accounts(),
+    onPress() {
+      store.openAccountList();
+    },
   },
   {
     key: 'connected-apps',
@@ -71,7 +74,9 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
         key: 'logout',
         icon: 'SignOut',
         label: 'Logout',
-        path: Pages.logout(),
+        onPress() {
+          store.openAccountsLogout();
+        },
       },
     ],
   },

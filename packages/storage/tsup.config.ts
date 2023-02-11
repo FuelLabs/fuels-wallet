@@ -1,8 +1,8 @@
 export default {
-  format: ['cjs', 'esm'],
-  splitting: false,
   sourcemap: true,
-  clean: false,
+  shims: true,
+  treeshake: true,
+  format: ['cjs', 'esm'],
   minify: process.env.NODE_ENV === 'production',
   entry: ['src/index.ts'],
 };

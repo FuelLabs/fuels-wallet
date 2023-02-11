@@ -9,7 +9,11 @@ type BottomBarProps = {
 
 export function BottomBar({ children }: BottomBarProps) {
   return (
-    <Grid gap="$4" css={styles.root(Children.count(children))}>
+    <Grid
+      gap="$4"
+      css={styles.root(Children.count(children))}
+      className="layout__bottom"
+    >
       {children}
     </Grid>
   );

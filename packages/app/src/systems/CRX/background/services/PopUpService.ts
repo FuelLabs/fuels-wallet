@@ -1,8 +1,14 @@
 import { POPUP_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
 import type { ResponseMessage, UIEventMessage } from '@fuel-wallet/types';
+import type { JSONRPCRequest } from 'json-rpc-2.0';
 import { JSONRPCClient } from 'json-rpc-2.0';
 
-import { createPopUp, getTabIdFromSender, showPopUp } from '../../utils';
+import {
+  closePopUp,
+  createPopUp,
+  getTabIdFromSender,
+  showPopUp,
+} from '../../utils';
 import type { DeferPromise } from '../../utils/promise';
 import { deferPromise } from '../../utils/promise';
 
@@ -11,7 +17,6 @@ import type { MessageInputs } from './types';
 
 import { CRXPages } from '~/systems/Core/types';
 import { uniqueId } from '~/systems/Core/utils/string';
-import { NetworkService } from '~/systems/Network/services';
 
 const popups = new Map<string, PopUpService>();
 
@@ -27,18 +32,7 @@ export class PopUpService {
   constructor(communicationProtocol: CommunicationProtocol) {
     this.communicationProtocol = communicationProtocol;
     this.openingPromise = deferPromise<PopUpService>();
-    this.client = new JSONRPCClient(async (rpcRequest) => {
-      if (this.eventId) {
-        this.communicationProtocol.postMessage({
-          type: MessageTypes.request,
-          target: POPUP_SCRIPT_NAME,
-          id: this.eventId,
-          request: rpcRequest,
-        });
-      } else {
-        throw new Error('UI not connected!');
-      }
-    });
+    this.client = new JSONRPCClient(this.sendRequest);
     this.setupUIListeners();
     this.setTimeout();
   }
@@ -51,9 +45,25 @@ export class PopUpService {
 
   rejectAllRequests = (id: string) => {
     if (id === this.eventId) {
+      // Close popup on rejecting connection
+      closePopUp(this.tabId);
+      // Reject all pending requests
       this.client.rejectAllPendingRequests(
         'Request cancelled without explicity response!'
       );
+    }
+  };
+
+  sendRequest = async (rpcRequest: JSONRPCRequest) => {
+    if (this.eventId) {
+      this.communicationProtocol.postMessage({
+        type: MessageTypes.request,
+        target: POPUP_SCRIPT_NAME,
+        id: this.eventId,
+        request: rpcRequest,
+      });
+    } else {
+      throw new Error('UI not connected!');
     }
   };
 
@@ -136,8 +146,8 @@ export class PopUpService {
   };
 
   // UI exposed methods
-  async requestConnection(origin: string) {
-    return this.client.request('requestConnection', { origin });
+  async requestConnection(input: MessageInputs['requestConnection']) {
+    return this.client.request('requestConnection', input);
   }
 
   async signMessage(input: MessageInputs['signMessage']) {
@@ -145,18 +155,6 @@ export class PopUpService {
   }
 
   async sendTransaction(input: MessageInputs['sendTransaction']) {
-    const selectedNetwork = await NetworkService.getSelectedNetwork();
-    if (selectedNetwork?.url !== input.provider.url) {
-      // TODO: Show for the user to add new network before
-      // finishing the transaction
-      // https://github.com/FuelLabs/fuels-wallet/issues/200
-      throw new Error(
-        [
-          `${input.provider.url} is different from the user current network!`,
-          'Request the user to add the new network. fuel.addNetwork([...]).',
-        ].join('\n')
-      );
-    }
     return this.client.request('sendTransaction', input);
   }
 

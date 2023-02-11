@@ -19,11 +19,6 @@ import type { ChildrenMachine, Maybe } from '~/systems/Core';
 import { FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
-export enum AccountScreen {
-  list = 'list',
-  add = 'add',
-}
-
 type MachineContext = {
   accounts?: Account[];
   accountName?: string;
@@ -63,10 +58,33 @@ export type MachineEvents =
   | { type: 'CLOSE_UNLOCK'; input?: void }
   | { type: 'LOGOUT'; input?: void };
 
-export const accountMachine = createMachine(
+const fetchAccount = {
+  invoke: {
+    src: 'fetchAccount',
+    onDone: [
+      {
+        target: 'idle',
+        actions: ['assignAccount'],
+        cond: 'hasAccount',
+      },
+      {
+        target: 'idle',
+        actions: ['assignAccount', 'setIsUnlogged'],
+      },
+    ],
+    onError: [
+      {
+        actions: 'assignError',
+        target: 'failed',
+      },
+    ],
+  },
+};
+
+export const accountsMachine = createMachine(
   {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    tsTypes: {} as import('./accountMachine.typegen').Typegen0,
+    tsTypes: {} as import('./accountsMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,
       services: {} as MachineServices,
@@ -78,12 +96,6 @@ export const accountMachine = createMachine(
     states: {
       idle: {
         on: {
-          UPDATE_ACCOUNTS: {
-            target: 'fetchingAccounts',
-          },
-          UPDATE_ACCOUNT: {
-            target: 'fetchingAccount',
-          },
           HIDE_ACCOUNT: {
             actions: ['hideAccount'],
             target: 'idle',
@@ -95,12 +107,21 @@ export const accountMachine = createMachine(
             actions: ['assignAccountName'],
             target: 'unlocking',
           },
+          UPDATE_ACCOUNTS: {
+            target: 'fetchingAccounts',
+          },
+          UPDATE_ACCOUNT: {
+            target: 'updateAccount',
+          },
         },
         after: {
+          /**
+           * Update accounts every 5 seconds
+           */
           TIMEOUT: {
-            target: 'fetchingAccount',
+            target: 'updateAccount',
             cond: 'isLoggedIn',
-          }, // retry
+          },
         },
       },
       fetchingAccounts: {
@@ -128,26 +149,10 @@ export const accountMachine = createMachine(
       },
       fetchingAccount: {
         tags: ['loading'],
-        invoke: {
-          src: 'fetchAccount',
-          onDone: [
-            {
-              target: 'idle',
-              actions: ['assignAccount'],
-              cond: 'hasAccount',
-            },
-            {
-              target: 'idle',
-              actions: ['assignAccount', 'setIsUnlogged'],
-            },
-          ],
-          onError: [
-            {
-              actions: 'assignError',
-              target: 'failed',
-            },
-          ],
-        },
+        ...fetchAccount,
+      },
+      updateAccount: {
+        ...fetchAccount,
       },
       settingCurrentAccount: {
         invoke: {
@@ -259,11 +264,16 @@ export const accountMachine = createMachine(
       },
     },
     on: {
-      LOGOUT: 'loggingout',
+      LOGOUT: {
+        target: 'loggingout',
+      },
     },
   },
   {
-    delays: { INTERVAL: 2000, TIMEOUT: 5000 },
+    delays: {
+      INTERVAL: 2000,
+      TIMEOUT: 5000,
+    },
     actions: {
       clearUnlockError: assign({
         unlockError: (_) => undefined,
@@ -305,6 +315,9 @@ export const accountMachine = createMachine(
       }),
       notifyUpdateAccounts: () => {
         store.updateAccounts();
+      },
+      redirectToHome() {
+        store.closeOverlay();
       },
     },
     services: {
@@ -380,18 +393,18 @@ export const accountMachine = createMachine(
         return !!Storage.getItem(IS_LOGGED_KEY);
       },
       hasAccount: (ctx, ev) => {
-        return Boolean(ctx?.account || ev?.data);
+        return Boolean(ev?.data || ctx?.account);
       },
       hasAccounts: (ctx, ev) => {
-        return Boolean((ctx?.accounts || ev.data || []).length);
+        return Boolean((ev.data || ctx?.accounts || []).length);
       },
     },
   }
 );
 
-export type AccountMachine = typeof accountMachine;
-export type AccountMachineService = InterpreterFrom<AccountMachine>;
-export type AccountMachineState = StateFrom<AccountMachine> &
+export type AccountsMachine = typeof accountsMachine;
+export type AccountsMachineService = InterpreterFrom<AccountsMachine>;
+export type AccountsMachineState = StateFrom<AccountsMachine> &
   ChildrenMachine<{
     unlock: UnlockMachine;
   }>;

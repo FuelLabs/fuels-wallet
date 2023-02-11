@@ -21,10 +21,6 @@ export function Home() {
     navigate(Pages.receive());
   };
 
-  const goToAccounts = () => {
-    navigate(Pages.accounts());
-  };
-
   return (
     <Layout title="Home" isLoading={isLoading} isHome>
       <Layout.TopBar />
@@ -35,7 +31,6 @@ export function Home() {
             account={account}
             isLoading={isLoading}
             onChangeVisibility={setVisibility}
-            onPressAccounts={goToAccounts}
           />
           <HomeActions
             receiveAction={goToReceive}

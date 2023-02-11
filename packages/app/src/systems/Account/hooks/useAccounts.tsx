@@ -1,38 +1,43 @@
 /* eslint-disable consistent-return */
 import { bn } from 'fuels';
 import { useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-import type { AccountMachineState } from '../machines';
+import type { AccountsMachineState } from '../machines';
 
 import { store, Services } from '~/store';
-import { Pages } from '~/systems/Core';
+import { useOverlay } from '~/systems/Overlay';
+
+enum AccountStatus {
+  idle = 'idle',
+  loading = 'loading',
+  unlocking = 'unlocking',
+  unlockingLoading = 'unlockingLoading',
+}
 
 const selectors = {
-  isLoading(state: AccountMachineState) {
-    return state.hasTag('loading');
-  },
-  isAddingAccount: (state: AccountMachineState) => {
-    return state.matches('addingAccount');
-  },
-  accounts: (state: AccountMachineState) => {
-    return state.context?.accounts;
-  },
-  account: (state: AccountMachineState) => {
-    return state.context?.account;
-  },
-  hasBalance(state: AccountMachineState) {
+  hasBalance(state: AccountsMachineState) {
     const acc = state.context?.account;
     return bn(acc?.balance ?? 0).gt(0);
   },
-  unlockError: (state: AccountMachineState) => {
-    return state.context?.unlockError;
+  accounts(state: AccountsMachineState) {
+    return state.context?.accounts;
   },
-  isUnlocking: (state: AccountMachineState) => {
-    return state.matches('unlocking');
-  },
-  isUnlockingLoading: (state: AccountMachineState) => {
+  isUnlockingLoading: (state: AccountsMachineState) => {
     return state.children.unlock?.state.matches('unlockingVault');
+  },
+  status(state: AccountsMachineState) {
+    if (selectors.isUnlockingLoading(state)) {
+      return AccountStatus.unlockingLoading;
+    }
+    if (state.hasTag('loading')) return AccountStatus.loading;
+    if (state.matches('unlocking')) return AccountStatus.unlocking;
+    return AccountStatus.idle;
+  },
+  context(state: AccountsMachineState) {
+    return state.context;
+  },
+  account(state: AccountsMachineState) {
+    return state.context.account;
   },
 };
 
@@ -44,35 +49,12 @@ const listenerAccountFetcher = () => {
 
 export function useAccounts() {
   const shouldListen = useRef(true);
-  const navigate = useNavigate();
-  const isAddingAccount = store.useSelector(
-    Services.accounts,
-    selectors.isAddingAccount
-  );
-  const isLoading = store.useSelector(Services.accounts, selectors.isLoading);
+  const hasBalance = store.useSelector(Services.accounts, selectors.hasBalance);
+  const accountStatus = store.useSelector(Services.accounts, selectors.status);
+  const ctx = store.useSelector(Services.accounts, selectors.context);
   const accounts = store.useSelector(Services.accounts, selectors.accounts);
   const account = store.useSelector(Services.accounts, selectors.account);
-  const hasBalance = store.useSelector(Services.accounts, selectors.hasBalance);
-  const unlockError = store.useSelector(
-    Services.accounts,
-    selectors.unlockError
-  );
-  const isUnlocking = store.useSelector(
-    Services.accounts,
-    selectors.isUnlocking
-  );
-  const isUnlockingLoading = store.useSelector(
-    Services.accounts,
-    selectors.isUnlockingLoading
-  );
-
-  function goToList() {
-    navigate(Pages.accounts());
-  }
-
-  function goToAdd() {
-    navigate(Pages.accountAdd());
-  }
+  const overlay = useOverlay();
 
   function unlock(password: string) {
     store.send(Services.accounts, {
@@ -87,11 +69,19 @@ export function useAccounts() {
     });
   }
 
+  function closeDialog() {
+    overlay.close();
+    if (status('unlocking')) {
+      closeUnlock();
+    }
+  }
+
+  function status(status: keyof typeof AccountStatus) {
+    return accountStatus === status;
+  }
+
   store.useUpdateMachineConfig(Services.accounts, {
     actions: {
-      redirectToHome() {
-        navigate(Pages.wallet());
-      },
       refreshApplication() {
         window.location.reload();
       },
@@ -109,23 +99,22 @@ export function useAccounts() {
   }, []);
 
   return {
+    ...ctx,
     accounts,
     account,
+    status,
     hasBalance,
-    unlockError,
-    isUnlocking,
-    isUnlockingLoading,
-    isAddingAccount,
-    isLoading: isLoading && !accounts,
+    isLoading: status('loading'),
     handlers: {
-      goToList,
-      goToAdd,
       unlock,
       closeUnlock,
-      logout: store.logout,
-      hideAccount: store.hideAccount,
-      setCurrentAccount: store.setCurrentAccount,
+      closeDialog,
       addAccount: store.addAccount,
+      goToAdd: store.openAccountsAdd,
+      goToList: store.openAccountList,
+      hideAccount: store.hideAccount,
+      logout: store.logout,
+      setCurrentAccount: store.setCurrentAccount,
     },
   };
 }

@@ -57,6 +57,7 @@ export const signMachine = createMachine(
     },
     id: '(machine)',
     initial: 'idle',
+    context: {},
     states: {
       idle: {
         on: {
@@ -64,17 +65,6 @@ export const signMachine = createMachine(
             actions: ['assignSignData'],
             target: 'fetchingAccount',
           },
-        },
-        after: {
-          /** connection should start quickly, if not, it's probably an error or reloading.
-           * to avoid stuck black screen, should close the window and let user retry */
-          TIMEOUT: '#(machine).closing', // retry
-        },
-      },
-      closing: {
-        entry: ['closeWindow'],
-        always: {
-          target: '#(machine).failed',
         },
       },
       fetchingAccount: {

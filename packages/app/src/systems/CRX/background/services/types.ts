@@ -16,4 +16,7 @@ export type MessageInputs = {
     asset: Asset;
     origin: string;
   };
+  requestConnection: {
+    origin: string;
+  };
 };

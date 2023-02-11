@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Stack, Tag, Text } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/sdk';
-import { FuelWalletEvents } from '@fuel-wallet/sdk';
 import { useEffect, useState } from 'react';
 
 import { ExampleBox } from '~/src/components/ExampleBox';
@@ -27,9 +26,9 @@ export function AssetsExample() {
   };
 
   useEffect(() => {
-    fuel?.on(FuelWalletEvents.ASSETS, handleAssetsEvent);
+    fuel?.on(fuel.events.assets, handleAssetsEvent);
     return () => {
-      fuel?.off(FuelWalletEvents.ASSETS, handleAssetsEvent);
+      fuel?.off(fuel.events.assets, handleAssetsEvent);
     };
   }, [fuel]);
 
