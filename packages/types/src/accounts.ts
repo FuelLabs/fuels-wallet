@@ -10,6 +10,7 @@ export type Vault = {
 export type Account = {
   name: string;
   address: string;
+  vaultId?: number;
   publicKey: string;
   isHidden?: boolean;
   balance?: BigNumberish | BN;

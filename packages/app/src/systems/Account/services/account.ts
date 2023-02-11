@@ -8,11 +8,12 @@ import { Address, bn, Provider } from 'fuels';
 import { unlockManager } from '../utils/manager';
 
 import { isEth } from '~/systems/Asset/utils/asset';
+import { CoreService } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
-import { Storage } from '~/systems/Core/utils/storage';
 import { getPhraseFromValue } from '~/systems/Core/utils/string';
 import { NetworkService } from '~/systems/Network/services';
+import { VaultService } from '~/systems/Vault';
 
 export type AccountInputs = {
   addAccount: {
@@ -20,6 +21,7 @@ export type AccountInputs = {
       name: string;
       address: string;
       publicKey: string;
+      vaultId?: number;
       isHidden?: boolean;
     };
   };
@@ -171,25 +173,31 @@ export class AccountService {
     return Object.values(accountMap || {});
   }
 
-  static async createManager({ data }: AccountInputs['createManager']) {
+  static async createVault({ data }: AccountInputs['createManager']) {
     if (!data?.password || !data?.mnemonic) {
       throw new Error('Invalid data');
     }
 
-    await db.vaults.clear();
+    // Clear databse on create
+    await db.clear();
+    await VaultService.unlock({ password: data.password });
 
-    try {
-      const manager = await unlockManager(data.password);
-      await manager.addVault({
-        type: 'mnemonic',
-        secret: getPhraseFromValue(data.mnemonic),
-      });
-      return manager;
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
-      throw error;
-    }
+    // Create vault using mnemonic
+    const account = await VaultService.createVault({
+      type: 'mnemonic',
+      secret: getPhraseFromValue(data.mnemonic),
+    });
+
+    // Register the first account retuned from the vault
+    return this.addAccount({
+      data: {
+        name: 'Account 1',
+        address: account.address.toString(),
+        publicKey: account.publicKey,
+        isHidden: false,
+        vaultId: account.vaultId,
+      },
+    });
   }
 
   static async addNewAccount({ data }: AccountInputs['addNewAccount']) {
@@ -208,6 +216,7 @@ export class AccountService {
         name: data.name,
         address: account.address.toString(),
         publicKey: account.publicKey,
+        vaultId: 0,
       },
     });
     return dbAccount;
@@ -293,8 +302,7 @@ export class AccountService {
   }
 
   static async logout() {
-    await db.clear();
-    await Storage.clear();
+    return CoreService.clear();
   }
 }
 

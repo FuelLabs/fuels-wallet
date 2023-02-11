@@ -6,7 +6,7 @@ import { send } from 'xstate/lib/actions';
 import type { AccountInputs } from '../services/account';
 import { AccountService } from '../services/account';
 
-import { unlockMachine, unlockMachineErrorAction } from './unlockMachine';
+import { unlockMachine } from './unlockMachine';
 import type {
   UnlockMachine,
   UnlockVaultReturn,
@@ -206,7 +206,6 @@ export const accountsMachine = createMachine(
           id: 'unlock',
           src: 'unlock',
           onDone: [
-            unlockMachineErrorAction('unlocking', 'unlockError'),
             {
               actions: ['clearUnlockError'],
               target: 'addingAccount',

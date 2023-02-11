@@ -40,7 +40,7 @@ type MachineContext = {
 };
 
 type MachineServices = {
-  createManager: {
+  setupVault: {
     data: Maybe<Account>;
   };
 };
@@ -146,7 +146,7 @@ export const signUpMachine = createMachine(
       creatingWallet: {
         tags: ['loading'],
         invoke: {
-          src: 'createManager',
+          src: 'setupVault',
           onDone: {
             actions: ['assignAccount', 'deleteData', 'sendAccountCreated'],
             target: 'done',
@@ -227,24 +227,16 @@ export const signUpMachine = createMachine(
       },
     },
     services: {
-      async createManager({ data }) {
+      async setupVault({ data }) {
         if (!data?.password) {
           throw new Error('Invalid password');
         }
         if (!data.mnemonic) {
           throw new Error('Invalid mnemonic');
         }
-
-        const manager = await AccountService.createManager({ data });
-        const account = manager.getAccounts()[0];
+        const account = await AccountService.createVault({ data });
         await NetworkService.addFirstNetwork();
-        return AccountService.addAccount({
-          data: {
-            name: 'Account 1',
-            address: account.address.toAddress(),
-            publicKey: account.publicKey,
-          },
-        });
+        return account;
       },
     },
   }
