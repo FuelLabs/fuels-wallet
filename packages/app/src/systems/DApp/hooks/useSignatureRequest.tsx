@@ -9,6 +9,8 @@ const selectors = {
   origin: (state: MessageRequestState) => state.context.origin,
   message: (state: MessageRequestState) => state.context.message,
   signedMessage: (state: MessageRequestState) => state.context.signedMessage,
+  isLoading: (state: MessageRequestState) =>
+    state.matches('signingMessage') || state.matches('fetchingAccount'),
 };
 
 export function useSignatureRequest() {
@@ -17,6 +19,7 @@ export function useSignatureRequest() {
   const message = useSelector(service, selectors.message);
   const origin = useSelector(service, selectors.origin);
   const account = useSelector(service, selectors.account);
+  const isLoading = useSelector(service, selectors.isLoading);
 
   function sign() {
     service.send('SIGN_MESSAGE');
@@ -35,5 +38,6 @@ export function useSignatureRequest() {
     message,
     account,
     signedMessage,
+    isLoading,
   };
 }

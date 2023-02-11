@@ -3,8 +3,7 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { AccountService } from '~/systems/Account';
-import type { AccountInputs, UnlockMachine } from '~/systems/Account';
-import type { ChildrenMachine } from '~/systems/Core';
+import type { AccountInputs } from '~/systems/Account';
 import { FetchMachine } from '~/systems/Core';
 
 type MachineServices = {
@@ -142,7 +141,4 @@ export const settingsMachine = createMachine(
 
 export type SettingsMachine = typeof settingsMachine;
 export type SettingsMachineService = InterpreterFrom<typeof settingsMachine>;
-export type SettingsMachineState = StateFrom<typeof settingsMachine> &
-  ChildrenMachine<{
-    unlock: UnlockMachine;
-  }>;
+export type SettingsMachineState = StateFrom<typeof settingsMachine>;

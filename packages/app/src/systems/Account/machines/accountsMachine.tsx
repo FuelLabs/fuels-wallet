@@ -5,11 +5,9 @@ import { assign, createMachine } from 'xstate';
 import type { AccountInputs } from '../services/account';
 import { AccountService } from '../services/account';
 
-import type { UnlockMachine, UnlockVaultReturn } from './unlockMachine';
-
 import { IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
-import type { ChildrenMachine, Maybe } from '~/systems/Core';
+import type { Maybe } from '~/systems/Core';
 import { FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 
@@ -170,10 +168,9 @@ export const accountsMachine = createMachine(
         invoke: {
           src: 'addAccount',
           data: {
-            input: (ctx: MachineContext, ev: UnlockVaultReturn) => {
+            input: (ctx: MachineContext) => {
               return {
                 data: {
-                  manager: ev.data,
                   name: ctx.accountName,
                 },
               };
@@ -318,7 +315,13 @@ export const accountsMachine = createMachine(
           if (!input?.data.name.trim()) {
             throw new Error('Name cannot be empty');
           }
-          let account = await AccountService.addNewAccount(input);
+          let account = await AccountService.addNewAccount({
+            data: {
+              ...input.data,
+              // TODO: remove this when we have multiple vaults
+              vaultId: 0,
+            },
+          });
           if (!account) {
             throw new Error('Failed to add account');
           }
@@ -352,7 +355,4 @@ export const accountsMachine = createMachine(
 
 export type AccountsMachine = typeof accountsMachine;
 export type AccountsMachineService = InterpreterFrom<AccountsMachine>;
-export type AccountsMachineState = StateFrom<AccountsMachine> &
-  ChildrenMachine<{
-    unlock: UnlockMachine;
-  }>;
+export type AccountsMachineState = StateFrom<AccountsMachine>;

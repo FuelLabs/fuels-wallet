@@ -24,13 +24,7 @@ const selectors = {
   accounts(state: AccountsMachineState) {
     return state.context?.accounts;
   },
-  isUnlockingLoading: (state: AccountsMachineState) => {
-    return state.children.unlock?.state.matches('unlockingVault');
-  },
   status(state: AccountsMachineState) {
-    if (selectors.isUnlockingLoading(state)) {
-      return AccountStatus.unlockingLoading;
-    }
     if (state.hasTag('loading')) return AccountStatus.loading;
     return AccountStatus.idle;
   },
