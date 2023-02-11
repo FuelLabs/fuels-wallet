@@ -116,6 +116,11 @@ export const addAssetMachine = createMachine(
             throw new Error('Invalid asset');
           }
 
+          const currentAsset = await AssetService.getAsset(input.data.assetId);
+          if (currentAsset && !currentAsset.isCustom) {
+            throw new Error(`It's not allowed to change Listed Assets`);
+          }
+
           const asset = await AssetService.upsertAsset({
             data: { ...input.data, isCustom: true },
           });

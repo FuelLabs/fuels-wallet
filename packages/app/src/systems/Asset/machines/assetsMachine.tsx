@@ -131,15 +131,6 @@ export const assetsMachine = createMachine(
     },
   },
   {
-    guards: {
-      // TODO: add security guards to avoid any change in listed assets
-      // hasOriginParam: (ctx) => {
-      //   return !!ctx.inputs.origin?.length;
-      // },
-      // hasNoAssets(_, ev) {
-      //   return !ev.data?.accounts.length;
-      // },
-    },
     actions: {
       assignAssets: assign({
         assets: (_, ev) => ev.data,
@@ -154,7 +145,7 @@ export const assetsMachine = createMachine(
         async fetch() {
           await Promise.all(
             ASSETS_LISTED.map((asset) =>
-              AssetService.upsertAsset({ data: asset })
+              AssetService.upsertAsset({ data: { ...asset, isCustom: false } })
             )
           );
         },
@@ -176,6 +167,10 @@ export const assetsMachine = createMachine(
         async fetch({ input }) {
           if (!input?.data) {
             throw new Error('Missing data');
+          }
+          const currentAsset = await AssetService.getAsset(input.data.assetId);
+          if (currentAsset && !currentAsset.isCustom) {
+            throw new Error(`It's not allowed to change Listed Assets`);
           }
 
           await AssetService.upsertAsset({ data: input.data });

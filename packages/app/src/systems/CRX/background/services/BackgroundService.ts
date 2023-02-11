@@ -14,6 +14,7 @@ import { PopUpService } from './PopUpService';
 import type { MessageInputs } from './types';
 
 import { AccountService } from '~/systems/Account/services';
+import { AssetService } from '~/systems/Asset/services';
 import { Pages } from '~/systems/Core/types';
 import { ConnectionService } from '~/systems/DApp/services';
 import { NetworkService } from '~/systems/Network/services';
@@ -266,10 +267,9 @@ export class BackgroundService {
   }
 
   async assets(_: JSONRPCParams) {
-    // TODO: this line is breaking the code because of circular dependencies. service worker doesnt start
-    // const assets = await AssetService.getAssets();
+    const assets = await AssetService.getAssets();
 
-    return { assets: [] };
+    return assets || [];
   }
 
   async addAsset(

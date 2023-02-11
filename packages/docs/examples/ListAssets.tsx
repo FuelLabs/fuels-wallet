@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import { Button, Stack, Tag, Text } from '@fuel-ui/react';
+import { Button, Stack, Tag } from '@fuel-ui/react';
+import type { Asset } from '@fuel-wallet/sdk';
 import { useState } from 'react';
 
 import { ExampleBox } from '~/src/components/ExampleBox';
@@ -11,7 +12,7 @@ import { useLoading } from '~/src/hooks/useLoading';
 export function ListAssets() {
   const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
-  const [assets, setAssets] = useState<Array<string>>([]);
+  const [assets, setAssets] = useState<Array<Asset>>([]);
   const [handleGetAssets, isLoadingAssets, errorGetAssets] = useLoading(
     async () => {
       console.debug('Request assets to Wallet!');
@@ -44,7 +45,7 @@ export function ListAssets() {
                 variant="ghost"
                 key={JSON.stringify(asset)}
               >
-                <Text>{JSON.stringify(asset)}</Text>
+                {asset.name} ({asset.symbol}): {asset.assetId}
               </Tag>
             ))}
           </Stack>
@@ -60,8 +61,12 @@ const styles = {
     display: 'inline-flex',
     alignItems: 'flex-start',
 
-    '.fuel_tag > p': {
-      fontSize: '$xs',
+    '.fuel_tag': {
+      justifyContent: 'flex-start',
+
+      '& > p': {
+        fontSize: '$xs',
+      },
     },
   }),
 };

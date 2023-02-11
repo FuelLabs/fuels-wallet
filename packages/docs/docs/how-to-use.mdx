@@ -74,7 +74,7 @@ You can list the assets in the wallet using `window.fuel.assets()`.
 
 <Examples.ListAssets />
 
-## Adding custom Asset to Wallet Asset collection
+## Adding custom Asset
 
 To add a custom Asset, use the `wallet.addAsset` method and pass in the `Asset` you want to add.
 
@@ -119,7 +119,6 @@ To listen to current account events, you can use the `FuelWalletEvents.CURRENT_A
   lineStart="24"
   lineEnd="35"
 />
-
 <Examples.Events.CurrentAccount />
 
 ### Network Change
@@ -131,3 +130,10 @@ To listen to network events, you can use the `FuelWalletEvents.NETWORK` event.
 Switch the network in your wallet to see the event triggered.
 
 <Examples.Events.Network />
+
+### Assets
+
+To listen to assets events, you can use the `FuelWalletEvents.ASSETS` event.
+
+<CodeImport file="../examples/events/Assets.tsx" lineStart="25" lineEnd="35" />
+<Examples.Events.Assets />

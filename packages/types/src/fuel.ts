@@ -5,6 +5,7 @@ import type {
 } from 'dexie-observable/api';
 import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
 
+import type { Asset } from './asset';
 import type { Network } from './network';
 
 export enum FuelWalletEvents {
@@ -12,6 +13,7 @@ export enum FuelWalletEvents {
   CURRENT_ACCOUNT = 'currentAccount',
   CONNECTION = 'connection',
   NETWORK = 'network',
+  ASSETS = 'assets',
 }
 
 export type FuelEvents =
@@ -30,6 +32,10 @@ export type FuelEvents =
   | {
       type: FuelWalletEvents.NETWORK;
       data: Network;
+    }
+  | {
+      type: FuelWalletEvents.ASSETS;
+      data: Array<Asset>;
     };
 
 export type FuelEventArg<T extends FuelEvents['type']> = Extract<
