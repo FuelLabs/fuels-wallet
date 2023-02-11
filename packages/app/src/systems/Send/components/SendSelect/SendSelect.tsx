@@ -34,9 +34,8 @@ export function SendSelect({
               <AssetSelect
                 items={account?.balances}
                 selected={field.value}
-                onSelect={(asset) => {
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-                  form.setValue('asset', asset?.assetId.toString()!, {
+                onSelect={(assetId) => {
+                  form.setValue('asset', assetId || '', {
                     shouldValidate: true,
                   });
                 }}

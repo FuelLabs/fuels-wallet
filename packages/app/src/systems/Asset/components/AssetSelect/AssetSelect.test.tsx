@@ -3,23 +3,20 @@ import { useState } from 'react';
 
 import { MOCK_ASSETS_AMOUNTS } from '../../__mocks__/assets';
 
-import type { AssetSelectInput } from './AssetSelect';
 import { AssetSelect } from './AssetSelect';
 
 const onSelect = jest.fn();
 
 type ContentProps = {
-  initialSelected?: AssetSelectInput | null;
+  initialSelected?: string | null;
 };
 
 function Content({ initialSelected = null }: ContentProps) {
-  const [selected, setSelected] = useState<AssetSelectInput>(
-    initialSelected as AssetSelectInput
-  );
+  const [selected, setSelected] = useState<string | null>(initialSelected);
 
-  function handleSelect(asset?: AssetSelectInput | null) {
-    onSelect(asset);
-    setSelected(asset!);
+  function handleSelect(assetId?: string | null) {
+    onSelect(assetId);
+    setSelected(assetId!);
   }
 
   return (
@@ -51,7 +48,7 @@ describe('AssetSelect', () => {
 
   it('should can have an initial selected item', async () => {
     const { container } = render(
-      <Content initialSelected={MOCK_ASSETS_AMOUNTS[0]} />
+      <Content initialSelected={MOCK_ASSETS_AMOUNTS[0].assetId} />
     );
     expect(() => screen.getByText('Select one asset')).toThrow();
     const trigger = container.querySelector('#fuel_asset-select');

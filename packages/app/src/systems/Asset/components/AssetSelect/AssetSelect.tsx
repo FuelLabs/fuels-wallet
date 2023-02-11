@@ -26,8 +26,8 @@ export type AssetSelectInput = AssetAmount | Coin | TxOutputCoin | TxInputCoin;
 
 export type AssetSelectProps = DropdownProps & {
   items?: Maybe<AssetSelectInput[]>;
-  onSelect: (asset?: AssetSelectInput | null) => void;
   selected?: Maybe<string>;
+  onSelect: (asset?: string | null) => void;
 };
 
 export function AssetSelect({
@@ -42,7 +42,7 @@ export function AssetSelect({
 
   function handleSelect(assetId: React.Key) {
     const asset = (items || [])?.find((i) => i.assetId === assetId);
-    onSelect(asset!);
+    onSelect(asset?.assetId.toString());
   }
 
   function handleClear() {

@@ -1,7 +1,6 @@
 import { Box } from '@fuel-ui/react';
+import { ASSETS_LISTED } from 'assets-listed';
 import { bn } from 'fuels';
-
-import { ASSET_LIST } from '../../utils';
 
 import type { AssetItemProps } from './AssetItem';
 import { AssetItem } from './AssetItem';
@@ -16,7 +15,7 @@ export const Usage = (args: AssetItemProps) => (
     <AssetItem
       {...args}
       coin={{
-        ...ASSET_LIST[0],
+        ...ASSETS_LISTED[0],
         amount: bn(14563943834),
       }}
     />
