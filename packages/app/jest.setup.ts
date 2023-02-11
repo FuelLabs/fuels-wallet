@@ -14,7 +14,9 @@ Object.defineProperty(window, 'scrollTo', { value: noop, writable: true });
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 Object.defineProperty(window, 'crypto', { value: webcrypto });
 
-// If test fails retry it until success
-jest.retryTimes(3, {
-  logErrorsBeforeRetry: true,
-});
+if (process.env.CI) {
+  // If test fails retry it until success
+  jest.retryTimes(3, {
+    logErrorsBeforeRetry: true,
+  });
+}

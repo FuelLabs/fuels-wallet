@@ -46,7 +46,6 @@ const selectors = {
         if (state.matches('idle')) return TxRequestStatus.idle;
         if (externalLoading || isLoading) return TxRequestStatus.loading;
         if (selectors.isUnlocking(state)) return TxRequestStatus.unlocking;
-        if (state.matches('unlocking')) return TxRequestStatus.waitingUnlock;
         if (state.matches('txFailed')) return TxRequestStatus.failed;
         if (state.matches('txSuccess')) return TxRequestStatus.success;
         if (state.matches('sendingTx')) return TxRequestStatus.sending;

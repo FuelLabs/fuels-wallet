@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import type { Account, Asset } from '@fuel-wallet/types';
 import type {
   BN,
@@ -24,7 +23,7 @@ import { getFee, getGasUsed, toJSON, processTransactionToTx } from '../utils';
 
 import { AccountService } from '~/systems/Account';
 import { isEth } from '~/systems/Asset';
-import { db, uniqueId } from '~/systems/Core';
+import { db, uniqueId, WalletLockedCustom } from '~/systems/Core';
 import { getGraphqlClient } from '~/systems/Core/utils/graphql';
 import { NetworkService } from '~/systems/Network';
 
@@ -43,8 +42,8 @@ export type TxInputs = {
     providerUrl: string;
   };
   send: {
+    address: string;
     transactionRequest: TransactionRequest;
-    wallet: WalletUnlocked;
     providerUrl?: string;
   };
   simulateTransaction: {
@@ -123,11 +122,11 @@ export class TxService {
   }
 
   static async send({
-    wallet,
+    address,
     transactionRequest,
-    providerUrl,
+    providerUrl = '',
   }: TxInputs['send']) {
-    wallet.provider = new Provider(providerUrl || '');
+    const wallet = new WalletLockedCustom(address, providerUrl);
     return wallet.sendTransaction(transactionRequest);
   }
 
