@@ -117,7 +117,12 @@ export function AssetSelect({
         onAction={handleSelect}
       >
         {(items || []).map((item) => (
-          <AssetSelectItem key={item.assetId.toString()} item={item} />
+          <Dropdown.MenuItem
+            key={item.assetId.toString()}
+            textValue={item.assetId.toString()}
+          >
+            <AssetSelectItem item={item} />
+          </Dropdown.MenuItem>
         ))}
       </Dropdown.Menu>
     </Dropdown>
@@ -129,17 +134,14 @@ type AssetSelectItemProps = {
 };
 
 function AssetSelectItem({ item }: AssetSelectItemProps) {
-  const asset = useAsset(item.assetId.toString());
+  const assetId = item.assetId.toString();
+  const asset = useAsset(assetId);
   const amount = bn(item.amount);
 
   const { name, symbol, imageUrl } = asset || {};
   const amountStr = `${formatAmount(amount)} ${symbol}`;
   return (
-    <Dropdown.MenuItem
-      key={item.assetId.toString()}
-      textValue={name}
-      aria-label={name}
-    >
+    <>
       <Avatar size="xsm" name={name || ''} src={imageUrl} />
       <Stack gap="$0" className="asset-info">
         <Text as="span" className="asset-name">
@@ -156,7 +158,7 @@ function AssetSelectItem({ item }: AssetSelectItemProps) {
           </Box>
         </Tooltip>
       </Flex>
-    </Dropdown.MenuItem>
+    </>
   );
 }
 

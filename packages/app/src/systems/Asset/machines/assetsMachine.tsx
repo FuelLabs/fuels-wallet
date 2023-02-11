@@ -7,7 +7,7 @@ import { assign, createMachine } from 'xstate';
 import type { AssetInputs } from '../services';
 import { AssetService } from '../services';
 
-import { FetchMachine } from '~/systems/Core';
+import { FetchMachine, relativeUrl } from '~/systems/Core';
 
 export enum AssetsStatus {
   loading = 'loading',
@@ -145,7 +145,13 @@ export const assetsMachine = createMachine(
         async fetch() {
           await Promise.all(
             ASSETS_LISTED.map((asset) =>
-              AssetService.upsertAsset({ data: { ...asset, isCustom: false } })
+              AssetService.upsertAsset({
+                data: {
+                  ...asset,
+                  isCustom: false,
+                  imageUrl: relativeUrl(asset.imageUrl),
+                },
+              })
             )
           );
         },
