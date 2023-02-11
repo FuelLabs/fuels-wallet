@@ -42,6 +42,7 @@ export class BackgroundService {
       this.signMessage,
       this.sendTransaction,
       this.currentAccount,
+      this.addAsset,
     ]);
   }
 
@@ -261,5 +262,28 @@ export class BackgroundService {
     return {
       url: selectedNetwork?.url,
     };
+  }
+
+  async addAsset(
+    input: Exclude<MessageInputs['addAsset'], 'origin'>,
+    serverParams: EventOrigin
+  ) {
+    const origin = serverParams.origin;
+
+    const app = await ConnectionService.getConnection(origin);
+    if (!app) {
+      throw new Error('Unable to establish a connection. No accounts found');
+    }
+
+    const popupService = await PopUpService.open(
+      origin,
+      Pages.requestAddAsset(),
+      this.communicationProtocol
+    );
+    const signedMessage = await popupService.addAsset({
+      ...input,
+      origin,
+    });
+    return signedMessage;
   }
 }

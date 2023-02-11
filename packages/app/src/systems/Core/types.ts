@@ -26,6 +26,7 @@ export const Pages = {
   requestConnection: route('/request/connection'),
   requestTransaction: route('/request/transaction'),
   requestMessage: route('/request/message'),
+  requestAddAsset: route('/request/asset'),
   txs: route('/transactions'),
   tx: route<'txId'>('/transactions/view/:txId'),
   settings: route('/settings'),

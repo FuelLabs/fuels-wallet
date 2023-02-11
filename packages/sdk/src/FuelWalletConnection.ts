@@ -1,4 +1,5 @@
 import type {
+  Asset,
   CommunicationMessage,
   FuelEventArg,
   FuelEvents,
@@ -87,6 +88,12 @@ export class FuelWalletConnection extends WindowConnection {
       address,
       provider: providerConfig,
       transaction: JSON.stringify(transaction),
+    });
+  }
+
+  async addAsset(asset: Asset): Promise<Asset> {
+    return this.client.request('addAsset', {
+      asset,
     });
   }
 

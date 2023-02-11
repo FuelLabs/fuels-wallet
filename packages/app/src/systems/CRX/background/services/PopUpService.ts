@@ -159,4 +159,8 @@ export class PopUpService {
     }
     return this.client.request('sendTransaction', input);
   }
+
+  async addAsset(input: MessageInputs['addAsset']) {
+    return this.client.request('addAsset', input);
+  }
 }
