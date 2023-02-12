@@ -11,7 +11,7 @@ import type { SendMachineState } from '../machines/sendMachine';
 import { sendMachine } from '../machines/sendMachine';
 
 import { useAccounts } from '~/systems/Account';
-import { useAssets } from '~/systems/Asset';
+import { isEth, useAssets } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
 import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionMachine';
@@ -116,11 +116,19 @@ export function useSend() {
   const isInvalid = useSelector(service, selectors.isInvalid);
   const titleSelector = selectors.title(txRequest.txStatus);
   const title = useSelector(service, titleSelector);
-  const accountBalance = bn(account?.balance);
-  const maxAmountToSend = accountBalance.sub(fee!);
 
   const balanceAssets = accountBalanceAssets?.filter(({ assetId }) =>
     assets.find((asset) => asset.assetId === assetId)
+  );
+
+  const assetIdSelected = form.getValues('asset');
+  const balanceAssetSelected = balanceAssets?.find(
+    ({ assetId }) => assetId === assetIdSelected
+  );
+  const isEthSelected =
+    !!assetIdSelected && isEth({ assetId: assetIdSelected });
+  const maxAmountToSend = bn(balanceAssetSelected?.amount).sub(
+    isEthSelected ? bn(fee) : 0
   );
 
   function status(status: keyof typeof SendStatus) {
@@ -187,8 +195,9 @@ export function useSend() {
     isInvalid,
     balanceAssets,
     account,
-    accountBalance,
     txRequest,
+    assetIdSelected,
+    maxAmountToSend,
     handlers: {
       cancel,
       submit,

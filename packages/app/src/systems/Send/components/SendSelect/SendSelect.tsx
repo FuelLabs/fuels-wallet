@@ -17,6 +17,7 @@ export function SendSelect({
   balanceAssets,
   txRequest,
   handlers,
+  maxAmountToSend,
   ...ctx
 }: SendSelectProps) {
   return (
@@ -78,7 +79,7 @@ export function SendSelect({
             render={({ field }) => (
               <InputAmount
                 name={field.name}
-                balance={ctx.accountBalance}
+                balance={maxAmountToSend}
                 value={bn(field.value)}
                 onChange={(value) => {
                   form.setValue('amount', value.toString());
