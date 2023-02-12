@@ -1,4 +1,5 @@
 import { Box } from '@fuel-ui/react';
+import { ASSETS_LISTED } from 'assets-listed';
 
 import {
   MOCK_OPERATION_CONTRACT_CALL,
@@ -22,6 +23,7 @@ export const Default = (args: TxOperationsProps) => (
       {...args}
       operations={[MOCK_OPERATION_CONTRACT_CALL, MOCK_OPERATION_TRANSFER]}
       status={TxStatus.success}
+      assets={ASSETS_LISTED}
     />
   </Box>
 );

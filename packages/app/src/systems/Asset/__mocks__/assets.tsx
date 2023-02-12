@@ -13,6 +13,15 @@ export const MOCK_ASSETS_AMOUNTS = ASSETS_LISTED.map((item, idx) => ({
   amount: bn(idx % 2 === 0 ? 14563943834 : -14563943834),
 }));
 
+export const MOCK_CUSTOM_ASSET = {
+  assetId: '0x0000000000212121',
+  name: 'Custom',
+  symbol: 'CUST',
+  imageUrl:
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
+  isCustom: true,
+};
+
 export const MOCK_ASSETS_NODE = [
   {
     node: {

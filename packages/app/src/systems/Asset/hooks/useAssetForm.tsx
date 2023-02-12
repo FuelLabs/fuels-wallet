@@ -31,12 +31,12 @@ function isValidUrl(url: any) {
 
 const schema = yup
   .object({
-    name: yup.string().required('Name is required'),
+    name: yup.string().max(20).required('Name is required'),
     assetId: yup
       .string()
       .test('is-id-valid', 'ID is not valid', isValidId)
       .required('Asset ID is required'),
-    symbol: yup.string().required('Symbol is required'),
+    symbol: yup.string().max(6).required('Symbol is required'),
     imageUrl: yup.string().test('is-url-valid', 'URL is not valid', isValidUrl),
   })
   .required();
