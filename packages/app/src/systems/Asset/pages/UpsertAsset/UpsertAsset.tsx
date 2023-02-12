@@ -49,6 +49,7 @@ export function UpsertAsset() {
               color="accent"
               isDisabled={!form.formState.isValid}
               isLoading={isLoading}
+              aria-label="Save Asset"
             >
               Save
             </Button>

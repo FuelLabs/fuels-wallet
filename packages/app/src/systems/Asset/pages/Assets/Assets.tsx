@@ -17,9 +17,13 @@ export function Assets() {
       <Layout.Content>
         <AnimatePresence initial={false} mode="wait">
           <Tabs defaultValue="listed">
-            <Tabs.List aria-label="Choose listed or custom assets">
-              <Tabs.Trigger value="listed">Listed</Tabs.Trigger>
-              <Tabs.Trigger value="custom">Custom</Tabs.Trigger>
+            <Tabs.List>
+              <Tabs.Trigger value="listed" aria-label="Listed Assets">
+                Listed
+              </Tabs.Trigger>
+              <Tabs.Trigger value="custom" aria-label="Custom Assets">
+                Custom
+              </Tabs.Trigger>
             </Tabs.List>
             <Tabs.Content value="listed">
               <AssetList assets={state.assetsListed} />
