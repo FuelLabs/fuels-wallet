@@ -12,8 +12,5 @@ export function mockUnlock(connector: VaultWebConnector) {
   connector.clientVault.unlock = async ({ password }) => {
     await connector.vault.unlock({ password });
     localStorage.setItem('password', password);
-    setTimeout(() => {
-      localStorage.removeItem('password');
-    }, 1000 * 60 * 10); // 10 minutes lock time
   };
 }
