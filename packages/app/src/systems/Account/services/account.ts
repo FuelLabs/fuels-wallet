@@ -1,19 +1,10 @@
 /* eslint-disable consistent-return */
-import type { WalletUnlocked } from '@fuel-ts/wallet';
-import { WalletLocked } from '@fuel-ts/wallet';
-import type { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account } from '@fuel-wallet/types';
 import { Address, bn, Provider } from 'fuels';
 
-import { unlockManager } from '../utils/manager';
-
 import { isEth } from '~/systems/Asset/utils/asset';
-import { CoreService } from '~/systems/Core/services';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
-import { getPhraseFromValue } from '~/systems/Core/utils/string';
-import { NetworkService } from '~/systems/Network/services';
-import { VaultService } from '~/systems/Vault/services';
 
 export type AccountInputs = {
   addAccount: {
@@ -38,29 +29,6 @@ export type AccountInputs = {
   hideAccount: {
     data: Pick<Account, 'address' | 'isHidden'>;
   };
-  createManager: {
-    data: {
-      password?: string;
-      mnemonic?: string[];
-    };
-  };
-  addNewAccount: {
-    data: {
-      name: string;
-      vaultId: number;
-    };
-  };
-  unlock: {
-    account: Account;
-    password: string;
-  };
-  unlockVault: {
-    password: string;
-  };
-  changePassword: {
-    oldPassword: string;
-    newPassword: string;
-  };
   setCurrentAccount: {
     address: string;
   };
@@ -80,7 +48,9 @@ export class AccountService {
         isHidden: !!input.data.isHidden,
       };
       await db.accounts.add(account);
-      return db.accounts.get({ address: input.data.address });
+      return db.accounts.get({
+        address: input.data.address,
+      }) as Promise<Account>;
     });
   }
 
@@ -173,97 +143,6 @@ export class AccountService {
     return Object.values(accountMap || {});
   }
 
-  static async createVault({ data }: AccountInputs['createManager']) {
-    if (!data?.password || !data?.mnemonic) {
-      throw new Error('Invalid data');
-    }
-
-    // Clear databse on create
-    await db.clear();
-    await VaultService.unlock({ password: data.password });
-
-    // Create vault using mnemonic
-    const account = await VaultService.createVault({
-      type: 'mnemonic',
-      secret: getPhraseFromValue(data.mnemonic),
-    });
-
-    // Register the first account retuned from the vault
-    return this.addAccount({
-      data: {
-        name: 'Account 1',
-        address: account.address.toString(),
-        publicKey: account.publicKey,
-        isHidden: false,
-        vaultId: account.vaultId,
-      },
-    });
-  }
-
-  static async addNewAccount({ data }: AccountInputs['addNewAccount']) {
-    const accounts = await this.getAccounts();
-    const existingAccount = accounts.find((a) => a.name === data.name);
-
-    if (existingAccount) {
-      throw new Error('Account name already exists');
-    }
-
-    const account = await VaultService.addAccount({
-      vaultId: data.vaultId,
-    });
-    // Add new account to database
-    const dbAccount = await this.addAccount({
-      data: {
-        name: data.name,
-        address: account.address.toString(),
-        publicKey: account.publicKey,
-      },
-    });
-    return dbAccount;
-  }
-
-  static async exportVault(input: AccountInputs['unlock']) {
-    const manager = await unlockManager(input.password);
-    const { secret } = manager.exportVault(0);
-    return secret;
-  }
-
-  static async unlock(input: AccountInputs['unlock']): Promise<WalletUnlocked> {
-    const manager = await unlockManager(input.password);
-    const wallet = manager.getWallet(Address.fromString(input.account.address));
-    const network = await NetworkService.getSelectedNetwork();
-    if (!network) {
-      throw new Error('Network not found!');
-    }
-    wallet.connect(network.url);
-    return wallet;
-  }
-
-  static async getWalletLocked(): Promise<WalletLocked> {
-    const network = await NetworkService.getSelectedNetwork();
-    const account = await AccountService.getCurrentAccount();
-    if (!network) {
-      throw new Error('Network not found!');
-    }
-    if (!account) {
-      throw new Error('Account not found!');
-    }
-    return new WalletLocked(Address.fromString(account.address), network.url);
-  }
-
-  static async unlockVault(
-    input: AccountInputs['unlockVault']
-  ): Promise<WalletManager> {
-    const manager = await unlockManager(input.password);
-    return manager;
-  }
-
-  static async changePassword(input: AccountInputs['changePassword']) {
-    const manager = await unlockManager(input.oldPassword);
-    await manager.updatePassphrase(input.oldPassword, input.newPassword);
-    return manager.lock();
-  }
-
   static getCurrentAccount() {
     return db.transaction('r', db.accounts, async () => {
       return (await db.accounts.toArray()).find((account) => account.isCurrent);
@@ -278,7 +157,7 @@ export class AccountService {
       await db.accounts.update(input.address, {
         isCurrent: true,
       });
-      return db.accounts.get(input.address);
+      return db.accounts.get(input.address) as Promise<Account>;
     });
   }
 
@@ -295,14 +174,16 @@ export class AccountService {
     });
   }
 
+  static async existsAccountName(name: string = '') {
+    const accounts = await AccountService.getAccounts();
+    const exitsAccount = this.filterByName(accounts, name).length > 0;
+    return exitsAccount;
+  }
+
   static filterByName(accounts: Account[], name: string = '') {
     return accounts.filter((account) =>
       account.name.toLowerCase().includes(name.toLowerCase())
     );
-  }
-
-  static async logout() {
-    return CoreService.clear();
   }
 }
 

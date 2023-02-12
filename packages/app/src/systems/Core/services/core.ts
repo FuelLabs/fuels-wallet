@@ -1,4 +1,5 @@
-import { db, Storage } from '../utils';
+import { db } from '../utils/database';
+import { Storage } from '../utils/storage';
 
 export class CoreService {
   static async clear() {

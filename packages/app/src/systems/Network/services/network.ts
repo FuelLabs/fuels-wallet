@@ -53,7 +53,7 @@ export class NetworkService {
         ...(count === 0 && { isSelected: true }),
         id: uniqueId(),
       });
-      return db.networks.get(id);
+      return db.networks.get(id) as Promise<Network>;
     });
   }
 
@@ -107,17 +107,21 @@ export class NetworkService {
         id: input.id,
         data: { isSelected: true },
       });
-      return db.networks.get(input.id);
+      return db.networks.get(input.id) as Promise<Network>;
     });
   }
 
-  static addFirstNetwork() {
-    const isProd =
-      import.meta.env.PROD || import.meta.env.NODE_ENV === 'production';
+  static async addFirstNetwork() {
+    const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
+    const chainInfo = await NetworkService.getChainInfo({
+      providerUrl,
+    }).catch(() => ({
+      name: 'Localhost',
+    }));
     return NetworkService.addNetwork({
       data: {
-        name: isProd ? 'Testnet' : 'Localhost',
-        url: import.meta.env.VITE_FUEL_PROVIDER_URL,
+        name: chainInfo.name,
+        url: providerUrl,
       },
     });
   }

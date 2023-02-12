@@ -41,7 +41,6 @@ describe('sendMachine', () => {
       account.isCurrent = true;
       account.balances = MOCK_ASSETS;
       await NetworkService.addFirstNetwork();
-      jest.spyOn(AccountService, 'unlock').mockResolvedValue(wallet);
     }
   });
 

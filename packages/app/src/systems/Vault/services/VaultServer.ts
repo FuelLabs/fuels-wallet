@@ -4,7 +4,6 @@ import { transactionRequestify, Address } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
-import { CoreService } from '~/systems/Core/services';
 
 export type VaultAccount = {
   address: string;
@@ -37,6 +36,7 @@ export type VaultInputs = {
   };
   exportVault: {
     vaultId: number;
+    password: string;
   };
 };
 
@@ -54,7 +54,6 @@ export class VaultServer extends EventEmitter {
     'changePassword',
     'exportVault',
     'lock',
-    'destroy',
   ];
 
   constructor() {
@@ -75,15 +74,10 @@ export class VaultServer extends EventEmitter {
     });
   }
 
-  async destroy(): Promise<void> {
-    return CoreService.clear();
-  }
-
   async createVault({
     type,
     secret,
   }: VaultInputs['createVault']): Promise<VaultAccount> {
-    await this.destroy();
     await this.manager.addVault({
       type,
       secret,
@@ -154,7 +148,11 @@ export class VaultServer extends EventEmitter {
     await this.manager.updatePassphrase(currentPassword, password);
   }
 
-  async exportVault({ vaultId }: VaultInputs['exportVault']): Promise<string> {
+  async exportVault({
+    vaultId,
+    password,
+  }: VaultInputs['exportVault']): Promise<string> {
+    await this.manager.unlock(password);
     const vault = await this.manager.exportVault(vaultId);
     return vault.secret || '';
   }

@@ -1,6 +1,7 @@
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
+import { CoreService } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core/machines';
 import type { VaultInputs } from '~/systems/Vault';
 import { VaultService } from '~/systems/Vault';
@@ -133,16 +134,14 @@ export const unlockMachine = createMachine(
       }),
     },
     guards: {
-      isLocked: (_, ev) => {
-        return ev.data;
-      },
+      isLocked: (_, ev) => ev.data,
     },
     services: {
       resetWallet: FetchMachine.create<void, void>({
         showError: true,
         maxAttempts: 1,
         async fetch() {
-          await VaultService.destroy();
+          await CoreService.clear();
         },
       }),
       checkLocked: FetchMachine.create<void, boolean>({

@@ -1,5 +1,6 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
+import type { InputPasswordProps } from '@fuel-ui/react';
 import { InputPassword, PasswordStrength, Stack } from '@fuel-ui/react';
 import { useState } from 'react';
 import type { ControllerRenderProps, FieldValues } from 'react-hook-form';
@@ -12,10 +13,12 @@ export type InputSecurePasswordProps = {
   field: ControllerRenderProps<FieldValues, string> & {
     id: string;
   };
+  inputProps?: Partial<InputPasswordProps>;
   css?: ThemeUtilsCSS;
 };
 
 export function InputSecurePassword({
+  inputProps,
   field,
   onChangeStrength,
   onBlur,
@@ -38,6 +41,7 @@ export function InputSecurePassword({
       >
         <InputPassword
           {...field}
+          {...inputProps}
           onBlur={() => {
             setPasswordTooltipOpened(false);
             onBlur?.();

@@ -4,9 +4,10 @@ import type { Account } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
+import { SignUpService } from '../services';
+
 import { IS_LOGGED_KEY, MNEMONIC_SIZE, VITE_MNEMONIC_WORDS } from '~/config';
 import { store } from '~/store';
-import { AccountService } from '~/systems/Account';
 import {
   assignErrorMessage,
   getPhraseFromValue,
@@ -15,7 +16,6 @@ import {
 } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
 import { isValidMnemonic } from '~/systems/Core/utils/mnemonic';
-import { NetworkService } from '~/systems/Network';
 
 // ----------------------------------------------------------------------------
 // Machine
@@ -234,8 +234,7 @@ export const signUpMachine = createMachine(
         if (!data.mnemonic) {
           throw new Error('Invalid mnemonic');
         }
-        const account = await AccountService.createVault({ data });
-        await NetworkService.addFirstNetwork();
+        const account = await SignUpService.create({ data });
         return account;
       },
     },

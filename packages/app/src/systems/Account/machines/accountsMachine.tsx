@@ -8,8 +8,9 @@ import { AccountService } from '../services/account';
 import { IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
 import type { Maybe } from '~/systems/Core';
-import { FetchMachine, Storage } from '~/systems/Core';
+import { CoreService, FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
+import { VaultService } from '~/systems/Vault';
 
 type MachineContext = {
   accounts?: Account[];
@@ -168,13 +169,9 @@ export const accountsMachine = createMachine(
         invoke: {
           src: 'addAccount',
           data: {
-            input: (ctx: MachineContext) => {
-              return {
-                data: {
-                  name: ctx.accountName,
-                },
-              };
-            },
+            input: (ctx: MachineContext) => ({
+              name: ctx.accountName,
+            }),
           },
           onDone: [
             {
@@ -308,34 +305,46 @@ export const accountsMachine = createMachine(
           return account;
         },
       }),
-      addAccount: FetchMachine.create<AccountInputs['addNewAccount'], Account>({
+      addAccount: FetchMachine.create<{ name: string }, Account>({
         showError: true,
         maxAttempts: 1,
         async fetch({ input }) {
-          if (!input?.data.name.trim()) {
+          if (!input?.name.trim()) {
             throw new Error('Name cannot be empty');
           }
-          let account = await AccountService.addNewAccount({
+          const { name } = input;
+
+          if (await AccountService.existsAccountName(name)) {
+            throw new Error('Account name already exists');
+          }
+
+          // Add account to vault
+          const accountVault = await VaultService.addAccount({
+            // TODO: remove this when we have multiple vaults
+            vaultId: 0,
+          });
+
+          // Add account to the database
+          let account = await AccountService.addAccount({
             data: {
-              ...input.data,
-              // TODO: remove this when we have multiple vaults
-              vaultId: 0,
+              ...input,
+              ...accountVault,
             },
           });
-          if (!account) {
-            throw new Error('Failed to add account');
-          }
+
+          // Add account to the database
           account = await AccountService.setCurrentAccount({
             address: account.address.toString(),
           });
-          return account as Account;
+
+          return account;
         },
       }),
       logout: FetchMachine.create<never, void>({
         showError: true,
         maxAttempts: 1,
         async fetch() {
-          await AccountService.logout();
+          await CoreService.clear();
         },
       }),
     },

@@ -179,7 +179,11 @@ export class TxService {
   }
 
   static async createFakeTx() {
-    const wallet = await AccountService.getWalletLocked();
+    const [account, network] = await Promise.all([
+      AccountService.getCurrentAccount(),
+      NetworkService.getSelectedNetwork(),
+    ]);
+    const wallet = new WalletLockedCustom(account!.address, network!.url);
     const params = { gasLimit: MAX_GAS_PER_TX };
     const request = new ScriptTransactionRequest(params);
     request.addCoinOutput(wallet.address, bn(1), NativeAssetId);

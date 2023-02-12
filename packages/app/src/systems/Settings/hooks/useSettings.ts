@@ -4,9 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { settingsMachine } from '../machines';
 import type { SettingsMachineState } from '../machines';
 
-import type { AccountInputs } from '~/systems/Account';
-import { useAccounts } from '~/systems/Account';
 import { Pages } from '~/systems/Core';
+import type { VaultInputs } from '~/systems/Vault';
 
 const selectors = {
   isChangingPassword: (state: SettingsMachineState) =>
@@ -19,7 +18,6 @@ const selectors = {
 
 export function useSettings() {
   const navigate = useNavigate();
-  const { account } = useAccounts();
   const service = useInterpret(() =>
     settingsMachine.withConfig({
       actions: {
@@ -37,11 +35,11 @@ export function useSettings() {
 
   /** @description - This will unlock the wallet and get the mnemonic phrase */
   function unlockAndGetMnemonic(password: string) {
-    send('UNLOCK_WALLET', { input: { password, account } });
+    send('EXPORT_VAULT', { input: { password } });
   }
 
   /** @description - This will change the password of the wallet */
-  function changePassword(changePassword: AccountInputs['changePassword']) {
+  function changePassword(changePassword: VaultInputs['changePassword']) {
     send('CHANGE_PASSWORD', {
       input: changePassword,
     });

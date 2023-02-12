@@ -6,7 +6,7 @@ import {
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
 
-import { VaultServer } from '~/systems/Vault/services';
+import { VaultServer } from '~/systems/Vault/services/VaultServer';
 
 export class VaultService {
   readonly vault: VaultServer;

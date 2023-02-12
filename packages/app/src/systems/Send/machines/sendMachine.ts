@@ -3,7 +3,7 @@ import { BN, TransactionRequest } from 'fuels';
 import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
 
 import { AccountService } from '~/systems/Account';
-import { FetchMachine } from '~/systems/Core';
+import { FetchMachine, WalletLockedCustom } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 import { TxInputs, TxService } from '~/systems/Transaction/services';
 
@@ -131,12 +131,12 @@ export const sendMachine = createMachine(
           const assetId = input?.asset?.assetId;
           const { amount } = input || {};
           const network = await NetworkService.getSelectedNetwork();
-          const wallet = await AccountService.getWalletLocked();
+          const account = await AccountService.getCurrentAccount();
 
-          if (!to || !assetId || !amount || !network?.url || !wallet) {
+          if (!to || !assetId || !amount || !network?.url || !account) {
             throw new Error('Missing params for transaction request');
           }
-
+          const wallet = new WalletLockedCustom(account.address, network.url);
           const createOpts = { to, amount, assetId };
           const transactionRequest = await TxService.fundTransaction({
             transactionRequest: await TxService.createTransfer(createOpts),

@@ -45,7 +45,9 @@ describe('signMachine', () => {
       hashMessage(DATA.message),
       context.signedMessage!
     );
-    expect(context.signedMessage).toEqual(recoveredAddress);
+    expect(context.origin).toEqual(DATA.origin);
+    expect(context.message).toEqual(DATA.message);
+    expect(recoveredAddress.toString()).toEqual(context.address);
   });
 
   it('should reject sign message', async () => {

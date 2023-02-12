@@ -17,6 +17,7 @@ export function UnlockForm({ form }: UnlockFormProps) {
       render={({ field }) => (
         <InputPassword
           {...field}
+          autoComplete="current-password"
           placeholder="Type your password"
           aria-label="Your Password"
         />

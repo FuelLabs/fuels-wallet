@@ -4,15 +4,10 @@ import { useEffect } from 'react';
 import { SignatureRequest } from './SignatureRequest';
 
 import { createMockAccount } from '~/systems/Account';
-import { NetworkService } from '~/systems/Network';
 
 let passwordToUnlock: string;
 async function loader() {
   const { password } = await createMockAccount();
-
-  await NetworkService.clearNetworks();
-  await NetworkService.addFirstNetwork();
-
   passwordToUnlock = password;
 }
 
