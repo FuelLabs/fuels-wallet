@@ -14,7 +14,7 @@ export const MOCK_ASSETS_AMOUNTS = ASSETS_LISTED.map((item, idx) => ({
 }));
 
 export const MOCK_CUSTOM_ASSET = {
-  assetId: '0x0000000000212121',
+  assetId: '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d91',
   name: 'Custom',
   symbol: 'CUST',
   imageUrl:

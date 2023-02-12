@@ -22,9 +22,10 @@ test.describe('Asset', () => {
     await visit(page, '/assets');
     await hasText(page, /Listed/i);
     await getByAriaLabel(page, 'Add Asset').click();
-    await hasText(page, 'Add Asset');
+    await hasText(page, 'Save');
     const assetToAdd = {
-      assetId: '0x0000000000212121',
+      assetId:
+        '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d91',
       name: 'CUSTOM',
       symbol: 'CUST',
       imageUrl:
