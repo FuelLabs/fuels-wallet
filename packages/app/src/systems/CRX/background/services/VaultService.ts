@@ -21,7 +21,7 @@ export class VaultService {
 
   async setupAutoClose() {
     this.vault.manager.on('unlock', () => {
-      chrome.alarms.create('VaultAutoClose', { delayInMinutes: 5 });
+      chrome.alarms.create('VaultAutoClose', { delayInMinutes: 15 });
       chrome.alarms.onAlarm.addListener((event) => {
         if (event.name === 'VaultAutoClose') {
           this.vault.manager.lock();

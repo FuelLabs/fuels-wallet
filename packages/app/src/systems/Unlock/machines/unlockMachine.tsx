@@ -88,6 +88,16 @@ export const unlockMachine = createMachine(
           ],
         },
       },
+      locking: {
+        invoke: {
+          src: 'lock',
+          onDone: [
+            {
+              target: 'checkingLocked',
+            },
+          ],
+        },
+      },
       unlocking: {
         tags: ['loading'],
         entry: ['cleanError'],
@@ -109,6 +119,11 @@ export const unlockMachine = createMachine(
       },
       failed: {},
       unlocked: {},
+    },
+    on: {
+      LOCK_WALLET: {
+        target: 'locking',
+      },
     },
   },
   {
@@ -146,6 +161,13 @@ export const unlockMachine = createMachine(
             throw new Error('Password is required to unlock wallet');
           }
           await VaultService.unlock(input);
+        },
+      }),
+      lock: FetchMachine.create<void, void>({
+        showError: false,
+        maxAttempts: 1,
+        async fetch() {
+          await VaultService.lock();
         },
       }),
     },
