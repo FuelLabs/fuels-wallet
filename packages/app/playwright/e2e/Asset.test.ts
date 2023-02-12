@@ -14,7 +14,7 @@ test.describe('Asset', () => {
 
   test.beforeEach(async () => {
     await visit(page, '/');
-    await mockData(page, 2);
+    await mockData(page, 1);
     await reload(page);
   });
 
@@ -26,7 +26,7 @@ test.describe('Asset', () => {
     const assetToAdd = {
       assetId:
         '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d91',
-      name: 'CUSTOM',
+      name: 'ASSET CUSTOM',
       symbol: 'CUST',
       imageUrl:
         'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
