@@ -14,7 +14,7 @@ type SendSelectProps = UseSendReturn;
 
 export function SendSelect({
   form,
-  account,
+  balanceAssets,
   txRequest,
   handlers,
   ...ctx
@@ -32,7 +32,7 @@ export function SendSelect({
             control={form.control}
             render={({ field }) => (
               <AssetSelect
-                items={account?.balances}
+                items={balanceAssets}
                 selected={field.value}
                 onSelect={(assetId) => {
                   form.setValue('asset', assetId || '', {

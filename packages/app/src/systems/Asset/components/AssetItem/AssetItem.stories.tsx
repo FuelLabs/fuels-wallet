@@ -14,7 +14,7 @@ export const Usage = (args: AssetItemProps) => (
   <Box css={{ width: 300 }}>
     <AssetItem
       {...args}
-      coin={{
+      asset={{
         ...ASSETS_LISTED[0],
         amount: bn(14563943834),
       }}

@@ -8,21 +8,17 @@ import {
   Stack,
   Text,
 } from '@fuel-ui/react';
-import type { Coin } from '@fuel-wallet/types';
-import type { BN } from 'fuels';
+import type { AssetAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import type { FC } from 'react';
-
-import { useAsset } from '../../hooks';
 
 import { AssetsAmountLoader } from './AssetsAmountLoader';
 
 import { shortAddress } from '~/systems/Core';
 import type { GroupedError } from '~/systems/Transaction';
-import type { TxOutputCoin, TxInputCoin } from '~/systems/Transaction/types';
 
 export type AssetsAmountProps = {
-  amounts: Coin[] | TxOutputCoin[] | TxInputCoin[];
+  amounts: AssetAmount[];
   title?: string;
   isPositive?: boolean;
   isNegative?: boolean;
@@ -65,11 +61,10 @@ export const AssetsAmount: AssetsAmountComponent = ({
         </Flex>
       )}
       <Stack gap="$2">
-        {amounts.map(({ assetId, amount }) => (
+        {amounts.map((assetAmount) => (
           <AssetsAmountItem
-            key={assetId.toString()}
-            assetId={assetId.toString()}
-            amount={bn(amount)}
+            assetAmount={assetAmount}
+            key={assetAmount.assetId}
             isPositive={isPositive}
             isNegative={isNegative}
           />
@@ -80,29 +75,28 @@ export const AssetsAmount: AssetsAmountComponent = ({
 };
 
 type AssetsAmountItemProps = {
-  assetId: string;
-  amount: BN;
+  assetAmount: AssetAmount;
   isPositive?: boolean;
   isNegative?: boolean;
 };
 
 const AssetsAmountItem = ({
-  assetId,
-  amount,
+  assetAmount,
   isPositive,
   isNegative,
 }: AssetsAmountItemProps) => {
-  const asset = useAsset(assetId);
   const assetAmountClass = cx('asset_amount');
 
-  const { name = '', symbol = '', imageUrl = '' } = asset || {};
+  const {
+    name = '',
+    symbol = '',
+    imageUrl = '',
+    assetId,
+    amount,
+  } = assetAmount || {};
 
   return (
-    <Grid
-      key={asset?.assetId.toString()}
-      css={styles.root}
-      className={assetAmountClass}
-    >
+    <Grid key={assetId} css={styles.root} className={assetAmountClass}>
       <Flex css={styles.asset}>
         <Avatar name={name} src={imageUrl} css={{ height: 18, width: 18 }} />
         <Text as="span">{name}</Text>
@@ -115,7 +109,7 @@ const AssetsAmountItem = ({
       <Flex css={styles.amount(isPositive)}>
         {isPositive && '+'}
         {isNegative && '-'}
-        {amount.format()} {symbol}
+        {bn(amount).format()} {symbol}
       </Flex>
     </Grid>
   );

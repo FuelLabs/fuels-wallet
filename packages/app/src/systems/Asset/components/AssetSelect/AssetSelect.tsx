@@ -12,17 +12,14 @@ import {
   Text,
   Tooltip,
 } from '@fuel-ui/react';
-import type { AssetAmount, Coin } from '@fuel-wallet/types';
+import type { AssetAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import React, { useState } from 'react';
 
-import { useAsset, useAssets } from '../../hooks';
-
 import type { Maybe } from '~/systems/Core';
-import { formatAmount } from '~/systems/Core';
-import type { TxInputCoin, TxOutputCoin } from '~/systems/Transaction';
+import { shortAddress, formatAmount } from '~/systems/Core';
 
-export type AssetSelectInput = AssetAmount | Coin | TxOutputCoin | TxInputCoin;
+export type AssetSelectInput = AssetAmount;
 
 export type AssetSelectProps = DropdownProps & {
   items?: Maybe<AssetSelectInput[]>;
@@ -38,8 +35,7 @@ export function AssetSelect({
 }: AssetSelectProps) {
   const [width, setWidth] = useState<Maybe<number>>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const { assets } = useAssets();
-  const asset = useAsset(selected || '');
+  const assetAmount = items?.find((i) => i.assetId === selected);
 
   function handleClear() {
     onSelect(null);
@@ -61,14 +57,14 @@ export function AssetSelect({
     >
       <Dropdown.Trigger>
         <Button
-          role={asset ? 'button' : 'combobox'}
-          as={asset ? 'div' : 'button'}
+          role={assetAmount ? 'button' : 'combobox'}
+          as={assetAmount ? 'div' : 'button'}
           color="gray"
           size="md"
           css={styles.trigger}
           id="fuel_asset-select"
           aria-label="Select Asset"
-          data-value={asset?.name}
+          data-value={assetAmount?.name}
           rightIcon={
             <Icon
               icon="CaretDown"
@@ -78,24 +74,39 @@ export function AssetSelect({
           }
         >
           <Flex css={styles.input}>
-            {asset ? (
+            {assetAmount && (
               <>
-                <Avatar
-                  name={asset?.name}
-                  src={asset?.imageUrl}
-                  css={{ height: 18, width: 18 }}
-                />
-                <Text as="span" className="asset-name">
-                  {asset?.name}
-                </Text>
+                {assetAmount.name ? (
+                  <>
+                    <Avatar
+                      name={assetAmount?.name}
+                      src={assetAmount?.imageUrl}
+                      css={{ height: 18, width: 18 }}
+                    />
+                    <Text as="span" className="asset-name">
+                      {assetAmount?.name}
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <Avatar.Generated
+                      hash={assetAmount.assetId}
+                      css={{ height: 18, width: 18 }}
+                    />
+                    <Text as="span" className="asset-name">
+                      {shortAddress(assetAmount?.assetId)}
+                    </Text>
+                  </>
+                )}
               </>
-            ) : (
+            )}
+            {!assetAmount && (
               <Text as="span" css={styles.placeholder}>
                 Select one asset
               </Text>
             )}
           </Flex>
-          {asset && (
+          {assetAmount && (
             <IconButton
               variant="link"
               color="gray"
@@ -114,23 +125,27 @@ export function AssetSelect({
       >
         {(items || []).map((item) => {
           const assetId = item.assetId.toString();
-          const itemAsset = assets.find((a) => a.assetId === assetId);
+          const itemAsset = items?.find((a) => a.assetId === assetId);
           const amount = bn(item.amount);
           const { name, symbol, imageUrl } = itemAsset || {};
-          const amountStr = `${formatAmount(amount)} ${symbol}`;
+          const amountStr = `${formatAmount(amount)} ${symbol || ''}`;
 
           return (
             <Dropdown.MenuItem
               key={item.assetId.toString()}
               textValue={item.assetId.toString()}
             >
-              <Avatar size="xsm" name={name || ''} src={imageUrl} />
+              {imageUrl ? (
+                <Avatar size="xsm" name={name || ''} src={imageUrl} />
+              ) : (
+                <Avatar.Generated size="xsm" hash={assetId} />
+              )}
               <Stack gap="$0" className="asset-info">
                 <Text as="span" className="asset-name">
-                  {name}
+                  {name || 'Unknown'}
                 </Text>
                 <Text as="span" className="asset-symbol">
-                  {symbol}
+                  {symbol || shortAddress(assetId)}
                 </Text>
               </Stack>
               <Flex className="asset-amount">
@@ -230,10 +245,12 @@ const styles = {
         textTransform: 'uppercase',
       },
       '.asset-amount > .value': {
-        width: '100px',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
+      },
+      '.fuel_avatar-generated': {
+        flexShrink: 0,
       },
     });
   },

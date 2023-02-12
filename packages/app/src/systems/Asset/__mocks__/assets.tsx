@@ -4,12 +4,12 @@ import { bn, NativeAssetId } from 'fuels';
 import { graphql } from 'msw';
 
 export const MOCK_ASSETS = ASSETS_LISTED.map((item) => ({
-  assetId: item.assetId,
+  ...item,
   amount: bn(14563943834),
 }));
 
 export const MOCK_ASSETS_AMOUNTS = ASSETS_LISTED.map((item, idx) => ({
-  assetId: item.assetId,
+  ...item,
   amount: bn(idx % 2 === 0 ? 14563943834 : -14563943834),
 }));
 

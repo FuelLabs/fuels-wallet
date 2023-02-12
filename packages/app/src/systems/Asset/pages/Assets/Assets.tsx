@@ -22,15 +22,16 @@ export function Assets() {
               <Tabs.Trigger value="custom">Custom</Tabs.Trigger>
             </Tabs.List>
             <Tabs.Content value="listed">
-              <AssetList coins={state.assetsListed} />
+              <AssetList assets={state.assetsListed} />
             </Tabs.Content>
             <Tabs.Content value="custom">
               <AssetList
-                coins={state.assetsCustom}
+                assets={state.assetsCustom}
                 showActions
                 onRemove={(assetId: string) =>
                   handlers.removeAsset({ assetId })
                 }
+                onEdit={(assetId: string) => handlers.goToEdit(assetId)}
               />
             </Tabs.Content>
           </Tabs>

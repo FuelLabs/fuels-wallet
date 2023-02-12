@@ -1,4 +1,5 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
+import { ASSETS_LISTED } from 'assets-listed';
 
 import {
   MOCK_OPERATION_CONTRACT_CALL,
@@ -7,17 +8,22 @@ import {
 
 import { TxOperation } from './TxOperation';
 
+import { TestWrapper } from '~/systems/Core';
+
 const PROPS = {
   operation: MOCK_OPERATION_CONTRACT_CALL,
+  assets: ASSETS_LISTED,
 };
+
+// ????
 
 describe('TxOperation', () => {
   it('a11y', async () => {
-    await testA11y(<TxOperation {...PROPS} />);
+    await testA11y(<TxOperation {...PROPS} />, { wrapper: TestWrapper });
   });
 
   it('should render operation to contract and dont have spinner', async () => {
-    render(<TxOperation {...PROPS} />);
+    render(<TxOperation {...PROPS} />, { wrapper: TestWrapper });
     expect(screen.getByText('From')).toBeInTheDocument();
     expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
@@ -27,7 +33,15 @@ describe('TxOperation', () => {
   });
 
   it('should render operation to account', async () => {
-    render(<TxOperation operation={MOCK_OPERATION_TRANSFER} />);
+    render(
+      <TxOperation
+        operation={MOCK_OPERATION_TRANSFER}
+        assets={ASSETS_LISTED}
+      />,
+      {
+        wrapper: TestWrapper,
+      }
+    );
     expect(screen.getByText('From')).toBeInTheDocument();
     expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
     expect(screen.getByText('To')).toBeInTheDocument();
@@ -40,7 +54,9 @@ describe('TxOperation', () => {
     render(
       <TxOperation
         operation={{ ...MOCK_OPERATION_TRANSFER, assetsSent: undefined }}
-      />
+        assets={ASSETS_LISTED}
+      />,
+      { wrapper: TestWrapper }
     );
     expect(screen.getByText('From')).toBeInTheDocument();
     expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();

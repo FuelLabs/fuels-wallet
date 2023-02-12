@@ -1,20 +1,20 @@
 import { Button, CardList } from '@fuel-ui/react';
-import type { Asset, Coin } from '@fuel-wallet/types';
+import type { AssetAmount } from '@fuel-wallet/types';
 import type { FC } from 'react';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import { useAssets } from '../../hooks';
 import { AssetItem } from '../AssetItem';
 
 import { AssetListEmpty } from './AssetListEmpty';
 import { AssetListLoading } from './AssetListLoading';
 
 export type AssetListProps = {
-  coins?: Coin[];
+  assets?: AssetAmount[];
   isLoading?: boolean;
   isDevnet?: boolean;
   showActions?: boolean;
   onRemove?: (assetId: string) => void;
+  onEdit?: (assetId: string) => void;
 };
 
 type AssetListComponent = FC<AssetListProps> & {
@@ -23,24 +23,18 @@ type AssetListComponent = FC<AssetListProps> & {
 };
 
 export const AssetList: AssetListComponent = ({
-  coins,
+  assets,
   isLoading,
   isDevnet,
   showActions,
   onRemove,
+  onEdit,
 }) => {
-  const { assets } = useAssets();
   const [showUnknown, setShowUnknown] = useState(false);
-  const [unknownCoinIds, setUnknownCoinIds] = useState<string[]>();
-
-  useEffect(() => {
-    const unknownCoins = coins
-      ?.filter(
-        ({ assetId }) => !assets.find((a: Asset) => a.assetId === assetId)
-      )
-      .map(({ assetId }) => assetId);
-    setUnknownCoinIds(unknownCoins);
-  }, [coins, assets]);
+  const unknownLength = useMemo(
+    () => assets?.filter((assetAmount) => !assetAmount?.name).length,
+    [assets]
+  );
 
   function toggle() {
     setShowUnknown((s) => !s);
@@ -48,28 +42,26 @@ export const AssetList: AssetListComponent = ({
 
   if (isLoading) return <AssetList.Loading items={4} />;
 
-  const isEmpty = !coins || !coins.length;
+  const isEmpty = !assets || !assets.length;
   if (isEmpty) return <AssetList.Empty isDevnet={isDevnet} />;
 
   return (
     <CardList>
-      {coins.map((coin) => {
+      {assets.map((asset) => {
         return (
           <AssetItem
-            key={coin.assetId}
-            coin={coin}
+            key={asset.assetId}
+            asset={asset}
             showActions={showActions}
-            isHidden={
-              !!(!showUnknown && unknownCoinIds?.includes(coin.assetId))
-            }
+            isHidden={!showUnknown && !asset?.name}
             onRemove={onRemove}
+            onEdit={onEdit}
           />
         );
       })}
-      {!!(!isLoading && unknownCoinIds?.length) && (
+      {!!(!isLoading && unknownLength) && (
         <Button size="xs" color="gray" variant="link" onPress={toggle}>
-          {showUnknown ? 'Hide' : 'Show'} unknown assets (
-          {unknownCoinIds.length})
+          {showUnknown ? 'Hide' : 'Show'} unknown assets ({unknownLength})
         </Button>
       )}
     </CardList>

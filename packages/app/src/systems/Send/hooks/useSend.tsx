@@ -83,7 +83,7 @@ const schema = yup
 export function useSend() {
   const navigate = useNavigate();
   const txRequest = useTransactionRequest();
-  const { account } = useAccounts();
+  const { account, balanceAssets: accountBalanceAssets } = useAccounts();
   const { assets } = useAssets();
 
   const form = useForm({
@@ -118,6 +118,10 @@ export function useSend() {
   const title = useSelector(service, titleSelector);
   const accountBalance = bn(account?.balance);
   const maxAmountToSend = accountBalance.sub(fee!);
+
+  const balanceAssets = accountBalanceAssets?.filter(({ assetId }) =>
+    assets.find((asset) => asset.assetId === assetId)
+  );
 
   function status(status: keyof typeof SendStatus) {
     return sendStatus === status;
@@ -181,6 +185,7 @@ export function useSend() {
     title,
     status,
     isInvalid,
+    balanceAssets,
     account,
     accountBalance,
     txRequest,

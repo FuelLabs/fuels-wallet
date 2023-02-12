@@ -11,12 +11,11 @@ import {
   Text,
   Tooltip,
 } from '@fuel-ui/react';
-import type { Coin } from '@fuel-wallet/types';
+import type { AssetAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useAsset, useAssets } from '../../hooks';
 import { AssetRemoveDialog } from '../AssetRemoveDialog';
 
 import { AssetItemLoader } from './AssetItemLoader';
@@ -25,10 +24,11 @@ import { AmountVisibility, Pages, shortAddress } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 export type AssetItemProps = {
-  coin: Coin;
+  asset: AssetAmount;
   isHidden?: boolean;
   showActions?: boolean;
   onRemove?: (assetId: string) => void;
+  onEdit?: (assetId: string) => void;
 };
 
 type AssetItemComponent = FC<AssetItemProps> & {
@@ -36,43 +36,50 @@ type AssetItemComponent = FC<AssetItemProps> & {
 };
 
 export const AssetItem: AssetItemComponent = ({
-  coin,
+  asset,
   isHidden,
   showActions,
   onRemove,
+  onEdit,
 }) => {
   const navigate = useNavigate();
-  const asset = useAsset(coin.assetId);
-  const { handlers } = useAssets();
   const { visibility } = useBalanceVisibility();
 
   if (isHidden) return null;
-
-  const { symbol, name = '', imageUrl } = asset || {};
-  // we get assetId from `coin`, because `asset` can be undefined
-  const { amount, assetId } = coin;
+  const {
+    symbol,
+    name = '',
+    imageUrl,
+    amount,
+    assetId,
+    isCustom,
+  } = asset || {};
 
   function getRightEl() {
     if (showActions) {
       return (
         <Flex css={styles.actionsWrapper}>
-          <IconButton
-            variant="link"
-            icon={<Icon icon={Icon.is('Pencil')} />}
-            aria-label="Edit Asset"
-            onPress={() => handlers.goToEdit(coin.assetId)}
-          />
-          {!!(onRemove && asset) && (
-            <AssetRemoveDialog
-              asset={asset}
-              onConfirm={() => onRemove(coin.assetId)}
-            >
+          {isCustom && name && (
+            <>
               <IconButton
                 variant="link"
-                icon={<Icon icon={Icon.is('Trash')} />}
-                aria-label="Remove"
+                icon={<Icon icon={Icon.is('Pencil')} />}
+                aria-label="Edit Asset"
+                onPress={() => onEdit?.(assetId)}
               />
-            </AssetRemoveDialog>
+              {onRemove && (
+                <AssetRemoveDialog
+                  asset={asset}
+                  onConfirm={() => onRemove(asset.assetId)}
+                >
+                  <IconButton
+                    variant="link"
+                    icon={<Icon icon={Icon.is('Trash')} />}
+                    aria-label="Remove"
+                  />
+                </AssetRemoveDialog>
+              )}
+            </>
           )}
         </Flex>
       );
@@ -92,7 +99,7 @@ export const AssetItem: AssetItemComponent = ({
   }
 
   function goToAsset() {
-    navigate(Pages.assetsEdit({ id: coin.assetId }));
+    navigate(Pages.assetsEdit({ id: asset.assetId }));
   }
 
   return (
