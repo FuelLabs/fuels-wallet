@@ -1,10 +1,11 @@
-import { render, screen, testA11y } from '@fuel-ui/test-utils';
+import { screen, testA11y } from '@fuel-ui/test-utils';
 
 import { MOCK_ACCOUNTS } from '../../__mocks__';
 
 import { BalanceWidget } from './BalanceWidget';
 
-import { shortAddress } from '~/systems/Core';
+import { shortAddress, TestWrapper } from '~/systems/Core';
+import { renderWithProvider } from '~/systems/Core/__tests__/utils';
 
 const ACCOUNT = {
   ...MOCK_ACCOUNTS[0],
@@ -14,22 +15,24 @@ const ACCOUNT = {
 
 describe('BalanceWidget', () => {
   it('a11y', async () => {
-    await testA11y(<BalanceWidget account={ACCOUNT} />);
+    await testA11y(<BalanceWidget account={ACCOUNT} />, {
+      wrapper: TestWrapper,
+    });
   });
 
   it('should show user address', () => {
-    render(<BalanceWidget account={ACCOUNT} />);
+    renderWithProvider(<BalanceWidget account={ACCOUNT} />);
     expect(screen.getByText(shortAddress(ACCOUNT.address))).toBeInTheDocument();
   });
 
   it('should show formatted balance', async () => {
-    render(<BalanceWidget account={ACCOUNT} />);
+    renderWithProvider(<BalanceWidget account={ACCOUNT} />);
     expect(screen.getByText(/4\.999/)).toBeInTheDocument();
   });
 
   it('should hide balance  when user sets his balance to hide', async () => {
     const onChangeVisibility = jest.fn();
-    const { user } = render(
+    const { user } = renderWithProvider(
       <BalanceWidget
         onChangeVisibility={onChangeVisibility}
         account={ACCOUNT}
@@ -43,7 +46,7 @@ describe('BalanceWidget', () => {
 
   it('should show balalnce when user sets his balance to show', async () => {
     const onChangeVisibility = jest.fn();
-    const { user } = render(
+    const { user } = renderWithProvider(
       <BalanceWidget
         account={ACCOUNT}
         visibility={false}
@@ -57,7 +60,7 @@ describe('BalanceWidget', () => {
   });
 
   it('should copy full address when click on copy icon', async () => {
-    const { user } = render(<BalanceWidget account={ACCOUNT} />);
+    const { user } = renderWithProvider(<BalanceWidget account={ACCOUNT} />);
     const btn = screen.getByLabelText(/copy to clipboard/i);
     expect(btn).toBeInTheDocument();
 

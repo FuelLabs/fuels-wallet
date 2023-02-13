@@ -1,15 +1,14 @@
-import { defineConfig } from 'tsup';
 import { getPublicEnvs } from './load.envs';
 
-export default defineConfig({
-  format: ['cjs', 'esm'],
-  splitting: false,
+export default {
   sourcemap: true,
-  clean: false,
+  shims: true,
+  treeshake: true,
+  format: ['cjs', 'esm'],
   minify: process.env.NODE_ENV === 'production',
-  entry: ['src/index.ts'],
+  entry: ['./src/index.ts'],
   noExternal: ['@fuel-wallet/types'],
   define: {
     'process.env': JSON.stringify(getPublicEnvs()),
   },
-});
+};

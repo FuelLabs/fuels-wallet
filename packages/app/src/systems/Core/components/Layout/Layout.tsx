@@ -1,17 +1,19 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
-import { Box, Flex } from '@fuel-ui/react';
+import { Box, BoxCentered } from '@fuel-ui/react';
 import type { FC, ReactNode } from 'react';
 import { forwardRef, useRef, useContext, createContext } from 'react';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 
-import { coreStyles } from '../styles';
+import { coreStyles } from '../../styles/core';
 
 import { BottomBar } from './BottomBar';
 import { TopBar } from './TopBar';
 
 import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
+import { AccountsDialog } from '~/systems/Account';
+import { Sidebar } from '~/systems/Sidebar';
 
 type Context = {
   isLoading?: boolean;
@@ -34,18 +36,11 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(
     return (
       <Box
         as={as}
+        ref={ref}
         css={{ ...styles.content, ...css }}
-        className="layout_content"
+        className="layout__content"
       >
-        <Box css={styles.scrollContainer} className="layout_content-scroll">
-          <Box
-            ref={ref}
-            css={styles.insideScrolContent}
-            className="layout_content-inside"
-          >
-            {children}
-          </Box>
-        </Box>
+        {children}
       </Box>
     );
   }
@@ -74,25 +69,33 @@ export const Layout: LayoutComponent = ({
   const isHome = location.pathname === '/wallet';
 
   return (
-    <ctx.Provider value={{ isLoading, title, isHome, ref }}>
-      <Helmet>
-        <title>{titleText}</title>
-      </Helmet>
-      <Flex as="main" css={styles.root({ isPublic })}>
+    <>
+      <ctx.Provider value={{ isLoading, title, isHome, ref }}>
+        <Helmet>
+          <title>{titleText}</title>
+        </Helmet>
         {isPublic ? (
-          <>{children}</>
+          <BoxCentered as="main" css={styles.root} data-public>
+            <>{children}</>
+          </BoxCentered>
         ) : (
-          <Flex css={styles.wrapper} ref={ref} className="layout_wrapper">
-            {children}
-          </Flex>
+          <BoxCentered as="main" css={styles.root}>
+            <Box css={styles.wrapper} className="layout__wrapper">
+              <AccountsDialog />
+              <Sidebar ref={ref} />
+              <Box ref={ref} css={styles.inner} className="layout__inner">
+                {children}
+              </Box>
+            </Box>
+          </BoxCentered>
         )}
-      </Flex>
-      {import.meta.env.NODE_ENV === 'test' && (
-        <Box css={{ visibility: 'hidden' }}>
-          {isLoading ? 'is loading' : 'is loaded'}
-        </Box>
-      )}
-    </ctx.Provider>
+        {import.meta.env.NODE_ENV === 'test' && (
+          <Box css={{ visibility: 'hidden' }}>
+            {isLoading ? 'is loading' : 'is loaded'}
+          </Box>
+        )}
+      </ctx.Provider>
+    </>
   );
 };
 
@@ -100,40 +103,33 @@ Layout.Content = Content;
 Layout.TopBar = TopBar;
 Layout.BottomBar = BottomBar;
 
-const styles = {
-  root: ({ isPublic }: Partial<LayoutProps>) =>
-    cssObj({
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexDirection: 'column',
-      minH: '100vh',
-      width: IS_CRX_POPUP ? WALLET_WIDTH : '100vw',
-      ...(isPublic && {
-        background:
-          'linear-gradient(197.05deg, #0E221B 0%, #071614 22.2%, #0C0E0D 40.7%);',
-      }),
-    }),
-  wrapper: cssObj({
-    overflow: 'hidden',
-    position: 'relative',
-    flexDirection: 'column',
+export const styles = {
+  root: cssObj({
+    minH: '100vh',
+    width: IS_CRX_POPUP ? WALLET_WIDTH : '100vw',
 
+    '&[data-public="true"]': {
+      background:
+        'linear-gradient(197.05deg, #0E221B 0%, #071614 22.2%, #0C0E0D 40.7%);',
+    },
+
+    '&:has(.layout__bottom) .layout__content': {
+      pb: '$0',
+    },
+  }),
+  wrapper: cssObj({
+    overflow: 'clip',
+    position: 'relative',
     width: WALLET_WIDTH,
     height: WALLET_HEIGHT,
     background:
       'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',
   }),
+  inner: coreStyles.fullscreen,
   content: cssObj({
-    flex: 1,
-    overflow: 'hidden',
-  }),
-  insideScrolContent: cssObj({
-    py: '$4',
-    px: '$4',
-  }),
-  scrollContainer: cssObj({
     ...coreStyles.scrollable(),
-    height: '100%',
+    padding: '$4',
+    flex: 1,
   }),
 };
 

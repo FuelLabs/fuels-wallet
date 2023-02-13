@@ -5,10 +5,11 @@ import type { UseAccountFormReturn } from '../../hooks/useAccountForm';
 import { ControlledField } from '~/systems/Core';
 
 export type AccountFormProps = {
+  isLoading?: boolean;
   form: UseAccountFormReturn;
 };
 
-export const AccountForm = ({ form }: AccountFormProps) => {
+export const AccountForm = ({ form, isLoading }: AccountFormProps) => {
   const { control, formState } = form;
 
   return (
@@ -24,7 +25,7 @@ export const AccountForm = ({ form }: AccountFormProps) => {
           </HelperIcon>
         }
         render={({ field }) => (
-          <Input>
+          <Input isDisabled={isLoading}>
             <Input.Field
               {...field}
               aria-label="Account Name"

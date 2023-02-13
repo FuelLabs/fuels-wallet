@@ -11,13 +11,15 @@ import {
 import type { Account } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 
+import { useAccounts } from '../../hooks';
+
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
 import type { Maybe } from '~/systems/Core';
 import {
+  AmountVisibility,
   shortAddress,
   VisibilityButton,
-  AmountVisibility,
 } from '~/systems/Core';
 
 type BalanceWidgetWrapperProps = {
@@ -46,9 +48,9 @@ export function BalanceWidget({
   account,
   isLoading,
   visibility = true,
-  onPressAccounts,
   onChangeVisibility,
 }: BalanceWidgetProps) {
+  const { handlers } = useAccounts();
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
   return (
@@ -61,7 +63,7 @@ export function BalanceWidget({
           color="gray"
           icon={<Icon icon="CaretDown" color="gray8" />}
           aria-label="Accounts"
-          onPress={onPressAccounts}
+          onPress={handlers.goToList}
           css={styles.caretDownIcon}
         />
       </Flex>

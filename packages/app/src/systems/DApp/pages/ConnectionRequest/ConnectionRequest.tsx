@@ -125,7 +125,6 @@ export function ConnectionRequest() {
               </motion.div>
               {currentAccounts?.map((account) => {
                 const { address } = account;
-
                 return (
                   <motion.div key={address} {...animations.slideInTop()}>
                     <AccountItem account={account!} compact />

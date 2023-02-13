@@ -1,12 +1,11 @@
 import type { Account } from '@fuel-wallet/types';
-import type { StoreClass } from '@fuel-wallet/xstore';
 
 import type { AccountInputs } from './services';
 
-import type { StoreMachines } from '~/store';
+import type { Store } from '~/store';
 import { Services } from '~/store';
 
-export function accountEvents(store: StoreClass<StoreMachines>) {
+export function accountEvents(store: Store) {
   return {
     updateAccounts() {
       store.send(Services.accounts, { type: 'UPDATE_ACCOUNTS' });
@@ -32,6 +31,24 @@ export function accountEvents(store: StoreClass<StoreMachines>) {
     logout() {
       store.send(Services.accounts, {
         type: 'LOGOUT',
+      });
+    },
+    openAccountList() {
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: 'accounts.list',
+      });
+    },
+    openAccountsAdd() {
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: 'accounts.add',
+      });
+    },
+    openAccountsLogout() {
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: 'accounts.logout',
       });
     },
   };
