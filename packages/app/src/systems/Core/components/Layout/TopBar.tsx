@@ -40,7 +40,7 @@ type TopBarProps = {
 function InternalTopBar({ onBack }: TopBarProps) {
   const navigate = useNavigate();
   const overlay = useOverlay();
-  const { isLoading, title, isHome, ref } = useLayoutContext();
+  const { isLoading, title, isHome } = useLayoutContext();
   const { networks, selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });

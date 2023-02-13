@@ -13,7 +13,7 @@ import { useOverlay } from '~/systems/Overlay';
 function SidebarContent() {
   const overlay = useOverlay();
   const { handlers: accountHandlers, account } = useAccounts();
-  const { networks, selectedNetwork, handlers } = useNetworks({
+  const { selectedNetwork } = useNetworks({
     type: NetworkScreen.list,
   });
 
