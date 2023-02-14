@@ -103,7 +103,7 @@ export const assetsMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['navigateBack'],
+              actions: ['saveSuccess', 'navigateBack'],
               target: 'fetchingAssets',
             },
           ],
@@ -137,6 +137,9 @@ export const assetsMachine = createMachine(
       }),
       removeSuccess: () => {
         toast.success('Custom Asset removed successfully');
+      },
+      saveSuccess: () => {
+        toast.success('Asset saved successfully');
       },
     },
     services: {

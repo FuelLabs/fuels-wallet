@@ -38,7 +38,11 @@ export function Home() {
             isDisabled={isLoading}
           />
           <AssetsTitle />
-          <AssetList assets={balanceAssets} isLoading={isLoading} isDevnet />
+          <AssetList
+            assets={balanceAssets}
+            isLoading={isLoading}
+            emptyProps={{ showFaucet: true }}
+          />
         </Flex>
       </Layout.Content>
     </Layout>

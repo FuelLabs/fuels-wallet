@@ -1,3 +1,4 @@
+import { cssObj } from '@fuel-ui/css';
 import { Button, Icon, Tabs } from '@fuel-ui/react';
 import { AnimatePresence } from 'framer-motion';
 
@@ -14,20 +15,17 @@ export function Assets() {
   return (
     <Layout title="Assets">
       <Layout.TopBar />
-      <Layout.Content>
+      <Layout.Content css={styles.content}>
         <AnimatePresence initial={false} mode="wait">
-          <Tabs defaultValue="listed">
+          <Tabs defaultValue="custom">
             <Tabs.List>
-              <Tabs.Trigger value="listed" aria-label="Listed Assets">
-                Listed
-              </Tabs.Trigger>
               <Tabs.Trigger value="custom" aria-label="Custom Assets">
                 Custom
               </Tabs.Trigger>
+              <Tabs.Trigger value="listed" aria-label="Listed Assets">
+                Listed
+              </Tabs.Trigger>
             </Tabs.List>
-            <Tabs.Content value="listed">
-              <AssetList assets={state.assetsListed} />
-            </Tabs.Content>
             <Tabs.Content value="custom">
               <AssetList
                 assets={state.assetsCustom}
@@ -36,7 +34,14 @@ export function Assets() {
                   handlers.removeAsset({ assetId })
                 }
                 onEdit={(assetId: string) => handlers.goToEdit(assetId)}
+                emptyProps={{
+                  text: 'No custom assets',
+                  supportText: 'Start by adding a new custom asset',
+                }}
               />
+            </Tabs.Content>
+            <Tabs.Content value="listed">
+              <AssetList assets={state.assetsListed} />
             </Tabs.Content>
           </Tabs>
         </AnimatePresence>
@@ -54,3 +59,15 @@ export function Assets() {
     </Layout>
   );
 }
+
+const styles = {
+  content: cssObj({
+    p: '$0',
+    '.fuel_tabs': {
+      backgroundColor: 'transparent',
+    },
+    '.fuel_tabs--content': {
+      p: '$4',
+    },
+  }),
+};

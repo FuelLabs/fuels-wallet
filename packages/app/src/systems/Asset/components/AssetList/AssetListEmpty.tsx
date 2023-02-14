@@ -4,11 +4,17 @@ import { BoxCentered, Button, Heading, Icon, Text } from '@fuel-ui/react';
 import { ImageLoader, relativeUrl } from '~/systems/Core';
 import { useOpenFaucet } from '~/systems/Faucet';
 
-type AssetsEmptyProps = {
-  isDevnet?: boolean;
+export type AssetListEmptyProps = {
+  showFaucet?: boolean;
+  text?: string;
+  supportText?: string;
 };
 
-export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
+export function AssetListEmpty({
+  showFaucet,
+  text = `You don't have any assets`,
+  supportText = 'Start depositing some assets',
+}: AssetListEmptyProps) {
   const openFaucet = useOpenFaucet();
 
   return (
@@ -20,10 +26,9 @@ export function AssetListEmpty({ isDevnet }: AssetsEmptyProps) {
         alt="No assets"
         wrapperCSS={{ mb: '$5' }}
       />
-      <Heading as="h5">You don&apos;t have any assets</Heading>
-      {!isDevnet ? (
-        <Text fontSize="sm">Start depositing some assets</Text>
-      ) : (
+      {!!text && <Heading as="h5">{text}</Heading>}
+      {!!supportText && <Text fontSize="sm">{supportText}</Text>}
+      {showFaucet && (
         /**
          * TODO: need to add right faucet icon on @fuel-ui
          */
@@ -41,6 +46,7 @@ const styles = {
     height: '100%',
     flexDirection: 'column',
     textAlign: 'center',
+    mt: '$3',
 
     img: {
       transform: 'translateX(-10px)',

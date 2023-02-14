@@ -29,16 +29,19 @@ export function Transfer() {
   const [addr, setAddr] = useState<string>(
     'fuel1a6msn9zmjpvv84g08y3t6x6flykw622s48k2lqg257pf9924pnfq50tdmw'
   );
+  const [assetId, setAssetId] = useState<string>(
+    '0x0000000000000000000000000000000000000000000000000000000000000000'
+  );
 
   const [sendTransaction, sendingTransaction, errorSendingTransaction] =
-    useLoading(async (amount: BN) => {
+    useLoading(async (amount: BN, addr: string, assetId: string) => {
       console.debug('Request signature transaction!');
       /* example:start */
       const accounts = await fuel.accounts();
       const account = accounts[0];
       const wallet = await fuel.getWallet(account);
       const toAddress = Address.fromString(addr);
-      const response = await wallet.transfer(toAddress, amount);
+      const response = await wallet.transfer(toAddress, amount, assetId);
       console.debug('Transaction created!', response.id);
       /* example:end */
       setProviderUrl(wallet.provider.url);
@@ -54,12 +57,21 @@ export function Transfer() {
           <Box css={{ width: 300 }}>
             <Input css={{ width: '100%' }}>
               <Input.Field
+                value={assetId}
+                placeholder={'Asset ID to transfer'}
+                onChange={(e) => setAssetId(e.target.value)}
+              />
+            </Input>
+          </Box>
+          <Box css={{ width: 300 }}>
+            <Input css={{ width: '100%' }}>
+              <Input.Field
                 value={addr}
+                placeholder={'Address to transfer'}
                 onChange={(e) => setAddr(e.target.value)}
               />
             </Input>
           </Box>
-
           <Box css={{ width: 300 }}>
             <InputAmount
               value={amount}
@@ -68,7 +80,7 @@ export function Transfer() {
           </Box>
           <Box>
             <Button
-              onPress={() => sendTransaction(amount)}
+              onPress={() => sendTransaction(amount, addr, assetId)}
               isLoading={sendingTransaction}
               isDisabled={sendingTransaction || !isConnected}
             >

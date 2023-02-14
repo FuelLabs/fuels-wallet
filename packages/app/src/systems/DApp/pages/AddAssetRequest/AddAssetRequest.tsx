@@ -1,11 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Card, Copyable, Image, Text } from '@fuel-ui/react';
+import { Alert, Button, Card, Copyable, Text } from '@fuel-ui/react';
 
-import { ConnectInfo } from '../../components';
 import { useAddAssetRequest } from '../../hooks';
 
 import { useAccounts } from '~/systems/Account';
-import { Layout, shortAddress } from '~/systems/Core';
+import { AssetItem } from '~/systems/Asset';
+import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 
 export function AddAssetRequest() {
@@ -20,36 +20,30 @@ export function AddAssetRequest() {
     <Layout title="Add Asset Request">
       <Layout.TopBar type={TopBarType.external} />
       <Layout.Content>
-        <ConnectInfo origin={origin} account={account} isReadOnly />
+        <Text css={{ mb: '$3' }}>Your new asset will look like this:</Text>
+        <AssetItem asset={{ assetId, imageUrl, name, symbol }} />
         <Card css={styles.card}>
           <Card.Body css={styles.cardBody}>
-            <Text fontSize="sm" css={{ mt: '$3' }}>
-              Asset ID:
-            </Text>
-            <Text css={{ mt: '$1', fontWeight: '$semibold' }}>
-              <Copyable value={assetId}>{shortAddress(assetId)}</Copyable>
-            </Text>
-            <Text fontSize="sm" css={{ mt: '$3' }}>
-              Name:
-            </Text>
-            <Text css={{ mt: '$1', fontWeight: '$semibold' }}>
-              <div style={{ whiteSpace: 'pre-wrap' }}>{name}</div>
-            </Text>
-            <Text fontSize="sm" css={{ mt: '$3' }}>
-              Symbol:
-            </Text>
-            <Text css={{ mt: '$1', fontWeight: '$semibold' }}>
-              <div style={{ whiteSpace: 'pre-wrap' }}>{symbol}</div>
-            </Text>
-            <Text fontSize="sm" css={{ mt: '$3' }}>
-              Image:
-            </Text>
-            <Image
-              src={imageUrl}
-              css={{ maxW: '40px', maxH: '40px', mt: '$1' }}
-            />
+            <Text fontSize="sm">Asset ID:</Text>
+            <Copyable
+              value={assetId}
+              css={{
+                mt: '$1',
+                fontSize: '$xs',
+                fontWeight: '$semibold',
+                wordBreak: 'break-word',
+              }}
+            >
+              {assetId}
+            </Copyable>
           </Card.Body>
         </Card>
+        <Alert css={{ maxW: '700px' }} direction="row">
+          <Alert.Description css={{ fontSize: '$sm' }}>
+            This request won&apos;t add funds. It will only add asset
+            information to Wallet Settings.
+          </Alert.Description>
+        </Alert>
       </Layout.Content>
       <Layout.BottomBar>
         <Button color="gray" variant="ghost" onPress={() => handlers.reject()}>
@@ -66,11 +60,11 @@ export function AddAssetRequest() {
 const styles = {
   card: cssObj({
     mt: '$4',
+    mb: '$4',
   }),
   cardBody: cssObj({
     p: '$3',
   }),
-
   listItemAllowed: cssObj({
     fontSize: '$sm',
     fontWeight: '$semibold',

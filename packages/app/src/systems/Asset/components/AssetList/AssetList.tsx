@@ -5,16 +5,17 @@ import { useMemo, useState } from 'react';
 
 import { AssetItem } from '../AssetItem';
 
+import type { AssetListEmptyProps } from './AssetListEmpty';
 import { AssetListEmpty } from './AssetListEmpty';
 import { AssetListLoading } from './AssetListLoading';
 
 export type AssetListProps = {
   assets?: AssetAmount[];
   isLoading?: boolean;
-  isDevnet?: boolean;
   showActions?: boolean;
   onRemove?: (assetId: string) => void;
   onEdit?: (assetId: string) => void;
+  emptyProps?: AssetListEmptyProps;
 };
 
 type AssetListComponent = FC<AssetListProps> & {
@@ -25,7 +26,7 @@ type AssetListComponent = FC<AssetListProps> & {
 export const AssetList: AssetListComponent = ({
   assets,
   isLoading,
-  isDevnet,
+  emptyProps = {},
   showActions,
   onRemove,
   onEdit,
@@ -43,7 +44,7 @@ export const AssetList: AssetListComponent = ({
   if (isLoading) return <AssetList.Loading items={4} />;
 
   const isEmpty = !assets || !assets.length;
-  if (isEmpty) return <AssetList.Empty isDevnet={isDevnet} />;
+  if (isEmpty) return <AssetList.Empty {...emptyProps} />;
 
   return (
     <CardList>
