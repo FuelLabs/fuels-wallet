@@ -17,7 +17,7 @@ import { useLayoutContext } from './Layout';
  * Because of some cycle-dependency error here, is not
  * possible to just import by using ~/systems/Network
  */
-import { NetworkDropdown } from '~/systems/Network/components/NetworkDropdown';
+import { NetworkSelector, NetworkDropdown } from '~/systems/Network/components';
 import { useNetworks } from '~/systems/Network/hooks';
 import { NetworkScreen } from '~/systems/Network/machines';
 import { useOverlay } from '~/systems/Overlay';
@@ -41,7 +41,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
   const navigate = useNavigate();
   const overlay = useOverlay();
   const { isLoading, title, isHome } = useLayoutContext();
-  const { selectedNetwork, handlers } = useNetworks({
+  const { networks, selectedNetwork, handlers } = useNetworks({
     type: NetworkScreen.list,
   });
 
@@ -73,9 +73,10 @@ function InternalTopBar({ onBack }: TopBarProps) {
             <FuelLogo size={40} />
             {isLoading && <Spinner aria-label="Spinner" />}
             {selectedNetwork && !isLoading && (
-              <NetworkDropdown
-                selected={selectedNetwork}
-                onPress={handlers.goToList}
+              <NetworkSelector
+                onSelectNetwork={handlers.selectNetwork}
+                selected={selectedNetwork!}
+                networks={networks}
               />
             )}
           </>
