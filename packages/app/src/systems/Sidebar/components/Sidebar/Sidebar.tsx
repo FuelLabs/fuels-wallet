@@ -3,7 +3,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Icon, Avatar, Flex, Drawer, IconButton, Stack } from '@fuel-ui/react';
 import { forwardRef } from 'react';
 
-import { Menu, NetworkSelector } from '..';
+import { Menu } from '..';
 import { useAccounts } from '../../../Account';
 import { NetworkScreen, useNetworks } from '../../../Network';
 import { sidebarItems } from '../../constants';
@@ -13,7 +13,7 @@ import { useOverlay } from '~/systems/Overlay';
 function SidebarContent() {
   const overlay = useOverlay();
   const { handlers: accountHandlers, account } = useAccounts();
-  const { networks, selectedNetwork, handlers } = useNetworks({
+  const { selectedNetwork } = useNetworks({
     type: NetworkScreen.list,
   });
 
@@ -46,13 +46,6 @@ function SidebarContent() {
         />
       </Flex>
       <Menu items={sidebarItems(selectedNetwork?.url)} />
-      <Flex css={styles.networkSelector}>
-        <NetworkSelector
-          onSelectNetwork={handlers.selectNetwork}
-          selected={selectedNetwork}
-          networks={networks}
-        />
-      </Flex>
     </>
   );
 }
@@ -97,12 +90,6 @@ const styles = {
   accountSelector: cssObj({
     flexDirection: 'row',
     alignItems: 'center',
-  }),
-  networkSelector: cssObj({
-    px: '$1',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderTop: '1px dashed $gray4',
   }),
   closeBtn: cssObj({
     position: 'initial',
