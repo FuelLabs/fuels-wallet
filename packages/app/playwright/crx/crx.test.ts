@@ -408,7 +408,7 @@ test.describe('FuelWallet Extension', () => {
         predicate: (page) => page.url().includes(extensionId),
       });
 
-      await hasText(addAssetPage, 'New');
+      await hasText(addAssetPage, 'Asset information');
       await getButtonByText(addAssetPage, /add asset/i).click();
       await expect(addingAsset).resolves.toBeDefined();
     });
