@@ -12,12 +12,15 @@ import EventEmitter from 'events';
 import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
 import { JSONRPCServer, JSONRPCClient } from 'json-rpc-2.0';
 
+import { MAX_EVENT_LISTENERS } from '../config';
+
 export class BaseConnection extends EventEmitter {
   readonly client: JSONRPCClient;
   readonly server: JSONRPCServer;
 
   constructor() {
     super();
+    this.setMaxListeners(MAX_EVENT_LISTENERS);
     this.client = new JSONRPCClient(this.sendRequest.bind(this));
     this.server = new JSONRPCServer();
   }

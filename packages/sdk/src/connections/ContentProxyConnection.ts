@@ -8,8 +8,7 @@ import {
 } from '@fuel-wallet/types';
 import type { CommunicationMessage } from '@fuel-wallet/types';
 
-const PING_TIMEOUT = 1000;
-const RECONNECT_TIMEOUT = 300;
+import { PING_TIMEOUT, RECONNECT_TIMEOUT } from '../config';
 
 export class ContentProxyConnection {
   connection: chrome.runtime.Port;
