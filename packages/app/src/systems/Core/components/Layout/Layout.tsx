@@ -124,6 +124,7 @@ export const styles = {
     height: WALLET_HEIGHT,
     background:
       'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',
+    zIndex: '$0',
   }),
   inner: coreStyles.fullscreen,
   content: cssObj({

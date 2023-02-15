@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { cssObj } from '@fuel-ui/css';
-import { Dropdown, Flex, Icon, Text } from '@fuel-ui/react';
+import { Dropdown, Flex } from '@fuel-ui/react';
 import type { Network } from '@fuel-wallet/types';
 
-import { NetworkItem } from '~/systems/Network';
+import { NetworkDropdown } from '../NetworkDropdown';
 
 export type NetworkSelectorProps = {
   selected: Network;
@@ -18,25 +18,30 @@ export function NetworkSelector({
 }: NetworkSelectorProps) {
   return (
     <Flex css={styles.root}>
-      <Text as="div" leftIcon={Icon.is('ShareNetwork')}>
-        Network selected
-      </Text>
-      <Dropdown popoverProps={{ side: 'top' }}>
+      <Dropdown
+        popoverProps={{ side: 'bottom', align: 'start', alignOffset: 10 }}
+      >
         <Dropdown.Trigger>
-          <NetworkItem network={selected!} css={styles.button} />
+          <NetworkDropdown selected={selected!} />
         </Dropdown.Trigger>
         <Dropdown.Menu
           autoFocus
+          autoFocusKey={selected.id}
           disabledKeys={['edit']}
           aria-label="Actions"
-          css={{ width: '200px' }}
+          css={styles.dropdownMenu}
           onAction={(id) => {
             const network = networks.find((n) => n.id === id);
             network && onSelectNetwork?.(network);
           }}
         >
           {networks.map((network) => (
-            <Dropdown.MenuItem key={network.id} textValue={network.name}>
+            <Dropdown.MenuItem
+              key={network.id}
+              textValue={network.name}
+              aria-label={`fuel_network-dropdown-item-${network.id}`}
+              css={styles.networkItem(selected.id === network.id)}
+            >
               {network.name}
             </Dropdown.MenuItem>
           ))}
@@ -52,6 +57,7 @@ const styles = {
     gap: '$3',
     w: '$full',
     padding: '$3',
+    zIndex: '$10',
 
     '& > .fuel_text': {
       fontSize: '$sm',
@@ -72,4 +78,31 @@ const styles = {
       background: 'transparent',
     },
   }),
+  dropdownMenu: cssObj({
+    boxShadow: '0 2px 3px 4px rgb(0 0 0 / 20%)',
+    width: '200px',
+  }),
+  networkItem: (active: boolean) =>
+    cssObj({
+      position: 'relative',
+      border: '1px solid $gray3',
+
+      '&:not(:first-child)': {
+        marginTop: 8,
+      },
+
+      ...(active && {
+        '&::after': {
+          position: 'absolute',
+          display: 'block',
+          content: '""',
+          top: 0,
+          left: 0,
+          width: '3px',
+          height: '$9',
+          background: '$accent11',
+          borderRadius: '$md 0 0 $md',
+        },
+      }),
+    }),
 };
