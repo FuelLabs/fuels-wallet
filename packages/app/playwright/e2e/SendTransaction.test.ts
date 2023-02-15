@@ -5,7 +5,7 @@ import { bn, Wallet } from 'fuels';
 
 import { getButtonByText, hasText, visit, getInputByName } from '../commons';
 import { seedWallet } from '../commons/seedWallet';
-import { mockData, WALLET_PASSWORD } from '../mocks';
+import { mockData } from '../mocks';
 
 test.describe('SendTransaction', () => {
   let browser: Browser;
@@ -50,10 +50,6 @@ test.describe('SendTransaction', () => {
 
     await getButtonByText(page, 'Approve').click();
     await hasText(page, '0.001 ETH');
-
-    // Approve transaction
-    await getInputByName(page, 'password').type(WALLET_PASSWORD);
-    await getButtonByText(page, 'Confirm Transaction').click();
 
     // Wait for transaction to be confirmed
     await hasText(page, 'Success');

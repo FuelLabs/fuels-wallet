@@ -31,8 +31,8 @@ export class FuelDB extends Dexie {
     });
   }
 
-  clear() {
-    return Promise.all([
+  async clear() {
+    await Promise.all([
       this.vaults.clear(),
       this.accounts.clear(),
       this.transactions.clear(),

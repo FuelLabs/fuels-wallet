@@ -1,12 +1,14 @@
-import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
+import { BACKGROUND_SCRIPT_NAME, VAULT_SCRIPT_NAME } from '@fuel-wallet/types';
 
 import { BackgroundService } from './services/BackgroundService';
 import { CommunicationProtocol } from './services/CommunicationProtocol';
 import { DatabaseEvents } from './services/DatabaseEvents';
+import { VaultService } from './services/VaultService';
 
 const communicationProtocol = new CommunicationProtocol();
 
 BackgroundService.start(communicationProtocol);
+VaultService.start(communicationProtocol);
 DatabaseEvents.start(communicationProtocol);
 
 chrome.runtime.onConnect.addListener((port) => {
@@ -20,7 +22,7 @@ chrome.runtime.onConnect.addListener((port) => {
     port.disconnect();
     return;
   }
-  if (port.name === BACKGROUND_SCRIPT_NAME) {
+  if ([BACKGROUND_SCRIPT_NAME, VAULT_SCRIPT_NAME].includes(port.name)) {
     communicationProtocol.addConnection(port);
   }
 });

@@ -4,7 +4,11 @@ import type {
   CommunicationMessage,
   EventMessage,
 } from '@fuel-wallet/types';
-import { BACKGROUND_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
+import {
+  VAULT_SCRIPT_NAME,
+  BACKGROUND_SCRIPT_NAME,
+  MessageTypes,
+} from '@fuel-wallet/types';
 
 export class CommunicationProtocol extends BaseConnection {
   ports: Map<string, chrome.runtime.Port>;
@@ -73,7 +77,8 @@ export class CommunicationProtocol extends BaseConnection {
   onMessage = (message: CommunicationMessage, port: chrome.runtime.Port) => {
     const sender = port.sender;
     if (sender?.id !== chrome.runtime.id) return;
-    if (message.target !== BACKGROUND_SCRIPT_NAME) return;
+    if (![VAULT_SCRIPT_NAME, BACKGROUND_SCRIPT_NAME].includes(message.target))
+      return;
     if (!Object.keys(MessageTypes).includes(message.type)) return;
 
     const portId = this.getPortId(port);

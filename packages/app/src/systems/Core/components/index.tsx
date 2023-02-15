@@ -14,7 +14,5 @@ export * from './SearchInput';
 export * from './TestWrapper';
 export * from './VisibilityButton';
 export * from './RouterProvider';
-export * from './UnlockDialog';
-export * from './UnlockForm';
 export * from './AmountVisibility';
 export * from './InputSecurePassword';

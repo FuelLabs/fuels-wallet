@@ -1,8 +1,8 @@
-import { useInterpret, useSelector } from '@xstate/react';
+import { useSelector } from '@xstate/react';
 
 import type { AddAssetMachineState } from '../machines';
-import { addAssetMachine } from '../machines';
-import { useAddAssetRequestMethods } from '../methods';
+
+import { Services, store } from '~/store';
 
 const selectors = {
   origin: (state: AddAssetMachineState) => state.context.origin,
@@ -10,13 +10,10 @@ const selectors = {
 };
 
 export function useAddAssetRequest() {
-  const service = useInterpret(addAssetMachine);
+  const service = store.useService(Services.addAssetRequest);
   const { send } = service;
   const asset = useSelector(service, selectors.asset);
   const origin = useSelector(service, selectors.origin);
-
-  // Start Connect Request Methods
-  useAddAssetRequestMethods(service);
 
   function addAsset() {
     send('ADD_ASSET');

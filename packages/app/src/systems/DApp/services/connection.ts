@@ -1,6 +1,6 @@
 import type { Account, Connection } from '@fuel-wallet/types';
 
-import type { Maybe } from '~/systems/Core';
+import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
 
 export type ConnectInputs = {
