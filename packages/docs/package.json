@@ -17,6 +17,7 @@
     "@fuel-wallet/sdk": "workspace:*",
     "@mdx-js/react": "^2.2.1",
     "@next/mdx": "^13.1.6",
+    "app": "workspace:*",
     "acorn": "^8.8.2",
     "acorn-walk": "^8.2.0",
     "dotenv": "^16.0.3",

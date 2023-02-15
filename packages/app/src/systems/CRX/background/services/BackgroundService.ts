@@ -287,11 +287,6 @@ export class BackgroundService {
   ) {
     const origin = serverParams.origin;
 
-    const app = await ConnectionService.getConnection(origin);
-    if (!app) {
-      throw new Error('Unable to establish a connection. No accounts found');
-    }
-
     const popupService = await PopUpService.open(
       origin,
       Pages.requestAddAsset(),

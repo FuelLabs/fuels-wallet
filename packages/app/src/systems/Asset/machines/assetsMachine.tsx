@@ -1,6 +1,6 @@
 import { toast } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/types';
-import { ASSETS_LISTED } from 'assets-listed';
+import { AssetList } from 'asset-list';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
@@ -147,7 +147,7 @@ export const assetsMachine = createMachine(
         showError: true,
         async fetch() {
           await Promise.all(
-            ASSETS_LISTED.map((asset) =>
+            AssetList.map((asset) =>
               AssetService.upsertAsset({
                 data: {
                   ...asset,

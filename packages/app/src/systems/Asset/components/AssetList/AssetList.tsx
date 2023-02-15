@@ -37,29 +37,25 @@ export const AssetList: AssetListComponent = ({
     [assets]
   );
 
+  if (isLoading) return <AssetList.Loading items={4} />;
+  const isEmpty = !assets || !assets.length;
+  if (isEmpty) return <AssetList.Empty {...emptyProps} />;
+  const assetsToShow = assets.filter((asset) => showUnknown || asset?.name);
+
   function toggle() {
     setShowUnknown((s) => !s);
   }
-
-  if (isLoading) return <AssetList.Loading items={4} />;
-
-  const isEmpty = !assets || !assets.length;
-  if (isEmpty) return <AssetList.Empty {...emptyProps} />;
-
   return (
     <CardList>
-      {assets.map((asset) => {
-        return (
-          <AssetItem
-            key={asset.assetId}
-            asset={asset}
-            showActions={showActions}
-            isHidden={!showUnknown && !asset?.name}
-            onRemove={onRemove}
-            onEdit={onEdit}
-          />
-        );
-      })}
+      {assetsToShow.map((asset) => (
+        <AssetItem
+          key={asset.assetId}
+          asset={asset}
+          showActions={showActions}
+          onRemove={onRemove}
+          onEdit={onEdit}
+        />
+      ))}
       {!!(!isLoading && unknownLength) && (
         <Button size="xs" color="gray" variant="link" onPress={toggle}>
           {showUnknown ? 'Hide' : 'Show'} unknown assets ({unknownLength})

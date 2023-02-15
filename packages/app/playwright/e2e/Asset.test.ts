@@ -2,7 +2,7 @@ import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
 
 import { getByAriaLabel, hasText, reload, visit, waitUrl } from '../commons';
-import { mockData } from '../mocks';
+import { CUSTOM_ASSET, mockData } from '../mocks';
 
 test.describe('Asset', () => {
   let browser: Browser;
@@ -23,22 +23,14 @@ test.describe('Asset', () => {
     await hasText(page, /Listed/i);
     await getByAriaLabel(page, 'Add Asset').click();
     await hasText(page, 'Save');
-    const assetToAdd = {
-      assetId:
-        '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d91',
-      name: 'ASSET CUSTOM',
-      symbol: 'CUST',
-      imageUrl:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
-    };
-    await getByAriaLabel(page, 'Asset ID').type(assetToAdd.assetId);
-    await getByAriaLabel(page, 'Asset name').type(assetToAdd.name);
-    await getByAriaLabel(page, 'Asset symbol').type(assetToAdd.symbol);
-    await getByAriaLabel(page, 'Asset imageUrl').type(assetToAdd.imageUrl);
+    await getByAriaLabel(page, 'Asset ID').type(CUSTOM_ASSET.assetId);
+    await getByAriaLabel(page, 'Asset name').type(CUSTOM_ASSET.name);
+    await getByAriaLabel(page, 'Asset symbol').type(CUSTOM_ASSET.symbol);
+    await getByAriaLabel(page, 'Asset imageUrl').type(CUSTOM_ASSET.imageUrl);
     await getByAriaLabel(page, 'Save Asset').click();
     await waitUrl(page, '/assets');
     await hasText(page, /Listed/i);
     await getByAriaLabel(page, 'Custom Assets').click();
-    await hasText(page, assetToAdd.name);
+    await hasText(page, CUSTOM_ASSET.name);
   });
 });

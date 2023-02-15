@@ -25,7 +25,6 @@ import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 export type AssetItemProps = {
   asset: AssetAmount;
-  isHidden?: boolean;
   showActions?: boolean;
   onRemove?: (assetId: string) => void;
   onEdit?: (assetId: string) => void;
@@ -37,7 +36,6 @@ type AssetItemComponent = FC<AssetItemProps> & {
 
 export const AssetItem: AssetItemComponent = ({
   asset,
-  isHidden,
   showActions,
   onRemove,
   onEdit,
@@ -45,7 +43,6 @@ export const AssetItem: AssetItemComponent = ({
   const navigate = useNavigate();
   const { visibility } = useBalanceVisibility();
 
-  if (isHidden) return null;
   const {
     symbol,
     name = '',

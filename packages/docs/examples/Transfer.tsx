@@ -12,7 +12,7 @@ import {
 } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import type { BN } from 'fuels';
-import { bn, Address } from 'fuels';
+import { NativeAssetId, bn, Address } from 'fuels';
 import { useState } from 'react';
 
 import { ExampleBox } from '~/src/components/ExampleBox';
@@ -29,9 +29,7 @@ export function Transfer() {
   const [addr, setAddr] = useState<string>(
     'fuel1a6msn9zmjpvv84g08y3t6x6flykw622s48k2lqg257pf9924pnfq50tdmw'
   );
-  const [assetId, setAssetId] = useState<string>(
-    '0x0000000000000000000000000000000000000000000000000000000000000000'
-  );
+  const [assetId, setAssetId] = useState<string>(NativeAssetId);
 
   const [sendTransaction, sendingTransaction, errorSendingTransaction] =
     useLoading(async (amount: BN, addr: string, assetId: string) => {

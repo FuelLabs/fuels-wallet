@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
+import type { Asset } from '@fuel-wallet/types';
 import { bn } from 'fuels';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import type { AccountsMachineState } from '../machines';
 
@@ -40,6 +41,14 @@ const selectors = {
   account(state: AccountsMachineState) {
     return state.context.account;
   },
+  balanceAssets(assets: Asset[]) {
+    return (state: AccountsMachineState) => {
+      state.context.account?.balances?.map((balance) => ({
+        ...balance,
+        ...(assets?.find(({ assetId }) => assetId === balance.assetId) || {}),
+      }));
+    };
+  },
 };
 
 const listenerAccountFetcher = () => {
@@ -57,13 +66,9 @@ export function useAccounts() {
   const accounts = store.useSelector(Services.accounts, selectors.accounts);
   const account = store.useSelector(Services.accounts, selectors.account);
   const overlay = useOverlay();
-  const balanceAssets = useMemo(
-    () =>
-      account?.balances?.map((balance) => ({
-        ...balance,
-        ...(assets?.find(({ assetId }) => assetId === balance.assetId) || {}),
-      })),
-    [account?.balance, assets]
+  const balanceAssets = store.useSelector(
+    Services.accounts,
+    selectors.balanceAssets(assets)
   );
 
   function unlock(password: string) {

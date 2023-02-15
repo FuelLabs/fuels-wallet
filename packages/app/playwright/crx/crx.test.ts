@@ -11,6 +11,7 @@ import {
   hasText,
   waitAriaLabel,
 } from '../commons';
+import { CUSTOM_ASSET } from '../mocks';
 
 import {
   test,
@@ -395,14 +396,7 @@ test.describe('FuelWallet Extension', () => {
         );
       }
 
-      const addingAsset = addAsset({
-        name: 'New',
-        symbol: 'NEW',
-        assetId:
-          '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d90',
-        imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
-      });
+      const addingAsset = addAsset(CUSTOM_ASSET);
 
       const addAssetPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),

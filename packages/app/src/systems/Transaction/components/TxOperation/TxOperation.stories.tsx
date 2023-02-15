@@ -1,5 +1,5 @@
 import { Box } from '@fuel-ui/react';
-import { ASSETS_LISTED } from 'assets-listed';
+import { AssetList } from 'asset-list';
 
 import {
   MOCK_OPERATION_CONTRACT_CALL,
@@ -25,7 +25,7 @@ export const ContractCall = (args: TxOperationProps) => (
       {...args}
       operation={MOCK_OPERATION_CONTRACT_CALL}
       status={TxStatus.success}
-      assets={ASSETS_LISTED}
+      assets={AssetList}
     />
   </Box>
 );
@@ -38,7 +38,7 @@ export const Transfer = (args: TxOperationProps) => (
       {...args}
       operation={MOCK_OPERATION_TRANSFER}
       status={TxStatus.success}
-      assets={ASSETS_LISTED}
+      assets={AssetList}
     />
   </Box>
 );
@@ -51,7 +51,7 @@ export const ContractCreated = (args: TxOperationProps) => (
       {...args}
       operation={MOCK_OPERATION_CONTRACT_CREATED}
       status={TxStatus.success}
-      assets={ASSETS_LISTED}
+      assets={AssetList}
     />
   </Box>
 );
@@ -64,7 +64,7 @@ export const Mint = (args: TxOperationProps) => (
       {...args}
       operation={MOCK_OPERATION_MINT}
       status={TxStatus.success}
-      assets={ASSETS_LISTED}
+      assets={AssetList}
     />
   </Box>
 );

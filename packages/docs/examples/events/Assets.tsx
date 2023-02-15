@@ -8,7 +8,7 @@ import { useFuel } from '~/src/hooks/useFuel';
 import { useIsConnected } from '~/src/hooks/useIsConnected';
 import { useLoading } from '~/src/hooks/useLoading';
 
-export function AssetsExample() {
+export function Assets() {
   const [fuel, notDetected] = useFuel();
   const [assets, setAssets] = useState<Asset[]>();
   const [isConnected] = useIsConnected();
