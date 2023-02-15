@@ -19,19 +19,23 @@ type MachineServices = {
   };
 };
 
-type MachineEvents =
+export type AddAssetInputs = {
+  start: { origin: string; asset: Asset };
+};
+
+export type MachineEvents =
   | {
-      type: 'START_ADD_ASSET';
-      input: { origin: string; asset: Asset };
+      type: 'START';
+      input: AddAssetInputs['start'];
     }
   | { type: 'ADD_ASSET' }
   | { type: 'REJECT' };
 
-export const addAssetMachine = createMachine(
+export const addAssetRequestMachine = createMachine(
   {
     predictableActionArguments: true,
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    tsTypes: {} as import('./addAssetMachine.typegen').Typegen0,
+    tsTypes: {} as import('./addAssetRequestMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,
       services: {} as MachineServices,
@@ -42,7 +46,7 @@ export const addAssetMachine = createMachine(
     states: {
       idle: {
         on: {
-          START_ADD_ASSET: {
+          START: {
             actions: ['assignAssetData'],
             target: 'reviewAsset',
           },
@@ -124,6 +128,8 @@ export const addAssetMachine = createMachine(
   }
 );
 
-export type AddAssetMachine = typeof addAssetMachine;
-export type AddAssetMachineService = InterpreterFrom<typeof addAssetMachine>;
-export type AddAssetMachineState = StateFrom<typeof addAssetMachine>;
+export type AddAssetMachine = typeof addAssetRequestMachine;
+export type AddAssetMachineService = InterpreterFrom<
+  typeof addAssetRequestMachine
+>;
+export type AddAssetMachineState = StateFrom<typeof addAssetRequestMachine>;

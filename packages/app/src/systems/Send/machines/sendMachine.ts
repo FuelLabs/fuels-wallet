@@ -89,12 +89,11 @@ export const sendMachine = createMachine(
           ],
         },
       },
-      confirming: {
-        on: {
-          BACK: {
-            target: 'idle',
-          },
-        },
+      confirming: {},
+    },
+    on: {
+      BACK: {
+        target: 'idle',
       },
     },
   },

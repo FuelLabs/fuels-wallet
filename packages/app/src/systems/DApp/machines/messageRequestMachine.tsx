@@ -26,7 +26,7 @@ type MachineServices = {
 };
 
 export type SignInputs = {
-  startSign: {
+  start: {
     origin: string;
     message: string;
     address: string;
@@ -36,7 +36,7 @@ export type SignInputs = {
 type MachineEvents =
   | {
       type: 'START';
-      input: SignInputs['startSign'];
+      input: SignInputs['start'];
     }
   | { type: 'SIGN_MESSAGE' }
   | { type: 'REJECT' };

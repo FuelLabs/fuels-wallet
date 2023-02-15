@@ -1,13 +1,11 @@
-import type { StoreClass } from '@fuel-wallet/xstore';
-
 import type { TxInputs } from '../Transaction/services';
 
-import type { SignInputs } from './machines';
+import type { AddAssetInputs, SignInputs } from './machines';
 
-import type { StoreMachines } from '~/store';
 import { Services } from '~/store';
+import type { Store } from '~/store';
 
-export function requestEvents(store: StoreClass<StoreMachines>) {
+export function requestEvents(store: Store) {
   return {
     requestTransaction(input: TxInputs['request']) {
       return store.send(Services.txRequest, {
@@ -15,7 +13,7 @@ export function requestEvents(store: StoreClass<StoreMachines>) {
         input,
       });
     },
-    requestMessage(input: SignInputs['startSign']) {
+    requestMessage(input: SignInputs['start']) {
       return store.send(Services.msgRequest, {
         type: 'START',
         input,
@@ -23,6 +21,12 @@ export function requestEvents(store: StoreClass<StoreMachines>) {
     },
     requestConnection(input: string) {
       return store.send(Services.connectRequest, {
+        type: 'START',
+        input,
+      });
+    },
+    requestAddAsset(input: AddAssetInputs['start']) {
+      return store.send(Services.addAssetRequest, {
         type: 'START',
         input,
       });

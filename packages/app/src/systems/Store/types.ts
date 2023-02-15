@@ -6,6 +6,7 @@ import type {
   TransactionRequestMachine,
   MessageRequestMachine,
   ConnectRequestMachine,
+  AddAssetMachine,
 } from '../DApp';
 import type { NetworksMachine } from '../Network';
 import type { OverlayMachine } from '../Overlay';
@@ -20,6 +21,7 @@ export enum Services {
   txRequest = 'txRequest',
   msgRequest = 'msgRequest',
   connectRequest = 'connectRequest',
+  addAssetRequest = 'addAssetRequest',
 }
 
 export type StoreMachines = {
@@ -31,6 +33,7 @@ export type StoreMachines = {
   txRequest: TransactionRequestMachine;
   msgRequest: MessageRequestMachine;
   connectRequest: ConnectRequestMachine;
+  addAssetRequest: AddAssetMachine;
 };
 
 export type Store = StoreClass<StoreMachines>;

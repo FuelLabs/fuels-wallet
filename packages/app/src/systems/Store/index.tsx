@@ -7,6 +7,7 @@ import {
   transactionRequestMachine,
   connectRequestMachine,
   messageRequestMachine,
+  addAssetRequestMachine,
 } from '../DApp';
 import { requestEvents } from '../DApp/events';
 import { networkEvents } from '../Network/events';
@@ -35,6 +36,7 @@ export const store = store$
   .addMachine(Services.msgRequest, () => messageRequestMachine)
   .addMachine(Services.connectRequest, () => connectRequestMachine)
   .addMachine(Services.txRequest, () => transactionRequestMachine)
+  .addMachine(Services.addAssetRequest, () => addAssetRequestMachine)
   .addHandlers(accountEvents)
   .addHandlers(networkEvents)
   .addHandlers(assetEvents)

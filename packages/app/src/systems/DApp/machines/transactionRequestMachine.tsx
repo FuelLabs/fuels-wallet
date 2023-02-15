@@ -158,10 +158,6 @@ export const transactionRequestMachine = createMachine(
             actions: [assignErrorMessage('User rejected the transaction!')],
             target: 'failed',
           },
-          RESET: {
-            actions: ['reset'],
-            target: 'idle',
-          },
         },
       },
       sendingTx: {
@@ -206,6 +202,12 @@ export const transactionRequestMachine = createMachine(
       },
       failed: {
         type: 'final',
+      },
+    },
+    on: {
+      RESET: {
+        actions: ['reset'],
+        target: 'idle',
       },
     },
   },

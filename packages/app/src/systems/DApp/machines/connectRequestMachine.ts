@@ -7,7 +7,7 @@ import { ConnectionService } from '../services';
 import type { FetchResponse } from '~/systems/Core';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 
-export type MachineContext = {
+type MachineContext = {
   origin?: string;
   connection?: Connection;
   isConnected: boolean;
@@ -27,7 +27,7 @@ type MachineServices = {
   };
 };
 
-export type MachineEvents =
+type MachineEvents =
   | { type: 'START'; input: string }
   | { type: 'TOGGLE_ADDRESS'; input: string }
   | { type: 'AUTHORIZE' }
