@@ -282,9 +282,9 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
   ) {
     try {
       const service = this.services[key];
-      const doneState = done || 'done';
-      const failureState = failure || 'failed';
-      const failureMessageField = failureMessage || 'error';
+      const doneState = done;
+      const failureState = failure;
+      const failureMessageField = failureMessage;
 
       if (!service) {
         throw new Error('Service not found');
@@ -295,7 +295,6 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
         (state) => state.matches(doneState) || state.matches(failureState),
         timeout
       );
-
       if (appState.matches(failureState)) {
         throw new Error(appState.context[failureMessageField], {
           cause: 'CustomState',
@@ -304,12 +303,19 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
 
       return appState as S;
     } catch (err: unknown) {
+      const error = err as Error & { cause?: string };
+      // Timeout of 5000 ms exceeded
+      if (/Timeout of (.*) ms exceeded/.test(error.message)) {
+        throw new Error(
+          `Window closed by inactivity after ${timeout / 1000 / 60} minutes!`
+        );
+      }
+      // Throw customized error from machine
       if (err && (err as { cause: string }).cause === 'CustomState') {
         throw err as Error;
       }
-      throw new Error(
-        `Window closed by inactivity after ${timeout / 1000 / 60} minutes!`
-      );
+      // Throw other errors that can be thrown
+      throw err;
     }
   }
 }

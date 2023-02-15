@@ -119,6 +119,8 @@ export const settingsMachine = createMachine(
           }
           const secret = await VaultService.exportVault({
             ...input,
+            // TODO change once we add multiple vault management
+            // https://github.com/FuelLabs/fuels-wallet/issues/562
             vaultId: 0,
           });
           return secret.split(' ');

@@ -23,16 +23,15 @@ export function ResetDialog({
         <Dialog.Description as="div" css={styles.description}>
           <Stack gap={'$2'}>
             <Text>
-              If you have lost your password, the only way to recover your it is
-              by using your seed phrase.{' '}
-              <b>
-                This action will remove all data stored on this device,
-                including your seed phrase, accounts, networks and other
-                settings.
-              </b>
+              If you have lost your password, the only way to recover your
+              wallet it is by using your seed phrase.{' '}
+            </Text>
+            <Text css={styles.warning}>
+              This action will remove all data stored on this device, including
+              your seed phrase, accounts, networks and other settings.
             </Text>
             <Text>
-              Make sure you had backed up your seed phrase before proceeding.
+              Make sure you have backed up your seed phrase before proceeding.
             </Text>
           </Stack>
         </Dialog.Description>
@@ -55,6 +54,10 @@ export function ResetDialog({
 }
 
 const styles = {
+  warning: cssObj({
+    color: '$gray11',
+    fontWeight: '$extrabold',
+  }),
   headingIcon: cssObj({
     marginRight: '$3',
   }),
@@ -74,6 +77,8 @@ const styles = {
   }),
   description: cssObj({
     flex: 1,
+    flexDirection: 'column',
+    display: 'flex',
   }),
   form: cssObj({
     flex: 1,

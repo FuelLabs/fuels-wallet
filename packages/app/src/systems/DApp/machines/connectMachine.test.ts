@@ -1,15 +1,15 @@
 import { interpret } from 'xstate';
 
-import type { ConnectRequestService } from './connectMachine';
-import { connectMachine } from './connectMachine';
+import type { ConnectRequestService } from './connectRequestMachine';
+import { connectRequestMachine } from './connectRequestMachine';
 
 import { MOCK_ACCOUNTS } from '~/systems/Account';
 import { expectStateMatch } from '~/systems/Core/__tests__';
 
-describe('connectMachine', () => {
+describe('connectRequestMachine', () => {
   let service: ConnectRequestService;
   beforeEach(async () => {
-    service = interpret(connectMachine).start();
+    service = interpret(connectRequestMachine).start();
   });
 
   afterEach(() => {

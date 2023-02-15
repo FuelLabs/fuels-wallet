@@ -174,10 +174,10 @@ export class AccountService {
     });
   }
 
-  static async existsAccountName(name: string = '') {
+  static async checkAccountNameExists(name: string = '') {
     const accounts = await AccountService.getAccounts();
-    const exitsAccount = this.filterByName(accounts, name).length > 0;
-    return exitsAccount;
+    const exitsAccountWithName = this.filterByName(accounts, name).length > 0;
+    return exitsAccountWithName;
   }
 
   static filterByName(accounts: Account[], name: string = '') {

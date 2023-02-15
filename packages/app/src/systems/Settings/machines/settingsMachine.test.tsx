@@ -51,10 +51,21 @@ describe('settingsMachine', () => {
     expect(state.context.words.length).toBeGreaterThan(10);
   });
 
-  it('should change the password of the user and we should be able to unlock it agan', async () => {
+  it('should change the password of the user', async () => {
     service.send('CHANGE_PASSWORD', {
       currentPassword: '123123',
       password: '12345678',
+    } as VaultInputs['changePassword']);
+
+    await expectStateMatch(service, 'changingPassword');
+    await expectStateMatch(service, 'passwordChanged');
+    expect(redirectToWallet).toHaveBeenCalled();
+
+    // Check if password was changed by changing the password again
+    service.start();
+    service.send('CHANGE_PASSWORD', {
+      currentPassword: '12345678',
+      password: '123123',
     } as VaultInputs['changePassword']);
 
     await expectStateMatch(service, 'changingPassword');

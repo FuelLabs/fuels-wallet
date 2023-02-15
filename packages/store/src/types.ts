@@ -113,7 +113,7 @@ export type WaitForArgs<T extends MachinesObj, K extends keyof T> = [
 
 export type WaitForStateArgs<T extends MachinesObj, K extends keyof T> = [
   key: K,
-  conifg?: {
+  config?: {
     done?: T[K]['__TResolvedTypesMeta']['resolved']['matchesStates'];
     failure?: T[K]['__TResolvedTypesMeta']['resolved']['matchesStates'];
     failureMessage?: StateFrom<T[K]>['context'];

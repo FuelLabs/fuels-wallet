@@ -3,8 +3,8 @@ import { interpret } from 'xstate';
 
 import { getMockedTransaction } from '../__mocks__/dapp-transaction';
 
-import type { TransactionRequestService } from './transactionMachine';
-import { transactionRequestMachine } from './transactionMachine';
+import type { TransactionRequestService } from './transactionRequestMachine';
+import { transactionRequestMachine } from './transactionRequestMachine';
 
 import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 import type { MockVaultData } from '~/systems/Core/__tests__/utils/mockVault';

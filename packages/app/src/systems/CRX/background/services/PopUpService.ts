@@ -46,9 +46,7 @@ export class PopUpService {
   rejectAllRequests = (id: string) => {
     if (id === this.eventId) {
       // Close popup on rejecting connection
-      // slient throw a error if tab is already
-      // closed
-      closePopUp(this.tabId).catch(() => {});
+      closePopUp(this.tabId);
       // Reject all pending requests
       this.client.rejectAllPendingRequests(
         'Request cancelled without explicity response!'

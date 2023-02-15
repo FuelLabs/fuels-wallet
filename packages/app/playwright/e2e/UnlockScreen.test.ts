@@ -28,6 +28,15 @@ test.describe('UnlockScreen', () => {
     await hasText(page, /assets/i);
   });
 
+  test('UnLock and Lock wallet screen without reload page', async () => {
+    await getByAriaLabel(page, 'Menu').click();
+    await page.getByText(/Lock Wallet/i).click();
+    await hasText(page, 'Unlock your wallet to continue');
+    await getByAriaLabel(page, 'Your Password').type(WALLET_PASSWORD);
+    await getByAriaLabel(page, 'Unlock wallet').click();
+    await hasText(page, /assets/i);
+  });
+
   test('Reset password on wallet', async () => {
     // Lock wallet first
     await getByAriaLabel(page, 'Menu').click();

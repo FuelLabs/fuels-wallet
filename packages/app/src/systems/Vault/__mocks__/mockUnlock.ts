@@ -10,7 +10,7 @@ export function mockUnlock(connector: VaultWebConnector) {
   }
 
   // Mock unlock in development to save password
-  // on sesstion Storage and unlock vault on reload
+  // on session Storage and unlock vault on reload
   clientVault.unlock = async ({ password }: VaultInputs['unlock']) => {
     await connector.vault.unlock({ password });
     localStorage.setItem('password', password);

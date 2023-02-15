@@ -16,7 +16,7 @@ export class VaultWebConnector {
     this.clientVault.onRequest = this.onRequest.bind(this);
 
     // Mock unlock in development to save password
-    // on sesstion Storage
+    // on session Storage
     if (IS_DEVELOPMENT || IS_TEST) {
       mockUnlock(this);
     }

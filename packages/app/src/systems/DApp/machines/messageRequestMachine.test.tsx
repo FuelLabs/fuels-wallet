@@ -1,18 +1,18 @@
 import { hashMessage, Signer } from 'fuels';
 import { interpret } from 'xstate';
 
-import type { MessageRequestService } from './signMachine';
-import { messageRequestMachine } from './signMachine';
+import type { MessageRequestService } from './messageRequestMachine';
+import { messageRequestMachine } from './messageRequestMachine';
 
 import type { MockVaultData } from '~/systems/Core/__tests__';
 import { expectStateMatch, mockVault } from '~/systems/Core/__tests__';
 
-describe('signMachine', () => {
-  let data: MockVaultData;
+describe('messageRequestMachine', () => {
+  let vaultData: MockVaultData;
   let service: MessageRequestService;
 
   beforeAll(async () => {
-    data = await mockVault();
+    vaultData = await mockVault();
   });
 
   beforeEach(async () => {
@@ -24,15 +24,15 @@ describe('signMachine', () => {
   });
 
   it('should sign message', async () => {
-    const DATA = {
+    const signData = {
       origin: 'foo.com',
       message: 'test message',
-      address: data.account.address.toString(),
+      address: vaultData.account.address.toString(),
     };
     await expectStateMatch(service, 'idle');
 
     service.send('START', {
-      input: DATA,
+      input: signData,
     });
 
     await expectStateMatch(service, 'reviewMessage');
@@ -42,11 +42,11 @@ describe('signMachine', () => {
     await expectStateMatch(service, 'signingMessage');
     const { context } = await expectStateMatch(service, 'done');
     const recoveredAddress = Signer.recoverAddress(
-      hashMessage(DATA.message),
+      hashMessage(signData.message),
       context.signedMessage!
     );
-    expect(context.origin).toEqual(DATA.origin);
-    expect(context.message).toEqual(DATA.message);
+    expect(context.origin).toEqual(signData.origin);
+    expect(context.message).toEqual(signData.message);
     expect(recoveredAddress.toString()).toEqual(context.address);
   });
 
@@ -57,7 +57,7 @@ describe('signMachine', () => {
       input: {
         origin: 'foo.com',
         message: 'test message',
-        address: data.account.address.toString(),
+        address: vaultData.account.address.toString(),
       },
     });
 

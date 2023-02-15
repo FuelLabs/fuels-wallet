@@ -2,8 +2,8 @@ import { useSelector } from '@xstate/react';
 import { bn } from 'fuels';
 import { useCallback, useMemo } from 'react';
 
-import type { TransactionRequestState } from '../machines/transactionMachine';
-import { TxRequestStatus } from '../machines/transactionMachine';
+import type { TransactionRequestState } from '../machines/transactionRequestMachine';
+import { TxRequestStatus } from '../machines/transactionRequestMachine';
 
 import { Services, store } from '~/store';
 import { isEth } from '~/systems/Asset';

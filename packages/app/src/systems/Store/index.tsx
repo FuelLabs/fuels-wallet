@@ -5,7 +5,7 @@ import { accountsMachine } from '../Account/machines';
 import { assetEvents, assetsMachine } from '../Asset';
 import {
   transactionRequestMachine,
-  connectMachine,
+  connectRequestMachine,
   messageRequestMachine,
 } from '../DApp';
 import { requestEvents } from '../DApp/events';
@@ -33,7 +33,7 @@ export const store = store$
   .addMachine(Services.assets, () => assetsMachine)
   .addMachine(Services.unlock, () => unlockMachine)
   .addMachine(Services.msgRequest, () => messageRequestMachine)
-  .addMachine(Services.connectRequest, () => connectMachine)
+  .addMachine(Services.connectRequest, () => connectRequestMachine)
   .addMachine(Services.txRequest, () => transactionRequestMachine)
   .addHandlers(accountEvents)
   .addHandlers(networkEvents)

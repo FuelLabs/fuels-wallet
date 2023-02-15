@@ -35,11 +35,11 @@ export type MachineEvents =
   | { type: 'BACK' }
   | { type: 'REJECT' };
 
-export const connectMachine = createMachine(
+export const connectRequestMachine = createMachine(
   {
     predictableActionArguments: true,
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    tsTypes: {} as import('./connectMachine.typegen').Typegen0,
+    tsTypes: {} as import('./connectRequestMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,
       services: {} as MachineServices,
@@ -192,6 +192,6 @@ export const connectMachine = createMachine(
   }
 );
 
-export type ConnectRequestMachine = typeof connectMachine;
+export type ConnectRequestMachine = typeof connectRequestMachine;
 export type ConnectRequestService = InterpreterFrom<ConnectRequestMachine>;
 export type ConnectRequestState = StateFrom<ConnectRequestMachine>;

@@ -314,13 +314,14 @@ export const accountsMachine = createMachine(
           }
           const { name } = input;
 
-          if (await AccountService.existsAccountName(name)) {
+          if (await AccountService.checkAccountNameExists(name)) {
             throw new Error('Account name already exists');
           }
 
           // Add account to vault
           const accountVault = await VaultService.addAccount({
             // TODO: remove this when we have multiple vaults
+            // https://github.com/FuelLabs/fuels-wallet/issues/562
             vaultId: 0,
           });
 
