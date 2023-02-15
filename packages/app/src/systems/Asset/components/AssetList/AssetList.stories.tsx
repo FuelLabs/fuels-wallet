@@ -28,8 +28,8 @@ export const Empty = () => (
   </Box>
 );
 
-export const EmptyDevnet = () => (
+export const EmptyFaucet = () => (
   <Box css={{ width: 300, height: 300 }}>
-    <AssetList.Empty isDevnet />
+    <AssetList.Empty showFaucet />
   </Box>
 );

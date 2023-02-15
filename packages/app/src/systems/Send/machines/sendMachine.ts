@@ -3,7 +3,6 @@ import { BN, TransactionRequest } from 'fuels';
 import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
 
 import { AccountService } from '~/systems/Account';
-import { ASSET_MAP } from '~/systems/Asset';
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 import { TxInputs, TxService } from '~/systems/Transaction/services';
@@ -106,8 +105,7 @@ export const sendMachine = createMachine(
         { input }: MachineEvents
       ) => {
         if (!input?.asset) return false;
-        const asset = ASSET_MAP[input.asset?.assetId];
-        return TxService.isValidTransaction({ ...input, asset, fee });
+        return TxService.isValidTransaction({ ...input, fee });
       },
     },
     actions: {

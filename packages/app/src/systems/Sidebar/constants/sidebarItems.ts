@@ -53,6 +53,12 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
     label: 'Settings',
     submenu: [
       {
+        key: 'assets',
+        icon: 'Coins',
+        label: 'Assets',
+        path: Pages.assets(),
+      },
+      {
         key: 'reveal-passphrase',
         icon: 'Lock',
         label: 'Reveal Passphrase',

@@ -5,8 +5,6 @@ import { OperationName } from '../utils';
 
 import { MOCK_TX_RECIPIENT } from './tx-recipient';
 
-import { ASSET_LIST } from '~/systems/Asset';
-
 export const MOCK_OPERATION_CONTRACT_CALL: Operation = {
   name: OperationName.contractCall,
   from: MOCK_TX_RECIPIENT.account,
@@ -15,10 +13,6 @@ export const MOCK_OPERATION_CONTRACT_CALL: Operation = {
     {
       amount: bn.parseUnits('0.10001'),
       assetId: NativeAssetId,
-    },
-    {
-      amount: bn.parseUnits('2014.001200917'),
-      assetId: ASSET_LIST[1].assetId,
     },
   ],
 };

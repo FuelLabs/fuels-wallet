@@ -1,5 +1,5 @@
 import { Signer } from '@fuel-ts/signer';
-import type { Account } from '@fuel-wallet/types';
+import type { Account, Asset } from '@fuel-wallet/types';
 import { expect } from '@playwright/test';
 import { bn, hashMessage, Wallet } from 'fuels';
 
@@ -11,6 +11,7 @@ import {
   hasText,
   waitAriaLabel,
 } from '../commons';
+import { CUSTOM_ASSET } from '../mocks';
 
 import {
   test,
@@ -228,6 +229,13 @@ test.describe('FuelWallet Extension', () => {
       });
     });
 
+    await test.step('window.fuel.assets()', async () => {
+      const assets = await blankPage.evaluate(async () => {
+        return window.fuel.assets();
+      });
+      await expect(assets.length).toEqual(1);
+    });
+
     await test.step('window.fuel.signMessage()', async () => {
       const message = 'Hello World';
 
@@ -376,6 +384,27 @@ test.describe('FuelWallet Extension', () => {
           'address is not authorized for this connection.'
         );
       });
+    });
+
+    await test.step('window.fuel.addAsset()', async () => {
+      function addAsset(asset: Asset) {
+        return blankPage.evaluate(
+          async ([asset]) => {
+            return window.fuel.addAsset(asset);
+          },
+          [asset]
+        );
+      }
+
+      const addingAsset = addAsset(CUSTOM_ASSET);
+
+      const addAssetPage = await context.waitForEvent('page', {
+        predicate: (page) => page.url().includes(extensionId),
+      });
+
+      await hasText(addAssetPage, 'Asset information');
+      await getButtonByText(addAssetPage, /add asset/i).click();
+      await expect(addingAsset).resolves.toBeDefined();
     });
 
     await test.step('window.fuel.on("currentAccount")', async () => {

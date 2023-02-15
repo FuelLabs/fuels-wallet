@@ -35,7 +35,7 @@ export function SignatureRequest() {
                 <HelperIcon
                   color="gray12"
                   css={{ fontWeight: '$semibold' }}
-                  message="Make sure you know the message been signed"
+                  message="Make sure you know the message being signed"
                 >
                   Message:
                 </HelperIcon>

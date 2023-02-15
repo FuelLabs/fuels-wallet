@@ -5,7 +5,7 @@ import { bn } from 'fuels';
 
 import type { UseSendReturn } from '../../hooks';
 
-import { AssetSelect, ASSET_MAP } from '~/systems/Asset';
+import { AssetSelect } from '~/systems/Asset';
 import { animations, ControlledField, Layout } from '~/systems/Core';
 import { TxDetails } from '~/systems/Transaction';
 
@@ -14,9 +14,10 @@ type SendSelectProps = UseSendReturn;
 
 export function SendSelect({
   form,
-  account,
+  balanceAssets,
   txRequest,
   handlers,
+  maxAmountToSend,
   ...ctx
 }: SendSelectProps) {
   return (
@@ -32,11 +33,10 @@ export function SendSelect({
             control={form.control}
             render={({ field }) => (
               <AssetSelect
-                items={account?.balances}
-                selected={ASSET_MAP[field.value]}
-                onSelect={(asset) => {
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-                  form.setValue('asset', asset?.assetId.toString()!, {
+                items={balanceAssets}
+                selected={field.value}
+                onSelect={(assetId) => {
+                  form.setValue('asset', assetId || '', {
                     shouldValidate: true,
                   });
                 }}
@@ -79,7 +79,7 @@ export function SendSelect({
             render={({ field }) => (
               <InputAmount
                 name={field.name}
-                balance={ctx.accountBalance}
+                balance={maxAmountToSend}
                 value={bn(field.value)}
                 onChange={(value) => {
                   form.setValue('amount', value.toString());

@@ -66,6 +66,22 @@ To transfer an amount to other address, use the `wallet.transfer` method and pas
 
 <Examples.Transfer />
 
+## List Assets in the Wallet
+
+You can list the assets in the wallet using `window.fuel.assets()`.
+
+<CodeImport file="../examples/ListAssets.tsx" />
+
+<Examples.ListAssets />
+
+## Adding custom Asset
+
+To add a custom Asset, use the `wallet.addAsset` method and pass in the `Asset` you want to add.
+
+<CodeImport file="../examples/AddAsset.tsx" />
+
+<Examples.AddAsset />
+
 ## Listening to events
 
 To listen to events, you can use the `fuel.on` method. <br />
@@ -74,14 +90,14 @@ The events enum `FuelWalletEvents` can be imported from the `@fuel-wallet/sdk` p
 
 ### Connection
 
-To listen to connection events, you can use the `FuelWalletEvents.CONNECTION` event.
+To listen to connection events, you can use the `fuel.events.connection` event.
 
 <CodeImport file="../src/hooks/useIsConnected.tsx" lineStart="9" lineEnd="27" />
 <Examples.Events.Connection />
 
 ### Accounts
 
-To listen to accounts events, you can use the `FuelWalletEvents.ACCOUNTS` event.
+To listen to accounts events, you can use the `fuel.events.accounts` event.
 
 <CodeImport
   file="../examples/events/Accounts.tsx"
@@ -92,22 +108,28 @@ To listen to accounts events, you can use the `FuelWalletEvents.ACCOUNTS` event.
 
 ### Current Account
 
-To listen to current account events, you can use the `FuelWalletEvents.CURRENT_ACCOUNT` event.
+To listen to current account events, you can use the `fuel.events.currentAccount` event.
 
 <CodeImport
   file="../examples/events/CurrentAccount.tsx"
   lineStart="23"
   lineEnd="35"
 />
-
 <Examples.Events.CurrentAccount />
 
 ### Network Change
 
-To listen to network events, you can use the `FuelWalletEvents.NETWORK` event.
+To listen to network events, you can use the `fuel.events.network` event.
 
 <CodeImport file="../examples/events/Network.tsx" lineStart="27" lineEnd="38" />
 
 Switch the network in your wallet to see the event triggered.
 
 <Examples.Events.Network />
+
+### Assets
+
+To listen to assets events, you can use the `fuel.events.assets` event.
+
+<CodeImport file="../examples/events/Assets.tsx" lineStart="24" lineEnd="34" />
+<Examples.Events.Assets />

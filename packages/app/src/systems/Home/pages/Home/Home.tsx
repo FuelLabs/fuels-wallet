@@ -10,7 +10,7 @@ import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 export function Home() {
   const { visibility, setVisibility } = useBalanceVisibility();
-  const { isLoading, account } = useAccounts();
+  const { isLoading, account, balanceAssets } = useAccounts();
   const navigate = useNavigate();
 
   function sendAction() {
@@ -39,9 +39,9 @@ export function Home() {
           />
           <AssetsTitle />
           <AssetList
-            assets={account?.balances}
+            assets={balanceAssets}
             isLoading={isLoading}
-            isDevnet
+            emptyProps={{ showFaucet: true }}
           />
         </Flex>
       </Layout.Content>

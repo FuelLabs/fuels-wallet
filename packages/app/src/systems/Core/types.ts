@@ -26,6 +26,7 @@ export const Pages = {
   requestConnection: route('/request/connection'),
   requestTransaction: route('/request/transaction'),
   requestMessage: route('/request/message'),
+  requestAddAsset: route('/request/asset'),
   txs: route('/transactions'),
   tx: route<'txId'>('/transactions/view/:txId'),
   settings: route('/settings'),
@@ -37,6 +38,9 @@ export const Pages = {
   accounts: route('/accounts'),
   accountAdd: route('/accounts/add'),
   logout: route('/accounts/logout'),
+  assets: route('/assets'),
+  assetsEdit: route<'id'>('/assets/edit/:id'),
+  assetsAdd: route('/assets/add'),
 };
 
 export type AmountMap = Record<string, Maybe<BN>>;

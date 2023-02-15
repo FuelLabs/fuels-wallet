@@ -1,4 +1,5 @@
 import { Stack } from '@fuel-ui/react';
+import type { Asset } from '@fuel-wallet/types';
 import { motion } from 'framer-motion';
 import type { BN } from 'fuels';
 import type { ReactNode } from 'react';
@@ -31,6 +32,7 @@ type TxContentInfoProps = {
   txStatus?: Maybe<TxStatus>;
   amount?: Maybe<BN>;
   showDetails?: boolean;
+  assets?: Maybe<Asset[]>;
 };
 
 function TxContentInfo({
@@ -40,12 +42,17 @@ function TxContentInfo({
   header,
   footer,
   showDetails,
+  assets,
 }: TxContentInfoProps) {
   const status = tx?.status || txStatus;
   return (
     <MotionStack {...animations.slideInTop()} gap="$3">
       {header}
-      <TxOperations operations={tx?.operations} status={status} />
+      <TxOperations
+        operations={tx?.operations}
+        status={status}
+        assets={assets}
+      />
       {showDetails && <TxDetails fee={tx?.fee} amountSent={amount!} />}
       {footer}
     </MotionStack>

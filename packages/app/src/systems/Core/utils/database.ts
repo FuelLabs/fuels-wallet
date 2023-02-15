@@ -1,4 +1,10 @@
-import type { Account, Vault, Connection, Network } from '@fuel-wallet/types';
+import type {
+  Account,
+  Vault,
+  Connection,
+  Network,
+  Asset,
+} from '@fuel-wallet/types';
 import type { Table } from 'dexie';
 import Dexie from 'dexie';
 
@@ -11,15 +17,17 @@ export class FuelDB extends Dexie {
   networks!: Table<Network, string>;
   connections!: Table<Connection, string>;
   transactions!: Table<Transaction, string>;
+  assets!: Table<Asset, string>;
 
   constructor() {
     super('FuelDB');
-    this.version(8).stores({
+    this.version(9).stores({
       vaults: `key`,
       accounts: `&address, &name`,
       networks: `&id, &url, &name`,
       connections: 'origin',
       transactions: `&id`,
+      assets: '&assetId, &name, $symbol',
     });
   }
 

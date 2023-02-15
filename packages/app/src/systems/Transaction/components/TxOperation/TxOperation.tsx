@@ -1,5 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Card } from '@fuel-ui/react';
+import type { Asset } from '@fuel-wallet/types';
 
 import type { Operation, TxStatus } from '../../utils';
 import { TxFromTo } from '../TxFromTo/TxFromTo';
@@ -10,14 +11,22 @@ import type { Maybe } from '~/systems/Core';
 export type TxOperationProps = {
   operation?: Operation;
   status?: Maybe<TxStatus>;
+  assets?: Maybe<Asset[]>;
 };
 
-export function TxOperation({ operation, status }: TxOperationProps) {
+export function TxOperation({ operation, status, assets }: TxOperationProps) {
   const { from, to, assetsSent } = operation ?? {};
+  const amounts = assetsSent?.map((assetSent) => {
+    const asset = assets?.find((a) => a.assetId === assetSent.assetId);
+    return {
+      ...assetSent,
+      ...asset,
+    };
+  });
   return (
     <Card css={styles.root}>
       <TxFromTo from={from} to={to} status={status} />
-      {!!assetsSent?.length && <AssetsAmount amounts={assetsSent} />}
+      {!!amounts?.length && <AssetsAmount amounts={amounts} />}
     </Card>
   );
 }

@@ -4,6 +4,7 @@ import { TxHeader, TxStatusAlert } from '../../components';
 import { TxContent } from '../../components/TxContent';
 import { useTx } from '../../hooks';
 
+import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { NetworkScreen, useNetworks } from '~/systems/Network';
 
@@ -17,6 +18,7 @@ export function TxView() {
     txId: txIdQueryParam,
     waitProviderUrl: true,
   });
+  const { assets } = useAssets();
 
   return (
     <Layout
@@ -34,6 +36,7 @@ export function TxView() {
             tx={tx}
             amount={ctx.ethAmountSent}
             showDetails={ctx.shouldShowTxDetails}
+            assets={assets}
             header={
               <TxHeader
                 id={tx?.id}

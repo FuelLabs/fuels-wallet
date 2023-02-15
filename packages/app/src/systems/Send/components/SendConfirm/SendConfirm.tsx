@@ -1,6 +1,7 @@
 import { Button, Text } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
+import { useAssets } from '~/systems/Asset';
 import { ContentHeader, Layout, Pages } from '~/systems/Core';
 import type { UseTransactionRequestReturn } from '~/systems/DApp';
 import { TxContent, TxHeader } from '~/systems/Transaction';
@@ -13,6 +14,7 @@ export function SendConfirm({ txRequest }: SendConfirmProps) {
   const amountSent = txRequest.ethAmountSent;
   const isDone = txRequest.status('success') || txRequest.status('failed');
   const navigate = useNavigate();
+  const { assets } = useAssets();
 
   return (
     <Layout.Content>
@@ -21,6 +23,7 @@ export function SendConfirm({ txRequest }: SendConfirmProps) {
         tx={txRequest.tx}
         txStatus={txRequest.approveStatus()}
         amount={amountSent}
+        assets={assets}
         header={
           <>
             {txRequest.status('waitingApproval') && (

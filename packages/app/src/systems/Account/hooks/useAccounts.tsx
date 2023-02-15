@@ -1,10 +1,12 @@
 /* eslint-disable consistent-return */
+import type { Asset } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import { useEffect, useRef } from 'react';
 
 import type { AccountsMachineState } from '../machines';
 
 import { store, Services } from '~/store';
+import { useAssets } from '~/systems/Asset';
 import { useOverlay } from '~/systems/Overlay';
 
 enum AccountStatus {
@@ -39,6 +41,13 @@ const selectors = {
   account(state: AccountsMachineState) {
     return state.context.account;
   },
+  balanceAssets(assets: Asset[]) {
+    return (state: AccountsMachineState) =>
+      state.context.account?.balances?.map((balance) => ({
+        ...balance,
+        ...(assets?.find(({ assetId }) => assetId === balance.assetId) || {}),
+      }));
+  },
 };
 
 const listenerAccountFetcher = () => {
@@ -49,12 +58,17 @@ const listenerAccountFetcher = () => {
 
 export function useAccounts() {
   const shouldListen = useRef(true);
+  const { assets } = useAssets();
   const hasBalance = store.useSelector(Services.accounts, selectors.hasBalance);
   const accountStatus = store.useSelector(Services.accounts, selectors.status);
   const ctx = store.useSelector(Services.accounts, selectors.context);
   const accounts = store.useSelector(Services.accounts, selectors.accounts);
   const account = store.useSelector(Services.accounts, selectors.account);
   const overlay = useOverlay();
+  const balanceAssets = store.useSelector(
+    Services.accounts,
+    selectors.balanceAssets(assets)
+  );
 
   function unlock(password: string) {
     store.send(Services.accounts, {
@@ -104,6 +118,7 @@ export function useAccounts() {
     account,
     status,
     hasBalance,
+    balanceAssets,
     isLoading: status('loading'),
     handlers: {
       unlock,

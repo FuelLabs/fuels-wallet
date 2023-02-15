@@ -14,6 +14,7 @@ import { PopUpService } from './PopUpService';
 import type { MessageInputs } from './types';
 
 import { AccountService } from '~/systems/Account/services';
+import { AssetService } from '~/systems/Asset/services';
 import { Pages } from '~/systems/Core/types';
 import { ConnectionService } from '~/systems/DApp/services';
 import { NetworkService } from '~/systems/Network/services';
@@ -42,6 +43,8 @@ export class BackgroundService {
       this.signMessage,
       this.sendTransaction,
       this.currentAccount,
+      this.addAsset,
+      this.assets,
     ]);
   }
 
@@ -270,5 +273,29 @@ export class BackgroundService {
     return {
       url: selectedNetwork?.url,
     };
+  }
+
+  async assets(_: JSONRPCParams) {
+    const assets = await AssetService.getAssets();
+
+    return assets || [];
+  }
+
+  async addAsset(
+    input: Exclude<MessageInputs['addAsset'], 'origin'>,
+    serverParams: EventOrigin
+  ) {
+    const origin = serverParams.origin;
+
+    const popupService = await PopUpService.open(
+      origin,
+      Pages.requestAddAsset(),
+      this.communicationProtocol
+    );
+    const signedMessage = await popupService.addAsset({
+      ...input,
+      origin,
+    });
+    return signedMessage;
   }
 }

@@ -4,6 +4,7 @@ import {
   MessageTypes,
 } from '@fuel-wallet/types';
 import type {
+  Asset,
   CommunicationMessage,
   FuelEventArg,
   FuelProviderConfig,
@@ -90,6 +91,16 @@ export class FuelWalletConnection extends WindowConnection {
       address,
       provider: providerConfig,
       transaction: JSON.stringify(txRequest),
+    });
+  }
+
+  async assets(): Promise<Array<Asset>> {
+    return this.client.request('assets', {});
+  }
+
+  async addAsset(asset: Asset): Promise<Asset> {
+    return this.client.request('addAsset', {
+      asset,
     });
   }
 

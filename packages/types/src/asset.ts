@@ -1,10 +1,11 @@
 import type { BNInput } from 'fuels';
 
 export type Asset = {
-  name: string;
+  name?: string;
   assetId: string;
-  imageUrl: string;
-  symbol: string;
+  imageUrl?: string;
+  symbol?: string;
+  isCustom?: boolean;
 };
 
 export type AssetAmount = Asset & {

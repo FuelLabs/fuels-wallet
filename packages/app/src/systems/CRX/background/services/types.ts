@@ -1,4 +1,4 @@
-import type { FuelProviderConfig } from '@fuel-wallet/types';
+import type { Asset, FuelProviderConfig } from '@fuel-wallet/types';
 
 export type MessageInputs = {
   signMessage: {
@@ -11,6 +11,10 @@ export type MessageInputs = {
     origin: string;
     provider: FuelProviderConfig;
     transaction: string;
+  };
+  addAsset: {
+    asset: Asset;
+    origin: string;
   };
   requestConnection: {
     origin: string;
