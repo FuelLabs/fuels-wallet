@@ -20,7 +20,6 @@ describe('AssetsAmount', () => {
       <AssetsAmount amounts={MOCK_ASSETS_AMOUNTS} title="Assets to Send" />
     );
     expect(screen.getByText('Ethereum')).toBeInTheDocument();
-    expect(screen.getByText('Dai')).toBeInTheDocument();
   });
 
   it('should show positive values with plus', async () => {

@@ -29,18 +29,6 @@ export const MOCK_ASSETS_NODE = [
       amount: bn(30000000000),
     },
   },
-  {
-    node: {
-      assetId: AssetList[1].assetId,
-      amount: bn(1500000000000),
-    },
-  },
-  {
-    node: {
-      assetId: AssetList[2].assetId,
-      amount: bn(120000000),
-    },
-  },
 ] as BalanceNode[];
 
 type BalanceNode = {

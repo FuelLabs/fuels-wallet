@@ -15,8 +15,6 @@ const PROPS = {
   assets: AssetList,
 };
 
-// ????
-
 describe('TxOperation', () => {
   it('a11y', async () => {
     await testA11y(<TxOperation {...PROPS} />, { wrapper: TestWrapper });

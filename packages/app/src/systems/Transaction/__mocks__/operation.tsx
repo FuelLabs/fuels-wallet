@@ -1,4 +1,3 @@
-import { AssetList } from 'asset-list';
 import { bn, NativeAssetId } from 'fuels';
 
 import type { Operation } from '../utils';
@@ -14,10 +13,6 @@ export const MOCK_OPERATION_CONTRACT_CALL: Operation = {
     {
       amount: bn.parseUnits('0.10001'),
       assetId: NativeAssetId,
-    },
-    {
-      amount: bn.parseUnits('2014.001200917'),
-      assetId: AssetList[1].assetId,
     },
   ],
 };

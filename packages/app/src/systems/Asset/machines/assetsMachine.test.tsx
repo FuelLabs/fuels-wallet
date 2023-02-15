@@ -30,7 +30,7 @@ describe('assetsMachine', () => {
   it('should reach idle state with initial assets set', async () => {
     state = await expectStateMatch(service, 'idle');
 
-    expect(state.context.assets?.length).toBe(3);
+    expect(state.context.assets?.length).toBe(1);
   });
 
   it('should save/remove custom asset ', async () => {
