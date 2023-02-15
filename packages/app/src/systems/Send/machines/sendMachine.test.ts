@@ -40,7 +40,7 @@ describe('sendMachine', () => {
     if (account) {
       account.isCurrent = true;
       account.balances = MOCK_ASSETS;
-      await NetworkService.addFirstNetwork();
+      await NetworkService.addDefaultNetworks();
     }
   });
 

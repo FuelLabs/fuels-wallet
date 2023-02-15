@@ -14,7 +14,7 @@ import { NetworkService } from '~/systems/Network';
 async function loader() {
   const { account, password } = await createMockAccount();
   await NetworkService.clearNetworks();
-  const network = await NetworkService.addFirstNetwork();
+  const network = await NetworkService.addDefaultNetworks();
   const wallet = Wallet.generate();
   const transactionRequest = await getMockedTransaction(
     account?.publicKey || '',

@@ -12,7 +12,7 @@ export function sendLoader(wallet: WalletUnlocked) {
   return async () => {
     const { account: acc1 } = await createMockAccount();
     await NetworkService.clearNetworks();
-    const network = await NetworkService.addFirstNetwork();
+    const network = await NetworkService.addDefaultNetworks();
     const transactionRequest = await getMockedTransaction(
       acc1?.publicKey || '',
       wallet.publicKey,

@@ -111,7 +111,7 @@ export class NetworkService {
     });
   }
 
-  static async addFirstNetwork() {
+  static async addDefaultNetworks() {
     const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
     const chainInfo = await NetworkService.getChainInfo({
       providerUrl,

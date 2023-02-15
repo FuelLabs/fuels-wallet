@@ -23,7 +23,7 @@ export class SignUpService {
     await db.clear();
 
     // Add networks
-    await NetworkService.addFirstNetwork();
+    await NetworkService.addDefaultNetworks();
 
     // Unlock Vault
     await VaultService.unlock({ password: data.password });
