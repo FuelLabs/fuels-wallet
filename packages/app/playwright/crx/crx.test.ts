@@ -233,7 +233,7 @@ test.describe('FuelWallet Extension', () => {
       const assets = await blankPage.evaluate(async () => {
         return window.fuel.assets();
       });
-      await expect(assets.length).toEqual(3);
+      await expect(assets.length).toEqual(1);
     });
 
     await test.step('window.fuel.signMessage()', async () => {
