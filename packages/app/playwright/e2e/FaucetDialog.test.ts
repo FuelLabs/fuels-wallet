@@ -1,7 +1,7 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
 
-import { getButtonByText, hasText, visit, reload } from '../commons';
+import { getButtonByText, hasText, visit } from '../commons';
 import { mockData } from '../mocks';
 
 test.describe('FaucetDialog', () => {
@@ -11,12 +11,11 @@ test.describe('FaucetDialog', () => {
   test.beforeAll(async () => {
     browser = await chromium.launch();
     page = await browser.newPage();
+    await mockData(page);
   });
 
   test('should be able to faucet a wallet', async () => {
     await visit(page, '/wallet');
-    await mockData(page);
-    await reload(page);
     await hasText(page, /Faucet/i);
 
     /** Needs to have Faucet button */

@@ -110,3 +110,13 @@ export type WaitForArgs<T extends MachinesObj, K extends keyof T> = [
   givenState: (state: StateFrom<T[K]>) => boolean,
   timeout?: number
 ];
+
+export type WaitForStateArgs<T extends MachinesObj, K extends keyof T> = [
+  key: K,
+  config?: {
+    done?: T[K]['__TResolvedTypesMeta']['resolved']['matchesStates'];
+    failure?: T[K]['__TResolvedTypesMeta']['resolved']['matchesStates'];
+    failureMessage?: StateFrom<T[K]>['context'];
+    timeout?: number;
+  }
+];

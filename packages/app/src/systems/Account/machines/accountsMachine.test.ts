@@ -103,34 +103,21 @@ describe('accountsMachine', () => {
 
   describe('add', () => {
     it('should be able to add an account', async () => {
-      const { password } = await createMockAccount();
       await expectStateMatch(service, 'idle');
 
       service.send('ADD_ACCOUNT', {
         input: 'Account Go',
       });
-      await expectStateMatch(service, 'unlocking');
-      service.send('UNLOCK_VAULT', {
-        input: {
-          password,
-        },
-      });
+
       await expectStateMatch(service, 'addingAccount');
       await expectStateMatch(service, 'fetchingAccounts');
       await expectStateMatch(service, 'idle');
     });
 
     it('should not be able to add accounts with same name', async () => {
-      const { password } = await createMockAccount();
       await expectStateMatch(service, 'idle');
       service.send('ADD_ACCOUNT', {
         input: 'Account Go',
-      });
-      await expectStateMatch(service, 'unlocking');
-      service.send('UNLOCK_VAULT', {
-        input: {
-          password,
-        },
       });
       await expectStateMatch(service, 'addingAccount');
       await expectStateMatch(service, 'fetchingAccounts');
@@ -142,12 +129,6 @@ describe('accountsMachine', () => {
       // make sure test fails but jest don't stop
       jest.spyOn(console, 'error').mockImplementation();
 
-      await expectStateMatch(service, 'unlocking');
-      service.send('UNLOCK_VAULT', {
-        input: {
-          password,
-        },
-      });
       await expectStateMatch(service, 'failed');
     });
 

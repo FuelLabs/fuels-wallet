@@ -1,29 +1,21 @@
 import type { Account } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-import { send } from 'xstate/lib/actions';
 
 import type { AccountInputs } from '../services/account';
 import { AccountService } from '../services/account';
 
-import { unlockMachine, unlockMachineErrorAction } from './unlockMachine';
-import type {
-  UnlockMachine,
-  UnlockVaultReturn,
-  UnlockVaultEvent,
-} from './unlockMachine';
-
 import { IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
-import type { ChildrenMachine, Maybe } from '~/systems/Core';
-import { FetchMachine, Storage } from '~/systems/Core';
+import type { Maybe } from '~/systems/Core';
+import { CoreService, FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
+import { VaultService } from '~/systems/Vault';
 
 type MachineContext = {
   accounts?: Account[];
   accountName?: string;
   account?: Maybe<Account>;
-  unlockError?: string;
   error?: unknown;
 };
 
@@ -54,8 +46,6 @@ export type MachineEvents =
       type: 'ADD_ACCOUNT';
       input: string;
     }
-  | { type: 'UNLOCK_VAULT'; input: AccountInputs['unlockVault'] }
-  | { type: 'CLOSE_UNLOCK'; input?: void }
   | { type: 'LOGOUT'; input?: void };
 
 const fetchAccount = {
@@ -105,7 +95,7 @@ export const accountsMachine = createMachine(
           },
           ADD_ACCOUNT: {
             actions: ['assignAccountName'],
-            target: 'unlocking',
+            target: 'addingAccount',
           },
           UPDATE_ACCOUNTS: {
             target: 'fetchingAccounts',
@@ -179,14 +169,9 @@ export const accountsMachine = createMachine(
         invoke: {
           src: 'addAccount',
           data: {
-            input: (ctx: MachineContext, ev: UnlockVaultReturn) => {
-              return {
-                data: {
-                  manager: ev.data,
-                  name: ctx.accountName,
-                },
-              };
-            },
+            input: (ctx: MachineContext) => ({
+              name: ctx.accountName,
+            }),
           },
           onDone: [
             {
@@ -199,36 +184,6 @@ export const accountsMachine = createMachine(
               target: 'fetchingAccounts',
             },
           ],
-        },
-      },
-      unlocking: {
-        invoke: {
-          id: 'unlock',
-          src: 'unlock',
-          onDone: [
-            unlockMachineErrorAction('unlocking', 'unlockError'),
-            {
-              actions: ['clearUnlockError'],
-              target: 'addingAccount',
-            },
-          ],
-        },
-        on: {
-          UNLOCK_VAULT: {
-            // send to the child machine
-            actions: [
-              send<MachineContext, UnlockVaultEvent>(
-                (_, ev) => ({
-                  type: 'UNLOCK_VAULT',
-                  input: ev.input,
-                }),
-                { to: 'unlock' }
-              ),
-            ],
-          },
-          CLOSE_UNLOCK: {
-            target: 'fetchingAccount',
-          },
         },
       },
       loggingout: {
@@ -249,12 +204,6 @@ export const accountsMachine = createMachine(
         },
       },
       failed: {
-        on: {
-          ADD_ACCOUNT: {
-            actions: ['assignAccountName'],
-            target: 'unlocking',
-          },
-        },
         after: {
           INTERVAL: {
             target: 'fetchingAccounts', // retry
@@ -275,9 +224,6 @@ export const accountsMachine = createMachine(
       TIMEOUT: 5000,
     },
     actions: {
-      clearUnlockError: assign({
-        unlockError: (_) => undefined,
-      }),
       assignAccounts: assign({
         accounts: (_, ev) => ev.data,
       }),
@@ -321,7 +267,6 @@ export const accountsMachine = createMachine(
       },
     },
     services: {
-      unlock: unlockMachine,
       fetchAccounts: FetchMachine.create<never, Account[]>({
         showError: true,
         async fetch() {
@@ -360,31 +305,47 @@ export const accountsMachine = createMachine(
           return account;
         },
       }),
-      addAccount: FetchMachine.create<AccountInputs['addNewAccount'], Account>({
+      addAccount: FetchMachine.create<{ name: string }, Account>({
         showError: true,
         maxAttempts: 1,
         async fetch({ input }) {
-          if (!input?.data.name.trim()) {
+          if (!input?.name.trim()) {
             throw new Error('Name cannot be empty');
           }
-          if (!input?.data.manager) {
-            throw new Error('Manager is not unlocked');
+          const { name } = input;
+
+          if (await AccountService.checkAccountNameExists(name)) {
+            throw new Error('Account name already exists');
           }
-          let account = await AccountService.addNewAccount(input);
-          if (!account) {
-            throw new Error('Failed to add account');
-          }
+
+          // Add account to vault
+          const accountVault = await VaultService.addAccount({
+            // TODO: remove this when we have multiple vaults
+            // https://github.com/FuelLabs/fuels-wallet/issues/562
+            vaultId: 0,
+          });
+
+          // Add account to the database
+          let account = await AccountService.addAccount({
+            data: {
+              ...input,
+              ...accountVault,
+            },
+          });
+
+          // Add account to the database
           account = await AccountService.setCurrentAccount({
             address: account.address.toString(),
           });
-          return account as Account;
+
+          return account;
         },
       }),
       logout: FetchMachine.create<never, void>({
         showError: true,
         maxAttempts: 1,
         async fetch() {
-          await AccountService.logout();
+          await CoreService.clear();
         },
       }),
     },
@@ -404,7 +365,4 @@ export const accountsMachine = createMachine(
 
 export type AccountsMachine = typeof accountsMachine;
 export type AccountsMachineService = InterpreterFrom<AccountsMachine>;
-export type AccountsMachineState = StateFrom<AccountsMachine> &
-  ChildrenMachine<{
-    unlock: UnlockMachine;
-  }>;
+export type AccountsMachineState = StateFrom<AccountsMachine>;

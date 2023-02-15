@@ -4,9 +4,10 @@ import type { Account } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
+import { SignUpService } from '../services';
+
 import { IS_LOGGED_KEY, MNEMONIC_SIZE, VITE_MNEMONIC_WORDS } from '~/config';
 import { store } from '~/store';
-import { AccountService } from '~/systems/Account';
 import {
   assignErrorMessage,
   getPhraseFromValue,
@@ -15,7 +16,6 @@ import {
 } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
 import { isValidMnemonic } from '~/systems/Core/utils/mnemonic';
-import { NetworkService } from '~/systems/Network';
 
 // ----------------------------------------------------------------------------
 // Machine
@@ -40,7 +40,7 @@ type MachineContext = {
 };
 
 type MachineServices = {
-  createManager: {
+  setupVault: {
     data: Maybe<Account>;
   };
 };
@@ -146,7 +146,7 @@ export const signUpMachine = createMachine(
       creatingWallet: {
         tags: ['loading'],
         invoke: {
-          src: 'createManager',
+          src: 'setupVault',
           onDone: {
             actions: ['assignAccount', 'deleteData', 'sendAccountCreated'],
             target: 'done',
@@ -227,24 +227,15 @@ export const signUpMachine = createMachine(
       },
     },
     services: {
-      async createManager({ data }) {
+      async setupVault({ data }) {
         if (!data?.password) {
           throw new Error('Invalid password');
         }
         if (!data.mnemonic) {
           throw new Error('Invalid mnemonic');
         }
-
-        const manager = await AccountService.createManager({ data });
-        const account = manager.getAccounts()[0];
-        await NetworkService.addFirstNetwork();
-        return AccountService.addAccount({
-          data: {
-            name: 'Account 1',
-            address: account.address.toAddress(),
-            publicKey: account.publicKey,
-          },
-        });
+        const account = await SignUpService.create({ data });
+        return account;
       },
     },
   }

@@ -34,7 +34,12 @@ test.describe('SelectWallet', () => {
     await getByAriaLabel(page, 'Accounts').click();
     await hasText(page, data.accounts[0].name);
     await hasText(page, data.accounts[1].name);
-    await getByAriaLabel(page, data.accounts[1].name).click();
+    await getByAriaLabel(page, data.accounts[1].name).click({
+      position: {
+        x: 10,
+        y: 10,
+      },
+    });
     await waitUrl(page, '/wallet');
     await hasText(page, /Assets/i);
     const address = data.accounts[1].address.toString();

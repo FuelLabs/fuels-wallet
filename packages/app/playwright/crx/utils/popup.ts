@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 
-import { getByAriaLabel, getInputByName, waitAriaLabel } from '../../commons';
+import { getByAriaLabel, waitAriaLabel } from '../../commons';
 
 export async function getAccountByName(popupPage: Page, name: string) {
   const accounts = await getWalletAccounts(popupPage);
@@ -46,9 +46,4 @@ export async function waitAccountPage(popupPage: Page, name: string) {
 
 export async function waitWalletToLoad(popupPage: Page) {
   await popupPage.waitForSelector('[data-account-name]');
-}
-
-export async function unlockWallet(popupPage: Page, password: string) {
-  await getInputByName(popupPage, 'password').type(password);
-  await getByAriaLabel(popupPage, 'Unlock wallet').click();
 }

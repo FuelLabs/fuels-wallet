@@ -3,21 +3,12 @@ import { Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
 import { ConnectInfo } from '../../components';
 import { useSignatureRequest } from '../../hooks';
 
-import { useAccounts } from '~/systems/Account';
-import { Layout, UnlockDialog } from '~/systems/Core';
+import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 
 export function SignatureRequest() {
-  const { isLoading } = useAccounts();
-  const {
-    isUnlocking,
-    handlers,
-    account,
-    origin,
-    message,
-    unlockError,
-    isUnlockingLoading,
-  } = useSignatureRequest();
+  const { handlers, account, origin, message, isLoading } =
+    useSignatureRequest();
 
   if (!origin || !message || !account) return null;
 
@@ -58,18 +49,15 @@ export function SignatureRequest() {
           >
             Cancel
           </Button>
-          <Button aria-label="Sign" onPress={handlers.sign}>
+          <Button
+            aria-label="Sign"
+            onPress={handlers.sign}
+            isLoading={isLoading}
+          >
             Sign
           </Button>
         </Layout.BottomBar>
       </Layout>
-      <UnlockDialog
-        isOpen={isUnlocking}
-        unlockError={unlockError}
-        onUnlock={handlers.unlock}
-        isLoading={isUnlockingLoading}
-        onClose={handlers.closeUnlock}
-      />
     </>
   );
 }

@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
+import {
+  BACKGROUND_SCRIPT_NAME,
+  CONTENT_SCRIPT_NAME,
+  MessageTypes,
+} from '@fuel-wallet/types';
 import type { Connection } from '@fuel-wallet/types';
 import { Address } from 'fuels';
 import type {
@@ -54,6 +58,7 @@ export class BackgroundService {
 
   setupListeners() {
     this.communicationProtocol.on(MessageTypes.request, async (event) => {
+      if (event.target !== BACKGROUND_SCRIPT_NAME) return;
       const origin = event.sender!.origin!;
       const response = await this.server.receive(event.request, {
         origin,
