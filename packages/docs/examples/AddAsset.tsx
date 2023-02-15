@@ -3,7 +3,6 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Stack, Button, Input, Tag } from '@fuel-ui/react';
 import { useState } from 'react';
 
-import { MOCK_CUSTOM_ASSET } from '~/../app/src/systems/Asset/__mocks__/assets';
 import type { Asset } from '~/../types/src';
 import { ExampleBox } from '~/src/components/ExampleBox';
 import { useFuel } from '~/src/hooks/useFuel';
@@ -14,7 +13,15 @@ export function AddAsset() {
   const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
   const [addedAsset, setAddedAsset] = useState<Asset>();
-  const [asset, setAsset] = useState<Asset>(MOCK_CUSTOM_ASSET);
+  const [asset, setAsset] = useState<Asset>({
+    assetId:
+      '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d90',
+    name: 'New',
+    symbol: 'NEW',
+    imageUrl:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
+    isCustom: true,
+  });
 
   const [handleAddAsset, isSingingMessage, errorSigningMessage] = useLoading(
     async (asset: Asset) => {

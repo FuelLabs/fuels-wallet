@@ -10,15 +10,7 @@ const selectors = {
 };
 
 export function useAddAssetRequest() {
-  const service = useInterpret(
-    addAssetMachine.withConfig({
-      actions: {
-        closeWindow: () => {
-          window.close();
-        },
-      },
-    })
-  );
+  const service = useInterpret(addAssetMachine);
   const { send } = service;
   const asset = useSelector(service, selectors.asset);
   const origin = useSelector(service, selectors.origin);

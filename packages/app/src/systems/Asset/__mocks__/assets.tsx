@@ -15,8 +15,8 @@ export const MOCK_ASSETS_AMOUNTS = AssetList.map((item, idx) => ({
 
 export const MOCK_CUSTOM_ASSET = {
   assetId: '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d90',
-  name: 'Custom',
-  symbol: 'CUST',
+  name: 'New',
+  symbol: 'NEW',
   imageUrl:
     'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
   isCustom: true,

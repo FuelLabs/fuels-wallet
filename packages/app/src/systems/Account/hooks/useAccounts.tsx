@@ -42,12 +42,11 @@ const selectors = {
     return state.context.account;
   },
   balanceAssets(assets: Asset[]) {
-    return (state: AccountsMachineState) => {
+    return (state: AccountsMachineState) =>
       state.context.account?.balances?.map((balance) => ({
         ...balance,
         ...(assets?.find(({ assetId }) => assetId === balance.assetId) || {}),
       }));
-    };
   },
 };
 
