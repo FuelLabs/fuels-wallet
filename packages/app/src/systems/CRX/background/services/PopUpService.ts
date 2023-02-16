@@ -149,15 +149,7 @@ export class PopUpService {
 
   // UI exposed methods
   async requestConnection(input: MessageInputs['requestConnection']) {
-    const originTitle = this.tab?.title || 'Unknown';
-    const favicon = this.tab?.favIconUrl || 'Unknown';
-    const fullInput = {
-      ...input,
-      originTitle,
-      favicon,
-    };
-
-    return this.client.request('requestConnection', fullInput);
+    return this.client.request('requestConnection', input);
   }
 
   async signMessage(input: MessageInputs['signMessage']) {

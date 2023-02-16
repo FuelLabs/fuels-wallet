@@ -26,6 +26,7 @@ import { NetworkService } from '~/systems/Network/services';
 type EventOrigin = {
   origin: string;
   connection?: Connection;
+  sender?: chrome.runtime.MessageSender;
 };
 
 export class BackgroundService {
@@ -63,6 +64,7 @@ export class BackgroundService {
       const sender = event.sender!;
       const response = await this.server.receive(event.request, {
         origin,
+        sender,
       });
       if (response) {
         this.communicationProtocol.postMessage({
@@ -144,6 +146,7 @@ export class BackgroundService {
     return next(request, {
       connection,
       origin: serverParams.origin,
+      sender: serverParams.sender,
     });
   }
 
@@ -173,6 +176,8 @@ export class BackgroundService {
 
   async connect(_: JSONRPCParams, serverParams: EventOrigin) {
     const origin = serverParams.origin;
+    const originTitle = serverParams.sender?.tab?.title;
+    const faviconUrl = serverParams.sender?.tab?.favIconUrl;
 
     let authorizedApp = await ConnectionService.getConnection(origin);
 
@@ -182,7 +187,11 @@ export class BackgroundService {
         Pages.requestConnection(),
         this.communicationProtocol
       );
-      authorizedApp = await popupService.requestConnection({ origin });
+      authorizedApp = await popupService.requestConnection({
+        origin,
+        originTitle,
+        faviconUrl,
+      });
     }
 
     if (authorizedApp) {
