@@ -15,6 +15,7 @@ export enum OperationName {
   contractCreated = 'Contract created',
   transfer = 'Transfer asset',
   contractCall = 'Contract call',
+  contractTransfer = 'Contract transfer',
   receive = 'Receive asset',
   mint = 'Mint asset',
   predicatecall = 'Predicate call',
@@ -117,7 +118,6 @@ export type Tx = {
   gasUsed: BN;
   fee: BN;
   type: TxType;
-  totalAssetsSent: Coin[];
   isTypeMint: boolean;
   isTypeCreate: boolean;
   isTypeScript: boolean;

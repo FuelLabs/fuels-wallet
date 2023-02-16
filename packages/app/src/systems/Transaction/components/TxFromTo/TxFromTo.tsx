@@ -1,8 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Flex, Icon, Spinner } from '@fuel-ui/react';
+import { Box, Flex, Icon, Spinner, Tooltip } from '@fuel-ui/react';
 
 import type { TxRecipientAddress } from '../../types';
-import { TxStatus } from '../../utils';
+import { OperationName, TxStatus } from '../../utils';
 import { TxRecipientCard } from '../TxRecipientCard';
 
 import type { Maybe } from '~/systems/Core';
@@ -10,32 +10,39 @@ import type { Maybe } from '~/systems/Core';
 type TxSpinnerProps = {
   status?: Maybe<TxStatus>;
   isLoading?: boolean;
+  operationName?: Maybe<OperationName>;
 };
 
-function TxSpinner({ status, isLoading }: TxSpinnerProps) {
-  const spinnerStatus = isLoading ? TxStatus.pending : status;
+function TxSpinner({ status, isLoading, operationName }: TxSpinnerProps) {
+  function getSpinnerData() {
+    if (isLoading) {
+      return {
+        tooltip: 'Loading',
+        iconEl: (
+          <Spinner color="$amber3" size={18} aria-label="Loading Spinner" />
+        ),
+      };
+    }
+    switch (operationName) {
+      case OperationName.contractCall:
+        return {
+          tooltip: 'Execute',
+          iconEl: <Icon icon={Icon.is('Play')} size={18} />,
+        };
 
-  let spinnerEl;
-  switch (spinnerStatus) {
-    case TxStatus.pending:
-      spinnerEl = (
-        <Spinner color="$amber3" size={18} aria-label="Loading Spinner" />
-      );
-      break;
-    case TxStatus.success:
-      spinnerEl = <Icon icon={Icon.is('Check')} size={18} />;
-      break;
-    case TxStatus.failure:
-      spinnerEl = <Icon icon={Icon.is('X')} size={18} />;
-      break;
-    default:
-      spinnerEl = <Icon icon={Icon.is('ArrowRight')} size={18} />;
-      break;
+      default:
+        return {
+          tooltip: 'Transfer',
+          iconEl: <Icon icon={Icon.is('ArrowRight')} size={18} />,
+        };
+    }
   }
+
+  const spinnerData = getSpinnerData();
 
   return (
     <Box css={styles.spinner} data-status={status} data-loading={isLoading}>
-      {spinnerEl}
+      <Tooltip content={spinnerData.tooltip}>{spinnerData.iconEl}</Tooltip>
     </Box>
   );
 }
@@ -45,12 +52,23 @@ export type TxFromToProps = {
   from?: TxRecipientAddress;
   to?: TxRecipientAddress;
   isLoading?: boolean;
+  operationName?: Maybe<OperationName>;
 };
 
-export function TxFromTo({ from, to, status, isLoading }: TxFromToProps) {
+export function TxFromTo({
+  from,
+  to,
+  status,
+  isLoading,
+  operationName,
+}: TxFromToProps) {
   return (
     <Flex css={styles.root}>
-      <TxSpinner status={status} isLoading={isLoading} />
+      <TxSpinner
+        status={status}
+        isLoading={isLoading}
+        operationName={operationName}
+      />
       {isLoading ? (
         <TxRecipientCard.Loader />
       ) : (

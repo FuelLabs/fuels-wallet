@@ -25,7 +25,12 @@ export function TxOperation({ operation, status, assets }: TxOperationProps) {
   });
   return (
     <Card css={styles.root}>
-      <TxFromTo from={from} to={to} status={status} />
+      <TxFromTo
+        from={from}
+        to={to}
+        status={status}
+        operationName={operation?.name}
+      />
       {!!amounts?.length && <AssetsAmount amounts={amounts} />}
     </Card>
   );
