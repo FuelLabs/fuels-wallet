@@ -1,48 +1,46 @@
-import { Button, Focus, Icon } from '@fuel-ui/react';
+import { Box, Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
 
-import { Layout } from '~/systems/Core';
 import type { NetworkFormValues } from '~/systems/Network';
-import {
-  NetworkForm,
-  useNetworks,
-  useNetworkForm,
-  NetworkScreen,
-} from '~/systems/Network';
+import { NetworkForm, useNetworks, useNetworkForm } from '~/systems/Network';
 
 export function AddNetwork() {
   const form = useNetworkForm();
-  const { handlers, isLoading } = useNetworks({
-    type: NetworkScreen.add,
-  });
+  const { handlers, isLoading } = useNetworks();
 
   function onSubmit(data: NetworkFormValues) {
     handlers.addNetwork({ data });
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      <Layout title="Add Network">
-        <Layout.TopBar onBack={handlers.goToList} />
-        <Focus.Scope autoFocus contain>
-          <Layout.Content>
-            <NetworkForm form={form} />
-          </Layout.Content>
-          <Layout.BottomBar>
-            <Button color="gray" variant="ghost" onPress={handlers.goToList}>
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              color="accent"
-              isDisabled={!form.formState.isValid}
-              isLoading={isLoading}
-              leftIcon={Icon.is('Plus')}
-            >
-              Create
-            </Button>
-          </Layout.BottomBar>
-        </Focus.Scope>
-      </Layout>
-    </form>
+    <Box as="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <Dialog.Heading>
+        Add Network
+        <IconButton
+          data-action="closed"
+          variant="link"
+          icon={<Icon icon="X" color="gray8" />}
+          aria-label="Close add network"
+          onPress={handlers.closeDialog}
+        />
+      </Dialog.Heading>
+      <Dialog.Description as="div">
+        <NetworkForm form={form} />
+      </Dialog.Description>
+      <Dialog.Footer>
+        <Button color="gray" variant="ghost" onPress={handlers.goToList}>
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          color="accent"
+          isDisabled={!form.formState.isValid}
+          isLoading={isLoading}
+          leftIcon={Icon.is('Plus')}
+          aria-label="Create new network"
+        >
+          Create
+        </Button>
+      </Dialog.Footer>
+    </Box>
   );
 }

@@ -1,29 +1,37 @@
-import { Button, Icon } from '@fuel-ui/react';
-import { useNavigate } from 'react-router-dom';
+import { cssObj } from '@fuel-ui/css';
+import { Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
 
-import { Layout, Pages } from '~/systems/Core';
-import { NetworkList, NetworkScreen, useNetworks } from '~/systems/Network';
+import { coreStyles } from '~/systems/Core/styles';
+import { NetworkList, useNetworks } from '~/systems/Network';
 
-export function Networks() {
-  const navigate = useNavigate();
-  const { networks, isLoading, handlers } = useNetworks({
-    type: NetworkScreen.list,
-  });
+export const Networks = () => {
+  const { networks, handlers } = useNetworks();
 
   return (
-    <Layout title="Networks" isLoading={isLoading}>
-      <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
-      <Layout.Content>
-        {networks && (
-          <NetworkList
-            networks={networks}
-            onUpdate={handlers.goToUpdate}
-            onPress={handlers.selectNetwork}
-            {...(networks?.length > 1 && { onRemove: handlers.removeNetwork })}
-          />
-        )}
-      </Layout.Content>
-      <Layout.BottomBar>
+    <>
+      <Dialog.Heading>
+        Networks
+        <IconButton
+          data-action="closed"
+          variant="link"
+          icon={<Icon icon="X" color="gray8" />}
+          aria-label="Close networks modal"
+          onPress={handlers.closeDialog}
+        />
+      </Dialog.Heading>
+      <Dialog.Description
+        as="div"
+        css={styles.description}
+        data-has-scroll={Boolean((networks || []).length >= 6)}
+      >
+        <NetworkList
+          networks={networks}
+          onUpdate={handlers.goToUpdate}
+          onPress={handlers.selectNetwork}
+          {...(networks?.length > 1 && { onRemove: handlers.removeNetwork })}
+        />
+      </Dialog.Description>
+      <Dialog.Footer>
         <Button
           aria-label="Add network"
           onPress={handlers.goToAdd}
@@ -32,7 +40,19 @@ export function Networks() {
         >
           Add new network
         </Button>
-      </Layout.BottomBar>
-    </Layout>
+      </Dialog.Footer>
+    </>
   );
-}
+};
+
+const styles = {
+  description: cssObj({
+    ...coreStyles.scrollable('$gray3'),
+    padding: '$4',
+    flex: 1,
+
+    '&[data-has-scroll="true"]': {
+      padding: '$4 $2 $4 $4',
+    },
+  }),
+};

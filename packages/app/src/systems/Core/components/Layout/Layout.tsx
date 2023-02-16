@@ -13,6 +13,7 @@ import { TopBar } from './TopBar';
 
 import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { AccountsDialog } from '~/systems/Account';
+import { NetworksDialog } from '~/systems/Network';
 import { Sidebar } from '~/systems/Sidebar';
 
 type Context = {
@@ -82,6 +83,7 @@ export const Layout: LayoutComponent = ({
           <BoxCentered as="main" css={styles.root}>
             <Box css={styles.wrapper} className="layout__wrapper">
               <AccountsDialog />
+              <NetworksDialog />
               <Sidebar ref={ref} />
               <Box ref={ref} css={styles.inner} className="layout__inner">
                 {children}

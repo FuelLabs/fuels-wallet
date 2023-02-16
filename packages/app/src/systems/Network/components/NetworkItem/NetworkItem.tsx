@@ -76,6 +76,7 @@ const styles = {
   root: cssObj({
     minHeight: '52px',
     boxSizing: 'border-box',
+    background: '$whiteA2',
 
     '&:hover': {
       cursor: 'pointer',

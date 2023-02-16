@@ -1,14 +1,11 @@
 import type { Network } from '@fuel-wallet/types';
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import type {
-  NetworkInitialInput,
-  NetworksMachineState,
-} from '../machines/networksMachine';
+import type { NetworksMachineState } from '../machines/networksMachine';
 
 import { store, Services } from '~/store';
 import { Pages } from '~/systems/Core';
+import { useOverlay } from '~/systems/Overlay';
 
 const selectors = {
   networks: (state: NetworksMachineState) => {
@@ -26,7 +23,8 @@ const selectors = {
   },
 };
 
-export function useNetworks(opts: NetworkInitialInput = {}) {
+export function useNetworks() {
+  const overlay = useOverlay();
   const navigate = useNavigate();
   const networks = store.useSelector(Services.networks, selectors.networks);
   const network = store.useSelector(Services.networks, selectors.network);
@@ -39,33 +37,29 @@ export function useNetworks(opts: NetworkInitialInput = {}) {
   store.useUpdateMachineConfig(Services.networks, {
     actions: {
       redirectToList() {
-        navigate(Pages.networks());
+        store.openNetworksAdd();
       },
       redirectToHome() {
+        overlay.close();
         navigate(Pages.wallet());
       },
     },
   });
 
+  function closeDialog() {
+    overlay.close();
+  }
   function goToUpdate(network: Network) {
-    navigate(Pages.networkUpdate({ id: network.id }));
+    store.editNetwork({ id: network.id as string });
+    overlay.open('networks.update');
   }
-  function goToAdd() {
-    navigate(Pages.networkAdd());
-  }
-  function goToList() {
-    navigate(Pages.networks());
-  }
-
-  useEffect(() => {
-    store.initNetworks(opts);
-  }, [opts.networkId, opts.type]);
 
   return {
     handlers: {
+      closeDialog,
       goToUpdate,
-      goToAdd,
-      goToList,
+      goToAdd: store.openNetworksAdd,
+      goToList: store.openNetworksList,
       addNetwork: store.addNetwork,
       updateNetwork: store.updateNetwork,
       removeNetwork: store.removeNetwork,

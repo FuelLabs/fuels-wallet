@@ -5,7 +5,7 @@ import { forwardRef } from 'react';
 
 import { Menu } from '..';
 import { useAccounts } from '../../../Account';
-import { NetworkScreen, useNetworks } from '../../../Network';
+import { useNetworks } from '../../../Network';
 import { sidebarItems } from '../../constants';
 
 import { useOverlay } from '~/systems/Overlay';
@@ -13,9 +13,7 @@ import { useOverlay } from '~/systems/Overlay';
 function SidebarContent() {
   const overlay = useOverlay();
   const { handlers: accountHandlers, account } = useAccounts();
-  const { selectedNetwork } = useNetworks({
-    type: NetworkScreen.list,
-  });
+  const { selectedNetwork } = useNetworks();
 
   return (
     <>

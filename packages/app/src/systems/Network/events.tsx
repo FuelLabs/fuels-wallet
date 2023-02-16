@@ -1,7 +1,5 @@
 import type { Network } from '@fuel-wallet/types';
 
-import type { NetworkInitialInput } from './machines';
-import { NetworkScreen } from './machines';
 import type { NetworkInputs } from './services';
 
 import type { Store } from '~/store';
@@ -12,6 +10,12 @@ export function networkEvents(store: Store) {
     addNetwork(input: NetworkInputs['addNetwork']) {
       store.send(Services.networks, {
         type: 'ADD_NETWORK',
+        input,
+      });
+    },
+    editNetwork(input: NetworkInputs['editNetwork']) {
+      store.send(Services.networks, {
+        type: 'EDIT_NETWORK',
         input,
       });
     },
@@ -31,15 +35,6 @@ export function networkEvents(store: Store) {
       store.send(Services.networks, {
         type: 'SELECT_NETWORK',
         input: { id: network.id! },
-      });
-    },
-    initNetworks(input: NetworkInitialInput) {
-      store.send('networks', {
-        type: 'SET_INITIAL_DATA',
-        input: {
-          networkId: input.networkId,
-          type: input.type || NetworkScreen.list,
-        },
       });
     },
   };

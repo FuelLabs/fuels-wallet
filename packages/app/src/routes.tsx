@@ -12,14 +12,12 @@ import { assetRoutes } from '~/systems/Asset';
 import { PrivateRoute, PublicRoute } from '~/systems/Core';
 import { Pages } from '~/systems/Core/types';
 import { homeRoutes } from '~/systems/Home';
-import { networkRoutes } from '~/systems/Network';
 import { signUpRoutes } from '~/systems/SignUp';
 import { WalletCreatedPage } from '~/systems/SignUp/pages';
 
 const walletRoutes = (
   <>
     {homeRoutes}
-    {networkRoutes}
     {settingsRoutes}
     {dappRoutes}
     {sendRoutes}

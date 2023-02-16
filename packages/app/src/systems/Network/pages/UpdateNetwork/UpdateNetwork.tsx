@@ -1,54 +1,49 @@
-import { Focus, Button } from '@fuel-ui/react';
-import { useParams } from 'react-router-dom';
+import { Button, Dialog, IconButton, Icon, Box } from '@fuel-ui/react';
 
-import { Layout } from '~/systems/Core';
 import type { NetworkFormValues } from '~/systems/Network';
-import {
-  NetworkForm,
-  useNetworkForm,
-  useNetworks,
-  NetworkScreen,
-} from '~/systems/Network';
+import { NetworkForm, useNetworkForm, useNetworks } from '~/systems/Network';
 
 export function UpdateNetwork() {
-  const params = useParams<{ id: string }>();
-  const id = params.id!;
-  const { network, isLoading, handlers } = useNetworks({
-    type: NetworkScreen.update,
-    networkId: id,
-  });
+  const { network, isLoading, handlers } = useNetworks();
 
   const form = useNetworkForm({
     defaultValues: network,
   });
 
   function onSubmit(data: NetworkFormValues) {
-    handlers.updateNetwork({ id, data });
+    handlers.updateNetwork({ id: network?.id as string, data });
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      <Layout title="Update Network" isLoading={isLoading || !network}>
-        <Layout.TopBar onBack={handlers.goToList} />
-        <Focus.Scope contain autoFocus>
-          <Layout.Content>
-            <NetworkForm form={form} />
-          </Layout.Content>
-          <Layout.BottomBar>
-            <Button color="gray" variant="ghost" onPress={handlers.goToList}>
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              color="accent"
-              isDisabled={!form.formState.isValid}
-              isLoading={isLoading}
-            >
-              Update
-            </Button>
-          </Layout.BottomBar>
-        </Focus.Scope>
-      </Layout>
-    </form>
+    <Box as="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <Dialog.Heading>
+        Update Network
+        <IconButton
+          data-action="closed"
+          variant="link"
+          icon={<Icon icon="X" color="gray8" />}
+          aria-label="Close update network"
+          onPress={handlers.closeDialog}
+        />
+      </Dialog.Heading>
+      <Dialog.Description as="div">
+        <NetworkForm form={form} />
+      </Dialog.Description>
+      <Dialog.Footer>
+        <Button color="gray" variant="ghost" onPress={handlers.goToList}>
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          color="accent"
+          isDisabled={!form.formState.isValid}
+          isLoading={isLoading}
+          leftIcon={Icon.is('Plus')}
+          aria-label="Update network"
+        >
+          Update
+        </Button>
+      </Dialog.Footer>
+    </Box>
   );
 }
