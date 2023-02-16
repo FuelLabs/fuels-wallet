@@ -6,7 +6,7 @@ import { JSONRPCClient } from 'json-rpc-2.0';
 import {
   closePopUp,
   createPopUp,
-  getTabIdFromSender,
+  getTabFromSender,
   showPopUp,
 } from '../../utils';
 import type { DeferPromise } from '../../utils/promise';
@@ -25,6 +25,7 @@ export class PopUpService {
   session: string | null = null;
   tabId: number | null = null;
   windowId: number | null = null;
+  tab: chrome.tabs.Tab | null = null;
   eventId?: string;
   client: JSONRPCClient;
   readonly communicationProtocol: CommunicationProtocol;
@@ -84,8 +85,9 @@ export class PopUpService {
 
   onUIEvent = (message: UIEventMessage) => {
     if (this.session === message.session && message.ready) {
-      const tabId = getTabIdFromSender(message.sender);
-      this.tabId = tabId!;
+      const tab = getTabFromSender(message.sender);
+      this.tab = tab!;
+      this.tabId = tab!.id!;
       this.eventId = message.id;
       this.openingPromise.resolve(this);
     }
@@ -147,7 +149,15 @@ export class PopUpService {
 
   // UI exposed methods
   async requestConnection(input: MessageInputs['requestConnection']) {
-    return this.client.request('requestConnection', input);
+    const originTitle = this.tab?.title || 'Unknown';
+    const favicon = this.tab?.favIconUrl || 'Unknown';
+    const fullInput = {
+      ...input,
+      originTitle,
+      favicon,
+    };
+
+    return this.client.request('requestConnection', fullInput);
   }
 
   async signMessage(input: MessageInputs['signMessage']) {

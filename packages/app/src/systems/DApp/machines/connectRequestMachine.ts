@@ -9,6 +9,8 @@ import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 
 type MachineContext = {
   origin?: string;
+  originTitle?: string;
+  faviconUrl?: string;
   connection?: Connection;
   isConnected: boolean;
   error?: string;
@@ -27,8 +29,16 @@ type MachineServices = {
   };
 };
 
+export type ConnectRequestInputs = {
+  start: {
+    origin: string;
+    originTitle?: string;
+    faviconUrl?: string;
+  };
+};
+
 type MachineEvents =
-  | { type: 'START'; input: string }
+  | { type: 'START'; input: ConnectRequestInputs['start'] }
   | { type: 'TOGGLE_ADDRESS'; input: string }
   | { type: 'AUTHORIZE' }
   | { type: 'NEXT' }
@@ -139,7 +149,9 @@ export const connectRequestMachine = createMachine(
     delays: { TIMEOUT: 1300 },
     actions: {
       setOrigin: assign({
-        origin: (_, ev) => ev.input,
+        origin: (_, ev) => ev.input.origin,
+        originTitle: (_, ev) => ev.input.originTitle,
+        faviconUrl: (_, ev) => ev.input.faviconUrl,
       }),
       setConnected: assign({
         isConnected: (_) => true,

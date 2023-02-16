@@ -60,6 +60,7 @@ export class BackgroundService {
     this.communicationProtocol.on(MessageTypes.request, async (event) => {
       if (event.target !== BACKGROUND_SCRIPT_NAME) return;
       const origin = event.sender!.origin!;
+      const sender = event.sender!;
       const response = await this.server.receive(event.request, {
         origin,
       });
@@ -68,6 +69,7 @@ export class BackgroundService {
           id: event.id,
           type: MessageTypes.response,
           target: CONTENT_SCRIPT_NAME,
+          sender,
           response,
         });
       }

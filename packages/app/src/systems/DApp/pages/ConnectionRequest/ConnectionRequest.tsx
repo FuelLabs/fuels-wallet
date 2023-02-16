@@ -15,7 +15,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useConnectRequest } from '../../hooks/useConnectRequest';
 
 import { AccountItem } from '~/systems/Account';
-import { animations, Layout, OriginTag } from '~/systems/Core';
+import { animations, Layout, OriginDetails } from '~/systems/Core';
 
 const PERMISSION_LIST = [
   'View your account address',
@@ -37,6 +37,8 @@ export function ConnectionRequest() {
     isConnecting,
     hasCurrentAccounts,
     currentAccounts,
+    originTitle,
+    faviconUrl,
   } = useConnectRequest();
 
   if (!accounts || !origin) return null;
@@ -44,12 +46,12 @@ export function ConnectionRequest() {
   return (
     <Layout title="Connection Request" isLoading={isLoadingAccounts}>
       <Layout.Content css={styles.content}>
-        <Card css={styles.connectCard}>
-          <Text color="gray12" css={{ fontWeight: '$semibold' }}>
-            Connect to Fuel Wallet
-          </Text>
-          <OriginTag origin={origin} />
-        </Card>
+        <OriginDetails
+          origin={origin}
+          title={originTitle || origin}
+          faviconUrl={faviconUrl}
+          headerText="Connect to Fuel Wallet"
+        />
         <MotionCardList
           {...animations.slideInTop()}
           gap="$3"
@@ -88,29 +90,34 @@ export function ConnectionRequest() {
           {isConnecting && (
             <AnimatePresence>
               <motion.div {...animations.slideInTop()}>
-                <Flex css={styles.sectionHeader}>
-                  <Text color="gray12" css={{ fontWeight: '$semibold' }}>
-                    Allow this site to:
-                  </Text>
-                </Flex>
                 <Card css={styles.connectionDetails}>
-                  <List icon={Icon.is('Check')} iconColor="accent9">
-                    {PERMISSION_LIST.map((permission) => (
-                      <List.Item css={styles.listItemAllowed} key={permission}>
-                        {permission}
-                      </List.Item>
-                    ))}
-                  </List>
-                  <List icon={Icon.is('X')} iconColor="red10">
-                    {NOT_ALLOWED_LIST.map((permission) => (
-                      <List.Item
-                        css={styles.listItemDisallowed}
-                        key={permission}
-                      >
-                        {permission}
-                      </List.Item>
-                    ))}
-                  </List>
+                  <Card.Header css={styles.permissionCardHeader}>
+                    <Text color="gray12" css={{ fontWeight: '$semibold' }}>
+                      This site would like to:
+                    </Text>
+                  </Card.Header>
+                  <Card.Body css={styles.permissionCardBody}>
+                    <List icon={Icon.is('Check')} iconColor="accent9">
+                      {PERMISSION_LIST.map((permission) => (
+                        <List.Item
+                          css={styles.listItemAllowed}
+                          key={permission}
+                        >
+                          {permission}
+                        </List.Item>
+                      ))}
+                    </List>
+                    <List icon={Icon.is('X')} iconColor="red10">
+                      {NOT_ALLOWED_LIST.map((permission) => (
+                        <List.Item
+                          css={styles.listItemDisallowed}
+                          key={permission}
+                        >
+                          {permission}
+                        </List.Item>
+                      ))}
+                    </List>
+                  </Card.Body>
                 </Card>
               </motion.div>
               <motion.div {...animations.slideInTop()}>
@@ -200,9 +207,6 @@ const styles = {
   }),
   connectionDetails: cssObj({
     marginTop: '$3',
-    px: '$3',
-    paddingTop: '$2',
-    paddingBottom: '$4',
   }),
   disclaimer: cssObj({
     mb: '-10px',
@@ -225,5 +229,11 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: '$2',
+  }),
+  permissionCardHeader: cssObj({
+    p: '$3',
+  }),
+  permissionCardBody: cssObj({
+    p: '$3',
   }),
 };
