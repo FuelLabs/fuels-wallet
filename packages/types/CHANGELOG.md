@@ -1,5 +1,29 @@
 # @fuel-wallet/types
 
+## 0.6.0
+
+### Minor Changes
+
+- [#558](https://github.com/FuelLabs/fuels-wallet/pull/558) [`6dc4878`](https://github.com/FuelLabs/fuels-wallet/commit/6dc4878381c8790924c082bccecd3eccf5f2b0fc) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Added asset List Screen
+  Added shortcut in Home Balances to add unknows assets
+  Added DAPP page to "Add Custom Asset"
+  Added fuel.assets()
+  Added fuel.on('assets')
+
+### Patch Changes
+
+- [#545](https://github.com/FuelLabs/fuels-wallet/pull/545) [`dd6dbf3`](https://github.com/FuelLabs/fuels-wallet/commit/dd6dbf3b6b1ccb3f166af4125f077c8b8dacb04b) Thanks [@luizstacio](https://github.com/luizstacio)! - Keep Wallet service worker available, and reconnect once is available back.
+
+- [#538](https://github.com/FuelLabs/fuels-wallet/pull/538) [`0034754`](https://github.com/FuelLabs/fuels-wallet/commit/0034754162b72ad4db0f6273a97af8ead7932707) Thanks [@luizstacio](https://github.com/luizstacio)! - Update ready event to use session id
+
+- [#555](https://github.com/FuelLabs/fuels-wallet/pull/555) [`28e9745`](https://github.com/FuelLabs/fuels-wallet/commit/28e9745f37a9cacec7c1e2c5be7314145a49b700) Thanks [@luizstacio](https://github.com/luizstacio)! - Update fules-ts dependencies
+
+- [#528](https://github.com/FuelLabs/fuels-wallet/pull/528) [`7fb7396`](https://github.com/FuelLabs/fuels-wallet/commit/7fb739659ef829145063cb111da9abcd5ef00ff6) Thanks [@luizstacio](https://github.com/luizstacio)! - Add vaultId on account type
+
+- [#526](https://github.com/FuelLabs/fuels-wallet/pull/526) [`fb79886`](https://github.com/FuelLabs/fuels-wallet/commit/fb7988682d190a6578377e7f67baa2ff5994e2fb) Thanks [@tomiiide](https://github.com/tomiiide)! - Add enum to sdk event types
+
+- [#551](https://github.com/FuelLabs/fuels-wallet/pull/551) [`153f1db`](https://github.com/FuelLabs/fuels-wallet/commit/153f1dbf91b84e7932b31e5ec75ab48d890ca393) Thanks [@luizstacio](https://github.com/luizstacio)! - Move events enum to fuel object
+
 ## 0.5.1
 
 ## 0.5.0
