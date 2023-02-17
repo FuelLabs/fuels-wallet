@@ -9,10 +9,19 @@ use std::{
         AuthError,
         msg_sender,
     },
-    constants::ZERO_B256,
+    call_frames::contract_id,
+    constants::{
+        BASE_ASSET_ID,
+        ZERO_B256,
+    },
     context::msg_amount,
     logging::log,
-    token::mint_to,
+    token::{
+        burn,
+        force_transfer_to_contract,
+        mint_to,
+        transfer,
+    },
 };
 
 use string::String;
@@ -50,7 +59,7 @@ abi Token {
     #[storage(read, write)]
     fn transfer_to(to: Identity, amount: u64) -> u64;
     #[storage(read, write)]
-    fn burn(burn_amount: u64);
+    fn burn(amount: u64);
 }
 
 impl Token for Contract {
@@ -113,6 +122,7 @@ impl Token for Contract {
         let mint_price = storage.mint_price;
         let deposit = msg_amount();
         require(deposit > mint_price, MintError::CannotMintWithoutDeposit);
+        force_transfer_to_contract(deposit, BASE_ASSET_ID, contract_id());
         storage.deposits.insert(sender, deposit);
 
         // Check if minting is possible
@@ -146,8 +156,9 @@ impl Token for Contract {
 
         // Update balances of sender and receiver
         let to_balance = storage.balances.get(to) | 0;
-        storage.balances.insert(to, to_balance + amount);
         storage.balances.insert(sender, curr_balance - amount);
+        storage.balances.insert(to, to_balance + amount);
+        transfer(amount, contract_id(), to);
 
         // Emit event
         log(TransferEvent {
@@ -161,19 +172,20 @@ impl Token for Contract {
     }
 
     #[storage(read, write)]
-    fn burn(burn_amount: u64) {
+    fn burn(amount: u64) {
         is_sender_owner(storage.owner.unwrap());
 
         // Require that the burn amount is less than the missing amount
         let total_minted = storage.total_minted;
         let total_supply = storage.total_supply;
         let missing_amount = total_supply - total_minted;
-        require(burn_amount <= missing_amount, BurnError::CannotBurnMoreThanMissing);
-        storage.total_supply = total_supply - burn_amount;
+        require(amount <= missing_amount, BurnError::CannotBurnMoreThanMissing);
+        storage.total_supply = total_supply - amount;
+        burn(amount);
 
         // Emit event
         log(BurnEvent {
-            amount: burn_amount,
+            amount: amount,
         });
     }
 }
