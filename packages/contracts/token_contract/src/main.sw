@@ -18,7 +18,7 @@ use std::{
 use string::String;
 use errors::{AccessError, BurnError, InitError, MintError, TransferError};
 use events::{BurnEvent, MintEvent, TransferEvent};
-use utils::{id_to_address, msg_sender_as_address};
+use utils::{id_to_address, is_sender_owner, sender_as_address};
 
 storage {
     owner: Option<Identity> = Option::None,
@@ -51,20 +51,6 @@ abi Token {
     fn transfer_to(to: Identity, amount: u64) -> u64;
     #[storage(read, write)]
     fn burn(burn_amount: u64);
-}
-
-#[storage(read)]
-fn validate_owner() {
-    let sender: Result<Identity, AuthError> = msg_sender();
-    match sender {
-        Result::Ok(sender) => {
-            let owner = storage.owner.unwrap();
-            require(owner == sender, AccessError::NotOwner);
-        }
-        _ => {
-            revert(0);
-        }
-    }
 }
 
 impl Token for Contract {
@@ -107,7 +93,7 @@ impl Token for Contract {
     fn balance_of(address: Option<Identity>) -> u64 {
         match address.unwrap() {
             Identity::Address(addr) => {
-                let sender = msg_sender_as_address();
+                let sender = sender_as_address();
                 let owner = id_to_address(storage.owner);
                 require(sender != owner && addr != owner, AccessError::CannotQueryOwnerBalance);
                 storage.balances.get(address.unwrap()) | 0
@@ -176,7 +162,7 @@ impl Token for Contract {
 
     #[storage(read, write)]
     fn burn(burn_amount: u64) {
-        validate_owner();
+        is_sender_owner(storage.owner.unwrap());
 
         // Require that the burn amount is less than the missing amount
         let total_minted = storage.total_minted;
