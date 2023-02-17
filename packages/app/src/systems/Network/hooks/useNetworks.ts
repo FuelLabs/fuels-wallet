@@ -1,10 +1,8 @@
 import type { Network } from '@fuel-wallet/types';
-import { useNavigate } from 'react-router-dom';
 
 import type { NetworksMachineState } from '../machines/networksMachine';
 
 import { store, Services } from '~/store';
-import { Pages } from '~/systems/Core';
 import { useOverlay } from '~/systems/Overlay';
 
 const selectors = {
@@ -25,7 +23,6 @@ const selectors = {
 
 export function useNetworks() {
   const overlay = useOverlay();
-  const navigate = useNavigate();
   const networks = store.useSelector(Services.networks, selectors.networks);
   const network = store.useSelector(Services.networks, selectors.network);
   const isLoading = store.useSelector(Services.networks, selectors.isLoading);
@@ -37,11 +34,10 @@ export function useNetworks() {
   store.useUpdateMachineConfig(Services.networks, {
     actions: {
       redirectToList() {
-        store.openNetworksAdd();
+        store.openNetworksList();
       },
       redirectToHome() {
-        overlay.close();
-        navigate(Pages.wallet());
+        closeDialog();
       },
     },
   });

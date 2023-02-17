@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
+import { Box, Button, Dialog, Focus, Icon, IconButton } from '@fuel-ui/react';
 
 import type { NetworkFormValues } from '~/systems/Network';
 import { NetworkForm, useNetworks, useNetworkForm } from '~/systems/Network';
@@ -24,7 +24,9 @@ export function AddNetwork() {
         />
       </Dialog.Heading>
       <Dialog.Description as="div">
-        <NetworkForm form={form} />
+        <Focus.Scope contain autoFocus>
+          <NetworkForm form={form} />
+        </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
         <Button color="gray" variant="ghost" onPress={handlers.goToList}>
