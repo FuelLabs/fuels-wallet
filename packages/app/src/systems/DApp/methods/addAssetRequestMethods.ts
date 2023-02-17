@@ -21,7 +21,7 @@ export class AddAssetRequestMethods extends ExtensionPageConnection {
   }
 
   async addAsset(input: AssetInputs['addAsset']) {
-    this.service.send('START_ADD_ASSET', {
+    this.service.send('START', {
       input,
     });
     const state = await waitForState(this.service);
