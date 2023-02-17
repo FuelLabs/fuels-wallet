@@ -16,8 +16,8 @@ const selectors = {
   origin: (state: ConnectRequestState) => {
     return state.context.origin;
   },
-  originTitle: (state: ConnectRequestState) => {
-    return state.context.originTitle;
+  title: (state: ConnectRequestState) => {
+    return state.context.title;
   },
   faviconUrl: (state: ConnectRequestState) => {
     return state.context.faviconUrl;
@@ -36,7 +36,7 @@ export function useConnectRequest() {
     selectors.isSelectingAccounts
   );
   const origin = useSelector(service, selectors.origin);
-  const originTitle = useSelector(service, selectors.originTitle);
+  const title = useSelector(service, selectors.title);
   const faviconUrl = useSelector(service, selectors.faviconUrl);
   const selectedAddresses = useSelector(service, selectors.selectedAddresses);
   const currentAccounts = useMemo(() => {
@@ -84,7 +84,7 @@ export function useConnectRequest() {
 
   return {
     origin,
-    originTitle,
+    title,
     faviconUrl,
     isSelectingAccounts,
     isConnecting,

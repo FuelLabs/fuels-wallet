@@ -25,8 +25,9 @@ import { NetworkService } from '~/systems/Network/services';
 
 type EventOrigin = {
   origin: string;
+  title: string;
+  favIconUrl: string;
   connection?: Connection;
-  sender?: chrome.runtime.MessageSender;
 };
 
 export class BackgroundService {
@@ -61,17 +62,18 @@ export class BackgroundService {
     this.communicationProtocol.on(MessageTypes.request, async (event) => {
       if (event.target !== BACKGROUND_SCRIPT_NAME) return;
       const origin = event.sender!.origin!;
-      const sender = event.sender!;
+      const title = event.sender!.tab!.title!;
+      const favIconUrl = event.sender!.tab!.favIconUrl!;
       const response = await this.server.receive(event.request, {
         origin,
-        sender,
+        title,
+        favIconUrl,
       });
       if (response) {
         this.communicationProtocol.postMessage({
           id: event.id,
           type: MessageTypes.response,
           target: CONTENT_SCRIPT_NAME,
-          sender,
           response,
         });
       }
@@ -126,9 +128,7 @@ export class BackgroundService {
   ) {
     // If the method is ping, by pass checks
     if (request.method === 'ping') {
-      return next(request, {
-        origin: serverParams.origin,
-      });
+      return next(request, serverParams);
     }
 
     // Retrive connection for use on accounts
@@ -145,8 +145,7 @@ export class BackgroundService {
     }
     return next(request, {
       connection,
-      origin: serverParams.origin,
-      sender: serverParams.sender,
+      ...serverParams,
     });
   }
 
@@ -176,8 +175,8 @@ export class BackgroundService {
 
   async connect(_: JSONRPCParams, serverParams: EventOrigin) {
     const origin = serverParams.origin;
-    const originTitle = serverParams.sender?.tab?.title;
-    const faviconUrl = serverParams.sender?.tab?.favIconUrl;
+    const title = serverParams.title;
+    const faviconUrl = serverParams.favIconUrl;
 
     let authorizedApp = await ConnectionService.getConnection(origin);
 
@@ -189,7 +188,7 @@ export class BackgroundService {
       );
       authorizedApp = await popupService.requestConnection({
         origin,
-        originTitle,
+        title,
         faviconUrl,
       });
     }

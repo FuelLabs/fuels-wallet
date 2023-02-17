@@ -1,10 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
-import { Stack, Text, Flex, Avatar, Card, Icon } from '@fuel-ui/react';
+import { Stack, Text, Flex, Avatar, Card } from '@fuel-ui/react';
 
 import { parseUrl } from '../../utils';
-
-const getFaviconUrl = (origin: string) =>
-  `https://s2.googleusercontent.com/s2/favicons?domain=${origin}&sz=64`;
 
 export type OriginDetailProps = {
   origin: string;
@@ -25,14 +22,13 @@ export function OriginDetails({
         <Text fontSize="base" css={styles.headerText}>
           {headerText}
         </Text>
-        <Icon icon="CaretDown" color="gray7" />
       </Card.Header>
 
       <Card.Body css={styles.contentSection}>
         <Flex>
           <Avatar
             name={title}
-            src={faviconUrl || getFaviconUrl(origin)}
+            src={faviconUrl}
             role="img"
             size="md"
             aria-label={`${origin}-favicon`}
@@ -56,7 +52,6 @@ const styles = {
   }),
   header: cssObj({
     padding: '$3',
-    borderBottom: '4px solid $gray2',
     width: '100%',
     display: 'flex',
     justifyContent: 'space-between',
@@ -70,7 +65,7 @@ const styles = {
   }),
   headerText: cssObj({
     color: '$gray12',
-    fontWeight: '$extrabold',
+    fontWeight: '$semibold',
   }),
   title: cssObj({
     fontSize: '$base',

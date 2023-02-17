@@ -9,7 +9,7 @@ import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 
 type MachineContext = {
   origin?: string;
-  originTitle?: string;
+  title?: string;
   faviconUrl?: string;
   connection?: Connection;
   isConnected: boolean;
@@ -32,7 +32,7 @@ type MachineServices = {
 export type ConnectRequestInputs = {
   start: {
     origin: string;
-    originTitle?: string;
+    title?: string;
     faviconUrl?: string;
   };
 };
@@ -150,7 +150,7 @@ export const connectRequestMachine = createMachine(
     actions: {
       setOrigin: assign({
         origin: (_, ev) => ev.input.origin,
-        originTitle: (_, ev) => ev.input.originTitle,
+        title: (_, ev) => ev.input.title,
         faviconUrl: (_, ev) => ev.input.faviconUrl,
       }),
       setConnected: assign({

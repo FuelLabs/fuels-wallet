@@ -37,7 +37,7 @@ export function ConnectionRequest() {
     isConnecting,
     hasCurrentAccounts,
     currentAccounts,
-    originTitle,
+    title,
     faviconUrl,
   } = useConnectRequest();
 
@@ -48,9 +48,9 @@ export function ConnectionRequest() {
       <Layout.Content css={styles.content}>
         <OriginDetails
           origin={origin}
-          title={originTitle || origin}
+          title={title || origin}
           faviconUrl={faviconUrl}
-          headerText="Connect to Fuel Wallet"
+          headerText="Connection request from:"
         />
         <MotionCardList
           {...animations.slideInTop()}
@@ -60,38 +60,44 @@ export function ConnectionRequest() {
           {isSelectingAccounts && (
             <AnimatePresence>
               <motion.div {...animations.slideInTop()}>
-                <Flex css={styles.sectionHeader}>
-                  <Text color="gray12" css={{ fontWeight: '$semibold' }}>
-                    Select accounts to connect
-                  </Text>
-                </Flex>
+                <Card>
+                  <Card.Header css={styles.cardHeader}>
+                    <Text color="gray12" css={{ fontWeight: '$semibold' }}>
+                      Select accounts to connect
+                    </Text>
+                  </Card.Header>
+                  <Card.Body css={styles.accountCardBody}>
+                    {accounts?.map((account) => {
+                      const { address, name } = account;
+                      const isConnected = handlers.isAccountSelected(address);
+                      const rightEl = (
+                        <Flex css={styles.switchWrapper}>
+                          <Switch
+                            size="sm"
+                            checked={isConnected}
+                            aria-label={`Toggle ${name}`}
+                            onCheckedChange={() =>
+                              handlers.toggleAccount(address)
+                            }
+                          />
+                        </Flex>
+                      );
+                      return (
+                        <motion.div key={address} {...animations.slideInTop()}>
+                          <AccountItem account={account!} rightEl={rightEl} />
+                        </motion.div>
+                      );
+                    })}
+                  </Card.Body>
+                </Card>
               </motion.div>
-              {accounts?.map((account) => {
-                const { address, name } = account;
-                const isConnected = handlers.isAccountSelected(address);
-                const rightEl = (
-                  <Flex css={styles.switchWrapper}>
-                    <Switch
-                      size="sm"
-                      checked={isConnected}
-                      aria-label={`Toggle ${name}`}
-                      onCheckedChange={() => handlers.toggleAccount(address)}
-                    />
-                  </Flex>
-                );
-                return (
-                  <motion.div key={address} {...animations.slideInTop()}>
-                    <AccountItem account={account!} rightEl={rightEl} />
-                  </motion.div>
-                );
-              })}
             </AnimatePresence>
           )}
           {isConnecting && (
             <AnimatePresence>
               <motion.div {...animations.slideInTop()}>
                 <Card css={styles.connectionDetails}>
-                  <Card.Header css={styles.permissionCardHeader}>
+                  <Card.Header css={styles.cardHeader}>
                     <Text color="gray12" css={{ fontWeight: '$semibold' }}>
                       This site would like to:
                     </Text>
@@ -121,23 +127,25 @@ export function ConnectionRequest() {
                 </Card>
               </motion.div>
               <motion.div {...animations.slideInTop()}>
-                <Flex css={styles.sectionHeader}>
-                  <Text color="gray12" css={{ fontWeight: '$semibold' }}>
-                    Accounts to connect
-                  </Text>
-                  <Button onPress={handlers.back} size="xs" variant="link">
-                    Change
-                  </Button>
-                </Flex>
+                <Card>
+                  <Card.Header css={styles.cardHeader} justify="space-between">
+                    <Text color="gray12" css={{ fontWeight: '$semibold' }}>
+                      Accounts to connect
+                    </Text>
+                    <Button onPress={handlers.back} size="xs" variant="link">
+                      Change
+                    </Button>
+                  </Card.Header>
+                  {currentAccounts?.map((account) => {
+                    const { address } = account;
+                    return (
+                      <motion.div key={address} {...animations.slideInTop()}>
+                        <AccountItem account={account!} compact />
+                      </motion.div>
+                    );
+                  })}
+                </Card>
               </motion.div>
-              {currentAccounts?.map((account) => {
-                const { address } = account;
-                return (
-                  <motion.div key={address} {...animations.slideInTop()}>
-                    <AccountItem account={account!} compact />
-                  </motion.div>
-                );
-              })}
             </AnimatePresence>
           )}
         </MotionCardList>
@@ -230,10 +238,13 @@ const styles = {
     alignItems: 'center',
     gap: '$2',
   }),
-  permissionCardHeader: cssObj({
+  cardHeader: cssObj({
     p: '$3',
   }),
   permissionCardBody: cssObj({
     p: '$3',
+  }),
+  accountCardBody: cssObj({
+    p: '$0',
   }),
 };
