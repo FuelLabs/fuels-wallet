@@ -19,8 +19,15 @@ pub enum MintError {
     InsufficientSupply: (),
 }
 
+pub enum ApproveError {
+    CannotApproveSelf: (),
+    CannotApproveSameAmount: (),
+    CannotApproveMoreThanBalance: (),
+}
+
 pub enum TransferError {
     CannotTransferToSelf: (),
+    InsufficientAllowance: (),
     InsufficientBalance: (),
 }
 

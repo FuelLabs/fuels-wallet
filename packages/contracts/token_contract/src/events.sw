@@ -1,5 +1,11 @@
 library events;
 
+pub struct ApprovalEvent {
+    spender: Identity,
+    receiver: Identity,
+    amount: u64,
+}
+
 pub struct TransferEvent {
     from: Identity,
     to: Identity,

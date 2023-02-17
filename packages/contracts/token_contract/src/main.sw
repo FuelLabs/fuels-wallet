@@ -2,8 +2,10 @@ contract;
 
 dep errors;
 dep events;
+dep interface;
 dep utils;
 
+use string::String;
 use std::{
     auth::{
         AuthError,
@@ -24,9 +26,9 @@ use std::{
     },
 };
 
-use string::String;
-use errors::{AccessError, BurnError, InitError, MintError, TransferError};
-use events::{BurnEvent, MintEvent, TransferEvent};
+use errors::*;
+use events::*;
+use interface::Token;
 use utils::{id_to_address, is_sender_owner, sender_as_address};
 
 storage {
@@ -37,29 +39,7 @@ storage {
     total_minted: u64 = 0,
     deposits: StorageMap<Identity, u64> = StorageMap {},
     balances: StorageMap<Identity, u64> = StorageMap {},
-}
-
-abi Token {
-    #[storage(read, write)]
-    fn constructor(mint_price: u64, mint_limit: u64, total_supply: u64);
-    #[storage(read)]
-    fn owner() -> Identity;
-    #[storage(read)]
-    fn mint_limit() -> u64;
-    #[storage(read)]
-    fn mint_price() -> u64;
-    #[storage(read)]
-    fn total_minted() -> u64;
-    #[storage(read)]
-    fn total_supply() -> u64;
-    #[storage(read)]
-    fn balance_of(to: Option<Identity>) -> u64;
-    #[payable, storage(read, write)]
-    fn mint() -> u64;
-    #[storage(read, write)]
-    fn transfer_to(to: Identity, amount: u64) -> u64;
-    #[storage(read, write)]
-    fn burn(amount: u64);
+    allowances: StorageMap<(Identity, Identity), u64> = StorageMap {},
 }
 
 impl Token for Contract {
@@ -97,7 +77,6 @@ impl Token for Contract {
     fn total_supply() -> u64 {
         storage.total_supply
     }
-
     #[storage(read)]
     fn balance_of(address: Option<Identity>) -> u64 {
         match address.unwrap() {
@@ -111,6 +90,10 @@ impl Token for Contract {
                 storage.balances.get(address.unwrap()) | 0
             }
         }
+    }
+    #[storage(read)]
+    fn allowance(spender: Identity, receiver: Identity) -> u64 {
+        storage.allowances.get((spender, receiver)) | 0
     }
 
     #[payable, storage(read, write)]
@@ -148,27 +131,34 @@ impl Token for Contract {
     }
 
     #[storage(read, write)]
-    fn transfer_to(to: Identity, amount: u64) -> u64 {
-        let sender = msg_sender().unwrap();
-        let curr_balance = storage.balances.get(sender) | 0;
-        require(sender != to, TransferError::CannotTransferToSelf);
-        require(curr_balance >= amount, TransferError::InsufficientBalance);
-
-        // Update balances of sender and receiver
-        let to_balance = storage.balances.get(to) | 0;
-        storage.balances.insert(sender, curr_balance - amount);
-        storage.balances.insert(to, to_balance + amount);
-        transfer(amount, contract_id(), to);
+    fn approve(spender: Identity, receiver: Identity, amount: u64) -> u64 {
+        let curr_allowance = storage.allowances.get((spender, receiver)) | 0;
+        let balance = storage.balances.get(spender) | 0;
+        require(spender != receiver, ApproveError::CannotApproveSelf);
+        require(curr_allowance > amount, ApproveError::CannotApproveSameAmount);
+        require(balance >= amount, ApproveError::CannotApproveMoreThanBalance);
+        storage.allowances.insert((spender, receiver), amount);
 
         // Emit event
-        log(TransferEvent {
-            from: sender,
-            to: to,
+        log(ApprovalEvent {
+            spender: spender,
+            receiver: receiver,
             amount: amount,
         });
 
-        // Return transfer amount
+        // Return allowance amount
         amount
+    }
+
+    #[storage(read, write)]
+    fn transfer_to(to: Identity, amount: u64) -> u64 {
+        let sender = msg_sender().unwrap();
+        _transfer(sender, to, amount)
+    }
+
+    #[storage(read, write)]
+    fn transfer_from_to(from: Identity, to: Identity, amount: u64) -> u64 {
+        _transfer(from, to, amount)
     }
 
     #[storage(read, write)]
@@ -188,4 +178,31 @@ impl Token for Contract {
             amount: amount,
         });
     }
+}
+
+#[storage(read, write)]
+fn _transfer(from: Identity, to: Identity, amount: u64) -> u64 {
+    // Check if transfer is possible
+    let sender = from;
+    let allowance = storage.allowances.get((sender, to)) | 0;
+    let curr_balance = storage.balances.get(sender) | 0;
+    require(sender != to, TransferError::CannotTransferToSelf);
+    require(allowance >= amount, TransferError::InsufficientAllowance);
+    require(curr_balance >= amount, TransferError::InsufficientBalance);
+
+    // Update balances of sender and receiver and transfer tokens
+    let to_balance = storage.balances.get(to) | 0;
+    storage.balances.insert(sender, curr_balance - amount);
+    storage.balances.insert(to, to_balance + amount);
+    transfer(amount, contract_id(), to);
+
+    // Emit event
+    log(TransferEvent {
+        from: sender,
+        to: to,
+        amount: amount,
+    });
+
+    // Return transfer amount
+    amount
 }
