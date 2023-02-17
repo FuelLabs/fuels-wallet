@@ -40,6 +40,7 @@ export enum TxStatus {
   failure = 'Failure',
   squeezedOut = 'SqueezedOut',
 }
+
 export enum TxType {
   create = 'Create',
   mint = 'Mint',

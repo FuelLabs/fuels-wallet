@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import type { AnyState, StateFrom } from 'xstate';
+import type { AnyInterpreter, AnyState, StateFrom } from 'xstate';
 
 import { ReactFactory } from './ReactFactory';
 import type { CreateStoreAtomsReturn } from './atoms';
@@ -12,6 +12,8 @@ import type {
   StoreServiceObj,
   AddMachineInput,
   WaitForArgs,
+  WaitForStateArgs,
+  StateItem,
 } from './types';
 import { createHandlers, waitFor } from './utils/xstate';
 
@@ -252,6 +254,69 @@ export class StoreClass<T extends MachinesObj> implements IStore<T> {
   async waitFor<K extends keyof T>(...[key, ...args]: WaitForArgs<T, K>) {
     const service = this.services[key];
     return waitFor(service, ...args);
+  }
+
+  /**
+   * Wait for a specifice state to be reached.
+   * @param key - the key of the service
+   * @param done - the state to wait for complete (default: 'done')
+   * @param failure - the state to wait for failure (default: 'failed')
+   * @param failureMessage - the field of the context to use as the error message (default: 'error')
+   * @param timeout - the timeout in milliseconds (default: 5000)
+   * @returns the current state value
+   * @example
+   * await store.waitForState('counter');
+   * // or
+   * await store.waitForState('counter', 'done', 'failed', 'error');
+   */
+  public async waitForState<K extends keyof T, S extends StateItem<T, K>>(
+    ...[
+      key,
+      {
+        done = 'done',
+        failure = 'failed',
+        failureMessage = 'error',
+        timeout = 5000,
+      } = {},
+    ]: WaitForStateArgs<T, K>
+  ) {
+    try {
+      const service = this.services[key];
+      const doneState = done;
+      const failureState = failure;
+      const failureMessageField = failureMessage;
+
+      if (!service) {
+        throw new Error('Service not found');
+      }
+
+      const appState = await waitFor<AnyInterpreter>(
+        service,
+        (state) => state.matches(doneState) || state.matches(failureState),
+        timeout
+      );
+      if (appState.matches(failureState)) {
+        throw new Error(appState.context[failureMessageField], {
+          cause: 'CustomState',
+        });
+      }
+
+      return appState as S;
+    } catch (err: unknown) {
+      const error = err as Error & { cause?: string };
+      // Timeout of 5000 ms exceeded
+      if (/Timeout of (.*) ms exceeded/.test(error.message)) {
+        throw new Error(
+          `Window closed by inactivity after ${timeout / 1000 / 60} minutes!`
+        );
+      }
+      // Throw customized error from machine
+      if (err && (err as { cause: string }).cause === 'CustomState') {
+        throw err as Error;
+      }
+      // Throw other errors that can be thrown
+      throw err;
+    }
   }
 }
 

@@ -44,7 +44,7 @@ export async function mockConnections() {
 
 export async function connectionsLoader() {
   await NetworkService.clearNetworks();
-  await NetworkService.addFirstNetwork();
+  await NetworkService.addDefaultNetworks();
   await AccountService.clearAccounts();
   return mockConnections();
 }

@@ -5,6 +5,7 @@ import {
   getButtonByText,
   getByAriaLabel,
   hasText,
+  reload,
   visit,
   waitUrl,
 } from '../commons';
@@ -26,6 +27,7 @@ test.describe('CreateWallet', () => {
 
   test('should be able to create wallet and see first account created', async () => {
     await visit(page, '/wallet');
+    await reload(page);
     await getButtonByText(page, /Create a Wallet/i).click();
 
     /** Copy Mnemonic */
@@ -53,7 +55,6 @@ test.describe('CreateWallet', () => {
     /** Account created */
     await hasText(page, /Wallet created successfully/i);
     await hasText(page, /Account 1/i);
-    await page.reload();
     await visit(page, '/wallet');
     await hasText(page, /assets/i, 1);
   });

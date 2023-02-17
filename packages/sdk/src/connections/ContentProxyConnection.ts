@@ -8,8 +8,7 @@ import {
 } from '@fuel-wallet/types';
 import type { CommunicationMessage } from '@fuel-wallet/types';
 
-const PING_TIMEOUT = 1000;
-const RECONNECT_TIMEOUT = 300;
+import { PING_TIMEOUT, RECONNECT_TIMEOUT } from '../config';
 
 export class ContentProxyConnection {
   connection: chrome.runtime.Port;
@@ -42,8 +41,12 @@ export class ContentProxyConnection {
         // It should not throw an error to avoid
         // uncessary error reporting as it is expected
         // to fail if background script is not available.
-        // eslint-disable-next-line no-empty
-      } catch {}
+      } catch (err: unknown) {
+        if ((err as Error).message === 'Extension context invalidated.') {
+          clearInterval(this._tryReconect);
+          console.debug('[FUEL WALLET] context invalidated!');
+        }
+      }
     }, RECONNECT_TIMEOUT);
   };
 

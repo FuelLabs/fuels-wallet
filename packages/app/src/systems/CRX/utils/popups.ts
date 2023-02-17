@@ -9,7 +9,8 @@ export type ShowPopUp = {
 
 export async function closePopUp(tabId: number | null) {
   if (tabId) {
-    chrome.tabs.remove(tabId);
+    // silently dismiss error if tab was closed already
+    chrome.tabs.remove(tabId).catch(() => {});
   }
 }
 

@@ -1,40 +1,36 @@
-import { useInterpret, useSelector } from '@xstate/react';
+import { useSelector } from '@xstate/react';
 import { useEffect, useMemo } from 'react';
 
-import type { ConnectMachineState } from '../machines';
-import { connectMachine } from '../machines';
-import { useConnectRequestMethods } from '../methods';
+import type { ConnectRequestState } from '../machines';
 
+import { Services, store } from '~/store';
 import { useAccounts } from '~/systems/Account';
 
 const selectors = {
-  isSelectingAccounts: (state: ConnectMachineState) => {
+  isSelectingAccounts: (state: ConnectRequestState) => {
     return state.matches('connecting.selectingAccounts');
   },
-  isConnecting: (state: ConnectMachineState) => {
+  isConnecting: (state: ConnectRequestState) => {
     return state.matches('connecting.authorizing');
   },
-  origin: (state: ConnectMachineState) => {
+  origin: (state: ConnectRequestState) => {
     return state.context.origin;
   },
-  selectedAddresses: (state: ConnectMachineState) => {
+  selectedAddresses: (state: ConnectRequestState) => {
     return state.context.selectedAddresses;
   },
 };
 
 export function useConnectRequest() {
   const { account, accounts, isLoading } = useAccounts();
-  const connectionService = useInterpret(connectMachine);
-  const isConnecting = useSelector(connectionService, selectors.isConnecting);
+  const service = store.useService(Services.connectRequest);
+  const isConnecting = useSelector(service, selectors.isConnecting);
   const isSelectingAccounts = useSelector(
-    connectionService,
+    service,
     selectors.isSelectingAccounts
   );
-  const origin = useSelector(connectionService, selectors.origin);
-  const selectedAddresses = useSelector(
-    connectionService,
-    selectors.selectedAddresses
-  );
+  const origin = useSelector(service, selectors.origin);
+  const selectedAddresses = useSelector(service, selectors.selectedAddresses);
   const currentAccounts = useMemo(() => {
     return (accounts ?? []).filter((account) =>
       selectedAddresses?.includes(account.address)
@@ -42,49 +38,43 @@ export function useConnectRequest() {
   }, [selectedAddresses, accounts]);
   const hasCurrentAccounts = !!selectedAddresses?.length;
 
-  // Start Connect Request Methods
-  useConnectRequestMethods(connectionService);
-
   useEffect(() => {
     if (account && !hasCurrentAccounts) {
-      connectionService.send({
+      service.send({
         type: 'TOGGLE_ADDRESS',
         input: account.address,
       });
     }
   }, [account, hasCurrentAccounts]);
 
-  function authorizeConnection() {
-    connectionService.send({
-      type: 'AUTHORIZE',
+  function toggleAccount(address: string) {
+    service.send({
+      type: 'TOGGLE_ADDRESS',
+      input: address,
     });
   }
 
+  function authorizeConnection() {
+    service.send('AUTHORIZE');
+  }
+
   function rejectConnection() {
-    connectionService.send('REJECT');
+    service.send('REJECT');
   }
 
   function next() {
-    connectionService.send('NEXT');
+    service.send('NEXT');
   }
 
   function back() {
-    connectionService.send('BACK');
+    service.send('BACK');
   }
 
   function isAccountSelected(address: string) {
     return !!selectedAddresses?.includes(address);
   }
 
-  function toggleAccount(address: string) {
-    connectionService.send({
-      type: 'TOGGLE_ADDRESS',
-      input: address,
-    });
-  }
-
   return {
-    service: connectionService,
     origin,
     isSelectingAccounts,
     isConnecting,

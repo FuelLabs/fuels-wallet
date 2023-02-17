@@ -112,4 +112,12 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
       },
     ],
   },
+  {
+    key: 'lock-wallet',
+    icon: 'Lock',
+    label: 'Lock Wallet',
+    onPress() {
+      store.lock();
+    },
+  },
 ];

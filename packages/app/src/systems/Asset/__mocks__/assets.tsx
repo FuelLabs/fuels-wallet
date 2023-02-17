@@ -17,7 +17,13 @@ export const MOCK_CUSTOM_ASSET = {
   isCustom: true,
 };
 
-export const MOCK_ASSETS_AMOUNTS = [...MOCK_ASSETS, MOCK_CUSTOM_ASSET];
+export const MOCK_ASSETS_AMOUNTS = [
+  ...AssetList.map((item, idx) => ({
+    ...item,
+    amount: bn(idx % 2 === 0 ? 14563943834 : -14563943834),
+  })),
+  MOCK_CUSTOM_ASSET,
+];
 
 export const MOCK_ASSETS_NODE = [
   {

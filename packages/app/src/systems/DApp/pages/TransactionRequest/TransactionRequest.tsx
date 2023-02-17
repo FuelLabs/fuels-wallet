@@ -5,7 +5,7 @@ import { ConnectInfo } from '../../components';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
 import { useAssets } from '~/systems/Asset';
-import { Layout, UnlockDialog } from '~/systems/Core';
+import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { TxContent, TxHeader } from '~/systems/Transaction';
 
@@ -86,14 +86,6 @@ export function TransactionRequest() {
           </Layout.BottomBar>
         )}
       </Layout>
-      <UnlockDialog
-        isOpen={status('unlocking') || status('waitingUnlock')}
-        isLoading={status('unlocking')}
-        unlockText="Confirm Transaction"
-        unlockError={txRequest.errors.unlockError}
-        onUnlock={txRequest.handlers.unlock}
-        onClose={txRequest.handlers.closeUnlock}
-      />
     </>
   );
 }

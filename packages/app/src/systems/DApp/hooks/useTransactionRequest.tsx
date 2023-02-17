@@ -1,32 +1,26 @@
-import { useInterpret, useSelector } from '@xstate/react';
+import { useSelector } from '@xstate/react';
 import { useCallback } from 'react';
 
-import type { TransactionMachineState } from '../machines/transactionMachine';
-import {
-  TxRequestStatus,
-  transactionMachine,
-} from '../machines/transactionMachine';
-import { useTransactionRequestMethods } from '../methods/transactionRequestMethods';
+import type { TransactionRequestState } from '../machines/transactionRequestMachine';
+import { TxRequestStatus } from '../machines/transactionRequestMachine';
 
+import { Services, store } from '~/store';
 import { useChainInfo } from '~/systems/Network';
 import { getFilteredErrors, TxStatus } from '~/systems/Transaction';
 import { useParseTx } from '~/systems/Transaction/hooks/useParseTx';
 import type { TxInputs } from '~/systems/Transaction/services';
 
 const selectors = {
-  context(state: TransactionMachineState) {
+  context(state: TransactionRequestState) {
     return state.context;
   },
-  account(state: TransactionMachineState) {
+  account(state: TransactionRequestState) {
     return state.context.input.account;
   },
-  isUnlocking(state: TransactionMachineState) {
-    return state.children.unlock?.state.matches('unlocking');
-  },
-  isLoadingAccounts(state: TransactionMachineState) {
+  isLoadingAccounts(state: TransactionRequestState) {
     return state.matches('fetchingAccount');
   },
-  errors(state: TransactionMachineState) {
+  errors(state: TransactionRequestState) {
     if (!state.context.errors) return {};
     const grouped = state.context.errors?.txDryRunGroupedErrors;
     const general = getFilteredErrors(grouped, ['InsufficientInputAmount']);
@@ -37,14 +31,12 @@ const selectors = {
   },
   status(externalLoading?: boolean) {
     return useCallback(
-      (state: TransactionMachineState) => {
+      (state: TransactionRequestState) => {
         const isLoading = state.hasTag('loading');
         const isClosed = state.matches('done') || state.matches('failed');
 
         if (state.matches('idle')) return TxRequestStatus.idle;
         if (externalLoading || isLoading) return TxRequestStatus.loading;
-        if (selectors.isUnlocking(state)) return TxRequestStatus.unlocking;
-        if (state.matches('unlocking')) return TxRequestStatus.waitingUnlock;
         if (state.matches('txFailed')) return TxRequestStatus.failed;
         if (state.matches('txSuccess')) return TxRequestStatus.success;
         if (state.matches('sendingTx')) return TxRequestStatus.sending;
@@ -54,7 +46,7 @@ const selectors = {
       [externalLoading]
     );
   },
-  title(state: TransactionMachineState) {
+  title(state: TransactionRequestState) {
     if (state.matches('txSuccess')) return 'Transaction sent';
     if (state.matches('txFailed')) return 'Transaction failed';
     return 'Approve Transaction';
@@ -70,13 +62,15 @@ export type UseTransactionRequestReturn = ReturnType<
 >;
 
 export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
-  const service = useInterpret(() =>
-    transactionMachine.withContext({
+  const service = store.useService(Services.txRequest);
+
+  store.useUpdateMachineConfig(Services.txRequest, {
+    context: {
       input: {
         isOriginRequired: opts.isOriginRequired,
       },
-    })
-  );
+    },
+  });
 
   const isLoadingAccounts = useSelector(service, selectors.isLoadingAccounts);
   const account = useSelector(service, selectors.account);
@@ -117,14 +111,8 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   function reject() {
     service.send('REJECT');
   }
-  function unlock(password: string) {
-    service.send('UNLOCK_WALLET', { input: { password, account } });
-  }
-  function closeUnlock() {
-    service.send('CLOSE_UNLOCK');
-  }
   function request(input: TxInputs['request']) {
-    service.send('START_REQUEST', { input });
+    service.send('START', { input });
   }
   function tryAgain() {
     service.send('TRY_AGAIN');
@@ -132,8 +120,6 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   function close() {
     service.send('CLOSE');
   }
-
-  useTransactionRequestMethods(service);
 
   return {
     ...ctx,
@@ -151,8 +137,6 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
       request,
       reset,
       approve,
-      unlock,
-      closeUnlock,
       reject,
       tryAgain,
       close,

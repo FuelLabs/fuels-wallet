@@ -23,15 +23,15 @@ const schema = yup
     }),
     confirmPassword: yup
       .string()
-      .oneOf([yup.ref('newPassword'), null], 'Passwords must match'),
-    oldPassword: yup.string().required('Current Password is required'),
+      .oneOf([yup.ref('password'), null], 'Passwords must match'),
+    currentPassword: yup.string().required('Current Password is required'),
   })
   .required();
 
 type ChangePasswordFormValues = {
+  password: string;
   confirmPassword: string;
-  newPassword: string;
-  oldPassword: string;
+  currentPassword: string;
   strength: string;
 };
 
@@ -43,9 +43,9 @@ export function ChangePassword() {
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
+      password: '',
       confirmPassword: '',
-      newPassword: '',
-      oldPassword: '',
+      currentPassword: '',
     },
   });
   const {
@@ -57,7 +57,7 @@ export function ChangePassword() {
   } = form;
 
   function onSubmit(values: ChangePasswordFormValues) {
-    if (values.confirmPassword !== values.newPassword) {
+    if (values.confirmPassword !== values.password) {
       return setError('confirmPassword', {
         message: 'Passwords must match',
       });
@@ -81,11 +81,12 @@ export function ChangePassword() {
             </Alert>
             <ControlledField
               control={control}
-              name="oldPassword"
+              name="currentPassword"
               label="Current Password"
               render={({ field }) => (
                 <InputPassword
                   {...field}
+                  autoComplete="current-password"
                   css={styles.input}
                   aria-label="Current Password"
                   placeholder="Type your current password"
@@ -94,7 +95,7 @@ export function ChangePassword() {
             />
             <ControlledField
               control={control}
-              name="newPassword"
+              name="password"
               label="New Password"
               hideError
               render={({ field }) => (
@@ -106,6 +107,9 @@ export function ChangePassword() {
                   onBlur={() => {
                     form.trigger();
                     field.onBlur();
+                  }}
+                  inputProps={{
+                    autoComplete: 'new-password',
                   }}
                   ariaLabel="New Password"
                   placeholder="Type your new password"
@@ -120,6 +124,7 @@ export function ChangePassword() {
               render={({ field }) => (
                 <InputPassword
                   {...field}
+                  autoComplete="new-password"
                   css={styles.input}
                   aria-label="Confirm Password"
                   placeholder="Confirm your new password"

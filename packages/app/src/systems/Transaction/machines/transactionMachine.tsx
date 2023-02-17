@@ -59,6 +59,7 @@ export const transactionMachine = createMachine(
       services: {} as MachineServices,
       events: {} as MachineEvents,
     },
+    context: {},
     predictableActionArguments: true,
     id: '(machine)',
     initial: 'idle',

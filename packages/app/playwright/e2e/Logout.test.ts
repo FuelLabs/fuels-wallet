@@ -1,13 +1,7 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
 
-import {
-  getButtonByText,
-  getByAriaLabel,
-  hasText,
-  reload,
-  visit,
-} from '../commons';
+import { getButtonByText, getByAriaLabel, hasText, visit } from '../commons';
 import { mockData } from '../mocks';
 
 test.describe('Logout', () => {
@@ -22,7 +16,6 @@ test.describe('Logout', () => {
   test.beforeEach(async () => {
     await visit(page, '/');
     await mockData(page, 2);
-    await reload(page);
   });
 
   test('Should logout and redirect to create new wallet', async () => {

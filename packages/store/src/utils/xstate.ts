@@ -130,14 +130,7 @@ export function updateService<I extends AnyInterpreter>(
 export async function waitFor<
   I extends AnyInterpreter,
   S = StateFrom<I['machine']>
->(service: I, givenState: (state: S) => boolean, timeout = 60 * 5 * 1000) {
-  try {
-    const state = await waitForRef<I>(service, givenState, { timeout });
-    return state as S;
-  } catch (err: any) {
-    if (err.cause === 'CustomState') throw err;
-    throw new Error(
-      `Window closed by inactivity after ${timeout / 1000 / 60} minutes!`
-    );
-  }
+>(service: I, givenState: (state: S) => boolean, timeout = 5000) {
+  const state = await waitForRef<I>(service, givenState, { timeout });
+  return state as S;
 }

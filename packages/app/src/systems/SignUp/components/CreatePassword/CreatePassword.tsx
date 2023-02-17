@@ -82,6 +82,9 @@ export function CreatePassword({
             render={({ field }) => (
               <InputSecurePassword
                 field={field}
+                inputProps={{
+                  autoComplete: 'new-password',
+                }}
                 onChangeStrength={(strength: string) =>
                   setValue('strength', strength)
                 }
@@ -99,6 +102,7 @@ export function CreatePassword({
             render={({ field }) => (
               <InputPassword
                 {...field}
+                autoComplete="new-password"
                 placeholder="Confirm your password"
                 aria-label="Confirm Password"
               />

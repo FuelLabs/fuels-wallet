@@ -2,13 +2,12 @@ import { toast } from '@fuel-ui/react';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-import { AccountService } from '~/systems/Account';
-import type { AccountInputs, UnlockMachine } from '~/systems/Account';
-import type { ChildrenMachine } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
+import type { VaultInputs } from '~/systems/Vault';
+import { VaultService } from '~/systems/Vault';
 
 type MachineServices = {
-  unlockAndGetMnemonic: {
+  exportVault: {
     data: string[];
   };
 };
@@ -17,10 +16,9 @@ type MachineContext = {
   words: string[];
 };
 
-type MachineEvents = (
-  | { type: 'UNLOCK_WALLET'; input: AccountInputs['unlock'] }
-  | { type: 'CHANGE_PASSWORD'; input: AccountInputs['changePassword'] }
-) & { data: string[] };
+type MachineEvents =
+  | { type: 'EXPORT_VAULT'; input: VaultInputs['exportVault'] }
+  | { type: 'CHANGE_PASSWORD'; input: VaultInputs['changePassword'] };
 
 export const settingsMachine = createMachine(
   {
@@ -34,6 +32,9 @@ export const settingsMachine = createMachine(
     predictableActionArguments: true,
     id: 'settingsMachine',
     initial: 'idle',
+    context: {
+      words: [],
+    },
     states: {
       changingPassword: {
         invoke: {
@@ -58,7 +59,7 @@ export const settingsMachine = createMachine(
           CHANGE_PASSWORD: {
             target: 'changingPassword',
           },
-          UNLOCK_WALLET: {
+          EXPORT_VAULT: {
             target: 'gettingMnemonic',
           },
         },
@@ -66,7 +67,7 @@ export const settingsMachine = createMachine(
       gettingMnemonic: {
         tags: ['unlocking'],
         invoke: {
-          src: 'unlockAndGetMnemonic',
+          src: 'exportVault',
           onDone: [
             {
               target: 'idle',
@@ -98,41 +99,30 @@ export const settingsMachine = createMachine(
       }),
     },
     services: {
-      changePassword: FetchMachine.create<
-        AccountInputs['changePassword'],
-        void
-      >({
+      changePassword: FetchMachine.create<VaultInputs['changePassword'], void>({
         showError: true,
         maxAttempts: 1,
         fetch: async ({ input }) => {
-          if (!input?.oldPassword || !input.newPassword) {
+          if (!input?.currentPassword || !input.password) {
             throw new Error('Invalid Input');
           }
-
-          await AccountService.changePassword({
-            oldPassword: input.oldPassword,
-            newPassword: input.newPassword,
-          });
-
+          await VaultService.changePassword(input);
           toast.success('Password Changed');
         },
       }),
-      unlockAndGetMnemonic: FetchMachine.create<
-        AccountInputs['unlock'],
-        string[]
-      >({
+      exportVault: FetchMachine.create<VaultInputs['exportVault'], string[]>({
         showError: true,
         maxAttempts: 1,
         fetch: async ({ input }) => {
-          if (!input?.account || !input.password) {
-            throw new Error('Invalid Input');
+          if (!input?.password) {
+            throw new Error('Password is required to export Vault!');
           }
-          const secret = await AccountService.exportVault(input);
-
-          if (!secret) {
-            throw new Error('No Secret Found');
-          }
-
+          const secret = await VaultService.exportVault({
+            ...input,
+            // TODO change once we add multiple vault management
+            // https://github.com/FuelLabs/fuels-wallet/issues/562
+            vaultId: 0,
+          });
           return secret.split(' ');
         },
       }),
@@ -142,7 +132,4 @@ export const settingsMachine = createMachine(
 
 export type SettingsMachine = typeof settingsMachine;
 export type SettingsMachineService = InterpreterFrom<typeof settingsMachine>;
-export type SettingsMachineState = StateFrom<typeof settingsMachine> &
-  ChildrenMachine<{
-    unlock: UnlockMachine;
-  }>;
+export type SettingsMachineState = StateFrom<typeof settingsMachine>;

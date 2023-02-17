@@ -1,6 +1,6 @@
 import type { Colors } from '@fuel-ui/css';
 
-import { TxStatus } from '.';
+import { TxStatus } from './tx.types';
 
 export const getTxStatusColor = (status?: TxStatus): Colors => {
   switch (status) {
