@@ -72,7 +72,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
             {selectedNetwork && !isLoading && (
               <NetworkDropdown
                 selected={selectedNetwork}
-                onPress={handlers.goToList}
+                onPress={handlers.openNetworks}
               />
             )}
           </>
@@ -123,7 +123,7 @@ function ExternalTopBar() {
       {selectedNetwork && (
         <NetworkDropdown
           selected={selectedNetwork}
-          onPress={handlers.goToList}
+          onPress={handlers.openNetworks}
           isDisabled={true}
         />
       )}

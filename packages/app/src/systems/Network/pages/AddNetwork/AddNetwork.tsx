@@ -29,7 +29,7 @@ export function AddNetwork() {
         </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
-        <Button color="gray" variant="ghost" onPress={handlers.goToList}>
+        <Button color="gray" variant="ghost" onPress={handlers.openNetworks}>
           Cancel
         </Button>
         <Button

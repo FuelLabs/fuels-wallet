@@ -34,7 +34,7 @@ export const Networks = () => {
       <Dialog.Footer>
         <Button
           aria-label="Add network"
-          onPress={handlers.goToAdd}
+          onPress={handlers.openNetworksAdd}
           leftIcon={Icon.is('Plus')}
           variant="ghost"
         >
