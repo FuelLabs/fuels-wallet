@@ -34,7 +34,6 @@ export function TxView() {
         {ctx.shouldShowTx && (
           <TxContent.Info
             tx={tx}
-            amount={ctx.ethAmountSent}
             showDetails={ctx.shouldShowTxDetails}
             assets={assets}
             header={

@@ -11,7 +11,6 @@ export type SendConfirmProps = {
 };
 
 export function SendConfirm({ txRequest }: SendConfirmProps) {
-  const amountSent = txRequest.ethAmountSent;
   const isDone = txRequest.status('success') || txRequest.status('failed');
   const navigate = useNavigate();
   const { assets } = useAssets();
@@ -22,7 +21,6 @@ export function SendConfirm({ txRequest }: SendConfirmProps) {
         showDetails
         tx={txRequest.tx}
         txStatus={txRequest.approveStatus()}
-        amount={amountSent}
         assets={assets}
         header={
           <>
