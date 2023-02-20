@@ -28,7 +28,6 @@ export function TransactionRequest() {
             <TxContent.Info
               showDetails
               tx={txRequest.tx}
-              amount={txRequest.ethAmountSent}
               header={
                 <ConnectInfo
                   account={ctx.account}
@@ -44,7 +43,6 @@ export function TransactionRequest() {
               showDetails
               tx={txRequest.tx}
               txStatus={txRequest.approveStatus()}
-              amount={txRequest.ethAmountSent}
               header={
                 <TxHeader
                   id={txRequest.tx?.id}

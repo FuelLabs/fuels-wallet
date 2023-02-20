@@ -20,8 +20,6 @@ import type { GroupedError } from '~/systems/Transaction';
 export type AssetsAmountProps = {
   amounts: AssetAmount[];
   title?: string;
-  isPositive?: boolean;
-  isNegative?: boolean;
   balanceErrors?: GroupedError[];
 };
 
@@ -32,8 +30,6 @@ type AssetsAmountComponent = FC<AssetsAmountProps> & {
 export const AssetsAmount: AssetsAmountComponent = ({
   amounts,
   title,
-  isPositive,
-  isNegative,
   balanceErrors,
 }: AssetsAmountProps) => {
   const hasError = !!balanceErrors?.length;
@@ -65,8 +61,6 @@ export const AssetsAmount: AssetsAmountComponent = ({
           <AssetsAmountItem
             assetAmount={assetAmount}
             key={assetAmount.assetId}
-            isPositive={isPositive}
-            isNegative={isNegative}
           />
         ))}
       </Stack>
@@ -76,39 +70,29 @@ export const AssetsAmount: AssetsAmountComponent = ({
 
 type AssetsAmountItemProps = {
   assetAmount: AssetAmount;
-  isPositive?: boolean;
-  isNegative?: boolean;
 };
 
-const AssetsAmountItem = ({
-  assetAmount,
-  isPositive,
-  isNegative,
-}: AssetsAmountItemProps) => {
+const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
   const assetAmountClass = cx('asset_amount');
 
-  const {
-    name = '',
-    symbol = '',
-    imageUrl = '',
-    assetId,
-    amount,
-  } = assetAmount || {};
+  const { name = '', symbol, imageUrl, assetId, amount } = assetAmount || {};
 
   return (
     <Grid key={assetId} css={styles.root} className={assetAmountClass}>
       <Flex css={styles.asset}>
-        <Avatar name={name} src={imageUrl} css={{ height: 18, width: 18 }} />
-        <Text as="span">{name}</Text>
+        {imageUrl ? (
+          <Avatar name={name} src={imageUrl} css={{ height: 18, width: 18 }} />
+        ) : (
+          <Avatar.Generated hash={assetId} size="xsm" />
+        )}
+        <Text as="span">{name || 'Unknown'}</Text>
       </Flex>
       <Copyable value={assetId} css={styles.address}>
         <Text fontSize="xs" css={{ mt: '$1' }}>
           {shortAddress(assetId)}
         </Text>
       </Copyable>
-      <Flex css={styles.amount(isPositive)}>
-        {isPositive && '+'}
-        {isNegative && '-'}
+      <Flex css={styles.amount}>
         {bn(amount).format()} {symbol}
       </Flex>
     </Grid>
@@ -155,16 +139,15 @@ const styles = {
     color: '$gray9',
     fontSize: '$xs',
   }),
-  amount: (isPositive?: boolean) =>
-    cssObj({
-      justifyContent: 'flex-end',
-      gridRow: '1 / 3',
-      gridColumn: '2 / 3',
-      textAlign: 'right',
-      fontSize: '$sm',
-      color: isPositive ? '$accent11' : '$gray12',
-      alignItems: 'center',
-    }),
+  amount: cssObj({
+    justifyContent: 'flex-end',
+    gridRow: '1 / 3',
+    gridColumn: '2 / 3',
+    textAlign: 'right',
+    fontSize: '$sm',
+    color: '$gray12',
+    alignItems: 'center',
+  }),
 };
 
 AssetsAmount.Loader = AssetsAmountLoader;

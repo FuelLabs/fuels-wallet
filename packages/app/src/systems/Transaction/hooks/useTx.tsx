@@ -1,5 +1,4 @@
 import { useInterpret, useSelector } from '@xstate/react';
-import { bn } from 'fuels';
 import { useEffect, useMemo } from 'react';
 
 import type { TransactionMachineState } from '../machines';
@@ -8,7 +7,6 @@ import type { TxInputs } from '../services';
 
 import { useParseTx } from './useParseTx';
 
-import { isEth } from '~/systems/Asset';
 import { useChainInfo } from '~/systems/Network';
 
 const selectors = {
@@ -62,38 +60,33 @@ export function useTx({
   });
 
   const isLoadingTx = isFetching || isFetchingResult || isLoadingChainInfo;
-  const { shouldShowAlert, shouldShowTx, shouldShowTxDetails, ethAmountSent } =
-    useMemo(() => {
-      const shouldShowAlert =
-        isTxNotFound ||
-        isInvalidTxId ||
-        tx?.isStatusPending ||
-        tx?.isStatusFailure;
-      const shouldShowTx =
-        tx &&
-        !isLoadingTx &&
-        !isLoadingChainInfo &&
-        !isInvalidTxId &&
-        !isTxNotFound;
-      const shouldShowTxDetails = shouldShowTx && !tx?.isTypeMint;
+  const { shouldShowAlert, shouldShowTx, shouldShowTxDetails } = useMemo(() => {
+    const shouldShowAlert =
+      isTxNotFound ||
+      isInvalidTxId ||
+      tx?.isStatusPending ||
+      tx?.isStatusFailure;
+    const shouldShowTx =
+      tx &&
+      !isLoadingTx &&
+      !isLoadingChainInfo &&
+      !isInvalidTxId &&
+      !isTxNotFound;
+    const shouldShowTxDetails = shouldShowTx && !tx?.isTypeMint;
 
-      const ethAmountSent = bn(tx?.totalAssetsSent?.find(isEth)?.amount);
-
-      return {
-        shouldShowAlert,
-        shouldShowTx,
-        shouldShowTxDetails,
-        ethAmountSent,
-      };
-    }, [
-      isTxNotFound,
-      isInvalidTxId,
-      isLoadingTx,
-      tx?.isStatusPending,
-      tx?.isStatusFailure,
-      tx?.isTypeMint,
-      tx?.totalAssetsSent,
-    ]);
+    return {
+      shouldShowAlert,
+      shouldShowTx,
+      shouldShowTxDetails,
+    };
+  }, [
+    isTxNotFound,
+    isInvalidTxId,
+    isLoadingTx,
+    tx?.isStatusPending,
+    tx?.isStatusFailure,
+    tx?.isTypeMint,
+  ]);
 
   function getTransaction(input: TxInputs['fetch']) {
     send('GET_TRANSACTION', { input });
@@ -121,6 +114,5 @@ export function useTx({
     shouldShowTxDetails,
     tx,
     error,
-    ethAmountSent,
   };
 }

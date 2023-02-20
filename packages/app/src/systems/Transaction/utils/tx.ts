@@ -441,12 +441,15 @@ export function getContractCallOperations({
                   type: AddressType.contract,
                   address: receipt.to,
                 },
-                assetsSent: [
-                  {
-                    amount: receipt.amount,
-                    assetId: receipt.assetId,
-                  },
-                ],
+                // if no amount is forwarded to the contract, skip showing assetsSent
+                assetsSent: receipt.amount?.isZero()
+                  ? undefined
+                  : [
+                      {
+                        amount: receipt.amount,
+                        assetId: receipt.assetId,
+                      },
+                    ],
               });
 
               return newContractCallOps;
@@ -461,6 +464,39 @@ export function getContractCallOperations({
       }
 
       return prevOutputCallOps;
+    },
+    [] as Operation[]
+  );
+
+  return contractCallOperations;
+}
+
+export function getContractTransferOperations({
+  receipts,
+}: ReceiptParam): Operation[] {
+  const contractCallReceipts = getReceiptsTransferOut(receipts);
+
+  const contractCallOperations = contractCallReceipts.reduce(
+    (prevContractTransferOps, receipt) => {
+      const newContractCallOps = addOperation(prevContractTransferOps, {
+        name: OperationName.contractTransfer,
+        from: {
+          type: AddressType.contract,
+          address: receipt.from,
+        },
+        to: {
+          type: AddressType.account,
+          address: receipt.to,
+        },
+        assetsSent: [
+          {
+            amount: receipt.amount,
+            assetId: receipt.assetId,
+          },
+        ],
+      });
+
+      return newContractCallOps;
     },
     [] as Operation[]
   );
@@ -489,42 +525,11 @@ export function getOperations({
     return [
       ...getTransferOperations({ inputs, outputs }),
       ...getContractCallOperations({ inputs, outputs, receipts }),
+      ...getContractTransferOperations({ receipts }),
     ];
   }
 
   return [];
-}
-
-export function getTotalAssetsSent({
-  transactionType,
-  inputs,
-  outputs,
-  receipts,
-}: GetOperationParams): Coin[] {
-  const operations = getOperations({
-    transactionType,
-    inputs,
-    outputs,
-    receipts,
-  });
-
-  const assetsSent = operations.reduce((prev, op) => {
-    const newAssetsSent = (op.assetsSent ?? []).reduce((prevOp, asset) => {
-      const assetExists = prevOp.find((a) => a.assetId === asset.assetId);
-
-      if (assetExists) {
-        assetExists.amount = bn(assetExists.amount).add(asset.amount);
-
-        return prevOp;
-      }
-
-      return [...prevOp, asset];
-    }, prev);
-
-    return newAssetsSent;
-  }, [] as Coin[]);
-
-  return assetsSent;
 }
 
 export function getGasUsedContractCreated({
@@ -655,19 +660,12 @@ export function parseTx({
     outputs: transaction.outputs || [],
     receipts,
   });
-  const totalAssetsSent = getTotalAssetsSent({
-    transactionType: transaction.type,
-    inputs: transaction.inputs || [],
-    outputs: transaction.outputs || [],
-    receipts,
-  });
 
   return {
     id,
     operations,
     gasUsed,
     fee,
-    totalAssetsSent,
     isTypeCreate: isTypeCreate(transaction.type),
     isTypeScript: isTypeScript(transaction.type),
     isTypeMint: isTypeMint(transaction.type),
