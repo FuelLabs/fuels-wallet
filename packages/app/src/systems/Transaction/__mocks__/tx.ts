@@ -27,6 +27,32 @@ type MockTransaction = {
   receipts: TransactionResultReceipt[];
 };
 
+export const createMockTx = ({
+  status,
+  time,
+  id,
+  operation,
+}: {
+  status?: TxStatus;
+  time?: string;
+  id?: string;
+  operation?: OperationName;
+}) => {
+  return {
+    ...MOCK_TRANSACTION_CONTRACT_CALL.tx,
+    time: time ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.time,
+    id: id ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.id,
+    status: status ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.status,
+    operations: [
+      {
+        ...MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0],
+        name: operation ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].name,
+      },
+      ...MOCK_TRANSACTION_CONTRACT_CALL.tx.operations.slice(1),
+    ],
+  };
+};
+
 export const MOCK_TRANSACTION_CONTRACT_CALL_PARTS: {
   inputContract: InputContract;
   inputCoin: InputCoin;
@@ -151,32 +177,6 @@ export const MOCK_TRANSACTION_CONTRACT_CALL_PARTS: {
   },
 };
 
-export const createMockTx = ({
-  status,
-  time,
-  id,
-  operation,
-}: {
-  status?: TxStatus;
-  time?: string;
-  id?: string;
-  operation?: OperationName;
-}) => {
-  return {
-    ...MOCK_TRANSACTION_CONTRACT_CALL.tx,
-    time: time ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.time,
-    id: id ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.id,
-    status: status ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.status,
-    operations: [
-      {
-        ...MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0],
-        name: operation ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].name,
-      },
-      ...MOCK_TRANSACTION_CONTRACT_CALL.tx.operations.slice(1),
-    ],
-  };
-};
-
 const thirtyFourDaysAgo = dateToTai64(
   new Date(Date.now() - 1000 * 60 * 60 * 24 * 34)
 );
@@ -187,7 +187,6 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
     inputsCount: 3,
     inputs: [
       MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputContract,
-      MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin,
       MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin,
     ],
     outputsCount: 3,
@@ -229,18 +228,31 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
           },
         ],
       },
+      {
+        name: OperationName.contractTransfer,
+        from: {
+          type: AddressType.contract,
+          address:
+            '0x0a98320d39c03337401a4e46263972a9af6ce69ec2f35a5420b1bd35784c74b1',
+        },
+        to: {
+          type: AddressType.account,
+          address:
+            '0x3e7ddda4d0d3f8307ae5f1aed87623992c1c4decefec684936960775181b2302',
+        },
+        assetsSent: [
+          {
+            amount: bn(100000000),
+            assetId:
+              '0x0000000000000000000000000000000000000000000000000000000000000000',
+          },
+        ],
+      },
     ],
     gasUsed: bn('0x28f90'),
     fee: bn('0x1'),
     type: TxType.script,
     status: TxStatus.success,
-    totalAssetsSent: [
-      {
-        amount: bn(100000000),
-        assetId:
-          '0x0000000000000000000000000000000000000000000000000000000000000000',
-      },
-    ],
     isTypeMint: false,
     isTypeCreate: false,
     isTypeScript: true,
@@ -355,7 +367,6 @@ export const MOCK_TRANSACTION_CREATE_CONTRACT: MockTransaction = {
     ],
     gasUsed: bn(1),
     fee: bn(1),
-    totalAssetsSent: [],
     isTypeCreate: true,
     isTypeScript: false,
     isTypeMint: false,
@@ -409,13 +420,6 @@ export const MOCK_TRANSACTION_MINT: MockTransaction = {
     ],
     gasUsed: bn(0),
     fee: bn(0),
-    totalAssetsSent: [
-      {
-        assetId:
-          '0x0000000000000000000000000000000000000000000000000000000000000000',
-        amount: bn(1),
-      },
-    ],
     isTypeCreate: false,
     isTypeScript: false,
     isTypeMint: true,
@@ -538,13 +542,6 @@ export const MOCK_TRANSACTION_TRANSFER: MockTransaction = {
     ],
     gasUsed: bn(1335),
     fee: bn(1),
-    totalAssetsSent: [
-      {
-        assetId:
-          '0x0000000000000000000000000000000000000000000000000000000000000000',
-        amount: bn(10000),
-      },
-    ],
     isTypeCreate: false,
     isTypeScript: true,
     isTypeMint: false,

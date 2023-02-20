@@ -1,6 +1,10 @@
 import { Box } from '@fuel-ui/react';
 
-import { MOCK_ASSETS_AMOUNTS } from '../../__mocks__/assets';
+import {
+  MOCK_ASSETS_AMOUNTS,
+  MOCK_MIXED_ASSETS_AMOUNTS,
+  MOCK_UNKNOWN_ASSETS_AMOUNT,
+} from '../../__mocks__/assets';
 
 import type { AssetsAmountProps } from './AssetsAmount';
 import { AssetsAmount } from './AssetsAmount';
@@ -22,6 +26,22 @@ export const Multiple = (args: AssetsAmountProps) => (
       {...args}
       title="Assets to send"
       amounts={MOCK_ASSETS_AMOUNTS}
+    />
+  </Box>
+);
+
+export const Unknown = (args: AssetsAmountProps) => (
+  <Box css={{ maxWidth: 300 }}>
+    <AssetsAmount {...args} amounts={MOCK_UNKNOWN_ASSETS_AMOUNT} />
+  </Box>
+);
+
+export const MultipleMixed = (args: AssetsAmountProps) => (
+  <Box css={{ maxWidth: 300 }}>
+    <AssetsAmount
+      {...args}
+      title="Assets to send"
+      amounts={MOCK_MIXED_ASSETS_AMOUNTS}
     />
   </Box>
 );
