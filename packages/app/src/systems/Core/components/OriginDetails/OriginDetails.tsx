@@ -7,14 +7,14 @@ export type OriginDetailProps = {
   origin: string;
   title: string;
   headerText: string;
-  faviconUrl?: string;
+  favIconUrl?: string;
 };
 
 export function OriginDetails({
   origin,
   title,
   headerText,
-  faviconUrl,
+  favIconUrl,
 }: OriginDetailProps) {
   return (
     <Card css={styles.root} align="center" gap="$0">
@@ -28,7 +28,7 @@ export function OriginDetails({
         <Flex>
           <Avatar
             name={title}
-            src={faviconUrl}
+            src={favIconUrl}
             role="img"
             size="md"
             aria-label={`${origin}-favicon`}

@@ -38,7 +38,7 @@ export function ConnectionRequest() {
     hasCurrentAccounts,
     currentAccounts,
     title,
-    faviconUrl,
+    favIconUrl,
   } = useConnectRequest();
 
   if (!accounts || !origin) return null;
@@ -49,7 +49,7 @@ export function ConnectionRequest() {
         <OriginDetails
           origin={origin}
           title={title || origin}
-          faviconUrl={faviconUrl}
+          favIconUrl={favIconUrl}
           headerText="Connection request from:"
         />
         <MotionCardList
@@ -214,7 +214,7 @@ const styles = {
     },
   }),
   connectionDetails: cssObj({
-    marginTop: '$3',
+    marginTop: '$0',
   }),
   disclaimer: cssObj({
     mb: '-10px',

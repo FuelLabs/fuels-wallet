@@ -176,7 +176,7 @@ export class BackgroundService {
   async connect(_: JSONRPCParams, serverParams: EventOrigin) {
     const origin = serverParams.origin;
     const title = serverParams.title;
-    const faviconUrl = serverParams.favIconUrl;
+    const favIconUrl = serverParams.favIconUrl;
 
     let authorizedApp = await ConnectionService.getConnection(origin);
 
@@ -189,7 +189,7 @@ export class BackgroundService {
       authorizedApp = await popupService.requestConnection({
         origin,
         title,
-        faviconUrl,
+        favIconUrl,
       });
     }
 
