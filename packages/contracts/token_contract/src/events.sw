@@ -1,22 +1,17 @@
 library events;
 
-pub struct ApprovalEvent {
-    spender: Identity,
-    receiver: Identity,
+pub struct TransferBackEvent {
+    from: ContractId,
+    to: Identity,
     amount: u64,
 }
 
-pub struct TransferEvent {
+pub struct DepositEvent {
     from: Identity,
-    to: Identity,
     amount: u64,
 }
 
 pub struct MintEvent {
     to: Identity,
-    amount: u64,
-}
-
-pub struct BurnEvent {
     amount: u64,
 }

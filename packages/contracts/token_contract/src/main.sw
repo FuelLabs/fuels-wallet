@@ -20,7 +20,6 @@ use std::{
     logging::log,
     token::{
         burn,
-        force_transfer_to_contract,
         mint_to,
         transfer,
     },
@@ -38,8 +37,6 @@ storage {
     total_supply: u64 = 0,
     total_minted: u64 = 0,
     deposits: StorageMap<Identity, u64> = StorageMap {},
-    balances: StorageMap<Identity, u64> = StorageMap {},
-    allowances: StorageMap<(Identity, Identity), u64> = StorageMap {},
 }
 
 impl Token for Contract {
@@ -55,6 +52,9 @@ impl Token for Contract {
         storage.mint_price = mint_price;
         storage.mint_limit = mint_limit;
         storage.total_minted = 0;
+
+        // Mint total tokens supply to owner
+        mint_to(total_supply, storage.owner.unwrap());
     }
 
     #[storage(read)]
@@ -77,48 +77,62 @@ impl Token for Contract {
     fn total_supply() -> u64 {
         storage.total_supply
     }
-    #[storage(read)]
-    fn balance_of(address: Option<Identity>) -> u64 {
-        match address.unwrap() {
-            Identity::Address(addr) => {
-                let sender = sender_as_address();
-                let owner = id_to_address(storage.owner);
-                require(sender != owner && addr != owner, AccessError::CannotQueryOwnerBalance);
-                storage.balances.get(address.unwrap()) | 0
-            },
-            Identity::ContractId(addr) => {
-                storage.balances.get(address.unwrap()) | 0
-            }
-        }
-    }
-    #[storage(read)]
-    fn allowance(spender: Identity, receiver: Identity) -> u64 {
-        storage.allowances.get((spender, receiver)) | 0
-    }
 
     #[payable, storage(read, write)]
+    fn deposit() -> u64 {
+        let sender = msg_sender().unwrap();
+        require(sender != storage.owner.unwrap(), DepositError::CannotDepositForOwner);
+
+        // Check deposit values
+        let deposit = msg_amount();
+        require(deposit > 0, DepositError::CannotDepositZero);
+        require(deposit > storage.mint_price, DepositError::CannotDepositLessThanMintPrice);
+
+        // Check deposit limits
+        let curr_deposit = storage.deposits.get(sender) | 0;
+        let total_plus_deposit = curr_deposit + deposit;
+        require(total_plus_deposit <= storage.mint_limit, DepositError::DepositLimitReached);
+
+        // Check if future minting is possible
+        let mint_amount = deposit / storage.mint_price;
+        let total_plus_amount = storage.total_minted + mint_amount;
+        require(total_plus_amount <= storage.total_supply, MintError::InsufficientSupply);
+
+        // Update storage deposit
+        storage.deposits.insert(sender, total_plus_deposit);
+
+        // Emit event
+        log(DepositEvent {
+            from: sender,
+            amount: deposit,
+        });
+
+        // Return deposit amount
+        deposit
+    }
+
+    #[storage(read, write)]
     fn mint() -> u64 {
         let sender = msg_sender().unwrap();
         require(sender != storage.owner.unwrap(), MintError::CannotMintForOwner);
 
-        // Make deposit first
-        let mint_price = storage.mint_price;
-        let deposit = msg_amount();
-        require(deposit > mint_price, MintError::CannotMintWithoutDeposit);
-        force_transfer_to_contract(deposit, BASE_ASSET_ID, contract_id());
-        storage.deposits.insert(sender, deposit);
+        // Check if sender has deposit and transfer half of it to himself
+        let curr_deposit = storage.deposits.get(sender) | 0;
+        let return_amount = curr_deposit / 2;
+        require(curr_deposit > 0, MintError::CannotMintWithoutDeposit);
+        transfer(return_amount, BASE_ASSET_ID, sender);
 
-        // Check if minting is possible
-        let amount = deposit / mint_price;
-        let total_plus_amount = storage.total_minted + amount;
-        let curr_balance = storage.balances.get(sender) | 0;
-        require(total_plus_amount <= storage.total_supply, MintError::InsufficientSupply);
-        require(curr_balance + amount <= storage.mint_limit, MintError::MintLimitReached);
+        // Emit transfer event
+        log(TransferBackEvent {
+            from: contract_id(),
+            to: sender,
+            amount: return_amount,
+        });
 
-        // Update storage and mint tokens
-        storage.balances.insert(sender, curr_balance + amount);
-        storage.total_minted = total_plus_amount;
-        mint_to(amount, sender);
+        // Update storage total minted and transfer tokens to sender
+        let amount = curr_deposit / storage.mint_price;
+        transfer(amount, contract_id(), sender);
+        storage.total_minted = storage.total_minted + amount;
 
         // Emit event
         log(MintEvent {
@@ -129,80 +143,4 @@ impl Token for Contract {
         // Return mint amount
         amount
     }
-
-    #[storage(read, write)]
-    fn approve(spender: Identity, receiver: Identity, amount: u64) -> u64 {
-        let curr_allowance = storage.allowances.get((spender, receiver)) | 0;
-        let balance = storage.balances.get(spender) | 0;
-        require(spender != receiver, ApproveError::CannotApproveSelf);
-        require(curr_allowance > amount, ApproveError::CannotApproveSameAmount);
-        require(balance >= amount, ApproveError::CannotApproveMoreThanBalance);
-        storage.allowances.insert((spender, receiver), amount);
-
-        // Emit event
-        log(ApprovalEvent {
-            spender: spender,
-            receiver: receiver,
-            amount: amount,
-        });
-
-        // Return allowance amount
-        amount
-    }
-
-    #[storage(read, write)]
-    fn transfer_to(to: Identity, amount: u64) -> u64 {
-        let sender = msg_sender().unwrap();
-        _transfer(sender, to, amount)
-    }
-
-    #[storage(read, write)]
-    fn transfer_from_to(from: Identity, to: Identity, amount: u64) -> u64 {
-        _transfer(from, to, amount)
-    }
-
-    #[storage(read, write)]
-    fn burn(amount: u64) {
-        is_sender_owner(storage.owner.unwrap());
-
-        // Require that the burn amount is less than the missing amount
-        let total_minted = storage.total_minted;
-        let total_supply = storage.total_supply;
-        let missing_amount = total_supply - total_minted;
-        require(amount <= missing_amount, BurnError::CannotBurnMoreThanMissing);
-        storage.total_supply = total_supply - amount;
-        burn(amount);
-
-        // Emit event
-        log(BurnEvent {
-            amount: amount,
-        });
-    }
-}
-
-#[storage(read, write)]
-fn _transfer(from: Identity, to: Identity, amount: u64) -> u64 {
-    // Check if transfer is possible
-    let sender = from;
-    let allowance = storage.allowances.get((sender, to)) | 0;
-    let curr_balance = storage.balances.get(sender) | 0;
-    require(sender != to, TransferError::CannotTransferToSelf);
-    require(allowance >= amount, TransferError::InsufficientAllowance);
-    require(curr_balance >= amount, TransferError::InsufficientBalance);
-
-    // Update balances of sender and receiver and transfer tokens
-    let to_balance = storage.balances.get(to) | 0;
-    storage.balances.insert(sender, curr_balance - amount);
-    storage.balances.insert(to, to_balance + amount);
-    transfer(amount, contract_id(), to);
-
-    // Emit event
-    log(TransferEvent {
-        from: sender,
-        to: to,
-        amount: amount,
-    });
-
-    // Return transfer amount
-    amount
 }
