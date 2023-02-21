@@ -99,13 +99,6 @@ export const MOCK_TXS: Tx[] = [
     ],
     gasUsed: bn(0),
     fee: bn(1),
-    totalAssetsSent: [
-      {
-        assetId:
-          '0x0000000000000000000000000000000000000000000000000000000000000000',
-        amount: '0x1dcd6500',
-      },
-    ],
     isTypeCreate: false,
     isTypeScript: true,
     isTypeMint: false,
@@ -142,13 +135,6 @@ export const MOCK_TXS: Tx[] = [
     ],
     gasUsed: bn(0),
     fee: bn(1),
-    totalAssetsSent: [
-      {
-        assetId:
-          '0x0000000000000000000000000000000000000000000000000000000000000000',
-        amount: '0x1dcd6500',
-      },
-    ],
     isTypeCreate: false,
     isTypeScript: true,
     isTypeMint: false,

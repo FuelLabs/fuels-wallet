@@ -33,13 +33,13 @@ describe('TxFromTo', () => {
     expect(screen.getByLabelText('Loading Spinner')).toBeInTheDocument();
   });
 
-  it('should show address info and show spinner when status is pending', async () => {
+  it('should show address info and not have spinner when status is pending', async () => {
     render(<TxFromTo {...PROPS} status={TxStatus.pending} />);
     expect(screen.getByText('From')).toBeInTheDocument();
     expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
     expect(screen.getByText('0x277f...207c')).toBeInTheDocument();
-    expect(screen.getByLabelText('Loading Spinner')).toBeInTheDocument();
+    expect(() => screen.getByLabelText('Loading Spinner')).toThrow();
   });
 
   it('should show address info and not have spinner when status is success', async () => {
