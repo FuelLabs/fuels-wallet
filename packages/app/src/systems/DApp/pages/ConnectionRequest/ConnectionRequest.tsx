@@ -54,7 +54,7 @@ export function ConnectionRequest() {
         />
         <MotionCardList
           {...animations.slideInTop()}
-          gap="$3"
+          gap="$4"
           css={styles.accountList}
         >
           {isSelectingAccounts && (
@@ -62,7 +62,7 @@ export function ConnectionRequest() {
               <motion.div {...animations.slideInTop()}>
                 <Card>
                   <Card.Header css={styles.cardHeader}>
-                    <Text color="gray12" css={{ fontWeight: '$semibold' }}>
+                    <Text css={styles.cardHeaderText}>
                       Select accounts to connect
                     </Text>
                   </Card.Header>
@@ -98,7 +98,7 @@ export function ConnectionRequest() {
               <motion.div {...animations.slideInTop()}>
                 <Card css={styles.connectionDetails}>
                   <Card.Header css={styles.cardHeader}>
-                    <Text color="gray12" css={{ fontWeight: '$semibold' }}>
+                    <Text css={styles.cardHeaderText}>
                       This site would like to:
                     </Text>
                   </Card.Header>
@@ -129,9 +129,7 @@ export function ConnectionRequest() {
               <motion.div {...animations.slideInTop()}>
                 <Card>
                   <Card.Header css={styles.cardHeader} justify="space-between">
-                    <Text color="gray12" css={{ fontWeight: '$semibold' }}>
-                      Accounts to connect
-                    </Text>
+                    <Text css={styles.cardHeaderText}>Accounts to connect</Text>
                     <Button onPress={handlers.back} size="xs" variant="link">
                       Change
                     </Button>
@@ -225,7 +223,7 @@ const styles = {
     justifyContent: 'center',
   }),
   accountList: cssObj({
-    mt: '$3',
+    mt: '$4',
   }),
   sectionHeader: cssObj({
     alignItems: 'center',
@@ -239,7 +237,12 @@ const styles = {
     gap: '$2',
   }),
   cardHeader: cssObj({
-    p: '$3',
+    p: '$2',
+  }),
+  cardHeaderText: cssObj({
+    fontSize: '$sm',
+    fontWeight: '$bold',
+    color: '$gray12',
   }),
   permissionCardBody: cssObj({
     p: '$3',

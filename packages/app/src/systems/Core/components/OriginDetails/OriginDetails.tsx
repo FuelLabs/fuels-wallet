@@ -19,7 +19,7 @@ export function OriginDetails({
   return (
     <Card css={styles.root} align="center" gap="$0">
       <Card.Header css={styles.header}>
-        <Text fontSize="base" css={styles.headerText}>
+        <Text fontSize="sm" css={styles.headerText}>
           {headerText}
         </Text>
       </Card.Header>
@@ -51,7 +51,7 @@ const styles = {
     fontSize: '$lg',
   }),
   header: cssObj({
-    padding: '$3',
+    padding: '$2',
     width: '100%',
     display: 'flex',
     justifyContent: 'space-between',
@@ -61,14 +61,14 @@ const styles = {
     padding: '$3',
     alignItems: 'center',
     display: 'flex',
-    gap: '$3',
+    gap: '$5',
   }),
   headerText: cssObj({
     color: '$gray12',
-    fontWeight: '$semibold',
+    fontWeight: '$bold',
   }),
   title: cssObj({
-    fontSize: '$base',
+    fontSize: '$sm',
     fontWeight: '$extrabold',
     color: '$gray12',
     textOverflow: 'ellipsis',
@@ -77,7 +77,7 @@ const styles = {
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    fontSize: '$sm',
+    fontSize: '$xs',
     color: '$accent11',
     fontWeight: '$bold',
   }),

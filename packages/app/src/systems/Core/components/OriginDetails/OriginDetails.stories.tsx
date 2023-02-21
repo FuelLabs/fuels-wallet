@@ -8,9 +8,8 @@ export default {
 
 export const Usage = (args: OriginDetailProps) => <OriginDetails {...args} />;
 Usage.args = {
-  origin: 'https://netflix.com',
-  title: 'Netflix | Watch TV Shows Online, Watch Movies Online',
-  favicon:
-    'https://s2.googleusercontent.com/s2/favicons?domain=netflix.com&sz=64',
+  origin: 'https://app.uniswap.org/#/swap',
+  title: 'Uniswap Interface',
+  favIconUrl: 'https://app.uniswap.org/favicon.png',
   headerText: 'Request connection from:',
 };
