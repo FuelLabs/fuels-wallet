@@ -225,7 +225,7 @@ const styles = {
     justifyContent: 'center',
   }),
   accountList: cssObj({
-    mt: '$4',
+    mt: '$3',
   }),
   sectionHeader: cssObj({
     alignItems: 'center',

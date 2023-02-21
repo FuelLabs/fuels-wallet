@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Stack, Text, Flex, Avatar, Card } from '@fuel-ui/react';
 
-import { parseUrl } from '../../utils';
+import { parseUrl, truncate } from '../../utils';
 
 export type OriginDetailProps = {
   origin: string;
@@ -36,7 +36,7 @@ export function OriginDetails({
         </Flex>
         <Stack gap="$0">
           <Text css={styles.title}>{title}</Text>
-          <Text css={styles.link}> {parseUrl(origin)} </Text>
+          <Text css={styles.link}> {truncate(parseUrl(origin))} </Text>
         </Stack>
       </Card.Body>
     </Card>
@@ -71,9 +71,9 @@ const styles = {
     fontSize: '$base',
     fontWeight: '$extrabold',
     color: '$gray12',
+    textOverflow: 'ellipsis',
   }),
   link: cssObj({
-    width: '100%',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
