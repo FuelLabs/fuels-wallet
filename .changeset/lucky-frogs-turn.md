@@ -1,5 +1,4 @@
 ---
-'asset-list': minor
 '@fuel-wallet/types': minor
 '@fuel-wallet/sdk': minor
 ---
