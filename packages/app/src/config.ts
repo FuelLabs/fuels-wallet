@@ -6,10 +6,14 @@ export const {
   VITE_FAUCET_RECAPTCHA_KEY,
   VITE_FUEL_FAUCET_URL,
   VITE_ADDR_OWNER,
+  VITE_APP_VERSION,
+  VITE_DATABASE_VERSION,
   VITE_CRX,
   NODE_ENV,
 } = import.meta.env;
 
+export const APP_VERSION = VITE_APP_VERSION;
+export const DATABASE_VERSION = VITE_DATABASE_VERSION;
 export const DECIMAL_UNITS = 9;
 export const FORMAT_LANGUAGE = 'en-US';
 export const MIN_FRACTION_DIGITS = 1;

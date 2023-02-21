@@ -1,12 +1,18 @@
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 
-export const getVersion = () => {
+const getVersion = () => {
   const packageJson: {
     version: string;
+    database: string;
   } = JSON.parse(
     readFileSync(resolve(__dirname, '../package.json')).toString()
   );
 
-  return packageJson.version;
+  return {
+    version: packageJson.version,
+    database: packageJson.database,
+  };
 };
+
+export const versions = getVersion();

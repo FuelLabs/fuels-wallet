@@ -1,14 +1,28 @@
 {
+  "$schema": "https://turbo.build/schema.json",
   "pipeline": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
-    },
-    "export": {
-      "dependsOn": []
-    },
     "ts:check": {
       "dependsOn": []
+    },
+    "build": {
+      "dependsOn": ["ts:check"],
+      "outputs": ["dist/**"]
+    },
+    "build:docs": {
+      "dependsOn": ["build"],
+      "outputs": ["dist/**"]
+    },
+    "build:crx": {
+      "dependsOn": ["build"],
+      "outputs": ["dist/**"]
+    },
+    "build:web": {
+      "dependsOn": ["build"],
+      "outputs": ["dist/**"]
+    },
+    "build:preview": {
+      "dependsOn": ["build"],
+      "outputs": ["dist/**"]
     },
     "test": {
       "dependsOn": ["ts:check"]

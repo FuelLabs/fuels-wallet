@@ -1,9 +1,13 @@
 import { defineManifest } from '@crxjs/vite-plugin';
 
+import { versions } from './vite-utils/versions';
+
 export default defineManifest({
   manifest_version: 3,
   name: 'Fuel Wallet',
-  version: '0.0.1',
+  version: versions.version,
+  description:
+    'The official wallet of the fastest modular execution layer. Fuel Network.',
   icons: {
     '16': 'icons/fuel-logo-16.png',
     '19': 'icons/fuel-logo-19.png',

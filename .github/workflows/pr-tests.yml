@@ -77,10 +77,9 @@ jobs:
           NODE_ENV: test
 
       - name: Build Application
-        run: pnpm build:app
+        run: pnpm build:crx
         env:
           NODE_ENV: test
-          DOCS_DIST: ./dist
 
       # E2E tests running with Playwright
       - name: Install Playwright Browsers
