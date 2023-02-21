@@ -1,4 +1,13 @@
-import { Stack, Form, Checkbox, Flex, Button, Box } from '@fuel-ui/react';
+import { cssObj } from '@fuel-ui/css';
+import {
+  Stack,
+  Form,
+  Checkbox,
+  Flex,
+  Button,
+  Box,
+  Alert,
+} from '@fuel-ui/react';
 import { useState } from 'react';
 
 import { Header } from '../Header';
@@ -12,7 +21,8 @@ export type MnemonicReadProps = {
 };
 
 export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
-  const [isChecked, setChecked] = useState(() => false);
+  const [isSavedChecked, setSavedChecked] = useState(false);
+  const [isAccessChecked, setAccessChecked] = useState(false);
 
   return (
     <Stack gap="$6" align="center">
@@ -26,22 +36,37 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
         title="Write down your Recovery Phrase"
         subtitle="You will need it on the next step"
       />
-      <Box css={{ width: 400 }}>
+      <Box css={styles.content}>
         <Mnemonic value={words} type="read" />
+        <Alert status="warning">
+          <Form.Control css={{ flexDirection: 'row' }}>
+            <Checkbox
+              id="confirmSaved"
+              aria-label="Confirm Saved"
+              checked={isSavedChecked}
+              onCheckedChange={(e) => {
+                setSavedChecked(e as boolean);
+              }}
+            />
+            <Form.Label htmlFor="confirmSaved">
+              I saved my Recovery Phrase in a safe place
+            </Form.Label>
+          </Form.Control>
+          <Form.Control css={{ flexDirection: 'row' }}>
+            <Checkbox
+              id="confirmAccess"
+              aria-label="Confirm Access"
+              checked={isAccessChecked}
+              onCheckedChange={(e) => {
+                setAccessChecked(e as boolean);
+              }}
+            />
+            <Form.Label htmlFor="confirmAccess">
+              I have continuous access to where I did save
+            </Form.Label>
+          </Form.Control>
+        </Alert>
       </Box>
-      <Form.Control css={{ flexDirection: 'row' }}>
-        <Checkbox
-          id="confirmSaved"
-          aria-label="Confirm Saved"
-          checked={isChecked}
-          onCheckedChange={(e) => {
-            setChecked(e as boolean);
-          }}
-        />
-        <Form.Label htmlFor="confirmSaved">
-          I saved my passphrase in some secure place
-        </Form.Label>
-      </Form.Control>
       <Flex gap="$4">
         <Button
           color="gray"
@@ -55,7 +80,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
           color="accent"
           css={{ width: 130 }}
           onPress={onNext}
-          isDisabled={!isChecked}
+          isDisabled={!isSavedChecked || !isAccessChecked}
         >
           Next
         </Button>
@@ -63,3 +88,16 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
     </Stack>
   );
 }
+
+const styles = {
+  content: cssObj({
+    width: 400,
+
+    '.fuel_alert--icon': {
+      display: 'none',
+    },
+    '.fuel_checkbox:focus-within::after': {
+      borderColor: '$yellow5 !important',
+    },
+  }),
+};
