@@ -2,7 +2,7 @@ library errors;
 
 pub enum InitError {
     CannotReinitialize: (),
-    AssetSupplyCannotBeZero: (),
+    TotalSupplyCannotBeZero: (),
     MintPriceCannotBeZero: (),
     MintLimitCannotBeZero: (),
 }
@@ -16,7 +16,6 @@ pub enum DepositError {
     CannotDepositForOwner: (),
     CannotDepositZero: (),
     CannotDepositLessThanMintPrice: (),
-    DepositLimitReached: (),
 }
 
 pub enum MintError {

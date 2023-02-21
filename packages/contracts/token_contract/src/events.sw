@@ -1,7 +1,6 @@
 library events;
 
 pub struct TransferBackEvent {
-    from: ContractId,
     to: Identity,
     amount: u64,
 }
