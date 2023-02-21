@@ -13,7 +13,7 @@ export const {
 } = import.meta.env;
 
 export const APP_VERSION = VITE_APP_VERSION;
-export const DATABASE_VERSION = VITE_DATABASE_VERSION;
+export const DATABASE_VERSION = Number(VITE_DATABASE_VERSION);
 export const DECIMAL_UNITS = 9;
 export const FORMAT_LANGUAGE = 'en-US';
 export const MIN_FRACTION_DIGITS = 1;

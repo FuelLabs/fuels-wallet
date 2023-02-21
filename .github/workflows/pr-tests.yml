@@ -36,6 +36,10 @@ jobs:
         uses: jwalton/gh-find-current-pr@v1
         id: findPr
 
+      - name: Build libs
+        run: |
+          pnpm build:libs
+
       - name: Run Jest Tests
         run: |
           pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
@@ -77,7 +81,7 @@ jobs:
           NODE_ENV: test
 
       - name: Build Application
-        run: pnpm build:crx
+        run: pnpm build:test
         env:
           NODE_ENV: test
 

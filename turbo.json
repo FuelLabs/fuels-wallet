@@ -5,27 +5,35 @@
       "dependsOn": []
     },
     "build": {
-      "dependsOn": ["ts:check"],
+      "dependsOn": ["^ts:check"],
       "outputs": ["dist/**"]
     },
     "build:docs": {
-      "dependsOn": ["build"],
+      "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
     "build:crx": {
-      "dependsOn": ["build"],
+      "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
     "build:web": {
-      "dependsOn": ["build"],
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "build:app": {
+      "dependsOn": ["^build:web", "^build:crx"],
+      "outputs": ["dist/**", "dist-crx/**"]
+    },
+    "build:all": {
+      "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
     "build:preview": {
-      "dependsOn": ["build"],
-      "outputs": ["dist/**"]
+      "dependsOn": ["^build"],
+      "outputs": ["./dist/"]
     },
     "test": {
-      "dependsOn": ["ts:check"]
+      "dependsOn": []
     },
     "test:e2e": {
       "dependsOn": []
