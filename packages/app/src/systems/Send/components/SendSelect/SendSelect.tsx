@@ -15,7 +15,6 @@ type SendSelectProps = UseSendReturn;
 export function SendSelect({
   form,
   balanceAssets,
-  txRequest,
   handlers,
   maxAmountToSend,
   ...ctx
@@ -89,7 +88,7 @@ export function SendSelect({
             )}
           />
         </Stack>
-        <TxDetails fee={ctx.fee} amountSent={txRequest.ethAmountSent} />
+        <TxDetails fee={ctx.fee} />
       </Stack>
     </MotionContent>
   );

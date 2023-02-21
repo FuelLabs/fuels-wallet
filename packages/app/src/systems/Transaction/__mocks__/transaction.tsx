@@ -54,8 +54,6 @@ export const MOCK_TX = {
   time: '2022-10-05T00:51:22.383161296+00:00',
 };
 
-export const MOCK_OUTPUT_AMOUNT = bn.parseUnits('0.5');
-
 export const MOCK_TRANSACTION_SCRIPT = {
   id: '12132213231231',
   type: TxType.script,

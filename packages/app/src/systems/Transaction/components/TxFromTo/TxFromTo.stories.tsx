@@ -1,7 +1,7 @@
 import { Box } from '@fuel-ui/react';
 
 import { MOCK_TX_RECIPIENT } from '../../__mocks__/tx-recipient';
-import { TxStatus } from '../../utils';
+import { OperationName, TxStatus } from '../../utils';
 
 import type { TxFromToProps } from './TxFromTo';
 import { TxFromTo } from './TxFromTo';
@@ -18,6 +18,18 @@ export const Default = (args: TxFromToProps) => (
     css={{ maxWidth: 318, display: 'flex', flexDirection: 'column', gap: '$4' }}
   >
     <TxFromTo {...args} from={ACCOUNT} to={CONTRACT} />
+  </Box>
+);
+export const ExecuteContract = (args: TxFromToProps) => (
+  <Box
+    css={{ maxWidth: 318, display: 'flex', flexDirection: 'column', gap: '$4' }}
+  >
+    <TxFromTo
+      {...args}
+      from={ACCOUNT}
+      to={CONTRACT}
+      operationName={OperationName.contractCall}
+    />
   </Box>
 );
 export const OnlyTo = (args: TxFromToProps) => (
