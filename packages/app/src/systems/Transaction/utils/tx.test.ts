@@ -18,6 +18,7 @@ import {
   addOperation,
   getContractCreatedFee,
   getContractCreatedOperations,
+  getContractTransferOperations,
   getFee,
   getFeeFromReceipts,
   getFromAddress,
@@ -48,7 +49,6 @@ import {
   getReceiptsTransfer,
   getReceiptsTransferOut,
   getStatus,
-  getTotalAssetsSent,
   getTransferOperations,
   getType,
   isStatus,
@@ -108,7 +108,7 @@ describe('Tx util', () => {
         MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || []
       );
 
-      expect(inputs.length).toEqual(2);
+      expect(inputs.length).toEqual(1);
       expect(inputs[0]).toStrictEqual(
         MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin
       );
@@ -672,17 +672,63 @@ describe('Tx util', () => {
       expect(operations.length).toEqual(0);
     });
 
-    it('should getOperations return contract call operations', () => {
+    it('should getContractTransferOperations return contract transfer operations', () => {
+      const operations = getContractTransferOperations({
+        receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts,
+      });
+      expect(operations.length).toEqual(1);
+      expect(operations[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[1]
+      );
+    });
+
+    it('should getContractTransferOperations return empty', () => {
+      const operations = getContractTransferOperations({
+        receipts: MOCK_TRANSACTION_TRANSFER.receipts || [],
+      });
+
+      expect(operations.length).toEqual(0);
+    });
+
+    it('should getOperations return contract call and contract transfer operations', () => {
       const operations = getOperations({
         transactionType: MOCK_TRANSACTION_CONTRACT_CALL.transaction.type,
         inputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || [],
         outputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || [],
         receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
       });
-      expect(operations.length).toEqual(1);
+      expect(operations.length).toEqual(2);
       expect(operations[0]).toStrictEqual(
-        MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0]
+        MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0] // contract call
       );
+      expect(operations[1]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[1] // contract transfer
+      );
+    });
+
+    it('should getOperations return contract call operations with no assets send if amount is zero', () => {
+      const receiptsCallNoAmount = MOCK_TRANSACTION_CONTRACT_CALL.receipts.map(
+        (receipt) => {
+          if (receipt.type === ReceiptType.Call) {
+            return { ...receipt, amount: bn(0) };
+          }
+
+          return receipt;
+        }
+      );
+      const operationsCallNoAmount = {
+        ...MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0],
+        assetsSent: undefined,
+      };
+
+      const operations = getOperations({
+        transactionType: MOCK_TRANSACTION_CONTRACT_CALL.transaction.type,
+        inputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || [],
+        receipts: receiptsCallNoAmount,
+      });
+      expect(operations.length).toEqual(2);
+      expect(operations[0]).toStrictEqual(operationsCallNoAmount); // contract call
     });
 
     it('should getOperations return transfer operations', () => {
@@ -723,26 +769,6 @@ describe('Tx util', () => {
       expect(operations.length).toEqual(1);
       expect(operations[0]).toStrictEqual(
         MOCK_TRANSACTION_CREATE_CONTRACT.tx.operations[0]
-      );
-    });
-  });
-
-  describe('getTotalAssetsSent', () => {
-    // TODO: add other combinations of only 1 asset, 2 asset equals, different assets. check sums etcv
-    it('should getTotalAssetsSent return total assets from contract call', () => {
-      const totalAssetsSent = getTotalAssetsSent({
-        transactionType:
-          MOCK_TRANSACTION_CONTRACT_CALL.transaction.type ||
-          TransactionType.Script,
-        inputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || [],
-        outputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || [],
-        receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
-      });
-      expect(totalAssetsSent[0]?.assetId).toEqual(
-        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall?.assetId
-      );
-      expect(totalAssetsSent[0]?.amount.valueOf()).toEqual(
-        MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall?.amount.valueOf()
       );
     });
   });
