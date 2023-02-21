@@ -237,7 +237,8 @@ const styles = {
     gap: '$2',
   }),
   cardHeader: cssObj({
-    p: '$2',
+    px: '$3',
+    py: '$2',
   }),
   cardHeaderText: cssObj({
     fontSize: '$sm',

@@ -17,7 +17,7 @@ export function OriginDetails({
   favIconUrl,
 }: OriginDetailProps) {
   return (
-    <Card css={styles.root} align="center" gap="$0">
+    <Card css={styles.root} gap="$0">
       <Card.Header css={styles.header}>
         <Text fontSize="sm" css={styles.headerText}>
           {headerText}
@@ -46,18 +46,13 @@ export function OriginDetails({
 const styles = {
   root: cssObj({
     boxSizing: 'border-box',
-    px: '$3',
-    color: '$gray11',
-    fontSize: '$lg',
   }),
   header: cssObj({
-    padding: '$2',
-    width: '100%',
+    px: '$3',
+    py: '$2',
     display: 'flex',
-    justifyContent: 'space-between',
   }),
   contentSection: cssObj({
-    width: '100%',
     padding: '$3',
     alignItems: 'center',
     display: 'flex',
