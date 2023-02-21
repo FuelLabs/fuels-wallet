@@ -1,5 +1,4 @@
 import type { Meta } from '@storybook/react';
-import { bn } from 'fuels';
 
 import { MOCK_TRANSACTION_MINT } from '../../__mocks__/tx';
 import { TxHeader } from '../TxHeader';
@@ -22,7 +21,6 @@ export const Info = () => {
   return (
     <TxContent.Info
       tx={TX}
-      amount={bn(10000)}
       header={
         <TxHeader
           id={TX.id}

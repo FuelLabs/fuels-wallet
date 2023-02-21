@@ -1,12 +1,10 @@
 import { useSelector } from '@xstate/react';
-import { bn } from 'fuels';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
 import type { TransactionRequestState } from '../machines/transactionRequestMachine';
 import { TxRequestStatus } from '../machines/transactionRequestMachine';
 
 import { Services, store } from '~/store';
-import { isEth } from '~/systems/Asset';
 import { useChainInfo } from '~/systems/Network';
 import { getFilteredErrors, TxStatus } from '~/systems/Transaction';
 import { useParseTx } from '~/systems/Transaction/hooks/useParseTx';
@@ -94,11 +92,6 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     gasPriceFactor: chainInfo?.consensusParameters.gasPriceFactor,
   });
 
-  const ethAmountSent = useMemo(
-    () => bn(tx?.totalAssetsSent?.find(isEth)?.amount),
-    [tx?.totalAssetsSent]
-  );
-
   function status(status: keyof typeof TxRequestStatus) {
     return txStatus === status;
   }
@@ -133,7 +126,6 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     account,
     approveStatus,
     errors,
-    ethAmountSent,
     isLoading,
     providerUrl,
     showActions,
