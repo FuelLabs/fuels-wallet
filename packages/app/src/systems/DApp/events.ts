@@ -1,6 +1,10 @@
 import type { TxInputs } from '../Transaction/services';
 
-import type { AddAssetInputs, SignInputs } from './machines';
+import type {
+  AddAssetInputs,
+  ConnectRequestInputs,
+  SignInputs,
+} from './machines';
 
 import { Services } from '~/store';
 import type { Store } from '~/store';
@@ -19,7 +23,7 @@ export function requestEvents(store: Store) {
         input,
       });
     },
-    requestConnection(input: string) {
+    requestConnection(input: ConnectRequestInputs['start']) {
       return store.send(Services.connectRequest, {
         type: 'START',
         input,

@@ -15,7 +15,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useConnectRequest } from '../../hooks/useConnectRequest';
 
 import { AccountItem } from '~/systems/Account';
-import { animations, Layout, OriginTag } from '~/systems/Core';
+import { animations, Layout, OriginDetails } from '~/systems/Core';
 
 const PERMISSION_LIST = [
   'View your account address',
@@ -37,6 +37,8 @@ export function ConnectionRequest() {
     isConnecting,
     hasCurrentAccounts,
     currentAccounts,
+    title,
+    favIconUrl,
   } = useConnectRequest();
 
   if (!accounts || !origin) return null;
@@ -44,93 +46,104 @@ export function ConnectionRequest() {
   return (
     <Layout title="Connection Request" isLoading={isLoadingAccounts}>
       <Layout.Content css={styles.content}>
-        <Card css={styles.connectCard}>
-          <Text color="gray12" css={{ fontWeight: '$semibold' }}>
-            Connect to Fuel Wallet
-          </Text>
-          <OriginTag origin={origin} />
-        </Card>
+        <OriginDetails
+          origin={origin}
+          title={title || origin}
+          favIconUrl={favIconUrl}
+          headerText="Connection request from:"
+        />
         <MotionCardList
           {...animations.slideInTop()}
-          gap="$3"
+          gap="$4"
           css={styles.accountList}
         >
           {isSelectingAccounts && (
             <AnimatePresence>
               <motion.div {...animations.slideInTop()}>
-                <Flex css={styles.sectionHeader}>
-                  <Text color="gray12" css={{ fontWeight: '$semibold' }}>
-                    Select accounts to connect
-                  </Text>
-                </Flex>
+                <Card>
+                  <Card.Header css={styles.cardHeader}>
+                    <Text css={styles.cardHeaderText}>
+                      Select accounts to connect
+                    </Text>
+                  </Card.Header>
+                  <Card.Body css={styles.accountCardBody}>
+                    {accounts?.map((account) => {
+                      const { address, name } = account;
+                      const isConnected = handlers.isAccountSelected(address);
+                      const rightEl = (
+                        <Flex css={styles.switchWrapper}>
+                          <Switch
+                            size="sm"
+                            checked={isConnected}
+                            aria-label={`Toggle ${name}`}
+                            onCheckedChange={() =>
+                              handlers.toggleAccount(address)
+                            }
+                          />
+                        </Flex>
+                      );
+                      return (
+                        <motion.div key={address} {...animations.slideInTop()}>
+                          <AccountItem account={account!} rightEl={rightEl} />
+                        </motion.div>
+                      );
+                    })}
+                  </Card.Body>
+                </Card>
               </motion.div>
-              {accounts?.map((account) => {
-                const { address, name } = account;
-                const isConnected = handlers.isAccountSelected(address);
-                const rightEl = (
-                  <Flex css={styles.switchWrapper}>
-                    <Switch
-                      size="sm"
-                      checked={isConnected}
-                      aria-label={`Toggle ${name}`}
-                      onCheckedChange={() => handlers.toggleAccount(address)}
-                    />
-                  </Flex>
-                );
-                return (
-                  <motion.div key={address} {...animations.slideInTop()}>
-                    <AccountItem account={account!} rightEl={rightEl} />
-                  </motion.div>
-                );
-              })}
             </AnimatePresence>
           )}
           {isConnecting && (
             <AnimatePresence>
               <motion.div {...animations.slideInTop()}>
-                <Flex css={styles.sectionHeader}>
-                  <Text color="gray12" css={{ fontWeight: '$semibold' }}>
-                    Allow this site to:
-                  </Text>
-                </Flex>
                 <Card css={styles.connectionDetails}>
-                  <List icon={Icon.is('Check')} iconColor="accent9">
-                    {PERMISSION_LIST.map((permission) => (
-                      <List.Item css={styles.listItemAllowed} key={permission}>
-                        {permission}
-                      </List.Item>
-                    ))}
-                  </List>
-                  <List icon={Icon.is('X')} iconColor="red10">
-                    {NOT_ALLOWED_LIST.map((permission) => (
-                      <List.Item
-                        css={styles.listItemDisallowed}
-                        key={permission}
-                      >
-                        {permission}
-                      </List.Item>
-                    ))}
-                  </List>
+                  <Card.Header css={styles.cardHeader}>
+                    <Text css={styles.cardHeaderText}>
+                      This site would like to:
+                    </Text>
+                  </Card.Header>
+                  <Card.Body css={styles.permissionCardBody}>
+                    <List icon={Icon.is('Check')} iconColor="accent9">
+                      {PERMISSION_LIST.map((permission) => (
+                        <List.Item
+                          css={styles.listItemAllowed}
+                          key={permission}
+                        >
+                          {permission}
+                        </List.Item>
+                      ))}
+                    </List>
+                    <List icon={Icon.is('X')} iconColor="red10">
+                      {NOT_ALLOWED_LIST.map((permission) => (
+                        <List.Item
+                          css={styles.listItemDisallowed}
+                          key={permission}
+                        >
+                          {permission}
+                        </List.Item>
+                      ))}
+                    </List>
+                  </Card.Body>
                 </Card>
               </motion.div>
               <motion.div {...animations.slideInTop()}>
-                <Flex css={styles.sectionHeader}>
-                  <Text color="gray12" css={{ fontWeight: '$semibold' }}>
-                    Accounts to connect
-                  </Text>
-                  <Button onPress={handlers.back} size="xs" variant="link">
-                    Change
-                  </Button>
-                </Flex>
+                <Card>
+                  <Card.Header css={styles.cardHeader} justify="space-between">
+                    <Text css={styles.cardHeaderText}>Accounts to connect</Text>
+                    <Button onPress={handlers.back} size="xs" variant="link">
+                      Change
+                    </Button>
+                  </Card.Header>
+                  {currentAccounts?.map((account) => {
+                    const { address } = account;
+                    return (
+                      <motion.div key={address} {...animations.slideInTop()}>
+                        <AccountItem account={account!} compact />
+                      </motion.div>
+                    );
+                  })}
+                </Card>
               </motion.div>
-              {currentAccounts?.map((account) => {
-                const { address } = account;
-                return (
-                  <motion.div key={address} {...animations.slideInTop()}>
-                    <AccountItem account={account!} compact />
-                  </motion.div>
-                );
-              })}
             </AnimatePresence>
           )}
         </MotionCardList>
@@ -199,10 +212,7 @@ const styles = {
     },
   }),
   connectionDetails: cssObj({
-    marginTop: '$3',
-    px: '$3',
-    paddingTop: '$2',
-    paddingBottom: '$4',
+    marginTop: '$0',
   }),
   disclaimer: cssObj({
     mb: '-10px',
@@ -225,5 +235,20 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: '$2',
+  }),
+  cardHeader: cssObj({
+    px: '$3',
+    py: '$2',
+  }),
+  cardHeaderText: cssObj({
+    fontSize: '$sm',
+    fontWeight: '$bold',
+    color: '$gray12',
+  }),
+  permissionCardBody: cssObj({
+    p: '$3',
+  }),
+  accountCardBody: cssObj({
+    p: '$0',
   }),
 };
