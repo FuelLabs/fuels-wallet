@@ -45,8 +45,8 @@ export function useNetworks() {
   function closeDialog() {
     overlay.close();
   }
-  function goToUpdate(network: Network) {
-    store.editNetwork({ id: network.id as string });
+  function goToUpdate(id: string) {
+    store.editNetwork({ id });
     overlay.open('networks.update');
   }
 

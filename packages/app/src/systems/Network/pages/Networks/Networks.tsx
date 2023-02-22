@@ -19,11 +19,7 @@ export const Networks = () => {
           onPress={handlers.closeDialog}
         />
       </Dialog.Heading>
-      <Dialog.Description
-        as="div"
-        css={styles.description}
-        data-has-scroll={Boolean((networks || []).length >= 6)}
-      >
+      <Dialog.Description as="div" css={styles.description}>
         <NetworkList
           networks={networks}
           onUpdate={handlers.goToUpdate}
@@ -48,11 +44,7 @@ export const Networks = () => {
 const styles = {
   description: cssObj({
     ...coreStyles.scrollable('$gray3'),
-    padding: '$4',
     flex: 1,
-
-    '&[data-has-scroll="true"]': {
-      padding: '$4 $2 $4 $4',
-    },
+    padding: '$4 $2 $4 $4',
   }),
 };
