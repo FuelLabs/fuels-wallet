@@ -1,13 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Stack,
-  Form,
-  Checkbox,
-  Flex,
-  Button,
-  Box,
-  Alert,
-} from '@fuel-ui/react';
+import { Stack, Form, Checkbox, Flex, Button, Alert } from '@fuel-ui/react';
 import { useState } from 'react';
 
 import { Header } from '../Header';
@@ -36,7 +28,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
         title="Write down your Recovery Phrase"
         subtitle="You will need it on the next step"
       />
-      <Box css={styles.content}>
+      <Stack css={styles.content} gap="$4">
         <Mnemonic value={words} type="read" />
         <Alert status="warning">
           <Form.Control css={{ flexDirection: 'row' }}>
@@ -66,7 +58,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
             </Form.Label>
           </Form.Control>
         </Alert>
-      </Box>
+      </Stack>
       <Flex gap="$4">
         <Button
           color="gray"
@@ -95,6 +87,9 @@ const styles = {
 
     '.fuel_alert--icon': {
       display: 'none',
+    },
+    '.fuel_alert--content': {
+      gap: '$4',
     },
     '.fuel_checkbox:focus-within::after': {
       borderColor: '$yellow5 !important',
