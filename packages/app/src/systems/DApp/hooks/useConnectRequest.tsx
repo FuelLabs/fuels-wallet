@@ -16,6 +16,12 @@ const selectors = {
   origin: (state: ConnectRequestState) => {
     return state.context.origin;
   },
+  title: (state: ConnectRequestState) => {
+    return state.context.title;
+  },
+  favIconUrl: (state: ConnectRequestState) => {
+    return state.context.favIconUrl;
+  },
   selectedAddresses: (state: ConnectRequestState) => {
     return state.context.selectedAddresses;
   },
@@ -30,6 +36,8 @@ export function useConnectRequest() {
     selectors.isSelectingAccounts
   );
   const origin = useSelector(service, selectors.origin);
+  const title = useSelector(service, selectors.title);
+  const favIconUrl = useSelector(service, selectors.favIconUrl);
   const selectedAddresses = useSelector(service, selectors.selectedAddresses);
   const currentAccounts = useMemo(() => {
     return (accounts ?? []).filter((account) =>
@@ -76,6 +84,8 @@ export function useConnectRequest() {
 
   return {
     origin,
+    title,
+    favIconUrl,
     isSelectingAccounts,
     isConnecting,
     isLoadingAccounts: isLoading,

@@ -18,5 +18,7 @@ export type MessageInputs = {
   };
   requestConnection: {
     origin: string;
+    title?: string;
+    favIconUrl?: string;
   };
 };
