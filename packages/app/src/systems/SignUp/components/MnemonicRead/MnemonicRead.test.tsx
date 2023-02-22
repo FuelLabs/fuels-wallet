@@ -51,10 +51,10 @@ describe('MnemonicRead', () => {
   });
 
   it('should next be enable when confirm checkboxes', async () => {
-    const saveCheckbox = screen.getByLabelText(/Confirm saved/i);
+    const saveCheckbox = screen.getByLabelText(/Confirm Saved/i);
     expect(saveCheckbox).toBeInTheDocument();
     await user.click(saveCheckbox);
-    const accessCheckbox = screen.getByLabelText(/Confirm access/i);
+    const accessCheckbox = screen.getByLabelText(/Confirm Access/i);
     expect(accessCheckbox).toBeInTheDocument();
     await user.click(accessCheckbox);
     await waitFor(() => {
@@ -64,8 +64,12 @@ describe('MnemonicRead', () => {
   });
 
   it('should trigger onCancel and onNext', async () => {
-    const checkbox = screen.getByLabelText(/Confirm saved/i);
-    await user.click(checkbox);
+    const saveCheckbox = screen.getByLabelText(/Confirm Saved/i);
+    expect(saveCheckbox).toBeInTheDocument();
+    await user.click(saveCheckbox);
+    const accessCheckbox = screen.getByLabelText(/Confirm Access/i);
+    expect(accessCheckbox).toBeInTheDocument();
+    await user.click(accessCheckbox);
 
     await waitFor(async () => {
       const btnNext = screen.getByText('Next');
