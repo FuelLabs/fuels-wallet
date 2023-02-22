@@ -116,7 +116,10 @@ test.describe('FuelWallet Extension', () => {
 
       /** Copy Mnemonic */
       await getButtonByText(page, /Copy/i).click();
-      await page.getByRole('checkbox').click();
+      const savedCheckbox = await getByAriaLabel(page, 'Confirm Saved');
+      await savedCheckbox.click();
+      const accessCheckbox = await getByAriaLabel(page, 'Confirm Access');
+      await accessCheckbox.click();
       await getButtonByText(page, /Next/i).click();
 
       /** Confirm Mnemonic */
