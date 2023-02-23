@@ -2,13 +2,6 @@ import { defineManifest } from '@crxjs/vite-plugin';
 
 import './load.envs.js';
 
-function getDevPermissions() {
-  if (process.env.NODE_ENV === 'development') {
-    return ['contextMenus'];
-  }
-  return [];
-}
-
 export default defineManifest({
   manifest_version: 3,
   name: 'Fuel Wallet',
@@ -43,11 +36,5 @@ export default defineManifest({
     },
   ],
   host_permissions: ['<all_urls>'],
-  permissions: [
-    'alarms',
-    'tabs',
-    'clipboardWrite',
-    'scripting',
-    ...getDevPermissions(),
-  ],
+  permissions: ['alarms', 'tabs', 'clipboardWrite', 'scripting'],
 });
