@@ -7,9 +7,9 @@ import type { useConnections } from '../../hooks';
 import { AccountItem } from '~/systems/Account';
 import {
   animations,
+  ConnectInfo,
   EmptyList,
   Layout,
-  OriginTag,
   SearchInput,
 } from '~/systems/Core';
 
@@ -23,12 +23,20 @@ export function ConnectionEdit({
   status,
   ...ctx
 }: ConnectionEditProps) {
+  if (!ctx.connection) return null;
+  const { origin, title, favIconUrl } = ctx.connection;
   return (
     <Layout.Content>
       <Stack gap="$3">
-        <Text leftIcon={Icon.is('Globe')} css={styles.title}>
+        {/* <Text leftIcon={Icon.is('Globe')} css={styles.title}>
           <OriginTag origin={ctx.inputs.origin} />
-        </Text>
+        </Text> */}
+        <ConnectInfo
+          origin={origin}
+          favIconUrl={favIconUrl}
+          title={title}
+          headerText="Edit your connection to:"
+        />
         <Flex css={styles.searchBar}>
           <SearchInput
             value={ctx.inputs?.searchText}

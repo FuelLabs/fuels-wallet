@@ -4,9 +4,7 @@ import {
   Card,
   CardList,
   Flex,
-  Icon,
   Link,
-  List,
   Switch,
   Text,
 } from '@fuel-ui/react';
@@ -15,15 +13,20 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useConnectRequest } from '../../hooks/useConnectRequest';
 
 import { AccountItem } from '~/systems/Account';
-import { animations, Layout, ConnectInfo } from '~/systems/Core';
+import {
+  animations,
+  Layout,
+  ConnectInfo,
+  PermissionCard,
+} from '~/systems/Core';
 
-const PERMISSION_LIST = [
+export const PERMISSION_LIST = [
   'View your account address',
   'Request transactions approval',
   'Request message signature',
   'Read your transactions history',
 ];
-const NOT_ALLOWED_LIST = ['View your private keys'];
+export const NOT_ALLOWED_LIST = ['View your private keys'];
 
 const MotionCardList = motion(CardList);
 
@@ -96,35 +99,11 @@ export function ConnectionRequest() {
           {isConnecting && (
             <AnimatePresence>
               <motion.div {...animations.slideInTop()}>
-                <Card css={styles.connectionDetails}>
-                  <Card.Header css={styles.cardHeader}>
-                    <Text css={styles.cardHeaderText}>
-                      This site would like to:
-                    </Text>
-                  </Card.Header>
-                  <Card.Body css={styles.permissionCardBody}>
-                    <List icon={Icon.is('Check')} iconColor="accent9">
-                      {PERMISSION_LIST.map((permission) => (
-                        <List.Item
-                          css={styles.listItemAllowed}
-                          key={permission}
-                        >
-                          {permission}
-                        </List.Item>
-                      ))}
-                    </List>
-                    <List icon={Icon.is('X')} iconColor="red10">
-                      {NOT_ALLOWED_LIST.map((permission) => (
-                        <List.Item
-                          css={styles.listItemDisallowed}
-                          key={permission}
-                        >
-                          {permission}
-                        </List.Item>
-                      ))}
-                    </List>
-                  </Card.Body>
-                </Card>
+                <PermissionCard
+                  headerText="This site would like to:"
+                  allowed={PERMISSION_LIST}
+                  notAllowed={NOT_ALLOWED_LIST}
+                />
               </motion.div>
               <motion.div {...animations.slideInTop()}>
                 <Card>
@@ -150,7 +129,7 @@ export function ConnectionRequest() {
       </Layout.Content>
       <Flex css={styles.disclaimer} justify="center" align={'flex-end'}>
         <Text fontSize="sm" as={'h2'} className="warning">
-          Only connect with sites you trust.{' '}
+          Only connect with sites you trust.
           <Link href="#" color="accent11">
             Learn more
           </Link>
@@ -192,13 +171,6 @@ export function ConnectionRequest() {
 }
 
 const styles = {
-  listItemAllowed: cssObj({
-    fontSize: '$sm',
-    fontWeight: '$semibold',
-  }),
-  listItemDisallowed: cssObj({
-    fontSize: '$sm',
-  }),
   content: cssObj({
     display: 'flex',
     flexDirection: 'column',
@@ -244,9 +216,6 @@ const styles = {
     fontSize: '$sm',
     fontWeight: '$bold',
     color: '$gray12',
-  }),
-  permissionCardBody: cssObj({
-    p: '$3',
   }),
   accountCardBody: cssObj({
     p: '$0',

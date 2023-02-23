@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button } from '@fuel-ui/react';
+import { Alert, Button } from '@fuel-ui/react';
 
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
@@ -28,13 +28,23 @@ export function TransactionRequest() {
               showDetails
               tx={txRequest.tx}
               header={
-                <ConnectInfo
-                  account={ctx.account}
-                  origin={ctx.input.origin!}
-                  favIconUrl={ctx.input.favIconUrl}
-                  title={ctx.input.title}
-                  headerText="Requesting a transaction from:"
-                />
+                <>
+                  <ConnectInfo
+                    account={ctx.account}
+                    origin={ctx.input.origin!}
+                    favIconUrl={ctx.input.favIconUrl}
+                    title={ctx.input.title}
+                    headerText="Requesting a transaction from:"
+                  />
+
+                  <Alert status="warning">
+                    <Alert.Title>Confirm before approve</Alert.Title>
+                    <Alert.Description>
+                      Carefully check if all details in your transaction are
+                      correct
+                    </Alert.Description>
+                  </Alert>
+                </>
               }
               assets={assets}
             />

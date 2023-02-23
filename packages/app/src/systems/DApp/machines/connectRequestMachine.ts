@@ -120,6 +120,8 @@ export const connectRequestMachine = createMachine(
                 input: (ctx: MachineContext) => ({
                   origin: ctx.origin!,
                   accounts: ctx.selectedAddresses,
+                  title: ctx.title,
+                  favIconUrl: ctx.favIconUrl,
                 }),
               },
               onDone: [
