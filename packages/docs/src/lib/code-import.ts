@@ -36,7 +36,7 @@ function extractLines(
     end = lines.length;
   }
   const linesContent = lines.slice(start - 1, end).join('\n');
-  return prettier.format(linesContent, { parser: 'babel' }).trimEnd();
+  return prettier.format(linesContent, { parser: 'babel-ts' }).trimEnd();
 }
 
 function extractCommentBlock(content: string) {
