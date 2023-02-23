@@ -27,9 +27,9 @@ export class RequestMethods extends ExtensionPageConnection {
     return new RequestMethods();
   }
 
-  async requestConnection({ origin }: { origin: string }) {
+  async requestConnection(input: MessageInputs['requestConnection']) {
     const state = await store
-      .requestConnection(origin)
+      .requestConnection(input)
       .waitForState(Services.connectRequest, WAIT_FOR_CONFIG);
     return !!state.context.isConnected;
   }

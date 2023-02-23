@@ -25,6 +25,8 @@ import { NetworkService } from '~/systems/Network/services';
 
 type EventOrigin = {
   origin: string;
+  title: string;
+  favIconUrl: string;
   connection?: Connection;
 };
 
@@ -60,8 +62,12 @@ export class BackgroundService {
     this.communicationProtocol.on(MessageTypes.request, async (event) => {
       if (event.target !== BACKGROUND_SCRIPT_NAME) return;
       const origin = event.sender!.origin!;
+      const title = event.sender!.tab!.title!;
+      const favIconUrl = event.sender!.tab!.favIconUrl!;
       const response = await this.server.receive(event.request, {
         origin,
+        title,
+        favIconUrl,
       });
       if (response) {
         this.communicationProtocol.postMessage({
@@ -122,9 +128,7 @@ export class BackgroundService {
   ) {
     // If the method is ping, by pass checks
     if (request.method === 'ping') {
-      return next(request, {
-        origin: serverParams.origin,
-      });
+      return next(request, serverParams);
     }
 
     // Retrive connection for use on accounts
@@ -141,7 +145,7 @@ export class BackgroundService {
     }
     return next(request, {
       connection,
-      origin: serverParams.origin,
+      ...serverParams,
     });
   }
 
@@ -171,6 +175,8 @@ export class BackgroundService {
 
   async connect(_: JSONRPCParams, serverParams: EventOrigin) {
     const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
 
     let authorizedApp = await ConnectionService.getConnection(origin);
 
@@ -180,7 +186,11 @@ export class BackgroundService {
         Pages.requestConnection(),
         this.communicationProtocol
       );
-      authorizedApp = await popupService.requestConnection({ origin });
+      authorizedApp = await popupService.requestConnection({
+        origin,
+        title,
+        favIconUrl,
+      });
     }
 
     if (authorizedApp) {
@@ -297,10 +307,10 @@ export class BackgroundService {
       Pages.requestAddAsset(),
       this.communicationProtocol
     );
-    const signedMessage = await popupService.addAsset({
+    const asset = await popupService.addAsset({
       ...input,
       origin,
     });
-    return signedMessage;
+    return asset;
   }
 }

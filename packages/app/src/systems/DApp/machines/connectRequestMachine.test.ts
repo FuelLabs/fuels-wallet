@@ -21,7 +21,9 @@ describe('connectRequestMachine', () => {
 
     service.send({
       type: 'START',
-      input: 'foo.com',
+      input: {
+        origin: 'foo.com',
+      },
     });
 
     await expectStateMatch(service, 'connecting.selectingAccounts');
@@ -39,7 +41,9 @@ describe('connectRequestMachine', () => {
 
     service.send({
       type: 'START',
-      input: 'foo.com',
+      input: {
+        origin: 'foo.com',
+      },
     });
 
     await expectStateMatch(service, 'connecting.selectingAccounts');
@@ -67,7 +71,9 @@ describe('connectRequestMachine', () => {
 
     service.send({
       type: 'START',
-      input: 'foo.com',
+      input: {
+        origin: 'foo.com',
+      },
     });
 
     await expectStateMatch(service, 'connecting.selectingAccounts');
@@ -95,7 +101,9 @@ describe('connectRequestMachine', () => {
 
     service.send({
       type: 'START',
-      input: 'foo.com',
+      input: {
+        origin: 'foo.com',
+      },
     });
 
     const state = await expectStateMatch(service, 'done');

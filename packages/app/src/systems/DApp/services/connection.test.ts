@@ -7,10 +7,14 @@ import { MOCK_ACCOUNTS } from '~/systems/Account';
 const MOCK_APP: Connection = {
   origin: 'foo.com',
   accounts: ['fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef'],
+  favIconUrl: 'https://wallet.fuel.network/favicon.ico',
+  title: 'Foo',
 };
 const MOCK_APP_2: Connection = {
   origin: 'foo.bar.com',
   accounts: ['fuel0x2c8e117bcfba11c76d7db2d43464b1d2093474ef'],
+  favIconUrl: 'https://wallet.fuel.network/favicon.ico',
+  title: 'Foo Bar',
 };
 
 describe('ConnectionService', () => {
