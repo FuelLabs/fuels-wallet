@@ -1,17 +1,41 @@
 {
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [".env", ".env.production", ".env.test"],
+  "globalEnv": ["NODE_ENV"],
   "pipeline": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
-    },
-    "export": {
-      "dependsOn": []
-    },
     "ts:check": {
       "dependsOn": []
     },
+    "build": {
+      "dependsOn": ["^ts:check"],
+      "outputs": ["dist/**"]
+    },
+    "build:docs": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "build:crx": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "build:web": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "build:app": {
+      "dependsOn": ["^build:web", "^build:crx"],
+      "outputs": ["dist/**", "dist-crx/**"]
+    },
+    "build:all": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "build:preview": {
+      "dependsOn": ["^build"],
+      "outputs": ["./dist/"]
+    },
     "test": {
-      "dependsOn": ["ts:check"]
+      "dependsOn": []
     },
     "test:e2e": {
       "dependsOn": []
