@@ -39,6 +39,17 @@ describe('Fuel', () => {
     expect(currentAccount).toEqual(userWallet.address.toAddress());
   });
 
+  test('assets', async () => {
+    const assets = await fuel.assets();
+    expect(assets.length).toEqual(0);
+  });
+
+  test('addAsset', async () => {
+    const asset = { assetId: NativeAssetId };
+    const addedAsset = await fuel.addAsset(asset);
+    expect({ ...addedAsset }).toEqual(asset);
+  });
+
   test('signMessage', async () => {
     const accounts = await fuel.accounts();
     const account = accounts[0];

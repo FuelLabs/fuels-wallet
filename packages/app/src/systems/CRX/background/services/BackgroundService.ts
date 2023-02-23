@@ -307,10 +307,10 @@ export class BackgroundService {
       Pages.requestAddAsset(),
       this.communicationProtocol
     );
-    const signedMessage = await popupService.addAsset({
+    const asset = await popupService.addAsset({
       ...input,
       origin,
     });
-    return signedMessage;
+    return asset;
   }
 }

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { FuelWalletEvents, PAGE_SCRIPT_NAME } from '@fuel-wallet/types';
+import type { Asset } from '@fuel-wallet/types';
 import EventEmitter from 'events';
 import { transactionRequestify, Wallet } from 'fuels';
 import type { JSONRPCResponse } from 'json-rpc-2.0';
@@ -28,6 +29,8 @@ export class MockConnection extends BaseConnection {
       this.signMessage,
       this.sendTransaction,
       this.currentAccount,
+      this.assets,
+      this.addAsset,
     ]);
   }
 
@@ -95,6 +98,17 @@ export class MockConnection extends BaseConnection {
     const account = userWallet.address.toAddress();
     fuel.emit(FuelWalletEvents.currentAccount, account);
     return account;
+  }
+
+  async assets() {
+    const assets = await userWallet.getBalances();
+    return assets;
+  }
+
+  async addAsset({ asset }: { asset: Asset }): Promise<Asset> {
+    const addedAsset: Asset = asset;
+    fuel.emit(FuelWalletEvents.assets, addedAsset);
+    return addedAsset;
   }
 }
 
