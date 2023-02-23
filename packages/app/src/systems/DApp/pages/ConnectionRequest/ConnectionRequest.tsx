@@ -15,7 +15,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useConnectRequest } from '../../hooks/useConnectRequest';
 
 import { AccountItem } from '~/systems/Account';
-import { animations, Layout, OriginDetails } from '~/systems/Core';
+import { animations, Layout, ConnectInfo } from '~/systems/Core';
 
 const PERMISSION_LIST = [
   'View your account address',
@@ -46,7 +46,7 @@ export function ConnectionRequest() {
   return (
     <Layout title="Connection Request" isLoading={isLoadingAccounts}>
       <Layout.Content css={styles.content}>
-        <OriginDetails
+        <ConnectInfo
           origin={origin}
           title={title || origin}
           favIconUrl={favIconUrl}

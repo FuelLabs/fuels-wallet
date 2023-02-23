@@ -1,11 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
 
-import { ConnectInfo } from '../../components';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
 import { useAssets } from '~/systems/Asset';
-import { Layout } from '~/systems/Core';
+import { Layout, ConnectInfo } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { TxContent, TxHeader } from '~/systems/Transaction';
 
@@ -32,7 +31,9 @@ export function TransactionRequest() {
                 <ConnectInfo
                   account={ctx.account}
                   origin={ctx.input.origin!}
-                  isReadOnly
+                  favIconUrl={ctx.input.favIconUrl}
+                  title={ctx.input.title}
+                  headerText="Requesting a transaction from:"
                 />
               }
               assets={assets}

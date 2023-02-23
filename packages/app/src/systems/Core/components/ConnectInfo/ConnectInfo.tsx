@@ -1,21 +1,25 @@
 import { cssObj } from '@fuel-ui/css';
 import { Stack, Text, Flex, Avatar, Card } from '@fuel-ui/react';
+import type { Account } from '@fuel-wallet/types';
 
-import { parseUrl, truncate } from '../../utils';
+import { ConnectInfoLoader } from './ConnectInfoLoader';
 
-export type OriginDetailProps = {
+import { parseUrl, truncate } from '~/systems/Core';
+
+export type ConnectInfoProps = {
   origin: string;
-  title: string;
+  title?: string;
   headerText: string;
   favIconUrl?: string;
+  account?: Account;
 };
 
-export function OriginDetails({
+export function ConnectInfo({
   origin,
   title,
   headerText,
   favIconUrl,
-}: OriginDetailProps) {
+}: ConnectInfoProps) {
   return (
     <Card css={styles.root} gap="$0">
       <Card.Header css={styles.header}>
@@ -27,7 +31,7 @@ export function OriginDetails({
       <Card.Body css={styles.contentSection}>
         <Flex>
           <Avatar
-            name={title}
+            name={title || origin}
             src={favIconUrl}
             role="img"
             size="md"
@@ -42,6 +46,8 @@ export function OriginDetails({
     </Card>
   );
 }
+
+ConnectInfo.Loader = ConnectInfoLoader;
 
 const styles = {
   root: cssObj({

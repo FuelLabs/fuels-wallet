@@ -1,16 +1,15 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Text } from '@fuel-ui/react';
 
-import { ConnectInfo } from '../../components';
 import { useAddAssetRequest } from '../../hooks';
 
 import { useAccounts } from '~/systems/Account';
 import { AssetItem } from '~/systems/Asset';
-import { Layout, shortAddress } from '~/systems/Core';
+import { Layout, shortAddress, ConnectInfo } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 
 export function AddAssetRequest() {
-  const { handlers, asset } = useAddAssetRequest();
+  const { handlers, asset, origin, title, favIconUrl } = useAddAssetRequest();
   const { account } = useAccounts();
 
   if (!origin || !asset || !account) return null;
@@ -21,7 +20,12 @@ export function AddAssetRequest() {
     <Layout title="Add Asset Request">
       <Layout.TopBar type={TopBarType.external} />
       <Layout.Content>
-        <ConnectInfo account={account} origin={origin} isReadOnly />
+        <ConnectInfo
+          origin={origin}
+          favIconUrl={favIconUrl}
+          title={title}
+          headerText="Add Asset From:"
+        />
         <Text css={styles.title}>
           This request will add new <b>Asset information</b> to your Wallet
           Settings.

@@ -1,13 +1,12 @@
 import { Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
 
-import { ConnectInfo } from '../../components';
 import { useSignatureRequest } from '../../hooks';
 
-import { Layout } from '~/systems/Core';
+import { Layout, ConnectInfo, AccountInfo } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 
 export function SignatureRequest() {
-  const { handlers, account, origin, message, isLoading } =
+  const { handlers, account, origin, message, isLoading, title, favIconUrl } =
     useSignatureRequest();
 
   if (!origin || !message || !account) return null;
@@ -17,28 +16,36 @@ export function SignatureRequest() {
       <Layout title={`Signature Request`} isLoading={isLoading}>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content>
-          {account && (
-            <ConnectInfo origin={origin} account={account} isReadOnly />
-          )}
-          <Card css={{ mt: '$4' }}>
-            <Card.Body css={{ p: '$3' }}>
-              <Flex css={{ alignItems: 'center', gap: '$3' }}>
-                <HelperIcon
-                  color="gray12"
-                  css={{ fontWeight: '$semibold' }}
-                  message="Make sure you know the message being signed"
-                >
-                  Message:
-                </HelperIcon>
-              </Flex>
-              <Text fontSize="sm" css={{ mt: '$3' }}>
-                {/* For preserving line breaks using pre-wrap all
+          <Flex gap="$4" direction="column">
+            <ConnectInfo
+              headerText="Signing a message to:"
+              origin={origin}
+              title={title || ''}
+              favIconUrl={favIconUrl}
+            />
+            {account && (
+              <AccountInfo account={account} headerText="Signer account:" />
+            )}
+            <Card>
+              <Card.Body css={{ p: '$3' }}>
+                <Flex css={{ alignItems: 'center', gap: '$3' }}>
+                  <HelperIcon
+                    color="gray12"
+                    css={{ fontWeight: '$semibold' }}
+                    message="Make sure you know the message being signed"
+                  >
+                    Message:
+                  </HelperIcon>
+                </Flex>
+                <Text fontSize="sm" css={{ mt: '$3' }}>
+                  {/* For preserving line breaks using pre-wrap all
                     the content inside the tag can't be formatted because of
                     this we wrap the message in a div element */}
-                <div style={{ whiteSpace: 'pre-wrap' }}>{message}</div>
-              </Text>
-            </Card.Body>
-          </Card>
+                  <div style={{ whiteSpace: 'pre-wrap' }}>{message}</div>
+                </Text>
+              </Card.Body>
+            </Card>
+          </Flex>
         </Layout.Content>
         <Layout.BottomBar>
           <Button

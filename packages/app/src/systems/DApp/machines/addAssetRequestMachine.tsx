@@ -9,6 +9,8 @@ import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 type MachineContext = {
   asset?: Asset;
   origin?: string;
+  title?: string;
+  favIconUrl?: string;
   error?: string;
   addedAsset?: Asset;
 };
@@ -20,7 +22,7 @@ type MachineServices = {
 };
 
 export type AddAssetInputs = {
-  start: { origin: string; asset: Asset };
+  start: { origin: string; asset: Asset; title?: string; favIconUrl?: string };
 };
 
 export type MachineEvents =
@@ -92,6 +94,8 @@ export const addAssetRequestMachine = createMachine(
         ...ctx,
         asset: ev.input.asset,
         origin: ev.input.origin,
+        title: ev.input.title,
+        favIconUrl: ev.input.favIconUrl,
       })),
       assignAddedAsset: assign({
         addedAsset: (_, ev) => ev.data,
