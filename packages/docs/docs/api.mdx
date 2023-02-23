@@ -41,6 +41,20 @@ Return the current account being used in the wallet application.
 
 <CodeImport file="../../sdk/src/Fuel.test.ts" testCase="currentAccount" />
 
+### List Assets
+
+`async assets(): Promise<Array<Asset>>`<br />
+Return the list of assets in the current wallet.
+
+<CodeImport file="../../sdk/src/Fuel.test.ts" testCase="assets" />
+
+### Add Asset
+
+`async addAsset(asset: Asset): Promise<Asset>`<br />
+Add an asset to the wallet.
+
+<CodeImport file="../../sdk/src/Fuel.test.ts" testCase="addAsset" />
+
 ### Request signature message
 
 `async signMessage(address: string, message: string): Promise<string>`<br />

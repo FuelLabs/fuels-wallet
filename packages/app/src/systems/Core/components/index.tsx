@@ -6,6 +6,7 @@ export * from './ImageLoader';
 export * from './Layout';
 export * from './Mnemonic';
 export * from './OriginTag';
+export * from './OriginDetails';
 export * from './PrivateRoute';
 export * from './Providers';
 export * from './PublicRoute';
