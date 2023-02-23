@@ -2,10 +2,11 @@ name: "CI setup"
 inputs:
   node-version:
     description: "Node version"
-    default: 16.15
+    default: 18.14.1
   pnpm-version:
     description: "PNPM version"
     default: latest
+
 runs:
   using: "composite"
   steps:
