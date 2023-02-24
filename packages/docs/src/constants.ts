@@ -7,6 +7,7 @@ export const MENU_ORDER = [
   'How to Use',
   'API',
   'TypeScript',
+  'React',
   'Contributing/Project Structure',
   'Contributing/Contributing Guide',
   'Contributing/Linking local dependencies',
