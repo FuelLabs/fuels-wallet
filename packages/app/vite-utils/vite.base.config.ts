@@ -6,9 +6,6 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 import '../load.envs.js';
 
-import { getVersion } from './getVersion';
-
-process.env.VITE_APP_VERSION = getVersion();
 const linkDeps = process.env.LINK_DEPS?.trim().split(' ') || [];
 
 // https://vitejs.dev/config/
