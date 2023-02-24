@@ -4,7 +4,8 @@
   "globalEnv": ["NODE_ENV"],
   "pipeline": {
     "ts:check": {
-      "dependsOn": []
+      "dependsOn": [],
+      "outputs": ["./**/*.typegen.ts"]
     },
     "build": {
       "dependsOn": ["^ts:check"],
@@ -16,14 +17,14 @@
     },
     "build:crx": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist-crx/**", "dist/fuel-wallet.zip"]
     },
     "build:web": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
     "build:app": {
-      "dependsOn": ["^build:web", "^build:crx"],
+      "dependsOn": ["build:web", "build:crx"],
       "outputs": ["dist/**", "dist-crx/**"]
     },
     "build:all": {
