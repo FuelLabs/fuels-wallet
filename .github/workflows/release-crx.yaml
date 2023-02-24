@@ -15,6 +15,7 @@ jobs:
       - name: Collect version
         run: |
           echo "BUILD_VERSION=$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' packages/app/package.json)" >> $GITHUB_ENV
+          echo "${{ env.BUILD_VERSION }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -29,5 +30,5 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./packages/app/dist/fuel-wallet.zip
-          asset_name: fuel-wallet-${{ env.BUILD_VERSION }}.zip
+          asset_name: fuel-wallet-chrome-${{ env.BUILD_VERSION }}.zip
           asset_content_type: application/zip
