@@ -8,7 +8,7 @@
       "outputs": ["./**/*.typegen.ts"]
     },
     "build": {
-      "dependsOn": ["^ts:check"],
+      "dependsOn": ["ts:check"],
       "outputs": ["dist/**"]
     },
     "build:docs": {
