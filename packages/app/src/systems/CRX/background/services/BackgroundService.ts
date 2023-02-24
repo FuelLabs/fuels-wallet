@@ -296,21 +296,81 @@ export class BackgroundService {
     return assets || [];
   }
 
-  async addAsset(
-    input: Exclude<MessageInputs['addAsset'], 'origin'>,
-    serverParams: EventOrigin
-  ) {
+  async validateAddAsset(input: MessageInputs['addAsset']) {
+    // first validate has basic input
+    const assets = Array.isArray(input.asset) ? input.asset : [input.asset];
+    if (!assets.length) {
+      throw new Error('No assets to add');
+    }
+
+    // trim asset props as will need to validate comparing strings
+    const trimmedAssets = assets.map((a) => ({
+      ...a,
+      assetId: a.assetId.trim(),
+      name: a.name?.trim(),
+      symbol: a.symbol?.trim(),
+      imageUrl: a.imageUrl?.trim(),
+    }));
+
+    // validate input doesnt repeat assets, by id, name or symbol
+    const uniqueAssetsById = trimmedAssets.filter(
+      (a, index) =>
+        index === trimmedAssets.findIndex((obj) => obj.assetId === a.assetId)
+    );
+    if (trimmedAssets.length !== uniqueAssetsById.length) {
+      throw new Error('Asset with same assetId being added multiple times');
+    }
+    const uniqueAssetsByName = trimmedAssets.filter(
+      (a, index) =>
+        index === trimmedAssets.findIndex((obj) => obj.name === a.name)
+    );
+    if (trimmedAssets.length !== uniqueAssetsByName.length) {
+      throw new Error('Asset with same name being added multiple times');
+    }
+    const uniqueAssetsBySymbol = trimmedAssets.filter(
+      (a, index) =>
+        index === trimmedAssets.findIndex((obj) => obj.symbol === a.symbol)
+    );
+    if (trimmedAssets.length !== uniqueAssetsBySymbol.length) {
+      throw new Error('Asset with same symbol being added multiple times');
+    }
+
+    // validate if all assets from input are already added
+    const uniqueAssetsIds = uniqueAssetsById.map((a) => a.assetId);
+    const repeatedAssets = await AssetService.getAssetsByFilter(
+      (a) => uniqueAssetsIds.indexOf(a.assetId) !== -1
+    );
+    if (repeatedAssets.length === uniqueAssetsById.length) {
+      throw new Error('Assets already exist in wallet settings');
+    }
+
+    // get only not repeated assets
+    const assetsToAdd = trimmedAssets.filter(
+      (a) => repeatedAssets.findIndex((obj) => obj.assetId === a.assetId) === -1
+    );
+
+    return { assetsToAdd };
+  }
+
+  async addAsset(input: MessageInputs['addAsset'], serverParams: EventOrigin) {
+    const { assetsToAdd } = await this.validateAddAsset(input);
+
     const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
 
     const popupService = await PopUpService.open(
       origin,
       Pages.requestAddAsset(),
       this.communicationProtocol
     );
-    const asset = await popupService.addAsset({
-      ...input,
+    await popupService.addAsset({
+      asset: assetsToAdd,
       origin,
+      title,
+      favIconUrl,
     });
-    return asset;
+
+    return true;
   }
 }

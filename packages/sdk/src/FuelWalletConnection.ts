@@ -98,7 +98,7 @@ export class FuelWalletConnection extends WindowConnection {
     return this.client.request('assets', {});
   }
 
-  async addAsset(asset: Asset): Promise<Asset> {
+  async addAsset(asset: Asset[]): Promise<void> {
     return this.client.request('addAsset', {
       asset,
     });

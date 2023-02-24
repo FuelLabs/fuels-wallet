@@ -9,6 +9,9 @@ export type AssetInputs = {
   addAsset: {
     data: Asset;
   };
+  bulkAddAsset: {
+    data: Asset[];
+  };
   removeAsset: {
     assetId: string;
   };
@@ -36,6 +39,14 @@ export class AssetService {
     });
   }
 
+  static async bulkAddAsset(input: AssetInputs['bulkAddAsset']) {
+    return db.transaction('rw', db.assets, async () => {
+      await db.assets.bulkAdd(input.data);
+
+      return true;
+    });
+  }
+
   static async removeAsset({ assetId }: AssetInputs['removeAsset']) {
     return db.transaction('rw', db.assets, async () => {
       await db.assets.delete(assetId);
@@ -59,6 +70,13 @@ export class AssetService {
   static async getAssets() {
     return db.transaction('r', db.assets, async () => {
       return db.assets.toArray();
+    });
+  }
+
+  static async getAssetsByFilter(filterFn: (asset: Asset) => boolean) {
+    return db.transaction('r', db.assets, async () => {
+      const assets = db.assets.filter(filterFn).toArray();
+      return assets;
     });
   }
 }

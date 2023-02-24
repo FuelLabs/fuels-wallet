@@ -55,10 +55,10 @@ export class RequestMethods extends ExtensionPageConnection {
   }
 
   async addAsset(input: MessageInputs['addAsset']) {
-    const state = await store
+    await store
       .requestAddAsset(input)
       .waitForState(Services.addAssetRequest, WAIT_FOR_CONFIG);
-    return state.context.addedAsset;
+    return true;
   }
 }
 

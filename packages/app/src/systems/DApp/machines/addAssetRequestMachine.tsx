@@ -7,20 +7,29 @@ import { AssetService } from '~/systems/Asset';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 
 type MachineContext = {
-  asset?: Asset;
+  assets?: Asset[];
   origin?: string;
+  title?: string;
+  favIconUrl?: string;
   error?: string;
-  addedAsset?: Asset;
 };
 
 type MachineServices = {
   saveAsset: {
-    data: Asset;
+    data: boolean;
+  };
+  filterAssets: {
+    data: Asset[];
   };
 };
 
 export type AddAssetInputs = {
-  start: { origin: string; asset: Asset };
+  start: {
+    origin: string;
+    asset: Asset | Asset[];
+    favIconUrl?: string;
+    title?: string;
+  };
 };
 
 export type MachineEvents =
@@ -28,8 +37,8 @@ export type MachineEvents =
       type: 'START';
       input: AddAssetInputs['start'];
     }
-  | { type: 'ADD_ASSET' }
-  | { type: 'REJECT' };
+  | { type: 'ADD_ASSET'; input: void }
+  | { type: 'REJECT'; input: void };
 
 export const addAssetRequestMachine = createMachine(
   {
@@ -47,9 +56,24 @@ export const addAssetRequestMachine = createMachine(
       idle: {
         on: {
           START: {
-            actions: ['assignAssetData'],
-            target: 'reviewAsset',
+            actions: ['assignStartData'],
+            target: 'filteringAssets',
           },
+        },
+      },
+      filteringAssets: {
+        invoke: {
+          src: 'filterAssets',
+          data: {
+            input: (_: MachineContext, ev: MachineEvents) => ev.input,
+          },
+          onDone: [
+            FetchMachine.errorState('failed'),
+            {
+              target: 'reviewAsset',
+              actions: ['assignAssets'],
+            },
+          ],
         },
       },
       reviewAsset: {
@@ -68,13 +92,12 @@ export const addAssetRequestMachine = createMachine(
           src: 'saveAsset',
           data: {
             input: (ctx: MachineContext) => ({
-              data: ctx.asset,
+              data: ctx.assets,
             }),
           },
           onDone: [
             FetchMachine.errorState('failed'),
             {
-              actions: ['assignAddedAsset'],
               target: 'done',
             },
           ],
@@ -88,40 +111,76 @@ export const addAssetRequestMachine = createMachine(
   },
   {
     actions: {
-      assignAssetData: assign((ctx, ev) => ({
+      assignStartData: assign((ctx, ev) => ({
         ...ctx,
-        asset: ev.input.asset,
         origin: ev.input.origin,
+        title: ev.input.title,
+        favIconUrl: ev.input.favIconUrl,
       })),
-      assignAddedAsset: assign({
-        addedAsset: (_, ev) => ev.data,
+      assignAssets: assign({
+        assets: (_, ev) => ev.data,
       }),
     },
     services: {
+      filterAssets: FetchMachine.create<
+        { asset: Asset[] },
+        MachineServices['filterAssets']['data']
+      >({
+        showError: true,
+        async fetch({ input }) {
+          if (!input?.asset?.length) {
+            throw new Error('Invalid assets');
+          }
+
+          async function getAssetNotRepeated(
+            asset: Asset,
+            field: 'name' | 'symbol',
+            tries: number = 1
+          ): Promise<string | undefined> {
+            const repeatedAssets = await AssetService.getAssetsByFilter(
+              (a) => a[field]?.trim() === asset[field]?.trim()
+            );
+
+            let notRepeatedProp: string | undefined;
+            if (repeatedAssets[0]) {
+              const nextToTry =
+                tries === 1
+                  ? `${asset[field]} (${tries})`
+                  : `${asset[field]?.slice(0, -4)} (${tries})`;
+              notRepeatedProp = await getAssetNotRepeated(
+                { ...asset, [field]: nextToTry },
+                field,
+                tries + 1
+              );
+            } else {
+              notRepeatedProp = asset[field];
+            }
+
+            return notRepeatedProp;
+          }
+
+          const assetsToAdd = input.asset.reduce(async (prev, asset) => {
+            const assets = await prev;
+            const name = await getAssetNotRepeated(asset, 'name');
+            const symbol = await getAssetNotRepeated(asset, 'symbol');
+
+            return [...assets, { ...asset, name, symbol, isCustom: true }];
+          }, Promise.resolve([] as Asset[]));
+
+          return assetsToAdd;
+        },
+      }),
       saveAsset: FetchMachine.create<
-        AssetInputs['upsertAsset'],
+        AssetInputs['bulkAddAsset'],
         MachineServices['saveAsset']['data']
       >({
         showError: true,
         async fetch({ input }) {
-          if (!input?.data) {
-            throw new Error('Invalid asset');
+          if (!input?.data?.length) {
+            throw new Error('Invalid assets');
           }
 
-          const currentAsset = await AssetService.getAsset(input.data.assetId);
-          if (currentAsset && !currentAsset.isCustom) {
-            throw new Error(`It's not allowed to change Listed Assets`);
-          }
-
-          const asset = await AssetService.upsertAsset({
-            data: { ...input.data, isCustom: true },
-          });
-
-          if (!asset) {
-            throw new Error('Failed to add asset');
-          }
-
-          return asset;
+          return AssetService.bulkAddAsset(input);
         },
       }),
     },
