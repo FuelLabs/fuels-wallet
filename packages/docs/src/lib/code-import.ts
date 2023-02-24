@@ -53,7 +53,7 @@ function extractCommentBlock(content: string) {
 
   const linesContent = lines.slice(lineStart, lineEnd).join('\n');
   const contentFormatted = prettier
-    .format(linesContent, { parser: 'babel' })
+    .format(linesContent, { parser: 'babel-ts' })
     .trimEnd();
 
   return {
@@ -89,7 +89,7 @@ function extractTestCase(source: string, testCase: string) {
       if (val && val === testCase) {
         const body = args[1]?.body;
         content = chars.slice(body.start, body.end).join('').slice(1, -1);
-        content = prettier.format(content, { parser: 'babel' }).trimEnd();
+        content = prettier.format(content, { parser: 'babel-ts' }).trimEnd();
         charStart = body.start;
         charEnd = body.end;
       }
