@@ -16,8 +16,6 @@ jobs:
         run: |
           echo "BUILD_VERSION=$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' packages/app/package.json)" >> $GITHUB_ENV
           echo "${{ env.BUILD_VERSION }}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Application
         run: pnpm build:crx
