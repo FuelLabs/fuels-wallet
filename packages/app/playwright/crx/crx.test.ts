@@ -386,7 +386,7 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.addAsset()', async () => {
-      function addAsset(asset: Asset) {
+      function addAsset(asset: Asset[]) {
         return blankPage.evaluate(
           async ([asset]) => {
             return window.fuel.addAsset(asset);
@@ -395,7 +395,7 @@ test.describe('FuelWallet Extension', () => {
         );
       }
 
-      const addingAsset = addAsset(CUSTOM_ASSET);
+      const addingAsset = addAsset([CUSTOM_ASSET]);
 
       const addAssetPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
