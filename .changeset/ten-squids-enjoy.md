@@ -1,5 +1,5 @@
 ---
-'app': patch
+'fuels-wallet': patch
 ---
 
 Start versioning Wallet

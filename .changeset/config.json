@@ -9,7 +9,7 @@
     { "repo": "FuelLabs/fuels-wallet" }
   ],
   "commit": false,
-  "fixed": [["@fuel-wallet/*", "app"]],
+  "fixed": [["@fuel-wallet/*", "fuels-wallet"]],
   "linked": [],
   "access": "public",
   "baseBranch": "master",
