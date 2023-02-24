@@ -1,21 +1,43 @@
-import type { Meta, StoryFn } from '@storybook/react';
+import { BoxCentered, Button } from '@fuel-ui/react';
+import type { ComponentStoryFn, Meta } from '@storybook/react';
 
 import { AddNetwork } from './AddNetwork';
 
-import { Pages } from '~/systems/Core';
+import { Layout } from '~/systems/Core';
+import { NetworkService, useNetworks } from '~/systems/Network';
+import { store } from '~/systems/Store';
 
 export default {
   component: AddNetwork,
   title: 'Network/Pages/2. AddNetwork',
+  decorators: [(Story) => <Story />],
   parameters: {
     layout: 'fullscreen',
     viewport: {
       defaultViewport: 'chromeExtension',
     },
-    reactRouter: {
-      routePath: Pages.networkAdd(),
-    },
   },
 } as Meta;
 
-export const Usage: StoryFn<unknown> = () => <AddNetwork />;
+const Template: ComponentStoryFn<typeof AddNetwork> = () => {
+  const { isLoading, handlers } = useNetworks();
+  return (
+    <Layout isLoading={isLoading}>
+      <BoxCentered css={{ minW: '100%', minH: '100%' }}>
+        <Button onPress={handlers.openNetworksAdd} isLoading={isLoading}>
+          Toggle Modal
+        </Button>
+      </BoxCentered>
+    </Layout>
+  );
+};
+
+export const Usage = Template.bind({});
+Usage.loaders = [
+  async () => {
+    store.closeOverlay();
+    await NetworkService.clearNetworks();
+    await NetworkService.addDefaultNetworks();
+    return {};
+  },
+];
