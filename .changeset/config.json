@@ -1,17 +1,20 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@2.0.0/schema.json",
+  "privatePackages": {
+    "version": true,
+    "tag": true
+  },
   "changelog": [
     "@changesets/changelog-github",
     { "repo": "FuelLabs/fuels-wallet" }
   ],
   "commit": false,
-  "fixed": [["@fuel-wallet/*"]],
+  "fixed": [["@fuel-wallet/*", "fuels-wallet"]],
   "linked": [],
   "access": "public",
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
   "ignore": [
-    "app",
     "docs",
     "fuelhat",
     "asset-list",
