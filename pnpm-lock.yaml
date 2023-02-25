@@ -96,7 +96,7 @@ importers:
       '@fuel-ui/test-utils': ^0.12.3
       '@fuel-wallet/sdk': workspace:*
       '@fuel-wallet/types': workspace:*
-      '@fuel-wallet/xstore': workspace:*
+      '@fuel-wallet/xstore': workspace:../store
       '@graphql-codegen/cli': ^2.16.5
       '@graphql-codegen/named-operations-object': ^2.3.1
       '@graphql-codegen/near-operation-file-preset': ^2.5.0
@@ -136,7 +136,7 @@ importers:
       '@vitejs/plugin-react': ^3.0.1
       '@xstate/inspect': ^0.7.1
       '@xstate/react': ^3.1.1
-      asset-list: workspace:*
+      asset-list: workspace:../asset-list
       cross-fetch: ^3.1.5
       dayjs: ^1.11.7
       dexie: ^3.2.3
@@ -184,7 +184,7 @@ importers:
       '@fuel-ui/config': 0.12.3_typescript@4.9.5
       '@fuel-ui/css': 0.12.3
       '@fuel-ui/react': 0.12.3_3rmrz26lo2xcg2m7re5kmkpfii
-      '@fuel-ui/test-utils': 0.12.3_3rmrz26lo2xcg2m7re5kmkpfii
+      '@fuel-ui/test-utils': 0.12.3_goymjlxrpta5icaoqypsoub72a
       '@fuel-wallet/sdk': link:../sdk
       '@fuel-wallet/types': link:../types
       '@fuel-wallet/xstore': link:../store
@@ -334,7 +334,6 @@ importers:
       '@types/react-syntax-highlighter': ^15.5.6
       acorn: ^8.8.2
       acorn-walk: ^8.2.0
-      app: workspace:*
       dotenv: ^16.0.3
       eslint: ^8.33.0
       eslint-config-next: 13.1.6
@@ -367,7 +366,6 @@ importers:
       '@next/mdx': 13.1.6_@mdx-js+react@2.2.1
       acorn: 8.8.2
       acorn-walk: 8.2.0
-      app: link:../app
       dotenv: 16.0.3
       framer-motion: 8.5.5_biqbaboplfbrettd7655fr4n2y
       fuels: 0.30.0
@@ -477,7 +475,7 @@ importers:
       uuid: 9.0.0
       xstate: 4.35.4
     devDependencies:
-      '@fuel-ui/test-utils': 0.12.3_@types+react@18.0.27
+      '@fuel-ui/test-utils': 0.12.3_3stiutgnnbnfnf3uowm5cip22i
       '@fuel-wallet/config': link:../config
       '@types/react': 18.0.27
       '@types/uuid': 9.0.0
@@ -3430,7 +3428,7 @@ packages:
     dependencies:
       '@fuel-ts/math': 0.29.1
       '@fuel-ui/css': 0.12.3
-      '@fuel-ui/test-utils': 0.12.3_3rmrz26lo2xcg2m7re5kmkpfii
+      '@fuel-ui/test-utils': 0.12.3_goymjlxrpta5icaoqypsoub72a
       '@radix-ui/react-accordion': 1.1.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_5ndqzdd6t4rivxsukjv3i3ak2q
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3485,7 +3483,7 @@ packages:
     dependencies:
       '@fuel-ts/math': 0.29.1
       '@fuel-ui/css': 0.12.3
-      '@fuel-ui/test-utils': 0.12.3_4k4h4j3b7mix7mbx4dw7fcb6uq
+      '@fuel-ui/test-utils': 0.12.3_42m3q4uhfkfyjp44k53gseqgja
       '@radix-ui/react-accordion': 1.1.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_5ndqzdd6t4rivxsukjv3i3ak2q
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3540,7 +3538,7 @@ packages:
     dependencies:
       '@fuel-ts/math': 0.29.1
       '@fuel-ui/css': 0.12.3
-      '@fuel-ui/test-utils': 0.12.3_c7qcy4ub4rpcctt7jglj3qg3v4
+      '@fuel-ui/test-utils': 0.12.3_h5q4hm4i2eggm7qg7xpzfdcdgq
       '@radix-ui/react-accordion': 1.1.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-alert-dialog': 1.0.2_5ndqzdd6t4rivxsukjv3i3ak2q
       '@radix-ui/react-aspect-ratio': 1.0.1_biqbaboplfbrettd7655fr4n2y
@@ -3590,86 +3588,10 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils/0.12.3_3rmrz26lo2xcg2m7re5kmkpfii:
+  /@fuel-ui/test-utils/0.12.3_3stiutgnnbnfnf3uowm5cip22i:
     resolution: {integrity: sha512-h19HeR5wMyYwLazHffHEh1VwcBJ5mlkw+fhlhJ7rY3kLM9q5f3pAXFfWs8GGjdyNXDcuepi7TIaHspjFBxbJMg==}
-    peerDependenciesMeta:
-      react:
-        optional: true
-    dependencies:
-      '@testing-library/dom': 8.20.0
-      '@testing-library/jest-dom': 5.16.5
-      '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
-      '@testing-library/react-hooks': 8.0.1_5ndqzdd6t4rivxsukjv3i3ak2q
-      '@testing-library/user-event': 14.4.3_yxlyej73nftwmh2fiao7paxmlm
-      identity-obj-proxy: 3.0.0
-      jest: 29.4.2
-      jest-axe: 7.0.0
-      jest-environment-jsdom: 29.4.2
-      jest-fail-on-console: 3.0.2
-      jest-matcher-utils: 29.4.2
-      jest-transform-stub: 2.0.0
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      resize-observer-polyfill: 1.5.1
-      ts-jest: 29.0.5_zgilbyuumz7xbrerspmrtjuxsi
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@jest/types'
-      - '@types/node'
-      - '@types/react'
-      - babel-jest
-      - bufferutil
-      - canvas
-      - esbuild
-      - node-notifier
-      - react-test-renderer
-      - supports-color
-      - ts-node
-      - typescript
-      - utf-8-validate
-    dev: false
-
-  /@fuel-ui/test-utils/0.12.3_4k4h4j3b7mix7mbx4dw7fcb6uq:
-    resolution: {integrity: sha512-h19HeR5wMyYwLazHffHEh1VwcBJ5mlkw+fhlhJ7rY3kLM9q5f3pAXFfWs8GGjdyNXDcuepi7TIaHspjFBxbJMg==}
-    peerDependenciesMeta:
-      react:
-        optional: true
-    dependencies:
-      '@testing-library/dom': 8.20.0
-      '@testing-library/jest-dom': 5.16.5
-      '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
-      '@testing-library/react-hooks': 8.0.1_5ndqzdd6t4rivxsukjv3i3ak2q
-      '@testing-library/user-event': 14.4.3_yxlyej73nftwmh2fiao7paxmlm
-      identity-obj-proxy: 3.0.0
-      jest: 29.4.2_ucpl6toqp57nqodtp3vxxi6g5a
-      jest-axe: 7.0.0
-      jest-environment-jsdom: 29.4.2
-      jest-fail-on-console: 3.0.2
-      jest-matcher-utils: 29.4.2
-      jest-transform-stub: 2.0.0
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      resize-observer-polyfill: 1.5.1
-      ts-jest: 29.0.5_e57enqiqm67zwl77zp7juojw4m
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@jest/types'
-      - '@types/node'
-      - '@types/react'
-      - babel-jest
-      - bufferutil
-      - canvas
-      - esbuild
-      - node-notifier
-      - react-test-renderer
-      - supports-color
-      - ts-node
-      - typescript
-      - utf-8-validate
-    dev: false
-
-  /@fuel-ui/test-utils/0.12.3_@types+react@18.0.27:
-    resolution: {integrity: sha512-h19HeR5wMyYwLazHffHEh1VwcBJ5mlkw+fhlhJ7rY3kLM9q5f3pAXFfWs8GGjdyNXDcuepi7TIaHspjFBxbJMg==}
+    peerDependencies:
+      react: '*'
     peerDependenciesMeta:
       react:
         optional: true
@@ -3707,8 +3629,92 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@fuel-ui/test-utils/0.12.3_c7qcy4ub4rpcctt7jglj3qg3v4:
+  /@fuel-ui/test-utils/0.12.3_42m3q4uhfkfyjp44k53gseqgja:
     resolution: {integrity: sha512-h19HeR5wMyYwLazHffHEh1VwcBJ5mlkw+fhlhJ7rY3kLM9q5f3pAXFfWs8GGjdyNXDcuepi7TIaHspjFBxbJMg==}
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      '@testing-library/dom': 8.20.0
+      '@testing-library/jest-dom': 5.16.5
+      '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
+      '@testing-library/react-hooks': 8.0.1_5ndqzdd6t4rivxsukjv3i3ak2q
+      '@testing-library/user-event': 14.4.3_yxlyej73nftwmh2fiao7paxmlm
+      identity-obj-proxy: 3.0.0
+      jest: 29.4.2_ucpl6toqp57nqodtp3vxxi6g5a
+      jest-axe: 7.0.0
+      jest-environment-jsdom: 29.4.2
+      jest-fail-on-console: 3.0.2
+      jest-matcher-utils: 29.4.2
+      jest-transform-stub: 2.0.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      resize-observer-polyfill: 1.5.1
+      ts-jest: 29.0.5_e57enqiqm67zwl77zp7juojw4m
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@jest/types'
+      - '@types/node'
+      - '@types/react'
+      - babel-jest
+      - bufferutil
+      - canvas
+      - esbuild
+      - node-notifier
+      - react-test-renderer
+      - supports-color
+      - ts-node
+      - typescript
+      - utf-8-validate
+    dev: false
+
+  /@fuel-ui/test-utils/0.12.3_goymjlxrpta5icaoqypsoub72a:
+    resolution: {integrity: sha512-h19HeR5wMyYwLazHffHEh1VwcBJ5mlkw+fhlhJ7rY3kLM9q5f3pAXFfWs8GGjdyNXDcuepi7TIaHspjFBxbJMg==}
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      '@testing-library/dom': 8.20.0
+      '@testing-library/jest-dom': 5.16.5
+      '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
+      '@testing-library/react-hooks': 8.0.1_5ndqzdd6t4rivxsukjv3i3ak2q
+      '@testing-library/user-event': 14.4.3_yxlyej73nftwmh2fiao7paxmlm
+      identity-obj-proxy: 3.0.0
+      jest: 29.4.2
+      jest-axe: 7.0.0
+      jest-environment-jsdom: 29.4.2
+      jest-fail-on-console: 3.0.2
+      jest-matcher-utils: 29.4.2
+      jest-transform-stub: 2.0.0
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      resize-observer-polyfill: 1.5.1
+      ts-jest: 29.0.5_zgilbyuumz7xbrerspmrtjuxsi
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@jest/types'
+      - '@types/node'
+      - '@types/react'
+      - babel-jest
+      - bufferutil
+      - canvas
+      - esbuild
+      - node-notifier
+      - react-test-renderer
+      - supports-color
+      - ts-node
+      - typescript
+      - utf-8-validate
+    dev: false
+
+  /@fuel-ui/test-utils/0.12.3_h5q4hm4i2eggm7qg7xpzfdcdgq:
+    resolution: {integrity: sha512-h19HeR5wMyYwLazHffHEh1VwcBJ5mlkw+fhlhJ7rY3kLM9q5f3pAXFfWs8GGjdyNXDcuepi7TIaHspjFBxbJMg==}
+    peerDependencies:
+      react: '*'
     peerDependenciesMeta:
       react:
         optional: true
@@ -3748,14 +3754,16 @@ packages:
 
   /@fuel-ui/test-utils/0.12.3_typescript@4.9.5:
     resolution: {integrity: sha512-h19HeR5wMyYwLazHffHEh1VwcBJ5mlkw+fhlhJ7rY3kLM9q5f3pAXFfWs8GGjdyNXDcuepi7TIaHspjFBxbJMg==}
+    peerDependencies:
+      react: '*'
     peerDependenciesMeta:
       react:
         optional: true
     dependencies:
       '@testing-library/dom': 8.20.0
       '@testing-library/jest-dom': 5.16.5
-      '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
-      '@testing-library/react-hooks': 8.0.1_biqbaboplfbrettd7655fr4n2y
+      '@testing-library/react': 13.4.0_react-dom@18.2.0
+      '@testing-library/react-hooks': 8.0.1_react-dom@18.2.0
       '@testing-library/user-event': 14.4.3_yxlyej73nftwmh2fiao7paxmlm
       identity-obj-proxy: 3.0.0
       jest: 29.4.2
@@ -3765,7 +3773,7 @@ packages:
       jest-matcher-utils: 29.4.2
       jest-transform-stub: 2.0.0
       react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
+      react-dom: 18.2.0
       resize-observer-polyfill: 1.5.1
       ts-jest: 29.0.5_gelezmms3va3pnkofxaadhcvma
     transitivePeerDependencies:
@@ -9338,7 +9346,7 @@ packages:
       react-dom: 18.2.0_react@18.2.0
       react-error-boundary: 3.1.4_react@18.2.0
 
-  /@testing-library/react-hooks/8.0.1_biqbaboplfbrettd7655fr4n2y:
+  /@testing-library/react-hooks/8.0.1_react-dom@18.2.0:
     resolution: {integrity: sha512-Aqhl2IVmLt8IovEVarNDFuJDVWVvhnr9/GCU6UUnrYXwgDFF9h2L2o2P9KBni1AST5sT6riAyoukFLyjQUgD/g==}
     engines: {node: '>=12'}
     peerDependencies:
@@ -9357,9 +9365,8 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.20.7
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      react-error-boundary: 3.1.4_react@18.2.0
+      react-dom: 18.2.0
+      react-error-boundary: 3.1.4
     dev: true
 
   /@testing-library/react/13.4.0_biqbaboplfbrettd7655fr4n2y:
@@ -9379,6 +9386,24 @@ packages:
       '@types/react-dom': 18.0.10
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+
+  /@testing-library/react/13.4.0_react-dom@18.2.0:
+    resolution: {integrity: sha512-sXOGON+WNTh3MLE9rve97ftaZukN3oNf2KjDy7YTx6hcTO2uuLHuCGynMDhFwGw/jYf4OJ2Qk0i4i79qMNNkyw==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '*'
+      react-dom: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.20.7
+      '@testing-library/dom': 8.20.0
+      '@types/react-dom': 18.0.10
+      react-dom: 18.2.0
+    dev: true
 
   /@testing-library/user-event/13.5.0_yxlyej73nftwmh2fiao7paxmlm:
     resolution: {integrity: sha512-5Kwtbo3Y/NowpkbRuSepbyMFkZmHgD+vPzYB/RJ4oxt5Gj/avFFBYjhw27cqSVPVw/3a67NK1PbiIr9k4Gwmdg==}
@@ -20327,6 +20352,18 @@ packages:
       - supports-color
     dev: true
 
+  /react-dom/18.2.0:
+    resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      loose-envify: 1.4.0
+      scheduler: 0.23.0
+    dev: true
+
   /react-dom/18.2.0_react@18.2.0:
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
@@ -20355,6 +20392,18 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-is: 17.0.2
+    dev: true
+
+  /react-error-boundary/3.1.4:
+    resolution: {integrity: sha512-uM9uPzZJTF6wRQORmSrvOIgt4lJ9MC1sNgEOj2XGsDTRE4kmpWxg7ENK9EWNKJRMAOY9z0MuF4yIfl6gp4sotA==}
+    engines: {node: '>=10', npm: '>=6'}
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.20.7
     dev: true
 
   /react-error-boundary/3.1.4_react@18.2.0:

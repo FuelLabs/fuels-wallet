@@ -3,9 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "build:preview": "run-s build:docs export:docs",
+    "build:docs": "next build",
     "dev": "next dev -p 3030",
-    "build": "next build",
-    "export": "DOCS_DIST=${DOCS_DIST:=dist} && next export -o $DOCS_DIST",
+    "export:docs": "DOCS_DIST=${DOCS_DIST:=dist} && next export -o $DOCS_DIST",
     "start": "next start",
     "lint": "next lint"
   },
@@ -17,7 +18,6 @@
     "@fuel-wallet/sdk": "workspace:*",
     "@mdx-js/react": "^2.2.1",
     "@next/mdx": "^13.1.6",
-    "app": "workspace:*",
     "acorn": "^8.8.2",
     "acorn-walk": "^8.2.0",
     "dotenv": "^16.0.3",
