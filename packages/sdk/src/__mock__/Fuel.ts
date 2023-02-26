@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { FuelWalletEvents, PAGE_SCRIPT_NAME } from '@fuel-wallet/types';
-import type { Asset } from '@fuel-wallet/types';
 import EventEmitter from 'events';
 import { transactionRequestify, Wallet } from 'fuels';
 import type { JSONRPCResponse } from 'json-rpc-2.0';
@@ -105,10 +104,8 @@ export class MockConnection extends BaseConnection {
     return assets;
   }
 
-  async addAsset({ asset }: { asset: Asset }): Promise<Asset> {
-    const addedAsset: Asset = asset;
-    fuel.emit(FuelWalletEvents.assets, addedAsset);
-    return addedAsset;
+  async addAsset(): Promise<boolean> {
+    return true;
   }
 }
 

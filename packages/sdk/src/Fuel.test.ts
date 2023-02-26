@@ -46,8 +46,8 @@ describe('Fuel', () => {
 
   test('addAsset', async () => {
     const asset = { assetId: NativeAssetId };
-    const addedAsset = await fuel.addAsset([asset]);
-    expect(addedAsset).toEqual(true);
+    const isAdded = await fuel.addAsset([asset]);
+    expect(isAdded).toEqual(true);
   });
 
   test('signMessage', async () => {
