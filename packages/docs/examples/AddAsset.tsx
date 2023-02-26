@@ -80,7 +80,6 @@ export function AddAsset() {
               <Input isDisabled={!isConnected} css={styles.input}>
                 <Input.Field
                   defaultValue={asset.assetId}
-                  // value={asset.assetId}
                   onBlur={(e) =>
                     onChangeAsset(index, { ...asset, assetId: e.target.value })
                   }
@@ -91,7 +90,6 @@ export function AddAsset() {
                 <Input isDisabled={!isConnected} css={styles.input}>
                   <Input.Field
                     defaultValue={asset.name}
-                    // value={asset.name}
                     onBlur={(e) =>
                       onChangeAsset(index, { ...asset, name: e.target.value })
                     }
@@ -101,7 +99,6 @@ export function AddAsset() {
                 <Input isDisabled={!isConnected} css={styles.input}>
                   <Input.Field
                     defaultValue={asset.symbol}
-                    // value={asset.symbol}
                     onBlur={(e) =>
                       onChangeAsset(index, { ...asset, symbol: e.target.value })
                     }
@@ -112,7 +109,6 @@ export function AddAsset() {
               <Input isDisabled={!isConnected} css={styles.input}>
                 <Input.Field
                   defaultValue={asset.imageUrl}
-                  // value={asset.imageUrl}
                   onBlur={(e) =>
                     onChangeAsset(index, { ...asset, imageUrl: e.target.value })
                   }

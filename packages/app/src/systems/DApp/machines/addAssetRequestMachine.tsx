@@ -26,7 +26,7 @@ type MachineServices = {
 export type AddAssetInputs = {
   start: {
     origin: string;
-    asset: Asset | Asset[];
+    asset: Asset[];
     favIconUrl?: string;
     title?: string;
   };
