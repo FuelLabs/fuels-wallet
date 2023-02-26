@@ -46,7 +46,7 @@ export function AddAssetRequest() {
           Reject
         </Button>
         <Button type="submit" color="accent" onPress={handlers.addAsset}>
-          Save Assets
+          Add Assets
         </Button>
       </Layout.BottomBar>
     </Layout>

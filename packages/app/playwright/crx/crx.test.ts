@@ -400,9 +400,8 @@ test.describe('FuelWallet Extension', () => {
       const addAssetPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
       });
-
-      await hasText(addAssetPage, 'Asset information');
-      await getButtonByText(addAssetPage, /save assets/i).click();
+      await hasText(addAssetPage, 'Review the Assets to be added:');
+      await getButtonByText(addAssetPage, /add assets/i).click();
       await expect(addingAsset).resolves.toBeDefined();
     });
 
