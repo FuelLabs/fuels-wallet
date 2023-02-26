@@ -16,6 +16,7 @@ export const Pages = {
   receive: route('/wallet/receive'),
   signUp: route('/sign-up'),
   signUpWelcome: route('/sign-up/welcome'),
+  signUpTerms: route('/sign-up/terms'),
   signUpCreateWallet: route('/sign-up/create-wallet'),
   signUpRecoverWallet: route('/sign-up/recover-wallet'),
   signUpWalletCreated: route('/sign-up/wallet-created'),
