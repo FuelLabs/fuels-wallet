@@ -402,7 +402,7 @@ test.describe('FuelWallet Extension', () => {
       });
 
       await hasText(addAssetPage, 'Asset information');
-      await getButtonByText(addAssetPage, /add asset/i).click();
+      await getButtonByText(addAssetPage, /save assets/i).click();
       await expect(addingAsset).resolves.toBeDefined();
     });
 
