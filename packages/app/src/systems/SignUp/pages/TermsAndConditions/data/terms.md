@@ -1,6 +1,4 @@
-# [DRAFT] Fuel Wallet Terms Of
-
-## Use Agreement
+# [DRAFT] Fuel Wallet Terms Of Use Agreement
 
 ## The Fuel Wallet
 
