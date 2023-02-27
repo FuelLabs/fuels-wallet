@@ -58,7 +58,7 @@ export function UpsertAsset() {
             />
             {!isEditing && dupeAsset && (
               <Box css={styles.duplicateAsset}>
-                <Text>This ID is already used in this asset:</Text>
+                <Text color="red9">Asset already exists</Text>
                 <AssetItem asset={dupeAsset} />
               </Box>
             )}
@@ -87,6 +87,10 @@ export function UpsertAsset() {
 
 const styles = {
   duplicateAsset: cssObj({
-    mt: '$4',
+    '& > p': {
+      mt: '$2',
+      ml: '$1',
+      mb: '$3',
+    },
   }),
 };
