@@ -13,7 +13,10 @@ export type MessageInputs = {
     transaction: string;
   };
   addAsset: {
-    asset: Asset | Asset[];
+    asset: Asset;
+  };
+  addAssets: {
+    assets: Asset[];
     origin: string;
     title?: string;
     favIconUrl?: string;

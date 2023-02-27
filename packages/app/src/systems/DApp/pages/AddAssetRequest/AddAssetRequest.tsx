@@ -14,7 +14,7 @@ export function AddAssetRequest() {
   if (!origin || !assets?.length || !account) return null;
 
   return (
-    <Layout title="Asset Add Request">
+    <Layout title="Add Asset Request">
       <Layout.Content css={styles.content}>
         <OriginDetails
           origin={origin}
@@ -45,7 +45,7 @@ export function AddAssetRequest() {
         <Button color="gray" variant="ghost" onPress={handlers.reject}>
           Reject
         </Button>
-        <Button type="submit" color="accent" onPress={handlers.addAsset}>
+        <Button type="submit" color="accent" onPress={handlers.approve}>
           Add Assets
         </Button>
       </Layout.BottomBar>

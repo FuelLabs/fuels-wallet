@@ -11,7 +11,7 @@ import {
   waitAriaLabel,
   reload,
 } from '../commons';
-import { CUSTOM_ASSET } from '../mocks';
+import { CUSTOM_ASSET, CUSTOM_ASSET_2 } from '../mocks';
 
 import {
   test,
@@ -386,7 +386,7 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.addAsset()', async () => {
-      function addAsset(asset: Asset[]) {
+      function addAsset(asset: Asset) {
         return blankPage.evaluate(
           async ([asset]) => {
             return window.fuel.addAsset(asset);
@@ -395,7 +395,27 @@ test.describe('FuelWallet Extension', () => {
         );
       }
 
-      const addingAsset = addAsset([CUSTOM_ASSET]);
+      const addingAsset = addAsset(CUSTOM_ASSET);
+
+      const addAssetPage = await context.waitForEvent('page', {
+        predicate: (page) => page.url().includes(extensionId),
+      });
+      await hasText(addAssetPage, 'Review the Assets to be added:');
+      await getButtonByText(addAssetPage, /add assets/i).click();
+      await expect(addingAsset).resolves.toBeDefined();
+    });
+
+    await test.step('window.fuel.addAssets()', async () => {
+      function addAssets(assets: Asset[]) {
+        return blankPage.evaluate(
+          async ([asset]) => {
+            return window.fuel.addAssets(asset);
+          },
+          [assets]
+        );
+      }
+
+      const addingAsset = addAssets([CUSTOM_ASSET, CUSTOM_ASSET_2]);
 
       const addAssetPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),

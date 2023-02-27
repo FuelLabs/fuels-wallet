@@ -19,8 +19,8 @@ export function useAddAssetRequest() {
   const title = useSelector(service, selectors.title);
   const favIconUrl = useSelector(service, selectors.favIconUrl);
 
-  function addAsset() {
-    send('ADD_ASSET');
+  function approve() {
+    send('APPROVE');
   }
 
   function reject() {
@@ -29,7 +29,7 @@ export function useAddAssetRequest() {
 
   return {
     handlers: {
-      addAsset,
+      approve,
       reject,
     },
     origin,

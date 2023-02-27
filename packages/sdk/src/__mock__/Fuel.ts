@@ -30,6 +30,7 @@ export class MockConnection extends BaseConnection {
       this.currentAccount,
       this.assets,
       this.addAsset,
+      this.addAssets,
     ]);
   }
 
@@ -105,6 +106,10 @@ export class MockConnection extends BaseConnection {
   }
 
   async addAsset(): Promise<boolean> {
+    return true;
+  }
+
+  async addAssets(): Promise<boolean> {
     return true;
   }
 }

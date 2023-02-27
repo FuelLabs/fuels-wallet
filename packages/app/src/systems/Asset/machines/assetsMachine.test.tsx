@@ -33,15 +33,30 @@ describe('assetsMachine', () => {
     expect(state.context.assets?.length).toBe(1);
   });
 
-  it('should save/remove custom asset ', async () => {
+  it('should add/update/remove custom asset ', async () => {
     state = await expectStateMatch(service, 'idle');
-    service.send('UPSERT_ASSET', { input: { data: MOCK_CUSTOM_ASSET } });
-    state = await expectStateMatch(service, 'saving');
+    service.send('ADD_ASSET', { input: { data: MOCK_CUSTOM_ASSET } });
+    state = await expectStateMatch(service, 'adding');
     state = await expectStateMatch(service, 'idle');
     const addedAsset = state.context.assets?.find(
       (asset) => asset.assetId === MOCK_CUSTOM_ASSET.assetId
     );
     expect(addedAsset).toBeDefined();
+
+    const newName = 'Updated';
+    service.send('UPDATE_ASSET', {
+      input: {
+        assetId: MOCK_CUSTOM_ASSET.assetId,
+        data: { ...MOCK_CUSTOM_ASSET, name: newName },
+      },
+    });
+    state = await expectStateMatch(service, 'adding');
+    state = await expectStateMatch(service, 'idle');
+    const updatedAsset = state.context.assets?.find(
+      (asset) => asset.assetId === MOCK_CUSTOM_ASSET.assetId
+    );
+    expect(updatedAsset?.name).toEqual(newName);
+
     service.send('REMOVE_ASSET', {
       input: { assetId: MOCK_CUSTOM_ASSET.assetId },
     });

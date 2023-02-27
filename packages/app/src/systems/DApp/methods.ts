@@ -19,7 +19,7 @@ export class RequestMethods extends ExtensionPageConnection {
       this.requestConnection,
       this.signMessage,
       this.sendTransaction,
-      this.addAsset,
+      this.addAssets,
     ]);
   }
 
@@ -54,7 +54,7 @@ export class RequestMethods extends ExtensionPageConnection {
     return state.context.response?.approvedTx?.id;
   }
 
-  async addAsset(input: MessageInputs['addAsset']) {
+  async addAssets(input: MessageInputs['addAssets']) {
     await store
       .requestAddAsset(input)
       .waitForState(Services.addAssetRequest, WAIT_FOR_CONFIG);

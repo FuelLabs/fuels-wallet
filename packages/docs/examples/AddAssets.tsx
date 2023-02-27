@@ -18,7 +18,7 @@ import { useFuel } from '~/src/hooks/useFuel';
 import { useIsConnected } from '~/src/hooks/useIsConnected';
 import { useLoading } from '~/src/hooks/useLoading';
 
-export function AddAsset() {
+export function AddAssets() {
   const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
   const [assets, setAssets] = useState<Asset[]>([
@@ -37,7 +37,7 @@ export function AddAsset() {
     async (assets: Asset[]) => {
       console.debug('Add Assets', assets);
       /* example:start */
-      await fuel.addAsset(assets);
+      await fuel.addAssets(assets);
       /* example:end */
     }
   );
@@ -63,7 +63,7 @@ export function AddAsset() {
           const isLast = index === assets.length - 1;
 
           return (
-            <Stack key={asset.assetId + index} css={styles.item}>
+            <Stack key={asset.assetId + index} css={styles.item(isLast)}>
               <Flex css={styles.itemHeader}>
                 <Text>Asset {index + 1}</Text>
                 {!!index && (
@@ -115,25 +115,21 @@ export function AddAsset() {
                   placeholder="Type your asset imageUrl"
                 />
               </Input>
-
-              {isLast && (
-                <Button
-                  variant="link"
-                  css={{ alignSelf: 'center' }}
-                  onPress={() =>
-                    setAssets([
-                      ...assets,
-                      { assetId: '', name: '', symbol: '', imageUrl: '' },
-                    ])
-                  }
-                >
-                  Add another asset
-                </Button>
-              )}
-              {!isLast && <Box>&nbsp;</Box>}
             </Stack>
           );
         })}
+        <Button
+          variant="link"
+          css={{ alignSelf: 'center' }}
+          onPress={() =>
+            setAssets([
+              ...assets,
+              { assetId: '', name: '', symbol: '', imageUrl: '' },
+            ])
+          }
+        >
+          Add another asset
+        </Button>
         <Box>
           <Button
             onPress={() => handleAddAsset(assets)}
@@ -158,9 +154,11 @@ const styles = {
   wrapper: cssObj({
     gap: '$4',
   }),
-  item: cssObj({
-    gap: '$2',
-  }),
+  item: (isLast: boolean) =>
+    cssObj({
+      gap: '$2',
+      mb: isLast ? '0' : '$4',
+    }),
   input: cssObj({
     width: '100%',
   }),
