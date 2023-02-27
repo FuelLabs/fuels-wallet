@@ -181,14 +181,16 @@ export const transactionMachine = createMachine(
             txId: input.txId,
           });
 
-          const { transaction, transactionWithReceipts: gqlTransaction } =
-            await transactionResponse.fetch();
+          const gqlTransaction = await transactionResponse.fetch();
+          const transaction = transactionResponse.decodeTransaction(
+            gqlTransaction!
+          );
 
           return {
             transaction,
             transactionResponse,
-            gqlTransactionStatus: gqlTransaction.status?.type,
-            txId: gqlTransaction.id,
+            gqlTransactionStatus: gqlTransaction?.status?.type,
+            txId: gqlTransaction?.id,
           };
         },
       }),
