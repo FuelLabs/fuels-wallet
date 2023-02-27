@@ -31,10 +31,12 @@ export function TermsAndConditions() {
       <Stack gap="$8" align="center">
         <Header
           title="Terms of Service"
-          subtitle="Read and accept out terms of service"
+          subtitle="Read and accept our terms of service"
         />
         <Box css={styles.termsContainer}>
-          <Terms />
+          <Flex css={styles.termsWrapper}>
+            <Terms />
+          </Flex>
         </Box>
         <Flex gap="$2">
           <Button color="gray" variant="ghost" onPress={handleCancel}>
@@ -50,12 +52,31 @@ export function TermsAndConditions() {
 }
 
 const styles = {
-  termsContainer: {
-    height: '480px',
-    maxWidth: '700px',
+  termsWrapper: {
     overflowY: 'scroll',
     padding: '$4',
     backgroundColor: '$gray3',
+    boxSizing: 'border-box',
+    height: '480px',
+
+    '&::-webkit-scrollbar': {
+      width: '8px',
+      backgroundColor: '$gray3',
+    },
+
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '$gray5',
+      borderRadius: '40px',
+    },
+
+    '& h1, & h2': {
+      lineHeight: '1.5',
+    },
+  },
+  termsContainer: {
+    height: '480px',
+    overflow: 'hidden',
+    maxWidth: '700px',
     borderRadius: '8px',
   },
 };
