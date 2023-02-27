@@ -338,7 +338,6 @@ test.describe('FuelWallet Extension', () => {
 
         // Confirm transaction
         await hasText(confirmTransactionPage, /0\.0000001.ETH/i);
-        console.log(senderAccount.address.toString());
         await waitAriaLabel(
           confirmTransactionPage,
           senderAccount.address.toString()
