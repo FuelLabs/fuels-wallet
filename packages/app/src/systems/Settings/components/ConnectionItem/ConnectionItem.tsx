@@ -16,7 +16,7 @@ import { ConnectionRemoveDialog } from '../ConnectionRemoveDialog';
 
 import { ConnectionItemLoader } from './ConnectionItemLoader';
 
-import { animations } from '~/systems/Core';
+import { animations, parseUrl, truncate } from '~/systems/Core';
 
 const MotionCardItem = motion(CardList.Item);
 
@@ -76,7 +76,7 @@ export const ConnectionItem: ConnectionItemComponent = ({
     >
       <Avatar name={origin} src={favIconUrl} css={styles.avatar} />
       <Box css={styles.text}>
-        <Text>{origin}</Text>
+        <Text>{truncate(parseUrl(origin))}</Text>
         <Text>{accounts} account(s) connected</Text>
       </Box>
     </MotionCardItem>

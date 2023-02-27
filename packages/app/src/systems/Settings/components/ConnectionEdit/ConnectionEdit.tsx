@@ -28,9 +28,6 @@ export function ConnectionEdit({
   return (
     <Layout.Content>
       <Stack gap="$3">
-        {/* <Text leftIcon={Icon.is('Globe')} css={styles.title}>
-          <OriginTag origin={ctx.inputs.origin} />
-        </Text> */}
         <ConnectInfo
           origin={origin}
           favIconUrl={favIconUrl}
