@@ -46,7 +46,7 @@ describe('assetsMachine', () => {
     const newName = 'Updated';
     service.send('UPDATE_ASSET', {
       input: {
-        assetId: MOCK_CUSTOM_ASSET.assetId,
+        id: MOCK_CUSTOM_ASSET.assetId,
         data: { ...MOCK_CUSTOM_ASSET, name: newName },
       },
     });
