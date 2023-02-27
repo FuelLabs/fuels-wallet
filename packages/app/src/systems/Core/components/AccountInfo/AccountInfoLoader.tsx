@@ -10,8 +10,8 @@ export const AccountInfoLoader = (props: IContentLoaderProps) => (
     <ContentLoader
       speed={2}
       width={300}
-      height={52}
-      viewBox="0 0 300 52"
+      height={42}
+      viewBox="0 0 300 42"
       backgroundColor={darkColors.gray2}
       foregroundColor={darkColors.gray3}
       {...props}
