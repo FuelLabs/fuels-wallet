@@ -7,14 +7,14 @@ import {
   CreateWallet,
   RecoverWallet,
   WelcomeScreen,
-  TermsAndConditions,
+  TermsOfUse,
 } from './pages';
 
 export const signUpRoutes = (
   <Route path={Pages.signUp()}>
     <Route index element={<Navigate to={Pages.signUpWelcome()} />} />
     <Route path={Pages.signUpWelcome()} element={<WelcomeScreen />} />
-    <Route path={Pages.signUpTerms()} element={<TermsAndConditions />} />
+    <Route path={Pages.signUpTerms()} element={<TermsOfUse />} />
     <Route element={<HasAcceptedTermsGuard />}>
       <Route path={Pages.signUpCreateWallet()} element={<CreateWallet />} />
       <Route path={Pages.signUpRecoverWallet()} element={<RecoverWallet />} />

@@ -8,7 +8,7 @@ import { ReactComponent as Terms } from './data/terms.md';
 import { Layout, Pages } from '~/systems/Core';
 import { useHasAcceptedTerms } from '~/systems/Core/hooks/useAcceptedTerms';
 
-export function TermsAndConditions() {
+export function TermsOfUse() {
   const navigate = useNavigate();
   const { action } = useParams();
   const { setHasAcceptedTerms } = useHasAcceptedTerms();
