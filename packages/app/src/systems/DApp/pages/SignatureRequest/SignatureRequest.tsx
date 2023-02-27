@@ -3,7 +3,6 @@ import { Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
 import { useSignatureRequest } from '../../hooks';
 
 import { Layout, ConnectInfo, AccountInfo } from '~/systems/Core';
-import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 
 export function SignatureRequest() {
   const { handlers, account, origin, message, isLoading, title, favIconUrl } =
@@ -14,7 +13,6 @@ export function SignatureRequest() {
   return (
     <>
       <Layout title={`Signature Request`} isLoading={isLoading}>
-        <Layout.TopBar type={TopBarType.external} />
         <Layout.Content>
           <Flex gap="$4" direction="column">
             <ConnectInfo
