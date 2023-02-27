@@ -22,7 +22,9 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
     key: 'networks',
     icon: 'ShareNetwork',
     label: 'Networks',
-    path: Pages.networks(),
+    onPress() {
+      store.openNetworksList();
+    },
   },
   {
     key: 'accounts',

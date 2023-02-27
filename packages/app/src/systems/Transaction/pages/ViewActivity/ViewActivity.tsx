@@ -7,11 +7,11 @@ import { useTxs } from '../../hooks/useTxs';
 
 import { useAccounts } from '~/systems/Account';
 import { Layout, Pages } from '~/systems/Core';
-import { NetworkScreen, useNetworks } from '~/systems/Network';
+import { useNetworks } from '~/systems/Network';
 
 export function ViewActivity() {
   const navigate = useNavigate();
-  const networks = useNetworks({ type: NetworkScreen.list });
+  const networks = useNetworks();
   const providerUrl = networks?.selectedNetwork?.url;
   const { account, isLoading } = useAccounts();
 
