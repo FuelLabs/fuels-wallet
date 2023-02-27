@@ -7,7 +7,9 @@ import { MOCK_NETWORKS } from '../__mocks__/networks';
 import { NetworkService } from '../services';
 
 import type { NetworksMachineService } from './networksMachine';
-import { NetworkScreen, networksMachine } from './networksMachine';
+import { networksMachine } from './networksMachine';
+
+import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 const NETWORK = MOCK_NETWORKS[0];
 
@@ -37,40 +39,25 @@ describe('networksMachine', () => {
     state = service.getSnapshot();
   });
 
-  it('should be on checking state by default', () => {
+  it('should be on fetchingNetworks state by default', () => {
     expect(state.context.networks).toBeUndefined();
-    expect(state.value).toBe('checking');
+    expect(state.value).toBe('fetchingNetworks');
     expect(state.hasTag('loading')).toBeTruthy();
   });
 
   describe('list', () => {
-    const initialEv: any = {
-      type: 'SET_INITIAL_DATA',
-      input: { type: NetworkScreen.list },
-    };
-
     it('should fetch list of networks', async () => {
-      const nextState = service.nextState(initialEv);
-      expect(nextState.value).toBe('fetchingNetworks');
-
-      service.send(initialEv);
-      state = await waitFor(service, (state) => state.matches('idle'));
+      state = await expectStateMatch(service, 'idle');
       expect(state.context.networks?.length).toBe(1);
     });
 
     it('should not have any network selected in context', async () => {
-      service.send(initialEv);
-      state = await waitFor(service, (state) => state.matches('idle'));
+      state = await expectStateMatch(service, 'idle');
       expect(state.context.network).toBeFalsy();
     });
   });
 
   describe('add', () => {
-    const initialEv: any = {
-      type: 'SET_INITIAL_DATA',
-      input: { type: NetworkScreen.add },
-    };
-
     const addEv: any = {
       type: 'ADD_NETWORK',
       input: {
@@ -78,31 +65,28 @@ describe('networksMachine', () => {
       },
     };
 
-    it('should be in idle state if type list is passed', async () => {
-      const nextState = service.nextState(initialEv);
-      expect(nextState.value).toBe('idle');
-    });
-
     it('should be able to add a new network', async () => {
-      service.send(initialEv);
-      state = await waitFor(service, (state) => state.matches('idle'));
+      state = await expectStateMatch(service, 'idle');
 
       const nextState = service.nextState(addEv);
       expect(nextState.value).toBe('addingNetwork');
       expect(nextState.hasTag('loading')).toBeTruthy();
 
       service.send(addEv);
-      state = await waitFor(service, (state) => state.matches('idle'));
-      expect(state.context.networks?.length).toBe(2);
-      const networkId = state.context.networks?.[1].id;
+      state = await expectStateMatch(service, 'idle');
+      const networks = state.context.networks || [];
+      expect(networks?.length).toBe(2);
+      const networkId = networks?.[1].id;
       await NetworkService.removeNetwork({ id: networkId as string });
     });
 
     it('should be able to remove a network', async () => {
-      service.send(initialEv);
+      await expectStateMatch(service, 'idle');
+
       service.send(addEv);
-      state = await waitFor(service, (state) => state.matches('idle'));
+      state = await expectStateMatch(service, 'idle');
       const networks = state.context.networks || [];
+
       const removeEv: any = {
         type: 'REMOVE_NETWORK',
         input: { id: networks[1]?.id },
@@ -112,14 +96,16 @@ describe('networksMachine', () => {
       expect(nextState.value).toBe('removingNetwork');
 
       service.send(removeEv);
-      state = await waitFor(service, (state) => state.matches('idle'));
+      state = await expectStateMatch(service, 'idle');
       expect(state.context.networks?.length).toBe(1);
     });
 
     it('should be able to select a new network', async () => {
-      service.send(initialEv);
+      await expectStateMatch(service, 'idle');
+
       service.send(addEv);
-      state = await waitFor(service, (state) => state.matches('idle'));
+      state = await expectStateMatch(service, 'idle');
+
       let networks = state.context.networks || [];
       const idx = networks.findIndex((n) => n.isSelected);
       const invertIdx = idx === 0 ? 1 : 0;
@@ -135,8 +121,8 @@ describe('networksMachine', () => {
       expect(nextState.value).toBe('selectingNetwork');
 
       service.send(selectEv);
-      await waitFor(service, (state) => state.matches('selectingNetwork'));
-      state = await waitFor(service, (state) => state.matches('idle'));
+      await expectStateMatch(service, 'selectingNetwork');
+      state = await expectStateMatch(service, 'idle');
       networks = state.context.networks || [];
       expect(networks[idx]?.isSelected).toBeFalsy();
       expect(networks[invertIdx]?.isSelected).toBeTruthy();
@@ -145,20 +131,19 @@ describe('networksMachine', () => {
 
   describe('update', () => {
     let network: Network | undefined;
-    let initialEv: any;
+    let editEv: any;
 
     beforeEach(async () => {
-      initialEv = {
-        type: 'SET_INITIAL_DATA',
+      editEv = {
+        type: 'EDIT_NETWORK',
         input: {
-          type: NetworkScreen.update,
-          networkId: network?.id as any,
+          id: network?.id as any,
         },
       };
     });
 
     it('should have networkId and network save on context', async () => {
-      service.send(initialEv);
+      service.send(editEv);
       expect(state.context.network).toBeUndefined();
       expect(state.context.networkId).toBeUndefined();
 
@@ -168,8 +153,7 @@ describe('networksMachine', () => {
     });
 
     it('should be able to update a network', async () => {
-      service.send(initialEv);
-      state = await waitFor(service, (state) => state.matches('idle'));
+      state = await expectStateMatch(service, 'idle');
       const networks = state.context.networks || [];
 
       const updateEv: any = {

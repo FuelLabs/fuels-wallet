@@ -1,14 +1,9 @@
 import type { Network } from '@fuel-wallet/types';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-import type {
-  NetworkInitialInput,
-  NetworksMachineState,
-} from '../machines/networksMachine';
+import type { NetworksMachineState } from '../machines/networksMachine';
 
 import { store, Services } from '~/store';
-import { Pages } from '~/systems/Core';
+import { useOverlay } from '~/systems/Overlay';
 
 const selectors = {
   networks: (state: NetworksMachineState) => {
@@ -26,8 +21,8 @@ const selectors = {
   },
 };
 
-export function useNetworks(opts: NetworkInitialInput = {}) {
-  const navigate = useNavigate();
+export function useNetworks() {
+  const overlay = useOverlay();
   const networks = store.useSelector(Services.networks, selectors.networks);
   const network = store.useSelector(Services.networks, selectors.network);
   const isLoading = store.useSelector(Services.networks, selectors.isLoading);
@@ -39,37 +34,33 @@ export function useNetworks(opts: NetworkInitialInput = {}) {
   store.useUpdateMachineConfig(Services.networks, {
     actions: {
       redirectToList() {
-        navigate(Pages.networks());
+        store.openNetworksList();
       },
       redirectToHome() {
-        navigate(Pages.wallet());
+        closeDialog();
       },
     },
   });
 
-  function goToUpdate(network: Network) {
-    navigate(Pages.networkUpdate({ id: network.id }));
+  function closeDialog() {
+    overlay.close();
   }
-  function goToAdd() {
-    navigate(Pages.networkAdd());
+  function goToUpdate(id?: string) {
+    if (!id) return;
+    store.editNetwork({ id });
+    overlay.open('networks.update');
   }
-  function goToList() {
-    navigate(Pages.networks());
-  }
-
-  useEffect(() => {
-    store.initNetworks(opts);
-  }, [opts.networkId, opts.type]);
 
   return {
     handlers: {
+      closeDialog,
       goToUpdate,
-      goToAdd,
-      goToList,
       addNetwork: store.addNetwork,
-      updateNetwork: store.updateNetwork,
+      openNetworks: store.openNetworksList,
+      openNetworksAdd: store.openNetworksAdd,
       removeNetwork: store.removeNetwork,
       selectNetwork: store.selectNetwork,
+      updateNetwork: store.updateNetwork,
     },
     isLoading,
     selectedNetwork,
