@@ -59,7 +59,13 @@ export function UpsertAsset() {
             {!isEditing && dupeAsset && (
               <Box css={styles.duplicateAsset}>
                 <Text color="red9">Asset already exists</Text>
-                <AssetItem asset={dupeAsset} />
+                <AssetItem
+                  asset={dupeAsset}
+                  showActions
+                  onEdit={async (assetId: string) => {
+                    handlers.goToEdit(assetId, { eraseLastNavigation: true });
+                  }}
+                />
               </Box>
             )}
           </Layout.Content>

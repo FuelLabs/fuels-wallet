@@ -49,8 +49,19 @@ export function useAssets() {
     navigate(Pages.assetsAdd());
   }
 
-  function goToEdit(assetId: string) {
-    navigate(Pages.assetsEdit({ id: assetId }));
+  function goToEdit(
+    assetId: string,
+    options: { eraseLastNavigation: boolean } = { eraseLastNavigation: false }
+  ) {
+    navigate(
+      Pages.assetsEdit({ id: assetId }),
+      options?.eraseLastNavigation
+        ? {
+            replace: true,
+            state: { n: -1 },
+          }
+        : undefined
+    );
   }
 
   return {
