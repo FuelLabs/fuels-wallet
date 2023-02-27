@@ -50,13 +50,12 @@ describe('assetsMachine', () => {
         data: { ...MOCK_CUSTOM_ASSET, name: newName },
       },
     });
-    state = await expectStateMatch(service, 'adding');
+    state = await expectStateMatch(service, 'updating');
     state = await expectStateMatch(service, 'idle');
     const updatedAsset = state.context.assets?.find(
       (asset) => asset.assetId === MOCK_CUSTOM_ASSET.assetId
     );
     expect(updatedAsset?.name).toEqual(newName);
-
     service.send('REMOVE_ASSET', {
       input: { assetId: MOCK_CUSTOM_ASSET.assetId },
     });
