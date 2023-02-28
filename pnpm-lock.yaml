@@ -37,7 +37,6 @@ importers:
       jest-transform-stub: ^2.0.0
       lint-staged: ^13.1.1
       npm-run-all: ^4.1.5
-      playwright: ^1.30.0
       prettier: ^2.8.4
       ts-jest: ^29.0.5
       ts-node: ^10.9.1
@@ -55,7 +54,7 @@ importers:
       '@changesets/changelog-github': 0.4.8
       '@changesets/cli': 2.26.0
       '@jest/types': 29.4.2
-      '@playwright/test': 1.31.1
+      '@playwright/test': 1.30.0
       '@types/jest': 29.4.0
       '@types/node': 18.14.1
       '@types/react': 18.0.28
@@ -72,7 +71,6 @@ importers:
       jest-transform-stub: 2.0.0
       lint-staged: 13.1.2
       npm-run-all: 4.1.5
-      playwright: 1.31.1
       prettier: 2.8.4
       ts-jest: 29.0.5_qwezuzwa3tuhe6cg7tondrbsca
       ts-node: 10.9.1_uayvamxqnl5yeiojjysxwopmsy
@@ -6326,17 +6324,6 @@ packages:
     dependencies:
       '@types/node': 18.11.18
       playwright-core: 1.30.0
-    dev: true
-
-  /@playwright/test/1.31.1:
-    resolution: {integrity: sha512-IsytVZ+0QLDh1Hj83XatGp/GsI1CDJWbyDaBGbainsh0p2zC7F4toUocqowmjS6sQff2NGT3D9WbDj/3K2CJiA==}
-    engines: {node: '>=14'}
-    hasBin: true
-    dependencies:
-      '@types/node': 18.14.1
-      playwright-core: 1.31.1
-    optionalDependencies:
-      fsevents: 2.3.2
     dev: true
 
   /@pmmmwh/react-refresh-webpack-plugin/0.5.10_ohj47mxwagpoxvu7nhhwxzphqm:
@@ -21162,21 +21149,6 @@ packages:
     resolution: {integrity: sha512-7AnRmTCf+GVYhHbLJsGUtskWTE33SwMZkybJ0v6rqR1boxq2x36U7p1vDRV7HO2IwTZgmycracLxPEJI49wu4g==}
     engines: {node: '>=14'}
     hasBin: true
-    dev: true
-
-  /playwright-core/1.31.1:
-    resolution: {integrity: sha512-JTyX4kV3/LXsvpHkLzL2I36aCdml4zeE35x+G5aPc4bkLsiRiQshU5lWeVpHFAuC8xAcbI6FDcw/8z3q2xtJSQ==}
-    engines: {node: '>=14'}
-    hasBin: true
-    dev: true
-
-  /playwright/1.31.1:
-    resolution: {integrity: sha512-zKJabsIA2rvOwJ12lGTqWv4HVJzlfw2JtUvO4hAr7J8UXQZ1qEPpX20E1vcz/9fotnTkwgqp3CVdIBwptBN3Fg==}
-    engines: {node: '>=14'}
-    hasBin: true
-    requiresBuild: true
-    dependencies:
-      playwright-core: 1.31.1
     dev: true
 
   /plyr-react/5.1.2_react@18.2.0:

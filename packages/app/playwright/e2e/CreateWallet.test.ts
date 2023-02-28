@@ -30,6 +30,10 @@ test.describe('CreateWallet', () => {
     await reload(page);
     await getButtonByText(page, /Create a Wallet/i).click();
 
+    /** Accept terms and conditions */
+    await hasText(page, /Terms of service/i);
+    await getButtonByText(page, /I accept/i).click();
+
     /** Copy Mnemonic */
     await getButtonByText(page, /Copy/i).click();
     const savedCheckbox = await getByAriaLabel(page, 'Confirm Saved');
