@@ -19,21 +19,41 @@ test.describe('Networks', () => {
   test.beforeAll(async () => {
     browser = await chromium.launch();
     page = await browser.newPage();
-    await visit(page, '/networks');
   });
 
   test.beforeEach(async () => {
+    await visit(page, '/');
     await mockData(page);
   });
 
   test('should be able to see network list', async () => {
-    await visit(page, '/networks');
+    await visit(page, '/wallet');
+    await getByAriaLabel(page, 'Selected Network').click();
     await hasText(page, 'Local');
     await hasText(page, 'Another');
   });
 
+  test('should be able to select a network', async () => {
+    await visit(page, '/wallet');
+    const networkSelector = await getByAriaLabel(page, 'Selected Network');
+    await expect(networkSelector).toHaveText('Local');
+    await networkSelector.click();
+    await hasText(page, /Another/i);
+    const network1 = await getByAriaLabel(page, 'fuel_network-item-1');
+    await expect(network1).toHaveAttribute('data-active', 'true');
+    const anotherNetwork = await getByAriaLabel(page, 'fuel_network-item-2');
+    await anotherNetwork.click();
+    await page.waitForTimeout(1000);
+    await visit(page, '/wallet');
+    const selector = await getByAriaLabel(page, 'Selected Network');
+    await expect(selector).toHaveText(/Another/i);
+  });
+
   test('should be able to update a network', async () => {
-    await visit(page, '/networks/update/1');
+    await visit(page, '/wallet');
+    await getByAriaLabel(page, 'Selected Network').click();
+    await hasText(page, /Networks/i);
+    await getByAriaLabel(page, 'Update').first().click();
     await hasText(page, /Update network/i);
     const inputName = await getInputByName(page, 'name');
     await expect(inputName).toBeFocused();
@@ -46,8 +66,22 @@ test.describe('Networks', () => {
     await hasText(page, 'Local 1');
   });
 
+  test('should be able to remove a network', async () => {
+    await visit(page, '/wallet');
+    await getByAriaLabel(page, 'Selected Network').click();
+    const items = await page.locator('[aria-label*=fuel_network]');
+    await expect(items).toHaveCount(2);
+    await getByAriaLabel(page, 'Remove').first().click();
+    await hasText(page, /Are you absolutely sure/i);
+    await getButtonByText(page, /confirm/i).click();
+    await expect(items).toHaveCount(1);
+    await expect(await items.first()).toHaveAttribute('data-active', 'true');
+  });
+
   test('should be able to add a new network', async () => {
-    await visit(page, '/networks');
+    await visit(page, '/wallet');
+    await getByAriaLabel(page, 'Selected Network').click();
+    await hasText(page, /Add new network/i);
     await getByAriaLabel(page, 'Add network').click();
     const buttonCreate = await getButtonByText(page, /create/i);
     await expect(buttonCreate).toBeDisabled();
@@ -59,32 +93,5 @@ test.describe('Networks', () => {
     await expect(buttonCreate).toBeEnabled();
     await buttonCreate.click();
     await hasText(page, 'Test Network');
-  });
-
-  test('should be able to select a network', async () => {
-    await visit(page, '/wallet');
-    const networkSelector = await getByAriaLabel(page, 'Selected Network');
-    await expect(networkSelector).toHaveText('Local');
-    await visit(page, '/networks');
-    await hasText(page, /Another/i);
-    const network1 = await getByAriaLabel(page, 'fuel_network-item-1');
-    await expect(network1).toHaveAttribute('data-active', 'true');
-    const anotherNetwork = await getByAriaLabel(page, 'fuel_network-item-2');
-    await anotherNetwork.click();
-    await page.waitForTimeout(1000);
-    await visit(page, '/wallet');
-    const selector = await getByAriaLabel(page, 'Selected Network');
-    await expect(selector).toHaveText(/Another/i);
-  });
-
-  test('should be able to remove a network', async () => {
-    await visit(page, '/networks');
-    const items = await page.locator('[aria-label*=fuel_network]');
-    await expect(items).toHaveCount(2);
-    await getByAriaLabel(page, 'Remove').first().click();
-    await hasText(page, /Are you absolutely sure/i);
-    await getButtonByText(page, /confirm/i).click();
-    await expect(items).toHaveCount(1);
-    await expect(await items.first()).toHaveAttribute('data-active', 'true');
   });
 });
