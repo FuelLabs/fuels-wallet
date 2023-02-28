@@ -6,11 +6,11 @@ import { useTx } from '../../hooks';
 
 import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
-import { NetworkScreen, useNetworks } from '~/systems/Network';
+import { useNetworks } from '~/systems/Network';
 
 export function TxView() {
   const txIdQueryParam = useParams<{ txId: string }>().txId;
-  const networks = useNetworks({ type: NetworkScreen.list });
+  const networks = useNetworks();
   const providerUrl = networks?.selectedNetwork?.url;
   const navigate = useNavigate();
   const { tx, ...ctx } = useTx({

@@ -8,17 +8,6 @@ import { store } from '~/store';
 import type { Maybe, FetchResponse } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
 
-export enum NetworkScreen {
-  list = 'list',
-  update = 'update',
-  add = 'add',
-}
-
-export type NetworkInitialInput = {
-  type?: NetworkScreen;
-  networkId?: string;
-};
-
 type MachineContext = {
   /**
    * Used as data on /networks
@@ -54,8 +43,8 @@ type MachineServices = {
 };
 
 type MachineEvents =
-  | { type: 'SET_INITIAL_DATA'; input: NetworkInitialInput }
   | { type: 'ADD_NETWORK'; input: NetworkInputs['addNetwork'] }
+  | { type: 'EDIT_NETWORK'; input: NetworkInputs['editNetwork'] }
   | { type: 'UPDATE_NETWORK'; input: NetworkInputs['updateNetwork'] }
   | { type: 'REMOVE_NETWORK'; input: NetworkInputs['removeNetwork'] }
   | { type: 'SELECT_NETWORK'; input: NetworkInputs['selectNetwork'] };
@@ -70,23 +59,8 @@ export const networksMachine = createMachine(
       events: {} as MachineEvents,
     },
     id: '(machine)',
-    initial: 'checking',
-    on: {
-      SET_INITIAL_DATA: [
-        {
-          target: 'idle',
-          cond: 'isAddScreen',
-        },
-        {
-          actions: ['assignNetworkId'],
-          target: 'fetchingNetworks',
-        },
-      ],
-    },
+    initial: 'fetchingNetworks',
     states: {
-      checking: {
-        tags: ['loading'],
-      },
       fetchingNetworks: {
         tags: ['loading'],
         invoke: {
@@ -107,6 +81,10 @@ export const networksMachine = createMachine(
         on: {
           ADD_NETWORK: {
             target: 'addingNetwork',
+          },
+          EDIT_NETWORK: {
+            actions: ['assignNetworkId'],
+            target: 'fetchingNetworks',
           },
           UPDATE_NETWORK: {
             target: 'updatingNetwork',
@@ -199,7 +177,7 @@ export const networksMachine = createMachine(
   {
     actions: {
       assignNetworkId: assign({
-        networkId: (_, ev) => ev.input.networkId,
+        networkId: (_, ev) => ev.input.id,
       }),
       assignNetworks: assign({
         networks: (_, ev) => ev.data,
@@ -288,11 +266,6 @@ export const networksMachine = createMachine(
           return network;
         },
       }),
-    },
-    guards: {
-      isAddScreen: (_, ev) => {
-        return ev.input.type === NetworkScreen.add;
-      },
     },
   }
 );

@@ -51,5 +51,17 @@ export function accountEvents(store: Store) {
         input: 'accounts.logout',
       });
     },
+    openNetworksList() {
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: 'networks.list',
+      });
+    },
+    openNetworksAdd() {
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: 'networks.add',
+      });
+    },
   };
 }

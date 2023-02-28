@@ -1,7 +1,7 @@
 export { Connect } from './Connect';
 export { CurrentAccount } from './CurrentAccount';
 export { ListAccounts } from './ListAccounts';
-export { AddAsset } from './AddAsset';
+export { AddAssets } from './AddAssets';
 export { ListAssets } from './ListAssets';
 export { SignMessage } from './SignMessage';
 export { Transfer } from './Transfer';
