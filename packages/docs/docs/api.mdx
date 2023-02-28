@@ -50,10 +50,17 @@ Return the list of assets in the current wallet.
 
 ### Add Asset
 
-`async addAsset(asset: Asset): Promise<Asset>`<br />
-Add an asset to the wallet.
+`async addAsset(asset: Asset): Promise<boolean>`<br />
+Add asset to the wallet.
 
 <CodeImport file="../../sdk/src/Fuel.test.ts" testCase="addAsset" />
+
+### Add Assets
+
+`async addAssets(asset: Asset[]): Promise<boolean>`<br />
+Add assets to the wallet.
+
+<CodeImport file="../../sdk/src/Fuel.test.ts" testCase="addAssets" />
 
 ### Request signature message
 
