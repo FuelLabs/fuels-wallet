@@ -56,7 +56,7 @@ const styles = {
     padding: '$3',
     alignItems: 'center',
     display: 'flex',
-    gap: '$5',
+    gap: '$3',
   }),
   headerText: cssObj({
     color: '$gray12',
