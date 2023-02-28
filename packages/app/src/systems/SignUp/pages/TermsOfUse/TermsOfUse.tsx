@@ -17,8 +17,9 @@ export function TermsOfUse() {
     setHasAcceptedTerms(true);
     if (action === 'recover') {
       navigate(Pages.signUpRecoverWallet());
+    } else {
+      navigate(Pages.signUpCreateWallet());
     }
-    navigate(Pages.signUpCreateWallet());
   };
 
   const handleCancel = () => {
