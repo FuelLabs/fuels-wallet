@@ -24,7 +24,7 @@ export function WalletCreated({ account }: WalletCreatedProps) {
 
   return (
     <>
-      <PinWalletCard />
+      {IS_CRX && <PinWalletCard />}
       <Stack gap="$6">
         <Flex justify="center">
           <ImageLoader
