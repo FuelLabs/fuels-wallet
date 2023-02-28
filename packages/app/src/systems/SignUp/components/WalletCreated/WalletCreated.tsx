@@ -3,8 +3,8 @@ import type { Account } from '@fuel-wallet/types';
 import { useNavigate } from 'react-router-dom';
 
 import { Header } from '../Header';
-
-import { PinWalletCard, PinWalletText } from './components';
+import { PinWalletCard } from '../PinWalletCard';
+import { PinWalletText } from '../PinWalletText';
 
 import { IS_CRX } from '~/config';
 import { AccountItem } from '~/systems/Account';
