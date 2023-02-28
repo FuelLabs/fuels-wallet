@@ -34,6 +34,12 @@ export function UpsertAsset() {
   // only security measure, should not happen by screen flow
   if (asset && !asset.isCustom) return null;
 
+  // make sure we disable button if form is not valid OR if has a dupe asset while creating new asset
+  const shouldDisableButton = !!(
+    !form.formState.isValid ||
+    (!isEditing && dupeAsset)
+  );
+
   function onSubmit(data: AssetFormValues) {
     if (isEditing) {
       handlers.updateAsset({
@@ -76,9 +82,7 @@ export function UpsertAsset() {
             <Button
               type="submit"
               color="accent"
-              isDisabled={
-                !!(!form.formState.isValid || (!isEditing && dupeAsset))
-              }
+              isDisabled={shouldDisableButton}
               isLoading={isLoading}
               aria-label="Save Asset"
             >

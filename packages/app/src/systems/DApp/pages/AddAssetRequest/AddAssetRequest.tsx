@@ -8,7 +8,7 @@ import { AssetItem } from '~/systems/Asset';
 import { Layout, OriginDetails, shortAddress } from '~/systems/Core';
 
 export function AddAssetRequest() {
-  const { handlers, assets, title, favIconUrl } = useAddAssetRequest();
+  const { handlers, assets, title, favIconUrl, origin } = useAddAssetRequest();
   const { account } = useAccounts();
 
   if (!origin || !assets?.length || !account) return null;
