@@ -1,5 +1,3 @@
-export * from './TransactionDialog';
-export * from './TxApprove';
 export * from './TxContent';
 export * from './TxDetails';
 export * from './TxFromTo';

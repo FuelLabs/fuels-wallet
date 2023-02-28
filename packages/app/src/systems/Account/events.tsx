@@ -33,41 +33,5 @@ export function accountEvents(store: Store) {
         type: 'LOGOUT',
       });
     },
-    openAccountList() {
-      store.send(Services.overlay, {
-        type: 'OPEN',
-        input: 'accounts.list',
-      });
-    },
-    openAccountsAdd() {
-      store.send(Services.overlay, {
-        type: 'OPEN',
-        input: 'accounts.add',
-      });
-    },
-    openAccountsLogout() {
-      store.send(Services.overlay, {
-        type: 'OPEN',
-        input: 'accounts.logout',
-      });
-    },
-    openNetworksList() {
-      store.send(Services.overlay, {
-        type: 'OPEN',
-        input: 'networks.list',
-      });
-    },
-    openNetworksAdd() {
-      store.send(Services.overlay, {
-        type: 'OPEN',
-        input: 'networks.add',
-      });
-    },
-    openTransactionApprove() {
-      store.send(Services.overlay, {
-        type: 'OPEN',
-        input: 'transactions.approve',
-      });
-    },
   };
 }
