@@ -30,10 +30,7 @@ export function MnemonicWrite({
         width={129}
         height={116}
       />
-      <Header
-        title="Write down your Recovery Phrase "
-        subtitle="You will need it on the next step"
-      />
+      <Header title="Enter your Recovery Phrase" />
       <Stack gap="$3" css={{ width: 400 }}>
         {error && (
           <Alert css={{ fontSize: '$sm', py: '$2' }} status="error">
