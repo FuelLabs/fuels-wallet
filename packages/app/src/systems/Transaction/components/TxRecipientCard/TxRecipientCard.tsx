@@ -57,11 +57,8 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
             </Box>
           )}
           <Flex css={styles.info}>
-            <Copyable
-              value={fuelAddress}
-              data-invalid-address={!isValidAddress}
-            >
-              {shortAddress(fuelAddress)}
+            <Copyable value={address} data-invalid-address={!isValidAddress}>
+              {shortAddress(address)}
             </Copyable>
           </Flex>
         </>
