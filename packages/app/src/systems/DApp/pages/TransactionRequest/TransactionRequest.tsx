@@ -38,9 +38,7 @@ export function TransactionRequest() {
                   />
 
                   <Alert status="warning" css={styles.alert}>
-                    <Alert.Title>
-                      <Text fontSize="sm">Confirm before approve</Text>
-                    </Alert.Title>
+                    <Alert.Title>Confirm before approve</Alert.Title>
                     <Alert.Description>
                       <Text fontSize="xs" css={styles.alertDescription}>
                         Carefully check if all details in your transaction are
@@ -128,6 +126,9 @@ const styles = {
   alert: cssObj({
     '& .fuel_alert--content': {
       gap: '$1',
+    },
+    ' & .fuel_heading': {
+      fontSize: '$sm',
     },
   }),
   alertDescription: cssObj({
