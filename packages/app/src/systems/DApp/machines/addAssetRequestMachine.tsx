@@ -7,20 +7,29 @@ import { AssetService } from '~/systems/Asset';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 
 type MachineContext = {
-  asset?: Asset;
+  assets?: Asset[];
   origin?: string;
+  title?: string;
+  favIconUrl?: string;
   error?: string;
-  addedAsset?: Asset;
 };
 
 type MachineServices = {
   saveAsset: {
-    data: Asset;
+    data: boolean;
+  };
+  filterAssets: {
+    data: Asset[];
   };
 };
 
 export type AddAssetInputs = {
-  start: { origin: string; asset: Asset };
+  start: {
+    origin: string;
+    assets: Asset[];
+    favIconUrl?: string;
+    title?: string;
+  };
 };
 
 export type MachineEvents =
@@ -28,8 +37,8 @@ export type MachineEvents =
       type: 'START';
       input: AddAssetInputs['start'];
     }
-  | { type: 'ADD_ASSET' }
-  | { type: 'REJECT' };
+  | { type: 'APPROVE'; input: void }
+  | { type: 'REJECT'; input: void };
 
 export const addAssetRequestMachine = createMachine(
   {
@@ -47,14 +56,29 @@ export const addAssetRequestMachine = createMachine(
       idle: {
         on: {
           START: {
-            actions: ['assignAssetData'],
-            target: 'reviewAsset',
+            actions: ['assignStartData'],
+            target: 'filteringAssets',
           },
+        },
+      },
+      filteringAssets: {
+        invoke: {
+          src: 'filterAssets',
+          data: {
+            input: (_: MachineContext, ev: MachineEvents) => ev.input,
+          },
+          onDone: [
+            FetchMachine.errorState('failed'),
+            {
+              target: 'reviewAsset',
+              actions: ['assignAssets'],
+            },
+          ],
         },
       },
       reviewAsset: {
         on: {
-          ADD_ASSET: {
+          APPROVE: {
             target: 'addingAsset',
           },
           REJECT: {
@@ -68,13 +92,12 @@ export const addAssetRequestMachine = createMachine(
           src: 'saveAsset',
           data: {
             input: (ctx: MachineContext) => ({
-              data: ctx.asset,
+              data: ctx.assets,
             }),
           },
           onDone: [
             FetchMachine.errorState('failed'),
             {
-              actions: ['assignAddedAsset'],
               target: 'done',
             },
           ],
@@ -88,40 +111,44 @@ export const addAssetRequestMachine = createMachine(
   },
   {
     actions: {
-      assignAssetData: assign((ctx, ev) => ({
+      assignStartData: assign((ctx, ev) => ({
         ...ctx,
-        asset: ev.input.asset,
         origin: ev.input.origin,
+        title: ev.input.title,
+        favIconUrl: ev.input.favIconUrl,
       })),
-      assignAddedAsset: assign({
-        addedAsset: (_, ev) => ev.data,
+      assignAssets: assign({
+        assets: (_, ev) => ev.data,
       }),
     },
     services: {
+      filterAssets: FetchMachine.create<
+        AddAssetInputs['start'],
+        MachineServices['filterAssets']['data']
+      >({
+        showError: true,
+        async fetch({ input }) {
+          if (!input?.assets?.length) {
+            throw new Error('Invalid assets');
+          }
+
+          const assetsToAdd = await AssetService.avoidRepeatedFields(
+            input.assets
+          );
+          return assetsToAdd;
+        },
+      }),
       saveAsset: FetchMachine.create<
-        AssetInputs['upsertAsset'],
+        AssetInputs['addAssets'],
         MachineServices['saveAsset']['data']
       >({
         showError: true,
         async fetch({ input }) {
-          if (!input?.data) {
-            throw new Error('Invalid asset');
+          if (!input?.data?.length) {
+            throw new Error('Invalid assets');
           }
 
-          const currentAsset = await AssetService.getAsset(input.data.assetId);
-          if (currentAsset && !currentAsset.isCustom) {
-            throw new Error(`It's not allowed to change Listed Assets`);
-          }
-
-          const asset = await AssetService.upsertAsset({
-            data: { ...input.data, isCustom: true },
-          });
-
-          if (!asset) {
-            throw new Error('Failed to add asset');
-          }
-
-          return asset;
+          return AssetService.addAssets(input);
         },
       }),
     },

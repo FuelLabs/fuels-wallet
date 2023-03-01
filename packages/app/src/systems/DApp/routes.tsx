@@ -14,6 +14,6 @@ export const dappRoutes = (
     <Route path={Pages.requestConnection()} element={<ConnectionRequest />} />
     <Route path={Pages.requestMessage()} element={<SignatureRequest />} />
     <Route path={Pages.requestTransaction()} element={<TransactionRequest />} />
-    <Route path={Pages.requestAddAsset()} element={<AddAssetRequest />} />
+    <Route path={Pages.requestAddAssets()} element={<AddAssetRequest />} />
   </Route>
 );

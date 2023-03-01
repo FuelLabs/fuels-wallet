@@ -49,7 +49,7 @@ export class BackgroundService {
       this.signMessage,
       this.sendTransaction,
       this.currentAccount,
-      this.addAsset,
+      this.addAssets,
       this.assets,
     ]);
   }
@@ -296,21 +296,28 @@ export class BackgroundService {
     return assets || [];
   }
 
-  async addAsset(
-    input: Exclude<MessageInputs['addAsset'], 'origin'>,
+  async addAssets(
+    input: MessageInputs['addAssets'],
     serverParams: EventOrigin
   ) {
+    const { assetsToAdd } = await AssetService.validateAddAssets(input.assets);
+
     const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
 
     const popupService = await PopUpService.open(
       origin,
-      Pages.requestAddAsset(),
+      Pages.requestAddAssets(),
       this.communicationProtocol
     );
-    const asset = await popupService.addAsset({
-      ...input,
+    await popupService.addAssets({
+      assets: assetsToAdd,
       origin,
+      title,
+      favIconUrl,
     });
-    return asset;
+
+    return true;
   }
 }

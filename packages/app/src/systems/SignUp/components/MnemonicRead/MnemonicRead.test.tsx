@@ -54,9 +54,6 @@ describe('MnemonicRead', () => {
     const saveCheckbox = screen.getByLabelText(/Confirm Saved/i);
     expect(saveCheckbox).toBeInTheDocument();
     await user.click(saveCheckbox);
-    const accessCheckbox = screen.getByLabelText(/Confirm Access/i);
-    expect(accessCheckbox).toBeInTheDocument();
-    await user.click(accessCheckbox);
     await waitFor(() => {
       const btn = screen.getByText('Next');
       expect(btn).toBeEnabled();
@@ -67,9 +64,6 @@ describe('MnemonicRead', () => {
     const saveCheckbox = screen.getByLabelText(/Confirm Saved/i);
     expect(saveCheckbox).toBeInTheDocument();
     await user.click(saveCheckbox);
-    const accessCheckbox = screen.getByLabelText(/Confirm Access/i);
-    expect(accessCheckbox).toBeInTheDocument();
-    await user.click(accessCheckbox);
 
     await waitFor(async () => {
       const btnNext = screen.getByText('Next');
