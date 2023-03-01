@@ -335,8 +335,11 @@ test.describe('FuelWallet Extension', () => {
 
         // Confirm transaction
         await hasText(confirmTransactionPage, /0\.0000001.ETH/i);
-        await waitAriaLabel(confirmTransactionPage, senderAccount.name);
-        await getButtonByText(confirmTransactionPage, /confirm/i).click();
+        await waitAriaLabel(
+          confirmTransactionPage,
+          senderAccount.address.toString()
+        );
+        await getButtonByText(confirmTransactionPage, /Confirm/i).click();
 
         await expect(transferStatus).resolves.toBe('success');
         const balance = await receiverWallet.getBalance();
