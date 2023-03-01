@@ -27,12 +27,12 @@ test.describe('RecoverWallet', () => {
     await getButtonByText(page, /Paste/i).click();
 
     /** Confirm Mnemonic */
-    await hasText(page, /Write down your Recovery Phrase/i);
+    await hasText(page, /Enter your Recovery Phrase/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
 
     /** Adding password */
-    await hasText(page, /Create your password/i);
+    await hasText(page, /Encrypt your wallet/i);
     const passwordInput = await getByAriaLabel(page, 'Your Password');
     await passwordInput.type(WALLET_PASSWORD);
     await passwordInput.press('Tab');
@@ -40,7 +40,6 @@ test.describe('RecoverWallet', () => {
     await confirmPasswordInput.type(WALLET_PASSWORD);
     await confirmPasswordInput.press('Tab');
 
-    await page.getByRole('checkbox').click();
     await getButtonByText(page, /Next/i).click();
 
     /** Account created */
