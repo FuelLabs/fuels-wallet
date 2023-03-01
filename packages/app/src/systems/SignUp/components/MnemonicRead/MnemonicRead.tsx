@@ -14,7 +14,6 @@ export type MnemonicReadProps = {
 
 export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
   const [isSavedChecked, setSavedChecked] = useState(false);
-  const [isAccessChecked, setAccessChecked] = useState(false);
 
   return (
     <Stack gap="$6" align="center">
@@ -25,7 +24,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
         alt="Showing your Mnemonic"
       />
       <Header
-        title="Write down your Recovery Phrase"
+        title="Backup your Recovery Phrase"
         subtitle="You will need it on the next step"
       />
       <Stack css={styles.content} gap="$4">
@@ -41,20 +40,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
               }}
             />
             <Form.Label htmlFor="confirmSaved">
-              I saved my Recovery Phrase in a safe place
-            </Form.Label>
-          </Form.Control>
-          <Form.Control css={{ flexDirection: 'row' }}>
-            <Checkbox
-              id="confirmAccess"
-              aria-label="Confirm Access"
-              checked={isAccessChecked}
-              onCheckedChange={(e) => {
-                setAccessChecked(e as boolean);
-              }}
-            />
-            <Form.Label htmlFor="confirmAccess">
-              I have continuous access to where I did save
+              I have backed up my recovery phrase in a secure place.
             </Form.Label>
           </Form.Control>
         </Alert>
@@ -72,7 +58,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
           color="accent"
           css={{ width: 130 }}
           onPress={onNext}
-          isDisabled={!isSavedChecked || !isAccessChecked}
+          isDisabled={!isSavedChecked}
         >
           Next
         </Button>

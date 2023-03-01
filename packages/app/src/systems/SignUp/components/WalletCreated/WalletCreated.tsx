@@ -3,6 +3,8 @@ import type { Account } from '@fuel-wallet/types';
 import { useNavigate } from 'react-router-dom';
 
 import { Header } from '../Header';
+import { PinWalletCard } from '../PinWalletCard';
+import { PinWalletText } from '../PinWalletText';
 
 import { IS_CRX } from '~/config';
 import { AccountItem } from '~/systems/Account';
@@ -21,24 +23,29 @@ export function WalletCreated({ account }: WalletCreatedProps) {
   }
 
   return (
-    <Stack gap="$6">
-      <Flex justify="center">
-        <ImageLoader
-          src={relativeUrl('/signup-illustration-3.svg')}
-          width={129}
-          height={116}
+    <>
+      {IS_CRX && <PinWalletCard />}
+      <Stack gap="$6">
+        <Flex justify="center">
+          <ImageLoader
+            src={relativeUrl('/signup-illustration-3.svg')}
+            width={129}
+            height={116}
+          />
+        </Flex>
+        <Header
+          title="Wallet created successfully"
+          subtitle="Below is your first Fuel wallet account"
         />
-      </Flex>
-      <Header
-        title="Wallet created successfully"
-        subtitle="These are your Fuel wallet details"
-      />
-      {account && <AccountItem account={account} />}
-      {!IS_CRX && (
-        <Button color="accent" onPress={handleGoToWallet}>
-          Go to wallet
-        </Button>
-      )}
-    </Stack>
+        {account && <AccountItem account={account} />}
+        {IS_CRX ? (
+          <PinWalletText />
+        ) : (
+          <Button color="accent" onPress={handleGoToWallet}>
+            Go to wallet
+          </Button>
+        )}
+      </Stack>
+    </>
   );
 }
