@@ -4,4 +4,4 @@
 '@fuel-wallet/sdk': patch
 ---
 
-refactor: bump fuel-core and fuels versions
+Update network compatibility to fuel-core v0.17.3
