@@ -5,10 +5,14 @@ export type MessageInputs = {
     message: string;
     address: string;
     origin: string;
+    title?: string;
+    favIconUrl?: string;
   };
   sendTransaction: {
     address: string;
     origin: string;
+    title?: string;
+    favIconUrl?: string;
     provider: FuelProviderConfig;
     transaction: string;
   };

@@ -10,6 +10,9 @@ const URL = 'fuellabs.github.io/swayswap/';
 const PROPS = {
   origin: URL,
   account: MOCK_ACCOUNTS[0],
+  headerText: 'Connect to',
+  title: 'SwaySwap',
+  favIconUrl: 'https://fuellabs.github.io/swayswap/favicon.ico',
 };
 
 describe('ConnectInfo', () => {
@@ -25,14 +28,14 @@ describe('ConnectInfo', () => {
   });
 
   it('should show some part of the url', async () => {
-    render(<ConnectInfo {...PROPS} />);
+    await render(<ConnectInfo {...PROPS} />);
     expect(screen.getByText(/fuellabs/)).toBeInTheDocument();
   });
 
-  it('should show account information', async () => {
-    render(<ConnectInfo {...PROPS} />);
+  it('should show the tile ', async () => {
+    await render(<ConnectInfo {...PROPS} />);
     await waitFor(() => {
-      expect(screen.getByLabelText('Account 1')).toBeInTheDocument();
+      expect(screen.getByText(/SwaySwap/)).toBeInTheDocument();
     });
   });
 });

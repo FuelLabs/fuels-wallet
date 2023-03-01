@@ -5,7 +5,7 @@ import { useAddAssetRequest } from '../../hooks';
 
 import { useAccounts } from '~/systems/Account';
 import { AssetItem } from '~/systems/Asset';
-import { Layout, OriginDetails, shortAddress } from '~/systems/Core';
+import { Layout, ConnectInfo, shortAddress } from '~/systems/Core';
 
 export function AddAssetRequest() {
   const { handlers, assets, title, favIconUrl, origin } = useAddAssetRequest();
@@ -16,7 +16,7 @@ export function AddAssetRequest() {
   return (
     <Layout title="Add Asset Request">
       <Layout.Content css={styles.content}>
-        <OriginDetails
+        <ConnectInfo
           origin={origin}
           title={title || ''}
           favIconUrl={favIconUrl}
