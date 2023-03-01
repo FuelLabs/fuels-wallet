@@ -17,5 +17,4 @@ export * from './RouterProvider';
 export * from './AmountVisibility';
 export * from './InputSecurePassword';
 export * from './ConnectInfo';
-export * from './AccountInfo';
 export * from './PermissionCard';
