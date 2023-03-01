@@ -33,6 +33,8 @@ export enum TxRequestStatus {
 type MachineContext = {
   input: {
     origin?: string;
+    title?: string;
+    favIconUrl?: string;
     address?: string;
     isOriginRequired?: boolean;
     providerUrl?: string;
@@ -223,8 +225,14 @@ export const transactionRequestMachine = createMachine(
       }),
       assignTxRequestData: assign({
         input: (ctx, ev) => {
-          const { transactionRequest, origin, address, providerUrl } =
-            ev.input || {};
+          const {
+            transactionRequest,
+            origin,
+            address,
+            providerUrl,
+            title,
+            favIconUrl,
+          } = ev.input || {};
 
           if (!providerUrl) {
             throw new Error('providerUrl is required');
@@ -244,6 +252,8 @@ export const transactionRequestMachine = createMachine(
             origin,
             address,
             providerUrl,
+            title,
+            favIconUrl,
           };
         },
       }),

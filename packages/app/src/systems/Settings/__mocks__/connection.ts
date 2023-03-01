@@ -54,6 +54,6 @@ export async function connectionsLoader() {
 }
 
 export const MOCK_CONNECTION = {
-  origin: 'https://example.com',
+  origin: 'example.com',
   accounts: [MOCK_ACCOUNTS[0].address],
 } as Connection;

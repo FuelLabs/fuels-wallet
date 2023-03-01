@@ -228,6 +228,8 @@ export class BackgroundService {
     serverParams: EventOrigin
   ) {
     const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
 
     await this.requireAccountConnecton(serverParams.connection, input.address);
 
@@ -239,6 +241,8 @@ export class BackgroundService {
     const signedMessage = await popupService.signMessage({
       ...input,
       origin,
+      title,
+      favIconUrl,
     });
     return signedMessage;
   }
@@ -249,6 +253,8 @@ export class BackgroundService {
   ) {
     await this.requireAccountConnecton(serverParams.connection, input.address);
     const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
     const selectedNetwork = await NetworkService.getSelectedNetwork();
 
     if (selectedNetwork?.url !== input.provider.url) {
@@ -268,6 +274,8 @@ export class BackgroundService {
     const signedMessage = await popupService.sendTransaction({
       ...input,
       origin,
+      title,
+      favIconUrl,
     });
     return signedMessage;
   }

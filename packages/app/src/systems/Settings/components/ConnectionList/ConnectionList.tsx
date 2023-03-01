@@ -5,7 +5,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import type { useConnections } from '../../hooks';
 import { ConnectionItem } from '../ConnectionItem';
 
-import { animations, EmptyList, Layout, SearchInput } from '~/systems/Core';
+import {
+  animations,
+  EmptyList,
+  Layout,
+  SearchInput,
+  PermissionCard,
+} from '~/systems/Core';
+import { NOT_ALLOWED_LIST, PERMISSION_LIST } from '~/systems/DApp';
 
 export type ConnectionListProps = ReturnType<typeof useConnections>;
 
@@ -19,8 +26,11 @@ export function ConnectionList({
 }: ConnectionListProps) {
   const tooltipContent = (
     <Box css={styles.tooltipContent}>
-      FuelWallet is connected to these sites. They can view your account
-      address.
+      <PermissionCard
+        headerText="These sites are allowed to:"
+        allowed={PERMISSION_LIST}
+        notAllowed={NOT_ALLOWED_LIST}
+      />
     </Box>
   );
 
@@ -34,7 +44,7 @@ export function ConnectionList({
               onChange={handlers.search}
               isDisabled={status('loading')}
             />
-            <Tooltip content={tooltipContent}>
+            <Tooltip content={tooltipContent} as="div" alignOffset={12}>
               <Icon icon={Icon.is('Warning')} aria-label="Connection Alert" />
             </Tooltip>
           </Flex>
@@ -84,6 +94,10 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '$4',
+
+    '.fuel_tooltip--content': {
+      background: '$gray1',
+    },
   }),
   empty: cssObj({
     pt: '$11',
@@ -104,5 +118,6 @@ const styles = {
     maxWidth: 250,
     textSize: 'sm',
     textAlign: 'right',
+    padding: '$0',
   }),
 };

@@ -51,6 +51,10 @@ const selectors = {
     if (state.matches('txFailed')) return 'Transaction failed';
     return 'Approve Transaction';
   },
+  origin: (state: TransactionRequestState) => state.context.input.origin,
+  originTitle: (state: TransactionRequestState) => state.context.input.title,
+  favIconUrl: (state: TransactionRequestState) =>
+    state.context.input.favIconUrl,
 };
 
 type UseTransactionRequestOpts = {
@@ -82,6 +86,9 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const txStatusSelector = selectors.status(externalLoading);
   const txStatus = useSelector(service, txStatusSelector);
   const title = useSelector(service, selectors.title);
+  const origin = useSelector(service, selectors.origin);
+  const originTitle = useSelector(service, selectors.originTitle);
+  const favIconUrl = useSelector(service, selectors.favIconUrl);
   const isLoading = status('loading');
   const showActions = !status('failed') && !status('success');
 
@@ -130,6 +137,9 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     providerUrl,
     showActions,
     status,
+    origin,
+    originTitle,
+    favIconUrl,
     title,
     tx,
     txStatus,
