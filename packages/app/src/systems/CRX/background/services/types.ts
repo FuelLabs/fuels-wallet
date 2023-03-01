@@ -14,7 +14,12 @@ export type MessageInputs = {
   };
   addAsset: {
     asset: Asset;
+  };
+  addAssets: {
+    assets: Asset[];
     origin: string;
+    title?: string;
+    favIconUrl?: string;
   };
   requestConnection: {
     origin: string;

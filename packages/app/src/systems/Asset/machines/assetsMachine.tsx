@@ -24,7 +24,10 @@ type MachineServices = {
   fetchAssets: {
     data: Asset[];
   };
-  saveAsset: {
+  addAsset: {
+    data: boolean;
+  };
+  updateAsset: {
     data: boolean;
   };
   removeAsset: {
@@ -36,7 +39,8 @@ type MachineServices = {
 };
 
 type MachineEvents =
-  | { type: 'UPSERT_ASSET'; input: AssetInputs['upsertAsset'] }
+  | { type: 'ADD_ASSET'; input: AssetInputs['addAsset'] }
+  | { type: 'UPDATE_ASSET'; input: AssetInputs['updateAsset'] }
   | { type: 'REMOVE_ASSET'; input: AssetInputs['removeAsset'] }
   | { type: 'CANCEL'; input?: null };
 
@@ -82,18 +86,21 @@ export const assetsMachine = createMachine(
       },
       idle: {
         on: {
-          UPSERT_ASSET: {
-            target: 'saving',
+          ADD_ASSET: {
+            target: 'adding',
+          },
+          UPDATE_ASSET: {
+            target: 'updating',
           },
           REMOVE_ASSET: {
             target: 'removing',
           },
         },
       },
-      saving: {
+      updating: {
         tags: ['loading'],
         invoke: {
-          src: 'saveAsset',
+          src: 'updateAsset',
           data: {
             input: (_: MachineContext, ev: MachineEvents) => ev.input,
           },
@@ -103,7 +110,26 @@ export const assetsMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['saveSuccess', 'navigateBack'],
+              actions: ['updateSuccess', 'navigateBack'],
+              target: 'fetchingAssets',
+            },
+          ],
+        },
+      },
+      adding: {
+        tags: ['loading'],
+        invoke: {
+          src: 'addAsset',
+          data: {
+            input: (_: MachineContext, ev: MachineEvents) => ev.input,
+          },
+          onDone: [
+            {
+              target: 'idle',
+              cond: FetchMachine.hasError,
+            },
+            {
+              actions: ['addSuccess', 'navigateBack'],
               target: 'fetchingAssets',
             },
           ],
@@ -138,8 +164,11 @@ export const assetsMachine = createMachine(
       removeSuccess: () => {
         toast.success('Custom Asset removed successfully');
       },
-      saveSuccess: () => {
-        toast.success('Asset saved successfully');
+      updateSuccess: () => {
+        toast.success('Asset updated successfully');
+      },
+      addSuccess: () => {
+        toast.success('Asset added successfully');
       },
     },
     services: {
@@ -168,21 +197,37 @@ export const assetsMachine = createMachine(
           return AssetService.getAssets();
         },
       }),
-      saveAsset: FetchMachine.create<
-        AssetInputs['upsertAsset'],
-        MachineServices['saveAsset']['data']
+      addAsset: FetchMachine.create<
+        AssetInputs['addAsset'],
+        MachineServices['addAsset']['data']
       >({
         showError: true,
         async fetch({ input }) {
           if (!input?.data) {
             throw new Error('Missing data');
           }
+
+          await AssetService.addAsset({ data: input.data });
+          return true;
+        },
+      }),
+      updateAsset: FetchMachine.create<
+        AssetInputs['updateAsset'],
+        MachineServices['updateAsset']['data']
+      >({
+        showError: true,
+        async fetch({ input }) {
+          if (!input?.data || !input?.id) {
+            throw new Error('Missing data');
+          }
+
+          // just for security, should not happen
           const currentAsset = await AssetService.getAsset(input.data.assetId);
           if (currentAsset && !currentAsset.isCustom) {
             throw new Error(`It's not allowed to change Listed Assets`);
           }
 
-          await AssetService.upsertAsset({ data: input.data });
+          await AssetService.updateAsset(input);
           return true;
         },
       }),
