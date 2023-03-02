@@ -48,7 +48,8 @@ const selectors = {
   title(txStatus?: TxRequestStatus) {
     return useCallback(
       (state: SendMachineState) => {
-        if (state.matches('creatingTx')) return 'Creating transaction';
+        if (state.matches('creatingTx') || txStatus === TxRequestStatus.loading)
+          return 'Creating transaction';
         if (state.matches('invalid')) return 'Invalid transaction';
         return 'Send';
       },
@@ -145,7 +146,6 @@ export function useSend() {
       address,
     } as TxInputs['isValidTransaction'];
     service.send('CONFIRM', { input });
-    txRequest.handlers.openDialog();
   }
   function goHome() {
     navigate(Pages.index());

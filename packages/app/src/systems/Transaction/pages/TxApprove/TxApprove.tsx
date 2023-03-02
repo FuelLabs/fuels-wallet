@@ -36,32 +36,36 @@ export const TxApprove = () => {
         />
       </Dialog.Heading>
       <Dialog.Description as="div" css={styles.description}>
-        <TxContent.Info
-          showDetails
-          tx={txRequest.tx}
-          txStatus={txRequest.approveStatus()}
-          assets={assets}
-          header={
-            <>
-              {txRequest.status('waitingApproval') && (
-                <ContentHeader title="Confirm before approving">
-                  <Text>
-                    Carefully check if all details in your transaction are
-                    correct
-                  </Text>
-                </ContentHeader>
-              )}
-              {isDone && (
-                <TxHeader
-                  id={txRequest.tx?.id}
-                  type={txRequest.tx?.type}
-                  status={txRequest.tx?.status || txRequest.approveStatus()}
-                  providerUrl={txRequest.providerUrl}
-                />
-              )}
-            </>
-          }
-        />
+        {txRequest.isLoading ? (
+          <TxContent.Loader />
+        ) : (
+          <TxContent.Info
+            showDetails
+            tx={txRequest.tx}
+            txStatus={txRequest.approveStatus()}
+            assets={assets}
+            header={
+              <>
+                {txRequest.status('waitingApproval') && (
+                  <ContentHeader title="Confirm before approving">
+                    <Text>
+                      Carefully check if all details in your transaction are
+                      correct
+                    </Text>
+                  </ContentHeader>
+                )}
+                {isDone && (
+                  <TxHeader
+                    id={txRequest.tx?.id}
+                    type={txRequest.tx?.type}
+                    status={txRequest.tx?.status || txRequest.approveStatus()}
+                    providerUrl={txRequest.providerUrl}
+                  />
+                )}
+              </>
+            }
+          />
+        )}
       </Dialog.Description>
       <Dialog.Footer>
         {txRequest.showActions && (
@@ -76,7 +80,7 @@ export const TxApprove = () => {
             </Button>
             <Button
               color="accent"
-              isDisabled={txRequest.isLoading}
+              isLoading={txRequest.isLoading}
               onPress={txRequest.handlers.approve}
             >
               Approve

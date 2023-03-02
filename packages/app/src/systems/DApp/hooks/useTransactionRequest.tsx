@@ -77,6 +77,11 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
         isOriginRequired: opts.isOriginRequired,
       },
     },
+    actions: {
+      openDialog() {
+        store.openTransactionApprove();
+      },
+    },
   });
 
   const isLoadingAccounts = useSelector(service, selectors.isLoadingAccounts);
