@@ -1,5 +1,17 @@
 # @fuel-wallet/types
 
+## 0.7.0
+
+### Minor Changes
+
+- [#571](https://github.com/FuelLabs/fuels-wallet/pull/571) [`ac3e822`](https://github.com/FuelLabs/fuels-wallet/commit/ac3e822ec0900e73602b760656f097cdd46e90df) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Added asset List Screen
+  Added shortcut in Home Balances to add unknows assets
+  Added DAPP page to "Add Custom Asset"
+  Added fuel.assets()
+  Added fuel.on('assets')
+
+- [#574](https://github.com/FuelLabs/fuels-wallet/pull/574) [`83ccac3`](https://github.com/FuelLabs/fuels-wallet/commit/83ccac333d36b8a286832cdc0f6576b8f088965d) Thanks [@tomiiide](https://github.com/tomiiide)! - Added title and favIconUrl to Connection type
+
 ## 0.6.0
 
 ### Minor Changes
