@@ -37,7 +37,7 @@ const styles = {
     height: WALLET_HEIGHT,
     maxWidth: WALLET_WIDTH,
     maxHeight: 'none',
-    background: '#0C0E0D',
+    background: '$bodyColor',
 
     '.fuel_dialog--heading, .fuel_dialog--footer': {
       borderColor: '$gray2',
