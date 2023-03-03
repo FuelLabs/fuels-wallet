@@ -110,7 +110,7 @@ export const TxApprove = () => {
 const styles = {
   description: cssObj({
     ...coreStyles.scrollable('$gray3'),
-    padding: '$4 $2 $4 $4',
+    padding: '$4',
     flex: 1,
   }),
 };
