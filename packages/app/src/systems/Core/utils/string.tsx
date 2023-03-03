@@ -21,3 +21,41 @@ export const truncate = (str: string, length: number = 30) => {
   }
   return str;
 };
+
+export type GetUniqueStringProps = {
+  desired?: string;
+  allValues: Array<string | undefined>;
+};
+
+// get unique string adding suffix to desired value if it already exists in allValues
+export const getUniqueString = ({
+  desired,
+  allValues,
+}: GetUniqueStringProps): string | undefined => {
+  if (!desired) return desired;
+
+  function nextNotRepeated(opt: { value: string; tries?: number }) {
+    const { value, tries = 1 } = opt;
+
+    const repeatedAssets = allValues.filter(
+      (a) => a && a.trim() === value.trim()
+    );
+
+    let notRepeatedField: string;
+    if (repeatedAssets[0]) {
+      const nextToTry =
+        tries === 1
+          ? `${value} (${tries})`
+          : `${value?.slice(0, -4)} (${tries})`;
+      notRepeatedField = nextNotRepeated({
+        value: nextToTry,
+        tries: tries + 1,
+      });
+    } else {
+      notRepeatedField = value;
+    }
+    return notRepeatedField;
+  }
+
+  return nextNotRepeated({ value: desired });
+};

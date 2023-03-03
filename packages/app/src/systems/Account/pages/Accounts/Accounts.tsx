@@ -32,14 +32,27 @@ export const Accounts = () => {
           onPress={handlers.setCurrentAccount}
         />
       </Dialog.Description>
-      <Dialog.Footer>
+      <Dialog.Footer css={styles.footer}>
         <Button
           aria-label="Add account"
           onPress={handlers.goToAdd}
           leftIcon={Icon.is('Plus')}
           variant="ghost"
+          size={'sm'}
+          iconSize={14}
         >
           Add new account
+        </Button>
+        <Button
+          aria-label="Import (private key)"
+          onPress={handlers.goToImport}
+          leftIcon={Icon.is('LockLaminatedOpen')}
+          variant="ghost"
+          color="gray"
+          size={'sm'}
+          iconSize={14}
+        >
+          Add from private key
         </Button>
       </Dialog.Footer>
     </>
@@ -55,5 +68,9 @@ const styles = {
     '&[data-has-scroll="true"]': {
       padding: '$4 $2 $4 $4',
     },
+  }),
+  footer: cssObj({
+    flexDirection: 'column',
+    gap: '$2',
   }),
 };

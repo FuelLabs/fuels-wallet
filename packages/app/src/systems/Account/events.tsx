@@ -28,6 +28,12 @@ export function accountEvents(store: Store) {
         input,
       });
     },
+    importAccount(privateKey: string) {
+      store.send(Services.accounts, {
+        type: 'IMPORT_ACCOUNT',
+        input: { privateKey },
+      });
+    },
     logout() {
       store.send(Services.accounts, {
         type: 'LOGOUT',
@@ -43,6 +49,12 @@ export function accountEvents(store: Store) {
       store.send(Services.overlay, {
         type: 'OPEN',
         input: 'accounts.add',
+      });
+    },
+    openAccountImport() {
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: 'accounts.import',
       });
     },
     openAccountsLogout() {

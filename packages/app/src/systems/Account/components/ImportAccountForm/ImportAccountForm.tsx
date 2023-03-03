@@ -1,0 +1,38 @@
+import { Input, Stack } from '@fuel-ui/react';
+
+import type { UseImportAccountFormReturn } from '../../hooks/useImportAccountForm';
+
+import { ControlledField } from '~/systems/Core';
+
+export type ImportAccountFormProps = {
+  isLoading?: boolean;
+  form: UseImportAccountFormReturn;
+};
+
+export const ImportAccountForm = ({
+  form,
+  isLoading,
+}: ImportAccountFormProps) => {
+  const { control, formState } = form;
+
+  return (
+    <Stack css={{ width: '100%' }} gap="$4">
+      <ControlledField
+        control={control}
+        name="privateKey"
+        label="Private Key"
+        isRequired
+        isInvalid={Boolean(formState.errors?.privateKey)}
+        render={({ field }) => (
+          <Input isDisabled={isLoading}>
+            <Input.Field
+              {...field}
+              aria-label="Private Key"
+              placeholder="Type the private key to import from"
+            />
+          </Input>
+        )}
+      />
+    </Stack>
+  );
+};

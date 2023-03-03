@@ -8,7 +8,12 @@ import { AccountService } from '../services/account';
 import { IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
 import type { Maybe } from '~/systems/Core';
-import { CoreService, FetchMachine, Storage } from '~/systems/Core';
+import {
+  getUniqueString,
+  CoreService,
+  FetchMachine,
+  Storage,
+} from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 import { VaultService } from '~/systems/Vault';
 
@@ -32,6 +37,9 @@ type MachineServices = {
   addAccount: {
     data: Account;
   };
+  importAccount: {
+    data: Account;
+  };
 };
 
 export type MachineEvents =
@@ -45,6 +53,10 @@ export type MachineEvents =
   | {
       type: 'ADD_ACCOUNT';
       input: string;
+    }
+  | {
+      type: 'IMPORT_ACCOUNT';
+      input: AccountInputs['importAccount'];
     }
   | { type: 'LOGOUT'; input?: void };
 
@@ -102,6 +114,9 @@ export const accountsMachine = createMachine(
           },
           UPDATE_ACCOUNT: {
             target: 'updateAccount',
+          },
+          IMPORT_ACCOUNT: {
+            target: 'importingAccount',
           },
         },
         after: {
@@ -172,6 +187,26 @@ export const accountsMachine = createMachine(
             input: (ctx: MachineContext) => ({
               name: ctx.accountName,
             }),
+          },
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              actions: 'assignError',
+              target: 'failed',
+            },
+            {
+              actions: ['notifyUpdateAccounts', 'redirectToHome'],
+              target: 'fetchingAccounts',
+            },
+          ],
+        },
+      },
+      importingAccount: {
+        tags: ['loading'],
+        invoke: {
+          src: 'importAccount',
+          data: {
+            input: (_: MachineContext, ev: MachineEvents) => ev.input,
           },
           onDone: [
             {
@@ -336,6 +371,43 @@ export const accountsMachine = createMachine(
           // Add account to the database
           account = await AccountService.setCurrentAccount({
             address: account.address.toString(),
+          });
+
+          return account;
+        },
+      }),
+      importAccount: FetchMachine.create<
+        AccountInputs['importAccount'],
+        MachineServices['importAccount']['data']
+      >({
+        showError: true,
+        maxAttempts: 1,
+        async fetch({ input }) {
+          if (!input?.privateKey.trim()) {
+            throw new Error('Private key cannot be empty');
+          }
+
+          // Add account to vault
+          const accountVault = await VaultService.createVault({
+            type: 'privateKey',
+            secret: input.privateKey,
+          });
+
+          // Add account to the database
+          const allAccounts = await AccountService.getAccounts();
+          const allAccountNames = allAccounts.map((a) => a.name);
+          const account = await AccountService.addAccount({
+            data: {
+              name:
+                getUniqueString({
+                  desired: 'Account',
+                  allValues: allAccountNames,
+                }) || '',
+              address: accountVault.address.toString(),
+              publicKey: accountVault.publicKey,
+              isHidden: false,
+              vaultId: accountVault.vaultId,
+            },
           });
 
           return account;

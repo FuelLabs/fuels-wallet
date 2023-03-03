@@ -3,6 +3,7 @@ import { Dialog } from '@fuel-ui/react';
 
 import { AddAccount, Logout } from '../../pages';
 import { Accounts } from '../../pages/Accounts';
+import { ImportAccount } from '../../pages/ImportAccount';
 
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { useOverlay } from '~/systems/Overlay';
@@ -15,6 +16,7 @@ export function AccountsDialog() {
       <Dialog.Content css={styles.content}>
         {overlay.is('accounts.list') && <Accounts />}
         {overlay.is('accounts.add') && <AddAccount />}
+        {overlay.is('accounts.import') && <ImportAccount />}
         {overlay.is('accounts.logout') && <Logout />}
       </Dialog.Content>
     </Dialog>
