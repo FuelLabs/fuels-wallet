@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, CardList, Flex, Icon, Stack, Switch, Text } from '@fuel-ui/react';
+import { Box, CardList, Flex, Icon, Stack, Text } from '@fuel-ui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import type { useConnections } from '../../hooks';
@@ -54,23 +54,15 @@ export function ConnectionEdit({
               {ctx.accounts?.map((account) => {
                 const { address } = account;
                 const isConnected = handlers.isConnected(address);
-                const rightEl = (
-                  <Flex css={styles.switchWrapper}>
-                    <Switch
-                      size="sm"
-                      checked={isConnected}
-                      onCheckedChange={() =>
-                        handlers.toggleAccount(address, isConnected)
-                      }
-                    />
-                  </Flex>
-                );
                 return (
                   <motion.div key={address} {...animations.slideInTop()}>
                     <AccountItem
                       account={account!}
-                      rightEl={rightEl}
+                      isConnected={isConnected}
                       isDisabled={ctx.accountToUpdate === address}
+                      onToggle={() =>
+                        handlers.toggleAccount(address, isConnected)
+                      }
                     />
                   </motion.div>
                 );
@@ -108,9 +100,5 @@ const styles = {
     '.fuel_icon': {
       color: '$gray8',
     },
-  }),
-  switchWrapper: cssObj({
-    alignItems: 'center',
-    justifyContent: 'center',
   }),
 };

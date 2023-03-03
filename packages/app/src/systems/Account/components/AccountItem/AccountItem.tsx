@@ -5,6 +5,9 @@ import {
   Copyable,
   Flex,
   Heading,
+  Icon,
+  IconButton,
+  Switch,
   Text,
 } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
@@ -16,12 +19,14 @@ import { shortAddress } from '~/systems/Core';
 
 export type AccountItemProps = {
   account: Account;
+  isConnected?: boolean;
   isCurrent?: boolean;
   isHidden?: boolean;
   onPress?: () => void;
-  rightEl?: JSX.Element;
   isDisabled?: boolean;
   compact?: boolean;
+  onToggle?: () => Promise<void> | void;
+  onUpdate?: () => Promise<void> | void;
 };
 
 type AccountItemComponent = FC<AccountItemProps> & {
@@ -30,12 +35,14 @@ type AccountItemComponent = FC<AccountItemProps> & {
 
 export const AccountItem: AccountItemComponent = ({
   account,
+  isConnected,
   isCurrent,
   isHidden,
   onPress,
-  rightEl,
   isDisabled,
   compact,
+  onToggle,
+  onUpdate,
 }: AccountItemProps) => {
   if (isHidden) return null;
   /**
@@ -54,11 +61,32 @@ export const AccountItem: AccountItemComponent = ({
   //     }}
   //   />
   // );
+  const actions = (
+    <Flex gap="$2">
+      {onUpdate && (
+        <IconButton
+          variant="link"
+          icon={<Icon icon={Icon.is('Pencil')} />}
+          aria-label="Update"
+          onPress={onUpdate}
+        />
+      )}
+      {onToggle && (
+        <Switch
+          size="sm"
+          checked={isConnected}
+          aria-label={`Toggle ${account.name}`}
+          onCheckedChange={onToggle}
+        />
+      )}
+    </Flex>
+  );
+
   return (
     <CardList.Item
       isActive={isCurrent}
       onClick={onPress}
-      rightEl={rightEl}
+      rightEl={actions}
       css={styles.root}
       aria-disabled={isDisabled}
       aria-label={account.name}
@@ -89,9 +117,11 @@ const styles = {
       opacity: 0.5,
       cursor: 'default',
     },
+
     '.wrapper': {
       flexDirection: 'column',
     },
+
     '&[data-compact="true"]': {
       '.wrapper': {
         flexDirection: 'row',
@@ -101,6 +131,15 @@ const styles = {
       '.fuel_avatar-generated': {
         flexShrink: 0,
       },
+    },
+
+    '.fuel_button': {
+      px: '$1 !important',
+      color: '$gray8',
+    },
+
+    '.fuel_button:hover': {
+      color: '$gray11',
     },
   }),
   name: cssObj({

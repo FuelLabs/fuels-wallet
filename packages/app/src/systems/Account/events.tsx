@@ -34,6 +34,18 @@ export function accountEvents(store: Store) {
         input,
       });
     },
+    editAccount(input: string) {
+      store.send(Services.accounts, {
+        type: 'EDIT_ACCOUNT',
+        input,
+      });
+    },
+    updateAccountName(input: AccountInputs['updateAccountName']) {
+      store.send(Services.accounts, {
+        type: 'UPDATE_ACCOUNT_NAME',
+        input,
+      });
+    },
     logout() {
       store.send(Services.accounts, {
         type: 'LOGOUT',

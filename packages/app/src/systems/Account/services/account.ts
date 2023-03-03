@@ -40,6 +40,9 @@ export type AccountInputs = {
     name: string;
     privateKey: string;
   };
+  updateAccountName: {
+    data: Pick<Account, 'address' | 'name'>;
+  };
 };
 
 export class AccountService {
@@ -188,6 +191,15 @@ export class AccountService {
     return accounts.filter((account) =>
       account.name.toLowerCase().includes(name.toLowerCase())
     );
+  }
+
+  static async updateAccountName(input: AccountInputs['updateAccountName']) {
+    if (!db.isOpen()) return;
+    return db.transaction('rw!', db.accounts, async () => {
+      const { address, ...updateData } = input.data;
+      await db.accounts.update(address, updateData);
+      return db.accounts.get({ address: input.data.address });
+    });
   }
 }
 

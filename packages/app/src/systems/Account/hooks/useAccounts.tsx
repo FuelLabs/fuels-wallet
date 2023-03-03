@@ -71,6 +71,11 @@ export function useAccounts() {
     return accountStatus === status;
   }
 
+  function editAccount(address: string) {
+    store.editAccount(address);
+    overlay.open('accounts.edit');
+  }
+
   store.useUpdateMachineConfig(Services.accounts, {
     actions: {
       refreshApplication() {
@@ -101,12 +106,14 @@ export function useAccounts() {
       closeDialog,
       addAccount: store.addAccount,
       importAccount: store.importAccount,
+      editAccount,
       goToAdd: store.openAccountsAdd,
       goToList: store.openAccountList,
       goToImport: store.openAccountImport,
       hideAccount: store.hideAccount,
       logout: store.logout,
       setCurrentAccount: store.setCurrentAccount,
+      updateAccountName: store.updateAccountName,
     },
   };
 }

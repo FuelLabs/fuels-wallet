@@ -1,13 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Button,
-  Card,
-  CardList,
-  Flex,
-  Link,
-  Switch,
-  Text,
-} from '@fuel-ui/react';
+import { Button, Card, CardList, Flex, Link, Text } from '@fuel-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { useConnectRequest } from '../../hooks/useConnectRequest';
@@ -71,23 +63,15 @@ export function ConnectionRequest() {
                   </Card.Header>
                   <Card.Body css={styles.accountCardBody}>
                     {accounts?.map((account) => {
-                      const { address, name } = account;
+                      const { address } = account;
                       const isConnected = handlers.isAccountSelected(address);
-                      const rightEl = (
-                        <Flex css={styles.switchWrapper}>
-                          <Switch
-                            size="sm"
-                            checked={isConnected}
-                            aria-label={`Toggle ${name}`}
-                            onCheckedChange={() =>
-                              handlers.toggleAccount(address)
-                            }
-                          />
-                        </Flex>
-                      );
                       return (
                         <motion.div key={address} {...animations.slideInTop()}>
-                          <AccountItem account={account!} rightEl={rightEl} />
+                          <AccountItem
+                            account={account!}
+                            onToggle={() => handlers.toggleAccount(address)}
+                            isConnected={isConnected}
+                          />
                         </motion.div>
                       );
                     })}
@@ -189,10 +173,6 @@ const styles = {
   disclaimer: cssObj({
     mb: '-10px',
     pt: '$1',
-  }),
-  switchWrapper: cssObj({
-    alignItems: 'center',
-    justifyContent: 'center',
   }),
   accountList: cssObj({
     mt: '$4',

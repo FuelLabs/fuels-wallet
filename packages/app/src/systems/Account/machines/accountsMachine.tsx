@@ -16,6 +16,10 @@ type MachineContext = {
   accounts?: Account[];
   accountName?: string;
   account?: Maybe<Account>;
+  /**
+   * Used as data on account edit
+   */
+  address?: string;
   error?: unknown;
 };
 
@@ -53,6 +57,8 @@ export type MachineEvents =
       type: 'IMPORT_ACCOUNT';
       input: AccountInputs['importAccount'];
     }
+  | { type: 'EDIT_ACCOUNT'; input: string }
+  | { type: 'UPDATE_ACCOUNT_NAME'; input: AccountInputs['updateAccountName'] }
   | { type: 'LOGOUT'; input?: void };
 
 const fetchAccount = {
@@ -112,6 +118,13 @@ export const accountsMachine = createMachine(
           },
           IMPORT_ACCOUNT: {
             target: 'importingAccount',
+          },
+          EDIT_ACCOUNT: {
+            actions: ['assignAddress'],
+            target: 'idle',
+          },
+          UPDATE_ACCOUNT_NAME: {
+            target: 'updatingAccountName',
           },
         },
         after: {
@@ -216,6 +229,27 @@ export const accountsMachine = createMachine(
           ],
         },
       },
+      updatingAccountName: {
+        tags: ['loading'],
+        exit: ['clearAddress'],
+        invoke: {
+          src: 'updateAccountName',
+          data: {
+            input: (_: MachineContext, ev: MachineEvents) => ev.input,
+          },
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              actions: 'assignError',
+              target: 'failed',
+            },
+            {
+              actions: ['notifyUpdateAccounts', 'redirectToList'],
+              target: 'fetchingAccounts',
+            },
+          ],
+        },
+      },
       loggingout: {
         tags: ['loading'],
         invoke: {
@@ -295,6 +329,15 @@ export const accountsMachine = createMachine(
       redirectToHome() {
         store.closeOverlay();
       },
+      redirectToList() {
+        store.openAccountList();
+      },
+      assignAddress: assign({
+        address: (_, ev) => ev.input,
+      }),
+      clearAddress: assign({
+        address: (_) => undefined,
+      }),
     },
     services: {
       fetchAccounts: FetchMachine.create<never, Account[]>({
@@ -408,6 +451,29 @@ export const accountsMachine = createMachine(
           });
 
           return activeAccount;
+        },
+      }),
+      updateAccountName: FetchMachine.create<
+        AccountInputs['updateAccountName'],
+        Account | undefined
+      >({
+        showError: true,
+        maxAttempts: 1,
+        async fetch({ input }) {
+          if (!input?.data.name.trim()) {
+            throw new Error('Name cannot be empty');
+          }
+          const { name } = input.data;
+
+          if (await AccountService.checkAccountNameExists(name)) {
+            throw new Error('Account name already exists');
+          }
+
+          const account = await AccountService.updateAccountName({
+            ...input,
+          });
+
+          return account;
         },
       }),
       logout: FetchMachine.create<never, void>({
