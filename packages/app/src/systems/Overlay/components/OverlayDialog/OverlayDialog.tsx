@@ -1,20 +1,31 @@
 import { cssObj } from '@fuel-ui/css';
 import { Dialog } from '@fuel-ui/react';
 
-import { AddNetwork, Networks, UpdateNetwork } from '../../pages';
-
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
+import { AddAccount, Logout } from '~/systems/Account';
+import { Accounts } from '~/systems/Account/pages/Accounts';
+import { AddNetwork, Networks, UpdateNetwork } from '~/systems/Network/pages';
 import { useOverlay } from '~/systems/Overlay';
+import { TxApprove } from '~/systems/Transaction';
 
-export function NetworksDialog() {
+export function OverlayDialog() {
   const overlay = useOverlay();
 
   return (
-    <Dialog isOpen={overlay.is((val) => val.includes('networks'))}>
+    <Dialog isOpen={overlay.isDialogOpen}>
       <Dialog.Content css={styles.content}>
+        {/* Accounts */}
+        {overlay.is('accounts.list') && <Accounts />}
+        {overlay.is('accounts.add') && <AddAccount />}
+        {overlay.is('accounts.logout') && <Logout />}
+
+        {/* Networks */}
         {overlay.is('networks.list') && <Networks />}
         {overlay.is('networks.add') && <AddNetwork />}
         {overlay.is('networks.update') && <UpdateNetwork />}
+
+        {/* Transactions */}
+        {overlay.is('transactions.approve') && <TxApprove />}
       </Dialog.Content>
     </Dialog>
   );
@@ -26,6 +37,7 @@ const styles = {
     height: WALLET_HEIGHT,
     maxWidth: WALLET_WIDTH,
     maxHeight: 'none',
+    background: '$bodyColor',
 
     '.fuel_dialog--heading, .fuel_dialog--footer': {
       borderColor: '$gray2',
