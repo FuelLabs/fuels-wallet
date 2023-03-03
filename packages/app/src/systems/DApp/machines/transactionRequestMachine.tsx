@@ -152,6 +152,7 @@ export const transactionRequestMachine = createMachine(
         },
       },
       waitingApproval: {
+        entry: ['openDialog'],
         on: {
           APPROVE: {
             target: 'sendingTx',

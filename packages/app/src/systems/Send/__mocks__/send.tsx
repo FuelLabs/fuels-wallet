@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import type { WalletUnlocked } from 'fuels';
-import { useEffect } from 'react';
 
 import { createMockAccount } from '~/systems/Account';
-import { useTransactionRequest } from '~/systems/DApp';
 import { getMockedTransaction } from '~/systems/DApp/__mocks__/dapp-transaction';
 import { NetworkService } from '~/systems/Network';
 
@@ -20,19 +17,4 @@ export function sendLoader(wallet: WalletUnlocked) {
     );
     return { acc1, network, transactionRequest, address: acc1?.address };
   };
-}
-
-export function useTxRequestMock(loaded: any) {
-  const { transactionRequest, network, address } = loaded || {};
-  const txRequest = useTransactionRequest();
-
-  useEffect(() => {
-    txRequest.handlers.request({
-      address,
-      transactionRequest,
-      providerUrl: network?.url,
-    });
-  }, []);
-
-  return txRequest;
 }

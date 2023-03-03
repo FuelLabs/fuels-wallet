@@ -84,12 +84,11 @@ export const sendMachine = createMachine(
             },
             {
               actions: ['callTransactionRequest'],
-              target: 'confirming',
+              target: 'idle',
             },
           ],
         },
       },
-      confirming: {},
     },
     on: {
       BACK: {

@@ -6,4 +6,5 @@ export enum Overlays {
   'networks.list' = 'networks.list',
   'networks.add' = 'networks.add',
   'networks.update' = 'networks.update',
+  'transactions.approve' = 'transactions.approve',
 }
