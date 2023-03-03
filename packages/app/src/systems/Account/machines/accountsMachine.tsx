@@ -8,12 +8,7 @@ import { AccountService } from '../services/account';
 import { IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
 import type { Maybe } from '~/systems/Core';
-import {
-  getUniqueString,
-  CoreService,
-  FetchMachine,
-  Storage,
-} from '~/systems/Core';
+import { CoreService, FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 import { VaultService } from '~/systems/Vault';
 
@@ -368,7 +363,7 @@ export const accountsMachine = createMachine(
             },
           });
 
-          // Add account to the database
+          // set as active account
           account = await AccountService.setCurrentAccount({
             address: account.address.toString(),
           });
@@ -386,6 +381,9 @@ export const accountsMachine = createMachine(
           if (!input?.privateKey.trim()) {
             throw new Error('Private key cannot be empty');
           }
+          if (!input?.name.trim()) {
+            throw new Error('Name cannot be empty');
+          }
 
           // Add account to vault
           const accountVault = await VaultService.createVault({
@@ -394,15 +392,9 @@ export const accountsMachine = createMachine(
           });
 
           // Add account to the database
-          const allAccounts = await AccountService.getAccounts();
-          const allAccountNames = allAccounts.map((a) => a.name);
           const account = await AccountService.addAccount({
             data: {
-              name:
-                getUniqueString({
-                  desired: 'Account',
-                  allValues: allAccountNames,
-                }) || '',
+              name: input.name,
               address: accountVault.address.toString(),
               publicKey: accountVault.publicKey,
               isHidden: false,
@@ -410,7 +402,12 @@ export const accountsMachine = createMachine(
             },
           });
 
-          return account;
+          // set as active account
+          const activeAccount = await AccountService.setCurrentAccount({
+            address: account.address.toString(),
+          });
+
+          return activeAccount;
         },
       }),
       logout: FetchMachine.create<never, void>({

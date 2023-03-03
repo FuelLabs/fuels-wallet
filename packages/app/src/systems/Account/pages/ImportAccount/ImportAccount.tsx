@@ -10,7 +10,7 @@ export const ImportAccount = () => {
   const form = useImportAccountForm();
 
   function onSubmit(data: ImportAccountFormValues) {
-    handlers.importAccount(data.privateKey);
+    handlers.importAccount(data);
   }
 
   return (
@@ -38,7 +38,7 @@ export const ImportAccount = () => {
           isDisabled={!form.formState.isValid}
           isLoading={isLoading}
           leftIcon={Icon.is('Plus')}
-          aria-label="Create new account"
+          aria-label="Import"
         >
           Import
         </Button>

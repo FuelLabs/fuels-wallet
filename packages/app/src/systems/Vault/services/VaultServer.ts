@@ -85,7 +85,7 @@ export class VaultServer extends EventEmitter {
     const accounts = await this.manager.getAccounts();
     const vaults = await this.manager.getVaults();
     const vaultId = vaults.length - 1;
-    const account = accounts[vaultId];
+    const [account] = accounts.slice(-1);
     return {
       address: account.address.toString(),
       publicKey: account.publicKey,

@@ -1,4 +1,4 @@
-import { Input, Stack } from '@fuel-ui/react';
+import { HelperIcon, Input, Stack } from '@fuel-ui/react';
 
 import type { UseImportAccountFormReturn } from '../../hooks/useImportAccountForm';
 
@@ -29,6 +29,26 @@ export const ImportAccountForm = ({
               {...field}
               aria-label="Private Key"
               placeholder="Type the private key to import from"
+            />
+          </Input>
+        )}
+      />
+      <ControlledField
+        control={control}
+        name="name"
+        isRequired
+        isInvalid={Boolean(formState.errors?.name)}
+        label={
+          <HelperIcon message="The name for your new account">
+            Account Name
+          </HelperIcon>
+        }
+        render={({ field }) => (
+          <Input isDisabled={isLoading}>
+            <Input.Field
+              {...field}
+              aria-label="Account Name"
+              placeholder="Type account name"
             />
           </Input>
         )}

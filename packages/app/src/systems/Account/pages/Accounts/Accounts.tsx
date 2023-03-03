@@ -44,7 +44,7 @@ export const Accounts = () => {
           Add new account
         </Button>
         <Button
-          aria-label="Import (private key)"
+          aria-label="Import from private key"
           onPress={handlers.goToImport}
           leftIcon={Icon.is('LockLaminatedOpen')}
           variant="ghost"

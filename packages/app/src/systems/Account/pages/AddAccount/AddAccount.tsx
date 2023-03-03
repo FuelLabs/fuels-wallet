@@ -8,7 +8,6 @@ import type { AccountFormValues } from '../../hooks/useAccountForm';
 export const AddAccount = () => {
   const { handlers, isLoading, status, ...ctx } = useAccounts();
   const form = useAccountForm({
-    accounts: ctx.accounts,
     defaultValues: {
       name: ctx.accountName || '',
     },

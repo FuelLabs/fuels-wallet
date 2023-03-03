@@ -28,10 +28,10 @@ export function accountEvents(store: Store) {
         input,
       });
     },
-    importAccount(privateKey: string) {
+    importAccount(input: AccountInputs['importAccount']) {
       store.send(Services.accounts, {
         type: 'IMPORT_ACCOUNT',
-        input: { privateKey },
+        input,
       });
     },
     logout() {
