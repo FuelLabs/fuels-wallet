@@ -14,6 +14,9 @@ export type NetworkInputs = {
       url: string;
     };
   };
+  editNetwork: {
+    id: string;
+  };
   updateNetwork: {
     id: string;
     data: Partial<Network>;

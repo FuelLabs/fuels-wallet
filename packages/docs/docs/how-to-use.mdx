@@ -74,13 +74,13 @@ You can list the assets in the wallet using `window.fuel.assets()`.
 
 <Examples.ListAssets />
 
-## Adding custom Asset
+## Adding custom Assets
 
-To add a custom Asset, use the `wallet.addAsset` method and pass in the `Asset` you want to add.
+To add custom Assets, use the `wallet.addAssets` method and pass in the `Asset[]` you want to add.
 
-<CodeImport file="../examples/AddAsset.tsx" />
+<CodeImport file="../examples/AddAssets.tsx" />
 
-<Examples.AddAsset />
+<Examples.AddAssets />
 
 ## Listening to events
 
@@ -92,7 +92,8 @@ The events enum `FuelWalletEvents` can be imported from the `@fuel-wallet/sdk` p
 
 To listen to connection events, you can use the `fuel.events.connection` event.
 
-<CodeImport file="../src/hooks/useIsConnected.tsx" lineStart="9" lineEnd="27" />
+<CodeImport file="../src/hooks/useIsConnected.tsx" lineStart="9" lineEnd="23" />
+
 <Examples.Events.Connection />
 
 ### Accounts

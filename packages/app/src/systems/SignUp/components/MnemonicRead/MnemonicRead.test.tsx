@@ -50,10 +50,10 @@ describe('MnemonicRead', () => {
     expect(btn).toHaveAttribute('aria-disabled');
   });
 
-  it('should next be enable when confirm checkbox', async () => {
-    const checkbox = screen.getByLabelText(/Confirm saved/i);
-    expect(checkbox).toBeInTheDocument();
-    await user.click(checkbox);
+  it('should next be enable when confirm checkboxes', async () => {
+    const saveCheckbox = screen.getByLabelText(/Confirm Saved/i);
+    expect(saveCheckbox).toBeInTheDocument();
+    await user.click(saveCheckbox);
     await waitFor(() => {
       const btn = screen.getByText('Next');
       expect(btn).toBeEnabled();
@@ -61,8 +61,9 @@ describe('MnemonicRead', () => {
   });
 
   it('should trigger onCancel and onNext', async () => {
-    const checkbox = screen.getByLabelText(/Confirm saved/i);
-    await user.click(checkbox);
+    const saveCheckbox = screen.getByLabelText(/Confirm Saved/i);
+    expect(saveCheckbox).toBeInTheDocument();
+    await user.click(saveCheckbox);
 
     await waitFor(async () => {
       const btnNext = screen.getByText('Next');

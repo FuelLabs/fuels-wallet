@@ -11,7 +11,7 @@ import {
   waitAriaLabel,
   reload,
 } from '../commons';
-import { CUSTOM_ASSET } from '../mocks';
+import { CUSTOM_ASSET, CUSTOM_ASSET_2 } from '../mocks';
 
 import {
   test,
@@ -116,16 +116,17 @@ test.describe('FuelWallet Extension', () => {
 
       /** Copy Mnemonic */
       await getButtonByText(page, /Copy/i).click();
-      await page.getByRole('checkbox').click();
+      const savedCheckbox = await getByAriaLabel(page, 'Confirm Saved');
+      await savedCheckbox.click();
       await getButtonByText(page, /Next/i).click();
 
       /** Confirm Mnemonic */
-      await hasText(page, /Write down your Recovery Phrase/i);
+      await hasText(page, /Enter your Recovery Phrase/i);
       await getButtonByText(page, /Paste/i).click();
       await getButtonByText(page, /Next/i).click();
 
       /** Adding password */
-      await hasText(page, /Create your password/i);
+      await hasText(page, /Encrypt your wallet/i);
       const passwordInput = await getByAriaLabel(page, 'Your Password');
       await passwordInput.type(WALLET_PASSWORD);
       await passwordInput.press('Tab');
@@ -136,7 +137,6 @@ test.describe('FuelWallet Extension', () => {
       await confirmPasswordInput.type(WALLET_PASSWORD);
       await confirmPasswordInput.press('Tab');
 
-      await page.getByRole('checkbox').click();
       await getButtonByText(page, /Next/i).click();
 
       /** Account created */
@@ -335,8 +335,11 @@ test.describe('FuelWallet Extension', () => {
 
         // Confirm transaction
         await hasText(confirmTransactionPage, /0\.0000001.ETH/i);
-        await waitAriaLabel(confirmTransactionPage, senderAccount.name);
-        await getButtonByText(confirmTransactionPage, /confirm/i).click();
+        await waitAriaLabel(
+          confirmTransactionPage,
+          senderAccount.address.toString()
+        );
+        await getButtonByText(confirmTransactionPage, /Confirm/i).click();
 
         await expect(transferStatus).resolves.toBe('success');
         const balance = await receiverWallet.getBalance();
@@ -397,9 +400,28 @@ test.describe('FuelWallet Extension', () => {
       const addAssetPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
       });
+      await hasText(addAssetPage, 'Review the Assets to be added:');
+      await getButtonByText(addAssetPage, /add assets/i).click();
+      await expect(addingAsset).resolves.toBeDefined();
+    });
 
-      await hasText(addAssetPage, 'Asset information');
-      await getButtonByText(addAssetPage, /add asset/i).click();
+    await test.step('window.fuel.addAssets()', async () => {
+      function addAssets(assets: Asset[]) {
+        return blankPage.evaluate(
+          async ([asset]) => {
+            return window.fuel.addAssets(asset);
+          },
+          [assets]
+        );
+      }
+
+      const addingAsset = addAssets([CUSTOM_ASSET, CUSTOM_ASSET_2]);
+
+      const addAssetPage = await context.waitForEvent('page', {
+        predicate: (page) => page.url().includes(extensionId),
+      });
+      await hasText(addAssetPage, 'Review the Assets to be added:');
+      await getButtonByText(addAssetPage, /add assets/i).click();
       await expect(addingAsset).resolves.toBeDefined();
     });
 

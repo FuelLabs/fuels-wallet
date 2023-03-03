@@ -25,6 +25,8 @@ import { NetworkService } from '~/systems/Network/services';
 
 type EventOrigin = {
   origin: string;
+  title: string;
+  favIconUrl: string;
   connection?: Connection;
 };
 
@@ -47,7 +49,7 @@ export class BackgroundService {
       this.signMessage,
       this.sendTransaction,
       this.currentAccount,
-      this.addAsset,
+      this.addAssets,
       this.assets,
     ]);
   }
@@ -60,8 +62,12 @@ export class BackgroundService {
     this.communicationProtocol.on(MessageTypes.request, async (event) => {
       if (event.target !== BACKGROUND_SCRIPT_NAME) return;
       const origin = event.sender!.origin!;
+      const title = event.sender!.tab!.title!;
+      const favIconUrl = event.sender!.tab!.favIconUrl!;
       const response = await this.server.receive(event.request, {
         origin,
+        title,
+        favIconUrl,
       });
       if (response) {
         this.communicationProtocol.postMessage({
@@ -122,9 +128,7 @@ export class BackgroundService {
   ) {
     // If the method is ping, by pass checks
     if (request.method === 'ping') {
-      return next(request, {
-        origin: serverParams.origin,
-      });
+      return next(request, serverParams);
     }
 
     // Retrive connection for use on accounts
@@ -141,7 +145,7 @@ export class BackgroundService {
     }
     return next(request, {
       connection,
-      origin: serverParams.origin,
+      ...serverParams,
     });
   }
 
@@ -171,6 +175,8 @@ export class BackgroundService {
 
   async connect(_: JSONRPCParams, serverParams: EventOrigin) {
     const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
 
     let authorizedApp = await ConnectionService.getConnection(origin);
 
@@ -180,7 +186,11 @@ export class BackgroundService {
         Pages.requestConnection(),
         this.communicationProtocol
       );
-      authorizedApp = await popupService.requestConnection({ origin });
+      authorizedApp = await popupService.requestConnection({
+        origin,
+        title,
+        favIconUrl,
+      });
     }
 
     if (authorizedApp) {
@@ -218,6 +228,8 @@ export class BackgroundService {
     serverParams: EventOrigin
   ) {
     const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
 
     await this.requireAccountConnecton(serverParams.connection, input.address);
 
@@ -229,6 +241,8 @@ export class BackgroundService {
     const signedMessage = await popupService.signMessage({
       ...input,
       origin,
+      title,
+      favIconUrl,
     });
     return signedMessage;
   }
@@ -239,6 +253,8 @@ export class BackgroundService {
   ) {
     await this.requireAccountConnecton(serverParams.connection, input.address);
     const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
     const selectedNetwork = await NetworkService.getSelectedNetwork();
 
     if (selectedNetwork?.url !== input.provider.url) {
@@ -258,6 +274,8 @@ export class BackgroundService {
     const signedMessage = await popupService.sendTransaction({
       ...input,
       origin,
+      title,
+      favIconUrl,
     });
     return signedMessage;
   }
@@ -286,21 +304,28 @@ export class BackgroundService {
     return assets || [];
   }
 
-  async addAsset(
-    input: Exclude<MessageInputs['addAsset'], 'origin'>,
+  async addAssets(
+    input: MessageInputs['addAssets'],
     serverParams: EventOrigin
   ) {
+    const { assetsToAdd } = await AssetService.validateAddAssets(input.assets);
+
     const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
 
     const popupService = await PopUpService.open(
       origin,
-      Pages.requestAddAsset(),
+      Pages.requestAddAssets(),
       this.communicationProtocol
     );
-    const signedMessage = await popupService.addAsset({
-      ...input,
+    await popupService.addAssets({
+      assets: assetsToAdd,
       origin,
+      title,
+      favIconUrl,
     });
-    return signedMessage;
+
+    return true;
   }
 }

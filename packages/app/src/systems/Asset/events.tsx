@@ -7,9 +7,15 @@ import { Services } from '~/store';
 
 export function assetEvents(store: StoreClass<StoreMachines>) {
   return {
-    upsertAsset(input: AssetInputs['upsertAsset']) {
+    addAsset(input: AssetInputs['addAsset']) {
       store.send(Services.assets, {
-        type: 'UPSERT_ASSET',
+        type: 'ADD_ASSET',
+        input,
+      });
+    },
+    updateAsset(input: AssetInputs['updateAsset']) {
+      store.send(Services.assets, {
+        type: 'UPDATE_ASSET',
         input,
       });
     },

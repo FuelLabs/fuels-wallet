@@ -42,8 +42,8 @@ export const parameters = {
       chromeExtension: {
         name: 'Chrome Extension',
         styles: {
-          width: WALLET_WIDTH,
-          height: WALLET_HEIGHT,
+          width: `${WALLET_WIDTH}px`,
+          height: `${WALLET_HEIGHT}px`,
         },
         type: 'mobile',
       },

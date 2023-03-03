@@ -24,7 +24,7 @@ export type NetworkItemProps = {
   network: Network;
   onPress?: (network: Network) => Promise<void> | void;
   onRemove?: (network: Network) => Promise<void> | void;
-  onUpdate?: (network: Network) => Promise<void> | void;
+  onUpdate?: (id?: string) => Promise<void> | void;
 };
 
 export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
@@ -37,7 +37,7 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
             variant="link"
             icon={<Icon icon={Icon.is('Pencil')} />}
             aria-label="Update"
-            onPress={() => onUpdate?.(network)}
+            onPress={() => onUpdate?.(network.id)}
           />
         )}
         {onRemove && (
@@ -76,6 +76,7 @@ const styles = {
   root: cssObj({
     minHeight: '52px',
     boxSizing: 'border-box',
+    background: '$whiteA2',
 
     '&:hover': {
       cursor: 'pointer',

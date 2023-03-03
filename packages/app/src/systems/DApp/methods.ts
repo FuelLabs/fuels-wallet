@@ -19,7 +19,7 @@ export class RequestMethods extends ExtensionPageConnection {
       this.requestConnection,
       this.signMessage,
       this.sendTransaction,
-      this.addAsset,
+      this.addAssets,
     ]);
   }
 
@@ -27,9 +27,9 @@ export class RequestMethods extends ExtensionPageConnection {
     return new RequestMethods();
   }
 
-  async requestConnection({ origin }: { origin: string }) {
+  async requestConnection(input: MessageInputs['requestConnection']) {
     const state = await store
-      .requestConnection(origin)
+      .requestConnection(input)
       .waitForState(Services.connectRequest, WAIT_FOR_CONFIG);
     return !!state.context.isConnected;
   }
@@ -42,11 +42,18 @@ export class RequestMethods extends ExtensionPageConnection {
   }
 
   async sendTransaction(input: MessageInputs['sendTransaction']) {
-    const { origin, address, provider, transaction } = input;
+    const { origin, address, provider, transaction, title, favIconUrl } = input;
     const providerUrl = provider.url;
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
     const state = await store
-      .requestTransaction({ origin, transactionRequest, address, providerUrl })
+      .requestTransaction({
+        origin,
+        transactionRequest,
+        address,
+        providerUrl,
+        title,
+        favIconUrl,
+      })
       .waitForState(Services.txRequest, {
         ...WAIT_FOR_CONFIG,
         done: 'txSuccess',
@@ -54,11 +61,11 @@ export class RequestMethods extends ExtensionPageConnection {
     return state.context.response?.approvedTx?.id;
   }
 
-  async addAsset(input: MessageInputs['addAsset']) {
-    const state = await store
+  async addAssets(input: MessageInputs['addAssets']) {
+    await store
       .requestAddAsset(input)
       .waitForState(Services.addAssetRequest, WAIT_FOR_CONFIG);
-    return state.context.addedAsset;
+    return true;
   }
 }
 

@@ -39,6 +39,23 @@ describe('Fuel', () => {
     expect(currentAccount).toEqual(userWallet.address.toAddress());
   });
 
+  test('assets', async () => {
+    const assets = await fuel.assets();
+    expect(assets.length).toEqual(0);
+  });
+
+  test('addAsset', async () => {
+    const asset = { assetId: NativeAssetId };
+    const isAdded = await fuel.addAsset(asset);
+    expect(isAdded).toEqual(true);
+  });
+
+  test('addAssets', async () => {
+    const asset = { assetId: NativeAssetId };
+    const isAdded = await fuel.addAssets([asset]);
+    expect(isAdded).toEqual(true);
+  });
+
   test('signMessage', async () => {
     const accounts = await fuel.accounts();
     const account = accounts[0];
