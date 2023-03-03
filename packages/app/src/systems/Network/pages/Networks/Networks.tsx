@@ -45,6 +45,6 @@ const styles = {
   description: cssObj({
     ...coreStyles.scrollable('$gray3'),
     flex: 1,
-    padding: '$4 $2 $4 $4',
+    padding: '$4',
   }),
 };
