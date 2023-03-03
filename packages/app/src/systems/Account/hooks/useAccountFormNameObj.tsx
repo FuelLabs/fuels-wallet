@@ -1,11 +1,8 @@
+import type { Account } from '@fuel-wallet/types';
 import { useMemo } from 'react';
 import * as yup from 'yup';
 
-import { useAccounts } from './useAccounts';
-
-export function useAccountFormNameObj() {
-  const { accounts } = useAccounts();
-
+export function useAccountFormNameObj(accounts: Account[]) {
   return useMemo(() => {
     const names = (accounts || []).map((account) => account.name);
 

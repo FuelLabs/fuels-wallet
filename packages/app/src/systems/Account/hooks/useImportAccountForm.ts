@@ -1,9 +1,12 @@
+import type { Account } from '@fuel-wallet/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isB256 } from 'fuels';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { useAccountFormNameObj } from './useAccountFormNameObj';
+
+import type { Maybe } from '~/systems/Core';
 
 export type ImportAccountFormValues = {
   privateKey: string;
@@ -19,8 +22,12 @@ export type UseImportAccountFormReturn = ReturnType<
   typeof useImportAccountForm
 >;
 
-export function useImportAccountForm() {
-  const nameSchemaObj = useAccountFormNameObj();
+export type UseImportAccountForm = {
+  accounts?: Maybe<Account[]>;
+};
+
+export function useImportAccountForm(opts: UseImportAccountForm) {
+  const nameSchemaObj = useAccountFormNameObj(opts?.accounts || []);
   const schema = yup.object({
     name: nameSchemaObj,
     privateKey: yup

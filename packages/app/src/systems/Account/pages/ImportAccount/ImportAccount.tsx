@@ -6,8 +6,8 @@ import { useImportAccountForm } from '../../hooks/useImportAccountForm';
 import type { ImportAccountFormValues } from '../../hooks/useImportAccountForm';
 
 export const ImportAccount = () => {
-  const { handlers, isLoading, status } = useAccounts();
-  const form = useImportAccountForm();
+  const { handlers, isLoading, status, accounts } = useAccounts();
+  const form = useImportAccountForm({ accounts });
 
   function onSubmit(data: ImportAccountFormValues) {
     handlers.importAccount(data);

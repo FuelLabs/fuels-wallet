@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
+import type { Account } from '@fuel-wallet/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -19,11 +20,12 @@ const DEFAULT_VALUES = {
 export type UseAccountFormReturn = ReturnType<typeof useAccountForm>;
 
 export type UseAddAccountOpts = {
+  accounts?: Maybe<Account[]>;
   defaultValues?: Maybe<AccountFormValues>;
 };
 
 export function useAccountForm(opts: UseAddAccountOpts = {}) {
-  const nameSchemaObj = useAccountFormNameObj();
+  const nameSchemaObj = useAccountFormNameObj(opts?.accounts || []);
   const schema = yup.object({
     name: nameSchemaObj,
   });
