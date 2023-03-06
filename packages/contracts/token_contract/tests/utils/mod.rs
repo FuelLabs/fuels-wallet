@@ -95,6 +95,7 @@ pub mod abi_calls {
             .deposit()
             .tx_params(tx_params)
             .call_params(call_params)
+            .expect("REASON")
             .call()
             .await
             .unwrap()
@@ -138,7 +139,7 @@ pub mod test_helpers {
         let num_wallets = params.num_wallets;
         let coins_per_wallet = params.coins_per_wallet;
         let coin_amount = params.coin_amount;
-        let mut wallets = launch_custom_provider_and_wallets(
+        let mut wallets = launch_custom_provider_and_get_wallets(
             WalletsConfig::new(num_wallets, coins_per_wallet, coin_amount),
             None,
             None,
@@ -167,7 +168,7 @@ pub mod test_helpers {
             total_supply: params.total_supply.unwrap_or_default(),
         };
 
-        let provider = deployer.provider().unwrap().clone();
+        let provider = deployer.get_provider().unwrap().clone();
         let metadata = {
             Metadata {
                 contract_id,
