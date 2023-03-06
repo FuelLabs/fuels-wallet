@@ -1,4 +1,4 @@
-import { Stack, Flex, Button, Checkbox, InputPassword } from '@fuel-ui/react';
+import { Stack, Flex, Button, InputPassword } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -22,14 +22,12 @@ const schema = yup
     confirmPassword: yup
       .string()
       .oneOf([yup.ref('password'), null], 'Passwords must match'),
-    accepted: yup.bool().oneOf([true]).required(),
   })
   .required();
 
 export type CreatePasswordValues = {
   password: string;
   confirmPassword: string;
-  accepted: boolean;
   strength: string;
 };
 
@@ -70,8 +68,8 @@ export function CreatePassword({
           height={116}
         />
         <Header
-          title="Create your password"
-          subtitle="Add a safe password to access your wallet"
+          title="Encrypt your wallet"
+          subtitle="Add a safe password to encrypt your wallet"
         />
         <Stack css={{ width: '100%' }} gap="$4">
           <ControlledField
@@ -109,27 +107,6 @@ export function CreatePassword({
             )}
           />
         </Stack>
-        <ControlledField
-          hideError
-          control={control}
-          name="accepted"
-          label="I agree with terms and services"
-          labelSide="right"
-          css={{ flexDirection: 'row ' }}
-          render={({ field: { value: _value, ...field } }) => (
-            <Checkbox
-              {...field}
-              checked={form.watch('accepted')}
-              aria-label="Accept terms"
-              onCheckedChange={(checked) => {
-                form.setValue('accepted', Boolean(checked), {
-                  shouldValidate: true,
-                  shouldTouch: true,
-                });
-              }}
-            />
-          )}
-        />
         <Flex gap="$4">
           <Button
             color="gray"

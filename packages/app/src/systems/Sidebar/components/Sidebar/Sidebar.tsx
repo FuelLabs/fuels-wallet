@@ -1,21 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cssObj } from '@fuel-ui/css';
-import { Icon, Avatar, Flex, Drawer, IconButton, Stack } from '@fuel-ui/react';
+import {
+  Icon,
+  Avatar,
+  Flex,
+  Drawer,
+  IconButton,
+  Stack,
+  Box,
+  Text,
+} from '@fuel-ui/react';
 import { forwardRef } from 'react';
 
 import { Menu } from '..';
 import { useAccounts } from '../../../Account';
-import { NetworkScreen, useNetworks } from '../../../Network';
+import { useNetworks } from '../../../Network';
 import { sidebarItems } from '../../constants';
 
+import { APP_VERSION } from '~/config';
 import { useOverlay } from '~/systems/Overlay';
 
 function SidebarContent() {
   const overlay = useOverlay();
   const { handlers: accountHandlers, account } = useAccounts();
-  const { selectedNetwork } = useNetworks({
-    type: NetworkScreen.list,
-  });
+  const { selectedNetwork } = useNetworks();
 
   return (
     <>
@@ -46,6 +54,11 @@ function SidebarContent() {
         />
       </Flex>
       <Menu items={sidebarItems(selectedNetwork?.url)} />
+      <Box css={styles.version}>
+        <Text fontSize="xs" color="gray8">
+          Version: {APP_VERSION}{' '}
+        </Text>
+      </Box>
     </>
   );
 }
@@ -97,5 +110,9 @@ const styles = {
     padding: '$1',
     top: '$2',
     right: '$2',
+  }),
+  version: cssObj({
+    padding: '$3 $4',
+    textAlign: 'center',
   }),
 };

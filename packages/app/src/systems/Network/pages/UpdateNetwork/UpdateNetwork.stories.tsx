@@ -1,32 +1,46 @@
-import type { Meta, StoryFn } from '@storybook/react';
-
-import { MOCK_NETWORKS } from '../../__mocks__/networks';
-import { NetworkService } from '../../services';
+import { BoxCentered, Button } from '@fuel-ui/react';
+import type { ComponentStoryFn, Meta } from '@storybook/react';
 
 import { UpdateNetwork } from './UpdateNetwork';
 
-import { Pages } from '~/systems/Core';
+import { Layout } from '~/systems/Core';
+import { NetworkService, useNetworks } from '~/systems/Network';
+import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
+import { store } from '~/systems/Store';
 
 export default {
   component: UpdateNetwork,
   title: 'Network/Pages/3. UpdateNetwork',
   parameters: {
-    reactRouter: {
-      routePath: Pages.networkUpdate(),
-      routeParams: { id: '3' },
-    },
     layout: 'fullscreen',
     viewport: {
       defaultViewport: 'chromeExtension',
     },
   },
-  loaders: [
-    async () => {
-      await NetworkService.clearNetworks();
-      await NetworkService.addNetwork({ data: MOCK_NETWORKS[0] });
-      return {};
-    },
-  ],
 } as Meta;
 
-export const Usage: StoryFn<unknown> = () => <UpdateNetwork />;
+const Template: ComponentStoryFn<typeof UpdateNetwork> = () => {
+  const { isLoading, handlers, networks } = useNetworks();
+  return (
+    <Layout isLoading={isLoading}>
+      <BoxCentered css={{ minW: '100%', minH: '100%' }}>
+        <Button
+          onPress={() => handlers.goToUpdate(networks[0].id)}
+          isLoading={isLoading}
+        >
+          Toggle Modal
+        </Button>
+      </BoxCentered>
+    </Layout>
+  );
+};
+
+export const Usage = Template.bind({});
+Usage.loaders = [
+  async () => {
+    store.closeOverlay();
+    await NetworkService.clearNetworks();
+    await NetworkService.addNetwork({ data: MOCK_NETWORKS[0] });
+    return {};
+  },
+];

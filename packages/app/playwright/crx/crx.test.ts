@@ -11,7 +11,7 @@ import {
   waitAriaLabel,
   reload,
 } from '../commons';
-import { CUSTOM_ASSET } from '../mocks';
+import { CUSTOM_ASSET, CUSTOM_ASSET_2 } from '../mocks';
 
 import {
   test,
@@ -26,7 +26,7 @@ const WALLET_PASSWORD = 'Qwe123456$';
 test.describe('FuelWallet Extension', () => {
   test('On install sign-up page is open', async ({ context }) => {
     // In development mode files are render dynamically
-    // making this first page to throw a error File not found.
+    // making this first page to throw an error File not found.
     if (process.env.NODE_ENV !== 'test') return;
 
     const page = await context.waitForEvent('page', {
@@ -52,7 +52,7 @@ test.describe('FuelWallet Extension', () => {
 
   test('SDK operations', async ({ context, baseURL, extensionId }) => {
     // Use a single instance of the page to avoid
-    // mutiple waiting times, and window.fuel checking.
+    // multiple waiting times, and window.fuel checking.
     const blankPage = await context.newPage();
 
     // Open a blank html in order for the CRX
@@ -62,7 +62,7 @@ test.describe('FuelWallet Extension', () => {
     await blankPage.goto(new URL('e2e.html', baseURL).href);
 
     await test.step('Should trigger event FuelLoaded', async () => {
-      // Reload and don't wait for laodstate to go to evalute
+      // Reload and don't wait for loadstate to go to evaluate
       // This is required in order to get the FuelLoaded event
       await blankPage.reload({
         waitUntil: 'commit',
@@ -116,16 +116,17 @@ test.describe('FuelWallet Extension', () => {
 
       /** Copy Mnemonic */
       await getButtonByText(page, /Copy/i).click();
-      await page.getByRole('checkbox').click();
+      const savedCheckbox = await getByAriaLabel(page, 'Confirm Saved');
+      await savedCheckbox.click();
       await getButtonByText(page, /Next/i).click();
 
       /** Confirm Mnemonic */
-      await hasText(page, /Write down your Recovery Phrase/i);
+      await hasText(page, /Enter your Recovery Phrase/i);
       await getButtonByText(page, /Paste/i).click();
       await getButtonByText(page, /Next/i).click();
 
       /** Adding password */
-      await hasText(page, /Create your password/i);
+      await hasText(page, /Encrypt your wallet/i);
       const passwordInput = await getByAriaLabel(page, 'Your Password');
       await passwordInput.type(WALLET_PASSWORD);
       await passwordInput.press('Tab');
@@ -136,7 +137,6 @@ test.describe('FuelWallet Extension', () => {
       await confirmPasswordInput.type(WALLET_PASSWORD);
       await confirmPasswordInput.press('Tab');
 
-      await page.getByRole('checkbox').click();
       await getButtonByText(page, /Next/i).click();
 
       /** Account created */
@@ -328,15 +328,18 @@ test.describe('FuelWallet Extension', () => {
           AMOUNT_TRANSFER
         );
 
-        // Wait confirmation page to show
-        const confirmTransactionPage = await context.waitForEvent('page', {
+        // Wait for approve transaction page to show
+        const approveTransactionPage = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
         });
 
-        // Confirm transaction
-        await hasText(confirmTransactionPage, /0\.0000001.ETH/i);
-        await waitAriaLabel(confirmTransactionPage, senderAccount.name);
-        await getButtonByText(confirmTransactionPage, /confirm/i).click();
+        // Approve transaction
+        await hasText(approveTransactionPage, /0\.0000001.ETH/i);
+        await waitAriaLabel(
+          approveTransactionPage,
+          senderAccount.address.toString()
+        );
+        await getButtonByText(approveTransactionPage, /Approve/i).click();
 
         await expect(transferStatus).resolves.toBe('success');
         const balance = await receiverWallet.getBalance();
@@ -356,7 +359,7 @@ test.describe('FuelWallet Extension', () => {
         await approveTxCheck(authorizedAccount);
       });
 
-      await test.step('Send transfer should block anauthorized account', async () => {
+      await test.step('Send transfer should block unauthorized account', async () => {
         const nonAuthorizedAccount = await getAccountByName(
           popupPage,
           'Account 2'
@@ -397,9 +400,28 @@ test.describe('FuelWallet Extension', () => {
       const addAssetPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
       });
+      await hasText(addAssetPage, 'Review the Assets to be added:');
+      await getButtonByText(addAssetPage, /add assets/i).click();
+      await expect(addingAsset).resolves.toBeDefined();
+    });
 
-      await hasText(addAssetPage, 'Asset information');
-      await getButtonByText(addAssetPage, /add asset/i).click();
+    await test.step('window.fuel.addAssets()', async () => {
+      function addAssets(assets: Asset[]) {
+        return blankPage.evaluate(
+          async ([asset]) => {
+            return window.fuel.addAssets(asset);
+          },
+          [assets]
+        );
+      }
+
+      const addingAsset = addAssets([CUSTOM_ASSET, CUSTOM_ASSET_2]);
+
+      const addAssetPage = await context.waitForEvent('page', {
+        predicate: (page) => page.url().includes(extensionId),
+      });
+      await hasText(addAssetPage, 'Review the Assets to be added:');
+      await getButtonByText(addAssetPage, /add assets/i).click();
       await expect(addingAsset).resolves.toBeDefined();
     });
 

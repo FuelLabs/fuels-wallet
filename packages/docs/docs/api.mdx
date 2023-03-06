@@ -41,6 +41,27 @@ Return the current account being used in the wallet application.
 
 <CodeImport file="../../sdk/src/Fuel.test.ts" testCase="currentAccount" />
 
+### List Assets
+
+`async assets(): Promise<Array<Asset>>`<br />
+Return the list of assets in the current wallet.
+
+<CodeImport file="../../sdk/src/Fuel.test.ts" testCase="assets" />
+
+### Add Asset
+
+`async addAsset(asset: Asset): Promise<boolean>`<br />
+Add asset to the wallet.
+
+<CodeImport file="../../sdk/src/Fuel.test.ts" testCase="addAsset" />
+
+### Add Assets
+
+`async addAssets(asset: Asset[]): Promise<boolean>`<br />
+Add assets to the wallet.
+
+<CodeImport file="../../sdk/src/Fuel.test.ts" testCase="addAssets" />
+
 ### Request signature message
 
 `async signMessage(address: string, message: string): Promise<string>`<br />
@@ -98,7 +119,7 @@ The `on` method takes two arguments, the event name and a callback function. The
 
 This event is triggered when the connection status change between the Wallet and the application. The callback function receives the `connection` object.
 
-<CodeImport file="../src/hooks/useIsConnected.tsx" lineStart="9" lineEnd="27" />
+<CodeImport file="../src/hooks/useIsConnected.tsx" lineStart="9" lineEnd="23" />
 
 ### Accounts
 

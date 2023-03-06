@@ -80,7 +80,7 @@ describe('sendMachine', () => {
     const { fee } = service.getSnapshot().context;
     const input = { ...MOCK_INPUTS, account, fee };
     service.send('CONFIRM', { input });
-    await waitFor(service, (state) => state.matches('confirming'));
+    await waitFor(service, (state) => state.matches('idle'));
     expect(callTransactionRequest).toHaveBeenCalled();
   });
 });

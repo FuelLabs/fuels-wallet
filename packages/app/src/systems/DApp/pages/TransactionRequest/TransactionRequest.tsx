@@ -1,11 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button } from '@fuel-ui/react';
+import { Alert, Button, Text } from '@fuel-ui/react';
 
-import { ConnectInfo } from '../../components';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
 import { useAssets } from '~/systems/Asset';
-import { Layout } from '~/systems/Core';
+import { Layout, ConnectInfo } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { TxContent, TxHeader } from '~/systems/Transaction';
 
@@ -29,11 +28,25 @@ export function TransactionRequest() {
               showDetails
               tx={txRequest.tx}
               header={
-                <ConnectInfo
-                  account={ctx.account}
-                  origin={ctx.input.origin!}
-                  isReadOnly
-                />
+                <>
+                  <ConnectInfo
+                    account={ctx.account}
+                    origin={ctx.input.origin!}
+                    favIconUrl={ctx.input.favIconUrl}
+                    title={ctx.input.title}
+                    headerText="Requesting a transaction from:"
+                  />
+
+                  <Alert status="warning" css={styles.alert}>
+                    <Alert.Title>Confirm before approve</Alert.Title>
+                    <Alert.Description>
+                      <Text fontSize="xs" css={styles.alertDescription}>
+                        Carefully check if all details in your transaction are
+                        correct
+                      </Text>
+                    </Alert.Description>
+                  </Alert>
+                </>
               }
               assets={assets}
             />
@@ -109,5 +122,16 @@ const styles = {
     background: 'transparent',
     borderColor: '$gray8',
     borderStyle: 'dashed',
+  }),
+  alert: cssObj({
+    '& .fuel_alert--content': {
+      gap: '$1',
+    },
+    ' & .fuel_heading': {
+      fontSize: '$sm',
+    },
+  }),
+  alertDescription: cssObj({
+    fontWeight: '$bold',
   }),
 };

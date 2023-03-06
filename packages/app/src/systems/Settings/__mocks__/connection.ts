@@ -26,12 +26,16 @@ export async function mockConnections() {
     data: {
       origin: 'uniswap.org',
       accounts: [account1?.address!],
+      favIconUrl: 'https://wallet.fuel.network/favicon.ico',
+      title: 'Uniswap',
     },
   });
   const connection2 = await ConnectionService.addConnection({
     data: {
       origin: 'fuellabs.github.io/swayswap',
       accounts: [account1?.address!, account2?.address!],
+      favIconUrl: 'https://wallet.fuel.network/favicon.ico',
+      title: 'SwaySwap',
     },
   });
   return {
@@ -50,6 +54,6 @@ export async function connectionsLoader() {
 }
 
 export const MOCK_CONNECTION = {
-  origin: 'https://example.com',
+  origin: 'example.com',
   accounts: [MOCK_ACCOUNTS[0].address],
 } as Connection;

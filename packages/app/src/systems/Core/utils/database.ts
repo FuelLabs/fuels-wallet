@@ -9,6 +9,7 @@ import type { Table } from 'dexie';
 import Dexie from 'dexie';
 
 import 'dexie-observable';
+import { DATABASE_VERSION } from '~/config';
 import type { Transaction } from '~/systems/Transaction/types';
 
 export class FuelDB extends Dexie {
@@ -21,7 +22,7 @@ export class FuelDB extends Dexie {
 
   constructor() {
     super('FuelDB');
-    this.version(9).stores({
+    this.version(DATABASE_VERSION).stores({
       vaults: `key`,
       accounts: `&address, &name`,
       networks: `&id, &url, &name`,

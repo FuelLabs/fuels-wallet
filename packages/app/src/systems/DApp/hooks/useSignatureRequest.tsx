@@ -11,6 +11,8 @@ const selectors = {
   signedMessage: (state: MessageRequestState) => state.context.signedMessage,
   isLoading: (state: MessageRequestState) =>
     state.matches('signingMessage') || state.matches('fetchingAccount'),
+  title: (state: MessageRequestState) => state.context.title,
+  favIconUrl: (state: MessageRequestState) => state.context.favIconUrl,
 };
 
 export function useSignatureRequest() {
@@ -20,6 +22,8 @@ export function useSignatureRequest() {
   const origin = useSelector(service, selectors.origin);
   const account = useSelector(service, selectors.account);
   const isLoading = useSelector(service, selectors.isLoading);
+  const title = useSelector(service, selectors.title);
+  const favIconUrl = useSelector(service, selectors.favIconUrl);
 
   function sign() {
     service.send('SIGN_MESSAGE');
@@ -35,6 +39,8 @@ export function useSignatureRequest() {
       reject,
     },
     origin,
+    title,
+    favIconUrl,
     message,
     account,
     signedMessage,

@@ -12,6 +12,8 @@ type MachineContext = {
   message?: string;
   address?: string;
   origin?: string;
+  title?: string;
+  favIconUrl?: string;
   error?: string;
   signedMessage?: string;
 };
@@ -28,6 +30,8 @@ type MachineServices = {
 export type SignInputs = {
   start: {
     origin: string;
+    title?: string;
+    favIconUrl?: string;
     message: string;
     address: string;
   };
@@ -127,6 +131,8 @@ export const messageRequestMachine = createMachine(
         message: ev.input.message,
         address: ev.input.address,
         origin: ev.input.origin,
+        title: ev.input.title,
+        favIconUrl: ev.input.favIconUrl,
       })),
       assignAccount: assign({
         account: (_, ev) => ev.data,

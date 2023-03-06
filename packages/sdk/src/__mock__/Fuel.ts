@@ -28,6 +28,9 @@ export class MockConnection extends BaseConnection {
       this.signMessage,
       this.sendTransaction,
       this.currentAccount,
+      this.assets,
+      this.addAsset,
+      this.addAssets,
     ]);
   }
 
@@ -95,6 +98,19 @@ export class MockConnection extends BaseConnection {
     const account = userWallet.address.toAddress();
     fuel.emit(FuelWalletEvents.currentAccount, account);
     return account;
+  }
+
+  async assets() {
+    const assets = await userWallet.getBalances();
+    return assets;
+  }
+
+  async addAsset(): Promise<boolean> {
+    return true;
+  }
+
+  async addAssets(): Promise<boolean> {
+    return true;
   }
 }
 
