@@ -1,13 +1,13 @@
 use fuels::prelude::*;
 
 use crate::utils::{
-    abi_calls::{constructor, get_coin_balance},
+    abi_calls::{coin_balance, constructor},
     test_helpers::setup,
     ConstructorParams, TokenContract,
 };
 
-async fn get_balance_from(contract: &TokenContract, asset_id: AssetId) -> u64 {
-    let balance = get_coin_balance(contract, asset_id).await;
+async fn balance_from(contract: &TokenContract, asset_id: AssetId) -> u64 {
+    let balance = coin_balance(contract, asset_id).await;
     balance.value
 }
 
@@ -29,13 +29,10 @@ mod success {
         let params = meta.params;
         let contract_asset_id = AssetId::new(asset_id.into());
 
-        assert_eq!(
-            get_balance_from(&token_contract, contract_asset_id).await,
-            0
-        );
+        assert_eq!(balance_from(&token_contract, contract_asset_id).await, 0);
         constructor(&token_contract, &params).await;
         assert_eq!(
-            get_balance_from(&token_contract, contract_asset_id).await,
+            balance_from(&token_contract, contract_asset_id).await,
             params.total_supply
         );
     }

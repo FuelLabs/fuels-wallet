@@ -17,7 +17,7 @@ mod success {
         let amount = 100;
         let id = Identity::Address(user.address().into());
         let deposit = deposit(&token_contract, user, amount).await;
-        let curr_deposit = get_deposit_of(&token_contract, id).await;
+        let curr_deposit = deposit_of(&token_contract, id).await;
         assert_eq!(deposit.value, curr_deposit.value);
 
         let balances = provider

@@ -15,11 +15,11 @@ abi TokenContract {
     #[storage(read)]
     fn total_supply() -> u64;
     #[storage()]
-    fn get_coin_balance(asset: ContractId) -> u64;
+    fn coin_balance(asset: ContractId) -> u64;
     #[storage(read)]
-    fn get_deposit_of(id: Identity) -> u64;
+    fn deposit_of(id: Identity) -> u64;
     #[storage(read)]
-    fn get_mint_of(id: Identity) -> u64;
+    fn mint_of(id: Identity) -> u64;
 
     #[payable, storage(read, write)]
     fn deposit() -> u64;

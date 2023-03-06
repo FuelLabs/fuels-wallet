@@ -30,11 +30,6 @@ pub struct Metadata {
     pub provider: Provider,
 }
 
-pub mod paths {
-    pub const ASSET_CONTRACT_BINARY_PATH: &str = "./out/debug/token_contract.bin";
-    pub const ASSET_CONTRACT_STORAGE_PATH: &str = "./out/debug/token_contract-storage_slots.json";
-}
-
 pub mod abi_calls {
     use super::*;
     use fuels::programs::call_response::FuelCallResponse;
@@ -66,23 +61,23 @@ pub mod abi_calls {
     pub async fn total_supply(contract: &TokenContract) -> FuelCallResponse<u64> {
         contract.methods().total_supply().call().await.unwrap()
     }
-    pub async fn get_coin_balance(
+    pub async fn coin_balance(
         contract: &TokenContract,
         asset_id: AssetId,
     ) -> FuelCallResponse<u64> {
         let contract_id = ContractId::new(asset_id.into());
         contract
             .methods()
-            .get_coin_balance(contract_id)
+            .coin_balance(contract_id)
             .call()
             .await
             .unwrap()
     }
-    pub async fn get_deposit_of(contract: &TokenContract, id: Identity) -> FuelCallResponse<u64> {
-        contract.methods().get_deposit_of(id).call().await.unwrap()
+    pub async fn deposit_of(contract: &TokenContract, id: Identity) -> FuelCallResponse<u64> {
+        contract.methods().deposit_of(id).call().await.unwrap()
     }
-    pub async fn get_mint_of(contract: &TokenContract, id: Identity) -> FuelCallResponse<u64> {
-        contract.methods().get_mint_of(id).call().await.unwrap()
+    pub async fn mint_of(contract: &TokenContract, id: Identity) -> FuelCallResponse<u64> {
+        contract.methods().mint_of(id).call().await.unwrap()
     }
 
     pub async fn deposit(
@@ -124,9 +119,11 @@ pub mod abi_calls {
 
 pub mod test_helpers {
     use super::*;
-    use paths::{ASSET_CONTRACT_BINARY_PATH, ASSET_CONTRACT_STORAGE_PATH};
 
     pub async fn setup(initial_params: Option<SetupParams>) -> Metadata {
+        const ASSET_CONTRACT_BINARY_PATH: &str = "./out/debug/token_contract.bin";
+        const ASSET_CONTRACT_STORAGE_PATH: &str = "./out/debug/token_contract-storage_slots.json";
+
         let params = initial_params.unwrap_or({
             SetupParams {
                 num_wallets: Some(2),
@@ -141,7 +138,7 @@ pub mod test_helpers {
         let num_wallets = params.num_wallets;
         let coins_per_wallet = params.coins_per_wallet;
         let coin_amount = params.coin_amount;
-        let mut wallets = launch_custom_provider_and_get_wallets(
+        let mut wallets = launch_custom_provider_and_wallets(
             WalletsConfig::new(num_wallets, coins_per_wallet, coin_amount),
             None,
             None,
@@ -170,7 +167,7 @@ pub mod test_helpers {
             total_supply: params.total_supply.unwrap_or_default(),
         };
 
-        let provider = deployer.get_provider().unwrap().clone();
+        let provider = deployer.provider().unwrap().clone();
         let metadata = {
             Metadata {
                 contract_id,

@@ -1,5 +1,10 @@
 library events;
 
+pub struct InitialMintEvent {
+    to: Identity,
+    amount: u64,
+}
+
 pub struct TransferBackEvent {
     to: Identity,
     amount: u64,

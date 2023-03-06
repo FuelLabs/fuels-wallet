@@ -18,7 +18,7 @@ mod success {
         let minted = mint_tokens(&token_contract, asset_id, user.clone()).await;
         println!("minted: {:?}", minted.value);
 
-        let curr_mint = get_mint_of(&token_contract, id).await;
+        let curr_mint = mint_of(&token_contract, id).await;
         assert_eq!(minted.value, curr_mint.value);
 
         let contract_asset_id = AssetId::new(asset_id.into());

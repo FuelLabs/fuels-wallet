@@ -7,11 +7,6 @@ pub enum InitError {
     MintLimitCannotBeZero: (),
 }
 
-pub enum AccessError {
-    CannotQueryOwnerBalance: (),
-    NotOwner: (),
-}
-
 pub enum DepositError {
     CannotDepositForOwner: (),
     CannotDepositZero: (),
