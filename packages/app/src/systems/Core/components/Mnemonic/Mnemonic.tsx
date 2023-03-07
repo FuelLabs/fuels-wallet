@@ -174,7 +174,6 @@ const styles = {
     gap: '$1',
     alignItems: 'center',
 
-    // applying some styles only to look minimally good.
     // TODO: should replace with a <Select> component in fuel-ui
     select: {
       backgroundColor: 'transparent',
