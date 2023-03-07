@@ -43,10 +43,8 @@ export const getUniqueString = ({
 
     let notRepeatedField: string;
     if (repeatedAssets[0]) {
-      const nextToTry =
-        tries === 1
-          ? `${value} (${tries})`
-          : `${value?.slice(0, -4)} (${tries})`;
+      const nextToTry = `${value?.replace(/\(\d+\)?$/, '')} (${tries})`;
+
       notRepeatedField = nextNotRepeated({
         value: nextToTry,
         tries: tries + 1,

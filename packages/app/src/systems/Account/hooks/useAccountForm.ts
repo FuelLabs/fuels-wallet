@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { useAccountFormNameObj } from './useAccountFormNameObj';
+import { useAccountFormName } from './useAccountFormName';
 
 import type { Maybe } from '~/systems/Core';
 
@@ -25,7 +25,7 @@ export type UseAddAccountOpts = {
 };
 
 export function useAccountForm(opts: UseAddAccountOpts = {}) {
-  const nameSchemaObj = useAccountFormNameObj(opts?.accounts || []);
+  const nameSchemaObj = useAccountFormName(opts?.accounts || []);
   const schema = yup.object({
     name: nameSchemaObj,
   });
