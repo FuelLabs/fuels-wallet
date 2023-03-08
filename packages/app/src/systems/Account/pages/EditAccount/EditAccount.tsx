@@ -1,24 +1,24 @@
 import { Box, Button, Dialog, Focus, Icon, IconButton } from '@fuel-ui/react';
 
 import { AccountForm } from '../../components';
-import { useAccounts } from '../../hooks';
+import { useAccounts, useEditAccount } from '../../hooks';
 import { useAccountForm } from '../../hooks/useAccountForm';
 import type { AccountFormValues } from '../../hooks/useAccountForm';
 
 export const EditAccount = () => {
-  const { address, handlers, isLoading, status, ...ctx } = useAccounts();
-  const selectedAccount = ctx.accounts?.find((a) => a.address === address);
+  const { accounts, handlers: accountsHandlers } = useAccounts();
+  const { account, handlers, isLoading } = useEditAccount();
   const form = useAccountForm({
-    accounts: ctx.accounts,
+    accounts,
     defaultValues: {
-      name: selectedAccount?.name || '',
+      name: account?.name || '',
     },
   });
 
   function onSubmit(data: AccountFormValues) {
-    if (!address) return;
+    if (!account) return;
     const { name } = data;
-    handlers.updateAccountName({ data: { address, name } });
+    handlers.updateAccountName({ address: account.address, data: { name } });
   }
 
   return (
@@ -30,16 +30,20 @@ export const EditAccount = () => {
           variant="link"
           icon={<Icon icon="X" color="gray8" />}
           aria-label="Close edit account"
-          onPress={handlers.closeDialog}
+          onPress={accountsHandlers.closeDialog}
         />
       </Dialog.Heading>
       <Dialog.Description as="div">
         <Focus.Scope contain autoFocus>
-          <AccountForm form={form} isLoading={status('loading')} />
+          <AccountForm form={form} isLoading={isLoading} />
         </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
-        <Button color="gray" variant="ghost" onPress={handlers.goToList}>
+        <Button
+          color="gray"
+          variant="ghost"
+          onPress={accountsHandlers.goToList}
+        >
           Cancel
         </Button>
         <Button

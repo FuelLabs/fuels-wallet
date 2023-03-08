@@ -26,9 +26,6 @@ export type AccountInputs = {
   setBalance: {
     data: Pick<Account, 'address' | 'balance' | 'balanceSymbol' | 'balances'>;
   };
-  hideAccount: {
-    data: Pick<Account, 'address' | 'isHidden'>;
-  };
   setCurrentAccount: {
     address: string;
   };
@@ -39,9 +36,6 @@ export type AccountInputs = {
   importAccount: {
     name: string;
     privateKey: string;
-  };
-  updateAccountName: {
-    data: Pick<Account, 'address' | 'name'>;
   };
 };
 
@@ -133,15 +127,6 @@ export class AccountService {
     });
   }
 
-  static async hideAccount(input: AccountInputs['hideAccount']) {
-    if (!db.isOpen()) return;
-    return db.transaction('rw!', db.accounts, async () => {
-      const { address, ...updateData } = input.data;
-      await db.accounts.update(address, updateData);
-      return db.accounts.get({ address: input.data.address });
-    });
-  }
-
   static toMap(accounts: Account[]) {
     return accounts.reduce((obj, acc) => ({ ...obj, [acc.address]: acc }), {});
   }
@@ -191,15 +176,6 @@ export class AccountService {
     return accounts.filter((account) =>
       account.name.toLowerCase().includes(name.toLowerCase())
     );
-  }
-
-  static async updateAccountName(input: AccountInputs['updateAccountName']) {
-    if (!db.isOpen()) return;
-    return db.transaction('rw!', db.accounts, async () => {
-      const { address, ...updateData } = input.data;
-      await db.accounts.update(address, updateData);
-      return db.accounts.get({ address: input.data.address });
-    });
   }
 }
 

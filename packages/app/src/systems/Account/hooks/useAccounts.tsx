@@ -45,7 +45,7 @@ const selectors = {
 
 const listenerAccountFetcher = () => {
   store.send(Services.accounts, {
-    type: 'UPDATE_ACCOUNT',
+    type: 'REFRESH_ACCOUNT',
   });
 };
 
@@ -69,11 +69,6 @@ export function useAccounts() {
 
   function status(status: keyof typeof AccountStatus) {
     return accountStatus === status;
-  }
-
-  function editAccount(address: string) {
-    store.editAccount(address);
-    overlay.open('accounts.edit');
   }
 
   store.useUpdateMachineConfig(Services.accounts, {
@@ -104,16 +99,12 @@ export function useAccounts() {
     isLoading: status('loading'),
     handlers: {
       closeDialog,
-      addAccount: store.addAccount,
-      importAccount: store.importAccount,
-      editAccount,
       goToAdd: store.openAccountsAdd,
       goToList: store.openAccountList,
+      goToEdit: store.openAccountEdit,
       goToImport: store.openAccountImport,
-      hideAccount: store.hideAccount,
       logout: store.logout,
       setCurrentAccount: store.setCurrentAccount,
-      updateAccountName: store.updateAccountName,
     },
   };
 }

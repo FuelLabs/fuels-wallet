@@ -1,11 +1,11 @@
 import type { Store } from '../Store';
 import { Services } from '../Store';
 
-import type { OverlayKeys } from './machines/overlayMachine';
+import type { OverlayData } from './machines/overlayMachine';
 
 export function overlayEvents(store: Store) {
   return {
-    openOverlay(input: OverlayKeys) {
+    openOverlay(input: OverlayData) {
       store.send(Services.overlay, { type: 'OPEN', input });
     },
     closeOverlay() {
@@ -14,43 +14,57 @@ export function overlayEvents(store: Store) {
     openAccountList() {
       store.send(Services.overlay, {
         type: 'OPEN',
-        input: 'accounts.list',
+        input: {
+          modal: 'accounts.list',
+        },
       });
     },
     openAccountsAdd() {
       store.send(Services.overlay, {
         type: 'OPEN',
-        input: 'accounts.add',
+        input: { modal: 'accounts.add' },
+      });
+    },
+    openAccountEdit(address: string) {
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: { modal: 'accounts.edit', params: address },
       });
     },
     openAccountImport() {
       store.send(Services.overlay, {
         type: 'OPEN',
-        input: 'accounts.import',
+        input: { modal: 'accounts.import' },
       });
     },
     openAccountsLogout() {
       store.send(Services.overlay, {
         type: 'OPEN',
-        input: 'accounts.logout',
+        input: { modal: 'accounts.logout' },
       });
     },
     openNetworksList() {
       store.send(Services.overlay, {
         type: 'OPEN',
-        input: 'networks.list',
+        input: { modal: 'networks.list' },
       });
     },
     openNetworksAdd() {
       store.send(Services.overlay, {
         type: 'OPEN',
-        input: 'networks.add',
+        input: { modal: 'networks.add' },
+      });
+    },
+    openNetworkUpdate() {
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: { modal: 'networks.update' },
       });
     },
     openTransactionApprove() {
       store.send(Services.overlay, {
         type: 'OPEN',
-        input: 'transactions.approve',
+        input: { modal: 'transactions.approve' },
       });
     },
   };
