@@ -469,11 +469,9 @@ export const accountsMachine = createMachine(
             throw new Error('Account name already exists');
           }
 
-          const account = await AccountService.updateAccountName({
+          return AccountService.updateAccountName({
             ...input,
           });
-
-          return account;
         },
       }),
       logout: FetchMachine.create<never, void>({

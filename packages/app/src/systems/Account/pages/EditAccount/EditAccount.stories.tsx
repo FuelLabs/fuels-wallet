@@ -1,7 +1,7 @@
 import { BoxCentered, Button } from '@fuel-ui/react';
 import type { ComponentStoryFn, Meta } from '@storybook/react';
 
-import { useAccounts } from '../..';
+import { AccountService, MOCK_ACCOUNTS, useAccounts } from '../..';
 
 import { EditAccount } from './EditAccount';
 
@@ -25,7 +25,10 @@ const Template: ComponentStoryFn<typeof EditAccount> = () => {
   return (
     <Layout isLoading={isLoading}>
       <BoxCentered css={{ minW: '100%', minH: '100%' }}>
-        <Button onPress={handlers.goToAdd} isLoading={isLoading}>
+        <Button
+          onPress={() => handlers.editAccount(MOCK_ACCOUNTS[0].address)}
+          isLoading={isLoading}
+        >
           Toggle Modal
         </Button>
       </BoxCentered>
@@ -37,6 +40,8 @@ export const Usage = Template.bind({});
 Usage.loaders = [
   async () => {
     store.closeOverlay();
+    await AccountService.clearAccounts();
+    await AccountService.addAccount({ data: MOCK_ACCOUNTS[0] });
     return {};
   },
 ];

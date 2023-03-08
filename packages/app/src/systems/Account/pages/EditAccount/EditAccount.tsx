@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
+import { Box, Button, Dialog, Focus, Icon, IconButton } from '@fuel-ui/react';
 
 import { AccountForm } from '../../components';
 import { useAccounts } from '../../hooks';
@@ -34,7 +34,9 @@ export const EditAccount = () => {
         />
       </Dialog.Heading>
       <Dialog.Description as="div">
-        <AccountForm form={form} isLoading={status('loading')} />
+        <Focus.Scope contain autoFocus>
+          <AccountForm form={form} isLoading={status('loading')} />
+        </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
         <Button color="gray" variant="ghost" onPress={handlers.goToList}>

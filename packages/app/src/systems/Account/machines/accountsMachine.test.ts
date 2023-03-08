@@ -131,7 +131,9 @@ describe('accountsMachine', () => {
 
       await expectStateMatch(service, 'failed');
     });
+  });
 
+  describe('import', () => {
     it('should be able to import from private key', async () => {
       await expectStateMatch(service, 'idle');
       service.send('IMPORT_ACCOUNT', {
@@ -144,7 +146,55 @@ describe('accountsMachine', () => {
       await expectStateMatch(service, 'fetchingAccounts');
       await expectStateMatch(service, 'idle');
     });
+  });
 
+  describe('edit', () => {
+    it('should be able to edit an account name', async () => {
+      const name = 'Test 1';
+      state = await expectStateMatch(service, 'idle');
+      expect(state.context.accounts?.[0].name).toBe(MOCK_ACCOUNT.name);
+
+      const updateAccountNameEv: MachineEvents = {
+        type: 'UPDATE_ACCOUNT_NAME',
+        input: { data: { address: MOCK_ACCOUNT.address, name } },
+      };
+
+      const nextState = service.nextState(updateAccountNameEv);
+      expect(nextState.value).toBe('updatingAccountName');
+
+      service.send(updateAccountNameEv);
+      await expectStateMatch(service, 'updatingAccountName');
+      state = await expectStateMatch(service, 'idle');
+
+      const accounts = await AccountService.getAccounts();
+      expect(accounts?.[0].name).toBe(name);
+    });
+
+    it('should not be able to edit an account with existing name', async () => {
+      await expectStateMatch(service, 'idle');
+      // TODO refactor: change to service.send(addEvent) when it is added to the accountsMachine
+      await AccountService.addAccount({ data: MOCK_ACCOUNT_TWO });
+
+      const accounts = await AccountService.getAccounts();
+      expect(accounts.length).toBe(2);
+
+      const updateAccountNameEv: MachineEvents = {
+        type: 'UPDATE_ACCOUNT_NAME',
+        input: {
+          data: { address: MOCK_ACCOUNT.address, name: MOCK_ACCOUNT_TWO.name },
+        },
+      };
+
+      service.send(updateAccountNameEv);
+
+      // make sure test fails but jest don't stop
+      jest.spyOn(console, 'error').mockImplementation();
+
+      await expectStateMatch(service, 'failed');
+    });
+  });
+
+  describe('logout', () => {
     it('logout should clean indexdb and localstorage', async () => {
       await createMockAccount();
       const DatabaseMock = jest.spyOn(db, 'clear').mockImplementation();
