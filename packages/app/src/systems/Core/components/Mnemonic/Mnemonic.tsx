@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import { MnemonicInput } from './MnemonicInput';
 
 const WORDS = import.meta.env.VITE_MNEMONIC_WORDS;
-const COMMON_MNEMONIC_SIZES = [12, 24];
 
 function fillArray(item: string[], format: number) {
   return Array.from({ length: format }).map((_, idx) => item[idx] || '');
@@ -36,14 +35,11 @@ export function Mnemonic({
   enableChangeFormat,
 }: MnemonicProps) {
   const [format, setFormat] = useState(() => {
-    if (initialFormat && COMMON_MNEMONIC_SIZES.includes(initialFormat)) {
+    if (initialFormat && MNEMONIC_SIZES.includes(initialFormat)) {
       return initialFormat;
     }
 
-    if (
-      initialValue.length &&
-      COMMON_MNEMONIC_SIZES.includes(initialValue.length)
-    ) {
+    if (initialValue.length && MNEMONIC_SIZES.includes(initialValue.length)) {
       return initialValue.length;
     }
 
