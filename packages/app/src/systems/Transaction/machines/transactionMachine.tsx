@@ -181,8 +181,12 @@ export const transactionMachine = createMachine(
             txId: input.txId,
           });
 
-          const { transaction, transactionWithReceipts: gqlTransaction } =
-            await transactionResponse.fetch();
+          const gqlTransaction = await transactionResponse.fetch();
+          if (!gqlTransaction) {
+            throw Error('Transaction not found');
+          }
+          const transaction =
+            transactionResponse.decodeTransaction(gqlTransaction);
 
           return {
             transaction,
