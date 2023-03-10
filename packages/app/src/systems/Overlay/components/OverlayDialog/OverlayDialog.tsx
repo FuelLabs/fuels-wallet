@@ -4,6 +4,7 @@ import { Dialog } from '@fuel-ui/react';
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { AddAccount, Logout } from '~/systems/Account';
 import { Accounts } from '~/systems/Account/pages/Accounts';
+import { ImportAccount } from '~/systems/Account/pages/ImportAccount';
 import { AddNetwork, Networks, UpdateNetwork } from '~/systems/Network/pages';
 import { useOverlay } from '~/systems/Overlay';
 import { TxApprove } from '~/systems/Transaction';
@@ -17,6 +18,7 @@ export function OverlayDialog() {
         {/* Accounts */}
         {overlay.is('accounts.list') && <Accounts />}
         {overlay.is('accounts.add') && <AddAccount />}
+        {overlay.is('accounts.import') && <ImportAccount />}
         {overlay.is('accounts.logout') && <Logout />}
 
         {/* Networks */}

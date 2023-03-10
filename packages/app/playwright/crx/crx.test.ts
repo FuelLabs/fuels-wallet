@@ -11,7 +11,7 @@ import {
   waitAriaLabel,
   reload,
 } from '../commons';
-import { CUSTOM_ASSET, CUSTOM_ASSET_2 } from '../mocks';
+import { CUSTOM_ASSET, CUSTOM_ASSET_2, PRIVATE_KEY } from '../mocks';
 
 import {
   test,
@@ -161,12 +161,25 @@ test.describe('FuelWallet Extension', () => {
         await waitAccountPage(popupPage, name);
       }
 
+      async function createAccountFromPrivateKey(
+        privateKey: string,
+        name: string
+      ) {
+        await waitWalletToLoad(popupPage);
+        await getByAriaLabel(popupPage, 'Accounts').click();
+        await getByAriaLabel(popupPage, 'Import from private key').click();
+        await getByAriaLabel(popupPage, 'Private Key').type(privateKey);
+        await getByAriaLabel(popupPage, 'Account Name').type(name);
+        await getByAriaLabel(popupPage, 'Import').click();
+        await waitAccountPage(popupPage, name);
+      }
+
       await createAccount('Account 2');
       await createAccount('Account 3');
+      await createAccountFromPrivateKey(PRIVATE_KEY, 'Account 4');
       await switchAccount(popupPage, 'Account 1');
     });
 
-    // Connect Account 1 to the DApp.
     await test.step('window.fuel.connect()', async () => {
       const isConnected = blankPage.evaluate(async () => {
         return window.fuel.connect();
@@ -177,6 +190,8 @@ test.describe('FuelWallet Extension', () => {
 
       // Add Account 3 to the DApp connection
       await getByAriaLabel(authorizeRequest, 'Toggle Account 3').click();
+      // Add Account 4 to the DApp connection
+      await getByAriaLabel(authorizeRequest, 'Toggle Account 4').click();
 
       await hasText(authorizeRequest, /connect/i);
       await getButtonByText(authorizeRequest, /next/i).click();
@@ -198,12 +213,14 @@ test.describe('FuelWallet Extension', () => {
     await test.step('window.fuel.accounts()', async () => {
       const authorizedAccount = await getAccountByName(popupPage, 'Account 1');
       const authorizedAccount2 = await getAccountByName(popupPage, 'Account 3');
+      const authorizedAccount3 = await getAccountByName(popupPage, 'Account 4');
       const accounts = await blankPage.evaluate(async () => {
         return window.fuel.accounts();
       });
       await expect(accounts).toEqual([
         authorizedAccount.address,
         authorizedAccount2.address,
+        authorizedAccount3.address,
       ]);
     });
 
@@ -225,13 +242,6 @@ test.describe('FuelWallet Extension', () => {
           'address is not authorized for this connection.'
         );
       });
-    });
-
-    await test.step('window.fuel.assets()', async () => {
-      const assets = await blankPage.evaluate(async () => {
-        return window.fuel.assets();
-      });
-      await expect(assets.length).toEqual(1);
     });
 
     await test.step('window.fuel.signMessage()', async () => {
@@ -276,6 +286,14 @@ test.describe('FuelWallet Extension', () => {
         const authorizedAccount = await getAccountByName(
           popupPage,
           'Account 3'
+        );
+        await approveMessageSignCheck(authorizedAccount);
+      });
+
+      await test.step('Signed message using authorized Account 4 (from Private Key)', async () => {
+        const authorizedAccount = await getAccountByName(
+          popupPage,
+          'Account 4'
         );
         await approveMessageSignCheck(authorizedAccount);
       });
@@ -359,7 +377,15 @@ test.describe('FuelWallet Extension', () => {
         await approveTxCheck(authorizedAccount);
       });
 
-      await test.step('Send transfer should block unauthorized account', async () => {
+      await test.step('Send transfer using authorized Account 4 (from Private Key)', async () => {
+        const authorizedAccount = await getAccountByName(
+          popupPage,
+          'Account 4'
+        );
+        await approveTxCheck(authorizedAccount);
+      });
+
+      await test.step('Send transfer should block anauthorized account', async () => {
         const nonAuthorizedAccount = await getAccountByName(
           popupPage,
           'Account 2'
@@ -383,6 +409,13 @@ test.describe('FuelWallet Extension', () => {
           'address is not authorized for this connection.'
         );
       });
+    });
+
+    await test.step('window.fuel.assets()', async () => {
+      const assets = await blankPage.evaluate(async () => {
+        return window.fuel.assets();
+      });
+      await expect(assets.length).toEqual(1);
     });
 
     await test.step('window.fuel.addAsset()', async () => {
