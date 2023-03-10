@@ -2,6 +2,7 @@ import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
 
 import { getByAriaLabel, getButtonByText, visit, hasText } from '../commons';
+import { logout } from '../commons/logout';
 import { WALLET_PASSWORD } from '../mocks';
 
 const WORDS_12 =
@@ -52,10 +53,10 @@ test.describe('RecoverWallet', () => {
 
   test('should be able to recover a wallet from 24-word mnemonic', async () => {
     await visit(page, '/wallet');
+    await logout(page);
     await getButtonByText(page, /I already have a wallet/i).click();
 
-    await getByAriaLabel(page, 'Select format').click();
-    await getByAriaLabel(page, '24 words').click();
+    await getByAriaLabel(page, 'Select format').selectOption('24 words');
 
     /** Copy words to clipboard area */
     await page.evaluate(`navigator.clipboard.writeText('${WORDS_24}')`);
@@ -82,6 +83,6 @@ test.describe('RecoverWallet', () => {
     /** Account created */
     await hasText(page, /Wallet created successfully/i);
     await hasText(page, /Account 1/i);
-    await hasText(page, 'fuel1r...xqqj');
+    await hasText(page, 'fuel1w...4rtl');
   });
 });
