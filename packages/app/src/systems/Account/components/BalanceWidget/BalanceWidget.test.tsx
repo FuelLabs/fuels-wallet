@@ -18,6 +18,7 @@ describe('BalanceWidget', () => {
     await testA11y(<BalanceWidget account={ACCOUNT} />, {
       wrapper: TestWrapper,
     });
+    await testA11y(<BalanceWidget.Loader />);
   });
 
   it('should show user address', () => {

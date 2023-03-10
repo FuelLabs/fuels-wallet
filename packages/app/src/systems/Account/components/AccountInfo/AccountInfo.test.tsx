@@ -25,6 +25,7 @@ describe('AccountInfo', () => {
 
   it('a11y', async () => {
     await testA11y(<AccountInfo {...PROPS} />, { wrapper: TestWrapper });
+    await testA11y(<AccountInfo.Loader />);
   });
 
   it('should show some part of the address', async () => {
