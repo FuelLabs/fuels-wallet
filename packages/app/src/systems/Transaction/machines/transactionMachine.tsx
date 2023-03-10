@@ -191,8 +191,8 @@ export const transactionMachine = createMachine(
           return {
             transaction,
             transactionResponse,
-            gqlTransactionStatus: gqlTransaction.status?.type,
-            txId: gqlTransaction.id,
+            gqlTransactionStatus: gqlTransaction?.status?.type,
+            txId: gqlTransaction?.id,
           };
         },
       }),
