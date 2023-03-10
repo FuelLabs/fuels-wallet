@@ -94,11 +94,16 @@ export function Mnemonic({
         <Flex css={styles.formatWrapper}>
           <Text>Format: </Text>
           <select
+            aria-label="Select format"
             value={format}
             onChange={(e) => handleChangeFormat(Number(e.target.value))}
           >
             {MNEMONIC_SIZES.map((size) => (
-              <option key={size} value={size}>{`${size} words`}</option>
+              <option
+                key={size}
+                value={size}
+                aria-label={`${size} words`}
+              >{`${size} words`}</option>
             ))}
           </select>
         </Flex>

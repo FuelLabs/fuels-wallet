@@ -27,7 +27,7 @@ export function RecoverWallet() {
           onFilled={handlers.confirmMnemonic}
           onNext={handlers.next}
           onCancel={() => navigate(Pages.signUp())}
-          enableUpdateFormat={true}
+          enableChangeFormat={true}
         />
       )}
       {(state.matches('addingPassword') || state.hasTag('loading')) && (
