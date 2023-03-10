@@ -10,6 +10,7 @@ export type MnemonicWriteProps = {
   onFilled: (words: string[]) => void;
   onNext: () => void;
   onCancel: () => void;
+  isLoading?: boolean;
 };
 
 export function MnemonicWrite({
@@ -18,6 +19,7 @@ export function MnemonicWrite({
   onFilled,
   onCancel,
   onNext,
+  isLoading,
 }: MnemonicWriteProps) {
   function handleFill(val: string[]) {
     onFilled(val);
@@ -53,6 +55,7 @@ export function MnemonicWrite({
           css={{ width: 130 }}
           onPress={onNext}
           isDisabled={!canProceed}
+          isLoading={isLoading}
         >
           Next
         </Button>

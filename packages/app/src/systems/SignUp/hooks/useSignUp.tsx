@@ -38,12 +38,20 @@ export function useSignUp(type: SignUpType) {
     send('CONFIRM_MNEMONIC', { data: { words } });
   }
 
-  function createManager({ password }: CreatePasswordValues) {
-    send('CREATE_MANAGER', { data: { password } });
+  function createManager() {
+    send('CREATE_MANAGER');
+  }
+
+  function createPassword({ password }: CreatePasswordValues) {
+    send('CREATE_PASSWORD', { data: { password } });
+  }
+
+  function saveSignup() {
+    send('SAVE_SIGNUP');
   }
 
   useEffect(() => {
-    if (type === SignUpType.create) send('CREATE_MNEMONIC');
+    if (type === SignUpType.create && state.matches('idle')) send('NEXT');
   }, []);
 
   return {
@@ -52,6 +60,8 @@ export function useSignUp(type: SignUpType) {
       next,
       confirmMnemonic,
       createManager,
+      createPassword,
+      saveSignup,
     },
     context: {
       ...ctx,

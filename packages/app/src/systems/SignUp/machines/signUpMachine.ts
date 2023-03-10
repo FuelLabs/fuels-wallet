@@ -43,13 +43,21 @@ type MachineServices = {
   setupVault: {
     data: Maybe<Account>;
   };
+  saveSignUp: {
+    data: Maybe<FormValues>;
+  };
+  getSavedSignup: {
+    data: Maybe<FormValues>;
+  };
 };
 
 type MachineEvents =
   | { type: 'NEXT' }
   | { type: 'CREATE_MNEMONIC'; data: { words: string[] } }
   | { type: 'CONFIRM_MNEMONIC'; data: { words: string[] } }
-  | { type: 'CREATE_MANAGER'; data: { password: string } };
+  | { type: 'CREATE_MANAGER'; data: { password: string } }
+  | { type: 'CREATE_PASSWORD'; data: { password: string } }
+  | { type: 'SAVE_SIGNUP' };
 
 export const signUpMachine = createMachine(
   {
@@ -67,6 +75,10 @@ export const signUpMachine = createMachine(
       checking: {
         always: [
           {
+            target: 'fetchingSavedData',
+            cond: 'hasSavedMnemonic',
+          },
+          {
             target: 'idle',
             cond: 'isCreatingWallet',
           },
@@ -77,9 +89,20 @@ export const signUpMachine = createMachine(
       },
       idle: {
         on: {
-          CREATE_MNEMONIC: {
+          NEXT: {
+            target: 'addingPassword',
+          },
+        },
+      },
+      fetchingSavedData: {
+        invoke: {
+          src: 'getSavedSignUp',
+          onDone: {
+            actions: ['assignSavedData'],
             target: 'showingMnemonic',
-            actions: 'createMnemonic',
+          },
+          onError: {
+            actions: ['assignError'],
           },
         },
       },
@@ -110,8 +133,8 @@ export const signUpMachine = createMachine(
           validMnemonic: {
             entry: ['cleanError'],
             on: {
-              NEXT: {
-                target: '#(machine).addingPassword',
+              CREATE_MANAGER: {
+                target: '#(machine).creatingWallet',
               },
             },
           },
@@ -137,9 +160,22 @@ export const signUpMachine = createMachine(
       },
       addingPassword: {
         on: {
-          CREATE_MANAGER: {
-            target: 'creatingWallet',
-            actions: 'assignPassword',
+          CREATE_PASSWORD: {
+            target: '#(machine).savingPassword',
+            actions: ['assignPassword', 'createMnemonic'],
+          },
+        },
+      },
+      savingPassword: {
+        tags: ['savingPassword'],
+        invoke: {
+          src: 'saveSignUp',
+          onDone: {
+            target: 'showingMnemonic',
+          },
+          onError: {
+            actions: 'assignError',
+            target: 'failed',
           },
         },
       },
@@ -176,7 +212,8 @@ export const signUpMachine = createMachine(
         error: (_) => undefined,
       }),
       createMnemonic: assign({
-        data: (_) => ({
+        data: (ctx) => ({
+          ...ctx.data,
           mnemonic: getWordsFromValue(Mnemonic.generate(MNEMONIC_SIZE)),
         }),
       }),
@@ -198,6 +235,16 @@ export const signUpMachine = createMachine(
       }),
       assignAccount: assign({
         account: (_, ev) => ev.data,
+      }),
+      assignSavedData: assign({
+        data: (_, ev) => {
+          console.log({ ev, _ });
+          return { mnemonic: ev.data.mnemonic, ..._.data };
+        },
+        account: (_, ev) => {
+          console.log(ev);
+          return ev.data.account;
+        },
       }),
       deleteData: assign({
         data: (_) => null,
@@ -225,6 +272,9 @@ export const signUpMachine = createMachine(
             getPhraseFromValue(ctx.data?.mnemonic) && isValid
         );
       },
+      hasSavedMnemonic: () => {
+        return SignUpService.hasSaved();
+      },
     },
     services: {
       async setupVault({ data }) {
@@ -236,6 +286,24 @@ export const signUpMachine = createMachine(
         }
         const account = await SignUpService.create({ data });
         return account;
+      },
+      async saveSignUp({ data }) {
+        if (!data?.password) {
+          throw new Error('Invalid password');
+        }
+        if (!data.mnemonic) {
+          throw new Error('Invalid mnemonic');
+        }
+
+        await SignUpService.save({ data });
+        return data;
+      },
+      async getSavedSignUp() {
+        const data = await SignUpService.getSaved();
+        console.log({
+          data,
+        });
+        return data;
       },
     },
   }

@@ -4,9 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { Header } from '../../components';
 
 import { Layout, Pages } from '~/systems/Core';
+import { useIsSigningUp } from '~/systems/Core/hooks/useIsSigningUp';
 
 export function WelcomeScreen() {
   const navigate = useNavigate();
+  const isSigningUp = useIsSigningUp();
+  if (isSigningUp) {
+    navigate(Pages.signUpCreateWallet());
+  }
 
   return (
     <Layout title="Sign Up" isPublic>
