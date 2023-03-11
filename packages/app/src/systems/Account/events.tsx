@@ -28,6 +28,12 @@ export function accountEvents(store: Store) {
         input,
       });
     },
+    importAccount(input: AccountInputs['importAccount']) {
+      store.send(Services.accounts, {
+        type: 'IMPORT_ACCOUNT',
+        input,
+      });
+    },
     logout() {
       store.send(Services.accounts, {
         type: 'LOGOUT',

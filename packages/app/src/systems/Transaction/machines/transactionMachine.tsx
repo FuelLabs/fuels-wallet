@@ -180,11 +180,12 @@ export const transactionMachine = createMachine(
             providerUrl,
             txId: input.txId,
           });
-
           const gqlTransaction = await transactionResponse.fetch();
-          const transaction = transactionResponse.decodeTransaction(
-            gqlTransaction!
-          );
+          if (!gqlTransaction) {
+            throw Error('Transaction not found');
+          }
+          const transaction =
+            transactionResponse.decodeTransaction(gqlTransaction);
 
           return {
             transaction,
