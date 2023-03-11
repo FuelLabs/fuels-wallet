@@ -10,12 +10,15 @@ import { store } from '~/store';
 import type { Maybe } from '~/systems/Core';
 import { CoreService, FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
+import type { VaultInputs } from '~/systems/Vault';
 import { VaultService } from '~/systems/Vault';
 
 type MachineContext = {
   accounts?: Account[];
   accountName?: string;
   account?: Maybe<Account>;
+  accountToExport?: Maybe<Account>;
+  exportedKey?: Maybe<string>;
   error?: unknown;
 };
 
@@ -35,6 +38,9 @@ type MachineServices = {
   importAccount: {
     data: Account;
   };
+  exportAccount: {
+    data: string;
+  };
 };
 
 export type MachineEvents =
@@ -52,6 +58,18 @@ export type MachineEvents =
   | {
       type: 'IMPORT_ACCOUNT';
       input: AccountInputs['importAccount'];
+    }
+  | {
+      type: 'SET_EXPORT_ACCOUNT';
+      input: AccountInputs['exportAccount'];
+    }
+  | {
+      type: 'CLEAR_EXPORTED_ACCOUNT';
+      input?: null;
+    }
+  | {
+      type: 'EXPORT_ACCOUNT';
+      input: VaultInputs['exportPrivateKey'];
     }
   | { type: 'LOGOUT'; input?: void };
 
@@ -112,6 +130,15 @@ export const accountsMachine = createMachine(
           },
           IMPORT_ACCOUNT: {
             target: 'importingAccount',
+          },
+          SET_EXPORT_ACCOUNT: {
+            actions: ['assignAccountToExport'],
+          },
+          CLEAR_EXPORTED_ACCOUNT: {
+            actions: ['clearExportedAccount'],
+          },
+          EXPORT_ACCOUNT: {
+            target: 'exportingAccount',
           },
         },
         after: {
@@ -216,6 +243,26 @@ export const accountsMachine = createMachine(
           ],
         },
       },
+      exportingAccount: {
+        tags: ['loading'],
+        invoke: {
+          src: 'exportAccount',
+          data: {
+            input: (_: MachineContext, ev: MachineEvents) => ev.input,
+          },
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              actions: 'assignError',
+              target: 'failed',
+            },
+            {
+              actions: ['assignExportedKey'],
+              target: 'fetchingAccounts',
+            },
+          ],
+        },
+      },
       loggingout: {
         tags: ['loading'],
         invoke: {
@@ -295,6 +342,16 @@ export const accountsMachine = createMachine(
       redirectToHome() {
         store.closeOverlay();
       },
+      assignAccountToExport: assign({
+        accountToExport: (_, ev) => ev.input.account,
+      }),
+      clearExportedAccount: assign({
+        accountToExport: (_) => undefined,
+        exportedKey: (_) => undefined,
+      }),
+      assignExportedKey: assign({
+        exportedKey: (_, ev) => ev.data,
+      }),
     },
     services: {
       fetchAccounts: FetchMachine.create<never, Account[]>({
@@ -408,6 +465,22 @@ export const accountsMachine = createMachine(
           });
 
           return activeAccount;
+        },
+      }),
+      exportAccount: FetchMachine.create<
+        VaultInputs['exportPrivateKey'],
+        MachineServices['exportAccount']['data']
+      >({
+        showError: true,
+        maxAttempts: 1,
+        async fetch({ input }) {
+          if (!input?.address) {
+            throw new Error('Invalid account address');
+          }
+
+          const privateKey = await VaultService.exportPrivateKey(input);
+
+          return privateKey;
         },
       }),
       logout: FetchMachine.create<never, void>({

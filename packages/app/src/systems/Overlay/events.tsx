@@ -29,6 +29,12 @@ export function overlayEvents(store: Store) {
         input: 'accounts.import',
       });
     },
+    openAccountExport() {
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: 'accounts.export',
+      });
+    },
     openAccountsLogout() {
       store.send(Services.overlay, {
         type: 'OPEN',

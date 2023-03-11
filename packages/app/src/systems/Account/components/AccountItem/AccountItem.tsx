@@ -5,6 +5,8 @@ import {
   Copyable,
   Flex,
   Heading,
+  Icon,
+  IconButton,
   Text,
 } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
@@ -22,6 +24,7 @@ export type AccountItemProps = {
   rightEl?: JSX.Element;
   isDisabled?: boolean;
   compact?: boolean;
+  onExport?: (account: Account) => void;
 };
 
 type AccountItemComponent = FC<AccountItemProps> & {
@@ -36,6 +39,7 @@ export const AccountItem: AccountItemComponent = ({
   rightEl,
   isDisabled,
   compact,
+  onExport,
 }: AccountItemProps) => {
   if (isHidden) return null;
   /**
@@ -54,11 +58,20 @@ export const AccountItem: AccountItemComponent = ({
   //     }}
   //   />
   // );
+
+  const rightElToUse = rightEl || (
+    <IconButton
+      variant="link"
+      icon={<Icon icon={Icon.is('Key')} />}
+      aria-label="Export Asset"
+      onPress={() => onExport?.(account)}
+    />
+  );
   return (
     <CardList.Item
       isActive={isCurrent}
       onClick={onPress}
-      rightEl={rightEl}
+      rightEl={rightElToUse}
       css={styles.root}
       aria-disabled={isDisabled}
       aria-label={account.name}

@@ -1,16 +1,16 @@
 import { BoxCentered, Button } from '@fuel-ui/react';
 import type { ComponentStoryFn, Meta } from '@storybook/react';
 
-import { useAccounts } from '../..';
+import { createMockAccount, useAccounts } from '../..';
 
-import { AddAccount } from './AddAccount';
+import { ExportAccount } from './ExportAccount';
 
 import { store } from '~/store';
 import { Layout } from '~/systems/Core';
 
 export default {
-  component: AddAccount,
-  title: 'Account/Pages/AddAccount',
+  component: ExportAccount,
+  title: 'Account/Pages/ExportAccount',
   decorators: [(Story) => <Story />],
   parameters: {
     layout: 'fullscreen',
@@ -20,14 +20,19 @@ export default {
   },
 } as Meta;
 
-const Template: ComponentStoryFn<typeof AddAccount> = () => {
-  const { isLoading, handlers } = useAccounts();
+const Template: ComponentStoryFn<typeof ExportAccount> = () => {
+  const { account, isLoading, handlers } = useAccounts();
   return (
     <Layout isLoading={isLoading}>
       <BoxCentered css={{ minW: '100%', minH: '100%' }}>
-        <Button onPress={handlers.goToAdd} isLoading={isLoading}>
-          Toggle Modal
-        </Button>
+        {account && (
+          <Button
+            onPress={() => handlers.goToExport({ account })}
+            isLoading={isLoading}
+          >
+            Toggle Modal
+          </Button>
+        )}
       </BoxCentered>
     </Layout>
   );
@@ -37,6 +42,8 @@ export const Usage = Template.bind({});
 Usage.loaders = [
   async () => {
     store.closeOverlay();
-    return {};
+    const { account, manager } = await createMockAccount();
+    manager.unlock('123123123');
+    return { account };
   },
 ];

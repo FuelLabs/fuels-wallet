@@ -1,5 +1,7 @@
 import type { Account } from '@fuel-wallet/types';
 
+import type { VaultInputs } from '../Vault';
+
 import type { AccountInputs } from './services';
 
 import type { Store } from '~/store';
@@ -31,6 +33,23 @@ export function accountEvents(store: Store) {
     importAccount(input: AccountInputs['importAccount']) {
       store.send(Services.accounts, {
         type: 'IMPORT_ACCOUNT',
+        input,
+      });
+    },
+    setAccountToExport(input: AccountInputs['exportAccount']) {
+      store.send(Services.accounts, {
+        type: 'SET_EXPORT_ACCOUNT',
+        input,
+      });
+    },
+    clearExportedAccount() {
+      store.send(Services.accounts, {
+        type: 'CLEAR_EXPORTED_ACCOUNT',
+      });
+    },
+    exportAccount(input: VaultInputs['exportPrivateKey']) {
+      store.send(Services.accounts, {
+        type: 'EXPORT_ACCOUNT',
         input,
       });
     },

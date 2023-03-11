@@ -9,12 +9,14 @@ export type AccountListProps = {
   accounts?: Account[];
   isLoading?: boolean;
   onPress: (account: Account) => void;
+  onExport?: (account: Account) => void;
 };
 
 export function AccountList({
   accounts,
   isLoading,
   onPress,
+  onExport,
 }: AccountListProps) {
   const [showHidden, setShowHidden] = useState(() => false);
   const [anyHiddenAccounts, setAnyHiddenAccounts] = useState(false);
@@ -46,6 +48,7 @@ export function AccountList({
               account={account}
               isHidden={!showHidden && account.isHidden}
               isCurrent={account.isCurrent}
+              onExport={onExport}
             />
           ))}
         </CardList>

@@ -40,6 +40,9 @@ export type AccountInputs = {
     name: string;
     privateKey: string;
   };
+  exportAccount: {
+    account: Account;
+  };
 };
 
 export class AccountService {
