@@ -180,21 +180,18 @@ export const transactionMachine = createMachine(
             providerUrl,
             txId: input.txId,
           });
-
-          // TODO: after upgrade to new ts sdk (higher than 0.35.0), this code should be included to fix breaking change:
-          // const gqlTransaction = await transactionResponse.fetch();
-          // if (!gqlTransaction) {
-          //   throw Error('Transaction not found');
-          // }
-          // const transaction = transactionResponse.decodeTransaction(gqlTransaction);
-          const { transaction, transactionWithReceipts: gqlTransaction } =
-            await transactionResponse.fetch();
+          const gqlTransaction = await transactionResponse.fetch();
+          if (!gqlTransaction) {
+            throw Error('Transaction not found');
+          }
+          const transaction =
+            transactionResponse.decodeTransaction(gqlTransaction);
 
           return {
             transaction,
             transactionResponse,
-            gqlTransactionStatus: gqlTransaction.status?.type,
-            txId: gqlTransaction.id,
+            gqlTransactionStatus: gqlTransaction?.status?.type,
+            txId: gqlTransaction?.id,
           };
         },
       }),
