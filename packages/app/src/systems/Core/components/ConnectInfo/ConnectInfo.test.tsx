@@ -25,6 +25,7 @@ describe('ConnectInfo', () => {
 
   it('a11y', async () => {
     await testA11y(<ConnectInfo {...PROPS} />, { wrapper: TestWrapper });
+    await testA11y(<ConnectInfo.Loader />);
   });
 
   it('should show some part of the url', async () => {

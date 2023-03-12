@@ -21,6 +21,7 @@ function Content() {
 describe('ConnectionItem', () => {
   it('a11y', async () => {
     await testA11y(<Content />);
+    await testA11y(<ConnectionItem.Loader />);
   });
 
   it('should show connection information', async () => {

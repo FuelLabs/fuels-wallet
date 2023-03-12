@@ -11,6 +11,7 @@ describe('AssetList', () => {
     await testA11y(<AssetList assets={MOCK_ASSETS} />, {
       wrapper: TestWrapper,
     });
+    await testA11y(<AssetList.Loading />);
   });
 
   it('should show one assets', () => {

@@ -11,6 +11,7 @@ describe('AssetItem', () => {
     await testA11y(<AssetItem asset={MOCK_ASSETS[0]} />, {
       wrapper: TestWrapper,
     });
+    await testA11y(<AssetItem.Loader />);
   });
   it('should show asset name', () => {
     render(<AssetItem asset={MOCK_ASSETS[0]} />, { wrapper: TestWrapper });
