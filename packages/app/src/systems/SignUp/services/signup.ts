@@ -65,10 +65,6 @@ export class SignUpService {
   }
 
   static async complete({ data, account }: SignUpServiceInputs['complete']) {
-    console.log({
-      data,
-      account,
-    });
     if (!account || !data?.mnemonic) {
       throw new Error('Invalid data');
     }

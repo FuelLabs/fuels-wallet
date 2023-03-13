@@ -9,10 +9,6 @@ import { Layout, Pages } from '~/systems/Core';
 export function CreateWallet() {
   const { state, handlers, context } = useSignUp(SignUpType.create);
   const navigate = useNavigate();
-  console.log({
-    state,
-    context,
-  });
   return (
     <Layout title="Create Wallet" isPublic>
       {(state.matches('addingPassword') || state.hasTag('savingPassword')) && (
