@@ -238,11 +238,9 @@ export const signUpMachine = createMachine(
       }),
       assignSavedData: assign({
         data: (_, ev) => {
-          console.log({ ev, _ });
           return { mnemonic: ev.data.mnemonic, ..._.data };
         },
         account: (_, ev) => {
-          console.log(ev);
           return ev.data.account;
         },
       }),
@@ -277,15 +275,21 @@ export const signUpMachine = createMachine(
       },
     },
     services: {
-      async setupVault({ data }) {
+      async setupVault({ data, account }) {
+        if (!data?.mnemonic) {
+          throw new Error('Invalid mnemonic');
+        }
+        if (account) {
+          const walletAccount = await SignUpService.complete({ data, account });
+          return walletAccount;
+        }
+
         if (!data?.password) {
           throw new Error('Invalid password');
         }
-        if (!data.mnemonic) {
-          throw new Error('Invalid mnemonic');
-        }
-        const account = await SignUpService.create({ data });
-        return account;
+
+        const walletAccount = await SignUpService.create({ data });
+        return walletAccount;
       },
       async saveSignUp({ data }) {
         if (!data?.password) {
@@ -300,9 +304,6 @@ export const signUpMachine = createMachine(
       },
       async getSavedSignUp() {
         const data = await SignUpService.getSaved();
-        console.log({
-          data,
-        });
         return data;
       },
     },

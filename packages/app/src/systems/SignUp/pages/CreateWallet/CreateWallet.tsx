@@ -11,10 +11,8 @@ export function CreateWallet() {
   const navigate = useNavigate();
   console.log({
     state,
-    handlers,
     context,
   });
-
   return (
     <Layout title="Create Wallet" isPublic>
       {(state.matches('addingPassword') || state.hasTag('savingPassword')) && (

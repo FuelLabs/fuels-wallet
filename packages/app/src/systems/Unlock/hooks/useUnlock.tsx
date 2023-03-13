@@ -1,6 +1,9 @@
 import type { UnlockMachineState } from '../machines';
 
 import { store, Services } from '~/store';
+import { continueSignUpLink } from '~/systems/CRX';
+import { openTab } from '~/systems/CRX/utils';
+import { useIsSigningUp } from '~/systems/Core/hooks/useIsSigningUp';
 
 const selectors = {
   error(state: UnlockMachineState) {
@@ -26,6 +29,12 @@ export function useUnlock() {
   store.useUpdateMachineConfig(Services.unlock, {
     actions: {
       reload: () => window.location.reload(),
+      onUnlock: () => {
+        const isSigningUp = useIsSigningUp();
+        if (isSigningUp) {
+          openTab(continueSignUpLink());
+        }
+      },
     },
   });
 

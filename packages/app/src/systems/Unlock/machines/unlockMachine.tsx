@@ -119,7 +119,9 @@ export const unlockMachine = createMachine(
         },
       },
       failed: {},
-      unlocked: {},
+      unlocked: {
+        entry: ['onUnlock'],
+      },
     },
     on: {
       LOCK_WALLET: {

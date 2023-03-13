@@ -15,6 +15,13 @@ export type SignUpServiceInputs = {
       mnemonic?: string[];
     };
   };
+  complete: {
+    data: {
+      password?: string;
+      mnemonic?: string[];
+    };
+    account: Account;
+  };
 };
 
 export type SignUpServiceOutputs = {
@@ -57,6 +64,30 @@ export class SignUpService {
     });
   }
 
+  static async complete({ data, account }: SignUpServiceInputs['complete']) {
+    console.log({
+      data,
+      account,
+    });
+    if (!account || !data?.mnemonic) {
+      throw new Error('Invalid data');
+    }
+
+    await db.clear();
+    await Storage.clear();
+
+    // Register the first account retuned from the vault
+    return AccountService.addAccount({
+      data: {
+        name: 'Account 1',
+        address: account.address.toString(),
+        publicKey: account.publicKey,
+        isHidden: false,
+        vaultId: account.vaultId,
+      },
+    });
+  }
+
   static async save({ data }: SignUpServiceInputs['create']) {
     if (!data?.password || !data?.mnemonic) {
       throw new Error('Invalid data');
@@ -71,7 +102,6 @@ export class SignUpService {
       secret: getPhraseFromValue(data.mnemonic),
     });
     Storage.setItem(IS_LOGGED_KEY, true);
-    console.log(Storage.getItem(IS_LOGGED_KEY));
     Storage.setItem('mnemonic', data.mnemonic);
     Storage.setItem('account', account);
     VaultService.lock();
