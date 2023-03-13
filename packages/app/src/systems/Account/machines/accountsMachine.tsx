@@ -32,6 +32,9 @@ type MachineServices = {
   addAccount: {
     data: Account;
   };
+  importAccount: {
+    data: Account;
+  };
 };
 
 export type MachineEvents =
@@ -45,6 +48,10 @@ export type MachineEvents =
   | {
       type: 'ADD_ACCOUNT';
       input: string;
+    }
+  | {
+      type: 'IMPORT_ACCOUNT';
+      input: AccountInputs['importAccount'];
     }
   | { type: 'LOGOUT'; input?: void };
 
@@ -102,6 +109,9 @@ export const accountsMachine = createMachine(
           },
           UPDATE_ACCOUNT: {
             target: 'updateAccount',
+          },
+          IMPORT_ACCOUNT: {
+            target: 'importingAccount',
           },
         },
         after: {
@@ -172,6 +182,26 @@ export const accountsMachine = createMachine(
             input: (ctx: MachineContext) => ({
               name: ctx.accountName,
             }),
+          },
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              actions: 'assignError',
+              target: 'failed',
+            },
+            {
+              actions: ['notifyUpdateAccounts', 'redirectToHome'],
+              target: 'fetchingAccounts',
+            },
+          ],
+        },
+      },
+      importingAccount: {
+        tags: ['loading'],
+        invoke: {
+          src: 'importAccount',
+          data: {
+            input: (_: MachineContext, ev: MachineEvents) => ev.input,
           },
           onDone: [
             {
@@ -333,12 +363,51 @@ export const accountsMachine = createMachine(
             },
           });
 
-          // Add account to the database
+          // set as active account
           account = await AccountService.setCurrentAccount({
             address: account.address.toString(),
           });
 
           return account;
+        },
+      }),
+      importAccount: FetchMachine.create<
+        AccountInputs['importAccount'],
+        MachineServices['importAccount']['data']
+      >({
+        showError: true,
+        maxAttempts: 1,
+        async fetch({ input }) {
+          if (!input?.privateKey.trim()) {
+            throw new Error('Private key cannot be empty');
+          }
+          if (!input?.name.trim()) {
+            throw new Error('Name cannot be empty');
+          }
+
+          // Add account to vault
+          const accountVault = await VaultService.createVault({
+            type: 'privateKey',
+            secret: input.privateKey,
+          });
+
+          // Add account to the database
+          const account = await AccountService.addAccount({
+            data: {
+              name: input.name,
+              address: accountVault.address.toString(),
+              publicKey: accountVault.publicKey,
+              isHidden: false,
+              vaultId: accountVault.vaultId,
+            },
+          });
+
+          // set as active account
+          const activeAccount = await AccountService.setCurrentAccount({
+            address: account.address.toString(),
+          });
+
+          return activeAccount;
         },
       }),
       logout: FetchMachine.create<never, void>({
