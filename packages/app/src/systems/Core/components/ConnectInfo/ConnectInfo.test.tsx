@@ -25,6 +25,9 @@ describe('ConnectInfo', () => {
 
   it('a11y', async () => {
     await testA11y(<ConnectInfo {...PROPS} />, { wrapper: TestWrapper });
+  });
+
+  it('a11y Loader', async () => {
     await testA11y(<ConnectInfo.Loader />);
   });
 

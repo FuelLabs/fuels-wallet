@@ -18,6 +18,8 @@ describe('BalanceWidget', () => {
     await testA11y(<BalanceWidget account={ACCOUNT} />, {
       wrapper: TestWrapper,
     });
+  });
+  it('a11y Loader', async () => {
     await testA11y(<BalanceWidget.Loader />);
   });
 

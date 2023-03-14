@@ -12,7 +12,6 @@ describe('AssetsAmount', () => {
     await testA11y(
       <AssetsAmount amounts={MOCK_ASSETS_AMOUNTS} title="Assets to Send" />
     );
-    await testA11y(<AssetsAmount.Loader />);
   });
 
   it('a11y Loader', async () => {

@@ -11,6 +11,11 @@ describe('AssetList', () => {
     await testA11y(<AssetList assets={MOCK_ASSETS} />, {
       wrapper: TestWrapper,
     });
+  });
+  it('a11y empty', async () => {
+    await testA11y(<AssetList.Empty />);
+  });
+  it('a11y loading', async () => {
     await testA11y(<AssetList.Loading />);
   });
 

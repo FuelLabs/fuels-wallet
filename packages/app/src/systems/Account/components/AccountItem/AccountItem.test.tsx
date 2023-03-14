@@ -12,6 +12,8 @@ const SHORT_ADDRESS = shortAddress(ACCOUNT.address);
 describe('AccountItem', () => {
   it('a11y', async () => {
     await testA11y(<AccountItem account={ACCOUNT} />);
+  });
+  it('a11y Loader', async () => {
     await testA11y(<AccountItem.Loader />);
   });
 

@@ -25,6 +25,8 @@ describe('AccountInfo', () => {
 
   it('a11y', async () => {
     await testA11y(<AccountInfo {...PROPS} />, { wrapper: TestWrapper });
+  });
+  it('a11y Loader', async () => {
     await testA11y(<AccountInfo.Loader />);
   });
 
