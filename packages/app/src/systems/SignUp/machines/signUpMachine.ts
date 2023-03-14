@@ -47,7 +47,7 @@ type MachineServices = {
   saveSignUp: {
     data: Maybe<FormValues>;
   };
-  getSavedSignup: {
+  getSavedSignUp: {
     data: {
       mnemonic?: string[];
       account?: Account;
@@ -242,10 +242,9 @@ export const signUpMachine = createMachine(
       }),
       assignSavedData: assign({
         data: (_, ev) => ({
-          mnemonic: (ev as MachineServices['getSavedSignup']).data.mnemonic,
+          mnemonic: ev.data.mnemonic,
         }),
-        account: (_, ev) =>
-          (ev as MachineServices['getSavedSignup']).data.account,
+        account: (_, ev) => ev.data.account,
       }),
       deleteData: assign({
         data: (_) => null,
@@ -307,7 +306,7 @@ export const signUpMachine = createMachine(
       },
       getSavedSignUp: FetchMachine.create<
         never,
-        MachineServices['getSavedSignup']['data']
+        MachineServices['getSavedSignUp']['data']
       >({
         showError: true,
         maxAttempts: 2,
