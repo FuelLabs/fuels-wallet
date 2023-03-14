@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Flex, Grid, Icon, Text } from '@fuel-ui/react';
+import { Box, Button, Flex, Grid, Icon } from '@fuel-ui/react';
 import { MNEMONIC_SIZES } from 'fuels';
 import React, { useEffect, useState } from 'react';
 
@@ -92,7 +92,6 @@ export function Mnemonic({
     <Box css={styles.root}>
       {enableChangeFormat && (
         <Flex css={styles.formatWrapper}>
-          <Text>Format: </Text>
           <select
             aria-label="Select format"
             value={format}
@@ -103,7 +102,7 @@ export function Mnemonic({
                 key={size}
                 value={size}
                 aria-label={`${size} words`}
-              >{`${size} words`}</option>
+              >{`I have a ${size} words seed phrase`}</option>
             ))}
           </select>
         </Flex>
@@ -174,6 +173,7 @@ const styles = {
     borderBottom: '1px dashed $gray3',
     gap: '$1',
     alignItems: 'center',
+    justifyContent: 'flex-end',
 
     // TODO: should replace with a <Select> component in fuel-ui
     select: {

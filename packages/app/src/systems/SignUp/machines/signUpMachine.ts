@@ -6,7 +6,7 @@ import { assign, createMachine } from 'xstate';
 
 import { SignUpService } from '../services';
 
-import { IS_LOGGED_KEY, MNEMONIC_SIZE, VITE_MNEMONIC_WORDS } from '~/config';
+import { IS_LOGGED_KEY, MNEMONIC_SIZE } from '~/config';
 import { store } from '~/store';
 import {
   assignErrorMessage,
@@ -168,7 +168,8 @@ export const signUpMachine = createMachine(
     actions: {
       assignIsFilled: assign({
         isFilled: (_, ev) => {
-          return ev.data.words.length === Number(VITE_MNEMONIC_WORDS);
+          const filledWords = ev.data.words.filter((word) => !!word);
+          return ev.data.words.length === filledWords.length;
         },
       }),
       cleanError: assign({

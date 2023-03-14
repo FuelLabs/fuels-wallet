@@ -56,7 +56,9 @@ test.describe('RecoverWallet', () => {
     await logout(page);
     await getButtonByText(page, /I already have a wallet/i).click();
 
-    await getByAriaLabel(page, 'Select format').selectOption('24 words');
+    await getByAriaLabel(page, 'Select format').selectOption(
+      'I have a 24 words seed phrase'
+    );
 
     /** Copy words to clipboard area */
     await page.evaluate(`navigator.clipboard.writeText('${WORDS_24}')`);
