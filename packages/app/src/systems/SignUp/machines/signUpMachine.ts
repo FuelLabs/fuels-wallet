@@ -10,6 +10,7 @@ import { IS_LOGGED_KEY, MNEMONIC_SIZE, VITE_MNEMONIC_WORDS } from '~/config';
 import { store } from '~/store';
 import {
   assignErrorMessage,
+  FetchMachine,
   getPhraseFromValue,
   getWordsFromValue,
   Storage,
@@ -47,7 +48,10 @@ type MachineServices = {
     data: Maybe<FormValues>;
   };
   getSavedSignup: {
-    data: Maybe<FormValues>;
+    data: {
+      mnemonic?: string[];
+      account?: Account;
+    };
   };
 };
 
@@ -237,12 +241,11 @@ export const signUpMachine = createMachine(
         account: (_, ev) => ev.data,
       }),
       assignSavedData: assign({
-        data: (_, ev) => {
-          return { mnemonic: ev.data.mnemonic, ..._.data };
-        },
-        account: (_, ev) => {
-          return ev.data.account;
-        },
+        data: (_, ev) => ({
+          mnemonic: (ev as MachineServices['getSavedSignup']).data.mnemonic,
+        }),
+        account: (_, ev) =>
+          (ev as MachineServices['getSavedSignup']).data.account,
       }),
       deleteData: assign({
         data: (_) => null,
@@ -302,10 +305,16 @@ export const signUpMachine = createMachine(
         await SignUpService.save({ data });
         return data;
       },
-      async getSavedSignUp() {
-        const data = await SignUpService.getSaved();
-        return data;
-      },
+      getSavedSignUp: FetchMachine.create<
+        never,
+        MachineServices['getSavedSignup']['data']
+      >({
+        showError: true,
+        maxAttempts: 2,
+        async fetch() {
+          return SignUpService.getSaved();
+        },
+      }),
     },
   }
 );

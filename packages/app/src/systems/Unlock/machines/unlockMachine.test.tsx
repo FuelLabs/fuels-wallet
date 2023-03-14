@@ -15,6 +15,7 @@ describe('unlockMachine', () => {
       unlockMachine.withConfig({
         actions: {
           reload: () => {},
+          onUnlock: () => {},
         },
       })
     ).start();
