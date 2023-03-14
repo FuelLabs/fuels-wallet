@@ -66,7 +66,7 @@ describe('signUpMachine', () => {
       service.send('NEXT');
       await expectStateMatch(service, 'waitingMnemonic');
 
-      const words = Mnemonic.generate(MNEMONIC_SIZE);
+      const words = Mnemonic.generate(MNEMONIC_SIZE).split(' ');
       service.send('CONFIRM_MNEMONIC', { data: { words } });
       await expectStateMatch(service, 'waitingMnemonic.mnemonicNotMatch');
     });
@@ -78,7 +78,7 @@ describe('signUpMachine', () => {
         type: SignUpType.recover,
       });
       const service = interpret(machine).start();
-      const words = Mnemonic.generate(MNEMONIC_SIZE);
+      const words = Mnemonic.generate(MNEMONIC_SIZE).split(' ');
       service.send('CONFIRM_MNEMONIC', { data: { words } });
       await expectStateMatch(service, 'waitingMnemonic.validMnemonic');
       service.send('NEXT');
