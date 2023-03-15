@@ -4,7 +4,7 @@ import { MOCK_ASSETS } from '../../__mocks__/assets';
 
 import { AssetList } from './AssetList';
 
-import { TestWrapper } from '~/systems/Core';
+import { TestWrapper, RouterProvider, Providers } from '~/systems/Core';
 
 describe('AssetList', () => {
   it('a11y', async () => {
@@ -13,7 +13,13 @@ describe('AssetList', () => {
     });
   });
   it('a11y empty', async () => {
-    await testA11y(<AssetList.Empty />);
+    await testA11y(
+      <RouterProvider>
+        <Providers>
+          <AssetList.Empty />
+        </Providers>
+      </RouterProvider>
+    );
   });
   it('a11y loading', async () => {
     await testA11y(<AssetList.Loading />);
