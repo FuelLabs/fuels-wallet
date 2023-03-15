@@ -6,6 +6,9 @@ import { TxDetails } from './TxDetails';
 describe('TxDetails', () => {
   it('a11y', async () => {
     await testA11y(<TxDetails fee={bn(6)} />);
+  });
+
+  it('a11y Loader', async () => {
     await testA11y(<TxDetails.Loader />);
   });
 

@@ -24,7 +24,6 @@ describe('TxItem', () => {
       />,
       opts
     );
-    await testA11y(<ActivityItem.Loader />);
   });
 
   it('a11y Loader', async () => {
