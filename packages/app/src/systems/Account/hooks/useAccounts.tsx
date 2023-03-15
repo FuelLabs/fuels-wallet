@@ -100,8 +100,10 @@ export function useAccounts() {
     handlers: {
       closeDialog,
       addAccount: store.addAccount,
+      importAccount: store.importAccount,
       goToAdd: store.openAccountsAdd,
       goToList: store.openAccountList,
+      goToImport: store.openAccountImport,
       hideAccount: store.hideAccount,
       logout: store.logout,
       setCurrentAccount: store.setCurrentAccount,

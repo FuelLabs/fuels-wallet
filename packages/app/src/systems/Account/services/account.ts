@@ -36,6 +36,10 @@ export type AccountInputs = {
     address: string;
     data: Partial<Account>;
   };
+  importAccount: {
+    name: string;
+    privateKey: string;
+  };
 };
 
 export class AccountService {

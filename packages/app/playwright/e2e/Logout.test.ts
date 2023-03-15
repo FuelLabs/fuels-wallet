@@ -1,7 +1,8 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
 
-import { getButtonByText, getByAriaLabel, hasText, visit } from '../commons';
+import { visit } from '../commons';
+import { logout } from '../commons/logout';
 import { mockData } from '../mocks';
 
 test.describe('Logout', () => {
@@ -19,10 +20,6 @@ test.describe('Logout', () => {
   });
 
   test('Should logout and redirect to create new wallet', async () => {
-    await getByAriaLabel(page, 'Menu').click();
-    await page.locator(`[data-key="settings"]`).click();
-    await page.locator(`[data-key="logout"]`).click();
-    await getButtonByText(page, /Logout/).click();
-    await hasText(page, 'Create a new Fuel Wallet');
+    await logout(page);
   });
 });

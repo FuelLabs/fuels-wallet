@@ -23,6 +23,12 @@ export function overlayEvents(store: Store) {
         input: 'accounts.add',
       });
     },
+    openAccountImport() {
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: 'accounts.import',
+      });
+    },
     openAccountsLogout() {
       store.send(Services.overlay, {
         type: 'OPEN',
