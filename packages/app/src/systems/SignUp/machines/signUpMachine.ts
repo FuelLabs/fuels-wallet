@@ -6,7 +6,7 @@ import { assign, createMachine } from 'xstate';
 
 import { SignUpService } from '../services';
 
-import { IS_LOGGED_KEY, MNEMONIC_SIZE, VITE_MNEMONIC_WORDS } from '~/config';
+import { IS_LOGGED_KEY, MNEMONIC_SIZE } from '~/config';
 import { store } from '~/store';
 import {
   assignErrorMessage,
@@ -16,7 +16,6 @@ import {
   Storage,
 } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
-import { isValidMnemonic } from '~/systems/Core/utils/mnemonic';
 
 // ----------------------------------------------------------------------------
 // Machine
@@ -209,7 +208,8 @@ export const signUpMachine = createMachine(
     actions: {
       assignIsFilled: assign({
         isFilled: (_, ev) => {
-          return ev.data.words.length === Number(VITE_MNEMONIC_WORDS);
+          const filledWords = ev.data.words.filter((word) => !!word);
+          return ev.data.words.length === filledWords.length;
         },
       }),
       cleanError: assign({
@@ -260,13 +260,15 @@ export const signUpMachine = createMachine(
         return ctx.type === SignUpType.create;
       },
       isValidMnemonic: (_, ev) => {
-        return isValidMnemonic(getPhraseFromValue(ev.data.words) || '');
-      },
-      isValidAndConfirmed: (ctx, ev) => {
-        const isValid = isValidMnemonic(
+        return Mnemonic.isMnemonicValid(
           getPhraseFromValue(ev.data.words) || ''
         );
-        if (ctx.type === SignUpType.recover) return true && isValid;
+      },
+      isValidAndConfirmed: (ctx, ev) => {
+        const isValid = Mnemonic.isMnemonicValid(
+          getPhraseFromValue(ev.data.words) || ''
+        );
+        if (ctx.type === SignUpType.recover) return isValid;
         return (
           getPhraseFromValue(ev.data.words) ===
             getPhraseFromValue(ctx.data?.mnemonic) && isValid

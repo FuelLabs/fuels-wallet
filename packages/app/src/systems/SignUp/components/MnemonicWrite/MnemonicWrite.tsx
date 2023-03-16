@@ -11,6 +11,7 @@ export type MnemonicWriteProps = {
   onNext: () => void;
   onCancel: () => void;
   isLoading?: boolean;
+  enableChangeFormat?: boolean;
 };
 
 export function MnemonicWrite({
@@ -20,6 +21,7 @@ export function MnemonicWrite({
   onCancel,
   onNext,
   isLoading,
+  enableChangeFormat,
 }: MnemonicWriteProps) {
   function handleFill(val: string[]) {
     onFilled(val);
@@ -39,7 +41,11 @@ export function MnemonicWrite({
             <Alert.Description>{error}</Alert.Description>
           </Alert>
         )}
-        <Mnemonic type="write" onFilled={handleFill} />
+        <Mnemonic
+          type="write"
+          onFilled={handleFill}
+          enableChangeFormat={enableChangeFormat}
+        />
       </Stack>
       <Flex gap="$4">
         <Button
