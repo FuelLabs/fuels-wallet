@@ -15,7 +15,7 @@ export function WelcomeScreen() {
     if (isSigningUp) {
       navigate(Pages.signUpCreateWallet());
     }
-  }, []);
+  }, [isSigningUp]);
 
   return (
     <Layout title="Sign Up" isPublic>

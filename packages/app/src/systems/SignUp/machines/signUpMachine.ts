@@ -216,10 +216,12 @@ export const signUpMachine = createMachine(
         error: (_) => undefined,
       }),
       createMnemonic: assign({
-        data: (ctx) => ({
-          ...ctx.data,
-          mnemonic: getWordsFromValue(Mnemonic.generate(MNEMONIC_SIZE)),
-        }),
+        data: (ctx) => {
+          return {
+            ...ctx.data,
+            mnemonic: getWordsFromValue(Mnemonic.generate(MNEMONIC_SIZE)),
+          };
+        },
       }),
       assignMnemonicWhenRecovering: assign({
         data: (ctx, ev) => {
@@ -307,13 +309,16 @@ export const signUpMachine = createMachine(
         return data;
       },
       getSavedSignUp: FetchMachine.create<
-        never,
+        { data: { password?: string } },
         MachineServices['getSavedSignUp']['data']
       >({
         showError: true,
         maxAttempts: 2,
-        async fetch() {
-          return SignUpService.getSaved();
+        async fetch({ input }) {
+          if (!input?.data?.password) {
+            throw new Error('Invalid password');
+          }
+          return SignUpService.getSaved(input);
         },
       }),
     },

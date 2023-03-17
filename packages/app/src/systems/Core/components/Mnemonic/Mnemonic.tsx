@@ -49,11 +49,6 @@ export function Mnemonic({
     fillArray(initialValue, format)
   );
 
-  async function handleCopy() {
-    const val = type === 'read' ? initialValue : value;
-    return navigator.clipboard.writeText(val.join(' '));
-  }
-
   function handlePastInput(ev: React.ClipboardEvent<HTMLInputElement>) {
     const text = ev.clipboardData.getData('text/plain');
     setValue(fillArray(text.split(' '), format));
@@ -133,19 +128,8 @@ export function Mnemonic({
           })}
         </Grid>
       )}
-      <Flex as="footer" align="center" gap="$4" css={styles.footer}>
-        {type === 'read' ? (
-          <Button
-            aria-label="Copy button"
-            size="sm"
-            variant="ghost"
-            color="gray"
-            leftIcon={<Icon icon="Copy" color="gray8" />}
-            onPress={handleCopy}
-          >
-            Copy
-          </Button>
-        ) : (
+      {type === 'write' ? (
+        <Flex as="footer" align="center" gap="$4" css={styles.footer}>
           <Button
             aria-label="Paste button"
             size="sm"
@@ -156,8 +140,8 @@ export function Mnemonic({
           >
             Paste
           </Button>
-        )}
-      </Flex>
+        </Flex>
+      ) : null}
     </Box>
   );
 }
@@ -191,8 +175,6 @@ const styles = {
   words: cssObj({
     px: '$3',
     py: '$3',
-    mb: '$3',
-    borderBottom: '1px dashed $gray3',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gridTemplateRows: 'repeat(4, 1fr)',
     gridColumnGap: '$4',

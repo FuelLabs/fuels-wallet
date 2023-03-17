@@ -1,6 +1,6 @@
 import type { Account } from '@fuel-wallet/types';
 
-import { IS_LOGGED_KEY } from '~/config';
+import { IS_LOGGED_KEY, IS_SIGNING_UP_KEY } from '~/config';
 import { AccountService } from '~/systems/Account';
 import { Storage } from '~/systems/Core';
 import { db } from '~/systems/Core/utils/database';
@@ -21,6 +21,11 @@ export type SignUpServiceInputs = {
       mnemonic?: string[];
     };
     account: Account;
+  };
+  getSaved: {
+    data: {
+      password?: string;
+    };
   };
 };
 
@@ -90,21 +95,34 @@ export class SignUpService {
     }
 
     // Unlock Vault
-    await VaultService.unlock({ password: data.password });
+    VaultService.unlock({ password: data.password });
 
     // Create vault using mnemonic
-    const account = await VaultService.createVault({
+    await VaultService.createVault({
       type: 'mnemonic',
       secret: getPhraseFromValue(data.mnemonic),
     });
     Storage.setItem(IS_LOGGED_KEY, true);
-    Storage.setItem('mnemonic', data.mnemonic);
-    Storage.setItem('account', account);
+    Storage.setItem(IS_SIGNING_UP_KEY, true);
     VaultService.lock();
   }
 
-  static getSaved(): SignUpServiceOutputs['save'] {
-    const mnemonic = Storage.getItem('mnemonic') as string[];
+  static async getSaved({
+    data,
+  }: SignUpServiceInputs['getSaved']): Promise<SignUpServiceOutputs['save']> {
+    if (!data?.password) {
+      throw new Error('Invalid password');
+    }
+
+    VaultService.unlock({ password: data.password });
+
+    const secret = await VaultService.exportVault({
+      password: data.password,
+      vaultId: 0,
+      // TODO change once we add multiple vault management
+      // https://github.com/FuelLabs/fuels-wallet/issues/562
+    });
+    const mnemonic = secret.split(' ');
     const account = Storage.getItem('account') as Account;
     return {
       mnemonic,
@@ -113,6 +131,6 @@ export class SignUpService {
   }
 
   static hasSaved(): boolean {
-    return !!Storage.getItem('mnemonic') && !!Storage.getItem('account');
+    return !!Storage.getItem(IS_SIGNING_UP_KEY);
   }
 }

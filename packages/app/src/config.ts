@@ -18,13 +18,14 @@ export const DECIMAL_UNITS = 9;
 export const FORMAT_LANGUAGE = 'en-US';
 export const MIN_FRACTION_DIGITS = 1;
 export const MAX_FRACTION_DIGITS = 3;
-export const MNEMONIC_SIZE = 16;
+export const MNEMONIC_SIZE = 32;
 export const WALLET_WIDTH = 350;
 export const WALLET_HEIGHT = 600;
 export const TAB_BAR_HEIGHT = 30;
 export const IS_CRX =
   typeof chrome !== 'undefined' && typeof chrome.runtime !== 'undefined';
 export const IS_LOGGED_KEY = 'isLogged';
+export const IS_SIGNING_UP_KEY = 'isSigningUp';
 export const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 export const IS_TEST = process.env.NODE_ENV === 'test';
 export const IS_CRX_POPUP =
