@@ -38,6 +38,19 @@ export type VaultInputs = {
     vaultId: number;
     password: string;
   };
+  validateWords: {
+    words: string[];
+    positions: number[];
+    vaultId: number;
+    password: string;
+  };
+};
+
+export type VaultOutputs = {
+  getWordsToValidate: {
+    words: string[];
+    positions: number[];
+  };
 };
 
 export class VaultServer extends EventEmitter {
@@ -54,6 +67,8 @@ export class VaultServer extends EventEmitter {
     'changePassword',
     'exportVault',
     'lock',
+    'getWordsToValidate',
+    'validateWords',
   ];
 
   constructor() {
@@ -158,6 +173,36 @@ export class VaultServer extends EventEmitter {
     await this.manager.unlock(password);
     const vault = await this.manager.exportVault(vaultId);
     return vault.secret || '';
+  }
+
+  async getWordsToValidate({
+    password,
+    vaultId,
+  }: VaultInputs['exportVault']): Promise<VaultOutputs['getWordsToValidate']> {
+    const vaultSecret = await this.exportVault({ password, vaultId });
+    const words = vaultSecret.split(' ');
+    const randomWords = words.sort(() => Math.random() - 0.5).slice(0, 9);
+    const positions = randomWords.map((word) => words.indexOf(word));
+    return {
+      words: randomWords,
+      positions,
+    };
+  }
+
+  async validateWords({
+    words,
+    positions,
+    vaultId,
+    password,
+  }: VaultInputs['validateWords']): Promise<boolean> {
+    const vaultSecret = await this.exportVault({ password, vaultId });
+    const wordsToValidate = vaultSecret.split(' ');
+    const isValid = words.every((word, index) => {
+      const position = positions[index];
+      return wordsToValidate[position] === word;
+    });
+
+    return isValid;
   }
 }
 
