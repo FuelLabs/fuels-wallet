@@ -1,16 +1,15 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Flex, Grid, Icon } from '@fuel-ui/react';
+import { MNEMONIC_SIZES } from 'fuels';
 import React, { useEffect, useState } from 'react';
 
 import { MnemonicInput } from './MnemonicInput';
 
 const WORDS = import.meta.env.VITE_MNEMONIC_WORDS;
-const BLANK_ARR = Array.from({ length: WORDS }).map(() => '');
 
-function fillArray(arr: string[], item: string[]) {
-  return arr.map((_, idx) => item[idx] || '');
+function fillArray(item: string[], format: number) {
+  return Array.from({ length: format }).map((_, idx) => item[idx] || '');
 }
-
 function checkMoreThanOneWord(word: string) {
   if (word.split(' ').length > 1) {
     const first = word.split(' ')[0];
@@ -24,19 +23,31 @@ export type MnemonicProps = {
   type: 'read' | 'write';
   value?: string[];
   onFilled?: (val: string[]) => void;
+  format?: number;
+  enableChangeFormat?: boolean;
 };
 
 export function Mnemonic({
   value: initialValue = [],
   type,
   onFilled,
+  format: initialFormat,
+  enableChangeFormat,
 }: MnemonicProps) {
-  const [value, setValue] = useState<string[]>(() => {
-    if (Array.isArray(initialValue) && initialValue.length > 0) {
-      return fillArray(BLANK_ARR, initialValue);
+  const [format, setFormat] = useState(() => {
+    if (initialFormat && MNEMONIC_SIZES.includes(initialFormat)) {
+      return initialFormat;
     }
-    return BLANK_ARR;
+
+    if (initialValue.length && MNEMONIC_SIZES.includes(initialValue.length)) {
+      return initialValue.length;
+    }
+
+    return WORDS;
   });
+  const [value, setValue] = useState<string[]>(() =>
+    fillArray(initialValue, format)
+  );
 
   async function handleCopy() {
     const val = type === 'read' ? initialValue : value;
@@ -45,12 +56,12 @@ export function Mnemonic({
 
   function handlePastInput(ev: React.ClipboardEvent<HTMLInputElement>) {
     const text = ev.clipboardData.getData('text/plain');
-    setValue((old) => fillArray(old, text.split(' ')));
+    setValue(fillArray(text.split(' '), format));
   }
 
   async function handlePast() {
     const text = await navigator.clipboard.readText();
-    setValue((old) => fillArray(old, text.split(' ')));
+    setValue(fillArray(text.split(' '), format));
   }
 
   function handleChange(idx: number) {
@@ -63,6 +74,14 @@ export function Mnemonic({
     };
   }
 
+  function handleChangeFormat(format: number) {
+    setFormat(format);
+    const newValue = fillArray(value, format);
+
+    setValue(newValue);
+    onFilled?.(newValue);
+  }
+
   useEffect(() => {
     if (value.every((word) => Boolean(word.length))) {
       onFilled?.(value);
@@ -71,6 +90,23 @@ export function Mnemonic({
 
   return (
     <Box css={styles.root}>
+      {enableChangeFormat && (
+        <Flex css={styles.formatWrapper}>
+          <select
+            aria-label="Select format"
+            value={format}
+            onChange={(e) => handleChangeFormat(Number(e.target.value))}
+          >
+            {MNEMONIC_SIZES.map((size) => (
+              <option
+                key={size}
+                value={size}
+                aria-label={`${size} words`}
+              >{`I have a ${size} words seed phrase`}</option>
+            ))}
+          </select>
+        </Flex>
+      )}
       {type === 'read' ? (
         <Grid css={styles.words}>
           {initialValue?.map((word, idx) => (
@@ -81,7 +117,7 @@ export function Mnemonic({
         </Grid>
       ) : (
         <Grid css={styles.words}>
-          {BLANK_ARR.map((_, idx) => {
+          {value.map((_, idx) => {
             return (
               <Grid key={idx} css={styles.inputWrapper}>
                 <span>{idx + 1}</span>
@@ -131,6 +167,26 @@ const styles = {
     background: '$gray1',
     border: '1px dashed $gray3',
     borderRadius: '$lg',
+  }),
+  formatWrapper: cssObj({
+    p: '$3',
+    borderBottom: '1px dashed $gray3',
+    gap: '$1',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+
+    // TODO: should replace with a <Select> component in fuel-ui
+    select: {
+      backgroundColor: 'transparent',
+      color: '$gray12',
+      border: 'none',
+      paddingRight: '$1',
+      fontSize: '$sm',
+
+      '&:focus-visible': {
+        outline: 'none',
+      },
+    },
   }),
   words: cssObj({
     px: '$3',
