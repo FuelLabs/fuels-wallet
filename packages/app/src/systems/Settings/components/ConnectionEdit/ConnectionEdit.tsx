@@ -58,11 +58,9 @@ export function ConnectionEdit({
                   <motion.div key={address} {...animations.slideInTop()}>
                     <AccountItem
                       account={account!}
-                      isConnected={isConnected}
+                      isToggleChecked={isConnected}
                       isDisabled={ctx.accountToUpdate === address}
-                      onToggle={() =>
-                        handlers.toggleAccount(address, isConnected)
-                      }
+                      onToggle={handlers.toggleAccount}
                     />
                   </motion.div>
                 );

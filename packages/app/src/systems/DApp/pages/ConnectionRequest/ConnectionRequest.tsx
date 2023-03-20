@@ -69,8 +69,8 @@ export function ConnectionRequest() {
                         <motion.div key={address} {...animations.slideInTop()}>
                           <AccountItem
                             account={account!}
-                            onToggle={() => handlers.toggleAccount(address)}
-                            isConnected={isConnected}
+                            onToggle={handlers.toggleAccount}
+                            isToggleChecked={isConnected}
                           />
                         </motion.div>
                       );

@@ -19,14 +19,17 @@ import { shortAddress } from '~/systems/Core';
 
 export type AccountItemProps = {
   account: Account;
-  isConnected?: boolean;
+  isToggleChecked?: boolean;
   isCurrent?: boolean;
   isHidden?: boolean;
   onPress?: () => void;
   isDisabled?: boolean;
   compact?: boolean;
-  onToggle?: () => Promise<void> | void;
-  onUpdate?: () => Promise<void> | void;
+  onToggle?: (
+    address: string,
+    isToggleChecked?: boolean
+  ) => Promise<void> | void;
+  onUpdate?: (address: string) => Promise<void> | void;
 };
 
 type AccountItemComponent = FC<AccountItemProps> & {
@@ -35,7 +38,7 @@ type AccountItemComponent = FC<AccountItemProps> & {
 
 export const AccountItem: AccountItemComponent = ({
   account,
-  isConnected,
+  isToggleChecked,
   isCurrent,
   isHidden,
   onPress,
@@ -68,15 +71,15 @@ export const AccountItem: AccountItemComponent = ({
           variant="link"
           icon={<Icon icon={Icon.is('Pencil')} />}
           aria-label="Update"
-          onPress={onUpdate}
+          onPress={() => onUpdate?.(account.address)}
         />
       )}
       {onToggle && (
         <Switch
           size="sm"
-          checked={isConnected}
+          checked={isToggleChecked}
           aria-label={`Toggle ${account.name}`}
-          onCheckedChange={onToggle}
+          onCheckedChange={() => onToggle?.(account.address, isToggleChecked)}
         />
       )}
     </Flex>

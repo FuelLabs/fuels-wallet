@@ -26,7 +26,7 @@ const Template: ComponentStoryFn<typeof EditAccount> = () => {
     <Layout isLoading={isLoading}>
       <BoxCentered css={{ minW: '100%', minH: '100%' }}>
         <Button
-          onPress={() => handlers.editAccount(MOCK_ACCOUNTS[0].address)}
+          onPress={() => handlers.goToEdit(MOCK_ACCOUNTS[0].address)}
           isLoading={isLoading}
         >
           Toggle Modal

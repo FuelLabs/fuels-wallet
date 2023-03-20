@@ -8,8 +8,8 @@ import { AccountItem } from '../AccountItem';
 export type AccountListProps = {
   accounts?: Account[];
   isLoading?: boolean;
-  onPress: (account: Account) => void;
-  onUpdate: (address: string) => void;
+  onPress?: (account: Account) => void;
+  onUpdate?: (address: string) => void;
 };
 
 export function AccountList({
@@ -43,8 +43,8 @@ export function AccountList({
         <CardList isClickable>
           {(accounts ?? []).map((account) => (
             <AccountItem
-              onPress={() => onPress(account)}
-              onUpdate={() => onUpdate(account.address)}
+              onPress={() => onPress?.(account)}
+              onUpdate={onUpdate}
               key={account.address}
               account={account}
               isHidden={!showHidden && account.isHidden}

@@ -1,20 +1,11 @@
-import { bn } from 'fuels';
 import { interpret } from 'xstate';
 
-import { MOCK_ACCOUNTS } from '../__mocks__';
 import { AccountService } from '../services';
 
 import type { ImportAccountMachineService } from './importAccountMachine';
 import { importAccountMachine } from './importAccountMachine';
 
-import { expectStateMatch } from '~/systems/Core/__tests__/utils';
-
-const MOCK_ACCOUNT = {
-  ...MOCK_ACCOUNTS[0],
-  balance: bn(0),
-  balanceSymbol: '$',
-  balances: [{ amount: bn(100000), assetId: '0x0000000000' }],
-};
+import { expectStateMatch, mockVault } from '~/systems/Core/__tests__/utils';
 
 const machine = importAccountMachine.withContext({}).withConfig({
   actions: {
@@ -26,8 +17,7 @@ describe('importAccountMachine', () => {
   let service: ImportAccountMachineService;
 
   beforeEach(async () => {
-    await AccountService.clearAccounts();
-    await AccountService.addAccount({ data: MOCK_ACCOUNT });
+    await mockVault();
     service = interpret(machine).start();
   });
 

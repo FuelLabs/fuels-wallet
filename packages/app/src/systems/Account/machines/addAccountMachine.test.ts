@@ -1,12 +1,11 @@
 import { interpret } from 'xstate';
 
-import { createMockAccount } from '../__mocks__';
 import { AccountService } from '../services';
 
 import type { AddAccountMachineService } from './addAccountMachine';
 import { addAccountMachine } from './addAccountMachine';
 
-import { expectStateMatch } from '~/systems/Core/__tests__/utils';
+import { expectStateMatch, mockVault } from '~/systems/Core/__tests__/utils';
 
 const machine = addAccountMachine.withContext({}).withConfig({
   actions: {
@@ -20,7 +19,7 @@ describe('addAccountMachine', () => {
   let service: AddAccountMachineService;
 
   beforeEach(async () => {
-    await createMockAccount();
+    await mockVault();
     service = interpret(machine).start();
   });
 
