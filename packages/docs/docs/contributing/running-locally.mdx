@@ -50,7 +50,7 @@ In this step, we are going to;
 Make sure you have docker installed and running, before running the command below
 
 ```sh
-pnpm node:dev start
+pnpm node:dev
 ```
 
 ### Run Web App
@@ -67,7 +67,6 @@ This section has a brief description of each directory. More details can be foun
 
 - [packages/app](@repository/packages/app/) Frontend Fuel Wallet application
 - [packages/config](@repository/packages/config/) Build configurations
-- [packages/fuelhat](@repository/packages/fuelhat/) Fuel Wallet scripts CLI
 - [packages/mediator](@repository/packages/mediator/) Mediator is a PubSub library we use to better integrate XState machines and also other relevant event-driven issues.
 
 ### Useful Scripts
@@ -102,7 +101,7 @@ All tests are run against the local node configured in the files `packages/app/.
 Before running test, make sure a local test node is running:
 
 ```sh
-pnpm node:dev start --test
+pnpm node:test
 ```
 
 Then, to run tests use:
@@ -118,7 +117,7 @@ To run E2E tests, follow these steps:
 #### Run Tests E2E in Development Mode
 
 ```sh
-pnpm node:dev start
+pnpm node:dev
 ```
 
 ```sh
@@ -132,7 +131,7 @@ pnpm test:e2e
 #### Run Tests E2E in CI/TEST env Mode
 
 ```sh
-pnpm node:dev start --test
+pnpm node:test
 ```
 
 ```sh
