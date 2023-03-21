@@ -160,7 +160,7 @@ export async function mockData(
 
   const accountsWithPkey = accounts.map((acc) => ({
     ...acc,
-    privateKey: this.manager.exportPrivateKey(Address.fromString(acc.address)),
+    privateKey: manager.exportPrivateKey(Address.fromString(acc.address)),
   }));
 
   return {
