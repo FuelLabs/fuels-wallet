@@ -1,5 +1,5 @@
 import { getWordsFromValue } from '../../utils';
-import { MNEMONIC, PASSWORD } from '../config';
+import { MNEMONIC, PASSWORD, PKEY } from '../config';
 
 import { NetworkService } from '~/systems/Network';
 import { SignUpService } from '~/systems/SignUp/services';
@@ -20,6 +20,7 @@ export async function mockVault() {
     network: network!,
     mnemonic,
     password,
+    pkey: PKEY,
   };
 }
 
