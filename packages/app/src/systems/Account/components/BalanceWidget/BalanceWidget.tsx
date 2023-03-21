@@ -56,7 +56,12 @@ export function BalanceWidget({
   return (
     <BalanceWidgetWrapper>
       <Flex direction="column" align="center">
-        <Avatar.Generated size="lg" hash={account.address} background="fuel" />
+        <Avatar.Generated
+          size="lg"
+          hash={account.address}
+          background="$gray3"
+          css={{ boxShadow: '$sm' }}
+        />
         <IconButton
           size="xs"
           variant="ghost"

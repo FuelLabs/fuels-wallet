@@ -56,8 +56,8 @@ const styles = {
     gap: '$2',
   }),
   button: cssObj({
-    borderRadius: 40,
+    borderRadius: '$full',
     flex: 1,
-    py: '$5',
+    py: '$0',
   }),
 };

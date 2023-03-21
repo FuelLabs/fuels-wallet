@@ -1,6 +1,7 @@
 export * from './AmountVisibility';
 export * from './ContentHeader';
 export * from './ControlledField';
+export * from './ButtonClose';
 export * from './EmptyList';
 export * from './ImageLoader';
 export * from './Layout';

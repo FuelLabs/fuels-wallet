@@ -143,7 +143,7 @@ AssetItem.Loader = AssetItemLoader;
 const styles = {
   assetName: cssObj({
     margin: 0,
-    fontSize: '$sm',
+    textSize: 'base',
   }),
   assetSymbol: cssObj({
     textSize: 'sm',

@@ -32,7 +32,8 @@ function SidebarContent() {
           <Avatar.Generated
             size="sm"
             hash={account?.address as string}
-            background="fuel"
+            background="$gray3"
+            css={{ boxShadow: '$sm' }}
           />
           <IconButton
             size="xs"
@@ -41,6 +42,7 @@ function SidebarContent() {
             icon={<Icon icon="CaretDown" size={18} />}
             aria-label="Accounts"
             onClick={accountHandlers.goToList}
+            css={{ padding: '$0 !important' }}
           />
         </Stack>
         <IconButton
@@ -105,9 +107,9 @@ const styles = {
     alignItems: 'center',
   }),
   closeBtn: cssObj({
+    padding: '$0 !important',
     position: 'initial',
-    height: '$6',
-    padding: '$1',
+    height: '$4',
     top: '$2',
     right: '$2',
   }),

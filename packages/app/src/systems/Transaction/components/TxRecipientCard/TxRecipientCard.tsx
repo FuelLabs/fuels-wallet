@@ -48,7 +48,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
               size="lg"
               hash={fuelAddress}
               aria-label={fuelAddress}
-              background="fuel"
+              background="$gray3"
             />
           )}
           {isContract && (

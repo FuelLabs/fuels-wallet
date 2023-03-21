@@ -137,7 +137,7 @@ export function Menu({ items }: MenuProps) {
 const styles = {
   root: cssObj({
     ...coreStyles.scrollable('$gray2'),
-    py: '$2',
+    py: '$3',
     flex: 1,
 
     '& > .fuel_menu-list-item': {
@@ -183,7 +183,7 @@ const styles = {
   }),
   submenu: cssObj({
     position: 'relative',
-    fontSize: '$xs',
+    fontSize: '$sm',
     py: '$0',
     ml: '$2',
 
@@ -205,7 +205,8 @@ const styles = {
       pl: '$2',
       ml: '$4',
       height: 'auto',
-      fontSize: '$xs',
+      fontSize: '$sm',
+      color: '$gray8',
     },
 
     '.fuel_menu-list-item .fuel_icon': {

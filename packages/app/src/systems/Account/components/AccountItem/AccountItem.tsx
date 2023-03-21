@@ -66,7 +66,7 @@ export const AccountItem: AccountItemComponent = ({
     >
       <Avatar.Generated
         size={compact ? 'xsm' : 'md'}
-        background="fuel"
+        background="$gray3"
         hash={account.address}
       />
       <Flex className="wrapper">
@@ -83,7 +83,7 @@ export const AccountItem: AccountItemComponent = ({
 
 const styles = {
   root: cssObj({
-    background: '$whiteA2',
+    background: '$cardListItemBg',
 
     '&[aria-disabled="true"]': {
       opacity: 0.5,

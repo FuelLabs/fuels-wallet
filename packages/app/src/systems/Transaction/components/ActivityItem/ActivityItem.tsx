@@ -43,11 +43,11 @@ export const ActivityItem: TxItemComponent = ({
           </Text>
           <Copyable
             value={id}
+            tooltipMessage="Copy Transaction ID"
             iconProps={{
               icon: Icon.is('CopySimple'),
               'aria-label': 'Copy Transaction ID',
             }}
-            tooltipMessage="Copy Transaction ID"
           />
         </Flex>
         <Flex css={styles.row}>
@@ -71,9 +71,9 @@ export const ActivityItem: TxItemComponent = ({
 const styles = {
   root: cssObj({
     flex: 1,
-    pt: '$3',
-    pb: '$3',
+    py: '$3',
     px: '$3',
+    pt: '8px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -105,6 +105,7 @@ const styles = {
     alignItems: 'center',
   }),
   label: cssObj({
+    mt: '-2px',
     fontWeight: '$bold',
     color: '$whiteA12',
   }),

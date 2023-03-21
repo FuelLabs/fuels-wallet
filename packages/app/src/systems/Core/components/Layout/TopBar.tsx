@@ -48,7 +48,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
 
   return (
     <Flex as="nav" css={styles.root}>
-      <Flex css={{ gap: '$2', alignItems: 'center', flex: 1 }}>
+      <Flex css={{ gap: '$3', alignItems: 'center', flex: 1 }}>
         {!isHome ? (
           <>
             <IconButton
@@ -67,7 +67,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
           </>
         ) : (
           <>
-            <FuelLogo size={40} />
+            <FuelLogo size={30} />
             {isLoading && <Spinner aria-label="Spinner" />}
             {selectedNetwork && !isLoading && (
               <NetworkDropdown
@@ -80,19 +80,19 @@ function InternalTopBar({ onBack }: TopBarProps) {
       </Flex>
       <Stack direction="row" gap="$2">
         <IconButton
-          css={{ px: '0 !important' }}
-          iconSize={24}
-          icon={<Icon icon="Bell" color="gray8" />}
+          iconSize={20}
+          icon={<Icon icon="Bell" />}
           variant="link"
           aria-label="activity"
+          css={styles.topbarIcon}
           onPress={goToActivityPage}
         />
         <IconButton
-          iconSize={24}
-          icon={<Icon icon="List" color="gray8" />}
+          iconSize={20}
+          icon={<Icon icon="List" />}
           aria-label="Menu"
           variant="link"
-          css={{ px: '0 !important' }}
+          css={styles.topbarIcon}
           onPress={() => {
             overlay.open('sidebar');
           }}
@@ -162,6 +162,15 @@ const styles = {
     '&[data-home="true"]': {
       boxShadow: '$none',
       background: 'transparent',
+    },
+  }),
+  topbarIcon: cssObj({
+    px: '0 !important',
+    color: '$gray8 !important',
+    transition: 'color 0.2s ease-in-out',
+
+    '&:hover': {
+      color: '$gray11 !important',
     },
   }),
 };

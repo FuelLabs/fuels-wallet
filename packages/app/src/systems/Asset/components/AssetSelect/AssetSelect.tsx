@@ -121,7 +121,8 @@ export function AssetSelect({
         autoFocus
         aria-label="Actions"
         css={styles.menu(width)}
-        onAction={(assetId) => onSelect(assetId.toString())}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onAction={(assetId: any) => onSelect(assetId.toString())}
       >
         {(items || []).map((item) => {
           const assetId = item.assetId.toString();
