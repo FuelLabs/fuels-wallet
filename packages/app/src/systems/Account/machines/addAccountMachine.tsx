@@ -46,7 +46,6 @@ export const addAccountMachine = createMachine(
       },
       addingAccount: {
         tags: ['loading'],
-        exit: ['clearAccountName'],
         invoke: {
           src: 'addAccount',
           data: {
@@ -75,9 +74,6 @@ export const addAccountMachine = createMachine(
     actions: {
       assignAccountName: assign({
         accountName: (_, ev) => ev.input,
-      }),
-      clearAccountName: assign({
-        accountName: (_) => undefined,
       }),
       notifyUpdateAccounts: () => {
         store.updateAccounts();

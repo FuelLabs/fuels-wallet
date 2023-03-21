@@ -70,7 +70,6 @@ export const editAccountMachine = createMachine(
       },
       updatingAccount: {
         tags: ['loading'],
-        exit: ['clearAccount', 'clearAddress'],
         invoke: {
           src: 'updateAccount',
           data: {
@@ -98,12 +97,6 @@ export const editAccountMachine = createMachine(
     actions: {
       assignAccount: assign({
         account: (_, ev) => ev.data,
-      }),
-      clearAccount: assign({
-        account: (_) => undefined,
-      }),
-      clearAddress: assign({
-        address: (_) => undefined,
       }),
       notifyUpdateAccounts: () => {
         store.updateAccounts();
