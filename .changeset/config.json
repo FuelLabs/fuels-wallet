@@ -16,7 +16,6 @@
   "updateInternalDependencies": "patch",
   "ignore": [
     "docs",
-    "fuelhat",
     "asset-list",
     "@fuel-wallet/config",
     "@fuel-wallet/xstore",
