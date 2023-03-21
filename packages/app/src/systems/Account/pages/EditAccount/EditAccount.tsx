@@ -1,38 +1,42 @@
-import { Box, Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
+import { Box, Button, Dialog, Focus, Icon, IconButton } from '@fuel-ui/react';
 
 import { AccountForm } from '../../components';
-import { useAccounts, useAddAccount } from '../../hooks';
+import { useAccounts, useEditAccount } from '../../hooks';
 import { useAccountForm } from '../../hooks/useAccountForm';
 import type { AccountFormValues } from '../../hooks/useAccountForm';
 
-export const AddAccount = () => {
+export const EditAccount = () => {
   const { accounts, handlers: accountsHandlers } = useAccounts();
-  const { accountName, handlers, isLoading } = useAddAccount();
+  const { account, handlers, isLoading } = useEditAccount();
   const form = useAccountForm({
     accounts,
     defaultValues: {
-      name: accountName || '',
+      name: account?.name || '',
     },
   });
 
   function onSubmit(data: AccountFormValues) {
-    handlers.addAccount(data.name);
+    if (!account) return;
+    const { name } = data;
+    handlers.updateAccountName({ address: account.address, data: { name } });
   }
 
   return (
     <Box as="form" onSubmit={form.handleSubmit(onSubmit)}>
       <Dialog.Heading>
-        Add Account
+        Edit Account
         <IconButton
           data-action="closed"
           variant="link"
           icon={<Icon icon="X" color="gray8" />}
-          aria-label="Close unlock window"
+          aria-label="Close edit account"
           onPress={accountsHandlers.closeDialog}
         />
       </Dialog.Heading>
       <Dialog.Description as="div">
-        <AccountForm form={form} isLoading={isLoading} />
+        <Focus.Scope contain autoFocus>
+          <AccountForm form={form} isLoading={isLoading} />
+        </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
         <Button
@@ -47,10 +51,10 @@ export const AddAccount = () => {
           color="accent"
           isDisabled={!form.formState.isValid}
           isLoading={isLoading}
-          leftIcon={Icon.is('Plus')}
-          aria-label="Create new account"
+          leftIcon={Icon.is('Pencil')}
+          aria-label="Edit account"
         >
-          Create
+          Edit
         </Button>
       </Dialog.Footer>
     </Box>

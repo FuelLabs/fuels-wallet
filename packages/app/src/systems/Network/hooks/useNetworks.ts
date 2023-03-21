@@ -48,7 +48,7 @@ export function useNetworks() {
   function goToUpdate(id?: string) {
     if (!id) return;
     store.editNetwork({ id });
-    overlay.open('networks.update');
+    store.openNetworkUpdate();
   }
 
   return {
