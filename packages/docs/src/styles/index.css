@@ -17,7 +17,8 @@ html {
 
 body,
 #__next {
-  background: #090a0a !important;
+  letter-spacing: -0.02em;
+  background: #000 !important;
   min-height: 100vh;
 }
 

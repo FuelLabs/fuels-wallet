@@ -12,7 +12,7 @@ export function Header() {
 
   return (
     <Flex as="header" css={styles.root}>
-      <Box css={{ flex: 1 }}>
+      <Flex css={{ alignItems: 'center', flex: 1 }}>
         <Link href="/" className="logo">
           <FuelLogo size={40} />
           <Flex css={styles.logoText}>
@@ -22,7 +22,7 @@ export function Header() {
             </Box>
           </Flex>
         </Link>
-      </Box>
+      </Flex>
       <Box css={styles.desktop}>
         <Flex css={styles.menu}>
           <Link href="/docs/install" className={isDocsActive ? 'active' : ''}>
@@ -92,10 +92,13 @@ const styles = {
     },
   }),
   logoText: cssObj({
+    pl: '$6',
     alignItems: 'center',
     flex: 1,
-    fontSize: '$lg',
+    fontSize: '$2xl',
     fontWeight: '$semibold',
+    color: 'white',
+    letterSpacing: '-0.05em',
   }),
   version: cssObj({
     ml: '$2',
