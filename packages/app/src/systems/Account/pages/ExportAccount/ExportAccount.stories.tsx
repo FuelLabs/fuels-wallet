@@ -27,7 +27,7 @@ const Template: ComponentStoryFn<typeof ExportAccount> = () => {
       <BoxCentered css={{ minW: '100%', minH: '100%' }}>
         {account && (
           <Button
-            onPress={() => handlers.goToExport({ account })}
+            onPress={() => handlers.goToExport(account.address)}
             isLoading={isLoading}
           >
             Toggle Modal
