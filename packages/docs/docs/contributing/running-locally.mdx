@@ -50,7 +50,7 @@ In this step, we are going to;
 Make sure you have docker installed and running, before running the command below
 
 ```sh
-pnpm node:dev
+pnpm node:up
 ```
 
 ### Run Web App
@@ -101,7 +101,7 @@ All tests are run against the local node configured in the files `packages/app/.
 Before running test, make sure a local test node is running:
 
 ```sh
-pnpm node:test
+pnpm node:test:up
 ```
 
 Then, to run tests use:
@@ -117,7 +117,7 @@ To run E2E tests, follow these steps:
 #### Run Tests E2E in Development Mode
 
 ```sh
-pnpm node:dev
+pnpm node:up
 ```
 
 ```sh
@@ -131,7 +131,7 @@ pnpm test:e2e
 #### Run Tests E2E in CI/TEST env Mode
 
 ```sh
-pnpm node:test
+pnpm node:test:up
 ```
 
 ```sh
