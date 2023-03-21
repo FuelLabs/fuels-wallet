@@ -89,7 +89,7 @@ export const AccountItem: AccountItemComponent = ({
         <IconButton
           variant="link"
           icon={<Icon icon={Icon.is('Key')} />}
-          aria-label="Export Asset"
+          aria-label={`Export ${account.name}`}
           onPress={() => onExport?.(account.address)}
         />
       )}

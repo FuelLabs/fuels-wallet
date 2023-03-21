@@ -63,4 +63,16 @@ test.describe('Account', () => {
     await editBtn.click();
     await hasText(page, /Test 1/i);
   });
+
+  test('should be able to export private key', async () => {
+    await visit(page, '/wallet');
+    await hasText(page, /Assets/i);
+    await getByAriaLabel(page, 'Accounts').click();
+    await hasText(page, data.accounts[0].name);
+    await getByAriaLabel(page, `Export ${data.accounts[0].name}`)
+      .first()
+      .click();
+    await hasText(page, /Export Private Key/i);
+    await hasText(page, data.accounts[0].privateKey);
+  });
 });

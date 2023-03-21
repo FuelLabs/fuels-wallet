@@ -17,8 +17,8 @@ export const ExportAccount = () => {
           <Stack gap="$4">
             <AccountItem account={account} />
             <Text css={styles.keyHeaderText}>
-              With this key, you can restore your account later. Make sure you
-              store it safely.
+              Using this Private Key, you can restore your account later. Make
+              sure you store it safely.
             </Text>
             {exportedKey && (
               <Card css={styles.exportedKey}>
