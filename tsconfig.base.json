@@ -19,6 +19,7 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
     "suppressImplicitAnyIndexErrors": true,
+    "ignoreDeprecations": "5.0",
     "target": "es2020"
   },
   "exclude": ["**/dist", "**/build", "node_modules", "**/node_modules"]

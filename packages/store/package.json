@@ -28,22 +28,23 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@fuel-wallet/storage": "^0.0.1",
-    "@xstate/inspect": "^0.7.1",
-    "@xstate/react": "^3.1.1",
-    "fast-equals": "^4.0.3",
-    "jotai": "^2.0.0",
-    "pnpm": "^7.26.3",
+    "@fuel-wallet/storage": "workspace:*",
+    "@xstate/inspect": "^0.8.0",
+    "@xstate/react": "^3.2.1",
+    "fast-equals": "^5.0.1",
+    "jotai": "^2.0.3",
+    "pnpm": "^7.30.0",
     "react": "^18.2.0",
     "uuid": "^9.0.0",
-    "xstate": "^4.35.4"
+    "xstate": "^4.37.0"
   },
   "devDependencies": {
     "@fuel-ui/test-utils": "^0.13.0",
     "@fuel-wallet/config": "workspace:*",
-    "@types/react": "^18.0.27",
-    "@types/uuid": "^9.0.0",
+    "@testing-library/react": "^14.0.0",
+    "@types/react": "^18.0.28",
+    "@types/uuid": "^9.0.1",
     "jest-localstorage-mock": "^2.4.26",
-    "tsup": "^6.5.0"
+    "tsup": "^6.7.0"
   }
 }

@@ -4,9 +4,9 @@
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "dependencies": {
-    "@types/chrome": "^0.0.212",
+    "@types/chrome": "^0.0.224",
     "dexie-observable": "4.0.1-beta.13",
-    "json-rpc-2.0": "^1.4.2"
+    "json-rpc-2.0": "^1.5.1"
   },
   "peerDependencies": {
     "fuels": ">=0.35.0"
