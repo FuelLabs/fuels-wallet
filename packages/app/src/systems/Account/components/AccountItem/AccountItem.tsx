@@ -66,7 +66,6 @@ export const AccountItem: AccountItemComponent = ({
   //     }}
   //   />
   // );
-
   const actions = (
     <Flex gap="$2">
       {onUpdate && (
