@@ -17,13 +17,13 @@ describe('TxRecipientCard', () => {
 
   it('should render account correctly', () => {
     render(<TxRecipientCard recipient={ACCOUNT} />);
-    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
+    expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
   });
 
   it('should render contract correctly', () => {
     render(<TxRecipientCard recipient={CONTRACT} />);
     expect(screen.getByText('From (Contract)')).toBeInTheDocument();
-    expect(screen.getByText('0x277f...207c')).toBeInTheDocument();
+    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
   });
 
   it('should change title with isReceiver prop', () => {

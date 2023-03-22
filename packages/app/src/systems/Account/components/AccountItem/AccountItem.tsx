@@ -2,20 +2,18 @@ import { cssObj } from '@fuel-ui/css';
 import {
   Avatar,
   CardList,
-  Copyable,
   Flex,
   Heading,
   Icon,
   IconButton,
   Switch,
-  Text,
 } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { FC } from 'react';
 
 import { AccountItemLoader } from './AccountItemLoader';
 
-import { shortAddress } from '~/systems/Core';
+import { FuelAddress } from '~/systems/Account';
 
 export type AccountItemProps = {
   account: Account;
@@ -104,9 +102,7 @@ export const AccountItem: AccountItemComponent = ({
         <Heading as="h6" css={styles.name}>
           {account.name}
         </Heading>
-        <Copyable value={account.address}>
-          <Text css={styles.address}>{shortAddress(account.address)}</Text>
-        </Copyable>
+        <FuelAddress address={account.address} css={styles.address} />
       </Flex>
     </CardList.Item>
   );
@@ -149,7 +145,7 @@ const styles = {
     margin: 0,
   }),
   address: cssObj({
-    textSize: 'sm',
+    fontSize: '$sm',
     fontWeight: '$semibold',
   }),
 };
