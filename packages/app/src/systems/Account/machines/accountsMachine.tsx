@@ -10,11 +10,9 @@ import { store } from '~/store';
 import type { Maybe } from '~/systems/Core';
 import { CoreService, FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
-import { VaultService } from '~/systems/Vault';
 
 type MachineContext = {
   accounts?: Account[];
-  accountName?: string;
   account?: Maybe<Account>;
   error?: unknown;
 };
@@ -29,30 +27,12 @@ type MachineServices = {
   setCurrentAccount: {
     data: Account;
   };
-  addAccount: {
-    data: Account;
-  };
-  importAccount: {
-    data: Account;
-  };
 };
 
-export type MachineEvents =
-  | { type: 'UPDATE_ACCOUNT'; input?: null }
-  | { type: 'UPDATE_ACCOUNTS'; input?: null }
-  | {
-      type: 'HIDE_ACCOUNT';
-      input: AccountInputs['hideAccount'];
-    }
+export type AccountsMachineEvents =
+  | { type: 'REFRESH_ACCOUNT'; input?: null }
+  | { type: 'REFRESH_ACCOUNTS'; input?: null }
   | { type: 'SET_CURRENT_ACCOUNT'; input: AccountInputs['setCurrentAccount'] }
-  | {
-      type: 'ADD_ACCOUNT';
-      input: string;
-    }
-  | {
-      type: 'IMPORT_ACCOUNT';
-      input: AccountInputs['importAccount'];
-    }
   | { type: 'LOGOUT'; input?: void };
 
 const fetchAccount = {
@@ -85,7 +65,7 @@ export const accountsMachine = createMachine(
     schema: {
       context: {} as MachineContext,
       services: {} as MachineServices,
-      events: {} as MachineEvents,
+      events: {} as AccountsMachineEvents,
     },
     predictableActionArguments: true,
     id: '(machine)',
@@ -93,25 +73,14 @@ export const accountsMachine = createMachine(
     states: {
       idle: {
         on: {
-          HIDE_ACCOUNT: {
-            actions: ['hideAccount'],
-            target: 'idle',
-          },
           SET_CURRENT_ACCOUNT: {
             target: 'settingCurrentAccount',
           },
-          ADD_ACCOUNT: {
-            actions: ['assignAccountName'],
-            target: 'addingAccount',
-          },
-          UPDATE_ACCOUNTS: {
+          REFRESH_ACCOUNTS: {
             target: 'fetchingAccounts',
           },
-          UPDATE_ACCOUNT: {
-            target: 'updateAccount',
-          },
-          IMPORT_ACCOUNT: {
-            target: 'importingAccount',
+          REFRESH_ACCOUNT: {
+            target: 'refreshAccount',
           },
         },
         after: {
@@ -119,7 +88,7 @@ export const accountsMachine = createMachine(
            * Update accounts every 5 seconds
            */
           TIMEOUT: {
-            target: 'updateAccount',
+            target: 'refreshAccount',
             cond: 'isLoggedIn',
           },
         },
@@ -151,63 +120,20 @@ export const accountsMachine = createMachine(
         tags: ['loading'],
         ...fetchAccount,
       },
-      updateAccount: {
+      refreshAccount: {
         ...fetchAccount,
       },
       settingCurrentAccount: {
         invoke: {
           src: 'setCurrentAccount',
           data: {
-            input: (_: MachineContext, ev: MachineEvents) => ev.input,
+            input: (_: MachineContext, ev: AccountsMachineEvents) => ev.input,
           },
           onDone: [
             {
               actions: 'assignError',
               target: 'failed',
               cond: FetchMachine.hasError,
-            },
-            {
-              actions: ['notifyUpdateAccounts', 'redirectToHome'],
-              target: 'fetchingAccounts',
-            },
-          ],
-        },
-      },
-      addingAccount: {
-        tags: ['loading'],
-        exit: ['clearAccountName'],
-        invoke: {
-          src: 'addAccount',
-          data: {
-            input: (ctx: MachineContext) => ({
-              name: ctx.accountName,
-            }),
-          },
-          onDone: [
-            {
-              cond: FetchMachine.hasError,
-              actions: 'assignError',
-              target: 'failed',
-            },
-            {
-              actions: ['notifyUpdateAccounts', 'redirectToHome'],
-              target: 'fetchingAccounts',
-            },
-          ],
-        },
-      },
-      importingAccount: {
-        tags: ['loading'],
-        invoke: {
-          src: 'importAccount',
-          data: {
-            input: (_: MachineContext, ev: MachineEvents) => ev.input,
-          },
-          onDone: [
-            {
-              cond: FetchMachine.hasError,
-              actions: 'assignError',
-              target: 'failed',
             },
             {
               actions: ['notifyUpdateAccounts', 'redirectToHome'],
@@ -270,25 +196,6 @@ export const accountsMachine = createMachine(
       setIsUnlogged: () => {
         Storage.removeItem(IS_LOGGED_KEY);
       },
-      hideAccount: assign({
-        account: (ctx, ev) => {
-          const account = ctx.account;
-          const { isHidden, address } = ev.input.data;
-          if (account) {
-            account.isHidden = isHidden;
-            AccountService.hideAccount({
-              data: { address, isHidden },
-            });
-          }
-          return account;
-        },
-      }),
-      assignAccountName: assign({
-        accountName: (_, ev) => ev.input,
-      }),
-      clearAccountName: assign({
-        accountName: (_) => undefined,
-      }),
       notifyUpdateAccounts: () => {
         store.updateAccounts();
       },
@@ -333,81 +240,6 @@ export const accountsMachine = createMachine(
             throw new Error('Failed to select account');
           }
           return account;
-        },
-      }),
-      addAccount: FetchMachine.create<{ name: string }, Account>({
-        showError: true,
-        maxAttempts: 1,
-        async fetch({ input }) {
-          if (!input?.name.trim()) {
-            throw new Error('Name cannot be empty');
-          }
-          const { name } = input;
-
-          if (await AccountService.checkAccountNameExists(name)) {
-            throw new Error('Account name already exists');
-          }
-
-          // Add account to vault
-          const accountVault = await VaultService.addAccount({
-            // TODO: remove this when we have multiple vaults
-            // https://github.com/FuelLabs/fuels-wallet/issues/562
-            vaultId: 0,
-          });
-
-          // Add account to the database
-          let account = await AccountService.addAccount({
-            data: {
-              ...input,
-              ...accountVault,
-            },
-          });
-
-          // set as active account
-          account = await AccountService.setCurrentAccount({
-            address: account.address.toString(),
-          });
-
-          return account;
-        },
-      }),
-      importAccount: FetchMachine.create<
-        AccountInputs['importAccount'],
-        MachineServices['importAccount']['data']
-      >({
-        showError: true,
-        maxAttempts: 1,
-        async fetch({ input }) {
-          if (!input?.privateKey.trim()) {
-            throw new Error('Private key cannot be empty');
-          }
-          if (!input?.name.trim()) {
-            throw new Error('Name cannot be empty');
-          }
-
-          // Add account to vault
-          const accountVault = await VaultService.createVault({
-            type: 'privateKey',
-            secret: input.privateKey,
-          });
-
-          // Add account to the database
-          const account = await AccountService.addAccount({
-            data: {
-              name: input.name,
-              address: accountVault.address.toString(),
-              publicKey: accountVault.publicKey,
-              isHidden: false,
-              vaultId: accountVault.vaultId,
-            },
-          });
-
-          // set as active account
-          const activeAccount = await AccountService.setCurrentAccount({
-            address: account.address.toString(),
-          });
-
-          return activeAccount;
         },
       }),
       logout: FetchMachine.create<never, void>({

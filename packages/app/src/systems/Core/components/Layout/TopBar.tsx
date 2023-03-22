@@ -94,7 +94,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
           variant="link"
           css={{ px: '0 !important' }}
           onPress={() => {
-            overlay.open('sidebar');
+            overlay.open({ modal: 'sidebar' });
           }}
         />
       </Stack>
