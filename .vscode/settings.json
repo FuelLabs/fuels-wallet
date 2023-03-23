@@ -4,5 +4,8 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
+  },
+  "[sway]": {
+    "editor.defaultFormatter": "FuelLabs.sway-vscode-plugin"
   }
 }
