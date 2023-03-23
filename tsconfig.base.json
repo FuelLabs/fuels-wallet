@@ -8,7 +8,7 @@
     "jsx": "react-jsx",
     "lib": ["dom", "esnext"],
     "module": "esnext",
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "resolveJsonModule": true,
