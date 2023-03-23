@@ -5,12 +5,20 @@ import { Overlays } from '../types';
 
 export type OverlayKeys = keyof typeof Overlays;
 
+export type OverlayData = {
+  modal: OverlayKeys;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  params?: any;
+};
+
 type MachineContext = {
   overlay?: Overlays;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  metadata?: any;
 };
 
 type MachineEvents =
-  | { type: 'OPEN'; input: OverlayKeys }
+  | { type: 'OPEN'; input: OverlayData }
   | { type: 'CLOSE'; input?: null };
 
 export const overlayMachine = createMachine(
@@ -45,10 +53,12 @@ export const overlayMachine = createMachine(
   {
     actions: {
       open: assign({
-        overlay: (_, e) => Overlays[e.input],
+        overlay: (_, e) => Overlays[e.input.modal],
+        metadata: (_, e) => e.input.params,
       }),
       close: assign({
         overlay: (_) => undefined,
+        metadata: (_) => undefined,
       }),
     },
   }

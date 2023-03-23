@@ -4,7 +4,10 @@ import { interpret } from 'xstate';
 import { MOCK_ACCOUNTS, createMockAccount } from '../__mocks__';
 import { AccountService } from '../services';
 
-import type { AccountsMachineService, MachineEvents } from './accountsMachine';
+import type {
+  AccountsMachineService,
+  AccountsMachineEvents as MachineEvents,
+} from './accountsMachine';
 import { accountsMachine } from './accountsMachine';
 
 import { db, Storage } from '~/systems/Core';
@@ -101,37 +104,7 @@ describe('accountsMachine', () => {
     });
   });
 
-  describe('add', () => {
-    it('should be able to add an account', async () => {
-      await expectStateMatch(service, 'idle');
-
-      service.send('ADD_ACCOUNT', {
-        input: 'Account Go',
-      });
-
-      await expectStateMatch(service, 'addingAccount');
-      await expectStateMatch(service, 'fetchingAccounts');
-      await expectStateMatch(service, 'idle');
-    });
-
-    it('should not be able to add accounts with same name', async () => {
-      await expectStateMatch(service, 'idle');
-      service.send('ADD_ACCOUNT', {
-        input: 'Account Go',
-      });
-      await expectStateMatch(service, 'addingAccount');
-      await expectStateMatch(service, 'fetchingAccounts');
-      await expectStateMatch(service, 'idle');
-      service.send('ADD_ACCOUNT', {
-        input: 'Account Go',
-      });
-
-      // make sure test fails but jest don't stop
-      jest.spyOn(console, 'error').mockImplementation();
-
-      await expectStateMatch(service, 'failed');
-    });
-
+  describe('logout', () => {
     it('logout should clean indexdb and localstorage', async () => {
       await createMockAccount();
       const DatabaseMock = jest.spyOn(db, 'clear').mockImplementation();

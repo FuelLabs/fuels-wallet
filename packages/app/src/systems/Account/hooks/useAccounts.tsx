@@ -45,7 +45,7 @@ const selectors = {
 
 const listenerAccountFetcher = () => {
   store.send(Services.accounts, {
-    type: 'UPDATE_ACCOUNT',
+    type: 'REFRESH_ACCOUNT',
   });
 };
 
@@ -99,10 +99,10 @@ export function useAccounts() {
     isLoading: status('loading'),
     handlers: {
       closeDialog,
-      addAccount: store.addAccount,
       goToAdd: store.openAccountsAdd,
       goToList: store.openAccountList,
-      hideAccount: store.hideAccount,
+      goToEdit: store.openAccountEdit,
+      goToImport: store.openAccountImport,
       logout: store.logout,
       setCurrentAccount: store.setCurrentAccount,
     },

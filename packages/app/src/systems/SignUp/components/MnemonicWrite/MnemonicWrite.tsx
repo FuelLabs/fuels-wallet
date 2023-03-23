@@ -10,6 +10,7 @@ export type MnemonicWriteProps = {
   onFilled: (words: string[]) => void;
   onNext: () => void;
   onCancel: () => void;
+  enableChangeFormat?: boolean;
 };
 
 export function MnemonicWrite({
@@ -18,6 +19,7 @@ export function MnemonicWrite({
   onFilled,
   onCancel,
   onNext,
+  enableChangeFormat,
 }: MnemonicWriteProps) {
   function handleFill(val: string[]) {
     onFilled(val);
@@ -37,7 +39,11 @@ export function MnemonicWrite({
             <Alert.Description>{error}</Alert.Description>
           </Alert>
         )}
-        <Mnemonic type="write" onFilled={handleFill} />
+        <Mnemonic
+          type="write"
+          onFilled={handleFill}
+          enableChangeFormat={enableChangeFormat}
+        />
       </Stack>
       <Flex gap="$4">
         <Button

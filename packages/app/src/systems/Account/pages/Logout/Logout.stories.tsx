@@ -10,7 +10,7 @@ import { Layout } from '~/systems/Core';
 
 export default {
   component: Logout,
-  title: 'Account/Pages/3. Logout',
+  title: 'Account/Pages/4. Logout',
   decorators: [(Story) => <Story />],
   parameters: {
     layout: 'fullscreen',
