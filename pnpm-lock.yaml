@@ -81,7 +81,7 @@ importers:
   packages/app:
     specifiers:
       '@babel/core': ^7.20.12
-      '@crxjs/vite-plugin': ^1.0.14
+      '@crxjs/vite-plugin': ^2.0.0-beta.14
       '@fontsource/source-code-pro': ^4.5.14
       '@fuel-ts/keystore': ^0.35.0
       '@fuel-ts/mnemonic': 0.35.0
@@ -131,7 +131,7 @@ importers:
       '@types/react-google-recaptcha': ^2.1.5
       '@types/react-helmet': ^6.1.6
       '@types/testing-library__jest-dom': ^5.14.5
-      '@vitejs/plugin-react': ^3.0.1
+      '@vitejs/plugin-react': ^3.1.0
       '@xstate/inspect': ^0.7.1
       '@xstate/react': ^3.1.1
       asset-list: workspace:../asset-list
@@ -166,7 +166,7 @@ importers:
       tsconfig-paths-webpack-plugin: ^4.0.0
       typescript: ^4.9.5
       util: ^0.12.5
-      vite: ^4.0.4
+      vite: ^4.1.0
       vite-plugin-clean: ^1.0.0
       vite-plugin-static-copy: ^0.13.0
       vite-plugin-zip-pack: ^1.0.5
@@ -217,7 +217,7 @@ importers:
       yup: 0.32.11
     devDependencies:
       '@babel/core': 7.21.0
-      '@crxjs/vite-plugin': 1.0.14_vite@4.1.4
+      '@crxjs/vite-plugin': 2.0.0-beta.15
       '@fuel-ts/keystore': 0.35.0
       '@fuel-ts/signer': 0.35.0
       '@graphql-codegen/cli': 2.16.5_eyfqap45c6bayojw2gfqpju2py
@@ -1127,7 +1127,7 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.12.9
-      '@babel/helper-plugin-utils': 7.10.4
+      '@babel/helper-plugin-utils': 7.20.2
       '@babel/plugin-syntax-object-rest-spread': 7.8.3_@babel+core@7.12.9
       '@babel/plugin-transform-parameters': 7.20.7_@babel+core@7.12.9
     dev: true
@@ -2315,11 +2315,8 @@ packages:
     dev: true
     optional: true
 
-  /@crxjs/vite-plugin/1.0.14_vite@4.1.4:
-    resolution: {integrity: sha512-emOueVCqFRFmpcfT80Xsm4mfuFw9VSp5GY4eh5qeLDeiP81g0hddlobVQCo0pE2ZvNnWbyhLrXEYAaMAXjNL6A==}
-    engines: {node: '>=14'}
-    peerDependencies:
-      vite: ^2.9.0
+  /@crxjs/vite-plugin/2.0.0-beta.15:
+    resolution: {integrity: sha512-3lDltBqr41BZpJRidbXnKiWwvvfpb8CQ0SKEBW1XsnKTzP9ZcJnZuSoTizBxd6Hx2VPrGFooPjuh+ohQ3QIoHg==}
     dependencies:
       '@rollup/pluginutils': 4.2.1
       '@webcomponents/custom-elements': 1.5.1
@@ -2334,10 +2331,8 @@ packages:
       magic-string: 0.26.7
       picocolors: 1.0.0
       react-refresh: 0.13.0
-      rollup: 2.79.1
-      vite: 4.1.4
-    optionalDependencies:
-      '@vitejs/plugin-react': 3.1.0_vite@4.1.4
+      rollup: 2.78.1
+      rxjs: 7.5.7
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -20927,8 +20922,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /rollup/2.79.1:
-    resolution: {integrity: sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw==}
+  /rollup/2.78.1:
+    resolution: {integrity: sha512-VeeCgtGi4P+o9hIg+xz4qQpRl6R401LWEXBmxYKOV4zlF82lyhgh2hTZnheFUbANE8l2A41F458iwj2vEYaXJg==}
     engines: {node: '>=10.0.0'}
     hasBin: true
     optionalDependencies:
@@ -20968,6 +20963,12 @@ packages:
     resolution: {integrity: sha512-ntymy489o0/QQplUDnpYAYUsO50K9SBrIVaKCWDOJzYJts0f9WH9RFJkyagebkw5+y1oi00R7ynNW/d12GBumg==}
     dependencies:
       aproba: 1.2.0
+    dev: true
+
+  /rxjs/7.5.7:
+    resolution: {integrity: sha512-z9MzKh/UcOqB3i20H6rtrlaE/CgjLOvheWK/9ILrbhROGTweAi1BaFsTT9FbwZi5Trr1qNRs+MXkhmR06awzQA==}
+    dependencies:
+      tslib: 2.5.0
     dev: true
 
   /rxjs/7.8.0:

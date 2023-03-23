@@ -1,6 +1,6 @@
-const { config } = require('dotenv');
-const { resolve } = require('path');
-const { readFileSync } = require('fs');
+import { config } from 'dotenv';
+import { resolve } from 'path';
+import { readFileSync } from 'fs';
 
 function getVersion() {
   const packageJson = JSON.parse(
@@ -48,4 +48,4 @@ const versions = getVersion();
 process.env.VITE_APP_VERSION = versions.version;
 process.env.VITE_DATABASE_VERSION = versions.database;
 
-module.exports.getPublicEnvs = getPublicEnvs;
+export default { getPublicEnvs };
