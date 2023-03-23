@@ -40,7 +40,7 @@ describe('exportAccountMachine', () => {
 
     it('should fail with incorrect password and be able to try again', async () => {
       state = await expectStateMatch(service, 'waitingPassword');
-      service.send('EXPORT_ACCOUNT', { input: { password: `${pass  }1` } });
+      service.send('EXPORT_ACCOUNT', { input: { password: `${pass}1` } });
       state = await expectStateMatch(service, 'failed');
       service.send('RETRY');
       state = await expectStateMatch(service, 'waitingPassword');

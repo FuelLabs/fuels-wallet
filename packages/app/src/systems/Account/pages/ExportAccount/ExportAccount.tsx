@@ -10,7 +10,6 @@ import {
   Text,
 } from '@fuel-ui/react';
 
-
 import { AccountItem } from '../../components';
 import { useAccounts } from '../../hooks';
 import { useExportAccount } from '../../hooks/useExportAccount';
