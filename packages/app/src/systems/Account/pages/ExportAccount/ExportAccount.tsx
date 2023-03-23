@@ -1,13 +1,43 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Card, Dialog, Stack, Text } from '@fuel-ui/react';
+import {
+  Button,
+  Card,
+  Copyable,
+  Dialog,
+  Link,
+  Spinner,
+  Stack,
+  Text,
+} from '@fuel-ui/react';
+
 
 import { AccountItem } from '../../components';
 import { useAccounts } from '../../hooks';
 import { useExportAccount } from '../../hooks/useExportAccount';
 
+import { UnlockCard } from '~/systems/Unlock';
+
 export const ExportAccount = () => {
   const { handlers: accountsHandlers } = useAccounts();
-  const { account, exportedKey } = useExportAccount();
+  const {
+    account,
+    exportedKey,
+    handlers,
+    isWaitingPassword,
+    isLoading,
+    isFailed,
+  } = useExportAccount();
+
+  if (isWaitingPassword) {
+    return (
+      <UnlockCard
+        onUnlock={(password) => {
+          handlers.exportAccount(password);
+        }}
+        headerText="Confirm your Password"
+      />
+    );
+  }
 
   return (
     <>
@@ -20,13 +50,26 @@ export const ExportAccount = () => {
               Using this Private Key, you can restore your account later. Make
               sure you store it safely.
             </Text>
-            {exportedKey && (
-              <Card css={styles.exportedKey}>
-                <Card.Body>
-                  <Text>{exportedKey}</Text>
-                </Card.Body>
-              </Card>
-            )}
+            <Card css={styles.exportedKey}>
+              <Card.Body>
+                {isLoading && <Spinner />}
+                {isFailed && (
+                  <>
+                    <Text fontSize="sm">
+                      Failed to export. Invalid Credentials.
+                    </Text>
+                    <Link onClick={handlers.retry} aria-label="Retry Unlock">
+                      Try again
+                    </Link>
+                  </>
+                )}
+                {exportedKey && (
+                  <Copyable value={exportedKey}>
+                    <Text fontSize="xs">{exportedKey}</Text>
+                  </Copyable>
+                )}
+              </Card.Body>
+            </Card>
           </Stack>
         )}
       </Dialog.Description>
@@ -49,5 +92,6 @@ const styles = {
   }),
   exportedKey: cssObj({
     wordBreak: 'break-all',
+    textAlign: 'center',
   }),
 };

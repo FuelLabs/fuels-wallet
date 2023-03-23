@@ -12,7 +12,7 @@ import {
   waitUrl,
 } from '../commons';
 import type { MockData } from '../mocks';
-import { mockData } from '../mocks';
+import { mockData, WALLET_PASSWORD } from '../mocks';
 
 test.describe('Account', () => {
   let browser: Browser;
@@ -72,6 +72,31 @@ test.describe('Account', () => {
     await getByAriaLabel(page, `Export ${data.accounts[0].name}`)
       .first()
       .click();
+
+    await hasText(page, 'Unlock your wallet to continue');
+    await getByAriaLabel(page, 'Your Password').type(WALLET_PASSWORD);
+    await getByAriaLabel(page, 'Unlock wallet').click();
+    await hasText(page, /Export Private Key/i);
+    await hasText(page, data.accounts[0].privateKey);
+  });
+
+  test('should fail if inform incorrect password, but work after trying again with correct one', async () => {
+    await visit(page, '/wallet');
+    await hasText(page, /Assets/i);
+    await getByAriaLabel(page, 'Accounts').click();
+    await hasText(page, data.accounts[0].name);
+    await getByAriaLabel(page, `Export ${data.accounts[0].name}`)
+      .first()
+      .click();
+
+    await hasText(page, 'Unlock your wallet to continue');
+    await getByAriaLabel(page, 'Your Password').type(`${WALLET_PASSWORD  }1`);
+    await getByAriaLabel(page, 'Unlock wallet').click();
+    await hasText(page, /Export Private Key/i);
+    await hasText(page, 'Failed to export. Invalid Credentials.');
+    await getByAriaLabel(page, 'Retry Unlock').click();
+    await getByAriaLabel(page, 'Your Password').type(WALLET_PASSWORD);
+    await getByAriaLabel(page, 'Unlock wallet').click();
     await hasText(page, /Export Private Key/i);
     await hasText(page, data.accounts[0].privateKey);
   });

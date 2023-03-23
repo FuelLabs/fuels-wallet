@@ -21,9 +21,10 @@ import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 export type UnlockDialogProps = {
   unlockError?: string;
   onUnlock: (value: string) => void;
-  onReset: () => void;
+  onReset?: () => void;
   isReseting?: boolean;
   isLoading?: boolean;
+  headerText?: string;
 };
 
 export function UnlockCard({
@@ -32,6 +33,7 @@ export function UnlockCard({
   onReset,
   isReseting,
   isLoading,
+  headerText = 'Welcome back',
 }: UnlockDialogProps) {
   const form = useUnlockForm({ password: unlockError });
   const { handleSubmit } = form;
@@ -49,7 +51,7 @@ export function UnlockCard({
               <Stack align="center">
                 <FuelLogo size={150} />
                 <Heading as="h2" css={{ margin: 0, textAlign: 'center' }}>
-                  Welcome back
+                  {headerText}
                 </Heading>
                 <Text fontSize="sm">Unlock your wallet to continue</Text>
               </Stack>
@@ -57,20 +59,22 @@ export function UnlockCard({
                 <UnlockForm form={form} />
               </Box>
             </Stack>
-            <Stack
-              align="center"
-              justify="space-between"
-              css={{ marginTop: '$2' }}
-            >
-              <ResetDialog isLoading={isReseting} onReset={onReset}>
-                <ButtonLink
-                  variant="ghost"
-                  css={{ color: '$gray10', fontSize: 'small' }}
-                >
-                  Forgot password?
-                </ButtonLink>
-              </ResetDialog>
-            </Stack>
+            {onReset && (
+              <Stack
+                align="center"
+                justify="space-between"
+                css={{ marginTop: '$2' }}
+              >
+                <ResetDialog isLoading={isReseting} onReset={onReset}>
+                  <ButtonLink
+                    variant="ghost"
+                    css={{ color: '$gray10', fontSize: 'small' }}
+                  >
+                    Forgot password?
+                  </ButtonLink>
+                </ResetDialog>
+              </Stack>
+            )}
           </Box>
         </Box>
       </Card.Body>

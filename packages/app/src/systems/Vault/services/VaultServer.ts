@@ -40,6 +40,7 @@ export type VaultInputs = {
   };
   exportPrivateKey: {
     address: string;
+    password: string;
   };
 };
 
@@ -166,7 +167,9 @@ export class VaultServer extends EventEmitter {
 
   async exportPrivateKey({
     address,
+    password,
   }: VaultInputs['exportPrivateKey']): Promise<string> {
+    await this.manager.unlock(password);
     return this.manager.exportPrivateKey(Address.fromString(address));
   }
 }

@@ -25,10 +25,14 @@ type MachineServices = {
   };
 };
 
-export type ExportAccountMachineEvents = {
-  type: 'EXPORT_ACCOUNT';
-  input: void;
-};
+export type ExportAccountMachineEvents =
+  | {
+      type: 'EXPORT_ACCOUNT';
+      input: Omit<VaultInputs['exportPrivateKey'], 'address'>;
+    }
+  | {
+      type: 'RETRY';
+    };
 
 export const exportAccountMachine = createMachine(
   {
@@ -43,13 +47,7 @@ export const exportAccountMachine = createMachine(
     id: '(machine)',
     initial: 'fetchingAccount',
     states: {
-      idle: {
-        on: {
-          EXPORT_ACCOUNT: {
-            target: 'exportingAccount',
-          },
-        },
-      },
+      idle: {},
       fetchingAccount: {
         tags: ['loading'],
         invoke: {
@@ -61,7 +59,7 @@ export const exportAccountMachine = createMachine(
           },
           onDone: {
             actions: ['assignAccount'],
-            target: 'exportingAccount',
+            target: 'waitingPassword',
           },
           onError: [
             {
@@ -70,12 +68,28 @@ export const exportAccountMachine = createMachine(
           ],
         },
       },
+      waitingPassword: {
+        on: {
+          EXPORT_ACCOUNT: {
+            target: 'exportingAccount',
+          },
+        },
+      },
       exportingAccount: {
         tags: ['loading'],
         invoke: {
           src: 'exportAccount',
           data: {
-            input: (ctx: MachineContext) => ({ address: ctx.address }),
+            input: (
+              ctx: MachineContext,
+              ev: Extract<
+                ExportAccountMachineEvents,
+                { type: 'EXPORT_ACCOUNT' }
+              >
+            ) => ({
+              address: ctx.address,
+              password: ev.input.password,
+            }),
           },
           onDone: [
             {
@@ -90,7 +104,11 @@ export const exportAccountMachine = createMachine(
         },
       },
       failed: {
-        type: 'final',
+        on: {
+          RETRY: {
+            target: 'waitingPassword',
+          },
+        },
       },
     },
   },
