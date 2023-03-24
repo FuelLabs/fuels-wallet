@@ -53,7 +53,11 @@ test.describe('Account', () => {
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
     await hasText(page, data.accounts[0].name);
-    await getByAriaLabel(page, 'Update').first().click();
+    await getByAriaLabel(
+      page,
+      `Account Actions ${data.accounts[0].name}`
+    ).click();
+    await getByAriaLabel(page, `Edit ${data.accounts[0].name}`).click();
     await hasText(page, /Edit/i);
     const inputName = await getInputByName(page, 'name');
     await expect(inputName).toBeFocused();
@@ -69,9 +73,11 @@ test.describe('Account', () => {
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
     await hasText(page, data.accounts[0].name);
-    await getByAriaLabel(page, `Export ${data.accounts[0].name}`)
-      .first()
-      .click();
+    await getByAriaLabel(
+      page,
+      `Account Actions ${data.accounts[0].name}`
+    ).click();
+    await getByAriaLabel(page, `Export ${data.accounts[0].name}`).click();
 
     await hasText(page, 'Unlock your wallet to continue');
     await getByAriaLabel(page, 'Your Password').type(WALLET_PASSWORD);
@@ -85,9 +91,11 @@ test.describe('Account', () => {
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
     await hasText(page, data.accounts[0].name);
-    await getByAriaLabel(page, `Export ${data.accounts[0].name}`)
-      .first()
-      .click();
+    await getByAriaLabel(
+      page,
+      `Account Actions ${data.accounts[0].name}`
+    ).click();
+    await getByAriaLabel(page, `Export ${data.accounts[0].name}`).click();
 
     await hasText(page, 'Unlock your wallet to continue');
     await getByAriaLabel(page, 'Your Password').type(`${WALLET_PASSWORD}1`);

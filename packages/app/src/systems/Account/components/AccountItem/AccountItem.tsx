@@ -66,13 +66,13 @@ export const AccountItem: AccountItemComponent = ({
 
     const menuItems = [
       onUpdate && (
-        <Dropdown.MenuItem key="update">
+        <Dropdown.MenuItem key="update" aria-label={`Edit ${account.name}`}>
           <Icon icon={Icon.is('Pencil')} />
           Edit
         </Dropdown.MenuItem>
       ),
       onExport && (
-        <Dropdown.MenuItem key="export">
+        <Dropdown.MenuItem key="export" aria-label={`Export ${account.name}`}>
           <Icon icon={Icon.is('Key')} />
           Export Private Key
         </Dropdown.MenuItem>
@@ -90,7 +90,7 @@ export const AccountItem: AccountItemComponent = ({
               variant="link"
               color="gray"
               icon={<Icon icon="DotsThreeOutline" color="gray8" />}
-              aria-label="Action"
+              aria-label={`Account Actions ${account.name}`}
               css={{
                 px: '$0',
                 color: '$gray10',
@@ -98,7 +98,6 @@ export const AccountItem: AccountItemComponent = ({
             />
           </Dropdown.Trigger>
           <Dropdown.Menu
-            aria-label="Account Actions"
             onAction={(action) => {
               if (action === 'update') onUpdate?.(account.address);
               if (action === 'export') onExport?.(account.address);
