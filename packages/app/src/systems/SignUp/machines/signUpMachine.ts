@@ -52,7 +52,6 @@ type MachineServices = {
   getSavedSignUp: {
     data: {
       mnemonic?: string[];
-      account?: Account;
     };
   };
   getConfirmationWords: {
@@ -113,9 +112,6 @@ export const signUpMachine = createMachine(
             actions: ['assignSavedData'],
             target: 'fetchingConfirmationWords',
           },
-          onError: {
-            actions: ['assignError'],
-          },
         },
       },
       showingMnemonic: {
@@ -131,6 +127,9 @@ export const signUpMachine = createMachine(
           onDone: {
             actions: ['assignConfirmWalletData'],
             target: 'waitingMnemonic',
+          },
+          onError: {
+            actions: ['assignError'],
           },
         },
       },
@@ -174,6 +173,7 @@ export const signUpMachine = createMachine(
         },
       },
       confirmingMnemonic: {
+        tags: ['loading'],
         invoke: {
           src: 'confirmMnemonic',
           onDone: {
@@ -266,7 +266,6 @@ export const signUpMachine = createMachine(
         data: (_, ev) => ({
           mnemonic: ev.data.mnemonic,
         }),
-        account: (_, ev) => ev.data.account,
       }),
       assignConfirmWalletData: assign({
         data: (ctx, ev) => ({
@@ -330,7 +329,7 @@ export const signUpMachine = createMachine(
         null,
         MachineServices['getSavedSignUp']['data']
       >({
-        showError: true,
+        showError: false,
         maxAttempts: 2,
         async fetch() {
           return SignUpService.getSaved();

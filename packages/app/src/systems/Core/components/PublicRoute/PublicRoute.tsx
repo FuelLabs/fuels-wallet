@@ -12,8 +12,10 @@ type PublicRouteProps = {
 export const PublicRoute = ({
   redirect = Pages.wallet(),
   children,
-}: PublicRouteProps) => (
-  <RouteGuard cond={guards.isNotLoggedIn} reject={<Navigate to={redirect} />}>
-    {children || <Outlet />}
-  </RouteGuard>
-);
+}: PublicRouteProps) => {
+  return (
+    <RouteGuard cond={guards.isNotLoggedIn} reject={<Navigate to={redirect} />}>
+      {children || <Outlet />}
+    </RouteGuard>
+  );
+};

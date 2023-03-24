@@ -29,10 +29,6 @@ export function MnemonicWrite({
   positions,
   defaultValue,
 }: MnemonicWriteProps) {
-  function handleFill(val: string[]) {
-    onFilled(val);
-  }
-
   return (
     <Stack gap="$6" align="center">
       <ImageLoader
@@ -53,7 +49,7 @@ export function MnemonicWrite({
         <MnemonicConfirm
           readOnly={!!defaultValue}
           defaultValue={defaultValue}
-          onFilled={handleFill}
+          onFilled={onFilled}
           words={words}
           positions={positions}
         />
@@ -71,8 +67,8 @@ export function MnemonicWrite({
           color="accent"
           css={{ width: 130 }}
           onPress={onNext}
-          isDisabled={!canProceed}
           isLoading={isLoading}
+          isDisabled={!canProceed}
         >
           Next
         </Button>

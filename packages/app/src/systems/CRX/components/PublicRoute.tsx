@@ -4,7 +4,7 @@ import { useIsSigningUp } from '~/systems/Core/hooks/useIsSigningUp';
 export const CRXPublicRoute = () => {
   const isSigningUp = useIsSigningUp();
   const redirectTo = isSigningUp
-    ? Pages.signUpWalletCreated()
-    : Pages.signUpCreateWallet();
+    ? Pages.signUpCreateWallet()
+    : Pages.signUpWalletCreated();
   return <PublicRoute redirect={redirectTo} />;
 };

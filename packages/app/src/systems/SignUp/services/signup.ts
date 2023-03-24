@@ -1,6 +1,6 @@
 import type { Account } from '@fuel-wallet/types';
 
-import { IS_LOGGED_KEY, IS_SIGNING_UP_KEY } from '~/config';
+import { IS_SIGNING_UP_KEY } from '~/config';
 import { AccountService } from '~/systems/Account';
 import { Storage } from '~/systems/Core';
 import { db } from '~/systems/Core/utils/database';
@@ -43,6 +43,9 @@ export type SignUpServiceOutputs = {
   getWordsToConfirm: {
     words?: string[];
     positions?: number[];
+  };
+  getSaved: {
+    mnemonic?: string[];
   };
 };
 export class SignUpService {
@@ -112,11 +115,14 @@ export class SignUpService {
       type: 'mnemonic',
       secret: getPhraseFromValue(data.mnemonic),
     });
-    Storage.setItem(IS_LOGGED_KEY, true);
     Storage.setItem(IS_SIGNING_UP_KEY, true);
   }
 
-  static async getSaved(): Promise<SignUpServiceOutputs['save']> {
+  static async getSaved(): Promise<SignUpServiceOutputs['getSaved']> {
+    const vaultIsLocked = await VaultService.isLocked();
+    if (vaultIsLocked) {
+      throw new Error('Vault is locked');
+    }
     const secret = await VaultService.exportVault({
       password: undefined,
       vaultId: 0,

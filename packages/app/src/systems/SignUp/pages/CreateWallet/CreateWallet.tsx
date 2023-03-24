@@ -27,6 +27,7 @@ export function CreateWallet() {
       )}
       {(state.matches('waitingMnemonic') ||
         state.matches('fetchingConfirmationWords') ||
+        state.matches('confirmingMnemonic') ||
         state.matches('creatingWallet')) && (
         <MnemonicWrite
           error={context.isFilled ? context.error : ''}
