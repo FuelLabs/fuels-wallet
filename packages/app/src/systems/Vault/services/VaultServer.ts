@@ -3,6 +3,8 @@ import EventEmitter from 'events';
 import { transactionRequestify, Address } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 
+import { shuffle } from './untils';
+
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
 
 export type VaultAccount = {
@@ -36,13 +38,15 @@ export type VaultInputs = {
   };
   exportVault: {
     vaultId: number;
-    password: string;
+    password?: string;
   };
-  validateWords: {
+  confirmMnemonic: {
     words: string[];
     positions: number[];
-    vaultId: number;
-    password: string;
+  };
+  getWordsToConfirm: {
+    words: string[];
+    limit?: number;
   };
 };
 
@@ -67,8 +71,8 @@ export class VaultServer extends EventEmitter {
     'changePassword',
     'exportVault',
     'lock',
-    'getWordsToValidate',
-    'validateWords',
+    'getWordsToConfirm',
+    'confirmMnemonic',
   ];
 
   constructor() {
@@ -170,38 +174,37 @@ export class VaultServer extends EventEmitter {
     vaultId,
     password,
   }: VaultInputs['exportVault']): Promise<string> {
-    await this.manager.unlock(password);
+    if (password) await this.manager.unlock(password);
     const vault = await this.manager.exportVault(vaultId);
     return vault.secret || '';
   }
 
-  async getWordsToValidate({
-    password,
-    vaultId,
-  }: VaultInputs['exportVault']): Promise<VaultOutputs['getWordsToValidate']> {
-    const vaultSecret = await this.exportVault({ password, vaultId });
-    const words = vaultSecret.split(' ');
-    const randomWords = words.sort(() => Math.random() - 0.5).slice(0, 9);
-    const positions = randomWords.map((word) => words.indexOf(word));
+  async getWordsToConfirm({
+    words,
+    limit = 9,
+  }: VaultInputs['getWordsToConfirm']): Promise<
+    VaultOutputs['getWordsToValidate']
+  > {
+    const randomWords = shuffle(words).slice(0, limit);
+    const positions = shuffle(
+      randomWords.map((word) => words.indexOf(word) + 1)
+    );
     return {
       words: randomWords,
       positions,
     };
   }
 
-  async validateWords({
+  async confirmMnemonic({
     words,
     positions,
-    vaultId,
-    password,
-  }: VaultInputs['validateWords']): Promise<boolean> {
-    const vaultSecret = await this.exportVault({ password, vaultId });
-    const wordsToValidate = vaultSecret.split(' ');
+  }: VaultInputs['confirmMnemonic']): Promise<boolean> {
+    const mnemonic = (await this.exportVault({ vaultId: 0 })).split(' ');
+
     const isValid = words.every((word, index) => {
       const position = positions[index];
-      return wordsToValidate[position] === word;
+      return mnemonic[position - 1] === word;
     });
-
     return isValid;
   }
 }

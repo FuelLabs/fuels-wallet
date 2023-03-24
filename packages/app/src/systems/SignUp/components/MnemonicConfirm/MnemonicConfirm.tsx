@@ -2,7 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Flex, Grid, Button } from '@fuel-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 
-import { MnemonicInput } from '../Mnemonic/MnemonicInput';
+import { MnemonicInput } from '../../../Core/components/Mnemonic/MnemonicInput';
 
 function fillArray(item: string[], format: number) {
   return Array.from({ length: format }).map((_, idx) => item[idx] || '');
@@ -18,23 +18,28 @@ function checkMoreThanOneWord(word: string) {
 }
 
 export type MnemonicConfirmProps = {
-  value?: string[];
+  words?: string[];
   onFilled?: (val: string[]) => void;
   positions?: number[];
+  error?: string;
+  readOnly?: boolean;
+  defaultValue?: string[];
 };
 
 export function MnemonicConfirm({
-  value: initialValue = [],
+  words = [],
   onFilled,
   positions,
+  readOnly,
+  defaultValue = fillArray([], 9),
 }: MnemonicConfirmProps) {
-  const format = 9;
-  const [value, setValue] = useState<string[]>(() => fillArray([], format));
+  const [value, setValue] = useState<string[]>(defaultValue);
   const [currentPosition, setCurrentPosition] = useState<number>(0);
+  const [isEditing, setIsEditing] = useState<boolean>(!readOnly);
 
   const unSelectedWords = useMemo(
-    () => initialValue.filter((word) => !value.includes(word)),
-    [initialValue, value]
+    () => words.filter((word) => !value.includes(word)),
+    [words, value]
   );
 
   function handleChange(idx: number) {
@@ -45,6 +50,7 @@ export function MnemonicConfirm({
           .map((word, i) => (i === idx ? val : word))
           .map(checkMoreThanOneWord)
       );
+      setIsEditing(true);
     };
   }
 
@@ -59,15 +65,18 @@ export function MnemonicConfirm({
       setValue((oldState) =>
         oldState.map((word, i) => (i === Number(currentPosition) ? val : word))
       );
+      setIsEditing(true);
       setCurrentPosition((oldState) => Number(oldState) + 1);
     };
   }
 
   useEffect(() => {
+    if (!isEditing) return;
     if (value.every((word) => Boolean(word.length))) {
       onFilled?.(value);
+      setIsEditing(false);
     }
-  }, [value]);
+  }, [value, isEditing]);
 
   return (
     <Box css={styles.root}>

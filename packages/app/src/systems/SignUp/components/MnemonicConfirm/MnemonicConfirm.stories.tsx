@@ -37,5 +37,5 @@ Confirm.parameters = {
 
 Confirm.args = {
   positions: POSITIONS,
-  value: WORDS,
+  words: WORDS,
 };

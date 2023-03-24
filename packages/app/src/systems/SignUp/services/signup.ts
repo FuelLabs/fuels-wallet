@@ -22,9 +22,15 @@ export type SignUpServiceInputs = {
     };
     account: Account;
   };
-  getSaved: {
+  getWordsToConfirm: {
     data: {
-      password?: string;
+      mnemonic?: string[];
+    };
+  };
+  confirmMnemonic: {
+    data: {
+      mnemonic?: string[];
+      positions?: number[];
     };
   };
 };
@@ -33,6 +39,10 @@ export type SignUpServiceOutputs = {
   save: {
     mnemonic?: string[];
     account?: Account;
+  };
+  getWordsToConfirm: {
+    words?: string[];
+    positions?: number[];
   };
 };
 export class SignUpService {
@@ -104,33 +114,52 @@ export class SignUpService {
     });
     Storage.setItem(IS_LOGGED_KEY, true);
     Storage.setItem(IS_SIGNING_UP_KEY, true);
-    VaultService.lock();
   }
 
-  static async getSaved({
-    data,
-  }: SignUpServiceInputs['getSaved']): Promise<SignUpServiceOutputs['save']> {
-    if (!data?.password) {
-      throw new Error('Invalid password');
-    }
-
-    VaultService.unlock({ password: data.password });
-
+  static async getSaved(): Promise<SignUpServiceOutputs['save']> {
     const secret = await VaultService.exportVault({
-      password: data.password,
+      password: undefined,
       vaultId: 0,
       // TODO change once we add multiple vault management
       // https://github.com/FuelLabs/fuels-wallet/issues/562
     });
     const mnemonic = secret.split(' ');
-    const account = Storage.getItem('account') as Account;
     return {
       mnemonic,
-      account,
     };
   }
 
   static hasSaved(): boolean {
     return !!Storage.getItem(IS_SIGNING_UP_KEY);
+  }
+
+  static async getWordsToConfirm({
+    data,
+  }: SignUpServiceInputs['getWordsToConfirm']): Promise<
+    SignUpServiceOutputs['getWordsToConfirm']
+  > {
+    if (!data?.mnemonic) {
+      throw new Error('Invalid password');
+    }
+
+    return VaultService.getWordsToConfirm({
+      words: data.mnemonic,
+    });
+  }
+
+  static async confirmMnemonic({
+    data,
+  }: SignUpServiceInputs['confirmMnemonic']): Promise<boolean> {
+    if (!data?.mnemonic) {
+      throw new Error('Invalid words');
+    }
+    if (!data?.positions) {
+      throw new Error('Invalid positions');
+    }
+
+    return VaultService.confirmMnemonic({
+      words: data.mnemonic,
+      positions: data.positions,
+    });
   }
 }

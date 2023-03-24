@@ -11,7 +11,6 @@ import { store } from '~/store';
 import {
   assignErrorMessage,
   FetchMachine,
-  getPhraseFromValue,
   getWordsFromValue,
   Storage,
 } from '~/systems/Core';
@@ -29,6 +28,9 @@ export enum SignUpType {
 type FormValues = {
   mnemonic?: string[];
   password?: string;
+  wordsForConfirmation?: string[];
+  confirmationWords?: string[];
+  positionsForConfirmation?: number[];
 };
 
 type MachineContext = {
@@ -37,6 +39,7 @@ type MachineContext = {
   error?: string;
   data?: Maybe<FormValues>;
   account?: Maybe<Account>;
+  isConfirmed?: boolean;
 };
 
 type MachineServices = {
@@ -50,6 +53,12 @@ type MachineServices = {
     data: {
       mnemonic?: string[];
       account?: Account;
+    };
+  };
+  getConfirmationWords: {
+    data: {
+      words?: string[];
+      positions?: number[];
     };
   };
 };
@@ -86,7 +95,7 @@ export const signUpMachine = createMachine(
             cond: 'isCreatingWallet',
           },
           {
-            target: 'waitingMnemonic',
+            target: 'fetchingConfirmationWords',
           },
         ],
       },
@@ -102,7 +111,7 @@ export const signUpMachine = createMachine(
           src: 'getSavedSignUp',
           onDone: {
             actions: ['assignSavedData'],
-            target: 'showingMnemonic',
+            target: 'fetchingConfirmationWords',
           },
           onError: {
             actions: ['assignError'],
@@ -112,6 +121,15 @@ export const signUpMachine = createMachine(
       showingMnemonic: {
         on: {
           NEXT: {
+            target: 'fetchingConfirmationWords',
+          },
+        },
+      },
+      fetchingConfirmationWords: {
+        invoke: {
+          src: 'getConfirmationWords',
+          onDone: {
+            actions: ['assignConfirmWalletData'],
             target: 'waitingMnemonic',
           },
         },
@@ -145,20 +163,22 @@ export const signUpMachine = createMachine(
         on: {
           CONFIRM_MNEMONIC: [
             {
-              actions: ['assignIsFilled', 'assignMnemonicWhenRecovering'],
-              target: '.validMnemonic',
-              cond: 'isValidAndConfirmed',
-            },
-            {
-              actions: ['assignIsFilled'],
-              target: '.mnemonicNotMatch',
-              cond: 'isValidMnemonic',
-            },
-            {
-              actions: ['assignIsFilled'],
-              target: '.invalidMnemonic',
+              actions: [
+                'assignIsFilled',
+                'assignMnemonicWhenRecovering',
+                'assignConfirmationWords',
+              ],
+              target: 'confirmingMnemonic',
             },
           ],
+        },
+      },
+      confirmingMnemonic: {
+        invoke: {
+          src: 'confirmMnemonic',
+          onDone: {
+            target: 'waitingMnemonic.validMnemonic',
+          },
         },
       },
       addingPassword: {
@@ -248,6 +268,19 @@ export const signUpMachine = createMachine(
         }),
         account: (_, ev) => ev.data.account,
       }),
+      assignConfirmWalletData: assign({
+        data: (ctx, ev) => ({
+          ...ctx.data,
+          wordsForConfirmation: ev.data.words,
+          positionsForConfirmation: ev.data.positions,
+        }),
+      }),
+      assignConfirmationWords: assign({
+        data: (ctx, ev) => ({
+          ...ctx.data,
+          confirmationWords: ev.data.words,
+        }),
+      }),
       deleteData: assign({
         data: (_) => null,
       }),
@@ -260,21 +293,6 @@ export const signUpMachine = createMachine(
     guards: {
       isCreatingWallet: (ctx) => {
         return ctx.type === SignUpType.create;
-      },
-      isValidMnemonic: (_, ev) => {
-        return Mnemonic.isMnemonicValid(
-          getPhraseFromValue(ev.data.words) || ''
-        );
-      },
-      isValidAndConfirmed: (ctx, ev) => {
-        const isValid = Mnemonic.isMnemonicValid(
-          getPhraseFromValue(ev.data.words) || ''
-        );
-        if (ctx.type === SignUpType.recover) return isValid;
-        return (
-          getPhraseFromValue(ev.data.words) ===
-            getPhraseFromValue(ctx.data?.mnemonic) && isValid
-        );
       },
       hasSavedMnemonic: () => {
         return SignUpService.hasSaved();
@@ -309,18 +327,28 @@ export const signUpMachine = createMachine(
         return data;
       },
       getSavedSignUp: FetchMachine.create<
-        { data: { password?: string } },
+        null,
         MachineServices['getSavedSignUp']['data']
       >({
         showError: true,
         maxAttempts: 2,
-        async fetch({ input }) {
-          if (!input?.data?.password) {
-            throw new Error('Invalid password');
-          }
-          return SignUpService.getSaved(input);
+        async fetch() {
+          return SignUpService.getSaved();
         },
       }),
+      async getConfirmationWords({ data }) {
+        if (!data?.mnemonic) throw new Error('Invalid mnemonic');
+        return SignUpService.getWordsToConfirm({ data });
+      },
+      async confirmMnemonic({ data }) {
+        if (!data?.mnemonic) throw new Error('Invalid mnemonic');
+        return SignUpService.confirmMnemonic({
+          data: {
+            mnemonic: data.mnemonic,
+            positions: data.positionsForConfirmation,
+          },
+        });
+      },
     },
   }
 );

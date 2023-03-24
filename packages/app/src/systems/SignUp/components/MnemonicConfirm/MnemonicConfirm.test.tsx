@@ -19,11 +19,11 @@ const POSITIONS = [4, 5, 7, 3, 2, 6, 8, 1, 9];
 
 describe('Mnemonic Confirmation', () => {
   it('a11y', async () => {
-    await testA11y(<MnemonicConfirm value={WORDS} positions={POSITIONS} />);
+    await testA11y(<MnemonicConfirm words={WORDS} positions={POSITIONS} />);
   });
 
   it('should only render 9 mnemonic inputs, and 9 words buttons', async () => {
-    render(<MnemonicConfirm value={WORDS} positions={POSITIONS} />);
+    render(<MnemonicConfirm words={WORDS} positions={POSITIONS} />);
 
     for (const position of POSITIONS) {
       expect(screen.getByText(position)).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe('Mnemonic Confirmation', () => {
     const onFilled = jest.fn();
     render(
       <MnemonicConfirm
-        value={WORDS}
+        words={WORDS}
         onFilled={onFilled}
         positions={POSITIONS}
       />
@@ -54,9 +54,11 @@ describe('Mnemonic Confirmation', () => {
     buttons.sort(() => Math.random() - 0.5);
     // get the text on the buttons
     const words = buttons.map((button) => button.textContent);
+    // click all the buttons
     buttons.forEach((button) => {
       fireEvent.click(button);
     });
+    // expect the onFilled function to be called with the words in the order of the buttons
     expect(onFilled).toHaveBeenCalledWith(words);
   });
 });

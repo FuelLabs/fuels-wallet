@@ -26,6 +26,7 @@ export function CreateWallet() {
         />
       )}
       {(state.matches('waitingMnemonic') ||
+        state.matches('fetchingConfirmationWords') ||
         state.matches('creatingWallet')) && (
         <MnemonicWrite
           error={context.isFilled ? context.error : ''}
@@ -34,6 +35,9 @@ export function CreateWallet() {
           onNext={handlers.createManager}
           onCancel={() => navigate(Pages.signUp())}
           isLoading={state.hasTag('loading')}
+          words={context.data?.wordsForConfirmation}
+          positions={context.data?.positionsForConfirmation}
+          defaultValue={context.data?.confirmationWords}
         />
       )}
     </Layout>
