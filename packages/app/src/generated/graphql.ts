@@ -146,9 +146,9 @@ export type ICoinEdge = {
 };
 
 export type ICoinFilterInput = {
-  /** Returns coins only with `asset_id`. */
+  /** Asset ID of the coins */
   assetId: InputMaybe<Scalars['AssetId']>;
-  /** Returns coins owned by the `owner`. */
+  /** Address of the owner */
   owner: Scalars['Address'];
 };
 
@@ -330,11 +330,11 @@ export type IMessage = {
   amount: Scalars['U64'];
   daHeight: Scalars['U64'];
   data: Scalars['HexString'];
+  fuelBlockSpend: Maybe<Scalars['U64']>;
   messageId: Scalars['MessageId'];
   nonce: Scalars['U64'];
   recipient: Scalars['Address'];
   sender: Scalars['Address'];
-  status: IMessageStatus;
 };
 
 export type IMessageConnection = {
@@ -374,11 +374,6 @@ export type IMessageProof = {
   sender: Scalars['Address'];
   signature: Scalars['Signature'];
 };
-
-export enum IMessageStatus {
-  Spent = 'SPENT',
-  Unspent = 'UNSPENT',
-}
 
 export type IMutation = {
   __typename?: 'Mutation';
@@ -503,12 +498,7 @@ export type IQuery = {
   block: Maybe<IBlock>;
   blocks: IBlockConnection;
   chain: IChainInfo;
-  /** Gets the coin by `utxo_id`. */
   coin: Maybe<ICoin>;
-  /**
-   * Gets all coins of some `owner` maybe filtered with by `asset_id` per page.
-   * It includes `CoinStatus::Spent` and `CoinStatus::Unspent` coins.
-   */
   coins: ICoinConnection;
   contract: Maybe<IContract>;
   contractBalance: IContractBalance;
@@ -687,7 +677,7 @@ export enum IReceiptType {
   TransferOut = 'TRANSFER_OUT',
 }
 
-/** The schema analog of the [`resource::Resource`]. */
+/** The schema analog of the [`crate::database::utils::Resource`]. */
 export type IResource = ICoin | IMessage;
 
 export enum IReturnType {
