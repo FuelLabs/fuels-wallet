@@ -1,13 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Avatar,
-  Box,
-  Copyable,
-  Flex,
-  Icon,
-  IconButton,
-  Text,
-} from '@fuel-ui/react';
+import { Avatar, Box, Flex, Icon, IconButton, Text } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 
@@ -15,12 +7,9 @@ import { useAccounts } from '../../hooks';
 
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
+import { FuelAddress } from '~/systems/Account';
 import type { Maybe } from '~/systems/Core';
-import {
-  AmountVisibility,
-  shortAddress,
-  VisibilityButton,
-} from '~/systems/Core';
+import { AmountVisibility, VisibilityButton } from '~/systems/Core';
 
 type BalanceWidgetWrapperProps = {
   children: ReactNode;
@@ -69,18 +58,13 @@ export function BalanceWidget({
       </Flex>
       <Flex justify="space-between" css={styles.balanceDetails}>
         <Flex direction="column" css={styles.balanceContainer}>
-          <Copyable value={account.address}>
-            <Text
-              fontSize="sm"
-              color="gray11"
-              css={styles.balanceAddress}
-              aria-label={account.address}
-              data-account-name={account.name}
-            >
-              {shortAddress(account.address)}
-            </Text>
-          </Copyable>
-          <Text fontSize="2xl" css={styles.balance} aria-hidden={visibility}>
+          <FuelAddress address={account.address} css={styles.balanceAddress} />
+          <Text
+            fontSize="2xl"
+            css={styles.balance}
+            aria-hidden={visibility}
+            data-account-name={account.name}
+          >
             {account.balanceSymbol || '$'}&nbsp;
             <AmountVisibility value={account.balance} visibility={visibility} />
           </Text>
@@ -114,6 +98,8 @@ const backgroundCss = {
 const styles = {
   balanceDetails: cssObj({ flex: '1 0' }),
   balanceAddress: cssObj({
+    color: '$gray11',
+    fontSize: '$sm',
     fontWeight: 'bold',
   }),
   visibilityContainer: cssObj({ marginRight: 6, marginTop: 8 }),
