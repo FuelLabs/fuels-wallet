@@ -8,7 +8,7 @@ import { AccountItem } from '../AccountItem';
 export type AccountListProps = {
   accounts?: Account[];
   isLoading?: boolean;
-  onPress: (account: Account) => void;
+  onPress?: (account: Account) => void;
   onExport?: (address: string) => void;
   onUpdate?: (address: string) => void;
 };
