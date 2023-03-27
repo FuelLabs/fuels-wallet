@@ -92,6 +92,8 @@ test.describe('Networks', () => {
     await urlInput.fill('https://test.network/graphql');
     await expect(buttonCreate).toBeEnabled();
     await buttonCreate.click();
+    await hasText(page, 'Assets');
+    await visit(page, '/wallet');
     await hasText(page, 'Test Network');
   });
 });
