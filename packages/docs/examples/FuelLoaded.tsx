@@ -42,3 +42,16 @@ export function FuelLoaded() {
     </ExampleBox>
   );
 }
+window.fuel.connect()
+// Fuel loaded handler
+const onFuelLoaded = () => {
+  setFuel(window.fuel);
+};
+
+// If fuel is already loaded, call the handler
+if (window.fuel) {
+  onFuelLoaded();
+}
+
+// Listen for the fuelLoaded event
+document.addEventListener("FuelLoaded", onFuelLoaded);
