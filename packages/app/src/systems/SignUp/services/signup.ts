@@ -46,6 +46,7 @@ export type SignUpServiceOutputs = {
   };
   getSaved: {
     mnemonic?: string[];
+    account?: Account;
   };
 };
 export class SignUpService {
@@ -130,8 +131,18 @@ export class SignUpService {
       // https://github.com/FuelLabs/fuels-wallet/issues/562
     });
     const mnemonic = secret.split(' ');
+    const vaultAccounts = await VaultService.getAccounts();
+    const vaultAccount = vaultAccounts[0];
+    const account = {
+      name: 'Account 1',
+      address: vaultAccount.address.toString(),
+      publicKey: vaultAccount.publicKey,
+      isHidden: false,
+      vaultId: vaultAccount.vaultId,
+    } as Account;
     return {
       mnemonic,
+      account,
     };
   }
 

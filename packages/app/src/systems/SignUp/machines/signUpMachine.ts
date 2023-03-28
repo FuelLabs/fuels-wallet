@@ -52,6 +52,7 @@ type MachineServices = {
   getSavedSignUp: {
     data: {
       mnemonic?: string[];
+      account?: Account;
     };
   };
   getConfirmationWords: {
@@ -112,6 +113,10 @@ export const signUpMachine = createMachine(
             actions: ['assignSavedData'],
             target: 'fetchingConfirmationWords',
           },
+          onError: {
+            actions: ['assignError'],
+            target: 'idle',
+          },
         },
       },
       showingMnemonic: {
@@ -130,11 +135,12 @@ export const signUpMachine = createMachine(
           },
           onError: {
             actions: ['assignError'],
+            target: 'showingMnemonic',
           },
         },
       },
       waitingMnemonic: {
-        initial: 'invalidMnemonic',
+        initial: 'idle',
         states: {
           invalidMnemonic: {
             entry: [
@@ -158,6 +164,9 @@ export const signUpMachine = createMachine(
               },
             },
           },
+          idle: {
+            entry: ['cleanError'],
+          },
         },
         on: {
           CONFIRM_MNEMONIC: [
@@ -178,6 +187,10 @@ export const signUpMachine = createMachine(
           src: 'confirmMnemonic',
           onDone: {
             target: 'waitingMnemonic.validMnemonic',
+          },
+          onError: {
+            target: 'waitingMnemonic.mnemonicNotMatch',
+            actions: 'assignError',
           },
         },
       },
@@ -266,6 +279,7 @@ export const signUpMachine = createMachine(
         data: (_, ev) => ({
           mnemonic: ev.data.mnemonic,
         }),
+        account: (_, ev) => ev.data.account,
       }),
       assignConfirmWalletData: assign({
         data: (ctx, ev) => ({
@@ -332,21 +346,25 @@ export const signUpMachine = createMachine(
         showError: false,
         maxAttempts: 2,
         async fetch() {
-          return SignUpService.getSaved();
+          const savedData = await SignUpService.getSaved();
+          return savedData;
         },
       }),
       async getConfirmationWords({ data }) {
         if (!data?.mnemonic) throw new Error('Invalid mnemonic');
-        return SignUpService.getWordsToConfirm({ data });
+        const words = await SignUpService.getWordsToConfirm({ data });
+        return words;
       },
       async confirmMnemonic({ data }) {
         if (!data?.mnemonic) throw new Error('Invalid mnemonic');
-        return SignUpService.confirmMnemonic({
+        const isValid = await SignUpService.confirmMnemonic({
           data: {
-            mnemonic: data.mnemonic,
+            mnemonic: data.confirmationWords,
             positions: data.positionsForConfirmation,
           },
         });
+        if (!isValid) throw new Error('Invalid mnemonic');
+        return isValid;
       },
     },
   }

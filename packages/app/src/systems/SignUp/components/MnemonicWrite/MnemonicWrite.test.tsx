@@ -6,6 +6,7 @@ import { MnemonicWrite } from './MnemonicWrite';
 
 import { MNEMONIC_SIZE } from '~/config';
 import { getPhraseFromValue } from '~/systems/Core';
+import { shuffle } from '~/systems/Vault/services/untils';
 
 const onFilledHandler = jest.fn();
 const onNextHandler = jest.fn();
@@ -15,29 +16,12 @@ const MNEMONIC = getPhraseFromValue(
   FuelMnemonic.generate(MNEMONIC_SIZE)
 ) as string;
 
+const wordsToConfirm = shuffle(MNEMONIC.split(' ')).splice(0, 9);
+const position = shuffle(
+  wordsToConfirm.map((word) => MNEMONIC.split(' ').indexOf(word) + 1)
+);
+
 describe('MnemonicWrite', () => {
-  it('should trigger onFilled after paste', async () => {
-    await render(
-      <MnemonicWrite
-        canProceed
-        onFilled={onFilledHandler}
-        onNext={onNextHandler}
-        onCancel={onCancelHandler}
-      />
-    );
-
-    await navigator.clipboard.writeText(MNEMONIC);
-    const btn = screen.getByText('Paste');
-
-    act(() => {
-      btn.click();
-    });
-
-    await waitFor(async () => {
-      expect(onFilledHandler).toBeCalledTimes(1);
-    });
-  });
-
   it('should be able to click on next if canProceed and isFilled', async () => {
     render(
       <MnemonicWrite
@@ -45,14 +29,17 @@ describe('MnemonicWrite', () => {
         onFilled={onFilledHandler}
         onNext={onNextHandler}
         onCancel={onCancelHandler}
+        words={wordsToConfirm}
+        positions={position}
       />
     );
 
-    await navigator.clipboard.writeText(MNEMONIC);
-    const btnPaste = screen.getByText('Paste');
-
-    act(() => {
-      btnPaste.click();
+    const buttons = screen.getAllByRole('button');
+    // remove the last two buttons
+    buttons.slice(0, buttons.length - 2).forEach((button) => {
+      act(() => {
+        button.click();
+      });
     });
 
     await waitFor(() => {

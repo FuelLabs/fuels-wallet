@@ -31,16 +31,6 @@ describe('Mnemonic', () => {
         expect(screen.getByText(word)).toBeInTheDocument();
       }
     });
-
-    it('should be able to copy mnemonic words', async () => {
-      const { user } = render(<Mnemonic value={WORDS} type="read" />);
-
-      const btn = screen.getByLabelText(/copy button/i);
-      expect(btn).toBeInTheDocument();
-
-      await user.click(btn);
-      expect(await navigator.clipboard.readText()).toBe(WORDS.join(' '));
-    });
   });
 
   describe('type: write', () => {
