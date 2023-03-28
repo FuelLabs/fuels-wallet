@@ -30,6 +30,7 @@ export const Accounts = () => {
           isLoading={isLoading}
           accounts={accounts}
           onPress={handlers.setCurrentAccount}
+          onUpdate={handlers.goToEdit}
         />
       </Dialog.Description>
       <Dialog.Footer css={styles.footer}>

@@ -2,26 +2,32 @@ import { cssObj } from '@fuel-ui/css';
 import {
   Avatar,
   CardList,
-  Copyable,
   Flex,
   Heading,
-  Text,
+  Icon,
+  IconButton,
+  Switch,
 } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { FC } from 'react';
 
 import { AccountItemLoader } from './AccountItemLoader';
 
-import { shortAddress } from '~/systems/Core';
+import { FuelAddress } from '~/systems/Account';
 
 export type AccountItemProps = {
   account: Account;
+  isToggleChecked?: boolean;
   isCurrent?: boolean;
   isHidden?: boolean;
   onPress?: () => void;
-  rightEl?: JSX.Element;
   isDisabled?: boolean;
   compact?: boolean;
+  onToggle?: (
+    address: string,
+    isToggleChecked?: boolean
+  ) => Promise<void> | void;
+  onUpdate?: (address: string) => Promise<void> | void;
 };
 
 type AccountItemComponent = FC<AccountItemProps> & {
@@ -30,12 +36,14 @@ type AccountItemComponent = FC<AccountItemProps> & {
 
 export const AccountItem: AccountItemComponent = ({
   account,
+  isToggleChecked,
   isCurrent,
   isHidden,
   onPress,
-  rightEl,
   isDisabled,
   compact,
+  onToggle,
+  onUpdate,
 }: AccountItemProps) => {
   if (isHidden) return null;
   /**
@@ -54,11 +62,32 @@ export const AccountItem: AccountItemComponent = ({
   //     }}
   //   />
   // );
+  const actions = (
+    <Flex gap="$2">
+      {onUpdate && (
+        <IconButton
+          variant="link"
+          icon={<Icon icon={Icon.is('Pencil')} />}
+          aria-label="Update"
+          onPress={() => onUpdate?.(account.address)}
+        />
+      )}
+      {onToggle && (
+        <Switch
+          size="sm"
+          checked={isToggleChecked}
+          aria-label={`Toggle ${account.name}`}
+          onCheckedChange={() => onToggle?.(account.address, isToggleChecked)}
+        />
+      )}
+    </Flex>
+  );
+
   return (
     <CardList.Item
       isActive={isCurrent}
       onClick={onPress}
-      rightEl={rightEl}
+      rightEl={actions}
       css={styles.root}
       aria-disabled={isDisabled}
       aria-label={account.name}
@@ -73,9 +102,7 @@ export const AccountItem: AccountItemComponent = ({
         <Heading as="h6" css={styles.name}>
           {account.name}
         </Heading>
-        <Copyable value={account.address}>
-          <Text css={styles.address}>{shortAddress(account.address)}</Text>
-        </Copyable>
+        <FuelAddress address={account.address} css={styles.address} />
       </Flex>
     </CardList.Item>
   );
@@ -89,9 +116,11 @@ const styles = {
       opacity: 0.5,
       cursor: 'default',
     },
+
     '.wrapper': {
       flexDirection: 'column',
     },
+
     '&[data-compact="true"]': {
       '.wrapper': {
         flexDirection: 'row',
@@ -102,12 +131,21 @@ const styles = {
         flexShrink: 0,
       },
     },
+
+    '.fuel_button': {
+      px: '$1 !important',
+      color: '$gray8',
+    },
+
+    '.fuel_button:hover': {
+      color: '$gray11',
+    },
   }),
   name: cssObj({
     margin: 0,
   }),
   address: cssObj({
-    textSize: 'sm',
+    fontSize: '$sm',
     fontWeight: '$semibold',
   }),
 };
