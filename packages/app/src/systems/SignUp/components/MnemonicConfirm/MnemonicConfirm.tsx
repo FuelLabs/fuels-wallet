@@ -84,7 +84,7 @@ export function MnemonicConfirm({
         {value.map((_, idx) => {
           return (
             <Grid key={idx} css={styles.inputWrapper}>
-              <span>{positions?.[idx]}</span>
+              <span aria-label="position">{positions?.[idx]}</span>
               <div>
                 <MnemonicInput
                   value={value[idx]}
