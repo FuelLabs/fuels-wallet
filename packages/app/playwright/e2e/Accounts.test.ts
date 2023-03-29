@@ -100,9 +100,7 @@ test.describe('Account', () => {
     await hasText(page, 'Unlock your wallet to continue');
     await getByAriaLabel(page, 'Your Password').type(`${WALLET_PASSWORD}1`);
     await getByAriaLabel(page, 'Unlock wallet').click();
-    await hasText(page, /Export Private Key/i);
-    await hasText(page, 'Failed to export. Invalid Credentials.');
-    await getByAriaLabel(page, 'Retry Unlock').click();
+    await hasText(page, /Invalid password/i);
     await getByAriaLabel(page, 'Your Password').type(WALLET_PASSWORD);
     await getByAriaLabel(page, 'Unlock wallet').click();
     await hasText(page, /Export Private Key/i);

@@ -8,9 +8,9 @@ const selectors = {
   account: (state: ExportAccountMachineState) => state.context?.account,
   isLoading: (state: ExportAccountMachineState) => state.hasTag('loading'),
   exportedKey: (state: ExportAccountMachineState) => state.context.exportedKey,
-  isWaitingPassword: (state: ExportAccountMachineState) =>
-    state.matches('waitingPassword'),
-  isFailed: (state: ExportAccountMachineState) => state.matches('failed'),
+  isUnlockOpened: (state: ExportAccountMachineState) =>
+    state.hasTag('unlockOpened'),
+  error: (state: ExportAccountMachineState) => state.context.error,
 };
 
 export function useExportAccount() {
@@ -22,10 +22,10 @@ export function useExportAccount() {
   );
 
   const isLoading = useSelector(service, selectors.isLoading);
-  const isFailed = useSelector(service, selectors.isFailed);
+  const error = useSelector(service, selectors.error);
   const account = useSelector(service, selectors.account);
   const exportedKey = useSelector(service, selectors.exportedKey);
-  const isWaitingPassword = useSelector(service, selectors.isWaitingPassword);
+  const isUnlockOpened = useSelector(service, selectors.isUnlockOpened);
 
   function exportAccount(password: string) {
     service.send({
@@ -36,21 +36,14 @@ export function useExportAccount() {
     });
   }
 
-  function retry() {
-    service.send({
-      type: 'RETRY',
-    });
-  }
-
   return {
     handlers: {
       exportAccount,
-      retry,
     },
     account,
     exportedKey,
     isLoading,
-    isFailed,
-    isWaitingPassword,
+    error,
+    isUnlockOpened,
   };
 }

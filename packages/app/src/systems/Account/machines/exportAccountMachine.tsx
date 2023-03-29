@@ -14,6 +14,7 @@ type MachineContext = {
   account?: Maybe<Account>;
   address?: string;
   exportedKey?: string;
+  error?: string;
 };
 
 type MachineServices = {
@@ -25,14 +26,10 @@ type MachineServices = {
   };
 };
 
-export type ExportAccountMachineEvents =
-  | {
-      type: 'EXPORT_ACCOUNT';
-      input: Omit<VaultInputs['exportPrivateKey'], 'address'>;
-    }
-  | {
-      type: 'RETRY';
-    };
+export type ExportAccountMachineEvents = {
+  type: 'EXPORT_ACCOUNT';
+  input: Omit<VaultInputs['exportPrivateKey'], 'address'>;
+};
 
 export const exportAccountMachine = createMachine(
   {
@@ -69,6 +66,7 @@ export const exportAccountMachine = createMachine(
         },
       },
       waitingPassword: {
+        tags: ['unlockOpened'],
         on: {
           EXPORT_ACCOUNT: {
             target: 'exportingAccount',
@@ -76,7 +74,8 @@ export const exportAccountMachine = createMachine(
         },
       },
       exportingAccount: {
-        tags: ['loading'],
+        tags: ['loading', 'unlockOpened'],
+        entry: ['clearError'],
         invoke: {
           src: 'exportAccount',
           data: {
@@ -94,7 +93,8 @@ export const exportAccountMachine = createMachine(
           onDone: [
             {
               cond: FetchMachine.hasError,
-              target: 'failed',
+              actions: ['assignError'],
+              target: 'waitingPassword',
             },
             {
               actions: ['assignExportedKey'],
@@ -103,13 +103,7 @@ export const exportAccountMachine = createMachine(
           ],
         },
       },
-      failed: {
-        on: {
-          RETRY: {
-            target: 'waitingPassword',
-          },
-        },
-      },
+      failed: {},
     },
   },
   {
@@ -119,6 +113,12 @@ export const exportAccountMachine = createMachine(
       }),
       assignExportedKey: assign({
         exportedKey: (_, ev) => ev.data,
+      }),
+      assignError: assign({
+        error: 'Invalid password',
+      }),
+      clearError: assign({
+        error: undefined,
       }),
     },
     services: {
@@ -137,7 +137,6 @@ export const exportAccountMachine = createMachine(
         VaultInputs['exportPrivateKey'],
         MachineServices['exportAccount']['data']
       >({
-        showError: true,
         maxAttempts: 1,
         async fetch({ input }) {
           if (!input?.address) {

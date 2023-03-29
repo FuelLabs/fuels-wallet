@@ -7,6 +7,7 @@ import {
   FuelLogo,
   Heading,
   Icon,
+  IconButton,
   Stack,
   Text,
 } from '@fuel-ui/react';
@@ -22,6 +23,7 @@ export type UnlockDialogProps = {
   unlockError?: string;
   onUnlock: (value: string) => void;
   onReset?: () => void;
+  onClose?: () => void;
   isReseting?: boolean;
   isLoading?: boolean;
   headerText?: string;
@@ -34,6 +36,7 @@ export function UnlockCard({
   isReseting,
   isLoading,
   headerText = 'Welcome back',
+  onClose,
 }: UnlockDialogProps) {
   const form = useUnlockForm({ password: unlockError });
   const { handleSubmit } = form;
@@ -45,6 +48,15 @@ export function UnlockCard({
   return (
     <Card css={styles.content} as="form" onSubmit={handleSubmit(onSubmit)}>
       <Card.Body css={{ flex: 1 }}>
+        {onClose && (
+          <IconButton
+            variant="link"
+            icon={<Icon icon="X" color="gray8" />}
+            aria-label="Close unlock card"
+            onPress={onClose}
+            css={styles.closeButton}
+          />
+        )}
         <Box css={styles.form}>
           <Box as="div" css={styles.description}>
             <Stack gap="$2">
@@ -111,6 +123,7 @@ const styles = {
     height: WALLET_HEIGHT,
     maxWidth: WALLET_WIDTH,
     maxHeight: 'none',
+    position: 'relative',
   }),
   description: cssObj({
     flex: 1,
@@ -120,5 +133,10 @@ const styles = {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
+  }),
+  closeButton: cssObj({
+    position: 'absolute',
+    top: '$4',
+    right: '$4',
   }),
 };
