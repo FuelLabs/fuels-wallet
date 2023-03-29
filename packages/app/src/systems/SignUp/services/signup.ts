@@ -179,4 +179,9 @@ export class SignUpService {
       positions: data.positions,
     });
   }
+
+  static async deleteSaved() {
+    await db.clear();
+    await Storage.clear();
+  }
 }

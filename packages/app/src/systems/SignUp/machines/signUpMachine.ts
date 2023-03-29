@@ -69,6 +69,7 @@ type MachineEvents =
   | { type: 'CONFIRM_MNEMONIC'; data: { words: string[] } }
   | { type: 'CREATE_MANAGER'; data: { password: string } }
   | { type: 'CREATE_PASSWORD'; data: { password: string } }
+  | { type: 'CANCEL' }
   | { type: 'SAVE_SIGNUP' };
 
 export const signUpMachine = createMachine(
@@ -93,6 +94,10 @@ export const signUpMachine = createMachine(
           {
             target: 'idle',
             cond: 'isCreatingWallet',
+          },
+          {
+            target: 'recoveringWallet',
+            cond: 'isRecoveringWallet',
           },
           {
             target: 'fetchingConfirmationWords',
@@ -123,6 +128,9 @@ export const signUpMachine = createMachine(
         on: {
           NEXT: {
             target: 'fetchingConfirmationWords',
+          },
+          CANCEL: {
+            target: 'cancel',
           },
         },
       },
@@ -179,6 +187,9 @@ export const signUpMachine = createMachine(
               target: 'confirmingMnemonic',
             },
           ],
+          CANCEL: {
+            target: 'cancel',
+          },
         },
       },
       confirmingMnemonic: {
@@ -199,6 +210,9 @@ export const signUpMachine = createMachine(
           CREATE_PASSWORD: {
             target: '#(machine).savingPassword',
             actions: ['assignPassword', 'createMnemonic'],
+          },
+          CANCEL: {
+            target: 'cancel',
           },
         },
       },
@@ -234,6 +248,69 @@ export const signUpMachine = createMachine(
       },
       done: {
         entry: 'redirectToWalletCreated',
+      },
+      cancel: {
+        invoke: {
+          src: 'deleteSavedSignUp',
+          onDone: {
+            actions: 'refreshPage',
+          },
+        },
+      },
+      recoveringWallet: {
+        initial: 'enteringMnemonic',
+        states: {
+          enteringMnemonic: {
+            initial: 'idle',
+            states: {
+              invalidMnemonic: {
+                entry: [
+                  assignErrorMessage(
+                    'The seed phrase is not valid check the words for typos or missing words'
+                  ),
+                ],
+              },
+              validMnemonic: {
+                entry: ['cleanError'],
+                on: {
+                  NEXT: {
+                    target: '#(machine).recoveringWallet.addingPassword',
+                  },
+                },
+              },
+              idle: {
+                on: {
+                  CONFIRM_MNEMONIC: {
+                    actions: ['assignIsFilled', 'assignMnemonicWhenRecovering'],
+                    target: 'validMnemonic',
+                  },
+                },
+              },
+            },
+          },
+          addingPassword: {
+            on: {
+              CREATE_MANAGER: {
+                actions: 'assignPassword',
+                target: '#(machine).creatingWallet',
+              },
+            },
+          },
+          creatingWallet: {
+            tags: ['loading'],
+            invoke: {
+              src: 'setupVault',
+              onDone: {
+                actions: ['assignAccount', 'deleteData', 'sendAccountCreated'],
+                target: '#(machine).done',
+              },
+              onError: {
+                actions: 'assignError',
+                target: '#(machine).failed',
+              },
+            },
+          },
+        },
       },
     },
   },
@@ -302,6 +379,7 @@ export const signUpMachine = createMachine(
         store.updateAccounts();
       },
       redirectToWalletCreated: () => {},
+      refreshPage: () => {},
     },
     guards: {
       isCreatingWallet: (ctx) => {
@@ -309,6 +387,9 @@ export const signUpMachine = createMachine(
       },
       hasSavedMnemonic: () => {
         return SignUpService.hasSaved();
+      },
+      isRecoveringWallet: (ctx) => {
+        return ctx.type === SignUpType.recover;
       },
     },
     services: {
@@ -365,6 +446,10 @@ export const signUpMachine = createMachine(
         });
         if (!isValid) throw new Error('Invalid mnemonic');
         return isValid;
+      },
+      async deleteSavedSignUp() {
+        const deleted = await SignUpService.deleteSaved();
+        return deleted;
       },
     },
   }

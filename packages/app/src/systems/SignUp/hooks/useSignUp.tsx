@@ -21,6 +21,9 @@ export function useSignUp(type: SignUpType) {
           redirectToWalletCreated() {
             navigate(Pages.signUpWalletCreated());
           },
+          refreshPage() {
+            navigate(Pages.signUp());
+          },
         },
       })
       .withContext({
@@ -38,8 +41,8 @@ export function useSignUp(type: SignUpType) {
     send('CONFIRM_MNEMONIC', { data: { words } });
   }
 
-  function createManager() {
-    send('CREATE_MANAGER');
+  function createManager({ password }: CreatePasswordValues) {
+    send('CREATE_MANAGER', { data: { password } });
   }
 
   function createPassword({ password }: CreatePasswordValues) {
@@ -48,6 +51,10 @@ export function useSignUp(type: SignUpType) {
 
   function saveSignup() {
     send('SAVE_SIGNUP');
+  }
+
+  function cancel() {
+    send('CANCEL');
   }
 
   useEffect(() => {
@@ -62,6 +69,7 @@ export function useSignUp(type: SignUpType) {
       createManager,
       createPassword,
       saveSignup,
+      cancel,
     },
     context: {
       ...ctx,

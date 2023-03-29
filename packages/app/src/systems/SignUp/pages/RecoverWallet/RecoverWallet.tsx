@@ -20,17 +20,19 @@ export function RecoverWallet() {
           stored, DO NOT IMPORT YOUR CURRENT SEED PHRASE.
         </Alert.Description>
       </Alert>
-      {state.matches('waitingMnemonic') && (
+      {state.matches('recoveringWallet.enteringMnemonic') && (
         <MnemonicWrite
           error={context.isFilled ? context.error : ''}
-          canProceed={state.matches('waitingMnemonic.validMnemonic')}
+          canProceed={state.matches(
+            'recoveringWallet.enteringMnemonic.validMnemonic'
+          )}
           onFilled={handlers.confirmMnemonic}
           onNext={handlers.next}
           onCancel={() => navigate(Pages.signUp())}
-          enableChangeFormat={true}
         />
       )}
-      {(state.matches('addingPassword') || state.hasTag('loading')) && (
+      {(state.matches('recoveringWallet.addingPassword') ||
+        state.hasTag('loading')) && (
         <CreatePassword
           onSubmit={handlers.createManager}
           onCancel={() => navigate(Pages.signUp())}

@@ -2,8 +2,7 @@ import { Stack, Flex, Button, Alert } from '@fuel-ui/react';
 
 import { Header } from '../Header';
 
-import { ImageLoader, relativeUrl } from '~/systems/Core';
-import { MnemonicConfirm } from '~/systems/SignUp/components/MnemonicConfirm';
+import { ImageLoader, Mnemonic, relativeUrl } from '~/systems/Core';
 
 export type MnemonicWriteProps = {
   canProceed?: boolean;
@@ -13,8 +12,6 @@ export type MnemonicWriteProps = {
   onCancel: () => void;
   isLoading?: boolean;
   enableChangeFormat?: boolean;
-  words?: string[];
-  positions?: number[];
   defaultValue?: string[];
 };
 
@@ -25,9 +22,7 @@ export function MnemonicWrite({
   onCancel,
   onNext,
   isLoading,
-  words,
-  positions,
-  defaultValue,
+  enableChangeFormat,
 }: MnemonicWriteProps) {
   return (
     <Stack gap="$6" align="center">
@@ -37,7 +32,7 @@ export function MnemonicWrite({
         height={116}
       />
       <Header
-        title="Confirm your Recovery Phrase"
+        title="Enter your Recovery Phrase"
         subtitle="Enter the correct word for each position"
       />
       <Stack gap="$3" css={{ width: 400 }}>
@@ -46,12 +41,10 @@ export function MnemonicWrite({
             <Alert.Description>{error}</Alert.Description>
           </Alert>
         )}
-        <MnemonicConfirm
-          readOnly={!!defaultValue}
-          defaultValue={defaultValue}
+        <Mnemonic
+          type="write"
           onFilled={onFilled}
-          words={words}
-          positions={positions}
+          enableChangeFormat={enableChangeFormat}
         />
       </Stack>
       <Flex gap="$4">

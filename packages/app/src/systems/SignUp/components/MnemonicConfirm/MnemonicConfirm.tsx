@@ -1,8 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Flex, Grid, Button } from '@fuel-ui/react';
+import { Box, Flex, Grid, Button, Stack, Alert } from '@fuel-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 
 import { MnemonicInput } from '../../../Core/components/Mnemonic/MnemonicInput';
+import { Header } from '../Header';
+
+import { ImageLoader, relativeUrl } from '~/systems/Core';
 
 function fillArray(item: string[], format: number) {
   return Array.from({ length: format }).map((_, idx) => item[idx] || '');
@@ -20,18 +23,27 @@ function checkMoreThanOneWord(word: string) {
 export type MnemonicConfirmProps = {
   words?: string[];
   onFilled?: (val: string[]) => void;
+  onNext: () => void;
+  onCancel: () => void;
   positions?: number[];
-  error?: string;
   readOnly?: boolean;
   defaultValue?: string[];
+  isLoading?: boolean;
+  canProceed?: boolean;
+  error?: string | boolean;
 };
 
 export function MnemonicConfirm({
   words = [],
   onFilled,
+  onNext,
+  onCancel,
   positions,
   readOnly,
   defaultValue = fillArray([], 9),
+  error,
+  canProceed,
+  isLoading,
 }: MnemonicConfirmProps) {
   const [value, setValue] = useState<string[]>(defaultValue);
   const [currentPosition, setCurrentPosition] = useState<number>(0);
@@ -79,32 +91,69 @@ export function MnemonicConfirm({
   }, [value, isEditing]);
 
   return (
-    <Box css={styles.root}>
-      <Grid css={styles.words}>
-        {value.map((_, idx) => {
-          return (
-            <Grid key={idx} css={styles.inputWrapper}>
-              <span aria-label="position">{positions?.[idx]}</span>
-              <div>
-                <MnemonicInput
-                  value={value[idx]}
-                  onChange={handleChange(idx)}
-                  onFocus={handleFocus(idx)}
-                />
-              </div>
-            </Grid>
-          );
-        })}
-      </Grid>
+    <Stack gap="$6" align="center">
+      <ImageLoader
+        src={relativeUrl('/signup-illustration-1.svg')}
+        width={129}
+        height={116}
+      />
+      <Header
+        title="Confirm your Recovery Phrase"
+        subtitle="Enter the correct word for each position"
+      />
+      <Stack gap="$3" css={{ width: 400 }}>
+        {error && (
+          <Alert css={{ fontSize: '$sm', py: '$2' }} status="error">
+            <Alert.Description>{error}</Alert.Description>
+          </Alert>
+        )}
+        <Box css={styles.root}>
+          <Grid css={styles.words}>
+            {value.map((_, idx) => {
+              return (
+                <Grid key={idx} css={styles.inputWrapper}>
+                  <span aria-label="position">{positions?.[idx]}</span>
+                  <div>
+                    <MnemonicInput
+                      value={value[idx]}
+                      onChange={handleChange(idx)}
+                      onFocus={handleFocus(idx)}
+                    />
+                  </div>
+                </Grid>
+              );
+            })}
+          </Grid>
 
-      <Flex as="footer" align="center" gap="$4" css={styles.footer}>
-        {unSelectedWords?.map((word) => (
-          <Button onPress={handleConfirmValueClick(word)} key={word}>
-            {word}
-          </Button>
-        ))}
+          <Flex as="footer" align="center" gap="$4" css={styles.footer}>
+            {unSelectedWords?.map((word) => (
+              <Button onPress={handleConfirmValueClick(word)} key={word}>
+                {word}
+              </Button>
+            ))}
+          </Flex>
+        </Box>
+      </Stack>
+      <Flex gap="$4">
+        <Button
+          color="gray"
+          variant="ghost"
+          css={{ width: 130 }}
+          onPress={onCancel}
+        >
+          Cancel
+        </Button>
+        <Button
+          color="accent"
+          css={{ width: 130 }}
+          onPress={onNext}
+          isLoading={isLoading}
+          isDisabled={!canProceed}
+        >
+          Next
+        </Button>
       </Flex>
-    </Box>
+    </Stack>
   );
 }
 

@@ -1,20 +1,18 @@
-import { useNavigate } from 'react-router-dom';
-
-import { CreatePassword, MnemonicRead, MnemonicWrite } from '../../components';
+import { CreatePassword, MnemonicRead } from '../../components';
+import { MnemonicConfirm } from '../../components/MnemonicConfirm';
 import { useSignUp } from '../../hooks';
 import { SignUpType } from '../../machines/signUpMachine';
 
-import { Layout, Pages } from '~/systems/Core';
+import { Layout } from '~/systems/Core';
 
 export function CreateWallet() {
   const { state, handlers, context } = useSignUp(SignUpType.create);
-  const navigate = useNavigate();
   return (
     <Layout title="Create Wallet" isPublic>
       {(state.matches('addingPassword') || state.hasTag('savingPassword')) && (
         <CreatePassword
           onSubmit={handlers.createPassword}
-          onCancel={() => navigate(Pages.signUp())}
+          onCancel={handlers.cancel}
           isLoading={state.hasTag('savingPassword')}
         />
       )}
@@ -22,19 +20,19 @@ export function CreateWallet() {
         <MnemonicRead
           words={context.data?.mnemonic}
           onNext={handlers.next}
-          onCancel={() => navigate(Pages.signUp())}
+          onCancel={handlers.cancel}
         />
       )}
       {(state.matches('waitingMnemonic') ||
         state.matches('fetchingConfirmationWords') ||
         state.matches('confirmingMnemonic') ||
         state.matches('creatingWallet')) && (
-        <MnemonicWrite
+        <MnemonicConfirm
           error={context.isFilled ? context.error : ''}
           canProceed={state.matches('waitingMnemonic.validMnemonic')}
           onFilled={handlers.confirmMnemonic}
           onNext={handlers.createManager}
-          onCancel={() => navigate(Pages.signUp())}
+          onCancel={handlers.cancel}
           isLoading={state.hasTag('loading')}
           words={context.data?.wordsForConfirmation}
           positions={context.data?.positionsForConfirmation}
