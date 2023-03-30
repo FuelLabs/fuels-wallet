@@ -290,7 +290,7 @@ export const signUpMachine = createMachine(
           },
           addingPassword: {
             on: {
-              CREATE_MANAGER: {
+              CREATE_PASSWORD: {
                 actions: 'assignPassword',
                 target: '#(machine).creatingWallet',
               },

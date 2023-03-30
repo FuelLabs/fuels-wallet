@@ -18,12 +18,25 @@ const WORDS = [
 const POSITIONS = [4, 5, 7, 3, 2, 6, 8, 1, 9];
 
 describe('Mnemonic Confirmation', () => {
+  const onNext = jest.fn();
+  const onCancel = jest.fn();
+  const onFilled = jest.fn();
+  const callbacks = {
+    onNext,
+    onCancel,
+    onFilled,
+  };
+
   it('a11y', async () => {
-    await testA11y(<MnemonicConfirm words={WORDS} positions={POSITIONS} />);
+    await testA11y(
+      <MnemonicConfirm {...callbacks} words={WORDS} positions={POSITIONS} />
+    );
   });
 
   it('should only render 9 mnemonic inputs, and 9 words buttons', async () => {
-    render(<MnemonicConfirm words={WORDS} positions={POSITIONS} />);
+    render(
+      <MnemonicConfirm {...callbacks} words={WORDS} positions={POSITIONS} />
+    );
 
     for (const position of POSITIONS) {
       expect(screen.getByText(position)).toBeInTheDocument();
@@ -41,13 +54,8 @@ describe('Mnemonic Confirmation', () => {
   });
 
   it('should call onFilled function after all buttons are clicked', () => {
-    const onFilled = jest.fn();
     render(
-      <MnemonicConfirm
-        words={WORDS}
-        onFilled={onFilled}
-        positions={POSITIONS}
-      />
+      <MnemonicConfirm words={WORDS} positions={POSITIONS} {...callbacks} />
     );
     const buttons = screen.getAllByRole('button');
     // randomize the order of the buttons

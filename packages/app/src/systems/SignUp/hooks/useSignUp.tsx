@@ -41,8 +41,8 @@ export function useSignUp(type: SignUpType) {
     send('CONFIRM_MNEMONIC', { data: { words } });
   }
 
-  function createManager({ password }: CreatePasswordValues) {
-    send('CREATE_MANAGER', { data: { password } });
+  function createManager() {
+    send('CREATE_MANAGER');
   }
 
   function createPassword({ password }: CreatePasswordValues) {

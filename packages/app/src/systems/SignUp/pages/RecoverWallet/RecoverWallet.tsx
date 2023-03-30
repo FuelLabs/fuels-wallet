@@ -34,7 +34,7 @@ export function RecoverWallet() {
       {(state.matches('recoveringWallet.addingPassword') ||
         state.hasTag('loading')) && (
         <CreatePassword
-          onSubmit={handlers.createManager}
+          onSubmit={handlers.createPassword}
           onCancel={() => navigate(Pages.signUp())}
           isLoading={state.hasTag('loading')}
         />

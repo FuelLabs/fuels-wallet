@@ -1,25 +1,11 @@
-import { Mnemonic as FuelMnemonic } from '@fuel-ts/mnemonic';
 import { render, screen, waitFor } from '@fuel-ui/test-utils';
 import { act } from 'react-dom/test-utils';
 
 import { MnemonicWrite } from './MnemonicWrite';
 
-import { MNEMONIC_SIZE } from '~/config';
-import { getPhraseFromValue } from '~/systems/Core';
-import { shuffle } from '~/systems/Vault/services/untils';
-
 const onFilledHandler = jest.fn();
 const onNextHandler = jest.fn();
 const onCancelHandler = jest.fn();
-
-const MNEMONIC = getPhraseFromValue(
-  FuelMnemonic.generate(MNEMONIC_SIZE)
-) as string;
-
-const wordsToConfirm = shuffle(MNEMONIC.split(' ')).splice(0, 9);
-const position = shuffle(
-  wordsToConfirm.map((word) => MNEMONIC.split(' ').indexOf(word) + 1)
-);
 
 describe('MnemonicWrite', () => {
   it('should be able to click on next if canProceed and isFilled', async () => {
@@ -29,8 +15,6 @@ describe('MnemonicWrite', () => {
         onFilled={onFilledHandler}
         onNext={onNextHandler}
         onCancel={onCancelHandler}
-        words={wordsToConfirm}
-        positions={position}
       />
     );
 
