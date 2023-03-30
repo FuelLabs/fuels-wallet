@@ -55,32 +55,38 @@ export class SignUpService {
       throw new Error('Invalid data');
     }
 
-    // Clear databse on create
-    await db.clear();
-    await Storage.clear();
+    try {
+      // Clear databse on create
+      await db.clear();
+      await Storage.clear();
+      await AccountService.clearAccounts();
 
-    // Add networks
-    await NetworkService.addDefaultNetworks();
+      // Add networks
+      await NetworkService.addDefaultNetworks();
 
-    // Unlock Vault
-    await VaultService.unlock({ password: data.password });
+      // Unlock Vault
+      await VaultService.unlock({ password: data.password });
 
-    // Create vault using mnemonic
-    const account = await VaultService.createVault({
-      type: 'mnemonic',
-      secret: getPhraseFromValue(data.mnemonic),
-    });
+      // Create vault using mnemonic
+      const account = await VaultService.createVault({
+        type: 'mnemonic',
+        secret: getPhraseFromValue(data.mnemonic),
+      });
 
-    // Register the first account retuned from the vault
-    return AccountService.addAccount({
-      data: {
-        name: 'Account 1',
-        address: account.address.toString(),
-        publicKey: account.publicKey,
-        isHidden: false,
-        vaultId: account.vaultId,
-      },
-    });
+      // Register the first account retuned from the vault
+      const newAccount = await AccountService.addAccount({
+        data: {
+          name: 'Account 1',
+          address: account.address.toString(),
+          publicKey: account.publicKey,
+          isHidden: false,
+          vaultId: account.vaultId,
+        },
+      });
+      return newAccount;
+    } catch (e) {
+      return null;
+    }
   }
 
   static async complete({ data, account }: SignUpServiceInputs['complete']) {
@@ -90,6 +96,7 @@ export class SignUpService {
 
     await db.clear();
     await Storage.clear();
+    await AccountService.clearAccounts();
 
     // Register the first account retuned from the vault
     return AccountService.addAccount({

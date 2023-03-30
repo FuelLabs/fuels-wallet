@@ -1,8 +1,10 @@
+import { Mnemonic } from 'fuels';
 import { interpret } from 'xstate';
 
 import type { SignUpMachineService, SignUpMachineState } from './signUpMachine';
 import { SignUpType, signUpMachine } from './signUpMachine';
 
+import { MNEMONIC_SIZE } from '~/config';
 import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 function createMachine() {
@@ -91,26 +93,27 @@ describe('signUpMachine', () => {
     });
   });
 
-  // describe('type: recover', () => {
-  //   it('should be able to recover wallet using seed phrase', async () => {
-  //     const machine = signUpMachine.withContext({
-  //       type: SignUpType.recover,
-  //     });
-  //     const service = interpret(machine).start();
-  //     const words = Mnemonic.generate(MNEMONIC_SIZE).split(' ');
-  //     service.send('CONFIRM_MNEMONIC', { data: { words } });
-  //     await expectStateMatch(service, 'waitingMnemonic.validMnemonic');
-  //     service.send('NEXT');
-  //     await expectStateMatch(service, 'addingPassword');
+  describe('type: recover', () => {
+    it('should be able to recover wallet using seed phrase', async () => {
+      const machine = signUpMachine.withContext({
+        type: SignUpType.recover,
+      });
+      const service = interpret(machine).start();
+      const words = Mnemonic.generate(MNEMONIC_SIZE).split(' ');
 
-  //     // This is not working, because fuels-ts is throwing an error
-  //     // "TypeError: Cannot read properties of undefined (reading 'importKey')
-  //     //
-  //     // const password = 'password';
-  //     // service.send('CREATE_MANAGER', { data: { password } });
-  //     // expect(
-  //     //   waitFor(service, (state) => state.matches('done'))
-  //     // ).resolves.toBeTruthy();
-  //   });
-  // });
+      service.send('CONFIRM_MNEMONIC', { data: { words } });
+      await expectStateMatch(
+        service,
+        'recoveringWallet.enteringMnemonic.validMnemonic'
+      );
+      service.send('NEXT');
+      await expectStateMatch(service, 'recoveringWallet.addingPassword');
+
+      const password = 'Password@1';
+      service.send('CREATE_PASSWORD', { data: { password } });
+      await expectStateMatch(service, 'done');
+      state = service.getSnapshot();
+      expect(state.context.account).toBeTruthy();
+    });
+  });
 });

@@ -88,16 +88,16 @@ export const signUpMachine = createMachine(
       checking: {
         always: [
           {
+            target: 'recoveringWallet',
+            cond: 'isRecoveringWallet',
+          },
+          {
             target: 'fetchingSavedData',
             cond: 'hasSavedMnemonic',
           },
           {
             target: 'idle',
             cond: 'isCreatingWallet',
-          },
-          {
-            target: 'recoveringWallet',
-            cond: 'isRecoveringWallet',
           },
           {
             target: 'fetchingConfirmationWords',
@@ -407,6 +407,7 @@ export const signUpMachine = createMachine(
         }
 
         const walletAccount = await SignUpService.create({ data });
+        console.log(walletAccount);
         return walletAccount;
       },
       async saveSignUp({ data }) {
