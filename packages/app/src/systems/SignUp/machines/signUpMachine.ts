@@ -407,7 +407,6 @@ export const signUpMachine = createMachine(
         }
 
         const walletAccount = await SignUpService.create({ data });
-        console.log(walletAccount);
         return walletAccount;
       },
       async saveSignUp({ data }) {

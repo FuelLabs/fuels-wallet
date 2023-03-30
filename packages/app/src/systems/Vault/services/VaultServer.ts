@@ -48,6 +48,10 @@ export type VaultInputs = {
     words: string[];
     limit?: number;
   };
+  exportPrivateKey: {
+    address: string;
+    password: string;
+  };
 };
 
 export type VaultOutputs = {
@@ -70,6 +74,7 @@ export class VaultServer extends EventEmitter {
     'signTransaction',
     'changePassword',
     'exportVault',
+    'exportPrivateKey',
     'lock',
     'getWordsToConfirm',
     'confirmMnemonic',
@@ -206,6 +211,14 @@ export class VaultServer extends EventEmitter {
       return mnemonic[position - 1] === word;
     });
     return isValid;
+  }
+
+  async exportPrivateKey({
+    address,
+    password,
+  }: VaultInputs['exportPrivateKey']): Promise<string> {
+    await this.manager.unlock(password);
+    return this.manager.exportPrivateKey(Address.fromString(address));
   }
 }
 

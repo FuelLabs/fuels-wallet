@@ -57,9 +57,9 @@ export class SignUpService {
 
     try {
       // Clear databse on create
+      await AccountService.clearAccounts();
       await db.clear();
       await Storage.clear();
-      await AccountService.clearAccounts();
 
       // Add networks
       await NetworkService.addDefaultNetworks();

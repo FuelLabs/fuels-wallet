@@ -102,6 +102,7 @@ export function useAccounts() {
       goToAdd: store.openAccountsAdd,
       goToList: store.openAccountList,
       goToEdit: store.openAccountEdit,
+      goToExport: store.openAccountExport,
       goToImport: store.openAccountImport,
       logout: store.logout,
       setCurrentAccount: store.setCurrentAccount,
