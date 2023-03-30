@@ -49,7 +49,8 @@ describe('Mnemonic Confirmation', () => {
     const inputs = screen.getAllByRole('textbox');
     expect(inputs).toHaveLength(9);
 
-    const buttons = screen.getAllByRole('button');
+    const buttons = screen.getAllByLabelText('word-button');
+
     expect(buttons).toHaveLength(9);
   });
 
@@ -57,7 +58,7 @@ describe('Mnemonic Confirmation', () => {
     render(
       <MnemonicConfirm words={WORDS} positions={POSITIONS} {...callbacks} />
     );
-    const buttons = screen.getAllByRole('button');
+    const buttons = screen.getAllByLabelText('word-button');
     // randomize the order of the buttons
     buttons.sort(() => Math.random() - 0.5);
     // get the text on the buttons

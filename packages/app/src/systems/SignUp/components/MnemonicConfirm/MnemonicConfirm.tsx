@@ -96,6 +96,7 @@ export function MnemonicConfirm({
         src={relativeUrl('/signup-illustration-1.svg')}
         width={129}
         height={116}
+        alt="Signup Illustration"
       />
       <Header
         title="Confirm your Recovery Phrase"
@@ -127,7 +128,11 @@ export function MnemonicConfirm({
 
           <Flex as="footer" align="center" gap="$4" css={styles.footer}>
             {unSelectedWords?.map((word) => (
-              <Button onPress={handleConfirmValueClick(word)} key={word}>
+              <Button
+                aria-label="word-button"
+                onPress={handleConfirmValueClick(word)}
+                key={word}
+              >
                 {word}
               </Button>
             ))}
