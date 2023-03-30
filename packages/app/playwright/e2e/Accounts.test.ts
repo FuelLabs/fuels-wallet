@@ -12,7 +12,7 @@ import {
   waitUrl,
 } from '../commons';
 import type { MockData } from '../mocks';
-import { mockData } from '../mocks';
+import { mockData, WALLET_PASSWORD } from '../mocks';
 
 test.describe('Account', () => {
   let browser: Browser;
@@ -53,7 +53,11 @@ test.describe('Account', () => {
     await hasText(page, /Assets/i);
     await getByAriaLabel(page, 'Accounts').click();
     await hasText(page, data.accounts[0].name);
-    await getByAriaLabel(page, 'Update').first().click();
+    await getByAriaLabel(
+      page,
+      `Account Actions ${data.accounts[0].name}`
+    ).click();
+    await getByAriaLabel(page, `Edit ${data.accounts[0].name}`).click();
     await hasText(page, /Edit/i);
     const inputName = await getInputByName(page, 'name');
     await expect(inputName).toBeFocused();
@@ -62,5 +66,46 @@ test.describe('Account', () => {
     expect(editBtn).toBeEnabled();
     await editBtn.click();
     await hasText(page, /Test 1/i);
+  });
+
+  test('should be able to export private key', async () => {
+    await visit(page, '/wallet');
+    await hasText(page, /Assets/i);
+    await getByAriaLabel(page, 'Accounts').click();
+    await hasText(page, data.accounts[0].name);
+    await getByAriaLabel(
+      page,
+      `Account Actions ${data.accounts[0].name}`
+    ).click();
+    await getByAriaLabel(page, `Export ${data.accounts[0].name}`).click();
+
+    await hasText(page, 'Unlock your wallet to continue');
+    await getByAriaLabel(page, 'Your Password').type(WALLET_PASSWORD);
+    await getByAriaLabel(page, 'Unlock wallet').click();
+    await hasText(page, /Export Private Key/i);
+    await hasText(page, data.accounts[0].privateKey);
+  });
+
+  test('should fail if inform incorrect password, but work after trying again with correct one', async () => {
+    await visit(page, '/wallet');
+    await hasText(page, /Assets/i);
+    await getByAriaLabel(page, 'Accounts').click();
+    await hasText(page, data.accounts[0].name);
+    await getByAriaLabel(
+      page,
+      `Account Actions ${data.accounts[0].name}`
+    ).click();
+    await getByAriaLabel(page, `Export ${data.accounts[0].name}`).click();
+
+    await hasText(page, 'Unlock your wallet to continue');
+    const passwordInput = await getByAriaLabel(page, 'Your Password');
+    await passwordInput.type(`${WALLET_PASSWORD}1`);
+    await getByAriaLabel(page, 'Unlock wallet').click();
+    await hasText(page, /Invalid password/i);
+    await passwordInput.clear();
+    await passwordInput.type(WALLET_PASSWORD);
+    await getByAriaLabel(page, 'Unlock wallet').click();
+    await hasText(page, /Export Private Key/i);
+    await hasText(page, data.accounts[0].privateKey);
   });
 });

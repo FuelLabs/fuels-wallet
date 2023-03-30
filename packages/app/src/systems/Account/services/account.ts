@@ -37,6 +37,9 @@ export type AccountInputs = {
     name: string;
     privateKey: string;
   };
+  exportAccount: {
+    address: string;
+  };
 };
 
 export class AccountService {

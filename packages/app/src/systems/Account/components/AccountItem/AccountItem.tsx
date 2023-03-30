@@ -2,6 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import {
   Avatar,
   CardList,
+  Dropdown,
   Flex,
   Heading,
   Icon,
@@ -23,6 +24,7 @@ export type AccountItemProps = {
   onPress?: () => void;
   isDisabled?: boolean;
   compact?: boolean;
+  onExport?: (address: string) => void;
   onToggle?: (
     address: string,
     isToggleChecked?: boolean
@@ -42,52 +44,77 @@ export const AccountItem: AccountItemComponent = ({
   onPress,
   isDisabled,
   compact,
+  onExport,
   onToggle,
   onUpdate,
 }: AccountItemProps) => {
   if (isHidden) return null;
-  /**
-   * TODO: add DropdownMenu here with actions after it's done on @fuel-ui
-   */
-  // const rightEl = (
-  //   <IconButton
-  //     size="xs"
-  //     variant="link"
-  //     color="gray"
-  //     icon={<Icon icon="DotsThreeOutline" color="gray8" />}
-  //     aria-label="Action"
-  //     css={{
-  //       px: '$0',
-  //       color: '$gray10',
-  //     }}
-  //   />
-  // );
-  const actions = (
-    <Flex gap="$2">
-      {onUpdate && (
-        <IconButton
-          variant="link"
-          icon={<Icon icon={Icon.is('Pencil')} />}
-          aria-label="Update"
-          onPress={() => onUpdate?.(account.address)}
-        />
-      )}
-      {onToggle && (
+
+  function getRightEl() {
+    if (onToggle) {
+      return (
         <Switch
           size="sm"
           checked={isToggleChecked}
           aria-label={`Toggle ${account.name}`}
           onCheckedChange={() => onToggle?.(account.address, isToggleChecked)}
         />
-      )}
-    </Flex>
-  );
+      );
+    }
+
+    const menuItems = [
+      onUpdate && (
+        <Dropdown.MenuItem key="update" aria-label={`Edit ${account.name}`}>
+          <Icon icon={Icon.is('Pencil')} />
+          Edit
+        </Dropdown.MenuItem>
+      ),
+      onExport && (
+        <Dropdown.MenuItem key="export" aria-label={`Export ${account.name}`}>
+          <Icon icon={Icon.is('Key')} />
+          Export Private Key
+        </Dropdown.MenuItem>
+      ),
+    ].filter(Boolean) as JSX.Element[];
+
+    if (menuItems.length) {
+      return (
+        <Dropdown
+          popoverProps={{ side: 'bottom', align: 'start', alignOffset: 10 }}
+        >
+          <Dropdown.Trigger>
+            <IconButton
+              size="xs"
+              variant="link"
+              color="gray"
+              icon={<Icon icon="DotsThreeOutline" color="gray8" />}
+              aria-label={`Account Actions ${account.name}`}
+              css={{
+                px: '$0',
+                color: '$gray10',
+              }}
+            />
+          </Dropdown.Trigger>
+          <Dropdown.Menu
+            onAction={(action) => {
+              if (action === 'update') onUpdate?.(account.address);
+              if (action === 'export') onExport?.(account.address);
+            }}
+          >
+            {menuItems}
+          </Dropdown.Menu>
+        </Dropdown>
+      );
+    }
+
+    return null;
+  }
 
   return (
     <CardList.Item
       isActive={isCurrent}
       onClick={onPress}
-      rightEl={actions}
+      rightEl={getRightEl()}
       css={styles.root}
       aria-disabled={isDisabled}
       aria-label={account.name}
