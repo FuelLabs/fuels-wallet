@@ -10,23 +10,26 @@ import { TxContent, TxHeader } from '~/systems/Transaction';
 
 export function TransactionRequest() {
   const txRequest = useTransactionRequest({ isOriginRequired: true });
-  const { handlers, status, ...ctx } = txRequest;
+  const { handlers, status, isSendingTx, ...ctx } = txRequest;
   const { assets } = useAssets();
 
   if (!ctx.account) return null;
 
+  const shouldShowTx = status('waitingApproval') || isSendingTx;
+
   return (
     <>
-      <Layout title={ctx.title} isLoading={ctx.isLoading}>
+      <Layout title={ctx.title}>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
-          {ctx.isLoading && (
+          {ctx.isLoading && !txRequest.tx && (
             <TxContent.Loader header={<ConnectInfo.Loader />} />
           )}
-          {status('waitingApproval') && (
+          {shouldShowTx && (
             <TxContent.Info
               showDetails
               tx={txRequest.tx}
+              isLoading={status('loading')}
               header={
                 <>
                   <ConnectInfo

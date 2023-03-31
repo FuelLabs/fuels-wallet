@@ -357,6 +357,7 @@ test.describe('FuelWallet Extension', () => {
           approveTransactionPage,
           senderAccount.address.toString()
         );
+        await hasText(approveTransactionPage, 'Requesting a transaction from:');
         await getButtonByText(approveTransactionPage, /Approve/i).click();
 
         await expect(transferStatus).resolves.toBe('success');
