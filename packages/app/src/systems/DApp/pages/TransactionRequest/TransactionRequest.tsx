@@ -97,7 +97,7 @@ export function TransactionRequest() {
               onPress={handlers.approve}
               isLoading={ctx.isLoading || status('sending')}
             >
-              Confirm
+              Approve
             </Button>
           </Layout.BottomBar>
         )}
