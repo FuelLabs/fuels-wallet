@@ -13,6 +13,7 @@ import type { OverlayMachine } from '../Overlay';
 import type { UnlockMachine } from '../Unlock';
 
 export enum Services {
+  account = 'account',
   accounts = 'accounts',
   networks = 'networks',
   assets = 'assets',

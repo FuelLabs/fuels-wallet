@@ -1,16 +1,17 @@
 import { Box, Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
 
 import { AccountForm } from '../../components';
-import { useAccounts } from '../../hooks';
+import { useAccounts, useAddAccount } from '../../hooks';
 import { useAccountForm } from '../../hooks/useAccountForm';
 import type { AccountFormValues } from '../../hooks/useAccountForm';
 
 export const AddAccount = () => {
-  const { handlers, isLoading, status, ...ctx } = useAccounts();
+  const { accounts, handlers: accountsHandlers } = useAccounts();
+  const { accountName, handlers, isLoading } = useAddAccount();
   const form = useAccountForm({
-    accounts: ctx.accounts,
+    accounts,
     defaultValues: {
-      name: ctx.accountName || '',
+      name: accountName || '',
     },
   });
 
@@ -27,14 +28,18 @@ export const AddAccount = () => {
           variant="link"
           icon={<Icon icon="X" color="gray8" />}
           aria-label="Close unlock window"
-          onPress={handlers.closeDialog}
+          onPress={accountsHandlers.closeDialog}
         />
       </Dialog.Heading>
       <Dialog.Description as="div">
-        <AccountForm form={form} isLoading={status('loading')} />
+        <AccountForm form={form} isLoading={isLoading} />
       </Dialog.Description>
       <Dialog.Footer>
-        <Button color="gray" variant="ghost" onPress={handlers.goToList}>
+        <Button
+          color="gray"
+          variant="ghost"
+          onPress={accountsHandlers.goToList}
+        >
           Cancel
         </Button>
         <Button

@@ -1,5 +1,13 @@
 # @fuel-wallet/sdk
 
+## 0.7.1
+
+### Patch Changes
+
+- [#616](https://github.com/FuelLabs/fuels-wallet/pull/616) [`8419f7d`](https://github.com/FuelLabs/fuels-wallet/commit/8419f7ddd8faf8a793012cbe93b88ff4b3c1d554) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - import account from mnemonic with 12, 15, 18, 21, 24 words
+
+- [#600](https://github.com/FuelLabs/fuels-wallet/pull/600) [`eb41aed`](https://github.com/FuelLabs/fuels-wallet/commit/eb41aed79bb0e3636d1b23e85c3269763dcc09d7) Thanks [@matt-user](https://github.com/matt-user)! - Update network compatibility to fuel-core v0.17.3
+
 ## 0.7.0
 
 ### Minor Changes

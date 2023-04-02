@@ -3,6 +3,8 @@ export enum Overlays {
   'accounts.list' = 'accounts.list',
   'accounts.add' = 'accounts.add',
   'accounts.import' = 'accounts.import',
+  'accounts.export' = 'accounts.export',
+  'accounts.edit' = 'accounts.edit',
   'accounts.logout' = 'accounts.logout',
   'networks.list' = 'networks.list',
   'networks.add' = 'networks.add',

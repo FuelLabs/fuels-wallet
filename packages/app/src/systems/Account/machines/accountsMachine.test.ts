@@ -4,7 +4,10 @@ import { interpret } from 'xstate';
 import { MOCK_ACCOUNTS, createMockAccount } from '../__mocks__';
 import { AccountService } from '../services';
 
-import type { AccountsMachineService, MachineEvents } from './accountsMachine';
+import type {
+  AccountsMachineService,
+  AccountsMachineEvents as MachineEvents,
+} from './accountsMachine';
 import { accountsMachine } from './accountsMachine';
 
 import { db, Storage } from '~/systems/Core';
@@ -101,50 +104,7 @@ describe('accountsMachine', () => {
     });
   });
 
-  describe('add', () => {
-    it('should be able to add an account', async () => {
-      await expectStateMatch(service, 'idle');
-
-      service.send('ADD_ACCOUNT', {
-        input: 'Account Go',
-      });
-
-      await expectStateMatch(service, 'addingAccount');
-      await expectStateMatch(service, 'fetchingAccounts');
-      await expectStateMatch(service, 'idle');
-    });
-
-    it('should not be able to add accounts with same name', async () => {
-      await expectStateMatch(service, 'idle');
-      service.send('ADD_ACCOUNT', {
-        input: 'Account Go',
-      });
-      await expectStateMatch(service, 'addingAccount');
-      await expectStateMatch(service, 'fetchingAccounts');
-      await expectStateMatch(service, 'idle');
-      service.send('ADD_ACCOUNT', {
-        input: 'Account Go',
-      });
-
-      // make sure test fails but jest don't stop
-      jest.spyOn(console, 'error').mockImplementation();
-
-      await expectStateMatch(service, 'failed');
-    });
-
-    it('should be able to import from private key', async () => {
-      await expectStateMatch(service, 'idle');
-      service.send('IMPORT_ACCOUNT', {
-        input: {
-          privateKey:
-            '0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298',
-        },
-      });
-      await expectStateMatch(service, 'importingAccount');
-      await expectStateMatch(service, 'fetchingAccounts');
-      await expectStateMatch(service, 'idle');
-    });
-
+  describe('logout', () => {
     it('logout should clean indexdb and localstorage', async () => {
       await createMockAccount();
       const DatabaseMock = jest.spyOn(db, 'clear').mockImplementation();

@@ -23,9 +23,9 @@ describe('TxOperation', () => {
   it('should render operation to contract and dont have spinner', async () => {
     render(<TxOperation {...PROPS} />, { wrapper: TestWrapper });
     expect(screen.getByText('From')).toBeInTheDocument();
-    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
+    expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
-    expect(screen.getByText('0x277f...207c')).toBeInTheDocument();
+    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
     expect(() => screen.getByLabelText('Loading Spinner')).toThrow();
     expect(screen.getByText('Ethereum')).toBeInTheDocument();
   });
@@ -38,7 +38,7 @@ describe('TxOperation', () => {
       }
     );
     expect(screen.getByText('From')).toBeInTheDocument();
-    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
+    expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
     expect(screen.getByText('To')).toBeInTheDocument();
     expect(screen.getByText('fuel1a...7n30')).toBeInTheDocument();
     expect(() => screen.getByLabelText('Loading Spinner')).toThrow();
@@ -54,7 +54,7 @@ describe('TxOperation', () => {
       { wrapper: TestWrapper }
     );
     expect(screen.getByText('From')).toBeInTheDocument();
-    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
+    expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
     expect(screen.getByText('To')).toBeInTheDocument();
     expect(screen.getByText('fuel1a...7n30')).toBeInTheDocument();
     expect(() => screen.getByLabelText('Loading Spinner')).toThrow();

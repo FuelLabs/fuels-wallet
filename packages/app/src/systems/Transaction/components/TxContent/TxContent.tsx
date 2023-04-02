@@ -31,6 +31,7 @@ type TxContentInfoProps = {
   txStatus?: Maybe<TxStatus>;
   showDetails?: boolean;
   assets?: Maybe<Asset[]>;
+  isLoading?: boolean;
 };
 
 function TxContentInfo({
@@ -40,6 +41,7 @@ function TxContentInfo({
   footer,
   showDetails,
   assets,
+  isLoading,
 }: TxContentInfoProps) {
   const status = tx?.status || txStatus;
   return (
@@ -49,6 +51,7 @@ function TxContentInfo({
         operations={tx?.operations}
         status={status}
         assets={assets}
+        isLoading={isLoading}
       />
       {showDetails && <TxDetails fee={tx?.fee} />}
       {footer}

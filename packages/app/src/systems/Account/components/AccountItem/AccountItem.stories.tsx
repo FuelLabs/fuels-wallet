@@ -12,19 +12,30 @@ export default {
 
 export const Usage = (args: AccountItemProps) => (
   <Box css={{ width: 320 }}>
-    <AccountItem {...args} account={MOCK_ACCOUNTS[0]} />
+    <AccountItem {...args} account={MOCK_ACCOUNTS[0]} onToggle={undefined} />
   </Box>
 );
 
 export const Compact = (args: AccountItemProps) => (
   <Box css={{ width: 320 }}>
-    <AccountItem {...args} account={MOCK_ACCOUNTS[0]} compact />
+    <AccountItem
+      {...args}
+      account={MOCK_ACCOUNTS[0]}
+      compact
+      onToggle={undefined}
+      onUpdate={undefined}
+    />
   </Box>
 );
 
 export const Current = (args: AccountItemProps) => (
   <Box css={{ width: 320 }}>
-    <AccountItem {...args} account={MOCK_ACCOUNTS[0]} isCurrent />
+    <AccountItem
+      {...args}
+      account={MOCK_ACCOUNTS[0]}
+      isCurrent
+      onToggle={undefined}
+    />
   </Box>
 );
 
