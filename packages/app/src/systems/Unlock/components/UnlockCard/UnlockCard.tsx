@@ -119,9 +119,9 @@ const styles = {
     width: '100%',
   }),
   content: cssObj({
-    width: WALLET_WIDTH,
-    height: WALLET_HEIGHT,
-    maxWidth: WALLET_WIDTH,
+    width: WALLET_WIDTH - 24,
+    height: WALLET_HEIGHT - 24,
+    maxWidth: WALLET_WIDTH - 24,
     maxHeight: 'none',
     position: 'relative',
   }),

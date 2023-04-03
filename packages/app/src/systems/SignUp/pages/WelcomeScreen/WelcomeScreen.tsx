@@ -11,7 +11,10 @@ export function WelcomeScreen() {
   return (
     <Layout title="Sign Up" isPublic>
       <Stack gap="$6" align="center">
-        <FuelLogo size={130} css={{ transform: 'translateY(10px)' }} />
+        <FuelLogo
+          size={120}
+          css={{ mb: '$2', transform: 'translateY(10px)' }}
+        />
         <Header title="Create a new Fuel Wallet" />
         <Flex direction="column" gap="$2">
           <Button
