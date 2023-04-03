@@ -69,12 +69,12 @@ export function TxFromTo({
         isLoading={isLoading}
         operationName={operationName}
       />
-      {isLoading ? (
+      {isLoading && !from ? (
         <TxRecipientCard.Loader />
       ) : (
         <TxRecipientCard recipient={from} />
       )}
-      {isLoading ? (
+      {isLoading && !to ? (
         <TxRecipientCard.Loader />
       ) : (
         <TxRecipientCard recipient={to} isReceiver />

@@ -26,9 +26,6 @@ export type AccountInputs = {
   setBalance: {
     data: Pick<Account, 'address' | 'balance' | 'balanceSymbol' | 'balances'>;
   };
-  hideAccount: {
-    data: Pick<Account, 'address' | 'isHidden'>;
-  };
   setCurrentAccount: {
     address: string;
   };
@@ -39,6 +36,9 @@ export type AccountInputs = {
   importAccount: {
     name: string;
     privateKey: string;
+  };
+  exportAccount: {
+    address: string;
   };
 };
 
@@ -122,15 +122,6 @@ export class AccountService {
   }
 
   static async setBalance(input: AccountInputs['setBalance']) {
-    if (!db.isOpen()) return;
-    return db.transaction('rw!', db.accounts, async () => {
-      const { address, ...updateData } = input.data;
-      await db.accounts.update(address, updateData);
-      return db.accounts.get({ address: input.data.address });
-    });
-  }
-
-  static async hideAccount(input: AccountInputs['hideAccount']) {
     if (!db.isOpen()) return;
     return db.transaction('rw!', db.accounts, async () => {
       const { address, ...updateData } = input.data;
