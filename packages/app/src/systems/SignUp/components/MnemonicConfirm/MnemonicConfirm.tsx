@@ -7,6 +7,8 @@ import { Header } from '../Header';
 
 import { ImageLoader, relativeUrl } from '~/systems/Core';
 
+const NUM_WORDS_TO_CONFIRM = 9;
+
 function fillArray(item: string[], format: number) {
   return Array.from({ length: format }).map((_, idx) => item[idx] || '');
 }
@@ -40,7 +42,7 @@ export function MnemonicConfirm({
   onCancel,
   positions,
   readOnly,
-  defaultValue = fillArray([], 9),
+  defaultValue = fillArray([], NUM_WORDS_TO_CONFIRM),
   error,
   canProceed,
   isLoading,
