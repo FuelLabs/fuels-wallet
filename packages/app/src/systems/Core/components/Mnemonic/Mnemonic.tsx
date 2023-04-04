@@ -77,6 +77,11 @@ export function Mnemonic({
     onFilled?.(newValue);
   }
 
+  function handleCopy() {
+    const val = type === 'read' ? initialValue : value;
+    return navigator.clipboard.writeText(val.join(' '));
+  }
+
   useEffect(() => {
     if (value.every((word) => Boolean(word.length))) {
       onFilled?.(value);
@@ -128,8 +133,8 @@ export function Mnemonic({
           })}
         </Grid>
       )}
-      {type === 'write' ? (
-        <Flex as="footer" align="center" gap="$4" css={styles.footer}>
+      <Flex as="footer" align="center" gap="$4" css={styles.footer}>
+        {type === 'write' ? (
           <Button
             aria-label="Paste button"
             size="sm"
@@ -140,8 +145,19 @@ export function Mnemonic({
           >
             Paste
           </Button>
-        </Flex>
-      ) : null}
+        ) : (
+          <Button
+            aria-label="Copy button"
+            size="sm"
+            variant="ghost"
+            color="gray"
+            leftIcon={<Icon icon="Copy" color="gray8" />}
+            onPress={handleCopy}
+          >
+            Copy
+          </Button>
+        )}
+      </Flex>
     </Box>
   );
 }

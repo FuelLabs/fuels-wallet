@@ -193,7 +193,7 @@ export class VaultServer extends EventEmitter {
     const randomWords = shuffle(words).slice(0, limit);
     const positions = shuffle(
       randomWords.map((word) => words.indexOf(word) + 1)
-    );
+    ).sort((a, b) => a - b);
     return {
       words: randomWords,
       positions,
