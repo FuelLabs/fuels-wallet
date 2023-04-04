@@ -11,12 +11,14 @@ export type TxOperationsProps = {
   operations?: Operation[];
   status?: Maybe<TxStatus>;
   assets?: Maybe<Asset[]>;
+  isLoading?: boolean;
 };
 
 export function TxOperations({
   operations,
   status,
   assets,
+  isLoading,
 }: TxOperationsProps) {
   return (
     <Flex css={styles.root}>
@@ -26,6 +28,7 @@ export function TxOperations({
           operation={operation}
           status={status}
           assets={assets}
+          isLoading={isLoading}
         />
       ))}
     </Flex>

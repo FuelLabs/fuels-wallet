@@ -57,6 +57,7 @@ const selectors = {
   originTitle: (state: TransactionRequestState) => state.context.input.title,
   favIconUrl: (state: TransactionRequestState) =>
     state.context.input.favIconUrl,
+  sendingTx: (state: TransactionRequestState) => state.matches('sendingTx'),
 };
 
 type UseTransactionRequestOpts = {
@@ -79,7 +80,9 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     },
     actions: {
       openDialog() {
-        store.openTransactionApprove();
+        if (!opts.isOriginRequired) {
+          store.openTransactionApprove();
+        }
       },
     },
   });
@@ -97,6 +100,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const origin = useSelector(service, selectors.origin);
   const originTitle = useSelector(service, selectors.originTitle);
   const favIconUrl = useSelector(service, selectors.favIconUrl);
+  const isSendingTx = useSelector(service, selectors.sendingTx);
   const isLoading = status('loading');
   const showActions = !status('failed') && !status('success');
 
@@ -156,6 +160,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     title,
     tx,
     txStatus,
+    isSendingTx,
     handlers: {
       request,
       reset,

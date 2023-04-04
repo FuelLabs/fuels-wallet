@@ -24,12 +24,21 @@ describe('TxFromTo', () => {
     expect(() => screen.getByLabelText('Loading Spinner')).toThrow();
   });
 
-  it('should not show any address info and show spinner when isLoading is true', async () => {
-    render(<TxFromTo {...PROPS} isLoading />);
+  it('should show spinner and loaders when isLoading is true and from and to are empty', async () => {
+    render(<TxFromTo isLoading />);
     expect(() => screen.getByText('From')).toThrow();
     expect(() => screen.getByText('fuel1g...kuj7')).toThrow();
     expect(() => screen.getByText('To (Contract)')).toThrow();
     expect(() => screen.getByText('fuel1y...y6wk')).toThrow();
+    expect(screen.getByLabelText('Loading Spinner')).toBeInTheDocument();
+  });
+
+  it('should show info and spinner when isLoading is true and from and to exits', async () => {
+    render(<TxFromTo {...PROPS} isLoading />);
+    expect(screen.getByText('From')).toBeInTheDocument();
+    expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
+    expect(screen.getByText('To (Contract)')).toBeInTheDocument();
+    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
     expect(screen.getByLabelText('Loading Spinner')).toBeInTheDocument();
   });
 
