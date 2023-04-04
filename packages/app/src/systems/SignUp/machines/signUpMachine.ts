@@ -258,7 +258,7 @@ export const signUpMachine = createMachine(
         },
       },
       recoveringWallet: {
-        initial: 'enteringMnemonic',
+        initial: 'addingPassword',
         states: {
           enteringMnemonic: {
             initial: 'idle',
@@ -274,7 +274,7 @@ export const signUpMachine = createMachine(
                 entry: ['cleanError'],
                 on: {
                   NEXT: {
-                    target: '#(machine).recoveringWallet.addingPassword',
+                    target: '#(machine).creatingWallet',
                   },
                 },
               },
@@ -292,7 +292,7 @@ export const signUpMachine = createMachine(
             on: {
               CREATE_PASSWORD: {
                 actions: 'assignPassword',
-                target: '#(machine).creatingWallet',
+                target: 'enteringMnemonic',
               },
             },
           },
@@ -336,7 +336,10 @@ export const signUpMachine = createMachine(
       assignMnemonicWhenRecovering: assign({
         data: (ctx, ev) => {
           return ctx.type === SignUpType.recover
-            ? { mnemonic: ev.data.words }
+            ? {
+                ...ctx.data,
+                mnemonic: ev.data.words,
+              }
             : ctx.data;
         },
       }),
