@@ -120,7 +120,7 @@ export const signUpMachine = createMachine(
           },
           onError: {
             actions: ['assignError'],
-            target: 'idle',
+            target: 'cancel',
           },
         },
       },
@@ -143,7 +143,7 @@ export const signUpMachine = createMachine(
           },
           onError: {
             actions: ['assignError'],
-            target: 'showingMnemonic',
+            target: 'cancel',
           },
         },
       },
@@ -160,7 +160,7 @@ export const signUpMachine = createMachine(
           mnemonicNotMatch: {
             entry: [
               assignErrorMessage(
-                "The seed phrase doesn't match. Check the phrase for typos or missing words"
+                "The seed phrase doesn't match. Please check the order of words and try again"
               ),
             ],
           },

@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Flex, Grid, Button, Stack, Alert } from '@fuel-ui/react';
+import { Box, Flex, Grid, Button, Stack, Alert, Icon } from '@fuel-ui/react';
 import { useEffect, useMemo, useState } from 'react';
 
 import { MnemonicInput } from '../../../Core/components/Mnemonic/MnemonicInput';
@@ -11,15 +11,6 @@ const NUM_WORDS_TO_CONFIRM = 9;
 
 function fillArray(item: string[], format: number) {
   return Array.from({ length: format }).map((_, idx) => item[idx] || '');
-}
-
-function checkMoreThanOneWord(word: string) {
-  if (word.split(' ').length > 1) {
-    const first = word.split(' ')[0];
-    const half = first.slice(0, first.length / 2);
-    return `${half}${half}` === first ? half : first;
-  }
-  return word;
 }
 
 export type MnemonicConfirmProps = {
@@ -56,21 +47,12 @@ export function MnemonicConfirm({
     [words, value]
   );
 
-  function handleChange(idx: number) {
-    return (val: string) => {
-      setCurrentPosition(idx);
+  function handleClear(idx: number) {
+    return () => {
       setValue((oldState) =>
-        oldState
-          .map((word, i) => (i === idx ? val : word))
-          .map(checkMoreThanOneWord)
+        oldState.map((word, i) => (i === idx ? '' : word))
       );
       setIsEditing(true);
-    };
-  }
-
-  function handleFocus(idx: number) {
-    return () => {
-      setCurrentPosition(idx);
     };
   }
 
@@ -80,9 +62,19 @@ export function MnemonicConfirm({
         oldState.map((word, i) => (i === Number(currentPosition) ? val : word))
       );
       setIsEditing(true);
-      setCurrentPosition((oldState) => Number(oldState) + 1);
     };
   }
+
+  function setNextPosition() {
+    const nextPosition = value.findIndex((word) => !word.length);
+    setCurrentPosition(nextPosition);
+  }
+
+  useEffect(() => {
+    if (isEditing) {
+      setNextPosition();
+    }
+  }, [value]);
 
   useEffect(() => {
     if (!isEditing) return;
@@ -102,7 +94,7 @@ export function MnemonicConfirm({
       />
       <Header
         title="Confirm your Recovery Phrase"
-        subtitle="Enter the correct word for each position"
+        subtitle="Click on each word in the correct order to confirm your recovery phrase"
       />
       <Stack gap="$3" css={{ width: 400 }}>
         {error && (
@@ -119,21 +111,30 @@ export function MnemonicConfirm({
                   <div>
                     <MnemonicInput
                       value={value[idx]}
-                      onChange={handleChange(idx)}
-                      onFocus={handleFocus(idx)}
+                      onChange={() => {}}
+                      onFocus={() => {}}
+                      readOnly={true}
                     />
                   </div>
+                  {value[idx] && (
+                    <Icon
+                      css={styles.clearButton}
+                      inline
+                      icon="XCircle"
+                      onClick={handleClear(idx)}
+                    />
+                  )}
                 </Grid>
               );
             })}
           </Grid>
 
           <Flex as="footer" align="center" gap="$4" css={styles.footer}>
-            {unSelectedWords?.map((word) => (
+            {unSelectedWords?.map((word, idx) => (
               <Button
                 aria-label="word-button"
                 onPress={handleConfirmValueClick(word)}
-                key={word}
+                key={`${word}+${idx}`}
               >
                 {word}
               </Button>
@@ -214,7 +215,7 @@ const styles = {
   }),
   inputWrapper: cssObj({
     boxSizing: 'border-box',
-    gridTemplateColumns: '14px 1fr',
+    gridTemplateColumns: '14px 1fr 14px',
     gridColumnGap: '8px',
 
     '&, input': {
@@ -245,5 +246,8 @@ const styles = {
     pb: '$3',
     boxSizing: 'border-box',
     flexWrap: 'wrap',
+  }),
+  clearButton: cssObj({
+    cursor: 'pointer',
   }),
 };

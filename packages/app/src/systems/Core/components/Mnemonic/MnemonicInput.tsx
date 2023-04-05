@@ -3,6 +3,7 @@ type MnemonicInputProps = {
   onChange: (val: string) => void;
   onPaste?: (ev: React.ClipboardEvent<HTMLInputElement>) => void;
   onFocus?: (ev: React.FocusEvent<HTMLInputElement>) => void;
+  readOnly?: boolean;
 };
 
 export function MnemonicInput({
@@ -10,6 +11,7 @@ export function MnemonicInput({
   onChange,
   onPaste,
   onFocus,
+  readOnly,
 }: MnemonicInputProps) {
   return (
     <input
@@ -19,6 +21,7 @@ export function MnemonicInput({
       onFocus={onFocus}
       onChange={(ev) => onChange(ev.target.value)}
       aria-label={value || 'Type your text'}
+      readOnly={readOnly}
     />
   );
 }
