@@ -34,7 +34,7 @@ describe('Mnemonic Confirmation', () => {
   });
 
   it('should only render 9 mnemonic inputs, and 9 words buttons', async () => {
-    render(
+    await render(
       <MnemonicConfirm {...callbacks} words={WORDS} positions={POSITIONS} />
     );
 
@@ -54,7 +54,7 @@ describe('Mnemonic Confirmation', () => {
     expect(buttons).toHaveLength(9);
   });
 
-  it('should call onFilled function after all buttons are clicked', () => {
+  it('should call onFilled function after all buttons are clicked', async () => {
     render(
       <MnemonicConfirm words={WORDS} positions={POSITIONS} {...callbacks} />
     );
@@ -64,9 +64,17 @@ describe('Mnemonic Confirmation', () => {
     // get the text on the buttons
     const words = buttons.map((button) => button.textContent);
     // click all the buttons
-    buttons.forEach((button) => {
-      fireEvent.click(button);
-    });
+    await Promise.all([
+      ...buttons.map(async (button, index) => {
+        // eslint-disable-next-line no-promise-executor-return
+        await new Promise((resolve) => setTimeout(resolve, index * 100));
+        fireEvent.click(
+          screen.getByText(new RegExp(button.textContent as string, 'i'))
+        );
+      }),
+    ]);
+    // eslint-disable-next-line no-promise-executor-return
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     // expect the onFilled function to be called with the words in the order of the buttons
     expect(onFilled).toHaveBeenCalledWith(words);
   });

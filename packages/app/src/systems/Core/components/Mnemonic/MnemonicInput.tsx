@@ -11,7 +11,7 @@ export function MnemonicInput({
   onChange,
   onPaste,
   onFocus,
-  readOnly,
+  readOnly = false,
 }: MnemonicInputProps) {
   return (
     <input

@@ -254,6 +254,7 @@ export const signUpMachine = createMachine(
           src: 'deleteSavedSignUp',
           onDone: {
             actions: 'refreshPage',
+            target: 'idle',
           },
         },
       },

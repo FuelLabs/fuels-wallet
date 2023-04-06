@@ -52,29 +52,17 @@ export function MnemonicConfirm({
       setValue((oldState) =>
         oldState.map((word, i) => (i === idx ? '' : word))
       );
-      setIsEditing(true);
     };
   }
 
   function handleConfirmValueClick(val: string) {
-    return () => {
-      setValue((oldState) =>
-        oldState.map((word, i) => (i === Number(currentPosition) ? val : word))
-      );
-      setIsEditing(true);
-    };
+    setValue((oldState) =>
+      oldState.map((word, i) => {
+        return i === Number(currentPosition) ? val : word;
+      })
+    );
+    setCurrentPosition((oldState) => oldState + 1);
   }
-
-  function setNextPosition() {
-    const nextPosition = value.findIndex((word) => !word.length);
-    setCurrentPosition(nextPosition);
-  }
-
-  useEffect(() => {
-    if (isEditing) {
-      setNextPosition();
-    }
-  }, [value]);
 
   useEffect(() => {
     if (!isEditing) return;
@@ -133,8 +121,9 @@ export function MnemonicConfirm({
             {unSelectedWords?.map((word, idx) => (
               <Button
                 aria-label="word-button"
-                onPress={handleConfirmValueClick(word)}
+                onPress={() => handleConfirmValueClick(word)}
                 key={`${word}+${idx}`}
+                variant="outlined"
               >
                 {word}
               </Button>

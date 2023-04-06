@@ -57,7 +57,6 @@ export class SignUpService {
 
     try {
       // Clear databse on create
-      await AccountService.clearAccounts();
       await db.clear();
       await Storage.clear();
 
@@ -85,7 +84,7 @@ export class SignUpService {
       });
       return newAccount;
     } catch (e) {
-      return null;
+      throw new Error(`Error creating account : ${e}`);
     }
   }
 

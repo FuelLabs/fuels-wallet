@@ -5,6 +5,7 @@ import type { SignUpMachineService, SignUpMachineState } from './signUpMachine';
 import { SignUpType, signUpMachine } from './signUpMachine';
 
 import { MNEMONIC_SIZE } from '~/config';
+import { Storage, db } from '~/systems/Core';
 import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 function createMachine() {
@@ -90,15 +91,24 @@ describe('signUpMachine', () => {
       await expectStateMatch(service, 'creatingWallet');
       state = service.getSnapshot();
       expect(state.context.account).toBeTruthy();
+      await db.clear();
+      await Storage.clear();
     });
   });
 
   describe('type: recover', () => {
     it('should be able to recover wallet using seed phrase', async () => {
+      await db.clear();
+      await Storage.clear();
       const machine = signUpMachine.withContext({
         type: SignUpType.recover,
       });
       const service = interpret(machine).start();
+
+      await expectStateMatch(service, 'recoveringWallet.addingPassword');
+      const password = 'Password@1';
+      await expectStateMatch(service, 'recoveringWallet.addingPassword');
+      service.send('CREATE_PASSWORD', { data: { password } });
       const words = Mnemonic.generate(MNEMONIC_SIZE).split(' ');
 
       service.send('CONFIRM_MNEMONIC', { data: { words } });
@@ -107,10 +117,6 @@ describe('signUpMachine', () => {
         'recoveringWallet.enteringMnemonic.validMnemonic'
       );
       service.send('NEXT');
-      await expectStateMatch(service, 'recoveringWallet.addingPassword');
-
-      const password = 'Password@1';
-      service.send('CREATE_PASSWORD', { data: { password } });
       await expectStateMatch(service, 'done');
       state = service.getSnapshot();
       expect(state.context.account).toBeTruthy();
