@@ -32,6 +32,7 @@ export const Accounts = () => {
           onPress={handlers.setCurrentAccount}
           onExport={handlers.goToExport}
           onUpdate={handlers.goToEdit}
+          onToggleHidden={handlers.toggleHideAccount}
         />
       </Dialog.Description>
       <Dialog.Footer css={styles.footer}>

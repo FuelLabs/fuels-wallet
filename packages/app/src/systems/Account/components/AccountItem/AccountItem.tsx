@@ -29,6 +29,7 @@ export type AccountItemProps = {
     address: string,
     isToggleChecked?: boolean
   ) => Promise<void> | void;
+  onToggleHidden?: (address: string, isHidden: boolean) => void;
   onUpdate?: (address: string) => Promise<void> | void;
 };
 
@@ -46,6 +47,7 @@ export const AccountItem: AccountItemComponent = ({
   compact,
   onExport,
   onToggle,
+  onToggleHidden,
   onUpdate,
 }: AccountItemProps) => {
   if (isHidden) return null;
@@ -75,6 +77,15 @@ export const AccountItem: AccountItemComponent = ({
           Export Private Key
         </Dropdown.MenuItem>
       ),
+      onToggleHidden && (
+        <Dropdown.MenuItem
+          key="hide"
+          aria-label={`${account.isHidden ? 'Unhide' : 'Hide'} ${account.name}`}
+        >
+          <Icon icon={Icon.is(account.isHidden ? 'EyeSlash' : 'Eye')} />
+          {`${account.isHidden ? 'Unhide' : 'Hide'} Account`}
+        </Dropdown.MenuItem>
+      ),
     ].filter(Boolean) as JSX.Element[];
 
     if (menuItems.length) {
@@ -99,6 +110,8 @@ export const AccountItem: AccountItemComponent = ({
             onAction={(action) => {
               if (action === 'update') onUpdate?.(account.address);
               if (action === 'export') onExport?.(account.address);
+              if (action === 'hide')
+                onToggleHidden?.(account.address, !account.isHidden);
             }}
           >
             {menuItems}

@@ -106,6 +106,7 @@ export function useAccounts() {
       goToImport: store.openAccountImport,
       logout: store.logout,
       setCurrentAccount: store.setCurrentAccount,
+      toggleHideAccount: store.toggleHideAccount,
     },
   };
 }
