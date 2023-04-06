@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.7.2
+
+### Patch Changes
+
+- [#666](https://github.com/FuelLabs/fuels-wallet/pull/666) [`a48fb2b`](https://github.com/FuelLabs/fuels-wallet/commit/a48fb2b86e97e4b2176e5adfee2fa9ff8e629eeb) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix preview tx view
+
+- Updated dependencies [[`a48fb2b`](https://github.com/FuelLabs/fuels-wallet/commit/a48fb2b86e97e4b2176e5adfee2fa9ff8e629eeb)]:
+  - @fuel-wallet/sdk@0.7.2
+  - @fuel-wallet/types@0.7.2
+
 ## 0.7.1
 
 ### Patch Changes
