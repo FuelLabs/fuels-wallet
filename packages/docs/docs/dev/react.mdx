@@ -1,5 +1,6 @@
 ---
 title: React
+category: For Developers
 ---
 
 # React
@@ -12,12 +13,12 @@ Below is the code for a `useFuel` hook, which detects the Fuel Wallet in the bro
 
 Make sure you have updated your `tsconfig.json` file as shown in the [TypeScript](/docs/typescript) section to use this hook.
 
-<CodeImport file="../src/hooks/useFuel.tsx" />
+<CodeImport file="../../src/hooks/useFuel.tsx" />
 
 Here is how you can use the `useFuel` hook in a component:
 
 <CodeImport
-  file="../examples/events/Accounts.tsx"
+  file="../../examples/events/Accounts.tsx"
   lineStart="11"
   lineEnd="11"
 />
@@ -27,12 +28,12 @@ Here is how you can use the `useFuel` hook in a component:
 The `useIsConnected` hook checks if a user's wallet is connected to your app.
 This hook depends on the `useFuel` hook above.
 
-<CodeImport file="../src/hooks/useIsConnected.tsx" />
+<CodeImport file="../../src/hooks/useIsConnected.tsx" />
 
 Here is how you can use the `useIsConnected` hook in a component:
 
 <CodeImport
-  file="../examples/events/Accounts.tsx"
+  file="../../examples/events/Accounts.tsx"
   lineStart="13"
   lineEnd="13"
 />

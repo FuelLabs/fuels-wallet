@@ -5,9 +5,10 @@ const { NEXT_PUBLIC_URL } = process.env;
 export const MENU_ORDER = [
   'Install',
   'How to Use',
-  'API',
-  'TypeScript',
-  'React',
+  'For Developers/Getting Started',
+  'For Developers/Reference',
+  'For Developers/TypeScript',
+  'For Developers/React',
   'Contributing/Project Structure',
   'Contributing/Contributing Guide',
   'Contributing/Linking local dependencies',

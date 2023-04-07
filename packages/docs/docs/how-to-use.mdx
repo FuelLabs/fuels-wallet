@@ -2,135 +2,226 @@
 title: How to Use
 ---
 
-# How to use
+# How to Use
 
-<ConnectionAlert />
+## Accounts
 
-If you've correctly installed the Fuel wallet extension, the wallet SDK will be injected automatically on the `window` object on the property `fuel`. To access it, you can use `window.fuel`
+### View all accounts
 
-```ts
-window.fuel.connect();
-```
+You can view all of your accounts by clicking on the down caret underneath the account icon, or clicking on "Accounts" in the navigation sidebar.
 
-You can try this code directly in the developer console.
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img alt="navigation" src="/wallet/wallet-accounts-button.png" height="500" />
+  <img alt="navigation" src="/wallet/wallet-screen-nav.png" height="500" />
+  <img alt="navigation accounts" src="/wallet/nav-accounts.png" height="500" />
+</div>
 
-## Detect when fuel is loaded
+### Add a new account
 
-It's possible that your application loads before `window.fuel` is injected. To detect when the `fuel` is loaded and ready to use, you can listen to the event `FuelLoaded` on the document.
-If you are using react take a look on the source code of the example bellow to see how we implement it.
+You can add a new account on the accounts page by clicking on the "Add new account" or "Add from private key" buttons.
 
-<CodeImport file="../examples/FuelLoaded.tsx" lineStart="10" lineEnd="21" />
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img alt="accounts screen" src="/wallet/accounts-screen.png" height="500" />
+  <img
+    alt="add account screen"
+    src="/wallet/add-account-screen.png"
+    height="500"
+  />
+  <img
+    alt="import account screen"
+    src="/wallet/import-account-screen.png"
+    height="500"
+  />
+</div>
 
-<Examples.FuelLoaded />
+### Edit an account
 
-## Request connection
+To edit an account, click on the horizontal ellipsis to the right of the account and select "Edit".
 
-First, you need to request a connection with the wallet, which will authorize your application to execute other actions. You can do this by accessing `fuel.connect()`.
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img
+    alt="edit accounts screen"
+    src="/wallet/edit-accounts-screen.png"
+    height="500"
+  />
+  <img
+    alt="edit account screen"
+    src="/wallet/edit-account-screen.png"
+    height="500"
+  />
+</div>
 
-<CodeImport file="../examples/Connect.tsx" />
+### Export a private key
 
-The `connect()` method returns a promise. If you prefer to do it in an async way, you can use `fuel.on('connection', () => void)` to
-listen for changes in the connection.
+To export the private key for an account, click on the horizontal ellipsis to the right of the account and select "Export Private Key".
 
-<Examples.Connect />
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img
+    alt="export private key screen"
+    src="/wallet/export-private-key-screen.png"
+    height="500"
+  />
+  <img
+    alt="private key screen"
+    src="/wallet/export-private-key.png"
+    height="500"
+  />
+</div>
 
-## List user accounts
+### Reveal your passphrase
 
-Once the connection is authorized, you can list the user accounts using `window.fuel.accounts()`.
+To view your secret passphrase, click "Reveal Passphrase" in the sidebar navigation under "Settings".
 
-<CodeImport file="../examples/ListAccounts.tsx" />
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img
+    alt="settings passphrase"
+    src="/wallet/settings-passphrase.png"
+    height="500"
+  />
+  <img
+    alt="reveal passphrase screen"
+    src="/wallet/reveal-passphrase-screen.png"
+    height="500"
+  />
+  <img
+    alt="secret passphrase screen"
+    src="/wallet/secret-passphrase.png"
+    height="500"
+  />
+</div>
 
-<Examples.ListAccounts />
+### Change your password
 
-## Get current account
+To change your password, click "Change Password" in the sidebar navigation under "Settings".
 
-You can also get the current account being used in the wallet using `window.fuel.currentAccount()`.
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img
+    alt="settings password"
+    src="/wallet/settings-password.png"
+    height="500"
+  />
+  <img alt="change password" src="/wallet/change-password.png" height="500" />
+</div>
 
-<CodeImport file="../examples/CurrentAccount.tsx" />
+## Networks
 
-<Examples.CurrentAccount />
+You can view your networks by clicking "Networks" in the sidebar navigation.
+To add a new network, click on the "Add new network" button.
 
-## Signing a message
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img alt="navigation network" src="/wallet/nav-networks.png" height="500" />
+  <img alt="networks screen" src="/wallet/networks-screen.png" height="500" />
+  <img
+    alt="add network screen"
+    src="/wallet/add-network-screen.png"
+    height="500"
+  />
+</div>
 
-With access to the user address and the connection authorized, you can request the user's signature using `fuel.signMessage`.
+## Assets
 
-<CodeImport file="../examples/SignMessage.tsx" />
+### Sending & Receiving Assets
 
-<Examples.SignMessage />
+Click the "Send" button on the wallet home screen to transfer any asset to another address.
+Click on the "Receive" button to view your wallet address and a QR code for it to receive assets from another address.
 
-## Transfering assets
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img alt="wallet screen" src="/wallet/wallet-screen.png" height="500" />
+  <img alt="send screen" src="/wallet/send-screen.png" height="500" />
+  <img alt="receive screen" src="/wallet/receive-screen.png" height="500" />
+</div>
 
-To transfer an amount to other address, use the `wallet.transfer` method and pass in the address you want to send to and the amount to send.
+### Viewing & Editing Assets
 
-<CodeImport file="../examples/Transfer.tsx" />
+You can view all custom and listed assets by clicking on "Assets" under "Settings" in the sidebar navigation.
+You can edit a custom asset by clicking on the pencil icon on the right.
 
-<Examples.Transfer />
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img alt="settings assets" src="/wallet/settings-assets.png" height="500" />
+  <img alt="custom assets" src="/wallet/custom-assets.png" height="500" />
+  <img alt="listed assets" src="/wallet/listed-assets.png" height="500" />
+</div>
 
-## List Assets in the Wallet
+### Adding Custom Assets
 
-You can list the assets in the wallet using `window.fuel.assets()`.
+You can add new custom assets by clicking the "Add Asset" button.
+You must specify the asset ID, name, symbol, and image URL.
 
-<CodeImport file="../examples/ListAssets.tsx" />
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img alt="add asset id" src="/wallet/add-asset-id.png" height="500" />
+  <img
+    alt="add asset details"
+    src="/wallet/add-asset-details.png"
+    height="500"
+  />
+</div>
 
-<Examples.ListAssets />
+If you already have an unknown asset in your wallet, you can click the "Add" button to add it.
 
-## Adding custom Assets
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img
+    alt="show unknown assets"
+    src="/wallet/show-unknown-assets.png"
+    height="500"
+  />
+  <img
+    alt="add unknown asset"
+    src="/wallet/add-unknown-asset.png"
+    height="500"
+  />
+</div>
 
-To add custom Assets, use the `wallet.addAssets` method and pass in the `Asset[]` you want to add.
+## Connected Apps
 
-<CodeImport file="../examples/AddAssets.tsx" />
+To view and delete the apps connected to your wallet, click "Connected Apps" in the sidebar navigation.
 
-<Examples.AddAssets />
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img
+    alt="navigation connected apps"
+    src="/wallet/nav-connected-apps.png"
+    height="500"
+  />
+  <img
+    alt="connected apps screen"
+    src="/wallet/connected-apps-screen.png"
+    height="500"
+  />
+</div>
 
-## Listening to events
+## History
 
-To listen to events, you can use the `fuel.on` method. <br />
-The first parameter is the event name and the second is the callback function. <br/ >
-The events enum `FuelWalletEvents` can be imported from the `@fuel-wallet/sdk` package.
+To view your wallet history, you can either click the bell icon on the top right or click "History" in the sidebar navigation.
 
-### Connection
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img alt="navigation history" src="/wallet/nav-history.png" height="500" />
+  <img
+    alt="history button"
+    src="/wallet/wallet-screen-history.png"
+    height="500"
+  />
+  <img alt="history screen" src="/wallet/history-screen.png" height="500" />
+</div>
 
-To listen to connection events, you can use the `fuel.events.connection` event.
+## Logging Out
 
-<CodeImport file="../src/hooks/useIsConnected.tsx" lineStart="9" lineEnd="23" />
+You can log out of your wallet by clicking "Logout" in the sidebar navigation.
 
-<Examples.Events.Connection />
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img alt="settings logout" src="/wallet/settings-logout.png" height="500" />
+</div>
 
-### Accounts
+## Locking your Wallet
 
-To listen to accounts events, you can use the `fuel.events.accounts` event.
+You can lock your wallet by clicking "Lock Wallet" in the sidebar navigation.
 
-<CodeImport
-  file="../examples/events/Accounts.tsx"
-  lineStart="23"
-  lineEnd="33"
-/>
-<Examples.Events.Accounts />
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img alt="navigation lock" src="/wallet/nav-lock.png" height="500" />
+</div>
 
-### Current Account
+## Support
 
-To listen to current account events, you can use the `fuel.events.currentAccount` event.
+You find links to the Fuel Discord, Forum, and GitHub under "Support" in the sidebar navigation.
 
-<CodeImport
-  file="../examples/events/CurrentAccount.tsx"
-  lineStart="23"
-  lineEnd="35"
-/>
-<Examples.Events.CurrentAccount />
-
-### Network Change
-
-To listen to network events, you can use the `fuel.events.network` event.
-
-<CodeImport file="../examples/events/Network.tsx" lineStart="27" lineEnd="38" />
-
-Switch the network in your wallet to see the event triggered.
-
-<Examples.Events.Network />
-
-### Assets
-
-To listen to assets events, you can use the `fuel.events.assets` event.
-
-<CodeImport file="../examples/events/Assets.tsx" lineStart="24" lineEnd="34" />
-<Examples.Events.Assets />
+<div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+  <img alt="settings support" src="/wallet/settings-support.png" height="500" />
+</div>
