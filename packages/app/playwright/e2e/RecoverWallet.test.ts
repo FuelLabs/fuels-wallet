@@ -20,17 +20,6 @@ test.describe('RecoverWallet', () => {
     await visit(page, '/wallet');
     await getButtonByText(page, /I already have a wallet/i).click();
 
-    /** Copy words to clipboard area */
-    await page.evaluate(`navigator.clipboard.writeText('${WORDS_24}')`);
-
-    /** Simulating clipboard write */
-    await getButtonByText(page, /Paste/i).click();
-
-    /** Confirm Mnemonic */
-    await hasText(page, /Enter your Recovery Phrase/i);
-    await getButtonByText(page, /Paste/i).click();
-    await getButtonByText(page, /Next/i).click();
-
     /** Adding password */
     await hasText(page, /Encrypt your wallet/i);
     const passwordInput = await getByAriaLabel(page, 'Your Password');
@@ -40,6 +29,17 @@ test.describe('RecoverWallet', () => {
     await confirmPasswordInput.type(WALLET_PASSWORD);
     await confirmPasswordInput.press('Tab');
 
+    await getButtonByText(page, /Next/i).click();
+
+    /** Copy words to clipboard area */
+    await page.evaluate(`navigator.clipboard.writeText('${WORDS_24}')`);
+
+    /** Simulating clipboard write */
+    await getButtonByText(page, /Paste/i).click();
+
+    /** Confirm Mnemonic */
+    await hasText(page, /Enter your Recovery Phrase/i);
+    await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
 
     /** Account created */
