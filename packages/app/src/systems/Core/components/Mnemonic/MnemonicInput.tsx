@@ -20,7 +20,7 @@ export const MnemonicInput = forwardRef(
         value={value}
         onPaste={onPaste}
         onFocus={onFocus}
-        onChange={(ev) => (readOnly ? null : onChange(ev.target.value))}
+        onChange={(ev) => onChange(ev.target.value)}
         aria-label={value || 'Type your text'}
         readOnly={readOnly}
         ref={ref}
