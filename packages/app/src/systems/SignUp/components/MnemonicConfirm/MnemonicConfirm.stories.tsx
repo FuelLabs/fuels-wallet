@@ -22,7 +22,7 @@ const WORDS = [
   'the',
   'emergency',
 ];
-const POSITIONS = [4, 5, 7, 3, 2, 6, 8, 1, 9];
+const POSITIONS = [4, 5, 7, 12, 13, 14, 16, 17, 19];
 
 const Template: ComponentStory<typeof MnemonicConfirm> = (args) => (
   <Box css={{ width: 400 }}>

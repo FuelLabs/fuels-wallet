@@ -1,3 +1,6 @@
+import type { ForwardedRef } from 'react';
+import { forwardRef } from 'react';
+
 type MnemonicInputProps = {
   value: string;
   onChange: (val: string) => void;
@@ -6,22 +9,22 @@ type MnemonicInputProps = {
   readOnly?: boolean;
 };
 
-export function MnemonicInput({
-  value,
-  onChange,
-  onPaste,
-  onFocus,
-  readOnly = false,
-}: MnemonicInputProps) {
-  return (
-    <input
-      role="textbox"
-      value={value}
-      onPaste={onPaste}
-      onFocus={onFocus}
-      onChange={(ev) => onChange(ev.target.value)}
-      aria-label={value || 'Type your text'}
-      readOnly={readOnly}
-    />
-  );
-}
+export const MnemonicInput = forwardRef(
+  (
+    { value, onChange, onPaste, onFocus, readOnly = false }: MnemonicInputProps,
+    ref: ForwardedRef<HTMLInputElement>
+  ) => {
+    return (
+      <input
+        role="textbox"
+        value={value}
+        onPaste={onPaste}
+        onFocus={onFocus}
+        onChange={(ev) => (readOnly ? null : onChange(ev.target.value))}
+        aria-label={value || 'Type your text'}
+        readOnly={readOnly}
+        ref={ref}
+      />
+    );
+  }
+);

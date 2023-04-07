@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Flex, Grid, Button, Stack, Alert, Icon } from '@fuel-ui/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 
 import { MnemonicInput } from '../../../Core/components/Mnemonic/MnemonicInput';
 import { Header } from '../Header';
@@ -47,6 +47,8 @@ export function MnemonicConfirm({
     [words, value]
   );
 
+  const itemEls = useRef<HTMLInputElement[]>(new Array(NUM_WORDS_TO_CONFIRM));
+
   function handleClear(idx: number) {
     return () => {
       setValue((oldState) =>
@@ -63,6 +65,21 @@ export function MnemonicConfirm({
     );
     setCurrentPosition((oldState) => oldState + 1);
   }
+
+  useEffect(() => {
+    // update position on value change to the next empty value
+    const nextEmptyPosition = value.findIndex((word) => !word.length);
+    if (nextEmptyPosition !== -1) {
+      setCurrentPosition(nextEmptyPosition);
+    }
+  }, [value]);
+
+  useEffect(() => {
+    // focus on current position
+    if (itemEls.current[currentPosition]) {
+      itemEls.current[currentPosition].focus();
+    }
+  }, [currentPosition]);
 
   useEffect(() => {
     if (!isEditing) return;
@@ -93,6 +110,9 @@ export function MnemonicConfirm({
         <Box css={styles.root}>
           <Grid css={styles.words}>
             {value.map((_, idx) => {
+              const getRef = (element: HTMLInputElement) => {
+                itemEls.current[idx] = element;
+              };
               return (
                 <Grid key={idx} css={styles.inputWrapper}>
                   <span aria-label="position">{positions?.[idx]}</span>
@@ -100,11 +120,11 @@ export function MnemonicConfirm({
                     <MnemonicInput
                       value={value[idx]}
                       onChange={() => {}}
-                      onFocus={() => {}}
                       readOnly={true}
+                      ref={getRef}
                     />
                   </div>
-                  {value[idx] && (
+                  {currentPosition - 1 === idx && (
                     <Icon
                       css={styles.clearButton}
                       inline
@@ -226,7 +246,7 @@ const styles = {
 
       '&:focus': {
         outline: 'none',
-        borderColor: '$gray8',
+        borderColor: '$accent11',
       },
     },
   }),
