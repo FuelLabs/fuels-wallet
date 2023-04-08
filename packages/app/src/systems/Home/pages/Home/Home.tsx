@@ -1,4 +1,4 @@
-import { Flex } from '@fuel-ui/react';
+import { Flex, Button } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { AssetsTitle, HomeActions } from '../../components';
@@ -19,6 +19,10 @@ export function Home() {
 
   const goToReceive = () => {
     navigate(Pages.receive());
+  };
+
+  const goToNfts = () => {
+    navigate(Pages.nfts());
   };
 
   return (
@@ -45,6 +49,26 @@ export function Home() {
           />
         </Flex>
       </Layout.Content>
+      <Layout.BottomBar>
+        <Button
+          aria-label="Assets"
+          // variant="ghost"
+          // color="gray"
+          // onPress={handlers.reject}
+          // onPress={() => navigate(Pages.nfts())}
+        >
+          Assets
+        </Button>
+        <Button
+          aria-label="NFTs"
+          // onPress={handlers.sign}
+          // isLoading={isLoading}
+          variant="ghost"
+          onPress={goToNfts}
+        >
+          NFTs
+        </Button>
+      </Layout.BottomBar>
     </Layout>
   );
 }

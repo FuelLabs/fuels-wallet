@@ -41,6 +41,8 @@ export const Pages = {
   assets: route('/assets'),
   assetsEdit: route<'id'>('/assets/edit/:id'),
   assetsAdd: route('/assets/add'),
+  nfts: route('/wallet/nfts'),
+  nftDetails: route('/wallet/nft-details/:contractId/:token'),
 };
 
 export type AmountMap = Record<string, Maybe<BN>>;
