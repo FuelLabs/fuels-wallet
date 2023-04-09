@@ -29,6 +29,7 @@ jobs:
         uses: tj-actions/changed-files@v22.2
         with:
           files: |
+            **/packages/app/**  
             **/packages/sdk/**
             **/packages/types/**
 
