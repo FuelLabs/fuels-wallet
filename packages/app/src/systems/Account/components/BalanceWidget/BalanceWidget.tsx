@@ -120,11 +120,11 @@ const styles = {
       width: 18,
     },
   }),
-  balanceContainer: cssObj({ mt: '$2', ml: '$4', alignSelf: 'center' }),
+  balanceContainer: cssObj({ mt: '$1', ml: '$4', alignSelf: 'center' }),
   balance: cssObj({
     fontSize: '1.625rem',
     fontWeight: 'bold',
-    marginTop: '$2',
+    margin: '$2 0',
     '&[aria-hidden="true"]': {
       color: '$gray12',
     },
@@ -154,7 +154,7 @@ const styles = {
     left: 0,
   }),
   balanceWidgetWrapper: cssObj({
-    minHeight: 88,
+    minHeight: 97,
     position: 'relative',
   }),
   caretDownIcon: cssObj({
