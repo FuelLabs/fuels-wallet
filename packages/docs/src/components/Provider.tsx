@@ -12,6 +12,7 @@ import { Blockquote } from './Blockquote';
 import { Code } from './Code';
 import { CodeImport } from './CodeImport';
 import { ConnectionAlert } from './ConnectionAlert';
+import { Demo } from './Demo';
 import { DownloadFuelWallet } from './DownloadFuelWallet';
 import { Heading } from './Heading';
 import { Link } from './Link';
@@ -42,6 +43,7 @@ const components = {
   Player,
   DownloadFuelWallet,
   Examples,
+  Demo,
 };
 
 type ProviderProps = {
