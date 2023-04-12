@@ -24,14 +24,16 @@ export function AccountList({
 }: AccountListProps) {
   const [showHidden, setShowHidden] = useState(() => false);
   const [anyHiddenAccounts, setAnyHiddenAccounts] = useState(false);
+  const [isPrimaryAccount, setIsPrimaryAccount] = useState(false);
 
   function toggle() {
     setShowHidden((s) => !s);
   }
 
   useEffect(() => {
-    const hiddenAccounts = (accounts ?? []).some((acc) => acc.isHidden);
-    setAnyHiddenAccounts(hiddenAccounts);
+    const hiddenAccounts = (accounts ?? []).filter((acc) => acc.isHidden);
+    setAnyHiddenAccounts(hiddenAccounts.length > 0);
+    setIsPrimaryAccount((accounts ?? []).length - hiddenAccounts.length === 1);
   }, [accounts]);
 
   return (
@@ -54,7 +56,11 @@ export function AccountList({
               isHidden={!showHidden && account.isHidden}
               isCurrent={account.isCurrent}
               onExport={onExport}
-              onToggleHidden={onToggleHidden}
+              onToggleHidden={
+                isPrimaryAccount && !account.isHidden
+                  ? undefined
+                  : onToggleHidden
+              }
             />
           ))}
         </CardList>
@@ -66,6 +72,7 @@ export function AccountList({
           variant="link"
           onPress={toggle}
           css={styles.hiddenBtn}
+          aria-label={`Toggle hidden accounts`}
         >
           {showHidden ? 'Hide' : 'Show'} hidden accounts
         </Button>

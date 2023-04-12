@@ -126,7 +126,7 @@ export const AccountItem: AccountItemComponent = ({
   return (
     <CardList.Item
       isActive={isCurrent}
-      onClick={onPress}
+      onClick={account.isHidden ? undefined : onPress}
       rightEl={getRightEl()}
       css={styles.root}
       aria-disabled={isDisabled}

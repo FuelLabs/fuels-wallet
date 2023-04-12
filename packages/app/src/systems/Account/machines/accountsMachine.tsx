@@ -87,7 +87,7 @@ export const accountsMachine = createMachine(
             target: 'refreshAccount',
           },
           TOGGLE_HIDE_ACCOUNT: {
-            actions: ['toggleHideAccount'],
+            actions: ['toggleHideAccount', 'notifyUpdateAccounts'],
             target: 'idle',
           },
         },
