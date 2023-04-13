@@ -15,6 +15,17 @@ export const MOCK_OPERATION_CONTRACT_CALL: Operation = {
       assetId: NativeAssetId,
     },
   ],
+  calls: [
+    {
+      functionName: 'transfer',
+      functionSignature: 'transfer(address,u64)',
+      argumentsProvided: {
+        address:
+          '0x277fe98efbafc2ee0a533e41104bf0b163ad35c180c2da4e1403ea5445f6207c',
+        amount: '100',
+      },
+    },
+  ],
 };
 
 export const MOCK_OPERATION_TRANSFER: Operation = {

@@ -26,6 +26,10 @@ import type {
   TransactionResultTransferReceipt,
 } from 'fuels';
 import {
+  filterEmptyParams,
+  hexlify,
+  VM_TX_MEMORY,
+  Interface,
   calculatePriceWithFactor,
   ReceiptType,
   TransactionType,
@@ -36,16 +40,19 @@ import {
 } from 'fuels';
 
 import type {
+  AbiParam,
   Coin,
   GetFeeFromReceiptsParams,
   GetFeeParams,
   GetGasUsedContractCreatedParams,
+  GetGasUsedFromReceiptsParams,
   GetGasUsedParams,
   GetOperationParams,
   GqlTransactionStatus,
   InputOutputParam,
   Operation,
   ParseTxParams,
+  RawPayloadParam,
   ReceiptParam,
   Tx,
 } from './tx.types';
@@ -305,18 +312,40 @@ const mergeAssets = (op1: Operation, op2: Operation) => {
 export function addOperation(operations: Operation[], toAdd: Operation) {
   const ops = operations
     .map((op) => {
+      // if it's not same operation, don't change. we just wanna stackle the same operation
       if (!isSameOperation(op, toAdd)) return null;
-      // if it's not adding any assets, just return the original operation
-      if (!toAdd.assetsSent?.length) return op;
-      // if the original operation doesn't have any assets, just return the toAdd assets
-      if (!op.assetsSent?.length) {
-        return { ...op, assetsSent: toAdd.assetsSent };
+
+      let newOp = { ...op };
+
+      // if it's adding new assets
+      if (toAdd.assetsSent?.length) {
+        // if prev op had assets, merge them. Otherwise just add the new assets
+        newOp = {
+          ...newOp,
+          assetsSent: op.assetsSent?.length
+            ? mergeAssets(op, toAdd)
+            : toAdd.assetsSent,
+        };
       }
-      // if both have assets, merge them
-      return { ...op, assetsSent: mergeAssets(op, toAdd) };
+
+      // if it's adding new calls,
+      if (toAdd.calls?.length) {
+        /*  
+          for calls we don't stack as grouping is not desired.
+          we wanna show all calls in the same operation
+          with each respective assets, amounts, functions, arguments.
+        */
+        newOp = {
+          ...newOp,
+          calls: [...(op.calls || []), ...(toAdd.calls || [])],
+        };
+      }
+
+      return newOp;
     })
     .filter(Boolean) as Operation[];
 
+  // if this operation didn't exist before just add it to the end
   return ops.length ? ops : [...operations, toAdd];
 }
 
@@ -415,7 +444,9 @@ export function getContractCallOperations({
   inputs,
   outputs,
   receipts,
-}: InputOutputParam & ReceiptParam): Operation[] {
+  abiMap,
+  rawPayload,
+}: InputOutputParam & ReceiptParam & AbiParam & RawPayloadParam): Operation[] {
   const contractCallReceipts = getReceiptsCall(receipts);
   const fromAddress = getFromAddress(inputs);
   const contractOutputs = getOutputsContract(outputs);
@@ -431,30 +462,94 @@ export function getContractCallOperations({
         const newCallOps = contractCallReceipts.reduce(
           (prevContractCallOps, receipt) => {
             if (receipt.to === contractInput.contractID) {
-              const newContractCallOps = addOperation(prevOutputCallOps, {
-                name: OperationName.contractCall,
-                from: {
-                  type: AddressType.account,
-                  address: fromAddress,
-                },
-                to: {
-                  type: AddressType.contract,
-                  address: receipt.to,
-                },
-                // if no amount is forwarded to the contract, skip showing assetsSent
-                assetsSent: receipt.amount?.isZero()
-                  ? undefined
-                  : [
-                      {
-                        amount: receipt.amount,
-                        assetId: receipt.assetId,
+              const calls = [];
+
+              const abi = abiMap?.[contractInput.contractID];
+              if (abi) {
+                const abiInterface = new Interface(abi);
+                const callFunctionSelector = receipt.param1.toHex(8);
+                const functionFragment =
+                  abiInterface.getFunction(callFunctionSelector);
+
+                const nonEmptyInputs = filterEmptyParams(
+                  functionFragment.inputs
+                );
+
+                let encodedArgs;
+                if (functionFragment.isInputDataPointer()) {
+                  if (rawPayload) {
+                    const argsOffset = bn(receipt.param2)
+                      .sub(VM_TX_MEMORY)
+                      .toNumber();
+
+                    // slice(2) to remove first 0x, then slice again to remove offset and get only args
+                    encodedArgs = `0x${rawPayload
+                      .slice(2)
+                      .slice(argsOffset * 2)}`;
+                  }
+                } else {
+                  encodedArgs = receipt.param2.toHex();
+                }
+
+                let argumentsProvided;
+                if (encodedArgs) {
+                  const data = functionFragment.decodeArguments(encodedArgs);
+                  if (data) {
+                    argumentsProvided = nonEmptyInputs.reduce(
+                      (prev, input, index) => {
+                        const value = data[index];
+                        const name = input.name;
+
+                        if (name) {
+                          return {
+                            ...prev,
+                            // reparse to remove bn
+                            [name]: JSON.parse(JSON.stringify(value)),
+                          };
+                        }
+
+                        return prev;
                       },
-                    ],
-              });
+                      {}
+                    );
+                  }
+                }
 
-              return newContractCallOps;
+                const call = {
+                  functionSignature: functionFragment.getSignature(),
+                  functionName: functionFragment.name,
+                  argumentsProvided,
+                  ...(receipt.amount?.isZero()
+                    ? {}
+                    : { amount: receipt.amount, assetId: receipt.assetId }),
+                };
+                calls.push(call);
+
+                const newContractCallOps = addOperation(prevContractCallOps, {
+                  name: OperationName.contractCall,
+                  from: {
+                    type: AddressType.account,
+                    address: fromAddress,
+                  },
+                  to: {
+                    type: AddressType.contract,
+                    address: receipt.to,
+                  },
+                  // if no amount is forwarded to the contract, skip showing assetsSent
+                  assetsSent: receipt.amount?.isZero()
+                    ? undefined
+                    : [
+                        {
+                          amount: receipt.amount,
+                          assetId: receipt.assetId,
+                        },
+                      ],
+                  calls,
+                });
+
+                return newContractCallOps;
+              }
             }
-
             return prevContractCallOps;
           },
           prevOutputCallOps as Operation[]
@@ -509,6 +604,8 @@ export function getOperations({
   inputs,
   outputs,
   receipts,
+  abiMap,
+  rawPayload,
 }: GetOperationParams): Operation[] {
   if (isTypeCreate(transactionType)) {
     return [
@@ -524,7 +621,13 @@ export function getOperations({
   if (isTypeScript(transactionType)) {
     return [
       ...getTransferOperations({ inputs, outputs }),
-      ...getContractCallOperations({ inputs, outputs, receipts }),
+      ...getContractCallOperations({
+        inputs,
+        outputs,
+        receipts,
+        abiMap,
+        rawPayload,
+      }),
       ...getContractTransferOperations({ receipts }),
     ];
   }
@@ -556,7 +659,9 @@ export function getGasUsedContractCreated({
   return gasUsed;
 }
 
-export function getGasUsedFromReceipts(receipts: TransactionResultReceipt[]) {
+export function getGasUsedFromReceipts({
+  receipts,
+}: GetGasUsedFromReceiptsParams) {
   const scriptReceipts = getReceiptsScriptResult(receipts);
   const gasUsed = scriptReceipts.reduce(
     (prev, receipt) => prev.add(receipt.gasUsed),
@@ -580,7 +685,7 @@ export function getGasUsed({
     });
   }
   if (isTypeScript(transaction.type))
-    return getGasUsedFromReceipts(receipts ?? []);
+    return getGasUsedFromReceipts({ receipts: receipts ?? [] });
 
   return bn(0);
 }
@@ -606,7 +711,7 @@ export function getFeeFromReceipts({
   gasPriceFactor,
 }: GetFeeFromReceiptsParams) {
   if (gasPrice.gt(0)) {
-    const gasUsed = getGasUsedFromReceipts(receipts ?? []);
+    const gasUsed = getGasUsedFromReceipts({ receipts: receipts ?? [] });
     const fee = calculatePriceWithFactor(gasUsed, gasPrice, gasPriceFactor);
 
     return fee;
@@ -644,7 +749,11 @@ export function parseTx({
   gqlStatus,
   id,
   time,
+  abiMap: abi,
+  rawPayload: _rawPayload,
 }: ParseTxParams): Tx {
+  const rawPayload =
+    _rawPayload || hexlify(new TransactionCoder().encode(transaction));
   const type = getType(transaction.type);
   const status = getStatus(gqlStatus);
   const gasUsed = getGasUsed({
@@ -659,6 +768,8 @@ export function parseTx({
     inputs: transaction.inputs || [],
     outputs: transaction.outputs || [],
     receipts,
+    abiMap: abi,
+    rawPayload,
   });
 
   return {

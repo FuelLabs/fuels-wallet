@@ -546,6 +546,8 @@ describe('Tx util', () => {
     });
 
     describe('should stack operations with same name / from / to', () => {
+      // TODO: fix tx tests after sdk PR vamp gets merged / fixed
+      // RN getting error on running tests with linked SDK locally =()
       it('should return prev operation if no asset is sent to add', () => {
         const baseOperations = addOperation([], OPERATION_CONTRACT_CALL);
         const operationsAddedSameAsset = addOperation(baseOperations, {
@@ -775,23 +777,24 @@ describe('Tx util', () => {
 
   describe('getGasUsed', () => {
     it('should getGasUsedFromReceipts return gasUsed from contract call transaction', () => {
-      const gasUsed = getGasUsedFromReceipts(
-        MOCK_TRANSACTION_CONTRACT_CALL.receipts || []
-      );
+      const gasUsed = getGasUsedFromReceipts({
+        receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
+      });
       expect(gasUsed.valueOf()).toEqual(
         MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptScriptResult.gasUsed.valueOf()
       );
     });
 
     it('should getGasUsedFromReceipts return empty', () => {
-      const gasUsed = getGasUsedFromReceipts(
-        MOCK_TRANSACTION_CONTRACT_CALL.receipts?.filter(
-          (r) => r.type !== ReceiptType.ScriptResult
-        ) || []
-      );
+      const gasUsed = getGasUsedFromReceipts({
+        receipts:
+          MOCK_TRANSACTION_CONTRACT_CALL.receipts?.filter(
+            (r) => r.type !== ReceiptType.ScriptResult
+          ) || [],
+      });
       expect(gasUsed.valueOf()).toEqual(bn(0).valueOf());
 
-      const gasUsedEmpty = getGasUsedFromReceipts([]);
+      const gasUsedEmpty = getGasUsedFromReceipts({ receipts: [] });
       expect(gasUsedEmpty.valueOf()).toEqual(bn(0).valueOf());
     });
 
