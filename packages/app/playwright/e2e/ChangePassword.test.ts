@@ -44,6 +44,7 @@ test.describe('ChangePassword', () => {
     await getByAriaLabel(page, 'Current Password').type('12345678');
     await getByAriaLabel(page, 'New Password').type('newPass12345$');
     await getByAriaLabel(page, 'Confirm Password').type('newPass123456$');
+    await getByAriaLabel(page, 'Confirm Password').blur();
 
     await hasText(page, 'Passwords must match');
   });

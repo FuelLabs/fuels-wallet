@@ -11,6 +11,7 @@ const selectors = {
   isChangingPassword: (state: SettingsMachineState) =>
     state.matches('changingPassword'),
   isUnlocking: (state: SettingsMachineState) => state.hasTag('unlocking'),
+  error: (state: SettingsMachineState) => state.context.error,
 };
 
 export function useSettings() {
@@ -27,6 +28,7 @@ export function useSettings() {
   const { send } = service;
   const isUnlocking = useSelector(service, selectors.isUnlocking);
   const isChangingPassword = useSelector(service, selectors.isChangingPassword);
+  const error = useSelector(service, selectors.error);
 
   /** @description - This will change the password of the wallet */
   function changePassword(changePassword: VaultInputs['changePassword']) {
@@ -36,6 +38,7 @@ export function useSettings() {
   }
 
   return {
+    error,
     handlers: {
       changePassword,
     },
