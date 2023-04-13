@@ -20,12 +20,12 @@ export const FuelAddress = ({ address, css }: AddressProps) => {
     <Flex css={styles.root}>
       <Copyable
         value={fuelAddress}
-        css={{ ...styles.copyable, ...css }}
+        css={styles.copyable}
         aria-label={fuelAddress}
         data-invalid-address={!isValidAddress}
       >
         <Tooltip content={fuelAddress} className="address_tooltip" side="top">
-          <Text>{shortAddress(fuelAddress)}</Text>
+          <Text css={css}>{shortAddress(fuelAddress)}</Text>
         </Tooltip>
       </Copyable>
     </Flex>
