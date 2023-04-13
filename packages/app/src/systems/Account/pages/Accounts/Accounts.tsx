@@ -7,7 +7,8 @@ import { useAccounts } from '../../hooks';
 import { coreStyles } from '~/systems/Core/styles';
 
 export const Accounts = () => {
-  const { accounts, isLoading, handlers } = useAccounts();
+  const { accounts, canHideAccounts, hasHiddenAccounts, isLoading, handlers } =
+    useAccounts();
 
   return (
     <>
@@ -29,6 +30,8 @@ export const Accounts = () => {
         <AccountList
           isLoading={isLoading}
           accounts={accounts}
+          canHideAccounts={canHideAccounts}
+          hasHiddenAccounts={hasHiddenAccounts}
           onPress={handlers.setCurrentAccount}
           onExport={handlers.goToExport}
           onUpdate={handlers.goToEdit}
