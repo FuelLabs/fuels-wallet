@@ -20,7 +20,6 @@ export function VisibilityButton({
       color="gray"
       icon={
         <Icon
-          size={18}
           {...(visibility
             ? {
                 color: 'gray8',
