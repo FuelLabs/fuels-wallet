@@ -40,10 +40,12 @@ LINK_FUEL_UI=true
 LINK_FUEL_TS=true
 ```
 
-3. Also inside `fuels-wallet` root directory, run this command:
+3. That's it. Now inside `fuels-wallet` root directory, run your dev command as you wish:
 
 ```sh
+pnpm dev
 pnpm dev:deps
+pnpm dev:crx
 ```
 
 > **Note**
@@ -52,7 +54,6 @@ pnpm dev:deps
 >
 > - Link dependency repos across all wallet monorepo packages, including the root
 > - Run dev server with linked dependencies
->   - Dev command is different from the usual `pnpm dev` because it inject an alias configuration inside Vite to use build module files `index.mjs`, instead of using default pnpm behavior and get `package:main`
 
 Done! Now your changes in `@fuel-ui` and/or `@fuel-ts` will reflect in wallet project. Test with a simple `console.log` to make sure it worked.
 
