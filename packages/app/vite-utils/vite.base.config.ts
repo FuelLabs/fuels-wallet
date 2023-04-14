@@ -6,7 +6,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 import '../load.envs.js';
 
-const linkDeps = process.env.LINK_DEPS?.trim().split(' ') || [];
+const linkDeps = process.env.LINK_DEPS?.trim().split(' ').filter(Boolean) || [];
 
 // https://vitejs.dev/config/
 const baseConfig: UserConfig = {
