@@ -1,5 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Flex, Icon, IconButton, Text } from '@fuel-ui/react';
+import {
+  Avatar,
+  Box,
+  Flex,
+  Heading,
+  Icon,
+  IconButton,
+  Text,
+} from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 
@@ -58,9 +66,11 @@ export function BalanceWidget({
       </Flex>
       <Flex justify="space-between" css={styles.balanceDetails}>
         <Flex direction="column" css={styles.balanceContainer}>
+          <Heading as="h6" css={styles.name}>
+            {account.name}
+          </Heading>
           <FuelAddress address={account.address} css={styles.balanceAddress} />
           <Text
-            fontSize="2xl"
             css={styles.balance}
             aria-hidden={visibility}
             data-account-name={account.name}
@@ -99,19 +109,28 @@ const styles = {
   balanceDetails: cssObj({ flex: '1 0' }),
   balanceAddress: cssObj({
     color: '$gray11',
-    fontSize: '$sm',
+    fontSize: '$xs',
     fontWeight: 'bold',
   }),
-  visibilityContainer: cssObj({ marginRight: 6, marginTop: 8 }),
-  balanceContainer: cssObj({ mt: '$2', ml: '$4', alignSelf: 'center' }),
+  visibilityContainer: cssObj({
+    marginRight: 6,
+    marginTop: 8,
+    svg: {
+      height: 18,
+      width: 18,
+    },
+  }),
+  balanceContainer: cssObj({ mt: '$1', ml: '$4', alignSelf: 'center' }),
   balance: cssObj({
+    fontSize: '1.625rem',
+    fontWeight: 'bold',
+    margin: '$2 0',
     '&[aria-hidden="true"]': {
       color: '$gray12',
     },
     '&[aria-hidden="false"]': {
       color: '$gray10',
     },
-    fontWeight: 'bold',
   }),
   backgroundFront: cssObj({
     ...backgroundCss,
@@ -135,7 +154,7 @@ const styles = {
     left: 0,
   }),
   balanceWidgetWrapper: cssObj({
-    minHeight: 88,
+    minHeight: 97,
     position: 'relative',
   }),
   caretDownIcon: cssObj({
@@ -143,5 +162,9 @@ const styles = {
     height: '20px !important',
     padding: '0 3px !important',
     borderRadius: 8,
+  }),
+  name: cssObj({
+    fontSize: '$sm',
+    margin: '0px 0px -6px',
   }),
 };

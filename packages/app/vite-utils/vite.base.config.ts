@@ -6,7 +6,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 import '../load.envs.js';
 
-const linkDeps = process.env.LINK_DEPS?.trim().split(' ') || [];
+const linkDeps = process.env.LINK_DEPS?.trim().split(' ').filter(Boolean) || [];
 
 // https://vitejs.dev/config/
 const baseConfig: UserConfig = {
@@ -57,14 +57,17 @@ const baseConfig: UserConfig = {
   define: {
     'process.env': {},
   },
-  ...(process.env.WITH_PNPM_LINKS && {
+  ...(!!linkDeps.length && {
     resolve: {
       alias: linkDeps.reduce((obj, dep) => {
-        // eslint-disable-next-line no-param-reassign
-        obj[dep] = path.resolve(
-          __dirname,
-          `../node_modules/${dep}/dist/index.mjs`
-        );
+        // remove TS SDK as it's not needed to resolve alias anymore.
+        if (!/^fuels?|@fuel-ts/.test(dep)) {
+          // eslint-disable-next-line no-param-reassign
+          obj[dep] = path.resolve(
+            __dirname,
+            `../node_modules/${dep}/dist/index.mjs`
+          );
+        }
         return obj;
       }, {}),
     },
