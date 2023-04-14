@@ -1,5 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Image, Flex, Box } from '@fuel-ui/react';
+import Plyr from 'plyr-react';
 
 interface Media {
   type: 'img' | 'mp4';
@@ -22,16 +23,15 @@ export function Demo({ media }: DemoProps) {
             }
             return (
               <Box key={index} css={styles.player}>
-                <video
-                  style={styles.player}
-                  title={example.alt}
-                  muted
-                  loop
-                  autoPlay
-                  playsInline
-                >
-                  <source src={example.src} type="video/mp4" />
-                </video>
+                <Plyr
+                  source={{
+                    type: 'video',
+                    title: example.alt,
+                    sources: [
+                      { src: example.src, type: 'video/mp4', size: 720 },
+                    ],
+                  }}
+                />
               </Box>
             );
           })}
@@ -44,16 +44,26 @@ export function Demo({ media }: DemoProps) {
 const styles = {
   outerContainer: cssObj({
     overflow: 'hidden',
-    maxWidth: '94vw',
+    maxWidth: '90vw',
   }),
   innerContainer: cssObj({
     flexWrap: 'nowrap',
-    overflowX: 'scroll',
+    overflowX: 'auto',
     height: '500px',
   }),
   player: {
     height: '500px',
     minWidth: '360px',
+    fontFamily: '$sans',
     overflow: 'hidden',
+    '.plyr': {
+      height: '500px',
+    },
+    '.plyr__volume': {
+      display: 'none',
+    },
+    '.video-react-duration, .video-react-current-time': {
+      fontFamily: '$sans',
+    },
   },
 };
