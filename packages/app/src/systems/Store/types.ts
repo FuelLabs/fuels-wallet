@@ -10,6 +10,7 @@ import type {
 } from '../DApp';
 import type { NetworksMachine } from '../Network';
 import type { OverlayMachine } from '../Overlay';
+import type { AbisMachine } from '../Settings/machines';
 import type { UnlockMachine } from '../Unlock';
 
 export enum Services {
@@ -23,6 +24,7 @@ export enum Services {
   msgRequest = 'msgRequest',
   connectRequest = 'connectRequest',
   addAssetRequest = 'addAssetRequest',
+  abis = 'abis',
 }
 
 export type StoreMachines = {
@@ -35,6 +37,7 @@ export type StoreMachines = {
   msgRequest: MessageRequestMachine;
   connectRequest: ConnectRequestMachine;
   addAssetRequest: AddAssetMachine;
+  abis: AbisMachine;
 };
 
 export type Store = StoreClass<StoreMachines>;

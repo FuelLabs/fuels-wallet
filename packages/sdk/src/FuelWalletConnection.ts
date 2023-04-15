@@ -9,6 +9,7 @@ import type {
   FuelEventArg,
   FuelProviderConfig,
   FuelEvents,
+  AbiMap,
 } from '@fuel-wallet/types';
 import type { TransactionRequestLike } from 'fuels';
 import { transactionRequestify } from 'fuels';
@@ -105,6 +106,12 @@ export class FuelWalletConnection extends WindowConnection {
   async addAssets(assets: Asset[]): Promise<boolean> {
     return this.client.request('addAssets', {
       assets,
+    });
+  }
+
+  async addAbi(abiMap: AbiMap): Promise<boolean> {
+    return this.client.request('addAbi', {
+      abiMap,
     });
   }
 
