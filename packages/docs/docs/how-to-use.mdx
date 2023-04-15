@@ -2,135 +2,310 @@
 title: How to Use
 ---
 
-# How to use
+# How to Use
 
-<ConnectionAlert />
+## Accounts
 
-If you've correctly installed the Fuel wallet extension, the wallet SDK will be injected automatically on the `window` object on the property `fuel`. To access it, you can use `window.fuel`
+### View all accounts
 
-```ts
-window.fuel.connect();
-```
+You can view all of your accounts by clicking on the down caret underneath the account icon, or clicking on "Accounts" in the navigation sidebar.
 
-You can try this code directly in the developer console.
-
-## Detect when fuel is loaded
-
-It's possible that your application loads before `window.fuel` is injected. To detect when the `fuel` is loaded and ready to use, you can listen to the event `FuelLoaded` on the document.
-If you are using react take a look on the source code of the example bellow to see how we implement it.
-
-<CodeImport file="../examples/FuelLoaded.tsx" lineStart="10" lineEnd="21" />
-
-<Examples.FuelLoaded />
-
-## Request connection
-
-First, you need to request a connection with the wallet, which will authorize your application to execute other actions. You can do this by accessing `fuel.connect()`.
-
-<CodeImport file="../examples/Connect.tsx" />
-
-The `connect()` method returns a promise. If you prefer to do it in an async way, you can use `fuel.on('connection', () => void)` to
-listen for changes in the connection.
-
-<Examples.Connect />
-
-## List user accounts
-
-Once the connection is authorized, you can list the user accounts using `window.fuel.accounts()`.
-
-<CodeImport file="../examples/ListAccounts.tsx" />
-
-<Examples.ListAccounts />
-
-## Get current account
-
-You can also get the current account being used in the wallet using `window.fuel.currentAccount()`.
-
-<CodeImport file="../examples/CurrentAccount.tsx" />
-
-<Examples.CurrentAccount />
-
-## Signing a message
-
-With access to the user address and the connection authorized, you can request the user's signature using `fuel.signMessage`.
-
-<CodeImport file="../examples/SignMessage.tsx" />
-
-<Examples.SignMessage />
-
-## Transfering assets
-
-To transfer an amount to other address, use the `wallet.transfer` method and pass in the address you want to send to and the amount to send.
-
-<CodeImport file="../examples/Transfer.tsx" />
-
-<Examples.Transfer />
-
-## List Assets in the Wallet
-
-You can list the assets in the wallet using `window.fuel.assets()`.
-
-<CodeImport file="../examples/ListAssets.tsx" />
-
-<Examples.ListAssets />
-
-## Adding custom Assets
-
-To add custom Assets, use the `wallet.addAssets` method and pass in the `Asset[]` you want to add.
-
-<CodeImport file="../examples/AddAssets.tsx" />
-
-<Examples.AddAssets />
-
-## Listening to events
-
-To listen to events, you can use the `fuel.on` method. <br />
-The first parameter is the event name and the second is the callback function. <br/ >
-The events enum `FuelWalletEvents` can be imported from the `@fuel-wallet/sdk` package.
-
-### Connection
-
-To listen to connection events, you can use the `fuel.events.connection` event.
-
-<CodeImport file="../src/hooks/useIsConnected.tsx" lineStart="9" lineEnd="23" />
-
-<Examples.Events.Connection />
-
-### Accounts
-
-To listen to accounts events, you can use the `fuel.events.accounts` event.
-
-<CodeImport
-  file="../examples/events/Accounts.tsx"
-  lineStart="23"
-  lineEnd="33"
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/view-accounts.mp4',
+      alt: 'View all wallet accounts',
+    },
+  ]}
 />
-<Examples.Events.Accounts />
 
-### Current Account
+### Add a new account
 
-To listen to current account events, you can use the `fuel.events.currentAccount` event.
+You can add a new account on the accounts page by clicking on the "Add new account" or "Add from private key" buttons.
 
-<CodeImport
-  file="../examples/events/CurrentAccount.tsx"
-  lineStart="23"
-  lineEnd="35"
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/add-new-account.mp4',
+      alt: 'Add a new account',
+    },
+    {
+      type: 'img',
+      src: '/wallet/import-account-screen.png',
+      alt: 'Import an account',
+    },
+  ]}
 />
-<Examples.Events.CurrentAccount />
 
-### Network Change
+### Edit an account
 
-To listen to network events, you can use the `fuel.events.network` event.
+To edit an account, click on the horizontal ellipsis to the right of the account and select "Edit".
 
-<CodeImport file="../examples/events/Network.tsx" lineStart="27" lineEnd="38" />
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/edit-account.mp4',
+      alt: 'Edit an account',
+    },
+  ]}
+/>
 
-Switch the network in your wallet to see the event triggered.
+### Export a private key
 
-<Examples.Events.Network />
+To export the private key for an account, click on the horizontal ellipsis to the right of the account and select "Export Private Key".
 
-### Assets
+<Demo
+  media={[
+    {
+      type: 'img',
+      src: '/wallet/export-private-key-screen.png',
+      alt: 'Export your private key',
+    },
+    {
+      type: 'img',
+      src: '/wallet/export-private-key.png',
+      alt: 'View your private key',
+    },
+  ]}
+/>
 
-To listen to assets events, you can use the `fuel.events.assets` event.
+### Reveal your passphrase
 
-<CodeImport file="../examples/events/Assets.tsx" lineStart="24" lineEnd="34" />
-<Examples.Events.Assets />
+To view your secret passphrase, click "Reveal Passphrase" in the sidebar navigation under "Settings".
+
+<Demo
+  media={[
+    {
+      type: 'img',
+      src: '/wallet/settings-passphrase.png',
+      alt: 'Passphrase settings',
+    },
+    {
+      type: 'img',
+      src: '/wallet/reveal-passphrase-screen.png',
+      alt: 'Reveal your passphrase',
+    },
+    {
+      type: 'img',
+      src: '/wallet/secret-passphrase.png',
+      alt: 'View your secret passphrase',
+    },
+  ]}
+/>
+
+### Change your password
+
+To change your password, click "Change Password" in the sidebar navigation under "Settings".
+
+<Demo
+  media={[
+    {
+      type: 'img',
+      src: '/wallet/settings-password.png',
+      alt: 'Password settings',
+    },
+    {
+      type: 'img',
+      src: '/wallet/change-password.png',
+      alt: 'Change password',
+    },
+  ]}
+/>
+
+## Networks
+
+### View all networks
+
+You can view your networks by clicking "Networks" in the sidebar navigation,
+
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/view-networks.mp4',
+      alt: 'View all networks',
+    },
+  ]}
+/>
+
+### Add & edit a network
+
+To add a new network, click on the "Add new network" button.
+To edit a network, click on the pencil icon on the right.
+
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/edit-network.mp4',
+      alt: 'Edit a network',
+    },
+  ]}
+/>
+
+### Delete a network
+
+To delete a network, click on the trash icon on the right.
+
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/delete-network.mp4',
+      alt: 'Delete a network',
+    },
+  ]}
+/>
+
+## Assets
+
+### Sending & Receiving Assets
+
+Click the "Send" button on the wallet home screen to transfer any asset to another address.
+Click on the "Receive" button to view your wallet address and a QR code for it to receive assets from another address.
+
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/send-assets.mp4',
+      alt: 'Send an asset',
+    },
+    {
+      type: 'img',
+      src: '/wallet/receive-screen.png',
+      alt: 'Receive assets',
+    },
+  ]}
+/>
+
+### Viewing Assets
+
+You can view all custom and listed assets by clicking on "Assets" under "Settings" in the sidebar navigation.
+
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/view-assets.mp4',
+      alt: 'View all assets',
+    },
+  ]}
+/>
+
+### Adding Custom Assets
+
+You can add new custom assets by clicking the "Add Asset" button.
+You must specify the asset ID, name, symbol, and image URL.
+If you already have an unknown asset in your wallet, you can click the "Add" button to add it.
+
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/add-unknown-assets.mp4',
+      alt: 'Add unknown assets',
+    },
+  ]}
+/>
+
+### Editing Assets
+
+You can edit a custom asset by clicking on the pencil icon on the right
+
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/edit-asset.mp4',
+      alt: 'Edit a custom asset',
+    },
+  ]}
+/>
+
+### Deleting Assets
+
+To delete an asset, click on the trash icon on the right.
+
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/delete-asset.mp4',
+      alt: 'Delete a custom asset',
+    },
+  ]}
+/>
+
+## Connected Apps
+
+To view and delete the apps connected to your wallet, click "Connected Apps" in the sidebar navigation.
+
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/connected-apps.mp4',
+      alt: 'View connected apps',
+    },
+  ]}
+/>
+
+## History
+
+To view your account history, you can either click the bell icon on the top right or click "History" in the sidebar navigation.
+
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/view-history.mp4',
+      alt: 'View account history',
+    },
+  ]}
+/>
+
+## Locking your Wallet
+
+You can lock your wallet by clicking "Lock Wallet" in the sidebar navigation.
+
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/lock-wallet.mp4',
+      alt: 'Lock your wallet',
+    },
+  ]}
+/>
+
+## Logging Out
+
+You can log out of your wallet by clicking "Logout" in the sidebar navigation. Please note that this will erase all accounts from your wallet.
+
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/logout.mp4',
+      alt: 'Logout of your accounts',
+    },
+  ]}
+/>
+
+## Support
+
+You find links to the Fuel Discord, Forum, and GitHub under "Support" in the sidebar navigation.
+
+<Demo
+  media={[
+    {
+      type: 'img',
+      src: '/wallet/settings-support.png',
+      alt: 'Support links',
+    },
+  ]}
+/>
