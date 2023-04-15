@@ -2,10 +2,8 @@
 
 # User should define here the Dependencies to link locally
 # we support linking "@fuel-ui" and "@fuels-ts". 
-# between LINK_FUEL_UI and LINK_FUEL_TS, comment out whichever one you don't want to link
-
 # LINK_FUEL_UI=true
-LINK_FUEL_TS=true
+# LINK_FUEL_TS=true
 
 # Figure out dependencies to link
 deps=""
