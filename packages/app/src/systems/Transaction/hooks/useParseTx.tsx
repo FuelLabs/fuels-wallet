@@ -8,7 +8,6 @@ import { useAbiMap } from '~/systems/Settings/hooks';
 export function useParseTx(props: Partial<ParseTxParams>) {
   const { transaction, receipts, gasPerByte, gasPriceFactor, gqlStatus, id } =
     props;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { abiMap } = useAbiMap();
 
   const tx = useMemo(() => {
@@ -22,6 +21,7 @@ export function useParseTx(props: Partial<ParseTxParams>) {
       gasPriceFactor,
       gqlStatus,
       id,
+      abiMap,
     });
   }, Object.values(props));
 
