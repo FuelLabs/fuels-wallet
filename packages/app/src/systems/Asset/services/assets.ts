@@ -2,6 +2,7 @@ import type { Asset } from '@fuel-wallet/types';
 import { isB256 } from 'fuels';
 
 import { db } from '~/systems/Core/utils/database';
+import { getUniqueString } from '~/systems/Core/utils/string';
 
 export type AssetInputs = {
   upsertAsset: {
@@ -166,44 +167,21 @@ export class AssetService {
     return { assetsToAdd };
   }
 
-  // add suffix to field if it already exists (ex: 'name (1)')
-  static async getFieldNotRepeated({
-    value,
-    field,
-    tries = 1,
-  }: AssetInputs['getFieldNotRepeated']): Promise<string> {
-    const repeatedAssets = await AssetService.getAssetsByFilter(
-      (a) => a[field]?.trim() === value.trim()
-    );
-
-    let notRepeatedField: string;
-    if (repeatedAssets[0]) {
-      const nextToTry =
-        tries === 1
-          ? `${value} (${tries})`
-          : `${value?.slice(0, -4)} (${tries})`;
-      notRepeatedField = await AssetService.getFieldNotRepeated({
-        value: nextToTry,
-        field,
-        tries: tries + 1,
-      });
-    } else {
-      notRepeatedField = value;
-    }
-
-    return notRepeatedField;
-  }
-
   static async avoidRepeatedFields(assets: Asset[]) {
+    const allAssets = await AssetService.getAssets();
+    const allNameValues = allAssets.map((a) => a.name);
+    const allSymbolValues = allAssets.map((a) => a.symbol);
     const assetsNotRepeated = assets.reduce(async (prev, asset) => {
       const assets = await prev;
-      const name = await AssetService.getFieldNotRepeated({
-        value: asset.name || '',
-        field: 'name',
+      const allNewAssetNames = assets.map((a) => a.name);
+      const allNewAssetSymbols = assets.map((a) => a.symbol);
+      const name = getUniqueString({
+        desired: asset.name,
+        allValues: [...allNameValues, ...allNewAssetNames],
       });
-      const symbol = await AssetService.getFieldNotRepeated({
-        value: asset.symbol || '',
-        field: 'symbol',
+      const symbol = getUniqueString({
+        desired: asset.symbol,
+        allValues: [...allSymbolValues, ...allNewAssetSymbols],
       });
 
       return [...assets, { ...asset, name, symbol, isCustom: true }];

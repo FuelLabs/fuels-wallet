@@ -2,8 +2,8 @@ import { cssObj } from '@fuel-ui/css';
 import {
   Avatar,
   Box,
-  Copyable,
   Flex,
+  Heading,
   Icon,
   IconButton,
   Text,
@@ -15,12 +15,9 @@ import { useAccounts } from '../../hooks';
 
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
 
+import { FuelAddress } from '~/systems/Account';
 import type { Maybe } from '~/systems/Core';
-import {
-  AmountVisibility,
-  shortAddress,
-  VisibilityButton,
-} from '~/systems/Core';
+import { AmountVisibility, VisibilityButton } from '~/systems/Core';
 
 type BalanceWidgetWrapperProps = {
   children: ReactNode;
@@ -69,18 +66,15 @@ export function BalanceWidget({
       </Flex>
       <Flex justify="space-between" css={styles.balanceDetails}>
         <Flex direction="column" css={styles.balanceContainer}>
-          <Copyable value={account.address}>
-            <Text
-              fontSize="sm"
-              color="gray11"
-              css={styles.balanceAddress}
-              aria-label={account.address}
-              data-account-name={account.name}
-            >
-              {shortAddress(account.address)}
-            </Text>
-          </Copyable>
-          <Text fontSize="2xl" css={styles.balance} aria-hidden={visibility}>
+          <Heading as="h6" css={styles.name}>
+            {account.name}
+          </Heading>
+          <FuelAddress address={account.address} css={styles.balanceAddress} />
+          <Text
+            css={styles.balance}
+            aria-hidden={visibility}
+            data-account-name={account.name}
+          >
             {account.balanceSymbol || '$'}&nbsp;
             <AmountVisibility value={account.balance} visibility={visibility} />
           </Text>
@@ -114,18 +108,29 @@ const backgroundCss = {
 const styles = {
   balanceDetails: cssObj({ flex: '1 0' }),
   balanceAddress: cssObj({
+    color: '$gray11',
+    fontSize: '$xs',
     fontWeight: 'bold',
   }),
-  visibilityContainer: cssObj({ marginRight: 6, marginTop: 8 }),
-  balanceContainer: cssObj({ mt: '$2', ml: '$4', alignSelf: 'center' }),
+  visibilityContainer: cssObj({
+    marginRight: 6,
+    marginTop: 8,
+    svg: {
+      height: 18,
+      width: 18,
+    },
+  }),
+  balanceContainer: cssObj({ mt: '$1', ml: '$4', alignSelf: 'center' }),
   balance: cssObj({
+    fontSize: '1.625rem',
+    fontWeight: 'bold',
+    margin: '$2 0',
     '&[aria-hidden="true"]': {
       color: '$gray12',
     },
     '&[aria-hidden="false"]': {
       color: '$gray10',
     },
-    fontWeight: 'bold',
   }),
   backgroundFront: cssObj({
     ...backgroundCss,
@@ -149,7 +154,7 @@ const styles = {
     left: 0,
   }),
   balanceWidgetWrapper: cssObj({
-    minHeight: 88,
+    minHeight: 97,
     position: 'relative',
   }),
   caretDownIcon: cssObj({
@@ -157,5 +162,9 @@ const styles = {
     height: '20px !important',
     padding: '0 3px !important',
     borderRadius: 8,
+  }),
+  name: cssObj({
+    fontSize: '$sm',
+    margin: '0px 0px -6px',
   }),
 };

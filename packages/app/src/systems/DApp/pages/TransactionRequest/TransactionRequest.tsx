@@ -1,39 +1,55 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button } from '@fuel-ui/react';
+import { Alert, Button, Text } from '@fuel-ui/react';
 
-import { ConnectInfo } from '../../components';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
 import { useAssets } from '~/systems/Asset';
-import { Layout } from '~/systems/Core';
+import { Layout, ConnectInfo } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { TxContent, TxHeader } from '~/systems/Transaction';
 
 export function TransactionRequest() {
   const txRequest = useTransactionRequest({ isOriginRequired: true });
-  const { handlers, status, ...ctx } = txRequest;
+  const { handlers, status, isSendingTx, ...ctx } = txRequest;
   const { assets } = useAssets();
 
   if (!ctx.account) return null;
 
+  const shouldShowTx = status('waitingApproval') || isSendingTx;
+
   return (
     <>
-      <Layout title={ctx.title} isLoading={ctx.isLoading}>
+      <Layout title={ctx.title}>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
-          {ctx.isLoading && (
+          {ctx.isLoading && !txRequest.tx && (
             <TxContent.Loader header={<ConnectInfo.Loader />} />
           )}
-          {status('waitingApproval') && (
+          {shouldShowTx && (
             <TxContent.Info
               showDetails
               tx={txRequest.tx}
+              isLoading={status('loading')}
               header={
-                <ConnectInfo
-                  account={ctx.account}
-                  origin={ctx.input.origin!}
-                  isReadOnly
-                />
+                <>
+                  <ConnectInfo
+                    account={ctx.account}
+                    origin={ctx.input.origin!}
+                    favIconUrl={ctx.input.favIconUrl}
+                    title={ctx.input.title}
+                    headerText="Requesting a transaction from:"
+                  />
+
+                  <Alert status="warning" css={styles.alert}>
+                    <Alert.Title>Confirm before approve</Alert.Title>
+                    <Alert.Description>
+                      <Text fontSize="xs" css={styles.alertDescription}>
+                        Carefully check if all details in your transaction are
+                        correct
+                      </Text>
+                    </Alert.Description>
+                  </Alert>
+                </>
               }
               assets={assets}
             />
@@ -81,7 +97,7 @@ export function TransactionRequest() {
               onPress={handlers.approve}
               isLoading={ctx.isLoading || status('sending')}
             >
-              Confirm
+              Approve
             </Button>
           </Layout.BottomBar>
         )}
@@ -109,5 +125,16 @@ const styles = {
     background: 'transparent',
     borderColor: '$gray8',
     borderStyle: 'dashed',
+  }),
+  alert: cssObj({
+    '& .fuel_alert--content': {
+      gap: '$1',
+    },
+    ' & .fuel_heading': {
+      fontSize: '$sm',
+    },
+  }),
+  alertDescription: cssObj({
+    fontWeight: '$bold',
   }),
 };

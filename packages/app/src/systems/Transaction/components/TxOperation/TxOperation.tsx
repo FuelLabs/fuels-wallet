@@ -12,9 +12,15 @@ export type TxOperationProps = {
   operation?: Operation;
   status?: Maybe<TxStatus>;
   assets?: Maybe<Asset[]>;
+  isLoading?: boolean;
 };
 
-export function TxOperation({ operation, status, assets }: TxOperationProps) {
+export function TxOperation({
+  operation,
+  status,
+  assets,
+  isLoading,
+}: TxOperationProps) {
   const { from, to, assetsSent } = operation ?? {};
   const amounts = assetsSent?.map((assetSent) => {
     const asset = assets?.find((a) => a.assetId === assetSent.assetId);
@@ -29,6 +35,7 @@ export function TxOperation({ operation, status, assets }: TxOperationProps) {
         from={from}
         to={to}
         status={status}
+        isLoading={isLoading}
         operationName={operation?.name}
       />
       {!!amounts?.length && <AssetsAmount amounts={amounts} />}

@@ -16,11 +16,7 @@ import { ConnectionRemoveDialog } from '../ConnectionRemoveDialog';
 
 import { ConnectionItemLoader } from './ConnectionItemLoader';
 
-import { animations } from '~/systems/Core';
-
-function getFaviconUrl(url: string, size = 32) {
-  return `https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${url}&size=${size}`;
-}
+import { animations, parseUrl, truncate } from '~/systems/Core';
 
 const MotionCardItem = motion(CardList.Item);
 
@@ -43,6 +39,7 @@ export const ConnectionItem: ConnectionItemComponent = ({
 }) => {
   const origin = connection.origin;
   const accounts = connection.accounts.length;
+  const favIconUrl = connection.favIconUrl;
 
   function handleConfirm() {
     onDelete(connection.origin);
@@ -77,9 +74,9 @@ export const ConnectionItem: ConnectionItemComponent = ({
         </Flex>
       }
     >
-      <Avatar name={origin} src={getFaviconUrl(origin)} css={styles.avatar} />
+      <Avatar name={origin} src={favIconUrl} css={styles.avatar} />
       <Box css={styles.text}>
-        <Text>{origin}</Text>
+        <Text>{truncate(parseUrl(origin))}</Text>
         <Text>{accounts} account(s) connected</Text>
       </Box>
     </MotionCardItem>

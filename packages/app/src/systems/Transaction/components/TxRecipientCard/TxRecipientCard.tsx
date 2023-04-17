@@ -1,14 +1,14 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
+import { Avatar, Box, Card, Flex, Heading, Icon, Text } from '@fuel-ui/react';
 import { AddressType } from '@fuel-wallet/types';
-import { isB256, isBech32 } from 'fuels';
+import { Address, isB256, isBech32 } from 'fuels';
 import type { FC } from 'react';
 
 import type { TxRecipientAddress } from '../../types';
 
 import { TxRecipientCardLoader } from './TxRecipientCardLoader';
 
-import { shortAddress } from '~/systems/Core';
+import { FuelAddress, useAccounts } from '~/systems/Account';
 
 export type TxRecipientCardProps = {
   recipient?: TxRecipientAddress;
@@ -23,9 +23,15 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   recipient,
   isReceiver,
 }) => {
+  const { accounts } = useAccounts();
   const address = recipient?.address || '';
-  const isContract = recipient?.type === AddressType.contract;
   const isValidAddress = isB256(address) || isBech32(address);
+  const fuelAddress = isValidAddress
+    ? Address.fromString(address).toString()
+    : '';
+  const isContract = recipient?.type === AddressType.contract;
+  const name =
+    accounts?.find((a) => a.address === fuelAddress)?.name || 'unknown';
 
   return (
     <Card
@@ -43,8 +49,8 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
             <Avatar.Generated
               role="img"
               size="lg"
-              hash={address}
-              aria-label="Generated Address"
+              hash={fuelAddress}
+              aria-label={fuelAddress}
               background="fuel"
             />
           )}
@@ -54,9 +60,10 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
             </Box>
           )}
           <Flex css={styles.info}>
-            <Copyable value={address} data-invalid-address={!isValidAddress}>
-              {shortAddress(address)}
-            </Copyable>
+            <Heading as="h6" css={styles.name}>
+              {name}
+            </Heading>
+            <FuelAddress address={fuelAddress} css={styles.address} />
           </Flex>
         </>
       )}
@@ -99,16 +106,12 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     gap: '$1',
-
-    '.fuel_copyable': {
-      fontSize: '$xs',
-      // to make sure we're using same text format, we just hide the copy icon but still use Copyable.
-      '&[data-invalid-address="true"]': {
-        '.fuel_copyable-icon': {
-          display: 'none',
-        },
-      },
-    },
+  }),
+  address: cssObj({
+    fontSize: '$xs',
+  }),
+  name: cssObj({
+    margin: '0px 0px -5px',
   }),
 };
 

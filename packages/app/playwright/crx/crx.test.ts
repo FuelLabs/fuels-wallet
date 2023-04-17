@@ -11,7 +11,7 @@ import {
   waitAriaLabel,
   reload,
 } from '../commons';
-import { CUSTOM_ASSET, CUSTOM_ASSET_2 } from '../mocks';
+import { CUSTOM_ASSET, CUSTOM_ASSET_2, PRIVATE_KEY } from '../mocks';
 
 import {
   test,
@@ -26,7 +26,7 @@ const WALLET_PASSWORD = 'Qwe123456$';
 test.describe('FuelWallet Extension', () => {
   test('On install sign-up page is open', async ({ context }) => {
     // In development mode files are render dynamically
-    // making this first page to throw a error File not found.
+    // making this first page to throw an error File not found.
     if (process.env.NODE_ENV !== 'test') return;
 
     const page = await context.waitForEvent('page', {
@@ -52,7 +52,7 @@ test.describe('FuelWallet Extension', () => {
 
   test('SDK operations', async ({ context, baseURL, extensionId }) => {
     // Use a single instance of the page to avoid
-    // mutiple waiting times, and window.fuel checking.
+    // multiple waiting times, and window.fuel checking.
     const blankPage = await context.newPage();
 
     // Open a blank html in order for the CRX
@@ -62,7 +62,7 @@ test.describe('FuelWallet Extension', () => {
     await blankPage.goto(new URL('e2e.html', baseURL).href);
 
     await test.step('Should trigger event FuelLoaded', async () => {
-      // Reload and don't wait for laodstate to go to evalute
+      // Reload and don't wait for loadstate to go to evaluate
       // This is required in order to get the FuelLoaded event
       await blankPage.reload({
         waitUntil: 'commit',
@@ -122,17 +122,15 @@ test.describe('FuelWallet Extension', () => {
       await getButtonByText(page, /Copy/i).click();
       const savedCheckbox = await getByAriaLabel(page, 'Confirm Saved');
       await savedCheckbox.click();
-      const accessCheckbox = await getByAriaLabel(page, 'Confirm Access');
-      await accessCheckbox.click();
       await getButtonByText(page, /Next/i).click();
 
       /** Confirm Mnemonic */
-      await hasText(page, /Write down your Recovery Phrase/i);
+      await hasText(page, /Enter your Recovery Phrase/i);
       await getButtonByText(page, /Paste/i).click();
       await getButtonByText(page, /Next/i).click();
 
       /** Adding password */
-      await hasText(page, /Create your password/i);
+      await hasText(page, /Encrypt your wallet/i);
       const passwordInput = await getByAriaLabel(page, 'Your Password');
       await passwordInput.type(WALLET_PASSWORD);
       await passwordInput.press('Tab');
@@ -143,7 +141,6 @@ test.describe('FuelWallet Extension', () => {
       await confirmPasswordInput.type(WALLET_PASSWORD);
       await confirmPasswordInput.press('Tab');
 
-      await page.getByRole('checkbox').click();
       await getButtonByText(page, /Next/i).click();
 
       /** Account created */
@@ -168,12 +165,25 @@ test.describe('FuelWallet Extension', () => {
         await waitAccountPage(popupPage, name);
       }
 
+      async function createAccountFromPrivateKey(
+        privateKey: string,
+        name: string
+      ) {
+        await waitWalletToLoad(popupPage);
+        await getByAriaLabel(popupPage, 'Accounts').click();
+        await getByAriaLabel(popupPage, 'Import from private key').click();
+        await getByAriaLabel(popupPage, 'Private Key').type(privateKey);
+        await getByAriaLabel(popupPage, 'Account Name').type(name);
+        await getByAriaLabel(popupPage, 'Import').click();
+        await waitAccountPage(popupPage, name);
+      }
+
       await createAccount('Account 2');
       await createAccount('Account 3');
+      await createAccountFromPrivateKey(PRIVATE_KEY, 'Account 4');
       await switchAccount(popupPage, 'Account 1');
     });
 
-    // Connect Account 1 to the DApp.
     await test.step('window.fuel.connect()', async () => {
       const isConnected = blankPage.evaluate(async () => {
         return window.fuel.connect();
@@ -184,6 +194,8 @@ test.describe('FuelWallet Extension', () => {
 
       // Add Account 3 to the DApp connection
       await getByAriaLabel(authorizeRequest, 'Toggle Account 3').click();
+      // Add Account 4 to the DApp connection
+      await getByAriaLabel(authorizeRequest, 'Toggle Account 4').click();
 
       await hasText(authorizeRequest, /connect/i);
       await getButtonByText(authorizeRequest, /next/i).click();
@@ -205,12 +217,14 @@ test.describe('FuelWallet Extension', () => {
     await test.step('window.fuel.accounts()', async () => {
       const authorizedAccount = await getAccountByName(popupPage, 'Account 1');
       const authorizedAccount2 = await getAccountByName(popupPage, 'Account 3');
+      const authorizedAccount3 = await getAccountByName(popupPage, 'Account 4');
       const accounts = await blankPage.evaluate(async () => {
         return window.fuel.accounts();
       });
       await expect(accounts).toEqual([
         authorizedAccount.address,
         authorizedAccount2.address,
+        authorizedAccount3.address,
       ]);
     });
 
@@ -232,13 +246,6 @@ test.describe('FuelWallet Extension', () => {
           'address is not authorized for this connection.'
         );
       });
-    });
-
-    await test.step('window.fuel.assets()', async () => {
-      const assets = await blankPage.evaluate(async () => {
-        return window.fuel.assets();
-      });
-      await expect(assets.length).toEqual(1);
     });
 
     await test.step('window.fuel.signMessage()', async () => {
@@ -283,6 +290,14 @@ test.describe('FuelWallet Extension', () => {
         const authorizedAccount = await getAccountByName(
           popupPage,
           'Account 3'
+        );
+        await approveMessageSignCheck(authorizedAccount);
+      });
+
+      await test.step('Signed message using authorized Account 4 (from Private Key)', async () => {
+        const authorizedAccount = await getAccountByName(
+          popupPage,
+          'Account 4'
         );
         await approveMessageSignCheck(authorizedAccount);
       });
@@ -335,15 +350,19 @@ test.describe('FuelWallet Extension', () => {
           AMOUNT_TRANSFER
         );
 
-        // Wait confirmation page to show
-        const confirmTransactionPage = await context.waitForEvent('page', {
+        // Wait for approve transaction page to show
+        const approveTransactionPage = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
         });
 
-        // Confirm transaction
-        await hasText(confirmTransactionPage, /0\.0000001.ETH/i);
-        await waitAriaLabel(confirmTransactionPage, senderAccount.name);
-        await getButtonByText(confirmTransactionPage, /confirm/i).click();
+        // Approve transaction
+        await hasText(approveTransactionPage, /0\.0000001.ETH/i);
+        await waitAriaLabel(
+          approveTransactionPage,
+          senderAccount.address.toString()
+        );
+        await hasText(approveTransactionPage, /Confirm before approve/i);
+        await getButtonByText(approveTransactionPage, /Approve/i).click();
 
         await expect(transferStatus).resolves.toBe('success');
         const balance = await receiverWallet.getBalance();
@@ -359,6 +378,14 @@ test.describe('FuelWallet Extension', () => {
         const authorizedAccount = await getAccountByName(
           popupPage,
           'Account 3'
+        );
+        await approveTxCheck(authorizedAccount);
+      });
+
+      await test.step('Send transfer using authorized Account 4 (from Private Key)', async () => {
+        const authorizedAccount = await getAccountByName(
+          popupPage,
+          'Account 4'
         );
         await approveTxCheck(authorizedAccount);
       });
@@ -387,6 +414,13 @@ test.describe('FuelWallet Extension', () => {
           'address is not authorized for this connection.'
         );
       });
+    });
+
+    await test.step('window.fuel.assets()', async () => {
+      const assets = await blankPage.evaluate(async () => {
+        return window.fuel.assets();
+      });
+      await expect(assets.length).toEqual(1);
     });
 
     await test.step('window.fuel.addAsset()', async () => {

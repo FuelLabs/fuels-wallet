@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import type { Account } from '@fuel-wallet/types';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
+
+import { useAccountFormName } from './useAccountFormName';
 
 import type { Maybe } from '~/systems/Core';
 
@@ -18,25 +20,16 @@ const DEFAULT_VALUES = {
 export type UseAccountFormReturn = ReturnType<typeof useAccountForm>;
 
 export type UseAddAccountOpts = {
-  accounts?: Array<Account>;
+  accounts?: Maybe<Account[]>;
   defaultValues?: Maybe<AccountFormValues>;
 };
 
-function useAccountFormSchema(opts?: Pick<UseAddAccountOpts, 'accounts'>) {
-  return useMemo(() => {
-    const names = (opts?.accounts || []).map((account) => account.name);
-    return yup.object({
-      name: yup
-        .string()
-        .trim()
-        .notOneOf(names, 'Name is already in use')
-        .required('Name is required'),
-    });
-  }, [opts?.accounts]);
-}
-
 export function useAccountForm(opts: UseAddAccountOpts = {}) {
-  const schema = useAccountFormSchema(opts);
+  const nameSchemaObj = useAccountFormName(opts?.accounts || []);
+  const schema = yup.object({
+    name: nameSchemaObj,
+  });
+
   const form = useForm<AccountFormValues>({
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',

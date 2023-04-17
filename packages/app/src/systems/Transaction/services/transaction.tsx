@@ -38,6 +38,8 @@ export type TxInputs = {
   request: {
     address?: string;
     origin?: string;
+    title?: string;
+    favIconUrl?: string;
     transactionRequest: TransactionRequest;
     providerUrl: string;
   };

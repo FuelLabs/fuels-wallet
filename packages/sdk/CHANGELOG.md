@@ -1,5 +1,33 @@
 # @fuel-wallet/sdk
 
+## 0.7.2
+
+### Patch Changes
+
+- [#666](https://github.com/FuelLabs/fuels-wallet/pull/666) [`a48fb2b`](https://github.com/FuelLabs/fuels-wallet/commit/a48fb2b86e97e4b2176e5adfee2fa9ff8e629eeb) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix preview tx view
+
+## 0.7.1
+
+### Patch Changes
+
+- [#616](https://github.com/FuelLabs/fuels-wallet/pull/616) [`8419f7d`](https://github.com/FuelLabs/fuels-wallet/commit/8419f7ddd8faf8a793012cbe93b88ff4b3c1d554) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - import account from mnemonic with 12, 15, 18, 21, 24 words
+
+- [#600](https://github.com/FuelLabs/fuels-wallet/pull/600) [`eb41aed`](https://github.com/FuelLabs/fuels-wallet/commit/eb41aed79bb0e3636d1b23e85c3269763dcc09d7) Thanks [@matt-user](https://github.com/matt-user)! - Update network compatibility to fuel-core v0.17.3
+
+## 0.7.0
+
+### Minor Changes
+
+- [#571](https://github.com/FuelLabs/fuels-wallet/pull/571) [`ac3e822`](https://github.com/FuelLabs/fuels-wallet/commit/ac3e822ec0900e73602b760656f097cdd46e90df) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Added asset List Screen
+  Added shortcut in Home Balances to add unknows assets
+  Added DAPP page to "Add Custom Asset"
+  Added fuel.assets()
+  Added fuel.on('assets')
+
+### Patch Changes
+
+- [#593](https://github.com/FuelLabs/fuels-wallet/pull/593) [`f4bd2d5`](https://github.com/FuelLabs/fuels-wallet/commit/f4bd2d563b457de221de46b14cb0cae2ccbe9feb) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: support multiple assets in `addAsset` method
+
 ## 0.6.0
 
 ### Minor Changes

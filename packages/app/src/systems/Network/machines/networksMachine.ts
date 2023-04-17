@@ -9,18 +9,12 @@ import type { Maybe, FetchResponse } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
 
 type MachineContext = {
-  /**
-   * Used as data on /networks
-   */
   networks?: Network[];
   /**
-   * Used as data on /network/update/:id
+   * Used as data on network update
    */
   networkId?: string;
   network?: Maybe<Network>;
-  /**
-   * Used as data to show error
-   */
   error?: unknown;
 };
 

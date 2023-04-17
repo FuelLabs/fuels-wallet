@@ -21,12 +21,11 @@ export function SendPage() {
         <AnimatePresence initial={false} mode="sync">
           {(isSelecting || status('loading')) && <Send.Select {...send} />}
           {status('loadingTx') && <Send.Loading />}
-          {status('confirming') && <Send.Confirm txRequest={txRequest} />}
         </AnimatePresence>
         {txRequest.showActions && (
           <Layout.BottomBar>
             <Button color="gray" variant="ghost" onPress={handlers.cancel}>
-              {isSelecting ? 'Cancel' : 'Back'}
+              Cancel
             </Button>
             <Button
               type="submit"
@@ -34,7 +33,7 @@ export function SendPage() {
               isDisabled={ctx.isInvalid || !form.formState.isValid}
               isLoading={status('loading') || status('loadingTx')}
             >
-              {isSelecting ? 'Confirm' : 'Approve'}
+              Confirm
             </Button>
           </Layout.BottomBar>
         )}

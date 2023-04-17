@@ -1,29 +1,24 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Button,
-  Card,
-  CardList,
-  Flex,
-  Icon,
-  Link,
-  List,
-  Switch,
-  Text,
-} from '@fuel-ui/react';
+import { Button, Card, CardList, Flex, Link, Text } from '@fuel-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { useConnectRequest } from '../../hooks/useConnectRequest';
 
 import { AccountItem } from '~/systems/Account';
-import { animations, Layout, OriginDetails } from '~/systems/Core';
+import {
+  animations,
+  Layout,
+  ConnectInfo,
+  PermissionCard,
+} from '~/systems/Core';
 
-const PERMISSION_LIST = [
+export const PERMISSION_LIST = [
   'View your account address',
   'Request transactions approval',
   'Request message signature',
   'Read your transactions history',
 ];
-const NOT_ALLOWED_LIST = ['View your private keys'];
+export const NOT_ALLOWED_LIST = ['View your private keys'];
 
 const MotionCardList = motion(CardList);
 
@@ -46,7 +41,7 @@ export function ConnectionRequest() {
   return (
     <Layout title="Connection Request" isLoading={isLoadingAccounts}>
       <Layout.Content css={styles.content}>
-        <OriginDetails
+        <ConnectInfo
           origin={origin}
           title={title || origin}
           favIconUrl={favIconUrl}
@@ -68,23 +63,15 @@ export function ConnectionRequest() {
                   </Card.Header>
                   <Card.Body css={styles.accountCardBody}>
                     {accounts?.map((account) => {
-                      const { address, name } = account;
+                      const { address } = account;
                       const isConnected = handlers.isAccountSelected(address);
-                      const rightEl = (
-                        <Flex css={styles.switchWrapper}>
-                          <Switch
-                            size="sm"
-                            checked={isConnected}
-                            aria-label={`Toggle ${name}`}
-                            onCheckedChange={() =>
-                              handlers.toggleAccount(address)
-                            }
-                          />
-                        </Flex>
-                      );
                       return (
                         <motion.div key={address} {...animations.slideInTop()}>
-                          <AccountItem account={account!} rightEl={rightEl} />
+                          <AccountItem
+                            account={account!}
+                            onToggle={handlers.toggleAccount}
+                            isToggleChecked={isConnected}
+                          />
                         </motion.div>
                       );
                     })}
@@ -96,35 +83,11 @@ export function ConnectionRequest() {
           {isConnecting && (
             <AnimatePresence>
               <motion.div {...animations.slideInTop()}>
-                <Card css={styles.connectionDetails}>
-                  <Card.Header css={styles.cardHeader}>
-                    <Text css={styles.cardHeaderText}>
-                      This site would like to:
-                    </Text>
-                  </Card.Header>
-                  <Card.Body css={styles.permissionCardBody}>
-                    <List icon={Icon.is('Check')} iconColor="accent9">
-                      {PERMISSION_LIST.map((permission) => (
-                        <List.Item
-                          css={styles.listItemAllowed}
-                          key={permission}
-                        >
-                          {permission}
-                        </List.Item>
-                      ))}
-                    </List>
-                    <List icon={Icon.is('X')} iconColor="red10">
-                      {NOT_ALLOWED_LIST.map((permission) => (
-                        <List.Item
-                          css={styles.listItemDisallowed}
-                          key={permission}
-                        >
-                          {permission}
-                        </List.Item>
-                      ))}
-                    </List>
-                  </Card.Body>
-                </Card>
+                <PermissionCard
+                  headerText="This site would like to:"
+                  allowed={PERMISSION_LIST}
+                  notAllowed={NOT_ALLOWED_LIST}
+                />
               </motion.div>
               <motion.div {...animations.slideInTop()}>
                 <Card>
@@ -150,7 +113,7 @@ export function ConnectionRequest() {
       </Layout.Content>
       <Flex css={styles.disclaimer} justify="center" align={'flex-end'}>
         <Text fontSize="sm" as={'h2'} className="warning">
-          Only connect with sites you trust.{' '}
+          Only connect with sites you trust.
           <Link href="#" color="accent11">
             Learn more
           </Link>
@@ -192,13 +155,6 @@ export function ConnectionRequest() {
 }
 
 const styles = {
-  listItemAllowed: cssObj({
-    fontSize: '$sm',
-    fontWeight: '$semibold',
-  }),
-  listItemDisallowed: cssObj({
-    fontSize: '$sm',
-  }),
   content: cssObj({
     display: 'flex',
     flexDirection: 'column',
@@ -217,10 +173,6 @@ const styles = {
   disclaimer: cssObj({
     mb: '-10px',
     pt: '$1',
-  }),
-  switchWrapper: cssObj({
-    alignItems: 'center',
-    justifyContent: 'center',
   }),
   accountList: cssObj({
     mt: '$4',
@@ -244,9 +196,6 @@ const styles = {
     fontSize: '$sm',
     fontWeight: '$bold',
     color: '$gray12',
-  }),
-  permissionCardBody: cssObj({
-    p: '$3',
   }),
   accountCardBody: cssObj({
     p: '$0',

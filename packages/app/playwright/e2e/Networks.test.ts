@@ -92,6 +92,8 @@ test.describe('Networks', () => {
     await urlInput.fill('https://test.network/graphql');
     await expect(buttonCreate).toBeEnabled();
     await buttonCreate.click();
+    await getByAriaLabel(page, 'Menu').click();
+    await page.locator(`[data-key="networks"]`).click();
     await hasText(page, 'Test Network');
   });
 });

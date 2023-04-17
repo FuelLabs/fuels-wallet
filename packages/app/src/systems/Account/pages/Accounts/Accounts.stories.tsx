@@ -10,7 +10,7 @@ import { Layout } from '~/systems/Core';
 
 export default {
   component: Accounts,
-  title: 'Account/Pages/1. Accounts',
+  title: 'Account/Pages/Accounts',
   decorators: [(Story) => <Story />],
   parameters: {
     layout: 'fullscreen',

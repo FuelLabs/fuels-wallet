@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, CardList, Flex, Icon, Stack, Switch, Text } from '@fuel-ui/react';
+import { Box, CardList, Flex, Icon, Stack, Text } from '@fuel-ui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import type { useConnections } from '../../hooks';
@@ -7,9 +7,9 @@ import type { useConnections } from '../../hooks';
 import { AccountItem } from '~/systems/Account';
 import {
   animations,
+  ConnectInfo,
   EmptyList,
   Layout,
-  OriginTag,
   SearchInput,
 } from '~/systems/Core';
 
@@ -23,12 +23,17 @@ export function ConnectionEdit({
   status,
   ...ctx
 }: ConnectionEditProps) {
+  if (!ctx.connection) return null;
+  const { origin, title, favIconUrl } = ctx.connection;
   return (
     <Layout.Content>
       <Stack gap="$3">
-        <Text leftIcon={Icon.is('Globe')} css={styles.title}>
-          <OriginTag origin={ctx.inputs.origin} />
-        </Text>
+        <ConnectInfo
+          origin={origin}
+          favIconUrl={favIconUrl}
+          title={title}
+          headerText="Edit your connection to:"
+        />
         <Flex css={styles.searchBar}>
           <SearchInput
             value={ctx.inputs?.searchText}
@@ -49,23 +54,13 @@ export function ConnectionEdit({
               {ctx.accounts?.map((account) => {
                 const { address } = account;
                 const isConnected = handlers.isConnected(address);
-                const rightEl = (
-                  <Flex css={styles.switchWrapper}>
-                    <Switch
-                      size="sm"
-                      checked={isConnected}
-                      onCheckedChange={() =>
-                        handlers.toggleAccount(address, isConnected)
-                      }
-                    />
-                  </Flex>
-                );
                 return (
                   <motion.div key={address} {...animations.slideInTop()}>
                     <AccountItem
                       account={account!}
-                      rightEl={rightEl}
+                      isToggleChecked={isConnected}
                       isDisabled={ctx.accountToUpdate === address}
+                      onToggle={handlers.toggleAccount}
                     />
                   </motion.div>
                 );
@@ -103,9 +98,5 @@ const styles = {
     '.fuel_icon': {
       color: '$gray8',
     },
-  }),
-  switchWrapper: cssObj({
-    alignItems: 'center',
-    justifyContent: 'center',
   }),
 };

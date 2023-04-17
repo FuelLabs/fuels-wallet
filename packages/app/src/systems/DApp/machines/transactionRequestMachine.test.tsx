@@ -14,6 +14,7 @@ describe('txApproveMachine', () => {
   let service: TransactionRequestService;
   let transactionRequest: TransactionRequest;
   let data: MockVaultData;
+  const openDialog = jest.fn();
 
   beforeAll(async () => {
     data = await mockVault();
@@ -26,7 +27,9 @@ describe('txApproveMachine', () => {
 
   beforeEach(async () => {
     service = interpret(
-      transactionRequestMachine.withContext({ input: {}, response: {} })
+      transactionRequestMachine
+        .withContext({ input: {}, response: {} })
+        .withConfig({ actions: { openDialog } })
     ).start();
   });
 

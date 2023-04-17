@@ -21,7 +21,6 @@ export enum SendStatus {
   loading = 'loading',
   selecting = 'selecting',
   loadingTx = 'loadingTx',
-  confirming = 'confirming',
 }
 
 const selectors = {
@@ -41,7 +40,6 @@ const selectors = {
 
         if (state.matches('fetchingFakeTx')) return SendStatus.loading;
         if (isLoadingTx) return SendStatus.loadingTx;
-        if (state.matches('confirming')) return SendStatus.confirming;
         return SendStatus.selecting;
       },
       [txStatus]
@@ -50,11 +48,8 @@ const selectors = {
   title(txStatus?: TxRequestStatus) {
     return useCallback(
       (state: SendMachineState) => {
-        if (txStatus === TxRequestStatus.success) return 'Transaction sent';
-        if (txStatus === TxRequestStatus.failed) return 'Transaction failed';
-        if (txStatus === TxRequestStatus.sending) return 'Sending transaction';
-        if (state.matches('creatingTx')) return 'Creating transaction';
-        if (state.matches('confirming')) return 'Approve Transaction';
+        if (state.matches('creatingTx') || txStatus === TxRequestStatus.loading)
+          return 'Creating transaction';
         if (state.matches('invalid')) return 'Invalid transaction';
         return 'Send';
       },
@@ -136,30 +131,21 @@ export function useSend() {
   }
 
   function cancel() {
-    if (txRequest.status('success')) {
-      navigate(Pages.index());
-      return;
-    }
-    txRequest.handlers.reset();
     service.send('BACK');
   }
   function submit() {
-    if (txRequest.status('idle')) {
-      const asset = assets.find(
-        ({ assetId }) => assetId === form.getValues('asset')
-      );
-      const amount = bn(form.getValues('amount'));
-      const address = form.getValues('address');
-      const input = {
-        account,
-        asset,
-        amount,
-        address,
-      } as TxInputs['isValidTransaction'];
-      service.send('CONFIRM', { input });
-    } else {
-      txRequest.handlers.approve();
-    }
+    const asset = assets.find(
+      ({ assetId }) => assetId === form.getValues('asset')
+    );
+    const amount = bn(form.getValues('amount'));
+    const address = form.getValues('address');
+    const input = {
+      account,
+      asset,
+      amount,
+      address,
+    } as TxInputs['isValidTransaction'];
+    service.send('CONFIRM', { input });
   }
   function goHome() {
     navigate(Pages.index());

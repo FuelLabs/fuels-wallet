@@ -148,7 +148,7 @@ export function useConnections() {
   function isConnected(account: string) {
     return connectedAccounts.some((a) => a?.address === account);
   }
-  function toggleAccount(account: string, isConnected: boolean) {
+  function toggleAccount(account: string, isConnected?: boolean) {
     service.send({
       type: isConnected ? 'REMOVE_ACCOUNT' : 'ADD_ACCOUNT',
       input: account,

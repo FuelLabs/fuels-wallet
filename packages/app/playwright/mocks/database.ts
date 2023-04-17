@@ -4,6 +4,7 @@ import type { Account as WalletAccount } from '@fuel-ts/wallet-manager';
 import { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account, Network } from '@fuel-wallet/types';
 import type { Page } from '@playwright/test';
+import { Address } from 'fuels';
 
 import { getByAriaLabel } from '../commons/locator';
 import { hasText } from '../commons/text';
@@ -12,6 +13,8 @@ import { reload, visit } from '../commons/visit';
 const { VITE_FUEL_PROVIDER_URL } = process.env;
 
 export const WALLET_PASSWORD = 'Qwe1234567$';
+export const PRIVATE_KEY =
+  '0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5291';
 
 const DEFAULT_NETWORKS: Array<Network> = [
   {
@@ -155,10 +158,15 @@ export async function mockData(
   );
   await reload(page);
 
+  const accountsWithPkey = accounts.map((acc) => ({
+    ...acc,
+    privateKey: manager.exportPrivateKey(Address.fromString(acc.address)),
+  }));
+
   return {
     mnemonic,
     manager,
-    accounts,
+    accounts: accountsWithPkey,
     networks,
   };
 }

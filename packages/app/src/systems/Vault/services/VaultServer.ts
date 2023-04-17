@@ -38,6 +38,10 @@ export type VaultInputs = {
     vaultId: number;
     password: string;
   };
+  exportPrivateKey: {
+    address: string;
+    password: string;
+  };
 };
 
 export class VaultServer extends EventEmitter {
@@ -53,6 +57,7 @@ export class VaultServer extends EventEmitter {
     'signTransaction',
     'changePassword',
     'exportVault',
+    'exportPrivateKey',
     'lock',
   ];
 
@@ -82,11 +87,14 @@ export class VaultServer extends EventEmitter {
       type,
       secret,
     });
-    const account = await this.manager.getAccounts()[0];
+    const accounts = await this.manager.getAccounts();
+    const vaults = await this.manager.getVaults();
+    const vaultId = vaults.length - 1;
+    const [account] = accounts.slice(-1);
     return {
       address: account.address.toString(),
       publicKey: account.publicKey,
-      vaultId: account.vaultId || 0,
+      vaultId,
     };
   }
 
@@ -155,6 +163,14 @@ export class VaultServer extends EventEmitter {
     await this.manager.unlock(password);
     const vault = await this.manager.exportVault(vaultId);
     return vault.secret || '';
+  }
+
+  async exportPrivateKey({
+    address,
+    password,
+  }: VaultInputs['exportPrivateKey']): Promise<string> {
+    await this.manager.unlock(password);
+    return this.manager.exportPrivateKey(Address.fromString(address));
   }
 }
 

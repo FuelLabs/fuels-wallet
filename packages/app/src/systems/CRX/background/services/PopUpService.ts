@@ -50,7 +50,7 @@ export class PopUpService {
       closePopUp(this.tabId);
       // Reject all pending requests
       this.client.rejectAllPendingRequests(
-        'Request cancelled without explicity response!'
+        'Request cancelled without user response!'
       );
     }
   };
