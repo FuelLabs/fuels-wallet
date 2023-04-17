@@ -60,6 +60,11 @@ const styles = {
     boxSizing: 'border-box',
     height: '480px',
 
+    '& >div': {
+      marginBottom: '$2',
+      height: 'fit-content',
+    },
+
     '&::-webkit-scrollbar': {
       width: '8px',
       backgroundColor: '$gray3',
@@ -73,11 +78,21 @@ const styles = {
     '& h1, & h2': {
       lineHeight: '1.5',
     },
+    '& a': {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '$1',
+      textDecoration: 'none',
+      fontWeight: '$medium',
+      color: '$accent11',
+    },
   },
   termsContainer: {
     height: '480px',
     overflow: 'hidden',
     maxWidth: '700px',
     borderRadius: '8px',
+    marginLeft: '$4',
+    marginRight: '$4',
   },
 };
