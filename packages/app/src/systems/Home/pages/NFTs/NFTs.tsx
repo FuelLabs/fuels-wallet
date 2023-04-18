@@ -55,7 +55,7 @@ export function NFTs() {
                 <div>
                   <Link
                     to={Pages.nftDetails({
-                      contractId: data.nft_contract,
+                      contractId: `0x${  data.nft_contract}`,
                       token: data.token_id.toString(),
                     })}
                   >
