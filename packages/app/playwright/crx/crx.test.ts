@@ -138,16 +138,26 @@ test.describe('FuelWallet Extension', () => {
 
       /** Confirm Mnemonic */
       await hasText(page, /Confirm your Recovery Phrase/i);
-      // get all the recovery words positions from the input fields
-      const recoveryWordsPositionsEl = await getByAriaLabel(page, 'position');
-      const recoveryWordsPositions =
-        await recoveryWordsPositionsEl.allInnerTexts();
-      // click on the recovery words buttons in the same order as the recovery words positions
-      for (let i = 0; i < recoveryWordsPositions.length; i += 1) {
-        const position = recoveryWordsPositions[i];
-        const recoveryWord = recoveryWords[parseInt(position, 10) - 1];
-        await getButtonByText(page, recoveryWord).click();
+      // get all empty text fields
+      const allInputs: Locator[] = [];
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const input of await page.locator('input').all()) {
+        await allInputs.push(input);
       }
+
+      // check if they are empty
+      await Promise.all([
+        ...allInputs.map(async (input, index) => {
+          // eslint-disable-next-line no-promise-executor-return
+          await new Promise((resolve) => setTimeout(resolve, index * 300));
+          const text = await input.inputValue();
+          if (text.length < 1) {
+            const word = recoveryWords[index];
+            await input.type(word);
+          }
+        }),
+      ]);
       await getButtonByText(page, /Next/i).click();
 
       /** Account created */
