@@ -11,18 +11,9 @@ export default {
   },
 } as ComponentMeta<typeof MnemonicConfirm>;
 
-const WORDS = [
-  'hello',
-  'world',
-  'this',
-  'is',
-  'a',
-  'test',
-  'of',
-  'the',
-  'emergency',
-];
-const POSITIONS = [4, 5, 7, 12, 13, 14, 16, 17, 19];
+const WORDS = ['hello', '', 'this', 'is', 'a', 'test', 'of', '', 'emergency'];
+const POSITIONS = [2, 5, 6, 7];
+const MNEMONIC_LENGTH = 9;
 
 const Template: ComponentStory<typeof MnemonicConfirm> = (args) => (
   <Box css={{ width: 400 }}>
@@ -38,4 +29,5 @@ Confirm.parameters = {
 Confirm.args = {
   positions: POSITIONS,
   words: WORDS,
+  mnemonicLength: MNEMONIC_LENGTH,
 };

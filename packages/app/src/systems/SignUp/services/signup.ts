@@ -30,7 +30,6 @@ export type SignUpServiceInputs = {
   confirmMnemonic: {
     data: {
       mnemonic?: string[];
-      positions?: number[];
     };
   };
 };
@@ -40,9 +39,8 @@ export type SignUpServiceOutputs = {
     mnemonic?: string[];
     account?: Account;
   };
-  getWordsToConfirm: {
-    words?: string[];
-    positions?: number[];
+  getPositionsToConfirm: {
+    positions: number[];
   };
   getSaved: {
     mnemonic?: string[];
@@ -156,16 +154,16 @@ export class SignUpService {
     return !!Storage.getItem(IS_SIGNING_UP_KEY);
   }
 
-  static async getWordsToConfirm({
+  static async getPositionsToConfirm({
     data,
   }: SignUpServiceInputs['getWordsToConfirm']): Promise<
-    SignUpServiceOutputs['getWordsToConfirm']
+    SignUpServiceOutputs['getPositionsToConfirm']
   > {
     if (!data?.mnemonic) {
       throw new Error('Invalid password');
     }
 
-    return VaultService.getWordsToConfirm({
+    return VaultService.getPositionsToConfirm({
       words: data.mnemonic,
     });
   }
@@ -176,13 +174,9 @@ export class SignUpService {
     if (!data?.mnemonic) {
       throw new Error('Invalid words');
     }
-    if (!data?.positions) {
-      throw new Error('Invalid positions');
-    }
 
     return VaultService.confirmMnemonic({
       words: data.mnemonic,
-      positions: data.positions,
     });
   }
 

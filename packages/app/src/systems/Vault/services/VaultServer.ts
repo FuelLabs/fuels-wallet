@@ -3,7 +3,7 @@ import EventEmitter from 'events';
 import { transactionRequestify, Address } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 
-import { shuffle } from './untils';
+import { shuffle } from './utils';
 
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
 
@@ -42,9 +42,8 @@ export type VaultInputs = {
   };
   confirmMnemonic: {
     words: string[];
-    positions: number[];
   };
-  getWordsToConfirm: {
+  getPositionsToConfirm: {
     words: string[];
     limit?: number;
   };
@@ -55,8 +54,7 @@ export type VaultInputs = {
 };
 
 export type VaultOutputs = {
-  getWordsToValidate: {
-    words: string[];
+  getPositionsToValidate: {
     positions: number[];
   };
 };
@@ -76,7 +74,7 @@ export class VaultServer extends EventEmitter {
     'exportVault',
     'exportPrivateKey',
     'lock',
-    'getWordsToConfirm',
+    'getPositionsToConfirm',
     'confirmMnemonic',
   ];
 
@@ -184,31 +182,26 @@ export class VaultServer extends EventEmitter {
     return vault.secret || '';
   }
 
-  async getWordsToConfirm({
+  async getPositionsToConfirm({
     words,
     limit = 9,
-  }: VaultInputs['getWordsToConfirm']): Promise<
-    VaultOutputs['getWordsToValidate']
+  }: VaultInputs['getPositionsToConfirm']): Promise<
+    VaultOutputs['getPositionsToValidate']
   > {
     const randomWords = shuffle(words).slice(0, limit);
     const positions = shuffle(
       randomWords.map((word) => words.indexOf(word) + 1)
     ).sort((a, b) => a - b);
-    return {
-      words: randomWords,
-      positions,
-    };
+
+    return { positions };
   }
 
   async confirmMnemonic({
     words,
-    positions,
   }: VaultInputs['confirmMnemonic']): Promise<boolean> {
     const mnemonic = (await this.exportVault({ vaultId: 0 })).split(' ');
-
     const isValid = words.every((word, index) => {
-      const position = positions[index];
-      return mnemonic[position - 1] === word;
+      return word === mnemonic[index];
     });
     return isValid;
   }

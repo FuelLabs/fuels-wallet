@@ -61,14 +61,8 @@ describe('signUpMachine', () => {
       await expectStateMatch(service, 'waitingMnemonic');
       state = service.getSnapshot();
       const words = state.context.data?.mnemonic;
-      const positionsForConfirmation =
-        state.context.data?.positionsForConfirmation;
-      // arrange the wordsForConfirmation in the same order as the mnemonic determined by positionsForConfirmation
-      const wordsForConfirmationInOrder =
-        positionsForConfirmation?.map((position) => words?.[position - 1]) ||
-        [];
       service.send('CONFIRM_MNEMONIC', {
-        data: { words: wordsForConfirmationInOrder },
+        data: { words },
       });
       await expectStateMatch(service, 'waitingMnemonic.validMnemonic');
     });
@@ -77,14 +71,8 @@ describe('signUpMachine', () => {
       await expectStateMatch(service, 'waitingMnemonic');
       state = service.getSnapshot();
       const words = state.context.data?.mnemonic;
-      const positionsForConfirmation =
-        state.context.data?.positionsForConfirmation;
-      // arrange the wordsForConfirmation in the same order as the mnemonic determined by positionsForConfirmation
-      const wordsForConfirmationInOrder =
-        positionsForConfirmation?.map((position) => words?.[position - 1]) ||
-        [];
       service.send('CONFIRM_MNEMONIC', {
-        data: { words: wordsForConfirmationInOrder },
+        data: { words },
       });
       await expectStateMatch(service, 'waitingMnemonic.validMnemonic');
       service.send('CREATE_MANAGER', { data: { mnemonic: words } });

@@ -13,9 +13,26 @@ const WORDS = [
   'eloquent',
   'missiles',
   'milk',
+  'sick',
+  'squeamish',
+  'sugar',
+  'dumb',
+  'left',
+  'reveal',
+  'bounce',
+  'giant',
+  'exotic',
+  'rhythm',
+  'taste',
+  'quartz',
+  'butter',
+  'erupt',
+  'proud',
 ];
 
 const POSITIONS = [4, 5, 7, 3, 2, 6, 8, 1, 9];
+
+const MNEMONIC_LENGTH = 24;
 
 describe('Mnemonic Confirmation', () => {
   const onNext = jest.fn();
@@ -33,49 +50,54 @@ describe('Mnemonic Confirmation', () => {
     );
   });
 
-  it('should only render 9 mnemonic inputs, and 9 words buttons', async () => {
+  it('should render the correct amount of mnemonic inputs', async () => {
     await render(
-      <MnemonicConfirm {...callbacks} words={WORDS} positions={POSITIONS} />
+      <MnemonicConfirm
+        {...callbacks}
+        words={WORDS}
+        positions={POSITIONS}
+        mnemonicLength={MNEMONIC_LENGTH}
+      />
     );
 
     for (const position of POSITIONS) {
       expect(screen.getByText(position)).toBeInTheDocument();
     }
 
-    for (const word of WORDS) {
-      expect(screen.getByText(word)).toBeInTheDocument();
-    }
-
     const inputs = screen.getAllByRole('textbox');
-    expect(inputs).toHaveLength(9);
-
-    const buttons = screen.getAllByLabelText('word-button');
-
-    expect(buttons).toHaveLength(9);
+    expect(inputs).toHaveLength(MNEMONIC_LENGTH);
   });
 
-  it('should call onFilled function after all buttons are clicked', async () => {
+  it('should call onFilled function after all inputs are filled', async () => {
     render(
       <MnemonicConfirm words={WORDS} positions={POSITIONS} {...callbacks} />
     );
-    const buttons = screen.getAllByLabelText('word-button');
-    // randomize the order of the buttons
-    buttons.sort(() => Math.random() - 0.5);
-    // get the text on the buttons
-    const words = buttons.map((button) => button.textContent);
-    // click all the buttons
+    // get all the empty inputs
+    const inputs = screen.getAllByRole('textbox');
+    const emptyInputs = inputs.filter((input) => input.textContent === '');
+    const emptyInputsIndex = [] as number[];
+    inputs.forEach((input, index) => {
+      if (input.textContent === '') {
+        emptyInputsIndex.push(index);
+      }
+    });
+    // fill them all with the correct words from the words array, using the position - 1 as the index
+    // wait for the onFilled function to be called with the words in the order of the input
+    // console.log(emptyInputsIndex)
+    // console.log(emptyInputs)
     await Promise.all([
-      ...buttons.map(async (button, index) => {
+      ...emptyInputs.map(async (input, index) => {
         // eslint-disable-next-line no-promise-executor-return
         await new Promise((resolve) => setTimeout(resolve, index * 100));
-        fireEvent.click(
-          screen.getByText(new RegExp(button.textContent as string, 'i'))
-        );
+        // console.log(input)
+        fireEvent.change(input, {
+          target: { value: WORDS[emptyInputsIndex[index]] },
+        });
       }),
     ]);
     // eslint-disable-next-line no-promise-executor-return
     await new Promise((resolve) => setTimeout(resolve, 1000));
     // expect the onFilled function to be called with the words in the order of the buttons
-    expect(onFilled).toHaveBeenCalledWith(words);
+    expect(onFilled).toHaveBeenCalledWith(WORDS);
   });
 });

@@ -34,9 +34,9 @@ export function CreateWallet() {
           onNext={handlers.createManager}
           onCancel={handlers.cancel}
           isLoading={state.hasTag('loading')}
-          words={context.data?.wordsForConfirmation}
+          words={context.data?.mnemonic}
           positions={context.data?.positionsForConfirmation}
-          defaultValue={context.data?.confirmationWords}
+          defaultValue={context.data?.mnemonicConfirmation}
         />
       )}
     </Layout>
