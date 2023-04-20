@@ -1,4 +1,4 @@
-import type { Browser, Page } from '@playwright/test';
+import type { Browser, Locator, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
 
 import {
@@ -32,10 +32,10 @@ test.describe('CreateWallet', () => {
 
     /** Adding password */
     await hasText(page, /Encrypt your wallet/i);
-    const passwordInput = await getByAriaLabel(page, 'Your Password');
+    const passwordInput = getByAriaLabel(page, 'Your Password');
     await passwordInput.type(WALLET_PASSWORD);
     await passwordInput.press('Tab');
-    const confirmPasswordInput = await getByAriaLabel(page, 'Confirm Password');
+    const confirmPasswordInput = getByAriaLabel(page, 'Confirm Password');
     await confirmPasswordInput.type(WALLET_PASSWORD);
     await confirmPasswordInput.press('Tab');
     await getButtonByText(page, /Next/i).click();
@@ -43,24 +43,35 @@ test.describe('CreateWallet', () => {
     /** Copy Mnemonic */
     await hasText(page, /Backup your Recovery Phrase/i);
     // get all the recovery words from the input fields
-    const recoveryWordsEl = await page.locator('span[data-idx]');
+    const recoveryWordsEl = page.locator('span[data-idx]');
     const recoveryWords = await recoveryWordsEl.allInnerTexts();
-    const savedCheckbox = await getByAriaLabel(page, 'Confirm Saved');
+    const savedCheckbox = getByAriaLabel(page, 'Confirm Saved');
     await savedCheckbox.click();
     await getButtonByText(page, /Next/i).click();
 
     /** Confirm Mnemonic */
     await hasText(page, /Confirm your Recovery Phrase/i);
-    // get all the recovery words positions from the input fields
-    const recoveryWordsPositionsEl = await getByAriaLabel(page, 'position');
-    const recoveryWordsPositions =
-      await recoveryWordsPositionsEl.allInnerTexts();
-    // click on the recovery words buttons in the same order as the recovery words positions
-    for (let i = 0; i < recoveryWordsPositions.length; i += 1) {
-      const position = recoveryWordsPositions[i];
-      const recoveryWord = recoveryWords[parseInt(position, 10) - 1];
-      await getButtonByText(page, recoveryWord).click();
+    // get all empty text fields
+    const allInputs: Locator[] = [];
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const input of await page.locator('input').all()) {
+      await allInputs.push(input);
     }
+
+    // check if they are empty
+    await Promise.all([
+      ...allInputs.map(async (input, index) => {
+        // eslint-disable-next-line no-promise-executor-return
+        await new Promise((resolve) => setTimeout(resolve, index * 300));
+        const text = await input.inputValue();
+        if (text.length < 1) {
+          const word = recoveryWords[index];
+          await input.type(word);
+        }
+      }),
+    ]);
+
     await getButtonByText(page, /Next/i).click();
 
     /** Account created */
