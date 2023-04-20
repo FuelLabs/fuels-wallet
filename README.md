@@ -53,7 +53,7 @@ Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/
 - [x] Settings
   - [x] Reveal your passphrase
   - [x] Change password
-  - [x] Export accout privateKey
+  - [x] Export account privateKey
 - [x] Transactions
   - [x] Receive Assets via address or QR Code
   - [x] Send Assets to another wallet
