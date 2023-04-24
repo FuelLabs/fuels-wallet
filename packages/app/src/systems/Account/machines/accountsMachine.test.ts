@@ -104,6 +104,26 @@ describe('accountsMachine', () => {
     });
   });
 
+  describe('hide', () => {
+    it('should hide an account', async () => {
+      state = await expectStateMatch(service, 'idle');
+
+      let accounts = await AccountService.getAccounts();
+      expect(accounts[0].isHidden).toBeFalsy();
+
+      const toggleHideEv: MachineEvents = {
+        type: 'TOGGLE_HIDE_ACCOUNT',
+        input: { address: accounts[0].address, data: { isHidden: true } },
+      };
+
+      service.send(toggleHideEv);
+      state = await expectStateMatch(service, 'idle');
+
+      accounts = await AccountService.getAccounts();
+      expect(accounts[0].isHidden).toBeTruthy();
+    });
+  });
+
   describe('logout', () => {
     it('logout should clean indexdb and localstorage', async () => {
       await createMockAccount();
