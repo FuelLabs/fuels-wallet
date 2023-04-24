@@ -1,11 +1,29 @@
 import { Box, Button, Dialog, Focus, Icon, IconButton } from '@fuel-ui/react';
+import { useEffect } from 'react';
 
 import type { NetworkFormValues } from '~/systems/Network';
-import { NetworkForm, useNetworks, useNetworkForm } from '~/systems/Network';
+import {
+  NetworkForm,
+  useNetworks,
+  useNetworkForm,
+  useChainInfo,
+} from '~/systems/Network';
 
 export function AddNetwork() {
   const form = useNetworkForm();
+  const { isDirty, invalid } = form.getFieldState('url');
+  const isValidUrl = isDirty && !invalid;
   const { handlers, isLoading } = useNetworks();
+  const { chainInfo, isLoading: isLoadingChainInfo } = useChainInfo(
+    isValidUrl ? form.getValues('url') : undefined
+  );
+
+  useEffect(() => {
+    if (isValidUrl && !isLoadingChainInfo && chainInfo) {
+      form.setValue('name', chainInfo.name);
+      form.trigger();
+    }
+  }, [chainInfo, isLoadingChainInfo, isValidUrl]);
 
   function onSubmit(data: NetworkFormValues) {
     handlers.addNetwork({ data });

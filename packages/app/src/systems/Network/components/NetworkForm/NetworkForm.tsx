@@ -14,22 +14,6 @@ export function NetworkForm({ form }: NetworkFormProps) {
     <Stack css={{ width: '100%' }} gap="$4">
       <ControlledField
         control={control}
-        name="name"
-        label="Name"
-        isRequired
-        isInvalid={Boolean(formState.errors?.name)}
-        render={({ field }) => (
-          <Input>
-            <Input.Field
-              {...field}
-              aria-label="Network name"
-              placeholder="Name of your network..."
-            />
-          </Input>
-        )}
-      />
-      <ControlledField
-        control={control}
         name="url"
         isRequired
         isInvalid={Boolean(formState.errors?.url)}
@@ -44,6 +28,22 @@ export function NetworkForm({ form }: NetworkFormProps) {
               {...field}
               aria-label="Network URL"
               placeholder="https://node.fuel.network/graphql"
+            />
+          </Input>
+        )}
+      />
+      <ControlledField
+        control={control}
+        name="name"
+        label="Name"
+        isRequired
+        isInvalid={Boolean(formState.errors?.name)}
+        render={({ field }) => (
+          <Input>
+            <Input.Field
+              {...field}
+              aria-label="Network name"
+              placeholder="Name of your network..."
             />
           </Input>
         )}
