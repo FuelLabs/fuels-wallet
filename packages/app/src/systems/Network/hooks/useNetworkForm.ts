@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect } from 'react';
@@ -12,14 +11,15 @@ export type NetworkFormValues = {
   url: string;
 };
 
-function isValidUrl(url: any) {
+function isValidUrl(url: string | undefined) {
+  if (!url) return false;
   try {
     // eslint-disable-next-line no-new
     new URL(url);
   } catch (e) {
     return false;
   }
-  return true;
+  return url.endsWith('/graphql');
 }
 
 const schema = yup

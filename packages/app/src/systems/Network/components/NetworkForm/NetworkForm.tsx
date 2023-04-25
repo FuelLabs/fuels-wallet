@@ -43,7 +43,7 @@ export function NetworkForm({ form }: NetworkFormProps) {
             <Input.Field
               {...field}
               aria-label="Network URL"
-              placeholder="URL of your network..."
+              placeholder="https://node.fuel.network/graphql"
             />
           </Input>
         )}
