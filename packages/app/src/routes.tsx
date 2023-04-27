@@ -12,7 +12,7 @@ import { assetRoutes } from '~/systems/Asset';
 import { PrivateRoute, PublicRoute } from '~/systems/Core';
 import { Pages } from '~/systems/Core/types';
 import { homeRoutes } from '~/systems/Home';
-import { signUpRoutes } from '~/systems/SignUp';
+import { signUpRoutes, SignUpGuard } from '~/systems/SignUp';
 import { WalletCreatedPage } from '~/systems/SignUp/pages';
 
 const walletRoutes = (
@@ -60,7 +60,7 @@ export const crxPopupRoutes = (
 export const crxSignUpRoutes = (
   <Routes>
     <Route element={<CRXPublicRoute />}>
-      {signUpRoutes}
+      <Route element={<SignUpGuard />}>{signUpRoutes}</Route>
       <Route path="*" element={<Navigate to={Pages.signUp()} />} />
     </Route>
     <Route path={Pages.signUpWalletCreated()} element={<WalletCreatedPage />} />

@@ -37,6 +37,7 @@ export function RecoverWallet() {
           onNext={handlers.next}
           onCancel={() => navigate(Pages.signUp())}
           isLoading={state.hasTag('loading')}
+          enableChangeFormat={true}
         />
       )}
       {state.matches('failed') && <SignUpFailed error={state.context.error} />}

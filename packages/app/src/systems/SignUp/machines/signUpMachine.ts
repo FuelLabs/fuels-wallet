@@ -11,6 +11,7 @@ import { store } from '~/store';
 import {
   assignErrorMessage,
   FetchMachine,
+  getPhraseFromValue,
   getWordsFromValue,
   Storage,
 } from '~/systems/Core';
@@ -283,6 +284,7 @@ export const signUpMachine = createMachine(
                   CONFIRM_MNEMONIC: {
                     actions: ['assignIsFilled', 'assignMnemonicWhenRecovering'],
                     target: 'validMnemonic',
+                    cond: 'isValidMnemonic',
                   },
                 },
               },
@@ -403,6 +405,12 @@ export const signUpMachine = createMachine(
       isRecoveringWallet: (ctx) => {
         return ctx.type === SignUpType.recover;
       },
+      isValidMnemonic: (ctx, ev) => {
+        const isValid = Mnemonic.isMnemonicValid(
+          getPhraseFromValue(ev.data.words) || ''
+        );
+        return isValid;
+      },
     },
     services: {
       async setupVault({ data, account }) {
@@ -448,14 +456,23 @@ export const signUpMachine = createMachine(
         const words = await SignUpService.getPositionsToConfirm({ data });
         return words;
       },
-      async confirmMnemonic({ data }) {
+      async confirmMnemonic({ data, type }) {
         if (!data?.mnemonic) throw new Error('Invalid mnemonic');
-        const isValid = await SignUpService.confirmMnemonic({
-          data: {
-            mnemonic: data.mnemonicConfirmation,
-          },
-        });
+        let isValid = false;
+        if (type === SignUpType.create) {
+          isValid = await SignUpService.confirmMnemonic({
+            data: {
+              mnemonic: data.mnemonicConfirmation,
+            },
+          });
+        } else {
+          isValid = Mnemonic.isMnemonicValid(
+            getPhraseFromValue(data?.mnemonic) || ''
+          );
+        }
+
         if (!isValid) throw new Error('Invalid mnemonic');
+
         return isValid;
       },
       async deleteSavedSignUp() {

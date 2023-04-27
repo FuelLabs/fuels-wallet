@@ -2,8 +2,7 @@ import type { Account } from '@fuel-wallet/types';
 
 import { IS_SIGNING_UP_KEY } from '~/config';
 import { AccountService } from '~/systems/Account';
-import { Storage } from '~/systems/Core';
-import { db } from '~/systems/Core/utils/database';
+import { CoreService, Storage } from '~/systems/Core';
 import { getPhraseFromValue } from '~/systems/Core/utils/string';
 import { NetworkService } from '~/systems/Network';
 import { VaultService } from '~/systems/Vault/services';
@@ -55,8 +54,7 @@ export class SignUpService {
 
     try {
       // Clear databse on create
-      await db.clear();
-      await Storage.clear();
+      await CoreService.clear();
 
       // Add networks
       await NetworkService.addDefaultNetworks();
@@ -91,9 +89,8 @@ export class SignUpService {
       throw new Error('Invalid data');
     }
 
-    await db.clear();
-    await Storage.clear();
     await AccountService.clearAccounts();
+    await CoreService.clear();
 
     // Register the first account retuned from the vault
     return AccountService.addAccount({
@@ -181,7 +178,6 @@ export class SignUpService {
   }
 
   static async deleteSaved() {
-    await db.clear();
-    await Storage.clear();
+    await CoreService.clear();
   }
 }

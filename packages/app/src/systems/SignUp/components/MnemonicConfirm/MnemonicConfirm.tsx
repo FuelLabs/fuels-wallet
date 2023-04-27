@@ -88,9 +88,9 @@ export function MnemonicConfirm({
         title="Confirm your Recovery Phrase"
         subtitle="Fill in the missing words to confirm your recovery phrase."
       />
-      <Stack gap="$3" css={{ width: 400 }}>
+      <Stack gap="$3" css={styles.wrapper}>
         {error && (
-          <Alert css={{ fontSize: '$sm', py: '$2' }} status="error">
+          <Alert css={styles.alert} status="error">
             <Alert.Description>{error}</Alert.Description>
           </Alert>
         )}
@@ -123,14 +123,14 @@ export function MnemonicConfirm({
         <Button
           color="gray"
           variant="ghost"
-          css={{ width: 130 }}
+          css={styles.buttons}
           onPress={onCancel}
         >
           Cancel
         </Button>
         <Button
           color="accent"
-          css={{ width: 130 }}
+          css={styles.buttons}
           onPress={onNext}
           isLoading={isLoading}
           isDisabled={!canProceed}
@@ -147,6 +147,9 @@ const styles = {
     background: '$gray1',
     border: '1px dashed $gray3',
     borderRadius: '$lg',
+  }),
+  wrapper: cssObj({
+    width: 400,
   }),
   formatWrapper: cssObj({
     p: '$3',
@@ -167,6 +170,13 @@ const styles = {
         outline: 'none',
       },
     },
+  }),
+  alert: cssObj({
+    fontSize: '$sm',
+    py: '$2',
+  }),
+  buttons: cssObj({
+    width: 130,
   }),
   words: cssObj({
     px: '$3',
