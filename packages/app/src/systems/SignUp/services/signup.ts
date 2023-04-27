@@ -121,17 +121,6 @@ export class SignUpService {
   }
 
   static async getSaved(): Promise<SignUpServiceOutputs['getSaved']> {
-    const vaultIsLocked = await VaultService.isLocked();
-    if (vaultIsLocked) {
-      throw new Error('Vault is locked');
-    }
-    const secret = await VaultService.exportVault({
-      password: undefined,
-      vaultId: 0,
-      // TODO change once we add multiple vault management
-      // https://github.com/FuelLabs/fuels-wallet/issues/562
-    });
-    const mnemonic = secret.split(' ');
     const vaultAccounts = await VaultService.getAccounts();
     const vaultAccount = vaultAccounts[0];
     const account = {
@@ -142,7 +131,6 @@ export class SignUpService {
       vaultId: vaultAccount.vaultId,
     } as Account;
     return {
-      mnemonic,
       account,
     };
   }

@@ -38,7 +38,7 @@ export type VaultInputs = {
   };
   exportVault: {
     vaultId: number;
-    password?: string;
+    password: string;
   };
   confirmMnemonic: {
     words: string[];
@@ -177,7 +177,7 @@ export class VaultServer extends EventEmitter {
     vaultId,
     password,
   }: VaultInputs['exportVault']): Promise<string> {
-    if (password) await this.manager.unlock(password);
+    await this.manager.unlock(password);
     const vault = await this.manager.exportVault(vaultId);
     return vault.secret || '';
   }
@@ -199,11 +199,21 @@ export class VaultServer extends EventEmitter {
   async confirmMnemonic({
     words,
   }: VaultInputs['confirmMnemonic']): Promise<boolean> {
-    const mnemonic = (await this.exportVault({ vaultId: 0 })).split(' ');
-    const isValid = words.every((word, index) => {
-      return word === mnemonic[index];
+    // get the current address
+    const accounts = await this.manager.getAccounts();
+    const [account] = accounts.slice(-1);
+    const address = account.address.toString();
+    // create a new wallet with the mnemonic
+    const tempWalletManager = new WalletManager();
+    tempWalletManager.unlock('');
+    await tempWalletManager.addVault({
+      type: 'mnemonic',
+      secret: words.join(' '),
     });
-    return isValid;
+    const tempAccounts = await tempWalletManager.getAccounts();
+    const [tempAccount] = tempAccounts.slice(-1);
+    const tempAddress = tempAccount.address.toString();
+    return tempAddress === address;
   }
 
   async exportPrivateKey({

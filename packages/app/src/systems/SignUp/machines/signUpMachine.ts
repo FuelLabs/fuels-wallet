@@ -115,8 +115,8 @@ export const signUpMachine = createMachine(
         invoke: {
           src: 'getSavedSignUp',
           onDone: {
-            actions: ['assignSavedData'],
-            target: 'fetchingConfirmationWords',
+            actions: ['assignSavedData', 'assignConfirmAllPositions'],
+            target: 'waitingMnemonic',
           },
           onError: {
             actions: ['assignError', 'assignNoPositionsToConfirm'],
@@ -198,6 +198,7 @@ export const signUpMachine = createMachine(
           src: 'confirmMnemonic',
           onDone: {
             target: 'waitingMnemonic.validMnemonic',
+            actions: ['assignIsConfirmed'],
           },
           onError: {
             target: 'waitingMnemonic.mnemonicNotMatch',
@@ -358,8 +359,12 @@ export const signUpMachine = createMachine(
         account: (_, ev) => ev.data,
       }),
       assignSavedData: assign({
-        data: (_, ev) => ({
-          mnemonic: ev.data.mnemonic,
+        data: () => ({
+          mnemonic: Array.from({ length: MNEMONIC_SIZE - 8 }, () => ''),
+          positionsForConfirmation: Array.from(
+            { length: MNEMONIC_SIZE - 8 },
+            (_, i) => i + 1
+          ),
         }),
         account: (_, ev) => ev.data.account,
       }),
@@ -367,10 +372,6 @@ export const signUpMachine = createMachine(
         data: (ctx, ev) => ({
           ...ctx.data,
           positionsForConfirmation: ev.data.positions,
-          // mnemonicConfirmation: removePositionsFromMnemonic(
-          //   ev.data?.positions || [],
-          //   ctx.data?.mnemonic || []
-          // ),
         }),
       }),
       assignConfirmationWords: assign({
@@ -382,6 +383,13 @@ export const signUpMachine = createMachine(
       assignNoPositionsToConfirm: assign({
         data: (ctx) => ({
           ...ctx.data,
+          positionsForConfirmation: [],
+        }),
+      }),
+      assignIsConfirmed: assign({
+        data: (ctx) => ({
+          ...ctx.data,
+          mnemonic: ctx?.data?.mnemonicConfirmation,
           positionsForConfirmation: [],
         }),
       }),
