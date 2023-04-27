@@ -16,10 +16,3 @@ export function shuffle<T extends string | number>(array: T[]): T[] {
 
   return newArray;
 }
-
-export function removePositionsFromMnemonic(
-  positions: number[],
-  words: string[]
-) {
-  return words.map((word, idx) => (positions.includes(idx + 1) ? '' : word));
-}
