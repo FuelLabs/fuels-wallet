@@ -114,6 +114,10 @@ test.describe('FuelWallet Extension', () => {
       await reload(page);
       await getButtonByText(page, /Create a Wallet/i).click();
 
+      /** Accept terms */
+      await hasText(page, /Terms of Service/i);
+      await getButtonByText(page, /Accept/i).click();
+
       /** Copy Mnemonic */
       await getButtonByText(page, /Copy/i).click();
       const savedCheckbox = await getByAriaLabel(page, 'Confirm Saved');

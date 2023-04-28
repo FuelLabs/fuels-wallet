@@ -2,6 +2,7 @@ import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import type { PluginOption, UserConfig } from 'vite';
 import cleanPlugin from 'vite-plugin-clean';
+import { plugin as viteMdPlugin, Mode } from 'vite-plugin-markdown';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 import '../load.envs.js';
@@ -38,6 +39,9 @@ const baseConfig: UserConfig = {
   },
   plugins: [
     react(),
+    viteMdPlugin({
+      mode: [Mode.REACT],
+    }),
     tsconfigPaths(),
     {
       ...cleanPlugin({

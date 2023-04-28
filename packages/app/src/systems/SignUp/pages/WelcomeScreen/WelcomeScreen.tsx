@@ -16,14 +16,14 @@ export function WelcomeScreen() {
         <Flex direction="column" gap="$2">
           <Button
             color="accent"
-            onPress={() => navigate(Pages.signUpCreateWallet())}
+            onPress={() => navigate(Pages.signUpTerms({ action: 'create' }))}
           >
             Create a Wallet
           </Button>
           <Button
             color="gray"
             variant="ghost"
-            onPress={() => navigate(Pages.signUpRecoverWallet())}
+            onPress={() => navigate(Pages.signUpTerms({ action: 'recover' }))}
           >
             I already have a wallet
           </Button>
