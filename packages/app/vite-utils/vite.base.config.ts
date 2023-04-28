@@ -40,7 +40,7 @@ const baseConfig: UserConfig = {
   plugins: [
     react(),
     viteMdPlugin({
-      mode: [Mode.TOC, Mode.REACT],
+      mode: [Mode.REACT],
     }),
     tsconfigPaths(),
     {

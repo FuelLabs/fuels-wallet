@@ -8,7 +8,7 @@ export function useHasAcceptedTerms() {
     false
   );
   return {
-    hasAcceptedTerms: hasAcceptedTerms as boolean,
+    hasAcceptedTerms: Boolean(hasAcceptedTerms),
     setHasAcceptedTerms,
   };
 }

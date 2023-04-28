@@ -32,7 +32,7 @@ export function TermsOfUse() {
       <Stack gap="$8" align="center">
         <Header
           title="Terms of Service"
-          subtitle="Read and accept our terms of service"
+          subtitle="Read and check to accept our terms of service"
         />
         <Box css={styles.termsContainer}>
           <Flex css={styles.termsWrapper}>
@@ -66,13 +66,13 @@ const styles = {
     },
 
     '&::-webkit-scrollbar': {
-      width: '8px',
+      width: '$2',
       backgroundColor: '$gray3',
     },
 
     '&::-webkit-scrollbar-thumb': {
       backgroundColor: '$gray5',
-      borderRadius: '40px',
+      borderRadius: '$10',
     },
 
     '& h1, & h2': {
@@ -91,7 +91,7 @@ const styles = {
     height: '480px',
     overflow: 'hidden',
     maxWidth: '700px',
-    borderRadius: '8px',
+    borderRadius: '$8',
     marginLeft: '$4',
     marginRight: '$4',
   },
