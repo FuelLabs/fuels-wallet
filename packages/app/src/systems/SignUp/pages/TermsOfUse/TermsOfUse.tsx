@@ -31,7 +31,7 @@ export function TermsOfUse() {
     <Layout title="Terms of Service" isPublic>
       <Stack gap="$8" align="center">
         <Header
-          title="Terms of Service"
+          title="Terms of use Agreement"
           subtitle="Read and check to accept our terms of service"
         />
         <Box css={styles.termsContainer}>
