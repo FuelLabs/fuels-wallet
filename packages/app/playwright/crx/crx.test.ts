@@ -201,6 +201,33 @@ test.describe('FuelWallet Extension', () => {
       await expect(await isConnected).toBeTruthy();
     });
 
+    await test.step('window.fuel.disconnect()', async () => {
+      let isConnected = blankPage.evaluate(async () => {
+        return window.fuel.connect();
+      });
+      const authorizeRequest = await context.waitForEvent('page', {
+        predicate: (page) => page.url().includes(extensionId),
+      });
+
+      // Add Account 3 to the DApp connection
+      await getByAriaLabel(authorizeRequest, 'Toggle Account 3').click();
+      // Add Account 4 to the DApp connection
+      await getByAriaLabel(authorizeRequest, 'Toggle Account 4').click();
+
+      await hasText(authorizeRequest, /connect/i);
+      await getButtonByText(authorizeRequest, /next/i).click();
+      await hasText(authorizeRequest, /accounts/i);
+      await getButtonByText(authorizeRequest, /connect/i).click();
+
+      expect(await isConnected).toBeTruthy();
+
+      isConnected = blankPage.evaluate(async () => {
+        return window.fuel.disconnect();
+      });
+
+      expect(await isConnected).toBeTruthy();
+    });
+
     await test.step('window.fuel.getWallet()', async () => {
       const isCorrectAddress = await blankPage.evaluate(async () => {
         const currentAccount = await window.fuel.currentAccount();
