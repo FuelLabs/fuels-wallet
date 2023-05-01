@@ -201,7 +201,7 @@ export class VaultServer extends EventEmitter {
     // get the current address
     const accounts = await this.manager.getAccounts();
     const [account] = accounts.slice(-1);
-    const address = account.address.toString();
+    const address = account?.address?.toString();
     // create a new wallet with the mnemonic
     const tempWalletManager = new WalletManager();
     tempWalletManager.unlock('');
@@ -211,7 +211,8 @@ export class VaultServer extends EventEmitter {
     });
     const tempAccounts = await tempWalletManager.getAccounts();
     const [tempAccount] = tempAccounts.slice(-1);
-    const tempAddress = tempAccount.address.toString();
+    const tempAddress = tempAccount?.address?.toString();
+
     return tempAddress === address;
   }
 

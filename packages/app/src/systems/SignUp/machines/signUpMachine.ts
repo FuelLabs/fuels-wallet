@@ -6,7 +6,7 @@ import { assign, createMachine } from 'xstate';
 
 import { SignUpService } from '../services';
 
-import { IS_LOGGED_KEY, MNEMONIC_SIZE } from '~/config';
+import { IS_LOGGED_KEY, IS_SIGNING_UP_KEY, MNEMONIC_SIZE } from '~/config';
 import { store } from '~/store';
 import {
   assignErrorMessage,
@@ -115,7 +115,7 @@ export const signUpMachine = createMachine(
         invoke: {
           src: 'getSavedSignUp',
           onDone: {
-            actions: ['assignSavedData', 'assignConfirmAllPositions'],
+            actions: ['assignSavedData'],
             target: 'waitingMnemonic',
           },
           onError: {
@@ -398,6 +398,7 @@ export const signUpMachine = createMachine(
       }),
       sendAccountCreated: () => {
         Storage.setItem(IS_LOGGED_KEY, true);
+        Storage.setItem(IS_SIGNING_UP_KEY, false);
         store.updateAccounts();
       },
       redirectToWalletCreated: () => {},
