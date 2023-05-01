@@ -4,7 +4,7 @@ import { transactionRequestify, Address } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
-import { shuffle } from '~/systems/Core/utils';
+import { shuffle } from '~/systems/Core/utils/mnemonic';
 
 export type VaultAccount = {
   address: string;
