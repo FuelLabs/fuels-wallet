@@ -58,6 +58,7 @@
     "react-qr-code": "^2.0.11",
     "react-router-dom": "^6.8.0",
     "tai64": "^1.0.0",
+    "vite-plugin-markdown": "^2.1.0",
     "xstate": "^4.35.4",
     "yup": "^0.32.11"
   },

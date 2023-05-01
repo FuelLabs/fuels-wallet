@@ -23,6 +23,10 @@ test.describe('RecoverWallet', () => {
     await visit(page, '/wallet');
     await getButtonByText(page, /I already have a wallet/i).click();
 
+    /** Accept terms and conditions */
+    await hasText(page, /Terms of service/i);
+    await getButtonByText(page, /I accept/i).click();
+
     /** Copy words to clipboard area */
     await page.evaluate(`navigator.clipboard.writeText('${WORDS_12}')`);
 
@@ -55,6 +59,10 @@ test.describe('RecoverWallet', () => {
     await visit(page, '/wallet');
     await logout(page);
     await getButtonByText(page, /I already have a wallet/i).click();
+
+    /** Accept terms and conditions */
+    await hasText(page, /Terms of service/i);
+    await getButtonByText(page, /I accept/i).click();
 
     await getByAriaLabel(page, 'Select format').selectOption(
       'I have a 24 words seed phrase'
