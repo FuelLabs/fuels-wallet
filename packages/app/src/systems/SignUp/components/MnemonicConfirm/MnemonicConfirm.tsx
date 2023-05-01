@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Flex, Grid, Button, Stack, Alert, Icon } from '@fuel-ui/react';
-import { useEffect, useState } from 'react';
+import debounce from 'lodash.debounce';
+import { useCallback, useEffect, useState } from 'react';
 
 import { MnemonicInput } from '../../../Core/components/Mnemonic/MnemonicInput';
 import { Header } from '../Header';
@@ -14,7 +15,7 @@ function fillArrayWithEmptyStrings(length: number) {
 export type MnemonicConfirmProps = {
   mnemonicLength?: number;
   words?: string[];
-  onFilled?: (val: string[]) => void;
+  onFilled: (val: string[]) => void;
   onNext: () => void;
   onCancel: () => void;
   positions?: number[];
@@ -40,6 +41,8 @@ export function MnemonicConfirm({
   const [value, setValue] = useState<string[]>(
     fillArrayWithEmptyStrings(mnemonicLength)
   );
+
+  const debouncedOnFilled = useCallback(debounce(onFilled, 500), []);
 
   function handleChange(idx: number) {
     return (val: string) => {
@@ -72,7 +75,7 @@ export function MnemonicConfirm({
   useEffect(() => {
     if (readOnly) return;
     if (value.every((word) => Boolean(word.length))) {
-      onFilled?.(value);
+      debouncedOnFilled(value);
     }
   }, [value]);
 
