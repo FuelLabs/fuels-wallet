@@ -20,8 +20,7 @@ export function AddNetwork() {
 
   useEffect(() => {
     if (isValidUrl && !isLoadingChainInfo && chainInfo) {
-      form.setValue('name', chainInfo.name);
-      form.trigger();
+      form.setValue('name', chainInfo.name, { shouldValidate: true });
     }
   }, [chainInfo, isLoadingChainInfo, isValidUrl]);
 
@@ -43,7 +42,11 @@ export function AddNetwork() {
       </Dialog.Heading>
       <Dialog.Description as="div">
         <Focus.Scope contain autoFocus>
-          <NetworkForm form={form} />
+          <NetworkForm
+            form={form}
+            isEditing={false}
+            isLoading={isLoadingChainInfo}
+          />
         </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
@@ -56,9 +59,9 @@ export function AddNetwork() {
           isDisabled={!form.formState.isValid}
           isLoading={isLoading}
           leftIcon={Icon.is('Plus')}
-          aria-label="Create new network"
+          aria-label="Add new network"
         >
-          Create
+          Add
         </Button>
       </Dialog.Footer>
     </Box>

@@ -17,10 +17,12 @@ type MachineServices = {
   };
 };
 
-type MachineEvents = {
-  type: 'FETCH_CHAIN_INFO';
-  input: { providerUrl?: string };
-};
+type MachineEvents =
+  | {
+      type: 'FETCH_CHAIN_INFO';
+      input: { providerUrl?: string };
+    }
+  | { type: 'CLEAR_CHAIN_INFO'; input: null };
 
 export const chainInfoMachine = createMachine(
   {
@@ -41,10 +43,16 @@ export const chainInfoMachine = createMachine(
               target: 'fetchingChainInfo',
             },
           ],
+          CLEAR_CHAIN_INFO: [
+            {
+              actions: ['clearChainInfo'],
+            },
+          ],
         },
       },
       fetchingChainInfo: {
         tags: ['loading'],
+        entry: ['clearChainInfo'],
         invoke: {
           src: 'fetchChainInfo',
           data: {
@@ -68,6 +76,9 @@ export const chainInfoMachine = createMachine(
     actions: {
       assignChainInfo: assign({
         chainInfo: (ctx, ev) => ev.data,
+      }),
+      clearChainInfo: assign({
+        chainInfo: undefined,
       }),
     },
     services: {

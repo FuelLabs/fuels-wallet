@@ -20,6 +20,8 @@ export function useChainInfo(providerUrl?: string) {
   useEffect(() => {
     if (providerUrl) {
       send('FETCH_CHAIN_INFO', { input: { providerUrl } });
+    } else {
+      send('CLEAR_CHAIN_INFO');
     }
   }, [providerUrl]);
 
