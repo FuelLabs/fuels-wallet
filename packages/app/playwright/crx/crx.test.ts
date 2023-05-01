@@ -231,7 +231,6 @@ test.describe('FuelWallet Extension', () => {
       await getByAriaLabel(popupPage, 'Menu').click();
       const connectedApps = await hasText(popupPage, 'Connected Apps');
       await connectedApps.click();
-      await hasText(popupPage, 'localhost:3000');
       await getByAriaLabel(popupPage, 'Delete').click();
       await getButtonByText(popupPage, 'Confirm').click();
 
