@@ -30,6 +30,7 @@ const config: JestConfigWithTsJest = {
         },
       },
     ],
+    '^.+\\.md?$': 'jest-transform-stub',
   },
   testTimeout: 10000,
   forceExit: true,

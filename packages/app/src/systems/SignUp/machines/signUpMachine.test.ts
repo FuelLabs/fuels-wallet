@@ -27,25 +27,30 @@ describe('signUpMachine', () => {
   });
 
   describe('type: create', () => {
+    let words: string[] = [];
     it('should create and save mnemonic after creating a password', async () => {
       service.send('NEXT');
       await expectStateMatch(service, 'addingPassword');
       service.send('CREATE_PASSWORD', { data: { password: 'Password@1' } });
       await expectStateMatch(service, 'showingMnemonic');
       state = service.getSnapshot();
-      expect(state.context.data?.mnemonic).toBeTruthy();
+      words = state.context.data?.mnemonic || [];
+      expect(
+        state.context.data?.mnemonic?.every((word) => word.length > 0)
+      ).toBeTruthy();
     });
 
     it('should resume from saved mnemonic', async () => {
       await expectStateMatch(service, 'waitingMnemonic');
       state = service.getSnapshot();
-      expect(state.context.data?.mnemonic).toBeTruthy();
+      expect(
+        state.context.data?.mnemonic?.every((word) => word.length === 0)
+      ).toBeTruthy();
     });
 
     it('should be fail confirmation if mnemonic confirmation does not match', async () => {
       await expectStateMatch(service, 'waitingMnemonic');
       state = service.getSnapshot();
-      const words = state.context.data?.mnemonic;
       const positionsForConfirmation =
         state.context.data?.positionsForConfirmation;
       // arrange the wordsForConfirmation in the wrong order as the mnemonic determined by positionsForConfirmation
@@ -60,7 +65,6 @@ describe('signUpMachine', () => {
     it('should be able to confirm mnemonic', async () => {
       await expectStateMatch(service, 'waitingMnemonic');
       state = service.getSnapshot();
-      const words = state.context.data?.mnemonic;
       service.send('CONFIRM_MNEMONIC', {
         data: { words },
       });
@@ -70,7 +74,6 @@ describe('signUpMachine', () => {
     it('should create the account after the confirmation', async () => {
       await expectStateMatch(service, 'waitingMnemonic');
       state = service.getSnapshot();
-      const words = state.context.data?.mnemonic;
       service.send('CONFIRM_MNEMONIC', {
         data: { words },
       });

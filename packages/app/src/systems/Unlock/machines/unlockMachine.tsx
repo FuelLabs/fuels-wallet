@@ -133,6 +133,7 @@ export const unlockMachine = createMachine(
       cleanError: assign({
         error: (_) => undefined,
       }),
+      onUnlock: () => {},
     },
     guards: {
       isLocked: (_, ev) => ev.data,
