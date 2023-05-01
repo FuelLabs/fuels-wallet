@@ -91,6 +91,9 @@ export const AccountItem: AccountItemComponent = ({
     if (menuItems.length) {
       return (
         <Dropdown
+          css={{
+            zIndex: 1,
+          }}
           popoverProps={{ side: 'bottom', align: 'start', alignOffset: 10 }}
         >
           <Dropdown.Trigger>

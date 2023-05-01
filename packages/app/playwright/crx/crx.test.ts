@@ -1,5 +1,6 @@
 import { Signer } from '@fuel-ts/signer';
 import type { Account, Asset } from '@fuel-wallet/types';
+import type { Locator } from '@playwright/test';
 import { expect } from '@playwright/test';
 import { bn, hashMessage, Wallet } from 'fuels';
 
@@ -113,6 +114,10 @@ test.describe('FuelWallet Extension', () => {
       const [page] = pages.filter((page) => page.url().includes('sign-up'));
       await reload(page);
       await getButtonByText(page, /Create a Wallet/i).click();
+
+      /** Accept terms */
+      await hasText(page, /Terms of Service/i);
+      await getButtonByText(page, /Accept/i).click();
 
       /** Adding password */
       await hasText(page, /Encrypt your wallet/i);

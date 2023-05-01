@@ -94,7 +94,6 @@
     "jest-transform-stub": "^2.0.0",
     "lint-staged": "^13.1.1",
     "npm-run-all": "^4.1.5",
-    "playwright": "^1.30.0",
     "prettier": "^2.8.4",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
