@@ -5,8 +5,11 @@ import type { CommunicationMessage } from '@fuel-wallet/types';
 import { BaseConnection } from './BaseConnection';
 
 export class WindowConnection extends BaseConnection {
-  constructor() {
+  targetWallet: string;
+
+  constructor(targetWallet: string) {
     super();
+    this.targetWallet = targetWallet;
     window.addEventListener(EVENT_MESSAGE, this.onMessage.bind(this));
   }
 
@@ -22,6 +25,12 @@ export class WindowConnection extends BaseConnection {
   };
 
   postMessage(message: CommunicationMessage, origin?: string) {
-    window.postMessage(message, origin || window.origin);
+    window.postMessage(
+      {
+        ...message,
+        targetWallet: this.targetWallet,
+      },
+      origin || window.origin
+    );
   }
 }

@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { injectFuel } from '@fuel-wallet/sdk/dist';
+import { injectFuel } from '@fuel-wallet/sdk';
 
-injectFuel(window);
+import { WALLET_NAME } from '~/config';
+
+injectFuel(window, { name: WALLET_NAME, logoUrl: 'mylogo' });

@@ -123,4 +123,4 @@ global.window = {
   },
 } as any;
 
-export const fuel = new Fuel();
+export const fuel = new Fuel({ name: 'FuelWallet' });

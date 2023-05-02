@@ -13,9 +13,11 @@ import { PING_TIMEOUT, RECONNECT_TIMEOUT } from '../config';
 export class ContentProxyConnection {
   connection: chrome.runtime.Port;
   _tryReconect?: NodeJS.Timer;
+  readonly targetWallet: string;
 
-  constructor() {
+  constructor(targetWallet: string) {
     this.connection = this.connect();
+    this.targetWallet = targetWallet;
     window.addEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
     this.keepAlive();
   }
@@ -65,8 +67,8 @@ export class ContentProxyConnection {
     }
   };
 
-  static start() {
-    return new ContentProxyConnection();
+  static start(providerWallet: string) {
+    return new ContentProxyConnection(providerWallet);
   }
 
   onMessageFromExtension = (message: CommunicationMessage) => {
@@ -79,7 +81,9 @@ export class ContentProxyConnection {
   onMessageFromWindow = (message: MessageEvent<CommunicationMessage>) => {
     const { data: event, origin } = Object.freeze(message);
     const shouldAcceptMessage =
-      origin === window.location.origin && event.target === CONTENT_SCRIPT_NAME;
+      origin === window.location.origin &&
+      event.target === CONTENT_SCRIPT_NAME &&
+      event.targetWallet === this.targetWallet;
     if (shouldAcceptMessage) {
       this.connection.postMessage({
         ...event,

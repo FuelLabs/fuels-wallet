@@ -12,6 +12,7 @@ export const {
   NODE_ENV,
 } = import.meta.env;
 
+export const WALLET_NAME = 'FuelWallet';
 export const APP_VERSION = VITE_APP_VERSION;
 export const DATABASE_VERSION = Number(VITE_DATABASE_VERSION);
 export const DECIMAL_UNITS = 9;

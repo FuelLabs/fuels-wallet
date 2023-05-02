@@ -1,3 +1,4 @@
+import type { WalletProvider } from '@fuel-wallet/types';
 import { FuelWalletEvents } from '@fuel-wallet/types';
 import { Address } from 'fuels';
 import type { AbstractAddress } from 'fuels';
@@ -14,6 +15,33 @@ const FuelWeb3Privates: {
 } = {};
 
 export class Fuel extends FuelWalletConnection {
+  readonly walletProviders: Array<WalletProvider> = [];
+
+  constructor(providerConfig: WalletProvider) {
+    super(providerConfig.name);
+    this.walletProviders = [providerConfig];
+  }
+
+  addWalletProvider(walletProvider: WalletProvider): void {
+    this.walletProviders.push(walletProvider);
+  }
+
+  listWalletProviders(): Array<WalletProvider> {
+    return this.walletProviders;
+  }
+
+  selectWalletProvider(providerName: string): void {
+    const providerConfig = this.walletProviders.find(
+      (provider) => provider.name === providerName
+    );
+
+    if (!providerConfig) {
+      throw new Error(`Wallet provider ${providerName} not found`);
+    }
+
+    this.targetWallet = providerConfig.name;
+  }
+
   readonly utils = {
     // TODO: remove createAddress once fuels-ts replace input
     // class address with string. The warn message is to avoid

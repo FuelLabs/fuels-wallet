@@ -54,6 +54,7 @@ export enum MessageTypes {
 
 export type BaseEvent<T> = {
   readonly target: string;
+  readonly targetWallet?: string;
   readonly id?: string;
   readonly sender?: chrome.runtime.Port['sender'];
 } & T;
@@ -117,4 +118,9 @@ export type DatabaseEventArg<T extends string> = T extends `${string}:create`
 export type FuelProviderConfig = {
   id?: string;
   url: string;
+};
+
+export type WalletProvider = {
+  name: string;
+  imageUrl?: string;
 };
