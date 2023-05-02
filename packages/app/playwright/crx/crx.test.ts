@@ -210,7 +210,7 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.disconnect()', async () => {
-      const isDisonnected = blankPage.evaluate(async () => {
+      const isDisconnected = blankPage.evaluate(async () => {
         return window.fuel.disconnect();
       });
 
