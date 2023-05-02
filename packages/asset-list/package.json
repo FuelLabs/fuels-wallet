@@ -3,5 +3,11 @@
   "name": "asset-list",
   "version": "0.0.1",
   "license": "Apache-2.0",
-  "main": "src/index.ts"
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsup --dts"
+  },
+  "dependencies": {
+    "tsup": "^6.5.0"
+  }
 }
