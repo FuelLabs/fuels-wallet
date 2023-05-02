@@ -21,8 +21,8 @@ export function AssetListEmpty({
     <BoxCentered css={styles.empty}>
       <ImageLoader
         src={relativeUrl('/empty-assets.png')}
-        width={183}
-        height={144}
+        width={150}
+        height={120}
         alt="No assets"
         wrapperCSS={{ mb: '$5' }}
       />
@@ -41,13 +41,15 @@ export function AssetListEmpty({
 }
 
 const styles = {
+  faucet: {
+    marginTop: '$4',
+  },
   empty: cssObj({
     width: '100%',
     height: '100%',
     flexDirection: 'column',
     textAlign: 'center',
     mt: '$3',
-
     img: {
       transform: 'translateX(-10px)',
       mb: '$5',
