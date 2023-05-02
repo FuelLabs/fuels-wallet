@@ -45,7 +45,7 @@ export function Home() {
             assets={balanceAssets}
             isLoading={isLoading}
             emptyProps={{
-              showFaucet: selectedNetwork.url === VITE_FUEL_PROVIDER_URL,
+              showFaucet: selectedNetwork?.url === VITE_FUEL_PROVIDER_URL,
             }}
           />
         </Flex>
