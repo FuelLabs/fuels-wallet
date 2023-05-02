@@ -1,5 +1,6 @@
 import type {
   Account,
+  Connection,
   EventMessage,
   EventMessageEvents,
 } from '@fuel-wallet/types';
@@ -13,7 +14,7 @@ import { ConnectionService } from '~/systems/DApp/services';
 
 export class DatabaseEvents {
   readonly databaseObservable: DatabaseObservable<
-    ['networks', 'accounts', 'assets']
+    ['networks', 'accounts', 'assets', 'connections']
   >;
 
   readonly communicationProtocol: CommunicationProtocol;
@@ -89,6 +90,20 @@ export class DatabaseEvents {
     );
     this.databaseObservable.on('assets:delete', () => this.broadcastAssets());
     this.databaseObservable.on('assets:create', () => this.broadcastAssets());
+
+    this.databaseObservable.on('connections:delete', async (updateEvent) => {
+      const deletedConnection = updateEvent.oldObj as Connection;
+
+      this.communicationProtocol.broadcast(
+        deletedConnection.origin,
+        this.createEvents([
+          {
+            event: 'connection',
+            params: [false],
+          },
+        ])
+      );
+    });
   }
 
   async broadcastAssets() {
