@@ -7,7 +7,7 @@ import { assign, createMachine } from 'xstate';
 import type { AssetInputs } from '../services';
 import { AssetService } from '../services';
 
-import { FetchMachine, relativeUrl } from '~/systems/Core';
+import { FetchMachine } from '~/systems/Core';
 
 export enum AssetsStatus {
   loading = 'loading',
@@ -181,7 +181,7 @@ export const assetsMachine = createMachine(
                 data: {
                   ...asset,
                   isCustom: false,
-                  imageUrl: relativeUrl(asset.imageUrl),
+                  imageUrl: asset.imageUrl,
                 },
               })
             )
