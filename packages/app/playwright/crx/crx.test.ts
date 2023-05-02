@@ -214,7 +214,7 @@ test.describe('FuelWallet Extension', () => {
         return window.fuel.disconnect();
       });
 
-      expect(await isDisonnected).toBeTruthy();
+      expect(await isDisconnected).toBeTruthy();
       // we need to reconnect the accounts for later tests
       await connectAccounts();
     });
