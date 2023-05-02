@@ -29,7 +29,7 @@ const Template: ComponentStoryFn<typeof ViewRecoveryPhrase> = () => {
           <Text>Password: 123123123</Text>
           {account && (
             <Button
-              onPress={() => store.openExportSeedPhrase()}
+              onPress={() => store.openViewRecoveryPhrase()}
               isLoading={isLoading}
             >
               Toggle Modal

@@ -65,7 +65,7 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
         icon: 'Lock',
         label: 'View Recovery Phrase',
         onPress() {
-          store.openExportSeedPhrase();
+          store.openViewRecoveryPhrase();
         },
       },
       {
