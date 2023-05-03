@@ -54,4 +54,31 @@ test.describe('SendTransaction', () => {
     // Wait for transaction to be confirmed
     await hasText(page, 'Success');
   });
+
+  test('Send transaction same owner', async () => {
+    await visit(page, '/send');
+
+    // Check submit button is disable by default
+    await page.waitForSelector('[aria-disabled="true"]');
+
+    // Select asset
+    await getButtonByText(page, 'Select one asset').click();
+    await page.getByText('Ethereum').click();
+
+    // Fill address
+    await getInputByName(page, 'address').type(account.address.toString());
+
+    // Fill amount
+    await getInputByName(page, 'amount').type('0.001');
+
+    // Check submit button is enabled after filling all fields
+    await page.waitForSelector('[aria-disabled="false"]');
+
+    // Submit transaction
+    await getButtonByText(page, 'Confirm').click();
+
+    await page.pause();
+
+    await hasText(page, '0.001 ETH');
+  });
 });
