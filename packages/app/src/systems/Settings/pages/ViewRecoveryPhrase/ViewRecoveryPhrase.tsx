@@ -37,9 +37,9 @@ export function ViewRecoveryPhrase() {
           <Alert status="warning" css={styles.alert}>
             <Alert.Description>
               <Text fontSize="xs" css={styles.alertDescription}>
-                Do not share your Recovery Phrase. {'\n'}
-                The recovery phrase, provide access to all your accounts sharing
-                or losing it may result in permanent loss of funds.
+                DON&APOS;T SHARE your Recovery Phrase. {'\n'}
+                This phrase provides access to all your accounts. Sharing or
+                losing it may result in a permanent loss of funds.
               </Text>
             </Alert.Description>
           </Alert>
