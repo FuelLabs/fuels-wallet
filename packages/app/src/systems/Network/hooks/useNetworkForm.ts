@@ -11,15 +11,19 @@ export type NetworkFormValues = {
   url: string;
 };
 
-function isValidUrl(url: string | undefined) {
+function isValidUrl(url?: string) {
   if (!url) return false;
-  try {
-    // eslint-disable-next-line no-new
-    new URL(url);
-  } catch (e) {
-    return false;
-  }
-  return url.endsWith('/graphql');
+  // Note: new URL('https://graphql') returns `true`
+  const pattern = new RegExp(
+    '^(https?:\\/\\/)?' +
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' +
+      '((\\d{1,3}\\.){3}\\d{1,3}))' +
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
+      '(\\?[;&a-z\\d%_.~+=-]*)?' +
+      '(\\#[-a-z\\d_]*)?$',
+    'i'
+  );
+  return pattern.test(url) && url.endsWith('/graphql');
 }
 
 const schema = yup

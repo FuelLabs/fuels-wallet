@@ -15,7 +15,7 @@ export function useChainInfo(providerUrl?: string) {
   const context = useSelector(service, selectors.context);
   const isLoading = useSelector(service, selectors.loading);
 
-  const { chainInfo } = context;
+  const { chainInfo, error } = context;
 
   useEffect(() => {
     if (providerUrl) {
@@ -25,5 +25,5 @@ export function useChainInfo(providerUrl?: string) {
     }
   }, [providerUrl]);
 
-  return { chainInfo, isLoading };
+  return { chainInfo, error, isLoading };
 }

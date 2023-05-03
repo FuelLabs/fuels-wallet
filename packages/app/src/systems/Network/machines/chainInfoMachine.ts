@@ -9,6 +9,7 @@ import { FetchMachine } from '~/systems/Core';
 
 type MachineContext = {
   chainInfo?: ChainInfo;
+  error?: string;
 };
 
 type MachineServices = {
@@ -52,7 +53,7 @@ export const chainInfoMachine = createMachine(
       },
       fetchingChainInfo: {
         tags: ['loading'],
-        entry: ['clearChainInfo'],
+        entry: ['clearChainInfo', 'clearError'],
         invoke: {
           src: 'fetchChainInfo',
           data: {
@@ -60,6 +61,7 @@ export const chainInfoMachine = createMachine(
           },
           onDone: [
             {
+              actions: ['assignError'],
               target: 'idle',
               cond: FetchMachine.hasError,
             },
@@ -80,13 +82,19 @@ export const chainInfoMachine = createMachine(
       clearChainInfo: assign({
         chainInfo: undefined,
       }),
+      assignError: assign({
+        error: (_, ev) => (ev.data.error as Error).message,
+      }),
+      clearError: assign({
+        error: (_) => undefined,
+      }),
     },
     services: {
       fetchChainInfo: FetchMachine.create<
         NetworkInputs['getChainInfo'],
         ChainInfo
       >({
-        showError: true,
+        showError: false,
         async fetch({ input }) {
           if (!input?.providerUrl) {
             throw new Error('No chain URL');

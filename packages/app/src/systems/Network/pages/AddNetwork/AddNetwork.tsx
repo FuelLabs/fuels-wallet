@@ -14,15 +14,29 @@ export function AddNetwork() {
   const { isDirty, invalid } = form.getFieldState('url');
   const isValidUrl = isDirty && !invalid;
   const { handlers, isLoading } = useNetworks();
-  const { chainInfo, isLoading: isLoadingChainInfo } = useChainInfo(
-    isValidUrl ? form.getValues('url') : undefined
-  );
+  const {
+    chainInfo,
+    error: chainInfoError,
+    isLoading: isLoadingChainInfo,
+  } = useChainInfo(isValidUrl ? form.getValues('url') : undefined);
 
   useEffect(() => {
     if (isValidUrl && !isLoadingChainInfo && chainInfo) {
       form.setValue('name', chainInfo.name, { shouldValidate: true });
     }
   }, [chainInfo, isLoadingChainInfo, isValidUrl]);
+
+  useEffect(() => {
+    if (chainInfoError) {
+      form.setError('url', {
+        type: 'manual',
+        message:
+          chainInfoError === 'Network request failed'
+            ? 'Invalid network'
+            : 'Unsupported network',
+      });
+    }
+  }, [chainInfoError]);
 
   function onSubmit(data: NetworkFormValues) {
     handlers.addNetwork({ data });
