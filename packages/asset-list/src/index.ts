@@ -6,6 +6,6 @@ export const AssetList = [
       '0x0000000000000000000000000000000000000000000000000000000000000000',
     name: 'Ethereum',
     symbol: 'ETH',
-    imageUrl: assets.ETH,
+    imageUrl: String(assets.ETH),
   },
 ];
