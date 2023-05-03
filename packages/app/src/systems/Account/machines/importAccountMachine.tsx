@@ -1,4 +1,5 @@
 import type { Account } from '@fuel-wallet/types';
+import { Wallet } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { createMachine } from 'xstate';
 
@@ -50,7 +51,7 @@ export const importAccountMachine = createMachine(
           onDone: [
             {
               cond: FetchMachine.hasError,
-              target: 'failed',
+              target: 'idle',
             },
             {
               actions: ['notifyUpdateAccounts', 'redirectToHome'],
@@ -58,9 +59,6 @@ export const importAccountMachine = createMachine(
             },
           ],
         },
-      },
-      failed: {
-        type: 'final',
       },
     },
   },
@@ -86,6 +84,16 @@ export const importAccountMachine = createMachine(
           }
           if (!input?.name.trim()) {
             throw new Error('Name cannot be empty');
+          }
+
+          // Check if account exists
+          const accounts = await AccountService.getAccounts();
+          const wallet = Wallet.fromPrivateKey(input.privateKey);
+          const exists = accounts.find((account) => {
+            return account.address.toString() === wallet.address.toString();
+          });
+          if (exists) {
+            throw new Error('Account already imported!');
           }
 
           // Add account to vault
