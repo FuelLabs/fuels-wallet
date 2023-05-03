@@ -5,7 +5,7 @@ import { bn, Wallet } from 'fuels';
 
 import { getButtonByText, hasText, visit, getInputByName } from '../commons';
 import { seedWallet } from '../commons/seedWallet';
-import { mockData } from '../mocks';
+import { ALT_ASSET, mockData } from '../mocks';
 
 test.describe('SendTransaction', () => {
   let browser: Browser;
@@ -77,8 +77,46 @@ test.describe('SendTransaction', () => {
     // Submit transaction
     await getButtonByText(page, 'Confirm').click();
 
-    await page.pause();
-
+    // Approve transaction
     await hasText(page, '0.001 ETH');
+    await getButtonByText(page, 'Approve').click();
+
+    // Wait for transaction to be confirmed
+    await hasText(page, 'Success');
+  });
+
+  test('Send transaction in other Asset', async () => {
+    const receiverWallet = Wallet.generate({
+      provider: process.env.VITE_FUEL_PROVIDER_URL,
+    });
+    await visit(page, '/send');
+
+    // Check submit button is disable by default
+    await page.waitForSelector('[aria-disabled="true"]');
+
+    // Select asset
+    await getButtonByText(page, 'Select one asset').click();
+    await page.getByText(ALT_ASSET.name).click();
+
+    // Fill address
+    await getInputByName(page, 'address').type(
+      receiverWallet.address.toString()
+    );
+
+    // Fill amount
+    await getInputByName(page, 'amount').type('0.001');
+
+    // Check submit button is enabled after filling all fields
+    await page.waitForSelector('[aria-disabled="false"]');
+
+    // Submit transaction
+    await getButtonByText(page, 'Confirm').click();
+
+    // Approve transaction
+    await hasText(page, `0.001 ${ALT_ASSET.symbol}`);
+    await getButtonByText(page, 'Approve').click();
+
+    // Wait for transaction to be confirmed
+    await hasText(page, 'Success');
   });
 });

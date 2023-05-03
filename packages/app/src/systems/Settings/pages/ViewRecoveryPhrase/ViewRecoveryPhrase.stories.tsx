@@ -1,16 +1,16 @@
 import { BoxCentered, Button, Stack, Text } from '@fuel-ui/react';
 import type { ComponentStoryFn, Meta } from '@storybook/react';
 
-import { createMockAccount, useAccounts } from '../..';
-
-import { ExportAccount } from './ExportAccount';
+import { ViewRecoveryPhrase } from './ViewRecoveryPhrase';
 
 import { store } from '~/store';
+import { useAccounts } from '~/systems/Account';
 import { Layout } from '~/systems/Core';
+import { mockVault } from '~/systems/Core/__tests__/utils/mockVault';
 
 export default {
-  component: ExportAccount,
-  title: 'Account/Pages/ExportAccount',
+  component: ViewRecoveryPhrase,
+  title: 'Settings/Pages/2. View Recovery Phrase',
   decorators: [(Story) => <Story />],
   parameters: {
     layout: 'fullscreen',
@@ -20,8 +20,8 @@ export default {
   },
 } as Meta;
 
-const Template: ComponentStoryFn<typeof ExportAccount> = () => {
-  const { account, isLoading, handlers } = useAccounts();
+const Template: ComponentStoryFn<typeof ViewRecoveryPhrase> = () => {
+  const { account, isLoading } = useAccounts();
   return (
     <Layout isLoading={isLoading}>
       <BoxCentered css={{ minW: '100%', minH: '100%' }}>
@@ -29,7 +29,7 @@ const Template: ComponentStoryFn<typeof ExportAccount> = () => {
           <Text>Password: 123123123</Text>
           {account && (
             <Button
-              onPress={() => handlers.goToExport(account.address)}
+              onPress={() => store.openViewRecoveryPhrase()}
               isLoading={isLoading}
             >
               Toggle Modal
@@ -45,8 +45,9 @@ export const Usage = Template.bind({});
 Usage.loaders = [
   async () => {
     store.closeOverlay();
-    const { account, manager } = await createMockAccount();
-    manager.unlock('123123123');
-    return { account };
+    await mockVault({
+      password: '123123123',
+    });
+    return {};
   },
 ];

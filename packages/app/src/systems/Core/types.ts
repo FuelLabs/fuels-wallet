@@ -31,7 +31,6 @@ export const Pages = {
   txs: route('/transactions'),
   tx: route<'txId'>('/transactions/view/:txId'),
   settings: route('/settings'),
-  settingsRevealPassphrase: route('/settings/reveal-passphrase'),
   settingsChangePassword: route('/settings/change-password'),
   settingsConnectedApps: route('/settings/connected-apps'),
   send: route('/send'),

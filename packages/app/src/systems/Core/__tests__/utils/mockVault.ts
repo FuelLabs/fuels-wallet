@@ -4,9 +4,13 @@ import { MNEMONIC, PASSWORD, PKEY } from '../config';
 import { NetworkService } from '~/systems/Network';
 import { SignUpService } from '~/systems/SignUp/services';
 
-export async function mockVault() {
+type MockVaultConfig = {
+  password?: string;
+};
+
+export async function mockVault(config?: MockVaultConfig) {
   const mnemonic = MNEMONIC;
-  const password = PASSWORD;
+  const password = config?.password || PASSWORD;
   const account = await SignUpService.create({
     data: {
       mnemonic: getWordsFromValue(mnemonic),
