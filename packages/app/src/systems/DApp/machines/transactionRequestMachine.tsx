@@ -312,7 +312,6 @@ export const transactionRequestMachine = createMachine(
           if (!input?.transactionRequest) {
             throw new Error('Invalid simulateTransaction input');
           }
-
           const receipts = await TxService.simulateTransaction(input);
           return receipts;
         },
