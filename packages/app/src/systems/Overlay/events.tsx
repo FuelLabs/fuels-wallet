@@ -73,5 +73,13 @@ export function overlayEvents(store: Store) {
         input: { modal: 'transactions.approve' },
       });
     },
+    openViewRecoveryPhrase() {
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: {
+          modal: 'settings.viewRecoveryPhrase',
+        },
+      });
+    },
   };
 }
