@@ -40,7 +40,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
               }}
             />
             <Form.Label htmlFor="confirmSaved">
-              I have backed up my recovery phrase in a secure place.
+              I have backed up my recovery phrase securely.
             </Form.Label>
           </Form.Control>
         </Alert>

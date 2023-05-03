@@ -68,8 +68,8 @@ export function CreatePassword({
           height={116}
         />
         <Header
-          title="Encrypt your wallet"
-          subtitle="Add a safe password to encrypt your wallet"
+          title="Create password for encryption"
+          subtitle="This password will be used to unlock your wallet."
         />
         <Stack css={{ width: '100%' }} gap="$4">
           <ControlledField

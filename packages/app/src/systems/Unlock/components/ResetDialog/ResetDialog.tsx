@@ -1,5 +1,15 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Dialog, Icon, Stack, Text } from '@fuel-ui/react';
+import {
+  Alert,
+  Button,
+  Checkbox,
+  Dialog,
+  Form,
+  Icon,
+  Stack,
+  Text,
+} from '@fuel-ui/react';
+import { useState } from 'react';
 
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 
@@ -14,6 +24,8 @@ export function ResetDialog({
   onReset,
   children,
 }: ResetDialogProps) {
+  const [isSavedChecked, setSavedChecked] = useState(false);
+
   return (
     <Dialog>
       <Dialog.Trigger>{children}</Dialog.Trigger>
@@ -21,18 +33,29 @@ export function ResetDialog({
         <Dialog.Close />
         <Dialog.Heading>Forgot password</Dialog.Heading>
         <Dialog.Description as="div" css={styles.description}>
-          <Stack gap={'$2'}>
+          <Stack gap={'$4'}>
             <Text>
-              If you have lost your password, the only way to recover your
-              wallet it is by using your seed phrase.{' '}
-            </Text>
-            <Text css={styles.warning}>
-              This action will remove all data stored on this device, including
-              your seed phrase, accounts, networks and other settings.
-            </Text>
-            <Text>
+              If you lost your password, the only way to recover your wallet is
+              to delete all data and set up your wallet with your seed phrase.
               Make sure you have backed up your seed phrase before proceeding.
             </Text>
+            <Alert status="warning">
+              <Form.Control css={{ flexDirection: 'row' }}>
+                <Checkbox
+                  id="confirmReset"
+                  aria-label="Confirm Reset"
+                  checked={isSavedChecked}
+                  onCheckedChange={(e) => {
+                    setSavedChecked(e as boolean);
+                  }}
+                />
+                <Form.Label htmlFor="confirmReset">
+                  I understand by resetting my wallet I&apos;ll remove all data
+                  stored on this device, including seed phrase, accounts,
+                  networks and other settings.
+                </Form.Label>
+              </Form.Control>
+            </Alert>
           </Stack>
         </Dialog.Description>
         <Dialog.Footer>
@@ -41,6 +64,7 @@ export function ResetDialog({
             color="accent"
             isLoading={isLoading}
             leftIcon={Icon.is('LockKeyOpen')}
+            isDisabled={!isSavedChecked}
             onPress={onReset}
             css={styles.button}
             aria-label="Reset wallet"
@@ -54,10 +78,6 @@ export function ResetDialog({
 }
 
 const styles = {
-  warning: cssObj({
-    color: '$gray11',
-    fontWeight: '$extrabold',
-  }),
   headingIcon: cssObj({
     marginRight: '$3',
   }),
@@ -79,6 +99,19 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
     display: 'flex',
+
+    '.fuel_alert--icon': {
+      display: 'none',
+    },
+    '.fuel_alert--content': {
+      gap: '$4',
+    },
+    '.fuel_checkbox': {
+      width: '$24',
+    },
+    '.fuel_checkbox:focus-within::after': {
+      borderColor: '$yellow5 !important',
+    },
   }),
   form: cssObj({
     flex: 1,

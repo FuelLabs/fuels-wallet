@@ -42,13 +42,13 @@ test.describe('CreateWallet', () => {
     await getButtonByText(page, /Next/i).click();
 
     /** Confirm Mnemonic */
-    await hasText(page, /Enter your Recovery Phrase/i);
+    await hasText(page, /Enter seed phrase/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
     // await page.pause();
 
     /** Adding password */
-    await hasText(page, /Encrypt your wallet/i);
+    await hasText(page, /Create password for encryption/i);
     const passwordInput = await getByAriaLabel(page, 'Your Password');
     await passwordInput.type(WALLET_PASSWORD);
     await passwordInput.press('Tab');
