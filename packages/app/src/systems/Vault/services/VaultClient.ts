@@ -1,3 +1,4 @@
+import EventEmitter from 'events';
 import type { JSONRPCParams, JSONRPCRequest } from 'json-rpc-2.0';
 import { JSONRPCClient } from 'json-rpc-2.0';
 
@@ -7,10 +8,11 @@ import { VaultServer } from './VaultServer';
 
 import { IS_CRX } from '~/config';
 
-export class VaultClient {
+export class VaultClient extends EventEmitter {
   readonly client: JSONRPCClient;
 
   constructor() {
+    super();
     // Setup client JSONRPC
     this.client = new JSONRPCClient(async (request) => {
       this.onRequest(request);
