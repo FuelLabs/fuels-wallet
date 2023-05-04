@@ -2,6 +2,7 @@ import type {
   RequestMessage,
   ResponseMessage,
   CommunicationMessage,
+  EventMessage,
 } from '@fuel-wallet/types';
 import {
   POPUP_SCRIPT_NAME,
@@ -31,9 +32,18 @@ export class VaultCRXConnector {
       case MessageTypes.response:
         this.onResponse(message);
         break;
+      case MessageTypes.event:
+        this.onEvent(message);
+        break;
       default:
     }
   };
+
+  async onEvent(message: EventMessage) {
+    message.events.forEach((event) => {
+      this.clientVault.emit(event.event, ...event.params);
+    });
+  }
 
   async onResponse(message: ResponseMessage) {
     this.clientVault.client.receive(message.response);
