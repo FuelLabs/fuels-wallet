@@ -175,6 +175,18 @@ export class AccountService {
     return exitsAccountWithName;
   }
 
+  static async generateAccountName(randomSuffix?: boolean): Promise<string> {
+    const suffix = randomSuffix ? Math.floor(Math.random() * 100) : '';
+    const accounts = await AccountService.getAccounts();
+    const count = accounts.length;
+    const name = `Account ${count + 1}${suffix}`;
+    const accountNameExists = await this.checkAccountNameExists(name);
+    if (accountNameExists) {
+      return this.generateAccountName(true);
+    }
+    return name;
+  }
+
   static filterByName(accounts: Account[], name: string = '') {
     return accounts.filter((account) =>
       account.name.toLowerCase().includes(name.toLowerCase())
