@@ -4,18 +4,14 @@ import { isB256 } from 'fuels';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { useAccountFormName } from './useAccountFormName';
-
 import type { Maybe } from '~/systems/Core';
 
 export type ImportAccountFormValues = {
   privateKey: string;
-  name: string;
 };
 
 const DEFAULT_VALUES = {
   privateKey: '',
-  name: '',
 };
 
 export type UseImportAccountFormReturn = ReturnType<
@@ -26,10 +22,8 @@ export type UseImportAccountForm = {
   accounts?: Maybe<Account[]>;
 };
 
-export function useImportAccountForm(opts: UseImportAccountForm) {
-  const nameSchemaObj = useAccountFormName(opts?.accounts || []);
+export function useImportAccountForm() {
   const schema = yup.object({
-    name: nameSchemaObj,
     privateKey: yup
       .string()
       .test('is-key-valid', 'Private Key is not valid', (v) => isB256(v || ''))

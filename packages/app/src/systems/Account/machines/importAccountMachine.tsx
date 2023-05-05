@@ -82,9 +82,7 @@ export const importAccountMachine = createMachine(
           if (!input?.privateKey.trim()) {
             throw new Error('Private key cannot be empty');
           }
-          if (!input?.name.trim()) {
-            throw new Error('Name cannot be empty');
-          }
+          const name = await AccountService.generateAccountName();
 
           // Check if account exists
           const accounts = await AccountService.getAccounts();
@@ -105,7 +103,7 @@ export const importAccountMachine = createMachine(
           // Add account to the database
           const account = await AccountService.addAccount({
             data: {
-              name: input.name,
+              name,
               address: accountVault.address.toString(),
               publicKey: accountVault.publicKey,
               isHidden: false,

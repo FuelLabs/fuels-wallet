@@ -34,7 +34,6 @@ export type AccountInputs = {
     data: Partial<Account>;
   };
   importAccount: {
-    name: string;
     privateKey: string;
   };
   exportAccount: {
