@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Alert, Button, Flex, Focus, InputPassword } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import debounce from 'lodash.debounce';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -41,8 +42,8 @@ export function ChangePassword() {
   const { error, handlers, isChangingPassword } = useSettings();
   const form = useForm<ChangePasswordFormValues>({
     resolver: yupResolver(schema),
-    mode: 'onBlur',
-    reValidateMode: 'onBlur',
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       password: '',
       confirmPassword: '',
@@ -55,7 +56,12 @@ export function ChangePassword() {
     setError,
     setValue,
     formState: { isValid },
+    trigger,
   } = form;
+
+  const debouncedValidate = debounce(() => {
+    trigger('confirmPassword');
+  }, 500);
 
   useEffect(() => {
     if (error) {
@@ -103,15 +109,15 @@ export function ChangePassword() {
                 render={({ field }) => (
                   <InputSecurePassword
                     field={field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      if (form.getValues('confirmPassword')) {
+                        debouncedValidate();
+                      }
+                    }}
                     onChangeStrength={(strength: string) =>
                       setValue('strength', strength)
                     }
-                    onBlur={() => {
-                      if (form.getValues('confirmPassword')) {
-                        form.trigger();
-                      }
-                      field.onBlur();
-                    }}
                     inputProps={{
                       autoComplete: 'new-password',
                     }}
@@ -132,6 +138,10 @@ export function ChangePassword() {
                     css={styles.input}
                     aria-label="Confirm Password"
                     placeholder="Confirm your new password"
+                    onChange={(e) => {
+                      field.onChange(e);
+                      debouncedValidate();
+                    }}
                   />
                 )}
               />

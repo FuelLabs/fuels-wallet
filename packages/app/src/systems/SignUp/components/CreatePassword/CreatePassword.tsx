@@ -1,5 +1,6 @@
 import { Stack, Flex, Button, InputPassword } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import debounce from 'lodash.debounce';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -44,8 +45,8 @@ export function CreatePassword({
 }: CreatePasswordProps) {
   const form = useForm<CreatePasswordValues>({
     resolver: yupResolver(schema),
-    reValidateMode: 'onBlur',
-    mode: 'onBlur',
+    reValidateMode: 'onChange',
+    mode: 'onChange',
     defaultValues: {
       password: '',
       confirmPassword: '',
@@ -57,7 +58,12 @@ export function CreatePassword({
     handleSubmit,
     formState: { isValid },
     setValue,
+    trigger,
   } = form;
+
+  const debouncedValidate = debounce(() => {
+    trigger('confirmPassword');
+  }, 500);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -86,9 +92,11 @@ export function CreatePassword({
                 onChangeStrength={(strength: string) =>
                   setValue('strength', strength)
                 }
-                onBlur={() => {
-                  form.trigger();
-                  field.onBlur();
+                onChange={(e) => {
+                  field.onChange(e);
+                  if (form.getValues('confirmPassword')) {
+                    debouncedValidate();
+                  }
                 }}
               />
             )}
@@ -103,6 +111,10 @@ export function CreatePassword({
                 autoComplete="new-password"
                 placeholder="Confirm your password"
                 aria-label="Confirm Password"
+                onChange={(e) => {
+                  field.onChange(e);
+                  debouncedValidate();
+                }}
               />
             )}
           />

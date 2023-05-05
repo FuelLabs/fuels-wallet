@@ -7,6 +7,7 @@ import type { ControllerRenderProps, FieldValues } from 'react-hook-form';
 
 export type InputSecurePasswordProps = {
   onChangeStrength?: (strength: string) => void;
+  onChange?: (e: never) => void;
   onBlur?: () => void;
   placeholder?: string;
   ariaLabel?: string;
@@ -21,6 +22,7 @@ export function InputSecurePassword({
   inputProps,
   field,
   onChangeStrength,
+  onChange,
   onBlur,
   placeholder = 'Type your password',
   ariaLabel = 'Your Password',
@@ -42,6 +44,7 @@ export function InputSecurePassword({
         <InputPassword
           {...field}
           {...inputProps}
+          onChange={onChange}
           onBlur={() => {
             setPasswordTooltipOpened(false);
             onBlur?.();
