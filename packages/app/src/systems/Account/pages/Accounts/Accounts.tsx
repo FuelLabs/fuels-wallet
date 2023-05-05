@@ -41,11 +41,12 @@ export const Accounts = () => {
       <Dialog.Footer css={styles.footer}>
         <Button
           aria-label="Add account"
-          onPress={handlers.goToAdd}
+          onPress={handlers.addAccount}
           leftIcon={Icon.is('Plus')}
           variant="ghost"
           size={'sm'}
           iconSize={14}
+          isLoading={isLoading}
         >
           Add new account
         </Button>

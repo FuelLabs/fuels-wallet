@@ -79,6 +79,12 @@ export function useAccounts() {
     selectors.canHideAccounts
   );
 
+  function addAccount() {
+    store.send(Services.accounts, {
+      type: 'ADD_ACCOUNT',
+    });
+  }
+
   function closeDialog() {
     overlay.close();
   }
@@ -125,6 +131,7 @@ export function useAccounts() {
       logout: store.logout,
       setCurrentAccount: store.setCurrentAccount,
       toggleHideAccount: store.toggleHideAccount,
+      addAccount,
     },
   };
 }
