@@ -214,13 +214,24 @@ export class TxService {
       amount: isEth(coin) ? bn(coin.amount).add(gasFee) : bn(coin.amount),
     }));
 
+    if (!coins.find(isEth)) {
+      coins.push({
+        assetId: NativeAssetId,
+        amount: gasFee,
+      });
+    }
+
     const resources = await wallet.getResourcesToSpend(coins);
     request.addResources(resources);
     return request;
   }
 
   static async fundTransaction(input: TxInputs['fundTransaction']) {
-    const transactionRequest = await TxService.addResources(input);
+    const { minGasPrice } = await input.wallet.provider.getNodeInfo();
+    const transactionRequest = await TxService.addResources({
+      ...input,
+      gasFee: minGasPrice,
+    });
     const txCost = await getTxCost(transactionRequest, input.wallet);
     transactionRequest.gasLimit = txCost.gasUsed;
     transactionRequest.gasPrice = txCost.gasPrice;

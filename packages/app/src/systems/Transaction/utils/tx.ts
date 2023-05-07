@@ -358,9 +358,8 @@ export function getTransferOperations({
   for (const output of coinOutputs) {
     const input = coinInputs.find((i) => i.assetId === output.assetId)!;
     const isSameAsset = input.assetId === output.assetId;
-    const isDifPublicKey = input.owner.toString() !== output.to.toString();
 
-    if (isSameAsset && isDifPublicKey) {
+    if (isSameAsset) {
       operations = addOperation(operations, {
         name: OperationName.transfer,
         from: {
