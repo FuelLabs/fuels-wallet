@@ -19,6 +19,7 @@ import {
   getAccountByName,
   switchAccount,
   waitAccountPage,
+  getWalletAccounts,
 } from './utils';
 
 const WALLET_PASSWORD = 'Qwe123456$';
@@ -156,31 +157,27 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('Add more accounts', async () => {
-      async function createAccount(name: string) {
+      async function createAccount() {
         await waitWalletToLoad(popupPage);
+        const accounts = await getWalletAccounts(popupPage);
         await getByAriaLabel(popupPage, 'Accounts').click();
         await getByAriaLabel(popupPage, 'Add account').click();
-        await getByAriaLabel(popupPage, 'Account Name').type(name);
-        await getByAriaLabel(popupPage, 'Create new account').click();
-        await waitAccountPage(popupPage, name);
+        await waitAccountPage(popupPage, `Account ${accounts.length + 1}`);
       }
 
-      async function createAccountFromPrivateKey(
-        privateKey: string,
-        name: string
-      ) {
+      async function createAccountFromPrivateKey(privateKey: string) {
         await waitWalletToLoad(popupPage);
+        const accounts = await getWalletAccounts(popupPage);
         await getByAriaLabel(popupPage, 'Accounts').click();
         await getByAriaLabel(popupPage, 'Import from private key').click();
         await getByAriaLabel(popupPage, 'Private Key').type(privateKey);
-        await getByAriaLabel(popupPage, 'Account Name').type(name);
         await getByAriaLabel(popupPage, 'Import').click();
-        await waitAccountPage(popupPage, name);
+        await waitAccountPage(popupPage, `Account ${accounts.length + 1}`);
       }
 
-      await createAccount('Account 2');
-      await createAccount('Account 3');
-      await createAccountFromPrivateKey(PRIVATE_KEY, 'Account 4');
+      await createAccount();
+      await createAccount();
+      await createAccountFromPrivateKey(PRIVATE_KEY);
       await switchAccount(popupPage, 'Account 1');
     });
 
