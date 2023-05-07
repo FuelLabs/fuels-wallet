@@ -5,7 +5,7 @@ import { useImportAccountForm } from '../../hooks/useImportAccountForm';
 import { ImportAccountForm } from './ImportAccountForm';
 
 const Content = () => {
-  const form = useImportAccountForm({ accounts: [] });
+  const form = useImportAccountForm();
   return <ImportAccountForm form={form} />;
 };
 
