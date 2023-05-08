@@ -116,8 +116,8 @@ export const accountsMachine = createMachine(
               target: 'failed',
             },
             {
-              actions: ['notifyUpdateAccounts'],
-              target: 'fetchingAccounts',
+              actions: ['notifyUpdateAccounts', 'redirectToHome'],
+              target: 'idle',
             },
           ],
         },
