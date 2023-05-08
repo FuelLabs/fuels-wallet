@@ -37,10 +37,12 @@ export function ResetDialog({
             <Text>
               If you lost your password, the only way to recover your wallet is
               to delete all data and set up your wallet with your seed phrase.
+            </Text>
+            <Text>
               Make sure you have backed up your seed phrase before proceeding.
             </Text>
-            <Alert status="warning">
-              <Form.Control css={{ flexDirection: 'row' }}>
+            <Alert status="warning" css={styles.alert}>
+              <Form.Control css={styles.form}>
                 <Checkbox
                   id="confirmReset"
                   aria-label="Confirm Reset"
@@ -78,14 +80,6 @@ export function ResetDialog({
 }
 
 const styles = {
-  headingIcon: cssObj({
-    marginRight: '$3',
-  }),
-  alert: cssObj({
-    py: '$2',
-    pr: '$2',
-    background: '$gray2',
-  }),
   button: cssObj({
     width: '100%',
   }),
@@ -99,6 +93,13 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
     display: 'flex',
+  }),
+  form: cssObj({
+    flexDirection: 'row',
+  }),
+  alert: cssObj({
+    py: '0',
+    px: '$4',
 
     '.fuel_alert--icon': {
       display: 'none',
@@ -112,10 +113,5 @@ const styles = {
     '.fuel_checkbox:focus-within::after': {
       borderColor: '$yellow5 !important',
     },
-  }),
-  form: cssObj({
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
   }),
 };
