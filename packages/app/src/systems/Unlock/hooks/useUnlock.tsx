@@ -1,6 +1,9 @@
+import { useEffect } from 'react';
+
 import type { UnlockMachineState } from '../machines';
 
 import { store, Services } from '~/store';
+import { VaultService } from '~/systems/Vault';
 
 const selectors = {
   error(state: UnlockMachineState) {
@@ -22,6 +25,17 @@ export function useUnlock() {
   const isLoading = store.useSelector(Services.unlock, selectors.isLoading);
   const isUnlocked = store.useSelector(Services.unlock, selectors.isUnlocked);
   const isReseting = store.useSelector(Services.unlock, selectors.isReseting);
+
+  // Lock Wallet when Vault is locked
+  useEffect(() => {
+    const onLock = () => {
+      store.checkLock();
+    };
+    VaultService.on('lock', onLock);
+    return () => {
+      VaultService.off('lock', onLock);
+    };
+  }, []);
 
   store.useUpdateMachineConfig(Services.unlock, {
     actions: {

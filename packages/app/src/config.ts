@@ -30,3 +30,5 @@ export const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 export const IS_TEST = process.env.NODE_ENV === 'test';
 export const IS_CRX_POPUP =
   IS_CRX && globalThis.location.pathname === CRXPages.popup;
+/** Time in minutes before Wallet auto locks */
+export const AUTO_LOCK_IN_MINUTES = 20;
