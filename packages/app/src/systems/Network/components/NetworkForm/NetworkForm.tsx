@@ -8,10 +8,13 @@ import {
   Button,
   Spinner,
 } from '@fuel-ui/react';
+import { motion } from 'framer-motion';
 
 import type { UseNetworkFormReturn } from '../../hooks';
 
-import { ControlledField } from '~/systems/Core';
+import { animations, ControlledField } from '~/systems/Core';
+
+const MotionCard = motion(Card);
 
 export type NetworkFormProps = {
   form: UseNetworkFormReturn;
@@ -33,7 +36,7 @@ export function NetworkForm({ form, isEditing, isLoading }: NetworkFormProps) {
   return (
     <Stack css={{ width: '100%' }} gap="$4">
       {showReview && (
-        <Card>
+        <MotionCard {...animations.slideInRight()}>
           <Card.Header css={styles.cardHeader} justify="space-between">
             <Text css={styles.cardHeaderText}>
               You&apos;re adding this network
@@ -46,7 +49,7 @@ export function NetworkForm({ form, isEditing, isLoading }: NetworkFormProps) {
             <Text as="h2">{name}</Text>
             <Text fontSize="sm">{url}</Text>
           </Card.Body>
-        </Card>
+        </MotionCard>
       )}
       {!showReview && (
         <ControlledField

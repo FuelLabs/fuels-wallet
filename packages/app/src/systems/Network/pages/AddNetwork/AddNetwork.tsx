@@ -1,6 +1,8 @@
 import { Box, Button, Dialog, Focus, Icon, IconButton } from '@fuel-ui/react';
+import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 
+import { animations } from '~/systems/Core';
 import type { NetworkFormValues } from '~/systems/Network';
 import {
   NetworkForm,
@@ -8,6 +10,8 @@ import {
   useNetworkForm,
   useChainInfo,
 } from '~/systems/Network';
+
+const MotionBox = motion(Box);
 
 export function AddNetwork() {
   const form = useNetworkForm();
@@ -43,7 +47,11 @@ export function AddNetwork() {
   }
 
   return (
-    <Box as="form" onSubmit={form.handleSubmit(onSubmit)}>
+    <MotionBox
+      {...animations.slideInTop()}
+      as="form"
+      onSubmit={form.handleSubmit(onSubmit)}
+    >
       <Dialog.Heading>
         Add Network
         <IconButton
@@ -78,6 +86,6 @@ export function AddNetwork() {
           Add
         </Button>
       </Dialog.Footer>
-    </Box>
+    </MotionBox>
   );
 }

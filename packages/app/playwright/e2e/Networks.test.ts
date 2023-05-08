@@ -88,7 +88,7 @@ test.describe('Networks', () => {
     const urlInput = await getInputByName(page, 'url');
     await expect(urlInput).toBeFocused();
     await urlInput.fill('https://beta-3.fuel.network/graphql');
-    await page.waitForTimeout(2000); // Wait to fetch `chainInfo`
+    await page.waitForTimeout(3500); // Wait to fetch `chainInfo`
     await hasText(page, /Testnet Beta 3/i);
     await expect(buttonCreate).toBeEnabled();
     await buttonCreate.click();
