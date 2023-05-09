@@ -15,6 +15,7 @@ import type { UseNetworkFormReturn } from '../../hooks';
 import { animations, ControlledField } from '~/systems/Core';
 
 const MotionCard = motion(Card);
+const MotionInput = motion(Input);
 
 export type NetworkFormProps = {
   form: UseNetworkFormReturn;
@@ -36,7 +37,7 @@ export function NetworkForm({ form, isEditing, isLoading }: NetworkFormProps) {
   return (
     <Stack css={{ width: '100%' }} gap="$4">
       {showReview && (
-        <MotionCard {...animations.slideInRight()}>
+        <MotionCard {...animations.slideInTop()}>
           <Card.Header css={styles.cardHeader} justify="space-between">
             <Text css={styles.cardHeaderText}>
               You&apos;re adding this network
@@ -55,6 +56,7 @@ export function NetworkForm({ form, isEditing, isLoading }: NetworkFormProps) {
         <ControlledField
           control={control}
           name="url"
+          css={styles.url}
           isDisabled={isEditing || isLoading}
           isRequired
           isInvalid={Boolean(formState.errors?.url)}
@@ -64,7 +66,7 @@ export function NetworkForm({ form, isEditing, isLoading }: NetworkFormProps) {
             </HelperIcon>
           }
           render={({ field }) => (
-            <Input>
+            <MotionInput {...animations.slideInTop()}>
               <Input.Field
                 {...field}
                 aria-label="Network URL"
@@ -75,7 +77,7 @@ export function NetworkForm({ form, isEditing, isLoading }: NetworkFormProps) {
                   <Spinner />
                 </Input.ElementRight>
               )}
-            </Input>
+            </MotionInput>
           )}
         />
       )}
@@ -109,5 +111,10 @@ const styles = {
   cardHeaderText: cssObj({
     fontSize: '$sm',
     fontWeight: '$bold',
+  }),
+  url: cssObj({
+    'input[aria-disabled="true"]': {
+      opacity: 0.5,
+    },
   }),
 };

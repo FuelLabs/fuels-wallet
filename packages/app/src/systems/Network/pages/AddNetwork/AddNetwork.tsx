@@ -34,10 +34,7 @@ export function AddNetwork() {
     if (chainInfoError) {
       form.setError('url', {
         type: 'manual',
-        message:
-          chainInfoError === 'Network request failed'
-            ? 'Invalid network'
-            : 'Unsupported network',
+        message: 'Invalid network',
       });
     }
   }, [chainInfoError]);
