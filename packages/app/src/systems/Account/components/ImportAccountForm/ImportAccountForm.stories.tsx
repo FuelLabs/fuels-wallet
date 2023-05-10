@@ -10,7 +10,7 @@ export default {
 };
 
 export const Usage = () => {
-  const form = useImportAccountForm();
+  const form = useImportAccountForm({ accounts: [] });
   return (
     <Box css={{ width: 320 }}>
       <ImportAccountForm form={form} />
