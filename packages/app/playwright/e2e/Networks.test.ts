@@ -55,11 +55,11 @@ test.describe('Networks', () => {
     await hasText(page, /Networks/i);
     await getByAriaLabel(page, 'Update').first().click();
     await hasText(page, /Update network/i);
+    const urlInput = await getInputByName(page, 'url');
+    await expect(urlInput).toHaveValue(VITE_FUEL_PROVIDER_URL);
     const inputName = await getInputByName(page, 'name');
     await expect(inputName).toBeFocused();
     await inputName.fill('Local 1');
-    const urlInput = await getInputByName(page, 'url');
-    await expect(urlInput).toHaveValue(VITE_FUEL_PROVIDER_URL);
     const update = await getButtonByText(page, /update/i);
     expect(update).toBeEnabled();
     await update.click();
@@ -83,17 +83,17 @@ test.describe('Networks', () => {
     await getByAriaLabel(page, 'Selected Network').click();
     await hasText(page, /Add new network/i);
     await getByAriaLabel(page, 'Add network').click();
-    const buttonCreate = await getButtonByText(page, /create/i);
+    const buttonCreate = await getButtonByText(page, /add/i);
     await expect(buttonCreate).toBeDisabled();
-    const inputName = await getInputByName(page, 'name');
-    await expect(inputName).toBeFocused();
-    await inputName.fill('Test Network');
     const urlInput = await getInputByName(page, 'url');
-    await urlInput.fill('https://test.network/graphql');
+    await expect(urlInput).toBeFocused();
+    await urlInput.fill('https://beta-3.fuel.network/graphql');
+    await page.waitForTimeout(3500); // Wait to fetch `chainInfo`
+    await hasText(page, /Testnet Beta 3/i);
     await expect(buttonCreate).toBeEnabled();
     await buttonCreate.click();
     await getByAriaLabel(page, 'Menu').click();
     await page.locator(`[data-key="networks"]`).click();
-    await hasText(page, 'Test Network');
+    await hasText(page, 'Testnet Beta 3');
   });
 });

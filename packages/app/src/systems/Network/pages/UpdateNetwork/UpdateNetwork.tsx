@@ -28,7 +28,7 @@ export function UpdateNetwork() {
       </Dialog.Heading>
       <Dialog.Description as="div">
         <Focus.Scope contain autoFocus>
-          <NetworkForm form={form} />
+          <NetworkForm form={form} isEditing />
         </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
