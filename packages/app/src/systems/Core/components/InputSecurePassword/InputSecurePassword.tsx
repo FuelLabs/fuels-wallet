@@ -33,7 +33,6 @@ export function InputSecurePassword({
   return (
     <Stack css={{ ...styles.root, ...css }} gap={0}>
       <PasswordStrength
-        onOpenChange={() => setPasswordTooltipOpened(true)}
         password={field.value || ''}
         open={passwordTooltipOpened}
         minLength={8}
