@@ -1,18 +1,54 @@
 import { Box, Button, Dialog, Focus, Icon, IconButton } from '@fuel-ui/react';
+import { motion } from 'framer-motion';
+import { useEffect } from 'react';
 
+import { animations } from '~/systems/Core';
 import type { NetworkFormValues } from '~/systems/Network';
-import { NetworkForm, useNetworks, useNetworkForm } from '~/systems/Network';
+import {
+  NetworkForm,
+  useNetworks,
+  useNetworkForm,
+  useChainInfo,
+} from '~/systems/Network';
+
+const MotionBox = motion(Box);
 
 export function AddNetwork() {
   const form = useNetworkForm();
+  const { isDirty, invalid } = form.getFieldState('url');
+  const isValidUrl = isDirty && !invalid;
   const { handlers, isLoading } = useNetworks();
+  const {
+    chainInfo,
+    error: chainInfoError,
+    isLoading: isLoadingChainInfo,
+  } = useChainInfo(isValidUrl ? form.getValues('url') : undefined);
+
+  useEffect(() => {
+    if (isValidUrl && !isLoadingChainInfo && chainInfo) {
+      form.setValue('name', chainInfo.name, { shouldValidate: true });
+    }
+  }, [chainInfo, isLoadingChainInfo, isValidUrl]);
+
+  useEffect(() => {
+    if (chainInfoError) {
+      form.setError('url', {
+        type: 'manual',
+        message: 'Invalid network',
+      });
+    }
+  }, [chainInfoError]);
 
   function onSubmit(data: NetworkFormValues) {
     handlers.addNetwork({ data });
   }
 
   return (
-    <Box as="form" onSubmit={form.handleSubmit(onSubmit)}>
+    <MotionBox
+      {...animations.slideInTop()}
+      as="form"
+      onSubmit={form.handleSubmit(onSubmit)}
+    >
       <Dialog.Heading>
         Add Network
         <IconButton
@@ -25,7 +61,11 @@ export function AddNetwork() {
       </Dialog.Heading>
       <Dialog.Description as="div">
         <Focus.Scope contain autoFocus>
-          <NetworkForm form={form} />
+          <NetworkForm
+            form={form}
+            isEditing={false}
+            isLoading={isLoadingChainInfo}
+          />
         </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
@@ -38,11 +78,11 @@ export function AddNetwork() {
           isDisabled={!form.formState.isValid}
           isLoading={isLoading}
           leftIcon={Icon.is('Plus')}
-          aria-label="Create new network"
+          aria-label="Add new network"
         >
-          Create
+          Add
         </Button>
       </Dialog.Footer>
-    </Box>
+    </MotionBox>
   );
 }
