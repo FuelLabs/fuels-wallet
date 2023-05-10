@@ -7,8 +7,14 @@ import { useAccounts } from '../../hooks';
 import { coreStyles } from '~/systems/Core/styles';
 
 export const Accounts = () => {
-  const { accounts, canHideAccounts, hasHiddenAccounts, isLoading, handlers } =
-    useAccounts();
+  const {
+    accounts,
+    canHideAccounts,
+    hasHiddenAccounts,
+    isLoading,
+    handlers,
+    isAddingAccount,
+  } = useAccounts();
 
   return (
     <>
@@ -46,7 +52,7 @@ export const Accounts = () => {
           variant="ghost"
           size={'sm'}
           iconSize={14}
-          isLoading={isAddingNewAccount}
+          isLoading={isAddingAccount}
         >
           Add new account
         </Button>

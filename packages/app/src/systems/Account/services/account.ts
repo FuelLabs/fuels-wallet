@@ -3,8 +3,8 @@ import type { Account } from '@fuel-wallet/types';
 import { Address, bn, Provider } from 'fuels';
 
 import { isEth } from '~/systems/Asset/utils/asset';
-import { getUniqueString } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core/types';
+import { getUniqueString } from '~/systems/Core/utils';
 import { db } from '~/systems/Core/utils/database';
 
 export type AccountInputs = {

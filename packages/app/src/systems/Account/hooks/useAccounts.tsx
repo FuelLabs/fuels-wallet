@@ -117,7 +117,7 @@ export function useAccounts() {
     canHideAccounts,
     hasHiddenAccounts,
     isLoading: status('loading'),
-    isAddingNewAccount: status('addingAccount'),
+    isAddingAccount: status('addingAccount'),
     handlers: {
       closeDialog,
       goToAdd: store.openAccountsAdd,
