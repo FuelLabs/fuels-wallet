@@ -107,7 +107,7 @@ export const accountsMachine = createMachine(
         },
       },
       addingAccount: {
-        tags: ['loading'],
+        tags: ['addingAccount'],
         invoke: {
           src: 'addAccount',
           onDone: [

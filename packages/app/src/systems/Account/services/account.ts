@@ -3,6 +3,7 @@ import type { Account } from '@fuel-wallet/types';
 import { Address, bn, Provider } from 'fuels';
 
 import { isEth } from '~/systems/Asset/utils/asset';
+import { getUniqueString } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
 
@@ -179,7 +180,11 @@ export class AccountService {
     const count = accounts.length;
     const desiredName = `Account ${count + 1}`;
     const allNames = accounts.map(({ name }) => name);
-    const name = getUniqueString(desiredName, allNames);
+    const name = getUniqueString({
+      desired: desiredName,
+      allValues: allNames,
+    });
+    return name || desiredName;
   }
 
   static filterByName(accounts: Account[], name: string = '') {

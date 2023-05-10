@@ -28,5 +28,10 @@ export function accountEvents(store: Store) {
         },
       });
     },
+    addAccount() {
+      store.send(Services.accounts, {
+        type: 'ADD_ACCOUNT',
+      });
+    },
   };
 }

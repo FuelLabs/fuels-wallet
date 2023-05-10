@@ -46,7 +46,7 @@ export const Accounts = () => {
           variant="ghost"
           size={'sm'}
           iconSize={14}
-          isLoading={isLoading}
+          isLoading={isAddingNewAccount}
         >
           Add new account
         </Button>

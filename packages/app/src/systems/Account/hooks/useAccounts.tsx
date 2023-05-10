@@ -14,6 +14,7 @@ enum AccountStatus {
   loading = 'loading',
   unlocking = 'unlocking',
   unlockingLoading = 'unlockingLoading',
+  addingAccount = 'addingAccount',
 }
 
 const selectors = {
@@ -26,6 +27,7 @@ const selectors = {
   },
   status(state: AccountsMachineState) {
     if (state.hasTag('loading')) return AccountStatus.loading;
+    if (state.hasTag('addingAccount')) return AccountStatus.addingAccount;
     return AccountStatus.idle;
   },
   context(state: AccountsMachineState) {
@@ -79,12 +81,6 @@ export function useAccounts() {
     selectors.canHideAccounts
   );
 
-  function addAccount() {
-    store.send(Services.accounts, {
-      type: 'ADD_ACCOUNT',
-    });
-  }
-
   function closeDialog() {
     overlay.close();
   }
@@ -121,6 +117,7 @@ export function useAccounts() {
     canHideAccounts,
     hasHiddenAccounts,
     isLoading: status('loading'),
+    isAddingNewAccount: status('addingAccount'),
     handlers: {
       closeDialog,
       goToAdd: store.openAccountsAdd,
@@ -131,7 +128,7 @@ export function useAccounts() {
       logout: store.logout,
       setCurrentAccount: store.setCurrentAccount,
       toggleHideAccount: store.toggleHideAccount,
-      addAccount,
+      addAccount: store.addAccount,
     },
   };
 }
