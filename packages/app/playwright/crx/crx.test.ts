@@ -165,19 +165,22 @@ test.describe('FuelWallet Extension', () => {
         await waitAccountPage(popupPage, `Account ${accounts.length + 1}`);
       }
 
-      async function createAccountFromPrivateKey(privateKey: string) {
+      async function createAccountFromPrivateKey(
+        privateKey: string,
+        name: string
+      ) {
         await waitWalletToLoad(popupPage);
-        const accounts = await getWalletAccounts(popupPage);
         await getByAriaLabel(popupPage, 'Accounts').click();
         await getByAriaLabel(popupPage, 'Import from private key').click();
         await getByAriaLabel(popupPage, 'Private Key').type(privateKey);
+        await getByAriaLabel(popupPage, 'Account Name').type(name);
         await getByAriaLabel(popupPage, 'Import').click();
-        await waitAccountPage(popupPage, `Account ${accounts.length + 1}`);
+        await waitAccountPage(popupPage, name);
       }
 
       await createAccount();
       await createAccount();
-      await createAccountFromPrivateKey(PRIVATE_KEY);
+      await createAccountFromPrivateKey(PRIVATE_KEY, 'Account 4');
       await switchAccount(popupPage, 'Account 1');
     });
 

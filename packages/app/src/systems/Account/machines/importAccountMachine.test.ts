@@ -44,7 +44,7 @@ describe('importAccountMachine', () => {
       const name = 'Imported Account';
       await importAccount(name);
       const accounts = await AccountService.getAccounts();
-      expect(accounts?.[1].name).toBe(`Account 2`);
+      expect(accounts?.[1].name).toBe('Imported Account');
     });
 
     it('should throw a error if private key is already imported', async () => {
