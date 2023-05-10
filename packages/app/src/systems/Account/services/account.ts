@@ -174,16 +174,12 @@ export class AccountService {
     return exitsAccountWithName;
   }
 
-  static async generateAccountName(randomSuffix?: boolean): Promise<string> {
-    const suffix = randomSuffix ? Math.floor(Math.random() * 100) : '';
+  static async generateAccountName() {
     const accounts = await AccountService.getAccounts();
     const count = accounts.length;
-    const name = `Account ${count + 1}${suffix}`;
-    const accountNameExists = await this.checkAccountNameExists(name);
-    if (accountNameExists) {
-      return this.generateAccountName(true);
-    }
-    return name;
+    const desiredName = `Account ${count + 1}`;
+    const allNames = accounts.map(({ name }) => name);
+    const name = getUniqueString(desiredName, allNames);
   }
 
   static filterByName(accounts: Account[], name: string = '') {
