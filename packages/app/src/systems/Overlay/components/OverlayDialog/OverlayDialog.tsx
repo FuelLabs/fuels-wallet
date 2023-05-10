@@ -8,6 +8,7 @@ import { ExportAccount } from '~/systems/Account/pages/ExportAccount';
 import { ImportAccount } from '~/systems/Account/pages/ImportAccount';
 import { AddNetwork, Networks, UpdateNetwork } from '~/systems/Network/pages';
 import { useOverlay } from '~/systems/Overlay';
+import { ViewRecoveryPhrase } from '~/systems/Settings/pages';
 import { TxApprove } from '~/systems/Transaction';
 
 export function OverlayDialog() {
@@ -31,6 +32,9 @@ export function OverlayDialog() {
 
         {/* Transactions */}
         {overlay.is('transactions.approve') && <TxApprove />}
+
+        {/* Settings */}
+        {overlay.is('settings.viewRecoveryPhrase') && <ViewRecoveryPhrase />}
       </Dialog.Content>
     </Dialog>
   );

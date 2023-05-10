@@ -16,7 +16,7 @@ export function SidebarSubmenu({
 }: SidebarSubmenuProps) {
   const pathname = usePathname();
   const isActive = pathname?.startsWith(`/docs/${subpath}`);
-  const [isOpened, setIsOpened] = useState(Boolean(isActive));
+  const [isOpened, setIsOpened] = useState(true);
 
   function toggle() {
     setIsOpened((s) => !s);

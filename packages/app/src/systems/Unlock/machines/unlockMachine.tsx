@@ -33,6 +33,9 @@ export type UnlockWalletEvent =
     }
   | {
       type: 'RESET_WALLET';
+    }
+  | {
+      type: 'CHECK_LOCK';
     };
 
 export type UnlockMachineEvents = UnlockWalletEvent;
@@ -124,6 +127,9 @@ export const unlockMachine = createMachine(
     on: {
       LOCK_WALLET: {
         target: 'locking',
+      },
+      CHECK_LOCK: {
+        target: 'checkingLocked',
       },
     },
   },

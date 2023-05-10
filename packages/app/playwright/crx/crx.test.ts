@@ -114,6 +114,10 @@ test.describe('FuelWallet Extension', () => {
       await reload(page);
       await getButtonByText(page, /Create a Wallet/i).click();
 
+      /** Accept terms */
+      await hasText(page, /Terms of Service/i);
+      await getButtonByText(page, /Accept/i).click();
+
       /** Copy Mnemonic */
       await getButtonByText(page, /Copy/i).click();
       const savedCheckbox = await getByAriaLabel(page, 'Confirm Saved');
@@ -180,7 +184,7 @@ test.describe('FuelWallet Extension', () => {
       await switchAccount(popupPage, 'Account 1');
     });
 
-    await test.step('window.fuel.connect()', async () => {
+    async function connectAccounts() {
       const isConnected = blankPage.evaluate(async () => {
         return window.fuel.connect();
       });
@@ -199,6 +203,44 @@ test.describe('FuelWallet Extension', () => {
       await getButtonByText(authorizeRequest, /connect/i).click();
 
       await expect(await isConnected).toBeTruthy();
+    }
+
+    await test.step('window.fuel.connect()', async () => {
+      await connectAccounts();
+    });
+
+    await test.step('window.fuel.disconnect()', async () => {
+      const isDisconnected = blankPage.evaluate(async () => {
+        return window.fuel.disconnect();
+      });
+
+      expect(await isDisconnected).toBeTruthy();
+      // we need to reconnect the accounts for later tests
+      await connectAccounts();
+    });
+
+    await test.step('window.fuel.on("connection")', async () => {
+      const onDeleteConnection = blankPage.evaluate(() => {
+        return new Promise((resolve) => {
+          window.fuel.on(window.fuel.events.connection, (isConnected) => {
+            resolve(isConnected);
+          });
+        });
+      });
+      // Disconnect accounts from inside of the Connected Apps page
+      await getByAriaLabel(popupPage, 'Menu').click();
+      const connectedApps = await hasText(popupPage, 'Connected Apps');
+      await connectedApps.click();
+      await getByAriaLabel(popupPage, 'Delete').click();
+      await getButtonByText(popupPage, 'Confirm').click();
+
+      const isConnectedResult = await onDeleteConnection;
+      expect(isConnectedResult).toBeFalsy();
+
+      await getByAriaLabel(popupPage, 'Menu').click();
+      (await hasText(popupPage, 'Wallet')).click();
+
+      await connectAccounts();
     });
 
     await test.step('window.fuel.getWallet()', async () => {

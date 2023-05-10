@@ -24,7 +24,11 @@ describe('AccountList', () => {
 
   it('should show hidden accounts when click on toggle button', async () => {
     const { user } = render(
-      <AccountList accounts={MOCK_ACCOUNTS} onPress={store.setCurrentAccount} />
+      <AccountList
+        accounts={MOCK_ACCOUNTS}
+        onPress={store.setCurrentAccount}
+        hasHiddenAccounts={true}
+      />
     );
     const btn = screen.getByText(/show hidden/i);
     expect(btn).toBeInTheDocument();

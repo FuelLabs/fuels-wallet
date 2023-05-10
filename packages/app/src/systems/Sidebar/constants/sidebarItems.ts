@@ -61,10 +61,12 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
         path: Pages.assets(),
       },
       {
-        key: 'reveal-passphrase',
+        key: 'view-recovery-phrase',
         icon: 'Lock',
-        label: 'Reveal Passphrase',
-        path: Pages.settingsRevealPassphrase(),
+        label: 'View Recovery Phrase',
+        onPress() {
+          store.openViewRecoveryPhrase();
+        },
       },
       {
         key: 'change-password',

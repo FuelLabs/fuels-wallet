@@ -2,7 +2,7 @@ import { encrypt } from '@fuel-ts/keystore';
 import { Mnemonic } from '@fuel-ts/mnemonic';
 import type { Account as WalletAccount } from '@fuel-ts/wallet-manager';
 import { WalletManager } from '@fuel-ts/wallet-manager';
-import type { Account, Network } from '@fuel-wallet/types';
+import type { Account, Asset, Connection, Network } from '@fuel-wallet/types';
 import type { Page } from '@playwright/test';
 import { Address } from 'fuels';
 
@@ -44,6 +44,15 @@ export const CUSTOM_ASSET_2 = {
   assetId: '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d91',
   name: 'New1',
   symbol: 'NEW1',
+  imageUrl:
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
+  isCustom: true,
+};
+
+export const ALT_ASSET = {
+  assetId: '0x0000000000000000000000000000000000000000000000000000000000000001',
+  name: 'Alt Token',
+  symbol: 'ALT',
   imageUrl:
     'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
   isCustom: true,
@@ -95,6 +104,18 @@ export function createAccounts(
   );
 }
 
+export function createConnections(accounts: Array<string>): Connection[] {
+  const numberOfConnections = 1;
+  return new Array(numberOfConnections).fill(0).map(() => {
+    return {
+      origin: 'http://localhost:3004',
+      title: 'mock connection',
+      favIconUrl: '',
+      accounts,
+    };
+  });
+}
+
 type SerializedVault = {
   key: string;
   data: string;
@@ -127,11 +148,16 @@ export async function mockData(
   const manager = await createManager(mnemonic);
   const accounts = await createAccounts(manager, numberOfAccounts);
   const vault = await serializeVault(manager);
+  const connections = createConnections(
+    accounts.map((account) => account.address)
+  );
 
   await page.evaluate(
-    ([accounts, networks, vault, password]: [
+    ([accounts, networks, connections, assets, vault, password]: [
       Array<Account>,
       Array<Network>,
+      Array<Connection>,
+      Array<Asset>,
       SerializedVault,
       string
     ]) => {
@@ -145,6 +171,9 @@ export async function mockData(
             await fuelDB.accounts.bulkAdd(accounts);
             await fuelDB.networks.clear();
             await fuelDB.networks.bulkAdd(networks);
+            await fuelDB.connections.clear();
+            await fuelDB.connections.bulkAdd(connections);
+            await fuelDB.assets.bulkAdd(assets);
             resolve(await fuelDB.networks.toArray());
           } catch (err: unknown) {
             reject(err);
@@ -154,7 +183,7 @@ export async function mockData(
         })();
       });
     },
-    [accounts, networks, vault, WALLET_PASSWORD]
+    [accounts, networks, connections, [ALT_ASSET], vault, WALLET_PASSWORD]
   );
   await reload(page);
 
@@ -168,6 +197,7 @@ export async function mockData(
     manager,
     accounts: accountsWithPkey,
     networks,
+    connections,
   };
 }
 

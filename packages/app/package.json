@@ -1,7 +1,7 @@
 {
   "name": "fuels-wallet",
   "private": true,
-  "version": "0.7.2",
+  "version": "0.8.0",
   "database": "9",
   "scripts": {
     "build:all": "run-p build:web build:crx build:storybook",
@@ -50,6 +50,7 @@
     "graphql-request": "^5.2.0",
     "graphql-tag": "^2.12.6",
     "json-rpc-2.0": "^1.5.1",
+    "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
     "react-content-loader": "^6.2.1",
     "react-dom": "^18.2.0",
@@ -60,7 +61,8 @@
     "react-router-dom": "^6.9.0",
     "tai64": "^1.0.0",
     "xstate": "^4.37.0",
-    "yup": "^1.0.2"
+    "yup": "^1.0.2",
+    "vite-plugin-markdown": "^2.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",
@@ -96,6 +98,7 @@
     "@types/chrome": "^0.0.224",
     "@types/lodash.clonedeep": "^4.5.7",
     "@types/react": "^18.0.28",
+    "@types/lodash.debounce": "^4.0.7",
     "@types/react-custom-scroll": "^4.3.2",
     "@types/react-dom": "^18.0.11",
     "@types/react-google-recaptcha": "^2.1.5",

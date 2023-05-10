@@ -1,5 +1,43 @@
 # fuels-wallet
 
+## 0.8.0
+
+### Minor Changes
+
+- [#733](https://github.com/FuelLabs/fuels-wallet/pull/733) [`147d01b`](https://github.com/FuelLabs/fuels-wallet/commit/147d01b1ff3b74bae9a9a7224c124d37baa1d64b) Thanks [@luizstacio](https://github.com/luizstacio)! - Update view recovery phrase flow.
+
+- [#641](https://github.com/FuelLabs/fuels-wallet/pull/641) [`0c65d22`](https://github.com/FuelLabs/fuels-wallet/commit/0c65d22bab404a5bffb399b5ea4dabe6b1f91022) Thanks [@eswarasai](https://github.com/eswarasai)! - Add account name on home and tx preview
+
+- [#734](https://github.com/FuelLabs/fuels-wallet/pull/734) [`6ba23b4`](https://github.com/FuelLabs/fuels-wallet/commit/6ba23b4261f949e326f3874acb1e68cb0571a145) Thanks [@luizstacio](https://github.com/luizstacio)! - Hide faucet button for other networks
+
+- [#722](https://github.com/FuelLabs/fuels-wallet/pull/722) [`5eab64a`](https://github.com/FuelLabs/fuels-wallet/commit/5eab64af791dd6da237da7c97c4a35a13a4be6b4) Thanks [@eswarasai](https://github.com/eswarasai)! - Modified network url validation rules
+
+- [#596](https://github.com/FuelLabs/fuels-wallet/pull/596) [`cccda5f`](https://github.com/FuelLabs/fuels-wallet/commit/cccda5f74fd3f9c8672ccbc3a1659fa69a66d48e) Thanks [@tomiiide](https://github.com/tomiiide)! - Create terms of use page
+
+- [#674](https://github.com/FuelLabs/fuels-wallet/pull/674) [`8b60303`](https://github.com/FuelLabs/fuels-wallet/commit/8b60303cf5a730af4ed93e29126465028afae123) Thanks [@eswarasai](https://github.com/eswarasai)! - Add hide account feature
+
+### Patch Changes
+
+- [#738](https://github.com/FuelLabs/fuels-wallet/pull/738) [`87fa40d`](https://github.com/FuelLabs/fuels-wallet/commit/87fa40d7b1a8e88815fc7bb9e5df501595e5f6cf) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix transaction preview for transactions to the same address.
+
+- [#739](https://github.com/FuelLabs/fuels-wallet/pull/739) [`6fba5f9`](https://github.com/FuelLabs/fuels-wallet/commit/6fba5f9e93653f2b7244f1ef6428f612fd1a91fa) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix Wallet auto locker.
+
+- [#735](https://github.com/FuelLabs/fuels-wallet/pull/735) [`b0f980e`](https://github.com/FuelLabs/fuels-wallet/commit/b0f980e07181acc45d9834d11f6e1cddd0d9978b) Thanks [@luizstacio](https://github.com/luizstacio)! - Improve error handling when importing a privateKey that already exists
+
+- [#692](https://github.com/FuelLabs/fuels-wallet/pull/692) [`cb9340c`](https://github.com/FuelLabs/fuels-wallet/commit/cb9340cfa919647d47362aa6eda69764db7b65bd) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat(infra): improve dev linking with local deps (fuel-ui and fuel-ts)
+
+- [#678](https://github.com/FuelLabs/fuels-wallet/pull/678) [`dbda3f6`](https://github.com/FuelLabs/fuels-wallet/commit/dbda3f64295f70fdedd3ad4a6a1f53076d3205e0) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix typo
+
+- [#697](https://github.com/FuelLabs/fuels-wallet/pull/697) [`6953201`](https://github.com/FuelLabs/fuels-wallet/commit/6953201d0ae1fb2f506ea33707641ee6950d8097) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: vite config
+
+- [#726](https://github.com/FuelLabs/fuels-wallet/pull/726) [`c8b2163`](https://github.com/FuelLabs/fuels-wallet/commit/c8b2163371b2b7f53fb2046d74f2ab4005335750) Thanks [@matt-user](https://github.com/matt-user)! - fix: broadcast connection deletions
+
+- [#737](https://github.com/FuelLabs/fuels-wallet/pull/737) [`d9b8c61`](https://github.com/FuelLabs/fuels-wallet/commit/d9b8c61bcab10cd51cd80c0c02e5a048ba8026a6) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix transfer of other tokens
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.8.0
+  - @fuel-wallet/types@0.8.0
+
 ## 0.7.2
 
 ### Patch Changes

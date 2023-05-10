@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Card, Flex, Icon, Text } from '@fuel-ui/react';
+import { Avatar, Box, Card, Flex, Heading, Icon, Text } from '@fuel-ui/react';
 import { AddressType } from '@fuel-wallet/types';
 import { Address, isB256, isBech32 } from 'fuels';
 import type { FC } from 'react';
@@ -8,7 +8,7 @@ import type { TxRecipientAddress } from '../../types';
 
 import { TxRecipientCardLoader } from './TxRecipientCardLoader';
 
-import { FuelAddress } from '~/systems/Account';
+import { FuelAddress, useAccounts } from '~/systems/Account';
 
 export type TxRecipientCardProps = {
   recipient?: TxRecipientAddress;
@@ -23,12 +23,15 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   recipient,
   isReceiver,
 }) => {
+  const { accounts } = useAccounts();
   const address = recipient?.address || '';
   const isValidAddress = isB256(address) || isBech32(address);
   const fuelAddress = isValidAddress
     ? Address.fromString(address).toString()
     : '';
   const isContract = recipient?.type === AddressType.contract;
+  const name =
+    accounts?.find((a) => a.address === fuelAddress)?.name || 'unknown';
 
   return (
     <Card
@@ -57,6 +60,9 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
             </Box>
           )}
           <Flex css={styles.info}>
+            <Heading as="h6" css={styles.name}>
+              {name}
+            </Heading>
             <FuelAddress address={fuelAddress} css={styles.address} />
           </Flex>
         </>
@@ -102,7 +108,10 @@ const styles = {
     gap: '$1',
   }),
   address: cssObj({
-    fontSize: '$xs !important',
+    fontSize: '$xs',
+  }),
+  name: cssObj({
+    margin: '0px 0px -5px',
   }),
 };
 
