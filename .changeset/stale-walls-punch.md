@@ -2,4 +2,4 @@
 'fuels-wallet': minor
 ---
 
-Improved change password feature UI/UX
+Improved change password UX and information structure.
