@@ -106,7 +106,7 @@ export const FetchMachine = {
           showError: (_, ev) => {
             if (!opts.showError) return;
             const errorMessage = (ev.data as any)?.message ?? '';
-            toast.custom(getErrorToastProps(errorMessage));
+            toast.error(getErrorToastProps(errorMessage));
           },
           assignError: assign({
             error: (_, ev) => ev.data,
