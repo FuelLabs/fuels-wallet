@@ -2,7 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Alert, Button, Flex, Focus, InputPassword } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import debounce from 'lodash.debounce';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -59,9 +59,12 @@ export function ChangePassword() {
     trigger,
   } = form;
 
-  const debouncedValidate = debounce(() => {
-    trigger('confirmPassword');
-  }, 500);
+  const debouncedValidate = useCallback(
+    debounce(() => {
+      trigger('confirmPassword');
+    }, 500),
+    []
+  );
 
   useEffect(() => {
     if (error) {

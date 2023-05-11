@@ -1,6 +1,7 @@
 import { Stack, Flex, Button, InputPassword } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import debounce from 'lodash.debounce';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -61,9 +62,12 @@ export function CreatePassword({
     trigger,
   } = form;
 
-  const debouncedValidate = debounce(() => {
-    trigger('confirmPassword');
-  }, 500);
+  const debouncedValidate = useCallback(
+    debounce(() => {
+      trigger('confirmPassword');
+    }, 500),
+    []
+  );
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
