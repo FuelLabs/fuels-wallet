@@ -14,7 +14,6 @@ enum AccountStatus {
   loading = 'loading',
   unlocking = 'unlocking',
   unlockingLoading = 'unlockingLoading',
-  addingAccount = 'addingAccount',
 }
 
 const selectors = {
@@ -27,7 +26,6 @@ const selectors = {
   },
   status(state: AccountsMachineState) {
     if (state.hasTag('loading')) return AccountStatus.loading;
-    if (state.hasTag('addingAccount')) return AccountStatus.addingAccount;
     return AccountStatus.idle;
   },
   context(state: AccountsMachineState) {
@@ -117,7 +115,6 @@ export function useAccounts() {
     canHideAccounts,
     hasHiddenAccounts,
     isLoading: status('loading'),
-    isAddingAccount: status('addingAccount'),
     handlers: {
       closeDialog,
       goToAdd: store.openAccountsAdd,

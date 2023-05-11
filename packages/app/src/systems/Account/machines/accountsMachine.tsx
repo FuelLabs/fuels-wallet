@@ -1,4 +1,3 @@
-import { toast } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
@@ -11,7 +10,6 @@ import { store } from '~/store';
 import type { Maybe } from '~/systems/Core';
 import { CoreService, FetchMachine, Storage } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
-import { VaultService } from '~/systems/Vault';
 
 type MachineContext = {
   accounts?: Account[];
@@ -29,9 +27,6 @@ type MachineServices = {
   setCurrentAccount: {
     data: Account;
   };
-  addAccount: {
-    data: Account;
-  };
 };
 
 export type AccountsMachineEvents =
@@ -42,8 +37,7 @@ export type AccountsMachineEvents =
   | {
       type: 'TOGGLE_HIDE_ACCOUNT';
       input: AccountInputs['updateAccount'];
-    }
-  | { type: 'ADD_ACCOUNT'; input?: null };
+    };
 
 const fetchAccount = {
   invoke: {
@@ -96,9 +90,6 @@ export const accountsMachine = createMachine(
             actions: ['toggleHideAccount', 'notifyUpdateAccounts'],
             target: 'idle',
           },
-          ADD_ACCOUNT: {
-            target: 'addingAccount',
-          },
         },
         after: {
           /**
@@ -108,26 +99,6 @@ export const accountsMachine = createMachine(
             target: 'refreshAccount',
             cond: 'isLoggedIn',
           },
-        },
-      },
-      addingAccount: {
-        tags: ['addingAccount'],
-        invoke: {
-          src: 'addAccount',
-          onDone: [
-            {
-              cond: FetchMachine.hasError,
-              target: 'failed',
-            },
-            {
-              actions: [
-                'notifyUpdateAccounts',
-                'redirectToHome',
-                'showSuccessNotification',
-              ],
-              target: 'idle',
-            },
-          ],
         },
       },
       fetchingAccounts: {
@@ -239,12 +210,8 @@ export const accountsMachine = createMachine(
       notifyUpdateAccounts: () => {
         store.updateAccounts();
       },
-      redirectToHome() {
+      redirectToHome: () => {
         store.closeOverlay();
-      },
-      showSuccessNotification: (_, ev) => {
-        const { name } = ev.data;
-        toast.success(` ${name || 'Account'} created`);
       },
     },
     services: {
@@ -291,39 +258,6 @@ export const accountsMachine = createMachine(
         maxAttempts: 1,
         async fetch() {
           await CoreService.clear();
-        },
-      }),
-      addAccount: FetchMachine.create<never, Account>({
-        showError: true,
-        maxAttempts: 1,
-        async fetch() {
-          const name = await AccountService.generateAccountName();
-
-          if (await AccountService.checkAccountNameExists(name)) {
-            throw new Error('Account name already exists');
-          }
-
-          // Add account to vault
-          const accountVault = await VaultService.addAccount({
-            // TODO: remove this when we have multiple vaults
-            // https://github.com/FuelLabs/fuels-wallet/issues/562
-            vaultId: 0,
-          });
-
-          // Add account to the database
-          let account = await AccountService.addAccount({
-            data: {
-              name,
-              ...accountVault,
-            },
-          });
-
-          // set as active account
-          account = await AccountService.setCurrentAccount({
-            address: account.address.toString(),
-          });
-
-          return account;
         },
       }),
     },

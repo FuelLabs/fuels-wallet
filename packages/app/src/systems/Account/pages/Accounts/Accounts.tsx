@@ -2,19 +2,15 @@ import { cssObj } from '@fuel-ui/css';
 import { Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
 
 import { AccountList } from '../../components';
-import { useAccounts } from '../../hooks';
+import { useAccounts, useAddAccount } from '../../hooks';
 
 import { coreStyles } from '~/systems/Core/styles';
 
 export const Accounts = () => {
-  const {
-    accounts,
-    canHideAccounts,
-    hasHiddenAccounts,
-    isLoading,
-    handlers,
-    isAddingAccount,
-  } = useAccounts();
+  const { accounts, canHideAccounts, hasHiddenAccounts, isLoading, handlers } =
+    useAccounts();
+  const { handlers: addAccountHandlers, isLoading: isAddingAccount } =
+    useAddAccount();
 
   return (
     <>
@@ -47,7 +43,7 @@ export const Accounts = () => {
       <Dialog.Footer css={styles.footer}>
         <Button
           aria-label="Add account"
-          onPress={handlers.addAccount}
+          onPress={addAccountHandlers.addAccount}
           leftIcon={Icon.is('Plus')}
           variant="ghost"
           size={'sm'}
