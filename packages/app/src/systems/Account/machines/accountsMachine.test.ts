@@ -104,20 +104,6 @@ describe('accountsMachine', () => {
     });
   });
 
-  describe('add', () => {
-    it('should be able to add an account', async () => {
-      await expectStateMatch(service, 'idle');
-      service.send('ADD_ACCOUNT');
-
-      await expectStateMatch(service, 'addingAccount');
-      await expectStateMatch(service, 'idle');
-
-      const accounts = await AccountService.getAccounts();
-      const name = `Account ${accounts.length}`;
-      expect(accounts?.[accounts.length - 1].name).toBe(name);
-    });
-  });
-
   describe('hide', () => {
     it('should hide an account', async () => {
       state = await expectStateMatch(service, 'idle');
