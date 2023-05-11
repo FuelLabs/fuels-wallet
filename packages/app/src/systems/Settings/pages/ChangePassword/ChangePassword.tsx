@@ -1,6 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Button, Flex, InputPassword } from '@fuel-ui/react';
+import { Alert, Button, Flex, Focus, InputPassword } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import debounce from 'lodash.debounce';
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -24,7 +26,7 @@ const schema = yup
     confirmPassword: yup
       .string()
       .oneOf([yup.ref('password'), null], 'Passwords must match'),
-    currentPassword: yup.string().required('Current Password is required'),
+    currentPassword: yup.string().required('Current password is required'),
   })
   .required();
 
@@ -37,7 +39,7 @@ type ChangePasswordFormValues = {
 
 export function ChangePassword() {
   const navigate = useNavigate();
-  const { handlers, isChangingPassword } = useSettings();
+  const { error, handlers, isChangingPassword } = useSettings();
   const form = useForm<ChangePasswordFormValues>({
     resolver: yupResolver(schema),
     mode: 'onChange',
@@ -54,7 +56,21 @@ export function ChangePassword() {
     setError,
     setValue,
     formState: { isValid },
+    trigger,
   } = form;
+
+  const debouncedValidate = useCallback(
+    debounce(() => {
+      trigger('confirmPassword');
+    }, 500),
+    []
+  );
+
+  useEffect(() => {
+    if (error) {
+      setError('currentPassword', { message: error });
+    }
+  }, [error]);
 
   function onSubmit(values: ChangePasswordFormValues) {
     if (values.confirmPassword !== values.password) {
@@ -73,64 +89,72 @@ export function ChangePassword() {
         <Layout.TopBar onBack={goBack} />
         <Layout.Content>
           <Flex css={styles.wrapper}>
-            <Alert direction="row" status={'warning'}>
+            <Focus.Scope contain autoFocus>
+              <ControlledField
+                control={control}
+                name="currentPassword"
+                label="Current Password"
+                render={({ field }) => (
+                  <InputPassword
+                    {...field}
+                    autoComplete="current-password"
+                    css={styles.input}
+                    aria-label="Current Password"
+                    placeholder="Type your current password"
+                  />
+                )}
+              />
+              <ControlledField
+                control={control}
+                name="password"
+                label="New Password"
+                hideError
+                render={({ field }) => (
+                  <InputSecurePassword
+                    field={field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      if (form.getValues('confirmPassword')) {
+                        debouncedValidate();
+                      }
+                    }}
+                    onChangeStrength={(strength: string) =>
+                      setValue('strength', strength)
+                    }
+                    inputProps={{
+                      autoComplete: 'new-password',
+                    }}
+                    ariaLabel="New Password"
+                    placeholder="Type your new password"
+                    css={styles.input}
+                  />
+                )}
+              />
+              <ControlledField
+                control={control}
+                name="confirmPassword"
+                label="Confirm Password"
+                render={({ field }) => (
+                  <InputPassword
+                    {...field}
+                    autoComplete="new-password"
+                    css={styles.input}
+                    aria-label="Confirm Password"
+                    placeholder="Confirm your new password"
+                    onChange={(e) => {
+                      field.onChange(e);
+                      debouncedValidate();
+                    }}
+                  />
+                )}
+              />
+            </Focus.Scope>
+            <Alert direction="row" status={'warning'} css={{ mt: '$2' }}>
               <Alert.Description>
-                If you lose your password and your seed phrase, all you funds
+                If you lose your password and your seed phrase, all your funds
                 can be lost forever.
               </Alert.Description>
             </Alert>
-            <ControlledField
-              control={control}
-              name="currentPassword"
-              label="Current Password"
-              render={({ field }) => (
-                <InputPassword
-                  {...field}
-                  autoComplete="current-password"
-                  css={styles.input}
-                  aria-label="Current Password"
-                  placeholder="Type your current password"
-                />
-              )}
-            />
-            <ControlledField
-              control={control}
-              name="password"
-              label="New Password"
-              hideError
-              render={({ field }) => (
-                <InputSecurePassword
-                  field={field}
-                  onChangeStrength={(strength: string) =>
-                    setValue('strength', strength)
-                  }
-                  onBlur={() => {
-                    form.trigger();
-                    field.onBlur();
-                  }}
-                  inputProps={{
-                    autoComplete: 'new-password',
-                  }}
-                  ariaLabel="New Password"
-                  placeholder="Type your new password"
-                  css={styles.input}
-                />
-              )}
-            />
-            <ControlledField
-              control={control}
-              name="confirmPassword"
-              label="Confirm Password"
-              render={({ field }) => (
-                <InputPassword
-                  {...field}
-                  autoComplete="new-password"
-                  css={styles.input}
-                  aria-label="Confirm Password"
-                  placeholder="Confirm your new password"
-                />
-              )}
-            />
           </Flex>
         </Layout.Content>
         <Layout.BottomBar>

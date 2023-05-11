@@ -1,10 +1,14 @@
 import { toast } from '@fuel-ui/react';
 import type { InterpreterFrom, StateFrom } from 'xstate';
-import { createMachine } from 'xstate';
+import { assign, createMachine } from 'xstate';
 
 import { FetchMachine } from '~/systems/Core';
 import type { VaultInputs } from '~/systems/Vault';
 import { VaultService } from '~/systems/Vault';
+
+type MachineContext = {
+  error?: string;
+};
 
 type MachineEvents = {
   type: 'CHANGE_PASSWORD';
@@ -21,9 +25,7 @@ export const settingsMachine = createMachine(
     predictableActionArguments: true,
     id: 'settingsMachine',
     initial: 'idle',
-    context: {
-      words: [],
-    },
+    context: {} as MachineContext,
     states: {
       idle: {
         tags: ['unlocking'],
@@ -34,6 +36,7 @@ export const settingsMachine = createMachine(
         },
       },
       changingPassword: {
+        entry: 'clearError',
         invoke: {
           data: {
             input: (_: void, ev: MachineEvents) => ev.input,
@@ -41,8 +44,9 @@ export const settingsMachine = createMachine(
           src: 'changePassword',
           onDone: [
             {
-              target: 'idle',
               cond: FetchMachine.hasError,
+              actions: ['assignError'],
+              target: 'idle',
             },
             {
               target: 'passwordChanged',
@@ -60,13 +64,21 @@ export const settingsMachine = createMachine(
     },
   },
   {
+    actions: {
+      assignError: assign({
+        error: 'Incorrect password',
+      }),
+      clearError: assign({
+        error: undefined,
+      }),
+    },
     services: {
       changePassword: FetchMachine.create<VaultInputs['changePassword'], void>({
-        showError: true,
+        showError: false,
         maxAttempts: 1,
         fetch: async ({ input }) => {
           if (!input?.currentPassword || !input.password) {
-            throw new Error('Invalid Input');
+            throw new Error('Current and new password are required');
           }
           await VaultService.changePassword(input);
           toast.success('Password Changed');
