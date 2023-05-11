@@ -3,6 +3,11 @@ import { toast } from '@fuel-ui/react';
 import type { TransitionConfig } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
+import {
+  getErrorIcon,
+  getErrorToastProps,
+} from '../components/Toast/ToastErrorCopy';
+
 export type FetchResponse<T> = T & {
   error?: unknown;
 };
@@ -103,8 +108,10 @@ export const FetchMachine = {
         actions: {
           showError: (_, ev) => {
             if (!opts.showError) return;
-            const error = ev.data as any;
-            toast.error(error.message);
+            const errorMessage = (ev.data as any)?.message ?? '';
+            toast(getErrorToastProps(errorMessage), {
+              icon: getErrorIcon(),
+            });
           },
           assignError: assign({
             error: (_, ev) => ev.data,
