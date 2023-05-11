@@ -1,33 +1,28 @@
-import { styled } from '@fuel-ui/css';
-import { Box, Button } from '@fuel-ui/react';
-import './toast.css';
+import { Button } from '@fuel-ui/react';
 
-const TextBox = styled(Box, {
-  display: 'block',
-  textOverflow: 'ellipsis',
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  width: 200,
-});
+const MAX_MESSAGE_LENGTH = 110;
 
-export const getErrorToastProps = (message: string) => () =>
-  (
-    <span>
-      <TextBox>{message}</TextBox>
-      {message.length > 100 ? (
-        <Button
-          color="accent"
-          css={{ width: 70, marginTop: 5 }}
-          onPress={() => {
-            navigator.clipboard.writeText(message);
-          }}
-        >
-          Copy
-        </Button>
-      ) : null}
-    </span>
+export const getErrorToastProps = (message: string) => () => {
+  const clampedText =
+    message.length > MAX_MESSAGE_LENGTH
+      ? `${message.slice(0, MAX_MESSAGE_LENGTH)}...`
+      : message;
+  return (
+    <p>
+      <p>{clampedText}</p>
+      <p>
+        {message.length > MAX_MESSAGE_LENGTH ? (
+          <Button
+            color="accent"
+            css={{ width: 70 }}
+            onPress={() => {
+              navigator.clipboard.writeText(message);
+            }}
+          >
+            Copy
+          </Button>
+        ) : null}
+      </p>
+    </p>
   );
-
-export const getErrorIcon = () => {
-  return <div className="Toast-Error-Icon" />;
 };
