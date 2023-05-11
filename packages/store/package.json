@@ -39,7 +39,7 @@
     "xstate": "^4.37.0"
   },
   "devDependencies": {
-    "@fuel-ui/test-utils": "^0.13.0",
+    "@fuel-ui/test-utils": "0.15.0-dev-c6f1a1b",
     "@fuel-wallet/config": "workspace:*",
     "@testing-library/react": "^14.0.0",
     "@types/react": "^18.0.28",

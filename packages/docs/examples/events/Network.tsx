@@ -1,4 +1,4 @@
-import { Flex, Text, Stack, Button } from '@fuel-ui/react';
+import { Text, Button, Box } from '@fuel-ui/react';
 import type { FuelProviderConfig } from '@fuel-wallet/sdk';
 import { useEffect, useState } from 'react';
 
@@ -44,8 +44,8 @@ export function NetworkExample() {
 
   return (
     <ExampleBox error={errorMessage}>
-      <Flex>
-        <Stack>
+      <Box.Flex>
+        <Box.Stack>
           {currentNetwork ? (
             <>
               <Text>Current network config </Text>
@@ -69,8 +69,8 @@ export function NetworkExample() {
               View your network
             </Button>
           )}
-        </Stack>
-      </Flex>
+        </Box.Stack>
+      </Box.Flex>
     </ExampleBox>
   );
 }

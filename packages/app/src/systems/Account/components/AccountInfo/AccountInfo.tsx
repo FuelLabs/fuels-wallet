@@ -37,7 +37,7 @@ const styles = {
     display: 'flex',
   }),
   headerText: cssObj({
-    color: '$gray12',
+    color: '$intentsBase12',
     fontWeight: '$bold',
   }),
 };

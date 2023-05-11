@@ -1,13 +1,5 @@
 import { cssObj, cx } from '@fuel-ui/css';
-import {
-  Avatar,
-  Card,
-  Copyable,
-  Flex,
-  Grid,
-  Stack,
-  Text,
-} from '@fuel-ui/react';
+import { Avatar, Box, Card, Copyable, Grid, Text } from '@fuel-ui/react';
 import type { AssetAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import type { FC } from 'react';
@@ -37,7 +29,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
   return (
     <Card css={styles.card(hasError)}>
       {(title || hasError) && (
-        <Flex css={styles.header}>
+        <Box.Flex css={styles.header}>
           {title && (
             <Text as="h3" css={{ fontSize: '$sm', fontWeight: '$semibold' }}>
               {title}
@@ -46,7 +38,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
           {hasError && (
             <Text
               css={{
-                color: '$red10',
+                color: '$intentsError10',
                 fontSize: '$sm',
                 fontWeight: '$semibold',
               }}
@@ -54,16 +46,16 @@ export const AssetsAmount: AssetsAmountComponent = ({
               (not enough balance)
             </Text>
           )}
-        </Flex>
+        </Box.Flex>
       )}
-      <Stack gap="$2">
+      <Box.Stack gap="$2">
         {amounts.map((assetAmount) => (
           <AssetsAmountItem
             assetAmount={assetAmount}
             key={assetAmount.assetId}
           />
         ))}
-      </Stack>
+      </Box.Stack>
     </Card>
   );
 };
@@ -79,22 +71,22 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
 
   return (
     <Grid key={assetId} css={styles.root} className={assetAmountClass}>
-      <Flex css={styles.asset}>
+      <Box.Flex css={styles.asset}>
         {imageUrl ? (
           <Avatar name={name} src={imageUrl} css={{ height: 18, width: 18 }} />
         ) : (
           <Avatar.Generated hash={assetId} size="xsm" />
         )}
         <Text as="span">{name || 'Unknown'}</Text>
-      </Flex>
+      </Box.Flex>
       <Copyable value={assetId} css={styles.address}>
         <Text fontSize="xs" css={{ mt: '$1' }}>
           {shortAddress(assetId)}
         </Text>
       </Copyable>
-      <Flex css={styles.amount}>
+      <Box.Flex css={styles.amount}>
         {bn(amount).format()} {symbol}
-      </Flex>
+      </Box.Flex>
     </Grid>
   );
 };
@@ -105,7 +97,7 @@ const styles = {
       px: '$3',
       py: '$2',
       ...(isError && {
-        backgroundColor: '$red3',
+        backgroundColor: '$intentsError3',
       }),
     }),
   header: cssObj({
@@ -118,11 +110,11 @@ const styles = {
     gridTemplateColumns: 'repeat(2, 1fr)',
     gridTemplateRows: 'repeat(2, 1fr)',
     fontWeight: '$semibold',
-    color: '$gray12',
+    color: '$intentsBase12',
 
     '& ~ & ': {
       pt: '$2',
-      borderTop: '1px dashed $gray3',
+      borderTop: '1px dashed $intentsBase3',
     },
   }),
   asset: cssObj({
@@ -131,12 +123,12 @@ const styles = {
 
     '& span': {
       fontSize: '$sm',
-      color: '$gray12',
+      color: '$intentsBase12',
     },
   }),
   address: cssObj({
     gridColumn: '1 / 2',
-    color: '$gray9',
+    color: '$intentsBase9',
     fontSize: '$xs',
   }),
   amount: cssObj({
@@ -145,7 +137,7 @@ const styles = {
     gridColumn: '2 / 3',
     textAlign: 'right',
     fontSize: '$sm',
-    color: '$gray12',
+    color: '$intentsBase12',
     alignItems: 'center',
   }),
 };

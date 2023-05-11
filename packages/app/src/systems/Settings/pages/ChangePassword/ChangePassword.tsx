@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Button, Flex, InputPassword } from '@fuel-ui/react';
+import { Alert, Box, Button, InputPassword } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -72,7 +72,7 @@ export function ChangePassword() {
       <Layout title="Change Password">
         <Layout.TopBar onBack={goBack} />
         <Layout.Content>
-          <Flex css={styles.wrapper}>
+          <Box.Flex css={styles.wrapper}>
             <Alert direction="row" status={'warning'}>
               <Alert.Description>
                 If you lose your password and your seed phrase, all you funds
@@ -131,7 +131,7 @@ export function ChangePassword() {
                 />
               )}
             />
-          </Flex>
+          </Box.Flex>
         </Layout.Content>
         <Layout.BottomBar>
           <Button
@@ -156,8 +156,8 @@ export function ChangePassword() {
 
 const styles = {
   cancelButton: cssObj({
-    background: '$gray2 !important',
-    color: '$gray11 !important',
+    background: '$intentsBase2 !important',
+    color: '$intentsBase11 !important',
   }),
   input: cssObj({
     '&.fuel_input--field, & .fuel_input--field': {

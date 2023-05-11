@@ -1,10 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import {
   Avatar,
+  Box,
   Button,
   CardList,
   Copyable,
-  Flex,
   Heading,
   Icon,
   IconButton,
@@ -55,12 +55,12 @@ export const AssetItem: AssetItemComponent = ({
   function getRightEl() {
     if (showActions) {
       return (
-        <Flex css={styles.actionsWrapper}>
+        <Box.Flex css={styles.actionsWrapper}>
           {isCustom && name && (
             <>
               <IconButton
                 variant="link"
-                icon={<Icon icon={Icon.is('Pencil')} />}
+                icon={<Icon icon={Icon.is('Edit')} />}
                 aria-label="Edit Asset"
                 onPress={() => onEdit?.(assetId)}
               />
@@ -78,7 +78,7 @@ export const AssetItem: AssetItemComponent = ({
               )}
             </>
           )}
-        </Flex>
+        </Box.Flex>
       );
     }
 
@@ -109,21 +109,21 @@ export const AssetItem: AssetItemComponent = ({
       ) : (
         <Avatar.Generated hash={assetId} css={{ height: 36, width: 36 }} />
       )}
-      <Flex direction="column">
+      <Box.Flex direction="column">
         <Heading as="h6" css={styles.assetName}>
           {name || (
-            <Flex>
+            <Box.Flex>
               Unknown
               <Button
                 size="xs"
-                color="green"
+                color="intentsPrimary"
                 variant="link"
                 onPress={goToAsset}
                 css={styles.addAssetBtn}
               >
                 (Add)
               </Button>
-            </Flex>
+            </Box.Flex>
           )}
         </Heading>
         {symbol ? (
@@ -133,7 +133,7 @@ export const AssetItem: AssetItemComponent = ({
             {shortAddress(assetId)}
           </Copyable>
         )}
-      </Flex>
+      </Box.Flex>
     </CardList.Item>
   );
 };
@@ -163,11 +163,11 @@ const styles = {
   actionsWrapper: cssObj({
     '.fuel_button': {
       px: '$1 !important',
-      color: '$gray8 !important',
+      color: '$intentsBase8 !important',
     },
 
     '.fuel_button:hover': {
-      color: '$gray11 !important',
+      color: '$intentsBase11 !important',
     },
   }),
 };

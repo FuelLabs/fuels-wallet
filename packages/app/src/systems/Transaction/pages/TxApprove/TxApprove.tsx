@@ -29,7 +29,7 @@ export const TxApprove = () => {
         <IconButton
           data-action="closed"
           variant="link"
-          icon={<Icon icon="X" color="gray8" />}
+          icon={<Icon icon="X" color="intentsBase8" />}
           aria-label="Close transaction dialog"
           isDisabled={txRequest.isLoading}
           onPress={isSuccess ? goToWallet : txRequest.handlers.closeDialog}
@@ -73,7 +73,7 @@ export const TxApprove = () => {
         {txRequest.showActions && (
           <>
             <Button
-              color="gray"
+              color="intentsBase"
               variant="ghost"
               isDisabled={txRequest.isLoading}
               onPress={txRequest.handlers.closeDialog}
@@ -98,7 +98,7 @@ export const TxApprove = () => {
           <Button
             size="sm"
             variant="ghost"
-            color="red"
+            color="intentsError"
             onPress={txRequest.handlers.tryAgain}
           >
             Try again
@@ -111,7 +111,7 @@ export const TxApprove = () => {
 
 const styles = {
   description: cssObj({
-    ...coreStyles.scrollable('$gray3'),
+    ...coreStyles.scrollable('$intentsBase3'),
     padding: '$4',
     flex: 1,
   }),

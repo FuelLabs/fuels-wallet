@@ -1,4 +1,4 @@
-import { HelperIcon, Input, Stack } from '@fuel-ui/react';
+import { Box, HelperIcon, Input } from '@fuel-ui/react';
 
 import type { UseImportAccountFormReturn } from '../../hooks/useImportAccountForm';
 
@@ -16,7 +16,7 @@ export const ImportAccountForm = ({
   const { control, formState } = form;
 
   return (
-    <Stack css={{ width: '100%' }} gap="$4">
+    <Box.Stack css={{ width: '100%' }} gap="$4">
       <ControlledField
         control={control}
         name="privateKey"
@@ -53,6 +53,6 @@ export const ImportAccountForm = ({
           </Input>
         )}
       />
-    </Stack>
+    </Box.Stack>
   );
 };

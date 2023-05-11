@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Flex } from '@fuel-ui/react';
+import { Box } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/types';
 
 import type { Operation, TxStatus } from '../../utils';
@@ -21,7 +21,7 @@ export function TxOperations({
   isLoading,
 }: TxOperationsProps) {
   return (
-    <Flex css={styles.root}>
+    <Box.Flex css={styles.root}>
       {operations?.map((operation, index) => (
         <TxOperation
           key={index}
@@ -31,14 +31,14 @@ export function TxOperations({
           isLoading={isLoading}
         />
       ))}
-    </Flex>
+    </Box.Flex>
   );
 }
 
 TxOperations.Loader = () => (
-  <Flex css={styles.root}>
+  <Box.Flex css={styles.root}>
     <TxOperation.Loader />
-  </Flex>
+  </Box.Flex>
 );
 
 const styles = {

@@ -13,7 +13,8 @@ export const NetworkDropdown = forwardRef<HTMLDivElement, NetworkDropdownProps>(
   ({ selected, isDisabled, onPress }, ref) => {
     return (
       <Button
-        ref={ref}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ref={ref as any}
         size="xs"
         css={styles.trigger}
         onPress={() => onPress?.(selected!)}
@@ -32,15 +33,15 @@ const styles = {
     cursor: 'pointer',
     fontSize: '$xs',
     px: '$4 !important',
-    border: '1px dashed $gray4 !important',
-    color: '$gray10 !important',
+    border: '1px dashed $intentsBase4 !important',
+    color: '$intentsBase10 !important',
     borderRadius: '$full !important',
     '&, &:hover': {
       background: '$transparent !important',
       boxShadow: 'none !important',
     },
     '&:focus': {
-      outlineColor: '$gray2 !important',
+      outlineColor: '$intentsBase2 !important',
     },
     '&[aria-disabled="true"]': {
       opacity: 1,

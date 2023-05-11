@@ -8,7 +8,6 @@ import {
   Heading,
   Icon,
   IconButton,
-  Stack,
   Text,
 } from '@fuel-ui/react';
 
@@ -51,7 +50,7 @@ export function UnlockCard({
         {onClose && (
           <IconButton
             variant="link"
-            icon={<Icon icon="X" color="gray8" />}
+            icon={<Icon icon="X" color="intentsBase8" />}
             aria-label="Close unlock card"
             onPress={onClose}
             css={styles.closeButton}
@@ -59,20 +58,20 @@ export function UnlockCard({
         )}
         <Box css={styles.form}>
           <Box as="div" css={styles.description}>
-            <Stack gap="$2">
-              <Stack align="center">
+            <Box.Stack gap="$2">
+              <Box.Stack align="center">
                 <FuelLogo size={150} />
                 <Heading as="h2" css={{ margin: 0, textAlign: 'center' }}>
                   {headerText}
                 </Heading>
                 <Text fontSize="sm">Unlock your wallet to continue</Text>
-              </Stack>
+              </Box.Stack>
               <Box css={{ marginTop: '$4' }}>
                 <UnlockForm form={form} />
               </Box>
-            </Stack>
+            </Box.Stack>
             {onReset && (
-              <Stack
+              <Box.Stack
                 align="center"
                 justify="space-between"
                 css={{ marginTop: '$2' }}
@@ -80,12 +79,12 @@ export function UnlockCard({
                 <ResetDialog isLoading={isReseting} onReset={onReset}>
                   <ButtonLink
                     variant="ghost"
-                    css={{ color: '$gray10', fontSize: 'small' }}
+                    css={{ color: '$intentsBase10', fontSize: 'small' }}
                   >
                     Forgot password?
                   </ButtonLink>
                 </ResetDialog>
-              </Stack>
+              </Box.Stack>
             )}
           </Box>
         </Box>
@@ -95,7 +94,7 @@ export function UnlockCard({
           type="submit"
           color="accent"
           isLoading={isLoading}
-          leftIcon={Icon.is('LockKeyOpen')}
+          leftIcon={Icon.is('LockOpen')}
           css={styles.button}
           aria-label="Unlock wallet"
         >
@@ -113,7 +112,7 @@ const styles = {
   alert: cssObj({
     py: '$2',
     pr: '$2',
-    background: '$gray2',
+    background: '$intentsBase2',
   }),
   button: cssObj({
     width: '100%',

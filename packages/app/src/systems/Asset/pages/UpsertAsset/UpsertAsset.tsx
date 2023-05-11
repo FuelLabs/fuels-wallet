@@ -64,7 +64,7 @@ export function UpsertAsset() {
             />
             {!isEditing && dupeAsset && (
               <Box css={styles.duplicateAsset}>
-                <Text color="red9">Asset already exists</Text>
+                <Text color="intentsError9">Asset already exists</Text>
                 <AssetItem
                   asset={dupeAsset}
                   showActions
@@ -76,7 +76,11 @@ export function UpsertAsset() {
             )}
           </Layout.Content>
           <Layout.BottomBar>
-            <Button color="gray" variant="ghost" onPress={() => navigate(-1)}>
+            <Button
+              color="intentsBase"
+              variant="ghost"
+              onPress={() => navigate(-1)}
+            >
               Cancel
             </Button>
             <Button

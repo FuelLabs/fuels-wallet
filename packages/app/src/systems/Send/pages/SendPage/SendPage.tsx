@@ -24,7 +24,11 @@ export function SendPage() {
         </AnimatePresence>
         {txRequest.showActions && (
           <Layout.BottomBar>
-            <Button color="gray" variant="ghost" onPress={handlers.cancel}>
+            <Button
+              color="intentsBase"
+              variant="ghost"
+              onPress={handlers.cancel}
+            >
               Cancel
             </Button>
             <Button

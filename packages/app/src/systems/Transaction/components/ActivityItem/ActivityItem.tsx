@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Card, Copyable, Flex, Icon, Stack, Text } from '@fuel-ui/react';
+import { Box, Card, Copyable, Icon, Text } from '@fuel-ui/react';
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,8 +36,8 @@ export const ActivityItem: TxItemComponent = ({
       onClick={() => navigate(Pages.tx({ txId: id }))}
     >
       <TxIcon operationName={label} status={status} />
-      <Stack css={styles.contentWrapper}>
-        <Flex css={styles.item} gap={5}>
+      <Box.Stack css={styles.contentWrapper}>
+        <Box.Flex css={styles.item} gap={5}>
           <Text fontSize="sm" css={styles.label}>
             {label}
           </Text>
@@ -45,25 +45,25 @@ export const ActivityItem: TxItemComponent = ({
             value={id}
             tooltipMessage="Copy Transaction ID"
             iconProps={{
-              icon: Icon.is('CopySimple'),
+              icon: Icon.is('Copy'),
               'aria-label': 'Copy Transaction ID',
             }}
           />
-        </Flex>
-        <Flex css={styles.row}>
-          <Flex css={styles.fromToTextWrapper}>
+        </Box.Flex>
+        <Box.Flex css={styles.row}>
+          <Box.Flex css={styles.fromToTextWrapper}>
             <Text fontSize="xs" css={styles.label}>
               {toOrFromText}
             </Text>
             <Text fontSize="xs">{shortAddress(toOrFromAddress)}</Text>
-          </Flex>
+          </Box.Flex>
           {timeFormatted && (
-            <Flex css={styles.item}>
+            <Box.Flex css={styles.item}>
               <Text fontSize="xs">{timeFormatted}</Text>
-            </Flex>
+            </Box.Flex>
           )}
-        </Flex>
-      </Stack>
+        </Box.Flex>
+      </Box.Stack>
     </Card>
   );
 };
@@ -83,7 +83,7 @@ const styles = {
     cursor: 'pointer',
   }),
   txIconWrapper: cssObj({
-    color: '$gray12',
+    color: '$intentsBase12',
     flex: '0 0 40px',
   }),
   row: cssObj({

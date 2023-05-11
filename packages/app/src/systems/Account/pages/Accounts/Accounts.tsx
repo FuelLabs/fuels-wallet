@@ -17,7 +17,7 @@ export const Accounts = () => {
         <IconButton
           data-action="closed"
           variant="link"
-          icon={<Icon icon="X" color="gray8" />}
+          icon={<Icon icon="X" color="intentsBase8" />}
           aria-label="Close unlock window"
           onPress={handlers.closeDialog}
         />
@@ -52,9 +52,9 @@ export const Accounts = () => {
         <Button
           aria-label="Import from private key"
           onPress={handlers.goToImport}
-          leftIcon={Icon.is('LockLaminatedOpen')}
+          leftIcon={Icon.is('LockOpen')}
           variant="ghost"
-          color="gray"
+          color="intentsBase"
           size={'sm'}
           iconSize={14}
         >
@@ -67,7 +67,7 @@ export const Accounts = () => {
 
 const styles = {
   description: cssObj({
-    ...coreStyles.scrollable('$gray3'),
+    ...coreStyles.scrollable('$intentsBase3'),
     padding: '$4',
     flex: 1,
 

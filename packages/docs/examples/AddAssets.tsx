@@ -1,15 +1,6 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import {
-  Box,
-  Stack,
-  Button,
-  Input,
-  Flex,
-  Text,
-  IconButton,
-  Icon,
-} from '@fuel-ui/react';
+import { Box, Button, Input, Text, IconButton, Icon } from '@fuel-ui/react';
 import { useState } from 'react';
 
 import type { Asset } from '~/../types/src';
@@ -58,25 +49,25 @@ export function AddAssets() {
 
   return (
     <ExampleBox error={errorMessage}>
-      <Stack css={styles.wrapper}>
+      <Box.Stack css={styles.wrapper}>
         {assets.map((asset, index) => {
           const isLast = index === assets.length - 1;
 
           return (
-            <Stack key={asset.assetId + index} css={styles.item(isLast)}>
-              <Flex css={styles.itemHeader}>
+            <Box.Stack key={asset.assetId + index} css={styles.item(isLast)}>
+              <Box.Flex css={styles.itemHeader}>
                 <Text>Asset {index + 1}</Text>
                 {!!index && (
                   <IconButton
                     size="xs"
                     variant="ghost"
-                    color="yellow"
+                    color="intentsWarning"
                     icon={<Icon icon="X" />}
                     onPress={removeAsset(index)}
                     aria-label="Remove Asset"
                   />
                 )}
-              </Flex>
+              </Box.Flex>
               <Input isDisabled={!isConnected} css={styles.input}>
                 <Input.Field
                   defaultValue={asset.assetId}
@@ -86,7 +77,7 @@ export function AddAssets() {
                   placeholder="Type your assetId (0x...)"
                 />
               </Input>
-              <Flex gap="$2">
+              <Box.Flex gap="$2">
                 <Input isDisabled={!isConnected} css={styles.input}>
                   <Input.Field
                     defaultValue={asset.name}
@@ -105,7 +96,7 @@ export function AddAssets() {
                     placeholder="Type your asset Symbol"
                   />
                 </Input>
-              </Flex>
+              </Box.Flex>
               <Input isDisabled={!isConnected} css={styles.input}>
                 <Input.Field
                   defaultValue={asset.imageUrl}
@@ -115,7 +106,7 @@ export function AddAssets() {
                   placeholder="Type your asset imageUrl"
                 />
               </Input>
-            </Stack>
+            </Box.Stack>
           );
         })}
         <Button
@@ -139,7 +130,7 @@ export function AddAssets() {
             Add Assets
           </Button>
         </Box>
-      </Stack>
+      </Box.Stack>
     </ExampleBox>
   );
 }

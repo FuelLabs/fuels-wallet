@@ -1,4 +1,4 @@
-import { Flex } from '@fuel-ui/react';
+import { Box } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { AssetsTitle, HomeActions } from '../../components';
@@ -28,7 +28,7 @@ export function Home() {
     <Layout title="Home" isLoading={isLoading} isHome>
       <Layout.TopBar />
       <Layout.Content>
-        <Flex css={{ height: '100%', flexDirection: 'column' }}>
+        <Box.Flex css={{ height: '100%', flexDirection: 'column' }}>
           <BalanceWidget
             visibility={visibility}
             account={account}
@@ -48,7 +48,7 @@ export function Home() {
               showFaucet: selectedNetwork?.url === VITE_FUEL_PROVIDER_URL,
             }}
           />
-        </Flex>
+        </Box.Flex>
       </Layout.Content>
     </Layout>
   );

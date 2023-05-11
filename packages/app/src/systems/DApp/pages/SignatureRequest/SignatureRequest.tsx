@@ -1,4 +1,4 @@
-import { Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
+import { Box, Button, Card, HelperIcon, Text } from '@fuel-ui/react';
 
 import { useSignatureRequest } from '../../hooks';
 
@@ -15,7 +15,7 @@ export function SignatureRequest() {
     <>
       <Layout title={`Signature Request`} isLoading={isLoading}>
         <Layout.Content>
-          <Flex gap="$4" direction="column">
+          <Box.Flex gap="$4" direction="column">
             <ConnectInfo
               headerText="Signing a message to:"
               origin={origin}
@@ -27,15 +27,15 @@ export function SignatureRequest() {
             )}
             <Card>
               <Card.Body css={{ p: '$3' }}>
-                <Flex css={{ alignItems: 'center', gap: '$3' }}>
+                <Box.Flex css={{ alignItems: 'center', gap: '$3' }}>
                   <HelperIcon
-                    color="gray12"
+                    color="intentsBase12"
                     css={{ fontWeight: '$semibold' }}
                     message="Make sure you know the message being signed"
                   >
                     Message:
                   </HelperIcon>
-                </Flex>
+                </Box.Flex>
                 <Text fontSize="sm" css={{ mt: '$3' }}>
                   {/* For preserving line breaks using pre-wrap all
                     the content inside the tag can't be formatted because of
@@ -44,13 +44,13 @@ export function SignatureRequest() {
                 </Text>
               </Card.Body>
             </Card>
-          </Flex>
+          </Box.Flex>
         </Layout.Content>
         <Layout.BottomBar>
           <Button
             aria-label="Cancel"
             variant="ghost"
-            color="gray"
+            color="intentsBase"
             onPress={handlers.reject}
           >
             Cancel

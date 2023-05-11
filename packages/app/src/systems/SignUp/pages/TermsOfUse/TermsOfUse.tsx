@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Stack } from '@fuel-ui/react';
+import { Box, Button } from '@fuel-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Header } from '../../components';
@@ -29,25 +29,25 @@ export function TermsOfUse() {
 
   return (
     <Layout title="Terms of Service" isPublic>
-      <Stack gap="$8" align="center">
+      <Box.Stack gap="$8" align="center">
         <Header
           title="Terms of use Agreement"
           subtitle="Read and check to accept our terms of service"
         />
         <Box css={styles.termsContainer}>
-          <Flex css={styles.termsWrapper}>
+          <Box.Flex css={styles.termsWrapper}>
             <Terms />
-          </Flex>
+          </Box.Flex>
         </Box>
-        <Flex gap="$2">
-          <Button color="gray" variant="ghost" onPress={handleCancel}>
+        <Box.Flex gap="$2">
+          <Button color="intentsBase" variant="ghost" onPress={handleCancel}>
             Cancel
           </Button>
           <Button color="accent" onPress={handleAccept}>
             I accept
           </Button>
-        </Flex>
-      </Stack>
+        </Box.Flex>
+      </Box.Stack>
     </Layout>
   );
 }
@@ -56,7 +56,7 @@ const styles = {
   termsWrapper: {
     overflowY: 'scroll',
     padding: '$4',
-    backgroundColor: '$gray3',
+    backgroundColor: '$intentsBase3',
     boxSizing: 'border-box',
     height: '480px',
 
@@ -67,11 +67,11 @@ const styles = {
 
     '&::-webkit-scrollbar': {
       width: '$2',
-      backgroundColor: '$gray3',
+      backgroundColor: '$intentsBase3',
     },
 
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '$gray5',
+      backgroundColor: '$intentsBase5',
       borderRadius: '$10',
     },
 

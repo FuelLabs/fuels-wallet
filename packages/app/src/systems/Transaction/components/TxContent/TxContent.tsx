@@ -1,4 +1,4 @@
-import { Stack } from '@fuel-ui/react';
+import { Box } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/types';
 import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
@@ -8,7 +8,7 @@ import { animations } from '~/systems/Core';
 import type { Tx, TxStatus } from '~/systems/Transaction';
 import { TxOperations, TxDetails } from '~/systems/Transaction';
 
-const MotionStack = motion(Stack);
+const MotionStack = motion(Box.Stack);
 
 type TxContentLoaderProps = {
   header?: ReactNode;
@@ -16,7 +16,7 @@ type TxContentLoaderProps = {
 
 function TxContentLoader({ header }: TxContentLoaderProps) {
   return (
-    <MotionStack {...animations.slideInTop()} gap="$4">
+    <MotionStack {...animations.slideInTop()} css={{ gap: '$4' }}>
       {header}
       <TxOperations.Loader />
       <TxDetails.Loader />

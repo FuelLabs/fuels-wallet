@@ -1,6 +1,6 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
-import { Text, CardList, Flex, IconButton, Icon } from '@fuel-ui/react';
+import { Text, CardList, IconButton, Icon, Box } from '@fuel-ui/react';
 import type { Network } from '@fuel-wallet/types';
 import { forwardRef } from 'react';
 
@@ -10,7 +10,7 @@ export function NetworkStatus({ network: _network }: { network: Network }) {
   return (
     <Text
       css={{
-        // color: network.isOnline ? '$accent11' : '$gray8',
+        // color: network.isOnline ? '$accent11' : '$intentsBase8',
         fontSize: '8px',
       }}
     >
@@ -31,11 +31,11 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
   ({ css, network, onRemove, onUpdate, onPress }, ref) => {
     const showActions = Boolean(onUpdate || onRemove);
     const actions = (
-      <Flex gap="$2">
+      <Box.Flex gap="$2">
         {onUpdate && (
           <IconButton
             variant="link"
-            icon={<Icon icon={Icon.is('Pencil')} />}
+            icon={<Icon icon={Icon.is('Edit')} />}
             aria-label="Update"
             onPress={() => onUpdate?.(network.id)}
           />
@@ -52,7 +52,7 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
             />
           </NetworkRemoveDialog>
         )}
-      </Flex>
+      </Box.Flex>
     );
 
     return (
@@ -84,11 +84,11 @@ const styles = {
 
     '.fuel_button': {
       px: '$1 !important',
-      color: '$gray8',
+      color: '$intentsBase8',
     },
 
     '.fuel_button:hover': {
-      color: '$gray11',
+      color: '$intentsBase11',
     },
   }),
 };

@@ -35,7 +35,7 @@ export function AssetRemoveDialog({
         </AlertDialog.Description>
         <AlertDialog.Footer>
           <AlertDialog.Cancel>
-            <Button color="gray" variant="ghost" onPress={handleCancel}>
+            <Button color="intentsBase" variant="ghost" onPress={handleCancel}>
               Cancel
             </Button>
           </AlertDialog.Cancel>

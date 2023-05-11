@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { BoxCentered, Button, Heading, Icon, Text } from '@fuel-ui/react';
+import { Box, Button, Heading, Icon, Text } from '@fuel-ui/react';
 
 import { ImageLoader, relativeUrl } from '~/systems/Core';
 import { useOpenFaucet } from '~/systems/Faucet';
@@ -18,7 +18,7 @@ export function AssetListEmpty({
   const openFaucet = useOpenFaucet();
 
   return (
-    <BoxCentered css={styles.empty}>
+    <Box.Centered css={styles.empty}>
       <ImageLoader
         src={relativeUrl('/empty-assets.png')}
         width={150}
@@ -32,11 +32,11 @@ export function AssetListEmpty({
         /**
          * TODO: need to add right faucet icon on @fuel-ui
          */
-        <Button size="sm" leftIcon={Icon.is('Coffee')} onPress={openFaucet}>
+        <Button size="sm" leftIcon={Icon.is('Wand')} onPress={openFaucet}>
           Faucet
         </Button>
       )}
-    </BoxCentered>
+    </Box.Centered>
   );
 }
 

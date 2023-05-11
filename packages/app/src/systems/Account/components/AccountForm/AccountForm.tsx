@@ -1,4 +1,4 @@
-import { HelperIcon, Input, Stack } from '@fuel-ui/react';
+import { Box, HelperIcon, Input } from '@fuel-ui/react';
 
 import type { UseAccountFormReturn } from '../../hooks/useAccountForm';
 
@@ -13,7 +13,7 @@ export const AccountForm = ({ form, isLoading }: AccountFormProps) => {
   const { control, formState } = form;
 
   return (
-    <Stack css={{ width: '100%' }} gap="$4">
+    <Box.Stack css={{ width: '100%' }} gap="$4">
       <ControlledField
         control={control}
         name="name"
@@ -34,6 +34,6 @@ export const AccountForm = ({ form, isLoading }: AccountFormProps) => {
           </Input>
         )}
       />
-    </Stack>
+    </Box.Stack>
   );
 };

@@ -1,15 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cssObj } from '@fuel-ui/css';
-import {
-  Icon,
-  Avatar,
-  Flex,
-  Drawer,
-  IconButton,
-  Stack,
-  Box,
-  Text,
-} from '@fuel-ui/react';
+import { Icon, Avatar, Drawer, IconButton, Box, Text } from '@fuel-ui/react';
 import { forwardRef } from 'react';
 
 import { Menu } from '..';
@@ -27,24 +18,23 @@ function SidebarContent() {
 
   return (
     <>
-      <Flex css={styles.header}>
-        <Stack gap="$2" css={styles.accountSelector}>
+      <Box.Flex css={styles.header}>
+        <Box.Stack gap="$2" css={styles.accountSelector}>
           <Avatar.Generated
             size="sm"
             hash={account?.address as string}
-            background="$gray3"
             css={{ boxShadow: '$sm' }}
           />
           <IconButton
             size="xs"
             variant="link"
-            color="gray"
-            icon={<Icon icon="CaretDown" size={18} />}
+            color="intentsBase"
+            icon={<Icon icon="ChevronDown" size={18} />}
             aria-label="Accounts"
             onClick={accountHandlers.goToList}
             css={{ padding: '$0 !important' }}
           />
-        </Stack>
+        </Box.Stack>
         <IconButton
           autoFocus
           size="sm"
@@ -54,10 +44,10 @@ function SidebarContent() {
           aria-label="drawer_closeButton"
           onPress={overlay.close}
         />
-      </Flex>
+      </Box.Flex>
       <Menu items={sidebarItems(selectedNetwork?.url)} />
       <Box css={styles.version}>
-        <Text fontSize="xs" color="gray8">
+        <Text fontSize="xs" color="intentsBase8">
           Version: {APP_VERSION}{' '}
         </Text>
       </Box>
@@ -96,10 +86,10 @@ const styles = {
     padding: '$3 $4',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottom: '1px dashed $gray4',
+    borderBottom: '1px dashed $intentsBase4',
 
     '.fuel_icon': {
-      color: '$gray8',
+      color: '$intentsBase8',
     },
   }),
   accountSelector: cssObj({

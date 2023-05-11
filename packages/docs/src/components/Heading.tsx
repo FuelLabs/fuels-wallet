@@ -15,24 +15,24 @@ const styles = {
   root: cssObj({
     '&[data-rank=h1]': {
       mb: '$6',
-      color: '$gray12',
+      color: '$intentsBase12',
     },
     '&[data-rank=h2]': {
       mt: '$12',
       mb: '$5',
       pb: '$2',
-      color: '$gray12',
-      borderBottom: '1px dashed $gray3',
+      color: '$intentsBase12',
+      borderBottom: '1px dashed $intentsBase3',
     },
     '&[data-rank=h3]': {
       mt: '$8',
       mb: '$4',
-      color: '$gray11',
+      color: '$intentsBase11',
     },
     '&[data-rank=h4], &[data-rank=h5], &[data-rank=h6]': {
       mt: '$6',
       mb: '$2',
-      color: '$gray11',
+      color: '$intentsBase11',
     },
   }),
 };

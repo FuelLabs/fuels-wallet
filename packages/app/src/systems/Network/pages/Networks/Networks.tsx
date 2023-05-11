@@ -14,7 +14,7 @@ export const Networks = () => {
         <IconButton
           data-action="closed"
           variant="link"
-          icon={<Icon icon="X" color="gray8" />}
+          icon={<Icon icon="X" color="intentsBase8" />}
           aria-label="Close networks modal"
           onPress={handlers.closeDialog}
         />
@@ -43,7 +43,7 @@ export const Networks = () => {
 
 const styles = {
   description: cssObj({
-    ...coreStyles.scrollable('$gray3'),
+    ...coreStyles.scrollable('$intentsBase3'),
     flex: 1,
     padding: '$4',
   }),

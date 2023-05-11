@@ -42,7 +42,7 @@ export function AddAssetRequest() {
         </Card>
       </Layout.Content>
       <Layout.BottomBar>
-        <Button color="gray" variant="ghost" onPress={handlers.reject}>
+        <Button color="intentsBase" variant="ghost" onPress={handlers.reject}>
           Reject
         </Button>
         <Button type="submit" color="accent" onPress={handlers.approve}>
@@ -88,7 +88,7 @@ const styles = {
     display: 'flex',
   }),
   cardHeaderText: cssObj({
-    color: '$gray12',
+    color: '$intentsBase12',
     fontWeight: '$bold',
   }),
   cardContentSection: cssObj({

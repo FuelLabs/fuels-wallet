@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Flex, Card, Text, Icon, Box } from '@fuel-ui/react';
+import { Card, Text, Icon, Box } from '@fuel-ui/react';
 
 export function PinWalletCard() {
   return (
@@ -9,17 +9,17 @@ export function PinWalletCard() {
           <Text as="h2" color="accent11">
             Pin Fuel Wallet
           </Text>
-          <Flex gap="$1">
+          <Box.Flex gap="$1">
             <Text>Click on</Text>
             <Icon
-              icon={Icon.is('PuzzlePiece')}
+              icon={Icon.is('Puzzle')}
               color="accent11"
               css={styles.puzzleIcon}
             />
             <Text>and</Text>
-            <Icon icon={'PushPin'} color="accent11" />
+            <Icon icon="Pinned" color="accent11" />
             <Text>.</Text>
-          </Flex>
+          </Box.Flex>
         </Box>
       </Card.Body>
     </Card>

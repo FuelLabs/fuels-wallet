@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Card, CardList, Flex, Link, Text } from '@fuel-ui/react';
+import { Button, Card, CardList, Box, Link, Text } from '@fuel-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { useConnectRequest } from '../../hooks/useConnectRequest';
@@ -111,7 +111,7 @@ export function ConnectionRequest() {
           )}
         </MotionCardList>
       </Layout.Content>
-      <Flex css={styles.disclaimer} justify="center" align={'flex-end'}>
+      <Box.Flex css={styles.disclaimer} justify="center" align={'flex-end'}>
         <Text fontSize="sm" as={'h2'} className="warning">
           Only connect with sites you trust.
           <Link href="#" color="accent11">
@@ -119,10 +119,10 @@ export function ConnectionRequest() {
           </Link>
           .
         </Text>
-      </Flex>
+      </Box.Flex>
       <Layout.BottomBar>
         <Button
-          color="gray"
+          color="intentsBase"
           variant="ghost"
           onPress={() => handlers.rejectConnection()}
         >
@@ -195,7 +195,7 @@ const styles = {
   cardHeaderText: cssObj({
     fontSize: '$sm',
     fontWeight: '$bold',
-    color: '$gray12',
+    color: '$intentsBase12',
   }),
   accountCardBody: cssObj({
     p: '$0',

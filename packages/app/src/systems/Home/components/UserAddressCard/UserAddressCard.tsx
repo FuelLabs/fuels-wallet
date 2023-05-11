@@ -13,12 +13,7 @@ export function UserAddressCard({ address }: Props) {
 
   return (
     <Card css={styles.wrapper}>
-      <Avatar.Generated
-        hash={address}
-        size="2xl"
-        background="$gray3"
-        css={{ boxShadow: '$sm' }}
-      />
+      <Avatar.Generated hash={address} size="2xl" css={{ boxShadow: '$sm' }} />
       <Copyable
         css={styles.accountText}
         aria-label="account-preview"

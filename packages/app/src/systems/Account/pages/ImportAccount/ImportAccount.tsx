@@ -21,7 +21,7 @@ export const ImportAccount = () => {
         <IconButton
           data-action="closed"
           variant="link"
-          icon={<Icon icon="X" color="gray8" />}
+          icon={<Icon icon="X" color="intentsBase8" />}
           aria-label="Close unlock window"
           onPress={accountsHandlers.closeDialog}
         />
@@ -31,7 +31,7 @@ export const ImportAccount = () => {
       </Dialog.Description>
       <Dialog.Footer>
         <Button
-          color="gray"
+          color="intentsBase"
           variant="ghost"
           onPress={accountsHandlers.goToList}
         >

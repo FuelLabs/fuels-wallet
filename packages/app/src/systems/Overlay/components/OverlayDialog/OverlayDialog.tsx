@@ -50,7 +50,7 @@ const styles = {
     borderRadius: '$none',
 
     '.fuel_dialog--heading, .fuel_dialog--footer': {
-      borderColor: '$gray2',
+      borderColor: '$intentsBase2',
     },
     '.fuel_dialog--description': {
       flex: 1,

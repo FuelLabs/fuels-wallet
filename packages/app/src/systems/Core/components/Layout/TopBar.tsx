@@ -1,13 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  FuelLogo,
-  Flex,
-  Icon,
-  IconButton,
-  Spinner,
-  Text,
-  Stack,
-} from '@fuel-ui/react';
+import { FuelLogo, Icon, IconButton, Spinner, Text, Box } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -47,12 +39,12 @@ function InternalTopBar({ onBack }: TopBarProps) {
   };
 
   return (
-    <Flex as="nav" css={styles.root}>
-      <Flex css={{ gap: '$3', alignItems: 'center', flex: 1 }}>
+    <Box.Flex as="nav" css={styles.root}>
+      <Box.Flex css={{ gap: '$3', alignItems: 'center', flex: 1 }}>
         {!isHome ? (
           <>
             <IconButton
-              icon={<Icon icon="CaretLeft" color="gray8" />}
+              icon={<Icon icon="ChevronLeft" color="intentsBase8" />}
               aria-label="Back"
               variant="link"
               css={{ px: '0 !important' }}
@@ -60,7 +52,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
             />
             {isLoading && <Spinner />}
             {!isLoading && (
-              <Text css={{ fontWeight: '$semibold', color: '$gray12' }}>
+              <Text css={{ fontWeight: '$semibold', color: '$intentsBase12' }}>
                 {title}
               </Text>
             )}
@@ -77,8 +69,8 @@ function InternalTopBar({ onBack }: TopBarProps) {
             )}
           </>
         )}
-      </Flex>
-      <Stack direction="row" gap="$2">
+      </Box.Flex>
+      <Box.Stack direction="row" gap="$2">
         <IconButton
           iconSize={20}
           icon={<Icon icon="Bell" />}
@@ -89,7 +81,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
         />
         <IconButton
           iconSize={20}
-          icon={<Icon icon="List" />}
+          icon={<Icon icon="Menu2" />}
           aria-label="Menu"
           variant="link"
           css={styles.topbarIcon}
@@ -97,8 +89,8 @@ function InternalTopBar({ onBack }: TopBarProps) {
             overlay.open({ modal: 'sidebar' });
           }}
         />
-      </Stack>
-    </Flex>
+      </Box.Stack>
+    </Box.Flex>
   );
 }
 
@@ -111,15 +103,15 @@ function ExternalTopBar() {
   const { selectedNetwork, handlers } = useNetworks();
 
   return (
-    <Flex as="nav" css={styles.root} data-home={isHome}>
-      <Flex css={{ alignItems: 'center', gap: '$5', flex: 1, pl: '$2' }}>
+    <Box.Flex as="nav" css={styles.root} data-home={isHome}>
+      <Box.Flex css={{ alignItems: 'center', gap: '$5', flex: 1, pl: '$2' }}>
         {isLoading && <Spinner aria-label="Spinner" />}
         {!isLoading && (
-          <Text css={{ fontWeight: '$semibold', color: '$gray12' }}>
+          <Text css={{ fontWeight: '$semibold', color: '$intentsBase12' }}>
             {title}
           </Text>
         )}
-      </Flex>
+      </Box.Flex>
       {selectedNetwork && (
         <NetworkDropdown
           selected={selectedNetwork}
@@ -127,7 +119,7 @@ function ExternalTopBar() {
           isDisabled={true}
         />
       )}
-    </Flex>
+    </Box.Flex>
   );
 }
 
@@ -166,11 +158,11 @@ const styles = {
   }),
   topbarIcon: cssObj({
     px: '0 !important',
-    color: '$gray8 !important',
+    color: '$intentsBase8 !important',
     transition: 'color 0.2s ease-in-out',
 
     '&:hover': {
-      color: '$gray11 !important',
+      color: '$intentsBase11 !important',
     },
   }),
 };

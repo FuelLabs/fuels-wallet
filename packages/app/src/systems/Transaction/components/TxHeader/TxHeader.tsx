@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
+import { Box, Card, Copyable, Icon, Text } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import type { FC } from 'react';
 
@@ -27,8 +27,8 @@ export const TxHeader: TxHeaderComponent = ({
 }) => {
   return (
     <Card css={styles.root}>
-      <Flex css={styles.row}>
-        <Flex css={styles.item}>
+      <Box.Flex css={styles.row}>
+        <Box.Flex css={styles.item}>
           <Text fontSize="sm">Status: </Text>
           <Text fontSize="sm" className="status">
             {status}
@@ -40,8 +40,8 @@ export const TxHeader: TxHeaderComponent = ({
           >
             ●
           </Text>
-        </Flex>
-        <Flex css={styles.item}>
+        </Box.Flex>
+        <Box.Flex css={styles.item}>
           <Copyable
             value={getBlockExplorerLink({
               path: `transaction/${id || ''}`,
@@ -49,7 +49,7 @@ export const TxHeader: TxHeaderComponent = ({
             })}
             tooltipMessage="Copy Transaction Link"
             iconProps={{
-              icon: Icon.is('LinkSimple'),
+              icon: Icon.is('Link'),
               'aria-label': 'Copy Transaction Link',
             }}
           />
@@ -57,21 +57,21 @@ export const TxHeader: TxHeaderComponent = ({
             value={id || ''}
             css={{ mx: '$2' }}
             iconProps={{
-              icon: Icon.is('CopySimple'),
+              icon: Icon.is('Copy'),
               'aria-label': 'Copy Transaction ID',
             }}
             tooltipMessage="Copy Transaction ID"
           />
-        </Flex>
-      </Flex>
-      <Flex css={styles.row}>
-        <Flex css={styles.item}>
+        </Box.Flex>
+      </Box.Flex>
+      <Box.Flex css={styles.row}>
+        <Box.Flex css={styles.item}>
           <Text fontSize="sm">Type: </Text>
           <Text fontSize="sm" className="type">
             {type}
           </Text>
-        </Flex>
-      </Flex>
+        </Box.Flex>
+      </Box.Flex>
     </Card>
   );
 };
@@ -99,7 +99,7 @@ const styles = {
     alignItems: 'center',
 
     '.status, .type': {
-      color: '$gray12',
+      color: '$intentsBase12',
       mx: '$2',
     },
 

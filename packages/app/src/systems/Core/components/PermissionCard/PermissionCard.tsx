@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Card, Flex, Icon, List, Text } from '@fuel-ui/react';
+import { Box, Card, Icon, List, Text } from '@fuel-ui/react';
 
 export type PermissionCardProps = {
   headerText: string;
@@ -17,7 +17,7 @@ export const PermissionCard = ({
         <Text css={styles.cardHeaderText}>{headerText}</Text>
       </Card.Header>
       <Card.Body css={styles.permissionCardBody}>
-        <Flex direction="column">
+        <Box.Flex direction="column">
           <List icon={Icon.is('Check')} iconColor="accent9">
             {allowed.map((permission) => (
               <List.Item css={styles.listItemAllowed} key={permission}>
@@ -25,14 +25,14 @@ export const PermissionCard = ({
               </List.Item>
             ))}
           </List>
-          <List icon={Icon.is('X')} iconColor="red10">
+          <List icon={Icon.is('X')} iconColor="intentsError10">
             {notAllowed.map((permission) => (
               <List.Item css={styles.listItemDisallowed} key={permission}>
                 {permission}
               </List.Item>
             ))}
           </List>
-        </Flex>
+        </Box.Flex>
       </Card.Body>
     </Card>
   );
@@ -49,7 +49,7 @@ const styles = {
   cardHeaderText: cssObj({
     fontSize: '$sm',
     fontWeight: '$bold',
-    color: '$gray12',
+    color: '$intentsBase12',
   }),
   listItemAllowed: cssObj({
     fontSize: '$sm',

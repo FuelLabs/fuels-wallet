@@ -1,6 +1,6 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
-import { Box, BoxCentered } from '@fuel-ui/react';
+import { Box } from '@fuel-ui/react';
 import type { FC, ReactNode } from 'react';
 import { forwardRef, useRef, useContext, createContext } from 'react';
 import { Helmet } from 'react-helmet';
@@ -75,11 +75,11 @@ export const Layout: LayoutComponent = ({
           <title>{titleText}</title>
         </Helmet>
         {isPublic ? (
-          <BoxCentered as="main" css={styles.root} data-public>
-            <>{children}</>
-          </BoxCentered>
+          <Box.Centered as="main" css={styles.root} data-public>
+            {children}
+          </Box.Centered>
         ) : (
-          <BoxCentered as="main" css={styles.root}>
+          <Box.Centered as="main" css={styles.root}>
             <Box css={styles.wrapper} className="layout__wrapper">
               <OverlayDialog />
               <Sidebar ref={ref} />
@@ -87,7 +87,7 @@ export const Layout: LayoutComponent = ({
                 {children}
               </Box>
             </Box>
-          </BoxCentered>
+          </Box.Centered>
         )}
         {import.meta.env.NODE_ENV === 'test' && (
           <Box css={{ visibility: 'hidden' }}>

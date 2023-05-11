@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Stack, Text, Flex, Avatar, Card } from '@fuel-ui/react';
+import { Text, Avatar, Card, Box } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 
 import { ConnectInfoLoader } from './ConnectInfoLoader';
@@ -29,7 +29,7 @@ export function ConnectInfo({
       </Card.Header>
 
       <Card.Body css={styles.contentSection}>
-        <Flex>
+        <Box.Flex>
           <Avatar
             name={title || origin}
             src={favIconUrl}
@@ -37,11 +37,11 @@ export function ConnectInfo({
             size="md"
             aria-label={`${origin}-favicon`}
           />
-        </Flex>
-        <Stack gap="$0">
+        </Box.Flex>
+        <Box.Stack gap="$0">
           <Text css={styles.title}>{title}</Text>
           <Text css={styles.link}> {truncate(parseUrl(origin))} </Text>
-        </Stack>
+        </Box.Stack>
       </Card.Body>
     </Card>
   );
@@ -65,13 +65,13 @@ const styles = {
     gap: '$3',
   }),
   headerText: cssObj({
-    color: '$gray12',
+    color: '$intentsBase12',
     fontWeight: '$bold',
   }),
   title: cssObj({
     fontSize: '$sm',
     fontWeight: '$extrabold',
-    color: '$gray12',
+    color: '$intentsBase12',
     textOverflow: 'ellipsis',
   }),
   link: cssObj({

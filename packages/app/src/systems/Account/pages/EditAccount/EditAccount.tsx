@@ -28,7 +28,7 @@ export const EditAccount = () => {
         <IconButton
           data-action="closed"
           variant="link"
-          icon={<Icon icon="X" color="gray8" />}
+          icon={<Icon icon="X" color="intentsBase8" />}
           aria-label="Close edit account"
           onPress={accountsHandlers.closeDialog}
         />
@@ -40,7 +40,7 @@ export const EditAccount = () => {
       </Dialog.Description>
       <Dialog.Footer>
         <Button
-          color="gray"
+          color="intentsBase"
           variant="ghost"
           onPress={accountsHandlers.goToList}
         >
@@ -51,7 +51,7 @@ export const EditAccount = () => {
           color="accent"
           isDisabled={!form.formState.isValid}
           isLoading={isLoading}
-          leftIcon={Icon.is('Pencil')}
+          leftIcon={Icon.is('Edit')}
           aria-label="Edit account"
         >
           Edit

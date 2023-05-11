@@ -1,4 +1,4 @@
-import { Stack, Input } from '@fuel-ui/react';
+import { Input, Box } from '@fuel-ui/react';
 
 import type { UseAssetFormReturn } from '../../hooks/useAssetForm';
 
@@ -13,7 +13,7 @@ export type AssetFormProps = {
 export function AssetForm({ form, isEditing, showOnlyId }: AssetFormProps) {
   const { control, formState } = form;
   return (
-    <Stack css={{ width: '100%' }} gap="$4">
+    <Box.Stack css={{ width: '100%' }} gap="$4">
       <ControlledField
         control={control}
         name="assetId"
@@ -82,6 +82,6 @@ export function AssetForm({ form, isEditing, showOnlyId }: AssetFormProps) {
           />
         </>
       )}
-    </Stack>
+    </Box.Stack>
   );
 }

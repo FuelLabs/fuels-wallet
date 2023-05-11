@@ -21,7 +21,7 @@ export function UpdateNetwork() {
         <IconButton
           data-action="closed"
           variant="link"
-          icon={<Icon icon="X" color="gray8" />}
+          icon={<Icon icon="X" color="intentsBase8" />}
           aria-label="Close update network"
           onPress={handlers.closeDialog}
         />
@@ -32,7 +32,11 @@ export function UpdateNetwork() {
         </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
-        <Button color="gray" variant="ghost" onPress={handlers.openNetworks}>
+        <Button
+          color="intentsBase"
+          variant="ghost"
+          onPress={handlers.openNetworks}
+        >
           Cancel
         </Button>
         <Button

@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Flex, Dialog, Text, Alert } from '@fuel-ui/react';
+import { Box, Button, Dialog, Text, Alert } from '@fuel-ui/react';
 
 import { useExportVault } from '../../hooks';
 
@@ -30,7 +30,7 @@ export function ViewRecoveryPhrase() {
     <>
       <Dialog.Heading>Recovery Phrase</Dialog.Heading>
       <Dialog.Description as="div">
-        <Flex gap="$4" direction="column" align="center">
+        <Box.Flex gap="$4" direction="column" align="center">
           <Box css={styles.mnemonicWrapper}>
             <Mnemonic type="read" value={words} />
           </Box>
@@ -43,10 +43,10 @@ export function ViewRecoveryPhrase() {
               </Text>
             </Alert.Description>
           </Alert>
-        </Flex>
+        </Box.Flex>
       </Dialog.Description>
       <Dialog.Footer>
-        <Button color="gray" variant="ghost" onPress={() => close()}>
+        <Button color="intentsBase" variant="ghost" onPress={() => close()}>
           Close
         </Button>
       </Dialog.Footer>

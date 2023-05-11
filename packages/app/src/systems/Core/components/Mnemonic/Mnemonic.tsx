@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Flex, Grid, Icon } from '@fuel-ui/react';
+import { Box, Button, Grid, Icon } from '@fuel-ui/react';
 import { MNEMONIC_SIZES } from 'fuels';
 import React, { useEffect, useState } from 'react';
 
@@ -91,7 +91,7 @@ export function Mnemonic({
   return (
     <Box css={styles.root}>
       {enableChangeFormat && (
-        <Flex css={styles.formatWrapper}>
+        <Box.Flex css={styles.formatWrapper}>
           <select
             aria-label="Select format"
             value={format}
@@ -105,7 +105,7 @@ export function Mnemonic({
               >{`I have a ${size} words seed phrase`}</option>
             ))}
           </select>
-        </Flex>
+        </Box.Flex>
       )}
       {type === 'read' ? (
         <Grid css={styles.words}>
@@ -133,14 +133,14 @@ export function Mnemonic({
           })}
         </Grid>
       )}
-      <Flex as="footer" align="center" gap="$4" css={styles.footer}>
+      <Box.Flex as="footer" align="center" gap="$4" css={styles.footer}>
         {type === 'read' ? (
           <Button
             aria-label="Copy button"
             size="sm"
             variant="ghost"
-            color="gray"
-            leftIcon={<Icon icon="Copy" color="gray8" />}
+            color="intentsBase"
+            leftIcon={<Icon icon="Copy" color="intentsBase8" />}
             onPress={handleCopy}
           >
             Copy
@@ -150,27 +150,27 @@ export function Mnemonic({
             aria-label="Paste button"
             size="sm"
             variant="ghost"
-            color="gray"
-            leftIcon={<Icon icon="ClipboardText" color="gray8" />}
+            color="intentsBase"
+            leftIcon={<Icon icon="Copy" color="intentsBase8" />}
             onPress={handlePast}
           >
             Paste
           </Button>
         )}
-      </Flex>
+      </Box.Flex>
     </Box>
   );
 }
 
 const styles = {
   root: cssObj({
-    background: '$gray1',
-    border: '1px dashed $gray3',
+    background: '$intentsBase1',
+    border: '1px dashed $intentsBase3',
     borderRadius: '$lg',
   }),
   formatWrapper: cssObj({
     p: '$3',
-    borderBottom: '1px dashed $gray3',
+    borderBottom: '1px dashed $intentsBase3',
     gap: '$1',
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -178,7 +178,7 @@ const styles = {
     // TODO: should replace with a <Select> component in fuel-ui
     select: {
       backgroundColor: 'transparent',
-      color: '$gray12',
+      color: '$intentsBase12',
       border: 'none',
       paddingRight: '$1',
       fontSize: '$sm',
@@ -192,7 +192,7 @@ const styles = {
     px: '$3',
     py: '$3',
     mb: '$3',
-    borderBottom: '1px dashed $gray3',
+    borderBottom: '1px dashed $intentsBase3',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gridTemplateRows: 'repeat(4, 1fr)',
     gridColumnGap: '$4',
@@ -208,7 +208,7 @@ const styles = {
       textAlign: 'right',
       display: 'inline-block',
       content: 'attr(data-idx)',
-      color: '$gray8',
+      color: '$intentsBase8',
       mr: '$2',
     },
   }),
@@ -222,7 +222,7 @@ const styles = {
       fontSize: '$sm',
     },
     span: {
-      color: '$gray8',
+      color: '$intentsBase8',
       textAlign: 'right',
     },
     input: {
@@ -231,12 +231,12 @@ const styles = {
       appearance: 'none',
       border: 'none',
       background: 'transparent',
-      borderBottom: '1px dashed $gray10',
-      color: '$gray11',
+      borderBottom: '1px dashed $intentsBase10',
+      color: '$intentsBase11',
 
       '&:focus': {
         outline: 'none',
-        borderColor: '$gray8',
+        borderColor: '$intentsBase8',
       },
     },
   }),

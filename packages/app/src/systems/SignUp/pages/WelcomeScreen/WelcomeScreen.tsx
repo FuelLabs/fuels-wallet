@@ -1,4 +1,4 @@
-import { Button, Flex, FuelLogo, Stack } from '@fuel-ui/react';
+import { Box, Button, FuelLogo } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { Header } from '../../components';
@@ -10,13 +10,13 @@ export function WelcomeScreen() {
 
   return (
     <Layout title="Sign Up" isPublic>
-      <Stack gap="$6" align="center">
+      <Box.Stack gap="$6" align="center">
         <FuelLogo
           size={120}
           css={{ mb: '$2', transform: 'translateY(10px)' }}
         />
         <Header title="Create a new Fuel Wallet" />
-        <Flex direction="column" gap="$2">
+        <Box.Flex direction="column" gap="$2">
           <Button
             color="accent"
             onPress={() => navigate(Pages.signUpTerms({ action: 'create' }))}
@@ -24,14 +24,14 @@ export function WelcomeScreen() {
             Create a Wallet
           </Button>
           <Button
-            color="gray"
+            color="intentsBase"
             variant="ghost"
             onPress={() => navigate(Pages.signUpTerms({ action: 'recover' }))}
           >
             I already have a wallet
           </Button>
-        </Flex>
-      </Stack>
+        </Box.Flex>
+      </Box.Stack>
     </Layout>
   );
 }

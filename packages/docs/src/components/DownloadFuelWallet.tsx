@@ -18,7 +18,7 @@ const styles = {
     px: '6px',
     borderRadius: '$md',
     fontFamily: 'monospace',
-    color: '$gray10',
+    color: '$intentsBase10',
     fontSize: '0.9rem',
   }),
 };

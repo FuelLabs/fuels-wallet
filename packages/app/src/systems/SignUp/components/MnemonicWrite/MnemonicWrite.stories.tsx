@@ -1,4 +1,4 @@
-import { BoxCentered } from '@fuel-ui/react';
+import { Box } from '@fuel-ui/react';
 import { action } from '@storybook/addon-actions';
 
 import { MnemonicWrite } from './MnemonicWrite';
@@ -12,22 +12,22 @@ export default {
 };
 
 export const Usage = () => (
-  <BoxCentered minHS>
+  <Box.Centered minHS>
     <MnemonicWrite
       onFilled={action('onFilled')}
       onNext={action('onNext')}
       onCancel={action('onCancel')}
     />
-  </BoxCentered>
+  </Box.Centered>
 );
 
 export const WithError = () => (
-  <BoxCentered minHS>
+  <Box.Centered minHS>
     <MnemonicWrite
       error="Sorry, your mnemonic doesn't match!"
       onFilled={action('onFilled')}
       onNext={action('onNext')}
       onCancel={action('onCancel')}
     />
-  </BoxCentered>
+  </Box.Centered>
 );

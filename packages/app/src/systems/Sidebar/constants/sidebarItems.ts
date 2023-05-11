@@ -14,13 +14,13 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
   },
   {
     key: 'history',
-    icon: 'ClockCounterClockwise',
+    icon: 'History',
     label: 'History',
     path: Pages.txs(),
   },
   {
     key: 'networks',
-    icon: 'ShareNetwork',
+    icon: 'BrandStackshare',
     label: 'Networks',
     onPress() {
       store.openNetworksList();
@@ -36,13 +36,13 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
   },
   {
     key: 'connected-apps',
-    icon: 'PlugsConnected',
+    icon: 'PlugConnected',
     label: 'Connected Apps',
     path: Pages.settingsConnectedApps(),
   },
   {
     key: 'block-explorer',
-    icon: 'Rows',
+    icon: 'DatabaseSearch',
     label: 'Block Explorer',
     ahref: buildBlockExplorerUrl({
       providerUrl: currentNetworkUrl,
@@ -51,7 +51,7 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
   },
   {
     key: 'settings',
-    icon: 'Gear',
+    icon: 'Settings',
     label: 'Settings',
     submenu: [
       {
@@ -76,7 +76,7 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
       },
       {
         key: 'logout',
-        icon: 'SignOut',
+        icon: 'Logout',
         label: 'Logout',
         onPress() {
           store.openAccountsLogout();
@@ -86,24 +86,24 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
   },
   {
     key: 'support',
-    icon: 'Question',
+    icon: 'HelpCircle',
     label: 'Support',
     submenu: [
       {
         key: 'discord',
-        icon: 'DiscordLogo',
+        icon: 'BrandDiscordFilled',
         label: 'Fuel Discord',
         ahref: 'https://discord.com/invite/xfpK4Pe',
       },
       {
         key: 'forum',
-        icon: 'ChatsCircle',
+        icon: 'MessageCircle',
         label: 'Forum',
         ahref: 'https://forum.fuel.network/c/fuel-wallet/15',
       },
       {
         key: 'github',
-        icon: 'GithubLogo',
+        icon: 'BrandGithubFilled',
         label: 'Github',
         ahref: 'https://github.com/FuelLabs/fuels-wallet',
       },

@@ -1,4 +1,4 @@
-import { Heading, Stack } from '@fuel-ui/react';
+import { Box, Heading } from '@fuel-ui/react';
 
 export type HeaderProps = {
   title: string;
@@ -7,7 +7,7 @@ export type HeaderProps = {
 
 export function Header({ title, subtitle }: HeaderProps) {
   return (
-    <Stack gap="$0">
+    <Box.Stack gap="$0">
       <Heading as="h2" css={{ margin: 0, textAlign: 'center' }}>
         {title}
       </Heading>
@@ -16,7 +16,7 @@ export function Header({ title, subtitle }: HeaderProps) {
           as="h3"
           css={{
             margin: 0,
-            color: '$gray11',
+            color: '$intentsBase11',
             textAlign: 'center',
             fontSize: '$lg',
           }}
@@ -24,6 +24,6 @@ export function Header({ title, subtitle }: HeaderProps) {
           {subtitle}
         </Heading>
       )}
-    </Stack>
+    </Box.Stack>
   );
 }

@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Stack, Tag, Text } from '@fuel-ui/react';
+import { Box, Button, Tag, Text } from '@fuel-ui/react';
 import { useEffect, useState } from 'react';
 
 import { ExampleBox } from '~/src/components/ExampleBox';
@@ -39,13 +39,18 @@ export function Accounts() {
 
   return (
     <ExampleBox error={errorMessage}>
-      <Stack css={styles.root}>
-        <Stack gap="$3" css={{ mt: '$2' }}>
+      <Box.Stack css={styles.root}>
+        <Box.Stack gap="$3" css={{ mt: '$2' }}>
           <Text> All connected accounts: </Text>
           {accounts.length > 0 ? (
             <>
               {accounts.map((account) => (
-                <Tag size="xs" color="gray" variant="ghost" key={account}>
+                <Tag
+                  size="xs"
+                  color="intentsBase"
+                  variant="ghost"
+                  key={account}
+                >
                   <Text key={account}>{account}</Text>
                 </Tag>
               ))}
@@ -68,8 +73,8 @@ export function Accounts() {
               View your accounts
             </Button>
           )}
-        </Stack>
-      </Stack>
+        </Box.Stack>
+      </Box.Stack>
     </ExampleBox>
   );
 }

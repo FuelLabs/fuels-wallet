@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { globby } from 'globby';
-import matter from 'gray-matter';
+import matter from 'intentsBase-matter';
 import { serialize } from 'next-mdx-remote/serialize';
 import { join } from 'path';
 import remarkGfm from 'remark-gfm';

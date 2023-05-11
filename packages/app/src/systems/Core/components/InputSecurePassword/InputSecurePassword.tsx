@@ -1,7 +1,7 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import type { InputPasswordProps } from '@fuel-ui/react';
-import { InputPassword, PasswordStrength, Stack } from '@fuel-ui/react';
+import { Box, InputPassword, PasswordStrength } from '@fuel-ui/react';
 import { useState } from 'react';
 import type { ControllerRenderProps, FieldValues } from 'react-hook-form';
 
@@ -29,7 +29,7 @@ export function InputSecurePassword({
   const [passwordTooltipOpened, setPasswordTooltipOpened] = useState(false);
 
   return (
-    <Stack css={{ ...styles.root, ...css }} gap={0}>
+    <Box.Stack css={{ ...styles.root, ...css }} gap={0}>
       <PasswordStrength
         onOpenChange={() => setPasswordTooltipOpened(true)}
         password={field.value || ''}
@@ -51,7 +51,7 @@ export function InputSecurePassword({
           aria-label={ariaLabel}
         />
       </PasswordStrength>
-    </Stack>
+    </Box.Stack>
   );
 }
 

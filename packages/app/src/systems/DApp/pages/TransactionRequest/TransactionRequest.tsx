@@ -72,7 +72,7 @@ export function TransactionRequest() {
                   <Button
                     size="sm"
                     variant="ghost"
-                    color="red"
+                    color="intentsError"
                     onPress={txRequest.handlers.tryAgain}
                   >
                     Try again
@@ -86,7 +86,7 @@ export function TransactionRequest() {
           <Layout.BottomBar>
             <Button
               onPress={handlers.reject}
-              color="gray"
+              color="intentsBase"
               variant="ghost"
               isDisabled={ctx.isLoading || status('sending')}
             >
@@ -114,7 +114,7 @@ const styles = {
     '& h2': {
       m: '$0',
       fontSize: '$sm',
-      color: '$gray12',
+      color: '$intentsBase12',
     },
     '& h4': {
       m: '$0',
@@ -123,7 +123,7 @@ const styles = {
   approveUrlTag: cssObj({
     alignSelf: 'center',
     background: 'transparent',
-    borderColor: '$gray8',
+    borderColor: '$intentsBase8',
     borderStyle: 'dashed',
   }),
   alert: cssObj({

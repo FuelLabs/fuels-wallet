@@ -27,7 +27,7 @@
     "test:watch": "jest --watch"
   },
   "devDependencies": {
-    "@fuel-ui/test-utils": "^0.13.0",
+    "@fuel-ui/test-utils": "0.15.0-dev-c6f1a1b",
     "@fuel-wallet/config": "workspace:*",
     "jest-localstorage-mock": "^2.4.26",
     "tsup": "^6.7.0",

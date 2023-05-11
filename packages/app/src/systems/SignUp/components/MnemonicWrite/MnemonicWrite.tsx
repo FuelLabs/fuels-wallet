@@ -1,4 +1,4 @@
-import { Stack, Flex, Button, Alert } from '@fuel-ui/react';
+import { Button, Alert, Box } from '@fuel-ui/react';
 
 import { Header } from '../Header';
 
@@ -26,14 +26,14 @@ export function MnemonicWrite({
   }
 
   return (
-    <Stack gap="$6" align="center">
+    <Box.Stack gap="$6" align="center">
       <ImageLoader
         src={relativeUrl('/signup-illustration-1.svg')}
         width={129}
         height={116}
       />
       <Header title="Enter your Recovery Phrase" />
-      <Stack gap="$3" css={{ width: 400 }}>
+      <Box.Stack gap="$3" css={{ width: 400 }}>
         {error && (
           <Alert css={{ fontSize: '$sm', py: '$2' }} status="error">
             <Alert.Description>{error}</Alert.Description>
@@ -44,10 +44,10 @@ export function MnemonicWrite({
           onFilled={handleFill}
           enableChangeFormat={enableChangeFormat}
         />
-      </Stack>
-      <Flex gap="$4">
+      </Box.Stack>
+      <Box.Flex gap="$4">
         <Button
-          color="gray"
+          color="intentsBase"
           variant="ghost"
           css={{ width: 130 }}
           onPress={onCancel}
@@ -62,7 +62,7 @@ export function MnemonicWrite({
         >
           Next
         </Button>
-      </Flex>
-    </Stack>
+      </Box.Flex>
+    </Box.Stack>
   );
 }

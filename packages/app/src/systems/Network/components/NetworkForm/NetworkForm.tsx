@@ -1,12 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
 import {
-  Stack,
   Input,
   HelperIcon,
   Card,
   Text,
   Button,
   Spinner,
+  Box,
 } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 
@@ -35,7 +35,7 @@ export function NetworkForm({ form, isEditing, isLoading }: NetworkFormProps) {
   }
 
   return (
-    <Stack css={{ width: '100%' }} gap="$4">
+    <Box.Stack css={{ width: '100%' }} gap="$4">
       {showReview && (
         <MotionCard {...animations.slideInTop()}>
           <Card.Header css={styles.cardHeader} justify="space-between">
@@ -99,7 +99,7 @@ export function NetworkForm({ form, isEditing, isLoading }: NetworkFormProps) {
           )}
         />
       )}
-    </Stack>
+    </Box.Stack>
   );
 }
 

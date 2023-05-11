@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Card, Flex, Heading, Icon, Text } from '@fuel-ui/react';
+import { Avatar, Box, Card, Heading, Icon, Text } from '@fuel-ui/react';
 import { AddressType } from '@fuel-wallet/types';
 import { Address, isB256, isBech32 } from 'fuels';
 import type { FC } from 'react';
@@ -51,7 +51,6 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
               size="lg"
               hash={fuelAddress}
               aria-label={fuelAddress}
-              background="$gray3"
             />
           )}
           {isContract && (
@@ -59,12 +58,12 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
               <Icon icon={Icon.is('Code')} size={16} />
             </Box>
           )}
-          <Flex css={styles.info}>
+          <Box.Flex css={styles.info}>
             <Heading as="h6" css={styles.name}>
               {name}
             </Heading>
             <FuelAddress address={fuelAddress} css={styles.address} />
-          </Flex>
+          </Box.Flex>
         </>
       )}
     </Card>
@@ -80,7 +79,7 @@ const styles = {
     gap: '$3',
 
     '.fuel_copyable': {
-      color: '$gray12',
+      color: '$intentsBase12',
       fontSize: '$sm',
       fontWeight: '$semibold',
     },
@@ -99,7 +98,7 @@ const styles = {
   }),
   iconWrapper: cssObj({
     padding: '$5',
-    background: '$gray3',
+    background: '$intentsBase3',
     borderRadius: '$full',
   }),
   info: cssObj({

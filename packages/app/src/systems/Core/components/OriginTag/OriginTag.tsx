@@ -24,7 +24,7 @@ const styles = {
     px: '$3',
     borderColor: '$accent11',
     borderStyle: 'dashed',
-    color: '$gray11',
+    color: '$intentsBase11',
 
     '& span': {
       width: '100%',

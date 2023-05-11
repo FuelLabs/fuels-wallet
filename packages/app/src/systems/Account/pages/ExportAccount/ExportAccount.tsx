@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Card, Copyable, Dialog, Stack, Text } from '@fuel-ui/react';
+import { Box, Button, Card, Copyable, Dialog, Text } from '@fuel-ui/react';
 
 import { AccountItem } from '../../components';
 import { useAccounts } from '../../hooks';
@@ -31,7 +31,7 @@ export const ExportAccount = () => {
       <Dialog.Heading>Export Private Key</Dialog.Heading>
       <Dialog.Description as="div">
         {account && (
-          <Stack gap="$4">
+          <Box.Stack gap="$4">
             <AccountItem account={account} />
             <Text css={styles.keyHeaderText}>
               Using this Private Key, you can restore your account later. Make
@@ -46,12 +46,12 @@ export const ExportAccount = () => {
                 )}
               </Card.Body>
             </Card>
-          </Stack>
+          </Box.Stack>
         )}
       </Dialog.Description>
       <Dialog.Footer>
         <Button
-          color="gray"
+          color="intentsBase"
           variant="ghost"
           onPress={accountsHandlers.goToList}
         >

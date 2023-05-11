@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Flex, Tooltip } from '@fuel-ui/react';
+import { Box, Button, Tooltip } from '@fuel-ui/react';
 
 import { useAccounts } from '~/systems/Account';
 
@@ -29,7 +29,7 @@ export const HomeActions = ({
   );
 
   return (
-    <Flex css={styles.wrapper}>
+    <Box.Flex css={styles.wrapper}>
       {hasBalance ? (
         sendButton
       ) : (
@@ -39,12 +39,12 @@ export const HomeActions = ({
         isDisabled={isDisabled}
         onPress={receiveAction}
         variant="outlined"
-        color="gray"
+        color="intentsBase"
         css={styles.button}
       >
         Receive
       </Button>
-    </Flex>
+    </Box.Flex>
   );
 };
 

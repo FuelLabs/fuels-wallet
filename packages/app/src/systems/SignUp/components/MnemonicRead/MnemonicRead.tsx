@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Stack, Form, Checkbox, Flex, Button, Alert } from '@fuel-ui/react';
+import { Form, Checkbox, Button, Alert, Box } from '@fuel-ui/react';
 import { useState } from 'react';
 
 import { Header } from '../Header';
@@ -16,7 +16,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
   const [isSavedChecked, setSavedChecked] = useState(false);
 
   return (
-    <Stack gap="$6" align="center">
+    <Box.Stack gap="$6" align="center">
       <ImageLoader
         src={relativeUrl('/signup-illustration-1.svg')}
         width={129}
@@ -27,7 +27,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
         title="Backup your Recovery Phrase"
         subtitle="You will need it on the next step"
       />
-      <Stack css={styles.content} gap="$4">
+      <Box.Stack css={styles.content} gap="$4">
         <Mnemonic value={words} type="read" />
         <Alert status="warning">
           <Form.Control css={{ flexDirection: 'row' }}>
@@ -36,7 +36,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
               aria-label="Confirm Saved"
               checked={isSavedChecked}
               // TODO: this bg property should be fixed inside @fuel-ui
-              css={{ background: '$gray3 !important', width: '$7' }}
+              css={{ background: '$intentsBase3 !important', width: '$7' }}
               onCheckedChange={(e) => {
                 setSavedChecked(e as boolean);
               }}
@@ -46,10 +46,10 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
             </Form.Label>
           </Form.Control>
         </Alert>
-      </Stack>
-      <Flex gap="$4">
+      </Box.Stack>
+      <Box.Flex gap="$4">
         <Button
-          color="gray"
+          color="intentsBase"
           variant="ghost"
           css={{ width: 130 }}
           onPress={onCancel}
@@ -64,8 +64,8 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
         >
           Next
         </Button>
-      </Flex>
-    </Stack>
+      </Box.Flex>
+    </Box.Stack>
   );
 }
 
@@ -80,7 +80,7 @@ const styles = {
       gap: '$4',
     },
     '.fuel_checkbox:focus-within::after': {
-      borderColor: '$yellow5 !important',
+      borderColor: '$intentsWarning5 !important',
     },
   }),
 };

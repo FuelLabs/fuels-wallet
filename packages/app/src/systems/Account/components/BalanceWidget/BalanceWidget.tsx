@@ -1,13 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Avatar,
-  Box,
-  Flex,
-  Heading,
-  Icon,
-  IconButton,
-  Text,
-} from '@fuel-ui/react';
+import { Avatar, Box, Heading, Icon, IconButton, Text } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 
@@ -28,7 +20,7 @@ export function BalanceWidgetWrapper({ children }: BalanceWidgetWrapperProps) {
     <Box css={styles.balanceWidgetWrapper}>
       <Box css={styles.backgroundShadow}>&nbsp;</Box>
       <Box css={styles.backgroundFront}>&nbsp;</Box>
-      <Flex css={styles.contentWrapper}>{children}</Flex>
+      <Box.Flex css={styles.contentWrapper}>{children}</Box.Flex>
     </Box>
   );
 }
@@ -52,25 +44,24 @@ export function BalanceWidget({
 
   return (
     <BalanceWidgetWrapper>
-      <Flex direction="column" align="center">
+      <Box.Flex direction="column" align="center">
         <Avatar.Generated
           size="lg"
           hash={account.address}
-          background="$gray3"
           css={{ boxShadow: '$sm' }}
         />
         <IconButton
           size="xs"
           variant="ghost"
-          color="gray"
-          icon={<Icon icon="CaretDown" color="gray8" />}
+          color="intentsBase"
+          icon={<Icon icon="ChevronDown" color="intentsBase8" />}
           aria-label="Accounts"
           onPress={handlers.goToList}
-          css={styles.caretDownIcon}
+          css={styles.ChevronDownIcon}
         />
-      </Flex>
-      <Flex justify="space-between" css={styles.balanceDetails}>
-        <Flex direction="column" css={styles.balanceContainer}>
+      </Box.Flex>
+      <Box.Flex justify="space-between" css={styles.balanceDetails}>
+        <Box.Flex direction="column" css={styles.balanceContainer}>
           <Heading as="h6" css={styles.name}>
             {account.name}
           </Heading>
@@ -83,7 +74,7 @@ export function BalanceWidget({
             {account.balanceSymbol || '$'}&nbsp;
             <AmountVisibility value={account.balance} visibility={visibility} />
           </Text>
-        </Flex>
+        </Box.Flex>
         <Box css={styles.visibilityContainer}>
           <VisibilityButton
             aria-label={visibility ? 'Hide balance' : 'Show balance'}
@@ -91,7 +82,7 @@ export function BalanceWidget({
             onChangeVisibility={onChangeVisibility}
           />
         </Box>
-      </Flex>
+      </Box.Flex>
     </BalanceWidgetWrapper>
   );
 }
@@ -113,7 +104,7 @@ const backgroundCss = {
 const styles = {
   balanceDetails: cssObj({ flex: '1 0' }),
   balanceAddress: cssObj({
-    color: '$gray11',
+    color: '$intentsBase11',
     fontSize: '$xs',
     fontWeight: 'bold',
   }),
@@ -131,10 +122,10 @@ const styles = {
     fontWeight: 'bold',
     margin: '$2 0',
     '&[aria-hidden="true"]': {
-      color: '$gray12',
+      color: '$intentsBase12',
     },
     '&[aria-hidden="false"]': {
-      color: '$gray10',
+      color: '$intentsBase10',
     },
   }),
   backgroundFront: cssObj({
@@ -162,7 +153,7 @@ const styles = {
     minHeight: 97,
     position: 'relative',
   }),
-  caretDownIcon: cssObj({
+  ChevronDownIcon: cssObj({
     marginTop: 8,
     height: '20px !important',
     padding: '0 3px !important',

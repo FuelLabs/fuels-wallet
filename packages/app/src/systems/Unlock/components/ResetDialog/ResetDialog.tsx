@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Dialog, Icon, Stack, Text } from '@fuel-ui/react';
+import { Box, Button, Dialog, Icon, Text } from '@fuel-ui/react';
 
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 
@@ -21,7 +21,7 @@ export function ResetDialog({
         <Dialog.Close />
         <Dialog.Heading>Forgot password</Dialog.Heading>
         <Dialog.Description as="div" css={styles.description}>
-          <Stack gap={'$2'}>
+          <Box.Stack gap={'$2'}>
             <Text>
               If you have lost your password, the only way to recover your
               wallet it is by using your seed phrase.{' '}
@@ -33,14 +33,14 @@ export function ResetDialog({
             <Text>
               Make sure you have backed up your seed phrase before proceeding.
             </Text>
-          </Stack>
+          </Box.Stack>
         </Dialog.Description>
         <Dialog.Footer>
           <Button
             type="submit"
             color="accent"
             isLoading={isLoading}
-            leftIcon={Icon.is('LockKeyOpen')}
+            leftIcon={Icon.is('LockOpen')}
             onPress={onReset}
             css={styles.button}
             aria-label="Reset wallet"
@@ -55,7 +55,7 @@ export function ResetDialog({
 
 const styles = {
   warning: cssObj({
-    color: '$gray11',
+    color: '$intentsBase11',
     fontWeight: '$extrabold',
   }),
   headingIcon: cssObj({
@@ -64,7 +64,7 @@ const styles = {
   alert: cssObj({
     py: '$2',
     pr: '$2',
-    background: '$gray2',
+    background: '$intentsBase2',
   }),
   button: cssObj({
     width: '100%',

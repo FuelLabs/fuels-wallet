@@ -44,7 +44,7 @@ export function ConnectionRemoveDialog({
           <AlertDialog.Cancel>
             <Button
               size="sm"
-              color="gray"
+              color="intentsBase"
               variant="ghost"
               onPress={handleCancel}
             >
@@ -83,7 +83,7 @@ const styles = {
       },
       '.from': {
         mb: '$1',
-        color: '$gray12',
+        color: '$intentsBase12',
         fontWeight: '$bold',
       },
     },

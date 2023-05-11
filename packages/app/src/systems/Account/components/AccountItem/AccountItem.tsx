@@ -1,9 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
 import {
   Avatar,
+  Box,
   CardList,
   Dropdown,
-  Flex,
   Heading,
   Icon,
   IconButton,
@@ -67,7 +67,7 @@ export const AccountItem: AccountItemComponent = ({
     const menuItems = [
       onUpdate && (
         <Dropdown.MenuItem key="update" aria-label={`Edit ${account.name}`}>
-          <Icon icon={Icon.is('Pencil')} />
+          <Icon icon={Icon.is('Edit')} />
           Edit
         </Dropdown.MenuItem>
       ),
@@ -82,7 +82,7 @@ export const AccountItem: AccountItemComponent = ({
           key="hide"
           aria-label={`${account.isHidden ? 'Unhide' : 'Hide'} ${account.name}`}
         >
-          <Icon icon={Icon.is(account.isHidden ? 'EyeSlash' : 'Eye')} />
+          <Icon icon={Icon.is(account.isHidden ? 'EyeClosed' : 'Eye')} />
           {`${account.isHidden ? 'Unhide' : 'Hide'} Account`}
         </Dropdown.MenuItem>
       ),
@@ -100,12 +100,12 @@ export const AccountItem: AccountItemComponent = ({
             <IconButton
               size="xs"
               variant="link"
-              color="gray"
-              icon={<Icon icon="DotsThreeOutline" color="gray8" />}
+              color="intentsBase"
+              icon={<Icon icon="Dots" color="intentsBase8" />}
               aria-label={`Account Actions ${account.name}`}
               css={{
                 px: '$0',
-                color: '$gray10',
+                color: '$intentsBase10',
               }}
             />
           </Dropdown.Trigger>
@@ -136,17 +136,13 @@ export const AccountItem: AccountItemComponent = ({
       aria-label={account.name}
       data-compact={compact}
     >
-      <Avatar.Generated
-        size={compact ? 'xsm' : 'md'}
-        background="$gray3"
-        hash={account.address}
-      />
-      <Flex className="wrapper">
+      <Avatar.Generated size={compact ? 'xsm' : 'md'} hash={account.address} />
+      <Box.Flex className="wrapper">
         <Heading as="h6" css={styles.name}>
           {account.name}
         </Heading>
         <FuelAddress address={account.address} css={styles.address} />
-      </Flex>
+      </Box.Flex>
     </CardList.Item>
   );
 };
@@ -177,11 +173,11 @@ const styles = {
 
     '.fuel_button': {
       px: '$1 !important',
-      color: '$gray8',
+      color: '$intentsBase8',
     },
 
     '.fuel_button:hover': {
-      color: '$gray11',
+      color: '$intentsBase11',
     },
   }),
   name: cssObj({

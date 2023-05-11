@@ -1,4 +1,4 @@
-import { BoxCentered } from '@fuel-ui/react';
+import { Box } from '@fuel-ui/react';
 
 import { SignUpFailed } from './SignUpFailed';
 
@@ -11,7 +11,7 @@ export default {
 };
 
 export const Usage = () => (
-  <BoxCentered minHS>
+  <Box.Centered minHS>
     <SignUpFailed />
-  </BoxCentered>
+  </Box.Centered>
 );

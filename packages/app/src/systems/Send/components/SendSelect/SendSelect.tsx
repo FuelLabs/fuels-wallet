@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Flex, Input, InputAmount, Stack, Text } from '@fuel-ui/react';
+import { Box, Input, InputAmount, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { bn } from 'fuels';
 
@@ -21,8 +21,8 @@ export function SendSelect({
 }: SendSelectProps) {
   return (
     <MotionContent {...animations.slideInTop()}>
-      <Stack gap="$4">
-        <Flex css={styles.row}>
+      <Box.Stack gap="$4">
+        <Box.Flex css={styles.row}>
           <Text as="span" css={styles.title}>
             Send
           </Text>
@@ -42,8 +42,8 @@ export function SendSelect({
               />
             )}
           />
-        </Flex>
-        <Flex css={styles.row}>
+        </Box.Flex>
+        <Box.Flex css={styles.row}>
           <Text as="span" css={styles.title}>
             To
           </Text>
@@ -65,8 +65,8 @@ export function SendSelect({
               )}
             />
           </Box>
-        </Flex>
-        <Stack gap="$3">
+        </Box.Flex>
+        <Box.Stack gap="$3">
           <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
             Which amount?
           </Text>
@@ -87,9 +87,9 @@ export function SendSelect({
               />
             )}
           />
-        </Stack>
+        </Box.Stack>
         <TxDetails fee={ctx.fee} />
-      </Stack>
+      </Box.Stack>
     </MotionContent>
   );
 }
@@ -110,7 +110,7 @@ const styles = {
   }),
   title: cssObj({
     pt: '$2',
-    color: '$gray12',
+    color: '$intentsBase12',
     fontSize: '$xl',
     fontWeight: '$semibold',
   }),
@@ -124,7 +124,7 @@ const styles = {
 
     '.error-msg': {
       fontSize: '$xs',
-      color: '$red9',
+      color: '$intentsError9',
     },
   }),
 };

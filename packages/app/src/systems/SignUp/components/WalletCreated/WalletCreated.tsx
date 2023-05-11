@@ -1,4 +1,4 @@
-import { Stack, Button, Flex } from '@fuel-ui/react';
+import { Button, Box } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,14 +25,14 @@ export function WalletCreated({ account }: WalletCreatedProps) {
   return (
     <>
       {IS_CRX && <PinWalletCard />}
-      <Stack gap="$6">
-        <Flex justify="center">
+      <Box.Stack gap="$6">
+        <Box.Flex justify="center">
           <ImageLoader
             src={relativeUrl('/signup-illustration-3.svg')}
             width={129}
             height={116}
           />
-        </Flex>
+        </Box.Flex>
         <Header
           title="Wallet created successfully"
           subtitle="Below is your first Fuel wallet account"
@@ -45,7 +45,7 @@ export function WalletCreated({ account }: WalletCreatedProps) {
             Go to wallet
           </Button>
         )}
-      </Stack>
+      </Box.Stack>
     </>
   );
 }

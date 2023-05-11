@@ -20,7 +20,7 @@ export function SearchInput({
 }: SearchInputProps) {
   return (
     <Input css={styles.input} isDisabled={isDisabled}>
-      <Input.ElementLeft element={<Icon icon={Icon.is('MagnifyingGlass')} />} />
+      <Input.ElementLeft element={<Icon icon={Icon.is('Search')} />} />
       <Input.Field
         {...props}
         type="search"

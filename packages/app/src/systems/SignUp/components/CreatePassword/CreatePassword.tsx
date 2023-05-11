@@ -1,4 +1,4 @@
-import { Stack, Flex, Button, InputPassword } from '@fuel-ui/react';
+import { Button, InputPassword, Box } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -61,7 +61,7 @@ export function CreatePassword({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack gap="$6" align="center">
+      <Box.Stack gap="$6" align="center">
         <ImageLoader
           src={relativeUrl('/signup-illustration-2.svg')}
           width={129}
@@ -71,7 +71,7 @@ export function CreatePassword({
           title="Encrypt your wallet"
           subtitle="Add a safe password to encrypt your wallet"
         />
-        <Stack css={{ width: '100%' }} gap="$4">
+        <Box.Stack css={{ width: '100%' }} gap="$4">
           <ControlledField
             control={control}
             name="password"
@@ -106,10 +106,10 @@ export function CreatePassword({
               />
             )}
           />
-        </Stack>
-        <Flex gap="$4">
+        </Box.Stack>
+        <Box.Flex gap="$4">
           <Button
-            color="gray"
+            color="intentsBase"
             variant="ghost"
             css={{ width: 130 }}
             onPress={onCancel}
@@ -125,8 +125,8 @@ export function CreatePassword({
           >
             Next
           </Button>
-        </Flex>
-      </Stack>
+        </Box.Flex>
+      </Box.Stack>
     </form>
   );
 }

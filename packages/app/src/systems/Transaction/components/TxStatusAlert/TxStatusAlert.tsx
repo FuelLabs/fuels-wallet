@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Link, Stack, Text } from '@fuel-ui/react';
+import { Alert, Box, Link, Text } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import type { FC } from 'react';
 import { useMemo } from 'react';
@@ -39,7 +39,7 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
       css={styles.root(txColor)}
     >
       <Alert.Description>
-        <Stack gap="$1">
+        <Box.Stack gap="$1">
           <Text fontSize="sm">
             {txStatus === TxStatus.pending &&
               'Your transaction is still pending, you can close this window if you want.'}
@@ -61,7 +61,7 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
               Show on Fuel Explorer
             </Link>
           )}
-        </Stack>
+        </Box.Stack>
       </Alert.Description>
     </Alert>
   );

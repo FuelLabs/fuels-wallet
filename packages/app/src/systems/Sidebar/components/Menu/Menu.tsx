@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import type { Icons } from '@fuel-ui/react';
-import { Box, Flex, Icon, Menu as RootMenu } from '@fuel-ui/react';
+import { Box, Icon, Menu as RootMenu } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useNavigate, useResolvedPath, useMatch } from 'react-router-dom';
@@ -63,15 +63,15 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
 
   return (
     <Box css={styles.routeContent}>
-      <Flex
+      <Box.Flex
         css={styles.route}
         data-active={Boolean(match && item.path)}
         data-opened={isOpened}
       >
         <Icon icon={item.icon} className="main-icon" aria-label="Menu Icon" />
         <Box css={{ flex: 1 }}>{item.label}</Box>
-        {item.submenu && <Icon icon="CaretDown" aria-label="Caret Icon" />}
-      </Flex>
+        {item.submenu && <Icon icon="ChevronDown" aria-label="Caret Icon" />}
+      </Box.Flex>
       {isOpened && item.submenu && (
         <MotionRootMenu
           css={styles.submenu}
@@ -83,7 +83,7 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
         >
           {item.submenu.map((subItem) => (
             <RootMenu.Item key={subItem.key} textValue={subItem.label}>
-              <Icon icon={subItem.icon} css={{ color: '$gray8' }} />
+              <Icon icon={subItem.icon} css={{ color: '$intentsBase8' }} />
               {subItem.label}
             </RootMenu.Item>
           ))}
@@ -136,7 +136,7 @@ export function Menu({ items }: MenuProps) {
 
 const styles = {
   root: cssObj({
-    ...coreStyles.scrollable('$gray2'),
+    ...coreStyles.scrollable('$intentsBase2'),
     py: '$3',
     flex: 1,
 
@@ -150,7 +150,7 @@ const styles = {
       background: '$transparent',
     },
     '& > .fuel_menu-list-item:focus-within': {
-      color: '$gray12',
+      color: '$intentsBase12',
     },
     '& > .fuel_menu-list-item:focus-within .main-icon': {
       color: '$accent11',
@@ -164,18 +164,18 @@ const styles = {
     borderRadius: '$lg',
 
     '&[data-active="true"]': {
-      color: '$gray12',
-      bg: '$gray3',
+      color: '$intentsBase12',
+      bg: '$intentsBase3',
       my: '2px',
     },
 
-    '&[data-opened="true"] .fuel_icon--CaretDown': {
+    '&[data-opened="true"] .fuel_icon--ChevronDown': {
       transform: 'rotate(180deg)',
     },
 
-    '.fuel_icon, .fuel_icon--CaretDown': {
+    '.fuel_icon, .fuel_icon--ChevronDown': {
       transition: 'transform .3s',
-      color: '$gray7',
+      color: '$intentsBase7',
     },
   }),
   routeContent: cssObj({
@@ -195,7 +195,7 @@ const styles = {
       left: 7,
       width: 1,
       height: 'calc(100% - 18px)',
-      background: '$gray6',
+      background: '$intentsBase6',
     },
 
     '.fuel_menu-list-item': {
@@ -206,11 +206,11 @@ const styles = {
       ml: '$4',
       height: 'auto',
       fontSize: '$sm',
-      color: '$gray8',
+      color: '$intentsBase8',
     },
 
     '.fuel_menu-list-item .fuel_icon': {
-      color: '$gray8',
+      color: '$intentsBase8',
     },
 
     '.fuel_menu-list-item::before': {
@@ -221,7 +221,7 @@ const styles = {
       left: -8,
       width: 10,
       height: 1,
-      background: '$gray6',
+      background: '$intentsBase6',
       transform: 'translateY(-50%)',
     },
   }),

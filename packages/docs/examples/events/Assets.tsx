@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Stack, Tag, Text } from '@fuel-ui/react';
+import { Box, Button, Tag, Text } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/sdk';
 import { useEffect, useState } from 'react';
 
@@ -40,13 +40,18 @@ export function Assets() {
 
   return (
     <ExampleBox error={errorMessage}>
-      <Stack css={styles.root}>
-        <Stack gap="$3" css={{ mt: '$2' }}>
+      <Box.Stack css={styles.root}>
+        <Box.Stack gap="$3" css={{ mt: '$2' }}>
           <Text> All wallet assets: </Text>
           {assets?.length ? (
             <>
               {assets.map((asset) => (
-                <Tag size="xs" color="gray" variant="ghost" key={asset.assetId}>
+                <Tag
+                  size="xs"
+                  color="intentsBase"
+                  variant="ghost"
+                  key={asset.assetId}
+                >
                   <Text key={asset.assetId}>
                     {asset.name} ({asset.symbol}): {asset.assetId}
                   </Text>
@@ -71,8 +76,8 @@ export function Assets() {
               View your assets
             </Button>
           )}
-        </Stack>
-      </Stack>
+        </Box.Stack>
+      </Box.Stack>
     </ExampleBox>
   );
 }

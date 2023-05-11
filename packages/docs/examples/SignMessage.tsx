@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import { Box, Stack, Button, Input, Tag } from '@fuel-ui/react';
+import { Box, Button, Input, Tag } from '@fuel-ui/react';
 import { useState } from 'react';
 
 import { ExampleBox } from '~/src/components/ExampleBox';
@@ -32,7 +32,7 @@ export function SignMessage() {
 
   return (
     <ExampleBox error={errorMessage}>
-      <Stack css={{ gap: '$4' }}>
+      <Box.Stack css={{ gap: '$4' }}>
         <Input isDisabled={!isConnected} css={{ width: 300, height: 100 }}>
           <Input.Field
             as="textarea"
@@ -52,11 +52,11 @@ export function SignMessage() {
           </Button>
         </Box>
         {signedMessage && (
-          <Tag size="xs" color="gray" variant="ghost" css={styles.msg}>
+          <Tag size="xs" color="intentsBase" variant="ghost" css={styles.msg}>
             {signedMessage}
           </Tag>
         )}
-      </Stack>
+      </Box.Stack>
     </ExampleBox>
   );
 }

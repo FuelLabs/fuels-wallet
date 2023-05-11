@@ -1,13 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Avatar,
-  Box,
-  CardList,
-  Flex,
-  Icon,
-  IconButton,
-  Text,
-} from '@fuel-ui/react';
+import { Avatar, Box, CardList, Icon, IconButton, Text } from '@fuel-ui/react';
 import type { Connection } from '@fuel-wallet/types';
 import { motion } from 'framer-motion';
 import type { FC } from 'react';
@@ -49,12 +41,12 @@ export const ConnectionItem: ConnectionItemComponent = ({
     <MotionCardItem
       {...animations.slideInTop()}
       rightEl={
-        <Flex css={styles.root}>
+        <Box.Flex css={styles.root}>
           <IconButton
-            icon={<Icon icon={Icon.is('NotePencil')} color="gray8" />}
+            icon={<Icon icon={Icon.is('Edit')} color="intentsBase8" />}
             size="xs"
             variant="link"
-            color="gray"
+            color="intentsBase"
             aria-label="Edit"
             onPress={() => onEdit(origin)}
           />
@@ -64,14 +56,14 @@ export const ConnectionItem: ConnectionItemComponent = ({
             onConfirm={handleConfirm}
           >
             <IconButton
-              icon={<Icon icon={Icon.is('Trash')} color="gray8" />}
+              icon={<Icon icon={Icon.is('Trash')} color="intentsBase8" />}
               size="xs"
               variant="link"
-              color="gray"
+              color="intentsBase"
               aria-label="Delete"
             />
           </ConnectionRemoveDialog>
-        </Flex>
+        </Box.Flex>
       }
     >
       <Avatar name={origin} src={favIconUrl} css={styles.avatar} />
@@ -109,12 +101,12 @@ const styles = {
       textOverflow: 'ellipsis',
       textSize: 'sm',
       fontWeight: '$medium',
-      color: '$gray12',
+      color: '$intentsBase12',
     },
     '.fuel_text:last-of-type': {
       textSize: 'xs',
       fontWeight: '$medium',
-      color: '$gray8',
+      color: '$intentsBase8',
     },
   }),
 };

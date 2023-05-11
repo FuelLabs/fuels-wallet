@@ -1,5 +1,5 @@
 import { cssObj, cx } from '@fuel-ui/css';
-import { Button, Flex, Icon, List } from '@fuel-ui/react';
+import { Box, Button, Icon, List } from '@fuel-ui/react';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
@@ -23,10 +23,10 @@ export function SidebarSubmenu({
   }
 
   return (
-    <Flex css={styles.root}>
+    <Box.Flex css={styles.root}>
       <Button
         variant="link"
-        rightIcon={isOpened ? Icon.is('CaretUp') : Icon.is('CaretDown')}
+        rightIcon={isOpened ? Icon.is('ChevronUp') : Icon.is('ChevronDown')}
         onPress={toggle}
         className={cx({ active: isActive })}
       >
@@ -39,14 +39,14 @@ export function SidebarSubmenu({
               key={item.slug}
               icon={Icon.is('ArrowRight')}
               iconSize={10}
-              iconColor="gray6"
+              iconColor="intentsBase6"
             >
               <SidebarLink item={item} />
             </List.Item>
           ))}
         </List>
       )}
-    </Flex>
+    </Box.Flex>
   );
 }
 
@@ -59,18 +59,18 @@ const styles = {
     '.fuel_button': {
       padding: '$0',
       justifyContent: 'space-between',
-      color: '$gray10',
+      color: '$intentsBase10',
       fontWeight: '$normal',
     },
     '.fuel_button:focus': {
       outline: 'none',
-      color: '$gray12',
+      color: '$intentsBase12',
     },
     '.fuel_button.active': {
-      color: '$gray12',
+      color: '$intentsBase12',
     },
     '.fuel_button:hover': {
-      color: '$gray11',
+      color: '$intentsBase11',
       textDecoration: 'none',
     },
 
