@@ -54,16 +54,6 @@ export function Mnemonic({
     return navigator.clipboard.writeText(val.join(' '));
   }
 
-  function handlePastInput(ev: React.ClipboardEvent<HTMLInputElement>) {
-    const text = ev.clipboardData.getData('text/plain');
-    setValue(fillArray(text.split(' '), format));
-  }
-
-  async function handlePast() {
-    const text = await navigator.clipboard.readText();
-    setValue(fillArray(text.split(' '), format));
-  }
-
   function handleChange(idx: number) {
     return (val: string) => {
       setValue((oldState) =>
@@ -80,6 +70,25 @@ export function Mnemonic({
 
     setValue(newValue);
     onFilled?.(newValue);
+  }
+
+  function handlePaste(text: string) {
+    const textTokens = text.split(' ');
+    const textTokensSize = textTokens.length;
+    const minTextLength =
+      MNEMONIC_SIZES.find((size) => size >= textTokensSize) || format;
+    handleChangeFormat(minTextLength);
+    setValue(fillArray(textTokens, minTextLength));
+  }
+
+  async function handlePasteButton() {
+    const text = await navigator.clipboard.readText();
+    handlePaste(text);
+  }
+
+  function handlePastInput(ev: React.ClipboardEvent<HTMLInputElement>) {
+    const text = ev.clipboardData.getData('text/plain');
+    handlePaste(text);
   }
 
   useEffect(() => {
@@ -152,7 +161,7 @@ export function Mnemonic({
             variant="ghost"
             color="gray"
             leftIcon={<Icon icon="ClipboardText" color="gray8" />}
-            onPress={handlePast}
+            onPress={handlePasteButton}
           >
             Paste
           </Button>
