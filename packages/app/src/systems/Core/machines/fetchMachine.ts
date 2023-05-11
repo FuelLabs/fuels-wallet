@@ -3,7 +3,10 @@ import { toast } from '@fuel-ui/react';
 import type { TransitionConfig } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-import { getErrorToastProps } from '../components/Toast/ToastErrorCopy';
+import {
+  MAX_MESSAGE_LENGTH,
+  getErrorToastProps,
+} from '../components/Toast/ToastErrorCopy';
 
 export type FetchResponse<T> = T & {
   error?: unknown;
@@ -106,7 +109,9 @@ export const FetchMachine = {
           showError: (_, ev) => {
             if (!opts.showError) return;
             const errorMessage = (ev.data as any)?.message ?? '';
-            toast.error(getErrorToastProps(errorMessage));
+            if (errorMessage.length > MAX_MESSAGE_LENGTH)
+              toast.error(getErrorToastProps(errorMessage));
+            else toast.error(errorMessage);
           },
           assignError: assign({
             error: (_, ev) => ev.data,
