@@ -1,10 +1,42 @@
-import { Button, Card, Dialog, Icon, IconButton, Text } from '@fuel-ui/react';
+import {
+  Button,
+  Card,
+  Dialog,
+  Icon,
+  IconButton,
+  Input,
+  Text,
+} from '@fuel-ui/react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
 
 import { useAccounts } from '../../hooks';
 
+import { ControlledField } from '~/systems/Core';
+
+const schema = yup
+  .object({
+    logoutConfirmation: yup.string(),
+  })
+  .required();
+
+export type FormValues = {
+  logoutConfirmation: string;
+};
+const logOutConfirmationPhrase = 'I have my recovery phrase';
+
 export const Logout = () => {
   const { isLoading, handlers } = useAccounts();
-
+  const form = useForm<FormValues>({
+    resolver: yupResolver(schema),
+    reValidateMode: 'onChange',
+    mode: 'onChange',
+    defaultValues: {
+      logoutConfirmation: '',
+    },
+  });
+  const { control } = form;
   return (
     <>
       <Dialog.Heading>
@@ -42,12 +74,33 @@ export const Logout = () => {
           <Text color="gray11" css={{ mb: '$2' }}></Text>
         </Card>
       </Dialog.Description>
+      <ControlledField
+        control={control}
+        name="logoutConfirmation"
+        label={
+          <p>
+            Write <i>{logOutConfirmationPhrase}</i> to logout
+          </p>
+        }
+        render={({ field }) => (
+          <Input>
+            <Input.Field
+              {...field}
+              aria-label="Confirm Log Out"
+              placeholder={logOutConfirmationPhrase}
+            />
+          </Input>
+        )}
+      />
       <Dialog.Footer>
         <Button
           aria-label="Logout"
           onPress={handlers.logout}
           isLoading={isLoading}
-          isDisabled={isLoading}
+          isDisabled={
+            isLoading ||
+            form.getValues().logoutConfirmation !== logOutConfirmationPhrase
+          }
           variant="ghost"
           color="red"
         >
