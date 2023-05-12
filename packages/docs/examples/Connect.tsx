@@ -11,20 +11,20 @@ export function Connect() {
   const [connected, setConnected] = useState(false);
 
   const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {
-    console.debug('Request connection to Wallet!');
+    console.log('Request connection to Wallet!');
     /* example:start */
     const isConnected = await fuel.connect();
-    console.debug('Connection response', isConnected);
+    console.log('Connection response', isConnected);
     /* example:end */
     setConnected(isConnected);
   });
 
   const [handleDisconnect, isDisconnecting, errorDisconnect] = useLoading(
     async () => {
-      console.debug('Request disconnection to Wallet!');
+      console.log('Request disconnection to Wallet!');
       await fuel.disconnect();
       setConnected(false);
-      console.debug('Disconnection response');
+      console.log('Disconnection response');
     }
   );
 
