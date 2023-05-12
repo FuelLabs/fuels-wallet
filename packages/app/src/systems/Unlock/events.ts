@@ -3,6 +3,9 @@ import { Services } from '~/store';
 
 export function unlockEvents(store: Store) {
   return {
+    checkLock() {
+      store.send(Services.unlock, { type: 'CHECK_LOCK' });
+    },
     lock() {
       store.send(Services.unlock, { type: 'LOCK_WALLET' });
     },

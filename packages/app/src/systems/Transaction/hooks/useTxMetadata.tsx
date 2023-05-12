@@ -13,6 +13,12 @@ type UseTxMetadataProps = {
   ownerAddress: string;
 };
 
+export function getAddress(address?: string) {
+  if (!address) return '';
+  if (address === 'Network') return address;
+  return Address.fromString(address).bech32Address;
+}
+
 export function useTxMetadata({
   transaction,
   ownerAddress,
@@ -42,7 +48,7 @@ export function useTxMetadata({
       opDirection === OperationDirection.to
         ? mainOperation.to?.address
         : mainOperation.from?.address;
-    return address ? Address.fromString(address).bech32Address : '';
+    return getAddress(address);
   }, [ownerAddress, mainOperation]);
 
   return {
