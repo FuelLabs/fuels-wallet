@@ -7,7 +7,7 @@ import { Mnemonic } from '~/systems/Core';
 import { useOverlay } from '~/systems/Overlay';
 import { UnlockCard } from '~/systems/Unlock';
 
-export function ViewRecoveryPhrase() {
+export function ViewSeedPhrase() {
   const { close } = useOverlay();
   const { handlers, error, isUnlockOpened, isLoading, words } =
     useExportVault();
@@ -28,7 +28,7 @@ export function ViewRecoveryPhrase() {
 
   return (
     <>
-      <Dialog.Heading>Recovery Phrase</Dialog.Heading>
+      <Dialog.Heading>Seed Phrase</Dialog.Heading>
       <Dialog.Description as="div">
         <Flex gap="$4" direction="column" align="center">
           <Box css={styles.mnemonicWrapper}>
@@ -37,7 +37,7 @@ export function ViewRecoveryPhrase() {
           <Alert status="warning" css={styles.alert}>
             <Alert.Description>
               <Text fontSize="xs" css={styles.alertDescription}>
-                DON&APOS;T SHARE your Recovery Phrase. {'\n'}
+                DON&APOS;T SHARE your Seed Phrase. {'\n'}
                 This phrase provides access to all your accounts. Sharing or
                 losing it may result in a permanent loss of funds.
               </Text>
