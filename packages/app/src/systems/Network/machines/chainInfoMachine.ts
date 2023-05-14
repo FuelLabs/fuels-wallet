@@ -9,6 +9,7 @@ import { FetchMachine } from '~/systems/Core';
 
 type MachineContext = {
   chainInfo?: ChainInfo;
+  error?: string;
 };
 
 type MachineServices = {
@@ -17,10 +18,12 @@ type MachineServices = {
   };
 };
 
-type MachineEvents = {
-  type: 'FETCH_CHAIN_INFO';
-  input: { providerUrl?: string };
-};
+type MachineEvents =
+  | {
+      type: 'FETCH_CHAIN_INFO';
+      input: { providerUrl?: string };
+    }
+  | { type: 'CLEAR_CHAIN_INFO'; input: null };
 
 export const chainInfoMachine = createMachine(
   {
@@ -41,10 +44,16 @@ export const chainInfoMachine = createMachine(
               target: 'fetchingChainInfo',
             },
           ],
+          CLEAR_CHAIN_INFO: [
+            {
+              actions: ['clearChainInfo'],
+            },
+          ],
         },
       },
       fetchingChainInfo: {
         tags: ['loading'],
+        entry: ['clearChainInfo', 'clearError'],
         invoke: {
           src: 'fetchChainInfo',
           data: {
@@ -52,6 +61,7 @@ export const chainInfoMachine = createMachine(
           },
           onDone: [
             {
+              actions: ['assignError'],
               target: 'idle',
               cond: FetchMachine.hasError,
             },
@@ -69,13 +79,22 @@ export const chainInfoMachine = createMachine(
       assignChainInfo: assign({
         chainInfo: (ctx, ev) => ev.data,
       }),
+      clearChainInfo: assign({
+        chainInfo: undefined,
+      }),
+      assignError: assign({
+        error: (_, ev) => (ev.data.error as Error).message,
+      }),
+      clearError: assign({
+        error: (_) => undefined,
+      }),
     },
     services: {
       fetchChainInfo: FetchMachine.create<
         NetworkInputs['getChainInfo'],
         ChainInfo
       >({
-        showError: true,
+        showError: false,
         async fetch({ input }) {
           if (!input?.providerUrl) {
             throw new Error('No chain URL');
