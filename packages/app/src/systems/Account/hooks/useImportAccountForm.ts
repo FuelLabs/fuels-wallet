@@ -36,11 +36,16 @@ export function useImportAccountForm(opts: UseImportAccountForm) {
       .required('Private Key is required'),
   });
 
+  const defaultName = `Account ${(opts?.accounts?.length || 0) + 1}`;
+
   const form = useForm<ImportAccountFormValues>({
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
     mode: 'onChange',
-    defaultValues: DEFAULT_VALUES,
+    defaultValues: {
+      ...DEFAULT_VALUES,
+      name: defaultName,
+    },
   });
 
   return form;
