@@ -8,6 +8,7 @@ import {
   Text,
 } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -28,6 +29,7 @@ const logOutConfirmationPhrase = 'I have my recovery phrase';
 
 export const Logout = () => {
   const { isLoading, handlers } = useAccounts();
+
   const form = useForm<FormValues>({
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
@@ -37,6 +39,12 @@ export const Logout = () => {
     },
   });
   const { control } = form;
+  const isLogoutDisabled = useMemo(
+    () =>
+      isLoading ||
+      form.getValues().logoutConfirmation !== logOutConfirmationPhrase,
+    [isLoading, form]
+  );
   return (
     <>
       <Dialog.Heading>
@@ -97,10 +105,7 @@ export const Logout = () => {
           aria-label="Logout"
           onPress={handlers.logout}
           isLoading={isLoading}
-          isDisabled={
-            isLoading ||
-            form.getValues().logoutConfirmation !== logOutConfirmationPhrase
-          }
+          isDisabled={isLogoutDisabled}
           variant="ghost"
           color="red"
         >
