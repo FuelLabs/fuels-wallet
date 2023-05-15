@@ -6,6 +6,7 @@ import type {
   WalletUnlocked,
 } from 'fuels';
 import {
+  normalizeJSON,
   Address,
   GAS_PER_BYTE,
   GAS_PRICE_FACTOR,
@@ -19,7 +20,7 @@ import {
 } from 'fuels';
 
 import type { Transaction } from '../types';
-import { getFee, getGasUsed, toJSON, processTransactionToTx } from '../utils';
+import { getFee, getGasUsed, processTransactionToTx } from '../utils';
 
 import { AccountService } from '~/systems/Account';
 import { isEth } from '~/systems/Asset';
@@ -108,7 +109,8 @@ export class TxService {
 
   static add(input: TxInputs['add']) {
     const { type } = input;
-    const data = toJSON(input.data!);
+
+    const data = normalizeJSON(input.data!);
     return db.transaction('rw', db.transactions, async () => {
       const id = await db.transactions.add({ type, data, id: uniqueId() });
       return db.transactions.get(id);

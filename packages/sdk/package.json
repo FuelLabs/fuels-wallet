@@ -35,12 +35,12 @@
     "xstate": "^4.35.4"
   },
   "peerDependencies": {
-    "fuels": ">=0.35.0"
+    "fuels": ">=0.41.0"
   },
   "devDependencies": {
     "@fuel-wallet/types": "workspace:*",
     "@types/uuid": "^9.0.0",
-    "fuels": "0.35.0",
+    "fuels": "0.41.0",
     "jest-webextension-mock": "^3.8.8",
     "tsup": "^6.5.0"
   }
