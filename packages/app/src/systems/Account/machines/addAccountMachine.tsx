@@ -1,6 +1,7 @@
+import { toast } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
-import { assign, createMachine } from 'xstate';
+import { createMachine } from 'xstate';
 
 import { AccountService } from '../services/account';
 
@@ -20,7 +21,6 @@ type MachineServices = {
 
 export type AddAccountMachineEvents = {
   type: 'ADD_ACCOUNT';
-  input: string;
 };
 
 export const addAccountMachine = createMachine(
@@ -39,7 +39,6 @@ export const addAccountMachine = createMachine(
       idle: {
         on: {
           ADD_ACCOUNT: {
-            actions: ['assignAccountName'],
             target: 'addingAccount',
           },
         },
@@ -59,7 +58,11 @@ export const addAccountMachine = createMachine(
               target: 'failed',
             },
             {
-              actions: ['notifyUpdateAccounts', 'redirectToHome'],
+              actions: [
+                'notifyUpdateAccounts',
+                'redirectToHome',
+                'showSuccessNotification',
+              ],
               target: 'idle',
             },
           ],
@@ -72,25 +75,23 @@ export const addAccountMachine = createMachine(
   },
   {
     actions: {
-      assignAccountName: assign({
-        accountName: (_, ev) => ev.input,
-      }),
       notifyUpdateAccounts: () => {
         store.updateAccounts();
       },
       redirectToHome() {
         store.closeOverlay();
       },
+      showSuccessNotification: (_, ev) => {
+        const { name } = ev.data;
+        toast.success(` ${name || 'Account'} created`);
+      },
     },
     services: {
-      addAccount: FetchMachine.create<{ name: string }, Account>({
+      addAccount: FetchMachine.create<never, Account>({
         showError: true,
         maxAttempts: 1,
-        async fetch({ input }) {
-          if (!input?.name.trim()) {
-            throw new Error('Name cannot be empty');
-          }
-          const { name } = input;
+        async fetch() {
+          const name = await AccountService.generateAccountName();
 
           if (await AccountService.checkAccountNameExists(name)) {
             throw new Error('Account name already exists');
@@ -106,7 +107,7 @@ export const addAccountMachine = createMachine(
           // Add account to the database
           let account = await AccountService.addAccount({
             data: {
-              ...input,
+              name,
               ...accountVault,
             },
           });

@@ -19,12 +19,6 @@ export function overlayEvents(store: Store) {
         },
       });
     },
-    openAccountsAdd() {
-      store.send(Services.overlay, {
-        type: 'OPEN',
-        input: { modal: 'accounts.add' },
-      });
-    },
     openAccountEdit(address: string) {
       store.send(Services.overlay, {
         type: 'OPEN',
