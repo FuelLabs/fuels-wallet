@@ -8,7 +8,6 @@ import {
   Text,
 } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
@@ -39,12 +38,9 @@ export const Logout = () => {
     },
   });
   const { control } = form;
-  const isLogoutDisabled = useMemo(
-    () =>
-      isLoading ||
-      form.getValues().logoutConfirmation !== logOutConfirmationPhrase,
-    [isLoading, form]
-  );
+  const isLogoutDisabled =
+    isLoading ||
+    form.getValues().logoutConfirmation !== logOutConfirmationPhrase;
   return (
     <>
       <Dialog.Heading>
