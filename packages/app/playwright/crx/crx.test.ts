@@ -173,7 +173,10 @@ test.describe('FuelWallet Extension', () => {
         await getByAriaLabel(popupPage, 'Accounts').click();
         await getByAriaLabel(popupPage, 'Import from private key').click();
         await getByAriaLabel(popupPage, 'Private Key').type(privateKey);
-        await getByAriaLabel(popupPage, 'Account Name').type(name);
+        if (name) {
+          await getByAriaLabel(popupPage, 'Account Name').clear();
+          await getByAriaLabel(popupPage, 'Account Name').type(name);
+        }
         await getByAriaLabel(popupPage, 'Import').click();
         await waitAccountPage(popupPage, name);
       }
