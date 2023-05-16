@@ -1,5 +1,5 @@
 import type { Browser, Page } from '@playwright/test';
-import test, { chromium } from '@playwright/test';
+import test, { chromium, expect } from '@playwright/test';
 
 import { getByAriaLabel, getButtonByText, visit, hasText } from '../commons';
 import { logout } from '../commons/logout';
@@ -69,6 +69,9 @@ test.describe('RecoverWallet', () => {
       'I have a 12 words seed phrase'
     );
 
+    WORDS_24.split(' ').forEach(async (word) => {
+      expect(await hasText(page, word)).toBeTruthy();
+    });
     /** Copy words to clipboard area */
     await page.evaluate(`navigator.clipboard.writeText('${WORDS_24}')`);
 
