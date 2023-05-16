@@ -69,9 +69,6 @@ test.describe('RecoverWallet', () => {
       'I have a 12 words seed phrase'
     );
 
-    WORDS_24.split(' ').forEach(async (word) => {
-      expect(await hasText(page, word)).toBeTruthy();
-    });
     /** Copy words to clipboard area */
     await page.evaluate(`navigator.clipboard.writeText('${WORDS_24}')`);
 
@@ -79,6 +76,9 @@ test.describe('RecoverWallet', () => {
     await getButtonByText(page, /Paste/i).click();
 
     /** Confirm Mnemonic */
+    WORDS_24.split(' ').forEach(async (word) => {
+      expect(await hasText(page, word)).toBeTruthy();
+    });
     await hasText(page, /Enter your Recovery Phrase/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
