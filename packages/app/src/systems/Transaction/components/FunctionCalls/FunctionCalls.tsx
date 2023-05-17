@@ -2,7 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Accordion, Box, Stack, Text } from '@fuel-ui/react';
 import ReactJson from 'react-json-view';
 
-import { coreStyles } from '~/systems/Core';
+import { coreStyles } from '~/systems/Core/styles';
 import type { FunctionCall } from '~/systems/Transaction';
 
 export type FunctionCallsProps = {
@@ -44,9 +44,13 @@ const FunctionCallItem = ({ call }: FunctionCallItemProps) => {
     <Stack gap="$1" css={styles.callItem}>
       <Stack gap="$0">
         <Text fontSize="sm">{functionName}</Text>
+        {/*
         <Text fontSize="xs" css={styles.callItemInputs}>
-          (amount: u64, address: Address, amount2: u64)
+          TODO: should find a way to convert functionSignature to a sway contract typing format, like:
+          from -> entry_one(u64,u64)
+          to -> (amount: u64, amount2: u64)   
         </Text>
+        */}
       </Stack>
       {argumentsProvided && (
         <ReactJson

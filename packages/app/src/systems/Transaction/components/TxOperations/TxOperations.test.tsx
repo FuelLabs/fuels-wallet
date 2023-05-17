@@ -1,14 +1,17 @@
 import { testA11y } from '@fuel-ui/test-utils';
 import { AssetList } from 'asset-list';
 
-import { MOCK_OPERATION_CONTRACT_CALL } from '../../__mocks__/operation';
+import {
+  MOCK_OPERATION_CONTRACT_CALL,
+  MOCK_OPERATION_TRANSFER,
+} from '../../__mocks__/operation';
 
 import { TxOperations } from './TxOperations';
 
 import { TestWrapper } from '~/systems/Core';
 
 const PROPS = {
-  operations: [MOCK_OPERATION_CONTRACT_CALL, MOCK_OPERATION_CONTRACT_CALL],
+  operations: [MOCK_OPERATION_CONTRACT_CALL, MOCK_OPERATION_TRANSFER],
   assets: AssetList,
 };
 

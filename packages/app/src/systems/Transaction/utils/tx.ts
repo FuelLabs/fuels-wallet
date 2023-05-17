@@ -27,7 +27,6 @@ import type {
 } from 'fuels';
 import {
   filterEmptyParams,
-  hexlify,
   VM_TX_MEMORY,
   Interface,
   calculatePriceWithFactor,
@@ -523,31 +522,31 @@ export function getContractCallOperations({
                     : { amount: receipt.amount, assetId: receipt.assetId }),
                 };
                 calls.push(call);
-
-                const newContractCallOps = addOperation(prevContractCallOps, {
-                  name: OperationName.contractCall,
-                  from: {
-                    type: AddressType.account,
-                    address: fromAddress,
-                  },
-                  to: {
-                    type: AddressType.contract,
-                    address: receipt.to,
-                  },
-                  // if no amount is forwarded to the contract, skip showing assetsSent
-                  assetsSent: receipt.amount?.isZero()
-                    ? undefined
-                    : [
-                        {
-                          amount: receipt.amount,
-                          assetId: receipt.assetId,
-                        },
-                      ],
-                  calls,
-                });
-
-                return newContractCallOps;
               }
+
+              const newContractCallOps = addOperation(prevContractCallOps, {
+                name: OperationName.contractCall,
+                from: {
+                  type: AddressType.account,
+                  address: fromAddress,
+                },
+                to: {
+                  type: AddressType.contract,
+                  address: receipt.to,
+                },
+                // if no amount is forwarded to the contract, skip showing assetsSent
+                assetsSent: receipt.amount?.isZero()
+                  ? undefined
+                  : [
+                      {
+                        amount: receipt.amount,
+                        assetId: receipt.assetId,
+                      },
+                    ],
+                calls,
+              });
+
+              return newContractCallOps;
             }
             return prevContractCallOps;
           },
@@ -749,10 +748,8 @@ export function parseTx({
   id,
   time,
   abiMap: abi,
-  rawPayload: _rawPayload,
+  rawPayload,
 }: ParseTxParams): Tx {
-  const rawPayload =
-    _rawPayload || hexlify(new TransactionCoder().encode(transaction));
   const type = getType(transaction.type);
   const status = getStatus(gqlStatus);
   const gasUsed = getGasUsed({

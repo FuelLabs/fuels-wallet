@@ -12,10 +12,12 @@ import {
   MOCK_TRANSACTION_MINT_PARTS,
   MOCK_TRANSACTION_TRANSFER,
   MOCK_TRANSACTION_TRANSFER_PARTS,
+  MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS,
 } from '../__mocks__/tx';
 
 import {
   addOperation,
+  getContractCallOperations,
   getContractCreatedFee,
   getContractCreatedOperations,
   getContractTransferOperations,
@@ -496,6 +498,15 @@ describe('Tx util', () => {
           amount: bn(100000),
         },
       ],
+      calls: [
+        {
+          functionSignature: 'entry_one(u64)',
+          functionName: 'entry_one',
+          argumentsProvided: {
+            amount: bn(100000),
+          },
+        },
+      ],
     };
 
     it('should just add operation when its the first one', () => {
@@ -546,8 +557,6 @@ describe('Tx util', () => {
     });
 
     describe('should stack operations with same name / from / to', () => {
-      // TODO: fix tx tests after sdk PR vamp gets merged / fixed
-      // RN getting error on running tests with linked SDK locally =()
       it('should return prev operation if no asset is sent to add', () => {
         const baseOperations = addOperation([], OPERATION_CONTRACT_CALL);
         const operationsAddedSameAsset = addOperation(baseOperations, {
@@ -555,8 +564,9 @@ describe('Tx util', () => {
           assetsSent: undefined,
         });
 
-        expect(JSON.stringify(operationsAddedSameAsset)).toEqual(
-          JSON.stringify(baseOperations)
+        expect(operationsAddedSameAsset.length).toEqual(1);
+        expect(reparse(operationsAddedSameAsset[0].assetsSent)).toEqual(
+          reparse(baseOperations[0].assetsSent)
         );
       });
       it('should stack when same asset is added', () => {
@@ -610,6 +620,15 @@ describe('Tx util', () => {
         expect(operationsAddedSameAsset[0].assetsSent?.[1]?.assetId).toEqual(
           DIF_ASSET_ID
         );
+      });
+      it('should always not stack for contract calls', () => {
+        const baseOperations = addOperation([], OPERATION_CONTRACT_CALL);
+        const operationsAddedSameContractCall = addOperation(
+          baseOperations,
+          OPERATION_CONTRACT_CALL
+        );
+        expect(operationsAddedSameContractCall.length).toEqual(1);
+        expect(operationsAddedSameContractCall[0].calls?.length).toEqual(2);
       });
     });
   });
@@ -686,6 +705,48 @@ describe('Tx util', () => {
 
     it('should getContractTransferOperations return empty', () => {
       const operations = getContractTransferOperations({
+        receipts: MOCK_TRANSACTION_TRANSFER.receipts || [],
+      });
+
+      expect(operations.length).toEqual(0);
+    });
+
+    it('should getContractCallOperations return contract call operations', () => {
+      const operations = getContractCallOperations({
+        inputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || [],
+        receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
+      });
+      expect(operations.length).toEqual(1);
+      expect(operations[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0]
+      );
+    });
+
+    it('should getContractCallOperations return contract call operations with calls details (method and params called in the contract)', () => {
+      const operations = getContractCallOperations({
+        inputs:
+          MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS.transaction
+            .inputs || [],
+        outputs:
+          MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS.transaction
+            .outputs || [],
+        receipts:
+          MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS.receipts || [],
+        abiMap: MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS.abiMap,
+        rawPayload:
+          MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS.rawPayload,
+      });
+      expect(operations.length).toEqual(1);
+      expect(operations[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS.tx.operations[0]
+      );
+    });
+
+    it('should getContractCallOperations return empty', () => {
+      const operations = getContractCallOperations({
+        inputs: MOCK_TRANSACTION_TRANSFER.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_TRANSFER.transaction.outputs || [],
         receipts: MOCK_TRANSACTION_TRANSFER.receipts || [],
       });
 

@@ -17,13 +17,19 @@ export const MOCK_OPERATION_CONTRACT_CALL: Operation = {
   ],
   calls: [
     {
-      functionName: 'transfer',
-      functionSignature: 'transfer(address,u64)',
+      functionName: 'mint_to_address',
+      functionSignature: 'mint_to_address(u64,s(b256),u64)',
       argumentsProvided: {
-        address:
-          '0x277fe98efbafc2ee0a533e41104bf0b163ad35c180c2da4e1403ea5445f6207c',
-        amount: '100',
+        address: {
+          value:
+            '0xa5a77a7d97c6708b08de873528ae6879ef5e9900fbc2e3f3cb74e28917bf7038',
+        },
+        amount: '0x64',
+        amount2: '0x64',
       },
+      amount: bn('0x5f5e100'),
+      assetId:
+        '0x0000000000000000000000000000000000000000000000000000000000000000',
     },
   ],
 };
