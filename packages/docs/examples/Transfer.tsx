@@ -33,14 +33,14 @@ export function Transfer() {
 
   const [sendTransaction, sendingTransaction, errorSendingTransaction] =
     useLoading(async (amount: BN, addr: string, assetId: string) => {
-      console.debug('Request signature transaction!');
+      console.log('Request signature transaction!');
       /* example:start */
       const accounts = await fuel.accounts();
       const account = accounts[0];
       const wallet = await fuel.getWallet(account);
       const toAddress = Address.fromString(addr);
       const response = await wallet.transfer(toAddress, amount, assetId);
-      console.debug('Transaction created!', response.id);
+      console.log('Transaction created!', response.id);
       /* example:end */
       setProviderUrl(wallet.provider.url);
       setTxId(response.id);
