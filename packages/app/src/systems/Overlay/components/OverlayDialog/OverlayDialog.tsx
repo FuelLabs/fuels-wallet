@@ -2,7 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Dialog } from '@fuel-ui/react';
 
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
-import { AddAccount, EditAccount, Logout } from '~/systems/Account';
+import { EditAccount, Logout } from '~/systems/Account';
 import { Accounts } from '~/systems/Account/pages/Accounts';
 import { ExportAccount } from '~/systems/Account/pages/ExportAccount';
 import { ImportAccount } from '~/systems/Account/pages/ImportAccount';
@@ -19,7 +19,6 @@ export function OverlayDialog() {
       <Dialog.Content css={styles.content}>
         {/* Accounts */}
         {overlay.is('accounts.list') && <Accounts />}
-        {overlay.is('accounts.add') && <AddAccount />}
         {overlay.is('accounts.import') && <ImportAccount />}
         {overlay.is('accounts.export') && <ExportAccount />}
         {overlay.is('accounts.edit') && <EditAccount />}

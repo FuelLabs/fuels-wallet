@@ -4,6 +4,7 @@ import { Address, bn, Provider } from 'fuels';
 
 import { isEth } from '~/systems/Asset/utils/asset';
 import type { Maybe } from '~/systems/Core/types';
+import { getUniqueString } from '~/systems/Core/utils';
 import { db } from '~/systems/Core/utils/database';
 
 export type AccountInputs = {
@@ -173,6 +174,18 @@ export class AccountService {
     const accounts = await AccountService.getAccounts();
     const exitsAccountWithName = this.filterByName(accounts, name).length > 0;
     return exitsAccountWithName;
+  }
+
+  static async generateAccountName() {
+    const accounts = await AccountService.getAccounts();
+    const count = accounts.length;
+    const desiredName = `Account ${count + 1}`;
+    const allNames = accounts.map(({ name }) => name);
+    const name = getUniqueString({
+      desired: desiredName,
+      allValues: allNames,
+    });
+    return name || desiredName;
   }
 
   static filterByName(accounts: Account[], name: string = '') {
