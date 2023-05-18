@@ -13,8 +13,8 @@ export function useAddAccount() {
 
   const accountName = useSelector(service, selectors.accountName);
   const isLoading = useSelector(service, selectors.isLoading);
-  const addAccount = (input: string) => {
-    send('ADD_ACCOUNT', { input });
+  const addAccount = () => {
+    send('ADD_ACCOUNT');
   };
 
   return {

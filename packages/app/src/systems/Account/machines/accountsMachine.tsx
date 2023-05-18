@@ -210,7 +210,7 @@ export const accountsMachine = createMachine(
       notifyUpdateAccounts: () => {
         store.updateAccounts();
       },
-      redirectToHome() {
+      redirectToHome: () => {
         store.closeOverlay();
       },
     },
