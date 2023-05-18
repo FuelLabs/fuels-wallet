@@ -37,7 +37,7 @@ export function ViewSeedPhrase() {
           <Alert status="warning" css={styles.alert}>
             <Alert.Description>
               <Text fontSize="xs" css={styles.alertDescription}>
-                DON&APOS;T SHARE your Seed Phrase. {'\n'}
+                DON&apos;T SHARE your Seed Phrase. {'\n'}
                 This phrase provides access to all your accounts. Sharing or
                 losing it may result in a permanent loss of funds.
               </Text>
