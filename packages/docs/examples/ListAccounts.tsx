@@ -14,6 +14,7 @@ export function ListAccounts() {
   const [accounts, setAccounts] = useState<Array<string>>([]);
   const [handleGetAccounts, isLoadingAccounts, errorGetAccounts] = useLoading(
     async () => {
+      if (!isConnected) await fuel.connect();
       console.log('Request accounts to Wallet!');
       /* example:start */
       const accounts = await fuel.accounts();
@@ -31,7 +32,7 @@ export function ListAccounts() {
         <Button
           onPress={handleGetAccounts}
           isLoading={isLoadingAccounts}
-          isDisabled={isLoadingAccounts || !isConnected}
+          isDisabled={isLoadingAccounts || !fuel}
         >
           Get accounts
         </Button>
