@@ -151,7 +151,7 @@ export function ChangePassword() {
             </Focus.Scope>
             <Alert direction="row" status={'warning'} css={{ mt: '$2' }}>
               <Alert.Description>
-                If you lose your password and your seed phrase, all your funds
+                If you lose your password and your Seed Phrase, all your funds
                 can be lost forever.
               </Alert.Description>
             </Alert>
