@@ -1,6 +1,12 @@
 {
   "index_name": "fuel_wallet_docs",
-  "start_urls": ["https://wallet.fuel.network/"],
+  "start_urls": [
+    "https://wallet.fuel.network/docs/install/",
+    "https://wallet.fuel.network/docs/how-to-use/",
+    "https://wallet.fuel.network/docs/dev/getting-started/",
+    "https://wallet.fuel.network/docs/contributing/running-locally/",
+    "https://wallet.fuel.network/docs/browser-support/"
+  ],
   "selectors": {
     "lvl0": "h1",
     "lvl1": "h2",
