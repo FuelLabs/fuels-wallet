@@ -35,7 +35,7 @@ export function AddAssets() {
 
   const [handleAddAsset, isSingingMessage, errorSigningMessage] = useLoading(
     async (assets: Asset[]) => {
-      console.debug('Add Assets', assets);
+      console.log('Add Assets', assets);
       /* example:start */
       await fuel.addAssets(assets);
       /* example:end */
