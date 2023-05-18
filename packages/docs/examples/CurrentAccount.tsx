@@ -14,10 +14,10 @@ export function CurrentAccount() {
   const [currentAccount, setCurrentAccount] = useState<string>('');
   const [handleCurrentAccount, isLoadingCurrentAccount, errorCurrentAccount] =
     useLoading(async () => {
-      console.debug('Request currentAccount to Wallet!');
+      console.log('Request currentAccount to Wallet!');
       /* example:start */
       const currentAccount = await fuel.currentAccount();
-      console.debug('Current Account ', currentAccount);
+      console.log('Current Account ', currentAccount);
       /* example:end */
       setCurrentAccount(currentAccount);
     });
