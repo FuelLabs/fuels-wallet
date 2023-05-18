@@ -7,3 +7,4 @@ export { SignMessage } from './SignMessage';
 export { Transfer } from './Transfer';
 export { Events } from './events';
 export { FuelLoaded } from './FuelLoaded';
+export { AddAbi } from './AddAbi';
