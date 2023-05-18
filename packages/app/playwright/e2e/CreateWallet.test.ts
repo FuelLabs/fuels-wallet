@@ -35,7 +35,7 @@ test.describe('CreateWallet', () => {
     await getButtonByText(page, /I accept/i).click();
 
     /** Copy Mnemonic */
-    await hasText(page, /Backup your Seed Phrase/i);
+    await hasText(page, /Backup seed phrase/i);
     await getButtonByText(page, /Copy/i).click();
     const savedCheckbox = await getByAriaLabel(page, 'Confirm Saved');
     await savedCheckbox.click();

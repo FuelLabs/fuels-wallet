@@ -36,10 +36,11 @@ export function ResetDialog({
           <Stack gap={'$4'}>
             <Text>
               If you lost your password, the only way to recover your wallet is
-              to delete all data and set up your wallet with your seed phrase.
+              to reset the Fuel Wallet extension, select &quot;I already have a
+              wallet&quot; and use your secret Seed Phrase.
             </Text>
             <Text>
-              Make sure you have backed up your seed phrase before proceeding.
+              Make sure you have backed up your Seed Phrase before proceeding.
             </Text>
             <Alert status="warning" css={styles.alert}>
               <Form.Control css={styles.form}>
@@ -53,7 +54,7 @@ export function ResetDialog({
                 />
                 <Form.Label htmlFor="confirmReset">
                   I understand by resetting my wallet I&apos;ll remove all data
-                  stored on this device, including seed phrase, accounts,
+                  stored on this device, including Seed Phrase, accounts,
                   networks and other settings.
                 </Form.Label>
               </Form.Control>

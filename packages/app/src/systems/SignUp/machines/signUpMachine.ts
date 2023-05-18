@@ -95,14 +95,14 @@ export const signUpMachine = createMachine(
           invalidMnemonic: {
             entry: [
               assignErrorMessage(
-                'The seed phrase is not valid check the words for typos or missing words'
+                'The Seed Phrase is not valid. Check the words for typos or missing words'
               ),
             ],
           },
           mnemonicNotMatch: {
             entry: [
               assignErrorMessage(
-                "The seed phrase doesn't match. Check the phrase for typos or missing words"
+                "The Seed Phrase doesn't match. Check the phrase for typos or missing words"
               ),
             ],
           },

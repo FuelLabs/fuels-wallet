@@ -24,7 +24,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
         alt="Showing your Mnemonic"
       />
       <Header
-        title="Backup your Seed Phrase"
+        title="Backup Seed Phrase"
         subtitle="You will need it on the next step"
       />
       <Stack css={styles.content} gap="$4">
@@ -40,7 +40,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
               }}
             />
             <Form.Label htmlFor="confirmSaved">
-              I have backed up my seed phrase securely.
+              I have backed up my Seed Phrase securely.
             </Form.Label>
           </Form.Control>
         </Alert>
