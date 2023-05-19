@@ -33,6 +33,7 @@ export function Transfer() {
 
   const [sendTransaction, sendingTransaction, errorSendingTransaction] =
     useLoading(async (amount: BN, addr: string, assetId: string) => {
+      if (!isConnected) await fuel.connect();
       console.log('Request signature transaction!');
       /* example:start */
       const accounts = await fuel.accounts();
@@ -80,7 +81,7 @@ export function Transfer() {
             <Button
               onPress={() => sendTransaction(amount, addr, assetId)}
               isLoading={sendingTransaction}
-              isDisabled={sendingTransaction || !isConnected}
+              isDisabled={sendingTransaction || !fuel}
             >
               Transfer
             </Button>
