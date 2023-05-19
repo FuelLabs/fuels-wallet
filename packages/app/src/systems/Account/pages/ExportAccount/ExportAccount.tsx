@@ -7,6 +7,8 @@ import {
   Stack,
   Text,
   Alert,
+  Tag,
+  BoxCentered,
 } from '@fuel-ui/react';
 
 import { AccountItem } from '../../components';
@@ -41,10 +43,11 @@ export const ExportAccount = () => {
         {account && (
           <Stack gap="$4">
             <AccountItem account={account} />
-            <Text css={styles.keyHeaderText}>
-              With this Private Key, you can restore your account later. Make
-              sure you store it safely.
-            </Text>
+            <BoxCentered>
+              <Tag size="xs" color="accent" variant="ghost">
+                Private Key:
+              </Tag>
+            </BoxCentered>
             <Card css={styles.exportedKey}>
               <Card.Body>
                 {exportedKey && (
