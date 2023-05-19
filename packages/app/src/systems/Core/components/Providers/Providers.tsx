@@ -3,7 +3,7 @@ import { ThemeProvider } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 
 import { StoreProvider } from '~/store';
-import { ErrorProvider } from '~/systems/Error';
+import { ErrorProvider } from '~/systems/ReportError';
 
 type ProvidersProps = {
   children: ReactNode;

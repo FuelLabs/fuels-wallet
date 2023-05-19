@@ -19,7 +19,7 @@ export class FuelDB extends Dexie {
   connections!: Table<Connection, string>;
   transactions!: Table<Transaction, string>;
   assets!: Table<Asset, string>;
-  errors!: Table<Error, string>;
+  errors!: Table<FuelWalletError, string>;
 
   constructor() {
     super('FuelDB');
