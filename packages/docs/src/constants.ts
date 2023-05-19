@@ -4,11 +4,15 @@ const { NEXT_PUBLIC_URL } = process.env;
 
 export const MENU_ORDER = [
   'Install',
+  'Browser Support',
   'How to Use',
   'For Developers/Getting Started',
+  'For Developers/Connecting',
+  'For Developers/Accounts',
+  'For Developers/Assets',
+  'For Developers/Networks',
+  'For Developers/Signing a Message',
   'For Developers/Reference',
-  'For Developers/TypeScript',
-  'For Developers/React',
   'Contributing/Project Structure',
   'Contributing/Contributing Guide',
   'Contributing/Linking local dependencies',
