@@ -1,0 +1,24 @@
+---
+title: Networks
+category: For Developers
+---
+
+# Networks
+
+## Get the Current Network
+
+To detect the current network the user's wallet is connected to, use the `network()` method on the `window.fuel` object.
+
+<CodeImport file="../../examples/Network.tsx" />
+
+<Examples.Network />
+
+## Listening for Network Changes
+
+To listen to network events, you can use the `fuel.events.network` event.
+
+<CodeImport file="../../examples/events/Network.tsx" />
+
+Switch the network in your wallet to see the event triggered.
+
+<Examples.Events.Network />
