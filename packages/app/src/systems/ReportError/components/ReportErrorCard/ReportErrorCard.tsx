@@ -15,12 +15,13 @@ import { WALLET_WIDTH, WALLET_HEIGHT } from '~/config';
 
 type ReportErrorsCardProps = {
   onClose: () => void;
-  onAlwaysSend: () => void;
+  onSendAlways: () => void;
   onSendOnce: () => void;
   onDontSend: () => void;
 };
 
-export function ReportErrorsCard({ onClose }: ReportErrorsCardProps) {
+export function ReportErrorsCard(props: ReportErrorsCardProps) {
+  const { onClose, onSendAlways: onAlwaysSend, onSendOnce, onDontSend } = props;
   return (
     <Card css={styles.content}>
       <Card.Body css={styles.body}>
@@ -35,7 +36,7 @@ export function ReportErrorsCard({ onClose }: ReportErrorsCardProps) {
         )}
         <Box as="div">
           <Stack align="center">
-            <FuelLogo size={150} />
+            <FuelLogo size={60} />
             <Heading as="h3">Help us improve Fuel Wallet</Heading>
           </Stack>
           <Stack align="center">
@@ -55,10 +56,19 @@ export function ReportErrorsCard({ onClose }: ReportErrorsCardProps) {
       <Card.Footer>
         <Stack gap="$6" align="center" css={styles.fullWidth}>
           <Stack gap="$2" align="center" css={styles.fullWidth}>
-            <Button css={styles.actionButton}>Always Send</Button>
-            <Button css={styles.actionButton}>Send this time</Button>
+            <Button css={styles.actionButton} onPress={onAlwaysSend}>
+              Always Send
+            </Button>
+            <Button css={styles.actionButton} onPress={onSendOnce}>
+              Send this time
+            </Button>
           </Stack>
-          <Button variant="solid" color="amber" css={styles.actionButton}>
+          <Button
+            variant="solid"
+            color="amber"
+            css={styles.actionButton}
+            onPress={onDontSend}
+          >
             Don&apos;t Send
           </Button>
         </Stack>

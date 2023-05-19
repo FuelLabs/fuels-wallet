@@ -1,4 +1,27 @@
+import type { ReportErrorMachineState } from '../machines';
+
+import { store, Services } from '~/store';
+
+const selectors = {
+  hasErrorsToReport(state: ReportErrorMachineState) {
+    console.log(state);
+    return state.context.hasErrors;
+  },
+  isLoading(state: ReportErrorMachineState) {
+    return state.hasTag('loading');
+  },
+};
+
 export function useReportError() {
+  const hasErrorsToReport = store.useSelector(
+    Services.reportError,
+    selectors.hasErrorsToReport
+  );
+  const isLoading = store.useSelector(
+    Services.reportError,
+    selectors.isLoading
+  );
+
   const reportErrorsOnce = () => {
     console.log('reportErrorsOnce');
   };
@@ -16,12 +39,13 @@ export function useReportError() {
   };
 
   return {
+    hasErrorsToReport,
+    isLoading,
     handlers: {
       reportErrorsOnce,
       alwaysReportErrors,
       dontReportErrors,
       close,
     },
-    state: {},
   };
 }

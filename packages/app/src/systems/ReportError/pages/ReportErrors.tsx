@@ -9,7 +9,7 @@ export function ReportErrorsPage() {
   return (
     <Layout title="Report Errors">
       <ReportErrorsCard
-        onAlwaysSend={handlers.alwaysReportErrors}
+        onSendAlways={handlers.alwaysReportErrors}
         onClose={handlers.close}
         onDontSend={handlers.dontReportErrors}
         onSendOnce={handlers.reportErrorsOnce}

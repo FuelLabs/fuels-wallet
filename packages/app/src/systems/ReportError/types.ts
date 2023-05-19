@@ -3,7 +3,7 @@ export type FuelWalletError = {
   id: string;
 } & Error;
 
-export enum ErrorReportingFrequency {
+export enum ReportErrorFrequency {
   ONCE = 'once',
   ALWAYS = 'always',
   NEVER = 'never',

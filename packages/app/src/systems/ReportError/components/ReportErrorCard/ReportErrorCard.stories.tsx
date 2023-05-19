@@ -15,7 +15,7 @@ export const Usage: StoryFn<never> = () => {
     <>
       <ReportErrorsCard
         onClose={() => {}}
-        onAlwaysSend={() => {}}
+        onSendAlways={() => {}}
         onDontSend={() => {}}
         onSendOnce={() => {}}
       />
