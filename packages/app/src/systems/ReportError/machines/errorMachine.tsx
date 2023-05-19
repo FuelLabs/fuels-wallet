@@ -1,14 +1,21 @@
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { createMachine } from 'xstate';
 
+import { ReportErrorService } from '../services';
 import type { ErrorReportingFrequency } from '../types';
+
+import { FetchMachine } from '~/systems/Core';
 
 export type ErrorMachineContext = {
   error?: string;
+  hasErrors?: boolean;
 };
 
 type MachineServices = {
   reportErrors: {
+    data: boolean;
+  };
+  checkForErrors: {
     data: boolean;
   };
 };
@@ -36,13 +43,28 @@ export const errorMachine = createMachine(
     },
     context: {},
     id: '(machine)',
-    initial: 'idle',
+    initial: 'checkForErrors',
     states: {
       idle: {
         on: {
           REPORT_ERRORS: {
             target: 'reporting',
           },
+        },
+      },
+      checkForErrors: {
+        invoke: {
+          src: 'checkForErrors',
+          onDone: [
+            {
+              cond: 'hasErrors',
+              target: 'idle',
+            },
+            {
+              target: 'reported',
+            },
+          ],
+          onError: {},
         },
       },
       reporting: {
@@ -66,6 +88,9 @@ export const errorMachine = createMachine(
   },
   {
     actions: {},
+    guards: {
+      hasErrors: (_, ev) => ev.data,
+    },
     services: {
       async reportErrors({ error }, { input }) {
         console.log({
@@ -74,6 +99,14 @@ export const errorMachine = createMachine(
         });
         return true;
       },
+      checkForErrors: FetchMachine.create<void, boolean>({
+        showError: false,
+        maxAttempts: 1,
+        async fetch() {
+          const hasErrors = await ReportErrorService.checkForErrors();
+          return hasErrors;
+        },
+      }),
     },
   }
 );
