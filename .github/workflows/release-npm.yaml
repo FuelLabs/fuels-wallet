@@ -48,8 +48,8 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
-      - name: Build
-        run: pnpm build:libs
+      - name: Build Fuel Wallet
+        run: pnpm build:crx
 
       - name: Create Release Pull Request or Publish to NPM
         id: changesets
@@ -74,3 +74,18 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Fuel Wallet releases version names
+        run: |
+          CHROME_BUILD_PATH="./fuel-wallet-chrome-${{ env.BUILD_VERSION }}.zip"
+          echo "CHROME_BUILD_PATH=$CHROME_BUILD_PATH" >> $GITHUB_ENV
+          cp ./packages/app/dist/fuel-wallet.zip $CHROME_BUILD_PATH
+
+      - name: Attach Fuel Wallet to release
+        if: steps.changesets.outputs.published == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: v${{ env.BUILD_VERSION }}
+          files: |
+            ${{ env.CHROME_BUILD_PATH }}
