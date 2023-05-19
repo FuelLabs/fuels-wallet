@@ -1,11 +1,15 @@
 {
   "index_name": "fuel_wallet_docs",
   "start_urls": [
+    "https://wallet.fuel.network/docs/browser-support/",
     "https://wallet.fuel.network/docs/install/",
     "https://wallet.fuel.network/docs/how-to-use/",
     "https://wallet.fuel.network/docs/dev/getting-started/",
+    "https://wallet.fuel.network/docs/dev/reference/",
+    "https://wallet.fuel.network/docs/dev/react/",
     "https://wallet.fuel.network/docs/contributing/running-locally/",
-    "https://wallet.fuel.network/docs/browser-support/"
+    "https://wallet.fuel.network/docs/contributing/guide/",
+    "https://wallet.fuel.network/docs/contributing/linking-deps/"
   ],
   "selectors": {
     "lvl0": "h1",
