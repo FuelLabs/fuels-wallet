@@ -26,9 +26,7 @@ describe('ConnectionItem', () => {
   it('should show connection information', async () => {
     render(<Content />);
     expect(await screen.findByText(MOCK_CONNECTION.origin)).toBeInTheDocument();
-    expect(
-      await screen.findByText(/1 account\(s\) connected/i)
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/1 account connected/i)).toBeInTheDocument();
   });
 
   it('should trigger onEdit', async () => {
