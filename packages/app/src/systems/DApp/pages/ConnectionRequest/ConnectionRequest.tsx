@@ -14,9 +14,9 @@ import {
 
 export const PERMISSION_LIST = [
   'View your account address',
-  'Request transactions approval',
+  'Request transaction approval',
   'Request message signature',
-  'Read your transactions history',
+  'Read your transaction history',
 ];
 export const NOT_ALLOWED_LIST = ['View your private keys'];
 
@@ -113,7 +113,7 @@ export function ConnectionRequest() {
       </Layout.Content>
       <Flex css={styles.disclaimer} justify="center" align={'flex-end'}>
         <Text fontSize="sm" as={'h2'} className="warning">
-          Only connect with sites you trust.
+          Only connect with sites you trust.{' '}
           <Link href="#" color="accent11">
             Learn more
           </Link>

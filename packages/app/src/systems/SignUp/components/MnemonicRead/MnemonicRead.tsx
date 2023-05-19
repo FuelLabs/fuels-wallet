@@ -25,7 +25,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
       />
       <Header
         title="Backup Seed Phrase"
-        subtitle="You will need it on the next step"
+        subtitle="You will need this in the next step"
       />
       <Stack css={styles.content} gap="$4">
         <Mnemonic value={words} type="read" />

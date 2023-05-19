@@ -26,7 +26,7 @@ export function AssetForm({ form, isEditing, showOnlyId }: AssetFormProps) {
             <Input.Field
               {...field}
               aria-label="Asset ID"
-              placeholder="ID of asset"
+              placeholder="Asset ID"
             />
           </Input>
         )}
@@ -44,7 +44,7 @@ export function AssetForm({ form, isEditing, showOnlyId }: AssetFormProps) {
                 <Input.Field
                   {...field}
                   aria-label="Asset name"
-                  placeholder="Name of asset"
+                  placeholder="Asset name"
                 />
               </Input>
             )}
@@ -60,7 +60,7 @@ export function AssetForm({ form, isEditing, showOnlyId }: AssetFormProps) {
                 <Input.Field
                   {...field}
                   aria-label="Asset symbol"
-                  placeholder="Symbol of asset"
+                  placeholder="Asset symbol"
                 />
               </Input>
             )}
@@ -74,8 +74,8 @@ export function AssetForm({ form, isEditing, showOnlyId }: AssetFormProps) {
               <Input>
                 <Input.Field
                   {...field}
-                  aria-label="Asset imageUrl"
-                  placeholder="Image URL of asset"
+                  aria-label="Asset image Url"
+                  placeholder="Asset image URL"
                 />
               </Input>
             )}
