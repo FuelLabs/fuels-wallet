@@ -4,6 +4,7 @@ const { NEXT_PUBLIC_URL } = process.env;
 
 export const MENU_ORDER = [
   'Install',
+  'Browser Support',
   'How to Use',
   'For Developers/Getting Started',
   'For Developers/Connecting',
