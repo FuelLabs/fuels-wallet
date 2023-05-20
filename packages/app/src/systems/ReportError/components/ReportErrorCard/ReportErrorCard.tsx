@@ -18,10 +18,21 @@ type ReportErrorsCardProps = {
   onSendAlways: () => void;
   onSendOnce: () => void;
   onDontSend: () => void;
+  isLoadingSendAlways: boolean;
+  isLoadingSendOnce: boolean;
+  isLoadingDontSend: boolean;
 };
 
 export function ReportErrorsCard(props: ReportErrorsCardProps) {
-  const { onClose, onSendAlways: onAlwaysSend, onSendOnce, onDontSend } = props;
+  const {
+    onClose,
+    onSendAlways: onAlwaysSend,
+    onSendOnce,
+    onDontSend,
+    isLoadingDontSend,
+    isLoadingSendAlways,
+    isLoadingSendOnce,
+  } = props;
   return (
     <Card css={styles.content}>
       <Card.Body css={styles.body}>
@@ -56,10 +67,18 @@ export function ReportErrorsCard(props: ReportErrorsCardProps) {
       <Card.Footer>
         <Stack gap="$6" align="center" css={styles.fullWidth}>
           <Stack gap="$2" align="center" css={styles.fullWidth}>
-            <Button css={styles.actionButton} onPress={onAlwaysSend}>
+            <Button
+              css={styles.actionButton}
+              onPress={onAlwaysSend}
+              isLoading={isLoadingSendAlways}
+            >
               Always Send
             </Button>
-            <Button css={styles.actionButton} onPress={onSendOnce}>
+            <Button
+              css={styles.actionButton}
+              onPress={onSendOnce}
+              isLoading={isLoadingSendOnce}
+            >
               Send this time
             </Button>
           </Stack>
@@ -68,6 +87,7 @@ export function ReportErrorsCard(props: ReportErrorsCardProps) {
             color="amber"
             css={styles.actionButton}
             onPress={onDontSend}
+            isLoading={isLoadingDontSend}
           >
             Don&apos;t Send
           </Button>

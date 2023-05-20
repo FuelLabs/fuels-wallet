@@ -6,5 +6,5 @@ export type FuelWalletError = {
 export enum ReportErrorFrequency {
   ONCE = 'once',
   ALWAYS = 'always',
-  NEVER = 'never',
+  DONT = 'dont',
 }

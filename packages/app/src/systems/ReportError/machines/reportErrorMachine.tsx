@@ -17,7 +17,10 @@ type MachineServices = {
     data: boolean;
   };
   checkForErrors: {
-    data: boolean;
+    data: {
+      hasErrors: boolean;
+      frequency: ReportErrorFrequency;
+    };
   };
 };
 
@@ -34,9 +37,7 @@ export type ErrorMachineEvents =
     }
   | {
       type: 'CHECK_FOR_ERRORS';
-    }
-  | {
-      type: 'DONT_REPORT_ERRORS';
+      input?: null;
     };
 
 export const reportErrorMachine = createMachine(
@@ -70,6 +71,7 @@ export const reportErrorMachine = createMachine(
           onDone: [
             {
               cond: 'hasErrors',
+              actions: ['assignCheckForErrors'],
               target: 'idle',
             },
             {
@@ -83,9 +85,12 @@ export const reportErrorMachine = createMachine(
         tags: ['loading'],
         invoke: {
           src: 'reportErrors',
+          data: {
+            input: (_: ErrorMachineContext, ev: ErrorMachineEvents) => ev.input,
+          },
           onDone: {
             target: 'reported',
-            actions: ['resetErrors', 'reload'],
+            actions: ['reload'],
           },
           onError: {
             target: 'error',
@@ -103,39 +108,49 @@ export const reportErrorMachine = createMachine(
       assignFrequency: assign({
         frequency: (_, ev) => ev.input.frequency,
       }),
-      resetErrors: assign({
-        error: undefined,
+      assignCheckForErrors: assign({
+        hasErrors: (_, ev) => ev.data.hasErrors,
+        frequency: (_, ev) => ev.data.frequency,
       }),
       reload: () => {},
     },
     guards: {
-      hasErrors: (_, ev) => ev.data,
+      hasErrors: (_, ev) => ev.data.hasErrors,
     },
     services: {
-      async reportErrors({ error }, { input }) {
-        console.log({
-          error,
-          input,
-        });
-        await ReportErrorService.setReportErrorFrequency(input.frequency);
-        switch (input.frequency) {
-          case ReportErrorFrequency.ALWAYS:
-          case ReportErrorFrequency.ONCE:
-            await ReportErrorService.reportErrors();
-            break;
-          default:
-            break;
-        }
-        await ReportErrorService.clearErrors();
-        return true;
-      },
-      checkForErrors: FetchMachine.create<void, boolean>({
+      reportErrors: FetchMachine.create<ReportErrorInputs['upload'], void>({
+        showError: true,
+        maxAttempts: 1,
+        async fetch({ input }) {
+          if (!input?.frequency) {
+            throw new Error('Frequency is required');
+          }
+          const { frequency } = input;
+          await ReportErrorService.setReportErrorFrequency(frequency);
+          switch (frequency) {
+            case ReportErrorFrequency.ALWAYS:
+            case ReportErrorFrequency.ONCE:
+              await ReportErrorService.reportErrors();
+              break;
+            default:
+              break;
+          }
+          await ReportErrorService.clearErrors();
+        },
+      }),
+      checkForErrors: FetchMachine.create<
+        void,
+        MachineServices['checkForErrors']['data']
+      >({
         showError: false,
         maxAttempts: 1,
         async fetch() {
           const hasErrors = await ReportErrorService.checkForErrors();
-          console.log({ hasErrors });
-          return hasErrors;
+          const frequency = await ReportErrorService.getReportErrorFrequency();
+          return {
+            hasErrors,
+            frequency,
+          };
         },
       }),
     },

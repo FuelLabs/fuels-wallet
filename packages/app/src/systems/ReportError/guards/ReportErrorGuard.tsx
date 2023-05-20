@@ -4,13 +4,9 @@ import { useReportError } from '../hooks';
 import { ReportErrorsPage } from '../pages';
 
 export function ReportErrorGuard() {
-  const { hasErrorsToReport } = useReportError();
+  const { reportErrorSilently, hasErrorsToReport } = useReportError();
 
-  console.log({
-    hasErrorsToReport,
-  });
-
-  if (hasErrorsToReport) {
+  if (hasErrorsToReport && !reportErrorSilently) {
     return <ReportErrorsPage />;
   }
 

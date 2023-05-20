@@ -1,6 +1,6 @@
 import type { ReportErrorFrequency, FuelWalletError } from '../types';
 
-import { ERROR_REPORTING_FREQUENCY_KEY } from '~/config';
+import { REPORT_ERROR_FREQUENCY_KEY } from '~/config';
 import { Storage, db } from '~/systems/Core';
 
 export class ReportErrorService {
@@ -26,12 +26,10 @@ export class ReportErrorService {
   }
 
   static getReportErrorFrequency(): ReportErrorFrequency {
-    return Storage.getItem(
-      ERROR_REPORTING_FREQUENCY_KEY
-    ) as ReportErrorFrequency;
+    return Storage.getItem(REPORT_ERROR_FREQUENCY_KEY) as ReportErrorFrequency;
   }
 
   static setReportErrorFrequency(frequency: ReportErrorFrequency) {
-    return Storage.setItem(ERROR_REPORTING_FREQUENCY_KEY, frequency);
+    return Storage.setItem(REPORT_ERROR_FREQUENCY_KEY, frequency);
   }
 }
