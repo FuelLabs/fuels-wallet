@@ -8,9 +8,9 @@ import type {
   ConnectRequestMachine,
   AddAssetMachine,
 } from '../DApp';
+import type { ReportErrorMachine } from '../Error';
 import type { NetworksMachine } from '../Network';
 import type { OverlayMachine } from '../Overlay';
-import type { ReportErrorMachine } from '../ReportError';
 import type { UnlockMachine } from '../Unlock';
 
 export enum Services {

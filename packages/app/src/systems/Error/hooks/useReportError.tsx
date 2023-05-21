@@ -1,10 +1,11 @@
-import { useMachine, useSelector } from '@xstate/react';
+import { useSelector } from '@xstate/react';
 import { useEffect } from 'react';
 
-import { reportErrorMachine, type ReportErrorMachineState } from '../machines';
+import { type ReportErrorMachineState } from '../machines';
 import { ReportErrorFrequency } from '../types';
 
 import { REPORT_ERROR_FREQUENCY_KEY } from '~/config';
+import { Services, store } from '~/store';
 import { useStorageItem } from '~/systems/Core/hooks/useStorage';
 
 const selectors = {
@@ -43,17 +44,17 @@ export function useReportError() {
       REPORT_ERROR_FREQUENCY_KEY,
       ReportErrorFrequency.ONCE
     );
-  const [, store, service] = useMachine(() =>
-    reportErrorMachine
-      .withConfig({
-        actions: {
-          reload: () => window.location.reload(),
-        },
-      })
-      .withContext({
-        frequency: reportErrorFrequency || ReportErrorFrequency.ONCE,
-      })
-  );
+  const service = store.useService(Services.reportError);
+  store.useUpdateMachineConfig(Services.reportError, {
+    context: {
+      frequency: reportErrorFrequency || ReportErrorFrequency.ONCE,
+    },
+    actions: {
+      reload: () => {
+        store.closeOverlay();
+      },
+    },
+  });
 
   const hasErrorsToReport = useSelector(service, selectors.hasErrorsToReport);
   const isLoadingSendOnce = useSelector(service, selectors.isLoadingSendOnce);

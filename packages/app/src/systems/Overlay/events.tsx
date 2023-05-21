@@ -75,5 +75,13 @@ export function overlayEvents(store: Store) {
         },
       });
     },
+    openViewReportErrors() {
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: {
+          modal: 'error.reportErrors',
+        },
+      });
+    },
   };
 }

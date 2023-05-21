@@ -10,11 +10,12 @@ import {
   addAssetRequestMachine,
 } from '../DApp';
 import { requestEvents } from '../DApp/events';
+import { reportErrorMachine } from '../Error';
+import { reportErrorEvents } from '../Error/events';
 import { networkEvents } from '../Network/events';
 import { networksMachine } from '../Network/machines';
 import { overlayMachine } from '../Overlay';
 import { overlayEvents } from '../Overlay/events';
-import { reportErrorMachine } from '../ReportError';
 import { unlockMachine } from '../Unlock';
 import { unlockEvents } from '../Unlock/events';
 
@@ -45,6 +46,7 @@ export const store = store$
   .addHandlers(overlayEvents)
   .addHandlers(unlockEvents)
   .addHandlers(requestEvents)
+  .addHandlers(reportErrorEvents)
   .setup();
 
 export const { StoreProvider } = store;

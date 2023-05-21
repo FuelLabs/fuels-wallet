@@ -11,4 +11,5 @@ export enum Overlays {
   'networks.update' = 'networks.update',
   'transactions.approve' = 'transactions.approve',
   'settings.viewRecoveryPhrase' = 'settings.viewRecoveryPhrase',
+  'error.reportErrors' = 'error.reportErrors',
 }

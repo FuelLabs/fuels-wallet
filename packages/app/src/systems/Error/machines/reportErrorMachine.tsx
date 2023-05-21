@@ -70,12 +70,8 @@ export const reportErrorMachine = createMachine(
           src: 'checkForErrors',
           onDone: [
             {
-              cond: 'hasErrors',
               actions: ['assignCheckForErrors'],
               target: 'idle',
-            },
-            {
-              target: 'reported',
             },
           ],
           onError: {},
@@ -89,11 +85,11 @@ export const reportErrorMachine = createMachine(
             input: (_: ErrorMachineContext, ev: ErrorMachineEvents) => ev.input,
           },
           onDone: {
-            target: 'reported',
+            target: 'idle',
             actions: ['reload'],
           },
           onError: {
-            target: 'error',
+            target: 'idle',
           },
         },
       },
@@ -113,9 +109,6 @@ export const reportErrorMachine = createMachine(
         frequency: (_, ev) => ev.data.frequency,
       }),
       reload: () => {},
-    },
-    guards: {
-      hasErrors: (_, ev) => ev.data.hasErrors,
     },
     services: {
       reportErrors: FetchMachine.create<ReportErrorInputs['upload'], void>({
