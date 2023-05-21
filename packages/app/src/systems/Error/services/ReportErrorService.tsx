@@ -14,6 +14,10 @@ export class ReportErrorService {
     // clear errors
   }
 
+  static saveError(error: FuelWalletError) {
+    return db.errors.add(error);
+  }
+
   static async checkForErrors(): Promise<boolean> {
     const errors = await this.getErrors();
     return errors.length > 0;

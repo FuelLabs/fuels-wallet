@@ -1,8 +1,7 @@
-import { createUUID } from '@fuel-wallet/sdk';
 import React, { createContext, useEffect } from 'react';
 
 import { db } from '../../../Core';
-import type { FuelWalletError } from '../../types';
+import { errorToFuelError } from '../../utils';
 
 const initialState = {};
 
@@ -15,14 +14,7 @@ type ErrorProviderProps = {
 
 const ErrorProvider = ({ children }: ErrorProviderProps) => {
   const handleError = async (e: ErrorEvent) => {
-    const error = {
-      ...e.error,
-      id: createUUID(),
-      message: e.message,
-      stack: e.error?.stack,
-      timestamp: new Date().getTime(),
-      name: e.error?.name,
-    } as FuelWalletError;
+    const error = errorToFuelError(e);
     await db.errors.add(error);
     // return false to allow the default handler to run.
     return false;
@@ -30,14 +22,7 @@ const ErrorProvider = ({ children }: ErrorProviderProps) => {
 
   const handleUnhandledRejection = async (e: PromiseRejectionEvent) => {
     e.preventDefault();
-    const error = {
-      ...e.reason,
-      id: createUUID(),
-      message: e.reason.message,
-      stack: e.reason?.stack,
-      timestamp: new Date().getTime(),
-      name: e.reason?.name,
-    } as FuelWalletError;
+    const error = errorToFuelError(e);
     await db.errors.add(error);
     // return false to allow the default handler to run.
     return true;

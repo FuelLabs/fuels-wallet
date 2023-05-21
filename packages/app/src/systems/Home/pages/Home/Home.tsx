@@ -17,7 +17,6 @@ export function Home() {
   const navigate = useNavigate();
 
   function sendAction() {
-    throw new Error('Test error.');
     navigate(Pages.send());
   }
 
