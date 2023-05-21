@@ -68,8 +68,6 @@ export function useReportError() {
   );
 
   const reportErrorsOnce = () => {
-    // eslint-disable-next-line no-console
-    console.log('reportErrorsOnce');
     setReportErrorFrequency(ReportErrorFrequency.ONCE);
     service.send('REPORT_ERRORS', {
       input: { frequency: ReportErrorFrequency.ONCE },
@@ -77,8 +75,6 @@ export function useReportError() {
   };
 
   const alwaysReportErrors = () => {
-    // eslint-disable-next-line no-console
-    console.log('alwaysReportErrors');
     setReportErrorFrequency(ReportErrorFrequency.ALWAYS);
     service.send('REPORT_ERRORS', {
       input: { frequency: ReportErrorFrequency.ALWAYS },
