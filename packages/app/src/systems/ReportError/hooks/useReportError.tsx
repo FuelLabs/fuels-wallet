@@ -1,4 +1,5 @@
 import { useMachine, useSelector } from '@xstate/react';
+import { useEffect } from 'react';
 
 import { reportErrorMachine, type ReportErrorMachineState } from '../machines';
 import { ReportErrorFrequency } from '../types';
@@ -69,11 +70,19 @@ export function useReportError() {
   const reportErrorsOnce = () => {
     // eslint-disable-next-line no-console
     console.log('reportErrorsOnce');
+    setReportErrorFrequency(ReportErrorFrequency.ONCE);
+    service.send('REPORT_ERRORS', {
+      input: { frequency: ReportErrorFrequency.ONCE },
+    });
   };
 
   const alwaysReportErrors = () => {
     // eslint-disable-next-line no-console
     console.log('alwaysReportErrors');
+    setReportErrorFrequency(ReportErrorFrequency.ALWAYS);
+    service.send('REPORT_ERRORS', {
+      input: { frequency: ReportErrorFrequency.ALWAYS },
+    });
   };
 
   const dontReportErrors = () => {
@@ -86,6 +95,15 @@ export function useReportError() {
   const close = () => {
     dontReportErrors();
   };
+
+  useEffect(() => {
+    // if it has errors, and user has chosen to report errors always, then report errors
+    if (reportErrorSilently) {
+      service.send('REPORT_ERRORS', {
+        input: { frequency: ReportErrorFrequency.ALWAYS },
+      });
+    }
+  }, [service, reportErrorSilently]);
 
   return {
     hasErrorsToReport,

@@ -6,7 +6,9 @@ import { Storage, db } from '~/systems/Core';
 export class ReportErrorService {
   static async reportErrors() {
     const errors = await this.getErrors();
+    // eslint-disable-next-line no-console
     console.log('errors', errors);
+    return true;
     // get errors
     // send errors to server
     // clear errors
