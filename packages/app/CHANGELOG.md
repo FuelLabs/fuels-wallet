@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.9.1
+
+### Patch Changes
+
+- [#754](https://github.com/FuelLabs/fuels-wallet/pull/754) [`2431f14`](https://github.com/FuelLabs/fuels-wallet/commit/2431f14bde68510dd626206a34c542f1762e3ff4) Thanks [@sarahschwartz](https://github.com/sarahschwartz)! - Text on screens updated to be more concise and readable
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.9.1
+  - @fuel-wallet/types@0.9.1
+
 ## 0.9.0
 
 ### Minor Changes
