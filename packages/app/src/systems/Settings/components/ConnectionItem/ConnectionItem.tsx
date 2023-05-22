@@ -78,7 +78,7 @@ export const ConnectionItem: ConnectionItemComponent = ({
       <Box css={styles.text}>
         <Text>{truncate(parseUrl(origin))}</Text>
         <Text>
-          {accounts} {accounts > 1 ? 'accounts' : 'account'} connected
+          {accounts} {`account${accounts > 1 ? 's' : ''}`} connected
         </Text>
       </Box>
     </MotionCardItem>
