@@ -3,42 +3,44 @@ import { cssObj } from '@fuel-ui/css';
 import { Button, Stack, Tag, Text } from '@fuel-ui/react';
 import { useState } from 'react';
 
+import type { FuelProviderConfig } from '~/../types/src';
 import { ExampleBox } from '~/src/components/ExampleBox';
 import { useFuel } from '~/src/hooks/useFuel';
 import { useIsConnected } from '~/src/hooks/useIsConnected';
 import { useLoading } from '~/src/hooks/useLoading';
 
-export function CurrentAccount() {
+export function Network() {
   const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
-  const [currentAccount, setCurrentAccount] = useState<string>('');
-  const [handleCurrentAccount, isLoadingCurrentAccount, errorCurrentAccount] =
-    useLoading(async () => {
+  const [network, setNetwork] = useState<FuelProviderConfig>();
+  const [handleGetNetwork, isLoadingNetwork, errorGetNetwork] = useLoading(
+    async () => {
       if (!isConnected) await fuel.connect();
-      console.log('Request currentAccount to Wallet!');
+      console.log('Request the current network');
       /* example:start */
-      const currentAccount = await fuel.currentAccount();
-      console.log('Current Account ', currentAccount);
+      const networkInfo = await fuel.network();
+      console.log('Network ', networkInfo);
       /* example:end */
-      setCurrentAccount(currentAccount);
-    });
+      setNetwork(networkInfo);
+    }
+  );
 
-  const errorMessage = errorCurrentAccount || notDetected;
+  const errorMessage = errorGetNetwork || notDetected;
 
   return (
     <ExampleBox error={errorMessage}>
       <Stack css={styles.root}>
         <Button
-          onPress={handleCurrentAccount}
-          isLoading={isLoadingCurrentAccount}
-          isDisabled={isLoadingCurrentAccount || !fuel}
+          onPress={handleGetNetwork}
+          isLoading={isLoadingNetwork}
+          isDisabled={isLoadingNetwork || !fuel}
         >
-          Get current account
+          Get network
         </Button>
         <Stack gap="$3" css={{ mt: '$2' }}>
-          {!!currentAccount && (
+          {network && (
             <Tag size="xs" color="gray" variant="ghost">
-              <Text key={currentAccount}>{currentAccount}</Text>
+              <Text>{network.url}</Text>
             </Tag>
           )}
         </Stack>
@@ -53,8 +55,12 @@ const styles = {
     display: 'inline-flex',
     alignItems: 'flex-start',
 
-    '.fuel_tag > p': {
-      fontSize: '$xs',
+    '.fuel_tag': {
+      justifyContent: 'flex-start',
+
+      '& > p': {
+        fontSize: '$xs',
+      },
     },
   }),
 };

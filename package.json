@@ -32,7 +32,7 @@
     "build:libs": "turbo run build",
     "changeset": "changeset",
     "changeset:empty": "changeset --empty",
-    "changeset:release": "changeset publish",
+    "changeset:release": "changeset publish --no-git-tag",
     "changeset:version": "changeset version",
     "changeset:check": "changeset status --since=master",
     "deps:update": "updates -gu && pnpm -r exec updates -gu",

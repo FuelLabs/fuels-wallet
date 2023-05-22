@@ -4,7 +4,7 @@ import test, { expect, chromium } from '@playwright/test';
 import { getButtonByText, getByAriaLabel, hasText } from '../commons';
 import { mockData, WALLET_PASSWORD } from '../mocks';
 
-test.describe('ViewRecoveryPhrase', () => {
+test.describe('ViewSeedPhrase', () => {
   let browser: Browser;
   let page: Page;
   let mnemonic: string;
@@ -16,10 +16,10 @@ test.describe('ViewRecoveryPhrase', () => {
     mnemonic = mock.mnemonic;
   });
 
-  test('should view recovery phrase', async () => {
+  test('should view seed phrase', async () => {
     test.step('should show unlock screen', async () => {
       await getByAriaLabel(page, 'Menu').click();
-      await page.getByText(/View Recovery Phrase/i).click();
+      await page.getByText(/View Seed Phrase/i).click();
 
       // Should show unlock screen
       await hasText(page, /Confirm your Password/i);
@@ -29,7 +29,7 @@ test.describe('ViewRecoveryPhrase', () => {
 
     test.step('should show the seed phrase', async () => {
       // Should show unlock screen
-      await hasText(page, /Recovery Phrase/i);
+      await hasText(page, /Seed Phrase/i);
       await getButtonByText(page, 'Copy button').click();
       const clipboardValue = await navigator.clipboard.readText();
       expect(clipboardValue).toEqual(mnemonic);

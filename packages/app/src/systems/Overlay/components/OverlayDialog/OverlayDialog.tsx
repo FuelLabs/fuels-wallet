@@ -9,7 +9,7 @@ import { ImportAccount } from '~/systems/Account/pages/ImportAccount';
 import { ReportErrors } from '~/systems/Error';
 import { AddNetwork, Networks, UpdateNetwork } from '~/systems/Network/pages';
 import { useOverlay } from '~/systems/Overlay';
-import { ViewRecoveryPhrase } from '~/systems/Settings/pages';
+import { ViewSeedPhrase } from '~/systems/Settings/pages';
 import { TxApprove } from '~/systems/Transaction';
 
 export function OverlayDialog() {
@@ -34,7 +34,7 @@ export function OverlayDialog() {
         {overlay.is('transactions.approve') && <TxApprove />}
 
         {/* Settings */}
-        {overlay.is('settings.viewRecoveryPhrase') && <ViewRecoveryPhrase />}
+        {overlay.is('settings.viewSeedPhrase') && <ViewSeedPhrase />}
 
         {/* Error */}
         {overlay.is('error.reportErrors') && <ReportErrors />}
