@@ -40,10 +40,10 @@ export function TermsOfUse() {
           </Box.Flex>
         </Box>
         <Box.Flex gap="$2">
-          <Button color="intentsBase" variant="ghost" onPress={handleCancel}>
+          <Button variant="ghost" onPress={handleCancel}>
             Cancel
           </Button>
-          <Button color="accent" onPress={handleAccept}>
+          <Button intent="primary" onPress={handleAccept}>
             I accept
           </Button>
         </Box.Flex>
@@ -54,9 +54,10 @@ export function TermsOfUse() {
 
 const styles = {
   termsWrapper: {
+    layer: 'layer-card',
     overflowY: 'scroll',
-    padding: '$4',
-    backgroundColor: '$intentsBase3',
+    pr: '$2',
+    px: '$5',
     boxSizing: 'border-box',
     height: '480px',
 
@@ -68,11 +69,12 @@ const styles = {
     '&::-webkit-scrollbar': {
       width: '$2',
       backgroundColor: '$intentsBase3',
+      borderRadius: '$sm',
     },
 
     '&::-webkit-scrollbar-thumb': {
       backgroundColor: '$intentsBase5',
-      borderRadius: '$10',
+      borderRadius: '$sm',
     },
 
     '& h1, & h2': {

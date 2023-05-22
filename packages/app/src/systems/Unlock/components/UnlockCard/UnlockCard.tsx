@@ -16,8 +16,6 @@ import { useUnlockForm } from '../../hooks';
 import { ResetDialog } from '../ResetDialog';
 import { UnlockForm } from '../UnlockForm';
 
-import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
-
 export type UnlockDialogProps = {
   unlockError?: string;
   onUnlock: (value: string) => void;
@@ -92,7 +90,7 @@ export function UnlockCard({
       <Card.Footer>
         <Button
           type="submit"
-          color="accent"
+          intent="primary"
           isLoading={isLoading}
           leftIcon={Icon.is('LockOpen')}
           css={styles.button}
@@ -118,11 +116,13 @@ const styles = {
     width: '100%',
   }),
   content: cssObj({
-    width: WALLET_WIDTH - 24,
-    height: WALLET_HEIGHT - 24,
-    maxWidth: WALLET_WIDTH - 24,
-    maxHeight: 'none',
-    position: 'relative',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    boxSizing: 'border-box',
+    borderColor: 'transparent',
   }),
   description: cssObj({
     flex: 1,

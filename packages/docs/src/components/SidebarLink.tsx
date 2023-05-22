@@ -18,8 +18,8 @@ const Link = styled(Box, {
     background: '$whiteA3',
   },
   '&.active': {
-    color: '$accent11',
-    background: '$accent2',
+    color: '$intentsPrimary11',
+    background: '$intentsPrimary2',
   },
   '&:focus': {
     outline: 'none',

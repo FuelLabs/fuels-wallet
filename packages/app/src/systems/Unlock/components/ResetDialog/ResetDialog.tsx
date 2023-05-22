@@ -38,7 +38,7 @@ export function ResetDialog({
         <Dialog.Footer>
           <Button
             type="submit"
-            color="accent"
+            intent="primary"
             isLoading={isLoading}
             leftIcon={Icon.is('LockOpen')}
             onPress={onReset}

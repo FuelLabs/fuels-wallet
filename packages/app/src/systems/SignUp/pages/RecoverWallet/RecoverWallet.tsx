@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert } from '@fuel-ui/react';
+import { Text } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { CreatePassword, MnemonicWrite, SignUpFailed } from '../../components';
@@ -14,12 +14,10 @@ export function RecoverWallet() {
 
   return (
     <Layout title="Recovering Wallet" isPublic>
-      <Alert status="warning" css={styles.alert}>
-        <Alert.Description>
-          This wallet is current on development, and your phrase is not safely
-          stored, DO NOT IMPORT YOUR CURRENT SEED PHRASE.
-        </Alert.Description>
-      </Alert>
+      <Text css={styles.alert} leftIcon="AlertTriangle">
+        This wallet is current on development, and your phrase is not safely
+        stored, DO NOT IMPORT YOUR CURRENT SEED PHRASE.
+      </Text>
       {state.matches('waitingMnemonic') && (
         <MnemonicWrite
           error={context.isFilled ? context.error : ''}
@@ -48,8 +46,15 @@ const styles = {
     top: 0,
     left: 0,
     width: '100vw',
-    boxShadow: '$lg',
     boxSizing: 'border-box',
+    bg: '$semanticGhostWarningBg',
+    color: '$semanticGhostWarningColor',
+    padding: '$3',
+    justifyContent: 'center',
+
+    '& .fuel_Icon': {
+      color: '$semanticGhostWarningIcon',
+    },
 
     '&, &::after': {
       borderRadius: '$none',

@@ -44,7 +44,7 @@ const styles = {
     justifyContent: 'center',
   }),
   accountText: cssObj({
-    fontSize: '$xs',
+    fontSize: '$sm',
     fontWeight: '$bold',
   }),
 };

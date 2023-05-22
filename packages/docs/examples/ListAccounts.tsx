@@ -38,7 +38,7 @@ export function ListAccounts() {
         {Boolean(accounts.length) && (
           <Box.Stack gap="$1" css={{ mt: '$2' }}>
             {accounts.map((account) => (
-              <Tag size="xs" color="intentsBase" variant="ghost" key={account}>
+              <Tag size="xs" variant="ghost" key={account}>
                 <Text>{account}</Text>
               </Tag>
             ))}
@@ -56,7 +56,7 @@ const styles = {
     alignItems: 'flex-start',
 
     '.fuel_tag > p': {
-      fontSize: '$xs',
+      fontSize: '$sm',
     },
   }),
 };

@@ -16,13 +16,7 @@ type BalanceWidgetWrapperProps = {
 };
 
 export function BalanceWidgetWrapper({ children }: BalanceWidgetWrapperProps) {
-  return (
-    <Box css={styles.balanceWidgetWrapper}>
-      <Box css={styles.backgroundShadow}>&nbsp;</Box>
-      <Box css={styles.backgroundFront}>&nbsp;</Box>
-      <Box.Flex css={styles.contentWrapper}>{children}</Box.Flex>
-    </Box>
-  );
+  return <Box css={styles.balanceWidgetWrapper}>{children}</Box>;
 }
 
 export type BalanceWidgetProps = {
@@ -44,20 +38,15 @@ export function BalanceWidget({
 
   return (
     <BalanceWidgetWrapper>
-      <Box.Flex direction="column" align="center">
-        <Avatar.Generated
-          size="lg"
-          hash={account.address}
-          css={{ boxShadow: '$sm' }}
-        />
+      <Box.Flex direction="column" align="center" justify="center">
+        <Avatar.Generated size="lg" hash={account.address} />
         <IconButton
           size="xs"
-          variant="ghost"
-          color="intentsBase"
+          variant="outlined"
           icon={<Icon icon="ChevronDown" color="intentsBase8" />}
           aria-label="Accounts"
           onPress={handlers.goToList}
-          css={styles.ChevronDownIcon}
+          css={styles.visibilityToggle}
         />
       </Box.Flex>
       <Box.Flex justify="space-between" css={styles.balanceDetails}>
@@ -89,38 +78,32 @@ export function BalanceWidget({
 
 BalanceWidget.Loader = BalanceWidgetLoader;
 
-const backgroundCss = {
-  position: 'absolute',
-  width: '100%',
-  height: '100%',
-  boxShadow: '2px 0px 4px rgba(0, 0, 0, 0.15)',
-  transform: 'skew(-25deg)',
-  borderTopRightRadius: '40px 35px',
-  borderBottomRightRadius: '35px 25px',
-  borderBottomLeftRadius: '40px 50px',
-  borderTopLeftRadius: '10px',
-};
-
 const styles = {
-  balanceDetails: cssObj({ flex: '1 0' }),
+  balanceDetails: cssObj({
+    flex: '1 0',
+  }),
   balanceAddress: cssObj({
     color: '$intentsBase11',
-    fontSize: '$xs',
+    fontSize: '$sm',
     fontWeight: 'bold',
   }),
   visibilityContainer: cssObj({
-    marginRight: 6,
-    marginTop: 8,
+    marginTop: '$2',
     svg: {
       height: 18,
       width: 18,
     },
   }),
-  balanceContainer: cssObj({ mt: '$1', ml: '$4', alignSelf: 'center' }),
+  balanceContainer: cssObj({
+    mt: '$1',
+    ml: '$4',
+    alignSelf: 'center',
+  }),
   balance: cssObj({
     fontSize: '1.625rem',
     fontWeight: 'bold',
     margin: '$2 0',
+
     '&[aria-hidden="true"]': {
       color: '$intentsBase12',
     },
@@ -128,39 +111,21 @@ const styles = {
       color: '$intentsBase10',
     },
   }),
-  backgroundFront: cssObj({
-    ...backgroundCss,
-    background:
-      'linear-gradient(180deg, #1F1F1F 0%, rgba(28, 30, 31, 0.45) 41.15%)',
-    top: 3,
-    left: 3,
-  }),
-  backgroundShadow: cssObj({
-    ...backgroundCss,
-    background:
-      'linear-gradient(180deg, #0F0F0F -9.3%, rgba(18, 20, 20, 0.45) 35.67%)',
-    top: 10,
-    left: 7,
-  }),
-  contentWrapper: cssObj({
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    top: 0,
-    left: 0,
-  }),
   balanceWidgetWrapper: cssObj({
-    minHeight: 97,
+    mt: '$1',
+    layer: 'layer-card',
+    padding: '$2 $3',
+    display: 'flex',
+    alignItems: 'center',
     position: 'relative',
   }),
-  ChevronDownIcon: cssObj({
-    marginTop: 8,
+  visibilityToggle: cssObj({
+    mt: '$2',
     height: '20px !important',
-    padding: '0 3px !important',
+    padding: '$0 2px',
     borderRadius: 8,
   }),
   name: cssObj({
-    fontSize: '$sm',
     margin: '0px 0px -6px',
   }),
 };

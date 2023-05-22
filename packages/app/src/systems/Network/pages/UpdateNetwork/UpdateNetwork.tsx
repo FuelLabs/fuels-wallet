@@ -15,7 +15,7 @@ export function UpdateNetwork() {
   }
 
   return (
-    <Box as="form" onSubmit={form.handleSubmit(onSubmit)}>
+    <Box.Stack gap="$6" as="form" onSubmit={form.handleSubmit(onSubmit)}>
       <Dialog.Heading>
         Update Network
         <IconButton
@@ -27,21 +27,17 @@ export function UpdateNetwork() {
         />
       </Dialog.Heading>
       <Dialog.Description as="div">
-        <Focus.Scope contain autoFocus>
+        <Focus.Scope autoFocus>
           <NetworkForm form={form} isEditing />
         </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
-        <Button
-          color="intentsBase"
-          variant="ghost"
-          onPress={handlers.openNetworks}
-        >
+        <Button variant="ghost" onPress={handlers.openNetworks}>
           Cancel
         </Button>
         <Button
           type="submit"
-          color="accent"
+          intent="primary"
           isDisabled={!form.formState.isValid}
           isLoading={isLoading}
           leftIcon={Icon.is('Plus')}
@@ -50,6 +46,6 @@ export function UpdateNetwork() {
           Update
         </Button>
       </Dialog.Footer>
-    </Box>
+    </Box.Stack>
   );
 }

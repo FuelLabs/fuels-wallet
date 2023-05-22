@@ -45,6 +45,5 @@ const styles = {
   description: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
     flex: 1,
-    padding: '$4',
   }),
 };

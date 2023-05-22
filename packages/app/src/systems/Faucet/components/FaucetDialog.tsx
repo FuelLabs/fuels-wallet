@@ -22,15 +22,14 @@ export function FaucetDialog() {
   }, [captcha.isLoaded]);
 
   return (
-    <Dialog isOpen onOpenChange={(open) => !open && navigate(Pages.wallet())}>
-      <Dialog.Content css={{ maxWidth: 334 }}>
+    <Dialog
+      isOpen
+      onOpenChange={(open: boolean) => !open && navigate(Pages.wallet())}
+    >
+      <Dialog.Content css={{ maxWidth: 300 }}>
         <Dialog.Heading>
           <Box.Flex css={{ alignItems: 'center' }}>
-            <Icon
-              icon="Wand"
-              color="intentsBase8"
-              css={{ marginRight: '$3' }}
-            />
+            <Icon icon="Wand" css={{ marginRight: '$3' }} />
             Faucet
           </Box.Flex>
         </Dialog.Heading>
@@ -79,6 +78,7 @@ export function FaucetDialog() {
         <Dialog.Footer css={{ marginTop: 0 }}>
           <Button
             variant="solid"
+            intent="primary"
             onPress={() =>
               handlers.startFaucet({
                 address: account!.address || '',

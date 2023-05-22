@@ -69,7 +69,7 @@ export function ExampleBox({
             <Tooltip content={downloadContent} side="left">
               <Tag
                 size="xs"
-                color="intentsWarning"
+                intent="warning"
                 variant="ghost"
                 leftIcon="Warning"
               >
@@ -78,12 +78,12 @@ export function ExampleBox({
             </Tooltip>
           )}
           {error && !notDetected && (
-            <Tag size="xs" color="intentsError" variant="ghost" leftIcon="X">
+            <Tag size="xs" intent="error" variant="ghost" leftIcon="X">
               Failed
             </Tag>
           )}
           {!notDetected && !error && (
-            <Tag size="xs" color="accent" variant="ghost">
+            <Tag size="xs" intent="primary" variant="ghost">
               Wallet Detected
             </Tag>
           )}
@@ -111,7 +111,7 @@ const styles = {
     gap: '$4',
     padding: '$4',
     borderRadius: '$md',
-    border: '1px dashed $intentsBase3',
+    border: '1px solid $border',
     position: 'relative',
     overflow: 'hidden',
 

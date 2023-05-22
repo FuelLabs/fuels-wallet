@@ -46,7 +46,6 @@ export const ConnectionItem: ConnectionItemComponent = ({
             icon={<Icon icon={Icon.is('Edit')} color="intentsBase8" />}
             size="xs"
             variant="link"
-            color="intentsBase"
             aria-label="Edit"
             onPress={() => onEdit(origin)}
           />
@@ -59,7 +58,6 @@ export const ConnectionItem: ConnectionItemComponent = ({
               icon={<Icon icon={Icon.is('Trash')} color="intentsBase8" />}
               size="xs"
               variant="link"
-              color="intentsBase"
               aria-label="Delete"
             />
           </ConnectionRemoveDialog>

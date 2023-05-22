@@ -46,16 +46,11 @@ export function MnemonicWrite({
         />
       </Box.Stack>
       <Box.Flex gap="$4">
-        <Button
-          color="intentsBase"
-          variant="ghost"
-          css={{ width: 130 }}
-          onPress={onCancel}
-        >
+        <Button variant="ghost" css={{ width: 130 }} onPress={onCancel}>
           Cancel
         </Button>
         <Button
-          color="accent"
+          intent="primary"
           css={{ width: 130 }}
           onPress={onNext}
           isDisabled={!canProceed}

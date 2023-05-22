@@ -46,22 +46,26 @@ const styles = {
     height: WALLET_HEIGHT,
     maxWidth: WALLET_WIDTH,
     maxHeight: 'none',
-    background: '$overlayBg',
-    borderRadius: '$none',
+    background: '$dialogBg',
+    borderRadius: '$default',
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '$6',
 
-    '.fuel_dialog--heading, .fuel_dialog--footer': {
+    '.fuel_DialogHeading, .fuel_DialogFooter': {
       borderColor: '$intentsBase2',
     },
-    '.fuel_dialog--description': {
+    '.fuel_DialogDescription': {
       flex: 1,
       overflowY: 'auto',
       height: '100%',
     },
-    '.fuel_dialog--heading': cssObj({
+    '.fuel_DialogHeading': cssObj({
       display: 'flex',
       justifyContent: 'space-between',
     }),
-    '.fuel_dialog--footer': cssObj({
+    '.fuel_DialogFooter': cssObj({
       button: {
         width: '100%',
       },

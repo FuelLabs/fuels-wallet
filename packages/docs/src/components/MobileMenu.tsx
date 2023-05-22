@@ -33,7 +33,6 @@ export function MobileMenu() {
     <IconButton
       className="mobile-button"
       variant="link"
-      color="intentsBase"
       icon={showing ? Icon.is('X') : Icon.is('Menu2')}
       iconSize={30}
       aria-label="Menu"
@@ -117,7 +116,7 @@ const styles = {
     },
 
     'a.active, a:hover': {
-      color: '$accent11',
+      color: '$intentsPrimary11',
     },
 
     '& > .fuel_box': {

@@ -108,17 +108,12 @@ export function CreatePassword({
           />
         </Box.Stack>
         <Box.Flex gap="$4">
-          <Button
-            color="intentsBase"
-            variant="ghost"
-            css={{ width: 130 }}
-            onPress={onCancel}
-          >
+          <Button variant="ghost" css={{ width: 130 }} onPress={onCancel}>
             Cancel
           </Button>
           <Button
             type="submit"
-            color="accent"
+            intent="primary"
             css={{ width: 130 }}
             isDisabled={!isValid}
             isLoading={isLoading}

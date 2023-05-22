@@ -8,7 +8,8 @@ import { store } from '~/store';
 import type { Maybe } from '~/systems/Core';
 import { urlJoin } from '~/systems/Core';
 
-const FAUCET_URL = urlJoin(VITE_FUEL_FAUCET_URL, '/dispense');
+const URL = VITE_FUEL_FAUCET_URL;
+const FAUCET_URL = urlJoin(URL, URL.endsWith('/dispense') ? '' : '/dispense');
 
 async function fetchFaucet(input: RequestInit) {
   const res = await fetch(FAUCET_URL, {

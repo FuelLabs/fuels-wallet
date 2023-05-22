@@ -22,7 +22,7 @@ const styles = {
       mb: '$5',
       pb: '$2',
       color: '$intentsBase12',
-      borderBottom: '1px dashed $intentsBase3',
+      borderBottom: '1px solid $border',
     },
     '&[data-rank=h3]': {
       mt: '$8',

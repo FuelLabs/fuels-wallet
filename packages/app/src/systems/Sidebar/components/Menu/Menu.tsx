@@ -142,7 +142,7 @@ const styles = {
 
     '& > .fuel_menu-list-item': {
       fontSize: '$sm',
-      height: 'auto',
+      height: '100px !important',
       px: '$3',
     },
 
@@ -161,7 +161,7 @@ const styles = {
     gap: '$2',
     py: '$1',
     px: '$2',
-    borderRadius: '$lg',
+    borderRadius: '$default',
 
     '&[data-active="true"]': {
       color: '$intentsBase12',
@@ -204,7 +204,7 @@ const styles = {
       px: '$0',
       pl: '$2',
       ml: '$4',
-      height: 'auto',
+      height: 'auto !important',
       fontSize: '$sm',
       color: '$intentsBase8',
     },

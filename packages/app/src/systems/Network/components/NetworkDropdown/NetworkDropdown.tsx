@@ -31,18 +31,23 @@ export const NetworkDropdown = forwardRef<HTMLDivElement, NetworkDropdownProps>(
 const styles = {
   trigger: cssObj({
     cursor: 'pointer',
-    fontSize: '$xs',
+    fontSize: '$sm',
     px: '$4 !important',
-    border: '1px dashed $intentsBase4 !important',
+    border: '1px solid $border',
     color: '$intentsBase10 !important',
     borderRadius: '$full !important',
-    '&, &:hover': {
-      background: '$transparent !important',
-      boxShadow: 'none !important',
+    background: 'transparent',
+
+    '&:not([aria-disabled="true"]):hover': {
+      bg: '$inverseA3',
+      boxShadow: 'none',
+      border: '1px solid $border',
     },
+
     '&:focus': {
       outlineColor: '$intentsBase2 !important',
     },
+
     '&[aria-disabled="true"]': {
       opacity: 1,
       cursor: 'default',

@@ -51,7 +51,7 @@ export const Logout = () => {
           isLoading={isLoading}
           isDisabled={isLoading}
           variant="ghost"
-          color="intentsError"
+          intent="error"
         >
           Logout
         </Button>

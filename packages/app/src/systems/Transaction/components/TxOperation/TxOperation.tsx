@@ -58,7 +58,7 @@ const styles = {
     },
     '.asset_amount': {
       pt: '$2',
-      borderTop: '1px dashed $intentsBase3',
+      borderTop: '1px solid $border',
     },
   }),
 };

@@ -60,7 +60,7 @@ export function AddNetwork() {
         />
       </Dialog.Heading>
       <Dialog.Description as="div">
-        <Focus.Scope contain autoFocus>
+        <Focus.Scope autoFocus>
           <NetworkForm
             form={form}
             isEditing={false}
@@ -69,16 +69,12 @@ export function AddNetwork() {
         </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
-        <Button
-          color="intentsBase"
-          variant="ghost"
-          onPress={handlers.openNetworks}
-        >
+        <Button variant="ghost" onPress={handlers.openNetworks}>
           Cancel
         </Button>
         <Button
           type="submit"
-          color="accent"
+          intent="primary"
           isDisabled={!form.formState.isValid}
           isLoading={isLoading}
           leftIcon={Icon.is('Plus')}

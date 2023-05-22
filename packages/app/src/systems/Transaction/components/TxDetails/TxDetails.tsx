@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Card, Text } from '@fuel-ui/react';
+import { Card, Text } from '@fuel-ui/react';
 import type { BN } from 'fuels';
 import { bn } from 'fuels';
 import type { FC } from 'react';
@@ -20,30 +20,20 @@ export const TxDetails: TxDetailsComponent = ({
   const fee = bn(initialFee);
 
   return (
-    <Card>
-      <Box.Flex css={styles.detailItems}>
-        <Box.Flex css={styles.detailItem}>
-          <Text color="intentsBase10" css={styles.text}>
-            Fee (network)
-          </Text>
-          <Text color="intentsBase12" css={styles.text} aria-label="Fee Value">
-            {fee?.format()} ETH
-          </Text>
-        </Box.Flex>
-      </Box.Flex>
+    <Card css={styles.detailItem}>
+      <Text color="intentsBase10" css={styles.text}>
+        Fee (network)
+      </Text>
+      <Text color="intentsBase12" css={styles.text} aria-label="Fee Value">
+        {fee?.format()} ETH
+      </Text>
     </Card>
   );
 };
 
 const styles = {
-  detailItems: cssObj({
-    flexDirection: 'column',
-    gap: '$4',
-    px: '$3',
-    py: '$2',
-    flex: 1,
-  }),
   detailItem: cssObj({
+    padding: '$3',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

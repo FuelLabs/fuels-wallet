@@ -108,11 +108,6 @@ export const styles = {
     minH: '100vh',
     width: IS_CRX_POPUP ? WALLET_WIDTH : '100vw',
 
-    '&[data-public="true"]': {
-      background:
-        'linear-gradient(197.05deg, #0E221B 0%, #071614 22.2%, #0C0E0D 40.7%);',
-    },
-
     '&:has(.layout__bottom) .layout__content': {
       pb: '$0',
     },
@@ -122,14 +117,15 @@ export const styles = {
     position: 'relative',
     width: WALLET_WIDTH,
     height: WALLET_HEIGHT,
-    background:
-      'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',
+    background: '$intentsBase1',
+    border: '1px solid $border',
+    borderRadius: '$default',
     zIndex: '$0',
   }),
   inner: coreStyles.fullscreen,
   content: cssObj({
     ...coreStyles.scrollable(),
-    padding: '$4',
+    padding: '$1 $4',
     flex: 1,
   }),
 };

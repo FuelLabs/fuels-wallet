@@ -18,6 +18,7 @@ export const HomeActions = ({
 
   const sendButton = (
     <Button
+      intent="primary"
       aria-label="Send Button"
       onPress={sendAction}
       isDisabled={isDisabled || !hasBalance}
@@ -39,7 +40,6 @@ export const HomeActions = ({
         isDisabled={isDisabled}
         onPress={receiveAction}
         variant="outlined"
-        color="intentsBase"
         css={styles.button}
       >
         Receive
@@ -50,13 +50,13 @@ export const HomeActions = ({
 
 const styles = {
   wrapper: cssObj({
-    marginTop: '$8',
+    marginTop: '$4',
     marginBottom: '$6',
     flexShrink: 0,
     gap: '$2',
   }),
   button: cssObj({
-    borderRadius: '$full',
+    borderRadius: '$default',
     flex: 1,
     py: '$0',
   }),

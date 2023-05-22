@@ -74,10 +74,8 @@ export const WithBottom = (args: LayoutProps) => (
     <Layout.TopBar />
     <Layout.Content>This is a content</Layout.Content>
     <Layout.BottomBar>
-      <Button color="intentsBase" variant="ghost">
-        Cancel
-      </Button>
-      <Button color="accent" variant="solid">
+      <Button variant="ghost">Cancel</Button>
+      <Button intent="primary" variant="solid">
         Save
       </Button>
     </Layout.BottomBar>

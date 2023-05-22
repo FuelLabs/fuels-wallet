@@ -46,7 +46,7 @@ export function ViewRecoveryPhrase() {
         </Box.Flex>
       </Dialog.Description>
       <Dialog.Footer>
-        <Button color="intentsBase" variant="ghost" onPress={() => close()}>
+        <Button variant="ghost" onPress={() => close()}>
           Close
         </Button>
       </Dialog.Footer>

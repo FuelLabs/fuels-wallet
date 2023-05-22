@@ -22,8 +22,8 @@ const styles = {
     maxWidth: 130,
     boxSizing: 'border-box',
     px: '$3',
-    borderColor: '$accent11',
-    borderStyle: 'dashed',
+    borderColor: '$intentsPrimary11',
+    borderStyle: 'solid',
     color: '$intentsBase11',
 
     '& span': {
@@ -31,7 +31,7 @@ const styles = {
       overflow: 'hidden',
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
-      fontSize: '$xs',
+      fontSize: '$sm',
       color: '$accent11',
     },
   }),

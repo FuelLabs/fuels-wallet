@@ -38,23 +38,17 @@ export const ExportAccount = () => {
               sure you store it safely.
             </Text>
             <Card css={styles.exportedKey}>
-              <Card.Body>
-                {exportedKey && (
-                  <Copyable value={exportedKey}>
-                    <Text fontSize="xs">{exportedKey}</Text>
-                  </Copyable>
-                )}
-              </Card.Body>
+              {exportedKey && (
+                <Copyable value={exportedKey}>
+                  <Text fontSize="xs">{exportedKey}</Text>
+                </Copyable>
+              )}
             </Card>
           </Box.Stack>
         )}
       </Dialog.Description>
       <Dialog.Footer>
-        <Button
-          color="intentsBase"
-          variant="ghost"
-          onPress={accountsHandlers.goToList}
-        >
+        <Button variant="ghost" onPress={accountsHandlers.goToList}>
           Close
         </Button>
       </Dialog.Footer>
@@ -67,6 +61,7 @@ const styles = {
     fontWeight: '$medium',
   }),
   exportedKey: cssObj({
+    padding: '$4',
     wordBreak: 'break-all',
     textAlign: 'center',
   }),

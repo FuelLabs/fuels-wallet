@@ -116,7 +116,7 @@ export const AssetItem: AssetItemComponent = ({
               Unknown
               <Button
                 size="xs"
-                color="intentsPrimary"
+                intent="primary"
                 variant="link"
                 onPress={goToAsset}
                 css={styles.addAssetBtn}

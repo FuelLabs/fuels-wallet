@@ -17,7 +17,6 @@ export function VisibilityButton({
       onPress={() => onChangeVisibility?.(!visibility)}
       size="xs"
       variant="link"
-      color="intentsBase"
       icon={
         <Icon
           {...(visibility

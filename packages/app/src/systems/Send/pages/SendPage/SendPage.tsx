@@ -24,16 +24,12 @@ export function SendPage() {
         </AnimatePresence>
         {txRequest.showActions && (
           <Layout.BottomBar>
-            <Button
-              color="intentsBase"
-              variant="ghost"
-              onPress={handlers.cancel}
-            >
+            <Button variant="ghost" onPress={handlers.cancel}>
               Cancel
             </Button>
             <Button
               type="submit"
-              color="accent"
+              intent="primary"
               isDisabled={ctx.isInvalid || !form.formState.isValid}
               isLoading={status('loading') || status('loadingTx')}
             >

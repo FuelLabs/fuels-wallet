@@ -29,14 +29,14 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
       />
       <Box.Stack css={styles.content} gap="$4">
         <Mnemonic value={words} type="read" />
-        <Alert status="warning">
+        <Alert status="warning" hideIcon>
           <Form.Control css={{ flexDirection: 'row' }}>
             <Checkbox
               id="confirmSaved"
               aria-label="Confirm Saved"
               checked={isSavedChecked}
               // TODO: this bg property should be fixed inside @fuel-ui
-              css={{ background: '$intentsBase3 !important', width: '$7' }}
+              css={styles.checkbox}
               onCheckedChange={(e) => {
                 setSavedChecked(e as boolean);
               }}
@@ -47,24 +47,19 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
           </Form.Control>
         </Alert>
       </Box.Stack>
-      <Box.Flex gap="$4">
-        <Button
-          color="intentsBase"
-          variant="ghost"
-          css={{ width: 130 }}
-          onPress={onCancel}
-        >
+      <Box css={styles.footer}>
+        <Button variant="ghost" css={{ width: 130 }} onPress={onCancel}>
           Cancel
         </Button>
         <Button
-          color="accent"
+          intent="primary"
           css={{ width: 130 }}
           onPress={onNext}
           isDisabled={!isSavedChecked}
         >
           Next
         </Button>
-      </Box.Flex>
+      </Box>
     </Box.Stack>
   );
 }
@@ -81,6 +76,30 @@ const styles = {
     },
     '.fuel_checkbox:focus-within::after': {
       borderColor: '$intentsWarning5 !important',
+    },
+  }),
+  checkbox: cssObj({
+    bg: '$semanticGhostWarningBg',
+    borderColor: '$semanticGhostWarningHoverBorder',
+    width: '$7',
+
+    '&[data-state="checked"]': {
+      bg: '$semanticGhostWarningHoverBg',
+      borderColor: '$semanticGhostWarningHoverBorder',
+    },
+
+    '&:focus-within': {
+      outline: '2px solid $semanticGhostWarningHoverBorder',
+    },
+  }),
+  footer: cssObj({
+    width: 'calc(100% - $6)',
+    display: 'flex',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '$4',
+
+    button: {
+      width: '100%',
     },
   }),
 };

@@ -103,7 +103,7 @@ const styles = {
   version: cssObj({
     ml: '$2',
     color: '$intentsBase8',
-    fontSize: '$xs',
+    fontSize: '$sm',
     fontStyle: 'italic',
   }),
   desktop: cssObj({
@@ -135,7 +135,7 @@ const styles = {
     },
 
     'a.active, a:hover': {
-      color: '$accent11',
+      color: '$intentsPrimary11',
     },
   }),
 };

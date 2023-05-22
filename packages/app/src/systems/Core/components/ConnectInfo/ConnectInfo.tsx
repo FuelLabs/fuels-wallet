@@ -78,7 +78,7 @@ const styles = {
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    fontSize: '$xs',
+    fontSize: '$sm',
     color: '$accent11',
     fontWeight: '$bold',
   }),

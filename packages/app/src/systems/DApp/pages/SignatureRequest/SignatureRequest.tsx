@@ -47,12 +47,7 @@ export function SignatureRequest() {
           </Box.Flex>
         </Layout.Content>
         <Layout.BottomBar>
-          <Button
-            aria-label="Cancel"
-            variant="ghost"
-            color="intentsBase"
-            onPress={handlers.reject}
-          >
+          <Button aria-label="Cancel" variant="ghost" onPress={handlers.reject}>
             Cancel
           </Button>
           <Button

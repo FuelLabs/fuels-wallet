@@ -139,7 +139,6 @@ export function Mnemonic({
             aria-label="Copy button"
             size="sm"
             variant="ghost"
-            color="intentsBase"
             leftIcon={<Icon icon="Copy" color="intentsBase8" />}
             onPress={handleCopy}
           >
@@ -150,7 +149,6 @@ export function Mnemonic({
             aria-label="Paste button"
             size="sm"
             variant="ghost"
-            color="intentsBase"
             leftIcon={<Icon icon="Copy" color="intentsBase8" />}
             onPress={handlePast}
           >
@@ -164,13 +162,12 @@ export function Mnemonic({
 
 const styles = {
   root: cssObj({
-    background: '$intentsBase1',
-    border: '1px dashed $intentsBase3',
-    borderRadius: '$lg',
+    layer: 'layer-card',
+    borderRadius: '$default',
   }),
   formatWrapper: cssObj({
     p: '$3',
-    borderBottom: '1px dashed $intentsBase3',
+    borderBottom: '1px solid $border',
     gap: '$1',
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -191,8 +188,6 @@ const styles = {
   words: cssObj({
     px: '$3',
     py: '$3',
-    mb: '$3',
-    borderBottom: '1px dashed $intentsBase3',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gridTemplateRows: 'repeat(4, 1fr)',
     gridColumnGap: '$4',
@@ -231,7 +226,7 @@ const styles = {
       appearance: 'none',
       border: 'none',
       background: 'transparent',
-      borderBottom: '1px dashed $intentsBase10',
+      borderBottom: '1px dashed $border',
       color: '$intentsBase11',
 
       '&:focus': {

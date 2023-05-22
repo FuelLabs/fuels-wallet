@@ -57,7 +57,6 @@ export function AssetSelect({
         <Button
           role={assetAmount ? 'button' : 'combobox'}
           as={assetAmount ? 'div' : 'button'}
-          color="intentsBase"
           size="md"
           css={styles.trigger}
           id="fuel_asset-select"
@@ -107,7 +106,6 @@ export function AssetSelect({
           {assetAmount && (
             <IconButton
               variant="link"
-              color="intentsBase"
               aria-label="Clear"
               icon={Icon.is('X')}
               onPress={handleClear}
@@ -164,13 +162,14 @@ export function AssetSelect({
 
 const styles = {
   trigger: cssObj({
+    layer: 'input-base',
     boxSizing: 'border-box',
     minWidth: '100%',
     px: '$3',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    background: '$intentsBase2',
+    height: '$9',
 
     span: {
       fontSize: '$sm',
@@ -178,9 +177,8 @@ const styles = {
 
     '&:not([aria-disabled=true])': {
       '&:hover': {
-        background: '$intentsBase2',
-        boxShadow: 'none',
-        borderColor: '$intentsBase5',
+        layer: 'input-base',
+        borderColor: '$intentsBase9',
       },
       '&:active, &[aria-pressed=true]': {
         transform: 'scale(1)',
@@ -225,15 +223,13 @@ const styles = {
       '.fuel_menu-list-item': {
         py: '$2',
         px: '$3',
-        gap: '$3',
         height: 'auto',
       },
       '.asset-info': {
         flex: 1,
       },
       '.asset-name, .asset-symbol': {
-        fontSize: '$sm',
-        lineHeight: 1.2,
+        fontSize: '$lg',
       },
       '.asset-name': {
         color: '$intentsBase11',

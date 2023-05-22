@@ -107,7 +107,7 @@ const styles = {
     gap: '$1',
   }),
   address: cssObj({
-    fontSize: '$xs',
+    fontSize: '$sm',
   }),
   name: cssObj({
     margin: '0px 0px -5px',

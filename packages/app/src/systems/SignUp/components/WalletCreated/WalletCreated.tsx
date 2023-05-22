@@ -41,7 +41,7 @@ export function WalletCreated({ account }: WalletCreatedProps) {
         {IS_CRX ? (
           <PinWalletText />
         ) : (
-          <Button color="accent" onPress={handleGoToWallet}>
+          <Button intent="primary" onPress={handleGoToWallet}>
             Go to wallet
           </Button>
         )}

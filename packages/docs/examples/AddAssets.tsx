@@ -61,7 +61,7 @@ export function AddAssets() {
                   <IconButton
                     size="xs"
                     variant="ghost"
-                    color="intentsWarning"
+                    intent="warning"
                     icon={<Icon icon="X" />}
                     onPress={removeAsset(index)}
                     aria-label="Remove Asset"

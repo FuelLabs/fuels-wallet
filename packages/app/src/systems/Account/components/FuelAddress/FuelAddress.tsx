@@ -33,15 +33,15 @@ export const FuelAddress = ({ address, css }: AddressProps) => {
 };
 
 const styles = {
-  root: {
+  root: cssObj({
     '.address_tooltip': cssObj({
-      fontSize: '$xs',
+      fontSize: '$sm',
       lineHeight: '$4',
       maxWidth: 125,
       textAlign: 'center',
       wordWrap: 'break-word',
     }),
-  },
+  }),
   copyable: cssObj({
     // to make sure we're using same text format, we just hide the copy icon but still use Copyable.
     '&[data-invalid-address="true"]': {

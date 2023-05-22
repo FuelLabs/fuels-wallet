@@ -39,12 +39,7 @@ export function ListAssets() {
         {Boolean(assets.length) && (
           <Box.Stack gap="$1" css={{ mt: '$2' }}>
             {assets.map((asset) => (
-              <Tag
-                size="xs"
-                color="intentsBase"
-                variant="ghost"
-                key={JSON.stringify(asset)}
-              >
+              <Tag size="xs" variant="ghost" key={JSON.stringify(asset)}>
                 {asset.name} ({asset.symbol}): {asset.assetId}
               </Tag>
             ))}
@@ -65,7 +60,7 @@ const styles = {
       justifyContent: 'flex-start',
 
       '& > p': {
-        fontSize: '$xs',
+        fontSize: '$sm',
       },
     },
   }),

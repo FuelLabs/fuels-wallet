@@ -77,7 +77,7 @@ const styles = {
   title: cssObj({
     fontSize: '$sm',
     pb: '$3',
-    borderBottom: '1px dashed $intentsBase2',
+    borderBottom: '1px solid $border',
     wordBreak: 'break-all',
 
     '.fuel_icon': {
@@ -91,7 +91,7 @@ const styles = {
     pt: '$11',
   }),
   label: cssObj({
-    fontSize: '$xs',
+    fontSize: '$sm',
     fontWeight: '$medium',
     color: '$intentsBase10',
 

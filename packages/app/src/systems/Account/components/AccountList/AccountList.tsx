@@ -64,7 +64,6 @@ export function AccountList({
       {!isLoading && hasHiddenAccounts && (
         <Button
           size="xs"
-          color="intentsBase"
           variant="link"
           onPress={toggle}
           css={styles.hiddenBtn}

@@ -22,7 +22,7 @@ export const EditAccount = () => {
   }
 
   return (
-    <Box as="form" onSubmit={form.handleSubmit(onSubmit)}>
+    <Box.Stack gap="$6" as="form" onSubmit={form.handleSubmit(onSubmit)}>
       <Dialog.Heading>
         Edit Account
         <IconButton
@@ -34,21 +34,17 @@ export const EditAccount = () => {
         />
       </Dialog.Heading>
       <Dialog.Description as="div">
-        <Focus.Scope contain autoFocus>
+        <Focus.Scope autoFocus>
           <AccountForm form={form} isLoading={isLoading} />
         </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
-        <Button
-          color="intentsBase"
-          variant="ghost"
-          onPress={accountsHandlers.goToList}
-        >
+        <Button variant="ghost" onPress={accountsHandlers.goToList}>
           Cancel
         </Button>
         <Button
           type="submit"
-          color="accent"
+          intent="primary"
           isDisabled={!form.formState.isValid}
           isLoading={isLoading}
           leftIcon={Icon.is('Edit')}
@@ -57,6 +53,6 @@ export const EditAccount = () => {
           Edit
         </Button>
       </Dialog.Footer>
-    </Box>
+    </Box.Stack>
   );
 };

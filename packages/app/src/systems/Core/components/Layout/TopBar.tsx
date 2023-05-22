@@ -146,15 +146,7 @@ const styles = {
     gap: '$3',
     alignItems: 'center',
     minHeight: '50px',
-    boxShadow: '$sm',
     transition: 'none',
-    background:
-      'linear-gradient(268.61deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.02) 87.23%)',
-
-    '&[data-home="true"]': {
-      boxShadow: '$none',
-      background: 'transparent',
-    },
   }),
   topbarIcon: cssObj({
     px: '0 !important',

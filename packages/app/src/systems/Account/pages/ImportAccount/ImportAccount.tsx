@@ -15,7 +15,7 @@ export const ImportAccount = () => {
   }
 
   return (
-    <Box as="form" onSubmit={form.handleSubmit(onSubmit)}>
+    <Box.Stack gap="$6" as="form" onSubmit={form.handleSubmit(onSubmit)}>
       <Dialog.Heading>
         Import Account
         <IconButton
@@ -30,16 +30,12 @@ export const ImportAccount = () => {
         <ImportAccountForm form={form} isLoading={isLoading} />
       </Dialog.Description>
       <Dialog.Footer>
-        <Button
-          color="intentsBase"
-          variant="ghost"
-          onPress={accountsHandlers.goToList}
-        >
+        <Button variant="ghost" onPress={accountsHandlers.goToList}>
           Cancel
         </Button>
         <Button
           type="submit"
-          color="accent"
+          intent="primary"
           isDisabled={!form.formState.isValid}
           isLoading={isLoading}
           leftIcon={Icon.is('Plus')}
@@ -48,6 +44,6 @@ export const ImportAccount = () => {
           Import
         </Button>
       </Dialog.Footer>
-    </Box>
+    </Box.Stack>
   );
 };

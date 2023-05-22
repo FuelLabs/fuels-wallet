@@ -73,7 +73,6 @@ export const TxApprove = () => {
         {txRequest.showActions && (
           <>
             <Button
-              color="intentsBase"
               variant="ghost"
               isDisabled={txRequest.isLoading}
               onPress={txRequest.handlers.closeDialog}
@@ -81,7 +80,7 @@ export const TxApprove = () => {
               Back
             </Button>
             <Button
-              color="accent"
+              intent="primary"
               isLoading={txRequest.isLoading}
               onPress={txRequest.handlers.approve}
             >
@@ -90,7 +89,12 @@ export const TxApprove = () => {
           </>
         )}
         {isSuccess && (
-          <Button size="sm" variant="ghost" color="accent" onPress={goToWallet}>
+          <Button
+            size="sm"
+            variant="ghost"
+            intent="primary"
+            onPress={goToWallet}
+          >
             Back to wallet
           </Button>
         )}
@@ -98,7 +102,7 @@ export const TxApprove = () => {
           <Button
             size="sm"
             variant="ghost"
-            color="intentsError"
+            intent="error"
             onPress={txRequest.handlers.tryAgain}
           >
             Try again

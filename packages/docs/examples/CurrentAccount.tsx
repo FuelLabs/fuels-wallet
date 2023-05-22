@@ -36,7 +36,7 @@ export function CurrentAccount() {
         </Button>
         <Box.Stack gap="$3" css={{ mt: '$2' }}>
           {!!currentAccount && (
-            <Tag size="xs" color="intentsBase" variant="ghost">
+            <Tag size="xs" variant="ghost">
               <Text key={currentAccount}>{currentAccount}</Text>
             </Tag>
           )}
@@ -53,7 +53,7 @@ const styles = {
     alignItems: 'flex-start',
 
     '.fuel_tag > p': {
-      fontSize: '$xs',
+      fontSize: '$sm',
     },
   }),
 };

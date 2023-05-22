@@ -114,7 +114,7 @@ const styles = {
 
     '& ~ & ': {
       pt: '$2',
-      borderTop: '1px dashed $intentsBase3',
+      borderTop: '1px solid $border',
     },
   }),
   asset: cssObj({
@@ -129,7 +129,7 @@ const styles = {
   address: cssObj({
     gridColumn: '1 / 2',
     color: '$intentsBase9',
-    fontSize: '$xs',
+    fontSize: '$sm',
   }),
   amount: cssObj({
     justifyContent: 'flex-end',

@@ -55,7 +55,7 @@ export function UpsertAsset() {
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <Layout title={`${isEditing ? 'Edit' : 'Add'} Asset`}>
         <Layout.TopBar />
-        <Focus.Scope autoFocus contain>
+        <Focus.Scope autoFocus>
           <Layout.Content>
             <AssetForm
               form={form}
@@ -76,16 +76,12 @@ export function UpsertAsset() {
             )}
           </Layout.Content>
           <Layout.BottomBar>
-            <Button
-              color="intentsBase"
-              variant="ghost"
-              onPress={() => navigate(-1)}
-            >
+            <Button variant="ghost" onPress={() => navigate(-1)}>
               Cancel
             </Button>
             <Button
               type="submit"
-              color="accent"
+              intent="primary"
               isDisabled={shouldDisableButton}
               isLoading={isLoading}
               aria-label="Save Asset"

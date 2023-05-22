@@ -123,7 +123,7 @@ const styles = {
     flexDirection: 'column',
 
     '.error-msg': {
-      fontSize: '$xs',
+      fontSize: '$sm',
       color: '$intentsError9',
     },
   }),

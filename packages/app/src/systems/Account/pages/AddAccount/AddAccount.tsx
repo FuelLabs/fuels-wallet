@@ -20,7 +20,7 @@ export const AddAccount = () => {
   }
 
   return (
-    <Box as="form" onSubmit={form.handleSubmit(onSubmit)}>
+    <Box.Stack gap="$6" as="form" onSubmit={form.handleSubmit(onSubmit)}>
       <Dialog.Heading>
         Add Account
         <IconButton
@@ -35,16 +35,12 @@ export const AddAccount = () => {
         <AccountForm form={form} isLoading={isLoading} />
       </Dialog.Description>
       <Dialog.Footer>
-        <Button
-          color="intentsBase"
-          variant="ghost"
-          onPress={accountsHandlers.goToList}
-        >
+        <Button variant="ghost" onPress={accountsHandlers.goToList}>
           Cancel
         </Button>
         <Button
           type="submit"
-          color="accent"
+          intent="primary"
           isDisabled={!form.formState.isValid}
           isLoading={isLoading}
           leftIcon={Icon.is('Plus')}
@@ -53,6 +49,6 @@ export const AddAccount = () => {
           Create
         </Button>
       </Dialog.Footer>
-    </Box>
+    </Box.Stack>
   );
 };

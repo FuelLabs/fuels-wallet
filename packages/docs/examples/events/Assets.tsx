@@ -46,12 +46,7 @@ export function Assets() {
           {assets?.length ? (
             <>
               {assets.map((asset) => (
-                <Tag
-                  size="xs"
-                  color="intentsBase"
-                  variant="ghost"
-                  key={asset.assetId}
-                >
+                <Tag size="xs" variant="ghost" key={asset.assetId}>
                   <Text key={asset.assetId}>
                     {asset.name} ({asset.symbol}): {asset.assetId}
                   </Text>
@@ -91,7 +86,7 @@ const styles = {
       justifyContent: 'flex-start',
 
       '& > p': {
-        fontSize: '$xs',
+        fontSize: '$sm',
       },
     },
   }),

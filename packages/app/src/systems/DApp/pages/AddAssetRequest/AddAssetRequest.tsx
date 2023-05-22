@@ -42,10 +42,10 @@ export function AddAssetRequest() {
         </Card>
       </Layout.Content>
       <Layout.BottomBar>
-        <Button color="intentsBase" variant="ghost" onPress={handlers.reject}>
+        <Button variant="ghost" onPress={handlers.reject}>
           Reject
         </Button>
-        <Button type="submit" color="accent" onPress={handlers.approve}>
+        <Button type="submit" intent="primary" onPress={handlers.approve}>
           Add Assets
         </Button>
       </Layout.BottomBar>
@@ -61,7 +61,7 @@ const styles = {
   }),
   assetId: cssObj({
     mt: '$4',
-    fontSize: '$xs',
+    fontSize: '$sm',
     fontWeight: '$semibold',
     wordBreak: 'break-all',
     textAlign: 'center',

@@ -40,11 +40,11 @@ export const Accounts = () => {
       </Dialog.Description>
       <Dialog.Footer css={styles.footer}>
         <Button
+          intent="primary"
           aria-label="Add account"
           onPress={handlers.goToAdd}
           leftIcon={Icon.is('Plus')}
           variant="ghost"
-          size={'sm'}
           iconSize={14}
         >
           Add new account
@@ -54,8 +54,6 @@ export const Accounts = () => {
           onPress={handlers.goToImport}
           leftIcon={Icon.is('LockOpen')}
           variant="ghost"
-          color="intentsBase"
-          size={'sm'}
           iconSize={14}
         >
           Add from private key
@@ -68,7 +66,7 @@ export const Accounts = () => {
 const styles = {
   description: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
-    padding: '$4',
+    padding: '$0',
     flex: 1,
 
     '&[data-has-scroll="true"]': {

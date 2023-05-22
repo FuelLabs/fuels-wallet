@@ -91,26 +91,24 @@ export const AccountItem: AccountItemComponent = ({
     if (menuItems.length) {
       return (
         <Dropdown
-          css={{
-            zIndex: 1,
+          css={{ zIndex: 1 }}
+          popoverProps={{
+            alignOffset: -20,
+            align: 'end',
           }}
-          popoverProps={{ side: 'bottom', align: 'start', alignOffset: 10 }}
         >
           <Dropdown.Trigger>
             <IconButton
               size="xs"
               variant="link"
-              color="intentsBase"
               icon={<Icon icon="Dots" color="intentsBase8" />}
               aria-label={`Account Actions ${account.name}`}
-              css={{
-                px: '$0',
-                color: '$intentsBase10',
-              }}
+              css={{ px: '$0', color: '$intentsBase10' }}
             />
           </Dropdown.Trigger>
           <Dropdown.Menu
-            onAction={(action) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            onAction={(action: any) => {
               if (action === 'update') onUpdate?.(account.address);
               if (action === 'export') onExport?.(account.address);
               if (action === 'hide')
@@ -150,6 +148,7 @@ export const AccountItem: AccountItemComponent = ({
 const styles = {
   root: cssObj({
     background: '$cardListItemBg',
+    py: '$3 !important',
 
     '&[aria-disabled="true"]': {
       opacity: 0.5,

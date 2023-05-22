@@ -42,12 +42,7 @@ export function ConnectionRemoveDialog({
         </AlertDialog.Description>
         <AlertDialog.Footer>
           <AlertDialog.Cancel>
-            <Button
-              size="sm"
-              color="intentsBase"
-              variant="ghost"
-              onPress={handleCancel}
-            >
+            <Button size="sm" variant="ghost" onPress={handleCancel}>
               Cancel
             </Button>
           </AlertDialog.Cancel>
@@ -77,7 +72,7 @@ const styles = {
       justifyContent: 'center',
     },
 
-    '.fuel_alert-dialog--description': {
+    '.fuel_AlertDialogDescription': {
       '.from, .message': {
         textSize: 'sm',
       },

@@ -83,8 +83,8 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     pt: '$3',
-    borderTop: '1px dashed $intentsBase4',
-    fontSize: '$xs',
+    borderTop: '1px solid $border',
+    fontSize: '$sm',
 
     'a, a:visited': {
       color: '$intentsBase10',

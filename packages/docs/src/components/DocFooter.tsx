@@ -32,7 +32,7 @@ const styles = {
     pt: '$4',
     mt: '$6',
     display: 'flex',
-    borderTop: '1px dashed $intentsBase3',
+    borderTop: '1px solid $border',
 
     a: {
       display: 'inline-flex',
@@ -41,7 +41,7 @@ const styles = {
       color: '$intentsBase9',
     },
     'a:hover': {
-      color: '$accent11',
+      color: '$intentsPrimary11',
     },
 
     '@xl': {

@@ -18,7 +18,7 @@ export function AssetListEmpty({
   const openFaucet = useOpenFaucet();
 
   return (
-    <Box.Centered css={styles.empty}>
+    <Box.Flex css={styles.empty}>
       <ImageLoader
         src={relativeUrl('/empty-assets.png')}
         width={150}
@@ -32,24 +32,30 @@ export function AssetListEmpty({
         /**
          * TODO: need to add right faucet icon on @fuel-ui
          */
-        <Button size="sm" leftIcon={Icon.is('Wand')} onPress={openFaucet}>
+        <Button
+          size="sm"
+          intent="primary"
+          leftIcon={Icon.is('Wand')}
+          onPress={openFaucet}
+        >
           Faucet
         </Button>
       )}
-    </Box.Centered>
+    </Box.Flex>
   );
 }
 
 const styles = {
-  faucet: {
+  faucet: cssObj({
     marginTop: '$4',
-  },
+  }),
   empty: cssObj({
+    mt: '$4',
     width: '100%',
     height: '100%',
     flexDirection: 'column',
-    textAlign: 'center',
-    mt: '$3',
+    alignItems: 'center',
+
     img: {
       transform: 'translateX(-10px)',
       mb: '$5',

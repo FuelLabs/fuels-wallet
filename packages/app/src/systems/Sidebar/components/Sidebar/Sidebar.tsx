@@ -28,7 +28,6 @@ function SidebarContent() {
           <IconButton
             size="xs"
             variant="link"
-            color="intentsBase"
             icon={<Icon icon="ChevronDown" size={18} />}
             aria-label="Accounts"
             onClick={accountHandlers.goToList}
@@ -86,7 +85,7 @@ const styles = {
     padding: '$3 $4',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottom: '1px dashed $intentsBase4',
+    borderBottom: '1px solid $border',
 
     '.fuel_icon': {
       color: '$intentsBase8',
