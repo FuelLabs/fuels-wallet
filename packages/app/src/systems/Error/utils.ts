@@ -1,6 +1,5 @@
+import type { FuelWalletError } from '@fuel-wallet/sdk';
 import { createUUID } from '@fuel-wallet/sdk';
-
-import type { FuelWalletError } from './types';
 
 export function errorToFuelError(
   errorEvent: ErrorEvent | PromiseRejectionEvent

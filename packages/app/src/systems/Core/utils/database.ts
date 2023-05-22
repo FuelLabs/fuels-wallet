@@ -4,6 +4,7 @@ import type {
   Connection,
   Network,
   Asset,
+  FuelWalletError,
 } from '@fuel-wallet/types';
 import type { Table } from 'dexie';
 import Dexie from 'dexie';

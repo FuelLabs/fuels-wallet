@@ -1,4 +1,4 @@
-import type { ReportErrorFrequency, FuelWalletError } from '../types';
+import type { FuelWalletError, ReportErrorFrequency } from '@fuel-wallet/types';
 
 import { REPORT_ERROR_FREQUENCY_KEY } from '~/config';
 import { Storage, db } from '~/systems/Core';
