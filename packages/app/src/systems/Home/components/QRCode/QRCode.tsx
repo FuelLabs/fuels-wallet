@@ -41,7 +41,7 @@ export function ReceiverQRCode({ address }: Props) {
         />
       </Flex>
       <Button onPress={downloadQrCode} variant="ghost" size="sm">
-        Download this QR Code
+        Download QR Code
       </Button>
     </Card>
   );

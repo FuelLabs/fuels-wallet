@@ -7,12 +7,12 @@ export function PinWalletText() {
       <Flex gap="$1" justify={'center'}>
         <Text>See your wallet by clicking on </Text>
         <Icon icon={Icon.is('PuzzlePiece')} css={styles.puzzleIcon} />
-        <Text>on the top right</Text>
+        <Text>on the top right.</Text>
       </Flex>
       <Flex gap="$1" justify={'center'}>
-        <Text>and then click on </Text>
+        <Text>Then click on </Text>
         <Icon icon={'PushPin'} />
-        <Text>to show the Fuel Wallet.</Text>
+        <Text>to pin the Fuel Wallet.</Text>
       </Flex>
     </Box>
   );
