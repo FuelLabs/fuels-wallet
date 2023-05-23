@@ -4,7 +4,7 @@ import type { FuelWalletError, ReportErrorFrequency } from '@fuel-wallet/types';
 import { REPORT_ERROR_FREQUENCY_KEY, DEV_EMAIL } from '~/config';
 import { Storage, db } from '~/systems/Core';
 
-function encodeHTMLEntities(text) {
+function encodeHTMLEntities(text: string) {
   const textArea = document.createElement('textarea');
   textArea.innerText = text;
   return textArea.innerHTML;
@@ -13,8 +13,6 @@ function encodeHTMLEntities(text) {
 export class ReportErrorService {
   static async reportErrors() {
     const errors = await this.getErrors();
-    // eslint-disable-next-line no-console
-    console.log('errors', errors);
     // send error as an email to the team
     const errorMailBody = encodeHTMLEntities(
       errors.map((error) => JSON.stringify(error)).join('\n')
