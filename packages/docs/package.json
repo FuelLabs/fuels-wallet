@@ -13,8 +13,8 @@
   "dependencies": {
     "@docsearch/css": "^3.3.3",
     "@docsearch/react": "3.3.3",
-    "@fuel-ui/css": "0.15.0-dev-c6f1a1b",
-    "@fuel-ui/react": "0.15.0-dev-c6f1a1b",
+    "@fuel-ui/css": "0.15.1-pr--4c3fae7",
+    "@fuel-ui/react": "0.15.1-pr--4c3fae7",
     "@fuel-wallet/sdk": "workspace:*",
     "@mdx-js/react": "^2.3.0",
     "@next/mdx": "^13.2.4",
