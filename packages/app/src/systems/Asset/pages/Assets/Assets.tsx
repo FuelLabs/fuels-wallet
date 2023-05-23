@@ -18,7 +18,7 @@ export function Assets() {
       <Layout.Content css={styles.content}>
         <AnimatePresence initial={false} mode="wait">
           <Tabs defaultValue="custom">
-            <Tabs.List css={{ px: '$6' }}>
+            <Tabs.List css={styles.tabList}>
               <Tabs.Trigger value="custom" aria-label="Custom Assets">
                 Custom
               </Tabs.Trigger>
@@ -69,6 +69,13 @@ const styles = {
     },
     '.fuel_TabsContent': {
       px: '$4',
+    },
+  }),
+  tabList: cssObj({
+    px: '$5',
+
+    '.fuel_TabsTrigger': {
+      textSize: 'lg',
     },
   }),
 };

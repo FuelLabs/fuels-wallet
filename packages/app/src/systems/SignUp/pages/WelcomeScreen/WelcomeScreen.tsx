@@ -8,7 +8,7 @@ import { Layout, Pages } from '~/systems/Core';
 export function WelcomeScreen() {
   return (
     <Layout title="Sign Up" isPublic>
-      <Box.Stack gap="$6" align="center">
+      <Box.Stack gap="$4" align="center">
         <FuelLogo
           size={120}
           css={{ mb: '$2', transform: 'translateY(10px)' }}

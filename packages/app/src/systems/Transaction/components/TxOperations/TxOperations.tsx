@@ -35,7 +35,7 @@ export function TxOperations({
 }
 
 TxOperations.Loader = () => (
-  <Box.Stack gap="$6">
+  <Box.Stack gap="$4">
     <TxOperation.Loader />
   </Box.Stack>
 );

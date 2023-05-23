@@ -20,7 +20,7 @@ export const AddAccount = () => {
   }
 
   return (
-    <Box.Stack gap="$6" as="form" onSubmit={form.handleSubmit(onSubmit)}>
+    <Box.Stack gap="$4" as="form" onSubmit={form.handleSubmit(onSubmit)}>
       <Dialog.Heading>
         Add Account
         <IconButton

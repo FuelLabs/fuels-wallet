@@ -40,22 +40,18 @@ function InternalTopBar({ onBack }: TopBarProps) {
 
   return (
     <Box.Flex as="nav" css={styles.root}>
-      <Box.Flex css={{ gap: '$3', alignItems: 'center', flex: 1 }}>
+      <Box.Flex css={styles.container} data-home={isHome}>
         {!isHome ? (
           <>
             <IconButton
               icon={<Icon icon="ChevronLeft" color="intentsBase8" />}
               aria-label="Back"
               variant="link"
-              css={{ px: '0 !important' }}
+              css={styles.backIcon}
               onPress={() => (onBack ? onBack() : navigate(-1))}
             />
             {isLoading && <Spinner />}
-            {!isLoading && (
-              <Text css={{ fontWeight: '$semibold', color: '$intentsBase12' }}>
-                {title}
-              </Text>
-            )}
+            {!isLoading && <Text css={styles.title}>{title}</Text>}
           </>
         ) : (
           <>
@@ -106,11 +102,7 @@ function ExternalTopBar() {
     <Box.Flex as="nav" css={styles.root} data-home={isHome}>
       <Box.Flex css={{ alignItems: 'center', gap: '$5', flex: 1, pl: '$2' }}>
         {isLoading && <Spinner aria-label="Spinner" />}
-        {!isLoading && (
-          <Text css={{ fontWeight: '$semibold', color: '$intentsBase12' }}>
-            {title}
-          </Text>
-        )}
+        {!isLoading && <Text css={styles.title}>{title}</Text>}
       </Box.Flex>
       {selectedNetwork && (
         <NetworkDropdown
@@ -156,5 +148,29 @@ const styles = {
     '&:hover': {
       color: '$intentsBase11 !important',
     },
+  }),
+  title: cssObj({
+    textSize: 'lg',
+    fontWeight: '$semibold',
+    color: '$intentsBase12',
+  }),
+  container: cssObj({
+    position: 'relative',
+    pl: '$6',
+    gap: '$3',
+    alignItems: 'center',
+    flex: 1,
+
+    '&[data-home="true"]': {
+      pl: '$0',
+    },
+  }),
+  backIcon: cssObj({
+    position: 'absolute',
+    top: '50%',
+    left: '$0',
+    px: '0 !important',
+    width: '$2 !important',
+    transform: 'translateY(-50%)',
   }),
 };

@@ -61,7 +61,7 @@ export function CreatePassword({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Box.Stack gap="$6" align="center">
+      <Box.Stack gap="$4" align="center">
         <ImageLoader
           src={relativeUrl('/signup-illustration-2.svg')}
           width={129}

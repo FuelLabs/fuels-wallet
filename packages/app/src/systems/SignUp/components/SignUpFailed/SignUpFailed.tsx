@@ -10,7 +10,7 @@ export type SignUpFailedProps = {
 
 export function SignUpFailed({ error }: SignUpFailedProps) {
   return (
-    <Box.Stack gap="$6">
+    <Box.Stack gap="$4">
       <Box.Flex justify="center">
         <ImageLoader
           src={relativeUrl('/signup-illustration-4.svg')}

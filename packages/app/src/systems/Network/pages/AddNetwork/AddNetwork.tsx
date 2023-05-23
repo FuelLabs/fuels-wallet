@@ -47,7 +47,7 @@ export function AddNetwork() {
     <MotionStack
       {...animations.slideInTop()}
       as="form"
-      gap="$6"
+      gap="$4"
       onSubmit={form.handleSubmit(onSubmit)}
     >
       <Dialog.Heading>

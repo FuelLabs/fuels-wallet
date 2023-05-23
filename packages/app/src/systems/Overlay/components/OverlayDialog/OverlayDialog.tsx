@@ -51,30 +51,33 @@ const styles = {
     boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column',
-    gap: '$6',
+    gap: '$4',
 
-    '.fuel_DialogHeading, .fuel_DialogFooter': {
-      borderColor: '$intentsBase2',
-    },
     '.fuel_DialogDescription': {
       flex: 1,
       overflowY: 'auto',
       height: '100%',
     },
-    '.fuel_DialogHeading': cssObj({
+    '.fuel_DialogHeading': {
       display: 'flex',
       justifyContent: 'space-between',
-    }),
-    '.fuel_DialogFooter': cssObj({
-      button: {
-        width: '100%',
-      },
-    }),
-    form: cssObj({
+      alignItems: 'center',
+      textSize: 'lg',
+      height: '$8',
+    },
+    '.fuel_DialogHeading .fuel_IconButton[data-action="closed"]': {
+      position: 'absolute',
+      right: '$3',
+      top: '24px',
+    },
+    '.fuel_DialogFooter button': {
+      width: '100%',
+    },
+    form: {
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-    }),
+    },
     'button[data-action="closed"]': {
       px: '$1',
     },

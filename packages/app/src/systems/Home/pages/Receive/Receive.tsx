@@ -30,6 +30,6 @@ const styles = {
   contentWrapper: cssObj({
     height: '100%',
     flexDirection: 'column',
-    gap: '$6',
+    gap: '$4',
   }),
 };

@@ -16,7 +16,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
   const [isSavedChecked, setSavedChecked] = useState(false);
 
   return (
-    <Box.Stack gap="$6" align="center">
+    <Box.Stack gap="$4" align="center">
       <ImageLoader
         src={relativeUrl('/signup-illustration-1.svg')}
         width={129}
@@ -93,7 +93,7 @@ const styles = {
     },
   }),
   footer: cssObj({
-    width: 'calc(100% - $6)',
+    width: 'calc(100% - $4)',
     display: 'flex',
     gridTemplateColumns: '1fr 1fr',
     gap: '$4',

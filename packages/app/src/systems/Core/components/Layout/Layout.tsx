@@ -125,7 +125,7 @@ export const styles = {
   inner: coreStyles.fullscreen,
   content: cssObj({
     ...coreStyles.scrollable(),
-    padding: '$1 $4',
+    padding: '$0 $4',
     flex: 1,
   }),
 };
