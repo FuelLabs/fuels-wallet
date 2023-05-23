@@ -41,11 +41,11 @@ export function TransactionRequest() {
                   />
 
                   <Alert status="warning" css={styles.alert}>
-                    <Alert.Title>Confirm before approve</Alert.Title>
+                    <Alert.Title>Confirm before approving</Alert.Title>
                     <Alert.Description>
                       <Text fontSize="xs" css={styles.alertDescription}>
-                        Carefully check if all details in your transaction are
-                        correct
+                        Carefully check if all the details in your transaction
+                        are correct
                       </Text>
                     </Alert.Description>
                   </Alert>

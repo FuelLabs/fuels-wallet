@@ -16,13 +16,14 @@ export function SignMessage() {
 
   const [handleSignMessage, isSingingMessage, errorSigningMessage] = useLoading(
     async (message: string) => {
-      console.debug('Request signature of message!');
+      if (!isConnected) await fuel.connect();
+      console.log('Request signature of message!');
       /* example:start */
       const accounts = await fuel.accounts();
       const account = accounts[0];
       const wallet = await fuel.getWallet(account);
       const signedMessage = await wallet.signMessage(message);
-      console.debug('Message signature', signedMessage);
+      console.log('Message signature', signedMessage);
       /* example:end */
       setSignedMessage(signedMessage);
     }
@@ -33,7 +34,7 @@ export function SignMessage() {
   return (
     <ExampleBox error={errorMessage}>
       <Box.Stack css={{ gap: '$4' }}>
-        <Input isDisabled={!isConnected} css={{ width: 300, height: 100 }}>
+        <Input isDisabled={!fuel} css={{ width: 300, height: 100 }}>
           <Input.Field
             as="textarea"
             value={message}
@@ -46,7 +47,7 @@ export function SignMessage() {
           <Button
             onPress={() => handleSignMessage(message)}
             isLoading={isSingingMessage}
-            isDisabled={isSingingMessage || !isConnected}
+            isDisabled={isSingingMessage || !fuel}
           >
             Sign Message
           </Button>

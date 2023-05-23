@@ -15,10 +15,11 @@ export function ListAssets() {
   const [assets, setAssets] = useState<Array<Asset>>([]);
   const [handleGetAssets, isLoadingAssets, errorGetAssets] = useLoading(
     async () => {
-      console.debug('Request assets to Wallet!');
+      if (!isConnected) await fuel.connect();
+      console.log('Request assets to Wallet!');
       /* example:start */
       const assets = await fuel.assets();
-      console.debug('Assets ', assets);
+      console.log('Assets ', assets);
       /* example:end */
       setAssets(assets);
     }
@@ -32,7 +33,7 @@ export function ListAssets() {
         <Button
           onPress={handleGetAssets}
           isLoading={isLoadingAssets}
-          isDisabled={isLoadingAssets || !isConnected}
+          isDisabled={isLoadingAssets || !fuel}
         >
           Get assets
         </Button>

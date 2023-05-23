@@ -15,8 +15,8 @@ export function RecoverWallet() {
   return (
     <Layout title="Recovering Wallet" isPublic>
       <Text css={styles.alert} leftIcon="AlertTriangle">
-        This wallet is current on development, and your phrase is not safely
-        stored, DO NOT IMPORT YOUR CURRENT SEED PHRASE.
+        This wallet is in development, and your phrase is not safely stored. DO
+        NOT IMPORT YOUR CURRENT SEED PHRASE.
       </Text>
       {state.matches('waitingMnemonic') && (
         <MnemonicWrite

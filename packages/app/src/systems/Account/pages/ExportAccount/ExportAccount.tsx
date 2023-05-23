@@ -1,5 +1,14 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Card, Copyable, Dialog, Text } from '@fuel-ui/react';
+import {
+  Button,
+  Card,
+  Copyable,
+  Dialog,
+  Text,
+  Alert,
+  Box,
+  Tag,
+} from '@fuel-ui/react';
 
 import { AccountItem } from '../../components';
 import { useAccounts } from '../../hooks';
@@ -33,10 +42,11 @@ export const ExportAccount = () => {
         {account && (
           <Box.Stack gap="$4">
             <AccountItem account={account} />
-            <Text css={styles.keyHeaderText}>
-              Using this Private Key, you can restore your account later. Make
-              sure you store it safely.
-            </Text>
+            <Box.Centered>
+              <Tag size="xs" color="accent" variant="ghost">
+                Private Key:
+              </Tag>
+            </Box.Centered>
             <Card css={styles.exportedKey}>
               {exportedKey && (
                 <Copyable value={exportedKey}>
@@ -44,6 +54,15 @@ export const ExportAccount = () => {
                 </Copyable>
               )}
             </Card>
+            <Alert status="warning" css={styles.alert}>
+              <Alert.Description>
+                <Text fontSize="xs" css={styles.alertDescription}>
+                  DON&apos;T SHARE your Private Key. {'\n'}
+                  This key provides access to your account. Sharing or losing it
+                  may result in a permanent loss of funds.
+                </Text>
+              </Alert.Description>
+            </Alert>
           </Box.Stack>
         )}
       </Dialog.Description>
@@ -64,5 +83,16 @@ const styles = {
     padding: '$4',
     wordBreak: 'break-all',
     textAlign: 'center',
+  }),
+  alert: cssObj({
+    '& .fuel_alert--content': {
+      gap: '$1',
+    },
+    ' & .fuel_heading': {
+      fontSize: '$sm',
+    },
+  }),
+  alertDescription: cssObj({
+    fontWeight: '$bold',
   }),
 };

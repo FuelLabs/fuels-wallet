@@ -67,7 +67,9 @@ export const ConnectionItem: ConnectionItemComponent = ({
       <Avatar size="sm" name={origin} src={favIconUrl} css={styles.avatar} />
       <Box css={styles.text}>
         <Text>{truncate(parseUrl(origin))}</Text>
-        <Text>{accounts} account(s) connected</Text>
+        <Text>
+          {accounts} {`account${accounts > 1 ? 's' : ''}`} connected
+        </Text>
       </Box>
     </MotionCardItem>
   );

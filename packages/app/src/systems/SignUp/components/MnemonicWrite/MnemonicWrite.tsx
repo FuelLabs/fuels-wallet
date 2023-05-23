@@ -32,7 +32,7 @@ export function MnemonicWrite({
         width={129}
         height={116}
       />
-      <Header title="Enter your Recovery Phrase" />
+      <Header title="Enter seed phrase" />
       <Box.Stack gap="$3" css={{ width: 400 }}>
         {error && (
           <Alert css={{ fontSize: '$sm', py: '$2' }} status="error">

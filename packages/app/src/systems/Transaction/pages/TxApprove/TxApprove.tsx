@@ -38,9 +38,9 @@ export const TxApprove = () => {
       <Dialog.Description as="div" css={styles.description}>
         {txRequest.status('waitingApproval') && (
           <Alert status="warning" css={styles.alert}>
-            <Alert.Title>Confirm before approve</Alert.Title>
+            <Alert.Title>Confirm before approving</Alert.Title>
             <Alert.Description>
-              Carefully check if all details in your transaction are correct
+              Carefully check if all the details in your transaction are correct
             </Alert.Description>
           </Alert>
         )}

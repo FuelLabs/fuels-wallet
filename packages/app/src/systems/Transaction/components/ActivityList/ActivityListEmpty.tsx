@@ -20,9 +20,9 @@ export function ActivityListEmpty({ isDevnet }: ActivityEmptyProps) {
         height={208}
         wrapperCSS={{ mb: '$5', mt: '$16' }}
       />
-      <Heading as="h5">You don&apos;t have activities yet</Heading>
+      <Heading as="h5">No activity yet</Heading>
       <Text fontSize="sm" css={styles.text}>
-        Create transactions to see it here
+        When you make a transaction you&apos;ll see it here
       </Text>
       {isDevnet && (
         /**

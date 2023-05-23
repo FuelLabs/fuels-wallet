@@ -59,7 +59,7 @@ export function SendSelect({
                     {...field}
                     id="address"
                     aria-label="Address Input"
-                    placeholder="Write a fuel address"
+                    placeholder="Enter a fuel address"
                   />
                 </Input>
               )}
@@ -68,7 +68,7 @@ export function SendSelect({
         </Box.Flex>
         <Box.Stack gap="$3">
           <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
-            Which amount?
+            Amount
           </Text>
           <ControlledField
             isRequired

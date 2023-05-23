@@ -102,7 +102,7 @@ export function Mnemonic({
                 key={size}
                 value={size}
                 aria-label={`${size} words`}
-              >{`I have a ${size} words seed phrase`}</option>
+              >{`I have a ${size} words Seed Phrase`}</option>
             ))}
           </select>
         </Box.Flex>

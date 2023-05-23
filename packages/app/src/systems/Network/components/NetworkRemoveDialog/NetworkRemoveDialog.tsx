@@ -29,7 +29,7 @@ export function NetworkRemoveDialog({
     <AlertDialog open={opened} onOpenChange={setOpened}>
       <AlertDialog.Trigger>{children}</AlertDialog.Trigger>
       <AlertDialog.Content>
-        <AlertDialog.Heading>Are you absolutely sure?</AlertDialog.Heading>
+        <AlertDialog.Heading>Are you sure?</AlertDialog.Heading>
         <AlertDialog.Description>
           This action cannot be undone. {network.name} will be permanently
           deleted.

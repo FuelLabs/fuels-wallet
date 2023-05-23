@@ -26,7 +26,8 @@ export function AddAssets() {
 
   const [handleAddAsset, isSingingMessage, errorSigningMessage] = useLoading(
     async (assets: Asset[]) => {
-      console.debug('Add Assets', assets);
+      if (!isConnected) await fuel.connect();
+      console.log('Add Assets', assets);
       /* example:start */
       await fuel.addAssets(assets);
       /* example:end */
@@ -68,7 +69,7 @@ export function AddAssets() {
                   />
                 )}
               </Box.Flex>
-              <Input isDisabled={!isConnected} css={styles.input}>
+              <Input isDisabled={!fuel} css={styles.input}>
                 <Input.Field
                   defaultValue={asset.assetId}
                   onBlur={(e) =>
@@ -78,7 +79,7 @@ export function AddAssets() {
                 />
               </Input>
               <Box.Flex gap="$2">
-                <Input isDisabled={!isConnected} css={styles.input}>
+                <Input isDisabled={!fuel} css={styles.input}>
                   <Input.Field
                     defaultValue={asset.name}
                     onBlur={(e) =>
@@ -87,7 +88,7 @@ export function AddAssets() {
                     placeholder="Type your asset Name"
                   />
                 </Input>
-                <Input isDisabled={!isConnected} css={styles.input}>
+                <Input isDisabled={!fuel} css={styles.input}>
                   <Input.Field
                     defaultValue={asset.symbol}
                     onBlur={(e) =>
@@ -97,7 +98,7 @@ export function AddAssets() {
                   />
                 </Input>
               </Box.Flex>
-              <Input isDisabled={!isConnected} css={styles.input}>
+              <Input isDisabled={!fuel} css={styles.input}>
                 <Input.Field
                   defaultValue={asset.imageUrl}
                   onBlur={(e) =>
@@ -125,7 +126,7 @@ export function AddAssets() {
           <Button
             onPress={() => handleAddAsset(assets)}
             isLoading={isSingingMessage}
-            isDisabled={isSingingMessage || !isConnected}
+            isDisabled={isSingingMessage || !fuel}
           >
             Add Assets
           </Button>

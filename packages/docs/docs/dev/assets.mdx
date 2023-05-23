@@ -1,0 +1,41 @@
+---
+title: Assets
+category: For Developers
+---
+
+# Assets
+
+## Transfering assets
+
+To transfer an amount to other address, use the `wallet.transfer` method and pass in the address you want to send to and the amount to send.
+
+<CodeImport file="../../examples/Transfer.tsx" />
+
+<Examples.Transfer />
+
+## List Assets in the Wallet
+
+You can list the assets in the wallet using `window.fuel.assets()`.
+
+<CodeImport file="../../examples/ListAssets.tsx" />
+
+<Examples.ListAssets />
+
+## Adding custom Assets
+
+To add custom Assets, use the `wallet.addAssets` method and pass in the `Asset[]` you want to add.
+
+<CodeImport file="../../examples/AddAssets.tsx" />
+
+<Examples.AddAssets />
+
+## Listening to Asset Events
+
+To listen to asset events, you can use the `fuel.events.assets` event.
+
+<CodeImport
+  file="../../examples/events/Assets.tsx"
+  lineStart="24"
+  lineEnd="34"
+/>
+<Examples.Events.Assets />

@@ -7,7 +7,7 @@ import { Mnemonic } from '~/systems/Core';
 import { useOverlay } from '~/systems/Overlay';
 import { UnlockCard } from '~/systems/Unlock';
 
-export function ViewRecoveryPhrase() {
+export function ViewSeedPhrase() {
   const { close } = useOverlay();
   const { handlers, error, isUnlockOpened, isLoading, words } =
     useExportVault();
@@ -28,7 +28,7 @@ export function ViewRecoveryPhrase() {
 
   return (
     <>
-      <Dialog.Heading>Recovery Phrase</Dialog.Heading>
+      <Dialog.Heading>Seed Phrase</Dialog.Heading>
       <Dialog.Description as="div">
         <Box.Flex gap="$4" direction="column" align="center">
           <Box css={styles.mnemonicWrapper}>

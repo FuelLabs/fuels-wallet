@@ -10,9 +10,9 @@ export function PinWalletText() {
         <Text>on the top right</Text>
       </Box.Flex>
       <Box.Flex gap="$1" justify={'center'}>
-        <Text>and then click on </Text>
+        <Text>Then click on </Text>
         <Icon icon="Pinned" />
-        <Text>to show the Fuel Wallet.</Text>
+        <Text>to pin the Fuel Wallet.</Text>
       </Box.Flex>
     </Box>
   );

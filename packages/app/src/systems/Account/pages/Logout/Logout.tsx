@@ -34,11 +34,11 @@ export const Logout = () => {
             seedphrase and accounts.
           </Text>
           <Text color="intentsBase11" css={{ mb: '$2' }}>
-            Make sure you have securely backed up your seed phrase before
+            Make sure you have securely backed up your Seed Phrase before
             removing the wallet.
           </Text>
           <Text color="intentsBase11" css={{ mb: '$2' }}>
-            If you have not backed up your seed phrase, you will lose access to
+            If you have not backed up your Seed Phrase, you will lose access to
             your funds.
           </Text>
           <Text color="intentsBase11" css={{ mb: '$2' }}></Text>

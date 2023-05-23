@@ -1,5 +1,15 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Dialog, Icon, Text } from '@fuel-ui/react';
+import {
+  Alert,
+  Button,
+  Checkbox,
+  Dialog,
+  Form,
+  Icon,
+  Box,
+  Text,
+} from '@fuel-ui/react';
+import { useState } from 'react';
 
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 
@@ -14,6 +24,8 @@ export function ResetDialog({
   onReset,
   children,
 }: ResetDialogProps) {
+  const [isSavedChecked, setSavedChecked] = useState(false);
+
   return (
     <Dialog>
       <Dialog.Trigger>{children}</Dialog.Trigger>
@@ -23,16 +35,30 @@ export function ResetDialog({
         <Dialog.Description as="div" css={styles.description}>
           <Box.Stack gap={'$2'}>
             <Text>
-              If you have lost your password, the only way to recover your
-              wallet it is by using your seed phrase.{' '}
-            </Text>
-            <Text css={styles.warning}>
-              This action will remove all data stored on this device, including
-              your seed phrase, accounts, networks and other settings.
+              If you lost your password, the only way to recover your wallet is
+              to reset the Fuel Wallet extension, select &quot;I already have a
+              wallet&quot; and use your secret Seed Phrase.
             </Text>
             <Text>
-              Make sure you have backed up your seed phrase before proceeding.
+              Make sure you have backed up your Seed Phrase before proceeding.
             </Text>
+            <Alert status="warning" css={styles.alert}>
+              <Form.Control css={styles.form}>
+                <Checkbox
+                  id="confirmReset"
+                  aria-label="Confirm Reset"
+                  checked={isSavedChecked}
+                  onCheckedChange={(e) => {
+                    setSavedChecked(e as boolean);
+                  }}
+                />
+                <Form.Label htmlFor="confirmReset">
+                  I understand by resetting my wallet I&apos;ll remove all data
+                  stored on this device, including my Seed Phrase, accounts,
+                  networks and other settings.
+                </Form.Label>
+              </Form.Control>
+            </Alert>
           </Box.Stack>
         </Dialog.Description>
         <Dialog.Footer>
@@ -81,8 +107,6 @@ const styles = {
     display: 'flex',
   }),
   form: cssObj({
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
   }),
 };

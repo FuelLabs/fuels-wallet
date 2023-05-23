@@ -61,11 +61,11 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
         path: Pages.assets(),
       },
       {
-        key: 'view-recovery-phrase',
+        key: 'view-seed-phrase',
         icon: 'Lock',
-        label: 'View Recovery Phrase',
+        label: 'View Seed Phrase',
         onPress() {
-          store.openViewRecoveryPhrase();
+          store.openViewSeedPhrase();
         },
       },
       {

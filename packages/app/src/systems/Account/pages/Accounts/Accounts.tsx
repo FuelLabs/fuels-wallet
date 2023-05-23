@@ -2,13 +2,15 @@ import { cssObj } from '@fuel-ui/css';
 import { Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
 
 import { AccountList } from '../../components';
-import { useAccounts } from '../../hooks';
+import { useAccounts, useAddAccount } from '../../hooks';
 
 import { coreStyles } from '~/systems/Core/styles';
 
 export const Accounts = () => {
   const { accounts, canHideAccounts, hasHiddenAccounts, isLoading, handlers } =
     useAccounts();
+  const { handlers: addAccountHandlers, isLoading: isAddingAccount } =
+    useAddAccount();
 
   return (
     <>
@@ -42,10 +44,11 @@ export const Accounts = () => {
         <Button
           intent="primary"
           aria-label="Add account"
-          onPress={handlers.goToAdd}
+          onPress={addAccountHandlers.addAccount}
           leftIcon={Icon.is('Plus')}
           variant="ghost"
           iconSize={14}
+          isLoading={isAddingAccount}
         >
           Add new account
         </Button>

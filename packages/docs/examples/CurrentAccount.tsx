@@ -14,10 +14,11 @@ export function CurrentAccount() {
   const [currentAccount, setCurrentAccount] = useState<string>('');
   const [handleCurrentAccount, isLoadingCurrentAccount, errorCurrentAccount] =
     useLoading(async () => {
-      console.debug('Request currentAccount to Wallet!');
+      if (!isConnected) await fuel.connect();
+      console.log('Request currentAccount to Wallet!');
       /* example:start */
       const currentAccount = await fuel.currentAccount();
-      console.debug('Current Account ', currentAccount);
+      console.log('Current Account ', currentAccount);
       /* example:end */
       setCurrentAccount(currentAccount);
     });
@@ -30,7 +31,7 @@ export function CurrentAccount() {
         <Button
           onPress={handleCurrentAccount}
           isLoading={isLoadingCurrentAccount}
-          isDisabled={isLoadingCurrentAccount || !isConnected}
+          isDisabled={isLoadingCurrentAccount || !fuel}
         >
           Get current account
         </Button>

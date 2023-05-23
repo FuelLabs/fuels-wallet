@@ -1,5 +1,15 @@
 # @fuel-wallet/types
 
+## 0.9.2
+
+## 0.9.1
+
+## 0.9.0
+
+### Patch Changes
+
+- [#748](https://github.com/FuelLabs/fuels-wallet/pull/748) [`372dc88`](https://github.com/FuelLabs/fuels-wallet/commit/372dc8828ab0777cc5bed139cebe5ba39c5d3817) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: upgrade fuels
+
 ## 0.8.0
 
 ## 0.7.2

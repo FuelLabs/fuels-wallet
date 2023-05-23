@@ -54,9 +54,7 @@ describe('ActivityList', () => {
         wrapper: TestWrapper,
       }
     );
-    expect(
-      screen.getByText(/You don't have activities yet/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/No activity yet/i)).toBeInTheDocument();
   });
 
   it('should render the same amount of activity items as transactions', async () => {

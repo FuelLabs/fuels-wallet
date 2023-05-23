@@ -113,14 +113,14 @@ importers:
         specifier: ^4.5.14
         version: 4.5.14
       '@fuel-ts/mnemonic':
-        specifier: 0.35.0
-        version: 0.35.0
+        specifier: 0.41.0
+        version: 0.41.0
       '@fuel-ts/wallet':
-        specifier: 0.35.0
-        version: 0.35.0
+        specifier: 0.41.0
+        version: 0.41.0
       '@fuel-ts/wallet-manager':
-        specifier: 0.35.0
-        version: 0.35.0
+        specifier: 0.41.0
+        version: 0.41.0
       '@fuel-ui/config':
         specifier: 0.15.1-pr--4118fe0
         version: 0.15.1-pr--4118fe0(typescript@4.9.5)
@@ -185,8 +185,8 @@ importers:
         specifier: ^10.8.4
         version: 10.8.4(react-dom@18.2.0)(react@18.2.0)
       fuels:
-        specifier: 0.35.0
-        version: 0.35.0
+        specifier: 0.41.0
+        version: 0.41.0
       graphql:
         specifier: ^16.6.0
         version: 16.6.0
@@ -246,11 +246,11 @@ importers:
         specifier: ^1.0.14
         version: 1.0.14(vite@4.2.1)
       '@fuel-ts/keystore':
-        specifier: ^0.35.0
-        version: 0.35.0
+        specifier: ^0.41.0
+        version: 0.41.0
       '@fuel-ts/signer':
-        specifier: ^0.35.0
-        version: 0.35.0
+        specifier: ^0.41.0
+        version: 0.41.0
       '@graphql-codegen/cli':
         specifier: ^3.2.2
         version: 3.2.2(@babel/core@7.21.3)(@types/node@18.15.5)(graphql@16.6.0)
@@ -283,10 +283,10 @@ importers:
         version: 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/addon-essentials':
         specifier: ^6.5.16
-        version: 6.5.16(@babel/core@7.21.3)(@storybook/builder-webpack5@6.5.16)(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@5.76.2)
+        version: 6.5.16(@babel/core@7.21.3)(@storybook/builder-webpack5@6.5.16)(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@5.76.2)
       '@storybook/addon-interactions':
         specifier: ^6.5.16
-        version: 6.5.16(@types/react@18.0.28)(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+        version: 6.5.16(@types/react@18.0.28)(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/addon-jest':
         specifier: ^6.5.16
         version: 6.5.16(react-dom@18.2.0)(react@18.2.0)
@@ -304,7 +304,7 @@ importers:
         version: 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/builder-webpack5':
         specifier: ^6.5.16
-        version: 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+        version: 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/components':
         specifier: ^6.5.16
         version: 6.5.16(react-dom@18.2.0)(react@18.2.0)
@@ -313,10 +313,10 @@ importers:
         version: 6.5.16
       '@storybook/manager-webpack5':
         specifier: ^6.5.16
-        version: 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+        version: 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/react':
         specifier: ^6.5.16
-        version: 6.5.16(@babel/core@7.21.3)(@storybook/builder-webpack5@6.5.16)(@storybook/manager-webpack5@6.5.16)(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(require-from-string@2.0.2)(typescript@4.9.5)
+        version: 6.5.16(@babel/core@7.21.3)(@storybook/builder-webpack5@6.5.16)(@storybook/manager-webpack5@6.5.16)(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(require-from-string@2.0.2)(typescript@4.9.5)
       '@storybook/testing-library':
         specifier: ^0.0.13
         version: 0.0.13(react-dom@18.2.0)(react@18.2.0)
@@ -501,8 +501,8 @@ importers:
         specifier: ^10.8.4
         version: 10.8.4(react-dom@18.2.0)(react@18.2.0)
       fuels:
-        specifier: 0.35.0
-        version: 0.35.0
+        specifier: 0.41.0
+        version: 0.41.0
       globby:
         specifier: ^13.1.3
         version: 13.1.3
@@ -620,8 +620,8 @@ importers:
         specifier: ^9.0.1
         version: 9.0.1
       fuels:
-        specifier: 0.35.0
-        version: 0.35.0
+        specifier: 0.41.0
+        version: 0.41.0
       jest-webextension-mock:
         specifier: ^3.8.9
         version: 3.8.9
@@ -730,8 +730,8 @@ importers:
         version: 1.5.1
     devDependencies:
       fuels:
-        specifier: 0.35.0
-        version: 0.35.0
+        specifier: 0.41.0
+        version: 0.41.0
 
 packages:
 
@@ -2961,7 +2961,6 @@ packages:
     dependencies:
       eslint: 8.41.0
       eslint-visitor-keys: 3.3.0
-    dev: false
 
   /@eslint-community/regexpp@4.4.0:
     resolution: {integrity: sha512-A9983Q0LnDGdLPjxyXQ00sbV+K+O+ko2Dr+CZigbHWtX9pNfxlaBkMR8X1CztI73zuEyEBXTVjx7CE+/VSwDiQ==}
@@ -3010,7 +3009,6 @@ packages:
   /@eslint/js@8.41.0:
     resolution: {integrity: sha512-LxcyMGxwmTh2lY9FwHPGWOHmYFCZvbrFCBZL4FzSSsxsRPuhrYUg/49/0KDfW8tnIEaEHtfmn6+NPN+1DqaNmA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    dev: false
 
   /@ethersproject/abi@5.7.0:
     resolution: {integrity: sha512-351ktp42TiRcYB3H1OP8yajPeAQstMW/yCFokj/AthP9bLHzQFPlOrxOcwYEDkUAICmOHljvN4K39OMTMUa9RA==}
@@ -3231,8 +3229,8 @@ packages:
     dependencies:
       tslib: 2.5.0
 
-  /@fuel-ts/abi-coder@0.35.0:
-    resolution: {integrity: sha512-Qt5HVV+c3PbJIgByM0s8v0va61FNGnXIPwRU12X2Dq0bCBdrz8EJobQvvSXACAVt/ciMqVvxvCTlKMePjtyXyw==}
+  /@fuel-ts/abi-coder@0.41.0:
+    resolution: {integrity: sha512-buPbvRiLtDNi9070/Lx2gNgqPRlJBgTFjVHZkMwCzsv9fMq3C0hQ7wvldG7UnFRKz9KgQ/as2yrKM1F5olbneQ==}
     dependencies:
       '@ethersproject/abi': 5.7.0
       '@ethersproject/bignumber': 5.7.0
@@ -3241,16 +3239,17 @@ packages:
       '@ethersproject/properties': 5.7.0
       '@ethersproject/sha2': 5.7.0
       '@ethersproject/strings': 5.7.0
-      '@fuel-ts/math': 0.35.0
-      '@fuel-ts/versions': 0.35.0
+      '@fuel-ts/keystore': 0.41.0
+      '@fuel-ts/math': 0.41.0
+      '@fuel-ts/versions': 0.41.0
       type-fest: 3.6.1
 
-  /@fuel-ts/abi-typegen@0.35.0:
-    resolution: {integrity: sha512-gyajD01XgZub5amkCAQgPCnTxH0HKJEqJc0tgntiOqAuJZMnLhsfBYEnj5gl+A8Pe3VxW9Fg54fqRJrhQcS1Eg==}
+  /@fuel-ts/abi-typegen@0.41.0:
+    resolution: {integrity: sha512-dxlWSgegcwXTMydcLpeXKpqRW70X7Do4k95X33QESgKkR97mCxDTZmd34ZN2+8rKPg8sLBZ4vpej3nLVM/Vf5A==}
     hasBin: true
     dependencies:
       '@ethersproject/bytes': 5.7.0
-      '@fuel-ts/versions': 0.35.0
+      '@fuel-ts/versions': 0.41.0
       commander: 9.5.0
       glob: 8.1.0
       handlebars: 4.7.7
@@ -3259,78 +3258,69 @@ packages:
       mkdirp: 1.0.4
       rimraf: 3.0.2
 
-  /@fuel-ts/address@0.35.0:
-    resolution: {integrity: sha512-ypPiLlLXctyt267y63zQXIi1fnhaBucRv791uUcgdXULvhOE1UocqbuDF5bhpuIIUW8sgLRvjH+G6r70V4YK0A==}
+  /@fuel-ts/address@0.41.0:
+    resolution: {integrity: sha512-RpF70hYpxoIwsxqjNB/RyacBYh07gc71kWxWIuO0FwfV2H6mFnx1V7KHzWRziD3pVk6sCqntJ9U0UxecSb90gw==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/logger': 5.7.0
       '@ethersproject/sha2': 5.7.0
-      '@fuel-ts/interfaces': 0.35.0
-      '@fuel-ts/keystore': 0.35.0
-      '@fuel-ts/versions': 0.35.0
+      '@fuel-ts/interfaces': 0.41.0
+      '@fuel-ts/keystore': 0.41.0
+      '@fuel-ts/versions': 0.41.0
       bech32: 2.0.0
 
-  /@fuel-ts/constants@0.35.0:
-    resolution: {integrity: sha512-vEHw6I0RmABoFWGXXsJ9prp2Mt3NsSxIZ7BS4czAcStV+zZYzSkVRyTxJnwRkoWJT+yN9vxKt20DTDKCNb/tFA==}
-
-  /@fuel-ts/contract@0.35.0:
-    resolution: {integrity: sha512-bIIIzsbpnKgMkGzwcXLlV65xpfHBsFZkCA5+gbeTLBcQH/yMWOExstujYx3IdxTtFpoH0g3G1XrEB8BoBDlZhQ==}
+  /@fuel-ts/contract@0.41.0:
+    resolution: {integrity: sha512-mPmAytePNtjreZUABIT1xwPXj2B+TorYw16Xvd/IECxNJtybLds9L00QuOxQW6+eArq6c8O8pUzx/0zzQlDFng==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/logger': 5.7.0
       '@ethersproject/sha2': 5.7.0
-      '@fuel-ts/abi-coder': 0.35.0
-      '@fuel-ts/keystore': 0.35.0
-      '@fuel-ts/merkle': 0.35.0
-      '@fuel-ts/program': 0.35.0
-      '@fuel-ts/providers': 0.35.0
-      '@fuel-ts/sparsemerkle': 0.35.0
-      '@fuel-ts/transactions': 0.35.0
-      '@fuel-ts/versions': 0.35.0
-      '@fuel-ts/wallet': 0.35.0
+      '@fuel-ts/abi-coder': 0.41.0
+      '@fuel-ts/keystore': 0.41.0
+      '@fuel-ts/merkle': 0.41.0
+      '@fuel-ts/program': 0.41.0
+      '@fuel-ts/providers': 0.41.0
+      '@fuel-ts/sparsemerkle': 0.41.0
+      '@fuel-ts/transactions': 0.41.0
+      '@fuel-ts/versions': 0.41.0
+      '@fuel-ts/wallet': 0.41.0
     transitivePeerDependencies:
       - encoding
 
-  /@fuel-ts/hasher@0.35.0:
-    resolution: {integrity: sha512-Q6FpCfGkYY0CECGDq7KBfaUGKH/EsVA9esXwe4Brr4lrjl10Tb6yzpwXWEe1D0TEyHH+r6mfJnLMH4Jplnz6NA==}
+  /@fuel-ts/hasher@0.41.0:
+    resolution: {integrity: sha512-uzvaG9yV3bHUhbugyispHZzEDyqYzJZnZTkA0rFxegJ7xv01XViR5AMUqlyNFoXmNzXvbBx6s1VULBRTQLQX4w==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/sha2': 5.7.0
-      '@fuel-ts/constants': 0.35.0
-      '@fuel-ts/keystore': 0.35.0
-      '@fuel-ts/math': 0.35.0
-      '@fuel-ts/providers': 0.35.0
-      '@fuel-ts/transactions': 0.35.0
+      '@fuel-ts/address': 0.41.0
+      '@fuel-ts/keystore': 0.41.0
+      '@fuel-ts/math': 0.41.0
+      '@fuel-ts/providers': 0.41.0
+      '@fuel-ts/transactions': 0.41.0
       lodash.clonedeep: 4.5.0
     transitivePeerDependencies:
       - encoding
 
-  /@fuel-ts/hdwallet@0.35.0:
-    resolution: {integrity: sha512-ZciSVGYMqkoHsxeMXOqSAoXRLaSOIfB122NNCNL4pWdERbV69ouIyj+2y8mrfopbcgucim0cvmgrzgnzYQsDgg==}
+  /@fuel-ts/hdwallet@0.41.0:
+    resolution: {integrity: sha512-BnXurWkgO7JNfU//UkVQj00MzxSqTJLnXrRidGo9hnje23kHJk9NyPslm2eDNhDvjI8mddzRVnTtNxltimfEqw==}
     dependencies:
       '@ethersproject/basex': 5.7.0
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/sha2': 5.7.0
-      '@fuel-ts/math': 0.35.0
-      '@fuel-ts/mnemonic': 0.35.0
-      '@fuel-ts/signer': 0.35.0
+      '@fuel-ts/math': 0.41.0
+      '@fuel-ts/mnemonic': 0.41.0
+      '@fuel-ts/signer': 0.41.0
     transitivePeerDependencies:
       - encoding
 
-  /@fuel-ts/interfaces@0.35.0:
-    resolution: {integrity: sha512-jwT97X3BTlrGTglQAHBGJWuDErT37P2Z8DIRgNNhrErp8gLcFQY7ebV4/88s6J/up3vRvZ7a5U9RNo3sm1RJvA==}
+  /@fuel-ts/interfaces@0.41.0:
+    resolution: {integrity: sha512-Jr03uN9pTxDoUP/wKyvk6Q6LcQ2v616MUibhWU4CGkIOqmcB9CDGoTvfeynN6KK4kCObOp0VafVgfuLnso1ddA==}
 
-  /@fuel-ts/keystore@0.35.0:
-    resolution: {integrity: sha512-dwLumNwW5jK3wCarcroQH9DEg0UYKrv67F4LQ7EmtqlfqO5NFFAdn1V8uX0aDQNL6Q+9cbvab0eLfLsrDZNXnQ==}
+  /@fuel-ts/keystore@0.41.0:
+    resolution: {integrity: sha512-u8RxMzzwPX+QaYqYrfsUNFp4lo905a+a48emcyLC0DckSIdlULkORelLI/nNxHVnsoxr5FVcQXorE23U+7QW8A==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/pbkdf2': 5.7.0
-
-  /@fuel-ts/math@0.35.0:
-    resolution: {integrity: sha512-2ljmk9XsBYgvZ5GgT7MNh8np1rSlQ65NjIncF3lCP8d+fF43mBIGbW83hwdXXg9/3ZjVYfRzszKRPnZXZrM1gA==}
-    dependencies:
-      '@types/bn.js': 5.1.1
-      bn.js: 5.2.1
 
   /@fuel-ts/math@0.41.0:
     resolution: {integrity: sha512-9leE/DIhvF2Dt6eAwjuohoHBG4IzjydDH4tbGPBuhAkB5sYywer2iaEbBluSJE+T67JQgoYjrbwKXjlNvkTsFg==}
@@ -3345,80 +3335,78 @@ packages:
       bn.js: 5.2.1
     dev: false
 
-  /@fuel-ts/merkle-shared@0.35.0:
-    resolution: {integrity: sha512-kbbfehG6CitzwlBPsLVD2J38nIWkGRgzpzqCYil5ntY41k0mKBDHdPEonK2yN+SxexnG0FrBUdpNGoRRI05XMg==}
+  /@fuel-ts/merkle-shared@0.41.0:
+    resolution: {integrity: sha512-pB5lMftBg4S4gEVWmaUxCHC9bPY4sGSc5zQBua2iAE2FwoSa1KcsOzutMxbCIrfVPx/r+8MIVROv+EszXSUsCg==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/sha2': 5.7.0
 
-  /@fuel-ts/merkle@0.35.0:
-    resolution: {integrity: sha512-U3QBxVCqSacH2XDW2IdXtGuA3YkjWrfPhsGAmNuW7RvNteh4e8D3JbT5xtHrgt89V2D5zGyRhKy5p5GOkUrFOg==}
+  /@fuel-ts/merkle@0.41.0:
+    resolution: {integrity: sha512-X76IpgjBjYNjPhNA+UzapUAtCujl7Gi3oQuTbVePDXcdDmu/SZIl5+EzpqPp6AlFp0A8VEpTSniZnW/HaEQxUQ==}
     dependencies:
-      '@fuel-ts/math': 0.35.0
-      '@fuel-ts/merkle-shared': 0.35.0
+      '@fuel-ts/math': 0.41.0
+      '@fuel-ts/merkle-shared': 0.41.0
 
-  /@fuel-ts/merklesum@0.35.0:
-    resolution: {integrity: sha512-9GnnySDARFPDrFmIzEgo4YYI94hE/V0NORh0osPDzyeZw4ymPN8oVEOFfzQWL0Yonf38my/PWiTc2P4FM+KARg==}
+  /@fuel-ts/merklesum@0.41.0:
+    resolution: {integrity: sha512-g2SpyznYF/VlhnXms1CX4KezNfD05Nm3YpIZG4i5kfMP7jwmhhC7Mc9Xd2upidHNrH/v+PmR+RTxUXS2HRjxag==}
     dependencies:
-      '@fuel-ts/math': 0.35.0
-      '@fuel-ts/merkle-shared': 0.35.0
+      '@fuel-ts/math': 0.41.0
+      '@fuel-ts/merkle-shared': 0.41.0
 
-  /@fuel-ts/mnemonic@0.35.0:
-    resolution: {integrity: sha512-o5fVKHzwUeWC+Tdu7Vdw5ySI6Z1rYLsdUNgeAsKWTPKPz8Y+RGZ+t5kiWo+dNU10FJNy/dMDXS7vEaamOKv4Xg==}
+  /@fuel-ts/mnemonic@0.41.0:
+    resolution: {integrity: sha512-GtvP6rJ2x7g4b4NrxWWR1VRPDCGLlbYR/irOcez45ekEpzbY9KmTcBO/rbgj+MVikbdVqb3i6lTU0wvDyBU3Gw==}
     dependencies:
       '@ethersproject/basex': 5.7.0
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/pbkdf2': 5.7.0
       '@ethersproject/sha2': 5.7.0
-      '@fuel-ts/keystore': 0.35.0
-      '@fuel-ts/wordlists': 0.35.0
+      '@fuel-ts/keystore': 0.41.0
+      '@fuel-ts/wordlists': 0.41.0
 
-  /@fuel-ts/predicate@0.35.0:
-    resolution: {integrity: sha512-6gTxwjWzEjPry8VXE+j3aEK9nUze1uWSP3inEVY+OvwmHJaEAfydgQCvdjGQyzMQyIsbpOAOFK+tdTDZs0zLjA==}
+  /@fuel-ts/predicate@0.41.0:
+    resolution: {integrity: sha512-z3smrzJ+w8AUTK+qxBVRGUyk75wN4zdJ8Db+E8KbrqryrrEnwvD3rrcbWUjus863PKeXmZ7Lr7zoD0Af2Xsy8Q==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/logger': 5.7.0
-      '@fuel-ts/abi-coder': 0.35.0
-      '@fuel-ts/address': 0.35.0
-      '@fuel-ts/interfaces': 0.35.0
-      '@fuel-ts/merkle': 0.35.0
-      '@fuel-ts/providers': 0.35.0
-      '@fuel-ts/transactions': 0.35.0
-      '@fuel-ts/versions': 0.35.0
-      '@fuel-ts/wallet': 0.35.0
+      '@fuel-ts/abi-coder': 0.41.0
+      '@fuel-ts/address': 0.41.0
+      '@fuel-ts/interfaces': 0.41.0
+      '@fuel-ts/merkle': 0.41.0
+      '@fuel-ts/providers': 0.41.0
+      '@fuel-ts/transactions': 0.41.0
+      '@fuel-ts/versions': 0.41.0
+      '@fuel-ts/wallet': 0.41.0
     transitivePeerDependencies:
       - encoding
 
-  /@fuel-ts/program@0.35.0:
-    resolution: {integrity: sha512-nxuNfneAJT7n2i1kCYnqYx1PkQxc1wtB9VhWk7PP6Ne/6E39paN2leoqxtIkio0Vli9qzbjKqx1VJG0fiuyLsQ==}
+  /@fuel-ts/program@0.41.0:
+    resolution: {integrity: sha512-icgM1YV8d9AmgLRIOmJnYAsOYt+XUHhp7tN28nyenZnJoB0gGu1Nnb5qJtwmFhtHV1IuIAa9UhMDbWXPu/0EPg==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/logger': 5.7.0
-      '@fuel-ts/abi-coder': 0.35.0
-      '@fuel-ts/address': 0.35.0
-      '@fuel-ts/constants': 0.35.0
-      '@fuel-ts/interfaces': 0.35.0
-      '@fuel-ts/math': 0.35.0
-      '@fuel-ts/providers': 0.35.0
-      '@fuel-ts/transactions': 0.35.0
-      '@fuel-ts/versions': 0.35.0
-      '@fuel-ts/wallet': 0.35.0
+      '@fuel-ts/abi-coder': 0.41.0
+      '@fuel-ts/address': 0.41.0
+      '@fuel-ts/interfaces': 0.41.0
+      '@fuel-ts/math': 0.41.0
+      '@fuel-ts/providers': 0.41.0
+      '@fuel-ts/transactions': 0.41.0
+      '@fuel-ts/versions': 0.41.0
+      '@fuel-ts/wallet': 0.41.0
     transitivePeerDependencies:
       - encoding
 
-  /@fuel-ts/providers@0.35.0:
-    resolution: {integrity: sha512-CK2h4FMybxJqsb/7LsoV0Nsxwcij4LmKslphnp7kNEREv5ysdOiYVnb9wJaaHvT1YI/vut2wsHqbfPdisu7Y5w==}
+  /@fuel-ts/providers@0.41.0:
+    resolution: {integrity: sha512-FaB/72gFtlrjW1urnagipv/Yse+DQ+iGx9cGZkRPC8In+TspoAKsrawLSSFSpXI4Bv1WLfdMsNIUVywGUfXByA==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/networks': 5.7.1
       '@ethersproject/sha2': 5.7.0
-      '@fuel-ts/abi-coder': 0.35.0
-      '@fuel-ts/address': 0.35.0
-      '@fuel-ts/constants': 0.35.0
-      '@fuel-ts/interfaces': 0.35.0
-      '@fuel-ts/keystore': 0.35.0
-      '@fuel-ts/math': 0.35.0
-      '@fuel-ts/transactions': 0.35.0
+      '@fuel-ts/abi-coder': 0.41.0
+      '@fuel-ts/address': 0.41.0
+      '@fuel-ts/interfaces': 0.41.0
+      '@fuel-ts/keystore': 0.41.0
+      '@fuel-ts/math': 0.41.0
+      '@fuel-ts/transactions': 0.41.0
       graphql: 16.6.0
       graphql-request: 5.1.0(graphql@16.6.0)
       graphql-tag: 2.12.6(graphql@16.6.0)
@@ -3426,93 +3414,92 @@ packages:
     transitivePeerDependencies:
       - encoding
 
-  /@fuel-ts/script@0.35.0:
-    resolution: {integrity: sha512-Jd9nvKGjdlGj3pLDph0mdswDCyuzniQDDNvAQUFqJgH+gNir3nLgfTwKiZHf06gvXbKluuWyswIA4W/Kdwcy0A==}
+  /@fuel-ts/script@0.41.0:
+    resolution: {integrity: sha512-hr3RCIJyCAZXQEuED+YhDYRJMPW1zDSnZXfPuQLPKJswn3emk77h9zdbZ+N67aI7o8Ob9MOGLLNd67si+lhI8A==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
-      '@fuel-ts/abi-coder': 0.35.0
-      '@fuel-ts/abi-typegen': 0.35.0
-      '@fuel-ts/constants': 0.35.0
-      '@fuel-ts/interfaces': 0.35.0
-      '@fuel-ts/math': 0.35.0
-      '@fuel-ts/program': 0.35.0
-      '@fuel-ts/providers': 0.35.0
-      '@fuel-ts/transactions': 0.35.0
-      '@fuel-ts/wallet': 0.35.0
+      '@fuel-ts/abi-coder': 0.41.0
+      '@fuel-ts/abi-typegen': 0.41.0
+      '@fuel-ts/address': 0.41.0
+      '@fuel-ts/interfaces': 0.41.0
+      '@fuel-ts/math': 0.41.0
+      '@fuel-ts/program': 0.41.0
+      '@fuel-ts/providers': 0.41.0
+      '@fuel-ts/transactions': 0.41.0
+      '@fuel-ts/wallet': 0.41.0
     transitivePeerDependencies:
       - encoding
 
-  /@fuel-ts/signer@0.35.0:
-    resolution: {integrity: sha512-ES7wHlvQCDJoTJ6ggwn+IoIDrKwAAX4csiNWlzb6WL4JlpduQEMcrKUcPu7Jy6uhoQ7cQm2gtz2JsrDukwrQvA==}
+  /@fuel-ts/signer@0.41.0:
+    resolution: {integrity: sha512-URxZUdmaB017IpUCbI3tJjGAN2xkj5fUWOB6t1i/TTPnqzFfUVLt+irJzgAGtYiUrmdwXM8SFYwi7/08lwfziw==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/sha2': 5.7.0
-      '@fuel-ts/address': 0.35.0
-      '@fuel-ts/hasher': 0.35.0
-      '@fuel-ts/keystore': 0.35.0
-      '@fuel-ts/math': 0.35.0
+      '@fuel-ts/address': 0.41.0
+      '@fuel-ts/hasher': 0.41.0
+      '@fuel-ts/keystore': 0.41.0
+      '@fuel-ts/math': 0.41.0
       elliptic: 6.5.4
     transitivePeerDependencies:
       - encoding
 
-  /@fuel-ts/sparsemerkle@0.35.0:
-    resolution: {integrity: sha512-dMsgfLsid5LSYbMX8bIEC/L1k3aNxXlhiugeJ3iFOWjA3UHEiKGjLr/PX0l5l6ktUOsbE3TN70WRdAMxP1JLUQ==}
+  /@fuel-ts/sparsemerkle@0.41.0:
+    resolution: {integrity: sha512-p4ed1izjQPoJ12Z9Vuw22bqbaHICn02pD/CTGenCko3SOAv6P5Lvw588HsRlqaF4VHDFSxNtsfNbe71JSXjC0g==}
     dependencies:
-      '@fuel-ts/math': 0.35.0
-      '@fuel-ts/merkle-shared': 0.35.0
+      '@fuel-ts/math': 0.41.0
+      '@fuel-ts/merkle-shared': 0.41.0
 
-  /@fuel-ts/testcases@0.35.0:
-    resolution: {integrity: sha512-KH7wG5Fy1ZUt6K+WEpumUGrsnZ19e5HSvXaytKnETJQ7sGl2YKp6DPPWVN+0vVbFVLyKxXlBOW4/B6yIFZ/ldw==}
+  /@fuel-ts/testcases@0.41.0:
+    resolution: {integrity: sha512-Bgd3Sn1lWmwdl/PhRL7qqmXhK+g0wDZ9jsfWVzSOwtugMdXmfmb2VO38xSq49eB6ahOJmgRT1lM72DOnbSSHfQ==}
 
-  /@fuel-ts/transactions@0.35.0:
-    resolution: {integrity: sha512-DRSu1dAdi7oPoNtz19AWap5U0t70AfYdjsTUwvwygs66ud8RCi5ezpWXxt0jUVk1UpPw5byIc7s06B/U50iD1Q==}
+  /@fuel-ts/transactions@0.41.0:
+    resolution: {integrity: sha512-lCVv6904bwpmjwUFXlGWW9C3wR6YF7ye/FKgW6nCR9XY9xqAd1+Oz8LpoG50vx6Hdbnq8OHZBkpJrklhunfzWw==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/sha2': 5.7.0
-      '@fuel-ts/abi-coder': 0.35.0
-      '@fuel-ts/constants': 0.35.0
-      '@fuel-ts/math': 0.35.0
+      '@fuel-ts/abi-coder': 0.41.0
+      '@fuel-ts/address': 0.41.0
+      '@fuel-ts/math': 0.41.0
 
-  /@fuel-ts/versions@0.35.0:
-    resolution: {integrity: sha512-ygjnFAOldjZg4iRSlNowxVuoUH4d1JEU6NcsTc095OOP8D4YJB1NQP1i0KKDFDGs2qRYjOApA5S2p0+KRDduYw==}
+  /@fuel-ts/versions@0.41.0:
+    resolution: {integrity: sha512-2y2mww8pvYcT9v+xABVcH6/nV41aeq7S134fgeud/xHaD6FxEKCe4vMGXTB1hpuGxLbl3ZSUbolaucZjQVabbQ==}
     hasBin: true
     dependencies:
       chalk: 4.1.2
       cli-table: 0.3.11
       semver: 7.3.8
 
-  /@fuel-ts/wallet-manager@0.35.0:
-    resolution: {integrity: sha512-z7cW98Ul6UncMhoggLo/Rr9tJEhmLotk5Y8jgJcfCB4zus5BIx0tMJujBb/2q2A7O0ZKlbcF2Emj6R8/1HJAHg==}
+  /@fuel-ts/wallet-manager@0.41.0:
+    resolution: {integrity: sha512-czxtNG5LufED79UiO1+GFso3qARor4QTP/bbfn77pY+/k5J3MtNXBDqGKjQr0B4NsPGLFfqwUFTIYEolX7AK6w==}
     dependencies:
-      '@fuel-ts/address': 0.35.0
-      '@fuel-ts/interfaces': 0.35.0
-      '@fuel-ts/keystore': 0.35.0
-      '@fuel-ts/mnemonic': 0.35.0
-      '@fuel-ts/wallet': 0.35.0
+      '@fuel-ts/address': 0.41.0
+      '@fuel-ts/interfaces': 0.41.0
+      '@fuel-ts/keystore': 0.41.0
+      '@fuel-ts/mnemonic': 0.41.0
+      '@fuel-ts/wallet': 0.41.0
       events: 3.3.0
     transitivePeerDependencies:
       - encoding
 
-  /@fuel-ts/wallet@0.35.0:
-    resolution: {integrity: sha512-rdFWz95u59aM3Fy+JCN/u/WG8jOT/MG/pETCJEP72GHAmFlpD6zE5lJJvHXUzuSGE2AIkGVkRalJ80TIUhfprg==}
+  /@fuel-ts/wallet@0.41.0:
+    resolution: {integrity: sha512-EwE9rMJFaIT9UqDlV9IY7XTeQHZaMHrSI9cXkh+nnm1x04Q8YjzzLYHH0nf+IiLy0A9Bi4HRtw+iWSz17CMn/A==}
     dependencies:
       '@ethersproject/bytes': 5.7.0
-      '@fuel-ts/abi-coder': 0.35.0
-      '@fuel-ts/address': 0.35.0
-      '@fuel-ts/constants': 0.35.0
-      '@fuel-ts/hasher': 0.35.0
-      '@fuel-ts/hdwallet': 0.35.0
-      '@fuel-ts/interfaces': 0.35.0
-      '@fuel-ts/math': 0.35.0
-      '@fuel-ts/mnemonic': 0.35.0
-      '@fuel-ts/providers': 0.35.0
-      '@fuel-ts/signer': 0.35.0
-      '@fuel-ts/transactions': 0.35.0
+      '@fuel-ts/abi-coder': 0.41.0
+      '@fuel-ts/address': 0.41.0
+      '@fuel-ts/hasher': 0.41.0
+      '@fuel-ts/hdwallet': 0.41.0
+      '@fuel-ts/interfaces': 0.41.0
+      '@fuel-ts/math': 0.41.0
+      '@fuel-ts/mnemonic': 0.41.0
+      '@fuel-ts/providers': 0.41.0
+      '@fuel-ts/signer': 0.41.0
+      '@fuel-ts/transactions': 0.41.0
     transitivePeerDependencies:
       - encoding
 
-  /@fuel-ts/wordlists@0.35.0:
-    resolution: {integrity: sha512-MuyozQd/hFAb6OEA6zvYtU8kHKTeyBMCscvlz6Sma7b/EqFzXX2puwSuKu9U7qijdKv7cZHDECIAQPPMAWs8fg==}
+  /@fuel-ts/wordlists@0.41.0:
+    resolution: {integrity: sha512-4aQgAq/k9rP0c9FaWSt7YhK6cxVGqclghClWHL74HRAIVkqyzd+9AtGcj99kz5Q+4TW5+0jWsPy10GIOAFielQ==}
 
   /@fuel-ui/config@0.15.0(typescript@4.9.5):
     resolution: {integrity: sha512-HMU7zkVlljGSInI9Ce0rIpY1AZwgvAv6b6MdiHRXWu81/oMUSKSop5kJQS1L+Fs8ElTXjnUpmIBEFjxds7tA7Q==}
@@ -3544,8 +3531,8 @@ packages:
   /@fuel-ui/config@0.15.1-pr--4118fe0(typescript@4.9.5):
     resolution: {integrity: sha512-gBOmyhZm3pIOiGuzBI7k/pQv05FsSonxT+3+nurC8yjOw23LI+tt8Y94wUS4L8EgeY8KxSOeGG0Rf8VtZvLw7Q==}
     dependencies:
-      '@typescript-eslint/eslint-plugin': 5.59.5(@typescript-eslint/parser@5.59.5)(eslint@8.40.0)(typescript@4.9.5)
-      '@typescript-eslint/parser': 5.59.5(eslint@8.40.0)(typescript@4.9.5)
+      '@typescript-eslint/eslint-plugin': 5.59.5(@typescript-eslint/parser@5.59.5)(eslint@8.41.0)(typescript@4.9.5)
+      '@typescript-eslint/parser': 5.59.5(eslint@8.41.0)(typescript@4.9.5)
       eslint: 8.40.0
       eslint-config-airbnb-base: 15.0.0(eslint-plugin-import@2.27.5)(eslint@8.40.0)
       eslint-config-airbnb-typescript: 17.0.0(@typescript-eslint/eslint-plugin@5.59.5)(@typescript-eslint/parser@5.59.5)(eslint-plugin-import@2.27.5)(eslint@8.40.0)
@@ -7551,7 +7538,7 @@ packages:
       util-deprecate: 1.0.2
     dev: true
 
-  /@storybook/addon-controls@6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
+  /@storybook/addon-controls@6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
     resolution: {integrity: sha512-kShSGjq1MjmmyL3l8i+uPz6yddtf82mzys0l82VKtcuyjrr5944wYFJ5NTXMfZxrO/U6FeFsfuFZE/k6ex3EMg==}
     peerDependencies:
       react: '*'
@@ -7566,7 +7553,7 @@ packages:
       '@storybook/api': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/client-logger': 6.5.16
       '@storybook/components': 6.5.16(react-dom@18.2.0)(react@18.2.0)
-      '@storybook/core-common': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/core-common': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/csf': 0.0.2--canary.4566f4d.1
       '@storybook/node-logger': 6.5.16
       '@storybook/store': 6.5.16(react-dom@18.2.0)(react@18.2.0)
@@ -7585,7 +7572,7 @@ packages:
       - webpack-command
     dev: true
 
-  /@storybook/addon-docs@6.5.16(@babel/core@7.21.3)(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@5.76.2):
+  /@storybook/addon-docs@6.5.16(@babel/core@7.21.3)(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@5.76.2):
     resolution: {integrity: sha512-QM9WDZG9P02UvbzLu947a8ZngOrQeAKAT8jCibQFM/+RJ39xBlfm8rm+cQy3dm94wgtjmVkA3mKGOV/yrrsddg==}
     peerDependencies:
       '@storybook/mdx2-csf': ^0.0.3
@@ -7606,7 +7593,7 @@ packages:
       '@storybook/addons': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/api': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/components': 6.5.16(react-dom@18.2.0)(react@18.2.0)
-      '@storybook/core-common': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/core-common': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/core-events': 6.5.16
       '@storybook/csf': 0.0.2--canary.4566f4d.1
       '@storybook/docs-tools': 6.5.16(react-dom@18.2.0)(react@18.2.0)
@@ -7640,7 +7627,7 @@ packages:
       - webpack-command
     dev: true
 
-  /@storybook/addon-essentials@6.5.16(@babel/core@7.21.3)(@storybook/builder-webpack5@6.5.16)(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@5.76.2):
+  /@storybook/addon-essentials@6.5.16(@babel/core@7.21.3)(@storybook/builder-webpack5@6.5.16)(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@5.76.2):
     resolution: {integrity: sha512-TeoMr6tEit4Pe91GH6f8g/oar1P4M0JL9S6oMcFxxrhhtOGO7XkWD5EnfyCx272Ok2VYfE58FNBTGPNBVIqYKQ==}
     peerDependencies:
       '@babel/core': ^7.9.6
@@ -7700,16 +7687,16 @@ packages:
       '@babel/core': 7.21.3
       '@storybook/addon-actions': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/addon-backgrounds': 6.5.16(react-dom@18.2.0)(react@18.2.0)
-      '@storybook/addon-controls': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
-      '@storybook/addon-docs': 6.5.16(@babel/core@7.21.3)(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@5.76.2)
+      '@storybook/addon-controls': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/addon-docs': 6.5.16(@babel/core@7.21.3)(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@5.76.2)
       '@storybook/addon-measure': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/addon-outline': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/addon-toolbars': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/addon-viewport': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/addons': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/api': 6.5.16(react-dom@18.2.0)(react@18.2.0)
-      '@storybook/builder-webpack5': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
-      '@storybook/core-common': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/builder-webpack5': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/core-common': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/node-logger': 6.5.16
       core-js: 3.29.0
       react: 18.2.0
@@ -7727,7 +7714,7 @@ packages:
       - webpack-command
     dev: true
 
-  /@storybook/addon-interactions@6.5.16(@types/react@18.0.28)(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
+  /@storybook/addon-interactions@6.5.16(@types/react@18.0.28)(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
     resolution: {integrity: sha512-DdTtyp3DgB/SpbM1GQgMnuSEBCkadxmj1mUcPk+Wp2iY+fDwsuoRDkr1H9Oe7IvlBKe7ciR79LEjoaABXNdw4w==}
     peerDependencies:
       react: '*'
@@ -7743,7 +7730,7 @@ packages:
       '@storybook/api': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/client-logger': 6.5.16
       '@storybook/components': 6.5.16(react-dom@18.2.0)(react@18.2.0)
-      '@storybook/core-common': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/core-common': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/core-events': 6.5.16
       '@storybook/csf': 0.0.2--canary.4566f4d.1
       '@storybook/instrumenter': 6.5.16(react-dom@18.2.0)(react@18.2.0)
@@ -7998,7 +7985,7 @@ packages:
       ts-dedent: 2.2.0
       util-deprecate: 1.0.2
 
-  /@storybook/builder-webpack4@6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
+  /@storybook/builder-webpack4@6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
     resolution: {integrity: sha512-YqDIrVNsUo8r9xc6AxsYDLxVYtMgl5Bxk+8/h1adsOko+jAFhdg6hOcAVxEmoSI0TMASOOVMFlT2hr23ppN2rQ==}
     peerDependencies:
       react: '*'
@@ -8020,7 +8007,7 @@ packages:
       '@storybook/client-api': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/client-logger': 6.5.16
       '@storybook/components': 6.5.16(react-dom@18.2.0)(react@18.2.0)
-      '@storybook/core-common': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/core-common': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/core-events': 6.5.16
       '@storybook/node-logger': 6.5.16
       '@storybook/preview-web': 6.5.16(react-dom@18.2.0)(react@18.2.0)
@@ -8038,7 +8025,7 @@ packages:
       css-loader: 3.6.0(webpack@4.46.0)
       file-loader: 6.2.0(webpack@4.46.0)
       find-up: 5.0.0
-      fork-ts-checker-webpack-plugin: 4.1.6(eslint@8.40.0)(typescript@4.9.5)(webpack@4.46.0)
+      fork-ts-checker-webpack-plugin: 4.1.6(eslint@8.41.0)(typescript@4.9.5)(webpack@4.46.0)
       glob: 7.2.3
       glob-promise: 3.4.0(glob@7.2.3)
       global: 4.4.0
@@ -8071,7 +8058,7 @@ packages:
       - webpack-command
     dev: true
 
-  /@storybook/builder-webpack5@6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
+  /@storybook/builder-webpack5@6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
     resolution: {integrity: sha512-kh8Sofm1sbijaHDWtm0sXabqACHVFjikU/fIkkW786kpjoPIPIec1a+hrLgDsZxMU3I7XapSOaCFzWt6FjVXjg==}
     peerDependencies:
       react: '*'
@@ -8093,7 +8080,7 @@ packages:
       '@storybook/client-api': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/client-logger': 6.5.16
       '@storybook/components': 6.5.16(react-dom@18.2.0)(react@18.2.0)
-      '@storybook/core-common': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/core-common': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/core-events': 6.5.16
       '@storybook/node-logger': 6.5.16
       '@storybook/preview-web': 6.5.16(react-dom@18.2.0)(react@18.2.0)
@@ -8108,7 +8095,7 @@ packages:
       case-sensitive-paths-webpack-plugin: 2.4.0
       core-js: 3.29.0
       css-loader: 5.2.7(webpack@5.76.2)
-      fork-ts-checker-webpack-plugin: 6.5.2(eslint@8.40.0)(typescript@4.9.5)(webpack@5.76.2)
+      fork-ts-checker-webpack-plugin: 6.5.2(eslint@8.41.0)(typescript@4.9.5)(webpack@5.76.2)
       glob: 7.2.3
       glob-promise: 3.4.0(glob@7.2.3)
       html-webpack-plugin: 5.5.0(webpack@5.76.2)
@@ -8312,7 +8299,7 @@ packages:
       webpack: 5.76.2
     dev: true
 
-  /@storybook/core-common@6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
+  /@storybook/core-common@6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
     resolution: {integrity: sha512-2qtnKP3TTOzt2cp6LXKRTh7XrI9z5VanMnMTgeoFcA5ebnndD4V6BExQUdYPClE/QooLx6blUWNgS9dFEpjSqQ==}
     peerDependencies:
       react: '*'
@@ -8360,7 +8347,7 @@ packages:
       express: 4.18.2
       file-system-cache: 1.1.0
       find-up: 5.0.0
-      fork-ts-checker-webpack-plugin: 6.5.2(eslint@8.40.0)(typescript@4.9.5)(webpack@4.46.0)
+      fork-ts-checker-webpack-plugin: 6.5.2(eslint@8.41.0)(typescript@4.9.5)(webpack@4.46.0)
       fs-extra: 9.1.0
       glob: 7.2.3
       handlebars: 4.7.7
@@ -8392,7 +8379,7 @@ packages:
     dependencies:
       core-js: 3.29.0
 
-  /@storybook/core-server@6.5.16(@storybook/builder-webpack5@6.5.16)(@storybook/manager-webpack5@6.5.16)(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
+  /@storybook/core-server@6.5.16(@storybook/builder-webpack5@6.5.16)(@storybook/manager-webpack5@6.5.16)(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
     resolution: {integrity: sha512-/3NPfmNyply395Dm0zaVZ8P9aruwO+tPx4D6/jpw8aqrRSwvAMndPMpoMCm0NXcpSm5rdX+Je4S3JW6JcggFkA==}
     peerDependencies:
       '@storybook/builder-webpack5': '*'
@@ -8413,19 +8400,19 @@ packages:
         optional: true
     dependencies:
       '@discoveryjs/json-ext': 0.5.7
-      '@storybook/builder-webpack4': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
-      '@storybook/builder-webpack5': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/builder-webpack4': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/builder-webpack5': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/core-client': 6.5.16(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@4.46.0)
-      '@storybook/core-common': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/core-common': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/core-events': 6.5.16
       '@storybook/csf': 0.0.2--canary.4566f4d.1
       '@storybook/csf-tools': 6.5.16
-      '@storybook/manager-webpack4': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
-      '@storybook/manager-webpack5': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/manager-webpack4': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/manager-webpack5': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/node-logger': 6.5.16
       '@storybook/semver': 7.3.2
       '@storybook/store': 6.5.16(react-dom@18.2.0)(react@18.2.0)
-      '@storybook/telemetry': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/telemetry': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@types/node': 16.18.13
       '@types/node-fetch': 2.6.2
       '@types/pretty-hrtime': 1.0.1
@@ -8475,7 +8462,7 @@ packages:
       - webpack-command
     dev: true
 
-  /@storybook/core@6.5.16(@storybook/builder-webpack5@6.5.16)(@storybook/manager-webpack5@6.5.16)(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@5.76.2):
+  /@storybook/core@6.5.16(@storybook/builder-webpack5@6.5.16)(@storybook/manager-webpack5@6.5.16)(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@5.76.2):
     resolution: {integrity: sha512-CEF3QFTsm/VMnMKtRNr4rRdLeIkIG0g1t26WcmxTdSThNPBd8CsWzQJ7Jqu7CKiut+MU4A1LMOwbwCE5F2gmyA==}
     peerDependencies:
       '@storybook/builder-webpack5': '*'
@@ -8496,10 +8483,10 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@storybook/builder-webpack5': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/builder-webpack5': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/core-client': 6.5.16(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@5.76.2)
-      '@storybook/core-server': 6.5.16(@storybook/builder-webpack5@6.5.16)(@storybook/manager-webpack5@6.5.16)(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
-      '@storybook/manager-webpack5': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/core-server': 6.5.16(@storybook/builder-webpack5@6.5.16)(@storybook/manager-webpack5@6.5.16)(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/manager-webpack5': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       typescript: 4.9.5
@@ -8604,7 +8591,7 @@ packages:
       - react-dom
     dev: false
 
-  /@storybook/manager-webpack4@6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
+  /@storybook/manager-webpack4@6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
     resolution: {integrity: sha512-5VJZwmQU6AgdsBPsYdu886UKBHQ9SJEnFMaeUxKEclXk+iRsmbzlL4GHKyVd6oGX/ZaecZtcHPR6xrzmA4Ziew==}
     peerDependencies:
       react: '*'
@@ -8623,7 +8610,7 @@ packages:
       '@babel/preset-react': 7.18.6(@babel/core@7.21.3)
       '@storybook/addons': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/core-client': 6.5.16(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@4.46.0)
-      '@storybook/core-common': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/core-common': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/node-logger': 6.5.16
       '@storybook/theming': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/ui': 6.5.16(react-dom@18.2.0)(react@18.2.0)
@@ -8666,7 +8653,7 @@ packages:
       - webpack-command
     dev: true
 
-  /@storybook/manager-webpack5@6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
+  /@storybook/manager-webpack5@6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
     resolution: {integrity: sha512-OtxXv8JCe0r/0rE5HxaFicsNsXA+fqZxzokxquFFgrYf/1Jg4d7QX6/pG5wINF+5qInJfVkRG6xhPzv1s5bk9Q==}
     peerDependencies:
       react: '*'
@@ -8685,7 +8672,7 @@ packages:
       '@babel/preset-react': 7.18.6(@babel/core@7.21.3)
       '@storybook/addons': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/core-client': 6.5.16(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@5.76.2)
-      '@storybook/core-common': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/core-common': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/node-logger': 6.5.16
       '@storybook/theming': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/ui': 6.5.16(react-dom@18.2.0)(react@18.2.0)
@@ -8812,7 +8799,7 @@ packages:
       - supports-color
     dev: true
 
-  /@storybook/react@6.5.16(@babel/core@7.21.3)(@storybook/builder-webpack5@6.5.16)(@storybook/manager-webpack5@6.5.16)(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(require-from-string@2.0.2)(typescript@4.9.5):
+  /@storybook/react@6.5.16(@babel/core@7.21.3)(@storybook/builder-webpack5@6.5.16)(@storybook/manager-webpack5@6.5.16)(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(require-from-string@2.0.2)(typescript@4.9.5):
     resolution: {integrity: sha512-cBtNlOzf/MySpNLBK22lJ8wFU22HnfTB2xJyBk7W7Zi71Lm7Uxkhv1Pz8HdiQndJ0SlsAAQOWjQYsSZsGkZIaA==}
     engines: {node: '>=10.13.0'}
     hasBin: true
@@ -8849,13 +8836,13 @@ packages:
       '@babel/preset-react': 7.18.6(@babel/core@7.21.3)
       '@pmmmwh/react-refresh-webpack-plugin': 0.5.10(react-refresh@0.11.0)(webpack@5.76.2)
       '@storybook/addons': 6.5.16(react-dom@18.2.0)(react@18.2.0)
-      '@storybook/builder-webpack5': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/builder-webpack5': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/client-logger': 6.5.16
-      '@storybook/core': 6.5.16(@storybook/builder-webpack5@6.5.16)(@storybook/manager-webpack5@6.5.16)(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@5.76.2)
-      '@storybook/core-common': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/core': 6.5.16(@storybook/builder-webpack5@6.5.16)(@storybook/manager-webpack5@6.5.16)(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)(webpack@5.76.2)
+      '@storybook/core-common': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/csf': 0.0.2--canary.4566f4d.1
       '@storybook/docs-tools': 6.5.16(react-dom@18.2.0)(react@18.2.0)
-      '@storybook/manager-webpack5': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/manager-webpack5': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       '@storybook/node-logger': 6.5.16
       '@storybook/react-docgen-typescript-plugin': 1.0.2-canary.6.9d540b91e815f8fc2f8829189deb00553559ff63.0(typescript@4.9.5)(webpack@5.76.2)
       '@storybook/semver': 7.3.2
@@ -8990,11 +8977,11 @@ packages:
       util-deprecate: 1.0.2
     dev: true
 
-  /@storybook/telemetry@6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
+  /@storybook/telemetry@6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5):
     resolution: {integrity: sha512-CWr5Uko1l9jJW88yTXsZTj/3GTabPvw0o7pDPOXPp8JRZiJTxv1JFaFCafhK9UzYbgcRuGfCC8kEWPZims7iKA==}
     dependencies:
       '@storybook/client-logger': 6.5.16
-      '@storybook/core-common': 6.5.16(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
+      '@storybook/core-common': 6.5.16(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(typescript@4.9.5)
       chalk: 4.1.2
       core-js: 3.29.0
       detect-package-manager: 2.0.1
@@ -9047,7 +9034,7 @@ packages:
       '@storybook/client-api': 6.5.16(react-dom@18.2.0)(react@18.2.0)
       '@storybook/csf': 0.0.2--canary.87bc651.0
       '@storybook/preview-web': 6.5.16(react-dom@18.2.0)(react@18.2.0)
-      '@storybook/react': 6.5.16(@babel/core@7.21.3)(@storybook/builder-webpack5@6.5.16)(@storybook/manager-webpack5@6.5.16)(eslint@8.40.0)(react-dom@18.2.0)(react@18.2.0)(require-from-string@2.0.2)(typescript@4.9.5)
+      '@storybook/react': 6.5.16(@babel/core@7.21.3)(@storybook/builder-webpack5@6.5.16)(@storybook/manager-webpack5@6.5.16)(eslint@8.41.0)(react-dom@18.2.0)(react@18.2.0)(require-from-string@2.0.2)(typescript@4.9.5)
       react: 18.2.0
     dev: true
 
@@ -9709,33 +9696,6 @@ packages:
       - supports-color
     dev: false
 
-  /@typescript-eslint/eslint-plugin@5.59.5(@typescript-eslint/parser@5.59.5)(eslint@8.40.0)(typescript@4.9.5):
-    resolution: {integrity: sha512-feA9xbVRWJZor+AnLNAr7A8JRWeZqHUf4T9tlP+TN04b05pFVhO5eN7/O93Y/1OUlLMHKbnJisgDURs/qvtqdg==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    peerDependencies:
-      '@typescript-eslint/parser': ^5.0.0
-      eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@eslint-community/regexpp': 4.4.0
-      '@typescript-eslint/parser': 5.59.5(eslint@8.40.0)(typescript@4.9.5)
-      '@typescript-eslint/scope-manager': 5.59.5
-      '@typescript-eslint/type-utils': 5.59.5(eslint@8.40.0)(typescript@4.9.5)
-      '@typescript-eslint/utils': 5.59.5(eslint@8.40.0)(typescript@4.9.5)
-      debug: 4.3.4
-      eslint: 8.40.0
-      grapheme-splitter: 1.0.4
-      ignore: 5.2.4
-      natural-compare-lite: 1.4.0
-      semver: 7.3.8
-      tsutils: 3.21.0(typescript@4.9.5)
-      typescript: 4.9.5
-    transitivePeerDependencies:
-      - supports-color
-
   /@typescript-eslint/eslint-plugin@5.59.5(@typescript-eslint/parser@5.59.5)(eslint@8.41.0)(typescript@4.9.5):
     resolution: {integrity: sha512-feA9xbVRWJZor+AnLNAr7A8JRWeZqHUf4T9tlP+TN04b05pFVhO5eN7/O93Y/1OUlLMHKbnJisgDURs/qvtqdg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -9762,7 +9722,6 @@ packages:
       typescript: 4.9.5
     transitivePeerDependencies:
       - supports-color
-    dev: false
 
   /@typescript-eslint/eslint-plugin@5.59.7(@typescript-eslint/parser@5.59.7)(eslint@8.36.0)(typescript@4.9.5):
     resolution: {integrity: sha512-BL+jYxUFIbuYwy+4fF86k5vdT9lT0CNJ6HtwrIvGh0PhH8s0yy5rjaKH2fDCrz5ITHy07WCzVGNvAmjJh4IJFA==}
@@ -9811,25 +9770,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@typescript-eslint/parser@5.59.5(eslint@8.40.0)(typescript@4.9.5):
-    resolution: {integrity: sha512-NJXQC4MRnF9N9yWqQE2/KLRSOLvrrlZb48NGVfBa+RuPMN6B7ZcK5jZOvhuygv4D64fRKnZI4L4p8+M+rfeQuw==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    peerDependencies:
-      eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@typescript-eslint/scope-manager': 5.59.5
-      '@typescript-eslint/types': 5.59.5
-      '@typescript-eslint/typescript-estree': 5.59.5(typescript@4.9.5)
-      debug: 4.3.4
-      eslint: 8.40.0
-      typescript: 4.9.5
-    transitivePeerDependencies:
-      - supports-color
-
   /@typescript-eslint/parser@5.59.5(eslint@8.41.0)(typescript@4.9.5):
     resolution: {integrity: sha512-NJXQC4MRnF9N9yWqQE2/KLRSOLvrrlZb48NGVfBa+RuPMN6B7ZcK5jZOvhuygv4D64fRKnZI4L4p8+M+rfeQuw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -9848,7 +9788,6 @@ packages:
       typescript: 4.9.5
     transitivePeerDependencies:
       - supports-color
-    dev: false
 
   /@typescript-eslint/parser@5.59.7(eslint@8.36.0)(typescript@4.9.5):
     resolution: {integrity: sha512-VhpsIEuq/8i5SF+mPg9jSdIwgMBBp0z9XqjiEay+81PYLJuroN+ET1hM5IhkiYMJd9MkTz8iJLt7aaGAgzWUbQ==}
@@ -9912,25 +9851,6 @@ packages:
       - supports-color
     dev: false
 
-  /@typescript-eslint/type-utils@5.59.5(eslint@8.40.0)(typescript@4.9.5):
-    resolution: {integrity: sha512-4eyhS7oGym67/pSxA2mmNq7X164oqDYNnZCUayBwJZIRVvKpBCMBzFnFxjeoDeShjtO6RQBHBuwybuX3POnDqg==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    peerDependencies:
-      eslint: '*'
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@typescript-eslint/typescript-estree': 5.59.5(typescript@4.9.5)
-      '@typescript-eslint/utils': 5.59.5(eslint@8.40.0)(typescript@4.9.5)
-      debug: 4.3.4
-      eslint: 8.40.0
-      tsutils: 3.21.0(typescript@4.9.5)
-      typescript: 4.9.5
-    transitivePeerDependencies:
-      - supports-color
-
   /@typescript-eslint/type-utils@5.59.5(eslint@8.41.0)(typescript@4.9.5):
     resolution: {integrity: sha512-4eyhS7oGym67/pSxA2mmNq7X164oqDYNnZCUayBwJZIRVvKpBCMBzFnFxjeoDeShjtO6RQBHBuwybuX3POnDqg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -9949,7 +9869,6 @@ packages:
       typescript: 4.9.5
     transitivePeerDependencies:
       - supports-color
-    dev: false
 
   /@typescript-eslint/type-utils@5.59.7(eslint@8.36.0)(typescript@4.9.5):
     resolution: {integrity: sha512-ozuz/GILuYG7osdY5O5yg0QxXUAEoI4Go3Do5xeu+ERH9PorHBPSdvD3Tjp2NN2bNLh1NJQSsQu2TPu/Ly+HaQ==}
@@ -10071,7 +9990,7 @@ packages:
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
-      '@eslint-community/eslint-utils': 4.3.0(eslint@8.40.0)
+      '@eslint-community/eslint-utils': 4.3.0(eslint@8.41.0)
       '@types/json-schema': 7.0.11
       '@types/semver': 7.3.13
       '@typescript-eslint/scope-manager': 5.59.5
@@ -10102,7 +10021,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
       - typescript
-    dev: false
 
   /@typescript-eslint/utils@5.59.7(eslint@8.36.0)(typescript@4.9.5):
     resolution: {integrity: sha512-yCX9WpdQKaLufz5luG4aJbOpdXf/fjwGMcLFXZVPUz3QqLirG5QcwwnIHNf8cjLjxK4qtzTO8udUtMQSAToQnQ==}
@@ -13672,8 +13590,8 @@ packages:
       eslint: ^7.32.0 || ^8.2.0
       eslint-plugin-import: ^2.25.3
     dependencies:
-      '@typescript-eslint/eslint-plugin': 5.59.5(@typescript-eslint/parser@5.59.5)(eslint@8.40.0)(typescript@4.9.5)
-      '@typescript-eslint/parser': 5.59.5(eslint@8.40.0)(typescript@4.9.5)
+      '@typescript-eslint/eslint-plugin': 5.59.5(@typescript-eslint/parser@5.59.5)(eslint@8.41.0)(typescript@4.9.5)
+      '@typescript-eslint/parser': 5.59.5(eslint@8.41.0)(typescript@4.9.5)
       eslint: 8.40.0
       eslint-config-airbnb-base: 15.0.0(eslint-plugin-import@2.27.5)(eslint@8.40.0)
       eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.56.0)(eslint-import-resolver-typescript@3.5.3)(eslint@8.36.0)
@@ -14335,7 +14253,6 @@ packages:
       text-table: 0.2.0
     transitivePeerDependencies:
       - supports-color
-    dev: false
 
   /espree@9.5.0:
     resolution: {integrity: sha512-JPbJGhKc47++oo4JkEoTe2wjy4fmMwvFpgJT9cQzmfXKp22Dr6Hf1tdCteLz1h0P3t+mGvWZ+4Uankvh8+c6zw==}
@@ -14928,7 +14845,7 @@ packages:
       signal-exit: 3.0.7
     dev: true
 
-  /fork-ts-checker-webpack-plugin@4.1.6(eslint@8.40.0)(typescript@4.9.5)(webpack@4.46.0):
+  /fork-ts-checker-webpack-plugin@4.1.6(eslint@8.41.0)(typescript@4.9.5)(webpack@4.46.0):
     resolution: {integrity: sha512-DUxuQaKoqfNne8iikd14SAkh5uw4+8vNifp6gmA73yYNS6ywLIWSLD/n/mBzHQRpW3J7rbATEakmiA8JvkTyZw==}
     engines: {node: '>=6.11.5', yarn: '>=1.0.0'}
     peerDependencies:
@@ -14944,7 +14861,7 @@ packages:
     dependencies:
       '@babel/code-frame': 7.18.6
       chalk: 2.4.2
-      eslint: 8.40.0
+      eslint: 8.41.0
       micromatch: 3.1.10
       minimatch: 3.1.2
       semver: 5.7.1
@@ -14956,7 +14873,7 @@ packages:
       - supports-color
     dev: true
 
-  /fork-ts-checker-webpack-plugin@6.5.2(eslint@8.40.0)(typescript@4.9.5)(webpack@4.46.0):
+  /fork-ts-checker-webpack-plugin@6.5.2(eslint@8.41.0)(typescript@4.9.5)(webpack@4.46.0):
     resolution: {integrity: sha512-m5cUmF30xkZ7h4tWUgTAcEaKmUW7tfyUyTqNNOz7OxWJ0v1VWKTcOvH8FWHUwSjlW/356Ijc9vi3XfcPstpQKA==}
     engines: {node: '>=10', yarn: '>=1.0.0'}
     peerDependencies:
@@ -14976,7 +14893,7 @@ packages:
       chokidar: 3.5.3
       cosmiconfig: 6.0.0
       deepmerge: 4.3.0
-      eslint: 8.40.0
+      eslint: 8.41.0
       fs-extra: 9.1.0
       glob: 7.2.3
       memfs: 3.4.13
@@ -14988,7 +14905,7 @@ packages:
       webpack: 4.46.0
     dev: true
 
-  /fork-ts-checker-webpack-plugin@6.5.2(eslint@8.40.0)(typescript@4.9.5)(webpack@5.76.2):
+  /fork-ts-checker-webpack-plugin@6.5.2(eslint@8.41.0)(typescript@4.9.5)(webpack@5.76.2):
     resolution: {integrity: sha512-m5cUmF30xkZ7h4tWUgTAcEaKmUW7tfyUyTqNNOz7OxWJ0v1VWKTcOvH8FWHUwSjlW/356Ijc9vi3XfcPstpQKA==}
     engines: {node: '>=10', yarn: '>=1.0.0'}
     peerDependencies:
@@ -15008,7 +14925,7 @@ packages:
       chokidar: 3.5.3
       cosmiconfig: 6.0.0
       deepmerge: 4.3.0
-      eslint: 8.40.0
+      eslint: 8.41.0
       fs-extra: 9.1.0
       glob: 7.2.3
       memfs: 3.4.13
@@ -15211,37 +15128,36 @@ packages:
     requiresBuild: true
     optional: true
 
-  /fuels@0.35.0:
-    resolution: {integrity: sha512-a0YTD+AJ7WeQHaj1cRW3M6YnumC0tLfd8Ay/KJ0FLAmr77BqVfh3cKDy6459Yjpeitc60K8+nAk0G36rIn6Ezw==}
+  /fuels@0.41.0:
+    resolution: {integrity: sha512-D06448Q0LpZEm2QgnztdhmmsbRoYPtyhW1S63ng5A7ATDGRICE1NmXOvxPT7vey2xdPf/tgmT/foDvP6Hy0C+w==}
     hasBin: true
     dependencies:
       '@ethersproject/bytes': 5.7.0
-      '@fuel-ts/abi-coder': 0.35.0
-      '@fuel-ts/abi-typegen': 0.35.0
-      '@fuel-ts/address': 0.35.0
-      '@fuel-ts/constants': 0.35.0
-      '@fuel-ts/contract': 0.35.0
-      '@fuel-ts/hasher': 0.35.0
-      '@fuel-ts/hdwallet': 0.35.0
-      '@fuel-ts/interfaces': 0.35.0
-      '@fuel-ts/keystore': 0.35.0
-      '@fuel-ts/math': 0.35.0
-      '@fuel-ts/merkle': 0.35.0
-      '@fuel-ts/merkle-shared': 0.35.0
-      '@fuel-ts/merklesum': 0.35.0
-      '@fuel-ts/mnemonic': 0.35.0
-      '@fuel-ts/predicate': 0.35.0
-      '@fuel-ts/program': 0.35.0
-      '@fuel-ts/providers': 0.35.0
-      '@fuel-ts/script': 0.35.0
-      '@fuel-ts/signer': 0.35.0
-      '@fuel-ts/sparsemerkle': 0.35.0
-      '@fuel-ts/testcases': 0.35.0
-      '@fuel-ts/transactions': 0.35.0
-      '@fuel-ts/versions': 0.35.0
-      '@fuel-ts/wallet': 0.35.0
-      '@fuel-ts/wallet-manager': 0.35.0
-      '@fuel-ts/wordlists': 0.35.0
+      '@fuel-ts/abi-coder': 0.41.0
+      '@fuel-ts/abi-typegen': 0.41.0
+      '@fuel-ts/address': 0.41.0
+      '@fuel-ts/contract': 0.41.0
+      '@fuel-ts/hasher': 0.41.0
+      '@fuel-ts/hdwallet': 0.41.0
+      '@fuel-ts/interfaces': 0.41.0
+      '@fuel-ts/keystore': 0.41.0
+      '@fuel-ts/math': 0.41.0
+      '@fuel-ts/merkle': 0.41.0
+      '@fuel-ts/merkle-shared': 0.41.0
+      '@fuel-ts/merklesum': 0.41.0
+      '@fuel-ts/mnemonic': 0.41.0
+      '@fuel-ts/predicate': 0.41.0
+      '@fuel-ts/program': 0.41.0
+      '@fuel-ts/providers': 0.41.0
+      '@fuel-ts/script': 0.41.0
+      '@fuel-ts/signer': 0.41.0
+      '@fuel-ts/sparsemerkle': 0.41.0
+      '@fuel-ts/testcases': 0.41.0
+      '@fuel-ts/transactions': 0.41.0
+      '@fuel-ts/versions': 0.41.0
+      '@fuel-ts/wallet': 0.41.0
+      '@fuel-ts/wallet-manager': 0.41.0
+      '@fuel-ts/wordlists': 0.41.0
       commander: 9.5.0
     transitivePeerDependencies:
       - encoding
@@ -15503,7 +15419,6 @@ packages:
 
   /graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
-    dev: false
 
   /graphql-config@4.5.0(@types/node@18.15.5)(graphql@16.6.0):
     resolution: {integrity: sha512-x6D0/cftpLUJ0Ch1e5sj1TZn6Wcxx4oMfmhaG9shM0DKajA9iR+j1z86GSTQ19fShbGvrSSvbIQsHku6aQ6BBw==}
