@@ -160,7 +160,7 @@ const styles = {
     color: '$intentsBase11 !important',
   }),
   input: cssObj({
-    '&.fuel_input--field, & .fuel_input--field': {
+    '&.fuel_InputField, & .fuel_InputField': {
       w: '235px !important',
     },
   }),

@@ -80,7 +80,7 @@ const styles = {
     borderBottom: '1px solid $border',
     wordBreak: 'break-all',
 
-    '.fuel_icon': {
+    '.fuel_Icon': {
       color: '$accent9',
     },
   }),
@@ -94,8 +94,10 @@ const styles = {
     fontSize: '$sm',
     fontWeight: '$medium',
     color: '$intentsBase10',
+    display: 'flex',
+    alignItems: 'center',
 
-    '.fuel_icon': {
+    '.fuel_Icon': {
       color: '$intentsBase8',
     },
   }),

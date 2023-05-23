@@ -33,7 +33,7 @@ export function AccountList({
   }
 
   return (
-    <Box.Stack gap="$3">
+    <Box.Stack gap="$4">
       {isLoading && (
         <CardList>
           {[...Array(3)].map((_, i) => {

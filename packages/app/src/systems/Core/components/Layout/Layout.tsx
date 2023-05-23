@@ -117,7 +117,7 @@ export const styles = {
     position: 'relative',
     width: WALLET_WIDTH,
     height: WALLET_HEIGHT,
-    background: '$intentsBase1',
+    background: '$body',
     border: '1px solid $border',
     borderRadius: '$default',
     zIndex: '$0',

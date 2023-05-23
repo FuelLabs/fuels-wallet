@@ -100,10 +100,7 @@ export const AssetItem: AssetItemComponent = ({
   }
 
   return (
-    <CardList.Item
-      rightEl={getRightEl()}
-      css={{ alignItems: 'center', py: '$2', px: '$3' }}
-    >
+    <CardList.Item rightEl={getRightEl()} css={{ alignItems: 'center' }}>
       {imageUrl ? (
         <Avatar name={name} src={imageUrl} css={{ height: 36, width: 36 }} />
       ) : (
@@ -152,6 +149,7 @@ const styles = {
   addAssetBtn: cssObj({
     p: '0',
     ml: '$1',
+
     '&:focus-visible': {
       outline: 'none !important',
     },
@@ -161,12 +159,12 @@ const styles = {
     fontWeight: '$semibold',
   }),
   actionsWrapper: cssObj({
-    '.fuel_button': {
+    '.fuel_Button': {
       px: '$1 !important',
       color: '$intentsBase8 !important',
     },
 
-    '.fuel_button:hover': {
+    '.fuel_Button:hover': {
       color: '$intentsBase11 !important',
     },
   }),

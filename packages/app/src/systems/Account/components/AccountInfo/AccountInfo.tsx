@@ -20,7 +20,9 @@ export function AccountInfo({ headerText, account }: AccountInfoProps) {
           {headerText}
         </Text>
       </Card.Header>
-      <AccountItem account={account} />
+      <Card.Body>
+        <AccountItem account={account} />
+      </Card.Body>
     </Card>
   );
 }
@@ -32,8 +34,6 @@ const styles = {
     boxSizing: 'border-box',
   }),
   header: cssObj({
-    px: '$3',
-    py: '$2',
     display: 'flex',
   }),
   headerText: cssObj({

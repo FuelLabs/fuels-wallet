@@ -52,6 +52,14 @@ const config = {
         Buffer: [require.resolve('buffer/'), 'Buffer'],
       })
     );
+
+    // for (rule of config.module.rules) {
+    //   if (rule.test.toString().includes('ts')) {
+    //     const include = rule.include || [];
+    //     include.push(join(__dirname, '../../../../fuel-ui/'));
+    //   }
+    // }
+
     return config;
   },
 };

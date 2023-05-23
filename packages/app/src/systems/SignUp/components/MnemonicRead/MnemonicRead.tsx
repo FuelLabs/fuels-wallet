@@ -68,10 +68,10 @@ const styles = {
   content: cssObj({
     width: 400,
 
-    '.fuel_alert--icon': {
+    '.fuel_Alert-icon': {
       display: 'none',
     },
-    '.fuel_alert--content': {
+    '.fuel_Alert-content': {
       gap: '$4',
     },
     '.fuel_checkbox:focus-within::after': {

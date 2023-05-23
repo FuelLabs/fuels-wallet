@@ -109,11 +109,11 @@ const styles = {
     zIndex: '$10',
     alignItems: 'center',
 
-    '.fuel_input': {
+    '.fuel_Input': {
       flex: 1,
     },
 
-    '& > .fuel_icon': {
+    '& > .fuel_Icon': {
       color: '$intentsWarning9',
     },
   }),

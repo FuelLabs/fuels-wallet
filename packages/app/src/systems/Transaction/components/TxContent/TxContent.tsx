@@ -16,7 +16,7 @@ type TxContentLoaderProps = {
 
 function TxContentLoader({ header }: TxContentLoaderProps) {
   return (
-    <MotionStack {...animations.slideInTop()} css={{ gap: '$4' }}>
+    <MotionStack {...animations.slideInTop()} gap="$4">
       {header}
       <TxOperations.Loader />
       <TxDetails.Loader />
@@ -45,7 +45,7 @@ function TxContentInfo({
 }: TxContentInfoProps) {
   const status = tx?.status || txStatus;
   return (
-    <MotionStack {...animations.slideInTop()} gap="$3">
+    <MotionStack {...animations.slideInTop()} gap="$4">
       {header}
       <TxOperations
         operations={tx?.operations}

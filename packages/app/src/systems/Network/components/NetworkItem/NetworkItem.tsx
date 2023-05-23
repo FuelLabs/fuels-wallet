@@ -82,12 +82,12 @@ const styles = {
       cursor: 'pointer',
     },
 
-    '.fuel_button': {
+    '.fuel_Button': {
       px: '$1 !important',
       color: '$intentsBase8',
     },
 
-    '.fuel_button:hover': {
+    '.fuel_Button:hover': {
       color: '$intentsBase11',
     },
   }),

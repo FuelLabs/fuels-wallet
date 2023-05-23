@@ -1,5 +1,5 @@
-import { globalCss } from '@fuel-ui/css';
-import { ThemeProvider } from '@fuel-ui/react';
+import { darkColors, globalCss } from '@fuel-ui/css';
+import { createTheme, ThemeProvider } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 
 import { StoreProvider } from '~/store';
@@ -14,10 +14,20 @@ const customStyles = {
   },
 };
 
+export const theme = createTheme('fuels-wallet', {
+  tokens: {
+    colors: {
+      ...darkColors,
+      body: '#090909',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any,
+  },
+});
+
 export function Providers({ children }: ProvidersProps) {
   return (
     <StoreProvider>
-      <ThemeProvider>
+      <ThemeProvider themes={{ wallet: theme }}>
         {globalCss(customStyles)()}
         {children}
       </ThemeProvider>

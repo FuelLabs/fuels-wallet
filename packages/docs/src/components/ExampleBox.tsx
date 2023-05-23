@@ -123,7 +123,7 @@ const styles = {
       color: '$intentsBase10',
       gap: '$2',
 
-      '& .fuel_icon': {
+      '& .fuel_Icon': {
         color: 'currentColor',
       },
     },

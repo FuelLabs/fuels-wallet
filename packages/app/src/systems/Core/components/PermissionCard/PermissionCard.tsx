@@ -16,7 +16,7 @@ export const PermissionCard = ({
       <Card.Header css={styles.cardHeader}>
         <Text css={styles.cardHeaderText}>{headerText}</Text>
       </Card.Header>
-      <Card.Body css={styles.permissionCardBody}>
+      <Card.Body>
         <Box.Flex direction="column">
           <List icon={Icon.is('Check')} iconColor="accent9">
             {allowed.map((permission) => (
@@ -43,11 +43,10 @@ const styles = {
     marginTop: '$0',
   }),
   cardHeader: cssObj({
-    px: '$3',
-    py: '$2',
+    border: 'none',
   }),
   cardHeaderText: cssObj({
-    fontSize: '$sm',
+    fontSize: '$md',
     fontWeight: '$bold',
     color: '$intentsBase12',
   }),
@@ -57,8 +56,5 @@ const styles = {
   }),
   listItemDisallowed: cssObj({
     fontSize: '$sm',
-  }),
-  permissionCardBody: cssObj({
-    p: '$3',
   }),
 };

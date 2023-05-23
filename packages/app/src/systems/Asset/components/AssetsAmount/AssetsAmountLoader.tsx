@@ -4,7 +4,7 @@ import type { IContentLoaderProps } from 'react-content-loader';
 import ContentLoader from 'react-content-loader';
 
 export const AssetsAmountLoader = (props: IContentLoaderProps) => (
-  <Card>
+  <Card css={{ padding: 0 }}>
     <ContentLoader
       speed={2}
       width={300}

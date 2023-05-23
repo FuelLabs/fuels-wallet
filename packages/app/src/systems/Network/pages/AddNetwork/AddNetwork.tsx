@@ -11,7 +11,7 @@ import {
   useChainInfo,
 } from '~/systems/Network';
 
-const MotionBox = motion(Box);
+const MotionStack = motion(Box.Stack);
 
 export function AddNetwork() {
   const form = useNetworkForm();
@@ -44,9 +44,10 @@ export function AddNetwork() {
   }
 
   return (
-    <MotionBox
+    <MotionStack
       {...animations.slideInTop()}
       as="form"
+      gap="$6"
       onSubmit={form.handleSubmit(onSubmit)}
     >
       <Dialog.Heading>
@@ -83,6 +84,6 @@ export function AddNetwork() {
           Add
         </Button>
       </Dialog.Footer>
-    </MotionBox>
+    </MotionStack>
   );
 }

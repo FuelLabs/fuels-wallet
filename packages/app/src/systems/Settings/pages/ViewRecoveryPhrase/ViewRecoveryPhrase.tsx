@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Dialog, Text, Alert } from '@fuel-ui/react';
+import { Box, Button, Dialog, Alert } from '@fuel-ui/react';
 
 import { useExportVault } from '../../hooks';
 
@@ -34,13 +34,11 @@ export function ViewRecoveryPhrase() {
           <Box css={styles.mnemonicWrapper}>
             <Mnemonic type="read" value={words} />
           </Box>
-          <Alert status="warning" css={styles.alert}>
+          <Alert status="warning">
             <Alert.Description>
-              <Text fontSize="xs" css={styles.alertDescription}>
-                DON&APOS;T SHARE your Recovery Phrase. {'\n'}
-                This phrase provides access to all your accounts. Sharing or
-                losing it may result in a permanent loss of funds.
-              </Text>
+              DON&apos;T SHARE your Recovery Phrase. {'\n'}
+              This phrase provides access to all your accounts. Sharing or
+              losing it may result in a permanent loss of funds.
             </Alert.Description>
           </Alert>
         </Box.Flex>
@@ -55,17 +53,6 @@ export function ViewRecoveryPhrase() {
 }
 
 const styles = {
-  alert: cssObj({
-    '& .fuel_alert--content': {
-      gap: '$1',
-    },
-    ' & .fuel_heading': {
-      fontSize: '$sm',
-    },
-  }),
-  alertDescription: cssObj({
-    fontWeight: '$bold',
-  }),
   mnemonicWrapper: cssObj({
     width: '330px',
   }),

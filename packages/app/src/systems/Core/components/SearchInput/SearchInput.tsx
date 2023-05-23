@@ -58,31 +58,29 @@ export function SearchInput({
 
 const styles = {
   input: cssObj({
-    height: '$6',
+    height: '$8',
     background: 'transparent',
+    border: 'none',
 
-    '&:focus-within': {
-      borderColor: 'transparent',
-    },
-    '.fuel_input--element': {
+    '.fuel_InputElement': {
       padding: 0,
     },
-    '.fuel_input-element--right > button': {
+    '.fuel_InputElementRight > button': {
       padding: '$0 !important',
       display: 'none',
       mr: '$3',
     },
 
-    '&:has(.fuel_input:focus-visible) .fuel-icon': {
+    '&:has(.fuel_Input:focus-visible) .fuel_Icon': {
       color: '$accent9',
     },
-    '&:has(.fuel_input--field[data-has-value="true"])': {
-      '.fuel_input-element--right > button': {
+    '&:has(.fuel_InputField[data-has-value="true"])': {
+      '.fuel_InputElementRight > button': {
         display: 'block',
       },
     },
 
-    '.fuel_input--field': {
+    '.fuel_InputField': {
       fontSize: '$sm',
     },
     'input[type="search" i]::-webkit-search-cancel-button': {

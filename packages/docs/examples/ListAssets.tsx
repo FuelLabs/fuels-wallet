@@ -56,7 +56,7 @@ const styles = {
     display: 'inline-flex',
     alignItems: 'flex-start',
 
-    '.fuel_tag': {
+    '.fuel_Tag': {
       justifyContent: 'flex-start',
 
       '& > p': {

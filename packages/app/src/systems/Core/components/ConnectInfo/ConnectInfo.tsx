@@ -22,11 +22,13 @@ export function ConnectInfo({
 }: ConnectInfoProps) {
   return (
     <Card css={styles.root} gap="$0">
-      <Card.Header css={styles.header}>
-        <Text fontSize="sm" css={styles.headerText}>
-          {headerText}
-        </Text>
-      </Card.Header>
+      {Boolean(headerText?.length) && (
+        <Card.Header css={styles.header}>
+          <Text fontSize="sm" css={styles.headerText}>
+            {headerText}
+          </Text>
+        </Card.Header>
+      )}
 
       <Card.Body css={styles.contentSection}>
         <Box.Flex>
@@ -34,7 +36,7 @@ export function ConnectInfo({
             name={title || origin}
             src={favIconUrl}
             role="img"
-            size="md"
+            size="sm"
             aria-label={`${origin}-favicon`}
           />
         </Box.Flex>
@@ -54,15 +56,15 @@ const styles = {
     boxSizing: 'border-box',
   }),
   header: cssObj({
-    px: '$3',
-    py: '$2',
+    mt: '$4',
     display: 'flex',
   }),
   contentSection: cssObj({
-    padding: '$3',
     alignItems: 'center',
     display: 'flex',
-    gap: '$3',
+    gap: '$4',
+    margin: '$4',
+    mt: '$2',
   }),
   headerText: cssObj({
     color: '$intentsBase12',

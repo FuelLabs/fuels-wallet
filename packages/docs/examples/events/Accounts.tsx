@@ -80,7 +80,7 @@ const styles = {
     display: 'inline-flex',
     alignItems: 'flex-start',
 
-    '.fuel_tag > p': {
+    '.fuel_Tag > p': {
       fontSize: '$sm',
     },
   }),

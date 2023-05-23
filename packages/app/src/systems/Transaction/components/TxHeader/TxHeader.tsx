@@ -64,13 +64,11 @@ export const TxHeader: TxHeaderComponent = ({
           />
         </Box.Flex>
       </Box.Flex>
-      <Box.Flex css={styles.row}>
-        <Box.Flex css={styles.item}>
-          <Text fontSize="sm">Type: </Text>
-          <Text fontSize="sm" className="type">
-            {type}
-          </Text>
-        </Box.Flex>
+      <Box.Flex css={{ ...styles.row, ...styles.type }}>
+        <Text fontSize="sm">Type: </Text>
+        <Text fontSize="sm" className="type">
+          {type}
+        </Text>
       </Box.Flex>
     </Card>
   );
@@ -78,13 +76,8 @@ export const TxHeader: TxHeaderComponent = ({
 
 const styles = {
   root: cssObj({
-    flex: 1,
-    pt: '$2',
-    pb: '$3',
-    px: '$3',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '$2',
+    px: '$4',
+    py: '$3',
     fontWeight: '$semibold',
 
     '.fuel_copyable-icon': {
@@ -94,6 +87,7 @@ const styles = {
   row: cssObj({
     alignItems: 'center',
     justifyContent: 'space-between',
+    height: '$6',
   }),
   item: cssObj({
     alignItems: 'center',
@@ -107,6 +101,7 @@ const styles = {
       borderRadius: '100%',
       fontSize: 9,
       cursor: 'default',
+
       [`&[data-status="${TxStatus.success}"]`]: {
         color: `$${getTxStatusColor(TxStatus.success)}`,
       },
@@ -120,6 +115,10 @@ const styles = {
   }),
   icon: cssObj({
     color: '$brand',
+  }),
+  type: cssObj({
+    justifyContent: 'flex-start',
+    gap: '$2',
   }),
 };
 

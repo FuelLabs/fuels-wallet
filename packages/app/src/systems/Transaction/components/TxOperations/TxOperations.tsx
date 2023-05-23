@@ -1,4 +1,3 @@
-import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/types';
 
@@ -21,7 +20,7 @@ export function TxOperations({
   isLoading,
 }: TxOperationsProps) {
   return (
-    <Box.Flex css={styles.root}>
+    <Box.Stack gap="$4">
       {operations?.map((operation, index) => (
         <TxOperation
           key={index}
@@ -31,19 +30,12 @@ export function TxOperations({
           isLoading={isLoading}
         />
       ))}
-    </Box.Flex>
+    </Box.Stack>
   );
 }
 
 TxOperations.Loader = () => (
-  <Box.Flex css={styles.root}>
+  <Box.Stack gap="$6">
     <TxOperation.Loader />
-  </Box.Flex>
+  </Box.Stack>
 );
-
-const styles = {
-  root: cssObj({
-    gap: '$4',
-    flexDirection: 'column',
-  }),
-};

@@ -3,10 +3,10 @@ import type { Icons } from '@fuel-ui/react';
 import { OperationName } from './tx.types';
 
 const ICON_MAP = {
-  [OperationName.transfer]: 'UploadSimple',
-  [OperationName.receive]: 'DownloadSimple',
+  [OperationName.transfer]: 'Upload',
+  [OperationName.receive]: 'Download',
   [OperationName.mint]: 'ArrowRight',
-  [OperationName.predicatecall]: 'MagicWand',
+  [OperationName.predicatecall]: 'Wand',
   [OperationName.contractCall]: 'ArrowsLeftRight',
 };
 

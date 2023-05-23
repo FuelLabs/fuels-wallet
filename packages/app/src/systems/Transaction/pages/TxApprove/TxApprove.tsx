@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Button, Dialog, Icon, IconButton, Text } from '@fuel-ui/react';
+import { Alert, Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAssets } from '~/systems/Asset';
@@ -40,9 +40,7 @@ export const TxApprove = () => {
           <Alert status="warning" css={styles.alert}>
             <Alert.Title>Confirm before approve</Alert.Title>
             <Alert.Description>
-              <Text fontSize="xs" css={styles.alertDescription}>
-                Carefully check if all details in your transaction are correct
-              </Text>
+              Carefully check if all details in your transaction are correct
             </Alert.Description>
           </Alert>
         )}
@@ -116,19 +114,22 @@ export const TxApprove = () => {
 const styles = {
   description: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
-    padding: '$4',
     flex: 1,
   }),
   alert: cssObj({
-    '& .fuel_alert--content': {
+    mb: '$4',
+    px: '$2',
+    py: '$3',
+
+    '& .fuel_Alert-content': {
+      padding: '$0',
       gap: '$1',
+      margin: '$0',
     },
-    ' & .fuel_heading': {
+
+    '& [class*="fuel_Alert"], & .fuel_Heading': {
       fontSize: '$sm',
+      lineHeight: '$tight',
     },
-    marginBottom: '$3',
-  }),
-  alertDescription: cssObj({
-    fontWeight: '$bold',
   }),
 };

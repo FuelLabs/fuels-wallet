@@ -102,7 +102,7 @@ const styles = {
     '.fuel_form--control': {
       flex: 1,
     },
-    '.fuel_input > input': {
+    '.fuel_Input > input': {
       px: '$3',
       fontFamily: '$sans',
       fontWeight: '$medium',

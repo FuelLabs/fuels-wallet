@@ -52,13 +52,10 @@ TxOperation.Loader = () => (
 
 const styles = {
   root: cssObj({
+    border: 'none',
     position: 'relative',
-    '.fuel_card': {
-      boxShadow: 'none',
-    },
-    '.asset_amount': {
-      pt: '$2',
-      borderTop: '1px solid $border',
-    },
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '$4',
   }),
 };

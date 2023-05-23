@@ -148,7 +148,6 @@ export const AccountItem: AccountItemComponent = ({
 const styles = {
   root: cssObj({
     background: '$cardListItemBg',
-    py: '$3 !important',
 
     '&[aria-disabled="true"]': {
       opacity: 0.5,
@@ -165,17 +164,17 @@ const styles = {
         flex: 1,
         justifyContent: 'space-between',
       },
-      '.fuel_avatar-generated': {
+      '.fuel_Avatar-generated': {
         flexShrink: 0,
       },
     },
 
-    '.fuel_button': {
+    '.fuel_Button': {
       px: '$1 !important',
       color: '$intentsBase8',
     },
 
-    '.fuel_button:hover': {
+    '.fuel_Button:hover': {
       color: '$intentsBase11',
     },
   }),

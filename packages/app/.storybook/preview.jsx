@@ -1,4 +1,5 @@
-import { ThemeProvider } from '@fuel-ui/react';
+import { darkColors } from '@fuel-ui/css';
+import { createTheme, ThemeProvider } from '@fuel-ui/react';
 import { themes } from '@storybook/theming';
 import { mswDecorator, initialize } from 'msw-storybook-addon';
 import { withRouter } from 'storybook-addon-react-router-v6';
@@ -51,12 +52,22 @@ export const parameters = {
   },
 };
 
+export const fuelTheme = createTheme('fuels-wallet', {
+  tokens: {
+    colors: {
+      ...darkColors,
+      body: '#090909',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    },
+  },
+});
+
 export const decorators = [
   mswDecorator,
   withRouter,
   (Story) => (
     <StoreProvider>
-      <ThemeProvider>
+      <ThemeProvider themes={{ fuel: fuelTheme }}>
         <Story />
       </ThemeProvider>
     </StoreProvider>

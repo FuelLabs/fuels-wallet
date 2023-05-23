@@ -140,19 +140,20 @@ const styles = {
     py: '$3',
     flex: 1,
 
-    '& > .fuel_menu-list-item': {
+    '& > .fuel_MenuListItem': {
       fontSize: '$sm',
-      height: '100px !important',
       px: '$3',
     },
 
-    '& > .fuel_menu-list-item:hover, .fuel_menu-list-item:focus': {
-      background: '$transparent',
-    },
-    '& > .fuel_menu-list-item:focus-within': {
+    '& .fuel_MenuListItem:not([aria-disabled="true"]):hover, .fuel_MenuListItem:not([aria-disabled="true"]):focus':
+      {
+        background: 'transparent',
+      },
+    '& > .fuel_MenuListItem:focus-within': {
+      background: 'transparent',
       color: '$intentsBase12',
     },
-    '& > .fuel_menu-list-item:focus-within .main-icon': {
+    '& > .fuel_MenuListItem:focus-within .main-icon': {
       color: '$accent11',
     },
   }),
@@ -169,11 +170,11 @@ const styles = {
       my: '2px',
     },
 
-    '&[data-opened="true"] .fuel_icon--ChevronDown': {
+    '&[data-opened="true"] .fuel_Icon--ChevronDown': {
       transform: 'rotate(180deg)',
     },
 
-    '.fuel_icon, .fuel_icon--ChevronDown': {
+    '.fuel_Icon, .fuel_Icon--ChevronDown': {
       transition: 'transform .3s',
       color: '$intentsBase7',
     },
@@ -198,22 +199,20 @@ const styles = {
       background: '$intentsBase6',
     },
 
-    '.fuel_menu-list-item': {
+    '.fuel_MenuListItem': {
       position: 'relative',
-      py: '2px',
       px: '$0',
       pl: '$2',
       ml: '$4',
-      height: 'auto !important',
       fontSize: '$sm',
       color: '$intentsBase8',
     },
 
-    '.fuel_menu-list-item .fuel_icon': {
+    '.fuel_MenuListItem .fuel_Icon': {
       color: '$intentsBase8',
     },
 
-    '.fuel_menu-list-item::before': {
+    '.fuel_MenuListItem::before': {
       display: 'block',
       content: '""',
       position: 'absolute',

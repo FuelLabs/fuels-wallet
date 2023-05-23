@@ -56,34 +56,34 @@ const styles = {
     mt: '$2',
     flexDirection: 'column',
 
-    '.fuel_button': {
+    '.fuel_Button': {
       padding: '$0',
       justifyContent: 'space-between',
       color: '$intentsBase10',
       fontWeight: '$normal',
     },
-    '.fuel_button:focus': {
+    '.fuel_Button:focus': {
       outline: 'none',
       color: '$intentsBase12',
     },
-    '.fuel_button.active': {
+    '.fuel_Button.active': {
       color: '$intentsBase12',
     },
-    '.fuel_button:hover': {
+    '.fuel_Button:hover': {
       color: '$intentsBase11',
       textDecoration: 'none',
     },
 
-    '.fuel_list': {
+    '.fuel_List': {
       display: 'flex',
       flexDirection: 'column',
       gap: '$1',
       mt: '$2',
     },
-    '.fuel_list-item': {
+    '.fuel_ListItem': {
       gap: '$2',
     },
-    '.fuel_list-item a': {
+    '.fuel_ListItem a': {
       flex: 1,
     },
   }),

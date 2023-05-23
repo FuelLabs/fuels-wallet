@@ -119,7 +119,7 @@ const styles = {
       color: '$intentsPrimary11',
     },
 
-    '& > .fuel_box': {
+    '& > .fuel_Box': {
       gap: '$4',
       alignItems: 'center',
     },
@@ -141,7 +141,7 @@ const styles = {
   }),
   content: cssObj({
     boxSizing: 'border-box',
-    padding: '$6',
+    padding: '$4',
     width: '100vw',
     height: '100%',
     background: '$bodyColor',

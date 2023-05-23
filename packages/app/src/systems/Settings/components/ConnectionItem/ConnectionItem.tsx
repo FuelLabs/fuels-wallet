@@ -64,7 +64,7 @@ export const ConnectionItem: ConnectionItemComponent = ({
         </Box.Flex>
       }
     >
-      <Avatar name={origin} src={favIconUrl} css={styles.avatar} />
+      <Avatar size="sm" name={origin} src={favIconUrl} css={styles.avatar} />
       <Box css={styles.text}>
         <Text>{truncate(parseUrl(origin))}</Text>
         <Text>{accounts} account(s) connected</Text>
@@ -80,9 +80,9 @@ const styles = {
     alignItems: 'center',
 
     /**
-     * TODO: change on fuel-ui to .fuel-icon-button instead
+     * TODO: change on fuel-ui to .fuel-IconButton instead
      */
-    '.fuel_icon-buton': {
+    '.fuel_IconButon': {
       padding: '$1 !important',
       height: 'auto',
     },
@@ -92,7 +92,7 @@ const styles = {
     width: 32,
   }),
   text: cssObj({
-    '.fuel_text:first-of-type': {
+    '.fuel_Text:first-of-type': {
       width: 160,
       whiteSpace: 'nowrap',
       overflow: 'hidden',
@@ -101,7 +101,7 @@ const styles = {
       fontWeight: '$medium',
       color: '$intentsBase12',
     },
-    '.fuel_text:last-of-type': {
+    '.fuel_Text:last-of-type': {
       textSize: 'xs',
       fontWeight: '$medium',
       color: '$intentsBase8',

@@ -43,29 +43,30 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
       <Text css={styles.from}>
         {isReceiver ? 'To' : 'From'} {isContract && '(Contract)'}
       </Text>
-      {address && (
-        <>
-          {!isContract && (
-            <Avatar.Generated
-              role="img"
-              size="lg"
-              hash={fuelAddress}
-              aria-label={fuelAddress}
-            />
-          )}
-          {isContract && (
-            <Box css={styles.iconWrapper}>
-              <Icon icon={Icon.is('Code')} size={16} />
-            </Box>
-          )}
-          <Box.Flex css={styles.info}>
-            <Heading as="h6" css={styles.name}>
-              {name}
-            </Heading>
-            <FuelAddress address={fuelAddress} css={styles.address} />
-          </Box.Flex>
-        </>
+      {!isContract && name !== 'unknown' && (
+        <Avatar.Generated
+          role="img"
+          size="lg"
+          hash={fuelAddress}
+          aria-label={fuelAddress}
+        />
       )}
+      {isContract && (
+        <Box css={styles.iconWrapper}>
+          <Icon icon={Icon.is('Code')} size={20} />
+        </Box>
+      )}
+      {!isContract && name === 'unknown' && (
+        <Box css={styles.iconWrapper}>
+          <Icon icon={Icon.is('QuestionMark')} size={20} />
+        </Box>
+      )}
+      <Box.Flex css={styles.info}>
+        <Heading as="h6" css={styles.name}>
+          {name}
+        </Heading>
+        <FuelAddress address={fuelAddress} css={styles.address} />
+      </Box.Flex>
     </Card>
   );
 };
@@ -83,7 +84,7 @@ const styles = {
       fontSize: '$sm',
       fontWeight: '$semibold',
     },
-    '.fuel_avatar-generated': {
+    '.fuel_Avatar-generated': {
       width: 56,
       height: 56,
       '& svg': {

@@ -59,7 +59,7 @@ const styles = {
     padding: '$3',
     zIndex: '$10',
 
-    '& > .fuel_text': {
+    '& > .fuel_Text': {
       fontSize: '$sm',
     },
   }),

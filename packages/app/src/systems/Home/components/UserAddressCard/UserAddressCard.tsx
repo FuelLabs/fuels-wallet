@@ -12,36 +12,37 @@ export function UserAddressCard({ address }: Props) {
   }, []);
 
   return (
-    <Card css={styles.wrapper}>
-      <Avatar.Generated hash={address} size="2xl" css={{ boxShadow: '$sm' }} />
-      <Copyable
-        css={styles.accountText}
-        aria-label="account-preview"
-        value={address}
-      >
-        {address.slice(0, 15)}...
-        {address.slice(address.length - 15, address.length)}
-      </Copyable>
-      <Button
-        aria-label="copy-account"
-        onPress={copyAccount}
-        size="sm"
-        css={{ w: '100%' }}
-      >
-        Copy User Address
-      </Button>
+    <Card>
+      <Card.Body css={styles.wrapper}>
+        <Avatar.Generated
+          hash={address}
+          size="2xl"
+          css={{ boxShadow: '$sm' }}
+        />
+        <Copyable
+          css={styles.accountText}
+          aria-label="account-preview"
+          value={address}
+        >
+          {address.slice(0, 15)}...
+          {address.slice(address.length - 15, address.length)}
+        </Copyable>
+        <Button aria-label="copy-account" onPress={copyAccount} size="sm">
+          Copy User Address
+        </Button>
+      </Card.Body>
     </Card>
   );
 }
 
 const styles = {
   wrapper: cssObj({
-    p: '24px',
     gap: '$3',
     borderRadius: '$lg',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'column',
   }),
   accountText: cssObj({
     fontSize: '$sm',

@@ -4,7 +4,7 @@ import type { IContentLoaderProps } from 'react-content-loader';
 import ContentLoader from 'react-content-loader';
 
 export const ConnectionItemLoader = (props: IContentLoaderProps) => (
-  <CardList.Item css={{ padding: 0 }}>
+  <CardList.Item css={{ padding: '$0 !important' }}>
     <ContentLoader
       speed={2}
       width={316}

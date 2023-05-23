@@ -42,7 +42,7 @@ export function TableOfContent() {
   );
 }
 
-const LIST_ITEM = '.fuel_list > .fuel_list-item';
+const LIST_ITEM = '.fuel_List > .fuel_ListItem';
 
 const styles = {
   queries: cssObj({

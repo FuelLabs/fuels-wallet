@@ -87,7 +87,7 @@ const styles = {
     justifyContent: 'space-between',
     borderBottom: '1px solid $border',
 
-    '.fuel_icon': {
+    '.fuel_Icon': {
       color: '$intentsBase8',
     },
   }),

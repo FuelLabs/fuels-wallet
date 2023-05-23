@@ -36,11 +36,9 @@ export const ActivityItem: TxItemComponent = ({
       onClick={() => navigate(Pages.tx({ txId: id }))}
     >
       <TxIcon operationName={label} status={status} />
-      <Box.Stack css={styles.contentWrapper}>
+      <Box.Stack css={styles.contentWrapper} gap="$0">
         <Box.Flex css={styles.item} gap={5}>
-          <Text fontSize="sm" css={styles.label}>
-            {label}
-          </Text>
+          <Text css={styles.label}>{label}</Text>
           <Copyable
             value={id}
             tooltipMessage="Copy Transaction ID"
@@ -52,14 +50,12 @@ export const ActivityItem: TxItemComponent = ({
         </Box.Flex>
         <Box.Flex css={styles.row}>
           <Box.Flex css={styles.fromToTextWrapper}>
-            <Text fontSize="xs" css={styles.label}>
-              {toOrFromText}
-            </Text>
-            <Text fontSize="xs">{shortAddress(toOrFromAddress)}</Text>
+            <Text css={styles.label}>{toOrFromText}</Text>
+            <Text>{shortAddress(toOrFromAddress)}</Text>
           </Box.Flex>
           {timeFormatted && (
             <Box.Flex css={styles.item}>
-              <Text fontSize="xs">{timeFormatted}</Text>
+              <Text>{timeFormatted}</Text>
             </Box.Flex>
           )}
         </Box.Flex>
@@ -73,7 +69,6 @@ const styles = {
     flex: 1,
     py: '$3',
     px: '$3',
-    pt: '8px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -89,6 +84,7 @@ const styles = {
   row: cssObj({
     alignItems: 'center',
     justifyContent: 'space-between',
+    fontSize: '$sm',
   }),
   item: cssObj({
     alignItems: 'center',
@@ -98,7 +94,6 @@ const styles = {
   }),
   contentWrapper: cssObj({
     flex: 1,
-    gap: '$0',
   }),
   fromToTextWrapper: cssObj({
     gap: '$1',

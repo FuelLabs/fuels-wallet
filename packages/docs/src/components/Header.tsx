@@ -117,7 +117,7 @@ const styles = {
   mobile: cssObj({
     display: 'flex',
     alignItems: 'center',
-    '.fuel_button': {
+    '.fuel_Button': {
       height: 'auto !important',
       padding: '$0 !important',
     },

@@ -126,10 +126,10 @@ const styles = {
     borderStyle: 'solid',
   }),
   alert: cssObj({
-    '& .fuel_alert--content': {
+    '& .fuel_Alert-content': {
       gap: '$1',
     },
-    ' & .fuel_heading': {
+    ' & .fuel_Heading': {
       fontSize: '$sm',
     },
   }),

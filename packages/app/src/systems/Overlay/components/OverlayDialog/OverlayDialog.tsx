@@ -46,7 +46,7 @@ const styles = {
     height: WALLET_HEIGHT,
     maxWidth: WALLET_WIDTH,
     maxHeight: 'none',
-    background: '$dialogBg',
+    background: '$body',
     borderRadius: '$default',
     boxSizing: 'border-box',
     display: 'flex',

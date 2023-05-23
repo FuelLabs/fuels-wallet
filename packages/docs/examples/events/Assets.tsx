@@ -82,7 +82,7 @@ const styles = {
     gap: '$2',
     display: 'inline-flex',
     alignItems: 'flex-start',
-    '.fuel_tag': {
+    '.fuel_Tag': {
       justifyContent: 'flex-start',
 
       '& > p': {

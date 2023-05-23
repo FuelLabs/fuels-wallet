@@ -27,7 +27,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
   const hasError = !!balanceErrors?.length;
 
   return (
-    <Card css={styles.card(hasError)}>
+    <Card css={styles.card} data-error={hasError}>
       {(title || hasError) && (
         <Box.Flex css={styles.header}>
           {title && (
@@ -66,14 +66,13 @@ type AssetsAmountItemProps = {
 
 const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
   const assetAmountClass = cx('asset_amount');
-
   const { name = '', symbol, imageUrl, assetId, amount } = assetAmount || {};
 
   return (
     <Grid key={assetId} css={styles.root} className={assetAmountClass}>
       <Box.Flex css={styles.asset}>
         {imageUrl ? (
-          <Avatar name={name} src={imageUrl} css={{ height: 18, width: 18 }} />
+          <Avatar name={name} src={imageUrl} />
         ) : (
           <Avatar.Generated hash={assetId} size="xsm" />
         )}
@@ -92,14 +91,19 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
 };
 
 const styles = {
-  card: (isError?: boolean) =>
-    cssObj({
-      px: '$3',
-      py: '$2',
-      ...(isError && {
-        backgroundColor: '$intentsError3',
-      }),
-    }),
+  card: cssObj({
+    px: '$3',
+    py: '$2',
+
+    '&[data-error=true]': {
+      backgroundColor: '$intentsError3',
+    },
+
+    '.fuel_Avatar': {
+      width: '$5',
+      height: '$5',
+    },
+  }),
   header: cssObj({
     mb: '$3',
     display: 'flex',
