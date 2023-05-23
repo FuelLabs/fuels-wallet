@@ -1,5 +1,11 @@
 # @fuel-wallet/sdk
 
+## 0.9.2
+
+### Patch Changes
+
+- [#762](https://github.com/FuelLabs/fuels-wallet/pull/762) [`bad48d1`](https://github.com/FuelLabs/fuels-wallet/commit/bad48d1b3036bca6ae28ddcc0f97cf921c6c0ab7) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix SDK exports
+
 ## 0.9.1
 
 ## 0.9.0
