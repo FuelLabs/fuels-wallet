@@ -7,6 +7,7 @@ import { NetworkInputs, NetworkService } from '../services';
 import { store } from '~/store';
 import type { Maybe, FetchResponse } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
+import { ReportErrorService } from '~/systems/Error';
 
 type MachineContext = {
   networks?: Network[];
@@ -146,6 +147,9 @@ export const networksMachine = createMachine(
               target: 'fetchingNetworks',
             },
           ],
+          onError: {
+            actions: ['logError'],
+          },
         },
       },
       selectingNetwork: {
@@ -182,6 +186,9 @@ export const networksMachine = createMachine(
       }),
       notifyUpdateAccounts: () => {
         store.updateAccounts();
+      },
+      logError: (_, ev) => {
+        ReportErrorService.saveError(ev.data as Error);
       },
     },
     services: {

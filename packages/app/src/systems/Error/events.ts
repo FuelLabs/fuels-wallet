@@ -1,4 +1,4 @@
-import { ReportErrorFrequency } from './types';
+import { ReportErrorFrequency } from '@fuel-wallet/types';
 
 import type { Store } from '~/store';
 import { Services } from '~/store';

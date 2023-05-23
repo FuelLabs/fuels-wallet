@@ -62,14 +62,14 @@ export function ReportErrors() {
       </Dialog.Description>
       <Dialog.Footer>
         <Stack css={styles.fullWidth}>
-          <Button
+          {/* <Button
             color="accent"
             isDisabled={isLoadingSendAlways}
             isLoading={isLoadingSendAlways}
             onPress={handlers.alwaysReportErrors}
           >
             Always Send
-          </Button>
+          </Button> */}
           <Button
             color="accent"
             variant="ghost"
@@ -77,7 +77,7 @@ export function ReportErrors() {
             isLoading={isLoadingSendOnce}
             onPress={handlers.reportErrorsOnce}
           >
-            Send this time
+            Send to Fuel
           </Button>
           <Button
             color="gray"

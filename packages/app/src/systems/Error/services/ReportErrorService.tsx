@@ -1,20 +1,42 @@
+import { createUUID } from '@fuel-wallet/sdk';
 import type { FuelWalletError, ReportErrorFrequency } from '@fuel-wallet/types';
 
-import { REPORT_ERROR_FREQUENCY_KEY } from '~/config';
+import { REPORT_ERROR_FREQUENCY_KEY, DEV_EMAIL } from '~/config';
 import { Storage, db } from '~/systems/Core';
+
+function encodeHTMLEntities(text) {
+  const textArea = document.createElement('textarea');
+  textArea.innerText = text;
+  return textArea.innerHTML;
+}
 
 export class ReportErrorService {
   static async reportErrors() {
     const errors = await this.getErrors();
     // eslint-disable-next-line no-console
     console.log('errors', errors);
+    // send error as an email to the team
+    const errorMailBody = encodeHTMLEntities(
+      errors.map((error) => JSON.stringify(error)).join('\n')
+    );
+    window?.open(
+      `mailto:${DEV_EMAIL}?subject=Fuel Wallet Error Report&body=${errorMailBody}`
+    );
     return true;
-    // get errors
-    // send errors to server
-    // clear errors
   }
 
-  static saveError(error: FuelWalletError) {
+  static saveError(error: FuelWalletError | Error) {
+    // convert error to FuelWalletError
+    if (error instanceof Error) {
+      const errorFormatted: FuelWalletError = {
+        message: error.message,
+        stack: error.stack,
+        timestamp: Date.now(),
+        id: createUUID(),
+        name: error.name,
+      };
+      return db.errors.add(errorFormatted);
+    }
     return db.errors.add(error);
   }
 

@@ -1,8 +1,8 @@
+import { ReportErrorFrequency } from '@fuel-wallet/types';
 import { useSelector } from '@xstate/react';
 import { useEffect } from 'react';
 
 import { type ReportErrorMachineState } from '../machines';
-import { ReportErrorFrequency } from '../types';
 
 import { REPORT_ERROR_FREQUENCY_KEY } from '~/config';
 import { Services, store } from '~/store';

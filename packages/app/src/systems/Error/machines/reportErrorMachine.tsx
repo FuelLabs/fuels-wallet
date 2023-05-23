@@ -1,8 +1,8 @@
+import { ReportErrorFrequency } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { ReportErrorService } from '../services';
-import { ReportErrorFrequency } from '../types';
 
 import { FetchMachine } from '~/systems/Core';
 
