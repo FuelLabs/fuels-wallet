@@ -53,7 +53,7 @@ const styles = {
       pr: '50px',
       mb: '$5 !important',
       padding: '$4 $2 !important',
-      borderRadius: '$lg',
+      borderRadius: '$default',
       fontSize: '14px !important',
       background: '$intentsBase1 !important',
     },
@@ -70,8 +70,8 @@ const styles = {
       padding: '$1 $3',
       background: '$intentsBase2',
       color: '$intentsBase10',
-      borderTopLeftRadius: '$lg',
-      borderTopRightRadius: '$lg',
+      borderTopLeftRadius: '$default',
+      borderTopRightRadius: '$default',
       borderBottom: '2px solid $bodyColor',
 
       span: {

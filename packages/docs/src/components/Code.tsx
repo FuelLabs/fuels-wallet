@@ -12,7 +12,7 @@ const styles = {
     pt: '2px',
     pb: '3px',
     px: '6px',
-    borderRadius: '$md',
+    borderRadius: '$default',
     fontFamily: 'monospace',
     background: '$intentsBase3',
     color: '$intentsBase10',
