@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Tooltip } from '@fuel-ui/react';
+import { Box, Button, Icon, Tooltip } from '@fuel-ui/react';
 
 import { useAccounts } from '~/systems/Account';
 
@@ -18,6 +18,7 @@ export const HomeActions = ({
 
   const sendButton = (
     <Button
+      leftIcon={<Icon icon="Exchange" />}
       intent="primary"
       aria-label="Send Button"
       onPress={sendAction}
@@ -37,6 +38,7 @@ export const HomeActions = ({
         <Tooltip content="You don't have balance to send">{sendButton}</Tooltip>
       )}
       <Button
+        leftIcon={<Icon icon="Qrcode" />}
         isDisabled={isDisabled}
         onPress={receiveAction}
         variant="ghost"
