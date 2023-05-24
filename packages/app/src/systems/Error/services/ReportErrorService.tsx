@@ -12,8 +12,6 @@ function encodeHTMLEntities(text: string) {
 export class ReportErrorService {
   static async reportErrors() {
     const errors = await this.getErrors();
-    // eslint-disable-next-line no-console
-    console.log('errors', errors);
     // send error as an email to the team
     const errorMailBody = encodeHTMLEntities(
       errors.map((error) => JSON.stringify(error)).join('\n')

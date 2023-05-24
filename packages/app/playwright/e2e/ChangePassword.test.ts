@@ -8,7 +8,7 @@ test.describe('ChangePassword', () => {
   let browser: Browser;
   let page: Page;
 
-  test.beforeAll(async () => {
+  test.beforeEach(async () => {
     browser = await chromium.launch();
     page = await browser.newPage();
     await visit(page, '/');

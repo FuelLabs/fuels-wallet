@@ -78,7 +78,6 @@ export const FetchMachine = {
                   cond: 'hasManyAttempts',
                 },
                 {
-                  actions: ['logError'],
                   target: 'retrying',
                 },
               ],
@@ -93,7 +92,7 @@ export const FetchMachine = {
             },
           },
           failed: {
-            entry: ['assignError', 'showError'],
+            entry: ['assignError', 'showError', 'logError'],
             type: 'final',
             data: (ctx, ev) => ({ error: ev.data }),
           },
@@ -117,6 +116,7 @@ export const FetchMachine = {
             attempts: (ctx) => (ctx.attempts ?? 0) + 1,
           }),
           logError: (_, ev) => {
+            console.log('logging error');
             const error = errorToFuelError(ev.data as Error);
             db.errors.add(error);
           },

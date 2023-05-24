@@ -165,6 +165,7 @@ export async function mockData(
         (async function main() {
           try {
             const fuelDB = window.fuelDB;
+            await fuelDB.errors.clear();
             await fuelDB.vaults.clear();
             await fuelDB.vaults.add(vault);
             await fuelDB.accounts.clear();

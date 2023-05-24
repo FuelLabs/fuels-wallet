@@ -198,7 +198,10 @@ export const networksMachine = createMachine(
           return NetworkService.getNetworks();
         },
       }),
-      addNetwork: FetchMachine.create<NetworkInputs['addNetwork'], Network>({
+      addNetwork: FetchMachine.create<
+        NetworkInputs['addNetwork'],
+        Network | null
+      >({
         showError: true,
         async fetch({ input }) {
           try {
@@ -216,7 +219,7 @@ export const networksMachine = createMachine(
             if (error?.message.includes('uniqueness')) {
               throw new Error('This network Name or URL already exist');
             }
-            throw new Error(error.message);
+            throw error;
           }
         },
       }),
