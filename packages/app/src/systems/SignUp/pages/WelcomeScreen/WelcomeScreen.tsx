@@ -24,7 +24,7 @@ export function WelcomeScreen() {
             onClick={() => navigate(Pages.signUpTerms({ action: 'create' }))}
           >
             <Box.Centered className="icon icon-primary">
-              <Icon icon="Wallet" stroke="1" size={40} />
+              <Icon icon="Wallet" stroke="1" size="40" />
             </Box.Centered>
             <Box.Stack className="text">
               <Heading as="h3">Create new wallet</Heading>
@@ -33,14 +33,14 @@ export function WelcomeScreen() {
               </Heading>
             </Box.Stack>
             <Box.Centered className="icon">
-              <Icon icon="ArrowRight" stroke="1" size={40} />
+              <Icon icon="ArrowRight" stroke="1" size="40" />
             </Box.Centered>
           </Card>
           <Card
             onClick={() => navigate(Pages.signUpTerms({ action: 'recover' }))}
           >
             <Box.Centered className="icon icon-primary">
-              <Icon icon="SquareKey" stroke="1" size={40} />
+              <Icon icon="SquareKey" stroke="1" size="40" />
             </Box.Centered>
             <Box.Stack className="text">
               <Heading as="h3">Import seed phrase</Heading>
@@ -49,7 +49,7 @@ export function WelcomeScreen() {
               </Heading>
             </Box.Stack>
             <Box.Centered className="icon">
-              <Icon icon="ArrowRight" stroke="1" size={40} />
+              <Icon icon="ArrowRight" stroke="1" size="40" />
             </Box.Centered>
           </Card>
         </Box>

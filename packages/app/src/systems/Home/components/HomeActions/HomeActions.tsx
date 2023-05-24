@@ -53,7 +53,7 @@ export const HomeActions = ({
 const styles = {
   wrapper: cssObj({
     marginTop: '$4',
-    marginBottom: '$4',
+    marginBottom: '$6',
     flexShrink: 0,
     gap: '$2',
   }),
