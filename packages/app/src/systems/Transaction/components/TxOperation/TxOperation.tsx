@@ -30,7 +30,7 @@ export function TxOperation({
     };
   });
   return (
-    <Card css={styles.root}>
+    <Card css={styles.root} className="TxOperation">
       <TxFromTo
         from={from}
         to={to}
@@ -56,6 +56,9 @@ const styles = {
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    gap: '$4',
+
+    '.TxFromTo': {
+      borderBottom: '1px solid $bodyBg',
+    },
   }),
 };

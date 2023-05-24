@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Heading, Icon, IconButton, Text } from '@fuel-ui/react';
+import { Box, Heading, Icon, IconButton, Text } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 
@@ -38,17 +38,6 @@ export function BalanceWidget({
 
   return (
     <BalanceWidgetWrapper>
-      <Box.Flex direction="column" align="center" justify="center">
-        <Avatar.Generated size="lg" hash={account.address} />
-        <IconButton
-          size="xs"
-          variant="outlined"
-          icon={<Icon icon="ChevronDown" color="intentsBase8" />}
-          aria-label="Accounts"
-          onPress={handlers.goToList}
-          css={styles.visibilityToggle}
-        />
-      </Box.Flex>
       <Box.Flex justify="space-between" css={styles.balanceDetails}>
         <Box.Flex direction="column" css={styles.balanceContainer}>
           <Heading as="h6" css={styles.name}>
@@ -65,6 +54,14 @@ export function BalanceWidget({
           </Text>
         </Box.Flex>
         <Box css={styles.visibilityContainer}>
+          <IconButton
+            size="xs"
+            variant="link"
+            icon={<Icon icon="ChevronDown" color="intentsBase8" />}
+            aria-label="Accounts"
+            onPress={handlers.goToList}
+            css={styles.visibilityToggle}
+          />
           <VisibilityButton
             aria-label={visibility ? 'Hide balance' : 'Show balance'}
             visibility={visibility}
@@ -96,7 +93,7 @@ const styles = {
   }),
   balanceContainer: cssObj({
     mt: '$1',
-    ml: '$4',
+    ml: '$2',
     alignSelf: 'center',
   }),
   balance: cssObj({
@@ -114,6 +111,7 @@ const styles = {
   balanceWidgetWrapper: cssObj({
     mt: '$1',
     layer: 'layer-card',
+    is: ['borderHighlight'],
     padding: '$2 $3',
     display: 'flex',
     alignItems: 'center',

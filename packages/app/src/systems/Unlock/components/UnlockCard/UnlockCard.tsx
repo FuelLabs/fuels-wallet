@@ -56,17 +56,18 @@ export function UnlockCard({
         )}
         <Box css={styles.form}>
           <Box as="div" css={styles.description}>
-            <Box.Stack gap="$2">
-              <Box.Stack align="center">
-                <FuelLogo size={150} />
-                <Heading as="h2" css={{ margin: 0, textAlign: 'center' }}>
+            <Box.Stack gap="$6" align="center">
+              <FuelLogo size={100} css={{ mb: '$4' }} />
+              <Box css={{ textAlign: 'center' }}>
+                <Heading
+                  as="h2"
+                  css={{ margin: 0, mb: '$2', textAlign: 'center' }}
+                >
                   {headerText}
                 </Heading>
                 <Text fontSize="sm">Unlock your wallet to continue</Text>
-              </Box.Stack>
-              <Box css={{ marginTop: '$4' }}>
-                <UnlockForm form={form} />
               </Box>
+              <UnlockForm form={form} />
             </Box.Stack>
             {onReset && (
               <Box.Stack

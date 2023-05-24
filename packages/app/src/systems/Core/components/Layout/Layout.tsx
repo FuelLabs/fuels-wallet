@@ -14,6 +14,7 @@ import { TopBar } from './TopBar';
 import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { OverlayDialog } from '~/systems/Overlay';
 import { Sidebar } from '~/systems/Sidebar';
+import signUpImage from '~public/signup.png';
 
 type Context = {
   isLoading?: boolean;
@@ -75,9 +76,9 @@ export const Layout: LayoutComponent = ({
           <title>{titleText}</title>
         </Helmet>
         {isPublic ? (
-          <Box.Centered as="main" css={styles.root} data-public>
-            {children}
-          </Box.Centered>
+          <Box as="main" css={{ ...styles.root, ...styles.public }} data-public>
+            <Box.Centered>{children}</Box.Centered>
+          </Box>
         ) : (
           <Box.Centered as="main" css={styles.root}>
             <Box css={styles.wrapper} className="layout__wrapper">
@@ -117,7 +118,7 @@ export const styles = {
     position: 'relative',
     width: WALLET_WIDTH,
     height: WALLET_HEIGHT,
-    background: '$body',
+    background: '$bodyColor',
     zIndex: '$0',
     ...(IS_CRX_POPUP
       ? null
@@ -131,6 +132,27 @@ export const styles = {
     ...coreStyles.scrollable(),
     padding: '$0 $4',
     flex: 1,
+  }),
+  public: cssObj({
+    maxWidth: '100vw',
+    display: 'grid',
+    gridTemplateColumns: '0.75fr 1.25fr',
+    gridTemplateRows: '1fr',
+    alignItems: 'center',
+
+    '& > .fuel_Box-centered': {
+      maxWidth: 450,
+      margin: '0 auto',
+    },
+
+    '&::before': {
+      content: '""',
+      display: 'block',
+      width: '100%',
+      height: '100%',
+      background: `url(${signUpImage})`,
+      backgroundPosition: 'left',
+    },
   }),
 };
 

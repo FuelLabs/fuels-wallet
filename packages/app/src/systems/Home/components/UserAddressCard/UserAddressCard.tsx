@@ -46,6 +46,6 @@ const styles = {
   }),
   accountText: cssObj({
     fontSize: '$sm',
-    fontWeight: '$bold',
+    fontWeight: '$normal',
   }),
 };

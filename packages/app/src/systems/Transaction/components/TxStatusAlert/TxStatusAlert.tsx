@@ -82,7 +82,7 @@ const styles = {
       '& .fuel_Button': {
         p: 0,
         color: cssColor,
-        fontWeight: '$semibold',
+        fontWeight: '$normal',
       },
       '&:after': {
         background: cssColor,

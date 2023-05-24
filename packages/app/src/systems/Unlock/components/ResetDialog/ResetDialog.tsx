@@ -42,7 +42,7 @@ export function ResetDialog({
             <Text>
               Make sure you have backed up your Seed Phrase before proceeding.
             </Text>
-            <Alert status="warning" css={styles.alert}>
+            <Alert status="warning" hideIcon css={styles.alert}>
               <Form.Control css={styles.form}>
                 <Checkbox
                   id="confirmReset"
@@ -88,6 +88,7 @@ const styles = {
     marginRight: '$3',
   }),
   alert: cssObj({
+    mt: '$2',
     py: '$2',
     pr: '$2',
     background: '$intentsBase2',
@@ -96,10 +97,14 @@ const styles = {
     width: '100%',
   }),
   content: cssObj({
+    padding: '$4',
     width: WALLET_WIDTH,
     height: WALLET_HEIGHT,
     maxWidth: WALLET_WIDTH,
     maxHeight: 'none',
+    background: '$bodyColor',
+    borderRadius: '$default',
+    boxSizing: 'border-box',
   }),
   description: cssObj({
     flex: 1,
@@ -107,6 +112,10 @@ const styles = {
     display: 'flex',
   }),
   form: cssObj({
+    pl: '$2',
+    display: 'grid',
+    gridTemplateColumns: 'auto 1fr',
     flexDirection: 'row',
+    gap: '$4',
   }),
 };

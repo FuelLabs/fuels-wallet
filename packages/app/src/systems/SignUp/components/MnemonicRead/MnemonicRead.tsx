@@ -16,7 +16,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
   const [isSavedChecked, setSavedChecked] = useState(false);
 
   return (
-    <Box.Stack gap="$4" align="center">
+    <Box.Stack gap="$6" align="center">
       <ImageLoader
         src={relativeUrl('/signup-illustration-1.svg')}
         width={129}
@@ -27,16 +27,15 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
         title="Backup Seed Phrase"
         subtitle="You will need this in the next step"
       />
-      <Box.Stack css={styles.content} gap="$4">
+      <Box.Stack css={styles.content} gap="$6">
         <Mnemonic value={words} type="read" />
         <Alert status="warning" hideIcon>
-          <Form.Control css={{ flexDirection: 'row' }}>
+          <Form.Control css={styles.alertContent}>
             <Checkbox
               id="confirmSaved"
               aria-label="Confirm Saved"
               checked={isSavedChecked}
               // TODO: this bg property should be fixed inside @fuel-ui
-              css={styles.checkbox}
               onCheckedChange={(e) => {
                 setSavedChecked(e as boolean);
               }}
@@ -48,16 +47,11 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
         </Alert>
       </Box.Stack>
       <Box css={styles.footer}>
-        <Button variant="ghost" css={{ width: 130 }} onPress={onCancel}>
-          Cancel
+        <Button variant="ghost" onPress={onCancel}>
+          Back
         </Button>
-        <Button
-          intent="primary"
-          css={{ width: 130 }}
-          onPress={onNext}
-          isDisabled={!isSavedChecked}
-        >
-          Next
+        <Button intent="primary" onPress={onNext} isDisabled={!isSavedChecked}>
+          Go to Confirm
         </Button>
       </Box>
     </Box.Stack>
@@ -66,37 +60,21 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
 
 const styles = {
   content: cssObj({
-    width: 400,
+    width: 450,
 
-    '.fuel_Alert-icon': {
-      display: 'none',
-    },
-    '.fuel_Alert-content': {
-      gap: '$4',
-    },
-    '.fuel_checkbox:focus-within::after': {
-      borderColor: '$intentsWarning5 !important',
+    '.fuel_Alert-content .fuel_FormLabel': {
+      color: '$semanticGhostWarningColor',
     },
   }),
-  checkbox: cssObj({
-    bg: '$semanticGhostWarningBg',
-    borderColor: '$semanticGhostWarningHoverBorder',
-    width: '$7',
-
-    '&[data-state="checked"]': {
-      bg: '$semanticGhostWarningHoverBg',
-      borderColor: '$semanticGhostWarningHoverBorder',
-    },
-
-    '&:focus-within': {
-      outline: '2px solid $semanticGhostWarningHoverBorder',
-    },
+  alertContent: cssObj({
+    flexDirection: 'row',
+    gap: '$4',
   }),
   footer: cssObj({
-    width: 'calc(100% - $4)',
-    display: 'flex',
+    width: '$full',
+    display: 'grid',
     gridTemplateColumns: '1fr 1fr',
-    gap: '$4',
+    gridGap: '$4',
 
     button: {
       width: '100%',

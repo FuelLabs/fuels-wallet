@@ -6,12 +6,12 @@ import { forwardRef } from 'react';
 
 import { NetworkRemoveDialog } from '../NetworkRemoveDialog/NetworkRemoveDialog';
 
-export function NetworkStatus({ network: _network }: { network: Network }) {
+export function NetworkStatus({ network }: { network: Network }) {
   return (
     <Text
       css={{
-        // color: network.isOnline ? '$accent11' : '$intentsBase8',
-        fontSize: '8px',
+        color: network.isSelected ? '$accent11' : '$intentsBase8',
+        fontSize: '16px',
       }}
     >
       ●
@@ -76,7 +76,7 @@ const styles = {
   root: cssObj({
     minHeight: '52px',
     boxSizing: 'border-box',
-    background: '$whiteA2',
+    background: '$cardBg',
 
     '&:hover': {
       cursor: 'pointer',

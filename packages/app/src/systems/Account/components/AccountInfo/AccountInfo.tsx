@@ -38,6 +38,6 @@ const styles = {
   }),
   headerText: cssObj({
     color: '$intentsBase12',
-    fontWeight: '$bold',
+    fontWeight: '$normal',
   }),
 };

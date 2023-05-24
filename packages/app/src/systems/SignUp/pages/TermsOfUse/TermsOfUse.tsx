@@ -1,3 +1,4 @@
+import { cssObj } from '@fuel-ui/css';
 import { Box, Button } from '@fuel-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -39,9 +40,9 @@ export function TermsOfUse() {
             <Terms />
           </Box.Flex>
         </Box>
-        <Box.Flex gap="$2">
+        <Box.Flex gap="$2" css={styles.footer}>
           <Button variant="ghost" onPress={handleCancel}>
-            Cancel
+            Back
           </Button>
           <Button intent="primary" onPress={handleAccept}>
             I accept
@@ -85,16 +86,20 @@ const styles = {
       alignItems: 'center',
       gap: '$1',
       textDecoration: 'none',
-      fontWeight: '$medium',
+      fontWeight: '$normal',
       color: '$accent11',
     },
   },
-  termsContainer: {
+  termsContainer: cssObj({
     height: '480px',
     overflow: 'hidden',
     maxWidth: '700px',
     borderRadius: '$8',
-    marginLeft: '$4',
-    marginRight: '$4',
-  },
+  }),
+  footer: cssObj({
+    width: '$full',
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '$4',
+  }),
 };

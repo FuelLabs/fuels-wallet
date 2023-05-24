@@ -207,7 +207,7 @@ const styles = {
     gap: '$2',
 
     '.asset-name': {
-      fontWeight: '$semibold',
+      fontWeight: '$normal',
     },
   }),
   placeholder: cssObj({

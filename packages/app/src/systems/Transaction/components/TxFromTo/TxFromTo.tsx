@@ -67,7 +67,7 @@ export function TxFromTo({
   operationName,
 }: TxFromToProps) {
   return (
-    <Box.Flex css={styles.root}>
+    <Box.Flex css={styles.root} className="TxFromTo">
       <TxSpinner
         status={status}
         isLoading={isLoading}
@@ -89,9 +89,13 @@ export function TxFromTo({
 
 const styles = {
   root: cssObj({
-    gap: '$4',
     position: 'relative',
     display: 'flex',
+
+    '.TxRecipientCard:first-of-type': {
+      borderRadius: '$default 0 0 0',
+      borderRight: '1px solid $bodyBg',
+    },
   }),
   spinner: cssObj({
     display: 'flex',
@@ -117,8 +121,7 @@ const styles = {
       background: '$intentsError9',
       color: '$intentsError3',
     },
-    [`&[data-status="${TxStatus.pending}"],
-      &[data-loading="true"]`]: {
+    [`&[data-status="${TxStatus.pending}"], &[data-loading="true"]`]: {
       background: '$intentsWarning9',
       color: '$intentsWarning3',
     },

@@ -1,3 +1,4 @@
+import { cssObj } from '@fuel-ui/css';
 import { Button, InputPassword, Box } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import debounce from 'lodash.debounce';
@@ -71,7 +72,7 @@ export function CreatePassword({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Box.Stack gap="$4" align="center">
+      <Box.Stack gap="$6" align="center">
         <ImageLoader
           src={relativeUrl('/signup-illustration-2.svg')}
           width={129}
@@ -123,21 +124,29 @@ export function CreatePassword({
             )}
           />
         </Box.Stack>
-        <Box.Flex gap="$4">
-          <Button variant="ghost" css={{ width: 130 }} onPress={onCancel}>
-            Cancel
+        <Box.Flex gap="$4" css={styles.footer}>
+          <Button variant="ghost" onPress={onCancel}>
+            Back
           </Button>
           <Button
             type="submit"
             intent="primary"
-            css={{ width: 130 }}
             isDisabled={!isValid}
             isLoading={isLoading}
           >
-            Next
+            Create Account
           </Button>
         </Box.Flex>
       </Box.Stack>
     </form>
   );
 }
+
+const styles = {
+  footer: cssObj({
+    width: '$full',
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gridGap: '$4',
+  }),
+};

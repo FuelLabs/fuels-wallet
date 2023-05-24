@@ -39,7 +39,7 @@ export function ReceiverQRCode({ address }: Props) {
           fgColor="#9BA1A6"
           value={address}
         />
-        <Button onPress={downloadQrCode} variant="ghost" size="sm">
+        <Button onPress={downloadQrCode} size="sm">
           Download this QR Code
         </Button>
       </Card.Body>

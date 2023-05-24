@@ -105,14 +105,14 @@ const styles = {
     '.fuel_Input > input': {
       px: '$3',
       fontFamily: '$sans',
-      fontWeight: '$medium',
+      fontWeight: '$normal',
     },
   }),
   title: cssObj({
     pt: '$2',
     color: '$intentsBase12',
     fontSize: '$xl',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
   }),
   amountTitle: cssObj({
     fontSize: '$md',

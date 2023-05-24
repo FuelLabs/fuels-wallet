@@ -30,7 +30,7 @@ export function SignatureRequest() {
                 <Box.Flex css={{ alignItems: 'center', gap: '$3' }}>
                   <HelperIcon
                     color="intentsBase12"
-                    css={{ fontWeight: '$semibold' }}
+                    css={{ fontWeight: '$normal' }}
                     message="Make sure you know the message being signed"
                   >
                     Message:
@@ -51,6 +51,7 @@ export function SignatureRequest() {
             Cancel
           </Button>
           <Button
+            intent="primary"
             aria-label="Sign"
             onPress={handlers.sign}
             isLoading={isLoading}

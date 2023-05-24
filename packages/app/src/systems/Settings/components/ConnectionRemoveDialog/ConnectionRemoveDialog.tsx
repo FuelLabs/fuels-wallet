@@ -79,7 +79,7 @@ const styles = {
       '.from': {
         mb: '$1',
         color: '$intentsBase12',
-        fontWeight: '$bold',
+        fontWeight: '$normal',
       },
     },
   }),

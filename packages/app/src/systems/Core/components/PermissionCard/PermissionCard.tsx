@@ -47,12 +47,12 @@ const styles = {
   }),
   cardHeaderText: cssObj({
     fontSize: '$md',
-    fontWeight: '$bold',
+    fontWeight: '$normal',
     color: '$intentsBase12',
   }),
   listItemAllowed: cssObj({
     fontSize: '$sm',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
   }),
   listItemDisallowed: cssObj({
     fontSize: '$sm',

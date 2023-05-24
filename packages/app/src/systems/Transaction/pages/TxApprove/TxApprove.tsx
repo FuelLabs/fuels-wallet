@@ -118,8 +118,6 @@ const styles = {
   }),
   alert: cssObj({
     mb: '$4',
-    px: '$2',
-    py: '$3',
 
     '& .fuel_Alert-content': {
       padding: '$0',

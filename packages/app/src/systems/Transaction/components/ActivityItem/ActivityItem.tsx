@@ -73,7 +73,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: '$3',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
     flexDirection: 'row',
     cursor: 'pointer',
   }),
@@ -101,7 +101,7 @@ const styles = {
   }),
   label: cssObj({
     mt: '-2px',
-    fontWeight: '$bold',
+    fontWeight: '$normal',
     color: '$whiteA12',
   }),
 };

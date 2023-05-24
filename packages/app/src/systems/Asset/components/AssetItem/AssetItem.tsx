@@ -85,7 +85,7 @@ export const AssetItem: AssetItemComponent = ({
     if (amount) {
       return (
         <Tooltip content={bn(amount).format()}>
-          <Text css={{ fontSize: '$sm', fontWeight: '$semibold' }}>
+          <Text css={{ fontSize: '$sm', fontWeight: '$normal' }}>
             <AmountVisibility value={amount} visibility={visibility} /> {symbol}
           </Text>
         </Tooltip>
@@ -144,7 +144,7 @@ const styles = {
   }),
   assetSymbol: cssObj({
     textSize: 'sm',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
   }),
   addAssetBtn: cssObj({
     p: '0',
@@ -156,7 +156,7 @@ const styles = {
   }),
   unknownAssetId: cssObj({
     fontSize: '$sm',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
   }),
   actionsWrapper: cssObj({
     '.fuel_Button': {

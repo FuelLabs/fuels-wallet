@@ -134,6 +134,6 @@ const styles = {
     },
   }),
   alertDescription: cssObj({
-    fontWeight: '$bold',
+    fontWeight: '$normal',
   }),
 };

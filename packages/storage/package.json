@@ -27,10 +27,10 @@
     "test:watch": "jest --watch"
   },
   "devDependencies": {
-    "@fuel-ui/config": "0.15.1-pr--4118fe0",
-    "@fuel-ui/css": "0.15.1-pr--4118fe0",
-    "@fuel-ui/react": "0.15.1-pr--4118fe0",
-    "@fuel-ui/test-utils": "0.15.1-pr--4118fe0",
+    "@fuel-ui/config": "0.15.1-pr--ff00aff",
+    "@fuel-ui/css": "0.15.1-pr--ff00aff",
+    "@fuel-ui/react": "0.15.1-pr--ff00aff",
+    "@fuel-ui/test-utils": "0.15.1-pr--ff00aff",
     "@fuel-wallet/config": "workspace:*",
     "jest-localstorage-mock": "^2.4.26",
     "tsup": "^6.7.0",

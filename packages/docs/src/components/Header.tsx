@@ -100,7 +100,7 @@ const styles = {
     alignItems: 'center',
     flex: 1,
     fontSize: '$2xl',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
     color: 'white',
     letterSpacing: '-0.05em',
   }),

@@ -138,7 +138,7 @@ export function Mnemonic({
           <Button
             aria-label="Copy button"
             size="sm"
-            variant="ghost"
+            variant="outlined"
             leftIcon={<Icon icon="Copy" color="intentsBase8" />}
             onPress={handleCopy}
           >
@@ -148,7 +148,7 @@ export function Mnemonic({
           <Button
             aria-label="Paste button"
             size="sm"
-            variant="ghost"
+            variant="outlined"
             leftIcon={<Icon icon="Copy" color="intentsBase8" />}
             onPress={handlePast}
           >
@@ -167,7 +167,7 @@ const styles = {
   }),
   formatWrapper: cssObj({
     p: '$3',
-    borderBottom: '1px solid $border',
+    borderBottom: '1px solid $bodyBg',
     gap: '$1',
     alignItems: 'center',
     justifyContent: 'flex-end',

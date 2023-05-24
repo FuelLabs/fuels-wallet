@@ -62,7 +62,7 @@ const styles = {
   assetId: cssObj({
     mt: '$4',
     fontSize: '$sm',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
     wordBreak: 'break-all',
     textAlign: 'center',
   }),
@@ -76,7 +76,7 @@ const styles = {
     },
     '& a': {
       fontSize: '$sm',
-      fontWeight: '$bold',
+      fontWeight: '$normal',
     },
   }),
   card: cssObj({
@@ -89,7 +89,7 @@ const styles = {
   }),
   cardHeaderText: cssObj({
     color: '$intentsBase12',
-    fontWeight: '$bold',
+    fontWeight: '$normal',
   }),
   cardContentSection: cssObj({
     padding: '0',

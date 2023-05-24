@@ -18,7 +18,6 @@ export const theme = createTheme('fuels-wallet', {
   tokens: {
     colors: {
       ...darkColors,
-      body: '#090909',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any,
   },

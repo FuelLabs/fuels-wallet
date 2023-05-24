@@ -22,7 +22,7 @@ export const HomeActions = ({
       aria-label="Send Button"
       onPress={sendAction}
       isDisabled={isDisabled || !hasBalance}
-      css={styles.button}
+      css={{ ...styles.button, ...styles.sendBtn }}
       isLoading={isLoading}
     >
       Send
@@ -39,7 +39,7 @@ export const HomeActions = ({
       <Button
         isDisabled={isDisabled}
         onPress={receiveAction}
-        variant="outlined"
+        variant="ghost"
         css={styles.button}
       >
         Receive
@@ -59,5 +59,8 @@ const styles = {
     borderRadius: '$default',
     flex: 1,
     py: '$0',
+  }),
+  sendBtn: cssObj({
+    layer: 'layer-gradient',
   }),
 };

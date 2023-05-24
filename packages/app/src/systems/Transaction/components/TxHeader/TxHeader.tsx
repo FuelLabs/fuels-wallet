@@ -78,7 +78,7 @@ const styles = {
   root: cssObj({
     px: '$4',
     py: '$3',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
 
     '.fuel_copyable-icon': {
       color: '$brand !important',

@@ -3,6 +3,8 @@ import { Button } from '@fuel-ui/react';
 import type { Network } from '@fuel-wallet/types';
 import { forwardRef } from 'react';
 
+import { NetworkStatus } from '../NetworkItem';
+
 export type NetworkDropdownProps = {
   selected?: Network;
   isDisabled?: boolean;
@@ -21,7 +23,7 @@ export const NetworkDropdown = forwardRef<HTMLDivElement, NetworkDropdownProps>(
         aria-label="Selected Network"
         isDisabled={isDisabled}
       >
-        {/* {selected && <NetworkStatus network={selected} />} */}
+        {selected && <NetworkStatus network={selected} />}
         {selected?.name}
       </Button>
     );
@@ -32,10 +34,10 @@ const styles = {
   trigger: cssObj({
     cursor: 'pointer',
     fontSize: '$sm',
-    px: '$4 !important',
+    px: '$3',
     border: '1px solid $border',
-    color: '$intentsBase10 !important',
-    borderRadius: '$full !important',
+    color: '$intentsBase10',
+    borderRadius: '$full',
     background: 'transparent',
 
     '&:not([aria-disabled="true"]):hover': {

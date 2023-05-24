@@ -160,7 +160,7 @@ const styles = {
     },
     '& a': {
       fontSize: '$sm',
-      fontWeight: '$bold',
+      fontWeight: '$normal',
     },
   }),
   connectionDetails: cssObj({
@@ -190,7 +190,7 @@ const styles = {
   }),
   cardHeaderText: cssObj({
     fontSize: '$sm',
-    fontWeight: '$bold',
+    fontWeight: '$normal',
     color: '$intentsBase12',
   }),
   accountCardBody: cssObj({

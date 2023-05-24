@@ -36,7 +36,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   return (
     <Card
       css={styles.root}
-      className="tx-recipient-card"
+      className="TxRecipientCard"
       data-recipient={address}
       data-type={isContract ? 'contract' : 'user'}
     >
@@ -82,7 +82,7 @@ const styles = {
     '.fuel_copyable': {
       color: '$intentsBase12',
       fontSize: '$sm',
-      fontWeight: '$semibold',
+      fontWeight: '$normal',
     },
     '.fuel_Avatar-generated': {
       width: 56,
@@ -95,7 +95,7 @@ const styles = {
   }),
   from: cssObj({
     fontSize: '$sm',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
   }),
   iconWrapper: cssObj({
     padding: '$5',

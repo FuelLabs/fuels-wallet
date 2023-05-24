@@ -25,7 +25,7 @@ export function WalletCreated({ account }: WalletCreatedProps) {
   return (
     <>
       {IS_CRX && <PinWalletCard />}
-      <Box.Stack gap="$4">
+      <Box.Stack gap="$6">
         <Box.Flex justify="center">
           <ImageLoader
             src={relativeUrl('/signup-illustration-3.svg')}

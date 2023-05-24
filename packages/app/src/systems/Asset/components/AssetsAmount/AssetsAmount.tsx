@@ -31,7 +31,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
       {(title || hasError) && (
         <Box.Flex css={styles.header}>
           {title && (
-            <Text as="h3" css={{ fontSize: '$sm', fontWeight: '$semibold' }}>
+            <Text as="h3" css={{ fontSize: '$sm', fontWeight: '$normal' }}>
               {title}
             </Text>
           )}
@@ -40,7 +40,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
               css={{
                 color: '$intentsError10',
                 fontSize: '$sm',
-                fontWeight: '$semibold',
+                fontWeight: '$normal',
               }}
             >
               (not enough balance)
@@ -92,7 +92,7 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
 
 const styles = {
   card: cssObj({
-    px: '$3',
+    px: '$6',
     py: '$2',
 
     '&[data-error=true]': {
@@ -113,7 +113,7 @@ const styles = {
   root: cssObj({
     gridTemplateColumns: 'repeat(2, 1fr)',
     gridTemplateRows: 'repeat(2, 1fr)',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
     color: '$intentsBase12',
 
     '& ~ & ': {

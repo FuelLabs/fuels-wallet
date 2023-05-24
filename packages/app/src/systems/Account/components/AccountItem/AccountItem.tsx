@@ -147,7 +147,8 @@ export const AccountItem: AccountItemComponent = ({
 
 const styles = {
   root: cssObj({
-    background: '$cardListItemBg',
+    background: '$cardBg',
+    py: '$3 !important',
 
     '&[aria-disabled="true"]': {
       opacity: 0.5,
@@ -183,7 +184,7 @@ const styles = {
   }),
   address: cssObj({
     fontSize: '$sm',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
   }),
 };
 

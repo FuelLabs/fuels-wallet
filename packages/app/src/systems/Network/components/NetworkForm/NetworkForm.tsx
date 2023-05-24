@@ -110,7 +110,7 @@ const styles = {
   }),
   cardHeaderText: cssObj({
     fontSize: '$sm',
-    fontWeight: '$bold',
+    fontWeight: '$normal',
   }),
   url: cssObj({
     'input[aria-disabled="true"]': {

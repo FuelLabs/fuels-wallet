@@ -68,7 +68,7 @@ const styles = {
   }),
   headerText: cssObj({
     color: '$intentsBase12',
-    fontWeight: '$bold',
+    fontWeight: '$normal',
   }),
   title: cssObj({
     fontSize: '$sm',
@@ -82,6 +82,6 @@ const styles = {
     textOverflow: 'ellipsis',
     fontSize: '$sm',
     color: '$accent11',
-    fontWeight: '$bold',
+    fontWeight: '$normal',
   }),
 };

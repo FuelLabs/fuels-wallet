@@ -34,10 +34,6 @@ function InternalTopBar({ onBack }: TopBarProps) {
   const { isLoading, title, isHome } = useLayoutContext();
   const { selectedNetwork, handlers } = useNetworks();
 
-  const goToActivityPage = () => {
-    navigate('/transactions');
-  };
-
   return (
     <Box.Flex as="nav" css={styles.root}>
       <Box.Flex css={styles.container} data-home={isHome}>
@@ -67,14 +63,6 @@ function InternalTopBar({ onBack }: TopBarProps) {
         )}
       </Box.Flex>
       <Box.Stack direction="row" gap="$2">
-        <IconButton
-          iconSize={20}
-          icon={<Icon icon="Bell" />}
-          variant="link"
-          aria-label="activity"
-          css={styles.topbarIcon}
-          onPress={goToActivityPage}
-        />
         <IconButton
           iconSize={20}
           icon={<Icon icon="Menu2" />}
@@ -151,7 +139,7 @@ const styles = {
   }),
   title: cssObj({
     textSize: 'lg',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
     color: '$intentsBase12',
   }),
   container: cssObj({

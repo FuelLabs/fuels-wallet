@@ -40,7 +40,7 @@ const styles = {
   }),
   text: cssObj({
     fontSize: '$sm',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
   }),
 };
 

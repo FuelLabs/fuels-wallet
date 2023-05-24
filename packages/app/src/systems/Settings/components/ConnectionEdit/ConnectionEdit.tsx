@@ -92,7 +92,7 @@ const styles = {
   }),
   label: cssObj({
     fontSize: '$sm',
-    fontWeight: '$medium',
+    fontWeight: '$normal',
     color: '$intentsBase10',
     display: 'flex',
     alignItems: 'center',

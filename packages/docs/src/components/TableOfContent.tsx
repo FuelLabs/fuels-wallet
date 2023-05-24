@@ -65,7 +65,7 @@ const styles = {
     [LIST_ITEM]: {
       pb: '$2',
       a: {
-        fontWeight: '$semibold',
+        fontWeight: '$normal',
         color: '$intentsBase11',
       },
     },

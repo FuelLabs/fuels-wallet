@@ -77,7 +77,7 @@ export const ExportAccount = () => {
 
 const styles = {
   keyHeaderText: cssObj({
-    fontWeight: '$medium',
+    fontWeight: '$normal',
   }),
   exportedKey: cssObj({
     padding: '$4',
@@ -93,6 +93,6 @@ const styles = {
     },
   }),
   alertDescription: cssObj({
-    fontWeight: '$bold',
+    fontWeight: '$normal',
   }),
 };

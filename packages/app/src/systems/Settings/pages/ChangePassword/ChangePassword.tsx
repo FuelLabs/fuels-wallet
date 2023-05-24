@@ -89,6 +89,12 @@ export function ChangePassword() {
         <Layout.TopBar onBack={goBack} />
         <Layout.Content>
           <Box.Flex css={styles.wrapper}>
+            <Alert direction="row" status={'warning'}>
+              <Alert.Description>
+                If you lose your password and your Seed Phrase, all your funds
+                can be lost forever.
+              </Alert.Description>
+            </Alert>
             <Focus.Scope contain autoFocus>
               <ControlledField
                 control={control}
@@ -149,64 +155,6 @@ export function ChangePassword() {
                 )}
               />
             </Focus.Scope>
-            <Alert direction="row" status={'warning'} css={{ mt: '$2' }}>
-              <Alert.Description>
-                If you lose your password and your Seed Phrase, all your funds
-                can be lost forever.
-              </Alert.Description>
-            </Alert>
-            <ControlledField
-              control={control}
-              name="currentPassword"
-              label="Current Password"
-              render={({ field }) => (
-                <InputPassword
-                  {...field}
-                  autoComplete="current-password"
-                  css={styles.input}
-                  aria-label="Current Password"
-                  placeholder="Type your current password"
-                />
-              )}
-            />
-            <ControlledField
-              control={control}
-              name="password"
-              label="New Password"
-              hideError
-              render={({ field }) => (
-                <InputSecurePassword
-                  field={field}
-                  onChangeStrength={(strength: string) =>
-                    setValue('strength', strength)
-                  }
-                  onBlur={() => {
-                    form.trigger();
-                    field.onBlur();
-                  }}
-                  inputProps={{
-                    autoComplete: 'new-password',
-                  }}
-                  ariaLabel="New Password"
-                  placeholder="Type your new password"
-                  css={styles.input}
-                />
-              )}
-            />
-            <ControlledField
-              control={control}
-              name="confirmPassword"
-              label="Confirm Password"
-              render={({ field }) => (
-                <InputPassword
-                  {...field}
-                  autoComplete="new-password"
-                  css={styles.input}
-                  aria-label="Confirm Password"
-                  placeholder="Confirm your new password"
-                />
-              )}
-            />
           </Box.Flex>
         </Layout.Content>
         <Layout.BottomBar>
@@ -218,6 +166,7 @@ export function ChangePassword() {
             Cancel
           </Button>
           <Button
+            intent="primary"
             type="submit"
             isLoading={isChangingPassword}
             isDisabled={!isValid}
