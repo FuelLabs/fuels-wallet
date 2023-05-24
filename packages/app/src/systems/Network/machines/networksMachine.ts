@@ -216,7 +216,7 @@ export const networksMachine = createMachine(
             if (error?.message.includes('uniqueness')) {
               throw new Error('This network Name or URL already exist');
             }
-            throw error;
+            throw new Error(error.message);
           }
         },
       }),
