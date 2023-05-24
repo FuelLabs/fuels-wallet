@@ -148,8 +148,8 @@ export const signUpMachine = createMachine(
         invoke: {
           src: 'setupVault',
           data: {
-            input: (_: MachineContext, ev: MachineEvents) => ({
-              password: ev.data,
+            input: (_: MachineContext, ev: any) => ({
+              password: ev.data?.password as string,
               mnemonic: _.data?.mnemonic,
             }),
           },
