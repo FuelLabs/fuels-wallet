@@ -118,9 +118,13 @@ export const styles = {
     width: WALLET_WIDTH,
     height: WALLET_HEIGHT,
     background: '$body',
-    border: '1px solid $border',
-    borderRadius: '$default',
     zIndex: '$0',
+    ...(IS_CRX_POPUP
+      ? null
+      : {
+          border: '1px solid $border',
+          borderRadius: '$default',
+        }),
   }),
   inner: coreStyles.fullscreen,
   content: cssObj({
