@@ -38,36 +38,36 @@ export function BalanceWidget({
 
   return (
     <BalanceWidgetWrapper>
-      <Box.Flex justify="space-between" css={styles.balanceDetails}>
-        <Box.Flex direction="column" css={styles.balanceContainer}>
+      <Box.Flex justify="space-between">
+        <Box.Stack gap="$1">
           <Heading as="h6" css={styles.name}>
             {account.name}
           </Heading>
           <FuelAddress address={account.address} css={styles.balanceAddress} />
-          <Text
-            css={styles.balance}
-            aria-hidden={visibility}
-            data-account-name={account.name}
-          >
-            {account.balanceSymbol || '$'}&nbsp;
-            <AmountVisibility value={account.balance} visibility={visibility} />
-          </Text>
-        </Box.Flex>
-        <Box css={styles.visibilityContainer}>
-          <IconButton
-            size="xs"
-            variant="link"
-            icon={<Icon icon="ChevronDown" color="intentsBase8" />}
-            aria-label="Accounts"
-            onPress={handlers.goToList}
-            css={styles.visibilityToggle}
-          />
-          <VisibilityButton
-            aria-label={visibility ? 'Hide balance' : 'Show balance'}
-            visibility={visibility}
-            onChangeVisibility={onChangeVisibility}
-          />
-        </Box>
+        </Box.Stack>
+        <IconButton
+          size="xs"
+          variant="link"
+          icon={<Icon icon="ChevronDown" color="intentsBase8" />}
+          aria-label="Accounts"
+          onPress={handlers.goToList}
+          css={styles.visibilityToggle}
+        />
+      </Box.Flex>
+      <Box.Flex justify="space-between">
+        <Text
+          css={styles.balance}
+          aria-hidden={visibility}
+          data-account-name={account.name}
+        >
+          {account.balanceSymbol || '$'}&nbsp;
+          <AmountVisibility value={account.balance} visibility={visibility} />
+        </Text>
+        <VisibilityButton
+          aria-label={visibility ? 'Hide balance' : 'Show balance'}
+          visibility={visibility}
+          onChangeVisibility={onChangeVisibility}
+        />
       </Box.Flex>
     </BalanceWidgetWrapper>
   );
@@ -76,28 +76,12 @@ export function BalanceWidget({
 BalanceWidget.Loader = BalanceWidgetLoader;
 
 const styles = {
-  balanceDetails: cssObj({
-    flex: '1 0',
-  }),
   balanceAddress: cssObj({
     color: '$intentsBase11',
     fontSize: '$sm',
   }),
-  visibilityContainer: cssObj({
-    marginTop: '$2',
-    svg: {
-      height: 18,
-      width: 18,
-    },
-  }),
-  balanceContainer: cssObj({
-    mt: '$1',
-    ml: '$2',
-    alignSelf: 'center',
-  }),
   balance: cssObj({
     fontSize: '1.625rem',
-    margin: '$2 0',
 
     '&[aria-hidden="true"]': {
       color: '$intentsBase12',
@@ -107,21 +91,21 @@ const styles = {
     },
   }),
   balanceWidgetWrapper: cssObj({
-    mt: '$1',
-    layer: 'layer-card',
-    is: ['borderHighlight'],
-    padding: '$2 $3',
     display: 'flex',
-    alignItems: 'center',
-    position: 'relative',
+    flexDirection: 'column',
+    is: ['borderHighlight'],
+    borderRadius: '$default',
+    gap: '$2',
+    px: '$4',
+    py: '$3',
   }),
   visibilityToggle: cssObj({
-    mt: '$2',
     height: '20px !important',
     padding: '$0 2px',
     borderRadius: 8,
   }),
   name: cssObj({
+    lineHeight: '$tight',
     margin: '0px 0px -6px',
   }),
 };

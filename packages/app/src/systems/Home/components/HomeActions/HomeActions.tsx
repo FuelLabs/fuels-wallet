@@ -18,7 +18,7 @@ export const HomeActions = ({
 
   const sendButton = (
     <Button
-      leftIcon={<Icon icon="Exchange" />}
+      leftIcon={<Icon icon="Send" />}
       intent="primary"
       aria-label="Send Button"
       onPress={sendAction}

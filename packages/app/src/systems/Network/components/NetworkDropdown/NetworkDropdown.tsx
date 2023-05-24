@@ -22,6 +22,7 @@ export const NetworkDropdown = forwardRef<HTMLDivElement, NetworkDropdownProps>(
         onPress={() => onPress?.(selected!)}
         aria-label="Selected Network"
         isDisabled={isDisabled}
+        rightIcon="ChevronDown"
       >
         {selected && <NetworkStatus network={selected} />}
         {selected?.name}
@@ -35,6 +36,7 @@ const styles = {
     cursor: 'pointer',
     fontSize: '$sm',
     px: '$3',
+    pr: '$2',
     border: '1px solid $border',
     color: '$intentsBase10',
     borderRadius: '$full',
@@ -45,6 +47,8 @@ const styles = {
       boxShadow: 'none',
       border: '1px solid $border',
     },
+
+    '& .fuel_Icon': { color: '$intentsBase8' },
 
     '&:focus': {
       outlineColor: '$intentsBase2 !important',
