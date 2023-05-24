@@ -28,7 +28,7 @@ export function UserAddressCard({ address }: Props) {
         size="sm"
         css={{ w: '100%' }}
       >
-        Copy User Address
+        Copy Address
       </Button>
     </Card>
   );
