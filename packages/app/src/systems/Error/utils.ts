@@ -1,11 +1,7 @@
 import type { FuelWalletError } from '@fuel-wallet/sdk';
 import { createUUID } from '@fuel-wallet/sdk';
 
-export function errorToFuelError(
-  errorEvent: ErrorEvent | PromiseRejectionEvent
-): FuelWalletError {
-  const error =
-    errorEvent instanceof ErrorEvent ? errorEvent?.error : errorEvent?.reason;
+export function errorToFuelError(error: Error): FuelWalletError {
   return {
     ...error,
     message: error?.message,

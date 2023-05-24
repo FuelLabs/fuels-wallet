@@ -3,7 +3,9 @@ import { toast } from '@fuel-ui/react';
 import type { TransitionConfig } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-import { ReportErrorService } from '~/systems/Error';
+import { db } from '../utils';
+
+import { errorToFuelError } from '~/systems/Error/utils';
 
 export type FetchResponse<T> = T & {
   error?: unknown;
@@ -111,12 +113,13 @@ export const FetchMachine = {
           assignError: assign({
             error: (_, ev) => ev.data,
           }),
-          logError: (_, ev) => {
-            ReportErrorService.saveError(ev.data as Error);
-          },
           incrementAttempts: assign({
             attempts: (ctx) => (ctx.attempts ?? 0) + 1,
           }),
+          logError: (_, ev) => {
+            const error = errorToFuelError(ev.data as Error);
+            db.errors.add(error);
+          },
         },
         guards: {
           hasManyAttempts: (ctx) => {

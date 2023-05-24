@@ -1,6 +1,6 @@
 export type FuelWalletError = {
-  timestamp: number;
-  id: string;
+  timestamp?: number;
+  id?: string;
 } & Error;
 
 export enum ReportErrorFrequency {

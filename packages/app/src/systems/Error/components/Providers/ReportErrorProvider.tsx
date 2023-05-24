@@ -14,7 +14,7 @@ type ErrorProviderProps = {
 
 const ErrorProvider = ({ children }: ErrorProviderProps) => {
   const handleError = async (e: ErrorEvent) => {
-    const error = errorToFuelError(e);
+    const error = errorToFuelError(e.error);
     await db.errors.add(error);
     // return false to allow the default handler to run.
     return false;
@@ -22,7 +22,7 @@ const ErrorProvider = ({ children }: ErrorProviderProps) => {
 
   const handleUnhandledRejection = async (e: PromiseRejectionEvent) => {
     e.preventDefault();
-    const error = errorToFuelError(e);
+    const error = errorToFuelError(e.reason);
     await db.errors.add(error);
     // return false to allow the default handler to run.
     return true;

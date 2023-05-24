@@ -1,4 +1,3 @@
-import { createUUID } from '@fuel-wallet/sdk';
 import type { FuelWalletError, ReportErrorFrequency } from '@fuel-wallet/types';
 
 import { REPORT_ERROR_FREQUENCY_KEY, DEV_EMAIL } from '~/config';
@@ -13,6 +12,8 @@ function encodeHTMLEntities(text: string) {
 export class ReportErrorService {
   static async reportErrors() {
     const errors = await this.getErrors();
+    // eslint-disable-next-line no-console
+    console.log('errors', errors);
     // send error as an email to the team
     const errorMailBody = encodeHTMLEntities(
       errors.map((error) => JSON.stringify(error)).join('\n')
@@ -23,18 +24,7 @@ export class ReportErrorService {
     return true;
   }
 
-  static saveError(error: FuelWalletError | Error) {
-    // convert error to FuelWalletError
-    if (error instanceof Error) {
-      const errorFormatted: FuelWalletError = {
-        message: error.message,
-        stack: error.stack,
-        timestamp: Date.now(),
-        id: createUUID(),
-        name: error.name,
-      };
-      return db.errors.add(errorFormatted);
-    }
+  static saveError(error: FuelWalletError) {
     return db.errors.add(error);
   }
 
