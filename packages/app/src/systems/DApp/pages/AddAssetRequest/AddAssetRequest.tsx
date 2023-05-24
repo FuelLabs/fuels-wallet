@@ -70,7 +70,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '$4',
-    paddingBottom: '$0',
+    pb: '$0',
+    pt: '$4',
+
     '& h2': {
       fontSize: '$sm',
     },
@@ -85,6 +87,8 @@ const styles = {
   cardHeader: cssObj({
     px: '$3',
     py: '$2',
+    margin: '$0',
+    borderBottom: '1px solid $bodyBg',
     display: 'flex',
   }),
   cardHeaderText: cssObj({
@@ -92,7 +96,7 @@ const styles = {
     fontWeight: '$normal',
   }),
   cardContentSection: cssObj({
-    padding: '0',
+    margin: '$0',
     gap: '$3',
   }),
 };

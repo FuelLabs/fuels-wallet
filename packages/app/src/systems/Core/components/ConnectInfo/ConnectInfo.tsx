@@ -56,15 +56,18 @@ const styles = {
     boxSizing: 'border-box',
   }),
   header: cssObj({
-    mt: '$4',
+    px: '$3',
+    py: '$2',
     display: 'flex',
+    margin: '$0',
+    borderBottom: '1px solid $bodyBg',
   }),
   contentSection: cssObj({
     alignItems: 'center',
     display: 'flex',
     gap: '$4',
-    margin: '$4',
-    mt: '$2',
+    mx: '$4',
+    my: '$2',
   }),
   headerText: cssObj({
     color: '$intentsBase12',

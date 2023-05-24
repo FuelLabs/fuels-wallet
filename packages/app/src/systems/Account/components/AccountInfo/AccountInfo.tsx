@@ -20,7 +20,7 @@ export function AccountInfo({ headerText, account }: AccountInfoProps) {
           {headerText}
         </Text>
       </Card.Header>
-      <Card.Body>
+      <Card.Body css={styles.cardBody}>
         <AccountItem account={account} />
       </Card.Body>
     </Card>
@@ -35,9 +35,16 @@ const styles = {
   }),
   header: cssObj({
     display: 'flex',
+    px: '$3',
+    py: '$2',
+    margin: '$0',
+    borderBottom: '1px solid $bodyBg',
   }),
   headerText: cssObj({
     color: '$intentsBase12',
     fontWeight: '$normal',
+  }),
+  cardBody: cssObj({
+    margin: '$0',
   }),
 };

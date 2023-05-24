@@ -21,6 +21,7 @@ export const PERMISSION_LIST = [
 export const NOT_ALLOWED_LIST = ['View your private keys'];
 
 const MotionCardList = motion(CardList);
+const MotionAccountItem = motion(AccountItem);
 
 export function ConnectionRequest() {
   const {
@@ -66,13 +67,14 @@ export function ConnectionRequest() {
                       const { address } = account;
                       const isConnected = handlers.isAccountSelected(address);
                       return (
-                        <motion.div key={address} {...animations.slideInTop()}>
-                          <AccountItem
-                            account={account!}
-                            onToggle={handlers.toggleAccount}
-                            isToggleChecked={isConnected}
-                          />
-                        </motion.div>
+                        <MotionAccountItem
+                          key={address}
+                          {...animations.slideInTop()}
+                          css={styles.accountItem}
+                          account={account!}
+                          onToggle={handlers.toggleAccount}
+                          isToggleChecked={isConnected}
+                        />
                       );
                     })}
                   </Card.Body>
@@ -154,7 +156,9 @@ const styles = {
   content: cssObj({
     display: 'flex',
     flexDirection: 'column',
-    paddingBottom: '$0',
+    pb: '$0',
+    pt: '$4',
+
     '& h2': {
       fontSize: '$sm',
     },
@@ -187,6 +191,8 @@ const styles = {
   cardHeader: cssObj({
     px: '$3',
     py: '$2',
+    margin: '$0',
+    borderBottom: '1px solid $bodyBg',
   }),
   cardHeaderText: cssObj({
     fontSize: '$sm',
@@ -194,6 +200,11 @@ const styles = {
     color: '$intentsBase12',
   }),
   accountCardBody: cssObj({
-    p: '$0',
+    margin: '$0',
+  }),
+  accountItem: cssObj({
+    '& ~ &': {
+      borderTop: '1px solid $bodyBg',
+    },
   }),
 };

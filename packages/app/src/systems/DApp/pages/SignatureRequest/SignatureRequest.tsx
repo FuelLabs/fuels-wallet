@@ -14,7 +14,7 @@ export function SignatureRequest() {
   return (
     <>
       <Layout title={`Signature Request`} isLoading={isLoading}>
-        <Layout.Content>
+        <Layout.Content css={{ pt: '$4' }}>
           <Box.Flex gap="$4" direction="column">
             <ConnectInfo
               headerText="Signing a message to:"
@@ -26,8 +26,8 @@ export function SignatureRequest() {
               <AccountInfo account={account} headerText="Signer account:" />
             )}
             <Card>
-              <Card.Body css={{ p: '$3' }}>
-                <Box.Flex css={{ alignItems: 'center', gap: '$3' }}>
+              <Card.Body css={{ margin: '0', px: '$4', py: '$3' }}>
+                <Box.Flex css={{ alignItems: 'center', gap: '$2' }}>
                   <HelperIcon
                     color="intentsBase12"
                     css={{ fontWeight: '$normal' }}

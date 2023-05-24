@@ -1,3 +1,4 @@
+import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import {
   Avatar,
@@ -17,6 +18,7 @@ import { AccountItemLoader } from './AccountItemLoader';
 import { FuelAddress } from '~/systems/Account';
 
 export type AccountItemProps = {
+  css?: ThemeUtilsCSS;
   account: Account;
   isToggleChecked?: boolean;
   isCurrent?: boolean;
@@ -49,18 +51,21 @@ export const AccountItem: AccountItemComponent = ({
   onToggle,
   onToggleHidden,
   onUpdate,
+  css,
 }: AccountItemProps) => {
   if (isHidden) return null;
 
   function getRightEl() {
     if (onToggle) {
       return (
-        <Switch
-          size="sm"
-          checked={isToggleChecked}
-          aria-label={`Toggle ${account.name}`}
-          onCheckedChange={() => onToggle?.(account.address, isToggleChecked)}
-        />
+        <Box.Flex align="center">
+          <Switch
+            size="sm"
+            checked={isToggleChecked}
+            aria-label={`Toggle ${account.name}`}
+            onCheckedChange={() => onToggle?.(account.address, isToggleChecked)}
+          />
+        </Box.Flex>
       );
     }
 
@@ -129,7 +134,7 @@ export const AccountItem: AccountItemComponent = ({
       isActive={isCurrent}
       onClick={account.isHidden ? undefined : onPress}
       rightEl={getRightEl()}
-      css={styles.root}
+      css={{ ...styles.root, ...css }}
       aria-disabled={isDisabled}
       aria-label={account.name}
       data-compact={compact}
