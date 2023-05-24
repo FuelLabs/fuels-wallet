@@ -82,7 +82,6 @@ export function ResetDialog({
 const styles = {
   warning: cssObj({
     color: '$intentsBase11',
-    fontWeight: '$extrabold',
   }),
   headingIcon: cssObj({
     marginRight: '$3',

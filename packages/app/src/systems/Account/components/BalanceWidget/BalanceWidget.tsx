@@ -82,7 +82,6 @@ const styles = {
   balanceAddress: cssObj({
     color: '$intentsBase11',
     fontSize: '$sm',
-    fontWeight: 'bold',
   }),
   visibilityContainer: cssObj({
     marginTop: '$2',
@@ -98,7 +97,6 @@ const styles = {
   }),
   balance: cssObj({
     fontSize: '1.625rem',
-    fontWeight: 'bold',
     margin: '$2 0',
 
     '&[aria-hidden="true"]': {

@@ -72,7 +72,6 @@ const styles = {
   }),
   title: cssObj({
     fontSize: '$sm',
-    fontWeight: '$extrabold',
     color: '$intentsBase12',
     textOverflow: 'ellipsis',
   }),
