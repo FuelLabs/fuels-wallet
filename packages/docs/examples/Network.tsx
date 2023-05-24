@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import { Button, Stack, Tag, Text } from '@fuel-ui/react';
+import { Button, Box, Tag, Text } from '@fuel-ui/react';
 import { useState } from 'react';
 
 import type { FuelProviderConfig } from '~/../types/src';
@@ -29,7 +29,7 @@ export function Network() {
 
   return (
     <ExampleBox error={errorMessage}>
-      <Stack css={styles.root}>
+      <Box.Stack css={styles.root}>
         <Button
           onPress={handleGetNetwork}
           isLoading={isLoadingNetwork}
@@ -37,14 +37,14 @@ export function Network() {
         >
           Get network
         </Button>
-        <Stack gap="$3" css={{ mt: '$2' }}>
+        <Box.Stack gap="$3" css={{ mt: '$2' }}>
           {network && (
             <Tag size="xs" color="gray" variant="ghost">
               <Text>{network.url}</Text>
             </Tag>
           )}
-        </Stack>
-      </Stack>
+        </Box.Stack>
+      </Box.Stack>
     </ExampleBox>
   );
 }
