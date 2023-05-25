@@ -122,17 +122,17 @@ importers:
         specifier: 0.41.0
         version: 0.41.0
       '@fuel-ui/config':
-        specifier: 0.15.1-pr--e15a9d2
-        version: 0.15.1-pr--e15a9d2(typescript@4.9.5)
+        specifier: 0.15.1-pr--ad2cb33
+        version: 0.15.1-pr--ad2cb33(typescript@4.9.5)
       '@fuel-ui/css':
-        specifier: 0.15.1-pr--e15a9d2
-        version: 0.15.1-pr--e15a9d2
+        specifier: 0.15.1-pr--ad2cb33
+        version: 0.15.1-pr--ad2cb33
       '@fuel-ui/react':
-        specifier: 0.15.1-pr--e15a9d2
-        version: 0.15.1-pr--e15a9d2(@babel/core@7.21.3)(@jest/types@29.5.0)(@types/node@18.15.5)(@types/react@18.0.28)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@4.9.5)
+        specifier: 0.15.1-pr--ad2cb33
+        version: 0.15.1-pr--ad2cb33(@babel/core@7.21.3)(@jest/types@29.5.0)(@types/node@18.15.5)(@types/react@18.0.28)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@4.9.5)
       '@fuel-ui/test-utils':
-        specifier: 0.15.1-pr--e15a9d2
-        version: 0.15.1-pr--e15a9d2(@babel/core@7.21.3)(@jest/types@29.5.0)(@types/node@18.15.5)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@4.9.5)
+        specifier: 0.15.1-pr--ad2cb33
+        version: 0.15.1-pr--ad2cb33(@babel/core@7.21.3)(@jest/types@29.5.0)(@types/node@18.15.5)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@4.9.5)
       '@fuel-wallet/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -632,17 +632,17 @@ importers:
   packages/storage:
     devDependencies:
       '@fuel-ui/config':
-        specifier: 0.15.1-pr--e15a9d2
-        version: 0.15.1-pr--e15a9d2(typescript@4.9.5)
+        specifier: 0.15.1-pr--ad2cb33
+        version: 0.15.1-pr--ad2cb33(typescript@4.9.5)
       '@fuel-ui/css':
-        specifier: 0.15.1-pr--e15a9d2
-        version: 0.15.1-pr--e15a9d2
+        specifier: 0.15.1-pr--ad2cb33
+        version: 0.15.1-pr--ad2cb33
       '@fuel-ui/react':
-        specifier: 0.15.1-pr--e15a9d2
-        version: 0.15.1-pr--e15a9d2(@babel/core@7.21.3)(@jest/types@29.5.0)(@types/node@18.15.5)(@types/react@18.0.28)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@4.9.5)
+        specifier: 0.15.1-pr--ad2cb33
+        version: 0.15.1-pr--ad2cb33(@babel/core@7.21.3)(@jest/types@29.5.0)(@types/node@18.15.5)(@types/react@18.0.28)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@4.9.5)
       '@fuel-ui/test-utils':
-        specifier: 0.15.1-pr--e15a9d2
-        version: 0.15.1-pr--e15a9d2(@babel/core@7.21.3)(@jest/types@29.5.0)(@types/node@18.15.5)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@4.9.5)
+        specifier: 0.15.1-pr--ad2cb33
+        version: 0.15.1-pr--ad2cb33(@babel/core@7.21.3)(@jest/types@29.5.0)(@types/node@18.15.5)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@4.9.5)
       '@fuel-wallet/config':
         specifier: workspace:*
         version: link:../config
@@ -3556,8 +3556,8 @@ packages:
       - typescript
     dev: false
 
-  /@fuel-ui/config@0.15.1-pr--e15a9d2(typescript@4.9.5):
-    resolution: {integrity: sha512-EQz1axA46NdNrVh+5OV0k0mnKQFK0WHrHVSLX2t5CcEhQ2+GSLtRMGIjh5s5hsrRhsYmrxFItWmZ34HFe46JfA==}
+  /@fuel-ui/config@0.15.1-pr--ad2cb33(typescript@4.9.5):
+    resolution: {integrity: sha512-nSlSCrFpsCtYIP2bXKS0A6tCBjtve3EDHtjVQNpV5hchMuIyD+oT0TwDmXM/11mMNjKR6CVr2UQEYfktOvkFQA==}
     dependencies:
       '@typescript-eslint/eslint-plugin': 5.59.7(@typescript-eslint/parser@5.59.7)(eslint@8.41.0)(typescript@4.9.5)
       '@typescript-eslint/parser': 5.59.7(eslint@8.41.0)(typescript@4.9.5)
@@ -3602,10 +3602,10 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@fuel-ui/css@0.15.1-pr--e15a9d2:
-    resolution: {integrity: sha512-Sx70tA0W4EtSMaQKgrlsuiltaSXrkEDGaYugNo5XNuze90g2f+y4ZW0Yymp0et5v6nJklSbxURbP+DEPmOplcA==}
+  /@fuel-ui/css@0.15.1-pr--ad2cb33:
+    resolution: {integrity: sha512-yyDplTGl82cOVDJkjSDxQ8c5SnlJC6tKK2uB94d7l6NtQjrBnIDXfMiqshyK11vH0F01TdDftwVinFZUxuLwTg==}
     dependencies:
-      '@fuel-ui/design-tokens': 0.15.1-pr--e15a9d2
+      '@fuel-ui/design-tokens': 0.15.1-pr--ad2cb33
       '@radix-ui/colors': 0.1.8
       classnames: 2.3.2
       react: 18.2.0
@@ -3629,8 +3629,8 @@ packages:
       lodash: 4.17.21
     dev: false
 
-  /@fuel-ui/design-tokens@0.15.1-pr--e15a9d2:
-    resolution: {integrity: sha512-Q6eF+dkVtu2EPOgPwfkfnEIIvVrA4tSGF3UrO3A7n3jo+Kw58qzxyqoBXKbPBpKCctwUVaMGGQclcGH/Q9WETA==}
+  /@fuel-ui/design-tokens@0.15.1-pr--ad2cb33:
+    resolution: {integrity: sha512-zYL/0e2Jjbx28JZvmGdLeEIv7dBKNc3+Gmky4yvM9vPanQBr5tyT2nLTrbEciqbfVF310tcZCD+XSg0qW2vm6w==}
     dependencies:
       '@radix-ui/colors': 0.1.8
       chroma-js: 2.4.2
@@ -3747,12 +3747,12 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/react@0.15.1-pr--e15a9d2(@babel/core@7.21.3)(@jest/types@29.5.0)(@types/node@18.15.5)(@types/react@18.0.28)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@4.9.5):
-    resolution: {integrity: sha512-sbKJJ62fibMOAwZ9i35FZ5LfnXibFK81oPCQyuaZGqSvmIgF0vagAsAj39WWryWHJHdO6sObqVzoP41SL1ljNA==}
+  /@fuel-ui/react@0.15.1-pr--ad2cb33(@babel/core@7.21.3)(@jest/types@29.5.0)(@types/node@18.15.5)(@types/react@18.0.28)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@4.9.5):
+    resolution: {integrity: sha512-g9qbwCTWxUAp+R14+VtgktF59LkELwnGiE3lR1PKPJvPoLcm5HJvkPDr4PBiHzwPTkColBNlF51/VCYUWn06lg==}
     dependencies:
       '@fuel-ts/math': 0.42.0
-      '@fuel-ui/css': 0.15.1-pr--e15a9d2
-      '@fuel-ui/test-utils': 0.15.1-pr--e15a9d2(@babel/core@7.21.3)(@jest/types@29.5.0)(@types/node@18.15.5)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@4.9.5)
+      '@fuel-ui/css': 0.15.1-pr--ad2cb33
+      '@fuel-ui/test-utils': 0.15.1-pr--ad2cb33(@babel/core@7.21.3)(@jest/types@29.5.0)(@types/node@18.15.5)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@4.9.5)
       '@radix-ui/react-accordion': 1.1.1(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-alert-dialog': 1.0.3(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-aspect-ratio': 1.0.2(react-dom@18.2.0)(react@18.2.0)
@@ -3878,8 +3878,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils@0.15.1-pr--e15a9d2(@babel/core@7.21.3)(@jest/types@29.5.0)(@types/node@18.15.5)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@4.9.5):
-    resolution: {integrity: sha512-vLqs7bzWLNQZCWk8jpzkGVzzXbNhUHFEKIAgMsBDPSRp/GSbbI3CphcWMJzgbet7xQ39Xhl+inY0IQb09xYN8A==}
+  /@fuel-ui/test-utils@0.15.1-pr--ad2cb33(@babel/core@7.21.3)(@jest/types@29.5.0)(@types/node@18.15.5)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@4.9.5):
+    resolution: {integrity: sha512-NBkDbfsCIzMB6ShQ51liN/TnR3mtHLr22M+1fP/uIuKI6OMGYIrq1FjcPxXfFaRWffzIq02WSDj6yBE0FAeE4Q==}
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
@@ -9136,19 +9136,6 @@ packages:
       lz-string: 1.4.4
       pretty-format: 27.5.1
 
-  /@testing-library/dom@9.0.1:
-    resolution: {integrity: sha512-fTOVsMY9QLFCCXRHG3Ese6cMH5qIWwSbgxZsgeF5TNsy81HKaZ4kgehnSF8FsR3OF+numlIV2YcU79MzbnhSig==}
-    engines: {node: '>=14'}
-    dependencies:
-      '@babel/code-frame': 7.18.6
-      '@babel/runtime': 7.21.0
-      '@types/aria-query': 5.0.1
-      aria-query: 5.1.3
-      chalk: 4.1.2
-      dom-accessibility-api: 0.5.16
-      lz-string: 1.5.0
-      pretty-format: 27.5.1
-
   /@testing-library/dom@9.2.0:
     resolution: {integrity: sha512-xTEnpUKiV/bMyEsE5bT4oYA0x0Z/colMtxzUY8bKyPXBNLn/e0V4ZjBZkEhms0xE4pv9QsPfSRu9AWS4y5wGvA==}
     engines: {node: '>=14'}
@@ -9203,7 +9190,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.21.0
-      '@testing-library/dom': 9.0.1
+      '@testing-library/dom': 9.3.0
       '@types/react-dom': 18.0.11
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
