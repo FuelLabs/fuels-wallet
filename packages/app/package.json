@@ -11,7 +11,7 @@
     "dev": "vite",
     "dev:crx": "vite --config vite.crx.config.ts",
     "preview": "vite preview",
-    "storybook": "storybook dev -p 6006",
+    "storybook:dev": "storybook dev -p 6006",
     "test": "jest --verbose",
     "test:ci": "pnpm ts:check && pnpm test",
     "test:watch": "jest --watch",
