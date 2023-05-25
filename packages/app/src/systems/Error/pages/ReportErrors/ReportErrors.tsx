@@ -30,7 +30,7 @@ export function ReportErrors() {
   return (
     <>
       <Dialog.Heading>
-        Crash Report
+        Report Errors
         <IconButton
           data-action="closed"
           variant="link"
@@ -50,11 +50,11 @@ export function ReportErrors() {
             <Icon icon="AlertTriangle" size={32} />
             <Heading as="h5">What happened?</Heading>
             <Text>
-              Fuel Wallet has detected unreported crashes. We&apos;re sorry for
-              the inconvenience.
+              Fuel Wallet has detected unreported errors / crashes. We&apos;re
+              sorry for the inconvenience.
               <br />
               <br />
-              Would you like to send us a crash report to help us improve Fuel
+              Would you like to send us the error report to help us improve Fuel
               Wallet?
             </Text>
           </Stack>
@@ -67,6 +67,7 @@ export function ReportErrors() {
             isDisabled={isLoadingSendAlways}
             isLoading={isLoadingSendAlways}
             onPress={handlers.alwaysReportErrors}
+            aria-label="Report Error Always"
           >
             Always Send
           </Button> */}
@@ -76,6 +77,7 @@ export function ReportErrors() {
             isDisabled={isLoadingSendOnce}
             isLoading={isLoadingSendOnce}
             onPress={handlers.reportErrorsOnce}
+            aria-label="Report Error Once"
           >
             Send to Fuel
           </Button>
@@ -84,6 +86,7 @@ export function ReportErrors() {
             isDisabled={isLoadingDontSend}
             isLoading={isLoadingDontSend}
             onPress={handlers.dontReportErrors}
+            aria-label="Don't send error report"
           >
             Don&apos;t Send
           </Button>

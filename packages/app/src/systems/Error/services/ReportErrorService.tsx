@@ -17,7 +17,8 @@ export class ReportErrorService {
       errors.map((error) => JSON.stringify(error)).join('\n')
     );
     window?.open(
-      `mailto:${DEV_EMAIL}?subject=Fuel Wallet Error Report&body=${errorMailBody}`
+      `mailto:${DEV_EMAIL}?subject=Fuel Wallet Error Report&body=${errorMailBody}`,
+      '_blank'
     );
     return true;
   }
