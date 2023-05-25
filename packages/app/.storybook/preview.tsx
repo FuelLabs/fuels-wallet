@@ -10,6 +10,7 @@ import { themes } from '@storybook/theming';
 import { mswDecorator, initialize } from 'msw-storybook-addon';
 import { withRouter } from 'storybook-addon-react-router-v6';
 
+import { MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
 import { StoreProvider } from '../src/systems/Store';
 import { WALLET_WIDTH, WALLET_HEIGHT } from '../src/config';
 
@@ -47,7 +48,7 @@ export const parameters = {
   },
   viewport: {
     viewports: {
-      // ...INITIAL_VIEWPORTS,
+      ...MINIMAL_VIEWPORTS,
       chromeExtension: {
         name: 'Chrome Extension',
         styles: {
