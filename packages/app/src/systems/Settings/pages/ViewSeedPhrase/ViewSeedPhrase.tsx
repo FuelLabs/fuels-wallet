@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Dialog, Alert } from '@fuel-ui/react';
+import { Box, Button, Dialog, Alert, IconButton, Icon } from '@fuel-ui/react';
 
 import { useExportVault } from '../../hooks';
 
@@ -28,7 +28,16 @@ export function ViewSeedPhrase() {
 
   return (
     <>
-      <Dialog.Heading>Seed Phrase</Dialog.Heading>
+      <Dialog.Heading>
+        Seed Phrase
+        <IconButton
+          data-action="closed"
+          variant="link"
+          icon={<Icon icon="X" color="intentsBase8" />}
+          aria-label="Close unlock window"
+          onPress={close}
+        />
+      </Dialog.Heading>
       <Dialog.Description as="div">
         <Box.Flex gap="$4" direction="column" align="center">
           <Box css={styles.mnemonicWrapper}>
