@@ -37,6 +37,7 @@
     "changeset:check": "changeset status --since=master",
     "deps:update": "updates -gu && pnpm -r exec updates -gu",
     "dev": "./scripts/dev.sh",
+    "dev:storybook": "./scripts/dev.sh --storybook",
     "dev:docs": "./scripts/dev.sh --docs",
     "dev:crx": "./scripts/dev.sh --crx",
     "lint": "run-s lint:check prettier:check",
