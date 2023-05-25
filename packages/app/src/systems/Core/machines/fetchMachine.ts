@@ -116,7 +116,6 @@ export const FetchMachine = {
             attempts: (ctx) => (ctx.attempts ?? 0) + 1,
           }),
           logError: (_, ev) => {
-            console.log('logging error');
             const error = errorToFuelError(ev.data as Error);
             db.errors.add(error);
           },
