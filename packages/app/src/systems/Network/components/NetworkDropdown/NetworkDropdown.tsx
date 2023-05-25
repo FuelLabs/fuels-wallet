@@ -42,13 +42,18 @@ const styles = {
     borderRadius: '$full',
     background: 'transparent',
 
-    '&:not([aria-disabled="true"]):hover': {
-      bg: '$inverseA3',
-      boxShadow: 'none',
-      border: '1px solid $border',
-    },
+    '&:not([aria-disabled="true"])': {
+      '&:hover': {
+        bg: '$inverseA3',
+        boxShadow: 'none',
+        border: '1px solid $border',
+        color: '$intentsBase11',
+      },
 
-    '& .fuel_Icon': { color: '$intentsBase8' },
+      '&:hover .fuel_Icon, & .fuel_Icon': {
+        color: 'currentColor',
+      },
+    },
 
     '&:focus': {
       outlineColor: '$intentsBase2 !important',

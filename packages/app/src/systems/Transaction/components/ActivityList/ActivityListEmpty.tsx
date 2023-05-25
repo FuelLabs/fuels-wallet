@@ -21,7 +21,7 @@ export function ActivityListEmpty({ isDevnet }: ActivityEmptyProps) {
         wrapperCSS={{ mb: '$5', mt: '$16' }}
       />
       <Heading as="h5">No activity yet</Heading>
-      <Text fontSize="sm" css={styles.text}>
+      <Text fontSize="sm">
         When you make a transaction you&apos;ll see it here
       </Text>
       {isDevnet && (
@@ -52,8 +52,5 @@ const styles = {
     h5: {
       margin: 0,
     },
-  }),
-  text: cssObj({
-    fontWeight: '500',
   }),
 };

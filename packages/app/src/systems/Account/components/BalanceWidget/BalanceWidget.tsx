@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Heading, Icon, IconButton, Text } from '@fuel-ui/react';
+import { Avatar, Box, Button, Heading, Icon, Text } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 
@@ -39,22 +39,34 @@ export function BalanceWidget({
   return (
     <BalanceWidgetWrapper>
       <Box.Flex justify="space-between">
-        <Box.Stack gap="$1">
-          <Heading as="h6" css={styles.name}>
-            {account.name}
-          </Heading>
-          <FuelAddress address={account.address} css={styles.balanceAddress} />
-        </Box.Stack>
-        <IconButton
+        <Box.Flex css={styles.accountInfo}>
+          <Avatar.Generated
+            size="sm"
+            hash={account?.address as string}
+            css={{ boxShadow: '$sm' }}
+          />
+          <Box.Stack gap="$1">
+            <Heading as="h6" css={styles.name}>
+              {account.name}
+            </Heading>
+            <FuelAddress
+              address={account.address}
+              css={styles.balanceAddress}
+            />
+          </Box.Stack>
+        </Box.Flex>
+        <Button
           size="xs"
           variant="link"
-          icon={<Icon icon="ChevronDown" color="intentsBase8" />}
+          rightIcon={<Icon icon="ChevronDown" color="intentsBase8" />}
           aria-label="Accounts"
           onPress={handlers.goToList}
           css={styles.visibilityToggle}
-        />
+        >
+          Change
+        </Button>
       </Box.Flex>
-      <Box.Flex justify="space-between">
+      <Box.Flex gap="$2">
         <Text
           css={styles.balance}
           aria-hidden={visibility}
@@ -107,5 +119,9 @@ const styles = {
   name: cssObj({
     lineHeight: '$tight',
     margin: '0px 0px -6px',
+  }),
+  accountInfo: cssObj({
+    gap: '$3',
+    alignItems: 'center',
   }),
 };
