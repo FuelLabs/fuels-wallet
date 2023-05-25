@@ -116,16 +116,12 @@ export const styles = {
   wrapper: cssObj({
     overflow: 'clip',
     position: 'relative',
-    width: WALLET_WIDTH,
-    height: WALLET_HEIGHT,
+    width: WALLET_WIDTH - 2, // reduce the border to contain width inside the window
+    height: WALLET_HEIGHT - 2, // reduce the border to contain width inside the window
     background: '$bodyColor',
     zIndex: '$0',
-    ...(IS_CRX_POPUP
-      ? null
-      : {
-          border: '1px solid $border',
-          borderRadius: '$default',
-        }),
+    border: '1px solid $border',
+    borderRadius: IS_CRX_POPUP ? 0 : '$default',
   }),
   inner: coreStyles.fullscreen,
   content: cssObj({
