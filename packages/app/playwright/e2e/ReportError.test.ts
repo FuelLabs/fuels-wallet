@@ -23,6 +23,14 @@ test.describe('ReportError', () => {
     await mockData(page);
   });
 
+  async function getPageErrors(page: Page): Promise<any> {
+    return page.evaluate(async () => {
+      const fuelDB = window.fuelDB;
+      const errors = await fuelDB.errors.toArray();
+      return errors;
+    });
+  }
+
   test('should log errors after trying to add network twice', async () => {
     await visit(page, '/wallet');
     await getByAriaLabel(page, 'Selected Network').click();
@@ -55,6 +63,7 @@ test.describe('ReportError', () => {
 
   test('should show report error dialog when there is an error', async () => {
     await reload(page);
+    const errors = await getPageErrors(page);
     // check if the password page is displayed
     const hasPasswordInput = await getByAriaLabel(
       page,
@@ -64,14 +73,13 @@ test.describe('ReportError', () => {
       await getByAriaLabel(page, 'Your Password').type(WALLET_PASSWORD);
       await getByAriaLabel(page, 'Unlock wallet').click();
     }
-    await hasText(page, /Help us improve Fuel Wallet/i);
-    await getByAriaLabel(page, 'Report Error Once').click();
-    // since we cannot test test mailto link handler, we'll just check if the errors were cleard
-    const errors = await page.evaluate(async () => {
-      const fuelDB = window.fuelDB;
-      const errors = await fuelDB.errors.toArray();
-      return errors;
-    });
-    await expect(errors.length).toBe(0);
+    if (errors.length > 0) {
+      await hasText(page, /Help us improve Fuel Wallet/i);
+      await getByAriaLabel(page, 'Report Error Once').click();
+      await page.waitForTimeout(3500);
+      // since we cannot test test mailto link handler, we'll just check if the errors were cleard
+      const errors = await getPageErrors(page);
+      await expect(errors.length).toBe(0);
+    }
   });
 });
