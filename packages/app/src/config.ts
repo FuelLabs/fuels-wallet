@@ -9,7 +9,7 @@ export const {
   VITE_APP_VERSION,
   VITE_DATABASE_VERSION,
   VITE_CRX,
-  VITE_DEV_EMAIL,
+  VITE_ERROR_REPORT_EMAIL,
   NODE_ENV,
 } = import.meta.env;
 
@@ -28,7 +28,7 @@ export const IS_CRX =
 export const IS_LOGGED_KEY = 'isLogged';
 export const HAS_ACCEPTED_TERMS_KEY = 'hasAcceptedTerms';
 export const REPORT_ERROR_FREQUENCY_KEY = 'errorReportingFrequency';
-export const DEV_EMAIL = VITE_DEV_EMAIL;
+export const REPORT_ERROR_EMAIL = VITE_ERROR_REPORT_EMAIL;
 export const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 export const IS_TEST = process.env.NODE_ENV === 'test';
 export const IS_CRX_POPUP =

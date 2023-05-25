@@ -1,6 +1,6 @@
 import type { FuelWalletError, ReportErrorFrequency } from '@fuel-wallet/types';
 
-import { REPORT_ERROR_FREQUENCY_KEY, DEV_EMAIL } from '~/config';
+import { REPORT_ERROR_FREQUENCY_KEY, REPORT_ERROR_EMAIL } from '~/config';
 import { Storage, db } from '~/systems/Core';
 
 function encodeHTMLEntities(text: string) {
@@ -17,7 +17,7 @@ export class ReportErrorService {
       errors.map((error) => JSON.stringify(error)).join('\n')
     );
     window?.open(
-      `mailto:${DEV_EMAIL}?subject=Fuel Wallet Error Report&body=${errorMailBody}`,
+      `mailto:${REPORT_ERROR_EMAIL}?subject=Fuel Wallet Error Report&body=${errorMailBody}`,
       '_blank'
     );
     return true;

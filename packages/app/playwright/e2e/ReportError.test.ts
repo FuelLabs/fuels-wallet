@@ -74,6 +74,7 @@ test.describe('ReportError', () => {
       await getByAriaLabel(page, 'Unlock wallet').click();
     }
     if (errors.length > 0) {
+      // if there are errors, the report error dialog should be displayed
       await hasText(page, /Help us improve Fuel Wallet/i);
       await getByAriaLabel(page, 'Report Error Once').click();
       await page.waitForTimeout(3500);
