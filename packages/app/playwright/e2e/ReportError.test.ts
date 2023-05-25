@@ -9,7 +9,7 @@ import {
   getInputByName,
   reload,
 } from '../commons';
-import { DEFAULT_NETWORKS, mockData } from '../mocks';
+import { DEFAULT_NETWORKS, WALLET_PASSWORD, mockData } from '../mocks';
 
 test.describe('ReportError', () => {
   let browser: Browser;
@@ -55,6 +55,15 @@ test.describe('ReportError', () => {
 
   test('should show report error dialog when there is an error', async () => {
     await reload(page);
+    // check if the password page is displayed
+    const hasPasswordInput = await getByAriaLabel(
+      page,
+      'Your Password'
+    ).count();
+    if (hasPasswordInput > 0) {
+      await getByAriaLabel(page, 'Your Password').type(WALLET_PASSWORD);
+      await getByAriaLabel(page, 'Unlock wallet').click();
+    }
     await hasText(page, /Help us improve Fuel Wallet/i);
     await getByAriaLabel(page, 'Report Error Once').click();
     // since we cannot test test mailto link handler, we'll just check if the errors were cleard
