@@ -1,5 +1,4 @@
 import { Button } from '@fuel-ui/react';
-import type { StoryFn } from '@storybook/react';
 
 import { ResetDialog } from './ResetDialog';
 
@@ -13,7 +12,7 @@ export default {
   },
 };
 
-export const Usage: StoryFn<never> = () => {
+export const Usage = () => {
   return (
     <>
       <ResetDialog onReset={() => {}}>

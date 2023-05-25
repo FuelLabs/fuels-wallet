@@ -1,5 +1,3 @@
-import type { StoryFn } from '@storybook/react';
-
 import { UnlockCard } from './UnlockCard';
 
 import { createMockAccount } from '~/systems/Account/__mocks__';
@@ -12,7 +10,7 @@ export default {
   },
 };
 
-export const Usage: StoryFn<never> = () => {
+export const Usage = () => {
   return (
     <>
       <UnlockCard onUnlock={() => {}} onReset={() => {}} />

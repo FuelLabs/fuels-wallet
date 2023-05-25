@@ -1,15 +1,19 @@
+import React from 'react';
 import { darkColors } from '@fuel-ui/css';
-import { createTheme, ThemeProvider } from '@fuel-ui/react';
+import {
+  createTheme,
+  darkTheme,
+  lightTheme,
+  ThemeProvider,
+} from '@fuel-ui/react';
 import { themes } from '@storybook/theming';
 import { mswDecorator, initialize } from 'msw-storybook-addon';
 import { withRouter } from 'storybook-addon-react-router-v6';
-import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 
-import { StoreProvider } from '../src/store';
+import { StoreProvider } from '../src/systems/Store';
 import { WALLET_WIDTH, WALLET_HEIGHT } from '../src/config';
 
 import theme from './theme';
-import { join } from 'path';
 
 export const parameters = {
   actions: {
@@ -31,15 +35,19 @@ export const parameters = {
     dark: {
       ...themes.dark,
       ...theme,
+      appBg: '#101010',
+      barBg: '#151515',
     },
     light: {
       ...themes.light,
       ...theme,
     },
+    darkClass: darkTheme.theme.className,
+    lightClass: lightTheme.theme.className,
   },
   viewport: {
     viewports: {
-      ...INITIAL_VIEWPORTS,
+      // ...INITIAL_VIEWPORTS,
       chromeExtension: {
         name: 'Chrome Extension',
         styles: {
@@ -58,14 +66,14 @@ export const fuelTheme = createTheme('fuels-wallet', {
       ...darkColors,
       body: '#090909',
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    },
+    } as any,
   },
 });
 
 export const decorators = [
   mswDecorator,
   withRouter,
-  (Story) => (
+  (Story: any) => (
     <StoreProvider>
       <ThemeProvider themes={{ fuel: fuelTheme }}>
         <Story />
@@ -77,6 +85,6 @@ export const decorators = [
 initialize({
   onUnhandledRequest: 'bypass',
   serviceWorker: {
-    url: join(process.env.STORYBOOK_BASE_URL || '', '/mockServiceWorker.js'),
+    url: `${process.env.STORYBOOK_BASE_URL || ''}/mockServiceWorker.js`,
   },
 });
