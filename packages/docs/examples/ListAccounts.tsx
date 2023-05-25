@@ -14,10 +14,11 @@ export function ListAccounts() {
   const [accounts, setAccounts] = useState<Array<string>>([]);
   const [handleGetAccounts, isLoadingAccounts, errorGetAccounts] = useLoading(
     async () => {
-      console.debug('Request accounts to Wallet!');
+      if (!isConnected) await fuel.connect();
+      console.log('Request accounts to Wallet!');
       /* example:start */
       const accounts = await fuel.accounts();
-      console.debug('Accounts ', accounts);
+      console.log('Accounts ', accounts);
       /* example:end */
       setAccounts(accounts);
     }
@@ -31,7 +32,7 @@ export function ListAccounts() {
         <Button
           onPress={handleGetAccounts}
           isLoading={isLoadingAccounts}
-          isDisabled={isLoadingAccounts || !isConnected}
+          isDisabled={isLoadingAccounts || !fuel}
         >
           Get accounts
         </Button>

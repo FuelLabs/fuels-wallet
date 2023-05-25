@@ -117,7 +117,6 @@ export function useAccounts() {
     isLoading: status('loading'),
     handlers: {
       closeDialog,
-      goToAdd: store.openAccountsAdd,
       goToList: store.openAccountList,
       goToEdit: store.openAccountEdit,
       goToExport: store.openAccountExport,

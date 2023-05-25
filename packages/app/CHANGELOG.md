@@ -1,5 +1,45 @@
 # fuels-wallet
 
+## 0.9.2
+
+### Patch Changes
+
+- Updated dependencies [[`bad48d1`](https://github.com/FuelLabs/fuels-wallet/commit/bad48d1b3036bca6ae28ddcc0f97cf921c6c0ab7)]:
+  - @fuel-wallet/sdk@0.9.2
+  - @fuel-wallet/types@0.9.2
+
+## 0.9.1
+
+### Patch Changes
+
+- [#754](https://github.com/FuelLabs/fuels-wallet/pull/754) [`2431f14`](https://github.com/FuelLabs/fuels-wallet/commit/2431f14bde68510dd626206a34c542f1762e3ff4) Thanks [@sarahschwartz](https://github.com/sarahschwartz)! - Text on screens updated to be more concise and readable
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.9.1
+  - @fuel-wallet/types@0.9.1
+
+## 0.9.0
+
+### Minor Changes
+
+- [#749](https://github.com/FuelLabs/fuels-wallet/pull/749) [`bc0eb33`](https://github.com/FuelLabs/fuels-wallet/commit/bc0eb33046555e5d75eb4fbe08ef8bea9d0d28de) Thanks [@eswarasai](https://github.com/eswarasai)! - Fixed edit account not updating the account list
+
+- [#741](https://github.com/FuelLabs/fuels-wallet/pull/741) [`3aa6d4c`](https://github.com/FuelLabs/fuels-wallet/commit/3aa6d4cbc3d61dc172db523a0cf988c1242de963) Thanks [@tomiiide](https://github.com/tomiiide)! - Auto generate names for new accounts
+
+- [#740](https://github.com/FuelLabs/fuels-wallet/pull/740) [`a58a807`](https://github.com/FuelLabs/fuels-wallet/commit/a58a8072f61175f3f2b82188da7145f2988d644d) Thanks [@eswarasai](https://github.com/eswarasai)! - Updated the texts on the screens
+
+- [#723](https://github.com/FuelLabs/fuels-wallet/pull/723) [`0f5fc2e`](https://github.com/FuelLabs/fuels-wallet/commit/0f5fc2efe1316743f1ab938200b02f7c7b05dd53) Thanks [@eswarasai](https://github.com/eswarasai)! - Modified network add user experience
+
+- [#691](https://github.com/FuelLabs/fuels-wallet/pull/691) [`df19c24`](https://github.com/FuelLabs/fuels-wallet/commit/df19c24391c5e5fdedf90fdbb8786ebff96996f6) Thanks [@eswarasai](https://github.com/eswarasai)! - Improved change password UX and information structure.
+
+### Patch Changes
+
+- [#748](https://github.com/FuelLabs/fuels-wallet/pull/748) [`372dc88`](https://github.com/FuelLabs/fuels-wallet/commit/372dc8828ab0777cc5bed139cebe5ba39c5d3817) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: upgrade fuels
+
+- Updated dependencies [[`372dc88`](https://github.com/FuelLabs/fuels-wallet/commit/372dc8828ab0777cc5bed139cebe5ba39c5d3817)]:
+  - @fuel-wallet/types@0.9.0
+  - @fuel-wallet/sdk@0.9.0
+
 ## 0.8.0
 
 ### Minor Changes

@@ -80,12 +80,6 @@ export const accountsMachine = createMachine(
           SET_CURRENT_ACCOUNT: {
             target: 'settingCurrentAccount',
           },
-          REFRESH_ACCOUNTS: {
-            target: 'fetchingAccounts',
-          },
-          REFRESH_ACCOUNT: {
-            target: 'refreshAccount',
-          },
           TOGGLE_HIDE_ACCOUNT: {
             actions: ['toggleHideAccount', 'notifyUpdateAccounts'],
             target: 'idle',
@@ -180,6 +174,12 @@ export const accountsMachine = createMachine(
       LOGOUT: {
         target: 'loggingout',
       },
+      REFRESH_ACCOUNTS: {
+        target: 'fetchingAccounts',
+      },
+      REFRESH_ACCOUNT: {
+        target: 'refreshAccount',
+      },
     },
   },
   {
@@ -210,7 +210,7 @@ export const accountsMachine = createMachine(
       notifyUpdateAccounts: () => {
         store.updateAccounts();
       },
-      redirectToHome() {
+      redirectToHome: () => {
         store.closeOverlay();
       },
     },
