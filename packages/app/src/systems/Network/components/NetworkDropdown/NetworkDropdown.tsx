@@ -39,7 +39,7 @@ const styles = {
     pr: '$2',
     border: '1px solid $border',
     color: '$intentsBase10',
-    borderRadius: '$full',
+    borderRadius: '$default',
     background: 'transparent',
 
     '&:not([aria-disabled="true"])': {
@@ -50,7 +50,7 @@ const styles = {
         color: '$intentsBase11',
       },
 
-      '&:hover .fuel_Icon, & .fuel_Icon': {
+      '&:hover .fuel_Icon,& .fuel_Icon': {
         color: 'currentColor',
       },
     },
