@@ -199,7 +199,7 @@ export const accountsMachine = createMachine(
         error: (_, ev) => ev.data,
       }),
       logError: (_, ev) => {
-        ReportErrorService.saveError(ev.data as Error);
+        ReportErrorService.handleError(ev.data as Error);
       },
       clearContext: assign(() => ({})),
       toggleHideAccount: (_, ev) => {

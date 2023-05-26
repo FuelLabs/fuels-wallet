@@ -1,5 +1,7 @@
 import type { FuelWalletError, ReportErrorFrequency } from '@fuel-wallet/types';
 
+import { errorToFuelError } from '../utils';
+
 import { REPORT_ERROR_FREQUENCY_KEY, REPORT_ERROR_EMAIL } from '~/config';
 import { Storage, db } from '~/systems/Core';
 
@@ -15,7 +17,7 @@ export class ReportErrorService {
     // send error as an email to the team
     const errorMailBody = encodeHTMLEntities(
       errors.map((error) => JSON.stringify(error)).join('\n')
-    );
+    ).slice(0, 2000);
     window?.open(
       `mailto:${REPORT_ERROR_EMAIL}?subject=Fuel Wallet Error Report&body=${errorMailBody}`,
       '_blank'
@@ -23,7 +25,26 @@ export class ReportErrorService {
     return true;
   }
 
-  static saveError(error: FuelWalletError) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static handleError(error: any) {
+    try {
+      // handle only network errors
+      if (error?.response?.status) {
+        const status = error.response.status;
+        if (status !== 200) {
+          const formatedError = errorToFuelError(error as Error);
+          return this.saveError(formatedError);
+        }
+      }
+      return this.saveError(errorToFuelError(error as Error));
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+    }
+    return true;
+  }
+
+  private static saveError(error: FuelWalletError) {
     return db.errors.add(error);
   }
 

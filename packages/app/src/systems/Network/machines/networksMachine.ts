@@ -188,7 +188,7 @@ export const networksMachine = createMachine(
         store.updateAccounts();
       },
       logError: (_, ev) => {
-        ReportErrorService.saveError(ev.data as Error);
+        ReportErrorService.handleError(ev.data as Error);
       },
     },
     services: {
