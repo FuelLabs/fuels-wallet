@@ -69,7 +69,7 @@ const styles = {
 
     '.fuel_Card': {
       boxSizing: 'border-box',
-      padding: '$2 $6',
+      padding: '$0 $6 $1',
       display: 'grid',
       gridTemplateColumns: 'auto 1fr auto',
       gridColumnGap: '$6',

@@ -34,7 +34,7 @@ export function AssetListEmpty({
          */
         <Button
           size="sm"
-          intent="primary"
+          variant="ghost"
           leftIcon={Icon.is('Wand')}
           onPress={openFaucet}
         >
@@ -65,7 +65,7 @@ const styles = {
       margin: 0,
     },
     button: {
-      mt: '$2',
+      mt: '$4',
     },
   }),
 };
