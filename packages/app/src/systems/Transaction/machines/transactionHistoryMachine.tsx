@@ -6,6 +6,7 @@ import { TxService } from '../services';
 import type { Tx } from '../utils';
 
 import { FetchMachine } from '~/systems/Core';
+import { ReportErrorService } from '~/systems/Error';
 
 export const TRANSACTION_HISTORY_ERRORS = {
   INVALID_ADDRESS: 'Invalid address',
@@ -105,11 +106,16 @@ export const transactionHistoryMachine = createMachine(
       >({
         showError: true,
         async fetch({ input }) {
-          const address = input?.address;
-          const transactions = await TxService.getTransactionHistory({
-            address: address?.toString() || '',
-          });
-          return transactions;
+          try {
+            const address = input?.address;
+            const transactions = await TxService.getTransactionHistory({
+              address: address?.toString() || '',
+            });
+            return transactions;
+          } catch (e) {
+            await ReportErrorService.handleError(e);
+            throw new Error('There was a problem fetching your transactions');
+          }
         },
       }),
     },
