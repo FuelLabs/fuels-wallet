@@ -53,6 +53,8 @@ export function TermsOfUse() {
   );
 }
 
+const HEIGHT = '350px';
+
 const styles = {
   termsWrapper: {
     layer: 'layer-card',
@@ -60,7 +62,7 @@ const styles = {
     pr: '$2',
     px: '$5',
     boxSizing: 'border-box',
-    height: '480px',
+    height: HEIGHT,
 
     '& >div': {
       marginBottom: '$2',
@@ -91,7 +93,7 @@ const styles = {
     },
   },
   termsContainer: cssObj({
-    height: '480px',
+    height: HEIGHT,
     overflow: 'hidden',
     maxWidth: '700px',
     borderRadius: '$8',

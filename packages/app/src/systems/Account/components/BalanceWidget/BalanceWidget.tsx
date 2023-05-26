@@ -104,8 +104,8 @@ const styles = {
   }),
   balanceWidgetWrapper: cssObj({
     display: 'flex',
+    layer: 'layer-card',
     flexDirection: 'column',
-    is: ['borderHighlight'],
     borderRadius: '$default',
     gap: '$2',
     px: '$4',

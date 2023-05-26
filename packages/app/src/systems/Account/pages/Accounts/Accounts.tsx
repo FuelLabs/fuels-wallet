@@ -42,6 +42,7 @@ export const Accounts = () => {
       </Dialog.Description>
       <Dialog.Footer css={styles.footer}>
         <Button
+          intent="primary"
           variant="ghost"
           aria-label="Add account"
           onPress={addAccountHandlers.addAccount}
