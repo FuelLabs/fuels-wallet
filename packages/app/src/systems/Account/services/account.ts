@@ -6,6 +6,7 @@ import { isEth } from '~/systems/Asset/utils/asset';
 import type { Maybe } from '~/systems/Core/types';
 import { getUniqueString } from '~/systems/Core/utils';
 import { db } from '~/systems/Core/utils/database';
+import { ReportErrorService } from '~/systems/Error';
 
 export type AccountInputs = {
   addAccount: {
@@ -110,6 +111,8 @@ export class AccountService {
       });
       return nextAccount ?? account;
     } catch (error) {
+      // save error
+      ReportErrorService.handleError(error);
       const nextAccount = await AccountService.setBalance({
         data: {
           address: account.address || '',

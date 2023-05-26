@@ -3,10 +3,6 @@ import { toast } from '@fuel-ui/react';
 import type { TransitionConfig } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
-import { db } from '../utils';
-
-import { errorToFuelError } from '~/systems/Error/utils';
-
 export type FetchResponse<T> = T & {
   error?: unknown;
 };
@@ -116,8 +112,8 @@ export const FetchMachine = {
             attempts: (ctx) => (ctx.attempts ?? 0) + 1,
           }),
           logError: (_, ev) => {
-            const error = errorToFuelError(ev.data as Error);
-            db.errors.add(error);
+            // eslint-disable-next-line no-console
+            console.error(ev.data);
           },
         },
         guards: {
