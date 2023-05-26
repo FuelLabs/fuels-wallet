@@ -10,7 +10,7 @@ export function WelcomeScreen() {
   const navigate = useNavigate();
   return (
     <Layout title="Sign Up" isPublic>
-      <Box.Stack gap="$6" align="center">
+      <Box.Stack gap="$6" css={styles.wrapper}>
         <FuelLogo
           size={120}
           css={{ mb: '$8', transform: 'translateY(10px)' }}
@@ -59,6 +59,9 @@ export function WelcomeScreen() {
 }
 
 const styles = {
+  wrapper: cssObj({
+    is: ['centered'],
+  }),
   footer: cssObj({
     width: '$full',
     display: 'grid',
@@ -66,11 +69,12 @@ const styles = {
 
     '.fuel_Card': {
       boxSizing: 'border-box',
-      px: '$4',
+      padding: '$2 $6',
       display: 'grid',
       gridTemplateColumns: 'auto 1fr auto',
       gridColumnGap: '$6',
       border: '1px solid $cardBg',
+      bg: '$intentsBase1',
 
       '&:hover': {
         cursor: 'pointer',
