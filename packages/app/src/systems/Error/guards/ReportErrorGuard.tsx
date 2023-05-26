@@ -6,16 +6,13 @@ import { useReportError } from '../hooks';
 import { store } from '~/store';
 
 export function ReportErrorGuard() {
-  const { reportErrorSilently, hasErrorsToReport } = useReportError();
+  const { hasErrorsToReport } = useReportError();
 
   useEffect(() => {
     if (hasErrorsToReport) {
-      if (reportErrorSilently) {
-        store.reportErrorsSilently();
-      }
       store.openViewReportErrors();
     }
-  }, [hasErrorsToReport, reportErrorSilently]);
+  }, [hasErrorsToReport]);
 
   return <Outlet />;
 }

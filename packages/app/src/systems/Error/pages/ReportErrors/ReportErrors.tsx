@@ -34,10 +34,11 @@ export function ReportErrors() {
         <IconButton
           data-action="closed"
           variant="link"
-          icon={<Icon icon="X" color="gray8" />}
+          icon={<Icon icon="X" />}
           aria-label="Close error dialog"
           isDisabled={isLoading}
           onPress={handlers.close}
+          color="gray"
         />
       </Dialog.Heading>
       <Dialog.Description as="div">
@@ -62,15 +63,6 @@ export function ReportErrors() {
       </Dialog.Description>
       <Dialog.Footer>
         <Stack css={styles.fullWidth}>
-          {/* <Button
-            color="accent"
-            isDisabled={isLoadingSendAlways}
-            isLoading={isLoadingSendAlways}
-            onPress={handlers.alwaysReportErrors}
-            aria-label="Report Error Always"
-          >
-            Always Send
-          </Button> */}
           <Button
             color="accent"
             variant="ghost"

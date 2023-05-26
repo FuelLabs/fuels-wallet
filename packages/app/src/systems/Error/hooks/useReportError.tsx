@@ -1,6 +1,5 @@
 import { ReportErrorFrequency } from '@fuel-wallet/types';
 import { useSelector } from '@xstate/react';
-import { useEffect } from 'react';
 
 import { type ReportErrorMachineState } from '../machines';
 
@@ -30,12 +29,6 @@ const selectors = {
       state.context.frequency === ReportErrorFrequency.DONT
     );
   },
-  reportErrorSilently(state: ReportErrorMachineState) {
-    return (
-      state.context.hasErrors &&
-      state.context.frequency === ReportErrorFrequency.ALWAYS
-    );
-  },
 };
 
 export function useReportError() {
@@ -63,10 +56,6 @@ export function useReportError() {
     selectors.isLoadingSendAlways
   );
   const isLoadingDontSend = useSelector(service, selectors.isLoadingDontSend);
-  const reportErrorSilently = useSelector(
-    service,
-    selectors.reportErrorSilently
-  );
 
   const reportErrorsOnce = () => {
     setReportErrorFrequency(ReportErrorFrequency.ONCE);
@@ -93,18 +82,8 @@ export function useReportError() {
     dontReportErrors();
   };
 
-  useEffect(() => {
-    // if it has errors, and user has chosen to report errors always, then report errors
-    if (reportErrorSilently) {
-      service.send('REPORT_ERRORS', {
-        input: { frequency: ReportErrorFrequency.ALWAYS },
-      });
-    }
-  }, [service, reportErrorSilently]);
-
   return {
     hasErrorsToReport,
-    reportErrorSilently,
     isLoadingDontSend,
     isLoadingSendAlways,
     isLoadingSendOnce,
