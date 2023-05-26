@@ -4,6 +4,7 @@ import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
 
 import { AccountService } from '~/systems/Account';
 import { FetchMachine, WalletLockedCustom } from '~/systems/Core';
+import { ReportErrorService } from '~/systems/Error';
 import { NetworkService } from '~/systems/Network';
 import { TxInputs, TxService } from '~/systems/Transaction/services';
 
@@ -65,10 +66,16 @@ export const sendMachine = createMachine(
       fetchingFakeTx: {
         invoke: {
           src: 'fetchFakeTx',
-          onDone: {
-            target: 'idle',
-            actions: ['assignInitialFee'],
-          },
+          onDone: [
+            {
+              target: 'idle',
+              cond: FetchMachine.hasError,
+            },
+            {
+              target: 'idle',
+              actions: ['assignInitialFee'],
+            },
+          ],
         },
       },
       idle: IDLE_STATE,
@@ -113,10 +120,15 @@ export const sendMachine = createMachine(
     },
     services: {
       fetchFakeTx: FetchMachine.create<null, BN>({
-        showError: false,
+        showError: true,
         async fetch() {
-          const tx = await TxService.createFakeTx();
-          return tx.request.calculateFee().amount;
+          try {
+            const tx = await TxService.createFakeTx();
+            return tx.request.calculateFee().amount;
+          } catch (e) {
+            await ReportErrorService.handleError(e);
+            throw new Error('Failed to calculate fee');
+          }
         },
       }),
       createTransactionRequest: FetchMachine.create<
@@ -134,18 +146,23 @@ export const sendMachine = createMachine(
           if (!to || !assetId || !amount || !network?.url || !account) {
             throw new Error('Missing params for transaction request');
           }
-          const wallet = new WalletLockedCustom(account.address, network.url);
-          const createOpts = { to, amount, assetId };
-          const transactionRequest = await TxService.fundTransaction({
-            transactionRequest: await TxService.createTransfer(createOpts),
-            wallet,
-          });
+          try {
+            const wallet = new WalletLockedCustom(account.address, network.url);
+            const createOpts = { to, amount, assetId };
+            const transactionRequest = await TxService.fundTransaction({
+              transactionRequest: await TxService.createTransfer(createOpts),
+              wallet,
+            });
 
-          return {
-            address: wallet.address.toString(),
-            transactionRequest,
-            providerUrl: network.url,
-          };
+            return {
+              address: wallet.address.toString(),
+              transactionRequest,
+              providerUrl: network.url,
+            };
+          } catch (e) {
+            await ReportErrorService.handleError(e);
+            throw new Error('Failed to create transaction request');
+          }
         },
       }),
     },

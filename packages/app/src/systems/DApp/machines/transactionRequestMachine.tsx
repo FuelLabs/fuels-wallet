@@ -11,6 +11,7 @@ import { assign, createMachine } from 'xstate';
 
 import { AccountService } from '~/systems/Account';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
+import { ReportErrorService } from '~/systems/Error';
 import type { NetworkInputs } from '~/systems/Network';
 import { NetworkService } from '~/systems/Network';
 import type { GroupedErrors, VMApiError } from '~/systems/Transaction';
@@ -172,7 +173,7 @@ export const transactionRequestMachine = createMachine(
           },
           onDone: [
             {
-              target: 'failed',
+              target: 'txFailed',
               actions: ['assignTxApproveError'],
               cond: FetchMachine.hasError,
             },
@@ -293,27 +294,36 @@ export const transactionRequestMachine = createMachine(
     },
     services: {
       fetchGasPrice: FetchMachine.create<NetworkInputs['getNodeInfo'], BN>({
-        showError: false,
+        showError: true,
         async fetch({ input }) {
-          if (!input?.providerUrl) {
-            throw new Error('providerUrl is required');
+          try {
+            if (!input?.providerUrl) {
+              throw new Error('providerUrl is required');
+            }
+            const { minGasPrice } = await NetworkService.getNodeInfo(input);
+            return minGasPrice;
+          } catch (error) {
+            await ReportErrorService.handleError(error);
+            throw new Error('There was a problem fetching the gas price');
           }
-
-          const { minGasPrice } = await NetworkService.getNodeInfo(input);
-          return minGasPrice;
         },
       }),
       simulateTransaction: FetchMachine.create<
         TxInputs['simulateTransaction'],
         MachineServices['simulateTransaction']['data']
       >({
-        showError: false,
+        showError: true,
         async fetch({ input }) {
           if (!input?.transactionRequest) {
             throw new Error('Invalid simulateTransaction input');
           }
-          const receipts = await TxService.simulateTransaction(input);
-          return receipts;
+          try {
+            const receipts = await TxService.simulateTransaction(input);
+            return receipts;
+          } catch (error) {
+            await ReportErrorService.handleError(error);
+            throw new Error('There was a problem simulating the transaction');
+          }
         },
       }),
       send: FetchMachine.create<
@@ -327,7 +337,13 @@ export const transactionRequestMachine = createMachine(
           if (!input?.address || !input?.transactionRequest) {
             throw new Error('Invalid approveTx input');
           }
-          return TxService.send(input);
+          try {
+            const tx = await TxService.send(input);
+            return tx;
+          } catch (error) {
+            await ReportErrorService.handleError(error);
+            throw new Error('There was a problem sending the transaction');
+          }
         },
       }),
       fetchAccount: FetchMachine.create<
