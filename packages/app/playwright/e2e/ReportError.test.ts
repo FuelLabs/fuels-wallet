@@ -23,6 +23,7 @@ test.describe('ReportError', () => {
     await mockData(page);
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async function getPageErrors(page: Page): Promise<any> {
     return page.evaluate(async () => {
       const fuelDB = window.fuelDB;
