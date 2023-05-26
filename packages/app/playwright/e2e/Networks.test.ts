@@ -72,7 +72,7 @@ test.describe('Networks', () => {
     const items = await page.locator('[aria-label*=fuel_network]');
     await expect(items).toHaveCount(2);
     await getByAriaLabel(page, 'Remove').first().click();
-    await hasText(page, /Are you absolutely sure/i);
+    await hasText(page, /Are you sure/i);
     await getButtonByText(page, /confirm/i).click();
     await expect(items).toHaveCount(1);
     await expect(await items.first()).toHaveAttribute('data-active', 'true');

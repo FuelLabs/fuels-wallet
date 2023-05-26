@@ -28,7 +28,7 @@ export const ImportAccountForm = ({
             <Input.Field
               {...field}
               aria-label="Private Key"
-              placeholder="Type the private key to import from"
+              placeholder="Enter the private key to import from"
             />
           </Input>
         )}

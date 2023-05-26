@@ -5,9 +5,9 @@ category: For Developers
 
 # Getting Started
 
-Integrate your DApp seamlessly with Fuel Wallet using our simple API, which is injected directly into the browser window.
+You can integrate your DApp seamlessly with Fuel Wallet using our simple API, which is injected directly into the browser window.
 This eliminates the need for additional dependencies, allowing you to perform key actions effortlessly.
-For even more powerful and customizable integration, use Fuel Wallet in conjunction with the Fuel TS SDK.
+For even more powerful and customizable integration, use Fuel Wallet in conjunction with the [Fuel TS SDK](https://fuellabs.github.io/fuels-ts/).
 
 <ConnectionAlert />
 
@@ -19,7 +19,7 @@ window.fuel.connect();
 
 You can try this code directly in the developer console.
 
-## Typescript
+## TypeScript
 
 The Fuel Wallet SDK provides a package on npm, making it more convenient to use in TypeScript projects.
 To use it, you must also install the [`fuels`](https://www.npmjs.com/package/fuels) package as a dependency.
@@ -59,140 +59,21 @@ window.fuel?.connect();
 ## Detect when fuel is loaded
 
 It's possible that your application loads before `window.fuel` is injected. To detect when the `fuel` is loaded and ready to use, you can listen to the event `FuelLoaded` on the document.
-If you are using react take a look on the source code of the example bellow to see how we implement it.
 
 <CodeImport file="../../examples/FuelLoaded.tsx" lineStart="10" lineEnd="21" />
 
 <Examples.FuelLoaded />
 
-## Request connection
+### With React
 
-First, you need to request a connection with the wallet, which will authorize your application to execute other actions. You can do this by accessing `fuel.connect()`.
+In a React app, you can use the `useFuel` hook below to detect when `window.fuel` is loaded.
 
-<CodeImport file="../../examples/Connect.tsx" />
+<CodeImport file="../../src/hooks/useFuel.tsx" />
 
-The `connect()` method returns a promise. If you prefer to do it in an async way, you can use `fuel.on('connection', () => void)` to
-listen for changes in the connection.
-
-<Examples.Connect />
-
-## List user accounts
-
-Once the connection is authorized, you can list the user accounts using `window.fuel.accounts()`.
-
-<CodeImport file="../../examples/ListAccounts.tsx" />
-
-<Examples.ListAccounts />
-
-## Get current account
-
-You can also get the current account being used in the wallet using `window.fuel.currentAccount()`.
-
-<CodeImport file="../../examples/CurrentAccount.tsx" />
-
-<Examples.CurrentAccount />
-
-## Signing a message
-
-With access to the user address and the connection authorized, you can request the user's signature using `fuel.signMessage`.
-
-<CodeImport file="../../examples/SignMessage.tsx" />
-
-<Examples.SignMessage />
-
-## Transfering assets
-
-To transfer an amount to other address, use the `wallet.transfer` method and pass in the address you want to send to and the amount to send.
-
-<CodeImport file="../../examples/Transfer.tsx" />
-
-<Examples.Transfer />
-
-## List Assets in the Wallet
-
-You can list the assets in the wallet using `window.fuel.assets()`.
-
-<CodeImport file="../../examples/ListAssets.tsx" />
-
-<Examples.ListAssets />
-
-## Adding custom Assets
-
-To add custom Assets, use the `wallet.addAssets` method and pass in the `Asset[]` you want to add.
-
-<CodeImport file="../../examples/AddAssets.tsx" />
-
-<Examples.AddAssets />
-
-## Adding ABI
-
-To add ABI of your contracts, use the `wallet.addAbi` method and pass in the `abiMap` you want to add.
-
-<CodeImport file="../../examples/AddAbi.tsx" />
-
-<Examples.AddAbi />
-
-## Listening to events
-
-To listen to events, you can use the `fuel.on` method. <br />
-The first parameter is the event name and the second is the callback function. <br/ >
-The events enum `FuelWalletEvents` can be imported from the `@fuel-wallet/sdk` package.
-
-### Connection
-
-To listen to connection events, you can use the `fuel.events.connection` event.
-
-<CodeImport
-  file="../../src/hooks/useIsConnected.tsx"
-  lineStart="9"
-  lineEnd="23"
-/>
-
-<Examples.Events.Connection />
-
-### Accounts
-
-To listen to accounts events, you can use the `fuel.events.accounts` event.
+Here is how you can use the `useFuel` hook in a component:
 
 <CodeImport
   file="../../examples/events/Accounts.tsx"
-  lineStart="23"
-  lineEnd="33"
+  lineStart="11"
+  lineEnd="11"
 />
-<Examples.Events.Accounts />
-
-### Current Account
-
-To listen to current account events, you can use the `fuel.events.currentAccount` event.
-
-<CodeImport
-  file="../../examples/events/CurrentAccount.tsx"
-  lineStart="23"
-  lineEnd="35"
-/>
-<Examples.Events.CurrentAccount />
-
-### Network Change
-
-To listen to network events, you can use the `fuel.events.network` event.
-
-<CodeImport
-  file="../../examples/events/Network.tsx"
-  lineStart="27"
-  lineEnd="38"
-/>
-
-Switch the network in your wallet to see the event triggered.
-
-<Examples.Events.Network />
-
-### Assets
-
-To listen to assets events, you can use the `fuel.events.assets` event.
-
-<CodeImport
-  file="../../examples/events/Assets.tsx"
-  lineStart="24"
-  lineEnd="34"
-/>
-<Examples.Events.Assets />

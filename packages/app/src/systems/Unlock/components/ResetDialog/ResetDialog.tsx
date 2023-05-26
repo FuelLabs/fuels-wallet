@@ -54,7 +54,7 @@ export function ResetDialog({
                 />
                 <Form.Label htmlFor="confirmReset">
                   I understand by resetting my wallet I&apos;ll remove all data
-                  stored on this device, including Seed Phrase, accounts,
+                  stored on this device, including my Seed Phrase, accounts,
                   networks and other settings.
                 </Form.Label>
               </Form.Control>

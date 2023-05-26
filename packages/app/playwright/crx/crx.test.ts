@@ -402,7 +402,7 @@ test.describe('FuelWallet Extension', () => {
           approveTransactionPage,
           senderAccount.address.toString()
         );
-        await hasText(approveTransactionPage, /Confirm before approve/i);
+        await hasText(approveTransactionPage, /Confirm before approving/i);
         await getButtonByText(approveTransactionPage, /Approve/i).click();
 
         await expect(transferStatus).resolves.toBe('success');

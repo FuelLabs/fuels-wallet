@@ -1,4 +1,5 @@
 export { Connect } from './Connect';
+export { IsConnected } from './IsConnected';
 export { CurrentAccount } from './CurrentAccount';
 export { ListAccounts } from './ListAccounts';
 export { AddAssets } from './AddAssets';
@@ -8,3 +9,4 @@ export { Transfer } from './Transfer';
 export { Events } from './events';
 export { FuelLoaded } from './FuelLoaded';
 export { AddAbi } from './AddAbi';
+export { Network } from './Network';
