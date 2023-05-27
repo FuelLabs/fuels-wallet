@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.9.3
+
+### Patch Changes
+
+- [#766](https://github.com/FuelLabs/fuels-wallet/pull/766) [`6e2accf`](https://github.com/FuelLabs/fuels-wallet/commit/6e2accfa97d84239161040d37fcfc4d5aaedaabc) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: upgrade sdk to 0.43.0
+
+- Updated dependencies [[`6e2accf`](https://github.com/FuelLabs/fuels-wallet/commit/6e2accfa97d84239161040d37fcfc4d5aaedaabc)]:
+  - @fuel-wallet/types@0.9.3
+  - @fuel-wallet/sdk@0.9.3
+
 ## 0.9.2
 
 ### Patch Changes
