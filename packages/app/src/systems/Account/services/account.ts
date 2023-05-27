@@ -6,7 +6,7 @@ import { isEth } from '~/systems/Asset/utils/asset';
 import type { Maybe } from '~/systems/Core/types';
 import { getUniqueString } from '~/systems/Core/utils';
 import { db } from '~/systems/Core/utils/database';
-import { ReportErrorService } from '~/systems/Error';
+import { ReportErrorService } from '~/systems/Error/services';
 
 export type AccountInputs = {
   addAccount: {

@@ -3,7 +3,7 @@ import type { FuelWalletError, ReportErrorFrequency } from '@fuel-wallet/types';
 import { errorToFuelError } from '../utils';
 
 import { REPORT_ERROR_FREQUENCY_KEY, REPORT_ERROR_EMAIL } from '~/config';
-import { Storage, db } from '~/systems/Core';
+import { Storage, db } from '~/systems/Core/utils';
 
 function encodeHTMLEntities(text: string) {
   const textArea = document.createElement('textarea');
