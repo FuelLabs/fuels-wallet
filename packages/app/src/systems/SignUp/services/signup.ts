@@ -1,8 +1,8 @@
-import { AccountService } from '~/systems/Account';
+import { AccountService } from '~/systems/Account/services';
 import { db } from '~/systems/Core/utils/database';
 import { getPhraseFromValue } from '~/systems/Core/utils/string';
-import { ReportErrorService } from '~/systems/Error';
-import { NetworkService } from '~/systems/Network';
+import { ReportErrorService } from '~/systems/Error/services';
+import { NetworkService } from '~/systems/Network/services';
 import { VaultService } from '~/systems/Vault/services';
 
 export type SignUpServiceInputs = {

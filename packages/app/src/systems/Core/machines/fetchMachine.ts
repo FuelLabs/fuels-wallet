@@ -113,7 +113,7 @@ export const FetchMachine = {
           }),
           logError: (_, ev) => {
             // eslint-disable-next-line no-console
-            console.error(ev.data);
+            console.log(ev.data);
           },
         },
         guards: {
