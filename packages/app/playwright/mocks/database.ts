@@ -24,6 +24,8 @@ export const DEFAULT_NETWORKS: Array<Network> = [
     url: VITE_FUEL_PROVIDER_URL,
   },
   {
+    // @TODO: we should test with a valid second network, as loading data from this chain logs errors,
+    // that breaks some tests if they are logged
     id: '2',
     isSelected: false,
     name: 'Another',

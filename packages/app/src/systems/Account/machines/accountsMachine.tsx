@@ -9,7 +9,6 @@ import { IS_LOGGED_KEY } from '~/config';
 import { store } from '~/store';
 import type { Maybe } from '~/systems/Core';
 import { CoreService, FetchMachine, Storage } from '~/systems/Core';
-import { ReportErrorService } from '~/systems/Error';
 import { NetworkService } from '~/systems/Network';
 
 type MachineContext = {
@@ -152,7 +151,7 @@ export const accountsMachine = createMachine(
           onDone: [
             {
               cond: FetchMachine.hasError,
-              actions: ['assignError', 'logError'],
+              actions: ['assignError'],
               target: 'failed',
             },
             {
@@ -198,9 +197,6 @@ export const accountsMachine = createMachine(
       assignError: assign({
         error: (_, ev) => ev.data,
       }),
-      logError: (_, ev) => {
-        ReportErrorService.handleError(ev.data as Error);
-      },
       clearContext: assign(() => ({})),
       toggleHideAccount: (_, ev) => {
         AccountService.updateAccount(ev.input);

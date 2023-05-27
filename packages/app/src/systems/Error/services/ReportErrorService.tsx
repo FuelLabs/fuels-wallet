@@ -28,20 +28,20 @@ export class ReportErrorService {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static handleError(error: any) {
     try {
-      // handle only network errors
+      // handle only network errors for now
       if (error?.response?.status) {
-        const status = error.response.status;
-        if (status !== 200) {
+        const status: string = error.response.status;
+        if (status.startsWith('5')) {
           const formatedError = errorToFuelError(error as Error);
           return this.saveError(formatedError);
         }
       }
-      return this.saveError(errorToFuelError(error as Error));
+      return true;
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
+      return true;
     }
-    return true;
   }
 
   private static saveError(error: FuelWalletError) {
