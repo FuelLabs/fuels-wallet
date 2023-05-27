@@ -30,8 +30,8 @@ export class ReportErrorService {
     try {
       // handle only network errors for now
       if (error?.response?.status) {
-        const status: string = error.response.status;
-        if (status.startsWith('5')) {
+        const status = error.response.status;
+        if (status + ''.startsWith('5')) {
           const formatedError = errorToFuelError(error as Error);
           return this.saveError(formatedError);
         }
