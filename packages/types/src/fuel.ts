@@ -14,6 +14,7 @@ export const FuelWalletEvents = {
   connection: 'connection',
   network: 'network',
   assets: 'assets',
+  connector: 'connector',
 } as const;
 
 export type FuelEvents =
@@ -36,6 +37,10 @@ export type FuelEvents =
   | {
       type: typeof FuelWalletEvents.assets;
       data: Array<Asset>;
+    }
+  | {
+      type: typeof FuelWalletEvents.connector;
+      data: FuelWalletConnector;
     };
 
 export type FuelEventArg<T extends FuelEvents['type']> = Extract<
@@ -54,7 +59,7 @@ export enum MessageTypes {
 
 export type BaseEvent<T> = {
   readonly target: string;
-  readonly targetWallet?: string;
+  readonly connectorName?: string;
   readonly id?: string;
   readonly sender?: chrome.runtime.Port['sender'];
 } & T;
@@ -120,7 +125,7 @@ export type FuelProviderConfig = {
   url: string;
 };
 
-export type WalletProvider = {
+export type FuelWalletConnector = {
   name: string;
   imageUrl?: string;
 };

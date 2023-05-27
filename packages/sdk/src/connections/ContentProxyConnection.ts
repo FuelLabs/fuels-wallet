@@ -1,23 +1,24 @@
 /* eslint-disable no-console */
 import {
-  PAGE_SCRIPT_NAME,
   BACKGROUND_SCRIPT_NAME,
   CONTENT_SCRIPT_NAME,
   EVENT_MESSAGE,
   MessageTypes,
 } from '@fuel-wallet/types';
 import type { CommunicationMessage } from '@fuel-wallet/types';
+import { createJSONRPCSuccessResponse } from 'json-rpc-2.0';
+import type { JSONRPCID } from 'json-rpc-2.0';
 
 import { PING_TIMEOUT, RECONNECT_TIMEOUT } from '../config';
 
 export class ContentProxyConnection {
   connection: chrome.runtime.Port;
   _tryReconect?: NodeJS.Timer;
-  readonly targetWallet: string;
+  readonly connectorName: string;
 
-  constructor(targetWallet: string) {
+  constructor(connectorName: string) {
     this.connection = this.connect();
-    this.targetWallet = targetWallet;
+    this.connectorName = connectorName;
     window.addEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
     this.keepAlive();
   }
@@ -78,24 +79,46 @@ export class ContentProxyConnection {
     }
   };
 
-  onMessageFromWindow = (message: MessageEvent<CommunicationMessage>) => {
-    const { data: event, origin } = Object.freeze(message);
-    const shouldAcceptMessage =
+  shouldAcceptMessage(event: CommunicationMessage, origin: string) {
+    return (
       origin === window.location.origin &&
       event.target === CONTENT_SCRIPT_NAME &&
-      event.targetWallet === this.targetWallet;
-    if (shouldAcceptMessage) {
-      this.connection.postMessage({
-        ...event,
-        target: BACKGROUND_SCRIPT_NAME,
-      });
+      event.connectorName === this.connectorName
+    );
+  }
+
+  sendConnectorName(id: JSONRPCID) {
+    this.postMessage({
+      type: MessageTypes.response,
+      response: createJSONRPCSuccessResponse(id, this.connectorName),
+      target: this.connectorName,
+    });
+  }
+
+  onMessageFromWindow = (message: MessageEvent<CommunicationMessage>) => {
+    const { data: event, origin } = Object.freeze(message);
+    if (this.shouldAcceptMessage(event, origin)) {
+      if (
+        event.type === MessageTypes.request &&
+        event.request.method === 'connectorName'
+      ) {
+        // If the message is a request for the connector name
+        // we send it back to the sender without send to the background script.
+        this.sendConnectorName(event.request.id!);
+      } else {
+        // Otherwise we send the message to the background script
+        this.connection.postMessage({
+          ...event,
+          target: BACKGROUND_SCRIPT_NAME,
+        });
+      }
     }
   };
 
   postMessage(message: CommunicationMessage) {
     const postMessage = {
       ...message,
-      target: PAGE_SCRIPT_NAME,
+      target: this.connectorName,
     };
     window.postMessage(postMessage, window.location.origin);
   }

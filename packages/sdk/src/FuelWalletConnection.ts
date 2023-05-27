@@ -1,8 +1,4 @@
-import {
-  CONTENT_SCRIPT_NAME,
-  PAGE_SCRIPT_NAME,
-  MessageTypes,
-} from '@fuel-wallet/types';
+import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
 import type {
   Asset,
   CommunicationMessage,
@@ -21,7 +17,7 @@ export class FuelWalletConnection extends WindowConnection {
   acceptMessage(message: MessageEvent<CommunicationMessage>): boolean {
     const { data: event } = message;
     return (
-      message.origin === window.origin && event.target === PAGE_SCRIPT_NAME
+      message.origin === window.origin && event.target === this.connectorName
     );
   }
 
@@ -30,6 +26,7 @@ export class FuelWalletConnection extends WindowConnection {
       this.postMessage({
         type: MessageTypes.request,
         target: CONTENT_SCRIPT_NAME,
+        connectorName: this.connectorName,
         request,
       });
     }

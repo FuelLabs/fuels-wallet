@@ -11,7 +11,12 @@ import { coreStyles } from '../../styles/core';
 import { BottomBar } from './BottomBar';
 import { TopBar } from './TopBar';
 
-import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
+import {
+  IS_CRX_POPUP,
+  WALLET_HEIGHT,
+  WALLET_WIDTH,
+  VITE_CRX_NAME,
+} from '~/config';
 import { OverlayDialog } from '~/systems/Overlay';
 import { Sidebar } from '~/systems/Sidebar';
 
@@ -74,6 +79,7 @@ export const Layout: LayoutComponent = ({
         <Helmet>
           <title>{titleText}</title>
         </Helmet>
+        <div>Ext: {VITE_CRX_NAME}</div>
         {isPublic ? (
           <BoxCentered as="main" css={styles.root} data-public>
             <>{children}</>

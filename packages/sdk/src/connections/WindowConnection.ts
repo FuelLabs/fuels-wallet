@@ -1,16 +1,53 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { EVENT_MESSAGE } from '@fuel-wallet/types';
-import type { CommunicationMessage } from '@fuel-wallet/types';
+import type {
+  CommunicationMessage,
+  FuelWalletConnector,
+} from '@fuel-wallet/types';
 
 import { BaseConnection } from './BaseConnection';
 
 export class WindowConnection extends BaseConnection {
-  targetWallet: string;
+  connectorName: string;
+  private connectors: Array<FuelWalletConnector>;
 
-  constructor(targetWallet: string) {
+  constructor(connector: FuelWalletConnector) {
     super();
-    this.targetWallet = targetWallet;
+    this.connectorName = connector.name;
+    this.connectors = [connector];
     window.addEventListener(EVENT_MESSAGE, this.onMessage.bind(this));
+  }
+
+  hasConnector(conectorName: string): boolean {
+    return !!this.connectors.find((c) => c.name === conectorName);
+  }
+
+  addConnector(conector: FuelWalletConnector): void {
+    // Ensure Fuel Wallet is the default connector
+    if (this.connectorName === 'Fuel Wallet') {
+      this.connectorName = conector.name;
+    }
+    if (this.hasConnector(conector.name)) {
+      throw new Error(`"${conector.name}" connector already exists!`);
+    }
+    this.emit('connector', conector);
+    this.connectors.push(conector);
+  }
+
+  listConnectors(): Array<FuelWalletConnector> {
+    return this.connectors;
+  }
+
+  async selectConnector(connectorName: string): Promise<boolean> {
+    const previousConnector = this.connectorName;
+    this.connectorName = connectorName;
+    try {
+      await this.client.timeout(1000).request('connectorName', {});
+    } catch {
+      this.connectorName = previousConnector;
+      return false;
+    }
+    return true;
   }
 
   acceptMessage(message: MessageEvent<CommunicationMessage>) {
@@ -25,12 +62,9 @@ export class WindowConnection extends BaseConnection {
   };
 
   postMessage(message: CommunicationMessage, origin?: string) {
-    window.postMessage(
-      {
-        ...message,
-        targetWallet: this.targetWallet,
-      },
-      origin || window.origin
-    );
+    if (!this.hasConnector(this.connectorName)) {
+      throw new Error(`Wallet Connector ${this.connectorName} not found!`);
+    }
+    window.postMessage(message, origin || window.origin);
   }
 }

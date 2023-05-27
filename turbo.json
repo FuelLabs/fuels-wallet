@@ -1,7 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": [".env", ".env.production", ".env.test"],
-  "globalEnv": ["NODE_ENV"],
+  "globalEnv": ["NODE_ENV", "CRX_OUT", "CRX_NAME"],
   "pipeline": {
     "ts:check": {
       "dependsOn": [],

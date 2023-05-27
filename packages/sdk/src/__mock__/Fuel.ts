@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { FuelWalletEvents, PAGE_SCRIPT_NAME } from '@fuel-wallet/types';
+import { FuelWalletEvents } from '@fuel-wallet/types';
 import EventEmitter from 'events';
 import { transactionRequestify, Wallet } from 'fuels';
 import type { JSONRPCResponse } from 'json-rpc-2.0';
@@ -11,6 +11,7 @@ import { BaseConnection } from '../connections/BaseConnection';
 const generateOptions = {
   provider: process.env.PUBLIC_PROVIDER_URL!,
 };
+const connectorName = 'FuelWallet';
 export const userWallet = Wallet.generate(generateOptions);
 export const toWallet = Wallet.generate(generateOptions);
 const events = new EventEmitter();
@@ -42,7 +43,7 @@ export class MockConnection extends BaseConnection {
     events.emit('message', {
       data: {
         type: 'response',
-        target: PAGE_SCRIPT_NAME,
+        target: connectorName,
         response,
       },
     });
@@ -123,4 +124,4 @@ global.window = {
   },
 } as any;
 
-export const fuel = new Fuel({ name: 'FuelWallet' });
+export const fuel = new Fuel({ name: connectorName });

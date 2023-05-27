@@ -11,7 +11,7 @@ export const createReadOnly = (fuel: Fuel) => {
       // extends from.
       if (
         Object.hasOwn(target, key) &&
-        ['_eventsCount', '_events', 'targetWallet'].includes(key as string)
+        ['_eventsCount', '_events', 'connectorName'].includes(key as string)
       ) {
         // eslint-disable-next-line no-param-reassign
         target[key] = value;
