@@ -88,7 +88,7 @@ export const FetchMachine = {
             },
           },
           failed: {
-            entry: ['assignError', 'showError', 'logError'],
+            entry: ['assignError', 'showError'],
             type: 'final',
             data: (ctx, ev) => ({ error: ev.data }),
           },
@@ -111,10 +111,6 @@ export const FetchMachine = {
           incrementAttempts: assign({
             attempts: (ctx) => (ctx.attempts ?? 0) + 1,
           }),
-          logError: (_, ev) => {
-            // eslint-disable-next-line no-console
-            console.log(ev.data);
-          },
         },
         guards: {
           hasManyAttempts: (ctx) => {
