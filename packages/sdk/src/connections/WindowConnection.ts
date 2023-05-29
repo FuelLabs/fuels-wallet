@@ -34,6 +34,15 @@ export class WindowConnection extends BaseConnection {
     this.connectors.push(conector);
   }
 
+  removeConnector(conectorName: string): void {
+    const connectorIndex = this.connectors.findIndex(
+      (c) => c.name === conectorName
+    );
+    if (connectorIndex > -1) {
+      this.connectors.splice(connectorIndex, 1);
+    }
+  }
+
   listConnectors(): Array<FuelWalletConnector> {
     return this.connectors;
   }
@@ -44,8 +53,9 @@ export class WindowConnection extends BaseConnection {
     try {
       await this.client.timeout(1000).request('connectorName', {});
     } catch {
+      // If the connector is not found, revert the change and throw an error
       this.connectorName = previousConnector;
-      return false;
+      throw new Error(`"${connectorName}" connector not found!`);
     }
     return true;
   }

@@ -14,6 +14,7 @@ import { PING_TIMEOUT, RECONNECT_TIMEOUT } from '../config';
 export class ContentProxyConnection {
   connection: chrome.runtime.Port;
   _tryReconect?: NodeJS.Timer;
+  _keepAlive?: NodeJS.Timer;
   readonly connectorName: string;
 
   constructor(connectorName: string) {
@@ -30,6 +31,12 @@ export class ContentProxyConnection {
     connection.onMessage.addListener(this.onMessageFromExtension);
     connection.onDisconnect.addListener(this.onDisconnect);
     return connection;
+  }
+
+  destroy() {
+    this.connection.disconnect();
+    clearInterval(this._tryReconect);
+    clearTimeout(this._keepAlive);
   }
 
   onDisconnect = () => {
@@ -62,7 +69,7 @@ export class ContentProxyConnection {
         target: BACKGROUND_SCRIPT_NAME,
         type: MessageTypes.ping,
       });
-      setTimeout(this.keepAlive, PING_TIMEOUT);
+      this._keepAlive = setTimeout(this.keepAlive, PING_TIMEOUT);
     } catch (err) {
       this.onDisconnect();
     }

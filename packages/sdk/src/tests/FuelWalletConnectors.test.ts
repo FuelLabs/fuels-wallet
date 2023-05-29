@@ -1,0 +1,77 @@
+import type { Fuel } from '../Fuel';
+
+import type { MockSerivices } from './__mock__';
+import { mockFuel } from './__mock__';
+
+describe('', () => {
+  let mocksConnector1: MockSerivices;
+  let mocksConnector2: MockSerivices;
+  let fuel: Fuel;
+
+  beforeAll(() => {
+    mocksConnector1 = mockFuel();
+    mocksConnector2 = mockFuel({ name: 'Third Wallet' });
+    fuel = window.fuel!;
+  });
+
+  afterAll(() => {
+    mocksConnector1.contentProxy.destroy();
+    mocksConnector2.contentProxy.destroy();
+  });
+
+  test('listConnectors', () => {
+    const connectors = fuel.listConnectors();
+    expect(connectors.map((c) => c.name)).toEqual([
+      'Fuel Wallet',
+      'Third Wallet',
+    ]);
+  });
+
+  test('hasConnector', () => {
+    expect(fuel.hasConnector('Fuel Wallet')).toBeTruthy();
+    expect(fuel.hasConnector('Third Wallet')).toBeTruthy();
+  });
+
+  test('selectConnector', async () => {
+    expect(await fuel.selectConnector('Fuel Wallet')).toBeTruthy();
+    expect(await fuel.selectConnector('Third Wallet')).toBeTruthy();
+  });
+
+  test('selectConnector that is not install should throw a Error', async () => {
+    const connectorName = 'Another Wallet';
+    fuel.addConnector({ name: connectorName });
+    const connectors = fuel.listConnectors();
+    expect(connectors.find((i) => i.name === connectorName)).toBeTruthy();
+    expect(fuel.selectConnector(connectorName)).rejects.toThrow(
+      `"${connectorName}" connector not found!`
+    );
+  });
+
+  test('removeConnector', async () => {
+    const connectorName = 'Another Wallet';
+    expect(
+      fuel.listConnectors().find((i) => i.name === connectorName)
+    ).toBeTruthy();
+    fuel.removeConnector(connectorName);
+    expect(
+      fuel.listConnectors().find((i) => i.name === connectorName)
+    ).toBeFalsy();
+  });
+
+  test('Message should go to the correct Connector', async () => {
+    // Change the state of the second connector
+    mocksConnector2.backgroundService.state.isConnected = false;
+
+    const hasConnector = await fuel.selectConnector('Fuel Wallet');
+    expect(hasConnector).toBeTruthy();
+    const isConnected = await fuel.isConnected();
+    expect(isConnected).toBeTruthy();
+    const hasConnector2 = await fuel.selectConnector('Third Wallet');
+    expect(hasConnector2).toBeTruthy();
+    const isConnected2 = await fuel.isConnected();
+    expect(isConnected2).toBeFalsy();
+
+    // Change the state back of the second connector
+    mocksConnector2.backgroundService.state.isConnected = true;
+  });
+});

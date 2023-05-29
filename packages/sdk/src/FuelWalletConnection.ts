@@ -17,7 +17,9 @@ export class FuelWalletConnection extends WindowConnection {
   acceptMessage(message: MessageEvent<CommunicationMessage>): boolean {
     const { data: event } = message;
     return (
-      message.origin === window.origin && event.target === this.connectorName
+      message.origin === window.origin &&
+      event.target === this.connectorName &&
+      event.type !== MessageTypes.request
     );
   }
 
