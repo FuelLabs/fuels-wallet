@@ -1,19 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Button,
-  Card,
-  Copyable,
-  Dialog,
-  Text,
-  Alert,
-  Box,
-  Tag,
-} from '@fuel-ui/react';
+import { Button, Card, Copyable, Dialog, Text, Box } from '@fuel-ui/react';
 
 import { AccountItem } from '../../components';
 import { useAccounts } from '../../hooks';
 import { useExportAccount } from '../../hooks/useExportAccount';
 
+import { DontShareAlert } from '~/systems/Settings/components/DontShareAlert';
 import { UnlockCard } from '~/systems/Unlock';
 
 export const ExportAccount = () => {
@@ -42,27 +34,17 @@ export const ExportAccount = () => {
         {account && (
           <Box.Stack gap="$4">
             <AccountItem account={account} />
-            <Box.Centered>
-              <Tag size="xs" color="accent" variant="ghost">
-                Private Key:
-              </Tag>
-            </Box.Centered>
-            <Card css={styles.exportedKey}>
-              {exportedKey && (
-                <Copyable value={exportedKey}>
-                  <Text fontSize="xs">{exportedKey}</Text>
-                </Copyable>
-              )}
+            <Card>
+              <Card.Header space="compact">Private key</Card.Header>
+              <Card.Body css={styles.body}>
+                {exportedKey && (
+                  <Copyable value={exportedKey}>
+                    <Text fontSize="xs">{exportedKey}</Text>
+                  </Copyable>
+                )}
+              </Card.Body>
             </Card>
-            <Alert status="warning" css={styles.alert}>
-              <Alert.Description>
-                <Text fontSize="xs" css={styles.alertDescription}>
-                  DON&apos;T SHARE your Private Key. {'\n'}
-                  This key provides access to your account. Sharing or losing it
-                  may result in a permanent loss of funds.
-                </Text>
-              </Alert.Description>
-            </Alert>
+            <DontShareAlert css={styles.alert} />
           </Box.Stack>
         )}
       </Dialog.Description>
@@ -79,10 +61,9 @@ const styles = {
   keyHeaderText: cssObj({
     fontWeight: '$normal',
   }),
-  exportedKey: cssObj({
-    padding: '$4',
+  body: cssObj({
     wordBreak: 'break-all',
-    textAlign: 'center',
+    py: '$2',
   }),
   alert: cssObj({
     '& .fuel_alert--content': {

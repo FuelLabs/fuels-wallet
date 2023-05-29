@@ -96,6 +96,9 @@ const styles = {
       borderRadius: '$default 0 0 0',
       borderRight: '1px solid $bodyBg',
     },
+    '.TxRecipientCard:last-of-type': {
+      borderRadius: '0 $default 0 0',
+    },
   }),
   spinner: cssObj({
     display: 'flex',

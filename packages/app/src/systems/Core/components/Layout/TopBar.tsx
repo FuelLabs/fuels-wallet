@@ -122,14 +122,14 @@ export function TopBar({ type = TopBarType.internal, ...props }: TopBarProps) {
 const styles = {
   root: cssObj({
     py: '$2',
-    px: '$4',
+    px: '$5',
     gap: '$3',
     alignItems: 'center',
     minHeight: '50px',
     transition: 'none',
   }),
   topbarIcon: cssObj({
-    px: '0 !important',
+    px: '$0 !important',
     color: '$intentsBase8 !important',
     transition: 'color 0.2s ease-in-out',
 
@@ -157,8 +157,13 @@ const styles = {
     position: 'absolute',
     top: '50%',
     left: '$0',
-    px: '0 !important',
-    width: '$2 !important',
+    px: '$2 !important',
+    width: '$4 !important',
     transform: 'translateY(-50%)',
+
+    '&:not([aria-disabled=true]):active, &:not([aria-disabled=true])[aria-pressed=true]':
+      {
+        transform: 'scale(0.97) translateY(-50%)',
+      },
   }),
 };

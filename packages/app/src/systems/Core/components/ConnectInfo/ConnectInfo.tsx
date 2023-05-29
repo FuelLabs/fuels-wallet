@@ -23,11 +23,7 @@ export function ConnectInfo({
   return (
     <Card css={styles.root} gap="$0">
       {Boolean(headerText?.length) && (
-        <Card.Header css={styles.header}>
-          <Text fontSize="sm" css={styles.headerText}>
-            {headerText}
-          </Text>
-        </Card.Header>
+        <Card.Header space="compact">{headerText}</Card.Header>
       )}
 
       <Card.Body css={styles.contentSection}>
@@ -55,23 +51,11 @@ const styles = {
   root: cssObj({
     boxSizing: 'border-box',
   }),
-  header: cssObj({
-    px: '$3',
-    py: '$2',
-    display: 'flex',
-    margin: '$0',
-    borderBottom: '1px solid $bodyBg',
-  }),
   contentSection: cssObj({
     alignItems: 'center',
     display: 'flex',
     gap: '$4',
-    mx: '$4',
-    my: '$2',
-  }),
-  headerText: cssObj({
-    color: '$intentsBase12',
-    fontWeight: '$normal',
+    py: '$2',
   }),
   title: cssObj({
     fontSize: '$sm',

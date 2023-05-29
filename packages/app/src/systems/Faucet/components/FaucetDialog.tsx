@@ -77,7 +77,6 @@ export function FaucetDialog() {
         </Dialog.Description>
         <Dialog.Footer css={{ marginTop: 0 }}>
           <Button
-            variant="solid"
             intent="primary"
             onPress={() =>
               handlers.startFaucet({

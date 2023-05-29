@@ -1,4 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
+import type { BoxProps } from '@fuel-ui/react';
 import { Box, CardList, Icon, Text } from '@fuel-ui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -15,7 +16,7 @@ import {
 
 export type ConnectionEditProps = ReturnType<typeof useConnections>;
 
-const MotionBox = motion(Box);
+const MotionBox = motion<BoxProps>(Box);
 const MotionCardList = motion(CardList);
 
 export function ConnectionEdit({

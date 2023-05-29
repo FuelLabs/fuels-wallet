@@ -124,6 +124,7 @@ const styles = {
     bottom: 0,
     boxSizing: 'border-box',
     borderColor: 'transparent',
+    background: '$bodyColor',
   }),
   description: cssObj({
     flex: 1,

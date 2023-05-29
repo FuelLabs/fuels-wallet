@@ -75,9 +75,7 @@ export const WithBottom = (args: LayoutProps) => (
     <Layout.Content>This is a content</Layout.Content>
     <Layout.BottomBar>
       <Button variant="ghost">Cancel</Button>
-      <Button intent="primary" variant="solid">
-        Save
-      </Button>
+      <Button intent="primary">Save</Button>
     </Layout.BottomBar>
   </Layout>
 );

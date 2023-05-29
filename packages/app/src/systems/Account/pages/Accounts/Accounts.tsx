@@ -42,17 +42,6 @@ export const Accounts = () => {
       </Dialog.Description>
       <Dialog.Footer css={styles.footer}>
         <Button
-          intent="primary"
-          variant="ghost"
-          aria-label="Add account"
-          onPress={addAccountHandlers.addAccount}
-          leftIcon={Icon.is('Plus')}
-          iconSize={14}
-          isLoading={isAddingAccount}
-        >
-          Add new account
-        </Button>
-        <Button
           aria-label="Import from private key"
           onPress={handlers.goToImport}
           leftIcon={Icon.is('LockOpen')}
@@ -60,6 +49,16 @@ export const Accounts = () => {
           iconSize={14}
         >
           Add from private key
+        </Button>
+        <Button
+          intent="primary"
+          aria-label="Add account"
+          onPress={addAccountHandlers.addAccount}
+          leftIcon={Icon.is('Plus')}
+          iconSize={14}
+          isLoading={isAddingAccount}
+        >
+          Add new account
         </Button>
       </Dialog.Footer>
     </>

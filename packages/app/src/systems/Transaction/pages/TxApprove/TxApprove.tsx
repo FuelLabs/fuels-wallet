@@ -87,12 +87,7 @@ export const TxApprove = () => {
           </>
         )}
         {isSuccess && (
-          <Button
-            size="sm"
-            variant="ghost"
-            intent="primary"
-            onPress={goToWallet}
-          >
+          <Button size="sm" intent="primary" onPress={goToWallet}>
             Back to wallet
           </Button>
         )}

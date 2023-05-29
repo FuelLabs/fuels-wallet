@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Card, Text } from '@fuel-ui/react';
+import { Button, Card } from '@fuel-ui/react';
 
 import { useAddAssetRequest } from '../../hooks';
 
@@ -23,10 +23,8 @@ export function AddAssetRequest() {
           headerText="Request to Add Assets from:"
         />
         <Card css={styles.card} gap="$0">
-          <Card.Header css={styles.cardHeader}>
-            <Text fontSize="sm" css={styles.cardHeaderText}>
-              Review the Assets to be added:
-            </Text>
+          <Card.Header space="compact">
+            Review the Assets to be added:
           </Card.Header>
           <Card.Body css={styles.cardContentSection}>
             {assets.map((asset) => (
@@ -84,19 +82,8 @@ const styles = {
   card: cssObj({
     boxSizing: 'border-box',
   }),
-  cardHeader: cssObj({
-    px: '$3',
-    py: '$2',
-    margin: '$0',
-    borderBottom: '1px solid $bodyBg',
-    display: 'flex',
-  }),
-  cardHeaderText: cssObj({
-    color: '$intentsBase12',
-    fontWeight: '$normal',
-  }),
   cardContentSection: cssObj({
-    margin: '$0',
+    padding: '$0',
     gap: '$3',
   }),
 };

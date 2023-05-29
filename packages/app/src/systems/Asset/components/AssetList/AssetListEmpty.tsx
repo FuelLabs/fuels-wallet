@@ -34,7 +34,7 @@ export function AssetListEmpty({
          */
         <Button
           size="sm"
-          variant="ghost"
+          intent="primary"
           leftIcon={Icon.is('Wand')}
           onPress={openFaucet}
         >

@@ -7,20 +7,20 @@ import { AccountItemLoader } from '~/systems/Account/components/AccountItem/Acco
 
 export const AccountInfoLoader = (props: IContentLoaderProps) => (
   <Card>
-    <Card.Header>
+    <Card.Header css={{ py: '$3' }}>
       <ContentLoader
         speed={2}
         width={300}
-        height={24}
-        viewBox="0 0 300 24"
+        height={16}
+        viewBox="0 0 300 16"
         backgroundColor={darkColors.gray2}
         foregroundColor={darkColors.gray3}
         {...props}
       >
-        <rect x="0" y="0" width="120" height="24" rx="4" />
+        <rect x="0" y="0" width="120" height="16" rx="4" />
       </ContentLoader>
     </Card.Header>
-    <Card.Body>
+    <Card.Body css={{ padding: '$0' }}>
       <AccountItemLoader />
     </Card.Body>
   </Card>
