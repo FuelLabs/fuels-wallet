@@ -9,6 +9,7 @@ import { MockBackgroundService } from './MockBackgroundSerivce';
 export type MockSerivices = {
   contentProxy: ContentProxyConnection;
   backgroundService: MockBackgroundService;
+  destroy: () => void;
 };
 
 export function mockFuel(
@@ -28,6 +29,11 @@ export function mockFuel(
   );
   // Create the connector and inject Fuel on Window
   createConnector(connector);
+  // Create destroy function to clean the mock
+  function destroy() {
+    contentProxy.destroy();
+    delete global.window.fuel;
+  }
   // Return the content proxy instance for cleaning
-  return { contentProxy, backgroundService };
+  return { contentProxy, backgroundService, destroy };
 }

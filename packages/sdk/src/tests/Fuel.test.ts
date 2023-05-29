@@ -7,7 +7,6 @@ import {
 } from 'fuels';
 
 import type { Fuel } from '../Fuel';
-import type { ContentProxyConnection } from '../connections';
 
 import type { MockSerivices } from './__mock__';
 import { toWallet, mockFuel, seedWallet } from './__mock__';
@@ -22,7 +21,7 @@ describe('Fuel', () => {
   });
 
   afterAll(() => {
-    mocks.contentProxy.destroy();
+    mocks.destroy();
   });
 
   test('isConnected', async () => {
@@ -167,17 +166,16 @@ describe('Fuel', () => {
 });
 
 describe('Fuel Events', () => {
-  let contentProxy: ContentProxyConnection;
+  let mocks: MockSerivices;
   let fuel: Fuel;
 
   beforeAll(() => {
-    const mocks = mockFuel();
-    contentProxy = mocks.contentProxy;
+    mocks = mockFuel();
     fuel = window.fuel!;
   });
 
   afterAll(() => {
-    contentProxy.destroy();
+    mocks.destroy();
   });
 
   test('Events: Connection events', async () => {

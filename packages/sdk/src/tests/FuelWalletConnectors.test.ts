@@ -3,7 +3,7 @@ import type { Fuel } from '../Fuel';
 import type { MockSerivices } from './__mock__';
 import { mockFuel } from './__mock__';
 
-describe('', () => {
+describe('Fuel Connectors', () => {
   let mocksConnector1: MockSerivices;
   let mocksConnector2: MockSerivices;
   let fuel: Fuel;
@@ -15,8 +15,8 @@ describe('', () => {
   });
 
   afterAll(() => {
-    mocksConnector1.contentProxy.destroy();
-    mocksConnector2.contentProxy.destroy();
+    mocksConnector1.destroy();
+    mocksConnector2.destroy();
   });
 
   test('listConnectors', () => {
@@ -73,5 +73,27 @@ describe('', () => {
 
     // Change the state back of the second connector
     mocksConnector2.backgroundService.state.isConnected = true;
+  });
+});
+
+describe('Fuel Connectors Events', () => {
+  let mocks: MockSerivices;
+  let fuel: Fuel;
+
+  beforeAll(() => {
+    mocks = mockFuel();
+    fuel = window.fuel!;
+  });
+
+  afterAll(() => {
+    mocks.destroy();
+  });
+
+  test('Event: Connector Added', async () => {
+    const handleConnectorEvent = jest.fn();
+    fuel.on(fuel.events.connector, handleConnectorEvent);
+    const walletConnector = { name: 'Another Connector' };
+    fuel.addConnector(walletConnector);
+    expect(handleConnectorEvent).toBeCalledWith(walletConnector);
   });
 });
