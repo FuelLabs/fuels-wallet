@@ -1,16 +1,3 @@
-@font-face {
-  font-family: 'Calling Code';
-  src: url('../../public/fonts/callingcode.woff2') format('woff2');
-  font-weight: 300 900;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Calling Code';
-  src: url('../../public/fonts/callingcode.woff2') format('woff2');
-  font-weight: 300 900;
-  font-style: italic;
-}
-
 html {
   scroll-behavior: smooth;
 }
@@ -58,8 +45,9 @@ tr > td {
 
 pre span,
 code {
-  font-family: 'Calling Code', monospace !important;
-  letter-spacing: -0.02em;
+  font-family: 'PxGrotesk Mono', Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+  letter-spacing: -0.04em;
 }
 
 .fuel_Logo {

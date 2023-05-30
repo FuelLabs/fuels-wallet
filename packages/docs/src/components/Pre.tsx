@@ -55,7 +55,7 @@ const styles = {
       padding: '$4 $2 !important',
       borderRadius: '$default',
       fontSize: '14px !important',
-      background: '$intentsBase1 !important',
+      background: '$cardBg !important',
     },
     'pre[data-title=true]': {
       marginTop: '$0 !important',
@@ -67,12 +67,14 @@ const styles = {
       display: 'flex',
       alignItems: 'center',
       margin: 0,
-      padding: '$1 $3',
-      background: '$intentsBase2',
+      padding: '$2 $3',
+      background: '$cardBg',
       color: '$intentsBase10',
       borderTopLeftRadius: '$default',
       borderTopRightRadius: '$default',
-      borderBottom: '2px solid $bodyColor',
+      borderBottom: '1px solid $bodyColor',
+      fontFamily: '$sans',
+      letterSpacing: '$normal',
 
       span: {
         fontSize: '$sm',
