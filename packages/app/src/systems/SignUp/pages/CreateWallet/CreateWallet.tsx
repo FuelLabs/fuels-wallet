@@ -1,38 +1,45 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { CreatePassword, MnemonicRead, MnemonicWrite } from '../../components';
+import { STORAGE_KEY } from '../../components/SignUpProvider';
 import { useSignUp } from '../../hooks';
+import { SignUpScreen } from '../../hooks/useSignUp';
 import { SignUpType } from '../../machines/signUpMachine';
 
-import { Layout, Pages } from '~/systems/Core';
+import { Layout, Pages, Storage } from '~/systems/Core';
 
 export function CreateWallet() {
-  const { state, handlers, context } = useSignUp(SignUpType.create);
+  const { handlers, context } = useSignUp();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    Storage.setItem(STORAGE_KEY, SignUpType.create);
+  }, []);
 
   return (
     <Layout title="Create Wallet" isPublic>
-      {state.matches('showingMnemonic') && (
+      {context.screen === SignUpScreen.showing && (
         <MnemonicRead
           words={context.data?.mnemonic}
           onNext={handlers.next}
           onCancel={() => navigate(Pages.signUp())}
         />
       )}
-      {state.matches('waitingMnemonic') && (
+      {context.screen === SignUpScreen.waiting && (
         <MnemonicWrite
           error={context.isFilled ? context.error : ''}
-          canProceed={state.matches('waitingMnemonic.validMnemonic')}
+          canProceed={context.isValidMnemonic}
           onFilled={handlers.confirmMnemonic}
           onNext={handlers.next}
           onCancel={() => navigate(Pages.signUp())}
         />
       )}
-      {(state.matches('addingPassword') || state.hasTag('loading')) && (
+      {context.screen === SignUpScreen.password && (
         <CreatePassword
           onSubmit={handlers.createManager}
           onCancel={() => navigate(Pages.signUp())}
-          isLoading={state.hasTag('loading')}
+          isLoading={context.isLoading}
         />
       )}
     </Layout>

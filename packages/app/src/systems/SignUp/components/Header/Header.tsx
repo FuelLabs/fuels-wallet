@@ -1,3 +1,4 @@
+import { cssObj } from '@fuel-ui/css';
 import { Box, Heading } from '@fuel-ui/react';
 
 export type HeaderProps = {
@@ -7,8 +8,8 @@ export type HeaderProps = {
 
 export function Header({ title, subtitle }: HeaderProps) {
   return (
-    <Box.Stack gap="$0">
-      <Heading as="h2" css={{ margin: 0, textAlign: 'center' }}>
+    <Box.Stack css={styles.root}>
+      <Heading as="h2" css={{ margin: 0 }}>
         {title}
       </Heading>
       {subtitle && (
@@ -17,7 +18,6 @@ export function Header({ title, subtitle }: HeaderProps) {
           css={{
             margin: 0,
             color: '$intentsBase11',
-            textAlign: 'center',
             fontSize: '$lg',
           }}
         >
@@ -27,3 +27,10 @@ export function Header({ title, subtitle }: HeaderProps) {
     </Box.Stack>
   );
 }
+
+const styles = {
+  root: cssObj({
+    width: '$full',
+    gap: '$0',
+  }),
+};

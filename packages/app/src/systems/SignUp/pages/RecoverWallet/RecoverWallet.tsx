@@ -1,16 +1,23 @@
 import { cssObj } from '@fuel-ui/css';
 import { Text } from '@fuel-ui/react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { CreatePassword, MnemonicWrite, SignUpFailed } from '../../components';
+import { STORAGE_KEY } from '../../components/SignUpProvider';
 import { useSignUp } from '../../hooks';
+import { SignUpScreen } from '../../hooks/useSignUp';
 import { SignUpType } from '../../machines/signUpMachine';
 
-import { Layout, Pages } from '~/systems/Core';
+import { Storage, Layout, Pages } from '~/systems/Core';
 
 export function RecoverWallet() {
-  const { state, handlers, context } = useSignUp(SignUpType.recover);
+  const { handlers, context } = useSignUp();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    Storage.setItem(STORAGE_KEY, SignUpType.create);
+  }, []);
 
   return (
     <Layout title="Recovering Wallet" isPublic>
@@ -18,24 +25,26 @@ export function RecoverWallet() {
         This wallet is in development, and your phrase is not safely stored. DO
         NOT IMPORT YOUR CURRENT SEED PHRASE.
       </Text>
-      {state.matches('waitingMnemonic') && (
+      {context.screen === SignUpScreen.waiting && (
         <MnemonicWrite
           error={context.isFilled ? context.error : ''}
-          canProceed={state.matches('waitingMnemonic.validMnemonic')}
+          canProceed={context.isValidMnemonic}
           onFilled={handlers.confirmMnemonic}
           onNext={handlers.next}
           onCancel={() => navigate(Pages.signUp())}
           enableChangeFormat={true}
         />
       )}
-      {(state.matches('addingPassword') || state.hasTag('loading')) && (
+      {context.screen === SignUpScreen.password && (
         <CreatePassword
           onSubmit={handlers.createManager}
           onCancel={() => navigate(Pages.signUp())}
-          isLoading={state.hasTag('loading')}
+          isLoading={context.isLoading}
         />
       )}
-      {state.matches('failed') && <SignUpFailed error={state.context.error} />}
+      {context.screen === SignUpScreen.failed && (
+        <SignUpFailed error={context.error} />
+      )}
     </Layout>
   );
 }

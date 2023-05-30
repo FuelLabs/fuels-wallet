@@ -1,37 +1,48 @@
-import { useMachine, useSelector } from '@xstate/react';
+import { useSelector } from '@xstate/react';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import type { CreatePasswordValues } from '../components';
+import { useSignUpProvider } from '../components/SignUpProvider';
 import type { SignUpMachineState } from '../machines/signUpMachine';
-import { signUpMachine, SignUpType } from '../machines/signUpMachine';
+import { SignUpType } from '../machines/signUpMachine';
 
-import { Pages } from '~/systems/Core';
+export enum SignUpScreen {
+  showing = 'showing',
+  waiting = 'waiting',
+  password = 'password',
+  failed = 'failed',
+}
 
 const selectors = {
   context: (state: SignUpMachineState) => state.context,
+  screen: (state: SignUpMachineState) => {
+    if (state.matches('showingMnemonic')) return SignUpScreen.showing;
+    if (state.matches('waitingMnemonic')) return SignUpScreen.waiting;
+    if (state.matches('failed')) return SignUpScreen.failed;
+    return SignUpScreen.password;
+  },
+  isValidMnemonic(state: SignUpMachineState) {
+    return state.matches('waitingMnemonic.validMnemonic');
+  },
+  isLoading(state: SignUpMachineState) {
+    return state.hasTag('loading');
+  },
 };
 
-export function useSignUp(type: SignUpType) {
-  const navigate = useNavigate();
-  const [state, send, service] = useMachine(() =>
-    signUpMachine
-      .withConfig({
-        actions: {
-          redirectToWalletCreated() {
-            navigate(Pages.signUpWalletCreated());
-          },
-        },
-      })
-      .withContext({
-        type,
-      })
-  );
+export function useSignUp() {
+  const { service, type } = useSignUpProvider();
+  const { send } = service;
 
   const ctx = useSelector(service, selectors.context);
+  const screen = useSelector(service, selectors.screen);
+  const isValidMnemonic = useSelector(service, selectors.isValidMnemonic);
+  const isLoading = useSelector(service, selectors.isLoading);
 
   function next() {
     send('NEXT');
+  }
+  function back() {
+    send('BACK');
   }
 
   function confirmMnemonic(words: string[]) {
@@ -47,14 +58,17 @@ export function useSignUp(type: SignUpType) {
   }, []);
 
   return {
-    state,
     handlers: {
       next,
       confirmMnemonic,
       createManager,
+      back,
     },
     context: {
       ...ctx,
+      screen,
+      isValidMnemonic,
+      isLoading,
     },
   };
 }

@@ -4,6 +4,7 @@ import type { Account } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
+import { STORAGE_KEY } from '../components/SignUpProvider';
 import { SignUpService } from '../services';
 
 import { IS_LOGGED_KEY, MNEMONIC_SIZE } from '~/config';
@@ -31,7 +32,6 @@ type FormValues = {
 };
 
 type MachineContext = {
-  type: SignUpType;
   isFilled?: boolean;
   error?: string;
   data?: Maybe<FormValues>;
@@ -65,13 +65,8 @@ export const signUpMachine = createMachine(
     states: {
       checking: {
         always: [
-          {
-            target: 'idle',
-            cond: 'isCreatingWallet',
-          },
-          {
-            target: 'waitingMnemonic',
-          },
+          { target: 'idle', cond: 'isCreatingWallet' },
+          { target: 'waitingMnemonic' },
         ],
       },
       idle: {
@@ -108,14 +103,12 @@ export const signUpMachine = createMachine(
           },
           validMnemonic: {
             entry: ['cleanError'],
-            on: {
-              NEXT: {
-                target: '#(machine).addingPassword',
-              },
-            },
           },
         },
         on: {
+          NEXT: {
+            target: '#(machine).addingPassword',
+          },
           CONFIRM_MNEMONIC: [
             {
               actions: ['assignIsFilled', 'assignMnemonicWhenRecovering'],
@@ -182,7 +175,8 @@ export const signUpMachine = createMachine(
       }),
       assignMnemonicWhenRecovering: assign({
         data: (ctx, ev) => {
-          return ctx.type === SignUpType.recover
+          const type = Storage.getItem(STORAGE_KEY);
+          return type === SignUpType.recover
             ? { mnemonic: ev.data.words }
             : ctx.data;
         },
@@ -206,11 +200,12 @@ export const signUpMachine = createMachine(
         Storage.setItem(IS_LOGGED_KEY, true);
         store.updateAccounts();
       },
-      redirectToWalletCreated: () => {},
+      redirectToWalletCreated() {},
     },
     guards: {
-      isCreatingWallet: (ctx) => {
-        return ctx.type === SignUpType.create;
+      isCreatingWallet: (_) => {
+        const type = Storage.getItem(STORAGE_KEY) ?? SignUpType.create;
+        return type === SignUpType.create;
       },
       isValidMnemonic: (_, ev) => {
         return Mnemonic.isMnemonicValid(
@@ -221,7 +216,8 @@ export const signUpMachine = createMachine(
         const isValid = Mnemonic.isMnemonicValid(
           getPhraseFromValue(ev.data.words) || ''
         );
-        if (ctx.type === SignUpType.recover) return isValid;
+        const type = Storage.getItem(STORAGE_KEY);
+        if (type === SignUpType.recover) return isValid;
         return (
           getPhraseFromValue(ev.data.words) ===
             getPhraseFromValue(ctx.data?.mnemonic) && isValid

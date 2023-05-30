@@ -2,9 +2,11 @@ import { cssObj } from '@fuel-ui/css';
 import { Form, Checkbox, Button, Alert, Box } from '@fuel-ui/react';
 import { useState } from 'react';
 
+import { useSignUpStepper } from '../../hooks';
 import { Header } from '../Header';
+import { Stepper } from '../Stepper';
 
-import { ImageLoader, Mnemonic, relativeUrl } from '~/systems/Core';
+import { Mnemonic } from '~/systems/Core';
 
 export type MnemonicReadProps = {
   words?: string[];
@@ -14,18 +16,14 @@ export type MnemonicReadProps = {
 
 export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
   const [isSavedChecked, setSavedChecked] = useState(false);
+  const { steps, handleChangeStep } = useSignUpStepper();
 
   return (
     <Box.Stack gap="$6" align="center">
-      <ImageLoader
-        src={relativeUrl('/signup-illustration-1.svg')}
-        width={129}
-        height={116}
-        alt="Showing your Mnemonic"
-      />
+      <Stepper steps={steps} active={2} onChange={handleChangeStep} />
       <Header
-        title="Backup Seed Phrase"
-        subtitle="You will need this in the next step"
+        title="Write down seed phrase"
+        subtitle="Write down your seed phrase in a secure location on a piece of paper."
       />
       <Box.Stack css={styles.content} gap="$6">
         <Mnemonic value={words} type="read" />
@@ -51,7 +49,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
           Back
         </Button>
         <Button intent="primary" onPress={onNext} isDisabled={!isSavedChecked}>
-          Go to Confirm
+          Next: Confirm phrase
         </Button>
       </Box>
     </Box.Stack>
@@ -60,7 +58,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
 
 const styles = {
   content: cssObj({
-    width: 450,
+    width: '$sm',
 
     '.fuel_Alert-content .fuel_FormLabel': {
       color: '$semanticGhostWarningColor',

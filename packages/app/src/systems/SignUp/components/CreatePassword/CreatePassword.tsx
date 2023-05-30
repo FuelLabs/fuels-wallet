@@ -6,14 +6,11 @@ import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
+import { useSignUpStepper } from '../../hooks';
 import { Header } from '../Header';
+import { Stepper } from '../Stepper';
 
-import {
-  ControlledField,
-  ImageLoader,
-  InputSecurePassword,
-  relativeUrl,
-} from '~/systems/Core';
+import { ControlledField, InputSecurePassword } from '~/systems/Core';
 
 const schema = yup
   .object({
@@ -45,6 +42,8 @@ export function CreatePassword({
   onCancel,
   onSubmit,
 }: CreatePasswordProps) {
+  const { steps, handleChangeStep } = useSignUpStepper();
+
   const form = useForm<CreatePasswordValues>({
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
@@ -73,11 +72,7 @@ export function CreatePassword({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Box.Stack gap="$6" align="center">
-        <ImageLoader
-          src={relativeUrl('/signup-illustration-2.svg')}
-          width={129}
-          height={116}
-        />
+        <Stepper steps={steps} active={4} onChange={handleChangeStep} />
         <Header
           title="Create password for encryption"
           subtitle="This password will be used to unlock your wallet."
@@ -92,6 +87,7 @@ export function CreatePassword({
               <InputSecurePassword
                 field={field}
                 inputProps={{
+                  autoFocus: true,
                   autoComplete: 'new-password',
                 }}
                 onChangeStrength={(strength: string) =>
@@ -134,7 +130,7 @@ export function CreatePassword({
             isDisabled={!isValid}
             isLoading={isLoading}
           >
-            Create Account
+            Next: Finish set-up
           </Button>
         </Box.Flex>
       </Box.Stack>

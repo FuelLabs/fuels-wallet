@@ -3,6 +3,8 @@ import { Box, Button } from '@fuel-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Header } from '../../components';
+import { Stepper } from '../../components/Stepper';
+import { useSignUpStepper } from '../../hooks';
 
 import { ReactComponent as Terms } from './data/terms.md';
 
@@ -13,15 +15,16 @@ export function TermsOfUse() {
   const navigate = useNavigate();
   const { action } = useParams();
   const { setHasAcceptedTerms } = useHasAcceptedTerms();
+  const { steps } = useSignUpStepper();
 
-  const handleAccept = () => {
+  function handleAccept() {
     setHasAcceptedTerms(true);
     if (action === 'recover') {
       navigate(Pages.signUpRecoverWallet());
     } else {
       navigate(Pages.signUpCreateWallet());
     }
-  };
+  }
 
   const handleCancel = () => {
     setHasAcceptedTerms(false);
@@ -31,6 +34,7 @@ export function TermsOfUse() {
   return (
     <Layout title="Terms of Service" isPublic>
       <Box.Stack gap="$8" align="center">
+        <Stepper steps={steps} active={1} />
         <Header
           title="Terms of use Agreement"
           subtitle="Read and check to accept our terms of service"
@@ -45,7 +49,7 @@ export function TermsOfUse() {
             Back
           </Button>
           <Button intent="primary" onPress={handleAccept}>
-            I accept
+            Next: Seed Phrase
           </Button>
         </Box.Flex>
       </Box.Stack>

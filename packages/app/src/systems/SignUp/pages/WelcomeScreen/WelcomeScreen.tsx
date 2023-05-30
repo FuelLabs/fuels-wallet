@@ -11,10 +11,9 @@ export function WelcomeScreen() {
   return (
     <Layout title="Sign Up" isPublic>
       <Box.Stack gap="$6" css={styles.wrapper}>
-        <FuelLogo
-          size={120}
-          css={{ mb: '$8', transform: 'translateY(10px)' }}
-        />
+        <Box css={{ width: '$full', textAlign: 'left' }}>
+          <FuelLogo size={50} css={{ transform: 'translateY(10px)' }} />
+        </Box>
         <Header
           title="Let's set up your Fuel Wallet"
           subtitle="Pick an option below to get started"

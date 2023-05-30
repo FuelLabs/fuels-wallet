@@ -137,7 +137,7 @@ export const styles = {
     alignItems: 'center',
 
     '& > .fuel_Box-centered': {
-      maxWidth: 450,
+      maxWidth: '$sm',
       margin: '0 auto',
     },
 
