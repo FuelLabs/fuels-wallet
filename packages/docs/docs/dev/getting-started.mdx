@@ -51,9 +51,16 @@ Alternatively, you can use a [TypeScript reference](https://www.typescriptlang.o
 ### Example
 
 With the SDK imported, `fuel` will be conveniently typed and accessible on the `window` object.
+Alternatively, you can directly use the SDK by creating new instance of `Fuel` to interact with the wallet.
 
 ```ts
+import { Fuel } from '@fuel-wallet/sdk';
+
+const fuel = new Fuel();
+
 window.fuel?.connect();
+// OR
+fuel.connect();
 ```
 
 ## Detect when fuel is loaded
