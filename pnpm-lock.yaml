@@ -20,7 +20,7 @@ importers:
         version: 0.15.1-pr--51a4b2d
       '@fuel-ui/react':
         specifier: 0.15.1-pr--51a4b2d
-        version: 0.15.1-pr--51a4b2d(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@18.15.5)(@types/react@18.2.7)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@5.0.4)
+        version: 0.15.1-pr--51a4b2d(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(@types/react@18.2.7)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@5.0.4)
       execa:
         specifier: ^7.1.1
         version: 7.1.1
@@ -468,11 +468,11 @@ importers:
         specifier: 3.4.0
         version: 3.4.0(@algolia/client-search@4.14.3)(@types/react@18.2.7)(react-dom@18.2.0)(react@18.2.0)
       '@fuel-ui/css':
-        specifier: ''
-        version: 0.15.0
+        specifier: 0.15.1-pr--51a4b2d
+        version: 0.15.1-pr--51a4b2d
       '@fuel-ui/react':
-        specifier: ''
-        version: 0.15.0(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(@types/react@18.2.7)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@5.0.4)
+        specifier: 0.15.1-pr--51a4b2d
+        version: 0.15.1-pr--51a4b2d(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(@types/react@18.2.7)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@5.0.4)
       '@fuel-wallet/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -626,17 +626,17 @@ importers:
   packages/storage:
     devDependencies:
       '@fuel-ui/config':
-        specifier: ''
-        version: 0.15.0(typescript@5.0.4)
+        specifier: 0.15.1-pr--51a4b2d
+        version: 0.15.1-pr--51a4b2d(typescript@5.0.4)
       '@fuel-ui/css':
-        specifier: ''
-        version: 0.15.0
+        specifier: 0.15.1-pr--51a4b2d
+        version: 0.15.1-pr--51a4b2d
       '@fuel-ui/react':
-        specifier: ''
-        version: 0.15.0(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(@types/react@18.2.7)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@5.0.4)
+        specifier: 0.15.1-pr--51a4b2d
+        version: 0.15.1-pr--51a4b2d(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(@types/react@18.2.7)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@5.0.4)
       '@fuel-ui/test-utils':
-        specifier: ''
-        version: 0.15.0(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@5.0.4)
+        specifier: 0.15.1-pr--51a4b2d
+        version: 0.15.1-pr--51a4b2d(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@5.0.4)
       '@fuel-wallet/config':
         specifier: workspace:*
         version: link:../config
@@ -653,17 +653,17 @@ importers:
   packages/store:
     dependencies:
       '@fuel-ui/config':
-        specifier: ^0.15.0
-        version: 0.15.0(typescript@5.0.4)
+        specifier: 0.15.1-pr--51a4b2d
+        version: 0.15.1-pr--51a4b2d(typescript@5.0.4)
       '@fuel-ui/css':
-        specifier: ^0.15.0
-        version: 0.15.0
+        specifier: 0.15.1-pr--51a4b2d
+        version: 0.15.1-pr--51a4b2d
       '@fuel-ui/react':
-        specifier: ^0.15.0
-        version: 0.15.0(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(@types/react@18.2.7)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@5.0.4)
+        specifier: 0.15.1-pr--51a4b2d
+        version: 0.15.1-pr--51a4b2d(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(@types/react@18.2.7)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@5.0.4)
       '@fuel-ui/test-utils':
-        specifier: ^0.15.0
-        version: 0.15.0(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@5.0.4)
+        specifier: 0.15.1-pr--51a4b2d
+        version: 0.15.1-pr--51a4b2d(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@5.0.4)
       '@fuel-wallet/storage':
         specifier: workspace:*
         version: link:../storage
@@ -3041,18 +3041,11 @@ packages:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/pbkdf2': 5.7.0
 
-  /@fuel-ts/math@0.41.0:
-    resolution: {integrity: sha512-9leE/DIhvF2Dt6eAwjuohoHBG4IzjydDH4tbGPBuhAkB5sYywer2iaEbBluSJE+T67JQgoYjrbwKXjlNvkTsFg==}
-    dependencies:
-      '@types/bn.js': 5.1.1
-      bn.js: 5.2.1
-
   /@fuel-ts/math@0.42.0:
     resolution: {integrity: sha512-ivngMopRp1xdr6U4YcmEB1KXhZgk1pZkVq+Pdj1nQuRguaL5kv8e1cnvDpBx9pBDJCs/ie/G0nlkPhyS8uduGA==}
     dependencies:
       '@types/bn.js': 5.1.1
       bn.js: 5.2.1
-    dev: false
 
   /@fuel-ts/math@0.43.0:
     resolution: {integrity: sha512-h/hEhmGFflazlJZ4rntVLn1tbv9yKCh/1qQyOt6rWmNkhofWCHe5txOvCAHEQ7fB+tZQ2TvLjTPpk8luVIzsDg==}
@@ -3233,32 +3226,6 @@ packages:
   /@fuel-ts/wordlists@0.43.0:
     resolution: {integrity: sha512-H2nGnMLlZpCOY3PGmoP3ABiiRoxf/rJpvgwRrdfgOBD6tlISmdEFFFuOzWKRf6zv96yIXLt9JoB31mg6e0WV0A==}
 
-  /@fuel-ui/config@0.15.0(typescript@5.0.4):
-    resolution: {integrity: sha512-HMU7zkVlljGSInI9Ce0rIpY1AZwgvAv6b6MdiHRXWu81/oMUSKSop5kJQS1L+Fs8ElTXjnUpmIBEFjxds7tA7Q==}
-    dependencies:
-      '@typescript-eslint/eslint-plugin': 5.59.7(@typescript-eslint/parser@5.59.7)(eslint@8.41.0)(typescript@5.0.4)
-      '@typescript-eslint/parser': 5.59.7(eslint@8.41.0)(typescript@5.0.4)
-      eslint: 8.41.0
-      eslint-config-airbnb-base: 15.0.0(eslint-plugin-import@2.27.5)(eslint@8.41.0)
-      eslint-config-airbnb-typescript: 17.0.0(@typescript-eslint/eslint-plugin@5.59.7)(@typescript-eslint/parser@5.59.7)(eslint-plugin-import@2.27.5)(eslint@8.41.0)
-      eslint-config-prettier: 8.8.0(eslint@8.41.0)
-      eslint-plugin-eslint-comments: 3.2.0(eslint@8.41.0)
-      eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.59.7)(eslint-import-resolver-typescript@3.5.3)(eslint@8.41.0)
-      eslint-plugin-jest-dom: 4.0.3(eslint@8.41.0)
-      eslint-plugin-jsx-a11y: 6.7.1(eslint@8.41.0)
-      eslint-plugin-prettier: 4.2.1(eslint-config-prettier@8.8.0)(eslint@8.41.0)(prettier@2.8.8)
-      eslint-plugin-react: 7.32.2(eslint@8.41.0)
-      eslint-plugin-react-hooks: 4.6.0(eslint@8.41.0)
-      eslint-plugin-testing-library: 5.11.0(eslint@8.41.0)(typescript@5.0.4)
-      prettier: 2.8.8
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - eslint-import-resolver-typescript
-      - eslint-import-resolver-webpack
-      - supports-color
-      - typescript
-
   /@fuel-ui/config@0.15.1-pr--51a4b2d(typescript@5.0.4):
     resolution: {integrity: sha512-a3phWyAV+Y3fq8rCLiRwm/p4SH8CuG6kh5nW43m1uOFAMkGkr+is5/DCJlicuV126bMMM6yQPpppKjF32fdwYg==}
     dependencies:
@@ -3284,16 +3251,6 @@ packages:
       - eslint-import-resolver-webpack
       - supports-color
       - typescript
-    dev: false
-
-  /@fuel-ui/css@0.15.0:
-    resolution: {integrity: sha512-rf81NpfWGrnbjZiv5PQcxRLIt2Ak0vXw6umFrOgB1LvMoMHMokFvOgQEg06PQJL59maOe2Skh9/0MaDanb501A==}
-    dependencies:
-      '@fuel-ui/design-tokens': 0.15.0
-      '@radix-ui/colors': 0.1.8
-      classnames: 2.3.2
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
 
   /@fuel-ui/css@0.15.1-pr--51a4b2d:
     resolution: {integrity: sha512-hKpoxysFwV3QK7Kgyk8RHeY2a/1bd/FDUOhAJFxCuac3aaSnf3xMNtWqQKDO7cRMRU8ZYG+Zvbuxd8ZYLUs+2w==}
@@ -3303,15 +3260,6 @@ packages:
       classnames: 2.3.2
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
-  /@fuel-ui/design-tokens@0.15.0:
-    resolution: {integrity: sha512-VjZfbKuxRnpgrT177LopOnJfEPmV9NJKY97CMN16LMqDOge3F2qMJ3SitMe0dPM4LVsxW6ktBN59hURbfPvinQ==}
-    dependencies:
-      '@radix-ui/colors': 0.1.8
-      chroma-js: 2.4.2
-      copy-to-clipboard: 3.3.3
-      lodash: 4.17.21
 
   /@fuel-ui/design-tokens@0.15.1-pr--51a4b2d:
     resolution: {integrity: sha512-YGk0qsXTewNkSPTGtEyZ2C/ZjDFO78kGfSO4Y69mt1T/ycPt9nYphjoyvGHv2GVgaUsuMlAW0j4lcX/bf0I4qA==}
@@ -3320,61 +3268,6 @@ packages:
       chroma-js: 2.4.2
       copy-to-clipboard: 3.3.3
       lodash: 4.17.21
-    dev: false
-
-  /@fuel-ui/react@0.15.0(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(@types/react@18.2.7)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@5.0.4):
-    resolution: {integrity: sha512-UJrBKydSKgSJSBbd6S96RiMNObCBJlvo5tmi0N8jcNdOtR6vJhekxEGFb0kHygRz5AKoKQLc3Qw4+SabgGTV4Q==}
-    dependencies:
-      '@fuel-ts/math': 0.41.0
-      '@fuel-ui/css': 0.15.0
-      '@fuel-ui/test-utils': 0.15.0(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@5.0.4)
-      '@radix-ui/react-accordion': 1.1.1(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-alert-dialog': 1.0.3(@types/react@18.2.7)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-aspect-ratio': 1.0.2(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-avatar': 1.0.2(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-checkbox': 1.0.3(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-dialog': 1.0.3(@types/react@18.2.7)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-label': 2.0.1(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-popover': 1.0.5(@types/react@18.2.7)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-radio-group': 1.1.2(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-switch': 1.0.2(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-tabs': 1.0.3(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-tooltip': 1.0.5(@types/react@18.2.7)(react-dom@18.2.0)(react@18.2.0)
-      '@radix-ui/react-visually-hidden': 1.0.2(react-dom@18.2.0)(react@18.2.0)
-      '@react-aria/focus': 3.12.0(react@18.2.0)
-      '@react-aria/overlays': 3.14.0(react-dom@18.2.0)(react@18.2.0)
-      '@react-aria/utils': 3.17.0(react@18.2.0)
-      '@tabler/icons-react': 2.20.0(react@18.2.0)
-      '@xstate/react': 3.2.2(@types/react@18.2.7)(react@18.2.0)(xstate@4.37.2)
-      deepmerge-json: 1.5.0
-      framer-motion: 10.12.16(react-dom@18.2.0)(react@18.2.0)
-      react: 18.2.0
-      react-aria: 3.24.0(react-dom@18.2.0)(react@18.2.0)
-      react-content-loader: 6.2.1(react@18.2.0)
-      react-dom: 18.2.0(react@18.2.0)
-      react-hot-toast: 2.4.1(csstype@3.1.1)(react-dom@18.2.0)(react@18.2.0)
-      react-number-format: 5.2.2(react-dom@18.2.0)(react@18.2.0)
-      react-stately: 3.22.0(react@18.2.0)
-      react-use: 17.4.0(react-dom@18.2.0)(react@18.2.0)
-      xstate: 4.37.2
-      zustand: 4.3.8(react@18.2.0)
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@jest/types'
-      - '@types/node'
-      - '@types/react'
-      - '@xstate/fsm'
-      - babel-jest
-      - bufferutil
-      - canvas
-      - csstype
-      - esbuild
-      - immer
-      - node-notifier
-      - supports-color
-      - ts-node
-      - typescript
-      - utf-8-validate
 
   /@fuel-ui/react@0.15.1-pr--51a4b2d(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@18.15.5)(@types/react@18.2.7)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@5.0.4):
     resolution: {integrity: sha512-6NrH0xol+v3IOJwFw+Qx+atH/+5SmoZ8Q+1Lq9dURBP9XXPdBT4G0aFfzlR/LVNrZXBEvCxuI2kjAggwusLs3A==}
@@ -3432,37 +3325,55 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuel-ui/test-utils@0.15.0(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@5.0.4):
-    resolution: {integrity: sha512-7bJmk8/LGiS4sC3hYkcWfgjUzH05Pdrdx9pciU6+cVVHmEy8Ytz2QKTpvRmiQSst2cO+BpOKKHFjkld4crz7lg==}
-    peerDependencies:
-      react: '*'
-    peerDependenciesMeta:
-      react:
-        optional: true
+  /@fuel-ui/react@0.15.1-pr--51a4b2d(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(@types/react@18.2.7)(csstype@3.1.1)(esbuild@0.17.10)(ts-node@10.9.1)(typescript@5.0.4):
+    resolution: {integrity: sha512-6NrH0xol+v3IOJwFw+Qx+atH/+5SmoZ8Q+1Lq9dURBP9XXPdBT4G0aFfzlR/LVNrZXBEvCxuI2kjAggwusLs3A==}
     dependencies:
-      '@testing-library/dom': 9.3.0
-      '@testing-library/jest-dom': 5.16.5
-      '@testing-library/react': 14.0.0(react-dom@18.2.0)(react@18.2.0)
-      '@testing-library/user-event': 14.4.3(@testing-library/dom@9.3.0)
-      identity-obj-proxy: 3.0.0
-      jest: 29.5.0(@types/node@20.2.4)(ts-node@10.9.1)
-      jest-axe: 7.0.1
-      jest-environment-jsdom: 29.5.0
-      jest-fail-on-console: 3.1.1
-      jest-matcher-utils: 29.5.0
-      jest-transform-stub: 2.0.0
+      '@fuel-ts/math': 0.42.0
+      '@fuel-ui/css': 0.15.1-pr--51a4b2d
+      '@fuel-ui/test-utils': 0.15.1-pr--51a4b2d(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@5.0.4)
+      '@radix-ui/react-accordion': 1.1.1(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-alert-dialog': 1.0.3(@types/react@18.2.7)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-aspect-ratio': 1.0.2(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-avatar': 1.0.2(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-checkbox': 1.0.3(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-dialog': 1.0.3(@types/react@18.2.7)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-label': 2.0.1(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-popover': 1.0.5(@types/react@18.2.7)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-radio-group': 1.1.2(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-switch': 1.0.2(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-tabs': 1.0.3(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-tooltip': 1.0.5(@types/react@18.2.7)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-visually-hidden': 1.0.2(react-dom@18.2.0)(react@18.2.0)
+      '@react-aria/focus': 3.12.0(react@18.2.0)
+      '@react-aria/overlays': 3.14.0(react-dom@18.2.0)(react@18.2.0)
+      '@react-aria/utils': 3.17.0(react@18.2.0)
+      '@storybook/global': 5.0.0
+      '@tabler/icons-react': 2.20.0(react@18.2.0)
+      '@xstate/react': 3.2.2(@types/react@18.2.7)(react@18.2.0)(xstate@4.37.2)
+      deepmerge-json: 1.5.0
+      framer-motion: 10.12.16(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
+      react-aria: 3.24.0(react-dom@18.2.0)(react@18.2.0)
+      react-content-loader: 6.2.1(react@18.2.0)
       react-dom: 18.2.0(react@18.2.0)
-      resize-observer-polyfill: 1.5.1
-      ts-jest: 29.1.0(@babel/core@7.21.8)(@jest/types@29.5.0)(esbuild@0.17.10)(jest@29.5.0)(typescript@5.0.4)
+      react-hot-toast: 2.4.1(csstype@3.1.1)(react-dom@18.2.0)(react@18.2.0)
+      react-number-format: 5.2.2(react-dom@18.2.0)(react@18.2.0)
+      react-stately: 3.22.0(react@18.2.0)
+      react-use: 17.4.0(react-dom@18.2.0)(react@18.2.0)
+      xstate: 4.37.2
+      zustand: 4.3.8(react@18.2.0)
     transitivePeerDependencies:
       - '@babel/core'
       - '@jest/types'
       - '@types/node'
+      - '@types/react'
+      - '@xstate/fsm'
       - babel-jest
       - bufferutil
       - canvas
+      - csstype
       - esbuild
+      - immer
       - node-notifier
       - supports-color
       - ts-node
@@ -3506,6 +3417,43 @@ packages:
       - typescript
       - utf-8-validate
     dev: false
+
+  /@fuel-ui/test-utils@0.15.1-pr--51a4b2d(@babel/core@7.21.8)(@jest/types@29.5.0)(@types/node@20.2.4)(esbuild@0.17.10)(react@18.2.0)(ts-node@10.9.1)(typescript@5.0.4):
+    resolution: {integrity: sha512-2JV4PyDkGzA71jtd7aMOsHlsioRShuRsKYU9N8Z6cfzfXL2/b6E/mEsYgGt9ENnbCMrLnytRQdz4dSJegdcS2g==}
+    peerDependencies:
+      react: '*'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      '@testing-library/dom': 9.3.0
+      '@testing-library/jest-dom': 5.16.5
+      '@testing-library/react': 14.0.0(react-dom@18.2.0)(react@18.2.0)
+      '@testing-library/user-event': 14.4.3(@testing-library/dom@9.3.0)
+      identity-obj-proxy: 3.0.0
+      jest: 29.5.0(@types/node@20.2.4)(ts-node@10.9.1)
+      jest-axe: 7.0.1
+      jest-environment-jsdom: 29.5.0
+      jest-fail-on-console: 3.1.1
+      jest-matcher-utils: 29.5.0
+      jest-transform-stub: 2.0.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      resize-observer-polyfill: 1.5.1
+      ts-jest: 29.1.0(@babel/core@7.21.8)(@jest/types@29.5.0)(esbuild@0.17.10)(jest@29.5.0)(typescript@5.0.4)
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@jest/types'
+      - '@types/node'
+      - babel-jest
+      - bufferutil
+      - canvas
+      - esbuild
+      - node-notifier
+      - supports-color
+      - ts-node
+      - typescript
+      - utf-8-validate
 
   /@graphql-codegen/add@3.2.3(graphql@16.6.0):
     resolution: {integrity: sha512-sQOnWpMko4JLeykwyjFTxnhqjd/3NOG2OyMuvK76Wnnwh8DRrNf2VEs2kmSvLl7MndMlOj7Kh5U154dVcvhmKQ==}

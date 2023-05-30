@@ -28,10 +28,10 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@fuel-ui/config": "^0.15.0",
-    "@fuel-ui/css": "^0.15.0",
-    "@fuel-ui/react": "^0.15.0",
-    "@fuel-ui/test-utils": "^0.15.0",
+    "@fuel-ui/config": "0.15.1-pr--51a4b2d",
+    "@fuel-ui/css": "0.15.1-pr--51a4b2d",
+    "@fuel-ui/react": "0.15.1-pr--51a4b2d",
+    "@fuel-ui/test-utils": "0.15.1-pr--51a4b2d",
     "@fuel-wallet/storage": "workspace:*",
     "@xstate/inspect": "^0.8.0",
     "@xstate/react": "^3.2.2",
