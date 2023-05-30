@@ -72,7 +72,7 @@ export function CreatePassword({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Box.Stack gap="$6" align="center">
-        <Stepper steps={steps} active={4} onChange={handleChangeStep} />
+        <Stepper steps={steps} active={4} onStepChange={handleChangeStep} />
         <Header
           title="Create password for encryption"
           subtitle="This password will be used to unlock your wallet."

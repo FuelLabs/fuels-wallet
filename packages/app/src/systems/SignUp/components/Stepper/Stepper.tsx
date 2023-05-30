@@ -1,18 +1,20 @@
+import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import type { FlexProps } from '@fuel-ui/react';
 import { Icon, Button, Box } from '@fuel-ui/react';
 import { Fragment } from 'react';
 
 export type StepperProps = FlexProps & {
+  css?: ThemeUtilsCSS;
   steps: number;
   active?: number;
-  onChange?: (step: number) => void;
+  onStepChange?: (step: number) => void;
 };
 
 export function Stepper({
   active = 1,
   steps,
-  onChange,
+  onStepChange,
   css,
   ...props
 }: StepperProps) {
@@ -24,7 +26,7 @@ export function Stepper({
           <Fragment key={index}>
             <Button
               size="sm"
-              onPress={() => onChange(index)}
+              onPress={() => onStepChange?.(index)}
               intent="primary"
               variant={active >= index ? 'solid' : 'outlined'}
               isDisabled={active <= index}

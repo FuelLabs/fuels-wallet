@@ -1,7 +1,8 @@
+import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { Alert } from '@fuel-ui/react';
 import type { AlertProps } from '@fuel-ui/react';
 
-export function DontShareAlert(props: AlertProps) {
+export function DontShareAlert(props: AlertProps & { css?: ThemeUtilsCSS }) {
   return (
     <Alert status="warning" {...props}>
       <Alert.Description>

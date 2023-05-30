@@ -32,7 +32,7 @@ export function MnemonicWrite({
 
   return (
     <Box.Stack gap="$6" align="center">
-      <Stepper steps={steps} active={3} onChange={handleChangeStep} />
+      <Stepper steps={steps} active={3} onStepChange={handleChangeStep} />
       <Header
         title="Confirm phrase"
         subtitle="Write your phrase again to ensure you wrote it down correctly."

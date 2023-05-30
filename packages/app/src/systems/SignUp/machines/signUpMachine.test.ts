@@ -1,16 +1,17 @@
 import { Mnemonic } from '@fuel-ts/mnemonic';
 import { interpret } from 'xstate';
 
+import { STORAGE_KEY } from '../components/SignUpProvider';
+
 import type { SignUpMachineService, SignUpMachineState } from './signUpMachine';
 import { SignUpType, signUpMachine } from './signUpMachine';
 
 import { MNEMONIC_SIZE } from '~/config';
+import { Storage } from '~/systems/Core';
 import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 function createMachine() {
-  return signUpMachine.withContext({
-    type: SignUpType.create,
-  });
+  return signUpMachine.withContext({});
 }
 
 describe('signUpMachine', () => {
@@ -26,6 +27,10 @@ describe('signUpMachine', () => {
   });
 
   describe('type: create', () => {
+    beforeEach(() => {
+      Storage.setItem(STORAGE_KEY, SignUpType.create);
+    });
+
     it('should be able to create a mnemonic', async () => {
       state = service.getSnapshot();
       expect(state.context.data?.mnemonic).toBeFalsy();
@@ -73,10 +78,12 @@ describe('signUpMachine', () => {
   });
 
   describe('type: recover', () => {
+    beforeEach(() => {
+      Storage.setItem(STORAGE_KEY, SignUpType.recover);
+    });
+
     it('should be able to recover wallet using seed phrase', async () => {
-      const machine = signUpMachine.withContext({
-        type: SignUpType.recover,
-      });
+      const machine = signUpMachine.withContext({});
       const service = interpret(machine).start();
       const words = Mnemonic.generate(MNEMONIC_SIZE).split(' ');
       service.send('CONFIRM_MNEMONIC', { data: { words } });

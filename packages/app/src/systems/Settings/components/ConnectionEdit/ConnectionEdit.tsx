@@ -1,3 +1,4 @@
+import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import type { BoxProps } from '@fuel-ui/react';
 import { Box, CardList, Icon, Text } from '@fuel-ui/react';
@@ -16,7 +17,8 @@ import {
 
 export type ConnectionEditProps = ReturnType<typeof useConnections>;
 
-const MotionBox = motion<BoxProps>(Box);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const MotionBox = motion<BoxProps & { css?: ThemeUtilsCSS }>(Box as any);
 const MotionCardList = motion(CardList);
 
 export function ConnectionEdit({

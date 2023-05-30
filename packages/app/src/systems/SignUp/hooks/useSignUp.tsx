@@ -41,9 +41,6 @@ export function useSignUp() {
   function next() {
     send('NEXT');
   }
-  function back() {
-    send('BACK');
-  }
 
   function confirmMnemonic(words: string[]) {
     send('CONFIRM_MNEMONIC', { data: { words } });
@@ -62,7 +59,6 @@ export function useSignUp() {
       next,
       confirmMnemonic,
       createManager,
-      back,
     },
     context: {
       ...ctx,

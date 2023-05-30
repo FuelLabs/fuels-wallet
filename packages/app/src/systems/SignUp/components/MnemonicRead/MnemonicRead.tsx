@@ -20,7 +20,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
 
   return (
     <Box.Stack gap="$6" align="center">
-      <Stepper steps={steps} active={2} onChange={handleChangeStep} />
+      <Stepper steps={steps} active={2} onStepChange={handleChangeStep} />
       <Header
         title="Write down seed phrase"
         subtitle="Write down your seed phrase in a secure location on a piece of paper."

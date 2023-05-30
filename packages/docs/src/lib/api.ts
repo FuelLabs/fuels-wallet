@@ -15,7 +15,7 @@ import type { DocType, NodeHeading, SidebarLinkItem } from '~/src/types';
 const DOCS_DIRECTORY = join(process.cwd(), './docs');
 
 export async function getDocsSlugs() {
-  const paths = await globby(['**.mdx']);
+  const paths = await globby(['**.mdx', '!node_modules']);
   return paths.map((item) => item.replace('docs/', ''));
 }
 
