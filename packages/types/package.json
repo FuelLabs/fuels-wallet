@@ -1,6 +1,6 @@
 {
   "name": "@fuel-wallet/types",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "dependencies": {
@@ -9,9 +9,9 @@
     "json-rpc-2.0": "^1.6.0"
   },
   "peerDependencies": {
-    "fuels": ">=0.42.0"
+    "fuels": ">=0.43.0"
   },
   "devDependencies": {
-    "fuels": "0.42.0"
+    "fuels": "0.43.0"
   }
 }
