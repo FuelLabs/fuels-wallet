@@ -37,7 +37,7 @@ test.describe('CreateWallet', () => {
     /** Copy Mnemonic */
     await hasText(page, /Backup seed phrase/i);
     await getButtonByText(page, /Copy/i).click();
-    const savedCheckbox = await getByAriaLabel(page, 'Confirm Saved');
+    const savedCheckbox = getByAriaLabel(page, 'Confirm Saved');
     await savedCheckbox.click();
     await getButtonByText(page, /Next/i).click();
 
@@ -49,10 +49,10 @@ test.describe('CreateWallet', () => {
 
     /** Adding password */
     await hasText(page, /Create password for encryption/i);
-    const passwordInput = await getByAriaLabel(page, 'Your Password');
+    const passwordInput = getByAriaLabel(page, 'Your Password');
     await passwordInput.type(WALLET_PASSWORD);
     await passwordInput.press('Tab');
-    const confirmPasswordInput = await getByAriaLabel(page, 'Confirm Password');
+    const confirmPasswordInput = getByAriaLabel(page, 'Confirm Password');
     await confirmPasswordInput.type(WALLET_PASSWORD);
     await confirmPasswordInput.press('Tab');
 

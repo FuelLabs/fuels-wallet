@@ -10,11 +10,11 @@ describe('TxIcon', () => {
   });
 
   it('should render icon correctly', async () => {
-    await render(<TxIcon operationName={OperationName.receive} />);
-    expect(screen.getByText('Download')).toBeInTheDocument();
-    await render(<TxIcon operationName={OperationName.contractCall} />);
-    expect(screen.getByText('ArrowsLeftRight')).toBeInTheDocument();
-    await render(<TxIcon operationName={OperationName.predicatecall} />);
-    expect(screen.getByText('Wand')).toBeInTheDocument();
+    render(<TxIcon operationName={OperationName.receive} />);
+    expect(screen.getByText(/Download/)).toBeInTheDocument();
+    render(<TxIcon operationName={OperationName.contractCall} />);
+    expect(screen.getByText(/ArrowsLeftRight/)).toBeInTheDocument();
+    render(<TxIcon operationName={OperationName.predicatecall} />);
+    expect(screen.getByText(/Wand/)).toBeInTheDocument();
   });
 });

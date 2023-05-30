@@ -62,7 +62,7 @@ describe('TxItem', () => {
       const to = await screen.findByText(shortAddress(addressBech32));
       expect(to).toBeInTheDocument();
 
-      const label = await screen.findByText(/To/i);
+      const label = await screen.findByText(/To:/i);
       expect(label).toBeInTheDocument();
     }
   });
@@ -77,10 +77,10 @@ describe('TxItem', () => {
     );
     const address = MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].to?.address;
     if (address) {
-      const to = await screen.queryByText(shortAddress(address));
+      const to = screen.queryByText(shortAddress(address));
       expect(to).not.toBeInTheDocument();
 
-      const label = await screen.queryByText(/To/i);
+      const label = screen.queryByText(/To:/i);
       expect(label).not.toBeInTheDocument();
     }
   });

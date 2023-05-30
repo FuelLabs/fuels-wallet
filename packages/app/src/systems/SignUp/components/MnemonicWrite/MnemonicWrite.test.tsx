@@ -1,11 +1,12 @@
 import { Mnemonic as FuelMnemonic } from '@fuel-ts/mnemonic';
-import { render, screen, waitFor } from '@fuel-ui/test-utils';
+import { screen, waitFor } from '@fuel-ui/test-utils';
 import { act } from 'react-dom/test-utils';
 
 import { MnemonicWrite } from './MnemonicWrite';
 
 import { MNEMONIC_SIZE } from '~/config';
 import { getPhraseFromValue } from '~/systems/Core';
+import { renderWithProvider } from '~/systems/Core/__tests__';
 
 const onFilledHandler = jest.fn();
 const onNextHandler = jest.fn();
@@ -17,7 +18,7 @@ const MNEMONIC = getPhraseFromValue(
 
 describe('MnemonicWrite', () => {
   it('should trigger onFilled after paste', async () => {
-    await render(
+    renderWithProvider(
       <MnemonicWrite
         canProceed
         onFilled={onFilledHandler}
@@ -39,7 +40,7 @@ describe('MnemonicWrite', () => {
   });
 
   it('should be able to click on next if canProceed and isFilled', async () => {
-    render(
+    renderWithProvider(
       <MnemonicWrite
         canProceed
         onFilled={onFilledHandler}
@@ -56,13 +57,13 @@ describe('MnemonicWrite', () => {
     });
 
     await waitFor(() => {
-      const btnNext = screen.getByText('Next');
+      const btnNext = screen.getByText(/next/i);
       expect(btnNext).toBeEnabled();
     });
   });
 
   it('should show error message when have error prop', async () => {
-    render(
+    renderWithProvider(
       <MnemonicWrite
         error="This is an error message"
         onFilled={onFilledHandler}

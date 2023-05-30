@@ -1,7 +1,10 @@
 /* eslint-disable no-restricted-syntax */
-import { render, screen, waitFor } from '@fuel-ui/test-utils';
+import type { render } from '@fuel-ui/test-utils';
+import { screen, waitFor } from '@fuel-ui/test-utils';
 
 import { MnemonicRead } from './MnemonicRead';
+
+import { renderWithProvider } from '~/systems/Core/__tests__';
 
 const WORDS = [
   'strange',
@@ -27,7 +30,7 @@ describe('MnemonicRead', () => {
   let user: UserPatch;
 
   beforeEach(() => {
-    const res = render(
+    const res = renderWithProvider(
       <MnemonicRead
         words={WORDS}
         onNext={onNextHandler}
@@ -45,7 +48,7 @@ describe('MnemonicRead', () => {
   });
 
   it('should next be disabled by default', async () => {
-    const btn = screen.getByText('Next');
+    const btn = screen.getByText(/next/i);
     expect(btn).toBeInTheDocument();
     expect(btn).toHaveAttribute('aria-disabled');
   });
@@ -55,7 +58,7 @@ describe('MnemonicRead', () => {
     expect(saveCheckbox).toBeInTheDocument();
     await user.click(saveCheckbox);
     await waitFor(() => {
-      const btn = screen.getByText('Next');
+      const btn = screen.getByText(/next/i);
       expect(btn).toBeEnabled();
     });
   });
@@ -66,8 +69,8 @@ describe('MnemonicRead', () => {
     await user.click(saveCheckbox);
 
     await waitFor(async () => {
-      const btnNext = screen.getByText('Next');
-      const btnCancel = screen.getByText('Cancel');
+      const btnNext = screen.getByText(/next/i);
+      const btnCancel = screen.getByText('Back');
 
       await user.click(btnNext);
       await user.click(btnCancel);

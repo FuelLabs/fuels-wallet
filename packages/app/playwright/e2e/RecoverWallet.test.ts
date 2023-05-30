@@ -40,10 +40,10 @@ test.describe('RecoverWallet', () => {
 
     /** Adding password */
     await hasText(page, /Create password for encryption/i);
-    const passwordInput = await getByAriaLabel(page, 'Your Password');
+    const passwordInput = getByAriaLabel(page, 'Your Password');
     await passwordInput.type(WALLET_PASSWORD);
     await passwordInput.press('Tab');
-    const confirmPasswordInput = await getByAriaLabel(page, 'Confirm Password');
+    const confirmPasswordInput = getByAriaLabel(page, 'Confirm Password');
     await confirmPasswordInput.type(WALLET_PASSWORD);
     await confirmPasswordInput.press('Tab');
 
@@ -81,10 +81,10 @@ test.describe('RecoverWallet', () => {
 
     /** Adding password */
     await hasText(page, /Create password for encryption/i);
-    const passwordInput = await getByAriaLabel(page, 'Your Password');
+    const passwordInput = getByAriaLabel(page, 'Your Password');
     await passwordInput.type(WALLET_PASSWORD);
     await passwordInput.press('Tab');
-    const confirmPasswordInput = await getByAriaLabel(page, 'Confirm Password');
+    const confirmPasswordInput = getByAriaLabel(page, 'Confirm Password');
     await confirmPasswordInput.type(WALLET_PASSWORD);
     await confirmPasswordInput.press('Tab');
 
