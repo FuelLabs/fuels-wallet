@@ -25,8 +25,8 @@ export function WalletCreated({ account }: WalletCreatedProps) {
   }
 
   return (
-    <Box.Stack gap="$6">
-      <Stepper steps={steps} active={4} />
+    <Box.Stack gap="$6" css={{ width: '$sm' }}>
+      <Stepper steps={steps} active={5} />
       <Header
         title="Wallet created successfully"
         subtitle="Below is your first Fuel wallet account"

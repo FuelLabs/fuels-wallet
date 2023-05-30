@@ -26,14 +26,17 @@ export function Stepper({
           <Fragment key={index}>
             <Button
               size="sm"
+              css={styles.button}
               onPress={() => onStepChange?.(index)}
-              intent="primary"
-              variant={active >= index ? 'solid' : 'outlined'}
+              intent={active >= index ? 'primary' : 'base'}
+              variant={active > index ? 'solid' : 'outlined'}
               isDisabled={active <= index}
+              leftIcon={active > index ? <Icon icon="Check" /> : undefined}
+              data-complete={active >= index}
+              data-active={active === index}
             >
-              {index}
+              {active > index ? '' : index}
             </Button>
-            {index !== steps && <Icon icon="ChevronRight" />}
           </Fragment>
         );
       })}
@@ -46,12 +49,17 @@ const styles = {
     gap: '$2',
     width: '$full',
 
-    '.fuel_Button': {
-      borderRadius: '$full',
-    },
-
     '.fuel_Icon': {
       color: '$border',
+    },
+  }),
+  button: cssObj({
+    width: '$8',
+    height: '$8',
+    borderRadius: '$full',
+
+    '&[data-active="true"]': {
+      color: '$text',
     },
   }),
 };

@@ -133,12 +133,12 @@ export function Mnemonic({
           })}
         </Grid>
       )}
-      <Box.Flex as="footer" align="center" gap="$4" css={styles.footer}>
+      <Box.Flex as="footer" css={styles.footer}>
         {type === 'read' ? (
           <Button
             aria-label="Copy button"
             size="sm"
-            variant="outlined"
+            variant="solid"
             leftIcon={<Icon icon="Copy" color="intentsBase8" />}
             onPress={handleCopy}
           >
@@ -148,7 +148,7 @@ export function Mnemonic({
           <Button
             aria-label="Paste button"
             size="sm"
-            variant="outlined"
+            variant="solid"
             leftIcon={<Icon icon="Copy" color="intentsBase8" />}
             onPress={handlePast}
           >
@@ -237,11 +237,14 @@ const styles = {
   }),
   footer: cssObj({
     px: '$3',
-    pb: '$3',
+    py: '$3',
     boxSizing: 'border-box',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '$4',
 
-    button: {
-      width: '100%',
+    '.fuel_Button': {
+      px: '$8',
     },
   }),
 };

@@ -134,11 +134,11 @@ export const styles = {
     display: 'grid',
     gridTemplateColumns: '0.75fr 1.25fr',
     gridTemplateRows: '1fr',
-    alignItems: 'center',
+    alignItems: 'flex-start',
 
     '& > .fuel_Box-centered': {
       maxWidth: '$sm',
-      margin: '0 auto',
+      margin: '$14 auto',
     },
 
     '&::before': {

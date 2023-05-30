@@ -27,22 +27,28 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
       />
       <Box.Stack css={styles.content} gap="$6">
         <Mnemonic value={words} type="read" />
-        <Alert status="warning" hideIcon>
+        <Alert status="warning">
           <Form.Control css={styles.alertContent}>
-            <Checkbox
-              id="confirmSaved"
-              aria-label="Confirm Saved"
-              checked={isSavedChecked}
-              // TODO: this bg property should be fixed inside @fuel-ui
-              onCheckedChange={(e) => {
-                setSavedChecked(e as boolean);
-              }}
-            />
             <Form.Label htmlFor="confirmSaved">
-              I have backed up my Seed Phrase securely.
+              Anyone with access to your recovery phrase could take your assets,
+              store it securely. Fuel does not keep a backup of your 12 words.
             </Form.Label>
           </Form.Control>
         </Alert>
+        <Form.Control css={{ flexDirection: 'row' }}>
+          <Checkbox
+            id="confirmSaved"
+            aria-label="Confirm Saved"
+            checked={isSavedChecked}
+            // TODO: this bg property should be fixed inside @fuel-ui
+            onCheckedChange={(e) => {
+              setSavedChecked(e as boolean);
+            }}
+          />
+          <Form.Label htmlFor="confirmSaved">
+            Accept terms and condition
+          </Form.Label>
+        </Form.Control>
       </Box.Stack>
       <Box css={styles.footer}>
         <Button variant="ghost" onPress={onCancel}>
@@ -59,10 +65,6 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
 const styles = {
   content: cssObj({
     width: '$sm',
-
-    '.fuel_Alert-content .fuel_FormLabel': {
-      color: '$semanticGhostWarningColor',
-    },
   }),
   alertContent: cssObj({
     flexDirection: 'row',
