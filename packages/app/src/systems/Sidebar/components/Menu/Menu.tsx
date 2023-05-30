@@ -137,7 +137,8 @@ export function Menu({ items }: MenuProps) {
 const styles = {
   root: cssObj({
     ...coreStyles.scrollable('$intentsBase2'),
-    py: '$3',
+    pt: '$0',
+    pb: '$3',
     flex: 1,
 
     '& > .fuel_MenuListItem': {
@@ -155,6 +156,10 @@ const styles = {
     },
     '& > .fuel_MenuListItem:focus-within .main-icon': {
       color: '$accent11',
+    },
+
+    '& li[data-key="settings"]': {
+      mt: '$8',
     },
   }),
   route: cssObj({
@@ -176,7 +181,7 @@ const styles = {
 
     '.fuel_Icon, .fuel_Icon--ChevronDown': {
       transition: 'transform .3s',
-      color: '$intentsBase7',
+      color: '$textIcon',
     },
   }),
   routeContent: cssObj({

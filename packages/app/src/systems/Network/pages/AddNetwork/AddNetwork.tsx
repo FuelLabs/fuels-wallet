@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, Focus, Icon, IconButton } from '@fuel-ui/react';
+import { Box, Button, Dialog, Focus, Icon } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 
@@ -10,8 +10,10 @@ import {
   useNetworkForm,
   useChainInfo,
 } from '~/systems/Network';
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 
-const MotionStack = motion(Box.Stack);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const MotionStack = motion<any>(Box.Stack);
 
 export function AddNetwork() {
   const form = useNetworkForm();
@@ -50,16 +52,12 @@ export function AddNetwork() {
       gap="$4"
       onSubmit={form.handleSubmit(onSubmit)}
     >
-      <Dialog.Heading>
+      <OverlayDialogTopbar
+        onClose={handlers.closeDialog}
+        onBack={handlers.openNetworks}
+      >
         Add Network
-        <IconButton
-          data-action="closed"
-          variant="link"
-          icon={<Icon icon="X" color="intentsBase8" />}
-          aria-label="Close add network"
-          onPress={handlers.closeDialog}
-        />
-      </Dialog.Heading>
+      </OverlayDialogTopbar>
       <Dialog.Description as="div">
         <Focus.Scope autoFocus>
           <NetworkForm

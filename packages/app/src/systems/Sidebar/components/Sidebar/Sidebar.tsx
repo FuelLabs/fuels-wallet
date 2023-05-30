@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cssObj } from '@fuel-ui/css';
-import { Icon, Avatar, Drawer, IconButton, Box, Text } from '@fuel-ui/react';
+import { Icon, Drawer, IconButton, Box, Text } from '@fuel-ui/react';
 import { forwardRef } from 'react';
 
 import { Menu } from '..';
-import { useAccounts } from '../../../Account';
-import { useNetworks } from '../../../Network';
 import { sidebarItems } from '../../constants';
 
 import { APP_VERSION } from '~/config';
@@ -13,27 +11,10 @@ import { useOverlay } from '~/systems/Overlay';
 
 function SidebarContent() {
   const overlay = useOverlay();
-  const { handlers: accountHandlers, account } = useAccounts();
-  const { selectedNetwork } = useNetworks();
 
   return (
     <>
       <Box.Flex css={styles.header}>
-        <Box.Stack gap="$2" css={styles.accountSelector}>
-          <Avatar.Generated
-            size="sm"
-            hash={account?.address as string}
-            css={{ boxShadow: '$sm' }}
-          />
-          <IconButton
-            size="xs"
-            variant="link"
-            icon={<Icon icon="ChevronDown" size={18} />}
-            aria-label="Accounts"
-            onClick={accountHandlers.goToList}
-            css={{ padding: '$0 !important' }}
-          />
-        </Box.Stack>
         <IconButton
           autoFocus
           size="sm"
@@ -44,7 +25,7 @@ function SidebarContent() {
           onPress={overlay.close}
         />
       </Box.Flex>
-      <Menu items={sidebarItems(selectedNetwork?.url)} />
+      <Menu items={sidebarItems()} />
       <Box css={styles.version}>
         <Text fontSize="xs" color="intentsBase8">
           Version: {APP_VERSION}{' '}
@@ -79,21 +60,16 @@ const styles = {
   wrapper: cssObj({
     display: 'grid',
     height: '100%',
-    gridTemplateRows: '60px 1fr auto',
+    gridTemplateRows: '50px 1fr auto',
   }),
   header: cssObj({
-    padding: '$3 $4',
+    px: '$4',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottom: '1px solid $border',
+    justifyContent: 'flex-end',
 
     '.fuel_Icon': {
       color: '$intentsBase8',
     },
-  }),
-  accountSelector: cssObj({
-    flexDirection: 'row',
-    alignItems: 'center',
   }),
   closeBtn: cssObj({
     padding: '$0 !important',

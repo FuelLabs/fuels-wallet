@@ -1,9 +1,11 @@
-import { Box, Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
+import { Box, Button, Dialog, Icon } from '@fuel-ui/react';
 
 import { ImportAccountForm } from '../../components/ImportAccountForm';
 import { useAccounts, useImportAccount } from '../../hooks';
 import { useImportAccountForm } from '../../hooks/useImportAccountForm';
 import type { ImportAccountFormValues } from '../../hooks/useImportAccountForm';
+
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export const ImportAccount = () => {
   const { accounts, handlers: accountsHandlers } = useAccounts();
@@ -16,16 +18,9 @@ export const ImportAccount = () => {
 
   return (
     <Box.Stack gap="$4" as="form" onSubmit={form.handleSubmit(onSubmit)}>
-      <Dialog.Heading>
+      <OverlayDialogTopbar onClose={accountsHandlers.closeDialog}>
         Import Account
-        <IconButton
-          data-action="closed"
-          variant="link"
-          icon={<Icon icon="X" color="intentsBase8" />}
-          aria-label="Close unlock window"
-          onPress={accountsHandlers.closeDialog}
-        />
-      </Dialog.Heading>
+      </OverlayDialogTopbar>
       <Dialog.Description as="div">
         <ImportAccountForm form={form} isLoading={isLoading} />
       </Dialog.Description>

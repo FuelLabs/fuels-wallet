@@ -1,9 +1,11 @@
-import { Box, Button, Dialog, Focus, Icon, IconButton } from '@fuel-ui/react';
+import { Box, Button, Dialog, Focus, Icon } from '@fuel-ui/react';
 
 import { AccountForm } from '../../components';
 import { useAccounts, useEditAccount } from '../../hooks';
 import { useAccountForm } from '../../hooks/useAccountForm';
 import type { AccountFormValues } from '../../hooks/useAccountForm';
+
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export const EditAccount = () => {
   const { accounts, handlers: accountsHandlers } = useAccounts();
@@ -23,16 +25,12 @@ export const EditAccount = () => {
 
   return (
     <Box.Stack gap="$4" as="form" onSubmit={form.handleSubmit(onSubmit)}>
-      <Dialog.Heading>
+      <OverlayDialogTopbar
+        onClose={accountsHandlers.closeDialog}
+        onBack={accountsHandlers.goToList}
+      >
         Edit Account
-        <IconButton
-          data-action="closed"
-          variant="link"
-          icon={<Icon icon="X" color="intentsBase8" />}
-          aria-label="Close edit account"
-          onPress={accountsHandlers.closeDialog}
-        />
-      </Dialog.Heading>
+      </OverlayDialogTopbar>
       <Dialog.Description as="div">
         <Focus.Scope autoFocus>
           <AccountForm form={form} isLoading={isLoading} />

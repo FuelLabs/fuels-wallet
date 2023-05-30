@@ -1,11 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Dialog, IconButton, Icon } from '@fuel-ui/react';
+import { Box, Dialog } from '@fuel-ui/react';
 
 import { DontShareAlert } from '../../components/DontShareAlert';
 import { useExportVault } from '../../hooks';
 
 import { Mnemonic } from '~/systems/Core';
-import { useOverlay } from '~/systems/Overlay';
+import { OverlayDialogTopbar, useOverlay } from '~/systems/Overlay';
 import { UnlockCard } from '~/systems/Unlock';
 
 export function ViewSeedPhrase() {
@@ -29,16 +29,7 @@ export function ViewSeedPhrase() {
 
   return (
     <>
-      <Dialog.Heading>
-        Seed Phrase
-        <IconButton
-          data-action="closed"
-          variant="link"
-          icon={<Icon icon="X" color="intentsBase8" />}
-          aria-label="Close unlock window"
-          onPress={close}
-        />
-      </Dialog.Heading>
+      <OverlayDialogTopbar onClose={close}>Seed Phrase</OverlayDialogTopbar>
       <Dialog.Description as="div">
         <Box.Flex gap="$4" direction="column" align="center">
           <Box css={styles.mnemonicWrapper}>
@@ -47,11 +38,6 @@ export function ViewSeedPhrase() {
           <DontShareAlert />
         </Box.Flex>
       </Dialog.Description>
-      <Dialog.Footer>
-        <Button variant="ghost" onPress={() => close()}>
-          Close
-        </Button>
-      </Dialog.Footer>
     </>
   );
 }

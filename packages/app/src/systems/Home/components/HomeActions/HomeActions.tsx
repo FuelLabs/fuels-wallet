@@ -52,10 +52,13 @@ export const HomeActions = ({
 
 const styles = {
   wrapper: cssObj({
-    marginTop: '$4',
-    marginBottom: '$6',
+    px: '$4',
+    pb: '$4',
+    mt: '$2',
+    mb: '$6',
     flexShrink: 0,
     gap: '$2',
+    borderBottom: '1px solid $border',
   }),
   button: cssObj({
     borderRadius: '$default',

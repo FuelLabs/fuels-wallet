@@ -4,7 +4,6 @@ export const AssetsTitle = () => {
   return (
     <Box.Flex
       css={{
-        marginBottom: '$5',
         flexShrink: 0,
       }}
     >

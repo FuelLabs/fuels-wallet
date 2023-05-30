@@ -1,11 +1,9 @@
-import { buildBlockExplorerUrl } from 'fuels';
-
 import type { MenuItemObj } from '../components';
 
 import { store } from '~/store';
 import { Pages } from '~/systems/Core';
 
-export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
+export const sidebarItems = (): Array<MenuItemObj> => [
   {
     key: 'wallet',
     icon: 'Wallet',
@@ -15,13 +13,13 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
   {
     key: 'history',
     icon: 'History',
-    label: 'History',
+    label: 'Transaction History',
     path: Pages.txs(),
   },
   {
     key: 'networks',
     icon: 'BrandStackshare',
-    label: 'Networks',
+    label: 'Networks Management',
     onPress() {
       store.openNetworksList();
     },
@@ -29,7 +27,7 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
   {
     key: 'accounts',
     icon: 'Users',
-    label: 'Accounts',
+    label: 'Account Management',
     onPress() {
       store.openAccountList();
     },
@@ -39,15 +37,6 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
     icon: 'PlugConnected',
     label: 'Connected Apps',
     path: Pages.settingsConnectedApps(),
-  },
-  {
-    key: 'block-explorer',
-    icon: 'DatabaseSearch',
-    label: 'Block Explorer',
-    ahref: buildBlockExplorerUrl({
-      providerUrl: currentNetworkUrl,
-      path: ' ',
-    }),
   },
   {
     key: 'settings',

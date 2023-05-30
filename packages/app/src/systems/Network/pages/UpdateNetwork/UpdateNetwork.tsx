@@ -1,7 +1,8 @@
-import { Box, Button, Dialog, Focus, IconButton, Icon } from '@fuel-ui/react';
+import { Box, Button, Dialog, Focus, Icon } from '@fuel-ui/react';
 
 import type { NetworkFormValues } from '~/systems/Network';
 import { NetworkForm, useNetworkForm, useNetworks } from '~/systems/Network';
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export function UpdateNetwork() {
   const { network, isLoading, handlers } = useNetworks();
@@ -16,16 +17,12 @@ export function UpdateNetwork() {
 
   return (
     <Box.Stack gap="$4" as="form" onSubmit={form.handleSubmit(onSubmit)}>
-      <Dialog.Heading>
+      <OverlayDialogTopbar
+        onClose={handlers.closeDialog}
+        onBack={handlers.openNetworks}
+      >
         Update Network
-        <IconButton
-          data-action="closed"
-          variant="link"
-          icon={<Icon icon="X" color="intentsBase8" />}
-          aria-label="Close update network"
-          onPress={handlers.closeDialog}
-        />
-      </Dialog.Heading>
+      </OverlayDialogTopbar>
       <Dialog.Description as="div">
         <Focus.Scope autoFocus>
           <NetworkForm form={form} isEditing />

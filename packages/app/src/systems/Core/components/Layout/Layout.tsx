@@ -30,16 +30,18 @@ type ContentProps = {
   as?: any;
   children: ReactNode;
   css?: ThemeUtilsCSS;
+  noBorder?: boolean;
 };
 
 const Content = forwardRef<HTMLDivElement, ContentProps>(
-  ({ as, children, css }, ref) => {
+  ({ as, children, css, noBorder }, ref) => {
     return (
       <Box
         as={as}
         ref={ref}
         css={{ ...styles.content, ...css }}
         className="layout__content"
+        data-noborder={noBorder}
       >
         {children}
       </Box>
@@ -128,6 +130,10 @@ export const styles = {
     ...coreStyles.scrollable(),
     padding: '$0 $4',
     flex: 1,
+
+    '&[data-noborder]': {
+      padding: '$0',
+    },
   }),
   public: cssObj({
     maxWidth: '100vw',

@@ -1,11 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
+import { Alert, Button, Dialog } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAssets } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 import { useTransactionRequest } from '~/systems/DApp';
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 import { TxContent, TxHeader } from '~/systems/Transaction';
 
 export const TxApprove = () => {
@@ -24,17 +25,11 @@ export const TxApprove = () => {
 
   return (
     <>
-      <Dialog.Heading>
+      <OverlayDialogTopbar
+        onClose={isSuccess ? goToWallet : txRequest.handlers.closeDialog}
+      >
         {txRequest.title}
-        <IconButton
-          data-action="closed"
-          variant="link"
-          icon={<Icon icon="X" color="intentsBase8" />}
-          aria-label="Close transaction dialog"
-          isDisabled={txRequest.isLoading}
-          onPress={isSuccess ? goToWallet : txRequest.handlers.closeDialog}
-        />
-      </Dialog.Heading>
+      </OverlayDialogTopbar>
       <Dialog.Description as="div" css={styles.description}>
         {txRequest.status('waitingApproval') && (
           <Alert status="warning" css={styles.alert}>

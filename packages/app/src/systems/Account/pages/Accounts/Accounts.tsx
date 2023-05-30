@@ -1,29 +1,24 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
+import { Button, Dialog, Icon } from '@fuel-ui/react';
 
 import { AccountList } from '../../components';
 import { useAccounts, useAddAccount } from '../../hooks';
 
 import { coreStyles } from '~/systems/Core/styles';
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export const Accounts = () => {
   const { accounts, canHideAccounts, hasHiddenAccounts, isLoading, handlers } =
     useAccounts();
+
   const { handlers: addAccountHandlers, isLoading: isAddingAccount } =
     useAddAccount();
 
   return (
     <>
-      <Dialog.Heading>
+      <OverlayDialogTopbar onClose={handlers.closeDialog}>
         Accounts
-        <IconButton
-          data-action="closed"
-          variant="link"
-          icon={<Icon icon="X" color="intentsBase8" />}
-          aria-label="Close unlock window"
-          onPress={handlers.closeDialog}
-        />
-      </Dialog.Heading>
+      </OverlayDialogTopbar>
       <Dialog.Description
         as="div"
         css={styles.description}

@@ -1,10 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Card, Copyable, Dialog, Text, Box } from '@fuel-ui/react';
+import { Card, Copyable, Dialog, Text, Box } from '@fuel-ui/react';
 
 import { AccountItem } from '../../components';
 import { useAccounts } from '../../hooks';
 import { useExportAccount } from '../../hooks/useExportAccount';
 
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 import { DontShareAlert } from '~/systems/Settings/components/DontShareAlert';
 import { UnlockCard } from '~/systems/Unlock';
 
@@ -29,7 +30,9 @@ export const ExportAccount = () => {
 
   return (
     <>
-      <Dialog.Heading>Export Private Key</Dialog.Heading>
+      <OverlayDialogTopbar onClose={accountsHandlers.goToList}>
+        Export Private Key
+      </OverlayDialogTopbar>
       <Dialog.Description as="div">
         {account && (
           <Box.Stack gap="$4">
@@ -39,7 +42,7 @@ export const ExportAccount = () => {
               <Card.Body css={styles.body}>
                 {exportedKey && (
                   <Copyable value={exportedKey}>
-                    <Text fontSize="xs">{exportedKey}</Text>
+                    <Text>{exportedKey}</Text>
                   </Copyable>
                 )}
               </Card.Body>
@@ -48,11 +51,6 @@ export const ExportAccount = () => {
           </Box.Stack>
         )}
       </Dialog.Description>
-      <Dialog.Footer>
-        <Button variant="ghost" onPress={accountsHandlers.goToList}>
-          Close
-        </Button>
-      </Dialog.Footer>
     </>
   );
 };

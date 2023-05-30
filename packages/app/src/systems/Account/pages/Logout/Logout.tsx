@@ -1,22 +1,17 @@
-import { Button, Card, Dialog, Icon, IconButton, Text } from '@fuel-ui/react';
+import { Button, Card, Dialog, Icon, Text } from '@fuel-ui/react';
 
 import { useAccounts } from '../../hooks';
+
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export const Logout = () => {
   const { isLoading, handlers } = useAccounts();
 
   return (
     <>
-      <Dialog.Heading>
+      <OverlayDialogTopbar onClose={handlers.closeDialog}>
         Logout
-        <IconButton
-          data-action="closed"
-          variant="link"
-          icon={<Icon icon="X" color="intentsBase8" />}
-          aria-label="Close unlock window"
-          onPress={handlers.closeDialog}
-        />
-      </Dialog.Heading>
+      </OverlayDialogTopbar>
       <Dialog.Description as="div">
         <Card css={{ padding: '$4' }}>
           <Text
