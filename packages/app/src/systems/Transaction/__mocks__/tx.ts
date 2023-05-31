@@ -2,6 +2,7 @@ import { AddressType } from '@fuel-wallet/types';
 import type {
   InputCoin,
   InputContract,
+  InputMessage,
   OutputChange,
   OutputCoin,
   OutputContract,
@@ -434,6 +435,7 @@ export const MOCK_TRANSACTION_MINT: MockTransaction = {
 
 export const MOCK_TRANSACTION_TRANSFER_PARTS: {
   inputCoin: InputCoin;
+  inputMessage: InputMessage;
   outputCoin: OutputCoin;
   outputChange: OutputChange;
   receiptReturn: ReceiptReturn;
@@ -457,6 +459,22 @@ export const MOCK_TRANSACTION_TRANSFER_PARTS: {
     predicateDataLength: 0,
     predicate: '0x',
     predicateData: '0x',
+  },
+  inputMessage: {
+    amount: bn.parseUnits('0.001'),
+    data: '0x',
+    dataLength: 0,
+    nonce: bn(2),
+    predicate: '0x',
+    predicateData: '0x',
+    predicateDataLength: 0,
+    predicateLength: 0,
+    recipient:
+      '0x06300e686a5511c7ba0399fc68dcbe0ca2d8f54f7e6afea73c505dd3bcacf33b',
+    sender:
+      '0x000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+    type: InputType.Message,
+    witnessIndex: 0,
   },
   outputCoin: {
     type: OutputType.Coin,
@@ -502,8 +520,7 @@ export const MOCK_TRANSACTION_TRANSFER: MockTransaction = {
     script: '0x24000000',
     scriptData: '0x',
     inputs: [
-      MOCK_TRANSACTION_TRANSFER_PARTS.inputCoin,
-      MOCK_TRANSACTION_TRANSFER_PARTS.inputCoin,
+      // here we don't have inputs. they should be defined in next mocks (from coin or message)
     ],
     outputs: [
       MOCK_TRANSACTION_TRANSFER_PARTS.outputCoin,
@@ -555,6 +572,28 @@ export const MOCK_TRANSACTION_TRANSFER: MockTransaction = {
     MOCK_TRANSACTION_TRANSFER_PARTS.receiptReturn,
     MOCK_TRANSACTION_TRANSFER_PARTS.receiptScriptResult,
   ],
+};
+
+export const MOCK_TRANSACTION_TRANSFER_FROM_COIN: MockTransaction = {
+  ...MOCK_TRANSACTION_TRANSFER,
+  transaction: {
+    ...MOCK_TRANSACTION_TRANSFER.transaction,
+    inputs: [
+      MOCK_TRANSACTION_TRANSFER_PARTS.inputCoin,
+      MOCK_TRANSACTION_TRANSFER_PARTS.inputCoin,
+    ],
+  },
+};
+
+export const MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE: MockTransaction = {
+  ...MOCK_TRANSACTION_TRANSFER,
+  transaction: {
+    ...MOCK_TRANSACTION_TRANSFER.transaction,
+    inputs: [
+      MOCK_TRANSACTION_TRANSFER_PARTS.inputMessage,
+      MOCK_TRANSACTION_TRANSFER_PARTS.inputMessage,
+    ],
+  },
 };
 
 export const MOCK_GAS_PER_BYTE = bn(4);
