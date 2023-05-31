@@ -4,7 +4,6 @@ import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
 
 import { AccountService } from '~/systems/Account';
 import { FetchMachine, WalletLockedCustom } from '~/systems/Core';
-import { ReportErrorService } from '~/systems/Error';
 import { NetworkService } from '~/systems/Network';
 import { TxInputs, TxService } from '~/systems/Transaction/services';
 
@@ -122,13 +121,8 @@ export const sendMachine = createMachine(
       fetchFakeTx: FetchMachine.create<null, BN>({
         showError: true,
         async fetch() {
-          try {
-            const tx = await TxService.createFakeTx();
-            return tx.request.calculateFee().amount;
-          } catch (e) {
-            await ReportErrorService.handleError(e);
-            throw new Error('Failed to calculate fee');
-          }
+          const tx = await TxService.createFakeTx();
+          return tx.request.calculateFee().amount;
         },
       }),
       createTransactionRequest: FetchMachine.create<
@@ -160,7 +154,6 @@ export const sendMachine = createMachine(
               providerUrl: network.url,
             };
           } catch (e) {
-            await ReportErrorService.handleError(e);
             throw new Error('Failed to create transaction request');
           }
         },

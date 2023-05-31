@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { IS_CRX, IS_CRX_POPUP } from './config';
 import { CRXPrivateRoute, CRXPublicRoute } from './systems/CRX/components';
 import { dappRoutes } from './systems/DApp/routes';
-import { ReportErrorGuard } from './systems/Error/guards';
 import { sendRoutes } from './systems/Send';
 import { settingsRoutes } from './systems/Settings';
 import { transactionRoutes } from './systems/Transaction/routes';
@@ -35,17 +34,15 @@ export const webAppRoutes = (
       <Route element={<PublicRoute />}>{signUpRoutes}</Route>
       <Route element={<PrivateRoute />}>
         <Route element={<UnlockGuard />}>
-          <Route element={<ReportErrorGuard />}>
-            <Route
-              path={Pages.signUpWalletCreated()}
-              element={<WalletCreatedPage />}
-            />
-            {walletRoutes}
-          </Route>
+          <Route
+            path={Pages.signUpWalletCreated()}
+            element={<WalletCreatedPage />}
+          />
+          {walletRoutes}
         </Route>
       </Route>
-      <Route path="*" element={<Navigate to={initialPage} />} />
     </Route>
+    <Route path="*" element={<Navigate to={initialPage} />} />
   </Routes>
 );
 
@@ -53,10 +50,8 @@ export const crxPopupRoutes = (
   <Routes>
     <Route element={<CRXPrivateRoute />}>
       <Route element={<UnlockGuard />}>
-        <Route element={<ReportErrorGuard />}>
-          {walletRoutes}
-          <Route path="*" element={<Navigate to={initialPage} />} />
-        </Route>
+        {walletRoutes}
+        <Route path="*" element={<Navigate to={initialPage} />} />
       </Route>
     </Route>
   </Routes>

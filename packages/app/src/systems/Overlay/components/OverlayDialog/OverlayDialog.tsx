@@ -6,7 +6,6 @@ import { EditAccount, Logout } from '~/systems/Account';
 import { Accounts } from '~/systems/Account/pages/Accounts';
 import { ExportAccount } from '~/systems/Account/pages/ExportAccount';
 import { ImportAccount } from '~/systems/Account/pages/ImportAccount';
-import { ReportErrors } from '~/systems/Error';
 import { AddNetwork, Networks, UpdateNetwork } from '~/systems/Network/pages';
 import { useOverlay } from '~/systems/Overlay';
 import { ViewSeedPhrase } from '~/systems/Settings/pages';
@@ -35,9 +34,6 @@ export function OverlayDialog() {
 
         {/* Settings */}
         {overlay.is('settings.viewSeedPhrase') && <ViewSeedPhrase />}
-
-        {/* Error */}
-        {overlay.is('error.reportErrors') && <ReportErrors />}
       </Dialog.Content>
     </Dialog>
   );

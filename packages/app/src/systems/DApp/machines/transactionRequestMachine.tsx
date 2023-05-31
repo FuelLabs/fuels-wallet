@@ -11,7 +11,6 @@ import { assign, createMachine } from 'xstate';
 
 import { AccountService } from '~/systems/Account';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
-import { ReportErrorService } from '~/systems/Error';
 import type { NetworkInputs } from '~/systems/Network';
 import { NetworkService } from '~/systems/Network';
 import type { GroupedErrors, VMApiError } from '~/systems/Transaction';
@@ -296,16 +295,11 @@ export const transactionRequestMachine = createMachine(
       fetchGasPrice: FetchMachine.create<NetworkInputs['getNodeInfo'], BN>({
         showError: true,
         async fetch({ input }) {
-          try {
-            if (!input?.providerUrl) {
-              throw new Error('providerUrl is required');
-            }
-            const { minGasPrice } = await NetworkService.getNodeInfo(input);
-            return minGasPrice;
-          } catch (error) {
-            await ReportErrorService.handleError(error);
-            throw new Error('There was a problem fetching the gas price');
+          if (!input?.providerUrl) {
+            throw new Error('providerUrl is required');
           }
+          const { minGasPrice } = await NetworkService.getNodeInfo(input);
+          return minGasPrice;
         },
       }),
       simulateTransaction: FetchMachine.create<
@@ -321,7 +315,6 @@ export const transactionRequestMachine = createMachine(
             const receipts = await TxService.simulateTransaction(input);
             return receipts;
           } catch (error) {
-            await ReportErrorService.handleError(error);
             throw new Error('There was a problem simulating the transaction');
           }
         },
@@ -341,7 +334,6 @@ export const transactionRequestMachine = createMachine(
             const tx = await TxService.send(input);
             return tx;
           } catch (error) {
-            await ReportErrorService.handleError(error);
             throw new Error('There was a problem sending the transaction');
           }
         },
