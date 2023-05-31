@@ -8,7 +8,9 @@ import { useIsConnected } from '~/src/hooks/useIsConnected';
 import { useLoading } from '~/src/hooks/useLoading';
 
 export function Accounts() {
+  /* useFuel:start */
   const [fuel, notDetected] = useFuel();
+  /* useFuel:end */
   const [accounts, setAccounts] = useState<string[]>([]);
   const [isConnected] = useIsConnected();
   const [handleAccounts, errorAccounts] = useLoading(async () => {
@@ -20,6 +22,7 @@ export function Accounts() {
     await fuel.connect();
   });
 
+  /* eventAccountChanges:start */
   const handleAccountsEvent = (accounts: string[]) => {
     setAccounts(accounts);
   };
@@ -30,7 +33,7 @@ export function Accounts() {
       fuel?.off(fuel.events.accounts, handleAccountsEvent);
     };
   }, [fuel]);
-
+  /* eventAccountChanges:end */
   useEffect(() => {
     if (isConnected) handleAccounts();
   }, [isConnected]);

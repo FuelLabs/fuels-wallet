@@ -21,6 +21,7 @@ export function Assets() {
     await fuel.connect();
   });
 
+  /* eventAssets:start */
   const handleAssetsEvent = (assets: Asset[]) => {
     setAssets(assets);
   };
@@ -31,6 +32,7 @@ export function Assets() {
       fuel?.off(fuel.events.assets, handleAssetsEvent);
     };
   }, [fuel]);
+  /* eventAssets:end */
 
   useEffect(() => {
     if (isConnected) handleAssets();

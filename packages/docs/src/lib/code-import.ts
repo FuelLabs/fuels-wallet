@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import * as acorn from 'acorn';
+import type { Node } from 'acorn';
+import * as acornLoose from 'acorn-loose';
 import * as walk from 'acorn-walk';
 import fs from 'node:fs';
 import { EOL } from 'os';
@@ -14,10 +15,13 @@ const COMMENT_BLOCK_START = '/* example:start */';
 const COMMENT_BLOCK_END = '/* example:end */';
 
 function toAST(content: string) {
-  return acorn.parse(content, {
+  // Acorn Loose is a parser that is tolerant to errors
+  // It replaces unknowm Nodes with a Dummb Node
+  // This enable for better DX when importing codes
+  return acornLoose.parse(content, {
     ecmaVersion: 'latest',
     sourceType: 'module',
-  });
+  }) as Node;
 }
 
 function extractLines(
@@ -39,10 +43,16 @@ function extractLines(
   return prettier.format(linesContent, { parser: 'babel-ts' }).trimEnd();
 }
 
-function extractCommentBlock(content: string) {
+function extractCommentBlock(content: string, commentBlock?: string) {
   const lines = content.split(EOL);
-  let lineStart = lines.findIndex((l) => l.includes(COMMENT_BLOCK_START)) + 1;
-  let lineEnd = lines.findIndex((l) => l.includes(COMMENT_BLOCK_END));
+  const commentStart = commentBlock
+    ? COMMENT_BLOCK_START.replace('example', commentBlock)
+    : COMMENT_BLOCK_START;
+  const commentEnd = commentBlock
+    ? COMMENT_BLOCK_END.replace('example', commentBlock)
+    : COMMENT_BLOCK_END;
+  let lineStart = lines.findIndex((l) => l.includes(commentStart)) + 1;
+  let lineEnd = lines.findIndex((l) => l.includes(commentEnd));
 
   if (lineStart < 0) {
     lineStart = 0;
@@ -134,89 +144,99 @@ export function codeImport(options: Options = { filepath: '' }) {
     });
 
     nodes.forEach(([node]) => {
-      const attr = node.attributes;
-      let content = '';
+      try {
+        const attr = node.attributes;
+        let content = '';
 
-      if (!attr.length) {
-        throw new Error('CodeImport need to have properties defined');
+        if (!attr.length) {
+          throw new Error('CodeImport need to have properties defined');
+        }
+
+        let lineStart = attr.find((i: any) => i.name === 'lineStart')?.value;
+        let lineEnd = attr.find((i: any) => i.name === 'lineEnd')?.value;
+        const commentBlock = attr.find(
+          (i: any) => i.name === 'commentBlock'
+        )?.value;
+        const file = attr.find((i: any) => i.name === 'file')?.value;
+        const testCase = attr.find((i: any) => i.name === 'testCase')?.value;
+        const fileAbsPath = path.resolve(path.join(rootDir, dirname), file);
+        const fileContent = fs.readFileSync(fileAbsPath, 'utf8');
+        const cachedFile = getFilesOnCache(fileAbsPath);
+        const attrId = `${fileAbsPath}${testCase || ''}${lineStart || ''}${
+          lineEnd || ''
+        }${commentBlock || ''}`;
+        const oldList = attrsList.get(attrId);
+
+        /** Return result from cache if file content is the same */
+        if (fileContent === cachedFile && oldList) {
+          node.attributes.push(...attrsList.get(attrId)!);
+          return;
+        }
+
+        if (lineStart && lineEnd) {
+          content = extractLines(fileContent, lineStart, lineEnd);
+        }
+
+        if (testCase) {
+          const testResult = extractTestCase(fileContent, testCase);
+          lineStart = testResult.lineStart;
+          lineEnd = testResult.lineEnd;
+          content = testResult.content;
+        }
+
+        if (!testCase && !lineStart && !lineEnd) {
+          const commentResult = extractCommentBlock(fileContent, commentBlock);
+          lineStart = commentResult.lineStart;
+          lineEnd = commentResult.lineEnd;
+          content = commentResult.content;
+        }
+
+        const fullPath = path.resolve(dirname, file);
+        const relativePath = fullPath.slice(fullPath.indexOf(PACKAGE_FOLDER));
+
+        const newAttrs = [
+          {
+            name: '__content',
+            type: 'mdxJsxAttribute',
+            value: content,
+          },
+          {
+            name: '__filepath',
+            type: 'mdxJsxAttribute',
+            value: relativePath,
+          },
+          {
+            name: '__filename',
+            type: 'mdxJsxAttribute',
+            value: path.parse(file).base,
+          },
+          {
+            name: '__language',
+            type: 'mdxJsxAttribute',
+            value: path.extname(fileAbsPath).replace('.', ''),
+          },
+          {
+            name: '__lineStart',
+            type: 'mdxJsxAttribute',
+            value: lineStart,
+          },
+          lineEnd && {
+            name: '__lineEnd',
+            type: 'mdxJsxAttribute',
+            value: lineEnd,
+          },
+        ];
+
+        node.attributes.push(...newAttrs);
+
+        /** Add results on cache */
+        attrsList.set(attrId, newAttrs);
+      } catch (err) {
+        // Log better error messages when parsing fails
+        // eslint-disable-next-line no-console
+        console.error(err);
+        throw err;
       }
-
-      let lineStart = attr.find((i: any) => i.name === 'lineStart')?.value;
-      let lineEnd = attr.find((i: any) => i.name === 'lineEnd')?.value;
-      const file = attr.find((i: any) => i.name === 'file')?.value;
-      const testCase = attr.find((i: any) => i.name === 'testCase')?.value;
-      const fileAbsPath = path.resolve(path.join(rootDir, dirname), file);
-      const fileContent = fs.readFileSync(fileAbsPath, 'utf8');
-      const cachedFile = getFilesOnCache(fileAbsPath);
-      const attrId = `${fileAbsPath}${testCase || ''}${lineStart || ''}${
-        lineEnd || ''
-      }`;
-      const oldList = attrsList.get(attrId);
-
-      /** Return result from cache if file content is the same */
-      if (fileContent === cachedFile && oldList) {
-        node.attributes.push(...attrsList.get(attrId)!);
-        return;
-      }
-
-      if (lineStart && lineEnd) {
-        content = extractLines(fileContent, lineStart, lineEnd);
-      }
-
-      if (testCase) {
-        const testResult = extractTestCase(fileContent, testCase);
-        lineStart = testResult.lineStart;
-        lineEnd = testResult.lineEnd;
-        content = testResult.content;
-      }
-
-      if (!testCase && !lineStart && !lineEnd) {
-        const commentResult = extractCommentBlock(fileContent);
-        lineStart = commentResult.lineStart;
-        lineEnd = commentResult.lineEnd;
-        content = commentResult.content;
-      }
-
-      const fullPath = path.resolve(dirname, file);
-      const relativePath = fullPath.slice(fullPath.indexOf(PACKAGE_FOLDER));
-
-      const newAttrs = [
-        {
-          name: '__content',
-          type: 'mdxJsxAttribute',
-          value: content,
-        },
-        {
-          name: '__filepath',
-          type: 'mdxJsxAttribute',
-          value: relativePath,
-        },
-        {
-          name: '__filename',
-          type: 'mdxJsxAttribute',
-          value: path.parse(file).base,
-        },
-        {
-          name: '__language',
-          type: 'mdxJsxAttribute',
-          value: path.extname(fileAbsPath).replace('.', ''),
-        },
-        {
-          name: '__lineStart',
-          type: 'mdxJsxAttribute',
-          value: lineStart,
-        },
-        lineEnd && {
-          name: '__lineEnd',
-          type: 'mdxJsxAttribute',
-          value: lineEnd,
-        },
-      ];
-
-      node.attributes.push(...newAttrs);
-
-      /** Add results on cache */
-      attrsList.set(attrId, newAttrs);
     });
   };
 }

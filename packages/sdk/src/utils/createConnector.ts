@@ -25,12 +25,12 @@ function injectFuel(fuel: Fuel, target: object & { fuel?: Fuel }) {
 }
 
 export function createConnector(
-  conector: FuelWalletConnector,
+  connector: FuelWalletConnector,
   target: ObjectTarget = window as ObjectTarget
 ) {
   if (target?.fuel) {
-    target.fuel.addConnector(conector);
+    target.fuel.addConnector(connector);
     return;
   }
-  injectFuel(new Fuel(conector), target);
+  injectFuel(new Fuel(connector), target);
 }

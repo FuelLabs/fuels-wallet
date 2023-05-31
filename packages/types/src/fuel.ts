@@ -14,7 +14,8 @@ export const FuelWalletEvents = {
   connection: 'connection',
   network: 'network',
   assets: 'assets',
-  connector: 'connector',
+  connectors: 'connectors',
+  currentConnector: 'currentConnector',
 } as const;
 
 export type FuelEvents =
@@ -39,7 +40,11 @@ export type FuelEvents =
       data: Array<Asset>;
     }
   | {
-      type: typeof FuelWalletEvents.connector;
+      type: typeof FuelWalletEvents.connectors;
+      data: Array<FuelWalletConnector>;
+    }
+  | {
+      type: typeof FuelWalletEvents.currentConnector;
       data: FuelWalletConnector;
     };
 

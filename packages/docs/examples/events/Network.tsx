@@ -24,7 +24,7 @@ export function NetworkExample() {
     setNetwork(network);
   });
 
-  /* example:start */
+  /* network:start */
   const handleNetworkChange = (network: FuelProviderConfig) => {
     setNetwork(network);
   };
@@ -36,7 +36,7 @@ export function NetworkExample() {
       fuel?.off(fuel.events.network, handleNetworkChange);
     };
   }, [fuel]);
-  /* example:end */
+  /* network:end */
 
   useEffect(() => {
     if (isConnected) handleNetwork();

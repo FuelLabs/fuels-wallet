@@ -9,3 +9,4 @@ export { Transfer } from './Transfer';
 export { Events } from './events';
 export { FuelLoaded } from './FuelLoaded';
 export { Network } from './Network';
+export { Connectors } from './Connectors';

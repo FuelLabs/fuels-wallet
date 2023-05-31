@@ -20,6 +20,7 @@ export function CurrentAccount() {
     await fuel.connect();
   });
 
+  /* eventCurrentAccount:start */
   const handleAccountEvent = (account: string) => {
     setCurrentAccount(account);
   };
@@ -32,6 +33,7 @@ export function CurrentAccount() {
       fuel?.off(fuel.events.currentAccount, handleAccountEvent);
     };
   }, [fuel]);
+  /* eventCurrentAccount:end */
 
   useEffect(() => {
     if (isConnected) handleCurrentAccount();

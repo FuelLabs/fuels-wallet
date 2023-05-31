@@ -58,6 +58,12 @@ describe('Fuel Connectors', () => {
     ).toBeFalsy();
   });
 
+  test('addConnector', async () => {
+    const connectorName = 'Third Wallet';
+    fuel.addConnector({ name: connectorName });
+    expect(fuel.hasConnector(connectorName)).toBeTruthy();
+  });
+
   test('Message should go to the correct Connector', async () => {
     // Change the state of the second connector
     mocksConnector2.backgroundService.state.isConnected = false;
@@ -77,23 +83,33 @@ describe('Fuel Connectors', () => {
 });
 
 describe('Fuel Connectors Events', () => {
-  let mocks: MockSerivices;
+  let mocksConnector1: MockSerivices;
+  let mocksConnector2: MockSerivices;
   let fuel: Fuel;
 
   beforeAll(() => {
-    mocks = mockFuel();
+    mocksConnector1 = mockFuel();
+    mocksConnector2 = mockFuel({ name: 'Third Wallet' });
     fuel = window.fuel!;
   });
 
   afterAll(() => {
-    mocks.destroy();
+    mocksConnector1.destroy();
+    mocksConnector2.destroy();
   });
 
   test('Event: Connector Added', async () => {
     const handleConnectorEvent = jest.fn();
-    fuel.on(fuel.events.connector, handleConnectorEvent);
+    fuel.on(fuel.events.connectors, handleConnectorEvent);
     const walletConnector = { name: 'Another Connector' };
     fuel.addConnector(walletConnector);
-    expect(handleConnectorEvent).toBeCalledWith(walletConnector);
+    expect(handleConnectorEvent).toBeCalledWith(fuel.listConnectors());
+  });
+
+  test('Event: Current Connector Change', async () => {
+    const handleConnectorChangeEvent = jest.fn();
+    fuel.on(fuel.events.currentConnector, handleConnectorChangeEvent);
+    await fuel.selectConnector('Third Wallet');
+    expect(handleConnectorChangeEvent).toBeCalledWith({ name: 'Third Wallet' });
   });
 });
