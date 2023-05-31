@@ -89,7 +89,7 @@ export const signUpMachine = createMachine(
         on: {
           CREATE_MNEMONIC: {
             target: 'showingMnemonic',
-            actions: 'createMnemonic',
+            actions: ['cleanError', 'deleteData', 'createMnemonic'],
           },
         },
       },
@@ -101,8 +101,9 @@ export const signUpMachine = createMachine(
         },
       },
       waitingMnemonic: {
-        initial: 'invalidMnemonic',
+        initial: 'idle',
         states: {
+          idle: {},
           invalidMnemonic: {
             entry: [
               assignErrorMessage(
