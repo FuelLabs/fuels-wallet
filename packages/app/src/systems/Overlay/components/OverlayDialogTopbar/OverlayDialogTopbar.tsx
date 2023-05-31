@@ -5,32 +5,16 @@ import type { ReactNode } from 'react';
 export type OverlayDialogTopbarProps = {
   children: ReactNode;
   onClose?: () => void;
-  onBack?: () => void;
 };
 
 export function OverlayDialogTopbar({
   children,
   onClose,
-  onBack,
 }: OverlayDialogTopbarProps) {
-  function handleBack() {
-    onBack?.();
-    onClose?.();
-  }
-
   return (
     <Dialog.Heading css={styles.root}>
-      {onBack && (
-        <IconButton
-          data-action="back"
-          variant="link"
-          icon={<Icon icon="ChevronLeft" />}
-          aria-label="Back"
-          onPress={handleBack}
-        />
-      )}
       <Box.Flex align="center">{children}</Box.Flex>
-      {!onBack && onClose && (
+      {onClose && (
         <IconButton
           data-action="closed"
           variant="link"

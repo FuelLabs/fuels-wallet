@@ -52,10 +52,7 @@ export function AddNetwork() {
       gap="$4"
       onSubmit={form.handleSubmit(onSubmit)}
     >
-      <OverlayDialogTopbar
-        onClose={handlers.closeDialog}
-        onBack={handlers.openNetworks}
-      >
+      <OverlayDialogTopbar onClose={handlers.closeDialog}>
         Add Network
       </OverlayDialogTopbar>
       <Dialog.Description as="div">

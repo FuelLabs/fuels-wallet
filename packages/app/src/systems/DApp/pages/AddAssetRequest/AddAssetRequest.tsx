@@ -14,7 +14,7 @@ export function AddAssetRequest() {
   if (!origin || !assets?.length || !account) return null;
 
   return (
-    <Layout title="Add Asset Request">
+    <Layout title="Add Asset Request" noBorder>
       <Layout.Content css={styles.content}>
         <ConnectInfo
           origin={origin}

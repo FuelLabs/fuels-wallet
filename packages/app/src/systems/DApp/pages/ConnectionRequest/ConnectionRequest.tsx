@@ -40,7 +40,7 @@ export function ConnectionRequest() {
   if (!accounts || !origin) return null;
 
   return (
-    <Layout title="Connection Request" isLoading={isLoadingAccounts}>
+    <Layout title="Connection Request" isLoading={isLoadingAccounts} noBorder>
       <Layout.Content css={styles.content}>
         <ConnectInfo
           origin={origin}

@@ -13,7 +13,7 @@ export function SignatureRequest() {
 
   return (
     <>
-      <Layout title={`Signature Request`} isLoading={isLoading}>
+      <Layout title={`Signature Request`} isLoading={isLoading} noBorder>
         <Layout.Content css={{ pt: '$4' }}>
           <Box.Flex gap="$4" direction="column">
             <ConnectInfo

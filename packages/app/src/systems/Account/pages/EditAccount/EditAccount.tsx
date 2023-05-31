@@ -25,10 +25,7 @@ export const EditAccount = () => {
 
   return (
     <Box.Stack gap="$4" as="form" onSubmit={form.handleSubmit(onSubmit)}>
-      <OverlayDialogTopbar
-        onClose={accountsHandlers.closeDialog}
-        onBack={accountsHandlers.goToList}
-      >
+      <OverlayDialogTopbar onClose={accountsHandlers.closeDialog}>
         Edit Account
       </OverlayDialogTopbar>
       <Dialog.Description as="div">

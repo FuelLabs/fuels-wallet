@@ -2,6 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Form, Checkbox, Button, Alert, Box } from '@fuel-ui/react';
 import { useState } from 'react';
 
+import { SIGNUP_HEIGHT } from '../../config';
 import { useSignUpStepper } from '../../hooks';
 import { Header } from '../Header';
 import { Stepper } from '../Stepper';
@@ -62,6 +63,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
 const styles = {
   content: cssObj({
     width: '$sm',
+    height: SIGNUP_HEIGHT,
   }),
   alertContent: cssObj({
     flexDirection: 'row',

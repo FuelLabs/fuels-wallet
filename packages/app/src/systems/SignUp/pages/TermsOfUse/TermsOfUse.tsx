@@ -3,6 +3,7 @@ import { Box, Button } from '@fuel-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Header, Stepper } from '../../components';
+import { SIGNUP_HEIGHT } from '../../config';
 import { useSignUpStepper } from '../../hooks';
 
 import { ReactComponent as Terms } from './data/terms.md';
@@ -56,8 +57,6 @@ export function TermsOfUse() {
   );
 }
 
-const HEIGHT = '350px';
-
 const styles = {
   termsWrapper: {
     layer: 'layer-card',
@@ -65,7 +64,7 @@ const styles = {
     pr: '$2',
     px: '$5',
     boxSizing: 'border-box',
-    height: HEIGHT,
+    height: SIGNUP_HEIGHT,
 
     '& >div': {
       marginBottom: '$2',
@@ -96,7 +95,7 @@ const styles = {
     },
   },
   termsContainer: cssObj({
-    height: HEIGHT,
+    height: SIGNUP_HEIGHT,
     overflow: 'hidden',
     maxWidth: '700px',
     borderRadius: '$8',

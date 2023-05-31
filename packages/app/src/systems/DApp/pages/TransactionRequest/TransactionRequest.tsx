@@ -19,7 +19,7 @@ export function TransactionRequest() {
 
   return (
     <>
-      <Layout title={ctx.title}>
+      <Layout title={ctx.title} noBorder>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
           {ctx.isLoading && !txRequest.tx && (

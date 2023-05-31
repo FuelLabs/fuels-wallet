@@ -50,8 +50,9 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(
 );
 
 export type LayoutProps = Context & {
-  isPublic?: boolean;
   children: ReactNode;
+  isPublic?: boolean;
+  noBorder?: boolean;
 };
 
 type LayoutComponent = FC<LayoutProps> & {
@@ -65,6 +66,7 @@ export const Layout: LayoutComponent = ({
   isLoading,
   title,
   children,
+  noBorder,
 }: LayoutProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const titleText = title ? `${title} | Fuel` : 'Fuel';
@@ -83,7 +85,11 @@ export const Layout: LayoutComponent = ({
           </Box>
         ) : (
           <Box.Centered as="main" css={styles.root}>
-            <Box css={styles.wrapper} className="layout__wrapper">
+            <Box
+              css={styles.wrapper}
+              className="layout__wrapper"
+              data-noborder={noBorder}
+            >
               <OverlayDialog />
               <Sidebar ref={ref} />
               <Box ref={ref} css={styles.inner} className="layout__inner">
@@ -123,6 +129,10 @@ export const styles = {
     height: WALLET_HEIGHT - 2, // reduce the border to contain height inside the window
     background: '$bodyColor',
     border: '1px solid $border',
+
+    '&[data-noborder=true]': {
+      border: '$none',
+    },
   }),
   inner: coreStyles.fullscreen,
   content: cssObj({
@@ -139,11 +149,11 @@ export const styles = {
     display: 'grid',
     gridTemplateColumns: '0.75fr 1.25fr',
     gridTemplateRows: '1fr',
-    alignItems: 'flex-start',
+    alignItems: 'center',
 
     '& > .fuel_Box-centered': {
       maxWidth: '$sm',
-      margin: '$14 auto',
+      margin: '$0 auto',
     },
 
     '&::before': {

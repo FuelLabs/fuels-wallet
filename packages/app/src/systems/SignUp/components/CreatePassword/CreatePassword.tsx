@@ -6,6 +6,7 @@ import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
+import { SIGNUP_HEIGHT } from '../../config';
 import { useSignUpStepper } from '../../hooks';
 import { Header } from '../Header';
 import { Stepper } from '../Stepper';
@@ -77,7 +78,7 @@ export function CreatePassword({
           title="Create password for encryption"
           subtitle="This password will be used to unlock your wallet."
         />
-        <Box.Stack css={{ width: '100%' }} gap="$4">
+        <Box.Stack css={styles.content} gap="$4">
           <ControlledField
             control={control}
             name="password"
@@ -144,5 +145,9 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     gridGap: '$4',
+  }),
+  content: cssObj({
+    width: '$sm',
+    height: SIGNUP_HEIGHT,
   }),
 };

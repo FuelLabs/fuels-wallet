@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Alert, Box } from '@fuel-ui/react';
 
+import { SIGNUP_HEIGHT } from '../../config';
 import { useSignUpStepper } from '../../hooks';
 import { Header } from '../Header';
 import { Stepper } from '../Stepper';
@@ -37,7 +38,7 @@ export function MnemonicWrite({
         title="Confirm phrase"
         subtitle="Write your phrase again to ensure you wrote it down correctly."
       />
-      <Box.Stack gap="$3" css={{ width: '$sm' }}>
+      <Box.Stack gap="$3" css={styles.content}>
         {error && (
           <Alert status="error">
             <Alert.Description>{error}</Alert.Description>
@@ -67,5 +68,9 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     gridGap: '$4',
+  }),
+  content: cssObj({
+    height: SIGNUP_HEIGHT,
+    width: '$sm',
   }),
 };

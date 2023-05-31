@@ -88,7 +88,7 @@ function ExternalTopBar() {
 
   return (
     <Box.Flex as="nav" css={styles.root} data-home={isHome}>
-      <Box.Flex css={{ alignItems: 'center', gap: '$5', flex: 1, pl: '$2' }}>
+      <Box.Flex css={{ alignItems: 'center', gap: '$5', flex: 1 }}>
         {isLoading && <Spinner aria-label="Spinner" />}
         {!isLoading && <Text css={styles.title}>{title}</Text>}
       </Box.Flex>
@@ -96,7 +96,7 @@ function ExternalTopBar() {
         <NetworkDropdown
           selected={selectedNetwork}
           onPress={handlers.openNetworks}
-          isDisabled={true}
+          isDisabled
         />
       )}
     </Box.Flex>
