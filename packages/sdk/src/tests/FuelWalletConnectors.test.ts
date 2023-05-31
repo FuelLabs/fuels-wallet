@@ -59,7 +59,7 @@ describe('Fuel Connectors', () => {
   });
 
   test('addConnector', async () => {
-    const connectorName = 'Third Wallet';
+    const connectorName = 'Second Wallet';
     fuel.addConnector({ name: connectorName });
     expect(fuel.hasConnector(connectorName)).toBeTruthy();
   });
