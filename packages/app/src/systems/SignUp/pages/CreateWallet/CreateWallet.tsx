@@ -7,6 +7,7 @@ import { SignUpType } from '../../machines/signUpMachine';
 import { Layout, Pages } from '~/systems/Core';
 
 export function CreateWallet() {
+  throw new Error('Error!');
   const { state, handlers, context } = useSignUp(SignUpType.create);
   const navigate = useNavigate();
 

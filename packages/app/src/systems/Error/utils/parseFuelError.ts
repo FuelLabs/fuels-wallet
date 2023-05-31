@@ -1,7 +1,7 @@
 import type { FuelWalletError } from '@fuel-wallet/sdk';
 import { createUUID } from '@fuel-wallet/sdk';
 
-export function errorToFuelError(error: Error): FuelWalletError {
+export function parseFuelError(error: Error): FuelWalletError {
   return {
     ...error,
     message: error?.message,

@@ -1,28 +1,19 @@
 import type { FuelWalletError, ReportErrorFrequency } from '@fuel-wallet/types';
 
-import { errorToFuelError } from '../utils';
+import { parseFuelError, parseErrorEmail } from '../utils';
 
 import { REPORT_ERROR_FREQUENCY_KEY, REPORT_ERROR_EMAIL } from '~/config';
 import { Storage, db } from '~/systems/Core/utils';
-
-function encodeHTMLEntities(text: string) {
-  const textArea = document.createElement('textarea');
-  textArea.innerText = text;
-  return textArea.innerHTML;
-}
 
 export class ReportErrorService {
   static async reportErrors() {
     const errors = await this.getErrors();
     // send error as an email to the team
-    const errorMailBody = encodeHTMLEntities(
-      errors.map((error) => JSON.stringify(error)).join('\n')
-    ).slice(0, 2000);
+    const errorMailBody = parseErrorEmail(errors);
     window?.open(
       `mailto:${REPORT_ERROR_EMAIL}?subject=Fuel Wallet Error Report&body=${errorMailBody}`,
       '_blank'
     );
-    return true;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,19 +23,17 @@ export class ReportErrorService {
       if (error?.response?.status) {
         const status = error.response.status;
         if (status + ''.startsWith('5')) {
-          const formatedError = errorToFuelError(error as Error);
-          return this.saveError(formatedError);
+          const formatedError = parseFuelError(error as Error);
+          this.saveError(formatedError);
         }
       }
-      return true;
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
-      return true;
     }
   }
 
-  private static saveError(error: FuelWalletError) {
+  static saveError(error: FuelWalletError) {
     return db.errors.add(error);
   }
 

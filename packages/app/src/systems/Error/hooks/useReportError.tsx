@@ -1,10 +1,9 @@
 import { ReportErrorFrequency } from '@fuel-wallet/types';
-import { useSelector } from '@xstate/react';
+import { useMachine, useSelector } from '@xstate/react';
 
-import { type ReportErrorMachineState } from '../machines';
+import { reportErrorMachine, type ReportErrorMachineState } from '../machines';
 
 import { REPORT_ERROR_FREQUENCY_KEY } from '~/config';
-import { Services, store } from '~/store';
 import { useStorageItem } from '~/systems/Core/hooks/useStorage';
 
 const selectors = {
@@ -37,17 +36,19 @@ export function useReportError() {
       REPORT_ERROR_FREQUENCY_KEY,
       ReportErrorFrequency.ONCE
     );
-  const service = store.useService(Services.reportError);
-  store.useUpdateMachineConfig(Services.reportError, {
-    context: {
-      frequency: reportErrorFrequency || ReportErrorFrequency.ONCE,
-    },
-    actions: {
-      reload: () => {
-        store.closeOverlay();
-      },
-    },
-  });
+  const [state, send, service] = useMachine(() =>
+    reportErrorMachine
+      .withConfig({
+        actions: {
+          reload: () => {
+            window.location.reload();
+          },
+        },
+      })
+      .withContext({
+        frequency: reportErrorFrequency || ReportErrorFrequency.ONCE,
+      })
+  );
 
   const hasErrorsToReport = useSelector(service, selectors.hasErrorsToReport);
   const isLoadingSendOnce = useSelector(service, selectors.isLoadingSendOnce);
@@ -59,21 +60,21 @@ export function useReportError() {
 
   const reportErrorsOnce = () => {
     setReportErrorFrequency(ReportErrorFrequency.ONCE);
-    service.send('REPORT_ERRORS', {
+    send('REPORT_ERRORS', {
       input: { frequency: ReportErrorFrequency.ONCE },
     });
   };
 
   const alwaysReportErrors = () => {
     setReportErrorFrequency(ReportErrorFrequency.ALWAYS);
-    service.send('REPORT_ERRORS', {
+    send('REPORT_ERRORS', {
       input: { frequency: ReportErrorFrequency.ALWAYS },
     });
   };
 
   const dontReportErrors = () => {
     setReportErrorFrequency(ReportErrorFrequency.DONT);
-    service.send('REPORT_ERRORS', {
+    send('REPORT_ERRORS', {
       input: { frequency: ReportErrorFrequency.DONT },
     });
   };
@@ -87,7 +88,7 @@ export function useReportError() {
     isLoadingDontSend,
     isLoadingSendAlways,
     isLoadingSendOnce,
-    store,
+    state,
     handlers: {
       reportErrorsOnce,
       alwaysReportErrors,

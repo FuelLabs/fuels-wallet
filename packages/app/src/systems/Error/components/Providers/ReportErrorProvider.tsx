@@ -1,46 +1,37 @@
-import React, { createContext, useEffect } from 'react';
+import React from 'react';
 
-import { db } from '../../../Core';
-import { errorToFuelError } from '../../utils';
-
-const initialState = {};
-
-const FuelErrorContext = createContext(initialState);
-const { Provider } = FuelErrorContext;
+import { ReportErrors } from '../../pages';
+import { ReportErrorService } from '../../services';
+import { parseFuelError } from '../../utils';
 
 type ErrorProviderProps = {
   children: React.ReactNode;
 };
 
-const ErrorProvider = ({ children }: ErrorProviderProps) => {
-  const handleError = async (e: ErrorEvent) => {
-    const error = errorToFuelError(e.error);
-    await db.errors.add(error);
-    // return false to allow the default handler to run.
-    return false;
-  };
+class ErrorBoundary extends React.Component<
+  ErrorProviderProps,
+  { hasError: boolean }
+> {
+  state = { hasError: false };
 
-  const handleUnhandledRejection = async (e: PromiseRejectionEvent) => {
-    e.preventDefault();
-    const error = errorToFuelError(e.reason);
-    await db.errors.add(error);
-    // return false to allow the default handler to run.
-    return true;
-  };
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
 
-  useEffect(() => {
-    window.addEventListener('error', handleError);
-    window.addEventListener('unhandledrejection', handleUnhandledRejection);
-    return () => {
-      window.removeEventListener('error', handleError);
-      window.removeEventListener(
-        'unhandledrejection',
-        handleUnhandledRejection
-      );
-    };
-  }, []);
+  async componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    const fuelError = parseFuelError({ ...error, ...errorInfo });
+    await ReportErrorService.saveError(fuelError);
+    this.setState({
+      hasError: true,
+    });
+  }
 
-  return <Provider value={{}}>{children}</Provider>;
-};
+  render() {
+    if (this.state.hasError) {
+      return <ReportErrors />;
+    }
+    return this.props.children;
+  }
+}
 
-export { FuelErrorContext, ErrorProvider };
+export { ErrorBoundary };
