@@ -10,6 +10,7 @@ import { useLoading } from '~/src/hooks/useLoading';
 export function Connectors() {
   const [fuel, notDetected] = useFuel();
   const [connected, setConnected] = useState(false);
+  const [compatibilityError, setCompatibilityError] = useState('');
   const [connectors, setConnectors] = useState<Array<FuelWalletConnector>>([]);
 
   useEffect(() => {
@@ -29,6 +30,13 @@ export function Connectors() {
 
   useEffect(() => {
     if (!fuel) return () => {};
+    if (!fuel.listConnectors) {
+      setCompatibilityError(
+        'Current verison of Fuel Wallet not support Connectors!'
+      );
+      return () => {};
+    }
+    setCompatibilityError('');
 
     /* listConnectors:start */
     const connectors = fuel.listConnectors();
@@ -77,7 +85,7 @@ export function Connectors() {
     errorConnect || errorDisconnect || notDetected || errorConnector;
 
   return (
-    <ExampleBox error={errorMessage}>
+    <ExampleBox error={errorMessage} overlayContent={compatibilityError}>
       <Input
         as={'select'}
         isDisabled={!connectors.length || isSelecting}
