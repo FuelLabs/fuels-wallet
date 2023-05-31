@@ -71,6 +71,7 @@
     "@fuel-ui/config": "0.15.1-pr--2ef2a88",
     "@fuel-ui/css": "0.15.1-pr--2ef2a88",
     "@fuel-ui/react": "0.15.1-pr--2ef2a88",
+    "@fuel-ui/test-utils": "0.15.1-pr--2ef2a88",
     "execa": "^7.1.1"
   },
   "devDependencies": {
