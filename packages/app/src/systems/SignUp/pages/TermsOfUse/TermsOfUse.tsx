@@ -2,8 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Button } from '@fuel-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { Header } from '../../components';
-import { Stepper } from '../../components/Stepper';
+import { Header, Stepper } from '../../components';
 import { useSignUpStepper } from '../../hooks';
 
 import { ReactComponent as Terms } from './data/terms.md';

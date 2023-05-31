@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Button, Text } from '@fuel-ui/react';
+import { Alert, Button } from '@fuel-ui/react';
 
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
@@ -39,14 +39,11 @@ export function TransactionRequest() {
                     title={ctx.input.title}
                     headerText="Requesting a transaction from:"
                   />
-
                   <Alert status="warning" css={styles.alert}>
                     <Alert.Title>Confirm before approving</Alert.Title>
                     <Alert.Description>
-                      <Text fontSize="xs" css={styles.alertDescription}>
-                        Carefully check if all the details in your transaction
-                        are correct
-                      </Text>
+                      Carefully check if all the details in your transaction are
+                      correct
                     </Alert.Description>
                   </Alert>
                 </>
@@ -132,8 +129,5 @@ const styles = {
     ' & .fuel_Heading': {
       fontSize: '$sm',
     },
-  }),
-  alertDescription: cssObj({
-    fontWeight: '$normal',
   }),
 };

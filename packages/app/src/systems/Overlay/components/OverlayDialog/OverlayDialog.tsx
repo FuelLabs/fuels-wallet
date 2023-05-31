@@ -23,6 +23,7 @@ export function OverlayDialog() {
         {overlay.is('accounts.export') && <ExportAccount />}
         {overlay.is('accounts.edit') && <EditAccount />}
         {overlay.is('accounts.logout') && <Logout />}
+        {/* {overlay.is('reset') && <ResetDialog />} */}
 
         {/* Networks */}
         {overlay.is('networks.list') && <Networks />}
@@ -46,8 +47,8 @@ const styles = {
     height: WALLET_HEIGHT,
     maxWidth: WALLET_WIDTH,
     maxHeight: 'none',
+    borderRadius: '$none',
     background: '$bodyColor',
-    borderRadius: '$default',
     boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column',

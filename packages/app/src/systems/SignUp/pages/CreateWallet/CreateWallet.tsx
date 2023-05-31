@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { CreatePassword, MnemonicRead, MnemonicWrite } from '../../components';
 import { STORAGE_KEY } from '../../components/SignUpProvider';
@@ -7,11 +6,10 @@ import { useSignUp } from '../../hooks';
 import { SignUpScreen } from '../../hooks/useSignUp';
 import { SignUpType } from '../../machines/signUpMachine';
 
-import { Layout, Pages, Storage } from '~/systems/Core';
+import { Layout, Storage } from '~/systems/Core';
 
 export function CreateWallet() {
   const { handlers, context } = useSignUp();
-  const navigate = useNavigate();
 
   useEffect(() => {
     Storage.setItem(STORAGE_KEY, SignUpType.create);
@@ -23,7 +21,7 @@ export function CreateWallet() {
         <MnemonicRead
           words={context.data?.mnemonic}
           onNext={handlers.next}
-          onCancel={() => navigate(Pages.signUp())}
+          onCancel={handlers.reset}
         />
       )}
       {context.screen === SignUpScreen.waiting && (
@@ -32,13 +30,13 @@ export function CreateWallet() {
           canProceed={context.isValidMnemonic}
           onFilled={handlers.confirmMnemonic}
           onNext={handlers.next}
-          onCancel={() => navigate(Pages.signUp())}
+          onCancel={handlers.reset}
         />
       )}
       {context.screen === SignUpScreen.password && (
         <CreatePassword
           onSubmit={handlers.createManager}
-          onCancel={() => navigate(Pages.signUp())}
+          onCancel={handlers.reset}
           isLoading={context.isLoading}
         />
       )}

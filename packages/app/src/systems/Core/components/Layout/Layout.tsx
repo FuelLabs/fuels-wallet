@@ -116,14 +116,13 @@ export const styles = {
     },
   }),
   wrapper: cssObj({
+    zIndex: '$0',
     overflow: 'clip',
     position: 'relative',
     width: WALLET_WIDTH - 2, // reduce the border to contain width inside the window
-    height: WALLET_HEIGHT - 2, // reduce the border to contain width inside the window
+    height: WALLET_HEIGHT - 2, // reduce the border to contain height inside the window
     background: '$bodyColor',
-    zIndex: '$0',
     border: '1px solid $border',
-    borderRadius: IS_CRX_POPUP ? 0 : '$default',
   }),
   inner: coreStyles.fullscreen,
   content: cssObj({

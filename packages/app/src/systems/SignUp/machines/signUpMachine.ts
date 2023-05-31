@@ -46,6 +46,7 @@ type MachineServices = {
 
 type MachineEvents =
   | { type: 'NEXT' }
+  | { type: 'RESET' }
   | { type: 'CREATE_MNEMONIC'; data: { words: string[] } }
   | { type: 'CONFIRM_MNEMONIC'; data: { words: string[] } }
   | { type: 'CREATE_MANAGER'; data: { password: string } };
@@ -63,10 +64,25 @@ export const signUpMachine = createMachine(
       events: {} as MachineEvents,
     },
     states: {
+      atWelcome: {
+        on: {
+          NEXT: 'checking',
+        },
+      },
       checking: {
         always: [
-          { target: 'idle', cond: 'isCreatingWallet' },
-          { target: 'waitingMnemonic' },
+          {
+            target: 'idle',
+            cond: 'isCreatingWallet',
+          },
+          {
+            target: 'atWelcome',
+            actions: 'redirectToWelcome',
+            cond: 'isTypeNull',
+          },
+          {
+            target: 'waitingMnemonic',
+          },
         ],
       },
       idle: {
@@ -103,12 +119,14 @@ export const signUpMachine = createMachine(
           },
           validMnemonic: {
             entry: ['cleanError'],
+            on: {
+              NEXT: {
+                target: '#(machine).addingPassword',
+              },
+            },
           },
         },
         on: {
-          NEXT: {
-            target: '#(machine).addingPassword',
-          },
           CONFIRM_MNEMONIC: [
             {
               actions: ['assignIsFilled', 'assignMnemonicWhenRecovering'],
@@ -156,6 +174,12 @@ export const signUpMachine = createMachine(
         entry: 'redirectToWalletCreated',
       },
     },
+    on: {
+      RESET: {
+        target: 'atWelcome',
+        actions: ['deleteData', 'redirectToWelcome'],
+      },
+    },
   },
   {
     actions: {
@@ -198,13 +222,18 @@ export const signUpMachine = createMachine(
       }),
       sendAccountCreated: () => {
         Storage.setItem(IS_LOGGED_KEY, true);
+        Storage.removeItem(STORAGE_KEY);
         store.updateAccounts();
       },
       redirectToWalletCreated() {},
     },
     guards: {
+      isTypeNull: () => {
+        const type = Storage.getItem(STORAGE_KEY);
+        return !type;
+      },
       isCreatingWallet: (_) => {
-        const type = Storage.getItem(STORAGE_KEY) ?? SignUpType.create;
+        const type = Storage.getItem(STORAGE_KEY);
         return type === SignUpType.create;
       },
       isValidMnemonic: (_, ev) => {

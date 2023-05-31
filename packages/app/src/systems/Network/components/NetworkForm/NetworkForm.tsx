@@ -38,12 +38,10 @@ export function NetworkForm({ form, isEditing, isLoading }: NetworkFormProps) {
     <Box.Stack css={{ width: '100%' }} gap="$4">
       {showReview && (
         <MotionCard {...animations.slideInTop()}>
-          <Card.Header css={styles.cardHeader} justify="space-between">
-            <Text css={styles.cardHeaderText}>
-              You&apos;re adding this network
-            </Text>
-            <Button size="xs" variant="link" onPress={onChangeUrl}>
-              Change URL
+          <Card.Header space="compact" css={styles.header}>
+            <Text>You&apos;re adding this network</Text>
+            <Button size="xs" variant="outlined" onPress={onChangeUrl}>
+              Change
             </Button>
           </Card.Header>
           <Card.Body css={{ p: '$3' }}>
@@ -104,13 +102,13 @@ export function NetworkForm({ form, isEditing, isLoading }: NetworkFormProps) {
 }
 
 const styles = {
-  cardHeader: cssObj({
-    px: '$3',
-    py: '$2',
-  }),
-  cardHeaderText: cssObj({
-    fontSize: '$sm',
-    fontWeight: '$normal',
+  header: cssObj({
+    justifyContent: 'space-between',
+
+    '.fuel_Button': {
+      py: '$1',
+      height: '$6',
+    },
   }),
   url: cssObj({
     'input[aria-disabled="true"]': {

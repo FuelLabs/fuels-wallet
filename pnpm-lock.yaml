@@ -1,4 +1,8 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
 
 overrides:
   glob-parent@<5.1.2: '>=5.1.2'
@@ -41,8 +45,8 @@ importers:
         specifier: ^1.34.3
         version: 1.34.3
       '@types/jest':
-        specifier: ^29.5.1
-        version: 29.5.1
+        specifier: ^29.5.2
+        version: 29.5.2
       '@types/node':
         specifier: ^20.2.5
         version: 20.2.5
@@ -56,8 +60,8 @@ importers:
         specifier: ^0.5.1
         version: 0.5.1
       dotenv:
-        specifier: ^16.0.3
-        version: 16.0.3
+        specifier: ^16.1.2
+        version: 16.1.2
       eslint:
         specifier: ^8.41.0
         version: 8.41.0
@@ -98,8 +102,8 @@ importers:
         specifier: ^10.9.1
         version: 10.9.1(@types/node@20.2.5)(typescript@5.0.4)
       turbo:
-        specifier: ^1.9.9
-        version: 1.9.9
+        specifier: ^1.10.0
+        version: 1.10.0
       typescript:
         specifier: ^5.0.4
         version: 5.0.4
@@ -110,8 +114,8 @@ importers:
   packages/app:
     dependencies:
       '@fontsource/source-code-pro':
-        specifier: ^5.0.1
-        version: 5.0.1
+        specifier: ^5.0.2
+        version: 5.0.2
       '@fuel-ts/mnemonic':
         specifier: 0.43.1
         version: 0.43.1
@@ -170,14 +174,14 @@ importers:
         specifier: ^1.11.7
         version: 1.11.7
       dexie:
-        specifier: ^3.2.3
-        version: 3.2.3
+        specifier: ^3.2.4
+        version: 3.2.4
       dexie-observable:
         specifier: 4.0.1-beta.13
-        version: 4.0.1-beta.13(dexie@3.2.3)
+        version: 4.0.1-beta.13(dexie@3.2.4)
       dexie-react-hooks:
         specifier: ^1.1.4
-        version: 1.1.4(@types/react@18.2.7)(dexie@3.2.3)(react@18.2.0)
+        version: 1.1.4(@types/react@18.2.7)(dexie@3.2.4)(react@18.2.0)
       events:
         specifier: ^3.3.0
         version: 3.3.0
@@ -208,9 +212,6 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.2.0
-      react-content-loader:
-        specifier: ^6.2.1
-        version: 6.2.1(react@18.2.0)
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
@@ -242,9 +243,6 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0
     devDependencies:
-      '@babel/core':
-        specifier: ^7.22.1
-        version: 7.22.1
       '@crxjs/vite-plugin':
         specifier: ^1.0.14
         version: 1.0.14(vite@4.3.9)
@@ -489,8 +487,8 @@ importers:
         specifier: ^8.2.0
         version: 8.2.0
       dotenv:
-        specifier: ^16.0.3
-        version: 16.0.3
+        specifier: ^16.1.2
+        version: 16.1.2
       framer-motion:
         specifier: ^10.12.16
         version: 10.12.16(react-dom@18.2.0)(react@18.2.0)
@@ -596,7 +594,7 @@ importers:
         version: 0.0.237
       dexie-observable:
         specifier: 4.0.1-beta.13
-        version: 4.0.1-beta.13(dexie@3.2.3)
+        version: 4.0.1-beta.13(dexie@3.2.4)
       events:
         specifier: ^3.3.0
         version: 3.3.0
@@ -721,7 +719,7 @@ importers:
         version: 0.0.237
       dexie-observable:
         specifier: 4.0.1-beta.13
-        version: 4.0.1-beta.13(dexie@3.2.3)
+        version: 4.0.1-beta.13(dexie@3.2.4)
       json-rpc-2.0:
         specifier: ^1.6.0
         version: 1.6.0
@@ -3884,8 +3882,8 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
 
-  /@fontsource/source-code-pro@5.0.1:
-    resolution: {integrity: sha512-SItUWzo8ibNnz6INEqNka/yjBJibdjk5uLVz8C2XRUZHHQKR3HU2Fkgt8nwLy2pipQWzzh8VrC3Zncdv4mGGYw==}
+  /@fontsource/source-code-pro@5.0.2:
+    resolution: {integrity: sha512-AElk4UAIUGl3TesV4CAkxWLC0S66Rb+jNIMM5F5rOKyxMg3CeH+VyXtUE7p2R8n2nKzgtBTGe6pJUcHOpuwBtw==}
     dev: false
 
   /@formatjs/ecma402-abstract@1.14.3:
@@ -4950,7 +4948,7 @@ packages:
       '@whatwg-node/fetch': 0.8.8
       chalk: 4.1.2
       debug: 4.3.4
-      dotenv: 16.0.3
+      dotenv: 16.1.2
       graphql: 16.6.0
       graphql-request: 5.1.0(graphql@16.6.0)
       http-proxy-agent: 6.1.1
@@ -8707,7 +8705,7 @@ packages:
   /@storybook/expect@27.5.2-0:
     resolution: {integrity: sha512-cP99mhWN/JeCp7VSIiymvj5tmuMY050iFohvp8Zq+kewKsBSZ6/qpTJAGCCZk6pneTcp4S0Fm5BSqyxzbyJ3gw==}
     dependencies:
-      '@types/jest': 29.5.1
+      '@types/jest': 29.5.2
     dev: false
 
   /@storybook/global@5.0.0:
@@ -9445,6 +9443,12 @@ packages:
 
   /@types/jest@29.5.1:
     resolution: {integrity: sha512-tEuVcHrpaixS36w7hpsfLBLpjtMRJUE09/MHXn923LOVojDwyC14cWcfc0rDs0VEfUyYmt/+iX1kxxp+gZMcaQ==}
+    dependencies:
+      expect: 29.5.0
+      pretty-format: 29.5.0
+
+  /@types/jest@29.5.2:
+    resolution: {integrity: sha512-mSoZVJF5YzGVCk+FsDxzDuH7s+SCkzrgKZzf0Z0T2WudhBUPoF6ktoTPC4R0ZoCPCV5xUvuU6ias5NvxcBcMMg==}
     dependencies:
       expect: 29.5.0
       pretty-format: 29.5.0
@@ -11998,15 +12002,15 @@ packages:
       - supports-color
     dev: true
 
-  /dexie-observable@4.0.1-beta.13(dexie@3.2.3):
+  /dexie-observable@4.0.1-beta.13(dexie@3.2.4):
     resolution: {integrity: sha512-axmgPk7yjoPwj+0DdQIE5s1MBXi+6XcIFIjBKdQAmSGpsLQSth/LHvMOQ3q3Wj6pwIE5hqIxg2GL75sVqQbhEw==}
     peerDependencies:
       dexie: ^3.0.2 || ^4.0.1-alpha.5
     dependencies:
-      dexie: 3.2.3
+      dexie: 3.2.4
     dev: false
 
-  /dexie-react-hooks@1.1.4(@types/react@18.2.7)(dexie@3.2.3)(react@18.2.0):
+  /dexie-react-hooks@1.1.4(@types/react@18.2.7)(dexie@3.2.4)(react@18.2.0):
     resolution: {integrity: sha512-5jc22lzrGhyte5Avl76kPDW5R/w/9rD0qB/ZhbXo/KHc47aKBbeD59f1EBpULiGbnnNT1rP+aWTuHyFOf3ezug==}
     peerDependencies:
       '@types/react': '>=16'
@@ -12017,12 +12021,12 @@ packages:
         optional: true
     dependencies:
       '@types/react': 18.2.7
-      dexie: 3.2.3
+      dexie: 3.2.4
       react: 18.2.0
     dev: false
 
-  /dexie@3.2.3:
-    resolution: {integrity: sha512-iHayBd4UYryDCVUNa3PMsJMEnd8yjyh5p7a+RFeC8i8n476BC9wMhVvqiImq5zJZJf5Tuer+s4SSj+AA3x+ZbQ==}
+  /dexie@3.2.4:
+    resolution: {integrity: sha512-VKoTQRSv7+RnffpOJ3Dh6ozknBqzWw/F3iqMdsZg958R0AS8AnY9x9d1lbwENr0gzeGJHXKcGhAMRaqys6SxqA==}
     engines: {node: '>=6.0'}
     dev: false
 
@@ -12136,8 +12140,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /dotenv@16.0.3:
-    resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
+  /dotenv@16.1.2:
+    resolution: {integrity: sha512-RiNjjDF5yr9NtjqJqmWYA/XZShmt3r8FtJgAaqTiYqb99SqT0+aw5xAwOIvjMyXsH/C9/fLNafFkkZDwRi1KHA==}
     engines: {node: '>=12'}
 
   /dotenv@8.6.0:
@@ -15683,7 +15687,7 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       app-root-dir: 1.0.2
-      dotenv: 16.0.3
+      dotenv: 16.1.2
       dotenv-expand: 10.0.0
     dev: true
 
@@ -20173,65 +20177,65 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /turbo-darwin-64@1.9.9:
-    resolution: {integrity: sha512-UDGM9E21eCDzF5t1F4rzrjwWutcup33e7ZjNJcW/mJDPorazZzqXGKEPIy9kXwKhamUUXfC7668r6ZuA1WXF2Q==}
+  /turbo-darwin-64@1.10.0:
+    resolution: {integrity: sha512-N0aVGFtBgOKd7pIdUiKREwnDhNHRIvpMJbmUw04c1AqEoTiKAKT6iuzcCozO5N/gYMVr0hxrXgLal5OLYXtcsw==}
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-darwin-arm64@1.9.9:
-    resolution: {integrity: sha512-VyfkXzTJpYLTAQ9krq2myyEq7RPObilpS04lgJ4OO1piq76RNmSpX9F/t9JCaY9Pj/4TL7i0d8PM7NGhwEA5Ag==}
+  /turbo-darwin-arm64@1.10.0:
+    resolution: {integrity: sha512-boXzhaHTS5MsTMv48I/JmYp9/fYplXk5nACUDrqV6nD1hzO5PMn5wNg75ATbpkaMaeuD+hjuobeSxn1p4vpqQg==}
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-64@1.9.9:
-    resolution: {integrity: sha512-Fu1MY29Odg8dHOqXcpIIGC3T63XLOGgnGfbobXMKdrC7JQDvtJv8TUCYciRsyknZYjyyKK1z6zKuYIiDjf3KeQ==}
+  /turbo-linux-64@1.10.0:
+    resolution: {integrity: sha512-crKQuS1jrp4vp+Th6EmUqqmAlvYNnzGmwWMLeckmYILrV7zAddu87eJu4hB7V6uV+W1qHZUTw8WXa1w1+8boBw==}
     cpu: [x64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-linux-arm64@1.9.9:
-    resolution: {integrity: sha512-50LI8NafPuJxdnMCBeDdzgyt1cgjQG7FwkyY336v4e95WJPUVjrHdrKH6jYXhOUyrv9+jCJxwX1Yrg02t5yJ1g==}
+  /turbo-linux-arm64@1.10.0:
+    resolution: {integrity: sha512-Y2fhWe0xepLjl7doIvsJK7mp2h8E+OF6qJsUHRgxFeRWQWi1I6clD2aEQeykHK8Tp+qp8pKFMocj32nFBvuCcg==}
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-64@1.9.9:
-    resolution: {integrity: sha512-9IsTReoLmQl1IRsy3WExe2j2RKWXQyXujfJ4fXF+jp08KxjVF4/tYP2CIRJx/A7UP/7keBta27bZqzAjsmbSTA==}
+  /turbo-windows-64@1.10.0:
+    resolution: {integrity: sha512-uh8rEqH6teaHysEMjinwWBqyNwv4IvgSAwbq/OphP8jObstTYHoR+gFPo8RQUSTaBYy4QVszgi5eO5YLvEQqNA==}
     cpu: [x64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo-windows-arm64@1.9.9:
-    resolution: {integrity: sha512-CUu4hpeQo68JjDr0V0ygTQRLbS+/sNfdqEVV+Xz9136vpKn2WMQLAuUBVZV0Sp0S/7i+zGnplskT0fED+W46wQ==}
+  /turbo-windows-arm64@1.10.0:
+    resolution: {integrity: sha512-JaVj3iM7qyRD6xYGZLL/Gs4mQKfM1zL0f91AwHZLNkk1CrJ6i5kO4ZjhKkwXSpVOTNKW3sX0Q7dExXj85Vv7UQ==}
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
     dev: true
     optional: true
 
-  /turbo@1.9.9:
-    resolution: {integrity: sha512-+ZS66LOT7ahKHxh6XrIdcmf2Yk9mNpAbPEj4iF2cs0cAeaDU3xLVPZFF0HbSho89Uxwhx7b5HBgPbdcjQTwQkg==}
+  /turbo@1.10.0:
+    resolution: {integrity: sha512-GWxoL2zJduiNaEHz78o74l2jCQEeuUZ3MdpMPz0SpZOvt3nimpvQPNxiyfbqt3U9/V5G375PWKYSbXkVnIbQcA==}
     hasBin: true
     requiresBuild: true
     optionalDependencies:
-      turbo-darwin-64: 1.9.9
-      turbo-darwin-arm64: 1.9.9
-      turbo-linux-64: 1.9.9
-      turbo-linux-arm64: 1.9.9
-      turbo-windows-64: 1.9.9
-      turbo-windows-arm64: 1.9.9
+      turbo-darwin-64: 1.10.0
+      turbo-darwin-arm64: 1.10.0
+      turbo-linux-64: 1.10.0
+      turbo-linux-arm64: 1.10.0
+      turbo-windows-64: 1.10.0
+      turbo-windows-arm64: 1.10.0
     dev: true
 
   /type-check@0.3.2:

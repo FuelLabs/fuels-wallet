@@ -111,7 +111,7 @@ const styles = {
     width: 40,
     height: 40,
     transform: 'translate(-50%, -50%)',
-    border: '3px solid $bodyColor',
+    border: '1px solid $bodyColor',
     borderRadius: '$md',
     background: '$intentsBase1',
     color: '$intentsBase8',

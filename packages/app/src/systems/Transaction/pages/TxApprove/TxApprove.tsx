@@ -32,10 +32,10 @@ export const TxApprove = () => {
       </OverlayDialogTopbar>
       <Dialog.Description as="div" css={styles.description}>
         {txRequest.status('waitingApproval') && (
-          <Alert status="warning" css={styles.alert}>
-            <Alert.Title>Confirm before approving</Alert.Title>
+          <Alert status="warning">
             <Alert.Description>
-              Carefully check if all the details in your transaction are correct
+              Confirm before approve if all details in your transaction are
+              correct
             </Alert.Description>
           </Alert>
         )}
@@ -105,19 +105,8 @@ const styles = {
   description: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
     flex: 1,
-  }),
-  alert: cssObj({
-    mb: '$4',
-
-    '& .fuel_Alert-content': {
-      padding: '$0',
-      gap: '$1',
-      margin: '$0',
-    },
-
-    '& [class*="fuel_Alert"], & .fuel_Heading': {
-      fontSize: '$sm',
-      lineHeight: '$tight',
-    },
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '$4',
   }),
 };

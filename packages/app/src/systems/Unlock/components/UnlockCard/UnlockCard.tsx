@@ -13,15 +13,14 @@ import {
 
 import type { UnlockFormValues } from '../../hooks';
 import { useUnlockForm } from '../../hooks';
-import { ResetDialog } from '../ResetDialog';
 import { UnlockForm } from '../UnlockForm';
+
+import { useOverlay } from '~/systems/Overlay';
 
 export type UnlockDialogProps = {
   unlockError?: string;
   onUnlock: (value: string) => void;
-  onReset?: () => void;
   onClose?: () => void;
-  isReseting?: boolean;
   isLoading?: boolean;
   headerText?: string;
 };
@@ -29,12 +28,11 @@ export type UnlockDialogProps = {
 export function UnlockCard({
   unlockError,
   onUnlock,
-  onReset,
-  isReseting,
   isLoading,
   headerText = 'Welcome back',
   onClose,
 }: UnlockDialogProps) {
+  const overlay = useOverlay();
   const form = useUnlockForm({ password: unlockError });
   const { handleSubmit } = form;
 
@@ -55,37 +53,32 @@ export function UnlockCard({
           />
         )}
         <Box css={styles.form}>
-          <Box as="div" css={styles.description}>
-            <Box.Stack gap="$6" align="center">
-              <FuelLogo size={100} css={{ mb: '$4' }} />
-              <Box css={{ textAlign: 'center' }}>
-                <Heading
-                  as="h2"
-                  css={{ margin: 0, mb: '$2', textAlign: 'center' }}
-                >
-                  {headerText}
-                </Heading>
-                <Text fontSize="sm">Unlock your wallet to continue</Text>
-              </Box>
-              <UnlockForm form={form} />
-            </Box.Stack>
-            {onReset && (
-              <Box.Stack
-                align="center"
-                justify="space-between"
-                css={{ marginTop: '$2' }}
+          <Box.Stack gap="$6" align="center">
+            <FuelLogo size={100} css={{ mt: '$14', mb: '$6' }} />
+            <Box css={{ textAlign: 'center' }}>
+              <Heading
+                as="h2"
+                css={{ margin: 0, mb: '$2', textAlign: 'center' }}
               >
-                <ResetDialog isLoading={isReseting} onReset={onReset}>
-                  <ButtonLink
-                    variant="ghost"
-                    css={{ color: '$intentsBase10', fontSize: 'small' }}
-                  >
-                    Forgot password?
-                  </ButtonLink>
-                </ResetDialog>
-              </Box.Stack>
-            )}
-          </Box>
+                {headerText}
+              </Heading>
+              <Text fontSize="sm">Unlock your wallet to continue</Text>
+            </Box>
+            <UnlockForm form={form} />
+          </Box.Stack>
+          <Box.Stack
+            align="center"
+            justify="space-between"
+            css={{ marginTop: '$2' }}
+          >
+            <ButtonLink
+              size="sm"
+              variant="ghost"
+              onPress={() => overlay.open({ modal: 'reset' })}
+            >
+              Forgot password?
+            </ButtonLink>
+          </Box.Stack>
         </Box>
       </Card.Body>
       <Card.Footer>

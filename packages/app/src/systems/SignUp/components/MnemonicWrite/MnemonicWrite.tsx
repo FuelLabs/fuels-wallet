@@ -39,7 +39,7 @@ export function MnemonicWrite({
       />
       <Box.Stack gap="$3" css={{ width: '$sm' }}>
         {error && (
-          <Alert css={{ py: '$2', px: '$4' }} hideIcon status="error">
+          <Alert status="error">
             <Alert.Description>{error}</Alert.Description>
           </Alert>
         )}

@@ -26,21 +26,20 @@ export function SignatureRequest() {
               <AccountInfo account={account} headerText="Signer account:" />
             )}
             <Card>
-              <Card.Body css={{ margin: '0', px: '$4', py: '$3' }}>
-                <Box.Flex css={{ alignItems: 'center', gap: '$2' }}>
-                  <HelperIcon
-                    color="intentsBase12"
-                    css={{ fontWeight: '$normal' }}
-                    message="Make sure you know the message being signed"
-                  >
-                    Message:
-                  </HelperIcon>
-                </Box.Flex>
-                <Text fontSize="sm" css={{ mt: '$3' }}>
+              <Card.Header space="compact">
+                <HelperIcon
+                  message="Make sure you know the message being signed"
+                  iconSize={14}
+                >
+                  Message:
+                </HelperIcon>
+              </Card.Header>
+              <Card.Body>
+                <Text as="div">
                   {/* For preserving line breaks using pre-wrap all
                     the content inside the tag can't be formatted because of
                     this we wrap the message in a div element */}
-                  <div style={{ whiteSpace: 'pre-wrap' }}>{message}</div>
+                  <Box css={{ whiteSpace: 'pre-wrap' }}>{message}</Box>
                 </Text>
               </Card.Body>
             </Card>

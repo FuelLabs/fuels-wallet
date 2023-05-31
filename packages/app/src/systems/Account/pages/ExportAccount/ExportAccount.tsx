@@ -6,7 +6,7 @@ import { useAccounts } from '../../hooks';
 import { useExportAccount } from '../../hooks/useExportAccount';
 
 import { OverlayDialogTopbar } from '~/systems/Overlay';
-import { DontShareAlert } from '~/systems/Settings/components/DontShareAlert';
+import { DontShareAlert } from '~/systems/Settings/components';
 import { UnlockCard } from '~/systems/Unlock';
 
 export const ExportAccount = () => {

@@ -89,7 +89,7 @@ export function ChangePassword() {
         <Layout.TopBar onBack={goBack} />
         <Layout.Content>
           <Box.Flex css={styles.wrapper}>
-            <Alert direction="row" status={'warning'}>
+            <Alert status="warning">
               <Alert.Description>
                 If you lose your password and your Seed Phrase, all your funds
                 can be lost forever.

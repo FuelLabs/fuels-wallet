@@ -13,8 +13,8 @@ export const PermissionCard = ({
 }: PermissionCardProps) => {
   return (
     <Card css={styles.connectionDetails}>
-      <Card.Header css={styles.cardHeader}>
-        <Text css={styles.cardHeaderText}>{headerText}</Text>
+      <Card.Header space="compact">
+        <Text>{headerText}</Text>
       </Card.Header>
       <Card.Body css={styles.cardBody}>
         <Box.Flex direction="column">
@@ -41,17 +41,6 @@ export const PermissionCard = ({
 const styles = {
   connectionDetails: cssObj({
     marginTop: '$0',
-  }),
-  cardHeader: cssObj({
-    margin: '$0',
-    px: '$3',
-    py: '$2',
-    borderBottom: '1px solid $bodyBg',
-  }),
-  cardHeaderText: cssObj({
-    fontSize: '$sm',
-    fontWeight: '$normal',
-    color: '$intentsBase12',
   }),
   listItemAllowed: cssObj({
     fontSize: '$sm',

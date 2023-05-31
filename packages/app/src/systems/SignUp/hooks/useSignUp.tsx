@@ -1,10 +1,13 @@
 import { useSelector } from '@xstate/react';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import type { CreatePasswordValues } from '../components';
-import { useSignUpProvider } from '../components/SignUpProvider';
+import { STORAGE_KEY, useSignUpProvider } from '../components/SignUpProvider';
 import type { SignUpMachineState } from '../machines/signUpMachine';
 import { SignUpType } from '../machines/signUpMachine';
+
+import { Pages, Storage } from '~/systems/Core';
 
 export enum SignUpScreen {
   showing = 'showing',
@@ -32,6 +35,7 @@ const selectors = {
 export function useSignUp() {
   const { service, type } = useSignUpProvider();
   const { send } = service;
+  const navigate = useNavigate();
 
   const ctx = useSelector(service, selectors.context);
   const screen = useSelector(service, selectors.screen);
@@ -50,6 +54,22 @@ export function useSignUp() {
     send('CREATE_MANAGER', { data: { password } });
   }
 
+  function reset() {
+    send('RESET');
+  }
+
+  function goToCreate() {
+    Storage.setItem(STORAGE_KEY, SignUpType.create);
+    navigate(Pages.signUpTerms({ action: 'create' }));
+    next();
+  }
+
+  function goToRecover() {
+    Storage.setItem(STORAGE_KEY, SignUpType.recover);
+    navigate(Pages.signUpTerms({ action: 'recover' }));
+    next();
+  }
+
   useEffect(() => {
     if (type === SignUpType.create) send('CREATE_MNEMONIC');
   }, []);
@@ -57,8 +77,11 @@ export function useSignUp() {
   return {
     handlers: {
       next,
+      reset,
       confirmMnemonic,
       createManager,
+      goToCreate,
+      goToRecover,
     },
     context: {
       ...ctx,

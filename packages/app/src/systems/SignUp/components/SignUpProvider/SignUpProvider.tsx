@@ -26,8 +26,10 @@ export function SignUpProvider() {
         redirectToWalletCreated() {
           navigate(Pages.signUpWalletCreated());
         },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any,
+        redirectToWelcome() {
+          navigate(Pages.signUpWelcome());
+        },
+      },
     })
   );
 

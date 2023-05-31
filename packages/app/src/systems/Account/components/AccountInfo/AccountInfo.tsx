@@ -17,7 +17,7 @@ export function AccountInfo({ headerText, account }: AccountInfoProps) {
     <Card css={styles.root} gap="$0">
       <Card.Header space="compact">{headerText}</Card.Header>
       <Card.Body css={styles.cardBody}>
-        <AccountItem account={account} />
+        <AccountItem account={account} compact />
       </Card.Body>
     </Card>
   );

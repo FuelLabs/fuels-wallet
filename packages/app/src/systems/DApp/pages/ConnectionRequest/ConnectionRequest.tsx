@@ -57,10 +57,8 @@ export function ConnectionRequest() {
             <AnimatePresence>
               <motion.div {...animations.slideInTop()}>
                 <Card>
-                  <Card.Header css={styles.cardHeader}>
-                    <Text css={styles.cardHeaderText}>
-                      Select accounts to connect
-                    </Text>
+                  <Card.Header space="compact">
+                    <Text>Select accounts to connect</Text>
                   </Card.Header>
                   <Card.Body css={styles.accountCardBody}>
                     {accounts?.map((account) => {
@@ -93,9 +91,13 @@ export function ConnectionRequest() {
               </motion.div>
               <motion.div {...animations.slideInTop()}>
                 <Card>
-                  <Card.Header css={styles.cardHeader} justify="space-between">
-                    <Text css={styles.cardHeaderText}>Accounts to connect</Text>
-                    <Button onPress={handlers.back} size="xs" variant="link">
+                  <Card.Header space="compact" css={styles.header}>
+                    <Text>Accounts to connect</Text>
+                    <Button
+                      size="xs"
+                      variant="outlined"
+                      onPress={handlers.back}
+                    >
                       Change
                     </Button>
                   </Card.Header>
@@ -174,6 +176,14 @@ const styles = {
     mb: '-10px',
     pt: '$1',
   }),
+  header: cssObj({
+    justifyContent: 'space-between',
+
+    '.fuel_Button': {
+      py: '$1',
+      height: '$6',
+    },
+  }),
   accountList: cssObj({
     mt: '$4',
   }),
@@ -188,19 +198,8 @@ const styles = {
     alignItems: 'center',
     gap: '$2',
   }),
-  cardHeader: cssObj({
-    px: '$3',
-    py: '$2',
-    margin: '$0',
-    borderBottom: '1px solid $bodyBg',
-  }),
-  cardHeaderText: cssObj({
-    fontSize: '$sm',
-    fontWeight: '$normal',
-    color: '$intentsBase12',
-  }),
   accountCardBody: cssObj({
-    margin: '$0',
+    padding: '$0',
   }),
   accountItem: cssObj({
     '& ~ &': {

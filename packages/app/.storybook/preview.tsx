@@ -66,8 +66,7 @@ export const fuelTheme = createTheme('fuels-wallet', {
     colors: {
       ...darkColors,
       body: '#090909',
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any,
+    },
   },
 });
 

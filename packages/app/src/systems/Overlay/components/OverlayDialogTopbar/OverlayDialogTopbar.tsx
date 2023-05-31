@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Dialog, Icon, IconButton } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export type OverlayDialogTopbarProps = {
   children: ReactNode;
@@ -14,34 +13,33 @@ export function OverlayDialogTopbar({
   onClose,
   onBack,
 }: OverlayDialogTopbarProps) {
-  const navigate = useNavigate();
   function handleBack() {
-    if (onBack) {
-      onBack();
-      return;
-    }
-    navigate('/');
+    onBack?.();
     onClose?.();
   }
 
   return (
     <Dialog.Heading css={styles.root}>
-      <IconButton
-        data-action="back"
-        variant="link"
-        icon={<Icon icon="ChevronLeft" />}
-        aria-label="Back"
-        onPress={handleBack}
-      />
+      {onBack && (
+        <IconButton
+          data-action="back"
+          variant="link"
+          icon={<Icon icon="ChevronLeft" />}
+          aria-label="Back"
+          onPress={handleBack}
+        />
+      )}
       <Box.Flex align="center">{children}</Box.Flex>
-      <IconButton
-        data-action="closed"
-        variant="link"
-        icon={<Icon icon="X" />}
-        aria-label="Close unlock window"
-        onPress={onClose}
-        css={styles.close}
-      />
+      {onClose && (
+        <IconButton
+          data-action="closed"
+          variant="link"
+          icon={<Icon icon="X" />}
+          aria-label="Close unlock window"
+          onPress={onClose}
+          css={styles.close}
+        />
+      )}
     </Dialog.Heading>
   );
 }

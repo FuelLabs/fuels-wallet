@@ -21,7 +21,7 @@
     "fix-codegen": "./scripts/fix-codegen.sh"
   },
   "dependencies": {
-    "@fontsource/source-code-pro": "^5.0.1",
+    "@fontsource/source-code-pro": "^5.0.2",
     "@fuel-ts/mnemonic": "0.43.1",
     "@fuel-ts/wallet": "0.43.1",
     "@fuel-ts/wallet-manager": "0.43.1",
@@ -41,7 +41,7 @@
     "asset-list": "workspace:../asset-list",
     "cross-fetch": "^3.1.6",
     "dayjs": "^1.11.7",
-    "dexie": "^3.2.3",
+    "dexie": "^3.2.4",
     "dexie-observable": "4.0.1-beta.13",
     "dexie-react-hooks": "^1.1.4",
     "events": "^3.3.0",
@@ -54,7 +54,6 @@
     "json-rpc-2.0": "^1.6.0",
     "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
-    "react-content-loader": "^6.2.1",
     "react-dom": "^18.2.0",
     "react-google-recaptcha": "^2.1.0",
     "react-helmet": "^6.1.0",
@@ -67,7 +66,6 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.1",
     "@crxjs/vite-plugin": "^1.0.14",
     "@graphql-codegen/cli": "^3.2.2",
     "@fuel-ts/keystore": "0.43.1",

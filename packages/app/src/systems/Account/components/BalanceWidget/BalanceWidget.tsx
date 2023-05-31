@@ -12,11 +12,20 @@ import type { Maybe } from '~/systems/Core';
 import { AmountVisibility, VisibilityButton } from '~/systems/Core';
 
 type BalanceWidgetWrapperProps = {
-  children: ReactNode;
+  top: ReactNode;
+  bottom: ReactNode;
 };
 
-export function BalanceWidgetWrapper({ children }: BalanceWidgetWrapperProps) {
-  return <Box css={styles.balanceWidgetWrapper}>{children}</Box>;
+export function BalanceWidgetWrapper({
+  top,
+  bottom,
+}: BalanceWidgetWrapperProps) {
+  return (
+    <Box css={styles.balanceWidgetWrapper}>
+      <Box.Flex css={styles.accountInfo}>{top}</Box.Flex>
+      <Box.Stack css={styles.balance}>{bottom}</Box.Stack>
+    </Box>
+  );
 }
 
 export type BalanceWidgetProps = {
@@ -37,44 +46,54 @@ export function BalanceWidget({
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
   return (
-    <BalanceWidgetWrapper>
-      <Box.Flex css={styles.accountInfo}>
-        <Avatar.Generated
-          size="sm"
-          hash={account?.address as string}
-          css={{ boxShadow: '$sm' }}
-        />
-        <Box.Stack gap="$1" css={{ flex: 1 }}>
-          <Heading as="h6" css={styles.name}>
-            {account.name}
-          </Heading>
-          <FuelAddress address={account.address} css={styles.balanceAddress} />
-        </Box.Stack>
-        <Button
-          size="sm"
-          variant="outlined"
-          rightIcon={<Icon icon="ChevronDown" color="intentsBase8" />}
-          aria-label="Accounts"
-          onPress={handlers.goToList}
-        >
-          Change
-        </Button>
-      </Box.Flex>
-      <Box.Stack css={styles.balance}>
-        <Text className="label">Balance</Text>
-        <Box.Flex>
-          <Text aria-hidden={visibility} data-account-name={account.name}>
-            {account.balanceSymbol || '$'}&nbsp;
-            <AmountVisibility value={account.balance} visibility={visibility} />
-          </Text>
-          <VisibilityButton
-            aria-label={visibility ? 'Hide balance' : 'Show balance'}
-            visibility={visibility}
-            onChangeVisibility={onChangeVisibility}
+    <BalanceWidgetWrapper
+      top={
+        <>
+          <Avatar.Generated
+            size="sm"
+            hash={account?.address as string}
+            css={{ boxShadow: '$sm' }}
           />
-        </Box.Flex>
-      </Box.Stack>
-    </BalanceWidgetWrapper>
+          <Box.Stack gap="$1" css={{ flex: 1 }}>
+            <Heading as="h6" css={styles.name}>
+              {account.name}
+            </Heading>
+            <FuelAddress
+              address={account.address}
+              css={styles.balanceAddress}
+            />
+          </Box.Stack>
+          <Button
+            size="sm"
+            variant="outlined"
+            rightIcon={<Icon icon="ChevronDown" color="intentsBase8" />}
+            aria-label="Accounts"
+            onPress={handlers.goToList}
+          >
+            Change
+          </Button>
+        </>
+      }
+      bottom={
+        <>
+          <Text className="label">Balance</Text>
+          <Box.Flex>
+            <Text aria-hidden={visibility} data-account-name={account.name}>
+              {account.balanceSymbol || '$'}&nbsp;
+              <AmountVisibility
+                value={account.balance}
+                visibility={visibility}
+              />
+            </Text>
+            <VisibilityButton
+              aria-label={visibility ? 'Hide balance' : 'Show balance'}
+              visibility={visibility}
+              onChangeVisibility={onChangeVisibility}
+            />
+          </Box.Flex>
+        </>
+      }
+    />
   );
 }
 

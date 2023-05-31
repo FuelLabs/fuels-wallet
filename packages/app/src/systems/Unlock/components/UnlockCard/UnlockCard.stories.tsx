@@ -13,7 +13,7 @@ export default {
 export const Usage = () => {
   return (
     <>
-      <UnlockCard onUnlock={() => {}} onReset={() => {}} />
+      <UnlockCard onUnlock={() => {}} />
     </>
   );
 };

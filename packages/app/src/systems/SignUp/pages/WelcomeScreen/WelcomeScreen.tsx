@@ -1,13 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Card, FuelLogo, Heading, Icon } from '@fuel-ui/react';
-import { useNavigate } from 'react-router-dom';
 
 import { Header } from '../../components';
+import { useSignUp } from '../../hooks';
 
-import { Layout, Pages } from '~/systems/Core';
+import { Layout } from '~/systems/Core';
 
 export function WelcomeScreen() {
-  const navigate = useNavigate();
+  const { handlers } = useSignUp();
   return (
     <Layout title="Sign Up" isPublic>
       <Box.Stack gap="$6" css={styles.wrapper}>
@@ -19,9 +19,7 @@ export function WelcomeScreen() {
           subtitle="Pick an option below to get started"
         />
         <Box css={styles.footer}>
-          <Card
-            onClick={() => navigate(Pages.signUpTerms({ action: 'create' }))}
-          >
+          <Card onClick={handlers.goToCreate}>
             <Box.Centered className="icon icon-primary">
               <Icon icon="Wallet" stroke={1} size={40} />
             </Box.Centered>
@@ -35,9 +33,7 @@ export function WelcomeScreen() {
               <Icon icon="ArrowRight" stroke={1} size={40} />
             </Box.Centered>
           </Card>
-          <Card
-            onClick={() => navigate(Pages.signUpTerms({ action: 'recover' }))}
-          >
+          <Card onClick={handlers.goToRecover}>
             <Box.Centered className="icon icon-primary">
               <Icon icon="SquareKey" stroke={1} size={40} />
             </Box.Centered>

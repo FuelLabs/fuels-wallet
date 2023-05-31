@@ -28,12 +28,10 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
       <Box.Stack css={styles.content} gap="$6">
         <Mnemonic value={words} type="read" />
         <Alert status="warning">
-          <Form.Control css={styles.alertContent}>
-            <Form.Label htmlFor="confirmSaved">
-              Anyone with access to your recovery phrase could take your assets,
-              store it securely. Fuel does not keep a backup of your 12 words.
-            </Form.Label>
-          </Form.Control>
+          <Alert.Description>
+            Anyone with access to your recovery phrase could take your assets,
+            store it securely. Fuel does not keep a backup of your 12 words.
+          </Alert.Description>
         </Alert>
         <Form.Control css={{ flexDirection: 'row' }}>
           <Checkbox
