@@ -71,7 +71,7 @@ export function ExampleBox({
                 size="xs"
                 intent="warning"
                 variant="ghost"
-                leftIcon="Warning"
+                leftIcon="AlertTriangle"
               >
                 Not working
               </Tag>
