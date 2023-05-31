@@ -3,4 +3,4 @@
 '@fuel-wallet/sdk': minor
 ---
 
-Enable other fuel wallets to work using the same fuel injected object
+Enable other Wallets to beening expose as Connectors using Fuel Wallet Connectors feature.
