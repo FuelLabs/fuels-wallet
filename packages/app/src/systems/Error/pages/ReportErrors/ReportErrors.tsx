@@ -7,6 +7,7 @@ import {
   Button,
   Box,
   Text,
+  Input,
 } from '@fuel-ui/react';
 
 import { useReportError } from '../../hooks';
@@ -16,7 +17,8 @@ import { Layout } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 
 export function ReportErrors() {
-  const { handlers, isLoadingDontSend, isLoadingSendOnce } = useReportError();
+  const { handlers, isLoadingDontSend, isLoadingSendOnce, errors } =
+    useReportError();
 
   return (
     <Layout title="Error" isPublic>
@@ -38,6 +40,10 @@ export function ReportErrors() {
                 Would you like to send us the error report to help us improve
                 Fuel Wallet?
               </Text>
+
+              <Input isDisabled={true} css={styles.textArea}>
+                <Input.Field as="textarea" value={errors} />
+              </Input>
             </Stack>
           </Box>
         </Layout.Content>
@@ -107,5 +113,11 @@ const styles = {
   }),
   alertDescription: cssObj({
     fontWeight: '$bold',
+  }),
+  textArea: cssObj({
+    width: '100%',
+    height: '200px',
+    padding: '$2',
+    resize: 'none',
   }),
 };

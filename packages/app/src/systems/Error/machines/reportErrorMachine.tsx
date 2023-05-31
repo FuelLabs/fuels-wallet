@@ -1,3 +1,4 @@
+import type { FuelWalletError } from '@fuel-wallet/types';
 import { ReportErrorFrequency } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
@@ -10,6 +11,7 @@ export type ErrorMachineContext = {
   error?: string;
   hasErrors?: boolean;
   frequency?: ReportErrorFrequency;
+  errors?: FuelWalletError[];
 };
 
 type MachineServices = {
@@ -20,6 +22,7 @@ type MachineServices = {
     data: {
       hasErrors: boolean;
       frequency: ReportErrorFrequency;
+      errors: FuelWalletError[];
     };
   };
 };
@@ -107,6 +110,7 @@ export const reportErrorMachine = createMachine(
       assignCheckForErrors: assign({
         hasErrors: (_, ev) => ev.data.hasErrors,
         frequency: (_, ev) => ev.data.frequency,
+        errors: (_, ev) => ev.data.errors,
       }),
       reload: () => {},
     },
@@ -140,9 +144,11 @@ export const reportErrorMachine = createMachine(
         async fetch() {
           const hasErrors = await ReportErrorService.checkForErrors();
           const frequency = await ReportErrorService.getReportErrorFrequency();
+          const errors = await ReportErrorService.getErrors();
           return {
             hasErrors,
             frequency,
+            errors,
           };
         },
       }),

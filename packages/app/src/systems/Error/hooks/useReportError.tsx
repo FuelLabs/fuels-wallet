@@ -28,6 +28,10 @@ const selectors = {
       state.context.frequency === ReportErrorFrequency.DONT
     );
   },
+  errors(state: ReportErrorMachineState) {
+    const errors = state.context?.errors || [];
+    return errors.map((error) => JSON.stringify(error, null, 2)).join('\n');
+  },
 };
 
 export function useReportError() {
@@ -58,17 +62,12 @@ export function useReportError() {
   );
   const isLoadingDontSend = useSelector(service, selectors.isLoadingDontSend);
 
+  const errors = useSelector(service, selectors.errors);
+
   const reportErrorsOnce = () => {
     setReportErrorFrequency(ReportErrorFrequency.ONCE);
     send('REPORT_ERRORS', {
       input: { frequency: ReportErrorFrequency.ONCE },
-    });
-  };
-
-  const alwaysReportErrors = () => {
-    setReportErrorFrequency(ReportErrorFrequency.ALWAYS);
-    send('REPORT_ERRORS', {
-      input: { frequency: ReportErrorFrequency.ALWAYS },
     });
   };
 
@@ -89,9 +88,9 @@ export function useReportError() {
     isLoadingSendAlways,
     isLoadingSendOnce,
     state,
+    errors,
     handlers: {
       reportErrorsOnce,
-      alwaysReportErrors,
       dontReportErrors,
       close,
     },
