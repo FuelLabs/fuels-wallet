@@ -3,7 +3,7 @@ import { interpret } from 'xstate';
 
 import { STORAGE_KEY } from '../components/SignUpProvider';
 
-import type { SignUpMachineService, SignUpMachineState } from './signUpMachine';
+import type { SignUpMachineService } from './signUpMachine';
 import { SignUpType, signUpMachine } from './signUpMachine';
 
 import { MNEMONIC_SIZE } from '~/config';
@@ -11,12 +11,17 @@ import { Storage } from '~/systems/Core';
 import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 function createMachine() {
-  return signUpMachine.withContext({});
+  return signUpMachine.withConfig({
+    actions: {
+      redirectToWalletCreated: () => {},
+      redirectToWelcome: () => {},
+    },
+  });
 }
 
 describe('signUpMachine', () => {
   let service: SignUpMachineService;
-  let state: SignUpMachineState;
+  let state: ReturnType<typeof service.getSnapshot>;
 
   beforeEach(() => {
     service = interpret(createMachine()).start();
@@ -83,7 +88,7 @@ describe('signUpMachine', () => {
     });
 
     it('should be able to recover wallet using seed phrase', async () => {
-      const machine = signUpMachine.withContext({});
+      const machine = createMachine();
       const service = interpret(machine).start();
       const words = Mnemonic.generate(MNEMONIC_SIZE).split(' ');
       service.send('CONFIRM_MNEMONIC', { data: { words } });
