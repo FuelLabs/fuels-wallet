@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Alert, Box } from '@fuel-ui/react';
 
-import { SIGNUP_HEIGHT } from '../../config';
 import { useSignUpStepper } from '../../hooks';
 import { Header } from '../Header';
 import { Stepper } from '../Stepper';
@@ -70,7 +69,6 @@ const styles = {
     gridGap: '$4',
   }),
   content: cssObj({
-    height: SIGNUP_HEIGHT,
     width: '$sm',
   }),
 };

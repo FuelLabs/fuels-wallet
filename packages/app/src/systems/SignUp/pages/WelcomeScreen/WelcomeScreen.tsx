@@ -9,7 +9,7 @@ import { Layout } from '~/systems/Core';
 export function WelcomeScreen() {
   const { handlers } = useSignUp();
   return (
-    <Layout title="Sign Up" isPublic>
+    <Layout title="Sign Up" isPublic isCentered>
       <Box.Stack gap="$6" css={styles.wrapper}>
         <Box css={{ width: '$full', textAlign: 'left' }}>
           <FuelLogo size={50} css={{ transform: 'translateY(10px)' }} />

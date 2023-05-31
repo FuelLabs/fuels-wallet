@@ -6,7 +6,6 @@ import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-import { SIGNUP_HEIGHT } from '../../config';
 import { useSignUpStepper } from '../../hooks';
 import { Header } from '../Header';
 import { Stepper } from '../Stepper';
@@ -148,6 +147,5 @@ const styles = {
   }),
   content: cssObj({
     width: '$sm',
-    height: SIGNUP_HEIGHT,
   }),
 };

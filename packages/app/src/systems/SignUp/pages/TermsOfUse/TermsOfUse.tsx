@@ -3,7 +3,6 @@ import { Box, Button } from '@fuel-ui/react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Header, Stepper } from '../../components';
-import { SIGNUP_HEIGHT } from '../../config';
 import { useSignUpStepper } from '../../hooks';
 
 import { ReactComponent as Terms } from './data/terms.md';
@@ -56,6 +55,8 @@ export function TermsOfUse() {
     </Layout>
   );
 }
+
+const SIGNUP_HEIGHT = 350;
 
 const styles = {
   termsWrapper: {

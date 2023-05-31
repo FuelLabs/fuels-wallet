@@ -53,6 +53,7 @@ export type LayoutProps = Context & {
   children: ReactNode;
   isPublic?: boolean;
   noBorder?: boolean;
+  isCentered?: boolean;
 };
 
 type LayoutComponent = FC<LayoutProps> & {
@@ -67,6 +68,7 @@ export const Layout: LayoutComponent = ({
   title,
   children,
   noBorder,
+  isCentered,
 }: LayoutProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const titleText = title ? `${title} | Fuel` : 'Fuel';
@@ -80,7 +82,12 @@ export const Layout: LayoutComponent = ({
           <title>{titleText}</title>
         </Helmet>
         {isPublic ? (
-          <Box as="main" css={{ ...styles.root, ...styles.public }} data-public>
+          <Box
+            as="main"
+            css={{ ...styles.root, ...styles.public }}
+            data-public
+            data-centered={isCentered}
+          >
             <Box.Centered>{children}</Box.Centered>
           </Box>
         ) : (
@@ -149,11 +156,19 @@ export const styles = {
     display: 'grid',
     gridTemplateColumns: '0.75fr 1.25fr',
     gridTemplateRows: '1fr',
-    alignItems: 'center',
+    alignItems: 'flex-start',
 
     '& > .fuel_Box-centered': {
       maxWidth: '$sm',
-      margin: '$0 auto',
+      margin: '10% auto',
+    },
+
+    '&[data-centered=true]': {
+      alignItems: 'center',
+
+      '& > .fuel_Box-centered': {
+        margin: '0 auto',
+      },
     },
 
     '&::before': {
