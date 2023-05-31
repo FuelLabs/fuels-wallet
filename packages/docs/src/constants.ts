@@ -13,6 +13,7 @@ export const MENU_ORDER = [
   'For Developers/Networks',
   'For Developers/Signing a Message',
   'For Developers/Reference',
+  'For Developers/Wallet Connectors',
   'Contributing/Project Structure',
   'Contributing/Contributing Guide',
   'Contributing/Linking local dependencies',
