@@ -30,7 +30,7 @@ export function OverlayDialogTopbar({
         />
       )}
       <Box.Flex align="center">{children}</Box.Flex>
-      {onClose && (
+      {!onBack && onClose && (
         <IconButton
           data-action="closed"
           variant="link"

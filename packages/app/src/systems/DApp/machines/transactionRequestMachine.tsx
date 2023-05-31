@@ -92,7 +92,6 @@ export const transactionRequestMachine = createMachine(
     },
     states: {
       idle: {
-        tags: ['loading'],
         on: {
           START: {
             actions: ['assignTxRequestData'],

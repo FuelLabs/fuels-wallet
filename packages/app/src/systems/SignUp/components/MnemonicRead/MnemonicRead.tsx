@@ -38,7 +38,6 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
             id="confirmSaved"
             aria-label="Confirm Saved"
             checked={isSavedChecked}
-            // TODO: this bg property should be fixed inside @fuel-ui
             onCheckedChange={(e) => {
               setSavedChecked(e as boolean);
             }}
