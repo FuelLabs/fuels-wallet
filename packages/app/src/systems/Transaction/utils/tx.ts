@@ -352,19 +352,27 @@ export function getTransferOperations({
   outputs,
 }: InputOutputParam): Operation[] {
   const coinInputs = getInputsCoin(inputs);
+  const messageInputs = getInputsMessage(inputs);
   const coinOutputs = getOutputsCoin(outputs);
 
   let operations: Operation[] = [];
   for (const output of coinOutputs) {
-    const input = coinInputs.find((i) => i.assetId === output.assetId)!;
-    const isSameAsset = input.assetId === output.assetId;
+    const coinInput = coinInputs.find((i) => i.assetId === output.assetId);
+    // TODO: should include assetId in InputMessage as well. for now we're mocking ETH
+    const messageInput = messageInputs.find(
+      (_) =>
+        output.assetId ===
+        '0x0000000000000000000000000000000000000000000000000000000000000000'
+    );
+    if (coinInput || messageInput) {
+      const fromAddress =
+        coinInput?.owner.toString() || messageInput?.recipient.toString() || '';
 
-    if (isSameAsset) {
       operations = addOperation(operations, {
         name: OperationName.transfer,
         from: {
           type: AddressType.account,
-          address: input.owner.toString(),
+          address: fromAddress,
         },
         to: {
           type: AddressType.account,
