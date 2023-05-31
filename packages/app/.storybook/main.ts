@@ -1,6 +1,7 @@
 import tsconfigpath from 'vite-tsconfig-paths';
 import { mergeConfig } from 'vite';
 import type { StorybookConfig } from '@storybook/react-vite';
+import { join } from 'node:path';
 
 import { resolveLinkDeps } from '../vite-utils/vite.base.config';
 
@@ -26,6 +27,7 @@ const config: StorybookConfig = {
   async viteFinal(config: any) {
     return mergeConfig(config, {
       ...resolveLinkDeps(),
+      base: join(process.env.STORYBOOK_BASE_URL || config.base || ''),
       plugins: [tsconfigpath()],
     });
   },
