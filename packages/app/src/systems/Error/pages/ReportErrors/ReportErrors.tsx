@@ -55,7 +55,7 @@ export function ReportErrors() {
               isDisabled={isLoadingSendOnce}
               isLoading={isLoadingSendOnce}
               onPress={handlers.reportErrorsOnce}
-              aria-label="Report Error Once"
+              aria-label="Report Error"
             >
               Send to Fuel
             </Button>
