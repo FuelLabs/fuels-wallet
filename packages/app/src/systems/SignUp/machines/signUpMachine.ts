@@ -10,7 +10,6 @@ import { IS_LOGGED_KEY, MNEMONIC_SIZE } from '~/config';
 import { store } from '~/store';
 import {
   assignErrorMessage,
-  FetchMachine,
   getPhraseFromValue,
   getWordsFromValue,
   Storage,
@@ -46,7 +45,7 @@ type MachineServices = {
 };
 
 type MachineEvents =
-  | { type: 'NEXT'; data: null }
+  | { type: 'NEXT' }
   | { type: 'CREATE_MNEMONIC'; data: { words: string[] } }
   | { type: 'CONFIRM_MNEMONIC'; data: { words: string[] } }
   | { type: 'CREATE_MANAGER'; data: { password: string } };
@@ -147,12 +146,6 @@ export const signUpMachine = createMachine(
         tags: ['loading'],
         invoke: {
           src: 'setupVault',
-          data: {
-            input: (_: MachineContext, ev: any) => ({
-              password: ev.data?.password,
-              mnemonic: _.data?.mnemonic,
-            }),
-          },
           onDone: {
             actions: ['assignAccount', 'deleteData', 'sendAccountCreated'],
             target: 'done',
@@ -236,20 +229,16 @@ export const signUpMachine = createMachine(
       },
     },
     services: {
-      setupVault: FetchMachine.create<FormValues, Account>({
-        showError: true,
-        maxAttempts: 1,
-        fetch: async ({ input }) => {
-          if (!input?.password) {
-            throw new Error('Invalid password');
-          }
-          if (!input.mnemonic) {
-            throw new Error('Invalid mnemonic');
-          }
-          const account = await SignUpService.create({ data: { ...input } });
-          return account;
-        },
-      }),
+      async setupVault({ data }) {
+        if (!data?.password) {
+          throw new Error('Invalid password');
+        }
+        if (!data.mnemonic) {
+          throw new Error('Invalid mnemonic');
+        }
+        const account = await SignUpService.create({ data });
+        return account;
+      },
     },
   }
 );

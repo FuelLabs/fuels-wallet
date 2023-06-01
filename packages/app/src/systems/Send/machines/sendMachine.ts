@@ -65,16 +65,10 @@ export const sendMachine = createMachine(
       fetchingFakeTx: {
         invoke: {
           src: 'fetchFakeTx',
-          onDone: [
-            {
-              target: 'idle',
-              cond: FetchMachine.hasError,
-            },
-            {
-              target: 'idle',
-              actions: ['assignInitialFee'],
-            },
-          ],
+          onDone: {
+            target: 'idle',
+            actions: ['assignInitialFee'],
+          },
         },
       },
       idle: IDLE_STATE,

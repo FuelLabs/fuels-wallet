@@ -74,7 +74,7 @@ export const FetchMachine = {
                   cond: 'hasManyAttempts',
                 },
                 {
-                  actions: 'logError',
+                  actions: ['logError'],
                   target: 'retrying',
                 },
               ],

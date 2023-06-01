@@ -1,8 +1,8 @@
-import { AccountService } from '~/systems/Account/services';
+import { AccountService } from '~/systems/Account';
 import { db } from '~/systems/Core/utils/database';
 import { getPhraseFromValue } from '~/systems/Core/utils/string';
-import { NetworkService } from '~/systems/Network/services';
-import { VaultService } from '~/systems/Vault/services';
+import { NetworkService } from '~/systems/Network';
+import { VaultService } from '~/systems/Vault';
 
 export type SignUpServiceInputs = {
   create: {
@@ -34,7 +34,7 @@ export class SignUpService {
     });
 
     // Register the first account retuned from the vault
-    const savedAccount = await AccountService.addAccount({
+    return AccountService.addAccount({
       data: {
         name: 'Account 1',
         address: account.address.toString(),
@@ -43,6 +43,5 @@ export class SignUpService {
         vaultId: account.vaultId,
       },
     });
-    return savedAccount;
   }
 }

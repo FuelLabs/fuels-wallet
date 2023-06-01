@@ -319,7 +319,7 @@ export const transactionRequestMachine = createMachine(
         TxInputs['send'],
         MachineServices['send']['data']
       >({
-        showError: false,
+        showError: true,
         maxAttempts: 1,
         async fetch(params) {
           const { input } = params;
@@ -333,7 +333,7 @@ export const transactionRequestMachine = createMachine(
         { address: string; providerUrl: string },
         Account
       >({
-        showError: false,
+        showError: true,
         async fetch({ input }) {
           if (!input?.address || !input?.providerUrl) {
             throw new Error('Invalid fetchAccount input');
