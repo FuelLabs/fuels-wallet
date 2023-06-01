@@ -55,7 +55,7 @@ const fetchAccount = {
     ],
     onError: [
       {
-        actions: ['assignError'],
+        actions: 'assignError',
         target: 'failed',
       },
     ],
@@ -151,7 +151,7 @@ export const accountsMachine = createMachine(
           onDone: [
             {
               cond: FetchMachine.hasError,
-              actions: ['assignError'],
+              actions: 'assignError',
               target: 'failed',
             },
             {

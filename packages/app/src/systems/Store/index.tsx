@@ -11,7 +11,6 @@ import {
 } from '../DApp';
 import { requestEvents } from '../DApp/events';
 import { reportErrorMachine } from '../Error';
-import { reportErrorEvents } from '../Error/events';
 import { networkEvents } from '../Network/events';
 import { networksMachine } from '../Network/machines';
 import { overlayMachine } from '../Overlay';
@@ -46,7 +45,6 @@ export const store = store$
   .addHandlers(overlayEvents)
   .addHandlers(unlockEvents)
   .addHandlers(requestEvents)
-  .addHandlers(reportErrorEvents)
   .setup();
 
 export const { StoreProvider } = store;

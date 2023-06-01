@@ -41,8 +41,8 @@ export const webAppRoutes = (
           {walletRoutes}
         </Route>
       </Route>
+      <Route path="*" element={<Navigate to={initialPage} />} />
     </Route>
-    <Route path="*" element={<Navigate to={initialPage} />} />
   </Routes>
 );
 

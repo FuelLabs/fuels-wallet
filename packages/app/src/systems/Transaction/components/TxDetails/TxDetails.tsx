@@ -17,7 +17,7 @@ type TxDetailsComponent = FC<TxDetailsProps> & {
 export const TxDetails: TxDetailsComponent = ({
   fee: initialFee,
 }: TxDetailsProps) => {
-  const fee = bn(initialFee || 0);
+  const fee = bn(initialFee);
 
   return (
     <Card>

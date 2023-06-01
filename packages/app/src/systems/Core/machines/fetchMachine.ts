@@ -74,6 +74,7 @@ export const FetchMachine = {
                   cond: 'hasManyAttempts',
                 },
                 {
+                  actions: 'logError',
                   target: 'retrying',
                 },
               ],
@@ -108,6 +109,10 @@ export const FetchMachine = {
           assignError: assign({
             error: (_, ev) => ev.data,
           }),
+          logError: (_, ev: { data: any }) => {
+            // eslint-disable-next-line no-console
+            console.error(ev.data);
+          },
           incrementAttempts: assign({
             attempts: (ctx) => (ctx.attempts ?? 0) + 1,
           }),

@@ -35,18 +35,14 @@ export async function showPopUp(params?: ShowPopUp | null) {
 }
 
 export async function createPopUp(url: string) {
-  try {
-    const { left, top } = await getPopUpPosition();
-    const win = await chrome.windows.create({
-      type: 'popup',
-      url,
-      width: WALLET_WIDTH,
-      height: WALLET_HEIGHT + TAB_BAR_HEIGHT,
-      left,
-      top,
-    });
-    return win?.id;
-  } catch (err) {
-    throw new Error(`Failed to create popup: ${err}`);
-  }
+  const { left, top } = await getPopUpPosition();
+  const win = await chrome.windows.create({
+    type: 'popup',
+    url,
+    width: WALLET_WIDTH,
+    height: WALLET_HEIGHT + TAB_BAR_HEIGHT,
+    left,
+    top,
+  });
+  return win?.id;
 }

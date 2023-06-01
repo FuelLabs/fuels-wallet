@@ -119,7 +119,7 @@ export const sendMachine = createMachine(
     },
     services: {
       fetchFakeTx: FetchMachine.create<null, BN>({
-        showError: true,
+        showError: false,
         async fetch() {
           const tx = await TxService.createFakeTx();
           return tx.request.calculateFee().amount;
@@ -140,22 +140,18 @@ export const sendMachine = createMachine(
           if (!to || !assetId || !amount || !network?.url || !account) {
             throw new Error('Missing params for transaction request');
           }
-          try {
-            const wallet = new WalletLockedCustom(account.address, network.url);
-            const createOpts = { to, amount, assetId };
-            const transactionRequest = await TxService.fundTransaction({
-              transactionRequest: await TxService.createTransfer(createOpts),
-              wallet,
-            });
+          const wallet = new WalletLockedCustom(account.address, network.url);
+          const createOpts = { to, amount, assetId };
+          const transactionRequest = await TxService.fundTransaction({
+            transactionRequest: await TxService.createTransfer(createOpts),
+            wallet,
+          });
 
-            return {
-              address: wallet.address.toString(),
-              transactionRequest,
-              providerUrl: network.url,
-            };
-          } catch (e) {
-            throw new Error('Failed to create transaction request');
-          }
+          return {
+            address: wallet.address.toString(),
+            transactionRequest,
+            providerUrl: network.url,
+          };
         },
       }),
     },

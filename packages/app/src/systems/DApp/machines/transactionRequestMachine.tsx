@@ -293,7 +293,7 @@ export const transactionRequestMachine = createMachine(
     },
     services: {
       fetchGasPrice: FetchMachine.create<NetworkInputs['getNodeInfo'], BN>({
-        showError: true,
+        showError: false,
         async fetch({ input }) {
           if (!input?.providerUrl) {
             throw new Error('providerUrl is required');
@@ -306,43 +306,34 @@ export const transactionRequestMachine = createMachine(
         TxInputs['simulateTransaction'],
         MachineServices['simulateTransaction']['data']
       >({
-        showError: true,
+        showError: false,
         async fetch({ input }) {
           if (!input?.transactionRequest) {
             throw new Error('Invalid simulateTransaction input');
           }
-          try {
-            const receipts = await TxService.simulateTransaction(input);
-            return receipts;
-          } catch (error) {
-            throw new Error('There was a problem simulating the transaction');
-          }
+          const receipts = await TxService.simulateTransaction(input);
+          return receipts;
         },
       }),
       send: FetchMachine.create<
         TxInputs['send'],
         MachineServices['send']['data']
       >({
-        showError: true,
+        showError: false,
         maxAttempts: 1,
         async fetch(params) {
           const { input } = params;
           if (!input?.address || !input?.transactionRequest) {
             throw new Error('Invalid approveTx input');
           }
-          try {
-            const tx = await TxService.send(input);
-            return tx;
-          } catch (error) {
-            throw new Error('There was a problem sending the transaction');
-          }
+          return TxService.send(input);
         },
       }),
       fetchAccount: FetchMachine.create<
         { address: string; providerUrl: string },
         Account
       >({
-        showError: true,
+        showError: false,
         async fetch({ input }) {
           if (!input?.address || !input?.providerUrl) {
             throw new Error('Invalid fetchAccount input');

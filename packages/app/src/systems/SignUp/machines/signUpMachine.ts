@@ -149,7 +149,7 @@ export const signUpMachine = createMachine(
           src: 'setupVault',
           data: {
             input: (_: MachineContext, ev: any) => ({
-              password: ev.data?.password as string,
+              password: ev.data?.password,
               mnemonic: _.data?.mnemonic,
             }),
           },
