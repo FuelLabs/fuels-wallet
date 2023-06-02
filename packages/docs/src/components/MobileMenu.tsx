@@ -49,8 +49,8 @@ export function MobileMenu() {
       transition={SPRING}
     >
       <Box.Flex css={styles.menu}>
-        <Box.Flex>
-          <FuelLogo size={40} />
+        <Box.Flex css={styles.nav}>
+          <FuelLogo size={30} />
           <Link href="/docs/install">Docs</Link>
           {process.env.NEXT_PUBLIC_PREVIEW && (
             <a
@@ -118,11 +118,10 @@ const styles = {
     'a.active, a:hover': {
       color: '$intentsPrimary11',
     },
-
-    '& > .fuel_Box': {
-      gap: '$4',
-      alignItems: 'center',
-    },
+  }),
+  nav: cssObj({
+    gap: '$4',
+    alignItems: 'center',
   }),
   overlay: cssObj({
     display: 'flex',
