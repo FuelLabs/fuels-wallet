@@ -84,7 +84,7 @@ export const faucetMachine =
           type: 'final',
         },
         done: {
-          entry: ['showDoneFeedback', 'navigateToHome', 'sendFaucetSuccess'],
+          entry: ['showDoneFeedback', 'sendFaucetSuccess', 'navigateToHome'],
           type: 'final',
         },
       },
@@ -102,7 +102,7 @@ export const faucetMachine =
         }),
         navigateToHome() {},
         sendFaucetSuccess: () => {
-          store.updateAccounts();
+          store.reloadBalance();
         },
         showDoneFeedback: () => {
           toast.success('Success, 0.5 ETH was added to your wallet.');

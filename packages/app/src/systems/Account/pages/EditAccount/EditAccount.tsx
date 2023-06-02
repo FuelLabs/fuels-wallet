@@ -45,7 +45,7 @@ export const EditAccount = () => {
           leftIcon={Icon.is('Edit')}
           aria-label="Edit account"
         >
-          Edit
+          Confirm
         </Button>
       </Dialog.Footer>
     </Box.Stack>
