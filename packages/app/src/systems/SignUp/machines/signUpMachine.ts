@@ -223,7 +223,6 @@ export const signUpMachine = createMachine(
       }),
       sendAccountCreated: () => {
         Storage.setItem(IS_LOGGED_KEY, true);
-        Storage.removeItem(STORAGE_KEY);
         store.updateAccounts();
       },
       redirectToWalletCreated() {},
