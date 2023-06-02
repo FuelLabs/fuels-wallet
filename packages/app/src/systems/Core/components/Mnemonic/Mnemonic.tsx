@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Grid, Icon } from '@fuel-ui/react';
+import { Box, Button, Grid, Icon, toast } from '@fuel-ui/react';
 import { MNEMONIC_SIZES } from 'fuels';
 import React, { useEffect, useState } from 'react';
 
@@ -51,7 +51,8 @@ export function Mnemonic({
 
   async function handleCopy() {
     const val = type === 'read' ? initialValue : value;
-    return navigator.clipboard.writeText(val.join(' '));
+    await navigator.clipboard.writeText(val.join(' '));
+    toast.success('Seed phrase copied to clipboard');
   }
 
   function handlePastInput(ev: React.ClipboardEvent<HTMLInputElement>) {
