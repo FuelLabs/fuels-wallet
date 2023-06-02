@@ -15,7 +15,7 @@ import type { UnlockFormValues } from '../../hooks';
 import { useUnlockForm } from '../../hooks';
 import { UnlockForm } from '../UnlockForm';
 
-import { useOverlay } from '~/systems/Overlay';
+import { store } from '~/store';
 
 export type UnlockDialogProps = {
   unlockError?: string;
@@ -32,7 +32,6 @@ export function UnlockCard({
   headerText = 'Welcome back',
   onClose,
 }: UnlockDialogProps) {
-  const overlay = useOverlay();
   const form = useUnlockForm({ password: unlockError });
   const { handleSubmit } = form;
 
@@ -74,7 +73,7 @@ export function UnlockCard({
             <ButtonLink
               size="sm"
               variant="ghost"
-              onPress={() => overlay.open({ modal: 'reset' })}
+              onPress={() => store.openResetDialog()}
             >
               Forgot password?
             </ButtonLink>

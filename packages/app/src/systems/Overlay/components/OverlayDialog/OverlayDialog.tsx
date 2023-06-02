@@ -10,6 +10,7 @@ import { AddNetwork, Networks, UpdateNetwork } from '~/systems/Network/pages';
 import { useOverlay } from '~/systems/Overlay';
 import { ViewSeedPhrase } from '~/systems/Settings/pages';
 import { TxApprove } from '~/systems/Transaction';
+import { ResetDialog } from '~/systems/Unlock/components/ResetDialog';
 
 export function OverlayDialog() {
   const overlay = useOverlay();
@@ -23,7 +24,7 @@ export function OverlayDialog() {
         {overlay.is('accounts.export') && <ExportAccount />}
         {overlay.is('accounts.edit') && <EditAccount />}
         {overlay.is('accounts.logout') && <Logout />}
-        {/* {overlay.is('reset') && <ResetDialog />} */}
+        {overlay.is('reset') && <ResetDialog />}
 
         {/* Networks */}
         {overlay.is('networks.list') && <Networks />}
