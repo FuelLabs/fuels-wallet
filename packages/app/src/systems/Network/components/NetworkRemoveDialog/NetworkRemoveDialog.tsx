@@ -28,7 +28,7 @@ export function NetworkRemoveDialog({
   return (
     <AlertDialog open={opened} onOpenChange={setOpened}>
       <AlertDialog.Trigger>{children}</AlertDialog.Trigger>
-      <AlertDialog.Content>
+      <AlertDialog.Content css={{ maxW: 250 }}>
         <AlertDialog.Heading>Are you sure?</AlertDialog.Heading>
         <AlertDialog.Description>
           This action cannot be undone. {network.name} will be permanently
@@ -36,12 +36,12 @@ export function NetworkRemoveDialog({
         </AlertDialog.Description>
         <AlertDialog.Footer>
           <AlertDialog.Cancel>
-            <Button variant="ghost" onPress={handleCancel}>
+            <Button variant="outlined" onPress={handleCancel}>
               Cancel
             </Button>
           </AlertDialog.Cancel>
           <AlertDialog.Action>
-            <Button variant="outlined" color="tomato" onPress={handleConfirm}>
+            <Button variant="ghost" intent="error" onPress={handleConfirm}>
               Confirm
             </Button>
           </AlertDialog.Action>

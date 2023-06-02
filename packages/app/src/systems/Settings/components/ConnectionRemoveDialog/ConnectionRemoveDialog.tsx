@@ -42,7 +42,7 @@ export function ConnectionRemoveDialog({
         </AlertDialog.Description>
         <AlertDialog.Footer>
           <AlertDialog.Cancel>
-            <Button size="sm" variant="ghost" onPress={handleCancel}>
+            <Button variant="outlined" onPress={handleCancel}>
               Cancel
             </Button>
           </AlertDialog.Cancel>
@@ -50,8 +50,8 @@ export function ConnectionRemoveDialog({
             <Button
               size="sm"
               aria-label="Confirm delete"
-              variant="outlined"
-              color="tomato"
+              variant="ghost"
+              intent="error"
               onPress={handleConfirm}
               isLoading={isConfirming}
             >
@@ -67,6 +67,7 @@ export function ConnectionRemoveDialog({
 const styles = {
   root: cssObj({
     textAlign: 'center',
+    maxWidth: 250,
 
     footer: {
       justifyContent: 'center',
