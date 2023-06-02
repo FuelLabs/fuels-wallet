@@ -24,10 +24,16 @@ export const ActivityItem: TxItemComponent = ({
   transaction,
   ownerAddress,
 }) => {
-  const { label, toOrFromAddress, toOrFromText, timeFormatted, id, status } =
-    useTxMetadata({ ownerAddress, transaction });
-
   const navigate = useNavigate();
+  const {
+    label,
+    operation,
+    toOrFromAddress,
+    toOrFromText,
+    timeFormatted,
+    id,
+    status,
+  } = useTxMetadata({ ownerAddress, transaction });
 
   return (
     <Card
@@ -35,7 +41,7 @@ export const ActivityItem: TxItemComponent = ({
       aria-label="activity-item"
       onClick={() => navigate(Pages.tx({ txId: id }))}
     >
-      <TxIcon operationName={label} status={status} />
+      <TxIcon operation={operation} status={status} />
       <Box.Stack css={styles.contentWrapper} gap="$0">
         <Box.Flex css={styles.item} gap={5}>
           <Text css={styles.label}>{label}</Text>

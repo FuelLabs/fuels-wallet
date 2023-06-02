@@ -20,6 +20,7 @@ export enum OperationName {
   mint = 'Mint asset',
   predicatecall = 'Predicate call',
   script = 'Script',
+  sent = 'Sent asset',
 }
 
 export enum OperationDirection {

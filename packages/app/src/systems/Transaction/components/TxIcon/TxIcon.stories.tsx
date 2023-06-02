@@ -1,5 +1,9 @@
 import type { ComponentStory, ComponentMeta } from '@storybook/react';
 
+import {
+  MOCK_OPERATION_CONTRACT_CALL,
+  MOCK_OPERATION_CONTRACT_CREATED,
+} from '../../__mocks__/operation';
 import { OperationName } from '../../utils';
 
 import type { TxIconProps } from './TxIcon';
@@ -16,17 +20,20 @@ const Template: ComponentStory<typeof TxIcon> = (args: TxIconProps) => (
 
 export const ContractCreated = Template.bind({});
 ContractCreated.args = {
-  operationName: OperationName.contractCreated,
+  operation: MOCK_OPERATION_CONTRACT_CREATED,
 };
 export const ContractCall = Template.bind({});
 ContractCall.args = {
-  operationName: OperationName.contractCall,
+  operation: MOCK_OPERATION_CONTRACT_CALL,
 };
 export const Script = Template.bind({});
 Script.args = {
-  operationName: OperationName.script,
+  operation: { ...MOCK_OPERATION_CONTRACT_CALL, name: OperationName.script },
 };
 export const PredicateCall = Template.bind({});
 PredicateCall.args = {
-  operationName: OperationName.predicatecall,
+  operation: {
+    ...MOCK_OPERATION_CONTRACT_CALL,
+    name: OperationName.predicatecall,
+  },
 };

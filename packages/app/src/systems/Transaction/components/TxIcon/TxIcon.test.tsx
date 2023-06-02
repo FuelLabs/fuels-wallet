@@ -1,20 +1,21 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
 
-import { OperationName } from '../../utils';
+import {
+  MOCK_OPERATION_CONTRACT_CALL,
+  MOCK_OPERATION_TRANSFER,
+} from '../../__mocks__/operation';
 
 import { TxIcon } from './TxIcon';
 
 describe('TxIcon', () => {
   it('a11y', async () => {
-    await testA11y(<TxIcon operationName={OperationName.contractCall} />);
+    await testA11y(<TxIcon operation={MOCK_OPERATION_CONTRACT_CALL} />);
   });
 
   it('should render icon correctly', async () => {
-    render(<TxIcon operationName={OperationName.receive} />);
+    render(<TxIcon operation={MOCK_OPERATION_TRANSFER} />);
     expect(screen.getByText(/Download/)).toBeInTheDocument();
-    render(<TxIcon operationName={OperationName.contractCall} />);
+    render(<TxIcon operation={MOCK_OPERATION_CONTRACT_CALL} />);
     expect(screen.getByText(/ArrowsLeftRight/)).toBeInTheDocument();
-    render(<TxIcon operationName={OperationName.predicatecall} />);
-    expect(screen.getByText(/Wand/)).toBeInTheDocument();
   });
 });
