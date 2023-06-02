@@ -178,7 +178,7 @@ export const signUpMachine = createMachine(
     on: {
       RESET: {
         target: 'atWelcome',
-        actions: ['deleteData', 'redirectToWelcome'],
+        actions: ['reset', 'redirectToWelcome'],
       },
     },
   },
@@ -220,6 +220,15 @@ export const signUpMachine = createMachine(
       }),
       deleteData: assign({
         data: (_) => null,
+      }),
+      reset: assign((_) => {
+        Storage.removeItem(STORAGE_KEY);
+        return {
+          data: null,
+          isFilled: false,
+          error: undefined,
+          account: undefined,
+        };
       }),
       sendAccountCreated: () => {
         Storage.setItem(IS_LOGGED_KEY, true);
