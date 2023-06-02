@@ -178,6 +178,7 @@ export const styles = {
       height: '100%',
       background: `url(${signUpImage})`,
       backgroundPosition: 'left',
+      backgroundSize: 'cover',
     },
   }),
 };
