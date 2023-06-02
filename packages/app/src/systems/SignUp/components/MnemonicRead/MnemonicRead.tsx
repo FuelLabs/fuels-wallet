@@ -43,7 +43,7 @@ export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
             }}
           />
           <Form.Label htmlFor="confirmSaved">
-            Accept terms and condition
+            I have written down my seed phrase on a piece of paper
           </Form.Label>
         </Form.Control>
       </Box.Stack>
