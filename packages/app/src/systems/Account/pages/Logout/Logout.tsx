@@ -77,25 +77,21 @@ export const Logout = () => {
           </Text>
           <Text color="gray11" css={{ mb: '$2' }}></Text>
         </Card>
+        <ControlledField
+          control={control}
+          name="logoutConfirmation"
+          label={`Write "${logOutConfirmationPhrase}" to confirm`}
+          render={({ field }) => (
+            <Input>
+              <Input.Field
+                {...field}
+                aria-label="Confirm Log Out"
+                placeholder={logOutConfirmationPhrase}
+              />
+            </Input>
+          )}
+        />
       </Dialog.Description>
-      <ControlledField
-        control={control}
-        name="logoutConfirmation"
-        label={
-          <p>
-            Write <i>{logOutConfirmationPhrase}</i> to logout
-          </p>
-        }
-        render={({ field }) => (
-          <Input>
-            <Input.Field
-              {...field}
-              aria-label="Confirm Log Out"
-              placeholder={logOutConfirmationPhrase}
-            />
-          </Input>
-        )}
-      />
       <Dialog.Footer>
         <Button
           aria-label="Logout"
