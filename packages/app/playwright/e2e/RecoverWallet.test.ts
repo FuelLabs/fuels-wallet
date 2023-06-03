@@ -66,7 +66,7 @@ test.describe('RecoverWallet', () => {
 
     /** Select the wrong mnemonic size */
     await getByAriaLabel(page, 'Select format').selectOption(
-      'I have a 12 words seed phrase'
+      'I have a 12 words Seed Phrase'
     );
 
     /** Copy words to clipboard area */
@@ -76,15 +76,15 @@ test.describe('RecoverWallet', () => {
     await getButtonByText(page, /Paste/i).click();
 
     /** Confirm Mnemonic */
-    WORDS_24.split(' ').forEach(async (word) => {
-      expect(await hasText(page, word)).toBeTruthy();
-    });
-    await hasText(page, /Enter your Recovery Phrase/i);
+    WORDS_24.split(' ').map((word) =>
+      expect(page.getByText(word)).toBeDefined()
+    );
+    await hasText(page, /Enter seed phrase/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
 
     /** Adding password */
-    await hasText(page, /Encrypt your wallet/i);
+    await hasText(page, /Create password for encryption/i);
     const passwordInput = await getByAriaLabel(page, 'Your Password');
     await passwordInput.type(WALLET_PASSWORD);
     await passwordInput.press('Tab');
