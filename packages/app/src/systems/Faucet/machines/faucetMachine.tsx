@@ -19,7 +19,6 @@ async function fetchFaucet(input: RequestInit) {
       'Content-Type': 'application/json',
     },
   });
-
   return res.json();
 }
 
