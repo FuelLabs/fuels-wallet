@@ -9,10 +9,16 @@ import type { Maybe } from '~/systems/Core';
 import { urlJoin } from '~/systems/Core';
 
 const URL = VITE_FUEL_FAUCET_URL;
-const FAUCET_URL = urlJoin(URL, URL.includes('/dispense') ? '' : '/dispense');
+
+function getFaucetUrl() {
+  if (URL.includes('localhost')) {
+    return urlJoin(URL, URL.includes('/dispense') ? '' : '/dispense');
+  }
+  return VITE_FUEL_FAUCET_URL;
+}
 
 async function fetchFaucet(input: RequestInit) {
-  const res = await fetch(FAUCET_URL, {
+  const res = await fetch(getFaucetUrl(), {
     ...input,
     headers: {
       Accept: 'application/json',
