@@ -3,7 +3,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Copyable, Flex, Text, Tooltip } from '@fuel-ui/react';
 import { bn } from 'fuels';
 
-import { shortAddress } from '~/systems/Core';
+import { isValidEthAddress, shortAddress } from '~/systems/Core';
 
 export type EthAddressProps = {
   address: string;
@@ -11,7 +11,8 @@ export type EthAddressProps = {
 };
 
 export const EthAddress = ({ address, css }: EthAddressProps) => {
-  const ethAddress = bn(address).toHex(20);
+  const isValidAddress = isValidEthAddress(address);
+  const ethAddress = isValidAddress ? bn(address).toHex(20) : '';
 
   return (
     <Flex css={styles.root}>
