@@ -121,9 +121,11 @@ Layout.BottomBar = BottomBar;
 
 export const styles = {
   root: cssObj({
-    minH: '100vh',
     width: IS_CRX_POPUP ? WALLET_WIDTH : '100vw',
-
+    position: 'relative',
+    height: '100vh',
+    maxHeight: '100vh',
+    ...coreStyles.scrollable(),
     '&:has(.layout__bottom) .layout__content': {
       pb: '$0',
     },
@@ -174,8 +176,10 @@ export const styles = {
     '&::before': {
       content: '""',
       display: 'block',
+      position: 'sticky',
+      top: 0,
       width: '100%',
-      height: '100%',
+      height: '100vh',
       background: `url(${signUpImage})`,
       backgroundPosition: 'left',
       backgroundSize: 'cover',
