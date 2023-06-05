@@ -7,5 +7,8 @@ export function shortAddress(address: string = '') {
 }
 
 export function isValidEthAddress(address: string = '') {
-  return isB256(address) || /^0x[a-fA-F0-9]{40}$/.test(address);
+  const isPadded =
+    isB256(address) && address.slice(0, 26) === '0x000000000000000000000000';
+  const isEthAddress = /^0x[a-fA-F0-9]{40}$/.test(address);
+  return isPadded || isEthAddress;
 }
