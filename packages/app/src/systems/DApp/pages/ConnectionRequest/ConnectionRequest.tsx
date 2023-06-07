@@ -10,6 +10,7 @@ import {
   Layout,
   ConnectInfo,
   PermissionCard,
+  coreStyles,
 } from '~/systems/Core';
 
 export const PERMISSION_LIST = [
@@ -41,7 +42,7 @@ export function ConnectionRequest() {
 
   return (
     <Layout title="Connection Request" isLoading={isLoadingAccounts} noBorder>
-      <Layout.Content css={styles.content}>
+      <Layout.Content noBorder noScroll={false} css={styles.content}>
         <ConnectInfo
           origin={origin}
           title={title || origin}
@@ -158,8 +159,9 @@ const styles = {
   content: cssObj({
     display: 'flex',
     flexDirection: 'column',
-    pb: '$0',
-    pt: '$4',
+    padding: '$4 $0 $4 $4 !important',
+    ...coreStyles.scrollable(),
+    overflowY: 'scroll !important',
 
     '& h2': {
       fontSize: '$sm',

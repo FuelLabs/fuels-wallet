@@ -195,5 +195,8 @@ const styles = {
     flex: 1,
     alignItems: 'center',
     flexDirection: 'column',
+    '& .fuel_FormControl': {
+      maxWidth: '100%',
+    },
   }),
 };

@@ -17,37 +17,38 @@ export function TransactionRequest() {
 
   const shouldShowTx = status('waitingApproval') || isSendingTx;
 
+  const Header = (
+    <>
+      <ConnectInfo
+        account={ctx.account}
+        origin={ctx.input.origin!}
+        favIconUrl={ctx.input.favIconUrl}
+        title={ctx.input.title}
+        headerText="Requesting a transaction from:"
+      />
+      <Alert status="warning" css={styles.alert}>
+        <Alert.Title>Confirm before approving</Alert.Title>
+        <Alert.Description>
+          Carefully check if all the details in your transaction are correct
+        </Alert.Description>
+      </Alert>
+    </>
+  );
+
   return (
     <>
       <Layout title={ctx.title} noBorder>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
           {ctx.isLoading && !txRequest.tx && (
-            <TxContent.Loader header={<ConnectInfo.Loader />} />
+            <TxContent.Loader header={Header} />
           )}
           {shouldShowTx && (
             <TxContent.Info
               showDetails
               tx={txRequest.tx}
               isLoading={status('loading')}
-              header={
-                <>
-                  <ConnectInfo
-                    account={ctx.account}
-                    origin={ctx.input.origin!}
-                    favIconUrl={ctx.input.favIconUrl}
-                    title={ctx.input.title}
-                    headerText="Requesting a transaction from:"
-                  />
-                  <Alert status="warning" css={styles.alert}>
-                    <Alert.Title>Confirm before approving</Alert.Title>
-                    <Alert.Description>
-                      Carefully check if all the details in your transaction are
-                      correct
-                    </Alert.Description>
-                  </Alert>
-                </>
-              }
+              header={Header}
               assets={assets}
             />
           )}

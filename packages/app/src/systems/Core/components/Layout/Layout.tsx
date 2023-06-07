@@ -31,10 +31,11 @@ type ContentProps = {
   children: ReactNode;
   css?: ThemeUtilsCSS;
   noBorder?: boolean;
+  noScroll?: boolean;
 };
 
 const Content = forwardRef<HTMLDivElement, ContentProps>(
-  ({ as, children, css, noBorder }, ref) => {
+  ({ as, children, css, noBorder, noScroll = false }, ref) => {
     return (
       <Box
         as={as}
@@ -42,6 +43,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(
         css={{ ...styles.content, ...css }}
         className="layout__content"
         data-noborder={noBorder}
+        data-scrollable={!noScroll}
       >
         {children}
       </Box>
@@ -145,10 +147,13 @@ export const styles = {
   }),
   inner: coreStyles.fullscreen,
   content: cssObj({
-    ...coreStyles.scrollable(),
-    padding: '$0 $4',
+    padding: '$0 $4 $4 $4',
     flex: 1,
-
+    '&[data-scrollable=true]:not([data-noborder])': {
+      padding: '$0 $0 $4 $4',
+      ...coreStyles.scrollable(),
+      overflowY: 'scroll !important',
+    },
     '&[data-noborder]': {
       padding: '$0',
     },

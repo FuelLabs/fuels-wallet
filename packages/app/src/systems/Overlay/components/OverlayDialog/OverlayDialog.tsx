@@ -43,7 +43,7 @@ export function OverlayDialog() {
 
 const styles = {
   content: cssObj({
-    padding: '$4',
+    padding: '$0',
     width: WALLET_WIDTH,
     height: WALLET_HEIGHT,
     maxWidth: WALLET_WIDTH,
@@ -61,6 +61,8 @@ const styles = {
       height: '100%',
     },
     '.fuel_DialogHeading': {
+      padding: '$4',
+      paddingBottom: '0 !important',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -71,6 +73,10 @@ const styles = {
       position: 'absolute',
       right: '$3',
       top: '24px',
+    },
+    '.fuel_DialogFooter': {
+      paddingTop: '0 !important',
+      padding: '$4',
     },
     '.fuel_DialogFooter button': {
       width: '100%',

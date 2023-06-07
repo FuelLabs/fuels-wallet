@@ -15,7 +15,7 @@ export function Assets() {
   return (
     <Layout title="Assets">
       <Layout.TopBar />
-      <Layout.Content css={styles.content}>
+      <Layout.Content css={styles.content} noBorder>
         <AnimatePresence initial={false} mode="wait">
           <Tabs defaultValue="custom" variant="subtle">
             <Tabs.List css={styles.tabList}>

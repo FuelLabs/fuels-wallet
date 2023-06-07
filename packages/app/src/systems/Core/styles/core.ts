@@ -12,7 +12,7 @@ export const scrollable = (
     scrollBehavior: 'smooth',
 
     '&::-webkit-scrollbar': {
-      width: '14px',
+      width: '$4',
       backgroundColor: 'transparent',
     },
     '&::-webkit-scrollbar-track': {

@@ -38,6 +38,8 @@ export const Networks = () => {
 const styles = {
   description: css.cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
+    overflowY: 'scroll !important',
+    paddingLeft: '$4',
     flex: 1,
   }),
 };

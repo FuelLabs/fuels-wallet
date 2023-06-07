@@ -15,7 +15,7 @@ export function AddAssetRequest() {
 
   return (
     <Layout title="Add Asset Request" noBorder>
-      <Layout.Content css={styles.content}>
+      <Layout.Content css={styles.content} noBorder>
         <ConnectInfo
           origin={origin}
           title={title || ''}
@@ -68,8 +68,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '$4',
-    pb: '$0',
-    pt: '$4',
+    padding: '$4 !important',
 
     '& h2': {
       fontSize: '$sm',

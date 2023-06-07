@@ -99,6 +99,7 @@ const styles = {
     color: '$intentsBase10',
     display: 'flex',
     alignItems: 'center',
+    marginRight: '$1',
 
     '.fuel_Icon': {
       color: '$intentsBase8',

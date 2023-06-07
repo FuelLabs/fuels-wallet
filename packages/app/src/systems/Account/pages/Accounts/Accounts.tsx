@@ -63,12 +63,9 @@ export const Accounts = () => {
 const styles = {
   description: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
-    padding: '$0',
+    overflowY: 'scroll !important',
+    paddingLeft: '$4',
     flex: 1,
-
-    '&[data-has-scroll="true"]': {
-      padding: '$4 $2 $4 $4',
-    },
   }),
   footer: cssObj({
     flexDirection: 'column',

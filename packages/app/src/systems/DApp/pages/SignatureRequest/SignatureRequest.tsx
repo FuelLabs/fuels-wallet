@@ -14,7 +14,7 @@ export function SignatureRequest() {
   return (
     <>
       <Layout title={`Signature Request`} isLoading={isLoading} noBorder>
-        <Layout.Content css={{ pt: '$4' }}>
+        <Layout.Content css={styles.content}>
           <Box.Flex gap="$4" direction="column">
             <ConnectInfo
               headerText="Signing a message to:"
@@ -62,3 +62,9 @@ export function SignatureRequest() {
     </>
   );
 }
+
+const styles = {
+  content: {
+    paddingTop: '$4 !important',
+  },
+};
