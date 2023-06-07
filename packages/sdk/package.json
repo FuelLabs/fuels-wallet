@@ -1,7 +1,7 @@
 {
   "name": "@fuel-wallet/sdk",
   "description": "Integrate DApps with Fuel Wallet Extension.",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
@@ -13,8 +13,8 @@
     "exports": {
       ".": {
         "require": "./dist/index.js",
-        "default": "./dist/index.mjs",
-        "types": "./dist/index.d.ts"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
       }
     }
   },

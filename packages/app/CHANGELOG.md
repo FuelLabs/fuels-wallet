@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.9.4
+
+### Patch Changes
+
+- [#768](https://github.com/FuelLabs/fuels-wallet/pull/768) [`a8fecfa`](https://github.com/FuelLabs/fuels-wallet/commit/a8fecfa33435cac300791879538c7265b3c7c2e2) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: add support to transfer from message input
+
+- Updated dependencies [[`c475816`](https://github.com/FuelLabs/fuels-wallet/commit/c475816fc5feca629e2a0cdab668a397c833ce23)]:
+  - @fuel-wallet/sdk@0.9.4
+  - @fuel-wallet/types@0.9.4
+
 ## 0.9.3
 
 ### Patch Changes
