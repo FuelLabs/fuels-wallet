@@ -57,6 +57,7 @@ export function TransactionRequest() {
               showDetails
               tx={txRequest.tx}
               txStatus={txRequest.approveStatus()}
+              assets={assets}
               header={
                 <TxHeader
                   id={txRequest.tx?.id}

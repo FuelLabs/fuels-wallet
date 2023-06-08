@@ -10,91 +10,89 @@ import { OverlayDialogTopbar } from '~/systems/Overlay';
 import { TxContent, TxHeader } from '~/systems/Transaction';
 
 export const TxApprove = () => {
-  const txRequest = useTransactionRequest();
+  const ctx = useTransactionRequest();
   const navigate = useNavigate();
   const { assets } = useAssets();
-
-  const isFailed = txRequest.status('failed');
-  const isSuccess = txRequest.status('success');
-  const isDone = isFailed || isSuccess;
+  const isSuccess = ctx.status('success');
 
   const goToWallet = () => {
-    txRequest.handlers.closeDialog();
+    ctx.handlers.closeDialog();
     navigate(Pages.index());
   };
+
+  const Header = (
+    <Alert status="warning" css={styles.alert}>
+      <Alert.Description>
+        Carefully check if all the details in your transaction are correct
+      </Alert.Description>
+    </Alert>
+  );
 
   return (
     <>
       <OverlayDialogTopbar
-        onClose={isSuccess ? goToWallet : txRequest.handlers.closeDialog}
+        onClose={isSuccess ? goToWallet : ctx.handlers.closeDialog}
       >
-        {txRequest.title}
+        {ctx.title}
       </OverlayDialogTopbar>
       <Dialog.Description as="div" css={styles.description}>
-        {txRequest.status('waitingApproval') && (
-          <Alert status="warning">
-            <Alert.Description>
-              Confirm before approve if all details in your transaction are
-              correct
-            </Alert.Description>
-          </Alert>
-        )}
-        {txRequest.isLoading ? (
-          <TxContent.Loader />
-        ) : (
+        {ctx.shouldShowLoader && <TxContent.Loader header={Header} />}
+        {ctx.shouldShowTx && (
           <TxContent.Info
             showDetails
-            tx={txRequest.tx}
-            txStatus={txRequest.approveStatus()}
+            tx={ctx.tx}
+            isLoading={ctx.status('loading')}
+            header={Header}
+            assets={assets}
+          />
+        )}
+        {(ctx.status('success') || ctx.status('failed')) && (
+          <TxContent.Info
+            showDetails
+            tx={ctx.tx}
+            txStatus={ctx.approveStatus()}
             assets={assets}
             header={
-              <>
-                {isDone && (
-                  <TxHeader
-                    id={txRequest.tx?.id}
-                    type={txRequest.tx?.type}
-                    status={txRequest.tx?.status || txRequest.approveStatus()}
-                    providerUrl={txRequest.providerUrl}
-                  />
-                )}
-              </>
+              <TxHeader
+                id={ctx.tx?.id}
+                type={ctx.tx?.type}
+                status={ctx.approveStatus()}
+                providerUrl={ctx.providerUrl}
+              />
+            }
+            footer={
+              ctx.status('failed') && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  intent="error"
+                  onPress={ctx.handlers.tryAgain}
+                >
+                  Try again
+                </Button>
+              )
             }
           />
         )}
       </Dialog.Description>
       <Dialog.Footer>
-        {txRequest.showActions && (
+        {ctx.showActions && (
           <>
             <Button
               variant="ghost"
-              isDisabled={txRequest.isLoading}
-              onPress={txRequest.handlers.closeDialog}
+              isDisabled={ctx.isLoading}
+              onPress={ctx.handlers.closeDialog}
             >
               Back
             </Button>
             <Button
               intent="primary"
-              isLoading={txRequest.isLoading}
-              onPress={txRequest.handlers.approve}
+              isLoading={ctx.isLoading}
+              onPress={ctx.handlers.approve}
             >
               Approve
             </Button>
           </>
-        )}
-        {isSuccess && (
-          <Button size="sm" intent="primary" onPress={goToWallet}>
-            Back to wallet
-          </Button>
-        )}
-        {isFailed && (
-          <Button
-            size="sm"
-            variant="ghost"
-            intent="error"
-            onPress={txRequest.handlers.tryAgain}
-          >
-            Try again
-          </Button>
         )}
       </Dialog.Footer>
     </>
@@ -104,9 +102,19 @@ export const TxApprove = () => {
 const styles = {
   description: cssObj({
     ...coreStyles.scrollable('$intentsBase3'),
+    overflowY: 'scroll !important',
+    paddingLeft: '$4',
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     gap: '$4',
+  }),
+  alert: cssObj({
+    '& .fuel_Alert-content': {
+      gap: '$1',
+    },
+    ' & .fuel_Heading': {
+      fontSize: '$sm',
+    },
   }),
 };

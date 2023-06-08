@@ -23,8 +23,6 @@ export enum TxRequestStatus {
   idle = 'idle',
   loading = 'loading',
   waitingApproval = 'waitingApproval',
-  waitingUnlock = 'waitingUnlock',
-  unlocking = 'unlocking',
   sending = 'sending',
   success = 'success',
   failed = 'failed',
@@ -100,7 +98,8 @@ export const transactionRequestMachine = createMachine(
         },
       },
       fetchingAccount: {
-        tags: ['loading'],
+        entry: ['openDialog'],
+        tags: ['loading', 'preLoading'],
         invoke: {
           src: 'fetchAccount',
           data: {
@@ -122,7 +121,7 @@ export const transactionRequestMachine = createMachine(
         },
       },
       settingGasPrice: {
-        tags: ['loading'],
+        tags: ['loading', 'preLoading'],
         invoke: {
           src: 'fetchGasPrice',
           data: ({ input }: MachineContext) => ({ input }),
@@ -135,7 +134,7 @@ export const transactionRequestMachine = createMachine(
         },
       },
       simulatingTransaction: {
-        tags: ['loading'],
+        tags: ['loading', 'preLoading'],
         invoke: {
           src: 'simulateTransaction',
           data: ({ input }: MachineContext) => ({ input }),
@@ -153,7 +152,6 @@ export const transactionRequestMachine = createMachine(
         },
       },
       waitingApproval: {
-        entry: ['openDialog'],
         on: {
           APPROVE: {
             target: 'sendingTx',
