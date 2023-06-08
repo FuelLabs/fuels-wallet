@@ -22,9 +22,8 @@ export const HomeActions = ({
       intent="primary"
       aria-label="Send Button"
       onPress={sendAction}
-      isDisabled={isDisabled || !hasBalance}
+      isDisabled={isLoading || isDisabled || !hasBalance}
       css={{ ...styles.button }}
-      isLoading={isLoading}
     >
       Send
     </Button>

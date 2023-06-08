@@ -17,7 +17,7 @@ export const BalanceWidgetLoader = (props: ContentLoaderProps) => (
     }
     bottom={
       <>
-        <ContentLoader width={320} height={50} viewBox="0 0 320 50" {...props}>
+        <ContentLoader width={320} height={53} viewBox="0 0 320 53" {...props}>
           <rect y="4" width="67" height="13" rx="4" />
           <rect y="27" width="181" height="24" rx="4" />
         </ContentLoader>

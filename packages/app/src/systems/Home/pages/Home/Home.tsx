@@ -26,7 +26,7 @@ export function Home() {
   };
 
   return (
-    <Layout title="Home" isLoading={isLoading} isHome>
+    <Layout title="Home" isHome>
       <Layout.TopBar />
       <Layout.Content noBorder>
         <Box.Flex css={{ height: '100%', flexDirection: 'column' }}>
