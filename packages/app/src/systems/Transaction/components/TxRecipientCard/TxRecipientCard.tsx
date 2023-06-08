@@ -4,14 +4,15 @@ import { AddressType } from '@fuel-wallet/types';
 import { Address, isB256, isBech32 } from 'fuels';
 import type { FC } from 'react';
 
-import type { TxRecipientAddress } from '../../types';
+import type { TxAddress } from '../../utils';
+import { ChainName } from '../../utils';
 
 import { TxRecipientCardLoader } from './TxRecipientCardLoader';
 
-import { FuelAddress, useAccounts } from '~/systems/Account';
+import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 
 export type TxRecipientCardProps = {
-  recipient?: TxRecipientAddress;
+  recipient?: TxAddress;
   isReceiver?: boolean;
 };
 
@@ -30,6 +31,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
     ? Address.fromString(address).toString()
     : '';
   const isContract = recipient?.type === AddressType.contract;
+  const isEthChain = recipient?.chain === ChainName.ethereum;
   const name =
     accounts?.find((a) => a.address === fuelAddress)?.name || 'unknown';
 
@@ -41,9 +43,23 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
       data-type={isContract ? 'contract' : 'user'}
     >
       <Text css={styles.from}>
-        {isReceiver ? 'To' : 'From'} {isContract && '(Contract)'}
+        {isReceiver ? 'To' : 'From'} {isContract && '(Contract)'}{' '}
+        {isEthChain && '(Ethereum)'}
       </Text>
-      {address && (
+      {isEthChain ? (
+        <>
+          <Box css={styles.iconWrapper}>
+            {/* replace icon with currency-ethereum from tabler icons when branding gets merged */}
+            <Icon icon={Icon.is('Key')} size={16} />
+          </Box>
+          <Flex css={styles.info}>
+            <Heading as="h6" css={styles.name}>
+              unknown
+            </Heading>
+            <EthAddress address={address} css={styles.address} />
+          </Flex>
+        </>
+      ) : (
         <>
           {!isContract && (
             <Avatar.Generated
