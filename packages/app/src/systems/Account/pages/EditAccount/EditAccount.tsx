@@ -5,6 +5,7 @@ import { useAccounts, useEditAccount } from '../../hooks';
 import { useAccountForm } from '../../hooks/useAccountForm';
 import type { AccountFormValues } from '../../hooks/useAccountForm';
 
+import { styles } from '~/systems/Core';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export const EditAccount = () => {
@@ -28,7 +29,7 @@ export const EditAccount = () => {
       <OverlayDialogTopbar onClose={accountsHandlers.closeDialog}>
         Edit Account
       </OverlayDialogTopbar>
-      <Dialog.Description as="div">
+      <Dialog.Description as="div" css={styles.content}>
         <Focus.Scope autoFocus>
           <AccountForm form={form} isLoading={isLoading} />
         </Focus.Scope>

@@ -5,6 +5,7 @@ import { AccountItem } from '../../components';
 import { useAccounts } from '../../hooks';
 import { useExportAccount } from '../../hooks/useExportAccount';
 
+import { styles as coreStyles } from '~/systems/Core';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 import { DontShareAlert } from '~/systems/Settings/components';
 import { UnlockCard } from '~/systems/Unlock';
@@ -33,7 +34,7 @@ export const ExportAccount = () => {
       <OverlayDialogTopbar onClose={accountsHandlers.goToList}>
         Export Private Key
       </OverlayDialogTopbar>
-      <Dialog.Description as="div">
+      <Dialog.Description as="div" css={coreStyles.content}>
         {account && (
           <Box.Stack gap="$4">
             <AccountItem account={account} />

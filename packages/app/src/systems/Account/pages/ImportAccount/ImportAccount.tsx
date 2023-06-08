@@ -5,6 +5,7 @@ import { useAccounts, useImportAccount } from '../../hooks';
 import { useImportAccountForm } from '../../hooks/useImportAccountForm';
 import type { ImportAccountFormValues } from '../../hooks/useImportAccountForm';
 
+import { styles } from '~/systems/Core';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export const ImportAccount = () => {
@@ -21,7 +22,7 @@ export const ImportAccount = () => {
       <OverlayDialogTopbar onClose={accountsHandlers.closeDialog}>
         Import Account
       </OverlayDialogTopbar>
-      <Dialog.Description as="div">
+      <Dialog.Description as="div" css={styles.content}>
         <ImportAccountForm form={form} isLoading={isLoading} />
       </Dialog.Description>
       <Dialog.Footer>

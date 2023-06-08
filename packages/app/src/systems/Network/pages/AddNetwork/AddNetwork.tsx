@@ -2,7 +2,7 @@ import { Box, Button, Dialog, Focus, Icon } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 
-import { animations } from '~/systems/Core';
+import { animations, styles } from '~/systems/Core';
 import type { NetworkFormValues } from '~/systems/Network';
 import {
   NetworkForm,
@@ -55,7 +55,7 @@ export function AddNetwork() {
       <OverlayDialogTopbar onClose={handlers.closeDialog}>
         Add Network
       </OverlayDialogTopbar>
-      <Dialog.Description as="div">
+      <Dialog.Description as="div" css={styles.content}>
         <Focus.Scope autoFocus>
           <NetworkForm
             form={form}
