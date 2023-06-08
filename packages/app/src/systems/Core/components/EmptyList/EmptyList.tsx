@@ -1,7 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Heading } from '@fuel-ui/react';
 
-import { ImageLoader, relativeUrl } from '~/systems/Core';
+import { relativeUrl } from '../../utils';
+import { ImageLoader } from '../ImageLoader';
 
 export type EmptyListProps = {
   label: string;

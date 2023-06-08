@@ -2,9 +2,9 @@ import { cssObj } from '@fuel-ui/css';
 import { Text, Avatar, Card, Box } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 
-import { ConnectInfoLoader } from './ConnectInfoLoader';
+import { parseUrl, truncate } from '../../utils';
 
-import { parseUrl, truncate } from '~/systems/Core';
+import { ConnectInfoLoader } from './ConnectInfoLoader';
 
 export type ConnectInfoProps = {
   origin: string;

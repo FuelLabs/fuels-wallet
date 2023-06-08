@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { AlertDialog, Button, Text } from '@fuel-ui/react';
+import { AlertDialog, Box, Button, Text } from '@fuel-ui/react';
 import type { Connection } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
@@ -33,13 +33,14 @@ export function ConnectionRemoveDialog({
       <AlertDialog.Trigger>{children}</AlertDialog.Trigger>
       <AlertDialog.Content css={styles.root}>
         <AlertDialog.Heading>Disconnecting App</AlertDialog.Heading>
-        <AlertDialog.Description as="div">
+        {/* TODO: Fix on fuel-ui AlertDialog.Description for the as prop to work correctly */}
+        <Box.Stack className="fuel_AlertDialog-description">
           <Text className="from">{connection.origin}</Text>
           <Text className="message">
             You will lose the connection of all your accounts with this website.
             Are you sure you want to disconnect?
           </Text>
-        </AlertDialog.Description>
+        </Box.Stack>
         <AlertDialog.Footer>
           <AlertDialog.Cancel>
             <Button variant="outlined" onPress={handleCancel}>
