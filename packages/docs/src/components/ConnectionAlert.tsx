@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Alert, Link } from '@fuel-ui/react';
 
-import { useFuel } from '~/src/hooks/useFuel';
+import { useFuel } from '../hooks/useFuel';
 
 export function ConnectionAlert() {
   const [, notDetected] = useFuel();
