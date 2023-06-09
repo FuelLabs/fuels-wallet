@@ -2,6 +2,8 @@
 import type { render } from '@fuel-ui/test-utils';
 import { screen, waitFor } from '@fuel-ui/test-utils';
 
+import { SignUpProvider } from '../SignUpProvider';
+
 import { MnemonicRead } from './MnemonicRead';
 
 import { renderWithProvider } from '~/systems/Core/__tests__';
@@ -31,11 +33,14 @@ describe('MnemonicRead', () => {
 
   beforeEach(() => {
     const res = renderWithProvider(
-      <MnemonicRead
-        words={WORDS}
-        onNext={onNextHandler}
-        onCancel={onCancelHandler}
-      />
+      <SignUpProvider>
+        <MnemonicRead
+          step={2}
+          words={WORDS}
+          onNext={onNextHandler}
+          onCancel={onCancelHandler}
+        />
+      </SignUpProvider>
     );
 
     user = res.user;

@@ -2,6 +2,8 @@ import { Mnemonic as FuelMnemonic } from '@fuel-ts/mnemonic';
 import { screen, waitFor } from '@fuel-ui/test-utils';
 import { act } from 'react-dom/test-utils';
 
+import { SignUpProvider } from '../SignUpProvider';
+
 import { MnemonicWrite } from './MnemonicWrite';
 
 import { MNEMONIC_SIZE } from '~/config';
@@ -19,12 +21,15 @@ const MNEMONIC = getPhraseFromValue(
 describe('MnemonicWrite', () => {
   it('should trigger onFilled after paste', async () => {
     renderWithProvider(
-      <MnemonicWrite
-        canProceed
-        onFilled={onFilledHandler}
-        onNext={onNextHandler}
-        onCancel={onCancelHandler}
-      />
+      <SignUpProvider>
+        <MnemonicWrite
+          step={2}
+          canProceed
+          onFilled={onFilledHandler}
+          onNext={onNextHandler}
+          onCancel={onCancelHandler}
+        />
+      </SignUpProvider>
     );
 
     await navigator.clipboard.writeText(MNEMONIC);
@@ -41,12 +46,15 @@ describe('MnemonicWrite', () => {
 
   it('should be able to click on next if canProceed and isFilled', async () => {
     renderWithProvider(
-      <MnemonicWrite
-        canProceed
-        onFilled={onFilledHandler}
-        onNext={onNextHandler}
-        onCancel={onCancelHandler}
-      />
+      <SignUpProvider>
+        <MnemonicWrite
+          step={2}
+          canProceed
+          onFilled={onFilledHandler}
+          onNext={onNextHandler}
+          onCancel={onCancelHandler}
+        />
+      </SignUpProvider>
     );
 
     await navigator.clipboard.writeText(MNEMONIC);
@@ -64,12 +72,15 @@ describe('MnemonicWrite', () => {
 
   it('should show error message when have error prop', async () => {
     renderWithProvider(
-      <MnemonicWrite
-        error="This is an error message"
-        onFilled={onFilledHandler}
-        onNext={onNextHandler}
-        onCancel={onCancelHandler}
-      />
+      <SignUpProvider>
+        <MnemonicWrite
+          step={2}
+          error="This is an error message"
+          onFilled={onFilledHandler}
+          onNext={onNextHandler}
+          onCancel={onCancelHandler}
+        />
+      </SignUpProvider>
     );
 
     expect(screen.getByText('This is an error message')).toBeInTheDocument();

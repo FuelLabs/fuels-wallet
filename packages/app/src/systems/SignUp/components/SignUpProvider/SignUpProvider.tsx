@@ -20,7 +20,7 @@ export function useSignUpProvider() {
   return useContext(ctx);
 }
 
-export function SignUpProvider() {
+export function SignUpProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const service = useInterpret(() =>
     signUpMachine.withConfig({
@@ -36,8 +36,6 @@ export function SignUpProvider() {
   );
 
   return (
-    <ctx.Provider value={{ service }}>
-      <Outlet />
-    </ctx.Provider>
+    <ctx.Provider value={{ service }}>{children || <Outlet />}</ctx.Provider>
   );
 }

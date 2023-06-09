@@ -14,6 +14,7 @@ export default {
 export const Usage = () => (
   <Box.Centered minHS>
     <MnemonicWrite
+      step={2}
       onFilled={action('onFilled')}
       onNext={action('onNext')}
       onCancel={action('onCancel')}
@@ -24,6 +25,7 @@ export const Usage = () => (
 export const WithError = () => (
   <Box.Centered minHS>
     <MnemonicWrite
+      step={2}
       error="Sorry, your mnemonic doesn't match!"
       onFilled={action('onFilled')}
       onNext={action('onNext')}

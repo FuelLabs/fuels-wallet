@@ -29,6 +29,7 @@ const WORDS = [
 export const Usage = () => (
   <Box.Centered minHS>
     <MnemonicRead
+      step={2}
       words={WORDS}
       onNext={action('onNext')}
       onCancel={action('onCancel')}

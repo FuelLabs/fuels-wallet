@@ -54,6 +54,7 @@ export function InputSecurePassword({
           gap={'$2'}
           onMouseEnter={() => setPasswordTooltipOpened(true)}
           onMouseLeave={() => setPasswordTooltipOpened(false)}
+          aria-label="Password strength"
         >
           <PasswordStrength.Indicator
             strength={strength}

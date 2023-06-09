@@ -14,6 +14,7 @@ export default {
 export const Usage = () => (
   <Box.Centered minHS>
     <CreatePassword
+      step={2}
       onCancel={action('onCancel')}
       onSubmit={action('onSubmit')}
     />

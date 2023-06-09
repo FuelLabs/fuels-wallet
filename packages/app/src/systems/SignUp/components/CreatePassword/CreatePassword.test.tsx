@@ -1,6 +1,8 @@
 import type { render } from '@fuel-ui/test-utils';
 import { fireEvent, screen, waitFor } from '@fuel-ui/test-utils';
 
+import { SignUpProvider } from '../SignUpProvider';
+
 import { CreatePassword } from './CreatePassword';
 
 import { renderWithProvider } from '~/systems/Core/__tests__';
@@ -11,7 +13,13 @@ const onCancelHandler = jest.fn();
 type UserPatch = ReturnType<typeof render>['user'];
 
 const Content = () => (
-  <CreatePassword onSubmit={onSubmitHandler} onCancel={onCancelHandler} />
+  <SignUpProvider>
+    <CreatePassword
+      step={2}
+      onSubmit={onSubmitHandler}
+      onCancel={onCancelHandler}
+    />
+  </SignUpProvider>
 );
 
 function fillInput(el: HTMLElement, value: string) {
@@ -46,7 +54,9 @@ describe('CreatePassword', () => {
     renderWithProvider(<Content />);
 
     const password = await screen.findByPlaceholderText('Type your password');
+
     fireEvent.focus(password);
+    fireEvent.mouseOver(screen.getByLabelText('Password strength'));
 
     const fuelPopoverContent = await screen.findByText('Weak');
     expect(fuelPopoverContent).toBeVisible();
@@ -60,30 +70,6 @@ describe('CreatePassword', () => {
       expect(screen.getByLabelText('Error message')).toBeInTheDocument()
     );
   });
-
-  /**
-   * TODO: try to fix this case later
-   * btw, this is already testes using Cypress E2E
-   */
-  // it("should be able to click on next if form is valid", async () => {
-  //   const { user } = render(<Content />, { wrapper: TestWrapper });
-
-  //   await fillInputs(user, "123456789", "123456789");
-  //   const checkbox = await screen.findByRole("checkbox");
-  //   await user.click(checkbox);
-
-  //   await waitFor(async () => {
-  //     expect(checkbox.getAttribute("data-state")).toBe("checked");
-  //     await user.tab();
-  //   });
-
-  //   await waitFor(async () => {
-  //     const btn = await screen.findByText("Next");
-  //     await user.click(btn);
-  //     expect(btn.getAttribute("aria-disabled")).toBe("false");
-  //     expect(onSubmitHandler).toBeCalledTimes(1);
-  //   });
-  // });
 
   it('should be able to click on cancel button', async () => {
     const { user } = renderWithProvider(<Content />);
