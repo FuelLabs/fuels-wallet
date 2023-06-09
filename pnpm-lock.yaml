@@ -219,7 +219,7 @@ importers:
         version: 1.0.0
       vite-plugin-markdown:
         specifier: ^2.1.0
-        version: 2.1.0(vite@4.2.1)
+        version: 2.1.0(vite@4.3.0)
       xstate:
         specifier: ^4.35.4
         version: 4.37.1
@@ -232,7 +232,7 @@ importers:
         version: 7.21.3
       '@crxjs/vite-plugin':
         specifier: ^1.0.14
-        version: 1.0.14(vite@4.2.1)
+        version: 1.0.14(vite@4.3.0)
       '@fuel-ts/keystore':
         specifier: 0.43.0
         version: 0.43.0
@@ -343,7 +343,7 @@ importers:
         version: 5.14.5
       '@vitejs/plugin-react':
         specifier: ^3.0.1
-        version: 3.1.0(vite@4.2.1)
+        version: 3.1.0(vite@4.3.0)
       '@xstate/inspect':
         specifier: ^0.7.1
         version: 0.7.1(ws@8.13.0)(xstate@4.37.1)
@@ -375,20 +375,20 @@ importers:
         specifier: ^0.12.5
         version: 0.12.5
       vite:
-        specifier: ^4.0.4
-        version: 4.2.1(@types/node@18.15.5)
+        specifier: ^4.2.3
+        version: 4.3.0(@types/node@18.15.5)
       vite-plugin-clean:
         specifier: ^1.0.0
         version: 1.0.0
       vite-plugin-static-copy:
         specifier: ^0.13.0
-        version: 0.13.1(vite@4.2.1)
+        version: 0.13.1(vite@4.3.0)
       vite-plugin-zip-pack:
         specifier: ^1.0.5
-        version: 1.0.5(vite@4.2.1)
+        version: 1.0.5(vite@4.3.0)
       vite-tsconfig-paths:
         specifier: ^4.0.5
-        version: 4.0.7(typescript@4.9.5)(vite@4.2.1)
+        version: 4.0.7(typescript@4.9.5)(vite@4.3.0)
       webpack:
         specifier: ^5.75.0
         version: 5.76.3
@@ -2522,7 +2522,7 @@ packages:
     dev: true
     optional: true
 
-  /@crxjs/vite-plugin@1.0.14(vite@4.2.1):
+  /@crxjs/vite-plugin@1.0.14(vite@4.3.0):
     resolution: {integrity: sha512-emOueVCqFRFmpcfT80Xsm4mfuFw9VSp5GY4eh5qeLDeiP81g0hddlobVQCo0pE2ZvNnWbyhLrXEYAaMAXjNL6A==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -2542,9 +2542,9 @@ packages:
       picocolors: 1.0.0
       react-refresh: 0.13.0
       rollup: 2.79.1
-      vite: 4.2.1(@types/node@18.15.5)
+      vite: 4.3.0(@types/node@18.15.5)
     optionalDependencies:
-      '@vitejs/plugin-react': 3.1.0(vite@4.2.1)
+      '@vitejs/plugin-react': 3.1.0(vite@4.3.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -9719,7 +9719,7 @@ packages:
       eslint-visitor-keys: 3.4.1
     dev: false
 
-  /@vitejs/plugin-react@3.1.0(vite@4.2.1):
+  /@vitejs/plugin-react@3.1.0(vite@4.3.0):
     resolution: {integrity: sha512-AfgcRL8ZBhAlc3BFdigClmTUMISmmzHn7sB2h9U1odvc5U/MjWXsAaz18b/WoppUTDBzxOJwo2VdClfUcItu9g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -9730,7 +9730,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.19.6(@babel/core@7.21.3)
       magic-string: 0.27.0
       react-refresh: 0.14.0
-      vite: 4.2.1(@types/node@18.15.5)
+      vite: 4.3.0(@types/node@18.15.5)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -20807,6 +20807,14 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
+
+  /rollup@3.24.0:
+    resolution: {integrity: sha512-OgraHOIg2YpHQTjl0/ymWfFNBEyPucB7lmhXrQUh38qNOegxLapSPFs9sNr0qKR75awW41D93XafoR2QfhBdUQ==}
+    engines: {node: '>=14.18.0', npm: '>=8.0.0'}
+    hasBin: true
+    optionalDependencies:
+      fsevents: 2.3.2
 
   /rsvp@4.8.5:
     resolution: {integrity: sha512-nfMOlASu9OnRJo1mbEk2cz0D56a1MBNrJ7orjRZQG10XDyuvwksKbuXNp6qa+kbn839HwjwhBzhFmdsaEAfauA==}
@@ -23130,7 +23138,7 @@ packages:
       - stylus
     dev: true
 
-  /vite-plugin-markdown@2.1.0(vite@4.2.1):
+  /vite-plugin-markdown@2.1.0(vite@4.3.0):
     resolution: {integrity: sha512-eWLlrWzYZXEX3/HaXZo/KLjRpO72IUhbgaoFrbwB07ueXi6QfwqrgdZQfUcXTSofJCkN7GhErMC1K1RTAE0gGQ==}
     peerDependencies:
       vite: ^2.0.0 || ^3.0.0
@@ -23138,10 +23146,10 @@ packages:
       front-matter: 4.0.2
       htmlparser2: 6.1.0
       markdown-it: 12.3.2
-      vite: 4.2.1(@types/node@18.15.5)
+      vite: 4.3.0(@types/node@18.15.5)
     dev: false
 
-  /vite-plugin-static-copy@0.13.1(vite@4.2.1):
+  /vite-plugin-static-copy@0.13.1(vite@4.3.0):
     resolution: {integrity: sha512-KwIcGBT1aOxSq+laK3VmSngoEa3HXWj/6ZEXdv+y59eZ7p/XSuPahoDo+CfYW22JjTdnstgeKWiX+78KNgDu6g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -23151,19 +23159,19 @@ packages:
       fast-glob: 3.2.12
       fs-extra: 11.1.1
       picocolors: 1.0.0
-      vite: 4.2.1(@types/node@18.15.5)
+      vite: 4.3.0(@types/node@18.15.5)
     dev: true
 
-  /vite-plugin-zip-pack@1.0.5(vite@4.2.1):
+  /vite-plugin-zip-pack@1.0.5(vite@4.3.0):
     resolution: {integrity: sha512-AY6F3GJL///Dc3d7fQhalJvWb08e0oIATVqHLwDAiK2/S1NCxbAFXfT4m2V+LtJRjHrRkHa0zbZvAI6/lb6vTQ==}
     peerDependencies:
       vite: '>=2.x'
     dependencies:
       jszip: 3.10.1
-      vite: 4.2.1(@types/node@18.15.5)
+      vite: 4.3.0(@types/node@18.15.5)
     dev: true
 
-  /vite-tsconfig-paths@4.0.7(typescript@4.9.5)(vite@4.2.1):
+  /vite-tsconfig-paths@4.0.7(typescript@4.9.5)(vite@4.3.0):
     resolution: {integrity: sha512-MwIYaby6kcbQGZqMH+gAK6h0UYQGOkjsuAgw4q6bP/5vWkn8VKvnmLuCQHA2+IzHAJHnE8OFTO4lnJLFMf9+7Q==}
     peerDependencies:
       vite: '*'
@@ -23174,7 +23182,7 @@ packages:
       debug: 4.3.4
       globrex: 0.1.2
       tsconfck: 2.1.1(typescript@4.9.5)
-      vite: 4.2.1(@types/node@18.15.5)
+      vite: 4.3.0(@types/node@18.15.5)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -23204,8 +23212,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vite@4.2.1(@types/node@18.15.5):
-    resolution: {integrity: sha512-7MKhqdy0ISo4wnvwtqZkjke6XN4taqQ2TBaTccLIpOKv7Vp2h4Y+NpmWCnGDeSvvn45KxvWgGyb0MkHvY1vgbg==}
+  /vite@4.3.0(@types/node@18.15.5):
+    resolution: {integrity: sha512-JTGFgDh3dVxeGBpuQX04Up+JZmuG6wu9414Ei36vQzaEruY/M4K0AgwtuB2b4HaBgB7R8l+LHxjB0jcgz4d2qQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -23232,8 +23240,7 @@ packages:
       '@types/node': 18.15.5
       esbuild: 0.17.12
       postcss: 8.4.21
-      resolve: 1.22.1
-      rollup: 3.20.1
+      rollup: 3.24.0
     optionalDependencies:
       fsevents: 2.3.2
 
