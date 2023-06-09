@@ -4,21 +4,22 @@ import { useMnemonicForm } from '../../hooks/useMnemonicForm';
 
 import { Layout } from '~/systems/Core';
 
-export function RecoverWallet() {
+export function ConfirmWallet() {
   const { handlers, context } = useSignUp();
-  const { error, words, hasError, onChange, onFilled } = useMnemonicForm();
+  const { error, words, hasError, onChange, onFilled } = useMnemonicForm(
+    context.data?.mnemonic
+  );
 
   return (
-    <Layout title="Recovering Wallet" isPublic>
+    <Layout title="Create Wallet" isPublic>
       <MnemonicWrite
-        step={2}
+        step={3}
         error={error || context.error}
         canProceed={!hasError}
         onFilled={onFilled}
         onChange={onChange}
-        onNext={() => handlers.importMnemonic(words)}
+        onNext={() => handlers.confirmMnemonic(words)}
         onCancel={handlers.reset}
-        enableChangeFormat={true}
       />
     </Layout>
   );

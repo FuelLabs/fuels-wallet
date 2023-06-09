@@ -1,34 +1,16 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button } from '@fuel-ui/react';
-import { useNavigate, useParams } from 'react-router-dom';
 
 import { Header, Stepper } from '../../components';
-import { useSignUpStepper } from '../../hooks';
+import { useSignUp, useSignUpStepper } from '../../hooks';
 
 import { ReactComponent as Terms } from './data/terms.md';
 
-import { Layout, Pages } from '~/systems/Core';
-import { useHasAcceptedTerms } from '~/systems/Core/hooks/useAcceptedTerms';
+import { Layout } from '~/systems/Core';
 
 export function TermsOfUse() {
-  const navigate = useNavigate();
-  const { action } = useParams();
-  const { setHasAcceptedTerms } = useHasAcceptedTerms();
+  const { handlers } = useSignUp();
   const { steps } = useSignUpStepper();
-
-  function handleAccept() {
-    setHasAcceptedTerms(true);
-    if (action === 'recover') {
-      navigate(Pages.signUpRecoverWallet());
-    } else {
-      navigate(Pages.signUpCreateWallet());
-    }
-  }
-
-  const handleCancel = () => {
-    setHasAcceptedTerms(false);
-    navigate(Pages.signUpWelcome());
-  };
 
   return (
     <Layout title="Terms of Service" isPublic>
@@ -44,10 +26,10 @@ export function TermsOfUse() {
           </Box.Flex>
         </Box>
         <Box.Flex gap="$2" css={styles.footer}>
-          <Button variant="ghost" onPress={handleCancel}>
+          <Button variant="ghost" onPress={handlers.reset}>
             Back
           </Button>
-          <Button intent="primary" onPress={handleAccept}>
+          <Button intent="primary" onPress={handlers.next}>
             Next: Seed Phrase
           </Button>
         </Box.Flex>

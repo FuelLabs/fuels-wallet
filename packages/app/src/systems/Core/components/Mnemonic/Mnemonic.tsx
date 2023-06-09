@@ -23,6 +23,7 @@ export type MnemonicProps = {
   type: 'read' | 'write';
   value?: string[];
   onFilled?: (val: string[]) => void;
+  onChange?: (val: string[]) => void;
   format?: number;
   enableChangeFormat?: boolean;
 };
@@ -31,6 +32,7 @@ export function Mnemonic({
   value: initialValue = [],
   type,
   onFilled,
+  onChange,
   format: initialFormat,
   enableChangeFormat,
 }: MnemonicProps) {
@@ -55,9 +57,19 @@ export function Mnemonic({
     toast.success('Seed phrase copied to clipboard');
   }
 
-  function handlePastInput(ev: React.ClipboardEvent<HTMLInputElement>) {
+  function handlePastInput(
+    ev: React.ClipboardEvent<HTMLInputElement>,
+    idx: number
+  ) {
     const text = ev.clipboardData.getData('text/plain');
-    setValue(fillArray(text.split(' '), format));
+    const words = text.split(' ');
+
+    // Only allow paste on the first input or
+    // if the paste has more than 12 words
+    if (idx === 0 || words.length > 11) {
+      ev.preventDefault();
+      setValue(fillArray(words, format));
+    }
   }
 
   async function handlePast() {
@@ -65,14 +77,12 @@ export function Mnemonic({
     setValue(fillArray(text.split(' '), format));
   }
 
-  function handleChange(idx: number) {
-    return (val: string) => {
-      setValue((oldState) =>
-        oldState
-          .map((word, i) => (i === idx ? val : word))
-          .map(checkMoreThanOneWord)
-      );
-    };
+  function handleChange(val: string, idx: number) {
+    setValue((oldState) =>
+      oldState
+        .map((word, i) => (i === idx ? val : word))
+        .map(checkMoreThanOneWord)
+    );
   }
 
   function handleChangeFormat(format: number) {
@@ -80,10 +90,10 @@ export function Mnemonic({
     const newValue = fillArray(value, format);
 
     setValue(newValue);
-    onFilled?.(newValue);
   }
 
   useEffect(() => {
+    onChange?.(value);
     if (value.every((word) => Boolean(word.length))) {
       onFilled?.(value);
     }
@@ -125,7 +135,8 @@ export function Mnemonic({
                 <div>
                   <MnemonicInput
                     value={value[idx]}
-                    onChange={handleChange(idx)}
+                    index={idx}
+                    onChange={handleChange}
                     onPaste={handlePastInput}
                   />
                 </div>

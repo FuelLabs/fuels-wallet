@@ -10,17 +10,23 @@ import { Mnemonic } from '~/systems/Core';
 
 export type MnemonicReadProps = {
   words?: string[];
+  step: number;
   onNext: () => void;
   onCancel: () => void;
 };
 
-export function MnemonicRead({ words, onCancel, onNext }: MnemonicReadProps) {
+export function MnemonicRead({
+  words,
+  step,
+  onCancel,
+  onNext,
+}: MnemonicReadProps) {
   const [isSavedChecked, setSavedChecked] = useState(false);
   const { steps, handleChangeStep } = useSignUpStepper();
 
   return (
     <Box.Stack gap="$6" align="center">
-      <Stepper steps={steps} active={2} onStepChange={handleChangeStep} />
+      <Stepper steps={steps} active={step} onStepChange={handleChangeStep} />
       <Header
         title="Write down seed phrase"
         subtitle="Write down your seed phrase in a secure location on a piece of paper."

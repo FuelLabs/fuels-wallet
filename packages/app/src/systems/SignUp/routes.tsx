@@ -3,12 +3,13 @@ import { Navigate, Route } from 'react-router-dom';
 import { Pages } from '../Core/types';
 
 import { SignUpProvider } from './components/SignUpProvider';
-import { HasAcceptedTermsGuard } from './guards';
 import {
-  CreateWallet,
   RecoverWallet,
   WelcomeScreen,
   TermsOfUse,
+  EncryptWallet,
+  BackupWallet,
+  ConfirmWallet,
 } from './pages';
 
 export const signUpRoutes = (
@@ -16,9 +17,9 @@ export const signUpRoutes = (
     <Route index element={<Navigate to={Pages.signUpWelcome()} />} />
     <Route path={Pages.signUpWelcome()} element={<WelcomeScreen />} />
     <Route path={Pages.signUpTerms()} element={<TermsOfUse />} />
-    <Route element={<HasAcceptedTermsGuard />}>
-      <Route path={Pages.signUpCreateWallet()} element={<CreateWallet />} />
-      <Route path={Pages.signUpRecoverWallet()} element={<RecoverWallet />} />
-    </Route>
+    <Route path={Pages.signUpCreateWallet()} element={<BackupWallet />} />
+    <Route path={Pages.signUpConfirmWallet()} element={<ConfirmWallet />} />
+    <Route path={Pages.signUpRecoverWallet()} element={<RecoverWallet />} />
+    <Route path={Pages.signUpEncryptWallet()} element={<EncryptWallet />} />
   </Route>
 );

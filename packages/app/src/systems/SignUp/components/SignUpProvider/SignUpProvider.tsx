@@ -2,10 +2,13 @@ import { useInterpret } from '@xstate/react';
 import { createContext, useContext } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import type { SignUpMachineService } from '../../machines/signUpMachine';
-import { signUpMachine, SignUpType } from '../../machines/signUpMachine';
+import type {
+  SignUpMachineService,
+  SignUpType,
+} from '../../machines/signUpMachine';
+import { signUpMachine } from '../../machines/signUpMachine';
 
-import { Pages, Storage } from '~/systems/Core';
+import { Pages } from '~/systems/Core';
 
 type Context = {
   service: SignUpMachineService;
@@ -19,7 +22,6 @@ export function useSignUpProvider() {
 
 export function SignUpProvider() {
   const navigate = useNavigate();
-  const type = getTypeFromStorage();
   const service = useInterpret(() =>
     signUpMachine.withConfig({
       actions: {
@@ -34,13 +36,8 @@ export function SignUpProvider() {
   );
 
   return (
-    <ctx.Provider value={{ service, type }}>
+    <ctx.Provider value={{ service }}>
       <Outlet />
     </ctx.Provider>
   );
-}
-
-export const STORAGE_KEY = 'signUpType';
-function getTypeFromStorage(): SignUpType {
-  return Storage.getItem(STORAGE_KEY) ?? SignUpType.create;
 }

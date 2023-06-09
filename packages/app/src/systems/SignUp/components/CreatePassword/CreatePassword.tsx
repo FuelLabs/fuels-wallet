@@ -32,12 +32,14 @@ export type CreatePasswordValues = {
 };
 
 export type CreatePasswordProps = {
+  step: number;
   isLoading?: boolean;
   onSubmit: (data: CreatePasswordValues) => void;
   onCancel: () => void;
 };
 
 export function CreatePassword({
+  step,
   isLoading = false,
   onCancel,
   onSubmit,
@@ -72,7 +74,7 @@ export function CreatePassword({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Box.Stack gap="$6" align="center">
-        <Stepper steps={steps} active={4} onStepChange={handleChangeStep} />
+        <Stepper steps={steps} active={step} onStepChange={handleChangeStep} />
         <Header
           title="Create password for encryption"
           subtitle="This password will be used to unlock your wallet."

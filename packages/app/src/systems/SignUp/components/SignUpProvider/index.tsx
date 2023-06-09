@@ -1,5 +1,1 @@
-export {
-  SignUpProvider,
-  useSignUpProvider,
-  STORAGE_KEY,
-} from './SignUpProvider';
+export { SignUpProvider, useSignUpProvider } from './SignUpProvider';

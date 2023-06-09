@@ -9,8 +9,10 @@ import { Mnemonic } from '~/systems/Core';
 
 export type MnemonicWriteProps = {
   canProceed?: boolean;
+  step: number;
   error?: string | boolean;
   onFilled: (words: string[]) => void;
+  onChange?: (words: string[]) => void;
   onNext: () => void;
   onCancel: () => void;
   enableChangeFormat?: boolean;
@@ -19,7 +21,9 @@ export type MnemonicWriteProps = {
 export function MnemonicWrite({
   canProceed,
   error,
+  step,
   onFilled,
+  onChange,
   onCancel,
   onNext,
   enableChangeFormat,
@@ -32,7 +36,7 @@ export function MnemonicWrite({
 
   return (
     <Box.Stack gap="$6" align="center">
-      <Stepper steps={steps} active={3} onStepChange={handleChangeStep} />
+      <Stepper steps={steps} active={step} onStepChange={handleChangeStep} />
       <Header
         title="Confirm phrase"
         subtitle="Write your phrase again to ensure you wrote it down correctly."
@@ -46,6 +50,7 @@ export function MnemonicWrite({
         <Mnemonic
           type="write"
           onFilled={handleFill}
+          onChange={onChange}
           enableChangeFormat={enableChangeFormat}
         />
       </Box.Stack>

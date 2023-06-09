@@ -3,11 +3,10 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import type { CreatePasswordValues } from '../components';
-import { STORAGE_KEY, useSignUpProvider } from '../components/SignUpProvider';
+import { useSignUpProvider } from '../components/SignUpProvider';
 import type { SignUpMachineState } from '../machines/signUpMachine';
-import { SignUpType } from '../machines/signUpMachine';
 
-import { Pages, Storage } from '~/systems/Core';
+import { Pages } from '~/systems/Core';
 
 export enum SignUpScreen {
   showing = 'showing',
@@ -19,13 +18,9 @@ export enum SignUpScreen {
 const selectors = {
   context: (state: SignUpMachineState) => state.context,
   screen: (state: SignUpMachineState) => {
-    if (state.matches('showingMnemonic')) return SignUpScreen.showing;
-    if (state.matches('waitingMnemonic')) return SignUpScreen.waiting;
-    if (state.matches('failed')) return SignUpScreen.failed;
+    if (state.matches('create.showingMnemonic')) return SignUpScreen.showing;
+    if (state.matches('create.confirmMnemonic')) return SignUpScreen.waiting;
     return SignUpScreen.password;
-  },
-  isValidMnemonic(state: SignUpMachineState) {
-    return state.matches('waitingMnemonic.validMnemonic');
   },
   isLoading(state: SignUpMachineState) {
     return state.hasTag('loading');
@@ -33,14 +28,52 @@ const selectors = {
 };
 
 export function useSignUp() {
-  const { service, type } = useSignUpProvider();
-  const { send } = service;
   const navigate = useNavigate();
+  const { service } = useSignUpProvider();
+  const { send } = service;
 
   const ctx = useSelector(service, selectors.context);
   const screen = useSelector(service, selectors.screen);
-  const isValidMnemonic = useSelector(service, selectors.isValidMnemonic);
   const isLoading = useSelector(service, selectors.isLoading);
+
+  useEffect(() => {
+    const sub = service.subscribe((state) => {
+      if (state.matches('atWelcome')) {
+        navigate(Pages.signUpWelcome(), {
+          replace: true,
+        });
+      }
+      if (state.matches('aggrement')) {
+        navigate(Pages.signUpTerms(), {
+          replace: true,
+        });
+      }
+      if (state.matches('import')) {
+        navigate(Pages.signUpRecoverWallet(), {
+          replace: true,
+        });
+      }
+      if (state.matches('create.showingMnemonic')) {
+        navigate(Pages.signUpCreateWallet(), {
+          replace: true,
+        });
+      }
+      if (state.matches('create.confirmMnemonic')) {
+        navigate(Pages.signUpConfirmWallet(), {
+          replace: true,
+        });
+      }
+      if (state.matches('addingPassword')) {
+        navigate(Pages.signUpEncryptWallet(), {
+          replace: true,
+        });
+      }
+    });
+
+    return () => {
+      sub.unsubscribe();
+    };
+  }, []);
 
   function next() {
     send('NEXT');
@@ -48,6 +81,10 @@ export function useSignUp() {
 
   function confirmMnemonic(words: string[]) {
     send('CONFIRM_MNEMONIC', { data: { words } });
+  }
+
+  function importMnemonic(words: string[]) {
+    send('IMPORT_MNEMONIC', { data: { words } });
   }
 
   function createManager({ password }: CreatePasswordValues) {
@@ -59,25 +96,18 @@ export function useSignUp() {
   }
 
   function goToCreate() {
-    Storage.setItem(STORAGE_KEY, SignUpType.create);
-    navigate(Pages.signUpTerms({ action: 'create' }));
-    next();
+    send('CREATE');
   }
 
   function goToRecover() {
-    Storage.setItem(STORAGE_KEY, SignUpType.recover);
-    navigate(Pages.signUpTerms({ action: 'recover' }));
-    next();
+    send('IMPORT');
   }
-
-  useEffect(() => {
-    if (type === SignUpType.create) send('CREATE_MNEMONIC');
-  }, []);
 
   return {
     handlers: {
       next,
       reset,
+      importMnemonic,
       confirmMnemonic,
       createManager,
       goToCreate,
@@ -86,7 +116,6 @@ export function useSignUp() {
     context: {
       ...ctx,
       screen,
-      isValidMnemonic,
       isLoading,
     },
   };
