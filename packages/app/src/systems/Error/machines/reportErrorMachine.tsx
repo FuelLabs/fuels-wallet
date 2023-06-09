@@ -1,5 +1,4 @@
 import type { FuelWalletError } from '@fuel-wallet/types';
-import { ReportErrorFrequency } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
@@ -10,7 +9,6 @@ import { FetchMachine } from '~/systems/Core';
 export type ErrorMachineContext = {
   error?: string;
   hasErrors?: boolean;
-  frequency?: ReportErrorFrequency;
   errors?: FuelWalletError[];
 };
 
@@ -21,25 +19,22 @@ type MachineServices = {
   checkForErrors: {
     data: {
       hasErrors: boolean;
-      frequency: ReportErrorFrequency;
       errors: FuelWalletError[];
     };
-  };
-};
-
-export type ReportErrorInputs = {
-  upload: {
-    frequency: ReportErrorFrequency;
   };
 };
 
 export type ErrorMachineEvents =
   | {
       type: 'REPORT_ERRORS';
-      input: ReportErrorInputs['upload'];
+      input?: null;
     }
   | {
       type: 'CHECK_FOR_ERRORS';
+      input?: null;
+    }
+  | {
+      type: 'IGNORE_ERRORS';
       input?: null;
     };
 
@@ -59,9 +54,12 @@ export const reportErrorMachine = createMachine(
     states: {
       idle: {
         on: {
+          IGNORE_ERRORS: {
+            target: 'idle',
+            actions: ['clearErrors', 'reload'],
+          },
           REPORT_ERRORS: {
             target: 'reporting',
-            actions: ['assignFrequency'],
           },
           CHECK_FOR_ERRORS: {
             target: 'checkForErrors',
@@ -104,34 +102,21 @@ export const reportErrorMachine = createMachine(
   },
   {
     actions: {
-      assignFrequency: assign({
-        frequency: (_, ev) => ev.input.frequency,
-      }),
       assignCheckForErrors: assign({
         hasErrors: (_, ev) => ev.data.hasErrors,
-        frequency: (_, ev) => ev.data.frequency,
         errors: (_, ev) => ev.data.errors,
       }),
+      clearErrors: () => {
+        ReportErrorService.clearErrors();
+      },
       reload: () => {},
     },
     services: {
-      reportErrors: FetchMachine.create<ReportErrorInputs['upload'], void>({
+      reportErrors: FetchMachine.create<void, void>({
         showError: true,
-        maxAttempts: 1,
-        async fetch({ input }) {
-          if (!input?.frequency) {
-            throw new Error('Frequency is required');
-          }
-          const { frequency } = input;
-          await ReportErrorService.setReportErrorFrequency(frequency);
-          switch (frequency) {
-            case ReportErrorFrequency.ALWAYS:
-            case ReportErrorFrequency.ONCE:
-              await ReportErrorService.reportErrors();
-              break;
-            default:
-              break;
-          }
+        maxAttempts: 3,
+        async fetch() {
+          await ReportErrorService.reportErrors();
           await ReportErrorService.clearErrors();
         },
       }),
@@ -143,11 +128,9 @@ export const reportErrorMachine = createMachine(
         maxAttempts: 1,
         async fetch() {
           const hasErrors = await ReportErrorService.checkForErrors();
-          const frequency = await ReportErrorService.getReportErrorFrequency();
           const errors = await ReportErrorService.getErrors();
           return {
             hasErrors,
-            frequency,
             errors,
           };
         },

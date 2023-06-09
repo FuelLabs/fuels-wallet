@@ -1,9 +1,9 @@
-import type { FuelWalletError, ReportErrorFrequency } from '@fuel-wallet/types';
+import type { FuelWalletError } from '@fuel-wallet/types';
 
 import { parseFuelError, parseErrorEmail } from '../utils';
 
-import { REPORT_ERROR_FREQUENCY_KEY, REPORT_ERROR_EMAIL } from '~/config';
-import { Storage, db } from '~/systems/Core/utils';
+import { REPORT_ERROR_EMAIL } from '~/config';
+import { db } from '~/systems/Core/utils';
 
 export class ReportErrorService {
   static async reportErrors() {
@@ -48,13 +48,5 @@ export class ReportErrorService {
 
   static async clearErrors() {
     await db.errors.clear();
-  }
-
-  static getReportErrorFrequency(): ReportErrorFrequency {
-    return Storage.getItem(REPORT_ERROR_FREQUENCY_KEY) as ReportErrorFrequency;
-  }
-
-  static setReportErrorFrequency(frequency: ReportErrorFrequency) {
-    return Storage.setItem(REPORT_ERROR_FREQUENCY_KEY, frequency);
   }
 }

@@ -17,8 +17,7 @@ import { Layout } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 
 export function ReportErrors() {
-  const { handlers, isLoadingDontSend, isLoadingSendOnce, errors } =
-    useReportError();
+  const { handlers, isLoadingSendOnce, errors } = useReportError();
 
   return (
     <Layout title="Error" isPublic>
@@ -38,7 +37,7 @@ export function ReportErrors() {
                 <br />
                 <br />
                 Would you like to send us the error report to help us improve
-                Fuel Wallet?
+                the Fuel Wallet?
               </Text>
 
               <Input isDisabled={true} css={styles.textArea}>
@@ -61,12 +60,10 @@ export function ReportErrors() {
             </Button>
             <Button
               color="gray"
-              isDisabled={isLoadingDontSend}
-              isLoading={isLoadingDontSend}
-              onPress={handlers.dontReportErrors}
+              onPress={handlers.ignoreErrors}
               aria-label="Don't send error report"
             >
-              Don&apos;t Send
+              Ignore
             </Button>
           </Stack>
         </Layout.BottomBar>

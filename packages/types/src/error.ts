@@ -5,9 +5,3 @@ export type FuelWalletError = {
   id?: string;
 } & Error &
   React.ErrorInfo;
-
-export enum ReportErrorFrequency {
-  ONCE = 'once',
-  ALWAYS = 'always',
-  DONT = 'dont',
-}
