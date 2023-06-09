@@ -1,5 +1,7 @@
 # @fuel-wallet/sdk
 
+## 0.9.5
+
 ## 0.9.4
 
 ### Patch Changes
