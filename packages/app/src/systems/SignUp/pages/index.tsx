@@ -4,4 +4,4 @@ export * from './RecoverWallet';
 export * from './BackupWallet';
 export * from './ConfirmWallet';
 export * from './EncryptWallet';
-export * from './WalletCreated';
+export * from './CreatedWallet';

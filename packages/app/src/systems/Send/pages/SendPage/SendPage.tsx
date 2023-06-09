@@ -1,13 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Box } from '@fuel-ui/react';
-import { motion } from 'framer-motion';
+import { Button } from '@fuel-ui/react';
 
 import { Send } from '../../components';
 import { useSend } from '../../hooks';
 
-import { animations, Layout } from '~/systems/Core';
-
-const MotionStack = motion(Box.Stack);
+import { animations, Layout, MotionStack } from '~/systems/Core';
 
 export function SendPage() {
   const send = useSend();

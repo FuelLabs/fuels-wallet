@@ -10,7 +10,12 @@ import { useSignUpStepper } from '../../hooks';
 import { Header } from '../Header';
 import { Stepper } from '../Stepper';
 
-import { ControlledField, InputSecurePassword } from '~/systems/Core';
+import {
+  ControlledField,
+  InputSecurePassword,
+  MotionStack,
+  animations,
+} from '~/systems/Core';
 
 const schema = yup
   .object({
@@ -79,62 +84,64 @@ export function CreatePassword({
           title="Create password for encryption"
           subtitle="This password will be used to unlock your wallet."
         />
-        <Box.Stack css={styles.content} gap="$4">
-          <ControlledField
-            control={control}
-            name="password"
-            label="Password"
-            hideError
-            render={({ field }) => (
-              <InputSecurePassword
-                field={field}
-                inputProps={{
-                  autoFocus: true,
-                  autoComplete: 'new-password',
-                }}
-                onChangeStrength={(strength: string) =>
-                  setValue('strength', strength)
-                }
-                onChange={(e) => {
-                  field.onChange(e);
-                  if (form.getValues('confirmPassword')) {
-                    debouncedValidate();
+        <MotionStack {...animations.slideInRight()} gap="$6" align="center">
+          <Box.Stack css={styles.content} gap="$4">
+            <ControlledField
+              control={control}
+              name="password"
+              label="Password"
+              hideError
+              render={({ field }) => (
+                <InputSecurePassword
+                  field={field}
+                  inputProps={{
+                    autoFocus: true,
+                    autoComplete: 'new-password',
+                  }}
+                  onChangeStrength={(strength: string) =>
+                    setValue('strength', strength)
                   }
-                }}
-              />
-            )}
-          />
-          <ControlledField
-            control={control}
-            name="confirmPassword"
-            label="Confirm password"
-            render={({ field }) => (
-              <InputPassword
-                {...field}
-                autoComplete="new-password"
-                placeholder="Confirm your password"
-                aria-label="Confirm Password"
-                onChange={(e) => {
-                  field.onChange(e);
-                  debouncedValidate();
-                }}
-              />
-            )}
-          />
-        </Box.Stack>
-        <Box.Flex gap="$4" css={styles.footer}>
-          <Button variant="ghost" onPress={onCancel}>
-            Back
-          </Button>
-          <Button
-            type="submit"
-            intent="primary"
-            isDisabled={!isValid}
-            isLoading={isLoading}
-          >
-            Next: Finish set-up
-          </Button>
-        </Box.Flex>
+                  onChange={(e) => {
+                    field.onChange(e);
+                    if (form.getValues('confirmPassword')) {
+                      debouncedValidate();
+                    }
+                  }}
+                />
+              )}
+            />
+            <ControlledField
+              control={control}
+              name="confirmPassword"
+              label="Confirm password"
+              render={({ field }) => (
+                <InputPassword
+                  {...field}
+                  autoComplete="new-password"
+                  placeholder="Confirm your password"
+                  aria-label="Confirm Password"
+                  onChange={(e) => {
+                    field.onChange(e);
+                    debouncedValidate();
+                  }}
+                />
+              )}
+            />
+          </Box.Stack>
+          <Box.Flex gap="$4" css={styles.footer}>
+            <Button variant="ghost" onPress={onCancel}>
+              Back
+            </Button>
+            <Button
+              type="submit"
+              intent="primary"
+              isDisabled={!isValid}
+              isLoading={isLoading}
+            >
+              Next: Finish set-up
+            </Button>
+          </Box.Flex>
+        </MotionStack>
       </Box.Stack>
     </form>
   );

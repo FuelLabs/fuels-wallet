@@ -57,6 +57,7 @@ const styles = {
     width: '$8',
     height: '$8',
     borderRadius: '$full',
+    cursor: 'not-allowed',
 
     '&[data-active="true"]': {
       color: '$text',

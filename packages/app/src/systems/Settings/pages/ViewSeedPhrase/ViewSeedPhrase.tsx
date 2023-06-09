@@ -4,7 +4,7 @@ import { Box, Dialog } from '@fuel-ui/react';
 import { DontShareAlert } from '../../components/DontShareAlert';
 import { useExportVault } from '../../hooks';
 
-import { Mnemonic } from '~/systems/Core';
+import { Mnemonic, styles as coreStyles } from '~/systems/Core';
 import { OverlayDialogTopbar, useOverlay } from '~/systems/Overlay';
 import { UnlockCard } from '~/systems/Unlock';
 
@@ -30,7 +30,7 @@ export function ViewSeedPhrase() {
   return (
     <>
       <OverlayDialogTopbar onClose={close}>Seed Phrase</OverlayDialogTopbar>
-      <Dialog.Description as="div">
+      <Dialog.Description as="div" css={coreStyles.content}>
         <Box.Flex gap="$4" direction="column" align="center">
           <Box css={styles.mnemonicWrapper}>
             <Mnemonic type="read" value={words} />

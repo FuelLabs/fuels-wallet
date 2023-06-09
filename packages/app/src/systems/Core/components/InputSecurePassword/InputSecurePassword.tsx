@@ -1,8 +1,14 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import type { InputPasswordProps } from '@fuel-ui/react';
-import { Box, InputPassword, PasswordStrength } from '@fuel-ui/react';
-import { useState } from 'react';
+import {
+  Box,
+  Icon,
+  InputPassword,
+  PasswordStrength,
+  usePasswordStrength,
+} from '@fuel-ui/react';
+import { useEffect, useState } from 'react';
 import type { ControllerRenderProps, FieldValues } from 'react-hook-form';
 
 export type InputSecurePasswordProps = {
@@ -29,35 +35,56 @@ export function InputSecurePassword({
   css,
 }: InputSecurePasswordProps) {
   const [passwordTooltipOpened, setPasswordTooltipOpened] = useState(false);
+  const password = field.value || '';
+  const { strength } = usePasswordStrength({
+    minLength: 8,
+    password,
+  });
+
+  useEffect(() => {
+    onChangeStrength?.(strength);
+  }, [strength]);
 
   return (
     <Box.Stack css={{ ...styles.root, ...css }} gap={0}>
-      <PasswordStrength
-        password={field.value || ''}
-        open={passwordTooltipOpened}
-        minLength={8}
-        onChangeStrength={onChangeStrength}
-        sideOffset={1}
-        align="end"
-      >
-        <InputPassword
-          {...field}
-          {...inputProps}
-          onChange={onChange}
-          onBlur={() => {
-            setPasswordTooltipOpened(false);
-            onBlur?.();
-          }}
-          onFocus={() => setPasswordTooltipOpened(true)}
-          placeholder={placeholder}
-          aria-label={ariaLabel}
-        />
+      <PasswordStrength password={password} open={passwordTooltipOpened}>
+        <Box.Flex
+          css={styles.indicator}
+          align={'center'}
+          gap={'$2'}
+          onMouseEnter={() => setPasswordTooltipOpened(true)}
+          onMouseLeave={() => setPasswordTooltipOpened(false)}
+        >
+          <PasswordStrength.Indicator
+            strength={strength}
+            className="indicator"
+          />
+          <Icon icon={Icon.is('ExclamationCircle')} color="intentsBase7" />
+        </Box.Flex>
       </PasswordStrength>
+      <InputPassword
+        {...field}
+        {...inputProps}
+        onChange={onChange}
+        onBlur={onBlur}
+        placeholder={placeholder}
+        aria-label={ariaLabel}
+      />
     </Box.Stack>
   );
 }
 
 const styles = {
+  indicator: cssObj({
+    width: 80,
+    alignSelf: 'flex-end',
+    marginTop: -24,
+    marginBottom: '$2',
+
+    '& .indicator': {
+      marginBottom: 0,
+    },
+  }),
   root: cssObj({
     '& [data-radix-popper-content-wrapper]': {
       zIndex: '1 !important',

@@ -2,6 +2,7 @@ import { Button, Card, Dialog, Icon, Text } from '@fuel-ui/react';
 
 import { useAccounts } from '../../hooks';
 
+import { styles } from '~/systems/Core';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export const Logout = () => {
@@ -12,7 +13,7 @@ export const Logout = () => {
       <OverlayDialogTopbar onClose={handlers.closeDialog}>
         Logout
       </OverlayDialogTopbar>
-      <Dialog.Description as="div">
+      <Dialog.Description as="div" css={styles.content}>
         <Card css={{ padding: '$4' }}>
           <Text
             as="h2"

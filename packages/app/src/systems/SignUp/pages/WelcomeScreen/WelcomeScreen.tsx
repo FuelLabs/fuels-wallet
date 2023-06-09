@@ -4,15 +4,15 @@ import { Box, Card, FuelLogo, Heading, Icon } from '@fuel-ui/react';
 import { Header } from '../../components';
 import { useSignUp } from '../../hooks';
 
-import { Layout } from '~/systems/Core';
+import { Layout, MotionStack, animations } from '~/systems/Core';
 
 export function WelcomeScreen() {
   const { handlers } = useSignUp();
   return (
     <Layout title="Sign Up" isPublic isCentered>
-      <Box.Stack gap="$6" css={styles.wrapper}>
-        <Box css={{ width: '$full', textAlign: 'left' }}>
-          <FuelLogo size={50} css={{ transform: 'translateY(10px)' }} />
+      <MotionStack gap="$6" css={styles.wrapper} {...animations.fadeIn()}>
+        <Box css={styles.logo}>
+          <FuelLogo size={50} />
         </Box>
         <Header
           title="Let's set up your Fuel Wallet"
@@ -48,12 +48,18 @@ export function WelcomeScreen() {
             </Box.Centered>
           </Card>
         </Box>
-      </Box.Stack>
+      </MotionStack>
     </Layout>
   );
 }
 
 const styles = {
+  logo: cssObj({
+    width: '$full',
+    textAlign: 'left',
+    fontSize: 0,
+    lineHeight: 0,
+  }),
   wrapper: cssObj({
     is: ['centered'],
   }),

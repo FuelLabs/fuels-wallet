@@ -1,15 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box } from '@fuel-ui/react';
-import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 import { ReceiverQRCode } from '../../components/QRCode';
 import { UserAddressCard } from '../../components/UserAddressCard';
 
 import { useAccounts } from '~/systems/Account';
-import { Layout, Pages, animations } from '~/systems/Core';
-
-const MotionFlex = motion(Box.Flex);
+import { Layout, MotionFlex, Pages, animations } from '~/systems/Core';
 
 export function Receive() {
   const navigate = useNavigate();

@@ -1,14 +1,11 @@
 import { Box } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/types';
-import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
 
 import type { Maybe } from '~/systems/Core';
-import { animations } from '~/systems/Core';
+import { MotionStack, animations } from '~/systems/Core';
 import type { Tx, TxStatus } from '~/systems/Transaction';
 import { TxOperations, TxDetails } from '~/systems/Transaction';
-
-const MotionStack = motion(Box.Stack);
 
 type TxContentLoaderProps = {
   header?: ReactNode;

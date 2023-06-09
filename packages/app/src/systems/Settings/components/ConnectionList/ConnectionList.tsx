@@ -11,12 +11,12 @@ import {
   Layout,
   SearchInput,
   PermissionCard,
+  MotionBox,
 } from '~/systems/Core';
 import { NOT_ALLOWED_LIST, PERMISSION_LIST } from '~/systems/DApp';
 
 export type ConnectionListProps = ReturnType<typeof useConnections>;
 
-const MotionBox = motion(Box);
 const MotionCardList = motion(CardList);
 
 export function ConnectionList({

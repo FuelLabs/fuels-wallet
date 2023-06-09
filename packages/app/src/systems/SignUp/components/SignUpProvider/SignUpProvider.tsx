@@ -26,7 +26,7 @@ export function SignUpProvider() {
     signUpMachine.withConfig({
       actions: {
         redirectToWalletCreated() {
-          navigate(Pages.signUpWalletCreated());
+          navigate(Pages.signUpCreatedWallet());
         },
         redirectToWelcome() {
           navigate(Pages.signUpWelcome());

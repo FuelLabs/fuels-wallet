@@ -3,10 +3,10 @@ import { WalletCreated } from '../../components';
 import { useAccounts } from '~/systems/Account';
 import { Layout } from '~/systems/Core';
 
-export const WalletCreatedPage = () => {
+export const CreatedWallet = () => {
   const { account } = useAccounts();
   return (
-    <Layout title="Create Wallet" isPublic>
+    <Layout title="Wallet Created" isPublic>
       <WalletCreated account={account} />
     </Layout>
   );

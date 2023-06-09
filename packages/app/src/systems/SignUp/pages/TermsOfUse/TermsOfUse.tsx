@@ -6,7 +6,7 @@ import { useSignUp, useSignUpStepper } from '../../hooks';
 
 import { ReactComponent as Terms } from './data/terms.md';
 
-import { Layout } from '~/systems/Core';
+import { Layout, MotionStack, animations } from '~/systems/Core';
 
 export function TermsOfUse() {
   const { handlers } = useSignUp();
@@ -14,7 +14,7 @@ export function TermsOfUse() {
 
   return (
     <Layout title="Terms of Service" isPublic>
-      <Box.Stack gap="$8" align="center">
+      <MotionStack gap="$8" align="center" {...animations.slideInRight()}>
         <Stepper steps={steps} active={1} />
         <Header
           title="Terms of use Agreement"
@@ -33,7 +33,7 @@ export function TermsOfUse() {
             Next: Seed Phrase
           </Button>
         </Box.Flex>
-      </Box.Stack>
+      </MotionStack>
     </Layout>
   );
 }

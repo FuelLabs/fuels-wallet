@@ -10,7 +10,7 @@ import { Stepper } from '../Stepper';
 import { IS_CRX } from '~/config';
 import { AccountItem } from '~/systems/Account';
 import type { Maybe } from '~/systems/Core';
-import { Pages } from '~/systems/Core';
+import { MotionStack, Pages, animations } from '~/systems/Core';
 
 export type WalletCreatedProps = {
   account?: Maybe<Account>;
@@ -31,16 +31,18 @@ export function WalletCreated({ account }: WalletCreatedProps) {
         title="Wallet created successfully"
         subtitle="Below is your first Fuel wallet account"
       />
-      {IS_CRX ? (
-        <PinWalletText />
-      ) : (
-        <>
-          {account && <AccountItem account={account} />}
-          <Button intent="primary" onPress={handleGoToWallet}>
-            Go to wallet
-          </Button>
-        </>
-      )}
+      <MotionStack {...animations.slideInRight()} gap="$6">
+        {IS_CRX ? (
+          <PinWalletText />
+        ) : (
+          <>
+            {account && <AccountItem account={account} />}
+            <Button intent="primary" onPress={handleGoToWallet}>
+              Go to wallet
+            </Button>
+          </>
+        )}
+      </MotionStack>
     </Box.Stack>
   );
 }

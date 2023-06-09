@@ -21,7 +21,7 @@ export const Pages = {
   signUpConfirmWallet: route('/sign-up/confirm'),
   signUpRecoverWallet: route('/sign-up/recover'),
   signUpEncryptWallet: route('/sign-up/encrypt'),
-  signUpWalletCreated: route('/sign-up/wallet-created'),
+  signUpCreatedWallet: route('/sign-up/complete'),
   networks: route('/networks'),
   networkUpdate: route<'id'>('/networks/update/:id'),
   networkAdd: route('/networks/add'),

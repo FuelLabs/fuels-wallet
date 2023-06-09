@@ -10,6 +10,7 @@ import {
   EncryptWallet,
   BackupWallet,
   ConfirmWallet,
+  CreatedWallet,
 } from './pages';
 
 export const signUpRoutes = (
@@ -21,5 +22,6 @@ export const signUpRoutes = (
     <Route path={Pages.signUpConfirmWallet()} element={<ConfirmWallet />} />
     <Route path={Pages.signUpRecoverWallet()} element={<RecoverWallet />} />
     <Route path={Pages.signUpEncryptWallet()} element={<EncryptWallet />} />
+    <Route path={Pages.signUpCreatedWallet()} element={<CreatedWallet />} />
   </Route>
 );

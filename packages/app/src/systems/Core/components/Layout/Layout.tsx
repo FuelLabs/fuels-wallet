@@ -167,7 +167,9 @@ export const styles = {
 
     '& > .fuel_Box-centered': {
       maxWidth: '$sm',
-      margin: '10% auto',
+      height: 650,
+      margin: 'auto',
+      alignItems: 'flex-start !important',
     },
 
     '&[data-centered=true]': {
@@ -183,6 +185,7 @@ export const styles = {
       display: 'block',
       position: 'sticky',
       top: 0,
+      bottom: 0,
       width: '100%',
       height: '100vh',
       background: `url(${signUpImage})`,

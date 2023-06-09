@@ -19,3 +19,4 @@ export * from './AmountVisibility';
 export * from './InputSecurePassword';
 export * from './ConnectInfo';
 export * from './PermissionCard';
+export * from './Motion';
