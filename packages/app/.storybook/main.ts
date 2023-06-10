@@ -16,7 +16,7 @@ const config: StorybookConfig = {
     'storybook-dark-mode',
     'storybook-addon-react-router-v6',
   ],
-  staticDirs: ['../public'],
+  staticDirs: ['../public', './assets'],
   core: {
     builder: '@storybook/builder-vite',
   },
