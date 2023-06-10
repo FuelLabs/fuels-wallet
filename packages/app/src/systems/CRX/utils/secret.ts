@@ -24,6 +24,12 @@ export async function getTimer(): Promise<number> {
   return timer || 0;
 }
 
+export async function saveTimer(autoLockInMinutes: number) {
+  chrome.storage.session.set({
+    timer: dayjs().add(autoLockInMinutes, 'minute').valueOf(),
+  });
+}
+
 export async function saveSecret(secret: string, autoLockInMinutes: number) {
   const salt = await createSalt();
   try {
