@@ -30,6 +30,7 @@ export function SendSelect({
             isRequired
             name="asset"
             control={form.control}
+            css={styles.asset}
             render={({ field }) => (
               <AssetSelect
                 items={balanceAssets}
@@ -95,6 +96,9 @@ export function SendSelect({
 }
 
 const styles = {
+  asset: cssObj({
+    flex: 1,
+  }),
   row: cssObj({
     alignItems: 'flex-start',
     gap: '$4',
