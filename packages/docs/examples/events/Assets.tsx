@@ -3,10 +3,10 @@ import { Box, Button, Tag, Text } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/sdk';
 import { useEffect, useState } from 'react';
 
-import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuel } from '~/src/hooks/useFuel';
-import { useIsConnected } from '~/src/hooks/useIsConnected';
-import { useLoading } from '~/src/hooks/useLoading';
+import { ExampleBox } from '../../src/components/ExampleBox';
+import { useFuel } from '../../src/hooks/useFuel';
+import { useIsConnected } from '../../src/hooks/useIsConnected';
+import { useLoading } from '../../src/hooks/useLoading';
 
 export function Assets() {
   const [fuel, notDetected] = useFuel();

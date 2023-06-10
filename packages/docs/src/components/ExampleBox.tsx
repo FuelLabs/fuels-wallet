@@ -3,11 +3,10 @@ import { cssObj } from '@fuel-ui/css';
 import { Alert, Box, Input, Link, Spinner, Tag, Tooltip } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 
+import { useFuel } from '../hooks/useFuel';
 import { capitalize } from '../lib/str';
 
 import { Heading } from './Heading';
-
-import { useFuel } from '~/src/hooks/useFuel';
 
 export function ExampleBox({
   children,

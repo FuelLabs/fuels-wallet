@@ -2,9 +2,9 @@
 import { Box, Button } from '@fuel-ui/react';
 import { useState } from 'react';
 
-import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuel } from '~/src/hooks/useFuel';
-import { useLoading } from '~/src/hooks/useLoading';
+import { ExampleBox } from '../src/components/ExampleBox';
+import { useFuel } from '../src/hooks/useFuel';
+import { useLoading } from '../src/hooks/useLoading';
 
 export function Connect() {
   const [fuel, notDetected] = useFuel();

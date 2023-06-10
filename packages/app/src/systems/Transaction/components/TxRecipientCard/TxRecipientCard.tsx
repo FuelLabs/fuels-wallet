@@ -4,14 +4,15 @@ import { AddressType } from '@fuel-wallet/types';
 import { Address, isB256, isBech32 } from 'fuels';
 import type { FC } from 'react';
 
-import type { TxRecipientAddress } from '../../types';
+import type { TxAddress } from '../../utils';
+import { ChainName } from '../../utils';
 
 import { TxRecipientCardLoader } from './TxRecipientCardLoader';
 
-import { FuelAddress, useAccounts } from '~/systems/Account';
+import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 
 export type TxRecipientCardProps = {
-  recipient?: TxRecipientAddress;
+  recipient?: TxAddress;
   isReceiver?: boolean;
 };
 
@@ -30,6 +31,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
     ? Address.fromString(address).toString()
     : '';
   const isContract = recipient?.type === AddressType.contract;
+  const isEthChain = recipient?.chain === ChainName.ethereum;
   const name =
     accounts?.find((a) => a.address === fuelAddress)?.name || 'unknown';
 
@@ -41,32 +43,44 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
       data-type={isContract ? 'contract' : 'user'}
     >
       <Text css={styles.from}>
-        {isReceiver ? 'To' : 'From'} {isContract && '(Contract)'}
+        {isReceiver ? 'To' : 'From'} {isContract && '(Contract)'}{' '}
+        {isEthChain && '(Ethereum)'}
       </Text>
-      {!isContract && name !== 'unknown' && (
-        <Avatar.Generated
-          role="img"
-          size="lg"
-          hash={fuelAddress}
-          aria-label={fuelAddress}
-        />
+      {isEthChain ? (
+        <>
+          <Box css={styles.iconWrapper}>
+            <Icon icon={Icon.is('CurrencyEthereum')} size={20} />
+          </Box>
+          <Box.Flex css={styles.info}>
+            <Heading as="h6" css={styles.name}>
+              unknown
+            </Heading>
+            <EthAddress address={address} css={styles.address} />
+          </Box.Flex>
+        </>
+      ) : (
+        <>
+          {!isContract && (
+            <Avatar.Generated
+              role="img"
+              size="lg"
+              hash={fuelAddress}
+              aria-label={fuelAddress}
+            />
+          )}
+          {isContract && (
+            <Box css={styles.iconWrapper}>
+              <Icon icon={Icon.is('Code')} size={20} />
+            </Box>
+          )}
+          <Box.Flex css={styles.info}>
+            <Heading as="h6" css={styles.name}>
+              {name}
+            </Heading>
+            <FuelAddress address={fuelAddress} css={styles.address} />
+          </Box.Flex>
+        </>
       )}
-      {isContract && (
-        <Box css={styles.iconWrapper}>
-          <Icon icon={Icon.is('Code')} size={20} />
-        </Box>
-      )}
-      {!isContract && name === 'unknown' && (
-        <Box css={styles.iconWrapper}>
-          <Icon icon={Icon.is('QuestionMark')} size={20} />
-        </Box>
-      )}
-      <Box.Flex css={styles.info}>
-        <Heading as="h6" css={styles.name}>
-          {name}
-        </Heading>
-        <FuelAddress address={fuelAddress} css={styles.address} />
-      </Box.Flex>
     </Card>
   );
 };

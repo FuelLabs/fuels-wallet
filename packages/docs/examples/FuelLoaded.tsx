@@ -1,7 +1,7 @@
 import { Box, Text } from '@fuel-ui/react';
 import { useEffect, useState } from 'react';
 
-import { ExampleBox } from '~/src/components/ExampleBox';
+import { ExampleBox } from '../src/components/ExampleBox';
 
 export function FuelLoaded() {
   const [fuel, setFuel] = useState<Window['fuel']>();
