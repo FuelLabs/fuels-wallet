@@ -12,11 +12,12 @@ import {
 } from '@fuel-ui/react';
 import { useState } from 'react';
 
-import type { Asset } from '~/../types/src';
-import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuel } from '~/src/hooks/useFuel';
-import { useIsConnected } from '~/src/hooks/useIsConnected';
-import { useLoading } from '~/src/hooks/useLoading';
+// eslint-disable-next-line import/no-relative-packages
+import type { Asset } from '../../types/src';
+import { ExampleBox } from '../src/components/ExampleBox';
+import { useFuel } from '../src/hooks/useFuel';
+import { useIsConnected } from '../src/hooks/useIsConnected';
+import { useLoading } from '../src/hooks/useLoading';
 
 export function AddAssets() {
   const [fuel, notDetected] = useFuel();
