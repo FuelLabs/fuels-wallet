@@ -8,6 +8,8 @@ import { Stepper } from '../Stepper';
 import { Mnemonic, MotionStack, animations } from '~/systems/Core';
 
 export type MnemonicWriteProps = {
+  title: string;
+  subtitle: string;
   canProceed?: boolean;
   step: number;
   error?: string | boolean;
@@ -19,6 +21,8 @@ export type MnemonicWriteProps = {
 };
 
 export function MnemonicWrite({
+  title,
+  subtitle,
   canProceed,
   error,
   step,
@@ -37,10 +41,7 @@ export function MnemonicWrite({
   return (
     <Box.Stack gap="$6" align="center">
       <Stepper steps={steps} active={step} onStepChange={handleChangeStep} />
-      <Header
-        title="Confirm phrase"
-        subtitle="Write your phrase again to ensure you wrote it down correctly."
-      />
+      <Header title={title} subtitle={subtitle} />
       <MotionStack {...animations.slideInRight()} gap="$6" align="center">
         <Box.Stack gap="$3" css={styles.content}>
           {error && (

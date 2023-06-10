@@ -23,6 +23,8 @@ describe('MnemonicWrite', () => {
     renderWithProvider(
       <SignUpProvider>
         <MnemonicWrite
+          title="Confirm phrase"
+          subtitle="Write your phrase again to ensure you wrote it down correctly."
           step={2}
           canProceed
           onFilled={onFilledHandler}
@@ -48,6 +50,8 @@ describe('MnemonicWrite', () => {
     renderWithProvider(
       <SignUpProvider>
         <MnemonicWrite
+          title="Confirm phrase"
+          subtitle="Write your phrase again to ensure you wrote it down correctly."
           step={2}
           canProceed
           onFilled={onFilledHandler}
@@ -74,6 +78,8 @@ describe('MnemonicWrite', () => {
     renderWithProvider(
       <SignUpProvider>
         <MnemonicWrite
+          title="Confirm phrase"
+          subtitle="Write your phrase again to ensure you wrote it down correctly."
           step={2}
           error="This is an error message"
           onFilled={onFilledHandler}

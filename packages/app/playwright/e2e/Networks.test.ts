@@ -7,6 +7,7 @@ import {
   getInputByName,
   getButtonByText,
   hasText,
+  reload,
 } from '../commons';
 import { mockData } from '../mocks';
 
@@ -29,14 +30,14 @@ test.describe('Networks', () => {
   test('should be able to see network list', async () => {
     await visit(page, '/wallet');
     await getByAriaLabel(page, 'Selected Network').click();
-    await hasText(page, 'Local');
-    await hasText(page, 'Another');
+    await hasText(page, /Local/);
+    await hasText(page, /Another/);
   });
 
   test('should be able to select a network', async () => {
     await visit(page, '/wallet');
     const networkSelector = getByAriaLabel(page, 'Selected Network');
-    await expect(networkSelector).toHaveText('Local');
+    await expect(networkSelector).toHaveText(/Local/);
     await networkSelector.click();
     await hasText(page, /Another/i);
     const network1 = getByAriaLabel(page, 'fuel_network-item-1');
@@ -63,7 +64,7 @@ test.describe('Networks', () => {
     const update = getButtonByText(page, /update/i);
     expect(update).toBeEnabled();
     await update.click();
-    await hasText(page, 'Local 1');
+    await hasText(page, /Local 1/);
   });
 
   test('should be able to remove a network', async () => {
@@ -88,12 +89,12 @@ test.describe('Networks', () => {
     const urlInput = getInputByName(page, 'url');
     await expect(urlInput).toBeFocused();
     await urlInput.fill('https://beta-3.fuel.network/graphql');
-    await page.waitForTimeout(3500); // Wait to fetch `chainInfo`
-    await hasText(page, /Testnet Beta 3/i);
+    await hasText(page, /Testnet Beta 3/i, 0, 15000);
     await expect(buttonCreate).toBeEnabled();
     await buttonCreate.click();
-    await getByAriaLabel(page, 'Menu').click();
-    await page.locator(`[data-key="networks"]`).click();
-    await hasText(page, 'Testnet Beta 3');
+    // Wait for save and close popup;
+    await page.waitForTimeout(2000);
+    await reload(page);
+    await hasText(page, /Testnet Beta 3/i);
   });
 });

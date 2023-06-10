@@ -1,7 +1,13 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
 
-import { getByAriaLabel, getButtonByText, visit, hasText } from '../commons';
+import {
+  getByAriaLabel,
+  getButtonByText,
+  visit,
+  hasText,
+  getElementByText,
+} from '../commons';
 import { logout } from '../commons/logout';
 import { WALLET_PASSWORD } from '../mocks';
 
@@ -21,11 +27,11 @@ test.describe('RecoverWallet', () => {
 
   test('should be able to recover a wallet', async () => {
     await visit(page, '/wallet');
-    await getButtonByText(page, /I already have a wallet/i).click();
+    await getElementByText(page, /Import seed phrase/i).click();
 
-    /** Accept terms and conditions */
-    await hasText(page, /Terms of service/i);
-    await getButtonByText(page, /I accept/i).click();
+    /** Accept terms */
+    await hasText(page, /Terms of use Agreement/i);
+    await getButtonByText(page, /Next: Seed Phrase/i).click();
 
     /** Copy words to clipboard area */
     await page.evaluate(`navigator.clipboard.writeText('${WORDS_12}')`);
@@ -34,7 +40,7 @@ test.describe('RecoverWallet', () => {
     await getButtonByText(page, /Paste/i).click();
 
     /** Confirm Mnemonic */
-    await hasText(page, /Enter seed phrase/i);
+    await hasText(page, /Recover wallet/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
 
@@ -58,11 +64,11 @@ test.describe('RecoverWallet', () => {
   test('should be able to recover a wallet from 24-word mnemonic', async () => {
     await visit(page, '/wallet');
     await logout(page);
-    await getButtonByText(page, /I already have a wallet/i).click();
+    await getElementByText(page, /Import seed phrase/i).click();
 
-    /** Accept terms and conditions */
-    await hasText(page, /Terms of service/i);
-    await getButtonByText(page, /I accept/i).click();
+    /** Accept terms */
+    await hasText(page, /Terms of use Agreement/i);
+    await getButtonByText(page, /Next: Seed Phrase/i).click();
 
     await getByAriaLabel(page, 'Select format').selectOption(
       'I have a 24 words Seed Phrase'
@@ -75,7 +81,7 @@ test.describe('RecoverWallet', () => {
     await getButtonByText(page, /Paste/i).click();
 
     /** Confirm Mnemonic */
-    await hasText(page, /Enter seed phrase/i);
+    await hasText(page, /Recover wallet/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
 

@@ -10,6 +10,7 @@ import {
   hasText,
   waitAriaLabel,
   reload,
+  getElementByText,
 } from '../commons';
 import { CUSTOM_ASSET, CUSTOM_ASSET_2, PRIVATE_KEY } from '../mocks';
 
@@ -113,20 +114,21 @@ test.describe('FuelWallet Extension', () => {
       const pages = context.pages();
       const [page] = pages.filter((page) => page.url().includes('sign-up'));
       await reload(page);
-      await getButtonByText(page, /Create a Wallet/i).click();
+      await getElementByText(page, /Create new wallet/i).click();
 
       /** Accept terms */
-      await hasText(page, /Terms of Service/i);
-      await getButtonByText(page, /Accept/i).click();
+      await hasText(page, /Terms of use Agreement/i);
+      await getButtonByText(page, /Next: Seed Phrase/i).click();
 
       /** Copy Mnemonic */
+      await hasText(page, /Write down seed phrase/i);
       await getButtonByText(page, /Copy/i).click();
       const savedCheckbox = getByAriaLabel(page, 'Confirm Saved');
       await savedCheckbox.click();
       await getButtonByText(page, /Next/i).click();
 
       /** Confirm Mnemonic */
-      await hasText(page, /Enter seed phrase/i);
+      await hasText(page, /Confirm phrase/i);
       await getButtonByText(page, /Paste/i).click();
       await getButtonByText(page, /Next/i).click();
 
@@ -249,7 +251,7 @@ test.describe('FuelWallet Extension', () => {
         const wallet = await window.fuel.getWallet(currentAccount);
         return wallet.address.toString() === currentAccount;
       });
-      expect(isCorrectAddress).toBeTruthy();
+      await expect(isCorrectAddress).toBeTruthy();
     });
 
     await test.step('window.fuel.accounts()', async () => {
@@ -259,7 +261,7 @@ test.describe('FuelWallet Extension', () => {
       const accounts = await blankPage.evaluate(async () => {
         return window.fuel.accounts();
       });
-      expect(accounts).toEqual([
+      await expect(accounts).toEqual([
         authorizedAccount.address,
         authorizedAccount2.address,
         authorizedAccount3.address,
@@ -272,7 +274,7 @@ test.describe('FuelWallet Extension', () => {
         const currentAccountPromise = await blankPage.evaluate(async () => {
           return window.fuel.currentAccount();
         });
-        expect(currentAccountPromise).toBe(authorizedAccount.address);
+        await expect(currentAccountPromise).toBe(authorizedAccount.address);
       });
 
       await test.step('Throw on not Authorized Account', async () => {

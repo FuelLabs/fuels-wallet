@@ -42,9 +42,6 @@ test.describe('SendTransaction', () => {
     // Fill amount
     await getInputByName(page, 'amount').type('0.001');
 
-    // Check submit button is enabled after filling all fields
-    await page.waitForSelector('[aria-disabled="false"]');
-
     // Submit transaction
     await getButtonByText(page, 'Confirm').click();
 
@@ -70,9 +67,6 @@ test.describe('SendTransaction', () => {
 
     // Fill amount
     await getInputByName(page, 'amount').type('0.001');
-
-    // Check submit button is enabled after filling all fields
-    await page.waitForSelector('[aria-disabled="false"]');
 
     // Submit transaction
     await getButtonByText(page, 'Confirm').click();
@@ -105,9 +99,6 @@ test.describe('SendTransaction', () => {
 
     // Fill amount
     await getInputByName(page, 'amount').type('0.001');
-
-    // Check submit button is enabled after filling all fields
-    await page.waitForSelector('[aria-disabled="false"]');
 
     // Submit transaction
     await getButtonByText(page, 'Confirm').click();
