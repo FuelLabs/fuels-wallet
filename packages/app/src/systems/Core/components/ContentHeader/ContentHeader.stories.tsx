@@ -21,7 +21,9 @@ export const Usage = Template.bind({});
 Usage.args = {
   title: 'Confirm Transaction',
   children: (
-    <Text>Carefully check if all details in your transaction are correct</Text>
+    <Text>
+      Carefully check if all the details in your transaction are correct
+    </Text>
   ),
 };
 

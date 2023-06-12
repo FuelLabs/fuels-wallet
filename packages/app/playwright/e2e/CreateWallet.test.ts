@@ -30,21 +30,25 @@ test.describe('CreateWallet', () => {
     await reload(page);
     await getButtonByText(page, /Create a Wallet/i).click();
 
+    /** Accept terms and conditions */
+    await hasText(page, /Terms of service/i);
+    await getButtonByText(page, /I accept/i).click();
+
     /** Copy Mnemonic */
-    await hasText(page, /Backup your Recovery Phrase/i);
+    await hasText(page, /Backup seed phrase/i);
     await getButtonByText(page, /Copy/i).click();
     const savedCheckbox = await getByAriaLabel(page, 'Confirm Saved');
     await savedCheckbox.click();
     await getButtonByText(page, /Next/i).click();
 
     /** Confirm Mnemonic */
-    await hasText(page, /Enter your Recovery Phrase/i);
+    await hasText(page, /Enter seed phrase/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
     // await page.pause();
 
     /** Adding password */
-    await hasText(page, /Encrypt your wallet/i);
+    await hasText(page, /Create password for encryption/i);
     const passwordInput = await getByAriaLabel(page, 'Your Password');
     await passwordInput.type(WALLET_PASSWORD);
     await passwordInput.press('Tab');

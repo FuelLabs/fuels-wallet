@@ -19,6 +19,7 @@ import {
   getAccountByName,
   switchAccount,
   waitAccountPage,
+  getWalletAccounts,
 } from './utils';
 
 const WALLET_PASSWORD = 'Qwe123456$';
@@ -114,6 +115,10 @@ test.describe('FuelWallet Extension', () => {
       await reload(page);
       await getButtonByText(page, /Create a Wallet/i).click();
 
+      /** Accept terms */
+      await hasText(page, /Terms of Service/i);
+      await getButtonByText(page, /Accept/i).click();
+
       /** Copy Mnemonic */
       await getButtonByText(page, /Copy/i).click();
       const savedCheckbox = await getByAriaLabel(page, 'Confirm Saved');
@@ -121,12 +126,12 @@ test.describe('FuelWallet Extension', () => {
       await getButtonByText(page, /Next/i).click();
 
       /** Confirm Mnemonic */
-      await hasText(page, /Enter your Recovery Phrase/i);
+      await hasText(page, /Enter seed phrase/i);
       await getButtonByText(page, /Paste/i).click();
       await getButtonByText(page, /Next/i).click();
 
       /** Adding password */
-      await hasText(page, /Encrypt your wallet/i);
+      await hasText(page, /Create password for encryption/i);
       const passwordInput = await getByAriaLabel(page, 'Your Password');
       await passwordInput.type(WALLET_PASSWORD);
       await passwordInput.press('Tab');
@@ -152,13 +157,12 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('Add more accounts', async () => {
-      async function createAccount(name: string) {
+      async function createAccount() {
         await waitWalletToLoad(popupPage);
+        const accounts = await getWalletAccounts(popupPage);
         await getByAriaLabel(popupPage, 'Accounts').click();
         await getByAriaLabel(popupPage, 'Add account').click();
-        await getByAriaLabel(popupPage, 'Account Name').type(name);
-        await getByAriaLabel(popupPage, 'Create new account').click();
-        await waitAccountPage(popupPage, name);
+        await waitAccountPage(popupPage, `Account ${accounts.length + 1}`);
       }
 
       async function createAccountFromPrivateKey(
@@ -169,18 +173,21 @@ test.describe('FuelWallet Extension', () => {
         await getByAriaLabel(popupPage, 'Accounts').click();
         await getByAriaLabel(popupPage, 'Import from private key').click();
         await getByAriaLabel(popupPage, 'Private Key').type(privateKey);
-        await getByAriaLabel(popupPage, 'Account Name').type(name);
+        if (name) {
+          await getByAriaLabel(popupPage, 'Account Name').clear();
+          await getByAriaLabel(popupPage, 'Account Name').type(name);
+        }
         await getByAriaLabel(popupPage, 'Import').click();
         await waitAccountPage(popupPage, name);
       }
 
-      await createAccount('Account 2');
-      await createAccount('Account 3');
+      await createAccount();
+      await createAccount();
       await createAccountFromPrivateKey(PRIVATE_KEY, 'Account 4');
       await switchAccount(popupPage, 'Account 1');
     });
 
-    await test.step('window.fuel.connect()', async () => {
+    async function connectAccounts() {
       const isConnected = blankPage.evaluate(async () => {
         return window.fuel.connect();
       });
@@ -199,6 +206,44 @@ test.describe('FuelWallet Extension', () => {
       await getButtonByText(authorizeRequest, /connect/i).click();
 
       await expect(await isConnected).toBeTruthy();
+    }
+
+    await test.step('window.fuel.connect()', async () => {
+      await connectAccounts();
+    });
+
+    await test.step('window.fuel.disconnect()', async () => {
+      const isDisconnected = blankPage.evaluate(async () => {
+        return window.fuel.disconnect();
+      });
+
+      expect(await isDisconnected).toBeTruthy();
+      // we need to reconnect the accounts for later tests
+      await connectAccounts();
+    });
+
+    await test.step('window.fuel.on("connection")', async () => {
+      const onDeleteConnection = blankPage.evaluate(() => {
+        return new Promise((resolve) => {
+          window.fuel.on(window.fuel.events.connection, (isConnected) => {
+            resolve(isConnected);
+          });
+        });
+      });
+      // Disconnect accounts from inside of the Connected Apps page
+      await getByAriaLabel(popupPage, 'Menu').click();
+      const connectedApps = await hasText(popupPage, 'Connected Apps');
+      await connectedApps.click();
+      await getByAriaLabel(popupPage, 'Delete').click();
+      await getButtonByText(popupPage, 'Confirm').click();
+
+      const isConnectedResult = await onDeleteConnection;
+      expect(isConnectedResult).toBeFalsy();
+
+      await getByAriaLabel(popupPage, 'Menu').click();
+      (await hasText(popupPage, 'Wallet')).click();
+
+      await connectAccounts();
     });
 
     await test.step('window.fuel.getWallet()', async () => {
@@ -357,7 +402,7 @@ test.describe('FuelWallet Extension', () => {
           approveTransactionPage,
           senderAccount.address.toString()
         );
-        await hasText(approveTransactionPage, /Confirm before approve/i);
+        await hasText(approveTransactionPage, /Confirm before approving/i);
         await getButtonByText(approveTransactionPage, /Approve/i).click();
 
         await expect(transferStatus).resolves.toBe('success');

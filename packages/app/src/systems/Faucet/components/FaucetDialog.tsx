@@ -32,7 +32,7 @@ export function FaucetDialog() {
         </Dialog.Heading>
         <Dialog.Description as="div">
           <Text color="gray12">
-            Click the button bellow to receive 0.5 Devnet ETH in your wallet
+            Click the button below to receive 0.5 Devnet ETH in your wallet
           </Text>
           {captcha.needToShow && (
             <Box css={{ marginTop: '$5' }}>

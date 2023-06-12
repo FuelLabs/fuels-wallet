@@ -33,7 +33,11 @@ export type AccountsMachineEvents =
   | { type: 'REFRESH_ACCOUNT'; input?: null }
   | { type: 'REFRESH_ACCOUNTS'; input?: null }
   | { type: 'SET_CURRENT_ACCOUNT'; input: AccountInputs['setCurrentAccount'] }
-  | { type: 'LOGOUT'; input?: void };
+  | { type: 'LOGOUT'; input?: void }
+  | {
+      type: 'TOGGLE_HIDE_ACCOUNT';
+      input: AccountInputs['updateAccount'];
+    };
 
 const fetchAccount = {
   invoke: {
@@ -76,11 +80,9 @@ export const accountsMachine = createMachine(
           SET_CURRENT_ACCOUNT: {
             target: 'settingCurrentAccount',
           },
-          REFRESH_ACCOUNTS: {
-            target: 'fetchingAccounts',
-          },
-          REFRESH_ACCOUNT: {
-            target: 'refreshAccount',
+          TOGGLE_HIDE_ACCOUNT: {
+            actions: ['toggleHideAccount', 'notifyUpdateAccounts'],
+            target: 'idle',
           },
         },
         after: {
@@ -172,6 +174,12 @@ export const accountsMachine = createMachine(
       LOGOUT: {
         target: 'loggingout',
       },
+      REFRESH_ACCOUNTS: {
+        target: 'fetchingAccounts',
+      },
+      REFRESH_ACCOUNT: {
+        target: 'refreshAccount',
+      },
     },
   },
   {
@@ -190,6 +198,9 @@ export const accountsMachine = createMachine(
         error: (_, ev) => ev.data,
       }),
       clearContext: assign(() => ({})),
+      toggleHideAccount: (_, ev) => {
+        AccountService.updateAccount(ev.input);
+      },
       setIsLogged: () => {
         Storage.setItem(IS_LOGGED_KEY, true);
       },
@@ -199,7 +210,7 @@ export const accountsMachine = createMachine(
       notifyUpdateAccounts: () => {
         store.updateAccounts();
       },
-      redirectToHome() {
+      redirectToHome: () => {
         store.closeOverlay();
       },
     },

@@ -12,11 +12,12 @@ import {
 } from '@fuel-ui/react';
 import { useState } from 'react';
 
-import type { Asset } from '~/../types/src';
-import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuel } from '~/src/hooks/useFuel';
-import { useIsConnected } from '~/src/hooks/useIsConnected';
-import { useLoading } from '~/src/hooks/useLoading';
+// eslint-disable-next-line import/no-relative-packages
+import type { Asset } from '../../types/src';
+import { ExampleBox } from '../src/components/ExampleBox';
+import { useFuel } from '../src/hooks/useFuel';
+import { useIsConnected } from '../src/hooks/useIsConnected';
+import { useLoading } from '../src/hooks/useLoading';
 
 export function AddAssets() {
   const [fuel, notDetected] = useFuel();
@@ -35,7 +36,8 @@ export function AddAssets() {
 
   const [handleAddAsset, isSingingMessage, errorSigningMessage] = useLoading(
     async (assets: Asset[]) => {
-      console.debug('Add Assets', assets);
+      if (!isConnected) await fuel.connect();
+      console.log('Add Assets', assets);
       /* example:start */
       await fuel.addAssets(assets);
       /* example:end */
@@ -77,7 +79,7 @@ export function AddAssets() {
                   />
                 )}
               </Flex>
-              <Input isDisabled={!isConnected} css={styles.input}>
+              <Input isDisabled={!fuel} css={styles.input}>
                 <Input.Field
                   defaultValue={asset.assetId}
                   onBlur={(e) =>
@@ -87,7 +89,7 @@ export function AddAssets() {
                 />
               </Input>
               <Flex gap="$2">
-                <Input isDisabled={!isConnected} css={styles.input}>
+                <Input isDisabled={!fuel} css={styles.input}>
                   <Input.Field
                     defaultValue={asset.name}
                     onBlur={(e) =>
@@ -96,7 +98,7 @@ export function AddAssets() {
                     placeholder="Type your asset Name"
                   />
                 </Input>
-                <Input isDisabled={!isConnected} css={styles.input}>
+                <Input isDisabled={!fuel} css={styles.input}>
                   <Input.Field
                     defaultValue={asset.symbol}
                     onBlur={(e) =>
@@ -106,7 +108,7 @@ export function AddAssets() {
                   />
                 </Input>
               </Flex>
-              <Input isDisabled={!isConnected} css={styles.input}>
+              <Input isDisabled={!fuel} css={styles.input}>
                 <Input.Field
                   defaultValue={asset.imageUrl}
                   onBlur={(e) =>
@@ -134,7 +136,7 @@ export function AddAssets() {
           <Button
             onPress={() => handleAddAsset(assets)}
             isLoading={isSingingMessage}
-            isDisabled={isSingingMessage || !isConnected}
+            isDisabled={isSingingMessage || !fuel}
           >
             Add Assets
           </Button>

@@ -14,7 +14,7 @@ export const Usage = () => {
   const form = useNetworkForm();
   return (
     <Box css={{ width: 320 }}>
-      <NetworkForm form={form} />
+      <NetworkForm form={form} isEditing={false} />
     </Box>
   );
 };
@@ -25,7 +25,7 @@ export const WithValues = () => {
   });
   return (
     <Box css={{ width: 320 }}>
-      <NetworkForm form={form} />
+      <NetworkForm form={form} isEditing />
     </Box>
   );
 };

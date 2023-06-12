@@ -33,6 +33,24 @@ test.describe('ChangePassword', () => {
     await hasText(page, 'Password Changed', 0, 30000);
   });
 
+  test('should not change the user password when current password is wrong', async () => {
+    // goes to the change password page
+    await visit(page, '/settings/change-password');
+
+    // ensure that the page has changed
+    await hasText(page, /Change Password/i);
+
+    // fills form data
+    await getByAriaLabel(page, 'Current Password').type('wrongPass123$');
+    await getByAriaLabel(page, 'New Password').type('newPass12345$');
+    await getByAriaLabel(page, 'Confirm Password').type('newPass12345$');
+
+    // submit data
+    await hasText(page, 'Save');
+    await getButtonByText(page, 'Save').click();
+    await hasText(page, 'Incorrect password', 0, 30000);
+  });
+
   test('should not change the user password when passwords not the same', async () => {
     // goes to the change password page
     await visit(page, '/settings/change-password');
@@ -44,6 +62,7 @@ test.describe('ChangePassword', () => {
     await getByAriaLabel(page, 'Current Password').type('12345678');
     await getByAriaLabel(page, 'New Password').type('newPass12345$');
     await getByAriaLabel(page, 'Confirm Password').type('newPass123456$');
+    await getByAriaLabel(page, 'Confirm Password').blur();
 
     await hasText(page, 'Passwords must match');
   });

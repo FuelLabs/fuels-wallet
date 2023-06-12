@@ -19,5 +19,14 @@ export function accountEvents(store: Store) {
         type: 'LOGOUT',
       });
     },
+    toggleHideAccount(address: string, isHidden: boolean) {
+      store.send(Services.accounts, {
+        type: 'TOGGLE_HIDE_ACCOUNT',
+        input: {
+          address,
+          data: { isHidden },
+        },
+      });
+    },
   };
 }

@@ -44,7 +44,7 @@ describe('Connections', () => {
 
     /** Check if connection was edited */
     await testQueries.waitShowingConnections();
-    const connectedText = /1 account\(s\) connected/;
+    const connectedText = /1 account connected/;
     const oneConnectedTexts = await screen.findAllByText(connectedText);
     expect(oneConnectedTexts.length).toBe(2);
 

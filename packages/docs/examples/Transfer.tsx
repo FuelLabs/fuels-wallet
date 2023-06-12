@@ -15,10 +15,10 @@ import type { BN } from 'fuels';
 import { NativeAssetId, bn, Address } from 'fuels';
 import { useState } from 'react';
 
-import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuel } from '~/src/hooks/useFuel';
-import { useIsConnected } from '~/src/hooks/useIsConnected';
-import { useLoading } from '~/src/hooks/useLoading';
+import { ExampleBox } from '../src/components/ExampleBox';
+import { useFuel } from '../src/hooks/useFuel';
+import { useIsConnected } from '../src/hooks/useIsConnected';
+import { useLoading } from '../src/hooks/useLoading';
 
 export function Transfer() {
   const [fuel, notDetected] = useFuel();
@@ -33,14 +33,15 @@ export function Transfer() {
 
   const [sendTransaction, sendingTransaction, errorSendingTransaction] =
     useLoading(async (amount: BN, addr: string, assetId: string) => {
-      console.debug('Request signature transaction!');
+      if (!isConnected) await fuel.connect();
+      console.log('Request signature transaction!');
       /* example:start */
       const accounts = await fuel.accounts();
       const account = accounts[0];
       const wallet = await fuel.getWallet(account);
       const toAddress = Address.fromString(addr);
       const response = await wallet.transfer(toAddress, amount, assetId);
-      console.debug('Transaction created!', response.id);
+      console.log('Transaction created!', response.id);
       /* example:end */
       setProviderUrl(wallet.provider.url);
       setTxId(response.id);
@@ -80,7 +81,7 @@ export function Transfer() {
             <Button
               onPress={() => sendTransaction(amount, addr, assetId)}
               isLoading={sendingTransaction}
-              isDisabled={sendingTransaction || !isConnected}
+              isDisabled={sendingTransaction || !fuel}
             >
               Transfer
             </Button>

@@ -2,12 +2,13 @@ import { cssObj } from '@fuel-ui/css';
 import { Dialog } from '@fuel-ui/react';
 
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
-import { AddAccount, EditAccount, Logout } from '~/systems/Account';
+import { EditAccount, Logout } from '~/systems/Account';
 import { Accounts } from '~/systems/Account/pages/Accounts';
 import { ExportAccount } from '~/systems/Account/pages/ExportAccount';
 import { ImportAccount } from '~/systems/Account/pages/ImportAccount';
 import { AddNetwork, Networks, UpdateNetwork } from '~/systems/Network/pages';
 import { useOverlay } from '~/systems/Overlay';
+import { ViewSeedPhrase } from '~/systems/Settings/pages';
 import { TxApprove } from '~/systems/Transaction';
 
 export function OverlayDialog() {
@@ -18,7 +19,6 @@ export function OverlayDialog() {
       <Dialog.Content css={styles.content}>
         {/* Accounts */}
         {overlay.is('accounts.list') && <Accounts />}
-        {overlay.is('accounts.add') && <AddAccount />}
         {overlay.is('accounts.import') && <ImportAccount />}
         {overlay.is('accounts.export') && <ExportAccount />}
         {overlay.is('accounts.edit') && <EditAccount />}
@@ -31,6 +31,9 @@ export function OverlayDialog() {
 
         {/* Transactions */}
         {overlay.is('transactions.approve') && <TxApprove />}
+
+        {/* Settings */}
+        {overlay.is('settings.viewSeedPhrase') && <ViewSeedPhrase />}
       </Dialog.Content>
     </Dialog>
   );

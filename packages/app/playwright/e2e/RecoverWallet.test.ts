@@ -23,6 +23,10 @@ test.describe('RecoverWallet', () => {
     await visit(page, '/wallet');
     await getButtonByText(page, /I already have a wallet/i).click();
 
+    /** Accept terms and conditions */
+    await hasText(page, /Terms of service/i);
+    await getButtonByText(page, /I accept/i).click();
+
     /** Copy words to clipboard area */
     await page.evaluate(`navigator.clipboard.writeText('${WORDS_12}')`);
 
@@ -30,12 +34,12 @@ test.describe('RecoverWallet', () => {
     await getButtonByText(page, /Paste/i).click();
 
     /** Confirm Mnemonic */
-    await hasText(page, /Enter your Recovery Phrase/i);
+    await hasText(page, /Enter seed phrase/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
 
     /** Adding password */
-    await hasText(page, /Encrypt your wallet/i);
+    await hasText(page, /Create password for encryption/i);
     const passwordInput = await getByAriaLabel(page, 'Your Password');
     await passwordInput.type(WALLET_PASSWORD);
     await passwordInput.press('Tab');
@@ -56,8 +60,12 @@ test.describe('RecoverWallet', () => {
     await logout(page);
     await getButtonByText(page, /I already have a wallet/i).click();
 
+    /** Accept terms and conditions */
+    await hasText(page, /Terms of service/i);
+    await getButtonByText(page, /I accept/i).click();
+
     await getByAriaLabel(page, 'Select format').selectOption(
-      'I have a 24 words seed phrase'
+      'I have a 24 words Seed Phrase'
     );
 
     /** Copy words to clipboard area */
@@ -67,12 +75,12 @@ test.describe('RecoverWallet', () => {
     await getButtonByText(page, /Paste/i).click();
 
     /** Confirm Mnemonic */
-    await hasText(page, /Enter your Recovery Phrase/i);
+    await hasText(page, /Enter seed phrase/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
 
     /** Adding password */
-    await hasText(page, /Encrypt your wallet/i);
+    await hasText(page, /Create password for encryption/i);
     const passwordInput = await getByAriaLabel(page, 'Your Password');
     await passwordInput.type(WALLET_PASSWORD);
     await passwordInput.press('Tab');

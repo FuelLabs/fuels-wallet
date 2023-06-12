@@ -36,5 +36,5 @@ export default defineManifest({
     },
   ],
   host_permissions: ['<all_urls>'],
-  permissions: ['alarms', 'tabs', 'clipboardWrite', 'scripting'],
+  permissions: ['storage', 'alarms', 'tabs', 'clipboardWrite', 'scripting'],
 });

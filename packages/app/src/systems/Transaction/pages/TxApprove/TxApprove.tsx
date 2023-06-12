@@ -1,9 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Dialog, Icon, IconButton, Text } from '@fuel-ui/react';
+import { Alert, Button, Dialog, Icon, IconButton, Text } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { useAssets } from '~/systems/Asset';
-import { ContentHeader, Pages } from '~/systems/Core';
+import { Pages } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 import { useTransactionRequest } from '~/systems/DApp';
 import { TxContent, TxHeader } from '~/systems/Transaction';
@@ -36,6 +36,17 @@ export const TxApprove = () => {
         />
       </Dialog.Heading>
       <Dialog.Description as="div" css={styles.description}>
+        {txRequest.status('waitingApproval') && (
+          <Alert status="warning" css={styles.alert}>
+            <Alert.Title>Confirm before approving</Alert.Title>
+            <Alert.Description>
+              <Text fontSize="xs" css={styles.alertDescription}>
+                Carefully check if all the details in your transaction are
+                correct
+              </Text>
+            </Alert.Description>
+          </Alert>
+        )}
         {txRequest.isLoading ? (
           <TxContent.Loader />
         ) : (
@@ -46,14 +57,6 @@ export const TxApprove = () => {
             assets={assets}
             header={
               <>
-                {txRequest.status('waitingApproval') && (
-                  <ContentHeader title="Confirm before approving">
-                    <Text>
-                      Carefully check if all details in your transaction are
-                      correct
-                    </Text>
-                  </ContentHeader>
-                )}
                 {isDone && (
                   <TxHeader
                     id={txRequest.tx?.id}
@@ -112,5 +115,17 @@ const styles = {
     ...coreStyles.scrollable('$gray3'),
     padding: '$4',
     flex: 1,
+  }),
+  alert: cssObj({
+    '& .fuel_alert--content': {
+      gap: '$1',
+    },
+    ' & .fuel_heading': {
+      fontSize: '$sm',
+    },
+    marginBottom: '$3',
+  }),
+  alertDescription: cssObj({
+    fontWeight: '$bold',
   }),
 };

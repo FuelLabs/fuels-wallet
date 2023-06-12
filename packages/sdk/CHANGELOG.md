@@ -1,5 +1,35 @@
 # @fuel-wallet/sdk
 
+## 0.9.5
+
+## 0.9.4
+
+### Patch Changes
+
+- [#775](https://github.com/FuelLabs/fuels-wallet/pull/775) [`c475816`](https://github.com/FuelLabs/fuels-wallet/commit/c475816fc5feca629e2a0cdab668a397c833ce23) Thanks [@sarahschwartz](https://github.com/sarahschwartz)! - Fixes "Module not found: Default condition should be last one" error.
+
+## 0.9.3
+
+### Patch Changes
+
+- [#766](https://github.com/FuelLabs/fuels-wallet/pull/766) [`6e2accf`](https://github.com/FuelLabs/fuels-wallet/commit/6e2accfa97d84239161040d37fcfc4d5aaedaabc) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: upgrade sdk to 0.43.0
+
+## 0.9.2
+
+### Patch Changes
+
+- [#762](https://github.com/FuelLabs/fuels-wallet/pull/762) [`bad48d1`](https://github.com/FuelLabs/fuels-wallet/commit/bad48d1b3036bca6ae28ddcc0f97cf921c6c0ab7) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix SDK exports
+
+## 0.9.1
+
+## 0.9.0
+
+### Patch Changes
+
+- [#748](https://github.com/FuelLabs/fuels-wallet/pull/748) [`372dc88`](https://github.com/FuelLabs/fuels-wallet/commit/372dc8828ab0777cc5bed139cebe5ba39c5d3817) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: upgrade fuels
+
+## 0.8.0
+
 ## 0.7.2
 
 ### Patch Changes

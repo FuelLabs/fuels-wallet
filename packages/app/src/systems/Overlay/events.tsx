@@ -19,12 +19,6 @@ export function overlayEvents(store: Store) {
         },
       });
     },
-    openAccountsAdd() {
-      store.send(Services.overlay, {
-        type: 'OPEN',
-        input: { modal: 'accounts.add' },
-      });
-    },
     openAccountEdit(address: string) {
       store.send(Services.overlay, {
         type: 'OPEN',
@@ -71,6 +65,14 @@ export function overlayEvents(store: Store) {
       store.send(Services.overlay, {
         type: 'OPEN',
         input: { modal: 'transactions.approve' },
+      });
+    },
+    openViewSeedPhrase() {
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: {
+          modal: 'settings.viewSeedPhrase',
+        },
       });
     },
   };

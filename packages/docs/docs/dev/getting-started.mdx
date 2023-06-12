@@ -1,0 +1,79 @@
+---
+title: Getting Started
+category: For Developers
+---
+
+# Getting Started
+
+You can integrate your DApp seamlessly with Fuel Wallet using our simple API, which is injected directly into the browser window.
+This eliminates the need for additional dependencies, allowing you to perform key actions effortlessly.
+For even more powerful and customizable integration, use Fuel Wallet in conjunction with the [Fuel TS SDK](https://fuellabs.github.io/fuels-ts/).
+
+<ConnectionAlert />
+
+If you've correctly installed the Fuel wallet extension, the wallet SDK will be injected automatically on the `window` object on the property `fuel`. To access it, you can use `window.fuel`
+
+```ts
+window.fuel.connect();
+```
+
+You can try this code directly in the developer console.
+
+## TypeScript
+
+The Fuel Wallet SDK provides a package on npm, making it more convenient to use in TypeScript projects.
+To use it, you must also install the [`fuels`](https://www.npmjs.com/package/fuels) package as a dependency.
+
+### Installation
+
+```bash
+npm install fuels @fuel-wallet/sdk
+```
+
+### Usage
+
+To use the SDK in your TypeScript project, add the following line to your tsconfig.json file:
+
+```json
+{
+  "compilerOptions": {
+    "types": ["@fuel-wallet/sdk"]
+  }
+}
+```
+
+Alternatively, you can use a [TypeScript reference](https://www.typescriptlang.org/docs/handbook/triple-slash-directives.html) directive in any TypeScript file:
+
+```ts
+/// <reference types="@fuel-wallet/sdk" />
+```
+
+### Example
+
+With the SDK imported, `fuel` will be conveniently typed and accessible on the `window` object.
+
+```ts
+window.fuel?.connect();
+```
+
+## Detect when fuel is loaded
+
+It's possible that your application loads before `window.fuel` is injected. To detect when the `fuel` is loaded and ready to use, you can listen to the event `FuelLoaded` on the document.
+
+<CodeImport file="../../examples/FuelLoaded.tsx" lineStart="10" lineEnd="21" />
+
+<Examples.FuelLoaded />
+
+### With React
+
+In a React app, you can use the `useFuel` hook below to detect when `window.fuel` is loaded.
+
+<CodeImport file="../../src/hooks/useFuel.tsx" />
+
+Here is how you can use the `useFuel` hook in a component:
+
+<CodeImport
+  file="../../examples/events/Accounts.tsx"
+  lineStart="11"
+  lineEnd="11"
+/>

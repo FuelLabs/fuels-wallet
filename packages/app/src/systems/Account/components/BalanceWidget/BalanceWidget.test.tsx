@@ -23,8 +23,9 @@ describe('BalanceWidget', () => {
     await testA11y(<BalanceWidget.Loader />);
   });
 
-  it('should show user address', () => {
+  it('should show account name and user address', () => {
     renderWithProvider(<BalanceWidget account={ACCOUNT} />);
+    expect(screen.getByText(ACCOUNT.name)).toBeInTheDocument();
     expect(screen.getByText(shortAddress(ACCOUNT.address))).toBeInTheDocument();
   });
 
@@ -33,7 +34,7 @@ describe('BalanceWidget', () => {
     expect(screen.getByText(/4\.999/)).toBeInTheDocument();
   });
 
-  it('should hide balance  when user sets his balance to hide', async () => {
+  it('should hide balance when user sets his balance to hide', async () => {
     const onChangeVisibility = jest.fn();
     const { user } = renderWithProvider(
       <BalanceWidget
@@ -47,7 +48,7 @@ describe('BalanceWidget', () => {
     expect(onChangeVisibility).toHaveBeenNthCalledWith(1, false);
   });
 
-  it('should show balalnce when user sets his balance to show', async () => {
+  it('should show balance when user sets his balance to show', async () => {
     const onChangeVisibility = jest.fn();
     const { user } = renderWithProvider(
       <BalanceWidget

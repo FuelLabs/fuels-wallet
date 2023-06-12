@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect } from 'react';
@@ -12,14 +11,20 @@ export type NetworkFormValues = {
   url: string;
 };
 
-function isValidUrl(url: any) {
-  try {
-    // eslint-disable-next-line no-new
-    new URL(url);
-  } catch (e) {
-    return false;
-  }
-  return true;
+function isValidUrl(url?: string) {
+  if (!url) return false;
+  // Note: new URL('https://graphql') returns `true`
+  const pattern = new RegExp(
+    '^(https?:\\/\\/)' +
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' +
+      '((\\d{1,3}\\.){3}\\d{1,3}))|' +
+      'localhost' +
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
+      '(\\?[;&a-z\\d%_.~+=-]*)?' +
+      '(\\#[-a-z\\d_]*)?$',
+    'i'
+  );
+  return pattern.test(url) && url.endsWith('/graphql');
 }
 
 const schema = yup

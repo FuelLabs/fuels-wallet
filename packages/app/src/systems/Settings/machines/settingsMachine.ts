@@ -6,81 +6,52 @@ import { FetchMachine } from '~/systems/Core';
 import type { VaultInputs } from '~/systems/Vault';
 import { VaultService } from '~/systems/Vault';
 
-type MachineServices = {
-  exportVault: {
-    data: string[];
-  };
-};
-
 type MachineContext = {
-  words: string[];
+  error?: string;
 };
 
-type MachineEvents =
-  | { type: 'EXPORT_VAULT'; input: VaultInputs['exportVault'] }
-  | { type: 'CHANGE_PASSWORD'; input: VaultInputs['changePassword'] };
+type MachineEvents = {
+  type: 'CHANGE_PASSWORD';
+  input: VaultInputs['changePassword'];
+};
 
 export const settingsMachine = createMachine(
   {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./settingsMachine.typegen').Typegen0,
     schema: {
-      context: {} as MachineContext,
-      services: {} as MachineServices,
       events: {} as MachineEvents,
     },
     predictableActionArguments: true,
     id: 'settingsMachine',
     initial: 'idle',
-    context: {
-      words: [],
-    },
+    context: {} as MachineContext,
     states: {
-      changingPassword: {
-        invoke: {
-          data: {
-            input: (_: MachineContext, ev: MachineEvents) => ev.input,
-          },
-          src: 'changePassword',
-          onDone: [
-            {
-              target: 'idle',
-              cond: FetchMachine.hasError,
-            },
-            {
-              target: 'passwordChanged',
-            },
-          ],
-        },
-      },
       idle: {
         tags: ['unlocking'],
         on: {
           CHANGE_PASSWORD: {
             target: 'changingPassword',
           },
-          EXPORT_VAULT: {
-            target: 'gettingMnemonic',
-          },
         },
       },
-      gettingMnemonic: {
-        tags: ['unlocking'],
+      changingPassword: {
+        entry: 'clearError',
         invoke: {
-          src: 'exportVault',
+          data: {
+            input: (_: void, ev: MachineEvents) => ev.input,
+          },
+          src: 'changePassword',
           onDone: [
             {
-              target: 'idle',
               cond: FetchMachine.hasError,
+              actions: ['assignError'],
+              target: 'idle',
             },
             {
-              actions: ['assignWords'],
-              target: 'done',
+              target: 'passwordChanged',
             },
           ],
-          data: {
-            input: (_: MachineContext, ev: MachineEvents) => ev.input,
-          },
         },
       },
       done: {
@@ -94,36 +65,23 @@ export const settingsMachine = createMachine(
   },
   {
     actions: {
-      assignWords: assign({
-        words: (_, ev) => ev.data,
+      assignError: assign({
+        error: 'Incorrect password',
+      }),
+      clearError: assign({
+        error: undefined,
       }),
     },
     services: {
       changePassword: FetchMachine.create<VaultInputs['changePassword'], void>({
-        showError: true,
+        showError: false,
         maxAttempts: 1,
         fetch: async ({ input }) => {
           if (!input?.currentPassword || !input.password) {
-            throw new Error('Invalid Input');
+            throw new Error('Current and new password are required');
           }
           await VaultService.changePassword(input);
           toast.success('Password Changed');
-        },
-      }),
-      exportVault: FetchMachine.create<VaultInputs['exportVault'], string[]>({
-        showError: true,
-        maxAttempts: 1,
-        fetch: async ({ input }) => {
-          if (!input?.password) {
-            throw new Error('Password is required to export Vault!');
-          }
-          const secret = await VaultService.exportVault({
-            ...input,
-            // TODO change once we add multiple vault management
-            // https://github.com/FuelLabs/fuels-wallet/issues/562
-            vaultId: 0,
-          });
-          return secret.split(' ');
         },
       }),
     },

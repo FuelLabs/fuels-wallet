@@ -61,10 +61,12 @@ export const sidebarItems = (currentNetworkUrl: string): Array<MenuItemObj> => [
         path: Pages.assets(),
       },
       {
-        key: 'reveal-passphrase',
+        key: 'view-seed-phrase',
         icon: 'Lock',
-        label: 'Reveal Passphrase',
-        path: Pages.settingsRevealPassphrase(),
+        label: 'View Seed Phrase',
+        onPress() {
+          store.openViewSeedPhrase();
+        },
       },
       {
         key: 'change-password',
