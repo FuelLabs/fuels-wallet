@@ -1,8 +1,9 @@
+import { cssObj } from '@fuel-ui/css';
 import { Button, Card, Dialog, Icon, Text } from '@fuel-ui/react';
 
 import { useAccounts } from '../../hooks';
 
-import { styles } from '~/systems/Core';
+import { styles as rootStyles } from '~/systems/Core';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export const Logout = () => {
@@ -13,31 +14,30 @@ export const Logout = () => {
       <OverlayDialogTopbar onClose={handlers.closeDialog}>
         Logout
       </OverlayDialogTopbar>
-      <Dialog.Description as="div" css={styles.content}>
-        <Card css={{ padding: '$4' }}>
+      <Dialog.Description as="div" css={rootStyles.content}>
+        <Card css={styles.card}>
           <Text
             as="h2"
             color="intentsBase12"
             leftIcon={
               <Icon icon={Icon.is('AlertTriangle')} color="intentsWarning12" />
             }
-            css={{ mb: '$4' }}
+            css={styles.line}
           >
             IMPORTANT
           </Text>
-          <Text color="intentsBase11" css={{ mb: '$2' }}>
+          <Text css={styles.line}>
             This action will remove all data from this device, including your
             seedphrase and accounts.
           </Text>
-          <Text color="intentsBase11" css={{ mb: '$2' }}>
+          <Text css={styles.line}>
             Make sure you have securely backed up your Seed Phrase before
             removing the wallet.
           </Text>
-          <Text color="intentsBase11" css={{ mb: '$2' }}>
+          <Text css={styles.line}>
             If you have not backed up your Seed Phrase, you will lose access to
             your funds.
           </Text>
-          <Text color="intentsBase11" css={{ mb: '$2' }}></Text>
         </Card>
       </Dialog.Description>
       <Dialog.Footer>
@@ -54,4 +54,14 @@ export const Logout = () => {
       </Dialog.Footer>
     </>
   );
+};
+
+const styles = {
+  card: {
+    padding: '$4',
+  },
+  line: cssObj({
+    mb: '$2',
+    color: '$intentsBase11',
+  }),
 };

@@ -22,11 +22,11 @@ export function MnemonicRead({
   onNext,
 }: MnemonicReadProps) {
   const [isSavedChecked, setSavedChecked] = useState(false);
-  const { steps, handleChangeStep } = useSignUpStepper();
+  const { steps } = useSignUpStepper();
 
   return (
     <Box.Stack gap="$6" align="center">
-      <Stepper steps={steps} active={step} onStepChange={handleChangeStep} />
+      <Stepper steps={steps} active={step} />
       <MotionStack {...animations.slideInRight()} gap="$6">
         <Header
           title="Write down seed phrase"

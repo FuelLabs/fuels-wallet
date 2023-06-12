@@ -13,7 +13,7 @@ export const AccountForm = ({ form, isLoading }: AccountFormProps) => {
   const { control, formState } = form;
 
   return (
-    <Box.Stack css={{ width: '100%' }} gap="$4">
+    <Box.Stack css={styles.root} gap="$4">
       <ControlledField
         control={control}
         name="name"
@@ -36,4 +36,8 @@ export const AccountForm = ({ form, isLoading }: AccountFormProps) => {
       />
     </Box.Stack>
   );
+};
+
+const styles = {
+  root: { width: '100%' },
 };

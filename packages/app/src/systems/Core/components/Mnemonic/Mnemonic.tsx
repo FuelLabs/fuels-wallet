@@ -72,7 +72,7 @@ export function Mnemonic({
     }
   }
 
-  async function handlePast() {
+  async function handlePaste() {
     const text = await navigator.clipboard.readText();
     setValue(fillArray(text.split(' '), format));
   }
@@ -162,7 +162,7 @@ export function Mnemonic({
             size="sm"
             variant="solid"
             leftIcon={<Icon icon="Copy" color="intentsBase8" />}
-            onPress={handlePast}
+            onPress={handlePaste}
           >
             Paste
           </Button>

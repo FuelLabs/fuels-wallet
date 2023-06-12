@@ -98,8 +98,8 @@ export function createAccounts(
   return Promise.all(
     new Array(numberOfAccounts).fill(0).map(async (_, index) => {
       const walletAccount = await manager.addAccount();
-      const acounnt = createAccount(walletAccount, index);
-      return acounnt;
+      const account = createAccount(walletAccount, index);
+      return account;
     })
   );
 }

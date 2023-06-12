@@ -96,7 +96,6 @@ const styles = {
     '.fuel_copyable': {
       color: '$intentsBase12',
       fontSize: '$sm',
-      fontWeight: '$normal',
     },
     '.fuel_Avatar-generated': {
       width: 56,

@@ -7,10 +7,7 @@ export function useSignUpStepper() {
   const isCreate = context.signUpType === SignUpType.create;
   const steps = isCreate ? 4 : 3;
 
-  function handleChangeStep() {}
-
   return {
     steps,
-    handleChangeStep,
   };
 }

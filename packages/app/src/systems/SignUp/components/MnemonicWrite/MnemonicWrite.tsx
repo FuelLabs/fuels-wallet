@@ -32,7 +32,7 @@ export function MnemonicWrite({
   onNext,
   enableChangeFormat,
 }: MnemonicWriteProps) {
-  const { steps, handleChangeStep } = useSignUpStepper();
+  const { steps } = useSignUpStepper();
 
   function handleFill(val: string[]) {
     onFilled(val);
@@ -40,7 +40,7 @@ export function MnemonicWrite({
 
   return (
     <Box.Stack gap="$6" align="center">
-      <Stepper steps={steps} active={step} onStepChange={handleChangeStep} />
+      <Stepper steps={steps} active={step} />
       <Header title={title} subtitle={subtitle} />
       <MotionStack {...animations.slideInRight()} gap="$6" align="center">
         <Box.Stack gap="$3" css={styles.content}>

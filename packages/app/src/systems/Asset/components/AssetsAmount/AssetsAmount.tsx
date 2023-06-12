@@ -31,7 +31,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
       {(title || hasError) && (
         <Box.Flex css={styles.header}>
           {title && (
-            <Text as="h3" css={{ fontSize: '$sm', fontWeight: '$normal' }}>
+            <Text as="h3" css={styles.title}>
               {title}
             </Text>
           )}
@@ -143,6 +143,10 @@ const styles = {
     fontSize: '$sm',
     color: '$intentsBase12',
     alignItems: 'center',
+  }),
+  title: cssObj({
+    fontSize: '$sm',
+    fontWeight: '$normal',
   }),
 };
 
