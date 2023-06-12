@@ -132,7 +132,7 @@ To check if a connector is on the connectors list use the `hasConnector(connecto
 ### Selecting connector
 
 For selecting a different Wallet Connector use the `async selectConnector(connectorName: string): Promise<boolean>` method.
-This method will check if the desired connector is install if not detect in 1 second it throws.
+This method will check if the desired connector is installed. If it is not detected in 1 second, the method throws an error.
 
 <CodeImport
   file="../../../sdk/src/tests/FuelWalletConnectors.test.ts"
