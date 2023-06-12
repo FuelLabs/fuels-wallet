@@ -1,5 +1,3 @@
-import * as process from 'process';
-
 import { CRXPages } from './systems/Core/types';
 
 export const {

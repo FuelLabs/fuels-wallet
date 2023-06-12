@@ -9,7 +9,7 @@ import {
   loadSecret,
   getTimer,
   clearSession,
-  saveTimer,
+  resetTimer,
 } from '../../utils';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
@@ -43,8 +43,8 @@ export class VaultService extends VaultServer {
     if (!isWalletLocked) {
       const timer = await getTimer();
       if (timer) {
-        // Saving a new timestamp for wallet auto lock
-        saveTimer(AUTO_LOCK_IN_MINUTES);
+        // Reset the timer for wallet auto lock
+        resetTimer();
       }
     }
     return isWalletLocked;
@@ -66,6 +66,7 @@ export class VaultService extends VaultServer {
   async autoUnlock() {
     const secret = await loadSecret();
     if (secret) {
+      // Unlock vault directly without saving a new timestamp
       await super.unlock({ password: secret });
     }
   }
