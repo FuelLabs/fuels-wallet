@@ -4,7 +4,7 @@ import { ContentProxyConnection } from '../../connections';
 import { createConnector, createUUID } from '../../utils';
 
 import './MockConnections';
-import { MockBackgroundService } from './MockBackgroundSerivce';
+import { MockBackgroundService } from './MockBackgroundService';
 
 export type MockSerivices = {
   contentProxy: ContentProxyConnection;

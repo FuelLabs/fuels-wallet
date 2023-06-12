@@ -1,3 +1,3 @@
 export * from './MockFuel';
-export * from './MockBackgroundSerivce';
+export * from './MockBackgroundService';
 export * from './utils';
