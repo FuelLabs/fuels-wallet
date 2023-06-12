@@ -2,10 +2,10 @@ import { cssObj } from '@fuel-ui/css';
 import { Button, Stack, Tag, Text } from '@fuel-ui/react';
 import { useEffect, useState } from 'react';
 
-import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuel } from '~/src/hooks/useFuel';
-import { useIsConnected } from '~/src/hooks/useIsConnected';
-import { useLoading } from '~/src/hooks/useLoading';
+import { ExampleBox } from '../../src/components/ExampleBox';
+import { useFuel } from '../../src/hooks/useFuel';
+import { useIsConnected } from '../../src/hooks/useIsConnected';
+import { useLoading } from '../../src/hooks/useLoading';
 
 export function Accounts() {
   const [fuel, notDetected] = useFuel();

@@ -64,7 +64,7 @@ test.describe('FuelWallet Extension', () => {
 
     await test.step('Should trigger event FuelLoaded', async () => {
       // Reload and don't wait for loadstate to go to evaluate
-      // This is required in order to get the FuelLoaded event
+      // This is required in order to get the `FuelLoaded` event
       await blankPage.reload({
         waitUntil: 'commit',
       });
@@ -230,7 +230,7 @@ test.describe('FuelWallet Extension', () => {
           });
         });
       });
-      // Disconnect accounts from inside of the Connected Apps page
+      // Disconnect accounts from inside the `Connected Apps` page
       await getByAriaLabel(popupPage, 'Menu').click();
       const connectedApps = await hasText(popupPage, 'Connected Apps');
       await connectedApps.click();
@@ -431,7 +431,7 @@ test.describe('FuelWallet Extension', () => {
         await approveTxCheck(authorizedAccount);
       });
 
-      await test.step('Send transfer should block anauthorized account', async () => {
+      await test.step('Send transfer should block unauthorized account', async () => {
         const nonAuthorizedAccount = await getAccountByName(
           popupPage,
           'Account 2'
@@ -522,6 +522,11 @@ test.describe('FuelWallet Extension', () => {
       /** Check result */
       const currentAccountEventResult = await onChangeAccountPromise;
       expect(currentAccountEventResult).toEqual(currentAccount.address);
+    });
+
+    await test.step('Auto lock fuel wallet', async () => {
+      await popupPage.waitForTimeout(60_000);
+      await hasText(popupPage, 'Unlock your wallet to continue');
     });
   });
 });

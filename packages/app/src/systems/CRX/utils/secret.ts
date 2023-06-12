@@ -24,12 +24,20 @@ export async function getTimer(): Promise<number> {
   return timer || 0;
 }
 
+export async function resetTimer() {
+  const { lockTime } = await chrome.storage.session.get('lockTime');
+  chrome.storage.session.set({
+    timer: dayjs().add(lockTime, 'minute').valueOf(),
+  });
+}
+
 export async function saveSecret(secret: string, autoLockInMinutes: number) {
   const salt = await createSalt();
   try {
     const encrypted = await encrypt(salt, secret);
     chrome.storage.session.set({
       data: encrypted,
+      lockTime: autoLockInMinutes,
       timer: dayjs().add(autoLockInMinutes, 'minute').valueOf(),
     });
   } catch {
