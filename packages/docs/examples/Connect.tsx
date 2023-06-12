@@ -12,17 +12,19 @@ export function Connect() {
 
   const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {
     console.log('Request connection to Wallet!');
-    /* example:start */
+    /* connect:start */
     const isConnected = await fuel.connect();
     console.log('Connection response', isConnected);
-    /* example:end */
+    /* connect:end */
     setConnected(isConnected);
   });
 
   const [handleDisconnect, isDisconnecting, errorDisconnect] = useLoading(
     async () => {
       console.log('Request disconnection to Wallet!');
+      /* disconnect:start */
       await fuel.disconnect();
+      /* disconnect:end */
       setConnected(false);
       console.log('Disconnection response');
     }

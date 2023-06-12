@@ -8,11 +8,13 @@ export const {
   VITE_ADDR_OWNER,
   VITE_APP_VERSION,
   VITE_DATABASE_VERSION,
+  VITE_CRX_NAME,
   VITE_CRX,
   VITE_AUTO_LOCK_IN_MINUTES,
   NODE_ENV,
 } = import.meta.env;
 
+export const WALLET_NAME = VITE_CRX_NAME;
 export const APP_VERSION = VITE_APP_VERSION;
 export const DATABASE_VERSION = Number(VITE_DATABASE_VERSION);
 export const DECIMAL_UNITS = 9;

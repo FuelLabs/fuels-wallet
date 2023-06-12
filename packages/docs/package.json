@@ -19,6 +19,8 @@
     "@mdx-js/react": "^2.3.0",
     "@next/mdx": "^13.4.4",
     "acorn": "^8.8.2",
+    "acorn-loose": "^8.3.0",
+    "acorn-typescript": "^1.2.10",
     "acorn-walk": "^8.2.0",
     "dotenv": "^16.1.2",
     "framer-motion": "^10.12.16",

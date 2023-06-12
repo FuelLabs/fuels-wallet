@@ -11,10 +11,12 @@ import { Heading } from './Heading';
 export function ExampleBox({
   children,
   error,
+  overlayContent,
   showNotDetectedOverlay = true,
 }: {
   children: ReactNode;
   error?: any;
+  overlayContent?: any;
   showNotDetectedOverlay?: boolean;
 }) {
   const [, notDetected, isLoading] = useFuel();
@@ -43,6 +45,12 @@ export function ExampleBox({
         Please install the Fuel Wallet to use this demo.
       </Link>
     </Box.Stack>
+  );
+
+  const OverlayContent = (
+    <Stack css={styles.overlay} justify="center" align="center">
+      {overlayContent}
+    </Stack>
   );
 
   if (isLoading) {
@@ -98,6 +106,7 @@ export function ExampleBox({
         )}
         {children}
         {showNotDetectedOverlay && notDetected && NotDetectedOverlayDefault}
+        {overlayContent && OverlayContent}
       </Box>
     </Box.Stack>
   );

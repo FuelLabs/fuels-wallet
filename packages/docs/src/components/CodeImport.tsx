@@ -10,6 +10,7 @@ export type CodeImportProps = {
   lines?: number[];
   testCase?: string;
   title?: string;
+  commentBlock?: string;
   __content: string;
   __filepath: string;
   __filename: string;
