@@ -3,4 +3,4 @@
 '@fuel-wallet/sdk': minor
 ---
 
-Enable other Wallets to beening expose as Connectors using Fuel Wallet Connectors feature.
+Enable other Wallets to being exposed as Connectors using the Fuel Wallet Connectors feature.
