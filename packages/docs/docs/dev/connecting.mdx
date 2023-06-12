@@ -9,11 +9,11 @@ category: For Developers
 
 Before interacting with the wallet, you need to request a connection, which will authorize your application to execute other actions. You can do this by calling the `connect()` method on the `window.fuel` object.
 
-<CodeImport file="../../examples/Connect.tsx" />
+<CodeImport file="../../examples/Connect.tsx" commentBlock="connect" />
 
 To disconnect, use the `disconnect()` method.
 
-<CodeImport file="../../examples/Connect.tsx" lineStart="25" lineEnd="25" />
+<CodeImport file="../../examples/Connect.tsx" commentBlock="disconnect" />
 
 <Examples.Connect />
 
@@ -21,7 +21,7 @@ To disconnect, use the `disconnect()` method.
 
 To check if the user's wallet is already connected, you can use the `isConnected()` method.
 
-<CodeImport file="../../../sdk/src/Fuel.test.ts" testCase="isConnected" />
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="isConnected" />
 
 <Examples.IsConnected />
 
@@ -32,8 +32,7 @@ listen for changes in the connection.
 
 <CodeImport
   file="../../src/hooks/useIsConnected.tsx"
-  lineStart="19"
-  lineEnd="22"
+  commentBlock="eventConnection"
 />
 
 <Examples.Events.Connection />
@@ -47,8 +46,4 @@ This hook depends on the `useFuel` hook on the [Getting Started](./getting-start
 
 Here is how you can use the `useIsConnected` hook in a component:
 
-<CodeImport
-  file="../../examples/events/Accounts.tsx"
-  lineStart="13"
-  lineEnd="13"
-/>
+<CodeImport file="../../examples/events/Accounts.tsx" commentBlock="useFuel" />

@@ -492,6 +492,12 @@ importers:
       acorn:
         specifier: ^8.8.2
         version: 8.8.2
+      acorn-loose:
+        specifier: ^8.3.0
+        version: 8.3.0
+      acorn-typescript:
+        specifier: ^1.2.10
+        version: 1.2.10(acorn@8.8.2)
       acorn-walk:
         specifier: ^8.2.0
         version: 8.2.0
@@ -10006,6 +10012,21 @@ packages:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
       acorn: 8.8.2
+
+  /acorn-loose@8.3.0:
+    resolution: {integrity: sha512-75lAs9H19ldmW+fAbyqHdjgdCrz0pWGXKmnqFoh8PyVd1L2RIb4RzYrSjmopeqv3E1G3/Pimu6GgLlrGbrkF7w==}
+    engines: {node: '>=0.4.0'}
+    dependencies:
+      acorn: 8.8.2
+    dev: false
+
+  /acorn-typescript@1.2.10(acorn@8.8.2):
+    resolution: {integrity: sha512-/5pcEQC7sJOlVoVVByONs4lAh0EBlsqtFXNAMpDridnjeU2I3dk+cXxx/f+vxpcZwhPYDCVOHkNI1axlQSn6Xg==}
+    peerDependencies:
+      acorn: '>=8.0.0'
+    dependencies:
+      acorn: 8.8.2
+    dev: false
 
   /acorn-walk@7.2.0:
     resolution: {integrity: sha512-OPdCF6GsMIP+Az+aWfAAOEt2/+iVDKE7oy6lJ098aoe59oAmK76qV6Gw60SbZ8jHuG2wH058GF4pLFbYamYrVA==}

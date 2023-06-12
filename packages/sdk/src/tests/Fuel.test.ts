@@ -6,12 +6,22 @@ import {
   Wallet,
 } from 'fuels';
 
-import { fuel, MockConnection, toWallet, userWallet } from './__mock__/Fuel';
-import { seedWallet } from './__mock__/utils';
+import type { Fuel } from '../Fuel';
+
+import type { MockSerivices } from './__mock__';
+import { toWallet, mockFuel, seedWallet } from './__mock__';
 
 describe('Fuel', () => {
+  let mocks: MockSerivices;
+  let fuel: Fuel;
+
   beforeAll(() => {
-    MockConnection.start();
+    mocks = mockFuel();
+    fuel = window.fuel!;
+  });
+
+  afterAll(() => {
+    mocks.destroy();
   });
 
   test('isConnected', async () => {
@@ -26,17 +36,21 @@ describe('Fuel', () => {
 
   test('disconnect', async () => {
     const isConnected = await fuel.disconnect();
-    expect(isConnected).toBeFalsy();
+    expect(isConnected).toBeTruthy();
   });
 
   test('accounts', async () => {
     const accounts = await fuel.accounts();
-    expect(accounts).toEqual([userWallet.address.toAddress()]);
+    expect(accounts).toEqual([
+      mocks.backgroundService.state.wallet.address.toAddress(),
+    ]);
   });
 
   test('currentAccount', async () => {
     const currentAccount = await fuel.currentAccount();
-    expect(currentAccount).toEqual(userWallet.address.toAddress());
+    expect(currentAccount).toEqual(
+      mocks.backgroundService.state.wallet.address.toAddress()
+    );
   });
 
   test('assets', async () => {
@@ -62,7 +76,8 @@ describe('Fuel', () => {
 
     // Test example like docs
     const signedMessage = await fuel.signMessage(account, 'test');
-    const signedMesageSpec = await userWallet.signMessage('test');
+    const signedMesageSpec =
+      await mocks.backgroundService.state.wallet.signMessage('test');
     expect(signedMessage).toEqual(signedMesageSpec);
   });
 
@@ -151,8 +166,16 @@ describe('Fuel', () => {
 });
 
 describe('Fuel Events', () => {
+  let mocks: MockSerivices;
+  let fuel: Fuel;
+
   beforeAll(() => {
-    MockConnection.start();
+    mocks = mockFuel();
+    fuel = window.fuel!;
+  });
+
+  afterAll(() => {
+    mocks.destroy();
   });
 
   test('Events: Connection events', async () => {

@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
-import { injectFuel } from '@fuel-wallet/sdk/dist';
+import { createConnector } from '@fuel-wallet/sdk';
 
-injectFuel(window);
+import { WALLET_NAME } from '~/config';
+
+createConnector({ name: WALLET_NAME });
