@@ -48,9 +48,9 @@ export function ExampleBox({
   );
 
   const OverlayContent = (
-    <Stack css={styles.overlay} justify="center" align="center">
+    <Box.Stack css={styles.overlay} justify="center" align="center">
       {overlayContent}
-    </Stack>
+    </Box.Stack>
   );
 
   if (isLoading) {
