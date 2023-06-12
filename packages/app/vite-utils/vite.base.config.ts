@@ -76,7 +76,7 @@ const baseConfig: UserConfig = {
   /**
    * Need because of this issue:
    * https://github.com/vitejs/vite/issues/1973
-   * Avoid "proccess is not defined" when compiling in Cypress side
+   * Avoid "process is not defined" when compiling in Cypress side
    */
   define: {
     'process.env': {},

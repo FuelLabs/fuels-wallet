@@ -7,6 +7,7 @@ interface ImportMetaEnv {
   readonly VITE_APP_VERSION: string;
   readonly VITE_CRX: string;
   readonly VITE_ADDR_OWNER: string;
+  readonly VITE_AUTO_LOCK_IN_MINUTES: number;
 }
 
 interface ImportMeta {
