@@ -32,7 +32,7 @@ export function Connectors() {
     if (!fuel) return () => {};
     if (!fuel.listConnectors) {
       setCompatibilityError(
-        'Current verison of Fuel Wallet not support Connectors!'
+        'Current version of Fuel Wallet doesn't support Connectors!'
       );
       return () => {};
     }
