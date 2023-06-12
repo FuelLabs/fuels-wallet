@@ -2,11 +2,11 @@ import { Flex, Text, Stack, Button } from '@fuel-ui/react';
 import type { FuelProviderConfig } from '@fuel-wallet/sdk';
 import { useEffect, useState } from 'react';
 
-import { Code } from '~/src/components/Code';
-import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuel } from '~/src/hooks/useFuel';
-import { useIsConnected } from '~/src/hooks/useIsConnected';
-import { useLoading } from '~/src/hooks/useLoading';
+import { Code } from '../../src/components/Code';
+import { ExampleBox } from '../../src/components/ExampleBox';
+import { useFuel } from '../../src/hooks/useFuel';
+import { useIsConnected } from '../../src/hooks/useIsConnected';
+import { useLoading } from '../../src/hooks/useLoading';
 
 export function NetworkExample() {
   const [fuel, notDetected] = useFuel();

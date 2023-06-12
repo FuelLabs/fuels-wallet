@@ -1,5 +1,27 @@
 # fuels-wallet
 
+## 0.9.5
+
+### Patch Changes
+
+- [#779](https://github.com/FuelLabs/fuels-wallet/pull/779) [`7a168af`](https://github.com/FuelLabs/fuels-wallet/commit/7a168af86ef8b60b398179f8498c1106535a2988) Thanks [@luizstacio](https://github.com/luizstacio)! - Upgrade vite version
+
+- [#771](https://github.com/FuelLabs/fuels-wallet/pull/771) [`cc341cb`](https://github.com/FuelLabs/fuels-wallet/commit/cc341cbe3ef443cb161f01eceaff1c1f3aa184cd) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Add support to operation "Withdraw from Fuel", using MessageOut receipt
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.9.5
+  - @fuel-wallet/types@0.9.5
+
+## 0.9.4
+
+### Patch Changes
+
+- [#768](https://github.com/FuelLabs/fuels-wallet/pull/768) [`a8fecfa`](https://github.com/FuelLabs/fuels-wallet/commit/a8fecfa33435cac300791879538c7265b3c7c2e2) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: add support to transfer from message input
+
+- Updated dependencies [[`c475816`](https://github.com/FuelLabs/fuels-wallet/commit/c475816fc5feca629e2a0cdab668a397c833ce23)]:
+  - @fuel-wallet/sdk@0.9.4
+  - @fuel-wallet/types@0.9.4
+
 ## 0.9.3
 
 ### Patch Changes

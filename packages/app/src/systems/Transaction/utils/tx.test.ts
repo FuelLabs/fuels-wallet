@@ -10,8 +10,12 @@ import {
   MOCK_TRANSACTION_CREATE_CONTRACT_PARTS,
   MOCK_TRANSACTION_MINT,
   MOCK_TRANSACTION_MINT_PARTS,
-  MOCK_TRANSACTION_TRANSFER,
   MOCK_TRANSACTION_TRANSFER_PARTS,
+  MOCK_TRANSACTION_TRANSFER_FROM_COIN,
+  MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE,
+  MOCK_CUSTOM_ASSET_ID,
+  MOCK_TRANSACTION_WITHDRAW_FROM_FUEL,
+  MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS,
 } from '../__mocks__/tx';
 
 import {
@@ -21,11 +25,12 @@ import {
   getContractTransferOperations,
   getFee,
   getFeeFromReceipts,
-  getFromAddress,
   getGasUsed,
   getGasUsedContractCreated,
   getGasUsedFromReceipts,
+  getInputAccountAddress,
   getInputContractFromIndex,
+  getInputFromAssetId,
   getInputsCoin,
   getInputsContract,
   getInputsMessage,
@@ -51,6 +56,7 @@ import {
   getStatus,
   getTransferOperations,
   getType,
+  getWithdrawFromFuelOperations,
   isStatus,
   isStatusFailure,
   isStatusPending,
@@ -175,18 +181,45 @@ describe('Tx util', () => {
     });
   });
 
-  describe('getFromAddress', () => {
-    it('should return correct fromAddress', () => {
-      const fromAddress = MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin?.owner;
+  describe('getInputs helpers', () => {
+    it('should getInputFromAssetId return correct input to pay for that assetId', () => {
+      const inputCustomAssetId = {
+        ...MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin,
+        assetId: MOCK_CUSTOM_ASSET_ID,
+      };
+
       expect(
-        getFromAddress(MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || [])
-      ).toEqual(fromAddress);
+        getInputFromAssetId(
+          [MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin, inputCustomAssetId],
+          MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin.assetId
+        )
+      ).toStrictEqual(MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin);
+      expect(
+        getInputFromAssetId(
+          [MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin, inputCustomAssetId],
+          inputCustomAssetId.assetId
+        )
+      ).toStrictEqual(inputCustomAssetId);
+      expect(
+        getInputFromAssetId(
+          [MOCK_TRANSACTION_TRANSFER_PARTS.inputMessage],
+          '0x0000000000000000000000000000000000000000000000000000000000000000'
+        )
+      ).toStrictEqual(MOCK_TRANSACTION_TRANSFER_PARTS.inputMessage);
     });
 
-    it('should return fromAddress from Mint transaction', () => {
+    it('should getInputAccountAddress return correct address of owner of input', () => {
       expect(
-        getFromAddress(MOCK_TRANSACTION_MINT.transaction.inputs || [])
-      ).toBeUndefined();
+        getInputAccountAddress(MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin)
+      ).toEqual(MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputCoin.owner);
+      expect(
+        getInputAccountAddress(MOCK_TRANSACTION_TRANSFER_PARTS.inputMessage)
+      ).toEqual(MOCK_TRANSACTION_TRANSFER_PARTS.inputMessage.recipient);
+      expect(
+        getInputAccountAddress(
+          MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputContract
+        )
+      ).toEqual('');
     });
   });
 
@@ -303,13 +336,17 @@ describe('Tx util', () => {
     });
 
     it('should getReceiptsCall return empty', () => {
-      const receipts = getReceiptsCall(MOCK_TRANSACTION_TRANSFER.receipts);
+      const receipts = getReceiptsCall(
+        MOCK_TRANSACTION_TRANSFER_FROM_COIN.receipts
+      );
 
       expect(receipts.length).toEqual(0);
     });
 
     it('should getReceiptsReturn return correct receipts', () => {
-      const receipts = getReceiptsReturn(MOCK_TRANSACTION_TRANSFER.receipts);
+      const receipts = getReceiptsReturn(
+        MOCK_TRANSACTION_TRANSFER_FROM_COIN.receipts
+      );
 
       expect(receipts.length).toEqual(1);
       expect(receipts[0]).toStrictEqual(
@@ -340,7 +377,7 @@ describe('Tx util', () => {
 
     it('should getReceiptsReturnData return empty', () => {
       const receipts = getReceiptsReturnData(
-        MOCK_TRANSACTION_TRANSFER.receipts
+        MOCK_TRANSACTION_TRANSFER_FROM_COIN.receipts
       );
 
       expect(receipts.length).toEqual(0);
@@ -412,7 +449,7 @@ describe('Tx util', () => {
 
     it('should getReceiptsTransferOut return empty', () => {
       const receipts = getReceiptsTransferOut(
-        MOCK_TRANSACTION_TRANSFER.receipts
+        MOCK_TRANSACTION_TRANSFER_FROM_COIN.receipts
       );
 
       expect(receipts.length).toEqual(0);
@@ -430,11 +467,22 @@ describe('Tx util', () => {
     });
 
     it('should getReceiptsScriptResult return empty', () => {
-      expect(false);
+      const receipts = getReceiptsScriptResult(
+        MOCK_TRANSACTION_CREATE_CONTRACT.receipts
+      );
+
+      expect(receipts.length).toEqual(0);
     });
 
     it('should getReceiptsMessageOut return correct receipts', () => {
-      expect(false);
+      const receipts = getReceiptsMessageOut(
+        MOCK_TRANSACTION_WITHDRAW_FROM_FUEL.receipts
+      );
+
+      expect(receipts.length).toEqual(1);
+      expect(receipts[0]).toStrictEqual(
+        MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.receiptMessageOut
+      );
     });
 
     it('should getReceiptsMessageOut return empty', () => {
@@ -477,9 +525,10 @@ describe('Tx util', () => {
   });
 
   describe('addOperation', () => {
-    const fromAddress = getFromAddress(
-      MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || []
+    const coinInput = getInputsCoin(
+      MOCK_TRANSACTION_TRANSFER_FROM_COIN.transaction.inputs || []
     );
+    const fromAddress = getInputAccountAddress(coinInput[0]);
     const OPERATION_CONTRACT_CALL = {
       name: OperationName.contractCall,
       from: {
@@ -612,7 +661,7 @@ describe('Tx util', () => {
     });
   });
 
-  describe('getOperation', () => {
+  describe('get isolated operations', () => {
     it('should getContractCreatedOperations return operations from transaction Create', () => {
       const operations = getContractCreatedOperations({
         inputs: MOCK_TRANSACTION_CREATE_CONTRACT.transaction.inputs || [],
@@ -653,14 +702,26 @@ describe('Tx util', () => {
       expect(operationsCreate.length).toEqual(0);
     });
 
-    it('should getTransferOperations return transfer operations', () => {
+    it('should getTransferOperations return transfer operations from coin inputs', () => {
       const operations = getTransferOperations({
-        inputs: MOCK_TRANSACTION_TRANSFER.transaction.inputs || [],
-        outputs: MOCK_TRANSACTION_TRANSFER.transaction.outputs || [],
+        inputs: MOCK_TRANSACTION_TRANSFER_FROM_COIN.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_TRANSFER_FROM_COIN.transaction.outputs || [],
       });
       expect(operations.length).toEqual(1);
       expect(operations[0]).toStrictEqual(
-        MOCK_TRANSACTION_TRANSFER.tx.operations[0]
+        MOCK_TRANSACTION_TRANSFER_FROM_COIN.tx.operations[0]
+      );
+    });
+
+    it('should getTransferOperations return transfer operations from message inputs', () => {
+      const operations = getTransferOperations({
+        inputs: MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE.transaction.inputs || [],
+        outputs:
+          MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE.transaction.outputs || [],
+      });
+      expect(operations.length).toEqual(1);
+      expect(operations[0]).toStrictEqual(
+        MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE.tx.operations[0]
       );
     });
 
@@ -684,12 +745,33 @@ describe('Tx util', () => {
 
     it('should getContractTransferOperations return empty', () => {
       const operations = getContractTransferOperations({
-        receipts: MOCK_TRANSACTION_TRANSFER.receipts || [],
+        receipts: MOCK_TRANSACTION_TRANSFER_FROM_COIN.receipts || [],
       });
 
       expect(operations.length).toEqual(0);
     });
 
+    it('should getWithdrawFromFuelOperations return withdraw from fuel operations', () => {
+      const operations = getWithdrawFromFuelOperations({
+        inputs: MOCK_TRANSACTION_WITHDRAW_FROM_FUEL.transaction.inputs || [],
+        receipts: MOCK_TRANSACTION_WITHDRAW_FROM_FUEL.receipts,
+      });
+      expect(operations.length).toEqual(1);
+      expect(operations[0]).toStrictEqual(
+        MOCK_TRANSACTION_WITHDRAW_FROM_FUEL.tx.operations[0]
+      );
+    });
+
+    it('should getWithdrawFromFuelOperations return empty', () => {
+      const operations = getWithdrawFromFuelOperations({
+        inputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || [],
+        receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts,
+      });
+      expect(operations.length).toEqual(0);
+    });
+  });
+
+  describe('getOperation', () => {
     it('should getOperations return contract call and contract transfer operations', () => {
       const operations = getOperations({
         transactionType: MOCK_TRANSACTION_CONTRACT_CALL.transaction.type,
@@ -731,16 +813,31 @@ describe('Tx util', () => {
       expect(operations[0]).toStrictEqual(operationsCallNoAmount); // contract call
     });
 
-    it('should getOperations return transfer operations', () => {
+    it('should getOperations return transfer operations from coin input', () => {
       const operations = getOperations({
-        transactionType: MOCK_TRANSACTION_TRANSFER.transaction.type,
-        inputs: MOCK_TRANSACTION_TRANSFER.transaction.inputs || [],
-        outputs: MOCK_TRANSACTION_TRANSFER.transaction.outputs || [],
-        receipts: MOCK_TRANSACTION_TRANSFER.receipts || [],
+        transactionType: MOCK_TRANSACTION_TRANSFER_FROM_COIN.transaction.type,
+        inputs: MOCK_TRANSACTION_TRANSFER_FROM_COIN.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_TRANSFER_FROM_COIN.transaction.outputs || [],
+        receipts: MOCK_TRANSACTION_TRANSFER_FROM_COIN.receipts || [],
       });
       expect(operations.length).toEqual(1);
       expect(operations[0]).toStrictEqual(
-        MOCK_TRANSACTION_TRANSFER.tx.operations[0]
+        MOCK_TRANSACTION_TRANSFER_FROM_COIN.tx.operations[0]
+      );
+    });
+
+    it('should getOperations return transfer operations from message input', () => {
+      const operations = getOperations({
+        transactionType:
+          MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE.transaction.type,
+        inputs: MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE.transaction.inputs || [],
+        outputs:
+          MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE.transaction.outputs || [],
+        receipts: MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE.receipts || [],
+      });
+      expect(operations.length).toEqual(1);
+      expect(operations[0]).toStrictEqual(
+        MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE.tx.operations[0]
       );
     });
 
@@ -925,14 +1022,28 @@ describe('Tx util', () => {
       );
     });
 
-    it('should getFee return fee from transfer transaction', () => {
+    it('should getFee return fee from transfer transaction from coin input', () => {
       const fee = getFee({
-        transaction: MOCK_TRANSACTION_TRANSFER.transaction,
-        receipts: MOCK_TRANSACTION_TRANSFER.receipts || [],
+        transaction: MOCK_TRANSACTION_TRANSFER_FROM_COIN.transaction,
+        receipts: MOCK_TRANSACTION_TRANSFER_FROM_COIN.receipts || [],
         gasPerByte: MOCK_GAS_PER_BYTE,
         gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
       });
-      expect(fee.valueOf()).toEqual(MOCK_TRANSACTION_TRANSFER.tx.fee.valueOf());
+      expect(fee.valueOf()).toEqual(
+        MOCK_TRANSACTION_TRANSFER_FROM_COIN.tx.fee.valueOf()
+      );
+    });
+
+    it('should getFee return fee from transfer transaction from message input', () => {
+      const fee = getFee({
+        transaction: MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE.transaction,
+        receipts: MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE.receipts || [],
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+      });
+      expect(fee.valueOf()).toEqual(
+        MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE.tx.fee.valueOf()
+      );
     });
 
     it('should getFee return fee from mint transaction (zero)', () => {
@@ -963,17 +1074,34 @@ describe('Tx util', () => {
       );
     });
 
-    it('should parseTx return correct data for transfer transaction', () => {
+    it('should parseTx return correct data for transfer transaction from coin input', () => {
       const tx = parseTx({
-        transaction: MOCK_TRANSACTION_TRANSFER.transaction,
-        receipts: MOCK_TRANSACTION_TRANSFER.receipts || [],
+        transaction: MOCK_TRANSACTION_TRANSFER_FROM_COIN.transaction,
+        receipts: MOCK_TRANSACTION_TRANSFER_FROM_COIN.receipts || [],
         gasPerByte: MOCK_GAS_PER_BYTE,
         gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
         gqlStatus: 'SuccessStatus',
-        id: MOCK_TRANSACTION_TRANSFER.tx.id,
+        id: MOCK_TRANSACTION_TRANSFER_FROM_COIN.tx.id,
       });
 
-      expect(reparse(tx)).toStrictEqual(reparse(MOCK_TRANSACTION_TRANSFER.tx));
+      expect(reparse(tx)).toStrictEqual(
+        reparse(MOCK_TRANSACTION_TRANSFER_FROM_COIN.tx)
+      );
+    });
+
+    it('should parseTx return correct data for transfer transaction from message input', () => {
+      const tx = parseTx({
+        transaction: MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE.transaction,
+        receipts: MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE.receipts || [],
+        gasPerByte: MOCK_GAS_PER_BYTE,
+        gasPriceFactor: MOCK_GAS_PRICE_FACTOR,
+        gqlStatus: 'SuccessStatus',
+        id: MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE.tx.id,
+      });
+
+      expect(reparse(tx)).toStrictEqual(
+        reparse(MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE.tx)
+      );
     });
 
     it('should parseTx return correct data for create contract transaction', () => {

@@ -2,11 +2,14 @@ import { AddressType } from '@fuel-wallet/types';
 import type {
   InputCoin,
   InputContract,
+  InputMessage,
   OutputChange,
   OutputCoin,
   OutputContract,
   OutputContractCreated,
+  OutputMessage,
   OutputVariable,
+  ReceiptMessageOut,
   ReceiptReturn,
   ReceiptScriptResult,
   Transaction,
@@ -19,7 +22,13 @@ import type {
 import { ReceiptType, TransactionType, OutputType, InputType, bn } from 'fuels';
 
 import type { Tx } from '../utils';
-import { dateToTai64, OperationName, TxStatus, TxType } from '../utils';
+import {
+  ChainName,
+  dateToTai64,
+  OperationName,
+  TxStatus,
+  TxType,
+} from '../utils';
 
 type MockTransaction = {
   transaction: Transaction;
@@ -434,6 +443,7 @@ export const MOCK_TRANSACTION_MINT: MockTransaction = {
 
 export const MOCK_TRANSACTION_TRANSFER_PARTS: {
   inputCoin: InputCoin;
+  inputMessage: InputMessage;
   outputCoin: OutputCoin;
   outputChange: OutputChange;
   receiptReturn: ReceiptReturn;
@@ -457,6 +467,22 @@ export const MOCK_TRANSACTION_TRANSFER_PARTS: {
     predicateDataLength: 0,
     predicate: '0x',
     predicateData: '0x',
+  },
+  inputMessage: {
+    amount: bn.parseUnits('0.001'),
+    data: '0x',
+    dataLength: 0,
+    nonce: bn(2),
+    predicate: '0x',
+    predicateData: '0x',
+    predicateDataLength: 0,
+    predicateLength: 0,
+    recipient:
+      '0x06300e686a5511c7ba0399fc68dcbe0ca2d8f54f7e6afea73c505dd3bcacf33b',
+    sender:
+      '0x000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+    type: InputType.Message,
+    witnessIndex: 0,
   },
   outputCoin: {
     type: OutputType.Coin,
@@ -502,8 +528,7 @@ export const MOCK_TRANSACTION_TRANSFER: MockTransaction = {
     script: '0x24000000',
     scriptData: '0x',
     inputs: [
-      MOCK_TRANSACTION_TRANSFER_PARTS.inputCoin,
-      MOCK_TRANSACTION_TRANSFER_PARTS.inputCoin,
+      // here we don't have inputs. they should be defined in next mocks (from coin or message)
     ],
     outputs: [
       MOCK_TRANSACTION_TRANSFER_PARTS.outputCoin,
@@ -557,5 +582,158 @@ export const MOCK_TRANSACTION_TRANSFER: MockTransaction = {
   ],
 };
 
+export const MOCK_TRANSACTION_TRANSFER_FROM_COIN: MockTransaction = {
+  ...MOCK_TRANSACTION_TRANSFER,
+  transaction: {
+    ...MOCK_TRANSACTION_TRANSFER.transaction,
+    inputs: [
+      MOCK_TRANSACTION_TRANSFER_PARTS.inputCoin,
+      MOCK_TRANSACTION_TRANSFER_PARTS.inputCoin,
+    ],
+  },
+};
+
+export const MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE: MockTransaction = {
+  ...MOCK_TRANSACTION_TRANSFER,
+  transaction: {
+    ...MOCK_TRANSACTION_TRANSFER.transaction,
+    inputs: [
+      MOCK_TRANSACTION_TRANSFER_PARTS.inputMessage,
+      MOCK_TRANSACTION_TRANSFER_PARTS.inputMessage,
+    ],
+  },
+};
+
+export const MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS: {
+  inputCoin: InputCoin;
+  outputMessage: OutputMessage;
+  outputChange: OutputChange;
+  receiptMessageOut: ReceiptMessageOut;
+  receiptReturn: ReceiptReturn;
+  receiptScriptResult: ReceiptScriptResult;
+} = {
+  inputCoin: {
+    type: InputType.Coin,
+    utxoID: {
+      transactionId:
+        '0x4590aa02d0b0a275858903d8eec5dd25f647eb7f46e27504c16c115b6f44da2e',
+      outputIndex: 1,
+    },
+    owner: '0xba8de454d50b4a2e53268849e5442d516a9715bc9c2db5f230d586bafa4ed666',
+    amount: bn.parseUnits('0.008'),
+    assetId:
+      '0x0000000000000000000000000000000000000000000000000000000000000000',
+    txPointer: { blockHeight: 0, txIndex: 0 },
+    witnessIndex: 0,
+    maturity: 0,
+    predicateLength: 0,
+    predicateDataLength: 0,
+    predicate: '0x',
+    predicateData: '0x',
+  },
+  outputMessage: {
+    type: OutputType.Message,
+    recipient:
+      '0x0000000000000000000000000000000000000000000000000000000000000000',
+    amount: bn(0),
+  },
+  outputChange: {
+    type: OutputType.Change,
+    to: '0xba8de454d50b4a2e53268849e5442d516a9715bc9c2db5f230d586bafa4ed666',
+    amount: bn(0),
+    assetId:
+      '0x0000000000000000000000000000000000000000000000000000000000000000',
+  },
+  receiptMessageOut: {
+    type: ReceiptType.MessageOut,
+    messageID:
+      '0x609a3e324753376cdbb64627d7365a5e039e522c584f73a3bf5ece00509cd24f',
+    sender:
+      '0x4aec2335430f52d0314a03b244d285c675d790dfbf0bc853fd31e39548ad8b7d',
+    recipient:
+      '0x000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+    amount: bn.parseUnits('0.001'),
+    nonce: '0x66c4d70c08ff30cd2d9dae0b6fd05972997579328529bb0605dd604afedfdf93',
+    digest:
+      '0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+    data: new Uint8Array(),
+  },
+  receiptReturn: {
+    type: ReceiptType.Return,
+    id: '0x0000000000000000000000000000000000000000000000000000000000000000',
+    val: bn('0x0'),
+    pc: bn('0x2874'),
+    is: bn('0x2868'),
+  },
+  receiptScriptResult: {
+    type: ReceiptType.ScriptResult,
+    result: bn(0),
+    gasUsed: bn('0x93'),
+  },
+};
+
+export const MOCK_TRANSACTION_WITHDRAW_FROM_FUEL: MockTransaction = {
+  transaction: {
+    type: 0,
+    gasPrice: bn(0),
+    gasLimit: bn(100000000),
+    maturity: 0,
+    inputs: [MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.inputCoin],
+    outputs: [
+      MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.outputMessage,
+      MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.outputChange,
+    ],
+    witnesses: [{ data: '0x', dataLength: 0 }],
+    inputsCount: 1,
+    outputsCount: 2,
+    witnessesCount: 1,
+    scriptLength: 56,
+    scriptDataLength: 0,
+    receiptsRoot:
+      '0x0000000000000000000000000000000000000000000000000000000000000000',
+    script:
+      '0x5040c0105d44c0064c40001124000000000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb9226600000000000f4240',
+    scriptData: '0x',
+  },
+  tx: {
+    operations: [
+      {
+        name: OperationName.withdrawFromFuel,
+        from: {
+          type: AddressType.account,
+          address:
+            '0xba8de454d50b4a2e53268849e5442d516a9715bc9c2db5f230d586bafa4ed666',
+        },
+        to: {
+          type: AddressType.account,
+          address:
+            '0x000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+          chain: ChainName.ethereum,
+        },
+        assetsSent: [
+          {
+            amount: bn.parseUnits('0.001'),
+            assetId:
+              '0x0000000000000000000000000000000000000000000000000000000000000000',
+          },
+        ],
+      },
+    ],
+    gasUsed: bn('0x93'),
+    fee: bn('0x0'),
+    isTypeCreate: false,
+    isTypeScript: true,
+    isTypeMint: false,
+    type: TxType.script,
+  },
+  receipts: [
+    MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.receiptMessageOut,
+    MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.receiptReturn,
+    MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.receiptScriptResult,
+  ],
+};
+
 export const MOCK_GAS_PER_BYTE = bn(4);
 export const MOCK_GAS_PRICE_FACTOR = bn(1000000000);
+export const MOCK_CUSTOM_ASSET_ID =
+  '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d90';

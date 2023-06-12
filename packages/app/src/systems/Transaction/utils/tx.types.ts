@@ -10,6 +10,11 @@ import type {
   TransactionType,
 } from 'fuels';
 
+export enum ChainName {
+  ethereum = 'ethereum',
+  fuel = 'fuel',
+}
+
 export enum OperationName {
   payBlockProducer = 'Pay network fee to block producer',
   contractCreated = 'Contract created',
@@ -20,6 +25,7 @@ export enum OperationName {
   mint = 'Mint asset',
   predicatecall = 'Predicate call',
   script = 'Script',
+  withdrawFromFuel = 'Withdraw from Fuel',
 }
 
 export enum OperationDirection {
@@ -47,9 +53,10 @@ export enum TxType {
   script = 'Script',
 }
 
-export type Address = {
+export type TxAddress = {
   address: string;
   type: AddressType;
+  chain?: ChainName;
 };
 
 export type Coin = {
@@ -59,15 +66,20 @@ export type Coin = {
 
 export type Operation = {
   name?: OperationName;
-  from?: Address;
-  to?: Address;
+  from?: TxAddress;
+  to?: TxAddress;
   assetsSent?: Array<Coin>;
 };
 
-export type InputOutputParam = {
+export type InputParam = {
   inputs: Input[];
+};
+
+export type OutputParam = {
   outputs: Output[];
 };
+
+export type InputOutputParam = InputParam & OutputParam;
 
 export type ReceiptParam = {
   receipts: TransactionResultReceipt[];

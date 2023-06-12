@@ -1,9 +1,9 @@
 import { Button, Flex, Text } from '@fuel-ui/react';
 
-import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuel } from '~/src/hooks/useFuel';
-import { useIsConnected } from '~/src/hooks/useIsConnected';
-import { useLoading } from '~/src/hooks/useLoading';
+import { ExampleBox } from '../../src/components/ExampleBox';
+import { useFuel } from '../../src/hooks/useFuel';
+import { useIsConnected } from '../../src/hooks/useIsConnected';
+import { useLoading } from '../../src/hooks/useLoading';
 
 export function Connection() {
   const [fuel, notDetected] = useFuel();

@@ -10,6 +10,7 @@ export const {
   VITE_DATABASE_VERSION,
   VITE_CRX_NAME,
   VITE_CRX,
+  VITE_AUTO_LOCK_IN_MINUTES,
   NODE_ENV,
 } = import.meta.env;
 
@@ -33,4 +34,4 @@ export const IS_TEST = process.env.NODE_ENV === 'test';
 export const IS_CRX_POPUP =
   IS_CRX && globalThis.location.pathname === CRXPages.popup;
 /** Time in minutes before Wallet auto locks */
-export const AUTO_LOCK_IN_MINUTES = 20;
+export const AUTO_LOCK_IN_MINUTES = VITE_AUTO_LOCK_IN_MINUTES;
