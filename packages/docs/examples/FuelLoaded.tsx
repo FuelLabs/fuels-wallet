@@ -7,6 +7,7 @@ export function FuelLoaded() {
   const [fuel, setFuel] = useState<Window['fuel']>();
 
   useEffect(() => {
+    /* detectFuel:start */
     // Fuel loaded handler
     const onFuelLoaded = () => {
       setFuel(window.fuel);
@@ -24,6 +25,7 @@ export function FuelLoaded() {
     return () => {
       document.removeEventListener('FuelLoaded', onFuelLoaded);
     };
+    /* detectFuel:end */
   }, []);
 
   return (
