@@ -66,7 +66,7 @@ import { createConnector } from '@fuel-wallet/sdk';
 createConnector({ name: 'Wallet Name' });
 ```
 
-In case you are using our Communication SDK, [Conent Page Script](https://developer.chrome.com/docs/extensions/mv3/content_scripts/) import `ContentProxyConnection` and inform the name of Wallet Exntesion.
+If you are using our Communication SDK [Content Page Script](https://developer.chrome.com/docs/extensions/mv3/content_scripts/) import `ContentProxyConnection` and pass the name of Wallet Extension.
 
 > Otherwise remember to filter events by the ones that have your Wallet Connector Name as the target.
 
