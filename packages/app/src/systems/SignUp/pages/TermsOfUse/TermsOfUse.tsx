@@ -1,5 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button } from '@fuel-ui/react';
+import { Form, Box, Button, Checkbox } from '@fuel-ui/react';
+import { useState } from 'react';
 
 import { Header, Stepper } from '../../components';
 import { useSignUp, useSignUpStepper } from '../../hooks';
@@ -9,12 +10,13 @@ import { ReactComponent as Terms } from './data/terms.md';
 import { Layout, MotionStack, animations } from '~/systems/Core';
 
 export function TermsOfUse() {
+  const [isSavedChecked, setCheckedTerms] = useState(false);
   const { handlers } = useSignUp();
   const { steps } = useSignUpStepper();
 
   return (
     <Layout title="Terms of Service" isPublic>
-      <MotionStack gap="$8" align="center" {...animations.slideInRight()}>
+      <MotionStack gap="$6" align="center" {...animations.slideInRight()}>
         <Stepper steps={steps} active={1} />
         <Header
           title="Terms of use Agreement"
@@ -25,11 +27,28 @@ export function TermsOfUse() {
             <Terms />
           </Box.Flex>
         </Box>
+        <Form.Control css={styles.agreeContainer}>
+          <Checkbox
+            id="agreeTerms"
+            aria-label="Agree with terms"
+            checked={isSavedChecked}
+            onCheckedChange={(e) => {
+              setCheckedTerms(e as boolean);
+            }}
+          />
+          <Form.Label htmlFor="agreeTerms">
+            I Agree to the Terms Of Use Agreement
+          </Form.Label>
+        </Form.Control>
         <Box.Flex gap="$2" css={styles.footer}>
           <Button variant="ghost" onPress={handlers.reset}>
             Back
           </Button>
-          <Button intent="primary" onPress={handlers.next}>
+          <Button
+            intent="primary"
+            isDisabled={!isSavedChecked}
+            onPress={handlers.next}
+          >
             Next: Seed Phrase
           </Button>
         </Box.Flex>
@@ -77,8 +96,12 @@ const styles = {
       color: '$accent11',
     },
   },
+  agreeContainer: cssObj({
+    width: '$full',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  }),
   termsContainer: cssObj({
-    height: SIGNUP_HEIGHT,
     overflow: 'hidden',
     maxWidth: '700px',
     borderRadius: '$8',

@@ -118,6 +118,8 @@ test.describe('FuelWallet Extension', () => {
 
       /** Accept terms */
       await hasText(page, /Terms of use Agreement/i);
+      const agreeCheckbox = getByAriaLabel(page, 'Agree with terms');
+      await agreeCheckbox.click();
       await getButtonByText(page, /Next: Seed Phrase/i).click();
 
       /** Copy Mnemonic */
