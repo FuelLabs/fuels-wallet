@@ -36,8 +36,7 @@ export function ReportErrors() {
                 sorry for the inconvenience.
                 <br />
                 <br />
-                Would you like to send us the error report to help us improve
-                the Fuel Wallet?
+                Would you like to send this error report to Fuel Wallet team?
               </Text>
 
               <Input isDisabled={true} css={styles.textArea}>
