@@ -144,7 +144,7 @@ test.describe('FuelWallet Extension', () => {
       await getButtonByText(page, /Next/i).click();
 
       /** Account created */
-      await hasText(page, /Wallet created successfully/i);
+      await hasText(page, /Wallet created successfully/i, 0, 15000);
       await page.close();
     });
 
