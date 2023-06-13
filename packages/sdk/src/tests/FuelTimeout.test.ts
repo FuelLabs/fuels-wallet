@@ -1,9 +1,10 @@
-import { Fuel } from './Fuel';
-import { MockConnection } from './__mock__/Fuel';
+import { Fuel } from '../Fuel';
 
-const fuel = new Fuel();
+import './__mock__/MockConnections';
 
 describe('Fuel Timeout', () => {
+  const fuel = new Fuel();
+
   beforeAll(() => {
     // Inject `fuel` on `window` after 500ms
     setTimeout(() => {
@@ -11,8 +12,6 @@ describe('Fuel Timeout', () => {
       // @ts-ignore
       window.fuel = fuel;
     }, 500);
-
-    MockConnection.start(fuel);
   });
 
   test('hasWallet with timeout', async () => {

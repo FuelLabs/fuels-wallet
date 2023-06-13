@@ -9,17 +9,29 @@ import type {
 } from '@fuel-wallet/types';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 
+import { hasWindow } from '../utils/hasWindow';
+import { deferPromise } from '../utils/promise';
+
 import { BaseConnection } from './BaseConnection';
 
 export class WindowConnection extends BaseConnection {
+  isListenerAdded = false;
+  queue: JSONRPCRequest[] = [];
+  _retry = 0;
+  _injectionTimeout: NodeJS.Timer;
+  _hasWallet = deferPromise<boolean>();
   connectorName: string;
   private connectors: Array<FuelWalletConnector>;
 
-  constructor(connector: FuelWalletConnector) {
+  constructor(connector: FuelWalletConnector = { name: 'Fuel Wallet' }) {
     super();
     this.connectorName = connector.name;
     this.connectors = [connector];
-    window.addEventListener(EVENT_MESSAGE, this.onMessage.bind(this));
+    this.handleFuelInjected();
+    this._injectionTimeout = setInterval(
+      this.handleFuelInjected.bind(this),
+      100
+    );
   }
 
   hasConnector(connectorName: string): boolean {
@@ -34,8 +46,8 @@ export class WindowConnection extends BaseConnection {
     if (this.hasConnector(connector.name)) {
       throw new Error(`"${connector.name}" connector already exists!`);
     }
-    this.emit('connectors', this.listConnectors());
     this.connectors.push(connector);
+    this.emit('connectors', this.listConnectors());
   }
 
   removeConnector(connectorName: string): void {
@@ -84,8 +96,16 @@ export class WindowConnection extends BaseConnection {
     );
   }
 
+  async hasWallet(): Promise<boolean> {
+    return this._hasWallet.promise;
+  }
+
   async sendRequest(request: JSONRPCRequest | null) {
-    if (request) {
+    if (!request) return;
+
+    if (!window.fuel) {
+      this.queue.push(request);
+    } else {
       this.postMessage({
         type: MessageTypes.request,
         target: CONTENT_SCRIPT_NAME,
@@ -107,5 +127,38 @@ export class WindowConnection extends BaseConnection {
       throw new Error(`Wallet Connector ${this.connectorName} not found!`);
     }
     window.postMessage(message, origin || window.origin);
+  }
+
+  handleFuelInjected() {
+    // Timeout after 10 retries i.e., 1 second
+    if (this._retry === 9) {
+      clearInterval(this._injectionTimeout);
+      this._hasWallet.resolve(false);
+      this.client.rejectAllPendingRequests(
+        'Timeout fuel not detected on the window!'
+      );
+      return;
+    }
+
+    // eslint-disable-next-line no-plusplus
+    this._retry++;
+
+    if (hasWindow) {
+      if (!this.isListenerAdded) {
+        window.addEventListener(EVENT_MESSAGE, this.onMessage.bind(this));
+        this.isListenerAdded = true;
+      }
+      if (window.fuel) {
+        this._hasWallet.resolve(true);
+
+        // Execute pending requests in the queue
+        let request = this.queue.shift();
+        while (request) {
+          this.sendRequest(request);
+          request = this.queue.shift();
+        }
+        clearInterval(this._injectionTimeout);
+      }
+    }
   }
 }

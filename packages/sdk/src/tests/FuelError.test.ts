@@ -1,12 +1,9 @@
-import { Fuel } from './Fuel';
-import { MockConnection } from './__mock__/Fuel';
+import { Fuel } from '../Fuel';
 
-const fuel = new Fuel();
+import './__mock__/MockConnections';
 
 describe('Fuel Error', () => {
-  beforeAll(() => {
-    MockConnection.start(fuel);
-  });
+  const fuel = new Fuel();
 
   test('fuel not detected', async () => {
     const hasWallet = await fuel.hasWallet();
