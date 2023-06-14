@@ -54,7 +54,7 @@ const styles = {
     px: '$4',
     pb: '$4',
     mt: '$2',
-    mb: '$6',
+    mb: '$4',
     flexShrink: 0,
     gap: '$2',
     borderBottom: '1px solid $border',
