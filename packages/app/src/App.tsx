@@ -7,7 +7,8 @@ import { Providers } from '~/systems/Core';
 export function App() {
   return (
     <Providers>
-      {getRoutes()} {(IS_TEST || IS_DEVELOPMENT) && <ThrowError />}
+      {getRoutes()}
+      {(IS_TEST || IS_DEVELOPMENT) && <ThrowError />}
     </Providers>
   );
 }
