@@ -7,7 +7,7 @@ import { AssetsTitle, HomeActions } from '../../components';
 import { VITE_FUEL_PROVIDER_URL } from '~/config';
 import { BalanceWidget, useAccounts } from '~/systems/Account';
 import { AssetList } from '~/systems/Asset';
-import { Layout, Pages } from '~/systems/Core';
+import { Layout, Pages, scrollable } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 import { useNetworks } from '~/systems/Network';
 
@@ -28,7 +28,7 @@ export function Home() {
   return (
     <Layout title="Home" isHome>
       <Layout.TopBar />
-      <Layout.Content noBorder>
+      <Layout.Content noBorder css={styles.content}>
         <Box.Flex css={{ height: '100%', flexDirection: 'column' }}>
           <BalanceWidget
             visibility={visibility}
@@ -42,14 +42,18 @@ export function Home() {
             isDisabled={isLoading}
           />
           <Box.Stack css={styles.assets}>
-            <AssetsTitle />
-            <AssetList
-              assets={balanceAssets}
-              isLoading={isLoading}
-              emptyProps={{
-                showFaucet: selectedNetwork?.url === VITE_FUEL_PROVIDER_URL,
-              }}
-            />
+            <Box css={styles.assetsTitle}>
+              <AssetsTitle />
+            </Box>
+            <Box.Stack css={styles.assetsList}>
+              <AssetList
+                assets={balanceAssets}
+                isLoading={isLoading}
+                emptyProps={{
+                  showFaucet: selectedNetwork?.url === VITE_FUEL_PROVIDER_URL,
+                }}
+              />
+            </Box.Stack>
           </Box.Stack>
         </Box.Flex>
       </Layout.Content>
@@ -58,8 +62,21 @@ export function Home() {
 }
 
 const styles = {
+  content: cssObj({
+    flex: 1,
+    overflow: 'hidden',
+  }),
   assets: cssObj({
-    gap: '$4',
+    gap: '$2',
+    overflow: 'hidden',
+    flex: 1,
+  }),
+  assetsTitle: cssObj({
     px: '$4',
+  }),
+  assetsList: cssObj({
+    padding: '$2 $0 $4 $4',
+    ...scrollable(),
+    overflowY: 'scroll !important',
   }),
 };

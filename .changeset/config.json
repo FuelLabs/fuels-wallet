@@ -19,8 +19,7 @@
     "asset-list",
     "@fuel-wallet/config",
     "@fuel-wallet/xstore",
-    "@fuel-wallet/storage",
-    "fuels-wallet"
+    "@fuel-wallet/storage"
   ],
   "snapshot": {
     "useCalculatedVersion": true,
