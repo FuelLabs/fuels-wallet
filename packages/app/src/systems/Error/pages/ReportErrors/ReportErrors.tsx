@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import {
   Icon,
-  Stack,
   FuelLogo,
   Heading,
   Button,
@@ -21,14 +20,14 @@ export function ReportErrors() {
 
   return (
     <Layout title="Error" isPublic>
-      <Stack>
+      <Box.Stack>
         <Layout.Content as="div">
           <Box as="div">
-            <Stack align="center">
+            <Box.Stack align="center">
               <FuelLogo size={60} />
               <Heading as="h3">Help us improve Fuel Wallet</Heading>
-            </Stack>
-            <Stack align="center">
+            </Box.Stack>
+            <Box.Stack align="center">
               <Icon icon="AlertTriangle" size={32} />
               <Heading as="h5">What happened?</Heading>
               <Text>
@@ -42,11 +41,11 @@ export function ReportErrors() {
               <Input isDisabled={true} css={styles.textArea}>
                 <Input.Field as="textarea" value={errors} />
               </Input>
-            </Stack>
+            </Box.Stack>
           </Box>
         </Layout.Content>
         <Layout.BottomBar>
-          <Stack css={styles.fullWidth}>
+          <Box.Stack css={styles.fullWidth}>
             <Button
               color="accent"
               variant="ghost"
@@ -64,9 +63,9 @@ export function ReportErrors() {
             >
               Ignore
             </Button>
-          </Stack>
+          </Box.Stack>
         </Layout.BottomBar>
-      </Stack>
+      </Box.Stack>
     </Layout>
   );
 }
