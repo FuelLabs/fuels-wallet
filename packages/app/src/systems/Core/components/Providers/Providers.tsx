@@ -26,13 +26,13 @@ export const theme = createTheme('fuels-wallet', {
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <ErrorBoundary>
-      <StoreProvider>
-        <ThemeProvider themes={{ wallet: theme }}>
+    <ThemeProvider themes={{ wallet: theme }}>
+      <ErrorBoundary>
+        <StoreProvider>
           {globalCss(customStyles)()}
           {children}
-        </ThemeProvider>
-      </StoreProvider>
-    </ErrorBoundary>
+        </StoreProvider>
+      </ErrorBoundary>
+    </ThemeProvider>
   );
 }
