@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Text, Card } from '@fuel-ui/react';
+import { Card } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 
 import { AccountInfoLoader } from './AccountInfoLoader';
@@ -15,12 +15,10 @@ export function AccountInfo({ headerText, account }: AccountInfoProps) {
   if (!account) return <AccountInfo.Loader />;
   return (
     <Card css={styles.root} gap="$0">
-      <Card.Header css={styles.header}>
-        <Text fontSize="sm" css={styles.headerText}>
-          {headerText}
-        </Text>
-      </Card.Header>
-      <AccountItem account={account} />
+      <Card.Header space="compact">{headerText}</Card.Header>
+      <Card.Body css={styles.cardBody}>
+        <AccountItem account={account} compact />
+      </Card.Body>
     </Card>
   );
 }
@@ -31,13 +29,7 @@ const styles = {
   root: cssObj({
     boxSizing: 'border-box',
   }),
-  header: cssObj({
-    px: '$3',
-    py: '$2',
-    display: 'flex',
-  }),
-  headerText: cssObj({
-    color: '$gray12',
-    fontWeight: '$bold',
+  cardBody: cssObj({
+    padding: '$0',
   }),
 };

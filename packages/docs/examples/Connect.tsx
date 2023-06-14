@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { Flex, Button } from '@fuel-ui/react';
+import { Box, Button } from '@fuel-ui/react';
 import { useState } from 'react';
 
 import { ExampleBox } from '../src/components/ExampleBox';
@@ -34,7 +34,7 @@ export function Connect() {
 
   return (
     <ExampleBox error={errorMessage}>
-      <Flex gap="$4">
+      <Box.Flex gap="$4">
         <Button
           onPress={handleConnect}
           isLoading={isConnecting}
@@ -49,7 +49,7 @@ export function Connect() {
         >
           {connected ? 'Disconnect' : 'Disconnected'}
         </Button>
-      </Flex>
+      </Box.Flex>
     </ExampleBox>
   );
 }

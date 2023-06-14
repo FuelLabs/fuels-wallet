@@ -22,10 +22,9 @@ export function Pre({ children, title }: PreProps) {
     <Box css={styles.root}>
       <IconButton
         size="xs"
-        icon={Icon.is('ClipboardText')}
+        icon={Icon.is('Copy')}
         css={styles.copyIcon}
         variant="ghost"
-        color="gray"
         aria-label="Copy to Clipborad"
         onPress={() =>
           typeof window !== 'undefined' && navigator.clipboard.writeText(code)
@@ -54,9 +53,9 @@ const styles = {
       pr: '50px',
       mb: '$5 !important',
       padding: '$4 $2 !important',
-      borderRadius: '$lg',
+      borderRadius: '$default',
       fontSize: '14px !important',
-      background: '$gray1 !important',
+      background: '$cardBg !important',
     },
     'pre[data-title=true]': {
       marginTop: '$0 !important',
@@ -68,29 +67,31 @@ const styles = {
       display: 'flex',
       alignItems: 'center',
       margin: 0,
-      padding: '$1 $3',
-      background: '$gray2',
-      color: '$gray10',
-      borderTopLeftRadius: '$lg',
-      borderTopRightRadius: '$lg',
-      borderBottom: '2px solid $bodyColor',
+      padding: '$2 $3',
+      background: '$cardBg',
+      color: '$intentsBase10',
+      borderTopLeftRadius: '$default',
+      borderTopRightRadius: '$default',
+      borderBottom: '1px solid $bodyColor',
+      fontFamily: '$sans',
+      letterSpacing: '$normal',
 
       span: {
         fontSize: '$sm',
       },
       a: {
-        color: '$gray10',
+        color: '$intentsBase10',
       },
     },
 
     '.token.plain': {
-      color: '$gray11',
+      color: '$intentsBase11',
     },
 
     '.linenumber': {
       boxSizing: 'border-box',
       minWidth: '30px !important',
-      color: '$gray8 !important',
+      color: '$intentsBase8 !important',
       mr: '$1',
     },
   }),
@@ -98,12 +99,12 @@ const styles = {
     position: 'absolute',
     right: 0,
     bottom: 0,
-    color: '$gray7 !important',
+    color: '$intentsBase7 !important',
     transition: 'all .3s',
-    background: '$gray1 !important',
+    background: '$intentsBase1 !important',
 
     '&:hover': {
-      color: '$gray9 !important',
+      color: '$intentsBase9 !important',
     },
   }),
 };

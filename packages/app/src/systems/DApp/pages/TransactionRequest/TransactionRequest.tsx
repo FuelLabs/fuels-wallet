@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Button, Text } from '@fuel-ui/react';
+import { Alert, Button } from '@fuel-ui/react';
 
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
@@ -17,40 +17,38 @@ export function TransactionRequest() {
 
   const shouldShowTx = status('waitingApproval') || isSendingTx;
 
+  const Header = (
+    <>
+      <ConnectInfo
+        account={ctx.account}
+        origin={ctx.input.origin!}
+        favIconUrl={ctx.input.favIconUrl}
+        title={ctx.input.title}
+        headerText="Requesting a transaction from:"
+      />
+      <Alert status="warning" css={styles.alert}>
+        <Alert.Title>Confirm before approving</Alert.Title>
+        <Alert.Description>
+          Carefully check if all the details in your transaction are correct
+        </Alert.Description>
+      </Alert>
+    </>
+  );
+
   return (
     <>
-      <Layout title={ctx.title}>
+      <Layout title={ctx.title} noBorder>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
           {ctx.isLoading && !txRequest.tx && (
-            <TxContent.Loader header={<ConnectInfo.Loader />} />
+            <TxContent.Loader header={Header} />
           )}
           {shouldShowTx && (
             <TxContent.Info
               showDetails
               tx={txRequest.tx}
               isLoading={status('loading')}
-              header={
-                <>
-                  <ConnectInfo
-                    account={ctx.account}
-                    origin={ctx.input.origin!}
-                    favIconUrl={ctx.input.favIconUrl}
-                    title={ctx.input.title}
-                    headerText="Requesting a transaction from:"
-                  />
-
-                  <Alert status="warning" css={styles.alert}>
-                    <Alert.Title>Confirm before approving</Alert.Title>
-                    <Alert.Description>
-                      <Text fontSize="xs" css={styles.alertDescription}>
-                        Carefully check if all the details in your transaction
-                        are correct
-                      </Text>
-                    </Alert.Description>
-                  </Alert>
-                </>
-              }
+              header={Header}
               assets={assets}
             />
           )}
@@ -59,6 +57,7 @@ export function TransactionRequest() {
               showDetails
               tx={txRequest.tx}
               txStatus={txRequest.approveStatus()}
+              assets={assets}
               header={
                 <TxHeader
                   id={txRequest.tx?.id}
@@ -72,7 +71,7 @@ export function TransactionRequest() {
                   <Button
                     size="sm"
                     variant="ghost"
-                    color="red"
+                    intent="error"
                     onPress={txRequest.handlers.tryAgain}
                   >
                     Try again
@@ -86,14 +85,13 @@ export function TransactionRequest() {
           <Layout.BottomBar>
             <Button
               onPress={handlers.reject}
-              color="gray"
               variant="ghost"
               isDisabled={ctx.isLoading || status('sending')}
             >
               Reject
             </Button>
             <Button
-              color="accent"
+              intent="primary"
               onPress={handlers.approve}
               isLoading={ctx.isLoading || status('sending')}
             >
@@ -114,7 +112,7 @@ const styles = {
     '& h2': {
       m: '$0',
       fontSize: '$sm',
-      color: '$gray12',
+      color: '$intentsBase12',
     },
     '& h4': {
       m: '$0',
@@ -123,18 +121,15 @@ const styles = {
   approveUrlTag: cssObj({
     alignSelf: 'center',
     background: 'transparent',
-    borderColor: '$gray8',
-    borderStyle: 'dashed',
+    borderColor: '$border',
+    borderStyle: 'solid',
   }),
   alert: cssObj({
-    '& .fuel_alert--content': {
+    '& .fuel_Alert-content': {
       gap: '$1',
     },
-    ' & .fuel_heading': {
+    ' & .fuel_Heading': {
       fontSize: '$sm',
     },
-  }),
-  alertDescription: cssObj({
-    fontWeight: '$bold',
   }),
 };

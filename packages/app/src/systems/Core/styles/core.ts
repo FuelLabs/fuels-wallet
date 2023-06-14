@@ -3,8 +3,8 @@ import { cssObj } from '@fuel-ui/css';
 import { WALLET_WIDTH, WALLET_HEIGHT } from '~/config';
 
 export const scrollable = (
-  regularColor: string = '$gray1',
-  hoverColor: string = '$gray10'
+  regularColor: string = '$intentsBase1',
+  hoverColor: string = '$intentsBase10'
 ) =>
   cssObj({
     overflowY: 'overlay',
@@ -12,7 +12,7 @@ export const scrollable = (
     scrollBehavior: 'smooth',
 
     '&::-webkit-scrollbar': {
-      width: '14px',
+      width: '$4',
       backgroundColor: 'transparent',
     },
     '&::-webkit-scrollbar-track': {

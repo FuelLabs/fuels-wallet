@@ -75,7 +75,7 @@ export const Success = (args: TxItemProps) => {
         maxWidth: 312,
         display: 'flex',
         flexDirection: 'column',
-        gap: '$4',
+        gap: '$2',
       }}
     >
       {MOCK_TRANSACTION_CONTRACT_CALLS.map((tx) => (
@@ -98,7 +98,7 @@ export const Pending = (args: TxItemProps) => {
         maxWidth: 312,
         display: 'flex',
         flexDirection: 'column',
-        gap: '$4',
+        gap: '$2',
       }}
     >
       {MOCK_TRANSACTION_CONTRACT_CALLS.map((tx) => (
@@ -121,7 +121,7 @@ export const Error = (args: TxItemProps) => {
         maxWidth: 312,
         display: 'flex',
         flexDirection: 'column',
-        gap: '$4',
+        gap: '$2',
       }}
     >
       {MOCK_TRANSACTION_CONTRACT_CALLS.map((tx) => (
@@ -138,7 +138,7 @@ export const Error = (args: TxItemProps) => {
 
 export const Loader = () => (
   <Box
-    css={{ maxWidth: 312, display: 'flex', flexDirection: 'column', gap: '$4' }}
+    css={{ maxWidth: 312, display: 'flex', flexDirection: 'column', gap: '$2' }}
   >
     <ActivityItem.Loader />
     <ActivityItem.Loader />

@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Card, Flex, Heading, Icon, Text } from '@fuel-ui/react';
+import { Avatar, Box, Card, Heading, Icon, Text } from '@fuel-ui/react';
 import { AddressType } from '@fuel-wallet/types';
 import { Address, isB256, isBech32 } from 'fuels';
 import type { FC } from 'react';
@@ -38,7 +38,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   return (
     <Card
       css={styles.root}
-      className="tx-recipient-card"
+      className="TxRecipientCard"
       data-recipient={address}
       data-type={isContract ? 'contract' : 'user'}
     >
@@ -49,15 +49,14 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
       {isEthChain ? (
         <>
           <Box css={styles.iconWrapper}>
-            {/* replace icon with currency-ethereum from tabler icons when branding gets merged */}
-            <Icon icon={Icon.is('Key')} size={16} />
+            <Icon icon={Icon.is('CurrencyEthereum')} size={20} />
           </Box>
-          <Flex css={styles.info}>
+          <Box.Flex css={styles.info}>
             <Heading as="h6" css={styles.name}>
               unknown
             </Heading>
             <EthAddress address={address} css={styles.address} />
-          </Flex>
+          </Box.Flex>
         </>
       ) : (
         <>
@@ -67,20 +66,19 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
               size="lg"
               hash={fuelAddress}
               aria-label={fuelAddress}
-              background="fuel"
             />
           )}
           {isContract && (
             <Box css={styles.iconWrapper}>
-              <Icon icon={Icon.is('Code')} size={16} />
+              <Icon icon={Icon.is('Code')} size={20} />
             </Box>
           )}
-          <Flex css={styles.info}>
+          <Box.Flex css={styles.info}>
             <Heading as="h6" css={styles.name}>
               {name}
             </Heading>
             <FuelAddress address={fuelAddress} css={styles.address} />
-          </Flex>
+          </Box.Flex>
         </>
       )}
     </Card>
@@ -96,11 +94,10 @@ const styles = {
     gap: '$3',
 
     '.fuel_copyable': {
-      color: '$gray12',
+      color: '$intentsBase12',
       fontSize: '$sm',
-      fontWeight: '$semibold',
     },
-    '.fuel_avatar-generated': {
+    '.fuel_Avatar-generated': {
       width: 56,
       height: 56,
       '& svg': {
@@ -111,11 +108,11 @@ const styles = {
   }),
   from: cssObj({
     fontSize: '$sm',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
   }),
   iconWrapper: cssObj({
     padding: '$5',
-    background: '$gray3',
+    background: '$intentsBase3',
     borderRadius: '$full',
   }),
   info: cssObj({
@@ -124,7 +121,7 @@ const styles = {
     gap: '$1',
   }),
   address: cssObj({
-    fontSize: '$xs',
+    fontSize: '$sm',
   }),
   name: cssObj({
     margin: '0px 0px -5px',

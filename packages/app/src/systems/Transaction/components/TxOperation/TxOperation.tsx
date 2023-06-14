@@ -30,7 +30,7 @@ export function TxOperation({
     };
   });
   return (
-    <Card css={styles.root}>
+    <Card css={styles.root} className="TxOperation">
       <TxFromTo
         from={from}
         to={to}
@@ -52,13 +52,13 @@ TxOperation.Loader = () => (
 
 const styles = {
   root: cssObj({
+    border: 'none',
     position: 'relative',
-    '.fuel_card': {
-      boxShadow: 'none',
-    },
-    '.asset_amount': {
-      pt: '$2',
-      borderTop: '1px dashed $gray3',
+    display: 'flex',
+    flexDirection: 'column',
+
+    '.TxFromTo': {
+      borderBottom: '1px solid $bodyBg',
     },
   }),
 };

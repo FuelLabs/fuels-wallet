@@ -1,4 +1,4 @@
-import { BoxCentered } from '@fuel-ui/react';
+import { Box } from '@fuel-ui/react';
 
 import { WalletCreated } from './WalletCreated';
 
@@ -13,7 +13,7 @@ export default {
 };
 
 export const Usage = () => (
-  <BoxCentered minHS>
+  <Box.Centered minHS>
     <WalletCreated account={MOCK_ACCOUNTS[0]} />
-  </BoxCentered>
+  </Box.Centered>
 );

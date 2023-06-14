@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Image, Flex, Box } from '@fuel-ui/react';
+import { Image, Box } from '@fuel-ui/react';
 import Plyr from 'plyr-react';
 
 interface Media {
@@ -15,8 +15,8 @@ interface DemoProps {
 export function Demo({ media }: DemoProps) {
   if (media.length > 0) {
     return (
-      <Flex css={styles.outerContainer}>
-        <Flex gap={'20px'} css={styles.innerContainer}>
+      <Box.Flex css={styles.outerContainer}>
+        <Box.Flex gap={'20px'} css={styles.innerContainer}>
           {media.map((example, index) => {
             if (example.type === 'img') {
               return <Image key={index} alt={example.alt} src={example.src} />;
@@ -35,8 +35,8 @@ export function Demo({ media }: DemoProps) {
               </Box>
             );
           })}
-        </Flex>
-      </Flex>
+        </Box.Flex>
+      </Box.Flex>
     );
   }
 }

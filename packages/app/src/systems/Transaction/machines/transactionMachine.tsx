@@ -79,6 +79,7 @@ export const transactionMachine = createMachine(
       },
       fetching: {
         entry: 'clearError',
+        tags: ['isLoading'],
         invoke: {
           src: 'getTransaction',
           data: (_, event: MachineEvents) => ({
@@ -98,6 +99,7 @@ export const transactionMachine = createMachine(
         },
       },
       fetchingResult: {
+        tags: ['isLoading'],
         invoke: {
           src: 'getTransactionResult',
           data: (ctx) => ({
@@ -108,16 +110,17 @@ export const transactionMachine = createMachine(
           onDone: [
             {
               actions: ['assignGetTransactionResultError'],
-              target: 'idle',
+              target: 'done',
               cond: FetchMachine.hasError,
             },
             {
               actions: ['assignGetTransactionResult'],
-              target: 'idle',
+              target: 'done',
             },
           ],
         },
       },
+      done: {},
     },
   },
   {

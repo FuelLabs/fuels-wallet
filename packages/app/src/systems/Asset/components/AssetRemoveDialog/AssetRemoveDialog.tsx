@@ -28,19 +28,19 @@ export function AssetRemoveDialog({
   return (
     <AlertDialog open={opened} onOpenChange={setOpened}>
       <AlertDialog.Trigger>{children}</AlertDialog.Trigger>
-      <AlertDialog.Content>
+      <AlertDialog.Content css={{ maxW: 250 }}>
         <AlertDialog.Heading>Are you sure?</AlertDialog.Heading>
         <AlertDialog.Description>
           {asset.name} will be deleted. This action cannot be undone.
         </AlertDialog.Description>
         <AlertDialog.Footer>
           <AlertDialog.Cancel>
-            <Button color="gray" variant="ghost" onPress={handleCancel}>
+            <Button variant="outlined" onPress={handleCancel}>
               Cancel
             </Button>
           </AlertDialog.Cancel>
           <AlertDialog.Action>
-            <Button variant="outlined" color="tomato" onPress={handleConfirm}>
+            <Button variant="ghost" intent="error" onPress={handleConfirm}>
               Confirm
             </Button>
           </AlertDialog.Action>

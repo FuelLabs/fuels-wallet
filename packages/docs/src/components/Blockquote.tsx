@@ -14,8 +14,8 @@ const styles = {
     mx: '$0',
     py: '$3',
     pl: '$4',
-    background: '$gray1',
-    color: '$gray9',
+    background: '$intentsBase1',
+    color: '$intentsBase9',
     fontStyle: 'italic',
 
     '& > p': {
@@ -30,7 +30,7 @@ const styles = {
       left: 0,
       width: 4,
       height: '100%',
-      background: '$gray3',
+      background: '$intentsBase3',
     },
   }),
 };

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { cssObj } from '@fuel-ui/css';
-import { Dropdown, Flex } from '@fuel-ui/react';
+import { Box, Dropdown } from '@fuel-ui/react';
 import type { Network } from '@fuel-wallet/types';
 
 import { NetworkDropdown } from '../NetworkDropdown';
@@ -17,7 +17,7 @@ export function NetworkSelector({
   onSelectNetwork,
 }: NetworkSelectorProps) {
   return (
-    <Flex css={styles.root}>
+    <Box.Flex css={styles.root}>
       <Dropdown
         popoverProps={{ side: 'bottom', align: 'start', alignOffset: 10 }}
       >
@@ -47,7 +47,7 @@ export function NetworkSelector({
           ))}
         </Dropdown.Menu>
       </Dropdown>
-    </Flex>
+    </Box.Flex>
   );
 }
 
@@ -59,13 +59,13 @@ const styles = {
     padding: '$3',
     zIndex: '$10',
 
-    '& > .fuel_text': {
+    '& > .fuel_Text': {
       fontSize: '$sm',
     },
   }),
   button: cssObj({
     fontSize: '$md',
-    bg: '$gray2 !important',
+    bg: '$intentsBase2 !important',
     flex: 1,
     minH: '36px',
     w: '200',
@@ -85,7 +85,7 @@ const styles = {
   networkItem: (active: boolean) =>
     cssObj({
       position: 'relative',
-      border: '1px solid $gray3',
+      border: '1px solid $intentsBase3',
 
       '&:not(:first-child)': {
         marginTop: 8,

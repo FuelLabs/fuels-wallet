@@ -1,4 +1,4 @@
-import { BoxCentered, Button } from '@fuel-ui/react';
+import { Box, Button } from '@fuel-ui/react';
 import type { ComponentStoryFn, Meta } from '@storybook/react';
 
 import { AccountService, MOCK_ACCOUNTS, useAccounts } from '../..';
@@ -24,14 +24,14 @@ const Template: ComponentStoryFn<typeof EditAccount> = () => {
   const { isLoading, handlers } = useAccounts();
   return (
     <Layout isLoading={isLoading}>
-      <BoxCentered css={{ minW: '100%', minH: '100%' }}>
+      <Box.Centered css={{ minW: '100%', minH: '100%' }}>
         <Button
           onPress={() => handlers.goToEdit(MOCK_ACCOUNTS[0].address)}
           isLoading={isLoading}
         >
           Toggle Modal
         </Button>
-      </BoxCentered>
+      </Box.Centered>
     </Layout>
   );
 };

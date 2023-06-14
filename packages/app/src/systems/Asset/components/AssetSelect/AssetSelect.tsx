@@ -5,16 +5,14 @@ import {
   Box,
   Button,
   Dropdown,
-  Flex,
   Icon,
   IconButton,
-  Stack,
   Text,
   Tooltip,
 } from '@fuel-ui/react';
 import type { AssetAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import type { Maybe } from '~/systems/Core';
 import { shortAddress, formatAmount } from '~/systems/Core';
@@ -33,7 +31,6 @@ export function AssetSelect({
   onSelect,
   ...props
 }: AssetSelectProps) {
-  const [width, setWidth] = useState<Maybe<number>>(null);
   const [isOpen, setIsOpen] = useState(false);
   const assetAmount = items?.find((i) => i.assetId === selected);
 
@@ -41,25 +38,18 @@ export function AssetSelect({
     onSelect(null);
   }
 
-  function handleSetWidth(isOpen: boolean) {
-    if (isOpen) {
-      const item = document.querySelector('#fuel_asset-select');
-      setWidth(item?.clientWidth ?? null);
-    }
-    setIsOpen(isOpen);
-  }
-
   return (
     <Dropdown
       {...props}
+      isOpen={isOpen}
+      onOpenChange={setIsOpen}
+      popoverProps={{ align: 'start' }}
       className="fuel_asset-select"
-      onOpenChange={handleSetWidth}
     >
       <Dropdown.Trigger>
         <Button
           role={assetAmount ? 'button' : 'combobox'}
           as={assetAmount ? 'div' : 'button'}
-          color="gray"
           size="md"
           css={styles.trigger}
           id="fuel_asset-select"
@@ -67,13 +57,13 @@ export function AssetSelect({
           data-value={assetAmount?.name}
           rightIcon={
             <Icon
-              icon="CaretDown"
+              icon="ChevronDown"
               aria-label="Button Caret"
               className={cx({ rotate: isOpen })}
             />
           }
         >
-          <Flex css={styles.input}>
+          <Box.Flex css={styles.input}>
             {assetAmount && (
               <>
                 {assetAmount.name ? (
@@ -105,11 +95,10 @@ export function AssetSelect({
                 Select one asset
               </Text>
             )}
-          </Flex>
+          </Box.Flex>
           {assetAmount && (
             <IconButton
               variant="link"
-              color="gray"
               aria-label="Clear"
               icon={Icon.is('X')}
               onPress={handleClear}
@@ -120,8 +109,9 @@ export function AssetSelect({
       <Dropdown.Menu
         autoFocus
         aria-label="Actions"
-        css={styles.menu(width)}
-        onAction={(assetId) => onSelect(assetId.toString())}
+        css={{ ...styles.menu, maxWidth: 250 }}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onAction={(assetId: any) => onSelect(assetId.toString())}
       >
         {(items || []).map((item) => {
           const assetId = item.assetId.toString();
@@ -140,21 +130,21 @@ export function AssetSelect({
               ) : (
                 <Avatar.Generated size="xsm" hash={assetId} />
               )}
-              <Stack gap="$0" className="asset-info">
+              <Box className="asset-info">
                 <Text as="span" className="asset-name">
                   {name || 'Unknown'}
                 </Text>
                 <Text as="span" className="asset-symbol">
                   {symbol || shortAddress(assetId)}
                 </Text>
-              </Stack>
-              <Flex className="asset-amount">
+              </Box>
+              <Box.Flex className="asset-amount">
                 <Tooltip content={amountStr}>
                   <Box as="span" className="value">
                     {amountStr}
                   </Box>
                 </Tooltip>
-              </Flex>
+              </Box.Flex>
             </Dropdown.MenuItem>
           );
         })}
@@ -165,44 +155,50 @@ export function AssetSelect({
 
 const styles = {
   trigger: cssObj({
+    layer: 'input-base',
     boxSizing: 'border-box',
     minWidth: '100%',
     px: '$3',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    background: '$gray2',
+    height: '$9',
 
     span: {
       fontSize: '$sm',
     },
 
+    '.fuel_Avatar': {
+      width: 20,
+      height: 20,
+    },
+
     '&:not([aria-disabled=true])': {
       '&:hover': {
-        background: '$gray2',
-        boxShadow: 'none',
-        borderColor: '$gray5',
+        layer: 'input-base',
+        borderColor: '$inputActiveBorder',
       },
       '&:active, &[aria-pressed=true]': {
         transform: 'scale(1)',
       },
       '&:focus-visible': {
-        borderColor: '$gray5',
+        borderColor: '$intentsBase5',
         outline: 'none',
       },
     },
 
-    '& > .fuel_button': {
-      color: '$gray9',
+    '& > .fuel_Button': {
+      color: '$intentsBase9',
       padding: '$0',
     },
 
-    '& > .fuel_icon': {
-      transition: 'all .3s',
-      color: '$gray7',
-    },
-    '.fuel_icon.rotate': {
-      transform: 'rotate(-180deg)',
+    '.fuel_Icon-ChevronDown': {
+      transition: 'transform .3s',
+      color: '$inputBaseIcon',
+
+      '&.rotate': {
+        transform: 'rotate(-180deg)',
+      },
     },
   }),
   input: cssObj({
@@ -211,47 +207,46 @@ const styles = {
     gap: '$2',
 
     '.asset-name': {
-      color: '$gray12',
-      fontWeight: '$semibold',
+      fontWeight: '$normal',
     },
   }),
   placeholder: cssObj({
-    color: '$gray9',
+    color: '$intentsBase9',
   }),
-  menu(width?: Maybe<number>) {
-    return cssObj({
-      ...(width && { width }),
-      padding: '$1',
+  menu: cssObj({
+    py: '$1',
 
-      '.fuel_menu-list-item': {
-        py: '$2',
-        px: '$3',
-        gap: '$3',
-        height: 'auto',
-      },
-      '.asset-info': {
-        flex: 1,
-      },
-      '.asset-name, .asset-symbol': {
-        fontSize: '$sm',
-        lineHeight: 1.2,
-      },
-      '.asset-name': {
-        color: '$gray11',
-        fontWeight: '$semibold',
-      },
-      '.asset-symbol': {
-        color: '$gray8',
-        textTransform: 'uppercase',
-      },
-      '.asset-amount > .value': {
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-      },
-      '.fuel_avatar-generated': {
-        flexShrink: 0,
-      },
-    });
-  },
+    '.fuel_Avatar': {
+      width: 30,
+      height: 30,
+    },
+    '.fuel_MenuListItem': {
+      py: '$2',
+      px: '$3',
+      height: 'auto',
+    },
+    '.fuel_MenuListItem:hover [class*="asset-"]': {
+      color: '$bodyInverse',
+    },
+    '.asset-info': {
+      flex: 1,
+      mr: '$3',
+    },
+    '.asset-name, .asset-symbol': {
+      display: 'block',
+      fontSize: '$sm',
+      lineHeight: '$tight',
+    },
+    '.asset-symbol': {
+      textTransform: 'uppercase',
+    },
+    '.asset-amount > .value': {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+    },
+    '.fuel_AvatarGenerated': {
+      flexShrink: 0,
+    },
+  }),
 };

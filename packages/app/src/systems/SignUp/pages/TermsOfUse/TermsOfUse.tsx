@@ -1,64 +1,72 @@
-import { Box, Button, Flex, Stack } from '@fuel-ui/react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { cssObj } from '@fuel-ui/css';
+import { Form, Box, Button, Checkbox } from '@fuel-ui/react';
+import { useState } from 'react';
 
-import { Header } from '../../components';
+import { Header, Stepper } from '../../components';
+import { useSignUp, useSignUpStepper } from '../../hooks';
 
 import { ReactComponent as Terms } from './data/terms.md';
 
-import { Layout, Pages } from '~/systems/Core';
-import { useHasAcceptedTerms } from '~/systems/Core/hooks/useAcceptedTerms';
+import { Layout, MotionStack, animations } from '~/systems/Core';
 
 export function TermsOfUse() {
-  const navigate = useNavigate();
-  const { action } = useParams();
-  const { setHasAcceptedTerms } = useHasAcceptedTerms();
-
-  const handleAccept = () => {
-    setHasAcceptedTerms(true);
-    if (action === 'recover') {
-      navigate(Pages.signUpRecoverWallet());
-    } else {
-      navigate(Pages.signUpCreateWallet());
-    }
-  };
-
-  const handleCancel = () => {
-    setHasAcceptedTerms(false);
-    navigate(Pages.signUpWelcome());
-  };
+  const [isSavedChecked, setCheckedTerms] = useState(false);
+  const { handlers } = useSignUp();
+  const { steps } = useSignUpStepper();
 
   return (
     <Layout title="Terms of Service" isPublic>
-      <Stack gap="$8" align="center">
+      <MotionStack gap="$6" align="center" {...animations.slideInRight()}>
+        <Stepper steps={steps} active={1} />
         <Header
           title="Terms of use Agreement"
           subtitle="Read and check to accept our terms of service"
         />
         <Box css={styles.termsContainer}>
-          <Flex css={styles.termsWrapper}>
+          <Box.Flex css={styles.termsWrapper}>
             <Terms />
-          </Flex>
+          </Box.Flex>
         </Box>
-        <Flex gap="$2">
-          <Button color="gray" variant="ghost" onPress={handleCancel}>
-            Cancel
+        <Form.Control css={styles.agreeContainer}>
+          <Checkbox
+            id="agreeTerms"
+            aria-label="Agree with terms"
+            checked={isSavedChecked}
+            onCheckedChange={(e) => {
+              setCheckedTerms(e as boolean);
+            }}
+          />
+          <Form.Label htmlFor="agreeTerms">
+            I Agree to the Terms Of Use Agreement
+          </Form.Label>
+        </Form.Control>
+        <Box.Flex gap="$2" css={styles.footer}>
+          <Button variant="ghost" onPress={handlers.reset}>
+            Back
           </Button>
-          <Button color="accent" onPress={handleAccept}>
-            I accept
+          <Button
+            intent="primary"
+            isDisabled={!isSavedChecked}
+            onPress={handlers.next}
+          >
+            Next: Seed Phrase
           </Button>
-        </Flex>
-      </Stack>
+        </Box.Flex>
+      </MotionStack>
     </Layout>
   );
 }
 
+const SIGNUP_HEIGHT = 350;
+
 const styles = {
   termsWrapper: {
+    layer: 'layer-card',
     overflowY: 'scroll',
-    padding: '$4',
-    backgroundColor: '$gray3',
+    pr: '$2',
+    px: '$5',
     boxSizing: 'border-box',
-    height: '480px',
+    height: SIGNUP_HEIGHT,
 
     '& >div': {
       marginBottom: '$2',
@@ -67,12 +75,13 @@ const styles = {
 
     '&::-webkit-scrollbar': {
       width: '$2',
-      backgroundColor: '$gray3',
+      backgroundColor: '$intentsBase3',
+      borderRadius: '$sm',
     },
 
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '$gray5',
-      borderRadius: '$10',
+      backgroundColor: '$intentsBase5',
+      borderRadius: '$sm',
     },
 
     '& h1, & h2': {
@@ -83,16 +92,24 @@ const styles = {
       alignItems: 'center',
       gap: '$1',
       textDecoration: 'none',
-      fontWeight: '$medium',
+      fontWeight: '$normal',
       color: '$accent11',
     },
   },
-  termsContainer: {
-    height: '480px',
+  agreeContainer: cssObj({
+    width: '$full',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  }),
+  termsContainer: cssObj({
     overflow: 'hidden',
     maxWidth: '700px',
     borderRadius: '$8',
-    marginLeft: '$4',
-    marginRight: '$4',
-  },
+  }),
+  footer: cssObj({
+    width: '$full',
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '$4',
+  }),
 };

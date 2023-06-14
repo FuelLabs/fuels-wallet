@@ -25,7 +25,7 @@ const styles = {
   alert: cssObj({
     mb: '$8',
 
-    '.fuel_alert--content': {
+    '.fuel_Alert-content': {
       gap: '$0',
     },
 
