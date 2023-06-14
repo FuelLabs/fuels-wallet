@@ -1,4 +1,4 @@
-import { BoxCentered, Button } from '@fuel-ui/react';
+import { Box, Button } from '@fuel-ui/react';
 import type { ComponentStoryFn, Meta } from '@storybook/react';
 import { Wallet } from 'fuels';
 import { useEffect } from 'react';
@@ -37,9 +37,9 @@ const Template: ComponentStoryFn<typeof TxApprove> = (_args, { loaded }) => {
 
   return (
     <Layout>
-      <BoxCentered css={{ minW: '100%', minH: '100%' }}>
+      <Box.Centered css={{ minW: '100%', minH: '100%' }}>
         <Button onPress={store.openTransactionApprove}>Toggle Modal</Button>
-      </BoxCentered>
+      </Box.Centered>
     </Layout>
   );
 };

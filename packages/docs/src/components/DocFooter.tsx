@@ -32,16 +32,16 @@ const styles = {
     pt: '$4',
     mt: '$6',
     display: 'flex',
-    borderTop: '1px dashed $gray3',
+    borderTop: '1px solid $border',
 
     a: {
       display: 'inline-flex',
       alignItems: 'center',
       gap: '$4',
-      color: '$gray9',
+      color: '$intentsBase9',
     },
     'a:hover': {
-      color: '$accent11',
+      color: '$intentsPrimary11',
     },
 
     '@xl': {

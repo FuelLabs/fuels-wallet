@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Flex, Icon, Spinner, Tooltip } from '@fuel-ui/react';
+import { Box, Icon, Spinner, Tooltip } from '@fuel-ui/react';
 
 import type { TxRecipientAddress } from '../../types';
 import { OperationName, TxStatus } from '../../utils';
@@ -19,7 +19,11 @@ function TxSpinner({ status, isLoading, operationName }: TxSpinnerProps) {
       return {
         tooltip: 'Loading',
         iconEl: (
-          <Spinner color="$amber3" size={18} aria-label="Loading Spinner" />
+          <Spinner
+            color="$intentsWarning3"
+            size={18}
+            aria-label="Loading Spinner"
+          />
         ),
       };
     }
@@ -27,7 +31,7 @@ function TxSpinner({ status, isLoading, operationName }: TxSpinnerProps) {
       case OperationName.contractCall:
         return {
           tooltip: 'Execute',
-          iconEl: <Icon icon={Icon.is('Play')} size={18} />,
+          iconEl: <Icon icon={Icon.is('PlayerPlay')} size={18} />,
         };
 
       default:
@@ -63,7 +67,7 @@ export function TxFromTo({
   operationName,
 }: TxFromToProps) {
   return (
-    <Flex css={styles.root}>
+    <Box.Flex css={styles.root} className="TxFromTo">
       <TxSpinner
         status={status}
         isLoading={isLoading}
@@ -79,15 +83,22 @@ export function TxFromTo({
       ) : (
         <TxRecipientCard recipient={to} isReceiver />
       )}
-    </Flex>
+    </Box.Flex>
   );
 }
 
 const styles = {
   root: cssObj({
-    gap: '$4',
     position: 'relative',
     display: 'flex',
+
+    '.TxRecipientCard:first-of-type': {
+      borderRadius: '$default 0 0 0',
+      borderRight: '1px solid $bodyBg',
+    },
+    '.TxRecipientCard:last-of-type': {
+      borderRadius: '0 $default 0 0',
+    },
   }),
   spinner: cssObj({
     display: 'flex',
@@ -100,23 +111,22 @@ const styles = {
     width: 40,
     height: 40,
     transform: 'translate(-50%, -50%)',
-    border: '3px solid $bodyColor',
+    border: '1px solid $bodyColor',
     borderRadius: '$md',
-    background: '$gray1',
-    color: '$gray8',
+    background: '$intentsBase1',
+    color: '$intentsBase8',
 
     [`&[data-status="${TxStatus.success}"]`]: {
       background: '$accent11',
       color: '$accent3',
     },
     [`&[data-status="${TxStatus.failure}"]`]: {
-      background: '$red9',
-      color: '$red3',
+      background: '$intentsError9',
+      color: '$intentsError3',
     },
-    [`&[data-status="${TxStatus.pending}"],
-      &[data-loading="true"]`]: {
-      background: '$amber9',
-      color: '$amber3',
+    [`&[data-status="${TxStatus.pending}"], &[data-loading="true"]`]: {
+      background: '$intentsWarning9',
+      color: '$intentsWarning3',
     },
   }),
 };

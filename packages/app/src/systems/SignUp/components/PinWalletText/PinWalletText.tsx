@@ -1,25 +1,27 @@
 import { cssObj } from '@fuel-ui/css';
-import { Flex, Text, Icon, Box } from '@fuel-ui/react';
+import { Box, Image, Text } from '@fuel-ui/react';
+
+import img1 from '~public/pin-img1.svg';
+import img2 from '~public/pin-img2.svg';
 
 export function PinWalletText() {
   return (
-    <Box>
-      <Flex gap="$1" justify={'center'}>
-        <Text>See your wallet by clicking on </Text>
-        <Icon icon={Icon.is('PuzzlePiece')} css={styles.puzzleIcon} />
-        <Text>on the top right.</Text>
-      </Flex>
-      <Flex gap="$1" justify={'center'}>
-        <Text>Then click on </Text>
-        <Icon icon={'PushPin'} />
-        <Text>to pin the Fuel Wallet.</Text>
-      </Flex>
-    </Box>
+    <Box.Stack css={styles.root}>
+      <Text>Click the extension button in the browser menu.</Text>
+      <Image src={img1} />
+      <Text>Find Fuel Wallet in the list and click pin.</Text>
+      <Image src={img2} />
+    </Box.Stack>
   );
 }
 
 const styles = {
-  puzzleIcon: cssObj({
-    transform: 'rotate(90deg)',
+  root: cssObj({
+    '.fuel_Text': {
+      color: '$intentsBase8',
+    },
+    '.fuel_Text:last-of-type': {
+      mt: '$4',
+    },
   }),
 };

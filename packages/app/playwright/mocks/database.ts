@@ -100,8 +100,8 @@ export function createAccounts(
   return Promise.all(
     new Array(numberOfAccounts).fill(0).map(async (_, index) => {
       const walletAccount = await manager.addAccount();
-      const acounnt = await createAccount(walletAccount, index);
-      return acounnt;
+      const account = createAccount(walletAccount, index);
+      return account;
     })
   );
 }
@@ -127,7 +127,7 @@ export async function serializeVault(
   manager: WalletManager
 ): Promise<SerializedVault> {
   const vaultKey = manager.STORAGE_KEY;
-  const vaultData = await manager.exportVault(0);
+  const vaultData = manager.exportVault(0);
   const encryptedData = await encrypt(WALLET_PASSWORD, {
     vaults: [
       {

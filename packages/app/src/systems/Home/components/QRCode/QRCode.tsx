@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Card, Flex } from '@fuel-ui/react';
+import { Button, Card } from '@fuel-ui/react';
 import { useCallback } from 'react';
 import QRCode from 'react-qr-code';
 
@@ -29,7 +29,7 @@ export function ReceiverQRCode({ address }: Props) {
 
   return (
     <Card css={styles.card}>
-      <Flex css={styles.qrWrapper}>
+      <Card.Body css={styles.qrWrapper}>
         <QRCode
           id="qrcode-receive"
           aria-label="qrcode"
@@ -39,23 +39,23 @@ export function ReceiverQRCode({ address }: Props) {
           fgColor="#9BA1A6"
           value={address}
         />
-      </Flex>
-      <Button onPress={downloadQrCode} variant="ghost" size="sm">
-        Download QR Code
-      </Button>
+        <Button onPress={downloadQrCode} size="sm">
+          Download this QR Code
+        </Button>
+      </Card.Body>
     </Card>
   );
 }
 
 const styles = {
   card: cssObj({
-    p: '24px',
-    gap: '$3',
-    borderRadius: '$lg',
+    borderRadius: '$default',
   }),
   qrWrapper: cssObj({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: '$4',
+    flexDirection: 'column',
   }),
 };

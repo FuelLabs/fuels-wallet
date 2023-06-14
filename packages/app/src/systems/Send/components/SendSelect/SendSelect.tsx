@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Flex, Input, InputAmount, Stack, Text } from '@fuel-ui/react';
+import { Box, Input, InputAmount, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { bn } from 'fuels';
 
@@ -21,8 +21,8 @@ export function SendSelect({
 }: SendSelectProps) {
   return (
     <MotionContent {...animations.slideInTop()}>
-      <Stack gap="$4">
-        <Flex css={styles.row}>
+      <Box.Stack gap="$4">
+        <Box.Flex css={styles.row}>
           <Text as="span" css={styles.title}>
             Send
           </Text>
@@ -30,6 +30,7 @@ export function SendSelect({
             isRequired
             name="asset"
             control={form.control}
+            css={styles.asset}
             render={({ field }) => (
               <AssetSelect
                 items={balanceAssets}
@@ -42,8 +43,8 @@ export function SendSelect({
               />
             )}
           />
-        </Flex>
-        <Flex css={styles.row}>
+        </Box.Flex>
+        <Box.Flex css={styles.row}>
           <Text as="span" css={styles.title}>
             To
           </Text>
@@ -65,8 +66,8 @@ export function SendSelect({
               )}
             />
           </Box>
-        </Flex>
-        <Stack gap="$3">
+        </Box.Flex>
+        <Box.Stack gap="$3">
           <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
             Amount
           </Text>
@@ -87,14 +88,17 @@ export function SendSelect({
               />
             )}
           />
-        </Stack>
+        </Box.Stack>
         <TxDetails fee={ctx.fee} />
-      </Stack>
+      </Box.Stack>
     </MotionContent>
   );
 }
 
 const styles = {
+  asset: cssObj({
+    flex: 1,
+  }),
   row: cssObj({
     alignItems: 'flex-start',
     gap: '$4',
@@ -102,17 +106,17 @@ const styles = {
     '.fuel_form--control': {
       flex: 1,
     },
-    '.fuel_input > input': {
+    '.fuel_Input > input': {
       px: '$3',
       fontFamily: '$sans',
-      fontWeight: '$medium',
+      fontWeight: '$normal',
     },
   }),
   title: cssObj({
     pt: '$2',
-    color: '$gray12',
+    color: '$intentsBase12',
     fontSize: '$xl',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
   }),
   amountTitle: cssObj({
     fontSize: '$md',
@@ -123,8 +127,8 @@ const styles = {
     flexDirection: 'column',
 
     '.error-msg': {
-      fontSize: '$xs',
-      color: '$red9',
+      fontSize: '$sm',
+      color: '$intentsError9',
     },
   }),
 };

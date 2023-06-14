@@ -1,4 +1,4 @@
-import { hooks } from '@fuel-ui/test-utils';
+import { renderHook } from '@testing-library/react';
 import type { ReactNode } from 'react';
 
 import { createMockStore } from './__mocks__';
@@ -21,13 +21,13 @@ describe('ReactFactory', () => {
     jest.clearAllMocks();
   });
 
-  it('should persis todos state on local storage', async () => {
+  it('should persist todos state on local storage', async () => {
     expect(store.persistedStates).toEqual(['todos']);
     const spy = jest.spyOn(localStorage, 'setItem');
     const payload = { id: 1, text: 'test' };
     store.addTodo(payload);
 
-    const { result } = hooks.render(() => {
+    const { result } = renderHook(() => {
       return store.useSelector('todos', (state) => state.context.todos);
     }, opts);
     expect(result.current).toEqual([payload]);
@@ -43,7 +43,7 @@ describe('ReactFactory', () => {
   describe('useSelector()', () => {
     it('should return the correct value', async () => {
       const selector = jest.fn((state) => state.context.todos);
-      const { result } = hooks.render(() => {
+      const { result, rerender } = renderHook(() => {
         return store.useSelector('todos', selector);
       }, opts);
 
@@ -51,10 +51,12 @@ describe('ReactFactory', () => {
       expect(selector).toHaveBeenCalledTimes(1);
       store.addTodo({ id: 1, text: 'test' });
       expect(selector).toHaveBeenCalledTimes(2);
+      rerender();
       expect(result.current).toEqual([{ id: 1, text: 'test' }]);
       store.addTodo({ id: 2, text: 'test' });
       store.addTodo({ id: 3, text: 'test' });
       expect(selector).toHaveBeenCalledTimes(4);
+      rerender();
       expect(result.current).toEqual([
         { id: 1, text: 'test' },
         { id: 2, text: 'test' },
@@ -63,12 +65,14 @@ describe('ReactFactory', () => {
       store.removeTodo(2);
       store.completeTodo(1);
       expect(selector).toHaveBeenCalledTimes(6);
+      rerender();
       expect(result.current).toEqual([
         { id: 1, text: 'test', completed: true },
         { id: 3, text: 'test' },
       ]);
       store.clearCompleted();
       expect(selector).toHaveBeenCalledTimes(7);
+      rerender();
       expect(result.current).toEqual([{ id: 3, text: 'test' }]);
     });
   });
@@ -76,7 +80,7 @@ describe('ReactFactory', () => {
   describe('useService()', () => {
     it('should return an initialized service from store', async () => {
       const spy = jest.spyOn(store, 'useService');
-      const { result } = hooks.render(() => store.useService('counter'), opts);
+      const { result } = renderHook(() => store.useService('counter'), opts);
       expect(spy).toBeCalledTimes(2);
       expect(spy).toBeCalledWith('counter');
       store.increment();
@@ -90,7 +94,7 @@ describe('ReactFactory', () => {
 
   describe('useState()', () => {
     it('should return a state from a service', async () => {
-      const { result } = hooks.render(() => store.useState('counter'), opts);
+      const { result } = renderHook(() => store.useState('counter'), opts);
       const currState = result.current[0];
       const serviceState = store.services.counter.getSnapshot();
       expect(currState.context.count).toBe(serviceState.context.count);
@@ -100,7 +104,7 @@ describe('ReactFactory', () => {
   describe('useUpdateMachineConfig()', () => {
     it('should update the machine config', async () => {
       let logger = 0;
-      const { result } = hooks.render(() => {
+      const { result } = renderHook(() => {
         return store.useUpdateMachineConfig('counter', {
           actions: {
             log(ctx) {

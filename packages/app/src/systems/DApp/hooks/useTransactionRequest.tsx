@@ -21,6 +21,9 @@ const selectors = {
   isLoadingAccounts(state: TransactionRequestState) {
     return state.matches('fetchingAccount');
   },
+  isPreLoading(state: TransactionRequestState) {
+    return state.hasTag('preLoading');
+  },
   errors(state: TransactionRequestState) {
     if (!state.context.errors) return {};
     const grouped = state.context.errors?.txDryRunGroupedErrors;
@@ -101,15 +104,17 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const originTitle = useSelector(service, selectors.originTitle);
   const favIconUrl = useSelector(service, selectors.favIconUrl);
   const isSendingTx = useSelector(service, selectors.sendingTx);
+  const isPreLoading = useSelector(service, selectors.isPreLoading);
   const isLoading = status('loading');
   const showActions = !status('failed') && !status('success');
-
   const tx = useParseTx({
     transaction: ctx.input.transactionRequest?.toTransaction(),
     receipts: ctx.response?.receipts,
     gasPerByte: chainInfo?.consensusParameters.gasPerByte,
     gasPriceFactor: chainInfo?.consensusParameters.gasPriceFactor,
   });
+  const shouldShowTx = (status('waitingApproval') || isSendingTx) && !!tx;
+  const shouldShowLoader = isPreLoading || !tx;
 
   function closeDialog() {
     reset();
@@ -161,6 +166,8 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     tx,
     txStatus,
     isSendingTx,
+    shouldShowTx,
+    shouldShowLoader,
     handlers: {
       request,
       reset,

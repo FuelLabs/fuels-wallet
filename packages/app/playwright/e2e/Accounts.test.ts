@@ -59,10 +59,10 @@ test.describe('Account', () => {
     ).click();
     await getByAriaLabel(page, `Edit ${data.accounts[0].name}`).click();
     await hasText(page, /Edit/i);
-    const inputName = await getInputByName(page, 'name');
+    const inputName = getInputByName(page, 'name');
     await expect(inputName).toBeFocused();
     await inputName.fill('Test 1');
-    const editBtn = await getButtonByText(page, /edit/i);
+    const editBtn = getButtonByText(page, /edit/i);
     expect(editBtn).toBeEnabled();
     await editBtn.click();
     await hasText(page, /Test 1/i);
@@ -141,7 +141,7 @@ test.describe('Account', () => {
     await getByAriaLabel(page, `Export ${data.accounts[0].name}`).click();
 
     await hasText(page, 'Unlock your wallet to continue');
-    const passwordInput = await getByAriaLabel(page, 'Your Password');
+    const passwordInput = getByAriaLabel(page, 'Your Password');
     await passwordInput.type(`${WALLET_PASSWORD}1`);
     await getByAriaLabel(page, 'Unlock wallet').click();
     await hasText(page, /Invalid password/i);

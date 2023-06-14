@@ -1,4 +1,4 @@
-import { BoxCentered } from '@fuel-ui/react';
+import { Box } from '@fuel-ui/react';
 import { action } from '@storybook/addon-actions';
 
 import { CreatePassword } from './CreatePassword';
@@ -12,10 +12,11 @@ export default {
 };
 
 export const Usage = () => (
-  <BoxCentered minHS>
+  <Box.Centered minHS>
     <CreatePassword
+      step={2}
       onCancel={action('onCancel')}
       onSubmit={action('onSubmit')}
     />
-  </BoxCentered>
+  </Box.Centered>
 );

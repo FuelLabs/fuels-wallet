@@ -27,20 +27,20 @@ export function TxView() {
     >
       <Layout.TopBar onBack={() => navigate(-1)} />
       <Layout.Content>
-        {ctx.isLoadingTx && <TxContent.Loader header={<TxHeader.Loader />} />}
+        {!tx && <TxContent.Loader header={<TxHeader.Loader />} />}
         {ctx.shouldShowAlert && (
           <TxStatusAlert txStatus={tx?.status} error={ctx.error} />
         )}
-        {ctx.shouldShowTx && (
+        {tx && (
           <TxContent.Info
             tx={tx}
             showDetails={ctx.shouldShowTxDetails}
             assets={assets}
             header={
               <TxHeader
-                id={tx?.id}
-                type={tx?.type}
-                status={tx?.status}
+                id={tx.id}
+                type={tx.type}
+                status={tx.status}
                 providerUrl={providerUrl}
               />
             }

@@ -58,8 +58,8 @@ export function useTx({
     gqlStatus: gqlTransactionStatus,
     id: txId,
   });
+  const isLoadingTx = isFetching || isFetchingResult;
 
-  const isLoadingTx = isFetching || isFetchingResult || isLoadingChainInfo;
   const { shouldShowAlert, shouldShowTx, shouldShowTxDetails } = useMemo(() => {
     const shouldShowAlert =
       isTxNotFound ||

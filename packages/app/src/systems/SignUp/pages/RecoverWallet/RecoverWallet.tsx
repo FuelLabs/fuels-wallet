@@ -1,58 +1,27 @@
-import { cssObj } from '@fuel-ui/css';
-import { Alert } from '@fuel-ui/react';
-import { useNavigate } from 'react-router-dom';
-
-import { CreatePassword, MnemonicWrite, SignUpFailed } from '../../components';
+import { MnemonicWrite } from '../../components';
 import { useSignUp } from '../../hooks';
-import { SignUpType } from '../../machines/signUpMachine';
+import { useMnemonicForm } from '../../hooks/useMnemonicForm';
 
-import { Layout, Pages } from '~/systems/Core';
+import { Layout } from '~/systems/Core';
 
 export function RecoverWallet() {
-  const { state, handlers, context } = useSignUp(SignUpType.recover);
-  const navigate = useNavigate();
+  const { handlers, context } = useSignUp();
+  const { error, words, hasError, onChange, onFilled } = useMnemonicForm();
 
   return (
     <Layout title="Recovering Wallet" isPublic>
-      <Alert status="warning" css={styles.alert}>
-        <Alert.Description>
-          This wallet is in development, and your phrase is not safely stored.
-          DO NOT IMPORT YOUR CURRENT SEED PHRASE.
-        </Alert.Description>
-      </Alert>
-      {state.matches('waitingMnemonic') && (
-        <MnemonicWrite
-          error={context.isFilled ? context.error : ''}
-          canProceed={state.matches('waitingMnemonic.validMnemonic')}
-          onFilled={handlers.confirmMnemonic}
-          onNext={handlers.next}
-          onCancel={() => navigate(Pages.signUp())}
-          enableChangeFormat={true}
-        />
-      )}
-      {(state.matches('addingPassword') || state.hasTag('loading')) && (
-        <CreatePassword
-          onSubmit={handlers.createManager}
-          onCancel={() => navigate(Pages.signUp())}
-          isLoading={state.hasTag('loading')}
-        />
-      )}
-      {state.matches('failed') && <SignUpFailed error={state.context.error} />}
+      <MnemonicWrite
+        title="Recover wallet"
+        subtitle="Write your existing seed-phrase to restore your wallet."
+        step={2}
+        error={error || context.error}
+        canProceed={!hasError}
+        onFilled={onFilled}
+        onChange={onChange}
+        onNext={() => handlers.importMnemonic(words)}
+        onCancel={handlers.reset}
+        enableChangeFormat={true}
+      />
     </Layout>
   );
 }
-
-const styles = {
-  alert: cssObj({
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100vw',
-    boxShadow: '$lg',
-    boxSizing: 'border-box',
-
-    '&, &::after': {
-      borderRadius: '$none',
-    },
-  }),
-};

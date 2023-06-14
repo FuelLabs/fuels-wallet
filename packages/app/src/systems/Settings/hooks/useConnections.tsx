@@ -80,7 +80,7 @@ const selectors = {
     const screen = selectors.screen(state);
     return screen === ConnectionScreen.list
       ? 'Connected Apps'
-      : 'Editting Connection';
+      : 'Editing Connection';
   },
 };
 

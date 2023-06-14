@@ -32,6 +32,7 @@ type MachineServices = {
 export type AccountsMachineEvents =
   | { type: 'REFRESH_ACCOUNT'; input?: null }
   | { type: 'REFRESH_ACCOUNTS'; input?: null }
+  | { type: 'RELOAD_BALANCE'; input?: null }
   | { type: 'SET_CURRENT_ACCOUNT'; input: AccountInputs['setCurrentAccount'] }
   | { type: 'LOGOUT'; input?: void }
   | {
@@ -125,6 +126,10 @@ export const accountsMachine = createMachine(
       refreshAccount: {
         ...fetchAccount,
       },
+      reloadingBalance: {
+        tags: ['loading'],
+        ...fetchAccount,
+      },
       settingCurrentAccount: {
         invoke: {
           src: 'setCurrentAccount',
@@ -179,6 +184,10 @@ export const accountsMachine = createMachine(
       },
       REFRESH_ACCOUNT: {
         target: 'refreshAccount',
+      },
+      RELOAD_BALANCE: {
+        target: 'reloadingBalance',
+        actions: ['notifyUpdateAccounts'],
       },
     },
   },

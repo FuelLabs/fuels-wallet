@@ -1,4 +1,4 @@
-import { BoxCentered, Button, Stack, Text } from '@fuel-ui/react';
+import { Box, Button, Text } from '@fuel-ui/react';
 import type { ComponentStoryFn, Meta } from '@storybook/react';
 
 import { ViewSeedPhrase } from './ViewSeedPhrase';
@@ -24,8 +24,8 @@ const Template: ComponentStoryFn<typeof ViewSeedPhrase> = () => {
   const { account, isLoading } = useAccounts();
   return (
     <Layout isLoading={isLoading}>
-      <BoxCentered css={{ minW: '100%', minH: '100%' }}>
-        <Stack>
+      <Box.Centered css={{ minW: '100%', minH: '100%' }}>
+        <Box.Stack>
           <Text>Password: 123123123</Text>
           {account && (
             <Button
@@ -35,8 +35,8 @@ const Template: ComponentStoryFn<typeof ViewSeedPhrase> = () => {
               Toggle Modal
             </Button>
           )}
-        </Stack>
-      </BoxCentered>
+        </Box.Stack>
+      </Box.Centered>
     </Layout>
   );
 };

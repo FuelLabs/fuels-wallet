@@ -1,4 +1,5 @@
-import { Flex } from '@fuel-ui/react';
+import { cssObj } from '@fuel-ui/css';
+import { Box } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { AssetsTitle, HomeActions } from '../../components';
@@ -25,10 +26,10 @@ export function Home() {
   };
 
   return (
-    <Layout title="Home" isLoading={isLoading} isHome>
+    <Layout title="Home" isHome>
       <Layout.TopBar />
-      <Layout.Content>
-        <Flex css={{ height: '100%', flexDirection: 'column' }}>
+      <Layout.Content noBorder>
+        <Box.Flex css={{ height: '100%', flexDirection: 'column' }}>
           <BalanceWidget
             visibility={visibility}
             account={account}
@@ -40,16 +41,25 @@ export function Home() {
             sendAction={sendAction}
             isDisabled={isLoading}
           />
-          <AssetsTitle />
-          <AssetList
-            assets={balanceAssets}
-            isLoading={isLoading}
-            emptyProps={{
-              showFaucet: selectedNetwork?.url === VITE_FUEL_PROVIDER_URL,
-            }}
-          />
-        </Flex>
+          <Box.Stack css={styles.assets}>
+            <AssetsTitle />
+            <AssetList
+              assets={balanceAssets}
+              isLoading={isLoading}
+              emptyProps={{
+                showFaucet: selectedNetwork?.url === VITE_FUEL_PROVIDER_URL,
+              }}
+            />
+          </Box.Stack>
+        </Box.Flex>
       </Layout.Content>
     </Layout>
   );
 }
+
+const styles = {
+  assets: cssObj({
+    gap: '$4',
+    px: '$4',
+  }),
+};

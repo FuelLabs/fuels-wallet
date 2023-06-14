@@ -5,7 +5,7 @@ export function DownloadFuelWallet() {
   return (
     <Box css={styles.root}>
       <a href={process.env.NEXT_PUBLIC_WALLET_DOWNLOAD_URL} download>
-        <Button>Download Fuel Wallet</Button>
+        <Button intent="primary">Download Fuel Wallet</Button>
       </a>
     </Box>
   );
@@ -18,7 +18,7 @@ const styles = {
     px: '6px',
     borderRadius: '$md',
     fontFamily: 'monospace',
-    color: '$gray10',
+    color: '$intentsBase10',
     fontSize: '0.9rem',
   }),
 };

@@ -47,6 +47,6 @@ test.describe('UnlockScreen', () => {
     await hasText(page, /Reset wallet/i);
     await getByAriaLabel(page, 'Confirm Reset').click();
     await getByAriaLabel(page, 'Reset wallet').click();
-    await hasText(page, /Create a new Fuel Wallet/i);
+    await hasText(page, /Create new wallet/i);
   });
 });

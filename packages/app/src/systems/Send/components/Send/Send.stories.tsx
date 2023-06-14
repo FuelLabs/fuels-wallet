@@ -23,13 +23,6 @@ export default {
   },
 } as Meta;
 
-export const Loading: StoryFn = (_args) => {
-  return <Send.Loading />;
-};
-Loading.parameters = {
-  layout: 'fullscreen',
-};
-
 export const Select: StoryFn = (_args) => {
   const send = useSend();
   return <Send.Select {...send} />;

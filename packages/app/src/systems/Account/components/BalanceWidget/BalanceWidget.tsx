@@ -1,13 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Avatar,
-  Box,
-  Flex,
-  Heading,
-  Icon,
-  IconButton,
-  Text,
-} from '@fuel-ui/react';
+import { Avatar, Box, Button, Heading, Icon, Text } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 
@@ -20,15 +12,18 @@ import type { Maybe } from '~/systems/Core';
 import { AmountVisibility, VisibilityButton } from '~/systems/Core';
 
 type BalanceWidgetWrapperProps = {
-  children: ReactNode;
+  top: ReactNode;
+  bottom: ReactNode;
 };
 
-export function BalanceWidgetWrapper({ children }: BalanceWidgetWrapperProps) {
+export function BalanceWidgetWrapper({
+  top,
+  bottom,
+}: BalanceWidgetWrapperProps) {
   return (
     <Box css={styles.balanceWidgetWrapper}>
-      <Box css={styles.backgroundShadow}>&nbsp;</Box>
-      <Box css={styles.backgroundFront}>&nbsp;</Box>
-      <Flex css={styles.contentWrapper}>{children}</Flex>
+      <Box.Flex css={styles.accountInfo}>{top}</Box.Flex>
+      <Box.Stack css={styles.balance}>{bottom}</Box.Stack>
     </Box>
   );
 }
@@ -51,120 +46,99 @@ export function BalanceWidget({
   if (isLoading || !account) return <BalanceWidget.Loader />;
 
   return (
-    <BalanceWidgetWrapper>
-      <Flex direction="column" align="center">
-        <Avatar.Generated size="lg" hash={account.address} background="fuel" />
-        <IconButton
-          size="xs"
-          variant="ghost"
-          color="gray"
-          icon={<Icon icon="CaretDown" color="gray8" />}
-          aria-label="Accounts"
-          onPress={handlers.goToList}
-          css={styles.caretDownIcon}
-        />
-      </Flex>
-      <Flex justify="space-between" css={styles.balanceDetails}>
-        <Flex direction="column" css={styles.balanceContainer}>
-          <Heading as="h6" css={styles.name}>
-            {account.name}
-          </Heading>
-          <FuelAddress address={account.address} css={styles.balanceAddress} />
-          <Text
-            css={styles.balance}
-            aria-hidden={visibility}
-            data-account-name={account.name}
-          >
-            {account.balanceSymbol || '$'}&nbsp;
-            <AmountVisibility value={account.balance} visibility={visibility} />
-          </Text>
-        </Flex>
-        <Box css={styles.visibilityContainer}>
-          <VisibilityButton
-            aria-label={visibility ? 'Hide balance' : 'Show balance'}
-            visibility={visibility}
-            onChangeVisibility={onChangeVisibility}
+    <BalanceWidgetWrapper
+      top={
+        <>
+          <Avatar.Generated
+            size="sm"
+            hash={account?.address as string}
+            css={{ boxShadow: '$sm' }}
           />
-        </Box>
-      </Flex>
-    </BalanceWidgetWrapper>
+          <Box.Stack gap="$1" css={{ flex: 1 }}>
+            <Heading as="h6" css={styles.name}>
+              {account.name}
+            </Heading>
+            <FuelAddress
+              address={account.address}
+              css={styles.balanceAddress}
+            />
+          </Box.Stack>
+          <Button
+            size="sm"
+            variant="outlined"
+            rightIcon={<Icon icon="ChevronDown" color="intentsBase8" />}
+            aria-label="Accounts"
+            onPress={handlers.goToList}
+          >
+            Change
+          </Button>
+        </>
+      }
+      bottom={
+        <>
+          <Text className="label">Balance</Text>
+          <Box.Flex>
+            <Text aria-hidden={visibility} data-account-name={account.name}>
+              {account.balanceSymbol || '$'}&nbsp;
+              <AmountVisibility
+                value={account.balance}
+                visibility={visibility}
+              />
+            </Text>
+            <VisibilityButton
+              aria-label={visibility ? 'Hide balance' : 'Show balance'}
+              visibility={visibility}
+              onChangeVisibility={onChangeVisibility}
+            />
+          </Box.Flex>
+        </>
+      }
+    />
   );
 }
 
 BalanceWidget.Loader = BalanceWidgetLoader;
 
-const backgroundCss = {
-  position: 'absolute',
-  width: '100%',
-  height: '100%',
-  boxShadow: '2px 0px 4px rgba(0, 0, 0, 0.15)',
-  transform: 'skew(-25deg)',
-  borderTopRightRadius: '40px 35px',
-  borderBottomRightRadius: '35px 25px',
-  borderBottomLeftRadius: '40px 50px',
-  borderTopLeftRadius: '10px',
-};
-
 const styles = {
-  balanceDetails: cssObj({ flex: '1 0' }),
+  balanceWidgetWrapper: cssObj({
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: '$default',
+    pb: '$3',
+  }),
   balanceAddress: cssObj({
-    color: '$gray11',
-    fontSize: '$xs',
-    fontWeight: 'bold',
+    color: '$intentsBase11',
+    fontSize: '$sm',
   }),
-  visibilityContainer: cssObj({
-    marginRight: 6,
-    marginTop: 8,
-    svg: {
-      height: 18,
-      width: 18,
-    },
-  }),
-  balanceContainer: cssObj({ mt: '$1', ml: '$4', alignSelf: 'center' }),
   balance: cssObj({
-    fontSize: '1.625rem',
-    fontWeight: 'bold',
-    margin: '$2 0',
+    pt: '$3',
+    px: '$4',
+
     '&[aria-hidden="true"]': {
-      color: '$gray12',
+      color: '$intentsBase12',
     },
     '&[aria-hidden="false"]': {
-      color: '$gray10',
+      color: '$intentsBase10',
+    },
+    '.fuel_Text[data-account-name]': {
+      color: '$textInverse',
+      fontSize: '$3xl',
+      fontFamily: '$mono',
+    },
+    '.label': {
+      lineHeight: '$tight',
     },
   }),
-  backgroundFront: cssObj({
-    ...backgroundCss,
-    background:
-      'linear-gradient(180deg, #1F1F1F 0%, rgba(28, 30, 31, 0.45) 41.15%)',
-    top: 3,
-    left: 3,
-  }),
-  backgroundShadow: cssObj({
-    ...backgroundCss,
-    background:
-      'linear-gradient(180deg, #0F0F0F -9.3%, rgba(18, 20, 20, 0.45) 35.67%)',
-    top: 10,
-    left: 7,
-  }),
-  contentWrapper: cssObj({
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    top: 0,
-    left: 0,
-  }),
-  balanceWidgetWrapper: cssObj({
-    minHeight: 97,
-    position: 'relative',
-  }),
-  caretDownIcon: cssObj({
-    marginTop: 8,
-    height: '20px !important',
-    padding: '0 3px !important',
-    borderRadius: 8,
-  }),
   name: cssObj({
-    fontSize: '$sm',
+    lineHeight: '$tight',
     margin: '0px 0px -6px',
+  }),
+  accountInfo: cssObj({
+    gap: '$3',
+    alignItems: 'center',
+    py: '$4',
+    px: '$4',
+    borderTop: '1px solid $border',
+    borderBottom: '1px solid $border',
   }),
 };

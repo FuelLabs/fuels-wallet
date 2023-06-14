@@ -15,10 +15,10 @@ export function Assets() {
   return (
     <Layout title="Assets">
       <Layout.TopBar />
-      <Layout.Content css={styles.content}>
+      <Layout.Content css={styles.content} noBorder>
         <AnimatePresence initial={false} mode="wait">
-          <Tabs defaultValue="custom">
-            <Tabs.List>
+          <Tabs defaultValue="custom" variant="subtle">
+            <Tabs.List css={styles.tabList}>
               <Tabs.Trigger value="custom" aria-label="Custom Assets">
                 Custom
               </Tabs.Trigger>
@@ -63,11 +63,15 @@ export function Assets() {
 const styles = {
   content: cssObj({
     p: '$0',
-    '.fuel_tabs': {
+
+    '.fuel_Tabs': {
       backgroundColor: 'transparent',
     },
-    '.fuel_tabs--content': {
-      p: '$4',
+    '.fuel_TabsContent': {
+      px: '$4',
     },
+  }),
+  tabList: cssObj({
+    mx: '$4',
   }),
 };

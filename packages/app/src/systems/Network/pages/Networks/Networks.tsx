@@ -1,24 +1,18 @@
-import { cssObj } from '@fuel-ui/css';
-import { Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
+import * as css from '@fuel-ui/css';
+import { Button, Dialog, Icon } from '@fuel-ui/react';
 
 import { coreStyles } from '~/systems/Core/styles';
 import { NetworkList, useNetworks } from '~/systems/Network';
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export const Networks = () => {
   const { networks, handlers } = useNetworks();
 
   return (
     <>
-      <Dialog.Heading>
+      <OverlayDialogTopbar onClose={handlers.closeDialog}>
         Networks
-        <IconButton
-          data-action="closed"
-          variant="link"
-          icon={<Icon icon="X" color="gray8" />}
-          aria-label="Close networks modal"
-          onPress={handlers.closeDialog}
-        />
-      </Dialog.Heading>
+      </OverlayDialogTopbar>
       <Dialog.Description as="div" css={styles.description}>
         <NetworkList
           networks={networks}
@@ -42,9 +36,10 @@ export const Networks = () => {
 };
 
 const styles = {
-  description: cssObj({
-    ...coreStyles.scrollable('$gray3'),
+  description: css.cssObj({
+    ...coreStyles.scrollable('$intentsBase3'),
+    overflowY: 'scroll !important',
+    paddingLeft: '$4',
     flex: 1,
-    padding: '$4',
   }),
 };

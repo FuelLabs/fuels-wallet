@@ -10,6 +10,7 @@ import { AddNetwork, Networks, UpdateNetwork } from '~/systems/Network/pages';
 import { useOverlay } from '~/systems/Overlay';
 import { ViewSeedPhrase } from '~/systems/Settings/pages';
 import { TxApprove } from '~/systems/Transaction';
+import { ResetDialog } from '~/systems/Unlock/components/ResetDialog';
 
 export function OverlayDialog() {
   const overlay = useOverlay();
@@ -23,6 +24,7 @@ export function OverlayDialog() {
         {overlay.is('accounts.export') && <ExportAccount />}
         {overlay.is('accounts.edit') && <EditAccount />}
         {overlay.is('accounts.logout') && <Logout />}
+        {overlay.is('reset') && <ResetDialog />}
 
         {/* Networks */}
         {overlay.is('networks.list') && <Networks />}
@@ -41,34 +43,49 @@ export function OverlayDialog() {
 
 const styles = {
   content: cssObj({
+    padding: '$0',
     width: WALLET_WIDTH,
     height: WALLET_HEIGHT,
     maxWidth: WALLET_WIDTH,
     maxHeight: 'none',
+    borderRadius: '$none',
     background: '$bodyColor',
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '$4',
 
-    '.fuel_dialog--heading, .fuel_dialog--footer': {
-      borderColor: '$gray2',
-    },
-    '.fuel_dialog--description': {
+    '.fuel_DialogDescription': {
       flex: 1,
       overflowY: 'auto',
       height: '100%',
     },
-    '.fuel_dialog--heading': cssObj({
+    '.fuel_DialogHeading': {
+      padding: '$4',
+      paddingBottom: '0 !important',
       display: 'flex',
       justifyContent: 'space-between',
-    }),
-    '.fuel_dialog--footer': cssObj({
-      button: {
-        width: '100%',
-      },
-    }),
-    form: cssObj({
+      alignItems: 'center',
+      textSize: 'lg',
+      height: '$8',
+    },
+    '.fuel_DialogHeading .fuel_IconButton[data-action="closed"]': {
+      position: 'absolute',
+      right: '$3',
+      top: '24px',
+    },
+    '.fuel_DialogFooter': {
+      paddingTop: '0 !important',
+      padding: '$4',
+    },
+    '.fuel_DialogFooter button': {
+      width: '100%',
+    },
+    form: {
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
-    }),
+    },
     'button[data-action="closed"]': {
       px: '$1',
     },

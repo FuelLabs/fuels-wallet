@@ -25,6 +25,7 @@ export enum OperationName {
   mint = 'Mint asset',
   predicatecall = 'Predicate call',
   script = 'Script',
+  sent = 'Sent asset',
   withdrawFromFuel = 'Withdraw from Fuel',
 }
 

@@ -1,4 +1,5 @@
-import { setGlobalConfig } from '@storybook/testing-react';
+// @ts-ignore
+import { setGlobalConfig } from '@storybook/react';
 
 // Storybook's preview file location
 import * as globalStorybookConfig from './preview';

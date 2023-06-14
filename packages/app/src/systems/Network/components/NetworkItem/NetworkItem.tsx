@@ -1,17 +1,20 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
-import { Text, CardList, Flex, IconButton, Icon } from '@fuel-ui/react';
+import { Text, CardList, IconButton, Icon, Box } from '@fuel-ui/react';
 import type { Network } from '@fuel-wallet/types';
 import { forwardRef } from 'react';
 
 import { NetworkRemoveDialog } from '../NetworkRemoveDialog/NetworkRemoveDialog';
 
-export function NetworkStatus({ network: _network }: { network: Network }) {
+export function NetworkStatus({ network }: { network: Network }) {
   return (
     <Text
       css={{
-        // color: network.isOnline ? '$accent11' : '$gray8',
-        fontSize: '8px',
+        display: 'inline-flex',
+        alignItems: 'center',
+        color: network.isSelected ? '$accent11' : '$intentsBase8',
+        fontSize: '16px',
+        height: '$4',
       }}
     >
       ●
@@ -31,11 +34,11 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
   ({ css, network, onRemove, onUpdate, onPress }, ref) => {
     const showActions = Boolean(onUpdate || onRemove);
     const actions = (
-      <Flex gap="$2">
+      <Box.Flex gap="$2">
         {onUpdate && (
           <IconButton
             variant="link"
-            icon={<Icon icon={Icon.is('Pencil')} />}
+            icon={<Icon icon={Icon.is('Edit')} />}
             aria-label="Update"
             onPress={() => onUpdate?.(network.id)}
           />
@@ -52,7 +55,7 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
             />
           </NetworkRemoveDialog>
         )}
-      </Flex>
+      </Box.Flex>
     );
 
     return (
@@ -76,19 +79,19 @@ const styles = {
   root: cssObj({
     minHeight: '52px',
     boxSizing: 'border-box',
-    background: '$whiteA2',
+    background: '$cardBg',
 
     '&:hover': {
       cursor: 'pointer',
     },
 
-    '.fuel_button': {
+    '.fuel_Button': {
       px: '$1 !important',
-      color: '$gray8',
+      color: '$intentsBase8',
     },
 
-    '.fuel_button:hover': {
-      color: '$gray11',
+    '.fuel_Button:hover': {
+      color: '$intentsBase11',
     },
   }),
 };
