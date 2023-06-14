@@ -1,5 +1,11 @@
 # @fuel-wallet/types
 
+## 0.10.0
+
+### Minor Changes
+
+- [#729](https://github.com/FuelLabs/fuels-wallet/pull/729) [`c9cd111`](https://github.com/FuelLabs/fuels-wallet/commit/c9cd1110a26e56f9f7e1fbf3a0db0873cdd043d0) Thanks [@luizstacio](https://github.com/luizstacio)! - Enable other Wallets to being exposed as Connectors using the Fuel Wallet Connectors feature.
+
 ## 0.9.5
 
 ## 0.9.4
