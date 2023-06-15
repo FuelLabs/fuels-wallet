@@ -11,12 +11,12 @@ export function useParseTx(props: Partial<ParseTxParams>) {
     props;
 
   const contractIds = useMemo(() => {
-    if (!transaction?.inputs) return undefined;
+    if (!transaction?.inputs?.length) return undefined;
 
     return getInputsContract(transaction.inputs).map(
       (input) => input.contractID
     );
-  }, [transaction?.inputs]);
+  }, [JSON.stringify(transaction?.inputs || {})]);
 
   const { abiMap } = useAbiMap({ contractIds });
 
@@ -31,7 +31,7 @@ export function useParseTx(props: Partial<ParseTxParams>) {
     }
 
     return undefined;
-  }, [transaction]);
+  }, [JSON.stringify(transaction || {})]);
 
   const tx = useMemo(() => {
     if (!transaction || !receipts || !gasPerByte || !gasPriceFactor)
