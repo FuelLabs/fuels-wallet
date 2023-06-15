@@ -10,10 +10,10 @@ export default {
 
 const ITEMS: MenuItemObj[] = [
   { key: 'wallet', icon: 'Wallet', label: 'Wallet', path: '/wallet' },
-  { key: 'bridge', icon: 'Swap', label: 'Bridge', path: '/bridge' },
+  { key: 'bridge', icon: 'ArrowsExchange', label: 'Bridge', path: '/bridge' },
   {
     key: 'settings',
-    icon: 'Gear',
+    icon: 'Settings',
     label: 'Settings',
     submenu: [
       {
@@ -30,13 +30,13 @@ const ITEMS: MenuItemObj[] = [
       },
       {
         key: 'networks',
-        icon: 'ShareNetwork',
+        icon: 'BrandStackshare',
         label: 'Networks',
         path: '/settings/networks',
       },
       {
         key: 'connected-apps',
-        icon: 'PlugsConnected',
+        icon: 'PlugConnected',
         label: 'Connected Apps',
         path: '/settings/connected-apps',
       },
@@ -44,19 +44,19 @@ const ITEMS: MenuItemObj[] = [
   },
   {
     key: 'support',
-    icon: 'Question',
+    icon: 'HelpCircle',
     label: 'Support',
     submenu: [
       {
         key: 'contact',
-        icon: 'Envelope',
+        icon: 'Mail',
         label: 'Contact Us',
         /** This page isn't created yet */
         ahref: 'https://fuel.network',
       },
       {
         key: 'discord',
-        icon: 'DiscordLogo',
+        icon: 'BrandDiscordFilled',
         label: 'Fuel Discord',
         ahref: 'https://discord.com/invite/xfpK4Pe',
       },

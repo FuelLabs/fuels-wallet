@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Icon, CardList, Flex, Tooltip, Box, Stack } from '@fuel-ui/react';
+import { Icon, CardList, Tooltip, Box } from '@fuel-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import type { useConnections } from '../../hooks';
@@ -11,12 +11,12 @@ import {
   Layout,
   SearchInput,
   PermissionCard,
+  MotionBox,
 } from '~/systems/Core';
 import { NOT_ALLOWED_LIST, PERMISSION_LIST } from '~/systems/DApp';
 
 export type ConnectionListProps = ReturnType<typeof useConnections>;
 
-const MotionBox = motion(Box);
 const MotionCardList = motion(CardList);
 
 export function ConnectionList({
@@ -36,18 +36,21 @@ export function ConnectionList({
 
   return (
     <Layout.Content css={styles.root}>
-      <Stack gap="$3">
+      <Box.Stack gap="$3">
         {!status('isEmpty') && (
-          <Flex css={styles.topbar}>
+          <Box.Flex css={styles.topbar}>
             <SearchInput
               value={ctx.inputs?.searchText}
               onChange={handlers.search}
               isDisabled={status('loading')}
             />
             <Tooltip content={tooltipContent} as="div" alignOffset={12}>
-              <Icon icon={Icon.is('Warning')} aria-label="Connection Alert" />
+              <Icon
+                icon={Icon.is('AlertTriangle')}
+                aria-label="Connection Alert"
+              />
             </Tooltip>
-          </Flex>
+          </Box.Flex>
         )}
         {status('loading') && (
           <CardList gap="$3">
@@ -84,7 +87,7 @@ export function ConnectionList({
             </AnimatePresence>
           </MotionCardList>
         )}
-      </Stack>
+      </Box.Stack>
     </Layout.Content>
   );
 }
@@ -96,7 +99,7 @@ const styles = {
     gap: '$4',
 
     '.fuel_tooltip--content': {
-      background: '$gray1',
+      background: '$intentsBase1',
     },
   }),
   empty: cssObj({
@@ -106,12 +109,12 @@ const styles = {
     zIndex: '$10',
     alignItems: 'center',
 
-    '.fuel_input': {
+    '.fuel_Input': {
       flex: 1,
     },
 
-    '& > .fuel_icon': {
-      color: '$amber9',
+    '& > .fuel_Icon': {
+      color: '$intentsWarning9',
     },
   }),
   tooltipContent: cssObj({

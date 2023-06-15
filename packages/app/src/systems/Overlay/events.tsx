@@ -75,5 +75,13 @@ export function overlayEvents(store: Store) {
         },
       });
     },
+    openResetDialog() {
+      store.send(Services.overlay, {
+        type: 'OPEN',
+        input: {
+          modal: 'reset',
+        },
+      });
+    },
   };
 }

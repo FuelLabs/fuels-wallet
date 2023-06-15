@@ -11,15 +11,15 @@ import type { SidebarLinkItem } from '~/src/types';
 const Link = styled(Box, {
   py: '$1',
   px: '$2',
-  color: '$gray10',
+  color: '$intentsBase10',
   borderRadius: '$md',
   '&:focus, &:hover': {
-    color: '$gray11',
+    color: '$intentsBase11',
     background: '$whiteA3',
   },
   '&.active': {
-    color: '$accent11',
-    background: '$accent2',
+    color: '$intentsPrimary11',
+    background: '$intentsPrimary2',
   },
   '&:focus': {
     outline: 'none',

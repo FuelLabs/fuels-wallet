@@ -60,7 +60,7 @@ window.fuel?.connect();
 
 It's possible that your application loads before `window.fuel` is injected. To detect when the `fuel` is loaded and ready to use, you can listen to the event `FuelLoaded` on the document.
 
-<CodeImport file="../../examples/FuelLoaded.tsx" lineStart="10" lineEnd="21" />
+<CodeImport file="../../examples/FuelLoaded.tsx" commentBlock="detectFuel" />
 
 <Examples.FuelLoaded />
 
@@ -72,8 +72,4 @@ In a React app, you can use the `useFuel` hook below to detect when `window.fuel
 
 Here is how you can use the `useFuel` hook in a component:
 
-<CodeImport
-  file="../../examples/events/Accounts.tsx"
-  lineStart="11"
-  lineEnd="11"
-/>
+<CodeImport file="../../examples/events/Accounts.tsx" commentBlock="useFuel" />

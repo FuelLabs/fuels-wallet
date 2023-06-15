@@ -12,6 +12,7 @@ export function UnlockForm({ form }: UnlockFormProps) {
   const { control } = form;
   return (
     <ControlledField
+      css={{ width: '90%' }}
       control={control}
       name="password"
       render={({ field }) => (

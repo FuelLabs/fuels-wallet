@@ -10,3 +10,4 @@ export { Events } from './events';
 export { FuelLoaded } from './FuelLoaded';
 export { AddAbi } from './AddAbi';
 export { Network } from './Network';
+export { Connectors } from './Connectors';

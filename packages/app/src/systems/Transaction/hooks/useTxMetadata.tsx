@@ -1,12 +1,16 @@
+import type { Bech32Address } from 'fuels';
 import { Address } from 'fuels';
 import { useMemo } from 'react';
 
-import type { Tx } from '../utils';
+import type { Operation, Tx } from '../utils';
 import {
+  OperationName,
   formatDate,
   getOperationDirection,
   OperationDirection,
 } from '../utils';
+
+import { useAccounts } from '~/systems/Account';
 
 type UseTxMetadataProps = {
   transaction: Tx;
@@ -19,15 +23,28 @@ export function getAddress(address?: string) {
   return Address.fromString(address).bech32Address;
 }
 
+export function getLabel(operation: Operation, address?: Bech32Address) {
+  const { name } = operation;
+  const me = address ? new Address(address).toHexString() : '';
+
+  if (name === OperationName.transfer && operation.from?.address === me) {
+    return 'Sent asset';
+  }
+  if (name === OperationName.transfer && operation.to?.address === me) {
+    return 'Received asset';
+  }
+  return name ?? 'Unknown';
+}
+
 export function useTxMetadata({
   transaction,
   ownerAddress,
 }: UseTxMetadataProps) {
   const { operations, time, id = ' ', status } = transaction;
+  const { account } = useAccounts();
 
   const mainOperation = operations[0];
-  const label = mainOperation.name;
-
+  const label = getLabel(mainOperation, account?.address as Bech32Address);
   const timeFormatted = time ? formatDate(time) : undefined;
 
   const toOrFromText = useMemo(() => {
@@ -57,6 +74,7 @@ export function useTxMetadata({
     label,
     timeFormatted,
     id,
+    operation: mainOperation,
     status,
   };
 }

@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import { Button, Stack, Tag } from '@fuel-ui/react';
+import { Box, Button, Tag } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/sdk';
 import { useState } from 'react';
 
-import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuel } from '~/src/hooks/useFuel';
-import { useIsConnected } from '~/src/hooks/useIsConnected';
-import { useLoading } from '~/src/hooks/useLoading';
+import { ExampleBox } from '../src/components/ExampleBox';
+import { useFuel } from '../src/hooks/useFuel';
+import { useIsConnected } from '../src/hooks/useIsConnected';
+import { useLoading } from '../src/hooks/useLoading';
 
 export function ListAssets() {
   const [fuel, notDetected] = useFuel();
@@ -29,7 +29,7 @@ export function ListAssets() {
 
   return (
     <ExampleBox error={errorMessage}>
-      <Stack css={styles.root}>
+      <Box.Stack css={styles.root}>
         <Button
           onPress={handleGetAssets}
           isLoading={isLoadingAssets}
@@ -38,20 +38,15 @@ export function ListAssets() {
           Get assets
         </Button>
         {Boolean(assets.length) && (
-          <Stack gap="$1" css={{ mt: '$2' }}>
+          <Box.Stack gap="$1" css={{ mt: '$2' }}>
             {assets.map((asset) => (
-              <Tag
-                size="xs"
-                color="gray"
-                variant="ghost"
-                key={JSON.stringify(asset)}
-              >
+              <Tag size="xs" variant="ghost" key={JSON.stringify(asset)}>
                 {asset.name} ({asset.symbol}): {asset.assetId}
               </Tag>
             ))}
-          </Stack>
+          </Box.Stack>
         )}
-      </Stack>
+      </Box.Stack>
     </ExampleBox>
   );
 }
@@ -62,11 +57,11 @@ const styles = {
     display: 'inline-flex',
     alignItems: 'flex-start',
 
-    '.fuel_tag': {
+    '.fuel_Tag': {
       justifyContent: 'flex-start',
 
       '& > p': {
-        fontSize: '$xs',
+        fontSize: '$sm',
       },
     },
   }),

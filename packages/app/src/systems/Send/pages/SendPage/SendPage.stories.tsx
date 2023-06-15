@@ -16,8 +16,10 @@ const wallet = Wallet.generate();
 export default {
   component: SendPage,
   title: 'Send/Pages/SendPage',
-  viewport: {
-    defaultViewport: 'chromeExtension',
+  parameters: {
+    viewport: {
+      defaultViewport: 'chromeExtension',
+    },
   },
   loaders: [sendLoader(wallet)],
 } as Meta;

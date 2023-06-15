@@ -4,10 +4,9 @@ import './load.envs.js';
 
 export default defineManifest({
   manifest_version: 3,
-  name: 'Fuel Wallet',
+  name: process.env.VITE_CRX_NAME,
   version: process.env.VITE_APP_VERSION,
-  description:
-    'The official wallet of the fastest modular execution layer. Fuel Network.',
+  description: 'The official Fuel Wallet',
   icons: {
     '16': 'icons/fuel-logo-16.png',
     '19': 'icons/fuel-logo-19.png',

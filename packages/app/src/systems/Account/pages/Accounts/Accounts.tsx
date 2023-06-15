@@ -1,29 +1,24 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
+import { Button, Dialog, Icon } from '@fuel-ui/react';
 
 import { AccountList } from '../../components';
 import { useAccounts, useAddAccount } from '../../hooks';
 
 import { coreStyles } from '~/systems/Core/styles';
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export const Accounts = () => {
   const { accounts, canHideAccounts, hasHiddenAccounts, isLoading, handlers } =
     useAccounts();
+
   const { handlers: addAccountHandlers, isLoading: isAddingAccount } =
     useAddAccount();
 
   return (
     <>
-      <Dialog.Heading>
+      <OverlayDialogTopbar onClose={handlers.closeDialog}>
         Accounts
-        <IconButton
-          data-action="closed"
-          variant="link"
-          icon={<Icon icon="X" color="gray8" />}
-          aria-label="Close unlock window"
-          onPress={handlers.closeDialog}
-        />
-      </Dialog.Heading>
+      </OverlayDialogTopbar>
       <Dialog.Description
         as="div"
         css={styles.description}
@@ -42,26 +37,23 @@ export const Accounts = () => {
       </Dialog.Description>
       <Dialog.Footer css={styles.footer}>
         <Button
+          aria-label="Import from private key"
+          onPress={handlers.goToImport}
+          leftIcon={Icon.is('LockOpen')}
+          variant="ghost"
+          iconSize={14}
+        >
+          Add from private key
+        </Button>
+        <Button
+          intent="primary"
           aria-label="Add account"
           onPress={addAccountHandlers.addAccount}
           leftIcon={Icon.is('Plus')}
-          variant="ghost"
-          size={'sm'}
           iconSize={14}
           isLoading={isAddingAccount}
         >
           Add new account
-        </Button>
-        <Button
-          aria-label="Import from private key"
-          onPress={handlers.goToImport}
-          leftIcon={Icon.is('LockLaminatedOpen')}
-          variant="ghost"
-          color="gray"
-          size={'sm'}
-          iconSize={14}
-        >
-          Add from private key
         </Button>
       </Dialog.Footer>
     </>
@@ -70,13 +62,10 @@ export const Accounts = () => {
 
 const styles = {
   description: cssObj({
-    ...coreStyles.scrollable('$gray3'),
-    padding: '$4',
+    ...coreStyles.scrollable('$intentsBase3'),
+    overflowY: 'scroll !important',
+    paddingLeft: '$4',
     flex: 1,
-
-    '&[data-has-scroll="true"]': {
-      padding: '$4 $2 $4 $4',
-    },
   }),
   footer: cssObj({
     flexDirection: 'column',

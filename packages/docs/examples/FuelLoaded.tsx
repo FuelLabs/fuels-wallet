@@ -1,12 +1,13 @@
-import { Flex, Text } from '@fuel-ui/react';
+import { Box, Text } from '@fuel-ui/react';
 import { useEffect, useState } from 'react';
 
-import { ExampleBox } from '~/src/components/ExampleBox';
+import { ExampleBox } from '../src/components/ExampleBox';
 
 export function FuelLoaded() {
   const [fuel, setFuel] = useState<Window['fuel']>();
 
   useEffect(() => {
+    /* detectFuel:start */
     // Fuel loaded handler
     const onFuelLoaded = () => {
       setFuel(window.fuel);
@@ -24,11 +25,12 @@ export function FuelLoaded() {
     return () => {
       document.removeEventListener('FuelLoaded', onFuelLoaded);
     };
+    /* detectFuel:end */
   }, []);
 
   return (
     <ExampleBox showNotDetectedOverlay={false}>
-      <Flex gap="$4">
+      <Box.Flex gap="$4">
         {fuel ? (
           <Text>
             <b>fuel</b> is ready to use
@@ -38,7 +40,7 @@ export function FuelLoaded() {
             <b>fuel</b> not detected
           </Text>
         )}
-      </Flex>
+      </Box.Flex>
     </ExampleBox>
   );
 }

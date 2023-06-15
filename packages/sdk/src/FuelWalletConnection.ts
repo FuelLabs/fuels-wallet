@@ -1,11 +1,5 @@
-import {
-  CONTENT_SCRIPT_NAME,
-  PAGE_SCRIPT_NAME,
-  MessageTypes,
-} from '@fuel-wallet/types';
 import type {
   Asset,
-  CommunicationMessage,
   FuelEventArg,
   FuelProviderConfig,
   FuelEvents,
@@ -13,29 +7,11 @@ import type {
 } from '@fuel-wallet/types';
 import type { TransactionRequestLike } from 'fuels';
 import { transactionRequestify } from 'fuels';
-import type { JSONRPCRequest } from 'json-rpc-2.0';
 
 import { WindowConnection } from './connections/WindowConnection';
 import { getTransactionSigner } from './utils/getTransactionSigner';
 
 export class FuelWalletConnection extends WindowConnection {
-  acceptMessage(message: MessageEvent<CommunicationMessage>): boolean {
-    const { data: event } = message;
-    return (
-      message.origin === window.origin && event.target === PAGE_SCRIPT_NAME
-    );
-  }
-
-  async sendRequest(request: JSONRPCRequest | null) {
-    if (request) {
-      this.postMessage({
-        type: MessageTypes.request,
-        target: CONTENT_SCRIPT_NAME,
-        request,
-      });
-    }
-  }
-
   async ping(): Promise<boolean> {
     return this.client.timeout(1000).request('ping', {});
   }

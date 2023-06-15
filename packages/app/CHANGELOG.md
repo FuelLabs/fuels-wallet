@@ -1,5 +1,53 @@
 # fuels-wallet
 
+## 0.10.0
+
+### Minor Changes
+
+- [#625](https://github.com/FuelLabs/fuels-wallet/pull/625) [`993a197`](https://github.com/FuelLabs/fuels-wallet/commit/993a197fcbb0e198df2e54810c451f4b3bb4d7fe) Thanks [@pedronauck](https://github.com/pedronauck)! - Update Fuel branding on Wallet and address minor issues on UI and UX.
+
+- [#784](https://github.com/FuelLabs/fuels-wallet/pull/784) [`3a3fdcc`](https://github.com/FuelLabs/fuels-wallet/commit/3a3fdcc263e0fee850bae29114d80241c4b5c3ac) Thanks [@eswarasai](https://github.com/eswarasai)! - Reset auto-lock timer on user interaction
+
+### Patch Changes
+
+- [#786](https://github.com/FuelLabs/fuels-wallet/pull/786) [`3b82e52`](https://github.com/FuelLabs/fuels-wallet/commit/3b82e526b7b732ef5dd07791ef59246f9725cf05) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix wallet home scroll
+
+- Updated dependencies [[`c9cd111`](https://github.com/FuelLabs/fuels-wallet/commit/c9cd1110a26e56f9f7e1fbf3a0db0873cdd043d0)]:
+  - @fuel-wallet/types@0.10.0
+  - @fuel-wallet/sdk@0.10.0
+
+## 0.9.5
+
+### Patch Changes
+
+- [#779](https://github.com/FuelLabs/fuels-wallet/pull/779) [`7a168af`](https://github.com/FuelLabs/fuels-wallet/commit/7a168af86ef8b60b398179f8498c1106535a2988) Thanks [@luizstacio](https://github.com/luizstacio)! - Upgrade vite version
+
+- [#771](https://github.com/FuelLabs/fuels-wallet/pull/771) [`cc341cb`](https://github.com/FuelLabs/fuels-wallet/commit/cc341cbe3ef443cb161f01eceaff1c1f3aa184cd) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Add support to operation "Withdraw from Fuel", using MessageOut receipt
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.9.5
+  - @fuel-wallet/types@0.9.5
+
+## 0.9.4
+
+### Patch Changes
+
+- [#768](https://github.com/FuelLabs/fuels-wallet/pull/768) [`a8fecfa`](https://github.com/FuelLabs/fuels-wallet/commit/a8fecfa33435cac300791879538c7265b3c7c2e2) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: add support to transfer from message input
+
+- Updated dependencies [[`c475816`](https://github.com/FuelLabs/fuels-wallet/commit/c475816fc5feca629e2a0cdab668a397c833ce23)]:
+  - @fuel-wallet/sdk@0.9.4
+  - @fuel-wallet/types@0.9.4
+
+## 0.9.3
+
+### Patch Changes
+
+- [#766](https://github.com/FuelLabs/fuels-wallet/pull/766) [`6e2accf`](https://github.com/FuelLabs/fuels-wallet/commit/6e2accfa97d84239161040d37fcfc4d5aaedaabc) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: upgrade sdk to 0.43.0
+
+- Updated dependencies [[`6e2accf`](https://github.com/FuelLabs/fuels-wallet/commit/6e2accfa97d84239161040d37fcfc4d5aaedaabc)]:
+  - @fuel-wallet/types@0.9.3
+  - @fuel-wallet/sdk@0.9.3
+
 ## 0.9.2
 
 ### Patch Changes

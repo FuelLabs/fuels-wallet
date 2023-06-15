@@ -1,13 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Avatar,
-  Box,
-  CardList,
-  Flex,
-  Icon,
-  IconButton,
-  Text,
-} from '@fuel-ui/react';
+import { Avatar, Box, CardList, Icon, IconButton, Text } from '@fuel-ui/react';
 import type { Connection } from '@fuel-wallet/types';
 import { motion } from 'framer-motion';
 import type { FC } from 'react';
@@ -49,12 +41,11 @@ export const ConnectionItem: ConnectionItemComponent = ({
     <MotionCardItem
       {...animations.slideInTop()}
       rightEl={
-        <Flex css={styles.root}>
+        <Box.Flex css={styles.root}>
           <IconButton
-            icon={<Icon icon={Icon.is('NotePencil')} color="gray8" />}
+            icon={<Icon icon={Icon.is('Edit')} color="intentsBase8" />}
             size="xs"
             variant="link"
-            color="gray"
             aria-label="Edit"
             onPress={() => onEdit(origin)}
           />
@@ -64,17 +55,16 @@ export const ConnectionItem: ConnectionItemComponent = ({
             onConfirm={handleConfirm}
           >
             <IconButton
-              icon={<Icon icon={Icon.is('Trash')} color="gray8" />}
+              icon={<Icon icon={Icon.is('Trash')} color="intentsBase8" />}
               size="xs"
               variant="link"
-              color="gray"
               aria-label="Delete"
             />
           </ConnectionRemoveDialog>
-        </Flex>
+        </Box.Flex>
       }
     >
-      <Avatar name={origin} src={favIconUrl} css={styles.avatar} />
+      <Avatar size="sm" name={origin} src={favIconUrl} css={styles.avatar} />
       <Box css={styles.text}>
         <Text>{truncate(parseUrl(origin))}</Text>
         <Text>
@@ -92,9 +82,9 @@ const styles = {
     alignItems: 'center',
 
     /**
-     * TODO: change on fuel-ui to .fuel-icon-button instead
+     * TODO: change on fuel-ui to .fuel-IconButton instead
      */
-    '.fuel_icon-buton': {
+    '.fuel_IconButon': {
       padding: '$1 !important',
       height: 'auto',
     },
@@ -104,19 +94,19 @@ const styles = {
     width: 32,
   }),
   text: cssObj({
-    '.fuel_text:first-of-type': {
+    '.fuel_Text:first-of-type': {
       width: 160,
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       textSize: 'sm',
-      fontWeight: '$medium',
-      color: '$gray12',
+      fontWeight: '$normal',
+      color: '$intentsBase12',
     },
-    '.fuel_text:last-of-type': {
+    '.fuel_Text:last-of-type': {
       textSize: 'xs',
-      fontWeight: '$medium',
-      color: '$gray8',
+      fontWeight: '$normal',
+      color: '$intentsBase8',
     },
   }),
 };

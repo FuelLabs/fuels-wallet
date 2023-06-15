@@ -4,7 +4,13 @@ import {
   VAULT_SCRIPT_NAME,
 } from '@fuel-wallet/types';
 
-import { saveSecret, loadSecret, getTimer, clearSession } from '../../utils';
+import {
+  saveSecret,
+  loadSecret,
+  getTimer,
+  clearSession,
+  resetTimer,
+} from '../../utils';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
 
@@ -30,6 +36,18 @@ export class VaultService extends VaultServer {
   async lock(): Promise<void> {
     await super.lock();
     this.emitLockEvent();
+  }
+
+  async isLocked(): Promise<boolean> {
+    const isWalletLocked = await super.isLocked();
+    if (!isWalletLocked) {
+      const timer = await getTimer();
+      if (timer) {
+        // Reset the timer for wallet auto lock
+        resetTimer();
+      }
+    }
+    return isWalletLocked;
   }
 
   async autoLock() {

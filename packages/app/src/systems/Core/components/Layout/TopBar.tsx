@@ -1,13 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  FuelLogo,
-  Flex,
-  Icon,
-  IconButton,
-  Spinner,
-  Text,
-  Stack,
-} from '@fuel-ui/react';
+import { FuelLogo, Icon, IconButton, Spinner, Text, Box } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,32 +34,24 @@ function InternalTopBar({ onBack }: TopBarProps) {
   const { isLoading, title, isHome } = useLayoutContext();
   const { selectedNetwork, handlers } = useNetworks();
 
-  const goToActivityPage = () => {
-    navigate('/transactions');
-  };
-
   return (
-    <Flex as="nav" css={styles.root}>
-      <Flex css={{ gap: '$2', alignItems: 'center', flex: 1 }}>
+    <Box.Flex as="nav" css={styles.root}>
+      <Box.Flex css={styles.container} data-home={isHome}>
         {!isHome ? (
           <>
             <IconButton
-              icon={<Icon icon="CaretLeft" color="gray8" />}
+              icon={<Icon icon="ChevronLeft" color="intentsBase8" />}
               aria-label="Back"
               variant="link"
-              css={{ px: '0 !important' }}
+              css={styles.backIcon}
               onPress={() => (onBack ? onBack() : navigate(-1))}
             />
             {isLoading && <Spinner />}
-            {!isLoading && (
-              <Text css={{ fontWeight: '$semibold', color: '$gray12' }}>
-                {title}
-              </Text>
-            )}
+            {!isLoading && <Text css={styles.title}>{title}</Text>}
           </>
         ) : (
           <>
-            <FuelLogo size={40} />
+            <FuelLogo size={30} />
             {isLoading && <Spinner aria-label="Spinner" />}
             {selectedNetwork && !isLoading && (
               <NetworkDropdown
@@ -77,28 +61,20 @@ function InternalTopBar({ onBack }: TopBarProps) {
             )}
           </>
         )}
-      </Flex>
-      <Stack direction="row" gap="$2">
+      </Box.Flex>
+      <Box.Stack direction="row" gap="$2">
         <IconButton
-          css={{ px: '0 !important' }}
-          iconSize={24}
-          icon={<Icon icon="Bell" color="gray8" />}
-          variant="link"
-          aria-label="activity"
-          onPress={goToActivityPage}
-        />
-        <IconButton
-          iconSize={24}
-          icon={<Icon icon="List" color="gray8" />}
+          iconSize={20}
+          icon={<Icon icon="Menu2" />}
           aria-label="Menu"
           variant="link"
-          css={{ px: '0 !important' }}
+          css={styles.topbarIcon}
           onPress={() => {
             overlay.open({ modal: 'sidebar' });
           }}
         />
-      </Stack>
-    </Flex>
+      </Box.Stack>
+    </Box.Flex>
   );
 }
 
@@ -111,23 +87,19 @@ function ExternalTopBar() {
   const { selectedNetwork, handlers } = useNetworks();
 
   return (
-    <Flex as="nav" css={styles.root} data-home={isHome}>
-      <Flex css={{ alignItems: 'center', gap: '$5', flex: 1, pl: '$2' }}>
+    <Box.Flex as="nav" css={styles.root} data-home={isHome}>
+      <Box.Flex css={{ alignItems: 'center', gap: '$5', flex: 1 }}>
         {isLoading && <Spinner aria-label="Spinner" />}
-        {!isLoading && (
-          <Text css={{ fontWeight: '$semibold', color: '$gray12' }}>
-            {title}
-          </Text>
-        )}
-      </Flex>
+        {!isLoading && <Text css={styles.title}>{title}</Text>}
+      </Box.Flex>
       {selectedNetwork && (
         <NetworkDropdown
           selected={selectedNetwork}
           onPress={handlers.openNetworks}
-          isDisabled={true}
+          isDisabled
         />
       )}
-    </Flex>
+    </Box.Flex>
   );
 }
 
@@ -150,18 +122,48 @@ export function TopBar({ type = TopBarType.internal, ...props }: TopBarProps) {
 const styles = {
   root: cssObj({
     py: '$2',
-    px: '$4',
+    px: '$5',
     gap: '$3',
     alignItems: 'center',
     minHeight: '50px',
-    boxShadow: '$sm',
     transition: 'none',
-    background:
-      'linear-gradient(268.61deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.02) 87.23%)',
+  }),
+  topbarIcon: cssObj({
+    px: '$0 !important',
+    color: '$intentsBase8 !important',
+    transition: 'color 0.2s ease-in-out',
+
+    '&:hover': {
+      color: '$intentsBase11 !important',
+    },
+  }),
+  title: cssObj({
+    textSize: 'lg',
+    fontWeight: '$normal',
+    color: '$intentsBase12',
+  }),
+  container: cssObj({
+    position: 'relative',
+    pl: '$6',
+    gap: '$3',
+    alignItems: 'center',
+    flex: 1,
 
     '&[data-home="true"]': {
-      boxShadow: '$none',
-      background: 'transparent',
+      pl: '$0',
     },
+  }),
+  backIcon: cssObj({
+    position: 'absolute',
+    top: '50%',
+    left: '$0',
+    px: '$2 !important',
+    width: '$4 !important',
+    transform: 'translateY(-50%)',
+
+    '&:not([aria-disabled=true]):active, &:not([aria-disabled=true])[aria-pressed=true]':
+      {
+        transform: 'scale(0.97) translateY(-50%)',
+      },
   }),
 };

@@ -1,10 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "keyofStringsOnly": true,
+    "ignoreDeprecations": "5.0",
     "outDir": "./dist",
     "baseUrl": ".",
     "rootDir": "."
   },
   "include": ["**/*.ts"],
-  "exclude": ["**/*.test.ts"]
+  "exclude": ["**/*.test.ts", "dist"]
 }

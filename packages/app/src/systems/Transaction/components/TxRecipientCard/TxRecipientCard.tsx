@@ -1,17 +1,18 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Card, Flex, Heading, Icon, Text } from '@fuel-ui/react';
+import { Avatar, Box, Card, Heading, Icon, Text } from '@fuel-ui/react';
 import { AddressType } from '@fuel-wallet/types';
 import { Address, isB256, isBech32 } from 'fuels';
 import type { FC } from 'react';
 
-import type { TxRecipientAddress } from '../../types';
+import type { TxAddress } from '../../utils';
+import { ChainName } from '../../utils';
 
 import { TxRecipientCardLoader } from './TxRecipientCardLoader';
 
-import { FuelAddress, useAccounts } from '~/systems/Account';
+import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 
 export type TxRecipientCardProps = {
-  recipient?: TxRecipientAddress;
+  recipient?: TxAddress;
   isReceiver?: boolean;
 };
 
@@ -30,20 +31,34 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
     ? Address.fromString(address).toString()
     : '';
   const isContract = recipient?.type === AddressType.contract;
+  const isEthChain = recipient?.chain === ChainName.ethereum;
   const name =
     accounts?.find((a) => a.address === fuelAddress)?.name || 'unknown';
 
   return (
     <Card
       css={styles.root}
-      className="tx-recipient-card"
+      className="TxRecipientCard"
       data-recipient={address}
       data-type={isContract ? 'contract' : 'user'}
     >
       <Text css={styles.from}>
-        {isReceiver ? 'To' : 'From'} {isContract && '(Contract)'}
+        {isReceiver ? 'To' : 'From'} {isContract && '(Contract)'}{' '}
+        {isEthChain && '(Ethereum)'}
       </Text>
-      {address && (
+      {isEthChain ? (
+        <>
+          <Box css={styles.iconWrapper}>
+            <Icon icon={Icon.is('CurrencyEthereum')} size={20} />
+          </Box>
+          <Box.Flex css={styles.info}>
+            <Heading as="h6" css={styles.name}>
+              unknown
+            </Heading>
+            <EthAddress address={address} css={styles.address} />
+          </Box.Flex>
+        </>
+      ) : (
         <>
           {!isContract && (
             <Avatar.Generated
@@ -51,20 +66,19 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
               size="lg"
               hash={fuelAddress}
               aria-label={fuelAddress}
-              background="fuel"
             />
           )}
           {isContract && (
             <Box css={styles.iconWrapper}>
-              <Icon icon={Icon.is('Code')} size={16} />
+              <Icon icon={Icon.is('Code')} size={20} />
             </Box>
           )}
-          <Flex css={styles.info}>
+          <Box.Flex css={styles.info}>
             <Heading as="h6" css={styles.name}>
               {name}
             </Heading>
             <FuelAddress address={fuelAddress} css={styles.address} />
-          </Flex>
+          </Box.Flex>
         </>
       )}
     </Card>
@@ -80,11 +94,10 @@ const styles = {
     gap: '$3',
 
     '.fuel_copyable': {
-      color: '$gray12',
+      color: '$intentsBase12',
       fontSize: '$sm',
-      fontWeight: '$semibold',
     },
-    '.fuel_avatar-generated': {
+    '.fuel_Avatar-generated': {
       width: 56,
       height: 56,
       '& svg': {
@@ -95,11 +108,11 @@ const styles = {
   }),
   from: cssObj({
     fontSize: '$sm',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
   }),
   iconWrapper: cssObj({
     padding: '$5',
-    background: '$gray3',
+    background: '$intentsBase3',
     borderRadius: '$full',
   }),
   info: cssObj({
@@ -108,7 +121,7 @@ const styles = {
     gap: '$1',
   }),
   address: cssObj({
-    fontSize: '$xs',
+    fontSize: '$sm',
   }),
   name: cssObj({
     margin: '0px 0px -5px',

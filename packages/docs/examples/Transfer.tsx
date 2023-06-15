@@ -1,24 +1,15 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import {
-  Box,
-  Button,
-  Flex,
-  Link,
-  Stack,
-  Text,
-  InputAmount,
-  Input,
-} from '@fuel-ui/react';
+import { Box, Button, Link, Text, InputAmount, Input } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import type { BN } from 'fuels';
 import { NativeAssetId, bn, Address } from 'fuels';
 import { useState } from 'react';
 
-import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuel } from '~/src/hooks/useFuel';
-import { useIsConnected } from '~/src/hooks/useIsConnected';
-import { useLoading } from '~/src/hooks/useLoading';
+import { ExampleBox } from '../src/components/ExampleBox';
+import { useFuel } from '../src/hooks/useFuel';
+import { useIsConnected } from '../src/hooks/useIsConnected';
+import { useLoading } from '../src/hooks/useLoading';
 
 export function Transfer() {
   const [fuel, notDetected] = useFuel();
@@ -51,8 +42,8 @@ export function Transfer() {
 
   return (
     <ExampleBox error={errorMessage}>
-      <Stack css={{ gap: '$4' }}>
-        <Flex gap="$4" direction={'column'}>
+      <Box.Stack css={{ gap: '$4' }}>
+        <Box.Flex gap="$4" direction={'column'}>
           <Box css={{ width: 300 }}>
             <Input css={{ width: '100%' }}>
               <Input.Field
@@ -86,7 +77,7 @@ export function Transfer() {
               Transfer
             </Button>
           </Box>
-        </Flex>
+        </Box.Flex>
         {txId ? (
           <Box css={styles.accounts}>
             <Text>{txId}</Text>
@@ -101,7 +92,7 @@ export function Transfer() {
             </Link>
           </Box>
         ) : null}
-      </Stack>
+      </Box.Stack>
     </ExampleBox>
   );
 }
@@ -111,7 +102,7 @@ const styles = {
     marginTop: '$2',
     padding: '$2',
     borderRadius: '$lg',
-    backgroundColor: '$gray4',
+    backgroundColor: '$intentsBase4',
     maxWidth: 300,
     wordWrap: 'break-word',
   }),

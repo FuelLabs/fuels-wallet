@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import type { Icons } from '@fuel-ui/react';
-import { Box, Flex, Icon, Menu as RootMenu } from '@fuel-ui/react';
+import { Box, Icon, Menu as RootMenu } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useNavigate, useResolvedPath, useMatch } from 'react-router-dom';
@@ -63,15 +63,15 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
 
   return (
     <Box css={styles.routeContent}>
-      <Flex
+      <Box.Flex
         css={styles.route}
         data-active={Boolean(match && item.path)}
         data-opened={isOpened}
       >
         <Icon icon={item.icon} className="main-icon" aria-label="Menu Icon" />
         <Box css={{ flex: 1 }}>{item.label}</Box>
-        {item.submenu && <Icon icon="CaretDown" aria-label="Caret Icon" />}
-      </Flex>
+        {item.submenu && <Icon icon="ChevronDown" aria-label="Caret Icon" />}
+      </Box.Flex>
       {isOpened && item.submenu && (
         <MotionRootMenu
           css={styles.submenu}
@@ -83,7 +83,7 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
         >
           {item.submenu.map((subItem) => (
             <RootMenu.Item key={subItem.key} textValue={subItem.label}>
-              <Icon icon={subItem.icon} css={{ color: '$gray8' }} />
+              <Icon icon={subItem.icon} css={{ color: '$intentsBase8' }} />
               {subItem.label}
             </RootMenu.Item>
           ))}
@@ -136,24 +136,30 @@ export function Menu({ items }: MenuProps) {
 
 const styles = {
   root: cssObj({
-    ...coreStyles.scrollable('$gray2'),
-    py: '$2',
+    ...coreStyles.scrollable('$intentsBase2'),
+    pt: '$0',
+    pb: '$3',
     flex: 1,
 
-    '& > .fuel_menu-list-item': {
+    '& > .fuel_MenuListItem': {
       fontSize: '$sm',
-      height: 'auto',
       px: '$3',
     },
 
-    '& > .fuel_menu-list-item:hover, .fuel_menu-list-item:focus': {
-      background: '$transparent',
+    '& .fuel_MenuListItem:not([aria-disabled="true"]):hover, .fuel_MenuListItem:not([aria-disabled="true"]):focus':
+      {
+        background: 'transparent',
+      },
+    '& > .fuel_MenuListItem:focus-within': {
+      background: 'transparent',
+      color: '$intentsBase12',
     },
-    '& > .fuel_menu-list-item:focus-within': {
-      color: '$gray12',
-    },
-    '& > .fuel_menu-list-item:focus-within .main-icon': {
+    '& > .fuel_MenuListItem:focus-within .main-icon': {
       color: '$accent11',
+    },
+
+    '& li[data-key="settings"]': {
+      mt: '$8',
     },
   }),
   route: cssObj({
@@ -161,21 +167,21 @@ const styles = {
     gap: '$2',
     py: '$1',
     px: '$2',
-    borderRadius: '$lg',
+    borderRadius: '$default',
 
     '&[data-active="true"]': {
-      color: '$gray12',
-      bg: '$gray3',
+      color: '$intentsBase12',
+      bg: '$intentsBase3',
       my: '2px',
     },
 
-    '&[data-opened="true"] .fuel_icon--CaretDown': {
+    '&[data-opened="true"] .fuel_Icon--ChevronDown': {
       transform: 'rotate(180deg)',
     },
 
-    '.fuel_icon, .fuel_icon--CaretDown': {
+    '.fuel_Icon, .fuel_Icon--ChevronDown': {
       transition: 'transform .3s',
-      color: '$gray7',
+      color: '$textIcon',
     },
   }),
   routeContent: cssObj({
@@ -183,7 +189,7 @@ const styles = {
   }),
   submenu: cssObj({
     position: 'relative',
-    fontSize: '$xs',
+    fontSize: '$sm',
     py: '$0',
     ml: '$2',
 
@@ -195,24 +201,23 @@ const styles = {
       left: 7,
       width: 1,
       height: 'calc(100% - 18px)',
-      background: '$gray6',
+      background: '$intentsBase6',
     },
 
-    '.fuel_menu-list-item': {
+    '.fuel_MenuListItem': {
       position: 'relative',
-      py: '2px',
       px: '$0',
       pl: '$2',
       ml: '$4',
-      height: 'auto',
-      fontSize: '$xs',
+      fontSize: '$sm',
+      color: '$intentsBase8',
     },
 
-    '.fuel_menu-list-item .fuel_icon': {
-      color: '$gray8',
+    '.fuel_MenuListItem .fuel_Icon': {
+      color: '$intentsBase8',
     },
 
-    '.fuel_menu-list-item::before': {
+    '.fuel_MenuListItem::before': {
       display: 'block',
       content: '""',
       position: 'absolute',
@@ -220,7 +225,7 @@ const styles = {
       left: -8,
       width: 10,
       height: 1,
-      background: '$gray6',
+      background: '$intentsBase6',
       transform: 'translateY(-50%)',
     },
   }),

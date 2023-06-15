@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import { Button, Stack, Tag, Text } from '@fuel-ui/react';
+import { Box, Button, Tag, Text } from '@fuel-ui/react';
 import { useState } from 'react';
 
-import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuel } from '~/src/hooks/useFuel';
-import { useIsConnected } from '~/src/hooks/useIsConnected';
-import { useLoading } from '~/src/hooks/useLoading';
+import { ExampleBox } from '../src/components/ExampleBox';
+import { useFuel } from '../src/hooks/useFuel';
+import { useIsConnected } from '../src/hooks/useIsConnected';
+import { useLoading } from '../src/hooks/useLoading';
 
 export function CurrentAccount() {
   const [fuel, notDetected] = useFuel();
@@ -27,7 +27,7 @@ export function CurrentAccount() {
 
   return (
     <ExampleBox error={errorMessage}>
-      <Stack css={styles.root}>
+      <Box.Stack css={styles.root}>
         <Button
           onPress={handleCurrentAccount}
           isLoading={isLoadingCurrentAccount}
@@ -35,14 +35,14 @@ export function CurrentAccount() {
         >
           Get current account
         </Button>
-        <Stack gap="$3" css={{ mt: '$2' }}>
+        <Box.Stack gap="$3" css={{ mt: '$2' }}>
           {!!currentAccount && (
-            <Tag size="xs" color="gray" variant="ghost">
+            <Tag size="xs" variant="ghost">
               <Text key={currentAccount}>{currentAccount}</Text>
             </Tag>
           )}
-        </Stack>
-      </Stack>
+        </Box.Stack>
+      </Box.Stack>
     </ExampleBox>
   );
 }
@@ -53,8 +53,8 @@ const styles = {
     display: 'inline-flex',
     alignItems: 'flex-start',
 
-    '.fuel_tag > p': {
-      fontSize: '$xs',
+    '.fuel_Tag > p': {
+      fontSize: '$sm',
     },
   }),
 };

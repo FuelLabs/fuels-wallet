@@ -9,19 +9,19 @@ const ITEMS: MenuItemObj[] = [
   { key: 'wallet', icon: 'Wallet', label: 'Wallet0', path: '/wallet' },
   {
     key: 'support',
-    icon: 'Question',
+    icon: 'HelpCircle',
     label: 'Support',
     submenu: [
       {
         key: 'contact',
-        icon: 'Envelope',
+        icon: 'Mail',
         label: 'Contact Us',
         /** This page isn't created yet */
         ahref: 'https://fuel.network',
       },
       {
         key: 'discord',
-        icon: 'DiscordLogo',
+        icon: 'BrandDiscordFilled',
         label: 'Fuel Discord',
         ahref: 'https://discord.com/invite/xfpK4Pe',
       },

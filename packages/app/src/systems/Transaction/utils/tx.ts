@@ -49,13 +49,14 @@ import type {
   GetOperationParams,
   GqlTransactionStatus,
   InputOutputParam,
+  InputParam,
   Operation,
   ParseTxParams,
   RawPayloadParam,
   ReceiptParam,
   Tx,
 } from './tx.types';
-import { OperationName, TxType, TxStatus } from './tx.types';
+import { ChainName, OperationName, TxType, TxStatus } from './tx.types';
 
 export const getStatus = (
   gqlStatus?: GqlTransactionStatus
@@ -106,9 +107,30 @@ export function getInputContractFromIndex(
   return contractInput as InputContract;
 }
 
-export function getFromAddress(inputs: Input[]) {
-  // considering only one address will send coin inputs, we can safely get first one
-  return getInputsCoin(inputs)[0]?.owner.toString();
+export function getInputFromAssetId(inputs: Input[], assetId: string) {
+  const coinInputs = getInputsCoin(inputs);
+  const messageInputs = getInputsMessage(inputs);
+  const coinInput = coinInputs.find((i) => i.assetId === assetId);
+  // TODO: should include assetId in InputMessage as well. for now we're mocking ETH
+  const messageInput = messageInputs.find(
+    (_) =>
+      assetId ===
+      '0x0000000000000000000000000000000000000000000000000000000000000000'
+  );
+
+  return coinInput || messageInput;
+}
+
+export function getInputAccountAddress(input: Input) {
+  if (input.type === InputType.Coin) {
+    return input.owner.toString();
+  }
+
+  if (input.type === InputType.Message) {
+    return input.recipient.toString();
+  }
+
+  return '';
 }
 
 export function getOutputsByType<T = Output>(
@@ -353,13 +375,15 @@ export function getContractCreatedOperations({
   outputs,
 }: InputOutputParam): Operation[] {
   const contractCreatedOutputs = getOutputsContractCreated(outputs);
+  const input = getInputsCoin(inputs)[0];
+  const fromAddress = getInputAccountAddress(input);
   const contractCreatedOperations = contractCreatedOutputs.reduce(
     (prev, contractCreatedOutput) => {
       const operations = addOperation(prev, {
         name: OperationName.contractCreated,
         from: {
           type: AddressType.account,
-          address: getFromAddress(inputs),
+          address: fromAddress,
         },
         to: {
           type: AddressType.contract,
@@ -379,20 +403,19 @@ export function getTransferOperations({
   inputs,
   outputs,
 }: InputOutputParam): Operation[] {
-  const coinInputs = getInputsCoin(inputs);
   const coinOutputs = getOutputsCoin(outputs);
 
   let operations: Operation[] = [];
   for (const output of coinOutputs) {
-    const input = coinInputs.find((i) => i.assetId === output.assetId)!;
-    const isSameAsset = input.assetId === output.assetId;
+    const input = getInputFromAssetId(inputs, output.assetId);
 
-    if (isSameAsset) {
+    if (input) {
+      const inputAddress = getInputAccountAddress(input);
       operations = addOperation(operations, {
         name: OperationName.transfer,
         from: {
           type: AddressType.account,
-          address: input.owner.toString(),
+          address: inputAddress,
         },
         to: {
           type: AddressType.account,
@@ -446,7 +469,6 @@ export function getContractCallOperations({
   rawPayload,
 }: InputOutputParam & ReceiptParam & AbiParam & RawPayloadParam): Operation[] {
   const contractCallReceipts = getReceiptsCall(receipts);
-  const fromAddress = getFromAddress(inputs);
   const contractOutputs = getOutputsContract(outputs);
 
   const contractCallOperations = contractOutputs.reduce(
@@ -460,93 +482,97 @@ export function getContractCallOperations({
         const newCallOps = contractCallReceipts.reduce(
           (prevContractCallOps, receipt) => {
             if (receipt.to === contractInput.contractID) {
-              const calls = [];
+              const input = getInputFromAssetId(inputs, receipt.assetId);
+              if (input) {
+                const inputAddress = getInputAccountAddress(input);
+                const calls = [];
 
-              const abi = abiMap?.[contractInput.contractID];
-              if (abi) {
-                const abiInterface = new Interface(abi);
-                const callFunctionSelector = receipt.param1.toHex(8);
-                const functionFragment =
-                  abiInterface.getFunction(callFunctionSelector);
+                const abi = abiMap?.[contractInput.contractID];
+                if (abi) {
+                  const abiInterface = new Interface(abi);
+                  const callFunctionSelector = receipt.param1.toHex(8);
+                  const functionFragment =
+                    abiInterface.getFunction(callFunctionSelector);
 
-                const nonEmptyInputs = filterEmptyParams(
-                  functionFragment.inputs
-                );
+                  const nonEmptyInputs = filterEmptyParams(
+                    functionFragment.inputs
+                  );
 
-                let encodedArgs;
-                if (functionFragment.isInputDataPointer()) {
-                  if (rawPayload) {
-                    const argsOffset = bn(receipt.param2)
-                      .sub(VM_TX_MEMORY)
-                      .toNumber();
+                  let encodedArgs;
+                  if (functionFragment.isInputDataPointer()) {
+                    if (rawPayload) {
+                      const argsOffset = bn(receipt.param2)
+                        .sub(VM_TX_MEMORY)
+                        .toNumber();
 
-                    // slice(2) to remove first 0x, then slice again to remove offset and get only args
-                    encodedArgs = `0x${rawPayload
-                      .slice(2)
-                      .slice(argsOffset * 2)}`;
+                      // slice(2) to remove first 0x, then slice again to remove offset and get only args
+                      encodedArgs = `0x${rawPayload
+                        .slice(2)
+                        .slice(argsOffset * 2)}`;
+                    }
+                  } else {
+                    encodedArgs = receipt.param2.toHex();
                   }
-                } else {
-                  encodedArgs = receipt.param2.toHex();
+
+                  let argumentsProvided;
+                  if (encodedArgs) {
+                    const data = functionFragment.decodeArguments(encodedArgs);
+                    if (data) {
+                      argumentsProvided = nonEmptyInputs.reduce(
+                        (prev, input, index) => {
+                          const value = data[index];
+                          const name = input.name;
+
+                          if (name) {
+                            return {
+                              ...prev,
+                              // reparse to remove bn
+                              [name]: JSON.parse(JSON.stringify(value)),
+                            };
+                          }
+
+                          return prev;
+                        },
+                        {}
+                      );
+                    }
+                  }
+
+                  const call = {
+                    functionSignature: functionFragment.getSignature(),
+                    functionName: functionFragment.name,
+                    argumentsProvided,
+                    ...(receipt.amount?.isZero()
+                      ? {}
+                      : { amount: receipt.amount, assetId: receipt.assetId }),
+                  };
+                  calls.push(call);
                 }
 
-                let argumentsProvided;
-                if (encodedArgs) {
-                  const data = functionFragment.decodeArguments(encodedArgs);
-                  if (data) {
-                    argumentsProvided = nonEmptyInputs.reduce(
-                      (prev, input, index) => {
-                        const value = data[index];
-                        const name = input.name;
+                const newContractCallOps = addOperation(prevContractCallOps, {
+                  name: OperationName.contractCall,
+                  from: {
+                    type: AddressType.account,
+                    address: inputAddress,
+                  },
+                  to: {
+                    type: AddressType.contract,
+                    address: receipt.to,
+                  },
+                  // if no amount is forwarded to the contract, skip showing assetsSent
+                  assetsSent: receipt.amount?.isZero()
+                    ? undefined
+                    : [
+                        {
+                          amount: receipt.amount,
+                          assetId: receipt.assetId,
+                        },
+                      ],
+                  calls,
+                });
 
-                        if (name) {
-                          return {
-                            ...prev,
-                            // reparse to remove bn
-                            [name]: JSON.parse(JSON.stringify(value)),
-                          };
-                        }
-
-                        return prev;
-                      },
-                      {}
-                    );
-                  }
-                }
-
-                const call = {
-                  functionSignature: functionFragment.getSignature(),
-                  functionName: functionFragment.name,
-                  argumentsProvided,
-                  ...(receipt.amount?.isZero()
-                    ? {}
-                    : { amount: receipt.amount, assetId: receipt.assetId }),
-                };
-                calls.push(call);
+                return newContractCallOps;
               }
-
-              const newContractCallOps = addOperation(prevContractCallOps, {
-                name: OperationName.contractCall,
-                from: {
-                  type: AddressType.account,
-                  address: fromAddress,
-                },
-                to: {
-                  type: AddressType.contract,
-                  address: receipt.to,
-                },
-                // if no amount is forwarded to the contract, skip showing assetsSent
-                assetsSent: receipt.amount?.isZero()
-                  ? undefined
-                  : [
-                      {
-                        amount: receipt.amount,
-                        assetId: receipt.assetId,
-                      },
-                    ],
-                calls,
-              });
-
-              return newContractCallOps;
             }
             return prevContractCallOps;
           },
@@ -567,11 +593,11 @@ export function getContractCallOperations({
 export function getContractTransferOperations({
   receipts,
 }: ReceiptParam): Operation[] {
-  const contractCallReceipts = getReceiptsTransferOut(receipts);
+  const transferOutReceipts = getReceiptsTransferOut(receipts);
 
-  const contractCallOperations = contractCallReceipts.reduce(
+  const contractTransferOperations = transferOutReceipts.reduce(
     (prevContractTransferOps, receipt) => {
-      const newContractCallOps = addOperation(prevContractTransferOps, {
+      const newContractTransferOps = addOperation(prevContractTransferOps, {
         name: OperationName.contractTransfer,
         from: {
           type: AddressType.contract,
@@ -589,12 +615,56 @@ export function getContractTransferOperations({
         ],
       });
 
-      return newContractCallOps;
+      return newContractTransferOps;
     },
     [] as Operation[]
   );
 
-  return contractCallOperations;
+  return contractTransferOperations;
+}
+
+export function getWithdrawFromFuelOperations({
+  inputs,
+  receipts,
+}: InputParam & ReceiptParam): Operation[] {
+  const messageOutReceipts = getReceiptsMessageOut(receipts);
+
+  const withdrawFromFuelOperations = messageOutReceipts.reduce(
+    (prevWithdrawFromFuelOps, receipt) => {
+      // TODO: replace this hardcode with receipt.assetId when assetId gets added to MessageOutReceipt
+      const assetId =
+        '0x0000000000000000000000000000000000000000000000000000000000000000';
+      const input = getInputFromAssetId(inputs, assetId);
+      if (input) {
+        const inputAddress = getInputAccountAddress(input);
+        const newWithdrawFromFuelOps = addOperation(prevWithdrawFromFuelOps, {
+          name: OperationName.withdrawFromFuel,
+          from: {
+            type: AddressType.account,
+            address: inputAddress,
+          },
+          to: {
+            type: AddressType.account,
+            address: receipt.recipient.toString(),
+            chain: ChainName.ethereum,
+          },
+          assetsSent: [
+            {
+              amount: receipt.amount,
+              assetId,
+            },
+          ],
+        });
+
+        return newWithdrawFromFuelOps;
+      }
+
+      return prevWithdrawFromFuelOps;
+    },
+    [] as Operation[]
+  );
+
+  return withdrawFromFuelOperations;
 }
 
 export function getOperations({
@@ -627,6 +697,7 @@ export function getOperations({
         rawPayload,
       }),
       ...getContractTransferOperations({ receipts }),
+      ...getWithdrawFromFuelOperations({ inputs, receipts }),
     ];
   }
 
