@@ -1,6 +1,8 @@
+import type { AbiMap } from '@fuel-wallet/types';
+
 import { AbiService } from '../services';
 
-export const MOCK_ABI_MAP = {
+export const MOCK_ABI_MAP: AbiMap = {
   '0x17a88dcb90a4b5df7433200c7eb7bd47015079b90043f197d64977443396f1c2': {
     types: [
       {
@@ -68,6 +70,7 @@ export const MOCK_ABI_MAP = {
       },
     ],
     loggedTypes: [],
+    configurables: [],
   },
 };
 

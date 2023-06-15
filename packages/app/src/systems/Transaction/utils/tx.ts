@@ -333,7 +333,7 @@ const mergeAssets = (op1: Operation, op2: Operation) => {
 export function addOperation(operations: Operation[], toAdd: Operation) {
   const ops = operations
     .map((op) => {
-      // if it's not same operation, don't change. we just wanna stackle the same operation
+      // if it's not same operation, don't change. we just wanna stack the same operation
       if (!isSameOperation(op, toAdd)) return null;
 
       let newOp = { ...op };

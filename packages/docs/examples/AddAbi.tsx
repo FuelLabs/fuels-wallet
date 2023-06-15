@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import { Stack, Input, Box, Button } from '@fuel-ui/react';
+import { Input, Box, Button } from '@fuel-ui/react';
 import type { JsonFlatAbi } from 'fuels';
 import { useState } from 'react';
 
@@ -40,7 +40,7 @@ export function AddAbi() {
 
   return (
     <ExampleBox error={errorMessage}>
-      <Stack gap="$4">
+      <Box.Stack gap="$4">
         <Input isDisabled={!isConnected} css={styles.input}>
           <Input.Field
             defaultValue={contractId}
@@ -56,12 +56,6 @@ export function AddAbi() {
             placeholder="Paste your ABI"
             rows={20}
           />
-          {/* <Input.Field
-            type="textarea"
-            defaultValue={JSON.stringify(abi, null, 2)}
-            onBlur={(e) => handleChangeAbi(e.target.value)}
-            placeholder="Paste your ABI"
-          /> */}
         </Input>
         <Box>
           <Button
@@ -72,7 +66,7 @@ export function AddAbi() {
             Add ABI
           </Button>
         </Box>
-      </Stack>
+      </Box.Stack>
     </ExampleBox>
   );
 }

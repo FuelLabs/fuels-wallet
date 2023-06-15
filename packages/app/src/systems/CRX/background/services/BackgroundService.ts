@@ -53,6 +53,7 @@ export class BackgroundService {
       this.addAssets,
       this.assets,
       this.addAbi,
+      this.getAbi,
     ]);
   }
 
@@ -334,5 +335,11 @@ export class BackgroundService {
   async addAbi(input: MessageInputs['addAbi']) {
     await AbiService.addAbi({ data: input.abiMap });
     return true;
+  }
+
+  async getAbi(input: MessageInputs['getAbi']) {
+    console.log(`input`, input);
+    const abi = await AbiService.getAbi({ data: input.contractId });
+    return abi;
   }
 }

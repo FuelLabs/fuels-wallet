@@ -14,7 +14,6 @@ import { networkEvents } from '../Network/events';
 import { networksMachine } from '../Network/machines';
 import { overlayMachine } from '../Overlay';
 import { overlayEvents } from '../Overlay/events';
-import { abiMachine } from '../Settings/machines';
 import { unlockMachine } from '../Unlock';
 import { unlockEvents } from '../Unlock/events';
 
@@ -38,7 +37,6 @@ export const store = store$
   .addMachine(Services.connectRequest, () => connectRequestMachine)
   .addMachine(Services.txRequest, () => transactionRequestMachine)
   .addMachine(Services.addAssetRequest, () => addAssetRequestMachine)
-  .addMachine(Services.abis, () => abiMachine)
   .addHandlers(accountEvents)
   .addHandlers(networkEvents)
   .addHandlers(assetEvents)

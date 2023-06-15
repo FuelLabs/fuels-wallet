@@ -12,6 +12,7 @@ export const MENU_ORDER = [
   'For Developers/Assets',
   'For Developers/Networks',
   'For Developers/Signing a Message',
+  'For Developers/ABIs',
   'For Developers/Wallet Connectors',
   'For Developers/Reference',
   'Contributing/Project Structure',

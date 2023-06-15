@@ -33,4 +33,7 @@ export type MessageInputs = {
   addAbi: {
     abiMap: AbiMap;
   };
+  getAbi: {
+    contractId: string;
+  };
 };

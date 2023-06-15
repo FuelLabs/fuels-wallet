@@ -6,36 +6,30 @@ export type AbiInputs = {
   addAbi: {
     data: AbiMap;
   };
+  getAbi: {
+    data: string;
+  };
 };
 
 export class AbiService {
   static async addAbi(input: AbiInputs['addAbi']) {
     return db.transaction('rw', db.abis, async () => {
-      const abiMap = await AbiService.getAbiMap();
-      const dataToAdd = Object.keys(input.data)
-        .map((key) => ({
-          contractId: key,
-          abi: input.data[key],
-        }))
-        .filter(({ contractId }) => !abiMap[contractId]);
-      await db.abis.bulkAdd(dataToAdd);
+      const dataToAdd = Object.keys(input.data).map((key) => ({
+        contractId: key,
+        abi: input.data[key],
+      }));
+      await db.abis.bulkAdd(dataToAdd, undefined, {
+        allKeys: true,
+      });
 
       return true;
     });
   }
 
-  static async getAbiMap() {
+  static async getAbi(input: AbiInputs['getAbi']) {
     return db.transaction('r', db.abis, async () => {
-      const abis = await db.abis.toArray();
-      // convert abis to abiMap
-      const abiMap: AbiMap = abis.reduce(
-        (prev, abi) => ({
-          ...prev,
-          [abi.contractId]: abi.abi,
-        }),
-        {}
-      );
-      return abiMap;
+      const abi = await db.abis.get({ contractId: input.data });
+      return abi?.abi;
     });
   }
 

@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Accordion, Box, Stack, Text } from '@fuel-ui/react';
+import { Accordion, Box, Text } from '@fuel-ui/react';
 import ReactJson from 'react-json-view';
 
 import { coreStyles } from '~/systems/Core/styles';
@@ -41,8 +41,8 @@ const FunctionCallItem = ({ call }: FunctionCallItemProps) => {
   const { functionName, argumentsProvided } = call || {};
 
   return (
-    <Stack gap="$1" css={styles.callItem}>
-      <Stack gap="$0">
+    <Box.Stack gap="$1" css={styles.callItem}>
+      <Box.Stack gap="$0">
         <Text fontSize="sm">{functionName}</Text>
         {/*
         <Text fontSize="xs" css={styles.callItemInputs}>
@@ -51,7 +51,7 @@ const FunctionCallItem = ({ call }: FunctionCallItemProps) => {
           to -> (amount: u64, amount2: u64)   
         </Text>
         */}
-      </Stack>
+      </Box.Stack>
       {argumentsProvided && (
         <ReactJson
           src={argumentsProvided}
@@ -66,7 +66,7 @@ const FunctionCallItem = ({ call }: FunctionCallItemProps) => {
           theme="summerfruit"
         />
       )}
-    </Stack>
+    </Box.Stack>
   );
 };
 
