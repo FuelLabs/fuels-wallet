@@ -23,7 +23,7 @@ export class WindowConnection extends BaseConnection {
   connectorName: string;
   private connectors: Array<FuelWalletConnector>;
 
-  constructor(connector: FuelWalletConnector = { name: 'Fuel Wallet' }) {
+  constructor(connector: FuelWalletConnector) {
     super();
     this.connectorName = connector.name;
     this.connectors = [connector];

@@ -3,7 +3,7 @@ import { Fuel } from '../Fuel';
 import './__mock__/MockConnections';
 
 describe('Fuel Timeout', () => {
-  const fuel = new Fuel();
+  const fuel = new Fuel({ name: 'Fuel Wallet' });
 
   beforeAll(() => {
     // Inject `fuel` on `window` after 500ms
