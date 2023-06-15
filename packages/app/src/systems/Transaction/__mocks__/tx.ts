@@ -496,8 +496,6 @@ export const MOCK_TRANSACTION_TRANSFER_PARTS: {
     predicateData: '0x',
   },
   inputMessage: {
-    messageId:
-      '0x06300e686a5511c7ba0399fc68dcbe0ca2d8f54f7e6afea73c505dd3bcacf33b',
     amount: bn.parseUnits('0.001'),
     data: '0x',
     dataLength: 0,
