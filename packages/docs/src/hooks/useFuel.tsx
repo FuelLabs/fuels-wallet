@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 export function useFuel() {
   const [error, setError] = useState('');
   const [isLoading, setLoading] = useState(true);
-  const [fuel] = useState<Fuel>(new Fuel());
+  const [fuel] = useState<Fuel>(new Fuel({ name: 'Fuel Wallet' }));
 
   useEffect(() => {
     fuel.hasWallet().then((hasWallet) => {
