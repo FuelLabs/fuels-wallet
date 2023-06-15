@@ -1,4 +1,4 @@
-import type { Account, Asset } from '@fuel-wallet/types';
+import type { Account, Asset, Network } from '@fuel-wallet/types';
 import { expect } from '@playwright/test';
 import { Signer, bn, hashMessage, Wallet } from 'fuels';
 
@@ -11,7 +11,12 @@ import {
   reload,
   getElementByText,
 } from '../commons';
-import { CUSTOM_ASSET, CUSTOM_ASSET_2, PRIVATE_KEY } from '../mocks';
+import {
+  CUSTOM_ASSET,
+  CUSTOM_ASSET_2,
+  FUEL_NETWORK,
+  PRIVATE_KEY,
+} from '../mocks';
 
 import {
   test,
@@ -514,6 +519,27 @@ test.describe('FuelWallet Extension', () => {
       await hasText(addAssetPage, 'Review the Assets to be added:');
       await getButtonByText(addAssetPage, /add assets/i).click();
       await expect(addingAsset).resolves.toBeDefined();
+    });
+
+    await test.step('window.fuel.addNetwork()', async () => {
+      function addNetwork(network: Network) {
+        return blankPage.evaluate(
+          async ([network]) => {
+            return window.fuel.addNetwork(network);
+          },
+          [network]
+        );
+      }
+
+      const addingNetwork = addNetwork(FUEL_NETWORK);
+
+      const addNetworkPage = await context.waitForEvent('page', {
+        predicate: (page) => page.url().includes(extensionId),
+      });
+
+      await hasText(addNetworkPage, 'Review the Network to be added:');
+      await getButtonByText(addNetworkPage, /add network/i).click();
+      await expect(addingNetwork).resolves.toBeDefined();
     });
 
     await test.step('window.fuel.on("currentAccount")', async () => {

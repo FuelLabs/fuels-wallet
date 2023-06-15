@@ -1,9 +1,10 @@
 import type {
+  AbiMap,
   Asset,
   FuelEventArg,
   FuelProviderConfig,
   FuelEvents,
-  AbiMap,
+  Network,
 } from '@fuel-wallet/types';
 import type { JsonFlatAbi, TransactionRequestLike } from 'fuels';
 import { transactionRequestify } from 'fuels';
@@ -14,10 +15,6 @@ import { getTransactionSigner } from './utils/getTransactionSigner';
 export class FuelWalletConnection extends WindowConnection {
   async ping(): Promise<boolean> {
     return this.client.timeout(1000).request('ping', {});
-  }
-
-  async network(): Promise<FuelProviderConfig> {
-    return this.client.request('network', {});
   }
 
   async isConnected(): Promise<boolean> {
@@ -84,7 +81,7 @@ export class FuelWalletConnection extends WindowConnection {
       assets,
     });
   }
-
+  
   async addAbi(abiMap: AbiMap): Promise<boolean> {
     return this.client.request('addAbi', {
       abiMap,
@@ -100,6 +97,18 @@ export class FuelWalletConnection extends WindowConnection {
   async hasAbi(contractId: string): Promise<boolean> {
     const abi = await this.getAbi(contractId);
     return !!abi;
+  }
+  
+  async network(): Promise<FuelProviderConfig> {
+    return this.client.request('network', {});
+  }
+
+  async networks(): Promise<FuelProviderConfig[]> {
+    return this.client.request('networks', {});
+  }
+
+  async addNetwork(network: Network): Promise<boolean> {
+    return this.client.request('addNetwork', { network });
   }
 
   on<E extends FuelEvents['type'], D extends FuelEventArg<E>>(

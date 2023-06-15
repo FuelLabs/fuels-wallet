@@ -17,6 +17,11 @@ import {
   FlatAbi,
 } from './__mock__';
 
+const FUEL_NETWORK = {
+  name: 'Fuel Testnet',
+  url: 'https://beta-3.fuel.network/graphql',
+};
+
 describe('Fuel', () => {
   let mocks: MockServices;
   let fuel: Fuel;
@@ -80,7 +85,12 @@ describe('Fuel', () => {
     const isAdded = await fuel.addAssets([asset]);
     expect(isAdded).toEqual(true);
   });
-
+  
+  test('addNetwork', async () => {
+    const isNetworkAdded = await fuel.addNetwork(FUEL_NETWORK);
+    expect(isNetworkAdded).toEqual(true);
+  });
+  
   test('addAbi', async () => {
     const abiMap = {
       [AbiContractId]: FlatAbi,
@@ -115,9 +125,9 @@ describe('Fuel', () => {
 
     // Test example like docs
     const signedMessage = await fuel.signMessage(account, 'test');
-    const signedMesageSpec =
+    const signedMessageSpec =
       await mocks.backgroundService.state.wallet.signMessage('test');
-    expect(signedMessage).toEqual(signedMesageSpec);
+    expect(signedMessage).toEqual(signedMessageSpec);
   });
 
   test('sendTransaction', async () => {

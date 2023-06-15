@@ -46,6 +46,7 @@ export class MockBackgroundService extends BaseConnection {
       this.currentAccount,
       this.addAssets,
       this.assets,
+      this.addNetwork,
       this.addAbi,
       this.getAbi,
       this.hasAbi,
@@ -168,7 +169,11 @@ export class MockBackgroundService extends BaseConnection {
   async addAssets(): Promise<boolean> {
     return true;
   }
-
+  
+  async addNetwork(): Promise<boolean> {
+    return true;
+  }
+  
   async addAbi(): Promise<boolean> {
     return true;
   }
@@ -178,6 +183,6 @@ export class MockBackgroundService extends BaseConnection {
   }
 
   async hasAbi(): Promise<boolean> {
-    return true;
+    return true
   }
 }

@@ -3,6 +3,7 @@ export { IsConnected } from './IsConnected';
 export { CurrentAccount } from './CurrentAccount';
 export { ListAccounts } from './ListAccounts';
 export { AddAssets } from './AddAssets';
+export { AddNetwork } from './AddNetwork';
 export { ListAssets } from './ListAssets';
 export { SignMessage } from './SignMessage';
 export { Transfer } from './Transfer';

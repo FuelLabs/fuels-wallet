@@ -1,4 +1,4 @@
-import type { AbiMap, Asset, FuelProviderConfig } from '@fuel-wallet/types';
+import type { AbiMap, Asset, FuelProviderConfig, Network } from '@fuel-wallet/types';
 
 export type MessageInputs = {
   signMessage: {
@@ -35,5 +35,11 @@ export type MessageInputs = {
   };
   getAbi: {
     contractId: string;
+  };
+  addNetwork: {
+    network: Network;
+    origin: string;
+    title?: string;
+    favIconUrl?: string;
   };
 };

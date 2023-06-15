@@ -207,7 +207,7 @@ export const networksMachine = createMachine(
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any) {
             if (error?.message.includes('uniqueness')) {
-              throw new Error('This network Name or URL already exist');
+              throw new Error('This network Name or URL already exists');
             }
             throw error;
           }
