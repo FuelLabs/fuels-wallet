@@ -18,7 +18,7 @@ import {
   MOCK_TRANSACTION_WITHDRAW_FROM_FUEL,
   MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS,
   MOCK_TRANSACTION_TRANSFER,
-} from '../__mocks__/tx';
+} from '../../__mocks__/tx';
 
 import {
   addOperation,

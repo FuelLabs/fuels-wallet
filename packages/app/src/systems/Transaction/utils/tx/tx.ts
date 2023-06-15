@@ -26,9 +26,6 @@ import type {
   TransactionResultTransferReceipt,
 } from 'fuels';
 import {
-  filterEmptyParams,
-  VM_TX_MEMORY,
-  Interface,
   calculatePriceWithFactor,
   ReceiptType,
   TransactionType,
@@ -38,6 +35,7 @@ import {
   OutputType,
 } from 'fuels';
 
+import { getFunctionCall } from './call';
 import type {
   AbiParam,
   Coin,
@@ -489,64 +487,13 @@ export function getContractCallOperations({
 
                 const abi = abiMap?.[contractInput.contractID];
                 if (abi) {
-                  const abiInterface = new Interface(abi);
-                  const callFunctionSelector = receipt.param1.toHex(8);
-                  const functionFragment =
-                    abiInterface.getFunction(callFunctionSelector);
-
-                  const nonEmptyInputs = filterEmptyParams(
-                    functionFragment.inputs
+                  calls.push(
+                    getFunctionCall({
+                      abi,
+                      receipt,
+                      rawPayload,
+                    })
                   );
-
-                  let encodedArgs;
-                  if (functionFragment.isInputDataPointer()) {
-                    if (rawPayload) {
-                      const argsOffset = bn(receipt.param2)
-                        .sub(VM_TX_MEMORY)
-                        .toNumber();
-
-                      // slice(2) to remove first 0x, then slice again to remove offset and get only args
-                      encodedArgs = `0x${rawPayload
-                        .slice(2)
-                        .slice(argsOffset * 2)}`;
-                    }
-                  } else {
-                    encodedArgs = receipt.param2.toHex();
-                  }
-
-                  let argumentsProvided;
-                  if (encodedArgs) {
-                    const data = functionFragment.decodeArguments(encodedArgs);
-                    if (data) {
-                      argumentsProvided = nonEmptyInputs.reduce(
-                        (prev, input, index) => {
-                          const value = data[index];
-                          const name = input.name;
-
-                          if (name) {
-                            return {
-                              ...prev,
-                              // reparse to remove bn
-                              [name]: JSON.parse(JSON.stringify(value)),
-                            };
-                          }
-
-                          return prev;
-                        },
-                        {}
-                      );
-                    }
-                  }
-
-                  const call = {
-                    functionSignature: functionFragment.getSignature(),
-                    functionName: functionFragment.name,
-                    argumentsProvided,
-                    ...(receipt.amount?.isZero()
-                      ? {}
-                      : { amount: receipt.amount, assetId: receipt.assetId }),
-                  };
-                  calls.push(call);
                 }
 
                 const newContractCallOps = addOperation(prevContractCallOps, {

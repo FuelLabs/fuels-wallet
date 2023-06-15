@@ -15,7 +15,7 @@ export const FunctionCalls = ({ calls }: FunctionCallsProps) => {
       <Accordion type="multiple">
         <Accordion.Item value="item-1">
           <Accordion.Trigger>Functions called</Accordion.Trigger>
-          <Accordion.Content>
+          <Accordion.Content css={styles.accordionContent}>
             {calls.map((call) => (
               <FunctionCallItem
                 call={call}
@@ -72,15 +72,14 @@ const FunctionCallItem = ({ call }: FunctionCallItemProps) => {
 
 const styles = {
   root: cssObj({
-    '.fuel_accordion-trigger': {
-      fontSize: '$xs',
-      height: 35,
+    '.fuel_Accordion-header': {
+      fontSize: '$sm',
     },
-    '.fuel_accordion-item': {
+    '.fuel_Accordion-item': {
       borderTopLeftRadius: 0,
       borderTopRightRadius: 0,
     },
-    '.fuel_accordion-content': {
+    '.fuel_Accordion-content': {
       '&[data-state="open"]': {
         height: 'auto !important',
       },
@@ -89,6 +88,9 @@ const styles = {
         py: 0,
       },
     },
+  }),
+  accordionContent: cssObj({
+    py: 0,
   }),
   callItem: cssObj({
     py: '$2',
