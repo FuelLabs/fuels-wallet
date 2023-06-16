@@ -1,11 +1,11 @@
 import type { Fuel } from '../Fuel';
 
-import type { MockSerivices } from './__mock__';
+import type { MockServices } from './__mock__';
 import { mockFuel } from './__mock__';
 
 describe('Fuel Connectors', () => {
-  let mocksConnector1: MockSerivices;
-  let mocksConnector2: MockSerivices;
+  let mocksConnector1: MockServices;
+  let mocksConnector2: MockServices;
   let fuel: Fuel;
 
   beforeAll(() => {
@@ -83,8 +83,8 @@ describe('Fuel Connectors', () => {
 });
 
 describe('Fuel Connectors Events', () => {
-  let mocksConnector1: MockSerivices;
-  let mocksConnector2: MockSerivices;
+  let mocksConnector1: MockServices;
+  let mocksConnector2: MockServices;
   let fuel: Fuel;
 
   beforeAll(() => {

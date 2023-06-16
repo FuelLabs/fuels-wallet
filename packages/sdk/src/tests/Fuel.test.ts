@@ -8,11 +8,11 @@ import {
 
 import type { Fuel } from '../Fuel';
 
-import type { MockSerivices } from './__mock__';
+import type { MockServices } from './__mock__';
 import { toWallet, mockFuel, seedWallet } from './__mock__';
 
 describe('Fuel', () => {
-  let mocks: MockSerivices;
+  let mocks: MockServices;
   let fuel: Fuel;
 
   beforeAll(() => {
@@ -22,6 +22,11 @@ describe('Fuel', () => {
 
   afterAll(() => {
     mocks.destroy();
+  });
+
+  test('hasWallet', async () => {
+    const hasWallet = await fuel.hasWallet();
+    expect(hasWallet).toBeTruthy();
   });
 
   test('isConnected', async () => {
@@ -166,7 +171,7 @@ describe('Fuel', () => {
 });
 
 describe('Fuel Events', () => {
-  let mocks: MockSerivices;
+  let mocks: MockServices;
   let fuel: Fuel;
 
   beforeAll(() => {
