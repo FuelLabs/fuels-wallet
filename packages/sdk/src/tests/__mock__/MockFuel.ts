@@ -6,7 +6,7 @@ import { createConnector, createUUID } from '../../utils';
 import './MockConnections';
 import { MockBackgroundService } from './MockBackgroundService';
 
-export type MockSerivices = {
+export type MockServices = {
   contentProxy: ContentProxyConnection;
   backgroundService: MockBackgroundService;
   destroy: () => void;
@@ -14,9 +14,9 @@ export type MockSerivices = {
 
 export function mockFuel(
   connector: FuelWalletConnector = { name: 'Fuel Wallet' }
-): MockSerivices {
+): MockServices {
   // Create a unique id for the extension
-  // This create the hability to have multiple
+  // This creates the ability to have multiple
   // mock extensions running at the same time
   global.chrome.runtime.id = createUUID();
   // Start the content proxy connection with

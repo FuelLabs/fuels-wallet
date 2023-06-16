@@ -1,3 +1,5 @@
+import type { DeferPromise } from '@fuel-wallet/sdk';
+import { deferPromise } from '@fuel-wallet/sdk';
 import { POPUP_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
 import type { ResponseMessage, UIEventMessage } from '@fuel-wallet/types';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
@@ -9,8 +11,6 @@ import {
   getTabFromSender,
   showPopUp,
 } from '../../utils';
-import type { DeferPromise } from '../../utils/promise';
-import { deferPromise } from '../../utils/promise';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import type { MessageInputs } from './types';
