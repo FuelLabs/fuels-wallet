@@ -15,7 +15,6 @@ export const getFunctionCall = ({
   const abiInterface = new Interface(abi);
   const callFunctionSelector = receipt.param1.toHex(8);
   const functionFragment = abiInterface.getFunction(callFunctionSelector);
-
   const nonEmptyInputs = filterEmptyParams(functionFragment.inputs);
 
   let encodedArgs;
