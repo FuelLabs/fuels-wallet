@@ -70,7 +70,7 @@ import {
   isTypeScript,
   parseTx,
 } from './tx';
-import { OperationName, TxStatus, TxType } from './tx.types';
+import { OperationName, TxStatus, TxType } from './types';
 
 import { reparse } from '~/systems/Core/utils/json';
 

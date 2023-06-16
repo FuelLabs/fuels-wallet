@@ -338,7 +338,6 @@ export class BackgroundService {
   }
 
   async getAbi(input: MessageInputs['getAbi']) {
-    console.log(`input`, input);
     const abi = await AbiService.getAbi({ data: input.contractId });
     return abi;
   }

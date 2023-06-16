@@ -92,7 +92,6 @@ export class FuelWalletConnection extends WindowConnection {
   }
 
   async getAbi(contractId: string): Promise<JsonFlatAbi> {
-    console.log(`contractId`, contractId);
     return this.client.request('getAbi', {
       contractId,
     });

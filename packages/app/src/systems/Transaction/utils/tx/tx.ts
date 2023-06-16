@@ -53,8 +53,8 @@ import type {
   RawPayloadParam,
   ReceiptParam,
   Tx,
-} from './tx.types';
-import { ChainName, OperationName, TxType, TxStatus } from './tx.types';
+} from './types';
+import { ChainName, OperationName, TxType, TxStatus } from './types';
 
 export const getStatus = (
   gqlStatus?: GqlTransactionStatus
