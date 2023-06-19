@@ -50,10 +50,23 @@ Alternatively, you can use a [TypeScript reference](https://www.typescriptlang.o
 
 ### Example
 
+#### Window
+
 With the SDK imported, `fuel` will be conveniently typed and accessible on the `window` object.
 
 ```ts
 window.fuel?.connect();
+```
+
+#### SDK
+
+Alternatively, you can directly use the SDK by creating new instance of `Fuel` to interact with the wallet.
+
+```ts
+import { Fuel } from '@fuel-wallet/sdk';
+
+const fuel = new Fuel();
+await fuel.connect();
 ```
 
 ## Detect when fuel is loaded
@@ -66,7 +79,7 @@ It's possible that your application loads before `window.fuel` is injected. To d
 
 ### With React
 
-In a React app, you can use the `useFuel` hook below to detect when `window.fuel` is loaded.
+In a React app, you can use the `useFuel` hook below to detect if the Fuel Wallet extension is installed or not.
 
 <CodeImport file="../../src/hooks/useFuel.tsx" />
 

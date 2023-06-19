@@ -17,6 +17,9 @@ const config: JestConfigWithTsJest = {
   testMatch: ['./**/*.test.ts'],
   testRunner: 'jest-circus/runner',
   verbose: true,
+  globals: {
+    window: {},
+  },
 };
 
 export default config;
