@@ -10,6 +10,7 @@ export const {
   VITE_DATABASE_VERSION,
   VITE_CRX_NAME,
   VITE_CRX,
+  VITE_ERROR_REPORT_EMAIL,
   VITE_AUTO_LOCK_IN_MINUTES,
   NODE_ENV,
 } = import.meta.env;
@@ -29,6 +30,7 @@ export const IS_CRX =
   typeof chrome !== 'undefined' && typeof chrome.runtime !== 'undefined';
 export const IS_LOGGED_KEY = 'isLogged';
 export const HAS_ACCEPTED_TERMS_KEY = 'hasAcceptedTerms';
+export const REPORT_ERROR_EMAIL = VITE_ERROR_REPORT_EMAIL;
 export const IS_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 export const IS_TEST = process.env.NODE_ENV === 'test';
 export const IS_CRX_POPUP =

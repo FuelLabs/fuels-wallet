@@ -5,3 +5,4 @@ export * from './network';
 export * from './connection';
 export * from './fuel';
 export * from './constants';
+export * from './error';

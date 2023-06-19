@@ -2,7 +2,7 @@ import { AccountService } from '~/systems/Account';
 import { db } from '~/systems/Core/utils/database';
 import { getPhraseFromValue } from '~/systems/Core/utils/string';
 import { NetworkService } from '~/systems/Network';
-import { VaultService } from '~/systems/Vault/services';
+import { VaultService } from '~/systems/Vault';
 
 export type SignUpServiceInputs = {
   create: {
@@ -18,7 +18,6 @@ export class SignUpService {
     if (!data?.password || !data?.mnemonic) {
       throw new Error('Invalid data');
     }
-
     // Clear databse on create
     await db.clear();
 

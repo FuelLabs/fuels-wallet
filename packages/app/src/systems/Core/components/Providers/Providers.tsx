@@ -3,6 +3,7 @@ import { createTheme, ThemeProvider } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 
 import { StoreProvider } from '~/store';
+import { ErrorBoundary } from '~/systems/Error';
 
 type ProvidersProps = {
   children: ReactNode;
@@ -25,11 +26,13 @@ export const theme = createTheme('fuels-wallet', {
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <StoreProvider>
-      <ThemeProvider themes={{ wallet: theme }}>
-        {globalCss(customStyles)()}
-        {children}
-      </ThemeProvider>
-    </StoreProvider>
+    <ThemeProvider themes={{ wallet: theme }}>
+      <ErrorBoundary>
+        <StoreProvider>
+          {globalCss(customStyles)()}
+          {children}
+        </StoreProvider>
+      </ErrorBoundary>
+    </ThemeProvider>
   );
 }
