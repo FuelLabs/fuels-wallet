@@ -4,7 +4,7 @@ import { assign, createMachine } from 'xstate';
 
 import { ReportErrorService } from '../services';
 
-import { FetchMachine } from '~/systems/Core';
+import { FetchMachine } from '~/systems/Core/machines/fetchMachine';
 
 export type ErrorMachineContext = {
   error?: string;

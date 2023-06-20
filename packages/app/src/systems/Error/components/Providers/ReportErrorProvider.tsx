@@ -2,7 +2,6 @@ import React from 'react';
 
 import { ReportErrors } from '../../pages';
 import { ReportErrorService } from '../../services';
-import { parseFuelError } from '../../utils';
 
 type ErrorProviderProps = {
   children: React.ReactNode;
@@ -18,13 +17,26 @@ class ErrorBoundary extends React.Component<
     return { hasError: true };
   }
 
-  async componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    const fuelError = parseFuelError({ ...error, ...errorInfo });
-    await ReportErrorService.saveError(fuelError);
+  async componentDidCatch(error: Error, reactError: React.ErrorInfo) {
+    await ReportErrorService.saveError({ error, reactError });
     this.setState({
       hasError: true,
     });
   }
+
+  constructor(props: ErrorProviderProps) {
+    super(props);
+    this.checkErrors();
+  }
+
+  checkErrors = async () => {
+    const errors = await ReportErrorService.getErrors();
+    if (errors.length > 0) {
+      this.setState({
+        hasError: true,
+      });
+    }
+  };
 
   render() {
     if (this.state.hasError) {

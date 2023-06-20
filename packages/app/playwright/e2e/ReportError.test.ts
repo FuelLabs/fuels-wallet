@@ -1,7 +1,7 @@
 import type { Browser, BrowserContext, Page } from '@playwright/test';
 import test, { chromium, expect } from '@playwright/test';
 
-import { visit, hasText, getButtonByText } from '../commons';
+import { visit, hasText, getButtonByText, reload } from '../commons';
 import { mockData } from '../mocks';
 
 test.describe('ReportError', () => {
@@ -31,14 +31,43 @@ test.describe('ReportError', () => {
       window.testCrash();
     });
 
-    await hasText(page, /Fuel Wallet has detected unreported errors/i);
+    await hasText(page, /Unexpected errors detected/i);
+    await expect(page.locator(`textarea[name="reports"]`)).toHaveText(/Crash/i);
 
     // get errors from indexedDB
     const errors = await getPageErrors(page);
     expect(errors.length).toBeGreaterThan(0);
 
     // report error
-    await getButtonByText(page, 'Send to Fuel').click();
+    await getButtonByText(page, 'Send reports').click();
+
+    await page.waitForTimeout(1000);
+
+    const errorsAfterReporting = await getPageErrors(page);
+    expect(errorsAfterReporting.length).toBe(0);
+  });
+
+  test('should show Error page when there is a error in the database', async () => {
+    await visit(page, '/');
+    await page.evaluate(() => {
+      window.fuelDB.errors.add({
+        id: '1234',
+        timestamp: Date.now(),
+        error: {
+          message: 'Test Error',
+          stack: ['Line error 1'],
+        },
+      });
+    });
+    await reload(page);
+
+    await hasText(page, /Unexpected errors detected/i);
+    await expect(page.locator(`textarea[name="reports"]`)).toHaveText(
+      /Test Error/i
+    );
+
+    // report error
+    await getButtonByText(page, 'Send reports').click();
 
     await page.waitForTimeout(1000);
 

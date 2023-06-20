@@ -4,8 +4,8 @@ import { Address, bn, Provider } from 'fuels';
 
 import { isEth } from '~/systems/Asset/utils/asset';
 import type { Maybe } from '~/systems/Core/types';
-import { getUniqueString } from '~/systems/Core/utils';
 import { db } from '~/systems/Core/utils/database';
+import { getUniqueString } from '~/systems/Core/utils/string';
 
 export type AccountInputs = {
   addAccount: {

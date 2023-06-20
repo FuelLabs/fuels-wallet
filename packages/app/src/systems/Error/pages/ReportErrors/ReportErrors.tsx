@@ -1,118 +1,86 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Icon,
-  FuelLogo,
-  Heading,
-  Button,
-  Box,
-  Text,
-  Input,
-} from '@fuel-ui/react';
+import { FuelLogo, Heading, Button, Box, Text, Input } from '@fuel-ui/react';
 
 import { useReportError } from '../../hooks';
 
 import { WALLET_WIDTH, WALLET_HEIGHT } from '~/config';
-import { Layout } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 
 export function ReportErrors() {
   const { handlers, isLoadingSendOnce, errors } = useReportError();
 
   return (
-    <Layout title="Error" isPublic>
+    <Box.Stack css={styles.root} gap="$4">
       <Box.Stack>
-        <Layout.Content as="div">
-          <Box as="div">
-            <Box.Stack align="center">
-              <FuelLogo size={60} />
-              <Heading as="h3">Help us improve Fuel Wallet</Heading>
-            </Box.Stack>
-            <Box.Stack align="center">
-              <Icon icon="AlertTriangle" size={32} />
-              <Heading as="h5">What happened?</Heading>
-              <Text>
-                Fuel Wallet has detected unreported errors / crashes. We&apos;re
-                sorry for the inconvenience.
-                <br />
-                <br />
-                Would you like to send this error report to Fuel Wallet team?
-              </Text>
-
-              <Input isDisabled={true} css={styles.textArea}>
-                <Input.Field as="textarea" value={errors} />
-              </Input>
-            </Box.Stack>
-          </Box>
-        </Layout.Content>
-        <Layout.BottomBar>
-          <Box.Stack css={styles.fullWidth}>
-            <Button
-              color="accent"
-              variant="ghost"
-              isDisabled={isLoadingSendOnce}
-              isLoading={isLoadingSendOnce}
-              onPress={handlers.reportErrorsOnce}
-              aria-label="Report Error"
-            >
-              Send to Fuel
-            </Button>
-            <Button
-              color="gray"
-              onPress={handlers.ignoreErrors}
-              aria-label="Don't send error report"
-            >
-              Ignore
-            </Button>
-          </Box.Stack>
-        </Layout.BottomBar>
+        <FuelLogo size={30} />
+        <Heading as="h3" css={styles.title}>
+          Unexpected Error
+        </Heading>
       </Box.Stack>
-    </Layout>
+      <Box.Stack css={styles.content}>
+        <Text>
+          Unexpected errors detected. We&apos;re sorry for the inconvenience.
+          <br />
+          Would you like to send the following error logs to Fuel Wallet team?
+        </Text>
+        <Input isDisabled={true} css={styles.textArea}>
+          <Input.Field as="textarea" name="reports" value={errors} />
+        </Input>
+      </Box.Stack>
+      <Box.Stack>
+        <Button
+          intent="primary"
+          isDisabled={isLoadingSendOnce}
+          isLoading={isLoadingSendOnce}
+          onPress={handlers.reportErrorsOnce}
+          aria-label="Report Error"
+        >
+          Send reports
+        </Button>
+        <Button
+          color="gray"
+          onPress={handlers.ignoreErrors}
+          aria-label="Don't send error report"
+        >
+          Ignore
+        </Button>
+      </Box.Stack>
+    </Box.Stack>
   );
 }
 
 const styles = {
-  content: cssObj({
+  root: cssObj({
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 999999,
     width: WALLET_WIDTH,
     height: WALLET_HEIGHT,
-    maxWidth: WALLET_WIDTH,
-    maxHeight: 'none',
-    position: 'relative',
-  }),
-  body: cssObj({
-    flex: 1,
-  }),
-  closeButton: cssObj({
-    position: 'absolute',
-    top: '$4',
-    right: '$4',
-  }),
-  actionButton: cssObj({
-    width: '100%',
-  }),
-  fullWidth: cssObj({
-    width: '100%',
-  }),
-  description: cssObj({
-    ...coreStyles.scrollable('$gray3'),
     padding: '$4',
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
+    border: '1px solid $border',
+  }),
+  title: cssObj({
+    marginBottom: 0,
+  }),
+  content: cssObj({
     flex: 1,
-  }),
-  alert: cssObj({
-    '& .fuel_alert--content': {
-      gap: '$1',
-    },
-    ' & .fuel_heading': {
-      fontSize: '$sm',
-    },
-    marginBottom: '$3',
-  }),
-  alertDescription: cssObj({
-    fontWeight: '$bold',
+    display: 'flex',
+    flexDirection: 'column',
   }),
   textArea: cssObj({
-    width: '100%',
+    flex: 1,
     height: '200px',
     padding: '$2',
-    resize: 'none',
+    paddingRight: 0,
+
+    '& textarea': {
+      resize: 'none',
+      ...coreStyles.scrollable(),
+    },
   }),
 };
