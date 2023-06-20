@@ -3,7 +3,6 @@ import { createTheme, ThemeProvider } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 
 import { StoreProvider } from '~/store';
-import { RouterProvider } from '~/systems/Core/components/RouterProvider';
 import { ErrorBoundary } from '~/systems/Error';
 
 type ProvidersProps = {
@@ -29,12 +28,10 @@ export function Providers({ children }: ProvidersProps) {
   return (
     <ThemeProvider themes={{ wallet: theme }}>
       <ErrorBoundary>
-        <RouterProvider>
-          <StoreProvider>
-            {globalCss(customStyles)()}
-            {children}
-          </StoreProvider>
-        </RouterProvider>
+        <StoreProvider>
+          {globalCss(customStyles)()}
+          {children}
+        </StoreProvider>
       </ErrorBoundary>
     </ThemeProvider>
   );
