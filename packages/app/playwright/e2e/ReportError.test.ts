@@ -32,7 +32,9 @@ test.describe('ReportError', () => {
     });
 
     await hasText(page, /Unexpected errors detected/i);
-    await expect(page.locator(`textarea[name="reports"]`)).toHaveText(/Crash/i);
+    await expect(page.locator(`textarea[name="reports"]`)).toHaveText(
+      /componentStack/i
+    );
 
     // get errors from indexedDB
     const errors = await getPageErrors(page);
