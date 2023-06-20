@@ -52,7 +52,7 @@ const styles = {
   img: cssObj({
     maxWidth: '50%',
     overflow: 'hidden',
-    '@media (max-width: 380px)': {
+    '@media (max-width: 600px)': {
       display: 'none',
     },
   }),
