@@ -52,6 +52,9 @@ const styles = {
   img: cssObj({
     maxWidth: '50%',
     overflow: 'hidden',
+    '@media (max-width: 380px)': {
+      display: 'none',
+    },
   }),
   action: cssObj({
     flex: 1,
