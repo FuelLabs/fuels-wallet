@@ -1,10 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Heading, Image, Text } from '@fuel-ui/react';
 
-import walletPrivewImg from '~/public/fuell-wallet-preview.png';
-import braveImg from '~/public/icons/browser/brave.png';
-import chomreImg from '~/public/icons/browser/chrome.png';
-import edgeImg from '~/public/icons/browser/edge.png';
+import walletPrivewImg from '../../public/fuell-wallet-preview.png';
+import braveImg from '../../public/icons/browser/brave.png';
+import chomreImg from '../../public/icons/browser/chrome.png';
+import edgeImg from '../../public/icons/browser/edge.png';
 
 const INSTALL_LINK =
   'https://chrome.google.com/webstore/detail/fuel-wallet/dldjpboieedgcmpkchcjcbijingjcgok';
@@ -52,6 +52,9 @@ const styles = {
   img: cssObj({
     maxWidth: '50%',
     overflow: 'hidden',
+    '& > img': {
+      width: 500,
+    },
     '@media (max-width: 600px)': {
       display: 'none',
     },
