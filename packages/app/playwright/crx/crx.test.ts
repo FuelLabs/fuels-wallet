@@ -503,11 +503,17 @@ test.describe('FuelWallet Extension', () => {
       await hasText(addAssetPage, 'Review the Assets to be added:');
       await getButtonByText(addAssetPage, /add assets/i).click();
       await expect(addingAsset).resolves.toBeDefined();
+
+      console.log(
+        `process.env.VITE_FUEL_PROVIDER_URL`,
+        process.env.VITE_FUEL_PROVIDER_URL
+      );
     });
 
     await test.step('window.fuel.on("currentAccount")', async () => {
       // Switch to account 2
       await switchAccount(popupPage, 'Account 2');
+      popupPage.waitForTimeout(1000);
 
       const onChangeAccountPromise = blankPage.evaluate(() => {
         return new Promise((resolve) => {
