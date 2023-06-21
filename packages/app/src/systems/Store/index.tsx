@@ -10,6 +10,7 @@ import {
   addAssetRequestMachine,
 } from '../DApp';
 import { requestEvents } from '../DApp/events';
+import { reportErrorMachine } from '../Error';
 import { networkEvents } from '../Network/events';
 import { networksMachine } from '../Network/machines';
 import { overlayMachine } from '../Overlay';
@@ -37,6 +38,7 @@ export const store = store$
   .addMachine(Services.connectRequest, () => connectRequestMachine)
   .addMachine(Services.txRequest, () => transactionRequestMachine)
   .addMachine(Services.addAssetRequest, () => addAssetRequestMachine)
+  .addMachine(Services.reportError, () => reportErrorMachine)
   .addHandlers(accountEvents)
   .addHandlers(networkEvents)
   .addHandlers(assetEvents)

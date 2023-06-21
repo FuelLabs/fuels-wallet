@@ -297,7 +297,6 @@ export const transactionRequestMachine = createMachine(
           if (!input?.providerUrl) {
             throw new Error('providerUrl is required');
           }
-
           const { minGasPrice } = await NetworkService.getNodeInfo(input);
           return minGasPrice;
         },
