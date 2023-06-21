@@ -15,7 +15,7 @@ export function InstallSection() {
       <Box.Flex css={styles.content} justify="space-between">
         <Box.Stack css={styles.head}>
           <Box.Stack css={styles.header}>
-            <Heading color="brand">THE OFFICAL</Heading>
+            <Heading color="brand">THE OFFICIAL</Heading>
             <Heading css={styles.title} fontSize={'7xl'}>
               Fuel Wallet
             </Heading>
