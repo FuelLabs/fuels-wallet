@@ -21,6 +21,7 @@ import {
   switchAccount,
   waitAccountPage,
   getWalletAccounts,
+  hideAccount,
 } from './utils';
 
 const WALLET_PASSWORD = 'Qwe123456$';
@@ -185,7 +186,9 @@ test.describe('FuelWallet Extension', () => {
       await createAccount();
       await createAccount();
       await createAccountFromPrivateKey(PRIVATE_KEY, 'Account 4');
+      await createAccount();
       await switchAccount(popupPage, 'Account 1');
+      await hideAccount(popupPage, 'Account 5');
     });
 
     async function connectAccounts() {
@@ -200,6 +203,13 @@ test.describe('FuelWallet Extension', () => {
       await getByAriaLabel(authorizeRequest, 'Toggle Account 3').click();
       // Add Account 4 to the DApp connection
       await getByAriaLabel(authorizeRequest, 'Toggle Account 4').click();
+
+      // Account 5 (Hidden) should not be shown to connect
+      await expect(async () => {
+        await getByAriaLabel(authorizeRequest, 'Toggle Account 5').click({
+          timeout: 3000,
+        });
+      }).rejects.toThrow();
 
       await hasText(authorizeRequest, /connect/i);
       await getButtonByText(authorizeRequest, /next/i).click();
