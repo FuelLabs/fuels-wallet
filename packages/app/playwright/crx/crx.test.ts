@@ -518,6 +518,8 @@ test.describe('FuelWallet Extension', () => {
     await test.step('window.fuel.on("currentAccount")', async () => {
       // Switch to account 2
       await switchAccount(popupPage, 'Account 2');
+      // await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
+      // await getByAriaLabel(popupPage, `Close dialog`).click();
 
       const onChangeAccountPromise = blankPage.evaluate(() => {
         return new Promise((resolve) => {
@@ -535,10 +537,10 @@ test.describe('FuelWallet Extension', () => {
       expect(currentAccountEventResult).toEqual(currentAccount.address);
     });
 
-    // await test.step('Auto lock fuel wallet', async () => {
-    //   await popupPage.waitForTimeout(60_000);
-    //   await hasText(popupPage, 'Unlock your wallet to continue');
-    // });
+    await test.step('Auto lock fuel wallet', async () => {
+      await getByAriaLabel(popupPage, 'Accounts').click({ delay: 70000 });
+      await hasText(popupPage, 'Unlock your wallet to continue');
+    });
   });
 });
 
