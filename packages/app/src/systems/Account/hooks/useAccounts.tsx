@@ -41,13 +41,17 @@ const selectors = {
         ...(assets?.find(({ assetId }) => assetId === balance.assetId) || {}),
       }));
   },
+  shownAccounts(state: AccountsMachineState) {
+    return state.context.accounts?.filter((acc) => !acc.isHidden);
+  },
+  hiddenAccounts(state: AccountsMachineState) {
+    return state.context.accounts?.filter((acc) => acc.isHidden);
+  },
   hasHiddenAccounts(state: AccountsMachineState) {
-    return state.context?.accounts?.some((acc) => acc.isHidden);
+    return !!selectors.hiddenAccounts(state)?.length;
   },
   canHideAccounts(state: AccountsMachineState) {
-    return (
-      (state.context?.accounts?.filter((acc) => !acc.isHidden)?.length || 0) > 1
-    );
+    return (selectors.shownAccounts(state)?.length || 0) > 1;
   },
 };
 
@@ -69,6 +73,14 @@ export function useAccounts() {
   const balanceAssets = store.useSelector(
     Services.accounts,
     selectors.balanceAssets(assets)
+  );
+  const shownAccounts = store.useSelector(
+    Services.accounts,
+    selectors.shownAccounts
+  );
+  const hiddenAccounts = store.useSelector(
+    Services.accounts,
+    selectors.shownAccounts
   );
   const hasHiddenAccounts = store.useSelector(
     Services.accounts,
@@ -112,6 +124,8 @@ export function useAccounts() {
     status,
     hasBalance,
     balanceAssets,
+    shownAccounts,
+    hiddenAccounts,
     canHideAccounts,
     hasHiddenAccounts,
     isLoading: status('loading'),

@@ -19,7 +19,7 @@ export function OverlayDialogTopbar({
           data-action="closed"
           variant="link"
           icon={<Icon icon="X" />}
-          aria-label="Close unlock window"
+          aria-label="Close dialog"
           onPress={onClose}
           css={styles.close}
         />
