@@ -77,7 +77,7 @@ const styles = {
   }),
   inputTextArea: cssObj({
     width: '100%',
-    height: 100,
+    height: 200,
 
     textarea: {
       width: '100%',

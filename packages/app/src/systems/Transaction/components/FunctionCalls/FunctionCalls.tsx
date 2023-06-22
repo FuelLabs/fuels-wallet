@@ -80,6 +80,9 @@ const styles = {
       borderTopRightRadius: 0,
     },
     '.fuel_Accordion-content': {
+      pt: 0,
+      pb: '$2',
+
       '&[data-state="open"]': {
         height: 'auto !important',
       },

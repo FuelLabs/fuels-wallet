@@ -18,7 +18,7 @@ export function Abi() {
     async (contractId: string | undefined) => {
       if (!contractId) return;
       if (!isConnected) await fuel.connect();
-      console.log('Request the current abi');
+      console.log('Request the current abi of contractId: ', contractId);
       /* example:start */
       const abiInfo = await fuel.getAbi(contractId);
       console.log('Abi ', abiInfo);
@@ -48,11 +48,11 @@ export function Abi() {
         </Button>
         {abi && (
           <Input isDisabled={!isConnected} css={styles.inputTextArea}>
-            {/* // TODO: change textarea to a proper fuel-ui component when it gets implemented */}
-            <textarea
-              defaultValue={JSON.stringify(abi, null, 2)}
+            <Input.Field
+              as="textarea"
+              value={JSON.stringify(abi, null, 2)}
               placeholder="Check ABI response"
-              rows={20}
+              css={{ color: '$whiteA11', padding: '$2' }}
             />
           </Input>
         )}
@@ -80,7 +80,7 @@ const styles = {
   }),
   inputTextArea: cssObj({
     width: '100%',
-    height: 'auto',
+    height: 200,
 
     textarea: {
       width: '100%',
