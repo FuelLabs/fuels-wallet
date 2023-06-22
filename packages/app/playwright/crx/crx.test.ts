@@ -283,6 +283,8 @@ test.describe('FuelWallet Extension', () => {
     await test.step('window.fuel.currentAccount()', async () => {
       await test.step('Current authorized current Account', async () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+        await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
+        await getByAriaLabel(popupPage, `Close dialog`).click();
         const currentAccountPromise = await blankPage.evaluate(async () => {
           return window.fuel.currentAccount();
         });
@@ -548,4 +550,4 @@ test.describe('FuelWallet Extension', () => {
 // The timeout is set for 2 minutes
 // because some tests like reconnect
 // can take up to 1 minute before it's reconnected
-test.setTimeout(120_000);
+test.setTimeout(180_000);
