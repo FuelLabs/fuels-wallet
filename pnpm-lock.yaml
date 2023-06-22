@@ -18580,7 +18580,7 @@ packages:
       react-base16-styling: 0.6.0
       react-dom: 18.2.0(react@18.2.0)
       react-lifecycles-compat: 3.0.4
-      react-textarea-autosize: 8.4.1(@types/react@18.2.7)(react@18.2.0)
+      react-textarea-autosize: 8.5.0(@types/react@18.2.7)(react@18.2.0)
     transitivePeerDependencies:
       - '@types/react'
       - encoding
@@ -18799,8 +18799,8 @@ packages:
       react: 18.2.0
       refractor: 3.6.0
 
-  /react-textarea-autosize@8.4.1(@types/react@18.2.7)(react@18.2.0):
-    resolution: {integrity: sha512-aD2C+qK6QypknC+lCMzteOdIjoMbNlgSFmJjCV+DrfTPwp59i/it9mMNf2HDzvRjQgKAyBDPyLJhcrzElf2U4Q==}
+  /react-textarea-autosize@8.5.0(@types/react@18.2.7)(react@18.2.0):
+    resolution: {integrity: sha512-cp488su3U9RygmHmGpJp0KEt0i/+57KCK33XVPH+50swVRBhIZYh0fGduz2YLKXwl9vSKBZ9HUXcg9PQXUXqIw==}
     engines: {node: '>=10'}
     peerDependencies:
       react: '*'
