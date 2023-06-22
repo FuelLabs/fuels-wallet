@@ -364,7 +364,9 @@ export const connectionsMachine = createMachine(
       fetchAccounts: FetchMachine.create<null, Account[]>({
         showError: true,
         async fetch() {
-          return AccountService.getAccounts();
+          return (await AccountService.getAccounts()).filter(
+            ({ isHidden }) => !isHidden
+          );
         },
       }),
       removeConnection: FetchMachine.create<

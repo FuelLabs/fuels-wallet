@@ -13,8 +13,8 @@ import { Code } from './Code';
 import { CodeImport } from './CodeImport';
 import { ConnectionAlert } from './ConnectionAlert';
 import { Demo } from './Demo';
-import { DownloadFuelWallet } from './DownloadFuelWallet';
 import { Heading } from './Heading';
+import { InstallSection } from './InstallSection';
 import { Link } from './Link';
 import { UL } from './List';
 import { Paragraph } from './Paragraph';
@@ -41,7 +41,7 @@ const components = {
   ConnectionAlert,
   CodeImport,
   Player,
-  DownloadFuelWallet,
+  InstallSection,
   Examples,
   Demo,
 };
