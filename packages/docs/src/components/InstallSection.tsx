@@ -5,9 +5,7 @@ import walletPrivewImg from '../../public/fuell-wallet-preview.png';
 import braveImg from '../../public/icons/browser/brave.png';
 import chomreImg from '../../public/icons/browser/chrome.png';
 import edgeImg from '../../public/icons/browser/edge.png';
-
-const INSTALL_LINK =
-  'https://chrome.google.com/webstore/detail/fuel-wallet/dldjpboieedgcmpkchcjcbijingjcgok';
+import { INSTALL_LINK } from '../constants';
 
 export function InstallSection() {
   return (

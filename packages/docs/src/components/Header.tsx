@@ -3,6 +3,8 @@ import { Box, Button, FuelLogo, Icon } from '@fuel-ui/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+import { INSTALL_LINK } from '../constants';
+
 import { MobileMenu } from './MobileMenu';
 import { Search } from './Search';
 
@@ -48,16 +50,25 @@ export function Header() {
         <Search />
         <Box css={{ ml: '$8' }}>
           {process.env.NEXT_PUBLIC_PREVIEW ? (
-            <Button
-              intent="primary"
-              as="a"
-              href={process.env.NEXT_PUBLIC_APP_URL}
-            >
-              Open Wallet
-            </Button>
+            <Box.Flex gap="$2">
+              <Button
+                intent="base"
+                as="a"
+                href={process.env.NEXT_PUBLIC_DOWNLOAD_URL}
+              >
+                Download Wallet
+              </Button>
+              <Button
+                intent="primary"
+                as="a"
+                href={process.env.NEXT_PUBLIC_APP_URL}
+              >
+                Open Wallet
+              </Button>
+            </Box.Flex>
           ) : (
-            <a href={process.env.NEXT_PUBLIC_WALLET_DOWNLOAD_URL} download>
-              <Button intent="primary">Download Fuel Wallet</Button>
+            <a href={INSTALL_LINK} target="_blank" rel="noreferrer">
+              <Button intent="primary">Install Fuel Wallet</Button>
             </a>
           )}
         </Box>
