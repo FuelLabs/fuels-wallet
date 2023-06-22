@@ -49,12 +49,12 @@ export function AddAbi() {
           />
         </Input>
         <Input isDisabled={!isConnected} css={styles.inputTextArea}>
-          {/* // TODO: change textarea to a proper fuel-ui component when it gets implemented */}
-          <textarea
-            defaultValue={JSON.stringify(abi, null, 2)}
-            onBlur={(e) => handleChangeAbi(e.target.value)}
+          <Input.Field
+            as="textarea"
+            value={JSON.stringify(abi, null, 2)}
+            onChange={(e) => handleChangeAbi(e.target.value)}
             placeholder="Paste your ABI"
-            rows={20}
+            css={{ color: '$whiteA11', padding: '$2' }}
           />
         </Input>
         <Box>
@@ -77,7 +77,7 @@ const styles = {
   }),
   inputTextArea: cssObj({
     width: '100%',
-    height: 'auto',
+    height: 100,
 
     textarea: {
       width: '100%',
