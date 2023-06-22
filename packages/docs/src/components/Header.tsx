@@ -54,7 +54,7 @@ export function Header() {
               <Button
                 intent="base"
                 as="a"
-                href={process.env.NEXT_PUBLIC_DOWNLOAD_URL}
+                href={process.env.NEXT_PUBLIC_WALLET_DOWNLOAD_URL}
               >
                 Download Wallet
               </Button>

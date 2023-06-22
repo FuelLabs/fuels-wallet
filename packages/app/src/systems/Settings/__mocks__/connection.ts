@@ -6,13 +6,14 @@ import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 import { ConnectionService } from '~/systems/DApp/services';
 import { NetworkService } from '~/systems/Network';
 
-function createAccount(name: string) {
+function createAccount(name: string, isHidden: boolean = false) {
   const wallet = Wallet.generate();
   return AccountService.addAccount({
     data: {
       name,
       address: wallet.address.toString(),
       publicKey: wallet.publicKey,
+      isHidden,
     },
   });
 }
@@ -21,6 +22,7 @@ export async function mockConnections() {
   await AccountService.clearAccounts();
   const account1 = await createAccount('Account 1');
   const account2 = await createAccount('Account 2');
+  const account3 = await createAccount('Account 3', true);
   await ConnectionService.clearConnections();
   const connection1 = await ConnectionService.addConnection({
     data: {
@@ -41,6 +43,7 @@ export async function mockConnections() {
   return {
     account1,
     account2,
+    account3,
     connection1,
     connection2,
   };
