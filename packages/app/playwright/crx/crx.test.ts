@@ -540,7 +540,7 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('Auto lock fuel wallet', async () => {
-      await getByAriaLabel(popupPage, 'Accounts').click({ delay: 70000 });
+      await getByAriaLabel(popupPage, 'Accounts').click({ delay: 65000 });
       await hasText(popupPage, 'Unlock your wallet to continue');
     });
   });
