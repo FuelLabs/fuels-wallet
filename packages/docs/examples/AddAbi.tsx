@@ -54,7 +54,6 @@ export function AddAbi() {
             value={JSON.stringify(abi, null, 2)}
             onChange={(e) => handleChangeAbi(e.target.value)}
             placeholder="Paste your ABI"
-            css={{ color: '$whiteA11', padding: '$2' }}
           />
         </Input>
         <Box>
@@ -81,6 +80,8 @@ const styles = {
 
     textarea: {
       width: '100%',
+      color: '$whiteA11',
+      padding: '$2',
     },
   }),
 };

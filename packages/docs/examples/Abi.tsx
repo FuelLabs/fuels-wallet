@@ -52,7 +52,6 @@ export function Abi() {
               as="textarea"
               value={JSON.stringify(abi, null, 2)}
               placeholder="Check ABI response"
-              css={{ color: '$whiteA11', padding: '$2' }}
             />
           </Input>
         )}
@@ -84,6 +83,8 @@ const styles = {
 
     textarea: {
       width: '100%',
+      color: '$whiteA11',
+      padding: '$2',
     },
   }),
 };
