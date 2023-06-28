@@ -41,7 +41,8 @@ type MachineEvents =
   | { type: 'EDIT_NETWORK'; input: NetworkInputs['editNetwork'] }
   | { type: 'UPDATE_NETWORK'; input: NetworkInputs['updateNetwork'] }
   | { type: 'REMOVE_NETWORK'; input: NetworkInputs['removeNetwork'] }
-  | { type: 'SELECT_NETWORK'; input: NetworkInputs['selectNetwork'] };
+  | { type: 'SELECT_NETWORK'; input: NetworkInputs['selectNetwork'] }
+  | { type: 'REFRESH_NETWORKS'; input?: null };
 
 export const networksMachine = createMachine(
   {
@@ -167,6 +168,11 @@ export const networksMachine = createMachine(
         },
       },
     },
+    on: {
+      REFRESH_NETWORKS: {
+        target: 'fetchingNetworks',
+      },
+    },
   },
   {
     actions: {
@@ -198,12 +204,11 @@ export const networksMachine = createMachine(
             if (!input?.data) {
               throw new Error('Invalid network input');
             }
-            let network = await NetworkService.addNetwork(input);
-            if (!network) {
+            const createdNetwork = await NetworkService.addNetwork(input);
+            if (!createdNetwork) {
               throw new Error('Failed to add network');
             }
-            network = await NetworkService.selectNetwork({ id: network.id! });
-            return network as Network;
+            return NetworkService.selectNetwork({ id: createdNetwork.id! });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any) {
             if (error?.message.includes('uniqueness')) {

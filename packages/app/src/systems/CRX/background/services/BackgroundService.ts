@@ -22,6 +22,7 @@ import { AssetService } from '~/systems/Asset/services';
 import { Pages } from '~/systems/Core/types';
 import { ConnectionService } from '~/systems/DApp/services';
 import { NetworkService } from '~/systems/Network/services';
+import { isValidNetworkUrl } from '~/systems/Network/utils';
 import { AbiService } from '~/systems/Settings/services';
 
 type EventOrigin = {
@@ -348,6 +349,9 @@ export class BackgroundService {
     serverParams: EventOrigin
   ) {
     const { network } = input;
+    if (!isValidNetworkUrl(network.url)) {
+      throw new Error('Invalid network URL');
+    }
 
     const origin = serverParams.origin;
     const title = serverParams.title;

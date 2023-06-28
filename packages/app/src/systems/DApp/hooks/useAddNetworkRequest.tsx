@@ -13,6 +13,17 @@ const selectors = {
 
 export function useAddNetworkRequest() {
   const service = store.useService(Services.addNetworkRequest);
+  /* store.useUpdateMachineConfig(Services.txRequest, {
+    actions: {
+      notifyRefreshNetworks () {
+        store.refreshNetworks();
+      },
+      notifyUpdateAccounts () {
+        store.updateAccounts();
+      },
+    },
+  }); */
+
   const { send } = service;
 
   const origin = useSelector(service, selectors.origin);

@@ -14,8 +14,8 @@ export function AddNetwork() {
   const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
   const [network, setNetwork] = useState<Network>({
-    name: '',
-    url: '',
+    name: 'Localhost',
+    url: 'http://localhost:4000/graphql',
   });
 
   const [handleAddNetwork, isAddingNetwork, errorAddingNetwork] = useLoading(

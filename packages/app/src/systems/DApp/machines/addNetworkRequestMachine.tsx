@@ -5,6 +5,7 @@ import { assign, createMachine } from 'xstate';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 import type { NetworkInputs } from '~/systems/Network';
 import { NetworkService } from '~/systems/Network';
+import { store } from '~/systems/Store';
 
 type MachineContext = {
   network?: Network;
@@ -80,6 +81,7 @@ export const addNetworkRequestMachine = createMachine(
           onDone: [
             FetchMachine.errorState('failed'),
             {
+              actions: ['notifyRefreshNetworks', 'notifyUpdateAccounts'],
               target: 'done',
             },
           ],
@@ -100,6 +102,12 @@ export const addNetworkRequestMachine = createMachine(
         favIconUrl: ev.input.favIconUrl,
         network: ev.input.network,
       })),
+      notifyRefreshNetworks: () => {
+        store.refreshNetworks();
+      },
+      notifyUpdateAccounts: () => {
+        store.updateAccounts();
+      },
     },
     services: {
       saveNetwork: FetchMachine.create<
@@ -112,12 +120,11 @@ export const addNetworkRequestMachine = createMachine(
             if (!input?.data) {
               throw new Error('Invalid network');
             }
-            let network = await NetworkService.addNetwork(input);
-            if (!network) {
+            const createdNetwork = await NetworkService.addNetwork(input);
+            if (!createdNetwork) {
               throw new Error('Failed to add network');
             }
-            network = await NetworkService.selectNetwork({ id: network.id! });
-            return network as Network;
+            return NetworkService.selectNetwork({ id: createdNetwork.id! });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any) {
             if (error?.message.includes('uniqueness')) {
