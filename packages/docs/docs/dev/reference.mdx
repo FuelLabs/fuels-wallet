@@ -12,63 +12,66 @@ category: For Developers
 `async connect(): Promise<boolean>`<br />
 Request permission to start a connection between the project and the wallet
 
-<CodeImport file="../../../sdk/src/Fuel.test.ts" testCase="connect" />
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="connect" />
 
 ### Disconnect
 
 `async disconnect(): Promise<boolean>`<br />
 Disconnect your project
 
-<CodeImport file="../../../sdk/src/Fuel.test.ts" testCase="disconnect" />
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="disconnect" />
 
 ### Get connection status
 
 `async isConnected(): Promise<boolean>`<br />
 Return the state of the application connection.
 
-<CodeImport file="../../../sdk/src/Fuel.test.ts" testCase="isConnected" />
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="isConnected" />
 
 ### List Accounts
 
 `async accounts(): Promise<Array<string>>`<br />
 List accounts in the wallet
 
-<CodeImport file="../../../sdk/src/Fuel.test.ts" testCase="accounts" />
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="accounts" />
 
 ### Current Account
 
 `async currentAccount(): Promise<string>`<br />
 Return the current account being used in the wallet application.
 
-<CodeImport file="../../../sdk/src/Fuel.test.ts" testCase="currentAccount" />
+<CodeImport
+  file="../../../sdk/src/tests/Fuel.test.ts"
+  testCase="currentAccount"
+/>
 
 ### List Assets
 
 `async assets(): Promise<Array<Asset>>`<br />
 Return the list of assets in the current wallet.
 
-<CodeImport file="../../../sdk/src/Fuel.test.ts" testCase="assets" />
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="assets" />
 
 ### Add Asset
 
 `async addAsset(asset: Asset): Promise<boolean>`<br />
 Add asset to the wallet.
 
-<CodeImport file="../../../sdk/src/Fuel.test.ts" testCase="addAsset" />
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="addAsset" />
 
 ### Add Assets
 
 `async addAssets(asset: Asset[]): Promise<boolean>`<br />
 Add assets to the wallet.
 
-<CodeImport file="../../../sdk/src/Fuel.test.ts" testCase="addAssets" />
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="addAssets" />
 
 ### Request signature message
 
 `async signMessage(address: string, message: string): Promise<string>`<br />
 Request a message signature for one specific account
 
-<CodeImport file="../../../sdk/src/Fuel.test.ts" testCase="signMessage" />
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="signMessage" />
 
 ### Send transaction
 
@@ -76,14 +79,17 @@ Request a message signature for one specific account
 Send a transaction, this will request the user selected account to review,
 sign, and send the transaction.
 
-<CodeImport file="../../../sdk/src/Fuel.test.ts" testCase="sendTransaction" />
+<CodeImport
+  file="../../../sdk/src/tests/Fuel.test.ts"
+  testCase="sendTransaction"
+/>
 
 ### Get Wallet
 
 `getWallet(address: string | AbstractAddress): Promise<FuelWalletLocked>`<br />
 Return `FuelWalletLocked` using a FuelWalletProvider on the connection point to request signed actions.
 
-<CodeImport file="../../../sdk/src/Fuel.test.ts" testCase="getWallet" />
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="getWallet" />
 
 ### Get Provider
 
@@ -96,13 +102,60 @@ the DApp will also switch to that network. Support for specific DApp networks wi
 
 #### Using provider to query node info
 
-<CodeImport file="../../../sdk/src/Fuel.test.ts" testCase="getProvider" />
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="getProvider" />
 
 #### Using provider on a fuels-ts Wallet
 
 <CodeImport
-  file="../../../sdk/src/Fuel.test.ts"
+  file="../../../sdk/src/tests/Fuel.test.ts"
   testCase="User getProvider on fuels-ts Wallet"
+/>
+
+### Listing connectors
+
+To list all available connectors you can use the `listConnectors(): Array<FuelWalletConnector>` method.
+
+<CodeImport
+  file="../../../sdk/src/tests/FuelWalletConnectors.test.ts"
+  testCase="listConnectors"
+/>
+
+### Has connector
+
+To check if a connector is on the connectors list use the `hasConnector(connectorName: string): boolean` method.
+
+<CodeImport
+  file="../../../sdk/src/tests/FuelWalletConnectors.test.ts"
+  testCase="hasConnector"
+/>
+
+### Selecting connector
+
+For selecting a different Wallet Connector use the `async selectConnector(connectorName: string): Promise<boolean>` method.
+This method will check if the desired connector is installed. If it is not detected in 1 second, the method throws an error.
+
+<CodeImport
+  file="../../../sdk/src/tests/FuelWalletConnectors.test.ts"
+  testCase="selectConnector"
+/>
+
+### Add connector
+
+For adding a Wallet Connector use the `addConnector(connector: FuelWalletConnector): boolean` method.
+This method does not trigger any errors if the target Connector is not installed.
+
+<CodeImport
+  file="../../../sdk/src/tests/FuelWalletConnectors.test.ts"
+  testCase="addConnector"
+/>
+
+### Remove connector
+
+To remove a Wallet Connector use the `removeConnector(connectorName: string): boolean` method.
+
+<CodeImport
+  file="../../../sdk/src/tests/FuelWalletConnectors.test.ts"
+  testCase="removeConnector"
 />
 
 ## Events
@@ -123,8 +176,7 @@ This event is triggered when the connection status change between the Wallet and
 
 <CodeImport
   file="../../src/hooks/useIsConnected.tsx"
-  lineStart="9"
-  lineEnd="23"
+  commentBlock="eventAccountChanges"
 />
 
 ### Accounts
@@ -133,8 +185,7 @@ This event is triggered when the list of connected accounts to the application c
 
 <CodeImport
   file="../../examples/events/Accounts.tsx"
-  lineStart="23"
-  lineEnd="33"
+  commentBlock="eventAccountChanges"
 />
 
 ### Current Account
@@ -145,16 +196,29 @@ This event is only triggered if the application has access to the current accoun
 
 <CodeImport
   file="../../examples/events/CurrentAccount.tsx"
-  lineStart="23"
-  lineEnd="35"
+  commentBlock="eventCurrentAccount"
 />
 
 ### Network
 
 This event is triggered when the client connects to a different network. The callback function receives the `network` object.
 
+<CodeImport file="../../examples/events/Network.tsx" commentBlock="network" />
+
+### CurrentConnector
+
+This event is triggered when the Current Connector is updated. The callback function receives the `FuelWalletConnector` object.
+
 <CodeImport
-  file="../../examples/events/Network.tsx"
-  lineStart="27"
-  lineEnd="38"
+  file="../../examples/Connectors.tsx"
+  commentBlock="eventCurrentConnector"
+/>
+
+### Connectors
+
+This event is triggered when the Connectors list is updated. The callback function receives the list of connectors, `Array<FuelWalletConnector>`.
+
+<CodeImport
+  file="../../examples/Connectors.tsx"
+  commentBlock="eventConnectors"
 />

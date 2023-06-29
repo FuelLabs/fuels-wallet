@@ -1,11 +1,13 @@
 type MnemonicInputProps = {
   value: string;
-  onChange: (val: string) => void;
-  onPaste: (ev: React.ClipboardEvent<HTMLInputElement>) => void;
+  index: number;
+  onChange: (val: string, index: number) => void;
+  onPaste: (ev: React.ClipboardEvent<HTMLInputElement>, index: number) => void;
 };
 
 export function MnemonicInput({
   value,
+  index,
   onChange,
   onPaste,
 }: MnemonicInputProps) {
@@ -13,8 +15,8 @@ export function MnemonicInput({
     <input
       role="textbox"
       value={value}
-      onPaste={onPaste}
-      onChange={(ev) => onChange(ev.target.value)}
+      onPaste={(ev) => onPaste(ev, index)}
+      onChange={(ev) => onChange(ev.target.value, index)}
       aria-label={value || 'Type your text'}
     />
   );

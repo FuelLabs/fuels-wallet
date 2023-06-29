@@ -8,6 +8,7 @@ import type {
   ConnectRequestMachine,
   AddAssetMachine,
 } from '../DApp';
+import type { ReportErrorMachine } from '../Error';
 import type { NetworksMachine } from '../Network';
 import type { OverlayMachine } from '../Overlay';
 import type { UnlockMachine } from '../Unlock';
@@ -23,6 +24,7 @@ export enum Services {
   msgRequest = 'msgRequest',
   connectRequest = 'connectRequest',
   addAssetRequest = 'addAssetRequest',
+  reportError = 'reportError',
 }
 
 export type StoreMachines = {
@@ -35,6 +37,7 @@ export type StoreMachines = {
   msgRequest: MessageRequestMachine;
   connectRequest: ConnectRequestMachine;
   addAssetRequest: AddAssetMachine;
+  reportError: ReportErrorMachine;
 };
 
 export type Store = StoreClass<StoreMachines>;

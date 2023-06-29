@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Stack, Tag, Text } from '@fuel-ui/react';
+import { Box, Button, Tag, Text } from '@fuel-ui/react';
 import { useEffect, useState } from 'react';
 
 import { ExampleBox } from '../../src/components/ExampleBox';
@@ -20,6 +20,7 @@ export function CurrentAccount() {
     await fuel.connect();
   });
 
+  /* eventCurrentAccount:start */
   const handleAccountEvent = (account: string) => {
     setCurrentAccount(account);
   };
@@ -32,6 +33,7 @@ export function CurrentAccount() {
       fuel?.off(fuel.events.currentAccount, handleAccountEvent);
     };
   }, [fuel]);
+  /* eventCurrentAccount:end */
 
   useEffect(() => {
     if (isConnected) handleCurrentAccount();
@@ -41,12 +43,12 @@ export function CurrentAccount() {
 
   return (
     <ExampleBox error={errorMessage}>
-      <Stack css={styles.root}>
-        <Stack gap="$3" css={{ mt: '$2' }}>
+      <Box.Stack css={styles.root}>
+        <Box.Stack gap="$3" css={{ mt: '$2' }}>
           {!!currentAccount && (
-            <Stack>
+            <Box.Stack>
               <Text> Current account: </Text>
-              <Tag size="xs" color="gray" variant="ghost">
+              <Tag size="xs" variant="ghost">
                 <Text key={currentAccount}>{currentAccount}</Text>
               </Tag>
               <Text>
@@ -54,7 +56,7 @@ export function CurrentAccount() {
                   Change the account in your Fuel wallet to test the event
                 </em>
               </Text>
-            </Stack>
+            </Box.Stack>
           )}
           {currentAccount.length < 1 && <Text> No account connected </Text>}
           {!isConnected && (
@@ -66,8 +68,8 @@ export function CurrentAccount() {
               View your account
             </Button>
           )}
-        </Stack>
-      </Stack>
+        </Box.Stack>
+      </Box.Stack>
     </ExampleBox>
   );
 }
@@ -78,8 +80,8 @@ const styles = {
     display: 'inline-flex',
     alignItems: 'flex-start',
 
-    '.fuel_tag > p': {
-      fontSize: '$xs',
+    '.fuel_Tag > p': {
+      fontSize: '$sm',
     },
   }),
 };

@@ -10,6 +10,7 @@ import {
   hasText,
   waitAriaLabel,
   reload,
+  getElementByText,
 } from '../commons';
 import { CUSTOM_ASSET, CUSTOM_ASSET_2, PRIVATE_KEY } from '../mocks';
 
@@ -20,6 +21,7 @@ import {
   switchAccount,
   waitAccountPage,
   getWalletAccounts,
+  hideAccount,
 } from './utils';
 
 const WALLET_PASSWORD = 'Qwe123456$';
@@ -35,7 +37,7 @@ test.describe('FuelWallet Extension', () => {
         return page.url().includes('sign-up');
       },
     });
-    await expect(page.url()).toContain('sign-up');
+    expect(page.url()).toContain('sign-up');
     await page.close();
   });
 
@@ -48,7 +50,7 @@ test.describe('FuelWallet Extension', () => {
     const page = await context.waitForEvent('page', {
       predicate: (page) => page.url().includes('sign-up'),
     });
-    await expect(page.url()).toContain('sign-up');
+    expect(page.url()).toContain('sign-up');
   });
 
   test('SDK operations', async ({ context, baseURL, extensionId }) => {
@@ -75,14 +77,14 @@ test.describe('FuelWallet Extension', () => {
           });
         });
       });
-      await expect(hasTriggerFuelLoaded).toBeTruthy();
+      expect(hasTriggerFuelLoaded).toBeTruthy();
     });
 
     await test.step('Has window.fuel', async () => {
       const hasFuel = await blankPage.evaluate(async () => {
         return typeof window.fuel === 'object';
       });
-      await expect(hasFuel).toBeTruthy();
+      expect(hasFuel).toBeTruthy();
     });
 
     await test.step('Should reconnect if service worker stops', async () => {
@@ -105,47 +107,47 @@ test.describe('FuelWallet Extension', () => {
         return testConnection();
       });
       const connectionStatus = await pingRet.jsonValue();
-      await expect(connectionStatus).toBeTruthy();
+      expect(connectionStatus).toBeTruthy();
       await swPage.close();
     });
 
     await test.step('Create wallet', async () => {
-      const pages = await context.pages();
+      const pages = context.pages();
       const [page] = pages.filter((page) => page.url().includes('sign-up'));
       await reload(page);
-      await getButtonByText(page, /Create a Wallet/i).click();
+      await getElementByText(page, /Create new wallet/i).click();
 
       /** Accept terms */
-      await hasText(page, /Terms of Service/i);
-      await getButtonByText(page, /Accept/i).click();
+      await hasText(page, /Terms of use Agreement/i);
+      const agreeCheckbox = getByAriaLabel(page, 'Agree with terms');
+      await agreeCheckbox.click();
+      await getButtonByText(page, /Next: Seed Phrase/i).click();
 
       /** Copy Mnemonic */
+      await hasText(page, /Write down seed phrase/i);
       await getButtonByText(page, /Copy/i).click();
-      const savedCheckbox = await getByAriaLabel(page, 'Confirm Saved');
+      const savedCheckbox = getByAriaLabel(page, 'Confirm Saved');
       await savedCheckbox.click();
       await getButtonByText(page, /Next/i).click();
 
       /** Confirm Mnemonic */
-      await hasText(page, /Enter seed phrase/i);
+      await hasText(page, /Confirm phrase/i);
       await getButtonByText(page, /Paste/i).click();
       await getButtonByText(page, /Next/i).click();
 
       /** Adding password */
       await hasText(page, /Create password for encryption/i);
-      const passwordInput = await getByAriaLabel(page, 'Your Password');
+      const passwordInput = getByAriaLabel(page, 'Your Password');
       await passwordInput.type(WALLET_PASSWORD);
       await passwordInput.press('Tab');
-      const confirmPasswordInput = await getByAriaLabel(
-        page,
-        'Confirm Password'
-      );
+      const confirmPasswordInput = getByAriaLabel(page, 'Confirm Password');
       await confirmPasswordInput.type(WALLET_PASSWORD);
       await confirmPasswordInput.press('Tab');
 
       await getButtonByText(page, /Next/i).click();
 
       /** Account created */
-      await hasText(page, /Wallet created successfully/i);
+      await hasText(page, /Wallet created successfully/i, 0, 15000);
       await page.close();
     });
 
@@ -184,7 +186,9 @@ test.describe('FuelWallet Extension', () => {
       await createAccount();
       await createAccount();
       await createAccountFromPrivateKey(PRIVATE_KEY, 'Account 4');
+      await createAccount();
       await switchAccount(popupPage, 'Account 1');
+      await hideAccount(popupPage, 'Account 5');
     });
 
     async function connectAccounts() {
@@ -200,12 +204,19 @@ test.describe('FuelWallet Extension', () => {
       // Add Account 4 to the DApp connection
       await getByAriaLabel(authorizeRequest, 'Toggle Account 4').click();
 
+      // Account 5 (Hidden) should not be shown to connect
+      await expect(async () => {
+        await getByAriaLabel(authorizeRequest, 'Toggle Account 5').click({
+          timeout: 3000,
+        });
+      }).rejects.toThrow();
+
       await hasText(authorizeRequest, /connect/i);
       await getButtonByText(authorizeRequest, /next/i).click();
       await hasText(authorizeRequest, /accounts/i);
       await getButtonByText(authorizeRequest, /connect/i).click();
 
-      await expect(await isConnected).toBeTruthy();
+      expect(await isConnected).toBeTruthy();
     }
 
     await test.step('window.fuel.connect()', async () => {
@@ -272,6 +283,8 @@ test.describe('FuelWallet Extension', () => {
     await test.step('window.fuel.currentAccount()', async () => {
       await test.step('Current authorized current Account', async () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+        await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
+        await getByAriaLabel(popupPage, `Close dialog`).click();
         const currentAccountPromise = await blankPage.evaluate(async () => {
           return window.fuel.currentAccount();
         });
@@ -319,7 +332,7 @@ test.describe('FuelWallet Extension', () => {
         );
 
         // Verify signature is from the account selected
-        await expect(addressSigner.toString()).toBe(authorizedAccount.address);
+        expect(addressSigner.toString()).toBe(authorizedAccount.address);
       }
 
       await test.step('Signed message using authorized Account 1', async () => {
@@ -407,7 +420,7 @@ test.describe('FuelWallet Extension', () => {
 
         await expect(transferStatus).resolves.toBe('success');
         const balance = await receiverWallet.getBalance();
-        await expect(balance.toNumber()).toBe(AMOUNT_TRANSFER);
+        expect(balance.toNumber()).toBe(AMOUNT_TRANSFER);
       }
 
       await test.step('Send transfer using authorized Account', async () => {
@@ -461,7 +474,7 @@ test.describe('FuelWallet Extension', () => {
       const assets = await blankPage.evaluate(async () => {
         return window.fuel.assets();
       });
-      await expect(assets.length).toEqual(1);
+      expect(assets.length).toEqual(1);
     });
 
     await test.step('window.fuel.addAsset()', async () => {
@@ -507,6 +520,8 @@ test.describe('FuelWallet Extension', () => {
     await test.step('window.fuel.on("currentAccount")', async () => {
       // Switch to account 2
       await switchAccount(popupPage, 'Account 2');
+      await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
+      await getByAriaLabel(popupPage, `Close dialog`).click();
 
       const onChangeAccountPromise = blankPage.evaluate(() => {
         return new Promise((resolve) => {
@@ -525,7 +540,7 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('Auto lock fuel wallet', async () => {
-      await popupPage.waitForTimeout(60_000);
+      await getByAriaLabel(popupPage, 'Accounts').click({ delay: 65000 });
       await hasText(popupPage, 'Unlock your wallet to continue');
     });
   });
@@ -535,4 +550,4 @@ test.describe('FuelWallet Extension', () => {
 // The timeout is set for 2 minutes
 // because some tests like reconnect
 // can take up to 1 minute before it's reconnected
-test.setTimeout(120_000);
+test.setTimeout(180_000);

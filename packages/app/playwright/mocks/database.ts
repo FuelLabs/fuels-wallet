@@ -16,7 +16,7 @@ export const WALLET_PASSWORD = 'Qwe1234567$';
 export const PRIVATE_KEY =
   '0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5291';
 
-const DEFAULT_NETWORKS: Array<Network> = [
+export const DEFAULT_NETWORKS: Array<Network> = [
   {
     id: '1',
     isSelected: true,
@@ -98,8 +98,8 @@ export function createAccounts(
   return Promise.all(
     new Array(numberOfAccounts).fill(0).map(async (_, index) => {
       const walletAccount = await manager.addAccount();
-      const acounnt = await createAccount(walletAccount, index);
-      return acounnt;
+      const account = createAccount(walletAccount, index);
+      return account;
     })
   );
 }
@@ -125,7 +125,7 @@ export async function serializeVault(
   manager: WalletManager
 ): Promise<SerializedVault> {
   const vaultKey = manager.STORAGE_KEY;
-  const vaultData = await manager.exportVault(0);
+  const vaultData = manager.exportVault(0);
   const encryptedData = await encrypt(WALLET_PASSWORD, {
     vaults: [
       {
@@ -165,6 +165,7 @@ export async function mockData(
         (async function main() {
           try {
             const fuelDB = window.fuelDB;
+            await fuelDB.errors.clear();
             await fuelDB.vaults.clear();
             await fuelDB.vaults.add(vault);
             await fuelDB.accounts.clear();

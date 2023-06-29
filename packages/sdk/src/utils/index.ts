@@ -2,4 +2,6 @@ export * from './blockExplorer';
 export * from './createReadOnly';
 export * from './createUUID';
 export * from './getTransactionSigner';
-export * from './injectFuel';
+export * from './createConnector';
+export * from './hasWindow';
+export * from './promise';

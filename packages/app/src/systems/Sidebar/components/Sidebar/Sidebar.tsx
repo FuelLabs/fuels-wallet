@@ -1,20 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cssObj } from '@fuel-ui/css';
-import {
-  Icon,
-  Avatar,
-  Flex,
-  Drawer,
-  IconButton,
-  Stack,
-  Box,
-  Text,
-} from '@fuel-ui/react';
+import { Icon, Drawer, IconButton, Box, Text } from '@fuel-ui/react';
 import { forwardRef } from 'react';
 
 import { Menu } from '..';
-import { useAccounts } from '../../../Account';
-import { useNetworks } from '../../../Network';
 import { sidebarItems } from '../../constants';
 
 import { APP_VERSION } from '~/config';
@@ -22,27 +11,10 @@ import { useOverlay } from '~/systems/Overlay';
 
 function SidebarContent() {
   const overlay = useOverlay();
-  const { handlers: accountHandlers, account } = useAccounts();
-  const { selectedNetwork } = useNetworks();
 
   return (
     <>
-      <Flex css={styles.header}>
-        <Stack gap="$2" css={styles.accountSelector}>
-          <Avatar.Generated
-            size="sm"
-            hash={account?.address as string}
-            background="fuel"
-          />
-          <IconButton
-            size="xs"
-            variant="link"
-            color="gray"
-            icon={<Icon icon="CaretDown" size={18} />}
-            aria-label="Accounts"
-            onClick={accountHandlers.goToList}
-          />
-        </Stack>
+      <Box.Flex css={styles.header}>
         <IconButton
           autoFocus
           size="sm"
@@ -52,10 +24,10 @@ function SidebarContent() {
           aria-label="drawer_closeButton"
           onPress={overlay.close}
         />
-      </Flex>
-      <Menu items={sidebarItems(selectedNetwork?.url)} />
+      </Box.Flex>
+      <Menu items={sidebarItems()} />
       <Box css={styles.version}>
-        <Text fontSize="xs" color="gray8">
+        <Text fontSize="xs" color="intentsBase8">
           Version: {APP_VERSION}{' '}
         </Text>
       </Box>
@@ -88,26 +60,21 @@ const styles = {
   wrapper: cssObj({
     display: 'grid',
     height: '100%',
-    gridTemplateRows: '60px 1fr auto',
+    gridTemplateRows: '50px 1fr auto',
   }),
   header: cssObj({
-    padding: '$3 $4',
+    px: '$4',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    borderBottom: '1px dashed $gray4',
+    justifyContent: 'flex-end',
 
-    '.fuel_icon': {
-      color: '$gray8',
+    '.fuel_Icon': {
+      color: '$intentsBase8',
     },
   }),
-  accountSelector: cssObj({
-    flexDirection: 'row',
-    alignItems: 'center',
-  }),
   closeBtn: cssObj({
+    padding: '$0 !important',
     position: 'initial',
-    height: '$6',
-    padding: '$1',
+    height: '$4',
     top: '$2',
     right: '$2',
   }),

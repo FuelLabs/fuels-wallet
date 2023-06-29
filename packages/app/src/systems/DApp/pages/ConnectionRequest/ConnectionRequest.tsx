@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Card, CardList, Flex, Link, Text } from '@fuel-ui/react';
+import { Button, Card, CardList, Box, Link, Text } from '@fuel-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { useConnectRequest } from '../../hooks/useConnectRequest';
@@ -10,6 +10,7 @@ import {
   Layout,
   ConnectInfo,
   PermissionCard,
+  coreStyles,
 } from '~/systems/Core';
 
 export const PERMISSION_LIST = [
@@ -21,6 +22,7 @@ export const PERMISSION_LIST = [
 export const NOT_ALLOWED_LIST = ['View your private keys'];
 
 const MotionCardList = motion(CardList);
+const MotionAccountItem = motion(AccountItem);
 
 export function ConnectionRequest() {
   const {
@@ -39,8 +41,8 @@ export function ConnectionRequest() {
   if (!accounts || !origin) return null;
 
   return (
-    <Layout title="Connection Request" isLoading={isLoadingAccounts}>
-      <Layout.Content css={styles.content}>
+    <Layout title="Connection Request" isLoading={isLoadingAccounts} noBorder>
+      <Layout.Content noBorder noScroll={false} css={styles.content}>
         <ConnectInfo
           origin={origin}
           title={title || origin}
@@ -56,23 +58,22 @@ export function ConnectionRequest() {
             <AnimatePresence>
               <motion.div {...animations.slideInTop()}>
                 <Card>
-                  <Card.Header css={styles.cardHeader}>
-                    <Text css={styles.cardHeaderText}>
-                      Select accounts to connect
-                    </Text>
+                  <Card.Header space="compact">
+                    <Text>Select accounts to connect</Text>
                   </Card.Header>
                   <Card.Body css={styles.accountCardBody}>
                     {accounts?.map((account) => {
                       const { address } = account;
                       const isConnected = handlers.isAccountSelected(address);
                       return (
-                        <motion.div key={address} {...animations.slideInTop()}>
-                          <AccountItem
-                            account={account!}
-                            onToggle={handlers.toggleAccount}
-                            isToggleChecked={isConnected}
-                          />
-                        </motion.div>
+                        <MotionAccountItem
+                          key={address}
+                          {...animations.slideInTop()}
+                          css={styles.accountItem}
+                          account={account!}
+                          onToggle={handlers.toggleAccount}
+                          isToggleChecked={isConnected}
+                        />
                       );
                     })}
                   </Card.Body>
@@ -91,9 +92,13 @@ export function ConnectionRequest() {
               </motion.div>
               <motion.div {...animations.slideInTop()}>
                 <Card>
-                  <Card.Header css={styles.cardHeader} justify="space-between">
-                    <Text css={styles.cardHeaderText}>Accounts to connect</Text>
-                    <Button onPress={handlers.back} size="xs" variant="link">
+                  <Card.Header space="compact" css={styles.header}>
+                    <Text>Accounts to connect</Text>
+                    <Button
+                      size="xs"
+                      variant="outlined"
+                      onPress={handlers.back}
+                    >
                       Change
                     </Button>
                   </Card.Header>
@@ -111,7 +116,7 @@ export function ConnectionRequest() {
           )}
         </MotionCardList>
       </Layout.Content>
-      <Flex css={styles.disclaimer} justify="center" align={'flex-end'}>
+      <Box.Flex css={styles.disclaimer} justify="center" align={'flex-end'}>
         <Text fontSize="sm" as={'h2'} className="warning">
           Only connect with sites you trust.{' '}
           <Link href="#" color="accent11">
@@ -119,20 +124,16 @@ export function ConnectionRequest() {
           </Link>
           .
         </Text>
-      </Flex>
+      </Box.Flex>
       <Layout.BottomBar>
-        <Button
-          color="gray"
-          variant="ghost"
-          onPress={() => handlers.rejectConnection()}
-        >
+        <Button variant="ghost" onPress={() => handlers.rejectConnection()}>
           Reject
         </Button>
         <>
           {isSelectingAccounts && (
             <Button
               type="submit"
-              color="accent"
+              intent="primary"
               onPress={() => handlers.next()}
               isDisabled={!hasCurrentAccounts}
             >
@@ -142,7 +143,7 @@ export function ConnectionRequest() {
           {isConnecting && (
             <Button
               type="submit"
-              color="accent"
+              intent="primary"
               onPress={handlers.authorizeConnection}
             >
               Connect
@@ -158,13 +159,16 @@ const styles = {
   content: cssObj({
     display: 'flex',
     flexDirection: 'column',
-    paddingBottom: '$0',
+    padding: '$4 $0 $4 $4 !important',
+    ...coreStyles.scrollable(),
+    overflowY: 'scroll !important',
+
     '& h2': {
       fontSize: '$sm',
     },
     '& a': {
       fontSize: '$sm',
-      fontWeight: '$bold',
+      fontWeight: '$normal',
     },
   }),
   connectionDetails: cssObj({
@@ -173,6 +177,14 @@ const styles = {
   disclaimer: cssObj({
     mb: '-10px',
     pt: '$1',
+  }),
+  header: cssObj({
+    justifyContent: 'space-between',
+
+    '.fuel_Button': {
+      py: '$1',
+      height: '$6',
+    },
   }),
   accountList: cssObj({
     mt: '$4',
@@ -188,16 +200,12 @@ const styles = {
     alignItems: 'center',
     gap: '$2',
   }),
-  cardHeader: cssObj({
-    px: '$3',
-    py: '$2',
-  }),
-  cardHeaderText: cssObj({
-    fontSize: '$sm',
-    fontWeight: '$bold',
-    color: '$gray12',
-  }),
   accountCardBody: cssObj({
-    p: '$0',
+    padding: '$0',
+  }),
+  accountItem: cssObj({
+    '& ~ &': {
+      borderTop: '1px solid $bodyBg',
+    },
   }),
 };

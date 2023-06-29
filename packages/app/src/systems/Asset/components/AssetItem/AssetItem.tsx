@@ -1,10 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import {
   Avatar,
+  Box,
   Button,
   CardList,
   Copyable,
-  Flex,
   Heading,
   Icon,
   IconButton,
@@ -55,12 +55,12 @@ export const AssetItem: AssetItemComponent = ({
   function getRightEl() {
     if (showActions) {
       return (
-        <Flex css={styles.actionsWrapper}>
+        <Box.Flex css={styles.actionsWrapper}>
           {isCustom && name && (
             <>
               <IconButton
                 variant="link"
-                icon={<Icon icon={Icon.is('Pencil')} />}
+                icon={<Icon icon={Icon.is('Edit')} />}
                 aria-label="Edit Asset"
                 onPress={() => onEdit?.(assetId)}
               />
@@ -78,14 +78,14 @@ export const AssetItem: AssetItemComponent = ({
               )}
             </>
           )}
-        </Flex>
+        </Box.Flex>
       );
     }
 
     if (amount) {
       return (
         <Tooltip content={bn(amount).format()}>
-          <Text css={{ fontSize: '$sm', fontWeight: '$semibold' }}>
+          <Text css={{ fontSize: '$sm', fontWeight: '$normal' }}>
             <AmountVisibility value={amount} visibility={visibility} /> {symbol}
           </Text>
         </Tooltip>
@@ -100,30 +100,27 @@ export const AssetItem: AssetItemComponent = ({
   }
 
   return (
-    <CardList.Item
-      rightEl={getRightEl()}
-      css={{ alignItems: 'center', py: '$2', px: '$3' }}
-    >
+    <CardList.Item rightEl={getRightEl()} css={{ alignItems: 'center' }}>
       {imageUrl ? (
         <Avatar name={name} src={imageUrl} css={{ height: 36, width: 36 }} />
       ) : (
         <Avatar.Generated hash={assetId} css={{ height: 36, width: 36 }} />
       )}
-      <Flex direction="column">
+      <Box.Flex direction="column">
         <Heading as="h6" css={styles.assetName}>
           {name || (
-            <Flex>
+            <Box.Flex>
               Unknown
               <Button
                 size="xs"
-                color="green"
+                intent="primary"
                 variant="link"
                 onPress={goToAsset}
                 css={styles.addAssetBtn}
               >
                 (Add)
               </Button>
-            </Flex>
+            </Box.Flex>
           )}
         </Heading>
         {symbol ? (
@@ -133,7 +130,7 @@ export const AssetItem: AssetItemComponent = ({
             {shortAddress(assetId)}
           </Copyable>
         )}
-      </Flex>
+      </Box.Flex>
     </CardList.Item>
   );
 };
@@ -143,31 +140,32 @@ AssetItem.Loader = AssetItemLoader;
 const styles = {
   assetName: cssObj({
     margin: 0,
-    fontSize: '$sm',
+    textSize: 'base',
   }),
   assetSymbol: cssObj({
     textSize: 'sm',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
   }),
   addAssetBtn: cssObj({
     p: '0',
     ml: '$1',
+
     '&:focus-visible': {
       outline: 'none !important',
     },
   }),
   unknownAssetId: cssObj({
     fontSize: '$sm',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
   }),
   actionsWrapper: cssObj({
-    '.fuel_button': {
+    '.fuel_Button': {
       px: '$1 !important',
-      color: '$gray8 !important',
+      color: '$intentsBase8 !important',
     },
 
-    '.fuel_button:hover': {
-      color: '$gray11 !important',
+    '.fuel_Button:hover': {
+      color: '$intentsBase11 !important',
     },
   }),
 };

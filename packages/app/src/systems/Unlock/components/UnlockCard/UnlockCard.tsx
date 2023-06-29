@@ -8,23 +8,19 @@ import {
   Heading,
   Icon,
   IconButton,
-  Stack,
   Text,
 } from '@fuel-ui/react';
 
 import type { UnlockFormValues } from '../../hooks';
 import { useUnlockForm } from '../../hooks';
-import { ResetDialog } from '../ResetDialog';
 import { UnlockForm } from '../UnlockForm';
 
-import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
+import { store } from '~/store';
 
 export type UnlockDialogProps = {
   unlockError?: string;
   onUnlock: (value: string) => void;
-  onReset?: () => void;
   onClose?: () => void;
-  isReseting?: boolean;
   isLoading?: boolean;
   headerText?: string;
 };
@@ -32,8 +28,6 @@ export type UnlockDialogProps = {
 export function UnlockCard({
   unlockError,
   onUnlock,
-  onReset,
-  isReseting,
   isLoading,
   headerText = 'Welcome back',
   onClose,
@@ -51,51 +45,47 @@ export function UnlockCard({
         {onClose && (
           <IconButton
             variant="link"
-            icon={<Icon icon="X" color="gray8" />}
+            icon={<Icon icon="X" color="intentsBase8" />}
             aria-label="Close unlock card"
             onPress={onClose}
             css={styles.closeButton}
           />
         )}
         <Box css={styles.form}>
-          <Box as="div" css={styles.description}>
-            <Stack gap="$2">
-              <Stack align="center">
-                <FuelLogo size={150} />
-                <Heading as="h2" css={{ margin: 0, textAlign: 'center' }}>
-                  {headerText}
-                </Heading>
-                <Text fontSize="sm">Unlock your wallet to continue</Text>
-              </Stack>
-              <Box css={{ marginTop: '$4' }}>
-                <UnlockForm form={form} />
-              </Box>
-            </Stack>
-            {onReset && (
-              <Stack
-                align="center"
-                justify="space-between"
-                css={{ marginTop: '$2' }}
+          <Box.Stack gap="$6" align="center">
+            <FuelLogo size={100} css={{ mt: '$14', mb: '$6' }} />
+            <Box css={{ textAlign: 'center' }}>
+              <Heading
+                as="h2"
+                css={{ margin: 0, mb: '$2', textAlign: 'center' }}
               >
-                <ResetDialog isLoading={isReseting} onReset={onReset}>
-                  <ButtonLink
-                    variant="ghost"
-                    css={{ color: '$gray10', fontSize: 'small' }}
-                  >
-                    Forgot password?
-                  </ButtonLink>
-                </ResetDialog>
-              </Stack>
-            )}
-          </Box>
+                {headerText}
+              </Heading>
+              <Text fontSize="sm">Unlock your wallet to continue</Text>
+            </Box>
+            <UnlockForm form={form} />
+          </Box.Stack>
+          <Box.Stack
+            align="center"
+            justify="space-between"
+            css={{ marginTop: '$2' }}
+          >
+            <ButtonLink
+              size="sm"
+              variant="ghost"
+              onPress={() => store.openResetDialog()}
+            >
+              Forgot password?
+            </ButtonLink>
+          </Box.Stack>
         </Box>
       </Card.Body>
       <Card.Footer>
         <Button
           type="submit"
-          color="accent"
+          intent="primary"
           isLoading={isLoading}
-          leftIcon={Icon.is('LockKeyOpen')}
+          leftIcon={Icon.is('LockOpen')}
           css={styles.button}
           aria-label="Unlock wallet"
         >
@@ -113,17 +103,20 @@ const styles = {
   alert: cssObj({
     py: '$2',
     pr: '$2',
-    background: '$gray2',
+    background: '$intentsBase2',
   }),
   button: cssObj({
     width: '100%',
   }),
   content: cssObj({
-    width: WALLET_WIDTH,
-    height: WALLET_HEIGHT,
-    maxWidth: WALLET_WIDTH,
-    maxHeight: 'none',
-    position: 'relative',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    boxSizing: 'border-box',
+    borderColor: 'transparent',
+    background: '$bodyColor',
   }),
   description: cssObj({
     flex: 1,

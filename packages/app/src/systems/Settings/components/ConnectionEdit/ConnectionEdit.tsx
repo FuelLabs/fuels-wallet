@@ -1,5 +1,7 @@
+import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
-import { Box, CardList, Flex, Icon, Stack, Text } from '@fuel-ui/react';
+import type { BoxProps } from '@fuel-ui/react';
+import { Box, CardList, Icon, Text } from '@fuel-ui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import type { useConnections } from '../../hooks';
@@ -15,7 +17,8 @@ import {
 
 export type ConnectionEditProps = ReturnType<typeof useConnections>;
 
-const MotionBox = motion(Box);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const MotionBox = motion<BoxProps & { css?: ThemeUtilsCSS }>(Box as any);
 const MotionCardList = motion(CardList);
 
 export function ConnectionEdit({
@@ -27,22 +30,22 @@ export function ConnectionEdit({
   const { origin, title, favIconUrl } = ctx.connection;
   return (
     <Layout.Content>
-      <Stack gap="$3">
+      <Box.Stack gap="$3">
         <ConnectInfo
           origin={origin}
           favIconUrl={favIconUrl}
           title={title}
           headerText="Edit your connection to:"
         />
-        <Flex css={styles.searchBar}>
+        <Box.Flex css={styles.searchBar}>
           <SearchInput
             value={ctx.inputs?.searchText}
             onChange={handlers.search}
           />
-          <Text css={styles.label} leftIcon={Icon.is('PlugsConnected')}>
+          <Text css={styles.label} leftIcon={Icon.is('PlugConnected')}>
             {ctx.numConnected} connected
           </Text>
-        </Flex>
+        </Box.Flex>
         {status('noResults') && (
           <MotionBox {...animations.slideInTop()} css={styles.empty}>
             <EmptyList label="No account found" />
@@ -68,7 +71,7 @@ export function ConnectionEdit({
             </AnimatePresence>
           </MotionCardList>
         )}
-      </Stack>
+      </Box.Stack>
     </Layout.Content>
   );
 }
@@ -77,10 +80,10 @@ const styles = {
   title: cssObj({
     fontSize: '$sm',
     pb: '$3',
-    borderBottom: '1px dashed $gray2',
+    borderBottom: '1px solid $border',
     wordBreak: 'break-all',
 
-    '.fuel_icon': {
+    '.fuel_Icon': {
       color: '$accent9',
     },
   }),
@@ -91,12 +94,15 @@ const styles = {
     pt: '$11',
   }),
   label: cssObj({
-    fontSize: '$xs',
-    fontWeight: '$medium',
-    color: '$gray10',
+    fontSize: '$sm',
+    fontWeight: '$normal',
+    color: '$intentsBase10',
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: '$1',
 
-    '.fuel_icon': {
-      color: '$gray8',
+    '.fuel_Icon': {
+      color: '$intentsBase8',
     },
   }),
 };

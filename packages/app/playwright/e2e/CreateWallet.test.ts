@@ -4,6 +4,7 @@ import test, { chromium } from '@playwright/test';
 import {
   getButtonByText,
   getByAriaLabel,
+  getElementByText,
   hasText,
   reload,
   visit,
@@ -28,31 +29,33 @@ test.describe('CreateWallet', () => {
   test('should be able to create wallet and see first account created', async () => {
     await visit(page, '/wallet');
     await reload(page);
-    await getButtonByText(page, /Create a Wallet/i).click();
+    await getElementByText(page, /Create new wallet/i).click();
 
-    /** Accept terms and conditions */
-    await hasText(page, /Terms of service/i);
-    await getButtonByText(page, /I accept/i).click();
+    /** Accept terms */
+    await hasText(page, /Terms of use Agreement/i);
+    const agreeCheckbox = getByAriaLabel(page, 'Agree with terms');
+    await agreeCheckbox.click();
+    await getButtonByText(page, /Next: Seed Phrase/i).click();
 
     /** Copy Mnemonic */
-    await hasText(page, /Backup seed phrase/i);
+    await hasText(page, /Write down seed phrase/i);
     await getButtonByText(page, /Copy/i).click();
-    const savedCheckbox = await getByAriaLabel(page, 'Confirm Saved');
+    const savedCheckbox = getByAriaLabel(page, 'Confirm Saved');
     await savedCheckbox.click();
     await getButtonByText(page, /Next/i).click();
 
     /** Confirm Mnemonic */
-    await hasText(page, /Enter seed phrase/i);
+    await hasText(page, /Confirm phrase/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
     // await page.pause();
 
     /** Adding password */
     await hasText(page, /Create password for encryption/i);
-    const passwordInput = await getByAriaLabel(page, 'Your Password');
+    const passwordInput = getByAriaLabel(page, 'Your Password');
     await passwordInput.type(WALLET_PASSWORD);
     await passwordInput.press('Tab');
-    const confirmPasswordInput = await getByAriaLabel(page, 'Confirm Password');
+    const confirmPasswordInput = getByAriaLabel(page, 'Confirm Password');
     await confirmPasswordInput.type(WALLET_PASSWORD);
     await confirmPasswordInput.press('Tab');
 

@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Button, Flex, Focus, InputPassword } from '@fuel-ui/react';
+import { Alert, Focus, Box, Button, InputPassword } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import debounce from 'lodash.debounce';
 import { useCallback, useEffect } from 'react';
@@ -25,7 +25,7 @@ const schema = yup
     }),
     confirmPassword: yup
       .string()
-      .oneOf([yup.ref('password'), null], 'Passwords must match'),
+      .oneOf([yup.ref('password'), undefined], 'Passwords must match'),
     currentPassword: yup.string().required('Current password is required'),
   })
   .required();
@@ -88,7 +88,13 @@ export function ChangePassword() {
       <Layout title="Change Password">
         <Layout.TopBar onBack={goBack} />
         <Layout.Content>
-          <Flex css={styles.wrapper}>
+          <Box.Flex css={styles.wrapper}>
+            <Alert status="warning">
+              <Alert.Description>
+                If you lose your password and your Seed Phrase, all your funds
+                can be lost forever.
+              </Alert.Description>
+            </Alert>
             <Focus.Scope contain autoFocus>
               <ControlledField
                 control={control}
@@ -149,13 +155,7 @@ export function ChangePassword() {
                 )}
               />
             </Focus.Scope>
-            <Alert direction="row" status={'warning'} css={{ mt: '$2' }}>
-              <Alert.Description>
-                If you lose your password and your Seed Phrase, all your funds
-                can be lost forever.
-              </Alert.Description>
-            </Alert>
-          </Flex>
+          </Box.Flex>
         </Layout.Content>
         <Layout.BottomBar>
           <Button
@@ -166,6 +166,7 @@ export function ChangePassword() {
             Cancel
           </Button>
           <Button
+            intent="primary"
             type="submit"
             isLoading={isChangingPassword}
             isDisabled={!isValid}
@@ -180,11 +181,11 @@ export function ChangePassword() {
 
 const styles = {
   cancelButton: cssObj({
-    background: '$gray2 !important',
-    color: '$gray11 !important',
+    background: '$intentsBase2 !important',
+    color: '$intentsBase11 !important',
   }),
   input: cssObj({
-    '&.fuel_input--field, & .fuel_input--field': {
+    '&.fuel_InputField, & .fuel_InputField': {
       w: '235px !important',
     },
   }),
@@ -194,5 +195,8 @@ const styles = {
     flex: 1,
     alignItems: 'center',
     flexDirection: 'column',
+    '& .fuel_FormControl': {
+      maxWidth: '100%',
+    },
   }),
 };

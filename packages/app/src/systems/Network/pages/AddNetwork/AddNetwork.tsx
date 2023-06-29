@@ -1,8 +1,8 @@
-import { Box, Button, Dialog, Focus, Icon, IconButton } from '@fuel-ui/react';
+import { Box, Button, Dialog, Focus, Icon } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 
-import { animations } from '~/systems/Core';
+import { animations, styles } from '~/systems/Core';
 import type { NetworkFormValues } from '~/systems/Network';
 import {
   NetworkForm,
@@ -10,8 +10,10 @@ import {
   useNetworkForm,
   useChainInfo,
 } from '~/systems/Network';
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 
-const MotionBox = motion(Box);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const MotionStack = motion<any>(Box.Stack);
 
 export function AddNetwork() {
   const form = useNetworkForm();
@@ -44,23 +46,17 @@ export function AddNetwork() {
   }
 
   return (
-    <MotionBox
+    <MotionStack
       {...animations.slideInTop()}
       as="form"
+      gap="$4"
       onSubmit={form.handleSubmit(onSubmit)}
     >
-      <Dialog.Heading>
+      <OverlayDialogTopbar onClose={handlers.closeDialog}>
         Add Network
-        <IconButton
-          data-action="closed"
-          variant="link"
-          icon={<Icon icon="X" color="gray8" />}
-          aria-label="Close add network"
-          onPress={handlers.closeDialog}
-        />
-      </Dialog.Heading>
-      <Dialog.Description as="div">
-        <Focus.Scope contain autoFocus>
+      </OverlayDialogTopbar>
+      <Dialog.Description as="div" css={styles.content}>
+        <Focus.Scope autoFocus>
           <NetworkForm
             form={form}
             isEditing={false}
@@ -69,12 +65,12 @@ export function AddNetwork() {
         </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
-        <Button color="gray" variant="ghost" onPress={handlers.openNetworks}>
+        <Button variant="ghost" onPress={handlers.openNetworks}>
           Cancel
         </Button>
         <Button
           type="submit"
-          color="accent"
+          intent="primary"
           isDisabled={!form.formState.isValid}
           isLoading={isLoading}
           leftIcon={Icon.is('Plus')}
@@ -83,6 +79,6 @@ export function AddNetwork() {
           Add
         </Button>
       </Dialog.Footer>
-    </MotionBox>
+    </MotionStack>
   );
 }

@@ -1,14 +1,11 @@
-import { Stack } from '@fuel-ui/react';
+import { Box } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/types';
-import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
 
 import type { Maybe } from '~/systems/Core';
-import { animations } from '~/systems/Core';
+import { MotionStack, animations } from '~/systems/Core';
 import type { Tx, TxStatus } from '~/systems/Transaction';
 import { TxOperations, TxDetails } from '~/systems/Transaction';
-
-const MotionStack = motion(Stack);
 
 type TxContentLoaderProps = {
   header?: ReactNode;
@@ -45,7 +42,7 @@ function TxContentInfo({
 }: TxContentInfoProps) {
   const status = tx?.status || txStatus;
   return (
-    <MotionStack {...animations.slideInTop()} gap="$3">
+    <Box.Stack gap="$4">
       {header}
       <TxOperations
         operations={tx?.operations}
@@ -55,7 +52,7 @@ function TxContentInfo({
       />
       {showDetails && <TxDetails fee={tx?.fee} />}
       {footer}
-    </MotionStack>
+    </Box.Stack>
   );
 }
 

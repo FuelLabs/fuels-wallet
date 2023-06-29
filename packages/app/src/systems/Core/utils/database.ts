@@ -4,6 +4,7 @@ import type {
   Connection,
   Network,
   Asset,
+  FuelWalletError,
 } from '@fuel-wallet/types';
 import type { Table } from 'dexie';
 import Dexie from 'dexie';
@@ -19,6 +20,7 @@ export class FuelDB extends Dexie {
   connections!: Table<Connection, string>;
   transactions!: Table<Transaction, string>;
   assets!: Table<Asset, string>;
+  errors!: Table<FuelWalletError, string>;
 
   constructor() {
     super('FuelDB');
@@ -29,6 +31,7 @@ export class FuelDB extends Dexie {
       connections: 'origin',
       transactions: `&id`,
       assets: '&assetId, &name, $symbol',
+      errors: '&id',
     });
   }
 
@@ -39,6 +42,7 @@ export class FuelDB extends Dexie {
       this.transactions.clear(),
       this.connections.clear(),
       this.networks.clear(),
+      this.errors.clear(),
     ]);
   }
 }

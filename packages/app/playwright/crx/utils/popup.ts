@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 
-import { getByAriaLabel, waitAriaLabel } from '../../commons';
+import { getByAriaLabel, hasText, waitAriaLabel } from '../../commons';
 
 export async function getAccountByName(popupPage: Page, name: string) {
   const accounts = await getWalletAccounts(popupPage);
@@ -38,6 +38,17 @@ export async function switchAccount(popupPage: Page, name: string) {
   account = await getAccountByName(popupPage, name);
 
   return account;
+}
+
+export async function hideAccount(popupPage: Page, name: string) {
+  await getByAriaLabel(popupPage, 'Accounts').click();
+  // Add position to click on the element and not on copy button
+  await getByAriaLabel(popupPage, `Account Actions ${name}`).click();
+  await getByAriaLabel(popupPage, `Hide ${name}`).click();
+  await hasText(popupPage, 'Show hidden accounts');
+  await popupPage.getByText(name).isHidden();
+
+  await getByAriaLabel(popupPage, `Close dialog`).click();
 }
 
 export async function waitAccountPage(popupPage: Page, name: string) {

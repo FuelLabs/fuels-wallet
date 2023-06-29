@@ -1,21 +1,23 @@
-import { Mnemonic } from '@fuel-ts/mnemonic';
+import { Mnemonic, Wallet } from 'fuels';
 import { interpret } from 'xstate';
 
-import type { SignUpMachineService, SignUpMachineState } from './signUpMachine';
-import { SignUpType, signUpMachine } from './signUpMachine';
+import { signUpMachine } from './signUpMachine';
+import type { SignUpMachineService } from './signUpMachine';
 
-import { MNEMONIC_SIZE } from '~/config';
-import { expectStateMatch } from '~/systems/Core/__tests__/utils';
+import { db } from '~/systems/Core';
+import { expectStateMatch } from '~/systems/Core/__tests__';
 
 function createMachine() {
-  return signUpMachine.withContext({
-    type: SignUpType.create,
+  return signUpMachine.withConfig({
+    actions: {
+      redirectToWalletCreated: () => {},
+      redirectToWelcome: () => {},
+    },
   });
 }
 
 describe('signUpMachine', () => {
   let service: SignUpMachineService;
-  let state: SignUpMachineState;
 
   beforeEach(() => {
     service = interpret(createMachine()).start();
@@ -25,73 +27,111 @@ describe('signUpMachine', () => {
     service.stop();
   });
 
-  describe('type: create', () => {
+  describe('Create', () => {
     it('should be able to create a mnemonic', async () => {
-      state = service.getSnapshot();
-      expect(state.context.data?.mnemonic).toBeFalsy();
-      service.send('CREATE_MNEMONIC');
-      await expectStateMatch(service, 'showingMnemonic');
-      state = service.getSnapshot();
-      expect(state.context.data?.mnemonic).toBeTruthy();
+      await expectStateMatch(service, 'atWelcome');
+      service.send('CREATE');
+      await expectStateMatch(service, 'aggrement');
+      service.send('NEXT');
+      const state = await expectStateMatch(service, 'create.showingMnemonic');
+      const menemonic = state.context.data?.mnemonic;
+      expect(menemonic).toBeTruthy();
+      service.send('NEXT');
+      await expectStateMatch(service, 'create.confirmMnemonic');
+      service.send('CONFIRM_MNEMONIC', { data: { words: menemonic } });
+      await expectStateMatch(service, 'addingPassword');
+      service.send('CREATE_MANAGER', { data: { password: 'password' } });
+      await expectStateMatch(service, 'creatingWallet');
+      await expectStateMatch(service, 'done');
     });
 
-    it('should be able to confirm mnemonic', async () => {
-      service.send('CREATE_MNEMONIC');
-      await expectStateMatch(service, 'showingMnemonic');
+    it('should be able to conitnue create after failing to check mnemonic', async () => {
+      await expectStateMatch(service, 'atWelcome');
+      service.send('CREATE');
+      await expectStateMatch(service, 'aggrement');
       service.send('NEXT');
-      await expectStateMatch(service, 'waitingMnemonic');
-
-      state = service.getSnapshot();
-      const words = state.context.data?.mnemonic;
-      service.send('CONFIRM_MNEMONIC', { data: { words } });
-      await expectStateMatch(service, 'waitingMnemonic.validMnemonic');
-    });
-
-    it('should be fail if mnemonic is invalid', async () => {
-      service.send('CREATE_MNEMONIC');
-      await expectStateMatch(service, 'showingMnemonic');
+      const state = await expectStateMatch(service, 'create.showingMnemonic');
+      const menemonic = state.context.data?.mnemonic || [];
+      expect(menemonic).toBeTruthy();
       service.send('NEXT');
-      await expectStateMatch(service, 'waitingMnemonic');
-
-      state = service.getSnapshot();
-      const words = Array.from(state.context.data?.mnemonic || []);
-      words[words.length - 1] = 'invalid-word';
-      service.send('CONFIRM_MNEMONIC', { data: { words } });
-      await expectStateMatch(service, 'waitingMnemonic.invalidMnemonic');
-    });
-
-    it('should be fail if mnemonic not matchs', async () => {
-      service.send('CREATE_MNEMONIC');
-      await expectStateMatch(service, 'showingMnemonic');
-      service.send('NEXT');
-      await expectStateMatch(service, 'waitingMnemonic');
-
-      const words = Mnemonic.generate(MNEMONIC_SIZE).split(' ');
-      service.send('CONFIRM_MNEMONIC', { data: { words } });
-      await expectStateMatch(service, 'waitingMnemonic.mnemonicNotMatch');
+      // Create a wrong mnemonic
+      const wrongMenemonic = [...menemonic.slice(1), 'wrong'];
+      await expectStateMatch(service, 'create.confirmMnemonic');
+      service.send('CONFIRM_MNEMONIC', { data: { words: wrongMenemonic } });
+      // Should fail with wrong mnemonic
+      const state2 = await expectStateMatch(service, 'create.confirmMnemonic');
+      expect(state2.context.error).toBe(
+        "The Seed Phrase doesn't match. Check the phrase for typos or missing words"
+      );
+      // Should pass if we use the correct mnemonic
+      service.send('CONFIRM_MNEMONIC', { data: { words: menemonic } });
+      // Finish the process ensure error is clear after fixing the mnemonic
+      const state3 = await expectStateMatch(service, 'addingPassword');
+      expect(state3.context.error).toBeFalsy();
+      service.send('CREATE_MANAGER', { data: { password: 'password' } });
+      await expectStateMatch(service, 'creatingWallet');
+      await expectStateMatch(service, 'done');
     });
   });
 
-  describe('type: recover', () => {
-    it('should be able to recover wallet using seed phrase', async () => {
-      const machine = signUpMachine.withContext({
-        type: SignUpType.recover,
-      });
-      const service = interpret(machine).start();
-      const words = Mnemonic.generate(MNEMONIC_SIZE).split(' ');
-      service.send('CONFIRM_MNEMONIC', { data: { words } });
-      await expectStateMatch(service, 'waitingMnemonic.validMnemonic');
+  describe('IMPORT', () => {
+    it('should be able to import mnemonic', async () => {
+      await expectStateMatch(service, 'atWelcome');
+      service.send('IMPORT');
+      await expectStateMatch(service, 'aggrement');
       service.send('NEXT');
+      await expectStateMatch(service, 'import');
+      // Import a 24 words mnemonic
+      const words = Mnemonic.generate(32).split(' ');
+      const wallet = Wallet.fromMnemonic(words.join(' '));
+      service.send('IMPORT_MNEMONIC', {
+        data: {
+          words,
+        },
+      });
       await expectStateMatch(service, 'addingPassword');
-
-      // This is not working, because fuels-ts is throwing an error
-      // "TypeError: Cannot read properties of undefined (reading 'importKey')
-      //
-      // const password = 'password';
-      // service.send('CREATE_MANAGER', { data: { password } });
-      // expect(
-      //   waitFor(service, (state) => state.matches('done'))
-      // ).resolves.toBeTruthy();
+      service.send('CREATE_MANAGER', { data: { password: 'password' } });
+      await expectStateMatch(service, 'creatingWallet');
+      await expectStateMatch(service, 'done');
+      // Verify that account created is the same as the imported mnemonic
+      const accounts = await db.accounts.toArray();
+      expect(accounts.length).toBe(1);
+      expect(accounts[0].address).toEqual(wallet.address.toString());
+    });
+    it('should be able to conitnue import after failing to check mnemonic', async () => {
+      await expectStateMatch(service, 'atWelcome');
+      service.send('IMPORT');
+      await expectStateMatch(service, 'aggrement');
+      service.send('NEXT');
+      await expectStateMatch(service, 'import');
+      // Import a 24 words mnemonic
+      const words = Mnemonic.generate(32).split(' ');
+      const wrongWords = [...words.slice(1), 'notValid'];
+      const wallet = Wallet.fromMnemonic(words.join(' '));
+      // Import invalid mnemonic
+      service.send('IMPORT_MNEMONIC', {
+        data: {
+          words: wrongWords,
+        },
+      });
+      const state = await expectStateMatch(service, 'import');
+      expect(state.context.error).toBe(
+        'The Seed Phrase is not valid. Check the words for typos or missing words'
+      );
+      // Import the correct mnemonic
+      service.send('IMPORT_MNEMONIC', {
+        data: {
+          words,
+        },
+      });
+      await expectStateMatch(service, 'addingPassword');
+      service.send('CREATE_MANAGER', { data: { password: 'password' } });
+      await expectStateMatch(service, 'creatingWallet');
+      await expectStateMatch(service, 'done');
+      // Verify that account created is the same as the imported mnemonic
+      const accounts = await db.accounts.toArray();
+      expect(accounts.length).toBe(1);
+      expect(accounts[0].address).toEqual(wallet.address.toString());
     });
   });
 });

@@ -2,7 +2,9 @@ import { ContentProxyConnection } from '@fuel-wallet/sdk';
 
 import fileName from './pageScript?script&module';
 
-ContentProxyConnection.start();
+import { WALLET_NAME } from '~/config';
+
+ContentProxyConnection.start(WALLET_NAME);
 
 async function main() {
   const script = document.createElement('script');

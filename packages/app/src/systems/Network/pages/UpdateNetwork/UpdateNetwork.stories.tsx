@@ -1,4 +1,4 @@
-import { BoxCentered, Button } from '@fuel-ui/react';
+import { Box, Button } from '@fuel-ui/react';
 import type { ComponentStoryFn, Meta } from '@storybook/react';
 
 import { UpdateNetwork } from './UpdateNetwork';
@@ -23,14 +23,14 @@ const Template: ComponentStoryFn<typeof UpdateNetwork> = () => {
   const { isLoading, handlers, networks } = useNetworks();
   return (
     <Layout isLoading={isLoading}>
-      <BoxCentered css={{ minW: '100%', minH: '100%' }}>
+      <Box.Centered css={{ minW: '100%', minH: '100%' }}>
         <Button
           onPress={() => handlers.goToUpdate(networks[0].id)}
           isLoading={isLoading}
         >
           Toggle Modal
         </Button>
-      </BoxCentered>
+      </Box.Centered>
     </Layout>
   );
 };

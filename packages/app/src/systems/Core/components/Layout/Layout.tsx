@@ -1,6 +1,6 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
-import { Box, BoxCentered } from '@fuel-ui/react';
+import { Box } from '@fuel-ui/react';
 import type { FC, ReactNode } from 'react';
 import { forwardRef, useRef, useContext, createContext } from 'react';
 import { Helmet } from 'react-helmet';
@@ -14,6 +14,7 @@ import { TopBar } from './TopBar';
 import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { OverlayDialog } from '~/systems/Overlay';
 import { Sidebar } from '~/systems/Sidebar';
+import signUpImage from '~public/signup.png';
 
 type Context = {
   isLoading?: boolean;
@@ -29,16 +30,20 @@ type ContentProps = {
   as?: any;
   children: ReactNode;
   css?: ThemeUtilsCSS;
+  noBorder?: boolean;
+  noScroll?: boolean;
 };
 
 const Content = forwardRef<HTMLDivElement, ContentProps>(
-  ({ as, children, css }, ref) => {
+  ({ as, children, css, noBorder, noScroll = false }, ref) => {
     return (
       <Box
         as={as}
         ref={ref}
         css={{ ...styles.content, ...css }}
         className="layout__content"
+        data-noborder={noBorder}
+        data-scrollable={!noScroll}
       >
         {children}
       </Box>
@@ -47,8 +52,10 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(
 );
 
 export type LayoutProps = Context & {
-  isPublic?: boolean;
   children: ReactNode;
+  isPublic?: boolean;
+  noBorder?: boolean;
+  isCentered?: boolean;
 };
 
 type LayoutComponent = FC<LayoutProps> & {
@@ -62,6 +69,8 @@ export const Layout: LayoutComponent = ({
   isLoading,
   title,
   children,
+  noBorder,
+  isCentered,
 }: LayoutProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const titleText = title ? `${title} | Fuel` : 'Fuel';
@@ -75,19 +84,28 @@ export const Layout: LayoutComponent = ({
           <title>{titleText}</title>
         </Helmet>
         {isPublic ? (
-          <BoxCentered as="main" css={styles.root} data-public>
-            <>{children}</>
-          </BoxCentered>
+          <Box
+            as="main"
+            css={{ ...styles.root, ...styles.public }}
+            data-public
+            data-centered={isCentered}
+          >
+            <Box.Centered>{children}</Box.Centered>
+          </Box>
         ) : (
-          <BoxCentered as="main" css={styles.root}>
-            <Box css={styles.wrapper} className="layout__wrapper">
+          <Box.Centered as="main" css={styles.root}>
+            <Box
+              css={styles.wrapper}
+              className="layout__wrapper"
+              data-noborder={noBorder}
+            >
               <OverlayDialog />
               <Sidebar ref={ref} />
               <Box ref={ref} css={styles.inner} className="layout__inner">
                 {children}
               </Box>
             </Box>
-          </BoxCentered>
+          </Box.Centered>
         )}
         {import.meta.env.NODE_ENV === 'test' && (
           <Box css={{ visibility: 'hidden' }}>
@@ -105,32 +123,75 @@ Layout.BottomBar = BottomBar;
 
 export const styles = {
   root: cssObj({
-    minH: '100vh',
     width: IS_CRX_POPUP ? WALLET_WIDTH : '100vw',
-
-    '&[data-public="true"]': {
-      background:
-        'linear-gradient(197.05deg, #0E221B 0%, #071614 22.2%, #0C0E0D 40.7%);',
-    },
-
+    position: 'relative',
+    height: '100vh',
+    maxHeight: '100vh',
+    ...coreStyles.scrollable(),
     '&:has(.layout__bottom) .layout__content': {
       pb: '$0',
     },
   }),
   wrapper: cssObj({
+    zIndex: '$0',
     overflow: 'clip',
     position: 'relative',
-    width: WALLET_WIDTH,
-    height: WALLET_HEIGHT,
-    background:
-      'linear-gradient(210.43deg, #0E221B 0%, #071614 10.03%, #0C0E0D 18.38%)',
-    zIndex: '$0',
+    width: WALLET_WIDTH - 2, // reduce the border to contain width inside the window
+    height: WALLET_HEIGHT - 2, // reduce the border to contain height inside the window
+    background: '$bodyColor',
+    border: '1px solid $border',
+
+    '&[data-noborder=true]': {
+      border: '$none',
+    },
   }),
   inner: coreStyles.fullscreen,
   content: cssObj({
-    ...coreStyles.scrollable(),
-    padding: '$4',
+    padding: '$0 $4 $4 $4',
     flex: 1,
+    '&[data-scrollable=true]:not([data-noborder])': {
+      padding: '$0 $0 $4 $4',
+      ...coreStyles.scrollable(),
+      overflowY: 'scroll !important',
+    },
+    '&[data-noborder]': {
+      padding: '$0',
+    },
+  }),
+  public: cssObj({
+    maxWidth: '100vw',
+    display: 'grid',
+    gridTemplateColumns: '0.75fr 1.25fr',
+    gridTemplateRows: '1fr',
+    alignItems: 'flex-start',
+
+    '& > .fuel_Box-centered': {
+      maxWidth: '$sm',
+      height: 650,
+      margin: 'auto',
+      alignItems: 'flex-start !important',
+    },
+
+    '&[data-centered=true]': {
+      alignItems: 'center',
+
+      '& > .fuel_Box-centered': {
+        margin: '0 auto',
+      },
+    },
+
+    '&::before': {
+      content: '""',
+      display: 'block',
+      position: 'sticky',
+      top: 0,
+      bottom: 0,
+      width: '100%',
+      height: '100vh',
+      background: `url(${signUpImage})`,
+      backgroundPosition: 'left',
+      backgroundSize: 'cover',
+    },
   }),
 };
 

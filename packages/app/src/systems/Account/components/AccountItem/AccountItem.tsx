@@ -1,9 +1,10 @@
+import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import {
   Avatar,
+  Box,
   CardList,
   Dropdown,
-  Flex,
   Heading,
   Icon,
   IconButton,
@@ -17,6 +18,7 @@ import { AccountItemLoader } from './AccountItemLoader';
 import { FuelAddress } from '~/systems/Account';
 
 export type AccountItemProps = {
+  css?: ThemeUtilsCSS;
   account: Account;
   isToggleChecked?: boolean;
   isCurrent?: boolean;
@@ -49,25 +51,28 @@ export const AccountItem: AccountItemComponent = ({
   onToggle,
   onToggleHidden,
   onUpdate,
+  css,
 }: AccountItemProps) => {
   if (isHidden) return null;
 
   function getRightEl() {
     if (onToggle) {
       return (
-        <Switch
-          size="sm"
-          checked={isToggleChecked}
-          aria-label={`Toggle ${account.name}`}
-          onCheckedChange={() => onToggle?.(account.address, isToggleChecked)}
-        />
+        <Box.Flex align="center">
+          <Switch
+            size="sm"
+            checked={isToggleChecked}
+            aria-label={`Toggle ${account.name}`}
+            onCheckedChange={() => onToggle?.(account.address, isToggleChecked)}
+          />
+        </Box.Flex>
       );
     }
 
     const menuItems = [
       onUpdate && (
         <Dropdown.MenuItem key="update" aria-label={`Edit ${account.name}`}>
-          <Icon icon={Icon.is('Pencil')} />
+          <Icon icon={Icon.is('Edit')} />
           Edit
         </Dropdown.MenuItem>
       ),
@@ -82,7 +87,7 @@ export const AccountItem: AccountItemComponent = ({
           key="hide"
           aria-label={`${account.isHidden ? 'Unhide' : 'Hide'} ${account.name}`}
         >
-          <Icon icon={Icon.is(account.isHidden ? 'EyeSlash' : 'Eye')} />
+          <Icon icon={Icon.is(account.isHidden ? 'EyeClosed' : 'Eye')} />
           {`${account.isHidden ? 'Unhide' : 'Hide'} Account`}
         </Dropdown.MenuItem>
       ),
@@ -91,26 +96,24 @@ export const AccountItem: AccountItemComponent = ({
     if (menuItems.length) {
       return (
         <Dropdown
-          css={{
-            zIndex: 1,
+          css={{ zIndex: 1 }}
+          popoverProps={{
+            alignOffset: -20,
+            align: 'end',
           }}
-          popoverProps={{ side: 'bottom', align: 'start', alignOffset: 10 }}
         >
           <Dropdown.Trigger>
             <IconButton
               size="xs"
               variant="link"
-              color="gray"
-              icon={<Icon icon="DotsThreeOutline" color="gray8" />}
+              icon={<Icon icon="Dots" color="intentsBase8" />}
               aria-label={`Account Actions ${account.name}`}
-              css={{
-                px: '$0',
-                color: '$gray10',
-              }}
+              css={{ px: '$0', color: '$intentsBase10' }}
             />
           </Dropdown.Trigger>
           <Dropdown.Menu
-            onAction={(action) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            onAction={(action: any) => {
               if (action === 'update') onUpdate?.(account.address);
               if (action === 'export') onExport?.(account.address);
               if (action === 'hide')
@@ -131,29 +134,26 @@ export const AccountItem: AccountItemComponent = ({
       isActive={isCurrent}
       onClick={account.isHidden ? undefined : onPress}
       rightEl={getRightEl()}
-      css={styles.root}
+      css={{ ...styles.root, ...css }}
       aria-disabled={isDisabled}
       aria-label={account.name}
       data-compact={compact}
     >
-      <Avatar.Generated
-        size={compact ? 'xsm' : 'md'}
-        background="fuel"
-        hash={account.address}
-      />
-      <Flex className="wrapper">
+      <Avatar.Generated size={compact ? 'xsm' : 'md'} hash={account.address} />
+      <Box.Flex className="wrapper">
         <Heading as="h6" css={styles.name}>
           {account.name}
         </Heading>
         <FuelAddress address={account.address} css={styles.address} />
-      </Flex>
+      </Box.Flex>
     </CardList.Item>
   );
 };
 
 const styles = {
   root: cssObj({
-    background: '$whiteA2',
+    background: '$cardBg',
+    py: '$3 !important',
 
     '&[aria-disabled="true"]': {
       opacity: 0.5,
@@ -170,18 +170,18 @@ const styles = {
         flex: 1,
         justifyContent: 'space-between',
       },
-      '.fuel_avatar-generated': {
+      '.fuel_Avatar-generated': {
         flexShrink: 0,
       },
     },
 
-    '.fuel_button': {
+    '.fuel_Button': {
       px: '$1 !important',
-      color: '$gray8',
+      color: '$intentsBase8',
     },
 
-    '.fuel_button:hover': {
-      color: '$gray11',
+    '.fuel_Button:hover': {
+      color: '$intentsBase11',
     },
   }),
   name: cssObj({
@@ -189,7 +189,7 @@ const styles = {
   }),
   address: cssObj({
     fontSize: '$sm',
-    fontWeight: '$semibold',
+    fontWeight: '$normal',
   }),
 };
 
