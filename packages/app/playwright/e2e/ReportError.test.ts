@@ -52,7 +52,7 @@ test.describe('ReportError', () => {
     await visit(page, '/');
     await page.evaluate(() => {
       window.fuelDB.errors.add({
-        id: '1234',
+        id: '12345',
         timestamp: Date.now(),
         error: {
           message: 'Test Error',
@@ -69,9 +69,36 @@ test.describe('ReportError', () => {
 
     // report error
     await getButtonByText(page, 'Send reports').click();
-    await expect(page.getByText(/Unexpected errors detected/)).toHaveCount(0);
+    await expect(page.getByText(/Unexpected errors detected/i)).toHaveCount(0);
 
     const errorsAfterReporting = await getPageErrors(page);
-    expect(errorsAfterReporting.length).toBe(0);
+    await expect(errorsAfterReporting.length).toBe(0);
+  });
+
+  test('should be able to ignore a error', async () => {
+    await visit(page, '/');
+    await page.evaluate(() => {
+      window.fuelDB.errors.add({
+        id: '12345',
+        timestamp: Date.now(),
+        error: {
+          message: 'Test Error',
+          stack: ['Line error 1'],
+        },
+      });
+    });
+    await reload(page);
+
+    await hasText(page, /Unexpected errors detected/i);
+    await expect(page.locator(`textarea[name="reports"]`)).toHaveText(
+      /Test Error/i
+    );
+
+    // report error
+    await getButtonByText(page, /Ignore/i).click();
+    await expect(page.getByText(/Unexpected errors detected/i)).toHaveCount(0);
+
+    const errorsAfterReporting = await getPageErrors(page);
+    await expect(errorsAfterReporting.length).toBe(0);
   });
 });

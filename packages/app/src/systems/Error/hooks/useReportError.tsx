@@ -31,7 +31,7 @@ export function useReportError() {
 
   const errors = useSelector(service, selectors.errors);
 
-  const reportErrorsOnce = () => {
+  const reportErrors = () => {
     send('REPORT_ERRORS');
   };
 
@@ -49,7 +49,7 @@ export function useReportError() {
     state,
     errors,
     handlers: {
-      reportErrorsOnce,
+      reportErrors,
       ignoreErrors,
       close,
     },

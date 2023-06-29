@@ -32,7 +32,7 @@ export function ReportErrors() {
           intent="primary"
           isDisabled={isLoadingSendOnce}
           isLoading={isLoadingSendOnce}
-          onPress={handlers.reportErrorsOnce}
+          onPress={handlers.reportErrors}
           aria-label="Report Error"
         >
           Send reports
