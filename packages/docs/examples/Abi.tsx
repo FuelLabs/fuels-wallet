@@ -9,10 +9,12 @@ import { useFuel } from '../src/hooks/useFuel';
 import { useIsConnected } from '../src/hooks/useIsConnected';
 import { useLoading } from '../src/hooks/useLoading';
 
+import { SWAY_SWAP_CONTRACT_ID } from './data/swayswap/contractId';
+
 export function Abi() {
   const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
-  const [contractId, setContractId] = useState<string>();
+  const [contractId, setContractId] = useState<string>(SWAY_SWAP_CONTRACT_ID);
   const [abi, setAbi] = useState<JsonFlatAbi>();
   const [handleGetAbi, isLoadingAbi, errorGetAbi] = useLoading(
     async (contractId: string | undefined) => {
