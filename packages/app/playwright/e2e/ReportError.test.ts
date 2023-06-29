@@ -42,8 +42,7 @@ test.describe('ReportError', () => {
 
     // report error
     await getButtonByText(page, 'Send reports').click();
-
-    await page.waitForTimeout(1000);
+    await expect(page.getByText(/Unexpected errors detected/)).toHaveCount(0);
 
     const errorsAfterReporting = await getPageErrors(page);
     expect(errorsAfterReporting.length).toBe(0);
@@ -70,8 +69,7 @@ test.describe('ReportError', () => {
 
     // report error
     await getButtonByText(page, 'Send reports').click();
-
-    await page.waitForTimeout(1000);
+    await expect(page.getByText(/Unexpected errors detected/)).toHaveCount(0);
 
     const errorsAfterReporting = await getPageErrors(page);
     expect(errorsAfterReporting.length).toBe(0);
