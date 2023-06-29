@@ -28,7 +28,7 @@ const selectors = {
 };
 
 export function useConnectRequest() {
-  const { account, accounts, isLoading } = useAccounts();
+  const { account, shownAccounts, isLoading } = useAccounts();
   const service = store.useService(Services.connectRequest);
   const isConnecting = useSelector(service, selectors.isConnecting);
   const isSelectingAccounts = useSelector(
@@ -40,10 +40,10 @@ export function useConnectRequest() {
   const favIconUrl = useSelector(service, selectors.favIconUrl);
   const selectedAddresses = useSelector(service, selectors.selectedAddresses);
   const currentAccounts = useMemo(() => {
-    return (accounts ?? []).filter((account) =>
+    return (shownAccounts ?? []).filter((account) =>
       selectedAddresses?.includes(account.address)
     );
-  }, [selectedAddresses, accounts]);
+  }, [selectedAddresses, shownAccounts]);
   const hasCurrentAccounts = !!selectedAddresses?.length;
 
   useEffect(() => {
@@ -90,7 +90,7 @@ export function useConnectRequest() {
     isConnecting,
     isLoadingAccounts: isLoading,
     account,
-    accounts,
+    accounts: shownAccounts,
     selectedAddresses,
     hasCurrentAccounts,
     currentAccounts,

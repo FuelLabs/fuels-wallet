@@ -1,7 +1,7 @@
 {
   "name": "@fuel-wallet/sdk",
   "description": "Integrate DApps with Fuel Wallet Extension.",
-  "version": "0.9.5",
+  "version": "0.10.0",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
@@ -28,21 +28,21 @@
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
-    "@types/chrome": "^0.0.212",
+    "@types/chrome": "^0.0.237",
     "dexie-observable": "4.0.1-beta.13",
     "events": "^3.3.0",
-    "json-rpc-2.0": "^1.4.2",
+    "json-rpc-2.0": "^1.6.0",
     "uuid": "^9.0.0",
-    "xstate": "^4.35.4"
+    "xstate": "^4.37.2"
   },
   "peerDependencies": {
-    "fuels": ">=0.43.0"
+    "fuels": ">=0.43.1"
   },
   "devDependencies": {
     "@fuel-wallet/types": "workspace:*",
-    "@types/uuid": "^9.0.0",
-    "fuels": "0.43.0",
-    "jest-webextension-mock": "^3.8.8",
-    "tsup": "^6.5.0"
+    "@types/uuid": "^9.0.1",
+    "fuels": "0.43.1",
+    "jest-webextension-mock": "^3.8.9",
+    "tsup": "^6.7.0"
   }
 }

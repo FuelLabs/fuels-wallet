@@ -128,8 +128,10 @@ export const sendMachine = createMachine(
           const to = input?.address;
           const assetId = input?.asset?.assetId;
           const { amount } = input || {};
-          const network = await NetworkService.getSelectedNetwork();
-          const account = await AccountService.getCurrentAccount();
+          const [network, account] = await Promise.all([
+            NetworkService.getSelectedNetwork(),
+            AccountService.getCurrentAccount(),
+          ]);
 
           if (!to || !assetId || !amount || !network?.url || !account) {
             throw new Error('Missing params for transaction request');

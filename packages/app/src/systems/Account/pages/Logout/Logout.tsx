@@ -1,19 +1,13 @@
-import {
-  Button,
-  Card,
-  Dialog,
-  Icon,
-  IconButton,
-  Input,
-  Text,
-} from '@fuel-ui/react';
+import { cssObj } from '@fuel-ui/css';
+import { Button, Card, Dialog, Icon, Input, Text } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { useAccounts } from '../../hooks';
 
-import { ControlledField } from '~/systems/Core';
+import { ControlledField, styles as rootStyles } from '~/systems/Core';
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 const schema = yup
   .object({
@@ -43,39 +37,33 @@ export const Logout = () => {
     form.getValues().logoutConfirmation !== logOutConfirmationPhrase;
   return (
     <>
-      <Dialog.Heading>
+      <OverlayDialogTopbar onClose={handlers.closeDialog}>
         Logout
-        <IconButton
-          data-action="closed"
-          variant="link"
-          icon={<Icon icon="X" color="gray8" />}
-          aria-label="Close unlock window"
-          onPress={handlers.closeDialog}
-        />
-      </Dialog.Heading>
-      <Dialog.Description as="div">
-        <Card css={{ padding: '$4' }}>
+      </OverlayDialogTopbar>
+      <Dialog.Description as="div" css={rootStyles.content}>
+        <Card css={styles.card}>
           <Text
             as="h2"
-            color="gray12"
-            leftIcon={<Icon icon={Icon.is('Warning')} color="yellow12" />}
-            css={{ mb: '$4' }}
+            color="intentsBase12"
+            leftIcon={
+              <Icon icon={Icon.is('AlertTriangle')} color="intentsWarning12" />
+            }
+            css={styles.line}
           >
             IMPORTANT
           </Text>
-          <Text color="gray11" css={{ mb: '$2' }}>
+          <Text css={styles.line}>
             This action will remove all data from this device, including your
             seedphrase and accounts.
           </Text>
-          <Text color="gray11" css={{ mb: '$2' }}>
+          <Text css={styles.line}>
             Make sure you have securely backed up your Seed Phrase before
             removing the wallet.
           </Text>
-          <Text color="gray11" css={{ mb: '$2' }}>
+          <Text css={styles.line}>
             If you have not backed up your Seed Phrase, you will lose access to
             your funds.
           </Text>
-          <Text color="gray11" css={{ mb: '$2' }}></Text>
         </Card>
         <ControlledField
           control={control}
@@ -99,11 +87,21 @@ export const Logout = () => {
           isLoading={isLoading}
           isDisabled={isLogoutDisabled}
           variant="ghost"
-          color="red"
+          intent="error"
         >
           Logout
         </Button>
       </Dialog.Footer>
     </>
   );
+};
+
+const styles = {
+  card: {
+    padding: '$4',
+  },
+  line: cssObj({
+    mb: '$2',
+    color: '$intentsBase11',
+  }),
 };

@@ -2,7 +2,7 @@
 
 'use client';
 
-import { ThemeProvider } from '@fuel-ui/react';
+import { createTheme, ThemeProvider } from '@fuel-ui/react';
 import { MDXProvider } from '@mdx-js/react';
 import type { ReactNode } from 'react';
 
@@ -13,8 +13,8 @@ import { Code } from './Code';
 import { CodeImport } from './CodeImport';
 import { ConnectionAlert } from './ConnectionAlert';
 import { Demo } from './Demo';
-import { DownloadFuelWallet } from './DownloadFuelWallet';
 import { Heading } from './Heading';
+import { InstallSection } from './InstallSection';
 import { Link } from './Link';
 import { UL } from './List';
 import { Paragraph } from './Paragraph';
@@ -41,7 +41,7 @@ const components = {
   ConnectionAlert,
   CodeImport,
   Player,
-  DownloadFuelWallet,
+  InstallSection,
   Examples,
   Demo,
 };
@@ -50,10 +50,20 @@ type ProviderProps = {
   children: ReactNode;
 };
 
+const theme = createTheme('fuel-docs', {
+  components: {
+    Button: {
+      defaultProps: {
+        intent: 'primary',
+      },
+    },
+  },
+} as any);
+
 export function Provider({ children }: ProviderProps) {
   return (
     <MDXProvider components={components as any}>
-      <ThemeProvider>{children}</ThemeProvider>
+      <ThemeProvider themes={{ docs: theme }}>{children}</ThemeProvider>
     </MDXProvider>
   );
 }

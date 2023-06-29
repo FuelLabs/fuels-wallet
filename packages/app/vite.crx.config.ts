@@ -11,7 +11,7 @@ export default defineConfig({
   base: '/',
   build: {
     ...baseConfig.build,
-    outDir: 'dist-crx',
+    outDir: process.env.CRX_OUT || 'dist-crx',
   },
   plugins: baseConfig.plugins?.concat([
     crx({

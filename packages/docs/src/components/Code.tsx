@@ -12,10 +12,10 @@ const styles = {
     pt: '2px',
     pb: '3px',
     px: '6px',
-    borderRadius: '$md',
+    borderRadius: '$default',
     fontFamily: 'monospace',
-    background: '$gray3',
-    color: '$gray10',
+    background: '$intentsBase3',
+    color: '$intentsBase10',
     fontSize: '0.9rem',
   }),
 };

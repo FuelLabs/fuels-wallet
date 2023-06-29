@@ -1,0 +1,80 @@
+---
+title: Wallet Connectors
+category: For Developers
+---
+
+# Wallet Connectors
+
+A Wallet Connector is an interface to integrate with third-party wallets on the Fuel Ecosystem. It exposes all currently installed wallets in a unified manner
+via `window.fuel`.
+
+<Examples.Connectors />
+
+## Methods
+
+### Listing connectors
+
+To list all available connectors you can use the `listConnectors()` method.
+
+<CodeImport
+  file="../../examples/Connectors.tsx"
+  commentBlock="listConnectors"
+/>
+
+### Selecting connector
+
+To select a different Wallet Connector use the `selectConnector(connectorName: string)` method.
+
+<CodeImport
+  file="../../examples/Connectors.tsx"
+  commentBlock="selectConnector"
+/>
+
+## Events
+
+### CurrentConnector
+
+This event is triggered when the Current Connector is updated. The callback function receives the `FuelWalletConnector` object.
+
+<CodeImport
+  file="../../examples/Connectors.tsx"
+  commentBlock="eventCurrentConnector"
+/>
+
+### Connectors
+
+This event is triggered when the Connectors list is updated. The callback function receives the list of connectors, `Array<FuelWalletConnector>`.
+
+<CodeImport
+  file="../../examples/Connectors.tsx"
+  commentBlock="eventConnectors"
+/>
+
+## For Wallet Developers
+
+Third-party wallets developed by the community can use the Wallet Connector to integrate with the current `fuel` instance on the window, enabling a better experience for
+developers and users.
+
+### Creating a Wallet Connector
+
+Inside `pageScript.ts` you can call the method `createConnector` instead of creating a new object on the window. This method will add your Connector to the current,
+`window.fuel` element.
+
+```ts
+import { createConnector } from '@fuel-wallet/sdk';
+
+createConnector({ name: 'Wallet Name' });
+```
+
+If you are using our Communication SDK [Content Page Script](https://developer.chrome.com/docs/extensions/mv3/content_scripts/) import `ContentProxyConnection` and pass the name of Wallet Extension.
+
+> Otherwise, remember to filter events by the ones that have your Wallet Connector Name as the target.
+
+```ts
+import { ContentProxyConnection } from '@fuel-wallet/sdk';
+
+// Start the content page script with the current Wallet Name
+ContentProxyConnection.start('Wallet Name');
+
+// ...pageScript.ts logic for page script injection
+```

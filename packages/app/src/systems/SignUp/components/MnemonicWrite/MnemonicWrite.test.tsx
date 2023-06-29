@@ -1,11 +1,14 @@
 import { Mnemonic as FuelMnemonic } from '@fuel-ts/mnemonic';
-import { render, screen, waitFor } from '@fuel-ui/test-utils';
+import { screen, waitFor } from '@fuel-ui/test-utils';
 import { act } from 'react-dom/test-utils';
+
+import { SignUpProvider } from '../SignUpProvider';
 
 import { MnemonicWrite } from './MnemonicWrite';
 
 import { MNEMONIC_SIZE } from '~/config';
 import { getPhraseFromValue } from '~/systems/Core';
+import { renderWithProvider } from '~/systems/Core/__tests__';
 
 const onFilledHandler = jest.fn();
 const onNextHandler = jest.fn();
@@ -17,13 +20,18 @@ const MNEMONIC = getPhraseFromValue(
 
 describe('MnemonicWrite', () => {
   it('should trigger onFilled after paste', async () => {
-    await render(
-      <MnemonicWrite
-        canProceed
-        onFilled={onFilledHandler}
-        onNext={onNextHandler}
-        onCancel={onCancelHandler}
-      />
+    renderWithProvider(
+      <SignUpProvider>
+        <MnemonicWrite
+          title="Confirm phrase"
+          subtitle="Write your phrase again to ensure you wrote it down correctly."
+          step={2}
+          canProceed
+          onFilled={onFilledHandler}
+          onNext={onNextHandler}
+          onCancel={onCancelHandler}
+        />
+      </SignUpProvider>
     );
 
     await navigator.clipboard.writeText(MNEMONIC);
@@ -39,13 +47,18 @@ describe('MnemonicWrite', () => {
   });
 
   it('should be able to click on next if canProceed and isFilled', async () => {
-    render(
-      <MnemonicWrite
-        canProceed
-        onFilled={onFilledHandler}
-        onNext={onNextHandler}
-        onCancel={onCancelHandler}
-      />
+    renderWithProvider(
+      <SignUpProvider>
+        <MnemonicWrite
+          title="Confirm phrase"
+          subtitle="Write your phrase again to ensure you wrote it down correctly."
+          step={2}
+          canProceed
+          onFilled={onFilledHandler}
+          onNext={onNextHandler}
+          onCancel={onCancelHandler}
+        />
+      </SignUpProvider>
     );
 
     await navigator.clipboard.writeText(MNEMONIC);
@@ -56,19 +69,24 @@ describe('MnemonicWrite', () => {
     });
 
     await waitFor(() => {
-      const btnNext = screen.getByText('Next');
+      const btnNext = screen.getByText(/next/i);
       expect(btnNext).toBeEnabled();
     });
   });
 
   it('should show error message when have error prop', async () => {
-    render(
-      <MnemonicWrite
-        error="This is an error message"
-        onFilled={onFilledHandler}
-        onNext={onNextHandler}
-        onCancel={onCancelHandler}
-      />
+    renderWithProvider(
+      <SignUpProvider>
+        <MnemonicWrite
+          title="Confirm phrase"
+          subtitle="Write your phrase again to ensure you wrote it down correctly."
+          step={2}
+          error="This is an error message"
+          onFilled={onFilledHandler}
+          onNext={onNextHandler}
+          onCancel={onCancelHandler}
+        />
+      </SignUpProvider>
     );
 
     expect(screen.getByText('This is an error message')).toBeInTheDocument();

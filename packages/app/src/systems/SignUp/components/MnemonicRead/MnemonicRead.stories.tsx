@@ -1,4 +1,4 @@
-import { BoxCentered } from '@fuel-ui/react';
+import { Box } from '@fuel-ui/react';
 import { action } from '@storybook/addon-actions';
 
 import { MnemonicRead } from './MnemonicRead';
@@ -27,11 +27,12 @@ const WORDS = [
 ];
 
 export const Usage = () => (
-  <BoxCentered minHS>
+  <Box.Centered minHS>
     <MnemonicRead
+      step={2}
       words={WORDS}
       onNext={action('onNext')}
       onCancel={action('onCancel')}
     />
-  </BoxCentered>
+  </Box.Centered>
 );

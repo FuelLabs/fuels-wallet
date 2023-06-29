@@ -1,21 +1,25 @@
 /* eslint-disable no-console */
 import {
-  PAGE_SCRIPT_NAME,
   BACKGROUND_SCRIPT_NAME,
   CONTENT_SCRIPT_NAME,
   EVENT_MESSAGE,
   MessageTypes,
 } from '@fuel-wallet/types';
 import type { CommunicationMessage } from '@fuel-wallet/types';
+import { createJSONRPCSuccessResponse } from 'json-rpc-2.0';
+import type { JSONRPCID } from 'json-rpc-2.0';
 
 import { PING_TIMEOUT, RECONNECT_TIMEOUT } from '../config';
 
 export class ContentProxyConnection {
   connection: chrome.runtime.Port;
   _tryReconect?: NodeJS.Timer;
+  _keepAlive?: NodeJS.Timer;
+  readonly connectorName: string;
 
-  constructor() {
+  constructor(connectorName: string) {
     this.connection = this.connect();
+    this.connectorName = connectorName;
     window.addEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
     this.keepAlive();
   }
@@ -27,6 +31,12 @@ export class ContentProxyConnection {
     connection.onMessage.addListener(this.onMessageFromExtension);
     connection.onDisconnect.addListener(this.onDisconnect);
     return connection;
+  }
+
+  destroy() {
+    this.connection.disconnect();
+    clearInterval(this._tryReconect);
+    clearTimeout(this._keepAlive);
   }
 
   onDisconnect = () => {
@@ -59,14 +69,14 @@ export class ContentProxyConnection {
         target: BACKGROUND_SCRIPT_NAME,
         type: MessageTypes.ping,
       });
-      setTimeout(this.keepAlive, PING_TIMEOUT);
+      this._keepAlive = setTimeout(this.keepAlive, PING_TIMEOUT);
     } catch (err) {
       this.onDisconnect();
     }
   };
 
-  static start() {
-    return new ContentProxyConnection();
+  static start(providerWallet: string) {
+    return new ContentProxyConnection(providerWallet);
   }
 
   onMessageFromExtension = (message: CommunicationMessage) => {
@@ -76,22 +86,46 @@ export class ContentProxyConnection {
     }
   };
 
+  shouldAcceptMessage(event: CommunicationMessage, origin: string) {
+    return (
+      origin === window.location.origin &&
+      event.target === CONTENT_SCRIPT_NAME &&
+      event.connectorName === this.connectorName
+    );
+  }
+
+  sendConnectorName(id: JSONRPCID) {
+    this.postMessage({
+      type: MessageTypes.response,
+      response: createJSONRPCSuccessResponse(id, this.connectorName),
+      target: this.connectorName,
+    });
+  }
+
   onMessageFromWindow = (message: MessageEvent<CommunicationMessage>) => {
     const { data: event, origin } = Object.freeze(message);
-    const shouldAcceptMessage =
-      origin === window.location.origin && event.target === CONTENT_SCRIPT_NAME;
-    if (shouldAcceptMessage) {
-      this.connection.postMessage({
-        ...event,
-        target: BACKGROUND_SCRIPT_NAME,
-      });
+    if (this.shouldAcceptMessage(event, origin)) {
+      if (
+        event.type === MessageTypes.request &&
+        event.request.method === 'connectorName'
+      ) {
+        // If the message is a request for the connector name
+        // we send it back to the sender without send to the background script.
+        this.sendConnectorName(event.request.id!);
+      } else {
+        // Otherwise we send the message to the background script
+        this.connection.postMessage({
+          ...event,
+          target: BACKGROUND_SCRIPT_NAME,
+        });
+      }
     }
   };
 
   postMessage(message: CommunicationMessage) {
     const postMessage = {
       ...message,
-      target: PAGE_SCRIPT_NAME,
+      target: this.connectorName,
     };
     window.postMessage(postMessage, window.location.origin);
   }

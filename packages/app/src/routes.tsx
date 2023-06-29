@@ -13,7 +13,6 @@ import { PrivateRoute, PublicRoute } from '~/systems/Core';
 import { Pages } from '~/systems/Core/types';
 import { homeRoutes } from '~/systems/Home';
 import { signUpRoutes } from '~/systems/SignUp';
-import { WalletCreatedPage } from '~/systems/SignUp/pages';
 
 const walletRoutes = (
   <>
@@ -34,10 +33,7 @@ export const webAppRoutes = (
       <Route element={<PublicRoute />}>{signUpRoutes}</Route>
       <Route element={<PrivateRoute />}>
         <Route element={<UnlockGuard />}>
-          <Route
-            path={Pages.signUpWalletCreated()}
-            element={<WalletCreatedPage />}
-          />
+          <Route element={<Navigate to={Pages.signUpCreatedWallet()} />} />
           {walletRoutes}
         </Route>
       </Route>
@@ -63,7 +59,7 @@ export const crxSignUpRoutes = (
       {signUpRoutes}
       <Route path="*" element={<Navigate to={Pages.signUp()} />} />
     </Route>
-    <Route path={Pages.signUpWalletCreated()} element={<WalletCreatedPage />} />
+    <Route element={<Navigate to={Pages.signUpCreatedWallet()} />} />
   </Routes>
 );
 

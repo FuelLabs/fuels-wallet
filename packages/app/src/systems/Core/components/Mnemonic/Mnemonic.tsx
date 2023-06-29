@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Flex, Grid, Icon } from '@fuel-ui/react';
+import { Box, Button, Grid, Icon, toast } from '@fuel-ui/react';
 import { MNEMONIC_SIZES } from 'fuels';
 import React, { useEffect, useState } from 'react';
 
@@ -23,6 +23,7 @@ export type MnemonicProps = {
   type: 'read' | 'write';
   value?: string[];
   onFilled?: (val: string[]) => void;
+  onChange?: (val: string[]) => void;
   format?: number;
   enableChangeFormat?: boolean;
 };
@@ -31,6 +32,7 @@ export function Mnemonic({
   value: initialValue = [],
   type,
   onFilled,
+  onChange,
   format: initialFormat,
   enableChangeFormat,
 }: MnemonicProps) {
@@ -51,27 +53,36 @@ export function Mnemonic({
 
   async function handleCopy() {
     const val = type === 'read' ? initialValue : value;
-    return navigator.clipboard.writeText(val.join(' '));
+    await navigator.clipboard.writeText(val.join(' '));
+    toast.success('Seed phrase copied to clipboard');
   }
 
-  function handlePastInput(ev: React.ClipboardEvent<HTMLInputElement>) {
+  function handlePastInput(
+    ev: React.ClipboardEvent<HTMLInputElement>,
+    idx: number
+  ) {
     const text = ev.clipboardData.getData('text/plain');
-    setValue(fillArray(text.split(' '), format));
+    const words = text.split(' ');
+
+    // Only allow paste on the first input or
+    // if the paste has more than 12 words
+    if (idx === 0 || words.length > 11) {
+      ev.preventDefault();
+      setValue(fillArray(words, format));
+    }
   }
 
-  async function handlePast() {
+  async function handlePaste() {
     const text = await navigator.clipboard.readText();
     setValue(fillArray(text.split(' '), format));
   }
 
-  function handleChange(idx: number) {
-    return (val: string) => {
-      setValue((oldState) =>
-        oldState
-          .map((word, i) => (i === idx ? val : word))
-          .map(checkMoreThanOneWord)
-      );
-    };
+  function handleChange(val: string, idx: number) {
+    setValue((oldState) =>
+      oldState
+        .map((word, i) => (i === idx ? val : word))
+        .map(checkMoreThanOneWord)
+    );
   }
 
   function handleChangeFormat(format: number) {
@@ -79,10 +90,10 @@ export function Mnemonic({
     const newValue = fillArray(value, format);
 
     setValue(newValue);
-    onFilled?.(newValue);
   }
 
   useEffect(() => {
+    onChange?.(value);
     if (value.every((word) => Boolean(word.length))) {
       onFilled?.(value);
     }
@@ -91,7 +102,7 @@ export function Mnemonic({
   return (
     <Box css={styles.root}>
       {enableChangeFormat && (
-        <Flex css={styles.formatWrapper}>
+        <Box.Flex css={styles.formatWrapper}>
           <select
             aria-label="Select format"
             value={format}
@@ -105,7 +116,7 @@ export function Mnemonic({
               >{`I have a ${size} words Seed Phrase`}</option>
             ))}
           </select>
-        </Flex>
+        </Box.Flex>
       )}
       {type === 'read' ? (
         <Grid css={styles.words}>
@@ -124,7 +135,8 @@ export function Mnemonic({
                 <div>
                   <MnemonicInput
                     value={value[idx]}
-                    onChange={handleChange(idx)}
+                    index={idx}
+                    onChange={handleChange}
                     onPaste={handlePastInput}
                   />
                 </div>
@@ -133,14 +145,13 @@ export function Mnemonic({
           })}
         </Grid>
       )}
-      <Flex as="footer" align="center" gap="$4" css={styles.footer}>
+      <Box.Flex as="footer" css={styles.footer}>
         {type === 'read' ? (
           <Button
             aria-label="Copy button"
             size="sm"
-            variant="ghost"
-            color="gray"
-            leftIcon={<Icon icon="Copy" color="gray8" />}
+            variant="solid"
+            leftIcon={<Icon icon="Copy" color="intentsBase8" />}
             onPress={handleCopy}
           >
             Copy
@@ -149,28 +160,26 @@ export function Mnemonic({
           <Button
             aria-label="Paste button"
             size="sm"
-            variant="ghost"
-            color="gray"
-            leftIcon={<Icon icon="ClipboardText" color="gray8" />}
-            onPress={handlePast}
+            variant="solid"
+            leftIcon={<Icon icon="Copy" color="intentsBase8" />}
+            onPress={handlePaste}
           >
             Paste
           </Button>
         )}
-      </Flex>
+      </Box.Flex>
     </Box>
   );
 }
 
 const styles = {
   root: cssObj({
-    background: '$gray1',
-    border: '1px dashed $gray3',
-    borderRadius: '$lg',
+    layer: 'layer-card',
+    borderRadius: '$default',
   }),
   formatWrapper: cssObj({
     p: '$3',
-    borderBottom: '1px dashed $gray3',
+    borderBottom: '1px solid $bodyBg',
     gap: '$1',
     alignItems: 'center',
     justifyContent: 'flex-end',
@@ -178,7 +187,7 @@ const styles = {
     // TODO: should replace with a <Select> component in fuel-ui
     select: {
       backgroundColor: 'transparent',
-      color: '$gray12',
+      color: '$intentsBase12',
       border: 'none',
       paddingRight: '$1',
       fontSize: '$sm',
@@ -191,8 +200,6 @@ const styles = {
   words: cssObj({
     px: '$3',
     py: '$3',
-    mb: '$3',
-    borderBottom: '1px dashed $gray3',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gridTemplateRows: 'repeat(4, 1fr)',
     gridColumnGap: '$4',
@@ -208,7 +215,7 @@ const styles = {
       textAlign: 'right',
       display: 'inline-block',
       content: 'attr(data-idx)',
-      color: '$gray8',
+      color: '$intentsBase8',
       mr: '$2',
     },
   }),
@@ -222,7 +229,7 @@ const styles = {
       fontSize: '$sm',
     },
     span: {
-      color: '$gray8',
+      color: '$intentsBase8',
       textAlign: 'right',
     },
     input: {
@@ -231,22 +238,25 @@ const styles = {
       appearance: 'none',
       border: 'none',
       background: 'transparent',
-      borderBottom: '1px dashed $gray10',
-      color: '$gray11',
+      borderBottom: '1px dashed $border',
+      color: '$intentsBase11',
 
       '&:focus': {
         outline: 'none',
-        borderColor: '$gray8',
+        borderColor: '$intentsBase8',
       },
     },
   }),
   footer: cssObj({
     px: '$3',
-    pb: '$3',
+    py: '$3',
     boxSizing: 'border-box',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '$4',
 
-    button: {
-      width: '100%',
+    '.fuel_Button': {
+      px: '$8',
     },
   }),
 };

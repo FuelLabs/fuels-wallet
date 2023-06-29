@@ -14,5 +14,5 @@ export const logout = async (page: Page) => {
     logOutConfirmationPhrase
   );
   await getButtonByText(page, /Logout/).click();
-  await hasText(page, 'Create a new Fuel Wallet');
+  await hasText(page, "Let's set up your Fuel Wallet");
 };

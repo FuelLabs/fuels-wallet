@@ -1,4 +1,4 @@
-import { Stack } from '@fuel-ui/react';
+import { Box } from '@fuel-ui/react';
 import { Address } from 'fuels';
 import { useNavigate } from 'react-router-dom';
 
@@ -27,13 +27,13 @@ export function ViewActivity() {
     <Layout title="History" isLoading={isLoading}>
       <Layout.TopBar onBack={() => navigate(Pages.wallet())} />
       <Layout.Content>
-        <Stack gap="$4">
+        <Box.Stack gap="$4">
           <ActivityList
             txs={txs ?? []}
             isLoading={isLoadingTx || isLoading || !account}
             ownerAddress={address}
           />
-        </Stack>
+        </Box.Stack>
       </Layout.Content>
     </Layout>
   );

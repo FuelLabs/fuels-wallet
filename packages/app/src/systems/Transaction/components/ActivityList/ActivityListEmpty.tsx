@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Text, BoxCentered, Heading, Button, Icon } from '@fuel-ui/react';
+import { Text, Heading, Button, Icon, Box } from '@fuel-ui/react';
 
 import { ImageLoader, relativeUrl } from '~/systems/Core';
 import { useOpenFaucet } from '~/systems/Faucet';
@@ -12,7 +12,7 @@ type ActivityEmptyProps = {
 export function ActivityListEmpty({ isDevnet }: ActivityEmptyProps) {
   const openFaucet = useOpenFaucet();
   return (
-    <BoxCentered css={styles.empty}>
+    <Box.Centered css={styles.empty}>
       <ImageLoader
         src={relativeUrl('/empty-activity.svg')}
         alt="No activity"
@@ -21,18 +21,18 @@ export function ActivityListEmpty({ isDevnet }: ActivityEmptyProps) {
         wrapperCSS={{ mb: '$5', mt: '$16' }}
       />
       <Heading as="h5">No activity yet</Heading>
-      <Text fontSize="sm" css={styles.text}>
+      <Text fontSize="sm">
         When you make a transaction you&apos;ll see it here
       </Text>
       {isDevnet && (
         /**
          * TODO: need to add right faucet icon on @fuel-ui
          */
-        <Button size="sm" leftIcon={Icon.is('Coffee')} onPress={openFaucet}>
+        <Button size="sm" leftIcon={Icon.is('Wand')} onPress={openFaucet}>
           Faucet
         </Button>
       )}
-    </BoxCentered>
+    </Box.Centered>
   );
 }
 
@@ -52,8 +52,5 @@ const styles = {
     h5: {
       margin: 0,
     },
-  }),
-  text: cssObj({
-    fontWeight: '500',
   }),
 };

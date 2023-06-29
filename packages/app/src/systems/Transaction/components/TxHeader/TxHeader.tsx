@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Card, Copyable, Flex, Icon, Text } from '@fuel-ui/react';
+import { Box, Card, Copyable, Icon, Text } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import type { FC } from 'react';
 
@@ -27,8 +27,8 @@ export const TxHeader: TxHeaderComponent = ({
 }) => {
   return (
     <Card css={styles.root}>
-      <Flex css={styles.row}>
-        <Flex css={styles.item}>
+      <Box.Flex css={styles.row}>
+        <Box.Flex css={styles.item}>
           <Text fontSize="sm">Status: </Text>
           <Text fontSize="sm" className="status">
             {status}
@@ -40,8 +40,8 @@ export const TxHeader: TxHeaderComponent = ({
           >
             ●
           </Text>
-        </Flex>
-        <Flex css={styles.item}>
+        </Box.Flex>
+        <Box.Flex css={styles.item}>
           <Copyable
             value={getBlockExplorerLink({
               path: `transaction/${id || ''}`,
@@ -49,7 +49,7 @@ export const TxHeader: TxHeaderComponent = ({
             })}
             tooltipMessage="Copy Transaction Link"
             iconProps={{
-              icon: Icon.is('LinkSimple'),
+              icon: Icon.is('Link'),
               'aria-label': 'Copy Transaction Link',
             }}
           />
@@ -57,35 +57,28 @@ export const TxHeader: TxHeaderComponent = ({
             value={id || ''}
             css={{ mx: '$2' }}
             iconProps={{
-              icon: Icon.is('CopySimple'),
+              icon: Icon.is('Copy'),
               'aria-label': 'Copy Transaction ID',
             }}
             tooltipMessage="Copy Transaction ID"
           />
-        </Flex>
-      </Flex>
-      <Flex css={styles.row}>
-        <Flex css={styles.item}>
-          <Text fontSize="sm">Type: </Text>
-          <Text fontSize="sm" className="type">
-            {type}
-          </Text>
-        </Flex>
-      </Flex>
+        </Box.Flex>
+      </Box.Flex>
+      <Box.Flex css={{ ...styles.row, ...styles.type }}>
+        <Text fontSize="sm">Type: </Text>
+        <Text fontSize="sm" className="type">
+          {type}
+        </Text>
+      </Box.Flex>
     </Card>
   );
 };
 
 const styles = {
   root: cssObj({
-    flex: 1,
-    pt: '$2',
-    pb: '$3',
-    px: '$3',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '$2',
-    fontWeight: '$semibold',
+    px: '$4',
+    py: '$3',
+    fontWeight: '$normal',
 
     '.fuel_copyable-icon': {
       color: '$brand !important',
@@ -94,12 +87,13 @@ const styles = {
   row: cssObj({
     alignItems: 'center',
     justifyContent: 'space-between',
+    height: '$6',
   }),
   item: cssObj({
     alignItems: 'center',
 
     '.status, .type': {
-      color: '$gray12',
+      color: '$intentsBase12',
       mx: '$2',
     },
 
@@ -107,6 +101,7 @@ const styles = {
       borderRadius: '100%',
       fontSize: 9,
       cursor: 'default',
+
       [`&[data-status="${TxStatus.success}"]`]: {
         color: `$${getTxStatusColor(TxStatus.success)}`,
       },
@@ -120,6 +115,10 @@ const styles = {
   }),
   icon: cssObj({
     color: '$brand',
+  }),
+  type: cssObj({
+    justifyContent: 'flex-start',
+    gap: '$2',
   }),
 };
 

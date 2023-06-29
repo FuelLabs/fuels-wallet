@@ -1,8 +1,11 @@
-import { fireEvent, render, screen, waitFor } from '@fuel-ui/test-utils';
+import type { render } from '@fuel-ui/test-utils';
+import { fireEvent, screen, waitFor } from '@fuel-ui/test-utils';
+
+import { SignUpProvider } from '../SignUpProvider';
 
 import { CreatePassword } from './CreatePassword';
 
-import { TestWrapper } from '~/systems/Core/components/TestWrapper';
+import { renderWithProvider } from '~/systems/Core/__tests__';
 
 const onSubmitHandler = jest.fn();
 const onCancelHandler = jest.fn();
@@ -10,7 +13,13 @@ const onCancelHandler = jest.fn();
 type UserPatch = ReturnType<typeof render>['user'];
 
 const Content = () => (
-  <CreatePassword onSubmit={onSubmitHandler} onCancel={onCancelHandler} />
+  <SignUpProvider>
+    <CreatePassword
+      step={2}
+      onSubmit={onSubmitHandler}
+      onCancel={onCancelHandler}
+    />
+  </SignUpProvider>
 );
 
 function fillInput(el: HTMLElement, value: string) {
@@ -21,7 +30,6 @@ async function fillInputs(user: UserPatch, pass: string, confirm?: string) {
   const password = screen.getByPlaceholderText('Type your password');
   const confirmPass = screen.getByPlaceholderText('Confirm your password');
 
-  await user.tab();
   expect(password).toHaveFocus();
   fillInput(password, pass);
   await user.tab();
@@ -36,24 +44,26 @@ async function fillInputs(user: UserPatch, pass: string, confirm?: string) {
 
 describe('CreatePassword', () => {
   it('should next button be disabled by default', async () => {
-    render(<Content />, { wrapper: TestWrapper });
-    const btn = screen.getByText('Next');
+    renderWithProvider(<Content />);
+    const btn = screen.getByText(/next/i);
     expect(btn).toBeInTheDocument();
     expect(btn).toHaveAttribute('aria-disabled');
   });
 
   it('should show "password strength: Weak" when focus in password field', async () => {
-    await render(<Content />, { wrapper: TestWrapper });
+    renderWithProvider(<Content />);
 
     const password = await screen.findByPlaceholderText('Type your password');
-    await fireEvent.focus(password);
+
+    fireEvent.focus(password);
+    fireEvent.mouseOver(screen.getByLabelText('Password strength'));
 
     const fuelPopoverContent = await screen.findByText('Weak');
     expect(fuelPopoverContent).toBeVisible();
   });
 
   it("should validate if password and confirmPassword doesn't match", async () => {
-    const { user } = render(<Content />, { wrapper: TestWrapper });
+    const { user } = renderWithProvider(<Content />);
 
     await fillInputs(user, 'Qwe123456$', 'Qwe1234567$');
     await waitFor(() =>
@@ -61,33 +71,9 @@ describe('CreatePassword', () => {
     );
   });
 
-  /**
-   * TODO: try to fix this case later
-   * btw, this is already testes using Cypress E2E
-   */
-  // it("should be able to click on next if form is valid", async () => {
-  //   const { user } = render(<Content />, { wrapper: TestWrapper });
-
-  //   await fillInputs(user, "123456789", "123456789");
-  //   const checkbox = await screen.findByRole("checkbox");
-  //   await user.click(checkbox);
-
-  //   await waitFor(async () => {
-  //     expect(checkbox.getAttribute("data-state")).toBe("checked");
-  //     await user.tab();
-  //   });
-
-  //   await waitFor(async () => {
-  //     const btn = await screen.findByText("Next");
-  //     await user.click(btn);
-  //     expect(btn.getAttribute("aria-disabled")).toBe("false");
-  //     expect(onSubmitHandler).toBeCalledTimes(1);
-  //   });
-  // });
-
   it('should be able to click on cancel button', async () => {
-    const { user } = render(<Content />, { wrapper: TestWrapper });
-    const btn = screen.getByText('Cancel');
+    const { user } = renderWithProvider(<Content />);
+    const btn = await screen.findByText('Back');
     expect(btn).toBeInTheDocument();
     await user.click(btn);
     expect(onCancelHandler).toBeCalledTimes(1);

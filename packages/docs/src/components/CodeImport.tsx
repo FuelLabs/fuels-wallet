@@ -10,6 +10,7 @@ export type CodeImportProps = {
   lines?: number[];
   testCase?: string;
   title?: string;
+  commentBlock?: string;
   __content: string;
   __filepath: string;
   __filename: string;
@@ -46,10 +47,10 @@ const styles = {
   filename: cssObj({
     '&, &:visited': {
       fontSize: '$sm',
-      color: '$gray9',
+      color: '$intentsBase9',
     },
     '&:hover': {
-      color: '$gray11',
+      color: '$intentsBase11',
       textDecoration: 'none',
     },
   }),

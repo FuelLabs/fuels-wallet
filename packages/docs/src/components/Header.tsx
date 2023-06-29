@@ -1,7 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Flex, FuelLogo, Icon } from '@fuel-ui/react';
+import { Box, Button, FuelLogo, Icon } from '@fuel-ui/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+import { INSTALL_LINK } from '../constants';
 
 import { MobileMenu } from './MobileMenu';
 import { Search } from './Search';
@@ -11,20 +13,20 @@ export function Header() {
   const isDocsActive = pathname?.startsWith('/docs');
 
   return (
-    <Flex as="header" css={styles.root}>
-      <Box css={{ flex: 1 }}>
+    <Box.Flex as="header" css={styles.root}>
+      <Box.Flex css={{ alignItems: 'center', flex: 1 }}>
         <Link href="/" className="logo">
           <FuelLogo size={40} />
-          <Flex css={styles.logoText}>
+          <Box.Flex css={styles.logoText}>
             <span>Fuel Wallet</span>
             <Box as="span" css={styles.version}>
               alpha
             </Box>
-          </Flex>
+          </Box.Flex>
         </Link>
-      </Box>
+      </Box.Flex>
       <Box css={styles.desktop}>
-        <Flex css={styles.menu}>
+        <Box.Flex css={styles.menu}>
           <Link href="/docs/install" className={isDocsActive ? 'active' : ''}>
             Docs
           </Link>
@@ -42,24 +44,37 @@ export function Header() {
             target="_blank"
             rel="noreferrer"
           >
-            <Icon icon={Icon.is('GithubLogo')} size={24} />
+            <Icon icon={Icon.is('BrandGithubFilled')} size={24} />
           </a>
-        </Flex>
+        </Box.Flex>
         <Search />
         <Box css={{ ml: '$8' }}>
           {process.env.NEXT_PUBLIC_PREVIEW ? (
-            <Button as="a" href={process.env.NEXT_PUBLIC_APP_URL}>
-              Open Wallet
-            </Button>
+            <Box.Flex gap="$2">
+              <Button
+                intent="base"
+                as="a"
+                href={process.env.NEXT_PUBLIC_WALLET_DOWNLOAD_URL}
+              >
+                Download Wallet
+              </Button>
+              <Button
+                intent="primary"
+                as="a"
+                href={process.env.NEXT_PUBLIC_APP_URL}
+              >
+                Open Wallet
+              </Button>
+            </Box.Flex>
           ) : (
-            <a href={process.env.NEXT_PUBLIC_WALLET_DOWNLOAD_URL} download>
-              <Button>Download Fuel Wallet</Button>
+            <a href={INSTALL_LINK} target="_blank" rel="noreferrer">
+              <Button intent="primary">Install Fuel Wallet</Button>
             </a>
           )}
         </Box>
       </Box>
       <MobileMenu />
-    </Flex>
+    </Box.Flex>
   );
 }
 
@@ -73,12 +88,12 @@ const styles = {
     py: '$4',
     px: '$4',
     alignItems: 'center',
-    borderBottom: '1px solid $gray2',
+    borderBottom: '1px solid $intentsBase2',
     gridColumn: '1 / 4',
 
     '.logo': {
       display: 'inline-flex',
-      color: '$gray9',
+      color: '$intentsBase9',
     },
 
     '@md': {
@@ -92,15 +107,18 @@ const styles = {
     },
   }),
   logoText: cssObj({
+    pl: '$6',
     alignItems: 'center',
     flex: 1,
-    fontSize: '$lg',
-    fontWeight: '$semibold',
+    fontSize: '$2xl',
+    fontWeight: '$normal',
+    color: 'white',
+    letterSpacing: '-0.05em',
   }),
   version: cssObj({
     ml: '$2',
-    color: '$gray8',
-    fontSize: '$xs',
+    color: '$intentsBase8',
+    fontSize: '$sm',
     fontStyle: 'italic',
   }),
   desktop: cssObj({
@@ -114,7 +132,7 @@ const styles = {
   mobile: cssObj({
     display: 'flex',
     alignItems: 'center',
-    '.fuel_button': {
+    '.fuel_Button': {
       height: 'auto !important',
       padding: '$0 !important',
     },
@@ -127,12 +145,12 @@ const styles = {
     gap: '$6',
 
     a: {
-      color: '$gray10',
+      color: '$intentsBase10',
       transition: 'all 0.3s',
     },
 
     'a.active, a:hover': {
-      color: '$accent11',
+      color: '$intentsPrimary11',
     },
   }),
 };

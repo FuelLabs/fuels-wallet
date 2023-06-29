@@ -1,15 +1,14 @@
+import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
-import { AnimatePresence } from 'framer-motion';
 
 import { Send } from '../../components';
 import { useSend } from '../../hooks';
 
-import { Layout } from '~/systems/Core';
+import { animations, Layout, MotionStack } from '~/systems/Core';
 
 export function SendPage() {
   const send = useSend();
   const { handlers, txRequest, status, form, ...ctx } = send;
-  const isSelecting = status('selecting');
 
   return (
     <form
@@ -18,18 +17,17 @@ export function SendPage() {
     >
       <Layout title={ctx.title} isLoading={status('loading')}>
         <Layout.TopBar onBack={handlers.cancel} />
-        <AnimatePresence initial={false} mode="sync">
-          {(isSelecting || status('loading')) && <Send.Select {...send} />}
-          {status('loadingTx') && <Send.Loading />}
-        </AnimatePresence>
+        <MotionStack {...animations.slideInTop()} gap="$4" css={styles.content}>
+          <Send.Select {...send} />
+        </MotionStack>
         {txRequest.showActions && (
           <Layout.BottomBar>
-            <Button color="gray" variant="ghost" onPress={handlers.cancel}>
+            <Button variant="ghost" onPress={handlers.cancel}>
               Cancel
             </Button>
             <Button
               type="submit"
-              color="accent"
+              intent="primary"
               isDisabled={ctx.isInvalid || !form.formState.isValid}
               isLoading={status('loading') || status('loadingTx')}
             >
@@ -41,3 +39,9 @@ export function SendPage() {
     </form>
   );
 }
+
+const styles = {
+  content: cssObj({
+    flex: 1,
+  }),
+};
