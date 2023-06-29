@@ -124,7 +124,10 @@ export const addNetworkRequestMachine = createMachine(
             if (!createdNetwork) {
               throw new Error('Failed to add network');
             }
-            return NetworkService.selectNetwork({ id: createdNetwork.id! });
+            const selectedNetwork = await NetworkService.selectNetwork({
+              id: createdNetwork.id!,
+            });
+            return selectedNetwork;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any) {
             if (error?.message.includes('uniqueness')) {

@@ -531,15 +531,42 @@ test.describe('FuelWallet Extension', () => {
         );
       }
 
-      const addingNetwork = addNetwork(FUEL_NETWORK);
+      async function testAddNetwork() {
+        const addingNetwork = addNetwork(FUEL_NETWORK);
 
-      const addNetworkPage = await context.waitForEvent('page', {
-        predicate: (page) => page.url().includes(extensionId),
-      });
+        const addNetworkPage = await context.waitForEvent('page', {
+          predicate: (page) => page.url().includes(extensionId),
+        });
 
-      await hasText(addNetworkPage, 'Review the Network to be added:');
-      await getButtonByText(addNetworkPage, /add network/i).click();
-      await expect(addingNetwork).resolves.toBeDefined();
+        await hasText(addNetworkPage, 'Review the Network to be added:');
+        await getButtonByText(addNetworkPage, /add network/i).click();
+        await expect(addingNetwork).resolves.toBeDefined();
+        await popupPage.reload();
+      }
+
+      // Add network
+      await testAddNetwork();
+
+      // Check if added network is selected
+      let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
+      await expect(networkSelector).toHaveText(/Fuel Testnet/);
+
+      // Remove added network
+      await networkSelector.click();
+      const items = popupPage.locator('[aria-label*=fuel_network]');
+      await expect(items).toHaveCount(2);
+      await getByAriaLabel(popupPage, 'Remove').first().click();
+      await hasText(popupPage, /Are you sure/i);
+      await getButtonByText(popupPage, /confirm/i).click();
+      await expect(items).toHaveCount(1);
+      await expect(items.first()).toHaveAttribute('data-active', 'true');
+
+      // Re-add network
+      await testAddNetwork();
+
+      // Check if re-added network is selected
+      networkSelector = getByAriaLabel(popupPage, 'Selected Network');
+      await expect(networkSelector).toHaveText(/Fuel Testnet/);
     });
 
     await test.step('window.fuel.on("currentAccount")', async () => {
@@ -559,7 +586,7 @@ test.describe('FuelWallet Extension', () => {
       // Switch to account 1
       const currentAccount = await switchAccount(popupPage, 'Account 1');
 
-      /** Check result */
+      // Check result
       const currentAccountEventResult = await onChangeAccountPromise;
       expect(currentAccountEventResult).toEqual(currentAccount.address);
     });

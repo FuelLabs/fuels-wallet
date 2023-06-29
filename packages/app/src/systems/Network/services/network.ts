@@ -1,6 +1,6 @@
+import { createUUID } from '@fuel-wallet/sdk';
 import type { Network } from '@fuel-wallet/types';
 import { Provider } from 'fuels';
-import { uniqueId } from 'xstate/lib/utils';
 
 import { db } from '~/systems/Core/utils/database';
 
@@ -51,11 +51,12 @@ export class NetworkService {
   static addNetwork(input: NetworkInputs['addNetwork']) {
     return db.transaction('rw', db.networks, async () => {
       const count = await db.networks.count();
-      const id = await db.networks.add({
+      const inputToAdd = {
         ...input.data,
         ...(count === 0 && { isSelected: true }),
-        id: uniqueId(),
-      });
+        id: createUUID(),
+      };
+      const id = await db.networks.add(inputToAdd);
       return db.networks.get(id) as Promise<Network>;
     });
   }

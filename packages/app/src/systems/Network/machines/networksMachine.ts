@@ -194,7 +194,8 @@ export const networksMachine = createMachine(
       fetchNetworks: FetchMachine.create<never, Network[]>({
         showError: true,
         async fetch() {
-          return NetworkService.getNetworks();
+          const networks = await NetworkService.getNetworks();
+          return networks;
         },
       }),
       addNetwork: FetchMachine.create<NetworkInputs['addNetwork'], Network>({
