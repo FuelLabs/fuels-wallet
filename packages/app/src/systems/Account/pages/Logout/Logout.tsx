@@ -69,6 +69,7 @@ export const Logout = () => {
           control={control}
           name="logoutConfirmation"
           label={`Write "${logOutConfirmationPhrase}" to confirm`}
+          css={styles.input}
           render={({ field }) => (
             <Input>
               <Input.Field
@@ -99,6 +100,9 @@ export const Logout = () => {
 const styles = {
   card: {
     padding: '$4',
+  },
+  input: {
+    marginTop: '$2',
   },
   line: cssObj({
     mb: '$2',
