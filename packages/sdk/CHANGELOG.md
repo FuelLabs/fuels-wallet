@@ -1,5 +1,13 @@
 # @fuel-wallet/sdk
 
+## 0.9.5
+
+## 0.9.4
+
+### Patch Changes
+
+- [#775](https://github.com/FuelLabs/fuels-wallet/pull/775) [`c475816`](https://github.com/FuelLabs/fuels-wallet/commit/c475816fc5feca629e2a0cdab668a397c833ce23) Thanks [@sarahschwartz](https://github.com/sarahschwartz)! - Fixes "Module not found: Default condition should be last one" error.
+
 ## 0.9.3
 
 ### Patch Changes
