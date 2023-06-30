@@ -333,7 +333,7 @@ export class BackgroundService {
 
     return true;
   }
-  
+
   async addAbi(input: MessageInputs['addAbi']) {
     await AbiService.addAbi({ data: input.abiMap });
     return true;

@@ -81,7 +81,7 @@ export class FuelWalletConnection extends WindowConnection {
       assets,
     });
   }
-  
+
   async addAbi(abiMap: AbiMap): Promise<boolean> {
     return this.client.request('addAbi', {
       abiMap,
@@ -98,7 +98,7 @@ export class FuelWalletConnection extends WindowConnection {
     const abi = await this.getAbi(contractId);
     return !!abi;
   }
-  
+
   async network(): Promise<FuelProviderConfig> {
     return this.client.request('network', {});
   }

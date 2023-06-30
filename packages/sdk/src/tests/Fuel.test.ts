@@ -85,12 +85,12 @@ describe('Fuel', () => {
     const isAdded = await fuel.addAssets([asset]);
     expect(isAdded).toEqual(true);
   });
-  
+
   test('addNetwork', async () => {
     const isNetworkAdded = await fuel.addNetwork(FUEL_NETWORK);
     expect(isNetworkAdded).toEqual(true);
   });
-  
+
   test('addAbi', async () => {
     const abiMap = {
       [AbiContractId]: FlatAbi,

@@ -1,4 +1,9 @@
-import type { AbiMap, Asset, FuelProviderConfig, Network } from '@fuel-wallet/types';
+import type {
+  AbiMap,
+  Asset,
+  FuelProviderConfig,
+  Network,
+} from '@fuel-wallet/types';
 
 export type MessageInputs = {
   signMessage: {
