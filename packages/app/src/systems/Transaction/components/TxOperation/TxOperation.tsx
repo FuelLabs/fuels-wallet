@@ -3,6 +3,7 @@ import { Card } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/types';
 
 import type { Operation, TxStatus } from '../../utils';
+import { FunctionCalls } from '../FunctionCalls';
 import { TxFromTo } from '../TxFromTo/TxFromTo';
 
 import { AssetsAmount } from '~/systems/Asset';
@@ -21,7 +22,7 @@ export function TxOperation({
   assets,
   isLoading,
 }: TxOperationProps) {
-  const { from, to, assetsSent } = operation ?? {};
+  const { from, to, assetsSent, calls } = operation ?? {};
   const amounts = assetsSent?.map((assetSent) => {
     const asset = assets?.find((a) => a.assetId === assetSent.assetId);
     return {
@@ -39,6 +40,7 @@ export function TxOperation({
         operationName={operation?.name}
       />
       {!!amounts?.length && <AssetsAmount amounts={amounts} />}
+      {!!calls?.length && <FunctionCalls calls={calls} />}
     </Card>
   );
 }

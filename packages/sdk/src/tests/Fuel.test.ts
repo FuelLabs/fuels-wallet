@@ -9,7 +9,13 @@ import {
 import type { Fuel } from '../Fuel';
 
 import type { MockServices } from './__mock__';
-import { toWallet, mockFuel, seedWallet } from './__mock__';
+import {
+  toWallet,
+  mockFuel,
+  seedWallet,
+  AbiContractId,
+  FlatAbi,
+} from './__mock__';
 
 describe('Fuel', () => {
   let mocks: MockServices;
@@ -73,6 +79,34 @@ describe('Fuel', () => {
     const asset = { assetId: NativeAssetId };
     const isAdded = await fuel.addAssets([asset]);
     expect(isAdded).toEqual(true);
+  });
+
+  test('addAbi', async () => {
+    const abiMap = {
+      [AbiContractId]: FlatAbi,
+    };
+    const isAdded = await fuel.addAbi(abiMap);
+    expect(isAdded).toEqual(true);
+  });
+
+  test('getAbi', async () => {
+    const abiMap = {
+      [AbiContractId]: FlatAbi,
+    };
+    await fuel.addAbi(abiMap);
+    const abi = await fuel.getAbi(AbiContractId);
+
+    expect(abi).toStrictEqual(FlatAbi);
+  });
+
+  test('hasAbi', async () => {
+    const abiMap = {
+      [AbiContractId]: FlatAbi,
+    };
+    await fuel.addAbi(abiMap);
+    const hasAbi = await fuel.hasAbi(AbiContractId);
+
+    expect(hasAbi).toBeTruthy();
   });
 
   test('signMessage', async () => {

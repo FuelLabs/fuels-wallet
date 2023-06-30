@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // TODO: this whole tx utils need be moved to SDK
 import type { AddressType } from '@fuel-wallet/types';
 import type {
   BN,
   BNInput,
   Input,
+  JsonFlatAbi,
   Output,
   Transaction,
   TransactionResultReceipt,
@@ -65,11 +67,18 @@ export type Coin = {
   amount: BNInput;
 };
 
+export type FunctionCall = {
+  functionSignature: string;
+  functionName: string;
+  argumentsProvided?: Record<string, any>;
+} & Partial<Coin>;
+
 export type Operation = {
   name?: OperationName;
   from?: TxAddress;
   to?: TxAddress;
   assetsSent?: Array<Coin>;
+  calls?: Array<FunctionCall>;
 };
 
 export type InputParam = {
@@ -80,52 +89,56 @@ export type OutputParam = {
   outputs: Output[];
 };
 
+export type TransactionParam = {
+  transaction: Transaction;
+};
 export type InputOutputParam = InputParam & OutputParam;
 
 export type ReceiptParam = {
   receipts: TransactionResultReceipt[];
 };
 
-export type GetOperationParams = InputOutputParam &
-  ReceiptParam & {
-    transactionType: TransactionType;
+export type AbiParam = {
+  abiMap?: {
+    [key: string]: JsonFlatAbi;
   };
+};
+export type RawPayloadParam = {
+  rawPayload?: string;
+};
 
+export type GetOperationParams = {
+  transactionType: TransactionType;
+} & InputOutputParam &
+  ReceiptParam &
+  AbiParam &
+  RawPayloadParam;
 export type GetGasUsedContractCreatedParams = {
-  transaction: Transaction;
   gasPerByte: BN;
   gasPriceFactor: BN;
-};
-
-export type GetGasUsedParams = {
-  transaction: Transaction;
-  receipts?: TransactionResultReceipt[];
-  gasPerByte: BN;
-  gasPriceFactor: BN;
-};
+} & TransactionParam;
+export type GetGasUsedFromReceiptsParams = ReceiptParam;
+export type GetGasUsedParams = GetGasUsedContractCreatedParams &
+  Partial<GetGasUsedFromReceiptsParams>;
 
 export type GetFeeFromReceiptsParams = {
   gasPrice: BN;
-  receipts: TransactionResultReceipt[];
   gasPriceFactor: BN;
-};
+} & ReceiptParam;
 
-export type GetFeeParams = {
-  transaction: Transaction;
-  gasPerByte: BN;
-  receipts: TransactionResultReceipt[];
-  gasPriceFactor: BN;
-};
+export type GetFeeParams = GetGasUsedContractCreatedParams &
+  Omit<GetFeeFromReceiptsParams, 'gasPrice'>;
 
 export type ParseTxParams = {
-  transaction: Transaction;
-  receipts: TransactionResultReceipt[];
   gasPerByte: BN;
   gasPriceFactor: BN;
   gqlStatus?: GqlTransactionStatus;
   id?: string;
   time?: string;
-};
+} & TransactionParam &
+  ReceiptParam &
+  AbiParam &
+  RawPayloadParam;
 
 export type Tx = {
   operations: Operation[];

@@ -15,6 +15,23 @@ export const MOCK_OPERATION_CONTRACT_CALL: Operation = {
       assetId: NativeAssetId,
     },
   ],
+  calls: [
+    {
+      functionName: 'mint_to_address',
+      functionSignature: 'mint_to_address(u64,s(b256),u64)',
+      argumentsProvided: {
+        address: {
+          value:
+            '0xa5a77a7d97c6708b08de873528ae6879ef5e9900fbc2e3f3cb74e28917bf7038',
+        },
+        amount: '0x64',
+        amount2: '0x64',
+      },
+      amount: bn('0x5f5e100'),
+      assetId:
+        '0x0000000000000000000000000000000000000000000000000000000000000000',
+    },
+  ],
 };
 
 export const MOCK_OPERATION_TRANSFER: Operation = {

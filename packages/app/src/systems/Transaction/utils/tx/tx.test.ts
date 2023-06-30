@@ -6,6 +6,7 @@ import {
   MOCK_GAS_PER_BYTE,
   MOCK_GAS_PRICE_FACTOR,
   MOCK_TRANSACTION_CONTRACT_CALL,
+  MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS,
   MOCK_TRANSACTION_CREATE_CONTRACT,
   MOCK_TRANSACTION_CREATE_CONTRACT_PARTS,
   MOCK_TRANSACTION_MINT,
@@ -16,10 +17,12 @@ import {
   MOCK_CUSTOM_ASSET_ID,
   MOCK_TRANSACTION_WITHDRAW_FROM_FUEL,
   MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS,
-} from '../__mocks__/tx';
+  MOCK_TRANSACTION_TRANSFER,
+} from '../../__mocks__/tx';
 
 import {
   addOperation,
+  getContractCallOperations,
   getContractCreatedFee,
   getContractCreatedOperations,
   getContractTransferOperations,
@@ -67,7 +70,7 @@ import {
   isTypeScript,
   parseTx,
 } from './tx';
-import { OperationName, TxStatus, TxType } from './tx.types';
+import { OperationName, TxStatus, TxType } from './types';
 
 import { reparse } from '~/systems/Core/utils/json';
 
@@ -545,6 +548,15 @@ describe('Tx util', () => {
           amount: bn(100000),
         },
       ],
+      calls: [
+        {
+          functionSignature: 'entry_one(u64)',
+          functionName: 'entry_one',
+          argumentsProvided: {
+            amount: bn(100000),
+          },
+        },
+      ],
     };
 
     it('should just add operation when its the first one', () => {
@@ -602,8 +614,9 @@ describe('Tx util', () => {
           assetsSent: undefined,
         });
 
-        expect(JSON.stringify(operationsAddedSameAsset)).toEqual(
-          JSON.stringify(baseOperations)
+        expect(operationsAddedSameAsset.length).toEqual(1);
+        expect(reparse(operationsAddedSameAsset[0].assetsSent)).toEqual(
+          reparse(baseOperations[0].assetsSent)
         );
       });
       it('should stack when same asset is added', () => {
@@ -657,6 +670,15 @@ describe('Tx util', () => {
         expect(operationsAddedSameAsset[0].assetsSent?.[1]?.assetId).toEqual(
           DIF_ASSET_ID
         );
+      });
+      it('should always not stack for contract calls', () => {
+        const baseOperations = addOperation([], OPERATION_CONTRACT_CALL);
+        const operationsAddedSameContractCall = addOperation(
+          baseOperations,
+          OPERATION_CONTRACT_CALL
+        );
+        expect(operationsAddedSameContractCall.length).toEqual(1);
+        expect(operationsAddedSameContractCall[0].calls?.length).toEqual(2);
       });
     });
   });
@@ -746,6 +768,48 @@ describe('Tx util', () => {
     it('should getContractTransferOperations return empty', () => {
       const operations = getContractTransferOperations({
         receipts: MOCK_TRANSACTION_TRANSFER_FROM_COIN.receipts || [],
+      });
+
+      expect(operations.length).toEqual(0);
+    });
+
+    it('should getContractCallOperations return contract call operations', () => {
+      const operations = getContractCallOperations({
+        inputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || [],
+        receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
+      });
+      expect(operations.length).toEqual(1);
+      expect(operations[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0]
+      );
+    });
+
+    it('should getContractCallOperations return contract call operations with calls details (method and params called in the contract)', () => {
+      const operations = getContractCallOperations({
+        inputs:
+          MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS.transaction
+            .inputs || [],
+        outputs:
+          MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS.transaction
+            .outputs || [],
+        receipts:
+          MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS.receipts || [],
+        abiMap: MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS.abiMap,
+        rawPayload:
+          MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS.rawPayload,
+      });
+      expect(operations.length).toEqual(1);
+      expect(operations[0]).toStrictEqual(
+        MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS.tx.operations[0]
+      );
+    });
+
+    it('should getContractCallOperations return empty', () => {
+      const operations = getContractCallOperations({
+        inputs: MOCK_TRANSACTION_TRANSFER.transaction.inputs || [],
+        outputs: MOCK_TRANSACTION_TRANSFER.transaction.outputs || [],
+        receipts: MOCK_TRANSACTION_TRANSFER.receipts || [],
       });
 
       expect(operations.length).toEqual(0);
@@ -872,23 +936,24 @@ describe('Tx util', () => {
 
   describe('getGasUsed', () => {
     it('should getGasUsedFromReceipts return gasUsed from contract call transaction', () => {
-      const gasUsed = getGasUsedFromReceipts(
-        MOCK_TRANSACTION_CONTRACT_CALL.receipts || []
-      );
+      const gasUsed = getGasUsedFromReceipts({
+        receipts: MOCK_TRANSACTION_CONTRACT_CALL.receipts || [],
+      });
       expect(gasUsed.valueOf()).toEqual(
         MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptScriptResult.gasUsed.valueOf()
       );
     });
 
     it('should getGasUsedFromReceipts return empty', () => {
-      const gasUsed = getGasUsedFromReceipts(
-        MOCK_TRANSACTION_CONTRACT_CALL.receipts?.filter(
-          (r) => r.type !== ReceiptType.ScriptResult
-        ) || []
-      );
+      const gasUsed = getGasUsedFromReceipts({
+        receipts:
+          MOCK_TRANSACTION_CONTRACT_CALL.receipts?.filter(
+            (r) => r.type !== ReceiptType.ScriptResult
+          ) || [],
+      });
       expect(gasUsed.valueOf()).toEqual(bn(0).valueOf());
 
-      const gasUsedEmpty = getGasUsedFromReceipts([]);
+      const gasUsedEmpty = getGasUsedFromReceipts({ receipts: [] });
       expect(gasUsedEmpty.valueOf()).toEqual(bn(0).valueOf());
     });
 

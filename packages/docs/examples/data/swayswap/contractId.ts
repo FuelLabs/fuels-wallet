@@ -1,0 +1,2 @@
+export const SWAY_SWAP_CONTRACT_ID =
+  '0x004ff2b3b79a67c1d574fa84a52af46cf42dbc1ac0229d13ec7802460ede9118';
