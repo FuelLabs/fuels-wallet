@@ -22,6 +22,7 @@ import { AssetService } from '~/systems/Asset/services';
 import { Pages } from '~/systems/Core/types';
 import { ConnectionService } from '~/systems/DApp/services';
 import { NetworkService } from '~/systems/Network/services';
+import { AbiService } from '~/systems/Settings/services';
 
 type EventOrigin = {
   origin: string;
@@ -51,6 +52,8 @@ export class BackgroundService {
       this.currentAccount,
       this.addAssets,
       this.assets,
+      this.addAbi,
+      this.getAbi,
     ]);
   }
 
@@ -327,5 +330,15 @@ export class BackgroundService {
     });
 
     return true;
+  }
+
+  async addAbi(input: MessageInputs['addAbi']) {
+    await AbiService.addAbi({ data: input.abiMap });
+    return true;
+  }
+
+  async getAbi(input: MessageInputs['getAbi']) {
+    const abi = await AbiService.getAbi({ data: input.contractId });
+    return abi;
   }
 }

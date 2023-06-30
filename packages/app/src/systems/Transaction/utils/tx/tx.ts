@@ -35,11 +35,14 @@ import {
   OutputType,
 } from 'fuels';
 
+import { getFunctionCall } from './call';
 import type {
+  AbiParam,
   Coin,
   GetFeeFromReceiptsParams,
   GetFeeParams,
   GetGasUsedContractCreatedParams,
+  GetGasUsedFromReceiptsParams,
   GetGasUsedParams,
   GetOperationParams,
   GqlTransactionStatus,
@@ -47,10 +50,11 @@ import type {
   InputParam,
   Operation,
   ParseTxParams,
+  RawPayloadParam,
   ReceiptParam,
   Tx,
-} from './tx.types';
-import { ChainName, OperationName, TxType, TxStatus } from './tx.types';
+} from './types';
+import { ChainName, OperationName, TxType, TxStatus } from './types';
 
 export const getStatus = (
   gqlStatus?: GqlTransactionStatus
@@ -327,18 +331,40 @@ const mergeAssets = (op1: Operation, op2: Operation) => {
 export function addOperation(operations: Operation[], toAdd: Operation) {
   const ops = operations
     .map((op) => {
+      // if it's not same operation, don't change. we just wanna stack the same operation
       if (!isSameOperation(op, toAdd)) return null;
-      // if it's not adding any assets, just return the original operation
-      if (!toAdd.assetsSent?.length) return op;
-      // if the original operation doesn't have any assets, just return the toAdd assets
-      if (!op.assetsSent?.length) {
-        return { ...op, assetsSent: toAdd.assetsSent };
+
+      let newOp = { ...op };
+
+      // if it's adding new assets
+      if (toAdd.assetsSent?.length) {
+        // if prev op had assets, merge them. Otherwise just add the new assets
+        newOp = {
+          ...newOp,
+          assetsSent: op.assetsSent?.length
+            ? mergeAssets(op, toAdd)
+            : toAdd.assetsSent,
+        };
       }
-      // if both have assets, merge them
-      return { ...op, assetsSent: mergeAssets(op, toAdd) };
+
+      // if it's adding new calls,
+      if (toAdd.calls?.length) {
+        /*  
+          for calls we don't stack as grouping is not desired.
+          we wanna show all calls in the same operation
+          with each respective assets, amounts, functions, arguments.
+        */
+        newOp = {
+          ...newOp,
+          calls: [...(op.calls || []), ...(toAdd.calls || [])],
+        };
+      }
+
+      return newOp;
     })
     .filter(Boolean) as Operation[];
 
+  // if this operation didn't exist before just add it to the end
   return ops.length ? ops : [...operations, toAdd];
 }
 
@@ -437,7 +463,9 @@ export function getContractCallOperations({
   inputs,
   outputs,
   receipts,
-}: InputOutputParam & ReceiptParam): Operation[] {
+  abiMap,
+  rawPayload,
+}: InputOutputParam & ReceiptParam & AbiParam & RawPayloadParam): Operation[] {
   const contractCallReceipts = getReceiptsCall(receipts);
   const contractOutputs = getOutputsContract(outputs);
 
@@ -455,7 +483,20 @@ export function getContractCallOperations({
               const input = getInputFromAssetId(inputs, receipt.assetId);
               if (input) {
                 const inputAddress = getInputAccountAddress(input);
-                const newContractCallOps = addOperation(prevOutputCallOps, {
+                const calls = [];
+
+                const abi = abiMap?.[contractInput.contractID];
+                if (abi) {
+                  calls.push(
+                    getFunctionCall({
+                      abi,
+                      receipt,
+                      rawPayload,
+                    })
+                  );
+                }
+
+                const newContractCallOps = addOperation(prevContractCallOps, {
                   name: OperationName.contractCall,
                   from: {
                     type: AddressType.account,
@@ -474,12 +515,12 @@ export function getContractCallOperations({
                           assetId: receipt.assetId,
                         },
                       ],
+                  calls,
                 });
 
                 return newContractCallOps;
               }
             }
-
             return prevContractCallOps;
           },
           prevOutputCallOps as Operation[]
@@ -578,6 +619,8 @@ export function getOperations({
   inputs,
   outputs,
   receipts,
+  abiMap,
+  rawPayload,
 }: GetOperationParams): Operation[] {
   if (isTypeCreate(transactionType)) {
     return [
@@ -593,7 +636,13 @@ export function getOperations({
   if (isTypeScript(transactionType)) {
     return [
       ...getTransferOperations({ inputs, outputs }),
-      ...getContractCallOperations({ inputs, outputs, receipts }),
+      ...getContractCallOperations({
+        inputs,
+        outputs,
+        receipts,
+        abiMap,
+        rawPayload,
+      }),
       ...getContractTransferOperations({ receipts }),
       ...getWithdrawFromFuelOperations({ inputs, receipts }),
     ];
@@ -626,7 +675,9 @@ export function getGasUsedContractCreated({
   return gasUsed;
 }
 
-export function getGasUsedFromReceipts(receipts: TransactionResultReceipt[]) {
+export function getGasUsedFromReceipts({
+  receipts,
+}: GetGasUsedFromReceiptsParams) {
   const scriptReceipts = getReceiptsScriptResult(receipts);
   const gasUsed = scriptReceipts.reduce(
     (prev, receipt) => prev.add(receipt.gasUsed),
@@ -650,7 +701,7 @@ export function getGasUsed({
     });
   }
   if (isTypeScript(transaction.type))
-    return getGasUsedFromReceipts(receipts ?? []);
+    return getGasUsedFromReceipts({ receipts: receipts ?? [] });
 
   return bn(0);
 }
@@ -676,7 +727,7 @@ export function getFeeFromReceipts({
   gasPriceFactor,
 }: GetFeeFromReceiptsParams) {
   if (gasPrice.gt(0)) {
-    const gasUsed = getGasUsedFromReceipts(receipts ?? []);
+    const gasUsed = getGasUsedFromReceipts({ receipts: receipts ?? [] });
     const fee = calculatePriceWithFactor(gasUsed, gasPrice, gasPriceFactor);
 
     return fee;
@@ -714,6 +765,8 @@ export function parseTx({
   gqlStatus,
   id,
   time,
+  abiMap: abi,
+  rawPayload,
 }: ParseTxParams): Tx {
   const type = getType(transaction.type);
   const status = getStatus(gqlStatus);
@@ -729,6 +782,8 @@ export function parseTx({
     inputs: transaction.inputs || [],
     outputs: transaction.outputs || [],
     receipts,
+    abiMap: abi,
+    rawPayload,
   });
 
   return {
