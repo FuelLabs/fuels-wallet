@@ -66,6 +66,27 @@ Add assets to the wallet.
 
 <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="addAssets" />
 
+### Get ABI
+
+`async getAbi(contractId: string): Promise<JsonFlatAbi>`<br />
+Get ABI of contractId given.
+
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="getAbi" />
+
+### Has ABI
+
+`async hasAbi(contractId: string): Promise<boolean>`<br />
+Check if has ABI for contractId given.
+
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="hasAbi" />
+
+### Add ABI
+
+`async addAbi(abiMap: AbiMap): Promise<boolean>`<br />
+Add ABI to the wallet.
+
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="addAbi" />
+
 ### Request signature message
 
 `async signMessage(address: string, message: string): Promise<string>`<br />
