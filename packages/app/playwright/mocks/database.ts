@@ -1,10 +1,8 @@
-import { encrypt } from '@fuel-ts/keystore';
-import { Mnemonic } from '@fuel-ts/mnemonic';
 import type { Account as WalletAccount } from '@fuel-ts/wallet-manager';
 import { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account, Asset, Connection, Network } from '@fuel-wallet/types';
 import type { Page } from '@playwright/test';
-import { Address } from 'fuels';
+import { Mnemonic, encrypt, Address } from 'fuels';
 
 import { getByAriaLabel } from '../commons/locator';
 import { hasText } from '../commons/text';
