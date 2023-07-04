@@ -11,7 +11,7 @@ export const {
   VITE_CRX_NAME,
   VITE_CRX,
   VITE_AUTO_LOCK_IN_MINUTES,
-  VITE_SENTRY_DNS,
+  VITE_SENTRY_DSN,
   NODE_ENV,
 } = import.meta.env;
 

@@ -3,14 +3,14 @@ import * as Sentry from '@sentry/browser';
 
 import { parseFuelError } from '../utils';
 
-import { VITE_SENTRY_DNS } from '~/config';
+import { VITE_SENTRY_DSN } from '~/config';
 import { db } from '~/systems/Core/utils/database';
 
 export class ReportErrorService {
   static async reportErrors() {
     const errors = await this.getErrors();
     Sentry.init({
-      dsn: VITE_SENTRY_DNS,
+      dsn: VITE_SENTRY_DSN,
       environment: process.env.NODE_ENV,
     });
     errors.forEach((e) => {
