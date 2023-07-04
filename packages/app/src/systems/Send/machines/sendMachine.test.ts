@@ -1,7 +1,6 @@
-import { Wallet } from '@fuel-ts/wallet';
-import type { WalletUnlocked } from '@fuel-ts/wallet';
 import type { Account } from '@fuel-wallet/types';
-import { bn, Provider } from 'fuels';
+import type { WalletUnlocked } from 'fuels';
+import { Wallet, bn, Provider } from 'fuels';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 

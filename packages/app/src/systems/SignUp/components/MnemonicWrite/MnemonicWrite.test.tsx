@@ -1,5 +1,5 @@
-import { Mnemonic as FuelMnemonic } from '@fuel-ts/mnemonic';
 import { screen, waitFor } from '@fuel-ui/test-utils';
+import { Mnemonic as FuelMnemonic } from 'fuels';
 import { act } from 'react-dom/test-utils';
 
 import { SignUpProvider } from '../SignUpProvider';
