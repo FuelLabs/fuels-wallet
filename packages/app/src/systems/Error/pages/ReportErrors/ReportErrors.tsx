@@ -38,7 +38,7 @@ export function ReportErrors() {
           Send reports
         </Button>
         <Button
-          color="gray"
+          variant="ghost"
           onPress={handlers.ignoreErrors}
           aria-label="Don't send error report"
         >
