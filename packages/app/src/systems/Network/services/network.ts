@@ -33,6 +33,9 @@ export type NetworkInputs = {
   getChainInfo: {
     providerUrl: string;
   };
+  getNetworkFromUrl: {
+    url: string;
+  };
 };
 
 export class NetworkService {
@@ -136,13 +139,19 @@ export class NetworkService {
     });
   }
 
-  static async getChainInfo(input: NetworkInputs['getChainInfo']) {
+  static getChainInfo(input: NetworkInputs['getChainInfo']) {
     const provider = new Provider(input.providerUrl);
     return provider.getChain();
   }
 
-  static async getNodeInfo(input: NetworkInputs['getNodeInfo']) {
+  static getNodeInfo(input: NetworkInputs['getNodeInfo']) {
     const provider = new Provider(input.providerUrl);
     return provider.getNodeInfo();
+  }
+
+  static getNetworkFromUrl(input: NetworkInputs['getNetworkFromUrl']) {
+    return db.transaction('r', db.networks, async () => {
+      return db.networks.get({ url: input.url });
+    });
   }
 }

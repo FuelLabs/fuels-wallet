@@ -353,6 +353,13 @@ export class BackgroundService {
       throw new Error('Invalid network URL');
     }
 
+    const networkExists = await NetworkService.getNetworkFromUrl({
+      url: network.url,
+    });
+    if (networkExists) {
+      throw new Error('Network already exists');
+    }
+
     const origin = serverParams.origin;
     const title = serverParams.title;
     const favIconUrl = serverParams.favIconUrl;
