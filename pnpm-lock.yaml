@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -122,12 +122,6 @@ importers:
       '@fontsource/source-code-pro':
         specifier: ^5.0.2
         version: 5.0.2
-      '@fuel-ts/mnemonic':
-        specifier: 0.44.2
-        version: 0.44.2
-      '@fuel-ts/wallet':
-        specifier: 0.44.2
-        version: 0.44.2
       '@fuel-ts/wallet-manager':
         specifier: 0.44.2
         version: 0.44.2
@@ -258,12 +252,6 @@ importers:
       '@crxjs/vite-plugin':
         specifier: ^1.0.14
         version: 1.0.14(vite@4.3.9)
-      '@fuel-ts/keystore':
-        specifier: 0.44.2
-        version: 0.44.2
-      '@fuel-ts/signer':
-        specifier: 0.44.2
-        version: 0.44.2
       '@graphql-codegen/cli':
         specifier: ^3.2.2
         version: 3.2.2(@babel/core@7.22.1)(@types/node@20.2.5)(graphql@16.6.0)
