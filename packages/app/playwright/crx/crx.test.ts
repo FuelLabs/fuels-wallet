@@ -1,7 +1,6 @@
-import { Signer } from '@fuel-ts/signer';
 import type { Account, Asset } from '@fuel-wallet/types';
 import { expect } from '@playwright/test';
-import { bn, hashMessage, Wallet } from 'fuels';
+import { Signer, bn, hashMessage, Wallet } from 'fuels';
 
 import {
   seedWallet,
