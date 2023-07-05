@@ -2,6 +2,8 @@ import { createUUID } from '@fuel-wallet/sdk';
 import type { Network } from '@fuel-wallet/types';
 import { Provider } from 'fuels';
 
+import { isValidNetworkUrl } from '../utils';
+
 import { db } from '~/systems/Core/utils/database';
 
 export type NetworkInputs = {
@@ -33,9 +35,6 @@ export type NetworkInputs = {
   getChainInfo: {
     providerUrl: string;
   };
-  getNetworkFromUrl: {
-    url: string;
-  };
 };
 
 export class NetworkService {
@@ -51,7 +50,8 @@ export class NetworkService {
     });
   }
 
-  static addNetwork(input: NetworkInputs['addNetwork']) {
+  static async addNetwork(input: NetworkInputs['addNetwork']) {
+    await this.assertAddNetwork(input);
     return db.transaction('rw', db.networks, async () => {
       const count = await db.networks.count();
       const inputToAdd = {
@@ -149,9 +149,21 @@ export class NetworkService {
     return provider.getNodeInfo();
   }
 
-  static getNetworkFromUrl(input: NetworkInputs['getNetworkFromUrl']) {
-    return db.transaction('r', db.networks, async () => {
-      return db.networks.get({ url: input.url });
+  static async assertAddNetwork(input: NetworkInputs['addNetwork']) {
+    const { name, url } = input.data;
+    if (!isValidNetworkUrl(url)) {
+      throw new Error('Invalid network URL');
+    }
+    const collection = await db.transaction('r', db.networks, async () => {
+      return db.networks
+        .where('url')
+        .equalsIgnoreCase(url)
+        .or('name')
+        .equalsIgnoreCase(name);
     });
+    const isExistingNetwork = await collection.count();
+    if (isExistingNetwork) {
+      throw new Error('Network with Name or URL already exists');
+    }
   }
 }

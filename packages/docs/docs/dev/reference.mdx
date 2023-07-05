@@ -45,6 +45,20 @@ Return the current account being used in the wallet application.
   testCase="currentAccount"
 />
 
+### List Networks
+
+`async networks(): Promise<Array<Network>>`<br />
+Return the list of networks in the current wallet.
+
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="networks" />
+
+### Current Network
+
+`async network(): Promise<Network>`<br />
+Return the current network being used in the wallet application.
+
+<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="network" />
+
 ### Add Network
 
 `async addNetwork(network: Network): Promise<boolean>`<br />

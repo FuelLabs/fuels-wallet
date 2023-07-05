@@ -554,8 +554,17 @@ test.describe('FuelWallet Extension', () => {
       // Remove added network
       await networkSelector.click();
       const items = popupPage.locator('[aria-label*=fuel_network]');
-      await expect(items).toHaveCount(2);
-      await getByAriaLabel(popupPage, 'Remove').first().click();
+      const networkItemsCount = await items.count();
+      expect(networkItemsCount).toEqual(2);
+
+      let selectedNetworkItem;
+      for (let i = 0; i < networkItemsCount; i += 1) {
+        const isSelected = await items.nth(i).getAttribute('data-active');
+        if (isSelected === 'true') {
+          selectedNetworkItem = items.nth(i);
+        }
+      }
+      await selectedNetworkItem.getByLabel(/Remove/).click();
       await hasText(popupPage, /Are you sure/i);
       await getButtonByText(popupPage, /confirm/i).click();
       await expect(items).toHaveCount(1);

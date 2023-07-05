@@ -201,22 +201,14 @@ export const networksMachine = createMachine(
       addNetwork: FetchMachine.create<NetworkInputs['addNetwork'], Network>({
         showError: true,
         async fetch({ input }) {
-          try {
-            if (!input?.data) {
-              throw new Error('Invalid network input');
-            }
-            const createdNetwork = await NetworkService.addNetwork(input);
-            if (!createdNetwork) {
-              throw new Error('Failed to add network');
-            }
-            return NetworkService.selectNetwork({ id: createdNetwork.id! });
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } catch (error: any) {
-            if (error?.message.includes('uniqueness')) {
-              throw new Error('This network Name or URL already exists');
-            }
-            throw error;
+          if (!input?.data) {
+            throw new Error('Invalid network input');
           }
+          const createdNetwork = await NetworkService.addNetwork(input);
+          if (!createdNetwork) {
+            throw new Error('Failed to add network');
+          }
+          return NetworkService.selectNetwork({ id: createdNetwork.id! });
         },
       }),
       updateNetwork: FetchMachine.create<

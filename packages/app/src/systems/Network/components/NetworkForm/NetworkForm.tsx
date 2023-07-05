@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import type { UseNetworkFormReturn } from '../../hooks';
 
 import { animations, ControlledField } from '~/systems/Core';
-import { NetworkReviewCard } from '~/systems/Network/components/NetworkReviewCard';
+import { NetworkReviewCard } from '~/systems/Network';
 
 const MotionInput = motion(Input);
 

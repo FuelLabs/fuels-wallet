@@ -16,11 +16,7 @@ import {
   AbiContractId,
   FlatAbi,
 } from './__mock__';
-
-const FUEL_NETWORK = {
-  name: 'Fuel Testnet',
-  url: 'https://beta-3.fuel.network/graphql',
-};
+import { FUEL_NETWORK } from './constants';
 
 describe('Fuel', () => {
   let mocks: MockServices;
@@ -84,6 +80,19 @@ describe('Fuel', () => {
     const asset = { assetId: NativeAssetId };
     const isAdded = await fuel.addAssets([asset]);
     expect(isAdded).toEqual(true);
+  });
+
+  test('network', async () => {
+    const network = await fuel.network();
+    expect(network).toStrictEqual({ url: process.env.PUBLIC_PROVIDER_URL! });
+  });
+
+  test('networks', async () => {
+    const networks = await fuel.networks();
+    expect(networks).toStrictEqual([
+      { url: process.env.PUBLIC_PROVIDER_URL! },
+      FUEL_NETWORK,
+    ]);
   });
 
   test('addNetwork', async () => {

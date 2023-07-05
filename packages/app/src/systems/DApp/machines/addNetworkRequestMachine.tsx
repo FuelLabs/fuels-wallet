@@ -116,33 +116,24 @@ export const addNetworkRequestMachine = createMachine(
       >({
         showError: true,
         async fetch({ input }) {
-          try {
-            if (!input?.data) {
-              throw new Error('Invalid network');
-            }
-            const createdNetwork = await NetworkService.addNetwork(input);
-            if (!createdNetwork) {
-              throw new Error('Failed to add network');
-            }
-            const selectedNetwork = await NetworkService.selectNetwork({
-              id: createdNetwork.id!,
-            });
-            return selectedNetwork;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } catch (error: any) {
-            if (error?.message.includes('uniqueness')) {
-              throw new Error('This network Name or URL already exists');
-            }
-            throw error;
+          if (!input?.data) {
+            throw new Error('Invalid network');
           }
+          const createdNetwork = await NetworkService.addNetwork(input);
+          if (!createdNetwork) {
+            throw new Error('Failed to add network');
+          }
+          return NetworkService.selectNetwork({ id: createdNetwork.id! });
         },
       }),
     },
   }
 );
 
-export type AddNetworkMachine = typeof addNetworkRequestMachine;
-export type AddNetworkMachineService = InterpreterFrom<
+export type AddNetworkRequestMachine = typeof addNetworkRequestMachine;
+export type AddNetworkRequestMachineService = InterpreterFrom<
   typeof addNetworkRequestMachine
 >;
-export type AddNetworkMachineState = StateFrom<typeof addNetworkRequestMachine>;
+export type AddNetworkRequestMachineState = StateFrom<
+  typeof addNetworkRequestMachine
+>;

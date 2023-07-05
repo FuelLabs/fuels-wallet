@@ -7,7 +7,7 @@ import type {
   MessageRequestMachine,
   ConnectRequestMachine,
   AddAssetMachine,
-  AddNetworkMachine,
+  AddNetworkRequestMachine,
 } from '../DApp';
 import type { ReportErrorMachine } from '../Error';
 import type { NetworksMachine } from '../Network';
@@ -40,7 +40,7 @@ export type StoreMachines = {
   connectRequest: ConnectRequestMachine;
   addAssetRequest: AddAssetMachine;
   reportError: ReportErrorMachine;
-  addNetworkRequest: AddNetworkMachine;
+  addNetworkRequest: AddNetworkRequestMachine;
 };
 
 export type Store = StoreClass<StoreMachines>;

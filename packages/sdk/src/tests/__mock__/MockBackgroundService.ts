@@ -10,6 +10,7 @@ import { transactionRequestify, Wallet } from 'fuels';
 import type { JSONRPCResponse } from 'json-rpc-2.0';
 
 import { BaseConnection } from '../../connections/BaseConnection';
+import { FUEL_NETWORK } from '../constants';
 
 import { AbiContractId, FlatAbi } from './abi';
 
@@ -41,6 +42,7 @@ export class MockBackgroundService extends BaseConnection {
       this.isConnected,
       this.accounts,
       this.network,
+      this.networks,
       this.signMessage,
       this.sendTransaction,
       this.currentAccount,
@@ -120,6 +122,10 @@ export class MockBackgroundService extends BaseConnection {
     const network = this.state.network;
     this.sendEvent(FuelWalletEvents.network, [network]);
     return network;
+  }
+
+  async networks() {
+    return [this.state.network, FUEL_NETWORK];
   }
 
   async disconnect() {

@@ -1,14 +1,15 @@
 import { useSelector } from '@xstate/react';
 
-import type { AddNetworkMachineState } from '../machines';
+import type { AddNetworkRequestMachineState } from '../machines';
 
 import { Services, store } from '~/store';
 
 const selectors = {
-  origin: (state: AddNetworkMachineState) => state.context.origin,
-  title: (state: AddNetworkMachineState) => state.context.title,
-  favIconUrl: (state: AddNetworkMachineState) => state.context.favIconUrl,
-  network: (state: AddNetworkMachineState) => state.context.network,
+  origin: (state: AddNetworkRequestMachineState) => state.context.origin,
+  title: (state: AddNetworkRequestMachineState) => state.context.title,
+  favIconUrl: (state: AddNetworkRequestMachineState) =>
+    state.context.favIconUrl,
+  network: (state: AddNetworkRequestMachineState) => state.context.network,
 };
 
 export function useAddNetworkRequest() {
