@@ -22,9 +22,9 @@ export function AddNetwork() {
     async (network: Network) => {
       if (!isConnected) await fuel.connect();
       console.log('Add Network', network);
-      /* example:start */
+      /* addNetwork:start */
       await fuel.addNetwork(network);
-      /* example:end */
+      /* addNetwork:end */
     }
   );
 
