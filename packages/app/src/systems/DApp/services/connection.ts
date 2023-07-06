@@ -18,6 +18,10 @@ export type ConnectInputs = {
     origin: string;
     account: string;
   };
+  updateConnectedAccounts: {
+    origin: string;
+    accounts: string[];
+  };
 };
 
 export class ConnectionService {
@@ -82,6 +86,20 @@ export class ConnectionService {
       const connection = await db.connections.get({ origin });
       if (connection) {
         connection.accounts = connection.accounts.concat(account);
+        await db.connections.put(connection);
+      }
+      return connection;
+    });
+  }
+
+  static async updateConnectedAccounts(
+    input: ConnectInputs['updateConnectedAccounts']
+  ) {
+    const { origin, accounts } = input;
+    return db.transaction('rw', db.connections, async () => {
+      const connection = await db.connections.get({ origin });
+      if (connection) {
+        connection.accounts = accounts;
         await db.connections.put(connection);
       }
       return connection;
