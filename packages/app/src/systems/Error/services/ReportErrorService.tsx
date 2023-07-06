@@ -1,40 +1,34 @@
 import type { FuelWalletError } from '@fuel-wallet/types';
+import * as Sentry from '@sentry/browser';
 
-import { parseFuelError, parseErrorEmail } from '../utils';
+import { parseFuelError } from '../utils';
 
-import { REPORT_ERROR_EMAIL } from '~/config';
-import { db } from '~/systems/Core/utils';
+import { VITE_SENTRY_DSN } from '~/config';
+import { db } from '~/systems/Core/utils/database';
 
 export class ReportErrorService {
   static async reportErrors() {
     const errors = await this.getErrors();
-    // send error as an email to the team
-    const errorMailBody = parseErrorEmail(errors);
-    window?.open(
-      `mailto:${REPORT_ERROR_EMAIL}?subject=Fuel Wallet Error Report&body=${errorMailBody}`,
-      '_blank'
-    );
+    Sentry.init({
+      dsn: VITE_SENTRY_DSN,
+      environment: process.env.NODE_ENV,
+    });
+    errors.forEach((e) => {
+      Sentry.captureException(e.error, {
+        extra: e,
+      });
+    });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static handleError(error: any) {
-    try {
-      // handle only network errors for now
-      if (error?.response?.status) {
-        const status = error.response.status;
-        if (status + ''.startsWith('5')) {
-          const formatedError = parseFuelError(error as Error);
-          this.saveError(formatedError);
-        }
-      }
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error(e);
-    }
-  }
-
-  static saveError(error: FuelWalletError) {
-    return db.errors.add(error);
+  static saveError({
+    error,
+    reactError,
+  }: Pick<FuelWalletError, 'error' | 'reactError'>) {
+    const fuelError = parseFuelError({
+      error: { ...error },
+      reactError: { ...reactError },
+    });
+    return db.errors.add(fuelError);
   }
 
   static async checkForErrors(): Promise<boolean> {

@@ -9,6 +9,7 @@ interface ImportMetaEnv {
   readonly VITE_ADDR_OWNER: string;
   readonly VITE_CRX_NAME: string;
   readonly VITE_AUTO_LOCK_IN_MINUTES: number;
+  readonly VITE_SENTRY_DSN: string;
 }
 
 interface ImportMeta {
