@@ -42,9 +42,6 @@ export function Home() {
             isDisabled={isLoading}
           />
           <Box.Stack css={styles.assets}>
-            <Box css={styles.assetsTitle}>
-              <AssetsTitle />
-            </Box>
             <Box.Stack css={styles.assetsList}>
               <AssetList
                 assets={balanceAssets}
