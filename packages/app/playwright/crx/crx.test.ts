@@ -1,4 +1,4 @@
-import type { Account, Asset } from '@fuel-wallet/types';
+import type { Account, Asset, Network } from '@fuel-wallet/types';
 import { expect } from '@playwright/test';
 import { Signer, bn, hashMessage, Wallet } from 'fuels';
 
@@ -11,7 +11,12 @@ import {
   reload,
   getElementByText,
 } from '../commons';
-import { CUSTOM_ASSET, CUSTOM_ASSET_2, PRIVATE_KEY } from '../mocks';
+import {
+  CUSTOM_ASSET,
+  CUSTOM_ASSET_2,
+  FUEL_NETWORK,
+  PRIVATE_KEY,
+} from '../mocks';
 
 import {
   test,
@@ -516,6 +521,63 @@ test.describe('FuelWallet Extension', () => {
       await expect(addingAsset).resolves.toBeDefined();
     });
 
+    await test.step('window.fuel.addNetwork()', async () => {
+      function addNetwork(network: Network) {
+        return blankPage.evaluate(
+          async ([network]) => {
+            return window.fuel.addNetwork(network);
+          },
+          [network]
+        );
+      }
+
+      async function testAddNetwork() {
+        const addingNetwork = addNetwork(FUEL_NETWORK);
+
+        const addNetworkPage = await context.waitForEvent('page', {
+          predicate: (page) => page.url().includes(extensionId),
+        });
+
+        await hasText(addNetworkPage, 'Review the Network to be added:');
+        await getButtonByText(addNetworkPage, /add network/i).click();
+        await expect(addingNetwork).resolves.toBeDefined();
+        await popupPage.reload();
+      }
+
+      // Add network
+      await testAddNetwork();
+
+      // Check if added network is selected
+      let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
+      await expect(networkSelector).toHaveText(/Fuel Testnet/);
+
+      // Remove added network
+      await networkSelector.click();
+      const items = popupPage.locator('[aria-label*=fuel_network]');
+      const networkItemsCount = await items.count();
+      expect(networkItemsCount).toEqual(2);
+
+      let selectedNetworkItem;
+      for (let i = 0; i < networkItemsCount; i += 1) {
+        const isSelected = await items.nth(i).getAttribute('data-active');
+        if (isSelected === 'true') {
+          selectedNetworkItem = items.nth(i);
+        }
+      }
+      await selectedNetworkItem.getByLabel(/Remove/).click();
+      await hasText(popupPage, /Are you sure/i);
+      await getButtonByText(popupPage, /confirm/i).click();
+      await expect(items).toHaveCount(1);
+      await expect(items.first()).toHaveAttribute('data-active', 'true');
+
+      // Re-add network
+      await testAddNetwork();
+
+      // Check if re-added network is selected
+      networkSelector = getByAriaLabel(popupPage, 'Selected Network');
+      await expect(networkSelector).toHaveText(/Fuel Testnet/);
+    });
+
     await test.step('window.fuel.on("currentAccount")', async () => {
       // Switch to account 2
       await switchAccount(popupPage, 'Account 2');
@@ -533,7 +595,7 @@ test.describe('FuelWallet Extension', () => {
       // Switch to account 1
       const currentAccount = await switchAccount(popupPage, 'Account 1');
 
-      /** Check result */
+      // Check result
       const currentAccountEventResult = await onChangeAccountPromise;
       expect(currentAccountEventResult).toEqual(currentAccount.address);
     });
