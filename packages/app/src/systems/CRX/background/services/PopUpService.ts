@@ -163,4 +163,8 @@ export class PopUpService {
   async addAssets(input: MessageInputs['addAssets']) {
     return this.client.request('addAssets', input);
   }
+
+  async addNetwork(input: MessageInputs['addNetwork']) {
+    return this.client.request('addNetwork', input);
+  }
 }

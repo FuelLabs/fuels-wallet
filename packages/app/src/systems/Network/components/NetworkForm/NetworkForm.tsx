@@ -1,20 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Input,
-  HelperIcon,
-  Card,
-  Text,
-  Button,
-  Spinner,
-  Box,
-} from '@fuel-ui/react';
+import { Input, HelperIcon, Spinner, Box } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 
 import type { UseNetworkFormReturn } from '../../hooks';
 
 import { animations, ControlledField } from '~/systems/Core';
+import { NetworkReviewCard } from '~/systems/Network';
 
-const MotionCard = motion(Card);
 const MotionInput = motion(Input);
 
 export type NetworkFormProps = {
@@ -37,18 +29,12 @@ export function NetworkForm({ form, isEditing, isLoading }: NetworkFormProps) {
   return (
     <Box.Stack css={{ width: '100%' }} gap="$4">
       {showReview && (
-        <MotionCard {...animations.slideInTop()}>
-          <Card.Header space="compact" css={styles.header}>
-            <Text>You&apos;re adding this network</Text>
-            <Button size="xs" variant="outlined" onPress={onChangeUrl}>
-              Change
-            </Button>
-          </Card.Header>
-          <Card.Body css={{ p: '$3' }}>
-            <Text as="h2">{name}</Text>
-            <Text fontSize="sm">{url}</Text>
-          </Card.Body>
-        </MotionCard>
+        <NetworkReviewCard
+          headerText="You're adding this network"
+          name={name}
+          onChangeUrl={onChangeUrl}
+          url={url}
+        />
       )}
       {!showReview && (
         <ControlledField
@@ -102,14 +88,6 @@ export function NetworkForm({ form, isEditing, isLoading }: NetworkFormProps) {
 }
 
 const styles = {
-  header: cssObj({
-    justifyContent: 'space-between',
-
-    '.fuel_Button': {
-      py: '$1',
-      height: '$6',
-    },
-  }),
   url: cssObj({
     'input[aria-disabled="true"]': {
       opacity: 0.5,

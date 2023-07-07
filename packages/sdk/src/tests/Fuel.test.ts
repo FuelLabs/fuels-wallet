@@ -16,6 +16,7 @@ import {
   AbiContractId,
   FlatAbi,
 } from './__mock__';
+import { FUEL_NETWORK } from './constants';
 
 describe('Fuel', () => {
   let mocks: MockServices;
@@ -81,6 +82,24 @@ describe('Fuel', () => {
     expect(isAdded).toEqual(true);
   });
 
+  test('network', async () => {
+    const network = await fuel.network();
+    expect(network).toStrictEqual({ url: process.env.PUBLIC_PROVIDER_URL! });
+  });
+
+  test('networks', async () => {
+    const networks = await fuel.networks();
+    expect(networks).toStrictEqual([
+      { url: process.env.PUBLIC_PROVIDER_URL! },
+      FUEL_NETWORK,
+    ]);
+  });
+
+  test('addNetwork', async () => {
+    const isNetworkAdded = await fuel.addNetwork(FUEL_NETWORK);
+    expect(isNetworkAdded).toEqual(true);
+  });
+
   test('addAbi', async () => {
     const abiMap = {
       [AbiContractId]: FlatAbi,
@@ -115,9 +134,9 @@ describe('Fuel', () => {
 
     // Test example like docs
     const signedMessage = await fuel.signMessage(account, 'test');
-    const signedMesageSpec =
+    const signedMessageSpec =
       await mocks.backgroundService.state.wallet.signMessage('test');
-    expect(signedMessage).toEqual(signedMesageSpec);
+    expect(signedMessage).toEqual(signedMessageSpec);
   });
 
   test('sendTransaction', async () => {
