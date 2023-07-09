@@ -8,15 +8,18 @@ import pkg from './package.json';
 const config: JestConfigWithTsJest = {
   displayName: pkg.name,
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
-  modulePathIgnorePatterns: ['/dist/'],
+  modulePathIgnorePatterns: ['dist'],
   rootDir: __dirname,
   transform: tsjPreset.transform,
   clearMocks: true,
   moduleFileExtensions: ['js', 'ts'],
   testEnvironment: 'node',
-  testMatch: ['**/*.test.ts'],
+  testMatch: ['./**/*.test.ts'],
   testRunner: 'jest-circus/runner',
   verbose: true,
+  globals: {
+    window: {},
+  },
 };
 
 export default config;

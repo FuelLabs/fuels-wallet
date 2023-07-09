@@ -1,6 +1,8 @@
+import { createUUID } from '@fuel-wallet/sdk';
 import type { Network } from '@fuel-wallet/types';
 import { Provider } from 'fuels';
-import { uniqueId } from 'xstate/lib/utils';
+
+import { isValidNetworkUrl } from '../utils';
 
 import { db } from '~/systems/Core/utils/database';
 
@@ -48,14 +50,16 @@ export class NetworkService {
     });
   }
 
-  static addNetwork(input: NetworkInputs['addNetwork']) {
+  static async addNetwork(input: NetworkInputs['addNetwork']) {
+    await this.assertAddNetwork(input);
     return db.transaction('rw', db.networks, async () => {
       const count = await db.networks.count();
-      const id = await db.networks.add({
+      const inputToAdd = {
         ...input.data,
         ...(count === 0 && { isSelected: true }),
-        id: uniqueId(),
-      });
+        id: createUUID(),
+      };
+      const id = await db.networks.add(inputToAdd);
       return db.networks.get(id) as Promise<Network>;
     });
   }
@@ -135,13 +139,31 @@ export class NetworkService {
     });
   }
 
-  static async getChainInfo(input: NetworkInputs['getChainInfo']) {
+  static getChainInfo(input: NetworkInputs['getChainInfo']) {
     const provider = new Provider(input.providerUrl);
     return provider.getChain();
   }
 
-  static async getNodeInfo(input: NetworkInputs['getNodeInfo']) {
+  static getNodeInfo(input: NetworkInputs['getNodeInfo']) {
     const provider = new Provider(input.providerUrl);
     return provider.getNodeInfo();
+  }
+
+  static async assertAddNetwork(input: NetworkInputs['addNetwork']) {
+    const { name, url } = input.data;
+    if (!isValidNetworkUrl(url)) {
+      throw new Error('Invalid network URL');
+    }
+    const collection = await db.transaction('r', db.networks, async () => {
+      return db.networks
+        .where('url')
+        .equalsIgnoreCase(url)
+        .or('name')
+        .equalsIgnoreCase(name);
+    });
+    const isExistingNetwork = await collection.count();
+    if (isExistingNetwork) {
+      throw new Error('Network with Name or URL already exists');
+    }
   }
 }

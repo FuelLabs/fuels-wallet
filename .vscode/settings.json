@@ -7,5 +7,8 @@
   },
   "[sway]": {
     "editor.defaultFormatter": "FuelLabs.sway-vscode-plugin"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }

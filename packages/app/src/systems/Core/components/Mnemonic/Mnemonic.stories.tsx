@@ -1,5 +1,5 @@
-import { Mnemonic as FuelMnemonic } from '@fuel-ts/mnemonic';
 import { Box } from '@fuel-ui/react';
+import { Mnemonic as FuelMnemonic } from 'fuels';
 
 import { getWordsFromValue } from '../../utils';
 

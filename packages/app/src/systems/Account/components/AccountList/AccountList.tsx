@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, CardList, Stack } from '@fuel-ui/react';
+import { Box, Button, CardList } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import { useState } from 'react';
 
@@ -33,7 +33,7 @@ export function AccountList({
   }
 
   return (
-    <Stack gap="$3">
+    <Box.Stack gap="$4">
       {isLoading && (
         <CardList>
           {[...Array(3)].map((_, i) => {
@@ -64,7 +64,6 @@ export function AccountList({
       {!isLoading && hasHiddenAccounts && (
         <Button
           size="xs"
-          color="gray"
           variant="link"
           onPress={toggle}
           css={styles.hiddenBtn}
@@ -73,12 +72,12 @@ export function AccountList({
           {showHidden ? 'Hide' : 'Show'} hidden accounts
         </Button>
       )}
-    </Stack>
+    </Box.Stack>
   );
 }
 
 const styles = {
   hiddenBtn: cssObj({
-    color: '$gray8',
+    color: '$intentsBase8',
   }),
 };

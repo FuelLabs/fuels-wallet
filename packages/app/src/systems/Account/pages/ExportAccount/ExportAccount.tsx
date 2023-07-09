@@ -1,20 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Button,
-  Card,
-  Copyable,
-  Dialog,
-  Stack,
-  Text,
-  Alert,
-  Tag,
-  BoxCentered,
-} from '@fuel-ui/react';
+import { Card, Copyable, Dialog, Text, Box } from '@fuel-ui/react';
 
 import { AccountItem } from '../../components';
 import { useAccounts } from '../../hooks';
 import { useExportAccount } from '../../hooks/useExportAccount';
 
+import { styles as coreStyles } from '~/systems/Core';
+import { OverlayDialogTopbar } from '~/systems/Overlay';
+import { DontShareAlert } from '~/systems/Settings/components';
 import { UnlockCard } from '~/systems/Unlock';
 
 export const ExportAccount = () => {
@@ -38,57 +31,38 @@ export const ExportAccount = () => {
 
   return (
     <>
-      <Dialog.Heading>Export Private Key</Dialog.Heading>
-      <Dialog.Description as="div">
+      <OverlayDialogTopbar onClose={accountsHandlers.goToList}>
+        Export Private Key
+      </OverlayDialogTopbar>
+      <Dialog.Description as="div" css={coreStyles.content}>
         {account && (
-          <Stack gap="$4">
+          <Box.Stack gap="$4">
             <AccountItem account={account} />
-            <BoxCentered>
-              <Tag size="xs" color="accent" variant="ghost">
-                Private Key:
-              </Tag>
-            </BoxCentered>
-            <Card css={styles.exportedKey}>
-              <Card.Body>
+            <Card>
+              <Card.Header space="compact">Private key</Card.Header>
+              <Card.Body css={styles.body}>
                 {exportedKey && (
                   <Copyable value={exportedKey}>
-                    <Text fontSize="xs">{exportedKey}</Text>
+                    <Text>{exportedKey}</Text>
                   </Copyable>
                 )}
               </Card.Body>
             </Card>
-            <Alert status="warning" css={styles.alert}>
-              <Alert.Description>
-                <Text fontSize="xs" css={styles.alertDescription}>
-                  DON&apos;T SHARE your Private Key. {'\n'}
-                  This key provides access to your account. Sharing or losing it
-                  may result in a permanent loss of funds.
-                </Text>
-              </Alert.Description>
-            </Alert>
-          </Stack>
+            <DontShareAlert css={styles.alert} />
+          </Box.Stack>
         )}
       </Dialog.Description>
-      <Dialog.Footer>
-        <Button
-          color="gray"
-          variant="ghost"
-          onPress={accountsHandlers.goToList}
-        >
-          Close
-        </Button>
-      </Dialog.Footer>
     </>
   );
 };
 
 const styles = {
   keyHeaderText: cssObj({
-    fontWeight: '$medium',
+    fontWeight: '$normal',
   }),
-  exportedKey: cssObj({
+  body: cssObj({
     wordBreak: 'break-all',
-    textAlign: 'center',
+    py: '$2',
   }),
   alert: cssObj({
     '& .fuel_alert--content': {
@@ -99,6 +73,6 @@ const styles = {
     },
   }),
   alertDescription: cssObj({
-    fontWeight: '$bold',
+    fontWeight: '$normal',
   }),
 };

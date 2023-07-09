@@ -1,4 +1,4 @@
-import { Stack } from '@fuel-ui/react';
+import { Box } from '@fuel-ui/react';
 
 import type { Tx } from '../../utils';
 import { ActivityItem } from '../ActivityItem';
@@ -27,7 +27,7 @@ export const ActivityList = ({
   if (isEmpty) return <ActivityList.Empty isDevnet={isDevnet} />;
 
   return (
-    <Stack gap="$2">
+    <Box.Stack gap="$2">
       {txs.map((tx) => (
         <ActivityItem
           ownerAddress={ownerAddress}
@@ -35,7 +35,7 @@ export const ActivityList = ({
           transaction={tx}
         />
       ))}
-    </Stack>
+    </Box.Stack>
   );
 };
 

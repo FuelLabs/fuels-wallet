@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, Flex, Icon, Spinner, Text } from '@fuel-ui/react';
+import { Box, Button, Dialog, Icon, Spinner, Text } from '@fuel-ui/react';
 import { useEffect } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useNavigate } from 'react-router-dom';
@@ -22,22 +22,25 @@ export function FaucetDialog() {
   }, [captcha.isLoaded]);
 
   return (
-    <Dialog isOpen onOpenChange={(open) => !open && navigate(Pages.wallet())}>
-      <Dialog.Content css={{ maxWidth: 334 }}>
+    <Dialog
+      isOpen
+      onOpenChange={(open: boolean) => !open && navigate(Pages.wallet())}
+    >
+      <Dialog.Content css={{ maxWidth: 300 }}>
         <Dialog.Heading>
-          <Flex css={{ alignItems: 'center' }}>
-            <Icon icon="MagicWand" color="gray8" css={{ marginRight: '$3' }} />
+          <Box.Flex css={{ alignItems: 'center' }}>
+            <Icon icon="Wand" css={{ marginRight: '$3' }} />
             Faucet
-          </Flex>
+          </Box.Flex>
         </Dialog.Heading>
         <Dialog.Description as="div">
-          <Text color="gray12">
+          <Text color="intentsBase12">
             Click the button below to receive 0.5 Devnet ETH in your wallet
           </Text>
           {captcha.needToShow && (
             <Box css={{ marginTop: '$5' }}>
               {captcha.isLoading && (
-                <Flex
+                <Box.Flex
                   css={{
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -46,7 +49,7 @@ export function FaucetDialog() {
                 >
                   <Spinner css={{ marginRight: '$3' }} />
                   Loading Captcha...
-                </Flex>
+                </Box.Flex>
               )}
               <Box
                 css={{
@@ -61,8 +64,10 @@ export function FaucetDialog() {
               </Box>
               {captcha.isFailed && (
                 <>
-                  <Text color="red10">Sorry, something went wrong here</Text>
-                  <Text color="red10">
+                  <Text color="intentsError10">
+                    Sorry, something went wrong here
+                  </Text>
+                  <Text color="intentsError10">
                     Please reload this page and try again.
                   </Text>
                 </>
@@ -72,7 +77,7 @@ export function FaucetDialog() {
         </Dialog.Description>
         <Dialog.Footer css={{ marginTop: 0 }}>
           <Button
-            variant="solid"
+            intent="primary"
             onPress={() =>
               handlers.startFaucet({
                 address: account!.address || '',

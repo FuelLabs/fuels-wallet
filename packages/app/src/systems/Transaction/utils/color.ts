@@ -1,40 +1,40 @@
 import type { Colors } from '@fuel-ui/css';
 
-import { TxStatus } from './tx.types';
+import { TxStatus } from './tx';
 
 export const getTxStatusColor = (status?: TxStatus): Colors => {
   switch (status) {
     case TxStatus.pending:
-      return 'amber9';
+      return 'intentsWarning9';
     case TxStatus.success:
-      return 'mint9';
+      return 'intentsPrimary9';
     case TxStatus.failure:
-      return 'crimson9';
+      return 'intentsError9';
     default:
-      return 'gray9';
+      return 'intentsBase9';
   }
 };
 
 export const getTxIconBgColor = (status: TxStatus | undefined) => {
   switch (status) {
     case TxStatus.success:
-      return '$mint2';
+      return '$intentsPrimary2';
     case TxStatus.failure:
-      return '$crimson2';
+      return '$intentsError2';
     case TxStatus.pending:
     default:
-      return '$amber2';
+      return '$intentsWarning2';
   }
 };
 
 export const getTxIconColor = (status: TxStatus | undefined) => {
   switch (status) {
     case TxStatus.success:
-      return 'green11';
+      return 'intentsPrimary11';
     case TxStatus.failure:
-      return 'crimson8';
+      return 'intentsError8';
     case TxStatus.pending:
     default:
-      return 'amber8';
+      return 'intentsWarning8';
   }
 };

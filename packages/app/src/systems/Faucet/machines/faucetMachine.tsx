@@ -8,7 +8,8 @@ import { store } from '~/store';
 import type { Maybe } from '~/systems/Core';
 import { urlJoin } from '~/systems/Core';
 
-const FAUCET_URL = urlJoin(VITE_FUEL_FAUCET_URL, '/dispense');
+const URL = VITE_FUEL_FAUCET_URL;
+const FAUCET_URL = urlJoin(URL, URL.includes('/dispense') ? '' : '/dispense');
 
 async function fetchFaucet(input: RequestInit) {
   const res = await fetch(FAUCET_URL, {
@@ -18,7 +19,6 @@ async function fetchFaucet(input: RequestInit) {
       'Content-Type': 'application/json',
     },
   });
-
   return res.json();
 }
 
@@ -83,7 +83,7 @@ export const faucetMachine =
           type: 'final',
         },
         done: {
-          entry: ['showDoneFeedback', 'navigateToHome', 'sendFaucetSuccess'],
+          entry: ['showDoneFeedback', 'sendFaucetSuccess', 'navigateToHome'],
           type: 'final',
         },
       },
@@ -101,7 +101,7 @@ export const faucetMachine =
         }),
         navigateToHome() {},
         sendFaucetSuccess: () => {
-          store.updateAccounts();
+          store.reloadBalance();
         },
         showDoneFeedback: () => {
           toast.success('Success, 0.5 ETH was added to your wallet.');

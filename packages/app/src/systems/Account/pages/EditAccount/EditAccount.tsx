@@ -1,9 +1,12 @@
-import { Box, Button, Dialog, Focus, Icon, IconButton } from '@fuel-ui/react';
+import { Box, Button, Dialog, Focus, Icon } from '@fuel-ui/react';
 
 import { AccountForm } from '../../components';
 import { useAccounts, useEditAccount } from '../../hooks';
 import { useAccountForm } from '../../hooks/useAccountForm';
 import type { AccountFormValues } from '../../hooks/useAccountForm';
+
+import { styles } from '~/systems/Core';
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export const EditAccount = () => {
   const { accounts, handlers: accountsHandlers } = useAccounts();
@@ -22,41 +25,30 @@ export const EditAccount = () => {
   }
 
   return (
-    <Box as="form" onSubmit={form.handleSubmit(onSubmit)}>
-      <Dialog.Heading>
+    <Box.Stack gap="$4" as="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <OverlayDialogTopbar onClose={accountsHandlers.closeDialog}>
         Edit Account
-        <IconButton
-          data-action="closed"
-          variant="link"
-          icon={<Icon icon="X" color="gray8" />}
-          aria-label="Close edit account"
-          onPress={accountsHandlers.closeDialog}
-        />
-      </Dialog.Heading>
-      <Dialog.Description as="div">
-        <Focus.Scope contain autoFocus>
+      </OverlayDialogTopbar>
+      <Dialog.Description as="div" css={styles.content}>
+        <Focus.Scope autoFocus>
           <AccountForm form={form} isLoading={isLoading} />
         </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
-        <Button
-          color="gray"
-          variant="ghost"
-          onPress={accountsHandlers.goToList}
-        >
+        <Button variant="ghost" onPress={accountsHandlers.goToList}>
           Cancel
         </Button>
         <Button
           type="submit"
-          color="accent"
+          intent="primary"
           isDisabled={!form.formState.isValid}
           isLoading={isLoading}
-          leftIcon={Icon.is('Pencil')}
+          leftIcon={Icon.is('Edit')}
           aria-label="Edit account"
         >
-          Edit
+          Confirm
         </Button>
       </Dialog.Footer>
-    </Box>
+    </Box.Stack>
   );
 };

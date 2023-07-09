@@ -1,9 +1,12 @@
-import { Box, Button, Dialog, Icon, IconButton } from '@fuel-ui/react';
+import { Box, Button, Dialog, Icon } from '@fuel-ui/react';
 
 import { ImportAccountForm } from '../../components/ImportAccountForm';
 import { useAccounts, useImportAccount } from '../../hooks';
 import { useImportAccountForm } from '../../hooks/useImportAccountForm';
 import type { ImportAccountFormValues } from '../../hooks/useImportAccountForm';
+
+import { styles } from '~/systems/Core';
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export const ImportAccount = () => {
   const { accounts, handlers: accountsHandlers } = useAccounts();
@@ -15,31 +18,20 @@ export const ImportAccount = () => {
   }
 
   return (
-    <Box as="form" onSubmit={form.handleSubmit(onSubmit)}>
-      <Dialog.Heading>
+    <Box.Stack gap="$4" as="form" onSubmit={form.handleSubmit(onSubmit)}>
+      <OverlayDialogTopbar onClose={accountsHandlers.closeDialog}>
         Import Account
-        <IconButton
-          data-action="closed"
-          variant="link"
-          icon={<Icon icon="X" color="gray8" />}
-          aria-label="Close unlock window"
-          onPress={accountsHandlers.closeDialog}
-        />
-      </Dialog.Heading>
-      <Dialog.Description as="div">
+      </OverlayDialogTopbar>
+      <Dialog.Description as="div" css={styles.content}>
         <ImportAccountForm form={form} isLoading={isLoading} />
       </Dialog.Description>
       <Dialog.Footer>
-        <Button
-          color="gray"
-          variant="ghost"
-          onPress={accountsHandlers.goToList}
-        >
+        <Button variant="ghost" onPress={accountsHandlers.goToList}>
           Cancel
         </Button>
         <Button
           type="submit"
-          color="accent"
+          intent="primary"
           isDisabled={!form.formState.isValid}
           isLoading={isLoading}
           leftIcon={Icon.is('Plus')}
@@ -48,6 +40,6 @@ export const ImportAccount = () => {
           Import
         </Button>
       </Dialog.Footer>
-    </Box>
+    </Box.Stack>
   );
 };

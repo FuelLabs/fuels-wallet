@@ -9,6 +9,26 @@ import '../load.envs.js';
 
 const linkDeps = process.env.LINK_DEPS?.trim().split(' ').filter(Boolean) || [];
 
+export function resolveLinkDeps() {
+  return (
+    !!linkDeps.length && {
+      resolve: {
+        alias: linkDeps.reduce((obj, dep) => {
+          // remove TS SDK as it's not needed to resolve alias anymore.
+          if (!/^fuels?|@fuel-ts/.test(dep)) {
+            // eslint-disable-next-line no-param-reassign
+            obj[dep] = path.resolve(
+              __dirname,
+              `../node_modules/${dep}/dist/index.mjs`
+            );
+          }
+          return obj;
+        }, {}),
+      },
+    }
+  );
+}
+
 // https://vitejs.dev/config/
 const baseConfig: UserConfig = {
   base: process.env.BASE_URL || '/',
@@ -56,26 +76,12 @@ const baseConfig: UserConfig = {
   /**
    * Need because of this issue:
    * https://github.com/vitejs/vite/issues/1973
-   * Avoid "proccess is not defined" when compiling in Cypress side
+   * Avoid "process is not defined" when compiling in Cypress side
    */
   define: {
     'process.env': {},
   },
-  ...(!!linkDeps.length && {
-    resolve: {
-      alias: linkDeps.reduce((obj, dep) => {
-        // remove TS SDK as it's not needed to resolve alias anymore.
-        if (!/^fuels?|@fuel-ts/.test(dep)) {
-          // eslint-disable-next-line no-param-reassign
-          obj[dep] = path.resolve(
-            __dirname,
-            `../node_modules/${dep}/dist/index.mjs`
-          );
-        }
-        return obj;
-      }, {}),
-    },
-  }),
+  ...resolveLinkDeps(),
   /**
    * Need because of this issue:
    * https://github.com/vitejs/vite/issues/8644#issuecomment-1159308803

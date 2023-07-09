@@ -1,9 +1,9 @@
-import { Button } from '@fuel-ui/react';
-import type { StoryFn } from '@storybook/react';
+import { Box, Button } from '@fuel-ui/react';
 
 import { ResetDialog } from './ResetDialog';
 
 import { createMockAccount } from '~/systems/Account/__mocks__';
+import { useOverlay } from '~/systems/Overlay';
 
 export default {
   component: ResetDialog,
@@ -13,13 +13,15 @@ export default {
   },
 };
 
-export const Usage: StoryFn<never> = () => {
+export const Usage = () => {
+  const overlay = useOverlay();
   return (
-    <>
-      <ResetDialog onReset={() => {}}>
-        <Button>Open reset wallet</Button>
-      </ResetDialog>
-    </>
+    <Box.Stack>
+      <Button onClick={() => overlay.open({ modal: 'reset' })}>
+        Open reset wallet
+      </Button>
+      <ResetDialog />
+    </Box.Stack>
   );
 };
 

@@ -1,7 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
-import { Heading, Stack } from '@fuel-ui/react';
+import { Box, Heading } from '@fuel-ui/react';
 
-import { ImageLoader, relativeUrl } from '~/systems/Core';
+import { relativeUrl } from '../../utils';
+import { ImageLoader } from '../ImageLoader';
 
 export type EmptyListProps = {
   label: string;
@@ -9,7 +10,7 @@ export type EmptyListProps = {
 
 export function EmptyList({ label }: EmptyListProps) {
   return (
-    <Stack gap="$2" css={styles.root}>
+    <Box.Stack gap="$2" css={styles.root}>
       <ImageLoader
         src={relativeUrl('/empty-list.png')}
         width={258}
@@ -17,7 +18,7 @@ export function EmptyList({ label }: EmptyListProps) {
         alt="No assets"
       />
       <Heading as="h3">{label}</Heading>
-    </Stack>
+    </Box.Stack>
   );
 }
 
@@ -29,7 +30,7 @@ const styles = {
 
     '& h3': {
       margin: 0,
-      color: '$gray12',
+      color: '$intentsBase12',
       fontSize: '$xl',
     },
   }),

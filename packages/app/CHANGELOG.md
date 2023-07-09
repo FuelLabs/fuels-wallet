@@ -1,5 +1,21 @@
 # fuels-wallet
 
+## 0.10.0
+
+### Minor Changes
+
+- [#625](https://github.com/FuelLabs/fuels-wallet/pull/625) [`993a197`](https://github.com/FuelLabs/fuels-wallet/commit/993a197fcbb0e198df2e54810c451f4b3bb4d7fe) Thanks [@pedronauck](https://github.com/pedronauck)! - Update Fuel branding on Wallet and address minor issues on UI and UX.
+
+- [#784](https://github.com/FuelLabs/fuels-wallet/pull/784) [`3a3fdcc`](https://github.com/FuelLabs/fuels-wallet/commit/3a3fdcc263e0fee850bae29114d80241c4b5c3ac) Thanks [@eswarasai](https://github.com/eswarasai)! - Reset auto-lock timer on user interaction
+
+### Patch Changes
+
+- [#786](https://github.com/FuelLabs/fuels-wallet/pull/786) [`3b82e52`](https://github.com/FuelLabs/fuels-wallet/commit/3b82e526b7b732ef5dd07791ef59246f9725cf05) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix wallet home scroll
+
+- Updated dependencies [[`c9cd111`](https://github.com/FuelLabs/fuels-wallet/commit/c9cd1110a26e56f9f7e1fbf3a0db0873cdd043d0)]:
+  - @fuel-wallet/types@0.10.0
+  - @fuel-wallet/sdk@0.10.0
+
 ## 0.9.5
 
 ### Patch Changes

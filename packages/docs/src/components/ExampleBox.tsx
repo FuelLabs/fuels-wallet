@@ -1,15 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cssObj } from '@fuel-ui/css';
-import {
-  Alert,
-  Box,
-  Input,
-  Link,
-  Spinner,
-  Stack,
-  Tag,
-  Tooltip,
-} from '@fuel-ui/react';
+import { Alert, Box, Input, Link, Spinner, Tag, Tooltip } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 
 import { useFuel } from '../hooks/useFuel';
@@ -20,10 +11,12 @@ import { Heading } from './Heading';
 export function ExampleBox({
   children,
   error,
+  overlayContent,
   showNotDetectedOverlay = true,
 }: {
   children: ReactNode;
   error?: any;
+  overlayContent?: any;
   showNotDetectedOverlay?: boolean;
 }) {
   const [, notDetected, isLoading] = useFuel();
@@ -46,12 +39,18 @@ export function ExampleBox({
   );
 
   const NotDetectedOverlayDefault = (
-    <Stack css={styles.overlay} justify="center" align="center">
+    <Box.Stack css={styles.overlay} justify="center" align="center">
       <Heading as="h6">Wallet not detected</Heading>
       <Link href="/docs/install">
         Please install the Fuel Wallet to use this demo.
       </Link>
-    </Stack>
+    </Box.Stack>
+  );
+
+  const OverlayContent = (
+    <Box.Stack css={styles.overlay} justify="center" align="center">
+      {overlayContent}
+    </Box.Stack>
   );
 
   if (isLoading) {
@@ -59,12 +58,12 @@ export function ExampleBox({
       <Box
         css={{ ...styles.root, justifyContent: 'center', alignItems: 'center' }}
       >
-        <Spinner size={20} color="gray4" />
+        <Spinner size={20} color="intentsBase4" />
       </Box>
     );
   }
   return (
-    <Stack gap="$4" css={{ mt: '$8' }}>
+    <Box.Stack gap="$4" css={{ mt: '$8' }}>
       {errorMsg && (
         <Alert css={styles.alert} status="error">
           <Alert.Description>{capitalize(errorMsg)}</Alert.Description>
@@ -75,18 +74,23 @@ export function ExampleBox({
           Check it working
           {notDetected && !error && (
             <Tooltip content={downloadContent} side="left">
-              <Tag size="xs" color="amber" variant="ghost" leftIcon="Warning">
+              <Tag
+                size="xs"
+                intent="warning"
+                variant="ghost"
+                leftIcon="AlertTriangle"
+              >
                 Not working
               </Tag>
             </Tooltip>
           )}
           {error && !notDetected && (
-            <Tag size="xs" color="red" variant="ghost" leftIcon="X">
+            <Tag size="xs" intent="error" variant="ghost" leftIcon="X">
               Failed
             </Tag>
           )}
           {!notDetected && !error && (
-            <Tag size="xs" color="accent" variant="ghost">
+            <Tag size="xs" intent="primary" variant="ghost">
               Wallet Detected
             </Tag>
           )}
@@ -96,14 +100,15 @@ export function ExampleBox({
             <Input.Field
               as="textarea"
               value={error.message}
-              css={{ color: '$red10', padding: '$2', height: '$full' }}
+              css={{ color: '$intentsError10', padding: '$2', height: '$full' }}
             />
           </Input>
         )}
         {children}
         {showNotDetectedOverlay && notDetected && NotDetectedOverlayDefault}
+        {overlayContent && OverlayContent}
       </Box>
-    </Stack>
+    </Box.Stack>
   );
 }
 
@@ -114,7 +119,7 @@ const styles = {
     gap: '$4',
     padding: '$4',
     borderRadius: '$md',
-    border: '1px dashed $gray3',
+    border: '1px solid $border',
     position: 'relative',
     overflow: 'hidden',
 
@@ -123,10 +128,10 @@ const styles = {
       alignItems: 'center',
       justifyContent: 'space-between',
       margin: '$0',
-      color: '$gray10',
+      color: '$intentsBase10',
       gap: '$2',
 
-      '& .fuel_icon': {
+      '& .fuel_Icon': {
         color: 'currentColor',
       },
     },

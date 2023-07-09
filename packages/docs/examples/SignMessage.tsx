@@ -1,12 +1,13 @@
 /* eslint-disable no-console */
-import { cssObj } from '@fuel-ui/css';
-import { Box, Stack, Button, Input, Tag } from '@fuel-ui/react';
+import { Box, Button, Input, Tag } from '@fuel-ui/react';
 import { useState } from 'react';
 
 import { ExampleBox } from '../src/components/ExampleBox';
 import { useFuel } from '../src/hooks/useFuel';
 import { useIsConnected } from '../src/hooks/useIsConnected';
 import { useLoading } from '../src/hooks/useLoading';
+
+import { docStyles } from './styles';
 
 export function SignMessage() {
   const [fuel, notDetected] = useFuel();
@@ -33,7 +34,7 @@ export function SignMessage() {
 
   return (
     <ExampleBox error={errorMessage}>
-      <Stack css={{ gap: '$4' }}>
+      <Box.Stack css={{ gap: '$4' }}>
         <Input isDisabled={!fuel} css={{ width: 300, height: 100 }}>
           <Input.Field
             as="textarea"
@@ -53,20 +54,16 @@ export function SignMessage() {
           </Button>
         </Box>
         {signedMessage && (
-          <Tag size="xs" color="gray" variant="ghost" css={styles.msg}>
+          <Tag
+            size="xs"
+            color="intentsBase"
+            variant="ghost"
+            css={docStyles.feedbackTag}
+          >
             {signedMessage}
           </Tag>
         )}
-      </Stack>
+      </Box.Stack>
     </ExampleBox>
   );
 }
-
-const styles = {
-  msg: cssObj({
-    borderRadius: '$md',
-    height: 'auto',
-    maxWidth: 320,
-    wordBreak: 'break-all',
-  }),
-};

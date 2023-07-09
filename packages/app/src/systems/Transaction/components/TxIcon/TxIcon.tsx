@@ -1,23 +1,27 @@
 import { cssObj } from '@fuel-ui/css';
-import { Flex, Icon } from '@fuel-ui/react';
+import { Box, Icon } from '@fuel-ui/react';
+import type { Bech32Address } from 'fuels';
 
-import type { OperationName, TxStatus } from '../../utils';
+import type { Operation, TxStatus } from '../../utils';
 import { getTxIconBgColor, getTxIconColor, getTxIcon } from '../../utils';
 
+import { useAccounts } from '~/systems/Account';
+
 export type TxIconProps = {
-  operationName?: OperationName;
+  operation?: Operation;
   status?: TxStatus;
 };
 
-export function TxIcon({ operationName, status }: TxIconProps) {
+export function TxIcon({ operation, status }: TxIconProps) {
+  const { account } = useAccounts();
   return (
-    <Flex css={styles.root(status)}>
+    <Box.Flex css={styles.root(status)}>
       <Icon
-        size="22px"
-        icon={getTxIcon(operationName)}
+        size={22}
+        icon={getTxIcon(operation, account?.address as Bech32Address)}
         color={getTxIconColor(status)}
       />
-    </Flex>
+    </Box.Flex>
   );
 }
 

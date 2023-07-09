@@ -57,7 +57,7 @@ export const AssetList: AssetListComponent = ({
         />
       ))}
       {!!(!isLoading && unknownLength) && (
-        <Button size="xs" color="gray" variant="link" onPress={toggle}>
+        <Button size="xs" variant="link" onPress={toggle}>
           {showUnknown ? 'Hide' : 'Show'} unknown assets ({unknownLength})
         </Button>
       )}

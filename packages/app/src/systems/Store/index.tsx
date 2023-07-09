@@ -8,8 +8,10 @@ import {
   connectRequestMachine,
   messageRequestMachine,
   addAssetRequestMachine,
+  addNetworkRequestMachine,
 } from '../DApp';
 import { requestEvents } from '../DApp/events';
+import { reportErrorMachine } from '../Error';
 import { networkEvents } from '../Network/events';
 import { networksMachine } from '../Network/machines';
 import { overlayMachine } from '../Overlay';
@@ -24,7 +26,6 @@ export * from './types';
 
 export const store$ = createStore<StoreMachines>({
   id: 'fuelStore',
-  persistedStates: ['networks'],
 });
 
 export const store = store$
@@ -37,6 +38,8 @@ export const store = store$
   .addMachine(Services.connectRequest, () => connectRequestMachine)
   .addMachine(Services.txRequest, () => transactionRequestMachine)
   .addMachine(Services.addAssetRequest, () => addAssetRequestMachine)
+  .addMachine(Services.reportError, () => reportErrorMachine)
+  .addMachine(Services.addNetworkRequest, () => addNetworkRequestMachine)
   .addHandlers(accountEvents)
   .addHandlers(networkEvents)
   .addHandlers(assetEvents)

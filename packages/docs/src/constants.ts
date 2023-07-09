@@ -12,6 +12,8 @@ export const MENU_ORDER = [
   'For Developers/Assets',
   'For Developers/Networks',
   'For Developers/Signing a Message',
+  'For Developers/ABIs',
+  'For Developers/Wallet Connectors',
   'For Developers/Reference',
   'Contributing/Project Structure',
   'Contributing/Contributing Guide',
@@ -27,3 +29,6 @@ export const META_DESC =
   'Native wallet for Fuel, the fatest modular execution layer';
 
 export const META_OGIMG = `${NEXT_PUBLIC_URL}${ogImage.src}`;
+
+export const INSTALL_LINK =
+  'https://chrome.google.com/webstore/detail/fuel-wallet/dldjpboieedgcmpkchcjcbijingjcgok';

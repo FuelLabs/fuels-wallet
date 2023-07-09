@@ -113,7 +113,7 @@ describe('connectionsMachine', () => {
       expect(connection).toEqual(conn1);
     });
 
-    it('should fetch all acounts before enter state', async () => {
+    it('should show only accounts not hidden before enter state', async () => {
       const state = service.getSnapshot();
       const accounts = state.context.response?.accounts;
       expect(accounts?.length).toBe(2);
