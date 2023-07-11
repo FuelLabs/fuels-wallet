@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
+import { isValidNetworkUrl } from '../utils';
+
 import type { Maybe } from '~/systems/Core';
 
 export type NetworkFormValues = {
@@ -11,28 +13,12 @@ export type NetworkFormValues = {
   url: string;
 };
 
-function isValidUrl(url?: string) {
-  if (!url) return false;
-  // Note: new URL('https://graphql') returns `true`
-  const pattern = new RegExp(
-    '^(https?:\\/\\/)' +
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' +
-      '((\\d{1,3}\\.){3}\\d{1,3}))|' +
-      'localhost' +
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
-      '(\\?[;&a-z\\d%_.~+=-]*)?' +
-      '(\\#[-a-z\\d_]*)?$',
-    'i'
-  );
-  return pattern.test(url) && url.endsWith('/graphql');
-}
-
 const schema = yup
   .object({
     name: yup.string().required('Name is required'),
     url: yup
       .string()
-      .test('is-url-valid', 'URL is not valid', isValidUrl)
+      .test('is-url-valid', 'URL is not valid', isValidNetworkUrl)
       .required('URL is required'),
   })
   .required();

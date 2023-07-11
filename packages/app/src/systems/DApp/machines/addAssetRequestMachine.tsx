@@ -32,7 +32,7 @@ export type AddAssetInputs = {
   };
 };
 
-export type MachineEvents =
+type MachineEvents =
   | {
       type: 'START';
       input: AddAssetInputs['start'];

@@ -56,6 +56,11 @@ export const ALT_ASSET = {
   isCustom: true,
 };
 
+export const FUEL_NETWORK = {
+  name: 'Fuel Testnet',
+  url: 'https://beta-3.fuel.network/graphql',
+};
+
 export async function getAccount(page: Page) {
   return page.evaluate(async () => {
     const fuelDB = window.fuelDB;

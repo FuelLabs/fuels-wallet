@@ -4,7 +4,7 @@ import { assign, createMachine } from 'xstate';
 
 import { ReportErrorService } from '../services';
 
-import { FetchMachine } from '~/systems/Core';
+import { FetchMachine } from '~/systems/Core/machines/fetchMachine';
 
 export type ErrorMachineContext = {
   error?: string;
@@ -13,6 +13,9 @@ export type ErrorMachineContext = {
 };
 
 type MachineServices = {
+  clearErrors: {
+    data: void;
+  };
   reportErrors: {
     data: boolean;
   };
@@ -55,14 +58,23 @@ export const reportErrorMachine = createMachine(
       idle: {
         on: {
           IGNORE_ERRORS: {
-            target: 'idle',
-            actions: ['clearErrors', 'reload'],
+            target: 'cleaning',
           },
           REPORT_ERRORS: {
             target: 'reporting',
           },
           CHECK_FOR_ERRORS: {
             target: 'checkForErrors',
+          },
+        },
+      },
+      cleaning: {
+        tags: ['loading'],
+        invoke: {
+          src: 'clearErrors',
+          onDone: {
+            target: 'idle',
+            actions: ['reload'],
           },
         },
       },
@@ -75,7 +87,6 @@ export const reportErrorMachine = createMachine(
               target: 'idle',
             },
           ],
-          onError: {},
         },
       },
       reporting: {
@@ -88,9 +99,6 @@ export const reportErrorMachine = createMachine(
           onDone: {
             target: 'idle',
             actions: ['reload'],
-          },
-          onError: {
-            target: 'idle',
           },
         },
       },
@@ -106,15 +114,19 @@ export const reportErrorMachine = createMachine(
         hasErrors: (_, ev) => ev.data.hasErrors,
         errors: (_, ev) => ev.data.errors,
       }),
-      clearErrors: () => {
-        ReportErrorService.clearErrors();
-      },
       reload: () => {},
     },
     services: {
+      clearErrors: FetchMachine.create<void, void>({
+        showError: true,
+        maxAttempts: 1,
+        async fetch() {
+          await ReportErrorService.clearErrors();
+        },
+      }),
       reportErrors: FetchMachine.create<void, void>({
         showError: true,
-        maxAttempts: 3,
+        maxAttempts: 2,
         async fetch() {
           await ReportErrorService.reportErrors();
           await ReportErrorService.clearErrors();

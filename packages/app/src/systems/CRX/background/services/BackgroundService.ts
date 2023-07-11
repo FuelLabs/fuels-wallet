@@ -52,6 +52,7 @@ export class BackgroundService {
       this.currentAccount,
       this.addAssets,
       this.assets,
+      this.addNetwork,
       this.addAbi,
       this.getAbi,
     ]);
@@ -340,5 +341,31 @@ export class BackgroundService {
   async getAbi(input: MessageInputs['getAbi']) {
     const abi = await AbiService.getAbi({ data: input.contractId });
     return abi;
+  }
+
+  async addNetwork(
+    input: MessageInputs['addNetwork'],
+    serverParams: EventOrigin
+  ) {
+    const { network } = input;
+    await NetworkService.assertAddNetwork({ data: network });
+
+    const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
+
+    const popupService = await PopUpService.open(
+      origin,
+      Pages.requestAddNetwork(),
+      this.communicationProtocol
+    );
+    await popupService.addNetwork({
+      network,
+      origin,
+      title,
+      favIconUrl,
+    });
+
+    return true;
   }
 }
