@@ -216,8 +216,8 @@ export const connectRequestMachine = createMachine(
             data: {
               origin: input.origin,
               accounts: input.selectedAddresses,
-              favIconUrl: input.favIconUrl!,
-              title: input.title!,
+              favIconUrl: input.favIconUrl,
+              title: input.title,
             },
           });
         },
@@ -225,7 +225,10 @@ export const connectRequestMachine = createMachine(
     },
     guards: {
       connectionConnected: (ctx, ev) => {
-        return (ev.data?.accounts.length || 0) === ctx.totalAccounts;
+        return (
+          (ev.data?.accounts.length || 0) === ctx.totalAccounts &&
+          ctx.totalAccounts >= 1
+        );
       },
     },
   }
