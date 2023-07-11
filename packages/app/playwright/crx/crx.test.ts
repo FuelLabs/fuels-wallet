@@ -236,7 +236,6 @@ test.describe('FuelWallet Extension', () => {
 
       // we need to reconnect the accounts for later tests
       await connectAccounts();
-      // await connectAccounts();
     });
 
     await test.step('window.fuel.on("connection")', async () => {
@@ -261,7 +260,7 @@ test.describe('FuelWallet Extension', () => {
       await getByAriaLabel(popupPage, 'Menu').click();
       (await hasText(popupPage, 'Wallet')).click();
 
-      await connectAccounts(['Account 3', 'Account 4']);
+      await connectAccounts();
     });
 
     await test.step('window.fuel.getWallet()', async () => {
