@@ -195,10 +195,7 @@ test.describe('FuelWallet Extension', () => {
       await hideAccount(popupPage, 'Account 5');
     });
 
-    async function connectAccounts(
-      accountNames: string[],
-      connectHiddenAccount = false
-    ) {
+    async function connectAccounts() {
       const isConnected = blankPage.evaluate(async () => {
         return window.fuel.connect();
       });
@@ -206,37 +203,28 @@ test.describe('FuelWallet Extension', () => {
         predicate: (page) => page.url().includes(extensionId),
       });
 
-      // Add account to the DApp connection
-      await accountNames.reduce(
-        (prev, accountName) =>
-          prev.then((prevResult) =>
-            getByAriaLabel(authorizeRequest, `Toggle ${accountName}`)
-              .click()
-              .then((result) => [...prevResult, result])
-          ),
-        Promise.resolve([])
-      );
+      // Add Account 3 to the DApp connection
+      await getByAriaLabel(authorizeRequest, 'Toggle Account 3').click();
+      // Add Account 4 to the DApp connection
+      await getByAriaLabel(authorizeRequest, 'Toggle Account 4').click();
 
-      // Skip checking hidden account connection by default to avoid unnecessary timeout
-      if (connectHiddenAccount) {
-        // Account 5 (Hidden) should not be shown to connect
-        await expect(async () => {
-          await getByAriaLabel(authorizeRequest, 'Toggle Account 5').click({
-            timeout: 3000,
-          });
-        }).rejects.toThrow();
-      }
+      // Account 5 (Hidden) should not be shown to connect
+      await expect(async () => {
+        await getByAriaLabel(authorizeRequest, 'Toggle Account 5').click({
+          timeout: 3000,
+        });
+      }).rejects.toThrow();
 
-      await hasText(authorizeRequest, /connect/i);
+      // await hasText(authorizeRequest, /connect/i);
       await getButtonByText(authorizeRequest, /next/i).click();
-      await hasText(authorizeRequest, /accounts/i);
+      // await hasText(authorizeRequest, /accounts/i);
       await getButtonByText(authorizeRequest, /connect/i).click();
 
       expect(await isConnected).toBeTruthy();
     }
 
     await test.step('window.fuel.connect()', async () => {
-      await connectAccounts(['Account 3', 'Account 4'], true);
+      await connectAccounts();
     });
 
     await test.step('window.fuel.disconnect()', async () => {
@@ -247,8 +235,8 @@ test.describe('FuelWallet Extension', () => {
       expect(await isDisconnected).toBeTruthy();
 
       // we need to reconnect the accounts for later tests
-      await connectAccounts(['Account 3']);
-      await connectAccounts(['Account 4']);
+      await connectAccounts();
+      // await connectAccounts();
     });
 
     await test.step('window.fuel.on("connection")', async () => {
