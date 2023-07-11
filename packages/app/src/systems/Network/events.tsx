@@ -37,5 +37,8 @@ export function networkEvents(store: Store) {
         input: { id: network.id! },
       });
     },
+    refreshNetworks() {
+      store.send(Services.networks, { type: 'REFRESH_NETWORKS' });
+    },
   };
 }

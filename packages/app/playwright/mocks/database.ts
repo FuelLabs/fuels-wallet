@@ -1,10 +1,8 @@
-import { encrypt } from '@fuel-ts/keystore';
-import { Mnemonic } from '@fuel-ts/mnemonic';
 import type { Account as WalletAccount } from '@fuel-ts/wallet-manager';
 import { WalletManager } from '@fuel-ts/wallet-manager';
 import type { Account, Asset, Connection, Network } from '@fuel-wallet/types';
 import type { Page } from '@playwright/test';
-import { Address } from 'fuels';
+import { Mnemonic, encrypt, Address } from 'fuels';
 
 import { getByAriaLabel } from '../commons/locator';
 import { hasText } from '../commons/text';
@@ -56,6 +54,11 @@ export const ALT_ASSET = {
   imageUrl:
     'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
   isCustom: true,
+};
+
+export const FUEL_NETWORK = {
+  name: 'Fuel Testnet',
+  url: 'https://beta-3.fuel.network/graphql',
 };
 
 export async function getAccount(page: Page) {

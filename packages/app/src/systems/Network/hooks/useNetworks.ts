@@ -1,4 +1,5 @@
 import type { Network } from '@fuel-wallet/types';
+import { useEffect } from 'react';
 
 import type { NetworksMachineState } from '../machines/networksMachine';
 
@@ -30,6 +31,10 @@ export function useNetworks() {
     Services.networks,
     selectors.selectedNetwork
   );
+
+  useEffect(() => {
+    store.refreshNetworks();
+  }, []);
 
   store.useUpdateMachineConfig(Services.networks, {
     actions: {

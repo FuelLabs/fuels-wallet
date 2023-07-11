@@ -9,7 +9,14 @@ import {
 import type { Fuel } from '../Fuel';
 
 import type { MockServices } from './__mock__';
-import { toWallet, mockFuel, seedWallet } from './__mock__';
+import {
+  toWallet,
+  mockFuel,
+  seedWallet,
+  AbiContractId,
+  FlatAbi,
+} from './__mock__';
+import { FUEL_NETWORK } from './constants';
 
 describe('Fuel', () => {
   let mocks: MockServices;
@@ -75,15 +82,61 @@ describe('Fuel', () => {
     expect(isAdded).toEqual(true);
   });
 
+  test('network', async () => {
+    const network = await fuel.network();
+    expect(network).toStrictEqual({ url: process.env.PUBLIC_PROVIDER_URL! });
+  });
+
+  test('networks', async () => {
+    const networks = await fuel.networks();
+    expect(networks).toStrictEqual([
+      { url: process.env.PUBLIC_PROVIDER_URL! },
+      FUEL_NETWORK,
+    ]);
+  });
+
+  test('addNetwork', async () => {
+    const isNetworkAdded = await fuel.addNetwork(FUEL_NETWORK);
+    expect(isNetworkAdded).toEqual(true);
+  });
+
+  test('addAbi', async () => {
+    const abiMap = {
+      [AbiContractId]: FlatAbi,
+    };
+    const isAdded = await fuel.addAbi(abiMap);
+    expect(isAdded).toEqual(true);
+  });
+
+  test('getAbi', async () => {
+    const abiMap = {
+      [AbiContractId]: FlatAbi,
+    };
+    await fuel.addAbi(abiMap);
+    const abi = await fuel.getAbi(AbiContractId);
+
+    expect(abi).toStrictEqual(FlatAbi);
+  });
+
+  test('hasAbi', async () => {
+    const abiMap = {
+      [AbiContractId]: FlatAbi,
+    };
+    await fuel.addAbi(abiMap);
+    const hasAbi = await fuel.hasAbi(AbiContractId);
+
+    expect(hasAbi).toBeTruthy();
+  });
+
   test('signMessage', async () => {
     const accounts = await fuel.accounts();
     const account = accounts[0];
 
     // Test example like docs
     const signedMessage = await fuel.signMessage(account, 'test');
-    const signedMesageSpec =
+    const signedMessageSpec =
       await mocks.backgroundService.state.wallet.signMessage('test');
-    expect(signedMessage).toEqual(signedMesageSpec);
+    expect(signedMessage).toEqual(signedMessageSpec);
   });
 
   test('sendTransaction', async () => {

@@ -1,4 +1,4 @@
-import type { CommunicationMessage } from '@fuel-wallet/types';
+import type { AbiMap, CommunicationMessage } from '@fuel-wallet/types';
 import {
   FuelWalletEvents,
   BACKGROUND_SCRIPT_NAME,
@@ -10,6 +10,9 @@ import { transactionRequestify, Wallet } from 'fuels';
 import type { JSONRPCResponse } from 'json-rpc-2.0';
 
 import { BaseConnection } from '../../connections/BaseConnection';
+import { FUEL_NETWORK } from '../constants';
+
+import { AbiContractId, FlatAbi } from './abi';
 
 const generateOptions = {
   provider: process.env.PUBLIC_PROVIDER_URL!,
@@ -24,6 +27,7 @@ export class MockBackgroundService extends BaseConnection {
     isConnected: boolean;
     accounts: Array<string>;
     network: { url: string };
+    abiMap: AbiMap;
   };
 
   constructor(extensionId: string) {
@@ -38,12 +42,16 @@ export class MockBackgroundService extends BaseConnection {
       this.isConnected,
       this.accounts,
       this.network,
+      this.networks,
       this.signMessage,
       this.sendTransaction,
       this.currentAccount,
-      this.assets,
-      this.addAsset,
       this.addAssets,
+      this.assets,
+      this.addNetwork,
+      this.addAbi,
+      this.getAbi,
+      this.hasAbi,
     ]);
     // Mock state of the background service
     // declared in this way to enable replacement
@@ -55,6 +63,9 @@ export class MockBackgroundService extends BaseConnection {
       accounts: [wallet.address.toAddress()],
       network: {
         url: process.env.PUBLIC_PROVIDER_URL!,
+      },
+      abiMap: {
+        [AbiContractId]: FlatAbi,
       },
     };
   }
@@ -113,6 +124,10 @@ export class MockBackgroundService extends BaseConnection {
     return network;
   }
 
+  async networks() {
+    return [this.state.network, FUEL_NETWORK];
+  }
+
   async disconnect() {
     this.sendEvent(FuelWalletEvents.connection, [false]);
     return true;
@@ -158,6 +173,22 @@ export class MockBackgroundService extends BaseConnection {
   }
 
   async addAssets(): Promise<boolean> {
+    return true;
+  }
+
+  async addNetwork(): Promise<boolean> {
+    return true;
+  }
+
+  async addAbi(): Promise<boolean> {
+    return true;
+  }
+
+  async getAbi() {
+    return this.state.abiMap[AbiContractId];
+  }
+
+  async hasAbi(): Promise<boolean> {
     return true;
   }
 }

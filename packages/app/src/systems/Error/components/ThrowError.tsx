@@ -4,7 +4,7 @@ const Crash = () => {
   throw new Error('Test Error');
 };
 
-export function ThrowError() {
+export default function ThrowError() {
   const [crash, setCrash] = useState(false);
 
   useEffect(() => {

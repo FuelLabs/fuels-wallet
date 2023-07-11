@@ -2,6 +2,7 @@ import type { TxInputs } from '../Transaction/services';
 
 import type {
   AddAssetInputs,
+  AddNetworkInputs,
   ConnectRequestInputs,
   SignInputs,
 } from './machines';
@@ -31,6 +32,12 @@ export function requestEvents(store: Store) {
     },
     requestAddAsset(input: AddAssetInputs['start']) {
       return store.send(Services.addAssetRequest, {
+        type: 'START',
+        input,
+      });
+    },
+    requestAddNetwork(input: AddNetworkInputs['start']) {
+      return store.send(Services.addNetworkRequest, {
         type: 'START',
         input,
       });
