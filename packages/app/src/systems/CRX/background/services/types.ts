@@ -34,6 +34,7 @@ export type MessageInputs = {
     origin: string;
     title?: string;
     favIconUrl?: string;
+    totalAccounts: number;
   };
   addAbi: {
     abiMap: AbiMap;

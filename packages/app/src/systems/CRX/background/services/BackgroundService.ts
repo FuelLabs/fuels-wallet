@@ -38,7 +38,7 @@ export class BackgroundService {
   constructor(communicationProtocol: CommunicationProtocol) {
     this.communicationProtocol = communicationProtocol;
     this.server = new JSONRPCServer<EventOrigin>();
-    this.server.applyMiddleware(this.connectionMiddlware.bind(this));
+    this.server.applyMiddleware(this.connectionMiddleware.bind(this));
     this.setupListeners();
     this.externalMethods([
       this.ping,
@@ -101,7 +101,7 @@ export class BackgroundService {
     }
   }
 
-  async requireAccountConnecton(
+  async requireAccountConnection(
     connection: Connection | undefined,
     address?: string
   ) {
@@ -125,22 +125,22 @@ export class BackgroundService {
     }
   }
 
-  async connectionMiddlware(
+  async connectionMiddleware(
     next: JSONRPCServerMiddlewareNext<EventOrigin>,
     request: JSONRPCRequest,
     serverParams: EventOrigin
   ) {
-    // If the method is ping, by pass checks
+    // If the method is ping, bypass checks
     if (request.method === 'ping') {
       return next(request, serverParams);
     }
 
-    // Retrive connection for use on accounts
+    // Retrieve connection for use on accounts
     const connection = await ConnectionService.getConnection(
       serverParams!.origin
     );
 
-    // If the method is not connect or isConnected
+    // If the method is not `connect` or `isConnected`
     // check if connection is already established
     if (!['connect', 'isConnected'].includes(request.method)) {
       await this.requireConnection(connection);
@@ -183,8 +183,13 @@ export class BackgroundService {
     const favIconUrl = serverParams.favIconUrl;
 
     let authorizedApp = await ConnectionService.getConnection(origin);
+    const accounts = await AccountService.getAccounts();
+    const shownAccounts = accounts?.filter((acc) => !acc.isHidden);
 
-    if (!authorizedApp) {
+    if (
+      !authorizedApp ||
+      (authorizedApp?.accounts.length || 0) !== shownAccounts.length
+    ) {
       const popupService = await PopUpService.open(
         origin,
         Pages.requestConnection(),
@@ -194,6 +199,7 @@ export class BackgroundService {
         origin,
         title,
         favIconUrl,
+        totalAccounts: shownAccounts?.length || 0,
       });
     }
 
@@ -235,7 +241,7 @@ export class BackgroundService {
     const title = serverParams.title;
     const favIconUrl = serverParams.favIconUrl;
 
-    await this.requireAccountConnecton(serverParams.connection, input.address);
+    await this.requireAccountConnection(serverParams.connection, input.address);
 
     const popupService = await PopUpService.open(
       origin,
@@ -255,7 +261,7 @@ export class BackgroundService {
     input: Exclude<MessageInputs['sendTransaction'], 'origin'>,
     serverParams: EventOrigin
   ) {
-    await this.requireAccountConnecton(serverParams.connection, input.address);
+    await this.requireAccountConnection(serverParams.connection, input.address);
     const origin = serverParams.origin;
     const title = serverParams.title;
     const favIconUrl = serverParams.favIconUrl;
@@ -287,7 +293,7 @@ export class BackgroundService {
   async currentAccount(_: unknown, serverParams: EventOrigin) {
     const currentAccount = await AccountService.getCurrentAccount();
 
-    await this.requireAccountConnecton(
+    await this.requireAccountConnection(
       serverParams.connection,
       currentAccount?.address
     );

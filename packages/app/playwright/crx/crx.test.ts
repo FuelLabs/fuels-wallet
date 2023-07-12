@@ -233,6 +233,7 @@ test.describe('FuelWallet Extension', () => {
       });
 
       expect(await isDisconnected).toBeTruthy();
+
       // we need to reconnect the accounts for later tests
       await connectAccounts();
     });
@@ -245,6 +246,7 @@ test.describe('FuelWallet Extension', () => {
           });
         });
       });
+
       // Disconnect accounts from inside the `Connected Apps` page
       await getByAriaLabel(popupPage, 'Menu').click();
       const connectedApps = await hasText(popupPage, 'Connected Apps');
