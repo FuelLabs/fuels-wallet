@@ -6,6 +6,8 @@ import { connectRequestMachine } from './connectRequestMachine';
 import { MOCK_ACCOUNTS } from '~/systems/Account';
 import { expectStateMatch } from '~/systems/Core/__tests__';
 
+const totalAccounts = MOCK_ACCOUNTS.filter((acc) => !acc.isHidden).length;
+
 describe('connectRequestMachine', () => {
   let service: ConnectRequestService;
   beforeEach(async () => {
@@ -23,6 +25,7 @@ describe('connectRequestMachine', () => {
       type: 'START',
       input: {
         origin: 'foo.com',
+        totalAccounts,
       },
     });
 
@@ -43,6 +46,7 @@ describe('connectRequestMachine', () => {
       type: 'START',
       input: {
         origin: 'foo.com',
+        totalAccounts,
       },
     });
 
@@ -66,13 +70,14 @@ describe('connectRequestMachine', () => {
     expect(state.context.error).toBeTruthy();
   });
 
-  it('should add connection', async () => {
+  it('should add Account 1 connection', async () => {
     await expectStateMatch(service, 'idle');
 
     service.send({
       type: 'START',
       input: {
         origin: 'foo.com',
+        totalAccounts,
       },
     });
 
@@ -96,6 +101,116 @@ describe('connectRequestMachine', () => {
     expect(state.context.isConnected).toBeTruthy();
   });
 
+  it('foo.com should have Account 1 connected', async () => {
+    await expectStateMatch(service, 'idle');
+
+    service.send({
+      type: 'START',
+      input: {
+        origin: 'foo.com',
+        totalAccounts,
+      },
+    });
+
+    const state = await expectStateMatch(
+      service,
+      'connecting.selectingAccounts'
+    );
+    expect(state.context.selectedAddresses).toStrictEqual([
+      MOCK_ACCOUNTS[0].address,
+    ]);
+  });
+
+  it('should remove Account 1 and add Account 2 connection', async () => {
+    await expectStateMatch(service, 'idle');
+
+    service.send({
+      type: 'START',
+      input: {
+        origin: 'foo.com',
+        totalAccounts,
+      },
+    });
+
+    await expectStateMatch(service, 'connecting.selectingAccounts');
+
+    service.send({
+      type: 'TOGGLE_ADDRESS',
+      input: MOCK_ACCOUNTS[0].address,
+    });
+    service.send({
+      type: 'TOGGLE_ADDRESS',
+      input: MOCK_ACCOUNTS[1].address,
+    });
+    service.send({
+      type: 'NEXT',
+    });
+
+    await expectStateMatch(service, 'connecting.authorizing');
+
+    service.send({
+      type: 'AUTHORIZE',
+    });
+
+    const state = await expectStateMatch(service, 'done');
+    expect(state.context.isConnected).toBeTruthy();
+  });
+
+  it('foo.com should have Account 2 connected', async () => {
+    await expectStateMatch(service, 'idle');
+
+    service.send({
+      type: 'START',
+      input: {
+        origin: 'foo.com',
+        totalAccounts,
+      },
+    });
+
+    const state = await expectStateMatch(
+      service,
+      'connecting.selectingAccounts'
+    );
+    expect(state.context.selectedAddresses).toStrictEqual([
+      MOCK_ACCOUNTS[1].address,
+    ]);
+  });
+
+  it('should add all accounts to the connection', async () => {
+    await expectStateMatch(service, 'idle');
+
+    service.send({
+      type: 'START',
+      input: {
+        origin: 'foo.com',
+        totalAccounts,
+      },
+    });
+
+    await expectStateMatch(service, 'connecting.selectingAccounts');
+
+    service.send({
+      type: 'TOGGLE_ADDRESS',
+      input: MOCK_ACCOUNTS[0].address,
+    });
+    service.send({
+      type: 'TOGGLE_ADDRESS',
+      input: MOCK_ACCOUNTS[3].address,
+    });
+    service.send({
+      type: 'NEXT',
+    });
+
+    await expectStateMatch(service, 'connecting.authorizing');
+
+    service.send({
+      type: 'AUTHORIZE',
+    });
+
+    const state = await expectStateMatch(service, 'done');
+    expect(state.context.isConnected).toBeTruthy();
+  });
+
   it('foo.com should already be connected', async () => {
     await expectStateMatch(service, 'idle');
 
@@ -103,11 +218,11 @@ describe('connectRequestMachine', () => {
       type: 'START',
       input: {
         origin: 'foo.com',
+        totalAccounts,
       },
     });
 
     const state = await expectStateMatch(service, 'done');
-
     expect(state.context.isConnected).toBeTruthy();
   });
 });
