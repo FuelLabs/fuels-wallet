@@ -40,7 +40,7 @@ export class WindowConnection extends BaseConnection {
 
   addConnector(connector: FuelWalletConnector): void {
     // Ensure Fuel Wallet is the default connector
-    if (this.connectorName === 'Fuel Wallet') {
+    if (connector.name === 'Fuel Wallet') {
       this.connectorName = connector.name;
     }
     if (this.hasConnector(connector.name)) {
