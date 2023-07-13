@@ -38,9 +38,9 @@ export function Connect() {
         <Button
           onPress={handleConnect}
           isLoading={isConnecting}
-          isDisabled={isConnecting || connected || !fuel}
+          isDisabled={isConnecting || !fuel}
         >
-          {connected ? 'Connected' : 'Connect'}
+          Connect
         </Button>
         <Button
           onPress={handleDisconnect}
