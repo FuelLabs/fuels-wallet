@@ -18,9 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/setup-docker
+      - uses: FuelLabs/github-actions/setups/node@master
+      - uses: FuelLabs/github-actions/setups/docker@master
         with:
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Start Test Node
@@ -53,8 +54,6 @@ jobs:
           package-manager: pnpm
           annotations: failed-tests
           test-script: pnpm test:ci
-          prnumber: ${{ steps.findPr.outputs.number }}
-          skip-test: all
           working-directory: ./packages/app
           coverage-file: ${{ env.COVERAGE_FILE }}
           base-coverage-file: ${{ env.COVERAGE_FILE }}
@@ -67,9 +66,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/setup-docker
+      - uses: FuelLabs/github-actions/setups/node@master
+      - uses: FuelLabs/github-actions/setups/docker@master
         with:
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Start Test Node
