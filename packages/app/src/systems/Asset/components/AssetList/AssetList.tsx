@@ -46,7 +46,7 @@ export const AssetList: AssetListComponent = ({
     setShowUnknown((s) => !s);
   }
   return (
-    <CardList>
+    <CardList aria-label="assets">
       {assetsToShow.map((asset) => (
         <AssetItem
           key={asset.assetId}

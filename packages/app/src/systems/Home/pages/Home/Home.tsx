@@ -2,7 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 
-import { AssetsTitle, HomeActions } from '../../components';
+import { HomeActions } from '../../components';
 
 import { VITE_FUEL_PROVIDER_URL } from '~/config';
 import { BalanceWidget, useAccounts } from '~/systems/Account';
