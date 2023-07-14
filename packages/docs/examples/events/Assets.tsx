@@ -11,7 +11,9 @@ import { useLoading } from '../../src/hooks/useLoading';
 export function Assets() {
   const [fuel, notDetected] = useFuel();
   const [assets, setAssets] = useState<Asset[]>();
+  /* useIsConnected:start */
   const [isConnected] = useIsConnected();
+  /* useIsConnected:end */
   const [handleAssets, errorAssets] = useLoading(async () => {
     const assets = await fuel.assets();
     setAssets(assets);
