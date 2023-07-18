@@ -4,11 +4,8 @@ import { MOCK_ASSETS } from '../../__mocks__/assets';
 
 import { AssetList } from './AssetList';
 
-
 import { TestWrapper, RouterProvider, Providers } from '~/systems/Core';
-
 import { renderWithProvider } from '~/systems/Core/__tests__';
-
 
 describe('AssetList', () => {
   it('a11y', async () => {
