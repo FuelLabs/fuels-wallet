@@ -10,7 +10,6 @@ import type {
   OutputCoin,
   OutputContract,
   OutputContractCreated,
-  OutputMessage,
   OutputVariable,
   TransactionResultCallReceipt,
   TransactionResultLogDataReceipt,
@@ -147,7 +146,10 @@ export function getOutputsContract(outputs: Output[]) {
 }
 
 export function getOutputsMessage(outputs: Output[]) {
-  return getOutputsByType<OutputMessage>(outputs, OutputType.Message);
+  return getOutputsByType<OutputContractCreated>(
+    outputs,
+    OutputType.ContractCreated
+  );
 }
 
 export function getOutputsChange(outputs: Output[]) {

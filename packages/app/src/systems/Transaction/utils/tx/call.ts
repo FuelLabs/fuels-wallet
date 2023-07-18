@@ -42,6 +42,7 @@ export const getFunctionCall = ({
       argumentsProvided = nonEmptyInputs.reduce((prev, input, index) => {
         const value = data[index];
         const name = input.type;
+        console.log(`name`, name);
 
         if (name) {
           return {
