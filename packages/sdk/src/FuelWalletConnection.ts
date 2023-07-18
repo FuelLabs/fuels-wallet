@@ -6,7 +6,7 @@ import type {
   FuelEvents,
   Network,
 } from '@fuel-wallet/types';
-import type { JsonFlatAbi, TransactionRequestLike } from 'fuels';
+import type { JsonAbi, TransactionRequestLike } from 'fuels';
 import { transactionRequestify } from 'fuels';
 
 import { WindowConnection } from './connections/WindowConnection';
@@ -88,7 +88,7 @@ export class FuelWalletConnection extends WindowConnection {
     });
   }
 
-  async getAbi(contractId: string): Promise<JsonFlatAbi> {
+  async getAbi(contractId: string): Promise<JsonAbi> {
     return this.client.request('getAbi', {
       contractId,
     });
