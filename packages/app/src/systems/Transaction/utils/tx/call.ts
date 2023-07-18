@@ -1,8 +1,8 @@
-import type { JsonFlatAbi, ReceiptCall } from 'fuels';
+import type { JsonAbi, ReceiptCall } from 'fuels';
 import { Interface, VM_TX_MEMORY, bn, filterEmptyParams } from 'fuels';
 
 type GetFunctionCallProps = {
-  abi: JsonFlatAbi;
+  abi: JsonAbi;
   receipt: ReceiptCall;
   rawPayload?: string;
 };
