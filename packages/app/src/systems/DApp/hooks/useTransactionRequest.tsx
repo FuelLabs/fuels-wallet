@@ -109,6 +109,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const showActions = !status('failed') && !status('success');
   const tx = useParseTx({
     transaction: ctx.input.transactionRequest?.toTransaction(),
+    id: ctx.response?.approvedTx?.id,
     receipts: ctx.response?.receipts,
     gasPerByte: chainInfo?.consensusParameters.gasPerByte,
     gasPriceFactor: chainInfo?.consensusParameters.gasPriceFactor,

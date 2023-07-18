@@ -15,6 +15,7 @@ type MachineContext = {
   isConnected: boolean;
   error?: string;
   selectedAddresses?: string[];
+  totalAccounts: number;
 };
 
 type MachineServices = {
@@ -34,6 +35,7 @@ export type ConnectRequestInputs = {
     origin: string;
     title?: string;
     favIconUrl?: string;
+    totalAccounts: number;
   };
 };
 
@@ -59,12 +61,13 @@ export const connectRequestMachine = createMachine(
     initial: 'idle',
     context: {
       isConnected: false,
+      totalAccounts: 0,
     },
     states: {
       idle: {
         on: {
           START: {
-            actions: ['setOrigin'],
+            actions: ['assignData'],
             target: 'connecting',
           },
         },
@@ -108,6 +111,7 @@ export const connectRequestMachine = createMachine(
                   target: '#(machine).done',
                 },
                 {
+                  actions: ['setConnection'],
                   target: 'selectingAccounts',
                 },
               ],
@@ -119,9 +123,10 @@ export const connectRequestMachine = createMachine(
               data: {
                 input: (ctx: MachineContext) => ({
                   origin: ctx.origin!,
-                  accounts: ctx.selectedAddresses,
                   title: ctx.title,
                   favIconUrl: ctx.favIconUrl,
+                  connection: ctx.connection,
+                  selectedAddresses: ctx.selectedAddresses,
                 }),
               },
               onDone: [
@@ -150,14 +155,19 @@ export const connectRequestMachine = createMachine(
   {
     delays: { TIMEOUT: 1300 },
     actions: {
-      setOrigin: assign({
+      assignData: assign({
         origin: (_, ev) => ev.input.origin,
         title: (_, ev) => ev.input.title,
         favIconUrl: (_, ev) => ev.input.favIconUrl,
+        totalAccounts: (_, ev) => ev.input.totalAccounts,
       }),
       setConnected: assign({
         isConnected: (_) => true,
         connection: (_, ev) => ev.data,
+      }),
+      setConnection: assign({
+        connection: (_, ev) => ev.data,
+        selectedAddresses: (_, ev) => ev.data?.accounts || [],
       }),
       toggleAddress: assign({
         selectedAddresses: (ctx, ev) => {
@@ -183,16 +193,29 @@ export const connectRequestMachine = createMachine(
           return undefined;
         },
       }),
-      addConnection: FetchMachine.create<Connection, Connection | undefined>({
+      addConnection: FetchMachine.create<
+        MachineContext,
+        Connection | undefined
+      >({
         showError: false,
         fetch: async ({ input }) => {
-          if (!input?.origin || !Array.isArray(input?.accounts)) {
-            throw new Error('Origin or account not passed');
+          if (
+            !input?.origin ||
+            !Array.isArray(input?.selectedAddresses) ||
+            input?.selectedAddresses.length === 0
+          ) {
+            throw new Error('Invalid connect request');
+          }
+          if (input.connection) {
+            return ConnectionService.updateConnectedAccounts({
+              origin: input.origin,
+              accounts: input.selectedAddresses,
+            });
           }
           return ConnectionService.addConnection({
             data: {
               origin: input.origin,
-              accounts: input.accounts,
+              accounts: input.selectedAddresses,
               favIconUrl: input.favIconUrl,
               title: input.title,
             },
@@ -201,8 +224,11 @@ export const connectRequestMachine = createMachine(
       }),
     },
     guards: {
-      connectionConnected: (_, ev) => {
-        return !!((ev.data?.accounts.length || 0) >= 1);
+      connectionConnected: (ctx, ev) => {
+        return (
+          (ev.data?.accounts.length || 0) === ctx.totalAccounts &&
+          ctx.totalAccounts >= 1
+        );
       },
     },
   }
