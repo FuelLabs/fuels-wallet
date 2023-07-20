@@ -145,13 +145,6 @@ export function getOutputsContract(outputs: Output[]) {
   return getOutputsByType<OutputContract>(outputs, OutputType.Contract);
 }
 
-export function getOutputsMessage(outputs: Output[]) {
-  return getOutputsByType<OutputContractCreated>(
-    outputs,
-    OutputType.ContractCreated
-  );
-}
-
 export function getOutputsChange(outputs: Output[]) {
   return getOutputsByType<OutputCoin>(outputs, OutputType.Change);
 }

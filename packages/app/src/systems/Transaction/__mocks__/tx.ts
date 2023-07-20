@@ -633,7 +633,6 @@ export const MOCK_TRANSACTION_TRANSFER_FROM_MESSAGE: MockTransaction = {
 
 export const MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS: {
   inputCoin: InputCoin;
-  outputMessage: OutputVariable;
   outputChange: OutputChange;
   receiptMessageOut: ReceiptMessageOut;
   receiptReturn: ReceiptReturn;
@@ -657,13 +656,6 @@ export const MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS: {
     predicateDataLength: 0,
     predicate: '0x',
     predicateData: '0x',
-  },
-  outputMessage: {
-    type: OutputType.Variable,
-    to: '0x0000000000000000000000000000000000000000000000000000000000000000',
-    amount: bn(0),
-    assetId:
-      '0x0000000000000000000000000000000000000000000000000000000000000000',
   },
   outputChange: {
     type: OutputType.Change,
@@ -707,10 +699,7 @@ export const MOCK_TRANSACTION_WITHDRAW_FROM_FUEL: MockTransaction = {
     gasLimit: bn(100000000),
     maturity: 0,
     inputs: [MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.inputCoin],
-    outputs: [
-      MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.outputMessage,
-      MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.outputChange,
-    ],
+    outputs: [MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.outputChange],
     witnesses: [{ data: '0x', dataLength: 0 }],
     inputsCount: 1,
     outputsCount: 2,

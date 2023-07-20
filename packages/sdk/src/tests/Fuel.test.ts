@@ -162,7 +162,7 @@ describe('Fuel', () => {
       [amount, NativeAssetId],
     ]);
 
-    transactionRequest.addResources(resources);
+    transactionRequest.addResourceInputsAndOutputs(resources);
     const response = await wallet.sendTransaction(transactionRequest);
 
     // wait for transaction to be completed
