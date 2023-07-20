@@ -1,6 +1,5 @@
 import { AddressType } from '@fuel-wallet/types';
-import {
- ReceiptType, TransactionType, OutputType, InputType, bn } from 'fuels';
+import { ReceiptType, TransactionType, OutputType, InputType, bn } from 'fuels';
 import type {
   InputCoin,
   InputContract,
@@ -17,7 +16,8 @@ import type {
   TransactionResultCallReceipt,
   TransactionResultReturnDataReceipt,
   TransactionResultScriptResultReceipt,
-  TransactionResultTransferOutReceipt } from 'fuels';
+  TransactionResultTransferOutReceipt,
+} from 'fuels';
 
 import type { AbiParam, RawPayloadParam, ReceiptParam, Tx } from '../utils';
 import {
@@ -83,7 +83,6 @@ export const MOCK_TRANSACTION_CONTRACT_CALL_PARTS: {
     owner: '0x3e7ddda4d0d3f8307ae5f1aed87623992c1c4decefec684936960775181b2302',
     predicate: '0x',
     predicateData: '0x',
-    predicateGasUsed: bn(),
     predicateDataLength: 0,
     predicateLength: 0,
     txPointer: { blockHeight: 0, txIndex: 0 },
@@ -329,7 +328,6 @@ export const MOCK_TRANSACTION_CREATE_CONTRACT_PARTS: {
     predicateDataLength: 0,
     predicate: '0x',
     predicateData: '0x',
-    predicateGasUsed: bn(),
   },
   outputContractCreated: {
     type: OutputType.ContractCreated,
@@ -496,7 +494,6 @@ export const MOCK_TRANSACTION_TRANSFER_PARTS: {
     predicateDataLength: 0,
     predicate: '0x',
     predicateData: '0x',
-    predicateGasUsed: bn(),
   },
   inputMessage: {
     amount: bn.parseUnits('0.001'),
@@ -507,7 +504,6 @@ export const MOCK_TRANSACTION_TRANSFER_PARTS: {
     predicateData: '0x',
     predicateDataLength: 0,
     predicateLength: 0,
-    predicateGasUsed: bn(),
     recipient:
       '0x06300e686a5511c7ba0399fc68dcbe0ca2d8f54f7e6afea73c505dd3bcacf33b',
     sender:
@@ -661,7 +657,6 @@ export const MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS: {
     predicateDataLength: 0,
     predicate: '0x',
     predicateData: '0x',
-    predicateGasUsed: bn(),
   },
   outputMessage: {
     type: OutputType.Variable,
