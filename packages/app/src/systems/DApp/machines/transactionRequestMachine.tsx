@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Account } from '@fuel-wallet/types';
-import type {
-  BN,
-  TransactionRequest,
-  TransactionResponse,
-  TransactionResultReceipt,
+import {
+  type BN,
+  type TransactionRequest,
+  type TransactionResponse,
+  type TransactionResultReceipt,
 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { AccountService } from '~/systems/Account';
-import { assignErrorMessage, FetchMachine } from '~/systems/Core';
+import { assignErrorMessage, delay, FetchMachine } from '~/systems/Core';
 import type { NetworkInputs } from '~/systems/Network';
 import { NetworkService } from '~/systems/Network';
 import type { GroupedErrors, VMApiError } from '~/systems/Transaction';
@@ -310,6 +310,10 @@ export const transactionRequestMachine = createMachine(
           if (!input?.transactionRequest) {
             throw new Error('Invalid simulateTransaction input');
           }
+          // Enforce a minimum delay to show the loading state
+          // this creates a better experience for the user as the
+          // screen doesn't flash between states
+          await delay(1000);
           const receipts = await TxService.simulateTransaction(input);
           return receipts;
         },
