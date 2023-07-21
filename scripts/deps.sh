@@ -8,7 +8,7 @@
 # Figure out dependencies to link
 deps=""
 if [ "$LINK_FUEL_TS" = true ] ; then
-    fuel_ts_deps="fuels @fuel-ts/wallet-manager"
+    fuel_ts_deps="fuels"
     deps="$deps $fuel_ts_deps"
 fi
 

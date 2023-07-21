@@ -66,6 +66,7 @@ export function Transfer() {
             <InputAmount
               value={amount}
               onChange={(value) => setAmount(value)}
+              hiddenBalance
             />
           </Box>
           <Box>
