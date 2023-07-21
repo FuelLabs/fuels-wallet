@@ -20,6 +20,7 @@ function isValidId(id: any) {
 }
 
 function isValidUrl(url: any) {
+  if (url === '') return true;
   try {
     // eslint-disable-next-line no-new
     new URL(url);
