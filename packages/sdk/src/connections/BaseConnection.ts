@@ -13,6 +13,7 @@ import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
 import { JSONRPCServer, JSONRPCClient } from 'json-rpc-2.0';
 
 import { MAX_EVENT_LISTENERS } from '../config';
+import { createUUID } from '../utils/createUUID';
 
 export class BaseConnection extends EventEmitter {
   readonly client: JSONRPCClient;
@@ -21,8 +22,15 @@ export class BaseConnection extends EventEmitter {
   constructor() {
     super();
     this.setMaxListeners(MAX_EVENT_LISTENERS);
-    this.client = new JSONRPCClient(this.sendRequest.bind(this));
+    this.client = new JSONRPCClient(
+      this.sendRequest.bind(this),
+      this.createRequestId
+    );
     this.server = new JSONRPCServer();
+  }
+
+  createRequestId(): string {
+    return createUUID();
   }
 
   externalMethods(methods: Array<string | any>) {
