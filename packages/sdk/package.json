@@ -41,7 +41,7 @@
   "devDependencies": {
     "@fuel-wallet/types": "workspace:*",
     "@types/uuid": "^9.0.1",
-    "fuels": "pr-1113",
+    "fuels": "pr-1123",
     "jest-webextension-mock": "^3.8.9",
     "tsup": "^6.7.0"
   }

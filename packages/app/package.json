@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@fontsource/source-code-pro": "^5.0.2",
-    "@fuel-ts/wallet-manager": "pr-1113",
+    "@fuel-ts/wallet-manager": "pr-1123",
     "@fuel-ui/config": "0.16.1",
     "@fuel-ui/css": "0.16.1",
     "@fuel-ui/react": "0.16.1",
@@ -46,7 +46,7 @@
     "events": "^3.3.0",
     "fake-indexeddb": "^4.0.1",
     "framer-motion": "^10.12.16",
-    "fuels": "pr-1113",
+    "fuels": "pr-1123",
     "graphql": "^16.6.0",
     "graphql-request": "^5.2.0",
     "graphql-tag": "^2.12.6",

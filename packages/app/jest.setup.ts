@@ -8,6 +8,7 @@ import { localStorageMock } from './src/mocks/localStorage';
 (global as any).TextDecoder = TextDecoder;
 (global as any).ArrayBuffer = ArrayBuffer;
 (global as any).Uint8Array = Uint8Array;
+(global as any).structuredClone = (val: any) => JSON.parse(JSON.stringify(val));
 
 const noop = () => {};
 Object.defineProperty(window, 'scrollTo', { value: noop, writable: true });
