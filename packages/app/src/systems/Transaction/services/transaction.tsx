@@ -12,7 +12,7 @@ import {
   GAS_PRICE_FACTOR,
   bn,
   MAX_GAS_PER_TX,
-  NativeAssetId,
+  BaseAssetId,
   ScriptTransactionRequest,
   transactionRequestify,
   Provider,
@@ -190,7 +190,7 @@ export class TxService {
     const wallet = new WalletLockedCustom(account!.address, network!.url);
     const params = { gasLimit: MAX_GAS_PER_TX };
     const request = new ScriptTransactionRequest(params);
-    request.addCoinOutput(wallet.address, bn(1), NativeAssetId);
+    request.addCoinOutput(wallet.address, bn(1), BaseAssetId);
     await wallet.fund(request);
     const txCost = await getTxCost(request, wallet);
 
@@ -218,7 +218,7 @@ export class TxService {
 
     if (!coins.find(isEth)) {
       coins.push({
-        assetId: NativeAssetId,
+        assetId: BaseAssetId,
         amount: gasFee,
       });
     }
@@ -245,7 +245,7 @@ export class TxService {
     if (!account || !asset || !fee || !amount || !address) return false;
     const assetBalance = getAssetAccountBalance(account, asset?.assetId);
     if (isEth(asset.assetId)) return assetBalance.gte(bn(amount).add(fee));
-    const ethBalance = getAssetAccountBalance(account, NativeAssetId);
+    const ethBalance = getAssetAccountBalance(account, BaseAssetId);
     const hasAssetBalance = assetBalance.gte(bn(amount));
     const hasGasFeeBalance = ethBalance.gte(bn(fee));
     return hasAssetBalance && hasGasFeeBalance;

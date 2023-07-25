@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import type { BN } from 'fuels';
-import { Address, NativeAssetId, Wallet } from 'fuels';
+import { Address, BaseAssetId, Wallet } from 'fuels';
 
 import { getAccount, ALT_ASSET } from '../mocks';
 
@@ -19,7 +19,7 @@ export async function seedWallet(address: string, amount: BN) {
   const transfETH = await genesisWallet.transfer(
     Address.fromString(address),
     amount,
-    NativeAssetId,
+    BaseAssetId,
     { gasPrice: 1 }
   );
   await transfETH.wait();
