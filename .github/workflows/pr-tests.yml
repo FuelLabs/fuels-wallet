@@ -25,7 +25,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Start Test Node
-        run: pnpm node:test:up
+        run: pnpm node:up:test
 
       - name: Graphql Codegen
         run: pnpm codegen:app
@@ -59,7 +59,7 @@ jobs:
           base-coverage-file: ${{ env.COVERAGE_FILE }}
 
       - name: Stop Test Node
-        run: pnpm node:test:clean
+        run: pnpm node:clean:test
 
   tests-e2e:
     name: E2E Tests
@@ -73,7 +73,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Start Test Node
-        run: pnpm node:test:up
+        run: pnpm node:up:test
 
       - name: Graphql Codegen
         run: pnpm codegen:app
@@ -102,4 +102,4 @@ jobs:
           retention-days: 30
 
       - name: Stop Test Node
-        run: pnpm node:test:clean
+        run: pnpm node:clean:test
