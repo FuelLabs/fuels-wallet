@@ -4,4 +4,4 @@
 '@fuel-wallet/sdk': patch
 ---
 
-Add support to fuel-core 0.18.3
+Add support for fuel-core 0.19.0
