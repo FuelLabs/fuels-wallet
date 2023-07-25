@@ -1,5 +1,15 @@
 # @fuel-wallet/types
 
+## 0.11.0
+
+### Minor Changes
+
+- [#759](https://github.com/FuelLabs/fuels-wallet/pull/759) [`f79897d`](https://github.com/FuelLabs/fuels-wallet/commit/f79897df28b0d6e63aeedc3af45ea7ad838f1803) Thanks [@tomiiide](https://github.com/tomiiide)! - Handle all errors in the wallet
+
+### Patch Changes
+
+- [#686](https://github.com/FuelLabs/fuels-wallet/pull/686) [`98c8184`](https://github.com/FuelLabs/fuels-wallet/commit/98c818480789ead39b498a9768f989a64ff8c583) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: add support to show called methods/params passed to contract calls inside Transaction Screen
+
 ## 0.10.0
 
 ### Minor Changes
