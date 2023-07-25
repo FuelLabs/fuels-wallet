@@ -1,6 +1,7 @@
 import type { FuelWalletError } from '@fuel-wallet/types';
 import * as Sentry from '@sentry/browser';
 
+import { WHITE_LIST } from '../constants';
 import { parseFuelError } from '../utils';
 
 import { VITE_SENTRY_DSN } from '~/config';
@@ -24,6 +25,11 @@ export class ReportErrorService {
     error,
     reactError,
   }: Pick<FuelWalletError, 'error' | 'reactError'>) {
+    const isWhiteListedError = !!WHITE_LIST.find((whiteListed) =>
+      error?.message.startsWith(whiteListed)
+    );
+    if (isWhiteListedError) return undefined;
+
     const fuelError = parseFuelError({
       error: { ...error },
       reactError: { ...reactError },
