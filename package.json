@@ -123,8 +123,7 @@
       "vite@<2.9.16": ">=2.9.16",
       "semver@<7.5.2": ">=7.5.2",
       "node-fetch@<2.6.7": ">=2.6.7",
-      "word-wrap": "npm:@aashutoshrathi/word-wrap",
-      "cross-fetch": "4.0.0"
+      "word-wrap": "npm:@aashutoshrathi/word-wrap"
     }
   }
 }
