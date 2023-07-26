@@ -1,0 +1,4 @@
+{
+  "folders": ["/src/components", "/examples", "/examples/events"],
+  "ignore": ["CodeImport"]
+}

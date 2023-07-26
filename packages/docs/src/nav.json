@@ -1,0 +1,25 @@
+{
+  "menu": [
+    "Install",
+    "Browser Support",
+    "How To Use",
+    "For Developers",
+    "Contributing"
+  ],
+  "for_developers": [
+    "Getting Started",
+    "Connecting",
+    "Accounts",
+    "Assets",
+    "Networks",
+    "Signing a Message",
+    "ABIs",
+    "Wallet Connectors",
+    "Reference"
+  ],
+  "contributing": [
+    "Running locally",
+    "Contributing Guide",
+    "Linking local dependencies"
+  ]
+}
