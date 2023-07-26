@@ -1,10 +1,10 @@
-import type { JsonFlatAbi } from 'fuels';
+import type { JsonAbi } from 'fuels';
 import { useEffect, useState } from 'react';
 
 import { AbiService } from '../services';
 
 export function useAbiMap({ contractIds }: { contractIds?: string[] }) {
-  const [abiMap, setAbiMap] = useState<Record<string, JsonFlatAbi> | undefined>(
+  const [abiMap, setAbiMap] = useState<Record<string, JsonAbi> | undefined>(
     undefined
   );
 
@@ -23,7 +23,7 @@ export function useAbiMap({ contractIds }: { contractIds?: string[] }) {
           }
 
           return prev;
-        }, {} as Record<string, JsonFlatAbi>);
+        }, {} as Record<string, JsonAbi>);
         setAbiMap(newAbiMap);
       }
     }

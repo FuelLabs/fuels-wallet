@@ -42,7 +42,6 @@ import {
   getOutputsCoin,
   getOutputsContract,
   getOutputsContractCreated,
-  getOutputsMessage,
   getOutputsVariable,
   getPayProducerOperations,
   getReceiptsCall,
@@ -257,18 +256,6 @@ describe('Tx util', () => {
     it('should getOutputsContract return empty', () => {
       const outputs = getOutputsContract(
         MOCK_TRANSACTION_CREATE_CONTRACT.transaction.outputs || []
-      );
-      expect(outputs.length).toEqual(0);
-    });
-
-    it('should getOutputsMessage return correct outputs', () => {
-      // TODO: add test here.. not sure how to test this as we don't support message inputs/outputs in screens yet
-      expect(false);
-    });
-
-    it('should getOutputsMessage return empty', () => {
-      const outputs = getOutputsMessage(
-        MOCK_TRANSACTION_CONTRACT_CALL.transaction.outputs || []
       );
       expect(outputs.length).toEqual(0);
     });

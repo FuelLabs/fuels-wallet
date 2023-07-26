@@ -1,7 +1,7 @@
 import {
   Address,
   bn,
-  NativeAssetId,
+  BaseAssetId,
   ScriptTransactionRequest,
   Wallet,
 } from 'fuels';
@@ -71,13 +71,13 @@ describe('Fuel', () => {
   });
 
   test('addAsset', async () => {
-    const asset = { assetId: NativeAssetId };
+    const asset = { assetId: BaseAssetId };
     const isAdded = await fuel.addAsset(asset);
     expect(isAdded).toEqual(true);
   });
 
   test('addAssets', async () => {
-    const asset = { assetId: NativeAssetId };
+    const asset = { assetId: BaseAssetId };
     const isAdded = await fuel.addAssets([asset]);
     expect(isAdded).toEqual(true);
   });
@@ -158,11 +158,9 @@ describe('Fuel', () => {
     transactionRequest.addCoinOutput(toAddress, amount);
 
     const wallet = await fuel.getWallet(account);
-    const resources = await wallet.getResourcesToSpend([
-      [amount, NativeAssetId],
-    ]);
+    const resources = await wallet.getResourcesToSpend([[amount, BaseAssetId]]);
 
-    transactionRequest.addResources(resources);
+    transactionRequest.addResourceInputsAndOutputs(resources);
     const response = await wallet.sendTransaction(transactionRequest);
 
     // wait for transaction to be completed
@@ -170,7 +168,7 @@ describe('Fuel', () => {
 
     // query the balance of the destination wallet
     const addrWallet = await fuel.getWallet(toAddress);
-    const balance = await addrWallet.getBalance(NativeAssetId);
+    const balance = await addrWallet.getBalance(BaseAssetId);
     expect(balance.toNumber()).toBeGreaterThanOrEqual(amount.toNumber());
   });
 
@@ -183,7 +181,7 @@ describe('Fuel', () => {
     const wallet = await fuel.getWallet(account);
     const toAddress = Address.fromString(toAccount);
     const amount = bn.parseUnits('0.1');
-    const response = await wallet.transfer(toAddress, amount, NativeAssetId, {
+    const response = await wallet.transfer(toAddress, amount, BaseAssetId, {
       gasPrice: 1,
     });
 
@@ -192,7 +190,7 @@ describe('Fuel', () => {
 
     // query the balance of the destination wallet
     const addrWallet = await fuel.getWallet(toAddress);
-    const balance = await addrWallet.getBalance(NativeAssetId);
+    const balance = await addrWallet.getBalance(BaseAssetId);
     expect(balance.toNumber()).toBeGreaterThanOrEqual(amount.toNumber());
   });
 
@@ -214,7 +212,7 @@ describe('Fuel', () => {
     const response = await walletLocked.transfer(
       toAddress,
       bn.parseUnits('0.1'),
-      NativeAssetId,
+      BaseAssetId,
       { gasPrice: 1 }
     );
 

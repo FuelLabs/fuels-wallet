@@ -5,7 +5,7 @@ import type {
   BN,
   BNInput,
   Input,
-  JsonFlatAbi,
+  JsonAbi,
   Output,
   Transaction,
   TransactionResultReceipt,
@@ -100,7 +100,7 @@ export type ReceiptParam = {
 
 export type AbiParam = {
   abiMap?: {
-    [key: string]: JsonFlatAbi;
+    [key: string]: JsonAbi;
   };
 };
 export type RawPayloadParam = {
