@@ -76,9 +76,3 @@ jobs:
         run: |
           pnpm ts:check
           pnpm lint
-  test-docs:
-    name: Docs
-    uses: FuelLabs/github-actions/.github/workflows/next-docs.yml@sarah/docs
-    with:
-      doc-folder-path: 'packages/docs/docs'
-      src-folder-path: 'packages/docs/src'
