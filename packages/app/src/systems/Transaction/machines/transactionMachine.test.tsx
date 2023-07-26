@@ -10,7 +10,7 @@ import { transactionMachine } from './transactionMachine';
 import { mockServer } from '~/mocks/server';
 
 const TRANSACTION_ID =
-  '0xc7862855b418ba8f58878db434b21053a61a2025209889cc115989e8040ff077';
+  '0x64641e1faeb1b0052d95e055b085b45b85155a7ec8cc47b1c6b7ed9f2783837a';
 
 mockServer([
   graphql.query('getTransactionWithReceipts', (_req, res, ctx) => {

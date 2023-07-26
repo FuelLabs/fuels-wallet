@@ -5,7 +5,7 @@
   "description": "Fuel Wallet",
   "author": "Fuel Labs <contact@fuel.sh> (https://fuel.network/)",
   "engines": {
-    "node": ">=16",
+    "node": ">=18.14.1",
     "pnpm": ">=7"
   },
   "homepage": "https://github.com/FuelLabs/fuels-wallet",
@@ -44,14 +44,14 @@
     "lint:check": "eslint . --ext .ts,.tsx,.js,.jsx",
     "lint:fix": "pnpm lint:check --fix",
     "node:up": "make -C ./docker up",
-    "node:test:up": "make -C ./docker up-test",
+    "node:up:test": "make -C ./docker up-test",
     "node:down": "make -C ./docker down",
-    "node:test:down": "make -C ./docker down-test",
+    "node:down:test": "make -C ./docker down-test",
     "node:clean": "make -C ./docker clean",
-    "node:test:clean": "make -C ./docker clean-test",
+    "node:clean:test": "make -C ./docker clean-test",
     "nodes:up": "run-s node:up node:test:up",
-    "nodes:down": "run-s node:down node:test:down",
-    "nodes:clean": "run-s node:clean node:test:clean",
+    "nodes:down": "run-s node:down node:down:test",
+    "nodes:clean": "run-s node:clean node:clean:test",
     "nodes:reset": "run-s nodes:clean nodes:up",
     "prettier:check": "prettier --check .",
     "prettier:format": "prettier --write .",
@@ -81,7 +81,7 @@
     "@jest/types": "29.5.0",
     "@playwright/test": "^1.34.3",
     "@types/jest": "^29.5.2",
-    "@types/node": "^20.2.5",
+    "@types/node": "18.15.3",
     "@types/react": "^18.2.7",
     "@types/react-dom": "^18.2.4",
     "@xstate/cli": "^0.5.1",
@@ -123,7 +123,8 @@
       "vite@<2.9.16": ">=2.9.16",
       "semver@<7.5.2": ">=7.5.2",
       "node-fetch@<2.6.7": ">=2.6.7",
-      "word-wrap": "npm:@aashutoshrathi/word-wrap"
+      "word-wrap": "npm:@aashutoshrathi/word-wrap",
+      "cross-fetch": "4.0.0"
     }
   }
 }

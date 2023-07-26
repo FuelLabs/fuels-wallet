@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.11.1
+
+### Patch Changes
+
+- [#811](https://github.com/FuelLabs/fuels-wallet/pull/811) [`a674406`](https://github.com/FuelLabs/fuels-wallet/commit/a67440640db8840f4c199a0bba47f6e82d46829a) Thanks [@matt-user](https://github.com/matt-user)! - Add support for fuel-core 0.19.0
+
+- Updated dependencies [[`a674406`](https://github.com/FuelLabs/fuels-wallet/commit/a67440640db8840f4c199a0bba47f6e82d46829a)]:
+  - @fuel-wallet/types@0.11.1
+  - @fuel-wallet/sdk@0.11.1
+
 ## 0.11.0
 
 ### Minor Changes
