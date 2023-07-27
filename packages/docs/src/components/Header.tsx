@@ -20,7 +20,7 @@ export function Header() {
           <Box.Flex css={styles.logoText}>
             <span>Fuel Wallet</span>
             <Box as="span" css={styles.version}>
-              alpha
+              beta
             </Box>
           </Box.Flex>
         </Link>
