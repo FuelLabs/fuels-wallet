@@ -25,6 +25,7 @@ export type VaultInputs = {
   signTransaction: {
     transaction: string;
     address: string;
+    providerUrl: string;
   };
   signMessage: {
     message: string;
@@ -133,9 +134,11 @@ export class VaultServer extends EventEmitter {
   async signTransaction({
     transaction,
     address,
+    providerUrl,
   }: VaultInputs['signTransaction']): Promise<string> {
     const wallet = await this.manager.getWallet(Address.fromString(address));
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
+    wallet.connect(providerUrl);
     const signature = await wallet.signTransaction(transactionRequest);
     return signature;
   }

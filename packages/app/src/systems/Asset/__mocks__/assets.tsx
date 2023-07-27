@@ -1,6 +1,6 @@
 import { AssetList } from 'asset-list';
 import type { BigNumberish } from 'fuels';
-import { bn, NativeAssetId } from 'fuels';
+import { bn, BaseAssetId } from 'fuels';
 import { graphql } from 'msw';
 
 export const MOCK_ASSETS = AssetList.map((item) => ({
@@ -28,7 +28,7 @@ export const MOCK_ASSETS_AMOUNTS = [
 export const MOCK_ASSETS_NODE = [
   {
     node: {
-      assetId: NativeAssetId,
+      assetId: BaseAssetId,
       amount: bn(30000000000),
     },
   },

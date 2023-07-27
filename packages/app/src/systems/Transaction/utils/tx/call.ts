@@ -1,8 +1,8 @@
-import type { JsonFlatAbi, ReceiptCall } from 'fuels';
-import { Interface, VM_TX_MEMORY, bn, filterEmptyParams } from 'fuels';
+import type { JsonAbi, ReceiptCall } from 'fuels';
+import { Interface, VM_TX_MEMORY, bn } from 'fuels';
 
 type GetFunctionCallProps = {
-  abi: JsonFlatAbi;
+  abi: JsonAbi;
   receipt: ReceiptCall;
   rawPayload?: string;
 };
@@ -15,7 +15,6 @@ export const getFunctionCall = ({
   const abiInterface = new Interface(abi);
   const callFunctionSelector = receipt.param1.toHex(8);
   const functionFragment = abiInterface.getFunction(callFunctionSelector);
-  const nonEmptyInputs = filterEmptyParams(functionFragment.inputs);
 
   let encodedArgs;
 
@@ -37,7 +36,12 @@ export const getFunctionCall = ({
   if (encodedArgs) {
     // use bytes got from rawPayload to decode function params
     const data = functionFragment.decodeArguments(encodedArgs);
-    if (data) {
+    if (data && abi) {
+      const nonEmptyInputs = functionFragment.jsonFn.inputs.filter((t) => {
+        const { type } = abiInterface.getTypeById(t.type) || {};
+
+        return type && type !== '()';
+      });
       // put together decoded data with input names from abi
       argumentsProvided = nonEmptyInputs.reduce((prev, input, index) => {
         const value = data[index];
@@ -57,7 +61,7 @@ export const getFunctionCall = ({
   }
 
   const call = {
-    functionSignature: functionFragment.getSignature(),
+    functionSignature: functionFragment.signature,
     functionName: functionFragment.name,
     argumentsProvided,
     ...(receipt.amount?.isZero()
