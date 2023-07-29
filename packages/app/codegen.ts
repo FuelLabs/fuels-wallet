@@ -50,11 +50,7 @@ const config: CodegenConfig = {
     },
   },
   hooks: {
-    afterOneFileWrite: [
-      'pnpm eslint --fix',
-      'pnpm prettier --write',
-      'pnpm fix-codegen',
-    ],
+    afterOneFileWrite: ['pnpm prettier --write'],
   },
 };
 
