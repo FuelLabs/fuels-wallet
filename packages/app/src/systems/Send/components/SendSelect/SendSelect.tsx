@@ -82,8 +82,9 @@ export function SendSelect({
                 balance={maxAmountToSend}
                 value={bn(field.value)}
                 onChange={(value) => {
-                  form.setValue('amount', value.toString());
-                  handlers.handleValidateAmount(value);
+                  const amountValue = value || undefined;
+                  form.setValue('amount', amountValue?.toString() || '');
+                  handlers.handleValidateAmount(amountValue);
                 }}
               />
             )}

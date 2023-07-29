@@ -18,7 +18,7 @@ import {
 
 const schema = yup
   .object({
-    newPassword: yup.string().test({
+    password: yup.string().test({
       name: 'is-strong',
       message: 'Password must be strong',
       test: (_, ctx) => ctx.parent.strength === 'strong',
@@ -27,12 +27,13 @@ const schema = yup
       .string()
       .oneOf([yup.ref('password'), undefined], 'Passwords must match'),
     currentPassword: yup.string().required('Current password is required'),
+    strength: yup.string().required(),
   })
   .required();
 
 type ChangePasswordFormValues = {
-  password: string;
-  confirmPassword: string;
+  password: string | undefined;
+  confirmPassword: string | undefined;
   currentPassword: string;
   strength: string;
 };
@@ -63,7 +64,7 @@ export function ChangePassword() {
     debounce(() => {
       trigger('confirmPassword');
     }, 500),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -78,7 +79,14 @@ export function ChangePassword() {
         message: 'Passwords must match',
       });
     }
-    return handlers.changePassword(values);
+    if (values.password && values.confirmPassword) {
+      return handlers.changePassword({
+        password: values.password,
+        currentPassword: values.currentPassword,
+      });
+    }
+
+    return undefined;
   }
 
   const goBack = () => navigate(Pages.wallet());

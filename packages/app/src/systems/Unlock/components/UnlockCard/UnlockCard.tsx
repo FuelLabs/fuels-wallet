@@ -36,7 +36,7 @@ export function UnlockCard({
   const { handleSubmit } = form;
 
   function onSubmit(values: UnlockFormValues) {
-    onUnlock(values.password);
+    onUnlock(values.password || '');
   }
 
   return (
@@ -70,11 +70,7 @@ export function UnlockCard({
             justify="space-between"
             css={{ marginTop: '$2' }}
           >
-            <ButtonLink
-              size="sm"
-              variant="ghost"
-              onPress={() => store.openResetDialog()}
-            >
+            <ButtonLink size="sm" onPress={() => store.openResetDialog()}>
               Forgot password?
             </ButtonLink>
           </Box.Stack>
