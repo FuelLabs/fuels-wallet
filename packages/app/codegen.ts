@@ -45,12 +45,17 @@ const config: CodegenConfig = {
           Signature: 'string',
           Tai64Timestamp: 'string',
           TxPointer: 'string',
+          Nonce: 'string',
+          U32: 'string',
         },
       },
     },
   },
   hooks: {
-    afterOneFileWrite: ['pnpm prettier --write'],
+    afterOneFileWrite: [
+      'pnpm eslint --fix --no-ignore',
+      'pnpm prettier --write',
+    ],
   },
 };
 

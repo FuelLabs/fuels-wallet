@@ -1,6 +1,7 @@
 import type { GraphQLClient } from 'graphql-request';
 import type { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/types';
 import gql from 'graphql-tag';
+
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -14,7 +15,7 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
 };
 export type MakeEmpty<
   T extends { [key: string]: unknown },
-  K extends keyof T,
+  K extends keyof T
 > = { [_ in K]?: never };
 export type Incremental<T> =
   | T
@@ -35,13 +36,13 @@ export type Scalars = {
   ContractId: { input: string; output: string };
   HexString: { input: string; output: string };
   MessageId: { input: string; output: string };
-  Nonce: { input: any; output: any };
+  Nonce: { input: string; output: string };
   Salt: { input: string; output: string };
   Signature: { input: string; output: string };
   Tai64Timestamp: { input: string; output: string };
   TransactionId: { input: string; output: string };
   TxPointer: { input: string; output: string };
-  U32: { input: any; output: any };
+  U32: { input: string; output: string };
   U64: { input: string; output: string };
   UtxoId: { input: string; output: string };
 };
@@ -936,33 +937,33 @@ export const AddressTransactionsDocument = gql`
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
   operationName: string,
-  operationType?: string,
+  operationType?: string
 ) => Promise<T>;
 
 const defaultWrapper: SdkFunctionWrapper = (
   action,
   _operationName,
-  _operationType,
+  _operationType
 ) => action();
 
 export function getSdk(
   client: GraphQLClient,
-  withWrapper: SdkFunctionWrapper = defaultWrapper,
+  withWrapper: SdkFunctionWrapper = defaultWrapper
 ) {
   return {
     AddressTransactions(
       variables: IAddressTransactionsQueryVariables,
-      requestHeaders?: GraphQLClientRequestHeaders,
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<IAddressTransactionsQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
           client.request<IAddressTransactionsQuery>(
             AddressTransactionsDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
+            { ...requestHeaders, ...wrappedRequestHeaders }
           ),
         'AddressTransactions',
-        'query',
+        'query'
       );
     },
   };
