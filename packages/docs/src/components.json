@@ -1,8 +1,4 @@
 {
-  "folders": [
-    "/packages/docs/src/components",
-    "/packages/docs/examples",
-    "/packages/docs/examples/events"
-  ],
-  "ignore": ["CodeImport"]
+  "folders": ["/packages/docs/src/components"],
+  "ignore": ["CodeImport", "Examples"]
 }
