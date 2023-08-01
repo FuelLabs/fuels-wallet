@@ -41,7 +41,7 @@ describe('NetworkItem', () => {
       wrapper: TestWrapper,
     });
 
-    const removeBtn = screen.getByLabelText('Remove');
+    const removeBtn = await screen.findByLabelText('Remove');
     await user.click(removeBtn);
 
     expect(await screen.findByText('Are you sure?')).toBeInTheDocument();
