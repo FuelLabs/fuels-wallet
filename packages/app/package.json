@@ -95,6 +95,7 @@
     "@types/chrome": "^0.0.242",
     "@types/lodash.clonedeep": "^4.5.7",
     "@types/lodash.debounce": "^4.0.7",
+    "@types/prettier": "^2.7.3",
     "@types/react": "^18.2.17",
     "@types/react-custom-scroll": "^4.3.2",
     "@types/react-dom": "^18.2.7",
