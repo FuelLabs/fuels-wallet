@@ -16,7 +16,7 @@ export function Transfer() {
   const [isConnected] = useIsConnected();
   const [txId, setTxId] = useState<string>('');
   const [providerUrl, setProviderUrl] = useState<string>('');
-  const [amount, setAmount] = useState<BN>(bn.parseUnits('0.00001'));
+  const [amount, setAmount] = useState<BN | null>(bn.parseUnits('0.00001'));
   const [addr, setAddr] = useState<string>(
     'fuel1a6msn9zmjpvv84g08y3t6x6flykw622s48k2lqg257pf9924pnfq50tdmw'
   );
@@ -71,7 +71,7 @@ export function Transfer() {
           </Box>
           <Box>
             <Button
-              onPress={() => sendTransaction(amount, addr, assetId)}
+              onPress={() => amount && sendTransaction(amount, addr, assetId)}
               isLoading={sendingTransaction}
               isDisabled={sendingTransaction || !fuel}
             >

@@ -1,4 +1,4 @@
 export const FUEL_NETWORK = {
   name: 'Fuel Testnet',
-  url: 'https://beta-3.fuel.network/graphql',
+  url: 'https://beta3-5-devv.swayswap.io/graphql',
 };
