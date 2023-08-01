@@ -106,7 +106,7 @@ jobs:
 
   docs:
     name: Docs
-    uses: FuelLabs/github-actions/.github/workflows/next@sarah/docs
+    uses: FuelLabs/github-actions/docs-hub/next@sarah/docs
     with:
       doc-folder-path: 'packages/docs/docs'
       src-folder-path: 'packages/docs/src'
