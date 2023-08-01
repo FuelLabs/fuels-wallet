@@ -1,4 +1,4 @@
-import { bn, NativeAssetId } from 'fuels';
+import { bn, BaseAssetId } from 'fuels';
 
 import { MOCK_ACCOUNTS } from '../__mocks__';
 
@@ -11,7 +11,7 @@ const MOCK_ACCOUNT = MOCK_ACCOUNTS[0];
 const MOCK_BALANCES = [
   {
     node: {
-      assetId: NativeAssetId,
+      assetId: BaseAssetId,
       amount: bn(1000),
     },
   },
@@ -38,7 +38,7 @@ describe('AccountService', () => {
     const result = await AccountService.fetchBalance({ account, providerUrl });
     expect(result.balance).toBe(bn(1000).toString());
     expect(result.address).toBe(MOCK_ACCOUNT.address);
-    expect(result.balances?.[0].assetId).toBe(NativeAssetId);
+    expect(result.balances?.[0].assetId).toBe(BaseAssetId);
   });
 
   it('should convert an array of accounts into a map', async () => {
