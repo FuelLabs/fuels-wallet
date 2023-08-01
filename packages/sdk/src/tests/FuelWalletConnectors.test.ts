@@ -32,6 +32,10 @@ describe('Fuel Connectors', () => {
     expect(fuel.hasConnector('Third Wallet')).toBeTruthy();
   });
 
+  test('Fuel Wallet should be the default connector', async () => {
+    expect(fuel.connectorName).toEqual('Fuel Wallet');
+  });
+
   test('selectConnector', async () => {
     expect(await fuel.selectConnector('Fuel Wallet')).toBeTruthy();
     expect(await fuel.selectConnector('Third Wallet')).toBeTruthy();

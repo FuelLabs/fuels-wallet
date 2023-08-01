@@ -18,13 +18,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/setup-docker
+      - uses: FuelLabs/github-actions/setups/node@master
+      - uses: FuelLabs/github-actions/setups/docker@master
         with:
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Start Test Node
-        run: pnpm node:test:up
+        run: pnpm node:up:test
 
       - name: Graphql Codegen
         run: pnpm codegen:app
@@ -53,27 +54,26 @@ jobs:
           package-manager: pnpm
           annotations: failed-tests
           test-script: pnpm test:ci
-          prnumber: ${{ steps.findPr.outputs.number }}
-          skip-test: all
           working-directory: ./packages/app
           coverage-file: ${{ env.COVERAGE_FILE }}
           base-coverage-file: ${{ env.COVERAGE_FILE }}
 
       - name: Stop Test Node
-        run: pnpm node:test:clean
+        run: pnpm node:clean:test
 
   tests-e2e:
     name: E2E Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-node
-      - uses: ./.github/actions/setup-docker
+      - uses: FuelLabs/github-actions/setups/node@master
+      - uses: FuelLabs/github-actions/setups/docker@master
         with:
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Start Test Node
-        run: pnpm node:test:up
+        run: pnpm node:up:test
 
       - name: Graphql Codegen
         run: pnpm codegen:app
@@ -102,4 +102,4 @@ jobs:
           retention-days: 30
 
       - name: Stop Test Node
-        run: pnpm node:test:clean
+        run: pnpm node:clean:test

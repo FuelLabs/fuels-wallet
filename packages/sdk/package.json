@@ -1,7 +1,7 @@
 {
   "name": "@fuel-wallet/sdk",
   "description": "Integrate DApps with Fuel Wallet Extension.",
-  "version": "0.10.0",
+  "version": "0.11.1",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
@@ -36,12 +36,12 @@
     "xstate": "^4.37.2"
   },
   "peerDependencies": {
-    "fuels": ">=0.44.2"
+    "fuels": ">=0.48.1"
   },
   "devDependencies": {
     "@fuel-wallet/types": "workspace:*",
     "@types/uuid": "^9.0.1",
-    "fuels": "0.44.2",
+    "fuels": "0.48.1",
     "jest-webextension-mock": "^3.8.9",
     "tsup": "^6.7.0"
   }

@@ -1,5 +1,39 @@
 # fuels-wallet
 
+## 0.11.1
+
+### Patch Changes
+
+- [#811](https://github.com/FuelLabs/fuels-wallet/pull/811) [`a674406`](https://github.com/FuelLabs/fuels-wallet/commit/a67440640db8840f4c199a0bba47f6e82d46829a) Thanks [@matt-user](https://github.com/matt-user)! - Add support for fuel-core 0.19.0
+
+- Updated dependencies [[`a674406`](https://github.com/FuelLabs/fuels-wallet/commit/a67440640db8840f4c199a0bba47f6e82d46829a)]:
+  - @fuel-wallet/types@0.11.1
+  - @fuel-wallet/sdk@0.11.1
+
+## 0.11.0
+
+### Minor Changes
+
+- [#801](https://github.com/FuelLabs/fuels-wallet/pull/801) [`992d5e7`](https://github.com/FuelLabs/fuels-wallet/commit/992d5e7591206c544c072c9ef72d045e2fc56915) Thanks [@eswarasai](https://github.com/eswarasai)! - Added support for user to connect multiple accounts, even if current account is connected
+
+- [#793](https://github.com/FuelLabs/fuels-wallet/pull/793) [`7e7300f`](https://github.com/FuelLabs/fuels-wallet/commit/7e7300fb3a3e2b3170e100a12845e1e0856aaa56) Thanks [@eswarasai](https://github.com/eswarasai)! - Implemented `addNetwork()` method on Fuel SDK enabling developers to add network
+
+### Patch Changes
+
+- [#813](https://github.com/FuelLabs/fuels-wallet/pull/813) [`3910e87`](https://github.com/FuelLabs/fuels-wallet/commit/3910e878aecde237e2dfad8716b36a4c0ce8fc48) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix validation on Asset Screen to allow empty image url field
+
+- [#802](https://github.com/FuelLabs/fuels-wallet/pull/802) [`3b42a3d`](https://github.com/FuelLabs/fuels-wallet/commit/3b42a3d80a4327618b85629d6da2d998748dcbfd) Thanks [@eswarasai](https://github.com/eswarasai)! - Fixed the broken copy transaction link in send transaction screen
+
+- [#794](https://github.com/FuelLabs/fuels-wallet/pull/794) [`3122ccd`](https://github.com/FuelLabs/fuels-wallet/commit/3122ccd08fe5eb9411bc82c182ce7fda2d274fa7) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Don't allow connecting hidden accounts
+
+- [#792](https://github.com/FuelLabs/fuels-wallet/pull/792) [`5b6b062`](https://github.com/FuelLabs/fuels-wallet/commit/5b6b062dd608900d9e089f40c15b70cd959b8901) Thanks [@luizstacio](https://github.com/luizstacio)! - Change dependencies from @fuel-ts/\* to fuels
+
+- [#686](https://github.com/FuelLabs/fuels-wallet/pull/686) [`98c8184`](https://github.com/FuelLabs/fuels-wallet/commit/98c818480789ead39b498a9768f989a64ff8c583) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: add support to show called methods/params passed to contract calls inside Transaction Screen
+
+- Updated dependencies [[`98c8184`](https://github.com/FuelLabs/fuels-wallet/commit/98c818480789ead39b498a9768f989a64ff8c583), [`e94d273`](https://github.com/FuelLabs/fuels-wallet/commit/e94d27341158991679108a1d53cdb7d4864e3dec), [`7e7300f`](https://github.com/FuelLabs/fuels-wallet/commit/7e7300fb3a3e2b3170e100a12845e1e0856aaa56), [`1cdb147`](https://github.com/FuelLabs/fuels-wallet/commit/1cdb1478b34ad331daf5d9a34f5904d1083c3531), [`144d722`](https://github.com/FuelLabs/fuels-wallet/commit/144d722fb70d13aaf8cfb17fe97aa0e1719fe65e), [`f79897d`](https://github.com/FuelLabs/fuels-wallet/commit/f79897df28b0d6e63aeedc3af45ea7ad838f1803), [`98c8184`](https://github.com/FuelLabs/fuels-wallet/commit/98c818480789ead39b498a9768f989a64ff8c583)]:
+  - @fuel-wallet/sdk@0.11.0
+  - @fuel-wallet/types@0.11.0
+
 ## 0.10.0
 
 ### Minor Changes
