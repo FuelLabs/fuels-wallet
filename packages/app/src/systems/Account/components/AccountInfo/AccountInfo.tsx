@@ -14,7 +14,7 @@ export type AccountInfoProps = {
 export function AccountInfo({ headerText, account }: AccountInfoProps) {
   if (!account) return <AccountInfo.Loader />;
   return (
-    <Card css={styles.root} gap="$0">
+    <Card css={styles.root}>
       <Card.Header space="compact">{headerText}</Card.Header>
       <Card.Body css={styles.cardBody}>
         <AccountItem account={account} compact />
@@ -28,6 +28,7 @@ AccountInfo.Loader = AccountInfoLoader;
 const styles = {
   root: cssObj({
     boxSizing: 'border-box',
+    gap: '$1',
   }),
   cardBody: cssObj({
     padding: '$0',

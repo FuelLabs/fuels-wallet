@@ -22,7 +22,7 @@ export function AddAssetRequest() {
           favIconUrl={favIconUrl}
           headerText="Request to Add Assets from:"
         />
-        <Card css={styles.card} gap="$0">
+        <Card css={styles.card}>
           <Card.Header space="compact">
             Review the Assets to be added:
           </Card.Header>
@@ -80,6 +80,7 @@ const styles = {
   }),
   card: cssObj({
     boxSizing: 'border-box',
+    gap: '$0',
   }),
   cardContentSection: cssObj({
     padding: '$0',

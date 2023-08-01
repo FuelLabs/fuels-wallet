@@ -28,21 +28,21 @@
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
-    "@types/chrome": "^0.0.237",
+    "@types/chrome": "^0.0.242",
     "dexie-observable": "4.0.1-beta.13",
     "events": "^3.3.0",
     "json-rpc-2.0": "^1.6.0",
     "uuid": "^9.0.0",
-    "xstate": "^4.37.2"
+    "xstate": "^4.38.2"
   },
   "peerDependencies": {
-    "fuels": ">=0.48.1"
+    "fuels": ">=0.49.1"
   },
   "devDependencies": {
     "@fuel-wallet/types": "workspace:*",
-    "@types/uuid": "^9.0.1",
-    "fuels": "0.48.1",
+    "@types/uuid": "^9.0.2",
+    "fuels": "0.49.1",
     "jest-webextension-mock": "^3.8.9",
-    "tsup": "^6.7.0"
+    "tsup": "^7.1.0"
   }
 }

@@ -1,4 +1,4 @@
-FROM ghcr.io/fuellabs/fuel-core:v0.19.0
+FROM ghcr.io/fuellabs/fuel-core:v0.19.1
 
 ENV MIN_GAS_PRICE="${MIN_GAS_PRICE}"
 ENV CONSENSUS_KEY="${CONSENSUS_KEY}"
