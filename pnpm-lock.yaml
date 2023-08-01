@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -15,6 +15,7 @@ overrides:
   node-fetch@<2.6.7: '>=2.6.7'
   word-wrap: npm:@aashutoshrathi/word-wrap
   cross-fetch: 4.0.0
+  pnpm@>=8.0.0 <8.6.8: '>=8.6.8'
 
 importers:
 
@@ -3504,6 +3505,7 @@ packages:
 
   /@emotion/memoize@0.7.4:
     resolution: {integrity: sha512-Ja/Vfqe3HpuzRsG1oBtWTHk2PGZ7GR+2Vz5iYGelAw8dx32K0y7PjVuxK6z1nMpZOqAFsRUPCkK1YjJ56qJlgw==}
+    requiresBuild: true
     dev: false
     optional: true
 
