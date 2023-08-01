@@ -7,6 +7,7 @@ import {
   getInputByName,
   getButtonByText,
   hasText,
+  reload,
 } from '../commons';
 import { mockData } from '../mocks';
 
@@ -78,23 +79,22 @@ test.describe('Networks', () => {
     await expect(items.first()).toHaveAttribute('data-active', 'true');
   });
 
-  // TODO: commented out until we have a valid network to add (beta-3 no longer valid)
-  // test('should be able to add a new network', async () => {
-  //   await visit(page, '/wallet');
-  //   await getByAriaLabel(page, 'Selected Network').click();
-  //   await hasText(page, /Add new network/i);
-  //   await getByAriaLabel(page, 'Add network').click();
-  //   const buttonCreate = getButtonByText(page, /add/i);
-  //   await expect(buttonCreate).toBeDisabled();
-  //   const urlInput = getInputByName(page, 'url');
-  //   await expect(urlInput).toBeFocused();
-  //   await urlInput.fill('https://beta-3.fuel.network/graphql');
-  //   await hasText(page, /Testnet Beta 3/i, 0, 15000);
-  //   await expect(buttonCreate).toBeEnabled();
-  //   await buttonCreate.click();
-  //   // Wait for save and close popup;
-  //   await page.waitForTimeout(2000);
-  //   await reload(page);
-  //   await hasText(page, /Testnet Beta 3/i);
-  // });
+  test('should be able to add a new network', async () => {
+    await visit(page, '/wallet');
+    await getByAriaLabel(page, 'Selected Network').click();
+    await hasText(page, /Add new network/i);
+    await getByAriaLabel(page, 'Add network').click();
+    const buttonCreate = getButtonByText(page, /add/i);
+    await expect(buttonCreate).toBeDisabled();
+    const urlInput = getInputByName(page, 'url');
+    await expect(urlInput).toBeFocused();
+    await urlInput.fill(VITE_FUEL_PROVIDER_URL);
+    await hasText(page, /Testnet Beta 3/i, 0, 15000);
+    await expect(buttonCreate).toBeEnabled();
+    await buttonCreate.click();
+    // Wait for save and close popup;
+    await page.waitForTimeout(2000);
+    await reload(page);
+    await hasText(page, /Testnet Beta 3/i);
+  });
 });
