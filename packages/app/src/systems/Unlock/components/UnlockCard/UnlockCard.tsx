@@ -70,7 +70,11 @@ export function UnlockCard({
             justify="space-between"
             css={{ marginTop: '$2' }}
           >
-            <ButtonLink size="sm" onPress={() => store.openResetDialog()}>
+            <ButtonLink
+              size="sm"
+              // TODO: should change to onPress when fix -> https://linear.app/fuel-network/issue/FRO-394/buttonlink-needs-to-pass-onpress-as-action
+              onClick={() => store.openResetDialog()}
+            >
               Forgot password?
             </ButtonLink>
           </Box.Stack>
