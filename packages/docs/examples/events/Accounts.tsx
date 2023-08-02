@@ -12,7 +12,9 @@ export function Accounts() {
   const [fuel, notDetected] = useFuel();
   /* useFuel:end */
   const [accounts, setAccounts] = useState<string[]>([]);
+  /* useisConnected:start */
   const [isConnected] = useIsConnected();
+  /* useisConnected:end */
   const [handleAccounts, errorAccounts] = useLoading(async () => {
     const accounts = await fuel.accounts();
     setAccounts(accounts);
