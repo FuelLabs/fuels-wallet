@@ -2,7 +2,7 @@ name: Tests
 
 on:
   pull_request:
-    branches: [main, master, release]
+    branches: [main, master]
     types: [opened, synchronize, reopened]
 
 concurrency:
@@ -103,11 +103,4 @@ jobs:
 
       - name: Stop Test Node
         run: pnpm node:clean:test
-
-  docs:
-    name: Docs
-    uses: FuelLabs/github-actions/.github/workflows/next-docs.yml@master
-    with:
-      doc-folder-path: 'packages/docs/docs'
-      src-folder-path: 'packages/docs/src'
 
