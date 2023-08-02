@@ -14,6 +14,7 @@ overrides:
   semver@<7.5.2: '>=7.5.2'
   node-fetch@<2.6.7: '>=2.6.7'
   word-wrap: npm:@aashutoshrathi/word-wrap
+  pnpm@>=8.0.0 <8.6.8: '>=8.6.8'
 
 importers:
 
@@ -657,8 +658,8 @@ importers:
         specifier: ^2.1.0
         version: 2.1.0(react@18.2.0)
       pnpm:
-        specifier: ^8.6.0
-        version: 8.6.0
+        specifier: ^8.6.10
+        version: 8.6.10
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -3549,6 +3550,7 @@ packages:
 
   /@emotion/memoize@0.7.4:
     resolution: {integrity: sha512-Ja/Vfqe3HpuzRsG1oBtWTHk2PGZ7GR+2Vz5iYGelAw8dx32K0y7PjVuxK6z1nMpZOqAFsRUPCkK1YjJ56qJlgw==}
+    requiresBuild: true
     dev: false
     optional: true
 
@@ -18406,10 +18408,9 @@ packages:
       url-polyfill: 1.1.12
     dev: false
 
-  /pnpm@8.6.0:
-    resolution: {integrity: sha512-uMaWGXlvG+m5NIJaR4JEEenChbg+1AP4zVpqs4PEcZg4uH+lXMTd/X/lirKZA+TC0w0d+++y3btINcwyKsuwAA==}
+  /pnpm@8.6.10:
+    resolution: {integrity: sha512-EBlPdgrAqmIDK6lflNm8M4lueWGM4PKJIDngt6vJ1+fmzh3e0482tg52nUjiuGvkzZ2sngA181GLqknXhAHgIg==}
     engines: {node: '>=16.14'}
-    deprecated: This version contains a regression. Upgrade to v8.6.2 or newer
     hasBin: true
     dev: false
 
