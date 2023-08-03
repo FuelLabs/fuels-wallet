@@ -14,7 +14,6 @@ import { TopBar } from './TopBar';
 import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { OverlayDialog } from '~/systems/Overlay';
 import { Sidebar } from '~/systems/Sidebar';
-import signUpImage from '~public/signup.png';
 
 type Context = {
   isLoading?: boolean;
@@ -188,7 +187,7 @@ export const styles = {
       bottom: 0,
       width: '100%',
       height: '100vh',
-      background: `url(${signUpImage})`,
+      background: `url(/signup.png?url)`,
       backgroundPosition: 'left',
       backgroundSize: 'cover',
     },
