@@ -9,6 +9,7 @@ import { NetworkRemoveDialog } from '../NetworkRemoveDialog/NetworkRemoveDialog'
 export function NetworkStatus({ network }: { network: Network }) {
   return (
     <Text
+      as="span"
       css={{
         display: 'inline-flex',
         alignItems: 'center',

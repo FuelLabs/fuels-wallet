@@ -32,8 +32,8 @@
     "@xstate/inspect": "^0.8.0",
     "@xstate/react": "^3.2.2",
     "fast-equals": "^5.0.1",
-    "jotai": "^2.2.2",
-    "pnpm": "^8.6.10",
+    "jotai": "^2.3.1",
+    "pnpm": "^8.6.12",
     "react": "^18.2.0",
     "uuid": "^9.0.0",
     "xstate": "^4.38.2"
@@ -41,10 +41,10 @@
   "devDependencies": {
     "@fuel-wallet/config": "workspace:*",
     "@testing-library/react": "^14.0.0",
-    "@types/react": "^18.2.17",
+    "@types/react": "^18.2.20",
     "@types/uuid": "^9.0.2",
     "jest-localstorage-mock": "^2.4.26",
-    "tsup": "^7.1.0",
+    "tsup": "^7.2.0",
     "typescript": "^5.1.6"
   }
 }
