@@ -119,7 +119,7 @@ export function ConnectionRequest() {
       <Box.Flex css={styles.disclaimer} justify="center" align={'flex-end'}>
         <Text fontSize="sm" as={'h2'} className="warning">
           Only connect with sites you trust.{' '}
-          <Link href="#" color="accent11">
+          <Link href="#" color="intentsPrimary11">
             Learn more
           </Link>
           .

@@ -6,7 +6,7 @@
   "author": "Fuel Labs <contact@fuel.sh> (https://fuel.network/)",
   "engines": {
     "node": ">=18.14.1",
-    "pnpm": ">=7"
+    "pnpm": ">=8"
   },
   "homepage": "https://github.com/FuelLabs/fuels-wallet",
   "repository": {
@@ -69,8 +69,8 @@
   },
   "dependencies": {
     "@fuel-ui/config": "0.17.0",
-    "@fuel-ui/css": "0.18.0-pr-289-240e624",
-    "@fuel-ui/react": "0.18.0-pr-289-240e624",
+    "@fuel-ui/css": "0.18.2-pr-302-cd8d057",
+    "@fuel-ui/react": "0.18.2-pr-302-cd8d057",
     "@fuel-ui/test-utils": "0.17.0",
     "execa": "^7.2.0"
   },

@@ -12,7 +12,7 @@ export function NetworkStatus({ network }: { network: Network }) {
       css={{
         display: 'inline-flex',
         alignItems: 'center',
-        color: network.isSelected ? '$accent11' : '$intentsBase8',
+        color: network.isSelected ? '$intentsPrimary11' : '$intentsBase8',
         fontSize: '16px',
         height: '$4',
       }}

@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Accordion, Box, Text } from '@fuel-ui/react';
+import { Accordion, Box, Text, useFuelTheme } from '@fuel-ui/react';
 import ReactJson from 'react-json-view';
 
 import { coreStyles } from '~/systems/Core/styles';
@@ -39,6 +39,7 @@ type FunctionCallItemProps = {
 
 const FunctionCallItem = ({ call }: FunctionCallItemProps) => {
   const { functionName, argumentsProvided } = call || {};
+  const { current } = useFuelTheme();
 
   return (
     <Box.Stack gap="$1" css={styles.callItem}>
@@ -48,7 +49,7 @@ const FunctionCallItem = ({ call }: FunctionCallItemProps) => {
         <Text fontSize="xs" css={styles.callItemInputs}>
           TODO: should find a way to convert functionSignature to a sway contract typing format, like:
           from -> entry_one(u64,u64)
-          to -> (amount: u64, amount2: u64)   
+          to -> (amount: u64, amount2: u64)
         </Text>
         */}
       </Box.Stack>
@@ -63,7 +64,7 @@ const FunctionCallItem = ({ call }: FunctionCallItemProps) => {
           enableClipboard={false}
           collapsed={true}
           name="params"
-          theme="summerfruit"
+          theme={current === 'light' ? 'summerfruit:inverted' : 'summerfruit'}
         />
       )}
     </Box.Stack>
@@ -98,17 +99,17 @@ const styles = {
   callItem: cssObj({
     py: '$2',
 
-    '.fuel_text': {
+    '.fuel_Text': {
       fontWeight: '$semibold',
-      color: '$gray12',
+      color: '$intentsBase12',
     },
 
     '& ~ & ': {
-      borderTop: '1px dashed $gray3',
+      borderTop: '1px dashed $intentsBase3',
     },
 
     '.react-json-view': {
-      ...coreStyles.scrollable('$gray5', '$gray10'),
+      ...coreStyles.scrollable('$intentsBase5', '$intentsBase10'),
       fontSize: '$xs',
       backgroundColor: '$transparent !important',
       maxHeight: 192,
@@ -121,6 +122,6 @@ const styles = {
     },
   }),
   callItemInputs: cssObj({
-    color: '$gray11 !important',
+    color: 'red',
   }),
 };

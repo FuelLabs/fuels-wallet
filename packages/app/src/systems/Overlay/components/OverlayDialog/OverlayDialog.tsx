@@ -55,12 +55,12 @@ const styles = {
     flexDirection: 'column',
     gap: '$4',
 
-    '.fuel_DialogDescription': {
+    '.fuel_Dialog-description': {
       flex: 1,
       overflowY: 'auto',
       height: '100%',
     },
-    '.fuel_DialogHeading': {
+    '.fuel_Dialog-heading': {
       padding: '$4',
       paddingBottom: '0 !important',
       display: 'flex',
@@ -69,16 +69,16 @@ const styles = {
       textSize: 'lg',
       height: '$8',
     },
-    '.fuel_DialogHeading .fuel_IconButton[data-action="closed"]': {
+    '.fuel_Dialog-heading .fuel_IconButton[data-action="closed"]': {
       position: 'absolute',
       right: '$3',
       top: '24px',
     },
-    '.fuel_DialogFooter': {
+    '.fuel_Dialog-footer': {
       paddingTop: '0 !important',
       padding: '$4',
     },
-    '.fuel_DialogFooter button': {
+    '.fuel_Dialog-footer button': {
       width: '100%',
     },
     form: {

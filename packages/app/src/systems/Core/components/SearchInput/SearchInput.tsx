@@ -72,7 +72,7 @@ const styles = {
     },
 
     '&:has(.fuel_Input:focus-visible) .fuel_Icon': {
-      color: '$accent9',
+      color: '$intentsPrimary9',
     },
     '&:has(.fuel_InputField[data-has-value="true"])': {
       '.fuel_InputElementRight > button': {

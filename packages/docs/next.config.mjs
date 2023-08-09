@@ -34,6 +34,11 @@ const nextConfig = {
     esmExternals: false,
     externalDir: true,
   },
+  images: {
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
   trailingSlash: true,
   webpack(config) {
     const depsAlias = resolveLinkDeps();
@@ -41,6 +46,10 @@ const nextConfig = {
       ...config.resolve.alias,
       ...depsAlias?.resolve?.alias,
     };
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    });
     return config;
   },
 };

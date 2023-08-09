@@ -57,10 +57,7 @@ const styles = {
     border: 'none',
     position: 'relative',
     display: 'flex',
+    gap: '$2',
     flexDirection: 'column',
-
-    '.TxFromTo': {
-      borderBottom: '1px solid $bodyBg',
-    },
   }),
 };

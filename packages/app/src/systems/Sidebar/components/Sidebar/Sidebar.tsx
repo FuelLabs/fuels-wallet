@@ -5,6 +5,7 @@ import { forwardRef } from 'react';
 
 import { Menu } from '..';
 import { sidebarItems } from '../../constants';
+import { ThemeToggler } from '../ThemeToggler';
 
 import { APP_VERSION } from '~/config';
 import { useOverlay } from '~/systems/Overlay';
@@ -15,6 +16,7 @@ function SidebarContent() {
   return (
     <>
       <Box.Flex css={styles.header}>
+        <ThemeToggler />
         <IconButton
           autoFocus
           size="sm"
@@ -65,7 +67,7 @@ const styles = {
   header: cssObj({
     px: '$4',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
 
     '.fuel_Icon': {
       color: '$intentsBase8',

@@ -1,9 +1,17 @@
-import { darkColors, globalCss } from '@fuel-ui/css';
-import { createTheme, ThemeProvider } from '@fuel-ui/react';
+import { globalCss } from '@fuel-ui/css';
+import {
+  darkTheme,
+  lightTheme,
+  loadIcons,
+  setFuelThemes,
+  ThemeProvider,
+} from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 
 import { StoreProvider } from '~/store';
-import { ErrorBoundary } from '~/systems/Error';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import icons from '~icons-url';
 
 type ProvidersProps = {
   children: ReactNode;
@@ -15,24 +23,22 @@ const customStyles = {
   },
 };
 
-export const theme = createTheme('fuels-wallet', {
-  tokens: {
-    colors: {
-      ...darkColors,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any,
+// this is temporary until we find a better solution
+loadIcons(icons);
+setFuelThemes({
+  themes: {
+    dark: darkTheme,
+    light: lightTheme,
   },
 });
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <ThemeProvider themes={{ wallet: theme }}>
-      <ErrorBoundary>
-        <StoreProvider>
-          {globalCss(customStyles)()}
-          {children}
-        </StoreProvider>
-      </ErrorBoundary>
+    <ThemeProvider>
+      <StoreProvider>
+        {globalCss(customStyles)()}
+        {children}
+      </StoreProvider>
     </ThemeProvider>
   );
 }

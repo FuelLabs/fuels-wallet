@@ -8,6 +8,7 @@
     "baseUrl": ".",
     "rootDir": ".",
     "paths": {
+      "~icons-url": ["./node_modules/@fuel-ui/icons/dist/icons/sprite.svg"],
       "~public/*": ["./public/*"],
       "~/*": ["./src/*"]
     }

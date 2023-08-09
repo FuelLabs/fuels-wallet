@@ -13,8 +13,8 @@
   "dependencies": {
     "@docsearch/css": "^3.5.1",
     "@docsearch/react": "3.5.1",
-    "@fuel-ui/css": "0.18.0-pr-289-240e624",
-    "@fuel-ui/react": "0.18.0-pr-289-240e624",
+    "@fuel-ui/css": "0.18.2-pr-302-cd8d057",
+    "@fuel-ui/react": "0.18.2-pr-302-cd8d057",
     "@fuel-wallet/sdk": "workspace:*",
     "@mdx-js/react": "^2.3.0",
     "@next/mdx": "^13.4.12",
@@ -45,6 +45,7 @@
     "vfile": "^6.0.1"
   },
   "devDependencies": {
+    "@svgr/webpack": "8.0.1",
     "@types/chrome": "^0.0.242",
     "@types/node": "^20.4.5",
     "@types/prismjs": "^1.26.0",
@@ -52,6 +53,7 @@
     "@types/react-dom": "^18.2.7",
     "@types/react-syntax-highlighter": "^15.5.7",
     "eslint": "^8.46.0",
-    "eslint-config-next": "13.4.12"
+    "eslint-config-next": "13.4.12",
+    "next-images": "1.8.5"
   }
 }

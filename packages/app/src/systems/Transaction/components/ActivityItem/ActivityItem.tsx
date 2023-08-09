@@ -108,7 +108,7 @@ const styles = {
   label: cssObj({
     mt: '-2px',
     fontWeight: '$normal',
-    color: '$whiteA12',
+    color: '$inverseA12',
   }),
 };
 

@@ -93,7 +93,7 @@ const styles = {
       gap: '$1',
       textDecoration: 'none',
       fontWeight: '$normal',
-      color: '$accent11',
+      color: '$intentsPrimary11',
     },
   },
   agreeContainer: cssObj({
