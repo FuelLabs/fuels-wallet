@@ -31,6 +31,7 @@ function resolveLinkDeps() {
 const nextConfig = {
   basePath: process.env.DOCS_BASE_URL || '',
   experimental: {
+    appDir: false,
     esmExternals: false,
     externalDir: true,
   },

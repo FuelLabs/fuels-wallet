@@ -73,8 +73,8 @@ setFuelThemes({
 
 export function Provider({ children }: ProviderProps) {
   return (
-    <MDXProvider components={components as any}>
-      <ThemeProvider>{children}</ThemeProvider>
-    </MDXProvider>
+    <ThemeProvider>
+      <MDXProvider components={components as any}>{children}</MDXProvider>
+    </ThemeProvider>
   );
 }
