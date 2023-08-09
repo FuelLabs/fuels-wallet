@@ -9,9 +9,9 @@ import {
 import type { ReactNode } from 'react';
 
 import { StoreProvider } from '~/store';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import icons from '~icons-url';
+
+// eslint-disable-next-line import/no-absolute-path
+import icons from '/icons/sprite.svg';
 
 type ProvidersProps = {
   children: ReactNode;

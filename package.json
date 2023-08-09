@@ -65,7 +65,8 @@
     "ts:check": "turbo run ts:check",
     "prepare": "husky install",
     "codegen:app": "pnpm run --filter=fuels-wallet codegen",
-    "xstate:typegen": "pnpm -r xstate:typegen"
+    "xstate:typegen": "pnpm -r xstate:typegen",
+    "postinstall": "./scripts/icons.sh"
   },
   "dependencies": {
     "@fuel-ui/config": "0.17.0",

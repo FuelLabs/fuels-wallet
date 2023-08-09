@@ -63,7 +63,7 @@ const theme = createTheme('fuel-docs', {
   },
 } as any);
 
-loadIcons('../../node_modules/@fuel-ui/icons/dist/icons/sprite.svg');
+loadIcons('/icons/sprite.svg');
 setFuelThemes({
   initial: 'docs',
   themes: {
