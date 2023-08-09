@@ -42,7 +42,6 @@ export const Sidebar = forwardRef<HTMLDivElement>((_props, ref) => {
   return (
     <Drawer
       isDismissable
-      type="menu"
       size={230}
       side="right"
       containerRef={ref as any}

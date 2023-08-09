@@ -10,7 +10,7 @@ export const AccountInfoLoader = (props: ContentLoaderProps) => (
         <rect x="0" y="0" width="120" height="16" rx="4" />
       </ContentLoader>
     </Card.Header>
-    <Card.Body css={{ padding: '$0', '& > .fuel_Card': { border: 'none' } }}>
+    <Card.Body css={{ padding: '$0' }}>
       <AccountItemLoader />
     </Card.Body>
   </Card>
