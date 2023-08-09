@@ -11,7 +11,7 @@ import { mswDecorator, initialize } from 'msw-storybook-addon';
 import { withRouter } from 'storybook-addon-react-router-v6';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import icons from '../../../node_modules/@fuel-ui/icons/dist/sprite.svg';
+import icons from '~icons-url';
 
 import { MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
 import { StoreProvider } from '../src/systems/Store';
