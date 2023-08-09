@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-'use client';
-
-import { createTheme, ThemeProvider } from '@fuel-ui/react';
+import {
+  createTheme,
+  loadIcons,
+  setFuelThemes,
+  ThemeProvider,
+} from '@fuel-ui/react';
 import { MDXProvider } from '@mdx-js/react';
 import type { ReactNode } from 'react';
 
@@ -60,10 +63,18 @@ const theme = createTheme('fuel-docs', {
   },
 } as any);
 
+loadIcons('../../node_modules/@fuel-ui/icons/dist/icons/sprite.svg');
+setFuelThemes({
+  initial: 'docs',
+  themes: {
+    docs: theme,
+  },
+});
+
 export function Provider({ children }: ProviderProps) {
   return (
     <MDXProvider components={components as any}>
-      <ThemeProvider themes={{ docs: theme }}>{children}</ThemeProvider>
+      <ThemeProvider>{children}</ThemeProvider>
     </MDXProvider>
   );
 }

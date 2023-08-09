@@ -482,6 +482,9 @@ importers:
       '@fuel-ui/css':
         specifier: 0.18.2-pr-302-cd8d057
         version: 0.18.2-pr-302-cd8d057
+      '@fuel-ui/icons':
+        specifier: 0.18.2-pr-302-cd8d057
+        version: 0.18.2-pr-302-cd8d057
       '@fuel-ui/react':
         specifier: 0.18.2-pr-302-cd8d057
         version: 0.18.2-pr-302-cd8d057(@types/react-dom@18.2.7)(@types/react@18.2.17)
