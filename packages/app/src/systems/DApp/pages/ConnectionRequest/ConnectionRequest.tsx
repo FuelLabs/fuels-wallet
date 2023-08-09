@@ -188,17 +188,14 @@ const styles = {
   }),
   accountList: cssObj({
     mt: '$4',
+
+    '.fuel_Card .fuel_Card': {
+      border: 'none',
+    },
   }),
   sectionHeader: cssObj({
     alignItems: 'center',
     justifyContent: 'space-between',
-  }),
-  connectCard: cssObj({
-    p: '$3',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: '$2',
   }),
   accountCardBody: cssObj({
     padding: '$0',
