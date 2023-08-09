@@ -12,4 +12,3 @@ contracts
 **/__generated__/
 **/generated/*
 .changeset/**.md
-sprite.svg

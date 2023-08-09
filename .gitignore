@@ -85,4 +85,3 @@ act-actions
 
 # XState typegen
 *.typegen.ts
-sprite.svg

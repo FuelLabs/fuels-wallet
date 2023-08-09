@@ -12,4 +12,3 @@ pnpm-lock.yaml
 **/__generated__/
 **/generated/
 .changeset/**.md
-sprite.svg
