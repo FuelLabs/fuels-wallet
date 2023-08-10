@@ -11,7 +11,7 @@ import type { ReactNode } from 'react';
 import { StoreProvider } from '~/store';
 
 // eslint-disable-next-line import/no-absolute-path
-import icons from '/public/icons/sprite.svg';
+import icons from '/icons/sprite.svg';
 
 type ProvidersProps = {
   children: ReactNode;
