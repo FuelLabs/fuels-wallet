@@ -1,13 +1,8 @@
-import React from 'react';
-
 import { IS_DEVELOPMENT, IS_TEST } from './config';
 import { getRoutes } from './routes';
+import ThrowError from './systems/Error/components/ThrowError';
 
 import { Providers } from '~/systems/Core';
-
-const ThrowError = React.lazy(
-  () => import('./systems/Error/components/ThrowError')
-);
 
 export function App() {
   return (

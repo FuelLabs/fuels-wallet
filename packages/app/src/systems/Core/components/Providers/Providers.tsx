@@ -11,7 +11,7 @@ import type { ReactNode } from 'react';
 import { StoreProvider } from '~/store';
 
 // eslint-disable-next-line import/no-absolute-path
-import icons from '/icons/sprite.svg';
+import icons from '/public/icons/sprite.svg';
 
 type ProvidersProps = {
   children: ReactNode;
@@ -20,6 +20,12 @@ type ProvidersProps = {
 const customStyles = {
   body: {
     margin: '0 auto !important',
+  },
+  '.fuel_AlertDialog-content': {
+    maxWidth: '300px',
+  },
+  '.fuel_Dialog-content': {
+    maxWidth: '350px',
   },
 };
 

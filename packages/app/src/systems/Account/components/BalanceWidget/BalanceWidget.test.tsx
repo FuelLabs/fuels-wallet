@@ -35,7 +35,7 @@ describe('BalanceWidget', () => {
 
   it('should hide balance when user sets his balance to hide', async () => {
     const onChangeVisibility = jest.fn();
-    const { user } = renderWithProvider(
+    renderWithProvider(
       <BalanceWidget
         onChangeVisibility={onChangeVisibility}
         account={ACCOUNT}
@@ -43,7 +43,7 @@ describe('BalanceWidget', () => {
     );
     const btn = screen.getByLabelText(/Hide balance/i);
     expect(btn).toBeInTheDocument();
-    await user.click(btn);
+    fireEvent.click(btn);
     expect(onChangeVisibility).toHaveBeenNthCalledWith(1, false);
   });
 

@@ -28,7 +28,7 @@ export function AssetRemoveDialog({
   return (
     <AlertDialog open={opened} onOpenChange={setOpened}>
       <AlertDialog.Trigger>{children}</AlertDialog.Trigger>
-      <AlertDialog.Content css={{ maxW: 250 }}>
+      <AlertDialog.Content>
         <AlertDialog.Heading>Are you sure?</AlertDialog.Heading>
         <AlertDialog.Description>
           {asset.name} will be deleted. This action cannot be undone.

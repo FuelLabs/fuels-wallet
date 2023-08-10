@@ -127,6 +127,7 @@ export const styles = {
     height: '100vh',
     maxHeight: '100vh',
     ...coreStyles.scrollable(),
+
     '&:has(.layout__bottom) .layout__content': {
       pb: '$0',
     },
