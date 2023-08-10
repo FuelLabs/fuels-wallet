@@ -24,8 +24,7 @@ class ErrorBoundary extends React.Component<
     });
   }
 
-  constructor(props: ErrorProviderProps) {
-    super(props);
+  async componentDidMount() {
     this.checkErrors();
   }
 

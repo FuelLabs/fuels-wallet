@@ -13,6 +13,8 @@ import { StoreProvider } from '~/store';
 // eslint-disable-next-line import/no-absolute-path
 import icons from '/icons/sprite.svg';
 
+import { ErrorBoundary } from '~/systems/Error';
+
 type ProvidersProps = {
   children: ReactNode;
 };
@@ -22,10 +24,10 @@ const customStyles = {
     margin: '0 auto !important',
   },
   '.fuel_AlertDialog-content': {
-    maxWidth: '300px',
+    maxWidth: '300px !important',
   },
   '.fuel_Dialog-content': {
-    maxWidth: '350px',
+    maxWidth: '350px !important',
   },
 };
 
@@ -41,10 +43,12 @@ setFuelThemes({
 export function Providers({ children }: ProvidersProps) {
   return (
     <ThemeProvider>
-      <StoreProvider>
-        {globalCss(customStyles)()}
-        {children}
-      </StoreProvider>
+      <ErrorBoundary>
+        <StoreProvider>
+          {globalCss(customStyles)()}
+          {children}
+        </StoreProvider>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 }
