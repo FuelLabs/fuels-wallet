@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Heading } from '@fuel-ui/react';
+import { Box, Heading, useFuelTheme } from '@fuel-ui/react';
 
 import { relativeUrl } from '../../utils';
 import { ImageLoader } from '../ImageLoader';
@@ -9,12 +9,13 @@ export type EmptyListProps = {
 };
 
 export function EmptyList({ label }: EmptyListProps) {
+  const { current: theme } = useFuelTheme();
   return (
     <Box.Stack gap="$2" css={styles.root}>
       <ImageLoader
-        src={relativeUrl('/empty-list.png')}
-        width={258}
-        height={157}
+        src={relativeUrl(`/empty_activity_${theme}.png`)}
+        width={231}
+        height={175}
         alt="No assets"
       />
       <Heading as="h3">{label}</Heading>

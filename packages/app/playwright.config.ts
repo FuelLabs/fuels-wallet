@@ -8,7 +8,6 @@ const IS_CI = !!process.env.CI;
 const PORT = process.env.PORT;
 
 const config: PlaywrightTestConfig = {
-  workers: 1,
   testMatch: join(__dirname, './playwright/**/*.test.ts'),
   testDir: join(__dirname, './playwright/'),
   reporter: [['list', { printSteps: true }]],
@@ -22,7 +21,7 @@ const config: PlaywrightTestConfig = {
   use: {
     baseURL: `http://localhost:${PORT}/`,
     permissions: ['clipboard-read', 'clipboard-write'],
-    headless: true,
+    headless: false,
   },
 };
 

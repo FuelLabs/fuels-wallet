@@ -164,6 +164,10 @@ export const styles = {
     gridTemplateRows: '1fr',
     alignItems: 'flex-start',
 
+    'html[class="fuel_light-theme"] &': {
+      bg: '$intentsBase2',
+    },
+
     '& > .fuel_Box-centered': {
       maxWidth: '$sm',
       height: 650,

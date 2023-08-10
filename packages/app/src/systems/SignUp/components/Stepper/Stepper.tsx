@@ -50,7 +50,7 @@ const styles = {
     width: '$full',
 
     '.fuel_Icon': {
-      color: '$border',
+      color: '$bodyInverse',
     },
   }),
   button: cssObj({
