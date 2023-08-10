@@ -21,7 +21,7 @@ const config: PlaywrightTestConfig = {
   use: {
     baseURL: `http://localhost:${PORT}/`,
     permissions: ['clipboard-read', 'clipboard-write'],
-    headless: false,
+    headless: true,
   },
 };
 
