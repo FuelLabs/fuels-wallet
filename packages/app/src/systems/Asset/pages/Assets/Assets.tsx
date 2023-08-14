@@ -5,7 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import { AssetList } from '../../components';
 import { useAssets } from '../../hooks';
 
-import { Layout } from '~/systems/Core';
+import { Layout, scrollable } from '~/systems/Core';
 
 export function Assets() {
   const state = useAssets();
@@ -63,12 +63,23 @@ export function Assets() {
 const styles = {
   content: cssObj({
     p: '$0',
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
 
     '.fuel_Tabs': {
       backgroundColor: 'transparent',
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
     },
     '.fuel_TabsContent': {
-      px: '$4',
+      flex: 1,
+      padding: '$0 $0 $2 $4',
+      ...scrollable(),
+      overflowY: 'scroll !important',
     },
   }),
   tabList: cssObj({
