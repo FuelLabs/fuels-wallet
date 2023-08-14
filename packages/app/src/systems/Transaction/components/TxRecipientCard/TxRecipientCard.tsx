@@ -91,6 +91,7 @@ const styles = {
     p: '$3',
     display: 'inline-flex',
     alignItems: 'center',
+    flexDirection: 'column',
     gap: '$3',
 
     '.fuel_copyable': {
