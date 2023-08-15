@@ -73,6 +73,16 @@ jobs:
           echo "CHROME_BUILD_PATH=$CHROME_BUILD_PATH" >> $GITHUB_ENV
           cp ./packages/app/dist/fuel-wallet.zip $CHROME_BUILD_PATH
 
+      - name: Upload aritifacts to Sentry
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: production
+          version: ${{ env.BUILD_VERSION }}
+
       - name: Attach Fuel Wallet to release
         if: steps.changesets.outputs.published == 'true'
         uses: softprops/action-gh-release@v1

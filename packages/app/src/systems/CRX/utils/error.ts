@@ -12,10 +12,11 @@ globalThis.addEventListener('unhandledrejection', (event) => {
 
 globalThis.addEventListener('error', (event) => {
   if (typeof window !== 'undefined') return;
+  if (!event?.error || !event?.message) return;
   ReportErrorService.saveError({
     error: {
-      message: event.error.message,
-      stack: event.error.stack,
+      message: event?.error?.message || event.message,
+      stack: event?.error?.stack,
     },
   });
 });
