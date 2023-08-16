@@ -1,3 +1,4 @@
+import { cssObj } from '@fuel-ui/css';
 import { AlertDialog, Button } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
@@ -28,7 +29,7 @@ export function AssetRemoveDialog({
   return (
     <AlertDialog open={opened} onOpenChange={setOpened}>
       <AlertDialog.Trigger>{children}</AlertDialog.Trigger>
-      <AlertDialog.Content css={{ maxW: 250 }}>
+      <AlertDialog.Content css={styles.popupContent}>
         <AlertDialog.Heading>Are you sure?</AlertDialog.Heading>
         <AlertDialog.Description>
           {asset.name} will be deleted. This action cannot be undone.
@@ -49,3 +50,12 @@ export function AssetRemoveDialog({
     </AlertDialog>
   );
 }
+
+// TODO: remove this once we fix on the fuel-ui side
+const styles = {
+  popupContent: cssObj({
+    '&.fuel_AlertDialog-content': {
+      maxWidth: 250,
+    },
+  }),
+};
