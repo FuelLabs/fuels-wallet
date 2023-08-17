@@ -137,7 +137,7 @@ export const sendMachine = createMachine(
             throw new Error('Missing params for transaction request');
           }
           const wallet = new WalletLockedCustom(account.address, network.url);
-          const createOpts = { to, amount, assetId };
+          const createOpts = { to, amount, assetId, provider: wallet.provider };
           const transactionRequest = await TxService.fundTransaction({
             transactionRequest: await TxService.createTransfer(createOpts),
             wallet,

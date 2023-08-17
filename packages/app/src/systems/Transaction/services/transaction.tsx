@@ -11,7 +11,6 @@ import {
   GAS_PER_BYTE,
   GAS_PRICE_FACTOR,
   bn,
-  MAX_GAS_PER_TX,
   BaseAssetId,
   ScriptTransactionRequest,
   transactionRequestify,
@@ -61,6 +60,7 @@ export type TxInputs = {
     to: string;
     amount: BN;
     assetId: string;
+    provider: Provider;
   };
   fetch: {
     txId: string;
@@ -131,7 +131,9 @@ export class TxService {
     providerUrl = '',
   }: TxInputs['send']) {
     const wallet = new WalletLockedCustom(address, providerUrl);
-    return wallet.sendTransaction(transactionRequest);
+    const txSent = await wallet.sendTransaction(transactionRequest);
+
+    return txSent;
   }
 
   static async fetch({ txId, providerUrl = '' }: TxInputs['fetch']) {
@@ -188,7 +190,8 @@ export class TxService {
       NetworkService.getSelectedNetwork(),
     ]);
     const wallet = new WalletLockedCustom(account!.address, network!.url);
-    const params = { gasLimit: MAX_GAS_PER_TX };
+    const chainInfo = await wallet.provider.getChain();
+    const params = { gasLimit: chainInfo.consensusParameters.maxGasPerTx };
     const request = new ScriptTransactionRequest(params);
     request.addCoinOutput(wallet.address, bn(1), BaseAssetId);
     await wallet.fund(request);
@@ -201,7 +204,10 @@ export class TxService {
   }
 
   static async createTransfer(input: TxInputs['createTransfer']) {
-    const request = new ScriptTransactionRequest({ gasLimit: MAX_GAS_PER_TX });
+    const chainInfo = await input.provider.getChain();
+    const request = new ScriptTransactionRequest({
+      gasLimit: chainInfo.consensusParameters.maxGasPerTx,
+    });
     const to = Address.fromAddressOrString(input.to);
     const { assetId, amount } = input;
     request.addCoinOutput(to, amount, assetId);
