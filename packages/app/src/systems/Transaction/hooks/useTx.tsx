@@ -47,15 +47,13 @@ export function useTx({
     selectors.isTxReceiptsNotFound
   );
 
-  const { error, gqlTransactionStatus, transaction, transactionResult, txId } =
-    context;
+  const { error, transaction, transactionResult, txId } = context;
 
   const tx = useParseTx({
     transaction,
     receipts: transactionResult?.receipts,
     gasPerByte: chainInfo?.consensusParameters.gasPerByte,
     gasPriceFactor: chainInfo?.consensusParameters.gasPriceFactor,
-    gqlStatus: gqlTransactionStatus,
     id: txId,
   });
   const isLoadingTx = isFetching || isFetchingResult;

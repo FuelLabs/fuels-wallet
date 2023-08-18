@@ -1,4 +1,5 @@
 import { useSelector } from '@xstate/react';
+import { SimplifiedTransactionStatusNameEnum } from 'fuels';
 import { useCallback } from 'react';
 
 import type { TransactionRequestState } from '../machines/transactionRequestMachine';
@@ -7,7 +8,7 @@ import { TxRequestStatus } from '../machines/transactionRequestMachine';
 import { Services, store } from '~/store';
 import { useChainInfo } from '~/systems/Network';
 import { useOverlay } from '~/systems/Overlay';
-import { getFilteredErrors, TxStatus } from '~/systems/Transaction';
+import { getFilteredErrors } from '~/systems/Transaction';
 import { useParseTx } from '~/systems/Transaction/hooks/useParseTx';
 import type { TxInputs } from '~/systems/Transaction/services';
 
@@ -127,8 +128,8 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   }
 
   function approveStatus() {
-    if (status('success')) return TxStatus.success;
-    if (status('failed')) return TxStatus.failure;
+    if (status('success')) return SimplifiedTransactionStatusNameEnum.success;
+    if (status('failed')) return SimplifiedTransactionStatusNameEnum.failure;
     return tx?.status;
   }
 

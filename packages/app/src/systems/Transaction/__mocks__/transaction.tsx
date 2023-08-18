@@ -1,6 +1,8 @@
-import { bn } from 'fuels';
-
-import { TxStatus, TxType } from '../utils';
+import {
+  SimplifiedTransactionStatusNameEnum,
+  TransactionTypeNameEnum,
+  bn,
+} from 'fuels';
 
 export const MOCK_TX = {
   status: {
@@ -56,15 +58,15 @@ export const MOCK_TX = {
 
 export const MOCK_TRANSACTION_SCRIPT = {
   id: '12132213231231',
-  type: TxType.script,
-  status: TxStatus.pending,
+  type: TransactionTypeNameEnum.Script,
+  status: SimplifiedTransactionStatusNameEnum.submitted,
   data: undefined,
 };
 
 export const MOCK_TRANSACTION_CREATE = {
   id: '12132213231231',
-  type: TxType.create,
-  status: TxStatus.pending,
+  type: TransactionTypeNameEnum.Create,
+  status: SimplifiedTransactionStatusNameEnum.submitted,
   data: undefined,
 };
 

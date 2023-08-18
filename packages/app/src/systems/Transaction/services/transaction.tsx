@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Account, Asset } from '@fuel-wallet/types';
 import type {
   BN,
@@ -8,18 +9,18 @@ import type {
 import {
   normalizeJSON,
   Address,
-  GAS_PER_BYTE,
-  GAS_PRICE_FACTOR,
   bn,
   BaseAssetId,
   ScriptTransactionRequest,
   transactionRequestify,
   Provider,
-  TransactionResponse,
+  getTransactionSummary,
+  calculateTransactionFee,
+  TransactionType,
 } from 'fuels';
 
 import type { Transaction } from '../types';
-import { getFee, getGasUsed, processTransactionToTx } from '../utils';
+import { processTransactionToTx } from '../utils/graphql';
 
 import { AccountService } from '~/systems/Account';
 import { isEth } from '~/systems/Asset';
@@ -138,9 +139,10 @@ export class TxService {
 
   static async fetch({ txId, providerUrl = '' }: TxInputs['fetch']) {
     const provider = new Provider(providerUrl);
-    const txResponse = new TransactionResponse(txId, provider);
+    // TODO: put ABI here
+    const txResult = await getTransactionSummary(txId, provider);
 
-    return txResponse;
+    return txResult;
   }
 
   static async simulateTransaction({
@@ -159,7 +161,7 @@ export class TxService {
     if (!network) {
       throw new Error('No network selected');
     }
-    const { transactionsByOwner, chain } = await getGraphqlClient(
+    const { transactionsByOwner } = await getGraphqlClient(
       network.url
     ).AddressTransactions({
       owner: address,
@@ -167,16 +169,10 @@ export class TxService {
       // pagination for transactions page
       first: 100,
     });
-    const gasPerByte = chain.consensusParameters.gasPerByte;
-    const gasPriceFactor = chain.consensusParameters.gasPriceFactor;
-    const transactions = processTransactionToTx(
-      transactionsByOwner,
-      bn(gasPerByte),
-      bn(gasPriceFactor)
-    );
+    const transactions = processTransactionToTx(transactionsByOwner);
     // TODO: remove this when fuel-client returns
     // the txs sort by date
-    transactions?.sort((a, b) => {
+    transactions?.sort((a: any, b: any) => {
       const aTime = bn(a.time, 10);
       const bTime = bn(b.time, 10);
       return aTime.gt(bTime) ? -1 : 1;
@@ -273,15 +269,22 @@ export async function getTxCost(
     providerUrl: wallet.provider.url,
   });
 
-  const getOpts = {
+  const { fee, gasUsed } = calculateTransactionFee({
     receipts,
-    gasPerByte: GAS_PER_BYTE,
-    gasPriceFactor: GAS_PRICE_FACTOR,
-  };
+    gasPrice: transactionRequest.gasPrice,
+    // TODO: remove this "transaction" params once sdk splits calculateTransactionFee
+    transactionBytes: new Uint8Array(),
+    transactionType: TransactionType.Script,
+    transactionWitnesses: [],
+  });
 
-  const transaction = transactionRequest.toTransaction();
-  const fee = getFee({ transaction, ...getOpts });
-  const gasUsed = getGasUsed({ transaction, ...getOpts });
+  // const getOpts = {
+  //   receipts,
+  // };
+
+  // const transaction = transactionRequest.toTransaction();
+  // const fee = getFee({ transaction, ...getOpts });
+  // const gasUsed = getGasUsed({ transaction, ...getOpts });
 
   return {
     fee,

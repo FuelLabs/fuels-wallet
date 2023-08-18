@@ -1,7 +1,12 @@
-import { bn } from 'fuels';
+import {
+  bn,
+  OperationName,
+  SimplifiedTransactionStatusNameEnum,
+  TransactionTypeNameEnum,
+} from 'fuels';
 
 import type { Tx } from '../utils';
-import { dateToTai64, OperationName, TxStatus, TxType } from '../utils';
+import { dateToTai64 } from '../utils';
 
 export const MOCK_TRANSACTIONS_BY_OWNER = {
   data: {
@@ -105,8 +110,8 @@ export const MOCK_TXS: Tx[] = [
     isStatusFailure: false,
     isStatusSuccess: true,
     isStatusPending: false,
-    type: TxType.script,
-    status: TxStatus.success,
+    type: TransactionTypeNameEnum.Script,
+    status: SimplifiedTransactionStatusNameEnum.success,
     time: dateToTai64(new Date('2022-12-05T00:51:22.383161296+00:00')),
   },
   {
@@ -141,8 +146,8 @@ export const MOCK_TXS: Tx[] = [
     isStatusFailure: false,
     isStatusSuccess: true,
     isStatusPending: false,
-    type: TxType.script,
-    status: TxStatus.success,
+    type: TransactionTypeNameEnum.Script,
+    status: SimplifiedTransactionStatusNameEnum.success,
     time: dateToTai64(new Date('2022-11-05T00:51:22.383161296+00:00')),
   },
 ];

@@ -1,60 +1,37 @@
-import type { TransactionResultReceipt, BN } from 'fuels';
-import { ReceiptCoder, arrayify, ReceiptType, TransactionCoder } from 'fuels';
+import type { TransactionResultReceipt } from 'fuels';
+import {
+  arrayify,
+  TransactionCoder,
+  processGqlReceipt,
+  assembleTransactionSummary,
+  bn,
+} from 'fuels';
 
-import { parseTx } from './tx';
-
-import type {
-  IReceiptFragment,
-  IAddressTransactionsQuery,
-} from '~/generated/graphql';
-
-/** @TODO: Move this logic to the SDK */
-export const processGqlReceipt = (
-  gqlReceipt: IReceiptFragment
-): TransactionResultReceipt => {
-  const receipt = new ReceiptCoder().decode(
-    arrayify(gqlReceipt.rawPayload),
-    0
-  )[0];
-
-  if (
-    receipt.type === ReceiptType.LogData ||
-    receipt.type === ReceiptType.ReturnData
-  ) {
-    return {
-      ...receipt,
-      data: gqlReceipt.data!,
-    };
-  }
-  return receipt;
-};
+import type { IAddressTransactionsQuery } from '~/generated/graphql';
 
 /** @TODO: Move this logic to the SDK */
 export const processTransactionToTx = (
-  gqlTransactions: IAddressTransactionsQuery['transactionsByOwner'],
-  gasPerByte: BN | undefined,
-  gasPriceFactor: BN | undefined
+  gqlTransactions: IAddressTransactionsQuery['transactionsByOwner']
 ) => {
   const edges = gqlTransactions.edges;
-  if (edges.length === 0 || !gasPerByte || !gasPriceFactor) return undefined;
+  if (edges.length === 0) return undefined;
   const txs = edges.map(({ node: tx }) => {
-    const transaction = new TransactionCoder().decode(
-      arrayify(tx.rawPayload),
-      0
-    )?.[0];
-    const receipts = tx.receipts?.map(processGqlReceipt) || [];
-    const gqlStatus = tx.status?.type;
+    const transactionBytes = arrayify(tx.rawPayload);
+    const transaction = new TransactionCoder().decode(transactionBytes, 0)?.[0];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const receipts = (tx.receipts?.map(processGqlReceipt as any) ||
+      []) as TransactionResultReceipt[];
     const time = (tx.status as { time: string })?.time;
     const dataNeededForTx = {
       transaction,
       receipts,
-      gqlStatus,
+      gqlStatus: tx.status,
       id: tx.id,
-      gasPerByte,
-      gasPriceFactor,
       time,
+      transactionBytes,
+      gasPrice: bn(transaction.gasPrice),
     };
-    return parseTx(dataNeededForTx);
+    return assembleTransactionSummary(dataNeededForTx);
   });
 
   return txs;

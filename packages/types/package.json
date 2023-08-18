@@ -12,6 +12,6 @@
     "fuels": ">=0.51.0"
   },
   "devDependencies": {
-    "fuels": "pr-1196"
+    "fuels": "0.0.0-pr-1196-20230818041304"
   }
 }

@@ -1,6 +1,6 @@
+import type { Operation } from 'fuels';
 import { Address } from 'fuels';
 
-import type { Operation } from './tx';
 import { OperationDirection } from './tx';
 
 export function getOperationDirection(operation: Operation, owner: string) {

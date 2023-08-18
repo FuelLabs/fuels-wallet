@@ -893,14 +893,6 @@ export type IAddressTransactionsQueryVariables = Exact<{
 
 export type IAddressTransactionsQuery = {
   __typename?: 'Query';
-  chain: {
-    __typename?: 'ChainInfo';
-    consensusParameters: {
-      __typename?: 'ConsensusParameters';
-      gasPriceFactor: string;
-      gasPerByte: string;
-    };
-  };
   transactionsByOwner: {
     __typename?: 'TransactionConnection';
     edges: Array<{
@@ -981,6 +973,37 @@ export type ITransactionFragment = {
   id: string;
   rawPayload: string;
   gasPrice: string | null;
+  receipts: Array<{
+    __typename?: 'Receipt';
+    pc: string | null;
+    is: string | null;
+    toAddress: string | null;
+    amount: string | null;
+    assetId: string | null;
+    gas: string | null;
+    param1: string | null;
+    param2: string | null;
+    val: string | null;
+    ptr: string | null;
+    digest: string | null;
+    reason: string | null;
+    ra: string | null;
+    rb: string | null;
+    rc: string | null;
+    rd: string | null;
+    len: string | null;
+    receiptType: IReceiptType;
+    result: string | null;
+    gasUsed: string | null;
+    data: string | null;
+    sender: string | null;
+    recipient: string | null;
+    nonce: string | null;
+    contractId: string | null;
+    subId: string | null;
+    contract: { __typename?: 'Contract'; id: string; bytecode: string } | null;
+    to: { __typename?: 'Contract'; id: string; bytecode: string } | null;
+  }> | null;
   status:
     | {
         __typename?: 'FailureStatus';
@@ -1053,36 +1076,6 @@ export const gqlOperations = {
     receipt: 'receipt',
   },
 };
-export const TransactionFragmentDoc = gql`
-  fragment transaction on Transaction {
-    id
-    rawPayload
-    gasPrice
-    status {
-      type: __typename
-      ... on SubmittedStatus {
-        time
-      }
-      ... on SuccessStatus {
-        block {
-          id
-        }
-        time
-        programState {
-          returnType
-          data
-        }
-      }
-      ... on FailureStatus {
-        block {
-          id
-        }
-        time
-        reason
-      }
-    }
-  }
-`;
 export const ContractFragmentFragmentDoc = gql`
   fragment contractFragment on Contract {
     id
@@ -1126,14 +1119,42 @@ export const ReceiptFragmentDoc = gql`
   }
   ${ContractFragmentFragmentDoc}
 `;
-export const AddressTransactionsDocument = gql`
-  query AddressTransactions($first: Int, $owner: Address!) {
-    chain {
-      consensusParameters {
-        gasPriceFactor
-        gasPerByte
+export const TransactionFragmentDoc = gql`
+  fragment transaction on Transaction {
+    id
+    rawPayload
+    gasPrice
+    receipts {
+      ...receipt
+    }
+    status {
+      type: __typename
+      ... on SubmittedStatus {
+        time
+      }
+      ... on SuccessStatus {
+        block {
+          id
+        }
+        time
+        programState {
+          returnType
+          data
+        }
+      }
+      ... on FailureStatus {
+        block {
+          id
+        }
+        time
+        reason
       }
     }
+  }
+  ${ReceiptFragmentDoc}
+`;
+export const AddressTransactionsDocument = gql`
+  query AddressTransactions($first: Int, $owner: Address!) {
     transactionsByOwner(first: $first, owner: $owner) {
       edges {
         node {

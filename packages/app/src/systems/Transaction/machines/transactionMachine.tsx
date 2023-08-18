@@ -9,7 +9,6 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { TxService } from '../services';
-import type { GqlTransactionStatus } from '../utils';
 
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
@@ -20,25 +19,20 @@ export const TRANSACTION_ERRORS = {
   RECEIPTS_NOT_FOUND: 'Receipts not found for this transaction',
 };
 
-type GetTransactionResponse = {
-  transactionResponse: TransactionResponse;
-  transaction: Transaction;
-  gqlTransactionStatus?: GqlTransactionStatus;
-  txId?: string;
-};
-
 type MachineContext = {
   error?: string;
   transactionResponse?: TransactionResponse;
-  gqlTransactionStatus?: GqlTransactionStatus;
   transaction?: Transaction;
   transactionResult?: TransactionResult<any>;
   txId?: string;
+  txResult?: TransactionResult;
 };
 
 type MachineServices = {
   getTransaction: {
-    data: GetTransactionResponse;
+    data: {
+      txResult: TransactionResult;
+    };
   };
   getTransactionResult: {
     data: TransactionResult<any>;
@@ -92,7 +86,7 @@ export const transactionMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['assignGetTransactionResponse'],
+              actions: ['assignTxResult'],
               target: 'fetchingResult',
             },
           ],
@@ -137,15 +131,8 @@ export const transactionMachine = createMachine(
       clearError: assign({
         error: (_) => undefined,
       }),
-      assignGetTransactionResponse: assign((_, event) => {
-        const data = event.data as GetTransactionResponse;
-
-        return {
-          transactionResponse: data.transactionResponse,
-          tx: data.transaction,
-          gqlTransactionStatus: data.gqlTransactionStatus,
-          txId: data.txId,
-        };
+      assignTxResult: assign({
+        txResult: (_, ev) => ev.data.txResult,
       }),
       assignGetTransactionResult: assign((_, event) => {
         const transactionResult = event.data as TransactionResult<any>;
@@ -153,9 +140,6 @@ export const transactionMachine = createMachine(
         return {
           transactionResult,
           transaction: transactionResult.transaction,
-          gqlTransactionStatus: (transactionResult.status.type === 'success'
-            ? 'SuccessStatus'
-            : 'FailureStatus') as GqlTransactionStatus,
         };
       }),
     },
@@ -165,7 +149,7 @@ export const transactionMachine = createMachine(
     services: {
       getTransaction: FetchMachine.create<
         { providerUrl?: string; txId: string },
-        GetTransactionResponse
+        MachineServices['getTransaction']['data']
       >({
         showError: true,
         async fetch({ input }) {
@@ -179,22 +163,17 @@ export const transactionMachine = createMachine(
           const providerUrl =
             input?.providerUrl || selectedNetwork?.url || defaultProvider;
 
-          const transactionResponse = await TxService.fetch({
+          const txResult = await TxService.fetch({
             providerUrl,
             txId: input.txId,
           });
-          const gqlTransaction = await transactionResponse.fetch();
-          if (!gqlTransaction) {
+
+          if (!txResult) {
             throw Error('Transaction not found');
           }
-          const transaction =
-            transactionResponse.decodeTransaction(gqlTransaction);
 
           return {
-            transaction,
-            transactionResponse,
-            gqlTransactionStatus: gqlTransaction?.status?.type,
-            txId: gqlTransaction?.id,
+            txResult,
           };
         },
       }),

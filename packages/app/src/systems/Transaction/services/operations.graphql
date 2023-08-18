@@ -1,10 +1,4 @@
 query AddressTransactions($first: Int, $owner: Address!) {
-  chain {
-    consensusParameters {
-      gasPriceFactor
-      gasPerByte
-    }
-  }
   transactionsByOwner(first: $first, owner: $owner) {
     edges {
       node {
@@ -21,6 +15,9 @@ fragment transaction on Transaction {
   id
   rawPayload
   gasPrice
+  receipts {
+    ...receipt
+  }
   status {
     type: __typename
     ... on SubmittedStatus {

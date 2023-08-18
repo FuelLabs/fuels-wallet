@@ -1,9 +1,9 @@
+import type { TransactionSummary } from 'fuels';
 import { isB256, isBech32 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { TxService } from '../services';
-import type { Tx } from '../utils';
 
 import { FetchMachine } from '~/systems/Core';
 
@@ -15,12 +15,12 @@ export const TRANSACTION_HISTORY_ERRORS = {
 type MachineContext = {
   walletAddress: string;
   error?: string;
-  transactions?: Tx[];
+  transactions?: TransactionSummary[];
 };
 
 type MachineServices = {
   getTransactionHistory: {
-    data: Tx[];
+    data: TransactionSummary[];
   };
 };
 

@@ -1,19 +1,17 @@
-import type { Bech32Address } from 'fuels';
-import { Address } from 'fuels';
+import type { Bech32Address, Operation, TransactionSummary } from 'fuels';
+import { Address, OperationName } from 'fuels';
 import { useMemo } from 'react';
 
-import type { Operation, Tx } from '../utils';
 import {
-  OperationName,
+  OperationDirection,
   formatDate,
   getOperationDirection,
-  OperationDirection,
 } from '../utils';
 
 import { useAccounts } from '~/systems/Account';
 
 type UseTxMetadataProps = {
-  transaction: Tx;
+  transaction: TransactionSummary;
   ownerAddress: string;
 };
 

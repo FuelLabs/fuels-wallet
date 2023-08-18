@@ -1,5 +1,14 @@
 import { AddressType } from '@fuel-wallet/types';
-import { ReceiptType, TransactionType, OutputType, InputType, bn } from 'fuels';
+import {
+  ReceiptType,
+  TransactionType,
+  OutputType,
+  InputType,
+  bn,
+  SimplifiedTransactionStatusNameEnum,
+  TransactionTypeNameEnum,
+  OperationName,
+} from 'fuels';
 import type {
   InputCoin,
   InputContract,
@@ -20,13 +29,7 @@ import type {
 } from 'fuels';
 
 import type { AbiParam, RawPayloadParam, ReceiptParam, Tx } from '../utils';
-import {
-  ChainName,
-  dateToTai64,
-  OperationName,
-  TxStatus,
-  TxType,
-} from '../utils';
+import { ChainName, dateToTai64 } from '../utils';
 
 import { CONTRACT_CALL_ABI } from './abi';
 import { MOCK_OPERATION_CONTRACT_CALL } from './operation';
@@ -44,7 +47,7 @@ export const createMockTx = ({
   id,
   operation,
 }: {
-  status?: TxStatus;
+  status?: SimplifiedTransactionStatusNameEnum;
   time?: string;
   id?: string;
   operation?: OperationName;
@@ -264,8 +267,8 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
     ],
     gasUsed: bn('0x28f90'),
     fee: bn('0x1'),
-    type: TxType.script,
-    status: TxStatus.success,
+    type: TransactionTypeNameEnum.Script,
+    status: SimplifiedTransactionStatusNameEnum.success,
     isTypeMint: false,
     isTypeCreate: false,
     isTypeScript: true,
@@ -411,8 +414,8 @@ export const MOCK_TRANSACTION_CREATE_CONTRACT: MockTransaction = {
     isStatusFailure: false,
     isStatusSuccess: true,
     isStatusPending: false,
-    type: TxType.create,
-    status: TxStatus.success,
+    type: TransactionTypeNameEnum.Create,
+    status: SimplifiedTransactionStatusNameEnum.success,
   },
   receipts: [],
 };
@@ -464,8 +467,8 @@ export const MOCK_TRANSACTION_MINT: MockTransaction = {
     isStatusFailure: false,
     isStatusSuccess: true,
     isStatusPending: false,
-    type: TxType.mint,
-    status: TxStatus.success,
+    type: TransactionTypeNameEnum.Mint,
+    status: SimplifiedTransactionStatusNameEnum.success,
   },
   receipts: [],
 };
@@ -604,8 +607,8 @@ export const MOCK_TRANSACTION_TRANSFER: MockTransaction = {
     isStatusFailure: false,
     isStatusSuccess: true,
     isStatusPending: false,
-    type: TxType.script,
-    status: TxStatus.success,
+    type: TransactionTypeNameEnum.Script,
+    status: SimplifiedTransactionStatusNameEnum.success,
   },
   receipts: [
     MOCK_TRANSACTION_TRANSFER_PARTS.receiptReturn,
@@ -746,7 +749,7 @@ export const MOCK_TRANSACTION_WITHDRAW_FROM_FUEL: MockTransaction = {
     isTypeCreate: false,
     isTypeScript: true,
     isTypeMint: false,
-    type: TxType.script,
+    type: TransactionTypeNameEnum.Script,
   },
   receipts: [
     MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.receiptMessageOut,

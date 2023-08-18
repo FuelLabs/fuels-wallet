@@ -1,9 +1,10 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-return-assign */
 import { Box } from '@fuel-ui/react';
+import { SimplifiedTransactionStatusNameEnum } from 'fuels';
 
 import { createMockTx } from '../../__mocks__/tx';
-import { dateToTai64, OperationName, TxStatus } from '../../utils';
+import { dateToTai64, OperationName } from '../../utils';
 
 import type { TxItemProps } from './ActivityItem';
 import { ActivityItem } from './ActivityItem';
@@ -16,42 +17,42 @@ export default {
 const MOCK_TRANSACTION_CONTRACT_CALL_SECONDS_AGO = createMockTx({
   time: dateToTai64(new Date(Date.now() - 1000 * 30)),
   id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade8',
-  status: TxStatus.pending,
+  status: SimplifiedTransactionStatusNameEnum.submitted,
   operation: OperationName.script,
 });
 
 const MOCK_TRANSACTION_CONTRACT_CALL_MINUTE_AGO = createMockTx({
   time: dateToTai64(new Date(Date.now() - 1000 * 60 * 24)),
   id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade9',
-  status: TxStatus.failure,
+  status: SimplifiedTransactionStatusNameEnum.failure,
   operation: OperationName.mint,
 });
 
 const MOCK_TRANSACTION_CONTRACT_CALL_HOURS_AGO = createMockTx({
   time: dateToTai64(new Date(Date.now() - 1000 * 60 * 60 * 2)),
   id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6adea',
-  status: TxStatus.pending,
+  status: SimplifiedTransactionStatusNameEnum.submitted,
   operation: OperationName.receive,
 });
 
 const MOCK_TRANSACTION_CONTRACT_CALL_DAYS_AGO = createMockTx({
   time: dateToTai64(new Date(Date.now() - 1000 * 60 * 60 * 24 * 24)),
   id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6adeb',
-  status: TxStatus.success,
+  status: SimplifiedTransactionStatusNameEnum.success,
   operation: OperationName.receive,
 });
 
 const MOCK_TRANSACTION_CONTRACT_CALL_MONTHS_AGO = createMockTx({
   time: dateToTai64(new Date(Date.now() - 1000 * 60 * 60 * 24 * 54)),
   id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6adeb',
-  status: TxStatus.success,
+  status: SimplifiedTransactionStatusNameEnum.success,
   operation: OperationName.transfer,
 });
 
 const MOCK_TRANSACTION_CONTRACT_CALL_YEARS_AGO = createMockTx({
   time: dateToTai64(new Date(Date.now() - 1000 * 60 * 60 * 24 * 364)),
   id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6adeb',
-  status: TxStatus.success,
+  status: SimplifiedTransactionStatusNameEnum.success,
   operation: OperationName.contractCreated,
 });
 
@@ -68,7 +69,9 @@ const ownerAddress =
   MOCK_TRANSACTION_CONTRACT_CALL_DAYS_AGO.operations[0].from?.address || '';
 
 export const Success = (args: TxItemProps) => {
-  MOCK_TRANSACTION_CONTRACT_CALLS.map((tx) => (tx.status = TxStatus.success));
+  MOCK_TRANSACTION_CONTRACT_CALLS.map(
+    (tx) => (tx.status = SimplifiedTransactionStatusNameEnum.success)
+  );
   return (
     <Box
       css={{
@@ -91,7 +94,9 @@ export const Success = (args: TxItemProps) => {
 };
 
 export const Pending = (args: TxItemProps) => {
-  MOCK_TRANSACTION_CONTRACT_CALLS.map((tx) => (tx.status = TxStatus.pending));
+  MOCK_TRANSACTION_CONTRACT_CALLS.map(
+    (tx) => (tx.status = SimplifiedTransactionStatusNameEnum.submitted)
+  );
   return (
     <Box
       css={{
@@ -114,7 +119,9 @@ export const Pending = (args: TxItemProps) => {
 };
 
 export const Error = (args: TxItemProps) => {
-  MOCK_TRANSACTION_CONTRACT_CALLS.map((tx) => (tx.status = TxStatus.failure));
+  MOCK_TRANSACTION_CONTRACT_CALLS.map(
+    (tx) => (tx.status = SimplifiedTransactionStatusNameEnum.failure)
+  );
   return (
     <Box
       css={{

@@ -4,12 +4,9 @@ import type { AddressType } from '@fuel-wallet/types';
 import type {
   BN,
   BNInput,
-  Input,
   JsonAbi,
-  Output,
   Transaction,
   TransactionResultReceipt,
-  TransactionType,
 } from 'fuels';
 
 export enum ChainName {
@@ -17,43 +14,24 @@ export enum ChainName {
   fuel = 'fuel',
 }
 
-export enum OperationName {
-  payBlockProducer = 'Pay network fee to block producer',
-  contractCreated = 'Contract created',
-  transfer = 'Transfer asset',
-  contractCall = 'Contract call',
-  contractTransfer = 'Contract transfer',
-  receive = 'Receive asset',
-  mint = 'Mint asset',
-  predicatecall = 'Predicate call',
-  script = 'Script',
-  sent = 'Sent asset',
-  withdrawFromFuel = 'Withdraw from Fuel',
-}
+// export enum OperationName {
+//   payBlockProducer = 'Pay network fee to block producer',
+//   contractCreated = 'Contract created',
+//   transfer = 'Transfer asset',
+//   contractCall = 'Contract call',
+//   contractTransfer = 'Contract transfer',
+//   receive = 'Receive asset',
+//   mint = 'Mint asset',
+//   predicatecall = 'Predicate call',
+//   script = 'Script',
+//   sent = 'Sent asset',
+//   withdrawFromFuel = 'Withdraw from Fuel',
+// }
 
 export enum OperationDirection {
   to = 'To',
   from = 'From',
   unknown = 'Unknown',
-}
-
-export type GqlTransactionStatus =
-  | 'FailureStatus'
-  | 'SubmittedStatus'
-  | 'SuccessStatus'
-  | 'SqueezedOutStatus';
-
-export enum TxStatus {
-  pending = 'Pending',
-  success = 'Success',
-  failure = 'Failure',
-  squeezedOut = 'SqueezedOut',
-}
-
-export enum TxType {
-  create = 'Create',
-  mint = 'Mint',
-  script = 'Script',
 }
 
 export type TxAddress = {
@@ -73,26 +51,26 @@ export type FunctionCall = {
   argumentsProvided?: Record<string, any>;
 } & Partial<Coin>;
 
-export type Operation = {
-  name?: OperationName;
-  from?: TxAddress;
-  to?: TxAddress;
-  assetsSent?: Array<Coin>;
-  calls?: Array<FunctionCall>;
-};
+// export type Operation = {
+//   name?: OperationName;
+//   from?: TxAddress;
+//   to?: TxAddress;
+//   assetsSent?: Array<Coin>;
+//   calls?: Array<FunctionCall>;
+// };
 
-export type InputParam = {
-  inputs: Input[];
-};
+// export type InputParam = {
+//   inputs: Input[];
+// };
 
-export type OutputParam = {
-  outputs: Output[];
-};
+// export type OutputParam = {
+//   outputs: Output[];
+// };
 
 export type TransactionParam = {
   transaction: Transaction;
 };
-export type InputOutputParam = InputParam & OutputParam;
+// export type InputOutputParam = InputParam & OutputParam;
 
 export type ReceiptParam = {
   receipts: TransactionResultReceipt[];
@@ -107,32 +85,31 @@ export type RawPayloadParam = {
   rawPayload?: string;
 };
 
-export type GetOperationParams = {
-  transactionType: TransactionType;
-} & InputOutputParam &
-  ReceiptParam &
-  AbiParam &
-  RawPayloadParam;
-export type GetGasUsedContractCreatedParams = {
-  gasPerByte: BN;
-  gasPriceFactor: BN;
-} & TransactionParam;
-export type GetGasUsedFromReceiptsParams = ReceiptParam;
-export type GetGasUsedParams = GetGasUsedContractCreatedParams &
-  Partial<GetGasUsedFromReceiptsParams>;
+// export type GetOperationParams = {
+//   transactionType: TransactionType;
+// } & InputOutputParam &
+//   ReceiptParam &
+//   AbiParam &
+//   RawPayloadParam;
+// export type GetGasUsedContractCreatedParams = {
+//   gasPerByte: BN;
+//   gasPriceFactor: BN;
+// } & TransactionParam;
+// export type GetGasUsedFromReceiptsParams = ReceiptParam;
+// export type GetGasUsedParams = GetGasUsedContractCreatedParams &
+//   Partial<GetGasUsedFromReceiptsParams>;
 
-export type GetFeeFromReceiptsParams = {
-  gasPrice: BN;
-  gasPriceFactor: BN;
-} & ReceiptParam;
+// export type GetFeeFromReceiptsParams = {
+//   gasPrice: BN;
+//   gasPriceFactor: BN;
+// } & ReceiptParam;
 
-export type GetFeeParams = GetGasUsedContractCreatedParams &
-  Omit<GetFeeFromReceiptsParams, 'gasPrice'>;
+// export type GetFeeParams = GetGasUsedContractCreatedParams &
+//   Omit<GetFeeFromReceiptsParams, 'gasPrice'>;
 
 export type ParseTxParams = {
   gasPerByte: BN;
   gasPriceFactor: BN;
-  gqlStatus?: GqlTransactionStatus;
   id?: string;
   time?: string;
 } & TransactionParam &
@@ -140,18 +117,16 @@ export type ParseTxParams = {
   AbiParam &
   RawPayloadParam;
 
-export type Tx = {
-  operations: Operation[];
-  gasUsed: BN;
-  fee: BN;
-  type: TxType;
-  isTypeMint: boolean;
-  isTypeCreate: boolean;
-  isTypeScript: boolean;
-  status?: TxStatus;
-  isStatusPending?: boolean;
-  isStatusSuccess?: boolean;
-  isStatusFailure?: boolean;
-  id?: string;
-  time?: string;
-};
+// export type Tx = {
+//   operations: Operation[];
+//   gasUsed: BN;
+//   fee: BN;
+//   isTypeMint: boolean;
+//   isTypeCreate: boolean;
+//   isTypeScript: boolean;
+//   isStatusPending?: boolean;
+//   isStatusSuccess?: boolean;
+//   isStatusFailure?: boolean;
+//   id?: string;
+//   time?: string;
+// };
