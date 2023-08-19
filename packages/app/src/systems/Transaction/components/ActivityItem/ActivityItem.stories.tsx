@@ -1,10 +1,10 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-return-assign */
 import { Box } from '@fuel-ui/react';
-import { SimplifiedTransactionStatusNameEnum } from 'fuels';
+import { OperationName, SimplifiedTransactionStatusNameEnum } from 'fuels';
 
 import { createMockTx } from '../../__mocks__/tx';
-import { dateToTai64, OperationName } from '../../utils';
+import { dateToTai64 } from '../../utils';
 
 import type { TxItemProps } from './ActivityItem';
 import { ActivityItem } from './ActivityItem';

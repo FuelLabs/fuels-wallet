@@ -46,3 +46,9 @@ export type Transaction = {
   amount?: AssetAmount;
   data?: TxRequest | TransactionResponse;
 };
+
+export enum OperationDirection {
+  to = 'To',
+  from = 'From',
+  unknown = 'Unknown',
+}

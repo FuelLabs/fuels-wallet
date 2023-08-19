@@ -1,2 +1,2 @@
-export * from './useTx';
-export * from './useParseTx';
+export * from './useTxResult';
+export * from './useTransactionHistory';

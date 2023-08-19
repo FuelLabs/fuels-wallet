@@ -388,7 +388,7 @@ test.describe('FuelWallet Extension', () => {
             const wallet = await window.fuel!.getWallet(senderAddress);
             const response = await wallet.transfer(receiver, Number(amount));
             const result = await response.waitForResult();
-            return result.status.type;
+            return result.status;
           },
           [senderAddress, receiverAddress, String(amount)]
         );

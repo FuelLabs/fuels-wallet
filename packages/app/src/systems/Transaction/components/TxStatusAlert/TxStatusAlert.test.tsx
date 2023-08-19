@@ -11,7 +11,7 @@ describe('TxStatusAlert', () => {
   it('should show transaction pending and block explorer link', async () => {
     render(
       <TxStatusAlert
-        txStatus={SimplifiedTransactionStatusNameEnum.pending}
+        txStatus={SimplifiedTransactionStatusNameEnum.submitted}
         txId="0x123"
       />
     );

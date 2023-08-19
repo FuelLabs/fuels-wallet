@@ -8,8 +8,10 @@ import {
   SimplifiedTransactionStatusNameEnum,
   TransactionTypeNameEnum,
   OperationName,
+  ChainName,
 } from 'fuels';
 import type {
+  AbiParam,
   InputCoin,
   InputContract,
   InputMessage,
@@ -18,28 +20,23 @@ import type {
   OutputContract,
   OutputContractCreated,
   OutputVariable,
+  RawPayloadParam,
   ReceiptMessageOut,
   ReceiptReturn,
   ReceiptScriptResult,
-  Transaction,
   TransactionResultCallReceipt,
   TransactionResultReturnDataReceipt,
   TransactionResultScriptResultReceipt,
   TransactionResultTransferOutReceipt,
+  TransactionSummary,
 } from 'fuels';
 
-import type { AbiParam, RawPayloadParam, ReceiptParam, Tx } from '../utils';
-import { ChainName, dateToTai64 } from '../utils';
+import { dateToTai64 } from '../utils';
 
 import { CONTRACT_CALL_ABI } from './abi';
 import { MOCK_OPERATION_CONTRACT_CALL } from './operation';
 
-type MockTransaction = {
-  transaction: Transaction;
-  tx: Tx;
-} & ReceiptParam &
-  AbiParam &
-  RawPayloadParam;
+type MockTransaction = TransactionSummary & AbiParam & RawPayloadParam;
 
 export const createMockTx = ({
   status,
@@ -53,16 +50,16 @@ export const createMockTx = ({
   operation?: OperationName;
 }) => {
   return {
-    ...MOCK_TRANSACTION_CONTRACT_CALL.tx,
-    time: time ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.time,
-    id: id ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.id,
-    status: status ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.status,
+    ...MOCK_TRANSACTION_CONTRACT_CALL,
+    time: time ?? MOCK_TRANSACTION_CONTRACT_CALL.time,
+    id: id ?? MOCK_TRANSACTION_CONTRACT_CALL.id,
+    status: status ?? MOCK_TRANSACTION_CONTRACT_CALL.status,
     operations: [
       {
-        ...MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0],
-        name: operation ?? MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].name,
+        ...MOCK_TRANSACTION_CONTRACT_CALL.operations[0],
+        name: operation ?? MOCK_TRANSACTION_CONTRACT_CALL.operations[0].name,
       },
-      ...MOCK_TRANSACTION_CONTRACT_CALL.tx.operations.slice(1),
+      ...MOCK_TRANSACTION_CONTRACT_CALL.operations.slice(1),
     ],
   };
 };
@@ -220,86 +217,83 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
     scriptLength: 3372,
     type: TransactionType.Script,
   },
-  tx: {
-    id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7',
-    operations: [
-      {
-        name: OperationName.contractCall,
-        calls: [],
-        from: {
-          type: AddressType.account,
-          address:
-            '0x3e7ddda4d0d3f8307ae5f1aed87623992c1c4decefec684936960775181b2302',
-        },
-        to: {
-          type: AddressType.contract,
-          address:
-            '0x0a98320d39c03337401a4e46263972a9af6ce69ec2f35a5420b1bd35784c74b1',
-        },
-        assetsSent: [
-          {
-            amount: bn(100000000),
-            assetId:
-              '0x0000000000000000000000000000000000000000000000000000000000000000',
-          },
-        ],
+  id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7',
+  operations: [
+    {
+      name: OperationName.contractCall,
+      calls: [],
+      from: {
+        type: AddressType.account,
+        address:
+          '0x3e7ddda4d0d3f8307ae5f1aed87623992c1c4decefec684936960775181b2302',
       },
-      {
-        name: OperationName.contractTransfer,
-        from: {
-          type: AddressType.contract,
-          address:
-            '0x0a98320d39c03337401a4e46263972a9af6ce69ec2f35a5420b1bd35784c74b1',
-        },
-        to: {
-          type: AddressType.account,
-          address:
-            '0x3e7ddda4d0d3f8307ae5f1aed87623992c1c4decefec684936960775181b2302',
-        },
-        assetsSent: [
-          {
-            amount: bn(100000000),
-            assetId:
-              '0x0000000000000000000000000000000000000000000000000000000000000000',
-          },
-        ],
+      to: {
+        type: AddressType.contract,
+        address:
+          '0x0a98320d39c03337401a4e46263972a9af6ce69ec2f35a5420b1bd35784c74b1',
       },
-    ],
-    gasUsed: bn('0x28f90'),
-    fee: bn('0x1'),
-    type: TransactionTypeNameEnum.Script,
-    status: SimplifiedTransactionStatusNameEnum.success,
-    isTypeMint: false,
-    isTypeCreate: false,
-    isTypeScript: true,
-    isStatusPending: false,
-    isStatusSuccess: true,
-    isStatusFailure: false,
-    time: thirtyFourDaysAgo,
-  },
+      assetsSent: [
+        {
+          amount: bn(100000000),
+          assetId:
+            '0x0000000000000000000000000000000000000000000000000000000000000000',
+        },
+      ],
+    },
+    {
+      name: OperationName.contractTransfer,
+      from: {
+        type: AddressType.contract,
+        address:
+          '0x0a98320d39c03337401a4e46263972a9af6ce69ec2f35a5420b1bd35784c74b1',
+      },
+      to: {
+        type: AddressType.account,
+        address:
+          '0x3e7ddda4d0d3f8307ae5f1aed87623992c1c4decefec684936960775181b2302',
+      },
+      assetsSent: [
+        {
+          amount: bn(100000000),
+          assetId:
+            '0x0000000000000000000000000000000000000000000000000000000000000000',
+        },
+      ],
+    },
+  ],
+  gasUsed: bn('0x28f90'),
+  fee: bn('0x1'),
+  type: TransactionTypeNameEnum.Script,
+  status: SimplifiedTransactionStatusNameEnum.success,
+  isTypeMint: false,
+  isTypeCreate: false,
+  isTypeScript: true,
+  isStatusPending: false,
+  isStatusSuccess: true,
+  isStatusFailure: false,
+  time: thirtyFourDaysAgo,
   receipts: [
     MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptCall,
     MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptTransferOut,
     ...MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptReturnData,
     MOCK_TRANSACTION_CONTRACT_CALL_PARTS.receiptScriptResult,
   ],
+  mintedAssets: [],
+  burnedAssets: [],
 };
 
 export const MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS: MockTransaction =
   {
     ...MOCK_TRANSACTION_CONTRACT_CALL,
-    tx: {
-      ...MOCK_TRANSACTION_CONTRACT_CALL.tx,
-      operations: [
-        {
-          ...MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0],
-          calls: MOCK_OPERATION_CONTRACT_CALL.calls,
-        },
-        {
-          ...MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[1],
-        },
-      ],
-    },
+    operations: [
+      {
+        ...MOCK_TRANSACTION_CONTRACT_CALL.operations[0],
+        calls: MOCK_OPERATION_CONTRACT_CALL.calls,
+      },
+      {
+        ...MOCK_TRANSACTION_CONTRACT_CALL.operations[1],
+      },
+    ],
     abiMap: {
       [MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputContract.contractID]:
         CONTRACT_CALL_ABI,
@@ -389,35 +383,35 @@ export const MOCK_TRANSACTION_CREATE_CONTRACT: MockTransaction = {
       },
     ],
   },
-  tx: {
-    id: '0x755fecd0059b835efbcd0e647590c38f87b95ca062ec978f28a085042c05e3a9',
-    operations: [
-      {
-        name: OperationName.contractCreated,
-        from: {
-          type: AddressType.account,
-          address:
-            '0x3e7ddda4d0d3f8307ae5f1aed87623992c1c4decefec684936960775181b2302',
-        },
-        to: {
-          type: AddressType.contract,
-          address:
-            '0xef066899413ef8dc7c3073a50868bafb3d039d9bad8006c2635b7f0efa992553',
-        },
+  id: '0x755fecd0059b835efbcd0e647590c38f87b95ca062ec978f28a085042c05e3a9',
+  operations: [
+    {
+      name: OperationName.contractCreated,
+      from: {
+        type: AddressType.account,
+        address:
+          '0x3e7ddda4d0d3f8307ae5f1aed87623992c1c4decefec684936960775181b2302',
       },
-    ],
-    gasUsed: bn(1),
-    fee: bn(1),
-    isTypeCreate: true,
-    isTypeScript: false,
-    isTypeMint: false,
-    isStatusFailure: false,
-    isStatusSuccess: true,
-    isStatusPending: false,
-    type: TransactionTypeNameEnum.Create,
-    status: SimplifiedTransactionStatusNameEnum.success,
-  },
+      to: {
+        type: AddressType.contract,
+        address:
+          '0xef066899413ef8dc7c3073a50868bafb3d039d9bad8006c2635b7f0efa992553',
+      },
+    },
+  ],
+  gasUsed: bn(1),
+  fee: bn(1),
+  isTypeCreate: true,
+  isTypeScript: false,
+  isTypeMint: false,
+  isStatusFailure: false,
+  isStatusSuccess: true,
+  isStatusPending: false,
+  type: TransactionTypeNameEnum.Create,
+  status: SimplifiedTransactionStatusNameEnum.success,
   receipts: [],
+  mintedAssets: [],
+  burnedAssets: [],
 };
 
 export const MOCK_TRANSACTION_MINT_PARTS: {
@@ -439,38 +433,38 @@ export const MOCK_TRANSACTION_MINT: MockTransaction = {
     outputs: [MOCK_TRANSACTION_MINT_PARTS.outputCoin],
     txPointer: { blockHeight: 417311, txIndex: 0 },
   },
-  tx: {
-    id: '0xc321cc16ea5c387c780d5d3061e1ddb5a94574dac0f79215f3ff3abf9c2fb3a0',
-    operations: [
-      {
-        name: OperationName.payBlockProducer,
-        from: { type: AddressType.account, address: 'Network' },
-        to: {
-          type: AddressType.account,
-          address:
-            '0xf65d6448a273b531ee942c133bb91a6f904c7d7f3104cdaf6b9f7f50d3518871',
-        },
-        assetsSent: [
-          {
-            assetId:
-              '0x0000000000000000000000000000000000000000000000000000000000000000',
-            amount: bn(1),
-          },
-        ],
+  id: '0xc321cc16ea5c387c780d5d3061e1ddb5a94574dac0f79215f3ff3abf9c2fb3a0',
+  operations: [
+    {
+      name: OperationName.payBlockProducer,
+      from: { type: AddressType.account, address: 'Network' },
+      to: {
+        type: AddressType.account,
+        address:
+          '0xf65d6448a273b531ee942c133bb91a6f904c7d7f3104cdaf6b9f7f50d3518871',
       },
-    ],
-    gasUsed: bn(0),
-    fee: bn(0),
-    isTypeCreate: false,
-    isTypeScript: false,
-    isTypeMint: true,
-    isStatusFailure: false,
-    isStatusSuccess: true,
-    isStatusPending: false,
-    type: TransactionTypeNameEnum.Mint,
-    status: SimplifiedTransactionStatusNameEnum.success,
-  },
+      assetsSent: [
+        {
+          assetId:
+            '0x0000000000000000000000000000000000000000000000000000000000000000',
+          amount: bn(1),
+        },
+      ],
+    },
+  ],
+  gasUsed: bn(0),
+  fee: bn(0),
+  isTypeCreate: false,
+  isTypeScript: false,
+  isTypeMint: true,
+  isStatusFailure: false,
+  isStatusSuccess: true,
+  isStatusPending: false,
+  type: TransactionTypeNameEnum.Mint,
+  status: SimplifiedTransactionStatusNameEnum.success,
   receipts: [],
+  mintedAssets: [],
+  burnedAssets: [],
 };
 
 export const MOCK_TRANSACTION_TRANSFER_PARTS: {
@@ -575,45 +569,45 @@ export const MOCK_TRANSACTION_TRANSFER: MockTransaction = {
       },
     ],
   },
-  tx: {
-    id: '0xdcbd3117aab0ec4a9a00f4a0f81616878140dccc3046b8fc4510fa2181d955e7',
-    operations: [
-      {
-        name: OperationName.transfer,
-        from: {
-          type: AddressType.account,
-          address:
-            '0x06300e686a5511c7ba0399fc68dcbe0ca2d8f54f7e6afea73c505dd3bcacf33b',
-        },
-        to: {
-          type: AddressType.account,
-          address:
-            '0x1c78a0266f7e10eb47872f0dc60a984625d01635c2723d61dccb9f555702a410',
-        },
-        assetsSent: [
-          {
-            assetId:
-              '0x0000000000000000000000000000000000000000000000000000000000000000',
-            amount: bn(10000),
-          },
-        ],
+  id: '0xdcbd3117aab0ec4a9a00f4a0f81616878140dccc3046b8fc4510fa2181d955e7',
+  operations: [
+    {
+      name: OperationName.transfer,
+      from: {
+        type: AddressType.account,
+        address:
+          '0x06300e686a5511c7ba0399fc68dcbe0ca2d8f54f7e6afea73c505dd3bcacf33b',
       },
-    ],
-    gasUsed: bn(1335),
-    fee: bn(1),
-    isTypeCreate: false,
-    isTypeScript: true,
-    isTypeMint: false,
-    isStatusFailure: false,
-    isStatusSuccess: true,
-    isStatusPending: false,
-    type: TransactionTypeNameEnum.Script,
-    status: SimplifiedTransactionStatusNameEnum.success,
-  },
+      to: {
+        type: AddressType.account,
+        address:
+          '0x1c78a0266f7e10eb47872f0dc60a984625d01635c2723d61dccb9f555702a410',
+      },
+      assetsSent: [
+        {
+          assetId:
+            '0x0000000000000000000000000000000000000000000000000000000000000000',
+          amount: bn(10000),
+        },
+      ],
+    },
+  ],
+  gasUsed: bn(1335),
+  fee: bn(1),
+  isTypeCreate: false,
+  isTypeScript: true,
+  isTypeMint: false,
+  isStatusFailure: false,
+  isStatusSuccess: true,
+  isStatusPending: false,
+  type: TransactionTypeNameEnum.Script,
+  status: SimplifiedTransactionStatusNameEnum.success,
   receipts: [
     MOCK_TRANSACTION_TRANSFER_PARTS.receiptReturn,
     MOCK_TRANSACTION_TRANSFER_PARTS.receiptScriptResult,
   ],
+  mintedAssets: [],
+  burnedAssets: [],
 };
 
 export const MOCK_TRANSACTION_TRANSFER_FROM_COIN: MockTransaction = {
@@ -720,42 +714,45 @@ export const MOCK_TRANSACTION_WITHDRAW_FROM_FUEL: MockTransaction = {
       '0x5040c0105d44c0064c40001124000000000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb9226600000000000f4240',
     scriptData: '0x',
   },
-  tx: {
-    operations: [
-      {
-        name: OperationName.withdrawFromFuel,
-        from: {
-          type: AddressType.account,
-          address:
-            '0xba8de454d50b4a2e53268849e5442d516a9715bc9c2db5f230d586bafa4ed666',
-        },
-        to: {
-          type: AddressType.account,
-          address:
-            '0x000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266',
-          chain: ChainName.ethereum,
-        },
-        assetsSent: [
-          {
-            amount: bn.parseUnits('0.001'),
-            assetId:
-              '0x0000000000000000000000000000000000000000000000000000000000000000',
-          },
-        ],
+  operations: [
+    {
+      name: OperationName.withdrawFromFuel,
+      from: {
+        type: AddressType.account,
+        address:
+          '0xba8de454d50b4a2e53268849e5442d516a9715bc9c2db5f230d586bafa4ed666',
       },
-    ],
-    gasUsed: bn('0x93'),
-    fee: bn('0x0'),
-    isTypeCreate: false,
-    isTypeScript: true,
-    isTypeMint: false,
-    type: TransactionTypeNameEnum.Script,
-  },
+      to: {
+        type: AddressType.account,
+        address:
+          '0x000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+        chain: ChainName.ethereum,
+      },
+      assetsSent: [
+        {
+          amount: bn.parseUnits('0.001'),
+          assetId:
+            '0x0000000000000000000000000000000000000000000000000000000000000000',
+        },
+      ],
+    },
+  ],
+  gasUsed: bn('0x93'),
+  fee: bn('0x0'),
+  isTypeCreate: false,
+  isTypeScript: true,
+  isTypeMint: false,
+  isStatusPending: false,
+  isStatusSuccess: true,
+  isStatusFailure: false,
+  type: TransactionTypeNameEnum.Script,
   receipts: [
     MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.receiptMessageOut,
     MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.receiptReturn,
     MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.receiptScriptResult,
   ],
+  mintedAssets: [],
+  burnedAssets: [],
 };
 
 export const MOCK_GAS_PER_BYTE = bn(4);

@@ -19,7 +19,7 @@ export const Failed = (args: TxStatusAlertProps) => (
 export const Pending = (args: TxStatusAlertProps) => (
   <TxStatusAlert
     {...args}
-    txStatus={SimplifiedTransactionStatusNameEnum.pending}
+    txStatus={SimplifiedTransactionStatusNameEnum.submitted}
     txId={'0xoaskokaes'}
   />
 );

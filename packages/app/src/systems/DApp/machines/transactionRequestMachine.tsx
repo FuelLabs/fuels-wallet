@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Account } from '@fuel-wallet/types';
-import {
-  type BN,
-  type TransactionRequest,
-  type TransactionResponse,
-  type TransactionResultReceipt,
+import type {
+  TransactionSummary,
+  BN,
+  TransactionRequest,
+  TransactionResponse,
 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
@@ -40,7 +40,7 @@ type MachineContext = {
     account?: Account;
   };
   response?: {
-    receipts?: TransactionResultReceipt[];
+    txResult?: TransactionSummary;
     approvedTx?: TransactionResponse;
   };
   errors?: {
@@ -55,7 +55,9 @@ type MachineServices = {
     data: TransactionResponse;
   };
   simulateTransaction: {
-    data: TransactionResultReceipt[];
+    data: {
+      txResult: TransactionSummary;
+    };
   };
   fetchGasPrice: {
     data: BN;
@@ -146,7 +148,7 @@ export const transactionRequestMachine = createMachine(
             },
             {
               target: 'waitingApproval',
-              actions: ['assignReceipts'],
+              actions: ['assignTxResult'],
             },
           ],
         },
@@ -267,8 +269,11 @@ export const transactionRequestMachine = createMachine(
       assignApprovedTx: assign({
         response: (ctx, ev) => ({ ...ctx.response, approvedTx: ev.data }),
       }),
-      assignReceipts: assign({
-        response: (ctx, ev) => ({ ...ctx.response, receipts: ev.data }),
+      assignTxResult: assign({
+        response: (ctx, ev) => ({
+          ...ctx.response,
+          txResult: ev.data.txResult,
+        }),
       }),
       assignTxDryRunError: assign((ctx, ev) => {
         const txDryRunGroupedErrors = getGroupedErrors(
@@ -313,9 +318,9 @@ export const transactionRequestMachine = createMachine(
           // Enforce a minimum delay to show the loading state
           // this creates a better experience for the user as the
           // screen doesn't flash between states
-          await delay(1000);
-          const receipts = await TxService.simulateTransaction(input);
-          return receipts;
+          await delay(600);
+          const { txResult } = await TxService.simulateTransaction(input);
+          return { txResult };
         },
       }),
       send: FetchMachine.create<

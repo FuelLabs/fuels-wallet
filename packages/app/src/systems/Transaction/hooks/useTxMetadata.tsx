@@ -2,11 +2,8 @@ import type { Bech32Address, Operation, TransactionSummary } from 'fuels';
 import { Address, OperationName } from 'fuels';
 import { useMemo } from 'react';
 
-import {
-  OperationDirection,
-  formatDate,
-  getOperationDirection,
-} from '../utils';
+import { OperationDirection } from '../types';
+import { formatDate, getOperationDirection } from '../utils';
 
 import { useAccounts } from '~/systems/Account';
 

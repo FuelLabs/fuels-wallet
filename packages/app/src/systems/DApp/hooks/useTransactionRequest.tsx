@@ -6,10 +6,8 @@ import type { TransactionRequestState } from '../machines/transactionRequestMach
 import { TxRequestStatus } from '../machines/transactionRequestMachine';
 
 import { Services, store } from '~/store';
-import { useChainInfo } from '~/systems/Network';
 import { useOverlay } from '~/systems/Overlay';
 import { getFilteredErrors } from '~/systems/Transaction';
-import { useParseTx } from '~/systems/Transaction/hooks/useParseTx';
 import type { TxInputs } from '~/systems/Transaction/services';
 
 const selectors = {
@@ -18,6 +16,9 @@ const selectors = {
   },
   account(state: TransactionRequestState) {
     return state.context.input.account;
+  },
+  txResult(state: TransactionRequestState) {
+    return state.context.response?.txResult;
   },
   isLoadingAccounts(state: TransactionRequestState) {
     return state.matches('fetchingAccount');
@@ -96,11 +97,10 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const ctx = useSelector(service, selectors.context);
   const errors = useSelector(service, selectors.errors);
   const providerUrl = ctx.input.providerUrl;
-  const { chainInfo, isLoading: isLoadingChain } = useChainInfo(providerUrl);
-  const externalLoading = isLoadingAccounts || isLoadingChain;
-  const txStatusSelector = selectors.status(externalLoading);
+  const txStatusSelector = selectors.status(isLoadingAccounts);
   const txStatus = useSelector(service, txStatusSelector);
   const title = useSelector(service, selectors.title);
+  const txResult = useSelector(service, selectors.txResult);
   const origin = useSelector(service, selectors.origin);
   const originTitle = useSelector(service, selectors.originTitle);
   const favIconUrl = useSelector(service, selectors.favIconUrl);
@@ -108,15 +108,8 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const isPreLoading = useSelector(service, selectors.isPreLoading);
   const isLoading = status('loading');
   const showActions = !status('failed') && !status('success');
-  const tx = useParseTx({
-    transaction: ctx.input.transactionRequest?.toTransaction(),
-    id: ctx.response?.approvedTx?.id,
-    receipts: ctx.response?.receipts,
-    gasPerByte: chainInfo?.consensusParameters.gasPerByte,
-    gasPriceFactor: chainInfo?.consensusParameters.gasPriceFactor,
-  });
-  const shouldShowTx = (status('waitingApproval') || isSendingTx) && !!tx;
-  const shouldShowLoader = isPreLoading || !tx;
+  const shouldShowTx = (status('waitingApproval') || isSendingTx) && !!txResult;
+  const shouldShowLoader = isPreLoading || !txResult;
 
   function closeDialog() {
     reset();
@@ -130,7 +123,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   function approveStatus() {
     if (status('success')) return SimplifiedTransactionStatusNameEnum.success;
     if (status('failed')) return SimplifiedTransactionStatusNameEnum.failure;
-    return tx?.status;
+    return txResult?.status;
   }
 
   function approve() {
@@ -165,7 +158,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     originTitle,
     favIconUrl,
     title,
-    tx,
+    txResult,
     txStatus,
     isSendingTx,
     shouldShowTx,

@@ -1,4 +1,4 @@
-import type { TransactionSummary } from 'fuels';
+import type { TransactionResult } from 'fuels';
 import { isB256, isBech32 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
@@ -6,6 +6,7 @@ import { assign, createMachine } from 'xstate';
 import { TxService } from '../services';
 
 import { FetchMachine } from '~/systems/Core';
+import { NetworkService } from '~/systems/Network';
 
 export const TRANSACTION_HISTORY_ERRORS = {
   INVALID_ADDRESS: 'Invalid address',
@@ -15,12 +16,14 @@ export const TRANSACTION_HISTORY_ERRORS = {
 type MachineContext = {
   walletAddress: string;
   error?: string;
-  transactions?: TransactionSummary[];
+  transactionHistory?: TransactionResult[];
 };
 
 type MachineServices = {
   getTransactionHistory: {
-    data: TransactionSummary[];
+    data: {
+      transactionHistory: TransactionResult[];
+    };
   };
 };
 
@@ -70,7 +73,7 @@ export const transactionHistoryMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['assignGetTransactionHistoryResponse'],
+              actions: ['assignTransactionHistory'],
               target: 'idle',
             },
           ],
@@ -91,8 +94,8 @@ export const transactionHistoryMachine = createMachine(
       assignGetTransactionHistoryError: assign({
         error: (_) => TRANSACTION_HISTORY_ERRORS.NOT_FOUND,
       }),
-      assignGetTransactionHistoryResponse: assign({
-        transactions: (_, event) => event.data,
+      assignTransactionHistory: assign({
+        transactionHistory: (_, ev) => ev.data.transactionHistory,
       }),
       clearError: assign({
         error: (_) => undefined,
@@ -106,10 +109,12 @@ export const transactionHistoryMachine = createMachine(
         showError: true,
         async fetch({ input }) {
           const address = input?.address;
-          const transactions = await TxService.getTransactionHistory({
+          const selectedNetwork = await NetworkService.getSelectedNetwork();
+          const { transactionHistory } = await TxService.getTransactionHistory({
             address: address?.toString() || '',
+            providerUrl: selectedNetwork?.url,
           });
-          return transactions;
+          return { transactionHistory };
         },
       }),
     },
