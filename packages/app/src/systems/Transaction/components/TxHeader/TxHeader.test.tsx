@@ -30,10 +30,10 @@ describe('TxHeader', () => {
     expect(screen.getByText(/Create/i)).toBeInTheDocument();
   });
 
-  it('should show transaction Pending', async () => {
+  it('should show transaction Submitted', async () => {
     render(<TxHeader {...MOCK_TRANSACTION_CREATE} />);
 
-    expect(screen.getByText(/Pending/i)).toBeInTheDocument();
+    expect(screen.getByText(/Submitted/i)).toBeInTheDocument();
     expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
       'data-status',
       SimplifiedTransactionStatusNameEnum.submitted
