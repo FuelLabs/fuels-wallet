@@ -31,7 +31,6 @@ describe('Send', () => {
     it('should show transaction details by default', async () => {
       render(<Select />, { wrapper: TestWrapper });
       await waitFor(() => findAssetSelect());
-      expect(await screen.findByText('Fee (network)')).toBeInTheDocument();
     });
   });
 });

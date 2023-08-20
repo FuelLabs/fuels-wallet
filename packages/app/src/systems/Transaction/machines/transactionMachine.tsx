@@ -179,8 +179,11 @@ export const transactionMachine = createMachine(
 
           // TODO: remove this when we get SDK with new TransactionResponse flow
           const selectedNetwork = await NetworkService.getSelectedNetwork();
+          const defaultProvider = import.meta.env.VITE_FUEL_PROVIDER_URL;
+
+          const providerUrl = selectedNetwork?.url || defaultProvider;
           const { txResult: txResultWithCalls } = await TxService.fetch({
-            providerUrl: selectedNetwork?.url || '',
+            providerUrl,
             txId: txResult.id || '',
           });
 

@@ -1,6 +1,7 @@
 import type { BN } from 'fuels';
 import { BaseAssetId, Address, Wallet } from 'fuels';
-import { getGasConfig } from 'src/utils';
+
+import { getGasConfig } from '../../utils';
 
 export async function seedWallet(address: string, amount: BN) {
   const genesisWallet = Wallet.fromPrivateKey(

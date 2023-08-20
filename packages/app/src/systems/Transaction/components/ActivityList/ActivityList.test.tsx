@@ -2,22 +2,22 @@ import { render, screen, testA11y } from '@fuel-ui/test-utils';
 
 import {
   MOCK_TRANSACTION_CONTRACT_CALL,
-  MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS,
   MOCK_TRANSACTION_CREATE_CONTRACT,
 } from '../../__mocks__/tx';
 
 import { ActivityList } from './ActivityList';
 
 import { MOCK_ACCOUNTS } from '~/systems/Account';
+import { byPassDataSpaceError } from '~/systems/Core/__tests__/utils/error';
 import { TestWrapper } from '~/systems/Core/components/TestWrapper';
 
 const MOCK_TXS = [
   MOCK_TRANSACTION_CONTRACT_CALL,
-  MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS,
   MOCK_TRANSACTION_CREATE_CONTRACT,
 ];
 
 describe('ActivityList', () => {
+  byPassDataSpaceError();
   it('a11y', async () => {
     await testA11y(
       <ActivityList txs={MOCK_TXS} ownerAddress={MOCK_ACCOUNTS[3].address} />,

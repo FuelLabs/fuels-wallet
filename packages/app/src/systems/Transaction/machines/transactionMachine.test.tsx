@@ -35,9 +35,9 @@ describe('transactionMachine', () => {
     service.send('GET_TRANSACTION', { input: { txId: TRANSACTION_ID } });
 
     await waitFor(service, (state) => state.matches('fetching'));
+    await waitFor(service, (state) => state.matches('fetchingResult'));
     await waitFor(service, (state) => Boolean(state.context.txResult));
     await waitFor(service, (state) => Boolean(state.context.txResponse));
-    await waitFor(service, (state) => state.matches('fetchingResult'));
     await waitFor(service, (state) => state.matches('done'));
   });
 });
