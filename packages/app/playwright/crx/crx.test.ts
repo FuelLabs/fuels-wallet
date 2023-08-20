@@ -10,6 +10,7 @@ import {
   waitAriaLabel,
   reload,
   getElementByText,
+  getGasConfig,
 } from '../commons';
 import {
   CUSTOM_ASSET,
@@ -386,7 +387,13 @@ test.describe('FuelWallet Extension', () => {
           async ([senderAddress, receiverAddress, amount]) => {
             const receiver = window.fuel.utils.createAddress(receiverAddress);
             const wallet = await window.fuel!.getWallet(senderAddress);
-            const response = await wallet.transfer(receiver, Number(amount));
+            const { gasLimit, gasPrice } = await getGasConfig(wallet.provider);
+            const response = await wallet.transfer(
+              receiver,
+              Number(amount),
+              undefined,
+              { gasLimit, gasPrice }
+            );
             const result = await response.waitForResult();
             return result.status;
           },
