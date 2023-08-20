@@ -1,3 +1,4 @@
+import { getGasConfig } from '@fuel-wallet/sdk';
 import type { Account, Asset } from '@fuel-wallet/types';
 import type {
   BN,
@@ -200,12 +201,8 @@ export class TxService {
       NetworkService.getSelectedNetwork(),
     ]);
     const wallet = new WalletLockedCustom(account!.address, network!.url);
-    const chain = await wallet.provider.getChain();
-    const nodeInfo = await wallet.provider.getNodeInfo();
-    const params: ScriptTransactionRequestLike = {
-      gasLimit: chain.consensusParameters.maxGasPerTx,
-      gasPrice: nodeInfo.minGasPrice,
-    };
+    const { gasLimit, gasPrice } = await getGasConfig(wallet.provider);
+    const params: ScriptTransactionRequestLike = { gasLimit, gasPrice };
     const request = new ScriptTransactionRequest(params);
     request.addCoinOutput(wallet.address, bn(1), BaseAssetId);
     await wallet.fund(request);
@@ -221,10 +218,8 @@ export class TxService {
   }
 
   static async createTransfer(input: TxInputs['createTransfer']) {
-    const chainInfo = await input.provider.getChain();
-    const request = new ScriptTransactionRequest({
-      gasLimit: chainInfo.consensusParameters.maxGasPerTx,
-    });
+    const { gasLimit, gasPrice } = await getGasConfig(input.provider);
+    const request = new ScriptTransactionRequest({ gasLimit, gasPrice });
     const to = Address.fromAddressOrString(input.to);
     const { assetId, amount } = input;
     request.addCoinOutput(to, amount, assetId);
