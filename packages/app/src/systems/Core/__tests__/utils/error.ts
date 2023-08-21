@@ -1,6 +1,7 @@
 export function byPassDataSpaceError() {
   // TODO: remove completely this after fuel-ui `dataSpace` problem gets fixed
   beforeEach(() => {
+    // eslint-disable-next-line no-console
     const consoleError = console.error;
 
     jest.spyOn(console, 'error').mockImplementation((e) => {
