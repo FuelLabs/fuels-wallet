@@ -3371,7 +3371,7 @@ packages:
       '@react-aria/overlays': 3.15.0(react-dom@18.2.0)(react@18.2.0)
       '@react-aria/utils': 3.18.0(react@18.2.0)
       '@storybook/global': 5.0.0
-      '@tabler/icons-react': 2.31.0(react@18.2.0)
+      '@tabler/icons-react': 2.30.0(react@18.2.0)
       '@xstate/react': 3.2.2(@types/react@18.2.17)(react@18.2.0)(xstate@4.38.2)
       deepmerge-json: 1.5.0
       framer-motion: 10.15.0(react-dom@18.2.0)(react@18.2.0)
@@ -3428,7 +3428,7 @@ packages:
       '@react-aria/overlays': 3.15.0(react-dom@18.2.0)(react@18.2.0)
       '@react-aria/utils': 3.18.0(react@18.2.0)
       '@storybook/global': 5.0.0
-      '@tabler/icons-react': 2.31.0(react@18.2.0)
+      '@tabler/icons-react': 2.30.0(react@18.2.0)
       '@xstate/react': 3.2.2(@types/react@18.2.17)(react@18.2.0)(xstate@4.38.2)
       deepmerge-json: 1.5.0
       framer-motion: 10.15.0(react-dom@18.2.0)(react@18.2.0)
@@ -8878,21 +8878,21 @@ packages:
       tslib: 2.6.1
     dev: false
 
-  /@tabler/icons-react@2.31.0(react@18.2.0):
-    resolution: {integrity: sha512-P0q4VtKXJEc9lv9kxBUYfRqNuPzAYGGl26Wt8nMeY8Ck6x6tdsIWyox9fmGQh9BEoYEln7hM6pOA9eNphVmg+A==}
+  /@tabler/icons-react@2.30.0(react@18.2.0):
+    resolution: {integrity: sha512-aYggXusHW133L4KujJkVf4GIIrjg7tIRHgNf/n37mnoHqMjwNP+PjmVdrBM1Z8Ywx9PKFRlrwM0eUMDcG+I4HA==}
     peerDependencies:
       react: '*'
     peerDependenciesMeta:
       react:
         optional: true
     dependencies:
-      '@tabler/icons': 2.31.0
+      '@tabler/icons': 2.30.0
       prop-types: 15.8.1
       react: 18.2.0
     dev: false
 
-  /@tabler/icons@2.31.0:
-    resolution: {integrity: sha512-vueOF4rjM0wcYAHOq7gcQB3fU04EAfHIwP0i/DVQdopXv84uu62DvOFHhYj9d0OBiM4O0PPoXEvsT8IVZDrYXw==}
+  /@tabler/icons@2.30.0:
+    resolution: {integrity: sha512-tvtmkI4ALjKThVVORh++sB9JnkFY7eGInKxNy+Df7WVQiF7T85tlvGADzlgX4Ic+CK5MIUzZ0jhOlQ/RRlgXpg==}
     dev: false
 
   /@testing-library/dom@9.3.1:
