@@ -50,7 +50,7 @@ test.describe('Networks', () => {
     await expect(selector).toHaveText(/Another/i);
   });
 
-  test.skip('should be able to update a network', async () => {
+  test('should be able to update a network', async () => {
     await visit(page, '/wallet');
     await getByAriaLabel(page, 'Selected Network').click();
     await hasText(page, /Networks/i);
@@ -67,7 +67,7 @@ test.describe('Networks', () => {
     await hasText(page, /Local 1/);
   });
 
-  test.skip('should be able to remove a network', async () => {
+  test('should be able to remove a network', async () => {
     await visit(page, '/wallet');
     await getByAriaLabel(page, 'Selected Network').click();
     const items = page.locator('[aria-label*=fuel_network]');
@@ -79,7 +79,7 @@ test.describe('Networks', () => {
     await expect(items.first()).toHaveAttribute('data-active', 'true');
   });
 
-  test.skip('should be able to add a new network', async () => {
+  test('should be able to add a new network', async () => {
     await visit(page, '/wallet');
     await getByAriaLabel(page, 'Selected Network').click();
     await hasText(page, /Add new network/i);

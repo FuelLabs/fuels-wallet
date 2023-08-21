@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 import type { Asset } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import { useEffect, useRef } from 'react';
@@ -115,6 +114,7 @@ export function useAccounts() {
         window.removeEventListener('focus', listenerAccountFetcher);
       };
     }
+    return () => {};
   }, []);
 
   return {
