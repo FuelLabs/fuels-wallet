@@ -1,6 +1,8 @@
-import { bn } from 'fuels';
-
-import { TxStatus, TxType } from '../utils';
+import {
+  SimplifiedTransactionStatusNameEnum,
+  TransactionTypeNameEnum,
+  bn,
+} from 'fuels';
 
 export const MOCK_TX = {
   status: {
@@ -56,15 +58,15 @@ export const MOCK_TX = {
 
 export const MOCK_TRANSACTION_SCRIPT = {
   id: '12132213231231',
-  type: TxType.script,
-  status: TxStatus.pending,
+  type: TransactionTypeNameEnum.Script,
+  status: SimplifiedTransactionStatusNameEnum.submitted,
   data: undefined,
 };
 
 export const MOCK_TRANSACTION_CREATE = {
   id: '12132213231231',
-  type: TxType.create,
-  status: TxStatus.pending,
+  type: TransactionTypeNameEnum.Create,
+  status: SimplifiedTransactionStatusNameEnum.submitted,
   data: undefined,
 };
 
@@ -73,29 +75,86 @@ export const MOCK_TRANSACTION_WITH_RECEIPTS_GQL = {
   transaction: {
     id: '0x64641e1faeb1b0052d95e055b085b45b85155a7ec8cc47b1c6b7ed9f2783837a',
     rawPayload:
-      '0x00000000000000000000000000000001000000000000003d0000000000000000000000000000000400000000000000000000000000000001000000000000000200000000000000017734552400d854fad375727b0dd5b6881c0d842b0fcfa527782a0a4a897c882924000000000000000000000000000000066ccede8d6301df075ef026be2b620bf0bf2825b94c5e56d6bad158244d70a6000000000000000057c23aefdbb5941d3abc454d702c4e54d1ab4c853643480f14f4405ad9b22837000000001dcd65000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007b46e795e0b80d9d5d1ab578e20ba48f195a657b7e4a28d7dab97e584d959b74000000000bebc2000000000000000000000000000000000000000000000000000000000000000000000000000000000257c23aefdbb5941d3abc454d702c4e54d1ab4c853643480f14f4405ad9b228370000000011e1a2ff00000000000000000000000000000000000000000000000000000000000000000000000000000040290b6b34bfe5c55b136d034dd7619491b1b8a4dce29148c7dfc4af6cb21d2dcbfa79e72e1306ae4adb573939784b6eaa9352ee7a42124405a2a39576967afb2c',
+      '0x000000000000000000000000000000010000000000989680000000000000000000000000000000040000000000000000000000000000000100000000000000020000000000000001e882ddcadd1d5075e97b141548f87c47a550dbd7f582083a7211463edc3acccf2400000000000000000000000000000002a7b90ac5ec741778a145da8db4fb5d677bcec8c8735c25268060834d459a53000000000000000157c23aefdbb5941d3abc454d702c4e54d1ab4c853643480f14f4405ad9b228370000000011e1a2d7000000000000000000000000000000000000000000000000000000000000000000000000000045d400000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007b46e795e0b80d9d5d1ab578e20ba48f195a657b7e4a28d7dab97e584d959b740000000005f5e1000000000000000000000000000000000000000000000000000000000000000000000000000000000257c23aefdbb5941d3abc454d702c4e54d1ab4c853643480f14f4405ad9b22837000000000bebc1c20000000000000000000000000000000000000000000000000000000000000000000000000000004092c7c702892d22482e96d086766f57e91c675d4c868f3a0fda418e4ab3e4978aa8ccd51f65542b6407a2b7f4af49bc127d50899bab02b7e5bce8adc0091ad060',
     gasPrice: '1',
+    receipts: [
+      {
+        contract: null,
+        pc: '10344',
+        is: '10344',
+        to: null,
+        toAddress: null,
+        amount: null,
+        assetId: null,
+        gas: null,
+        param1: null,
+        param2: null,
+        val: '0',
+        ptr: null,
+        digest: null,
+        reason: null,
+        ra: null,
+        rb: null,
+        rc: null,
+        rd: null,
+        len: null,
+        receiptType: 'RETURN',
+        result: null,
+        gasUsed: null,
+        data: null,
+        sender: null,
+        recipient: null,
+        nonce: null,
+        contractId: null,
+        subId: null,
+      },
+      {
+        contract: null,
+        pc: null,
+        is: null,
+        to: null,
+        toAddress: null,
+        amount: null,
+        assetId: null,
+        gas: null,
+        param1: null,
+        param2: null,
+        val: null,
+        ptr: null,
+        digest: null,
+        reason: null,
+        ra: null,
+        rb: null,
+        rc: null,
+        rd: null,
+        len: null,
+        receiptType: 'SCRIPT_RESULT',
+        result: '0',
+        gasUsed: '13',
+        data: null,
+        sender: null,
+        recipient: null,
+        nonce: null,
+        contractId: null,
+        subId: null,
+      },
+    ],
     status: {
       type: 'SuccessStatus',
       block: {
-        id: '0x07edb6b91809069b09f1f94b03a541cb9dffd56272e20538f7633e7f43a4ccbd',
+        id: '0xe0710c561735660032fc94db9535b39e523ceba91ae33c3a77f9532d9e30ca05',
       },
-      time: '4611686020117628379',
+      time: '4611686020119787600',
       programState: {
         returnType: 'RETURN',
         data: '0x0000000000000000',
       },
     },
-    receipts: [
-      {
-        data: null,
-        rawPayload:
-          '0x00000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000028680000000000002868',
-      },
-      {
-        data: null,
-        rawPayload: '0x00000000000000090000000000000000000000000000003d',
-      },
-    ],
+  },
+  chain: {
+    consensusParameters: {
+      gasPerByte: '4',
+      gasPriceFactor: '92',
+    },
   },
 };

@@ -40,7 +40,7 @@ export const TxApprove = () => {
         {ctx.shouldShowTx && (
           <TxContent.Info
             showDetails
-            tx={ctx.tx}
+            tx={ctx.txResult}
             isLoading={ctx.status('loading')}
             header={Header}
             assets={assets}
@@ -49,13 +49,13 @@ export const TxApprove = () => {
         {(ctx.status('success') || ctx.status('failed')) && (
           <TxContent.Info
             showDetails
-            tx={ctx.tx}
+            tx={ctx.txResult}
             txStatus={ctx.approveStatus()}
             assets={assets}
             header={
               <TxHeader
-                id={ctx.tx?.id}
-                type={ctx.tx?.type}
+                id={ctx.txResult?.id}
+                type={ctx.txResult?.type}
                 status={ctx.approveStatus()}
                 providerUrl={ctx.providerUrl}
               />

@@ -15,7 +15,7 @@ export default {
 } as Meta;
 
 const PROVIDER_URL = 'http://localhost:4000';
-const TX = MOCK_TRANSACTION_MINT.tx;
+const TX = MOCK_TRANSACTION_MINT;
 
 export const Info = () => {
   return (

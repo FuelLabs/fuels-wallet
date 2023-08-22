@@ -1,11 +1,11 @@
 import { render, testA11y, screen, act, fireEvent } from '@fuel-ui/test-utils';
 import { BLOCK_EXPLORER_URL } from '@fuel-wallet/sdk';
+import { SimplifiedTransactionStatusNameEnum } from 'fuels';
 
 import {
   MOCK_TRANSACTION_CREATE,
   MOCK_TRANSACTION_SCRIPT,
 } from '../../__mocks__/transaction';
-import { TxStatus } from '../../utils';
 
 import { TxHeader } from './TxHeader';
 
@@ -30,33 +30,43 @@ describe('TxHeader', () => {
     expect(screen.getByText(/Create/i)).toBeInTheDocument();
   });
 
-  it('should show transaction Pending', async () => {
+  it('should show transaction Submitted', async () => {
     render(<TxHeader {...MOCK_TRANSACTION_CREATE} />);
 
-    expect(screen.getByText(/Pending/i)).toBeInTheDocument();
+    expect(screen.getByText(/Submitted/i)).toBeInTheDocument();
     expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
       'data-status',
-      TxStatus.pending
+      SimplifiedTransactionStatusNameEnum.submitted
     );
   });
 
   it('should show transaction Success', async () => {
-    render(<TxHeader {...MOCK_TRANSACTION_CREATE} status={TxStatus.success} />);
+    render(
+      <TxHeader
+        {...MOCK_TRANSACTION_CREATE}
+        status={SimplifiedTransactionStatusNameEnum.success}
+      />
+    );
 
     expect(screen.getByText(/Success/i)).toBeInTheDocument();
     expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
       'data-status',
-      TxStatus.success
+      SimplifiedTransactionStatusNameEnum.success
     );
   });
 
   it('should show transaction Error', async () => {
-    render(<TxHeader {...MOCK_TRANSACTION_CREATE} status={TxStatus.failure} />);
+    render(
+      <TxHeader
+        {...MOCK_TRANSACTION_CREATE}
+        status={SimplifiedTransactionStatusNameEnum.failure}
+      />
+    );
 
     expect(screen.getByText(/Failure/i)).toBeInTheDocument();
     expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
       'data-status',
-      TxStatus.failure
+      SimplifiedTransactionStatusNameEnum.failure
     );
   });
 

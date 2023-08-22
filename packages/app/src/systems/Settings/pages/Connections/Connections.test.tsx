@@ -8,6 +8,7 @@ import { List } from './Connections.stories';
 
 import { TestWrapper } from '~/systems/Core';
 import { renderWithRouter } from '~/systems/Core/__tests__/utils';
+import { byPassDataSpaceError } from '~/systems/Core/__tests__/utils/error';
 import { ConnectionService } from '~/systems/DApp/services';
 
 const opts = {
@@ -19,6 +20,7 @@ describe('Connections', () => {
   let conn1: Connection;
   let conn2: Connection;
 
+  byPassDataSpaceError();
   beforeEach(async () => {
     const res = await connectionsLoader();
     conn1 = res.connection1!;

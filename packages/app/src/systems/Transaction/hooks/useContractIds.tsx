@@ -1,7 +1,6 @@
-import type { Input } from 'fuels';
+import { getInputsByType, InputType } from 'fuels';
+import type { InputContract, Input } from 'fuels';
 import { useMemo } from 'react';
-
-import { getInputsContract } from '../utils';
 
 type ContractIdsProps = {
   inputs?: Input[];
@@ -12,7 +11,13 @@ export function useContractIds(props: Partial<ContractIdsProps>) {
   const contractIds = useMemo(() => {
     if (!inputs?.length) return undefined;
 
-    return getInputsContract(inputs).map((input) => input.contractID);
+    // TODO: should change here to use `getInputsContract` when SDK includes it
+    const contractInputs = getInputsByType<InputContract>(
+      inputs,
+      InputType.Contract
+    ).map((input) => input.contractID);
+
+    return contractInputs;
   }, [JSON.stringify(inputs || [])]);
   return { contractIds };
 }

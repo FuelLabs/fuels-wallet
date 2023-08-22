@@ -1,12 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
 import { Accordion, Box, Text } from '@fuel-ui/react';
+import type { OperationFunctionCall } from 'fuels';
 import ReactJson from 'react-json-view';
 
 import { coreStyles } from '~/systems/Core/styles';
-import type { FunctionCall } from '~/systems/Transaction';
 
 export type FunctionCallsProps = {
-  calls: FunctionCall[];
+  calls: OperationFunctionCall[];
 };
 
 export const FunctionCalls = ({ calls }: FunctionCallsProps) => {
@@ -34,7 +34,7 @@ export const FunctionCalls = ({ calls }: FunctionCallsProps) => {
 };
 
 type FunctionCallItemProps = {
-  call: FunctionCall;
+  call: OperationFunctionCall;
 };
 
 const FunctionCallItem = ({ call }: FunctionCallItemProps) => {

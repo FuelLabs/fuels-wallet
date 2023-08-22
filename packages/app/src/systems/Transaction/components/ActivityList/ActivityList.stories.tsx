@@ -1,7 +1,11 @@
 import { Box } from '@fuel-ui/react';
-import type { Story } from '@storybook/react';
+import type { StoryFn } from '@storybook/react';
 
-import { MOCK_TXS } from '../../__mocks__/transactions';
+import {
+  MOCK_TRANSACTION_CONTRACT_CALL,
+  MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS,
+  MOCK_TRANSACTION_CREATE_CONTRACT,
+} from '../../__mocks__/tx';
 
 import type { ActivityListProps } from './ActivityList';
 import { ActivityList } from './ActivityList';
@@ -13,7 +17,13 @@ export default {
   title: 'Transaction/Components/ActivityList',
 };
 
-const Template: Story<ActivityListProps> = (args) => (
+const MOCK_TXS = [
+  MOCK_TRANSACTION_CONTRACT_CALL,
+  MOCK_TRANSACTION_CONTRACT_CALL_WITH_FUNCTION_PARAMS,
+  MOCK_TRANSACTION_CREATE_CONTRACT,
+];
+
+const Template: StoryFn<ActivityListProps> = (args) => (
   <Box css={{ maxWidth: 320 }}>
     {' '}
     <ActivityList {...args} />{' '}

@@ -1,5 +1,5 @@
 import { Text } from '@fuel-ui/react';
-import type { ComponentStoryFn, Meta } from '@storybook/react';
+import type { StoryFn, Meta } from '@storybook/react';
 
 import { ContentHeader } from '.';
 
@@ -13,7 +13,7 @@ export default {
   },
 } as Meta;
 
-const Template: ComponentStoryFn<typeof ContentHeader> = (args) => (
+const Template: StoryFn<typeof ContentHeader> = (args) => (
   <ContentHeader {...args} />
 );
 
