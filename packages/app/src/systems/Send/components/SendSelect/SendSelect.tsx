@@ -17,6 +17,7 @@ export function SendSelect({
   balanceAssets,
   handlers,
   maxAmountToSend,
+  isLoadingInitialFee,
   ...ctx
 }: SendSelectProps) {
   return (
@@ -90,7 +91,11 @@ export function SendSelect({
             )}
           />
         </Box.Stack>
-        <TxDetails fee={ctx.fee} />
+        {isLoadingInitialFee ? (
+          <TxDetails.Loader />
+        ) : (
+          <TxDetails fee={ctx.fee} />
+        )}
       </Box.Stack>
     </MotionContent>
   );

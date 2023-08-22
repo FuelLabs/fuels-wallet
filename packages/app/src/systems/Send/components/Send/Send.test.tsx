@@ -3,11 +3,16 @@ import { fireEvent, render, screen, waitFor } from '@fuel-ui/test-utils';
 import { Select } from './Send.stories';
 
 import { TestWrapper } from '~/systems/Core';
+import { mockVault } from '~/systems/Core/__tests__';
 
 describe('Send', () => {
   function findAssetSelect() {
     return screen.findByLabelText('Select Asset');
   }
+
+  beforeAll(async () => {
+    await mockVault();
+  });
 
   describe('Send.Select()', () => {
     it('should have all inputs rendered by default', async () => {
@@ -30,7 +35,7 @@ describe('Send', () => {
 
     it('should show transaction details by default', async () => {
       render(<Select />, { wrapper: TestWrapper });
-      await waitFor(() => findAssetSelect());
+      expect(await findAssetSelect()).toBeInTheDocument();
       expect(await screen.findByText('Fee (network)')).toBeInTheDocument();
     });
   });

@@ -63,6 +63,7 @@ export const sendMachine = createMachine(
     initial: 'fetchingFakeTx',
     states: {
       fetchingFakeTx: {
+        tags: ['isLoadingInitialFee'],
         invoke: {
           src: 'fetchFakeTx',
           onDone: {
@@ -115,8 +116,8 @@ export const sendMachine = createMachine(
       fetchFakeTx: FetchMachine.create<null, BN>({
         showError: false,
         async fetch() {
-          const tx = await TxService.createFakeTx();
-          return tx.request.calculateFee().amount;
+          const { txResult } = await TxService.createFakeTx();
+          return txResult.fee;
         },
       }),
       createTransactionRequest: FetchMachine.create<
@@ -137,7 +138,7 @@ export const sendMachine = createMachine(
             throw new Error('Missing params for transaction request');
           }
           const wallet = new WalletLockedCustom(account.address, network.url);
-          const createOpts = { to, amount, assetId };
+          const createOpts = { to, amount, assetId, provider: wallet.provider };
           const transactionRequest = await TxService.fundTransaction({
             transactionRequest: await TxService.createTransfer(createOpts),
             wallet,

@@ -7,6 +7,7 @@ import {
 } from 'fuels';
 
 import type { Fuel } from '../Fuel';
+import { getGasConfig } from '../utils';
 
 import type { MockServices } from './__mock__';
 import {
@@ -147,10 +148,12 @@ describe('Fuel', () => {
     // Seed wallet with funds
     await seedWallet(account, bn.parseUnits('1'));
 
+    const { gasLimit, gasPrice } = await getGasConfig(toWallet.provider);
+
     // Test example like docs
     const transactionRequest = new ScriptTransactionRequest({
-      gasLimit: 50_000,
-      gasPrice: 1,
+      gasLimit,
+      gasPrice,
     });
 
     const toAddress = Address.fromString(toAccount);
@@ -181,8 +184,13 @@ describe('Fuel', () => {
     const wallet = await fuel.getWallet(account);
     const toAddress = Address.fromString(toAccount);
     const amount = bn.parseUnits('0.1');
+
+    const gasLimit = (await wallet.provider.getChain()).consensusParameters
+      .maxGasPerTx;
+    const gasPrice = (await wallet.provider.getNodeInfo()).minGasPrice;
     const response = await wallet.transfer(toAddress, amount, BaseAssetId, {
-      gasPrice: 1,
+      gasPrice,
+      gasLimit,
     });
 
     // wait for transaction to be completed
@@ -209,11 +217,13 @@ describe('Fuel', () => {
     const provider = await fuel.getProvider();
     const walletLocked = Wallet.fromAddress(account, provider);
     const toAddress = Address.fromString(toAccount);
+
+    const { gasLimit, gasPrice } = await getGasConfig(walletLocked.provider);
     const response = await walletLocked.transfer(
       toAddress,
       bn.parseUnits('0.1'),
       BaseAssetId,
-      { gasPrice: 1 }
+      { gasLimit, gasPrice }
     );
 
     // wait for transaction to be completed

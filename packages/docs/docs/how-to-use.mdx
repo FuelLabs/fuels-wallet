@@ -8,7 +8,7 @@ title: How to Use
 
 ### View all accounts
 
-You can view all of your accounts by clicking on the down caret underneath the account icon, or clicking on "Accounts" in the navigation sidebar.
+You can view all of your accounts by clicking on the "change" button to the right of the account icon, or clicking on "Account Management" in the navigation sidebar.
 
 <Demo
   media={[
@@ -53,6 +53,20 @@ To edit an account, click on the horizontal ellipsis to the right of the account
   ]}
 />
 
+### Hide an account
+
+To hide an account, click on the horizontal ellipsis to the right of the account and select "Hide Account". Please note you must have a different account selected as the active account.
+
+<Demo
+  media={[
+    {
+      type: 'mp4',
+      src: '/wallet/hide-show-account.mp4',
+      alt: 'Hide an account',
+    },
+  ]}
+/>
+
 ### Export a private key
 
 To export the private key for an account, click on the horizontal ellipsis to the right of the account and select "Export Private Key".
@@ -74,7 +88,7 @@ To export the private key for an account, click on the horizontal ellipsis to th
 
 ### Reveal your passphrase
 
-To view your secret passphrase, click "Reveal Passphrase" in the sidebar navigation under "Settings".
+To view your secret passphrase, click "View Seed Phrase" in the sidebar navigation under "Settings".
 
 <Demo
   media={[
@@ -82,11 +96,6 @@ To view your secret passphrase, click "Reveal Passphrase" in the sidebar navigat
       type: 'img',
       src: '/wallet/settings-passphrase.png',
       alt: 'Passphrase settings',
-    },
-    {
-      type: 'img',
-      src: '/wallet/reveal-passphrase-screen.png',
-      alt: 'Reveal your passphrase',
     },
     {
       type: 'img',
@@ -119,7 +128,7 @@ To change your password, click "Change Password" in the sidebar navigation under
 
 ### View all networks
 
-You can view your networks by clicking "Networks" in the sidebar navigation,
+You can view your networks by clicking on the network dropdown at the top of your account page, or by clicking on "Networks Management" in the sidebar navigation.
 
 <Demo
   media={[
@@ -138,6 +147,11 @@ To edit a network, click on the pencil icon on the right.
 
 <Demo
   media={[
+    {
+      type: 'mp4',
+      src: '/wallet/add-network.mp4',
+      alt: 'Add a network',
+    },
     {
       type: 'mp4',
       src: '/wallet/edit-network.mp4',
@@ -206,6 +220,11 @@ If you already have an unknown asset in your wallet, you can click the "Add" but
   media={[
     {
       type: 'mp4',
+      src: '/wallet/add-asset.mp4',
+      alt: 'Add a custom asset',
+    },
+    {
+      type: 'mp4',
       src: '/wallet/add-unknown-assets.mp4',
       alt: 'Add unknown assets',
     },
@@ -251,12 +270,17 @@ To view and delete the apps connected to your wallet, click "Connected Apps" in 
       src: '/wallet/connected-apps.mp4',
       alt: 'View connected apps',
     },
+    {
+      type: 'mp4',
+      src: '/wallet/delete-connected-app.mp4',
+      alt: 'Delete a connected app',
+    },
   ]}
 />
 
 ## History
 
-To view your account history, you can either click the bell icon on the top right or click "History" in the sidebar navigation.
+To view your account history, you can click "Transaction History" in the sidebar navigation.
 
 <Demo
   media={[
@@ -289,8 +313,8 @@ You can log out of your wallet by clicking "Logout" in the sidebar navigation. P
 <Demo
   media={[
     {
-      type: 'mp4',
-      src: '/wallet/logout.mp4',
+      type: 'img',
+      src: '/wallet/logout.png',
       alt: 'Logout of your accounts',
     },
   ]}

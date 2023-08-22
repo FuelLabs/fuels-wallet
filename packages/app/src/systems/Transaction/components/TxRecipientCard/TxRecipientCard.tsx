@@ -1,18 +1,16 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Card, Heading, Icon, Text } from '@fuel-ui/react';
 import { AddressType } from '@fuel-wallet/types';
-import { Address, isB256, isBech32 } from 'fuels';
+import type { OperationTransactionAddress } from 'fuels';
+import { Address, ChainName, isB256, isBech32 } from 'fuels';
 import type { FC } from 'react';
-
-import type { TxAddress } from '../../utils';
-import { ChainName } from '../../utils';
 
 import { TxRecipientCardLoader } from './TxRecipientCardLoader';
 
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 
 export type TxRecipientCardProps = {
-  recipient?: TxAddress;
+  recipient?: OperationTransactionAddress;
   isReceiver?: boolean;
 };
 

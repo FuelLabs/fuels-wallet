@@ -5,14 +5,11 @@ import type { TransactionMachineState } from '../machines';
 import { TRANSACTION_ERRORS, transactionMachine } from '../machines';
 import type { TxInputs } from '../services';
 
-import { useParseTx } from './useParseTx';
-
-import { useChainInfo } from '~/systems/Network';
-
 const selectors = {
   isFetching: (state: TransactionMachineState) => state.matches('fetching'),
   isFetchingResult: (state: TransactionMachineState) =>
     state.matches('fetchingResult'),
+  isLoading: (state: TransactionMachineState) => state.hasTag('isLoading'),
   context: (state: TransactionMachineState) => state.context,
   isInvalidTxId: (state: TransactionMachineState) =>
     state.context.error === TRANSACTION_ERRORS.INVALID_ID,
@@ -22,23 +19,22 @@ const selectors = {
     state.context.error === TRANSACTION_ERRORS.RECEIPTS_NOT_FOUND,
 };
 
-type UseTxProps = {
+type UseTxResultProps = {
   txId?: string;
   providerUrl?: string;
   waitProviderUrl?: boolean;
 };
 
-export function useTx({
+export function useTxResult({
   txId: txIdInput,
   providerUrl,
   waitProviderUrl,
-}: UseTxProps) {
-  const { chainInfo, isLoading: isLoadingChainInfo } =
-    useChainInfo(providerUrl);
+}: UseTxResultProps) {
   const service = useInterpret(() => transactionMachine);
   const { send } = service;
   const isFetching = useSelector(service, selectors.isFetching);
   const isFetchingResult = useSelector(service, selectors.isFetchingResult);
+  const isLoading = useSelector(service, selectors.isLoading);
   const context = useSelector(service, selectors.context);
   const isInvalidTxId = useSelector(service, selectors.isInvalidTxId);
   const isTxNotFound = useSelector(service, selectors.isTxNotFound);
@@ -47,32 +43,17 @@ export function useTx({
     selectors.isTxReceiptsNotFound
   );
 
-  const { error, gqlTransactionStatus, transaction, transactionResult, txId } =
-    context;
-
-  const tx = useParseTx({
-    transaction,
-    receipts: transactionResult?.receipts,
-    gasPerByte: chainInfo?.consensusParameters.gasPerByte,
-    gasPriceFactor: chainInfo?.consensusParameters.gasPriceFactor,
-    gqlStatus: gqlTransactionStatus,
-    id: txId,
-  });
-  const isLoadingTx = isFetching || isFetchingResult;
+  const { error, txResult } = context;
 
   const { shouldShowAlert, shouldShowTx, shouldShowTxDetails } = useMemo(() => {
     const shouldShowAlert =
       isTxNotFound ||
       isInvalidTxId ||
-      tx?.isStatusPending ||
-      tx?.isStatusFailure;
+      txResult?.isStatusPending ||
+      txResult?.isStatusFailure;
     const shouldShowTx =
-      tx &&
-      !isLoadingTx &&
-      !isLoadingChainInfo &&
-      !isInvalidTxId &&
-      !isTxNotFound;
-    const shouldShowTxDetails = shouldShowTx && !tx?.isTypeMint;
+      txResult && !isLoading && !isInvalidTxId && !isTxNotFound;
+    const shouldShowTxDetails = shouldShowTx && !txResult?.isTypeMint;
 
     return {
       shouldShowAlert,
@@ -82,10 +63,10 @@ export function useTx({
   }, [
     isTxNotFound,
     isInvalidTxId,
-    isLoadingTx,
-    tx?.isStatusPending,
-    tx?.isStatusFailure,
-    tx?.isTypeMint,
+    isLoading,
+    txResult?.isStatusPending,
+    txResult?.isStatusFailure,
+    txResult?.isTypeMint,
   ]);
 
   function getTransaction(input: TxInputs['fetch']) {
@@ -102,17 +83,16 @@ export function useTx({
     handlers: {
       getTransaction,
     },
-    isLoadingTx,
+    isLoading,
     isFetching,
     isFetchingResult,
-    isLoadingChainInfo,
     isInvalidTxId,
     isTxNotFound,
     isTxReceiptsNotFound,
     shouldShowAlert,
     shouldShowTx,
     shouldShowTxDetails,
-    tx,
+    txResult,
     error,
   };
 }

@@ -1,6 +1,5 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
-
-import { TxStatus } from '../../utils';
+import { SimplifiedTransactionStatusNameEnum } from 'fuels';
 
 import { TxStatusAlert } from './TxStatusAlert';
 
@@ -10,7 +9,12 @@ describe('TxStatusAlert', () => {
   });
 
   it('should show transaction pending and block explorer link', async () => {
-    render(<TxStatusAlert txStatus={TxStatus.pending} txId="0x123" />);
+    render(
+      <TxStatusAlert
+        txStatus={SimplifiedTransactionStatusNameEnum.submitted}
+        txId="0x123"
+      />
+    );
 
     expect(
       screen.getByText(/transaction is still pending/i)
@@ -21,7 +25,12 @@ describe('TxStatusAlert', () => {
   });
 
   it('should show transaction error and block explorer link', async () => {
-    render(<TxStatusAlert txStatus={TxStatus.failure} txId="0x123" />);
+    render(
+      <TxStatusAlert
+        txStatus={SimplifiedTransactionStatusNameEnum.failure}
+        txId="0x123"
+      />
+    );
 
     expect(screen.getByText(/something wrong happened/i)).toBeInTheDocument();
     expect(

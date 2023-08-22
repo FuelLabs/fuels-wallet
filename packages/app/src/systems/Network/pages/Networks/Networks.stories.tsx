@@ -1,5 +1,5 @@
 import { Box, Button } from '@fuel-ui/react';
-import type { ComponentStoryFn, Meta } from '@storybook/react';
+import type { StoryFn, Meta } from '@storybook/react';
 
 import { Networks } from './Networks';
 
@@ -19,7 +19,7 @@ export default {
   },
 } as Meta;
 
-const Template: ComponentStoryFn<typeof Networks> = () => {
+const Template: StoryFn<typeof Networks> = () => {
   const { isLoading, handlers } = useNetworks();
   return (
     <Layout isLoading={isLoading}>

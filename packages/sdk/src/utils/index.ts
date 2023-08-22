@@ -5,3 +5,4 @@ export * from './getTransactionSigner';
 export * from './createConnector';
 export * from './hasWindow';
 export * from './promise';
+export * from './provider';

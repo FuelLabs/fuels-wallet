@@ -1,5 +1,5 @@
 import { Box, Button } from '@fuel-ui/react';
-import type { ComponentStoryFn, Meta } from '@storybook/react';
+import type { StoryFn, Meta } from '@storybook/react';
 
 import { useAccounts } from '../..';
 
@@ -20,7 +20,7 @@ export default {
   },
 } as Meta;
 
-const Template: ComponentStoryFn<typeof ImportAccount> = () => {
+const Template: StoryFn<typeof ImportAccount> = () => {
   const { isLoading, handlers } = useAccounts();
   return (
     <Layout isLoading={isLoading}>
