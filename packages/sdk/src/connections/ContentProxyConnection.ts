@@ -13,8 +13,8 @@ import { PING_TIMEOUT, RECONNECT_TIMEOUT } from '../config';
 
 export class ContentProxyConnection {
   connection: chrome.runtime.Port;
-  _tryReconect?: NodeJS.Timer;
-  _keepAlive?: NodeJS.Timer;
+  _tryReconect?: NodeJS.Timeout;
+  _keepAlive?: NodeJS.Timeout;
   readonly connectorName: string;
 
   constructor(connectorName: string) {
