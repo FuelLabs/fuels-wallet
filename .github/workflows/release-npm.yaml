@@ -78,14 +78,16 @@ jobs:
           cp ./packages/app/dist/fuel-wallet.zip $CHROME_BUILD_PATH
 
       - name: Upload aritifacts to Sentry
+        if: steps.changesets.outputs.published == 'true'
         uses: getsentry/action-release@v1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
+          set_commits: "skip"
           environment: production
-          version: "0.0.1"
+          version: ${{ env.BUILD_VERSION }}
 
       - name: Attach Fuel Wallet to release
         if: steps.changesets.outputs.published == 'true'

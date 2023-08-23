@@ -88,18 +88,6 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
           NODE_ENV: test
 
-      # Test upload artifacts to Sentry
-      - name: Upload aritifacts to Sentry
-        uses: getsentry/action-release@v1
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-        with:
-          set_commits: "skip"
-          environment: production
-          version: "0.0.1"
-
       # E2E tests running with Playwright
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
