@@ -3,10 +3,10 @@ import { ReportErrorService } from '~/systems/Error/services';
 
 globalThis.addEventListener('error', (event) => {
   if (typeof window !== 'undefined') return;
-  if (!event?.error || !event?.message) return;
+  if (!event?.error) return;
   ReportErrorService.saveError({
     error: {
-      message: event?.error?.message || event.message,
+      message: event?.error?.message,
       stack: event?.error?.stack,
     },
   });
