@@ -85,7 +85,7 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
           environment: production
-          version: ${{ env.BUILD_VERSION }}
+          version: "0.0.1"
 
       - name: Attach Fuel Wallet to release
         if: steps.changesets.outputs.published == 'true'
