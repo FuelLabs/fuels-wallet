@@ -1,0 +1,45 @@
+name: "PR sentry release"
+
+on:
+  pull_request:
+    branches: [main, master]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  relase-sentry:
+    name: Relase Sentry to PR preview
+    runs-on: buildjet-4vcpu-ubuntu-2204
+    steps:
+      - uses: actions/checkout@v3
+      - uses: FuelLabs/github-actions/setups/node@master
+      - uses: FuelLabs/github-actions/setups/docker@master
+        with:
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Graphql Codegen
+        run: pnpm codegen:app
+
+      - name: Build Application
+        run: pnpm build:app
+        env:
+          ## increase node.js m memory limit for building
+          ## with sourcemaps
+          NODE_OPTIONS: "--max-old-space-size=4096"
+          VITE_APP_VERSION: ${{ github.sha }}
+      
+      - name: Upload aritifacts to Sentry
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          set_commits: "skip"
+          environment: production
+          version: ${{ github.sha }}
+          working_directory: ./packages/app/dist-crx
