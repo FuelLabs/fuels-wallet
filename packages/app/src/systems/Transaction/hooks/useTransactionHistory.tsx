@@ -19,12 +19,15 @@ const selectors = {
     state.context.error === TRANSACTION_HISTORY_ERRORS.NOT_FOUND,
 };
 
-type UseTxsProps = {
+type UseTransactionHistoryProps = {
   address?: string | Address;
   providerUrl?: string;
 };
 
-export function useTxs({ address, providerUrl }: UseTxsProps) {
+export function useTransactionHistory({
+  address,
+  providerUrl,
+}: UseTransactionHistoryProps) {
   const service = useInterpret(() => transactionHistoryMachine);
   const { send } = service;
   const isFetching = useSelector(service, selectors.isFetching);
@@ -32,7 +35,7 @@ export function useTxs({ address, providerUrl }: UseTxsProps) {
   const isInvalidAddress = useSelector(service, selectors.isInvalidAddress);
   const isNotFound = useSelector(service, selectors.isNotFound);
 
-  const { walletAddress, transactions, error } = context;
+  const { walletAddress, transactionHistory, error } = context;
 
   function getTransactionHistory(input: TxInputs['getTransactionHistory']) {
     send('GET_TRANSACTION_HISTORY', { input });
@@ -46,8 +49,8 @@ export function useTxs({ address, providerUrl }: UseTxsProps) {
   }, [address, providerUrl]);
 
   return {
-    isLoadingTx: isFetching,
-    txs: transactions,
+    isLoading: isFetching,
+    transactionHistory,
     error,
     walletAddress,
     isFetching,

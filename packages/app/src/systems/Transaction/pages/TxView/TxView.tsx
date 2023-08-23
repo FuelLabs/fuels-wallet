@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { TxHeader, TxStatusAlert } from '../../components';
 import { TxContent } from '../../components/TxContent';
-import { useTx } from '../../hooks';
+import { useTxResult } from '../../hooks';
 
 import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
@@ -13,7 +13,7 @@ export function TxView() {
   const networks = useNetworks();
   const providerUrl = networks?.selectedNetwork?.url;
   const navigate = useNavigate();
-  const { tx, ...ctx } = useTx({
+  const { txResult, ...ctx } = useTxResult({
     providerUrl,
     txId: txIdQueryParam,
     waitProviderUrl: true,
@@ -27,20 +27,20 @@ export function TxView() {
     >
       <Layout.TopBar onBack={() => navigate(-1)} />
       <Layout.Content>
-        {!tx && <TxContent.Loader header={<TxHeader.Loader />} />}
+        {!txResult && <TxContent.Loader header={<TxHeader.Loader />} />}
         {ctx.shouldShowAlert && (
-          <TxStatusAlert txStatus={tx?.status} error={ctx.error} />
+          <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
         )}
-        {tx && (
+        {txResult && (
           <TxContent.Info
-            tx={tx}
+            tx={txResult}
             showDetails={ctx.shouldShowTxDetails}
             assets={assets}
             header={
               <TxHeader
-                id={tx.id}
-                type={tx.type}
-                status={tx.status}
+                id={txResult.id}
+                type={txResult.type}
+                status={txResult.status}
                 providerUrl={providerUrl}
               />
             }

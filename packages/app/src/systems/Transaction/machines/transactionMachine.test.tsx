@@ -36,8 +36,8 @@ describe('transactionMachine', () => {
 
     await waitFor(service, (state) => state.matches('fetching'));
     await waitFor(service, (state) => state.matches('fetchingResult'));
+    await waitFor(service, (state) => Boolean(state.context.txResult));
+    await waitFor(service, (state) => Boolean(state.context.txResponse));
     await waitFor(service, (state) => state.matches('done'));
-    await waitFor(service, (state) => Boolean(state.context.transaction));
-    await waitFor(service, (state) => Boolean(state.context.transactionResult));
   });
 });

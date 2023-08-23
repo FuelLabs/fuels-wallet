@@ -109,6 +109,7 @@ export type IChainInfo = {
   __typename?: 'ChainInfo';
   baseChainHeight: Scalars['U32']['output'];
   consensusParameters: IConsensusParameters;
+  gasCosts: IGasCosts;
   latestBlock: IBlock;
   name: Scalars['String']['output'];
   peerCount: Scalars['Int']['output'];
@@ -242,6 +243,12 @@ export type IContractOutput = {
   stateRoot: Scalars['Bytes32']['output'];
 };
 
+export type IDependentCost = {
+  __typename?: 'DependentCost';
+  base: Scalars['U64']['output'];
+  depPerUnit: Scalars['U64']['output'];
+};
+
 export type IExcludeInput = {
   /** Messages to exclude from the selection. */
   messages: Array<Scalars['Nonce']['input']>;
@@ -255,6 +262,112 @@ export type IFailureStatus = {
   programState: Maybe<IProgramState>;
   reason: Scalars['String']['output'];
   time: Scalars['Tai64Timestamp']['output'];
+};
+
+export type IGasCosts = {
+  __typename?: 'GasCosts';
+  add: Scalars['U64']['output'];
+  addi: Scalars['U64']['output'];
+  aloc: Scalars['U64']['output'];
+  and: Scalars['U64']['output'];
+  andi: Scalars['U64']['output'];
+  bal: Scalars['U64']['output'];
+  bhei: Scalars['U64']['output'];
+  bhsh: Scalars['U64']['output'];
+  burn: Scalars['U64']['output'];
+  call: IDependentCost;
+  cb: Scalars['U64']['output'];
+  ccp: IDependentCost;
+  cfei: Scalars['U64']['output'];
+  cfsi: Scalars['U64']['output'];
+  croo: Scalars['U64']['output'];
+  csiz: IDependentCost;
+  div: Scalars['U64']['output'];
+  divi: Scalars['U64']['output'];
+  eck1: Scalars['U64']['output'];
+  ecr1: Scalars['U64']['output'];
+  ed19: Scalars['U64']['output'];
+  eq: Scalars['U64']['output'];
+  exp: Scalars['U64']['output'];
+  expi: Scalars['U64']['output'];
+  flag: Scalars['U64']['output'];
+  gm: Scalars['U64']['output'];
+  gt: Scalars['U64']['output'];
+  gtf: Scalars['U64']['output'];
+  ji: Scalars['U64']['output'];
+  jmp: Scalars['U64']['output'];
+  jmpb: Scalars['U64']['output'];
+  jmpf: Scalars['U64']['output'];
+  jne: Scalars['U64']['output'];
+  jneb: Scalars['U64']['output'];
+  jnef: Scalars['U64']['output'];
+  jnei: Scalars['U64']['output'];
+  jnzb: Scalars['U64']['output'];
+  jnzf: Scalars['U64']['output'];
+  jnzi: Scalars['U64']['output'];
+  k256: Scalars['U64']['output'];
+  lb: Scalars['U64']['output'];
+  ldc: IDependentCost;
+  log: Scalars['U64']['output'];
+  logd: IDependentCost;
+  lt: Scalars['U64']['output'];
+  lw: Scalars['U64']['output'];
+  mcl: IDependentCost;
+  mcli: IDependentCost;
+  mcp: IDependentCost;
+  mcpi: Scalars['U64']['output'];
+  meq: IDependentCost;
+  mint: Scalars['U64']['output'];
+  mldv: Scalars['U64']['output'];
+  mlog: Scalars['U64']['output'];
+  modOp: Scalars['U64']['output'];
+  modi: Scalars['U64']['output'];
+  moveOp: Scalars['U64']['output'];
+  movi: Scalars['U64']['output'];
+  mroo: Scalars['U64']['output'];
+  mul: Scalars['U64']['output'];
+  muli: Scalars['U64']['output'];
+  noop: Scalars['U64']['output'];
+  not: Scalars['U64']['output'];
+  or: Scalars['U64']['output'];
+  ori: Scalars['U64']['output'];
+  ret: Scalars['U64']['output'];
+  retd: IDependentCost;
+  rvrt: Scalars['U64']['output'];
+  s256: Scalars['U64']['output'];
+  sb: Scalars['U64']['output'];
+  scwq: Scalars['U64']['output'];
+  sll: Scalars['U64']['output'];
+  slli: Scalars['U64']['output'];
+  smo: IDependentCost;
+  srl: Scalars['U64']['output'];
+  srli: Scalars['U64']['output'];
+  srw: Scalars['U64']['output'];
+  srwq: IDependentCost;
+  sub: Scalars['U64']['output'];
+  subi: Scalars['U64']['output'];
+  sw: Scalars['U64']['output'];
+  sww: Scalars['U64']['output'];
+  swwq: Scalars['U64']['output'];
+  time: Scalars['U64']['output'];
+  tr: Scalars['U64']['output'];
+  tro: Scalars['U64']['output'];
+  wdam: Scalars['U64']['output'];
+  wdcm: Scalars['U64']['output'];
+  wddv: Scalars['U64']['output'];
+  wdmd: Scalars['U64']['output'];
+  wdml: Scalars['U64']['output'];
+  wdmm: Scalars['U64']['output'];
+  wdop: Scalars['U64']['output'];
+  wqam: Scalars['U64']['output'];
+  wqcm: Scalars['U64']['output'];
+  wqdv: Scalars['U64']['output'];
+  wqmd: Scalars['U64']['output'];
+  wqml: Scalars['U64']['output'];
+  wqmm: Scalars['U64']['output'];
+  wqop: Scalars['U64']['output'];
+  xor: Scalars['U64']['output'];
+  xori: Scalars['U64']['output'];
 };
 
 export type IGenesis = {
@@ -622,7 +735,6 @@ export type IReceipt = {
   pc: Maybe<Scalars['U64']['output']>;
   ptr: Maybe<Scalars['U64']['output']>;
   ra: Maybe<Scalars['U64']['output']>;
-  rawPayload: Scalars['HexString']['output'];
   rb: Maybe<Scalars['U64']['output']>;
   rc: Maybe<Scalars['U64']['output']>;
   rd: Maybe<Scalars['U64']['output']>;
@@ -631,16 +743,19 @@ export type IReceipt = {
   recipient: Maybe<Scalars['Address']['output']>;
   result: Maybe<Scalars['U64']['output']>;
   sender: Maybe<Scalars['Address']['output']>;
+  subId: Maybe<Scalars['Bytes32']['output']>;
   to: Maybe<IContract>;
   toAddress: Maybe<Scalars['Address']['output']>;
   val: Maybe<Scalars['U64']['output']>;
 };
 
 export enum IReceiptType {
+  Burn = 'BURN',
   Call = 'CALL',
   Log = 'LOG',
   LogData = 'LOG_DATA',
   MessageOut = 'MESSAGE_OUT',
+  Mint = 'MINT',
   Panic = 'PANIC',
   Return = 'RETURN',
   ReturnData = 'RETURN_DATA',
@@ -778,14 +893,6 @@ export type IAddressTransactionsQueryVariables = Exact<{
 
 export type IAddressTransactionsQuery = {
   __typename?: 'Query';
-  chain: {
-    __typename?: 'ChainInfo';
-    consensusParameters: {
-      __typename?: 'ConsensusParameters';
-      gasPriceFactor: string;
-      gasPerByte: string;
-    };
-  };
   transactionsByOwner: {
     __typename?: 'TransactionConnection';
     edges: Array<{
@@ -797,8 +904,38 @@ export type IAddressTransactionsQuery = {
         gasPrice: string | null;
         receipts: Array<{
           __typename?: 'Receipt';
+          pc: string | null;
+          is: string | null;
+          toAddress: string | null;
+          amount: string | null;
+          assetId: string | null;
+          gas: string | null;
+          param1: string | null;
+          param2: string | null;
+          val: string | null;
+          ptr: string | null;
+          digest: string | null;
+          reason: string | null;
+          ra: string | null;
+          rb: string | null;
+          rc: string | null;
+          rd: string | null;
+          len: string | null;
+          receiptType: IReceiptType;
+          result: string | null;
+          gasUsed: string | null;
           data: string | null;
-          rawPayload: string;
+          sender: string | null;
+          recipient: string | null;
+          nonce: string | null;
+          contractId: string | null;
+          subId: string | null;
+          contract: {
+            __typename?: 'Contract';
+            id: string;
+            bytecode: string;
+          } | null;
+          to: { __typename?: 'Contract'; id: string; bytecode: string } | null;
         }> | null;
         status:
           | {
@@ -836,6 +973,37 @@ export type ITransactionFragment = {
   id: string;
   rawPayload: string;
   gasPrice: string | null;
+  receipts: Array<{
+    __typename?: 'Receipt';
+    pc: string | null;
+    is: string | null;
+    toAddress: string | null;
+    amount: string | null;
+    assetId: string | null;
+    gas: string | null;
+    param1: string | null;
+    param2: string | null;
+    val: string | null;
+    ptr: string | null;
+    digest: string | null;
+    reason: string | null;
+    ra: string | null;
+    rb: string | null;
+    rc: string | null;
+    rd: string | null;
+    len: string | null;
+    receiptType: IReceiptType;
+    result: string | null;
+    gasUsed: string | null;
+    data: string | null;
+    sender: string | null;
+    recipient: string | null;
+    nonce: string | null;
+    contractId: string | null;
+    subId: string | null;
+    contract: { __typename?: 'Contract'; id: string; bytecode: string } | null;
+    to: { __typename?: 'Contract'; id: string; bytecode: string } | null;
+  }> | null;
   status:
     | {
         __typename?: 'FailureStatus';
@@ -860,10 +1028,42 @@ export type ITransactionFragment = {
     | null;
 };
 
+export type IContractFragmentFragment = {
+  __typename?: 'Contract';
+  id: string;
+  bytecode: string;
+};
+
 export type IReceiptFragment = {
   __typename?: 'Receipt';
+  pc: string | null;
+  is: string | null;
+  toAddress: string | null;
+  amount: string | null;
+  assetId: string | null;
+  gas: string | null;
+  param1: string | null;
+  param2: string | null;
+  val: string | null;
+  ptr: string | null;
+  digest: string | null;
+  reason: string | null;
+  ra: string | null;
+  rb: string | null;
+  rc: string | null;
+  rd: string | null;
+  len: string | null;
+  receiptType: IReceiptType;
+  result: string | null;
+  gasUsed: string | null;
   data: string | null;
-  rawPayload: string;
+  sender: string | null;
+  recipient: string | null;
+  nonce: string | null;
+  contractId: string | null;
+  subId: string | null;
+  contract: { __typename?: 'Contract'; id: string; bytecode: string } | null;
+  to: { __typename?: 'Contract'; id: string; bytecode: string } | null;
 };
 
 export const gqlOperations = {
@@ -872,14 +1072,61 @@ export const gqlOperations = {
   },
   Fragment: {
     transaction: 'transaction',
+    contractFragment: 'contractFragment',
     receipt: 'receipt',
   },
 };
+export const ContractFragmentFragmentDoc = gql`
+  fragment contractFragment on Contract {
+    id
+    bytecode
+  }
+`;
+export const ReceiptFragmentDoc = gql`
+  fragment receipt on Receipt {
+    contract {
+      ...contractFragment
+    }
+    pc
+    is
+    to {
+      ...contractFragment
+    }
+    toAddress
+    amount
+    assetId
+    gas
+    param1
+    param2
+    val
+    ptr
+    digest
+    reason
+    ra
+    rb
+    rc
+    rd
+    len
+    receiptType
+    result
+    gasUsed
+    data
+    sender
+    recipient
+    nonce
+    contractId
+    subId
+  }
+  ${ContractFragmentFragmentDoc}
+`;
 export const TransactionFragmentDoc = gql`
   fragment transaction on Transaction {
     id
     rawPayload
     gasPrice
+    receipts {
+      ...receipt
+    }
     status {
       type: __typename
       ... on SubmittedStatus {
@@ -904,21 +1151,10 @@ export const TransactionFragmentDoc = gql`
       }
     }
   }
-`;
-export const ReceiptFragmentDoc = gql`
-  fragment receipt on Receipt {
-    data
-    rawPayload
-  }
+  ${ReceiptFragmentDoc}
 `;
 export const AddressTransactionsDocument = gql`
   query AddressTransactions($first: Int, $owner: Address!) {
-    chain {
-      consensusParameters {
-        gasPriceFactor
-        gasPerByte
-      }
-    }
     transactionsByOwner(first: $first, owner: $owner) {
       edges {
         node {

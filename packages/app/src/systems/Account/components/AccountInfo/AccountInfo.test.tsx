@@ -4,6 +4,7 @@ import { AccountInfo } from './AccountInfo';
 
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 import { shortAddress, TestWrapper } from '~/systems/Core';
+import { byPassDataSpaceError } from '~/systems/Core/__tests__/utils/error';
 
 const PROPS = {
   account: MOCK_ACCOUNTS[0],
@@ -11,6 +12,7 @@ const PROPS = {
 };
 
 describe('AccountInfo', () => {
+  byPassDataSpaceError();
   beforeEach(async () => {
     await AccountService.clearAccounts();
     await AccountService.addAccount({

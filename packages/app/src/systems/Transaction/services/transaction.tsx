@@ -1,30 +1,31 @@
+import { getGasConfig } from '@fuel-wallet/sdk';
 import type { Account, Asset } from '@fuel-wallet/types';
 import type {
   BN,
+  ScriptTransactionRequestLike,
   TransactionRequest,
   WalletLocked,
-  WalletUnlocked,
 } from 'fuels';
 import {
   normalizeJSON,
   Address,
-  GAS_PER_BYTE,
-  GAS_PRICE_FACTOR,
   bn,
   BaseAssetId,
   ScriptTransactionRequest,
   transactionRequestify,
   Provider,
+  getTransactionSummary,
   TransactionResponse,
+  getTransactionsSummaries,
+  getTransactionSummaryFromRequest,
 } from 'fuels';
 
 import type { Transaction } from '../types';
-import { getFee, getGasUsed, processTransactionToTx } from '../utils';
+import { getAbiMap } from '../utils';
 
 import { AccountService } from '~/systems/Account';
 import { isEth } from '~/systems/Asset';
 import { db, uniqueId, WalletLockedCustom } from '~/systems/Core';
-import { getGraphqlClient } from '~/systems/Core/utils/graphql';
 import { NetworkService } from '~/systems/Network';
 
 export type TxInputs = {
@@ -68,6 +69,7 @@ export type TxInputs = {
   };
   getTransactionHistory: {
     address: string;
+    providerUrl?: string;
   };
   addResources: {
     wallet: WalletLocked;
@@ -138,9 +140,18 @@ export class TxService {
 
   static async fetch({ txId, providerUrl = '' }: TxInputs['fetch']) {
     const provider = new Provider(providerUrl);
+    const txResult = await getTransactionSummary(txId, provider);
     const txResponse = new TransactionResponse(txId, provider);
 
-    return txResponse;
+    // TODO: remove this when we get SDK with new TransactionResponse flow
+    const abiMap = await getAbiMap({
+      inputs: txResult.transaction.inputs,
+    });
+    const txResultWithCalls = await getTransactionSummary(txId, provider, {
+      abiMap,
+    });
+
+    return { txResult: txResultWithCalls, txResponse };
   }
 
   static async simulateTransaction({
@@ -148,40 +159,40 @@ export class TxService {
     providerUrl,
   }: TxInputs['simulateTransaction']) {
     const provider = new Provider(providerUrl || '');
-    const { receipts } = await provider.call(transactionRequest);
-    return receipts;
+    const transaction = transactionRequest.toTransaction();
+    const abiMap = await getAbiMap({
+      inputs: transaction.inputs,
+    });
+    const txResult = await getTransactionSummaryFromRequest(
+      transactionRequest,
+      provider,
+      { abiMap }
+    );
+
+    return { txResult };
   }
 
   static async getTransactionHistory({
     address,
+    providerUrl = '',
   }: TxInputs['getTransactionHistory']) {
-    const network = await NetworkService.getSelectedNetwork();
-    if (!network) {
-      throw new Error('No network selected');
-    }
-    const { transactionsByOwner, chain } = await getGraphqlClient(
-      network.url
-    ).AddressTransactions({
+    const provider = new Provider(providerUrl || '');
+
+    const txSummaries = await getTransactionsSummaries(provider, {
       owner: address,
-      // TODO: remove hardcode size when we add
-      // pagination for transactions page
-      first: 100,
+      first: 1000,
     });
-    const gasPerByte = chain.consensusParameters.gasPerByte;
-    const gasPriceFactor = chain.consensusParameters.gasPriceFactor;
-    const transactions = processTransactionToTx(
-      transactionsByOwner,
-      bn(gasPerByte),
-      bn(gasPriceFactor)
-    );
-    // TODO: remove this when fuel-client returns
-    // the txs sort by date
-    transactions?.sort((a, b) => {
+
+    const sortedTransactions = txSummaries.transactions?.sort((a, b) => {
       const aTime = bn(a.time, 10);
       const bTime = bn(b.time, 10);
       return aTime.gt(bTime) ? -1 : 1;
     });
-    return transactions || [];
+
+    return {
+      transactionHistory: sortedTransactions,
+      pageInfo: txSummaries.pageInfo,
+    };
   }
 
   static async createFakeTx() {
@@ -190,24 +201,25 @@ export class TxService {
       NetworkService.getSelectedNetwork(),
     ]);
     const wallet = new WalletLockedCustom(account!.address, network!.url);
-    const chainInfo = await wallet.provider.getChain();
-    const params = { gasLimit: chainInfo.consensusParameters.maxGasPerTx };
+    const { gasLimit, gasPrice } = await getGasConfig(wallet.provider);
+    const params: ScriptTransactionRequestLike = { gasLimit, gasPrice };
     const request = new ScriptTransactionRequest(params);
     request.addCoinOutput(wallet.address, bn(1), BaseAssetId);
     await wallet.fund(request);
-    const txCost = await getTxCost(request, wallet);
+
+    const { txResult } = await TxService.simulateTransaction({
+      transactionRequest: request,
+      providerUrl: wallet.provider.url,
+    });
 
     return {
-      request,
-      ...txCost,
+      txResult,
     };
   }
 
   static async createTransfer(input: TxInputs['createTransfer']) {
-    const chainInfo = await input.provider.getChain();
-    const request = new ScriptTransactionRequest({
-      gasLimit: chainInfo.consensusParameters.maxGasPerTx,
-    });
+    const { gasLimit, gasPrice } = await getGasConfig(input.provider);
+    const request = new ScriptTransactionRequest({ gasLimit, gasPrice });
     const to = Address.fromAddressOrString(input.to);
     const { assetId, amount } = input;
     request.addCoinOutput(to, amount, assetId);
@@ -240,9 +252,6 @@ export class TxService {
       ...input,
       gasFee: minGasPrice,
     });
-    const txCost = await getTxCost(transactionRequest, input.wallet);
-    transactionRequest.gasLimit = txCost.gasUsed;
-    transactionRequest.gasPrice = txCost.gasPrice;
     return transactionRequest;
   }
 
@@ -262,30 +271,4 @@ export function getAssetAccountBalance(account: Account, assetId: string) {
   const balances = account.balances || [];
   const asset = balances.find((balance) => balance.assetId === assetId);
   return bn(asset?.amount);
-}
-
-export async function getTxCost(
-  transactionRequest: TransactionRequest,
-  wallet: WalletLocked | WalletUnlocked
-) {
-  const receipts = await TxService.simulateTransaction({
-    transactionRequest,
-    providerUrl: wallet.provider.url,
-  });
-
-  const getOpts = {
-    receipts,
-    gasPerByte: GAS_PER_BYTE,
-    gasPriceFactor: GAS_PRICE_FACTOR,
-  };
-
-  const transaction = transactionRequest.toTransaction();
-  const fee = getFee({ transaction, ...getOpts });
-  const gasUsed = getGasUsed({ transaction, ...getOpts });
-
-  return {
-    fee,
-    gasUsed,
-    gasPrice: transactionRequest.gasPrice,
-  };
 }

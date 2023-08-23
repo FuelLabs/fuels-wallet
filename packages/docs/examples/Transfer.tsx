@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Link, Text, InputAmount, Input } from '@fuel-ui/react';
-import { getBlockExplorerLink } from '@fuel-wallet/sdk';
+import { getBlockExplorerLink, getGasConfig } from '@fuel-wallet/sdk';
 import type { BN } from 'fuels';
 import { BaseAssetId, bn, Address } from 'fuels';
 import { useState } from 'react';
@@ -31,7 +31,10 @@ export function Transfer() {
       const account = accounts[0];
       const wallet = await fuel.getWallet(account);
       const toAddress = Address.fromString(addr);
-      const response = await wallet.transfer(toAddress, amount, assetId);
+      const gasConfig = await getGasConfig(wallet.provider);
+      const response = await wallet.transfer(toAddress, amount, assetId, {
+        ...gasConfig,
+      });
       console.log('Transaction created!', response.id);
       /* example:end */
       setProviderUrl(wallet.provider.url);

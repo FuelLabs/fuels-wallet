@@ -1,18 +1,13 @@
-import type { Account } from '@fuel-wallet/types';
-import type { WalletUnlocked } from 'fuels';
-import { Wallet, bn, Provider } from 'fuels';
+import { Wallet, bn } from 'fuels';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
 import type { SendMachineService } from './sendMachine';
 import { sendMachine } from './sendMachine';
 
-import { AccountService } from '~/systems/Account';
 import { MOCK_ASSETS } from '~/systems/Asset/__mocks__/assets';
-import { NetworkService } from '~/systems/Network';
-
-const OWNER = import.meta.env.VITE_ADDR_OWNER;
-const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
+import type { MockVaultData } from '~/systems/Core/__tests__';
+import { mockVault } from '~/systems/Core/__tests__';
 
 const MOCK_INPUTS = {
   address: Wallet.generate().address.toString(),
@@ -21,26 +16,15 @@ const MOCK_INPUTS = {
 };
 
 describe('sendMachine', () => {
-  let account: Account | undefined;
   let service: SendMachineService;
-  let wallet: WalletUnlocked;
   const goToHome = jest.fn();
   const callTransactionRequest = jest.fn();
+  let data: MockVaultData;
 
   beforeAll(async () => {
-    wallet = Wallet.fromPrivateKey(OWNER);
-    wallet.provider = new Provider(providerUrl);
-    const acc = {
-      name: 'Account 1',
-      address: wallet.address.toString(),
-      publicKey: wallet.publicKey,
-    };
-    account = await AccountService.addAccount({ data: acc });
-    if (account) {
-      account.isCurrent = true;
-      account.balances = MOCK_ASSETS;
-      await NetworkService.addDefaultNetworks();
-    }
+    data = await mockVault();
+    data.account.isCurrent = true;
+    data.account.balances = MOCK_ASSETS;
   });
 
   beforeEach(async () => {
@@ -77,7 +61,7 @@ describe('sendMachine', () => {
   it('should create transaction request after confirm', async () => {
     await waitFor(service, (state) => state.matches('idle'));
     const { fee } = service.getSnapshot().context;
-    const input = { ...MOCK_INPUTS, account, fee };
+    const input = { ...MOCK_INPUTS, account: data.account, fee };
     service.send('CONFIRM', { input });
     await waitFor(service, (state) => state.matches('idle'));
     expect(callTransactionRequest).toHaveBeenCalled();

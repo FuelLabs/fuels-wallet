@@ -1,5 +1,11 @@
 # @fuel-wallet/sdk
 
+## 0.12.0
+
+### Minor Changes
+
+- [#834](https://github.com/FuelLabs/fuels-wallet/pull/834) [`2ded832`](https://github.com/FuelLabs/fuels-wallet/commit/2ded832b4930b1be847e56a1f2da1c085606da1b) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: upgrade to beta-4 (fuel-core 0.20.4)
+
 ## 0.11.2
 
 ### Patch Changes

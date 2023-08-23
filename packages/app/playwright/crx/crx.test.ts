@@ -384,11 +384,26 @@ test.describe('FuelWallet Extension', () => {
       ) {
         return blankPage.evaluate(
           async ([senderAddress, receiverAddress, amount]) => {
-            const receiver = window.fuel.utils.createAddress(receiverAddress);
-            const wallet = await window.fuel!.getWallet(senderAddress);
-            const response = await wallet.transfer(receiver, Number(amount));
+            const receiver = window.fuel.utils.createAddress(
+              receiverAddress as string
+            );
+            const wallet = await window.fuel!.getWallet(
+              senderAddress as string
+            );
+
+            // TODO: remove this gas config once SDK fixes and start with correct values
+            const chain = await wallet.provider.getChain();
+            const nodeInfo = await wallet.provider.getNodeInfo();
+            const gasLimit = chain.consensusParameters.maxGasPerTx;
+            const gasPrice = nodeInfo.minGasPrice;
+            const response = await wallet.transfer(
+              receiver,
+              Number(amount),
+              undefined,
+              { gasPrice, gasLimit }
+            );
             const result = await response.waitForResult();
-            return result.status.type;
+            return result.status;
           },
           [senderAddress, receiverAddress, String(amount)]
         );

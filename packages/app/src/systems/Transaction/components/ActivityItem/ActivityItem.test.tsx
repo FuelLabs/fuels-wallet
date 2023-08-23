@@ -10,7 +10,7 @@ import { ActivityItem } from './ActivityItem';
 import { Pages, shortAddress, TestWrapper } from '~/systems/Core';
 
 const ownerAddress =
-  MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].from?.address || '';
+  MOCK_TRANSACTION_CONTRACT_CALL.operations[0].from?.address || '';
 
 const opts = {
   route: Pages.txs(),
@@ -21,7 +21,7 @@ describe('TxItem', () => {
   it('a11y', async () => {
     await testA11y(
       <ActivityItem
-        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
+        transaction={MOCK_TRANSACTION_CONTRACT_CALL}
         ownerAddress={ownerAddress}
       />,
       opts
@@ -35,7 +35,7 @@ describe('TxItem', () => {
   it('should copy transaction id', async () => {
     render(
       <ActivityItem
-        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
+        transaction={MOCK_TRANSACTION_CONTRACT_CALL}
         ownerAddress={ownerAddress}
       />,
       opts
@@ -47,7 +47,7 @@ describe('TxItem', () => {
     await act(async () => {
       fireEvent.click(btn);
       expect(await navigator.clipboard.readText()).toBe(
-        MOCK_TRANSACTION_CONTRACT_CALL.tx.id
+        MOCK_TRANSACTION_CONTRACT_CALL.id
       );
     });
   });
@@ -55,12 +55,12 @@ describe('TxItem', () => {
   it('should display the right from / to address', async () => {
     render(
       <ActivityItem
-        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
+        transaction={MOCK_TRANSACTION_CONTRACT_CALL}
         ownerAddress={ownerAddress}
       />,
       opts
     );
-    const address = MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].to?.address;
+    const address = MOCK_TRANSACTION_CONTRACT_CALL.operations[0].to?.address;
     if (address) {
       const addressBech32 = Address.fromString(address ?? '').bech32Address;
       const to = await screen.findByText(shortAddress(addressBech32));
@@ -74,12 +74,12 @@ describe('TxItem', () => {
   it('should not display the right from / to label if owner address is empty', async () => {
     render(
       <ActivityItem
-        transaction={MOCK_TRANSACTION_CONTRACT_CALL.tx}
+        transaction={MOCK_TRANSACTION_CONTRACT_CALL}
         ownerAddress={''}
       />,
       opts
     );
-    const address = MOCK_TRANSACTION_CONTRACT_CALL.tx.operations[0].to?.address;
+    const address = MOCK_TRANSACTION_CONTRACT_CALL.operations[0].to?.address;
     if (address) {
       const to = screen.queryByText(shortAddress(address));
       expect(to).not.toBeInTheDocument();

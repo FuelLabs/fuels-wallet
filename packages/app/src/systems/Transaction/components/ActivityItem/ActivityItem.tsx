@@ -1,10 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Card, Copyable, Icon, Text } from '@fuel-ui/react';
+import type { TransactionSummary } from 'fuels';
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useTxMetadata } from '../../hooks/useTxMetadata';
-import type { Tx } from '../../utils';
 import { TxIcon } from '../TxIcon';
 
 import { ActivityItemLoader } from './ActivityItemLoader';
@@ -12,7 +12,7 @@ import { ActivityItemLoader } from './ActivityItemLoader';
 import { Pages, shortAddress } from '~/systems/Core';
 
 export type TxItemProps = {
-  transaction: Tx;
+  transaction: TransactionSummary;
   ownerAddress: string;
 };
 

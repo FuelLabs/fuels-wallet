@@ -1,5 +1,21 @@
 # fuels-wallet
 
+## 0.12.0
+
+### Minor Changes
+
+- [#833](https://github.com/FuelLabs/fuels-wallet/pull/833) [`41d306e`](https://github.com/FuelLabs/fuels-wallet/commit/41d306eb5fe33e60b9a69601fb166bb9b40a3358) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: get maxGasPerTx from chainInfo
+
+- [#834](https://github.com/FuelLabs/fuels-wallet/pull/834) [`2ded832`](https://github.com/FuelLabs/fuels-wallet/commit/2ded832b4930b1be847e56a1f2da1c085606da1b) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: upgrade to beta-4 (fuel-core 0.20.4)
+
+### Patch Changes
+
+- [#830](https://github.com/FuelLabs/fuels-wallet/pull/830) [`e206fc8`](https://github.com/FuelLabs/fuels-wallet/commit/e206fc8ec5c64e41284319d3fc343f54f194cb8a) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix scroll on assets page
+
+- Updated dependencies [[`2ded832`](https://github.com/FuelLabs/fuels-wallet/commit/2ded832b4930b1be847e56a1f2da1c085606da1b)]:
+  - @fuel-wallet/types@0.12.0
+  - @fuel-wallet/sdk@0.12.0
+
 ## 0.11.2
 
 ### Patch Changes

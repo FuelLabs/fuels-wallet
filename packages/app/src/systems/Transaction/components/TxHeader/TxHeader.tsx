@@ -1,18 +1,19 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Card, Copyable, Icon, Text } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
+import { SimplifiedTransactionStatusNameEnum } from 'fuels';
+import type { TransactionTypeNameEnum } from 'fuels';
 import type { FC } from 'react';
 
-import type { TxType } from '../../utils';
-import { TxStatus, getTxStatusColor } from '../../utils';
+import { getTxStatusColor } from '../../utils';
 
 import { TxHeaderLoader } from './TxHeaderLoader';
 
 export type TxHeaderProps = {
-  status?: TxStatus;
+  status?: SimplifiedTransactionStatusNameEnum;
   id?: string;
   providerUrl?: string;
-  type?: TxType;
+  type?: TransactionTypeNameEnum;
 };
 
 type TxHeaderComponent = FC<TxHeaderProps> & {
@@ -102,14 +103,20 @@ const styles = {
       fontSize: 9,
       cursor: 'default',
 
-      [`&[data-status="${TxStatus.success}"]`]: {
-        color: `$${getTxStatusColor(TxStatus.success)}`,
+      [`&[data-status="${SimplifiedTransactionStatusNameEnum.success}"]`]: {
+        color: `$${getTxStatusColor(
+          SimplifiedTransactionStatusNameEnum.success
+        )}`,
       },
-      [`&[data-status="${TxStatus.failure}"]`]: {
-        color: `$${getTxStatusColor(TxStatus.failure)}`,
+      [`&[data-status="${SimplifiedTransactionStatusNameEnum.failure}"]`]: {
+        color: `$${getTxStatusColor(
+          SimplifiedTransactionStatusNameEnum.failure
+        )}`,
       },
-      [`&[data-status="${TxStatus.pending}"]`]: {
-        color: `$${getTxStatusColor(TxStatus.pending)}`,
+      [`&[data-status="${SimplifiedTransactionStatusNameEnum.submitted}"]`]: {
+        color: `$${getTxStatusColor(
+          SimplifiedTransactionStatusNameEnum.submitted
+        )}`,
       },
     },
   }),
