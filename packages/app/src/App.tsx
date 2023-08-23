@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { IS_DEVELOPMENT, IS_TEST } from './config';
+// import { IS_DEVELOPMENT, IS_TEST } from './config';
 import { getRoutes } from './routes';
 
 import { Providers } from '~/systems/Core';
@@ -13,7 +13,8 @@ export function App() {
   return (
     <Providers>
       {getRoutes()}
-      {(IS_TEST || IS_DEVELOPMENT) && <ThrowError />}
+      {/* {(IS_TEST || IS_DEVELOPMENT) && <ThrowError />} */}
+      <ThrowError />
     </Providers>
   );
 }
