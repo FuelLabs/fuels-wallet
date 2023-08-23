@@ -79,16 +79,14 @@ jobs:
 
       - name: Upload aritifacts to Sentry
         if: steps.changesets.outputs.published == 'true'
-        uses: getsentry/action-release@v1
+        run: |
+          pnpm sentry-cli sourcemaps inject --release ${{ env.BUILD_VERSION }} ./dist-crx
+          pnpm sentry-cli sourcemaps upload --release ${{ env.BUILD_VERSION }} ./dist-crx
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-        with:
-          set_commits: "skip"
-          environment: production
-          version: ${{ env.BUILD_VERSION }}
-          working_directory: ./packages/app/dist-crx
+        working-directory: ./packages/app
 
       - name: Attach Fuel Wallet to release
         if: steps.changesets.outputs.published == 'true'
