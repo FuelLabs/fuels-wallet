@@ -87,6 +87,19 @@ jobs:
           ## with sourcemaps
           NODE_OPTIONS: "--max-old-space-size=4096"
           NODE_ENV: test
+          VITE_APP_VERSION: ${{ github.sha }}
+
+      - name: Upload aritifacts to Sentry
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          set_commits: "skip"
+          environment: test
+          version: ${{ github.sha }}
+          working_directory: ./packages/app/dist-crx
 
       # E2E tests running with Playwright
       - name: Install Playwright Browsers

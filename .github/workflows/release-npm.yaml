@@ -88,6 +88,7 @@ jobs:
           set_commits: "skip"
           environment: production
           version: ${{ env.BUILD_VERSION }}
+          working_directory: ./packages/app/dist-crx
 
       - name: Attach Fuel Wallet to release
         if: steps.changesets.outputs.published == 'true'

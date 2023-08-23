@@ -116,8 +116,8 @@
     "vite": "^4.4.7",
     "vite-plugin-clean": "^1.0.0",
     "vite-plugin-static-copy": "^0.17.0",
-    "vite-plugin-zip-pack": "^1.0.6",
-    "vite-tsconfig-paths": "^4.2.0"
+    "vite-tsconfig-paths": "^4.2.0",
+    "jszip": "^3.10.1"
   },
   "msw": {
     "workerDirectory": "public"
