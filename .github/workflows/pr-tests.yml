@@ -96,6 +96,7 @@ jobs:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
+          set_commits: "skip"
           environment: production
           version: "0.0.1"
 
