@@ -50,8 +50,8 @@ test.describe('ReportError', () => {
 
   test('should show Error page when there is a error in the database', async () => {
     await visit(page, '/');
-    await page.evaluate(() => {
-      window.fuelDB.errors.add({
+    await page.evaluate(async () => {
+      await window.fuelDB.errors.add({
         id: '12345',
         timestamp: Date.now(),
         error: {
@@ -77,8 +77,8 @@ test.describe('ReportError', () => {
 
   test('should be able to ignore a error', async () => {
     await visit(page, '/');
-    await page.evaluate(() => {
-      window.fuelDB.errors.add({
+    await page.evaluate(async () => {
+      await window.fuelDB.errors.add({
         id: '12345',
         timestamp: Date.now(),
         error: {
