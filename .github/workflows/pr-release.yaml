@@ -20,12 +20,9 @@ jobs:
         with:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Graphql Codegen
-        run: pnpm codegen:app
 
       - name: Build Application
-        run: pnpm build:app
+        run: pnpm build:crx
         env:
           ## increase node.js m memory limit for building
           ## with sourcemaps
