@@ -32,7 +32,8 @@ jobs:
       - name: Upload aritifacts to Sentry
         run: |
           cd ./packages/app
-          ls ./dist-crx
+          ls ./dist-crx/assets
+          pnpm sentry-cli sourcemaps inject --release 0.0.10 ./dist-crx
           pnpm sentry-cli sourcemaps upload --release 0.0.10 ./dist-crx
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
