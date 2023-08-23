@@ -1,15 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ReportErrorService } from '~/systems/Error/services';
 
-globalThis.addEventListener('unhandledrejection', (event) => {
-  // Only report error if the window is undefined and the error occured in the
-  // background script
-  if (typeof window !== 'undefined') return;
-  ReportErrorService.saveError({
-    error: event.reason,
-  });
-});
-
 globalThis.addEventListener('error', (event) => {
   if (typeof window !== 'undefined') return;
   if (!event?.error || !event?.message) return;
