@@ -27,7 +27,7 @@ jobs:
           ## increase node.js m memory limit for building
           ## with sourcemaps
           NODE_OPTIONS: "--max-old-space-size=4096"
-          VITE_APP_VERSION: ${{ github.sha }}
+          VITE_APP_VERSION: 0.0.3
       
       - name: Upload aritifacts to Sentry
         uses: getsentry/action-release@v1
@@ -39,4 +39,5 @@ jobs:
           set_commits: "skip"
           environment: production
           version: ${{ github.sha }}
-          working_directory: ./packages/app/dist-crx
+          sourcemaps: 0.0.3
+
