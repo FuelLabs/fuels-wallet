@@ -30,14 +30,10 @@ jobs:
           VITE_APP_VERSION: 0.0.10
       
       - name: Upload aritifacts to Sentry
-        uses: getsentry/action-release@v1
+        run:
+          pnpm sentry-cli sourcemaps upload --release 0.0.4 ./dist-crx
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-        with:
-          set_commits: "skip"
-          environment: production
-          version: 0.0.10
-          sourcemaps: ./packages/app/dist-crx
-
+        working-directory: ./packages/app
