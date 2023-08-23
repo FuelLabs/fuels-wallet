@@ -83,6 +83,7 @@ jobs:
       - name: Build Application
         run: pnpm build:test
         env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
           NODE_ENV: test
 
       # E2E tests running with Playwright
@@ -92,6 +93,7 @@ jobs:
       - name: Run E2E Tests
         run: xvfb-run --auto-servernum -- pnpm test:e2e
         env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
           NODE_ENV: test
 
       - uses: actions/upload-artifact@v2

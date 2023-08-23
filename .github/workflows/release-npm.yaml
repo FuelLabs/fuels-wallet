@@ -42,6 +42,8 @@ jobs:
 
       - name: Build Fuel Wallet
         run: pnpm build:crx
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Create Release Pull Request or Publish to NPM
         id: changesets
