@@ -38,6 +38,6 @@ jobs:
         with:
           set_commits: "skip"
           environment: production
-          version: ${{ github.sha }}
-          sourcemaps: 0.0.3
+          version: 0.0.3
+          sourcemaps: ./packages/app/dist-crx
 
