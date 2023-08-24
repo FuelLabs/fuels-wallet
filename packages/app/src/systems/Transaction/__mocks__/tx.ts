@@ -36,7 +36,10 @@ import { dateToTai64 } from '../utils';
 import { CONTRACT_CALL_ABI } from './abi';
 import { MOCK_OPERATION_CONTRACT_CALL } from './operation';
 
-type MockTransaction = TransactionSummary & AbiMap & RawPayloadParam;
+type MockTransaction = {
+  abiMap?: AbiMap;
+} & TransactionSummary &
+  RawPayloadParam;
 
 export const createMockTx = ({
   status,
