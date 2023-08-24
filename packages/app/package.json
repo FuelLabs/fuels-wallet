@@ -74,6 +74,7 @@
     "@graphql-codegen/typescript-operations": "^4.0.1",
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@playwright/test": "^1.36.2",
+    "@sentry/cli": "^2.20.5",
     "@storybook/addon-a11y": "^7.1.1",
     "@storybook/addon-actions": "^7.1.1",
     "@storybook/addon-essentials": "^7.1.1",
@@ -104,6 +105,7 @@
     "@vitejs/plugin-react": "^4.0.3",
     "@xstate/inspect": "^0.8.0",
     "get-graphql-schema": "^2.1.2",
+    "jszip": "^3.10.1",
     "msw": "^1.2.3",
     "msw-storybook-addon": "^1.8.0",
     "storybook": "^7.1.1",
@@ -116,7 +118,6 @@
     "vite": "^4.4.7",
     "vite-plugin-clean": "^1.0.0",
     "vite-plugin-static-copy": "^0.17.0",
-    "vite-plugin-zip-pack": "^1.0.6",
     "vite-tsconfig-paths": "^4.2.0"
   },
   "msw": {
