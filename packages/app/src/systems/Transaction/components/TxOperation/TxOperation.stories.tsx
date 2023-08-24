@@ -1,6 +1,6 @@
 import { Box } from '@fuel-ui/react';
 import { AssetList } from 'asset-list';
-import { SimplifiedTransactionStatusNameEnum } from 'fuels';
+import { TransactionStatus } from 'fuels';
 
 import {
   MOCK_OPERATION_CONTRACT_CALL,
@@ -24,7 +24,7 @@ export const ContractCall = (args: TxOperationProps) => (
     <TxOperation
       {...args}
       operation={MOCK_OPERATION_CONTRACT_CALL}
-      status={SimplifiedTransactionStatusNameEnum.success}
+      status={TransactionStatus.success}
       assets={AssetList}
     />
   </Box>
@@ -37,7 +37,7 @@ export const Transfer = (args: TxOperationProps) => (
     <TxOperation
       {...args}
       operation={MOCK_OPERATION_TRANSFER}
-      status={SimplifiedTransactionStatusNameEnum.success}
+      status={TransactionStatus.success}
       assets={AssetList}
     />
   </Box>
@@ -50,7 +50,7 @@ export const ContractCreated = (args: TxOperationProps) => (
     <TxOperation
       {...args}
       operation={MOCK_OPERATION_CONTRACT_CREATED}
-      status={SimplifiedTransactionStatusNameEnum.success}
+      status={TransactionStatus.success}
       assets={AssetList}
     />
   </Box>
@@ -63,7 +63,7 @@ export const Mint = (args: TxOperationProps) => (
     <TxOperation
       {...args}
       operation={MOCK_OPERATION_MINT}
-      status={SimplifiedTransactionStatusNameEnum.success}
+      status={TransactionStatus.success}
       assets={AssetList}
     />
   </Box>

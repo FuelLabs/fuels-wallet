@@ -1,5 +1,5 @@
 import { Box } from '@fuel-ui/react';
-import { OperationName, SimplifiedTransactionStatusNameEnum } from 'fuels';
+import { OperationName, TransactionStatus } from 'fuels';
 
 import { MOCK_TX_RECIPIENT } from '../../__mocks__/tx-recipient';
 
@@ -47,7 +47,7 @@ export const Pending = (args: TxFromToProps) => (
       {...args}
       from={ACCOUNT}
       to={CONTRACT}
-      status={SimplifiedTransactionStatusNameEnum.submitted}
+      status={TransactionStatus.submitted}
     />
   </Box>
 );
@@ -59,7 +59,7 @@ export const Success = (args: TxFromToProps) => (
       {...args}
       from={ACCOUNT}
       to={CONTRACT}
-      status={SimplifiedTransactionStatusNameEnum.success}
+      status={TransactionStatus.success}
     />
   </Box>
 );
@@ -71,7 +71,7 @@ export const Failed = (args: TxFromToProps) => (
       {...args}
       from={ACCOUNT}
       to={CONTRACT}
-      status={SimplifiedTransactionStatusNameEnum.failure}
+      status={TransactionStatus.failure}
     />
   </Box>
 );

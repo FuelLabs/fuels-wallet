@@ -1,9 +1,6 @@
 import { Box } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/types';
-import type {
-  SimplifiedTransactionStatusNameEnum,
-  TransactionSummary,
-} from 'fuels';
+import type { TransactionStatus, TransactionSummary } from 'fuels';
 import type { ReactNode } from 'react';
 
 import type { Maybe } from '~/systems/Core';
@@ -28,7 +25,7 @@ type TxContentInfoProps = {
   header?: ReactNode;
   footer?: ReactNode;
   tx?: Maybe<TransactionSummary>;
-  txStatus?: Maybe<SimplifiedTransactionStatusNameEnum>;
+  txStatus?: Maybe<TransactionStatus>;
   showDetails?: boolean;
   assets?: Maybe<Asset[]>;
   isLoading?: boolean;

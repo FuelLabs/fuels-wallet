@@ -6,7 +6,7 @@ import type {
   InputContract,
   OutputContract,
   OutputContractCreated,
-  SimplifiedTransactionStatusNameEnum,
+  TransactionStatus,
   TransactionRequestInput,
   TransactionRequestLike,
   TransactionResponse,
@@ -38,7 +38,7 @@ export type TxOutputContractCreated = OutputContractCreated;
 export type Transaction = {
   id?: string;
   type?: TransactionType;
-  status?: SimplifiedTransactionStatusNameEnum;
+  status?: TransactionStatus;
   category?: TxCategory;
   date?: Date;
   from?: TxRecipientAddress;

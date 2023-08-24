@@ -1,8 +1,4 @@
-import {
-  SimplifiedTransactionStatusNameEnum,
-  TransactionTypeNameEnum,
-  bn,
-} from 'fuels';
+import { TransactionStatus, TransactionTypeName, bn } from 'fuels';
 
 export const MOCK_TX = {
   status: {
@@ -58,15 +54,15 @@ export const MOCK_TX = {
 
 export const MOCK_TRANSACTION_SCRIPT = {
   id: '12132213231231',
-  type: TransactionTypeNameEnum.Script,
-  status: SimplifiedTransactionStatusNameEnum.submitted,
+  type: TransactionTypeName.Script,
+  status: TransactionStatus.submitted,
   data: undefined,
 };
 
 export const MOCK_TRANSACTION_CREATE = {
   id: '12132213231231',
-  type: TransactionTypeNameEnum.Create,
-  status: SimplifiedTransactionStatusNameEnum.submitted,
+  type: TransactionTypeName.Create,
+  status: TransactionStatus.submitted,
   data: undefined,
 };
 

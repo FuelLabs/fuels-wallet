@@ -1,14 +1,14 @@
 import { cssObj } from '@fuel-ui/css';
 import { Alert, Link } from '@fuel-ui/react';
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
-import { SimplifiedTransactionStatusNameEnum } from 'fuels';
+import { TransactionStatus } from 'fuels';
 import type { FC } from 'react';
 import { useMemo } from 'react';
 
 import { getTxStatusColor } from '../../utils';
 
 export type TxStatusAlertProps = {
-  txStatus?: SimplifiedTransactionStatusNameEnum;
+  txStatus?: TransactionStatus;
   error?: string;
   txId?: string;
   providerUrl?: string;
@@ -21,18 +21,15 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
   providerUrl,
 }) => {
   const alertStatus = useMemo(() => {
-    if (txStatus === SimplifiedTransactionStatusNameEnum.submitted)
-      return 'warning';
-    if (txStatus === SimplifiedTransactionStatusNameEnum.success)
-      return 'success';
-    if (txStatus === SimplifiedTransactionStatusNameEnum.failure || error)
-      return 'error';
+    if (txStatus === TransactionStatus.submitted) return 'warning';
+    if (txStatus === TransactionStatus.success) return 'success';
+    if (txStatus === TransactionStatus.failure || error) return 'error';
 
     return 'info';
   }, [txStatus, error]);
 
   const txColor = error
-    ? getTxStatusColor(SimplifiedTransactionStatusNameEnum.failure)
+    ? getTxStatusColor(TransactionStatus.failure)
     : getTxStatusColor(txStatus);
 
   return (
@@ -43,9 +40,9 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
       css={styles.root(txColor)}
     >
       <Alert.Description>
-        {txStatus === SimplifiedTransactionStatusNameEnum.submitted &&
+        {txStatus === TransactionStatus.submitted &&
           'Your transaction is still pending, you can close this window if you want.'}
-        {txStatus === SimplifiedTransactionStatusNameEnum.failure &&
+        {txStatus === TransactionStatus.failure &&
           'Sorry, something wrong happened with your transaction.'}
         {error}
         {txId && (

@@ -1,6 +1,6 @@
 import { render, testA11y, screen, act, fireEvent } from '@fuel-ui/test-utils';
 import { BLOCK_EXPLORER_URL } from '@fuel-wallet/sdk';
-import { SimplifiedTransactionStatusNameEnum } from 'fuels';
+import { TransactionStatus } from 'fuels';
 
 import {
   MOCK_TRANSACTION_CREATE,
@@ -36,7 +36,7 @@ describe('TxHeader', () => {
     expect(screen.getByText(/Submitted/i)).toBeInTheDocument();
     expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
       'data-status',
-      SimplifiedTransactionStatusNameEnum.submitted
+      TransactionStatus.submitted
     );
   });
 
@@ -44,14 +44,14 @@ describe('TxHeader', () => {
     render(
       <TxHeader
         {...MOCK_TRANSACTION_CREATE}
-        status={SimplifiedTransactionStatusNameEnum.success}
+        status={TransactionStatus.success}
       />
     );
 
     expect(screen.getByText(/Success/i)).toBeInTheDocument();
     expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
       'data-status',
-      SimplifiedTransactionStatusNameEnum.success
+      TransactionStatus.success
     );
   });
 
@@ -59,14 +59,14 @@ describe('TxHeader', () => {
     render(
       <TxHeader
         {...MOCK_TRANSACTION_CREATE}
-        status={SimplifiedTransactionStatusNameEnum.failure}
+        status={TransactionStatus.failure}
       />
     );
 
     expect(screen.getByText(/Failure/i)).toBeInTheDocument();
     expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
       'data-status',
-      SimplifiedTransactionStatusNameEnum.failure
+      TransactionStatus.failure
     );
   });
 
