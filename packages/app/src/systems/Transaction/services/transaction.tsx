@@ -140,14 +140,16 @@ export class TxService {
 
   static async fetch({ txId, providerUrl = '' }: TxInputs['fetch']) {
     const provider = new Provider(providerUrl);
-    const txResult = await getTransactionSummary(txId, provider);
+    const txResult = await getTransactionSummary({ id: txId, provider });
     const txResponse = new TransactionResponse(txId, provider);
 
     // TODO: remove this when we get SDK with new TransactionResponse flow
     const abiMap = await getAbiMap({
       inputs: txResult.transaction.inputs,
     });
-    const txResultWithCalls = await getTransactionSummary(txId, provider, {
+    const txResultWithCalls = await getTransactionSummary({
+      id: txId,
+      provider,
       abiMap,
     });
 
@@ -163,11 +165,11 @@ export class TxService {
     const abiMap = await getAbiMap({
       inputs: transaction.inputs,
     });
-    const txResult = await getTransactionSummaryFromRequest(
+    const txResult = await getTransactionSummaryFromRequest({
       transactionRequest,
       provider,
-      { abiMap }
-    );
+      abiMap,
+    });
 
     return { txResult };
   }
@@ -178,9 +180,12 @@ export class TxService {
   }: TxInputs['getTransactionHistory']) {
     const provider = new Provider(providerUrl || '');
 
-    const txSummaries = await getTransactionsSummaries(provider, {
-      owner: address,
-      first: 1000,
+    const txSummaries = await getTransactionsSummaries({
+      provider,
+      filters: {
+        owner: address,
+        first: 1000,
+      },
     });
 
     const sortedTransactions = txSummaries.transactions?.sort((a, b) => {

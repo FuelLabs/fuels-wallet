@@ -5,13 +5,13 @@ import {
   OutputType,
   InputType,
   bn,
-  SimplifiedTransactionStatusNameEnum,
-  TransactionTypeNameEnum,
+  TransactionStatus,
+  TransactionTypeName,
   OperationName,
   ChainName,
 } from 'fuels';
 import type {
-  AbiParam,
+  AbiMap,
   InputCoin,
   InputContract,
   InputMessage,
@@ -36,7 +36,10 @@ import { dateToTai64 } from '../utils';
 import { CONTRACT_CALL_ABI } from './abi';
 import { MOCK_OPERATION_CONTRACT_CALL } from './operation';
 
-type MockTransaction = TransactionSummary & AbiParam & RawPayloadParam;
+type MockTransaction = {
+  abiMap?: AbiMap;
+} & TransactionSummary &
+  RawPayloadParam;
 
 export const createMockTx = ({
   status,
@@ -44,7 +47,7 @@ export const createMockTx = ({
   id,
   operation,
 }: {
-  status?: SimplifiedTransactionStatusNameEnum;
+  status?: TransactionStatus;
   time?: string;
   id?: string;
   operation?: OperationName;
@@ -263,8 +266,8 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
   ],
   gasUsed: bn('0x28f90'),
   fee: bn('0x1'),
-  type: TransactionTypeNameEnum.Script,
-  status: SimplifiedTransactionStatusNameEnum.success,
+  type: TransactionTypeName.Script,
+  status: TransactionStatus.success,
   isTypeMint: false,
   isTypeCreate: false,
   isTypeScript: true,
@@ -407,8 +410,8 @@ export const MOCK_TRANSACTION_CREATE_CONTRACT: MockTransaction = {
   isStatusFailure: false,
   isStatusSuccess: true,
   isStatusPending: false,
-  type: TransactionTypeNameEnum.Create,
-  status: SimplifiedTransactionStatusNameEnum.success,
+  type: TransactionTypeName.Create,
+  status: TransactionStatus.success,
   receipts: [],
   mintedAssets: [],
   burnedAssets: [],
@@ -460,8 +463,8 @@ export const MOCK_TRANSACTION_MINT: MockTransaction = {
   isStatusFailure: false,
   isStatusSuccess: true,
   isStatusPending: false,
-  type: TransactionTypeNameEnum.Mint,
-  status: SimplifiedTransactionStatusNameEnum.success,
+  type: TransactionTypeName.Mint,
+  status: TransactionStatus.success,
   receipts: [],
   mintedAssets: [],
   burnedAssets: [],
@@ -600,8 +603,8 @@ export const MOCK_TRANSACTION_TRANSFER: MockTransaction = {
   isStatusFailure: false,
   isStatusSuccess: true,
   isStatusPending: false,
-  type: TransactionTypeNameEnum.Script,
-  status: SimplifiedTransactionStatusNameEnum.success,
+  type: TransactionTypeName.Script,
+  status: TransactionStatus.success,
   receipts: [
     MOCK_TRANSACTION_TRANSFER_PARTS.receiptReturn,
     MOCK_TRANSACTION_TRANSFER_PARTS.receiptScriptResult,
@@ -745,7 +748,7 @@ export const MOCK_TRANSACTION_WITHDRAW_FROM_FUEL: MockTransaction = {
   isStatusPending: false,
   isStatusSuccess: true,
   isStatusFailure: false,
-  type: TransactionTypeNameEnum.Script,
+  type: TransactionTypeName.Script,
   receipts: [
     MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.receiptMessageOut,
     MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.receiptReturn,

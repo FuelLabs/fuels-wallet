@@ -1,5 +1,5 @@
 import { useSelector } from '@xstate/react';
-import { SimplifiedTransactionStatusNameEnum } from 'fuels';
+import { TransactionStatus } from 'fuels';
 import { useCallback } from 'react';
 
 import type { TransactionRequestState } from '../machines/transactionRequestMachine';
@@ -121,8 +121,8 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   }
 
   function approveStatus() {
-    if (status('success')) return SimplifiedTransactionStatusNameEnum.success;
-    if (status('failed')) return SimplifiedTransactionStatusNameEnum.failure;
+    if (status('success')) return TransactionStatus.success;
+    if (status('failed')) return TransactionStatus.failure;
     return txResult?.status;
   }
 

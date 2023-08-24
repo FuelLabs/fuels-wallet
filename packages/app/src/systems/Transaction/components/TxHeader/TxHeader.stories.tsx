@@ -1,5 +1,5 @@
 import { Box } from '@fuel-ui/react';
-import { SimplifiedTransactionStatusNameEnum } from 'fuels';
+import { TransactionStatus } from 'fuels';
 
 import {
   MOCK_TRANSACTION_CREATE,
@@ -26,7 +26,7 @@ export const Usage = (args: TxHeaderProps) => (
     <TxHeader
       {...args}
       {...MOCK_TRANSACTION_CREATE}
-      status={SimplifiedTransactionStatusNameEnum.success}
+      status={TransactionStatus.success}
       providerUrl={process.env.VITE_FUEL_PROVIDER_URL}
     />
   </Box>

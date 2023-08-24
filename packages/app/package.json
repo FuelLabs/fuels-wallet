@@ -45,7 +45,7 @@
     "events": "^3.3.0",
     "fake-indexeddb": "^4.0.2",
     "framer-motion": "^10.15.0",
-    "fuels": "0.52.0",
+    "fuels": "0.53.0",
     "graphql": "^16.6.0",
     "graphql-request": "^6.1.0",
     "graphql-tag": "^2.12.6",

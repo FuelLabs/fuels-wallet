@@ -1,6 +1,6 @@
 import { Box } from '@fuel-ui/react';
 import { AssetList } from 'asset-list';
-import { SimplifiedTransactionStatusNameEnum } from 'fuels';
+import { TransactionStatus } from 'fuels';
 
 import {
   MOCK_OPERATION_CONTRACT_CALL,
@@ -22,7 +22,7 @@ export const Default = (args: TxOperationsProps) => (
     <TxOperations
       {...args}
       operations={[MOCK_OPERATION_CONTRACT_CALL, MOCK_OPERATION_TRANSFER]}
-      status={SimplifiedTransactionStatusNameEnum.success}
+      status={TransactionStatus.success}
       assets={AssetList}
     />
   </Box>

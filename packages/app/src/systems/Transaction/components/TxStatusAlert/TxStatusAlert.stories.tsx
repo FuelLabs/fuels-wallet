@@ -1,4 +1,4 @@
-import { SimplifiedTransactionStatusNameEnum } from 'fuels';
+import { TransactionStatus } from 'fuels';
 
 import type { TxStatusAlertProps } from './TxStatusAlert';
 import { TxStatusAlert } from './TxStatusAlert';
@@ -11,7 +11,7 @@ export default {
 export const Failed = (args: TxStatusAlertProps) => (
   <TxStatusAlert
     {...args}
-    txStatus={SimplifiedTransactionStatusNameEnum.failure}
+    txStatus={TransactionStatus.failure}
     txId={'0xoaskokaes'}
   />
 );
@@ -19,7 +19,7 @@ export const Failed = (args: TxStatusAlertProps) => (
 export const Pending = (args: TxStatusAlertProps) => (
   <TxStatusAlert
     {...args}
-    txStatus={SimplifiedTransactionStatusNameEnum.submitted}
+    txStatus={TransactionStatus.submitted}
     txId={'0xoaskokaes'}
   />
 );
