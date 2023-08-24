@@ -34,6 +34,7 @@ const baseConfig: UserConfig = {
   base: process.env.BASE_URL || '/',
   build: {
     target: 'es2020',
+    sourcemap: true,
     outDir: process.env.APP_DIST || 'dist',
     rollupOptions: {
       input: {

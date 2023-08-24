@@ -16,7 +16,7 @@ env:
 jobs:
   release-changesets:
     name: Changesets Release
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
         with:
@@ -42,6 +42,10 @@ jobs:
 
       - name: Build Fuel Wallet
         run: pnpm build:crx
+        env:
+          ## increase node.js m memory limit for building
+          ## with sourcemaps
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Create Release Pull Request or Publish to NPM
         id: changesets
@@ -72,6 +76,17 @@ jobs:
           CHROME_BUILD_PATH="./fuel-wallet-chrome-${{ env.BUILD_VERSION }}.zip"
           echo "CHROME_BUILD_PATH=$CHROME_BUILD_PATH" >> $GITHUB_ENV
           cp ./packages/app/dist/fuel-wallet.zip $CHROME_BUILD_PATH
+
+      - name: Upload aritifacts to Sentry
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          pnpm sentry-cli sourcemaps inject --release ${{ env.BUILD_VERSION }} ./dist-crx
+          pnpm sentry-cli sourcemaps upload --release ${{ env.BUILD_VERSION }} ./dist-crx
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        working-directory: ./packages/app
 
       - name: Attach Fuel Wallet to release
         if: steps.changesets.outputs.published == 'true'

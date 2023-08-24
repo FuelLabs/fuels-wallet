@@ -1,20 +1,21 @@
 import type { FuelWalletError } from '@fuel-wallet/types';
 import * as Sentry from '@sentry/browser';
 
-import { parseFuelError } from '../utils';
+import { createError, parseFuelError } from '../utils';
 
-import { VITE_SENTRY_DSN } from '~/config';
+import { APP_VERSION, VITE_SENTRY_DSN } from '~/config';
 import { db } from '~/systems/Core/utils/database';
 
 export class ReportErrorService {
   static async reportErrors() {
     const errors = await this.getErrors();
     Sentry.init({
+      release: APP_VERSION,
       dsn: VITE_SENTRY_DSN,
       environment: process.env.NODE_ENV,
     });
     errors.forEach((e) => {
-      Sentry.captureException(e.error, {
+      Sentry.captureException(createError(e), {
         extra: e,
       });
     });
