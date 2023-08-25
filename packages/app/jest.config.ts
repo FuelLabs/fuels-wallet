@@ -32,7 +32,10 @@ const config: JestConfigWithTsJest = {
     ],
   },
   testTimeout: 10000,
+  forceExit: true,
+  detectOpenHandles: true,
   modulePathIgnorePatterns: ['/dist/', 'playwright'],
+  maxWorkers: 1,
   rootDir: __dirname,
   displayName: pkg.name,
   setupFilesAfterEnv: [
