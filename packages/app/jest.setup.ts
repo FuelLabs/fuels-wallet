@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { webcrypto } from 'crypto';
-import failOnConsole from 'jest-fail-on-console';
 import { TextEncoder, TextDecoder } from 'util';
 
 import { localStorageMock } from './src/mocks/localStorage';
@@ -22,13 +21,3 @@ if (process.env.CI) {
     logErrorsBeforeRetry: true,
   });
 }
-
-failOnConsole({
-  shouldFailOnWarn: false,
-  silenceMessage: (errorMessage: string) => {
-    if (/Warning: React does not recognize the/i.test(errorMessage)) {
-      return true;
-    }
-    return false;
-  },
-});

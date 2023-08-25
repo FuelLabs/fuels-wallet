@@ -35,7 +35,7 @@ describe('Mnemonic', () => {
     it('should be able to copy mnemonic words', async () => {
       const { user } = render(<Mnemonic value={WORDS} type="read" />);
 
-      const btn = screen.getByLabelText(/copy button/i);
+      const btn = screen.getByLabelText(/copy seed phrase/i);
       expect(btn).toBeInTheDocument();
 
       await user.click(btn);
@@ -52,7 +52,7 @@ describe('Mnemonic', () => {
       render(<Mnemonic type="write" />);
       await navigator.clipboard.writeText(WORDS.join(' '));
 
-      const btn = screen.getByLabelText(/paste button/i);
+      const btn = screen.getByLabelText(/paste seed phrase/i);
       expect(btn).toBeInTheDocument();
 
       fireEvent.click(btn);

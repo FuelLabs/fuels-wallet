@@ -8,7 +8,6 @@ import {
 import { ActivityList } from './ActivityList';
 
 import { MOCK_ACCOUNTS } from '~/systems/Account';
-import { byPassDataSpaceError } from '~/systems/Core/__tests__/utils/error';
 import { TestWrapper } from '~/systems/Core/components/TestWrapper';
 
 const MOCK_TXS = [
@@ -17,7 +16,6 @@ const MOCK_TXS = [
 ];
 
 describe('ActivityList', () => {
-  byPassDataSpaceError();
   it('a11y', async () => {
     await testA11y(
       <ActivityList txs={MOCK_TXS} ownerAddress={MOCK_ACCOUNTS[3].address} />,

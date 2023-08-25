@@ -1,7 +1,5 @@
 import { render, screen, testA11y, waitFor } from '@fuel-ui/test-utils';
 
-import { byPassDataSpaceError } from '../../__tests__/utils/error';
-
 import { ConnectInfo } from './ConnectInfo';
 
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
@@ -18,7 +16,6 @@ const PROPS = {
 };
 
 describe('ConnectInfo', () => {
-  byPassDataSpaceError();
   beforeEach(async () => {
     await AccountService.clearAccounts();
     await AccountService.addAccount({
