@@ -160,6 +160,7 @@ const styles = {
     flexDirection: 'row',
     background: '$cardBg',
     py: '$3 !important',
+    cursor: 'pointer',
 
     '&[aria-disabled="true"]': {
       opacity: 0.5,

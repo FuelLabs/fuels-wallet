@@ -16,7 +16,7 @@ export function OverlayDialog() {
   const overlay = useOverlay();
 
   return (
-    <Dialog isOpen={overlay.isDialogOpen}>
+    <Dialog isOpen={overlay.isDialogOpen} isBlocked={overlay.isDialogOpen}>
       <Dialog.Content css={styles.content}>
         {/* Accounts */}
         {overlay.is('accounts.list') && <Accounts />}
