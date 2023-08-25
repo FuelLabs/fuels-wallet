@@ -1,5 +1,11 @@
 import JSZip from 'jszip';
-import { readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import {
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
 import { join } from 'node:path';
 import type { Plugin } from 'vite';
 
@@ -62,6 +68,7 @@ export const zipBuildPlugin = ({
         },
       });
       const fileName = join(outDir, outFileName);
+      mkdirSync(outDir, { recursive: true });
       writeFileSync(fileName, file);
     },
   };
