@@ -40,8 +40,6 @@ export class FuelDB extends Dexie {
         errors: '&id',
       })
       .upgrade(async (tx) => {
-        // Once we update the app on chrome webstore
-        // we need to upgrade the database to support beta-4
         // Clear networks table
         await tx.table('networks').clear();
         // Add Beta 4 network as default
