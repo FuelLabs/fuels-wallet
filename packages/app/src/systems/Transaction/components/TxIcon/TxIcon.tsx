@@ -1,10 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon } from '@fuel-ui/react';
-import type {
-  Bech32Address,
-  Operation,
-  SimplifiedTransactionStatusNameEnum,
-} from 'fuels';
+import type { Bech32Address, Operation, TransactionStatus } from 'fuels';
 
 import { getTxIconBgColor, getTxIconColor, getTxIcon } from '../../utils';
 
@@ -12,7 +8,7 @@ import { useAccounts } from '~/systems/Account';
 
 export type TxIconProps = {
   operation?: Operation;
-  status?: SimplifiedTransactionStatusNameEnum;
+  status?: TransactionStatus;
 };
 
 export function TxIcon({ operation, status }: TxIconProps) {
@@ -29,7 +25,7 @@ export function TxIcon({ operation, status }: TxIconProps) {
 }
 
 const styles = {
-  root: (status: SimplifiedTransactionStatusNameEnum | undefined) =>
+  root: (status: TransactionStatus | undefined) =>
     cssObj({
       alignItems: 'center',
       justifyContent: 'center',

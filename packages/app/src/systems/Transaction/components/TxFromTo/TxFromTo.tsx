@@ -1,7 +1,7 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon, Spinner, Tooltip } from '@fuel-ui/react';
-import { OperationName, SimplifiedTransactionStatusNameEnum } from 'fuels';
+import { OperationName, TransactionStatus } from 'fuels';
 
 import type { TxRecipientAddress } from '../../types';
 import { TxRecipientCard } from '../TxRecipientCard';
@@ -9,7 +9,7 @@ import { TxRecipientCard } from '../TxRecipientCard';
 import type { Maybe } from '~/systems/Core';
 
 type TxSpinnerProps = {
-  status?: Maybe<SimplifiedTransactionStatusNameEnum>;
+  status?: Maybe<TransactionStatus>;
   isLoading?: boolean;
   operationName?: Maybe<OperationName>;
 };
@@ -53,7 +53,7 @@ function TxSpinner({ status, isLoading, operationName }: TxSpinnerProps) {
 }
 
 export type TxFromToProps = {
-  status?: Maybe<SimplifiedTransactionStatusNameEnum>;
+  status?: Maybe<TransactionStatus>;
   from?: TxRecipientAddress;
   to?: TxRecipientAddress;
   isLoading?: boolean;
@@ -119,15 +119,15 @@ const styles = {
     background: '$border',
     color: '$textColor',
 
-    [`&[data-status="${SimplifiedTransactionStatusNameEnum.success}"]`]: {
+    [`&[data-status="${TransactionStatus.success}"]`]: {
       background: '$intentsPrimary11',
       color: '$intentsPrimary3',
     },
-    [`&[data-status="${SimplifiedTransactionStatusNameEnum.failure}"]`]: {
+    [`&[data-status="${TransactionStatus.failure}"]`]: {
       background: '$intentsError9',
       color: '$intentsError3',
     },
-    [`&[data-status="${SimplifiedTransactionStatusNameEnum.submitted}"], &[data-loading="true"]`]:
+    [`&[data-status="${TransactionStatus.submitted}"], &[data-loading="true"]`]:
       {
         background: '$intentsWarning9',
         color: '$intentsWarning3',

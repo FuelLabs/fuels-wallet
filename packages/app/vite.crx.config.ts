@@ -1,9 +1,9 @@
 import { crx } from '@crxjs/vite-plugin';
 import { defineConfig } from 'vite';
-import zipPack from 'vite-plugin-zip-pack';
 
 import manifest from './manifest.config';
 import baseConfig from './vite-utils/vite.base.config';
+import { zipBuildPlugin } from './vite-utils/zip-build.plugin';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,10 +17,11 @@ export default defineConfig({
     crx({
       manifest,
     }),
-    zipPack({
+    zipBuildPlugin({
       inDir: 'dist-crx',
       outDir: baseConfig.build?.outDir,
       outFileName: 'fuel-wallet.zip',
+      excludeFiles: /.map$/,
     }),
   ]),
 });

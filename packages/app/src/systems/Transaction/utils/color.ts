@@ -1,44 +1,38 @@
 import type { Colors } from '@fuel-ui/css';
-import { SimplifiedTransactionStatusNameEnum } from 'fuels';
+import { TransactionStatus } from 'fuels';
 
-export const getTxStatusColor = (
-  status?: SimplifiedTransactionStatusNameEnum
-): Colors => {
+export const getTxStatusColor = (status?: TransactionStatus): Colors => {
   switch (status) {
-    case SimplifiedTransactionStatusNameEnum.submitted:
+    case TransactionStatus.submitted:
       return 'intentsWarning9';
-    case SimplifiedTransactionStatusNameEnum.success:
+    case TransactionStatus.success:
       return 'intentsPrimary9';
-    case SimplifiedTransactionStatusNameEnum.failure:
+    case TransactionStatus.failure:
       return 'intentsError9';
     default:
       return 'intentsBase9';
   }
 };
 
-export const getTxIconBgColor = (
-  status: SimplifiedTransactionStatusNameEnum | undefined
-) => {
+export const getTxIconBgColor = (status: TransactionStatus | undefined) => {
   switch (status) {
-    case SimplifiedTransactionStatusNameEnum.success:
+    case TransactionStatus.success:
       return '$intentsPrimary2';
-    case SimplifiedTransactionStatusNameEnum.failure:
+    case TransactionStatus.failure:
       return '$intentsError2';
-    case SimplifiedTransactionStatusNameEnum.submitted:
+    case TransactionStatus.submitted:
     default:
       return '$intentsWarning2';
   }
 };
 
-export const getTxIconColor = (
-  status: SimplifiedTransactionStatusNameEnum | undefined
-) => {
+export const getTxIconColor = (status: TransactionStatus | undefined) => {
   switch (status) {
-    case SimplifiedTransactionStatusNameEnum.success:
+    case TransactionStatus.success:
       return 'intentsPrimary11';
-    case SimplifiedTransactionStatusNameEnum.failure:
+    case TransactionStatus.failure:
       return 'intentsError8';
-    case SimplifiedTransactionStatusNameEnum.submitted:
+    case TransactionStatus.submitted:
     default:
       return 'intentsWarning8';
   }

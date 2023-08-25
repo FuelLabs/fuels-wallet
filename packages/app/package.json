@@ -47,7 +47,7 @@
     "fake-indexeddb": "^4.0.2",
     "framer-motion": "^10.16.1",
     "graphql": "^16.8.0",
-    "fuels": "0.52.0",
+    "fuels": "0.53.0",
     "graphql-request": "^6.1.0",
     "graphql-tag": "^2.12.6",
     "json-rpc-2.0": "^1.6.0",
@@ -86,6 +86,7 @@
     "@storybook/api": "^7.3.2",
     "@storybook/components": "^7.3.2",
     "@storybook/core-events": "^7.3.2",
+    "@sentry/cli": "^2.20.5",
     "@storybook/jest": "^0.1.0",
     "@storybook/react": "^7.3.2",
     "@storybook/react-vite": "^7.3.2",
@@ -107,6 +108,7 @@
     "@xstate/inspect": "^0.8.0",
     "get-graphql-schema": "^2.1.2",
     "jest-fail-on-console": "^3.1.1",
+    "jszip": "^3.10.1",
     "msw": "^1.2.3",
     "msw-storybook-addon": "^1.8.0",
     "storybook": "^7.3.2",
@@ -119,7 +121,6 @@
     "vite": "^4.4.9",
     "vite-plugin-clean": "^1.0.0",
     "vite-plugin-static-copy": "^0.17.0",
-    "vite-plugin-zip-pack": "^1.0.6",
     "vite-tsconfig-paths": "^4.2.0"
   },
   "msw": {
