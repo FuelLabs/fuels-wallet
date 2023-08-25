@@ -1,3 +1,4 @@
+import { createUUID } from '@fuel-wallet/sdk';
 import type {
   Account,
   Vault,
@@ -9,8 +10,9 @@ import type {
 } from '@fuel-wallet/types';
 import type { Table } from 'dexie';
 import Dexie from 'dexie';
-
 import 'dexie-observable';
+import { bn } from 'fuels';
+
 import { DATABASE_VERSION } from '~/config';
 import type { Transaction } from '~/systems/Transaction/types';
 
@@ -26,16 +28,40 @@ export class FuelDB extends Dexie {
 
   constructor() {
     super('FuelDB');
-    this.version(DATABASE_VERSION).stores({
-      vaults: `key`,
-      accounts: `&address, &name`,
-      networks: `&id, &url, &name`,
-      connections: 'origin',
-      transactions: `&id`,
-      assets: '&assetId, &name, $symbol',
-      abis: '&contractId',
-      errors: '&id',
-    });
+    this.version(DATABASE_VERSION)
+      .stores({
+        vaults: `key`,
+        accounts: `&address, &name`,
+        networks: `&id, &url, &name`,
+        connections: 'origin',
+        transactions: `&id`,
+        assets: '&assetId, &name, $symbol',
+        abis: '&contractId',
+        errors: '&id',
+      })
+      .upgrade(async (tx) => {
+        // Once we update the app on chrome webstore
+        // we need to upgrade the database to support beta-4
+        // Clear networks table
+        await tx.table('networks').clear();
+        // Add Beta 4 network as default
+        await tx.table('networks').add({
+          id: createUUID(),
+          name: 'Testnet Beta 4',
+          url: import.meta.env.VITE_FUEL_PROVIDER_URL,
+          isSelected: true,
+        });
+        // Modify accounts table to set balance to 0
+        await tx
+          .table('accounts')
+          .toCollection()
+          .modify((account) => {
+            // eslint-disable-next-line no-param-reassign
+            account.balance = bn();
+            // eslint-disable-next-line no-param-reassign
+            account.balances = [];
+          });
+      });
   }
 
   async clear() {
