@@ -84,6 +84,11 @@ export const transactionMachine = createMachine(
             {
               actions: ['assignTxResult', 'assignTxResponse'],
               target: 'fetchingResult',
+              cond: 'isStatusPending',
+            },
+            {
+              actions: ['assignTxResult', 'assignTxResponse'],
+              target: 'idle',
             },
           ],
         },
@@ -136,6 +141,8 @@ export const transactionMachine = createMachine(
     },
     guards: {
       isInvalidTxId: (_, ev) => !isB256(ev.input?.txId || ''),
+      isStatusPending: (ctx, ev) =>
+        ctx.txResult?.isStatusPending || ev.data.txResult.isStatusPending,
     },
     services: {
       getTransaction: FetchMachine.create<
