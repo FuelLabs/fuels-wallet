@@ -88,7 +88,7 @@ export const transactionMachine = createMachine(
             },
             {
               actions: ['assignTxResult', 'assignTxResponse'],
-              target: 'idle',
+              target: 'done',
             },
           ],
         },
