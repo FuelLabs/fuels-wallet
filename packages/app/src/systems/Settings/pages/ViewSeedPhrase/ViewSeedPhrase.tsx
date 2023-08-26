@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Dialog } from '@fuel-ui/react';
+import { Alert, Box, Dialog } from '@fuel-ui/react';
 
-import { DontShareAlert } from '../../components/DontShareAlert';
 import { useExportVault } from '../../hooks';
 
 import { Mnemonic, styles as coreStyles } from '~/systems/Core';
@@ -35,7 +34,15 @@ export function ViewSeedPhrase() {
           <Box css={styles.mnemonicWrapper}>
             <Mnemonic type="read" value={words} />
           </Box>
-          <DontShareAlert />
+          <Alert status="warning">
+            <Alert.Description>
+              <Box css={styles.alertFirstLine}>
+                DON&apos;T SHARE your Recovery Phrase. {'\n'}
+                It provides access to all your accounts.
+              </Box>
+              Sharing or losing it may result in a permanent loss of funds.
+            </Alert.Description>
+          </Alert>
         </Box.Flex>
       </Dialog.Description>
     </>
@@ -45,5 +52,8 @@ export function ViewSeedPhrase() {
 const styles = {
   mnemonicWrapper: cssObj({
     width: '316px',
+  }),
+  alertFirstLine: cssObj({
+    mb: '$2',
   }),
 };
