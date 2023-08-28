@@ -50,6 +50,7 @@ function TxContentInfo({
         assets={assets}
         isLoading={isLoading}
       />
+      {isLoading && !showDetails && <TxDetails.Loader />}
       {showDetails && <TxDetails fee={tx?.fee} />}
       {footer}
     </Box.Stack>
