@@ -52,7 +52,7 @@ export function useTxResult({
       txResult?.isStatusPending ||
       txResult?.isStatusFailure;
     const shouldShowTx =
-      txResult && !isLoading && !isInvalidTxId && !isTxNotFound;
+      txResult && !isFetching && !isInvalidTxId && !isTxNotFound;
     const shouldShowTxDetails = shouldShowTx && !txResult?.isTypeMint;
 
     return {
