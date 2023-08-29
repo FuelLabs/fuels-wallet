@@ -179,6 +179,7 @@ const styles = {
     pt: '$1',
   }),
   header: cssObj({
+    display: 'flex',
     justifyContent: 'space-between',
 
     '.fuel_Button': {
