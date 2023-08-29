@@ -27,7 +27,12 @@ export function UserAddressCard({ address }: Props) {
           {address.slice(0, 15)}...
           {address.slice(address.length - 15, address.length)}
         </Copyable>
-        <Button aria-label="copy-account" onPress={copyAccount} size="sm">
+        <Button
+          variant="ghost"
+          aria-label="copy-account"
+          onPress={copyAccount}
+          size="sm"
+        >
           Copy User Address
         </Button>
       </Card.Body>

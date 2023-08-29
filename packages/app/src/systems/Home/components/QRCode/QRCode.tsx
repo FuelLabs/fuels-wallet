@@ -41,7 +41,7 @@ export function ReceiverQRCode({ address }: Props) {
             value={address}
           />
         </Box>
-        <Button onPress={downloadQrCode} size="sm">
+        <Button variant="ghost" onPress={downloadQrCode} size="sm">
           Download this QR Code
         </Button>
       </Card.Body>
