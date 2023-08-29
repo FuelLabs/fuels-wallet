@@ -95,12 +95,16 @@ const styles = {
     position: 'relative',
     display: 'flex',
 
+    '.TxRecipientCard': {
+      border: 'none',
+    },
+
     '.TxRecipientCard:first-of-type': {
-      borderRadius: '$default 0 0 $default',
-      borderRight: '1px solid $bodyBg',
+      borderRadius: '$default 0 0 0',
+      borderRight: '1px solid $cardBorder',
     },
     '.TxRecipientCard:last-of-type': {
-      borderRadius: '0 $default $default 0',
+      borderRadius: '0 $default 0 0',
     },
   }),
   spinner: cssObj({

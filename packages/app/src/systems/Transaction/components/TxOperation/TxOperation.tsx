@@ -54,10 +54,10 @@ TxOperation.Loader = () => (
 
 const styles = {
   root: cssObj({
-    border: 'none',
+    borderRadius: '$md',
+    overflow: 'hidden',
     position: 'relative',
     display: 'flex',
-    gap: '$2',
     flexDirection: 'column',
   }),
 };

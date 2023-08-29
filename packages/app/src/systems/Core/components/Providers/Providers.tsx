@@ -29,6 +29,9 @@ const customStyles = {
   '.fuel_Dialog-content': {
     maxWidth: '350px !important',
   },
+  ':root': {
+    '--colors-inputBaseBg': 'var(--colors-cardBg)',
+  },
 };
 
 // this is temporary until we find a better solution

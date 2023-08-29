@@ -25,11 +25,11 @@ importers:
         specifier: 0.17.0
         version: 0.17.0(@testing-library/dom@9.3.1)(typescript@5.1.6)
       '@fuel-ui/css':
-        specifier: 0.18.3
-        version: 0.18.3
+        specifier: 0.18.4-pr-309-33712cc
+        version: 0.18.4-pr-309-33712cc
       '@fuel-ui/react':
-        specifier: 0.18.3
-        version: 0.18.3(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
+        specifier: 0.18.4-pr-309-33712cc
+        version: 0.18.4-pr-309-33712cc(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
       '@fuel-ui/test-utils':
         specifier: 0.17.0
         version: 0.17.0(@babel/core@7.22.10)(@jest/types@29.6.1)(@types/node@20.4.9)(ts-node@10.9.1)(typescript@5.1.6)
@@ -134,14 +134,14 @@ importers:
         specifier: 0.17.0
         version: 0.17.0(@testing-library/dom@9.3.1)(typescript@5.1.6)
       '@fuel-ui/css':
-        specifier: 0.18.3
-        version: 0.18.3
+        specifier: 0.18.4-pr-309-33712cc
+        version: 0.18.4-pr-309-33712cc
       '@fuel-ui/icons':
-        specifier: 0.18.3
-        version: 0.18.3
+        specifier: 0.18.4-pr-309-33712cc
+        version: 0.18.4-pr-309-33712cc
       '@fuel-ui/react':
-        specifier: 0.18.3
-        version: 0.18.3(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
+        specifier: 0.18.4-pr-309-33712cc
+        version: 0.18.4-pr-309-33712cc(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
       '@fuel-ui/test-utils':
         specifier: 0.17.0
         version: 0.17.0(@babel/core@7.22.11)(@jest/types@29.6.1)(@types/node@20.4.9)(esbuild@0.18.17)(react@18.2.0)(ts-node@10.9.1)(typescript@5.1.6)
@@ -489,14 +489,14 @@ importers:
         specifier: 3.5.1
         version: 3.5.1(@algolia/client-search@4.19.1)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)(search-insights@2.7.0)
       '@fuel-ui/css':
-        specifier: 0.18.3
-        version: 0.18.3
+        specifier: 0.18.4-pr-309-33712cc
+        version: 0.18.4-pr-309-33712cc
       '@fuel-ui/icons':
-        specifier: 0.18.3
-        version: 0.18.3
+        specifier: 0.18.4-pr-309-33712cc
+        version: 0.18.4-pr-309-33712cc
       '@fuel-ui/react':
-        specifier: 0.18.3
-        version: 0.18.3(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
+        specifier: 0.18.4-pr-309-33712cc
+        version: 0.18.4-pr-309-33712cc(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
       '@fuel-wallet/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -3778,18 +3778,18 @@ packages:
       - typescript
     dev: false
 
-  /@fuel-ui/css@0.18.3:
-    resolution: {integrity: sha512-nQqhOKq52GCzs1DXncRkVvVuOmrnZ0JWvGwGW+zN56cBzuT3iHtjL2Kwr1HCCgkpldU6ux/g5WijuwMqvA2ZUw==}
+  /@fuel-ui/css@0.18.4-pr-309-33712cc:
+    resolution: {integrity: sha512-lfPOXLCIw9FlA1lLZo8f3dE4vk9Q1K61l7vcLet7fcn7EDgB1me6/34F4hoqEvSGsBTLPq5dLJ5gnFDKIjSF4Q==}
     dependencies:
-      '@fuel-ui/design-tokens': 0.18.3
+      '@fuel-ui/design-tokens': 0.18.4-pr-309-33712cc
       '@radix-ui/colors': 2.1.0
       classnames: 2.3.2
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@fuel-ui/design-tokens@0.18.3:
-    resolution: {integrity: sha512-KpiO/5x1i3IWeuNu0eY1Wvrt6R9n3alrtomaYHUYO2BQwxAg/jbrWFglQBnyhC3/pNz35ImtzLLqf5RHo3LNww==}
+  /@fuel-ui/design-tokens@0.18.4-pr-309-33712cc:
+    resolution: {integrity: sha512-bwnLndsvuGS5SiECgI5OuoAJn1Z83qUH53H8obbZPblpQWXYkwOZCJlfjjgQ/PMa+kJ9YUtpbRs4E219nvKoPg==}
     dependencies:
       '@radix-ui/colors': 2.1.0
       chroma-js: 2.4.2
@@ -3797,20 +3797,20 @@ packages:
       lodash: 4.17.21
     dev: false
 
-  /@fuel-ui/icons@0.18.3:
-    resolution: {integrity: sha512-ieO2ItbbSMcYr7n11AEmo7D4I7kT40DWfVuKegRLJARkcjapFwHahOQRTOfYNOvg+ajNsnhwAqjp3vxFRkcjVg==}
+  /@fuel-ui/icons@0.18.4-pr-309-33712cc:
+    resolution: {integrity: sha512-VCpJTmS0HftBNoiMoGY/n0bjwBTNBrU23csbFyodIQativsYFkT01wMVsCQH+2csDAkWiDK6dcYQVZQtyZQO0A==}
     dependencies:
       '@tabler/icons': 2.30.0
       prettier: 3.0.2
       svgo: 3.0.2
     dev: false
 
-  /@fuel-ui/react@0.18.3(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2):
-    resolution: {integrity: sha512-JLHGHAU9kEiyUTzO4VkretAMvBlbM+GkBB4UuEe2L9hwyJTW1bGjfhaGbtnpq7DDdY/0C1uZDiJxxeVkO5xKlQ==}
+  /@fuel-ui/react@0.18.4-pr-309-33712cc(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2):
+    resolution: {integrity: sha512-f2jT5BnTyJKo4cqLDF9e4tWPw3aAabg0X2elleSbNYTV/Lj/6zHpiJHS1uXijSMvhth0rOSo/uS66bjXAW4BMw==}
     dependencies:
       '@fuel-ts/math': 0.49.1
-      '@fuel-ui/css': 0.18.3
-      '@fuel-ui/icons': 0.18.3
+      '@fuel-ui/css': 0.18.4-pr-309-33712cc
+      '@fuel-ui/icons': 0.18.4-pr-309-33712cc
       '@radix-ui/react-accordion': 1.1.2(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-alert-dialog': 1.0.4(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-aspect-ratio': 1.0.3(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)

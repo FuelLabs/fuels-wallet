@@ -73,16 +73,22 @@ const FunctionCallItem = ({ call }: FunctionCallItemProps) => {
 
 const styles = {
   root: cssObj({
+    borderTop: '1px solid $cardBorder',
+
     '.fuel_Accordion-header': {
       fontSize: '$sm',
     },
     '.fuel_Accordion-item': {
-      borderTopLeftRadius: 0,
-      borderTopRightRadius: 0,
+      borderRadius: 0,
+    },
+    '.fuel_Accordion-trigger': {
+      borderRadius: 0,
+      border: 'none',
     },
     '.fuel_Accordion-content': {
       pt: 0,
       pb: '$2',
+      borderTop: '1px dashed $cardBorder',
 
       '&[data-state="open"]': {
         height: 'auto !important',

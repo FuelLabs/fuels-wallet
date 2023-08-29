@@ -9,7 +9,7 @@ export const AssetsTitle = () => {
     >
       <Icon icon="Coins" color="brand" size={22} />
       <Heading
-        as="h4"
+        as="h5"
         css={{ my: '0px', marginLeft: '$3' }}
         color="textHeading"
       >

@@ -80,6 +80,7 @@ const styles = {
     justifyContent: 'space-between',
     gap: '$3',
     fontWeight: '$normal',
+    fontSize: '$sm',
     flexDirection: 'row',
     cursor: 'pointer',
   }),
@@ -109,6 +110,8 @@ const styles = {
     mt: '-2px',
     fontWeight: '$normal',
     color: '$inverseA12',
+    textWrap: 'nowrap',
+    textOverflow: 'ellipsis',
   }),
 };
 
