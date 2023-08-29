@@ -33,8 +33,8 @@ import type {
 
 import { dateToTai64 } from '../utils';
 
-import { CONTRACT_CALL_ABI } from './abi';
 import { MOCK_OPERATION_CONTRACT_CALL } from './operation';
+import { CONTRACT_CALL_ABI } from './txABI';
 
 type MockTransaction = {
   abiMap?: AbiMap;

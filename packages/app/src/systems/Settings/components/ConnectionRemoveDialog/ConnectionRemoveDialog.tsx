@@ -68,7 +68,6 @@ export function ConnectionRemoveDialog({
 const styles = {
   root: cssObj({
     textAlign: 'center',
-    maxWidth: 250,
 
     footer: {
       justifyContent: 'center',

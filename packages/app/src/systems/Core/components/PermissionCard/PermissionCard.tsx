@@ -18,7 +18,7 @@ export const PermissionCard = ({
       </Card.Header>
       <Card.Body css={styles.cardBody}>
         <Box.Flex direction="column">
-          <List icon={Icon.is('Check')} iconColor="accent9">
+          <List icon={Icon.is('Check')} iconColor="intentsPrimary9">
             {allowed.map((permission) => (
               <List.Item css={styles.listItemAllowed} key={permission}>
                 {permission}

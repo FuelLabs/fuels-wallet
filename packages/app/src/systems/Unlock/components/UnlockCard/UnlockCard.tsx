@@ -109,6 +109,8 @@ const styles = {
     width: '100%',
   }),
   content: cssObj({
+    display: 'flex',
+    flexDirection: 'column',
     position: 'absolute',
     top: 0,
     left: 0,

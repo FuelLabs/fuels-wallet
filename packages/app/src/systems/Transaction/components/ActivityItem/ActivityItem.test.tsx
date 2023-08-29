@@ -1,5 +1,7 @@
 import { render, testA11y, screen } from '@fuel-ui/test-utils';
+import { fireEvent } from '@storybook/testing-library';
 import { Address } from 'fuels';
+import { act } from 'react-dom/test-utils';
 
 import { MOCK_TRANSACTION_CONTRACT_CALL } from '../../__mocks__/tx';
 
@@ -31,7 +33,7 @@ describe('TxItem', () => {
   });
 
   it('should copy transaction id', async () => {
-    const { user } = render(
+    render(
       <ActivityItem
         transaction={MOCK_TRANSACTION_CONTRACT_CALL}
         ownerAddress={ownerAddress}
@@ -42,10 +44,12 @@ describe('TxItem', () => {
     const btn = await screen.findByLabelText(/Copy Transaction ID/i);
     expect(btn).toBeInTheDocument();
 
-    await user.click(btn);
-    expect(await navigator.clipboard.readText()).toBe(
-      MOCK_TRANSACTION_CONTRACT_CALL.id
-    );
+    await act(async () => {
+      fireEvent.click(btn);
+      expect(await navigator.clipboard.readText()).toBe(
+        MOCK_TRANSACTION_CONTRACT_CALL.id
+      );
+    });
   });
 
   it('should display the right from / to address', async () => {

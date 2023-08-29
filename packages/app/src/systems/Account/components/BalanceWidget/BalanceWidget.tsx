@@ -66,6 +66,7 @@ export function BalanceWidget({
           <Button
             size="sm"
             variant="outlined"
+            css={styles.accountChange}
             rightIcon={<Icon icon="ChevronDown" color="intentsBase8" />}
             aria-label="Accounts"
             onPress={handlers.goToList}
@@ -140,5 +141,8 @@ const styles = {
     px: '$4',
     borderTop: '1px solid $border',
     borderBottom: '1px solid $border',
+  }),
+  accountChange: cssObj({
+    borderColor: '$border',
   }),
 };

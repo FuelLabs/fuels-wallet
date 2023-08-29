@@ -1,7 +1,12 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { expect, chromium } from '@playwright/test';
 
-import { getButtonByText, getByAriaLabel, hasText } from '../commons';
+import {
+  getButtonByText,
+  getByAriaLabel,
+  getElementByText,
+  hasText,
+} from '../commons';
 import { mockData, WALLET_PASSWORD } from '../mocks';
 
 test.describe('ViewSeedPhrase', () => {
@@ -17,26 +22,29 @@ test.describe('ViewSeedPhrase', () => {
   });
 
   test('should view seed phrase', async () => {
-    test.step('should show unlock screen', async () => {
+    await test.step('should show unlock screen', async () => {
       await getByAriaLabel(page, 'Menu').click();
+      await getElementByText(page, /Settings/i).click();
       await page.getByText(/View Seed Phrase/i).click();
 
       // Should show unlock screen
       await hasText(page, /Confirm your Password/i);
       await getByAriaLabel(page, 'Your Password').type(WALLET_PASSWORD);
-      await getButtonByText(page, 'Unlock wallet').click();
+      await getButtonByText(page, 'Unlock').click();
     });
 
-    test.step('should show the seed phrase', async () => {
+    await test.step('should show the seed phrase', async () => {
       // Should show unlock screen
       await hasText(page, /Seed Phrase/i);
-      await getButtonByText(page, 'Copy button').click();
-      const clipboardValue = await navigator.clipboard.readText();
-      expect(clipboardValue).toEqual(mnemonic);
+      await getByAriaLabel(page, 'Copy seed phrase').click();
+      const clipboardValue = await page.evaluate(() =>
+        navigator.clipboard.readText()
+      );
+      await expect(clipboardValue).toEqual(mnemonic);
     });
 
-    test.step('should close the page', async () => {
-      await getButtonByText(page, 'Close').click();
+    await test.step('should close the page', async () => {
+      await getByAriaLabel(page, 'Close dialog').click();
       await hasText(page, /assets/i);
     });
   });

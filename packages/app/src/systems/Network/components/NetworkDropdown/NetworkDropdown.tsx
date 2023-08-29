@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
 import type { Network } from '@fuel-wallet/types';
@@ -12,14 +13,13 @@ export type NetworkDropdownProps = {
 };
 
 export const NetworkDropdown = forwardRef<HTMLDivElement, NetworkDropdownProps>(
-  ({ selected, isDisabled, onPress }, ref) => {
+  ({ selected, isDisabled, ...props }, ref) => {
     return (
       <Button
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        {...(props as any)}
         ref={ref as any}
         size="xs"
         css={styles.trigger}
-        onPress={() => onPress?.(selected!)}
         aria-label="Selected Network"
         isDisabled={isDisabled}
         rightIcon={isDisabled ? null : 'ChevronDown'}

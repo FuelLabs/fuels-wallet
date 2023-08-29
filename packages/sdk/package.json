@@ -28,7 +28,7 @@
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
-    "@types/chrome": "^0.0.242",
+    "@types/chrome": "^0.0.243",
     "dexie-observable": "4.0.1-beta.13",
     "events": "^3.3.0",
     "json-rpc-2.0": "^1.6.0",
@@ -43,6 +43,6 @@
     "@types/uuid": "^9.0.2",
     "fuels": "0.53.0",
     "jest-webextension-mock": "^3.8.9",
-    "tsup": "^7.1.0"
+    "tsup": "^7.2.0"
   }
 }

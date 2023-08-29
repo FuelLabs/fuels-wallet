@@ -18,7 +18,7 @@ export class WindowConnection extends BaseConnection {
   isListenerAdded = false;
   queue: JSONRPCRequest[] = [];
   _retry = 0;
-  _injectionTimeout: NodeJS.Timer;
+  _injectionTimeout: NodeJS.Timeout;
   _hasWallet = deferPromise<boolean>();
   connectorName: string;
   private connectors: Array<FuelWalletConnector>;

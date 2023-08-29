@@ -148,7 +148,7 @@ export function Mnemonic({
       <Box.Flex as="footer" css={styles.footer}>
         {type === 'read' ? (
           <Button
-            aria-label="Copy button"
+            aria-label="Copy seed phrase"
             size="sm"
             variant="solid"
             leftIcon={<Icon icon="Copy" color="intentsBase8" />}
@@ -158,7 +158,7 @@ export function Mnemonic({
           </Button>
         ) : (
           <Button
-            aria-label="Paste button"
+            aria-label="Paste seed phrase"
             size="sm"
             variant="solid"
             leftIcon={<Icon icon="Copy" color="intentsBase8" />}

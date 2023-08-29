@@ -60,8 +60,8 @@ test.describe('ReportError', () => {
         },
       });
     });
-    await reload(page);
 
+    await reload(page);
     await hasText(page, /Unexpected errors detected/i);
     await expect(page.locator(`textarea[name="reports"]`)).toHaveText(
       /Test Error/i

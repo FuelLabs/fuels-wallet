@@ -46,7 +46,7 @@ export function AssetSelect({
       popoverProps={{ align: 'start' }}
       className="fuel_asset-select"
     >
-      <Dropdown.Trigger>
+      <Dropdown.Trigger asChild>
         <Button
           role={assetAmount ? 'button' : 'combobox'}
           as={assetAmount ? 'div' : 'button'}

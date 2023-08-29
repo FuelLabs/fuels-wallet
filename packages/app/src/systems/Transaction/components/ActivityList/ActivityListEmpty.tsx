@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Text, Heading, Button, Icon, Box } from '@fuel-ui/react';
+import { Text, Heading, Button, Icon, Box, useFuelTheme } from '@fuel-ui/react';
 
 import { ImageLoader, relativeUrl } from '~/systems/Core';
 import { useOpenFaucet } from '~/systems/Faucet';
@@ -11,13 +11,14 @@ type ActivityEmptyProps = {
 
 export function ActivityListEmpty({ isDevnet }: ActivityEmptyProps) {
   const openFaucet = useOpenFaucet();
+  const { current: theme } = useFuelTheme();
   return (
     <Box.Centered css={styles.empty}>
       <ImageLoader
-        src={relativeUrl('/empty-activity.svg')}
+        src={relativeUrl(`/empty_activity_${theme}.png`)}
         alt="No activity"
-        width={250}
-        height={208}
+        width={231}
+        height={175}
         wrapperCSS={{ mb: '$5', mt: '$16' }}
       />
       <Heading as="h5">No activity yet</Heading>
@@ -42,12 +43,6 @@ const styles = {
     height: '100%',
     flexDirection: 'column',
     textAlign: 'center',
-
-    img: {
-      transform: 'translateX(-10px)',
-      mb: '$5',
-      mt: '$5',
-    },
 
     h5: {
       margin: 0,

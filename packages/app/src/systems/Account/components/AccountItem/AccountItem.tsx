@@ -102,13 +102,17 @@ export const AccountItem: AccountItemComponent = ({
             align: 'end',
           }}
         >
-          <Dropdown.Trigger>
+          <Dropdown.Trigger asChild>
             <IconButton
               size="xs"
               variant="link"
               icon={<Icon icon="Dots" color="intentsBase8" />}
               aria-label={`Account Actions ${account.name}`}
-              css={{ px: '$0', color: '$intentsBase10' }}
+              css={{
+                px: '$0',
+                color: '$intentsBase10',
+                bg: 'transparent !important',
+              }}
             />
           </Dropdown.Trigger>
           <Dropdown.Menu
@@ -138,6 +142,7 @@ export const AccountItem: AccountItemComponent = ({
       aria-disabled={isDisabled}
       aria-label={account.name}
       data-compact={compact}
+      className="AccountItem"
     >
       <Avatar.Generated size={compact ? 'xsm' : 'md'} hash={account.address} />
       <Box.Flex className="wrapper">
@@ -152,8 +157,10 @@ export const AccountItem: AccountItemComponent = ({
 
 const styles = {
   root: cssObj({
+    flexDirection: 'row',
     background: '$cardBg',
     py: '$3 !important',
+    cursor: 'pointer',
 
     '&[aria-disabled="true"]': {
       opacity: 0.5,

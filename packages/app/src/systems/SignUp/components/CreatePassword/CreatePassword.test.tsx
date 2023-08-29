@@ -58,7 +58,7 @@ describe('CreatePassword', () => {
     fireEvent.focus(password);
     fireEvent.mouseOver(screen.getByLabelText('Password strength'));
 
-    const fuelPopoverContent = await screen.findByText('Weak');
+    const fuelPopoverContent = await screen.findByText(/weak/i);
     expect(fuelPopoverContent).toBeVisible();
   });
 
