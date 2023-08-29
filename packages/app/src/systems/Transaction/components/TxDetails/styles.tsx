@@ -2,7 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 
 export const styles = {
   detailItem: cssObj({
-    padding: '$3 $6',
+    padding: '$3 $4',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

@@ -48,11 +48,11 @@ export const ExportAccount = () => {
               </Card.Body>
             </Card>
             <Alert status="warning" css={styles.alert}>
-              <Alert.Description>
-                <Box css={styles.alertFirstLine}>
+              <Alert.Description as="div">
+                <Text css={styles.alertFirstLine}>
                   DON&apos;T SHARE your Private Key. {'\n'}
                   It provides access to {account.name}.
-                </Box>
+                </Text>
                 Sharing or losing it may result in a permanent loss of funds for
                 this account.
               </Alert.Description>

@@ -35,7 +35,7 @@ export function ViewSeedPhrase() {
             <Mnemonic type="read" value={words} />
           </Box>
           <Alert status="warning">
-            <Alert.Description>
+            <Alert.Description as="div">
               <Box css={styles.alertFirstLine}>
                 DON&apos;T SHARE your Recovery Phrase. {'\n'}
                 It provides access to all your accounts.

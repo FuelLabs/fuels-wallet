@@ -25,11 +25,11 @@ importers:
         specifier: 0.17.0
         version: 0.17.0(@testing-library/dom@9.3.1)(typescript@5.1.6)
       '@fuel-ui/css':
-        specifier: '0.19'
-        version: 0.19.0
+        specifier: 0.19.1
+        version: 0.19.1
       '@fuel-ui/react':
-        specifier: '0.19'
-        version: 0.19.0(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
+        specifier: 0.19.1
+        version: 0.19.1(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
       '@fuel-ui/test-utils':
         specifier: 0.17.0
         version: 0.17.0(@babel/core@7.22.10)(@jest/types@29.6.1)(@types/node@20.4.9)(ts-node@10.9.1)(typescript@5.1.6)
@@ -134,14 +134,14 @@ importers:
         specifier: 0.17.0
         version: 0.17.0(@testing-library/dom@9.3.1)(typescript@5.1.6)
       '@fuel-ui/css':
-        specifier: '0.19'
-        version: 0.19.0
+        specifier: 0.19.1
+        version: 0.19.1
       '@fuel-ui/icons':
-        specifier: '0.19'
-        version: 0.19.0
+        specifier: 0.19.1
+        version: 0.19.1
       '@fuel-ui/react':
-        specifier: '0.19'
-        version: 0.19.0(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
+        specifier: 0.19.1
+        version: 0.19.1(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
       '@fuel-ui/test-utils':
         specifier: 0.17.0
         version: 0.17.0(@babel/core@7.22.11)(@jest/types@29.6.1)(@types/node@20.4.9)(esbuild@0.18.17)(react@18.2.0)(ts-node@10.9.1)(typescript@5.1.6)
@@ -489,14 +489,14 @@ importers:
         specifier: 3.5.1
         version: 3.5.1(@algolia/client-search@4.19.1)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)(search-insights@2.7.0)
       '@fuel-ui/css':
-        specifier: '0.19'
-        version: 0.19.0
+        specifier: 0.19.1
+        version: 0.19.1
       '@fuel-ui/icons':
-        specifier: '0.19'
-        version: 0.19.0
+        specifier: 0.19.1
+        version: 0.19.1
       '@fuel-ui/react':
-        specifier: '0.19'
-        version: 0.19.0(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
+        specifier: 0.19.1
+        version: 0.19.1(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
       '@fuel-wallet/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -3778,18 +3778,18 @@ packages:
       - typescript
     dev: false
 
-  /@fuel-ui/css@0.19.0:
-    resolution: {integrity: sha512-DYeWPX/GCKsTHPGZGtVOLOJ8iLSqQvnt/mbn/u6Tqs4QYdieWWj87QcAVuJlQXvDQCmv06bPYcGIqR63+q0HBg==}
+  /@fuel-ui/css@0.19.1:
+    resolution: {integrity: sha512-ZQu2qMoFggDQ7/ieEKpZ/nK0g5F3a7z5owOG2B+2YDgPs5J58Ac086XsuN5Wdah4RjJKMElnQQLthUKzYhPSLA==}
     dependencies:
-      '@fuel-ui/design-tokens': 0.19.0
+      '@fuel-ui/design-tokens': 0.19.1
       '@radix-ui/colors': 2.1.0
       classnames: 2.3.2
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@fuel-ui/design-tokens@0.19.0:
-    resolution: {integrity: sha512-jIeOEjJDgz2zTQNuRGNnS0+Wll+s3uOoBUR/2ZKxi8vuH1PIBP2PVjCEImM8UMIEpGjvCKjfeu3tBheB1G0n+w==}
+  /@fuel-ui/design-tokens@0.19.1:
+    resolution: {integrity: sha512-ZBBtt/ujw3Qf0imXzcsbj5vS4AeSX49jAiCpbmXyyUxq3nZAwMjg7vMPchIl1/+EVSHUuROdsSd5Vkx1b24sZQ==}
     dependencies:
       '@radix-ui/colors': 2.1.0
       chroma-js: 2.4.2
@@ -3797,20 +3797,20 @@ packages:
       lodash: 4.17.21
     dev: false
 
-  /@fuel-ui/icons@0.19.0:
-    resolution: {integrity: sha512-5aswEalUXCevq8KEukxB2jkf5G31rA691cRQ2Sa6ud5wlhGytTqM2ka7YiSc+/2uNJFswmFd5zZBCA9DbJ3sEg==}
+  /@fuel-ui/icons@0.19.1:
+    resolution: {integrity: sha512-bKWkIY29pBGVuKhZfy+u2YBm3d6xOkqxFx8+OKbEkprYGoaJTaEX52x3fHMsYBTheCh3PLZU4xMdF7+WT9iojw==}
     dependencies:
       '@tabler/icons': 2.30.0
       prettier: 3.0.2
       svgo: 3.0.2
     dev: false
 
-  /@fuel-ui/react@0.19.0(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2):
-    resolution: {integrity: sha512-Ma/mbUvYibSZ8Pb4j7xPDj+ibvXwjdtDbk4UAW42iK2NtDa9RBOeMz+9oFR9xNeD47m4tTJmMZWl57+kBiGkOQ==}
+  /@fuel-ui/react@0.19.1(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2):
+    resolution: {integrity: sha512-SVb9oYOtjYmpCgOhU6q9RbWqr7Pp0sCZhUiGGl4kBSSdqBql4cS4ChKa4PHg/Iq1oN3yt/fj1M0SrfqTTd5GdA==}
     dependencies:
       '@fuel-ts/math': 0.49.1
-      '@fuel-ui/css': 0.19.0
-      '@fuel-ui/icons': 0.19.0
+      '@fuel-ui/css': 0.19.1
+      '@fuel-ui/icons': 0.19.1
       '@radix-ui/react-accordion': 1.1.2(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-alert-dialog': 1.0.4(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-aspect-ratio': 1.0.3(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
@@ -4829,6 +4829,13 @@ packages:
       v8-to-istanbul: 9.1.0
     transitivePeerDependencies:
       - supports-color
+
+  /@jest/schemas@28.1.3:
+    resolution: {integrity: sha512-/l/VWsdt/aBXgjshLWOFyFt3IVdYypu5y2Wn2rOO1un6nkqIn8SLXzgIMYXFyYsRWDyF5EthmKJMIdJvk08grg==}
+    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
+    dependencies:
+      '@sinclair/typebox': 0.24.51
+    dev: false
 
   /@jest/schemas@29.6.0:
     resolution: {integrity: sha512-rxLjXyJBTL4LQeJW3aKo0M/+GkCOXsO+8i9Iu7eDb6KwtP65ayoDsitrdPBtujxQ88k4wI2FNYfa6TOGwSn6cQ==}
@@ -7976,6 +7983,10 @@ packages:
       tslib: 2.6.1
     dev: false
 
+  /@sinclair/typebox@0.24.51:
+    resolution: {integrity: sha512-1P1OROm/rdubP5aFDSZQILU0vrLCJ4fvHt6EoqHEM+2D/G5MK3bIaymUKLit8Js9gbns5UyJnkP/TZROLw4tUA==}
+    dev: false
+
   /@sinclair/typebox@0.27.8:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
 
@@ -8929,10 +8940,10 @@ packages:
       - supports-color
     dev: true
 
-  /@storybook/expect@27.5.2-0:
-    resolution: {integrity: sha512-cP99mhWN/JeCp7VSIiymvj5tmuMY050iFohvp8Zq+kewKsBSZ6/qpTJAGCCZk6pneTcp4S0Fm5BSqyxzbyJ3gw==}
+  /@storybook/expect@28.1.3-5:
+    resolution: {integrity: sha512-lS1oJnY1qTAxnH87C765NdfvGhksA6hBcbUVI5CHiSbNsEtr456wtg/z+dT9XlPriq1D5t2SgfNL9dBAoIGyIA==}
     dependencies:
-      '@types/jest': 29.5.3
+      '@types/jest': 28.1.3
     dev: false
 
   /@storybook/global@5.0.0:
@@ -8976,7 +8987,7 @@ packages:
   /@storybook/jest@0.1.0:
     resolution: {integrity: sha512-TmybnEXlv5Fu2/Hq4nRj7alS9mw4CasLR0RDwaAzS+Vpvu1TC4+j9rh+b1BHtmWebbJh0JMT6mgzPqOyJdgtQA==}
     dependencies:
-      '@storybook/expect': 27.5.2-0
+      '@storybook/expect': 28.1.3-5
       '@storybook/instrumenter': 7.1.1
       '@testing-library/jest-dom': 5.17.0
       jest-mock: 27.5.1
@@ -9933,6 +9944,13 @@ packages:
     resolution: {integrity: sha512-c3mAZEuK0lvBp8tmuL74XRKn1+y2dcwOUpH7x4WrF6gk1GIgiluDRgMYQtw2OFcBvAJWlt6ASU3tSqxp0Uu0Aw==}
     dependencies:
       '@types/istanbul-lib-report': 3.0.0
+
+  /@types/jest@28.1.3:
+    resolution: {integrity: sha512-Tsbjk8Y2hkBaY/gJsataeb4q9Mubw9EOz7+4RjPkzD5KjTvHHs7cpws22InaoXxAVAhF5HfFbzJjo6oKWqSZLw==}
+    dependencies:
+      jest-matcher-utils: 28.1.3
+      pretty-format: 28.1.3
+    dev: false
 
   /@types/jest@29.5.3:
     resolution: {integrity: sha512-1Nq7YrO/vJE/FYnqYyw0FS8LdrjExSgIiHyKg7xPpn+yi8Q4huZryKnkJatN1ZRH89Kw2v33/8ZMB7DuZeSLlA==}
@@ -12675,6 +12693,11 @@ packages:
   /dexie@3.2.4:
     resolution: {integrity: sha512-VKoTQRSv7+RnffpOJ3Dh6ozknBqzWw/F3iqMdsZg958R0AS8AnY9x9d1lbwENr0gzeGJHXKcGhAMRaqys6SxqA==}
     engines: {node: '>=6.0'}
+    dev: false
+
+  /diff-sequences@28.1.1:
+    resolution: {integrity: sha512-FU0iFaH/E23a+a718l8Qa/19bF9p06kgE0KipMOMadwa3SjnaElKzPaUC0vnibs6/B/9ni97s61mcejk8W1fQw==}
+    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dev: false
 
   /diff-sequences@29.4.3:
@@ -15898,6 +15921,16 @@ packages:
       - babel-plugin-macros
       - supports-color
 
+  /jest-diff@28.1.3:
+    resolution: {integrity: sha512-8RqP1B/OXzjjTWkqMX67iqgwBVJRgCyKD3L9nq+6ZqJMdvjE8RgHktqZ6jNrkdMT+dJuYNI3rhQpxaz7drJHfw==}
+    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
+    dependencies:
+      chalk: 4.1.2
+      diff-sequences: 28.1.1
+      jest-get-type: 28.0.2
+      pretty-format: 28.1.3
+    dev: false
+
   /jest-diff@29.6.2:
     resolution: {integrity: sha512-t+ST7CB9GX5F2xKwhwCf0TAR17uNDiaPTZnVymP9lw0lssa9vG+AFyDZoeIHStU3WowFFwT+ky+er0WVl2yGhA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -15962,6 +15995,11 @@ packages:
       chalk: 4.1.2
     dev: false
 
+  /jest-get-type@28.0.2:
+    resolution: {integrity: sha512-ioj2w9/DxSYHfOm5lJKCdcAmPJzQXmbM/Url3rhlghrPvT3tt+7a/+oXc9azkKmLvoiXjtV83bEWqi+vs5nlPA==}
+    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
+    dev: false
+
   /jest-get-type@29.4.3:
     resolution: {integrity: sha512-J5Xez4nRRMjk8emnTpWrlkyb9pfRQQanDrvWHhsR1+VUfbwxi30eVcZFlcdGInRibU4G5LwHXpI7IRHU0CY+gg==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -15995,6 +16033,16 @@ packages:
     resolution: {integrity: sha512-owAJrYnjulVlMIXOYQIPRCCn3MmqI3GzgfZCXdD3/pmwrIvFMXcKVWZ+aMc44IzaASapg0Z4SEFxR+v5qxDA2w==}
     engines: {node: '>=6.16.0'}
     dev: true
+
+  /jest-matcher-utils@28.1.3:
+    resolution: {integrity: sha512-kQeJ7qHemKfbzKoGjHHrRKH6atgxMk8Enkk2iPQ3XwO6oE/KYD8lMYOziCkeSB9G4adPM4nR1DE8Tf5JeWH6Bw==}
+    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
+    dependencies:
+      chalk: 4.1.2
+      jest-diff: 28.1.3
+      jest-get-type: 28.0.2
+      pretty-format: 28.1.3
+    dev: false
 
   /jest-matcher-utils@29.2.2:
     resolution: {integrity: sha512-4DkJ1sDPT+UX2MR7Y3od6KtvRi9Im1ZGLGgdLFLm4lPexbTaCgJW5NN3IOXlQHF7NSHY/VHhflQ+WoKtD/vyCw==}
@@ -18592,6 +18640,16 @@ packages:
       ansi-regex: 5.0.1
       ansi-styles: 5.2.0
       react-is: 17.0.2
+
+  /pretty-format@28.1.3:
+    resolution: {integrity: sha512-8gFb/To0OmxHR9+ZTb14Df2vNxdGCX8g1xWGUTqUw5TiZvcQf5sHKObd5UcPyLLyowNwDAMTF3XWOG1B6mxl1Q==}
+    engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
+    dependencies:
+      '@jest/schemas': 28.1.3
+      ansi-regex: 5.0.1
+      ansi-styles: 5.2.0
+      react-is: 18.2.0
+    dev: false
 
   /pretty-format@29.6.2:
     resolution: {integrity: sha512-1q0oC8eRveTg5nnBEWMXAU2qpv65Gnuf2eCQzSjxpWFkPaPARwqZZDGuNE0zPAZfTCHzIk3A8dIjwlQKKLphyg==}
