@@ -25,6 +25,15 @@ const customStyles = {
   },
   '.fuel_AlertDialog-content': {
     maxWidth: '300px !important',
+    boxSizing: 'border-box !important',
+    paddingTop: '$6 !important',
+    paddingBottom: '$6 !important',
+  },
+  '.fuel_AlertDialog-description': {
+    margin: 0,
+  },
+  '.fuel_AlertDialog-footer > button': {
+    flex: 1,
   },
   '.fuel_Dialog-content': {
     maxWidth: '350px !important',
