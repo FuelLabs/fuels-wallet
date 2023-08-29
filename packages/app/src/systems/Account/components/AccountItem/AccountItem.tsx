@@ -96,7 +96,7 @@ export const AccountItem: AccountItemComponent = ({
     if (menuItems.length) {
       return (
         <Dropdown
-          css={{ zIndex: 1 }}
+          css={styles.dropdown}
           popoverProps={{
             alignOffset: -20,
             align: 'end',
@@ -156,6 +156,14 @@ export const AccountItem: AccountItemComponent = ({
 };
 
 const styles = {
+  dropdown: cssObj({
+    background: '$intentsBase6',
+    zIndex: 1,
+
+    '& .fuel_PopoverArrow': {
+      fill: '$intentsBase6',
+    },
+  }),
   root: cssObj({
     flexDirection: 'row',
     background: '$cardBg',
