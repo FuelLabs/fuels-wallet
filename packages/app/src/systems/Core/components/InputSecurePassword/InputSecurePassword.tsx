@@ -8,6 +8,7 @@ import {
   PasswordStrength,
   usePasswordStrength,
 } from '@fuel-ui/react';
+import unsafeList from '@fuel-ui/react/unsafe-passwords';
 import { useEffect, useState } from 'react';
 import type { ControllerRenderProps, FieldValues } from 'react-hook-form';
 
@@ -39,6 +40,7 @@ export function InputSecurePassword({
   const { strength } = usePasswordStrength({
     minLength: 8,
     password,
+    unsafeList,
   });
 
   useEffect(() => {
@@ -47,7 +49,11 @@ export function InputSecurePassword({
 
   return (
     <Box.Stack css={{ ...styles.root, ...css }} gap={0}>
-      <PasswordStrength password={password} open={passwordTooltipOpened}>
+      <PasswordStrength
+        password={password}
+        open={passwordTooltipOpened}
+        unsafeList={unsafeList}
+      >
         <Box.Flex
           css={styles.indicator}
           align={'center'}

@@ -80,6 +80,7 @@ const styles = {
     justifyContent: 'space-between',
     gap: '$3',
     fontWeight: '$normal',
+    fontSize: '$sm',
     flexDirection: 'row',
     cursor: 'pointer',
   }),
@@ -108,7 +109,9 @@ const styles = {
   label: cssObj({
     mt: '-2px',
     fontWeight: '$normal',
-    color: '$whiteA12',
+    color: '$inverseA12',
+    textWrap: 'nowrap',
+    textOverflow: 'ellipsis',
   }),
 };
 

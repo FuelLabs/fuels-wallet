@@ -1,10 +1,11 @@
-import { cssObj, cx } from '@fuel-ui/css';
-import { Avatar, Box, Card, Copyable, Grid, Text } from '@fuel-ui/react';
+import { cx } from '@fuel-ui/css';
+import { Avatar, Box, Copyable, Grid, Text } from '@fuel-ui/react';
 import type { AssetAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import type { FC } from 'react';
 
 import { AssetsAmountLoader } from './AssetsAmountLoader';
+import { styles } from './styles';
 
 import { shortAddress } from '~/systems/Core';
 import type { GroupedError } from '~/systems/Transaction';
@@ -27,7 +28,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
   const hasError = !!balanceErrors?.length;
 
   return (
-    <Card css={styles.card} data-error={hasError}>
+    <Box css={styles.card} data-error={hasError}>
       {(title || hasError) && (
         <Box.Flex css={styles.header}>
           {title && (
@@ -56,7 +57,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
           />
         ))}
       </Box.Stack>
-    </Card>
+    </Box>
   );
 };
 
@@ -88,66 +89,6 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
       </Box.Flex>
     </Grid>
   );
-};
-
-const styles = {
-  card: cssObj({
-    px: '$6',
-    py: '$2',
-
-    '&[data-error=true]': {
-      backgroundColor: '$intentsError3',
-    },
-
-    '.fuel_Avatar': {
-      width: '$5',
-      height: '$5',
-    },
-  }),
-  header: cssObj({
-    mb: '$3',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  }),
-  root: cssObj({
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gridTemplateRows: 'repeat(2, 1fr)',
-    fontWeight: '$normal',
-    color: '$intentsBase12',
-
-    '& ~ & ': {
-      pt: '$2',
-      borderTop: '1px solid $border',
-    },
-  }),
-  asset: cssObj({
-    alignItems: 'center',
-    gap: '$2',
-
-    '& span': {
-      fontSize: '$sm',
-      color: '$intentsBase12',
-    },
-  }),
-  address: cssObj({
-    gridColumn: '1 / 2',
-    color: '$intentsBase9',
-    fontSize: '$sm',
-  }),
-  amount: cssObj({
-    justifyContent: 'flex-end',
-    gridRow: '1 / 3',
-    gridColumn: '2 / 3',
-    textAlign: 'right',
-    fontSize: '$sm',
-    color: '$intentsBase12',
-    alignItems: 'center',
-  }),
-  title: cssObj({
-    fontSize: '$sm',
-    fontWeight: '$normal',
-  }),
 };
 
 AssetsAmount.Loader = AssetsAmountLoader;

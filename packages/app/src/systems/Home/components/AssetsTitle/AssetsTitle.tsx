@@ -7,8 +7,12 @@ export const AssetsTitle = () => {
         flexShrink: 0,
       }}
     >
-      <Icon icon="Coins" color="accent9" size={22} />
-      <Heading as="h4" css={{ my: '0px', marginLeft: '$3' }} color="white">
+      <Icon icon="Coins" color="brand" size={22} />
+      <Heading
+        as="h5"
+        css={{ my: '0px', marginLeft: '$3' }}
+        color="textHeading"
+      >
         Assets
       </Heading>
     </Box.Flex>

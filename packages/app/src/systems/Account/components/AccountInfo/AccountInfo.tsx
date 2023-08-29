@@ -32,5 +32,9 @@ const styles = {
   }),
   cardBody: cssObj({
     padding: '$0',
+
+    '& > .fuel_Card': {
+      border: 'none',
+    },
   }),
 };

@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax */
-import { render, screen, testA11y } from '@fuel-ui/test-utils';
+import { fireEvent, render, screen, testA11y } from '@fuel-ui/test-utils';
 
 import { Mnemonic } from './Mnemonic';
 
@@ -35,7 +35,7 @@ describe('Mnemonic', () => {
     it('should be able to copy mnemonic words', async () => {
       const { user } = render(<Mnemonic value={WORDS} type="read" />);
 
-      const btn = screen.getByLabelText(/copy button/i);
+      const btn = screen.getByLabelText(/copy seed phrase/i);
       expect(btn).toBeInTheDocument();
 
       await user.click(btn);
@@ -49,16 +49,15 @@ describe('Mnemonic', () => {
     });
 
     it('should be able to paste using paste button', async () => {
-      const { user } = render(<Mnemonic type="write" />);
+      render(<Mnemonic type="write" />);
       await navigator.clipboard.writeText(WORDS.join(' '));
 
-      const btn = screen.getByLabelText(/paste button/i);
+      const btn = screen.getByLabelText(/paste seed phrase/i);
       expect(btn).toBeInTheDocument();
 
-      await user.click(btn);
-
+      fireEvent.click(btn);
       for (const word of WORDS) {
-        expect(screen.getByLabelText(word)).toBeInTheDocument();
+        expect(await screen.findByLabelText(word)).toBeInTheDocument();
       }
     });
 

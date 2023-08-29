@@ -167,8 +167,8 @@ export function ChangePassword() {
         </Layout.Content>
         <Layout.BottomBar>
           <Button
-            css={styles.cancelButton}
             onPress={goBack}
+            variant="ghost"
             isDisabled={isChangingPassword}
           >
             Cancel
@@ -188,10 +188,6 @@ export function ChangePassword() {
 }
 
 const styles = {
-  cancelButton: cssObj({
-    background: '$intentsBase2 !important',
-    color: '$intentsBase11 !important',
-  }),
   input: cssObj({
     '&.fuel_InputField, & .fuel_InputField': {
       w: '235px !important',

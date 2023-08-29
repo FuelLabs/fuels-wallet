@@ -5,8 +5,9 @@ import { useState } from 'react';
 import { Header, Stepper } from '../../components';
 import { useSignUp, useSignUpStepper } from '../../hooks';
 
+import { ReactComponent as Terms } from './TermOfService.md';
+
 import { Layout, MotionStack, animations } from '~/systems/Core';
-import { ReactComponent as Terms } from '~public/TermOfService.md';
 
 export function TermsOfUse() {
   const [isSavedChecked, setCheckedTerms] = useState(false);
@@ -92,7 +93,7 @@ const styles = {
       gap: '$1',
       textDecoration: 'none',
       fontWeight: '$normal',
-      color: '$accent11',
+      color: '$intentsPrimary11',
     },
   },
   agreeContainer: cssObj({

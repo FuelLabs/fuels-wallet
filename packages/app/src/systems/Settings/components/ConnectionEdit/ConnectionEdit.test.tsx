@@ -8,7 +8,6 @@ import { Usage } from './ConnectionEdit.stories';
 
 import { TestWrapper } from '~/systems/Core';
 import { renderWithRouter } from '~/systems/Core/__tests__/utils';
-import { byPassDataSpaceError } from '~/systems/Core/__tests__/utils/error';
 
 function Content() {
   const state = useConnections();
@@ -21,7 +20,6 @@ const opts = {
 };
 
 describe('ConnectionEdit', () => {
-  byPassDataSpaceError();
   beforeEach(async () => {
     await connectionsLoader();
   });

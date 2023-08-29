@@ -1,4 +1,4 @@
-import { MOCK_ABI_MAP } from '~/systems/Settings/__mocks__/abi';
+import { MOCK_ABI_MAP } from '~/systems/Settings/__mocks__/settingsABI';
 
 export const CONTRACT_CALL_ABI =
   MOCK_ABI_MAP[

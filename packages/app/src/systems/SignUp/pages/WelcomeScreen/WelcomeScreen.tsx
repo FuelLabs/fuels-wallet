@@ -75,7 +75,7 @@ const styles = {
       gridTemplateColumns: 'auto 1fr auto',
       gridColumnGap: '$6',
       border: '1px solid $cardBg',
-      bg: '$intentsBase1',
+      bg: '$cardBg',
 
       '&:hover': {
         cursor: 'pointer',

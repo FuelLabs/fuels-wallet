@@ -26,7 +26,7 @@ export function FaucetDialog() {
       isOpen
       onOpenChange={(open: boolean) => !open && navigate(Pages.wallet())}
     >
-      <Dialog.Content css={{ maxWidth: 300 }}>
+      <Dialog.Content>
         <Dialog.Heading>
           <Box.Flex css={{ alignItems: 'center' }}>
             <Icon icon="Wand" css={{ marginRight: '$3' }} />

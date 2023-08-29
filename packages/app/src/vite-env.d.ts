@@ -27,3 +27,8 @@ declare module '*?script' {
   const src: string;
   export default src;
 }
+
+declare module '@fuel-ui/react/unsafe-passwords' {
+  const src: string[];
+  export default src;
+}

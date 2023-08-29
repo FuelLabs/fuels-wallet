@@ -30,6 +30,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
     : '';
   const isContract = recipient?.type === AddressType.contract;
   const isEthChain = recipient?.chain === ChainName.ethereum;
+  const isNetwork = address === 'Network';
   const name =
     accounts?.find((a) => a.address === fuelAddress)?.name || 'unknown';
 
@@ -58,7 +59,12 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
         </>
       ) : (
         <>
-          {!isContract && (
+          {isNetwork && (
+            <Box css={styles.iconWrapper}>
+              <Icon icon={Icon.is('LayersLinked')} size={20} />
+            </Box>
+          )}
+          {!isContract && !isNetwork && (
             <Avatar.Generated
               role="img"
               size="lg"
@@ -66,16 +72,18 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
               aria-label={fuelAddress}
             />
           )}
-          {isContract && (
+          {isContract && !isNetwork && (
             <Box css={styles.iconWrapper}>
               <Icon icon={Icon.is('Code')} size={20} />
             </Box>
           )}
           <Box.Flex css={styles.info}>
             <Heading as="h6" css={styles.name}>
-              {name}
+              {isNetwork ? address : name}
             </Heading>
-            <FuelAddress address={fuelAddress} css={styles.address} />
+            {!isNetwork && (
+              <FuelAddress address={fuelAddress} css={styles.address} />
+            )}
           </Box.Flex>
         </>
       )}
@@ -89,6 +97,7 @@ const styles = {
     p: '$3',
     display: 'inline-flex',
     alignItems: 'center',
+    flexDirection: 'column',
     gap: '$3',
 
     '.fuel_copyable': {
@@ -109,7 +118,11 @@ const styles = {
     fontWeight: '$normal',
   }),
   iconWrapper: cssObj({
-    padding: '$5',
+    width: 56,
+    height: 56,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     background: '$intentsBase3',
     borderRadius: '$full',
   }),

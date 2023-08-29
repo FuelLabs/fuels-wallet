@@ -14,7 +14,6 @@ import { TopBar } from './TopBar';
 import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { OverlayDialog } from '~/systems/Overlay';
 import { Sidebar } from '~/systems/Sidebar';
-import signUpImage from '~public/signup.png';
 
 type Context = {
   isLoading?: boolean;
@@ -128,6 +127,7 @@ export const styles = {
     height: '100vh',
     maxHeight: '100vh',
     ...coreStyles.scrollable(),
+
     '&:has(.layout__bottom) .layout__content': {
       pb: '$0',
     },
@@ -165,6 +165,10 @@ export const styles = {
     gridTemplateRows: '1fr',
     alignItems: 'flex-start',
 
+    'html[class="fuel_light-theme"] &': {
+      bg: '$intentsBase2',
+    },
+
     '& > .fuel_Box-centered': {
       maxWidth: '$sm',
       height: 650,
@@ -188,7 +192,7 @@ export const styles = {
       bottom: 0,
       width: '100%',
       height: '100vh',
-      background: `url(${signUpImage})`,
+      background: `url(/signup.png?url)`,
       backgroundPosition: 'left',
       backgroundSize: 'cover',
     },

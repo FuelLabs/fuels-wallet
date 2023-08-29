@@ -21,7 +21,7 @@ export function NetworkSelector({
       <Dropdown
         popoverProps={{ side: 'bottom', align: 'start', alignOffset: 10 }}
       >
-        <Dropdown.Trigger>
+        <Dropdown.Trigger asChild>
           <NetworkDropdown selected={selected!} />
         </Dropdown.Trigger>
         <Dropdown.Menu
@@ -30,7 +30,8 @@ export function NetworkSelector({
           disabledKeys={['edit']}
           aria-label="Actions"
           css={styles.dropdownMenu}
-          onAction={(id) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onAction={(id: any) => {
             const network = networks.find((n) => n.id === id);
             network && onSelectNetwork?.(network);
           }}
@@ -100,7 +101,7 @@ const styles = {
           left: 0,
           width: '3px',
           height: '$9',
-          background: '$accent11',
+          background: '$intentsPrimary11',
           borderRadius: '$md 0 0 $md',
         },
       }),

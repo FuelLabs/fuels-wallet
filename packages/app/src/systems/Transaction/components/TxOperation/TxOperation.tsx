@@ -54,13 +54,10 @@ TxOperation.Loader = () => (
 
 const styles = {
   root: cssObj({
-    border: 'none',
+    borderRadius: '$md',
+    overflow: 'hidden',
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-
-    '.TxFromTo': {
-      borderBottom: '1px solid $bodyBg',
-    },
   }),
 };
