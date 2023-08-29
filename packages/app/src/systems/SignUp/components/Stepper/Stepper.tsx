@@ -48,10 +48,6 @@ const styles = {
   root: cssObj({
     gap: '$2',
     width: '$full',
-
-    '.fuel_Icon': {
-      color: '$bodyInverse',
-    },
   }),
   button: cssObj({
     width: '$8',
