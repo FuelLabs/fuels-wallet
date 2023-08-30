@@ -49,7 +49,6 @@ export function ConnectionRemoveDialog({
           </AlertDialog.Cancel>
           <AlertDialog.Action>
             <Button
-              size="sm"
               aria-label="Confirm delete"
               variant="ghost"
               intent="error"
