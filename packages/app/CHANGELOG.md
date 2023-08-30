@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.12.2
+
+### Patch Changes
+
+- [#850](https://github.com/FuelLabs/fuels-wallet/pull/850) [`fd36e30`](https://github.com/FuelLabs/fuels-wallet/commit/fd36e30dc3ae410d5aebe3472ac20e6372582ac1) Thanks [@luizstacio](https://github.com/luizstacio)! - Update ToS location
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.12.2
+  - @fuel-wallet/types@0.12.2
+
 ## 0.12.1
 
 ### Patch Changes
