@@ -1,5 +1,29 @@
 # fuels-wallet
 
+## 0.12.1
+
+### Patch Changes
+
+- [#842](https://github.com/FuelLabs/fuels-wallet/pull/842) [`9491f56`](https://github.com/FuelLabs/fuels-wallet/commit/9491f56dfb73c9e7941b4f5a0ea2aeb8016fe894) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: improve alerts of "export seed" and "export private key" screens
+
+- [#841](https://github.com/FuelLabs/fuels-wallet/pull/841) [`09258e1`](https://github.com/FuelLabs/fuels-wallet/commit/09258e19898865071f43eebcc07251c40f2a4d0e) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: tx fee loader
+
+- [#838](https://github.com/FuelLabs/fuels-wallet/pull/838) [`9c40a6e`](https://github.com/FuelLabs/fuels-wallet/commit/9c40a6e6d4e96ad81b0da8f72196baec980b346c) Thanks [@luizstacio](https://github.com/luizstacio)! - Add upgrade database to beta-4
+
+- [#837](https://github.com/FuelLabs/fuels-wallet/pull/837) [`badd641`](https://github.com/FuelLabs/fuels-wallet/commit/badd6419880b0cf9b53afb36bca1b27c111b5614) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: update to fuels 0.53.0
+
+- [#831](https://github.com/FuelLabs/fuels-wallet/pull/831) [`2b5c363`](https://github.com/FuelLabs/fuels-wallet/commit/2b5c36351a27c3d69e0babb8214104102848bb2e) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix sentry report errors
+
+- [#827](https://github.com/FuelLabs/fuels-wallet/pull/827) [`7851c3e`](https://github.com/FuelLabs/fuels-wallet/commit/7851c3e42d1ba289d0854c8cbfce74b400a8d8b6) Thanks [@pedronauck](https://github.com/pedronauck)! - Add light and dark theme support
+
+- [#844](https://github.com/FuelLabs/fuels-wallet/pull/844) [`6835a9d`](https://github.com/FuelLabs/fuels-wallet/commit/6835a9dddaef1f8be0450a69cb5966c8f0620564) Thanks [@luizstacio](https://github.com/luizstacio)! - Add open explorer on transaction screen
+
+- [#845](https://github.com/FuelLabs/fuels-wallet/pull/845) [`c76cc43`](https://github.com/FuelLabs/fuels-wallet/commit/c76cc4318aa720fdcb22e93371f19d174cc602e6) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix buttons colors on receive page
+
+- Updated dependencies [[`09258e1`](https://github.com/FuelLabs/fuels-wallet/commit/09258e19898865071f43eebcc07251c40f2a4d0e), [`badd641`](https://github.com/FuelLabs/fuels-wallet/commit/badd6419880b0cf9b53afb36bca1b27c111b5614), [`7851c3e`](https://github.com/FuelLabs/fuels-wallet/commit/7851c3e42d1ba289d0854c8cbfce74b400a8d8b6)]:
+  - @fuel-wallet/sdk@0.12.1
+  - @fuel-wallet/types@0.12.1
+
 ## 0.12.0
 
 ### Minor Changes

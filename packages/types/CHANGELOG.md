@@ -1,5 +1,13 @@
 # @fuel-wallet/types
 
+## 0.12.1
+
+### Patch Changes
+
+- [#837](https://github.com/FuelLabs/fuels-wallet/pull/837) [`badd641`](https://github.com/FuelLabs/fuels-wallet/commit/badd6419880b0cf9b53afb36bca1b27c111b5614) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: update to fuels 0.53.0
+
+- [#827](https://github.com/FuelLabs/fuels-wallet/pull/827) [`7851c3e`](https://github.com/FuelLabs/fuels-wallet/commit/7851c3e42d1ba289d0854c8cbfce74b400a8d8b6) Thanks [@pedronauck](https://github.com/pedronauck)! - Add light and dark theme support
+
 ## 0.12.0
 
 ### Minor Changes
