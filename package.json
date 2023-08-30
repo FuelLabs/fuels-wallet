@@ -126,7 +126,8 @@
       "node-fetch@<2.6.7": ">=2.6.7",
       "word-wrap": "npm:@aashutoshrathi/word-wrap",
       "cross-fetch": "4.0.0",
-      "pnpm@>=8.0.0 <8.6.8": ">=8.6.8"
+      "pnpm@>=8.0.0 <8.6.8": ">=8.6.8",
+      "@adobe/css-tools": ">=4.3.1"
     }
   }
 }
