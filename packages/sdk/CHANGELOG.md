@@ -1,5 +1,11 @@
 # @fuel-wallet/sdk
 
+## 0.12.3
+
+### Patch Changes
+
+- [#853](https://github.com/FuelLabs/fuels-wallet/pull/853) [`1382e00`](https://github.com/FuelLabs/fuels-wallet/commit/1382e00a849ee1b8d013c16e6cd6db82b33b343e) Thanks [@luizstacio](https://github.com/luizstacio)! - Update CRX deps and permissions
+
 ## 0.12.2
 
 ## 0.12.1
