@@ -1,4 +1,4 @@
-import { createStore } from '@fuel-wallet/xstore';
+import { createStore } from '@fuels/react-xstore';
 
 import { accountEvents } from '../Account/events';
 import { accountsMachine } from '../Account/machines';
