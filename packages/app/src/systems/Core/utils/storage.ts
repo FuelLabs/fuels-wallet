@@ -1,4 +1,3 @@
- 
 import { LocalStorage } from '@fuels/local-storage';
 import { EventEmitter } from 'events';
 
