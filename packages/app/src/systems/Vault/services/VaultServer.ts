@@ -2,7 +2,6 @@ import { WalletManager } from '@fuel-ts/wallet-manager';
 import EventEmitter from 'events';
 import { transactionRequestify, Address } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
-
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
 
 export type VaultAccount = {

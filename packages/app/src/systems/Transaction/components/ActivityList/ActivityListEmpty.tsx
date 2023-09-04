@@ -1,6 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
 import { Text, Heading, Button, Icon, Box, useFuelTheme } from '@fuel-ui/react';
-
 import { ImageLoader, relativeUrl } from '~/systems/Core';
 import { useOpenFaucet } from '~/systems/Faucet';
 

@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import type { JestConfigWithTsJest } from 'ts-jest';
 import { defaultsESM as tsjPreset } from 'ts-jest/presets';
 

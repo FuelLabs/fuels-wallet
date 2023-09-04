@@ -8,7 +8,6 @@ import type {
 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-
 import { AccountService } from '~/systems/Account';
 import { assignErrorMessage, delay, FetchMachine } from '~/systems/Core';
 import type { NetworkInputs } from '~/systems/Network';

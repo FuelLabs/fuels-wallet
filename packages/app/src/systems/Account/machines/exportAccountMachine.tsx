@@ -1,14 +1,13 @@
 import type { Account } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-
-import type { AccountInputs } from '../services/account';
-import { AccountService } from '../services/account';
-
 import type { Maybe } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
 import type { VaultInputs } from '~/systems/Vault';
 import { VaultService } from '~/systems/Vault';
+
+import { AccountService } from '../services/account';
+import type { AccountInputs } from '../services/account';
 
 type MachineContext = {
   account?: Maybe<Account>;

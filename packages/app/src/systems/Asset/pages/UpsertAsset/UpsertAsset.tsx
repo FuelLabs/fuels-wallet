@@ -2,14 +2,13 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Focus, Text } from '@fuel-ui/react';
 import { isB256 } from 'fuels';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Layout } from '~/systems/Core';
 
 import { AssetItem } from '../../components';
 import { AssetForm } from '../../components/AssetForm';
 import { useAsset, useAssets } from '../../hooks';
 import type { AssetFormValues } from '../../hooks/useAssetForm';
 import { useAssetForm } from '../../hooks/useAssetForm';
-
-import { Layout } from '~/systems/Core';
 
 export function UpsertAsset() {
   const navigate = useNavigate();

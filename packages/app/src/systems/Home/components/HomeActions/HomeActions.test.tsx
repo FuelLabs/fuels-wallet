@@ -1,8 +1,7 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
+import { TestWrapper } from '~/systems/Core';
 
 import { HomeActions } from './HomeActions';
-
-import { TestWrapper } from '~/systems/Core';
 
 describe('HomeActions', () => {
   it('a11y', async () => {

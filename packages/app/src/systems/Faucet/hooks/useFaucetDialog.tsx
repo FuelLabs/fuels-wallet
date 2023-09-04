@@ -1,10 +1,9 @@
 import { useMachine, useSelector } from '@xstate/react';
 import { useNavigate } from 'react-router-dom';
+import { Pages } from '~/systems/Core';
 
 import type { FaucetMachineState, StartFaucetData } from '../machines';
 import { faucetMachine } from '../machines';
-
-import { Pages } from '~/systems/Core';
 
 const selectors = {
   isLoading: (state: FaucetMachineState) => state.matches('fauceting'),

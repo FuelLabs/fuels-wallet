@@ -1,10 +1,9 @@
 import { WalletManager } from '@fuel-ts/wallet-manager';
 import { Wallet } from 'fuels';
+import { db, Storage } from '~/systems/Core';
 
 import { AccountService } from '../services';
 import { IndexedDBStorage } from '../utils';
-
-import { db, Storage } from '~/systems/Core';
 
 const wallet1 = Wallet.generate();
 const wallet2 = Wallet.generate();

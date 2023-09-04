@@ -1,12 +1,11 @@
 import { graphql } from 'msw';
+import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
+import { NetworkService } from '~/systems/Network';
+import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
 import { MOCK_TRANSACTIONS_BY_OWNER } from '../../__mocks__/transactions';
 
 import { ViewActivity } from './ViewActivity';
-
-import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
-import { NetworkService } from '~/systems/Network';
-import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
 export default {
   component: ViewActivity,

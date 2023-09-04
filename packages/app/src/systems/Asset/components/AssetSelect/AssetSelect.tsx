@@ -13,7 +13,6 @@ import {
 import type { AssetAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import { useState } from 'react';
-
 import type { Maybe } from '~/systems/Core';
 import { shortAddress, formatAmount } from '~/systems/Core';
 

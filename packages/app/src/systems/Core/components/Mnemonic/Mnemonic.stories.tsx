@@ -1,12 +1,11 @@
 import { Box } from '@fuel-ui/react';
 import { Mnemonic as FuelMnemonic } from 'fuels';
+import { MNEMONIC_SIZE } from '~/config';
 
 import { getWordsFromValue } from '../../utils';
 
 import type { MnemonicProps } from './Mnemonic';
 import { Mnemonic } from './Mnemonic';
-
-import { MNEMONIC_SIZE } from '~/config';
 
 export default {
   component: Mnemonic,

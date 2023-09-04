@@ -2,7 +2,6 @@ import { Box } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/types';
 import type { TransactionStatus, TransactionSummary } from 'fuels';
 import type { ReactNode } from 'react';
-
 import type { Maybe } from '~/systems/Core';
 import { MotionStack, animations } from '~/systems/Core';
 import { TxOperations, TxDetails } from '~/systems/Transaction';

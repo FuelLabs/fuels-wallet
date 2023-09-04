@@ -3,9 +3,6 @@ import type { Account } from '@fuel-wallet/types';
 import { Mnemonic } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-
-import { SignUpService } from '../services';
-
 import { IS_LOGGED_KEY, MNEMONIC_SIZE } from '~/config';
 import { store } from '~/store';
 import {
@@ -15,6 +12,8 @@ import {
   Storage,
 } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
+
+import { SignUpService } from '../services';
 
 // ----------------------------------------------------------------------------
 // Machine

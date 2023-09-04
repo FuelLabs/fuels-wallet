@@ -1,11 +1,10 @@
 import { Box, Button } from '@fuel-ui/react';
 import type { StoryFn, Meta } from '@storybook/react';
-
-import { AddNetwork } from './AddNetwork';
-
 import { Layout } from '~/systems/Core';
 import { NetworkService, useNetworks } from '~/systems/Network';
 import { store } from '~/systems/Store';
+
+import { AddNetwork } from './AddNetwork';
 
 export default {
   component: AddNetwork,

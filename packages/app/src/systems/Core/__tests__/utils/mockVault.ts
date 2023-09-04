@@ -1,8 +1,8 @@
-import { getWordsFromValue } from '../../utils';
-import { MNEMONIC, PASSWORD, PKEY } from '../config';
-
 import { NetworkService } from '~/systems/Network';
 import { SignUpService } from '~/systems/SignUp/services';
+
+import { getWordsFromValue } from '../../utils';
+import { MNEMONIC, PASSWORD, PKEY } from '../config';
 
 type MockVaultConfig = {
   password?: string;

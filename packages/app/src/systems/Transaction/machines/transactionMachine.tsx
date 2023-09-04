@@ -2,11 +2,10 @@ import type { TransactionResponse, TransactionResult } from 'fuels';
 import { isB256 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-
-import { TxService } from '../services';
-
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
+
+import { TxService } from '../services';
 
 export const TRANSACTION_ERRORS = {
   INVALID_ID: 'Invalid transaction ID',

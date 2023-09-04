@@ -6,16 +6,15 @@ import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-
-import type { SendMachineState } from '../machines/sendMachine';
-import { sendMachine } from '../machines/sendMachine';
-
 import { useAccounts } from '~/systems/Account';
 import { isEth, useAssets } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
 import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
+
+import { sendMachine } from '../machines/sendMachine';
+import type { SendMachineState } from '../machines/sendMachine';
 
 export enum SendStatus {
   loading = 'loading',
@@ -34,6 +33,7 @@ const selectors = {
     return state.matches('invalid');
   },
   status(txStatus?: TxRequestStatus) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useCallback(
       (state: SendMachineState) => {
         const isLoadingTx =
@@ -49,6 +49,7 @@ const selectors = {
     );
   },
   title(txStatus?: TxRequestStatus) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useCallback(
       (state: SendMachineState) => {
         if (state.matches('creatingTx') || txStatus === TxRequestStatus.loading)

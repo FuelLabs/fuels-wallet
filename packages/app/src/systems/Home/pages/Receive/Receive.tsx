@@ -1,11 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { useNavigate } from 'react-router-dom';
+import { useAccounts } from '~/systems/Account';
+import { Layout, MotionFlex, Pages, animations } from '~/systems/Core';
 
 import { ReceiverQRCode } from '../../components/QRCode';
 import { UserAddressCard } from '../../components/UserAddressCard';
-
-import { useAccounts } from '~/systems/Account';
-import { Layout, MotionFlex, Pages, animations } from '~/systems/Core';
 
 export function Receive() {
   const navigate = useNavigate();

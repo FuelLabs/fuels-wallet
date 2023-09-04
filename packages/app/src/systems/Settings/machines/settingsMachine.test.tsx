@@ -1,10 +1,9 @@
 import type { InterpreterFrom } from 'xstate';
 import { interpret } from 'xstate';
-
-import { settingsMachine } from './settingsMachine';
-
 import { expectStateMatch } from '~/systems/Core/__tests__';
 import type { VaultInputs } from '~/systems/Vault';
+
+import { settingsMachine } from './settingsMachine';
 
 describe('settingsMachine', () => {
   const redirectToWallet = jest.fn();

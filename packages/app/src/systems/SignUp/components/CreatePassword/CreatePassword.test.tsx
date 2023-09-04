@@ -1,11 +1,10 @@
 import type { render } from '@fuel-ui/test-utils';
 import { fireEvent, screen, waitFor } from '@fuel-ui/test-utils';
+import { renderWithProvider } from '~/systems/Core/__tests__';
 
 import { SignUpProvider } from '../SignUpProvider';
 
 import { CreatePassword } from './CreatePassword';
-
-import { renderWithProvider } from '~/systems/Core/__tests__';
 
 const onSubmitHandler = jest.fn();
 const onCancelHandler = jest.fn();

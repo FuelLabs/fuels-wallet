@@ -1,11 +1,9 @@
 import { waitFor, fireEvent, screen } from '@fuel-ui/test-utils';
 import type { Connection } from '@fuel-wallet/types';
-
 import { ConnectionService } from '~/systems/DApp/services';
 
 export async function waitShowingConnections(...conns: Connection[]) {
   await waitFor(() => {
-    // eslint-disable-next-line no-restricted-syntax
     for (const conn of conns) {
       expect(screen.getByText(conn.origin)).toBeInTheDocument();
     }

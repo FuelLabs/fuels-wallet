@@ -1,12 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
 import { Form, Box, Button, Checkbox } from '@fuel-ui/react';
 import { useState } from 'react';
+import { Layout, MotionStack, animations } from '~/systems/Core';
+import { ReactComponent as Terms } from '~public/TermOfService.md';
 
 import { Header, Stepper } from '../../components';
 import { useSignUp, useSignUpStepper } from '../../hooks';
-
-import { Layout, MotionStack, animations } from '~/systems/Core';
-import { ReactComponent as Terms } from '~public/TermOfService.md';
 
 export function TermsOfUse() {
   const [isSavedChecked, setCheckedTerms] = useState(false);

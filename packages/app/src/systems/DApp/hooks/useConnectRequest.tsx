@@ -1,10 +1,9 @@
 import { useSelector } from '@xstate/react';
 import { useEffect, useMemo } from 'react';
-
-import type { ConnectRequestState } from '../machines';
-
 import { Services, store } from '~/store';
 import { useAccounts } from '~/systems/Account';
+
+import type { ConnectRequestState } from '../machines';
 
 const selectors = {
   isSelectingAccounts: (state: ConnectRequestState) => {

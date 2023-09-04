@@ -1,12 +1,11 @@
 import { screen, testA11y } from '@fuel-ui/test-utils';
 import { TransactionStatus } from 'fuels';
+import { TestWrapper } from '~/systems/Core';
+import { renderWithProvider } from '~/systems/Core/__tests__';
 
 import { MOCK_TX_RECIPIENT } from '../../__mocks__/tx-recipient';
 
 import { TxFromTo } from './TxFromTo';
-
-import { TestWrapper } from '~/systems/Core';
-import { renderWithProvider } from '~/systems/Core/__tests__';
 
 const PROPS = {
   from: MOCK_TX_RECIPIENT.account,

@@ -2,11 +2,10 @@ import type { TransactionResult } from 'fuels';
 import { isB256, isBech32 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-
-import { TxService } from '../services';
-
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
+
+import { TxService } from '../services';
 
 export const TRANSACTION_HISTORY_ERRORS = {
   INVALID_ADDRESS: 'Invalid address',

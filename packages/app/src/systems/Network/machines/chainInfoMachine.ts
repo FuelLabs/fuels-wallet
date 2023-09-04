@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 import { ChainInfo } from 'fuels';
 import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
-
-import { NetworkInputs, NetworkService } from '../services';
-
 import type { FetchResponse } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
+
+import { NetworkInputs, NetworkService } from '../services';
 
 type MachineContext = {
   chainInfo?: ChainInfo;

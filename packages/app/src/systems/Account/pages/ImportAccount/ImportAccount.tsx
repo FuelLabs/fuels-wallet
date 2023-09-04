@@ -1,12 +1,11 @@
 import { Box, Button, Dialog, Icon } from '@fuel-ui/react';
+import { styles } from '~/systems/Core';
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 import { ImportAccountForm } from '../../components/ImportAccountForm';
 import { useAccounts, useImportAccount } from '../../hooks';
 import { useImportAccountForm } from '../../hooks/useImportAccountForm';
 import type { ImportAccountFormValues } from '../../hooks/useImportAccountForm';
-
-import { styles } from '~/systems/Core';
-import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export const ImportAccount = () => {
   const { accounts, handlers: accountsHandlers } = useAccounts();

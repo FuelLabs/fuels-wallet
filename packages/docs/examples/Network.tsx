@@ -3,7 +3,6 @@ import { cssObj } from '@fuel-ui/css';
 import { Button, Box, Tag, Text } from '@fuel-ui/react';
 import { useState } from 'react';
 
-// eslint-disable-next-line import/no-relative-packages
 import type { FuelProviderConfig } from '../../types/src';
 import { ExampleBox } from '../src/components/ExampleBox';
 import { useFuel } from '../src/hooks/useFuel';

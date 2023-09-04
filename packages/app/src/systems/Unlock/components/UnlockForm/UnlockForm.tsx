@@ -1,8 +1,7 @@
 import { InputPassword } from '@fuel-ui/react';
+import { ControlledField } from '~/systems/Core';
 
 import type { UseUnlockFormReturn } from '../../hooks/useUnlockForm';
-
-import { ControlledField } from '~/systems/Core';
 
 type UnlockFormProps = {
   form: UseUnlockFormReturn;

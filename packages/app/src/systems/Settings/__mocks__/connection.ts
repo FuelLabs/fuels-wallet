@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import type { Connection } from '@fuel-wallet/types';
 import { Wallet } from 'fuels';
-
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 import { ConnectionService } from '~/systems/DApp/services';
 import { NetworkService } from '~/systems/Network';

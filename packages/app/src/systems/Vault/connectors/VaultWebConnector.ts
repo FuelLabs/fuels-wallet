@@ -1,10 +1,9 @@
 import type { JSONRPCRequest } from 'json-rpc-2.0';
+import { IS_DEVELOPMENT, IS_TEST } from '~/config';
+import { VaultServer } from '~/systems/Vault/services/VaultServer';
 
 import { mockUnlock } from '../__mocks__/mockUnlock';
 import type { VaultClient } from '../services/VaultClient';
-
-import { IS_DEVELOPMENT, IS_TEST } from '~/config';
-import { VaultServer } from '~/systems/Vault/services/VaultServer';
 
 export class VaultWebConnector {
   vault: VaultServer;

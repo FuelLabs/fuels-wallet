@@ -2,12 +2,11 @@ import { cssObj } from '@fuel-ui/css';
 import { Card } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/types';
 import type { Operation, TransactionStatus } from 'fuels';
+import { AssetsAmount } from '~/systems/Asset';
+import type { Maybe } from '~/systems/Core';
 
 import { FunctionCalls } from '../FunctionCalls';
 import { TxFromTo } from '../TxFromTo/TxFromTo';
-
-import { AssetsAmount } from '~/systems/Asset';
-import type { Maybe } from '~/systems/Core';
 
 export type TxOperationProps = {
   operation?: Operation;

@@ -1,6 +1,5 @@
 import type { Input, InputContract, JsonAbi } from 'fuels';
 import { InputType, getInputsByType } from 'fuels';
-
 import { AbiService } from '~/systems/Settings/services';
 
 export async function getAbiMap({
@@ -21,7 +20,6 @@ export async function getAbiMap({
   );
   const abiMap = abis.reduce((prev, abi, index) => {
     if (abi) {
-      // eslint-disable-next-line no-param-reassign
       prev[contractIds[index]] = abi;
     }
 

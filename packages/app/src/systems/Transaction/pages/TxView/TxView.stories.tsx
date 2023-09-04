@@ -1,13 +1,12 @@
 import { graphql } from 'msw';
 import { Route, Routes } from 'react-router-dom';
+import { Pages } from '~/systems/Core';
+import { NetworkService } from '~/systems/Network';
+import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
 import { MOCK_TRANSACTION_WITH_RECEIPTS_GQL } from '../../__mocks__/transaction';
 
 import { TxView } from './TxView';
-
-import { Pages } from '~/systems/Core';
-import { NetworkService } from '~/systems/Network';
-import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
 const TxViewStory = ({ txId }: { txId: string }) => {
   return (

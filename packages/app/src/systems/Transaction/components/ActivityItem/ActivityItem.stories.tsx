@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-return-assign */
 import { Box } from '@fuel-ui/react';
 import { OperationName, TransactionStatus } from 'fuels';
 

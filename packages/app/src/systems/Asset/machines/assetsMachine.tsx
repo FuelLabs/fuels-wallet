@@ -3,11 +3,10 @@ import type { Asset } from '@fuel-wallet/types';
 import { AssetList } from 'asset-list';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
+import { FetchMachine } from '~/systems/Core';
 
 import type { AssetInputs } from '../services';
 import { AssetService } from '../services';
-
-import { FetchMachine } from '~/systems/Core';
 
 export enum AssetsStatus {
   loading = 'loading',

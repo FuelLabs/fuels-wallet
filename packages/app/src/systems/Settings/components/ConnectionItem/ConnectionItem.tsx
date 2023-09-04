@@ -3,12 +3,11 @@ import { Avatar, Box, CardList, Icon, IconButton, Text } from '@fuel-ui/react';
 import type { Connection } from '@fuel-wallet/types';
 import { motion } from 'framer-motion';
 import type { FC } from 'react';
+import { animations, parseUrl, truncate } from '~/systems/Core';
 
 import { ConnectionRemoveDialog } from '../ConnectionRemoveDialog';
 
 import { ConnectionItemLoader } from './ConnectionItemLoader';
-
-import { animations, parseUrl, truncate } from '~/systems/Core';
 
 const MotionCardItem = motion(CardList.Item);
 

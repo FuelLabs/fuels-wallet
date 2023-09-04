@@ -1,14 +1,13 @@
 import { screen, waitFor } from '@fuel-ui/test-utils';
 import { Mnemonic as FuelMnemonic } from 'fuels';
 import { act } from 'react-dom/test-utils';
+import { MNEMONIC_SIZE } from '~/config';
+import { getPhraseFromValue } from '~/systems/Core';
+import { renderWithProvider } from '~/systems/Core/__tests__';
 
 import { SignUpProvider } from '../SignUpProvider';
 
 import { MnemonicWrite } from './MnemonicWrite';
-
-import { MNEMONIC_SIZE } from '~/config';
-import { getPhraseFromValue } from '~/systems/Core';
-import { renderWithProvider } from '~/systems/Core/__tests__';
 
 const onFilledHandler = jest.fn();
 const onNextHandler = jest.fn();

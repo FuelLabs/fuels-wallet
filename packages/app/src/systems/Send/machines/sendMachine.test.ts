@@ -1,13 +1,12 @@
 import { Wallet, bn } from 'fuels';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
-
-import type { SendMachineService } from './sendMachine';
-import { sendMachine } from './sendMachine';
-
 import { MOCK_ASSETS } from '~/systems/Asset/__mocks__/assets';
 import type { MockVaultData } from '~/systems/Core/__tests__';
 import { mockVault } from '~/systems/Core/__tests__';
+
+import { sendMachine } from './sendMachine';
+import type { SendMachineService } from './sendMachine';
 
 const MOCK_INPUTS = {
   address: Wallet.generate().address.toString(),

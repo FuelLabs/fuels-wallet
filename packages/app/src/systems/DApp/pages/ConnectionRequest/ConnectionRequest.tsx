@@ -1,9 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Card, CardList, Box, Link, Text } from '@fuel-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
-
-import { useConnectRequest } from '../../hooks/useConnectRequest';
-
 import { AccountItem } from '~/systems/Account';
 import {
   animations,
@@ -12,6 +9,8 @@ import {
   PermissionCard,
   coreStyles,
 } from '~/systems/Core';
+
+import { useConnectRequest } from '../../hooks/useConnectRequest';
 
 export const PERMISSION_LIST = [
   'View your account address',

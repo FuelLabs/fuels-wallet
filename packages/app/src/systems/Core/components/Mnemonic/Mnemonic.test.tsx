@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { fireEvent, render, screen, testA11y } from '@fuel-ui/test-utils';
 
 import { Mnemonic } from './Mnemonic';

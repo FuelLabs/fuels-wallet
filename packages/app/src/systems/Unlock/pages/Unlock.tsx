@@ -1,9 +1,8 @@
 import { Box } from '@fuel-ui/react';
+import { Layout } from '~/systems/Core';
 
 import { UnlockCard } from '../components/UnlockCard';
 import { useUnlock } from '../hooks';
-
-import { Layout } from '~/systems/Core';
 
 export function UnlockPage() {
   const { isLoading, error, handlers } = useUnlock();

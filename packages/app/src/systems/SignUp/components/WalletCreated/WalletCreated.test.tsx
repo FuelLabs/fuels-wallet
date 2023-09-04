@@ -1,12 +1,11 @@
 import { screen } from '@fuel-ui/test-utils';
+import { MOCK_ACCOUNTS } from '~/systems/Account';
+import { shortAddress } from '~/systems/Core';
+import { renderWithProvider } from '~/systems/Core/__tests__';
 
 import { SignUpProvider } from '../SignUpProvider';
 
 import { WalletCreated } from './WalletCreated';
-
-import { MOCK_ACCOUNTS } from '~/systems/Account';
-import { shortAddress } from '~/systems/Core';
-import { renderWithProvider } from '~/systems/Core/__tests__';
 
 const ACCOUNT = MOCK_ACCOUNTS[0];
 

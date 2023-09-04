@@ -1,8 +1,7 @@
 import { Input, Box } from '@fuel-ui/react';
+import { ControlledField } from '~/systems/Core';
 
 import type { UseAssetFormReturn } from '../../hooks/useAssetForm';
-
-import { ControlledField } from '~/systems/Core';
 
 export type AssetFormProps = {
   form: UseAssetFormReturn;

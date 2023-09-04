@@ -1,11 +1,10 @@
 import type { Connection } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-
-import { ConnectionService } from '../services';
-
 import type { FetchResponse } from '~/systems/Core';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
+
+import { ConnectionService } from '../services';
 
 type MachineContext = {
   origin?: string;

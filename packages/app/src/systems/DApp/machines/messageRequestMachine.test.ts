@@ -1,11 +1,10 @@
 import { hashMessage, Signer } from 'fuels';
 import { interpret } from 'xstate';
+import type { MockVaultData } from '~/systems/Core/__tests__';
+import { expectStateMatch, mockVault } from '~/systems/Core/__tests__';
 
 import type { MessageRequestService } from './messageRequestMachine';
 import { messageRequestMachine } from './messageRequestMachine';
-
-import type { MockVaultData } from '~/systems/Core/__tests__';
-import { expectStateMatch, mockVault } from '~/systems/Core/__tests__';
 
 describe('messageRequestMachine', () => {
   let vaultData: MockVaultData;

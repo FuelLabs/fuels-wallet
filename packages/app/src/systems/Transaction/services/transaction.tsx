@@ -19,14 +19,13 @@ import {
   getTransactionsSummaries,
   getTransactionSummaryFromRequest,
 } from 'fuels';
-
-import type { Transaction } from '../types';
-import { getAbiMap } from '../utils';
-
 import { AccountService } from '~/systems/Account';
 import { isEth } from '~/systems/Asset';
 import { db, uniqueId, WalletLockedCustom } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
+
+import type { Transaction } from '../types';
+import { getAbiMap } from '../utils';
 
 export type TxInputs = {
   get: {

@@ -1,11 +1,10 @@
 import { rest } from 'msw';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
+import { mockServer } from '~/mocks/server';
 
 import type { FaucetMachineService, FaucetMachineState } from './faucetMachine';
 import { faucetMachine } from './faucetMachine';
-
-import { mockServer } from '~/mocks/server';
 
 mockServer([
   rest.post('http://localhost:4041/dispense', (req, res, ctx) => {

@@ -1,8 +1,7 @@
 import { act, render, screen } from '@fuel-ui/test-utils';
+import { TestWrapper } from '~/systems/Core';
 
 import { UserAddressCard } from '.';
-
-import { TestWrapper } from '~/systems/Core';
 
 const TEST_ACCOUNT =
   'fuel1auahknz6mjuu0am034mlggh55f0tgp9j7fkzrc6xl48zuy5zv7vqa07n30';

@@ -1,15 +1,14 @@
 import type { ComponentStory, Meta } from '@storybook/react';
 import { userEvent, waitFor, within } from '@storybook/testing-library';
 import { Wallet } from 'fuels';
-
-import { sendLoader } from '../../__mocks__/send';
-
-import { SendPage } from './SendPage';
-
 import {
   mockBalancesOnGraphQL,
   MOCK_ASSETS_NODE,
 } from '~/systems/Asset/__mocks__/assets';
+
+import { sendLoader } from '../../__mocks__/send';
+
+import { SendPage } from './SendPage';
 
 const wallet = Wallet.generate();
 

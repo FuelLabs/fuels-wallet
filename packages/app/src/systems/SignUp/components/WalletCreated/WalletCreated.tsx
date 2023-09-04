@@ -1,16 +1,15 @@
 import { Button, Box } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import { useNavigate } from 'react-router-dom';
+import { IS_CRX } from '~/config';
+import { AccountItem } from '~/systems/Account';
+import type { Maybe } from '~/systems/Core';
+import { MotionStack, Pages, animations } from '~/systems/Core';
 
 import { useSignUpStepper } from '../../hooks';
 import { Header } from '../Header';
 import { PinWalletText } from '../PinWalletText';
 import { Stepper } from '../Stepper';
-
-import { IS_CRX } from '~/config';
-import { AccountItem } from '~/systems/Account';
-import type { Maybe } from '~/systems/Core';
-import { MotionStack, Pages, animations } from '~/systems/Core';
 
 export type WalletCreatedProps = {
   account?: Maybe<Account>;

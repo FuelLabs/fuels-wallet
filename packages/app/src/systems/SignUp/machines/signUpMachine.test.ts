@@ -1,11 +1,10 @@
 import { Mnemonic, Wallet } from 'fuels';
 import { interpret } from 'xstate';
+import { db } from '~/systems/Core';
+import { expectStateMatch } from '~/systems/Core/__tests__';
 
 import { signUpMachine } from './signUpMachine';
 import type { SignUpMachineService } from './signUpMachine';
-
-import { db } from '~/systems/Core';
-import { expectStateMatch } from '~/systems/Core/__tests__';
 
 function createMachine() {
   return signUpMachine.withConfig({

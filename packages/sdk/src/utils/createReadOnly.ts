@@ -13,7 +13,6 @@ export const createReadOnly = (fuel: Fuel) => {
         Object.hasOwn(target, key) &&
         ['_eventsCount', '_events', 'connectorName'].includes(key as string)
       ) {
-        // eslint-disable-next-line no-param-reassign
         target[key] = value;
         return true;
       }

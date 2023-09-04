@@ -1,10 +1,9 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
+import { shortAddress } from '~/systems/Core';
 
 import { MOCK_ACCOUNTS } from '../../__mocks__';
 
 import { AccountItem } from './AccountItem';
-
-import { shortAddress } from '~/systems/Core';
 
 const ACCOUNT = MOCK_ACCOUNTS[0];
 const SHORT_ADDRESS = shortAddress(ACCOUNT.address);

@@ -1,11 +1,10 @@
 import { screen, testA11y } from '@fuel-ui/test-utils';
+import { TestWrapper } from '~/systems/Core';
+import { renderWithProvider } from '~/systems/Core/__tests__';
 
 import { MOCK_TX_RECIPIENT } from '../../__mocks__/tx-recipient';
 
 import { TxRecipientCard } from './TxRecipientCard';
-
-import { TestWrapper } from '~/systems/Core';
-import { renderWithProvider } from '~/systems/Core/__tests__';
 
 const { account: ACCOUNT, contract: CONTRACT } = MOCK_TX_RECIPIENT;
 

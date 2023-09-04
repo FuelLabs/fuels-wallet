@@ -1,6 +1,5 @@
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-
 import { CoreService } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core/machines';
 import type { VaultInputs } from '~/systems/Vault';

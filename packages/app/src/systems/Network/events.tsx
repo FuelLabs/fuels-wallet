@@ -1,9 +1,8 @@
 import type { Network } from '@fuel-wallet/types';
-
-import type { NetworkInputs } from './services';
-
 import type { Store } from '~/store';
 import { Services } from '~/store';
+
+import type { NetworkInputs } from './services';
 
 export function networkEvents(store: Store) {
   return {

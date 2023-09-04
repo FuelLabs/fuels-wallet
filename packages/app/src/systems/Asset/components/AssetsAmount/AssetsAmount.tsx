@@ -3,12 +3,11 @@ import { Avatar, Box, Copyable, Grid, Text } from '@fuel-ui/react';
 import type { AssetAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import type { FC } from 'react';
+import { shortAddress } from '~/systems/Core';
+import type { GroupedError } from '~/systems/Transaction';
 
 import { AssetsAmountLoader } from './AssetsAmountLoader';
 import { styles } from './styles';
-
-import { shortAddress } from '~/systems/Core';
-import type { GroupedError } from '~/systems/Transaction';
 
 export type AssetsAmountProps = {
   amounts: AssetAmount[];

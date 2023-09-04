@@ -1,10 +1,9 @@
 import type { FuelWalletError } from '@fuel-wallet/types';
 import * as Sentry from '@sentry/browser';
-
-import { createError, parseFuelError } from '../utils';
-
 import { APP_VERSION, VITE_SENTRY_DSN } from '~/config';
 import { db } from '~/systems/Core/utils/database';
+
+import { createError, parseFuelError } from '../utils';
 
 export class ReportErrorService {
   static async reportErrors() {

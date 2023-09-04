@@ -1,11 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Alert, Box, Dialog } from '@fuel-ui/react';
-
-import { useExportVault } from '../../hooks';
-
 import { Mnemonic, styles as coreStyles } from '~/systems/Core';
 import { OverlayDialogTopbar, useOverlay } from '~/systems/Overlay';
 import { UnlockCard } from '~/systems/Unlock';
+
+import { useExportVault } from '../../hooks';
 
 export function ViewSeedPhrase() {
   const { close } = useOverlay();

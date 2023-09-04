@@ -6,15 +6,14 @@ import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-
-import { useSettings } from '../../hooks/useSettings';
-
 import {
   ControlledField,
   InputSecurePassword,
   Layout,
   Pages,
 } from '~/systems/Core';
+
+import { useSettings } from '../../hooks/useSettings';
 
 const schema = yup
   .object({

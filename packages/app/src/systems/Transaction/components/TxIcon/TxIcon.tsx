@@ -1,10 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon } from '@fuel-ui/react';
 import type { Bech32Address, Operation, TransactionStatus } from 'fuels';
+import { useAccounts } from '~/systems/Account';
 
 import { getTxIconBgColor, getTxIconColor, getTxIcon } from '../../utils';
-
-import { useAccounts } from '~/systems/Account';
 
 export type TxIconProps = {
   operation?: Operation;

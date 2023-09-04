@@ -7,10 +7,9 @@ import {
   ThemeProvider,
 } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
-
 import { StoreProvider } from '~/store';
 
-// eslint-disable-next-line import/no-absolute-path
+// eslint-disable-next-line import/no-unresolved
 import icons from '/icons/sprite.svg';
 
 import { ErrorBoundary } from '~/systems/Error';

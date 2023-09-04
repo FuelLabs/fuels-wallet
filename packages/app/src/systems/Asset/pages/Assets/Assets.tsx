@@ -1,11 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Icon, Tabs } from '@fuel-ui/react';
 import { AnimatePresence } from 'framer-motion';
+import { Layout, scrollable } from '~/systems/Core';
 
 import { AssetList } from '../../components';
 import { useAssets } from '../../hooks';
-
-import { Layout, scrollable } from '~/systems/Core';
 
 export function Assets() {
   const state = useAssets();

@@ -16,7 +16,6 @@ export function resolveLinkDeps() {
         alias: linkDeps.reduce((obj, dep) => {
           // remove TS SDK as it's not needed to resolve alias anymore.
           if (!/^fuels?|@fuel-ts/.test(dep)) {
-            // eslint-disable-next-line no-param-reassign
             obj[dep] = path.resolve(
               __dirname,
               `../node_modules/${dep}/dist/index.mjs`

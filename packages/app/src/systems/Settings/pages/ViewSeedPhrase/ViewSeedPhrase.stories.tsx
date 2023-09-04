@@ -1,12 +1,11 @@
 import { Box, Button, Text } from '@fuel-ui/react';
 import type { StoryFn, Meta } from '@storybook/react';
-
-import { ViewSeedPhrase } from './ViewSeedPhrase';
-
 import { store } from '~/store';
 import { useAccounts } from '~/systems/Account';
 import { Layout } from '~/systems/Core';
 import { mockVault } from '~/systems/Core/__tests__/utils/mockVault';
+
+import { ViewSeedPhrase } from './ViewSeedPhrase';
 
 export default {
   component: ViewSeedPhrase,

@@ -10,11 +10,10 @@ import {
   Text,
 } from '@fuel-ui/react';
 import { useState } from 'react';
-
-import { useUnlock } from '../../hooks';
-
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { OverlayDialogTopbar, useOverlay } from '~/systems/Overlay';
+
+import { useUnlock } from '../../hooks';
 
 export function ResetDialog() {
   const [isSavedChecked, setSavedChecked] = useState(false);

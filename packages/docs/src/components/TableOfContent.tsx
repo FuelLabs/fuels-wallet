@@ -1,6 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Heading, Link, List, Text } from '@fuel-ui/react';
-
 import { useDocContext } from '~/src/hooks/useDocContext';
 
 export function TableOfContent() {

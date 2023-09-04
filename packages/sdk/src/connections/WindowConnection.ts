@@ -140,7 +140,6 @@ export class WindowConnection extends BaseConnection {
       return;
     }
 
-    // eslint-disable-next-line no-plusplus
     this._retry++;
 
     if (hasWindow) {

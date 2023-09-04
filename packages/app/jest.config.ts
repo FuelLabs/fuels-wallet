@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import baseDefaultConfig from '@fuel-ui/test-utils/config';
 import type { JestConfigWithTsJest } from 'ts-jest';
 import { defaultsESM as tsjPreset } from 'ts-jest/presets';

@@ -1,11 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Alert, Box } from '@fuel-ui/react';
+import { Mnemonic, MotionStack, animations } from '~/systems/Core';
 
 import { useSignUpStepper } from '../../hooks';
 import { Header } from '../Header';
 import { Stepper } from '../Stepper';
-
-import { Mnemonic, MotionStack, animations } from '~/systems/Core';
 
 export type MnemonicWriteProps = {
   title: string;

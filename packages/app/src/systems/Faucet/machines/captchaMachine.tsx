@@ -1,6 +1,5 @@
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-
 import { VITE_FAUCET_RECAPTCHA_KEY } from '~/config';
 import type { Maybe } from '~/systems/Core';
 

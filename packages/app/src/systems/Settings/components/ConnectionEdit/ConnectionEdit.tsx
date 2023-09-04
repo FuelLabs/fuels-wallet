@@ -3,9 +3,6 @@ import { cssObj } from '@fuel-ui/css';
 import type { BoxProps } from '@fuel-ui/react';
 import { Box, CardList, Icon, Text } from '@fuel-ui/react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-import type { useConnections } from '../../hooks';
-
 import { AccountItem } from '~/systems/Account';
 import {
   animations,
@@ -14,6 +11,8 @@ import {
   Layout,
   SearchInput,
 } from '~/systems/Core';
+
+import type { useConnections } from '../../hooks';
 
 export type ConnectionEditProps = ReturnType<typeof useConnections>;
 

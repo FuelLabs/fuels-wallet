@@ -1,14 +1,13 @@
 import type { TransactionRequest } from 'fuels';
 import { interpret } from 'xstate';
+import { expectStateMatch } from '~/systems/Core/__tests__/utils';
+import type { MockVaultData } from '~/systems/Core/__tests__/utils/mockVault';
+import { mockVault } from '~/systems/Core/__tests__/utils/mockVault';
 
 import { getMockedTransaction } from '../__mocks__/dapp-transaction';
 
 import type { TransactionRequestService } from './transactionRequestMachine';
 import { transactionRequestMachine } from './transactionRequestMachine';
-
-import { expectStateMatch } from '~/systems/Core/__tests__/utils';
-import type { MockVaultData } from '~/systems/Core/__tests__/utils/mockVault';
-import { mockVault } from '~/systems/Core/__tests__/utils/mockVault';
 
 describe('txApproveMachine', () => {
   let service: TransactionRequestService;

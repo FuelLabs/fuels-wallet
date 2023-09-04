@@ -3,13 +3,12 @@ import type { Account } from '@fuel-wallet/types';
 import { Wallet } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { createMachine } from 'xstate';
-
-import type { AccountInputs } from '../services/account';
-import { AccountService } from '../services/account';
-
 import { store } from '~/store';
 import { FetchMachine } from '~/systems/Core';
 import { VaultService } from '~/systems/Vault';
+
+import { AccountService } from '../services/account';
+import type { AccountInputs } from '../services/account';
 
 type MachineServices = {
   importAccount: {

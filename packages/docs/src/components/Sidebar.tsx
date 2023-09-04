@@ -1,10 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
+import { useDocContext } from '~/src/hooks/useDocContext';
 
 import { SidebarLink } from './SidebarLink';
 import { SidebarSubmenu } from './SidebarSubmenu';
-
-import { useDocContext } from '~/src/hooks/useDocContext';
 
 export function Sidebar() {
   const { links } = useDocContext();

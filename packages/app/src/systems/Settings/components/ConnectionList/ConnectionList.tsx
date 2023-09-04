@@ -1,10 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Icon, CardList, Tooltip, Box } from '@fuel-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
-
-import type { useConnections } from '../../hooks';
-import { ConnectionItem } from '../ConnectionItem';
-
 import {
   animations,
   EmptyList,
@@ -14,6 +10,9 @@ import {
   MotionBox,
 } from '~/systems/Core';
 import { NOT_ALLOWED_LIST, PERMISSION_LIST } from '~/systems/DApp';
+
+import type { useConnections } from '../../hooks';
+import { ConnectionItem } from '../ConnectionItem';
 
 export type ConnectionListProps = ReturnType<typeof useConnections>;
 

@@ -1,9 +1,8 @@
 import { Mnemonic } from 'fuels';
 import { useState } from 'react';
+import { getPhraseFromValue } from '~/systems/Core';
 
 import { ERRORS } from '../machines/signUpMachine';
-
-import { getPhraseFromValue } from '~/systems/Core';
 
 export function useMnemonicForm(checkWords?: string[]) {
   const [isValid, setIsValid] = useState(false);

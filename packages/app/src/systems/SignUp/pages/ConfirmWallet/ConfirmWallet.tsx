@@ -1,8 +1,8 @@
+import { Layout } from '~/systems/Core';
+
 import { MnemonicWrite } from '../../components';
 import { useSignUp } from '../../hooks';
 import { useMnemonicForm } from '../../hooks/useMnemonicForm';
-
-import { Layout } from '~/systems/Core';
 
 export function ConfirmWallet() {
   const { handlers, context } = useSignUp();

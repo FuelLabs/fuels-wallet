@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import type { WalletUnlocked } from 'fuels';
-
 import { createMockAccount } from '~/systems/Account';
 import { getMockedTransaction } from '~/systems/DApp/__mocks__/dapp-transaction';
 import { NetworkService } from '~/systems/Network';

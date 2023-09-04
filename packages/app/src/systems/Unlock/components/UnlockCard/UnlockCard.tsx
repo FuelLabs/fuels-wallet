@@ -10,12 +10,11 @@ import {
   IconButton,
   Text,
 } from '@fuel-ui/react';
+import { store } from '~/store';
 
 import type { UnlockFormValues } from '../../hooks';
 import { useUnlockForm } from '../../hooks';
 import { UnlockForm } from '../UnlockForm';
-
-import { store } from '~/store';
 
 export type UnlockDialogProps = {
   unlockError?: string;

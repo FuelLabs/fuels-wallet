@@ -1,4 +1,9 @@
 import { screen } from '@fuel-ui/test-utils';
+import { TestWrapper } from '~/systems/Core';
+import {
+  renderWithProvider,
+  testA11yWithProvider,
+} from '~/systems/Core/__tests__';
 
 import {
   MOCK_OPERATION_CONTRACT_CALL,
@@ -6,12 +11,6 @@ import {
 } from '../../__mocks__/operation';
 
 import { TxIcon } from './TxIcon';
-
-import { TestWrapper } from '~/systems/Core';
-import {
-  renderWithProvider,
-  testA11yWithProvider,
-} from '~/systems/Core/__tests__';
 
 describe('TxIcon', () => {
   it('a11y', async () => {

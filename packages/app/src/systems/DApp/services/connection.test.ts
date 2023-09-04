@@ -1,8 +1,7 @@
 import type { Connection } from '@fuel-wallet/types';
+import { MOCK_ACCOUNTS } from '~/systems/Account';
 
 import { ConnectionService } from './connection';
-
-import { MOCK_ACCOUNTS } from '~/systems/Account';
 
 const MOCK_APP: Connection = {
   origin: 'foo.com',

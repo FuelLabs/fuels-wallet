@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon } from '@fuel-ui/react';
 import Link from 'next/link';
-
 import { useDocContext } from '~/src/hooks/useDocContext';
 
 export function DocFooter() {

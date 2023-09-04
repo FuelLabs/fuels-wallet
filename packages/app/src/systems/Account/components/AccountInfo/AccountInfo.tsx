@@ -1,10 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
 import { Card } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
+import { AccountItem } from '~/systems/Account';
 
 import { AccountInfoLoader } from './AccountInfoLoader';
-
-import { AccountItem } from '~/systems/Account';
 
 export type AccountInfoProps = {
   headerText: string;
