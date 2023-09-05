@@ -5,6 +5,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import type { AnimationProps } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
+import { IS_PUBLIC_PREVIEW } from '../constants';
+
 import { Search } from './Search';
 import { Sidebar } from './Sidebar';
 
@@ -52,7 +54,7 @@ export function MobileMenu() {
         <Box.Flex css={styles.nav}>
           <FuelLogo size={30} />
           <Link href="/docs/install">Docs</Link>
-          {process.env.NEXT_PUBLIC_PREVIEW && (
+          {IS_PUBLIC_PREVIEW && (
             <>
               <a
                 href={process.env.NEXT_PUBLIC_STORYBOOK_URL}
