@@ -44,7 +44,8 @@ export function Connectors() {
     setConnectors(connectors);
 
     const onConnectors = () => {
-      setConnectors(fuel.listConnectors());
+      console.log('Connectors changed!', fuel.listConnectors());
+      setConnectors(Array.from(fuel.listConnectors()));
     };
 
     /* eventConnectors:start */
