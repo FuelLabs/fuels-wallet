@@ -132,7 +132,8 @@ export class WindowConnection extends BaseConnection {
   bindFuelConnectors(fuel: Window['fuel']) {
     // Prevent binding to self if this happen the
     // object would enter on a infinite loop
-    const isSelf = (fuel as WindowConnection) === this;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const isSelf = (fuel as any) === this;
     if (!fuel || isSelf) return;
     // Bind to fuel events to
     // sync with current instace
