@@ -15,7 +15,7 @@ env:
 jobs:
   tests-jest:
     name: JEST Tests
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
@@ -25,7 +25,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Start Test Node
-        run: pnpm node:test:up
+        run: pnpm node:up:test
 
       - name: Graphql Codegen
         run: pnpm codegen:app
@@ -45,6 +45,8 @@ jobs:
         run: |
           pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
         timeout-minutes: 20
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Publish coverage
         uses: artiomtr/jest-coverage-report-action@v2.0.5
@@ -59,11 +61,11 @@ jobs:
           base-coverage-file: ${{ env.COVERAGE_FILE }}
 
       - name: Stop Test Node
-        run: pnpm node:test:clean
+        run: pnpm node:clean:test
 
   tests-e2e:
     name: E2E Tests
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
@@ -73,7 +75,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Start Test Node
-        run: pnpm node:test:up
+        run: pnpm node:up:test
 
       - name: Graphql Codegen
         run: pnpm codegen:app
@@ -83,6 +85,9 @@ jobs:
       - name: Build Application
         run: pnpm build:test
         env:
+          ## increase node.js m memory limit for building
+          ## with sourcemaps
+          NODE_OPTIONS: "--max-old-space-size=4096"
           NODE_ENV: test
 
       # E2E tests running with Playwright
@@ -102,4 +107,5 @@ jobs:
           retention-days: 30
 
       - name: Stop Test Node
-        run: pnpm node:test:clean
+        run: pnpm node:clean:test
+

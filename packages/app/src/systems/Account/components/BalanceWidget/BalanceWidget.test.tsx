@@ -1,4 +1,6 @@
 import { screen, testA11y } from '@fuel-ui/test-utils';
+import { fireEvent } from '@storybook/testing-library';
+import { act } from 'react-dom/test-utils';
 
 import { MOCK_ACCOUNTS } from '../../__mocks__';
 
@@ -36,7 +38,7 @@ describe('BalanceWidget', () => {
 
   it('should hide balance when user sets his balance to hide', async () => {
     const onChangeVisibility = jest.fn();
-    const { user } = renderWithProvider(
+    renderWithProvider(
       <BalanceWidget
         onChangeVisibility={onChangeVisibility}
         account={ACCOUNT}
@@ -44,7 +46,7 @@ describe('BalanceWidget', () => {
     );
     const btn = screen.getByLabelText(/Hide balance/i);
     expect(btn).toBeInTheDocument();
-    await user.click(btn);
+    fireEvent.click(btn);
     expect(onChangeVisibility).toHaveBeenNthCalledWith(1, false);
   });
 
@@ -64,11 +66,13 @@ describe('BalanceWidget', () => {
   });
 
   it('should copy full address when click on copy icon', async () => {
-    const { user } = renderWithProvider(<BalanceWidget account={ACCOUNT} />);
+    renderWithProvider(<BalanceWidget account={ACCOUNT} />);
     const btn = screen.getByLabelText(/copy to clipboard/i);
     expect(btn).toBeInTheDocument();
 
-    await user.click(btn);
-    expect(await navigator.clipboard.readText()).toBe(ACCOUNT.address);
+    await act(async () => {
+      fireEvent.click(btn);
+      expect(await navigator.clipboard.readText()).toBe(ACCOUNT.address);
+    });
   });
 });

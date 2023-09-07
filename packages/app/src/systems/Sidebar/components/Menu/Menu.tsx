@@ -155,7 +155,7 @@ const styles = {
       color: '$intentsBase12',
     },
     '& > .fuel_MenuListItem:focus-within .main-icon': {
-      color: '$accent11',
+      color: '$brand',
     },
 
     '& li[data-key="settings"]': {
@@ -170,7 +170,7 @@ const styles = {
     borderRadius: '$default',
 
     '&[data-active="true"]': {
-      color: '$intentsBase12',
+      color: '$textHeading',
       bg: '$intentsBase3',
       my: '2px',
     },
@@ -210,11 +210,11 @@ const styles = {
       pl: '$2',
       ml: '$4',
       fontSize: '$sm',
-      color: '$intentsBase8',
+      color: '$textColor',
     },
 
     '.fuel_MenuListItem .fuel_Icon': {
-      color: '$intentsBase8',
+      color: '$textColor',
     },
 
     '.fuel_MenuListItem::before': {

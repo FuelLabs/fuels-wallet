@@ -1,17 +1,17 @@
 {
   "name": "@fuel-wallet/types",
-  "version": "0.10.0",
+  "version": "0.12.3",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "dependencies": {
-    "@types/chrome": "^0.0.237",
+    "@types/chrome": "^0.0.243",
     "dexie-observable": "4.0.1-beta.13",
     "json-rpc-2.0": "^1.6.0"
   },
   "peerDependencies": {
-    "fuels": ">=0.44.2"
+    "fuels": ">=0.54.1"
   },
   "devDependencies": {
-    "fuels": "0.44.2"
+    "fuels": "0.54.1"
   }
 }

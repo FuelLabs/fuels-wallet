@@ -3,7 +3,7 @@ import { Box, Button, FuelLogo, Icon } from '@fuel-ui/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { INSTALL_LINK } from '../constants';
+import { INSTALL_LINK, IS_PUBLIC_PREVIEW } from '../constants';
 
 import { MobileMenu } from './MobileMenu';
 import { Search } from './Search';
@@ -20,7 +20,7 @@ export function Header() {
           <Box.Flex css={styles.logoText}>
             <span>Fuel Wallet</span>
             <Box as="span" css={styles.version}>
-              alpha
+              beta
             </Box>
           </Box.Flex>
         </Link>
@@ -30,7 +30,7 @@ export function Header() {
           <Link href="/docs/install" className={isDocsActive ? 'active' : ''}>
             Docs
           </Link>
-          {process.env.NEXT_PUBLIC_PREVIEW && (
+          {IS_PUBLIC_PREVIEW && (
             <a
               href={process.env.NEXT_PUBLIC_STORYBOOK_URL}
               target="_blank"
@@ -49,7 +49,7 @@ export function Header() {
         </Box.Flex>
         <Search />
         <Box css={{ ml: '$8' }}>
-          {process.env.NEXT_PUBLIC_PREVIEW ? (
+          {IS_PUBLIC_PREVIEW ? (
             <Box.Flex gap="$2">
               <Button
                 intent="base"

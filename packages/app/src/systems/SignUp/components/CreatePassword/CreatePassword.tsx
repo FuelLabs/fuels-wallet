@@ -27,13 +27,14 @@ const schema = yup
     confirmPassword: yup
       .string()
       .oneOf([yup.ref('password'), undefined], 'Passwords must match'),
+    strength: yup.string(),
   })
   .required();
 
 export type CreatePasswordValues = {
-  password: string;
-  confirmPassword: string;
-  strength: string;
+  password: string | undefined;
+  confirmPassword: string | undefined;
+  strength: string | undefined;
 };
 
 export type CreatePasswordProps = {

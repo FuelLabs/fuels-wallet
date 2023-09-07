@@ -1,15 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type {
-  Transaction,
-  TransactionResponse,
-  TransactionResult,
-} from 'fuels';
+import type { TransactionResponse, TransactionResult } from 'fuels';
 import { isB256 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { TxService } from '../services';
-import type { GqlTransactionStatus } from '../utils';
 
 import { FetchMachine } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
@@ -20,28 +14,24 @@ export const TRANSACTION_ERRORS = {
   RECEIPTS_NOT_FOUND: 'Receipts not found for this transaction',
 };
 
-type GetTransactionResponse = {
-  transactionResponse: TransactionResponse;
-  transaction: Transaction;
-  gqlTransactionStatus?: GqlTransactionStatus;
-  txId?: string;
-};
-
 type MachineContext = {
   error?: string;
-  transactionResponse?: TransactionResponse;
-  gqlTransactionStatus?: GqlTransactionStatus;
-  transaction?: Transaction;
-  transactionResult?: TransactionResult<any>;
   txId?: string;
+  txResult?: TransactionResult;
+  txResponse?: TransactionResponse;
 };
 
 type MachineServices = {
   getTransaction: {
-    data: GetTransactionResponse;
+    data: {
+      txResult: TransactionResult;
+      txResponse: TransactionResponse;
+    };
   };
   getTransactionResult: {
-    data: TransactionResult<any>;
+    data: {
+      txResult: TransactionResult;
+    };
   };
 };
 
@@ -92,8 +82,13 @@ export const transactionMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['assignGetTransactionResponse'],
+              actions: ['assignTxResult', 'assignTxResponse'],
               target: 'fetchingResult',
+              cond: 'isStatusPending',
+            },
+            {
+              actions: ['assignTxResult', 'assignTxResponse'],
+              target: 'done',
             },
           ],
         },
@@ -104,7 +99,7 @@ export const transactionMachine = createMachine(
           src: 'getTransactionResult',
           data: (ctx) => ({
             input: {
-              transactionResponse: ctx.transactionResponse,
+              txResponse: ctx.txResponse,
             },
           }),
           onDone: [
@@ -114,7 +109,7 @@ export const transactionMachine = createMachine(
               cond: FetchMachine.hasError,
             },
             {
-              actions: ['assignGetTransactionResult'],
+              actions: ['assignTxResult'],
               target: 'done',
             },
           ],
@@ -137,35 +132,22 @@ export const transactionMachine = createMachine(
       clearError: assign({
         error: (_) => undefined,
       }),
-      assignGetTransactionResponse: assign((_, event) => {
-        const data = event.data as GetTransactionResponse;
-
-        return {
-          transactionResponse: data.transactionResponse,
-          tx: data.transaction,
-          gqlTransactionStatus: data.gqlTransactionStatus,
-          txId: data.txId,
-        };
+      assignTxResult: assign({
+        txResult: (_, ev) => ev.data.txResult,
       }),
-      assignGetTransactionResult: assign((_, event) => {
-        const transactionResult = event.data as TransactionResult<any>;
-
-        return {
-          transactionResult,
-          transaction: transactionResult.transaction,
-          gqlTransactionStatus: (transactionResult.status.type === 'success'
-            ? 'SuccessStatus'
-            : 'FailureStatus') as GqlTransactionStatus,
-        };
+      assignTxResponse: assign({
+        txResponse: (_, ev) => ev.data.txResponse,
       }),
     },
     guards: {
-      isInvalidTxId: (ctx, ev) => !isB256(ev.input?.txId || ''),
+      isInvalidTxId: (_, ev) => !isB256(ev.input?.txId || ''),
+      isStatusPending: (ctx, ev) =>
+        ctx.txResult?.isStatusPending || ev.data.txResult.isStatusPending,
     },
     services: {
       getTransaction: FetchMachine.create<
         { providerUrl?: string; txId: string },
-        GetTransactionResponse
+        MachineServices['getTransaction']['data']
       >({
         showError: true,
         async fetch({ input }) {
@@ -179,39 +161,40 @@ export const transactionMachine = createMachine(
           const providerUrl =
             input?.providerUrl || selectedNetwork?.url || defaultProvider;
 
-          const transactionResponse = await TxService.fetch({
+          const { txResult, txResponse } = await TxService.fetch({
             providerUrl,
             txId: input.txId,
           });
-          const gqlTransaction = await transactionResponse.fetch();
-          if (!gqlTransaction) {
-            throw Error('Transaction not found');
-          }
-          const transaction =
-            transactionResponse.decodeTransaction(gqlTransaction);
 
           return {
-            transaction,
-            transactionResponse,
-            gqlTransactionStatus: gqlTransaction?.status?.type,
-            txId: gqlTransaction?.id,
+            txResult,
+            txResponse,
           };
         },
       }),
       getTransactionResult: FetchMachine.create<
-        { transactionResponse: TransactionResponse },
-        TransactionResult<any>
+        { txResponse: TransactionResponse },
+        MachineServices['getTransactionResult']['data']
       >({
         showError: true,
         async fetch({ input }) {
-          if (!input?.transactionResponse) {
+          if (!input?.txResponse) {
             throw new Error('Invalid tx response');
           }
 
-          const transactionResult =
-            await input?.transactionResponse?.waitForResult();
+          const txResult = await input.txResponse.waitForResult();
 
-          return transactionResult;
+          // TODO: remove this when we get SDK with new TransactionResponse flow
+          const selectedNetwork = await NetworkService.getSelectedNetwork();
+          const defaultProvider = import.meta.env.VITE_FUEL_PROVIDER_URL;
+
+          const providerUrl = selectedNetwork?.url || defaultProvider;
+          const { txResult: txResultWithCalls } = await TxService.fetch({
+            providerUrl,
+            txId: txResult.id || '',
+          });
+
+          return { txResult: txResultWithCalls };
         },
       }),
     },

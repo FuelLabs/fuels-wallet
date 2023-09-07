@@ -1,8 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
 import { Card } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/types';
+import type { Operation, TransactionStatus } from 'fuels';
 
-import type { Operation, TxStatus } from '../../utils';
 import { FunctionCalls } from '../FunctionCalls';
 import { TxFromTo } from '../TxFromTo/TxFromTo';
 
@@ -11,7 +11,7 @@ import type { Maybe } from '~/systems/Core';
 
 export type TxOperationProps = {
   operation?: Operation;
-  status?: Maybe<TxStatus>;
+  status?: Maybe<TransactionStatus>;
   assets?: Maybe<Asset[]>;
   isLoading?: boolean;
 };
@@ -54,13 +54,10 @@ TxOperation.Loader = () => (
 
 const styles = {
   root: cssObj({
-    border: 'none',
+    borderRadius: '$md',
+    overflow: 'hidden',
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-
-    '.TxFromTo': {
-      borderBottom: '1px solid $bodyBg',
-    },
   }),
 };

@@ -25,7 +25,7 @@ export function VisibilityButton({
                 icon: 'Eye',
               }
             : {
-                color: 'accent9',
+                color: 'intentsPrimary9',
                 icon: 'EyeClosed',
               })}
         />

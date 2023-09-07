@@ -11,7 +11,7 @@ import type { Maybe } from '~/systems/Core';
 export type AssetFormValues = {
   name: string;
   assetId: string;
-  imageUrl: string;
+  imageUrl: string | undefined;
   symbol: string;
 };
 

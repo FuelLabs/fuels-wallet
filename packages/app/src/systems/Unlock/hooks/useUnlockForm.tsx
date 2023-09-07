@@ -12,7 +12,7 @@ const schema = yup
 export type UseUnlockFormReturn = ReturnType<typeof useUnlockForm>;
 
 export type UnlockFormValues = {
-  password: string;
+  password: string | undefined;
 };
 
 export type UnlockFormValuesErrors = Partial<UnlockFormValues>;

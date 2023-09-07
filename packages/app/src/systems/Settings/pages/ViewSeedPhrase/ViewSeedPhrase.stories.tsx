@@ -1,5 +1,5 @@
 import { Box, Button, Text } from '@fuel-ui/react';
-import type { ComponentStoryFn, Meta } from '@storybook/react';
+import type { StoryFn, Meta } from '@storybook/react';
 
 import { ViewSeedPhrase } from './ViewSeedPhrase';
 
@@ -20,7 +20,7 @@ export default {
   },
 } as Meta;
 
-const Template: ComponentStoryFn<typeof ViewSeedPhrase> = () => {
+const Template: StoryFn<typeof ViewSeedPhrase> = () => {
   const { account, isLoading } = useAccounts();
   return (
     <Layout isLoading={isLoading}>

@@ -1,18 +1,19 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Card, Copyable, Icon, Text } from '@fuel-ui/react';
-import { getBlockExplorerLink } from '@fuel-wallet/sdk';
+import { Box, Card, Copyable, Icon, Text, Tooltip } from '@fuel-ui/react';
+import { TransactionStatus } from 'fuels';
+import type { TransactionTypeName } from 'fuels';
 import type { FC } from 'react';
 
-import type { TxType } from '../../utils';
-import { TxStatus, getTxStatusColor } from '../../utils';
+import { useExplorerLink } from '../../hooks/useExplorerLink';
+import { getTxStatusColor } from '../../utils';
 
 import { TxHeaderLoader } from './TxHeaderLoader';
 
 export type TxHeaderProps = {
-  status?: TxStatus;
+  status?: TransactionStatus;
   id?: string;
   providerUrl?: string;
-  type?: TxType;
+  type?: TransactionTypeName;
 };
 
 type TxHeaderComponent = FC<TxHeaderProps> & {
@@ -25,6 +26,8 @@ export const TxHeader: TxHeaderComponent = ({
   type,
   providerUrl = '',
 }) => {
+  const { href, openExplorer } = useExplorerLink(providerUrl, id);
+
   return (
     <Card css={styles.root}>
       <Box.Flex css={styles.row}>
@@ -41,27 +44,31 @@ export const TxHeader: TxHeaderComponent = ({
             ●
           </Text>
         </Box.Flex>
-        <Box.Flex css={styles.item}>
-          <Copyable
-            value={getBlockExplorerLink({
-              path: `transaction/${id || ''}`,
-              providerUrl,
-            })}
-            tooltipMessage="Copy Transaction Link"
-            iconProps={{
-              icon: Icon.is('Link'),
-              'aria-label': 'Copy Transaction Link',
-            }}
-          />
+        <Box.Flex css={styles.actions}>
           <Copyable
             value={id || ''}
-            css={{ mx: '$2' }}
             iconProps={{
               icon: Icon.is('Copy'),
               'aria-label': 'Copy Transaction ID',
             }}
             tooltipMessage="Copy Transaction ID"
           />
+          <Copyable
+            value={href}
+            tooltipMessage="Copy Transaction Link"
+            iconProps={{
+              icon: Icon.is('Link'),
+              'aria-label': 'Copy Transaction Link',
+            }}
+          />
+          <Tooltip content="Open explorer">
+            <Icon
+              css={styles.icon}
+              icon={Icon.is('ExternalLink')}
+              onClick={openExplorer}
+              aria-label="Open explorer"
+            />
+          </Tooltip>
         </Box.Flex>
       </Box.Flex>
       <Box.Flex css={{ ...styles.row, ...styles.type }}>
@@ -89,6 +96,9 @@ const styles = {
     justifyContent: 'space-between',
     height: '$6',
   }),
+  actions: cssObj({
+    gap: '$2',
+  }),
   item: cssObj({
     alignItems: 'center',
 
@@ -102,19 +112,19 @@ const styles = {
       fontSize: 9,
       cursor: 'default',
 
-      [`&[data-status="${TxStatus.success}"]`]: {
-        color: `$${getTxStatusColor(TxStatus.success)}`,
+      [`&[data-status="${TransactionStatus.success}"]`]: {
+        color: `$${getTxStatusColor(TransactionStatus.success)}`,
       },
-      [`&[data-status="${TxStatus.failure}"]`]: {
-        color: `$${getTxStatusColor(TxStatus.failure)}`,
+      [`&[data-status="${TransactionStatus.failure}"]`]: {
+        color: `$${getTxStatusColor(TransactionStatus.failure)}`,
       },
-      [`&[data-status="${TxStatus.pending}"]`]: {
-        color: `$${getTxStatusColor(TxStatus.pending)}`,
+      [`&[data-status="${TransactionStatus.submitted}"]`]: {
+        color: `$${getTxStatusColor(TransactionStatus.submitted)}`,
       },
     },
   }),
   icon: cssObj({
-    color: '$brand',
+    cursor: 'pointer',
   }),
   type: cssObj({
     justifyContent: 'flex-start',

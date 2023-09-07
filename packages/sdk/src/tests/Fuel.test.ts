@@ -1,12 +1,13 @@
 import {
   Address,
   bn,
-  NativeAssetId,
+  BaseAssetId,
   ScriptTransactionRequest,
   Wallet,
 } from 'fuels';
 
 import type { Fuel } from '../Fuel';
+import { getGasConfig } from '../utils';
 
 import type { MockServices } from './__mock__';
 import {
@@ -71,13 +72,13 @@ describe('Fuel', () => {
   });
 
   test('addAsset', async () => {
-    const asset = { assetId: NativeAssetId };
+    const asset = { assetId: BaseAssetId };
     const isAdded = await fuel.addAsset(asset);
     expect(isAdded).toEqual(true);
   });
 
   test('addAssets', async () => {
-    const asset = { assetId: NativeAssetId };
+    const asset = { assetId: BaseAssetId };
     const isAdded = await fuel.addAssets([asset]);
     expect(isAdded).toEqual(true);
   });
@@ -147,10 +148,12 @@ describe('Fuel', () => {
     // Seed wallet with funds
     await seedWallet(account, bn.parseUnits('1'));
 
+    const { gasLimit, gasPrice } = await getGasConfig(toWallet.provider);
+
     // Test example like docs
     const transactionRequest = new ScriptTransactionRequest({
-      gasLimit: 50_000,
-      gasPrice: 1,
+      gasLimit,
+      gasPrice,
     });
 
     const toAddress = Address.fromString(toAccount);
@@ -158,11 +161,9 @@ describe('Fuel', () => {
     transactionRequest.addCoinOutput(toAddress, amount);
 
     const wallet = await fuel.getWallet(account);
-    const resources = await wallet.getResourcesToSpend([
-      [amount, NativeAssetId],
-    ]);
+    const resources = await wallet.getResourcesToSpend([[amount, BaseAssetId]]);
 
-    transactionRequest.addResources(resources);
+    transactionRequest.addResourceInputsAndOutputs(resources);
     const response = await wallet.sendTransaction(transactionRequest);
 
     // wait for transaction to be completed
@@ -170,7 +171,7 @@ describe('Fuel', () => {
 
     // query the balance of the destination wallet
     const addrWallet = await fuel.getWallet(toAddress);
-    const balance = await addrWallet.getBalance(NativeAssetId);
+    const balance = await addrWallet.getBalance(BaseAssetId);
     expect(balance.toNumber()).toBeGreaterThanOrEqual(amount.toNumber());
   });
 
@@ -183,8 +184,13 @@ describe('Fuel', () => {
     const wallet = await fuel.getWallet(account);
     const toAddress = Address.fromString(toAccount);
     const amount = bn.parseUnits('0.1');
-    const response = await wallet.transfer(toAddress, amount, NativeAssetId, {
-      gasPrice: 1,
+
+    const gasLimit = (await wallet.provider.getChain()).consensusParameters
+      .maxGasPerTx;
+    const gasPrice = (await wallet.provider.getNodeInfo()).minGasPrice;
+    const response = await wallet.transfer(toAddress, amount, BaseAssetId, {
+      gasPrice,
+      gasLimit,
     });
 
     // wait for transaction to be completed
@@ -192,7 +198,7 @@ describe('Fuel', () => {
 
     // query the balance of the destination wallet
     const addrWallet = await fuel.getWallet(toAddress);
-    const balance = await addrWallet.getBalance(NativeAssetId);
+    const balance = await addrWallet.getBalance(BaseAssetId);
     expect(balance.toNumber()).toBeGreaterThanOrEqual(amount.toNumber());
   });
 
@@ -211,11 +217,13 @@ describe('Fuel', () => {
     const provider = await fuel.getProvider();
     const walletLocked = Wallet.fromAddress(account, provider);
     const toAddress = Address.fromString(toAccount);
+
+    const { gasLimit, gasPrice } = await getGasConfig(walletLocked.provider);
     const response = await walletLocked.transfer(
       toAddress,
       bn.parseUnits('0.1'),
-      NativeAssetId,
-      { gasPrice: 1 }
+      BaseAssetId,
+      { gasLimit, gasPrice }
     );
 
     // wait for transaction to be completed

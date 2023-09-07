@@ -29,6 +29,11 @@ const config: StorybookConfig = {
       ...resolveLinkDeps(),
       base: join(process.env.STORYBOOK_BASE_URL || config.base || ''),
       plugins: [tsconfigpath()],
+      resolve: {
+        alias: {
+          '/icons/sprite.svg': '/public/icons/sprite.svg',
+        },
+      },
     });
   },
 };

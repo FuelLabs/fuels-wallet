@@ -2,6 +2,7 @@ import { graphql } from 'msw';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
+import { MOCK_CHAIN_GQL } from '../__mocks__/chain';
 import { MOCK_TRANSACTION_WITH_RECEIPTS_GQL } from '../__mocks__/transaction';
 
 import type { TransactionMachineService } from './transactionMachine';
@@ -10,11 +11,14 @@ import { transactionMachine } from './transactionMachine';
 import { mockServer } from '~/mocks/server';
 
 const TRANSACTION_ID =
-  '0xc7862855b418ba8f58878db434b21053a61a2025209889cc115989e8040ff077';
+  '0x64641e1faeb1b0052d95e055b085b45b85155a7ec8cc47b1c6b7ed9f2783837a';
 
 mockServer([
   graphql.query('getTransactionWithReceipts', (_req, res, ctx) => {
     return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
+  }),
+  graphql.query('getChain', (_req, res, ctx) => {
+    return res(ctx.data(MOCK_CHAIN_GQL));
   }),
 ]);
 
@@ -35,9 +39,8 @@ describe('transactionMachine', () => {
     service.send('GET_TRANSACTION', { input: { txId: TRANSACTION_ID } });
 
     await waitFor(service, (state) => state.matches('fetching'));
-    await waitFor(service, (state) => state.matches('fetchingResult'));
+    await waitFor(service, (state) => Boolean(state.context.txResult));
+    await waitFor(service, (state) => Boolean(state.context.txResponse));
     await waitFor(service, (state) => state.matches('done'));
-    await waitFor(service, (state) => Boolean(state.context.transaction));
-    await waitFor(service, (state) => Boolean(state.context.transactionResult));
   });
 });

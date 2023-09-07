@@ -17,6 +17,7 @@ export function SendSelect({
   balanceAssets,
   handlers,
   maxAmountToSend,
+  isLoadingInitialFee,
   ...ctx
 }: SendSelectProps) {
   return (
@@ -82,14 +83,19 @@ export function SendSelect({
                 balance={maxAmountToSend}
                 value={bn(field.value)}
                 onChange={(value) => {
-                  form.setValue('amount', value.toString());
-                  handlers.handleValidateAmount(value);
+                  const amountValue = value || undefined;
+                  form.setValue('amount', amountValue?.toString() || '');
+                  handlers.handleValidateAmount(amountValue);
                 }}
               />
             )}
           />
         </Box.Stack>
-        <TxDetails fee={ctx.fee} />
+        {isLoadingInitialFee ? (
+          <TxDetails.Loader />
+        ) : (
+          <TxDetails fee={ctx.fee} />
+        )}
       </Box.Stack>
     </MotionContent>
   );

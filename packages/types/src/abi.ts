@@ -1,10 +1,10 @@
-import type { JsonFlatAbi } from 'fuels';
+import type { JsonAbi } from 'fuels';
 
 export type AbiMap = {
-  [key: string]: JsonFlatAbi;
+  [key: string]: JsonAbi;
 };
 
 export type AbiTable = {
   contractId: string;
-  abi: JsonFlatAbi;
+  abi: JsonAbi;
 };

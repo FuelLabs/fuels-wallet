@@ -1,14 +1,15 @@
+import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon, Spinner, Tooltip } from '@fuel-ui/react';
+import { OperationName, TransactionStatus } from 'fuels';
 
 import type { TxRecipientAddress } from '../../types';
-import { OperationName, TxStatus } from '../../utils';
 import { TxRecipientCard } from '../TxRecipientCard';
 
 import type { Maybe } from '~/systems/Core';
 
 type TxSpinnerProps = {
-  status?: Maybe<TxStatus>;
+  status?: Maybe<TransactionStatus>;
   isLoading?: boolean;
   operationName?: Maybe<OperationName>;
 };
@@ -52,11 +53,12 @@ function TxSpinner({ status, isLoading, operationName }: TxSpinnerProps) {
 }
 
 export type TxFromToProps = {
-  status?: Maybe<TxStatus>;
+  status?: Maybe<TransactionStatus>;
   from?: TxRecipientAddress;
   to?: TxRecipientAddress;
   isLoading?: boolean;
   operationName?: Maybe<OperationName>;
+  css?: ThemeUtilsCSS;
 };
 
 export function TxFromTo({
@@ -65,9 +67,10 @@ export function TxFromTo({
   status,
   isLoading,
   operationName,
+  css,
 }: TxFromToProps) {
   return (
-    <Box.Flex css={styles.root} className="TxFromTo">
+    <Box.Flex css={{ ...styles.root, ...css }} className="TxFromTo">
       <TxSpinner
         status={status}
         isLoading={isLoading}
@@ -92,9 +95,13 @@ const styles = {
     position: 'relative',
     display: 'flex',
 
+    '.TxRecipientCard': {
+      border: 'none',
+    },
+
     '.TxRecipientCard:first-of-type': {
       borderRadius: '$default 0 0 0',
-      borderRight: '1px solid $bodyBg',
+      borderRight: '1px solid $cardBorder',
     },
     '.TxRecipientCard:last-of-type': {
       borderRadius: '0 $default 0 0',
@@ -113,20 +120,21 @@ const styles = {
     transform: 'translate(-50%, -50%)',
     border: '1px solid $bodyColor',
     borderRadius: '$md',
-    background: '$intentsBase1',
-    color: '$intentsBase8',
+    background: '$border',
+    color: '$textColor',
 
-    [`&[data-status="${TxStatus.success}"]`]: {
-      background: '$accent11',
-      color: '$accent3',
+    [`&[data-status="${TransactionStatus.success}"]`]: {
+      background: '$intentsPrimary11',
+      color: '$intentsPrimary3',
     },
-    [`&[data-status="${TxStatus.failure}"]`]: {
+    [`&[data-status="${TransactionStatus.failure}"]`]: {
       background: '$intentsError9',
       color: '$intentsError3',
     },
-    [`&[data-status="${TxStatus.pending}"], &[data-loading="true"]`]: {
-      background: '$intentsWarning9',
-      color: '$intentsWarning3',
-    },
+    [`&[data-status="${TransactionStatus.submitted}"], &[data-loading="true"]`]:
+      {
+        background: '$intentsWarning9',
+        color: '$intentsWarning3',
+      },
   }),
 };

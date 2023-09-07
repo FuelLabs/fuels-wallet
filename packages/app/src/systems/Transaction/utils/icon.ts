@@ -1,10 +1,7 @@
 import type { Icons } from '@fuel-ui/react';
-import type { Bech32Address } from 'fuels';
+import { OperationName, type Bech32Address, type Operation } from 'fuels';
 
 import { getLabel } from '../hooks/useTxMetadata';
-
-import type { Operation } from './tx';
-import { OperationName } from './tx';
 
 const ICON_MAP = {
   [OperationName.transfer]: 'Upload',

@@ -31,8 +31,14 @@ function resolveLinkDeps() {
 const nextConfig = {
   basePath: process.env.DOCS_BASE_URL || '',
   experimental: {
+    appDir: false,
     esmExternals: false,
     externalDir: true,
+  },
+  images: {
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   trailingSlash: true,
   webpack(config) {
@@ -41,6 +47,10 @@ const nextConfig = {
       ...config.resolve.alias,
       ...depsAlias?.resolve?.alias,
     };
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    });
     return config;
   },
 };

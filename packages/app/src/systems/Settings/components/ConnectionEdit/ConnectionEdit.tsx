@@ -84,7 +84,7 @@ const styles = {
     wordBreak: 'break-all',
 
     '.fuel_Icon': {
-      color: '$accent9',
+      color: '$intentsPrimary9',
     },
   }),
   searchBar: cssObj({

@@ -20,6 +20,14 @@ export const Single = (args: AssetsAmountProps) => (
   </Box>
 );
 
+export const Loader = () => (
+  <Box
+    css={{ maxWidth: 300, display: 'flex', flexDirection: 'column', gap: '$4' }}
+  >
+    <AssetsAmount.Loader />
+  </Box>
+);
+
 export const Multiple = (args: AssetsAmountProps) => (
   <Box css={{ maxWidth: 300 }}>
     <AssetsAmount
@@ -43,13 +51,5 @@ export const MultipleMixed = (args: AssetsAmountProps) => (
       title="Assets to send"
       amounts={MOCK_MIXED_ASSETS_AMOUNTS}
     />
-  </Box>
-);
-
-export const Loader = () => (
-  <Box
-    css={{ maxWidth: 300, display: 'flex', flexDirection: 'column', gap: '$4' }}
-  >
-    <AssetsAmount.Loader />
   </Box>
 );

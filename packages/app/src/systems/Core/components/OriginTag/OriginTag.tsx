@@ -32,7 +32,7 @@ const styles = {
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis',
       fontSize: '$sm',
-      color: '$accent11',
+      color: '$intentsPrimary11',
     },
   }),
 };

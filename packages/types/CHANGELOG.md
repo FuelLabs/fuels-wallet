@@ -1,5 +1,49 @@
 # @fuel-wallet/types
 
+## 0.12.3
+
+### Patch Changes
+
+- [#853](https://github.com/FuelLabs/fuels-wallet/pull/853) [`1382e00`](https://github.com/FuelLabs/fuels-wallet/commit/1382e00a849ee1b8d013c16e6cd6db82b33b343e) Thanks [@luizstacio](https://github.com/luizstacio)! - Update CRX deps and permissions
+
+## 0.12.2
+
+## 0.12.1
+
+### Patch Changes
+
+- [#837](https://github.com/FuelLabs/fuels-wallet/pull/837) [`badd641`](https://github.com/FuelLabs/fuels-wallet/commit/badd6419880b0cf9b53afb36bca1b27c111b5614) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: update to fuels 0.53.0
+
+- [#827](https://github.com/FuelLabs/fuels-wallet/pull/827) [`7851c3e`](https://github.com/FuelLabs/fuels-wallet/commit/7851c3e42d1ba289d0854c8cbfce74b400a8d8b6) Thanks [@pedronauck](https://github.com/pedronauck)! - Add light and dark theme support
+
+## 0.12.0
+
+### Minor Changes
+
+- [#834](https://github.com/FuelLabs/fuels-wallet/pull/834) [`2ded832`](https://github.com/FuelLabs/fuels-wallet/commit/2ded832b4930b1be847e56a1f2da1c085606da1b) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: upgrade to beta-4 (fuel-core 0.20.4)
+
+## 0.11.2
+
+### Patch Changes
+
+- [#821](https://github.com/FuelLabs/fuels-wallet/pull/821) [`4e08bc0`](https://github.com/FuelLabs/fuels-wallet/commit/4e08bc0edd74210de03d9e5481180641bbcc8803) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Upgrade to fuel-core 0.19.1
+
+## 0.11.1
+
+### Patch Changes
+
+- [#811](https://github.com/FuelLabs/fuels-wallet/pull/811) [`a674406`](https://github.com/FuelLabs/fuels-wallet/commit/a67440640db8840f4c199a0bba47f6e82d46829a) Thanks [@matt-user](https://github.com/matt-user)! - Add support for fuel-core 0.19.0
+
+## 0.11.0
+
+### Minor Changes
+
+- [#759](https://github.com/FuelLabs/fuels-wallet/pull/759) [`f79897d`](https://github.com/FuelLabs/fuels-wallet/commit/f79897df28b0d6e63aeedc3af45ea7ad838f1803) Thanks [@tomiiide](https://github.com/tomiiide)! - Handle all errors in the wallet
+
+### Patch Changes
+
+- [#686](https://github.com/FuelLabs/fuels-wallet/pull/686) [`98c8184`](https://github.com/FuelLabs/fuels-wallet/commit/98c818480789ead39b498a9768f989a64ff8c583) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: add support to show called methods/params passed to contract calls inside Transaction Screen
+
 ## 0.10.0
 
 ### Minor Changes

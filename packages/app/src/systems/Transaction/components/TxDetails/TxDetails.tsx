@@ -1,10 +1,10 @@
-import { cssObj } from '@fuel-ui/css';
 import { Card, Text } from '@fuel-ui/react';
 import type { BN } from 'fuels';
 import { bn } from 'fuels';
 import type { FC } from 'react';
 
 import { TxDetailsLoader } from './TxDetailsLoader';
+import { styles } from './styles';
 
 export type TxDetailsProps = {
   fee?: BN;
@@ -29,19 +29,6 @@ export const TxDetails: TxDetailsComponent = ({
       </Text>
     </Card>
   );
-};
-
-const styles = {
-  detailItem: cssObj({
-    padding: '$3',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  }),
-  text: cssObj({
-    fontSize: '$sm',
-    fontWeight: '$normal',
-  }),
 };
 
 TxDetails.Loader = TxDetailsLoader;
