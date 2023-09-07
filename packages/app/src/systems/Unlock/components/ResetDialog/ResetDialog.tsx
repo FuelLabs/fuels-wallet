@@ -22,7 +22,7 @@ export function ResetDialog() {
   const { isReseting, handlers } = useUnlock();
 
   return (
-    <Dialog.Content css={styles.content}>
+    <>
       <OverlayDialogTopbar onClose={overlay.close}>
         Forgot Password
       </OverlayDialogTopbar>
@@ -71,7 +71,7 @@ export function ResetDialog() {
           Reset Wallet
         </Button>
       </Dialog.Footer>
-    </Dialog.Content>
+    </>
   );
 }
 
@@ -92,7 +92,6 @@ const styles = {
     width: '100%',
   }),
   content: cssObj({
-    padding: '$4',
     width: WALLET_WIDTH,
     height: WALLET_HEIGHT,
     maxWidth: WALLET_WIDTH,
@@ -105,6 +104,7 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
     display: 'flex',
+    px: '$4',
   }),
   form: cssObj({
     pl: '$2',

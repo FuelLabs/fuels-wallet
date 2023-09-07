@@ -49,7 +49,7 @@ test.describe('SendTransaction', () => {
     await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
-    await hasText(page, 'Success');
+    await hasText(page, 'success');
   });
 
   test('Send transaction same owner', async () => {
@@ -76,7 +76,7 @@ test.describe('SendTransaction', () => {
     await getButtonByText(page, 'Approve').click();
 
     // Wait for transaction to be confirmed
-    await hasText(page, 'Success');
+    await hasText(page, 'success');
   });
 
   test('Send transaction in other Asset', async () => {
@@ -108,6 +108,6 @@ test.describe('SendTransaction', () => {
     await getButtonByText(page, 'Approve').click();
 
     // Wait for transaction to be confirmed
-    await hasText(page, 'Success');
+    await hasText(page, 'success');
   });
 });

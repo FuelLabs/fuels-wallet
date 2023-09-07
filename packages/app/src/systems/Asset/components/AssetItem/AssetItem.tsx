@@ -102,7 +102,11 @@ export const AssetItem: AssetItemComponent = ({
   return (
     <CardList.Item rightEl={getRightEl()} css={{ alignItems: 'center' }}>
       {imageUrl ? (
-        <Avatar name={name} src={imageUrl} css={{ height: 36, width: 36 }} />
+        <Avatar
+          name={name}
+          src={imageUrl}
+          css={{ height: 36, width: 36, borderRadius: '$full' }}
+        />
       ) : (
         <Avatar.Generated hash={assetId} css={{ height: 36, width: 36 }} />
       )}

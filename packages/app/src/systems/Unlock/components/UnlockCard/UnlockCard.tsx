@@ -36,7 +36,7 @@ export function UnlockCard({
   const { handleSubmit } = form;
 
   function onSubmit(values: UnlockFormValues) {
-    onUnlock(values.password);
+    onUnlock(values.password || '');
   }
 
   return (
@@ -72,8 +72,8 @@ export function UnlockCard({
           >
             <ButtonLink
               size="sm"
-              variant="ghost"
-              onPress={() => store.openResetDialog()}
+              // TODO: should change to onPress when fix -> https://linear.app/fuel-network/issue/FRO-394/buttonlink-needs-to-pass-onpress-as-action
+              onClick={() => store.openResetDialog()}
             >
               Forgot password?
             </ButtonLink>
@@ -109,6 +109,8 @@ const styles = {
     width: '100%',
   }),
   content: cssObj({
+    display: 'flex',
+    flexDirection: 'column',
     position: 'absolute',
     top: 0,
     left: 0,

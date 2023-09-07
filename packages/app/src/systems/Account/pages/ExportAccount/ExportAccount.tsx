@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Card, Copyable, Dialog, Text, Box } from '@fuel-ui/react';
+import { Card, Copyable, Dialog, Text, Box, Alert } from '@fuel-ui/react';
 
 import { AccountItem } from '../../components';
 import { useAccounts } from '../../hooks';
@@ -7,7 +7,6 @@ import { useExportAccount } from '../../hooks/useExportAccount';
 
 import { styles as coreStyles } from '~/systems/Core';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
-import { DontShareAlert } from '~/systems/Settings/components';
 import { UnlockCard } from '~/systems/Unlock';
 
 export const ExportAccount = () => {
@@ -48,7 +47,16 @@ export const ExportAccount = () => {
                 )}
               </Card.Body>
             </Card>
-            <DontShareAlert css={styles.alert} />
+            <Alert status="warning" css={styles.alert}>
+              <Alert.Description as="div">
+                <Text css={styles.alertFirstLine}>
+                  DON&apos;T SHARE your Private Key. {'\n'}
+                  It provides access to {account.name}.
+                </Text>
+                Sharing or losing it may result in a permanent loss of funds for
+                this account.
+              </Alert.Description>
+            </Alert>
           </Box.Stack>
         )}
       </Dialog.Description>
@@ -74,5 +82,8 @@ const styles = {
   }),
   alertDescription: cssObj({
     fontWeight: '$normal',
+  }),
+  alertFirstLine: cssObj({
+    mb: '$2',
   }),
 };

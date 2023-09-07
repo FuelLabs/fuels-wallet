@@ -1,8 +1,10 @@
 import type { Page } from '@playwright/test';
 import type { BN } from 'fuels';
-import { Address, NativeAssetId, Wallet } from 'fuels';
+import { Address, BaseAssetId, Wallet } from 'fuels';
 
 import { getAccount, ALT_ASSET } from '../mocks';
+
+import { getGasConfig } from './gas';
 
 const { GENESIS_SECRET, VITE_FUEL_PROVIDER_URL } = process.env;
 
@@ -16,18 +18,19 @@ export async function seedWallet(address: string, amount: BN) {
     GENESIS_SECRET,
     VITE_FUEL_PROVIDER_URL
   );
+  const { gasPrice, gasLimit } = await getGasConfig(genesisWallet.provider);
   const transfETH = await genesisWallet.transfer(
     Address.fromString(address),
     amount,
-    NativeAssetId,
-    { gasPrice: 1 }
+    BaseAssetId,
+    { gasPrice, gasLimit }
   );
   await transfETH.wait();
   const transfAsset = await genesisWallet.transfer(
     Address.fromString(address),
     amount,
     ALT_ASSET.assetId,
-    { gasPrice: 1 }
+    { gasPrice, gasLimit }
   );
   await transfAsset.wait();
 }

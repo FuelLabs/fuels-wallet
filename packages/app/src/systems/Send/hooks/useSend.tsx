@@ -27,6 +27,9 @@ const selectors = {
   fee(state: SendMachineState) {
     return state.context.fee;
   },
+  isLoadingInitialFee(state: SendMachineState) {
+    return state.hasTag('isLoadingInitialFee');
+  },
   isInvalid(state: SendMachineState) {
     return state.matches('invalid');
   },
@@ -111,6 +114,10 @@ export function useSend() {
   const isInvalid = useSelector(service, selectors.isInvalid);
   const titleSelector = selectors.title(txRequest.txStatus);
   const title = useSelector(service, titleSelector);
+  const isLoadingInitialFee = useSelector(
+    service,
+    selectors.isLoadingInitialFee
+  );
 
   const balanceAssets = accountBalanceAssets?.filter(({ assetId }) =>
     assets.find((asset) => asset.assetId === assetId)
@@ -184,6 +191,7 @@ export function useSend() {
     txRequest,
     assetIdSelected,
     maxAmountToSend,
+    isLoadingInitialFee,
     handlers: {
       cancel,
       submit,

@@ -1,10 +1,10 @@
-import type { ComponentStory, ComponentMeta } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
+import { OperationName } from 'fuels';
 
 import {
   MOCK_OPERATION_CONTRACT_CALL,
   MOCK_OPERATION_CONTRACT_CREATED,
 } from '../../__mocks__/operation';
-import { OperationName } from '../../utils';
 
 import type { TxIconProps } from './TxIcon';
 import { TxIcon } from './TxIcon';
@@ -12,9 +12,9 @@ import { TxIcon } from './TxIcon';
 export default {
   component: TxIcon,
   title: 'Transaction/Components/TxIcon',
-} as ComponentMeta<typeof TxIcon>;
+} as Meta<typeof TxIcon>;
 
-const Template: ComponentStory<typeof TxIcon> = (args: TxIconProps) => (
+const Template: StoryFn<typeof TxIcon> = (args: TxIconProps) => (
   <TxIcon {...args} />
 );
 

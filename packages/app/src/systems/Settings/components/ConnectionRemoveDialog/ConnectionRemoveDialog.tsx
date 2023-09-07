@@ -49,7 +49,6 @@ export function ConnectionRemoveDialog({
           </AlertDialog.Cancel>
           <AlertDialog.Action>
             <Button
-              size="sm"
               aria-label="Confirm delete"
               variant="ghost"
               intent="error"
@@ -68,7 +67,6 @@ export function ConnectionRemoveDialog({
 const styles = {
   root: cssObj({
     textAlign: 'center',
-    maxWidth: 250,
 
     footer: {
       justifyContent: 'center',

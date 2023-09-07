@@ -1,3 +1,4 @@
+import { useFuelTheme } from '@fuel-ui/react';
 import { useMachine, useSelector } from '@xstate/react';
 import type { ReCAPTCHAProps } from 'react-google-recaptcha';
 
@@ -27,6 +28,7 @@ export function useCaptcha() {
   const isFailed = useSelector(service, selectors.isFailed);
   const isLoading = useSelector(service, selectors.isLoading);
   const isLoaded = useSelector(service, selectors.isLoaded);
+  const { current } = useFuelTheme();
 
   function setCaptcha(token: Maybe<string>) {
     send('SET_CAPTCHA', { data: token });
@@ -37,7 +39,7 @@ export function useCaptcha() {
 
   function getProps() {
     return {
-      theme: 'dark',
+      theme: current,
       sitekey: key,
       onChange: setCaptcha,
       asyncScriptOnLoad: load,

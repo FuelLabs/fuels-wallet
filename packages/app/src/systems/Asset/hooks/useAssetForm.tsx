@@ -11,7 +11,7 @@ import type { Maybe } from '~/systems/Core';
 export type AssetFormValues = {
   name: string;
   assetId: string;
-  imageUrl: string;
+  imageUrl: string | undefined;
   symbol: string;
 };
 
@@ -20,6 +20,7 @@ function isValidId(id: any) {
 }
 
 function isValidUrl(url: any) {
+  if (url === '') return true;
   try {
     // eslint-disable-next-line no-new
     new URL(url);

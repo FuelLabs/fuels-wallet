@@ -1,5 +1,5 @@
 import { Box, Button } from '@fuel-ui/react';
-import type { ComponentStoryFn, Meta } from '@storybook/react';
+import type { StoryFn, Meta } from '@storybook/react';
 import { Wallet } from 'fuels';
 import { useEffect } from 'react';
 
@@ -23,7 +23,7 @@ export default {
   },
 } as Meta;
 
-const Template: ComponentStoryFn<typeof TxApprove> = (_args, { loaded }) => {
+const Template: StoryFn<typeof TxApprove> = (_args, { loaded }) => {
   const txRequest = useTransactionRequest();
   const { transactionRequest, network, address } = loaded || {};
 

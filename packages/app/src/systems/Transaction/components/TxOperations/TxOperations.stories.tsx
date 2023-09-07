@@ -1,11 +1,11 @@
 import { Box } from '@fuel-ui/react';
 import { AssetList } from 'asset-list';
+import { TransactionStatus } from 'fuels';
 
 import {
   MOCK_OPERATION_CONTRACT_CALL,
   MOCK_OPERATION_TRANSFER,
 } from '../../__mocks__/operation';
-import { TxStatus } from '../../utils';
 
 import type { TxOperationsProps } from './TxOperations';
 import { TxOperations } from './TxOperations';
@@ -22,7 +22,7 @@ export const Default = (args: TxOperationsProps) => (
     <TxOperations
       {...args}
       operations={[MOCK_OPERATION_CONTRACT_CALL, MOCK_OPERATION_TRANSFER]}
-      status={TxStatus.success}
+      status={TransactionStatus.success}
       assets={AssetList}
     />
   </Box>

@@ -23,6 +23,7 @@ export class WalletLockedCustom extends WalletLocked {
     const signature = await VaultService.signTransaction({
       transaction: JSON.stringify(transactionRequest),
       address: this.address.toString(),
+      providerUrl: this.provider.url,
     });
     return signature;
   }

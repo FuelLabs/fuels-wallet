@@ -1,13 +1,13 @@
 import { Box } from '@fuel-ui/react';
+import type { TransactionSummary } from 'fuels';
 
-import type { Tx } from '../../utils';
 import { ActivityItem } from '../ActivityItem';
 
 import { ActivityListEmpty } from './ActivityListEmpty';
 import { ActivityListLoading } from './ActivityListLoading';
 
 export interface ActivityListProps {
-  txs: Tx[];
+  txs: TransactionSummary[];
   providerUrl?: string;
   isLoading?: boolean;
   isDevnet?: boolean;

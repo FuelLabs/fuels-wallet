@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Account } from '@fuel-wallet/types';
 import type {
+  TransactionSummary,
   BN,
   TransactionRequest,
   TransactionResponse,
-  TransactionResultReceipt,
 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 
 import { AccountService } from '~/systems/Account';
-import { assignErrorMessage, FetchMachine } from '~/systems/Core';
+import { assignErrorMessage, delay, FetchMachine } from '~/systems/Core';
 import type { NetworkInputs } from '~/systems/Network';
 import { NetworkService } from '~/systems/Network';
 import type { GroupedErrors, VMApiError } from '~/systems/Transaction';
@@ -40,7 +40,7 @@ type MachineContext = {
     account?: Account;
   };
   response?: {
-    receipts?: TransactionResultReceipt[];
+    txResult?: TransactionSummary;
     approvedTx?: TransactionResponse;
   };
   errors?: {
@@ -55,7 +55,9 @@ type MachineServices = {
     data: TransactionResponse;
   };
   simulateTransaction: {
-    data: TransactionResultReceipt[];
+    data: {
+      txResult: TransactionSummary;
+    };
   };
   fetchGasPrice: {
     data: BN;
@@ -146,7 +148,7 @@ export const transactionRequestMachine = createMachine(
             },
             {
               target: 'waitingApproval',
-              actions: ['assignReceipts'],
+              actions: ['assignTxResult'],
             },
           ],
         },
@@ -267,8 +269,11 @@ export const transactionRequestMachine = createMachine(
       assignApprovedTx: assign({
         response: (ctx, ev) => ({ ...ctx.response, approvedTx: ev.data }),
       }),
-      assignReceipts: assign({
-        response: (ctx, ev) => ({ ...ctx.response, receipts: ev.data }),
+      assignTxResult: assign({
+        response: (ctx, ev) => ({
+          ...ctx.response,
+          txResult: ev.data.txResult,
+        }),
       }),
       assignTxDryRunError: assign((ctx, ev) => {
         const txDryRunGroupedErrors = getGroupedErrors(
@@ -310,8 +315,12 @@ export const transactionRequestMachine = createMachine(
           if (!input?.transactionRequest) {
             throw new Error('Invalid simulateTransaction input');
           }
-          const receipts = await TxService.simulateTransaction(input);
-          return receipts;
+          // Enforce a minimum delay to show the loading state
+          // this creates a better experience for the user as the
+          // screen doesn't flash between states
+          await delay(600);
+          const { txResult } = await TxService.simulateTransaction(input);
+          return { txResult };
         },
       }),
       send: FetchMachine.create<

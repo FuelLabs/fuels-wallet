@@ -18,7 +18,7 @@ export class WindowConnection extends BaseConnection {
   isListenerAdded = false;
   queue: JSONRPCRequest[] = [];
   _retry = 0;
-  _injectionTimeout: NodeJS.Timer;
+  _injectionTimeout: NodeJS.Timeout;
   _hasWallet = deferPromise<boolean>();
   connectorName: string;
   private connectors: Array<FuelWalletConnector>;
@@ -40,7 +40,7 @@ export class WindowConnection extends BaseConnection {
 
   addConnector(connector: FuelWalletConnector): void {
     // Ensure Fuel Wallet is the default connector
-    if (this.connectorName === 'Fuel Wallet') {
+    if (connector.name === 'Fuel Wallet') {
       this.connectorName = connector.name;
     }
     if (this.hasConnector(connector.name)) {

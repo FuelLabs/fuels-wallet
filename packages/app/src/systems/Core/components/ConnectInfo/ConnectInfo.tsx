@@ -21,7 +21,7 @@ export function ConnectInfo({
   favIconUrl,
 }: ConnectInfoProps) {
   return (
-    <Card css={styles.root} gap="$0">
+    <Card css={styles.root}>
       {Boolean(headerText?.length) && (
         <Card.Header space="compact">{headerText}</Card.Header>
       )}
@@ -50,6 +50,7 @@ ConnectInfo.Loader = ConnectInfoLoader;
 const styles = {
   root: cssObj({
     boxSizing: 'border-box',
+    gap: '$0',
   }),
   contentSection: cssObj({
     alignItems: 'center',
@@ -67,7 +68,7 @@ const styles = {
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     fontSize: '$sm',
-    color: '$accent11',
+    color: '$intentsPrimary11',
     fontWeight: '$normal',
   }),
 };

@@ -1,12 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "allowJs": true,
-    "jsx": "preserve",
-    "incremental": true,
     "plugins": [{ "name": "next" }],
+    "allowJs": true,
     "noEmit": true,
+    "incremental": true,
     "isolatedModules": true,
+    "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
       "~/*": ["./*"]

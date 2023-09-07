@@ -1,39 +1,38 @@
 import type { Colors } from '@fuel-ui/css';
+import { TransactionStatus } from 'fuels';
 
-import { TxStatus } from './tx';
-
-export const getTxStatusColor = (status?: TxStatus): Colors => {
+export const getTxStatusColor = (status?: TransactionStatus): Colors => {
   switch (status) {
-    case TxStatus.pending:
+    case TransactionStatus.submitted:
       return 'intentsWarning9';
-    case TxStatus.success:
+    case TransactionStatus.success:
       return 'intentsPrimary9';
-    case TxStatus.failure:
+    case TransactionStatus.failure:
       return 'intentsError9';
     default:
       return 'intentsBase9';
   }
 };
 
-export const getTxIconBgColor = (status: TxStatus | undefined) => {
+export const getTxIconBgColor = (status: TransactionStatus | undefined) => {
   switch (status) {
-    case TxStatus.success:
+    case TransactionStatus.success:
       return '$intentsPrimary2';
-    case TxStatus.failure:
+    case TransactionStatus.failure:
       return '$intentsError2';
-    case TxStatus.pending:
+    case TransactionStatus.submitted:
     default:
       return '$intentsWarning2';
   }
 };
 
-export const getTxIconColor = (status: TxStatus | undefined) => {
+export const getTxIconColor = (status: TransactionStatus | undefined) => {
   switch (status) {
-    case TxStatus.success:
+    case TransactionStatus.success:
       return 'intentsPrimary11';
-    case TxStatus.failure:
+    case TransactionStatus.failure:
       return 'intentsError8';
-    case TxStatus.pending:
+    case TransactionStatus.submitted:
     default:
       return 'intentsWarning8';
   }

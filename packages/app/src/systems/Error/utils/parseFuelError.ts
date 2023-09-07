@@ -9,3 +9,18 @@ export function parseFuelError(error: any): FuelWalletError {
     id: createUUID(),
   };
 }
+
+export function createError(e: FuelWalletError): FuelWalletError | Error {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let syntheticError: any = e;
+
+  if (e.error && 'stack' in e.error) {
+    syntheticError = new Error(e.error.message);
+    syntheticError.stack = e.error.stack;
+  } else if (e.reactError) {
+    syntheticError = new Error('React Error');
+    syntheticError.stack = e.reactError.componentStack;
+  }
+
+  return syntheticError;
+}

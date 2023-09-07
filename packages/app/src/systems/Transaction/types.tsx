@@ -6,13 +6,12 @@ import type {
   InputContract,
   OutputContract,
   OutputContractCreated,
+  TransactionStatus,
   TransactionRequestInput,
   TransactionRequestLike,
   TransactionResponse,
   TransactionType,
 } from 'fuels';
-
-import type { TxStatus } from './utils';
 
 export enum TxCategory {
   SEND = 'send',
@@ -39,7 +38,7 @@ export type TxOutputContractCreated = OutputContractCreated;
 export type Transaction = {
   id?: string;
   type?: TransactionType;
-  status?: TxStatus;
+  status?: TransactionStatus;
   category?: TxCategory;
   date?: Date;
   from?: TxRecipientAddress;
@@ -47,3 +46,9 @@ export type Transaction = {
   amount?: AssetAmount;
   data?: TxRequest | TransactionResponse;
 };
+
+export enum OperationDirection {
+  to = 'To',
+  from = 'From',
+  unknown = 'Unknown',
+}

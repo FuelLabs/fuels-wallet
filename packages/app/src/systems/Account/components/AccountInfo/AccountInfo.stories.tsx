@@ -1,5 +1,5 @@
 import { Box } from '@fuel-ui/react';
-import type { ComponentStoryFn, Meta } from '@storybook/react';
+import type { StoryFn, Meta } from '@storybook/react';
 
 import { AccountInfo } from './AccountInfo';
 
@@ -10,7 +10,7 @@ export default {
   title: 'DApp/Components/AccountInfo',
 } as Meta;
 
-const Template: ComponentStoryFn<typeof AccountInfo> = (args) => (
+const Template: StoryFn<typeof AccountInfo> = (args) => (
   <Box css={{ width: '300px' }}>
     <AccountInfo {...args} />
   </Box>

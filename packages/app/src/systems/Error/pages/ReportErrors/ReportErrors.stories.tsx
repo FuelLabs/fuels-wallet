@@ -1,4 +1,4 @@
-import type { ComponentStoryFn, Meta } from '@storybook/react';
+import type { StoryFn, Meta } from '@storybook/react';
 
 import { ReportErrors } from './ReportErrors';
 
@@ -13,7 +13,7 @@ export default {
   },
 } as Meta;
 
-const Template: ComponentStoryFn<typeof ReportErrors> = (_args) => {
+const Template: StoryFn<typeof ReportErrors> = (_args) => {
   return <ReportErrors />;
 };
 

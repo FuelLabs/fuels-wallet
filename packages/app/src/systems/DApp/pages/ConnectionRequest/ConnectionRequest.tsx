@@ -119,7 +119,7 @@ export function ConnectionRequest() {
       <Box.Flex css={styles.disclaimer} justify="center" align={'flex-end'}>
         <Text fontSize="sm" as={'h2'} className="warning">
           Only connect with sites you trust.{' '}
-          <Link href="#" color="accent11">
+          <Link href="#" color="intentsPrimary11">
             Learn more
           </Link>
           .
@@ -179,6 +179,7 @@ const styles = {
     pt: '$1',
   }),
   header: cssObj({
+    display: 'flex',
     justifyContent: 'space-between',
 
     '.fuel_Button': {
@@ -188,17 +189,14 @@ const styles = {
   }),
   accountList: cssObj({
     mt: '$4',
+
+    '.fuel_Card .fuel_Card': {
+      border: 'none',
+    },
   }),
   sectionHeader: cssObj({
     alignItems: 'center',
     justifyContent: 'space-between',
-  }),
-  connectCard: cssObj({
-    p: '$3',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: '$2',
   }),
   accountCardBody: cssObj({
     padding: '$0',

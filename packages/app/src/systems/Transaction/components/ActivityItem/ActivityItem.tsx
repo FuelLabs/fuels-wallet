@@ -1,10 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Card, Copyable, Icon, Text } from '@fuel-ui/react';
+import type { TransactionSummary } from 'fuels';
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useTxMetadata } from '../../hooks/useTxMetadata';
-import type { Tx } from '../../utils';
 import { TxIcon } from '../TxIcon';
 
 import { ActivityItemLoader } from './ActivityItemLoader';
@@ -12,7 +12,7 @@ import { ActivityItemLoader } from './ActivityItemLoader';
 import { Pages, shortAddress } from '~/systems/Core';
 
 export type TxItemProps = {
-  transaction: Tx;
+  transaction: TransactionSummary;
   ownerAddress: string;
 };
 
@@ -80,6 +80,7 @@ const styles = {
     justifyContent: 'space-between',
     gap: '$3',
     fontWeight: '$normal',
+    fontSize: '$sm',
     flexDirection: 'row',
     cursor: 'pointer',
   }),
@@ -108,7 +109,9 @@ const styles = {
   label: cssObj({
     mt: '-2px',
     fontWeight: '$normal',
-    color: '$whiteA12',
+    color: '$inverseA12',
+    textWrap: 'nowrap',
+    textOverflow: 'ellipsis',
   }),
 };
 
