@@ -129,6 +129,29 @@ export class WindowConnection extends BaseConnection {
     window.postMessage(message, origin || window.origin);
   }
 
+  bindFuelConnectors(fuel: Window['fuel']) {
+    // Prevent binding to self if this happen the
+    // object would enter on a infinite loop
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const isSelf = (fuel as any) === this;
+    if (!fuel || isSelf) return;
+    // Bind to fuel events to
+    // sync with current instace
+    fuel.on('connectors', (connectors) => {
+      this.connectors = connectors;
+      this.emit('connectors', connectors);
+    });
+    fuel.on('currentConnector', (connector) => {
+      this.selectConnector(connector.name);
+    });
+    // Update the current connectors list
+    this.connectors = fuel.listConnectors();
+    // Trigger connectros list changed event
+    this.emit('connectors', this.listConnectors());
+    // Sync the current connector
+    this.selectConnector(fuel.connectorName);
+  }
+
   handleFuelInjected() {
     // Timeout after 10 retries i.e., 1 second
     if (this._retry === 9) {
@@ -149,7 +172,9 @@ export class WindowConnection extends BaseConnection {
         this.isListenerAdded = true;
       }
       if (window.fuel) {
+        clearInterval(this._injectionTimeout);
         this._hasWallet.resolve(true);
+        this.bindFuelConnectors(window.fuel);
 
         // Execute pending requests in the queue
         let request = this.queue.shift();
@@ -157,7 +182,6 @@ export class WindowConnection extends BaseConnection {
           this.sendRequest(request);
           request = this.queue.shift();
         }
-        clearInterval(this._injectionTimeout);
       }
     }
   }

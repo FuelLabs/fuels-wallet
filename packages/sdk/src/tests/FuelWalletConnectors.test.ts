@@ -1,4 +1,4 @@
-import type { Fuel } from '../Fuel';
+import { Fuel } from '../Fuel';
 
 import type { MockServices } from './__mock__';
 import { mockFuel } from './__mock__';
@@ -7,8 +7,10 @@ describe('Fuel Connectors', () => {
   let mocksConnector1: MockServices;
   let mocksConnector2: MockServices;
   let fuel: Fuel;
+  let fuelSDK: Fuel;
 
   beforeAll(() => {
+    fuelSDK = new Fuel({ name: 'Fuel Wallet' });
     mocksConnector1 = mockFuel();
     mocksConnector2 = mockFuel({ name: 'Third Wallet' });
     fuel = window.fuel!;
@@ -19,12 +21,14 @@ describe('Fuel Connectors', () => {
     mocksConnector2.destroy();
   });
 
-  test('listConnectors', () => {
+  test('listConnectors', async () => {
     const connectors = fuel.listConnectors();
-    expect(connectors.map((c) => c.name)).toEqual([
-      'Fuel Wallet',
-      'Third Wallet',
-    ]);
+    await fuelSDK.hasWallet();
+    const connectorsSDK = fuelSDK.listConnectors();
+    const expectedConnectors = ['Fuel Wallet', 'Third Wallet'];
+
+    expect(connectors.map((c) => c.name)).toEqual(expectedConnectors);
+    expect(connectorsSDK.map((c) => c.name)).toEqual(expectedConnectors);
   });
 
   test('hasConnector', () => {
