@@ -29,7 +29,7 @@ describe('Fuel Timeout', () => {
     expect(hasWallet).toBeFalsy();
 
     const onReadyChange = jest.fn();
-    fuel.on(fuel.events.ready, onReadyChange);
+    fuel.on(fuel.events.load, onReadyChange);
     mockFuel({ name: 'Fuel Wallet' });
     expect(onReadyChange).toBeCalledTimes(1);
 
