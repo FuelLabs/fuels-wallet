@@ -16,7 +16,7 @@ export const FuelWalletEvents = {
   assets: 'assets',
   connectors: 'connectors',
   currentConnector: 'currentConnector',
-  ready: 'ready',
+  load: 'load',
 } as const;
 
 export type FuelEvents =
@@ -49,7 +49,7 @@ export type FuelEvents =
       data: FuelWalletConnector;
     }
   | {
-      type: typeof FuelWalletEvents.ready;
+      type: typeof FuelWalletEvents.load;
       data: boolean;
     };
 

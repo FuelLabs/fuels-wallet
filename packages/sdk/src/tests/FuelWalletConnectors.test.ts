@@ -10,7 +10,7 @@ describe('Fuel Connectors', () => {
   let fuelSDK: Fuel;
 
   beforeAll(() => {
-    fuelSDK = new Fuel({ name: 'Fuel Wallet' });
+    fuelSDK = new Fuel();
     mocksConnector1 = mockFuel();
     mocksConnector2 = mockFuel({ name: 'Third Wallet' });
     fuel = window.fuel!;

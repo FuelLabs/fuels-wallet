@@ -52,7 +52,7 @@ export class WindowConnection extends BaseConnection {
       this._hasWallet.resolve(true);
       this._hasWallet = deferPromise<boolean>();
       this.handleFuelInjected();
-      this.emit(FuelWalletEvents.ready, true);
+      this.emit(FuelWalletEvents.load, true);
     });
   }
 

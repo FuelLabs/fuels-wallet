@@ -1,7 +1,7 @@
 import { Fuel } from '@fuel-wallet/sdk';
 import { useState, useEffect } from 'react';
 
-const fuelSDK = new Fuel({ name: 'Fuel Wallet' });
+const fuelSDK = new Fuel();
 
 export function useFuel() {
   const [error, setError] = useState('');
@@ -21,9 +21,9 @@ export function useFuel() {
       setError('');
     };
 
-    fuelSDK.on(fuelSDK.events.ready, handleFuelLoad);
+    fuelSDK.on(fuelSDK.events.load, handleFuelLoad);
     return () => {
-      fuelSDK.on(fuelSDK.events.ready, handleFuelLoad);
+      fuelSDK.on(fuelSDK.events.load, handleFuelLoad);
     };
   }, []);
 

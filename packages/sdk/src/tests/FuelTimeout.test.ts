@@ -10,7 +10,7 @@ describe('Fuel Timeout', () => {
   });
 
   test('hasWallet with timeout', async () => {
-    const fuel = new Fuel({ name: 'Fuel Wallet' });
+    const fuel = new Fuel();
 
     // Inject `fuel` on `window` after 500ms
     setTimeout(() => {
