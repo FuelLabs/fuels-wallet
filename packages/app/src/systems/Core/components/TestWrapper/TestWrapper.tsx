@@ -9,7 +9,7 @@ const LocationDisplay = () => {
   return <div data-testid="location-display">{location?.pathname}</div>;
 };
 
-type TestWrapperProps = {
+export type TestWrapperProps = {
   initialEntries?: any[];
   children?: ReactNode;
 };
@@ -26,10 +26,5 @@ export function TestWrapper({ children, initialEntries }: TestWrapperProps) {
       <MemoryRouter initialEntries={initialEntries}>{content}</MemoryRouter>
     );
   }
-  return (
-    <BrowserRouter>
-      <Providers>{children}</Providers>
-      <LocationDisplay />
-    </BrowserRouter>
-  );
+  return <BrowserRouter>{content}</BrowserRouter>;
 }

@@ -15,6 +15,7 @@ type Context = {
 };
 
 const ctx = createContext<Context>({} as Context);
+
 export function useSignUpProvider() {
   return useContext(ctx);
 }
