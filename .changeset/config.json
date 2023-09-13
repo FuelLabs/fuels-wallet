@@ -14,13 +14,7 @@
   "access": "public",
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
-  "ignore": [
-    "docs",
-    "asset-list",
-    "@fuel-wallet/config",
-    "@fuel-wallet/xstore",
-    "@fuel-wallet/storage"
-  ],
+  "ignore": ["docs", "asset-list", "@fuel-wallet/config"],
   "snapshot": {
     "useCalculatedVersion": true,
     "prereleaseTemplate": "{tag}-{commit}"

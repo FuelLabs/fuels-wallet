@@ -1,4 +1,4 @@
-import type { StoreClass } from '@fuel-wallet/xstore';
+import type { StoreClass } from '@fuels/react-xstore';
 
 import type { AssetInputs } from './services';
 
