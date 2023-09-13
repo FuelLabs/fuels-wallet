@@ -12,6 +12,16 @@ export type MockServices = {
   destroy: () => void;
 };
 
+const FUEL_MOCK_SERVICES: Array<MockServices> = [];
+
+function registerMockFuel(mockService: MockServices) {
+  FUEL_MOCK_SERVICES.push(mockService);
+}
+
+export function cleanFuelMocks() {
+  FUEL_MOCK_SERVICES.map((mock) => mock.destroy());
+}
+
 export function mockFuel(
   connector: FuelWalletConnector = { name: 'Fuel Wallet' }
 ): MockServices {
@@ -34,6 +44,9 @@ export function mockFuel(
     contentProxy.destroy();
     delete global.window.fuel;
   }
+
+  registerMockFuel({ contentProxy, backgroundService, destroy });
+
   // Return the content proxy instance for cleaning
   return { contentProxy, backgroundService, destroy };
 }

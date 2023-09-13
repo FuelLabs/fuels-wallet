@@ -2,6 +2,7 @@
 import EventEmitter from 'events';
 
 export const windowEventBus = new EventEmitter();
+export const documentEventBus = new EventEmitter();
 export const proxyConnectorEventBus = new EventEmitter();
 
 global.window = {
@@ -17,6 +18,17 @@ global.window = {
       data: message,
       origin: 'http://origin.com',
     });
+  },
+} as any;
+
+global.CustomEvent = Event as any;
+
+global.document = {
+  addEventListener(event: string, cb: () => any) {
+    documentEventBus.on(event, cb);
+  },
+  dispatchEvent(event: CustomEvent): void {
+    documentEventBus.emit(event.type, event);
   },
 } as any;
 

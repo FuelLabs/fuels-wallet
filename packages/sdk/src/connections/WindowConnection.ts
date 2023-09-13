@@ -1,6 +1,7 @@
 import {
   CONTENT_SCRIPT_NAME,
   EVENT_MESSAGE,
+  FuelWalletEvents,
   MessageTypes,
 } from '@fuel-wallet/types';
 import type {
@@ -23,15 +24,36 @@ export class WindowConnection extends BaseConnection {
   connectorName: string;
   private connectors: Array<FuelWalletConnector>;
 
-  constructor(connector: FuelWalletConnector) {
+  constructor(connector?: FuelWalletConnector) {
     super();
-    this.connectorName = connector.name;
-    this.connectors = [connector];
+    this.connectorName = connector ? connector.name : '';
+    this.connectors = connector ? [connector] : [];
     this.handleFuelInjected();
     this._injectionTimeout = setInterval(
       this.handleFuelInjected.bind(this),
       100
     );
+    this.handleIsReady();
+  }
+
+  executeQueuedRequests() {
+    // Execute pending requests in the queue
+    let request = this.queue.shift();
+    while (request) {
+      this.sendRequest(request);
+      request = this.queue.shift();
+    }
+  }
+
+  handleIsReady() {
+    if (typeof document === 'undefined') return;
+    document.addEventListener('FuelLoaded', () => {
+      this._retry = 0;
+      this._hasWallet.resolve(true);
+      this._hasWallet = deferPromise<boolean>();
+      this.handleFuelInjected();
+      this.emit(FuelWalletEvents.ready, true);
+    });
   }
 
   hasConnector(connectorName: string): boolean {
@@ -47,7 +69,7 @@ export class WindowConnection extends BaseConnection {
       throw new Error(`"${connector.name}" connector already exists!`);
     }
     this.connectors.push(connector);
-    this.emit('connectors', this.listConnectors());
+    this.emit(FuelWalletEvents.connectors, this.listConnectors());
   }
 
   removeConnector(connectorName: string): void {
@@ -78,7 +100,7 @@ export class WindowConnection extends BaseConnection {
         this.addConnector({ name: connectorName });
       }
       // Emit the current connector
-      this.emit('currentConnector', connector);
+      this.emit(FuelWalletEvents.currentConnector, connector);
     } catch {
       // If the connector is not found, revert the change and throw an error
       this.connectorName = previousConnector;
@@ -137,17 +159,17 @@ export class WindowConnection extends BaseConnection {
     if (!fuel || isSelf) return;
     // Bind to fuel events to
     // sync with current instace
-    fuel.on('connectors', (connectors) => {
+    fuel.on(FuelWalletEvents.connectors, (connectors) => {
       this.connectors = connectors;
-      this.emit('connectors', connectors);
+      this.emit(FuelWalletEvents.connectors, connectors);
     });
-    fuel.on('currentConnector', (connector) => {
+    fuel.on(FuelWalletEvents.currentConnector, (connector) => {
       this.selectConnector(connector.name);
     });
     // Update the current connectors list
     this.connectors = fuel.listConnectors();
     // Trigger connectros list changed event
-    this.emit('connectors', this.listConnectors());
+    this.emit(FuelWalletEvents.connectors, this.listConnectors());
     // Sync the current connector
     this.selectConnector(fuel.connectorName);
   }
@@ -175,13 +197,7 @@ export class WindowConnection extends BaseConnection {
         clearInterval(this._injectionTimeout);
         this._hasWallet.resolve(true);
         this.bindFuelConnectors(window.fuel);
-
-        // Execute pending requests in the queue
-        let request = this.queue.shift();
-        while (request) {
-          this.sendRequest(request);
-          request = this.queue.shift();
-        }
+        this.executeQueuedRequests();
       }
     }
   }
