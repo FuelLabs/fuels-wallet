@@ -163,7 +163,7 @@ describe('Fuel', () => {
     const wallet = await fuel.getWallet(account);
     const resources = await wallet.getResourcesToSpend([[amount, BaseAssetId]]);
 
-    transactionRequest.addResourceInputsAndOutputs(resources);
+    transactionRequest.addResources(resources);
     const response = await wallet.sendTransaction(transactionRequest);
 
     // wait for transaction to be completed

@@ -246,7 +246,7 @@ export class TxService {
     }
 
     const resources = await wallet.getResourcesToSpend(coins);
-    request.addResourceInputsAndOutputs(resources);
+    request.addResources(resources);
     return request;
   }
 
