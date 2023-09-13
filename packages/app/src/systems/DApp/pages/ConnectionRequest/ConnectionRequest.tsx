@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Card, CardList, Box, Link, Text } from '@fuel-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { AccountItem } from '~/systems/Account';
+import { AccountItem } from '~/systems/Account/components/AccountItem';
 import {
   animations,
   Layout,
