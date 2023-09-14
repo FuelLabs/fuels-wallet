@@ -16,6 +16,7 @@ export const FuelWalletEvents = {
   assets: 'assets',
   connectors: 'connectors',
   currentConnector: 'currentConnector',
+  load: 'load',
 } as const;
 
 export type FuelEvents =
@@ -46,6 +47,10 @@ export type FuelEvents =
   | {
       type: typeof FuelWalletEvents.currentConnector;
       data: FuelWalletConnector;
+    }
+  | {
+      type: typeof FuelWalletEvents.load;
+      data: boolean;
     };
 
 export type FuelEventArg<T extends FuelEvents['type']> = Extract<

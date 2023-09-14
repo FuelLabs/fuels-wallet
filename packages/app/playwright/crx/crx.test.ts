@@ -91,6 +91,13 @@ test.describe('FuelWallet Extension', () => {
       expect(hasFuel).toBeTruthy();
     });
 
+    await test.step('Should return current version of Wallet', async () => {
+      const version = await blankPage.evaluate(async () => {
+        return window.fuel.version();
+      });
+      expect(version).toEqual(process.env.VITE_APP_VERSION);
+    });
+
     await test.step('Should reconnect if service worker stops', async () => {
       // Stop service worker
       const swPage = await context.newPage();

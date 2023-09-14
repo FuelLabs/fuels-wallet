@@ -32,6 +32,11 @@ describe('Fuel', () => {
     mocks.destroy();
   });
 
+  test('version', async () => {
+    const version = await fuel.version();
+    expect(version).toEqual('0.1.1');
+  });
+
   test('hasWallet', async () => {
     const hasWallet = await fuel.hasWallet();
     expect(hasWallet).toBeTruthy();

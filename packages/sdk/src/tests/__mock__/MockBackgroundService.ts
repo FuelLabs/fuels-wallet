@@ -36,6 +36,7 @@ export class MockBackgroundService extends BaseConnection {
     this.connection = chrome.runtime.connect(extensionId);
     this.connection.onMessage.addListener(this.onMessage.bind(this));
     this.externalMethods([
+      this.version,
       this.ping,
       this.connect,
       this.disconnect,
@@ -107,6 +108,10 @@ export class MockBackgroundService extends BaseConnection {
    */
   async ping() {
     return true;
+  }
+
+  async version() {
+    return '0.1.1';
   }
 
   async isConnected() {
