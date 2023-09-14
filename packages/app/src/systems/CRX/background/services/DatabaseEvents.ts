@@ -5,12 +5,11 @@ import type {
   EventMessageEvents,
 } from '@fuel-wallet/types';
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
+import { AssetService } from '~/systems/Asset/services';
+import { ConnectionService } from '~/systems/DApp/services';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import { DatabaseObservable } from './DatabaseObservable';
-
-import { AssetService } from '~/systems/Asset/services';
-import { ConnectionService } from '~/systems/DApp/services';
 
 export class DatabaseEvents {
   readonly databaseObservable: DatabaseObservable<

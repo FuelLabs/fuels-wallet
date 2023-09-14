@@ -1,11 +1,10 @@
 import { useInterpret, useSelector } from '@xstate/react';
 import { useNavigate } from 'react-router-dom';
+import { Pages } from '~/systems/Core';
+import type { VaultInputs } from '~/systems/Vault';
 
 import { settingsMachine } from '../machines';
 import type { SettingsMachineState } from '../machines';
-
-import { Pages } from '~/systems/Core';
-import type { VaultInputs } from '~/systems/Vault';
 
 const selectors = {
   isChangingPassword: (state: SettingsMachineState) =>

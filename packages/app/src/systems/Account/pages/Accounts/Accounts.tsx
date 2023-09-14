@@ -1,11 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Dialog, Icon } from '@fuel-ui/react';
+import { coreStyles } from '~/systems/Core/styles';
+import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 import { AccountList } from '../../components';
 import { useAccounts, useAddAccount } from '../../hooks';
-
-import { coreStyles } from '~/systems/Core/styles';
-import { OverlayDialogTopbar } from '~/systems/Overlay';
 
 export const Accounts = () => {
   const { accounts, canHideAccounts, hasHiddenAccounts, isLoading, handlers } =

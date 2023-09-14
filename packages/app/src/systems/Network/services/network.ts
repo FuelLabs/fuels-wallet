@@ -1,10 +1,9 @@
 import { createUUID } from '@fuel-wallet/sdk';
 import type { Network } from '@fuel-wallet/types';
 import { Provider } from 'fuels';
+import { db } from '~/systems/Core/utils/database';
 
 import { isValidNetworkUrl } from '../utils';
-
-import { db } from '~/systems/Core/utils/database';
 
 export type NetworkInputs = {
   getNetwork: {

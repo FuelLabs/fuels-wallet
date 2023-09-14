@@ -1,13 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
 import { Card, Copyable, Dialog, Text, Box, Alert } from '@fuel-ui/react';
+import { styles as coreStyles } from '~/systems/Core';
+import { OverlayDialogTopbar } from '~/systems/Overlay';
+import { UnlockCard } from '~/systems/Unlock';
 
 import { AccountItem } from '../../components';
 import { useAccounts } from '../../hooks';
 import { useExportAccount } from '../../hooks/useExportAccount';
-
-import { styles as coreStyles } from '~/systems/Core';
-import { OverlayDialogTopbar } from '~/systems/Overlay';
-import { UnlockCard } from '~/systems/Unlock';
 
 export const ExportAccount = () => {
   const { handlers: accountsHandlers } = useAccounts();

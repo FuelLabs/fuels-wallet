@@ -1,15 +1,14 @@
 import type { Meta, StoryFn } from '@storybook/react';
 import { Wallet } from 'fuels';
+import {
+  mockBalancesOnGraphQL,
+  MOCK_ASSETS_NODE,
+} from '~/systems/Asset/__mocks__/assets';
 
 import { sendLoader } from '../../__mocks__/send';
 import { useSend } from '../../hooks';
 
 import { Send } from '.';
-
-import {
-  mockBalancesOnGraphQL,
-  MOCK_ASSETS_NODE,
-} from '~/systems/Asset/__mocks__/assets';
 
 const wallet = Wallet.generate();
 

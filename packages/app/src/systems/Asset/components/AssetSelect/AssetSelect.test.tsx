@@ -1,11 +1,10 @@
 import { act, fireEvent, render, screen } from '@fuel-ui/test-utils';
 import { useState } from 'react';
+import { TestWrapper } from '~/systems/Core';
 
 import { MOCK_ASSETS_AMOUNTS } from '../../__mocks__/assets';
 
 import { AssetSelect } from './AssetSelect';
-
-import { TestWrapper } from '~/systems/Core';
 
 const onSelect = jest.fn();
 

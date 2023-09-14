@@ -5,7 +5,6 @@ import { Box } from '@fuel-ui/react';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
 import { forwardRef } from 'react';
-
 import type { SidebarLinkItem } from '~/src/types';
 
 const Link = styled(Box, {

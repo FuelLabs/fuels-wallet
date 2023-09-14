@@ -1,12 +1,11 @@
 import { CardList } from '@fuel-ui/react';
 import { render, screen, testA11y, waitFor } from '@fuel-ui/test-utils';
+import { TestWrapper } from '~/systems/Core/components/TestWrapper';
 
 import { MOCK_NETWORKS } from '../../__mocks__/networks';
 
 import type { NetworkItemProps } from './NetworkItem';
 import { NetworkItem } from './NetworkItem';
-
-import { TestWrapper } from '~/systems/Core/components/TestWrapper';
 
 const NETWORK = MOCK_NETWORKS[0];
 

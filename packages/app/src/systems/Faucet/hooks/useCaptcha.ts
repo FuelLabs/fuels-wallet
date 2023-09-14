@@ -1,11 +1,10 @@
 import { useFuelTheme } from '@fuel-ui/react';
 import { useMachine, useSelector } from '@xstate/react';
 import type { ReCAPTCHAProps } from 'react-google-recaptcha';
+import type { Maybe } from '~/systems/Core';
 
 import type { CaptchaMachineState } from '../machines';
 import { captchaMachine } from '../machines';
-
-import type { Maybe } from '~/systems/Core';
 
 const selectors = {
   key: (state: CaptchaMachineState) => state.context.key,

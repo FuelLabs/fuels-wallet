@@ -1,9 +1,8 @@
 import { render, screen, testA11y, waitFor } from '@fuel-ui/test-utils';
-
-import { AccountInfo } from './AccountInfo';
-
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 import { shortAddress, TestWrapper } from '~/systems/Core';
+
+import { AccountInfo } from './AccountInfo';
 
 const PROPS = {
   account: MOCK_ACCOUNTS[0],

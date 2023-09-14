@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { IS_CRX, VITE_FUEL_FAUCET_URL } from '~/config';
 import { useAccounts } from '~/systems/Account';
 import { openTab } from '~/systems/CRX/utils';

@@ -1,14 +1,13 @@
 import { Button } from '@fuel-ui/react';
 import type { Meta } from '@storybook/react';
+import { NetworkService } from '~/systems/Network';
+import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
 import { Pages } from '../../types';
 
 import type { LayoutProps } from './Layout';
 import { Layout } from './Layout';
 import { TopBarType } from './TopBar';
-
-import { NetworkService } from '~/systems/Network';
-import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
 export default {
   component: Layout,

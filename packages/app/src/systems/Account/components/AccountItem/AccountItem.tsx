@@ -12,10 +12,9 @@ import {
 } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { FC } from 'react';
+import { FuelAddress } from '~/systems/Account';
 
 import { AccountItemLoader } from './AccountItemLoader';
-
-import { FuelAddress } from '~/systems/Account';
 
 export type AccountItemProps = {
   css?: ThemeUtilsCSS;

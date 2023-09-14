@@ -1,5 +1,4 @@
 import type { Account } from '@fuel-wallet/types';
-
 import type { Store } from '~/store';
 import { Services } from '~/store';
 

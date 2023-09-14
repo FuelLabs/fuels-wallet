@@ -1,8 +1,8 @@
+import { Layout } from '~/systems/Core';
+
 import { CreatePassword } from '../../components';
 import { useSignUp } from '../../hooks';
 import { SignUpType } from '../../machines/signUpMachine';
-
-import { Layout } from '~/systems/Core';
 
 export function EncryptWallet() {
   const { handlers, context } = useSignUp();

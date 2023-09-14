@@ -1,12 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
 import { Form, Checkbox, Button, Alert, Box } from '@fuel-ui/react';
 import { useState } from 'react';
+import { Mnemonic, MotionStack, animations } from '~/systems/Core';
 
 import { useSignUpStepper } from '../../hooks';
 import { Header } from '../Header';
 import { Stepper } from '../Stepper';
-
-import { Mnemonic, MotionStack, animations } from '~/systems/Core';
 
 export type MnemonicReadProps = {
   words?: string[];

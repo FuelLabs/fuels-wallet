@@ -2,7 +2,6 @@ import { toast } from '@fuel-ui/react';
 import type { Account, Connection } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-
 import { AccountService } from '~/systems/Account';
 import type { Maybe } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';

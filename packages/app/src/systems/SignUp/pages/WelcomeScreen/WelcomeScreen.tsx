@@ -1,10 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Card, FuelLogo, Heading, Icon } from '@fuel-ui/react';
+import { Layout, MotionStack, animations } from '~/systems/Core';
 
 import { Header } from '../../components';
 import { useSignUp } from '../../hooks';
-
-import { Layout, MotionStack, animations } from '~/systems/Core';
 
 export function WelcomeScreen() {
   const { handlers } = useSignUp();

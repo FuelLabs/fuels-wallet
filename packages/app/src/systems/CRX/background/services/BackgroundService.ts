@@ -12,11 +12,6 @@ import type {
   JSONRPCServerMiddlewareNext,
 } from 'json-rpc-2.0';
 import { JSONRPCServer } from 'json-rpc-2.0';
-
-import type { CommunicationProtocol } from './CommunicationProtocol';
-import { PopUpService } from './PopUpService';
-import type { MessageInputs } from './types';
-
 import { APP_VERSION } from '~/config';
 import { AccountService } from '~/systems/Account/services';
 import { AssetService } from '~/systems/Asset/services';
@@ -24,6 +19,10 @@ import { Pages } from '~/systems/Core/types';
 import { ConnectionService } from '~/systems/DApp/services';
 import { NetworkService } from '~/systems/Network/services';
 import { AbiService } from '~/systems/Settings/services';
+
+import type { CommunicationProtocol } from './CommunicationProtocol';
+import { PopUpService } from './PopUpService';
+import type { MessageInputs } from './types';
 
 type EventOrigin = {
   origin: string;

@@ -21,6 +21,10 @@ declare module '*?script&module' {
   const src: string;
   export default src;
 }
+declare module '*.svg' {
+  const src: string;
+  export default src;
+}
 
 // Add script  importing
 declare module '*?script' {

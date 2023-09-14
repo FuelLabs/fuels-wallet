@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isB256 } from 'fuels';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-
 import type { Maybe } from '~/systems/Core';
 
 export type AssetFormValues = {
@@ -22,7 +21,6 @@ function isValidId(id: any) {
 function isValidUrl(url: any) {
   if (url === '') return true;
   try {
-    // eslint-disable-next-line no-new
     new URL(url);
   } catch (e) {
     return false;

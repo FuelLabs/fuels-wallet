@@ -15,13 +15,12 @@ import type { AssetAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AmountVisibility, Pages, shortAddress } from '~/systems/Core';
+import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 import { AssetRemoveDialog } from '../AssetRemoveDialog';
 
 import { AssetItemLoader } from './AssetItemLoader';
-
-import { AmountVisibility, Pages, shortAddress } from '~/systems/Core';
-import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 
 export type AssetItemProps = {
   asset: AssetAmount;

@@ -1,5 +1,4 @@
 import { Address, bn, BaseAssetId, Provider, Wallet } from 'fuels';
-
 import { TxService } from '~/systems/Transaction/services';
 
 export const getMockedTransaction = async (

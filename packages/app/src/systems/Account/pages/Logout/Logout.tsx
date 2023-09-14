@@ -1,10 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Card, Dialog, Icon, Text } from '@fuel-ui/react';
-
-import { useAccounts } from '../../hooks';
-
 import { styles as rootStyles } from '~/systems/Core';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
+
+import { useAccounts } from '../../hooks';
 
 export const Logout = () => {
   const { isLoading, handlers } = useAccounts();

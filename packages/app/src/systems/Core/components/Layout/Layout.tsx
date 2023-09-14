@@ -5,15 +5,14 @@ import type { FC, ReactNode } from 'react';
 import { forwardRef, useRef, useContext, createContext } from 'react';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
+import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
+import { OverlayDialog } from '~/systems/Overlay';
+import { Sidebar } from '~/systems/Sidebar';
 
 import { coreStyles } from '../../styles/core';
 
 import { BottomBar } from './BottomBar';
 import { TopBar } from './TopBar';
-
-import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
-import { OverlayDialog } from '~/systems/Overlay';
-import { Sidebar } from '~/systems/Sidebar';
 
 type Context = {
   isLoading?: boolean;

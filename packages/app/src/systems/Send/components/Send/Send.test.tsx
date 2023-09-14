@@ -1,9 +1,8 @@
 import { fireEvent, render, screen, waitFor } from '@fuel-ui/test-utils';
-
-import { Select } from './Send.stories';
-
 import { TestWrapper } from '~/systems/Core';
 import { mockVault } from '~/systems/Core/__tests__';
+
+import { Select } from './Send.stories';
 
 describe('Send', () => {
   function findAssetSelect() {

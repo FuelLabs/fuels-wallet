@@ -1,7 +1,7 @@
+import { Layout } from '~/systems/Core';
+
 import { MnemonicRead } from '../../components';
 import { useSignUp } from '../../hooks';
-
-import { Layout } from '~/systems/Core';
 
 export function BackupWallet() {
   const { handlers, context } = useSignUp();

@@ -1,8 +1,7 @@
 import { useSelector } from '@xstate/react';
+import { Services, store } from '~/store';
 
 import type { MessageRequestState } from '../machines';
-
-import { Services, store } from '~/store';
 
 const selectors = {
   account: (state: MessageRequestState) => state.context.account,

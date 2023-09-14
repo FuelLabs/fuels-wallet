@@ -2,11 +2,10 @@ import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon, Spinner, Tooltip } from '@fuel-ui/react';
 import { OperationName, TransactionStatus } from 'fuels';
+import type { Maybe } from '~/systems/Core';
 
 import type { TxRecipientAddress } from '../../types';
 import { TxRecipientCard } from '../TxRecipientCard';
-
-import type { Maybe } from '~/systems/Core';
 
 type TxSpinnerProps = {
   status?: Maybe<TransactionStatus>;

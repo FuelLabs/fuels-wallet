@@ -2,7 +2,6 @@ import { toast } from '@fuel-ui/react';
 import fetch from 'cross-fetch';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-
 import { VITE_FUEL_FAUCET_URL } from '~/config';
 import { store } from '~/store';
 import type { Maybe } from '~/systems/Core';

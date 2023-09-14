@@ -1,12 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { useAssets } from '~/systems/Asset';
+import { Layout } from '~/systems/Core';
+import { useNetworks } from '~/systems/Network';
 
 import { TxHeader, TxStatusAlert } from '../../components';
 import { TxContent } from '../../components/TxContent';
 import { useTxResult } from '../../hooks';
-
-import { useAssets } from '~/systems/Asset';
-import { Layout } from '~/systems/Core';
-import { useNetworks } from '~/systems/Network';
 
 export function TxView() {
   const txIdQueryParam = useParams<{ txId: string }>().txId;

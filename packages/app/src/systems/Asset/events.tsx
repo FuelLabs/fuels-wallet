@@ -1,9 +1,8 @@
 import type { StoreClass } from '@fuels/react-xstore';
-
-import type { AssetInputs } from './services';
-
 import type { StoreMachines } from '~/store';
 import { Services } from '~/store';
+
+import type { AssetInputs } from './services';
 
 export function assetEvents(store: StoreClass<StoreMachines>) {
   return {

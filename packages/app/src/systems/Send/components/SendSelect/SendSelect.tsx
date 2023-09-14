@@ -2,12 +2,11 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Input, InputAmount, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { bn } from 'fuels';
-
-import type { UseSendReturn } from '../../hooks';
-
 import { AssetSelect } from '~/systems/Asset';
 import { animations, ControlledField, Layout } from '~/systems/Core';
 import { TxDetails } from '~/systems/Transaction';
+
+import type { UseSendReturn } from '../../hooks';
 
 const MotionContent = motion(Layout.Content);
 type SendSelectProps = UseSendReturn;

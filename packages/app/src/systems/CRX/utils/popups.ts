@@ -1,6 +1,6 @@
-import { getPopUpPosition } from './position';
-
 import { TAB_BAR_HEIGHT, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
+
+import { getPopUpPosition } from './position';
 
 export type ShowPopUp = {
   windowId?: number;

@@ -1,10 +1,9 @@
 import type { FuelWalletError } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
+import { FetchMachine } from '~/systems/Core/machines/fetchMachine';
 
 import { ReportErrorService } from '../services';
-
-import { FetchMachine } from '~/systems/Core/machines/fetchMachine';
 
 export type ErrorMachineContext = {
   error?: string;

@@ -1,8 +1,7 @@
 import { ContentProxyConnection } from '@fuel-wallet/sdk';
+import { WALLET_NAME } from '~/config';
 
 import fileName from './pageScript?script&module';
-
-import { WALLET_NAME } from '~/config';
 
 ContentProxyConnection.start(WALLET_NAME);
 

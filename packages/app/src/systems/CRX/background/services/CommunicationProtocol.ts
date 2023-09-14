@@ -58,7 +58,6 @@ export class CommunicationProtocol extends BaseConnection {
   };
 
   getPortId = (port: chrome.runtime.Port) => {
-    // eslint-disable-next-line no-restricted-syntax
     for (const [key, value] of this.ports.entries()) {
       if (value === port) {
         return key;

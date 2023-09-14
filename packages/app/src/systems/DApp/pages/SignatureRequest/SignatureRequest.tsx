@@ -1,9 +1,8 @@
 import { Box, Button, Card, HelperIcon, Text } from '@fuel-ui/react';
-
-import { useSignatureRequest } from '../../hooks';
-
 import { AccountInfo } from '~/systems/Account';
 import { Layout, ConnectInfo } from '~/systems/Core';
+
+import { useSignatureRequest } from '../../hooks';
 
 export function SignatureRequest() {
   const { handlers, account, origin, message, isLoading, title, favIconUrl } =

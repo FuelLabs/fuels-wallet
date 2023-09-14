@@ -1,11 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
-
-import { useAddNetworkRequest } from '../../hooks';
-
 import { useAccounts } from '~/systems/Account';
 import { Layout, ConnectInfo } from '~/systems/Core';
 import { NetworkReviewCard } from '~/systems/Network';
+
+import { useAddNetworkRequest } from '../../hooks';
 
 export function AddNetworkRequest() {
   const { handlers, title, favIconUrl, origin, network } =

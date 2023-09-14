@@ -1,6 +1,7 @@
 import { useInterpret } from '@xstate/react';
 import { createContext, useContext } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
+import { Pages } from '~/systems/Core';
 
 import type {
   SignUpMachineService,
@@ -8,14 +9,13 @@ import type {
 } from '../../machines/signUpMachine';
 import { signUpMachine } from '../../machines/signUpMachine';
 
-import { Pages } from '~/systems/Core';
-
 type Context = {
   service: SignUpMachineService;
   type?: SignUpType;
 };
 
 const ctx = createContext<Context>({} as Context);
+
 export function useSignUpProvider() {
   return useContext(ctx);
 }

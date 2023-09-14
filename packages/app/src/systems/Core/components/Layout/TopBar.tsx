@@ -2,9 +2,6 @@ import { cssObj } from '@fuel-ui/css';
 import { FuelLogo, Icon, IconButton, Spinner, Text, Box } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import { useLayoutContext } from './Layout';
-
 /**
  * Because of some cycle-dependency error here, is not
  * possible to just import by using ~/systems/Network
@@ -12,6 +9,8 @@ import { useLayoutContext } from './Layout';
 import { NetworkDropdown } from '~/systems/Network/components';
 import { useNetworks } from '~/systems/Network/hooks';
 import { useOverlay } from '~/systems/Overlay';
+
+import { useLayoutContext } from './Layout';
 
 export enum TopBarType {
   internal,

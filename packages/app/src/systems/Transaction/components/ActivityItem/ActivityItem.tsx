@@ -3,13 +3,12 @@ import { Box, Card, Copyable, Icon, Text } from '@fuel-ui/react';
 import type { TransactionSummary } from 'fuels';
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Pages, shortAddress } from '~/systems/Core';
 
 import { useTxMetadata } from '../../hooks/useTxMetadata';
 import { TxIcon } from '../TxIcon';
 
 import { ActivityItemLoader } from './ActivityItemLoader';
-
-import { Pages, shortAddress } from '~/systems/Core';
 
 export type TxItemProps = {
   transaction: TransactionSummary;

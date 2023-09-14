@@ -3,7 +3,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
 import { MDXRemote } from 'next-mdx-remote';
-
 import { Breadcrumb } from '~/src/components/Breadcrumb';
 import { DocFooter } from '~/src/components/DocFooter';
 import { Layout } from '~/src/components/Layout';

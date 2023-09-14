@@ -2,12 +2,11 @@ import { toast } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { createMachine } from 'xstate';
-
-import { AccountService } from '../services/account';
-
 import { store } from '~/store';
 import { FetchMachine } from '~/systems/Core';
 import { VaultService } from '~/systems/Vault';
+
+import { AccountService } from '../services/account';
 
 type MachineContext = {
   accountName?: string;

@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Card, Text, Button } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-
 import { animations } from '~/systems/Core';
 
 const MotionCard = motion(Card);

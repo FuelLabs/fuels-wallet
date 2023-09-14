@@ -4,6 +4,8 @@ import { POPUP_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
 import type { ResponseMessage, UIEventMessage } from '@fuel-wallet/types';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 import { JSONRPCClient } from 'json-rpc-2.0';
+import { CRXPages } from '~/systems/Core/types';
+import { uniqueId } from '~/systems/Core/utils/string';
 
 import {
   closePopUp,
@@ -14,9 +16,6 @@ import {
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import type { MessageInputs } from './types';
-
-import { CRXPages } from '~/systems/Core/types';
-import { uniqueId } from '~/systems/Core/utils/string';
 
 const popups = new Map<string, PopUpService>();
 

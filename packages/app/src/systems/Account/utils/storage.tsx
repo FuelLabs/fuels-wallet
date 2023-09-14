@@ -1,5 +1,4 @@
 import type { StorageAbstract } from '@fuel-ts/wallet-manager';
-
 import { db } from '~/systems/Core/utils/database';
 
 export class IndexedDBStorage implements StorageAbstract {

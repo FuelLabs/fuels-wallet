@@ -1,12 +1,11 @@
 import { Box, Button } from '@fuel-ui/react';
 import type { StoryFn, Meta } from '@storybook/react';
-
-import { Networks } from './Networks';
-
 import { Layout } from '~/systems/Core';
 import { NetworkService, useNetworks } from '~/systems/Network';
 import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 import { store } from '~/systems/Store';
+
+import { Networks } from './Networks';
 
 export default {
   component: Networks,

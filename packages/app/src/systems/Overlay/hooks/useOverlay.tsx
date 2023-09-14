@@ -1,9 +1,9 @@
+import { Services, store } from '~/store';
+
 import type {
   OverlayMachineState,
   OverlayKeys,
 } from '../machines/overlayMachine';
-
-import { Services, store } from '~/store';
 
 const selectors = {
   isDialogOpen: (state: OverlayMachineState) =>

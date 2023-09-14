@@ -1,12 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
 import { Alert, Button } from '@fuel-ui/react';
-
-import { useTransactionRequest } from '../../hooks/useTransactionRequest';
-
 import { useAssets } from '~/systems/Asset';
 import { Layout, ConnectInfo } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
 import { TxContent, TxHeader } from '~/systems/Transaction';
+
+import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
 export function TransactionRequest() {
   const txRequest = useTransactionRequest({ isOriginRequired: true });

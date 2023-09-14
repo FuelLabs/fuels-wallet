@@ -2,7 +2,6 @@ import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Box, Copyable, Text, Tooltip } from '@fuel-ui/react';
 import { Address, isB256, isBech32 } from 'fuels';
-
 import { shortAddress } from '~/systems/Core';
 
 export type AddressProps = {

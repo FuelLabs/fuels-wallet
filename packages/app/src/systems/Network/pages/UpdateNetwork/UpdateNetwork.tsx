@@ -1,5 +1,4 @@
 import { Box, Button, Dialog, Focus, Icon } from '@fuel-ui/react';
-
 import { styles } from '~/systems/Core';
 import type { NetworkFormValues } from '~/systems/Network';
 import { NetworkForm, useNetworkForm, useNetworks } from '~/systems/Network';

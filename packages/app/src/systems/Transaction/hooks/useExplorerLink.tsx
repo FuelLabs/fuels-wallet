@@ -1,6 +1,5 @@
 import { getBlockExplorerLink } from '@fuel-wallet/sdk';
 import { useCallback } from 'react';
-
 import { IS_CRX } from '~/config';
 import { openTab } from '~/systems/CRX/utils';
 

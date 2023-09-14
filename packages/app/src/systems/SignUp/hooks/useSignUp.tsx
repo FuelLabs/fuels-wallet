@@ -1,12 +1,11 @@
 import { useSelector } from '@xstate/react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Pages } from '~/systems/Core';
 
 import type { CreatePasswordValues } from '../components';
 import { useSignUpProvider } from '../components/SignUpProvider';
 import type { SignUpMachineState } from '../machines/signUpMachine';
-
-import { Pages } from '~/systems/Core';
 
 export enum SignUpScreen {
   showing = 'showing',

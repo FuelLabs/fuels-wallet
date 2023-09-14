@@ -1,3 +1,6 @@
+import { Services } from '~/store';
+import type { Store } from '~/store';
+
 import type { TxInputs } from '../Transaction/services';
 
 import type {
@@ -6,9 +9,6 @@ import type {
   ConnectRequestInputs,
   SignInputs,
 } from './machines';
-
-import { Services } from '~/store';
-import type { Store } from '~/store';
 
 export function requestEvents(store: Store) {
   return {

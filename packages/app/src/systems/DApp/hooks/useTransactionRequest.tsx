@@ -1,14 +1,13 @@
 import { useSelector } from '@xstate/react';
 import { TransactionStatus } from 'fuels';
 import { useCallback } from 'react';
-
-import type { TransactionRequestState } from '../machines/transactionRequestMachine';
-import { TxRequestStatus } from '../machines/transactionRequestMachine';
-
 import { Services, store } from '~/store';
 import { useOverlay } from '~/systems/Overlay';
 import { getFilteredErrors } from '~/systems/Transaction';
 import type { TxInputs } from '~/systems/Transaction/services';
+
+import { TxRequestStatus } from '../machines/transactionRequestMachine';
+import type { TransactionRequestState } from '../machines/transactionRequestMachine';
 
 const selectors = {
   context(state: TransactionRequestState) {
@@ -36,6 +35,7 @@ const selectors = {
     return { txApproveError, unlockError, grouped, general, hasGeneral };
   },
   status(externalLoading?: boolean) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useCallback(
       (state: TransactionRequestState) => {
         const isLoading = state.hasTag('loading');

@@ -2,16 +2,15 @@
 import { cssObj } from '@fuel-ui/css';
 import { Input, Box, Button, Link, Text, Tag } from '@fuel-ui/react';
 import { useState } from 'react';
-
-import SWAY_SWAP_ABI from './data/swayswap/abi.json';
-import { SWAY_SWAP_CONTRACT_ID } from './data/swayswap/contractId';
-import { docStyles } from './styles';
-
 import type { AbiMap } from '~/../types/src';
 import { ExampleBox } from '~/src/components/ExampleBox';
 import { useFuel } from '~/src/hooks/useFuel';
 import { useIsConnected } from '~/src/hooks/useIsConnected';
 import { useLoading } from '~/src/hooks/useLoading';
+
+import SWAY_SWAP_ABI from './data/swayswap/abi.json';
+import { SWAY_SWAP_CONTRACT_ID } from './data/swayswap/contractId';
+import { docStyles } from './styles';
 
 export function AddAbi() {
   const [fuel, notDetected] = useFuel();

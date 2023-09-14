@@ -1,10 +1,9 @@
 import type { Meta, StoryFn } from '@storybook/react';
-
-import { Home } from './Home';
-
 import { store } from '~/store';
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 import { mockBalancesOnGraphQL } from '~/systems/Asset/__mocks__/assets';
+
+import { Home } from './Home';
 
 export default {
   component: Home,

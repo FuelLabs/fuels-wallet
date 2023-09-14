@@ -1,6 +1,5 @@
 import { ExtensionPageConnection } from '@fuel-wallet/sdk';
 import { transactionRequestify } from 'fuels';
-
 import { IS_CRX } from '~/config';
 import { Services, store } from '~/store';
 import type { MessageInputs } from '~/systems/CRX/background/services/types';

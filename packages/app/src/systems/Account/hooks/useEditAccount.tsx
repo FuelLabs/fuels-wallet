@@ -1,10 +1,9 @@
 import { useMachine, useSelector } from '@xstate/react';
+import type { AccountInputs } from '~/systems/Account';
+import { useOverlay } from '~/systems/Overlay';
 
 import type { EditAccountMachineState } from '../machines';
 import { editAccountMachine } from '../machines';
-
-import type { AccountInputs } from '~/systems/Account';
-import { useOverlay } from '~/systems/Overlay';
 
 const selectors = {
   account: (state: EditAccountMachineState) => state.context?.account,

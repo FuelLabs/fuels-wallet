@@ -1,9 +1,8 @@
 import type { WalletUnlocked } from 'fuels';
 import { TransactionType, bn, ScriptTransactionRequest, Wallet } from 'fuels';
+import { VITE_FUEL_PROVIDER_URL } from '~/config';
 
 import { TxService } from './transaction';
-
-import { VITE_FUEL_PROVIDER_URL } from '~/config';
 
 const OWNER = import.meta.env.VITE_ADDR_OWNER;
 const amount = bn(1);

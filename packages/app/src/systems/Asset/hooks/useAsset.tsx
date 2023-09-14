@@ -1,6 +1,6 @@
-import type { AssetsMachineState } from '../machines';
-
 import { Services, store } from '~/store';
+
+import type { AssetsMachineState } from '../machines';
 
 const selectors = {
   asset(assetId: string) {

@@ -4,10 +4,9 @@ import { AddressType } from '@fuel-wallet/types';
 import type { OperationTransactionAddress } from 'fuels';
 import { Address, ChainName, isB256, isBech32 } from 'fuels';
 import type { FC } from 'react';
+import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 
 import { TxRecipientCardLoader } from './TxRecipientCardLoader';
-
-import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 
 export type TxRecipientCardProps = {
   recipient?: OperationTransactionAddress;

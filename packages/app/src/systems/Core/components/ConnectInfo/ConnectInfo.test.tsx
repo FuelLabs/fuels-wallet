@@ -1,9 +1,8 @@
 import { render, screen, testA11y, waitFor } from '@fuel-ui/test-utils';
-
-import { ConnectInfo } from './ConnectInfo';
-
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 import { TestWrapper } from '~/systems/Core';
+
+import { ConnectInfo } from './ConnectInfo';
 
 const URL = 'fuellabs.github.io/swayswap/';
 

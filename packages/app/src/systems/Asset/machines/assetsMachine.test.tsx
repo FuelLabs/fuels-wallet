@@ -1,11 +1,10 @@
 import { interpret } from 'xstate';
+import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 import { MOCK_CUSTOM_ASSET } from '../__mocks__/assets';
 
 import type { AssetsMachineService } from './assetsMachine';
 import { assetsMachine } from './assetsMachine';
-
-import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 const machine = assetsMachine.withContext({}).withConfig({
   actions: {

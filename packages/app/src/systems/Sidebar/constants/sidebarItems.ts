@@ -1,7 +1,7 @@
-import type { MenuItemObj } from '../components';
-
 import { store } from '~/store';
 import { Pages } from '~/systems/Core';
+
+import type { MenuItemObj } from '../components';
 
 export const sidebarItems = (): Array<MenuItemObj> => [
   {

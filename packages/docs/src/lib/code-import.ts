@@ -139,7 +139,6 @@ export function codeImport(options: Options = { filepath: '' }) {
 
     visit(tree, 'mdxJsxFlowElement', (node: any, idx, parent) => {
       if (node.name === 'CodeImport') {
-        // eslint-disable-next-line eqeqeq
         nodes.push([node as any, idx == undefined ? null : idx, parent as any]);
       }
     });
