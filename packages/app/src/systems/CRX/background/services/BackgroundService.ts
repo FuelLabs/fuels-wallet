@@ -12,7 +12,6 @@ import type {
   JSONRPCServerMiddlewareNext,
 } from 'json-rpc-2.0';
 import { JSONRPCServer } from 'json-rpc-2.0';
-
 import { APP_VERSION } from '~/config';
 import { AccountService } from '~/systems/Account/services';
 import { AssetService } from '~/systems/Asset/services';
