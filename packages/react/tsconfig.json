@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "keyofStringsOnly": true,
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "rootDir": ".",
+    "types": ["@fuel-wallet/sdk", "jest"]
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["**/*.test.ts"]
+}
