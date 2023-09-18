@@ -5,4 +5,5 @@ export default {
   format: ['cjs', 'esm'],
   minify: process.env.NODE_ENV === 'production',
   entry: ['src/index.ts'],
+  dts: true,
 };

@@ -567,6 +567,9 @@ importers:
 
   packages/react:
     dependencies:
+      '@fuel-wallet/sdk':
+        specifier: workspace:*
+        version: link:../sdk
       '@tanstack/react-query':
         specifier: ^4.29.5
         version: 4.35.3(react@18.2.0)
@@ -577,9 +580,6 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
     devDependencies:
-      '@fuel-wallet/sdk':
-        specifier: workspace:*
-        version: link:../sdk
       '@types/chrome':
         specifier: ^0.0.243
         version: 0.0.243

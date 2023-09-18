@@ -21,20 +21,19 @@
     ]
   },
   "scripts": {
-    "build": "pnpm ts:check && tsup --dts",
+    "build": "pnpm ts:check && tsup",
     "ts:check": "pnpm tsc --noEmit"
   },
   "peerDependencies": {
-    "fuels": ">=0.57.0",
-    "@fuel-wallet/sdk": "workspace:*"
+    "fuels": ">=0.57.0"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.29.5",
+    "@fuel-wallet/sdk": "workspace:*",
     "compare-versions": "^6.1.0",
     "react": "^18.2.0"
   },
   "devDependencies": {
-    "@fuel-wallet/sdk": "workspace:*",
     "@types/chrome": "^0.0.243",
     "tsup": "^6.5.0",
     "fuels": "0.57.0"

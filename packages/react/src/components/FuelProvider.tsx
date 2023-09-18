@@ -41,29 +41,29 @@ export const FuelProvider = ({ children }: FuelProviderProps) => {
   const fuel = useWindowFuel();
 
   function onCurrentAccountChange() {
-    fuelQueryClient.fetchQuery([QUERY_KEYS.account]);
-    fuelQueryClient.fetchQuery([QUERY_KEYS.wallet]);
-    fuelQueryClient.fetchQuery([QUERY_KEYS.balance]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.account]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.wallet]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.balance]);
   }
 
   function onConnectionChange() {
-    fuelQueryClient.fetchQuery([QUERY_KEYS.account]);
-    fuelQueryClient.fetchQuery([QUERY_KEYS.isConnected]);
-    fuelQueryClient.fetchQuery([QUERY_KEYS.wallet]);
-    fuelQueryClient.fetchQuery([QUERY_KEYS.balance]);
-    fuelQueryClient.fetchQuery([QUERY_KEYS.provider]);
-    fuelQueryClient.fetchQuery([QUERY_KEYS.nodeInfo]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.account]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.isConnected]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.wallet]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.balance]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.provider]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.nodeInfo]);
   }
 
   function onNetworkChange() {
-    fuelQueryClient.fetchQuery([QUERY_KEYS.provider]);
-    fuelQueryClient.fetchQuery([QUERY_KEYS.transactionReceipts]);
-    fuelQueryClient.fetchQuery([QUERY_KEYS.chain]);
-    fuelQueryClient.fetchQuery([QUERY_KEYS.nodeInfo]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.provider]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.transactionReceipts]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.chain]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.nodeInfo]);
   }
 
   function onAccountsChange() {
-    fuelQueryClient.fetchQuery([QUERY_KEYS.account]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.account]);
   }
 
   useEffect(() => {
