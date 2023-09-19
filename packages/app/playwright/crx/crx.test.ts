@@ -203,7 +203,7 @@ test.describe('FuelWallet Extension', () => {
     });
 
     async function connectAccounts() {
-      const isConnected = blankPage.evaluate(async () => {
+      const connectionResponse = blankPage.evaluate(async () => {
         return window.fuel.connect();
       });
       const authorizeRequest = await context.waitForEvent('page', {
@@ -227,6 +227,10 @@ test.describe('FuelWallet Extension', () => {
       await hasText(authorizeRequest, /accounts/i);
       await getButtonByText(authorizeRequest, /connect/i).click();
 
+      expect(await connectionResponse).toBeTruthy();
+      const isConnected = blankPage.evaluate(async () => {
+        return window.fuel.isConnected();
+      });
       expect(await isConnected).toBeTruthy();
     }
 

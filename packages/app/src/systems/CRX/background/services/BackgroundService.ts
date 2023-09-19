@@ -131,7 +131,7 @@ export class BackgroundService {
     request: JSONRPCRequest,
     serverParams: EventOrigin
   ) {
-    const ALLOWED_METHODS = ['version', 'ping', 'isConnected'];
+    const ALLOWED_METHODS = ['version', 'ping'];
 
     // If the method is ping, bypass checks
     if (ALLOWED_METHODS.includes(request.method)) {
@@ -145,7 +145,7 @@ export class BackgroundService {
 
     // If the method is not `connect` or `isConnected`
     // check if connection is already established
-    if (!['connect'].includes(request.method)) {
+    if (!['connect', 'isConnected'].includes(request.method)) {
       await this.requireConnection(connection);
     } else {
       await this.requireAccounts();
