@@ -22,7 +22,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm ts:check && tsup --dts",
+    "build": "pnpm ts:check && tsup",
     "ts:check": "tsc --noEmit",
     "test": "jest --verbose",
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"

@@ -32,6 +32,7 @@ jobs:
             **/packages/app/**  
             **/packages/sdk/**
             **/packages/types/**
+            **/packages/react/**
 
   validate-changeset:
     name: Validate PR Changeset
