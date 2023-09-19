@@ -33,8 +33,8 @@ export const FuelReactContext = createContext<FuelReactContextType | null>(
   null
 );
 
-export const useFuel = () => {
-  return useContext(FuelReactContext) as FuelReactContextType;
+export const useFuel = (): FuelReactContextType => {
+  return useContext(FuelReactContext) ?? { fuel: undefined };
 };
 
 export const FuelProvider = ({ children }: FuelProviderProps) => {
