@@ -26,7 +26,7 @@ export type FuelEvents =
     }
   | {
       type: typeof FuelWalletEvents.currentAccount;
-      data: string;
+      data: string | null;
     }
   | {
       type: typeof FuelWalletEvents.connection;
