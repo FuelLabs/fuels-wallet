@@ -38,7 +38,7 @@ export class FuelWalletConnection extends WindowConnection {
     return this.client.request('accounts', {});
   }
 
-  async currentAccount(): Promise<string | null> {
+  async currentAccount(): Promise<string> {
     return this.client.request('currentAccount', {});
   }
 
