@@ -66,14 +66,21 @@ export class DatabaseEvents {
 
       const currentAccount = updateEvent.obj as Account;
       const connections = await ConnectionService.getConnections();
-      const origins = connections
-        .filter((connection) =>
+      const getOriginsForConnections = (connections: Array<Connection>) =>
+        connections.map((c) => c.origin);
+      const addressConnectedOrigins = getOriginsForConnections(
+        connections.filter((connection) =>
           connection.accounts.includes(currentAccount?.address || '')
         )
-        .map((connection) => connection.origin);
+      );
+      const addressNotConnectedOrigins = getOriginsForConnections(connections);
+      const hasUnconnectedOrigins =
+        addressNotConnectedOrigins.length !== addressConnectedOrigins.length;
 
+      // Notify all connections that the current account is connected
+      // by sending the current account address
       this.communicationProtocol.broadcast(
-        origins,
+        addressConnectedOrigins,
         this.createEvents([
           {
             event: 'currentAccount',
@@ -81,6 +88,19 @@ export class DatabaseEvents {
           },
         ])
       );
+      // Nofity all connections that the current account is not connected
+      // by sending a null value
+      if (hasUnconnectedOrigins) {
+        this.communicationProtocol.broadcast(
+          addressConnectedOrigins,
+          this.createEvents([
+            {
+              event: 'currentAccount',
+              params: [null],
+            },
+          ])
+        );
+      }
     });
 
     this.databaseObservable.on(

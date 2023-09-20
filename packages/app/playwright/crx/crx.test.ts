@@ -198,6 +198,7 @@ test.describe('FuelWallet Extension', () => {
       await createAccount();
       await createAccountFromPrivateKey(PRIVATE_KEY, 'Account 4');
       await createAccount();
+      await createAccount();
       await switchAccount(popupPage, 'Account 1');
       await hideAccount(popupPage, 'Account 5');
     });
@@ -606,7 +607,7 @@ test.describe('FuelWallet Extension', () => {
       await expect(networkSelector).toHaveText(/Fuel Testnet/);
     });
 
-    await test.step('window.fuel.on("currentAccount")', async () => {
+    await test.step('window.fuel.on("currentAccount") to a connected account', async () => {
       // Switch to account 2
       await switchAccount(popupPage, 'Account 2');
       await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
@@ -626,6 +627,28 @@ test.describe('FuelWallet Extension', () => {
       // Check result
       const currentAccountEventResult = await onChangeAccountPromise;
       expect(currentAccountEventResult).toEqual(currentAccount.address);
+    });
+
+    await test.step('window.fuel.on("currentAccount") to a connected account', async () => {
+      // Switch to account 2
+      await switchAccount(popupPage, 'Account 2');
+      await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
+      await getByAriaLabel(popupPage, `Close dialog`).click();
+
+      const onChangeAccountPromise = blankPage.evaluate(() => {
+        return new Promise((resolve) => {
+          window.fuel.on(window.fuel.events.currentAccount, (account) => {
+            resolve(account);
+          });
+        });
+      });
+
+      // Switch to account 1
+      await switchAccount(popupPage, 'Account 6');
+
+      // Check result
+      const currentAccountEventResult = await onChangeAccountPromise;
+      expect(currentAccountEventResult).toEqual(null);
     });
 
     await test.step('Auto lock fuel wallet', async () => {
