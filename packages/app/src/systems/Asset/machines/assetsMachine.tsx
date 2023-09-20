@@ -1,6 +1,6 @@
 import { toast } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/types';
-import { AssetList } from 'asset-list';
+import assetList from '@fuels/assets';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { FetchMachine } from '~/systems/Core';
@@ -175,12 +175,12 @@ export const assetsMachine = createMachine(
         showError: true,
         async fetch() {
           await Promise.all(
-            AssetList.map((asset) =>
+            assetList.map((asset) =>
               AssetService.upsertAsset({
                 data: {
                   ...asset,
                   isCustom: false,
-                  imageUrl: asset.imageUrl,
+                  imageUrl: asset.icon,
                 },
               })
             )

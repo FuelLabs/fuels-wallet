@@ -3,7 +3,7 @@ import type { BNInput } from 'fuels';
 export type Asset = {
   name?: string;
   assetId: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   symbol?: string;
   isCustom?: boolean;
 };
