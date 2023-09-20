@@ -629,7 +629,7 @@ test.describe('FuelWallet Extension', () => {
       expect(currentAccountEventResult).toEqual(currentAccount.address);
     });
 
-    await test.step('window.fuel.on("currentAccount") to a connected account', async () => {
+    await test.step('window.fuel.on("currentAccount") should be null when not connected', async () => {
       // Switch to account 2
       await switchAccount(popupPage, 'Account 2');
       await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
