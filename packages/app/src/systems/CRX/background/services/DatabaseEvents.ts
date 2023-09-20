@@ -69,12 +69,10 @@ export class DatabaseEvents {
       const getOriginsForConnections = (connections: Array<Connection>) =>
         connections.map((c) => c.origin);
       const addressConnectedOrigins = getOriginsForConnections(
-        connections.filter((c) =>
-          c.accounts.includes(currentAccount?.address || '')
-        )
+        connections.filter((c) => c.accounts.includes(currentAccount.address))
       );
       const addressNotConnectedOrigins = getOriginsForConnections(
-        connections.filter((c) => addressConnectedOrigins.includes(c.origin))
+        connections.filter((c) => !addressConnectedOrigins.includes(c.origin))
       );
       const hasUnconnectedOrigins =
         addressNotConnectedOrigins.length !== addressConnectedOrigins.length;
