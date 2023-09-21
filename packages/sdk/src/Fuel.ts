@@ -40,13 +40,15 @@ export class Fuel extends FuelWalletConnection {
     }
     // Otherwise, create a new provider instance
     // fetch the current network and connect the provider
-    const provider = new FuelWalletProvider(providerConfig.url, this);
+    const provider = await FuelWalletProvider.create(providerConfig.url, {
+      walletConnection: this,
+    });
     FuelWeb3Privates.provider = provider;
 
     // Listen for network changes and connect the provider
     // selected network from the user
     this.on(FuelWalletEvents.network, async (network) => {
-      FuelWeb3Privates.provider?.connect(network.url);
+      FuelWeb3Privates.provider?.switchUrl(network.url);
     });
 
     return FuelWeb3Privates.provider;
