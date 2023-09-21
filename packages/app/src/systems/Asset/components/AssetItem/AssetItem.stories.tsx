@@ -1,5 +1,5 @@
 import { Box } from '@fuel-ui/react';
-import { AssetList } from 'asset-list';
+import assetList from '@fuels/assets';
 import { bn } from 'fuels';
 
 import type { AssetItemProps } from './AssetItem';
@@ -15,7 +15,7 @@ export const Usage = (args: AssetItemProps) => (
     <AssetItem
       {...args}
       asset={{
-        ...AssetList[0],
+        ...assetList[0],
         amount: bn(14563943834),
       }}
     />
