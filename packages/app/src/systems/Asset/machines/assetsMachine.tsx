@@ -180,7 +180,7 @@ export const assetsMachine = createMachine(
                 data: {
                   ...asset,
                   isCustom: false,
-                  imageUrl: asset.icon,
+                  imageUrl: asset.icon || undefined,
                 },
               })
             )

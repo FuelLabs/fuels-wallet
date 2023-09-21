@@ -100,7 +100,7 @@ export function AddAssets() {
               </Box.Flex>
               <Input isDisabled={!fuel} css={styles.input}>
                 <Input.Field
-                  defaultValue={asset.imageUrl || ''}
+                  defaultValue={asset.imageUrl}
                   onBlur={(e) =>
                     onChangeAsset(index, { ...asset, imageUrl: e.target.value })
                   }
