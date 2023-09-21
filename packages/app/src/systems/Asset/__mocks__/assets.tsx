@@ -1,9 +1,9 @@
-import { AssetList } from 'asset-list';
+import assetList from '@fuels/assets';
 import type { BigNumberish } from 'fuels';
 import { bn, BaseAssetId } from 'fuels';
 import { graphql } from 'msw';
 
-export const MOCK_ASSETS = AssetList.map((item) => ({
+export const MOCK_ASSETS = assetList.map((item) => ({
   ...item,
   amount: bn(14563943834),
 }));
@@ -18,7 +18,7 @@ export const MOCK_CUSTOM_ASSET = {
 };
 
 export const MOCK_ASSETS_AMOUNTS = [
-  ...AssetList.map((item, idx) => ({
+  ...assetList.map((item, idx) => ({
     ...item,
     amount: bn(idx % 2 === 0 ? 14563943834 : -14563943834),
   })),

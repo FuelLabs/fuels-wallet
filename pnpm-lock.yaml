@@ -48,14 +48,14 @@ importers:
         specifier: ^2.26.2
         version: 2.26.2
       '@fuels/eslint-plugin':
-        specifier: 0.0.9
-        version: 0.0.9(@testing-library/dom@9.3.1)(eslint@8.47.0)(typescript@5.1.6)
+        specifier: 0.0.11
+        version: 0.0.11(@testing-library/dom@9.3.1)(eslint@8.47.0)(typescript@5.1.6)
       '@fuels/prettier-config':
-        specifier: 0.0.9
-        version: 0.0.9(prettier@2.8.8)
+        specifier: 0.0.11
+        version: 0.0.11(prettier@2.8.8)
       '@fuels/ts-config':
-        specifier: 0.0.9
-        version: 0.0.9(typescript@5.1.6)
+        specifier: 0.0.11
+        version: 0.0.11(typescript@5.1.6)
       '@jest/types':
         specifier: 29.6.1
         version: 29.6.1
@@ -161,12 +161,15 @@ importers:
       '@fuel-wallet/types':
         specifier: workspace:*
         version: link:../types
+      '@fuels/assets':
+        specifier: 0.0.11
+        version: 0.0.11
       '@fuels/local-storage':
-        specifier: 0.0.9
-        version: 0.0.9
+        specifier: 0.0.11
+        version: 0.0.11
       '@fuels/react-xstore':
-        specifier: 0.0.9
-        version: 0.0.9(@types/react@18.2.20)(@xstate/react@3.2.2)(react-dom@18.2.0)(react@18.2.0)(ws@8.13.0)(xstate@4.38.2)
+        specifier: 0.0.11
+        version: 0.0.11(@types/react@18.2.20)(@xstate/react@3.2.2)(react-dom@18.2.0)(react@18.2.0)(ws@8.13.0)(xstate@4.38.2)
       '@hookform/resolvers':
         specifier: ^3.2.0
         version: 3.2.0(react-hook-form@7.45.4)
@@ -429,8 +432,6 @@ importers:
       vite-tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.0(typescript@5.1.6)(vite@4.4.9)
-
-  packages/asset-list: {}
 
   packages/docs:
     dependencies:
@@ -3955,8 +3956,12 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@fuels/eslint-plugin@0.0.9(@testing-library/dom@9.3.1)(eslint@8.47.0)(typescript@5.1.6):
-    resolution: {integrity: sha512-2pECNfYPo2jnvUs98yOQ3P3SmIqiy5SophnCl4wYLS9ZlA9K8wQk831ecm6gAW9HpFeFCaikFUcZ3fM6uAQxIg==}
+  /@fuels/assets@0.0.11:
+    resolution: {integrity: sha512-Ww8mO8apM/27OH2PR6LC3jg7IlnWN3yKVXuWIEpkEPy6QCDEiivsmA7H8moM2BH6VSKm8k4OiVKaOhaIDzOqHQ==}
+    dev: false
+
+  /@fuels/eslint-plugin@0.0.11(@testing-library/dom@9.3.1)(eslint@8.47.0)(typescript@5.1.6):
+    resolution: {integrity: sha512-tZCCO8opZu4sQoBbvkwy9trwugOMBxbhYLd6H7zLd9PxG3RO8ZVzPkYpQZTkVMC1oIc+h73Oripdrbs7a2IDKw==}
     peerDependencies:
       eslint: ^8.48.0
     dependencies:
@@ -3984,20 +3989,20 @@ packages:
       - typescript
     dev: true
 
-  /@fuels/local-storage@0.0.9:
-    resolution: {integrity: sha512-jdrYBfTBp6M6eoFsMKareqHbaMdhghjCJ+QVhz7axGaFNEdYH8R0SCKsbSLCQoCtfbPHyXYU7ACDV280mFw/Rw==}
+  /@fuels/local-storage@0.0.11:
+    resolution: {integrity: sha512-mnIBUKzhmpboECTeLtx1ogDRRZsIbm7xbwlhuncWALiyNCeeFC7Kqrm1jevp7ndaPFDZeo7h5cJ2Ppob9HsLgw==}
     dev: false
 
-  /@fuels/prettier-config@0.0.9(prettier@2.8.8):
-    resolution: {integrity: sha512-/Foww7TXrf9gdCYe1ax53MGz9Ep6ue/j7MfvAtaZC7P5BrORHef2UMHSeAU6oMiY5L72OYFD2uMgcFVF87VLWQ==}
+  /@fuels/prettier-config@0.0.11(prettier@2.8.8):
+    resolution: {integrity: sha512-zjZ2m7YN104ucwgTTY0MH0TWVWwJMkKf2LWact5hUNoQcyuAzcqN8LUX0nhYbk+m8wrqrj6XtmEqbCyJTa0UoQ==}
     peerDependencies:
       prettier: ^3.0.3
     dependencies:
       prettier: 2.8.8
     dev: true
 
-  /@fuels/react-xstore@0.0.9(@types/react@18.2.20)(@xstate/react@3.2.2)(react-dom@18.2.0)(react@18.2.0)(ws@8.13.0)(xstate@4.38.2):
-    resolution: {integrity: sha512-eFRK2phYWzMHsDWjbLOldVIDlbGUkufNplFFU6FU1AANSovb7G/8AWTXEC1SAqmYT7iAkgvELngVbS1HxORNaQ==}
+  /@fuels/react-xstore@0.0.11(@types/react@18.2.20)(@xstate/react@3.2.2)(react-dom@18.2.0)(react@18.2.0)(ws@8.13.0)(xstate@4.38.2):
+    resolution: {integrity: sha512-36WgkrlyiGs/7f0zxb4/VjogBD1+pjHUc40BJkuy986SXZjX5L3whkV9Ab0rcXqRbW7GuqnXpNg0LdVgLMqsrA==}
     peerDependencies:
       '@xstate/react': ^3.2.2
       react: '*'
@@ -4009,7 +4014,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@fuels/local-storage': 0.0.9
+      '@fuels/local-storage': 0.0.11
       '@xstate/inspect': 0.8.0(ws@8.13.0)(xstate@4.38.2)
       '@xstate/react': 3.2.2(@types/react@18.2.20)(react@18.2.0)(xstate@4.38.2)
       fast-equals: 5.0.1
@@ -4024,8 +4029,8 @@ packages:
       - ws
     dev: false
 
-  /@fuels/ts-config@0.0.9(typescript@5.1.6):
-    resolution: {integrity: sha512-NCUvTITS/ucVmCRhOdRy7uARbz/MDFLMF/Z7Uq6LhWX96u5zIpBcOZxA3RpxHN/QdyBgTQJL2seq0oL9RImsow==}
+  /@fuels/ts-config@0.0.11(typescript@5.1.6):
+    resolution: {integrity: sha512-L17yQeTCoQbvaEL6l0LCJF29nv3vw9BxbvUBJqWAlce0mYKuO6XRMV4tB4qv8Yx4Wq2Aixvpy442xWzH1DN9pA==}
     peerDependencies:
       typescript: 5.2.2
     dependencies:
