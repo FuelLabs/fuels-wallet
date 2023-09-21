@@ -48,7 +48,7 @@
     "fake-indexeddb": "^4.0.2",
     "framer-motion": "^10.16.1",
     "fuels": "0.57.0",
-    "graphql": "^16.8.0",
+    "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
     "graphql-tag": "^2.12.6",
     "json-rpc-2.0": "^1.6.0",
