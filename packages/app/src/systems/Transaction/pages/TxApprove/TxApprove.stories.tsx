@@ -1,6 +1,5 @@
 import { Box, Button } from '@fuel-ui/react';
 import type { StoryFn, Meta } from '@storybook/react';
-import { Wallet } from 'fuels';
 import { useEffect } from 'react';
 import { Layout } from '~/systems/Core';
 import { useTransactionRequest } from '~/systems/DApp';
@@ -8,8 +7,6 @@ import { sendLoader } from '~/systems/Send/__mocks__/send';
 import { store } from '~/systems/Store';
 
 import { TxApprove } from './TxApprove';
-
-const wallet = Wallet.generate();
 
 export default {
   component: TxApprove,
@@ -44,4 +41,4 @@ const Template: StoryFn<typeof TxApprove> = (_args, { loaded }) => {
 };
 
 export const Usage = Template.bind({});
-Usage.loaders = [sendLoader(wallet)];
+Usage.loaders = [sendLoader()];

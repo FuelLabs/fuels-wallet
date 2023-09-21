@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
-import { BN, TransactionRequest } from 'fuels';
+import { BN, Provider, TransactionRequest } from 'fuels';
 import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
 import { AccountService } from '~/systems/Account';
 import { FetchMachine, WalletLockedCustom } from '~/systems/Core';
@@ -136,7 +136,8 @@ export const sendMachine = createMachine(
           if (!to || !assetId || !amount || !network?.url || !account) {
             throw new Error('Missing params for transaction request');
           }
-          const wallet = new WalletLockedCustom(account.address, network.url);
+          const provider = await Provider.create(network.url);
+          const wallet = new WalletLockedCustom(account.address, provider);
           const createOpts = { to, amount, assetId, provider: wallet.provider };
           const transactionRequest = await TxService.fundTransaction({
             transactionRequest: await TxService.createTransfer(createOpts),

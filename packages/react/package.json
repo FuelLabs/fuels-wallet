@@ -25,7 +25,7 @@
     "ts:check": "pnpm tsc --noEmit"
   },
   "peerDependencies": {
-    "fuels": ">=0.57.0"
+    "fuels": ">=0.58.0"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.29.5",
@@ -36,6 +36,6 @@
   "devDependencies": {
     "@types/chrome": "^0.0.243",
     "tsup": "^6.5.0",
-    "fuels": "0.57.0"
+    "fuels": "0.58.0"
   }
 }

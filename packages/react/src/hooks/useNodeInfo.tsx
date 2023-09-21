@@ -14,7 +14,7 @@ export const useNodeInfo = ({ version = '0.0.0' }: NodeInfoParams = {}) => {
   const { data: nodeInfo, ...query } = useQuery(
     [QUERY_KEYS.nodeInfo, provider?.url],
     () => {
-      return provider?.getNodeInfo();
+      return provider?.fetchNode();
     },
     {
       enabled: !!provider,

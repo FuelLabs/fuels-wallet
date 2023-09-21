@@ -1,6 +1,6 @@
 import type { Account, Asset, Network } from '@fuel-wallet/types';
 import { expect } from '@playwright/test';
-import { Signer, bn, hashMessage, Wallet } from 'fuels';
+import { Signer, bn, hashMessage, Wallet, Provider } from 'fuels';
 
 import {
   seedWallet,
@@ -405,7 +405,7 @@ test.describe('FuelWallet Extension', () => {
 
             // TODO: remove this gas config once SDK fixes and start with correct values
             const chain = await wallet.provider.getChain();
-            const nodeInfo = await wallet.provider.getNodeInfo();
+            const nodeInfo = await wallet.provider.fetchNode();
             const gasLimit = chain.consensusParameters.maxGasPerTx;
             const gasPrice = nodeInfo.minGasPrice;
             const response = await wallet.transfer(
@@ -422,8 +422,11 @@ test.describe('FuelWallet Extension', () => {
       }
 
       async function approveTxCheck(senderAccount: Account) {
+        const provider = await Provider.create(
+          process.env.VITE_FUEL_PROVIDER_URL
+        );
         const receiverWallet = Wallet.generate({
-          provider: process.env.VITE_FUEL_PROVIDER_URL,
+          provider,
         });
         const AMOUNT_TRANSFER = 100;
 
@@ -482,8 +485,11 @@ test.describe('FuelWallet Extension', () => {
           popupPage,
           'Account 2'
         );
+        const provider = await Provider.create(
+          process.env.VITE_FUEL_PROVIDER_URL
+        );
         const receiverWallet = Wallet.generate({
-          provider: process.env.VITE_FUEL_PROVIDER_URL,
+          provider,
         });
         const AMOUNT_TRANSFER = 100;
 
