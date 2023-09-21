@@ -25,6 +25,8 @@
     "ts:check": "pnpm tsc --noEmit"
   },
   "peerDependencies": {
+    "@fuel-ui/css": "0.21.0",
+    "@fuel-ui/react": "0.21.0",
     "fuels": ">=0.57.0"
   },
   "dependencies": {

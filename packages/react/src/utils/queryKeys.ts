@@ -8,4 +8,9 @@ export const QUERY_KEYS = {
   transaction: 'transaction',
   transactionReceipts: 'transactionReceipts',
   nodeInfo: 'nodeInfo',
+  connectorList: 'connectorList',
+};
+
+export const MUTATION_KEYS = {
+  connect: 'connect',
 };
