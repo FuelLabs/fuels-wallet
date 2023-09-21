@@ -162,8 +162,8 @@ importers:
         specifier: workspace:*
         version: link:../types
       '@fuels/assets':
-        specifier: file:/Users/mrbytes/fuels/fuels-npm-packs/packages/assets/fuels-assets-0.0.9.tgz
-        version: file:../fuels-npm-packs/packages/assets/fuels-assets-0.0.9.tgz
+        specifier: 0.0.11
+        version: 0.0.11
       '@fuels/local-storage':
         specifier: 0.0.9
         version: 0.0.9
@@ -432,8 +432,6 @@ importers:
       vite-tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.0(typescript@5.1.6)(vite@4.4.9)
-
-  packages/asset-list: {}
 
   packages/docs:
     dependencies:
@@ -3873,6 +3871,10 @@ packages:
       - ts-node
       - typescript
       - utf-8-validate
+    dev: false
+
+  /@fuels/assets@0.0.11:
+    resolution: {integrity: sha512-Ww8mO8apM/27OH2PR6LC3jg7IlnWN3yKVXuWIEpkEPy6QCDEiivsmA7H8moM2BH6VSKm8k4OiVKaOhaIDzOqHQ==}
     dev: false
 
   /@fuels/eslint-plugin@0.0.9(@testing-library/dom@9.3.1)(eslint@8.47.0)(typescript@5.1.6):
@@ -22745,10 +22747,4 @@ packages:
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
-    dev: false
-
-  file:../fuels-npm-packs/packages/assets/fuels-assets-0.0.9.tgz:
-    resolution: {integrity: sha512-AHAvVPShos0f+t23ItgG9jajjeZug8nrxtAKFMGOEfiJqaUr3u+fK5LB6hI12d8Y3B4JfcMScw/Ss5EqBDmKFw==, tarball: file:../fuels-npm-packs/packages/assets/fuels-assets-0.0.9.tgz}
-    name: '@fuels/assets'
-    version: 0.0.9
     dev: false

@@ -29,7 +29,7 @@
     "@fuel-ui/test-utils": "0.17.0",
     "@fuel-wallet/sdk": "workspace:*",
     "@fuel-wallet/types": "workspace:*",
-    "@fuels/assets": "file:/Users/mrbytes/fuels/fuels-npm-packs/packages/assets/fuels-assets-0.0.9.tgz",
+    "@fuels/assets": "0.0.11",
     "@fuels/local-storage": "0.0.9",
     "@fuels/react-xstore": "0.0.9",
     "@hookform/resolvers": "^3.2.0",
