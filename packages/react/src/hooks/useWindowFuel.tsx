@@ -5,6 +5,10 @@ export function useWindowFuel() {
 
   useEffect(() => {
     const onFuelLoaded = () => {
+      const connectorName = localStorage.getItem('connector');
+      if (window.fuel && connectorName) {
+        window.fuel.selectConnector(connectorName);
+      }
       setFuel(window.fuel);
     };
 

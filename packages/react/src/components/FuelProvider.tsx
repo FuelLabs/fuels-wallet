@@ -1,7 +1,7 @@
 import type { Fuel } from '@fuel-wallet/sdk';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { useContext, createContext, useEffect } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 
 import { useWindowFuel } from '../hooks';
 import { QUERY_KEYS } from '../utils';
@@ -25,7 +25,7 @@ type FuelProviderProps = {
   children?: ReactNode;
 };
 
-type FuelReactContextType = {
+export type FuelReactContextType = {
   fuel: Fuel | undefined;
 };
 
