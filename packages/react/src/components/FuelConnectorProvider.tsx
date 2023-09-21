@@ -56,7 +56,7 @@ export function FuelConnectorProvider({
     return initalConnectors
       .map((connector) => ({
         ...connector,
-        installed: connectorList.find((c) => c.name === connector.name),
+        installed: !!connectorList.find((c) => c.name === connector.name),
       }))
       .sort((a) => (a.installed ? -1 : 1));
   }, [initalConnectors, connectorList]);
