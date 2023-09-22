@@ -1,7 +1,7 @@
 import type { Account } from '@fuel-wallet/types';
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
-import { bn, Wallet } from 'fuels';
+import { bn, Provider, Wallet } from 'fuels';
 
 import { getButtonByText, hasText, visit, getInputByName } from '../commons';
 import { seedWallet } from '../commons/seedWallet';
@@ -11,6 +11,7 @@ test.describe('SendTransaction', () => {
   let browser: Browser;
   let page: Page;
   let account: Account;
+  let provider: Provider;
 
   test.beforeAll(async () => {
     browser = await chromium.launch();
@@ -19,11 +20,12 @@ test.describe('SendTransaction', () => {
     const { accounts } = await mockData(page);
     account = accounts[0];
     await seedWallet(account.address, bn(100_000_000));
+    provider = await Provider.create(process.env.VITE_FUEL_PROVIDER_URL);
   });
 
   test('Send transaction', async () => {
     const receiverWallet = Wallet.generate({
-      provider: process.env.VITE_FUEL_PROVIDER_URL,
+      provider,
     });
     await visit(page, '/send');
 
@@ -81,7 +83,7 @@ test.describe('SendTransaction', () => {
 
   test('Send transaction in other Asset', async () => {
     const receiverWallet = Wallet.generate({
-      provider: process.env.VITE_FUEL_PROVIDER_URL,
+      provider,
     });
     await visit(page, '/send');
 
