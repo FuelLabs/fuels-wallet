@@ -1,4 +1,4 @@
-import { Wallet, bn } from 'fuels';
+import { Address, bn } from 'fuels';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 import { MOCK_ASSETS } from '~/systems/Asset/__mocks__/assets';
@@ -9,7 +9,7 @@ import { sendMachine } from './sendMachine';
 import type { SendMachineService } from './sendMachine';
 
 const MOCK_INPUTS = {
-  address: Wallet.generate().address.toString(),
+  address: Address.fromRandom().toString(),
   asset: MOCK_ASSETS[0],
   amount: bn(100),
 };

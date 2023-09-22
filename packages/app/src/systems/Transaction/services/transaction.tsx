@@ -131,14 +131,15 @@ export class TxService {
     transactionRequest,
     providerUrl = '',
   }: TxInputs['send']) {
-    const wallet = new WalletLockedCustom(address, providerUrl);
+    const provider = await Provider.create(providerUrl);
+    const wallet = new WalletLockedCustom(address, provider);
     const txSent = await wallet.sendTransaction(transactionRequest);
 
     return txSent;
   }
 
   static async fetch({ txId, providerUrl = '' }: TxInputs['fetch']) {
-    const provider = new Provider(providerUrl);
+    const provider = await Provider.create(providerUrl);
     const txResult = await getTransactionSummary({ id: txId, provider });
     const txResponse = new TransactionResponse(txId, provider);
 
@@ -159,7 +160,7 @@ export class TxService {
     transactionRequest,
     providerUrl,
   }: TxInputs['simulateTransaction']) {
-    const provider = new Provider(providerUrl || '');
+    const provider = await Provider.create(providerUrl || '');
     const transaction = transactionRequest.toTransaction();
     const abiMap = await getAbiMap({
       inputs: transaction.inputs,
@@ -177,7 +178,7 @@ export class TxService {
     address,
     providerUrl = '',
   }: TxInputs['getTransactionHistory']) {
-    const provider = new Provider(providerUrl || '');
+    const provider = await Provider.create(providerUrl || '');
 
     const txSummaries = await getTransactionsSummaries({
       provider,
@@ -204,7 +205,8 @@ export class TxService {
       AccountService.getCurrentAccount(),
       NetworkService.getSelectedNetwork(),
     ]);
-    const wallet = new WalletLockedCustom(account!.address, network!.url);
+    const provider = await Provider.create(network!.url);
+    const wallet = new WalletLockedCustom(account!.address, provider);
     const { gasLimit, gasPrice } = await getGasConfig(wallet.provider);
     const params: ScriptTransactionRequestLike = { gasLimit, gasPrice };
     const request = new ScriptTransactionRequest(params);
@@ -251,7 +253,7 @@ export class TxService {
   }
 
   static async fundTransaction(input: TxInputs['fundTransaction']) {
-    const { minGasPrice } = await input.wallet.provider.getNodeInfo();
+    const { minGasPrice } = await input.wallet.provider.fetchNode();
     const transactionRequest = await TxService.addResources({
       ...input,
       gasFee: minGasPrice,

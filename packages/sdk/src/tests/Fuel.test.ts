@@ -1,3 +1,4 @@
+import type { WalletUnlocked } from 'fuels';
 import {
   Address,
   bn,
@@ -11,7 +12,7 @@ import { getGasConfig } from '../utils';
 
 import type { MockServices } from './__mock__';
 import {
-  toWallet,
+  createToWallet,
   mockFuel,
   seedWallet,
   AbiContractId,
@@ -22,9 +23,11 @@ import { FUEL_NETWORK } from './constants';
 describe('Fuel', () => {
   let mocks: MockServices;
   let fuel: Fuel;
+  let toWallet: WalletUnlocked;
 
-  beforeAll(() => {
-    mocks = mockFuel();
+  beforeAll(async () => {
+    mocks = await mockFuel();
+    toWallet = await createToWallet();
     fuel = window.fuel!;
   });
 
@@ -192,7 +195,7 @@ describe('Fuel', () => {
 
     const gasLimit = (await wallet.provider.getChain()).consensusParameters
       .maxGasPerTx;
-    const gasPrice = (await wallet.provider.getNodeInfo()).minGasPrice;
+    const gasPrice = (await wallet.provider.fetchNode()).minGasPrice;
     const response = await wallet.transfer(toAddress, amount, BaseAssetId, {
       gasPrice,
       gasLimit,
@@ -209,7 +212,7 @@ describe('Fuel', () => {
 
   test('getProvider', async () => {
     const provider = await fuel.getProvider();
-    const nodeInfo = await provider.getNodeInfo();
+    const nodeInfo = await provider.fetchNode();
     expect(nodeInfo.nodeVersion).toBeTruthy();
   });
 
@@ -240,8 +243,8 @@ describe('Fuel Events', () => {
   let mocks: MockServices;
   let fuel: Fuel;
 
-  beforeAll(() => {
-    mocks = mockFuel();
+  beforeAll(async () => {
+    mocks = await mockFuel();
     fuel = window.fuel!;
   });
 
