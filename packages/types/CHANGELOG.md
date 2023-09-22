@@ -1,5 +1,19 @@
 # @fuel-wallet/types
 
+## 0.13.0
+
+### Minor Changes
+
+- [#866](https://github.com/FuelLabs/fuels-wallet/pull/866) [`86b72b9`](https://github.com/FuelLabs/fuels-wallet/commit/86b72b98fbe8441d6327f7283bf27b6603664821) Thanks [@luizstacio](https://github.com/luizstacio)! - Improve Fuel SDK detecction handler and add version method
+
+- [#864](https://github.com/FuelLabs/fuels-wallet/pull/864) [`c6e3069`](https://github.com/FuelLabs/fuels-wallet/commit/c6e3069d633e25bbf52dc9ee9257c36d0bf6a9bb) Thanks [@luizstacio](https://github.com/luizstacio)! - Update fuels package to latest version
+
+### Patch Changes
+
+- [#877](https://github.com/FuelLabs/fuels-wallet/pull/877) [`b13f13a`](https://github.com/FuelLabs/fuels-wallet/commit/b13f13a4ee1db41610fcca1f4deed7a9e509ca54) Thanks [@luizstacio](https://github.com/luizstacio)! - Update to use @fuels/assets package for assets metadata.
+
+- [#876](https://github.com/FuelLabs/fuels-wallet/pull/876) [`7696757`](https://github.com/FuelLabs/fuels-wallet/commit/76967574d628bc0f96fb8df56afd920440f24815) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: update fuels-ts sdk and move from provider sync to async.
+
 ## 0.12.3
 
 ### Patch Changes
