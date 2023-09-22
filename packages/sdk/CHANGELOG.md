@@ -1,5 +1,19 @@
 # @fuel-wallet/sdk
 
+## 0.13.0
+
+### Minor Changes
+
+- [#866](https://github.com/FuelLabs/fuels-wallet/pull/866) [`86b72b9`](https://github.com/FuelLabs/fuels-wallet/commit/86b72b98fbe8441d6327f7283bf27b6603664821) Thanks [@luizstacio](https://github.com/luizstacio)! - Improve Fuel SDK detecction handler and add version method
+
+- [#875](https://github.com/FuelLabs/fuels-wallet/pull/875) [`e446225`](https://github.com/FuelLabs/fuels-wallet/commit/e446225d39772b3615a923d01539559940f085f0) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: dispatch current account null when current account is not connected
+
+- [#864](https://github.com/FuelLabs/fuels-wallet/pull/864) [`c6e3069`](https://github.com/FuelLabs/fuels-wallet/commit/c6e3069d633e25bbf52dc9ee9257c36d0bf6a9bb) Thanks [@luizstacio](https://github.com/luizstacio)! - Update fuels package to latest version
+
+### Patch Changes
+
+- [#861](https://github.com/FuelLabs/fuels-wallet/pull/861) [`2a0282e`](https://github.com/FuelLabs/fuels-wallet/commit/2a0282eff86def9a45a394320f15c5eeecc140f9) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix connectors syncing on Fuel SDK standalone use
+
 ## 0.12.3
 
 ### Patch Changes
