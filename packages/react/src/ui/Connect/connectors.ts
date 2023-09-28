@@ -26,16 +26,16 @@ export const FUEL_WALLET_DEVELOPMENT_CONNECTOR: Connector = {
 };
 
 export const FUELET_CONNECTOR: Connector = {
-  name: 'Fuelet',
+  name: 'Fuelet Wallet',
   image: {
     light: '/connectors/fuelet-light.svg',
     dark: '/connectors/fuelet-dark.svg',
   },
-  connector: 'Fuelet',
+  connector: 'Fuelet Wallet',
   install: {
     action: 'Install',
-    description: 'To connect your Fuelet, install the browser extension.',
-    link: 'https://chrome.google.com/webstore/detail/fuelet-wallet-fuel/bifidjkcdpgfnlbcjpdkdcnbiooooblg',
+    description: 'Install Fuelet Wallet in order to connect it.',
+    link: 'https://fuelet.app/download/',
   },
   installed: false,
 };
