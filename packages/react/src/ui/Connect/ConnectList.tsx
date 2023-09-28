@@ -23,7 +23,7 @@ export const ConnectList = ({
           variant="ghost"
           key={connector.connector}
           onPress={() => onPress(connector)}
-          aria-label={`Connect to ${connector.name}}`}
+          aria-label={`Connect to ${connector.name}`}
           data-theme={theme}
           css={styles.connector}
           tabIndex={index}
