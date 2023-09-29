@@ -6,12 +6,14 @@
   "scripts": {
     "dev:e2e-contracts": "vite",
     "build": "tsc && vite build",
+    "build:contracts": "pnpm exec fuels typegen -i ./contracts/custom_asset/out/debug/*-abi.json -o ./src/contracts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
     "@fuel-ui/css": "0.21.0",
     "@fuel-ui/react": "0.21.0",
+    "fuels": "0.58.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
