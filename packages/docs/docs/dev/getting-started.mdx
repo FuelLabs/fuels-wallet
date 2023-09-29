@@ -19,6 +19,14 @@ window.fuel.connect();
 
 You can try this code directly in the developer console.
 
+## Using React
+
+Fuel Wallet provides a set of React hooks that improves the developer experience.
+
+Please check out the [React Hooks](/docs/dev/react-hooks/) section to learn how to use them.
+
+Otherwise, if you are working with other frameworks, you can use the typescript SDK directly as shown below.
+
 ## TypeScript
 
 The Fuel Wallet SDK provides a package on npm, making it more convenient to use in TypeScript projects.
@@ -69,20 +77,10 @@ const fuel = new Fuel();
 await fuel.connect();
 ```
 
-## Detect when fuel is loaded
+### Detect when fuel is loaded
 
 It's possible that your application loads before `window.fuel` is injected. To detect when the `fuel` is loaded and ready to use, you can listen to the event `FuelLoaded` on the document.
 
 <CodeImport file="../../examples/FuelLoaded.tsx" commentBlock="detectFuel" />
 
 <Examples.FuelLoaded />
-
-### With React
-
-In a React app, you can use the `useFuel` hook below to detect if the Fuel Wallet extension is installed or not.
-
-<CodeImport file="../../src/hooks/useFuel.tsx" />
-
-Here is how you can use the `useFuel` hook in a component:
-
-<CodeImport file="../../examples/events/Accounts.tsx" commentBlock="useFuel" />
