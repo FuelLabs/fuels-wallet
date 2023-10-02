@@ -13,9 +13,9 @@
   "dependencies": {
     "@fuel-ui/css": "0.21.0",
     "@fuel-ui/react": "0.21.0",
+    "@fuel-wallet/react": "workspace:*",
     "@fuel-wallet/sdk": "workspace:*",
     "@fuel-wallet/types": "workspace:*",
-    "@fuel-wallet/react": "workspace:*",
     "fuels": "0.58.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
