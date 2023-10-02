@@ -13,7 +13,7 @@ export const MintAssetCard = () => {
   return (
     <Card>
       <Card.Header>Mint Custom Asset</Card.Header>
-      <Card.Body>
+      <Card.Body aria-label="Mint asset card">
         <InputAmount hiddenBalance onChange={setAmount} value={amount} />
         <Button
           isDisabled={!wallet.wallet}
