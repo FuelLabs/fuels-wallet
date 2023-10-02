@@ -1,10 +1,12 @@
-import { Card, Button } from '@fuel-ui/react';
+import { Card, Button, InputAmount } from '@fuel-ui/react';
 import { useAccount, useWallet } from '@fuel-wallet/react';
-import { bn } from 'fuels';
+import { BN, bn } from 'fuels';
 
 import { mint } from '../contract_interactions';
+import { useState } from 'react';
 
 export const MintAssetCard = () => {
+  const [amount, setAmount] = useState<BN | null>(bn());
   const account = useAccount();
   const wallet = useWallet({ address: account.account });
 
@@ -12,14 +14,15 @@ export const MintAssetCard = () => {
     <Card>
       <Card.Header>Mint Custom Asset</Card.Header>
       <Card.Body>
+        <InputAmount hiddenBalance onChange={setAmount} value={amount} />
         <Button
           isDisabled={!wallet.wallet}
           onPress={async () => {
-            if (wallet.wallet) {
-              await mint({ wallet: wallet.wallet, amount: bn(100) });
+            if (wallet.wallet && amount) {
+              await mint({ wallet: wallet.wallet, amount });
             }
           }}
-          css={{ width: '$full' }}
+          css={{ width: '$full', marginTop: '10px' }}
         >
           Mint
         </Button>
