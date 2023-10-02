@@ -81,7 +81,7 @@ export async function walletApprove(context: BrowserContext) {
   await approveButton.click();
 }
 
-async function getWalletPage(context: BrowserContext) {
+export async function getWalletPage(context: BrowserContext) {
   let walletPage = context.pages().find((p) => p.url().includes('/popup?'));
   if (!walletPage) {
     walletPage = await context.waitForEvent('page', {
