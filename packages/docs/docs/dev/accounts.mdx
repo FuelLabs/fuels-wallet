@@ -40,3 +40,14 @@ To listen to current account events, you can use the `fuel.events.currentAccount
   commentBlock="eventCurrentAccount"
 />
 <Examples.Events.CurrentAccount />
+
+### With React
+
+You can keep track of the current account being used just by invoking the `useAccount` hook as shown below:
+
+```tsx
+import { useAccount } from '@fuel-wallet/react';
+// ...
+const { accountAddress } = useAccount();
+console.log('Current Account ', currentAccount);
+```

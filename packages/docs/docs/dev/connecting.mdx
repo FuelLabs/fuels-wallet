@@ -39,14 +39,28 @@ listen for changes in the connection.
 
 ### With React
 
-In a React app, you can use the `useIsConnected` hook below to check if the user's wallet is connected.
-This hook depends on the `useFuel` hook on the [Getting Started](../getting-started#with-react) page.
+In a React app, you can use the `useIsConnected` hook below to check if the user's wallet is IsConnected
 
-<CodeImport file="../../src/hooks/useIsConnected.tsx" />
+```ts
+import { useIsConnected } from '@fuel-wallet/react';
+// ...
+const { isConnected } = useIsConnected();
+```
 
-Here is how you can use the `useIsConnected` hook in a component:
+You can import the `useConnect` hook to access the 'connect' function and request a connection.
 
-<CodeImport
-  file="../../examples/events/Accounts.tsx"
-  commentBlock="useisConnected"
-/>
+```tsx
+import { useConnect } from '@fuel-wallet/react';
+// ...
+const { connect } = useConnect();
+await connect();
+```
+
+To disconnect, use the `useDisconnect()` hook.
+
+```tsx
+import { useDisconnect } from '@fuel-wallet/react';
+// ...
+const { disconnect } = useDisconnect();
+await disconnect();
+```
