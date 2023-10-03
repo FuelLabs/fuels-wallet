@@ -28,7 +28,7 @@
       "outputs": ["dist/**", "dist-crx/**"]
     },
     "build:e2e-contracts": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["build:app"],
       "outputs": ["dist/**"]
     },
     "build:all": {
