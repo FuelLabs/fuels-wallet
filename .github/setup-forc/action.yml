@@ -6,7 +6,7 @@ inputs:
     default: 1.71.1
 
 runs:
-  using: 'composit'
+  using: 'composite'
   steps:
     - name: Install Rust Toolchain
       uses: actions-rs/toolchain@v1
