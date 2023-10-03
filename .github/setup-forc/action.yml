@@ -2,7 +2,7 @@ name: 'Setup Forc'
 
 inputs:
   rust-version:
-    description: "Rust version",
+    description: "Rust version"
     default: 1.71.1
 
 runs:
