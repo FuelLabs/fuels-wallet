@@ -119,7 +119,7 @@ jobs:
         with:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: ./.github/setup-forc
+      # - uses: ./.github/setup-forc
 
       - name: Start Test Node
         run: pnpm node:up:test
