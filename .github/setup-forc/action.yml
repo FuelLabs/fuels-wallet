@@ -1,0 +1,24 @@
+name: 'Setup Forc'
+
+inputs:
+  rust-version:
+    description: "Rust version",
+    default: 1.71.1
+
+runs:
+  using: 'composit'
+  steps:
+    - name: Install Rust Toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: ${{ inputs.rust-version }}
+        # selecting a toolchain either by action or manual `rustup` calls should happen
+        # before the cache plugin, as it uses the current rustc version as its cache key
+        override: true
+
+    - uses: Swatinem/rust-cache@v1
+
+    - uses: actions/checkout@v2
+    - name: Install Fuel toolchain
+      uses: FuelLabs/action-fuel-toolchain@master
