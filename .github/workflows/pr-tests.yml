@@ -114,12 +114,19 @@ jobs:
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/setup-forc
       - uses: FuelLabs/github-actions/setups/node@master
+      - uses: ./.github/setup-forc
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      
+      ## This is needed because for some reason setup-forc and setup-node
+      ## Override eachothers installations
+      - name: Run PNPM install
+        id: pnpm-cache
+        run:
+          pnpm recursive install --frozen-lockfile
 
       - name: Start Test Node
         run: pnpm node:up:test
