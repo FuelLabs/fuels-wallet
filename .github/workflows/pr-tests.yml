@@ -114,12 +114,12 @@ jobs:
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
+      - uses: ./.github/setup-forc
       - uses: FuelLabs/github-actions/setups/node@master
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      # - uses: ./.github/setup-forc
 
       - name: Start Test Node
         run: pnpm node:up:test
