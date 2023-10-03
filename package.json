@@ -40,6 +40,7 @@
     "dev:storybook": "./scripts/dev.sh --storybook",
     "dev:docs": "./scripts/dev.sh --docs",
     "dev:crx": "./scripts/dev.sh --crx",
+    "dev:e2e-contracts": "./scripts/dev.sh --e2e-contracts-test",
     "lint": "run-s lint:check prettier:check",
     "lint:check": "eslint . --ext .ts,.tsx,.js,.jsx",
     "lint:fix": "pnpm lint:check --fix",
