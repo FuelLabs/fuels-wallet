@@ -58,6 +58,7 @@ export async function walletSetup(
   // Navigate to add network and add test network
   await signupPage.locator('[aria-label="Selected Network"]').click();
   await signupPage.locator('button').getByText('Add new network').click();
+  // TODO: remove process.env and take as param
   await signupPage
     .locator('[aria-label="Network URL"]')
     .fill(process.env.FUEL_PROVIDER_URL || 'http://localhost:4000/graphql');
@@ -82,12 +83,8 @@ export async function walletApprove(context: BrowserContext) {
 }
 
 export async function getWalletPage(context: BrowserContext) {
-  let walletPage = context.pages().find((p) => p.url().includes('/popup?'));
-  if (!walletPage) {
-    walletPage = await context.waitForEvent('page', {
-      predicate: (page) => page.url().includes('/popup'),
-    });
-  }
-
+  const walletPage = await context.waitForEvent('page', {
+    predicate: (page) => page.url().includes('/popup'),
+  });
   return walletPage;
 }
