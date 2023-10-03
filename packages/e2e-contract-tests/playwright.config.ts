@@ -10,7 +10,7 @@ const config: PlaywrightTestConfig = defineConfig({
   webServer: {
     command: `pnpm dev:e2e-contracts --mode test --port ${process.env.PORT}`,
     port: Number(process.env.PORT),
-    reuseExistingServer: false,
+    reuseExistingServer: true,
   },
   use: {
     baseURL: `http://localhost:${process.env.PORT}`,

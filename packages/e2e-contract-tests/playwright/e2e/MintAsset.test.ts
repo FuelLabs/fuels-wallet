@@ -42,9 +42,18 @@ test.describe('Mint Assets', () => {
     const mintButton = getButtonByText(page, 'Mint');
     await mintButton.click();
 
+    // test asset is correct
     const assetId = calculateAssetId(process.env.VITE_MINT_CONTRACT_ID!);
     const walletPage = await getWalletPage(context);
     // short address function copied from app package
     await hasText(walletPage, shortAddress(assetId));
+
+    // test mint amount is correct
+    await hasText(walletPage, mintAmount);
+
+    // test gas fee is shown and correct
+    await hasText(walletPage, 'Fee (network)');
+    // 0.000000001 since we hardcode a gas price of 1 in our mint function
+    await hasText(walletPage, '0.000000001 ETH');
   });
 });
