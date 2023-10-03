@@ -5,7 +5,7 @@ import {
   FUEL_WALLET_DEVELOPMENT_CONNECTOR,
 } from '@fuel-wallet/react';
 
-const IS_TEST = false;
+import { IS_TEST } from '../config';
 
 export const Header = () => {
   const connect = useConnect();

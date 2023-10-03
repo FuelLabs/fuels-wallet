@@ -7,6 +7,12 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: Number(process.env.PORT),
-    strictPort: true,
+  },
+  define: {
+    'process.env': {},
+  },
+  build: {
+    target: ['es2020'],
+    outDir: process.env.BUILD_PATH || 'dist',
   },
 });

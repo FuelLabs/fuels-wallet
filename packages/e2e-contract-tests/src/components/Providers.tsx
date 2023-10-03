@@ -6,11 +6,11 @@ import {
 } from '@fuel-wallet/react';
 import { ThemeProvider } from '@fuel-ui/react';
 
+import { IS_TEST } from '../config';
+
 type ProviderProps = {
   children: ReactNode;
 };
-
-const IS_TEST = false;
 
 export const Providers = ({ children }: ProviderProps) => {
   return (
