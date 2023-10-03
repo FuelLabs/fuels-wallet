@@ -8,7 +8,8 @@ import { getButtonByText } from './button';
 export async function walletSetup(
   context: BrowserContext,
   fuelExtensionId: string,
-  page: Page
+  page: Page,
+  fuelProviderUrl: string = 'http://localhost:4000/graphql'
 ) {
   await page.goto(`chrome-extension://${fuelExtensionId}/popup.html`);
 
@@ -58,10 +59,7 @@ export async function walletSetup(
   // Navigate to add network and add test network
   await signupPage.locator('[aria-label="Selected Network"]').click();
   await signupPage.locator('button').getByText('Add new network').click();
-  // TODO: remove process.env and take as param
-  await signupPage
-    .locator('[aria-label="Network URL"]')
-    .fill(process.env.FUEL_PROVIDER_URL || 'http://localhost:4000/graphql');
+  await signupPage.locator('[aria-label="Network URL"]').fill(fuelProviderUrl);
   const addButton = getButtonByText(signupPage, 'Add');
   await addButton.click({ timeout: 9000 });
 }
