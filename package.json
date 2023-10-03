@@ -30,6 +30,8 @@
     "build:app": "turbo run build:app",
     "build:test": "NODE_ENV=test pnpm build:app",
     "build:libs": "turbo run build",
+    "build:e2e-contracts": "turbo run build:e2e-contracts",
+    "build:test-e2e-contracts": "NODE_ENV=test pnpm build:e2e-contracts",
     "changeset": "changeset",
     "changeset:empty": "changeset --empty",
     "changeset:release": "changeset publish --no-git-tag",
