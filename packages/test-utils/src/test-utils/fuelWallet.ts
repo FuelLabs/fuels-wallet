@@ -9,7 +9,7 @@ export async function walletSetup(
   context: BrowserContext,
   fuelExtensionId: string,
   page: Page,
-  fuelProviderUrl: string = 'http://localhost:4000/graphql'
+  fuelProviderUrl: string
 ) {
   await page.goto(`chrome-extension://${fuelExtensionId}/popup.html`);
 
