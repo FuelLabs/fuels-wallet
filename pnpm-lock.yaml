@@ -18,6 +18,7 @@ overrides:
   pnpm@>=8.0.0 <8.6.8: '>=8.6.8'
   '@adobe/css-tools': '>=4.3.1'
   postcss@<8.4.31: '>=8.4.31'
+  zod@<=3.22.2: '>3.22.2'
 
 importers:
 
@@ -18148,7 +18149,7 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
       styled-jsx: 5.1.1(@babel/core@7.22.11)(react@18.2.0)
       watchpack: 2.4.0
-      zod: 3.21.4
+      zod: 3.22.3
     optionalDependencies:
       '@next/swc-darwin-arm64': 13.4.13
       '@next/swc-darwin-x64': 13.4.13
@@ -22880,8 +22881,8 @@ packages:
       type-fest: 2.19.0
     dev: false
 
-  /zod@3.21.4:
-    resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
+  /zod@3.22.3:
+    resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
     dev: false
 
   /zustand@4.4.1(@types/react@18.2.20)(react@18.2.0):
