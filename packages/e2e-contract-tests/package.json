@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev:e2e-contracts": "vite",
-    "build": "tsc && vite build",
+    "build:web": "vite build",
     "build:contracts": "pnpm exec fuels typegen -i ./contracts/custom_asset/out/debug/*-abi.json -o ./src/contracts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
