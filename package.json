@@ -32,6 +32,7 @@
     "build:libs": "turbo run build",
     "build:e2e-contracts": "turbo run build:e2e-contracts",
     "build:test-e2e-contracts": "NODE_ENV=test pnpm build:e2e-contracts",
+    "build:e2e-contracts-types": "pnpm run --filter=@fuel-wallet/e2e-contract-tests build:contracts",
     "changeset": "changeset",
     "changeset:empty": "changeset --empty",
     "changeset:release": "changeset publish --no-git-tag",

@@ -130,12 +130,21 @@ jobs:
           ## with sourcemaps
           NODE_OPTIONS: "--max-old-space-size=4096"
           NODE_ENV: test
+      
+      - name: Build Contracts
+        run: forc build --path packages/e2e-contract-tests/contracts/custom_asset
+
+      - name: Deploy Contracts
+        run: forc deploy --path packages/e2e-contract-tests/contracts/custom_asset --node-url http://localhost:4001/graphql --default-signer
+
+      - name: Generate Contract Types
+        run: pnpm build:e2e-contracts-types
 
       # E2E tests running with Playwright
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Run E2E Tests
+      - name: Run E2E Contract Tests
         run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts
         env:
           NODE_ENV: test
