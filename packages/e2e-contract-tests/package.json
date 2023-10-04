@@ -1,0 +1,35 @@
+{
+  "name": "@fuel-wallet/e2e-contract-tests",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev:e2e-contracts": "vite",
+    "build:web": "vite build",
+    "build:contracts": "pnpm exec fuels typegen -i ./contracts/custom_asset/out/debug/*-abi.json -o ./src/contracts",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fuel-wallet/react": "workspace:*",
+    "@fuel-wallet/sdk": "workspace:*",
+    "@fuel-wallet/types": "workspace:*",
+    "fuels": "0.58.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@fuel-wallet/test-utils": "workspace:*",
+    "@playwright/test": "^1.37.1",
+    "@types/node": "^20.8.0",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitejs/plugin-react": "^4.0.3",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
+  }
+}

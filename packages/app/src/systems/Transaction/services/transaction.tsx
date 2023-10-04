@@ -194,6 +194,7 @@ export class TxService {
     params: GetTransactionSummaryFromRequestParams
   ): Promise<TransactionSummary<TTransactionType>> {
     const { provider, transactionRequest, abiMap } = params;
+    await provider.estimateTxDependencies(transactionRequest);
     const transaction = transactionRequest.toTransaction();
     const transactionBytes = transactionRequest.toTransactionBytes();
     const { dryRun: gqlReceipts } = await provider.operations.dryRun({
