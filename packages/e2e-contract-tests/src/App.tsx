@@ -1,4 +1,5 @@
 import { Box, Card } from '@fuel-ui/react';
+
 import { Header, MintAssetCard, Providers } from './components';
 
 function App() {

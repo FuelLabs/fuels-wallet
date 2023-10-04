@@ -8,9 +8,11 @@ import {
   FUEL_MNEMONIC,
   seedWallet,
 } from '@fuel-wallet/test-utils';
+import type { WalletUnlocked } from 'fuels';
+import { Provider, Wallet, bn } from 'fuels';
+
 import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
-import { Provider, Wallet, WalletUnlocked, bn } from 'fuels';
 
 const { FUEL_PROVIDER_URL, WALLET_SECRET } = process.env;
 

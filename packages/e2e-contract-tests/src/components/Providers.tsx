@@ -1,10 +1,11 @@
-import type { ReactNode } from 'react';
-import { FuelProvider, FuelConnectorProvider } from '@fuel-wallet/react';
+import { ThemeProvider } from '@fuel-ui/react';
 import {
+  FuelProvider,
+  FuelConnectorProvider,
   FUEL_WALLET_CONNECTOR,
   FUEL_WALLET_DEVELOPMENT_CONNECTOR,
 } from '@fuel-wallet/react';
-import { ThemeProvider } from '@fuel-ui/react';
+import type { ReactNode } from 'react';
 
 import { IS_TEST } from '../config';
 

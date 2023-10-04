@@ -1,4 +1,8 @@
-import { PlaywrightTestConfig, defineConfig, devices } from '@playwright/test';
+import {
+  type PlaywrightTestConfig,
+  defineConfig,
+  devices,
+} from '@playwright/test';
 import './load.envs';
 
 const config: PlaywrightTestConfig = defineConfig({

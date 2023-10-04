@@ -1,8 +1,10 @@
-import { FuelWalletLocked } from '@fuel-wallet/sdk';
-import { BaseAssetId, BigNumberish } from 'fuels';
+import type { FuelWalletLocked } from '@fuel-wallet/sdk';
+import type { BigNumberish } from 'fuels';
+import { BaseAssetId } from 'fuels';
+
 import { VITE_MINT_CONTRACT_ID } from '../config';
 import { MintCustomAssetAbi__factory } from '../contracts';
-import { IdentityInput } from '../contracts/MintCustomAssetAbi';
+import type { IdentityInput } from '../contracts/MintCustomAssetAbi';
 
 const CONTRACT_ID = VITE_MINT_CONTRACT_ID;
 

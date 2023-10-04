@@ -1,9 +1,10 @@
 import { Card, Button, InputAmount } from '@fuel-ui/react';
 import { useAccount, useWallet } from '@fuel-wallet/react';
-import { BN, bn } from 'fuels';
+import type { BN } from 'fuels';
+import { bn } from 'fuels';
+import { useState } from 'react';
 
 import { mint } from '../contract_interactions';
-import { useState } from 'react';
 
 export const MintAssetCard = () => {
   const [amount, setAmount] = useState<BN | null>(bn());

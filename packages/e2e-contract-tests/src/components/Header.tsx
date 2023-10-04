@@ -1,6 +1,7 @@
 import { Nav } from '@fuel-ui/react';
-import { useAccount, useConnect } from '@fuel-wallet/react';
 import {
+  useAccount,
+  useConnect,
   FUEL_WALLET_CONNECTOR,
   FUEL_WALLET_DEVELOPMENT_CONNECTOR,
 } from '@fuel-wallet/react';
