@@ -48,6 +48,7 @@ export const AssetItem: AssetItemComponent = ({
     imageUrl,
     amount,
     assetId,
+    decimals,
     isCustom,
   } = asset || {};
 
@@ -83,9 +84,18 @@ export const AssetItem: AssetItemComponent = ({
 
     if (amount) {
       return (
-        <Tooltip content={bn(amount).format()}>
+        <Tooltip
+          content={bn(amount).format({
+            units: decimals,
+          })}
+        >
           <Text css={{ fontSize: '$sm', fontWeight: '$normal' }}>
-            <AmountVisibility value={amount} visibility={visibility} /> {symbol}
+            <AmountVisibility
+              value={amount}
+              units={decimals}
+              visibility={visibility}
+            />{' '}
+            {symbol}
           </Text>
         </Tooltip>
       );

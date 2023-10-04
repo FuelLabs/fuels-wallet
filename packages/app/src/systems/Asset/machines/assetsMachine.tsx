@@ -180,6 +180,8 @@ export const assetsMachine = createMachine(
                 data: {
                   ...asset,
                   isCustom: false,
+                  decimals: asset.networks.find((n) => n.type === 'fuel')
+                    ?.decimals,
                   imageUrl: asset.icon || undefined,
                 },
               })

@@ -66,7 +66,14 @@ type AssetsAmountItemProps = {
 
 const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
   const assetAmountClass = cx('asset_amount');
-  const { name = '', symbol, imageUrl, assetId, amount } = assetAmount || {};
+  const {
+    name = '',
+    symbol,
+    imageUrl,
+    assetId,
+    amount,
+    decimals,
+  } = assetAmount || {};
 
   return (
     <Grid key={assetId} css={styles.root} className={assetAmountClass}>
@@ -84,7 +91,10 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
         </Text>
       </Copyable>
       <Box.Flex css={styles.amount}>
-        {bn(amount).format()} {symbol}
+        {bn(amount).format({
+          units: decimals,
+        })}{' '}
+        {symbol}
       </Box.Flex>
     </Grid>
   );
