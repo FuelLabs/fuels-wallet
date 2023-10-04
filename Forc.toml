@@ -1,2 +1,0 @@
-[workspace]
-members = ["./packages/contracts/token_contract"]
