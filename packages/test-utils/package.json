@@ -1,0 +1,33 @@
+{
+  "name": "@fuel-wallet/test-utils",
+  "private": true,
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "main": "src/index.ts",
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "typings": "dist/index.d.ts",
+    "exports": {
+      ".": {
+        "require": "dist/index.js",
+        "default": "dist/index.mjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pnpm ts:check && tsup",
+    "ts:check": "pnpm tsc --noEmit"
+  },
+  "dependencies": {
+    "fuels": "0.58.0"
+  },
+  "devDependencies": {
+    "tsup": "^7.2.0"
+  }
+}
