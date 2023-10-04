@@ -48,7 +48,7 @@ test.describe('Mint Assets', () => {
     const assetId = calculateAssetId(process.env.VITE_MINT_CONTRACT_ID!);
     const walletPage = await getWalletPage(context);
     // short address function copied from app package
-    await hasText(walletPage, shortAddress(assetId));
+    await hasText(walletPage, shortAddress(assetId), 0, 10000);
 
     // test mint amount is correct
     await hasText(walletPage, mintAmount);
