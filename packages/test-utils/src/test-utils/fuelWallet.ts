@@ -5,11 +5,12 @@ import { FUEL_MNEMONIC, FUEL_WALLET_PASSWORD } from '../mocks';
 
 import { getButtonByText } from './button';
 
+// TODO: this function can only setup a wallet on http://localhost:4001
+// because we cannot modify the existing testnet provider url
 export async function walletSetup(
   context: BrowserContext,
   fuelExtensionId: string,
-  page: Page,
-  fuelProviderUrl: string
+  page: Page
 ) {
   await page.goto(`chrome-extension://${fuelExtensionId}/popup.html`);
 
@@ -55,13 +56,6 @@ export async function walletSetup(
   await signupPage.goto(
     `chrome-extension://${fuelExtensionId}/popup.html#/wallet`
   );
-
-  // Navigate to add network and add test network
-  await signupPage.locator('[aria-label="Selected Network"]').click();
-  await signupPage.locator('button').getByText('Add new network').click();
-  await signupPage.locator('[aria-label="Network URL"]').fill(fuelProviderUrl);
-  const addButton = getButtonByText(signupPage, 'Add');
-  await addButton.click({ timeout: 9000 });
 }
 
 export async function walletConnect(context: BrowserContext) {
