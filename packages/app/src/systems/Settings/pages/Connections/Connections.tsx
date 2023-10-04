@@ -1,10 +1,9 @@
 import { AnimatePresence } from 'framer-motion';
+import { Layout } from '~/systems/Core';
 
 import { ConnectionEdit, ConnectionList } from '../../components';
 import { useConnections } from '../../hooks';
 import { ConnectionScreen } from '../../machines';
-
-import { Layout } from '~/systems/Core';
 
 export function Connections() {
   const state = useConnections();

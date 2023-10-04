@@ -1,11 +1,10 @@
 import { interpret } from 'xstate';
+import { expectStateMatch, mockVault } from '~/systems/Core/__tests__/utils';
 
 import { AccountService } from '../services';
 
 import type { AddAccountMachineService } from './addAccountMachine';
 import { addAccountMachine } from './addAccountMachine';
-
-import { expectStateMatch, mockVault } from '~/systems/Core/__tests__/utils';
 
 const machine = addAccountMachine.withContext({}).withConfig({
   actions: {

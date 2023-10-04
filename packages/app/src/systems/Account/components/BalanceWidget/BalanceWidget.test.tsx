@@ -1,13 +1,12 @@
 import { screen, testA11y } from '@fuel-ui/test-utils';
 import { fireEvent } from '@storybook/testing-library';
 import { act } from 'react-dom/test-utils';
+import { shortAddress, TestWrapper } from '~/systems/Core';
+import { renderWithProvider } from '~/systems/Core/__tests__/utils';
 
 import { MOCK_ACCOUNTS } from '../../__mocks__';
 
 import { BalanceWidget } from './BalanceWidget';
-
-import { shortAddress, TestWrapper } from '~/systems/Core';
-import { renderWithProvider } from '~/systems/Core/__tests__/utils';
 
 const ACCOUNT = {
   ...MOCK_ACCOUNTS[0],

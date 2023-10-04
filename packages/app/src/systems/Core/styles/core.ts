@@ -1,5 +1,4 @@
 import { cssObj } from '@fuel-ui/css';
-
 import { WALLET_WIDTH, WALLET_HEIGHT } from '~/config';
 
 export const scrollable = (

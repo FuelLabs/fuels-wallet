@@ -2,13 +2,12 @@
 import { cssObj } from '@fuel-ui/css';
 import { Icon, Drawer, IconButton, Box, Text } from '@fuel-ui/react';
 import { forwardRef } from 'react';
+import { APP_VERSION } from '~/config';
+import { useOverlay } from '~/systems/Overlay';
 
 import { Menu } from '..';
 import { sidebarItems } from '../../constants';
 import { ThemeToggler } from '../ThemeToggler';
-
-import { APP_VERSION } from '~/config';
-import { useOverlay } from '~/systems/Overlay';
 
 function SidebarContent() {
   const overlay = useOverlay();

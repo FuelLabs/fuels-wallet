@@ -13,7 +13,6 @@ export function MnemonicInput({
 }: MnemonicInputProps) {
   return (
     <input
-      role="textbox"
       value={value}
       onPaste={(ev) => onPaste(ev, index)}
       onChange={(ev) => onChange(ev.target.value, index)}

@@ -1,9 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
 import { Link } from '@fuel-ui/react';
+import { REPO_LINK } from '~/src/constants';
 
 import { Pre } from './Pre';
-
-import { REPO_LINK } from '~/src/constants';
 
 export type CodeImportProps = {
   file: string;

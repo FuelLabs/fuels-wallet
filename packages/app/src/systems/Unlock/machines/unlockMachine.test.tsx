@@ -1,10 +1,9 @@
 import { interpret } from 'xstate';
+import { MOCK_ACCOUNTS } from '~/systems/Account/__mocks__/accounts';
+import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 import type { UnlockMachineService } from './unlockMachine';
 import { unlockMachine } from './unlockMachine';
-
-import { MOCK_ACCOUNTS } from '~/systems/Account/__mocks__/accounts';
-import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 describe('unlockMachine', () => {
   let service: UnlockMachineService;

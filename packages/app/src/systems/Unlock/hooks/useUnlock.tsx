@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
-
-import type { UnlockMachineState } from '../machines';
-
 import { store, Services } from '~/store';
 import { VaultService } from '~/systems/Vault';
+
+import type { UnlockMachineState } from '../machines';
 
 const selectors = {
   error(state: UnlockMachineState) {

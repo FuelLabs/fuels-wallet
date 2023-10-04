@@ -3,7 +3,6 @@ import type {
   DatabaseObservableEvent,
 } from '@fuel-wallet/types';
 import EventEmitter from 'events';
-
 import { db } from '~/systems/Core/utils/database';
 
 export class DatabaseObservable<

@@ -1,5 +1,6 @@
 import { bn } from 'fuels';
 import { interpret } from 'xstate';
+import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 import { MOCK_ACCOUNTS } from '../__mocks__';
 import { AccountService } from '../services';
@@ -9,8 +10,6 @@ import type {
   EditAccountMachineEvents as MachineEvents,
 } from './editAccountMachine';
 import { editAccountMachine } from './editAccountMachine';
-
-import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 const MOCK_ACCOUNT = {
   ...MOCK_ACCOUNTS[0],

@@ -1,11 +1,10 @@
 import { bn, BaseAssetId } from 'fuels';
+import { mockServer } from '~/mocks/server';
+import { mockBalancesOnGraphQL } from '~/systems/Asset/__mocks__/assets';
 
 import { MOCK_ACCOUNTS } from '../__mocks__';
 
 import { AccountService } from './account';
-
-import { mockServer } from '~/mocks/server';
-import { mockBalancesOnGraphQL } from '~/systems/Asset/__mocks__/assets';
 
 const MOCK_ACCOUNT = MOCK_ACCOUNTS[0];
 const MOCK_BALANCES = [

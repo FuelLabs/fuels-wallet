@@ -2,7 +2,7 @@ import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Box, Copyable, Text, Tooltip } from '@fuel-ui/react';
 import { Address, isB256, isBech32 } from 'fuels';
-
+import { useState } from 'react';
 import { shortAddress } from '~/systems/Core';
 
 export type AddressProps = {
@@ -12,9 +12,12 @@ export type AddressProps = {
 
 export const FuelAddress = ({ address, css }: AddressProps) => {
   const isValidAddress = isB256(address) || isBech32(address);
-  const fuelAddress = isValidAddress
-    ? Address.fromString(address).toString()
-    : '';
+  const [showB256, setShowB56] = useState(false);
+  const getAddress = () => {
+    const addressInstance = Address.fromString(address);
+    return showB256 ? addressInstance.toB256() : addressInstance.toString();
+  };
+  const fuelAddress = isValidAddress ? getAddress() : '';
 
   return (
     <Box.Flex css={styles.root}>
@@ -24,8 +27,18 @@ export const FuelAddress = ({ address, css }: AddressProps) => {
         aria-label={fuelAddress}
         data-invalid-address={!isValidAddress}
       >
-        <Tooltip content={fuelAddress} className="address_tooltip" side="top">
-          <Text css={css}>{shortAddress(fuelAddress)}</Text>
+        <Tooltip
+          content={`Click to show ${showB256 ? 'Bech32' : 'HEX'} address`}
+          className="address_tooltip"
+          side="top"
+        >
+          <Text
+            className="address"
+            onClick={() => setShowB56(!showB256)}
+            css={css}
+          >
+            {shortAddress(fuelAddress)}
+          </Text>
         </Tooltip>
       </Copyable>
     </Box.Flex>
@@ -34,6 +47,7 @@ export const FuelAddress = ({ address, css }: AddressProps) => {
 
 const styles = {
   root: cssObj({
+    cursor: 'pointer',
     '.address_tooltip': cssObj({
       fontSize: '$sm',
       lineHeight: '$4',
@@ -41,6 +55,9 @@ const styles = {
       textAlign: 'center',
       wordWrap: 'break-word',
     }),
+    '.address': {
+      userSelect: 'none',
+    },
   }),
   copyable: cssObj({
     // to make sure we're using same text format, we just hide the copy icon but still use Copyable.

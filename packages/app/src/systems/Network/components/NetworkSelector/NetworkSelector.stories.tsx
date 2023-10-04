@@ -1,11 +1,10 @@
 import { Box } from '@fuel-ui/react';
 import type { Network } from '@fuel-wallet/types';
 import { useState } from 'react';
+import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
 import type { NetworkSelectorProps } from './NetworkSelector';
 import { NetworkSelector } from './NetworkSelector';
-
-import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
 export default {
   component: NetworkSelector,

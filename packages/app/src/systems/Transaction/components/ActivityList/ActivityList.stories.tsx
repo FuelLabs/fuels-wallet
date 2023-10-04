@@ -1,5 +1,6 @@
 import { Box } from '@fuel-ui/react';
 import type { StoryFn } from '@storybook/react';
+import { MOCK_ACCOUNTS } from '~/systems/Account';
 
 import {
   MOCK_TRANSACTION_CONTRACT_CALL,
@@ -9,8 +10,6 @@ import {
 
 import type { ActivityListProps } from './ActivityList';
 import { ActivityList } from './ActivityList';
-
-import { MOCK_ACCOUNTS } from '~/systems/Account';
 
 export default {
   component: ActivityList,

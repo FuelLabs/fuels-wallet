@@ -1,8 +1,7 @@
 import { render, screen } from '@fuel-ui/test-utils';
+import { TestWrapper } from '~/systems/Core/components/TestWrapper';
 
 import { ReceiverQRCode } from './QRCode';
-
-import { TestWrapper } from '~/systems/Core/components/TestWrapper';
 
 const TEST_ACCOUNT =
   'fuel1auahknz6mjuu0am034mlggh55f0tgp9j7fkzrc6xl48zuy5zv7vqa07n30';

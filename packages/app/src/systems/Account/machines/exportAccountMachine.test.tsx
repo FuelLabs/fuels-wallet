@@ -1,9 +1,8 @@
 import { interpret } from 'xstate';
+import { expectStateMatch, mockVault } from '~/systems/Core/__tests__/utils';
 
 import type { ExportAccountMachineService } from './exportAccountMachine';
 import { exportAccountMachine } from './exportAccountMachine';
-
-import { expectStateMatch, mockVault } from '~/systems/Core/__tests__/utils';
 
 describe('exportAccountMachine', () => {
   let service: ExportAccountMachineService;

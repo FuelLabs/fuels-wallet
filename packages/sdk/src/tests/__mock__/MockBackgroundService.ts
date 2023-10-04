@@ -6,7 +6,7 @@ import {
   MessageTypes,
 } from '@fuel-wallet/types';
 import type { WalletUnlocked } from 'fuels';
-import { transactionRequestify, Wallet } from 'fuels';
+import { Provider, transactionRequestify, Wallet } from 'fuels';
 import type { JSONRPCResponse } from 'json-rpc-2.0';
 
 import { BaseConnection } from '../../connections/BaseConnection';
@@ -14,10 +14,14 @@ import { FUEL_NETWORK } from '../constants';
 
 import { AbiContractId, FlatAbi } from './abi';
 
-const generateOptions = {
-  provider: process.env.PUBLIC_PROVIDER_URL!,
+const CACHE: Record<string, WalletUnlocked> = {};
+
+export const createToWallet = async () => {
+  if (CACHE.toWallet) return CACHE.toWallet;
+  const provider = await Provider.create(process.env.PUBLIC_PROVIDER_URL!);
+  CACHE.toWallet = Wallet.generate({ provider });
+  return CACHE.toWallet;
 };
-export const toWallet = Wallet.generate(generateOptions);
 
 export class MockBackgroundService extends BaseConnection {
   connection: chrome.runtime.Port;
@@ -30,12 +34,13 @@ export class MockBackgroundService extends BaseConnection {
     abiMap: AbiMap;
   };
 
-  constructor(extensionId: string) {
+  constructor(extensionId: string, wallet: WalletUnlocked) {
     super();
     // Mock commnucation protocol isolated by extension id
     this.connection = chrome.runtime.connect(extensionId);
     this.connection.onMessage.addListener(this.onMessage.bind(this));
     this.externalMethods([
+      this.version,
       this.ping,
       this.connect,
       this.disconnect,
@@ -53,10 +58,6 @@ export class MockBackgroundService extends BaseConnection {
       this.getAbi,
       this.hasAbi,
     ]);
-    // Mock state of the background service
-    // declared in this way to enable replacement
-    // of the state object for testing purposes
-    const wallet = Wallet.generate(generateOptions);
     this.state = {
       wallet,
       isConnected: true,
@@ -98,8 +99,13 @@ export class MockBackgroundService extends BaseConnection {
     this.connection.postMessage(data);
   }
 
-  static start(extensionId: string) {
-    return new MockBackgroundService(extensionId);
+  static async start(extensionId: string) {
+    // Mock state of the background service
+    // declared in this way to enable replacement
+    // of the state object for testing purposes
+    const provider = await Provider.create(process.env.PUBLIC_PROVIDER_URL!);
+    const wallet = Wallet.generate({ provider });
+    return new MockBackgroundService(extensionId, wallet);
   }
 
   /**
@@ -107,6 +113,10 @@ export class MockBackgroundService extends BaseConnection {
    */
   async ping() {
     return true;
+  }
+
+  async version() {
+    return '0.1.1';
   }
 
   async isConnected() {

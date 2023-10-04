@@ -2,7 +2,6 @@ import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Copyable, Box, Text, Tooltip } from '@fuel-ui/react';
 import { bn } from 'fuels';
-
 import { isValidEthAddress, shortAddress } from '~/systems/Core';
 
 export type EthAddressProps = {

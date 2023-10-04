@@ -11,4 +11,5 @@ export default {
   define: {
     'process.env': JSON.stringify(getPublicEnvs()),
   },
+  dts: true,
 };

@@ -1,4 +1,9 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { assetRoutes } from '~/systems/Asset';
+import { PrivateRoute, PublicRoute } from '~/systems/Core';
+import { Pages } from '~/systems/Core/types';
+import { homeRoutes } from '~/systems/Home';
+import { signUpRoutes } from '~/systems/SignUp';
 
 import { IS_CRX, IS_CRX_POPUP } from './config';
 import { CRXPrivateRoute, CRXPublicRoute } from './systems/CRX/components';
@@ -7,12 +12,6 @@ import { sendRoutes } from './systems/Send';
 import { settingsRoutes } from './systems/Settings';
 import { transactionRoutes } from './systems/Transaction/routes';
 import { UnlockGuard } from './systems/Unlock';
-
-import { assetRoutes } from '~/systems/Asset';
-import { PrivateRoute, PublicRoute } from '~/systems/Core';
-import { Pages } from '~/systems/Core/types';
-import { homeRoutes } from '~/systems/Home';
-import { signUpRoutes } from '~/systems/SignUp';
 
 const walletRoutes = (
   <>

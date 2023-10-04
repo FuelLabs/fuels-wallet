@@ -1,15 +1,14 @@
 import { toast } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
-import { Wallet } from 'fuels';
+import { Signer } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { createMachine } from 'xstate';
-
-import type { AccountInputs } from '../services/account';
-import { AccountService } from '../services/account';
-
 import { store } from '~/store';
 import { FetchMachine } from '~/systems/Core';
 import { VaultService } from '~/systems/Vault';
+
+import { AccountService } from '../services/account';
+import type { AccountInputs } from '../services/account';
 
 type MachineServices = {
   importAccount: {
@@ -96,9 +95,9 @@ export const importAccountMachine = createMachine(
 
           // Check if account exists
           const accounts = await AccountService.getAccounts();
-          const wallet = Wallet.fromPrivateKey(input.privateKey);
+          const signer = new Signer(input.privateKey);
           const exists = accounts.find((account) => {
-            return account.address.toString() === wallet.address.toString();
+            return account.address.toString() === signer.address.toString();
           });
           if (exists) {
             throw new Error('Account already imported!');

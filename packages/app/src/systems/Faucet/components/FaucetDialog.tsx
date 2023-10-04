@@ -2,11 +2,10 @@ import { Box, Button, Dialog, Icon, Spinner, Text } from '@fuel-ui/react';
 import { useEffect } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useNavigate } from 'react-router-dom';
-
-import { useCaptcha, useFaucetDialog } from '../hooks';
-
 import { useAccounts } from '~/systems/Account';
 import { Pages } from '~/systems/Core';
+
+import { useCaptcha, useFaucetDialog } from '../hooks';
 
 export function FaucetDialog() {
   const navigate = useNavigate();

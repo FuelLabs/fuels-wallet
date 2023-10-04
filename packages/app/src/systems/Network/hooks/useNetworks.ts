@@ -1,10 +1,9 @@
 import type { Network } from '@fuel-wallet/types';
 import { useEffect } from 'react';
-
-import type { NetworksMachineState } from '../machines/networksMachine';
-
 import { store, Services } from '~/store';
 import { useOverlay } from '~/systems/Overlay';
+
+import type { NetworksMachineState } from '../machines/networksMachine';
 
 const selectors = {
   networks: (state: NetworksMachineState) => {

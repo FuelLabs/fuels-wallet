@@ -1,6 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Card, Heading, Icon, Text } from '@fuel-ui/react';
-
 import { useOpenFaucet } from '~/systems/Faucet';
 
 export type AssetListEmptyProps = {

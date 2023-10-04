@@ -1,11 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button, Card } from '@fuel-ui/react';
-
-import { useAddAssetRequest } from '../../hooks';
-
 import { useAccounts } from '~/systems/Account';
 import { AssetItem } from '~/systems/Asset';
 import { Layout, ConnectInfo, shortAddress } from '~/systems/Core';
+
+import { useAddAssetRequest } from '../../hooks';
 
 export function AddAssetRequest() {
   const { handlers, assets, title, favIconUrl, origin } = useAddAssetRequest();

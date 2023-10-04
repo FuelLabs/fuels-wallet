@@ -18,7 +18,12 @@ export class FuelWalletConnection extends WindowConnection {
   }
 
   async isConnected(): Promise<boolean> {
-    return this.client.request('isConnected', {});
+    // If the wallet not exists or not connected, return false
+    try {
+      return await this.client.request('isConnected', {});
+    } catch {
+      return false;
+    }
   }
 
   async connect(): Promise<boolean> {
@@ -109,6 +114,10 @@ export class FuelWalletConnection extends WindowConnection {
 
   async addNetwork(network: Network): Promise<boolean> {
     return this.client.request('addNetwork', { network });
+  }
+
+  async version(): Promise<string> {
+    return this.client.request('version', {});
   }
 
   on<E extends FuelEvents['type'], D extends FuelEventArg<E>>(

@@ -1,12 +1,11 @@
 import type { Asset } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import { useEffect, useRef } from 'react';
-
-import type { AccountsMachineState } from '../machines';
-
 import { store, Services } from '~/store';
 import { useAssets } from '~/systems/Asset';
 import { useOverlay } from '~/systems/Overlay';
+
+import type { AccountsMachineState } from '../machines';
 
 enum AccountStatus {
   idle = 'idle',

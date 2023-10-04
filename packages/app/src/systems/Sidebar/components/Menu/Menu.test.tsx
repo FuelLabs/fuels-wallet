@@ -1,9 +1,8 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
+import { TestWrapper } from '~/systems/Core';
 
 import type { MenuItemObj } from './Menu';
 import { Menu } from './Menu';
-
-import { TestWrapper } from '~/systems/Core';
 
 const ITEMS: MenuItemObj[] = [
   { key: 'wallet', icon: 'Wallet', label: 'Wallet0', path: '/wallet' },

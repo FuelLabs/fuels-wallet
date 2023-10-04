@@ -5,17 +5,16 @@ import debounce from 'lodash.debounce';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-
-import { useSignUpStepper } from '../../hooks';
-import { Header } from '../Header';
-import { Stepper } from '../Stepper';
-
 import {
   ControlledField,
   InputSecurePassword,
   MotionStack,
   animations,
 } from '~/systems/Core';
+
+import { useSignUpStepper } from '../../hooks';
+import { Header } from '../Header';
+import { Stepper } from '../Stepper';
 
 const schema = yup
   .object({

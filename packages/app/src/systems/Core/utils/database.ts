@@ -12,7 +12,6 @@ import type { Table } from 'dexie';
 import Dexie from 'dexie';
 import 'dexie-observable';
 import { bn } from 'fuels';
-
 import { DATABASE_VERSION } from '~/config';
 import type { Transaction } from '~/systems/Transaction/types';
 
@@ -54,9 +53,8 @@ export class FuelDB extends Dexie {
           .table('accounts')
           .toCollection()
           .modify((account) => {
-            // eslint-disable-next-line no-param-reassign
             account.balance = bn();
-            // eslint-disable-next-line no-param-reassign
+
             account.balances = [];
           });
       });

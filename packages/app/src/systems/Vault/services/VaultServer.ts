@@ -1,8 +1,8 @@
 import { WalletManager } from '@fuel-ts/wallet-manager';
 import EventEmitter from 'events';
-import { transactionRequestify, Address } from 'fuels';
+import { transactionRequestify, Address, Provider } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
-
+import { VITE_FUEL_PROVIDER_URL } from '~/config';
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
 
 export type VaultAccount = {
@@ -84,9 +84,11 @@ export class VaultServer extends EventEmitter {
     type,
     secret,
   }: VaultInputs['createVault']): Promise<VaultAccount> {
+    const provider = await Provider.create(VITE_FUEL_PROVIDER_URL);
     await this.manager.addVault({
       type,
       secret,
+      provider,
     });
     const accounts = await this.manager.getAccounts();
     const vaults = await this.manager.getVaults();
@@ -138,7 +140,8 @@ export class VaultServer extends EventEmitter {
   }: VaultInputs['signTransaction']): Promise<string> {
     const wallet = await this.manager.getWallet(Address.fromString(address));
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
-    wallet.connect(providerUrl);
+    const provider = await Provider.create(providerUrl);
+    wallet.connect(provider);
     const signature = await wallet.signTransaction(transactionRequest);
     return signature;
   }

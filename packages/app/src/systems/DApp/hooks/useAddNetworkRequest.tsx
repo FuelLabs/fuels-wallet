@@ -1,8 +1,7 @@
 import { useSelector } from '@xstate/react';
+import { Services, store } from '~/store';
 
 import type { AddNetworkRequestMachineState } from '../machines';
-
-import { Services, store } from '~/store';
 
 const selectors = {
   origin: (state: AddNetworkRequestMachineState) => state.context.origin,

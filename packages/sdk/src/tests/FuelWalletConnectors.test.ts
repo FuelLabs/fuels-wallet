@@ -9,10 +9,10 @@ describe('Fuel Connectors', () => {
   let fuel: Fuel;
   let fuelSDK: Fuel;
 
-  beforeAll(() => {
-    fuelSDK = new Fuel({ name: 'Fuel Wallet' });
-    mocksConnector1 = mockFuel();
-    mocksConnector2 = mockFuel({ name: 'Third Wallet' });
+  beforeAll(async () => {
+    fuelSDK = new Fuel();
+    mocksConnector1 = await mockFuel();
+    mocksConnector2 = await mockFuel({ name: 'Third Wallet' });
     fuel = window.fuel!;
   });
 
@@ -95,9 +95,9 @@ describe('Fuel Connectors Events', () => {
   let mocksConnector2: MockServices;
   let fuel: Fuel;
 
-  beforeAll(() => {
-    mocksConnector1 = mockFuel();
-    mocksConnector2 = mockFuel({ name: 'Third Wallet' });
+  beforeAll(async () => {
+    mocksConnector1 = await mockFuel();
+    mocksConnector2 = await mockFuel({ name: 'Third Wallet' });
     fuel = window.fuel!;
   });
 

@@ -1,17 +1,13 @@
 import type { ComponentStory, Meta } from '@storybook/react';
 import { userEvent, waitFor, within } from '@storybook/testing-library';
-import { Wallet } from 'fuels';
-
-import { sendLoader } from '../../__mocks__/send';
-
-import { SendPage } from './SendPage';
-
 import {
   mockBalancesOnGraphQL,
   MOCK_ASSETS_NODE,
 } from '~/systems/Asset/__mocks__/assets';
 
-const wallet = Wallet.generate();
+import { sendLoader } from '../../__mocks__/send';
+
+import { SendPage } from './SendPage';
 
 export default {
   component: SendPage,
@@ -21,7 +17,7 @@ export default {
       defaultViewport: 'chromeExtension',
     },
   },
-  loaders: [sendLoader(wallet)],
+  loaders: [sendLoader()],
 } as Meta;
 
 const Template: ComponentStory<typeof SendPage> = () => {
@@ -33,7 +29,7 @@ Usage.parameters = {
   layout: 'fullscreen',
   msw: [mockBalancesOnGraphQL(MOCK_ASSETS_NODE.slice(0, 1))],
 };
-Usage.play = async ({ canvasElement }) => {
+Usage.play = async ({ canvasElement, loaded }) => {
   const canvas = within(canvasElement);
   await waitFor(() => canvas.findByLabelText('Select Asset'));
   const select = canvas.getByLabelText('Select Asset');
@@ -43,7 +39,7 @@ Usage.play = async ({ canvasElement }) => {
   userEvent.keyboard('{Enter}');
   userEvent.type(
     canvas.getByLabelText('Address Input'),
-    wallet.address.toString()
+    loaded.receiver.toString()
   );
   const inputAmount = canvas.getByLabelText('amount');
   userEvent.type(inputAmount, '10');

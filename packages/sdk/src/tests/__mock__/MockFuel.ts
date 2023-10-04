@@ -12,9 +12,19 @@ export type MockServices = {
   destroy: () => void;
 };
 
-export function mockFuel(
+const FUEL_MOCK_SERVICES: Array<MockServices> = [];
+
+function registerMockFuel(mockService: MockServices) {
+  FUEL_MOCK_SERVICES.push(mockService);
+}
+
+export function cleanFuelMocks() {
+  FUEL_MOCK_SERVICES.map((mock) => mock.destroy());
+}
+
+export async function mockFuel(
   connector: FuelWalletConnector = { name: 'Fuel Wallet' }
-): MockServices {
+): Promise<MockServices> {
   // Create a unique id for the extension
   // This creates the ability to have multiple
   // mock extensions running at the same time
@@ -24,7 +34,7 @@ export function mockFuel(
   const contentProxy = ContentProxyConnection.start(connector.name);
   // Create a instance of the background service
   // with the extension id related to it
-  const backgroundService = MockBackgroundService.start(
+  const backgroundService = await MockBackgroundService.start(
     global.chrome.runtime.id
   );
   // Create the connector and inject Fuel on Window
@@ -34,6 +44,9 @@ export function mockFuel(
     contentProxy.destroy();
     delete global.window.fuel;
   }
+
+  registerMockFuel({ contentProxy, backgroundService, destroy });
+
   // Return the content proxy instance for cleaning
   return { contentProxy, backgroundService, destroy };
 }

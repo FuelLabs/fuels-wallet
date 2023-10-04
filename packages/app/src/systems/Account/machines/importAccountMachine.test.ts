@@ -1,12 +1,11 @@
 import { toast } from '@fuel-ui/react';
 import { interpret } from 'xstate';
+import { expectStateMatch, mockVault } from '~/systems/Core/__tests__/utils';
 
 import { AccountService } from '../services';
 
 import type { ImportAccountMachineService } from './importAccountMachine';
 import { importAccountMachine } from './importAccountMachine';
-
-import { expectStateMatch, mockVault } from '~/systems/Core/__tests__/utils';
 
 const machine = importAccountMachine.withContext({}).withConfig({
   actions: {

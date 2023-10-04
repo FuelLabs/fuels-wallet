@@ -1,9 +1,8 @@
 import type { Meta, Story } from '@storybook/react';
-
-import { ConnectionRequest } from './ConnectionRequest';
-
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 import { mockBalancesOnGraphQL } from '~/systems/Asset/__mocks__/assets';
+
+import { ConnectionRequest } from './ConnectionRequest';
 
 export default {
   component: ConnectionRequest,

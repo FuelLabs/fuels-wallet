@@ -1,12 +1,11 @@
 import { Box, Button } from '@fuel-ui/react';
 import type { StoryFn, Meta } from '@storybook/react';
+import { store } from '~/store';
+import { Layout } from '~/systems/Core';
 
 import { AccountService, MOCK_ACCOUNTS, useAccounts } from '../..';
 
 import { Logout } from './Logout';
-
-import { store } from '~/store';
-import { Layout } from '~/systems/Core';
 
 export default {
   component: Logout,

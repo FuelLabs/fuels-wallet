@@ -1,31 +1,31 @@
 import { WalletManager } from '@fuel-ts/wallet-manager';
-import { Wallet } from 'fuels';
+import { Provider, Signer } from 'fuels';
+import { VITE_FUEL_PROVIDER_URL } from '~/config';
+import { db, Storage } from '~/systems/Core';
 
 import { AccountService } from '../services';
 import { IndexedDBStorage } from '../utils';
 
-import { db, Storage } from '~/systems/Core';
-
-const wallet1 = Wallet.generate();
-const wallet2 = Wallet.generate();
-const wallet3 = Wallet.generate();
+const signer1 = new Signer(Signer.generatePrivateKey());
+const signer2 = new Signer(Signer.generatePrivateKey());
+const signer3 = new Signer(Signer.generatePrivateKey());
 
 export const MOCK_ACCOUNTS = [
   {
     name: 'Account 1',
-    address: wallet1.address.toString(),
-    publicKey: wallet1.publicKey,
+    address: signer1.address.toString(),
+    publicKey: signer1.publicKey,
   },
   {
     name: 'Account 2',
-    address: wallet2.address.toString(),
-    publicKey: wallet2.publicKey,
+    address: signer2.address.toString(),
+    publicKey: signer2.publicKey,
   },
   {
     isHidden: true,
     name: 'Account 3',
-    address: wallet3.address.toString(),
-    publicKey: wallet3.publicKey,
+    address: signer3.address.toString(),
+    publicKey: signer3.publicKey,
   },
   {
     name: 'Account 4',
@@ -55,7 +55,8 @@ export async function createMockAccount() {
   /**
    * Add Vault
    * */
-  await manager.addVault({ type: 'privateKey', secret: secretKey });
+  const provider = await Provider.create(VITE_FUEL_PROVIDER_URL);
+  await manager.addVault({ type: 'privateKey', secret: secretKey, provider });
   const accounts = manager.getAccounts();
   const walletAccount =
     accounts.find((a) => a.address.toString().startsWith('0x94')) ||

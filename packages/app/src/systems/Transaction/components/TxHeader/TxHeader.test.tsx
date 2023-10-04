@@ -92,7 +92,7 @@ describe('TxHeader', () => {
   });
 
   it('should copy transaction id', async () => {
-    const { user } = render(
+    render(
       <TxHeader
         {...MOCK_TRANSACTION_CREATE}
         providerUrl={process.env.VITE_FUEL_PROVIDER_URL}
@@ -102,7 +102,7 @@ describe('TxHeader', () => {
     const btn = await screen.findByLabelText(/Copy Transaction ID/i);
     expect(btn).toBeInTheDocument();
 
-    await user.click(btn);
+    await act(() => fireEvent.click(btn));
     expect(await navigator.clipboard.readText()).toBe(
       MOCK_TRANSACTION_CREATE.id
     );

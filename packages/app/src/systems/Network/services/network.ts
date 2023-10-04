@@ -1,10 +1,9 @@
 import { createUUID } from '@fuel-wallet/sdk';
 import type { Network } from '@fuel-wallet/types';
 import { Provider } from 'fuels';
+import { db } from '~/systems/Core/utils/database';
 
 import { isValidNetworkUrl } from '../utils';
-
-import { db } from '~/systems/Core/utils/database';
 
 export type NetworkInputs = {
   getNetwork: {
@@ -139,14 +138,14 @@ export class NetworkService {
     });
   }
 
-  static getChainInfo(input: NetworkInputs['getChainInfo']) {
-    const provider = new Provider(input.providerUrl);
+  static async getChainInfo(input: NetworkInputs['getChainInfo']) {
+    const provider = await Provider.create(input.providerUrl);
     return provider.getChain();
   }
 
-  static getNodeInfo(input: NetworkInputs['getNodeInfo']) {
-    const provider = new Provider(input.providerUrl);
-    return provider.getNodeInfo();
+  static async getNodeInfo(input: NetworkInputs['getNodeInfo']) {
+    const provider = await Provider.create(input.providerUrl);
+    return provider.fetchNode();
   }
 
   static async assertAddNetwork(input: NetworkInputs['addNetwork']) {

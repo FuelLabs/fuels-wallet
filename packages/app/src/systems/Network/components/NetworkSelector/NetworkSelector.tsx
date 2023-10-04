@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Dropdown } from '@fuel-ui/react';
 import type { Network } from '@fuel-wallet/types';

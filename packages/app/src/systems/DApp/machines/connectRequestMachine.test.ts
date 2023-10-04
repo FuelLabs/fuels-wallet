@@ -1,10 +1,9 @@
 import { interpret } from 'xstate';
+import { MOCK_ACCOUNTS } from '~/systems/Account';
+import { expectStateMatch } from '~/systems/Core/__tests__';
 
 import type { ConnectRequestService } from './connectRequestMachine';
 import { connectRequestMachine } from './connectRequestMachine';
-
-import { MOCK_ACCOUNTS } from '~/systems/Account';
-import { expectStateMatch } from '~/systems/Core/__tests__';
 
 const totalAccounts = MOCK_ACCOUNTS.filter((acc) => !acc.isHidden).length;
 

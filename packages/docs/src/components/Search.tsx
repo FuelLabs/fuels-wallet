@@ -1,5 +1,4 @@
 import { DocSearch } from '@docsearch/react';
-
 import docsearch from '~/docsearch.json';
 
 export function Search() {

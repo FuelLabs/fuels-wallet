@@ -12,17 +12,17 @@ import type {
   JSONRPCServerMiddlewareNext,
 } from 'json-rpc-2.0';
 import { JSONRPCServer } from 'json-rpc-2.0';
-
-import type { CommunicationProtocol } from './CommunicationProtocol';
-import { PopUpService } from './PopUpService';
-import type { MessageInputs } from './types';
-
+import { APP_VERSION } from '~/config';
 import { AccountService } from '~/systems/Account/services';
 import { AssetService } from '~/systems/Asset/services';
 import { Pages } from '~/systems/Core/types';
 import { ConnectionService } from '~/systems/DApp/services';
 import { NetworkService } from '~/systems/Network/services';
 import { AbiService } from '~/systems/Settings/services';
+
+import type { CommunicationProtocol } from './CommunicationProtocol';
+import { PopUpService } from './PopUpService';
+import type { MessageInputs } from './types';
 
 type EventOrigin = {
   origin: string;
@@ -42,6 +42,7 @@ export class BackgroundService {
     this.setupListeners();
     this.externalMethods([
       this.ping,
+      this.version,
       this.isConnected,
       this.accounts,
       this.connect,
@@ -130,8 +131,10 @@ export class BackgroundService {
     request: JSONRPCRequest,
     serverParams: EventOrigin
   ) {
+    const ALLOWED_METHODS = ['version', 'ping'];
+
     // If the method is ping, bypass checks
-    if (request.method === 'ping') {
+    if (ALLOWED_METHODS.includes(request.method)) {
       return next(request, serverParams);
     }
 
@@ -169,6 +172,10 @@ export class BackgroundService {
   /**
    * JSON RPC Methods
    */
+  async version() {
+    return APP_VERSION;
+  }
+
   async ping() {
     return true;
   }

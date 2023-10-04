@@ -1,13 +1,12 @@
 import { Box } from '@fuel-ui/react';
 import { Address } from 'fuels';
 import { useNavigate } from 'react-router-dom';
-
-import { ActivityList } from '../../components/ActivityList/ActivityList';
-import { useTransactionHistory } from '../../hooks';
-
 import { useAccounts } from '~/systems/Account';
 import { Layout, Pages } from '~/systems/Core';
 import { useNetworks } from '~/systems/Network';
+
+import { ActivityList } from '../../components/ActivityList/ActivityList';
+import { useTransactionHistory } from '../../hooks';
 
 export function ViewActivity() {
   const navigate = useNavigate();

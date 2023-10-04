@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-/* eslint-disable import/no-extraneous-dependencies */
 import { config } from 'dotenv';
 import { resolve } from 'path';
 

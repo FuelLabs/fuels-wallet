@@ -1,21 +1,20 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Box } from '@fuel-ui/react';
 import type { Meta, Story } from '@storybook/react';
-import { Wallet } from 'fuels';
+import { Signer } from 'fuels';
 import { useEffect } from 'react';
+import { createMockAccount } from '~/systems/Account';
+import { NetworkService } from '~/systems/Network';
 
 import { getMockedTransaction } from '../../__mocks__/dapp-transaction';
 
 import { TransactionRequest } from './TransactionRequest';
 
-import { createMockAccount } from '~/systems/Account';
-import { NetworkService } from '~/systems/Network';
-
 async function loader() {
   const { account, password } = await createMockAccount();
   await NetworkService.clearNetworks();
   const network = await NetworkService.addDefaultNetworks();
-  const wallet = Wallet.generate();
+  const wallet = new Signer(Signer.generatePrivateKey());
   const transactionRequest = await getMockedTransaction(
     account?.publicKey || '',
     wallet.publicKey,
@@ -40,7 +39,6 @@ export default {
 
 export const Usage: Story = (_args, { loaded }) => {
   useEffect(() => {
-    // eslint-disable-next-line no-alert
     alert(`use this password to unlock: ${loaded.password}`);
   }, []);
 

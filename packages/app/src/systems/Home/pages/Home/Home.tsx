@@ -1,15 +1,14 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
-
-import { AssetsTitle, HomeActions } from '../../components';
-
 import { VITE_FUEL_PROVIDER_URL } from '~/config';
 import { BalanceWidget, useAccounts } from '~/systems/Account';
 import { AssetList } from '~/systems/Asset';
 import { Layout, Pages, scrollable } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 import { useNetworks } from '~/systems/Network';
+
+import { AssetsTitle, HomeActions } from '../../components';
 
 export function Home() {
   const { visibility, setVisibility } = useBalanceVisibility();

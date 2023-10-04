@@ -1,14 +1,13 @@
 import { graphql } from 'msw';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
+import { mockServer } from '~/mocks/server';
 
 import { MOCK_CHAIN_GQL } from '../__mocks__/chain';
 import { MOCK_TRANSACTION_WITH_RECEIPTS_GQL } from '../__mocks__/transaction';
 
 import type { TransactionMachineService } from './transactionMachine';
 import { transactionMachine } from './transactionMachine';
-
-import { mockServer } from '~/mocks/server';
 
 const TRANSACTION_ID =
   '0x64641e1faeb1b0052d95e055b085b45b85155a7ec8cc47b1c6b7ed9f2783837a';

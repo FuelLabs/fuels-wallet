@@ -1,12 +1,12 @@
-/* eslint-disable no-restricted-syntax */
 import type { render } from '@fuel-ui/test-utils';
 import { screen, waitFor } from '@fuel-ui/test-utils';
+import type { TestWrapperProps } from '~/systems/Core';
+import { TestWrapper } from '~/systems/Core';
+import { renderWithProvider } from '~/systems/Core/__tests__';
 
 import { SignUpProvider } from '../SignUpProvider';
 
 import { MnemonicRead } from './MnemonicRead';
-
-import { renderWithProvider } from '~/systems/Core/__tests__';
 
 const WORDS = [
   'strange',
@@ -33,16 +33,20 @@ describe('MnemonicRead', () => {
 
   beforeEach(() => {
     const res = renderWithProvider(
-      <SignUpProvider>
-        <MnemonicRead
-          step={2}
-          words={WORDS}
-          onNext={onNextHandler}
-          onCancel={onCancelHandler}
-        />
-      </SignUpProvider>
+      <MnemonicRead
+        step={2}
+        words={WORDS}
+        onNext={onNextHandler}
+        onCancel={onCancelHandler}
+      />,
+      {
+        wrapper: ({ children }: TestWrapperProps) => (
+          <TestWrapper>
+            <SignUpProvider>{children}</SignUpProvider>
+          </TestWrapper>
+        ),
+      }
     );
-
     user = res.user;
   });
 

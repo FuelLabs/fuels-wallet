@@ -1,10 +1,9 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
+import { store } from '~/store';
 
 import { MOCK_ACCOUNTS } from '../../__mocks__';
 
 import { AccountList } from './AccountList';
-
-import { store } from '~/store';
 
 describe('AccountList', () => {
   it('a11y', async () => {

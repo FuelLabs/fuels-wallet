@@ -1,9 +1,14 @@
 import type { WalletUnlocked } from 'fuels';
-import { TransactionType, bn, ScriptTransactionRequest, Wallet } from 'fuels';
+import {
+  TransactionType,
+  bn,
+  ScriptTransactionRequest,
+  Wallet,
+  Provider,
+} from 'fuels';
+import { VITE_FUEL_PROVIDER_URL } from '~/config';
 
 import { TxService } from './transaction';
-
-import { VITE_FUEL_PROVIDER_URL } from '~/config';
 
 const OWNER = import.meta.env.VITE_ADDR_OWNER;
 const amount = bn(1);
@@ -14,10 +19,11 @@ describe('TxService', () => {
   let transactionRequest: ScriptTransactionRequest;
 
   beforeAll(async () => {
-    wallet = Wallet.fromPrivateKey(OWNER, VITE_FUEL_PROVIDER_URL);
+    const provider = await Provider.create(VITE_FUEL_PROVIDER_URL);
+    wallet = Wallet.fromPrivateKey(OWNER, provider);
     const coins = await wallet.getCoins();
     const newAddr = Wallet.generate({
-      provider: VITE_FUEL_PROVIDER_URL,
+      provider,
     }).address;
     transactionRequest = new ScriptTransactionRequest(params);
     const assetId = coins[0].assetId;

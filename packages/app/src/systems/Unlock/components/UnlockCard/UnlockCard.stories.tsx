@@ -1,6 +1,6 @@
-import { UnlockCard } from './UnlockCard';
-
 import { createMockAccount } from '~/systems/Account/__mocks__';
+
+import { UnlockCard } from './UnlockCard';
 
 export default {
   component: UnlockCard,

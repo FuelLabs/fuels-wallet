@@ -1,18 +1,17 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import type { Connection } from '@fuel-wallet/types';
-import { Wallet } from 'fuels';
-
+import { Signer } from 'fuels';
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 import { ConnectionService } from '~/systems/DApp/services';
 import { NetworkService } from '~/systems/Network';
 
 function createAccount(name: string, isHidden: boolean = false) {
-  const wallet = Wallet.generate();
+  const signer = new Signer(Signer.generatePrivateKey());
   return AccountService.addAccount({
     data: {
       name,
-      address: wallet.address.toString(),
-      publicKey: wallet.publicKey,
+      address: signer.address.toString(),
+      publicKey: signer.publicKey,
       isHidden,
     },
   });

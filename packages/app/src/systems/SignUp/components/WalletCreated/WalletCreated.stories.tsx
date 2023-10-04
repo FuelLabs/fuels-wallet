@@ -1,8 +1,7 @@
 import { Box } from '@fuel-ui/react';
+import { MOCK_ACCOUNTS } from '~/systems/Account';
 
 import { WalletCreated } from './WalletCreated';
-
-import { MOCK_ACCOUNTS } from '~/systems/Account';
 
 export default {
   component: WalletCreated,

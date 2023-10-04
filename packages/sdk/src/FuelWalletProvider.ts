@@ -1,14 +1,27 @@
-import type { TransactionRequestLike } from 'fuels';
+import type { ProviderOptions, TransactionRequestLike } from 'fuels';
 import { TransactionResponse, Provider } from 'fuels';
 
 import type { FuelWalletConnection } from './FuelWalletConnection';
 
+type FuelWalletProviderOptions = ProviderOptions & {
+  walletConnection: FuelWalletConnection;
+};
+
 export class FuelWalletProvider extends Provider {
   walletConnection: FuelWalletConnection;
 
-  constructor(providerUrl: string, walletConnection: FuelWalletConnection) {
-    super(providerUrl);
-    this.walletConnection = walletConnection;
+  constructor(url: string, options: FuelWalletProviderOptions) {
+    super(url, options);
+    this.walletConnection = options.walletConnection;
+  }
+
+  static async create(
+    url: string,
+    options: FuelWalletProviderOptions
+  ): Promise<FuelWalletProvider> {
+    const provider = new FuelWalletProvider(url, options);
+    await provider.fetchChainAndNodeInfo();
+    return provider;
   }
 
   async sendTransaction(

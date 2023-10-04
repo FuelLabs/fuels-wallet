@@ -1,6 +1,5 @@
 import type { Asset } from '@fuel-wallet/types';
 import { isB256 } from 'fuels';
-
 import { db } from '~/systems/Core/utils/database';
 import { getUniqueString } from '~/systems/Core/utils/string';
 

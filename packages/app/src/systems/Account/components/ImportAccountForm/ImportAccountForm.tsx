@@ -1,8 +1,7 @@
 import { Box, HelperIcon, Input } from '@fuel-ui/react';
+import { ControlledField } from '~/systems/Core';
 
 import type { UseImportAccountFormReturn } from '../../hooks/useImportAccountForm';
-
-import { ControlledField } from '~/systems/Core';
 
 export type ImportAccountFormProps = {
   isLoading?: boolean;

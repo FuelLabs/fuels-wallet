@@ -1,25 +1,32 @@
 import type { render } from '@fuel-ui/test-utils';
 import { fireEvent, screen, waitFor } from '@fuel-ui/test-utils';
+import type { TestWrapperProps } from '~/systems/Core';
+import { TestWrapper } from '~/systems/Core';
+import { renderWithProvider } from '~/systems/Core/__tests__';
 
 import { SignUpProvider } from '../SignUpProvider';
 
 import { CreatePassword } from './CreatePassword';
-
-import { renderWithProvider } from '~/systems/Core/__tests__';
 
 const onSubmitHandler = jest.fn();
 const onCancelHandler = jest.fn();
 
 type UserPatch = ReturnType<typeof render>['user'];
 
+const renderOpts = {
+  wrapper: ({ children }: TestWrapperProps) => (
+    <TestWrapper>
+      <SignUpProvider>{children}</SignUpProvider>
+    </TestWrapper>
+  ),
+};
+
 const Content = () => (
-  <SignUpProvider>
-    <CreatePassword
-      step={2}
-      onSubmit={onSubmitHandler}
-      onCancel={onCancelHandler}
-    />
-  </SignUpProvider>
+  <CreatePassword
+    step={2}
+    onSubmit={onSubmitHandler}
+    onCancel={onCancelHandler}
+  />
 );
 
 function fillInput(el: HTMLElement, value: string) {
@@ -44,14 +51,14 @@ async function fillInputs(user: UserPatch, pass: string, confirm?: string) {
 
 describe('CreatePassword', () => {
   it('should next button be disabled by default', async () => {
-    renderWithProvider(<Content />);
+    renderWithProvider(<Content />, renderOpts);
     const btn = screen.getByText(/next/i);
     expect(btn).toBeInTheDocument();
     expect(btn).toHaveAttribute('aria-disabled');
   });
 
   it('should show "password strength: Weak" when focus in password field', async () => {
-    renderWithProvider(<Content />);
+    renderWithProvider(<Content />, renderOpts);
 
     const password = await screen.findByPlaceholderText('Type your password');
 
@@ -63,7 +70,7 @@ describe('CreatePassword', () => {
   });
 
   it("should validate if password and confirmPassword doesn't match", async () => {
-    const { user } = renderWithProvider(<Content />);
+    const { user } = renderWithProvider(<Content />, renderOpts);
 
     await fillInputs(user, 'Qwe123456$', 'Qwe1234567$');
     await waitFor(() =>
@@ -72,7 +79,7 @@ describe('CreatePassword', () => {
   });
 
   it('should be able to click on cancel button', async () => {
-    const { user } = renderWithProvider(<Content />);
+    const { user } = renderWithProvider(<Content />, renderOpts);
     const btn = await screen.findByText('Back');
     expect(btn).toBeInTheDocument();
     await user.click(btn);

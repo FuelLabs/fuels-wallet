@@ -1,9 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-
-import type { AssetsMachineState } from '../machines';
-
 import { Services, store } from '~/store';
 import { Pages } from '~/systems/Core';
+
+import type { AssetsMachineState } from '../machines';
 
 const selectors = {
   assets(state: AssetsMachineState) {

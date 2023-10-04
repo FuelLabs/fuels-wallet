@@ -1,7 +1,7 @@
-import { WalletCreated } from '../../components';
-
 import { useAccounts } from '~/systems/Account';
 import { Layout } from '~/systems/Core';
+
+import { WalletCreated } from '../../components';
 
 export const CreatedWallet = () => {
   const { account } = useAccounts();

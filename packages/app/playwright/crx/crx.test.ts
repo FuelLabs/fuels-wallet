@@ -1,6 +1,6 @@
 import type { Account, Asset, Network } from '@fuel-wallet/types';
 import { expect } from '@playwright/test';
-import { Signer, bn, hashMessage, Wallet } from 'fuels';
+import { Signer, bn, hashMessage, Wallet, Provider } from 'fuels';
 
 import {
   seedWallet,
@@ -89,6 +89,13 @@ test.describe('FuelWallet Extension', () => {
         return typeof window.fuel === 'object';
       });
       expect(hasFuel).toBeTruthy();
+    });
+
+    await test.step('Should return current version of Wallet', async () => {
+      const version = await blankPage.evaluate(async () => {
+        return window.fuel.version();
+      });
+      expect(version).toEqual(process.env.VITE_APP_VERSION);
     });
 
     await test.step('Should reconnect if service worker stops', async () => {
@@ -191,12 +198,13 @@ test.describe('FuelWallet Extension', () => {
       await createAccount();
       await createAccountFromPrivateKey(PRIVATE_KEY, 'Account 4');
       await createAccount();
+      await createAccount();
       await switchAccount(popupPage, 'Account 1');
       await hideAccount(popupPage, 'Account 5');
     });
 
     async function connectAccounts() {
-      const isConnected = blankPage.evaluate(async () => {
+      const connectionResponse = blankPage.evaluate(async () => {
         return window.fuel.connect();
       });
       const authorizeRequest = await context.waitForEvent('page', {
@@ -220,6 +228,10 @@ test.describe('FuelWallet Extension', () => {
       await hasText(authorizeRequest, /accounts/i);
       await getButtonByText(authorizeRequest, /connect/i).click();
 
+      expect(await connectionResponse).toBeTruthy();
+      const isConnected = blankPage.evaluate(async () => {
+        return window.fuel.isConnected();
+      });
       expect(await isConnected).toBeTruthy();
     }
 
@@ -393,7 +405,7 @@ test.describe('FuelWallet Extension', () => {
 
             // TODO: remove this gas config once SDK fixes and start with correct values
             const chain = await wallet.provider.getChain();
-            const nodeInfo = await wallet.provider.getNodeInfo();
+            const nodeInfo = await wallet.provider.fetchNode();
             const gasLimit = chain.consensusParameters.maxGasPerTx;
             const gasPrice = nodeInfo.minGasPrice;
             const response = await wallet.transfer(
@@ -410,8 +422,11 @@ test.describe('FuelWallet Extension', () => {
       }
 
       async function approveTxCheck(senderAccount: Account) {
+        const provider = await Provider.create(
+          process.env.VITE_FUEL_PROVIDER_URL
+        );
         const receiverWallet = Wallet.generate({
-          provider: process.env.VITE_FUEL_PROVIDER_URL,
+          provider,
         });
         const AMOUNT_TRANSFER = 100;
 
@@ -470,8 +485,11 @@ test.describe('FuelWallet Extension', () => {
           popupPage,
           'Account 2'
         );
+        const provider = await Provider.create(
+          process.env.VITE_FUEL_PROVIDER_URL
+        );
         const receiverWallet = Wallet.generate({
-          provider: process.env.VITE_FUEL_PROVIDER_URL,
+          provider,
         });
         const AMOUNT_TRANSFER = 100;
 
@@ -595,7 +613,7 @@ test.describe('FuelWallet Extension', () => {
       await expect(networkSelector).toHaveText(/Fuel Testnet/);
     });
 
-    await test.step('window.fuel.on("currentAccount")', async () => {
+    await test.step('window.fuel.on("currentAccount") to a connected account', async () => {
       // Switch to account 2
       await switchAccount(popupPage, 'Account 2');
       await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
@@ -615,6 +633,28 @@ test.describe('FuelWallet Extension', () => {
       // Check result
       const currentAccountEventResult = await onChangeAccountPromise;
       expect(currentAccountEventResult).toEqual(currentAccount.address);
+    });
+
+    await test.step('window.fuel.on("currentAccount") should be null when not connected', async () => {
+      // Switch to account 2
+      await switchAccount(popupPage, 'Account 2');
+      await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
+      await getByAriaLabel(popupPage, `Close dialog`).click();
+
+      const onChangeAccountPromise = blankPage.evaluate(() => {
+        return new Promise((resolve) => {
+          window.fuel.on(window.fuel.events.currentAccount, (account) => {
+            resolve(account);
+          });
+        });
+      });
+
+      // Switch to account 1
+      await switchAccount(popupPage, 'Account 6');
+
+      // Check result
+      const currentAccountEventResult = await onChangeAccountPromise;
+      expect(currentAccountEventResult).toEqual(null);
     });
 
     await test.step('Auto lock fuel wallet', async () => {

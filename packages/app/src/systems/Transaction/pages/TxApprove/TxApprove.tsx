@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Alert, Button, Dialog } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
-
 import { useAssets } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';

@@ -1,13 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import type { Account } from '@fuel-wallet/types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import type { Maybe } from '~/systems/Core';
 
 import { useAccountFormName } from './useAccountFormName';
-
-import type { Maybe } from '~/systems/Core';
 
 export type AccountFormValues = {
   name: string;

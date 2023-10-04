@@ -1,6 +1,5 @@
 import * as css from '@fuel-ui/css';
 import { Button, Dialog, Icon } from '@fuel-ui/react';
-
 import { coreStyles } from '~/systems/Core/styles';
 import { NetworkList, useNetworks } from '~/systems/Network';
 import { OverlayDialogTopbar } from '~/systems/Overlay';

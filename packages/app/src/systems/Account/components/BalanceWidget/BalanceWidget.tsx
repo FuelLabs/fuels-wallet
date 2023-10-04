@@ -2,14 +2,13 @@ import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Button, Heading, Icon, Text } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
+import { FuelAddress } from '~/systems/Account';
+import type { Maybe } from '~/systems/Core';
+import { AmountVisibility, VisibilityButton } from '~/systems/Core';
 
 import { useAccounts } from '../../hooks';
 
 import { BalanceWidgetLoader } from './BalanceWidgetLoader';
-
-import { FuelAddress } from '~/systems/Account';
-import type { Maybe } from '~/systems/Core';
-import { AmountVisibility, VisibilityButton } from '~/systems/Core';
 
 type BalanceWidgetWrapperProps = {
   top: ReactNode;

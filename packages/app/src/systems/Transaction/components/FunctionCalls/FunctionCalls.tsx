@@ -2,7 +2,6 @@ import { cssObj } from '@fuel-ui/css';
 import { Accordion, Box, Text, useFuelTheme } from '@fuel-ui/react';
 import type { OperationFunctionCall } from 'fuels';
 import ReactJson from 'react-json-view';
-
 import { coreStyles } from '~/systems/Core/styles';
 
 export type FunctionCallsProps = {

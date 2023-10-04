@@ -1,9 +1,8 @@
 import type { StoryFn } from '@storybook/react';
-
-import { ChangePassword } from './ChangePassword';
-
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
 import { mockBalancesOnGraphQL } from '~/systems/Asset/__mocks__/assets';
+
+import { ChangePassword } from './ChangePassword';
 
 export default {
   component: ChangePassword,

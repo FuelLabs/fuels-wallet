@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import type { BN } from 'fuels';
-import { Address, BaseAssetId, Wallet } from 'fuels';
+import { Address, BaseAssetId, Provider, Wallet } from 'fuels';
 
 import { getAccount, ALT_ASSET } from '../mocks';
 
@@ -14,10 +14,8 @@ export async function seedCurretAccount(page: Page, amount: BN) {
 }
 
 export async function seedWallet(address: string, amount: BN) {
-  const genesisWallet = Wallet.fromPrivateKey(
-    GENESIS_SECRET,
-    VITE_FUEL_PROVIDER_URL
-  );
+  const provider = await Provider.create(VITE_FUEL_PROVIDER_URL);
+  const genesisWallet = Wallet.fromPrivateKey(GENESIS_SECRET, provider);
   const { gasPrice, gasLimit } = await getGasConfig(genesisWallet.provider);
   const transfETH = await genesisWallet.transfer(
     Address.fromString(address),

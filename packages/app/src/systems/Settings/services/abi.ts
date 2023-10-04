@@ -1,5 +1,4 @@
 import type { AbiMap } from '@fuel-wallet/types';
-
 import { db } from '~/systems/Core/utils/database';
 
 export type AbiInputs = {
