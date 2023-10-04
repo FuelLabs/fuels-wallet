@@ -27,7 +27,7 @@ To use it, you must also install the [`fuels`](https://www.npmjs.com/package/fue
 ### Installation
 
 ```bash
-npm install fuels @fuel-wallet/sdk @fuel-wallet/react
+npm install fuels @fuel-wallet/sdk
 ```
 
 ### Usage
@@ -37,7 +37,7 @@ To use the SDK and the React Hooks in your TypeScript project, add the following
 ```json
 {
   "compilerOptions": {
-    "types": ["@fuel-wallet/sdk", "@fuel-wallet/react"]
+    "types": ["@fuel-wallet/sdk"]
   }
 }
 ```
@@ -46,7 +46,6 @@ Alternatively, you can use a [TypeScript reference](https://www.typescriptlang.o
 
 ```ts
 /// <reference types="@fuel-wallet/sdk" />
-/// <reference types="@fuel-wallet/react" />
 ```
 
 ### Example
@@ -81,6 +80,14 @@ It's possible that your application loads before `window.fuel` is injected. To d
 ## Using React
 
 Fuel Wallet provides a set of React hooks that improve the developer experience.
+
+### Installation
+
+```bash
+npm install @fuel-wallet/react
+```
+
+### Usage
 
 Wrap your application with the `FuelProvider` component.
 
