@@ -1,4 +1,3 @@
-import { ThemeProvider } from '@fuel-ui/react';
 import {
   FuelProvider,
   FuelConnectorProvider,
@@ -22,7 +21,7 @@ export const Providers = ({ children }: ProviderProps) => {
           IS_TEST ? FUEL_WALLET_CONNECTOR : FUEL_WALLET_DEVELOPMENT_CONNECTOR,
         ]}
       >
-        <ThemeProvider>{children}</ThemeProvider>
+        {children}
       </FuelConnectorProvider>
     </FuelProvider>
   );

@@ -570,12 +570,6 @@ importers:
 
   packages/e2e-contract-tests:
     dependencies:
-      '@fuel-ui/css':
-        specifier: 0.21.0
-        version: 0.21.0
-      '@fuel-ui/react':
-        specifier: 0.21.0
-        version: 0.21.0(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
       '@fuel-wallet/react':
         specifier: workspace:*
         version: link:../react
