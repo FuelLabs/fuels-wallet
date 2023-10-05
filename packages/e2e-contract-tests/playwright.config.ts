@@ -7,9 +7,8 @@ import './load.envs';
 
 const config: PlaywrightTestConfig = defineConfig({
   testDir: './playwright',
-  fullyParallel: true,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: 'html',
   webServer: {
     command: `pnpm dev:e2e-contracts --mode test --port ${process.env.PORT}`,

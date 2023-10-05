@@ -61,11 +61,13 @@ impl SRC3 for Contract {
 
 abi Deposit {
     #[storage(read, write)]
+    #[payable]
     fn deposit() -> u64;
 }
 
 impl Deposit for Contract {
     #[storage(read, write)]
+    #[payable]
     fn deposit() -> u64 {
         let sender = msg_sender().unwrap();
         let asset_id = msg_asset_id();
