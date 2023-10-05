@@ -1,3 +1,4 @@
+import type { FuelWalletConnector } from '@fuel-wallet/types';
 import { FuelWalletEvents } from '@fuel-wallet/types';
 import { Address } from 'fuels';
 import type { AbstractAddress } from 'fuels';
@@ -63,7 +64,7 @@ export class Fuel extends FuelWalletConnection {
 }
 
 interface FuelDocumentEvents {
-  FuelLoaded: CustomEvent<Fuel>;
+  FuelLoaded: CustomEvent<FuelWalletConnector>;
 }
 declare global {
   interface Document {
@@ -78,6 +79,6 @@ declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    fuel: Fuel | undefined;
+    fuel: FuelWalletConnector | undefined;
   }
 }

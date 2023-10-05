@@ -7,24 +7,23 @@ describe('Fuel Connectors', () => {
   let mocksConnector1: MockServices;
   let mocksConnector2: MockServices;
   let fuel: Fuel;
-  let fuelSDK: Fuel;
 
   beforeAll(async () => {
-    fuelSDK = new Fuel();
+    fuel = new Fuel();
     mocksConnector1 = await mockFuel();
     mocksConnector2 = await mockFuel({ name: 'Third Wallet' });
-    fuel = window.fuel!;
   });
 
   afterAll(() => {
     mocksConnector1.destroy();
     mocksConnector2.destroy();
+    fuel.destroy();
   });
 
   test('listConnectors', async () => {
     const connectors = fuel.listConnectors();
-    await fuelSDK.hasWallet();
-    const connectorsSDK = fuelSDK.listConnectors();
+    await fuel.hasWallet();
+    const connectorsSDK = fuel.listConnectors();
     const expectedConnectors = ['Fuel Wallet', 'Third Wallet'];
 
     expect(connectors.map((c) => c.name)).toEqual(expectedConnectors);
@@ -96,14 +95,15 @@ describe('Fuel Connectors Events', () => {
   let fuel: Fuel;
 
   beforeAll(async () => {
+    fuel = new Fuel();
     mocksConnector1 = await mockFuel();
     mocksConnector2 = await mockFuel({ name: 'Third Wallet' });
-    fuel = window.fuel!;
   });
 
   afterAll(() => {
     mocksConnector1.destroy();
     mocksConnector2.destroy();
+    fuel.destroy();
   });
 
   test('Event: Connector Added', async () => {

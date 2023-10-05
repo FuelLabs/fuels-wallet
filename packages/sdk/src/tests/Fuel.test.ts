@@ -7,7 +7,7 @@ import {
   Wallet,
 } from 'fuels';
 
-import type { Fuel } from '../Fuel';
+import { Fuel } from '../Fuel';
 import { getGasConfig } from '../utils';
 
 import type { MockServices } from './__mock__';
@@ -26,12 +26,13 @@ describe('Fuel', () => {
   let toWallet: WalletUnlocked;
 
   beforeAll(async () => {
+    fuel = new Fuel();
     mocks = await mockFuel();
     toWallet = await createToWallet();
-    fuel = window.fuel!;
   });
 
   afterAll(() => {
+    fuel.destroy();
     mocks.destroy();
   });
 
@@ -244,11 +245,12 @@ describe('Fuel Events', () => {
   let fuel: Fuel;
 
   beforeAll(async () => {
+    fuel = new Fuel();
     mocks = await mockFuel();
-    fuel = window.fuel!;
   });
 
   afterAll(() => {
+    fuel.destroy();
     mocks.destroy();
   });
 

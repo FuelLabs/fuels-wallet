@@ -10,32 +10,42 @@ import type {
 } from '@fuel-wallet/types';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 
-import { hasWindow } from '../utils/hasWindow';
-import { deferPromise } from '../utils/promise';
+import type { DeferPromiseWithTimeout } from '../utils/promise';
+import { deferPromiseWithTimeout } from '../utils/promise';
 
 import { BaseConnection } from './BaseConnection';
 
 export class WindowConnection extends BaseConnection {
   isListenerAdded = false;
   queue: JSONRPCRequest[] = [];
-  _retry = 0;
-  _injectionTimeout: NodeJS.Timeout;
-  _hasWallet = deferPromise<boolean>();
-  connectorName: string;
+  _hasWallet: DeferPromiseWithTimeout<boolean>;
+  connectorName: string = '';
   private connectors: Array<FuelWalletConnector>;
+
+  destroy() {
+    window.removeEventListener(EVENT_MESSAGE, this.onMessage);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    document.removeEventListener('FuelLoaded', this.handleFuelLoaded as any);
+  }
 
   constructor(connector?: FuelWalletConnector) {
     super();
-    this.connectorName = connector ? connector.name : '';
     this.connectors = connector ? [connector] : [];
-    this.handleFuelInjected();
-    this._injectionTimeout = setInterval(
-      this.handleFuelInjected.bind(this),
-      100
-    );
-    this.handleIsReady();
+    this._hasWallet = deferPromiseWithTimeout(1000, this.handleWalletTimeout);
+    this.setupListenFuelLoaded();
   }
 
+  // Accept messages from the current window
+  acceptMessage(message: MessageEvent<CommunicationMessage>): boolean {
+    const { data: event } = message;
+    return (
+      message.origin === window.origin &&
+      event.target === this.connectorName &&
+      event.type !== MessageTypes.request
+    );
+  }
+
+  // Queue requests until the wallet is ready
   executeQueuedRequests() {
     // Execute pending requests in the queue
     let request = this.queue.shift();
@@ -45,17 +55,48 @@ export class WindowConnection extends BaseConnection {
     }
   }
 
-  handleIsReady() {
-    if (typeof document === 'undefined') return;
-    document.addEventListener('FuelLoaded', () => {
-      this._retry = 0;
-      this._hasWallet.resolve(true);
-      this._hasWallet = deferPromise<boolean>();
-      this.handleFuelInjected();
+  // Add a listener to the window message event
+  handleWalletAvailable() {
+    if (!this.isListenerAdded) {
+      // Avoid listener to be added multiple times
+      this.isListenerAdded = true;
+      // Add listener to the window message event
+      window.addEventListener(EVENT_MESSAGE, this.onMessage.bind(this));
+      // Execute pending requests in the queue
+      this.executeQueuedRequests();
+      // Emit the load event
       this.emit(FuelWalletEvents.load, true);
-    });
+    }
   }
 
+  handleWalletTimeout = () => {
+    this._hasWallet.resolve(false);
+    this.client.rejectAllPendingRequests(
+      'Timeout fuel not detected on the window!'
+    );
+  };
+
+  async hasWallet(): Promise<boolean> {
+    if (this._hasWallet.isResolved) {
+      return true;
+    }
+    return this._hasWallet.promise;
+  }
+
+  handleFuelLoaded = (event: CustomEvent<FuelWalletConnector>) => {
+    const { detail } = event;
+    // If Fuel Wallet is loaded set it
+    // as the default connector
+    this.addConnector(detail);
+    this._hasWallet.resolve(true);
+    this.handleWalletAvailable();
+  };
+
+  setupListenFuelLoaded() {
+    document.addEventListener('FuelLoaded', this.handleFuelLoaded);
+  }
+
+  // Connectors management methods
   hasConnector(connectorName: string): boolean {
     return !!this.connectors.find((c) => c.name === connectorName);
   }
@@ -109,23 +150,11 @@ export class WindowConnection extends BaseConnection {
     return true;
   }
 
-  acceptMessage(message: MessageEvent<CommunicationMessage>): boolean {
-    const { data: event } = message;
-    return (
-      message.origin === window.origin &&
-      event.target === this.connectorName &&
-      event.type !== MessageTypes.request
-    );
-  }
-
-  async hasWallet(): Promise<boolean> {
-    return this._hasWallet.promise;
-  }
-
+  // Communication methods
   async sendRequest(request: JSONRPCRequest | null) {
     if (!request) return;
 
-    if (!window.fuel) {
+    if (!this._hasWallet.isResolved) {
       this.queue.push(request);
     } else {
       this.postMessage({
@@ -151,53 +180,32 @@ export class WindowConnection extends BaseConnection {
     window.postMessage(message, origin || window.origin);
   }
 
-  bindFuelConnectors(fuel: Window['fuel']) {
-    // Prevent binding to self if this happen the
-    // object would enter on a infinite loop
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isSelf = (fuel as any) === this;
-    if (!fuel || isSelf) return;
-    // Bind to fuel events to
-    // sync with current instace
-    fuel.on(FuelWalletEvents.connectors, (connectors) => {
-      this.connectors = connectors;
-      this.emit(FuelWalletEvents.connectors, connectors);
-    });
-    fuel.on(FuelWalletEvents.currentConnector, (connector) => {
-      this.selectConnector(connector.name);
-    });
-    // Update the current connectors list
-    this.connectors = fuel.listConnectors();
-    // Trigger connectros list changed event
-    this.emit(FuelWalletEvents.connectors, this.listConnectors());
-    // Sync the current connector
-    this.selectConnector(fuel.connectorName);
-  }
+  // bindFuelConnectors(fuel: Window['fuel']) {
+  //   // Prevent binding to self if this happen the
+  //   // object would enter on a infinite loop
+  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  //   const isSelf = (fuel as any) === this;
+  //   if (!fuel || isSelf) return;
+  //   // Bind to fuel events to
+  //   // sync with current instace
+  //   fuel.on(FuelWalletEvents.connectors, (connectors) => {
+  //     this.connectors = connectors;
+  //     this.emit(FuelWalletEvents.connectors, connectors);
+  //   });
+  //   fuel.on(FuelWalletEvents.currentConnector, (connector) => {
+  //     this.selectConnector(connector.name);
+  //   });
+  //   // Update the current connectors list
+  //   this.connectors = fuel.listConnectors();
+  //   // Trigger connectros list changed event
+  //   this.emit(FuelWalletEvents.connectors, this.listConnectors());
+  //   // Sync the current connector
+  //   this.selectConnector(fuel.connectorName);
+  // }
+  // this.bindFuelConnectors(window.fuel);
 
-  handleFuelInjected() {
-    // Timeout after 10 retries i.e., 1 second
-    if (this._retry === 9) {
-      clearInterval(this._injectionTimeout);
-      this._hasWallet.resolve(false);
-      this.client.rejectAllPendingRequests(
-        'Timeout fuel not detected on the window!'
-      );
-      return;
-    }
-
-    this._retry++;
-
-    if (hasWindow) {
-      if (!this.isListenerAdded) {
-        window.addEventListener(EVENT_MESSAGE, this.onMessage.bind(this));
-        this.isListenerAdded = true;
-      }
-      if (window.fuel) {
-        clearInterval(this._injectionTimeout);
-        this._hasWallet.resolve(true);
-        this.bindFuelConnectors(window.fuel);
-        this.executeQueuedRequests();
-      }
-    }
-  }
+  // handleFuelInjected() {
+  //   window.window.addEventListener(EVENT_MESSAGE, this.onMessage.bind(this));
+  //   this.executeQueuedRequests();
+  // }
 }

@@ -42,7 +42,6 @@ export async function mockFuel(
   // Create destroy function to clean the mock
   function destroy() {
     contentProxy.destroy();
-    delete global.window.fuel;
   }
 
   registerMockFuel({ contentProxy, backgroundService, destroy });

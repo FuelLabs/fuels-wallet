@@ -19,6 +19,8 @@ describe('Fuel Timeout', () => {
 
     const hasWallet = await fuel.hasWallet();
     expect(hasWallet).toBeTruthy();
+
+    fuel.destroy();
   });
 
   test('Should be able to connect if Wallet changes to ready', async () => {
@@ -36,5 +38,7 @@ describe('Fuel Timeout', () => {
     // Should pass as fuel is detected
     const hasWallet2 = await fuel.hasWallet();
     expect(hasWallet2).toBeTruthy();
+
+    fuel.destroy();
   });
 });

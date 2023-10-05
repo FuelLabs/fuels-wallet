@@ -137,5 +137,4 @@ export type FuelProviderConfig = {
 
 export type FuelWalletConnector = {
   name: string;
-  imageUrl?: string;
 };

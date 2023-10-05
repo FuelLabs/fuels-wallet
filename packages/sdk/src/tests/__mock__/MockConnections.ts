@@ -13,6 +13,9 @@ global.window = {
   addEventListener(event: string, cb: () => any) {
     windowEventBus.on(event, cb);
   },
+  removeEventListener(event: string, cb: () => any) {
+    windowEventBus.off(event, cb);
+  },
   postMessage(message: any): void {
     windowEventBus.emit('message', {
       data: message,
@@ -21,11 +24,23 @@ global.window = {
   },
 } as any;
 
-global.CustomEvent = Event as any;
+class CustomEvent {
+  type: string;
+  detail: any;
+  constructor(type: string, params: { detail: any }) {
+    this.type = type;
+    this.detail = params.detail;
+  }
+}
+
+global.CustomEvent = CustomEvent as any;
 
 global.document = {
   addEventListener(event: string, cb: () => any) {
     documentEventBus.on(event, cb);
+  },
+  removeEventListener(event: string, cb: () => any) {
+    documentEventBus.off(event, cb);
   },
   dispatchEvent(event: CustomEvent): void {
     documentEventBus.emit(event.type, event);
