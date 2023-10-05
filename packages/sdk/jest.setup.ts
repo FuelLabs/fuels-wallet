@@ -16,7 +16,7 @@ global.window = {
   removeEventListener(event: string, cb: () => any) {
     windowEventBus.off(event, cb);
   },
-  dispatchEvent(event: CustomEvent): void {
+  dispatchEvent(event: any): void {
     windowEventBus.emit(event.type, event);
   },
   postMessage(message: any): void {
@@ -26,17 +26,16 @@ global.window = {
     });
   },
 } as any;
+globalThis.window = global.window;
 
-class CustomEvent {
+class Event {
   type: string;
-  detail: any;
-  constructor(type: string, params?: { detail: any }) {
+  constructor(type: string) {
     this.type = type;
-    this.detail = params?.detail;
   }
 }
 
-global.CustomEvent = CustomEvent as any;
+global.Event = Event as any;
 
 global.chrome = {
   runtime: {

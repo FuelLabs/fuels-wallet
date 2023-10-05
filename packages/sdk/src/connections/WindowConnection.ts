@@ -11,10 +11,8 @@ import type {
 } from '@fuel-wallet/types';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 
-import type { FuelLoadedEvent } from '../utils/events';
-import { FuelConnectorEvent } from '../utils/events';
-import type { DeferPromiseWithTimeout } from '../utils/promise';
-import { deferPromiseWithTimeout } from '../utils/promise';
+import type { FuelLoadedEvent, DeferPromiseWithTimeout } from '../utils';
+import { FuelConnectorEvent, deferPromiseWithTimeout } from '../utils';
 
 import { BaseConnection } from './BaseConnection';
 
@@ -35,6 +33,7 @@ export class WindowConnection extends BaseConnection {
 
   // Dispatch a custom event to query available Fuel connectors
   dispatchQueryConnectors() {
+    if (typeof window === 'undefined') return;
     window.dispatchEvent(new FuelConnectorEvent());
   }
 
@@ -87,11 +86,11 @@ export class WindowConnection extends BaseConnection {
   }
 
   handleFuelLoaded = (event: FuelLoadedEvent) => {
-    const { detail } = event;
+    const { connector } = event;
     // If Fuel Wallet is loaded set it
     // as the default connector
     try {
-      this.addConnector(detail);
+      this.addConnector(connector);
     } catch {
       // If the connector already exists, ignore the error
     }
@@ -100,7 +99,8 @@ export class WindowConnection extends BaseConnection {
   };
 
   setupListenFuelLoaded() {
-    window.addEventListener('FuelLoaded', this.handleFuelLoaded);
+    if (typeof window === 'undefined') return;
+    window.addEventListener(FuelWindowEvents.FuelLoaded, this.handleFuelLoaded);
   }
 
   // Connectors management methods
@@ -110,7 +110,7 @@ export class WindowConnection extends BaseConnection {
 
   addConnector(connector: FuelWalletConnector): void {
     // Ensure Fuel Wallet is the default connector
-    if (connector.name === 'Fuel Wallet') {
+    if (connector.name === 'Fuel Wallet' || !this.connectorName) {
       this.connectorName = connector.name;
     }
     if (this.hasConnector(connector.name)) {
@@ -161,7 +161,7 @@ export class WindowConnection extends BaseConnection {
   async sendRequest(request: JSONRPCRequest | null) {
     if (!request) return;
 
-    if (!this._hasWallet.isResolved) {
+    if (!this._hasWallet.isResolved && this.connectors.length === 0) {
       this.queue.push(request);
     } else {
       this.postMessage({

@@ -4,7 +4,7 @@ import { FuelWindowEvents } from '@fuel-wallet/types';
 /**
  * Custom event to query available Fuel connectors
  */
-export class FuelConnectorEvent extends CustomEvent<void> {
+export class FuelConnectorEvent extends Event {
   constructor() {
     super(FuelWindowEvents.FuelConnector);
   }
@@ -13,10 +13,11 @@ export class FuelConnectorEvent extends CustomEvent<void> {
 /**
  * Custom event to notify application that Fuel is loaded
  */
-export class FuelLoadedEvent extends CustomEvent<FuelWalletConnector> {
+export class FuelLoadedEvent extends Event {
+  connector: FuelWalletConnector;
+
   constructor(connector: FuelWalletConnector) {
-    super(FuelWindowEvents.FuelConnector, {
-      detail: connector,
-    });
+    super(FuelWindowEvents.FuelLoaded);
+    this.connector = connector;
   }
 }
