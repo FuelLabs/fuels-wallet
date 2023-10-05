@@ -8,7 +8,6 @@ import {
   FUEL_MNEMONIC,
   seedWallet,
 } from '@fuel-wallet/test-utils';
-import type { WalletUnlocked } from 'fuels';
 import { BaseAssetId, Provider, Wallet, bn } from 'fuels';
 
 import { shortAddress } from '../../src/utils';
@@ -16,16 +15,14 @@ import '../../load.envs.js';
 
 const { FUEL_PROVIDER_URL, WALLET_SECRET } = process.env;
 
-test.describe('Mint Assets', () => {
-  let fuelWallet: WalletUnlocked;
-
+test.describe('Deposit Half ETH', () => {
   test.beforeEach(async ({ context, extensionId, page }) => {
     await walletSetup(context, extensionId, page);
     const fuelProvider = await Provider.create(FUEL_PROVIDER_URL!);
-    fuelWallet = Wallet.fromMnemonic(FUEL_MNEMONIC, fuelProvider);
+    const fuelWallet = Wallet.fromMnemonic(FUEL_MNEMONIC, fuelProvider);
     await seedWallet(
       fuelWallet.address.toString(),
-      bn(1_000_000_000),
+      bn(100_000_000_000),
       FUEL_PROVIDER_URL!,
       WALLET_SECRET!
     );
