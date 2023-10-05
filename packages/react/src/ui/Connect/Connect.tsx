@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Dialog, Icon, IconButton, Text, HStack } from '@fuel-ui/react';
+import { Box, Dialog, Icon, IconButton, Text } from '@fuel-ui/react';
 
 import { useConnector } from '../../components';
 
@@ -17,7 +17,7 @@ export const Connect = ({ theme }: { theme: string }) => {
     <Dialog isOpen={isOpen} isBlocked={isOpen}>
       <Dialog.Content css={styles.content}>
         <Dialog.Heading as="div">
-          <HStack justify="space-between">
+          <Box.HStack justify="space-between">
             <Box css={styles.headerAction}>
               {connector && (
                 <IconButton
@@ -39,7 +39,7 @@ export const Connect = ({ theme }: { theme: string }) => {
                 onPress={cancel}
               />
             </Box>
-          </HStack>
+          </Box.HStack>
         </Dialog.Heading>
         {!connector ? (
           <ConnectList
