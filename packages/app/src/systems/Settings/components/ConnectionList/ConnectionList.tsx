@@ -43,7 +43,12 @@ export function ConnectionList({
               onChange={handlers.search}
               isDisabled={status('loading')}
             />
-            <Tooltip content={tooltipContent} as="div" alignOffset={12}>
+            <Tooltip
+              content={tooltipContent}
+              as="div"
+              alignOffset={12}
+              className="fuel_tooltip--container"
+            >
               <Icon
                 icon={Icon.is('AlertTriangle')}
                 aria-label="Connection Alert"
@@ -114,6 +119,11 @@ const styles = {
 
     '& > .fuel_Icon': {
       color: '$intentsWarning9',
+    },
+
+    '.fuel_tooltip--container': {
+      paddingTop: 0,
+      background: '$transparent',
     },
   }),
   tooltipContent: cssObj({
