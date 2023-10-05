@@ -389,6 +389,25 @@ const _abi = {
         },
       ],
     },
+    {
+      inputs: [],
+      name: 'deposit_half',
+      output: {
+        name: '',
+        type: 13,
+        typeArguments: null,
+      },
+      attributes: [
+        {
+          name: 'storage',
+          arguments: ['read', 'write'],
+        },
+        {
+          name: 'payable',
+          arguments: [],
+        },
+      ],
+    },
   ],
   loggedTypes: [
     {

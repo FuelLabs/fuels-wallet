@@ -1,4 +1,10 @@
-import { ForwardEthCard, Header, MintAssetCard, Providers } from './components';
+import {
+  ForwardEthCard,
+  Header,
+  MintAssetCard,
+  Providers,
+  DepositHalfEthCard,
+} from './components';
 
 function App() {
   return (
@@ -7,6 +13,7 @@ function App() {
       <div>
         <MintAssetCard />
         <ForwardEthCard />
+        <DepositHalfEthCard />
       </div>
     </Providers>
   );
