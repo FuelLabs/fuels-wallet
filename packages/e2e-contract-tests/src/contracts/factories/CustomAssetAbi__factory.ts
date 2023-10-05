@@ -18,9 +18,9 @@ import type {
   DeployContractOptions,
 } from 'fuels';
 import type {
-  MintCustomAssetAbi,
-  MintCustomAssetAbiInterface,
-} from '../MintCustomAssetAbi';
+  CustomAssetAbi,
+  CustomAssetAbiInterface,
+} from '../CustomAssetAbi';
 
 const _abi = {
   types: [
@@ -370,6 +370,44 @@ const _abi = {
         },
       ],
     },
+    {
+      inputs: [],
+      name: 'deposit',
+      output: {
+        name: '',
+        type: 13,
+        typeArguments: null,
+      },
+      attributes: [
+        {
+          name: 'storage',
+          arguments: ['read', 'write'],
+        },
+        {
+          name: 'payable',
+          arguments: [],
+        },
+      ],
+    },
+    {
+      inputs: [],
+      name: 'deposit_half',
+      output: {
+        name: '',
+        type: 13,
+        typeArguments: null,
+      },
+      attributes: [
+        {
+          name: 'storage',
+          arguments: ['read', 'write'],
+        },
+        {
+          name: 'payable',
+          arguments: [],
+        },
+      ],
+    },
   ],
   loggedTypes: [
     {
@@ -385,28 +423,28 @@ const _abi = {
   configurables: [],
 };
 
-export class MintCustomAssetAbi__factory {
+export class CustomAssetAbi__factory {
   static readonly abi = _abi;
-  static createInterface(): MintCustomAssetAbiInterface {
-    return new Interface(_abi) as unknown as MintCustomAssetAbiInterface;
+  static createInterface(): CustomAssetAbiInterface {
+    return new Interface(_abi) as unknown as CustomAssetAbiInterface;
   }
   static connect(
     id: string | AbstractAddress,
     accountOrProvider: Account | Provider
-  ): MintCustomAssetAbi {
+  ): CustomAssetAbi {
     return new Contract(
       id,
       _abi,
       accountOrProvider
-    ) as unknown as MintCustomAssetAbi;
+    ) as unknown as CustomAssetAbi;
   }
   static async deployContract(
     bytecode: BytesLike,
     wallet: Account,
     options: DeployContractOptions = {}
-  ): Promise<MintCustomAssetAbi> {
+  ): Promise<CustomAssetAbi> {
     const factory = new ContractFactory(bytecode, _abi, wallet);
     const contract = await factory.deployContract(options);
-    return contract as unknown as MintCustomAssetAbi;
+    return contract as unknown as CustomAssetAbi;
   }
 }
