@@ -32,7 +32,7 @@ test.describe('Forward Eth', () => {
     await page.goto('/');
   });
 
-  test('e2e forward eth', async ({ context, page }) => {
+  test('e2e forward ETH', async ({ context, page }) => {
     const connectButton = getButtonByText(page, 'Connect');
     await connectButton.click();
     await walletConnect(context);
