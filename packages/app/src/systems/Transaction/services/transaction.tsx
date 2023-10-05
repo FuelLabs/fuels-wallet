@@ -2,8 +2,10 @@ import { getGasConfig } from '@fuel-wallet/sdk';
 import type { Account, Asset } from '@fuel-wallet/types';
 import type {
   BN,
+  GetTransactionSummaryFromRequestParams,
   ScriptTransactionRequestLike,
   TransactionRequest,
+  TransactionSummary,
   WalletLocked,
 } from 'fuels';
 import {
@@ -17,7 +19,10 @@ import {
   getTransactionSummary,
   TransactionResponse,
   getTransactionsSummaries,
-  getTransactionSummaryFromRequest,
+  assembleTransactionSummary,
+  hexlify,
+  processGqlReceipt,
+  arrayify,
 } from 'fuels';
 import { AccountService } from '~/systems/Account';
 import { isEth } from '~/systems/Asset';
@@ -26,6 +31,7 @@ import { NetworkService } from '~/systems/Network';
 
 import type { Transaction } from '../types';
 import { getAbiMap } from '../utils';
+import { calculateTotalFee } from '../utils/fee';
 
 export type TxInputs = {
   get: {
@@ -140,6 +146,7 @@ export class TxService {
 
   static async fetch({ txId, providerUrl = '' }: TxInputs['fetch']) {
     const provider = await Provider.create(providerUrl);
+    const { gasPerByte, gasPriceFactor } = await provider.getGasConfig();
     const txResult = await getTransactionSummary({ id: txId, provider });
     const txResponse = new TransactionResponse(txId, provider);
 
@@ -153,7 +160,65 @@ export class TxService {
       abiMap,
     });
 
+    // TODO: remove this once is fixed on the SDK
+    // https://github.com/FuelLabs/fuels-ts/issues/1314
+    let bytesUsed = 0;
+    try {
+      const byteSize = arrayify(
+        txResultWithCalls.gqlTransaction.rawPayload
+      ).length;
+      const witnessesSize =
+        txResultWithCalls.transaction?.witnesses?.reduce((t, w) => {
+          return t + w.dataLength;
+        }, 0) || 0;
+      bytesUsed = byteSize - witnessesSize;
+    } catch (err) {
+      bytesUsed = 0;
+    }
+
+    // gasPrice
+    txResultWithCalls.fee = await calculateTotalFee({
+      gasPerByte,
+      gasPriceFactor,
+      gasUsed: txResultWithCalls.gasUsed,
+      gasPrice: bn(txResultWithCalls.transaction.gasPrice),
+      bytesUsed: bn(bytesUsed),
+    });
+
     return { txResult: txResultWithCalls, txResponse };
+  }
+
+  // TODO: remove this once is fixed on the SDK
+  // https://github.com/FuelLabs/fuels-ts/issues/1314
+  static async getTransactionSummaryFromRequest<TTransactionType = void>(
+    params: GetTransactionSummaryFromRequestParams
+  ): Promise<TransactionSummary<TTransactionType>> {
+    const { provider, transactionRequest, abiMap } = params;
+    await provider.estimateTxDependencies(transactionRequest);
+    const transaction = transactionRequest.toTransaction();
+    const transactionBytes = transactionRequest.toTransactionBytes();
+    const { dryRun: gqlReceipts } = await provider.operations.dryRun({
+      encodedTransaction: hexlify(transactionBytes),
+      utxoValidation: false,
+    });
+    const receipts = gqlReceipts.map(processGqlReceipt);
+    const { gasPerByte, gasPriceFactor } = provider.getGasConfig();
+    const transactionSummary = assembleTransactionSummary<TTransactionType>({
+      receipts,
+      transaction,
+      transactionBytes,
+      abiMap,
+      gasPerByte,
+      gasPriceFactor,
+    });
+    transactionSummary.fee = await calculateTotalFee({
+      gasPerByte,
+      gasPriceFactor,
+      gasPrice: transaction.gasPrice,
+      gasUsed: transactionSummary.gasUsed,
+      bytesUsed: bn(transactionBytes.length),
+    });
+    return transactionSummary;
   }
 
   static async simulateTransaction({
@@ -165,7 +230,7 @@ export class TxService {
     const abiMap = await getAbiMap({
       inputs: transaction.inputs,
     });
-    const txResult = await getTransactionSummaryFromRequest({
+    const txResult = await TxService.getTransactionSummaryFromRequest({
       transactionRequest,
       provider,
       abiMap,
@@ -224,8 +289,11 @@ export class TxService {
   }
 
   static async createTransfer(input: TxInputs['createTransfer']) {
-    const { gasLimit, gasPrice } = await getGasConfig(input.provider);
-    const request = new ScriptTransactionRequest({ gasLimit, gasPrice });
+    const { gasPrice } = await getGasConfig(input.provider);
+    // Because gasLimit is caulculated on the number of operations we can
+    // safely assume that a transfer will consume at max 20 units, this should
+    // be change once we add multiple trasnfers in a single transaction.
+    const request = new ScriptTransactionRequest({ gasLimit: 20, gasPrice });
     const to = Address.fromAddressOrString(input.to);
     const { assetId, amount } = input;
     request.addCoinOutput(to, amount, assetId);
