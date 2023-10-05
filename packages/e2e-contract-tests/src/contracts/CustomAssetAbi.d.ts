@@ -50,7 +50,7 @@ export type RawBytesOutput = { ptr: BN; cap: BN };
 export type StringInput = { bytes: BytesInput };
 export type StringOutput = { bytes: BytesOutput };
 
-interface MintCustomAssetAbiInterface extends Interface {
+interface CustomAssetAbiInterface extends Interface {
   functions: {
     decimals: FunctionFragment;
     name: FunctionFragment;
@@ -59,6 +59,8 @@ interface MintCustomAssetAbiInterface extends Interface {
     total_supply: FunctionFragment;
     burn: FunctionFragment;
     mint: FunctionFragment;
+    deposit: FunctionFragment;
+    deposit_half: FunctionFragment;
   };
 
   encodeFunctionData(
@@ -86,6 +88,8 @@ interface MintCustomAssetAbiInterface extends Interface {
     functionFragment: 'mint',
     values: [IdentityInput, string, BigNumberish]
   ): Uint8Array;
+  encodeFunctionData(functionFragment: 'deposit', values: []): Uint8Array;
+  encodeFunctionData(functionFragment: 'deposit_half', values: []): Uint8Array;
 
   decodeFunctionData(
     functionFragment: 'decimals',
@@ -103,10 +107,18 @@ interface MintCustomAssetAbiInterface extends Interface {
   ): DecodedValue;
   decodeFunctionData(functionFragment: 'burn', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'mint', data: BytesLike): DecodedValue;
+  decodeFunctionData(
+    functionFragment: 'deposit',
+    data: BytesLike
+  ): DecodedValue;
+  decodeFunctionData(
+    functionFragment: 'deposit_half',
+    data: BytesLike
+  ): DecodedValue;
 }
 
-export class MintCustomAssetAbi extends Contract {
-  interface: MintCustomAssetAbiInterface;
+export class CustomAssetAbi extends Contract {
+  interface: CustomAssetAbiInterface;
   functions: {
     decimals: InvokeFunction<[asset: AssetIdInput], Option<number>>;
     name: InvokeFunction<[asset: AssetIdInput], Option<StringOutput>>;
@@ -118,5 +130,7 @@ export class MintCustomAssetAbi extends Contract {
       [recipient: IdentityInput, sub_id: string, amount: BigNumberish],
       void
     >;
+    deposit: InvokeFunction<[], BN>;
+    deposit_half: InvokeFunction<[], BN>;
   };
 }
