@@ -1,8 +1,6 @@
-import { Fuel } from '../Fuel';
+import { Fuel } from '../src/Fuel';
 
 import { cleanFuelMocks, mockFuel } from './__mock__';
-
-import './__mock__/MockConnections';
 
 describe('Fuel Timeout', () => {
   afterEach(() => {

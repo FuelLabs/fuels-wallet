@@ -1,9 +1,8 @@
 import type { FuelWalletConnector } from '@fuel-wallet/types';
 
-import { ContentProxyConnection } from '../../connections';
-import { createConnector, createUUID } from '../../utils';
+import { ContentProxyConnection } from '../../src/connections';
+import { createConnector, createUUID } from '../../src/utils';
 
-import './MockConnections';
 import { MockBackgroundService } from './MockBackgroundService';
 
 export type MockServices = {
@@ -42,6 +41,7 @@ export async function mockFuel(
   // Create destroy function to clean the mock
   function destroy() {
     contentProxy.destroy();
+    windowEventBus.removeAllListeners();
   }
 
   registerMockFuel({ contentProxy, backgroundService, destroy });

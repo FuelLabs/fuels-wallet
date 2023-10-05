@@ -8,6 +8,11 @@ import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
 import type { Asset } from './asset';
 import type { Network } from './network';
 
+export const FuelWindowEvents = {
+  FuelLoaded: 'FuelLoaded',
+  FuelConnector: 'FuelConnector',
+} as const;
+
 export const FuelWalletEvents = {
   accounts: 'accounts',
   currentAccount: 'currentAccount',

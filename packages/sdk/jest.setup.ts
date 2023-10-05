@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import EventEmitter from 'events';
 
-export const windowEventBus = new EventEmitter();
-export const documentEventBus = new EventEmitter();
-export const proxyConnectorEventBus = new EventEmitter();
+(global as any).windowEventBus = new EventEmitter() as any;
+(global as any).documentEventBus = new EventEmitter() as any;
+(global as any).proxyConnectorEventBus = new EventEmitter() as any;
 
 global.window = {
   location: {
@@ -16,6 +16,9 @@ global.window = {
   removeEventListener(event: string, cb: () => any) {
     windowEventBus.off(event, cb);
   },
+  dispatchEvent(event: CustomEvent): void {
+    windowEventBus.emit(event.type, event);
+  },
   postMessage(message: any): void {
     windowEventBus.emit('message', {
       data: message,
@@ -27,25 +30,13 @@ global.window = {
 class CustomEvent {
   type: string;
   detail: any;
-  constructor(type: string, params: { detail: any }) {
+  constructor(type: string, params?: { detail: any }) {
     this.type = type;
-    this.detail = params.detail;
+    this.detail = params?.detail;
   }
 }
 
 global.CustomEvent = CustomEvent as any;
-
-global.document = {
-  addEventListener(event: string, cb: () => any) {
-    documentEventBus.on(event, cb);
-  },
-  removeEventListener(event: string, cb: () => any) {
-    documentEventBus.off(event, cb);
-  },
-  dispatchEvent(event: CustomEvent): void {
-    documentEventBus.emit(event.type, event);
-  },
-} as any;
 
 global.chrome = {
   runtime: {
@@ -72,3 +63,9 @@ global.chrome = {
     },
   },
 } as any;
+
+declare global {
+  let windowEventBus: EventEmitter;
+  let documentEventBus: EventEmitter;
+  let proxyConnectorEventBus: EventEmitter;
+}

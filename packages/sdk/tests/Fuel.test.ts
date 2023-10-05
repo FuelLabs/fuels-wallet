@@ -7,11 +7,11 @@ import {
   Wallet,
 } from 'fuels';
 
-import { Fuel } from '../Fuel';
-import { getGasConfig } from '../utils';
+import { Fuel } from '../src';
 
 import type { MockServices } from './__mock__';
 import {
+  getGasConfig,
   createToWallet,
   mockFuel,
   seedWallet,

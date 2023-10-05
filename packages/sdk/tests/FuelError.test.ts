@@ -1,6 +1,4 @@
-import { Fuel } from '../Fuel';
-
-import './__mock__/MockConnections';
+import { Fuel } from '../src';
 
 describe('Fuel Error', () => {
   const fuel = new Fuel();

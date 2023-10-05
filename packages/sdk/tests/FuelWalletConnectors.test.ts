@@ -1,4 +1,4 @@
-import { Fuel } from '../Fuel';
+import { Fuel } from '../src';
 
 import type { MockServices } from './__mock__';
 import { mockFuel } from './__mock__';
@@ -119,5 +119,27 @@ describe('Fuel Connectors Events', () => {
     fuel.on(fuel.events.currentConnector, handleConnectorChangeEvent);
     await fuel.selectConnector('Third Wallet');
     expect(handleConnectorChangeEvent).toBeCalledWith({ name: 'Third Wallet' });
+  });
+});
+
+describe('Fuel SDK instance with connector', () => {
+  let mocksConnector1: MockServices;
+  let mocksConnector2: MockServices;
+
+  beforeAll(async () => {
+    mocksConnector1 = await mockFuel();
+    mocksConnector2 = await mockFuel({ name: 'Third Wallet' });
+  });
+
+  afterAll(() => {
+    mocksConnector1.destroy();
+    mocksConnector2.destroy();
+  });
+
+  test('Should find connectors even if the SDK is intantieted after', async () => {
+    const fuel = new Fuel();
+
+    const hasWallet = await fuel.hasWallet();
+    expect(hasWallet).toBeTruthy();
   });
 });

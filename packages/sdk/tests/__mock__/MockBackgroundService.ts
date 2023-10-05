@@ -9,7 +9,7 @@ import type { WalletUnlocked } from 'fuels';
 import { Provider, transactionRequestify, Wallet } from 'fuels';
 import type { JSONRPCResponse } from 'json-rpc-2.0';
 
-import { BaseConnection } from '../../connections/BaseConnection';
+import { BaseConnection } from '../../src/connections/BaseConnection';
 import { FUEL_NETWORK } from '../constants';
 
 import { AbiContractId, FlatAbi } from './abi';

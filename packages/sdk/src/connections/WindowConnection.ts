@@ -2,6 +2,7 @@ import {
   CONTENT_SCRIPT_NAME,
   EVENT_MESSAGE,
   FuelWalletEvents,
+  FuelWindowEvents,
   MessageTypes,
 } from '@fuel-wallet/types';
 import type {
@@ -10,6 +11,8 @@ import type {
 } from '@fuel-wallet/types';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 
+import type { FuelLoadedEvent } from '../utils/events';
+import { FuelConnectorEvent } from '../utils/events';
 import type { DeferPromiseWithTimeout } from '../utils/promise';
 import { deferPromiseWithTimeout } from '../utils/promise';
 
@@ -22,17 +25,17 @@ export class WindowConnection extends BaseConnection {
   connectorName: string = '';
   private connectors: Array<FuelWalletConnector>;
 
-  destroy() {
-    window.removeEventListener(EVENT_MESSAGE, this.onMessage);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    document.removeEventListener('FuelLoaded', this.handleFuelLoaded as any);
-  }
-
   constructor(connector?: FuelWalletConnector) {
     super();
     this.connectors = connector ? [connector] : [];
     this._hasWallet = deferPromiseWithTimeout(1000, this.handleWalletTimeout);
     this.setupListenFuelLoaded();
+    this.dispatchQueryConnectors();
+  }
+
+  // Dispatch a custom event to query available Fuel connectors
+  dispatchQueryConnectors() {
+    window.dispatchEvent(new FuelConnectorEvent());
   }
 
   // Accept messages from the current window
@@ -83,17 +86,21 @@ export class WindowConnection extends BaseConnection {
     return this._hasWallet.promise;
   }
 
-  handleFuelLoaded = (event: CustomEvent<FuelWalletConnector>) => {
+  handleFuelLoaded = (event: FuelLoadedEvent) => {
     const { detail } = event;
     // If Fuel Wallet is loaded set it
     // as the default connector
-    this.addConnector(detail);
+    try {
+      this.addConnector(detail);
+    } catch {
+      // If the connector already exists, ignore the error
+    }
     this._hasWallet.resolve(true);
     this.handleWalletAvailable();
   };
 
   setupListenFuelLoaded() {
-    document.addEventListener('FuelLoaded', this.handleFuelLoaded);
+    window.addEventListener('FuelLoaded', this.handleFuelLoaded);
   }
 
   // Connectors management methods
@@ -180,32 +187,11 @@ export class WindowConnection extends BaseConnection {
     window.postMessage(message, origin || window.origin);
   }
 
-  // bindFuelConnectors(fuel: Window['fuel']) {
-  //   // Prevent binding to self if this happen the
-  //   // object would enter on a infinite loop
-  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //   const isSelf = (fuel as any) === this;
-  //   if (!fuel || isSelf) return;
-  //   // Bind to fuel events to
-  //   // sync with current instace
-  //   fuel.on(FuelWalletEvents.connectors, (connectors) => {
-  //     this.connectors = connectors;
-  //     this.emit(FuelWalletEvents.connectors, connectors);
-  //   });
-  //   fuel.on(FuelWalletEvents.currentConnector, (connector) => {
-  //     this.selectConnector(connector.name);
-  //   });
-  //   // Update the current connectors list
-  //   this.connectors = fuel.listConnectors();
-  //   // Trigger connectros list changed event
-  //   this.emit(FuelWalletEvents.connectors, this.listConnectors());
-  //   // Sync the current connector
-  //   this.selectConnector(fuel.connectorName);
-  // }
-  // this.bindFuelConnectors(window.fuel);
-
-  // handleFuelInjected() {
-  //   window.window.addEventListener(EVENT_MESSAGE, this.onMessage.bind(this));
-  //   this.executeQueuedRequests();
-  // }
+  destroy() {
+    window.removeEventListener(EVENT_MESSAGE, this.onMessage);
+    window.removeEventListener(
+      FuelWindowEvents.FuelLoaded,
+      this.handleFuelLoaded
+    );
+  }
 }

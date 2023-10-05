@@ -1,4 +1,3 @@
-import type { FuelWalletConnector } from '@fuel-wallet/types';
 import { FuelWalletEvents } from '@fuel-wallet/types';
 import { Address } from 'fuels';
 import type { AbstractAddress } from 'fuels';
@@ -60,25 +59,5 @@ export class Fuel extends FuelWalletConnection {
   ): Promise<FuelWalletLocked> {
     const provider = await this.getProvider();
     return new FuelWalletLocked(address, provider);
-  }
-}
-
-interface FuelDocumentEvents {
-  FuelLoaded: CustomEvent<FuelWalletConnector>;
-}
-declare global {
-  interface Document {
-    addEventListener<K extends keyof FuelDocumentEvents>(
-      type: K,
-      listener: (this: Document, ev: FuelDocumentEvents[K]) => void
-    ): void;
-    dispatchEvent<K extends keyof FuelDocumentEvents>(
-      ev: FuelDocumentEvents[K]
-    ): void;
-  }
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    fuel: FuelWalletConnector | undefined;
   }
 }

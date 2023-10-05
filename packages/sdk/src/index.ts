@@ -5,3 +5,4 @@ export * from './FuelWalletProvider';
 export * from './FuelWalletLocked';
 export * from './utils';
 export * from './connections';
+export * from './FuelWindowTypes';

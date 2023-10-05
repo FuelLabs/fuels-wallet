@@ -1,7 +1,16 @@
 import type { BN } from 'fuels';
 import { BaseAssetId, Address, Wallet, Provider } from 'fuels';
 
-import { getGasConfig } from '../../utils';
+export const getGasConfig = async (provider: Provider) => {
+  const chain = await provider.getChain();
+  const nodeInfo = await provider.fetchNode();
+
+  return {
+    gasLimit: chain.consensusParameters.maxGasPerTx,
+    gasPrice: nodeInfo.minGasPrice,
+    gasPriceFactor: chain.consensusParameters.gasPriceFactor,
+  };
+};
 
 export async function seedWallet(address: string, amount: BN) {
   const provider = await Provider.create(process.env.PUBLIC_PROVIDER_URL!);

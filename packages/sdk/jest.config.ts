@@ -13,6 +13,7 @@ const config: JestConfigWithTsJest = {
   clearMocks: true,
   moduleFileExtensions: ['js', 'ts'],
   testEnvironment: 'node',
+  setupFiles: ['./jest.setup.ts'],
   testMatch: ['./**/*.test.ts'],
   testRunner: 'jest-circus/runner',
   verbose: true,
