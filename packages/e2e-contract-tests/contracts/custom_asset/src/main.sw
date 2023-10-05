@@ -63,10 +63,26 @@ impl SRC3 for Contract {
 abi CustomBehavior {
     #[storage(read, write)]
     #[payable]
+    fn deposit() -> u64;
+
+    #[storage(read, write)]
+    #[payable]
     fn deposit_half() -> u64;
 }
 
 impl CustomBehavior for Contract {
+    #[storage(read, write)]
+    #[payable]
+    fn deposit() -> u64 {
+        let sender = msg_sender().unwrap();
+        let asset_id = msg_asset_id();
+        let amount = msg_amount();
+        let prev_balance = storage.balances.get((sender, asset_id)).try_read().unwrap_or(0);
+        let new_balance = prev_balance + amount;
+        storage.balances.insert((sender, asset_id), new_balance);
+        new_balance
+    }
+
     #[storage(read, write)]
     #[payable]
     fn deposit_half() -> u64 {

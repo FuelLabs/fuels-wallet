@@ -27,6 +27,22 @@ export const mint = async ({
     .call();
 };
 
+export const deposit = async ({
+  wallet,
+  amount,
+  assetId,
+}: {
+  wallet: FuelWalletLocked;
+  amount: BigNumberish;
+  assetId: string;
+}) => {
+  const contract = CustomAssetAbi__factory.connect(CONTRACT_ID, wallet);
+  await contract.functions
+    .deposit()
+    .callParams({ forward: [amount, assetId] })
+    .call();
+};
+
 export const depositHalf = async ({
   wallet,
   amount,

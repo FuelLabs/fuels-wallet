@@ -59,6 +59,7 @@ interface CustomAssetAbiInterface extends Interface {
     total_supply: FunctionFragment;
     burn: FunctionFragment;
     mint: FunctionFragment;
+    deposit: FunctionFragment;
     deposit_half: FunctionFragment;
   };
 
@@ -87,6 +88,7 @@ interface CustomAssetAbiInterface extends Interface {
     functionFragment: 'mint',
     values: [IdentityInput, string, BigNumberish]
   ): Uint8Array;
+  encodeFunctionData(functionFragment: 'deposit', values: []): Uint8Array;
   encodeFunctionData(functionFragment: 'deposit_half', values: []): Uint8Array;
 
   decodeFunctionData(
@@ -106,6 +108,10 @@ interface CustomAssetAbiInterface extends Interface {
   decodeFunctionData(functionFragment: 'burn', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'mint', data: BytesLike): DecodedValue;
   decodeFunctionData(
+    functionFragment: 'deposit',
+    data: BytesLike
+  ): DecodedValue;
+  decodeFunctionData(
     functionFragment: 'deposit_half',
     data: BytesLike
   ): DecodedValue;
@@ -124,6 +130,7 @@ export class CustomAssetAbi extends Contract {
       [recipient: IdentityInput, sub_id: string, amount: BigNumberish],
       void
     >;
+    deposit: InvokeFunction<[], BN>;
     deposit_half: InvokeFunction<[], BN>;
   };
 }
