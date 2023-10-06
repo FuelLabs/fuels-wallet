@@ -9,6 +9,6 @@
   Fuel-Core version: 0.20.4
 */
 
-export type { MintCustomAssetAbi } from './MintCustomAssetAbi';
+export type { CustomAssetAbi } from './CustomAssetAbi';
 
-export { MintCustomAssetAbi__factory } from './factories/MintCustomAssetAbi__factory';
+export { CustomAssetAbi__factory } from './factories/CustomAssetAbi__factory';
