@@ -36,6 +36,7 @@ export const CUSTOM_ASSET = {
   imageUrl:
     'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
   isCustom: true,
+  decimals: 2,
 };
 
 export const CUSTOM_ASSET_2 = {
@@ -45,6 +46,7 @@ export const CUSTOM_ASSET_2 = {
   imageUrl:
     'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
   isCustom: true,
+  decimals: 2,
 };
 
 export const ALT_ASSET = {
@@ -54,6 +56,7 @@ export const ALT_ASSET = {
   imageUrl:
     'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
   isCustom: true,
+  decimals: 2,
 };
 
 export const FUEL_NETWORK = {
@@ -76,6 +79,7 @@ export async function createManager(mnemonic: string) {
   await walletManager.addVault({
     type: 'mnemonic',
     secret: mnemonic,
+    provider: null,
   });
 
   return walletManager;

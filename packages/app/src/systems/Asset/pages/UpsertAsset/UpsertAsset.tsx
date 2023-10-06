@@ -22,6 +22,7 @@ export function UpsertAsset() {
       name: '',
       symbol: '',
       imageUrl: '',
+      decimals: 0,
       ...asset,
       assetId: id || '',
     },

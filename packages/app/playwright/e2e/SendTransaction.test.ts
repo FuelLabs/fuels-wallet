@@ -9,6 +9,7 @@ import {
   visit,
   getInputByName,
   getByAriaLabel,
+  hasAriaLabel,
 } from '../commons';
 import { seedWallet } from '../commons/seedWallet';
 import { ALT_ASSET, mockData } from '../mocks';
@@ -106,13 +107,15 @@ test.describe('SendTransaction', () => {
     );
 
     // Fill amount
-    await getInputByName(page, 'amount').type('0.001');
+    await getInputByName(page, 'amount').type('0.01');
+    // Check the balance is correct formated with only 2 decimals
+    await hasAriaLabel(page, 'Balance: 1,000,000.00');
 
     // Submit transaction
     await getButtonByText(page, 'Confirm').click();
 
     // Approve transaction
-    await hasText(page, `0.001 ${ALT_ASSET.symbol}`);
+    await hasText(page, `0.01 ${ALT_ASSET.symbol}`);
     await getButtonByText(page, 'Approve').click();
 
     // Wait for transaction to be confirmed

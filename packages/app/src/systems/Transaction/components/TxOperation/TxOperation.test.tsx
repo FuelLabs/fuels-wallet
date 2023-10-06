@@ -1,6 +1,5 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
-import assetList from '@fuels/assets';
-import { TestWrapper } from '~/systems/Core';
+import { TestWrapper, fuelAssets } from '~/systems/Core';
 
 import {
   MOCK_OPERATION_CONTRACT_CALL,
@@ -11,7 +10,7 @@ import { TxOperation } from './TxOperation';
 
 const PROPS = {
   operation: MOCK_OPERATION_CONTRACT_CALL,
-  assets: assetList,
+  assets: fuelAssets,
 };
 
 describe('TxOperation', () => {
@@ -31,7 +30,7 @@ describe('TxOperation', () => {
 
   it('should render operation to account', async () => {
     render(
-      <TxOperation operation={MOCK_OPERATION_TRANSFER} assets={assetList} />,
+      <TxOperation operation={MOCK_OPERATION_TRANSFER} assets={PROPS.assets} />,
       {
         wrapper: TestWrapper,
       }
@@ -48,7 +47,7 @@ describe('TxOperation', () => {
     render(
       <TxOperation
         operation={{ ...MOCK_OPERATION_TRANSFER, assetsSent: undefined }}
-        assets={assetList}
+        assets={PROPS.assets}
       />,
       { wrapper: TestWrapper }
     );
