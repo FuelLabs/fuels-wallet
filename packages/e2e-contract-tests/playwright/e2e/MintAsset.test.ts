@@ -41,7 +41,7 @@ test.describe('Mint Assets', () => {
     const mintInput = page.getByLabel('Mint asset card').locator('input');
     await mintInput.fill(mintAmount);
 
-    const mintButton = getButtonByText(page, 'Mint');
+    const mintButton = getButtonByText(page, 'Mint', true);
     await mintButton.click();
 
     // test asset is correct

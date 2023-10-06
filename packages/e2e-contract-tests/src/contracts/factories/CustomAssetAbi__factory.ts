@@ -380,18 +380,53 @@ const _abi = {
       },
       attributes: [
         {
-          name: 'storage',
-          arguments: ['read', 'write'],
-        },
-        {
           name: 'payable',
           arguments: [],
+        },
+        {
+          name: 'storage',
+          arguments: ['read', 'write'],
         },
       ],
     },
     {
       inputs: [],
       name: 'deposit_half',
+      output: {
+        name: '',
+        type: 13,
+        typeArguments: null,
+      },
+      attributes: [
+        {
+          name: 'payable',
+          arguments: [],
+        },
+        {
+          name: 'storage',
+          arguments: ['read', 'write'],
+        },
+      ],
+    },
+    {
+      inputs: [
+        {
+          name: 'recipient',
+          type: 3,
+          typeArguments: null,
+        },
+        {
+          name: 'sub_id',
+          type: 1,
+          typeArguments: null,
+        },
+        {
+          name: 'amount',
+          type: 13,
+          typeArguments: null,
+        },
+      ],
+      name: 'deposit_half_and_mint',
       output: {
         name: '',
         type: 13,
