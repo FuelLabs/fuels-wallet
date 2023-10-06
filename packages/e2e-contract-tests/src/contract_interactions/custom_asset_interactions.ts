@@ -2,9 +2,12 @@ import type { FuelWalletLocked } from '@fuel-wallet/sdk';
 import type { BigNumberish } from 'fuels';
 import { BaseAssetId } from 'fuels';
 
-import { VITE_CONTRACT_ID } from '../config';
+import { VITE_CONTRACT_ID, VITE_EXTERNAL_CONTRACT_ID } from '../config';
 import { CustomAssetAbi__factory } from '../contracts';
-import type { IdentityInput } from '../contracts/CustomAssetAbi';
+import type {
+  IdentityInput,
+  ContractIdInput,
+} from '../contracts/CustomAssetAbi';
 
 const CONTRACT_ID = VITE_CONTRACT_ID;
 
@@ -78,6 +81,37 @@ export const depositHalfAndMint = async ({
   };
   await contract.functions
     .deposit_half_and_mint(recipient, BaseAssetId, mintAmount)
+    .callParams({ forward: [forwardAmount, assetId] })
+    .call();
+};
+
+export const depositHalfAndExternalMint = async ({
+  wallet,
+  forwardAmount,
+  mintAmount,
+  assetId,
+}: {
+  wallet: FuelWalletLocked;
+  forwardAmount: BigNumberish;
+  mintAmount: BigNumberish;
+  assetId: string;
+}) => {
+  const contract = CustomAssetAbi__factory.connect(CONTRACT_ID, wallet);
+  const recipient: IdentityInput = {
+    Address: {
+      value: wallet.address.toHexString(),
+    },
+  };
+  const externalContract: ContractIdInput = {
+    value: VITE_EXTERNAL_CONTRACT_ID,
+  };
+  await contract.functions
+    .deposit_half_and_mint_from_external_contract(
+      recipient,
+      BaseAssetId,
+      mintAmount,
+      externalContract
+    )
     .callParams({ forward: [forwardAmount, assetId] })
     .call();
 };
