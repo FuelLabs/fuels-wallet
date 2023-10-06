@@ -1,10 +1,8 @@
 import { toast } from '@fuel-ui/react';
 import type { Asset } from '@fuel-wallet/types';
-import type { Fuel as FuelNetwork } from '@fuels/assets';
-import assetList from '@fuels/assets';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-import { FetchMachine } from '~/systems/Core';
+import { FetchMachine, fuelAssets } from '~/systems/Core';
 
 import type { AssetInputs } from '../services';
 import { AssetService } from '../services';
@@ -176,20 +174,15 @@ export const assetsMachine = createMachine(
         showError: true,
         async fetch() {
           await Promise.all(
-            assetList.map((asset) => {
-              const fuelNetworkAsset = asset.networks.find(
-                (n) => n.type === 'fuel'
-              ) as FuelNetwork;
+            fuelAssets.map((asset) =>
               AssetService.upsertAsset({
                 data: {
                   ...asset,
                   isCustom: false,
-                  assetId: fuelNetworkAsset.assetId,
-                  decimals: fuelNetworkAsset.decimals,
                   imageUrl: asset.icon,
                 },
-              });
-            })
+              })
+            )
           );
         },
       }),
