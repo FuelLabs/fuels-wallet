@@ -75,8 +75,14 @@ export async function walletApprove(context: BrowserContext) {
 }
 
 export async function getWalletPage(context: BrowserContext) {
-  const walletPage = await context.waitForEvent('page', {
-    predicate: (page) => page.url().includes('/popup'),
+  let walletPage = context.pages().find((page) => {
+    const url = page.url();
+    return url.includes('/popup') && url.indexOf('#') === -1;
   });
+  if (!walletPage) {
+    walletPage = await context.waitForEvent('page', {
+      predicate: (page) => page.url().includes('/popup'),
+    });
+  }
   return walletPage;
 }
