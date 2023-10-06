@@ -58,3 +58,26 @@ export const depositHalf = async ({
     .callParams({ forward: [amount, assetId] })
     .call();
 };
+
+export const depositHalfAndMint = async ({
+  wallet,
+  forwardAmount,
+  mintAmount,
+  assetId,
+}: {
+  wallet: FuelWalletLocked;
+  forwardAmount: BigNumberish;
+  mintAmount: BigNumberish;
+  assetId: string;
+}) => {
+  const contract = CustomAssetAbi__factory.connect(CONTRACT_ID, wallet);
+  const recipient: IdentityInput = {
+    Address: {
+      value: wallet.address.toHexString(),
+    },
+  };
+  await contract.functions
+    .deposit_half_and_mint(recipient, BaseAssetId, mintAmount)
+    .callParams({ forward: [forwardAmount, assetId] })
+    .call();
+};
