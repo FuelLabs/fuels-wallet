@@ -68,6 +68,10 @@ abi CustomBehavior {
     #[storage(read, write)]
     #[payable]
     fn deposit_half() -> u64;
+
+    #[storage(read, write)]
+    #[payable]
+    fn deposit_half_and_mint(recipient: Identity, sub_id: SubId, amount: u64) -> u64;
 }
 
 impl CustomBehavior for Contract {
@@ -94,6 +98,22 @@ impl CustomBehavior for Contract {
         let new_balance = prev_balance + half_amount;
         storage.balances.insert((sender, asset_id), new_balance);
         transfer(sender, asset_id, half_amount);
+        new_balance
+    }
+
+    #[storage(read, write)]
+    #[payable]
+    fn deposit_half_and_mint(recipient: Identity, sub_id: SubId, amount: u64) -> u64 {
+        let sender = msg_sender().unwrap();
+        let asset_id = msg_asset_id();
+        let forward_amount = msg_amount();
+        let prev_balance = storage.balances.get((sender, asset_id)).try_read().unwrap_or(0);
+        let half_amount = forward_amount / 2;
+        let new_balance = prev_balance + half_amount;
+        storage.balances.insert((sender, asset_id), new_balance);
+        transfer(sender, asset_id, half_amount);
+
+        _mint(storage.total_assets, storage.total_supply, recipient, sub_id, amount);
         new_balance
     }
 }
