@@ -12,7 +12,7 @@ export const ForwardHalfAndMintCard = () => {
 
   return (
     <div>
-      <p>Forward Custom Asset</p>
+      <p>Forward Half and Mint</p>
       <div aria-label="forward half and mint card">
         <input
           aria-label="Forward amount"
