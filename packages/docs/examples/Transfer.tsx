@@ -3,8 +3,9 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Link, Text, InputAmount, Input } from '@fuel-ui/react';
 import { getBlockExplorerLink, getGasConfig } from '@fuel-wallet/sdk';
 import type { BN } from 'fuels';
-import { BaseAssetId, bn, Address } from 'fuels';
-import { useState } from 'react';
+import { BaseAssetId, bn, Address, DECIMAL_UNITS } from 'fuels';
+import { useMemo, useState } from 'react';
+import { useAssets } from '~/src/hooks/useAssets';
 
 import { ExampleBox } from '../src/components/ExampleBox';
 import { useFuel } from '../src/hooks/useFuel';
@@ -21,6 +22,13 @@ export function Transfer() {
     'fuel1a6msn9zmjpvv84g08y3t6x6flykw622s48k2lqg257pf9924pnfq50tdmw'
   );
   const [assetId, setAssetId] = useState<string>(BaseAssetId);
+  const assets = useAssets();
+  const decimals = useMemo(() => {
+    return (
+      assets.find((asset) => asset.assetId === assetId)?.decimals ||
+      DECIMAL_UNITS
+    );
+  }, [assets, assetId]);
 
   const [sendTransaction, sendingTransaction, errorSendingTransaction] =
     useLoading(async (amount: BN, addr: string, assetId: string) => {
@@ -52,7 +60,10 @@ export function Transfer() {
               <Input.Field
                 value={assetId}
                 placeholder={'Asset ID to transfer'}
-                onChange={(e) => setAssetId(e.target.value)}
+                onChange={(e) => {
+                  setAmount(null);
+                  setAssetId(e.target.value);
+                }}
               />
             </Input>
           </Box>
@@ -67,9 +78,14 @@ export function Transfer() {
           </Box>
           <Box css={{ width: 300 }}>
             <InputAmount
+              // Force component to re-render when decimals change
+              // Remove this once fuel-ui InputAmount is fixed
+              // TODO: https://github.com/FuelLabs/fuel-ui/issues/323
+              key={decimals}
               value={amount}
               onChange={(value) => setAmount(value)}
               hiddenBalance
+              units={decimals}
             />
           </Box>
           <Box>

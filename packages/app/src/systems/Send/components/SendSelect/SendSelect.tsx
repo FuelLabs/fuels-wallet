@@ -1,7 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Input, InputAmount, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { bn } from 'fuels';
+import { DECIMAL_UNITS, bn } from 'fuels';
+import { useMemo } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import { animations, ControlledField, Layout } from '~/systems/Core';
 import { TxDetails } from '~/systems/Transaction';
@@ -19,6 +20,12 @@ export function SendSelect({
   isLoadingInitialFee,
   ...ctx
 }: SendSelectProps) {
+  const assetId = form.watch('asset', '');
+  const decimals = useMemo(() => {
+    const selectedAsset = balanceAssets?.find((a) => a.assetId === assetId);
+    return selectedAsset?.decimals || DECIMAL_UNITS;
+  }, [assetId]);
+
   return (
     <MotionContent {...animations.slideInTop()}>
       <Box.Stack gap="$4">
@@ -81,6 +88,7 @@ export function SendSelect({
                 name={field.name}
                 balance={maxAmountToSend}
                 value={bn(field.value)}
+                units={decimals}
                 onChange={(value) => {
                   const amountValue = value || undefined;
                   form.setValue('amount', amountValue?.toString() || '');

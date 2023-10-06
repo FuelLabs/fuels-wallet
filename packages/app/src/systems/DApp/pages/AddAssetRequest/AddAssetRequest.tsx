@@ -80,6 +80,10 @@ const styles = {
   card: cssObj({
     boxSizing: 'border-box',
     gap: '$0',
+
+    '.fuel_Card': {
+      border: '$none',
+    },
   }),
   cardContentSection: cssObj({
     padding: '$0',

@@ -148,6 +148,15 @@ export class AssetService {
     if (trimmedAssets.length !== uniqueAssetsBySymbol.length) {
       throw new Error('Asset with same symbol being added multiple times');
     }
+    trimmedAssets.forEach((obj) => {
+      if (
+        !Number.isInteger(obj.decimals) ||
+        Number(obj.decimals) > 19 ||
+        Number(obj.decimals) < 0
+      ) {
+        throw new Error(`Asset ${obj.assetId} decimals is not valid`);
+      }
+    });
 
     // validate if all assets from input are already added
     const uniqueAssetsIds = uniqueAssetsById.map((a) => a.assetId);
