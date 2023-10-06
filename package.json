@@ -21,7 +21,7 @@
     "./packages/*"
   ],
   "scripts": {
-    "build:website": "node ./scripts/build-website.mjs",
+    "build:website": "node ./scripts/build-website/index.mjs",
     "build:preview": "turbo run build:preview",
     "build:all": "turbo run build:all",
     "build:docs": "turbo run build:docs",
@@ -57,6 +57,7 @@
     "nodes:down": "run-s node:down node:down:test",
     "nodes:clean": "run-s node:clean node:clean:test",
     "nodes:reset": "run-s nodes:clean nodes:up",
+    "packages:version": "node ./scripts/version.js",
     "prettier:check": "prettier --check .",
     "prettier:format": "prettier --write .",
     "storybook": "pnpm -r --filter=fuels-wallet storybook",
