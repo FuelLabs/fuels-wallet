@@ -2,11 +2,11 @@ import type { FuelWalletLocked } from '@fuel-wallet/sdk';
 import type { BigNumberish } from 'fuels';
 import { BaseAssetId } from 'fuels';
 
-import { VITE_MINT_CONTRACT_ID } from '../config';
+import { VITE_CONTRACT_ID } from '../config';
 import { CustomAssetAbi__factory } from '../contracts';
 import type { IdentityInput } from '../contracts/CustomAssetAbi';
 
-const CONTRACT_ID = VITE_MINT_CONTRACT_ID;
+const CONTRACT_ID = VITE_CONTRACT_ID;
 
 export const mint = async ({
   wallet,
