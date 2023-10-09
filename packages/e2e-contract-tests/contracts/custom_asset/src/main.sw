@@ -137,7 +137,6 @@ impl CustomBehavior for Contract {
         let new_balance = prev_balance + half_amount;
         storage.balances.insert((sender, asset_id), new_balance);
         transfer(sender, asset_id, half_amount);
-
         let external_contract = abi(SRC3, contract_id.value);
         external_contract.mint(recipient, sub_id, amount);
 

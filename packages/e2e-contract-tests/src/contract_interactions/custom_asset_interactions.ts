@@ -4,10 +4,7 @@ import { BaseAssetId } from 'fuels';
 
 import { VITE_CONTRACT_ID, VITE_EXTERNAL_CONTRACT_ID } from '../config';
 import { CustomAssetAbi__factory } from '../contracts';
-import type {
-  IdentityInput,
-  ContractIdInput,
-} from '../contracts/CustomAssetAbi';
+import type { IdentityInput } from '../contracts/CustomAssetAbi';
 
 const CONTRACT_ID = VITE_CONTRACT_ID;
 
@@ -102,16 +99,18 @@ export const depositHalfAndExternalMint = async ({
       value: wallet.address.toHexString(),
     },
   };
-  const externalContract: ContractIdInput = {
-    value: VITE_EXTERNAL_CONTRACT_ID,
-  };
+  const externalContract = CustomAssetAbi__factory.connect(
+    VITE_EXTERNAL_CONTRACT_ID,
+    wallet
+  );
   await contract.functions
     .deposit_half_and_mint_from_external_contract(
       recipient,
       BaseAssetId,
       mintAmount,
-      externalContract
+      { value: externalContract.id.toB256() }
     )
     .callParams({ forward: [forwardAmount, assetId] })
+    .addContracts([externalContract])
     .call();
 };
