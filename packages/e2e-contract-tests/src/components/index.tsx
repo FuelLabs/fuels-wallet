@@ -6,3 +6,4 @@ export * from './DepositHalfEthCard';
 export * from './ForwardCustomAssetCard';
 export * from './ForwardHalfCustomAssetCard';
 export * from './ForwardHalfAndMintCard';
+export * from './DepositAndMintMultiCall';

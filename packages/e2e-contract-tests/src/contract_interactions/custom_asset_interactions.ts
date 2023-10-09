@@ -81,3 +81,30 @@ export const depositHalfAndMint = async ({
     .callParams({ forward: [forwardAmount, assetId] })
     .call();
 };
+
+export const depositAndMintMultiCall = async ({
+  wallet,
+  forwardAmount,
+  mintAmount,
+  assetId,
+}: {
+  wallet: FuelWalletLocked;
+  forwardAmount: BigNumberish;
+  mintAmount: BigNumberish;
+  assetId: string;
+}) => {
+  const contract = CustomAssetAbi__factory.connect(CONTRACT_ID, wallet);
+  const recipient: IdentityInput = {
+    Address: {
+      value: wallet.address.toHexString(),
+    },
+  };
+  await contract
+    .multiCall([
+      contract.functions
+        .deposit()
+        .callParams({ forward: [forwardAmount, assetId] }),
+      contract.functions.mint(recipient, BaseAssetId, mintAmount),
+    ])
+    .call();
+};
