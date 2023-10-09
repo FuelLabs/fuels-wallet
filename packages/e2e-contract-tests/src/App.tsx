@@ -5,6 +5,7 @@ import {
   Providers,
   DepositHalfEthCard,
   ForwardCustomAssetCard,
+  ForwardHalfCustomAssetCard,
   ForwardHalfAndMintCard,
 } from './components';
 
@@ -17,6 +18,7 @@ function App() {
         <ForwardEthCard />
         <DepositHalfEthCard />
         <ForwardCustomAssetCard />
+        <ForwardHalfCustomAssetCard />
         <ForwardHalfAndMintCard />
       </div>
     </Providers>
