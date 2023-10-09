@@ -5,22 +5,26 @@ import manifest from './manifest.config';
 import baseConfig from './vite-utils/vite.base.config';
 import { zipBuildPlugin } from './vite-utils/zip-build.plugin';
 
+const OUT_DIT = process.env.CRX_OUT || 'dist-crx';
+const APP_VERSION = process.env.VITE_APP_VERSION;
+const APP_VERSION_POSTFIX = process.env.APP_VERSION_POSTFIX || '';
+
 // https://vitejs.dev/config/
 export default defineConfig({
   ...baseConfig,
   base: '/',
   build: {
     ...baseConfig.build,
-    outDir: process.env.CRX_OUT || 'dist-crx',
+    outDir: OUT_DIT,
   },
   plugins: baseConfig.plugins?.concat([
     crx({
       manifest,
     }),
     zipBuildPlugin({
-      inDir: 'dist-crx',
+      inDir: OUT_DIT,
       outDir: baseConfig.build?.outDir,
-      outFileName: 'fuel-wallet.zip',
+      outFileName: `fuel-wallet-${APP_VERSION}${APP_VERSION_POSTFIX}.zip`,
       excludeFiles: /.map$/,
     }),
   ]),
