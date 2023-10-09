@@ -39,11 +39,11 @@ test.describe('Forward Half ETH and Mint Custom Asset', () => {
 
     const depositAmount = '1.000';
     const halfDepositAmount = '0.500';
-    const depositHalfInput = page.getByLabel('Forward amount');
+    const depositHalfInput = page.getByLabel('Forward amount', { exact: true });
     await depositHalfInput.fill(depositAmount);
 
     const mintAmount = '1.2345';
-    const mintInput = page.getByLabel('Mint amount');
+    const mintInput = page.getByLabel('Mint amount', { exact: true });
     await mintInput.fill(mintAmount);
 
     const forwardHalfAndMintButton = getButtonByText(
