@@ -10,7 +10,8 @@ import { getButtonByText } from './button';
 export async function walletSetup(
   context: BrowserContext,
   fuelExtensionId: string,
-  page: Page
+  page: Page,
+  fuelProviderUrl: string
 ) {
   await page.goto(`chrome-extension://${fuelExtensionId}/popup.html`);
 
@@ -56,6 +57,19 @@ export async function walletSetup(
   await signupPage.goto(
     `chrome-extension://${fuelExtensionId}/popup.html#/wallet`
   );
+
+  // Add testnet url
+  const selectNetworkButton = signupPage.getByLabel('Selected Network');
+  await selectNetworkButton.click();
+
+  const addNetworkButton = signupPage.getByLabel('Add network');
+  await addNetworkButton.click();
+
+  const urlInput = signupPage.getByLabel('Network URL');
+  await urlInput.fill(fuelProviderUrl);
+
+  const addNewNetworkButton = signupPage.getByLabel('Add new network');
+  await addNewNetworkButton.click();
 }
 
 export async function walletConnect(context: BrowserContext) {

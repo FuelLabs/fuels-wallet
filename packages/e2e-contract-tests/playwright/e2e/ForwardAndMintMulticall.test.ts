@@ -17,7 +17,7 @@ const { FUEL_PROVIDER_URL, WALLET_SECRET, VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward and Mint Multicall', () => {
   test.beforeEach(async ({ context, extensionId, page }) => {
-    await walletSetup(context, extensionId, page);
+    await walletSetup(context, extensionId, page, FUEL_PROVIDER_URL!);
     const fuelProvider = await Provider.create(FUEL_PROVIDER_URL!);
     const fuelWallet = Wallet.fromMnemonic(FUEL_MNEMONIC, fuelProvider);
     await seedWallet(
