@@ -8,13 +8,11 @@ import {
   Icon,
   IconButton,
   Text,
-  Tooltip,
 } from '@fuel-ui/react';
 import type { AssetAmount } from '@fuel-wallet/types';
-import { bn } from 'fuels';
 import { useState } from 'react';
 import type { Maybe } from '~/systems/Core';
-import { shortAddress, formatAmount } from '~/systems/Core';
+import { shortAddress } from '~/systems/Core';
 
 export type AssetSelectInput = AssetAmount;
 
@@ -108,16 +106,14 @@ export function AssetSelect({
       <Dropdown.Menu
         autoFocus
         aria-label="Actions"
-        css={{ ...styles.menu, maxWidth: 250 }}
+        css={styles.menu}
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onAction={(assetId: any) => onSelect(assetId.toString())}
       >
         {(items || []).map((item) => {
           const assetId = item.assetId.toString();
           const itemAsset = items?.find((a) => a.assetId === assetId);
-          const amount = bn(item.amount);
           const { name, symbol, imageUrl } = itemAsset || {};
-          const amountStr = `${formatAmount(amount)} ${symbol || ''}`;
 
           return (
             <Dropdown.MenuItem
@@ -137,13 +133,6 @@ export function AssetSelect({
                   {symbol || shortAddress(assetId)}
                 </Text>
               </Box>
-              <Box.Flex className="asset-amount">
-                <Tooltip content={amountStr}>
-                  <Box as="span" className="value">
-                    {amountStr}
-                  </Box>
-                </Tooltip>
-              </Box.Flex>
             </Dropdown.MenuItem>
           );
         })}
@@ -214,7 +203,7 @@ const styles = {
   }),
   menu: cssObj({
     py: '$1',
-
+    width: 250,
     '.fuel_Avatar': {
       width: 30,
       height: 30,
@@ -238,14 +227,6 @@ const styles = {
     },
     '.asset-symbol': {
       textTransform: 'uppercase',
-    },
-    '.asset-amount > .value': {
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
-    },
-    '.fuel_AvatarGenerated': {
-      flexShrink: 0,
     },
   }),
 };
