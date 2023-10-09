@@ -39,7 +39,7 @@ test.describe('Forward and Mint Multicall', () => {
     await depositHalfInput.fill(depositAmount);
 
     const mintAmount = '1.2345';
-    const mintInput = page.getByLabel('Mint amount mutlicall');
+    const mintInput = page.getByLabel('Mint amount multicall');
     await mintInput.fill(mintAmount);
 
     const forwardHalfAndMintButton = getButtonByText(
