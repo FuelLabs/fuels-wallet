@@ -595,6 +595,9 @@ importers:
       '@playwright/test':
         specifier: ^1.37.1
         version: 1.37.1
+      '@types/chrome':
+        specifier: ^0.0.243
+        version: 0.0.243
       '@types/node':
         specifier: ^20.8.0
         version: 20.8.0
