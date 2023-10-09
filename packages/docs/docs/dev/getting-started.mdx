@@ -107,7 +107,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 Here is how you can use the `useFuel` hook in a component to access an instance of `Fuel`:
 
 ```ts
-import { Fuel } from '@fuel-wallet/react';
+import { useFuel } from '@fuel-wallet/react';
 // ...
 const { fuel } = useFuel();
 await fuel.connect();
