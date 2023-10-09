@@ -25,7 +25,7 @@ test.describe('Forward Eth', () => {
     fuelWallet = Wallet.fromMnemonic(FUEL_MNEMONIC, fuelProvider);
     await seedWallet(
       fuelWallet.address.toString(),
-      bn(1_000_000_000),
+      bn(100_000_000_000),
       FUEL_PROVIDER_URL!,
       WALLET_SECRET!
     );
