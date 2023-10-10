@@ -1,35 +1,19 @@
 import {
   test,
-  walletSetup,
-  seedWallet,
-  FUEL_MNEMONIC,
   getButtonByText,
   walletConnect,
   getWalletPage,
   hasText,
 } from '@fuel-wallet/test-utils';
-import type { WalletUnlocked } from 'fuels';
-import { Wallet, Provider, bn, BaseAssetId } from 'fuels';
+import { BaseAssetId } from 'fuels';
 
 import '../../load.envs';
 import { shortAddress } from '../../src/utils';
-
-const { FUEL_PROVIDER_URL, WALLET_SECRET } = process.env;
+import { testSetup } from '../utils';
 
 test.describe('Forward Eth', () => {
-  let fuelWallet: WalletUnlocked;
-
   test.beforeEach(async ({ context, extensionId, page }) => {
-    await walletSetup(context, extensionId, page, FUEL_PROVIDER_URL!);
-    const fuelProvider = await Provider.create(FUEL_PROVIDER_URL!);
-    fuelWallet = Wallet.fromMnemonic(FUEL_MNEMONIC, fuelProvider);
-    await seedWallet(
-      fuelWallet.address.toString(),
-      bn(100_000_000_000),
-      FUEL_PROVIDER_URL!,
-      WALLET_SECRET!
-    );
-    await page.goto('/');
+    await testSetup({ context, page, extensionId });
   });
 
   test('e2e forward ETH', async ({ context, page }) => {

@@ -1,32 +1,19 @@
 import {
   test,
-  walletSetup,
   getButtonByText,
   getWalletPage,
   hasText,
   walletConnect,
-  FUEL_MNEMONIC,
-  seedWallet,
 } from '@fuel-wallet/test-utils';
-import { BaseAssetId, Provider, Wallet, bn } from 'fuels';
+import { BaseAssetId } from 'fuels';
 
 import { shortAddress } from '../../src/utils';
 import '../../load.envs.js';
-
-const { FUEL_PROVIDER_URL, WALLET_SECRET } = process.env;
+import { testSetup } from '../utils';
 
 test.describe('Deposit Half ETH', () => {
   test.beforeEach(async ({ context, extensionId, page }) => {
-    await walletSetup(context, extensionId, page, FUEL_PROVIDER_URL!);
-    const fuelProvider = await Provider.create(FUEL_PROVIDER_URL!);
-    const fuelWallet = Wallet.fromMnemonic(FUEL_MNEMONIC, fuelProvider);
-    await seedWallet(
-      fuelWallet.address.toString(),
-      bn(100_000_000_000),
-      FUEL_PROVIDER_URL!,
-      WALLET_SECRET!
-    );
-    await page.goto('/');
+    await testSetup({ context, page, extensionId });
   });
 
   test('e2e deposit half eth', async ({ context, page }) => {

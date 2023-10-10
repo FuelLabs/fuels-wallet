@@ -1,32 +1,21 @@
 import {
   test,
-  walletSetup,
   getButtonByText,
   getWalletPage,
   hasText,
   walletConnect,
-  FUEL_MNEMONIC,
-  seedWallet,
 } from '@fuel-wallet/test-utils';
-import { BaseAssetId, Provider, Wallet, bn } from 'fuels';
+import { BaseAssetId } from 'fuels';
 
 import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
+import { testSetup } from '../utils';
 
-const { FUEL_PROVIDER_URL, WALLET_SECRET, VITE_CONTRACT_ID } = process.env;
+const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward Half ETH and Mint Custom Asset', () => {
   test.beforeEach(async ({ context, extensionId, page }) => {
-    await walletSetup(context, extensionId, page, FUEL_PROVIDER_URL!);
-    const fuelProvider = await Provider.create(FUEL_PROVIDER_URL!);
-    const fuelWallet = Wallet.fromMnemonic(FUEL_MNEMONIC, fuelProvider);
-    await seedWallet(
-      fuelWallet.address.toString(),
-      bn(100_000_000_000),
-      FUEL_PROVIDER_URL!,
-      WALLET_SECRET!
-    );
-    await page.goto('/');
+    await testSetup({ context, page, extensionId });
   });
 
   test('e2e foreward half eth and mint custom asset', async ({

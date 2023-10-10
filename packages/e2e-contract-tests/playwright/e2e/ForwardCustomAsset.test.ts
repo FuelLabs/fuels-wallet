@@ -1,37 +1,26 @@
 import {
   test,
-  walletSetup,
-  seedWallet,
-  FUEL_MNEMONIC,
   getButtonByText,
   walletConnect,
   getWalletPage,
   hasText,
 } from '@fuel-wallet/test-utils';
 import type { WalletUnlocked } from 'fuels';
-import { Wallet, Provider, bn, BaseAssetId } from 'fuels';
+import { bn, BaseAssetId } from 'fuels';
 
 import { CustomAssetAbi__factory } from '../../src/contracts';
 import type { IdentityInput } from '../../src/contracts/CustomAssetAbi';
 import '../../load.envs';
 import { calculateAssetId, shortAddress } from '../../src/utils';
+import { testSetup } from '../utils';
 
-const { FUEL_PROVIDER_URL, WALLET_SECRET, VITE_CONTRACT_ID } = process.env;
+const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward Custom Asset', () => {
   let fuelWallet: WalletUnlocked;
 
   test.beforeEach(async ({ context, extensionId, page }) => {
-    await walletSetup(context, extensionId, page, FUEL_PROVIDER_URL!);
-    const fuelProvider = await Provider.create(FUEL_PROVIDER_URL!);
-    fuelWallet = Wallet.fromMnemonic(FUEL_MNEMONIC, fuelProvider);
-    await seedWallet(
-      fuelWallet.address.toString(),
-      bn(100_000_000_000),
-      FUEL_PROVIDER_URL!,
-      WALLET_SECRET!
-    );
-    await page.goto('/');
+    fuelWallet = await testSetup({ context, page, extensionId });
   });
 
   test('e2e forward custom asset', async ({ context, page }) => {
