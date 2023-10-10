@@ -42,6 +42,7 @@ test.describe('Mint Assets', () => {
     await mintInput.fill(mintAmount);
 
     const mintButton = getButtonByText(page, 'Mint', true);
+    await page.waitForTimeout(3000);
     await mintButton.click();
 
     // test asset is correct

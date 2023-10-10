@@ -41,7 +41,9 @@ test.describe('Deposit Half ETH', () => {
       .locator('input');
     await depositHalfInput.fill(depositAmount);
 
-    const depositHalfButton = getButtonByText(page, 'Deposit Half ETH');
+    const depositHalfButton = getButtonByText(page, 'Deposit Half ETH', true);
+
+    await page.waitForTimeout(3000);
     await depositHalfButton.click();
 
     const walletPage = await getWalletPage(context);

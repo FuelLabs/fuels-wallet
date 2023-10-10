@@ -44,8 +44,9 @@ test.describe('Forward and Mint Multicall', () => {
 
     const forwardHalfAndMintButton = getButtonByText(
       page,
-      'Forward Half And Mint'
+      'Deposit And Mint Multicall'
     );
+    await page.waitForTimeout(2500);
     await forwardHalfAndMintButton.click();
 
     const walletPage = await getWalletPage(context);

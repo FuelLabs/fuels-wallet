@@ -44,6 +44,7 @@ test.describe('Forward Eth', () => {
     await forwardEthInput.fill(forwardEthAmount);
 
     const forwardEthButton = getButtonByText(page, 'Forward ETH');
+    await page.waitForTimeout(2500);
     await forwardEthButton.click();
 
     const walletPage = await getWalletPage(context);
