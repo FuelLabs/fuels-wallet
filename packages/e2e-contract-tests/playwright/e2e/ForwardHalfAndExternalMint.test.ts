@@ -18,7 +18,7 @@ const { FUEL_PROVIDER_URL, WALLET_SECRET, VITE_EXTERNAL_CONTRACT_ID } =
 
 test.describe('Forward Half ETH and Mint External Custom Asset', () => {
   test.beforeEach(async ({ context, extensionId, page }) => {
-    await walletSetup(context, extensionId, page);
+    await walletSetup(context, extensionId, page, FUEL_PROVIDER_URL!);
     const fuelProvider = await Provider.create(FUEL_PROVIDER_URL!);
     const fuelWallet = Wallet.fromMnemonic(FUEL_MNEMONIC, fuelProvider);
     await seedWallet(

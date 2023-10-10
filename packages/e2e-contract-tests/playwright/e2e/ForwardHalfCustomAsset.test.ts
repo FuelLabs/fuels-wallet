@@ -22,7 +22,7 @@ test.describe('Forward Custom Asset', () => {
   let fuelWallet: WalletUnlocked;
 
   test.beforeEach(async ({ context, extensionId, page }) => {
-    await walletSetup(context, extensionId, page);
+    await walletSetup(context, extensionId, page, FUEL_PROVIDER_URL!);
     const fuelProvider = await Provider.create(FUEL_PROVIDER_URL!);
     fuelWallet = Wallet.fromMnemonic(FUEL_MNEMONIC, fuelProvider);
     await seedWallet(

@@ -17,7 +17,7 @@ const { FUEL_PROVIDER_URL, WALLET_SECRET } = process.env;
 
 test.describe('Deposit Half ETH', () => {
   test.beforeEach(async ({ context, extensionId, page }) => {
-    await walletSetup(context, extensionId, page);
+    await walletSetup(context, extensionId, page, FUEL_PROVIDER_URL!);
     const fuelProvider = await Provider.create(FUEL_PROVIDER_URL!);
     const fuelWallet = Wallet.fromMnemonic(FUEL_MNEMONIC, fuelProvider);
     await seedWallet(
@@ -41,7 +41,9 @@ test.describe('Deposit Half ETH', () => {
       .locator('input');
     await depositHalfInput.fill(depositAmount);
 
-    const depositHalfButton = getButtonByText(page, 'Deposit Half ETH');
+    const depositHalfButton = getButtonByText(page, 'Deposit Half ETH', true);
+
+    await page.waitForTimeout(3000);
     await depositHalfButton.click();
 
     const walletPage = await getWalletPage(context);

@@ -99,6 +99,7 @@ export const depositHalfAndExternalMint = async ({
       value: wallet.address.toHexString(),
     },
   };
+
   const externalContract = CustomAssetAbi__factory.connect(
     VITE_EXTERNAL_CONTRACT_ID,
     wallet
@@ -112,5 +113,33 @@ export const depositHalfAndExternalMint = async ({
     )
     .callParams({ forward: [forwardAmount, assetId] })
     .addContracts([externalContract])
+    .call();
+};
+
+export const depositAndMintMultiCall = async ({
+  wallet,
+  forwardAmount,
+  mintAmount,
+  assetId,
+}: {
+  wallet: FuelWalletLocked;
+  forwardAmount: BigNumberish;
+  mintAmount: BigNumberish;
+  assetId: string;
+}) => {
+  const contract = CustomAssetAbi__factory.connect(CONTRACT_ID, wallet);
+  const recipient: IdentityInput = {
+    Address: {
+      value: wallet.address.toHexString(),
+    },
+  };
+
+  await contract
+    .multiCall([
+      contract.functions
+        .deposit()
+        .callParams({ forward: [forwardAmount, assetId] }),
+      contract.functions.mint(recipient, BaseAssetId, mintAmount),
+    ])
     .call();
 };
