@@ -20,6 +20,7 @@
   "devDependencies": {
     "@fuel-wallet/test-utils": "workspace:*",
     "@playwright/test": "^1.37.1",
+    "@types/chrome": "^0.0.243",
     "@types/node": "^20.8.0",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",

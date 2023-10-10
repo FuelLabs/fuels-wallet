@@ -2,7 +2,7 @@ import type { FuelWalletLocked } from '@fuel-wallet/sdk';
 import type { BigNumberish } from 'fuels';
 import { BaseAssetId } from 'fuels';
 
-import { VITE_CONTRACT_ID } from '../config';
+import { VITE_CONTRACT_ID, VITE_EXTERNAL_CONTRACT_ID } from '../config';
 import { CustomAssetAbi__factory } from '../contracts';
 import type { IdentityInput } from '../contracts/CustomAssetAbi';
 
@@ -82,6 +82,40 @@ export const depositHalfAndMint = async ({
     .call();
 };
 
+export const depositHalfAndExternalMint = async ({
+  wallet,
+  forwardAmount,
+  mintAmount,
+  assetId,
+}: {
+  wallet: FuelWalletLocked;
+  forwardAmount: BigNumberish;
+  mintAmount: BigNumberish;
+  assetId: string;
+}) => {
+  const contract = CustomAssetAbi__factory.connect(CONTRACT_ID, wallet);
+  const recipient: IdentityInput = {
+    Address: {
+      value: wallet.address.toHexString(),
+    },
+  };
+
+  const externalContract = CustomAssetAbi__factory.connect(
+    VITE_EXTERNAL_CONTRACT_ID,
+    wallet
+  );
+  await contract.functions
+    .deposit_half_and_mint_from_external_contract(
+      recipient,
+      BaseAssetId,
+      mintAmount,
+      { value: externalContract.id.toB256() }
+    )
+    .callParams({ forward: [forwardAmount, assetId] })
+    .addContracts([externalContract])
+    .call();
+};
+
 export const depositAndMintMultiCall = async ({
   wallet,
   forwardAmount,
@@ -99,6 +133,7 @@ export const depositAndMintMultiCall = async ({
       value: wallet.address.toHexString(),
     },
   };
+
   await contract
     .multiCall([
       contract.functions

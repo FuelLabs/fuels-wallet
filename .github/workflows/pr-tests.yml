@@ -143,7 +143,9 @@ jobs:
         run: forc build --path packages/e2e-contract-tests/contracts/custom_asset
 
       - name: Deploy Contracts
-        run: forc deploy --path packages/e2e-contract-tests/contracts/custom_asset --node-url http://localhost:4001/graphql --default-salt 0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298
+        run: | 
+          forc deploy --path packages/e2e-contract-tests/contracts/custom_asset --node-url http://localhost:4001/graphql --default-salt 0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298
+          forc deploy --path packages/e2e-contract-tests/contracts/custom_asset --node-url http://localhost:4001/graphql --salt 0x0000000000000000000000000000000000000000000000000000000000000001 0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298
 
       - name: Generate Contract Types
         run: pnpm build:e2e-contracts-types

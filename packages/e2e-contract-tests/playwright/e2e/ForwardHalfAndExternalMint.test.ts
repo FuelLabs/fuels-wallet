@@ -7,31 +7,39 @@ import {
 } from '@fuel-wallet/test-utils';
 import { BaseAssetId } from 'fuels';
 
-import { shortAddress } from '../../src/utils';
+import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
 import { testSetup } from '../utils';
 
-test.describe('Deposit Half ETH', () => {
+const { VITE_EXTERNAL_CONTRACT_ID } = process.env;
+
+test.describe('Forward Half ETH and Mint External Custom Asset', () => {
   test.beforeEach(async ({ context, extensionId, page }) => {
     await testSetup({ context, page, extensionId });
   });
 
-  test('e2e deposit half eth', async ({ context, page }) => {
+  test('e2e foreward half eth and mint external custom asset', async ({
+    context,
+    page,
+  }) => {
     const connectButton = getButtonByText(page, 'Connect');
     await connectButton.click();
     await walletConnect(context);
 
     const depositAmount = '1.000';
     const halfDepositAmount = '0.500';
-    const depositHalfInput = page
-      .getByLabel('Deposit half eth card')
-      .locator('input');
+    const depositHalfInput = page.getByLabel('Forward amount external mint');
     await depositHalfInput.fill(depositAmount);
 
-    const depositHalfButton = getButtonByText(page, 'Deposit Half ETH', true);
+    const mintAmount = '1.2345';
+    const mintInput = page.getByLabel('Mint amount external mint');
+    await mintInput.fill(mintAmount);
 
-    await page.waitForTimeout(3000);
-    await depositHalfButton.click();
+    const forwardHalfAndMintButton = getButtonByText(
+      page,
+      'Forward Half And External Mint'
+    );
+    await forwardHalfAndMintButton.click();
 
     const walletPage = await getWalletPage(context);
 
@@ -48,6 +56,14 @@ test.describe('Deposit Half ETH', () => {
     await hasText(walletPage, shortAddress(BaseAssetId), 1);
     // test return eth amount is correct
     await hasText(walletPage, `${halfDepositAmount} ETH`);
+
+    // test mint asset name is shown
+    await hasText(walletPage, 'Unknown', 0, 5000, true);
+    // test mint asset id is shown
+    const assetId = calculateAssetId(VITE_EXTERNAL_CONTRACT_ID!, BaseAssetId);
+    await hasText(walletPage, shortAddress(assetId));
+    // test mint amount is correct
+    await hasText(walletPage, mintAmount);
 
     // test gas fee is shown and correct
     await hasText(walletPage, 'Fee (network)');
