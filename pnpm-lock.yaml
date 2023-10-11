@@ -28,11 +28,11 @@ importers:
         specifier: 0.17.0
         version: 0.17.0(@testing-library/dom@9.3.1)(typescript@5.1.6)
       '@fuel-ui/css':
-        specifier: 0.19.1
-        version: 0.19.1
+        specifier: 0.21.1
+        version: 0.21.1
       '@fuel-ui/react':
-        specifier: 0.19.1
-        version: 0.19.1(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
+        specifier: 0.21.1
+        version: 0.21.1(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
       '@fuel-ui/test-utils':
         specifier: 0.17.0
         version: 0.17.0(@babel/core@7.22.10)(@jest/types@29.6.1)(@types/node@20.4.9)(ts-node@10.9.1)(typescript@5.1.6)
@@ -146,14 +146,14 @@ importers:
         specifier: 0.17.0
         version: 0.17.0(@testing-library/dom@9.3.1)(typescript@5.1.6)
       '@fuel-ui/css':
-        specifier: 0.19.1
-        version: 0.19.1
+        specifier: 0.21.1
+        version: 0.21.1
       '@fuel-ui/icons':
-        specifier: 0.19.1
-        version: 0.19.1
+        specifier: 0.21.1
+        version: 0.21.1
       '@fuel-ui/react':
-        specifier: 0.19.1
-        version: 0.19.1(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
+        specifier: 0.21.1
+        version: 0.21.1(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
       '@fuel-ui/test-utils':
         specifier: 0.17.0
         version: 0.17.0(@babel/core@7.22.11)(@jest/types@29.6.1)(@types/node@20.4.9)(esbuild@0.18.17)(react@18.2.0)(ts-node@10.9.1)(typescript@5.1.6)
@@ -444,14 +444,14 @@ importers:
         specifier: 3.5.1
         version: 3.5.1(@algolia/client-search@4.19.1)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)(search-insights@2.7.0)
       '@fuel-ui/css':
-        specifier: 0.19.1
-        version: 0.19.1
+        specifier: 0.21.1
+        version: 0.21.1
       '@fuel-ui/icons':
-        specifier: 0.19.1
-        version: 0.19.1
+        specifier: 0.21.1
+        version: 0.21.1
       '@fuel-ui/react':
-        specifier: 0.19.1
-        version: 0.19.1(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
+        specifier: 0.21.1
+        version: 0.21.1(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2)
       '@fuel-wallet/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -3483,13 +3483,6 @@ packages:
   /@fuel-ts/interfaces@0.58.0:
     resolution: {integrity: sha512-E5ZiBeJCCl1ftXOGSWUq9Er45Nktqz5wyPQJoTpjN3CbO8+ewv3M9GP6RbjsVSl4hgoFLrwy3cWOEuR/GF5EkA==}
 
-  /@fuel-ts/math@0.49.1:
-    resolution: {integrity: sha512-h+ozE982eKkvqulX1V6X0JdsH2RkkCtYwYr9v1vwT5L/J73RySuxhoVEFSYkURjPOKSPjxK9q4RANXZZi433bA==}
-    dependencies:
-      '@types/bn.js': 5.1.1
-      bn.js: 5.2.1
-    dev: false
-
   /@fuel-ts/math@0.54.1:
     resolution: {integrity: sha512-balx5RmqFOPAA5e8T5HS89dXOwt//oji10Asr2znN8aAxC0O05Hr7BFiiMFun6ql2rNaw/PdY1b/zuvrzysdBQ==}
     dependencies:
@@ -3713,16 +3706,6 @@ packages:
       - typescript
     dev: false
 
-  /@fuel-ui/css@0.19.1:
-    resolution: {integrity: sha512-ZQu2qMoFggDQ7/ieEKpZ/nK0g5F3a7z5owOG2B+2YDgPs5J58Ac086XsuN5Wdah4RjJKMElnQQLthUKzYhPSLA==}
-    dependencies:
-      '@fuel-ui/design-tokens': 0.19.1
-      '@radix-ui/colors': 2.1.0
-      classnames: 2.3.2
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
   /@fuel-ui/css@0.21.0:
     resolution: {integrity: sha512-H0w/zTbFF2zuzP8o6rmb5fq0EOPjQALdcNPMP8wQl/v8KtS1olC2nG3yCBfTa1e+Jlh0i+mIKO1Od7xx4AmENQ==}
     dependencies:
@@ -3733,13 +3716,14 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@fuel-ui/design-tokens@0.19.1:
-    resolution: {integrity: sha512-ZBBtt/ujw3Qf0imXzcsbj5vS4AeSX49jAiCpbmXyyUxq3nZAwMjg7vMPchIl1/+EVSHUuROdsSd5Vkx1b24sZQ==}
+  /@fuel-ui/css@0.21.1:
+    resolution: {integrity: sha512-DVdPXZ/ShsxkGUpk0kJRpe16D7BeU/P+t0wZ1EpzsdOvv0HBlATo7eFD410VwaopJYbKe48XWK3g01bQPYhBYQ==}
     dependencies:
+      '@fuel-ui/design-tokens': 0.21.1
       '@radix-ui/colors': 2.1.0
-      chroma-js: 2.4.2
-      copy-to-clipboard: 3.3.3
-      lodash: 4.17.21
+      classnames: 2.3.2
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /@fuel-ui/design-tokens@0.21.0:
@@ -3751,28 +3735,29 @@ packages:
       lodash: 4.17.21
     dev: false
 
-  /@fuel-ui/icons@0.19.1:
-    resolution: {integrity: sha512-bKWkIY29pBGVuKhZfy+u2YBm3d6xOkqxFx8+OKbEkprYGoaJTaEX52x3fHMsYBTheCh3PLZU4xMdF7+WT9iojw==}
+  /@fuel-ui/design-tokens@0.21.1:
+    resolution: {integrity: sha512-JjYOYX9VJmSCDDzOJRren1Or7M/1JDwBh0BFBLqCik/PLASbpbmVB+KYJj25eBiVHv2fXTLHM377SeIMnEW9DA==}
     dependencies:
-      '@tabler/icons': 2.30.0
-      prettier: 3.0.2
-      svgo: 3.0.2
+      '@radix-ui/colors': 2.1.0
+      chroma-js: 2.4.2
+      copy-to-clipboard: 3.3.3
+      lodash: 4.17.21
     dev: false
 
-  /@fuel-ui/icons@0.21.0:
-    resolution: {integrity: sha512-n1bsOIrPTIvZb93F3G0Tc0mP0n//zD23KC/rfUvshcRMoHsWtNuoY+qIgnYyyMnA34jgqlDMotLIPoxmV4Gbmw==}
+  /@fuel-ui/icons@0.21.1:
+    resolution: {integrity: sha512-Eey7+u4aLUcJKu7YPfB1lqSCL87RRhAVHKdAPV9MI+crV0Sy4gPTWw0jA0oXDJcnloyUtw6pRfzce32lqZycMQ==}
     dependencies:
       '@tabler/icons': 2.34.0
       prettier: 3.0.3
       svgo: 3.0.2
     dev: false
 
-  /@fuel-ui/react@0.19.1(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2):
-    resolution: {integrity: sha512-SVb9oYOtjYmpCgOhU6q9RbWqr7Pp0sCZhUiGGl4kBSSdqBql4cS4ChKa4PHg/Iq1oN3yt/fj1M0SrfqTTd5GdA==}
+  /@fuel-ui/react@0.21.0(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2):
+    resolution: {integrity: sha512-zcTqRazDq0AKGZyzUhanR84dNmWiKhYzSyBp2ow3/mkp1q3+ItneHKoiqHaePqW0nVw6zzoocoToVg28UNn3MA==}
     dependencies:
-      '@fuel-ts/math': 0.49.1
-      '@fuel-ui/css': 0.19.1
-      '@fuel-ui/icons': 0.19.1
+      '@fuel-ts/math': 0.54.1
+      '@fuel-ui/css': 0.21.0
+      '@fuel-ui/icons': 0.21.1
       '@radix-ui/react-accordion': 1.1.2(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-alert-dialog': 1.0.4(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-aspect-ratio': 1.0.3(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
@@ -3810,12 +3795,12 @@ packages:
       - immer
     dev: false
 
-  /@fuel-ui/react@0.21.0(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2):
-    resolution: {integrity: sha512-zcTqRazDq0AKGZyzUhanR84dNmWiKhYzSyBp2ow3/mkp1q3+ItneHKoiqHaePqW0nVw6zzoocoToVg28UNn3MA==}
+  /@fuel-ui/react@0.21.1(@types/react-dom@18.2.7)(@types/react@18.2.20)(csstype@3.1.2):
+    resolution: {integrity: sha512-45WC86OBeJ86ZqC4ApUERf9HZMWo9oc4frydMtmxd147ciG13O+1NTunT9TYUvlPAeFJF9zc6WDj/17Q3Bc3kw==}
     dependencies:
       '@fuel-ts/math': 0.54.1
-      '@fuel-ui/css': 0.21.0
-      '@fuel-ui/icons': 0.21.0
+      '@fuel-ui/css': 0.21.1
+      '@fuel-ui/icons': 0.21.1
       '@radix-ui/react-accordion': 1.1.2(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-alert-dialog': 1.0.4(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-aspect-ratio': 1.0.3(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
@@ -9807,10 +9792,6 @@ packages:
     resolution: {integrity: sha512-sJ902EfIzn1Fa+qYmjdQqh8tPsoxyBz+8yBKC2HKUxyezKJFwPGOn7pv4WY6QuQW//ySQi5lJjA/ZT9sNWWNTg==}
     dependencies:
       tslib: 2.6.1
-    dev: false
-
-  /@tabler/icons@2.30.0:
-    resolution: {integrity: sha512-tvtmkI4ALjKThVVORh++sB9JnkFY7eGInKxNy+Df7WVQiF7T85tlvGADzlgX4Ic+CK5MIUzZ0jhOlQ/RRlgXpg==}
     dev: false
 
   /@tabler/icons@2.34.0:
@@ -18952,12 +18933,6 @@ packages:
     resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
     engines: {node: '>=10.13.0'}
     hasBin: true
-
-  /prettier@3.0.2:
-    resolution: {integrity: sha512-o2YR9qtniXvwEZlOKbveKfDQVyqxbEIWn48Z8m3ZJjBjcCmUy3xZGIv+7AkaeuaTr6yPXJjwv07ZWlsWbEy1rQ==}
-    engines: {node: '>=14'}
-    hasBin: true
-    dev: false
 
   /prettier@3.0.3:
     resolution: {integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==}

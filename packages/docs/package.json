@@ -13,9 +13,9 @@
   "dependencies": {
     "@docsearch/css": "^3.5.2",
     "@docsearch/react": "3.5.1",
-    "@fuel-ui/css": "0.19.1",
-    "@fuel-ui/icons": "0.19.1",
-    "@fuel-ui/react": "0.19.1",
+    "@fuel-ui/css": "0.21.1",
+    "@fuel-ui/icons": "0.21.1",
+    "@fuel-ui/react": "0.21.1",
     "@fuel-wallet/sdk": "workspace:*",
     "@mdx-js/react": "^2.3.0",
     "@next/mdx": "^13.4.19",

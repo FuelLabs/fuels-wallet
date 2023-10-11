@@ -75,8 +75,8 @@
   },
   "dependencies": {
     "@fuel-ui/config": "0.17.0",
-    "@fuel-ui/css": "0.19.1",
-    "@fuel-ui/react": "0.19.1",
+    "@fuel-ui/css": "0.21.1",
+    "@fuel-ui/react": "0.21.1",
     "@fuel-ui/test-utils": "0.17.0",
     "execa": "^7.2.0"
   },
