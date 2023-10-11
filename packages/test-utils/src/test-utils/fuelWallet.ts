@@ -2,6 +2,7 @@ import { type BrowserContext, type Page } from '@playwright/test';
 
 import { expect } from '../fixtures';
 import { FUEL_MNEMONIC, FUEL_WALLET_PASSWORD } from '../mocks';
+import { shortAddress } from '../utils';
 
 import { getButtonByText } from './button';
 
@@ -86,6 +87,48 @@ export async function walletApprove(context: BrowserContext) {
 
   const approveButton = walletPage.locator('button').getByText('Approve');
   await approveButton.click();
+}
+
+export async function addAsset(
+  context: BrowserContext,
+  assetId: string,
+  name: string,
+  symbol: string,
+  decimals: number,
+  imageUrl?: string
+) {
+  const walletPage = context.pages().find((page) => {
+    const url = page.url();
+    return url.includes('/popup.html#/wallet');
+  });
+
+  if (!walletPage) {
+    throw new Error('Wallet Page could not be found');
+  }
+
+  const showUnkownAssetsButton = getButtonByText(
+    walletPage,
+    'Show unknown assets'
+  );
+  await showUnkownAssetsButton.click();
+
+  walletPage
+    .getByRole('article')
+    .getByText(shortAddress(assetId))
+    .locator('button')
+    .getByText('(Add)');
+
+  const assetNameInput = walletPage.getByLabel('Asset name');
+  await assetNameInput.fill(name);
+  const assetSymbolInput = walletPage.getByLabel('Asset symbol');
+  await assetSymbolInput.fill(symbol);
+  const assetDecimalsInput = walletPage.getByLabel('Asset decimals');
+  await assetDecimalsInput.fill(decimals.toString());
+  const assetImageUrlInput = walletPage.getByLabel('Asset image Url');
+  await assetImageUrlInput.fill(imageUrl || '');
+
+  const saveButton = getButtonByText(walletPage, 'Save');
+  await saveButton.click();
 }
 
 export async function getWalletPage(context: BrowserContext) {

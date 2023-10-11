@@ -11,9 +11,11 @@ const CONTRACT_ID = VITE_CONTRACT_ID;
 export const mint = async ({
   wallet,
   amount,
+  subId,
 }: {
   wallet: FuelWalletLocked;
   amount: BigNumberish;
+  subId: string;
 }) => {
   const contract = CustomAssetAbi__factory.connect(CONTRACT_ID, wallet);
   const recipient: IdentityInput = {
@@ -22,7 +24,7 @@ export const mint = async ({
     },
   };
   await contract.functions
-    .mint(recipient, BaseAssetId, amount)
+    .mint(recipient, subId, amount)
     .txParams({ gasPrice: 1 })
     .call();
 };
