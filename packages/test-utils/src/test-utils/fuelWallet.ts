@@ -112,11 +112,12 @@ export async function addAsset(
   );
   await showUnkownAssetsButton.click();
 
-  walletPage
+  await walletPage
     .getByRole('article')
-    .getByText(shortAddress(assetId))
+    .filter({ hasText: shortAddress(assetId) })
     .locator('button')
-    .getByText('(Add)');
+    .getByText('(Add)')
+    .click();
 
   const assetNameInput = walletPage.getByLabel('Asset name');
   await assetNameInput.fill(name);

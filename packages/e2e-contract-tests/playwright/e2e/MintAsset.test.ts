@@ -46,6 +46,10 @@ test.describe('Mint Assets', () => {
   });
 
   test('e2e mint known asset', async ({ context, page }) => {
+    const connectButton = getButtonByText(page, 'Connect');
+    await connectButton.click();
+    await walletConnect(context);
+
     const mintAmount = '1.2345';
     const mintAmountInput = page.getByLabel('Asset config amount');
     await mintAmountInput.fill(mintAmount);
@@ -65,7 +69,7 @@ test.describe('Mint Assets', () => {
 
     // test asset is correct
     const assetId = calculateAssetId(process.env.VITE_CONTRACT_ID!, subId);
-    const walletPage = await getWalletPage(context);
+    let walletPage = await getWalletPage(context);
     // short address function copied from app package
     await hasText(walletPage, shortAddress(assetId), 0, 10000);
 
@@ -85,6 +89,10 @@ test.describe('Mint Assets', () => {
     await addAsset(context, assetId, name, symbol, Number(decimals));
 
     await mintButton.click();
+
+    walletPage = await getWalletPage(context);
+
+    await page.waitForTimeout(10000);
 
     await hasText(walletPage, name);
     await hasText(walletPage, shortAddress(assetId), 0, 10000);
