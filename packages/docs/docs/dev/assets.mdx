@@ -38,3 +38,20 @@ To listen to asset events, you can use the `fuel.events.assets` event.
   commentBlock="eventAssets"
 />
 <Examples.Events.Assets />
+
+## With React
+
+In a react app you can use the `useAccount` hook as shown below to check the account balance for an specific asset.
+
+```tsx
+import { useAccount } from '@fuel-wallet/react';
+// ...
+const { accountAddress } = useAccount();
+
+const { balance } = useBalance({
+  address: accountAddress,
+  assetId: '0x000000000...',
+});
+console.log(balance);
+// 0004990000
+```
