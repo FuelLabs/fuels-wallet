@@ -23,7 +23,7 @@ describe('TxItem', () => {
         transaction={MOCK_TRANSACTION_CONTRACT_CALL}
         ownerAddress={ownerAddress}
       />,
-      opts
+      opts,
     );
   });
 
@@ -37,7 +37,7 @@ describe('TxItem', () => {
         transaction={MOCK_TRANSACTION_CONTRACT_CALL}
         ownerAddress={ownerAddress}
       />,
-      opts
+      opts,
     );
 
     const btn = await screen.findByLabelText(/Copy Transaction ID/i);
@@ -46,7 +46,7 @@ describe('TxItem', () => {
     await act(async () => {
       fireEvent.click(btn);
       expect(await navigator.clipboard.readText()).toBe(
-        MOCK_TRANSACTION_CONTRACT_CALL.id
+        MOCK_TRANSACTION_CONTRACT_CALL.id,
       );
     });
   });
@@ -57,7 +57,7 @@ describe('TxItem', () => {
         transaction={MOCK_TRANSACTION_CONTRACT_CALL}
         ownerAddress={ownerAddress}
       />,
-      opts
+      opts,
     );
     const address = MOCK_TRANSACTION_CONTRACT_CALL.operations[0].to?.address;
     if (address) {
@@ -76,7 +76,7 @@ describe('TxItem', () => {
         transaction={MOCK_TRANSACTION_CONTRACT_CALL}
         ownerAddress={''}
       />,
-      opts
+      opts,
     );
     const address = MOCK_TRANSACTION_CONTRACT_CALL.operations[0].to?.address;
     if (address) {

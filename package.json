@@ -58,7 +58,7 @@
     "nodes:clean": "run-s node:clean node:clean:test",
     "nodes:reset": "run-s nodes:clean nodes:up",
     "packages:version": "node ./scripts/version.js",
-    "prettier:check": "prettier --check .",
+    "prettier:check": "prettier --check . !./packages/docs",
     "prettier:format": "prettier --write .",
     "storybook": "pnpm -r --filter=fuels-wallet storybook",
     "test": "turbo run test --parallel",

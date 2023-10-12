@@ -7,7 +7,7 @@ import { FunctionCalls } from './FunctionCalls';
 describe('FunctionCalls', () => {
   it('a11y', async () => {
     await testA11y(
-      <FunctionCalls calls={MOCK_OPERATION_CONTRACT_CALL.calls || []} />
+      <FunctionCalls calls={MOCK_OPERATION_CONTRACT_CALL.calls || []} />,
     );
   });
 });

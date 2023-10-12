@@ -100,7 +100,7 @@ export const sendMachine = createMachine(
     guards: {
       isValidTransaction: (
         { fee }: MachineContext,
-        { input }: MachineEvents
+        { input }: MachineEvents,
       ) => {
         if (!input?.asset) return false;
         return TxService.isValidTransaction({ ...input, fee });
@@ -152,7 +152,7 @@ export const sendMachine = createMachine(
         },
       }),
     },
-  }
+  },
 );
 
 export type SendMachine = typeof sendMachine;

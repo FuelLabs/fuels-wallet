@@ -15,7 +15,7 @@ describe('unlockMachine', () => {
         actions: {
           reload: () => {},
         },
-      })
+      }),
     ).start();
   });
 

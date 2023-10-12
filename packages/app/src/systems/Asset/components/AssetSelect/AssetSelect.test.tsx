@@ -50,7 +50,7 @@ describe('AssetSelect', () => {
   it('should have an initial selected item', async () => {
     const { container } = render(
       <Content initialSelected={MOCK_ASSETS_AMOUNTS[0].assetId} />,
-      { wrapper: TestWrapper }
+      { wrapper: TestWrapper },
     );
     // expect(() => screen.getByText('Select one asset')).toThrow();
     const trigger = container.querySelector('#fuel_asset-select');

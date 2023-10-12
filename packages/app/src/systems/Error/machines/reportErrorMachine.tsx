@@ -147,7 +147,7 @@ export const reportErrorMachine = createMachine(
         },
       }),
     },
-  }
+  },
 );
 
 export type ReportErrorMachine = typeof reportErrorMachine;

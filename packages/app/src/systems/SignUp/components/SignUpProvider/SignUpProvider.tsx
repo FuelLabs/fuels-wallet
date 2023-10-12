@@ -32,7 +32,7 @@ export function SignUpProvider({ children }: { children?: React.ReactNode }) {
           navigate(Pages.signUpWelcome());
         },
       },
-    })
+    }),
   );
 
   return (

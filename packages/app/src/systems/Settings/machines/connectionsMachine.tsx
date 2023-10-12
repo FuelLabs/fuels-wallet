@@ -282,7 +282,7 @@ export const connectionsMachine = createMachine(
           ...response,
           filteredConnections: ConnectionService.filterByOrigin(
             response?.connections || [],
-            inputs.searchText
+            inputs.searchText,
           ),
         }),
       }),
@@ -291,7 +291,7 @@ export const connectionsMachine = createMachine(
           ...response,
           connections: ConnectionService.excludeByOrigin(
             response?.connections || [],
-            ev.data.origin
+            ev.data.origin,
           ),
         }),
       }),
@@ -300,7 +300,7 @@ export const connectionsMachine = createMachine(
           ...response,
           filteredAccounts: AccountService.filterByName(
             response?.accounts || [],
-            inputs.searchText
+            inputs.searchText,
           ),
         }),
       }),
@@ -309,7 +309,7 @@ export const connectionsMachine = createMachine(
           ...inputs,
           connection: ConnectionService.findByOrigin(
             response?.connections || [],
-            inputs.origin || ''
+            inputs.origin || '',
           ),
         }),
       }),
@@ -341,7 +341,7 @@ export const connectionsMachine = createMachine(
         response: ({ inputs, response }) => {
           const connectedAccounts = ConnectionService.getConnectedAccounts(
             inputs.connection,
-            response?.accounts || []
+            response?.accounts || [],
           );
           return {
             ...response,
@@ -364,7 +364,7 @@ export const connectionsMachine = createMachine(
         showError: true,
         async fetch() {
           return (await AccountService.getAccounts()).filter(
-            ({ isHidden }) => !isHidden
+            ({ isHidden }) => !isHidden,
           );
         },
       }),
@@ -405,7 +405,7 @@ export const connectionsMachine = createMachine(
         },
       }),
     },
-  }
+  },
 );
 
 export type ConnectionsMachine = typeof connectionsMachine;

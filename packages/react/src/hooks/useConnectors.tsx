@@ -14,7 +14,7 @@ export const useConnectors = () => {
     },
     {
       enabled: !!fuel,
-    }
+    },
   );
 
   return {

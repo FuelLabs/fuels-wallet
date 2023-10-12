@@ -18,7 +18,7 @@ export const useNodeInfo = ({ version = '0.0.0' }: NodeInfoParams = {}) => {
     },
     {
       enabled: !!provider,
-    }
+    },
   );
   const isCompatible = nodeInfo?.nodeVersion
     ? compare(nodeInfo.nodeVersion, version, '>=')

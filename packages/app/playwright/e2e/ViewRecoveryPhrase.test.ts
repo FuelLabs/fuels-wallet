@@ -38,7 +38,7 @@ test.describe('ViewSeedPhrase', () => {
       await hasText(page, /Seed Phrase/i);
       await getByAriaLabel(page, 'Copy seed phrase').click();
       const clipboardValue = await page.evaluate(() =>
-        navigator.clipboard.readText()
+        navigator.clipboard.readText(),
       );
       await expect(clipboardValue).toEqual(mnemonic);
     });

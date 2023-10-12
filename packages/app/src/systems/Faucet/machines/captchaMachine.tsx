@@ -83,7 +83,7 @@ export const captchaMachine =
         assignCaptcha: assign({ captcha: (_, ev) => ev.data }),
         assignIsLoaded: assign({ isLoaded: (_) => true }),
       },
-    }
+    },
   );
 
 export type CaptchaMachine = typeof captchaMachine;

@@ -120,14 +120,14 @@ export const FetchMachine = {
         guards: {
           hasManyAttempts: (ctx) => {
             return Boolean(
-              (ctx?.attempts ?? 0) >= (opts?.maxAttempts || MAX_ATTEMPTS)
+              (ctx?.attempts ?? 0) >= (opts?.maxAttempts || MAX_ATTEMPTS),
             );
           },
         },
         services: {
           fetch: opts.fetch,
         },
-      }
+      },
     );
   },
 };

@@ -83,7 +83,7 @@ export const exportAccountMachine = createMachine(
               ev: Extract<
                 ExportAccountMachineEvents,
                 { type: 'EXPORT_ACCOUNT' }
-              >
+              >,
             ) => ({
               address: ctx.address,
               password: ev.input.password,
@@ -148,7 +148,7 @@ export const exportAccountMachine = createMachine(
         },
       }),
     },
-  }
+  },
 );
 
 export type ExportAccountMachine = typeof exportAccountMachine;
