@@ -5,6 +5,7 @@ import { FUEL_MNEMONIC, FUEL_WALLET_PASSWORD } from '../mocks';
 import { shortAddress } from '../utils';
 
 import { getButtonByText } from './button';
+import { getByAriaLabel } from './locator';
 
 // TODO: this function can only setup a wallet on http://localhost:4001
 // because we cannot modify the existing testnet provider url
@@ -12,7 +13,8 @@ export async function walletSetup(
   context: BrowserContext,
   fuelExtensionId: string,
   page: Page,
-  fuelProviderUrl: string
+  fuelProviderUrl: string,
+  chainName: string
 ) {
   await page.goto(`chrome-extension://${fuelExtensionId}/popup.html`);
 
@@ -63,14 +65,19 @@ export async function walletSetup(
   const selectNetworkButton = signupPage.getByLabel('Selected Network');
   await selectNetworkButton.click();
 
-  const addNetworkButton = signupPage.getByLabel('Add network');
-  await addNetworkButton.click();
+  if ((await signupPage.getByText(chainName).count()) === 0) {
+    const addNetworkButton = signupPage.getByLabel('Add network');
+    await addNetworkButton.click();
 
-  const urlInput = signupPage.getByLabel('Network URL');
-  await urlInput.fill(fuelProviderUrl);
+    const urlInput = signupPage.getByLabel('Network URL');
+    await urlInput.fill(fuelProviderUrl);
 
-  const addNewNetworkButton = signupPage.getByLabel('Add new network');
-  await addNewNetworkButton.click();
+    const addNewNetworkButton = signupPage.getByLabel('Add new network');
+    await addNewNetworkButton.click();
+  } else {
+    const closeNetworkButton = getByAriaLabel(signupPage, 'Close dialog');
+    await closeNetworkButton.click();
+  }
 }
 
 export async function walletConnect(context: BrowserContext) {
