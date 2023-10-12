@@ -28,7 +28,7 @@ export type AccountItemProps = {
   onExport?: (address: string) => void;
   onToggle?: (
     address: string,
-    isToggleChecked?: boolean
+    isToggleChecked?: boolean,
   ) => Promise<void> | void;
   onToggleHidden?: (address: string, isHidden: boolean) => void;
   onUpdate?: (address: string) => Promise<void> | void;

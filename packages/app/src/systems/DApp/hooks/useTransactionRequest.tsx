@@ -49,7 +49,7 @@ const selectors = {
         if (isClosed) return TxRequestStatus.inactive;
         return TxRequestStatus.waitingApproval;
       },
-      [externalLoading]
+      [externalLoading],
     );
   },
   title(state: TransactionRequestState) {

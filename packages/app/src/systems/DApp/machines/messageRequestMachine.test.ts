@@ -42,7 +42,7 @@ describe('messageRequestMachine', () => {
     const { context } = await expectStateMatch(service, 'done');
     const recoveredAddress = Signer.recoverAddress(
       hashMessage(signData.message),
-      context.signedMessage!
+      context.signedMessage!,
     );
     expect(context.origin).toEqual(signData.origin);
     expect(context.message).toEqual(signData.message);

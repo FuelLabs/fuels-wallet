@@ -180,7 +180,7 @@ test.describe('FuelWallet Extension', () => {
 
       async function createAccountFromPrivateKey(
         privateKey: string,
-        name: string
+        name: string,
       ) {
         await waitWalletToLoad(popupPage);
         await getByAriaLabel(popupPage, 'Accounts').click();
@@ -315,7 +315,7 @@ test.describe('FuelWallet Extension', () => {
           return window.fuel.currentAccount();
         });
         await expect(currentAccountPromise).rejects.toThrowError(
-          'address is not authorized for this connection.'
+          'address is not authorized for this connection.',
         );
       });
     });
@@ -328,7 +328,7 @@ test.describe('FuelWallet Extension', () => {
           async ([address, message]) => {
             return window.fuel.signMessage(address, message);
           },
-          [address, message]
+          [address, message],
         );
       }
 
@@ -346,7 +346,7 @@ test.describe('FuelWallet Extension', () => {
         const messageSigned = await signedMessagePromise;
         const addressSigner = Signer.recoverAddress(
           hashMessage(message),
-          messageSigned
+          messageSigned,
         );
 
         // Verify signature is from the account selected
@@ -361,7 +361,7 @@ test.describe('FuelWallet Extension', () => {
       await test.step('Signed message using authorized Account 3', async () => {
         const authorizedAccount = await getAccountByName(
           popupPage,
-          'Account 3'
+          'Account 3',
         );
         await approveMessageSignCheck(authorizedAccount);
       });
@@ -369,7 +369,7 @@ test.describe('FuelWallet Extension', () => {
       await test.step('Signed message using authorized Account 4 (from Private Key)', async () => {
         const authorizedAccount = await getAccountByName(
           popupPage,
-          'Account 4'
+          'Account 4',
         );
         await approveMessageSignCheck(authorizedAccount);
       });
@@ -377,12 +377,12 @@ test.describe('FuelWallet Extension', () => {
       await test.step('Throw on not Authorized Account', async () => {
         const notAuthorizedAccount = await getAccountByName(
           popupPage,
-          'Account 2'
+          'Account 2',
         );
         const signedMessagePromise = signMessage(notAuthorizedAccount.address);
 
         await expect(signedMessagePromise).rejects.toThrowError(
-          'address is not authorized for this connection.'
+          'address is not authorized for this connection.',
         );
       });
     });
@@ -392,15 +392,15 @@ test.describe('FuelWallet Extension', () => {
       async function transfer(
         senderAddress: string,
         receiverAddress: string,
-        amount: number
+        amount: number,
       ) {
         return blankPage.evaluate(
           async ([senderAddress, receiverAddress, amount]) => {
             const receiver = window.fuel.utils.createAddress(
-              receiverAddress as string
+              receiverAddress as string,
             );
             const wallet = await window.fuel!.getWallet(
-              senderAddress as string
+              senderAddress as string,
             );
 
             // TODO: remove this gas config once SDK fixes and start with correct values
@@ -412,18 +412,18 @@ test.describe('FuelWallet Extension', () => {
               receiver,
               Number(amount),
               undefined,
-              { gasPrice, gasLimit }
+              { gasPrice, gasLimit },
             );
             const result = await response.waitForResult();
             return result.status;
           },
-          [senderAddress, receiverAddress, String(amount)]
+          [senderAddress, receiverAddress, String(amount)],
         );
       }
 
       async function approveTxCheck(senderAccount: Account) {
         const provider = await Provider.create(
-          process.env.VITE_FUEL_PROVIDER_URL
+          process.env.VITE_FUEL_PROVIDER_URL,
         );
         const receiverWallet = Wallet.generate({
           provider,
@@ -437,7 +437,7 @@ test.describe('FuelWallet Extension', () => {
         const transferStatus = transfer(
           senderAccount.address,
           receiverWallet.address.toString(),
-          AMOUNT_TRANSFER
+          AMOUNT_TRANSFER,
         );
 
         // Wait for approve transaction page to show
@@ -449,7 +449,7 @@ test.describe('FuelWallet Extension', () => {
         await hasText(approveTransactionPage, /0\.0000001.ETH/i);
         await waitAriaLabel(
           approveTransactionPage,
-          senderAccount.address.toString()
+          senderAccount.address.toString(),
         );
         await hasText(approveTransactionPage, /Confirm before approving/i);
         await getButtonByText(approveTransactionPage, /Approve/i).click();
@@ -467,7 +467,7 @@ test.describe('FuelWallet Extension', () => {
       await test.step('Send transfer using authorized Account 3', async () => {
         const authorizedAccount = await getAccountByName(
           popupPage,
-          'Account 3'
+          'Account 3',
         );
         await approveTxCheck(authorizedAccount);
       });
@@ -475,7 +475,7 @@ test.describe('FuelWallet Extension', () => {
       await test.step('Send transfer using authorized Account 4 (from Private Key)', async () => {
         const authorizedAccount = await getAccountByName(
           popupPage,
-          'Account 4'
+          'Account 4',
         );
         await approveTxCheck(authorizedAccount);
       });
@@ -483,10 +483,10 @@ test.describe('FuelWallet Extension', () => {
       await test.step('Send transfer should block unauthorized account', async () => {
         const nonAuthorizedAccount = await getAccountByName(
           popupPage,
-          'Account 2'
+          'Account 2',
         );
         const provider = await Provider.create(
-          process.env.VITE_FUEL_PROVIDER_URL
+          process.env.VITE_FUEL_PROVIDER_URL,
         );
         const receiverWallet = Wallet.generate({
           provider,
@@ -500,11 +500,11 @@ test.describe('FuelWallet Extension', () => {
         const transferStatus = transfer(
           nonAuthorizedAccount.address,
           receiverWallet.address.toString(),
-          AMOUNT_TRANSFER
+          AMOUNT_TRANSFER,
         );
 
         await expect(transferStatus).rejects.toThrowError(
-          'address is not authorized for this connection.'
+          'address is not authorized for this connection.',
         );
       });
     });
@@ -522,7 +522,7 @@ test.describe('FuelWallet Extension', () => {
           async ([asset]) => {
             return window.fuel.addAsset(asset);
           },
-          [asset]
+          [asset],
         );
       }
 
@@ -542,7 +542,7 @@ test.describe('FuelWallet Extension', () => {
           async ([asset]) => {
             return window.fuel.addAssets(asset);
           },
-          [assets]
+          [assets],
         );
       }
 
@@ -562,7 +562,7 @@ test.describe('FuelWallet Extension', () => {
           async ([network]) => {
             return window.fuel.addNetwork(network);
           },
-          [network]
+          [network],
         );
       }
 

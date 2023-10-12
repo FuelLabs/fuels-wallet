@@ -47,7 +47,7 @@ describe('NetworkSelector', () => {
     const handler = jest.fn();
     const { user } = render(
       <NetworkSelector {...props} onSelectNetwork={handler} />,
-      { wrapper: TestWrapper }
+      { wrapper: TestWrapper },
     );
 
     const selector = screen.getByRole('button', { name: /selected network/i });

@@ -9,7 +9,7 @@ type RenderWithProviderOpts = {
 
 export const renderWithProvider = (
   ui: JSX.Element,
-  { wrapper = TestWrapper }: RenderWithProviderOpts = {}
+  { wrapper = TestWrapper }: RenderWithProviderOpts = {},
 ) => {
   return render(ui, { wrapper });
 };

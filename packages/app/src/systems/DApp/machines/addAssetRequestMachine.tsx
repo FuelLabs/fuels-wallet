@@ -132,7 +132,7 @@ export const addAssetRequestMachine = createMachine(
           }
 
           const assetsToAdd = await AssetService.avoidRepeatedFields(
-            input.assets
+            input.assets,
           );
           return assetsToAdd;
         },
@@ -151,7 +151,7 @@ export const addAssetRequestMachine = createMachine(
         },
       }),
     },
-  }
+  },
 );
 
 export type AddAssetMachine = typeof addAssetRequestMachine;

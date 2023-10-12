@@ -61,7 +61,7 @@ describe('signUpMachine', () => {
       // Should fail with wrong mnemonic
       const state2 = await expectStateMatch(service, 'create.confirmMnemonic');
       expect(state2.context.error).toBe(
-        "The Seed Phrase doesn't match. Check the phrase for typos or missing words"
+        "The Seed Phrase doesn't match. Check the phrase for typos or missing words",
       );
       // Should pass if we use the correct mnemonic
       service.send('CONFIRM_MNEMONIC', { data: { words: menemonic } });
@@ -118,7 +118,7 @@ describe('signUpMachine', () => {
       });
       const state = await expectStateMatch(service, 'import');
       expect(state.context.error).toBe(
-        'The Seed Phrase is not valid. Check the words for typos or missing words'
+        'The Seed Phrase is not valid. Check the words for typos or missing words',
       );
       // Import the correct mnemonic
       service.send('IMPORT_MNEMONIC', {

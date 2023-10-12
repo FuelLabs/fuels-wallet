@@ -31,7 +31,7 @@ export class WindowConnection extends BaseConnection {
     this.handleFuelInjected();
     this._injectionTimeout = setInterval(
       this.handleFuelInjected.bind(this),
-      100
+      100,
     );
     this.handleIsReady();
   }
@@ -74,7 +74,7 @@ export class WindowConnection extends BaseConnection {
 
   removeConnector(connectorName: string): void {
     const connectorIndex = this.connectors.findIndex(
-      (c) => c.name === connectorName
+      (c) => c.name === connectorName,
     );
     if (connectorIndex > -1) {
       this.connectors.splice(connectorIndex, 1);
@@ -180,7 +180,7 @@ export class WindowConnection extends BaseConnection {
       clearInterval(this._injectionTimeout);
       this._hasWallet.resolve(false);
       this.client.rejectAllPendingRequests(
-        'Timeout fuel not detected on the window!'
+        'Timeout fuel not detected on the window!',
       );
       return;
     }

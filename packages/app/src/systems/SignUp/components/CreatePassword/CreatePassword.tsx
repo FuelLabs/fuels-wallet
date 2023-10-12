@@ -31,9 +31,9 @@ const schema = yup
   .required();
 
 export type CreatePasswordValues = {
-  password: string | undefined;
-  confirmPassword: string | undefined;
-  strength: string | undefined;
+  password?: string;
+  confirmPassword?: string;
+  strength?: string;
 };
 
 export type CreatePasswordProps = {
@@ -73,7 +73,7 @@ export function CreatePassword({
     debounce(() => {
       trigger('confirmPassword');
     }, 500),
-    []
+    [],
   );
 
   return (

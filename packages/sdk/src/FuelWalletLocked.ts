@@ -18,12 +18,12 @@ export class FuelWalletLocked extends WalletLocked {
   async signMessage(message: string): Promise<string> {
     return this.provider.walletConnection.signMessage(
       this.address.toString(),
-      message
+      message,
     );
   }
 
   async sendTransaction(
-    transaction: TransactionRequestLike
+    transaction: TransactionRequestLike,
   ): Promise<TransactionResponse> {
     return this.provider.sendTransaction({
       ...transaction,

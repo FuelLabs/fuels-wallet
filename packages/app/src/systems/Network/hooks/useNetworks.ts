@@ -28,7 +28,7 @@ export function useNetworks() {
   const isLoading = store.useSelector(Services.networks, selectors.isLoading);
   const selectedNetwork = store.useSelector(
     Services.networks,
-    selectors.selectedNetwork
+    selectors.selectedNetwork,
   );
 
   useEffect(() => {

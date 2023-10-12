@@ -6,7 +6,7 @@ const selectors = {
   asset(assetId: string) {
     return (state: AssetsMachineState) => {
       return state.context.assets?.find(
-        ({ assetId: contextAssetId }) => contextAssetId === assetId
+        ({ assetId: contextAssetId }) => contextAssetId === assetId,
       );
     };
   },

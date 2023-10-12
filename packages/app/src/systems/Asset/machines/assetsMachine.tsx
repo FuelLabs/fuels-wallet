@@ -181,8 +181,8 @@ export const assetsMachine = createMachine(
                   isCustom: false,
                   imageUrl: asset.icon,
                 },
-              })
-            )
+              }),
+            ),
           );
         },
       }),
@@ -244,7 +244,7 @@ export const assetsMachine = createMachine(
         },
       }),
     },
-  }
+  },
 );
 
 export type AssetsMachine = typeof assetsMachine;

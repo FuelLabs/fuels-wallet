@@ -27,7 +27,7 @@ test.describe('Asset', () => {
     await getByAriaLabel(page, 'Asset name').type(CUSTOM_ASSET.name);
     await getByAriaLabel(page, 'Asset symbol').type(CUSTOM_ASSET.symbol);
     await getByAriaLabel(page, 'Asset decimals').type(
-      String(CUSTOM_ASSET.decimals)
+      String(CUSTOM_ASSET.decimals),
     );
     await getByAriaLabel(page, 'Asset image Url').type(CUSTOM_ASSET.imageUrl);
     await getByAriaLabel(page, 'Save Asset').click();

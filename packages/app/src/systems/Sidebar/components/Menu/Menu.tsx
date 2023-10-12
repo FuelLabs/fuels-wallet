@@ -2,6 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import type { Icons } from '@fuel-ui/react';
 import { Box, Icon, Menu as RootMenu } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
+import type { Key } from 'react';
 import { useState } from 'react';
 import { useNavigate, useResolvedPath, useMatch } from 'react-router-dom';
 import { store } from '~/store';
@@ -24,7 +25,7 @@ type MenuItemContentProps = {
 
 function commonActions(
   item: MenuItemObj,
-  navigate: ReturnType<typeof useNavigate>
+  navigate: ReturnType<typeof useNavigate>,
 ) {
   if (item?.onPress) {
     store.closeOverlay();
@@ -53,7 +54,7 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
     caseSensitive: false,
   });
 
-  function handleAction(key: string | number) {
+  function handleAction(key: Key) {
     const subItem = item.submenu?.find((i) => i.key === key);
     if (subItem) {
       commonActions(subItem, navigate);
@@ -100,7 +101,7 @@ export function Menu({ items }: MenuProps) {
   const [opened, setOpened] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  function handleAction(key: string | number) {
+  function handleAction(key: Key) {
     const item = items.find((item) => item.key === key);
     if (item?.submenu) {
       setOpened(opened !== item.key ? item.key : null);

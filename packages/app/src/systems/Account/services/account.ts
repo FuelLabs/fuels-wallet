@@ -188,7 +188,7 @@ export class AccountService {
 
   static filterByName(accounts: Account[], name: string = '') {
     return accounts.filter((account) =>
-      account.name.toLowerCase().includes(name.toLowerCase())
+      account.name.toLowerCase().includes(name.toLowerCase()),
     );
   }
 }

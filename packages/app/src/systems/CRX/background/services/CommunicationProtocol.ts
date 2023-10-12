@@ -68,7 +68,7 @@ export class CommunicationProtocol extends BaseConnection {
 
   on<E extends MessageTypes>(
     eventName: E,
-    listener: (message: CommunicationEventArg<E>) => void
+    listener: (message: CommunicationEventArg<E>) => void,
   ) {
     return super.on(eventName, listener);
   }
@@ -88,7 +88,7 @@ export class CommunicationProtocol extends BaseConnection {
         ...message,
         id: portId,
         sender: port.sender,
-      })
+      }),
     );
   };
 
