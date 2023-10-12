@@ -11,7 +11,7 @@ export type AssetFormValues = {
   name: string;
   assetId: string;
   decimals: number;
-  imageUrl: string | undefined;
+  imageUrl?: string;
   symbol: string;
 };
 

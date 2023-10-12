@@ -3,9 +3,9 @@ import type { BigNumberish, BNInput } from 'fuels';
 import { formatAmount } from '../../utils';
 
 export type AmountVisibilityProps = {
-  value: BigNumberish | BNInput | undefined;
-  units?: number | undefined;
-  visibility: boolean | undefined;
+  value?: BigNumberish | BNInput;
+  units?: number;
+  visibility?: boolean;
 };
 
 export function AmountVisibility({
