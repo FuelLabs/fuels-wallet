@@ -88,11 +88,15 @@ test.describe('Mint Assets', () => {
     // Add the unknown asset to the wallet
     await addAsset(context, assetId, name, symbol, Number(decimals));
 
+    // TODO: figure out a way to wait until the wallet has finished loading.
+    // This would be useful for a variety of functions in test-utils
+    // note: await walletPage.waitForContentLoaded() does not work
+    // We need to wait a little for the asset to be added to the wallet
+    await page.waitForTimeout(2500);
+
     await mintButton.click();
 
     walletPage = await getWalletPage(context);
-
-    await page.waitForTimeout(10000);
 
     await hasText(walletPage, name);
     await hasText(walletPage, shortAddress(assetId), 0, 10000);
