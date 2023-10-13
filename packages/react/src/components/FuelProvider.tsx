@@ -1,9 +1,8 @@
-import type { Fuel } from '@fuel-wallet/sdk';
+import { Fuel } from '@fuel-wallet/sdk';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { createContext, useContext, useEffect } from 'react';
 
-import { useWindowFuel } from '../hooks';
 import { QUERY_KEYS } from '../utils';
 
 export const fuelQueryClient = new QueryClient({
@@ -38,7 +37,14 @@ export const useFuel = () => {
 };
 
 export const FuelProvider = ({ children }: FuelProviderProps) => {
-  const fuel = useWindowFuel();
+  const fuel = new Fuel();
+
+  function onFuelLoaded() {
+    const connectorName = localStorage.getItem('connector');
+    if (connectorName) {
+      fuel.selectConnector(connectorName);
+    }
+  }
 
   function onCurrentAccountChange() {
     fuelQueryClient.invalidateQueries([QUERY_KEYS.account]);
@@ -67,16 +73,18 @@ export const FuelProvider = ({ children }: FuelProviderProps) => {
   }
 
   useEffect(() => {
-    fuel?.on(fuel.events.currentAccount, onCurrentAccountChange);
-    fuel?.on(fuel.events.connection, onConnectionChange);
-    fuel?.on(fuel.events.accounts, onAccountsChange);
-    fuel?.on(fuel.events.network, onNetworkChange);
+    fuel.on(fuel.events.currentAccount, onCurrentAccountChange);
+    fuel.on(fuel.events.connection, onConnectionChange);
+    fuel.on(fuel.events.accounts, onAccountsChange);
+    fuel.on(fuel.events.network, onNetworkChange);
+    fuel.on(fuel.events.load, onFuelLoaded);
 
     return () => {
-      fuel?.off(fuel.events.currentAccount, onCurrentAccountChange);
-      fuel?.off(fuel.events.connection, onConnectionChange);
-      fuel?.off(fuel.events.accounts, onAccountsChange);
-      fuel?.off(fuel.events.network, onNetworkChange);
+      fuel.off(fuel.events.currentAccount, onCurrentAccountChange);
+      fuel.off(fuel.events.connection, onConnectionChange);
+      fuel.off(fuel.events.accounts, onAccountsChange);
+      fuel.off(fuel.events.network, onNetworkChange);
+      fuel.off(fuel.events.load, onFuelLoaded);
     };
   }, [fuel]);
 
