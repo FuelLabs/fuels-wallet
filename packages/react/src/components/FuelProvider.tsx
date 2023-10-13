@@ -86,7 +86,7 @@ export const FuelProvider = ({ children }: FuelProviderProps) => {
       fuel.off(fuel.events.network, onNetworkChange);
       fuel.off(fuel.events.load, onFuelLoaded);
     };
-  }, [fuel]);
+  }, [fuel.connectorName]);
 
   return (
     <FuelReactContext.Provider value={{ fuel }}>
