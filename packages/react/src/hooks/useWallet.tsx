@@ -5,7 +5,6 @@ import { QUERY_KEYS } from '../utils';
 
 export const useWallet = ({ address }: { address?: string }) => {
   const { fuel } = useFuel();
-
   const { data, ...queryProps } = useQuery(
     [QUERY_KEYS.wallet, address],
     async () => {
