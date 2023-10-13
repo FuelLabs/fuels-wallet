@@ -1,5 +1,14 @@
 # @fuel-wallet/react
 
+## 0.13.2
+
+### Patch Changes
+
+- [#914](https://github.com/FuelLabs/fuels-wallet/pull/914) [`d6b847d`](https://github.com/FuelLabs/fuels-wallet/commit/d6b847d2df774f00494de284282db1199ba676d3) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: use Fuel SDK instead of window.fuel
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.13.2
+
 ## 0.13.1
 
 ### Patch Changes
