@@ -8,7 +8,6 @@ import { zipBuildPlugin } from './vite-utils/zip-build.plugin';
 const OUT_DIT = process.env.CRX_OUT || 'dist-crx';
 const APP_VERSION = process.env.VITE_APP_VERSION;
 const APP_VERSION_POSTFIX = process.env.APP_VERSION_POSTFIX || '';
-const ZIP_FILE_NAME = `fuel-wallet-${APP_VERSION}${APP_VERSION_POSTFIX}.zip`;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -25,7 +24,7 @@ export default defineConfig({
     zipBuildPlugin({
       inDir: OUT_DIT,
       outDir: baseConfig.build?.outDir,
-      outFileName: ZIP_FILE_NAME,
+      outFileName: `fuel-wallet-${APP_VERSION}${APP_VERSION_POSTFIX}.zip`,
       excludeFiles: /.map$/,
     }),
   ]),
