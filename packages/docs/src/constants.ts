@@ -31,5 +31,6 @@ export const META_DESC =
 export const META_OGIMG = `${NEXT_PUBLIC_URL}${ogImage.src}`;
 
 export const INSTALL_LINK = process.env.NEXT_PUBLIC_WALLET_INSTALL;
+export const DOWNLOAD_LINK = `/app/fuel-wallet-${process.env.NEXT_PUBLIC_APP_VERSION}.zip`;
 
 export const IS_PUBLIC_PREVIEW = process.env.NEXT_PUBLIC_PREVIEW === 'true';
