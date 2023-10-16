@@ -1,2 +1,2 @@
 export * from './queryKeys';
-export * from './selectCurrenctConnector';
+export * from './selectCurrentConnector';

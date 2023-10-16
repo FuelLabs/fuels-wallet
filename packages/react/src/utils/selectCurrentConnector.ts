@@ -2,7 +2,7 @@ import type { Fuel, FuelWalletConnector } from '@fuel-wallet/sdk';
 
 import { CONNECTOR_KEY } from '../config';
 
-export function selectCurrenctConnector(
+export function selectCurrentConnector(
   fuel: Fuel,
   connectors: Array<FuelWalletConnector>,
 ) {

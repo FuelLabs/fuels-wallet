@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { createContext, useContext, useEffect } from 'react';
 
-import { QUERY_KEYS, selectCurrenctConnector } from '../utils';
+import { QUERY_KEYS, selectCurrentConnector } from '../utils';
 
 const queryClientConfig = {
   defaultOptions: {
@@ -43,7 +43,7 @@ export const FuelProvider = ({ children }: FuelProviderProps) => {
 
   function onConnectorsChange(connectors: Array<FuelWalletConnector>) {
     fuelQueryClient.invalidateQueries([QUERY_KEYS.connectorList]);
-    selectCurrenctConnector(fuel, connectors)?.then(() => {
+    selectCurrentConnector(fuel, connectors)?.then(() => {
       fuelQueryClient.invalidateQueries();
     });
   }
