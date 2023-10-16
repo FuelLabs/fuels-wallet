@@ -7,7 +7,7 @@ export const useConnectors = () => {
   const { fuel } = useFuel();
 
   const query = useQuery(
-    [QUERY_KEYS.chain, fuel],
+    [QUERY_KEYS.connectorList],
     async () => {
       return fuel?.listConnectors();
     },
