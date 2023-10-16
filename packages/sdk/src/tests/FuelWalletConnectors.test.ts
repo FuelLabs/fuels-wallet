@@ -51,18 +51,18 @@ describe('Fuel Connectors', () => {
     const connectors = fuel.listConnectors();
     expect(connectors.find((i) => i.name === connectorName)).toBeTruthy();
     expect(fuel.selectConnector(connectorName)).rejects.toThrow(
-      `"${connectorName}" connector not found!`
+      `"${connectorName}" connector not found!`,
     );
   });
 
   test('removeConnector', async () => {
     const connectorName = 'Another Wallet';
     expect(
-      fuel.listConnectors().find((i) => i.name === connectorName)
+      fuel.listConnectors().find((i) => i.name === connectorName),
     ).toBeTruthy();
     fuel.removeConnector(connectorName);
     expect(
-      fuel.listConnectors().find((i) => i.name === connectorName)
+      fuel.listConnectors().find((i) => i.name === connectorName),
     ).toBeFalsy();
   });
 

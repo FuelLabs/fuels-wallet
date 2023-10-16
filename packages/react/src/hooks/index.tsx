@@ -10,4 +10,3 @@ export * from './useProvider';
 export * from './useTransaction';
 export * from './useTransactionReceipts';
 export * from './useWallet';
-export * from './useWindowFuel';

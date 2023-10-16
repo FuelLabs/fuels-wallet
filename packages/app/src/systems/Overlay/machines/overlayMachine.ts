@@ -61,7 +61,7 @@ export const overlayMachine = createMachine(
         metadata: (_) => undefined,
       }),
     },
-  }
+  },
 );
 
 export type OverlayMachine = typeof overlayMachine;

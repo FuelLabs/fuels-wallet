@@ -20,7 +20,7 @@ describe('txApproveMachine', () => {
     transactionRequest = await getMockedTransaction(
       data.account?.publicKey || '',
       '0xc7862855b418ba8f58878db434b21053a61a2025209889cc115989e8040ff077',
-      data.network?.url || ''
+      data.network?.url || '',
     );
   });
 
@@ -28,7 +28,7 @@ describe('txApproveMachine', () => {
     service = interpret(
       transactionRequestMachine
         .withContext({ input: {}, response: {} })
-        .withConfig({ actions: { openDialog } })
+        .withConfig({ actions: { openDialog } }),
     ).start();
   });
 

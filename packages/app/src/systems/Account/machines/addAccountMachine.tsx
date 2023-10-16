@@ -120,7 +120,7 @@ export const addAccountMachine = createMachine(
         },
       }),
     },
-  }
+  },
 );
 
 export type AddAccountMachine = typeof addAccountMachine;

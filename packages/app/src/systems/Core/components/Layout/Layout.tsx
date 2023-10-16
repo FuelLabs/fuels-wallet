@@ -46,7 +46,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(
         {children}
       </Box>
     );
-  }
+  },
 );
 
 export type LayoutProps = Context & {

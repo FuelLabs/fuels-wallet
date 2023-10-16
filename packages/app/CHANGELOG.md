@@ -1,5 +1,13 @@
 # fuels-wallet
 
+## 0.13.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.13.2
+  - @fuel-wallet/types@0.13.2
+
 ## 0.13.1
 
 ### Patch Changes

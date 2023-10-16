@@ -17,7 +17,7 @@ export class WalletLockedCustom extends WalletLocked {
   }
 
   async signTransaction(
-    transactionRequest: TransactionRequestLike
+    transactionRequest: TransactionRequestLike,
   ): Promise<string> {
     const signature = await VaultService.signTransaction({
       transaction: JSON.stringify(transactionRequest),
@@ -28,7 +28,7 @@ export class WalletLockedCustom extends WalletLocked {
   }
 
   async populateTransactionWitnessesSignature(
-    transactionRequestLike: TransactionRequestLike
+    transactionRequestLike: TransactionRequestLike,
   ) {
     const transactionRequest = transactionRequestify(transactionRequestLike);
     const signedTransaction = await this.signTransaction(transactionRequest);
@@ -39,12 +39,11 @@ export class WalletLockedCustom extends WalletLocked {
   }
 
   async sendTransaction(
-    transactionRequestLike: TransactionRequestLike
+    transactionRequestLike: TransactionRequestLike,
   ): Promise<TransactionResponse> {
     const transactionRequest = transactionRequestify(transactionRequestLike);
-    const txRequestToSend = await this.populateTransactionWitnessesSignature(
-      transactionRequest
-    );
+    const txRequestToSend =
+      await this.populateTransactionWitnessesSignature(transactionRequest);
     return this.provider.sendTransaction(txRequestToSend);
   }
 }

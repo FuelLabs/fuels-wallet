@@ -27,7 +27,7 @@ export const testSetup = async ({
     fuelWallet.address.toString(),
     bn.parseUnits('100'),
     FUEL_PROVIDER_URL!,
-    WALLET_SECRET!
+    WALLET_SECRET!,
   );
   await page.goto('/');
   return fuelWallet;

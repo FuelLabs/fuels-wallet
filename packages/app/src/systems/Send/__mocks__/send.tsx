@@ -13,7 +13,7 @@ export function sendLoader() {
     const transactionRequest = await getMockedTransaction(
       acc1?.publicKey || '',
       signer.publicKey,
-      network?.url!
+      network?.url!,
     );
     return {
       acc1,

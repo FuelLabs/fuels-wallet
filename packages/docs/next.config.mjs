@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/naming-convention */
 import path from 'node:path';
 import * as url from 'url';
 
@@ -31,7 +29,6 @@ function resolveLinkDeps() {
 const nextConfig = {
   basePath: process.env.DOCS_BASE_URL || '',
   experimental: {
-    appDir: false,
     esmExternals: false,
     externalDir: true,
   },

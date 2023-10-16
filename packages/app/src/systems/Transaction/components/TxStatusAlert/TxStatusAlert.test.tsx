@@ -10,14 +10,14 @@ describe('TxStatusAlert', () => {
 
   it('should show transaction pending and block explorer link', async () => {
     render(
-      <TxStatusAlert txStatus={TransactionStatus.submitted} txId="0x123" />
+      <TxStatusAlert txStatus={TransactionStatus.submitted} txId="0x123" />,
     );
 
     expect(
-      screen.getByText(/transaction is still pending/i)
+      screen.getByText(/transaction is still pending/i),
     ).toBeInTheDocument();
     expect(
-      screen.getByLabelText(/View Transaction on Block Explorer/i)
+      screen.getByLabelText(/View Transaction on Block Explorer/i),
     ).toBeInTheDocument();
   });
 
@@ -26,7 +26,7 @@ describe('TxStatusAlert', () => {
 
     expect(screen.getByText(/something wrong happened/i)).toBeInTheDocument();
     expect(
-      screen.getByLabelText(/View Transaction on Block Explorer/i)
+      screen.getByLabelText(/View Transaction on Block Explorer/i),
     ).toBeInTheDocument();
   });
 

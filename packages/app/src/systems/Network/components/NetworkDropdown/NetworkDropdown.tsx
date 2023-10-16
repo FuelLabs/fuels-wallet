@@ -28,7 +28,7 @@ export const NetworkDropdown = forwardRef<HTMLDivElement, NetworkDropdownProps>(
         {selected?.name}
       </Button>
     );
-  }
+  },
 );
 
 const styles = {

@@ -15,7 +15,7 @@ export function useEditAccount() {
   const [, send, service] = useMachine(() =>
     editAccountMachine.withContext({
       address,
-    })
+    }),
   );
 
   const account = useSelector(service, selectors.account);

@@ -55,7 +55,7 @@ export class FuelWalletConnection extends WindowConnection {
   async sendTransaction(
     transaction: TransactionRequestLike & { signer?: string },
     providerConfig: FuelProviderConfig,
-    signer?: string
+    signer?: string,
   ): Promise<string> {
     if (!transaction) {
       throw new Error('Transaction is required');
@@ -122,7 +122,7 @@ export class FuelWalletConnection extends WindowConnection {
 
   on<E extends FuelEvents['type'], D extends FuelEventArg<E>>(
     eventName: E,
-    listener: (data: D) => void
+    listener: (data: D) => void,
   ): this {
     return super.on(eventName, listener);
   }

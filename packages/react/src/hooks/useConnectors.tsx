@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { useFuel } from '../components';
 import { QUERY_KEYS } from '../utils';
 
-import { useWindowFuel } from './useWindowFuel';
-
 export const useConnectors = () => {
-  const fuel = useWindowFuel();
+  const { fuel } = useFuel();
 
   const query = useQuery(
     [QUERY_KEYS.chain, fuel],
@@ -14,7 +13,7 @@ export const useConnectors = () => {
     },
     {
       enabled: !!fuel,
-    }
+    },
   );
 
   return {

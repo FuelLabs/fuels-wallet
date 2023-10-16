@@ -48,7 +48,7 @@ describe('TxFromTo', () => {
 
   it('should show address info and not have spinner when status is pending', async () => {
     renderWithProvider(
-      <TxFromTo {...PROPS} status={TransactionStatus.submitted} />
+      <TxFromTo {...PROPS} status={TransactionStatus.submitted} />,
     );
     expect(screen.getByText('From')).toBeInTheDocument();
     expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
@@ -59,7 +59,7 @@ describe('TxFromTo', () => {
 
   it('should show address info and not have spinner when status is success', async () => {
     renderWithProvider(
-      <TxFromTo {...PROPS} status={TransactionStatus.success} />
+      <TxFromTo {...PROPS} status={TransactionStatus.success} />,
     );
     expect(screen.getByText('From')).toBeInTheDocument();
     expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
@@ -70,7 +70,7 @@ describe('TxFromTo', () => {
 
   it('should show address info and not have spinner when status is error', async () => {
     renderWithProvider(
-      <TxFromTo {...PROPS} status={TransactionStatus.failure} />
+      <TxFromTo {...PROPS} status={TransactionStatus.failure} />,
     );
     expect(screen.getByText('From')).toBeInTheDocument();
     expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();

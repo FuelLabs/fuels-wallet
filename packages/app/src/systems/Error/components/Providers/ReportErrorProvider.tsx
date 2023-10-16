@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 
 import { ReportErrors } from '../../pages';
@@ -18,7 +19,10 @@ class ErrorBoundary extends React.Component<
   }
 
   async componentDidCatch(error: Error, reactError: React.ErrorInfo) {
-    await ReportErrorService.saveError({ error, reactError });
+    await ReportErrorService.saveError({
+      error,
+      reactError: reactError as any,
+    });
     this.setState({
       hasError: true,
     });

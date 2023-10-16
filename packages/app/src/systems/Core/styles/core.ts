@@ -3,7 +3,7 @@ import { WALLET_WIDTH, WALLET_HEIGHT } from '~/config';
 
 export const scrollable = (
   regularColor: string = '$intentsBase1',
-  hoverColor: string = '$intentsBase10'
+  hoverColor: string = '$intentsBase10',
 ) =>
   cssObj({
     overflowY: 'overlay',
