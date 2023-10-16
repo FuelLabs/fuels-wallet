@@ -19,7 +19,7 @@ export class SignUpService {
       throw new Error('Invalid data');
     }
 
-    // Ensure datbase is open
+    // Ensure database is open
     await db.open();
     // Clear databse on create
     await db.clear();
