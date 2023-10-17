@@ -230,7 +230,7 @@ export const connectRequestMachine = createMachine(
         );
       },
     },
-  }
+  },
 );
 
 export type ConnectRequestMachine = typeof connectRequestMachine;

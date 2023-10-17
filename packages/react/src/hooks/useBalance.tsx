@@ -27,7 +27,7 @@ export const useBalance = ({
         const currentFuelBalance = await provider?.getBalance(
           Address.fromString(address || ''),
           assetId ||
-            '0x0000000000000000000000000000000000000000000000000000000000000000'
+            '0x0000000000000000000000000000000000000000000000000000000000000000',
         );
         return currentFuelBalance || null;
       } catch (error: unknown) {
@@ -36,7 +36,7 @@ export const useBalance = ({
     },
     {
       enabled: !!provider,
-    }
+    },
   );
 
   const listenerAccountFetcher = () => {

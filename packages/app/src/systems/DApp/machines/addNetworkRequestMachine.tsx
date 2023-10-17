@@ -126,7 +126,7 @@ export const addNetworkRequestMachine = createMachine(
         },
       }),
     },
-  }
+  },
 );
 
 export type AddNetworkRequestMachine = typeof addNetworkRequestMachine;

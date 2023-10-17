@@ -6,7 +6,7 @@ export async function hasText(
   text: string | RegExp,
   position: number = 0,
   timeout: number = 5000,
-  exact: boolean = false
+  exact: boolean = false,
 ) {
   const textFound = page.getByText(text, { exact }).nth(position);
   await expect(textFound).toHaveText(text, {

@@ -22,7 +22,7 @@ export function useChainInfo(providerUrl?: string) {
     debounce((url: string) => {
       send('FETCH_CHAIN_INFO', { input: { providerUrl: url } });
     }, 750),
-    []
+    [],
   );
 
   useEffect(() => {

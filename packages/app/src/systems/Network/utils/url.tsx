@@ -24,7 +24,7 @@ export function isValidNetworkUrl(url?: string) {
       '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
       '(\\?[;&a-z\\d%_.~+=-]*)?' +
       '(\\#[-a-z\\d_]*)?$',
-    'i'
+    'i',
   );
   return pattern.test(url) && url.endsWith('/graphql');
 }

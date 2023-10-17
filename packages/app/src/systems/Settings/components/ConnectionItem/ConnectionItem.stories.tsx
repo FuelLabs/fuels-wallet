@@ -20,7 +20,7 @@ type LoadedProps = {
 
 export const Usage = (
   _args: ConnectionItemProps,
-  { loaded: { connection1: connection } }: LoadedProps
+  { loaded: { connection1: connection } }: LoadedProps,
 ) => (
   <CardList css={{ maxWidth: 300 }}>
     <ConnectionItem

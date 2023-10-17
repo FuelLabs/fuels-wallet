@@ -52,7 +52,7 @@ export const exportVaultMachine = createMachine(
           data: {
             input: (
               _: MachineContext,
-              ev: Extract<MachineEvents, { type: 'EXPORT_VAULT' }>
+              ev: Extract<MachineEvents, { type: 'EXPORT_VAULT' }>,
             ) => ({
               password: ev.input.password,
             }),
@@ -105,7 +105,7 @@ export const exportVaultMachine = createMachine(
         },
       }),
     },
-  }
+  },
 );
 
 export type ExportVaultMachine = typeof exportVaultMachine;

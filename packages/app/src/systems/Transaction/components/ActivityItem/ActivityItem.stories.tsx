@@ -68,7 +68,7 @@ const ownerAddress =
 
 export const Success = (args: TxItemProps) => {
   MOCK_TRANSACTION_CONTRACT_CALLS.map(
-    (tx) => (tx.status = TransactionStatus.success)
+    (tx) => (tx.status = TransactionStatus.success),
   );
   return (
     <Box
@@ -93,7 +93,7 @@ export const Success = (args: TxItemProps) => {
 
 export const Pending = (args: TxItemProps) => {
   MOCK_TRANSACTION_CONTRACT_CALLS.map(
-    (tx) => (tx.status = TransactionStatus.submitted)
+    (tx) => (tx.status = TransactionStatus.submitted),
   );
   return (
     <Box
@@ -118,7 +118,7 @@ export const Pending = (args: TxItemProps) => {
 
 export const Error = (args: TxItemProps) => {
   MOCK_TRANSACTION_CONTRACT_CALLS.map(
-    (tx) => (tx.status = TransactionStatus.failure)
+    (tx) => (tx.status = TransactionStatus.failure),
   );
   return (
     <Box

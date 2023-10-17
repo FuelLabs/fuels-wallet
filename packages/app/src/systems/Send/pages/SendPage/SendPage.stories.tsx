@@ -39,7 +39,7 @@ Usage.play = async ({ canvasElement, loaded }) => {
   userEvent.keyboard('{Enter}');
   userEvent.type(
     canvas.getByLabelText('Address Input'),
-    loaded.receiver.toString()
+    loaded.receiver.toString(),
   );
   const inputAmount = canvas.getByLabelText('amount');
   userEvent.type(inputAmount, '10');

@@ -19,7 +19,7 @@ export function Transfer() {
   const [providerUrl, setProviderUrl] = useState<string>('');
   const [amount, setAmount] = useState<BN | null>(bn.parseUnits('0.00001'));
   const [addr, setAddr] = useState<string>(
-    'fuel1a6msn9zmjpvv84g08y3t6x6flykw622s48k2lqg257pf9924pnfq50tdmw'
+    'fuel1a6msn9zmjpvv84g08y3t6x6flykw622s48k2lqg257pf9924pnfq50tdmw',
   );
   const [assetId, setAssetId] = useState<string>(BaseAssetId);
   const assets = useAssets();

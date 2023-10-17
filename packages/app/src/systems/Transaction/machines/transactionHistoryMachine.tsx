@@ -117,7 +117,7 @@ export const transactionHistoryMachine = createMachine(
         },
       }),
     },
-  }
+  },
 );
 
 export type TransactionHistoryMachine = typeof transactionHistoryMachine;

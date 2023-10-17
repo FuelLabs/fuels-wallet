@@ -13,7 +13,7 @@ function resolveLinkDeps() {
           if (/@fuel-ui/.test(dep)) {
             obj[dep] = path.resolve(
               __dirname,
-              `./node_modules/${dep}/dist/index.mjs`
+              `./node_modules/${dep}/dist/index.mjs`,
             );
           }
           return obj;

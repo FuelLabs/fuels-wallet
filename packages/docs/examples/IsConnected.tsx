@@ -17,7 +17,7 @@ export function IsConnected() {
       console.log('Connection response', isConnected);
       /* example:end */
       setConnected(isConnected);
-    }
+    },
   );
 
   const errorMessage = error || notDetected;

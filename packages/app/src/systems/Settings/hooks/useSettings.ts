@@ -22,7 +22,7 @@ export function useSettings() {
           navigate(Pages.wallet());
         },
       },
-    })
+    }),
   );
   const { send } = service;
   const isUnlocking = useSelector(service, selectors.isUnlocking);

@@ -27,7 +27,7 @@ export function Connect() {
       /* disconnect:end */
       setConnected(false);
       console.log('Disconnection response');
-    }
+    },
   );
 
   const errorMessage = errorConnect || errorDisconnect || notDetected;

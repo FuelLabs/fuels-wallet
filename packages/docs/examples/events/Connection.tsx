@@ -16,7 +16,7 @@ export function Connection() {
   const [handleDisconnect, isDisconnecting, errorDisconnect] = useLoading(
     async () => {
       await fuel?.disconnect();
-    }
+    },
   );
 
   const errorMessage = errorConnect || errorDisconnect || notDetected;

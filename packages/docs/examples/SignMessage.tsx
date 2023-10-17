@@ -27,7 +27,7 @@ export function SignMessage() {
       console.log('Message signature', signedMessage);
       /* example:end */
       setSignedMessage(signedMessage);
-    }
+    },
   );
 
   const errorMessage = notDetected || errorSigningMessage;

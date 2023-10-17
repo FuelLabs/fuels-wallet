@@ -37,7 +37,7 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
 
     const forwardHalfAndMintButton = getButtonByText(
       page,
-      'Forward Half And External Mint'
+      'Forward Half And External Mint',
     );
     await forwardHalfAndMintButton.click();
 

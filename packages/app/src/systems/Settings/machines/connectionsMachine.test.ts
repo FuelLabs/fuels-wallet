@@ -159,7 +159,7 @@ describe('connectionsMachine', () => {
       expect(connected?.length).toBe(2);
       service.send('REMOVE_ACCOUNT', { input: acc1?.address });
       await waitFor(service, (state) =>
-        state.matches('editing.removingAccount')
+        state.matches('editing.removingAccount'),
       );
       await waitFor(service, (state) => state.matches('editing.idle'));
       expect(removeFn).toBeCalled();

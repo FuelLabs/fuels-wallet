@@ -22,7 +22,7 @@ export function ListAssets() {
       console.log('Assets ', assets);
       /* example:end */
       setAssets(assets);
-    }
+    },
   );
 
   const errorMessage = errorGetAssets || notDetected;

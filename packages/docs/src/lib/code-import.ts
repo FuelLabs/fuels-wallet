@@ -27,7 +27,7 @@ function toAST(content: string) {
 function extractLines(
   content: string,
   fromLine: number | undefined,
-  toLine: number | undefined
+  toLine: number | undefined,
 ) {
   const lines = content.split(EOL);
   const start = fromLine || 1;
@@ -154,9 +154,8 @@ export function codeImport(options: Options = { filepath: '' }) {
 
         let lineStart = attr.find((i: any) => i.name === 'lineStart')?.value;
         let lineEnd = attr.find((i: any) => i.name === 'lineEnd')?.value;
-        const commentBlock = attr.find(
-          (i: any) => i.name === 'commentBlock'
-        )?.value;
+        const commentBlock = attr.find((i: any) => i.name === 'commentBlock')
+          ?.value;
         const file = attr.find((i: any) => i.name === 'file')?.value;
         const testCase = attr.find((i: any) => i.name === 'testCase')?.value;
         const fileAbsPath = path.resolve(path.join(rootDir, dirname), file);

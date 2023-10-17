@@ -48,7 +48,7 @@ export function Mnemonic({
     return WORDS;
   });
   const [value, setValue] = useState<string[]>(() =>
-    fillArray(initialValue, format)
+    fillArray(initialValue, format),
   );
 
   async function handleCopy() {
@@ -59,7 +59,7 @@ export function Mnemonic({
 
   function handlePastInput(
     ev: React.ClipboardEvent<HTMLInputElement>,
-    idx: number
+    idx: number,
   ) {
     const text = ev.clipboardData.getData('text/plain');
     const words = text.split(' ');
@@ -81,7 +81,7 @@ export function Mnemonic({
     setValue((oldState) =>
       oldState
         .map((word, i) => (i === idx ? val : word))
-        .map(checkMoreThanOneWord)
+        .map(checkMoreThanOneWord),
     );
   }
 

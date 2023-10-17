@@ -25,7 +25,7 @@ export function getDocFullPath(slug: string) {
 
 export async function getDocBySlug(
   slug: string,
-  fields: string[] = []
+  fields: string[] = [],
 ): Promise<DocType> {
   const realSlug = slug.replace(/\.mdx$/, '');
   const fullpath = getDocFullPath(slug);
@@ -33,7 +33,7 @@ export async function getDocBySlug(
   const { data, content } = matter(fileContents);
   const pageLink = join(
     DOCS_REPO_LINK,
-    fullpath.replace(process.cwd(), '')
+    fullpath.replace(process.cwd(), ''),
   ).replace('https:/', 'https://');
 
   const doc = {
@@ -129,7 +129,7 @@ export async function getSidebarLinks(order: string[]) {
       const submenu = link.submenu.sort(
         (a, b) =>
           catOrder.indexOf(`${link.label}/${a.label}`) -
-          catOrder.indexOf(`${link.label}/${b.label}`)
+          catOrder.indexOf(`${link.label}/${b.label}`),
       );
       return { ...link, submenu };
     });

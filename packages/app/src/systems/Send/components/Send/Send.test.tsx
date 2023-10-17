@@ -28,7 +28,7 @@ describe('Send', () => {
       const input = await screen.findByLabelText('Address Input');
       fireEvent.input(input, { target: { value: 'wrong address' } });
       expect(
-        await screen.findByText('Invalid bech32 address')
+        await screen.findByText('Invalid bech32 address'),
       ).toBeInTheDocument();
     });
 

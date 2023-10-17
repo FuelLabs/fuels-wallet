@@ -33,7 +33,7 @@ test.describe('Forward and Mint Multicall', () => {
 
     const forwardHalfAndMintButton = getButtonByText(
       page,
-      'Deposit And Mint Multicall'
+      'Deposit And Mint Multicall',
     );
     await page.waitForTimeout(2500);
     await forwardHalfAndMintButton.click();
