@@ -32,7 +32,7 @@ export function AddAssets() {
       /* example:start */
       await fuel.addAssets(assets);
       /* example:end */
-    },
+    }
   );
 
   const errorMessage = notDetected || errorSigningMessage;

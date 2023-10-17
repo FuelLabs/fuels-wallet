@@ -21,7 +21,7 @@ export function ListAccounts() {
       console.log('Accounts ', accounts);
       /* example:end */
       setAccounts(accounts);
-    },
+    }
   );
 
   const errorMessage = errorGetAccounts || notDetected;

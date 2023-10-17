@@ -59,7 +59,7 @@
     "nodes:reset": "run-s nodes:clean nodes:up",
     "packages:version": "node ./scripts/version.js",
     "prettier:check": "prettier --check . !./packages/docs",
-    "prettier:format": "prettier --write .",
+    "prettier:format": "prettier --write . && pnpm -r --filter=docs exec prettier --write .",
     "storybook": "pnpm -r --filter=fuels-wallet storybook",
     "test": "turbo run test --parallel",
     "test:ci": "turbo run test --parallel -- --ci --testLocationInResults --json --coverage",

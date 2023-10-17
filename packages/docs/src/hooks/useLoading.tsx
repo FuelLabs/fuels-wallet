@@ -6,7 +6,7 @@ import { useIsConnected } from './useIsConnected';
 
 export function useLoading<T extends (...args: any) => Promise<void>>(
   callback: T,
-  deps: any = [],
+  deps: any = []
 ) {
   const [fuel] = useFuel();
   const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ export function useLoading<T extends (...args: any) => Promise<void>>(
           setLoading(false);
         });
     },
-    [fuel, isConnected, ...deps],
+    [fuel, isConnected, ...deps]
   );
 
   return [execute as T, loading, error] as const;

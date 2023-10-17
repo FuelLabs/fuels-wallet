@@ -57,10 +57,5 @@
     "eslint": "^8.51.0",
     "eslint-config-next": "13.5.4",
     "next-images": "1.8.5"
-  },
-  "pnpm": {
-    "overrides": {
-      "prettier@*": "2.8.8"
-    }
   }
 }

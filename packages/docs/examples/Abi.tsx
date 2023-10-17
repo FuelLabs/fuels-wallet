@@ -26,7 +26,7 @@ export function Abi() {
       console.log('Abi ', abiInfo);
       /* example:end */
       setAbi(abiInfo);
-    },
+    }
   );
 
   const errorMessage = errorGetAbi || notDetected;

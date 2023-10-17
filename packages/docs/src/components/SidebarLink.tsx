@@ -43,5 +43,5 @@ export const SidebarLink = forwardRef<unknown, SidebarLinkProps>(
         {item.label}
       </Link>
     );
-  },
+  }
 );

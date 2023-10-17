@@ -12,7 +12,7 @@ export function NetworkExample() {
   const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
   const [currentNetwork, setNetwork] = useState<FuelProviderConfig | null>(
-    null,
+    null
   );
 
   const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {

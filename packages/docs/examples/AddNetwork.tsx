@@ -24,7 +24,7 @@ export function AddNetwork() {
       /* addNetwork:start */
       await fuel.addNetwork(network);
       /* addNetwork:end */
-    },
+    }
   );
 
   const errorMessage = notDetected || errorAddingNetwork;

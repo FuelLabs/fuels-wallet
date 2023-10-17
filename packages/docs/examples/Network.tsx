@@ -22,7 +22,7 @@ export function Network() {
       console.log('Network ', networkInfo);
       /* example:end */
       setNetwork(networkInfo);
-    },
+    }
   );
 
   const errorMessage = errorGetNetwork || notDetected;

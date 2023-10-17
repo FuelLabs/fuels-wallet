@@ -19,7 +19,7 @@ export function AddAbi() {
   const [abiSuccess, setAbiSuccess] = useState(false);
   const [contractId, setContractId] = useState<string>(SWAY_SWAP_CONTRACT_ID);
   const [abiString, setAbiString] = useState<string>(
-    JSON.stringify(SWAY_SWAP_ABI, null, 2),
+    JSON.stringify(SWAY_SWAP_ABI, null, 2)
   );
 
   const [handleAddAbi, isAddingAbi, errorAddingAbi] = useLoading(
@@ -40,7 +40,7 @@ export function AddAbi() {
         console.error(e);
         setAbiError(true);
       }
-    },
+    }
   );
 
   const errorMessage = notDetected || errorAddingAbi;
