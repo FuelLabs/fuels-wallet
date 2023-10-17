@@ -165,7 +165,7 @@ export class TxService {
     let bytesUsed = 0;
     try {
       const byteSize = arrayify(
-        txResultWithCalls.gqlTransaction.rawPayload
+        txResultWithCalls.gqlTransaction.rawPayload,
       ).length;
       const witnessesSize =
         txResultWithCalls.transaction?.witnesses?.reduce((t, w) => {
@@ -191,9 +191,10 @@ export class TxService {
   // TODO: remove this once is fixed on the SDK
   // https://github.com/FuelLabs/fuels-ts/issues/1314
   static async getTransactionSummaryFromRequest<TTransactionType = void>(
-    params: GetTransactionSummaryFromRequestParams
+    params: GetTransactionSummaryFromRequestParams,
   ): Promise<TransactionSummary<TTransactionType>> {
     const { provider, transactionRequest, abiMap } = params;
+    await provider.estimateTxDependencies(transactionRequest);
     const transaction = transactionRequest.toTransaction();
     const transactionBytes = transactionRequest.toTransactionBytes();
     const { dryRun: gqlReceipts } = await provider.operations.dryRun({

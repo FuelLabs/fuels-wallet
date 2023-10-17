@@ -73,7 +73,7 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
         <Text>{network?.name}</Text>
       </CardList.Item>
     );
-  }
+  },
 );
 
 const styles = {

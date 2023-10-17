@@ -30,7 +30,7 @@ describe('sendMachine', () => {
     service = interpret(
       sendMachine
         .withContext({})
-        .withConfig({ actions: { goToHome, callTransactionRequest } })
+        .withConfig({ actions: { goToHome, callTransactionRequest } }),
     ).start();
   });
 

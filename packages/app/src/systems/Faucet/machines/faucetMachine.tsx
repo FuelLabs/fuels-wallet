@@ -117,7 +117,7 @@ export const faucetMachine =
           });
         },
       },
-    }
+    },
   );
 
 export type FaucetMachine = typeof faucetMachine;

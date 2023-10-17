@@ -49,7 +49,7 @@ export class PopUpService {
       closePopUp(this.tabId);
       // Reject all pending requests
       this.client.rejectAllPendingRequests(
-        'Request cancelled without user response!'
+        'Request cancelled without user response!',
       );
     }
   };
@@ -78,7 +78,7 @@ export class PopUpService {
     this.communicationProtocol.on(MessageTypes.response, this.onResponse);
     this.communicationProtocol.on(
       MessageTypes.removeConnection,
-      this.rejectAllRequests
+      this.rejectAllRequests,
     );
   }
 
@@ -109,7 +109,7 @@ export class PopUpService {
   static create = async (
     origin: string,
     pathname: string,
-    communicationProtocol: CommunicationProtocol
+    communicationProtocol: CommunicationProtocol,
   ) => {
     const session = uniqueId(4);
     const popupService = new PopUpService(communicationProtocol);
@@ -119,7 +119,7 @@ export class PopUpService {
     popups.set(origin, popupService);
 
     const windowId = await createPopUp(
-      `${CRXPages.popup}?s=${session}#${pathname}`
+      `${CRXPages.popup}?s=${session}#${pathname}`,
     );
 
     popupService.session = session;
@@ -131,7 +131,7 @@ export class PopUpService {
   static open = async (
     origin: string,
     pathname: string,
-    communicationProtocol: CommunicationProtocol
+    communicationProtocol: CommunicationProtocol,
   ) => {
     let popupService = await this.getCurrent(origin);
 
@@ -139,7 +139,7 @@ export class PopUpService {
       popupService = await PopUpService.create(
         origin,
         pathname,
-        communicationProtocol
+        communicationProtocol,
       );
     }
 

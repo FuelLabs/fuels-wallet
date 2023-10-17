@@ -193,7 +193,7 @@ export const MOCK_TRANSACTION_CONTRACT_CALL_PARTS: {
 };
 
 const thirtyFourDaysAgo = dateToTai64(
-  new Date(Date.now() - 1000 * 60 * 60 * 24 * 34)
+  new Date(Date.now() - 1000 * 60 * 60 * 24 * 34),
 );
 export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
   transaction: {

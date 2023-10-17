@@ -18,6 +18,9 @@ export class SignUpService {
     if (!data?.password || !data?.mnemonic) {
       throw new Error('Invalid data');
     }
+
+    // Ensure datbase is open
+    await db.open();
     // Clear databse on create
     await db.clear();
 

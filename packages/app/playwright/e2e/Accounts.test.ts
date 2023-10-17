@@ -55,7 +55,7 @@ test.describe('Account', () => {
     await hasText(page, data.accounts[0].name);
     await getByAriaLabel(
       page,
-      `Account Actions ${data.accounts[0].name}`
+      `Account Actions ${data.accounts[0].name}`,
     ).click();
     await getByAriaLabel(page, `Edit ${data.accounts[0].name}`).click();
     await hasText(page, /Edit/i);
@@ -75,7 +75,7 @@ test.describe('Account', () => {
     await hasText(page, data.accounts[0].name);
     await getByAriaLabel(
       page,
-      `Account Actions ${data.accounts[0].name}`
+      `Account Actions ${data.accounts[0].name}`,
     ).click();
     await getByAriaLabel(page, `Export ${data.accounts[0].name}`).click();
 
@@ -94,7 +94,7 @@ test.describe('Account', () => {
     await hasText(page, data.accounts[1].name);
     await getByAriaLabel(
       page,
-      `Account Actions ${data.accounts[1].name}`
+      `Account Actions ${data.accounts[1].name}`,
     ).click();
     await getByAriaLabel(page, `Hide ${data.accounts[1].name}`).click();
     await hasText(page, 'Show hidden accounts');
@@ -103,7 +103,7 @@ test.describe('Account', () => {
     await hasText(page, data.accounts[1].name);
     await getByAriaLabel(
       page,
-      `Account Actions ${data.accounts[1].name}`
+      `Account Actions ${data.accounts[1].name}`,
     ).click();
     await getByAriaLabel(page, `Unhide ${data.accounts[1].name}`).click();
     await page.getByText('Show hidden accounts').isHidden();
@@ -117,14 +117,14 @@ test.describe('Account', () => {
     await hasText(page, data.accounts[1].name);
     await getByAriaLabel(
       page,
-      `Account Actions ${data.accounts[1].name}`
+      `Account Actions ${data.accounts[1].name}`,
     ).click();
     await getByAriaLabel(page, `Hide ${data.accounts[1].name}`).click();
     await hasText(page, 'Show hidden accounts');
     await page.getByText(data.accounts[1].name).isHidden();
     await getByAriaLabel(
       page,
-      `Account Actions ${data.accounts[0].name}`
+      `Account Actions ${data.accounts[0].name}`,
     ).click();
     await getByAriaLabel(page, `Hide ${data.accounts[0].name}`).isHidden();
   });
@@ -136,7 +136,7 @@ test.describe('Account', () => {
     await hasText(page, data.accounts[0].name);
     await getByAriaLabel(
       page,
-      `Account Actions ${data.accounts[0].name}`
+      `Account Actions ${data.accounts[0].name}`,
     ).click();
     await getByAriaLabel(page, `Export ${data.accounts[0].name}`).click();
 

@@ -4,13 +4,13 @@ import { TxService } from '~/systems/Transaction/services';
 export const getMockedTransaction = async (
   owner: string,
   destiny: string,
-  providerUrl: string
+  providerUrl: string,
 ) => {
   const destinyAddress = Address.fromPublicKey(destiny);
   const provider = await Provider.create(providerUrl);
   const ownerWallet = Wallet.fromAddress(
     Address.fromPublicKey(owner),
-    provider
+    provider,
   );
   const transactionRequest = await TxService.createTransfer({
     to: destinyAddress.toString(),

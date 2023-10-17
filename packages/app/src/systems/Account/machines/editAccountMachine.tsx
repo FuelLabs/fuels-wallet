@@ -138,7 +138,7 @@ export const editAccountMachine = createMachine(
         },
       }),
     },
-  }
+  },
 );
 
 export type EditAccountMachine = typeof editAccountMachine;

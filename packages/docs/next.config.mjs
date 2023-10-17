@@ -1,10 +1,13 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/naming-convention */
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import * as url from 'url';
 
 const linkDeps = process.env.LINK_DEPS?.trim().split(' ').filter(Boolean) || [];
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+
+// inject app version on the docs
+const appPackage = JSON.parse(readFileSync('../app/package.json', 'utf8'));
+process.env.NEXT_PUBLIC_APP_VERSION = appPackage.version;
 
 function resolveLinkDeps() {
   return (
@@ -31,7 +34,6 @@ function resolveLinkDeps() {
 const nextConfig = {
   basePath: process.env.DOCS_BASE_URL || '',
   experimental: {
-    appDir: false,
     esmExternals: false,
     externalDir: true,
   },

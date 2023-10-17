@@ -1,10 +1,10 @@
 {
   "name": "@fuel-wallet/types",
-  "version": "0.13.0",
+  "version": "0.13.2",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "dependencies": {
-    "@types/chrome": "^0.0.243",
+    "@types/chrome": "^0.0.246",
     "dexie-observable": "4.0.1-beta.13",
     "json-rpc-2.0": "^1.6.0"
   },

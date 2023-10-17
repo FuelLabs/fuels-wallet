@@ -70,7 +70,7 @@ describe('Fuel', () => {
   test('currentAccount', async () => {
     const currentAccount = await fuel.currentAccount();
     expect(currentAccount).toEqual(
-      mocks.backgroundService.state.wallet.address.toAddress()
+      mocks.backgroundService.state.wallet.address.toAddress(),
     );
   });
 
@@ -231,7 +231,7 @@ describe('Fuel', () => {
       toAddress,
       bn.parseUnits('0.1'),
       BaseAssetId,
-      { gasLimit, gasPrice }
+      { gasLimit, gasPrice },
     );
 
     // wait for transaction to be completed

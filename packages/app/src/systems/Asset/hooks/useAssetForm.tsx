@@ -10,7 +10,8 @@ import type { Maybe } from '~/systems/Core';
 export type AssetFormValues = {
   name: string;
   assetId: string;
-  imageUrl: string | undefined;
+  decimals: number;
+  imageUrl?: string;
   symbol: string;
 };
 
@@ -36,14 +37,22 @@ const schema = yup
       .test('is-id-valid', 'ID is not valid', isValidId)
       .required('Asset ID is required'),
     symbol: yup.string().max(6).required('Symbol is required'),
+    decimals: yup
+      .number()
+      .typeError('Decimals is required')
+      .min(0)
+      .max(19)
+      .required('Decimals is required'),
     imageUrl: yup.string().test('is-url-valid', 'URL is not valid', isValidUrl),
   })
   .required();
 
 const DEFAULT_VALUES = {
-  name: '',
   assetId: '',
+  contractId: '',
+  name: '',
   imageUrl: '',
+  decimals: 0,
   symbol: '',
 };
 

@@ -12,7 +12,7 @@ mockServer([
       ctx.json({
         status: 'Success',
         tokens: 500000000,
-      })
+      }),
     );
   }),
 ]);
@@ -25,7 +25,7 @@ describe('faucetMachine', () => {
     service = interpret(
       faucetMachine.withContext({}).withConfig({
         actions: { sendFaucetSuccess() {} },
-      })
+      }),
     ).start();
     state = service.getSnapshot();
   });

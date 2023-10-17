@@ -17,7 +17,7 @@ describe('Url', () => {
     const value5 = urlJoin(
       'http://localhost:3000/foo/bar/',
       '/test/',
-      '/test2'
+      '/test2',
     );
     expect(value5).toBe('http://localhost:3000/foo/bar/test/test2');
 

@@ -38,7 +38,7 @@ export const getUniqueString = ({
     const { value, tries = 1 } = opt;
 
     const repeatedAssets = allValues.filter(
-      (a) => a && a.trim() === value.trim()
+      (a) => a && a.trim() === value.trim(),
     );
 
     let notRepeatedField: string;

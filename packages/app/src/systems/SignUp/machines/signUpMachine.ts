@@ -237,7 +237,7 @@ export const signUpMachine = createMachine(
       isImport: (ctx) => ctx.signUpType === SignUpType.import,
       isNotValidMnemonic: (_, ev) => {
         return !Mnemonic.isMnemonicValid(
-          getPhraseFromValue(ev.data.words) || ''
+          getPhraseFromValue(ev.data.words) || '',
         );
       },
       notMatchMnemonic: (ctx, ev) => {
@@ -259,7 +259,7 @@ export const signUpMachine = createMachine(
         return account;
       },
     },
-  }
+  },
 );
 
 export type SignUpMachine = typeof signUpMachine;

@@ -7,14 +7,14 @@ export async function seedWallet(address: string, amount: BN) {
   const provider = await Provider.create(process.env.PUBLIC_PROVIDER_URL!);
   const genesisWallet = Wallet.fromPrivateKey(
     process.env.PUBLIC_GENESIS_SECRET!,
-    provider
+    provider,
   );
   const { gasLimit, gasPrice } = await getGasConfig(genesisWallet.provider);
   const response = await genesisWallet.transfer(
     Address.fromString(address),
     amount,
     BaseAssetId,
-    { gasLimit, gasPrice }
+    { gasLimit, gasPrice },
   );
   await response.wait();
 }

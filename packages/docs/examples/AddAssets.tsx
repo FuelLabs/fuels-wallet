@@ -21,6 +21,7 @@ export function AddAssets() {
       imageUrl:
         'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
       isCustom: true,
+      decimals: 6,
     },
   ]);
 
@@ -95,6 +96,21 @@ export function AddAssets() {
                       onChangeAsset(index, { ...asset, symbol: e.target.value })
                     }
                     placeholder="Type your asset Symbol"
+                  />
+                </Input>
+                <Input isDisabled={!fuel} css={styles.input}>
+                  <Input.Field
+                    type="number"
+                    defaultValue={asset.decimals}
+                    onBlur={(e) => {
+                      onChangeAsset(index, {
+                        ...asset,
+                        decimals: e.target.value
+                          ? Number(e.target.value)
+                          : undefined,
+                      });
+                    }}
+                    placeholder="Type your asset Decimals"
                   />
                 </Input>
               </Box.Flex>

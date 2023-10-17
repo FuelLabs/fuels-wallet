@@ -23,7 +23,7 @@ export function useReportError() {
           window.location.reload();
         },
       },
-    })
+    }),
   );
 
   const hasErrorsToReport = useSelector(service, selectors.hasErrorsToReport);

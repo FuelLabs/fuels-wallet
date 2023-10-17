@@ -45,7 +45,7 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
       isReadOnly,
       hideError,
     },
-    ref
+    ref,
   ) => {
     const id = useId();
     return (
@@ -86,5 +86,5 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
         }}
       />
     );
-  }
+  },
 );

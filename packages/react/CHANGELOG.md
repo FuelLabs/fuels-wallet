@@ -1,5 +1,27 @@
 # @fuel-wallet/react
 
+## 0.13.2
+
+### Patch Changes
+
+- [#914](https://github.com/FuelLabs/fuels-wallet/pull/914) [`d6b847d`](https://github.com/FuelLabs/fuels-wallet/commit/d6b847d2df774f00494de284282db1199ba676d3) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: use Fuel SDK instead of window.fuel
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.13.2
+
+## 0.13.1
+
+### Patch Changes
+
+- [#891](https://github.com/FuelLabs/fuels-wallet/pull/891) [`3e1d91b`](https://github.com/FuelLabs/fuels-wallet/commit/3e1d91b8f54c4da9badc17e341da715117e5e618) Thanks [@matt-user](https://github.com/matt-user)! - fix: import and use HStack correctly
+
+- [#881](https://github.com/FuelLabs/fuels-wallet/pull/881) [`5901763`](https://github.com/FuelLabs/fuels-wallet/commit/590176349681675a78fea6467caa6f9089a0b2e7) Thanks [@luizstacio](https://github.com/luizstacio)! - Update fuelet connector data
+
+- [#882](https://github.com/FuelLabs/fuels-wallet/pull/882) [`efb1736`](https://github.com/FuelLabs/fuels-wallet/commit/efb1736b778659dd1107f083547eb3f16c8f8dba) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix connector name in the aria label
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.13.1
+
 ## 0.13.0
 
 ### Minor Changes

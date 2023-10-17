@@ -33,7 +33,7 @@ test.describe('ReportError', () => {
 
     await hasText(page, /Unexpected errors detected/i);
     await expect(page.locator(`textarea[name="reports"]`)).toHaveText(
-      /componentStack/i
+      /componentStack/i,
     );
 
     // get errors from indexedDB
@@ -64,7 +64,7 @@ test.describe('ReportError', () => {
     await reload(page);
     await hasText(page, /Unexpected errors detected/i);
     await expect(page.locator(`textarea[name="reports"]`)).toHaveText(
-      /Test Error/i
+      /Test Error/i,
     );
 
     // report error
@@ -91,7 +91,7 @@ test.describe('ReportError', () => {
 
     await hasText(page, /Unexpected errors detected/i);
     await expect(page.locator(`textarea[name="reports"]`)).toHaveText(
-      /Test Error/i
+      /Test Error/i,
     );
 
     // report error

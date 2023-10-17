@@ -36,6 +36,7 @@ export const CUSTOM_ASSET = {
   imageUrl:
     'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
   isCustom: true,
+  decimals: 2,
 };
 
 export const CUSTOM_ASSET_2 = {
@@ -45,6 +46,7 @@ export const CUSTOM_ASSET_2 = {
   imageUrl:
     'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
   isCustom: true,
+  decimals: 2,
 };
 
 export const ALT_ASSET = {
@@ -54,6 +56,7 @@ export const ALT_ASSET = {
   imageUrl:
     'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
   isCustom: true,
+  decimals: 2,
 };
 
 export const FUEL_NETWORK = {
@@ -76,6 +79,7 @@ export async function createManager(mnemonic: string) {
   await walletManager.addVault({
     type: 'mnemonic',
     secret: mnemonic,
+    provider: null,
   });
 
   return walletManager;
@@ -96,14 +100,14 @@ export function createAccount(wallet: WalletAccount, index: number = 0) {
 
 export function createAccounts(
   manager: WalletManager,
-  numberOfAccounts: number = 1
+  numberOfAccounts: number = 1,
 ) {
   return Promise.all(
     new Array(numberOfAccounts).fill(0).map(async (_, index) => {
       const walletAccount = await manager.addAccount();
       const account = createAccount(walletAccount, index);
       return account;
-    })
+    }),
   );
 }
 
@@ -125,7 +129,7 @@ type SerializedVault = {
 };
 
 export async function serializeVault(
-  manager: WalletManager
+  manager: WalletManager,
 ): Promise<SerializedVault> {
   const vaultKey = manager.STORAGE_KEY;
   const vaultData = manager.exportVault(0);
@@ -144,7 +148,7 @@ export async function serializeVault(
 export async function mockData(
   page: Page,
   numberOfAccounts: number = 1,
-  networks: Array<Network> = DEFAULT_NETWORKS
+  networks: Array<Network> = DEFAULT_NETWORKS,
 ) {
   await visit(page, '/');
   const mnemonic = Mnemonic.generate(16);
@@ -152,7 +156,7 @@ export async function mockData(
   const accounts = await createAccounts(manager, numberOfAccounts);
   const vault = await serializeVault(manager);
   const connections = createConnections(
-    accounts.map((account) => account.address)
+    accounts.map((account) => account.address),
   );
 
   await page.evaluate(
@@ -162,7 +166,7 @@ export async function mockData(
       Array<Connection>,
       Array<Asset>,
       SerializedVault,
-      string
+      string,
     ]) => {
       return new Promise((resolve, reject) => {
         (async function main() {
@@ -187,7 +191,7 @@ export async function mockData(
         })();
       });
     },
-    [accounts, networks, connections, [ALT_ASSET], vault, WALLET_PASSWORD]
+    [accounts, networks, connections, [ALT_ASSET], vault, WALLET_PASSWORD],
   );
   await reload(page);
 

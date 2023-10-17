@@ -1,5 +1,15 @@
 # @fuel-wallet/types
 
+## 0.13.2
+
+## 0.13.1
+
+### Patch Changes
+
+- [#887](https://github.com/FuelLabs/fuels-wallet/pull/887) [`09fa482`](https://github.com/FuelLabs/fuels-wallet/commit/09fa4824384d5fdd33df3a762462bab228fa13b5) Thanks [@dmihal](https://github.com/dmihal)! - fix: remove unlisted dependency
+
+- [#894](https://github.com/FuelLabs/fuels-wallet/pull/894) [`91d71f5`](https://github.com/FuelLabs/fuels-wallet/commit/91d71f581514f93bc5c5dc19425e5654f1dc7450) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: add decimal size for custom assets
+
 ## 0.13.0
 
 ### Minor Changes

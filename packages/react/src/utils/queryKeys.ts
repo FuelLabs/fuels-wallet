@@ -9,6 +9,7 @@ export const QUERY_KEYS = {
   transactionReceipts: 'transactionReceipts',
   nodeInfo: 'nodeInfo',
   connectorList: 'connectorList',
+  currentConnector: 'currentConnector',
 };
 
 export const MUTATION_KEYS = {

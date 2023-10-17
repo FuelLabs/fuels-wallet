@@ -122,37 +122,46 @@ export class AssetService {
     const invalidAssetId = trimmedAssets.find((a) => !isB256(a.assetId));
     if (invalidAssetId) {
       throw new Error(
-        'Asset with invalid assetId. Asset IDs can only be B256 addresses.'
+        'Asset with invalid assetId. Asset IDs can only be B256 addresses.',
       );
     }
 
     // validate input doesnt repeat assets, by id, name or symbol
     const uniqueAssetsById = trimmedAssets.filter(
       (a, index) =>
-        index === trimmedAssets.findIndex((obj) => obj.assetId === a.assetId)
+        index === trimmedAssets.findIndex((obj) => obj.assetId === a.assetId),
     );
     if (trimmedAssets.length !== uniqueAssetsById.length) {
       throw new Error('Asset with same assetId being added multiple times');
     }
     const uniqueAssetsByName = trimmedAssets.filter(
       (a, index) =>
-        index === trimmedAssets.findIndex((obj) => obj.name === a.name)
+        index === trimmedAssets.findIndex((obj) => obj.name === a.name),
     );
     if (trimmedAssets.length !== uniqueAssetsByName.length) {
       throw new Error('Asset with same name being added multiple times');
     }
     const uniqueAssetsBySymbol = trimmedAssets.filter(
       (a, index) =>
-        index === trimmedAssets.findIndex((obj) => obj.symbol === a.symbol)
+        index === trimmedAssets.findIndex((obj) => obj.symbol === a.symbol),
     );
     if (trimmedAssets.length !== uniqueAssetsBySymbol.length) {
       throw new Error('Asset with same symbol being added multiple times');
     }
+    trimmedAssets.forEach((obj) => {
+      if (
+        !Number.isInteger(obj.decimals) ||
+        Number(obj.decimals) > 19 ||
+        Number(obj.decimals) < 0
+      ) {
+        throw new Error(`Asset ${obj.assetId} decimals is not valid`);
+      }
+    });
 
     // validate if all assets from input are already added
     const uniqueAssetsIds = uniqueAssetsById.map((a) => a.assetId);
     const repeatedAssets = await AssetService.getAssetsByFilter(
-      (a) => uniqueAssetsIds.indexOf(a.assetId) !== -1
+      (a) => uniqueAssetsIds.indexOf(a.assetId) !== -1,
     );
     if (repeatedAssets.length === uniqueAssetsById.length) {
       throw new Error('Assets already exist in wallet settings');
@@ -160,7 +169,8 @@ export class AssetService {
 
     // get only not repeated assets
     const assetsToAdd = trimmedAssets.filter(
-      (a) => repeatedAssets.findIndex((obj) => obj.assetId === a.assetId) === -1
+      (a) =>
+        repeatedAssets.findIndex((obj) => obj.assetId === a.assetId) === -1,
     );
 
     return { assetsToAdd };
@@ -170,21 +180,24 @@ export class AssetService {
     const allAssets = await AssetService.getAssets();
     const allNameValues = allAssets.map((a) => a.name);
     const allSymbolValues = allAssets.map((a) => a.symbol);
-    const assetsNotRepeated = assets.reduce(async (prev, asset) => {
-      const assets = await prev;
-      const allNewAssetNames = assets.map((a) => a.name);
-      const allNewAssetSymbols = assets.map((a) => a.symbol);
-      const name = getUniqueString({
-        desired: asset.name,
-        allValues: [...allNameValues, ...allNewAssetNames],
-      });
-      const symbol = getUniqueString({
-        desired: asset.symbol,
-        allValues: [...allSymbolValues, ...allNewAssetSymbols],
-      });
+    const assetsNotRepeated = assets.reduce(
+      async (prev, asset) => {
+        const assets = await prev;
+        const allNewAssetNames = assets.map((a) => a.name);
+        const allNewAssetSymbols = assets.map((a) => a.symbol);
+        const name = getUniqueString({
+          desired: asset.name,
+          allValues: [...allNameValues, ...allNewAssetNames],
+        });
+        const symbol = getUniqueString({
+          desired: asset.symbol,
+          allValues: [...allSymbolValues, ...allNewAssetSymbols],
+        });
 
-      return [...assets, { ...asset, name, symbol, isCustom: true }];
-    }, Promise.resolve([] as Asset[]));
+        return [...assets, { ...asset, name, symbol, isCustom: true }];
+      },
+      Promise.resolve([] as Asset[]),
+    );
 
     return assetsNotRepeated;
   }

@@ -40,7 +40,7 @@ export function useTxResult({
   const isTxNotFound = useSelector(service, selectors.isTxNotFound);
   const isTxReceiptsNotFound = useSelector(
     service,
-    selectors.isTxReceiptsNotFound
+    selectors.isTxReceiptsNotFound,
   );
 
   const { error, txResult } = context;
