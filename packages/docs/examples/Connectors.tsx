@@ -31,7 +31,7 @@ export function Connectors() {
     if (!fuel) return () => {};
     if (!fuel.listConnectors) {
       setCompatibilityError(
-        "Current version of Fuel Wallet doesn't support Connectors!",
+        "Current version of Fuel Wallet doesn't support Connectors!"
       );
       return () => {};
     }
@@ -67,7 +67,7 @@ export function Connectors() {
       await fuel.disconnect();
       setConnected(false);
       console.log('Disconnection response');
-    },
+    }
   );
 
   const [handleSelectConnector, isSelecting, errorConnector] = useLoading(
@@ -76,7 +76,7 @@ export function Connectors() {
       console.log(`Select connector "${connectorName}"!`);
       await fuel.selectConnector(connectorName);
       console.log(`Connector "${connectorName}" connected`);
-    },
+    }
     /* selectConnector:end */
   );
 
