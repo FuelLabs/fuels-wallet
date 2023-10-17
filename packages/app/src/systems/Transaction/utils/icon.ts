@@ -14,7 +14,7 @@ const ICON_MAP = {
 
 export const getTxIcon = (
   operation?: Operation,
-  address?: Bech32Address,
+  address?: Bech32Address
 ): Icons => {
   const type = operation?.name;
   const label = operation ? getLabel(operation, address) : 'Unknown';

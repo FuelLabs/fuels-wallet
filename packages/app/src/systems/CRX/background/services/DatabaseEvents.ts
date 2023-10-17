@@ -56,7 +56,7 @@ export class DatabaseEvents {
               },
             ],
           },
-        ]),
+        ])
       );
     });
 
@@ -69,10 +69,10 @@ export class DatabaseEvents {
       const getOriginsForConnections = (connections: Array<Connection>) =>
         connections.map((c) => c.origin);
       const addressConnectedOrigins = getOriginsForConnections(
-        connections.filter((c) => c.accounts.includes(currentAccount.address)),
+        connections.filter((c) => c.accounts.includes(currentAccount.address))
       );
       const addressNotConnectedOrigins = getOriginsForConnections(
-        connections.filter((c) => !addressConnectedOrigins.includes(c.origin)),
+        connections.filter((c) => !addressConnectedOrigins.includes(c.origin))
       );
       const hasUnconnectedOrigins =
         addressNotConnectedOrigins.length !== addressConnectedOrigins.length;
@@ -86,7 +86,7 @@ export class DatabaseEvents {
             event: 'currentAccount',
             params: [updateEvent.obj.address],
           },
-        ]),
+        ])
       );
       // Nofity all connections that the current account is not connected
       // by sending a null value
@@ -98,14 +98,14 @@ export class DatabaseEvents {
               event: 'currentAccount',
               params: [null],
             },
-          ]),
+          ])
         );
       }
     });
 
     this.databaseObservable.on(
       'assets:update',
-      (updateEvent) => updateEvent.obj.isCustom && this.broadcastAssets(),
+      (updateEvent) => updateEvent.obj.isCustom && this.broadcastAssets()
     );
     this.databaseObservable.on('assets:delete', () => this.broadcastAssets());
     this.databaseObservable.on('assets:create', () => this.broadcastAssets());
@@ -120,7 +120,7 @@ export class DatabaseEvents {
             event: 'connection',
             params: [false],
           },
-        ]),
+        ])
       );
     });
   }
@@ -137,7 +137,7 @@ export class DatabaseEvents {
           event: 'assets',
           params: [assets],
         },
-      ]),
+      ])
     );
   }
 }

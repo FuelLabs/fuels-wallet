@@ -70,23 +70,23 @@ export function useAccounts() {
   const overlay = useOverlay();
   const balanceAssets = store.useSelector(
     Services.accounts,
-    selectors.balanceAssets(assets),
+    selectors.balanceAssets(assets)
   );
   const shownAccounts = store.useSelector(
     Services.accounts,
-    selectors.shownAccounts,
+    selectors.shownAccounts
   );
   const hiddenAccounts = store.useSelector(
     Services.accounts,
-    selectors.shownAccounts,
+    selectors.shownAccounts
   );
   const hasHiddenAccounts = store.useSelector(
     Services.accounts,
-    selectors.hasHiddenAccounts,
+    selectors.hasHiddenAccounts
   );
   const canHideAccounts = store.useSelector(
     Services.accounts,
-    selectors.canHideAccounts,
+    selectors.canHideAccounts
   );
 
   function closeDialog() {

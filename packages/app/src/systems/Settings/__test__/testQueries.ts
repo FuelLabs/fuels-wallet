@@ -12,10 +12,7 @@ export async function waitShowingConnections(...conns: Connection[]) {
 
 export async function testRemovingConnection(
   conn: Connection,
-  deleteFn: jest.SpyInstance = jest.spyOn(
-    ConnectionService,
-    'removeConnection',
-  ),
+  deleteFn: jest.SpyInstance = jest.spyOn(ConnectionService, 'removeConnection')
 ) {
   expect(await screen.findByText(/Disconnecting App/i)).toBeInTheDocument();
   const confirm = screen.getByLabelText('Confirm delete');

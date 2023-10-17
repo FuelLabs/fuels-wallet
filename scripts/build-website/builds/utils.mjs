@@ -39,11 +39,11 @@ export function setEnv() {
   console.log('NEXT_PUBLIC_APP_URL', process.env.NEXT_PUBLIC_APP_URL);
   console.log(
     'NEXT_PUBLIC_WALLET_DOWNLOAD_URL',
-    process.env.NEXT_PUBLIC_WALLET_DOWNLOAD_URL,
+    process.env.NEXT_PUBLIC_WALLET_DOWNLOAD_URL
   );
   console.log(
     'NEXT_PUBLIC_STORYBOOK_URL',
-    process.env.NEXT_PUBLIC_STORYBOOK_URL,
+    process.env.NEXT_PUBLIC_STORYBOOK_URL
   );
 }
 

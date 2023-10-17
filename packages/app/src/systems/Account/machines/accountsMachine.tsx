@@ -280,7 +280,7 @@ export const accountsMachine = createMachine(
         return Boolean((ev.data || ctx?.accounts || []).length);
       },
     },
-  },
+  }
 );
 
 export type AccountsMachine = typeof accountsMachine;

@@ -36,7 +36,7 @@ describe('TxHeader', () => {
     expect(screen.getByText(/Submitted/i)).toBeInTheDocument();
     expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
       'data-status',
-      TransactionStatus.submitted,
+      TransactionStatus.submitted
     );
   });
 
@@ -45,13 +45,13 @@ describe('TxHeader', () => {
       <TxHeader
         {...MOCK_TRANSACTION_CREATE}
         status={TransactionStatus.success}
-      />,
+      />
     );
 
     expect(screen.getByText(/Success/i)).toBeInTheDocument();
     expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
       'data-status',
-      TransactionStatus.success,
+      TransactionStatus.success
     );
   });
 
@@ -60,13 +60,13 @@ describe('TxHeader', () => {
       <TxHeader
         {...MOCK_TRANSACTION_CREATE}
         status={TransactionStatus.failure}
-      />,
+      />
     );
 
     expect(screen.getByText(/Failure/i)).toBeInTheDocument();
     expect(screen.getByLabelText('Status Circle')).toHaveAttribute(
       'data-status',
-      TransactionStatus.failure,
+      TransactionStatus.failure
     );
   });
 
@@ -75,7 +75,7 @@ describe('TxHeader', () => {
       <TxHeader
         {...MOCK_TRANSACTION_CREATE}
         providerUrl={process.env.VITE_FUEL_PROVIDER_URL}
-      />,
+      />
     );
 
     const btn = await screen.findByLabelText(/Copy Transaction Link/i);
@@ -86,8 +86,8 @@ describe('TxHeader', () => {
       `${BLOCK_EXPLORER_URL}transaction/${
         MOCK_TRANSACTION_CREATE.id
       }?providerUrl=${encodeURIComponent(
-        process.env.VITE_FUEL_PROVIDER_URL || '',
-      )}`,
+        process.env.VITE_FUEL_PROVIDER_URL || ''
+      )}`
     );
   });
 
@@ -96,7 +96,7 @@ describe('TxHeader', () => {
       <TxHeader
         {...MOCK_TRANSACTION_CREATE}
         providerUrl={process.env.VITE_FUEL_PROVIDER_URL}
-      />,
+      />
     );
 
     const btn = await screen.findByLabelText(/Copy Transaction ID/i);
@@ -104,7 +104,7 @@ describe('TxHeader', () => {
 
     await act(() => fireEvent.click(btn));
     expect(await navigator.clipboard.readText()).toBe(
-      MOCK_TRANSACTION_CREATE.id,
+      MOCK_TRANSACTION_CREATE.id
     );
   });
 });

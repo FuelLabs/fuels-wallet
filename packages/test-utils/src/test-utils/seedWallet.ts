@@ -10,7 +10,7 @@ export async function seedWallet(
   amount: BN,
   fuelProviderUrl: string,
   genesisSecret: string,
-  options: SeedWalletOptions = {},
+  options: SeedWalletOptions = {}
 ) {
   const fuelProvider = await Provider.create(fuelProviderUrl);
   const genesisWallet = Wallet.fromPrivateKey(genesisSecret!, fuelProvider);
@@ -18,7 +18,7 @@ export async function seedWallet(
     Address.fromString(address),
     amount,
     BaseAssetId,
-    { gasPrice: 1, ...options },
+    { gasPrice: 1, ...options }
   );
   await response.wait();
 }

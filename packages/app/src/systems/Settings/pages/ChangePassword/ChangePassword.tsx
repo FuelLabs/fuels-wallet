@@ -63,7 +63,7 @@ export function ChangePassword() {
     debounce(() => {
       trigger('confirmPassword');
     }, 500),
-    [],
+    []
   );
 
   useEffect(() => {

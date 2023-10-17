@@ -18,7 +18,7 @@ describe('TxIcon', () => {
       <TxIcon operation={MOCK_OPERATION_CONTRACT_CALL} />,
       {
         wrapper: TestWrapper,
-      },
+      }
     );
   });
 

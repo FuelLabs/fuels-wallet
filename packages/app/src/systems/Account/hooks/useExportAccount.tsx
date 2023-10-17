@@ -17,7 +17,7 @@ export function useExportAccount() {
   const [, , service] = useMachine(
     exportAccountMachine.withContext({
       address,
-    }),
+    })
   );
 
   const isLoading = useSelector(service, selectors.isLoading);

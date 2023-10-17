@@ -45,7 +45,7 @@ test.describe('SendTransaction', () => {
 
     // Fill address
     await getInputByName(page, 'address').type(
-      receiverWallet.address.toString(),
+      receiverWallet.address.toString()
     );
 
     // Fill amount
@@ -103,7 +103,7 @@ test.describe('SendTransaction', () => {
 
     // Fill address
     await getInputByName(page, 'address').type(
-      receiverWallet.address.toString(),
+      receiverWallet.address.toString()
     );
 
     // Fill amount
@@ -137,7 +137,7 @@ test.describe('SendTransaction', () => {
 
     // Fill address
     await getInputByName(page, 'address').type(
-      receiverWallet.address.toString(),
+      receiverWallet.address.toString()
     );
 
     // Fill amount

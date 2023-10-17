@@ -258,7 +258,7 @@ export const networksMachine = createMachine(
         },
       }),
     },
-  },
+  }
 );
 
 export type NetworksMachine = typeof networksMachine;

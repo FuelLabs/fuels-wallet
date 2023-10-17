@@ -24,7 +24,7 @@ export class BaseConnection extends EventEmitter {
     this.setMaxListeners(MAX_EVENT_LISTENERS);
     this.client = new JSONRPCClient(
       this.sendRequest.bind(this),
-      this.createRequestId,
+      this.createRequestId
     );
     this.server = new JSONRPCServer();
   }
@@ -49,7 +49,7 @@ export class BaseConnection extends EventEmitter {
 
   sendResponse(
     response: JSONRPCResponse | null,
-    message: RequestMessage,
+    message: RequestMessage
   ): void {
     throw new Error('Send response not implemented');
   }

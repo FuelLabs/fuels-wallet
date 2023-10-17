@@ -37,7 +37,7 @@ export type FuelConnectContextType = {
 };
 
 export const FuelConnectContext = createContext<FuelConnectContextType | null>(
-  null,
+  null
 );
 
 export const useConnector = () => {
@@ -94,7 +94,7 @@ export function FuelConnectorProvider({
         setConnector(connector);
       }
     },
-    [fuel],
+    [fuel]
   );
 
   return (

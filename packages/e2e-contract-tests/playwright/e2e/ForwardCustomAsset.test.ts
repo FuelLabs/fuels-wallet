@@ -31,7 +31,7 @@ test.describe('Forward Custom Asset', () => {
     // Mint custom asset to wallet
     const contract = CustomAssetAbi__factory.connect(
       VITE_CONTRACT_ID!,
-      fuelWallet,
+      fuelWallet
     );
     const recipient: IdentityInput = {
       Address: {
@@ -52,7 +52,7 @@ test.describe('Forward Custom Asset', () => {
 
     const forwardCustomAssetButton = getButtonByText(
       page,
-      'Forward Custom Asset',
+      'Forward Custom Asset'
     );
     await forwardCustomAssetButton.click();
 

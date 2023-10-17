@@ -505,18 +505,18 @@ export class CustomAssetAbi__factory {
   }
   static connect(
     id: string | AbstractAddress,
-    accountOrProvider: Account | Provider,
+    accountOrProvider: Account | Provider
   ): CustomAssetAbi {
     return new Contract(
       id,
       _abi,
-      accountOrProvider,
+      accountOrProvider
     ) as unknown as CustomAssetAbi;
   }
   static async deployContract(
     bytecode: BytesLike,
     wallet: Account,
-    options: DeployContractOptions = {},
+    options: DeployContractOptions = {}
   ): Promise<CustomAssetAbi> {
     const factory = new ContractFactory(bytecode, _abi, wallet);
     const contract = await factory.deployContract(options);

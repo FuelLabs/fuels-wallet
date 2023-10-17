@@ -6,7 +6,7 @@ import EventEmitter from 'events';
 import { db } from '~/systems/Core/utils/database';
 
 export class DatabaseObservable<
-  TableNames extends Array<string>,
+  TableNames extends Array<string>
 > extends EventEmitter {
   constructor() {
     super();
@@ -36,7 +36,7 @@ export class DatabaseObservable<
 
   on<T extends DatabaseObservableEvent<TableNames>>(
     eventName: T,
-    listener: (event: DatabaseEventArg<T>) => void,
+    listener: (event: DatabaseEventArg<T>) => void
   ): this {
     return super.on(eventName, listener);
   }
