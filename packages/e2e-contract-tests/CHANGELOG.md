@@ -1,5 +1,14 @@
 # @fuel-wallet/e2e-contract-tests
 
+## 0.13.3
+
+### Patch Changes
+
+- Updated dependencies [[`7ef4fac`](https://github.com/FuelLabs/fuels-wallet/commit/7ef4facf3e61c409ad5e7b794700f90c62cbf865)]:
+  - @fuel-wallet/react@0.13.3
+  - @fuel-wallet/sdk@0.13.3
+  - @fuel-wallet/types@0.13.3
+
 ## 0.13.2
 
 ### Patch Changes
