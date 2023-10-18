@@ -113,7 +113,7 @@ export async function addAssetById(
     throw new Error('Wallet Page could not be found');
   }
 
-  const menuButton = getByAriaLabel(walletPage, 'Menu');
+  const menuButton = getByAriaLabel(walletPage, 'Menu', true);
   await menuButton.click();
 
   const settingsButton = walletPage.getByRole('menuitem').getByText('Settings');
