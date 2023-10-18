@@ -1,7 +1,7 @@
 {
   "name": "@fuel-wallet/react",
   "description": "Interact with the Fuel Wallet Extension in React.",
-  "version": "0.13.2",
+  "version": "0.13.3",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
