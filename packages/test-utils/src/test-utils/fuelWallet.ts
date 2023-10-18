@@ -96,6 +96,51 @@ export async function walletApprove(context: BrowserContext) {
   await approveButton.click();
 }
 
+export async function addAssetById(
+  context: BrowserContext,
+  assetId: string,
+  name: string,
+  symbol: string,
+  decimals: number,
+  imageUrl?: string,
+) {
+  const walletPage = context.pages().find((page) => {
+    const url = page.url();
+    return url.includes('/popup.html#/wallet');
+  });
+
+  if (!walletPage) {
+    throw new Error('Wallet Page could not be found');
+  }
+
+  const menuButton = getByAriaLabel(walletPage, 'Menu');
+  await menuButton.click();
+
+  const settingsButton = walletPage.getByRole('menuitem').getByText('Settings');
+  await settingsButton.click();
+
+  const assetsButton = walletPage.getByRole('menuitem').getByText('Assets');
+  await assetsButton.click();
+
+  const addAssetButton = getByAriaLabel(walletPage, 'Add Asset');
+  await addAssetButton.click();
+
+  const assetIdInput = getByAriaLabel(walletPage, 'Asset ID');
+  await assetIdInput.fill(assetId);
+
+  const assetNameInput = walletPage.getByLabel('Asset name');
+  await assetNameInput.fill(name);
+  const assetSymbolInput = walletPage.getByLabel('Asset symbol');
+  await assetSymbolInput.fill(symbol);
+  const assetDecimalsInput = walletPage.getByLabel('Asset decimals');
+  await assetDecimalsInput.fill(decimals.toString());
+  const assetImageUrlInput = walletPage.getByLabel('Asset image Url');
+  await assetImageUrlInput.fill(imageUrl || '');
+
+  const saveButton = getButtonByText(walletPage, 'Save');
+  await saveButton.click();
+}
+
 export async function addAsset(
   context: BrowserContext,
   assetId: string,
