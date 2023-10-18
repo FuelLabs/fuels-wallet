@@ -122,7 +122,7 @@ export function CreatePassword({
                   placeholder="Confirm your password"
                   aria-label="Confirm Password"
                   onPaste={
-                    IS_DEVELOPMENT ? (e) => e.preventDefault() : undefined
+                    IS_DEVELOPMENT ? undefined : (e) => e.preventDefault()
                   }
                   onChange={(e) => {
                     field.onChange(e);
