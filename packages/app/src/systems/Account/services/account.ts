@@ -196,7 +196,6 @@ export class AccountService {
 // ----------------------------------------------------------------------------
 // Private methods
 // ----------------------------------------------------------------------------
-
 async function getBalances(providerUrl: string, publicKey: string = '0x00') {
   const provider = await Provider.create(providerUrl!);
   const address = Address.fromPublicKey(publicKey);
