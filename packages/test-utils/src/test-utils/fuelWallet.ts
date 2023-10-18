@@ -96,7 +96,7 @@ export async function walletApprove(context: BrowserContext) {
   await approveButton.click();
 }
 
-export async function addAssetById(
+export async function addAssetThroughSettings(
   context: BrowserContext,
   assetId: string,
   name: string,
@@ -141,7 +141,7 @@ export async function addAssetById(
   await saveButton.click();
 }
 
-export async function addAsset(
+export async function addAssetFromHomeBalance(
   context: BrowserContext,
   assetId: string,
   name: string,

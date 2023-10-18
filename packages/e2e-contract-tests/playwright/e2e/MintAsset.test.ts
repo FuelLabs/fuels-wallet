@@ -4,7 +4,7 @@ import {
   getWalletPage,
   hasText,
   walletConnect,
-  addAssetById,
+  addAssetThroughSettings,
 } from '@fuel-wallet/test-utils';
 
 import { shortAddress, calculateAssetId } from '../../src/utils';
@@ -56,7 +56,13 @@ test.describe('Mint Assets', () => {
     const decimals = '6';
     const assetId = calculateAssetId(process.env.VITE_CONTRACT_ID!, subId);
 
-    await addAssetById(context, assetId, name, symbol, Number(decimals));
+    await addAssetThroughSettings(
+      context,
+      assetId,
+      name,
+      symbol,
+      Number(decimals),
+    );
 
     const mintAmount = '1.2345';
     const mintAmountInput = page.getByLabel('Asset config amount');
