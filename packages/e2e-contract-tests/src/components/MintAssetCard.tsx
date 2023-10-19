@@ -1,5 +1,5 @@
 import { useAccount, useWallet } from '@fuel-wallet/react';
-import { bn } from 'fuels';
+import { BaseAssetId, bn } from 'fuels';
 import { useState } from 'react';
 
 import { mint } from '../contract_interactions';
@@ -25,6 +25,7 @@ export const MintAssetCard = () => {
               await mint({
                 wallet: wallet.wallet,
                 amount: bn.parseUnits(amount),
+                subId: BaseAssetId,
               });
             }
           }}

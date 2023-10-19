@@ -9,6 +9,7 @@ import {
   ForwardHalfAndExternalMintCard,
   ForwardHalfCustomAssetCard,
   DepositAndMintMultiCalls,
+  AssetConfigurationCard,
 } from './components';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <ForwardHalfCustomAssetCard />
         <ForwardHalfAndMintCard />
         <DepositAndMintMultiCalls />
+        <AssetConfigurationCard />
       </div>
     </Providers>
   );

@@ -1,7 +1,11 @@
 import type { Page } from '@playwright/test';
 
-export function getByAriaLabel(page: Page, selector: string) {
-  return page.locator(`[aria-label*="${selector}"]`);
+export function getByAriaLabel(
+  page: Page,
+  selector: string,
+  exact: boolean = false,
+) {
+  return page.getByLabel(selector, { exact });
 }
 
 export async function waitAriaLabel(page: Page, selector: string) {
