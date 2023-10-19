@@ -27,7 +27,7 @@
   "peerDependencies": {
     "@fuel-ui/css": "0.21.1",
     "@fuel-ui/react": "0.21.1",
-    "fuels": ">=0.58.0"
+    "fuels": ">=0.63.0"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.36.1",
@@ -38,6 +38,6 @@
   "devDependencies": {
     "@types/chrome": "^0.0.246",
     "tsup": "^7.2.0",
-    "fuels": "0.58.0"
+    "fuels": "0.63.0"
   }
 }
