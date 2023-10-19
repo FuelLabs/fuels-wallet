@@ -33,3 +33,9 @@ export const META_OGIMG = `${NEXT_PUBLIC_URL}${ogImage.src}`;
 export const INSTALL_LINK = process.env.NEXT_PUBLIC_WALLET_INSTALL;
 
 export const IS_PUBLIC_PREVIEW = process.env.NEXT_PUBLIC_PREVIEW === 'true';
+
+// If preview link them download from the path otherwise download from the main
+// branch version of the documentation.
+export const DOWNLOAD_LINK = `${
+  IS_PUBLIC_PREVIEW ? '' : 'https://next-wallet.fuel.network'
+}/app/fuel-wallet-${process.env.NEXT_PUBLIC_APP_VERSION}.zip`;
