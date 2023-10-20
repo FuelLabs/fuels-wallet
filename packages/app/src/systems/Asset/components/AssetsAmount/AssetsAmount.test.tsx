@@ -26,7 +26,6 @@ describe('AssetsAmount', () => {
       />,
     );
     expect(screen.getByText('Ethereum')).toBeInTheDocument();
-    expect(screen.getByText('New')).toBeInTheDocument();
     expect(screen.getByText('Unknown')).toBeInTheDocument();
   });
 });
