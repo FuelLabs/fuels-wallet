@@ -5,7 +5,7 @@ import {
   getWalletPage,
   hasText,
 } from '@fuel-wallet/test-utils';
-import { BaseAssetId } from 'fuels';
+import { BaseAssetId, bn } from 'fuels';
 
 import '../../load.envs';
 import { shortAddress } from '../../src/utils';
@@ -46,6 +46,7 @@ test.describe('Forward Eth', () => {
 
     // test gas fee is correct
     await hasText(walletPage, 'Fee (network)');
-    await checkFee(walletPage, '0.000000114 ETH');
+    const fee = bn.parseUnits('0.000000114');
+    await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
   });
 });

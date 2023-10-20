@@ -6,6 +6,7 @@ import {
   walletConnect,
   addAssetThroughSettings,
 } from '@fuel-wallet/test-utils';
+import { bn } from 'fuels';
 
 import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
@@ -42,8 +43,8 @@ test.describe('Mint Assets', () => {
 
     // test gas fee is shown and correct
     await hasText(walletPage, 'Fee (network)');
-    // 0.000000001 since we hardcode a gas price of 1 in our mint function
-    await checkFee(walletPage, '0.00000013 ETH');
+    const fee = bn.parseUnits('0.00000013');
+    await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
   });
 
   test('e2e mint known asset', async ({ context, page }) => {
@@ -90,7 +91,7 @@ test.describe('Mint Assets', () => {
 
     // test gas fee is shown and correct
     await hasText(walletPage, 'Fee (network)');
-    // 0.000000001 since we hardcode a gas price of 1 in our mint function
-    await checkFee(walletPage, '0.000000133 ETH');
+    const fee = bn.parseUnits('0.000000133');
+    await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
   });
 });

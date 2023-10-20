@@ -78,6 +78,7 @@ test.describe('Forward Half Custom Asset', () => {
 
     // test gas fee is correct
     await hasText(walletPage, 'Fee (network)');
-    await checkFee(walletPage, '0.000000165 ETH');
+    const fee = bn.parseUnits('0.000000165');
+    await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
   });
 });

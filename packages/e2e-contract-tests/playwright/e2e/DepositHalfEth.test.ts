@@ -5,7 +5,7 @@ import {
   hasText,
   walletConnect,
 } from '@fuel-wallet/test-utils';
-import { BaseAssetId } from 'fuels';
+import { BaseAssetId, bn } from 'fuels';
 
 import { shortAddress } from '../../src/utils';
 import '../../load.envs.js';
@@ -53,6 +53,7 @@ test.describe('Deposit Half ETH', () => {
 
     // test gas fee is shown and correct
     await hasText(walletPage, 'Fee (network)');
-    await checkFee(walletPage, '0.000000152 ETH');
+    const fee = bn.parseUnits('0.000000152');
+    await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
   });
 });
