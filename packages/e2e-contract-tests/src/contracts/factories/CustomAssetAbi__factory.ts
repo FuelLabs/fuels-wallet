@@ -4,9 +4,9 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.58.0
+  Fuels version: 0.63.0
   Forc version: 0.44.0
-  Fuel-Core version: 0.20.4
+  Fuel-Core version: 0.20.7
 */
 
 import { Interface, Contract, ContractFactory } from 'fuels';
@@ -16,6 +16,7 @@ import type {
   AbstractAddress,
   BytesLike,
   DeployContractOptions,
+  StorageSlot,
 } from 'fuels';
 import type {
   CustomAssetAbi,
@@ -399,12 +400,12 @@ const _abi = {
       },
       attributes: [
         {
-          name: 'storage',
-          arguments: ['read', 'write'],
-        },
-        {
           name: 'payable',
           arguments: [],
+        },
+        {
+          name: 'storage',
+          arguments: ['read', 'write'],
         },
       ],
     },
@@ -434,12 +435,12 @@ const _abi = {
       },
       attributes: [
         {
-          name: 'payable',
-          arguments: [],
-        },
-        {
           name: 'storage',
           arguments: ['read', 'write'],
+        },
+        {
+          name: 'payable',
+          arguments: [],
         },
       ],
     },
@@ -474,12 +475,12 @@ const _abi = {
       },
       attributes: [
         {
-          name: 'payable',
-          arguments: [],
-        },
-        {
           name: 'storage',
           arguments: ['read', 'write'],
+        },
+        {
+          name: 'payable',
+          arguments: [],
         },
       ],
     },
@@ -498,11 +499,22 @@ const _abi = {
   configurables: [],
 };
 
+const _storageSlots: StorageSlot[] = [
+  {
+    key: 'f383b0ce51358be57daa3b725fe44acdb2d880604e367199080b4379c41bb6ed',
+    value: '0000000000000000000000000000000000000000000000000000000000000000',
+  },
+];
+
 export class CustomAssetAbi__factory {
   static readonly abi = _abi;
+
+  static readonly storageSlots = _storageSlots;
+
   static createInterface(): CustomAssetAbiInterface {
     return new Interface(_abi) as unknown as CustomAssetAbiInterface;
   }
+
   static connect(
     id: string | AbstractAddress,
     accountOrProvider: Account | Provider,
@@ -513,13 +525,21 @@ export class CustomAssetAbi__factory {
       accountOrProvider,
     ) as unknown as CustomAssetAbi;
   }
+
   static async deployContract(
     bytecode: BytesLike,
     wallet: Account,
     options: DeployContractOptions = {},
   ): Promise<CustomAssetAbi> {
     const factory = new ContractFactory(bytecode, _abi, wallet);
-    const contract = await factory.deployContract(options);
+
+    const { storageSlots } = CustomAssetAbi__factory;
+
+    const contract = await factory.deployContract({
+      storageSlots,
+      ...options,
+    });
+
     return contract as unknown as CustomAssetAbi;
   }
 }
