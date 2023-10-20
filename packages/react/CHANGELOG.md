@@ -1,5 +1,14 @@
 # @fuel-wallet/react
 
+## 0.13.4
+
+### Patch Changes
+
+- [#923](https://github.com/FuelLabs/fuels-wallet/pull/923) [`f683bae`](https://github.com/FuelLabs/fuels-wallet/commit/f683baeb6efbcc75561ac53c9c0d9d05f3bbae29) Thanks [@matt-user](https://github.com/matt-user)! - chore: bump fuels version
+
+- Updated dependencies [[`f683bae`](https://github.com/FuelLabs/fuels-wallet/commit/f683baeb6efbcc75561ac53c9c0d9d05f3bbae29)]:
+  - @fuel-wallet/sdk@0.13.4
+
 ## 0.13.3
 
 ### Patch Changes
