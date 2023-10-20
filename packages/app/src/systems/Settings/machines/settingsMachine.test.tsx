@@ -18,7 +18,7 @@ describe('settingsMachine', () => {
         services: {
           changePassword: () => Promise.resolve(),
         },
-      }),
+      })
     ).start();
   });
 

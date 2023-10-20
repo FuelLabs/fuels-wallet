@@ -109,7 +109,7 @@ export const unlockMachine = createMachine(
           data: {
             input: (
               _: UnlockMachineContext,
-              ev: Extract<UnlockMachineEvents, { type: 'UNLOCK_WALLET' }>,
+              ev: Extract<UnlockMachineEvents, { type: 'UNLOCK_WALLET' }>
             ) => ev.input,
           },
           onDone: [
@@ -175,7 +175,7 @@ export const unlockMachine = createMachine(
         },
       }),
     },
-  },
+  }
 );
 
 export type UnlockMachine = typeof unlockMachine;

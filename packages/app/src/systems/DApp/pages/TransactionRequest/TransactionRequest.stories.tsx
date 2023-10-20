@@ -18,7 +18,7 @@ async function loader() {
   const transactionRequest = await getMockedTransaction(
     account?.publicKey || '',
     wallet.publicKey,
-    network?.url!,
+    network?.url!
   );
 
   return { transactionRequest, network, password };

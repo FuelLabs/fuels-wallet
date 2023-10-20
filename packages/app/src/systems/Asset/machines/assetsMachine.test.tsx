@@ -38,7 +38,7 @@ describe('assetsMachine', () => {
     state = await expectStateMatch(service, 'adding');
     state = await expectStateMatch(service, 'idle');
     const addedAsset = state.context.assets?.find(
-      (asset) => asset.assetId === MOCK_CUSTOM_ASSET.assetId,
+      (asset) => asset.assetId === MOCK_CUSTOM_ASSET.assetId
     );
     expect(addedAsset).toBeDefined();
 
@@ -52,7 +52,7 @@ describe('assetsMachine', () => {
     state = await expectStateMatch(service, 'updating');
     state = await expectStateMatch(service, 'idle');
     const updatedAsset = state.context.assets?.find(
-      (asset) => asset.assetId === MOCK_CUSTOM_ASSET.assetId,
+      (asset) => asset.assetId === MOCK_CUSTOM_ASSET.assetId
     );
     expect(updatedAsset?.name).toEqual(newName);
     service.send('REMOVE_ASSET', {
@@ -61,7 +61,7 @@ describe('assetsMachine', () => {
     state = await expectStateMatch(service, 'removing');
     state = await expectStateMatch(service, 'idle');
     const removedAsset = state.context.assets?.find(
-      (asset) => asset.assetId === MOCK_CUSTOM_ASSET.assetId,
+      (asset) => asset.assetId === MOCK_CUSTOM_ASSET.assetId
     );
     expect(removedAsset).toBeUndefined();
   });

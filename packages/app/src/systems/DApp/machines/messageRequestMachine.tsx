@@ -159,7 +159,7 @@ export const messageRequestMachine = createMachine(
         },
       }),
     },
-  },
+  }
 );
 
 export type MessageRequestMachine = typeof messageRequestMachine;

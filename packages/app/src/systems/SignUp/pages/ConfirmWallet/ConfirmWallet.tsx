@@ -7,7 +7,7 @@ import { useMnemonicForm } from '../../hooks/useMnemonicForm';
 export function ConfirmWallet() {
   const { handlers, context } = useSignUp();
   const { error, words, hasError, onChange, onFilled } = useMnemonicForm(
-    context.data?.mnemonic,
+    context.data?.mnemonic
   );
 
   return (

@@ -15,7 +15,7 @@ export const Header = () => {
         connect.mutate(
           IS_TEST
             ? FUEL_WALLET_CONNECTOR.connector
-            : FUEL_WALLET_DEVELOPMENT_CONNECTOR.connector,
+            : FUEL_WALLET_DEVELOPMENT_CONNECTOR.connector
         );
       }}
     >

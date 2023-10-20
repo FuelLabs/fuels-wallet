@@ -14,7 +14,7 @@ export const useIsConnected = () => {
     },
     {
       enabled: !!fuel,
-    },
+    }
   );
 
   return {

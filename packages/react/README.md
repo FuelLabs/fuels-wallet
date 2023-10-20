@@ -28,7 +28,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <FuelProvider>
       <App />
     </FuelProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );
 ```
 

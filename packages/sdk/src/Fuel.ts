@@ -21,7 +21,7 @@ export class Fuel extends FuelWalletConnection {
     createAddress: (address: string) => {
       // eslint-disable-next-line no-console
       console.warn(
-        'Do not use this method! It will be removed in the next release.',
+        'Do not use this method! It will be removed in the next release.'
       );
       return Address.fromString(address);
     },
@@ -55,7 +55,7 @@ export class Fuel extends FuelWalletConnection {
   }
 
   async getWallet(
-    address: string | AbstractAddress,
+    address: string | AbstractAddress
   ): Promise<FuelWalletLocked> {
     const provider = await this.getProvider();
     return new FuelWalletLocked(address, provider);
@@ -69,10 +69,10 @@ declare global {
   interface Document {
     addEventListener<K extends keyof FuelDocumentEvents>(
       type: K,
-      listener: (this: Document, ev: FuelDocumentEvents[K]) => void,
+      listener: (this: Document, ev: FuelDocumentEvents[K]) => void
     ): void;
     dispatchEvent<K extends keyof FuelDocumentEvents>(
-      ev: FuelDocumentEvents[K],
+      ev: FuelDocumentEvents[K]
     ): void;
   }
   interface Window {

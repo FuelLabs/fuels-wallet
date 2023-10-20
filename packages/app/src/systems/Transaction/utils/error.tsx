@@ -31,7 +31,7 @@ export type GroupedErrors = {
 // typeguard
 const isVmErrorTypeKey = <K extends string & keyof GroupedErrors>(
   properties: K[],
-  vmError: string,
+  vmError: string
 ): vmError is K => {
   return (properties as string[]).includes(vmError);
 };
@@ -81,7 +81,7 @@ export const getGroupedErrors = (rawErrors?: { message: string }[]) => {
         ],
       };
     },
-    {},
+    {}
   );
 
   return groupedErrors;
@@ -89,7 +89,7 @@ export const getGroupedErrors = (rawErrors?: { message: string }[]) => {
 
 export const getFilteredErrors = (
   groupedErrors?: GroupedErrors,
-  filterOutKeys?: Array<VmErrorType | string>,
+  filterOutKeys?: Array<VmErrorType | string>
 ) => {
   if (!groupedErrors) return undefined;
   if (!filterOutKeys) return groupedErrors;
@@ -105,7 +105,7 @@ export const getFilteredErrors = (
 
       return prevGroupedErrors;
     },
-    {},
+    {}
   );
 
   return Object.keys(filteredErrors).length > 0 ? filteredErrors : undefined;
