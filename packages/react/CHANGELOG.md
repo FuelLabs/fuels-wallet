@@ -1,5 +1,23 @@
 # @fuel-wallet/react
 
+## 0.13.4
+
+### Patch Changes
+
+- [#923](https://github.com/FuelLabs/fuels-wallet/pull/923) [`f683bae`](https://github.com/FuelLabs/fuels-wallet/commit/f683baeb6efbcc75561ac53c9c0d9d05f3bbae29) Thanks [@matt-user](https://github.com/matt-user)! - chore: bump fuels version
+
+- Updated dependencies [[`f683bae`](https://github.com/FuelLabs/fuels-wallet/commit/f683baeb6efbcc75561ac53c9c0d9d05f3bbae29)]:
+  - @fuel-wallet/sdk@0.13.4
+
+## 0.13.3
+
+### Patch Changes
+
+- [#917](https://github.com/FuelLabs/fuels-wallet/pull/917) [`7ef4fac`](https://github.com/FuelLabs/fuels-wallet/commit/7ef4facf3e61c409ad5e7b794700f90c62cbf865) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: load connectors on start up
+
+- Updated dependencies [[`7ef4fac`](https://github.com/FuelLabs/fuels-wallet/commit/7ef4facf3e61c409ad5e7b794700f90c62cbf865)]:
+  - @fuel-wallet/sdk@0.13.3
+
 ## 0.13.2
 
 ### Patch Changes

@@ -1,7 +1,7 @@
 {
   "name": "@fuel-wallet/test-utils",
   "private": true,
-  "version": "0.13.2",
+  "version": "0.13.4",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
@@ -25,7 +25,7 @@
     "ts:check": "pnpm tsc --noEmit"
   },
   "dependencies": {
-    "fuels": "0.58.0"
+    "fuels": "0.63.0"
   },
   "devDependencies": {
     "tsup": "^7.2.0"

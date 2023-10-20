@@ -19,8 +19,9 @@ export const testSetup = async ({
   page: Page;
   extensionId: string;
 }) => {
-  await walletSetup(context, extensionId, page, FUEL_PROVIDER_URL!);
   const fuelProvider = await Provider.create(FUEL_PROVIDER_URL!);
+  const chainName = (await fuelProvider.fetchChain()).name;
+  await walletSetup(context, extensionId, page, fuelProvider.url, chainName);
   const fuelWallet = Wallet.fromMnemonic(FUEL_MNEMONIC, fuelProvider);
   await seedWallet(
     fuelWallet.address.toString(),

@@ -4,9 +4,9 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.58.0
+  Fuels version: 0.63.0
   Forc version: 0.44.0
-  Fuel-Core version: 0.20.4
+  Fuel-Core version: 0.20.7
 */
 
 import type {
@@ -41,14 +41,10 @@ export type AddressInput = { value: string };
 export type AddressOutput = AddressInput;
 export type AssetIdInput = { value: string };
 export type AssetIdOutput = AssetIdInput;
-export type BytesInput = { buf: RawBytesInput; len: BigNumberish };
-export type BytesOutput = { buf: RawBytesOutput; len: BN };
 export type ContractIdInput = { value: string };
 export type ContractIdOutput = ContractIdInput;
 export type RawBytesInput = { ptr: BigNumberish; cap: BigNumberish };
 export type RawBytesOutput = { ptr: BN; cap: BN };
-export type StringInput = { bytes: BytesInput };
-export type StringOutput = { bytes: BytesOutput };
 
 interface CustomAssetAbiInterface extends Interface {
   functions: {
@@ -139,8 +135,8 @@ export class CustomAssetAbi extends Contract {
   interface: CustomAssetAbiInterface;
   functions: {
     decimals: InvokeFunction<[asset: AssetIdInput], Option<number>>;
-    name: InvokeFunction<[asset: AssetIdInput], Option<StringOutput>>;
-    symbol: InvokeFunction<[asset: AssetIdInput], Option<StringOutput>>;
+    name: InvokeFunction<[asset: AssetIdInput], Option<StdString>>;
+    symbol: InvokeFunction<[asset: AssetIdInput], Option<StdString>>;
     total_assets: InvokeFunction<[], BN>;
     total_supply: InvokeFunction<[asset: AssetIdInput], Option<BN>>;
     burn: InvokeFunction<[sub_id: string, amount: BigNumberish], void>;

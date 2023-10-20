@@ -2,8 +2,10 @@ import { type BrowserContext, type Page } from '@playwright/test';
 
 import { expect } from '../fixtures';
 import { FUEL_MNEMONIC, FUEL_WALLET_PASSWORD } from '../mocks';
+import { shortAddress } from '../utils';
 
 import { getButtonByText } from './button';
+import { getByAriaLabel } from './locator';
 
 // TODO: this function can only setup a wallet on http://localhost:4001
 // because we cannot modify the existing testnet provider url
@@ -12,6 +14,7 @@ export async function walletSetup(
   fuelExtensionId: string,
   page: Page,
   fuelProviderUrl: string,
+  chainName: string,
 ) {
   await page.goto(`chrome-extension://${fuelExtensionId}/popup.html`);
 
@@ -62,14 +65,19 @@ export async function walletSetup(
   const selectNetworkButton = signupPage.getByLabel('Selected Network');
   await selectNetworkButton.click();
 
-  const addNetworkButton = signupPage.getByLabel('Add network');
-  await addNetworkButton.click();
+  if ((await signupPage.getByText(chainName).count()) === 0) {
+    const addNetworkButton = signupPage.getByLabel('Add network');
+    await addNetworkButton.click();
 
-  const urlInput = signupPage.getByLabel('Network URL');
-  await urlInput.fill(fuelProviderUrl);
+    const urlInput = signupPage.getByLabel('Network URL');
+    await urlInput.fill(fuelProviderUrl);
 
-  const addNewNetworkButton = signupPage.getByLabel('Add new network');
-  await addNewNetworkButton.click();
+    const addNewNetworkButton = signupPage.getByLabel('Add new network');
+    await addNewNetworkButton.click();
+  } else {
+    const closeNetworkButton = getByAriaLabel(signupPage, 'Close dialog');
+    await closeNetworkButton.click();
+  }
 }
 
 export async function walletConnect(context: BrowserContext) {
@@ -86,6 +94,94 @@ export async function walletApprove(context: BrowserContext) {
 
   const approveButton = walletPage.locator('button').getByText('Approve');
   await approveButton.click();
+}
+
+export async function addAssetThroughSettings(
+  context: BrowserContext,
+  assetId: string,
+  name: string,
+  symbol: string,
+  decimals: number,
+  imageUrl?: string,
+) {
+  const walletPage = context.pages().find((page) => {
+    const url = page.url();
+    return url.includes('/popup.html#/wallet');
+  });
+
+  if (!walletPage) {
+    throw new Error('Wallet Page could not be found');
+  }
+
+  const menuButton = getByAriaLabel(walletPage, 'Menu', true);
+  await menuButton.click();
+
+  const settingsButton = walletPage.getByRole('menuitem').getByText('Settings');
+  await settingsButton.click();
+
+  const assetsButton = walletPage.getByRole('menuitem').getByText('Assets');
+  await assetsButton.click();
+
+  const addAssetButton = getByAriaLabel(walletPage, 'Add Asset');
+  await addAssetButton.click();
+
+  const assetIdInput = getByAriaLabel(walletPage, 'Asset ID');
+  await assetIdInput.fill(assetId);
+
+  const assetNameInput = walletPage.getByLabel('Asset name');
+  await assetNameInput.fill(name);
+  const assetSymbolInput = walletPage.getByLabel('Asset symbol');
+  await assetSymbolInput.fill(symbol);
+  const assetDecimalsInput = walletPage.getByLabel('Asset decimals');
+  await assetDecimalsInput.fill(decimals.toString());
+  const assetImageUrlInput = walletPage.getByLabel('Asset image Url');
+  await assetImageUrlInput.fill(imageUrl || '');
+
+  const saveButton = getButtonByText(walletPage, 'Save');
+  await saveButton.click();
+}
+
+export async function addAssetFromHomeBalance(
+  context: BrowserContext,
+  assetId: string,
+  name: string,
+  symbol: string,
+  decimals: number,
+  imageUrl?: string,
+) {
+  const walletPage = context.pages().find((page) => {
+    const url = page.url();
+    return url.includes('/popup.html#/wallet');
+  });
+
+  if (!walletPage) {
+    throw new Error('Wallet Page could not be found');
+  }
+
+  const showUnkownAssetsButton = getButtonByText(
+    walletPage,
+    'Show unknown assets',
+  );
+  await showUnkownAssetsButton.click();
+
+  await walletPage
+    .getByRole('article')
+    .filter({ hasText: shortAddress(assetId) })
+    .locator('button')
+    .getByText('(Add)')
+    .click();
+
+  const assetNameInput = walletPage.getByLabel('Asset name');
+  await assetNameInput.fill(name);
+  const assetSymbolInput = walletPage.getByLabel('Asset symbol');
+  await assetSymbolInput.fill(symbol);
+  const assetDecimalsInput = walletPage.getByLabel('Asset decimals');
+  await assetDecimalsInput.fill(decimals.toString());
+  const assetImageUrlInput = walletPage.getByLabel('Asset image Url');
+  await assetImageUrlInput.fill(imageUrl || '');
+
+  const saveButton = getButtonByText(walletPage, 'Save');
+  await saveButton.click();
 }
 
 export async function getWalletPage(context: BrowserContext) {
