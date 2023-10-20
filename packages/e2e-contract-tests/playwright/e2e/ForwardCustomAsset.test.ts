@@ -14,6 +14,8 @@ import '../../load.envs';
 import { calculateAssetId, shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
+import { checkFee } from './utils';
+
 const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward Custom Asset', () => {
@@ -70,6 +72,6 @@ test.describe('Forward Custom Asset', () => {
 
     // test gas fee is correct
     await hasText(walletPage, 'Fee (network)');
-    await hasText(walletPage, '0.000000001 ETH');
+    await checkFee(walletPage, '0.000000126 ETH');
   });
 });

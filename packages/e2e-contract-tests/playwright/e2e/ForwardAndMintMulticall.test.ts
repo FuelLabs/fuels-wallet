@@ -11,6 +11,8 @@ import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
 import { testSetup } from '../utils';
 
+import { checkFee } from './utils';
+
 const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward and Mint Multicall', () => {
@@ -57,6 +59,6 @@ test.describe('Forward and Mint Multicall', () => {
 
     // test gas fee is shown and correct
     await hasText(walletPage, 'Fee (network)');
-    await hasText(walletPage, '0.000000001 ETH');
+    await checkFee(walletPage, '0.000000217 ETH');
   });
 });

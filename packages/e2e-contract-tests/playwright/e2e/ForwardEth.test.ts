@@ -11,6 +11,8 @@ import '../../load.envs';
 import { shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
+import { checkFee } from './utils';
+
 test.describe('Forward Eth', () => {
   test.beforeEach(async ({ context, extensionId, page }) => {
     await testSetup({ context, page, extensionId });
@@ -44,6 +46,6 @@ test.describe('Forward Eth', () => {
 
     // test gas fee is correct
     await hasText(walletPage, 'Fee (network)');
-    await hasText(walletPage, '0.000000001 ETH');
+    await checkFee(walletPage, '0.000000114 ETH');
   });
 });

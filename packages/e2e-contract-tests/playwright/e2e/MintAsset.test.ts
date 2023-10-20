@@ -11,6 +11,8 @@ import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
 import { testSetup } from '../utils';
 
+import { checkFee } from './utils';
+
 test.describe('Mint Assets', () => {
   test.beforeEach(async ({ context, extensionId, page }) => {
     await testSetup({ context, page, extensionId });
@@ -41,7 +43,7 @@ test.describe('Mint Assets', () => {
     // test gas fee is shown and correct
     await hasText(walletPage, 'Fee (network)');
     // 0.000000001 since we hardcode a gas price of 1 in our mint function
-    await hasText(walletPage, '0.000000001 ETH');
+    await checkFee(walletPage, '0.00000013 ETH');
   });
 
   test('e2e mint known asset', async ({ context, page }) => {
@@ -89,6 +91,6 @@ test.describe('Mint Assets', () => {
     // test gas fee is shown and correct
     await hasText(walletPage, 'Fee (network)');
     // 0.000000001 since we hardcode a gas price of 1 in our mint function
-    await hasText(walletPage, '0.000000001 ETH');
+    await checkFee(walletPage, '0.000000133 ETH');
   });
 });
