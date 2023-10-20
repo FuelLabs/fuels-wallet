@@ -20,7 +20,7 @@ describe('ActivityList', () => {
       <ActivityList txs={MOCK_TXS} ownerAddress={MOCK_ACCOUNTS[3].address} />,
       {
         wrapper: TestWrapper,
-      },
+      }
     );
   });
 
@@ -33,7 +33,7 @@ describe('ActivityList', () => {
       />,
       {
         wrapper: TestWrapper,
-      },
+      }
     );
   });
 
@@ -46,7 +46,7 @@ describe('ActivityList', () => {
       />,
       {
         wrapper: TestWrapper,
-      },
+      }
     );
   });
 
@@ -59,7 +59,7 @@ describe('ActivityList', () => {
       />,
       {
         wrapper: TestWrapper,
-      },
+      }
     );
     expect(screen.getByText(/No activity yet/i)).toBeInTheDocument();
   });
@@ -73,10 +73,10 @@ describe('ActivityList', () => {
       />,
       {
         wrapper: TestWrapper,
-      },
+      }
     );
     expect(screen.getAllByLabelText('activity-item').length).toBe(
-      MOCK_TXS.length,
+      MOCK_TXS.length
     );
   });
 });

@@ -45,7 +45,7 @@ const selectors = {
         if (isLoadingTx) return SendStatus.loadingTx;
         return SendStatus.selecting;
       },
-      [txStatus],
+      [txStatus]
     );
   },
   title(txStatus?: TxRequestStatus) {
@@ -57,7 +57,7 @@ const selectors = {
         if (state.matches('invalid')) return 'Invalid transaction';
         return 'Send';
       },
-      [txStatus],
+      [txStatus]
     );
   },
 };
@@ -106,7 +106,7 @@ export function useSend() {
           txRequest.handlers.request(ev.data);
         },
       },
-    }),
+    })
   );
 
   const fee = useSelector(service, selectors.fee);
@@ -117,21 +117,21 @@ export function useSend() {
   const title = useSelector(service, titleSelector);
   const isLoadingInitialFee = useSelector(
     service,
-    selectors.isLoadingInitialFee,
+    selectors.isLoadingInitialFee
   );
 
   const balanceAssets = accountBalanceAssets?.filter(({ assetId }) =>
-    assets.find((asset) => asset.assetId === assetId),
+    assets.find((asset) => asset.assetId === assetId)
   );
 
   const assetIdSelected = form.getValues('asset');
   const balanceAssetSelected = balanceAssets?.find(
-    ({ assetId }) => assetId === assetIdSelected,
+    ({ assetId }) => assetId === assetIdSelected
   );
   const isEthSelected =
     !!assetIdSelected && isEth({ assetId: assetIdSelected });
   const maxAmountToSend = bn(balanceAssetSelected?.amount).sub(
-    isEthSelected ? bn(fee) : 0,
+    isEthSelected ? bn(fee) : 0
   );
 
   function status(status: keyof typeof SendStatus) {
@@ -143,7 +143,7 @@ export function useSend() {
   }
   function submit() {
     const asset = assets.find(
-      ({ assetId }) => assetId === form.getValues('asset'),
+      ({ assetId }) => assetId === form.getValues('asset')
     );
     const amount = bn(form.getValues('amount'));
     const address = form.getValues('address');

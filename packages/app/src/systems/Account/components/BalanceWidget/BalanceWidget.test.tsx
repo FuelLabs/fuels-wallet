@@ -38,7 +38,7 @@ describe('BalanceWidget', () => {
       <BalanceWidget
         onChangeVisibility={onChangeVisibility}
         account={ACCOUNT}
-      />,
+      />
     );
     const btn = screen.getByLabelText(/Hide balance/i);
     expect(btn).toBeInTheDocument();
@@ -53,7 +53,7 @@ describe('BalanceWidget', () => {
         account={ACCOUNT}
         visibility={false}
         onChangeVisibility={onChangeVisibility}
-      />,
+      />
     );
     const btn = screen.getByLabelText(/Show balance/i);
     expect(btn).toBeInTheDocument();

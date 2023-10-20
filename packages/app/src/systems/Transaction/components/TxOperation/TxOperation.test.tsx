@@ -33,7 +33,7 @@ describe('TxOperation', () => {
       <TxOperation operation={MOCK_OPERATION_TRANSFER} assets={PROPS.assets} />,
       {
         wrapper: TestWrapper,
-      },
+      }
     );
     expect(screen.getByText('From')).toBeInTheDocument();
     expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
@@ -49,7 +49,7 @@ describe('TxOperation', () => {
         operation={{ ...MOCK_OPERATION_TRANSFER, assetsSent: undefined }}
         assets={PROPS.assets}
       />,
-      { wrapper: TestWrapper },
+      { wrapper: TestWrapper }
     );
     expect(screen.getByText('From')).toBeInTheDocument();
     expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();

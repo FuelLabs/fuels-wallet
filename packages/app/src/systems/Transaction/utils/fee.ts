@@ -19,7 +19,7 @@ export async function calculateTotalFee({
   return bn(
     Math.ceil(
       bn(bytesUsed).mul(gasPerByte).add(gasUsed.mul(gasPrice)).toNumber() /
-        gasPriceFactor.toNumber(),
-    ),
+        gasPriceFactor.toNumber()
+    )
   );
 }

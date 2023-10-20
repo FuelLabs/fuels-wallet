@@ -73,7 +73,7 @@ export function CreatePassword({
     debounce(() => {
       trigger('confirmPassword');
     }, 500),
-    [],
+    []
   );
 
   return (

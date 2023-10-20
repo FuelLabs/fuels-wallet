@@ -276,7 +276,7 @@ export const transactionRequestMachine = createMachine(
       }),
       assignTxDryRunError: assign((ctx, ev) => {
         const txDryRunGroupedErrors = getGroupedErrors(
-          (ev.data as any)?.error?.response?.errors,
+          (ev.data as any)?.error?.response?.errors
         );
         return {
           ...ctx,
@@ -357,7 +357,7 @@ export const transactionRequestMachine = createMachine(
         },
       }),
     },
-  },
+  }
 );
 
 export type TransactionRequestMachine = typeof transactionRequestMachine;

@@ -28,7 +28,7 @@ export const useTransactionReceipts = ({ txId }: { txId?: string }) => {
     },
     {
       enabled: !!fuel && !!txId,
-    },
+    }
   );
 
   return {

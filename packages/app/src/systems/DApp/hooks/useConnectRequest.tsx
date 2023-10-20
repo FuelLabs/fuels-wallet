@@ -32,7 +32,7 @@ export function useConnectRequest() {
   const isConnecting = useSelector(service, selectors.isConnecting);
   const isSelectingAccounts = useSelector(
     service,
-    selectors.isSelectingAccounts,
+    selectors.isSelectingAccounts
   );
   const origin = useSelector(service, selectors.origin);
   const title = useSelector(service, selectors.title);
@@ -40,7 +40,7 @@ export function useConnectRequest() {
   const selectedAddresses = useSelector(service, selectors.selectedAddresses);
   const currentAccounts = useMemo(() => {
     return (shownAccounts ?? []).filter(
-      (account) => selectedAddresses?.includes(account.address),
+      (account) => selectedAddresses?.includes(account.address)
     );
   }, [selectedAddresses, shownAccounts]);
   const hasCurrentAccounts = !!selectedAddresses?.length;

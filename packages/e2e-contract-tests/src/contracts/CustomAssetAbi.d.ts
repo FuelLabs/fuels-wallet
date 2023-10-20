@@ -63,71 +63,71 @@ interface CustomAssetAbiInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: 'decimals',
-    values: [AssetIdInput],
+    values: [AssetIdInput]
   ): Uint8Array;
   encodeFunctionData(
     functionFragment: 'name',
-    values: [AssetIdInput],
+    values: [AssetIdInput]
   ): Uint8Array;
   encodeFunctionData(
     functionFragment: 'symbol',
-    values: [AssetIdInput],
+    values: [AssetIdInput]
   ): Uint8Array;
   encodeFunctionData(functionFragment: 'total_assets', values: []): Uint8Array;
   encodeFunctionData(
     functionFragment: 'total_supply',
-    values: [AssetIdInput],
+    values: [AssetIdInput]
   ): Uint8Array;
   encodeFunctionData(
     functionFragment: 'burn',
-    values: [string, BigNumberish],
+    values: [string, BigNumberish]
   ): Uint8Array;
   encodeFunctionData(
     functionFragment: 'mint',
-    values: [IdentityInput, string, BigNumberish],
+    values: [IdentityInput, string, BigNumberish]
   ): Uint8Array;
   encodeFunctionData(functionFragment: 'deposit', values: []): Uint8Array;
   encodeFunctionData(functionFragment: 'deposit_half', values: []): Uint8Array;
   encodeFunctionData(
     functionFragment: 'deposit_half_and_mint',
-    values: [IdentityInput, string, BigNumberish],
+    values: [IdentityInput, string, BigNumberish]
   ): Uint8Array;
   encodeFunctionData(
     functionFragment: 'deposit_half_and_mint_from_external_contract',
-    values: [IdentityInput, string, BigNumberish, ContractIdInput],
+    values: [IdentityInput, string, BigNumberish, ContractIdInput]
   ): Uint8Array;
 
   decodeFunctionData(
     functionFragment: 'decimals',
-    data: BytesLike,
+    data: BytesLike
   ): DecodedValue;
   decodeFunctionData(functionFragment: 'name', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'symbol', data: BytesLike): DecodedValue;
   decodeFunctionData(
     functionFragment: 'total_assets',
-    data: BytesLike,
+    data: BytesLike
   ): DecodedValue;
   decodeFunctionData(
     functionFragment: 'total_supply',
-    data: BytesLike,
+    data: BytesLike
   ): DecodedValue;
   decodeFunctionData(functionFragment: 'burn', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'mint', data: BytesLike): DecodedValue;
   decodeFunctionData(
     functionFragment: 'deposit',
-    data: BytesLike,
+    data: BytesLike
   ): DecodedValue;
   decodeFunctionData(
     functionFragment: 'deposit_half',
-    data: BytesLike,
+    data: BytesLike
   ): DecodedValue;
   decodeFunctionData(
     functionFragment: 'deposit_half_and_mint',
-    data: BytesLike,
+    data: BytesLike
   ): DecodedValue;
   decodeFunctionData(
     functionFragment: 'deposit_half_and_mint_from_external_contract',
-    data: BytesLike,
+    data: BytesLike
   ): DecodedValue;
 }
 
