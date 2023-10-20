@@ -3,13 +3,13 @@ name: 'Setup Forc'
 inputs:
   rust-version:
     description: "Rust version"
-    default: 1.71.1
+    default: 1.73.0
   forc-version:
     description: "Forc version"
     default: 0.46.0
   fuel-core-version:
     description: "Fuel core version"
-    default: 0.20.4
+    default: 0.20.7
 
 runs:
   using: 'composite'
