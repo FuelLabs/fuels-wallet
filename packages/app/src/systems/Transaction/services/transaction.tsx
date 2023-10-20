@@ -210,6 +210,7 @@ export class TxService {
       abiMap,
       gasPerByte,
       gasPriceFactor,
+      maxInputs: bn(255),
     });
     transactionSummary.fee = await calculateTotalFee({
       gasPerByte,

@@ -48,7 +48,7 @@ export class Fuel extends FuelWalletConnection {
     // Listen for network changes and connect the provider
     // selected network from the user
     this.on(FuelWalletEvents.network, async (network) => {
-      FuelWeb3Privates.provider?.switchUrl(network.url);
+      FuelWeb3Privates.provider?.connect(network.url);
     });
 
     return FuelWeb3Privates.provider;
