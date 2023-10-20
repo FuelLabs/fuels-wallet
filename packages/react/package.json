@@ -25,6 +25,7 @@
     "ts:check": "pnpm tsc --noEmit"
   },
   "peerDependencies": {
+    "react": "^18.2.0",
     "@fuel-ui/css": "0.21.1",
     "@fuel-ui/react": "0.21.1",
     "fuels": ">=0.63.0"
@@ -32,8 +33,8 @@
   "dependencies": {
     "@tanstack/react-query": "^4.36.1",
     "@fuel-wallet/sdk": "workspace:*",
-    "compare-versions": "^6.1.0",
-    "react": "^18.2.0"
+    "@fuel-wallet/types": "workspace:*",
+    "compare-versions": "^6.1.0"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.246",
