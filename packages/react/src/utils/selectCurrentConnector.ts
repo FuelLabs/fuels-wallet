@@ -4,7 +4,7 @@ import { CONNECTOR_KEY } from '../config';
 
 export function selectCurrentConnector(
   fuel: Fuel,
-  connectors: Array<FuelWalletConnector>,
+  connectors: Array<FuelWalletConnector>
 ) {
   // If a connector is already select wait for it to be available
   // on the connectors list and select it as a connector

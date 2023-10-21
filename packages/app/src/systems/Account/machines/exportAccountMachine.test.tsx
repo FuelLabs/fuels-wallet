@@ -15,7 +15,7 @@ describe('exportAccountMachine', () => {
     primary = pkey;
     pass = password;
     service = interpret(
-      exportAccountMachine.withContext({ address: account.address }),
+      exportAccountMachine.withContext({ address: account.address })
     ).start();
     state = service.getSnapshot();
   });

@@ -4,7 +4,7 @@ const { readFileSync } = require('fs');
 
 function getVersion() {
   const packageJson = JSON.parse(
-    readFileSync(resolve(__dirname, './package.json')).toString(),
+    readFileSync(resolve(__dirname, './package.json')).toString()
   );
   return {
     version: packageJson.version,
@@ -33,8 +33,8 @@ function getPublicEnvs() {
   const WHITELIST = ['NODE_ENV', 'PUBLIC_URL'];
   return Object.fromEntries(
     Object.entries(process.env).filter(([key]) =>
-      WHITELIST.some((k) => k === key || key.match(/^VITE_/)),
-    ),
+      WHITELIST.some((k) => k === key || key.match(/^VITE_/))
+    )
   );
 }
 

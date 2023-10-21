@@ -23,7 +23,7 @@ export function cleanFuelMocks() {
 }
 
 export async function mockFuel(
-  connector: FuelWalletConnector = { name: 'Fuel Wallet' },
+  connector: FuelWalletConnector = { name: 'Fuel Wallet' }
 ): Promise<MockServices> {
   // Create a unique id for the extension
   // This creates the ability to have multiple
@@ -35,7 +35,7 @@ export async function mockFuel(
   // Create a instance of the background service
   // with the extension id related to it
   const backgroundService = await MockBackgroundService.start(
-    global.chrome.runtime.id,
+    global.chrome.runtime.id
   );
   // Create the connector and inject Fuel on Window
   createConnector(connector);

@@ -6,7 +6,7 @@ import { bn } from 'fuels';
 
 export const checkFee = async (
   page: Page,
-  { minFee, maxFee }: { minFee: BN; maxFee: BN },
+  { minFee, maxFee }: { minFee: BN; maxFee: BN }
 ) => {
   const fee = getByAriaLabel(page, 'Fee Value');
   const feeText = (await fee.innerText()).replace(' ETH', '');

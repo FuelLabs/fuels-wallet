@@ -14,7 +14,7 @@ export const useProvider = () => {
     },
     {
       enabled: !!fuel,
-    },
+    }
   );
 
   return {

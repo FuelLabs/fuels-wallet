@@ -24,7 +24,7 @@
 export function route<P extends string = any>(path: string) {
   return function parse(
     params?: Record<P, any>,
-    query?: Record<string, any>,
+    query?: Record<string, any>
   ): string {
     const split = path.match(/[^/]+/g);
     const parsed = split

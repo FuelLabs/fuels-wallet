@@ -8,19 +8,13 @@ import { AccountList } from './AccountList';
 describe('AccountList', () => {
   it('a11y', async () => {
     await testA11y(
-      <AccountList
-        accounts={MOCK_ACCOUNTS}
-        onPress={store.setCurrentAccount}
-      />,
+      <AccountList accounts={MOCK_ACCOUNTS} onPress={store.setCurrentAccount} />
     );
   });
 
   it('should render two accounts', () => {
     render(
-      <AccountList
-        accounts={MOCK_ACCOUNTS}
-        onPress={store.setCurrentAccount}
-      />,
+      <AccountList accounts={MOCK_ACCOUNTS} onPress={store.setCurrentAccount} />
     );
     expect(screen.getByText('Account 1')).toBeInTheDocument();
     expect(screen.getByText('Account 2')).toBeInTheDocument();
@@ -33,7 +27,7 @@ describe('AccountList', () => {
         accounts={MOCK_ACCOUNTS}
         onPress={store.setCurrentAccount}
         hasHiddenAccounts={true}
-      />,
+      />
     );
     const btn = screen.getByText(/show hidden/i);
     expect(btn).toBeInTheDocument();

@@ -113,7 +113,7 @@ describe('connectRequestMachine', () => {
 
     const state = await expectStateMatch(
       service,
-      'connecting.selectingAccounts',
+      'connecting.selectingAccounts'
     );
     expect(state.context.selectedAddresses).toStrictEqual([
       MOCK_ACCOUNTS[0].address,
@@ -168,7 +168,7 @@ describe('connectRequestMachine', () => {
 
     const state = await expectStateMatch(
       service,
-      'connecting.selectingAccounts',
+      'connecting.selectingAccounts'
     );
     expect(state.context.selectedAddresses).toStrictEqual([
       MOCK_ACCOUNTS[1].address,

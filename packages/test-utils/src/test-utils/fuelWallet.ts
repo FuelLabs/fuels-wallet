@@ -14,7 +14,7 @@ export async function walletSetup(
   fuelExtensionId: string,
   page: Page,
   fuelProviderUrl: string,
-  chainName: string,
+  chainName: string
 ) {
   await page.goto(`chrome-extension://${fuelExtensionId}/popup.html`);
 
@@ -34,7 +34,7 @@ export async function walletSetup(
   // Copy and paste seed phrase
   /** Copy words to clipboard area */
   await signupPage.evaluate(
-    `navigator.clipboard.writeText('${FUEL_MNEMONIC}')`,
+    `navigator.clipboard.writeText('${FUEL_MNEMONIC}')`
   );
   const pasteButton = signupPage.locator('button').getByText('Paste');
   await pasteButton.click();
@@ -58,7 +58,7 @@ export async function walletSetup(
     .waitFor({ state: 'visible', timeout: 9000 });
 
   await signupPage.goto(
-    `chrome-extension://${fuelExtensionId}/popup.html#/wallet`,
+    `chrome-extension://${fuelExtensionId}/popup.html#/wallet`
   );
 
   // Add testnet url
@@ -102,7 +102,7 @@ export async function addAssetThroughSettings(
   name: string,
   symbol: string,
   decimals: number,
-  imageUrl?: string,
+  imageUrl?: string
 ) {
   const walletPage = context.pages().find((page) => {
     const url = page.url();
@@ -147,7 +147,7 @@ export async function addAssetFromHomeBalance(
   name: string,
   symbol: string,
   decimals: number,
-  imageUrl?: string,
+  imageUrl?: string
 ) {
   const walletPage = context.pages().find((page) => {
     const url = page.url();
@@ -160,7 +160,7 @@ export async function addAssetFromHomeBalance(
 
   const showUnkownAssetsButton = getButtonByText(
     walletPage,
-    'Show unknown assets',
+    'Show unknown assets'
   );
   await showUnkownAssetsButton.click();
 

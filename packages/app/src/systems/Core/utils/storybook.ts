@@ -4,7 +4,7 @@ import type { Story } from '@storybook/react';
 export async function storyToComponent<T>(
   story: Story<T>,
   args: any = {},
-  loaded: any = {},
+  loaded: any = {}
 ): Promise<React.FC> {
   return () => {
     const context: any = {

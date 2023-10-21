@@ -104,14 +104,14 @@ export const depositHalfAndExternalMint = async ({
 
   const externalContract = CustomAssetAbi__factory.connect(
     VITE_EXTERNAL_CONTRACT_ID,
-    wallet,
+    wallet
   );
   await contract.functions
     .deposit_half_and_mint_from_external_contract(
       recipient,
       BaseAssetId,
       mintAmount,
-      { value: externalContract.id.toB256() },
+      { value: externalContract.id.toB256() }
     )
     .callParams({ forward: [forwardAmount, assetId] })
     .addContracts([externalContract])

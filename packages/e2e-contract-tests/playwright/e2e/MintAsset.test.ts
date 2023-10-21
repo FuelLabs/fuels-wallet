@@ -64,7 +64,7 @@ test.describe('Mint Assets', () => {
       assetId,
       name,
       symbol,
-      Number(decimals),
+      Number(decimals)
     );
 
     const mintAmount = '1.2345';

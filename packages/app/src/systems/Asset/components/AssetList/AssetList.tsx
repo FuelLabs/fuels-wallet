@@ -34,7 +34,7 @@ export const AssetList: AssetListComponent = ({
   const [showUnknown, setShowUnknown] = useState(false);
   const unknownLength = useMemo(
     () => assets?.filter((assetAmount) => !assetAmount?.name).length,
-    [assets],
+    [assets]
   );
 
   if (isLoading) return <AssetList.Loading items={4} />;
