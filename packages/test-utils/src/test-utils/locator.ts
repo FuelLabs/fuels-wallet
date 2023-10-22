@@ -3,7 +3,7 @@ import type { Page } from '@playwright/test';
 export function getByAriaLabel(
   page: Page,
   selector: string,
-  exact: boolean = false,
+  exact: boolean = false
 ) {
   return page.getByLabel(selector, { exact });
 }

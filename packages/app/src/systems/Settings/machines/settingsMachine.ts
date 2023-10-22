@@ -84,7 +84,7 @@ export const settingsMachine = createMachine(
         },
       }),
     },
-  },
+  }
 );
 
 export type SettingsMachine = typeof settingsMachine;

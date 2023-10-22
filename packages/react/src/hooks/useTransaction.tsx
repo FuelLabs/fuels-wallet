@@ -22,7 +22,7 @@ export const useTransaction = (txId?: string) => {
     },
     {
       enabled: !!fuel && !!txId,
-    },
+    }
   );
 
   return {

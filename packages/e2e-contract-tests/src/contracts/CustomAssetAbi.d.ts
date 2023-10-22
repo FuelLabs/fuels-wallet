@@ -4,9 +4,9 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.58.0
+  Fuels version: 0.63.0
   Forc version: 0.44.0
-  Fuel-Core version: 0.20.4
+  Fuel-Core version: 0.20.7
 */
 
 import type {
@@ -41,14 +41,10 @@ export type AddressInput = { value: string };
 export type AddressOutput = AddressInput;
 export type AssetIdInput = { value: string };
 export type AssetIdOutput = AssetIdInput;
-export type BytesInput = { buf: RawBytesInput; len: BigNumberish };
-export type BytesOutput = { buf: RawBytesOutput; len: BN };
 export type ContractIdInput = { value: string };
 export type ContractIdOutput = ContractIdInput;
 export type RawBytesInput = { ptr: BigNumberish; cap: BigNumberish };
 export type RawBytesOutput = { ptr: BN; cap: BN };
-export type StringInput = { bytes: BytesInput };
-export type StringOutput = { bytes: BytesOutput };
 
 interface CustomAssetAbiInterface extends Interface {
   functions: {
@@ -67,71 +63,71 @@ interface CustomAssetAbiInterface extends Interface {
 
   encodeFunctionData(
     functionFragment: 'decimals',
-    values: [AssetIdInput],
+    values: [AssetIdInput]
   ): Uint8Array;
   encodeFunctionData(
     functionFragment: 'name',
-    values: [AssetIdInput],
+    values: [AssetIdInput]
   ): Uint8Array;
   encodeFunctionData(
     functionFragment: 'symbol',
-    values: [AssetIdInput],
+    values: [AssetIdInput]
   ): Uint8Array;
   encodeFunctionData(functionFragment: 'total_assets', values: []): Uint8Array;
   encodeFunctionData(
     functionFragment: 'total_supply',
-    values: [AssetIdInput],
+    values: [AssetIdInput]
   ): Uint8Array;
   encodeFunctionData(
     functionFragment: 'burn',
-    values: [string, BigNumberish],
+    values: [string, BigNumberish]
   ): Uint8Array;
   encodeFunctionData(
     functionFragment: 'mint',
-    values: [IdentityInput, string, BigNumberish],
+    values: [IdentityInput, string, BigNumberish]
   ): Uint8Array;
   encodeFunctionData(functionFragment: 'deposit', values: []): Uint8Array;
   encodeFunctionData(functionFragment: 'deposit_half', values: []): Uint8Array;
   encodeFunctionData(
     functionFragment: 'deposit_half_and_mint',
-    values: [IdentityInput, string, BigNumberish],
+    values: [IdentityInput, string, BigNumberish]
   ): Uint8Array;
   encodeFunctionData(
     functionFragment: 'deposit_half_and_mint_from_external_contract',
-    values: [IdentityInput, string, BigNumberish, ContractIdInput],
+    values: [IdentityInput, string, BigNumberish, ContractIdInput]
   ): Uint8Array;
 
   decodeFunctionData(
     functionFragment: 'decimals',
-    data: BytesLike,
+    data: BytesLike
   ): DecodedValue;
   decodeFunctionData(functionFragment: 'name', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'symbol', data: BytesLike): DecodedValue;
   decodeFunctionData(
     functionFragment: 'total_assets',
-    data: BytesLike,
+    data: BytesLike
   ): DecodedValue;
   decodeFunctionData(
     functionFragment: 'total_supply',
-    data: BytesLike,
+    data: BytesLike
   ): DecodedValue;
   decodeFunctionData(functionFragment: 'burn', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'mint', data: BytesLike): DecodedValue;
   decodeFunctionData(
     functionFragment: 'deposit',
-    data: BytesLike,
+    data: BytesLike
   ): DecodedValue;
   decodeFunctionData(
     functionFragment: 'deposit_half',
-    data: BytesLike,
+    data: BytesLike
   ): DecodedValue;
   decodeFunctionData(
     functionFragment: 'deposit_half_and_mint',
-    data: BytesLike,
+    data: BytesLike
   ): DecodedValue;
   decodeFunctionData(
     functionFragment: 'deposit_half_and_mint_from_external_contract',
-    data: BytesLike,
+    data: BytesLike
   ): DecodedValue;
 }
 
@@ -139,8 +135,8 @@ export class CustomAssetAbi extends Contract {
   interface: CustomAssetAbiInterface;
   functions: {
     decimals: InvokeFunction<[asset: AssetIdInput], Option<number>>;
-    name: InvokeFunction<[asset: AssetIdInput], Option<StringOutput>>;
-    symbol: InvokeFunction<[asset: AssetIdInput], Option<StringOutput>>;
+    name: InvokeFunction<[asset: AssetIdInput], Option<StdString>>;
+    symbol: InvokeFunction<[asset: AssetIdInput], Option<StdString>>;
     total_assets: InvokeFunction<[], BN>;
     total_supply: InvokeFunction<[asset: AssetIdInput], Option<BN>>;
     burn: InvokeFunction<[sub_id: string, amount: BigNumberish], void>;

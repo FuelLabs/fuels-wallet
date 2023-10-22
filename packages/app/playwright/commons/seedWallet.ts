@@ -21,14 +21,14 @@ export async function seedWallet(address: string, amount: BN) {
     Address.fromString(address),
     amount,
     BaseAssetId,
-    { gasPrice, gasLimit },
+    { gasPrice, gasLimit }
   );
   await transfETH.wait();
   const transfAsset = await genesisWallet.transfer(
     Address.fromString(address),
     amount,
     ALT_ASSET.assetId,
-    { gasPrice, gasLimit },
+    { gasPrice, gasLimit }
   );
   await transfAsset.wait();
 }

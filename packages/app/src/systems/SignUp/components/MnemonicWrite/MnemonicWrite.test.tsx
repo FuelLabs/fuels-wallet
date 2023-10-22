@@ -15,7 +15,7 @@ const onNextHandler = jest.fn();
 const onCancelHandler = jest.fn();
 
 const MNEMONIC = getPhraseFromValue(
-  FuelMnemonic.generate(MNEMONIC_SIZE),
+  FuelMnemonic.generate(MNEMONIC_SIZE)
 ) as string;
 
 const renderOpts = {
@@ -38,7 +38,7 @@ describe('MnemonicWrite', () => {
         onNext={onNextHandler}
         onCancel={onCancelHandler}
       />,
-      renderOpts,
+      renderOpts
     );
 
     await navigator.clipboard.writeText(MNEMONIC);
@@ -64,7 +64,7 @@ describe('MnemonicWrite', () => {
         onNext={onNextHandler}
         onCancel={onCancelHandler}
       />,
-      renderOpts,
+      renderOpts
     );
 
     await navigator.clipboard.writeText(MNEMONIC);
@@ -91,7 +91,7 @@ describe('MnemonicWrite', () => {
         onNext={onNextHandler}
         onCancel={onCancelHandler}
       />,
-      renderOpts,
+      renderOpts
     );
 
     expect(screen.getByText('This is an error message')).toBeInTheDocument();

@@ -14,6 +14,8 @@ import '../../load.envs';
 import { calculateAssetId, shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
+import { checkFee } from './utils';
+
 const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward Custom Asset', () => {
@@ -31,7 +33,7 @@ test.describe('Forward Custom Asset', () => {
     // Mint custom asset to wallet
     const contract = CustomAssetAbi__factory.connect(
       VITE_CONTRACT_ID!,
-      fuelWallet,
+      fuelWallet
     );
     const recipient: IdentityInput = {
       Address: {
@@ -52,7 +54,7 @@ test.describe('Forward Custom Asset', () => {
 
     const forwardCustomAssetButton = getButtonByText(
       page,
-      'Forward Custom Asset',
+      'Forward Custom Asset'
     );
     await forwardCustomAssetButton.click();
 
@@ -70,6 +72,7 @@ test.describe('Forward Custom Asset', () => {
 
     // test gas fee is correct
     await hasText(walletPage, 'Fee (network)');
-    await hasText(walletPage, '0.000000001 ETH');
+    const fee = bn.parseUnits('0.000000126');
+    await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
   });
 });

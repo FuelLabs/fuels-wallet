@@ -74,7 +74,7 @@ describe('CreatePassword', () => {
 
     await fillInputs(user, 'Qwe123456$', 'Qwe1234567$');
     await waitFor(() =>
-      expect(screen.getByLabelText('Error message')).toBeInTheDocument(),
+      expect(screen.getByLabelText('Error message')).toBeInTheDocument()
     );
   });
 

@@ -45,7 +45,7 @@ describe('MnemonicRead', () => {
             <SignUpProvider>{children}</SignUpProvider>
           </TestWrapper>
         ),
-      },
+      }
     );
     user = res.user;
   });

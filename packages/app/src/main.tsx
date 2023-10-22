@@ -8,5 +8,5 @@ import { RouterProvider } from './systems/Core/components/RouterProvider';
 createRoot(document.getElementById('root')!).render(
   <RouterProvider>
     <App />
-  </RouterProvider>,
+  </RouterProvider>
 );

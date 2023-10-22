@@ -22,7 +22,7 @@ export const useChain = () => {
     },
     {
       enabled: !!provider,
-    },
+    }
   );
 
   return {

@@ -19,7 +19,7 @@ const selectors = {
 export function useOverlay<T = void>() {
   const isDialogOpen = store.useSelector(
     Services.overlay,
-    selectors.isDialogOpen,
+    selectors.isDialogOpen
   );
   const overlay = store.useSelector(Services.overlay, selectors.overlay);
   const metadata = store.useSelector(Services.overlay, selectors.metadata);

@@ -5,11 +5,13 @@ import {
   hasText,
   walletConnect,
 } from '@fuel-wallet/test-utils';
-import { BaseAssetId } from 'fuels';
+import { BaseAssetId, bn } from 'fuels';
 
 import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
 import { testSetup } from '../utils';
+
+import { checkFee } from './utils';
 
 const { VITE_EXTERNAL_CONTRACT_ID } = process.env;
 
@@ -37,7 +39,7 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
 
     const forwardHalfAndMintButton = getButtonByText(
       page,
-      'Forward Half And External Mint',
+      'Forward Half And External Mint'
     );
     await forwardHalfAndMintButton.click();
 
@@ -67,6 +69,7 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
 
     // test gas fee is shown and correct
     await hasText(walletPage, 'Fee (network)');
-    await hasText(walletPage, '0.000000001 ETH');
+    const fee = bn.parseUnits('0.000000233');
+    await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
   });
 });

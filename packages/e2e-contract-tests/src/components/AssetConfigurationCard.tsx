@@ -45,7 +45,7 @@ export const AssetConfigurationCard = () => {
                 wallet: wallet.wallet,
                 amount: bn.parseUnits(
                   assetData.amount,
-                  Number(assetData.decimals),
+                  Number(assetData.decimals)
                 ),
                 subId: assetData.subId,
               });

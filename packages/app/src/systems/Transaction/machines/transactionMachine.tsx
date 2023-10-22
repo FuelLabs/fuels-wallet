@@ -197,7 +197,7 @@ export const transactionMachine = createMachine(
         },
       }),
     },
-  },
+  }
 );
 
 export type TransactionMachine = typeof transactionMachine;

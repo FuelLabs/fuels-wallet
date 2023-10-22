@@ -129,7 +129,7 @@ export const importAccountMachine = createMachine(
         },
       }),
     },
-  },
+  }
 );
 
 export type ImportAccountMachine = typeof importAccountMachine;

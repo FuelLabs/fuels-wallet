@@ -26,7 +26,7 @@ export const Usage = (_args: AssetSelectProps) => {
 
 export const Selected = (_args: AssetSelectProps) => {
   const [selected, setSelected] = useState<string>(
-    MOCK_ASSETS_AMOUNTS[0].assetId,
+    MOCK_ASSETS_AMOUNTS[0].assetId
   );
   return (
     <Box css={{ maxWidth: 300 }}>
