@@ -26,7 +26,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
 }: AssetsAmountProps) => {
   const hasError = !!balanceErrors?.length;
   const allEmptyAmounts = amounts.every((assetAmount) =>
-    bn(assetAmount.amount).eq(0),
+    bn(assetAmount.amount).eq(0)
   );
 
   return (
@@ -62,7 +62,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
                       assetAmount={assetAmount}
                       key={assetAmount.assetId}
                     />
-                  ),
+                  )
               )}
             </Box.Stack>
           )}
