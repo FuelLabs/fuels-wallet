@@ -14,7 +14,7 @@ env:
 
 jobs:
   release-changesets:
-    name: Changesets Release
+    name: Release master or next
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
