@@ -1,11 +1,9 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "keyofStringsOnly": true,
     "outDir": "./dist",
     "baseUrl": ".",
-    "rootDir": ".",
-    "types": ["@fuel-wallet/sdk", "chrome"]
+    "rootDir": "."
   },
   "include": ["./src"],
   "references": [{ "path": "./tsconfig.node.json" }]
