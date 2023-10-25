@@ -13,7 +13,6 @@
   "dependencies": {
     "@fuel-wallet/react": "workspace:*",
     "@fuel-wallet/sdk": "workspace:*",
-    "@fuel-wallet/types": "workspace:*",
     "fuels": "0.63.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -21,7 +20,6 @@
   "devDependencies": {
     "@fuel-wallet/test-utils": "workspace:*",
     "@playwright/test": "^1.39.0",
-    "@types/chrome": "^0.0.246",
     "@types/node": "^20.8.4",
     "@types/react": "^18.2.28",
     "@types/react-dom": "^18.2.13",
