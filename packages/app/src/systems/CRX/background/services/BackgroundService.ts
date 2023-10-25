@@ -181,7 +181,13 @@ export class BackgroundService {
   }
 
   async isConnected(_: unknown, serverParams: EventOrigin) {
-    return !!serverParams.connection;
+    const currentAccount = await AccountService.getCurrentAccount();
+    if (!serverParams.connection) {
+      return false;
+    }
+    return serverParams.connection.accounts.includes(
+      currentAccount?.address || ''
+    );
   }
 
   async connect(_: JSONRPCParams, serverParams: EventOrigin) {
