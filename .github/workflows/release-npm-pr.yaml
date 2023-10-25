@@ -5,8 +5,11 @@ on:
   pull_request:
   workflow_dispatch:
 
+env:
+  BUILD_VERSION: ""
+
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -19,7 +22,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.ref }}
       - uses: FuelLabs/github-actions/setups/node@master
       - uses: FuelLabs/github-actions/setups/npm@master
         with:
@@ -37,17 +39,15 @@ jobs:
         run: |
           pnpm changeset version --snapshot preview
           changetsets=$(pnpm changeset publish --tag preview)
-          published_version=$(echo "$changetsets" | grep -oP '@\K([0-9]+\.){2}[0-9]+-preview-\d+' | head -1)
-          echo "published_version=$published_version" >> $GITHUB_OUTPUT
+          echo "BUILD_VERSION=$(pnpm -s packages:version)" >> $GITHUB_ENV
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
 
       - name: Comment release package name to PR
         uses: mshick/add-pr-comment@v2
         with:
           message: |
-            This PR is published in NPM with version **${{ steps.release.outputs.published_version }}**
+            This PR is published in NPM with version **${{ env.BUILD_VERSION }}**
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

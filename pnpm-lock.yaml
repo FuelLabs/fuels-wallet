@@ -73,6 +73,9 @@ importers:
       '@xstate/cli':
         specifier: 0.5.2
         version: 0.5.2
+      compare-versions:
+        specifier: ^6.1.0
+        version: 6.1.0
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
