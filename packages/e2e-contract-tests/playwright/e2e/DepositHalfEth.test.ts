@@ -5,17 +5,21 @@ import {
   hasText,
   walletConnect,
 } from '@fuel-wallet/test-utils';
-import { BaseAssetId, bn } from 'fuels';
+import type { WalletUnlocked} from 'fuels';
+import { BaseAssetId, bn, toBech32 } from 'fuels';
 
 import { shortAddress } from '../../src/utils';
 import '../../load.envs.js';
 import { testSetup } from '../utils';
 
-import { checkFee } from './utils';
+import { checkAddresses, checkFee } from './utils';
+
+const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Deposit Half ETH', () => {
+  let fuelWallet: WalletUnlocked;
   test.beforeEach(async ({ context, extensionId, page }) => {
-    await testSetup({ context, page, extensionId });
+    fuelWallet = await testSetup({ context, page, extensionId });
   });
 
   test('e2e deposit half eth', async ({ context, page }) => {
@@ -55,5 +59,19 @@ test.describe('Deposit Half ETH', () => {
     await hasText(walletPage, 'Fee (network)');
     const fee = bn.parseUnits('0.000000152');
     await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
+
+    // test to and from addresses
+    const fuelContractId = toBech32(VITE_CONTRACT_ID!);
+    await checkAddresses(
+      fuelWallet.address.toAddress(),
+      fuelContractId,
+      walletPage
+    );
+    await checkAddresses(
+      fuelContractId,
+      fuelWallet.address.toAddress(),
+      walletPage,
+      1
+    );
   });
 });
