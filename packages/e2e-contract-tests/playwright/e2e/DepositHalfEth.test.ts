@@ -5,7 +5,7 @@ import {
   hasText,
   walletConnect,
 } from '@fuel-wallet/test-utils';
-import type { WalletUnlocked} from 'fuels';
+import type { WalletUnlocked } from 'fuels';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
 
 import { shortAddress } from '../../src/utils';
@@ -63,15 +63,14 @@ test.describe('Deposit Half ETH', () => {
     // test to and from addresses
     const fuelContractId = toBech32(VITE_CONTRACT_ID!);
     await checkAddresses(
-      fuelWallet.address.toAddress(),
-      fuelContractId,
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: fuelContractId, isContract: true },
       walletPage
     );
     await checkAddresses(
-      fuelContractId,
-      fuelWallet.address.toAddress(),
-      walletPage,
-      1
+      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      walletPage
     );
   });
 });
