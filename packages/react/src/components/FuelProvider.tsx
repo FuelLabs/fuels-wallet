@@ -61,6 +61,7 @@ export const FuelProvider = ({ children }: FuelProviderProps) => {
     fuelQueryClient.invalidateQueries([QUERY_KEYS.balance]);
     fuelQueryClient.invalidateQueries([QUERY_KEYS.provider]);
     fuelQueryClient.invalidateQueries([QUERY_KEYS.nodeInfo]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.accounts]);
   }
 
   function onNetworkChange() {
@@ -72,6 +73,7 @@ export const FuelProvider = ({ children }: FuelProviderProps) => {
 
   function onAccountsChange() {
     fuelQueryClient.invalidateQueries([QUERY_KEYS.account]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.accounts]);
   }
 
   useEffect(() => {
