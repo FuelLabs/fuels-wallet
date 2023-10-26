@@ -8,7 +8,7 @@ import { getGasConfig } from './gas';
 
 const { GENESIS_SECRET, VITE_FUEL_PROVIDER_URL } = process.env;
 
-export async function seedCurretAccount(page: Page, amount: BN) {
+export async function seedCurrentAccount(page: Page, amount: BN) {
   const account = await getAccount(page);
   await seedWallet(account.address, amount);
 }
@@ -21,14 +21,14 @@ export async function seedWallet(address: string, amount: BN) {
     Address.fromString(address),
     amount,
     BaseAssetId,
-    { gasPrice, gasLimit: gasLimit.mul(1.3) }
+    { gasPrice, gasLimit }
   );
   await transfETH.wait();
   const transfAsset = await genesisWallet.transfer(
     Address.fromString(address),
     amount,
     ALT_ASSET.assetId,
-    { gasPrice, gasLimit: gasLimit.mul(1.3) }
+    { gasPrice, gasLimit }
   );
   await transfAsset.wait();
 }
