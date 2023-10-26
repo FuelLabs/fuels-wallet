@@ -1,4 +1,5 @@
 export * from './useAccount';
+export * from './useAccounts';
 export * from './useBalance';
 export * from './useChain';
 export * from './useConnect';
