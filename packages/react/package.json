@@ -37,7 +37,6 @@
     "compare-versions": "^6.1.0"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.246",
     "tsup": "^7.2.0",
     "fuels": "0.63.0"
   }

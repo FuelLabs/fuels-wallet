@@ -638,9 +638,6 @@ importers:
         specifier: '*'
         version: 18.2.0
     devDependencies:
-      '@types/chrome':
-        specifier: ^0.0.246
-        version: 0.0.246
       fuels:
         specifier: 0.63.0
         version: 0.63.0
@@ -650,9 +647,9 @@ importers:
 
   packages/sdk:
     dependencies:
-      '@types/chrome':
-        specifier: ^0.0.246
-        version: 0.0.246
+      '@fuel-wallet/types':
+        specifier: workspace:*
+        version: link:../types
       dexie-observable:
         specifier: 4.0.1-beta.13
         version: 4.0.1-beta.13(dexie@3.2.4)
@@ -669,9 +666,6 @@ importers:
         specifier: ^4.38.2
         version: 4.38.2
     devDependencies:
-      '@fuel-wallet/types':
-        specifier: workspace:*
-        version: link:../types
       '@types/uuid':
         specifier: ^9.0.5
         version: 9.0.5
