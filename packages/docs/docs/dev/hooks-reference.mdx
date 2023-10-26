@@ -17,6 +17,18 @@ console.log(account);
 
 [See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useAccount.tsx)
 
+## useAccounts
+
+Retrieves the fuel accounts and returns the addresses of the accounts `<string[] | undefined>`
+
+```tsx
+const { accounts } = useAccounts();
+console.log(accounts);
+// [fuel1r20zhd..., fuel1qqluc9..., ...]
+```
+
+[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useAccounts.tsx)
+
 ## useBalance
 
 Fetches the balance `<number | undefined>` of a specified address and asset ID. Additionally, it includes a listener that triggers a balance refresh when the window gains focus.
