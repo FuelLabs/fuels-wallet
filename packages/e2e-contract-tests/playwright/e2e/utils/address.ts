@@ -18,8 +18,9 @@ export const checkAddresses = async (
         .getByText(`From${from.isContract ? ' (Contract)' : ''}`, {
           exact: true,
         }),
-    }).nth(fromPosition);
-    console.log(`fromArticle`, await fromArticle.innerText());
+      hasNotText: 'To',
+    })
+    .nth(fromPosition);
   const fromShortAddress = shortAddress(from.address.toString());
   const fromAddressText = fromArticle
     .getByRole('paragraph')
@@ -36,8 +37,9 @@ export const checkAddresses = async (
         .getByText(`To${to.isContract ? ' (Contract)' : ''}`, {
           exact: true,
         }),
-    }).nth(toPosition);
-  console.log("toArticle: ", await toArticle.innerText());
+      hasNotText: 'From',
+    })
+    .nth(toPosition);
   const toShortAddress = shortAddress(to.address.toString());
   const toAddressText = toArticle
     .getByRole('paragraph')
