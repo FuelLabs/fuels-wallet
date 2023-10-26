@@ -6,7 +6,7 @@ import {
   hasText,
 } from '@fuel-wallet/test-utils';
 import type { WalletUnlocked } from 'fuels';
-import { bn, BaseAssetId } from 'fuels';
+import { bn, BaseAssetId, toBech32 } from 'fuels';
 
 import { CustomAssetAbi__factory } from '../../src/contracts';
 import type { IdentityInput } from '../../src/contracts/CustomAssetAbi';
@@ -14,7 +14,7 @@ import '../../load.envs';
 import { calculateAssetId, shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
-import { checkFee } from './utils';
+import { checkFee, checkAddresses } from './utils';
 
 const { VITE_CONTRACT_ID } = process.env;
 
@@ -74,5 +74,12 @@ test.describe('Forward Custom Asset', () => {
     await hasText(walletPage, 'Fee (network)');
     const fee = bn.parseUnits('0.000000126');
     await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
+
+    const fuelContractId = toBech32(VITE_CONTRACT_ID!);
+    await checkAddresses(
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: fuelContractId, isContract: true },
+      walletPage
+    );
   });
 });

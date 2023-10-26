@@ -7,7 +7,8 @@ export const checkAddresses = async (
   from: { address: Bech32Address; isContract: boolean },
   to: { address: Bech32Address; isContract: boolean },
   page: Page,
-  position: number = 0
+  fromPosition: number = 0,
+  toPosition: number = 0
 ) => {
   const fromArticle = page
     .getByRole('article')
@@ -17,8 +18,8 @@ export const checkAddresses = async (
         .getByText(`From${from.isContract ? ' (Contract)' : ''}`, {
           exact: true,
         }),
-    })
-    .nth(position);
+    }).nth(fromPosition);
+    console.log(`fromArticle`, await fromArticle.innerText());
   const fromShortAddress = shortAddress(from.address.toString());
   const fromAddressText = fromArticle
     .getByRole('paragraph')
@@ -32,11 +33,11 @@ export const checkAddresses = async (
     .filter({
       has: page
         .getByRole('paragraph')
-        .getByText(`To${from.isContract ? ' (Contract)' : ''}`, {
+        .getByText(`To${to.isContract ? ' (Contract)' : ''}`, {
           exact: true,
         }),
-    })
-    .nth(position);
+    }).nth(toPosition);
+  console.log("toArticle: ", await toArticle.innerText());
   const toShortAddress = shortAddress(to.address.toString());
   const toAddressText = toArticle
     .getByRole('paragraph')

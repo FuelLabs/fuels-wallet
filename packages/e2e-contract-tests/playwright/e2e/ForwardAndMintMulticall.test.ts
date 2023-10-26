@@ -5,19 +5,20 @@ import {
   hasText,
   walletConnect,
 } from '@fuel-wallet/test-utils';
-import { BaseAssetId, bn } from 'fuels';
+import { BaseAssetId, bn, toBech32 } from 'fuels';
 
 import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
 import { testSetup } from '../utils';
 
-import { checkFee } from './utils';
+import { checkFee, checkAddresses } from './utils';
 
 const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward and Mint Multicall', () => {
+  let fuelWallet;
   test.beforeEach(async ({ context, extensionId, page }) => {
-    await testSetup({ context, page, extensionId });
+    fuelWallet = await testSetup({ context, page, extensionId });
   });
 
   test('e2e foreward and mint multicall', async ({ context, page }) => {
@@ -61,5 +62,17 @@ test.describe('Forward and Mint Multicall', () => {
     await hasText(walletPage, 'Fee (network)');
     const fee = bn.parseUnits('0.000000217');
     await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
+
+    const fuelContractId = toBech32(VITE_CONTRACT_ID!);
+    await checkAddresses(
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: fuelContractId, isContract: true },
+      walletPage
+    );
+    await checkAddresses(
+      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      walletPage
+    );
   });
 });
