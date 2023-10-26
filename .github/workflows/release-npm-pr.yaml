@@ -1,8 +1,6 @@
 name: Release to @preview tag on npm
 
 on:
-  # This should be removed before merging to master
-  pull_request:
   workflow_dispatch:
 
 env:
