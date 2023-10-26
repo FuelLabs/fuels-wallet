@@ -6,6 +6,7 @@ import {
   hasText,
 } from '@fuel-wallet/test-utils';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
+import type { WalletUnlocked } from 'fuels';
 
 import '../../load.envs';
 import { shortAddress } from '../../src/utils';
@@ -16,7 +17,7 @@ import { checkFee, checkAddresses } from './utils';
 const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward Eth', () => {
-  let fuelWallet;
+  let fuelWallet: WalletUnlocked;
   test.beforeEach(async ({ context, extensionId, page }) => {
     fuelWallet = await testSetup({ context, page, extensionId });
   });

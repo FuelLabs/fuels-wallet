@@ -5,7 +5,8 @@ import {
   hasText,
   walletConnect,
 } from '@fuel-wallet/test-utils';
-import { BaseAssetId, WalletUnlocked, bn, toBech32 } from 'fuels';
+import { BaseAssetId, bn, toBech32 } from 'fuels';
+import type { WalletUnlocked } from 'fuels';
 
 import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';

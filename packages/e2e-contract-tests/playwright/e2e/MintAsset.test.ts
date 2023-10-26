@@ -7,6 +7,7 @@ import {
   addAssetThroughSettings,
 } from '@fuel-wallet/test-utils';
 import { bn, toBech32 } from 'fuels';
+import type { WalletUnlocked } from 'fuels';
 
 import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
@@ -17,7 +18,7 @@ import { checkFee, checkAddresses } from './utils';
 const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Mint Assets', () => {
-  let fuelWallet;
+  let fuelWallet: WalletUnlocked;
   test.beforeEach(async ({ context, extensionId, page }) => {
     fuelWallet = await testSetup({ context, page, extensionId });
   });
