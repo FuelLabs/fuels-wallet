@@ -1,4 +1,3 @@
-/// <reference types="@types/chrome" />
 export * from './asset';
 export * from './coin';
 export * from './accounts';

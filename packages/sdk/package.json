@@ -28,7 +28,7 @@
     "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
   },
   "dependencies": {
-    "@fuel-wallet/types": "workspace:*",
+    "@types/chrome": "^0.0.246",
     "dexie-observable": "4.0.1-beta.13",
     "events": "^3.3.0",
     "json-rpc-2.0": "^1.6.0",
@@ -39,6 +39,7 @@
     "fuels": ">=0.63.0"
   },
   "devDependencies": {
+    "@fuel-wallet/types": "workspace:*",
     "@types/uuid": "^9.0.5",
     "fuels": "0.63.0",
     "jest-webextension-mock": "^3.8.9",
