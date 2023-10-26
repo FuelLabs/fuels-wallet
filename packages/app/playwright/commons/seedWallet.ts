@@ -24,6 +24,8 @@ export async function seedWallet(address: string, amount: BN) {
     { gasPrice, gasLimit }
   );
   await transfETH.wait();
+  // eslint-disable-next-line no-console
+  console.log(gasLimit);
   const transfAsset = await genesisWallet.transfer(
     Address.fromString(address),
     amount,
