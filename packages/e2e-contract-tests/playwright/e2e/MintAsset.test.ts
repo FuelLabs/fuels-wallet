@@ -7,6 +7,7 @@ import {
   addAssetThroughSettings,
   walletApprove,
 } from '@fuel-wallet/test-utils';
+import { expect } from '@playwright/test';
 import { bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
 
@@ -63,7 +64,17 @@ test.describe('Mint Assets', () => {
       walletPage
     );
 
+    const preMintBalanceTkn = await fuelWallet.getBalance(assetId);
     await walletApprove(context);
+    await hasText(page, 'Transaction successful.');
+    const postMintBalanceTkn = await fuelWallet.getBalance(assetId);
+    expect(
+      parseFloat(
+        postMintBalanceTkn
+          .sub(preMintBalanceTkn)
+          .format({ precision: 6, units: 9 })
+      )
+    ).toBe(parseFloat(mintAmount));
   });
 
   test('e2e mint known asset', async ({ context, page }) => {
@@ -126,6 +137,16 @@ test.describe('Mint Assets', () => {
       walletPage
     );
 
+    const preMintBalanceTkn = await fuelWallet.getBalance(assetId);
     await walletApprove(context);
+    await hasText(page, 'Transaction successful.');
+    const postMintBalanceTkn = await fuelWallet.getBalance(assetId);
+    expect(
+      parseFloat(
+        postMintBalanceTkn
+          .sub(preMintBalanceTkn)
+          .format({ precision: 6, units: 6 })
+      )
+    ).toBe(parseFloat(mintAmount));
   });
 });

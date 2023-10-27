@@ -6,6 +6,7 @@ import {
   hasText,
   walletApprove,
 } from '@fuel-wallet/test-utils';
+import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
 import { bn, BaseAssetId, toBech32 } from 'fuels';
 
@@ -96,6 +97,16 @@ test.describe('Forward Half Custom Asset', () => {
     );
 
     // Test approve
+    const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     await walletApprove(context);
+    await hasText(page, 'Transaction successful.');
+    const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
+    expect(
+      parseFloat(
+        preDepositBalanceTkn
+          .sub(postDepositBalanceTkn)
+          .format({ precision: 6, units: 9 })
+      )
+    ).toBe(parseFloat(halfForwardCustomAssetAmount));
   });
 });

@@ -6,6 +6,7 @@ import {
   hasText,
   walletApprove,
 } from '@fuel-wallet/test-utils';
+import { expect } from '@playwright/test';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
 
@@ -63,6 +64,16 @@ test.describe('Forward Eth', () => {
     );
 
     // Test approve
+    const preDepositBalanceEth = await fuelWallet.getBalance();
     await walletApprove(context);
+    await hasText(page, 'Transaction successful.');
+    const postDepositBalanceEth = await fuelWallet.getBalance();
+    expect(
+      parseFloat(
+        preDepositBalanceEth
+          .sub(postDepositBalanceEth)
+          .format({ precision: 6, units: 9 })
+      )
+    ).toBe(parseFloat(forwardEthAmount));
   });
 });

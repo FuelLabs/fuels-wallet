@@ -6,6 +6,7 @@ import {
   walletConnect,
   walletApprove,
 } from '@fuel-wallet/test-utils';
+import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
 
@@ -75,6 +76,16 @@ test.describe('Deposit Half ETH', () => {
     );
 
     // Test approve
+    const preDepositBalanceEth = await fuelWallet.getBalance();
     await walletApprove(context);
+    await hasText(page, 'Transaction successful.');
+    const postDepositBalanceEth = await fuelWallet.getBalance();
+    expect(
+      parseFloat(
+        preDepositBalanceEth
+          .sub(postDepositBalanceEth)
+          .format({ precision: 6, units: 9 })
+      )
+    ).toBe(parseFloat(halfDepositAmount));
   });
 });

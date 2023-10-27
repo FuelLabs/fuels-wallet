@@ -6,6 +6,7 @@ import {
   walletConnect,
   walletApprove,
 } from '@fuel-wallet/test-utils';
+import { expect } from '@playwright/test';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
 
@@ -78,6 +79,25 @@ test.describe('Forward and Mint Multicall', () => {
     );
 
     // Test approve
+    const preDepositBalanceEth = await fuelWallet.getBalance();
+    const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     await walletApprove(context);
+    await hasText(page, 'Transaction successful.');
+    const postDepositBalanceEth = await fuelWallet.getBalance();
+    const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
+    expect(
+      parseFloat(
+        preDepositBalanceEth
+          .sub(postDepositBalanceEth)
+          .format({ precision: 6, units: 9 })
+      )
+    ).toBe(parseFloat(depositAmount));
+    expect(
+      parseFloat(
+        postDepositBalanceTkn
+          .sub(preDepositBalanceTkn)
+          .format({ precision: 6, units: 9 })
+      )
+    ).toBe(parseFloat(mintAmount));
   });
 });
