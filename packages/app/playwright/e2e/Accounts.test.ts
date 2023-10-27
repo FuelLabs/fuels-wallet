@@ -80,7 +80,7 @@ test.describe('Account', () => {
     await getByAriaLabel(page, `Export ${data.accounts[0].name}`).click();
 
     await hasText(page, 'Unlock your wallet to continue');
-    await getByAriaLabel(page, 'Your Password').type(WALLET_PASSWORD);
+    await getByAriaLabel(page, 'Your Password').fill(WALLET_PASSWORD);
     await getByAriaLabel(page, 'Unlock wallet').click();
     await hasText(page, /Export Private Key/i);
     await hasText(page, data.accounts[0].privateKey);
@@ -142,11 +142,11 @@ test.describe('Account', () => {
 
     await hasText(page, 'Unlock your wallet to continue');
     const passwordInput = getByAriaLabel(page, 'Your Password');
-    await passwordInput.type(`${WALLET_PASSWORD}1`);
+    await passwordInput.fill(`${WALLET_PASSWORD}1`);
     await getByAriaLabel(page, 'Unlock wallet').click();
     await hasText(page, /Invalid password/i);
     await passwordInput.clear();
-    await passwordInput.type(WALLET_PASSWORD);
+    await passwordInput.fill(WALLET_PASSWORD);
     await getByAriaLabel(page, 'Unlock wallet').click();
     await hasText(page, /Export Private Key/i);
     await hasText(page, data.accounts[0].privateKey);
