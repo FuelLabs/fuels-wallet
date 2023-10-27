@@ -1,12 +1,12 @@
-import type { Fuel } from '@fuel-wallet/sdk';
+import type { FuelWalletConnector } from '@fuel-wallet/sdk';
+import { Fuel } from '@fuel-wallet/sdk';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { createContext, useContext, useEffect } from 'react';
 
-import { useWindowFuel } from '../hooks';
-import { QUERY_KEYS } from '../utils';
+import { QUERY_KEYS, selectCurrentConnector } from '../utils';
 
-export const fuelQueryClient = new QueryClient({
+const queryClientConfig = {
   defaultOptions: {
     queries: {
       // These two are annoying during development
@@ -19,7 +19,7 @@ export const fuelQueryClient = new QueryClient({
       structuralSharing: false,
     },
   },
-});
+};
 
 type FuelProviderProps = {
   children?: ReactNode;
@@ -38,7 +38,15 @@ export const useFuel = () => {
 };
 
 export const FuelProvider = ({ children }: FuelProviderProps) => {
-  const fuel = useWindowFuel();
+  const fuel = new Fuel();
+  const fuelQueryClient = new QueryClient(queryClientConfig);
+
+  function onConnectorsChange(connectors: Array<FuelWalletConnector>) {
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.connectorList]);
+    selectCurrentConnector(fuel, connectors)?.then(() => {
+      fuelQueryClient.invalidateQueries();
+    });
+  }
 
   function onCurrentAccountChange() {
     fuelQueryClient.invalidateQueries([QUERY_KEYS.account]);
@@ -67,18 +75,20 @@ export const FuelProvider = ({ children }: FuelProviderProps) => {
   }
 
   useEffect(() => {
-    fuel?.on(fuel.events.currentAccount, onCurrentAccountChange);
-    fuel?.on(fuel.events.connection, onConnectionChange);
-    fuel?.on(fuel.events.accounts, onAccountsChange);
-    fuel?.on(fuel.events.network, onNetworkChange);
+    fuel.on(fuel.events.currentAccount, onCurrentAccountChange);
+    fuel.on(fuel.events.connectors, onConnectorsChange);
+    fuel.on(fuel.events.connection, onConnectionChange);
+    fuel.on(fuel.events.accounts, onAccountsChange);
+    fuel.on(fuel.events.network, onNetworkChange);
 
     return () => {
-      fuel?.off(fuel.events.currentAccount, onCurrentAccountChange);
-      fuel?.off(fuel.events.connection, onConnectionChange);
-      fuel?.off(fuel.events.accounts, onAccountsChange);
-      fuel?.off(fuel.events.network, onNetworkChange);
+      fuel.off(fuel.events.currentAccount, onCurrentAccountChange);
+      fuel.off(fuel.events.connectors, onConnectorsChange);
+      fuel.off(fuel.events.connection, onConnectionChange);
+      fuel.off(fuel.events.accounts, onAccountsChange);
+      fuel.off(fuel.events.network, onNetworkChange);
     };
-  }, [fuel]);
+  }, []);
 
   return (
     <FuelReactContext.Provider value={{ fuel }}>

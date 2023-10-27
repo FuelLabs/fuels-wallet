@@ -6,7 +6,7 @@ import EventEmitter from 'events';
 import { db } from '~/systems/Core/utils/database';
 
 export class DatabaseObservable<
-  TableNames extends Array<string>
+  TableNames extends Array<string>,
 > extends EventEmitter {
   constructor() {
     super();

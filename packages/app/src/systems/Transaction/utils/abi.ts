@@ -18,13 +18,16 @@ export async function getAbiMap({
   const abis = await Promise.all(
     contractIds.map((contractId) => AbiService.getAbi({ data: contractId }))
   );
-  const abiMap = abis.reduce((prev, abi, index) => {
-    if (abi) {
-      prev[contractIds[index]] = abi;
-    }
+  const abiMap = abis.reduce(
+    (prev, abi, index) => {
+      if (abi) {
+        prev[contractIds[index]] = abi;
+      }
 
-    return prev;
-  }, {} as Record<string, JsonAbi>);
+      return prev;
+    },
+    {} as Record<string, JsonAbi>
+  );
 
   return abiMap;
 }

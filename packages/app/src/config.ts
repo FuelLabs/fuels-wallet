@@ -18,7 +18,6 @@ export const {
 export const WALLET_NAME = VITE_CRX_NAME;
 export const APP_VERSION = VITE_APP_VERSION;
 export const DATABASE_VERSION = Number(VITE_DATABASE_VERSION);
-export const DECIMAL_UNITS = 9;
 export const FORMAT_LANGUAGE = 'en-US';
 export const MIN_FRACTION_DIGITS = 1;
 export const MAX_FRACTION_DIGITS = 3;

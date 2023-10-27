@@ -15,7 +15,8 @@
     "Signing a Message",
     "ABIs",
     "Wallet Connectors",
-    "Reference"
+    "Reference",
+    "Hooks Reference"
   ],
   "contributing": [
     "Running locally",

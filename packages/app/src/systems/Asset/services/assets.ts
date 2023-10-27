@@ -148,6 +148,15 @@ export class AssetService {
     if (trimmedAssets.length !== uniqueAssetsBySymbol.length) {
       throw new Error('Asset with same symbol being added multiple times');
     }
+    trimmedAssets.forEach((obj) => {
+      if (
+        !Number.isInteger(obj.decimals) ||
+        Number(obj.decimals) > 19 ||
+        Number(obj.decimals) < 0
+      ) {
+        throw new Error(`Asset ${obj.assetId} decimals is not valid`);
+      }
+    });
 
     // validate if all assets from input are already added
     const uniqueAssetsIds = uniqueAssetsById.map((a) => a.assetId);
@@ -170,21 +179,24 @@ export class AssetService {
     const allAssets = await AssetService.getAssets();
     const allNameValues = allAssets.map((a) => a.name);
     const allSymbolValues = allAssets.map((a) => a.symbol);
-    const assetsNotRepeated = assets.reduce(async (prev, asset) => {
-      const assets = await prev;
-      const allNewAssetNames = assets.map((a) => a.name);
-      const allNewAssetSymbols = assets.map((a) => a.symbol);
-      const name = getUniqueString({
-        desired: asset.name,
-        allValues: [...allNameValues, ...allNewAssetNames],
-      });
-      const symbol = getUniqueString({
-        desired: asset.symbol,
-        allValues: [...allSymbolValues, ...allNewAssetSymbols],
-      });
+    const assetsNotRepeated = assets.reduce(
+      async (prev, asset) => {
+        const assets = await prev;
+        const allNewAssetNames = assets.map((a) => a.name);
+        const allNewAssetSymbols = assets.map((a) => a.symbol);
+        const name = getUniqueString({
+          desired: asset.name,
+          allValues: [...allNameValues, ...allNewAssetNames],
+        });
+        const symbol = getUniqueString({
+          desired: asset.symbol,
+          allValues: [...allSymbolValues, ...allNewAssetSymbols],
+        });
 
-      return [...assets, { ...asset, name, symbol, isCustom: true }];
-    }, Promise.resolve([] as Asset[]));
+        return [...assets, { ...asset, name, symbol, isCustom: true }];
+      },
+      Promise.resolve([] as Asset[])
+    );
 
     return assetsNotRepeated;
   }

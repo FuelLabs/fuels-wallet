@@ -1,5 +1,63 @@
 # fuels-wallet
 
+## 0.13.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.13.5
+  - @fuel-wallet/types@0.13.5
+
+## 0.13.4
+
+### Patch Changes
+
+- [#939](https://github.com/FuelLabs/fuels-wallet/pull/939) [`9939298`](https://github.com/FuelLabs/fuels-wallet/commit/9939298ba935ef30f79e1f47405451cfa34ff4b6) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: password input showing incorrect error feedback
+
+- [#923](https://github.com/FuelLabs/fuels-wallet/pull/923) [`f683bae`](https://github.com/FuelLabs/fuels-wallet/commit/f683baeb6efbcc75561ac53c9c0d9d05f3bbae29) Thanks [@matt-user](https://github.com/matt-user)! - chore: bump fuels version
+
+- [#939](https://github.com/FuelLabs/fuels-wallet/pull/939) [`9939298`](https://github.com/FuelLabs/fuels-wallet/commit/9939298ba935ef30f79e1f47405451cfa34ff4b6) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: upgrade fuel-core
+
+- Updated dependencies [[`f683bae`](https://github.com/FuelLabs/fuels-wallet/commit/f683baeb6efbcc75561ac53c9c0d9d05f3bbae29)]:
+  - @fuel-wallet/types@0.13.4
+  - @fuel-wallet/sdk@0.13.4
+
+## 0.13.3
+
+### Patch Changes
+
+- [#920](https://github.com/FuelLabs/fuels-wallet/pull/920) [`7286df2`](https://github.com/FuelLabs/fuels-wallet/commit/7286df278f27c9bcbddd5c91d39c9e8ed1c272c6) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: add object-src for win7 compatibility.
+
+- Updated dependencies [[`7ef4fac`](https://github.com/FuelLabs/fuels-wallet/commit/7ef4facf3e61c409ad5e7b794700f90c62cbf865)]:
+  - @fuel-wallet/sdk@0.13.3
+  - @fuel-wallet/types@0.13.3
+
+## 0.13.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.13.2
+  - @fuel-wallet/types@0.13.2
+
+## 0.13.1
+
+### Patch Changes
+
+- [#889](https://github.com/FuelLabs/fuels-wallet/pull/889) [`1932a10`](https://github.com/FuelLabs/fuels-wallet/commit/1932a10daca83c7cbdec2d7d66bd398c63732a18) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: transaction fee calculation
+
+- [#900](https://github.com/FuelLabs/fuels-wallet/pull/900) [`f0e8060`](https://github.com/FuelLabs/fuels-wallet/commit/f0e806096da4aa9a7fff36accfb017e825634e60) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: remove asset select amount
+
+- [#894](https://github.com/FuelLabs/fuels-wallet/pull/894) [`91d71f5`](https://github.com/FuelLabs/fuels-wallet/commit/91d71f581514f93bc5c5dc19425e5654f1dc7450) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: add decimal size for custom assets
+
+- [#886](https://github.com/FuelLabs/fuels-wallet/pull/886) [`9e3c5f2`](https://github.com/FuelLabs/fuels-wallet/commit/9e3c5f2998a715de17d6c2e7e22cba52b8c2da1a) Thanks [@matt-user](https://github.com/matt-user)! - fix: mint transaction screen
+
+- [#895](https://github.com/FuelLabs/fuels-wallet/pull/895) [`f4b07b7`](https://github.com/FuelLabs/fuels-wallet/commit/f4b07b7f67f162d283ac5d782680e4afa90f9bd5) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: permissions popup background color
+
+- Updated dependencies [[`09fa482`](https://github.com/FuelLabs/fuels-wallet/commit/09fa4824384d5fdd33df3a762462bab228fa13b5), [`91d71f5`](https://github.com/FuelLabs/fuels-wallet/commit/91d71f581514f93bc5c5dc19425e5654f1dc7450)]:
+  - @fuel-wallet/types@0.13.1
+  - @fuel-wallet/sdk@0.13.1
+
 ## 0.13.0
 
 ### Minor Changes

@@ -66,6 +66,25 @@ export function AssetForm({ form, isEditing, showOnlyId }: AssetFormProps) {
           />
           <ControlledField
             control={control}
+            name="decimals"
+            label="Decimals"
+            isInvalid={Boolean(formState.errors?.decimals)}
+            isRequired
+            render={({ field }) => (
+              <Input>
+                <Input.Field
+                  {...field}
+                  type="number"
+                  min={0}
+                  max={19}
+                  aria-label="Asset decimals"
+                  placeholder="Number of decimals ex. 9"
+                />
+              </Input>
+            )}
+          />
+          <ControlledField
+            control={control}
             name="imageUrl"
             label="Image URL"
             isInvalid={Boolean(formState.errors?.imageUrl)}

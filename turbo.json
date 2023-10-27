@@ -27,6 +27,10 @@
       "dependsOn": ["build:web", "build:crx"],
       "outputs": ["dist/**", "dist-crx/**"]
     },
+    "build:e2e-contracts": {
+      "dependsOn": ["build:app"],
+      "outputs": ["dist/**"]
+    },
     "build:all": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
@@ -51,6 +55,9 @@
       "cache": false
     },
     "dev:deps": {
+      "cache": false
+    },
+    "dev:e2e-contracts": {
       "cache": false
     }
   }

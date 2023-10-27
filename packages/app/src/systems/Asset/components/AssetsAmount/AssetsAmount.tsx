@@ -25,38 +25,50 @@ export const AssetsAmount: AssetsAmountComponent = ({
   balanceErrors,
 }: AssetsAmountProps) => {
   const hasError = !!balanceErrors?.length;
+  const allEmptyAmounts = amounts.every((assetAmount) =>
+    bn(assetAmount.amount).eq(0)
+  );
 
   return (
-    <Box css={styles.card} data-error={hasError}>
-      {(title || hasError) && (
-        <Box.Flex css={styles.header}>
-          {title && (
-            <Text as="h3" css={styles.title}>
-              {title}
-            </Text>
+    <>
+      {(!allEmptyAmounts || hasError) && (
+        <Box css={styles.card} data-error={hasError}>
+          {(title || hasError) && (
+            <Box.Flex css={styles.header}>
+              {title && (
+                <Text as="h3" css={styles.title}>
+                  {title}
+                </Text>
+              )}
+              {hasError && (
+                <Text
+                  css={{
+                    color: '$intentsError10',
+                    fontSize: '$sm',
+                    fontWeight: '$normal',
+                  }}
+                >
+                  (not enough balance)
+                </Text>
+              )}
+            </Box.Flex>
           )}
-          {hasError && (
-            <Text
-              css={{
-                color: '$intentsError10',
-                fontSize: '$sm',
-                fontWeight: '$normal',
-              }}
-            >
-              (not enough balance)
-            </Text>
+          {!allEmptyAmounts && (
+            <Box.Stack gap="$2">
+              {amounts.map(
+                (assetAmount) =>
+                  bn(assetAmount.amount).gt(0) && (
+                    <AssetsAmountItem
+                      assetAmount={assetAmount}
+                      key={assetAmount.assetId}
+                    />
+                  )
+              )}
+            </Box.Stack>
           )}
-        </Box.Flex>
+        </Box>
       )}
-      <Box.Stack gap="$2">
-        {amounts.map((assetAmount) => (
-          <AssetsAmountItem
-            assetAmount={assetAmount}
-            key={assetAmount.assetId}
-          />
-        ))}
-      </Box.Stack>
-    </Box>
+    </>
   );
 };
 
@@ -66,7 +78,14 @@ type AssetsAmountItemProps = {
 
 const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
   const assetAmountClass = cx('asset_amount');
-  const { name = '', symbol, imageUrl, assetId, amount } = assetAmount || {};
+  const {
+    name = '',
+    symbol,
+    imageUrl,
+    assetId,
+    amount,
+    decimals,
+  } = assetAmount || {};
 
   return (
     <Grid key={assetId} css={styles.root} className={assetAmountClass}>
@@ -84,7 +103,10 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
         </Text>
       </Copyable>
       <Box.Flex css={styles.amount}>
-        {bn(amount).format()} {symbol}
+        {bn(amount).format({
+          units: decimals,
+        })}{' '}
+        {symbol}
       </Box.Flex>
     </Grid>
   );

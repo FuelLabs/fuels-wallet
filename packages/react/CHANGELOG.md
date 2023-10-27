@@ -1,5 +1,55 @@
 # @fuel-wallet/react
 
+## 0.13.5
+
+### Patch Changes
+
+- [#884](https://github.com/FuelLabs/fuels-wallet/pull/884) [`a991b08`](https://github.com/FuelLabs/fuels-wallet/commit/a991b08d7f8a62650dfec5167e795ef9e6fe093c) Thanks [@cold-briu](https://github.com/cold-briu)! - fix: dependencies for react package
+  feat: add docs for react package
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.13.5
+  - @fuel-wallet/types@0.13.5
+
+## 0.13.4
+
+### Patch Changes
+
+- [#923](https://github.com/FuelLabs/fuels-wallet/pull/923) [`f683bae`](https://github.com/FuelLabs/fuels-wallet/commit/f683baeb6efbcc75561ac53c9c0d9d05f3bbae29) Thanks [@matt-user](https://github.com/matt-user)! - chore: bump fuels version
+
+- Updated dependencies [[`f683bae`](https://github.com/FuelLabs/fuels-wallet/commit/f683baeb6efbcc75561ac53c9c0d9d05f3bbae29)]:
+  - @fuel-wallet/sdk@0.13.4
+
+## 0.13.3
+
+### Patch Changes
+
+- [#917](https://github.com/FuelLabs/fuels-wallet/pull/917) [`7ef4fac`](https://github.com/FuelLabs/fuels-wallet/commit/7ef4facf3e61c409ad5e7b794700f90c62cbf865) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: load connectors on start up
+
+- Updated dependencies [[`7ef4fac`](https://github.com/FuelLabs/fuels-wallet/commit/7ef4facf3e61c409ad5e7b794700f90c62cbf865)]:
+  - @fuel-wallet/sdk@0.13.3
+
+## 0.13.2
+
+### Patch Changes
+
+- [#914](https://github.com/FuelLabs/fuels-wallet/pull/914) [`d6b847d`](https://github.com/FuelLabs/fuels-wallet/commit/d6b847d2df774f00494de284282db1199ba676d3) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: use Fuel SDK instead of window.fuel
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.13.2
+
+## 0.13.1
+
+### Patch Changes
+
+- [#891](https://github.com/FuelLabs/fuels-wallet/pull/891) [`3e1d91b`](https://github.com/FuelLabs/fuels-wallet/commit/3e1d91b8f54c4da9badc17e341da715117e5e618) Thanks [@matt-user](https://github.com/matt-user)! - fix: import and use HStack correctly
+
+- [#881](https://github.com/FuelLabs/fuels-wallet/pull/881) [`5901763`](https://github.com/FuelLabs/fuels-wallet/commit/590176349681675a78fea6467caa6f9089a0b2e7) Thanks [@luizstacio](https://github.com/luizstacio)! - Update fuelet connector data
+
+- [#882](https://github.com/FuelLabs/fuels-wallet/pull/882) [`efb1736`](https://github.com/FuelLabs/fuels-wallet/commit/efb1736b778659dd1107f083547eb3f16c8f8dba) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix connector name in the aria label
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.13.1
+
 ## 0.13.0
 
 ### Minor Changes
