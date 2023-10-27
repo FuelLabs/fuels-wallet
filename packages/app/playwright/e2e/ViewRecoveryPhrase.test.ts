@@ -29,7 +29,7 @@ test.describe('ViewSeedPhrase', () => {
 
       // Should show unlock screen
       await hasText(page, /Confirm your Password/i);
-      await getByAriaLabel(page, 'Your Password').type(WALLET_PASSWORD);
+      await getByAriaLabel(page, 'Your Password').fill(WALLET_PASSWORD);
       await getButtonByText(page, 'Unlock').click();
     });
 
