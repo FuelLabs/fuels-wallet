@@ -28,7 +28,7 @@ export async function seedWallet(address: string, amount: BN) {
     Address.fromString(address),
     amount,
     ALT_ASSET.assetId,
-    { gasPrice, gasLimit }
+    { gasPrice, gasLimit: 110_000 }
   );
   await transfAsset.wait();
 }
