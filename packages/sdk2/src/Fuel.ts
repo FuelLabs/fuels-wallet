@@ -1,89 +1,48 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { FuelConnectorEventsType } from './FuelConnector';
 import { FuelConnector } from './FuelConnector';
-import { FuelWalletConnector } from './connectors/FuelWalletConnector';
-
-interface TargetObject {
-  on?: (event: string, callback: (data: any) => void) => void;
-  emit?: (event: string, data: any) => void;
-  addEventListener?: (event: string, callback: (event: any) => void) => void;
-  removeEventListener?: (event: string, callback: (event: any) => void) => void;
-  postMessage?: (message: string) => void;
-}
-
-interface Storage {
-  setItem: (key: string, value: string) => void;
-  getItem: (key: string) => string | null;
-  removeItem: (key: string) => void;
-}
+import {
+  FUEL_CONNECTOR_EVENTS,
+  FUEL_CONNECTOR_METHODS,
+} from './FuelConnectorAPI';
+import type { FuelStorage, TargetObject } from './types';
 
 export type FuelConfig = {
-  defaultConnectors?: Array<FuelConnector>;
   connectors?: Array<FuelConnector>;
   storeConnector?: boolean;
   targetObject?: TargetObject;
 };
 
-const FUEL_CONNECTOR_COMMON_METHODS = [
-  'ping',
-  'version',
-  'isConnected',
-  'accounts',
-  'connect',
-  'disconnect',
-  'signMessage',
-  'sendTransaction',
-  'currentAccount',
-  'addAssets',
-  'assets',
-  'addNetwork',
-  'currentNetwork',
-  'networks',
-  'addABI',
-  'getABI',
-  'hasABI',
-];
-const FUEL_CONNECTOR_COMMON_EVENTS = [
-  'accounts',
-  'currentAccount',
-  'connection',
-  'network',
-  'assets',
-];
-
 export class Fuel extends FuelConnector {
   private currentConnector: FuelConnector;
-
-  connectorEventName: string = 'FuelConnector';
-  connectors: Array<FuelConnector> = [];
-  targetObject: TargetObject;
-  storage?: Storage;
-  unsubscribes: Array<() => void> = [];
+  private storage?: FuelStorage;
+  private connectors: Array<FuelConnector> = [];
+  private targetObject: TargetObject;
+  private unsubscribes: Array<() => void> = [];
 
   constructor(config: FuelConfig = {}) {
     super();
-    // Increase the limite of listeners
+    // Increase the limit of listeners
     this.setMaxListeners(1_000);
-    // Fuel Wallet Connector default connector
-    const fuelWalletConnector = new FuelWalletConnector();
     // Set all connectors
-    this.connectors = [
-      ...(config.defaultConnectors || [fuelWalletConnector]),
-      ...(config.connectors || []),
-    ];
+    this.connectors = config.connectors ?? [];
     // Set current connector to be the first one from the list
     this.currentConnector = this.connectors[0];
     // Set the target object to listen for global events
-    this.targetObject = config.targetObject || window;
-    // Setup new connector listener to know if a
-    // new connector was added
+    this.targetObject =
+      config.targetObject ?? typeof window !== 'undefined' ? window : {};
+    // Setup new connector listener for global events
     this.setupConnectorListener();
-    // Fetch all connectors status to know if they are installed
-    // and connected
-    this.fetchConnectorsStatus();
     // Setup all methods
-    this.setupMethods(FUEL_CONNECTOR_COMMON_METHODS);
-
+    this.setupMethods();
     // Get the current connector from the storage
+    this.setDefaultConnector();
+  }
+
+  /**
+   * Setup the default connector from the storage.
+   */
+  private setDefaultConnector() {
     const connectorName =
       this.storage?.getItem('currentConnector') ||
       this.connectors[0]?.metadata?.name;
@@ -100,11 +59,11 @@ export class Fuel extends FuelConnector {
   private setupConnectorEvents(events: string[]) {
     this.unsubscribes.map((unsub) => unsub());
     this.unsubscribes = events.map((event) => {
-      const handler = (...args: any[]) => {
+      const handler = (...args: unknown[]) => {
         this.emit(event, ...args);
       };
-      this.currentConnector.on(event as any, handler);
-      return () => this.currentConnector.off(event as any, handler);
+      this.currentConnector.on(event as FuelConnectorEventsType, handler);
+      return () => this.currentConnector.off(event, handler);
     });
   }
 
@@ -124,8 +83,8 @@ export class Fuel extends FuelConnector {
    * Create a method for each method proxy that is available on the Common interface
    * and call the method from the current connector.
    */
-  private setupMethods(methods: string[]) {
-    methods.map((method) => {
+  private setupMethods() {
+    FUEL_CONNECTOR_METHODS.map((method) => {
       this[method] = async (...args: any[]) => this.callMethod(method, ...args);
     });
   }
@@ -225,7 +184,7 @@ export class Fuel extends FuelConnector {
     const { installed } = await this.fetchConnectorStatus(connector);
     if (installed) {
       this.currentConnector = connector;
-      this.setupConnectorEvents(FUEL_CONNECTOR_COMMON_EVENTS);
+      this.setupConnectorEvents(FUEL_CONNECTOR_EVENTS);
       this.storage?.setItem('currentConnector', connector.metadata.name);
     }
     return true;

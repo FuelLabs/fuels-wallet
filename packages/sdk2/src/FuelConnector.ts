@@ -116,6 +116,8 @@ export type FuelConnectorEvents =
   | ConnectorEvent
   | CurrentAccountEvent;
 
+export type FuelConnectorEventsType = FuelConnectorEvents['type'];
+
 /****
  * ========================================================================================
  * Data Types
@@ -346,6 +348,17 @@ export abstract class FuelConnector extends EventEmitter {
    * @returns {boolean} boolean - Return true if the network was added successfully
    */
   async addNetwork(network: Network): Promise<boolean> {
+    throw new Error('Method not implemented.');
+  }
+
+  /**
+   * Should start the switch network process and return true if the network has change successfully.
+   *
+   * @emits networks
+   * @throws {Error} if the network already exists
+   * @returns {boolean} boolean - Return true if the network was added successfully
+   */
+  async switchNetwork(network: Network): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
 
