@@ -4,6 +4,7 @@ import {
   getWalletPage,
   hasText,
   walletConnect,
+  walletApprove,
 } from '@fuel-wallet/test-utils';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
@@ -75,5 +76,8 @@ test.describe('Forward and Mint Multicall', () => {
       { address: fuelWallet.address.toAddress(), isContract: false },
       walletPage
     );
+
+    // Test approve
+    await walletApprove(context);
   });
 });

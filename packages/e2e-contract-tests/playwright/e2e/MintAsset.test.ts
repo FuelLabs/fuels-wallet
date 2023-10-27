@@ -5,6 +5,7 @@ import {
   hasText,
   walletConnect,
   addAssetThroughSettings,
+  walletApprove,
 } from '@fuel-wallet/test-utils';
 import { bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
@@ -61,6 +62,8 @@ test.describe('Mint Assets', () => {
       { address: fuelWallet.address.toAddress(), isContract: false },
       walletPage
     );
+
+    await walletApprove(context);
   });
 
   test('e2e mint known asset', async ({ context, page }) => {
@@ -122,5 +125,7 @@ test.describe('Mint Assets', () => {
       { address: fuelWallet.address.toAddress(), isContract: false },
       walletPage
     );
+
+    await walletApprove(context);
   });
 });

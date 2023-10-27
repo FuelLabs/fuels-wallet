@@ -4,6 +4,7 @@ import {
   getWalletPage,
   hasText,
   walletConnect,
+  walletApprove,
 } from '@fuel-wallet/test-utils';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
@@ -86,5 +87,8 @@ test.describe('Forward Half ETH and Mint Custom Asset', () => {
       { address: fuelWallet.address.toAddress(), isContract: false },
       walletPage
     );
+
+    // Test approve
+    await walletApprove(context);
   });
 });

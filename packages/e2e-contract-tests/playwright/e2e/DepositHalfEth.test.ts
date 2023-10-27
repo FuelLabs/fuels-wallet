@@ -4,6 +4,7 @@ import {
   getWalletPage,
   hasText,
   walletConnect,
+  walletApprove,
 } from '@fuel-wallet/test-utils';
 import type { WalletUnlocked } from 'fuels';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
@@ -72,5 +73,8 @@ test.describe('Deposit Half ETH', () => {
       { address: fuelWallet.address.toAddress(), isContract: false },
       walletPage
     );
+
+    // Test approve
+    await walletApprove(context);
   });
 });

@@ -4,6 +4,7 @@ import {
   walletConnect,
   getWalletPage,
   hasText,
+  walletApprove,
 } from '@fuel-wallet/test-utils';
 import type { WalletUnlocked } from 'fuels';
 import { bn, BaseAssetId, toBech32 } from 'fuels';
@@ -81,5 +82,8 @@ test.describe('Forward Custom Asset', () => {
       { address: fuelContractId, isContract: true },
       walletPage
     );
+
+    // Test approve
+    await walletApprove(context);
   });
 });
