@@ -1,8 +1,8 @@
 import type { Asset } from '@fuels/assets';
-import { WalletLocked, type TransactionRequestLike, Provider } from 'fuels';
+import { type TransactionRequestLike } from 'fuels';
 import { setTimeout } from 'timers/promises';
 
-import { FuelConnector } from '../FuelConnector';
+import { FuelWalletConnector } from '../FuelWalletConnector';
 import { FuelConnectorEventTypes } from '../api';
 import type { FuelABI, Network, WalletConnectorMetadata } from '../types';
 
@@ -16,7 +16,7 @@ type MockConnectorOptions = {
   metadata?: Partial<WalletConnectorMetadata>;
 };
 
-export class MockConnector extends FuelConnector {
+export class MockConnector extends FuelWalletConnector {
   _accounts: Array<string>;
   _networks: Array<Network>;
   _pingDelay: number;
@@ -131,14 +131,5 @@ export class MockConnector extends FuelConnector {
 
   async hasABI(_id: string) {
     return true;
-  }
-
-  async getWallet(address: string) {
-    const provider = await Provider.create('http://localhost:4000/graphql');
-    return new WalletLocked(address, provider);
-  }
-
-  async getProvider() {
-    return Provider.create('http://localhost:4000/graphql');
   }
 }

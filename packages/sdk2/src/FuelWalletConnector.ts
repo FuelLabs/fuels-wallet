@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Asset } from '@fuels/assets';
 import EventEmitter from 'events';
-import type { WalletLocked, Provider, TransactionRequestLike } from 'fuels';
+import type { TransactionRequestLike } from 'fuels';
 
 import { FuelConnectorEventTypes } from './api';
 import type {
@@ -14,12 +14,12 @@ import type {
 } from './types';
 
 /**
- * @name FuelConnector
+ * @name FuelWalletConnector
  *
  * Wallet Connector is a interface that represents a Wallet Connector and all the methods
  * that should be implemented to be compatible with the Fuel SDK.
  */
-export abstract class FuelConnector extends EventEmitter {
+export abstract class FuelWalletConnector extends EventEmitter {
   name: string = '';
   metadata: WalletConnectorMetadata = {} as WalletConnectorMetadata;
   connected: boolean = false;
@@ -229,25 +229,6 @@ export abstract class FuelConnector extends EventEmitter {
    * @return {boolean} - Return true if the abi exists or false if not.
    */
   async hasABI(id: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
-  }
-
-  /**
-   * Should return a instance of WalletLocked that represents the current wallet
-   *
-   * @param {string} address - The address of the account that should    the Wallet.
-   * @returns {WalletLocked}
-   */
-  async getWallet(address: string): Promise<WalletLocked> {
-    throw new Error('Method not implemented.');
-  }
-
-  /**
-   * Should return a instance of the Provider that represents the current network selected
-   *
-   * @returns {Provider}
-   */
-  async getProvider(): Promise<Provider> {
     throw new Error('Method not implemented.');
   }
 

@@ -22,7 +22,7 @@ describe('Fuel', () => {
     const fuel = new Fuel({
       targetObject: eventBus,
     });
-    let connectors = await fuel.getConnectors();
+    let connectors = await fuel.connectors();
     expect(connectors.length).toBe(0);
 
     // listen to connection event
@@ -34,7 +34,7 @@ describe('Fuel', () => {
     // wait for the event to be triggered
     await onConnectors.promise;
 
-    connectors = await fuel.getConnectors();
+    connectors = await fuel.connectors();
     expect(onConnectors).toBeCalledTimes(1);
     expect(onConnectors).toBeCalledWith(connectors);
     expect(connectors.length).toBeGreaterThan(0);
@@ -44,7 +44,7 @@ describe('Fuel', () => {
 
   test('Add connector using window events', async () => {
     const fuel = new Fuel();
-    let connectors = await fuel.getConnectors();
+    let connectors = await fuel.connectors();
     expect(connectors.length).toBe(0);
 
     // listen to connection event
@@ -58,7 +58,7 @@ describe('Fuel', () => {
     // wait for the event to be triggered
     await onConnectors.promise;
 
-    connectors = await fuel.getConnectors();
+    connectors = await fuel.connectors();
     expect(onConnectors).toBeCalledTimes(1);
     expect(onConnectors).toBeCalledWith(connectors);
     expect(connectors.length).toBeGreaterThan(0);
@@ -305,15 +305,15 @@ describe('Fuel Multiple Connectors', () => {
     });
 
     // Connectors should be available
-    const connectors = await fuel.getConnectors();
+    const connectors = await fuel.connectors();
     expect(connectors.length).toEqual(2);
     expect(connectors[0].name).toEqual(walletConnectorName);
     expect(connectors[1].name).toEqual(thirdPartyConnectorName);
     // Switch between connectors
-    expect(fuel.currentConnector?.name).toBe(walletConnectorName);
+    expect(fuel.currentConnector()?.name).toBe(walletConnectorName);
     expect(await fuel.accounts()).toHaveLength(2);
     await fuel.selectConnector(thirdPartyConnectorName);
-    expect(fuel.currentConnector?.name).toBe(thirdPartyConnectorName);
+    expect(fuel.currentConnector()?.name).toBe(thirdPartyConnectorName);
     expect(await fuel.accounts()).toHaveLength(0);
   });
 
@@ -420,7 +420,7 @@ describe('Fuel Multiple Connectors', () => {
     await fuel.selectConnector(walletConnector.name);
 
     // Ensure that the current connector is the wallet connector
-    expect(fuel.currentConnector?.name).toBe(walletConnector.name);
+    expect(fuel.currentConnector()?.name).toBe(walletConnector.name);
 
     const onAccounts = promiseCallback();
     fuel.on(fuel.events.accounts, onAccounts);
@@ -458,7 +458,7 @@ describe('Fuel Multiple Connectors', () => {
       storage: window.localStorage,
     });
     await fuelNewInstance.hasConnector();
-    expect(fuelNewInstance.currentConnector?.name).toBe(
+    expect(fuelNewInstance.currentConnector()?.name).toBe(
       thirdPartyConnector.name
     );
   });

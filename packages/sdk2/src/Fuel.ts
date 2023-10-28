@@ -1,9 +1,14 @@
-import { FuelConnector } from './FuelConnector';
+import type { AbstractAddress } from 'fuels';
+
+import { FuelWalletConnector } from './FuelWalletConnector';
+import { FuelWalletLocked } from './FuelWalletLocked';
+import { FuelWalletProvider } from './FuelWalletProvider';
 import { FuelConnectorEventTypes, FuelConnectorMethods } from './api';
 import { FuelConnectorEvent } from './types';
 import type {
   FuelConnectorEventsType,
   FuelStorage,
+  Network,
   TargetObject,
 } from './types';
 import type { CacheFor } from './utils';
@@ -19,7 +24,7 @@ const HAS_CONNECTOR_TIMEOUT = 2_000;
 const PING_CACHE_TIME = 5_000;
 
 export type FuelConfig = {
-  connectors?: Array<FuelConnector>;
+  connectors?: Array<FuelWalletConnector>;
   storage?: FuelStorage;
   storeConnector?: boolean;
   targetObject?: TargetObject;
@@ -29,34 +34,33 @@ export type FuelConnectorSelectOptions = {
   emitEvents?: boolean;
 };
 
-export class Fuel extends FuelConnector {
+export class Fuel extends FuelWalletConnector {
   static STORAGE_KEY = 'fuel-current-connector';
 
-  private storage?: FuelStorage;
-  private connectors: Array<FuelConnector> = [];
-  private targetObject: TargetObject | null = null;
-  private unsubscribes: Array<() => void> = [];
-  private targetUnsubscribe: () => void;
-  private pingCache: CacheFor = {};
-
-  currentConnector?: FuelConnector | null;
+  private _storage?: FuelStorage;
+  private _connectors: Array<FuelWalletConnector> = [];
+  private _targetObject: TargetObject | null = null;
+  private _unsubscribes: Array<() => void> = [];
+  private _targetUnsubscribe: () => void;
+  private _pingCache: CacheFor = {};
+  private _currentConnector?: FuelWalletConnector | null;
 
   constructor(config: FuelConfig = {}) {
     super();
     // Increase the limit of listeners
     this.setMaxListeners(1_000);
     // Set all connectors
-    this.connectors = config.connectors ?? [];
+    this._connectors = config.connectors ?? [];
     // Set the target object to listen for global events
-    this.targetObject = this.getTargetObject(config.targetObject);
+    this._targetObject = this.getTargetObject(config.targetObject);
     // Set default storage
-    this.storage = config.storage ?? this.getStorage();
+    this._storage = config.storage ?? this.getStorage();
     // Setup all methods
     this.setupMethods();
     // Get the current connector from the storage
     this.setDefaultConnector();
     // Setup new connector listener for global events
-    this.targetUnsubscribe = this.setupConnectorListener();
+    this._targetUnsubscribe = this.setupConnectorListener();
   }
 
   /**
@@ -82,7 +86,7 @@ export class Fuel extends FuelConnector {
    */
   private setDefaultConnector() {
     const connectorName =
-      this.storage?.getItem(Fuel.STORAGE_KEY) || this.connectors[0]?.name;
+      this._storage?.getItem(Fuel.STORAGE_KEY) || this._connectors[0]?.name;
     if (connectorName) {
       // Setup all events for the current connector
       return this.selectConnector(connectorName, {
@@ -96,10 +100,10 @@ export class Fuel extends FuelConnector {
    * connector and emit them to the Fuel instance
    */
   private setupConnectorEvents(events: string[]) {
-    if (!this.currentConnector) return;
-    const currentConnector = this.currentConnector;
-    this.unsubscribes.map((unSub) => unSub());
-    this.unsubscribes = events.map((event) => {
+    if (!this._currentConnector) return;
+    const currentConnector = this._currentConnector;
+    this._unsubscribes.map((unSub) => unSub());
+    this._unsubscribes = events.map((event) => {
       const handler = (...args: unknown[]) => this.emit(event, ...args);
       currentConnector.on(event as FuelConnectorEventsType, handler);
       return () => currentConnector.off(event, handler);
@@ -112,11 +116,11 @@ export class Fuel extends FuelConnector {
   private async callMethod(method: string, ...args: unknown[]) {
     const hasConnector = await this.hasConnector();
     await this.pingConnector();
-    if (!this.currentConnector || !hasConnector) {
+    if (!this._currentConnector || !hasConnector) {
       throw new Error('No current connector.');
     }
-    if (typeof this.currentConnector[method] === 'function') {
-      return this.currentConnector[method](...args);
+    if (typeof this._currentConnector[method] === 'function') {
+      return this._currentConnector[method](...args);
     } else {
       new Error(`Method ${method} is not available for the connector.`);
     }
@@ -137,7 +141,7 @@ export class Fuel extends FuelConnector {
    * Fetch the status of a connector and set the installed and connected
    * status.
    */
-  private async fetchConnectorStatus(connector: FuelConnector) {
+  private async fetchConnectorStatus(connector: FuelWalletConnector) {
     const [isConnected, ping] = await Promise.allSettled([
       connector.isConnected(),
       withTimeout(this.pingConnector(connector)),
@@ -157,7 +161,7 @@ export class Fuel extends FuelConnector {
    */
   private async fetchConnectorsStatus() {
     return Promise.all(
-      this.connectors.map(async (connector) => {
+      this._connectors.map(async (connector) => {
         return this.fetchConnectorStatus(connector);
       })
     );
@@ -167,8 +171,8 @@ export class Fuel extends FuelConnector {
    * Fetch the status of a connector and set the installed and connected
    * status. If no connector is provided it will ping the current connector.
    */
-  private async pingConnector(connector?: FuelConnector) {
-    const { currentConnector } = this;
+  private async pingConnector(connector?: FuelWalletConnector) {
+    const { _currentConnector: currentConnector } = this;
     if (!currentConnector) return false;
     // If finds a ping in the cache and the value is true
     // return from cache
@@ -180,7 +184,7 @@ export class Fuel extends FuelConnector {
         },
         {
           key: _connector.name,
-          cache: this.pingCache,
+          cache: this._pingCache,
           cacheTime: PING_CACHE_TIME,
         }
       )();
@@ -194,7 +198,7 @@ export class Fuel extends FuelConnector {
    * to the list of new connectors.
    */
   private setupConnectorListener = () => {
-    const { targetObject } = this;
+    const { _targetObject: targetObject } = this;
     const eventName = FuelConnectorEvent.type;
     if (targetObject?.on) {
       targetObject.on(eventName, this.addConnector);
@@ -217,14 +221,14 @@ export class Fuel extends FuelConnector {
   /**
    * Add a new connector to the list of connectors.
    */
-  private addConnector = async (connector: FuelConnector) => {
+  private addConnector = async (connector: FuelWalletConnector) => {
     if (!this.getConnector(connector)) {
-      this.connectors.push(connector);
+      this._connectors.push(connector);
       await this.fetchConnectorStatus(connector);
       // Emit connectors events once the connector list changes
-      this.emit(this.events.connectors, this.connectors);
+      this.emit(this.events.connectors, this._connectors);
       // If the current connector is not set
-      if (!this.currentConnector) {
+      if (!this._currentConnector) {
         // set the new connector as currentConnector
         await this.selectConnector(connector.name, {
           emitEvents: false,
@@ -255,9 +259,11 @@ export class Fuel extends FuelConnector {
   /**
    * Get a connector from the list of connectors.
    */
-  getConnector = (connector: FuelConnector | string): FuelConnector | null => {
+  getConnector = (
+    connector: FuelWalletConnector | string
+  ): FuelWalletConnector | null => {
     return (
-      this.connectors.find((c) => {
+      this._connectors.find((c) => {
         const connectorName =
           typeof connector === 'string' ? connector : connector.name;
         return c.name === connectorName || c === connector;
@@ -268,9 +274,9 @@ export class Fuel extends FuelConnector {
   /**
    * Return the list of connectors with the status of installed and connected.
    */
-  async getConnectors(): Promise<Array<FuelConnector>> {
+  async connectors(): Promise<Array<FuelWalletConnector>> {
     await this.fetchConnectorsStatus();
-    return this.connectors;
+    return this._connectors;
   }
 
   /**
@@ -284,13 +290,13 @@ export class Fuel extends FuelConnector {
   ): Promise<boolean> {
     const connector = this.getConnector(connectorName);
     if (!connector) return false;
-    if (this.currentConnector?.name === connectorName) return true;
+    if (this._currentConnector?.name === connectorName) return true;
     const { installed } = await this.fetchConnectorStatus(connector);
     if (installed) {
-      this.currentConnector = connector;
+      this._currentConnector = connector;
       this.emit(this.events.currentConnector, connector);
       this.setupConnectorEvents(Object.values(FuelConnectorEventTypes));
-      this.storage?.setItem(Fuel.STORAGE_KEY, connector.name);
+      this._storage?.setItem(Fuel.STORAGE_KEY, connector.name);
       // If emitEvents is true we query all the data from the connector
       // and emit the events to the Fuel instance allowing the application to
       // react to changes in the connector state.
@@ -302,12 +308,19 @@ export class Fuel extends FuelConnector {
   }
 
   /**
+   * Return the current selected connector.
+   */
+  currentConnector() {
+    return this._currentConnector;
+  }
+
+  /**
    * Return true if any connector is available.
    */
   async hasConnector(): Promise<boolean> {
     // If there is a current connector return true
     // as the connector is ready
-    if (this.currentConnector) return true;
+    if (this._currentConnector) return true;
     // If there is no current connector
     // wait for the current connector to be set
     // for 1 second and return false if is not set
@@ -323,11 +336,32 @@ export class Fuel extends FuelConnector {
   }
 
   /**
+   * Return a Fuel Wallet Locked instance with extends features to work with
+   * connectors.
+   */
+  async getWallet(
+    address: string | AbstractAddress,
+    providerOrNetwork?: FuelWalletProvider | Network
+  ): Promise<FuelWalletLocked> {
+    if (providerOrNetwork && 'getVersion' in providerOrNetwork) {
+      return new FuelWalletLocked(address, this, providerOrNetwork);
+    } else if (providerOrNetwork && 'url' in providerOrNetwork) {
+      const fuelProvider = await FuelWalletProvider.create(
+        providerOrNetwork.url
+      );
+      return new FuelWalletLocked(address, this, fuelProvider);
+    }
+    const currentNetwork = await this.currentNetwork();
+    const fuelProvider = await FuelWalletProvider.create(currentNetwork.url);
+    return new FuelWalletLocked(address, this, fuelProvider);
+  }
+
+  /**
    * Remove all open listeners this is useful when you want to
    * destroy the Fuel instance and avoid memory leaks.
    */
   destroy() {
-    this.unsubscribes.map((unSub) => unSub());
-    this.targetUnsubscribe();
+    this._unsubscribes.map((unSub) => unSub());
+    this._targetUnsubscribe();
   }
 }
