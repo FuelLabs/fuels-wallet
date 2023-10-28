@@ -8,6 +8,8 @@ import type {
   TransactionRequestLike,
 } from 'fuels';
 
+import { FuelEvents } from './FuelConnectorAPI';
+
 /****
  * ========================================================================================
  * Helpers
@@ -18,7 +20,7 @@ import type {
  * Extract the event argument type from the event type.
  */
 export type FuelEventArg<T extends FuelConnectorEvents['type']> = Extract<
-  FuelConnectorEvents,
+  FuelEvents,
   { type: T }
 >['data'];
 
@@ -36,7 +38,7 @@ export type FuelEventArg<T extends FuelConnectorEvents['type']> = Extract<
  * @property {string[]} accounts - The accounts addresses
  */
 export type AccountsEvent = {
-  type: 'accounts';
+  type: FuelEvents.accounts;
   data: Array<string>;
 };
 
@@ -47,8 +49,8 @@ export type AccountsEvent = {
  * @property {string} type - The event type.
  * @property {string | null} data - The current account selected or null.
  */
-export type CurrentAccountEvent = {
-  type: 'currentAccount';
+export type AccountEvent = {
+  type: FuelEvents.currentAccount;
   data: string | null;
 };
 
@@ -61,7 +63,7 @@ export type CurrentAccountEvent = {
  * @property {boolean} data - The new connection status.
  */
 export type ConnectionEvent = {
-  type: 'connection';
+  type: FuelEvents.connection;
   data: boolean;
 };
 
@@ -75,33 +77,47 @@ export type ConnectionEvent = {
  * @property {Network} data - The network information
  */
 export type NetworkEvent = {
-  type: 'network';
+  type: FuelEvents.currentNetwork;
   data: Network;
 };
 
 /**
- * Event trigger when the assets metadata available to the connector are changed.
+ * Event trigger when the network seleted on the connector is changed.
+ * It should trigger even if the network is not available for the connection.
  *
- * @event NetworkEvent
+ * @event NetworksEvent
  * @type {object}
  * @property {string} type - The event type.
- * @property {Network} data - The network information
+ * @property {Network[]} data - The network information
  */
-export type AssetsEvent = {
-  type: 'assets';
-  data: Array<Asset>;
+export type NetworksEvent = {
+  type: FuelEvents.networks;
+  data: Network;
 };
 
 /**
- * Event trigger when the connector is initialized and ready to receive calls from the application.
+ * Event trigger when the list of connectors has changed.
+ *
+ * @event ConnectorsEvent
+ * @type {object}
+ * @property {string} type - The event type.
+ * @property {FuelConnector[]} data - The list of connectors
+ */
+export type ConnectorsEvent = {
+  type: FuelEvents.connectors;
+  data: Array<FuelConnector>;
+};
+
+/**
+ * Event trigger when the current connector has changed.
  *
  * @event ConnectorEvent
  * @type {object}
  * @property {string} type - The event type.
- * @property {FuelConnector} data - The instance of the connector.
+ * @property {FuelConnector} data - The list of connectors
  */
 export type ConnectorEvent = {
-  type: 'connector';
+  type: FuelEvents.currentConnector;
   data: FuelConnector;
 };
 
@@ -109,12 +125,13 @@ export type ConnectorEvent = {
  * All the events available to the connector.
  */
 export type FuelConnectorEvents =
-  | AccountsEvent
   | ConnectionEvent
   | NetworkEvent
-  | AssetsEvent
-  | ConnectorEvent
-  | CurrentAccountEvent;
+  | NetworksEvent
+  | AccountEvent
+  | AccountsEvent
+  | ConnectorsEvent
+  | ConnectorEvent;
 
 export type FuelConnectorEventsType = FuelConnectorEvents['type'];
 
@@ -173,7 +190,6 @@ export type FuelABI = JsonAbi;
  */
 
 export type WalletConnectorMetadata = {
-  name: string;
   image:
     | string
     | {
@@ -201,9 +217,11 @@ export type WalletConnectorMetadata = {
  * that should be implemented to be compatible with the Fuel SDK.
  */
 export abstract class FuelConnector extends EventEmitter {
+  name: string = '';
   metadata: WalletConnectorMetadata = {} as WalletConnectorMetadata;
   connected: boolean = false;
   installed: boolean = false;
+  events = FuelEvents;
 
   /**
    * Should return true if the connector is loaded
@@ -352,13 +370,13 @@ export abstract class FuelConnector extends EventEmitter {
   }
 
   /**
-   * Should start the switch network process and return true if the network has change successfully.
+   * Should start the select network process and return true if the network has change successfully.
    *
    * @emits networks
    * @throws {Error} if the network already exists
    * @returns {boolean} boolean - Return true if the network was added successfully
    */
-  async switchNetwork(network: Network): Promise<boolean> {
+  async selectNetwork(network: Network): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
 
@@ -392,7 +410,7 @@ export abstract class FuelConnector extends EventEmitter {
   }
 
   /**
-   * Should return the ABIT from the connector vinculated to the all accounts from a specifc Wallet.
+   * Should return the ABI from the connector vinculated to the all accounts from a specifc Wallet.
    *
    * @param {string} contractId - The contract id to get the abi
    * @returns {FuelABI | null} abi - The fuel abi that represents a contract or script.

@@ -17,24 +17,25 @@ export const FUEL_CONNECTOR_METHODS = [
   'addAssets',
   // Network methods
   'networks',
-  'addNetwork',
-  'switchNetwork',
   'currentNetwork',
+  'addNetwork',
+  'selectNetwork',
   // ABI methods
   'addABI',
   'getABI',
   'hasABI',
 ];
 
-export const FUEL_CONNECTOR_EVENTS = [
-  // Connection events
-  'connection',
-  // Account events
-  'accounts',
-  'currentAccount',
-  // Network events
-  'network',
-  'currentNetwork',
-];
+export enum FuelEvents {
+  connectors = 'connectors',
+  currentConnector = 'currentConnector',
+  connection = 'connection',
+  accounts = 'accounts',
+  currentAccount = 'currentAccount',
+  networks = 'networks',
+  currentNetwork = 'currentNetwork',
+}
+
+export const FUEL_CONNECTOR_EVENTS = Object.keys(FuelEvents);
 
 export const TARGET_FUEL_CONNECTOR_EVENT = 'FuelConnector';
