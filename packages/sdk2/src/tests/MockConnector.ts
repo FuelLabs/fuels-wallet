@@ -1,5 +1,5 @@
 import type { Asset } from '@fuels/assets';
-import { type TransactionRequestLike } from 'fuels';
+import type { WalletUnlocked, TransactionRequestLike } from 'fuels';
 import { setTimeout } from 'timers/promises';
 
 import { FuelWalletConnector } from '../FuelWalletConnector';
@@ -12,6 +12,7 @@ type MockConnectorOptions = {
   name?: string;
   accounts?: Array<string>;
   networks?: Array<Network>;
+  wallets?: Array<WalletUnlocked>;
   pingDelay?: number;
   metadata?: Partial<WalletConnectorMetadata>;
 };
@@ -19,11 +20,13 @@ type MockConnectorOptions = {
 export class MockConnector extends FuelWalletConnector {
   _accounts: Array<string>;
   _networks: Array<Network>;
+  _wallets: Array<WalletUnlocked>;
   _pingDelay: number;
   name = 'Fuel Wallet';
 
   constructor(options: MockConnectorOptions = {}) {
     super();
+    this._wallets = options.wallets ?? [];
     this._accounts = options.accounts ?? generateAccounts(2);
     this._networks = options.networks ?? [
       {
@@ -81,12 +84,25 @@ export class MockConnector extends FuelWalletConnector {
     return false;
   }
 
+  async signMessage(_address: string, _message: string) {
+    const wallet = this._wallets.find((w) => w.address.toString() === _address);
+    if (!wallet) {
+      throw new Error('Wallet is not found!');
+    }
+    return wallet.signMessage(_message);
+  }
+
   async sendTransaction(
     _address: string,
     _transaction: TransactionRequestLike,
     _network: Network
   ) {
-    return '0xefca54d7824226b6710208c8f6088c532a91715fa3db85a7645d0b59f8c57c98';
+    const wallet = this._wallets.find((w) => w.address.toString() === _address);
+    if (!wallet) {
+      throw new Error('Wallet is not found!');
+    }
+    const { id } = await wallet.sendTransaction(_transaction);
+    return id;
   }
 
   async currentAccount() {

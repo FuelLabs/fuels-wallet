@@ -34,7 +34,7 @@ export class FuelWalletLocked extends WalletLocked {
     const chainId = this.provider.getChainId();
     const networks = await this.connector.networks();
     const network = networks.find((n) => {
-      n.url === this.provider.url && n.chainId === chainId;
+      return n.url === this.provider.url && n.chainId === chainId;
     });
     if (!network) {
       throw new Error(

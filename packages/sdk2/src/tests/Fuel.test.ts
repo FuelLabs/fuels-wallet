@@ -1,4 +1,11 @@
-import { BaseAssetId } from 'fuels';
+import {
+  Address,
+  BaseAssetId,
+  Provider,
+  TransactionStatus,
+  Wallet,
+  bn,
+} from 'fuels';
 import { EventEmitter } from 'stream';
 
 import { Fuel } from '../Fuel';
@@ -268,6 +275,45 @@ describe('Fuel', () => {
     const hasFuel = await fuel.hasABI('0x001123');
     expect(hasFuel).toBeTruthy();
   });
+  test.only('getWallet and transfer amount', async () => {
+    const provider = await Provider.create('http://localhost:4001/graphql');
+    const wallets = [
+      Wallet.fromPrivateKey(
+        '0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298',
+        provider
+      ),
+    ];
+    const network = {
+      chainId: await provider.getChainId(),
+      url: provider.url,
+    };
+    const fuel = new Fuel({
+      connectors: [
+        new MockConnector({
+          wallets: wallets,
+          networks: [network],
+          accounts: wallets.map((w) => w.address.toString()),
+        }),
+      ],
+    });
+    const account = await fuel.currentAccount();
+    expect(account).toBeTruthy();
+    const wallet = await fuel.getWallet(account!);
+    expect(wallet.provider.url).toEqual(network.url);
+    const receiver = Wallet.fromAddress(Address.fromRandom(), provider);
+    const response = await wallet.transfer(
+      receiver.address,
+      bn(1000),
+      BaseAssetId,
+      {
+        gasPrice: bn(1),
+        gasLimit: bn(1_000_000),
+      }
+    );
+    const { status } = await response.waitForResult();
+    expect(status).toEqual(TransactionStatus.success);
+    expect((await receiver.getBalance()).toString()).toEqual('1000');
+  }, 10_000);
 
   test('should throw if ping takes more than a second', async () => {
     const fuel = new Fuel({
