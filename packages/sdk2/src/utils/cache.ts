@@ -1,4 +1,4 @@
-type CacheFor = {
+export type CacheFor = {
   [key: string]: {
     timeout: number;
     value: unknown;

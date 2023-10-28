@@ -2,7 +2,7 @@ import { BaseAssetId } from 'fuels';
 import { EventEmitter } from 'stream';
 
 import { Fuel } from '../Fuel';
-import { TARGET_FUEL_CONNECTOR_EVENT } from '../FuelConnectorAPI';
+import { FuelConnectorEventType } from '../api';
 import { FuelConnectorEvent } from '../types';
 
 import { MockConnector } from './MockConnector';
@@ -30,7 +30,7 @@ describe('Fuel', () => {
     fuel.on(fuel.events.connectors, onConnectors);
 
     // Trigger event to add connector
-    eventBus.emit(TARGET_FUEL_CONNECTOR_EVENT, new MockConnector());
+    eventBus.emit(FuelConnectorEventType, new MockConnector());
     // wait for the event to be triggered
     await onConnectors.promise;
 
@@ -385,7 +385,7 @@ describe('Fuel Multiple Connectors', () => {
     await fuel.hasConnector();
     await expectEventsForConnector(thirdPartyConnector);
     await expectEventsForConnector(walletConnector);
-  }, 20_000);
+  });
 
   test('should only proxy events from the currentConnector', async () => {
     const walletConnector = new MockConnector({
@@ -436,5 +436,30 @@ describe('Fuel Multiple Connectors', () => {
     walletConnector.emit(fuel.events.accounts, walletConnector._accounts);
     expect(onAccounts).toBeCalledTimes(1);
     expect(onAccounts).toBeCalledWith(walletConnector._accounts);
+  });
+
+  test('Retrieve default connector from storage', async () => {
+    const walletConnector = new MockConnector({
+      name: 'Fuel Wallet',
+    });
+    const thirdPartyConnector = new MockConnector({
+      name: 'Third Party Wallet',
+    });
+    const fuel = new Fuel({
+      connectors: [walletConnector, thirdPartyConnector],
+      storage: window.localStorage,
+    });
+
+    // Select third party connector
+    await fuel.selectConnector(thirdPartyConnector.name);
+
+    const fuelNewInstance = new Fuel({
+      connectors: [walletConnector, thirdPartyConnector],
+      storage: window.localStorage,
+    });
+    await fuelNewInstance.hasConnector();
+    expect(fuelNewInstance.currentConnector?.name).toBe(
+      thirdPartyConnector.name
+    );
   });
 });

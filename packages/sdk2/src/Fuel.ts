@@ -1,14 +1,22 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { FuelConnectorEventsType } from './FuelConnector';
 import { FuelConnector } from './FuelConnector';
-import {
-  FUEL_CONNECTOR_EVENTS,
-  FUEL_CONNECTOR_METHODS,
-} from './FuelConnectorAPI';
+import { FuelConnectorEventTypes, FuelConnectorMethods } from './api';
 import { FuelConnectorEvent } from './types';
-import type { FuelStorage, TargetObject } from './types';
-import { cacheFor } from './utils/cache';
-import { deferPromise, withTimeout } from './utils/promise';
+import type {
+  FuelConnectorEventsType,
+  FuelStorage,
+  TargetObject,
+} from './types';
+import type { CacheFor } from './utils';
+import { cacheFor, deferPromise, withTimeout } from './utils';
+
+// This is the time to wait for the connector
+// to be available before returning false for hasConnector.
+const HAS_CONNECTOR_TIMEOUT = 2_000;
+// The time to cache the ping result, as is not
+// expected to change the availability of the connector to
+// change too often we can safely cache the result for 5 seconds
+// at minimum.
+const PING_CACHE_TIME = 5_000;
 
 export type FuelConfig = {
   connectors?: Array<FuelConnector>;
@@ -29,7 +37,7 @@ export class Fuel extends FuelConnector {
   private targetObject: TargetObject | null = null;
   private unsubscribes: Array<() => void> = [];
   private targetUnsubscribe: () => void;
-  private cache: any = {};
+  private pingCache: CacheFor = {};
 
   currentConnector?: FuelConnector | null;
 
@@ -101,7 +109,7 @@ export class Fuel extends FuelConnector {
   /**
    * Call method from the current connector.
    */
-  private async callMethod(method: string, ...args: any[]) {
+  private async callMethod(method: string, ...args: unknown[]) {
     const hasConnector = await this.hasConnector();
     await this.pingConnector();
     if (!this.currentConnector || !hasConnector) {
@@ -119,8 +127,9 @@ export class Fuel extends FuelConnector {
    * and call the method from the current connector.
    */
   private setupMethods() {
-    FUEL_CONNECTOR_METHODS.map((method) => {
-      this[method] = async (...args: any[]) => this.callMethod(method, ...args);
+    Object.values(FuelConnectorMethods).map((method) => {
+      this[method] = async (...args: unknown[]) =>
+        this.callMethod(method, ...args);
     });
   }
 
@@ -156,7 +165,7 @@ export class Fuel extends FuelConnector {
 
   /**
    * Fetch the status of a connector and set the installed and connected
-   * status.
+   * status. If no connector is provided it will ping the current connector.
    */
   private async pingConnector(connector?: FuelConnector) {
     const { currentConnector } = this;
@@ -165,18 +174,16 @@ export class Fuel extends FuelConnector {
     // return from cache
     try {
       const _connector = connector ?? currentConnector;
-      const cachePing = await cacheFor(
+      return await cacheFor(
         async () => {
           return withTimeout(_connector.ping());
         },
         {
           key: _connector.name,
-          cache: this.cache,
-          cacheTime: 5_000,
+          cache: this.pingCache,
+          cacheTime: PING_CACHE_TIME,
         }
-      );
-      return await cachePing();
-      // return await withTimeout(currentConnector.ping());
+      )();
     } catch {
       throw new Error('Current connector is not available.');
     }
@@ -226,6 +233,25 @@ export class Fuel extends FuelConnector {
     }
   };
 
+  private triggerConnectorEvents = async () => {
+    const [isConnected, networks, currentNetwork] = await Promise.all([
+      this.isConnected(),
+      this.networks(),
+      this.currentNetwork(),
+    ]);
+    this.emit(this.events.connection, isConnected);
+    this.emit(this.events.networks, networks);
+    this.emit(this.events.currentNetwork, currentNetwork);
+    if (isConnected) {
+      const [accounts, currentAccount] = await Promise.all([
+        this.accounts(),
+        this.currentAccount(),
+      ]);
+      this.emit(this.events.accounts, accounts);
+      this.emit(this.events.currentAccount, currentAccount);
+    }
+  };
+
   /**
    * Get a connector from the list of connectors.
    */
@@ -247,25 +273,6 @@ export class Fuel extends FuelConnector {
     return this.connectors;
   }
 
-  private triggerConnectorEvents = async () => {
-    const [isConnected, networks, currentNetwork] = await Promise.all([
-      this.isConnected(),
-      this.networks(),
-      this.currentNetwork(),
-    ]);
-    this.emit(this.events.connection, isConnected);
-    this.emit(this.events.networks, networks);
-    this.emit(this.events.currentNetwork, currentNetwork);
-    if (isConnected) {
-      const [accounts, currentAccount] = await Promise.all([
-        this.accounts(),
-        this.currentAccount(),
-      ]);
-      this.emit(this.events.accounts, accounts);
-      this.emit(this.events.currentAccount, currentAccount);
-    }
-  };
-
   /**
    * Set the current connector to be used.
    */
@@ -282,7 +289,7 @@ export class Fuel extends FuelConnector {
     if (installed) {
       this.currentConnector = connector;
       this.emit(this.events.currentConnector, connector);
-      this.setupConnectorEvents(FUEL_CONNECTOR_EVENTS);
+      this.setupConnectorEvents(Object.values(FuelConnectorEventTypes));
       this.storage?.setItem(Fuel.STORAGE_KEY, connector.name);
       // If emitEvents is true we query all the data from the connector
       // and emit the events to the Fuel instance allowing the application to
@@ -310,7 +317,7 @@ export class Fuel extends FuelConnector {
     });
     // As the max ping time is 1 second we wait for 2 seconds
     // to allow applications to react to the current connector
-    return withTimeout(defer.promise, 2_000)
+    return withTimeout(defer.promise, HAS_CONNECTOR_TIMEOUT)
       .then(() => true)
       .catch(() => false);
   }

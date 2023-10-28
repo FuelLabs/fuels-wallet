@@ -2,13 +2,9 @@ import type { Asset } from '@fuels/assets';
 import { WalletLocked, type TransactionRequestLike, Provider } from 'fuels';
 import { setTimeout } from 'timers/promises';
 
-import type {
-  FuelABI,
-  Network,
-  WalletConnectorMetadata,
-} from '../FuelConnector';
 import { FuelConnector } from '../FuelConnector';
-import { FuelEvents } from '../FuelConnectorAPI';
+import { FuelConnectorEventTypes } from '../api';
+import type { FuelABI, Network, WalletConnectorMetadata } from '../types';
 
 import { generateAccounts } from './utils/generateAccounts';
 
@@ -72,16 +68,16 @@ export class MockConnector extends FuelConnector {
   }
 
   async connect() {
-    this.emit(FuelEvents.connection, true);
-    this.emit(FuelEvents.accounts, this._accounts);
-    this.emit(FuelEvents.currentAccount, this._accounts[0]);
+    this.emit(FuelConnectorEventTypes.connection, true);
+    this.emit(FuelConnectorEventTypes.accounts, this._accounts);
+    this.emit(FuelConnectorEventTypes.currentAccount, this._accounts[0]);
     return true;
   }
 
   async disconnect() {
-    this.emit(FuelEvents.connection, false);
-    this.emit(FuelEvents.accounts, []);
-    this.emit(FuelEvents.currentAccount, null);
+    this.emit(FuelConnectorEventTypes.connection, false);
+    this.emit(FuelConnectorEventTypes.accounts, []);
+    this.emit(FuelConnectorEventTypes.currentAccount, null);
     return false;
   }
 
@@ -107,13 +103,13 @@ export class MockConnector extends FuelConnector {
 
   async addNetwork(_network: Network) {
     this._networks.push(_network);
-    this.emit(FuelEvents.networks, this._networks);
-    this.emit(FuelEvents.currentNetwork, _network);
+    this.emit(FuelConnectorEventTypes.networks, this._networks);
+    this.emit(FuelConnectorEventTypes.currentNetwork, _network);
     return true;
   }
 
   async selectNetwork(_network: Network) {
-    this.emit(FuelEvents.currentNetwork, _network);
+    this.emit(FuelConnectorEventTypes.currentNetwork, _network);
     return true;
   }
 
