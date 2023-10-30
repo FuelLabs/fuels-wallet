@@ -40,8 +40,6 @@ static async walletSetup(
 ): Promise<FuelWalletTestHelper>
 ```
 
-<br />
-
 This function sets up your fuel wallet extension and returns an instace of FuelWalletTestHelper.
 
 ### walletConnect
@@ -53,8 +51,6 @@ async walletConnect(
 ): Promise<void>
 ```
 
-<br />
-
 This function connects fuel wallet accounts to your web application through the connect popup window. It will throw an error if the connect popup window does not appear.
 
 ### walletApprove
@@ -63,8 +59,6 @@ This function connects fuel wallet accounts to your web application through the 
 async walletApprove(): Promise<void>
 ```
 
-<br />
-
 This function approves a transaction through the transaction popup window. It function will throw an error if the transaction popup window does not appear.
 
 ### getWalletNotificationPage
@@ -72,8 +66,6 @@ This function approves a transaction through the transaction popup window. It fu
 ```tsx
 async getWalletNotificationPage(): Promise<Page>
 ```
-
-<br />
 
 This function returns the wallet notification popup. It will throw an error is the popup does not exist.
 
@@ -89,8 +81,6 @@ async addAssetThroughSettings(
 ): Promise<void>
 ```
 
-<br />
-
 This function adds an asset to the wallet through the settings.
 
 ### addAssetFromHomeBalance
@@ -105,8 +95,6 @@ async addAssetFromHomeBalance(
 ): Promise<void>
 ```
 
-<br />
-
 This functions adds an asset to the wallet from the home page. It will throw an error if the wallet does not have any of the asset.
 
 ### addAccount
@@ -114,8 +102,6 @@ This functions adds an asset to the wallet from the home page. It will throw an 
 ```tsx
 async addAccount(): Promise<void>
 ```
-
-<br />
 
 This function adds an account to the wallet.
 
@@ -125,8 +111,6 @@ This function adds an account to the wallet.
 async switchAccount(accountName: string): Promise<void>
 ```
 
-<br />
-
 This function switches to the account named accountName. It will throw an error if there are not accounts with accountName.
 
 ### addNetwork
@@ -134,8 +118,6 @@ This function switches to the account named accountName. It will throw an error 
 ```tsx
 async addNetwork(chainName: string, providerUrl: string): Promise<void>
 ```
-
-<br />
 
 This function adds a network to the wallet. It will not add the network if a network already exists with the same name.
 
