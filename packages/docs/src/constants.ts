@@ -16,6 +16,7 @@ export const MENU_ORDER = [
   'For Developers/Wallet Connectors',
   'For Developers/Reference',
   'For Developers/Hooks Reference',
+  'For Developers/Wallet Test Utils',
   'Contributing/Project Structure',
   'Contributing/Contributing Guide',
   'Contributing/Linking local dependencies',
