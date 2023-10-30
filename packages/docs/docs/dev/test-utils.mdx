@@ -5,11 +5,23 @@ category: For Developers
 
 # Wallet Test Utils
 
-The @fuel-wallet/test-utils package provides utility functions to test your frontend application with the fuel wallet with playwright.
+The `@fuel-wallet/test-utils` package allows developers building frontend applications on fuel to test their application as it interacts with the fuel wallet. This package is compatible with the [playwright](https://playwright.dev/) test framework.
 
 ## Fixtures
 
-If you are not using any custom test or extensionId fixtures in your playwright tests you can import the fixtures directly from this package for use.
+If you are not using any custom test fixtures in your playwright tests import the fixtures directly from this package, and pass in the path to the fuel extension. You can download the extension manually or use our `downloadFuel` function.
+
+```tsx
+// e2e.test.ts
+import { test } from '@fuel-wallet/test-utils';
+
+test.use({ pathToExtension: './path/to/extension' });
+// OR
+const fuelPathToExtension = downloadFuel('0.13.5');
+test.use({ pathToExtension: fuelPathToExtension });
+```
+
+If you are using custom test fixtures in your playwright tests then setup the `context` and `extensionId` fixtures as shown in the [playwright docs](https://playwright.dev/docs/chrome-extensions#testing).
 
 ## FuelWalletTestHelper
 
@@ -43,7 +55,7 @@ async walletConnect(
 
 <br />
 
-This function connects fuel wallet accounts to your web application through the connect popup window.
+This function connects fuel wallet accounts to your web application through the connect popup window. It will throw an error if the connect popup window does not appear.
 
 ### walletApprove
 
@@ -53,7 +65,7 @@ async walletApprove(): Promise<void>
 
 <br />
 
-This function approves a transaction through the transaction popup window.
+This function approves a transaction through the transaction popup window. It function will throw an error if the transaction popup window does not appear.
 
 ### getWalletNotificationPage
 
@@ -115,7 +127,7 @@ async switchAccount(accountName: string): Promise<void>
 
 <br />
 
-This function switches to the account named accountName. This will throw an error if there are not accounts with accountName.
+This function switches to the account named accountName. It will throw an error if there are not accounts with accountName.
 
 ### addNetwork
 
@@ -133,8 +145,8 @@ This function adds a network to the wallet. It will not add the network if a net
 async switchNetwork(chainName: string): Promise<void>
 ```
 
-This function switches to the network named chainName. This will throw an error if there are no networks named chainName.
+This function switches to the network named chainName. It will throw an error if there are no networks named chainName.
 
 ## Mocks
 
-Default mnemonic and password mocks.
+Mnemonic and password mock variables for the fuel wallet. These are the default mnemonic and password variables for the `walletSetup` function.
