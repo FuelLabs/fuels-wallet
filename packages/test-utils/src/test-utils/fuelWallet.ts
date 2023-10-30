@@ -83,8 +83,29 @@ export class FuelWalletTestHelper {
     return new FuelWalletTestHelper(context);
   }
 
-  async walletConnect() {
+  async walletConnect(
+    accountNames?: string[],
+    connectCurrentAccount: boolean = true
+  ) {
     const walletNotificationPage = await this.getWalletNotificationPage();
+
+    if (!connectCurrentAccount) {
+      const disconnectCurrentAccountButton = walletNotificationPage.getByRole(
+        'switch',
+        { checked: true }
+      );
+      await disconnectCurrentAccountButton.click();
+    }
+
+    if (accountNames) {
+      for (const accountName of accountNames) {
+        const accountConnectionButton = getByAriaLabel(
+          walletNotificationPage,
+          `Toggle ${accountName}`
+        );
+        await accountConnectionButton.click();
+      }
+    }
 
     const nextButton = getButtonByText(walletNotificationPage, 'Next');
     await nextButton.click();
@@ -186,6 +207,24 @@ export class FuelWalletTestHelper {
 
     const saveButton = getButtonByText(walletPage, 'Save');
     await saveButton.click();
+  }
+
+  async addAccount() {
+    const walletPage = this.getWalletPage();
+
+    const accountsButton = getByAriaLabel(walletPage, 'Accounts');
+    await accountsButton.click();
+    const addAccountButton = getByAriaLabel(walletPage, 'Add account');
+    await addAccountButton.click();
+  }
+
+  async switchAccount(accountName: string) {
+    const walletPage = this.getWalletPage();
+
+    const accountsButton = getByAriaLabel(walletPage, 'Accounts');
+    await accountsButton.click();
+    const accountButton = getByAriaLabel(walletPage, accountName, true);
+    await accountButton.click();
   }
 
   getWalletPage() {
