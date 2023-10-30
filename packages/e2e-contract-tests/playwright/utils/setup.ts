@@ -1,7 +1,7 @@
 import {
-  walletSetup,
   seedWallet,
   FUEL_MNEMONIC,
+  FuelWalletTestHelper,
 } from '@fuel-wallet/test-utils';
 import type { BrowserContext, Page } from '@playwright/test';
 import { bn, Wallet, Provider } from 'fuels';
@@ -21,7 +21,12 @@ export const testSetup = async ({
 }) => {
   const fuelProvider = await Provider.create(FUEL_PROVIDER_URL!);
   const chainName = (await fuelProvider.fetchChain()).name;
-  await walletSetup(context, extensionId, page, fuelProvider.url, chainName);
+  const fuelWalletTestHelper = await FuelWalletTestHelper.walletSetup(
+    context,
+    extensionId,
+    fuelProvider.url,
+    chainName
+  );
   const fuelWallet = Wallet.fromMnemonic(FUEL_MNEMONIC, fuelProvider);
   await seedWallet(
     fuelWallet.address.toString(),
@@ -30,5 +35,5 @@ export const testSetup = async ({
     WALLET_SECRET!
   );
   await page.goto('/');
-  return fuelWallet;
+  return { fuelWallet, fuelWalletTestHelper };
 };

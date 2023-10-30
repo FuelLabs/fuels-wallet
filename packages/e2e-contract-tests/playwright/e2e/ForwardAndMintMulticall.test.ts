@@ -1,29 +1,28 @@
-import {
-  test,
-  getButtonByText,
-  getWalletPage,
-  hasText,
-  walletConnect,
-} from '@fuel-wallet/test-utils';
+import type { FuelWalletTestHelper } from '@fuel-wallet/test-utils';
+import { test, getButtonByText, hasText } from '@fuel-wallet/test-utils';
 import { BaseAssetId, bn } from 'fuels';
 
 import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
 import { testSetup } from '../utils';
 
-import { checkFee } from './utils';
+import { checkFee, connect } from './utils';
 
 const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward and Mint Multicall', () => {
+  let fuelWalletTestHelper: FuelWalletTestHelper;
+
   test.beforeEach(async ({ context, extensionId, page }) => {
-    await testSetup({ context, page, extensionId });
+    ({ fuelWalletTestHelper } = await testSetup({
+      context,
+      page,
+      extensionId,
+    }));
   });
 
-  test('e2e foreward and mint multicall', async ({ context, page }) => {
-    const connectButton = getButtonByText(page, 'Connect');
-    await connectButton.click();
-    await walletConnect(context);
+  test('e2e foreward and mint multicall', async ({ page }) => {
+    await connect(page, fuelWalletTestHelper);
 
     const depositAmount = '1.000';
     const depositHalfInput = page.getByLabel('Forward amount multicall');
@@ -40,26 +39,30 @@ test.describe('Forward and Mint Multicall', () => {
     await page.waitForTimeout(2500);
     await forwardHalfAndMintButton.click();
 
-    const walletPage = await getWalletPage(context);
+    const walletNotificationPage =
+      await fuelWalletTestHelper.getWalletNotificationPage();
 
     // test forward asset name is shown
-    await hasText(walletPage, 'Ethereum');
+    await hasText(walletNotificationPage, 'Ethereum');
     // test forward asset id is shown
-    await hasText(walletPage, shortAddress(BaseAssetId));
+    await hasText(walletNotificationPage, shortAddress(BaseAssetId));
     // test forward eth amount is correct
-    await hasText(walletPage, `${depositAmount} ETH`);
+    await hasText(walletNotificationPage, `${depositAmount} ETH`);
 
     // test mint asset name is shown
-    await hasText(walletPage, 'Unknown', 0, 5000, true);
+    await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
     // test mint asset id is shown
     const assetId = calculateAssetId(VITE_CONTRACT_ID!, BaseAssetId);
-    await hasText(walletPage, shortAddress(assetId));
+    await hasText(walletNotificationPage, shortAddress(assetId));
     // test mint amount is correct
-    await hasText(walletPage, mintAmount);
+    await hasText(walletNotificationPage, mintAmount);
 
     // test gas fee is shown and correct
-    await hasText(walletPage, 'Fee (network)');
+    await hasText(walletNotificationPage, 'Fee (network)');
     const fee = bn.parseUnits('0.000000217');
-    await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
+    await checkFee(walletNotificationPage, {
+      minFee: fee.sub(100),
+      maxFee: fee.add(100),
+    });
   });
 });

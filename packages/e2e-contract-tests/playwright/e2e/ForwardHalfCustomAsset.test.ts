@@ -1,10 +1,5 @@
-import {
-  test,
-  getButtonByText,
-  walletConnect,
-  getWalletPage,
-  hasText,
-} from '@fuel-wallet/test-utils';
+import type { FuelWalletTestHelper } from '@fuel-wallet/test-utils';
+import { test, getButtonByText, hasText } from '@fuel-wallet/test-utils';
 import type { WalletUnlocked } from 'fuels';
 import { bn, BaseAssetId } from 'fuels';
 
@@ -14,21 +9,24 @@ import '../../load.envs';
 import { calculateAssetId, shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
-import { checkFee } from './utils';
+import { checkFee, connect } from './utils';
 
 const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward Half Custom Asset', () => {
   let fuelWallet: WalletUnlocked;
+  let fuelWalletTestHelper: FuelWalletTestHelper;
 
   test.beforeEach(async ({ context, extensionId, page }) => {
-    fuelWallet = await testSetup({ context, page, extensionId });
+    ({ fuelWallet, fuelWalletTestHelper } = await testSetup({
+      context,
+      page,
+      extensionId,
+    }));
   });
 
-  test('e2e forward half custom asset', async ({ context, page }) => {
-    const connectButton = getButtonByText(page, 'Connect');
-    await connectButton.click();
-    await walletConnect(context);
+  test('e2e forward half custom asset', async ({ page }) => {
+    await connect(page, fuelWalletTestHelper);
 
     // Mint custom asset to wallet
     const contract = CustomAssetAbi__factory.connect(
@@ -59,26 +57,30 @@ test.describe('Forward Half Custom Asset', () => {
     );
     await forwardHalfCustomAssetButton.click();
 
-    const walletPage = await getWalletPage(context);
+    const walletNotificationPage =
+      await fuelWalletTestHelper.getWalletNotificationPage();
 
     // test the forward asset name is shown
-    await hasText(walletPage, 'Unknown', 0, 5000, true);
+    await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
     // test forward asset id is correct
     const assetId = calculateAssetId(VITE_CONTRACT_ID!, BaseAssetId);
-    await hasText(walletPage, shortAddress(assetId));
+    await hasText(walletNotificationPage, shortAddress(assetId));
     // test forward custom asset amount is correct
-    await hasText(walletPage, forwardCustomAssetAmount);
+    await hasText(walletNotificationPage, forwardCustomAssetAmount);
 
     // test return asset name is shown
-    await hasText(walletPage, 'Unknown', 1, 5000, true);
+    await hasText(walletNotificationPage, 'Unknown', 1, 5000, true);
     // test return asset id is shown
-    await hasText(walletPage, shortAddress(assetId), 1);
+    await hasText(walletNotificationPage, shortAddress(assetId), 1);
     // test return asset amount is correct
-    await hasText(walletPage, halfForwardCustomAssetAmount);
+    await hasText(walletNotificationPage, halfForwardCustomAssetAmount);
 
     // test gas fee is correct
-    await hasText(walletPage, 'Fee (network)');
+    await hasText(walletNotificationPage, 'Fee (network)');
     const fee = bn.parseUnits('0.000000165');
-    await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
+    await checkFee(walletNotificationPage, {
+      minFee: fee.sub(100),
+      maxFee: fee.add(100),
+    });
   });
 });
