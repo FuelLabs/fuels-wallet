@@ -275,7 +275,7 @@ describe('Fuel', () => {
     const hasFuel = await fuel.hasABI('0x001123');
     expect(hasFuel).toBeTruthy();
   });
-  test.only('getWallet and transfer amount', async () => {
+  test('getWallet and transfer amount', async () => {
     const provider = await Provider.create('http://localhost:4001/graphql');
     const wallets = [
       Wallet.fromPrivateKey(

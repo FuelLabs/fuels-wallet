@@ -343,17 +343,28 @@ export class Fuel extends FuelWalletConnector {
     address: string | AbstractAddress,
     providerOrNetwork?: FuelWalletProvider | Network
   ): Promise<FuelWalletLocked> {
-    if (providerOrNetwork && 'getVersion' in providerOrNetwork) {
-      return new FuelWalletLocked(address, this, providerOrNetwork);
-    } else if (providerOrNetwork && 'url' in providerOrNetwork) {
-      const fuelProvider = await FuelWalletProvider.create(
-        providerOrNetwork.url
-      );
-      return new FuelWalletLocked(address, this, fuelProvider);
+    // Decide which provider to use based on the providerOrNetwork
+    let provider: FuelWalletProvider;
+    // If provider is a valid instance of a Provider use it
+    if (providerOrNetwork && 'getTransactionResponse' in providerOrNetwork) {
+      provider = providerOrNetwork;
+      // If the provided param is a valid network use it
+    } else if (
+      providerOrNetwork &&
+      'chainId' in providerOrNetwork &&
+      'url' in providerOrNetwork
+    ) {
+      provider = await FuelWalletProvider.create(providerOrNetwork.url);
+      // If nor provider or network is provided use the current network
+    } else if (!providerOrNetwork) {
+      const currentNetwork = await this.currentNetwork();
+      provider = await FuelWalletProvider.create(currentNetwork.url);
+      // If a provider or network was informed but is not valid
+      // throw an error
+    } else {
+      throw new Error('Provider is not valid.');
     }
-    const currentNetwork = await this.currentNetwork();
-    const fuelProvider = await FuelWalletProvider.create(currentNetwork.url);
-    return new FuelWalletLocked(address, this, fuelProvider);
+    return new FuelWalletLocked(address, this, provider);
   }
 
   /**

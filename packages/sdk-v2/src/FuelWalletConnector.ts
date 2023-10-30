@@ -5,6 +5,7 @@ import type { TransactionRequestLike } from 'fuels';
 
 import { FuelConnectorEventTypes } from './api';
 import type {
+  ApplicationInfo,
   FuelABI,
   FuelConnectorEvents,
   FuelEventArg,
@@ -120,7 +121,7 @@ export abstract class FuelWalletConnector extends EventEmitter {
   async sendTransaction(
     address: string,
     transaction: TransactionRequestLike,
-    network: Network
+    appInfo: ApplicationInfo
   ): Promise<string> {
     throw new Error('Method not implemented.');
   }

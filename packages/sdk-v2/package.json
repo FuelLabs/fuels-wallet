@@ -1,5 +1,5 @@
 {
-  "name": "@fuel-wallet/sdk2",
+  "name": "@fuel-wallet/sdk-v2",
   "private": true,
   "description": "Integrate DApps with Fuel Wallet Extension.",
   "version": "0.13.0",

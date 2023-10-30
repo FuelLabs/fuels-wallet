@@ -51,11 +51,16 @@ export class FuelWalletLocked extends WalletLocked {
   async sendTransaction(
     transaction: TransactionRequestLike
   ): Promise<TransactionResponse> {
-    const network = await this.getNetwork();
     const transactionId = await this.connector.sendTransaction(
       this.address.toString(),
       transaction,
-      network
+      {
+        /**
+         * @todo: This should be the sdk version. We should have a way to
+         * retrieve this from the sdk.
+         */
+        sdkVersion: '0.0.0',
+      }
     );
     return this.provider.getTransactionResponse(transactionId);
   }

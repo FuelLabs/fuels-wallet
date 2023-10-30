@@ -4,7 +4,12 @@ import { setTimeout } from 'timers/promises';
 
 import { FuelWalletConnector } from '../FuelWalletConnector';
 import { FuelConnectorEventTypes } from '../api';
-import type { FuelABI, Network, WalletConnectorMetadata } from '../types';
+import type {
+  ApplicationInfo,
+  FuelABI,
+  Network,
+  WalletConnectorMetadata,
+} from '../types';
 
 import { generateAccounts } from './utils/generateAccounts';
 
@@ -95,7 +100,7 @@ export class MockConnector extends FuelWalletConnector {
   async sendTransaction(
     _address: string,
     _transaction: TransactionRequestLike,
-    _network: Network
+    _appInfo: ApplicationInfo
   ) {
     const wallet = this._wallets.find((w) => w.address.toString() === _address);
     if (!wallet) {
