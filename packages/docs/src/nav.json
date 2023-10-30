@@ -16,7 +16,8 @@
     "ABIs",
     "Wallet Connectors",
     "Reference",
-    "Hooks Reference"
+    "Hooks Reference",
+    "Wallet Test Utils"
   ],
   "contributing": [
     "Running locally",

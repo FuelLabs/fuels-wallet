@@ -1,0 +1,140 @@
+---
+title: Wallet Test Utils
+category: For Developers
+---
+
+# Wallet Test Utils
+
+The @fuel-wallet/test-utils package provides utility functions to test your frontend application with the fuel wallet with playwright.
+
+## Fixtures
+
+If you are not using any custom test or extensionId fixtures in your playwright tests you can import the fixtures directly from this package for use.
+
+## FuelWalletTestHelper
+
+The FuelWalletTestHelper is a class which allows you to interact with the fuel wallet extension.
+
+### walletSetup
+
+```tsx
+static async walletSetup(
+    context: BrowserContext,
+    fuelExtensionId: string,
+    fuelProviderUrl: string,
+    chainName: string,
+    mnemonic: string = FUEL_MNEMONIC,
+    password: string = FUEL_WALLET_PASSWORD
+): Promise<FuelWalletTestHelper>
+```
+
+<br />
+
+This function sets up your fuel wallet extension and returns an instace of FuelWalletTestHelper.
+
+### walletConnect
+
+```tsx
+async walletConnect(
+    accountNames?: string[],
+    connectCurrentAccount: boolean = true
+): Promise<void>
+```
+
+<br />
+
+This function connects fuel wallet accounts to your web application through the connect popup window.
+
+### walletApprove
+
+```tsx
+async walletApprove(): Promise<void>
+```
+
+<br />
+
+This function approves a transaction through the transaction popup window.
+
+### getWalletNotificationPage
+
+```tsx
+async getWalletNotificationPage(): Promise<Page>
+```
+
+<br />
+
+This function returns the wallet notification popup. It will throw an error is the popup does not exist.
+
+### addAssetThroughSettings
+
+```tsx
+async addAssetThroughSettings(
+    assetId: string,
+    name: string,
+    symbol: string,
+    decimals: number,
+    imageUrl?: string
+): Promise<void>
+```
+
+<br />
+
+This function adds an asset to the wallet through the settings.
+
+### addAssetFromHomeBalance
+
+```tsx
+async addAssetFromHomeBalance(
+    assetId: string,
+    name: string,
+    symbol: string,
+    decimals: number,
+    imageUrl?: string
+): Promise<void>
+```
+
+<br />
+
+This functions adds an asset to the wallet from the home page. It will throw an error if the wallet does not have any of the asset.
+
+### addAccount
+
+```tsx
+async addAccount(): Promise<void>
+```
+
+<br />
+
+This function adds an account to the wallet.
+
+### switchAccount
+
+```tsx
+async switchAccount(accountName: string): Promise<void>
+```
+
+<br />
+
+This function switches to the account named accountName. This will throw an error if there are not accounts with accountName.
+
+### addNetwork
+
+```tsx
+async addNetwork(chainName: string, providerUrl: string): Promise<void>
+```
+
+<br />
+
+This function adds a network to the wallet. It will not add the network if a network already exists with the same name.
+
+### switchNetwork
+
+```tsx
+async switchNetwork(chainName: string): Promise<void>
+```
+
+This function switches to the network named chainName. This will throw an error if there are no networks named chainName.
+
+## Mocks
+
+Default mnemonic and password mocks.
