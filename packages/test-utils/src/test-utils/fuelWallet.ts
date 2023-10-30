@@ -18,7 +18,9 @@ export class FuelWalletTestHelper {
     context: BrowserContext,
     fuelExtensionId: string,
     fuelProviderUrl: string,
-    chainName: string
+    chainName: string,
+    mnemonic: string = FUEL_MNEMONIC,
+    password: string = FUEL_WALLET_PASSWORD
   ) {
     let signupPage = await context.newPage();
     await signupPage.goto(`chrome-extension://${fuelExtensionId}/popup.html`);
@@ -36,9 +38,7 @@ export class FuelWalletTestHelper {
     const toSeedPhrase = getButtonByText(signupPage, 'Next: Seed Phrase');
     await toSeedPhrase.click();
 
-    await signupPage.evaluate(
-      `navigator.clipboard.writeText('${FUEL_MNEMONIC}')`
-    );
+    await signupPage.evaluate(`navigator.clipboard.writeText('${mnemonic}')`);
     const pasteButton = signupPage.locator('button').getByText('Paste');
     await pasteButton.click();
     const toPassword = signupPage
@@ -47,9 +47,9 @@ export class FuelWalletTestHelper {
     await toPassword.click();
 
     const enterPassword = getByAriaLabel(signupPage, 'Your Password');
-    await enterPassword.fill(FUEL_WALLET_PASSWORD);
+    await enterPassword.fill(password);
     const confirmPassword = getByAriaLabel(signupPage, 'Confirm Password');
-    await confirmPassword.fill(FUEL_WALLET_PASSWORD);
+    await confirmPassword.fill(password);
     const toFinish = getButtonByText(signupPage, 'Next: Finish set-up');
     await toFinish.click();
 

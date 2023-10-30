@@ -1,10 +1,5 @@
 import type { FuelWalletTestHelper } from '@fuel-wallet/test-utils';
-import {
-  test,
-  getButtonByText,
-  hasText,
-  addAssetThroughSettings,
-} from '@fuel-wallet/test-utils';
+import { test, getButtonByText, hasText } from '@fuel-wallet/test-utils';
 import { bn } from 'fuels';
 
 import { shortAddress, calculateAssetId } from '../../src/utils';
@@ -54,7 +49,7 @@ test.describe('Mint Assets', () => {
     });
   });
 
-  test('e2e mint known asset', async ({ context, page }) => {
+  test('e2e mint known asset', async ({ page }) => {
     await connect(page, fuelWalletTestHelper);
 
     const subId =
@@ -64,8 +59,7 @@ test.describe('Mint Assets', () => {
     const decimals = '6';
     const assetId = calculateAssetId(process.env.VITE_CONTRACT_ID!, subId);
 
-    await addAssetThroughSettings(
-      context,
+    await fuelWalletTestHelper.addAssetThroughSettings(
       assetId,
       name,
       symbol,
