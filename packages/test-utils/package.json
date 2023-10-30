@@ -25,9 +25,11 @@
     "ts:check": "pnpm tsc --noEmit"
   },
   "dependencies": {
+    "adm-zip": "^0.5.10",
     "fuels": "0.63.0"
   },
   "devDependencies": {
+    "@types/adm-zip": "^0.5.3",
     "tsup": "^7.2.0"
   }
 }
