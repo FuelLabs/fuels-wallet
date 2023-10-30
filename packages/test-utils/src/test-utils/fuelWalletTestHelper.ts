@@ -8,10 +8,21 @@ import { getButtonByText } from './button';
 import { getByAriaLabel } from './locator';
 
 export class FuelWalletTestHelper {
-  context;
+  private context;
+  private walletPage;
 
   private constructor(context: BrowserContext) {
     this.context = context;
+    const walletPage = this.context.pages().find((page) => {
+      const url = page.url();
+      return url.includes('/popup.html#/wallet');
+    });
+
+    if (!walletPage) {
+      throw new Error('Wallet Page could not be found');
+    }
+
+    this.walletPage = walletPage;
   }
 
   static async walletSetup(
@@ -62,25 +73,11 @@ export class FuelWalletTestHelper {
       `chrome-extension://${fuelExtensionId}/popup.html#/wallet`
     );
 
-    // Add testnet url
-    const selectNetworkButton = signupPage.getByLabel('Selected Network');
-    await selectNetworkButton.click();
+    const fuelWalletTestHelper = new FuelWalletTestHelper(context);
 
-    if ((await signupPage.getByText(chainName).count()) === 0) {
-      const addNetworkButton = signupPage.getByLabel('Add network');
-      await addNetworkButton.click();
+    await fuelWalletTestHelper.addNetwork(chainName, fuelProviderUrl);
 
-      const urlInput = signupPage.getByLabel('Network URL');
-      await urlInput.fill(fuelProviderUrl);
-
-      const addNewNetworkButton = signupPage.getByLabel('Add new network');
-      await addNewNetworkButton.click();
-    } else {
-      const closeNetworkButton = getByAriaLabel(signupPage, 'Close dialog');
-      await closeNetworkButton.click();
-    }
-
-    return new FuelWalletTestHelper(context);
+    return fuelWalletTestHelper;
   }
 
   async walletConnect(
@@ -210,33 +207,52 @@ export class FuelWalletTestHelper {
   }
 
   async addAccount() {
-    const walletPage = this.getWalletPage();
-
-    const accountsButton = getByAriaLabel(walletPage, 'Accounts');
+    const accountsButton = getByAriaLabel(this.walletPage, 'Accounts');
     await accountsButton.click();
-    const addAccountButton = getByAriaLabel(walletPage, 'Add account');
+    const addAccountButton = getByAriaLabel(this.walletPage, 'Add account');
     await addAccountButton.click();
   }
 
   async switchAccount(accountName: string) {
-    const walletPage = this.getWalletPage();
-
-    const accountsButton = getByAriaLabel(walletPage, 'Accounts');
+    const accountsButton = getByAriaLabel(this.walletPage, 'Accounts');
     await accountsButton.click();
-    const accountButton = getByAriaLabel(walletPage, accountName, true);
+    const accountButton = getByAriaLabel(this.walletPage, accountName, true);
     await accountButton.click();
   }
 
-  getWalletPage() {
-    const walletPage = this.context.pages().find((page) => {
-      const url = page.url();
-      return url.includes('/popup.html#/wallet');
-    });
+  async addNetwork(chainName: string, providerUrl: string) {
+    const networksButton = getByAriaLabel(this.walletPage, 'Selected Network');
+    await networksButton.click();
 
-    if (!walletPage) {
-      throw new Error('Wallet Page could not be found');
+    if ((await this.walletPage.getByText(chainName).count()) === 0) {
+      const addNetworkButton = getByAriaLabel(this.walletPage, 'Add network');
+      await addNetworkButton.click();
+
+      const urlInput = getByAriaLabel(this.walletPage, 'Network url');
+      await urlInput.fill(providerUrl);
+
+      const addNewNetworkButton = getByAriaLabel(
+        this.walletPage,
+        'Add new network'
+      );
+      await addNewNetworkButton.click();
+    } else {
+      const closeNetworkButton = getByAriaLabel(
+        this.walletPage,
+        'Close dialog'
+      );
+      await closeNetworkButton.click();
     }
+  }
 
-    return walletPage;
+  async switchNetwork(chainName: string) {
+    const networksButton = getByAriaLabel(this.walletPage, 'Selected Network');
+    await networksButton.click();
+    const networkButton = getByAriaLabel(this.walletPage, chainName, true);
+    await networkButton.click();
+  }
+
+  getWalletPage() {
+    return this.walletPage;
   }
 }
