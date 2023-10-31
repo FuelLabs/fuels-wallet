@@ -25,8 +25,7 @@ const PING_CACHE_TIME = 5_000;
 
 export type FuelConfig = {
   connectors?: Array<FuelWalletConnector>;
-  storage?: FuelStorage;
-  storeConnector?: boolean;
+  storage?: FuelStorage | null;
   targetObject?: TargetObject;
 };
 
@@ -37,7 +36,7 @@ export type FuelConnectorSelectOptions = {
 export class Fuel extends FuelWalletConnector {
   static STORAGE_KEY = 'fuel-current-connector';
 
-  private _storage?: FuelStorage;
+  private _storage?: FuelStorage | null = null;
   private _connectors: Array<FuelWalletConnector> = [];
   private _targetObject: TargetObject | null = null;
   private _unsubscribes: Array<() => void> = [];
@@ -54,7 +53,8 @@ export class Fuel extends FuelWalletConnector {
     // Set the target object to listen for global events
     this._targetObject = this.getTargetObject(config.targetObject);
     // Set default storage
-    this._storage = config.storage ?? this.getStorage();
+    this._storage =
+      config.storage === undefined ? this.getStorage() : config.storage;
     // Setup all methods
     this.setupMethods();
     // Get the current connector from the storage
@@ -369,10 +369,28 @@ export class Fuel extends FuelWalletConnector {
 
   /**
    * Remove all open listeners this is useful when you want to
-   * destroy the Fuel instance and avoid memory leaks.
+   * remove the Fuel instance and avoid memory leaks.
    */
-  destroy() {
+  unsubscribe() {
+    // Unsubscribe from all events
     this._unsubscribes.map((unSub) => unSub());
     this._targetUnsubscribe();
+    // Remove all listeners from fuel instance
+    this.removeAllListeners();
+  }
+
+  /**
+   * Clean all the data from the storage.
+   */
+  clean() {
+    this._storage?.removeItem(Fuel.STORAGE_KEY);
+  }
+
+  /**
+   * Removes all listeners and clean the storage.
+   */
+  destroy() {
+    this.unsubscribe();
+    this.clean();
   }
 }

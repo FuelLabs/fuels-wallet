@@ -9,6 +9,7 @@ const config: JestConfigWithTsJest = {
   modulePathIgnorePatterns: ['dist'],
   rootDir: __dirname,
   transform: tsjPreset.transform,
+  setupFilesAfterEnv: ['./jest.setup.ts'],
   clearMocks: true,
   moduleFileExtensions: ['js', 'ts'],
   testEnvironment: 'jsdom',

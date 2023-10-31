@@ -32,7 +32,11 @@ export class MockConnector extends FuelWalletConnector {
   constructor(options: MockConnectorOptions = {}) {
     super();
     this._wallets = options.wallets ?? [];
-    this._accounts = options.accounts ?? generateAccounts(2);
+    if (options.wallets) {
+      this._accounts = options.wallets.map((w) => w.address.toString());
+    } else {
+      this._accounts = options.accounts ?? generateAccounts(2);
+    }
     this._networks = options.networks ?? [
       {
         chainId: 0,
