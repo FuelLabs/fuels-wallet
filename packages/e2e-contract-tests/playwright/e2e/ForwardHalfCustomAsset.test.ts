@@ -1,7 +1,8 @@
 import type { FuelWalletTestHelper } from '@fuel-wallet/playwright-utils';
 import { test, getButtonByText, hasText } from '@fuel-wallet/playwright-utils';
+import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
-import { bn, BaseAssetId } from 'fuels';
+import { bn, BaseAssetId, toBech32 } from 'fuels';
 
 import { CustomAssetAbi__factory } from '../../src/contracts';
 import type { IdentityInput } from '../../src/contracts/CustomAssetAbi';
@@ -9,7 +10,7 @@ import '../../load.envs';
 import { calculateAssetId, shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
-import { checkFee, connect } from './utils';
+import { checkFee, connect, checkAddresses } from './utils';
 
 const { VITE_CONTRACT_ID } = process.env;
 
@@ -82,5 +83,31 @@ test.describe('Forward Half Custom Asset', () => {
       minFee: fee.sub(100),
       maxFee: fee.add(100),
     });
+
+    // test to and from addresses
+    const fuelContractId = toBech32(VITE_CONTRACT_ID!);
+    await checkAddresses(
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: fuelContractId, isContract: true },
+      walletNotificationPage
+    );
+    await checkAddresses(
+      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      walletNotificationPage
+    );
+
+    // Test approve
+    const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
+    await fuelWalletTestHelper.walletApprove();
+    await hasText(page, 'Transaction successful.');
+    const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
+    expect(
+      parseFloat(
+        preDepositBalanceTkn
+          .sub(postDepositBalanceTkn)
+          .format({ precision: 6, units: 9 })
+      )
+    ).toBe(parseFloat(halfForwardCustomAssetAmount));
   });
 });

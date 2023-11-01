@@ -1,20 +1,23 @@
 import type { FuelWalletTestHelper } from '@fuel-wallet/playwright-utils';
 import { test, getButtonByText, hasText } from '@fuel-wallet/playwright-utils';
-import { BaseAssetId, bn } from 'fuels';
+import { expect } from '@playwright/test';
+import { BaseAssetId, bn, toBech32 } from 'fuels';
+import type { WalletUnlocked } from 'fuels';
 
 import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
 import { testSetup } from '../utils';
 
-import { checkFee, connect } from './utils';
+import { checkFee, connect, checkAddresses } from './utils';
 
-const { VITE_EXTERNAL_CONTRACT_ID } = process.env;
+const { VITE_CONTRACT_ID, VITE_EXTERNAL_CONTRACT_ID } = process.env;
 
 test.describe('Forward Half ETH and Mint External Custom Asset', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;
+  let fuelWallet: WalletUnlocked;
 
   test.beforeEach(async ({ context, extensionId, page }) => {
-    ({ fuelWalletTestHelper } = await testSetup({
+    ({ fuelWalletTestHelper, fuelWallet } = await testSetup({
       context,
       page,
       extensionId,
@@ -73,5 +76,46 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
       minFee: fee.sub(100),
       maxFee: fee.add(100),
     });
+
+    const fuelContractId = toBech32(VITE_CONTRACT_ID!);
+    await checkAddresses(
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: fuelContractId, isContract: true },
+      walletNotificationPage
+    );
+    await checkAddresses(
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: toBech32(VITE_EXTERNAL_CONTRACT_ID!), isContract: true },
+      walletNotificationPage,
+      1,
+      1
+    );
+    await checkAddresses(
+      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      walletNotificationPage
+    );
+
+    // Test approve
+    const preDepositBalanceEth = await fuelWallet.getBalance();
+    const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
+    await fuelWalletTestHelper.walletApprove();
+    await hasText(page, 'Transaction successful.');
+    const postDepositBalanceEth = await fuelWallet.getBalance();
+    const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
+    expect(
+      parseFloat(
+        preDepositBalanceEth
+          .sub(postDepositBalanceEth)
+          .format({ precision: 6, units: 9 })
+      )
+    ).toBe(parseFloat(halfDepositAmount));
+    expect(
+      parseFloat(
+        postDepositBalanceTkn
+          .sub(preDepositBalanceTkn)
+          .format({ precision: 6, units: 9 })
+      )
+    ).toBe(parseFloat(mintAmount));
   });
 });

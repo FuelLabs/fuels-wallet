@@ -1,18 +1,23 @@
 import type { FuelWalletTestHelper } from '@fuel-wallet/playwright-utils';
 import { test, getButtonByText, hasText } from '@fuel-wallet/playwright-utils';
-import { BaseAssetId, bn } from 'fuels';
+import { expect } from '@playwright/test';
+import { BaseAssetId, bn, toBech32 } from 'fuels';
+import type { WalletUnlocked } from 'fuels';
 
 import '../../load.envs';
 import { shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
-import { checkFee, connect } from './utils';
+import { checkFee, connect, checkAddresses } from './utils';
+
+const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward Eth', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;
+  let fuelWallet: WalletUnlocked;
 
   test.beforeEach(async ({ context, extensionId, page }) => {
-    ({ fuelWalletTestHelper } = await testSetup({
+    ({ fuelWalletTestHelper, fuelWallet } = await testSetup({
       context,
       page,
       extensionId,
@@ -51,5 +56,26 @@ test.describe('Forward Eth', () => {
       minFee: fee.sub(100),
       maxFee: fee.add(100),
     });
+
+    // test to and from addresses
+    const fuelContractId = toBech32(VITE_CONTRACT_ID!);
+    await checkAddresses(
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: fuelContractId, isContract: true },
+      walletNotificationPage
+    );
+
+    // Test approve
+    const preDepositBalanceEth = await fuelWallet.getBalance();
+    await fuelWalletTestHelper.walletApprove();
+    await hasText(page, 'Transaction successful.');
+    const postDepositBalanceEth = await fuelWallet.getBalance();
+    expect(
+      parseFloat(
+        preDepositBalanceEth
+          .sub(postDepositBalanceEth)
+          .format({ precision: 6, units: 9 })
+      )
+    ).toBe(parseFloat(forwardEthAmount));
   });
 });
