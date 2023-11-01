@@ -5,18 +5,24 @@ import {
   hasText,
   walletConnect,
   addAssetThroughSettings,
+  walletApprove,
 } from '@fuel-wallet/test-utils';
-import { bn } from 'fuels';
+import { expect } from '@playwright/test';
+import { bn, toBech32 } from 'fuels';
+import type { WalletUnlocked } from 'fuels';
 
 import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
 import { testSetup } from '../utils';
 
-import { checkFee } from './utils';
+import { checkFee, checkAddresses } from './utils';
+
+const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Mint Assets', () => {
+  let fuelWallet: WalletUnlocked;
   test.beforeEach(async ({ context, extensionId, page }) => {
-    await testSetup({ context, page, extensionId });
+    fuelWallet = await testSetup({ context, page, extensionId });
   });
 
   test('e2e mint unknown assets', async ({ context, page }) => {
@@ -45,6 +51,30 @@ test.describe('Mint Assets', () => {
     await hasText(walletPage, 'Fee (network)');
     const fee = bn.parseUnits('0.00000013');
     await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
+
+    const fuelContractId = toBech32(VITE_CONTRACT_ID!);
+    await checkAddresses(
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: fuelContractId, isContract: true },
+      walletPage
+    );
+    await checkAddresses(
+      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      walletPage
+    );
+
+    const preMintBalanceTkn = await fuelWallet.getBalance(assetId);
+    await walletApprove(context);
+    await hasText(page, 'Transaction successful.');
+    const postMintBalanceTkn = await fuelWallet.getBalance(assetId);
+    expect(
+      parseFloat(
+        postMintBalanceTkn
+          .sub(preMintBalanceTkn)
+          .format({ precision: 6, units: 9 })
+      )
+    ).toBe(parseFloat(mintAmount));
   });
 
   test('e2e mint known asset', async ({ context, page }) => {
@@ -93,5 +123,30 @@ test.describe('Mint Assets', () => {
     await hasText(walletPage, 'Fee (network)');
     const fee = bn.parseUnits('0.000000133');
     await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
+
+    // test to and from addresses
+    const fuelContractId = toBech32(VITE_CONTRACT_ID!);
+    await checkAddresses(
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: fuelContractId, isContract: true },
+      walletPage
+    );
+    await checkAddresses(
+      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      walletPage
+    );
+
+    const preMintBalanceTkn = await fuelWallet.getBalance(assetId);
+    await walletApprove(context);
+    await hasText(page, 'Transaction successful.');
+    const postMintBalanceTkn = await fuelWallet.getBalance(assetId);
+    expect(
+      parseFloat(
+        postMintBalanceTkn
+          .sub(preMintBalanceTkn)
+          .format({ precision: 6, units: 6 })
+      )
+    ).toBe(parseFloat(mintAmount));
   });
 });
