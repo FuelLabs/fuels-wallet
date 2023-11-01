@@ -17,7 +17,7 @@
     "Wallet Connectors",
     "Reference",
     "Hooks Reference",
-    "Wallet Test Utils"
+    "Playwright Utils"
   ],
   "contributing": [
     "Running locally",

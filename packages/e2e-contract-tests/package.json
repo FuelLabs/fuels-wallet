@@ -19,7 +19,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@fuel-wallet/test-utils": "workspace:*",
+    "@fuel-wallet/playwright-utils": "workspace:*",
     "@playwright/test": "^1.39.0",
     "@types/chrome": "^0.0.246",
     "@types/node": "^20.8.4",

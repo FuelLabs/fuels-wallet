@@ -1,4 +1,4 @@
-import { getByAriaLabel } from '@fuel-wallet/test-utils';
+import { getByAriaLabel } from '@fuel-wallet/playwright-utils';
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 import type { BN } from 'fuels';

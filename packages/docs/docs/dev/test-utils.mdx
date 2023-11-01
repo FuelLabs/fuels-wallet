@@ -1,11 +1,11 @@
 ---
-title: Wallet Test Utils
+title: Playwright Utils
 category: For Developers
 ---
 
-# Wallet Test Utils
+# Playwright Utils
 
-The `@fuel-wallet/test-utils` package allows developers building frontend applications on fuel to test their application as it interacts with the fuel wallet. This package is compatible with the [playwright](https://playwright.dev/) test framework.
+The `@fuel-wallet/playwright-utils` package allows developers building frontend applications on fuel to test their application as it interacts with the fuel wallet. This package is compatible with the [playwright](https://playwright.dev/) test framework.
 
 ## Fixtures
 
@@ -13,7 +13,7 @@ If you are not using any custom test fixtures in your playwright tests import th
 
 ```tsx
 // e2e.test.ts
-import { test } from '@fuel-wallet/test-utils';
+import { test } from '@fuel-wallet/playwright-utils';
 
 test.use({ pathToExtension: './path/to/extension' });
 // OR

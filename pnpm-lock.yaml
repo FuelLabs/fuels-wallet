@@ -574,7 +574,7 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
     devDependencies:
-      '@fuel-wallet/test-utils':
+      '@fuel-wallet/playwright-utils':
         specifier: workspace:*
         version: link:../test-utils
       '@playwright/test':

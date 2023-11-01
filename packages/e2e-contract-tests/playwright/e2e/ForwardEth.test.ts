@@ -1,5 +1,5 @@
-import type { FuelWalletTestHelper } from '@fuel-wallet/test-utils';
-import { test, getButtonByText, hasText } from '@fuel-wallet/test-utils';
+import type { FuelWalletTestHelper } from '@fuel-wallet/playwright-utils';
+import { test, getButtonByText, hasText } from '@fuel-wallet/playwright-utils';
 import { BaseAssetId, bn } from 'fuels';
 
 import '../../load.envs';
