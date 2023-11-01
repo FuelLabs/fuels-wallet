@@ -74,7 +74,7 @@ export class Fuel extends FuelWalletConnector {
   }
 
   /**
-   * Return the target object to listen for global events.
+   * Return the storage used.
    */
   private getStorage() {
     if (typeof window !== 'undefined') return window.localStorage;
