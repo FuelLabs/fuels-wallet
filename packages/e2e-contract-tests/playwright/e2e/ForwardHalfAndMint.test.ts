@@ -4,20 +4,24 @@ import {
   getWalletPage,
   hasText,
   walletConnect,
+  walletApprove,
 } from '@fuel-wallet/test-utils';
-import { BaseAssetId, bn } from 'fuels';
+import { expect } from '@playwright/test';
+import { BaseAssetId, bn, toBech32 } from 'fuels';
+import type { WalletUnlocked } from 'fuels';
 
 import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
 import { testSetup } from '../utils';
 
-import { checkFee } from './utils';
+import { checkFee, checkAddresses } from './utils';
 
 const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward Half ETH and Mint Custom Asset', () => {
+  let fuelWallet: WalletUnlocked;
   test.beforeEach(async ({ context, extensionId, page }) => {
-    await testSetup({ context, page, extensionId });
+    fuelWallet = await testSetup({ context, page, extensionId });
   });
 
   test('e2e foreward half eth and mint custom asset', async ({
@@ -71,5 +75,40 @@ test.describe('Forward Half ETH and Mint Custom Asset', () => {
     await hasText(walletPage, 'Fee (network)');
     const fee = bn.parseUnits('0.00000021');
     await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
+
+    // test to and from addresses
+    const fuelContractId = toBech32(VITE_CONTRACT_ID!);
+    await checkAddresses(
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: fuelContractId, isContract: true },
+      walletPage
+    );
+    await checkAddresses(
+      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      walletPage
+    );
+
+    // Test approve
+    const preDepositBalanceEth = await fuelWallet.getBalance();
+    const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
+    await walletApprove(context);
+    await hasText(page, 'Transaction successful.');
+    const postDepositBalanceEth = await fuelWallet.getBalance();
+    const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
+    expect(
+      parseFloat(
+        preDepositBalanceEth
+          .sub(postDepositBalanceEth)
+          .format({ precision: 6, units: 9 })
+      )
+    ).toBe(parseFloat(halfDepositAmount));
+    expect(
+      parseFloat(
+        postDepositBalanceTkn
+          .sub(preDepositBalanceTkn)
+          .format({ precision: 6, units: 9 })
+      )
+    ).toBe(parseFloat(mintAmount));
   });
 });

@@ -1,3 +1,5 @@
+import { Toaster } from 'react-hot-toast';
+
 import {
   ForwardEthCard,
   Header,
@@ -27,6 +29,7 @@ function App() {
         <DepositAndMintMultiCalls />
         <AssetConfigurationCard />
       </div>
+      <Toaster />
     </Providers>
   );
 }
