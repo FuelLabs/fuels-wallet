@@ -40,7 +40,7 @@ test.describe('Deposit Half ETH', () => {
     await depositHalfButton.click();
 
     const walletNotificationPage =
-      await fuelWalletTestHelper.getWalletNotificationPage();
+      await fuelWalletTestHelper.getWalletPopupPage();
 
     // test forward asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');

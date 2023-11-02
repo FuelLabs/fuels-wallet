@@ -84,7 +84,7 @@ export class FuelWalletTestHelper {
     accountNames?: string[],
     connectCurrentAccount: boolean = true
   ) {
-    const walletNotificationPage = await this.getWalletNotificationPage();
+    const walletNotificationPage = await this.getWalletPopupPage();
 
     if (!connectCurrentAccount) {
       const disconnectCurrentAccountButton = walletNotificationPage.getByRole(
@@ -111,13 +111,13 @@ export class FuelWalletTestHelper {
   }
 
   async walletApprove() {
-    const walletPage = await this.getWalletNotificationPage();
+    const walletPage = await this.getWalletPopupPage();
 
     const approveButton = getButtonByText(walletPage, 'Approve');
     await approveButton.click();
   }
 
-  async getWalletNotificationPage() {
+  async getWalletPopupPage() {
     let walletNotificationPage = this.context.pages().find((page) => {
       const url = page.url();
       return url.includes('/popup.html?');

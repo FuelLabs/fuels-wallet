@@ -38,7 +38,7 @@ test.describe('Mint Assets', () => {
     // test asset is correct
     const assetId = calculateAssetId(process.env.VITE_CONTRACT_ID!);
     const walletNotificationPage =
-      await fuelWalletTestHelper.getWalletNotificationPage();
+      await fuelWalletTestHelper.getWalletPopupPage();
     // short address function copied from app package
     await hasText(walletNotificationPage, shortAddress(assetId), 0, 10000);
 
@@ -111,7 +111,7 @@ test.describe('Mint Assets', () => {
 
     // test asset is correct
     const walletNotificationPage =
-      await fuelWalletTestHelper.getWalletNotificationPage();
+      await fuelWalletTestHelper.getWalletPopupPage();
 
     await hasText(walletNotificationPage, name);
     await hasText(walletNotificationPage, shortAddress(assetId), 0, 10000);

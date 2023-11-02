@@ -43,7 +43,7 @@ test.describe('Forward and Mint Multicall', () => {
     await forwardHalfAndMintButton.click();
 
     const walletNotificationPage =
-      await fuelWalletTestHelper.getWalletNotificationPage();
+      await fuelWalletTestHelper.getWalletPopupPage();
 
     // test forward asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');

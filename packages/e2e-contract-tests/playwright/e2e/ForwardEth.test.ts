@@ -38,7 +38,7 @@ test.describe('Forward Eth', () => {
     await forwardEthButton.click();
 
     const walletNotificationPage =
-      await fuelWalletTestHelper.getWalletNotificationPage();
+      await fuelWalletTestHelper.getWalletPopupPage();
 
     // test the asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');

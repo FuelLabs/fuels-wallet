@@ -43,7 +43,7 @@ test.describe('Forward Half ETH and Mint Custom Asset', () => {
     await forwardHalfAndMintButton.click();
 
     const walletNotificationPage =
-      await fuelWalletTestHelper.getWalletNotificationPage();
+      await fuelWalletTestHelper.getWalletPopupPage();
 
     // test forward asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');

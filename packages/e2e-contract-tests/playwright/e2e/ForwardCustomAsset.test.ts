@@ -58,7 +58,7 @@ test.describe('Forward Custom Asset', () => {
     await forwardCustomAssetButton.click();
 
     const walletNotificationPage =
-      await fuelWalletTestHelper.getWalletNotificationPage();
+      await fuelWalletTestHelper.getWalletPopupPage();
 
     // test the asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
