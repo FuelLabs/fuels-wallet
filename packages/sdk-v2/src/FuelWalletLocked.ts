@@ -7,7 +7,6 @@ import { WalletLocked } from 'fuels';
 
 import type { FuelWalletConnector } from './FuelWalletConnector';
 import type { FuelWalletProvider } from './FuelWalletProvider';
-import type { Network } from './types';
 
 export class FuelWalletLocked extends WalletLocked {
   connector: FuelWalletConnector;
@@ -23,27 +22,6 @@ export class FuelWalletLocked extends WalletLocked {
     this.provider = provider;
   }
 
-  /**
-   * Return the network respective to the provider url and chainId of the
-   * wallet instance.
-   *
-   * If the network is not found on the connector, throws an error to indicate
-   * that the network must be added to the connector.
-   */
-  async getNetwork(): Promise<Network> {
-    const chainId = this.provider.getChainId();
-    const networks = await this.connector.networks();
-    const network = networks.find((n) => {
-      return n.url === this.provider.url && n.chainId === chainId;
-    });
-    if (!network) {
-      throw new Error(
-        'Network not found on the connector. See `addNetwork`, `selectNetwork` methods.'
-      );
-    }
-    return network;
-  }
-
   async signMessage(message: string): Promise<string> {
     return this.connector.signMessage(this.address.toString(), message);
   }
@@ -53,14 +31,7 @@ export class FuelWalletLocked extends WalletLocked {
   ): Promise<TransactionResponse> {
     const transactionId = await this.connector.sendTransaction(
       this.address.toString(),
-      transaction,
-      {
-        /**
-         * @todo: This should be the sdk version. We should have a way to
-         * retrieve this from the sdk.
-         */
-        sdkVersion: '0.0.0',
-      }
+      transaction
     );
     return this.provider.getTransactionResponse(transactionId);
   }

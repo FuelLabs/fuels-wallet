@@ -166,16 +166,6 @@ export type Network = {
 };
 
 /**
- * @name ApplicationInfo
- */
-export type ApplicationInfo = {
-  /**
-   * The version of the SDK been used by the application.
-   */
-  sdkVersion: string;
-};
-
-/**
  * Asset metadata that represents a asset_id from Fuel Network.
  *
  * Read more at: https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/assets

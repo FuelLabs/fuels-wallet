@@ -336,13 +336,30 @@ export class Fuel extends FuelWalletConnector {
   }
 
   /**
-   * Return a Fuel Wallet Locked instance with extends features to work with
+   * Return a Fuel Provider instance with extends features to work with
+   * connectors.
+   *
+   * @deprecated Provider is going to be deprecated in the future.
+   */
+  async getProvider(
+    providerOrNetwork?: FuelWalletProvider | Network
+  ): Promise<FuelWalletProvider> {
+    if (process.env.NODE_ENV !== 'production') {
+      // eslint-disable-next-line no-console
+      console.warn(
+        'Get provider is deprecated, use getWallet instead. Provider is going to be removed in the future.'
+      );
+    }
+    return this._getProvider(providerOrNetwork);
+  }
+
+  /**
+   * Return a Fuel Provider instance with extends features to work with
    * connectors.
    */
-  async getWallet(
-    address: string | AbstractAddress,
+  private async _getProvider(
     providerOrNetwork?: FuelWalletProvider | Network
-  ): Promise<FuelWalletLocked> {
+  ): Promise<FuelWalletProvider> {
     // Decide which provider to use based on the providerOrNetwork
     let provider: FuelWalletProvider;
     // If provider is a valid instance of a Provider use it
@@ -364,6 +381,18 @@ export class Fuel extends FuelWalletConnector {
     } else {
       throw new Error('Provider is not valid.');
     }
+    return provider;
+  }
+
+  /**
+   * Return a Fuel Wallet Locked instance with extends features to work with
+   * connectors.
+   */
+  async getWallet(
+    address: string | AbstractAddress,
+    providerOrNetwork?: FuelWalletProvider | Network
+  ): Promise<FuelWalletLocked> {
+    const provider = await this._getProvider(providerOrNetwork);
     return new FuelWalletLocked(address, this, provider);
   }
 
