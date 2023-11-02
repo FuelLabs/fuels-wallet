@@ -1,11 +1,5 @@
-import {
-  test,
-  getButtonByText,
-  walletConnect,
-  getWalletPage,
-  hasText,
-  walletApprove,
-} from '@fuel-wallet/test-utils';
+import type { FuelWalletTestHelper } from '@fuel-wallet/playwright-utils';
+import { test, getButtonByText, hasText } from '@fuel-wallet/playwright-utils';
 import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
 import { bn, BaseAssetId, toBech32 } from 'fuels';
@@ -16,21 +10,24 @@ import '../../load.envs';
 import { calculateAssetId, shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
-import { checkFee, checkAddresses } from './utils';
+import { checkFee, connect, checkAddresses } from './utils';
 
 const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward Custom Asset', () => {
   let fuelWallet: WalletUnlocked;
+  let fuelWalletTestHelper: FuelWalletTestHelper;
 
   test.beforeEach(async ({ context, extensionId, page }) => {
-    fuelWallet = await testSetup({ context, page, extensionId });
+    ({ fuelWallet, fuelWalletTestHelper } = await testSetup({
+      context,
+      page,
+      extensionId,
+    }));
   });
 
-  test('e2e forward custom asset', async ({ context, page }) => {
-    const connectButton = getButtonByText(page, 'Connect');
-    await connectButton.click();
-    await walletConnect(context);
+  test('e2e forward custom asset', async ({ page }) => {
+    await connect(page, fuelWalletTestHelper);
 
     // Mint custom asset to wallet
     const contract = CustomAssetAbi__factory.connect(
@@ -60,33 +57,37 @@ test.describe('Forward Custom Asset', () => {
     );
     await forwardCustomAssetButton.click();
 
-    const walletPage = await getWalletPage(context);
+    const walletNotificationPage =
+      await fuelWalletTestHelper.getWalletPopupPage();
 
     // test the asset name is shown
-    await hasText(walletPage, 'Unknown', 0, 5000, true);
+    await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
 
     // test asset id is correct
     const assetId = calculateAssetId(VITE_CONTRACT_ID!, BaseAssetId);
-    await hasText(walletPage, shortAddress(assetId));
+    await hasText(walletNotificationPage, shortAddress(assetId));
 
     // test forward custom asset amount is correct
-    await hasText(walletPage, forwardCustomAssetAmount);
+    await hasText(walletNotificationPage, forwardCustomAssetAmount);
 
     // test gas fee is correct
-    await hasText(walletPage, 'Fee (network)');
+    await hasText(walletNotificationPage, 'Fee (network)');
     const fee = bn.parseUnits('0.000000126');
-    await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
+    await checkFee(walletNotificationPage, {
+      minFee: fee.sub(100),
+      maxFee: fee.add(100),
+    });
 
     const fuelContractId = toBech32(VITE_CONTRACT_ID!);
     await checkAddresses(
       { address: fuelWallet.address.toAddress(), isContract: false },
       { address: fuelContractId, isContract: true },
-      walletPage
+      walletNotificationPage
     );
 
     // Test approve
     const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
-    await walletApprove(context);
+    await fuelWalletTestHelper.walletApprove();
     await hasText(page, 'Transaction successful.');
     const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(

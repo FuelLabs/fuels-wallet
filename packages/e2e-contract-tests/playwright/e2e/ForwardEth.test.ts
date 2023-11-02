@@ -1,11 +1,5 @@
-import {
-  test,
-  getButtonByText,
-  walletConnect,
-  getWalletPage,
-  hasText,
-  walletApprove,
-} from '@fuel-wallet/test-utils';
+import type { FuelWalletTestHelper } from '@fuel-wallet/playwright-utils';
+import { test, getButtonByText, hasText } from '@fuel-wallet/playwright-utils';
 import { expect } from '@playwright/test';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
@@ -14,20 +8,24 @@ import '../../load.envs';
 import { shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
-import { checkFee, checkAddresses } from './utils';
+import { checkFee, connect, checkAddresses } from './utils';
 
 const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward Eth', () => {
+  let fuelWalletTestHelper: FuelWalletTestHelper;
   let fuelWallet: WalletUnlocked;
+
   test.beforeEach(async ({ context, extensionId, page }) => {
-    fuelWallet = await testSetup({ context, page, extensionId });
+    ({ fuelWalletTestHelper, fuelWallet } = await testSetup({
+      context,
+      page,
+      extensionId,
+    }));
   });
 
-  test('e2e forward ETH', async ({ context, page }) => {
-    const connectButton = getButtonByText(page, 'Connect');
-    await connectButton.click();
-    await walletConnect(context);
+  test('e2e forward ETH', async ({ page }) => {
+    await connect(page, fuelWalletTestHelper);
 
     const forwardEthAmount = '1.2345';
     const forwardEthInput = page
@@ -39,33 +37,37 @@ test.describe('Forward Eth', () => {
     await page.waitForTimeout(2500);
     await forwardEthButton.click();
 
-    const walletPage = await getWalletPage(context);
+    const walletNotificationPage =
+      await fuelWalletTestHelper.getWalletPopupPage();
 
     // test the asset name is shown
-    await hasText(walletPage, 'Ethereum');
+    await hasText(walletNotificationPage, 'Ethereum');
 
     // test asset id is correct
-    await hasText(walletPage, shortAddress(BaseAssetId));
+    await hasText(walletNotificationPage, shortAddress(BaseAssetId));
 
     // test forward eth amount is correct
-    await hasText(walletPage, `${forwardEthAmount} ETH`);
+    await hasText(walletNotificationPage, `${forwardEthAmount} ETH`);
 
     // test gas fee is correct
-    await hasText(walletPage, 'Fee (network)');
+    await hasText(walletNotificationPage, 'Fee (network)');
     const fee = bn.parseUnits('0.000000114');
-    await checkFee(walletPage, { minFee: fee.sub(100), maxFee: fee.add(100) });
+    await checkFee(walletNotificationPage, {
+      minFee: fee.sub(100),
+      maxFee: fee.add(100),
+    });
 
     // test to and from addresses
     const fuelContractId = toBech32(VITE_CONTRACT_ID!);
     await checkAddresses(
       { address: fuelWallet.address.toAddress(), isContract: false },
       { address: fuelContractId, isContract: true },
-      walletPage
+      walletNotificationPage
     );
 
     // Test approve
     const preDepositBalanceEth = await fuelWallet.getBalance();
-    await walletApprove(context);
+    await fuelWalletTestHelper.walletApprove();
     await hasText(page, 'Transaction successful.');
     const postDepositBalanceEth = await fuelWallet.getBalance();
     expect(
