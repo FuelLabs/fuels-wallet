@@ -1,5 +1,11 @@
 # @fuel-wallet/types
 
+## 0.13.6
+
+### Patch Changes
+
+- [#948](https://github.com/FuelLabs/fuels-wallet/pull/948) [`c2baa3c`](https://github.com/FuelLabs/fuels-wallet/commit/c2baa3c5a4bc5212bce5275390dd71c111aa83c5) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix types deps on wallet packs
+
 ## 0.13.5
 
 ## 0.13.4

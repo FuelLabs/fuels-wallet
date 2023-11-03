@@ -1,5 +1,17 @@
 # @fuel-wallet/react
 
+## 0.13.6
+
+### Patch Changes
+
+- [#955](https://github.com/FuelLabs/fuels-wallet/pull/955) [`6483dc7`](https://github.com/FuelLabs/fuels-wallet/commit/6483dc7c5eb606b22a85bf31b47c333b5963879b) Thanks [@matt-user](https://github.com/matt-user)! - feat: add useAccounts hook
+
+- [#948](https://github.com/FuelLabs/fuels-wallet/pull/948) [`c2baa3c`](https://github.com/FuelLabs/fuels-wallet/commit/c2baa3c5a4bc5212bce5275390dd71c111aa83c5) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix types deps on wallet packs
+
+- Updated dependencies [[`c2baa3c`](https://github.com/FuelLabs/fuels-wallet/commit/c2baa3c5a4bc5212bce5275390dd71c111aa83c5)]:
+  - @fuel-wallet/types@0.13.6
+  - @fuel-wallet/sdk@0.13.6
+
 ## 0.13.5
 
 ### Patch Changes

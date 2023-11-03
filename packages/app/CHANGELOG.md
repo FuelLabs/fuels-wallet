@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.13.6
+
+### Patch Changes
+
+- [#940](https://github.com/FuelLabs/fuels-wallet/pull/940) [`bb05d1d`](https://github.com/FuelLabs/fuels-wallet/commit/bb05d1daefbb50d371bc56b7c7fedc458169ae5a) Thanks [@matt-user](https://github.com/matt-user)! - fix: showing assets with amount 0
+
+- Updated dependencies [[`c2baa3c`](https://github.com/FuelLabs/fuels-wallet/commit/c2baa3c5a4bc5212bce5275390dd71c111aa83c5)]:
+  - @fuel-wallet/types@0.13.6
+  - @fuel-wallet/sdk@0.13.6
+
 ## 0.13.5
 
 ### Patch Changes
