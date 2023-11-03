@@ -16,7 +16,8 @@
     "ABIs",
     "Wallet Connectors",
     "Reference",
-    "Hooks Reference"
+    "Hooks Reference",
+    "Playwright Utils"
   ],
   "contributing": [
     "Running locally",

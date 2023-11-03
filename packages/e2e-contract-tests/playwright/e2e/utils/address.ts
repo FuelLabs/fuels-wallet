@@ -1,7 +1,8 @@
-import { shortAddress } from '@fuel-wallet/test-utils/src/utils';
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 import type { Bech32Address } from 'fuels';
+
+import { shortAddress } from '../../../src/utils';
 
 export const checkAddresses = async (
   from: { address: Bech32Address; isContract: boolean },
