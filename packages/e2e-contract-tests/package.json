@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@fuel-wallet/react": "workspace:*",
-    "@fuel-wallet/sdk": "workspace:*",
+    "@fuel-wallet/sdk-v2": "workspace:*",
     "@fuel-wallet/types": "workspace:*",
     "fuels": "0.63.0",
     "react": "^18.2.0",

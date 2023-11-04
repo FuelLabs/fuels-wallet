@@ -1,5 +1,6 @@
-import type { FuelWalletConnector } from '@fuel-wallet/sdk';
-import { Fuel } from '@fuel-wallet/sdk';
+import { FuelWalletConnector } from '@fuel-wallet/connectors';
+import type { FuelConnector } from '@fuel-wallet/sdk-v2';
+import { Fuel } from '@fuel-wallet/sdk-v2';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { createContext, useContext, useEffect } from 'react';
@@ -38,10 +39,13 @@ export const useFuel = () => {
 };
 
 export const FuelProvider = ({ children }: FuelProviderProps) => {
-  const fuel = new Fuel();
+  const fuel = new Fuel({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    connectors: [new FuelWalletConnector() as any],
+  });
   const fuelQueryClient = new QueryClient(queryClientConfig);
 
-  function onConnectorsChange(connectors: Array<FuelWalletConnector>) {
+  function onConnectorsChange(connectors: Array<FuelConnector>) {
     fuelQueryClient.invalidateQueries([QUERY_KEYS.connectorList]);
     selectCurrentConnector(fuel, connectors)?.then(() => {
       fuelQueryClient.invalidateQueries();
@@ -81,14 +85,14 @@ export const FuelProvider = ({ children }: FuelProviderProps) => {
     fuel.on(fuel.events.connectors, onConnectorsChange);
     fuel.on(fuel.events.connection, onConnectionChange);
     fuel.on(fuel.events.accounts, onAccountsChange);
-    fuel.on(fuel.events.network, onNetworkChange);
+    fuel.on(fuel.events.currentNetwork, onNetworkChange);
 
     return () => {
       fuel.off(fuel.events.currentAccount, onCurrentAccountChange);
       fuel.off(fuel.events.connectors, onConnectorsChange);
       fuel.off(fuel.events.connection, onConnectionChange);
       fuel.off(fuel.events.accounts, onAccountsChange);
-      fuel.off(fuel.events.network, onNetworkChange);
+      fuel.off(fuel.events.currentNetwork, onNetworkChange);
     };
   }, []);
 

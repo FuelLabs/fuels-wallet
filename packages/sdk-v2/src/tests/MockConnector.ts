@@ -2,9 +2,9 @@ import type { Asset } from '@fuels/assets';
 import type { WalletUnlocked, TransactionRequestLike } from 'fuels';
 import { setTimeout } from 'timers/promises';
 
-import { FuelWalletConnector } from '../FuelWalletConnector';
+import { FuelConnector } from '../FuelConnector';
 import { FuelConnectorEventTypes } from '../api';
-import type { FuelABI, Network, WalletConnectorMetadata } from '../types';
+import type { FuelABI, Network, ConnectorMetadata } from '../types';
 
 import { generateAccounts } from './utils/generateAccounts';
 
@@ -14,10 +14,10 @@ type MockConnectorOptions = {
   networks?: Array<Network>;
   wallets?: Array<WalletUnlocked>;
   pingDelay?: number;
-  metadata?: Partial<WalletConnectorMetadata>;
+  metadata?: Partial<ConnectorMetadata>;
 };
 
-export class MockConnector extends FuelWalletConnector {
+export class MockConnector extends FuelConnector {
   _accounts: Array<string>;
   _networks: Array<Network>;
   _wallets: Array<WalletUnlocked>;

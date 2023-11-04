@@ -47,19 +47,19 @@ export const useConnector = () => {
 export function FuelConnectorProvider({
   theme,
   children,
-  connectors: initalConnectors = DEFAULT_CONNECTORS,
+  connectors: initialConnectors = DEFAULT_CONNECTORS,
 }: FuelConnectProviderProps) {
   const { fuel } = useFuel();
   const { isLoading: isConnecting, isError, connect } = useConnect();
   const { connectors: connectorList } = useConnectors();
   const connectors = useMemo(() => {
-    return initalConnectors
+    return initialConnectors
       .map((connector) => ({
         ...connector,
         installed: !!connectorList.find((c) => c.name === connector.name),
       }))
       .sort((a) => (a.installed ? -1 : 1));
-  }, [initalConnectors, connectorList]);
+  }, [initialConnectors, connectorList]);
   const [connector, setConnector] = useState<Connector | null>(null);
   const [isOpen, setOpen] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -80,7 +80,7 @@ export function FuelConnectorProvider({
     async (connector: Connector) => {
       if (!fuel) return setConnector(connector);
 
-      const connectors = await fuel.listConnectors();
+      const connectors = await fuel.connectors();
       const hasConnector = connectors.find((c) => c.name === connector.name);
 
       if (hasConnector) {

@@ -417,6 +417,43 @@ importers:
         specifier: ^4.2.1
         version: 4.2.1(typescript@5.2.2)(vite@4.4.11)
 
+  packages/connectors:
+    dependencies:
+      '@fuel-wallet/sdk-v2':
+        specifier: workspace:*
+        version: link:../sdk-v2
+      '@fuel-wallet/types':
+        specifier: workspace:*
+        version: link:../types
+      '@fuels/assets':
+        specifier: 0.0.11
+        version: 0.0.11
+      events:
+        specifier: ^3.3.0
+        version: 3.3.0
+      json-rpc-2.0:
+        specifier: ^1.6.0
+        version: 1.6.0
+      uuid:
+        specifier: ^9.0.1
+        version: 9.0.1
+    devDependencies:
+      '@fuel-ts/wallet':
+        specifier: 0.63.0
+        version: 0.63.0
+      '@types/uuid':
+        specifier: ^9.0.5
+        version: 9.0.5
+      fuels:
+        specifier: 0.63.0
+        version: 0.63.0
+      jest-environment-jsdom:
+        specifier: 29.6.2
+        version: 29.6.2
+      tsup:
+        specifier: ^7.2.0
+        version: 7.2.0(ts-node@10.9.1)(typescript@5.2.2)
+
   packages/docs:
     dependencies:
       '@docsearch/css':
@@ -558,9 +595,9 @@ importers:
       '@fuel-wallet/react':
         specifier: workspace:*
         version: link:../react
-      '@fuel-wallet/sdk':
+      '@fuel-wallet/sdk-v2':
         specifier: workspace:*
-        version: link:../sdk
+        version: link:../sdk-v2
       '@fuel-wallet/types':
         specifier: workspace:*
         version: link:../types
@@ -628,9 +665,12 @@ importers:
       '@fuel-ui/react':
         specifier: 0.21.1
         version: 0.21.1(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.2)
-      '@fuel-wallet/sdk':
+      '@fuel-wallet/connectors':
         specifier: workspace:*
-        version: link:../sdk
+        version: link:../connectors
+      '@fuel-wallet/sdk-v2':
+        specifier: workspace:*
+        version: link:../sdk-v2
       '@fuel-wallet/types':
         specifier: workspace:*
         version: link:../types

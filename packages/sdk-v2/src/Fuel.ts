@@ -1,6 +1,6 @@
 import type { AbstractAddress } from 'fuels';
 
-import { FuelWalletConnector } from './FuelWalletConnector';
+import { FuelConnector } from './FuelConnector';
 import { FuelWalletLocked } from './FuelWalletLocked';
 import { FuelWalletProvider } from './FuelWalletProvider';
 import { FuelConnectorEventTypes, FuelConnectorMethods } from './api';
@@ -24,7 +24,7 @@ const HAS_CONNECTOR_TIMEOUT = 2_000;
 const PING_CACHE_TIME = 5_000;
 
 export type FuelConfig = {
-  connectors?: Array<FuelWalletConnector>;
+  connectors?: Array<FuelConnector>;
   storage?: FuelStorage | null;
   targetObject?: TargetObject;
 };
@@ -33,16 +33,16 @@ export type FuelConnectorSelectOptions = {
   emitEvents?: boolean;
 };
 
-export class Fuel extends FuelWalletConnector {
+export class Fuel extends FuelConnector {
   static STORAGE_KEY = 'fuel-current-connector';
 
   private _storage?: FuelStorage | null = null;
-  private _connectors: Array<FuelWalletConnector> = [];
+  private _connectors: Array<FuelConnector> = [];
   private _targetObject: TargetObject | null = null;
   private _unsubscribes: Array<() => void> = [];
   private _targetUnsubscribe: () => void;
   private _pingCache: CacheFor = {};
-  private _currentConnector?: FuelWalletConnector | null;
+  private _currentConnector?: FuelConnector | null;
 
   constructor(config: FuelConfig = {}) {
     super();
@@ -141,7 +141,7 @@ export class Fuel extends FuelWalletConnector {
    * Fetch the status of a connector and set the installed and connected
    * status.
    */
-  private async fetchConnectorStatus(connector: FuelWalletConnector) {
+  private async fetchConnectorStatus(connector: FuelConnector) {
     const [isConnected, ping] = await Promise.allSettled([
       connector.isConnected(),
       withTimeout(this.pingConnector(connector)),
@@ -171,7 +171,7 @@ export class Fuel extends FuelWalletConnector {
    * Fetch the status of a connector and set the installed and connected
    * status. If no connector is provided it will ping the current connector.
    */
-  private async pingConnector(connector?: FuelWalletConnector) {
+  private async pingConnector(connector?: FuelConnector) {
     const { _currentConnector: currentConnector } = this;
     if (!currentConnector) return false;
     // If finds a ping in the cache and the value is true
@@ -221,7 +221,7 @@ export class Fuel extends FuelWalletConnector {
   /**
    * Add a new connector to the list of connectors.
    */
-  private addConnector = async (connector: FuelWalletConnector) => {
+  private addConnector = async (connector: FuelConnector) => {
     if (!this.getConnector(connector)) {
       this._connectors.push(connector);
       await this.fetchConnectorStatus(connector);
@@ -259,9 +259,7 @@ export class Fuel extends FuelWalletConnector {
   /**
    * Get a connector from the list of connectors.
    */
-  getConnector = (
-    connector: FuelWalletConnector | string
-  ): FuelWalletConnector | null => {
+  getConnector = (connector: FuelConnector | string): FuelConnector | null => {
     return (
       this._connectors.find((c) => {
         const connectorName =
@@ -274,7 +272,7 @@ export class Fuel extends FuelWalletConnector {
   /**
    * Return the list of connectors with the status of installed and connected.
    */
-  async connectors(): Promise<Array<FuelWalletConnector>> {
+  async connectors(): Promise<Array<FuelConnector>> {
     await this.fetchConnectorsStatus();
     return this._connectors;
   }

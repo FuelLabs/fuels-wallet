@@ -5,16 +5,16 @@ import type {
 } from 'fuels';
 import { WalletLocked } from 'fuels';
 
-import type { FuelWalletConnector } from './FuelWalletConnector';
+import type { FuelConnector } from './FuelConnector';
 import type { FuelWalletProvider } from './FuelWalletProvider';
 
 export class FuelWalletLocked extends WalletLocked {
-  connector: FuelWalletConnector;
+  connector: FuelConnector;
   provider: FuelWalletProvider;
 
   constructor(
     address: string | AbstractAddress,
-    connector: FuelWalletConnector,
+    connector: FuelConnector,
     provider: FuelWalletProvider
   ) {
     super(address, provider);

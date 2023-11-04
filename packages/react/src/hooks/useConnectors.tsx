@@ -9,7 +9,7 @@ export const useConnectors = () => {
   const query = useQuery(
     [QUERY_KEYS.connectorList],
     async () => {
-      return fuel?.listConnectors();
+      return fuel?.connectors();
     },
     {
       enabled: !!fuel,

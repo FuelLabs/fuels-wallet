@@ -2,7 +2,7 @@
 import type { Asset } from '@fuels/assets';
 import type { JsonAbi } from 'fuels';
 
-import type { FuelWalletConnector } from './FuelWalletConnector';
+import type { FuelConnector } from './FuelConnector';
 import type { FuelConnectorEventTypes } from './api';
 import { FuelConnectorEventType } from './api';
 
@@ -101,7 +101,7 @@ export type NetworksEvent = {
  */
 export type ConnectorsEvent = {
   type: FuelConnectorEventTypes.connectors;
-  data: Array<FuelWalletConnector>;
+  data: Array<FuelConnector>;
 };
 
 /**
@@ -114,7 +114,7 @@ export type ConnectorsEvent = {
  */
 export type ConnectorEvent = {
   type: FuelConnectorEventTypes.currentConnector;
-  data: FuelWalletConnector;
+  data: FuelConnector;
 };
 
 /**
@@ -185,7 +185,7 @@ export type FuelABI = JsonAbi;
  * ========================================================================================
  */
 
-export type WalletConnectorMetadata = {
+export type ConnectorMetadata = {
   image:
     | string
     | {
@@ -235,9 +235,9 @@ export interface FuelStorage {
  * Fuel Connector Event is a custom event that can be used by the connector to
  * inform the Fuel Connector Manager that a new connector is available.
  */
-export class FuelConnectorEvent extends CustomEvent<FuelWalletConnector> {
+export class FuelConnectorEvent extends CustomEvent<FuelConnector> {
   static type = FuelConnectorEventType;
-  constructor(connector: FuelWalletConnector) {
+  constructor(connector: FuelConnector) {
     super(FuelConnectorEventType, { detail: connector });
   }
 }

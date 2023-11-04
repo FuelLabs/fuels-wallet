@@ -10,18 +10,18 @@ import type {
   FuelEventArg,
   Network,
   Version,
-  WalletConnectorMetadata,
+  ConnectorMetadata,
 } from './types';
 
 /**
- * @name FuelWalletConnector
+ * @name FuelConnector
  *
  * Wallet Connector is a interface that represents a Wallet Connector and all the methods
  * that should be implemented to be compatible with the Fuel SDK.
  */
-export abstract class FuelWalletConnector extends EventEmitter {
+export abstract class FuelConnector extends EventEmitter {
   name: string = '';
-  metadata: WalletConnectorMetadata = {} as WalletConnectorMetadata;
+  metadata: ConnectorMetadata = {} as ConnectorMetadata;
   connected: boolean = false;
   installed: boolean = false;
   events = FuelConnectorEventTypes;
