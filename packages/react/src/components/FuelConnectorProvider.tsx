@@ -1,38 +1,35 @@
+import type { FuelConnector } from '@fuel-wallet/sdk-v2';
 import {
   createContext,
   useContext,
   type ReactNode,
-  useMemo,
   useState,
   useCallback,
 } from 'react';
 
 import { useConnect } from '../hooks/useConnect';
 import { useConnectors } from '../hooks/useConnectors';
-import type { Connector, ConnectorList } from '../types';
 import { Connect } from '../ui';
-import { DEFAULT_CONNECTORS } from '../ui/Connect/connectors';
 
 import { useFuel } from './FuelProvider';
 
 type FuelConnectProviderProps = {
   children?: ReactNode;
   theme: string;
-  connectors?: ConnectorList;
 };
 
 export type FuelConnectContextType = {
-  connectors: ConnectorList;
+  connectors: Array<FuelConnector>;
   isConnecting: boolean;
   isError: boolean;
   connect: () => void;
   cancel: () => void;
   error: Error | null;
   dialog: {
-    connector: Connector | null;
+    connector: FuelConnector | null;
     isOpen: boolean;
     back: () => void;
-    connect: (connector: Connector) => void;
+    connect: (connector: FuelConnector) => void;
   };
 };
 
@@ -47,20 +44,11 @@ export const useConnector = () => {
 export function FuelConnectorProvider({
   theme,
   children,
-  connectors: initialConnectors = DEFAULT_CONNECTORS,
 }: FuelConnectProviderProps) {
   const { fuel } = useFuel();
   const { isLoading: isConnecting, isError, connect } = useConnect();
-  const { connectors: connectorList } = useConnectors();
-  const connectors = useMemo(() => {
-    return initialConnectors
-      .map((connector) => ({
-        ...connector,
-        installed: !!connectorList.find((c) => c.name === connector.name),
-      }))
-      .sort((a) => (a.installed ? -1 : 1));
-  }, [initialConnectors, connectorList]);
-  const [connector, setConnector] = useState<Connector | null>(null);
+  const { connectors } = useConnectors();
+  const [connector, setConnector] = useState<FuelConnector | null>(null);
   const [isOpen, setOpen] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -77,7 +65,7 @@ export function FuelConnectorProvider({
   };
 
   const handleSelectConnector = useCallback(
-    async (connector: Connector) => {
+    async (connector: FuelConnector) => {
       if (!fuel) return setConnector(connector);
 
       const connectors = await fuel.connectors();

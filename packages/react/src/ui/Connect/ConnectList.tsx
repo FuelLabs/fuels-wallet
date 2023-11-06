@@ -1,14 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, CardList, Image, Text } from '@fuel-ui/react';
-
-import type { Connector, ConnectorList } from '../../types';
+import type { FuelConnector } from '@fuel-wallet/sdk-v2';
 
 import { getImageUrl } from './utils/getImageUrl';
 
 export type ConnectListProps = {
   theme: string;
-  connectors: ConnectorList;
-  onPress: (connector: Connector) => void;
+  connectors: Array<FuelConnector>;
+  onPress: (connector: FuelConnector) => void;
 };
 
 export const ConnectList = ({
@@ -21,7 +20,7 @@ export const ConnectList = ({
       {connectors.map((connector, index) => (
         <CardList.Item
           variant="ghost"
-          key={connector.connector}
+          key={connector.name}
           onPress={() => onPress(connector)}
           aria-label={`Connect to ${connector.name}`}
           data-theme={theme}

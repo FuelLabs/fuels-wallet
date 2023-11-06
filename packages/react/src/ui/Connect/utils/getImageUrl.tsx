@@ -1,8 +1,9 @@
-import type { Connector } from '../../../types';
+import type { FuelConnector } from '@fuel-wallet/sdk-v2';
 
-export const getImageUrl = (theme: string, connector: Connector) => {
-  if (typeof connector.image === 'object') {
-    return theme === 'dark' ? connector.image.dark : connector.image.light;
+export const getImageUrl = (theme: string, connector: FuelConnector) => {
+  const { image } = connector.metadata;
+  if (typeof image === 'object') {
+    return theme === 'dark' ? image.dark : image.light;
   }
-  return connector.image;
+  return image;
 };

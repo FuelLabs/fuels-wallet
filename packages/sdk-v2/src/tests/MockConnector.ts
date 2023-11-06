@@ -23,6 +23,15 @@ export class MockConnector extends FuelConnector {
   _wallets: Array<WalletUnlocked>;
   _pingDelay: number;
   name = 'Fuel Wallet';
+  metadata: ConnectorMetadata = {
+    image: '/connectors/fuel-wallet.svg',
+    install: {
+      action: 'Install',
+      description:
+        'To connect your Fuel Wallet, install the browser extension.',
+      link: 'https://chrome.google.com/webstore/detail/fuel-wallet/dldjpboieedgcmpkchcjcbijingjcgok',
+    },
+  };
 
   constructor(options: MockConnectorOptions = {}) {
     super();
@@ -42,14 +51,7 @@ export class MockConnector extends FuelConnector {
     this._pingDelay = options.pingDelay ?? 900;
     this.name = options.name ?? this.name;
     this.metadata = {
-      image: '/connectors/fuel-wallet.svg',
-      connector: 'Fuel Wallet',
-      install: {
-        action: 'Install',
-        description:
-          'To connect your Fuel Wallet, install the browser extension.',
-        link: 'https://chrome.google.com/webstore/detail/fuel-wallet/dldjpboieedgcmpkchcjcbijingjcgok',
-      },
+      ...this.metadata,
       ...options.metadata,
     };
   }

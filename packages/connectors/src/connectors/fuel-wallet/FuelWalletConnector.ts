@@ -8,7 +8,7 @@ import {
 } from '@fuel-wallet/sdk-v2';
 import { transactionRequestify, type TransactionRequestLike } from 'fuels';
 
-import { WindowConnection } from '../../connections';
+import { WindowConnection } from '../../connections/WindowConnection';
 
 export class FuelWalletConnector extends WindowConnection {
   name: string = 'Fuel Wallet';
@@ -17,7 +17,6 @@ export class FuelWalletConnector extends WindowConnection {
   events = FuelConnectorEventTypes;
   metadata: ConnectorMetadata = {
     image: '/connectors/fuel-wallet.svg',
-    connector: 'Fuel Wallet',
     install: {
       action: 'Install',
       description:
@@ -75,9 +74,19 @@ export class FuelWalletConnector extends WindowConnection {
     // Transform transaction object to a transaction request
     const txRequest = transactionRequestify(transaction);
 
+    /**
+     * @todo We should remove this once the chainId standard start to be used and chainId is required
+     * to be correct according to the network the transaction wants to target.
+     */
+    const network = await this.currentNetwork();
+    const provider = {
+      url: network.url,
+    };
+
     return this.client.request('sendTransaction', {
       address,
       transaction: JSON.stringify(txRequest),
+      provider,
     });
   }
 
@@ -115,15 +124,11 @@ export class FuelWalletConnector extends WindowConnection {
   }
 
   async currentNetwork(): Promise<Network> {
-    throw new Error('Method not implemented.');
+    return this.client.request('network', {});
   }
 
   async selectNetwork(_network: Network): Promise<boolean> {
     throw new Error('Method not implemented.');
-  }
-
-  async network(): Promise<Network> {
-    return this.client.request('network', {});
   }
 
   async networks(): Promise<Network[]> {

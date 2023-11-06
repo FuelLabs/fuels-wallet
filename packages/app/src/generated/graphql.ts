@@ -14,7 +14,7 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
 };
 export type MakeEmpty<
   T extends { [key: string]: unknown },
-  K extends keyof T
+  K extends keyof T,
 > = { [_ in K]?: never };
 export type Incremental<T> =
   | T
@@ -504,6 +504,17 @@ export type IMessageProof = {
   sender: Scalars['Address']['output'];
 };
 
+export enum IMessageState {
+  NotFound = 'NOT_FOUND',
+  Spent = 'SPENT',
+  Unspent = 'UNSPENT',
+}
+
+export type IMessageStatus = {
+  __typename?: 'MessageStatus';
+  state: IMessageState;
+};
+
 export type IMutation = {
   __typename?: 'Mutation';
   /** Execute a dry-run of the transaction using a fork of current state, no changes are committed. */
@@ -611,6 +622,7 @@ export type IQuery = {
   /** Returns true when the GraphQL API is serving requests. */
   health: Scalars['Boolean']['output'];
   messageProof: Maybe<IMessageProof>;
+  messageStatus: IMessageStatus;
   messages: IMessageConnection;
   nodeInfo: INodeInfo;
   transaction: Maybe<ITransaction>;
@@ -687,6 +699,10 @@ export type IQueryMessageProofArgs = {
   commitBlockId: InputMaybe<Scalars['BlockId']['input']>;
   messageId: Scalars['MessageId']['input'];
   transactionId: Scalars['TransactionId']['input'];
+};
+
+export type IQueryMessageStatusArgs = {
+  nonce: Scalars['Nonce']['input'];
 };
 
 export type IQueryMessagesArgs = {

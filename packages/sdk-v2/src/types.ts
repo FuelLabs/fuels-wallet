@@ -192,7 +192,6 @@ export type ConnectorMetadata = {
         light: string;
         dark: string;
       };
-  connector: string;
   install: {
     action: string;
     link: string;

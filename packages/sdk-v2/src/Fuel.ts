@@ -143,10 +143,10 @@ export class Fuel extends FuelConnector {
    */
   private async fetchConnectorStatus(connector: FuelConnector) {
     const [isConnected, ping] = await Promise.allSettled([
-      connector.isConnected(),
+      withTimeout(connector.isConnected()),
       withTimeout(this.pingConnector(connector)),
     ]);
-    connector.installed = ping.status === 'fulfilled';
+    connector.installed = ping.status === 'fulfilled' && ping.value;
     connector.connected =
       isConnected.status === 'fulfilled' && isConnected.value;
     return {
@@ -173,11 +173,11 @@ export class Fuel extends FuelConnector {
    */
   private async pingConnector(connector?: FuelConnector) {
     const { _currentConnector: currentConnector } = this;
-    if (!currentConnector) return false;
+    const _connector = connector ?? currentConnector;
+    if (!_connector) return false;
     // If finds a ping in the cache and the value is true
     // return from cache
     try {
-      const _connector = connector ?? currentConnector;
       return await cacheFor(
         async () => {
           return withTimeout(_connector.ping());

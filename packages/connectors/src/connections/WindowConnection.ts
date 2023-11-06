@@ -10,6 +10,7 @@ import { BaseConnection } from './BaseConnection';
 
 export class WindowConnection extends BaseConnection {
   isListenerAdded = false;
+  name?: string;
 
   constructor() {
     super();
@@ -32,6 +33,7 @@ export class WindowConnection extends BaseConnection {
     this.postMessage({
       type: MessageTypes.request,
       target: CONTENT_SCRIPT_NAME,
+      connectorName: this.name,
       request,
     });
   }

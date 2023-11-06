@@ -16,7 +16,7 @@ export function deferPromise<R = unknown>() {
   return defer;
 }
 
-export function withTimeout<F extends Promise<unknown>>(
+export async function withTimeout<F extends Promise<unknown>>(
   promise: F,
   timeout: number = 1050
 ) {

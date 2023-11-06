@@ -1,22 +1,18 @@
 import {
   useConnect,
   FUEL_WALLET_CONNECTOR,
-  FUEL_WALLET_DEVELOPMENT_CONNECTOR,
+  useConnectors,
 } from '@fuel-wallet/react';
 
-import { IS_TEST } from '../config';
-
 export const Header = () => {
-  const connect = useConnect();
+  const { connect } = useConnect();
+  const { connectors } = useConnectors();
 
   return (
     <button
+      disabled={!connectors.length}
       onClick={() => {
-        connect.mutate(
-          IS_TEST
-            ? FUEL_WALLET_CONNECTOR.connector
-            : FUEL_WALLET_DEVELOPMENT_CONNECTOR.connector
-        );
+        connect(FUEL_WALLET_CONNECTOR.connector);
       }}
     >
       Connect
