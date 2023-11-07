@@ -1,5 +1,15 @@
 # @fuel-wallet/react
 
+## 0.13.7
+
+### Patch Changes
+
+- [#964](https://github.com/FuelLabs/fuels-wallet/pull/964) [`e0854e6`](https://github.com/FuelLabs/fuels-wallet/commit/e0854e6ec88f546baa6b70e56f327e75ebfbfd49) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: exports on react and test-utils packages
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.13.7
+  - @fuel-wallet/types@0.13.7
+
 ## 0.13.6
 
 ### Patch Changes
