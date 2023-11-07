@@ -11,8 +11,8 @@
     "typings": "dist/index.d.ts",
     "exports": {
       ".": {
-        "require": "dist/index.js",
-        "default": "dist/index.mjs"
+        "require": "./dist/index.js",
+        "default": "./dist/index.mjs"
       }
     }
   },
