@@ -1,4 +1,4 @@
-import { createUUID } from '@fuel-wallet/sdk';
+import { createUUID } from '@fuel-wallet/connections';
 import type { Network } from '@fuel-wallet/types';
 import { Provider } from 'fuels';
 import { db } from '~/systems/Core/utils/database';

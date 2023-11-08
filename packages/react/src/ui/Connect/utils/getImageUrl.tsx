@@ -1,4 +1,4 @@
-import type { FuelConnector } from '@fuel-wallet/sdk-v2';
+import type { FuelConnector } from '@fuel-wallet/sdk';
 
 export const getImageUrl = (theme: string, connector: FuelConnector) => {
   const { image } = connector.metadata;

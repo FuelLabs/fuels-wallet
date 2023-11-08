@@ -1,4 +1,4 @@
-import type { FuelWalletLocked } from '@fuel-wallet/sdk-v2';
+import type { FuelWalletLocked } from '@fuel-wallet/sdk';
 import type { BigNumberish } from 'fuels';
 import { BaseAssetId } from 'fuels';
 import toast from 'react-hot-toast';

@@ -1,8 +1,8 @@
 import {
+  Fuel,
   FuelWalletConnector,
   FuelWalletDevelopmentConnector,
-} from '@fuel-wallet/connectors';
-import { Fuel } from '@fuel-wallet/sdk-v2';
+} from '@fuel-wallet/sdk';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { createContext, useContext, useEffect } from 'react';

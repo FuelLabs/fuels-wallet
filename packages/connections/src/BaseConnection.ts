@@ -12,8 +12,8 @@ import EventEmitter from 'events';
 import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
 import { JSONRPCServer, JSONRPCClient } from 'json-rpc-2.0';
 
-import { MAX_EVENT_LISTENERS } from '../config';
-import { createUUID } from '../utils/createUUID';
+import { MAX_EVENT_LISTENERS } from './config';
+import { createUUID } from './utils/createUUID';
 
 export class BaseConnection extends EventEmitter {
   readonly client: JSONRPCClient;

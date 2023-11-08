@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, CardList, Image, Text } from '@fuel-ui/react';
-import type { FuelConnector } from '@fuel-wallet/sdk-v2';
+import type { FuelConnector } from '@fuel-wallet/sdk';
 
 import { getImageUrl } from './utils/getImageUrl';
 

@@ -32,8 +32,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^4.36.1",
-    "@fuel-wallet/sdk-v2": "workspace:*",
-    "@fuel-wallet/connectors": "workspace:*",
+    "@fuel-wallet/sdk": "workspace:*",
     "@fuel-wallet/types": "workspace:*",
     "compare-versions": "^6.1.0"
   },

@@ -1,4 +1,4 @@
-import type { FuelConnector } from '@fuel-wallet/sdk-v2';
+import type { FuelConnector } from '@fuel-wallet/sdk';
 import {
   createContext,
   useContext,

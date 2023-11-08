@@ -148,6 +148,9 @@ importers:
       '@fuel-ui/test-utils':
         specifier: 0.17.0
         version: 0.17.0(@babel/core@7.23.2)(@jest/types@29.6.3)(@types/node@20.8.4)(esbuild@0.18.17)(react@18.2.0)(ts-node@10.9.1)(typescript@5.2.2)
+      '@fuel-wallet/connections':
+        specifier: workspace:*
+        version: link:../connections
       '@fuel-wallet/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -417,17 +420,20 @@ importers:
         specifier: ^4.2.1
         version: 4.2.1(typescript@5.2.2)(vite@4.4.11)
 
-  packages/connectors:
+  packages/connections:
     dependencies:
-      '@fuel-wallet/sdk-v2':
+      '@fuel-wallet/sdk':
         specifier: workspace:*
-        version: link:../sdk-v2
+        version: link:../sdk
       '@fuel-wallet/types':
         specifier: workspace:*
         version: link:../types
       '@fuels/assets':
         specifier: 0.0.11
         version: 0.0.11
+      '@types/chrome':
+        specifier: ^0.0.246
+        version: 0.0.246
       events:
         specifier: ^3.3.0
         version: 3.3.0
@@ -595,9 +601,9 @@ importers:
       '@fuel-wallet/react':
         specifier: workspace:*
         version: link:../react
-      '@fuel-wallet/sdk-v2':
+      '@fuel-wallet/sdk':
         specifier: workspace:*
-        version: link:../sdk-v2
+        version: link:../sdk
       '@fuel-wallet/types':
         specifier: workspace:*
         version: link:../types
@@ -668,12 +674,9 @@ importers:
       '@fuel-ui/react':
         specifier: 0.21.1
         version: 0.21.1(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.2)
-      '@fuel-wallet/connectors':
+      '@fuel-wallet/sdk':
         specifier: workspace:*
-        version: link:../connectors
-      '@fuel-wallet/sdk-v2':
-        specifier: workspace:*
-        version: link:../sdk-v2
+        version: link:../sdk
       '@fuel-wallet/types':
         specifier: workspace:*
         version: link:../types
@@ -699,47 +702,16 @@ importers:
       '@fuel-wallet/types':
         specifier: workspace:*
         version: link:../types
-      dexie-observable:
-        specifier: 4.0.1-beta.13
-        version: 4.0.1-beta.13(dexie@3.2.4)
-      events:
-        specifier: ^3.3.0
-        version: 3.3.0
-      json-rpc-2.0:
-        specifier: ^1.6.0
-        version: 1.6.0
-      uuid:
-        specifier: ^9.0.1
-        version: 9.0.1
-      xstate:
-        specifier: ^4.38.2
-        version: 4.38.2
-    devDependencies:
-      '@types/uuid':
-        specifier: ^9.0.5
-        version: 9.0.5
-      fuels:
-        specifier: 0.63.0
-        version: 0.63.0
-      jest-webextension-mock:
-        specifier: ^3.8.9
-        version: 3.8.9
-      tsup:
-        specifier: ^7.2.0
-        version: 7.2.0(ts-node@10.9.1)(typescript@5.2.2)
-
-  packages/sdk-v2:
-    dependencies:
       '@fuels/assets':
         specifier: 0.0.11
         version: 0.0.11
       events:
         specifier: ^3.3.0
         version: 3.3.0
+      json-rpc-2.0:
+        specifier: ^1.6.0
+        version: 1.6.0
     devDependencies:
-      '@fuel-ts/wallet':
-        specifier: 0.63.0
-        version: 0.63.0
       fuels:
         specifier: 0.63.0
         version: 0.63.0
@@ -768,9 +740,6 @@ importers:
 
   packages/types:
     dependencies:
-      '@types/chrome':
-        specifier: ^0.0.246
-        version: 0.0.246
       dexie-observable:
         specifier: 4.0.1-beta.13
         version: 4.0.1-beta.13(dexie@3.2.4)
@@ -15792,10 +15761,6 @@ packages:
       emittery: 0.13.1
       jest-util: 29.7.0
       string-length: 4.0.2
-
-  /jest-webextension-mock@3.8.9:
-    resolution: {integrity: sha512-PglflLBEhqAtfKOmwEcP2iV2YdQK3Xwa7e/SELIK/4+y1NiKSJnba7DdPe32HavHJCJwuL8bpVwFrxGZFD2m+A==}
-    dev: true
 
   /jest-worker@27.5.1:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}

@@ -1,16 +1,28 @@
 import {
-  FuelConnectorEventTypes,
-  type ConnectorMetadata,
-  type FuelABI,
-  type FuelAsset,
-  type Network,
-  type Version,
-} from '@fuel-wallet/sdk-v2';
+  MessageTypes,
+  EVENT_MESSAGE,
+  CONTENT_SCRIPT_NAME,
+} from '@fuel-wallet/types';
+import type {
+  ResponseMessage,
+  EventMessage,
+  CommunicationMessage,
+} from '@fuel-wallet/types';
+import EventEmitter from 'events';
 import { transactionRequestify, type TransactionRequestLike } from 'fuels';
+import type { JSONRPCRequest } from 'json-rpc-2.0';
+import { JSONRPCClient } from 'json-rpc-2.0';
 
-import { WindowConnection } from '../../connections/WindowConnection';
+import { FuelConnectorEventTypes } from '../api';
+import type {
+  ConnectorMetadata,
+  FuelABI,
+  FuelAsset,
+  Network,
+  Version,
+} from '../types';
 
-export class FuelWalletConnector extends WindowConnection {
+export class FuelWalletConnector extends EventEmitter {
   name: string = 'Fuel Wallet';
   connected: boolean = false;
   installed: boolean = false;
@@ -25,6 +37,86 @@ export class FuelWalletConnector extends WindowConnection {
     },
   };
 
+  readonly client: JSONRPCClient;
+
+  constructor() {
+    super();
+    this.setMaxListeners(100);
+    this.client = new JSONRPCClient(
+      this.sendRequest.bind(this),
+      this.createRequestId
+    );
+    this.setupListener();
+  }
+
+  /**
+   * ============================================================
+   * Application communication methods
+   * ============================================================
+   */
+  private acceptMessage(message: MessageEvent<CommunicationMessage>): boolean {
+    const { data: event } = message;
+    return (
+      message.origin === window.origin && event.type !== MessageTypes.request
+    );
+  }
+
+  private setupListener() {
+    window.addEventListener(EVENT_MESSAGE, this.onMessage.bind(this));
+  }
+
+  private createRequestId(): string {
+    return crypto.randomUUID();
+  }
+
+  private postMessage(message: CommunicationMessage, origin?: string) {
+    window.postMessage(message, origin || window.origin);
+  }
+
+  private async sendRequest(request: JSONRPCRequest | null) {
+    if (!request) return;
+    this.postMessage({
+      type: MessageTypes.request,
+      target: CONTENT_SCRIPT_NAME,
+      connectorName: this.name,
+      request,
+    });
+  }
+
+  private onResponse(message: ResponseMessage): void {
+    this.client.receive(message.response);
+  }
+
+  private onEvent(message: EventMessage): void {
+    message.events.forEach((eventData) => {
+      this.emit(eventData.event, ...eventData.params);
+    });
+  }
+
+  private onMessage = (message: MessageEvent<CommunicationMessage>) => {
+    const messageFroze = Object.freeze(message);
+    if (!this.acceptMessage(messageFroze)) return;
+    const { data: event } = messageFroze;
+    this.onCommunicationMessage(event);
+  };
+
+  private onCommunicationMessage = (message: CommunicationMessage) => {
+    switch (message.type) {
+      case MessageTypes.response:
+        this.onResponse(message);
+        break;
+      case MessageTypes.event:
+        this.onEvent(message);
+        break;
+      default:
+    }
+  };
+
+  /**
+   * ============================================================
+   * Connector methods
+   * ============================================================
+   */
   async ping(): Promise<boolean> {
     return this.client.timeout(1000).request('ping', {});
   }

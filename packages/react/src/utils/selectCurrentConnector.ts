@@ -1,4 +1,4 @@
-import type { Fuel, FuelConnector } from '@fuel-wallet/sdk-v2';
+import type { Fuel, FuelConnector } from '@fuel-wallet/sdk';
 
 import { CONNECTOR_KEY } from '../config';
 

@@ -1,7 +1,7 @@
 {
   "name": "@fuel-wallet/sdk",
-  "description": "Integrate DApps with Fuel Wallet Extension.",
-  "version": "0.13.5",
+  "description": "Integrate DApps with Fuel Network compatible Wallets.",
+  "version": "0.13.7",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
@@ -24,24 +24,20 @@
   "scripts": {
     "build": "pnpm ts:check && tsup",
     "ts:check": "tsc --noEmit",
-    "test": "jest --verbose",
-    "xstate:typegen": "xstate typegen 'src/**/*.ts?(x)'"
+    "test": "jest --verbose"
   },
   "dependencies": {
     "@fuel-wallet/types": "workspace:*",
-    "dexie-observable": "4.0.1-beta.13",
+    "@fuels/assets": "0.0.11",
     "events": "^3.3.0",
-    "json-rpc-2.0": "^1.6.0",
-    "uuid": "^9.0.1",
-    "xstate": "^4.38.2"
+    "json-rpc-2.0": "^1.6.0"
   },
   "peerDependencies": {
     "fuels": ">=0.63.0"
   },
   "devDependencies": {
-    "@types/uuid": "^9.0.5",
     "fuels": "0.63.0",
-    "jest-webextension-mock": "^3.8.9",
+    "jest-environment-jsdom": "29.6.2",
     "tsup": "^7.2.0"
   }
 }

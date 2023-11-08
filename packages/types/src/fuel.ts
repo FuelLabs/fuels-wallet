@@ -67,11 +67,24 @@ export enum MessageTypes {
   removeConnection = 'removeConnection',
 }
 
+export interface MessageSender {
+  id?: string | undefined;
+  origin?: string | undefined;
+  tab?: {
+    id?: number | undefined;
+    index?: number | undefined;
+    windowId?: number | undefined;
+    url?: string | undefined;
+    title?: string | undefined;
+    favIconUrl?: string | undefined;
+  };
+}
+
 export type BaseEvent<T> = {
   readonly target: string;
   readonly connectorName?: string;
   readonly id?: string;
-  readonly sender?: chrome.runtime.Port['sender'];
+  readonly sender?: MessageSender;
 } & T;
 
 export type UIEventMessage = BaseEvent<{

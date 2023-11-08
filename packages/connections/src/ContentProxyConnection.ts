@@ -9,11 +9,11 @@ import type { CommunicationMessage } from '@fuel-wallet/types';
 import { createJSONRPCSuccessResponse } from 'json-rpc-2.0';
 import type { JSONRPCID } from 'json-rpc-2.0';
 
-import { PING_TIMEOUT, RECONNECT_TIMEOUT } from '../config';
+import { PING_TIMEOUT, RECONNECT_TIMEOUT } from './config';
 
 export class ContentProxyConnection {
   connection: chrome.runtime.Port;
-  _tryReconect?: NodeJS.Timeout;
+  _tryReconnect?: NodeJS.Timeout;
   _keepAlive?: NodeJS.Timeout;
   readonly connectorName: string;
 
@@ -35,25 +35,25 @@ export class ContentProxyConnection {
 
   destroy() {
     this.connection.disconnect();
-    clearInterval(this._tryReconect);
+    clearInterval(this._tryReconnect);
     clearTimeout(this._keepAlive);
   }
 
   onDisconnect = () => {
-    clearInterval(this._tryReconect);
-    this._tryReconect = setInterval(() => {
+    clearInterval(this._tryReconnect);
+    this._tryReconnect = setInterval(() => {
       console.debug('[FUEL WALLET] reconnecting!');
       try {
         this.connection = this.connect();
         console.debug('[FUEL WALLET] reconnected!');
-        clearInterval(this._tryReconect);
+        clearInterval(this._tryReconnect);
         // If fails it will try to reconnect
         // It should not throw an error to avoid
-        // uncessary error reporting as it is expected
+        // unnecessary error reporting as it is expected
         // to fail if background script is not available.
       } catch (err: unknown) {
         if ((err as Error).message === 'Extension context invalidated.') {
-          clearInterval(this._tryReconect);
+          clearInterval(this._tryReconnect);
           console.debug('[FUEL WALLET] context invalidated!');
         }
       }

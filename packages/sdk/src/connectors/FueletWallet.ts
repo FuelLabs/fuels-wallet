@@ -1,6 +1,6 @@
-import type { ConnectorMetadata } from '@fuel-wallet/sdk-v2';
+import type { ConnectorMetadata } from '../types';
 
-import { FuelWalletConnector } from '../fuel-wallet';
+import { FuelWalletConnector } from './FuelWallet';
 
 export class FueletWalletConnector extends FuelWalletConnector {
   name = 'Fuelet Wallet';
