@@ -59,7 +59,7 @@ importers:
         specifier: 29.6.3
         version: 29.6.3
       '@playwright/test':
-        specifier: ^1.39.0
+        specifier: 1.39.0
         version: 1.39.0
       '@types/jest':
         specifier: ^29.5.5
@@ -716,6 +716,9 @@ importers:
         specifier: 0.63.0
         version: 0.63.0
     devDependencies:
+      '@playwright/test':
+        specifier: ^1.39.0
+        version: 1.39.0
       '@types/adm-zip':
         specifier: ^0.5.3
         version: 0.5.3
