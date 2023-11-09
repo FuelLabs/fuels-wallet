@@ -18,7 +18,7 @@ export function Network() {
       if (!isConnected) await fuel.connect();
       console.log('Request the current network');
       /* example:start */
-      const networkInfo = await fuel.network();
+      const networkInfo = await fuel.currentNetwork();
       console.log('Network ', networkInfo);
       /* example:end */
       setNetwork(networkInfo);

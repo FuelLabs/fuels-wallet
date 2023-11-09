@@ -3,7 +3,6 @@ import type { ConnectorMetadata } from '../types';
 import { FuelWalletConnector } from './FuelWallet';
 
 export class FuelWalletDevelopmentConnector extends FuelWalletConnector {
-  name = 'Fuel Wallet Development';
   metadata: ConnectorMetadata = {
     image: '/connectors/fuel-wallet-dev.svg',
     install: {
@@ -13,4 +12,8 @@ export class FuelWalletDevelopmentConnector extends FuelWalletConnector {
       link: 'https://chrome.google.com/webstore/detail/fuel-wallet-development/hcgmehahnlbhpilepakbdinkhhaackmc',
     },
   };
+
+  constructor() {
+    super('Fuel Wallet Development');
+  }
 }

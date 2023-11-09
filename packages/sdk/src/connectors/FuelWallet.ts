@@ -2,28 +2,35 @@ import {
   MessageTypes,
   EVENT_MESSAGE,
   CONTENT_SCRIPT_NAME,
+  CONNECTOR_SCRIPT,
 } from '@fuel-wallet/types';
 import type {
+  Asset,
   ResponseMessage,
   EventMessage,
   CommunicationMessage,
+  AssetData,
+  AssetFuel,
 } from '@fuel-wallet/types';
-import EventEmitter from 'events';
-import { transactionRequestify, type TransactionRequestLike } from 'fuels';
+import {
+  Provider,
+  transactionRequestify,
+  type TransactionRequestLike,
+} from 'fuels';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 import { JSONRPCClient } from 'json-rpc-2.0';
 
+import { FuelConnector } from '../FuelConnector';
 import { FuelConnectorEventTypes } from '../api';
-import type {
-  ConnectorMetadata,
-  FuelABI,
-  FuelAsset,
-  Network,
-  Version,
+import {
+  type ConnectorMetadata,
+  type FuelABI,
+  type Network,
+  type Version,
 } from '../types';
 
-export class FuelWalletConnector extends EventEmitter {
-  name: string = 'Fuel Wallet';
+export class FuelWalletConnector extends FuelConnector {
+  name: string = '';
   connected: boolean = false;
   installed: boolean = false;
   events = FuelConnectorEventTypes;
@@ -39,14 +46,16 @@ export class FuelWalletConnector extends EventEmitter {
 
   readonly client: JSONRPCClient;
 
-  constructor() {
+  constructor(name: string = 'Fuel Wallet') {
     super();
+    this.name = name;
     this.setMaxListeners(100);
     this.client = new JSONRPCClient(
       this.sendRequest.bind(this),
       this.createRequestId
     );
     this.setupListener();
+    this.setupConnector();
   }
 
   /**
@@ -54,14 +63,30 @@ export class FuelWalletConnector extends EventEmitter {
    * Application communication methods
    * ============================================================
    */
+  private async setupConnector() {
+    if (typeof window !== 'undefined') {
+      this.ping()
+        .then(() => {
+          window.dispatchEvent(
+            new CustomEvent('FuelConnector', { detail: this })
+          );
+        })
+        .catch(() => {});
+    }
+  }
+
   private acceptMessage(message: MessageEvent<CommunicationMessage>): boolean {
     const { data: event } = message;
     return (
-      message.origin === window.origin && event.type !== MessageTypes.request
+      message.origin === window.origin &&
+      event.type !== MessageTypes.request &&
+      event.connectorName === this.name &&
+      event.target === CONNECTOR_SCRIPT
     );
   }
 
   private setupListener() {
+    if (typeof window === 'undefined') return;
     window.addEventListener(EVENT_MESSAGE, this.onMessage.bind(this));
   }
 
@@ -89,7 +114,11 @@ export class FuelWalletConnector extends EventEmitter {
 
   private onEvent(message: EventMessage): void {
     message.events.forEach((eventData) => {
-      this.emit(eventData.event, ...eventData.params);
+      if (eventData.event === 'start') {
+        this.setupConnector();
+      } else {
+        this.emit(eventData.event, ...eventData.params);
+      }
     });
   }
 
@@ -118,7 +147,7 @@ export class FuelWalletConnector extends EventEmitter {
    * ============================================================
    */
   async ping(): Promise<boolean> {
-    return this.client.timeout(1000).request('ping', {});
+    return this.client.timeout(800).request('ping', {});
   }
 
   async isConnected(): Promise<boolean> {
@@ -182,17 +211,34 @@ export class FuelWalletConnector extends EventEmitter {
     });
   }
 
-  async assets(): Promise<Array<FuelAsset>> {
+  async assets(): Promise<Array<Asset>> {
     return this.client.request('assets', {});
   }
 
-  async addAsset(asset: FuelAsset): Promise<boolean> {
+  async addAsset(asset: Asset): Promise<boolean> {
     return this.addAssets([asset]);
   }
 
-  async addAssets(assets: FuelAsset[]): Promise<boolean> {
+  async addAssets(assets: Asset[]): Promise<boolean> {
+    /**
+     * @todo: Remove this once Fuel Wallet supports assets with multiple networks
+     */
+    const assetsData: Array<AssetData> = assets.map((asset) => {
+      const fuelNetworkAsset = asset.networks.find(
+        (n) => n.type === 'fuel'
+      ) as AssetFuel;
+      if (!fuelNetworkAsset) {
+        throw new Error('Asset for Fuel Network not found!');
+      }
+      return {
+        ...asset,
+        imageUrl: asset.icon,
+        decimals: fuelNetworkAsset.decimals,
+        assetId: fuelNetworkAsset.assetId,
+      };
+    });
     return this.client.request('addAssets', {
-      assets,
+      assets: assetsData,
     });
   }
 
@@ -227,8 +273,18 @@ export class FuelWalletConnector extends EventEmitter {
     return this.client.request('networks', {});
   }
 
-  async addNetwork(network: Network): Promise<boolean> {
-    return this.client.request('addNetwork', { network });
+  async addNetwork(networkUrl: string): Promise<boolean> {
+    /**
+     * @todo: Remove fetch provider once Fuel Wallet supports adding networks
+     * by URL
+     */
+    const provider = await Provider.create(networkUrl);
+    return this.client.request('addNetwork', {
+      network: {
+        url: provider.url,
+        name: provider.getChain().name,
+      },
+    });
   }
 
   async version(): Promise<Version> {

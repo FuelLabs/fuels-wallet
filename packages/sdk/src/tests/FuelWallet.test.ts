@@ -10,7 +10,7 @@ import {
 
 import { Fuel } from '../Fuel';
 import { FuelConnectorEventType } from '../api';
-import { FuelConnectorEvent } from '../types';
+import { dispatchFuelConnectorEvent } from '../utils';
 
 import { MockConnector } from './MockConnector';
 import { promiseCallback } from './utils/promiseCallback';
@@ -58,8 +58,7 @@ describe('Fuel Wallet SDK multiple connectors', () => {
     fuel.on(fuel.events.connectors, onConnectors);
 
     // Trigger event to add connector
-    const event = new FuelConnectorEvent(new MockConnector());
-    window.dispatchEvent(event);
+    dispatchFuelConnectorEvent(new MockConnector());
 
     // wait for the event to be triggered
     await onConnectors.promise;
@@ -132,7 +131,7 @@ describe('Fuel Wallet SDK multiple connectors', () => {
       BaseAssetId,
       {
         gasPrice: bn(1),
-        gasLimit: bn(1_000_000),
+        gasLimit: bn(100_000),
       }
     );
     const { status } = await response.waitForResult();

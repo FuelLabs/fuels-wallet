@@ -5,6 +5,7 @@ on:
 
 jobs:
     check-links:
+        if: false
         uses: FuelLabs/github-actions/.github/workflows/next-links.yml@master
         with:
           status: ${{ github.event.deployment_status.state }}

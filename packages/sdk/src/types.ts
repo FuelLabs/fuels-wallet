@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Asset } from '@fuels/assets';
 import type { JsonAbi } from 'fuels';
 
 import type { FuelConnector } from './FuelConnector';
 import type { FuelConnectorEventTypes } from './api';
-import { FuelConnectorEventType } from './api';
 
 /****
  * ========================================================================================
@@ -166,13 +164,6 @@ export type Network = {
 };
 
 /**
- * Asset metadata that represents a asset_id from Fuel Network.
- *
- * Read more at: https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/assets
- */
-export type FuelAsset = Asset;
-
-/**
  * ABI that represents a binary code interface from Sway.
  *
  * Read more at: https://docs.fuel.network/docs/specs/abi/json-abi-format/
@@ -228,15 +219,4 @@ export interface FuelStorage {
   setItem: (key: string, value: string) => void;
   getItem: (key: string) => string | null;
   removeItem: (key: string) => void;
-}
-
-/**
- * Fuel Connector Event is a custom event that can be used by the connector to
- * inform the Fuel Connector Manager that a new connector is available.
- */
-export class FuelConnectorEvent extends CustomEvent<FuelConnector> {
-  static type = FuelConnectorEventType;
-  constructor(connector: FuelConnector) {
-    super(FuelConnectorEventType, { detail: connector });
-  }
 }

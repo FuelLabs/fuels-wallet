@@ -10,7 +10,7 @@ import {
 
 import { Fuel } from '../Fuel';
 import { FuelConnectorEventType } from '../api';
-import { FuelConnectorEvent } from '../types';
+import { dispatchFuelConnectorEvent } from '../utils';
 
 import { MockConnector } from './MockConnector';
 import { promiseCallback } from './utils/promiseCallback';
@@ -58,8 +58,7 @@ describe('Fuel Wallet SDK Connector actions', () => {
     fuel.on(fuel.events.connectors, onConnectors);
 
     // Trigger event to add connector
-    const event = new FuelConnectorEvent(new MockConnector());
-    window.dispatchEvent(event);
+    dispatchFuelConnectorEvent(new MockConnector());
 
     // wait for the event to be triggered
     await onConnectors.promise;
@@ -190,9 +189,10 @@ describe('Fuel Wallet SDK Connector actions', () => {
       storage: null,
       connectors: [new MockConnector()],
     });
+    const networkUrl = 'https://beta-4.fuel.network';
     const newNetwork = {
-      url: 'https://beta-4.fuel.network',
-      chainId: 1,
+      url: networkUrl,
+      chainId: 0,
     };
 
     // listen to connection event
@@ -201,10 +201,10 @@ describe('Fuel Wallet SDK Connector actions', () => {
     fuel.on(fuel.events.networks, onNetworks);
     fuel.on(fuel.events.currentNetwork, onCurrentNetwork);
 
-    const isNetworkAdded = await fuel.addNetwork(newNetwork);
+    const isNetworkAdded = await fuel.addNetwork(networkUrl);
     const networks = await fuel.networks();
     expect(isNetworkAdded).toEqual(true);
-    expect(networks).toContain(newNetwork);
+    expect(networks).toContainEqual(newNetwork);
     expect(onNetworks).toBeCalledTimes(1);
     expect(onNetworks).toBeCalledWith(networks);
     expect(onCurrentNetwork).toBeCalledTimes(1);
@@ -239,11 +239,16 @@ describe('Fuel Wallet SDK Connector actions', () => {
     const isAdded = await fuel.addAssets([
       {
         name: 'Asset',
-        description: '...',
         symbol: 'AST',
         icon: 'ast.png',
-        assetId: BaseAssetId,
-        networks: [],
+        networks: [
+          {
+            type: 'fuel',
+            assetId: BaseAssetId,
+            decimals: 9,
+            chainId: 0,
+          },
+        ],
       },
     ]);
     expect(isAdded).toEqual(true);
@@ -334,7 +339,7 @@ describe('Fuel Wallet SDK Connector actions', () => {
       BaseAssetId,
       {
         gasPrice: bn(1),
-        gasLimit: bn(1_000_000),
+        gasLimit: bn(100_000),
       }
     );
     const { status } = await response.waitForResult();

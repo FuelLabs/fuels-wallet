@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Button, Box, Input } from '@fuel-ui/react';
-import type { JsonAbi } from 'fuels';
+import type { FuelABI } from '@fuel-wallet/sdk';
 import { useState } from 'react';
 
 import { ExampleBox } from '../src/components/ExampleBox';
@@ -15,17 +15,17 @@ export function Abi() {
   const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
   const [contractId, setContractId] = useState<string>(SWAY_SWAP_CONTRACT_ID);
-  const [abi, setAbi] = useState<JsonAbi>();
+  const [abi, setABI] = useState<FuelABI | null>(null);
   const [handleGetAbi, isLoadingAbi, errorGetAbi] = useLoading(
     async (contractId: string | undefined) => {
       if (!contractId) return;
       if (!isConnected) await fuel.connect();
       console.log('Request the current abi of contractId: ', contractId);
       /* example:start */
-      const abiInfo = await fuel.getAbi(contractId);
+      const abiInfo = await fuel.getABI(contractId);
       console.log('Abi ', abiInfo);
       /* example:end */
-      setAbi(abiInfo);
+      setABI(abiInfo);
     }
   );
 

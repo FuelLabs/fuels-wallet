@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import {
   BACKGROUND_SCRIPT_NAME,
+  CONNECTOR_SCRIPT,
   CONTENT_SCRIPT_NAME,
   EVENT_MESSAGE,
   MessageTypes,
@@ -22,6 +23,28 @@ export class ContentProxyConnection {
     this.connectorName = connectorName;
     window.addEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
     this.keepAlive();
+    this.onStartEvent();
+  }
+
+  /**
+   * Sends a start event to the connector script
+   * to notify that the extension is available.
+   *
+   * This is useful to notify once a extension is installed
+   * or if the service is restarted.
+   */
+  onStartEvent() {
+    this.postMessage({
+      type: MessageTypes.event,
+      target: CONNECTOR_SCRIPT,
+      connectorName: this.connectorName,
+      events: [
+        {
+          event: 'start',
+          params: [],
+        },
+      ],
+    });
   }
 
   connect() {
@@ -125,7 +148,8 @@ export class ContentProxyConnection {
   postMessage(message: CommunicationMessage) {
     const postMessage = {
       ...message,
-      target: this.connectorName,
+      target: CONNECTOR_SCRIPT,
+      connectorName: this.connectorName,
     };
     window.postMessage(postMessage, window.location.origin);
   }

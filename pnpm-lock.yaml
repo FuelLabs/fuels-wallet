@@ -702,9 +702,6 @@ importers:
       '@fuel-wallet/types':
         specifier: workspace:*
         version: link:../types
-      '@fuels/assets':
-        specifier: 0.0.11
-        version: 0.0.11
       events:
         specifier: ^3.3.0
         version: 3.3.0
@@ -740,6 +737,9 @@ importers:
 
   packages/types:
     dependencies:
+      '@fuels/assets':
+        specifier: ^0.1.1
+        version: 0.1.1
       dexie-observable:
         specifier: 4.0.1-beta.13
         version: 4.0.1-beta.13(dexie@3.2.4)

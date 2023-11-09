@@ -1,13 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Dropdown } from '@fuel-ui/react';
-import type { Network } from '@fuel-wallet/types';
+import type { NetworkData } from '@fuel-wallet/types';
 
 import { NetworkDropdown } from '../NetworkDropdown';
 
 export type NetworkSelectorProps = {
-  selected: Network;
-  networks: Network[];
-  onSelectNetwork?: (network: Network) => void;
+  selected: NetworkData;
+  networks: NetworkData[];
+  onSelectNetwork?: (network: NetworkData) => void;
 };
 
 export function NetworkSelector({

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { Asset } from '@fuels/assets';
+import type { Asset } from '@fuel-wallet/types';
 import EventEmitter from 'events';
 import type { TransactionRequestLike } from 'fuels';
 
@@ -166,7 +166,7 @@ export abstract class FuelConnector extends EventEmitter {
    * @throws {Error} if the network already exists
    * @returns {boolean} boolean - Return true if the network was added successfully
    */
-  async addNetwork(network: Network): Promise<boolean> {
+  async addNetwork(networkUrl: string): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
 
@@ -237,7 +237,7 @@ export abstract class FuelConnector extends EventEmitter {
    * @param {function} listener - The listener function
    */
   on<E extends FuelConnectorEvents['type'], D extends FuelEventArg<E>>(
-    eventName: E | '*',
+    eventName: E,
     listener: (data: D) => void
   ): this {
     super.on(eventName, listener);

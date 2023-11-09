@@ -1,4 +1,4 @@
-import type { Account, Asset } from '@fuel-wallet/types';
+import type { Account, AssetData } from '@fuel-wallet/types';
 import type {
   BN,
   GetTransactionSummaryFromRequestParams,
@@ -88,7 +88,7 @@ export type TxInputs = {
   isValidTransaction: {
     address?: string;
     account?: Account;
-    asset?: Asset;
+    asset?: AssetData;
     amount?: BN;
     fee?: BN;
   };

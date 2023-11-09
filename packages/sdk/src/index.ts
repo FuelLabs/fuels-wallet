@@ -6,3 +6,4 @@ export * from './FuelConnector';
 export * from './FuelWalletProvider';
 export * from './FuelWalletLocked';
 export * from './connectors';
+export * from '@fuel-wallet/types';

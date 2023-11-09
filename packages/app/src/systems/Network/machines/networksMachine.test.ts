@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Network } from '@fuel-wallet/types';
+import type { NetworkData } from '@fuel-wallet/types';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 import { expectStateMatch } from '~/systems/Core/__tests__/utils';
@@ -129,7 +129,7 @@ describe('networksMachine', () => {
   });
 
   describe('update', () => {
-    let network: Network | undefined;
+    let network: NetworkData | undefined;
     let editEv: any;
 
     beforeEach(async () => {

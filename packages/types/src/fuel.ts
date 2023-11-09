@@ -5,59 +5,6 @@ import type {
 } from 'dexie-observable/api';
 import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
 
-import type { Asset } from './asset';
-import type { Network } from './network';
-
-export const FuelWalletEvents = {
-  accounts: 'accounts',
-  currentAccount: 'currentAccount',
-  connection: 'connection',
-  network: 'network',
-  assets: 'assets',
-  connectors: 'connectors',
-  currentConnector: 'currentConnector',
-  load: 'load',
-} as const;
-
-export type FuelEvents =
-  | {
-      type: typeof FuelWalletEvents.accounts;
-      data: Array<string>;
-    }
-  | {
-      type: typeof FuelWalletEvents.currentAccount;
-      data: string | null;
-    }
-  | {
-      type: typeof FuelWalletEvents.connection;
-      data: boolean;
-    }
-  | {
-      type: typeof FuelWalletEvents.network;
-      data: Network;
-    }
-  | {
-      type: typeof FuelWalletEvents.assets;
-      data: Array<Asset>;
-    }
-  | {
-      type: typeof FuelWalletEvents.connectors;
-      data: Array<FuelWalletConnector>;
-    }
-  | {
-      type: typeof FuelWalletEvents.currentConnector;
-      data: FuelWalletConnector;
-    }
-  | {
-      type: typeof FuelWalletEvents.load;
-      data: boolean;
-    };
-
-export type FuelEventArg<T extends FuelEvents['type']> = Extract<
-  FuelEvents,
-  { type: T }
->['data'];
-
 export enum MessageTypes {
   ping = 'ping',
   uiEvent = 'uiEvent',
@@ -146,9 +93,4 @@ export type DatabaseEventArg<T extends string> = T extends `${string}:create`
 export type FuelProviderConfig = {
   id?: string;
   url: string;
-};
-
-export type FuelWalletConnector = {
-  name: string;
-  imageUrl?: string;
 };

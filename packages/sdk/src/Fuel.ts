@@ -3,8 +3,11 @@ import type { AbstractAddress } from 'fuels';
 import { FuelConnector } from './FuelConnector';
 import { FuelWalletLocked } from './FuelWalletLocked';
 import { FuelWalletProvider } from './FuelWalletProvider';
-import { FuelConnectorEventTypes, FuelConnectorMethods } from './api';
-import { FuelConnectorEvent } from './types';
+import {
+  FuelConnectorEventType,
+  FuelConnectorEventTypes,
+  FuelConnectorMethods,
+} from './api';
 import type {
   FuelConnectorEventsType,
   FuelStorage,
@@ -117,7 +120,9 @@ export class Fuel extends FuelConnector {
     const hasConnector = await this.hasConnector();
     await this.pingConnector();
     if (!this._currentConnector || !hasConnector) {
-      throw new Error('No current connector.');
+      throw new Error(
+        `No connector selected for calling ${method}. Use hasConnector before executing other methods.`
+      );
     }
     if (typeof this._currentConnector[method] === 'function') {
       return this._currentConnector[method](...args);
@@ -199,7 +204,7 @@ export class Fuel extends FuelConnector {
    */
   private setupConnectorListener = () => {
     const { _targetObject: targetObject } = this;
-    const eventName = FuelConnectorEvent.type;
+    const eventName = FuelConnectorEventType;
     if (targetObject?.on) {
       targetObject.on(eventName, this.addConnector);
       return () => {
@@ -207,7 +212,7 @@ export class Fuel extends FuelConnector {
       };
     }
     if (targetObject?.addEventListener) {
-      const handler = (e: FuelConnectorEvent) => {
+      const handler = (e: CustomEvent<FuelConnector>) => {
         this.addConnector(e.detail);
       };
       targetObject.addEventListener(eventName, handler);
@@ -224,16 +229,17 @@ export class Fuel extends FuelConnector {
   private addConnector = async (connector: FuelConnector) => {
     if (!this.getConnector(connector)) {
       this._connectors.push(connector);
-      await this.fetchConnectorStatus(connector);
-      // Emit connectors events once the connector list changes
-      this.emit(this.events.connectors, this._connectors);
-      // If the current connector is not set
-      if (!this._currentConnector) {
-        // set the new connector as currentConnector
-        await this.selectConnector(connector.name, {
-          emitEvents: false,
-        });
-      }
+    }
+    // Fetch the status of the new connector
+    await this.fetchConnectorStatus(connector);
+    // Emit connectors events once the connector list changes
+    this.emit(this.events.connectors, this._connectors);
+    // If the current connector is not set
+    if (!this._currentConnector) {
+      // set the new connector as currentConnector
+      await this.selectConnector(connector.name, {
+        emitEvents: false,
+      });
     }
   };
 

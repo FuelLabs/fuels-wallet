@@ -15,4 +15,8 @@ export class FueletWalletConnector extends FuelWalletConnector {
       link: 'https://fuelet.app/download/',
     },
   };
+
+  constructor() {
+    super('Fuelet Wallet');
+  }
 }

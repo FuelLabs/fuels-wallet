@@ -1,11 +1,11 @@
 import { CardList } from '@fuel-ui/react';
-import type { Network } from '@fuel-wallet/types';
+import type { NetworkData } from '@fuel-wallet/types';
 
 import type { NetworkItemProps } from '../NetworkItem';
 import { NetworkItem } from '../NetworkItem';
 
 export type NetworkListProps = Omit<NetworkItemProps, 'network'> & {
-  networks: Network[];
+  networks: NetworkData[];
 };
 
 export function NetworkList({ networks = [], ...props }: NetworkListProps) {

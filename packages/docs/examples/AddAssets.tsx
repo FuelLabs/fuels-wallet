@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Input, Text, IconButton, Icon } from '@fuel-ui/react';
+import type { AssetFuel, Asset } from '@fuel-wallet/sdk';
+import { getAssetByChain } from '@fuel-wallet/sdk';
 import { useState } from 'react';
 
-import type { Asset } from '../../types/src';
 import { ExampleBox } from '../src/components/ExampleBox';
 import { useFuel } from '../src/hooks/useFuel';
 import { useIsConnected } from '../src/hooks/useIsConnected';
@@ -14,14 +15,18 @@ export function AddAssets() {
   const [isConnected] = useIsConnected();
   const [assets, setAssets] = useState<Asset[]>([
     {
-      assetId:
-        '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d90',
       name: 'New',
       symbol: 'NEW',
-      imageUrl:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
-      isCustom: true,
-      decimals: 6,
+      icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
+      networks: [
+        {
+          type: 'fuel',
+          chainId: 0,
+          decimals: 6,
+          assetId:
+            '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d90',
+        },
+      ],
     },
   ]);
 
@@ -52,8 +57,9 @@ export function AddAssets() {
   return (
     <ExampleBox error={errorMessage}>
       <Box.Stack css={styles.wrapper}>
-        {assets.map((asset, index) => {
+        {assets.map((a, index) => {
           const isLast = index === assets.length - 1;
+          const asset = getAssetByChain(a, 0);
 
           return (
             <Box.Stack key={asset.assetId + index} css={styles.item(isLast)}>
@@ -74,7 +80,15 @@ export function AddAssets() {
                 <Input.Field
                   defaultValue={asset.assetId}
                   onBlur={(e) =>
-                    onChangeAsset(index, { ...asset, assetId: e.target.value })
+                    onChangeAsset(index, {
+                      ...asset,
+                      networks: [
+                        {
+                          ...(asset.networks[0] as AssetFuel),
+                          assetId: e.target.value,
+                        },
+                      ],
+                    })
                   }
                   placeholder="Type your assetId (0x...)"
                 />
@@ -105,9 +119,12 @@ export function AddAssets() {
                     onBlur={(e) => {
                       onChangeAsset(index, {
                         ...asset,
-                        decimals: e.target.value
-                          ? Number(e.target.value)
-                          : undefined,
+                        networks: [
+                          {
+                            ...(asset.networks[0] as AssetFuel),
+                            decimals: Number(e.target.value || 0),
+                          },
+                        ],
                       });
                     }}
                     placeholder="Type your asset Decimals"
@@ -116,9 +133,9 @@ export function AddAssets() {
               </Box.Flex>
               <Input isDisabled={!fuel} css={styles.input}>
                 <Input.Field
-                  defaultValue={asset.imageUrl}
+                  defaultValue={asset.icon}
                   onBlur={(e) =>
-                    onChangeAsset(index, { ...asset, imageUrl: e.target.value })
+                    onChangeAsset(index, { ...asset, icon: e.target.value })
                   }
                   placeholder="Type your asset imageUrl"
                 />
@@ -132,7 +149,19 @@ export function AddAssets() {
           onPress={() =>
             setAssets([
               ...assets,
-              { assetId: '', name: '', symbol: '', imageUrl: '' },
+              {
+                name: '',
+                symbol: '',
+                icon: '',
+                networks: [
+                  {
+                    type: 'fuel',
+                    chainId: 0,
+                    assetId: '',
+                    decimals: 0,
+                  },
+                ],
+              },
             ])
           }
         >

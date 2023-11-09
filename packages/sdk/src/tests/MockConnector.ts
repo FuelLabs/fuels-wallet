@@ -1,4 +1,4 @@
-import type { Asset } from '@fuels/assets';
+import type { Asset } from '@fuel-wallet/types';
 import type { WalletUnlocked, TransactionRequestLike } from 'fuels';
 import { setTimeout } from 'timers/promises';
 
@@ -122,10 +122,14 @@ export class MockConnector extends FuelConnector {
     return true;
   }
 
-  async addNetwork(_network: Network) {
-    this._networks.push(_network);
+  async addNetwork(_network: string) {
+    const newNetwork = {
+      chainId: 0,
+      url: _network,
+    };
+    this._networks.push(newNetwork);
     this.emit(FuelConnectorEventTypes.networks, this._networks);
-    this.emit(FuelConnectorEventTypes.currentNetwork, _network);
+    this.emit(FuelConnectorEventTypes.currentNetwork, newNetwork);
     return true;
   }
 

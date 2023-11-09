@@ -1,5 +1,5 @@
 import { Box } from '@fuel-ui/react';
-import type { Network } from '@fuel-wallet/types';
+import type { NetworkData } from '@fuel-wallet/types';
 import { useState } from 'react';
 import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
@@ -12,7 +12,7 @@ export default {
 };
 
 export const Usage = (args: NetworkSelectorProps) => {
-  const [network, setNetwork] = useState<Network>(() => MOCK_NETWORKS[0]);
+  const [network, setNetwork] = useState<NetworkData>(() => MOCK_NETWORKS[0]);
   return (
     <Box css={{ width: 200 }}>
       <NetworkSelector

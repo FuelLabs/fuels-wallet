@@ -1,4 +1,4 @@
-import type { Account, Asset, Network } from '@fuel-wallet/types';
+import type { Account, AssetData, NetworkData } from '@fuel-wallet/types';
 import { expect } from '@playwright/test';
 import { Signer, bn, hashMessage, Wallet, Provider } from 'fuels';
 
@@ -517,7 +517,7 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.addAsset()', async () => {
-      function addAsset(asset: Asset) {
+      function addAsset(asset: AssetData) {
         return blankPage.evaluate(
           async ([asset]) => {
             return window.fuel.addAsset(asset);
@@ -537,7 +537,7 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.addAssets()', async () => {
-      function addAssets(assets: Asset[]) {
+      function addAssets(assets: AssetData[]) {
         return blankPage.evaluate(
           async ([asset]) => {
             return window.fuel.addAssets(asset);
@@ -557,7 +557,7 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.addNetwork()', async () => {
-      function addNetwork(network: Network) {
+      function addNetwork(network: NetworkData) {
         return blankPage.evaluate(
           async ([network]) => {
             return window.fuel.addNetwork(network);

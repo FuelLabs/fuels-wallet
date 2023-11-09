@@ -1,5 +1,5 @@
 import { createUUID } from '@fuel-wallet/connections';
-import type { Network } from '@fuel-wallet/types';
+import type { NetworkData } from '@fuel-wallet/types';
 import { Provider } from 'fuels';
 import { db } from '~/systems/Core/utils/database';
 
@@ -20,7 +20,7 @@ export type NetworkInputs = {
   };
   updateNetwork: {
     id: string;
-    data: Partial<Network>;
+    data: Partial<NetworkData>;
   };
   selectNetwork: {
     id: string;
@@ -59,7 +59,7 @@ export class NetworkService {
         id: createUUID(),
       };
       const id = await db.networks.add(inputToAdd);
-      return db.networks.get(id) as Promise<Network>;
+      return db.networks.get(id) as Promise<NetworkData>;
     });
   }
 
@@ -113,7 +113,7 @@ export class NetworkService {
         id: input.id,
         data: { isSelected: true },
       });
-      return db.networks.get(input.id) as Promise<Network>;
+      return db.networks.get(input.id) as Promise<NetworkData>;
     });
   }
 

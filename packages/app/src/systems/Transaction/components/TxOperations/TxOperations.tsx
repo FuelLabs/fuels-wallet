@@ -1,5 +1,5 @@
 import { Box } from '@fuel-ui/react';
-import type { Asset } from '@fuel-wallet/types';
+import type { AssetData } from '@fuel-wallet/types';
 import type { Operation, TransactionStatus } from 'fuels';
 import type { Maybe } from '~/systems/Core';
 
@@ -8,7 +8,7 @@ import { TxOperation } from '../TxOperation/TxOperation';
 export type TxOperationsProps = {
   operations?: Operation[];
   status?: Maybe<TransactionStatus>;
-  assets?: Maybe<Asset[]>;
+  assets?: Maybe<AssetData[]>;
   isLoading?: boolean;
 };
 
