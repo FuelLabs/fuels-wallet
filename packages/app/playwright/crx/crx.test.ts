@@ -1,4 +1,4 @@
-import type { Account, AssetData, NetworkData } from '@fuel-wallet/types';
+import type { Account, Asset } from '@fuel-wallet/sdk';
 import { expect } from '@playwright/test';
 import { Signer, bn, hashMessage, Wallet, Provider } from 'fuels';
 
@@ -12,8 +12,8 @@ import {
   getElementByText,
 } from '../commons';
 import {
-  CUSTOM_ASSET,
-  CUSTOM_ASSET_2,
+  CUSTOM_ASSET_INPUT,
+  CUSTOM_ASSET_INPUT_2,
   FUEL_NETWORK,
   PRIVATE_KEY,
 } from '../mocks';
@@ -33,7 +33,7 @@ const WALLET_PASSWORD = 'Qwe123456$';
 /**
  * @todo: skip e2e tests of the wallet application for implement it on the next PR
  */
-test.describe.skip('FuelWallet Extension', () => {
+test.describe('FuelWallet Extension', () => {
   test('On install sign-up page is open', async ({ context }) => {
     // In development mode files are render dynamically
     // making this first page to throw an error File not found.
@@ -70,22 +70,6 @@ test.describe.skip('FuelWallet Extension', () => {
     // because the CRX is injected after load state of
     // the page.
     await blankPage.goto(new URL('e2e.html', baseURL).href);
-
-    await test.step('Should trigger event FuelLoaded', async () => {
-      // Reload and don't wait for loadstate to go to evaluate
-      // This is required in order to get the `FuelLoaded` event
-      await blankPage.reload({
-        waitUntil: 'commit',
-      });
-      const hasTriggerFuelLoaded = await blankPage.evaluate(async () => {
-        return new Promise((resolve) => {
-          document.addEventListener('FuelLoaded', () => {
-            resolve(typeof window.fuel !== 'undefined');
-          });
-        });
-      });
-      expect(hasTriggerFuelLoaded).toBeTruthy();
-    });
 
     await test.step('Has window.fuel', async () => {
       const hasFuel = await blankPage.evaluate(async () => {
@@ -399,9 +383,7 @@ test.describe.skip('FuelWallet Extension', () => {
       ) {
         return blankPage.evaluate(
           async ([senderAddress, receiverAddress, amount]) => {
-            const receiver = window.fuel.utils.createAddress(
-              receiverAddress as string
-            );
+            const receiver = window.createAddress(receiverAddress as string);
             const wallet = await window.fuel!.getWallet(
               senderAddress as string
             );
@@ -520,7 +502,7 @@ test.describe.skip('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.addAsset()', async () => {
-      function addAsset(asset: AssetData) {
+      function addAsset(asset: Asset) {
         return blankPage.evaluate(
           async ([asset]) => {
             return window.fuel.addAsset(asset);
@@ -529,7 +511,7 @@ test.describe.skip('FuelWallet Extension', () => {
         );
       }
 
-      const addingAsset = addAsset(CUSTOM_ASSET);
+      const addingAsset = addAsset(CUSTOM_ASSET_INPUT);
 
       const addAssetPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
@@ -540,7 +522,7 @@ test.describe.skip('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.addAssets()', async () => {
-      function addAssets(assets: AssetData[]) {
+      function addAssets(assets: Asset[]) {
         return blankPage.evaluate(
           async ([asset]) => {
             return window.fuel.addAssets(asset);
@@ -549,7 +531,7 @@ test.describe.skip('FuelWallet Extension', () => {
         );
       }
 
-      const addingAsset = addAssets([CUSTOM_ASSET, CUSTOM_ASSET_2]);
+      const addingAsset = addAssets([CUSTOM_ASSET_INPUT, CUSTOM_ASSET_INPUT_2]);
 
       const addAssetPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
@@ -560,17 +542,17 @@ test.describe.skip('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.addNetwork()', async () => {
-      function addNetwork(network: NetworkData) {
+      function addNetwork(network: string) {
         return blankPage.evaluate(
           async ([network]) => {
-            return window.fuel.addNetwork(network.url);
+            return window.fuel.addNetwork(network);
           },
           [network]
         );
       }
 
       async function testAddNetwork() {
-        const addingNetwork = addNetwork(FUEL_NETWORK);
+        const addingNetwork = addNetwork(FUEL_NETWORK.url);
 
         const addNetworkPage = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
@@ -587,7 +569,7 @@ test.describe.skip('FuelWallet Extension', () => {
 
       // Check if added network is selected
       let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      await expect(networkSelector).toHaveText(/Fuel Testnet/);
+      await expect(networkSelector).toHaveText(/Testnet Beta 4/);
 
       // Remove added network
       await networkSelector.click();
@@ -613,7 +595,7 @@ test.describe.skip('FuelWallet Extension', () => {
 
       // Check if re-added network is selected
       networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      await expect(networkSelector).toHaveText(/Fuel Testnet/);
+      await expect(networkSelector).toHaveText(/Testnet Beta 4/);
     });
 
     await test.step('window.fuel.on("currentAccount") to a connected account', async () => {

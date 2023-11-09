@@ -2,10 +2,11 @@ import type { Account as WalletAccount } from '@fuel-ts/wallet-manager';
 import { WalletManager } from '@fuel-ts/wallet-manager';
 import type {
   Account,
+  Asset,
   AssetData,
   Connection,
-  Network,
-} from '@fuel-wallet/types';
+  NetworkData,
+} from '@fuel-wallet/sdk';
 import type { Page } from '@playwright/test';
 import { Mnemonic, encrypt, Address } from 'fuels';
 
@@ -19,7 +20,7 @@ export const WALLET_PASSWORD = 'Qwe1234567$';
 export const PRIVATE_KEY =
   '0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5291';
 
-export const DEFAULT_NETWORKS: Array<Network> = [
+export const DEFAULT_NETWORKS: Array<NetworkData> = [
   {
     id: '1',
     isSelected: true,
@@ -33,6 +34,35 @@ export const DEFAULT_NETWORKS: Array<Network> = [
     url: 'https://another.network.fuel/graphql',
   },
 ];
+
+export const CUSTOM_ASSET_INPUT: Asset = {
+  name: 'New',
+  symbol: 'NEW',
+  icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
+  networks: [
+    {
+      type: 'fuel',
+      assetId:
+        '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d90',
+      decimals: 2,
+      chainId: 0,
+    },
+  ],
+};
+export const CUSTOM_ASSET_INPUT_2: Asset = {
+  name: 'New1',
+  symbol: 'NEW1',
+  icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
+  networks: [
+    {
+      type: 'fuel',
+      assetId:
+        '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d91',
+      decimals: 2,
+      chainId: 0,
+    },
+  ],
+};
 
 export const CUSTOM_ASSET = {
   assetId: '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d90',
@@ -65,7 +95,6 @@ export const ALT_ASSET = {
 };
 
 export const FUEL_NETWORK = {
-  name: 'Fuel Testnet',
   url: 'https://beta-4.fuel.network/graphql',
 };
 
@@ -153,7 +182,7 @@ export async function serializeVault(
 export async function mockData(
   page: Page,
   numberOfAccounts: number = 1,
-  networks: Array<Network> = DEFAULT_NETWORKS
+  networks: Array<NetworkData> = DEFAULT_NETWORKS
 ) {
   await visit(page, '/');
   const mnemonic = Mnemonic.generate(16);
@@ -167,7 +196,7 @@ export async function mockData(
   await page.evaluate(
     ([accounts, networks, connections, assets, vault, password]: [
       Array<Account>,
-      Array<Network>,
+      Array<NetworkData>,
       Array<Connection>,
       Array<AssetData>,
       SerializedVault,
