@@ -122,7 +122,7 @@ export async function getSidebarLinks(order: string[]) {
       const idx = order.indexOf(first);
       return a.subpath ? idx - bIdx : aIdx - idx;
     })
-    /** Sort categoried links */
+    /** Sort categorized links */
     .map((link) => {
       if (!link.submenu) return link;
       const catOrder = order.filter((i) => i.startsWith(link.label));

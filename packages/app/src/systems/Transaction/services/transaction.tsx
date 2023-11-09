@@ -293,7 +293,7 @@ export class TxService {
     const { gasPrice } = await getGasConfig(input.provider);
     // Because gasLimit is caulculated on the number of operations we can
     // safely assume that a transfer will consume at max 20 units, this should
-    // be change once we add multiple trasnfers in a single transaction.
+    // be change once we add multiple transfers in a single transaction.
     const request = new ScriptTransactionRequest({ gasLimit: 20, gasPrice });
     const to = Address.fromAddressOrString(input.to);
     const { assetId, amount } = input;
