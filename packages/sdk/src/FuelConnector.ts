@@ -151,6 +151,21 @@ export abstract class FuelConnector extends EventEmitter {
   }
 
   /**
+   * Should add the the asset metadata to the connector and return true if the asset
+   * was added successfully.
+   *
+   * If the asset already exists it should throw an error.
+   *
+   * @emits assets
+   * @param {Asset} asset - The asset to add the metadata to the connection.
+   * @returns True if the asset was added successfully
+   * @throws Error if the asset already exists
+   */
+  async addAsset(asset: Asset): Promise<boolean> {
+    throw new Error('Method not implemented.');
+  }
+
+  /**
    * Should return all the assets added to the connector. If a connection is already established.
    *
    * @returns {Asset} assets - The assets metadata from the connector vinculated to the all accounts from a specific Wallet.

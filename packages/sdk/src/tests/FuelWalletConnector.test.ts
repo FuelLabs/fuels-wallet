@@ -236,6 +236,27 @@ describe('Fuel Wallet SDK Connector actions', () => {
       storage: null,
       connectors: [new MockConnector()],
     });
+    const isAdded = await fuel.addAsset({
+      name: 'Asset',
+      symbol: 'AST',
+      icon: 'ast.png',
+      networks: [
+        {
+          type: 'fuel',
+          assetId: BaseAssetId,
+          decimals: 9,
+          chainId: 0,
+        },
+      ],
+    });
+    expect(isAdded).toEqual(true);
+  });
+
+  test('addAssets', async () => {
+    const fuel = new Fuel({
+      storage: null,
+      connectors: [new MockConnector()],
+    });
     const isAdded = await fuel.addAssets([
       {
         name: 'Asset',

@@ -14,6 +14,7 @@ export enum FuelConnectorMethods {
   sendTransaction = 'sendTransaction',
   // Assets metadata methods
   assets = 'assets',
+  addAsset = 'addAsset',
   addAssets = 'addAssets',
   // Network methods
   networks = 'networks',

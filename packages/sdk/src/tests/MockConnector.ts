@@ -118,6 +118,10 @@ export class MockConnector extends FuelConnector {
     return [];
   }
 
+  async addAsset(_asset: Asset) {
+    return true;
+  }
+
   async addAssets(_assets: Array<Asset>) {
     return true;
   }
