@@ -13,7 +13,7 @@ export function CurrentAccount() {
   const [isConnected] = useIsConnected();
   const [handleCurrentAccount, errorCurrentAccount] = useLoading(async () => {
     const currentAccount = await fuel.currentAccount();
-    setCurrentAccount(currentAccount);
+    setCurrentAccount(currentAccount || '');
   });
 
   const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {

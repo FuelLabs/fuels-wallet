@@ -57,12 +57,15 @@ export function AddAssets() {
   return (
     <ExampleBox error={errorMessage}>
       <Box.Stack css={styles.wrapper}>
-        {assets.map((a, index) => {
+        {assets.map((asset, index) => {
           const isLast = index === assets.length - 1;
-          const asset = getAssetByChain(a, 0);
+          const assetData = getAssetByChain(asset, 0);
 
           return (
-            <Box.Stack key={asset.assetId + index} css={styles.item(isLast)}>
+            <Box.Stack
+              key={assetData.assetId + index}
+              css={styles.item(isLast)}
+            >
               <Box.Flex css={styles.itemHeader}>
                 <Text>Asset {index + 1}</Text>
                 {!!index && (
@@ -78,7 +81,7 @@ export function AddAssets() {
               </Box.Flex>
               <Input isDisabled={!fuel} css={styles.input}>
                 <Input.Field
-                  defaultValue={asset.assetId}
+                  defaultValue={assetData.assetId}
                   onBlur={(e) =>
                     onChangeAsset(index, {
                       ...asset,
@@ -115,7 +118,7 @@ export function AddAssets() {
                 <Input isDisabled={!fuel} css={styles.input}>
                   <Input.Field
                     type="number"
-                    defaultValue={asset.decimals}
+                    defaultValue={assetData.decimals}
                     onBlur={(e) => {
                       onChangeAsset(index, {
                         ...asset,
