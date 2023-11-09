@@ -13,12 +13,13 @@ export async function seedWallet(
   options: SeedWalletOptions = {}
 ) {
   const fuelProvider = await Provider.create(fuelProviderUrl);
+  const { minGasPrice } = await fuelProvider.getGasConfig();
   const genesisWallet = Wallet.fromPrivateKey(genesisSecret!, fuelProvider);
   const response = await genesisWallet.transfer(
     Address.fromString(address),
     amount,
     BaseAssetId,
-    { gasPrice: 1, ...options }
+    { gasPrice: minGasPrice, ...options }
   );
   await response.wait();
 }

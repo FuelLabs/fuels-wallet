@@ -1,7 +1,6 @@
 {
-  "name": "@fuel-wallet/test-utils",
-  "private": true,
-  "version": "0.13.5",
+  "name": "@fuel-wallet/playwright-utils",
+  "version": "0.13.7",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
@@ -12,8 +11,8 @@
     "typings": "dist/index.d.ts",
     "exports": {
       ".": {
-        "require": "dist/index.js",
-        "default": "dist/index.mjs"
+        "require": "./dist/index.js",
+        "default": "./dist/index.mjs"
       }
     }
   },
@@ -25,9 +24,11 @@
     "ts:check": "pnpm tsc --noEmit"
   },
   "dependencies": {
+    "adm-zip": "^0.5.10",
     "fuels": "0.63.0"
   },
   "devDependencies": {
+    "@types/adm-zip": "^0.5.3",
     "tsup": "^7.2.0"
   }
 }

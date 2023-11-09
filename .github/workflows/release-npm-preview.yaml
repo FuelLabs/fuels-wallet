@@ -1,0 +1,51 @@
+name: Release to @preview tag on npm
+
+on:
+  workflow_dispatch:
+
+env:
+  BUILD_VERSION: ""
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release-changesets:
+    name: Release to @preview tag on npm
+    runs-on: buildjet-4vcpu-ubuntu-2204
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: FuelLabs/github-actions/setups/node@master
+      - uses: FuelLabs/github-actions/setups/npm@master
+        with:
+          npm-token: ${{ secrets.NPM_TOKEN }}
+
+      - name: Build Libs
+        run: pnpm build:libs
+        env:
+          ## increase node.js m memory limit for building
+          ## with sourcemaps
+          NODE_OPTIONS: "--max-old-space-size=4096"
+      
+      - name: Release to @preview tag on npm
+        id: release
+        run: |
+          pnpm changeset version --snapshot preview
+          changetsets=$(pnpm changeset publish --tag preview)
+          echo "BUILD_VERSION=$(pnpm -s packages:version)" >> $GITHUB_ENV
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment release package name to PR
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            This PR is published in NPM with version **${{ env.BUILD_VERSION }}**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,7 +1,7 @@
 {
   "name": "@fuel-wallet/react",
   "description": "Interact with the Fuel Wallet Extension in React.",
-  "version": "0.13.5",
+  "version": "0.13.7",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
@@ -12,8 +12,8 @@
     "typings": "dist/index.d.ts",
     "exports": {
       ".": {
-        "require": "dist/index.js",
-        "default": "dist/index.mjs"
+        "require": "./dist/index.js",
+        "default": "./dist/index.mjs"
       }
     }
   },
@@ -37,7 +37,6 @@
     "compare-versions": "^6.1.0"
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.246",
     "tsup": "^7.2.0",
     "fuels": "0.63.0"
   }

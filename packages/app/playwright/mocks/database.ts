@@ -213,7 +213,7 @@ export async function unlock(page, password = WALLET_PASSWORD) {
   await reload(page);
   try {
     await hasText(page, 'Welcome back');
-    await getByAriaLabel(page, 'Your Password').type(password);
+    await getByAriaLabel(page, 'Your Password').fill(password);
     await getByAriaLabel(page, 'Unlock wallet').click();
   } catch (err) {
     // Ignore
