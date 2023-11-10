@@ -24,7 +24,7 @@ Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/
   - [📒 - List user accounts](https://wallet.fuel.network/docs/how-to-use/#list-user-accounts)
   - [✍️ - Signing a message](https://wallet.fuel.network/docs/how-to-use/#signing-a-message)
   - [✍️ - Transfering assets](https://wallet.fuel.network/docs/how-to-use/#transfering-assets)
-  - [📗 SDK API](https://wallet.fuel.network/docs/dev/getting-started/)
+  - [📗 SDK API](https://wallet.fuel.network/docs/dev/hooks-reference/)
 - [Contributing](https://wallet.fuel.network/docs/contributing/guide/)
   - [Contribution Guide](https://wallet.fuel.network/docs/contributing/guide/)
   - [Running Locally](https://wallet.fuel.network/docs/contributing/running-locally)
