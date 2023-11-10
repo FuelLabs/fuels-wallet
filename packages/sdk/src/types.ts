@@ -177,7 +177,7 @@ export type FuelABI = JsonAbi;
  */
 
 export type ConnectorMetadata = {
-  image:
+  image?:
     | string
     | {
         light: string;

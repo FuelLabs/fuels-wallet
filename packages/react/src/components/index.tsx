@@ -1,2 +1,2 @@
 export * from './FuelProvider';
-export * from './FuelConnectorProvider';
+export * from '../ui/providers/FuelConnectProvider';

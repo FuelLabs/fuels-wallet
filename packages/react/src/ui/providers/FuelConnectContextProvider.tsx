@@ -5,25 +5,27 @@ import {
   type ReactNode,
   useState,
   useCallback,
+  useEffect,
 } from 'react';
 
-import { useConnect } from '../hooks/useConnect';
-import { useConnectors } from '../hooks/useConnectors';
-import { Connect } from '../ui';
+import { useFuel } from '../../components/FuelProvider';
+import { useConnect } from '../../hooks/useConnect';
+import { useConnectors } from '../../hooks/useConnectors';
 
-import { useFuel } from './FuelProvider';
-
-type FuelConnectProviderProps = {
+export type FuelConnectProviderProps = {
   children?: ReactNode;
-  theme: string;
+  theme?: string;
 };
 
 export type FuelConnectContextType = {
+  theme: string;
   connectors: Array<FuelConnector>;
+  isLoading: boolean;
   isConnecting: boolean;
   isError: boolean;
   connect: () => void;
   cancel: () => void;
+  setTheme: (theme: string) => void;
   error: Error | null;
   dialog: {
     connector: FuelConnector | null;
@@ -37,23 +39,25 @@ export const FuelConnectContext = createContext<FuelConnectContextType | null>(
   null
 );
 
-export const useConnector = () => {
+export const useFuelConnect = () => {
   return useContext(FuelConnectContext) as FuelConnectContextType;
 };
 
-export function FuelConnectorProvider({
-  theme,
+export function FuelConnectContextProvider({
   children,
+  theme: initialTheme,
 }: FuelConnectProviderProps) {
+  const [theme, setTheme] = useState(initialTheme || 'light');
   const { fuel } = useFuel();
   const { isLoading: isConnecting, isError, connect } = useConnect();
-  const { connectors } = useConnectors();
+  const { connectors, isLoading } = useConnectors();
   const [connector, setConnector] = useState<FuelConnector | null>(null);
   const [isOpen, setOpen] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   const handleCancel = () => {
     setOpen(false);
+    setConnector(null);
   };
 
   const handleConnect = () => {
@@ -64,14 +68,17 @@ export function FuelConnectorProvider({
     setConnector(null);
   };
 
+  useEffect(() => {
+    if (connector && connector.installed) {
+      handleBack();
+    }
+  }, [connectors.map((c) => c.installed)]);
+
   const handleSelectConnector = useCallback(
     async (connector: FuelConnector) => {
       if (!fuel) return setConnector(connector);
 
-      const connectors = await fuel.connectors();
-      const hasConnector = connectors.find((c) => c.name === connector.name);
-
-      if (hasConnector) {
+      if (connector.installed) {
         handleCancel();
         try {
           await connect(connector.name);
@@ -88,6 +95,9 @@ export function FuelConnectorProvider({
   return (
     <FuelConnectContext.Provider
       value={{
+        theme,
+        setTheme,
+        isLoading,
         isConnecting,
         isError,
         connectors,
@@ -102,7 +112,6 @@ export function FuelConnectorProvider({
         },
       }}
     >
-      <Connect theme={theme} />
       {children}
     </FuelConnectContext.Provider>
   );

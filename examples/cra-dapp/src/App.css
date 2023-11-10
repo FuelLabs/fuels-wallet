@@ -1,0 +1,49 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 100px;
+  height: 100vh;
+  width: 100vw;
+}
+
+.App[data-theme='dark'] {
+  background-color: #282c34;
+  color: white;
+}
+
+button {
+  all: unset;
+  border: 1px solid black;
+  padding: 10px 20px;
+  border-radius: 4px;
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+button:active {
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2);
+}
+
+.Actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.Accounts {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.Accounts > div {
+  font-style: italic;
+}
+
+.Error {
+  color: #d60000;
+  width: 100%;
+  text-align: center;
+}

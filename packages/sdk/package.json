@@ -19,7 +19,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "icons"
   ],
   "scripts": {
     "build": "pnpm ts:check && tsup",
