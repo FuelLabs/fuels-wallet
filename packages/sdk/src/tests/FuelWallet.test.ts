@@ -103,7 +103,7 @@ describe('Fuel Wallet SDK multiple connectors', () => {
     const provider = await Provider.create('http://localhost:4001/graphql');
     const wallets = [
       Wallet.fromPrivateKey(
-        '0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298',
+        '0xa349d39f614a3085b7f7f8cef63fd5189136924fc1238e6d25ccdaa43a901cd0',
         provider
       ),
     ];
