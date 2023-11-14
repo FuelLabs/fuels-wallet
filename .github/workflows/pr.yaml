@@ -49,7 +49,7 @@ jobs:
         uses: FuelLabs/github-actions/setups/node@master
 
       - name: Validate Changeset
-        run: pnpm changeset status --since=origin/master
+        run: pnpm changeset status --since=origin/${{ github.base_ref }}
 
   audit:
     name: Audit

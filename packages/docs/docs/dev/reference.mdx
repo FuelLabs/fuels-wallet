@@ -11,116 +11,112 @@ category: For Developers
 
 `async version(): Promise<string>`<br />
 Return the current version of the Wallet.
-
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="version" />
+testCase="version" />
 
 ### Connect
 
 `async connect(): Promise<boolean>`<br />
 Request permission to start a connection between the project and the wallet
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="connect" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="connect" /> */}
 
 ### Disconnect
 
 `async disconnect(): Promise<boolean>`<br />
 Disconnect your project
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="disconnect" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="disconnect" /> */}
 
 ### Get connection status
 
 `async isConnected(): Promise<boolean>`<br />
 Return the state of the application connection.
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="isConnected" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="isConnected" /> */}
 
 ### List Accounts
 
 `async accounts(): Promise<Array<string>>`<br />
 List accounts in the wallet
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="accounts" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="accounts" /> */}
 
 ### Current Account
 
 `async currentAccount(): Promise<string>`<br />
 Return the current account being used in the wallet application.
 
-<CodeImport
-  file="../../../sdk/src/tests/Fuel.test.ts"
-  testCase="currentAccount"
-/>
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="currentAccount" /> */}
 
 ### List Networks
 
 `async networks(): Promise<Array<Network>>`<br />
 Return the list of networks in the current wallet.
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="networks" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="networks" /> */}
 
 ### Current Network
 
 `async network(): Promise<Network>`<br />
 Return the current network being used in the wallet application.
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="network" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="network" /> */}
 
 ### Add Network
 
 `async addNetwork(network: Network): Promise<boolean>`<br />
 Add network to the wallet.
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="addNetwork" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="addNetwork" /> */}
 
 ### List Assets
 
 `async assets(): Promise<Array<Asset>>`<br />
 Return the list of assets in the current wallet.
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="assets" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="assets" /> */}
 
 ### Add Asset
 
 `async addAsset(asset: Asset): Promise<boolean>`<br />
 Add asset to the wallet.
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="addAsset" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="addAsset" /> */}
 
 ### Add Assets
 
 `async addAssets(asset: Asset[]): Promise<boolean>`<br />
 Add assets to the wallet.
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="addAssets" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="addAssets" /> */}
 
 ### Get ABI
 
 `async getAbi(contractId: string): Promise<JsonAbi>`<br />
 Get ABI of contractId given.
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="getAbi" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="getAbi" /> */}
 
 ### Has ABI
 
 `async hasAbi(contractId: string): Promise<boolean>`<br />
 Check if has ABI for contractId given.
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="hasAbi" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="hasAbi" /> */}
 
 ### Add ABI
 
 `async addAbi(abiMap: AbiMap): Promise<boolean>`<br />
 Add ABI to the wallet.
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="addAbi" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="addAbi" /> */}
 
 ### Request signature message
 
 `async signMessage(address: string, message: string): Promise<string>`<br />
 Request a message signature for one specific account
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="signMessage" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="signMessage" /> */}
 
 ### Send transaction
 
@@ -128,17 +124,14 @@ Request a message signature for one specific account
 Send a transaction, this will request the user selected account to review,
 sign, and send the transaction.
 
-<CodeImport
-  file="../../../sdk/src/tests/Fuel.test.ts"
-  testCase="sendTransaction"
-/>
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="sendTransaction" /> */}
 
 ### Get Wallet
 
 `getWallet(address: string | AbstractAddress): Promise<FuelWalletLocked>`<br />
 Return `FuelWalletLocked` using a FuelWalletProvider on the connection point to request signed actions.
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="getWallet" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="getWallet" /> */}
 
 ### Get Provider
 
@@ -151,61 +144,43 @@ the DApp will also switch to that network. Support for specific DApp networks wi
 
 #### Using provider to query node info
 
-<CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="getProvider" />
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="getProvider" /> */}
 
 #### Using provider on a fuels-ts Wallet
 
-<CodeImport
-  file="../../../sdk/src/tests/Fuel.test.ts"
-  testCase="User getProvider on fuels-ts Wallet"
-/>
+{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="User getProvider on fuels-ts Wallet" /> */}
 
 ### Listing connectors
 
 To list all available connectors you can use the `listConnectors(): Array<FuelWalletConnector>` method.
 
-<CodeImport
-  file="../../../sdk/src/tests/FuelWalletConnectors.test.ts"
-  testCase="listConnectors"
-/>
+{/* <CodeImport file="../../../sdk/src/tests/FuelWalletConnectors.test.ts" testCase="listConnectors" /> */}
 
 ### Has connector
 
 To check if a connector is on the connectors list use the `hasConnector(connectorName: string): boolean` method.
 
-<CodeImport
-  file="../../../sdk/src/tests/FuelWalletConnectors.test.ts"
-  testCase="hasConnector"
-/>
+{/* <CodeImport file="../../../sdk/src/tests/FuelWalletConnectors.test.ts" testCase="hasConnector" /> */}
 
 ### Selecting connector
 
 For selecting a different Wallet Connector use the `async selectConnector(connectorName: string): Promise<boolean>` method.
 This method will check if the desired connector is installed. If it is not detected in 1 second, the method throws an error.
 
-<CodeImport
-  file="../../../sdk/src/tests/FuelWalletConnectors.test.ts"
-  testCase="selectConnector"
-/>
+{/* <CodeImport file="../../../sdk/src/tests/FuelWalletConnectors.test.ts" testCase="selectConnector" /> */}
 
 ### Add connector
 
 For adding a Wallet Connector use the `addConnector(connector: FuelWalletConnector): boolean` method.
 This method does not trigger any errors if the target Connector is not installed.
 
-<CodeImport
-  file="../../../sdk/src/tests/FuelWalletConnectors.test.ts"
-  testCase="addConnector"
-/>
+{/* <CodeImport file="../../../sdk/src/tests/FuelWalletConnectors.test.ts" testCase="addConnector" /> */}
 
 ### Remove connector
 
 To remove a Wallet Connector use the `removeConnector(connectorName: string): boolean` method.
 
-<CodeImport
-  file="../../../sdk/src/tests/FuelWalletConnectors.test.ts"
-  testCase="removeConnector"
-/>
+{/* <CodeImport file="../../../sdk/src/tests/FuelWalletConnectors.test.ts" testCase="removeConnector" /> */}
 
 ## Events
 

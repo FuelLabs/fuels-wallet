@@ -19,11 +19,6 @@ export function useAssets() {
 
     // Query assets
     queryAssets();
-
-    fuel.on('assets', queryAssets);
-    return () => {
-      fuel.off('assets', queryAssets);
-    };
   }, [fuel, isConnected]);
 
   return assets;

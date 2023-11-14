@@ -20,7 +20,7 @@ export function CurrentAccount() {
       const currentAccount = await fuel.currentAccount();
       console.log('Current Account ', currentAccount);
       /* example:end */
-      setCurrentAccount(currentAccount);
+      setCurrentAccount(currentAccount || '');
     });
 
   const errorMessage = errorCurrentAccount || notDetected;

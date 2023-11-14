@@ -1,5 +1,4 @@
-import { getGasConfig } from '@fuel-wallet/sdk';
-import type { Account, Asset } from '@fuel-wallet/types';
+import type { Account, AssetData } from '@fuel-wallet/types';
 import type {
   BN,
   GetTransactionSummaryFromRequestParams,
@@ -89,7 +88,7 @@ export type TxInputs = {
   isValidTransaction: {
     address?: string;
     account?: Account;
-    asset?: Asset;
+    asset?: AssetData;
     amount?: BN;
     fee?: BN;
   };
@@ -273,8 +272,12 @@ export class TxService {
     ]);
     const provider = await Provider.create(network!.url);
     const wallet = new WalletLockedCustom(account!.address, provider);
-    const { gasLimit, gasPrice } = await getGasConfig(wallet.provider);
-    const params: ScriptTransactionRequestLike = { gasLimit, gasPrice };
+    const { maxGasPerTx: gasLimit, minGasPrice: gasPrice } =
+      await wallet.provider.getGasConfig();
+    const params: ScriptTransactionRequestLike = {
+      gasLimit,
+      gasPrice,
+    };
     const request = new ScriptTransactionRequest(params);
     request.addCoinOutput(wallet.address, bn(1), BaseAssetId);
     await wallet.fund(request);
@@ -290,7 +293,7 @@ export class TxService {
   }
 
   static async createTransfer(input: TxInputs['createTransfer']) {
-    const { gasPrice } = await getGasConfig(input.provider);
+    const { minGasPrice: gasPrice } = await input.provider.getGasConfig();
     // Because gasLimit is caulculated on the number of operations we can
     // safely assume that a transfer will consume at max 20 units, this should
     // be change once we add multiple trasnfers in a single transaction.

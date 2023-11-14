@@ -6,8 +6,8 @@ import { mint } from '../contract_interactions';
 
 export const MintAssetCard = () => {
   const [amount, setAmount] = useState<string>('');
-  const account = useAccount();
-  const wallet = useWallet({ address: account.account });
+  const { account } = useAccount();
+  const { wallet } = useWallet({ address: account });
 
   return (
     <div>
@@ -21,9 +21,9 @@ export const MintAssetCard = () => {
         />
         <button
           onClick={async () => {
-            if (wallet.wallet && amount) {
+            if (wallet && amount) {
               await mint({
-                wallet: wallet.wallet,
+                wallet,
                 amount: bn.parseUnits(amount),
                 subId: BaseAssetId,
               });

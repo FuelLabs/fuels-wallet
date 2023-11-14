@@ -1,11 +1,11 @@
-import { getBlockExplorerLink } from '@fuel-wallet/sdk';
+import { buildBlockExplorerUrl } from 'fuels';
 import { useCallback } from 'react';
 import { IS_CRX } from '~/config';
 import { openTab } from '~/systems/CRX/utils';
 
 export function useExplorerLink(providerUrl: string, id?: string) {
-  const href = getBlockExplorerLink({
-    path: `transaction/${id || ''}`,
+  const href = buildBlockExplorerUrl({
+    txId: id,
     providerUrl,
   });
 

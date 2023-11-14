@@ -1,10 +1,13 @@
-import type { FuelWalletConnector } from '@fuel-wallet/sdk';
-import { Fuel } from '@fuel-wallet/sdk';
+import {
+  Fuel,
+  FuelWalletConnector,
+  FuelWalletDevelopmentConnector,
+} from '@fuel-wallet/sdk';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { createContext, useContext, useEffect } from 'react';
 
-import { QUERY_KEYS, selectCurrentConnector } from '../utils';
+import { QUERY_KEYS } from '../utils';
 
 const queryClientConfig = {
   defaultOptions: {
@@ -37,15 +40,25 @@ export const useFuel = () => {
   return useContext(FuelReactContext) as FuelReactContextType;
 };
 
+export const fuel = new Fuel({
+  connectors: [new FuelWalletConnector(), new FuelWalletDevelopmentConnector()],
+});
+
 export const FuelProvider = ({ children }: FuelProviderProps) => {
-  const fuel = new Fuel();
   const fuelQueryClient = new QueryClient(queryClientConfig);
 
-  function onConnectorsChange(connectors: Array<FuelWalletConnector>) {
+  function onCurrentConnectorChange() {
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.account]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.isConnected]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.wallet]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.balance]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.provider]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.nodeInfo]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.accounts]);
+  }
+
+  function onConnectorsChange() {
     fuelQueryClient.invalidateQueries([QUERY_KEYS.connectorList]);
-    selectCurrentConnector(fuel, connectors)?.then(() => {
-      fuelQueryClient.invalidateQueries();
-    });
   }
 
   function onCurrentAccountChange() {
@@ -78,17 +91,19 @@ export const FuelProvider = ({ children }: FuelProviderProps) => {
 
   useEffect(() => {
     fuel.on(fuel.events.currentAccount, onCurrentAccountChange);
+    fuel.on(fuel.events.currentConnector, onCurrentConnectorChange);
     fuel.on(fuel.events.connectors, onConnectorsChange);
     fuel.on(fuel.events.connection, onConnectionChange);
     fuel.on(fuel.events.accounts, onAccountsChange);
-    fuel.on(fuel.events.network, onNetworkChange);
+    fuel.on(fuel.events.currentNetwork, onNetworkChange);
 
     return () => {
+      fuel.on(fuel.events.currentConnector, onCurrentConnectorChange);
       fuel.off(fuel.events.currentAccount, onCurrentAccountChange);
       fuel.off(fuel.events.connectors, onConnectorsChange);
       fuel.off(fuel.events.connection, onConnectionChange);
       fuel.off(fuel.events.accounts, onAccountsChange);
-      fuel.off(fuel.events.network, onNetworkChange);
+      fuel.off(fuel.events.currentNetwork, onNetworkChange);
     };
   }, []);
 

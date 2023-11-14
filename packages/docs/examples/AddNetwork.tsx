@@ -3,7 +3,6 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Input, Text } from '@fuel-ui/react';
 import { useState } from 'react';
 
-import type { Network } from '../../types/src';
 import { ExampleBox } from '../src/components/ExampleBox';
 import { useFuel } from '../src/hooks/useFuel';
 import { useIsConnected } from '../src/hooks/useIsConnected';
@@ -12,13 +11,12 @@ import { useLoading } from '../src/hooks/useLoading';
 export function AddNetwork() {
   const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
-  const [network, setNetwork] = useState<Network>({
-    name: 'Localhost',
-    url: 'http://localhost:4000/graphql',
-  });
+  const [network, setNetwork] = useState<string>(
+    'http://localhost:4000/graphql'
+  );
 
   const [handleAddNetwork, isAddingNetwork, errorAddingNetwork] = useLoading(
-    async (network: Network) => {
+    async (network: string) => {
       if (!isConnected) await fuel.connect();
       console.log('Add Network', network);
       /* addNetwork:start */
@@ -29,7 +27,7 @@ export function AddNetwork() {
 
   const errorMessage = notDetected || errorAddingNetwork;
 
-  const onChangeNetwork = (network: Network) => {
+  const onChangeNetwork = (network: string) => {
     setNetwork(network);
   };
 
@@ -40,22 +38,11 @@ export function AddNetwork() {
           <Box.Flex css={styles.itemHeader}>
             <Text>Network</Text>
           </Box.Flex>
-          <Input isDisabled={!fuel} css={styles.input}>
-            <Input.Field
-              defaultValue={network.name}
-              onBlur={(e) =>
-                onChangeNetwork({ ...network, name: e.target.value })
-              }
-              placeholder="Type your network name"
-            />
-          </Input>
           <Box.Flex gap="$2">
             <Input isDisabled={!fuel} css={styles.input}>
               <Input.Field
-                defaultValue={network.url}
-                onBlur={(e) =>
-                  onChangeNetwork({ ...network, url: e.target.value })
-                }
+                defaultValue={network}
+                onBlur={(e) => onChangeNetwork(e.target.value)}
                 placeholder="Type your network url"
               />
             </Input>

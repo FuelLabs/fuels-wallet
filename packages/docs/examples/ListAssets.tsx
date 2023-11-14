@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Tag } from '@fuel-ui/react';
-import type { Asset } from '@fuel-wallet/sdk';
+import { getAssetByChain, type Asset } from '@fuel-wallet/sdk';
 import { useState } from 'react';
 
 import { ExampleBox } from '../src/components/ExampleBox';
@@ -39,11 +39,14 @@ export function ListAssets() {
         </Button>
         {Boolean(assets.length) && (
           <Box.Stack gap="$1" css={{ mt: '$2' }}>
-            {assets.map((asset) => (
-              <Tag size="xs" variant="ghost" key={JSON.stringify(asset)}>
-                {asset.name} ({asset.symbol}): {asset.assetId}
-              </Tag>
-            ))}
+            {assets.map((a) => {
+              const asset = getAssetByChain(a, 0);
+              return (
+                <Tag size="xs" variant="ghost" key={JSON.stringify(asset)}>
+                  {asset.name} ({asset.symbol}): {asset.assetId}
+                </Tag>
+              );
+            })}
           </Box.Stack>
         )}
       </Box.Stack>

@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Alert, Link } from '@fuel-ui/react';
-import { getBlockExplorerLink } from '@fuel-wallet/sdk';
-import { TransactionStatus } from 'fuels';
+import { TransactionStatus, buildBlockExplorerUrl } from 'fuels';
 import type { FC } from 'react';
 import { useMemo } from 'react';
 
@@ -50,8 +49,8 @@ export const TxStatusAlert: FC<TxStatusAlertProps> = ({
             aria-label="View Transaction on Block Explorer"
             isExternal
             css={{ ...styles.link, color: `$${txColor}` }}
-            href={getBlockExplorerLink({
-              path: `transaction/${txId}`,
+            href={buildBlockExplorerUrl({
+              txId,
               providerUrl,
             })}
           >

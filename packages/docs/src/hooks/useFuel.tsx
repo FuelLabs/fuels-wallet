@@ -1,7 +1,13 @@
-import { Fuel } from '@fuel-wallet/sdk';
+import {
+  Fuel,
+  FuelWalletConnector,
+  FuelWalletDevelopmentConnector,
+} from '@fuel-wallet/sdk';
 import { useState, useEffect } from 'react';
 
-const fuelSDK = new Fuel();
+const fuelSDK = new Fuel({
+  connectors: [new FuelWalletConnector(), new FuelWalletDevelopmentConnector()],
+});
 
 export function useFuel() {
   const [error, setError] = useState('');
@@ -9,21 +15,24 @@ export function useFuel() {
 
   useEffect(() => {
     fuelSDK
-      .hasWallet()
+      .hasConnector()
       .then((hasWallet) => {
         setError(hasWallet ? '' : 'fuel not detected on the window!');
         setLoading(false);
       })
-      .catch(() => {});
+      .catch(() => {
+        setError('fuel not detected on the window!');
+        setLoading(false);
+      });
 
     const handleFuelLoad = () => {
       setLoading(false);
       setError('');
     };
 
-    fuelSDK.on(fuelSDK.events.load, handleFuelLoad);
+    fuelSDK.on(fuelSDK.events.currentConnector, handleFuelLoad);
     return () => {
-      fuelSDK.on(fuelSDK.events.load, handleFuelLoad);
+      fuelSDK.on(fuelSDK.events.currentConnector, handleFuelLoad);
     };
   }, []);
 

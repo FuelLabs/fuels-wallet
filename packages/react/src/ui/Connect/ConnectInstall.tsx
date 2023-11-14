@@ -1,16 +1,18 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Image, Text, useFuelTheme } from '@fuel-ui/react';
-
-import type { Connector } from '../../types';
+import type { FuelConnector } from '@fuel-wallet/sdk';
 
 import { getImageUrl } from './utils/getImageUrl';
 
 type ConnectInstallProps = {
-  connector: Connector;
+  connector: FuelConnector;
 };
 
 export const ConnectInstall = ({ connector }: ConnectInstallProps) => {
   const { current } = useFuelTheme();
+  const {
+    metadata: { install },
+  } = connector;
 
   return (
     <Box.Stack>
@@ -21,20 +23,18 @@ export const ConnectInstall = ({ connector }: ConnectInstallProps) => {
         />
       </Box>
       <Text fontSize="lg" css={styles.connectorTitle}>
-        {connector.install.action} {connector.name}
+        {install.action} {connector.name}
       </Text>
-      <Text css={styles.connectorDescription}>
-        {connector.install.description}
-      </Text>
+      <Text css={styles.connectorDescription}>{install.description}</Text>
       <Box css={styles.connectorFooter}>
         <Button
           size="lg"
           variant="ghost"
           as="a"
-          href={connector.install.link}
+          href={install.link}
           target="_blank"
         >
-          <b>{connector.install.action}</b>
+          <b>{install.action}</b>
         </Button>
       </Box>
     </Box.Stack>

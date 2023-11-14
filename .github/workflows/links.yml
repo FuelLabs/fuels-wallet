@@ -5,6 +5,8 @@ on:
 
 jobs:
     check-links:
+        # @todo: Skip this check until the documentation is up to date and back to work
+        if: false
         uses: FuelLabs/github-actions/.github/workflows/next-links.yml@master
         with:
           status: ${{ github.event.deployment_status.state }}

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { Box, Button, Input } from '@fuel-ui/react';
+import type { FuelConnector } from '@fuel-wallet/sdk';
 import { useEffect, useState } from 'react';
-import type { FuelWalletConnector } from '~/../types/src';
 import { ExampleBox } from '~/src/components/ExampleBox';
 import { useFuel } from '~/src/hooks/useFuel';
 import { useLoading } from '~/src/hooks/useLoading';
@@ -10,7 +10,7 @@ export function Connectors() {
   const [fuel, notDetected] = useFuel();
   const [connected, setConnected] = useState(false);
   const [compatibilityError, setCompatibilityError] = useState('');
-  const [connectors, setConnectors] = useState<Array<FuelWalletConnector>>([]);
+  const [connectors, setConnectors] = useState<Array<FuelConnector>>([]);
 
   useEffect(() => {
     if (!fuel) return () => {};
@@ -29,7 +29,7 @@ export function Connectors() {
 
   useEffect(() => {
     if (!fuel) return () => {};
-    if (!fuel.listConnectors) {
+    if (!fuel.connectors) {
       setCompatibilityError(
         "Current version of Fuel Wallet doesn't support Connectors!"
       );
@@ -37,19 +37,18 @@ export function Connectors() {
     }
     setCompatibilityError('');
 
-    /* listConnectors:start */
-    const connectors = fuel.listConnectors();
-    /* listConnectors:end */
-    setConnectors(connectors);
-
-    const onConnectors = () => {
-      setConnectors(Array.from(fuel.listConnectors()));
+    const listConnectors = async () => {
+      /* listConnectors:start */
+      const connectors = await fuel.connectors();
+      /* listConnectors:end */
+      setConnectors(connectors.filter((c) => c.installed));
     };
+    listConnectors();
 
     /* eventConnectors:start */
-    fuel.on(fuel.events.connectors, onConnectors);
+    fuel.on(fuel.events.connectors, listConnectors);
     return () => {
-      fuel.off(fuel.events.connectors, onConnectors);
+      fuel.off(fuel.events.connectors, listConnectors);
     };
     /* eventConnectors:end */
   }, [fuel]);
@@ -74,8 +73,11 @@ export function Connectors() {
     /* selectConnector:start */
     async (connectorName: string) => {
       console.log(`Select connector "${connectorName}"!`);
-      await fuel.selectConnector(connectorName);
-      console.log(`Connector "${connectorName}" connected`);
+      const isSelected = await fuel.selectConnector(connectorName);
+      console.log(isSelected);
+      if (isSelected) {
+        console.log(`Connector "${connectorName}" connected`);
+      }
     }
     /* selectConnector:end */
   );

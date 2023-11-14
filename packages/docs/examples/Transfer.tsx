@@ -1,9 +1,15 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Link, Text, InputAmount, Input } from '@fuel-ui/react';
-import { getBlockExplorerLink, getGasConfig } from '@fuel-wallet/sdk';
+import { getAssetByChain } from '@fuel-wallet/sdk';
 import type { BN } from 'fuels';
-import { BaseAssetId, bn, Address, DECIMAL_UNITS } from 'fuels';
+import {
+  buildBlockExplorerUrl,
+  BaseAssetId,
+  bn,
+  Address,
+  DECIMAL_UNITS,
+} from 'fuels';
 import { useMemo, useState } from 'react';
 import { useAssets } from '~/src/hooks/useAssets';
 
@@ -24,10 +30,10 @@ export function Transfer() {
   const [assetId, setAssetId] = useState<string>(BaseAssetId);
   const assets = useAssets();
   const decimals = useMemo(() => {
-    return (
-      assets.find((asset) => asset.assetId === assetId)?.decimals ||
-      DECIMAL_UNITS
-    );
+    const asset = assets
+      .map((asset) => getAssetByChain(asset, 0))
+      .find((asset) => asset?.assetId === assetId);
+    return asset?.decimals || DECIMAL_UNITS;
   }, [assets, assetId]);
 
   const [sendTransaction, sendingTransaction, errorSendingTransaction] =
@@ -39,9 +45,11 @@ export function Transfer() {
       const account = accounts[0];
       const wallet = await fuel.getWallet(account);
       const toAddress = Address.fromString(addr);
-      const gasConfig = await getGasConfig(wallet.provider);
+      const { minGasPrice: gasPrice, maxGasPerTx: gasLimit } =
+        await wallet.provider.getGasConfig();
       const response = await wallet.transfer(toAddress, amount, assetId, {
-        ...gasConfig,
+        gasPrice,
+        gasLimit,
       });
       console.log('Transaction created!', response.id);
       /* example:end */
@@ -103,8 +111,8 @@ export function Transfer() {
             <Text>{txId}</Text>
             <Link
               target={'_blank'}
-              href={getBlockExplorerLink({
-                path: `transaction/${txId}`,
+              href={buildBlockExplorerUrl({
+                txId,
                 providerUrl,
               })}
             >

@@ -1,12 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
 import { AlertDialog, Button } from '@fuel-ui/react';
-import type { Asset } from '@fuel-wallet/types';
+import type { AssetData } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
 type AssetRemoveDialogProps = {
   children: ReactNode;
-  asset: Asset;
+  asset: AssetData;
   onConfirm: () => void;
 };
 
