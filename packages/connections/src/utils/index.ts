@@ -1,4 +1,3 @@
-export * from './blockExplorer';
 export * from './createUUID';
 export * from './hasWindow';
 export * from './promise';

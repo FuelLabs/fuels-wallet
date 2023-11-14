@@ -1,9 +1,15 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Link, Text, InputAmount, Input } from '@fuel-ui/react';
-import { getAssetByChain, getBlockExplorerLink } from '@fuel-wallet/sdk';
+import { getAssetByChain } from '@fuel-wallet/sdk';
 import type { BN } from 'fuels';
-import { BaseAssetId, bn, Address, DECIMAL_UNITS } from 'fuels';
+import {
+  buildBlockExplorerUrl,
+  BaseAssetId,
+  bn,
+  Address,
+  DECIMAL_UNITS,
+} from 'fuels';
 import { useMemo, useState } from 'react';
 import { useAssets } from '~/src/hooks/useAssets';
 
@@ -105,8 +111,8 @@ export function Transfer() {
             <Text>{txId}</Text>
             <Link
               target={'_blank'}
-              href={getBlockExplorerLink({
-                path: `transaction/${txId}`,
+              href={buildBlockExplorerUrl({
+                txId,
                 providerUrl,
               })}
             >
