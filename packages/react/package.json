@@ -42,12 +42,8 @@
   "devDependencies": {
     "styled-components": "^6.1.1",
     "@fuel-wallet/sdk": "workspace:*",
-    "autoprefixer": "^10.4.16",
     "compare-versions": "^6.1.0",
     "fuels": "0.63.0",
-    "postcss": "^8.4.31",
-    "postcss-preset-env": "^9.3.0",
-    "tsup": "^7.2.0",
-    "typescript-plugin-css-modules": "^5.0.2"
+    "tsup": "^7.2.0"
   }
 }
