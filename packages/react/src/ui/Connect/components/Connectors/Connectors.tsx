@@ -1,4 +1,4 @@
-import { useFuelConnect } from '../../../../components';
+import { useFuelConnect } from '../../../providers/FuelConnectProvider';
 import { ConnectorIcon } from '../ConnectorIcon';
 
 import { ConnectorsLoader } from './ConnectorsLoader';
