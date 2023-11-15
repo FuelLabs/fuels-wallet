@@ -1,7 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Text } from '@fuel-ui/react';
 import {
-  Connect,
   FuelProvider,
   FuelConnectProvider,
   useAccount,
@@ -10,7 +9,7 @@ import {
 import { useDarkMode } from 'storybook-dark-mode';
 
 export default {
-  component: Connect,
+  component: FuelConnectProvider,
   title: 'Connect',
   parameters: {
     layout: 'fullscreen',
