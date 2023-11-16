@@ -1,5 +1,11 @@
 # @fuel-wallet/test-utils
 
+## 0.13.8
+
+### Patch Changes
+
+- [#973](https://github.com/FuelLabs/fuels-wallet/pull/973) [`208b955`](https://github.com/FuelLabs/fuels-wallet/commit/208b95563a9bfb4cd6700ee6abc315d82f5fc3e5) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: update fuels sdk to version 0.67.0
+
 ## 0.13.7
 
 ### Patch Changes
