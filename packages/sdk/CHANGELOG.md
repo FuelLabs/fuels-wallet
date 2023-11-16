@@ -1,5 +1,14 @@
 # @fuel-wallet/sdk
 
+## 0.13.9
+
+### Patch Changes
+
+- [#976](https://github.com/FuelLabs/fuels-wallet/pull/976) [`217f04d`](https://github.com/FuelLabs/fuels-wallet/commit/217f04dc918c547b9922a7403a12f5fb4b59f74f) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: attach development wallet on release tags
+
+- Updated dependencies [[`217f04d`](https://github.com/FuelLabs/fuels-wallet/commit/217f04dc918c547b9922a7403a12f5fb4b59f74f)]:
+  - @fuel-wallet/types@0.13.9
+
 ## 0.13.8
 
 ### Patch Changes
