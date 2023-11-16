@@ -47,14 +47,14 @@ importers:
         specifier: ^2.26.2
         version: 2.26.2
       '@fuels/eslint-plugin':
-        specifier: 0.1.1
-        version: 0.1.1(eslint@8.51.0)(typescript@5.2.2)
+        specifier: 0.1.4
+        version: 0.1.4(eslint@8.51.0)(typescript@5.2.2)
       '@fuels/prettier-config':
-        specifier: 0.1.1
-        version: 0.1.1(prettier@3.0.3)
+        specifier: 0.1.4
+        version: 0.1.4(prettier@3.0.3)
       '@fuels/ts-config':
-        specifier: 0.1.1
-        version: 0.1.1(typescript@5.2.2)
+        specifier: 0.1.4
+        version: 0.1.4(typescript@5.2.2)
       '@jest/types':
         specifier: 29.6.3
         version: 29.6.3
@@ -155,14 +155,14 @@ importers:
         specifier: workspace:*
         version: link:../types
       '@fuels/assets':
-        specifier: 0.1.1
-        version: 0.1.1
+        specifier: 0.1.4
+        version: 0.1.4
       '@fuels/local-storage':
-        specifier: 0.1.1
-        version: 0.1.1
+        specifier: 0.1.4
+        version: 0.1.4
       '@fuels/react-xstore':
-        specifier: 0.1.1
-        version: 0.1.1(@types/react@18.2.28)(@xstate/react@3.2.2)(react-dom@18.2.0)(react@18.2.0)(ws@8.13.0)(xstate@4.38.2)
+        specifier: 0.1.4
+        version: 0.1.4(@types/react@18.2.28)(@xstate/react@3.2.2)(react-dom@18.2.0)(react@18.2.0)(ws@8.13.0)(xstate@4.38.2)
       '@hookform/resolvers':
         specifier: ^3.3.2
         version: 3.3.2(react-hook-form@7.47.0)
@@ -3536,16 +3536,16 @@ packages:
     resolution: {integrity: sha512-Ww8mO8apM/27OH2PR6LC3jg7IlnWN3yKVXuWIEpkEPy6QCDEiivsmA7H8moM2BH6VSKm8k4OiVKaOhaIDzOqHQ==}
     dev: false
 
-  /@fuels/assets@0.1.1:
-    resolution: {integrity: sha512-1nvpA6xUN1jqk4MH1Pas8XL3wofvRPgFis68XSQfmHOchkRNA82lwoiUaCJ+NlLnQC+3YVVuonwYuWO9dTjkuQ==}
+  /@fuels/assets@0.1.4:
+    resolution: {integrity: sha512-6rSbzxxDlDkoW9u4vvSbTfnA4Cy9WjZ1ajBOuKTnvoQ9EzQKvrP4lYpN2SjqdfJkdhRfCItaf1aQq/avaN51BQ==}
     dev: false
 
-  /@fuels/eslint-plugin@0.1.1(eslint@8.51.0)(typescript@5.2.2):
-    resolution: {integrity: sha512-48EJcDJpXX+RexPhzDhY7SpkiWV0BCKMnEpMxJNEL2OxVJ3ROM6xH390fIBdV3X5Mwc4z9kYq5UGrvRTJSb61g==}
+  /@fuels/eslint-plugin@0.1.4(eslint@8.51.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-ND6B9kIdrEORH5f88PAnlPQzYPt0Cb+TZx56rIZFeLmpq0AEEYDNKjpub95LTXFekI13UIqlMTHSYtRcrbbYkg==}
     peerDependencies:
       eslint: ^8.48.0
     dependencies:
-      '@next/eslint-plugin-next': 13.4.19
+      '@next/eslint-plugin-next': 13.5.4
       '@typescript-eslint/eslint-plugin': 6.7.5(@typescript-eslint/parser@6.7.5)(eslint@8.51.0)(typescript@5.2.2)
       '@typescript-eslint/parser': 6.7.5(eslint@8.51.0)(typescript@5.2.2)
       eslint: 8.51.0
@@ -3569,20 +3569,20 @@ packages:
       - typescript
     dev: true
 
-  /@fuels/local-storage@0.1.1:
-    resolution: {integrity: sha512-+yXAg4rNsq20ul4ZuBmrbhIig7bCoYghRnXYUehmnbjAW/vvrt+LfidYufRUx6SBUi2KIMlu6xsskX0YbclIeQ==}
+  /@fuels/local-storage@0.1.4:
+    resolution: {integrity: sha512-fdjgASY0VLEJHI1DgXfBuvQJ0tkmd89uFyyYx52swtffKh5BuVJKEfCiVm5DGxXWc4/BkPTLEcUMI4E5SbBOLA==}
     dev: false
 
-  /@fuels/prettier-config@0.1.1(prettier@3.0.3):
-    resolution: {integrity: sha512-sYIW/8NyU5QpyhbM5oTNz6xsNDKoUYAIPWDvlJKC9CGoKypWhWiyVz9McCOkC+I1PRaTe9x2lvXMzt5svIv19A==}
+  /@fuels/prettier-config@0.1.4(prettier@3.0.3):
+    resolution: {integrity: sha512-1jh3/v2fWbMlBp2ImzYTQhzRdy23ToAGowH6/cWDN4Y7kGoOkmhjfoPKDmBDUGYjqDhi0HpwVRt5u5E5/npzGg==}
     peerDependencies:
       prettier: ^3.0.3
     dependencies:
       prettier: 3.0.3
     dev: true
 
-  /@fuels/react-xstore@0.1.1(@types/react@18.2.28)(@xstate/react@3.2.2)(react-dom@18.2.0)(react@18.2.0)(ws@8.13.0)(xstate@4.38.2):
-    resolution: {integrity: sha512-v8HJOUUvc3lOwW3KDNTmz+bugs/zsiz3rPbPqhl9Z1iZ32pTo0rUIVtQgUpTKTi2ESxnuaIxTUjSPrVwnJVHXA==}
+  /@fuels/react-xstore@0.1.4(@types/react@18.2.28)(@xstate/react@3.2.2)(react-dom@18.2.0)(react@18.2.0)(ws@8.13.0)(xstate@4.38.2):
+    resolution: {integrity: sha512-N3QLYxJOs7djZ71DJSyKKbd6p9kxO0CeDprR1pJ0OYoiH7poMowkY2kfhBeLr9q2cAp9sWrzQG2J9UYuFnv1Yg==}
     peerDependencies:
       '@xstate/react': ^3.2.2
       react: '*'
@@ -3594,7 +3594,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@fuels/local-storage': 0.1.1
+      '@fuels/local-storage': 0.1.4
       '@xstate/inspect': 0.8.0(ws@8.13.0)(xstate@4.38.2)
       '@xstate/react': 3.2.2(@types/react@18.2.28)(react@18.2.0)(xstate@4.38.2)
       fast-equals: 5.0.1
@@ -3609,8 +3609,8 @@ packages:
       - ws
     dev: false
 
-  /@fuels/ts-config@0.1.1(typescript@5.2.2):
-    resolution: {integrity: sha512-qafMCovps5fFuh3RbqBoJNAI+Ynf1x2wW39765aFwj5UBT5tEK/ERcz0oYqtKwfaZTYBZGiqtRwjfoUtusLrBw==}
+  /@fuels/ts-config@0.1.4(typescript@5.2.2):
+    resolution: {integrity: sha512-1DDWrqtL+Z8V88f1uhK0th3rHAGrAbAHxjefaxUapudgPQfkb6IOIgHOdDDjEagq8gXmIfs4TKQPBUPT+0ezPg==}
     peerDependencies:
       typescript: 5.2.2
     dependencies:
@@ -4789,12 +4789,6 @@ packages:
   /@next/env@13.5.4:
     resolution: {integrity: sha512-LGegJkMvRNw90WWphGJ3RMHMVplYcOfRWf2Be3td3sUa+1AaxmsYyANsA+znrGCBjXJNi4XAQlSoEfUxs/4kIQ==}
     dev: false
-
-  /@next/eslint-plugin-next@13.4.19:
-    resolution: {integrity: sha512-N/O+zGb6wZQdwu6atMZHbR7T9Np5SUFUjZqCbj0sXm+MwQO35M8TazVB4otm87GkXYs2l6OPwARd3/PUWhZBVQ==}
-    dependencies:
-      glob: 7.1.7
-    dev: true
 
   /@next/eslint-plugin-next@13.5.4:
     resolution: {integrity: sha512-vI94U+D7RNgX6XypSyjeFrOzxGlZyxOplU0dVE5norIfZGn/LDjJYPHdvdsR5vN1eRtl6PDAsOHmycFEOljK5A==}
