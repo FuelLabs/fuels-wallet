@@ -277,7 +277,9 @@ export class TxService {
     const params: ScriptTransactionRequestLike = { gasLimit, gasPrice };
     const request = new ScriptTransactionRequest(params);
     request.addCoinOutput(wallet.address, bn(1), BaseAssetId);
-    await wallet.fund(request);
+    const { maxFee, requiredQuantities } =
+      await provider.getTransactionCost(request);
+    await wallet.fund(request, requiredQuantities, maxFee);
 
     const { txResult } = await TxService.simulateTransaction({
       transactionRequest: request,
