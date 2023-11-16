@@ -1,5 +1,11 @@
 # @fuel-wallet/test-utils
 
+## 0.13.10
+
+### Patch Changes
+
+- [#978](https://github.com/FuelLabs/fuels-wallet/pull/978) [`1f34e67`](https://github.com/FuelLabs/fuels-wallet/commit/1f34e67b36ef94a8164f6cabfea143ac4d92f197) Thanks [@luizstacio](https://github.com/luizstacio)! - chore: fix icons on fuel wallet development attachment
+
 ## 0.13.9
 
 ### Patch Changes
