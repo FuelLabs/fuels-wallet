@@ -59,12 +59,8 @@ jobs:
           ## increase node.js m memory limit for building
           ## with sourcemaps
           CRX_OUT: "dist-crx-dev"
-          APP_VERSION_POSTFIX: "development"
+          APP_VERSION_POSTFIX: "-development"
           NODE_OPTIONS: "--max-old-space-size=4096"
-
-      # Remove before merge
-      - name: Run list folder
-        run: ls ./dist
 
       - name: Create Release Pull Request or Publish to NPM
         id: changesets
