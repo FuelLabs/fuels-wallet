@@ -56,6 +56,7 @@ jobs:
       - name: Build Fuel Wallet Development
         run: pnpm build:crx
         env:
+          VITE_CRX_NAME: "Fuel Wallet Development"
           CRX_OUT: "dist-crx-dev"
           APP_VERSION_POSTFIX: "-development"
           NODE_OPTIONS: "--max-old-space-size=4096"
