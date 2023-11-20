@@ -17,7 +17,7 @@
     },
     "build:crx": {
       "dependsOn": ["^build"],
-      "outputs": ["dist-crx/**", "dist/fuel-wallet.zip"]
+      "outputs": ["dist-crx*/**", "dist/fuel-wallet*.zip"]
     },
     "build:web": {
       "dependsOn": ["^build"],

@@ -53,6 +53,13 @@ jobs:
           ## with sourcemaps
           NODE_OPTIONS: "--max-old-space-size=4096"
 
+      - name: Build Fuel Wallet Development
+        run: pnpm build:crx
+        env:
+          CRX_OUT: "dist-crx-dev"
+          APP_VERSION_POSTFIX: "-development"
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
       - name: Create Release Pull Request or Publish to NPM
         id: changesets
         uses: FuelLabs/changesets-action@main

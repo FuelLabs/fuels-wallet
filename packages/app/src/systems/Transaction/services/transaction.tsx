@@ -280,7 +280,9 @@ export class TxService {
     };
     const request = new ScriptTransactionRequest(params);
     request.addCoinOutput(wallet.address, bn(1), BaseAssetId);
-    await wallet.fund(request);
+    const { maxFee, requiredQuantities } =
+      await provider.getTransactionCost(request);
+    await wallet.fund(request, requiredQuantities, maxFee);
 
     const { txResult } = await TxService.simulateTransaction({
       transactionRequest: request,
@@ -296,7 +298,7 @@ export class TxService {
     const { minGasPrice: gasPrice } = await input.provider.getGasConfig();
     // Because gasLimit is caulculated on the number of operations we can
     // safely assume that a transfer will consume at max 20 units, this should
-    // be change once we add multiple trasnfers in a single transaction.
+    // be change once we add multiple transfers in a single transaction.
     const request = new ScriptTransactionRequest({ gasLimit: 20, gasPrice });
     const to = Address.fromAddressOrString(input.to);
     const { assetId, amount } = input;
