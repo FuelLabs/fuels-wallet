@@ -37,7 +37,8 @@ export function useTxMetadata({
   const { operations, time, id = ' ', status } = transaction;
   const { account } = useAccounts();
 
-  const mainOperation = operations[0];
+  // Avoid screen to break with empty operations
+  const mainOperation = operations[0] || {};
   const label = getLabel(mainOperation, account?.address as Bech32Address);
   const timeFormatted = time ? formatDate(time) : undefined;
 
