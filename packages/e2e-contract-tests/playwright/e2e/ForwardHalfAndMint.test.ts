@@ -24,7 +24,7 @@ test.describe('Forward Half ETH and Mint Custom Asset', () => {
     }));
   });
 
-  test('e2e foreward half eth and mint custom asset', async ({ page }) => {
+  test('e2e forward half eth and mint custom asset', async ({ page }) => {
     await connect(page, fuelWalletTestHelper);
 
     const depositAmount = '1.000';

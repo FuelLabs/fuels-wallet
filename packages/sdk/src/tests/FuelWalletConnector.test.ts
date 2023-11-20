@@ -24,6 +24,7 @@ describe('Fuel Wallet SDK Connector actions', () => {
     const eventBus = new EventEmitter();
     const fuel = new Fuel({
       targetObject: eventBus,
+      connectors: [],
       storage: null,
     });
     let connectors = await fuel.connectors();
@@ -48,6 +49,7 @@ describe('Fuel Wallet SDK Connector actions', () => {
 
   test('Add connector using window events', async () => {
     const fuel = new Fuel({
+      connectors: [],
       storage: null,
     });
     let connectors = await fuel.connectors();

@@ -7,8 +7,8 @@ import { depositHalfAndMint } from '../contract_interactions';
 export const ForwardHalfAndMintCard = () => {
   const [forwardAmount, setForwardAmount] = useState<string>('');
   const [mintAmount, setMintAmount] = useState<string>('');
-  const account = useAccount();
-  const wallet = useWallet({ address: account.account });
+  const { account } = useAccount();
+  const wallet = useWallet(account);
 
   return (
     <div>

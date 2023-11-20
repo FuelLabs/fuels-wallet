@@ -2,14 +2,14 @@
 import {
   useAccounts,
   useDisconnect,
-  useFuelConnect,
+  useConnectUI,
   useIsConnected,
 } from '@fuel-wallet/react';
 import './App.css';
 
 function App() {
   const { connect, error, isError, theme, setTheme, isConnecting } =
-    useFuelConnect();
+    useConnectUI();
   const { disconnect } = useDisconnect();
   const { isConnected } = useIsConnected();
   const { accounts } = useAccounts();

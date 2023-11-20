@@ -24,7 +24,7 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
     }));
   });
 
-  test('e2e foreward half eth and mint external custom asset', async ({
+  test('e2e forward half eth and mint external custom asset', async ({
     page,
   }) => {
     await connect(page, fuelWalletTestHelper);

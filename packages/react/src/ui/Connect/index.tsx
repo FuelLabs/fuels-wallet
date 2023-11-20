@@ -1,7 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { useRef } from 'react';
 
-import { useFuelConnect } from '../providers/FuelConnectContextProvider';
+import { useConnectUI } from '../../providers/FuelUIProvider';
 
 import { Connector } from './components/Connector/Connector';
 import { Connectors } from './components/Connectors';
@@ -22,7 +22,7 @@ export function Connect() {
     theme,
     cancel,
     dialog: { isOpen, connector, back },
-  } = useFuelConnect();
+  } = useConnectUI();
 
   const handleOpenChange = (openState: boolean) => {
     if (!openState) cancel();

@@ -11,11 +11,12 @@ import {
 } from './styles';
 
 type ConnectorProps = {
+  theme?: string;
   className?: string;
   connector: FuelConnector;
 };
 
-export function Connector({ className, connector }: ConnectorProps) {
+export function Connector({ className, connector, theme }: ConnectorProps) {
   const {
     install: { action, link, description },
   } = connector.metadata;
@@ -23,7 +24,11 @@ export function Connector({ className, connector }: ConnectorProps) {
   return (
     <div className={className}>
       <ConnectorImage>
-        <ConnectorIcon connectorName={connector.name} size={100} />
+        <ConnectorIcon
+          connectorName={connector.name}
+          size={100}
+          theme={theme}
+        />
       </ConnectorImage>
       <ConnectorContent>
         <ConnectorTitle>{connector.name}</ConnectorTitle>

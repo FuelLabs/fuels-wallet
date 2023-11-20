@@ -5,17 +5,18 @@ import { useFuel } from '../components';
 export const useConnect = () => {
   const { fuel } = useFuel();
 
-  const { mutateAsync, ...mutateProps } = useMutation({
-    mutationFn: async (connectorName?: string) => {
+  const { mutate, mutateAsync, ...mutateProps } = useMutation({
+    mutationFn: async (connectorName?: string | null) => {
       if (connectorName) {
-        await fuel?.selectConnector(connectorName);
+        await fuel.selectConnector(connectorName);
       }
-      return fuel?.connect();
+      return fuel.connect();
     },
   });
 
   return {
-    connect: mutateAsync,
+    connect: (connectorName?: string | null) => mutate(connectorName),
+    connectAsync: (connectorName?: string | null) => mutateAsync(connectorName),
     ...mutateProps,
   };
 };

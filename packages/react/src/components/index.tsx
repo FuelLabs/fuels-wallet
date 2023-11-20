@@ -1,1 +1,1 @@
-export * from './FuelProvider';
+export * from '../providers/FuelHooksProvider';

@@ -20,10 +20,25 @@ describe('Fuel Wallet SDK multiple connectors', () => {
     window.localStorage.clear();
   });
 
+  test('Create using default connectors', async () => {
+    const fuel = new Fuel();
+    const connectors = await fuel.connectors();
+    expect(connectors.length).toBe(2);
+  });
+
+  test('Create using default connectors devMode', async () => {
+    const fuel = new Fuel({
+      devMode: true,
+    });
+    const connectors = await fuel.connectors();
+    expect(connectors.length).toBe(3);
+  });
+
   test('Add connector using event of a custom EventBus', async () => {
     const eventBus = new EventEmitter();
     const fuel = new Fuel({
       targetObject: eventBus,
+      connectors: [],
       storage: null,
     });
     let connectors = await fuel.connectors();
@@ -48,6 +63,7 @@ describe('Fuel Wallet SDK multiple connectors', () => {
 
   test('Add connector using window events', async () => {
     const fuel = new Fuel({
+      connectors: [],
       storage: null,
     });
     let connectors = await fuel.connectors();
