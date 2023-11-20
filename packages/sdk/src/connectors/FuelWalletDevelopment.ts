@@ -8,7 +8,7 @@ export class FuelWalletDevelopmentConnector extends FuelWalletConnector {
     install: {
       action: 'Install',
       description:
-        'To connect your Fuel Wallet Development, install the browser extension.',
+        'To connect your Fuel Wallet, you need to install the browser extension first.',
       link: 'https://chrome.google.com/webstore/detail/fuel-wallet-development/hcgmehahnlbhpilepakbdinkhhaackmc',
     },
   };

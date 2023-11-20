@@ -16,14 +16,14 @@ export function deferPromise<R = unknown>() {
   return defer;
 }
 
-export async function withTimeout<F extends Promise<unknown>>(
+export async function withTimeout<F extends Promise<unknown>, RT = Awaited<F>>(
   promise: F,
   timeout: number = 1050
-) {
+): Promise<RT> {
   const timeoutPromise = new Promise((_, reject) => {
     setTimeout(() => {
       reject(new Error('Promise timed out'));
     }, timeout);
   });
-  return Promise.race([timeoutPromise, promise]) as F;
+  return Promise.race([timeoutPromise, promise]) as any;
 }

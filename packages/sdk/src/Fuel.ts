@@ -146,14 +146,26 @@ export class Fuel extends FuelConnector {
    * Fetch the status of a connector and set the installed and connected
    * status.
    */
-  private async fetchConnectorStatus(connector: FuelConnector) {
+  private async fetchConnectorStatus(
+    connector: FuelConnector & { _latestUpdate?: number }
+  ) {
+    // Control fetch status to avoid rewriting the status
+    // on late responses in this way even if a response is
+    // late we can avoid rewriting the status of the connector
+    const requestTimestamp = Date.now();
     const [isConnected, ping] = await Promise.allSettled([
       withTimeout(connector.isConnected()),
       withTimeout(this.pingConnector(connector)),
     ]);
-    connector.installed = ping.status === 'fulfilled' && ping.value;
-    connector.connected =
-      isConnected.status === 'fulfilled' && isConnected.value;
+    // If the requestTimestamp is greater than the latest update
+    // we can ignore the response as is treated as stale.
+    const isStale = requestTimestamp < (connector._latestUpdate || 0);
+    if (!isStale) {
+      connector._latestUpdate = Date.now();
+      connector.installed = ping.status === 'fulfilled' && ping.value;
+      connector.connected =
+        isConnected.status === 'fulfilled' && isConnected.value;
+    }
     return {
       installed: connector.installed,
       connected: connector.connected,

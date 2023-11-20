@@ -7,7 +7,7 @@ const options: Options = {
   splitting: false,
   dts: true,
   format: ['cjs', 'esm'],
-  minify: process.env.NODE_ENV === 'production',
+  minify: true,
   entry: ['src/index.ts'],
 };
 

@@ -9,8 +9,14 @@ export const useIsConnected = () => {
   const { data, ...queryProps } = useQuery(
     [QUERY_KEYS.isConnected],
     async () => {
-      const isConnected = await fuel?.isConnected();
-      return isConnected || false;
+      // This ensure the hook returns false even if
+      // no connector is selected.
+      try {
+        const isConnected = await fuel?.isConnected();
+        return isConnected || false;
+      } catch {
+        return false;
+      }
     },
     {
       enabled: !!fuel,
