@@ -1,90 +1,85 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Link, Text, InputAmount, Input } from '@fuel-ui/react';
+import { useFuel, useIsConnected, useAssets } from '@fuel-wallet/react';
 import { getAssetByChain } from '@fuel-wallet/sdk';
 import type { BN } from 'fuels';
-import {
-  buildBlockExplorerUrl,
-  BaseAssetId,
-  bn,
-  Address,
-  DECIMAL_UNITS,
-} from 'fuels';
+import { buildBlockExplorerUrl, BaseAssetId, bn, Address } from 'fuels';
 import { useMemo, useState } from 'react';
-import { useAssets } from '~/src/hooks/useAssets';
 
-import { ExampleBox } from '../src/components/ExampleBox';
-import { useFuel } from '../src/hooks/useFuel';
-import { useIsConnected } from '../src/hooks/useIsConnected';
-import { useLoading } from '../src/hooks/useLoading';
+import { ExampleBox } from '../../src/components/ExampleBox';
+import { useLoading } from '../../src/hooks/useLoading';
 
-export function Transfer() {
-  const [fuel, notDetected] = useFuel();
-  const [isConnected] = useIsConnected();
+export function TransferAssets() {
+  const { fuel } = useFuel();
+  const { isConnected } = useIsConnected();
+  const { assets } = useAssets();
   const [txId, setTxId] = useState<string>('');
   const [providerUrl, setProviderUrl] = useState<string>('');
   const [amount, setAmount] = useState<BN | null>(bn.parseUnits('0.00001'));
-  const [addr, setAddr] = useState<string>(
+  const [receiverAddress, setAddr] = useState<string>(
     'fuel1a6msn9zmjpvv84g08y3t6x6flykw622s48k2lqg257pf9924pnfq50tdmw'
   );
   const [assetId, setAssetId] = useState<string>(BaseAssetId);
-  const assets = useAssets();
   const decimals = useMemo(() => {
     const asset = assets
       .map((asset) => getAssetByChain(asset, 0))
-      .find((asset) => asset?.assetId === assetId);
-    return asset?.decimals || DECIMAL_UNITS;
-  }, [assets, assetId]);
+      .find((asset) => asset.assetId === assetId);
+    return asset?.decimals || 0;
+  }, [assetId, assets]);
 
   const [sendTransaction, sendingTransaction, errorSendingTransaction] =
     useLoading(async (amount: BN, addr: string, assetId: string) => {
       if (!isConnected) await fuel.connect();
       console.log('Request signature transaction!');
-      /* example:start */
-      const accounts = await fuel.accounts();
-      const account = accounts[0];
+      /* transferAsset:start */
+      // Retrieve the current account address
+      const account = await fuel.currentAccount();
+      // If the current account is null this means the user has not authorized
+      // the currentAccount to the connection.
+      if (!account) {
+        throw new Error('Current account not authorized for this connection!');
+      }
+      // Create a Wallet instance from the current account
       const wallet = await fuel.getWallet(account);
-      const toAddress = Address.fromString(addr);
+      // Create a Address instance to the receiver address
+      const toAddress = Address.fromString(receiverAddress);
+      // Get the minGasPrice and maxGasPerTx for the network
       const { minGasPrice: gasPrice, maxGasPerTx: gasLimit } =
         await wallet.provider.getGasConfig();
+      // Send a transaction to transfer the asset to the receiver address
       const response = await wallet.transfer(toAddress, amount, assetId, {
         gasPrice,
         gasLimit,
       });
       console.log('Transaction created!', response.id);
-      /* example:end */
+      /* transferAsset:end */
       setProviderUrl(wallet.provider.url);
       setTxId(response.id);
     });
 
-  const errorMessage = notDetected || errorSendingTransaction;
-
   return (
-    <ExampleBox error={errorMessage}>
+    <ExampleBox error={errorSendingTransaction}>
       <Box.Stack css={{ gap: '$4' }}>
         <Box.Flex gap="$4" direction={'column'}>
-          <Box css={{ width: 300 }}>
-            <Input css={{ width: '100%' }}>
-              <Input.Field
-                value={assetId}
-                placeholder={'Asset ID to transfer'}
-                onChange={(e) => {
-                  setAmount(null);
-                  setAssetId(e.target.value);
-                }}
-              />
-            </Input>
-          </Box>
-          <Box css={{ width: 300 }}>
-            <Input css={{ width: '100%' }}>
-              <Input.Field
-                value={addr}
-                placeholder={'Address to transfer'}
-                onChange={(e) => setAddr(e.target.value)}
-              />
-            </Input>
-          </Box>
-          <Box css={{ width: 300 }}>
+          <Input css={{ width: '100%' }}>
+            <Input.Field
+              value={assetId}
+              placeholder={'Asset ID to transfer'}
+              onChange={(e) => {
+                setAmount(null);
+                setAssetId(e.target.value);
+              }}
+            />
+          </Input>
+          <Input css={{ width: '100%' }}>
+            <Input.Field
+              value={receiverAddress}
+              placeholder={'Address to transfer'}
+              onChange={(e) => setAddr(e.target.value)}
+            />
+          </Input>
+          {decimals ? (
             <InputAmount
               // Force component to re-render when decimals change
               // Remove this once fuel-ui InputAmount is fixed
@@ -95,10 +90,26 @@ export function Transfer() {
               hiddenBalance
               units={decimals}
             />
-          </Box>
+          ) : (
+            <Input css={{ width: '100%' }}>
+              <Input.Field
+                type="number"
+                value={amount?.toString()}
+                min={0}
+                onChange={(e) => {
+                  const ignore = /[.,\-+]/g;
+                  const val = (e.target.value || '').replaceAll(ignore, '');
+                  setAmount(val ? bn(val) : null);
+                }}
+                placeholder={'Asset amount'}
+              />
+            </Input>
+          )}
           <Box>
             <Button
-              onPress={() => amount && sendTransaction(amount, addr, assetId)}
+              onPress={() =>
+                amount && sendTransaction(amount, receiverAddress, assetId)
+              }
               isLoading={sendingTransaction}
               isDisabled={sendingTransaction || !fuel}
             >

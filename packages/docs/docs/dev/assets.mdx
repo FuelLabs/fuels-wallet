@@ -9,39 +9,57 @@ category: For Developers
 
 To transfer an amount to other address, use the `wallet.transfer` method and pass in the address you want to send to and the amount to send.
 
-<CodeImport file="../../examples/Transfer.tsx" />
-
-<Examples.Transfer />
+<CodeImport
+  file="../../examples/assets/TransferAssets.tsx"
+  commentBlock="transferAsset"
+/>
+<Examples.TransferAssets />
 
 ## List Assets in the Wallet
 
-You can list the assets in the wallet using `window.fuel.assets()`.
+You can list the assets in the wallet using `assets()`.
 
-<CodeImport file="../../examples/ListAssets.tsx" />
-
+<CodeImport file="../../examples/assets/ListAssets.tsx" commentBlock="assets" />
 <Examples.ListAssets />
 
 ## Adding custom Assets
 
-To add custom Assets, use the `wallet.addAssets` method and pass in the `Asset[]` you want to add.
+To add custom Assets, use the `useAsset` for single `Asset` or `addAssets` multiple assets.
 
-<CodeImport file="../../examples/AddAssets.tsx" />
-
+<CodeImport
+  file="../../examples/assets/AddAssets.tsx"
+  commentBlock="addAssets"
+/>
 <Examples.AddAssets />
 
 ## With React
 
-In a React app you can use the `useAccount` hook as shown below to check the account balance for a specific asset.
+### Transferring assets
 
-```tsx
-import { useAccount } from '@fuel-wallet/react';
-// ...
-const { accountAddress } = useAccount();
+To transfer an amount to other address, use the `wallet.transfer` method and pass in the address you want to send to and the amount to send.
 
-const { balance } = useBalance({
-  address: accountAddress,
-  assetId: '0x000000000...',
-});
-console.log(balance);
-// 0004990000
-```
+<CodeImport
+  file="../../examples/assets/hooks/TransferAssetsHook.tsx"
+  commentBlock="transferHook"
+/>
+<Examples.TransferAssetsHook />
+
+### List Assets
+
+You can keep track of the assets in the users wallet by using the hook `useAssets`.
+
+<CodeImport
+  file="../../examples/assets/hooks/ListAssetsHook.tsx"
+  commentBlock="useAssets"
+/>
+<Examples.ListAssetsHook />
+
+### Add assets
+
+You can keep track of the assets in the users wallet by using the hook `useAddAssets`.
+
+<CodeImport
+  file="../../examples/assets/hooks/AddAssetsHook.tsx"
+  commentBlock="addAssets"
+/>
+<Examples.AddAssetsHook />

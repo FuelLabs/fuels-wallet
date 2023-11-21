@@ -1,46 +1,33 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Input, Text, IconButton, Icon } from '@fuel-ui/react';
+import {
+  useFuel,
+  useIsConnected,
+  useAddAssets,
+  useConnect,
+} from '@fuel-wallet/react';
 import type { AssetFuel, Asset } from '@fuel-wallet/sdk';
 import { getAssetByChain } from '@fuel-wallet/sdk';
 import { useState } from 'react';
 
-import { ExampleBox } from '../src/components/ExampleBox';
-import { useFuel } from '../src/hooks/useFuel';
-import { useIsConnected } from '../src/hooks/useIsConnected';
-import { useLoading } from '../src/hooks/useLoading';
+import { ExampleBox } from '../../../src/components/ExampleBox';
+import { ASSET } from '../data';
 
-export function AddAssets() {
-  const [fuel, notDetected] = useFuel();
-  const [isConnected] = useIsConnected();
-  const [assets, setAssets] = useState<Asset[]>([
-    {
-      name: 'New',
-      symbol: 'NEW',
-      icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
-      networks: [
-        {
-          type: 'fuel',
-          chainId: 0,
-          decimals: 6,
-          assetId:
-            '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d90',
-        },
-      ],
-    },
-  ]);
+export function AddAssetsHook() {
+  const { fuel } = useFuel();
+  const { isConnected } = useIsConnected();
+  const [assets, setAssets] = useState<Asset[]>([ASSET]);
+  const { connect, error: errorConnecting } = useConnect();
+  /* addAssets:start */
+  const { addAssets, isLoading, error } = useAddAssets();
 
-  const [handleAddAsset, isSingingMessage, errorSigningMessage] = useLoading(
-    async (assets: Asset[]) => {
-      if (!isConnected) await fuel.connect();
-      console.log('Add Assets', assets);
-      /* example:start */
-      await fuel.addAssets(assets);
-      /* example:end */
-    }
-  );
-
-  const errorMessage = notDetected || errorSigningMessage;
+  async function handleAddAssets(assets: Asset[]) {
+    if (!isConnected) await connect(); // ignore-line
+    console.log('Add Assets', assets);
+    addAssets(assets);
+  }
+  /* addAssets:end */
 
   const onChangeAsset = (index: number, asset: Asset) => {
     const newAssets = [...assets];
@@ -55,7 +42,7 @@ export function AddAssets() {
   };
 
   return (
-    <ExampleBox error={errorMessage}>
+    <ExampleBox error={error || errorConnecting}>
       <Box.Stack css={styles.wrapper}>
         {assets.map((asset, index) => {
           const isLast = index === assets.length - 1;
@@ -172,9 +159,9 @@ export function AddAssets() {
         </Button>
         <Box>
           <Button
-            onPress={() => handleAddAsset(assets)}
-            isLoading={isSingingMessage}
-            isDisabled={isSingingMessage || !fuel}
+            onPress={() => handleAddAssets(assets)}
+            isLoading={isLoading}
+            isDisabled={isLoading || !fuel}
           >
             Add Assets
           </Button>

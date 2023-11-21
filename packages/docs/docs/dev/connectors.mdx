@@ -3,78 +3,75 @@ title: Wallet Connectors
 category: For Developers
 ---
 
-# Wallet Connectors
+# Fuel Wallet Connectors
 
-A Wallet Connector is an interface to integrate with third-party wallets on the Fuel Ecosystem. It exposes all currently installed wallets in a unified manner
-via `window.fuel`.
+Fuel Wallet Connectors are a interface provided by Wallet developers to allow, you DApp to integrate with specific Wallets.
 
-<Examples.Connectors />
+You can learn more about how Fuel Wallet Connectors work, by reading the [Fuel Wallet Connectors](https://github.com/FuelLabs/fuels-wallet/wiki/Fuel-Wallet-Connectors) spec.
 
-## Methods
+## Setup Fuel Wallet Connectors
 
-### Listing connectors
-
-To list all available connectors you can use the `listConnectors()` method.
+The Fuel Wallet SDK allows you to provide a set of connectors, when creating a new instance.
+By default if you don't provide any connectors, the SDK will use the default connectors, `FuelWalletConnector` and `FueletWalletConnector`.
 
 <CodeImport
-  file="../../examples/Connectors.tsx"
-  commentBlock="listConnectors"
+  file="../../examples/connectors/ListConnectors.tsx"
+  commentBlock="createInstance"
 />
 
-### Selecting connector
+## Listing Connectors
 
-To select a different Wallet Connector use the `selectConnector(connectorName: string)` method.
+When working with mutiple connectors you should allow users to select the Connectors he want to use for interacting with your DApp.
+Once the `connectors()` method is called the Fuel Wallet SDK, will query informations from the connectors to allow you to know,
+waht connectors are installed.
+
+We also recommend to use the `connectors` listener on places that will use the `connectors` method as the availability can change.
 
 <CodeImport
-  file="../../examples/Connectors.tsx"
+  file="../../examples/connectors/ListConnectors.tsx"
+  commentBlock="listConnectors"
+/>
+<Examples.ListConnectors />
+
+## Selecting Connector
+
+Once you have a list of connectors, you can allow the user to select the connector he want to use. By using the methoid `selectConnect`.
+If the connector is not installed, the SDK will return false.
+
+<CodeImport
+  file="../../examples/connectors/SelectConnector.tsx"
   commentBlock="selectConnector"
 />
 
-## Events
+### Interacting with the selected connector
 
-### CurrentConnector
-
-This event is triggered when the Current Connector is updated. The callback function receives the `FuelWalletConnector` object.
+Once you have selected a connector, you can interact with it using all the available methods.
 
 <CodeImport
-  file="../../examples/Connectors.tsx"
-  commentBlock="eventCurrentConnector"
+  file="../../examples/connectors/SelectConnector.tsx"
+  commentBlock="connect"
 />
 
-### Connectors
+<Examples.SelectConnector />
 
-This event is triggered when the Connectors list is updated. The callback function receives the list of connectors, `Array<FuelWalletConnector>`.
+## With React
+
+### Connectors UI
+
+When using the react application you can use the Connectors UI provided by react package.
+
+<Examples.ConnectorUIHook />
+
+You can see the full a DApp example on the [examples](https://github.com/FuelLabs/fuels-wallet/tree/master/examples) folder.
+
+### Only hooks
+
+If you prefer to build your own UI for the connectors you can achive the experience using
+the hooks `useConnect` and `useConnectors`.
 
 <CodeImport
-  file="../../examples/Connectors.tsx"
-  commentBlock="eventConnectors"
+  file="../../examples/connectors/hooks/SelectConnectorHook.tsx"
+  commentBlock="useConnectors"
 />
 
-## For Wallet Developers
-
-Third-party wallets developed by the community can use the Wallet Connector to integrate with the current `fuel` instance on the window, enabling a better experience for
-developers and users.
-
-### Creating a Wallet Connector
-
-Inside `pageScript.ts` you can call the method `createConnector` instead of creating a new object on the window. This method will add your Connector to the current,
-`window.fuel` element.
-
-```ts
-import { createConnector } from '@fuel-wallet/sdk';
-
-createConnector({ name: 'Wallet Name' });
-```
-
-If you are using our Communication SDK [Content Page Script](https://developer.chrome.com/docs/extensions/mv3/content_scripts/) import `ContentProxyConnection` and pass the name of Wallet Extension.
-
-> Otherwise, remember to filter events by the ones that have your Wallet Connector Name as the target.
-
-```ts
-import { ContentProxyConnection } from '@fuel-wallet/sdk';
-
-// Start the content page script with the current Wallet Name
-ContentProxyConnection.start('Wallet Name');
-
-// ...pageScript.ts logic for page script injection
-```
+<Examples.SelectConnectorHook />

@@ -5,62 +5,99 @@ category: For Developers
 
 # Connecting
 
+## Checking if a Connector is available
+
+Before doing others actions the Application can check if the user has a Wallet installed.
+This is not required but it's a good practice to provide a better experience to the user.
+
+<CodeImport
+  file="../../examples/connecting/CheckWallet.tsx"
+  commentBlock="checkWallet"
+/>
+
+As a user can install a wallet, you can listen for changes on the status of the `currentConnector`.
+
+<CodeImport
+  file="../../examples/connecting/CheckWallet.tsx"
+  commentBlock="watchWallet"
+/>
+
+<Examples.CheckWallet />
+
+You can learn more about connectors and how they work to allow mutiple wallet's [here](./connectors)
+
 ## Requesting a Connection
 
-Before interacting with the wallet, you need to request a connection, which will authorize your application to execute other actions. You can do this by calling the `connect()` method on the `window.fuel` object.
+Before any actions from the user starts the user needs to authorize the connection this is done by calling the method `connect()`. Which will start the connection flow in the user's Wallet,
+if the user has more Accounts them what is available to the current connection.
 
-<CodeImport file="../../examples/Connect.tsx" commentBlock="connect" />
-
-To disconnect, use the `disconnect()` method.
-
-<CodeImport file="../../examples/Connect.tsx" commentBlock="disconnect" />
+<CodeImport
+  file="../../examples/connecting/Connect.tsx"
+  commentBlock="connect"
+/>
 
 <Examples.Connect />
 
-## Checking for a Connection
+## Checking connection state
 
 To check if the user's wallet is already connected, you can use the `isConnected()` method.
 
-{/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="isConnected" /> */}
-
-<Examples.IsConnected />
-
-## Listening to Connection Events
-
-The `connect()` method returns a promise. If you prefer to do it in an async way, you can use `fuel.on('connection', () => void)` to
-listen for changes in the connection.
-
 <CodeImport
-  file="../../src/hooks/useIsConnected.tsx"
-  commentBlock="eventConnection"
+  file="../../examples/connecting/CheckConnection.tsx"
+  commentBlock="checkConnection"
 />
 
-<Examples.Events.Connection />
+<Examples.CheckConnection />
 
-## With React
+## Watching connection state
 
-In a React app, you can use the `useIsConnected` hook below to check if the user's wallet is connected.
+As a user can add or remove a connection, directly inside the wallet. We also recommend
+to your application to also listen for the connection state changes, by using the event listener.
 
-```ts
-import { useIsConnected } from '@fuel-wallet/react';
-// ...
-const { isConnected } = useIsConnected();
-```
+<CodeImport
+  file="../../examples/connecting/CheckConnection.tsx"
+  commentBlock="watchConnection"
+/>
 
-You can import the `useConnect` hook to access the `connect` function and request a connection.
+## Removing connection
 
-```tsx
-import { useConnect } from '@fuel-wallet/react';
-// ...
-const { connect } = useConnect();
-await connect();
-```
+In some cases a application may want to provide a experience for the user to remove the connection.
+in this cases you can use the `disconnect()` method.
 
-To disconnect, use the `useDisconnect()` hook.
+<CodeImport
+  file="../../examples/connecting/Disconnect.tsx"
+  commentBlock="disconnect"
+/>
 
-```tsx
-import { useDisconnect } from '@fuel-wallet/react';
-// ...
-const { disconnect } = useDisconnect();
-await disconnect();
-```
+<Examples.Disconnect />
+
+## Using React Hooks
+
+### Requesting a Connection
+
+In React Application you can levarage our ready to use hooks, that include tracking of events.
+
+<CodeImport
+  file="../../examples/connecting/hooks/ConnectHook.tsx"
+  commentBlock="connect"
+/>
+
+<Examples.ConnectHook />
+
+### Removing connection
+
+<CodeImport
+  file="../../examples/connecting/hooks/DisconnectHook.tsx"
+  commentBlock="disconnect"
+/>
+
+<Examples.DisconnectHook />
+
+### Checking connection state
+
+All hooks implement validations to ensure the state is sync, using the methods and events available from the SDK.
+
+<CodeImport
+  file="../../examples/connecting/hooks/ConnectHook.tsx"
+  commentBlock="checkConnection"
+/>

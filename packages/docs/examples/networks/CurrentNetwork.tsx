@@ -1,34 +1,31 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Button, Box, Tag, Text } from '@fuel-ui/react';
+import { useFuel, useIsConnected } from '@fuel-wallet/react';
 import { useState } from 'react';
 
-import type { FuelProviderConfig } from '../../types/src';
-import { ExampleBox } from '../src/components/ExampleBox';
-import { useFuel } from '../src/hooks/useFuel';
-import { useIsConnected } from '../src/hooks/useIsConnected';
-import { useLoading } from '../src/hooks/useLoading';
+import type { FuelProviderConfig } from '../../../types/src';
+import { ExampleBox } from '../../src/components/ExampleBox';
+import { useLoading } from '../../src/hooks/useLoading';
 
-export function Network() {
-  const [fuel, notDetected] = useFuel();
-  const [isConnected] = useIsConnected();
+export function CurrentNetwork() {
+  const { fuel } = useFuel();
+  const { isConnected } = useIsConnected();
   const [network, setNetwork] = useState<FuelProviderConfig>();
   const [handleGetNetwork, isLoadingNetwork, errorGetNetwork] = useLoading(
     async () => {
       if (!isConnected) await fuel.connect();
       console.log('Request the current network');
-      /* example:start */
+      /* currentNetwork:start */
       const networkInfo = await fuel.currentNetwork();
       console.log('Network ', networkInfo);
-      /* example:end */
+      /* currentNetwork:end */
       setNetwork(networkInfo);
     }
   );
 
-  const errorMessage = errorGetNetwork || notDetected;
-
   return (
-    <ExampleBox error={errorMessage}>
+    <ExampleBox error={errorGetNetwork}>
       <Box.Stack css={styles.root}>
         <Button
           onPress={handleGetNetwork}
