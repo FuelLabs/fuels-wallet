@@ -80,7 +80,8 @@ jobs:
           
   docs:
     name: Docs
-    uses: FuelLabs/github-actions/.github/workflows/next-docs.yml@master
+    uses: FuelLabs/github-actions/.github/workflows/next-docs.yml@sarah/spell-check
     with:
       doc-folder-path: 'packages/docs/docs'
       src-folder-path: 'packages/docs/src'
+      spellcheck-config-path: 'packages/docs/.spellcheck.yml'
