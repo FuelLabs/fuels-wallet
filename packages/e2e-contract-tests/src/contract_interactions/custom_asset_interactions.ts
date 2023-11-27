@@ -24,10 +24,11 @@ export const mint = async ({
       value: wallet.address.toHexString(),
     },
   };
-  const result = await contract.functions
+  const invokeScope = await contract.functions
     .mint(recipient, subId, amount)
-    .txParams({ gasPrice: 1 })
-    .call();
+    .txParams({ gasPrice: 1 });
+
+  const result = await invokeScope.call();
   if (result.transactionResult.isStatusSuccess) {
     toast.success('Transaction successful.');
   }

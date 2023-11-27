@@ -1,5 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-console */
+
 import React from 'react';
+import { IS_DEVELOPMENT } from '~/config';
 
 import { ReportErrors } from '../../pages';
 import { ReportErrorService } from '../../services';
@@ -19,13 +21,17 @@ class ErrorBoundary extends React.Component<
   }
 
   async componentDidCatch(error: Error, reactError: React.ErrorInfo) {
-    await ReportErrorService.saveError({
-      error,
-      reactError: reactError as any,
-    });
-    this.setState({
-      hasError: true,
-    });
+    if (IS_DEVELOPMENT) {
+      console.error(error);
+      console.error(reactError);
+    }
+    // await ReportErrorService.saveError({
+    //   error,
+    //   reactError: reactError as any,
+    // });
+    // this.setState({
+    //   hasError: true,
+    // });
   }
 
   async componentDidMount() {

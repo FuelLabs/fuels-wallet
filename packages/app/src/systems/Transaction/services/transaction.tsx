@@ -22,7 +22,6 @@ import {
   assembleTransactionSummary,
   hexlify,
   processGqlReceipt,
-  arrayify,
 } from 'fuels';
 import { AccountService } from '~/systems/Account';
 import { isEth } from '~/systems/Asset';
@@ -31,7 +30,6 @@ import { NetworkService } from '~/systems/Network';
 
 import type { Transaction } from '../types';
 import { getAbiMap } from '../utils';
-import { calculateTotalFee } from '../utils/fee';
 
 export type TxInputs = {
   get: {
@@ -146,7 +144,6 @@ export class TxService {
 
   static async fetch({ txId, providerUrl = '' }: TxInputs['fetch']) {
     const provider = await Provider.create(providerUrl);
-    const { gasPerByte, gasPriceFactor } = await provider.getGasConfig();
     const txResult = await getTransactionSummary({ id: txId, provider });
     const txResponse = new TransactionResponse(txId, provider);
 
@@ -159,31 +156,31 @@ export class TxService {
       provider,
       abiMap,
     });
+    // const { gasPerByte, gasPriceFactor } = await provider.getGasConfig();
+    // // TODO: remove this once is fixed on the SDK
+    // // https://github.com/FuelLabs/fuels-ts/issues/1314
+    // let bytesUsed = 0;
+    // try {
+    //   const byteSize = arrayify(
+    //     txResultWithCalls.gqlTransaction.rawPayload
+    //   ).length;
+    //   const witnessesSize =
+    //     txResultWithCalls.transaction?.witnesses?.reduce((t, w) => {
+    //       return t + w.dataLength;
+    //     }, 0) || 0;
+    //   bytesUsed = byteSize - witnessesSize;
+    // } catch (err) {
+    //   bytesUsed = 0;
+    // }
 
-    // TODO: remove this once is fixed on the SDK
-    // https://github.com/FuelLabs/fuels-ts/issues/1314
-    let bytesUsed = 0;
-    try {
-      const byteSize = arrayify(
-        txResultWithCalls.gqlTransaction.rawPayload
-      ).length;
-      const witnessesSize =
-        txResultWithCalls.transaction?.witnesses?.reduce((t, w) => {
-          return t + w.dataLength;
-        }, 0) || 0;
-      bytesUsed = byteSize - witnessesSize;
-    } catch (err) {
-      bytesUsed = 0;
-    }
-
-    // gasPrice
-    txResultWithCalls.fee = await calculateTotalFee({
-      gasPerByte,
-      gasPriceFactor,
-      gasUsed: txResultWithCalls.gasUsed,
-      gasPrice: bn(txResultWithCalls.transaction.gasPrice),
-      bytesUsed: bn(bytesUsed),
-    });
+    // // gasPrice
+    // txResultWithCalls.fee = await calculateTotalFee({
+    //   gasPerByte,
+    //   gasPriceFactor,
+    //   gasUsed: txResultWithCalls.gasUsed,
+    //   gasPrice: bn(txResultWithCalls.transaction.gasPrice),
+    //   bytesUsed: bn(bytesUsed),
+    // });
 
     return { txResult: txResultWithCalls, txResponse };
   }
@@ -212,13 +209,13 @@ export class TxService {
       gasPriceFactor,
       maxInputs: bn(255),
     });
-    transactionSummary.fee = await calculateTotalFee({
-      gasPerByte,
-      gasPriceFactor,
-      gasPrice: transaction.gasPrice,
-      gasUsed: transactionSummary.gasUsed,
-      bytesUsed: bn(transactionBytes.length),
-    });
+    // transactionSummary.fee = await calculateTotalFee({
+    //   gasPerByte,
+    //   gasPriceFactor,
+    //   gasPrice: transaction.gasPrice,
+    //   gasUsed: transactionSummary.gasUsed,
+    //   bytesUsed: bn(transactionBytes.length),
+    // });
     return transactionSummary;
   }
 
@@ -274,13 +271,15 @@ export class TxService {
     const provider = await Provider.create(network!.url);
     const wallet = new WalletLockedCustom(account!.address, provider);
     const { gasLimit, gasPrice } = await getGasConfig(wallet.provider);
-    const params: ScriptTransactionRequestLike = { gasLimit, gasPrice };
+    const params: ScriptTransactionRequestLike = {
+      gasLimit: gasLimit.div(2),
+      gasPrice,
+    };
     const request = new ScriptTransactionRequest(params);
     request.addCoinOutput(wallet.address, bn(1), BaseAssetId);
     const { maxFee, requiredQuantities } =
       await provider.getTransactionCost(request);
     await wallet.fund(request, requiredQuantities, maxFee);
-
     const { txResult } = await TxService.simulateTransaction({
       transactionRequest: request,
       providerUrl: wallet.provider.url,

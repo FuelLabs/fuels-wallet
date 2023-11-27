@@ -92,7 +92,7 @@ export function SendSelect({
                 onChange={(value) => {
                   const amountValue = value || undefined;
                   form.setValue('amount', amountValue?.toString() || '');
-                  handlers.handleValidateAmount(amountValue);
+                  handlers.handleValidateAmount(bn(amountValue));
                 }}
               />
             )}

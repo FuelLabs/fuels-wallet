@@ -1,7 +1,6 @@
 import { AddressType } from '@fuel-wallet/types';
 import {
   ReceiptType,
-  TransactionType,
   OutputType,
   InputType,
   bn,
@@ -9,6 +8,7 @@ import {
   TransactionTypeName,
   OperationName,
   ChainName,
+  PolicyType,
 } from 'fuels';
 import type {
   AbiMap,
@@ -79,42 +79,36 @@ export const MOCK_TRANSACTION_CONTRACT_CALL_PARTS: {
   receiptScriptResult: TransactionResultScriptResultReceipt;
 } = {
   inputCoin: {
+    type: InputType.Coin,
+    txID: '0xf23da6e1d6a55d05f2a0ebbb90b6b161d9e70f1723680f610f08c98279bc6855',
+    outputIndex: 0,
+    owner: '0x3e7ddda4d0d3f8307ae5f1aed87623992c1c4decefec684936960775181b2302',
     amount: bn(4999989993),
     assetId:
       '0x0000000000000000000000000000000000000000000000000000000000000000',
+    txPointer: { blockHeight: 0, txIndex: 0 },
+    witnessIndex: 0,
     maturity: 0,
-    owner: '0x3e7ddda4d0d3f8307ae5f1aed87623992c1c4decefec684936960775181b2302',
+    predicateGasUsed: bn(0),
+    predicateLength: 0,
+    predicateDataLength: 0,
     predicate: '0x',
     predicateData: '0x',
-    predicateDataLength: 0,
-    predicateLength: 0,
-    predicateGasUsed: bn(0),
-    txPointer: { blockHeight: 0, txIndex: 0 },
-    type: InputType.Coin,
-    utxoID: {
-      transactionId:
-        '0xf23da6e1d6a55d05f2a0ebbb90b6b161d9e70f1723680f610f08c98279bc6855',
-      outputIndex: 1,
-    },
-    witnessIndex: 0,
   },
   inputContract: {
+    type: InputType.Contract,
+    txID: '0xf23da6e1d6a55d05f2a0ebbb90b6b161d9e70f1723680f610f08c98279bc6855',
+    outputIndex: 0,
     balanceRoot:
       '0x0000000000000000000000000000000000000000000000000000000000000000',
-    contractID:
-      '0x0a98320d39c03337401a4e46263972a9af6ce69ec2f35a5420b1bd35784c74b1',
     stateRoot:
       '0x0000000000000000000000000000000000000000000000000000000000000000',
     txPointer: {
       blockHeight: 0,
       txIndex: 0,
     },
-    type: InputType.Contract,
-    utxoID: {
-      outputIndex: 0,
-      transactionId:
-        '0xf23da6e1d6a55d05f2a0ebbb90b6b161d9e70f1723680f610f08c98279bc6855',
-    },
+    contractID:
+      '0x0a98320d39c03337401a4e46263972a9af6ce69ec2f35a5420b1bd35784c74b1',
   },
   outputContract: {
     type: OutputType.Contract,
@@ -198,7 +192,13 @@ const thirtyFourDaysAgo = dateToTai64(
 export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
   transaction: {
     gasLimit: bn(100000000),
-    gasPrice: bn(1),
+    policies: [
+      {
+        type: PolicyType.GasPrice,
+        data: bn(1),
+      },
+    ],
+    policyTypes: 1,
     inputsCount: 3,
     inputs: [
       MOCK_TRANSACTION_CONTRACT_CALL_PARTS.inputContract,
@@ -218,7 +218,7 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
       '0x00000000000000010a98320d39c03337401a4e46263972a9af6ce69ec2f35a5420b1bd35784c74b1000000002b85955300000000000000000000000000000000000000000000000300000000000000010000000005f5e1000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
     scriptDataLength: 720,
     scriptLength: 3372,
-    type: TransactionType.Script,
+    type: 0, // TransactionType.Script,
   },
   id: '0x18617ccc580478214175c4daba11903df93a66a94aada773e80411ed06b6ade7',
   operations: [
@@ -313,11 +313,8 @@ export const MOCK_TRANSACTION_CREATE_CONTRACT_PARTS: {
 } = {
   inputCoin: {
     type: InputType.Coin,
-    utxoID: {
-      transactionId:
-        '0x1501d55926c33878ec8c02f1cf57e0b1f7d0617685dcd14109fbe0b0c228aebd',
-      outputIndex: 1,
-    },
+    txID: '0x1501d55926c33878ec8c02f1cf57e0b1f7d0617685dcd14109fbe0b0c228aebd',
+    outputIndex: 1,
     owner: '0x3e7ddda4d0d3f8307ae5f1aed87623992c1c4decefec684936960775181b2302',
     amount: bn(4999989999),
     assetId:
@@ -349,10 +346,16 @@ export const MOCK_TRANSACTION_CREATE_CONTRACT_PARTS: {
 
 export const MOCK_TRANSACTION_CREATE_CONTRACT: MockTransaction = {
   transaction: {
-    type: TransactionType.Create,
-    gasPrice: bn(1),
+    type: 1, // TransactionType.Create,
+    policies: [
+      {
+        type: PolicyType.GasPrice,
+        data: bn(1),
+      },
+    ],
+    policyTypes: 1,
     gasLimit: bn(100000000),
-    maturity: 0,
+    // maturity: 0,
     bytecodeLength: 65,
     bytecodeWitnessIndex: 0,
     storageSlotsCount: 1,
@@ -431,7 +434,7 @@ export const MOCK_TRANSACTION_MINT_PARTS: {
 
 export const MOCK_TRANSACTION_MINT: MockTransaction = {
   transaction: {
-    type: TransactionType.Mint,
+    type: 2, // TransactionType.Mint,
     outputsCount: 1,
     outputs: [MOCK_TRANSACTION_MINT_PARTS.outputCoin],
     txPointer: { blockHeight: 417311, txIndex: 0 },
@@ -480,11 +483,8 @@ export const MOCK_TRANSACTION_TRANSFER_PARTS: {
 } = {
   inputCoin: {
     type: InputType.Coin,
-    utxoID: {
-      transactionId:
-        '0x0dbd3bd53580b647a74ca5825b5b70a44b9b780e8fc6fa40faa080f0da971ec4',
-      outputIndex: 0,
-    },
+    txID: '0x0dbd3bd53580b647a74ca5825b5b70a44b9b780e8fc6fa40faa080f0da971ec4',
+    outputIndex: 0,
     owner: '0x06300e686a5511c7ba0399fc68dcbe0ca2d8f54f7e6afea73c505dd3bcacf33b',
     amount: bn('500000000'),
     assetId:
@@ -546,9 +546,14 @@ export const MOCK_TRANSACTION_TRANSFER_PARTS: {
 export const MOCK_TRANSACTION_TRANSFER: MockTransaction = {
   transaction: {
     type: 0,
-    gasPrice: bn(1),
+    policies: [
+      {
+        type: PolicyType.GasPrice,
+        data: bn(1),
+      },
+    ],
+    policyTypes: 1,
     gasLimit: bn(100000000),
-    maturity: 0,
     scriptLength: 4,
     scriptDataLength: 0,
     inputsCount: 2,
@@ -644,11 +649,8 @@ export const MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS: {
 } = {
   inputCoin: {
     type: InputType.Coin,
-    utxoID: {
-      transactionId:
-        '0x4590aa02d0b0a275858903d8eec5dd25f647eb7f46e27504c16c115b6f44da2e',
-      outputIndex: 1,
-    },
+    txID: '0x4590aa02d0b0a275858903d8eec5dd25f647eb7f46e27504c16c115b6f44da2e',
+    outputIndex: 1,
     owner: '0xba8de454d50b4a2e53268849e5442d516a9715bc9c2db5f230d586bafa4ed666',
     amount: bn.parseUnits('0.008'),
     assetId:
@@ -700,9 +702,15 @@ export const MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS: {
 export const MOCK_TRANSACTION_WITHDRAW_FROM_FUEL: MockTransaction = {
   transaction: {
     type: 0,
-    gasPrice: bn(0),
+    policies: [
+      {
+        type: PolicyType.GasPrice,
+        data: bn(1),
+      },
+    ],
+    policyTypes: 1,
     gasLimit: bn(100000000),
-    maturity: 0,
+    // maturity: 0,
     inputs: [MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.inputCoin],
     outputs: [MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.outputChange],
     witnesses: [{ data: '0x', dataLength: 0 }],
