@@ -199,23 +199,21 @@ export class TxService {
       utxoValidation: false,
     });
     const receipts = gqlReceipts.map(processGqlReceipt);
-    const { gasPerByte, gasPriceFactor } = provider.getGasConfig();
+    const {
+      consensusParameters: { gasPerByte, gasPriceFactor, maxInputs, gasCosts },
+    } = provider.getChain();
+
     const transactionSummary = assembleTransactionSummary<TTransactionType>({
-      receipts,
+      gasCosts,
       transaction,
       transactionBytes,
       abiMap,
+      receipts,
       gasPerByte,
       gasPriceFactor,
-      maxInputs: bn(255),
+      maxInputs,
     });
-    // transactionSummary.fee = await calculateTotalFee({
-    //   gasPerByte,
-    //   gasPriceFactor,
-    //   gasPrice: transaction.gasPrice,
-    //   gasUsed: transactionSummary.gasUsed,
-    //   bytesUsed: bn(transactionBytes.length),
-    // });
+
     return transactionSummary;
   }
 

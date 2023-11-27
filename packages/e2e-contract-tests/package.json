@@ -6,7 +6,7 @@
     "dev:e2e-contracts": "vite",
     "build:web": "vite build",
     "ts:check": "tsc --noEmit",
-    "build:contracts": "pnpm exec fuels typegen -i ./contracts/custom_asset/out/debug/*-abi.json -o ./src/contracts",
+    "deploy:contracts": "sh ./scripts/deploy.sh",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },

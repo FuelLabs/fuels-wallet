@@ -1,13 +1,13 @@
 import type { FuelWalletLocked } from '@fuel-wallet/sdk';
 import type { BigNumberish } from 'fuels';
-import { BaseAssetId } from 'fuels';
+import { bn, BaseAssetId } from 'fuels';
 import toast from 'react-hot-toast';
 
-import { VITE_CONTRACT_ID, VITE_EXTERNAL_CONTRACT_ID } from '../config';
+import { MAIN_CONTRACT_ID, EXTERNAL_CONTRACT_ID } from '../config';
 import { CustomAssetAbi__factory } from '../contracts';
 import type { IdentityInput } from '../contracts/CustomAssetAbi';
 
-const CONTRACT_ID = VITE_CONTRACT_ID;
+const TX_PARAMS = { gasPrice: 1, gasLimit: bn(1_000_000) };
 
 export const mint = async ({
   wallet,
@@ -18,7 +18,7 @@ export const mint = async ({
   amount: BigNumberish;
   subId: string;
 }) => {
-  const contract = CustomAssetAbi__factory.connect(CONTRACT_ID, wallet);
+  const contract = CustomAssetAbi__factory.connect(MAIN_CONTRACT_ID, wallet);
   const recipient: IdentityInput = {
     Address: {
       value: wallet.address.toHexString(),
@@ -26,7 +26,7 @@ export const mint = async ({
   };
   const invokeScope = await contract.functions
     .mint(recipient, subId, amount)
-    .txParams({ gasPrice: 1 });
+    .txParams(TX_PARAMS);
 
   const result = await invokeScope.call();
   if (result.transactionResult.isStatusSuccess) {
@@ -43,10 +43,11 @@ export const deposit = async ({
   amount: BigNumberish;
   assetId: string;
 }) => {
-  const contract = CustomAssetAbi__factory.connect(CONTRACT_ID, wallet);
+  const contract = CustomAssetAbi__factory.connect(MAIN_CONTRACT_ID, wallet);
   const result = await contract.functions
     .deposit()
     .callParams({ forward: [amount, assetId] })
+    .txParams(TX_PARAMS)
     .call();
   if (result.transactionResult.isStatusSuccess) {
     toast.success('Transaction successful.');
@@ -62,10 +63,11 @@ export const depositHalf = async ({
   amount: BigNumberish;
   assetId: string;
 }) => {
-  const contract = CustomAssetAbi__factory.connect(CONTRACT_ID, wallet);
+  const contract = CustomAssetAbi__factory.connect(MAIN_CONTRACT_ID, wallet);
   const result = await contract.functions
     .deposit_half()
     .callParams({ forward: [amount, assetId] })
+    .txParams(TX_PARAMS)
     .call();
   if (result.transactionResult.isStatusSuccess) {
     toast.success('Transaction successful.');
@@ -83,7 +85,7 @@ export const depositHalfAndMint = async ({
   mintAmount: BigNumberish;
   assetId: string;
 }) => {
-  const contract = CustomAssetAbi__factory.connect(CONTRACT_ID, wallet);
+  const contract = CustomAssetAbi__factory.connect(MAIN_CONTRACT_ID, wallet);
   const recipient: IdentityInput = {
     Address: {
       value: wallet.address.toHexString(),
@@ -92,6 +94,7 @@ export const depositHalfAndMint = async ({
   const result = await contract.functions
     .deposit_half_and_mint(recipient, BaseAssetId, mintAmount)
     .callParams({ forward: [forwardAmount, assetId] })
+    .txParams(TX_PARAMS)
     .call();
   if (result.transactionResult.isStatusSuccess) {
     toast.success('Transaction successful.');
@@ -109,7 +112,7 @@ export const depositHalfAndExternalMint = async ({
   mintAmount: BigNumberish;
   assetId: string;
 }) => {
-  const contract = CustomAssetAbi__factory.connect(CONTRACT_ID, wallet);
+  const contract = CustomAssetAbi__factory.connect(MAIN_CONTRACT_ID, wallet);
   const recipient: IdentityInput = {
     Address: {
       value: wallet.address.toHexString(),
@@ -117,7 +120,7 @@ export const depositHalfAndExternalMint = async ({
   };
 
   const externalContract = CustomAssetAbi__factory.connect(
-    VITE_EXTERNAL_CONTRACT_ID,
+    EXTERNAL_CONTRACT_ID,
     wallet
   );
   const result = await contract.functions
@@ -129,6 +132,7 @@ export const depositHalfAndExternalMint = async ({
     )
     .callParams({ forward: [forwardAmount, assetId] })
     .addContracts([externalContract])
+    .txParams(TX_PARAMS)
     .call();
   if (result.transactionResult.isStatusSuccess) {
     toast.success('Transaction successful.');
@@ -146,7 +150,7 @@ export const depositAndMintMultiCall = async ({
   mintAmount: BigNumberish;
   assetId: string;
 }) => {
-  const contract = CustomAssetAbi__factory.connect(CONTRACT_ID, wallet);
+  const contract = CustomAssetAbi__factory.connect(MAIN_CONTRACT_ID, wallet);
   const recipient: IdentityInput = {
     Address: {
       value: wallet.address.toHexString(),
@@ -160,6 +164,7 @@ export const depositAndMintMultiCall = async ({
         .callParams({ forward: [forwardAmount, assetId] }),
       contract.functions.mint(recipient, BaseAssetId, mintAmount),
     ])
+    .txParams(TX_PARAMS)
     .call();
   if (result.transactionResult.isStatusSuccess) {
     toast.success('Transaction successful.');

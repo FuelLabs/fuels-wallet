@@ -1,6 +1,17 @@
 contract;
 
-use token::{_burn, _decimals, _mint, _name, _symbol, _total_assets, _total_supply};
+use token::{
+    mint::{
+        _mint, _burn,
+    },
+    base::{
+        _decimals,
+        _name,
+        _symbol,
+        _total_assets,
+        _total_supply,
+    }
+};
 use src_20::SRC20;
 use src_3::SRC3;
 use std::{

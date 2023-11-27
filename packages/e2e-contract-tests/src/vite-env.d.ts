@@ -1,8 +1,8 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_CONTRACT_ID: string;
-  readonly VITE_EXTERNAL_CONTRACT_ID: string;
+  readonly MAIN_CONTRACT_ID: string;
+  readonly EXTERNAL_CONTRACT_ID: string;
 }
 
 interface ImportMeta {

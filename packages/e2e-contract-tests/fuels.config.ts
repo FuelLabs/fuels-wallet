@@ -1,4 +1,5 @@
-import { createConfig, ZeroBytes32 } from 'fuels';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { createConfig } from 'fuels';
 
 export default createConfig({
   output: './src/contracts',
@@ -8,9 +9,18 @@ export default createConfig({
   privateKey:
     '0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298',
   providerUrl: 'http://localhost:4001/graphql',
-  deployConfig: {
-    salt: process.env.SALT || ZeroBytes32,
+  onSuccess: (event) => {
+    if (event.type === 'deploy') {
+      const contractIdsPath = './src/contract-ids.json';
+      let contractIds = {};
+      if (!existsSync(contractIdsPath)) {
+        contractIds = JSON.parse(
+          readFileSync(contractIdsPath, 'utf8').toString()
+        );
+      }
+      contractIds[process.env.CONTRACT_NAME || 'contract'] =
+        event.data[0].contractId;
+      writeFileSync(contractIdsPath, JSON.stringify(contractIds));
+    }
   },
 });
-
-// ?  ZeroBytes32 ? '0x0000000000000000000000000000000000000000000000000000000000000001'

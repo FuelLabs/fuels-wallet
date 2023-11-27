@@ -1,19 +1,18 @@
 import { Toaster } from 'react-hot-toast';
 
-import { Header, MintAssetCard, Providers } from './components';
-// import {
-//   ForwardEthCard,
-//   Header,
-//   MintAssetCard,
-//   Providers,
-//   DepositHalfEthCard,
-//   ForwardCustomAssetCard,
-//   ForwardHalfAndMintCard,
-//   ForwardHalfAndExternalMintCard,
-//   ForwardHalfCustomAssetCard,
-//   DepositAndMintMultiCalls,
-//   AssetConfigurationCard,
-// } from './components';
+import {
+  ForwardEthCard,
+  Header,
+  MintAssetCard,
+  Providers,
+  DepositHalfEthCard,
+  ForwardCustomAssetCard,
+  ForwardHalfAndMintCard,
+  ForwardHalfAndExternalMintCard,
+  ForwardHalfCustomAssetCard,
+  DepositAndMintMultiCalls,
+  AssetConfigurationCard,
+} from './components';
 
 function App() {
   return (
@@ -21,14 +20,14 @@ function App() {
       <Header />
       <div>
         <MintAssetCard />
-        {/* <ForwardEthCard />
+        <ForwardEthCard />
         <DepositHalfEthCard />
         <ForwardCustomAssetCard />
         <ForwardHalfAndExternalMintCard />
         <ForwardHalfCustomAssetCard />
         <ForwardHalfAndMintCard />
         <DepositAndMintMultiCalls />
-        <AssetConfigurationCard /> */}
+        <AssetConfigurationCard />
       </div>
       <Toaster />
     </Providers>
