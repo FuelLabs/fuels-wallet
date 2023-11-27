@@ -1,12 +1,12 @@
-// import { TransactionType } from 'fuels';
+import { TransactionType } from 'fuels';
 
 export const getTransactionTypeText = (type?: number) => {
   switch (type) {
-    case 0: // TransactionType.Script:
+    case TransactionType.Script:
       return 'Script';
-    case 1: // TransactionType.Create:
+    case TransactionType.Create:
       return 'Create';
-    case 2: // TransactionType.Mint:
+    case TransactionType.Mint:
       return 'Mint';
     default:
       return '';

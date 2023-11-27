@@ -1,5 +1,11 @@
 import type { WalletUnlocked } from 'fuels';
-import { bn, ScriptTransactionRequest, Wallet, Provider } from 'fuels';
+import {
+  bn,
+  ScriptTransactionRequest,
+  Wallet,
+  Provider,
+  TransactionType,
+} from 'fuels';
 import { VITE_FUEL_PROVIDER_URL } from '~/config';
 
 import { TxService } from './transaction';
@@ -36,7 +42,7 @@ describe('TxService', () => {
     expect(txs.length).toBe(0);
     await TxService.add({
       data: transactionRequest,
-      type: 0, // TransactionType.Script,
+      type: TransactionType.Script,
     });
     txs = await TxService.getAll();
     expect(txs.length).toBe(1);
@@ -47,7 +53,7 @@ describe('TxService', () => {
     expect(txs.length).toBe(0);
     const tx = await TxService.add({
       data: transactionRequest,
-      type: 0, // TransactionType.Script,
+      type: TransactionType.Script,
     });
     if (tx) {
       await TxService.remove({ id: tx.id! });
