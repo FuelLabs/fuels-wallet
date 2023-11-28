@@ -7,7 +7,7 @@ category: For Developers
 
 ## Transferring assets
 
-To transfer an amount to other address, use the `wallet.transfer` method and pass in the address you want to send to and the amount to send.
+To transfer a specific amount to another address, use the `wallet.transfer()` method.
 
 <CodeImport
   file="../../examples/assets/TransferAssets.tsx"
@@ -17,14 +17,14 @@ To transfer an amount to other address, use the `wallet.transfer` method and pas
 
 ## List Assets in the Wallet
 
-You can list the assets in the wallet using `assets()`.
+You can list the assets added in the wallet by using the `assets()` method.
 
 <CodeImport file="../../examples/assets/ListAssets.tsx" commentBlock="assets" />
 <Examples.ListAssets />
 
 ## Adding custom Assets
 
-To add custom Assets, use the `useAsset` for single `Asset` or `addAssets` multiple assets.
+To add custom assets, use the `useAssets()` method to add a single asset, or the `addAssets()` method to add multiple assets.
 
 <CodeImport
   file="../../examples/assets/AddAssets.tsx"
@@ -36,7 +36,7 @@ To add custom Assets, use the `useAsset` for single `Asset` or `addAssets` multi
 
 ### Transferring assets
 
-To transfer an amount to other address, use the `wallet.transfer` method and pass in the address you want to send to and the amount to send.
+To transfer an amount to other address, use the `wallet.transfer()` method and pass in the address you want to send to and the amount to send as well as the assetId.
 
 <CodeImport
   file="../../examples/assets/hooks/TransferAssetsHook.tsx"
@@ -46,7 +46,7 @@ To transfer an amount to other address, use the `wallet.transfer` method and pas
 
 ### List Assets
 
-You can keep track of the assets in the users wallet by using the hook `useAssets`.
+You can keep track of the assets in the users wallet by using the hook `useAssets()`.
 
 <CodeImport
   file="../../examples/assets/hooks/ListAssetsHook.tsx"
@@ -56,7 +56,7 @@ You can keep track of the assets in the users wallet by using the hook `useAsset
 
 ### Add assets
 
-You can keep track of the assets in the users wallet by using the hook `useAddAssets`.
+You can keep track of the assets in the users wallet by using the hook `useAddAssets()`.
 
 <CodeImport
   file="../../examples/assets/hooks/AddAssetsHook.tsx"

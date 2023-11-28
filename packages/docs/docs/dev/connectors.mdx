@@ -5,14 +5,13 @@ category: For Developers
 
 # Fuel Wallet Connectors
 
-Fuel Wallet Connectors are a interface provided by Wallet developers to allow, you DApp to integrate with specific Wallets.
+Fuel Wallet Connectors are an interface provided by wallet developers to allow your DApp to integrate with specific wallets.
 
 You can learn more about how Fuel Wallet Connectors work, by reading the [Fuel Wallet Connectors](https://github.com/FuelLabs/fuels-wallet/wiki/Fuel-Wallet-Connectors) spec.
 
 ## Setup Fuel Wallet Connectors
 
-The Fuel Wallet SDK allows you to provide a set of connectors, when creating a new instance.
-By default if you don't provide any connectors, the SDK will use the default connectors, `FuelWalletConnector` and `FueletWalletConnector`.
+The Fuel Wallet SDK enables you to include a set of connectors when creating a new instance. If you don't provide any connectors, the SDK will default to using the `FuelWalletConnector()` and `FueletWalletConnector()` methods.
 
 <CodeImport
   file="../../examples/connectors/ListConnectors.tsx"
@@ -21,11 +20,9 @@ By default if you don't provide any connectors, the SDK will use the default con
 
 ## Listing Connectors
 
-When working with mutiple connectors you should allow users to select the Connectors he want to use for interacting with your DApp.
-Once the `connectors()` method is called the Fuel Wallet SDK, will query informations from the connectors to allow you to know,
-waht connectors are installed.
+When working with multiple connectors, you should enable users to select the connectors they wish to use for interacting with your DApp. Once the `connectors()` method is called, the Fuel Wallet SDK will query information from the connectors, allowing you to determine which connectors are installed.
 
-We also recommend to use the `connectors` listener on places that will use the `connectors` method as the availability can change.
+We also recommend to use the `connectors` listener on places that will use the `connectors()` method as the availability can change.
 
 <CodeImport
   file="../../examples/connectors/ListConnectors.tsx"
@@ -35,8 +32,7 @@ We also recommend to use the `connectors` listener on places that will use the `
 
 ## Selecting Connector
 
-Once you have a list of connectors, you can allow the user to select the connector he want to use. By using the methoid `selectConnect`.
-If the connector is not installed, the SDK will return false.
+Once you have a list of connectors, you can enable the user to select the connector they wish to use by using the `selectConnect()` method. If the connector is not installed, the SDK will return false.
 
 <CodeImport
   file="../../examples/connectors/SelectConnector.tsx"
@@ -58,7 +54,7 @@ Once you have selected a connector, you can interact with it using all the avail
 
 ### Connectors UI
 
-When using the react application you can use the Connectors UI provided by react package.
+When using a React application, you can utilize the Connectors UI provided by the React package.
 
 <Examples.ConnectorUIHook />
 
@@ -67,7 +63,7 @@ You can see the full a DApp example on the [examples](https://github.com/FuelLab
 ### Only hooks
 
 If you prefer to build your own UI for the connectors you can achive the experience using
-the hooks `useConnect` and `useConnectors`.
+the hooks `useConnect()` and `useConnectors()`.
 
 <CodeImport
   file="../../examples/connectors/hooks/SelectConnectorHook.tsx"

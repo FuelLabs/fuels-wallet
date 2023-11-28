@@ -7,113 +7,113 @@ category: For Developers
 
 ## Methods
 
-### Listing connectors
+## Listing connectors
 
 `connectors(): Promise<Array<FuelConnector>>`<br />
 Return connectors with availability metadata.
 
-### Has connector
+## Has connector
 
 `hasConnector(connectorName?: string | FuelConnector): Promise<boolean>`<br />
-Check if any Connector is avialable or if a connector is provided check if it is available.
+Check if any connector is available or, if a connector is provided, check whether it is available.
 
-### Current connector
+## Current connector
 
 `currentConnector(): FuelConnector`<br />
 Return the current selected connector.
 
-### Get connector
+## Get connector
 
 `getConnector(connectorName: string): FuelConnector`<br />
 Return the connector with the given name.
 
-### Selecting connector
+## Selecting connector
 
 `selectConnector(connectorName: string): Promise<boolean>` <br />
 This method will check if the desired connector is installed. If it is not detected in 1 second, the method throws an error.
 
-### Version
+## Version
 
 `version(): Promise<string>`<br />
 Return the current version of the Wallet and Network supported.
 
-### Connect
+## Connect
 
 `connect(): Promise<boolean>`<br />
 Request permission to start a connection between the project and the wallet. Return the connection state.
 
-### Disconnect
+## Disconnect
 
 `disconnect(): Promise<boolean>`<br />
 Disconnect your project from the wallet. Return the connection state.
 
-### Get connection status
+## Get connection status
 
 `isConnected(): Promise<boolean>`<br />
 Return the state of the application connection.
 
-### List Accounts
+## List accounts
 
 `accounts(): Promise<Array<string>>`<br />
 Return the accounts authorized for the current connection.
 
-### Current Account
+## Current account
 
 `currentAccount(): Promise<string | null>`<br />
 Return the current account being used in the wallet application.
 If the account selected is not authorized for the connection, returns null.
 
-### List Networks
+## List networks
 
 `networks(): Promise<Array<Network>>`<br />
 Return the list of networks in the current wallet.
 
-### Current Network
+## Current network
 
 `currentNetwork(): Promise<Network>`<br />
 Return the current network being used in the wallet application.
 
-### Select Network
+## Select network
 
 `selectNetwork(url: string): Promise<boolean>`<br />
 Request the user to switch to a different network. Return true if success or false it fails.
 
-### Add Network
+## Add network
 
 `addNetwork(url: string): Promise<boolean>`<br />
 Request the user to add a new network. Return true if success or false it fails.
 
-### List Assets
+## List assets
 
 `assets(): Promise<Array<Asset>>`<br />
 Return the list of assets in the current wallet.
 
-### Add Asset
+## Add asset
 
 `addAsset(asset: Asset): Promise<boolean>`<br />
-Request the user to add a asset metadata to the wallet.
+Request the user to add metadata for an asset to the wallet.
 
-### Add Assets
+## Add assets
 
 `addAssets(asset: Asset[]): Promise<boolean>`<br />
-Request the user to add multiple assets metadata at once to the wallet.
+Request the user to add metadata for multiple assets to the wallet at once.
 
-### Get ABI
+## Get ABI
 
 `getABI(contractId: string): Promise<JsonAbi>`<br />
-Return ABI of contractId given or null if not found.
+Return the ABI of the given contractId, or null if not found.
 
-### Has ABI
+## Has ABI
 
 `hasABI(contractId: string): Promise<boolean>`<br />
-Return boolean if the ABI for contractId given is found.
+Return a boolean indicating if the ABI for the given contractId is found.
 
-### Add ABI
+## Add ABI
 
 `addAbi(abiMap: AbiMap): Promise<boolean>`<br />
-Add ABI to the users Wallet.
+Add the ABI to the user's wallet.
 
-### Request signature message
+## Request signature message
 
 `async signMessage(address: string, message: string): Promise<string>`<br />
 Request a message signature for one specific account
@@ -121,27 +121,27 @@ Request a message signature for one specific account
 ### Send transaction
 
 `async sendTransaction(address: string, transaction: TransactionRequestLike): Promise<string>`<br />
-Request the user specific account to send a transaction.
+Request a specific user account to send a transaction.
 
-### Get Wallet
+## Get Wallet
 
 `getWallet(address: string | AbstractAddress, provider?: FuelWalletProvider): Promise<FuelWalletLocked>`<br />
-Return a `FuelWalletLocked` instance, witch can be used for contract, transfers and other interactions.
+Return a `FuelWalletLocked` instance, which can be used for contracts, transfers, and other interactions.
 
-### Unsubscribe all
+## Unsubscribe all
 
 `unsubscribe(): void`<br />
-Remove all open listeners this is useful when you want to remove the Fuel instance and avoid memory leaks.
+Remove all open listeners. This is useful when you want to dispose of the Fuel instance and avoid memory leaks.
 
-### Destory
+## Clean
 
 `clean(): void`<br />
-Clean the storage from Fuel SDK. Used to keep track of selected connector.
+Clean the storage used by the Fuel SDK, which is utilized to keep track of the selected connector.
 
-### Destory
+## Destory
 
 `destroy(): void`<br />
-Removes all listeners and clean the storage.
+Removes all listeners and cleans the storage.
 
 ## Events
 

@@ -7,7 +7,7 @@ category: For Developers
 
 ## List user accounts
 
-Once the connection is authorized, you can list the user accounts using `accounts()`.
+Once the connection is authorized, you can list all the user accounts using `accounts()`.
 
 <CodeImport
   file="../../examples/accounts/Accounts.tsx"
@@ -16,9 +16,9 @@ Once the connection is authorized, you can list the user accounts using `account
 
 <Examples.ListAccounts />
 
-### Watch to Account Changes
+### Watch Account Changes
 
-To watch to accounts events, you can use the `accounts` event.
+To watch account events, you can use the `accounts` event.
 
 <CodeImport
   file="../../examples/accounts/Accounts.tsx"
@@ -38,9 +38,9 @@ If the return is `null` this means that the current account selected by the user
 
 <Examples.CurrentAccount />
 
-### Watch for Current Account Changes
+### Watch Current Account Changes
 
-To listen to current account events, you can use the `currentAccount` event.
+To monitor events related to the current account, utilize the `currentAccount` event. Receiving a `null` value from this event indicates that the user's currently selected account is not connected.
 If the event receive a `null` value this means that the current account selected by the user is not connected.
 
 <CodeImport
@@ -53,7 +53,7 @@ If the event receive a `null` value this means that the current account selected
 
 You can keep track of the current account when using React using the `useAccount` hook as shown below:
 
-### Connected Accounts
+### All Connected Accounts
 
 <CodeImport
   file="../../examples/accounts/hooks/AccountsHook.tsx"
