@@ -1,7 +1,7 @@
 import type { Asset } from '@fuel-wallet/sdk';
 import { useMutation } from '@tanstack/react-query';
 
-import { useFuel } from '../components';
+import { useFuel } from '../providers';
 import { MUTATION_KEYS } from '../utils';
 
 export const useAddAssets = () => {

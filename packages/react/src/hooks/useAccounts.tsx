@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useFuel } from '../components';
+import { useFuel } from '../providers';
 import { QUERY_KEYS } from '../utils';
 
 export const useAccounts = () => {
@@ -17,12 +17,12 @@ export const useAccounts = () => {
       }
     },
     {
-      enabled: !!fuel,
+      initialData: null,
     }
   );
 
   return {
-    accounts: data || undefined,
+    accounts: data,
     ...queryProps,
   };
 };

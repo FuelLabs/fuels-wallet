@@ -66,13 +66,13 @@ export function FuelEventsWatcher() {
     fuel.on(fuel.events.assets, onAssetsChange);
 
     return () => {
-      fuel.on(fuel.events.currentConnector, onCurrentConnectorChange);
+      fuel.off(fuel.events.currentConnector, onCurrentConnectorChange);
       fuel.off(fuel.events.currentAccount, onCurrentAccountChange);
       fuel.off(fuel.events.connectors, onConnectorsChange);
       fuel.off(fuel.events.connection, onConnectionChange);
       fuel.off(fuel.events.accounts, onAccountsChange);
       fuel.off(fuel.events.currentNetwork, onNetworkChange);
-      fuel.on(fuel.events.assets, onAssetsChange);
+      fuel.off(fuel.events.assets, onAssetsChange);
     };
   }, [fuel, fuelQueryClient]);
 
