@@ -11,13 +11,13 @@ export const useAccounts = () => {
     async () => {
       try {
         const accounts = await fuel.accounts();
-        return accounts || null;
+        return accounts || [];
       } catch (error: unknown) {
-        return null;
+        return [];
       }
     },
     {
-      initialData: null,
+      initialData: [],
     }
   );
 
