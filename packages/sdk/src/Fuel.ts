@@ -325,6 +325,7 @@ export class Fuel extends FuelConnector {
       if (options.emitEvents) {
         this.triggerConnectorEvents();
       }
+      return true;
     }
     return false;
   }
