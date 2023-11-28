@@ -8,7 +8,7 @@ export function AccountsHook() {
   const { connect, isLoading: isConnecting, error } = useConnect();
   const { isConnected } = useIsConnected();
   /* useAccounts:start */
-  const { accounts = [] } = useAccounts();
+  const { accounts } = useAccounts();
   /* useAccounts:end */
 
   return (

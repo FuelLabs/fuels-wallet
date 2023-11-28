@@ -25,13 +25,13 @@ export function ListAccounts() {
 
   useEffect(() => {
     /* watchAccounts:start */
-    function logCurrentAccount(accounts: string) {
+    function logAccounts(accounts: string) {
       console.log('Accounts ', accounts);
     }
-    fuel.on(fuel.events.currentAccount, logCurrentAccount);
+    fuel.on(fuel.events.accounts, logAccounts);
     /* watchAccounts:end */
     return () => {
-      fuel.off(fuel.events.currentAccount, logCurrentAccount);
+      fuel.off(fuel.events.accounts, logAccounts);
     };
   }, []);
 
