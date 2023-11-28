@@ -117,7 +117,7 @@ export const sendMachine = createMachine(
         async fetch() {
           const { txResult } = await TxService.createFakeTx();
           /**
-           * @todo: The TS-SDK not returns an accurate fee, because of this
+           * @todo: The TS-SDK doesn't return an accurate fee, because of this
            * we are multiplying by 2 the fee to avoid the error on the
            * validation of the transaction.
            */

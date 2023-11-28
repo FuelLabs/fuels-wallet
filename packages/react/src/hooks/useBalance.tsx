@@ -1,7 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-// should import BN because of this error: https://github.com/FuelLabs/fuels-ts/issues/1054
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { BytesLike, BN } from 'fuels';
+import type { BytesLike } from 'fuels';
 import { Address } from 'fuels';
 import { useEffect } from 'react';
 
@@ -35,6 +33,7 @@ export const useBalance = ({
       }
     },
     {
+      initialData: null,
       enabled: !!provider,
     }
   );
@@ -51,7 +50,7 @@ export const useBalance = ({
   }, []);
 
   return {
-    balance: query.data || undefined,
+    balance: query.data,
     ...query,
   };
 };
