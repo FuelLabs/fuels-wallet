@@ -4,7 +4,7 @@ import { Address } from 'fuels';
 import { useFuel } from '../providers';
 import { QUERY_KEYS } from '../utils';
 
-export const useWallet = (address?: string) => {
+export const useWallet = (address?: string | null) => {
   const { fuel } = useFuel();
 
   const { data, ...queryProps } = useQuery(
