@@ -1,15 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Text } from '@fuel-ui/react';
-import {
-  FuelProvider,
-  FuelConnectProvider,
-  useAccount,
-  useFuelConnect,
-} from '@fuel-wallet/react';
+import { FuelProvider, useAccount, useConnectUI } from '@fuel-wallet/react';
 import { useDarkMode } from 'storybook-dark-mode';
 
 export default {
-  component: FuelConnectProvider,
+  component: FuelProvider,
   title: 'Connect',
   parameters: {
     layout: 'fullscreen',
@@ -18,7 +13,7 @@ export default {
 
 const App = () => {
   const { account } = useAccount();
-  const { connect, isConnecting } = useFuelConnect();
+  const { connect, isConnecting } = useConnectUI();
 
   return (
     <>
@@ -35,9 +30,9 @@ export const Usage = () => {
   return (
     <Box css={styles.box}>
       <FuelProvider>
-        <FuelConnectProvider theme={isDark ? 'dark' : 'light'}>
+        <FuelProvider theme={isDark ? 'dark' : 'light'}>
           <App />
-        </FuelConnectProvider>
+        </FuelProvider>
       </FuelProvider>
     </Box>
   );

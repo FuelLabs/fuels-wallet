@@ -3,21 +3,18 @@ import { useQuery } from '@tanstack/react-query';
 import { useFuel } from '../providers';
 import { QUERY_KEYS } from '../utils';
 
-export const useConnectors = () => {
+export const useNetwork = () => {
   const { fuel } = useFuel();
 
-  const query = useQuery(
-    [QUERY_KEYS.connectorList],
+  const { data, ...queryProps } = useQuery(
+    [QUERY_KEYS.currentNetwork],
     async () => {
-      return fuel.connectors();
-    },
-    {
-      initialData: [],
+      return fuel.currentNetwork();
     }
   );
 
   return {
-    connectors: query.data,
-    ...query,
+    network: data,
+    ...queryProps,
   };
 };

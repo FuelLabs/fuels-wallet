@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
-import { BN, Provider, TransactionRequest } from 'fuels';
+import { BN, Provider, TransactionRequest, bn } from 'fuels';
 import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
 import { AccountService } from '~/systems/Account';
 import { FetchMachine, WalletLockedCustom } from '~/systems/Core';
@@ -116,7 +116,12 @@ export const sendMachine = createMachine(
         showError: false,
         async fetch() {
           const { txResult } = await TxService.createFakeTx();
-          return txResult.fee;
+          /**
+           * @todo: The TS-SDK doesn't return an accurate fee, because of this
+           * we are multiplying by 2 the fee to avoid the error on the
+           * validation of the transaction.
+           */
+          return bn(txResult.fee).mul(2);
         },
       }),
       createTransactionRequest: FetchMachine.create<

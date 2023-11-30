@@ -8,6 +8,7 @@ import {
   FuelConnectorEventTypes,
   FuelConnectorMethods,
 } from './api';
+import { defaultConnectors } from './connectors';
 import type {
   FuelConnectorEventsType,
   FuelStorage,
@@ -30,6 +31,7 @@ export type FuelConfig = {
   connectors?: Array<FuelConnector>;
   storage?: FuelStorage | null;
   targetObject?: TargetObject;
+  devMode?: boolean;
 };
 
 export type FuelConnectorSelectOptions = {
@@ -38,7 +40,7 @@ export type FuelConnectorSelectOptions = {
 
 export class Fuel extends FuelConnector {
   static STORAGE_KEY = 'fuel-current-connector';
-
+  static defaultConfig: FuelConfig = {};
   private _storage?: FuelStorage | null = null;
   private _connectors: Array<FuelConnector> = [];
   private _targetObject: TargetObject | null = null;
@@ -47,12 +49,16 @@ export class Fuel extends FuelConnector {
   private _pingCache: CacheFor = {};
   private _currentConnector?: FuelConnector | null;
 
-  constructor(config: FuelConfig = {}) {
+  constructor(config: FuelConfig = Fuel.defaultConfig) {
     super();
     // Increase the limit of listeners
     this.setMaxListeners(1_000);
     // Set all connectors
-    this._connectors = config.connectors ?? [];
+    this._connectors =
+      config.connectors ??
+      defaultConnectors({
+        devMode: config.devMode,
+      });
     // Set the target object to listen for global events
     this._targetObject = this.getTargetObject(config.targetObject);
     // Set default storage
@@ -319,8 +325,9 @@ export class Fuel extends FuelConnector {
       if (options.emitEvents) {
         this.triggerConnectorEvents();
       }
+      return true;
     }
-    return true;
+    return false;
   }
 
   /**
@@ -349,6 +356,10 @@ export class Fuel extends FuelConnector {
     return withTimeout(defer.promise, HAS_CONNECTOR_TIMEOUT)
       .then(() => true)
       .catch(() => false);
+  }
+
+  async hasWallet(): Promise<boolean> {
+    return this.hasConnector();
   }
 
   /**

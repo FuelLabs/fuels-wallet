@@ -1,4 +1,4 @@
-import { FuelProvider, FuelConnectProvider } from '@fuel-wallet/react';
+import { FuelProvider } from '@fuel-wallet/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
@@ -11,10 +11,12 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <FuelProvider>
-      <FuelConnectProvider>
-        <App />
-      </FuelConnectProvider>
+    <FuelProvider
+      fuelConfig={{
+        devMode: true,
+      }}
+    >
+      <App />
     </FuelProvider>
   </React.StrictMode>
 );

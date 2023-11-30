@@ -1,28 +1,29 @@
+import type { Asset } from '@fuel-wallet/sdk';
 import { useQuery } from '@tanstack/react-query';
 
 import { useFuel } from '../providers';
 import { QUERY_KEYS } from '../utils';
 
-export const useIsConnected = () => {
+export const useAssets = () => {
   const { fuel } = useFuel();
 
   const { data, ...queryProps } = useQuery(
-    [QUERY_KEYS.isConnected],
+    [QUERY_KEYS.assets],
     async () => {
       try {
-        const isConnected = await fuel.isConnected();
-        return isConnected || false;
-      } catch {
-        return false;
+        const assets = (await fuel.assets()) as Array<Asset>;
+        return assets || [];
+      } catch (error: unknown) {
+        return [];
       }
     },
     {
-      initialData: null,
+      initialData: [],
     }
   );
 
   return {
-    isConnected: data,
+    assets: data,
     ...queryProps,
   };
 };

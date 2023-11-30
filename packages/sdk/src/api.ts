@@ -34,5 +34,7 @@ export enum FuelConnectorEventTypes {
   currentAccount = 'currentAccount',
   networks = 'networks',
   currentNetwork = 'currentNetwork',
+  assets = 'assets',
+  abis = 'abis',
 }
 export const FuelConnectorEventType = 'FuelConnector';

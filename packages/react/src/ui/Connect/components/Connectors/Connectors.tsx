@@ -1,4 +1,4 @@
-import { useFuelConnect } from '../../../providers/FuelConnectProvider';
+import { useConnectUI } from '../../../../providers/FuelUIProvider';
 import { ConnectorIcon } from '../ConnectorIcon';
 
 import { ConnectorsLoader } from './ConnectorsLoader';
@@ -8,8 +8,9 @@ export function Connectors() {
   const {
     connectors,
     isLoading,
+    theme,
     dialog: { connect },
-  } = useFuelConnect();
+  } = useConnectUI();
 
   return (
     <ConnectorList>
@@ -25,7 +26,11 @@ export function Connectors() {
             connect(connector);
           }}
         >
-          <ConnectorIcon connectorName={connector.name} size={32} />
+          <ConnectorIcon
+            connectorName={connector.name}
+            size={32}
+            theme={theme}
+          />
           <ConnectorName>{connector.name}</ConnectorName>
         </ConnectorItem>
       ))}

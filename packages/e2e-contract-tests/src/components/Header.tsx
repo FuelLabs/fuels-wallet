@@ -1,12 +1,7 @@
-import { useConnectors, useFuelConnect } from '@fuel-wallet/react';
+import { useConnectUI } from '@fuel-wallet/react';
 
 export const Header = () => {
-  const { connect } = useFuelConnect();
-  const { connectors } = useConnectors();
+  const { connect } = useConnectUI();
 
-  return (
-    <button disabled={!connectors.length} onClick={connect}>
-      Connect
-    </button>
-  );
+  return <button onClick={connect}>Connect</button>;
 };

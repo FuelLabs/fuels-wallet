@@ -8,16 +8,17 @@ import {
   useEffect,
 } from 'react';
 
-import { useFuel } from '../../components/FuelProvider';
-import { useConnect } from '../../hooks/useConnect';
-import { useConnectors } from '../../hooks/useConnectors';
+import { useConnect } from '../hooks/useConnect';
+import { useConnectors } from '../hooks/useConnectors';
 
-export type FuelConnectProviderProps = {
+import { useFuel } from './FuelHooksProvider';
+
+export type FuelUIProviderProps = {
   children?: ReactNode;
   theme?: string;
 };
 
-export type FuelConnectContextType = {
+export type FuelUIContextType = {
   theme: string;
   connectors: Array<FuelConnector>;
   isLoading: boolean;
@@ -35,18 +36,27 @@ export type FuelConnectContextType = {
   };
 };
 
-export const FuelConnectContext = createContext<FuelConnectContextType | null>(
-  null
-);
+export const FuelConnectContext = createContext<FuelUIContextType | null>(null);
 
-export const useFuelConnect = () => {
-  return useContext(FuelConnectContext) as FuelConnectContextType;
+export const useHasFuelConnectProvider = () => {
+  const context = useContext(FuelConnectContext);
+  return context !== undefined;
 };
 
-export function FuelConnectContextProvider({
+export const useConnectUI = () => {
+  const context = useContext(FuelConnectContext) as FuelUIContextType;
+
+  if (context === undefined) {
+    throw new Error('useConnectUI must be used within a FuelUIProvider');
+  }
+
+  return context;
+};
+
+export function FuelUIProvider({
   children,
   theme: initialTheme,
-}: FuelConnectProviderProps) {
+}: FuelUIProviderProps) {
   const [theme, setTheme] = useState(initialTheme || 'light');
   const { fuel } = useFuel();
   const { isLoading: isConnecting, isError, connect } = useConnect();

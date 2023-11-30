@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Asset } from '@fuel-wallet/types';
 import type { JsonAbi } from 'fuels';
 
 import type { FuelConnector } from './FuelConnector';
@@ -116,6 +117,19 @@ export type ConnectorEvent = {
 };
 
 /**
+ * Event trigger when the assets list of metadata changed.
+ *
+ * @event AssetsEvent
+ * @type {object}
+ * @property {string} type - The event type.
+ * @property {Array<Asset>} data - The list of assets
+ */
+export type AssetsEvent = {
+  type: FuelConnectorEventTypes.assets;
+  data: Array<Asset>;
+};
+
+/**
  * All the events available to the connector.
  */
 export type FuelConnectorEvents =
@@ -125,7 +139,8 @@ export type FuelConnectorEvents =
   | AccountEvent
   | AccountsEvent
   | ConnectorsEvent
-  | ConnectorEvent;
+  | ConnectorEvent
+  | AssetsEvent;
 
 export type FuelConnectorEventsType = FuelConnectorEvents['type'];
 

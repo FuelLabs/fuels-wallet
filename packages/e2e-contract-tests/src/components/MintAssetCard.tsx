@@ -7,7 +7,7 @@ import { mint } from '../contract_interactions';
 export const MintAssetCard = () => {
   const [amount, setAmount] = useState<string>('');
   const { account } = useAccount();
-  const { wallet } = useWallet({ address: account });
+  const { wallet } = useWallet(account);
 
   return (
     <div>
