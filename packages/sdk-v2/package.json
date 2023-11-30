@@ -32,11 +32,11 @@
     "events": "^3.3.0"
   },
   "peerDependencies": {
-    "fuels": ">=0.0.0-pr-1407-20231127182456"
+    "fuels": ">=0.0.0-pr-1407-20231128182153"
   },
   "devDependencies": {
-    "@fuel-ts/wallet": "0.0.0-pr-1407-20231127182456",
-    "fuels": "0.0.0-pr-1407-20231127182456",
+    "@fuel-ts/wallet": "0.0.0-pr-1407-20231128182153",
+    "fuels": "0.0.0-pr-1407-20231128182153",
     "jest-environment-jsdom": "29.6.2",
     "tsup": "^7.2.0"
   }

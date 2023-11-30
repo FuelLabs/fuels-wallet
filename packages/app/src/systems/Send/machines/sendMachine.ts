@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
-import { BN, Provider, TransactionRequest } from 'fuels';
+import { BN, BaseAssetId, TransactionRequest } from 'fuels';
 import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
 import { AccountService } from '~/systems/Account';
-import { FetchMachine, WalletLockedCustom } from '~/systems/Core';
+import { FetchMachine, WalletLockedCustom, assignError } from '~/systems/Core';
+import { AppProvider } from '~/systems/Core/services/provider';
 import { NetworkService } from '~/systems/Network';
 import { TxInputs, TxService } from '~/systems/Transaction/services';
 
@@ -14,27 +15,31 @@ export enum SendScreens {
 }
 
 export type MachineContext = {
+  transactionRequest?: TransactionRequest;
+  providerUrl?: string;
+  address?: string;
   fee?: BN;
+  error?: string;
 };
 
-type CreateReturn = {
+type CreateTransactionReturn = {
   transactionRequest: TransactionRequest;
   providerUrl: string;
+  address: string;
+  fee: BN;
 };
 
 type MachineServices = {
-  fetchFakeTx: {
-    data: BN;
-  };
   createTransactionRequest: {
-    data: CreateReturn;
+    data: CreateTransactionReturn;
   };
 };
 
 type MachineEvents =
   | { type: 'RESET'; input: null }
   | { type: 'BACK'; input: null }
-  | { type: 'CONFIRM'; input: TxInputs['isValidTransaction'] };
+  | { type: 'SET_DATA'; input: TxInputs['isValidTransaction'] }
+  | { type: 'CONFIRM'; input: null };
 
 const IDLE_STATE = {
   tags: ['selecting'],
@@ -42,10 +47,6 @@ const IDLE_STATE = {
     BACK: {
       actions: ['goToHome'],
     },
-    CONFIRM: [
-      { target: 'creatingTx', cond: 'isValidTransaction' },
-      { target: 'invalid' },
-    ],
   },
 };
 
@@ -59,34 +60,29 @@ export const sendMachine = createMachine(
       services: {} as MachineServices,
     },
     id: '(machine)',
-    initial: 'fetchingFakeTx',
+    initial: 'idle',
     states: {
-      fetchingFakeTx: {
-        tags: ['isLoadingInitialFee'],
-        invoke: {
-          src: 'fetchFakeTx',
-          onDone: {
-            target: 'idle',
-            actions: ['assignInitialFee'],
-          },
-        },
-      },
       idle: IDLE_STATE,
-      invalid: IDLE_STATE,
       creatingTx: {
         invoke: {
           src: 'createTransactionRequest',
           data: (_: MachineContext, { input }: MachineEvents) => ({ input }),
           onDone: [
             {
-              target: 'idle',
               cond: FetchMachine.hasError,
+              target: 'idle',
+              actions: [assignError()],
             },
             {
-              actions: ['callTransactionRequest'],
-              target: 'idle',
+              actions: ['assignTransactionData'],
+              target: 'readyToSend',
             },
           ],
+        },
+      },
+      readyToSend: {
+        on: {
+          CONFIRM: { actions: ['callTransactionRequest'] },
         },
       },
     },
@@ -94,36 +90,25 @@ export const sendMachine = createMachine(
       BACK: {
         target: 'idle',
       },
+      SET_DATA: { target: 'creatingTx' },
     },
   },
   {
-    guards: {
-      isValidTransaction: (
-        { fee }: MachineContext,
-        { input }: MachineEvents
-      ) => {
-        if (!input?.asset) return false;
-        return TxService.isValidTransaction({ ...input, fee });
-      },
-    },
     actions: {
-      assignInitialFee: assign({
-        fee: (_, ev) => ev.data,
-      }),
+      assignTransactionData: assign((_, ev) => ({
+        transactionRequest: ev.data.transactionRequest,
+        providerUrl: ev.data.providerUrl,
+        address: ev.data.address,
+        fee: ev.data.fee,
+      })),
     },
     services: {
-      fetchFakeTx: FetchMachine.create<null, BN>({
-        showError: false,
-        async fetch() {
-          const { txResult } = await TxService.createFakeTx();
-          return txResult.fee;
-        },
-      }),
       createTransactionRequest: FetchMachine.create<
         TxInputs['isValidTransaction'],
-        CreateReturn | null
+        CreateTransactionReturn | null
       >({
-        showError: true,
+        showError: false,
+        maxAttempts: 1,
         async fetch({ input }) {
           const to = input?.address;
           const assetId = input?.asset?.assetId;
@@ -136,19 +121,68 @@ export const sendMachine = createMachine(
           if (!to || !assetId || !amount || !network?.url || !account) {
             throw new Error('Missing params for transaction request');
           }
-          const provider = await Provider.create(network.url);
-          const wallet = new WalletLockedCustom(account.address, provider);
-          const createOpts = { to, amount, assetId, provider: wallet.provider };
-          const transactionRequest = await TxService.fundTransaction({
-            transactionRequest: await TxService.createTransfer(createOpts),
-            wallet,
-          });
+          try {
+            const provider = await AppProvider.create(network.url);
+            const wallet = new WalletLockedCustom(account.address, provider);
+            const nativeBalance = await wallet.getBalance();
+            const createOpts = {
+              to,
+              amount,
+              assetId,
+              provider: wallet.provider,
+            };
 
-          return {
-            address: wallet.address.toString(),
-            transactionRequest,
-            providerUrl: network.url,
-          };
+            const transferRequest = await TxService.createTransfer(createOpts);
+            let fee = new BN(0);
+
+            // If transaction is native asset and amount is equal to balance
+            // them we calculate the fee for the screen to reduce the input amount
+            if (assetId === BaseAssetId && amount.eq(nativeBalance)) {
+              const resources = await provider.getResourcesToSpend(
+                wallet.address,
+                [
+                  {
+                    assetId: BaseAssetId,
+                    amount: nativeBalance,
+                  },
+                ]
+              );
+              transferRequest.addResources(resources);
+              const { gasUsed, gasPrice, usedFee } =
+                await provider.getTransactionCost(transferRequest);
+              transferRequest.gasPrice = gasPrice;
+              transferRequest.gasLimit = gasUsed;
+              fee = usedFee;
+            } else {
+              const { requiredQuantities, gasPrice, gasUsed, usedFee } =
+                await provider.getResourcesForTransaction(
+                  wallet.address,
+                  transferRequest
+                );
+              const resources = await provider.getResourcesToSpend(
+                wallet.address,
+                requiredQuantities
+              );
+              transferRequest.gasPrice = gasPrice;
+              transferRequest.gasLimit = gasUsed;
+              transferRequest.addResources(resources);
+              fee = usedFee;
+            }
+
+            return {
+              fee,
+              address: wallet.address.toString(),
+              transactionRequest: transferRequest,
+              providerUrl: network.url,
+            };
+          } catch (err) {
+            if (err instanceof Error) {
+              if (err.message.includes('not enough coins to fit the target')) {
+                throw new Error('Insufficient funds to cover gas costs');
+              }
+            }
+            throw err;
+          }
         },
       }),
     },

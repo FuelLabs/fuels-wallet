@@ -3,7 +3,6 @@ import type { Account, Asset } from '@fuel-wallet/types';
 import type {
   BN,
   GetTransactionSummaryFromRequestParams,
-  ScriptTransactionRequestLike,
   TransactionRequest,
   TransactionSummary,
   WalletLocked,
@@ -14,7 +13,6 @@ import {
   bn,
   BaseAssetId,
   ScriptTransactionRequest,
-  transactionRequestify,
   Provider,
   getTransactionSummary,
   TransactionResponse,
@@ -23,10 +21,8 @@ import {
   hexlify,
   processGqlReceipt,
 } from 'fuels';
-import { AccountService } from '~/systems/Account';
 import { isEth } from '~/systems/Asset';
 import { db, uniqueId, WalletLockedCustom } from '~/systems/Core';
-import { NetworkService } from '~/systems/Network';
 
 import type { Transaction } from '../types';
 import { getAbiMap } from '../utils';
@@ -146,7 +142,6 @@ export class TxService {
     const provider = await Provider.create(providerUrl);
     const txResult = await getTransactionSummary({ id: txId, provider });
     const txResponse = new TransactionResponse(txId, provider);
-
     // TODO: remove this when we get SDK with new TransactionResponse flow
     const abiMap = await getAbiMap({
       inputs: txResult.transaction.inputs,
@@ -156,32 +151,6 @@ export class TxService {
       provider,
       abiMap,
     });
-    // const { gasPerByte, gasPriceFactor } = await provider.getGasConfig();
-    // // TODO: remove this once is fixed on the SDK
-    // // https://github.com/FuelLabs/fuels-ts/issues/1314
-    // let bytesUsed = 0;
-    // try {
-    //   const byteSize = arrayify(
-    //     txResultWithCalls.gqlTransaction.rawPayload
-    //   ).length;
-    //   const witnessesSize =
-    //     txResultWithCalls.transaction?.witnesses?.reduce((t, w) => {
-    //       return t + w.dataLength;
-    //     }, 0) || 0;
-    //   bytesUsed = byteSize - witnessesSize;
-    // } catch (err) {
-    //   bytesUsed = 0;
-    // }
-
-    // // gasPrice
-    // txResultWithCalls.fee = await calculateTotalFee({
-    //   gasPerByte,
-    //   gasPriceFactor,
-    //   gasUsed: txResultWithCalls.gasUsed,
-    //   gasPrice: bn(txResultWithCalls.transaction.gasPrice),
-    //   bytesUsed: bn(bytesUsed),
-    // });
-
     return { txResult: txResultWithCalls, txResponse };
   }
 
@@ -261,33 +230,6 @@ export class TxService {
     };
   }
 
-  static async createFakeTx() {
-    const [account, network] = await Promise.all([
-      AccountService.getCurrentAccount(),
-      NetworkService.getSelectedNetwork(),
-    ]);
-    const provider = await Provider.create(network!.url);
-    const wallet = new WalletLockedCustom(account!.address, provider);
-    const { gasLimit, gasPrice } = await getGasConfig(wallet.provider);
-    const params: ScriptTransactionRequestLike = {
-      gasLimit: gasLimit.div(2),
-      gasPrice,
-    };
-    const request = new ScriptTransactionRequest(params);
-    request.addCoinOutput(wallet.address, bn(1), BaseAssetId);
-    const { maxFee, requiredQuantities } =
-      await provider.getTransactionCost(request);
-    await wallet.fund(request, requiredQuantities, maxFee);
-    const { txResult } = await TxService.simulateTransaction({
-      transactionRequest: request,
-      providerUrl: wallet.provider.url,
-    });
-
-    return {
-      txResult,
-    };
-  }
-
   static async createTransfer(input: TxInputs['createTransfer']) {
     const { gasPrice } = await getGasConfig(input.provider);
     // Because gasLimit is caulculated on the number of operations we can
@@ -297,7 +239,7 @@ export class TxService {
     const to = Address.fromAddressOrString(input.to);
     const { assetId, amount } = input;
     request.addCoinOutput(to, amount, assetId);
-    return transactionRequestify(request);
+    return request;
   }
 
   static async addResources(input: TxInputs['addResources']) {
