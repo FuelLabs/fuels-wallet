@@ -20,8 +20,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm ts:check && tsup",
-    "ts:check": "pnpm tsc --noEmit",
+    "ts:check": "tsc --noEmit",
     "check-versions": "tsx src/index.ts"
   },
   "devDependencies": {
