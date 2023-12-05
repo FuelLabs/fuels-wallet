@@ -108,15 +108,13 @@ async function main() {
   await $$`pnpm install`;
   await $$`git config --global user.email "github-actions[bot]@users.noreply.github.com"`;
   await $$`git config --global user.name "github-actions[bot]"`;
-  await $$`git checkout -b ${headBranch}`;
   await $$`git add .`;
-  await $$`git commit -m "chore: update sdk ${latest}"`;
+  await $$`git commit -m 'chore: update sdk ${latest}'`;
   await $$`git push --force --set-upstream origin ${headBranch}`;
 
   const prTitle = `chore: update sdk ${latest}`;
   const prBody = `This PR updates the SDK to the latest version: ${latest}`;
   await $$`gh pr create --title "${prTitle}" --body "${prBody}" --base ${baseBranch} --head ${headBranch}`;
-
   await $`git checkout ${currentBranch}`;
   // const res = await fetch(
   //   `https://api.github.com/repos/${repoOwner}/${repoName}/pulls`,
