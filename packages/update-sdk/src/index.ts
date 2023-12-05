@@ -81,15 +81,13 @@ async function main() {
     return;
   }
 
-  const lastestRcVersion = await getLatestRcVersion();
+  const latestVersion = await getLatestRcVersion();
   console.log(
-    `\n${chalk.green(
-      'All packages updated to latest SDK:'
-    )} ${lastestRcVersion}`
+    `\n${chalk.green('All packages updated to latest SDK:')} ${latestVersion}`
   );
 
   // Output the latest version for GitHub Actions
-  console.log(`::set-output name=latest_version::${latestRcVersion}`);
+  console.log(`::set-output name=latest_version::${latestVersion}`);
 }
 
 main();
