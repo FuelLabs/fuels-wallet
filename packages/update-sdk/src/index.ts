@@ -1,17 +1,12 @@
 /* eslint-disable no-console */
 import chalk from 'chalk';
 import { compare } from 'compare-versions';
-import { $ } from 'execa';
 import { glob } from 'glob';
 import { produce } from 'immer';
-import minimist from 'minimist';
 import { promises as fs } from 'node:fs';
 import { resolve } from 'node:path';
 import packageJson from 'package-json';
 import prettier from 'prettier';
-
-const TOKEN = process.env.GITHUB_TOKEN!;
-const HEAD_BRANCH = process.env.HEAD_BRANCH!;
 
 async function getLatestRcVersion() {
   const pkgJSON = await packageJson('fuels', { version: 'latest' });
@@ -78,66 +73,23 @@ async function checkPackages() {
 }
 
 async function main() {
-  const currentBranch = await $`git branch --show-current`;
-  const latest = await getLatestRcVersion();
-  const argv = minimist(process.argv.slice(2));
-  const token = argv.token ?? TOKEN;
-  // const repoOwner = 'fuellabs';
-  // const repoName = 'fuels-wallet';
-  const baseBranch = 'master';
-  const headBranch = argv['head-branch'] ?? HEAD_BRANCH;
-  await $`git checkout ${headBranch}`;
-
-  const changed = await checkPackages();
-  if (!changed) {
-    console.log(chalk.green('All packages are up to date!'));
-    return;
-  }
-  console.log(chalk.yellow('Packages have been updated!'));
-
-  if (!token) {
-    console.error(chalk.red('❌ Missing GITHUB_TOKEN'));
-    return;
-  }
-  if (!headBranch) {
-    console.error(chalk.red('❌ Missing HEAD_BRANCH'));
+  const checked = await checkPackages();
+  if (!checked) {
+    console.log(
+      `\n${chalk.green('All packages are up to date with latest SDK')}`
+    );
     return;
   }
 
-  const $$ = $({ stdio: 'inherit' });
-  await $$`pnpm install`;
-  await $$`git config --global user.email "github-actions[bot]@users.noreply.github.com"`;
-  await $$`git config --global user.name "github-actions[bot]"`;
-  await $$`git add .`;
-  await $$`git commit -m \'chore: update sdk ${latest}\'`;
-  await $$`git push --force --set-upstream origin ${headBranch}`;
+  const lastestRcVersion = await getLatestRcVersion();
+  console.log(
+    `\n${chalk.green(
+      'All packages updated to latest SDK:'
+    )} ${lastestRcVersion}`
+  );
 
-  const prTitle = `chore: update sdk ${latest}`;
-  const prBody = `This PR updates the SDK to the latest version: ${latest}`;
-  await $$`gh pr create --title "${prTitle}" --body "${prBody}" --base ${baseBranch} --head ${headBranch}`;
-  await $`git checkout ${currentBranch}`;
-  // const res = await fetch(
-  //   `https://api.github.com/repos/${repoOwner}/${repoName}/pulls`,
-  //   {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: `token ${token}`,
-  //       Accept: 'application/vnd.github.v3+json',
-  //     },
-  //     body: JSON.stringify({
-  //       title: prTitle,
-  //       body: prBody,
-  //       head: headBranch,
-  //       base: baseBranch,
-  //     }),
-  //   }
-  // );
-  //
-  // if (!res.ok) {
-  //   console.error(await res.text());
-  //   return;
-  // }
+  // Output the latest version for GitHub Actions
+  console.log(`::set-output name=latest_version::${latestRcVersion}`);
 }
 
 main();
