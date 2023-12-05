@@ -78,13 +78,7 @@ async function checkPackages() {
 }
 
 async function main() {
-  const changed = await checkPackages();
-  if (!changed) {
-    console.log(chalk.green('All packages are up to date!'));
-    return;
-  }
-
-  console.log(chalk.yellow('Packages have been updated!'));
+  const currentBranch = await $`git branch --show-current`;
   const latest = await getLatestRcVersion();
   const argv = minimist(process.argv.slice(2));
   const token = argv.token ?? TOKEN;
@@ -92,6 +86,14 @@ async function main() {
   // const repoName = 'fuels-wallet';
   const baseBranch = 'master';
   const headBranch = argv['head-branch'] ?? HEAD_BRANCH;
+  await $`git checkout ${headBranch}`;
+
+  const changed = await checkPackages();
+  if (!changed) {
+    console.log(chalk.green('All packages are up to date!'));
+    return;
+  }
+  console.log(chalk.yellow('Packages have been updated!'));
 
   if (!token) {
     console.error(chalk.red('❌ Missing GITHUB_TOKEN'));
@@ -114,6 +116,8 @@ async function main() {
   const prTitle = `chore: update sdk ${latest}`;
   const prBody = `This PR updates the SDK to the latest version: ${latest}`;
   await $$`gh pr create --title "${prTitle}" --body "${prBody}" --base ${baseBranch} --head ${headBranch}`;
+
+  await $`git checkout ${currentBranch}`;
   // const res = await fetch(
   //   `https://api.github.com/repos/${repoOwner}/${repoName}/pulls`,
   //   {
