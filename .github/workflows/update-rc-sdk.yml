@@ -1,9 +1,11 @@
 name: Update Fuels Package Version
 
 on:
-  schedule:
-    - cron: '0 0 * * *'
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -11,7 +13,7 @@ permissions:
 
 jobs:
   update-version:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
 
     steps:
       - uses: actions/checkout@v3
