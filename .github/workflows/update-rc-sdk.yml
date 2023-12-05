@@ -1,0 +1,19 @@
+name: Update Fuels Package Version
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: FuelLabs/github-actions/setups/node@master
+
+      - name: Check versions
+        run: |
+          node ./scripts/check-sdk-rc.mjs
+
