@@ -88,8 +88,8 @@ async function main() {
   const latest = await getLatestRcVersion();
   const argv = minimist(process.argv.slice(2));
   const token = argv.token ?? TOKEN;
-  const repoOwner = 'fuellabs';
-  const repoName = 'fuels-wallet';
+  // const repoOwner = 'fuellabs';
+  // const repoName = 'fuels-wallet';
   const baseBranch = 'master';
   const headBranch = argv['head-branch'] ?? HEAD_BRANCH;
 
@@ -113,28 +113,29 @@ async function main() {
 
   const prTitle = `chore: update sdk ${latest}`;
   const prBody = `This PR updates the SDK to the latest version: ${latest}`;
-  const res = await fetch(
-    `https://api.github.com/repos/${repoOwner}/${repoName}/pulls`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `token ${token}`,
-        Accept: 'application/vnd.github.v3+json',
-      },
-      body: JSON.stringify({
-        title: prTitle,
-        body: prBody,
-        head: headBranch,
-        base: baseBranch,
-      }),
-    }
-  );
-
-  if (!res.ok) {
-    console.error(await res.text());
-    return;
-  }
+  await $$`gh pr create --title "${prTitle}" --body "${prBody}" --base ${baseBranch} --head ${headBranch}`;
+  // const res = await fetch(
+  //   `https://api.github.com/repos/${repoOwner}/${repoName}/pulls`,
+  //   {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: `token ${token}`,
+  //       Accept: 'application/vnd.github.v3+json',
+  //     },
+  //     body: JSON.stringify({
+  //       title: prTitle,
+  //       body: prBody,
+  //       head: headBranch,
+  //       base: baseBranch,
+  //     }),
+  //   }
+  // );
+  //
+  // if (!res.ok) {
+  //   console.error(await res.text());
+  //   return;
+  // }
 }
 
 main();
