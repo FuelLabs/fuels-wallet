@@ -34,11 +34,15 @@ export function SignatureRequest() {
                 </HelperIcon>
               </Card.Header>
               <Card.Body>
-                <Text as="div">
-                  {/* For preserving line breaks using pre-wrap all
-                    the content inside the tag can't be formatted because of
-                    this we wrap the message in a div element */}
-                  <Box css={{ whiteSpace: 'pre-wrap' }}>{message}</Box>
+                <Text
+                  css={{
+                    overflowX: 'auto',
+                    maxWidth: '100%',
+                    wordBreak: 'break-all',
+                    display: 'block',
+                  }}
+                >
+                  {message}
                 </Text>
               </Card.Body>
             </Card>
