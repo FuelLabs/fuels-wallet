@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
-import { BN, BaseAssetId, TransactionRequest } from 'fuels';
+import { BN, BaseAssetId, Provider, TransactionRequest } from 'fuels';
 import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
 import { AccountService } from '~/systems/Account';
 import { FetchMachine, WalletLockedCustom, assignError } from '~/systems/Core';
-import { AppProvider } from '~/systems/Core/services/provider';
 import { NetworkService } from '~/systems/Network';
 import { TxInputs, TxService } from '~/systems/Transaction/services';
 
@@ -122,7 +121,7 @@ export const sendMachine = createMachine(
             throw new Error('Missing params for transaction request');
           }
           try {
-            const provider = await AppProvider.create(network.url);
+            const provider = await Provider.create(network.url);
             const wallet = new WalletLockedCustom(account.address, provider);
             const nativeBalance = await wallet.getBalance();
             const createOpts = {
@@ -148,13 +147,13 @@ export const sendMachine = createMachine(
                 ]
               );
               transferRequest.addResources(resources);
-              const { gasUsed, gasPrice, usedFee } =
+              const { gasUsed, gasPrice, usedFee, minFee } =
                 await provider.getTransactionCost(transferRequest);
               transferRequest.gasPrice = gasPrice;
               transferRequest.gasLimit = gasUsed;
-              fee = usedFee;
+              fee = usedFee.add(minFee);
             } else {
-              const { requiredQuantities, gasPrice, gasUsed, usedFee } =
+              const { requiredQuantities, gasPrice, gasUsed, usedFee, minFee } =
                 await provider.getResourcesForTransaction(
                   wallet.address,
                   transferRequest
@@ -166,7 +165,7 @@ export const sendMachine = createMachine(
               transferRequest.gasPrice = gasPrice;
               transferRequest.gasLimit = gasUsed;
               transferRequest.addResources(resources);
-              fee = usedFee;
+              fee = usedFee.add(minFee);
             }
 
             return {
