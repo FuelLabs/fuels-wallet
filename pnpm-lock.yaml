@@ -934,7 +934,9 @@ packages:
     resolution: {integrity: sha512-xhlTqH0m31mnsG0tIP4ETgfSB6gXDaYYsUWTrlUV93fFQPI9dd8hE0Ot6MHLCtqgB32hwJAC3YZMWlXZw7AleA==}
     engines: {node: '>=14'}
     dependencies:
-      node-fetch: 3.3.2
+      node-fetch: 2.7.0
+    transitivePeerDependencies:
+      - encoding
     dev: true
 
   /@aw-web-design/x-default-browser@1.4.126:
@@ -2340,6 +2342,8 @@ packages:
       '@changesets/get-github-info': 0.5.2
       '@changesets/types': 5.2.1
       dotenv: 8.6.0
+    transitivePeerDependencies:
+      - encoding
     dev: true
 
   /@changesets/cli@2.27.1:
@@ -2412,7 +2416,9 @@ packages:
     resolution: {integrity: sha512-JppheLu7S114aEs157fOZDjFqUDpm7eHdq5E8SSR0gUBTEK0cNSHsrSR5a66xs0z3RWuo46QvA3vawp8BxDHvg==}
     dependencies:
       dataloader: 1.4.0
-      node-fetch: 3.3.2
+      node-fetch: 2.7.0
+    transitivePeerDependencies:
+      - encoding
     dev: true
 
   /@changesets/get-release-plan@4.0.0:
@@ -4043,6 +4049,8 @@ packages:
       '@whatwg-node/fetch': 0.9.14
       graphql: 16.8.1
       tslib: 2.6.2
+    transitivePeerDependencies:
+      - encoding
     dev: true
 
   /@graphql-tools/batch-execute@9.0.2(graphql@16.8.1):
@@ -4189,6 +4197,7 @@ packages:
       value-or-promise: 1.0.12
     transitivePeerDependencies:
       - '@types/node'
+      - encoding
       - supports-color
     dev: true
 
@@ -4390,6 +4399,7 @@ packages:
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
+      - encoding
       - utf-8-validate
     dev: true
 
@@ -8175,6 +8185,7 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
+      - encoding
       - react
       - react-dom
       - supports-color
@@ -8215,6 +8226,7 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
+      - encoding
       - supports-color
     dev: true
 
@@ -8248,6 +8260,7 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
+      - encoding
       - supports-color
     dev: true
 
@@ -8381,6 +8394,7 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
+      - encoding
       - supports-color
     dev: true
 
@@ -8404,6 +8418,7 @@ packages:
       process: 0.11.10
       util: 0.12.5
     transitivePeerDependencies:
+      - encoding
       - supports-color
     dev: true
 
@@ -8441,6 +8456,7 @@ packages:
       typescript: 5.3.3
       vite: 4.5.1(@types/node@20.8.4)
     transitivePeerDependencies:
+      - encoding
       - supports-color
     dev: true
 
@@ -8492,6 +8508,7 @@ packages:
       webpack-virtual-modules: 0.5.0
     transitivePeerDependencies:
       - '@swc/helpers'
+      - encoding
       - esbuild
       - supports-color
       - uglify-js
@@ -8556,6 +8573,7 @@ packages:
       util-deprecate: 1.0.2
     transitivePeerDependencies:
       - bufferutil
+      - encoding
       - supports-color
       - utf-8-validate
     dev: true
@@ -8642,13 +8660,14 @@ packages:
       glob: 10.3.10
       handlebars: 4.7.8
       lazy-universal-dotenv: 4.0.0
-      node-fetch: 3.3.2
+      node-fetch: 2.7.0
       picomatch: 2.3.1
       pkg-dir: 5.0.0
       pretty-hrtime: 1.0.3
       resolve-from: 5.0.0
       ts-dedent: 2.2.0
     transitivePeerDependencies:
+      - encoding
       - supports-color
     dev: true
 
@@ -8704,6 +8723,7 @@ packages:
       ws: 8.14.2
     transitivePeerDependencies:
       - bufferutil
+      - encoding
       - supports-color
       - utf-8-validate
     dev: true
@@ -8717,6 +8737,7 @@ packages:
       '@types/node': 18.19.3
       ts-dedent: 2.2.0
     transitivePeerDependencies:
+      - encoding
       - supports-color
     dev: true
 
@@ -8766,6 +8787,7 @@ packages:
       doctrine: 3.0.0
       lodash: 4.17.21
     transitivePeerDependencies:
+      - encoding
       - supports-color
     dev: true
 
@@ -8873,6 +8895,7 @@ packages:
     transitivePeerDependencies:
       - '@swc/core'
       - '@types/webpack'
+      - encoding
       - esbuild
       - sockjs-client
       - supports-color
@@ -8966,6 +8989,7 @@ packages:
       vite: 4.5.1(@types/node@20.8.4)
     transitivePeerDependencies:
       - '@preact/preset-vite'
+      - encoding
       - rollup
       - supports-color
       - typescript
@@ -9002,6 +9026,7 @@ packages:
       - '@swc/core'
       - '@swc/helpers'
       - '@types/webpack'
+      - encoding
       - esbuild
       - sockjs-client
       - supports-color
@@ -9053,6 +9078,7 @@ packages:
       typescript: 5.3.3
       util-deprecate: 1.0.2
     transitivePeerDependencies:
+      - encoding
       - supports-color
     dev: true
 
@@ -9086,6 +9112,7 @@ packages:
       fs-extra: 11.2.0
       read-pkg-up: 7.0.1
     transitivePeerDependencies:
+      - encoding
       - supports-color
     dev: true
 
@@ -12153,11 +12180,6 @@ packages:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
     dev: true
 
-  /data-uri-to-buffer@4.0.1:
-    resolution: {integrity: sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==}
-    engines: {node: '>= 12'}
-    dev: true
-
   /data-urls@3.0.2:
     resolution: {integrity: sha512-Jy/tj3ldjZJo63sVAvg6LHt2mHvl4V6AgRAmNDtLdm7faqtsx+aJG42rsyCo9JCoRVKwPFzKlIPx3DIibwSIaQ==}
     engines: {node: '>=12'}
@@ -13612,14 +13634,6 @@ packages:
       pend: 1.2.0
     dev: true
 
-  /fetch-blob@3.2.0:
-    resolution: {integrity: sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==}
-    engines: {node: ^12.20 || >= 14.13}
-    dependencies:
-      node-domexception: 1.0.0
-      web-streams-polyfill: 3.2.1
-    dev: true
-
   /fetch-retry@5.0.6:
     resolution: {integrity: sha512-3yurQZ2hD9VISAhJJP9bpYFNQrHHBXE2JxxjY5aLEcDi46RmAzJE2OC9FAde0yis5ElW0jTTzs0zfg/Cca4XqQ==}
     dev: true
@@ -13845,13 +13859,6 @@ packages:
     engines: {node: '>=0.4.x'}
     dev: false
 
-  /formdata-polyfill@4.0.10:
-    resolution: {integrity: sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==}
-    engines: {node: '>=12.20.0'}
-    dependencies:
-      fetch-blob: 3.2.0
-    dev: true
-
   /forwarded@0.2.0:
     resolution: {integrity: sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==}
     engines: {node: '>= 0.6'}
@@ -14046,7 +14053,9 @@ packages:
       chalk: 2.4.2
       graphql: 14.7.0
       minimist: 1.2.8
-      node-fetch: 3.3.2
+      node-fetch: 2.7.0
+    transitivePeerDependencies:
+      - encoding
     dev: true
 
   /get-intrinsic@1.2.2:
@@ -14283,6 +14292,7 @@ packages:
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
+      - encoding
       - typescript
       - utf-8-validate
     dev: true
@@ -17406,11 +17416,6 @@ packages:
       minimatch: 3.1.2
     dev: true
 
-  /node-domexception@1.0.0:
-    resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
-    engines: {node: '>=10.5.0'}
-    dev: true
-
   /node-fetch-native@1.4.1:
     resolution: {integrity: sha512-NsXBU0UgBxo2rQLOeWNZqS3fvflWePMECr8CoSWoSTqCqGbVVsvl9vZu1HfQicYN0g5piV9Gh8RTEvo/uP752w==}
     dev: true
@@ -17425,15 +17430,6 @@ packages:
         optional: true
     dependencies:
       whatwg-url: 5.0.0
-
-  /node-fetch@3.3.2:
-    resolution: {integrity: sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-    dependencies:
-      data-uri-to-buffer: 4.0.1
-      fetch-blob: 3.2.0
-      formdata-polyfill: 4.0.10
-    dev: true
 
   /node-int64@0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
@@ -19904,6 +19900,7 @@ packages:
       '@storybook/cli': 7.6.4
     transitivePeerDependencies:
       - bufferutil
+      - encoding
       - supports-color
       - utf-8-validate
     dev: true

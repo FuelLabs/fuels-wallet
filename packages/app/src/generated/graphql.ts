@@ -3,47 +3,34 @@ import type { GraphQLClientRequestHeaders } from 'graphql-request/build/cjs/type
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
-export type MakeEmpty<
-  T extends { [key: string]: unknown },
-  K extends keyof T
-> = { [_ in K]?: never };
-export type Incremental<T> =
-  | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
-    };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string };
-  String: { input: string; output: string };
-  Boolean: { input: boolean; output: boolean };
-  Int: { input: number; output: number };
-  Float: { input: number; output: number };
-  Address: { input: string; output: string };
-  AssetId: { input: string; output: string };
-  BlockId: { input: string; output: string };
-  Bytes32: { input: string; output: string };
-  ContractId: { input: string; output: string };
-  HexString: { input: string; output: string };
-  MessageId: { input: string; output: string };
-  Nonce: { input: string; output: string };
-  Salt: { input: string; output: string };
-  Signature: { input: string; output: string };
-  Tai64Timestamp: { input: string; output: string };
-  TransactionId: { input: string; output: string };
-  TxPointer: { input: string; output: string };
-  U32: { input: string; output: string };
-  U64: { input: string; output: string };
-  UtxoId: { input: string; output: string };
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  Address: { input: string; output: string; }
+  AssetId: { input: string; output: string; }
+  BlockId: { input: string; output: string; }
+  Bytes32: { input: string; output: string; }
+  ContractId: { input: string; output: string; }
+  HexString: { input: string; output: string; }
+  Nonce: { input: string; output: string; }
+  Salt: { input: string; output: string; }
+  Signature: { input: string; output: string; }
+  Tai64Timestamp: { input: string; output: string; }
+  TransactionId: { input: string; output: string; }
+  TxPointer: { input: string; output: string; }
+  U8: { input: any; output: any; }
+  U32: { input: string; output: string; }
+  U64: { input: string; output: string; }
+  UtxoId: { input: string; output: string; }
 };
 
 export type IBalance = {
@@ -104,10 +91,15 @@ export type IBlockEdge = {
   node: IBlock;
 };
 
+export type IBreakpoint = {
+  contract: Scalars['ContractId']['input'];
+  pc: Scalars['U64']['input'];
+};
+
 export type IChainInfo = {
   __typename?: 'ChainInfo';
-  baseChainHeight: Scalars['U32']['output'];
   consensusParameters: IConsensusParameters;
+  daHeight: Scalars['U64']['output'];
   gasCosts: IGasCosts;
   latestBlock: IBlock;
   name: Scalars['String']['output'];
@@ -174,21 +166,14 @@ export type IConsensus = IGenesis | IPoAConsensus;
 
 export type IConsensusParameters = {
   __typename?: 'ConsensusParameters';
+  baseAssetId: Scalars['AssetId']['output'];
   chainId: Scalars['U64']['output'];
-  contractMaxSize: Scalars['U64']['output'];
-  gasPerByte: Scalars['U64']['output'];
-  gasPriceFactor: Scalars['U64']['output'];
-  maxGasPerPredicate: Scalars['U64']['output'];
-  maxGasPerTx: Scalars['U64']['output'];
-  maxInputs: Scalars['U64']['output'];
-  maxMessageDataLength: Scalars['U64']['output'];
-  maxOutputs: Scalars['U64']['output'];
-  maxPredicateDataLength: Scalars['U64']['output'];
-  maxPredicateLength: Scalars['U64']['output'];
-  maxScriptDataLength: Scalars['U64']['output'];
-  maxScriptLength: Scalars['U64']['output'];
-  maxStorageSlots: Scalars['U64']['output'];
-  maxWitnesses: Scalars['U64']['output'];
+  contractParams: IContractParameters;
+  feeParams: IFeeParameters;
+  gasCosts: IGasCosts;
+  predicateParams: IPredicateParameters;
+  scriptParams: IScriptParameters;
+  txParams: ITxParameters;
 };
 
 export type IContract = {
@@ -242,11 +227,13 @@ export type IContractOutput = {
   stateRoot: Scalars['Bytes32']['output'];
 };
 
-export type IDependentCost = {
-  __typename?: 'DependentCost';
-  base: Scalars['U64']['output'];
-  depPerUnit: Scalars['U64']['output'];
+export type IContractParameters = {
+  __typename?: 'ContractParameters';
+  contractMaxSize: Scalars['U64']['output'];
+  maxStorageSlots: Scalars['U64']['output'];
 };
+
+export type IDependentCost = IHeavyOperation | ILightOperation;
 
 export type IExcludeInput = {
   /** Messages to exclude from the selection. */
@@ -261,6 +248,12 @@ export type IFailureStatus = {
   programState: Maybe<IProgramState>;
   reason: Scalars['String']['output'];
   time: Scalars['Tai64Timestamp']['output'];
+};
+
+export type IFeeParameters = {
+  __typename?: 'FeeParameters';
+  gasPerByte: Scalars['U64']['output'];
+  gasPriceFactor: Scalars['U64']['output'];
 };
 
 export type IGasCosts = {
@@ -279,6 +272,7 @@ export type IGasCosts = {
   ccp: IDependentCost;
   cfei: Scalars['U64']['output'];
   cfsi: Scalars['U64']['output'];
+  contractRoot: IDependentCost;
   croo: Scalars['U64']['output'];
   csiz: IDependentCost;
   div: Scalars['U64']['output'];
@@ -304,7 +298,7 @@ export type IGasCosts = {
   jnzb: Scalars['U64']['output'];
   jnzf: Scalars['U64']['output'];
   jnzi: Scalars['U64']['output'];
-  k256: Scalars['U64']['output'];
+  k256: IDependentCost;
   lb: Scalars['U64']['output'];
   ldc: IDependentCost;
   log: Scalars['U64']['output'];
@@ -314,7 +308,7 @@ export type IGasCosts = {
   mcl: IDependentCost;
   mcli: IDependentCost;
   mcp: IDependentCost;
-  mcpi: Scalars['U64']['output'];
+  mcpi: IDependentCost;
   meq: IDependentCost;
   mint: Scalars['U64']['output'];
   mldv: Scalars['U64']['output'];
@@ -326,16 +320,21 @@ export type IGasCosts = {
   mroo: Scalars['U64']['output'];
   mul: Scalars['U64']['output'];
   muli: Scalars['U64']['output'];
+  newStoragePerByte: Scalars['U64']['output'];
   noop: Scalars['U64']['output'];
   not: Scalars['U64']['output'];
   or: Scalars['U64']['output'];
   ori: Scalars['U64']['output'];
+  poph: Scalars['U64']['output'];
+  popl: Scalars['U64']['output'];
+  pshh: Scalars['U64']['output'];
+  pshl: Scalars['U64']['output'];
   ret: Scalars['U64']['output'];
   retd: IDependentCost;
   rvrt: Scalars['U64']['output'];
-  s256: Scalars['U64']['output'];
+  s256: IDependentCost;
   sb: Scalars['U64']['output'];
-  scwq: Scalars['U64']['output'];
+  scwq: IDependentCost;
   sll: Scalars['U64']['output'];
   slli: Scalars['U64']['output'];
   smo: IDependentCost;
@@ -343,14 +342,16 @@ export type IGasCosts = {
   srli: Scalars['U64']['output'];
   srw: Scalars['U64']['output'];
   srwq: IDependentCost;
+  stateRoot: IDependentCost;
   sub: Scalars['U64']['output'];
   subi: Scalars['U64']['output'];
   sw: Scalars['U64']['output'];
   sww: Scalars['U64']['output'];
-  swwq: Scalars['U64']['output'];
+  swwq: IDependentCost;
   time: Scalars['U64']['output'];
   tr: Scalars['U64']['output'];
   tro: Scalars['U64']['output'];
+  vmInitialization: IDependentCost;
   wdam: Scalars['U64']['output'];
   wdcm: Scalars['U64']['output'];
   wddv: Scalars['U64']['output'];
@@ -408,6 +409,12 @@ export type IHeader = {
   transactionsRoot: Scalars['Bytes32']['output'];
 };
 
+export type IHeavyOperation = {
+  __typename?: 'HeavyOperation';
+  base: Scalars['U64']['output'];
+  gasPerUnit: Scalars['U64']['output'];
+};
+
 export type IInput = IInputCoin | IInputContract | IInputMessage;
 
 export type IInputCoin = {
@@ -444,6 +451,12 @@ export type IInputMessage = {
   recipient: Scalars['Address']['output'];
   sender: Scalars['Address']['output'];
   witnessIndex: Scalars['Int']['output'];
+};
+
+export type ILightOperation = {
+  __typename?: 'LightOperation';
+  base: Scalars['U64']['output'];
+  unitsPerGas: Scalars['U64']['output'];
 };
 
 export type IMerkleProof = {
@@ -504,10 +517,24 @@ export type IMessageProof = {
   sender: Scalars['Address']['output'];
 };
 
+export enum IMessageState {
+  NotFound = 'NOT_FOUND',
+  Spent = 'SPENT',
+  Unspent = 'UNSPENT'
+}
+
+export type IMessageStatus = {
+  __typename?: 'MessageStatus';
+  state: IMessageState;
+};
+
 export type IMutation = {
   __typename?: 'Mutation';
+  continueTx: IRunResult;
   /** Execute a dry-run of the transaction using a fork of current state, no changes are committed. */
   dryRun: Array<IReceipt>;
+  endSession: Scalars['Boolean']['output'];
+  execute: Scalars['Boolean']['output'];
   /**
    * Sequentially produces `blocks_to_produce` blocks. The first block starts with
    * `start_timestamp`. If the block production in the [`crate::service::Config`] is
@@ -515,6 +542,11 @@ export type IMutation = {
    * them. The `start_timestamp` is the timestamp in seconds.
    */
   produceBlocks: Scalars['U32']['output'];
+  reset: Scalars['Boolean']['output'];
+  setBreakpoint: Scalars['Boolean']['output'];
+  setSingleStepping: Scalars['Boolean']['output'];
+  startSession: Scalars['ID']['output'];
+  startTx: IRunResult;
   /**
    * Submits transaction to the `TxPool`.
    *
@@ -523,15 +555,57 @@ export type IMutation = {
   submit: ITransaction;
 };
 
+
+export type IMutationContinueTxArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type IMutationDryRunArgs = {
   tx: Scalars['HexString']['input'];
   utxoValidation: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+
+export type IMutationEndSessionArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type IMutationExecuteArgs = {
+  id: Scalars['ID']['input'];
+  op: Scalars['String']['input'];
+};
+
+
 export type IMutationProduceBlocksArgs = {
-  blocksToProduce: Scalars['U64']['input'];
+  blocksToProduce: Scalars['U32']['input'];
   startTimestamp: InputMaybe<Scalars['Tai64Timestamp']['input']>;
 };
+
+
+export type IMutationResetArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type IMutationSetBreakpointArgs = {
+  breakpoint: IBreakpoint;
+  id: Scalars['ID']['input'];
+};
+
+
+export type IMutationSetSingleSteppingArgs = {
+  enable: Scalars['Boolean']['input'];
+  id: Scalars['ID']['input'];
+};
+
+
+export type IMutationStartTxArgs = {
+  id: Scalars['ID']['input'];
+  txJson: Scalars['String']['input'];
+};
+
 
 export type IMutationSubmitArgs = {
   tx: Scalars['HexString']['input'];
@@ -547,12 +621,17 @@ export type INodeInfo = {
   vmBacktrace: Scalars['Boolean']['output'];
 };
 
-export type IOutput =
-  | IChangeOutput
-  | ICoinOutput
-  | IContractCreated
-  | IContractOutput
-  | IVariableOutput;
+export type IOutput = IChangeOutput | ICoinOutput | IContractCreated | IContractOutput | IVariableOutput;
+
+/**
+ * A separate `Breakpoint` type to be used as an output, as a single
+ * type cannot act as both input and output type in async-graphql
+ */
+export type IOutputBreakpoint = {
+  __typename?: 'OutputBreakpoint';
+  contract: Scalars['ContractId']['output'];
+  pc: Scalars['U64']['output'];
+};
 
 /** Information about pagination in a connection */
 export type IPageInfo = {
@@ -571,6 +650,22 @@ export type IPoAConsensus = {
   __typename?: 'PoAConsensus';
   /** Gets the signature of the block produced by `PoA` consensus. */
   signature: Scalars['Signature']['output'];
+};
+
+export type IPolicies = {
+  __typename?: 'Policies';
+  gasPrice: Maybe<Scalars['U64']['output']>;
+  maturity: Maybe<Scalars['U32']['output']>;
+  maxFee: Maybe<Scalars['U64']['output']>;
+  witnessLimit: Maybe<Scalars['U64']['output']>;
+};
+
+export type IPredicateParameters = {
+  __typename?: 'PredicateParameters';
+  maxGasPerPredicate: Scalars['U64']['output'];
+  maxMessageDataLength: Scalars['U64']['output'];
+  maxPredicateDataLength: Scalars['U64']['output'];
+  maxPredicateLength: Scalars['U64']['output'];
 };
 
 export type IProgramState = {
@@ -610,18 +705,23 @@ export type IQuery = {
   estimatePredicates: ITransaction;
   /** Returns true when the GraphQL API is serving requests. */
   health: Scalars['Boolean']['output'];
+  memory: Scalars['String']['output'];
   messageProof: Maybe<IMessageProof>;
+  messageStatus: IMessageStatus;
   messages: IMessageConnection;
   nodeInfo: INodeInfo;
+  register: Scalars['U64']['output'];
   transaction: Maybe<ITransaction>;
   transactions: ITransactionConnection;
   transactionsByOwner: ITransactionConnection;
 };
 
+
 export type IQueryBalanceArgs = {
   assetId: Scalars['AssetId']['input'];
   owner: Scalars['Address']['input'];
 };
+
 
 export type IQueryBalancesArgs = {
   after: InputMaybe<Scalars['String']['input']>;
@@ -631,10 +731,12 @@ export type IQueryBalancesArgs = {
   last: InputMaybe<Scalars['Int']['input']>;
 };
 
+
 export type IQueryBlockArgs = {
-  height: InputMaybe<Scalars['U64']['input']>;
+  height: InputMaybe<Scalars['U32']['input']>;
   id: InputMaybe<Scalars['BlockId']['input']>;
 };
+
 
 export type IQueryBlocksArgs = {
   after: InputMaybe<Scalars['String']['input']>;
@@ -643,9 +745,11 @@ export type IQueryBlocksArgs = {
   last: InputMaybe<Scalars['Int']['input']>;
 };
 
+
 export type IQueryCoinArgs = {
   utxoId: Scalars['UtxoId']['input'];
 };
+
 
 export type IQueryCoinsArgs = {
   after: InputMaybe<Scalars['String']['input']>;
@@ -655,20 +759,24 @@ export type IQueryCoinsArgs = {
   last: InputMaybe<Scalars['Int']['input']>;
 };
 
+
 export type IQueryCoinsToSpendArgs = {
   excludedIds: InputMaybe<IExcludeInput>;
   owner: Scalars['Address']['input'];
   queryPerAsset: Array<ISpendQueryElementInput>;
 };
 
+
 export type IQueryContractArgs = {
   id: Scalars['ContractId']['input'];
 };
+
 
 export type IQueryContractBalanceArgs = {
   asset: Scalars['AssetId']['input'];
   contract: Scalars['ContractId']['input'];
 };
+
 
 export type IQueryContractBalancesArgs = {
   after: InputMaybe<Scalars['String']['input']>;
@@ -678,16 +786,31 @@ export type IQueryContractBalancesArgs = {
   last: InputMaybe<Scalars['Int']['input']>;
 };
 
+
 export type IQueryEstimatePredicatesArgs = {
   tx: Scalars['HexString']['input'];
 };
 
+
+export type IQueryMemoryArgs = {
+  id: Scalars['ID']['input'];
+  size: Scalars['U32']['input'];
+  start: Scalars['U32']['input'];
+};
+
+
 export type IQueryMessageProofArgs = {
   commitBlockHeight: InputMaybe<Scalars['U32']['input']>;
   commitBlockId: InputMaybe<Scalars['BlockId']['input']>;
-  messageId: Scalars['MessageId']['input'];
+  nonce: Scalars['Nonce']['input'];
   transactionId: Scalars['TransactionId']['input'];
 };
+
+
+export type IQueryMessageStatusArgs = {
+  nonce: Scalars['Nonce']['input'];
+};
+
 
 export type IQueryMessagesArgs = {
   after: InputMaybe<Scalars['String']['input']>;
@@ -697,9 +820,17 @@ export type IQueryMessagesArgs = {
   owner: InputMaybe<Scalars['Address']['input']>;
 };
 
+
+export type IQueryRegisterArgs = {
+  id: Scalars['ID']['input'];
+  register: Scalars['U32']['input'];
+};
+
+
 export type IQueryTransactionArgs = {
   id: Scalars['TransactionId']['input'];
 };
+
 
 export type IQueryTransactionsArgs = {
   after: InputMaybe<Scalars['String']['input']>;
@@ -707,6 +838,7 @@ export type IQueryTransactionsArgs = {
   first: InputMaybe<Scalars['Int']['input']>;
   last: InputMaybe<Scalars['Int']['input']>;
 };
+
 
 export type IQueryTransactionsByOwnerArgs = {
   after: InputMaybe<Scalars['String']['input']>;
@@ -761,14 +893,34 @@ export enum IReceiptType {
   Revert = 'REVERT',
   ScriptResult = 'SCRIPT_RESULT',
   Transfer = 'TRANSFER',
-  TransferOut = 'TRANSFER_OUT',
+  TransferOut = 'TRANSFER_OUT'
 }
 
 export enum IReturnType {
   Return = 'RETURN',
   ReturnData = 'RETURN_DATA',
-  Revert = 'REVERT',
+  Revert = 'REVERT'
 }
+
+export type IRunResult = {
+  __typename?: 'RunResult';
+  breakpoint: Maybe<IOutputBreakpoint>;
+  jsonReceipts: Array<Scalars['String']['output']>;
+  state: IRunState;
+};
+
+export enum IRunState {
+  /** Stopped on a breakpoint */
+  Breakpoint = 'BREAKPOINT',
+  /** All breakpoints have been processed, and the program has terminated */
+  Completed = 'COMPLETED'
+}
+
+export type IScriptParameters = {
+  __typename?: 'ScriptParameters';
+  maxScriptDataLength: Scalars['U64']['output'];
+  maxScriptLength: Scalars['U64']['output'];
+};
 
 export type ISpendQueryElementInput = {
   /** Target amount for the query. */
@@ -776,7 +928,7 @@ export type ISpendQueryElementInput = {
   /** Identifier of the asset to spend. */
   assetId: Scalars['AssetId']['input'];
   /** The maximum number of currencies for selection. */
-  max: InputMaybe<Scalars['U64']['input']>;
+  max: InputMaybe<Scalars['U32']['input']>;
 };
 
 export type ISqueezedOutStatus = {
@@ -810,9 +962,11 @@ export type ISubscription = {
   submitAndAwait: ITransactionStatus;
 };
 
+
 export type ISubscriptionStatusChangeArgs = {
   id: Scalars['TransactionId']['input'];
 };
+
 
 export type ISubscriptionSubmitAndAwaitArgs = {
   tx: Scalars['HexString']['input'];
@@ -829,17 +983,21 @@ export type ITransaction = {
   __typename?: 'Transaction';
   bytecodeLength: Maybe<Scalars['U64']['output']>;
   bytecodeWitnessIndex: Maybe<Scalars['Int']['output']>;
-  gasLimit: Maybe<Scalars['U64']['output']>;
   gasPrice: Maybe<Scalars['U64']['output']>;
   id: Scalars['TransactionId']['output'];
   inputAssetIds: Maybe<Array<Scalars['AssetId']['output']>>;
+  inputContract: Maybe<IInputContract>;
   inputContracts: Maybe<Array<IContract>>;
   inputs: Maybe<Array<IInput>>;
   isCreate: Scalars['Boolean']['output'];
   isMint: Scalars['Boolean']['output'];
   isScript: Scalars['Boolean']['output'];
   maturity: Maybe<Scalars['U32']['output']>;
+  mintAmount: Maybe<Scalars['U64']['output']>;
+  mintAssetId: Maybe<Scalars['AssetId']['output']>;
+  outputContract: Maybe<IContractOutput>;
   outputs: Array<IOutput>;
+  policies: Maybe<IPolicies>;
   /** Return the transaction bytes using canonical encoding */
   rawPayload: Scalars['HexString']['output'];
   receipts: Maybe<Array<IReceipt>>;
@@ -847,6 +1005,7 @@ export type ITransaction = {
   salt: Maybe<Scalars['Salt']['output']>;
   script: Maybe<Scalars['HexString']['output']>;
   scriptData: Maybe<Scalars['HexString']['output']>;
+  scriptGasLimit: Maybe<Scalars['U64']['output']>;
   status: Maybe<ITransactionStatus>;
   storageSlots: Maybe<Array<Scalars['HexString']['output']>>;
   txPointer: Maybe<Scalars['TxPointer']['output']>;
@@ -872,11 +1031,16 @@ export type ITransactionEdge = {
   node: ITransaction;
 };
 
-export type ITransactionStatus =
-  | IFailureStatus
-  | ISqueezedOutStatus
-  | ISubmittedStatus
-  | ISuccessStatus;
+export type ITransactionStatus = IFailureStatus | ISqueezedOutStatus | ISubmittedStatus | ISuccessStatus;
+
+export type ITxParameters = {
+  __typename?: 'TxParameters';
+  maxGasPerTx: Scalars['U64']['output'];
+  maxInputs: Scalars['U8']['output'];
+  maxOutputs: Scalars['U8']['output'];
+  maxSize: Scalars['U64']['output'];
+  maxWitnesses: Scalars['U32']['output'];
+};
 
 export type IVariableOutput = {
   __typename?: 'VariableOutput';
@@ -890,317 +1054,126 @@ export type IAddressTransactionsQueryVariables = Exact<{
   owner: Scalars['Address']['input'];
 }>;
 
-export type IAddressTransactionsQuery = {
-  __typename?: 'Query';
-  transactionsByOwner: {
-    __typename?: 'TransactionConnection';
-    edges: Array<{
-      __typename?: 'TransactionEdge';
-      node: {
-        __typename?: 'Transaction';
-        id: string;
-        rawPayload: string;
-        gasPrice: string | null;
-        receipts: Array<{
-          __typename?: 'Receipt';
-          pc: string | null;
-          is: string | null;
-          toAddress: string | null;
-          amount: string | null;
-          assetId: string | null;
-          gas: string | null;
-          param1: string | null;
-          param2: string | null;
-          val: string | null;
-          ptr: string | null;
-          digest: string | null;
-          reason: string | null;
-          ra: string | null;
-          rb: string | null;
-          rc: string | null;
-          rd: string | null;
-          len: string | null;
-          receiptType: IReceiptType;
-          result: string | null;
-          gasUsed: string | null;
-          data: string | null;
-          sender: string | null;
-          recipient: string | null;
-          nonce: string | null;
-          contractId: string | null;
-          subId: string | null;
-          contract: {
-            __typename?: 'Contract';
-            id: string;
-            bytecode: string;
-          } | null;
-          to: { __typename?: 'Contract'; id: string; bytecode: string } | null;
-        }> | null;
-        status:
-          | {
-              __typename?: 'FailureStatus';
-              time: string;
-              reason: string;
-              type: 'FailureStatus';
-              block: { __typename?: 'Block'; id: string };
-            }
-          | { __typename?: 'SqueezedOutStatus'; type: 'SqueezedOutStatus' }
-          | {
-              __typename?: 'SubmittedStatus';
-              time: string;
-              type: 'SubmittedStatus';
-            }
-          | {
-              __typename?: 'SuccessStatus';
-              time: string;
-              type: 'SuccessStatus';
-              block: { __typename?: 'Block'; id: string };
-              programState: {
-                __typename?: 'ProgramState';
-                returnType: IReturnType;
-                data: string;
-              } | null;
-            }
-          | null;
-      };
-    }>;
-  };
-};
 
-export type ITransactionFragment = {
-  __typename?: 'Transaction';
-  id: string;
-  rawPayload: string;
-  gasPrice: string | null;
-  receipts: Array<{
-    __typename?: 'Receipt';
-    pc: string | null;
-    is: string | null;
-    toAddress: string | null;
-    amount: string | null;
-    assetId: string | null;
-    gas: string | null;
-    param1: string | null;
-    param2: string | null;
-    val: string | null;
-    ptr: string | null;
-    digest: string | null;
-    reason: string | null;
-    ra: string | null;
-    rb: string | null;
-    rc: string | null;
-    rd: string | null;
-    len: string | null;
-    receiptType: IReceiptType;
-    result: string | null;
-    gasUsed: string | null;
-    data: string | null;
-    sender: string | null;
-    recipient: string | null;
-    nonce: string | null;
-    contractId: string | null;
-    subId: string | null;
-    contract: { __typename?: 'Contract'; id: string; bytecode: string } | null;
-    to: { __typename?: 'Contract'; id: string; bytecode: string } | null;
-  }> | null;
-  status:
-    | {
-        __typename?: 'FailureStatus';
-        time: string;
-        reason: string;
-        type: 'FailureStatus';
-        block: { __typename?: 'Block'; id: string };
-      }
-    | { __typename?: 'SqueezedOutStatus'; type: 'SqueezedOutStatus' }
-    | { __typename?: 'SubmittedStatus'; time: string; type: 'SubmittedStatus' }
-    | {
-        __typename?: 'SuccessStatus';
-        time: string;
-        type: 'SuccessStatus';
-        block: { __typename?: 'Block'; id: string };
-        programState: {
-          __typename?: 'ProgramState';
-          returnType: IReturnType;
-          data: string;
-        } | null;
-      }
-    | null;
-};
+export type IAddressTransactionsQuery = { __typename?: 'Query', transactionsByOwner: { __typename?: 'TransactionConnection', edges: Array<{ __typename?: 'TransactionEdge', node: { __typename?: 'Transaction', id: string, rawPayload: string, gasPrice: string | null, receipts: Array<{ __typename?: 'Receipt', pc: string | null, is: string | null, toAddress: string | null, amount: string | null, assetId: string | null, gas: string | null, param1: string | null, param2: string | null, val: string | null, ptr: string | null, digest: string | null, reason: string | null, ra: string | null, rb: string | null, rc: string | null, rd: string | null, len: string | null, receiptType: IReceiptType, result: string | null, gasUsed: string | null, data: string | null, sender: string | null, recipient: string | null, nonce: string | null, contractId: string | null, subId: string | null, contract: { __typename?: 'Contract', id: string, bytecode: string } | null, to: { __typename?: 'Contract', id: string, bytecode: string } | null }> | null, status: { __typename?: 'FailureStatus', time: string, reason: string, type: 'FailureStatus', block: { __typename?: 'Block', id: string } } | { __typename?: 'SqueezedOutStatus', type: 'SqueezedOutStatus' } | { __typename?: 'SubmittedStatus', time: string, type: 'SubmittedStatus' } | { __typename?: 'SuccessStatus', time: string, type: 'SuccessStatus', block: { __typename?: 'Block', id: string }, programState: { __typename?: 'ProgramState', returnType: IReturnType, data: string } | null } | null } }> } };
 
-export type IContractFragmentFragment = {
-  __typename?: 'Contract';
-  id: string;
-  bytecode: string;
-};
+export type ITransactionFragment = { __typename?: 'Transaction', id: string, rawPayload: string, gasPrice: string | null, receipts: Array<{ __typename?: 'Receipt', pc: string | null, is: string | null, toAddress: string | null, amount: string | null, assetId: string | null, gas: string | null, param1: string | null, param2: string | null, val: string | null, ptr: string | null, digest: string | null, reason: string | null, ra: string | null, rb: string | null, rc: string | null, rd: string | null, len: string | null, receiptType: IReceiptType, result: string | null, gasUsed: string | null, data: string | null, sender: string | null, recipient: string | null, nonce: string | null, contractId: string | null, subId: string | null, contract: { __typename?: 'Contract', id: string, bytecode: string } | null, to: { __typename?: 'Contract', id: string, bytecode: string } | null }> | null, status: { __typename?: 'FailureStatus', time: string, reason: string, type: 'FailureStatus', block: { __typename?: 'Block', id: string } } | { __typename?: 'SqueezedOutStatus', type: 'SqueezedOutStatus' } | { __typename?: 'SubmittedStatus', time: string, type: 'SubmittedStatus' } | { __typename?: 'SuccessStatus', time: string, type: 'SuccessStatus', block: { __typename?: 'Block', id: string }, programState: { __typename?: 'ProgramState', returnType: IReturnType, data: string } | null } | null };
 
-export type IReceiptFragment = {
-  __typename?: 'Receipt';
-  pc: string | null;
-  is: string | null;
-  toAddress: string | null;
-  amount: string | null;
-  assetId: string | null;
-  gas: string | null;
-  param1: string | null;
-  param2: string | null;
-  val: string | null;
-  ptr: string | null;
-  digest: string | null;
-  reason: string | null;
-  ra: string | null;
-  rb: string | null;
-  rc: string | null;
-  rd: string | null;
-  len: string | null;
-  receiptType: IReceiptType;
-  result: string | null;
-  gasUsed: string | null;
-  data: string | null;
-  sender: string | null;
-  recipient: string | null;
-  nonce: string | null;
-  contractId: string | null;
-  subId: string | null;
-  contract: { __typename?: 'Contract'; id: string; bytecode: string } | null;
-  to: { __typename?: 'Contract'; id: string; bytecode: string } | null;
-};
+export type IContractFragmentFragment = { __typename?: 'Contract', id: string, bytecode: string };
+
+export type IReceiptFragment = { __typename?: 'Receipt', pc: string | null, is: string | null, toAddress: string | null, amount: string | null, assetId: string | null, gas: string | null, param1: string | null, param2: string | null, val: string | null, ptr: string | null, digest: string | null, reason: string | null, ra: string | null, rb: string | null, rc: string | null, rd: string | null, len: string | null, receiptType: IReceiptType, result: string | null, gasUsed: string | null, data: string | null, sender: string | null, recipient: string | null, nonce: string | null, contractId: string | null, subId: string | null, contract: { __typename?: 'Contract', id: string, bytecode: string } | null, to: { __typename?: 'Contract', id: string, bytecode: string } | null };
 
 export const gqlOperations = {
   Query: {
-    AddressTransactions: 'AddressTransactions',
+    AddressTransactions: 'AddressTransactions'
   },
   Fragment: {
     transaction: 'transaction',
     contractFragment: 'contractFragment',
-    receipt: 'receipt',
-  },
-};
+    receipt: 'receipt'
+  }
+}
 export const ContractFragmentFragmentDoc = gql`
-  fragment contractFragment on Contract {
-    id
-    bytecode
-  }
-`;
+    fragment contractFragment on Contract {
+  id
+  bytecode
+}
+    `;
 export const ReceiptFragmentDoc = gql`
-  fragment receipt on Receipt {
-    contract {
-      ...contractFragment
-    }
-    pc
-    is
-    to {
-      ...contractFragment
-    }
-    toAddress
-    amount
-    assetId
-    gas
-    param1
-    param2
-    val
-    ptr
-    digest
-    reason
-    ra
-    rb
-    rc
-    rd
-    len
-    receiptType
-    result
-    gasUsed
-    data
-    sender
-    recipient
-    nonce
-    contractId
-    subId
+    fragment receipt on Receipt {
+  contract {
+    ...contractFragment
   }
-  ${ContractFragmentFragmentDoc}
-`;
+  pc
+  is
+  to {
+    ...contractFragment
+  }
+  toAddress
+  amount
+  assetId
+  gas
+  param1
+  param2
+  val
+  ptr
+  digest
+  reason
+  ra
+  rb
+  rc
+  rd
+  len
+  receiptType
+  result
+  gasUsed
+  data
+  sender
+  recipient
+  nonce
+  contractId
+  subId
+}
+    ${ContractFragmentFragmentDoc}`;
 export const TransactionFragmentDoc = gql`
-  fragment transaction on Transaction {
-    id
-    rawPayload
-    gasPrice
-    receipts {
-      ...receipt
+    fragment transaction on Transaction {
+  id
+  rawPayload
+  gasPrice
+  receipts {
+    ...receipt
+  }
+  status {
+    type: __typename
+    ... on SubmittedStatus {
+      time
     }
-    status {
-      type: __typename
-      ... on SubmittedStatus {
-        time
+    ... on SuccessStatus {
+      block {
+        id
       }
-      ... on SuccessStatus {
-        block {
-          id
-        }
-        time
-        programState {
-          returnType
-          data
-        }
+      time
+      programState {
+        returnType
+        data
       }
-      ... on FailureStatus {
-        block {
-          id
-        }
-        time
-        reason
+    }
+    ... on FailureStatus {
+      block {
+        id
       }
+      time
+      reason
     }
   }
-  ${ReceiptFragmentDoc}
-`;
+}
+    ${ReceiptFragmentDoc}`;
 export const AddressTransactionsDocument = gql`
-  query AddressTransactions($first: Int, $owner: Address!) {
-    transactionsByOwner(first: $first, owner: $owner) {
-      edges {
-        node {
-          ...transaction
-          receipts {
-            ...receipt
-          }
+    query AddressTransactions($first: Int, $owner: Address!) {
+  transactionsByOwner(first: $first, owner: $owner) {
+    edges {
+      node {
+        ...transaction
+        receipts {
+          ...receipt
         }
       }
     }
   }
-  ${TransactionFragmentDoc}
-  ${ReceiptFragmentDoc}
-`;
+}
+    ${TransactionFragmentDoc}
+${ReceiptFragmentDoc}`;
 
-export type SdkFunctionWrapper = <T>(
-  action: (requestHeaders?: Record<string, string>) => Promise<T>,
-  operationName: string,
-  operationType?: string
-) => Promise<T>;
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string) => Promise<T>;
 
-const defaultWrapper: SdkFunctionWrapper = (
-  action,
-  _operationName,
-  _operationType
-) => action();
 
-export function getSdk(
-  client: GraphQLClient,
-  withWrapper: SdkFunctionWrapper = defaultWrapper
-) {
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
+
+export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    AddressTransactions(
-      variables: IAddressTransactionsQueryVariables,
-      requestHeaders?: GraphQLClientRequestHeaders
-    ): Promise<IAddressTransactionsQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<IAddressTransactionsQuery>(
-            AddressTransactionsDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders }
-          ),
-        'AddressTransactions',
-        'query'
-      );
-    },
+    AddressTransactions(variables: IAddressTransactionsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<IAddressTransactionsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<IAddressTransactionsQuery>(AddressTransactionsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AddressTransactions', 'query');
+    }
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
