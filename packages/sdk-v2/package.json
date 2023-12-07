@@ -24,8 +24,7 @@
   ],
   "scripts": {
     "build": "pnpm ts:check && tsup",
-    "ts:check": "tsc --noEmit",
-    "test": "jest --verbose"
+    "ts:check": "tsc --noEmit"
   },
   "dependencies": {
     "@fuels/assets": "0.0.11",
