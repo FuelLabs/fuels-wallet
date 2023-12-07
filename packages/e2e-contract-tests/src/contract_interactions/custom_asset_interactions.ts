@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 
 import { MAIN_CONTRACT_ID, EXTERNAL_CONTRACT_ID } from '../config';
 import { CustomAssetAbi__factory } from '../contracts';
-import type { IdentityInput } from '../contracts/CustomAssetAbi';
+import type { IdentityInput } from '../contracts/contracts/CustomAssetAbi';
 
 const TX_PARAMS = { gasPrice: 1, gasLimit: bn(1_000_000) };
 

@@ -36,11 +36,11 @@
     "xstate": "^4.38.2"
   },
   "peerDependencies": {
-    "fuels": ">=0.0.0-next-20231206190252"
+    "fuels": ">=next"
   },
   "devDependencies": {
     "@types/uuid": "^9.0.5",
-    "fuels": "0.0.0-next-20231206190252",
+    "fuels": "next",
     "jest-webextension-mock": "^3.8.9",
     "tsup": "^7.2.0"
   }

@@ -192,7 +192,6 @@ const thirtyFourDaysAgo = dateToTai64(
 );
 export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
   transaction: {
-    gasLimit: bn(100000000),
     policies: [
       {
         type: PolicyType.GasPrice,
@@ -355,7 +354,6 @@ export const MOCK_TRANSACTION_CREATE_CONTRACT: MockTransaction = {
       },
     ],
     policyTypes: 1,
-    gasLimit: bn(100000000),
     bytecodeLength: 65,
     bytecodeWitnessIndex: 0,
     storageSlotsCount: 1,
@@ -553,7 +551,6 @@ export const MOCK_TRANSACTION_TRANSFER: MockTransaction = {
       },
     ],
     policyTypes: 1,
-    gasLimit: bn(100000000),
     scriptLength: 4,
     scriptDataLength: 0,
     inputsCount: 2,
@@ -709,7 +706,6 @@ export const MOCK_TRANSACTION_WITHDRAW_FROM_FUEL: MockTransaction = {
       },
     ],
     policyTypes: 1,
-    gasLimit: bn(100000000),
     inputs: [MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.inputCoin],
     outputs: [MOCK_TRANSACTION_WITHDRAW_FROM_FUEL_PARTS.outputChange],
     witnesses: [{ data: '0x', dataLength: 0 }],

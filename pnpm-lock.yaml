@@ -134,7 +134,7 @@ importers:
         specifier: ^5.0.13
         version: 5.0.16
       '@fuel-ts/wallet-manager':
-        specifier: 0.0.0-next-20231206190252
+        specifier: next
         version: 0.0.0-next-20231206190252
       '@fuel-ui/css':
         specifier: 0.21.1
@@ -209,7 +209,7 @@ importers:
         specifier: ^10.16.4
         version: 10.16.15(react-dom@18.2.0)(react@18.2.0)
       fuels:
-        specifier: 0.0.0-next-20231206190252
+        specifier: next
         version: 0.0.0-next-20231206190252
       graphql:
         specifier: ^16.8.1
@@ -465,7 +465,7 @@ importers:
         specifier: ^10.16.4
         version: 10.16.15(react-dom@18.2.0)(react@18.2.0)
       fuels:
-        specifier: 0.0.0-next-20231206190252
+        specifier: next
         version: 0.0.0-next-20231206190252
       globby:
         specifier: ^13.2.2
@@ -568,7 +568,7 @@ importers:
         specifier: workspace:*
         version: link:../types
       fuels:
-        specifier: 0.0.0-next-20231206190252
+        specifier: next
         version: 0.0.0-next-20231206190252
       react:
         specifier: ^18.2.0
@@ -648,7 +648,7 @@ importers:
         version: 18.2.0
     devDependencies:
       fuels:
-        specifier: 0.0.0-next-20231206190252
+        specifier: next
         version: 0.0.0-next-20231206190252
       tsup:
         specifier: ^7.2.0
@@ -679,7 +679,7 @@ importers:
         specifier: ^9.0.5
         version: 9.0.7
       fuels:
-        specifier: 0.0.0-next-20231206190252
+        specifier: next
         version: 0.0.0-next-20231206190252
       jest-webextension-mock:
         specifier: ^3.8.9
@@ -698,10 +698,10 @@ importers:
         version: 3.3.0
     devDependencies:
       '@fuel-ts/wallet':
-        specifier: 0.0.0-next-20231206190252
+        specifier: next
         version: 0.0.0-next-20231206190252
       fuels:
-        specifier: 0.0.0-next-20231206190252
+        specifier: next
         version: 0.0.0-next-20231206190252
       jest-environment-jsdom:
         specifier: 29.6.2
@@ -716,7 +716,7 @@ importers:
         specifier: ^0.5.10
         version: 0.5.10
       fuels:
-        specifier: 0.0.0-next-20231206190252
+        specifier: next
         version: 0.0.0-next-20231206190252
     devDependencies:
       '@playwright/test':
@@ -742,7 +742,7 @@ importers:
         version: 1.7.0
     devDependencies:
       fuels:
-        specifier: 0.0.0-next-20231206190252
+        specifier: next
         version: 0.0.0-next-20231206190252
 
 packages:
