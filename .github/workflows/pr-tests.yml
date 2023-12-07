@@ -132,7 +132,7 @@ jobs:
         run: pnpm node:up:test
 
       - name: Build Application
-        run: pnpm build:test-e2e-contracts
+        run: pnpm build:all
         env:
           ## increase node.js m memory limit for building
           ## with sourcemaps
