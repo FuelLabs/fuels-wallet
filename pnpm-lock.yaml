@@ -22,6 +22,7 @@ overrides:
   '@babel/traverse@<7.23.2': '>=7.23.2'
   '@adobe/css-tools@<4.3.2': '>=4.3.2'
   vite@>=4.4.0 <4.4.12: '>=4.4.12'
+  '@adobe/css-tools@<4.3.2': '>=4.3.2'
 
 importers:
 
