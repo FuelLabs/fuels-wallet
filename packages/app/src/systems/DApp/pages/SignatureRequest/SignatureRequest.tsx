@@ -1,6 +1,6 @@
 import { Box, Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
 import { AccountInfo } from '~/systems/Account';
-import { Layout, ConnectInfo } from '~/systems/Core';
+import { Layout, ConnectInfo, coreStyles } from '~/systems/Core';
 
 import { useSignatureRequest } from '../../hooks';
 
@@ -36,14 +36,14 @@ export function SignatureRequest() {
               <Card.Body>
                 <Flex
                   css={{
+                    ...coreStyles.scrollable(),
                     overflowX: 'auto',
-                    maxWidth: '100%',
                   }}
                 >
                   <div>
                     <Text
                       css={{
-                        width: '800px',
+                        width: message.length > 80 ? '800px' : '100%',
                         wordBreak: 'break-all',
                       }}
                     >
