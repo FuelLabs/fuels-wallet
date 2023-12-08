@@ -19,10 +19,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
 
-      - name: Checkout main
-        run: |
-          git checkout master
-
       - name: Check versions
         id: check_versions
         run: |
