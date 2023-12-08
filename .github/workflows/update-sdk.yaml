@@ -53,6 +53,8 @@ jobs:
 
       - name: Create Pull Request
         if: steps.git-check.outputs.changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           latest_version=${{ steps.check_versions.outputs.latest_version }}
           branch_name="update-sdk-$latest_version"
