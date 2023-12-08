@@ -5,7 +5,8 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["@fuel-wallet/sdk/dist"]
   },
   "include": [
     "load.envs.js",
