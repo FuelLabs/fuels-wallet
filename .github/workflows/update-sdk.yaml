@@ -47,4 +47,8 @@ jobs:
         run: |
           latest_version=${{ steps.check_versions.outputs.latest_version }}
           pr_title="chore: update sdk to $latest_version"
-          gh pr create --title "$pr_title" --body "This PR updates the SDK package to version $latest_version." --base main --head $branch_name
+          gh pr create \
+            --title "$pr_title" \
+            --body "This PR updates the SDK package to version [$latest_version](https://github.com/FuelLabs/fuels-ts/releases/tag/v$latest_version)." \
+            --base master \
+            --head $branch_name
