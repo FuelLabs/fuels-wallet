@@ -1,4 +1,4 @@
-import { Box, Button, Card, HelperIcon, Text } from '@fuel-ui/react';
+import { Box, Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
 import { AccountInfo } from '~/systems/Account';
 import { Layout, ConnectInfo } from '~/systems/Core';
 
@@ -34,16 +34,23 @@ export function SignatureRequest() {
                 </HelperIcon>
               </Card.Header>
               <Card.Body>
-                <Text
+                <Flex
                   css={{
                     overflowX: 'auto',
                     maxWidth: '100%',
-                    wordBreak: 'break-all',
-                    display: 'block',
                   }}
                 >
-                  {message}
-                </Text>
+                  <div>
+                    <Text
+                      css={{
+                        width: '800px',
+                        wordBreak: 'break-all',
+                      }}
+                    >
+                      {message}
+                    </Text>
+                  </div>
+                </Flex>
               </Card.Body>
             </Card>
           </Box.Flex>
