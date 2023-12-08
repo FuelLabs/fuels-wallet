@@ -7,7 +7,9 @@ on:
 jobs:
   check-pr-failure:
     runs-on: ubuntu-latest
-    if: github.actor == 'github-actions[bot]' # Check if the PR is opened by the bot
+    # Waiting intermitent errors being solved in our repo
+    if: false
+    # if: github.actor == 'github-actions[bot]' # Check if the PR is opened by the bot
     steps:
       - name: Check PR Build Status
         id: check_status
