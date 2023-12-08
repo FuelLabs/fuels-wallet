@@ -8,9 +8,8 @@ import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
 import { testSetup } from '../utils';
 
+import { MAIN_CONTRACT_ID } from './config';
 import { checkFee, connect, checkAddresses } from './utils';
-
-const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Mint Assets', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;
@@ -36,7 +35,7 @@ test.describe('Mint Assets', () => {
     await mintButton.click();
 
     // test asset is correct
-    const assetId = calculateAssetId(process.env.VITE_CONTRACT_ID!);
+    const assetId = calculateAssetId(MAIN_CONTRACT_ID);
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
     // short address function copied from app package
@@ -53,7 +52,7 @@ test.describe('Mint Assets', () => {
       maxFee: fee.add(100),
     });
 
-    const fuelContractId = toBech32(VITE_CONTRACT_ID!);
+    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
       { address: fuelWallet.address.toAddress(), isContract: false },
       { address: fuelContractId, isContract: true },
@@ -86,7 +85,7 @@ test.describe('Mint Assets', () => {
     const name = 'Token';
     const symbol = 'TKN';
     const decimals = '6';
-    const assetId = calculateAssetId(process.env.VITE_CONTRACT_ID!, subId);
+    const assetId = calculateAssetId(MAIN_CONTRACT_ID, subId);
 
     await fuelWalletTestHelper.addAssetThroughSettings(
       assetId,
@@ -127,7 +126,7 @@ test.describe('Mint Assets', () => {
     });
 
     // test to and from addresses
-    const fuelContractId = toBech32(VITE_CONTRACT_ID!);
+    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
       { address: fuelWallet.address.toAddress(), isContract: false },
       { address: fuelContractId, isContract: true },

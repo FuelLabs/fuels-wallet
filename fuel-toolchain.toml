@@ -1,5 +1,0 @@
-[toolchain]
-channel = "beta-5"
-
-[components]
-forc = "0.48.1"
