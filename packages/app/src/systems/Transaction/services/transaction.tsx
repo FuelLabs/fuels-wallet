@@ -21,7 +21,7 @@ import {
   hexlify,
   processGqlReceipt,
 } from 'fuels';
-import { isEth } from '~/systems/Asset';
+import { isEth } from '~/systems/Asset/utils/asset';
 import { db, uniqueId, WalletLockedCustom } from '~/systems/Core';
 
 import type { Transaction } from '../types';
