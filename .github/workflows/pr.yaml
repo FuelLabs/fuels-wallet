@@ -11,7 +11,7 @@ concurrency:
 jobs:
   validate-title:
     name: Validate PR Title
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: amannn/action-semantic-pull-request@v4
         env:
@@ -19,7 +19,7 @@ jobs:
 
   check-packages-changed:
     name: Assign project changed
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
     outputs:
       changed: ${{ steps.packages-changed.outputs.any_changed }}
     steps:
@@ -38,7 +38,7 @@ jobs:
     name: Validate PR Changeset
     needs: check-packages-changed
     if: ${{ github.head_ref != 'changeset-release/master' && needs.check-packages-changed.outputs.changed == 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -53,7 +53,7 @@ jobs:
 
   audit:
     name: Audit
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
@@ -61,7 +61,7 @@ jobs:
 
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
     permissions:
       checks: write
       pull-requests: write
