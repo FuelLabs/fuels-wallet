@@ -17,6 +17,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: master
+          fetch-depth: 0
+
       - uses: FuelLabs/github-actions/setups/node@master
 
       - name: Check versions
@@ -34,9 +38,9 @@ jobs:
         if: steps.git-check.outputs.changes == 'true'
         run: |
           latest_version=${{ steps.check_versions.outputs.latest_version }}
+          branch_name="update-sdk-$latest_version"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          branch_name="update-sdk-$latest_version"
 
           # Check if branch already exists
           if git rev-parse --verify $branch_name; then
