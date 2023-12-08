@@ -22,7 +22,8 @@ jobs:
       - name: Check versions
         id: check_versions
         run: |
-          node ./scripts/check-sdk-rc.mjs
+          cd packages/update-sdk
+          pnpm check-versions
 
       - name: Check for changes
         id: git-check
