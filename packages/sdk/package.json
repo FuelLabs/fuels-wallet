@@ -36,7 +36,7 @@
     "xstate": "^4.38.2"
   },
   "peerDependencies": {
-    "fuels": "0.67.0"
+    "fuels": ">=0.67.0"
   },
   "devDependencies": {
     "@types/uuid": "^9.0.5",
