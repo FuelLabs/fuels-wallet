@@ -1,5 +1,6 @@
 {
   "name": "@fuels/update-sdk",
+  "private": true,
   "version": "0.13.10",
   "license": "Apache-2.0",
   "main": "src/index.ts",
