@@ -3,6 +3,23 @@
   "version": "0.13.8",
   "license": "Apache-2.0",
   "main": "src/index.ts",
+  "publishConfig": {
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "typings": "dist/index.d.ts",
+    "exports": {
+      ".": {
+        "require": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      }
+    }
+  },
+  "scripts": {
+    "build": "pnpm ts:check && tsup",
+    "ts:check": "tsc --noEmit"
+  },
   "dependencies": {
     "@fuels/assets": "^0.1.1",
     "dexie-observable": "4.0.1-beta.13",
@@ -12,6 +29,7 @@
     "fuels": ">=0.67.0"
   },
   "devDependencies": {
-    "fuels": "0.67.0"
+    "fuels": "0.67.0",
+    "tsup": "^7.2.0"
   }
 }
