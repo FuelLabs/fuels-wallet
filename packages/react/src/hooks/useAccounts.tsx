@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useFuel } from '../components';
+import { useFuel } from '../providers';
 import { QUERY_KEYS } from '../utils';
 
 export const useAccounts = () => {
@@ -11,18 +11,18 @@ export const useAccounts = () => {
     async () => {
       try {
         const accounts = await fuel.accounts();
-        return accounts || null;
+        return accounts || [];
       } catch (error: unknown) {
-        return null;
+        return [];
       }
     },
     {
-      enabled: !!fuel,
+      initialData: [],
     }
   );
 
   return {
-    accounts: data || undefined,
+    accounts: data,
     ...queryProps,
   };
 };

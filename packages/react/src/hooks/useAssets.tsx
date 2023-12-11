@@ -1,7 +1,7 @@
 import type { Asset } from '@fuel-wallet/sdk';
 import { useQuery } from '@tanstack/react-query';
 
-import { useFuel } from '../components';
+import { useFuel } from '../providers';
 import { QUERY_KEYS } from '../utils';
 
 export const useAssets = () => {
@@ -18,7 +18,6 @@ export const useAssets = () => {
       }
     },
     {
-      enabled: !!fuel,
       initialData: [],
     }
   );
