@@ -135,7 +135,6 @@ export const depositHalfAndExternalMint = async ({
     .txParams(TX_PARAMS)
     .call();
 
-  // console.log(result.callResult.receipts);
   if (result.transactionResult.isStatusSuccess) {
     toast.success('Transaction successful.');
   }

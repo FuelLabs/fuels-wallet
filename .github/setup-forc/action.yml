@@ -24,16 +24,3 @@ runs:
         override: true
 
     - uses: Swatinem/rust-cache@v1
-
-    - name: Set git config
-      run: |
-        git config --global core.bigfilethreshold 100m
-      shell:
-        bash
-
-    - uses: actions/checkout@v2
-    - name: Install Fuel toolchain
-      uses: FuelLabs/action-fuel-toolchain@master
-      with:
-        name: beta-4
-        components: forc@${{ inputs.forc-version }}, fuel-core@${{ inputs.fuel-core-version }}
