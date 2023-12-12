@@ -61,7 +61,7 @@ export const ALT_ASSET = {
 
 export const FUEL_NETWORK = {
   name: 'Fuel Testnet',
-  url: 'https://beta-4.fuel.network/graphql',
+  url: 'https://beta-5.swayswap.io/graphql',
 };
 
 export async function getAccount(page: Page) {
