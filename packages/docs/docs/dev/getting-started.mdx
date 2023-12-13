@@ -30,9 +30,15 @@ To use it, you must also install the [`fuels`](https://www.npmjs.com/package/fue
 npm install fuels @fuel-wallet/sdk
 ```
 
+To install the latest prerelease of `@fuel-wallet/sdk`, use the command:
+
+```bash
+npm install fuels @fuel-wallet/sdk@master
+```
+
 ### Usage
 
-To use the SDK in your TypeScript project, add the following line to your tsconfig.json file:
+To use the SDK and the React Hooks in your TypeScript project, add the following line to your `tsconfig.json` file:
 
 ```json
 {
@@ -69,7 +75,7 @@ const fuel = new Fuel();
 await fuel.connect();
 ```
 
-## Detect when fuel is loaded
+### Detect when fuel is loaded
 
 It's possible that your application loads before `window.fuel` is injected. To detect when the `fuel` is loaded and ready to use, you can listen to the event `FuelLoaded` on the document.
 
@@ -77,12 +83,44 @@ It's possible that your application loads before `window.fuel` is injected. To d
 
 <Examples.FuelLoaded />
 
-### With React
+## Using React
 
-In a React app, you can use the `useFuel` hook below to detect if the Fuel Wallet extension is installed or not.
+Fuel Wallet provides a set of React hooks that improve the developer experience.
 
-<CodeImport file="../../src/hooks/useFuel.tsx" />
+### Installation
 
-Here is how you can use the `useFuel` hook in a component:
+```bash
+npm install @fuel-wallet/react
+```
 
-<CodeImport file="../../examples/events/Accounts.tsx" commentBlock="useFuel" />
+To install the latest prerelease of `@fuel-wallet/react`, use the command:
+
+```bash
+npm install fuels @fuel-wallet/react@master
+```
+
+### Usage
+
+Wrap your application with the `FuelProvider` component.
+
+```tsx
+// index.tsx
+import { FuelProvider } from '@fuel-wallet/react';
+//...
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <FuelProvider>
+      <App />
+    </FuelProvider>
+  </React.StrictMode>
+);
+```
+
+Here is how you can use the `useFuel` hook in a component to access an instance of `Fuel`:
+
+```ts
+import { useFuel } from '@fuel-wallet/react';
+// ...
+const { fuel } = useFuel();
+await fuel.connect();
+```

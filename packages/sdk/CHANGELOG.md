@@ -1,5 +1,66 @@
 # @fuel-wallet/sdk
 
+## 0.13.10
+
+### Patch Changes
+
+- [#978](https://github.com/FuelLabs/fuels-wallet/pull/978) [`1f34e67`](https://github.com/FuelLabs/fuels-wallet/commit/1f34e67b36ef94a8164f6cabfea143ac4d92f197) Thanks [@luizstacio](https://github.com/luizstacio)! - chore: fix icons on fuel wallet development attachment
+
+- Updated dependencies [[`1f34e67`](https://github.com/FuelLabs/fuels-wallet/commit/1f34e67b36ef94a8164f6cabfea143ac4d92f197)]:
+  - @fuel-wallet/types@0.13.10
+
+## 0.13.9
+
+### Patch Changes
+
+- [#976](https://github.com/FuelLabs/fuels-wallet/pull/976) [`217f04d`](https://github.com/FuelLabs/fuels-wallet/commit/217f04dc918c547b9922a7403a12f5fb4b59f74f) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: attach development wallet on release tags
+
+- Updated dependencies [[`217f04d`](https://github.com/FuelLabs/fuels-wallet/commit/217f04dc918c547b9922a7403a12f5fb4b59f74f)]:
+  - @fuel-wallet/types@0.13.9
+
+## 0.13.8
+
+### Patch Changes
+
+- [#973](https://github.com/FuelLabs/fuels-wallet/pull/973) [`208b955`](https://github.com/FuelLabs/fuels-wallet/commit/208b95563a9bfb4cd6700ee6abc315d82f5fc3e5) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: update fuels sdk to version 0.67.0
+
+- Updated dependencies [[`208b955`](https://github.com/FuelLabs/fuels-wallet/commit/208b95563a9bfb4cd6700ee6abc315d82f5fc3e5)]:
+  - @fuel-wallet/types@0.13.8
+
+## 0.13.7
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/types@0.13.7
+
+## 0.13.6
+
+### Patch Changes
+
+- [#948](https://github.com/FuelLabs/fuels-wallet/pull/948) [`c2baa3c`](https://github.com/FuelLabs/fuels-wallet/commit/c2baa3c5a4bc5212bce5275390dd71c111aa83c5) Thanks [@luizstacio](https://github.com/luizstacio)! - Fix types deps on wallet packs
+
+- Updated dependencies [[`c2baa3c`](https://github.com/FuelLabs/fuels-wallet/commit/c2baa3c5a4bc5212bce5275390dd71c111aa83c5)]:
+  - @fuel-wallet/types@0.13.6
+
+## 0.13.5
+
+## 0.13.4
+
+### Patch Changes
+
+- [#923](https://github.com/FuelLabs/fuels-wallet/pull/923) [`f683bae`](https://github.com/FuelLabs/fuels-wallet/commit/f683baeb6efbcc75561ac53c9c0d9d05f3bbae29) Thanks [@matt-user](https://github.com/matt-user)! - chore: bump fuels version
+
+## 0.13.3
+
+### Patch Changes
+
+- [#917](https://github.com/FuelLabs/fuels-wallet/pull/917) [`7ef4fac`](https://github.com/FuelLabs/fuels-wallet/commit/7ef4facf3e61c409ad5e7b794700f90c62cbf865) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: load connectors on start up
+
+## 0.13.2
+
+## 0.13.1
+
 ## 0.13.0
 
 ### Minor Changes

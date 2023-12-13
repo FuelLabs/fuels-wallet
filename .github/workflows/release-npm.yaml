@@ -6,16 +6,15 @@ on:
       - master
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
   BUILD_VERSION: ""
-  CHROME_BUILD_PATH: ""
 
 jobs:
   release-changesets:
-    name: Changesets Release
+    name: Release master or rc
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
@@ -30,7 +29,7 @@ jobs:
       - name: Bump and Collect Version
         run: |
           pnpm changeset version
-          echo "BUILD_VERSION=$(sed -nE 's/^\s*"version": "(.*?)",$/\1/p' packages/app/package.json)" >> $GITHUB_ENV
+          echo "BUILD_VERSION=$(pnpm -s packages:version)" >> $GITHUB_ENV
           git reset --hard
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -54,11 +53,20 @@ jobs:
           ## with sourcemaps
           NODE_OPTIONS: "--max-old-space-size=4096"
 
+      - name: Build Fuel Wallet Development
+        run: pnpm build:crx
+        env:
+          VITE_CRX_RELEASE: false
+          VITE_CRX_NAME: "Fuel Wallet Development"
+          CRX_OUT: "dist-crx-dev"
+          APP_VERSION_POSTFIX: "-development"
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
       - name: Create Release Pull Request or Publish to NPM
         id: changesets
         uses: FuelLabs/changesets-action@main
         with:
-          publish: pnpm changeset:release
+          publish: pnpm changeset publish --tag rc
           commit: "ci(changesets): versioning packages"
           title: "ci(changesets): versioning packages"
           createGithubReleases: aggregate
@@ -68,21 +76,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Release to @next tag
+      - name: Release to @master tag
         if: steps.changesets.outputs.published != 'true'
         run: |
           git checkout master
-          pnpm changeset version --snapshot next
-          pnpm changeset publish --tag next
+          pnpm changeset version --snapshot master
+          pnpm changeset publish --tag master
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create Fuel Wallet releases version names
-        run: |
-          CHROME_BUILD_PATH="./fuel-wallet-chrome-${{ env.BUILD_VERSION }}.zip"
-          echo "CHROME_BUILD_PATH=$CHROME_BUILD_PATH" >> $GITHUB_ENV
-          cp ./packages/app/dist/fuel-wallet.zip $CHROME_BUILD_PATH
 
       - name: Upload aritifacts to Sentry
         if: steps.changesets.outputs.published == 'true'
@@ -102,4 +104,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: v${{ env.BUILD_VERSION }}
           files: |
-            ${{ env.CHROME_BUILD_PATH }}
+            ./packages/app/dist/*.zip

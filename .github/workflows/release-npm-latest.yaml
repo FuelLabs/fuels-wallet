@@ -1,0 +1,36 @@
+name: "Release latest"
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  BUILD_VERSION: ""
+
+jobs:
+  release-npm-latest:
+    name: Tag packages as latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # need this to get full git-history/clone in order to build changelogs and check changesets
+          fetch-depth: 0
+      - uses: FuelLabs/github-actions/setups/node@master
+      - uses: FuelLabs/github-actions/setups/npm@master
+        with:
+          npm-token: ${{ secrets.NPM_TOKEN }}
+      
+      - name: Collect current version
+        run: |
+          echo "BUILD_VERSION=$(pnpm -s packages:version)" >> $GITHUB_ENV
+
+      - name: Change tag to latest
+        run: |
+          npm dist-tag add @fuel-wallet/sdk@${{ env.BUILD_VERSION }} latest
+          npm dist-tag add @fuel-wallet/types@${{ env.BUILD_VERSION }} latest
+          npm dist-tag add @fuel-wallet/react@${{ env.BUILD_VERSION }} latest
+          npm dist-tag add @fuel-wallet/playwright-utils@${{ env.BUILD_VERSION }} latest

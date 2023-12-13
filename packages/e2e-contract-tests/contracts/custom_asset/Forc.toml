@@ -1,0 +1,10 @@
+[project]
+authors = ["Matt Auer"]
+entry = "main.sw"
+license = "Apache-2.0"
+name = "custom_asset"
+
+[dependencies]
+src_20 = { git = "https://github.com/FuelLabs/sway-standards", tag = "v0.1.1" }
+src_3 = { git = "https://github.com/FuelLabs/sway-standards", tag = "v0.1.1" }
+token = { git = "https://github.com/FuelLabs/sway-libs", tag = "v0.14.0" }

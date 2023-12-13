@@ -43,6 +43,6 @@ export default defineManifest({
   host_permissions: ['<all_urls>'],
   permissions: ['storage', 'alarms', 'tabs', 'clipboardWrite', 'scripting'],
   content_security_policy: {
-    extension_pages: "script-src 'self' 'wasm-unsafe-eval'",
+    extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'",
   },
 });

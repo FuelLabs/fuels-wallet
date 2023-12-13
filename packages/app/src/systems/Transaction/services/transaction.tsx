@@ -194,6 +194,7 @@ export class TxService {
     params: GetTransactionSummaryFromRequestParams
   ): Promise<TransactionSummary<TTransactionType>> {
     const { provider, transactionRequest, abiMap } = params;
+    await provider.estimateTxDependencies(transactionRequest);
     const transaction = transactionRequest.toTransaction();
     const transactionBytes = transactionRequest.toTransactionBytes();
     const { dryRun: gqlReceipts } = await provider.operations.dryRun({
@@ -209,6 +210,7 @@ export class TxService {
       abiMap,
       gasPerByte,
       gasPriceFactor,
+      maxInputs: bn(255),
     });
     transactionSummary.fee = await calculateTotalFee({
       gasPerByte,
@@ -275,7 +277,9 @@ export class TxService {
     const params: ScriptTransactionRequestLike = { gasLimit, gasPrice };
     const request = new ScriptTransactionRequest(params);
     request.addCoinOutput(wallet.address, bn(1), BaseAssetId);
-    await wallet.fund(request);
+    const { maxFee, requiredQuantities } =
+      await provider.getTransactionCost(request);
+    await wallet.fund(request, requiredQuantities, maxFee);
 
     const { txResult } = await TxService.simulateTransaction({
       transactionRequest: request,
@@ -291,7 +295,7 @@ export class TxService {
     const { gasPrice } = await getGasConfig(input.provider);
     // Because gasLimit is caulculated on the number of operations we can
     // safely assume that a transfer will consume at max 20 units, this should
-    // be change once we add multiple trasnfers in a single transaction.
+    // be change once we add multiple transfers in a single transaction.
     const request = new ScriptTransactionRequest({ gasLimit: 20, gasPrice });
     const to = Address.fromAddressOrString(input.to);
     const { assetId, amount } = input;

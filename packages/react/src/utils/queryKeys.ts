@@ -1,5 +1,6 @@
 export const QUERY_KEYS = {
   account: 'account',
+  accounts: 'accounts',
   chain: 'chain',
   isConnected: 'isConnected',
   provider: 'provider',
@@ -9,6 +10,7 @@ export const QUERY_KEYS = {
   transactionReceipts: 'transactionReceipts',
   nodeInfo: 'nodeInfo',
   connectorList: 'connectorList',
+  currentConnector: 'currentConnector',
 };
 
 export const MUTATION_KEYS = {

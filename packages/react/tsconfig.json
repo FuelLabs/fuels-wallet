@@ -5,7 +5,7 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "rootDir": ".",
-    "types": ["@fuel-wallet/sdk", "jest", "chrome"]
+    "types": ["jest"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["**/*.test.ts"]

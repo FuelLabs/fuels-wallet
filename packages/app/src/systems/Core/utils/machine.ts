@@ -7,7 +7,7 @@ export async function waitForState<
   I extends AnyInterpreter,
   T extends StateFrom<I['machine']>,
   D extends I['machine']['__TResolvedTypesMeta']['resolved']['matchesStates'],
-  FK extends keyof T['context']
+  FK extends keyof T['context'],
 >(
   service: I,
   done?: D,

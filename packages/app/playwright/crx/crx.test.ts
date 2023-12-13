@@ -149,10 +149,10 @@ test.describe('FuelWallet Extension', () => {
       /** Adding password */
       await hasText(page, /Create password for encryption/i);
       const passwordInput = getByAriaLabel(page, 'Your Password');
-      await passwordInput.type(WALLET_PASSWORD);
+      await passwordInput.fill(WALLET_PASSWORD);
       await passwordInput.press('Tab');
       const confirmPasswordInput = getByAriaLabel(page, 'Confirm Password');
-      await confirmPasswordInput.type(WALLET_PASSWORD);
+      await confirmPasswordInput.fill(WALLET_PASSWORD);
       await confirmPasswordInput.press('Tab');
 
       await getButtonByText(page, /Next/i).click();
@@ -185,10 +185,10 @@ test.describe('FuelWallet Extension', () => {
         await waitWalletToLoad(popupPage);
         await getByAriaLabel(popupPage, 'Accounts').click();
         await getByAriaLabel(popupPage, 'Import from private key').click();
-        await getByAriaLabel(popupPage, 'Private Key').type(privateKey);
+        await getByAriaLabel(popupPage, 'Private Key').fill(privateKey);
         if (name) {
           await getByAriaLabel(popupPage, 'Account Name').clear();
-          await getByAriaLabel(popupPage, 'Account Name').type(name);
+          await getByAriaLabel(popupPage, 'Account Name').fill(name);
         }
         await getByAriaLabel(popupPage, 'Import').click();
         await waitAccountPage(popupPage, name);

@@ -124,8 +124,7 @@ export class WindowConnection extends BaseConnection {
 
   async sendRequest(request: JSONRPCRequest | null) {
     if (!request) return;
-
-    if (!window.fuel) {
+    if (!window.fuel && this.connectorName) {
       this.queue.push(request);
     } else {
       this.postMessage({
@@ -170,8 +169,11 @@ export class WindowConnection extends BaseConnection {
     this.connectors = fuel.listConnectors();
     // Trigger connectros list changed event
     this.emit(FuelWalletEvents.connectors, this.listConnectors());
-    // Sync the current connector
-    this.selectConnector(fuel.connectorName);
+    // If connector is already selected, do nothing
+    if (!this.connectorName) {
+      // Sync the current connector
+      this.selectConnector(fuel.connectorName);
+    }
   }
 
   handleFuelInjected() {

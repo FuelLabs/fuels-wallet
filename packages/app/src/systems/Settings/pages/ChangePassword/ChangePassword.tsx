@@ -31,8 +31,8 @@ const schema = yup
   .required();
 
 type ChangePasswordFormValues = {
-  password: string | undefined;
-  confirmPassword: string | undefined;
+  password?: string;
+  confirmPassword?: string;
   currentPassword: string;
   strength: string;
 };

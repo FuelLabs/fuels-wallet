@@ -31,9 +31,9 @@ const schema = yup
   .required();
 
 export type CreatePasswordValues = {
-  password: string | undefined;
-  confirmPassword: string | undefined;
-  strength: string | undefined;
+  password?: string;
+  confirmPassword?: string;
+  strength?: string;
 };
 
 export type CreatePasswordProps = {
@@ -54,7 +54,7 @@ export function CreatePassword({
   const form = useForm<CreatePasswordValues>({
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
-    mode: 'onChange',
+    mode: 'onBlur',
     defaultValues: {
       password: '',
       confirmPassword: '',
