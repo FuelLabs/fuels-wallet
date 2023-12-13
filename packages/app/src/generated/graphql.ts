@@ -116,7 +116,6 @@ export type IChainInfo = {
   gasCosts: IGasCosts;
   latestBlock: IBlock;
   name: Scalars['String']['output'];
-  peerCount: Scalars['Int']['output'];
 };
 
 export type IChangeOutput = {
@@ -622,6 +621,7 @@ export type INodeInfo = {
   maxTx: Scalars['U64']['output'];
   minGasPrice: Scalars['U64']['output'];
   nodeVersion: Scalars['String']['output'];
+  peers: Array<IPeerInfo>;
   utxoValidation: Scalars['Boolean']['output'];
   vmBacktrace: Scalars['Boolean']['output'];
 };
@@ -654,6 +654,22 @@ export type IPageInfo = {
   hasPreviousPage: Scalars['Boolean']['output'];
   /** When paginating backwards, the cursor to continue. */
   startCursor: Maybe<Scalars['String']['output']>;
+};
+
+export type IPeerInfo = {
+  __typename?: 'PeerInfo';
+  /** The advertised multi-addrs that can be used to connect to this peer */
+  addresses: Array<Scalars['String']['output']>;
+  /** The internal fuel p2p reputation of this peer */
+  appScore: Scalars['Float']['output'];
+  /** The last reported height of the peer */
+  blockHeight: Maybe<Scalars['U32']['output']>;
+  /** The self-reported version of the client the peer is using */
+  clientVersion: Maybe<Scalars['String']['output']>;
+  /** The libp2p peer id */
+  id: Scalars['String']['output'];
+  /** The last heartbeat from this peer in unix epoch time ms */
+  lastHeartbeatMs: Scalars['U64']['output'];
 };
 
 export type IPoAConsensus = {
