@@ -5,7 +5,7 @@ category: For Developers
 
 # React Hooks Reference
 
-## useAccount
+## `useAccount`
 
 Retrieves the current fuel account and returns the account address `<string | undefined>`.
 
@@ -17,7 +17,7 @@ console.log(account);
 
 [See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useAccount.tsx)
 
-## useAccounts
+## `useAccounts`
 
 Retrieves the fuel accounts and returns the addresses of the accounts `<string[] | undefined>`
 
@@ -27,9 +27,9 @@ console.log(accounts);
 // [fuel1r20zhd..., fuel1qqluc9..., ...]
 ```
 
-{/* TODO add source file after pr is merged and useAccounts is in master */}
+{/* TODO add source file after pr is merged and `useAccounts` is in master */}
 
-## useBalance
+## `useBalance`
 
 Fetches the balance `<number | undefined>` of a specified address and asset ID. Additionally, it includes a listener that triggers a balance refresh when the window gains focus.
 
@@ -45,7 +45,7 @@ console.log(balance);
 
 [See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useBalance.tsx)
 
-## useChain
+## `useChain`
 
 Fetches information about the current Fuel network `<ChainInfo | undefined>`.
 
@@ -57,7 +57,7 @@ console.log(chain.name);
 
 [See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useChain.tsx)
 
-## useConnect
+## `useConnect`
 
 Facilitates the connection to the Fuel wallet. Allows selecting a connector by name. It also provides a function `<UseMutateAsyncFunction<boolean | undefined>>` to initiate the connection and relevant mutation properties for managing the connection state.
 
@@ -73,7 +73,7 @@ handleConnect();
 
 [See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useConnect.tsx)
 
-## useConnectors
+## `useConnectors`
 
 Retrieves a list of available connectors `<Array<FuelWalletConnector>>` for connecting to Fuel.
 
@@ -85,7 +85,7 @@ console.log(connectors);
 
 [See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useConnectors.tsx)
 
-## useDisconnect
+## `useDisconnect`
 
 Facilitates disconnection from the Fuel Wallet. It provides a function `<UseMutateAsyncFunction<boolean | undefined>>` to initiate disconnection.
 
@@ -101,9 +101,9 @@ handleDisconnect();
 
 [See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useDisconnect.tsx)
 
-## useIsConnected
+## `useIsConnected`
 
-Checks whether the user is connected to the Fuel protocol. It provides a boolean indicating the connection.
+Checks whether the user is connected to the Fuel protocol. It provides a `boolean` indicating the connection.
 
 ```tsx
 const { isConnected } = useIsConnected();
@@ -113,9 +113,9 @@ console.log(isConnected);
 
 [See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useIsConnected.tsx)
 
-## useNodeInfo
+## `useNodeInfo`
 
-Asynchronously retrieves information about the connected node, checks compatibility with a specified version. The function returns isCompatible `<boolean>` and node information.
+Asynchronously retrieves information about the connected node, checks compatibility with a specified version. The function returns `isCompatible` (a `<boolean>`), and node information.
 
 ```tsx
 const { isCompatible } = useNodeInfo();
@@ -123,7 +123,7 @@ const { isCompatible } = useNodeInfo();
 
 [See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useNodeInfo.tsx)
 
-## useProvider
+## `useProvider`
 
 Returns the provider from the Fuel object instance.
 
@@ -133,7 +133,7 @@ const { provider } = useProvider();
 
 [See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useProvider.tsx)
 
-## useTransaction
+## `useTransaction`
 
 Retrieves transaction information associated with a specific transaction ID by using the `provider.getTransaction` method.
 
@@ -143,7 +143,7 @@ const { transaction } = useTransaction({ txId: 'fuel1r20zhd...' });
 
 [See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useTransaction.tsx)
 
-## useTransactionReceipts
+## `useTransactionReceipts`
 
 Retrieves transaction receipts `<TransactionResponse.Receipts>` associated with a specific transaction ID using the `useFuel` hook.
 
@@ -155,7 +155,7 @@ const { transactionReceipts } = useTransactionReceipts({
 
 [See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useTransactionReceipts.tsx)
 
-## useWallet
+## `useWallet`
 
 Retrieves wallet instance `<FuelWalletLocked | undefined>` and ensures the presence of a valid address and fuel instance.
 
