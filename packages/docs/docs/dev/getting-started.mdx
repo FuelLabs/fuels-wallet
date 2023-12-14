@@ -30,7 +30,7 @@ To use it, you must also install the [`fuels`](https://www.npmjs.com/package/fue
 npm install fuels @fuel-wallet/sdk
 ```
 
-To install the latest pre-release of `@fuel-wallet/sdk`, use the command:
+To install the latest prerelease of `@fuel-wallet/sdk`, use the command:
 
 ```bash
 npm install fuels @fuel-wallet/sdk@master
@@ -38,7 +38,7 @@ npm install fuels @fuel-wallet/sdk@master
 
 ### Usage
 
-To use the SDK and the React Hooks in your TypeScript project, add the following line to your tsconfig.json file:
+To use the SDK and the React Hooks in your TypeScript project, add the following line to your `tsconfig.json` file:
 
 ```json
 {
@@ -66,7 +66,7 @@ window.fuel?.connect();
 
 #### SDK
 
-Alternatively, you can directly use the SDK by creating new instance of `Fuel` to interact with the wallet.
+Alternatively, you can directly use the SDK by creating a new instance of `Fuel` to interact with the wallet.
 
 ```ts
 import { Fuel } from '@fuel-wallet/sdk';
@@ -77,7 +77,7 @@ await fuel.connect();
 
 ### Detect when fuel is loaded
 
-It's possible that your application loads before `window.fuel` is injected. To detect when the `fuel` is loaded and ready to use, you can listen to the event `FuelLoaded` on the document.
+It's possible that your application loads before `window.fuel` is injected. To detect when `fuel` is loaded and ready to use, you can listen to the event `FuelLoaded` on the document.
 
 ## Using React
 
@@ -89,7 +89,7 @@ Fuel Wallet provides a set of React hooks that improve the developer experience.
 npm install @fuel-wallet/react
 ```
 
-To install the latest pre-release of `@fuel-wallet/react`, use the command:
+To install the latest prerelease of `@fuel-wallet/react`, use the command:
 
 ```bash
 npm install fuels @fuel-wallet/react@master

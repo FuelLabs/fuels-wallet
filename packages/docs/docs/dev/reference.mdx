@@ -11,7 +11,6 @@ category: For Developers
 
 `async version(): Promise<string>`<br />
 Return the current version of the Wallet.
-testCase="version" />
 
 ### Connect
 
@@ -93,14 +92,14 @@ Add assets to the wallet.
 ### Get ABI
 
 `async getAbi(contractId: string): Promise<JsonAbi>`<br />
-Get ABI of contractId given.
+Get ABI of a given `contractId`.
 
 {/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="getAbi" /> */}
 
 ### Has ABI
 
 `async hasAbi(contractId: string): Promise<boolean>`<br />
-Check if has ABI for contractId given.
+Check if has ABI for a given `contractId`.
 
 {/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="hasAbi" /> */}
 
@@ -129,15 +128,15 @@ sign, and send the transaction.
 ### Get Wallet
 
 `getWallet(address: string | AbstractAddress): Promise<FuelWalletLocked>`<br />
-Return `FuelWalletLocked` using a FuelWalletProvider on the connection point to request signed actions.
+Return `FuelWalletLocked` using a `FuelWalletProvider` on the connection point to request signed actions.
 
 {/* <CodeImport file="../../../sdk/src/tests/Fuel.test.ts" testCase="getWallet" /> */}
 
 ### Get Provider
 
 `getProvider(): Promise<FuelWalletProvider>`<br />
-Return a FuelWalletProvider. This class extends the fuels-ts SDK's `Provider`,
-enabling all of the methods available for `Provider` while using the FuelSDK on signature points to request user permissions.
+Return a `FuelWalletProvider`. This class extends the `fuels-ts` SDK's `Provider`,
+enabling all of the methods available for `Provider` while using the Fuel SDK on signature points to request user permissions.
 
 Note: The provider returned is tied to the current network selected by the user in their wallet. This means that if the user changes the network within their wallet,
 the DApp will also switch to that network. Support for specific DApp networks will be available in the future.
@@ -229,7 +228,7 @@ This event is triggered when the client connects to a different network. The cal
 
 <CodeImport file="../../examples/events/Network.tsx" commentBlock="network" />
 
-### CurrentConnector
+### `CurrentConnector`
 
 This event is triggered when the Current Connector is updated. The callback function receives the `FuelWalletConnector` object.
 
