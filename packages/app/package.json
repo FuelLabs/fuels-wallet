@@ -1,7 +1,7 @@
 {
   "name": "fuels-wallet",
   "private": true,
-  "version": "0.13.8",
+  "version": "0.13.10",
   "database": "13",
   "scripts": {
     "build:all": "run-s build:web build:crx build:storybook",
