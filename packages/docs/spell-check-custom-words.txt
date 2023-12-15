@@ -94,3 +94,4 @@ http
 localhost
 nvm
 prerelease
+UI
