@@ -95,3 +95,6 @@ localhost
 nvm
 prerelease
 UI
+assetId
+contractId
+boolean

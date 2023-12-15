@@ -51,7 +51,7 @@ Return the current selected connector.
 `currentNetwork(): Promise<Network>`<br />
 Return the current network being used in the wallet application.
 
-## Destory
+## Destroy
 
 `destroy(): void`<br />
 Removes all listeners and cleans the storage.
@@ -84,11 +84,11 @@ fuel.on(fuel.events.connection, (connectionState) => {
 | Event              | Trigger                   | Params                 |
 | ------------------ | ------------------------- | ---------------------- |
 | `connectors`       | connectors change         | `Array<FuelConnector>` |
-| `currentConnector` | currentConnector change   | `FuelConnector`        |
+| `currentConnector` | current connector change  | `FuelConnector`        |
 | `accounts`         | accounts available change | `Array<string>`        |
 | `currentAccount`   | current account change    | `string \| null`       |
 | `connection`       | connection state change   | `boolean`              |
-| `currentNetwork`   | cuurent network change    | `Network`              |
+| `currentNetwork`   | current network change    | `Network`              |
 | `assets`           | assets metadata change    | `Array<Asset>`         |
 
 ## Get ABI
