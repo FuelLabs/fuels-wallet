@@ -12,6 +12,6 @@
     "fuels": ">=next"
   },
   "devDependencies": {
-    "fuels": "pr-1528"
+    "fuels": "pr-1531"
   }
 }

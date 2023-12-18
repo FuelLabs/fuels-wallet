@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "adm-zip": "^0.5.10",
-    "fuels": "pr-1528"
+    "fuels": "pr-1531"
   },
   "devDependencies": {
     "@playwright/test": "^1.39.0",
