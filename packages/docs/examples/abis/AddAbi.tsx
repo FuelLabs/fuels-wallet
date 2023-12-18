@@ -1,19 +1,18 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Input, Box, Button, Link, Text, Tag } from '@fuel-ui/react';
+import { useFuel, useIsConnected } from '@fuel-wallet/react';
 import { useState } from 'react';
 import { ExampleBox } from '~/src/components/ExampleBox';
-import { useFuel } from '~/src/hooks/useFuel';
-import { useIsConnected } from '~/src/hooks/useIsConnected';
 import { useLoading } from '~/src/hooks/useLoading';
 
-import SWAY_SWAP_ABI from './data/swayswap/abi.json';
-import { SWAY_SWAP_CONTRACT_ID } from './data/swayswap/contractId';
-import { docStyles } from './styles';
+import SWAY_SWAP_ABI from '../data/swayswap/abi.json';
+import { SWAY_SWAP_CONTRACT_ID } from '../data/swayswap/contractId';
+import { docStyles } from '../styles';
 
 export function AddAbi() {
-  const [fuel, notDetected] = useFuel();
-  const [isConnected] = useIsConnected();
+  const { fuel } = useFuel();
+  const { isConnected } = useIsConnected();
   const [abiError, setAbiError] = useState(false);
   const [abiSuccess, setAbiSuccess] = useState(false);
   const [contractId, setContractId] = useState<string>(SWAY_SWAP_CONTRACT_ID);
@@ -27,9 +26,10 @@ export function AddAbi() {
 
       try {
         const abi = JSON.parse(abiString);
-        /* example:start */
-        await fuel.addABI(contractId, abi);
-        /* example:end */
+        /* addABI:start */
+        const isAdded = await fuel.addABI(contractId, abi);
+        console.log('ABI is added', isAdded);
+        /* addABI:end */
         setAbiError(false);
         setAbiSuccess(true);
       } catch (e) {
@@ -38,8 +38,6 @@ export function AddAbi() {
       }
     }
   );
-
-  const errorMessage = notDetected || errorAddingAbi;
 
   function handleChangeAbi(value: string) {
     try {
@@ -54,7 +52,7 @@ export function AddAbi() {
   }
 
   return (
-    <ExampleBox error={errorMessage}>
+    <ExampleBox error={errorAddingAbi}>
       <Box.Stack gap="$4">
         <Input isDisabled={!isConnected} css={styles.input}>
           <Input.Field

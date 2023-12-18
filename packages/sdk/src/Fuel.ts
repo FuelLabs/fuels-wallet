@@ -443,7 +443,7 @@ export class Fuel extends FuelConnector {
   }
 
   /**
-   * Removes all listeners and clean the storage.
+   * Removes all listeners and cleans the storage.
    */
   destroy() {
     this.unsubscribe();

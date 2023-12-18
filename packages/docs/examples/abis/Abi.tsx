@@ -1,19 +1,17 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Button, Box, Input } from '@fuel-ui/react';
+import { useFuel, useIsConnected } from '@fuel-wallet/react';
 import type { FuelABI } from '@fuel-wallet/sdk';
 import { useState } from 'react';
 
-import { ExampleBox } from '../src/components/ExampleBox';
-import { useFuel } from '../src/hooks/useFuel';
-import { useIsConnected } from '../src/hooks/useIsConnected';
-import { useLoading } from '../src/hooks/useLoading';
-
-import { SWAY_SWAP_CONTRACT_ID } from './data/swayswap/contractId';
+import { ExampleBox } from '../../src/components/ExampleBox';
+import { useLoading } from '../../src/hooks/useLoading';
+import { SWAY_SWAP_CONTRACT_ID } from '../data/swayswap/contractId';
 
 export function Abi() {
-  const [fuel, notDetected] = useFuel();
-  const [isConnected] = useIsConnected();
+  const { fuel } = useFuel();
+  const { isConnected } = useIsConnected();
   const [contractId, setContractId] = useState<string>(SWAY_SWAP_CONTRACT_ID);
   const [abi, setABI] = useState<FuelABI | null>(null);
   const [handleGetAbi, isLoadingAbi, errorGetAbi] = useLoading(
@@ -21,18 +19,16 @@ export function Abi() {
       if (!contractId) return;
       if (!isConnected) await fuel.connect();
       console.log('Request the current abi of contractId: ', contractId);
-      /* example:start */
+      /* getABI:start */
       const abiInfo = await fuel.getABI(contractId);
       console.log('Abi ', abiInfo);
-      /* example:end */
+      /* getABI:end */
       setABI(abiInfo);
     }
   );
 
-  const errorMessage = errorGetAbi || notDetected;
-
   return (
-    <ExampleBox error={errorMessage}>
+    <ExampleBox error={errorGetAbi}>
       <Box.Stack css={styles.root}>
         <Input isDisabled={!isConnected} css={styles.input}>
           <Input.Field

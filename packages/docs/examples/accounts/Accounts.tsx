@@ -1,33 +1,42 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Tag, Text } from '@fuel-ui/react';
-import { useState } from 'react';
+import { useFuel, useIsConnected } from '@fuel-wallet/react';
+import { useEffect, useState } from 'react';
 
-import { ExampleBox } from '../src/components/ExampleBox';
-import { useFuel } from '../src/hooks/useFuel';
-import { useIsConnected } from '../src/hooks/useIsConnected';
-import { useLoading } from '../src/hooks/useLoading';
+import { ExampleBox } from '../../src/components/ExampleBox';
+import { useLoading } from '../../src/hooks/useLoading';
 
 export function ListAccounts() {
-  const [fuel, notDetected] = useFuel();
-  const [isConnected] = useIsConnected();
+  const { fuel } = useFuel();
+  const { isConnected } = useIsConnected();
   const [accounts, setAccounts] = useState<Array<string>>([]);
   const [handleGetAccounts, isLoadingAccounts, errorGetAccounts] = useLoading(
     async () => {
       if (!isConnected) await fuel.connect();
       console.log('Request accounts to Wallet!');
-      /* example:start */
+      /* accounts:start */
       const accounts = await fuel.accounts();
-      console.log('Accounts ', accounts);
-      /* example:end */
+      console.log('Accounts', accounts);
+      /* accounts:end */
       setAccounts(accounts);
     }
   );
 
-  const errorMessage = errorGetAccounts || notDetected;
+  useEffect(() => {
+    /* watchAccounts:start */
+    function logAccounts(accounts: string) {
+      console.log('Accounts ', accounts);
+    }
+    fuel.on(fuel.events.accounts, logAccounts);
+    /* watchAccounts:end */
+    return () => {
+      fuel.off(fuel.events.accounts, logAccounts);
+    };
+  }, []);
 
   return (
-    <ExampleBox error={errorMessage}>
+    <ExampleBox error={errorGetAccounts}>
       <Box.Stack css={styles.root}>
         <Button
           onPress={handleGetAccounts}

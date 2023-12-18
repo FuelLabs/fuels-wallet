@@ -1,17 +1,15 @@
 /* eslint-disable no-console */
+import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Input, Tag } from '@fuel-ui/react';
+import { useFuel, useIsConnected } from '@fuel-wallet/react';
 import { useState } from 'react';
 
-import { ExampleBox } from '../src/components/ExampleBox';
-import { useFuel } from '../src/hooks/useFuel';
-import { useIsConnected } from '../src/hooks/useIsConnected';
-import { useLoading } from '../src/hooks/useLoading';
-
-import { docStyles } from './styles';
+import { ExampleBox } from '../../src/components/ExampleBox';
+import { useLoading } from '../../src/hooks/useLoading';
 
 export function SignMessage() {
-  const [fuel, notDetected] = useFuel();
-  const [isConnected] = useIsConnected();
+  const { fuel } = useFuel();
+  const { isConnected } = useIsConnected();
   const [signedMessage, setSignedMessage] = useState<string>('');
   const [message, setMessage] = useState<string>('Message to sign');
 
@@ -19,21 +17,21 @@ export function SignMessage() {
     async (message: string) => {
       if (!isConnected) await fuel.connect();
       console.log('Request signature of message!');
-      /* example:start */
-      const accounts = await fuel.accounts();
-      const account = accounts[0];
+      /* signMessage:start */
+      const account = await fuel.currentAccount();
+      if (!account) {
+        throw new Error('Current account not authorized for this connection!');
+      }
       const wallet = await fuel.getWallet(account);
       const signedMessage = await wallet.signMessage(message);
       console.log('Message signature', signedMessage);
-      /* example:end */
+      /* signMessage:end */
       setSignedMessage(signedMessage);
     }
   );
 
-  const errorMessage = notDetected || errorSigningMessage;
-
   return (
-    <ExampleBox error={errorMessage}>
+    <ExampleBox error={errorSigningMessage}>
       <Box.Stack css={{ gap: '$4' }}>
         <Input isDisabled={!fuel} css={{ width: 300, height: 100 }}>
           <Input.Field
@@ -58,7 +56,7 @@ export function SignMessage() {
             size="xs"
             color="intentsBase"
             variant="ghost"
-            css={docStyles.feedbackTag}
+            css={styles.feedbackTag}
           >
             {signedMessage}
           </Tag>
@@ -67,3 +65,12 @@ export function SignMessage() {
     </ExampleBox>
   );
 }
+
+const styles = {
+  feedbackTag: cssObj({
+    borderRadius: '$md',
+    height: 'auto',
+    maxWidth: 320,
+    wordBreak: 'break-all',
+  }),
+};

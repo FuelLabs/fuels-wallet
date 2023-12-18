@@ -12,6 +12,8 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <FuelProvider
+      // devMode is used to show Connectors that are focused on development versions
+      // like Fuel Wallet Development
       fuelConfig={{
         devMode: true,
       }}

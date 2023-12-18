@@ -1,16 +1,15 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Input, Text } from '@fuel-ui/react';
+import { useFuel, useIsConnected } from '@fuel-wallet/react';
 import { useState } from 'react';
 
-import { ExampleBox } from '../src/components/ExampleBox';
-import { useFuel } from '../src/hooks/useFuel';
-import { useIsConnected } from '../src/hooks/useIsConnected';
-import { useLoading } from '../src/hooks/useLoading';
+import { ExampleBox } from '../../src/components/ExampleBox';
+import { useLoading } from '../../src/hooks/useLoading';
 
 export function AddNetwork() {
-  const [fuel, notDetected] = useFuel();
-  const [isConnected] = useIsConnected();
+  const { fuel } = useFuel();
+  const { isConnected } = useIsConnected();
   const [network, setNetwork] = useState<string>(
     'http://localhost:4000/graphql'
   );
@@ -18,21 +17,20 @@ export function AddNetwork() {
   const [handleAddNetwork, isAddingNetwork, errorAddingNetwork] = useLoading(
     async (network: string) => {
       if (!isConnected) await fuel.connect();
-      console.log('Add Network', network);
       /* addNetwork:start */
-      await fuel.addNetwork(network);
+      console.log('Add Network', network);
+      const isAdded = await fuel.addNetwork(network);
+      console.log('Add Network result', isAdded);
       /* addNetwork:end */
     }
   );
-
-  const errorMessage = notDetected || errorAddingNetwork;
 
   const onChangeNetwork = (network: string) => {
     setNetwork(network);
   };
 
   return (
-    <ExampleBox error={errorMessage}>
+    <ExampleBox error={errorAddingNetwork}>
       <Box.Stack css={styles.wrapper}>
         <Box.Stack>
           <Box.Flex css={styles.itemHeader}>

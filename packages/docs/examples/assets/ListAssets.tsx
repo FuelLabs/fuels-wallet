@@ -1,34 +1,31 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Tag } from '@fuel-ui/react';
+import { useFuel, useIsConnected } from '@fuel-wallet/react';
 import { getAssetByChain, type Asset } from '@fuel-wallet/sdk';
 import { useState } from 'react';
 
-import { ExampleBox } from '../src/components/ExampleBox';
-import { useFuel } from '../src/hooks/useFuel';
-import { useIsConnected } from '../src/hooks/useIsConnected';
-import { useLoading } from '../src/hooks/useLoading';
+import { ExampleBox } from '../../src/components/ExampleBox';
+import { useLoading } from '../../src/hooks/useLoading';
 
 export function ListAssets() {
-  const [fuel, notDetected] = useFuel();
-  const [isConnected] = useIsConnected();
+  const { fuel } = useFuel();
+  const { isConnected } = useIsConnected();
   const [assets, setAssets] = useState<Array<Asset>>([]);
   const [handleGetAssets, isLoadingAssets, errorGetAssets] = useLoading(
     async () => {
       if (!isConnected) await fuel.connect();
       console.log('Request assets to Wallet!');
-      /* example:start */
+      /* assets:start */
       const assets = await fuel.assets();
       console.log('Assets ', assets);
-      /* example:end */
+      /* assets:end */
       setAssets(assets);
     }
   );
 
-  const errorMessage = errorGetAssets || notDetected;
-
   return (
-    <ExampleBox error={errorMessage}>
+    <ExampleBox error={errorGetAssets}>
       <Box.Stack css={styles.root}>
         <Button
           onPress={handleGetAssets}
