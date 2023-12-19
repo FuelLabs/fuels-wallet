@@ -85,10 +85,12 @@ export class ReleaseBot {
         head: rcBranch,
       });
 
+      console.log({ version, opened, merged });
       if (!opened.length && !merged.length) {
         filtered.push(version);
       }
     }
+    console.log({ filtered });
     return filtered;
   }
 
