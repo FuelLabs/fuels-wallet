@@ -23,33 +23,37 @@ export class Github {
     head?: string;
   }) {
     const api = await this.getApi();
-    const { data: pulls }: { data: any[] } = await api.rest.pulls.list({
-      owner: this.owner,
-      repo: this.repo,
-      base,
-      head,
-    });
+    try {
+      const { data: pulls }: { data: any[] } = await api.rest.pulls.list({
+        owner: this.owner,
+        repo: this.repo,
+        base,
+        head,
+      });
 
-    const numbers = pulls?.map((pull) => pull.number);
-    const closed: string[] = [];
+      const numbers = pulls?.map((pull) => pull.number);
+      const closed: string[] = [];
 
-    for (const number of numbers) {
-      try {
-        const { data: pull }: { data: any } = await api.rest.pulls.get({
-          owner: this.owner,
-          repo: this.repo,
-          pull_number: number,
-        });
+      for (const number of numbers) {
+        try {
+          const { data: pull }: { data: any } = await api.rest.pulls.get({
+            owner: this.owner,
+            repo: this.repo,
+            pull_number: number,
+          });
 
-        const { merged_at: mergedAt } = pull;
-        if (mergedAt) {
-          closed.push(number);
+          const { merged_at: mergedAt } = pull;
+          if (mergedAt) {
+            closed.push(number);
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch (e) {
-        console.error(e);
       }
+      return closed;
+    } catch (e) {
+      return [];
     }
-    return closed;
   }
 
   async getOpenedPullRequests({
