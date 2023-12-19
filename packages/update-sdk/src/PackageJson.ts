@@ -56,7 +56,7 @@ export class PackageJson {
       await PackageJson.updateDependency(pkg, version, matcher);
     }
 
-    console.log(c.white(`📟 Running pnpm install...`));
-    await $({ stdio: 'inherit' })`pnpm install`;
+    console.log(c.white(`\n📟 Running pnpm install...`));
+    await $({ stdio: 'inherit' })`pnpm install --no-frozen-lockfile`;
   }
 }
