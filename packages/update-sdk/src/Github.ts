@@ -135,8 +135,11 @@ export class Github {
   }
 
   private async getApi() {
-    const { stdout } = await $`gh auth token`;
-    const token = stdout || process.env.GITHUB_TOKEN;
+    const token = process.env.GITHUB_TOKEN;
+    if (!token) {
+      throw new Error('Missing GITHUB_TOKEN');
+    }
+
     const auth = createTokenAuth(token);
     const authentication = await auth();
     if (authentication.type !== 'token') {

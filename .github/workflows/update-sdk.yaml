@@ -26,3 +26,5 @@ jobs:
         run: |
           cd packages/update-sdk
           pnpm check-versions
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
