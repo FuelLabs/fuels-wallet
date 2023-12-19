@@ -102,6 +102,7 @@ export class Github {
   }
 
   async pushingFromStage(commit: string) {
+    const cwd = resolve(process.cwd(), '../../');
     const $$ = $({ cwd });
     await $$`git add .`;
     await $$`git restore --staged .lintstagedrc`;
