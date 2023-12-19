@@ -6,12 +6,14 @@ import { NpmPackage } from './NpmPackage';
 import { PackageJson } from './PackageJson';
 
 export class ReleaseBot {
-  private git = new Github(this.owner, this.repo);
+  private git!: Github;
 
   constructor(
     private owner: string,
     private repo: string
-  ) {}
+  ) {
+    this.git = new Github(owner, repo);
+  }
 
   async release() {
     const versions = await this._getUnreleasedVersions();

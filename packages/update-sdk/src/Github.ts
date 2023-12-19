@@ -51,7 +51,10 @@ export class Github {
         }
       }
       return closed;
-    } catch (e) {
+    } catch (e: any) {
+      if (e.status !== 404) {
+        throw e;
+      }
       return [];
     }
   }
@@ -73,7 +76,10 @@ export class Github {
         head,
       });
       return pulls?.map((pull) => pull.number);
-    } catch (e) {
+    } catch (e: any) {
+      if (e.status !== 404) {
+        throw e;
+      }
       return [];
     }
   }
