@@ -746,6 +746,15 @@ importers:
 
   packages/update-sdk:
     dependencies:
+      '@octokit/auth-token':
+        specifier: ^4.0.0
+        version: 4.0.0
+      '@octokit/core':
+        specifier: ^5.0.2
+        version: 5.0.2
+      '@octokit/plugin-rest-endpoint-methods':
+        specifier: ^10.2.0
+        version: 10.2.0(@octokit/core@5.0.2)
       axios:
         specifier: ^1.6.2
         version: 1.6.2
@@ -759,6 +768,9 @@ importers:
         specifier: ^7.5.4
         version: 7.5.4
     devDependencies:
+      '@octokit/openapi-types':
+        specifier: ^19.1.0
+        version: 19.1.0
       '@types/minimist':
         specifier: ^1.2.5
         version: 1.2.5
@@ -5476,7 +5488,6 @@ packages:
 
   /@octokit/openapi-types@19.1.0:
     resolution: {integrity: sha512-6G+ywGClliGQwRsjvqVYpklIfa7oRPA0vyhPQG/1Feh+B+wU0vGH1JiJ5T25d3g1JZYBHzR2qefLi9x8Gt+cpw==}
-    dev: false
 
   /@octokit/plugin-paginate-graphql@4.0.0(@octokit/core@5.0.2):
     resolution: {integrity: sha512-7HcYW5tP7/Z6AETAPU14gp5H5KmCPT3hmJrS/5tO7HIgbwenYmgw4OY9Ma54FDySuxMwD+wsJlxtuGWwuZuItA==}
