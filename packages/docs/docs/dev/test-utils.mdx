@@ -23,11 +23,11 @@ test.use({ pathToExtension: fuelPathToExtension });
 
 If you are using custom test fixtures in your playwright tests then setup the `context` and `extensionId` fixtures as shown in the [playwright docs](https://playwright.dev/docs/chrome-extensions#testing).
 
-## FuelWalletTestHelper
+## `FuelWalletTestHelper`
 
-The FuelWalletTestHelper is a class which allows you to interact with the fuel wallet extension.
+The `FuelWalletTestHelper` is a class which allows you to interact with the fuel wallet extension.
 
-### walletSetup
+### `walletSetup`
 
 ```tsx
 static async walletSetup(
@@ -40,9 +40,9 @@ static async walletSetup(
 ): Promise<FuelWalletTestHelper>
 ```
 
-This function sets up your fuel wallet extension and returns an instace of FuelWalletTestHelper.
+This function sets up your fuel wallet extension and returns an instance of `FuelWalletTestHelper`.
 
-### walletConnect
+### `walletConnect`
 
 ```tsx
 async walletConnect(
@@ -53,7 +53,7 @@ async walletConnect(
 
 This function connects fuel wallet accounts to your web application through the connect popup window. It will throw an error if the connect popup window does not appear.
 
-### walletApprove
+### `walletApprove`
 
 ```tsx
 async walletApprove(): Promise<void>
@@ -61,7 +61,7 @@ async walletApprove(): Promise<void>
 
 This function approves a transaction through the transaction popup window. It will throw an error if the transaction popup window does not appear.
 
-### getWalletNotificationPage
+### `getWalletNotificationPage`
 
 ```tsx
 async getWalletPopupPage(): Promise<Page>
@@ -69,7 +69,7 @@ async getWalletPopupPage(): Promise<Page>
 
 This function returns the wallet popup page. It will throw an error is the popup does not exist.
 
-### addAssetThroughSettings
+### `addAssetThroughSettings`
 
 ```tsx
 async addAssetThroughSettings(
@@ -83,7 +83,7 @@ async addAssetThroughSettings(
 
 This function adds an asset to the wallet through the settings.
 
-### addAssetFromHomeBalance
+### `addAssetFromHomeBalance`
 
 ```tsx
 async addAssetFromHomeBalance(
@@ -97,7 +97,7 @@ async addAssetFromHomeBalance(
 
 This functions adds an asset to the wallet from the home page. It will throw an error if the wallet does not have any of the asset.
 
-### addAccount
+### `addAccount`
 
 ```tsx
 async addAccount(): Promise<void>
@@ -105,15 +105,15 @@ async addAccount(): Promise<void>
 
 This function adds an account to the wallet.
 
-### switchAccount
+### `switchAccount`
 
 ```tsx
 async switchAccount(accountName: string): Promise<void>
 ```
 
-This function switches to the account named accountName. It will throw an error if there are not accounts with accountName.
+This function switches to the account named `accountName`. It will throw an error if there are not accounts with `accountName`.
 
-### addNetwork
+### `addNetwork`
 
 ```tsx
 async addNetwork(chainName: string, providerUrl: string): Promise<void>
@@ -121,13 +121,13 @@ async addNetwork(chainName: string, providerUrl: string): Promise<void>
 
 This function adds a network to the wallet. It will not add the network if a network already exists with the same name.
 
-### switchNetwork
+### `switchNetwork`
 
 ```tsx
 async switchNetwork(chainName: string): Promise<void>
 ```
 
-This function switches to the network named chainName. It will throw an error if there are no networks named chainName.
+This function switches to the network named `chainName`. It will throw an error if there are no networks named `chainName`.
 
 ## Mocks
 

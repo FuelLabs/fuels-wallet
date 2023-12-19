@@ -1,0 +1,21 @@
+matrix:
+  - name: SPCheck
+    aspell:
+      lang: en
+    dictionary:
+      encoding: utf-8
+      wordlists:
+        - packages/docs/spell-check-custom-words.txt
+    pipeline:
+      - pyspelling.filters.markdown:
+          markdown_extensions:
+            - pymdownx.superfences
+      - pyspelling.filters.html:
+          comments: false
+          ignores:
+            - code
+            - pre
+    sources:
+      - '**/docs/*.mdx'
+      - '**/docs/**/*.mdx'
+    default_encoding: utf-8
