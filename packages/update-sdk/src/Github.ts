@@ -84,8 +84,6 @@ export class Github {
   }
 
   async checkoutBranch(branchName: string) {
-    await $`git config --global user.email "github-actions[bot]@users.noreply.github.com"`;
-    await $`git config --global user.name "github-actions[bot]"`;
     const cwd = resolve(process.cwd(), '../../');
     const $$ = $({ cwd });
     let branchExists = false;
@@ -104,14 +102,11 @@ export class Github {
   }
 
   async pushingFromStage(commit: string) {
-    await $`git config --global user.email "github-actions[bot]@users.noreply.github.com"`;
-    await $`git config --global user.name "github-actions[bot]"`;
-    const cwd = resolve(process.cwd(), '../../');
     const $$ = $({ cwd });
     await $$`git add .`;
     await $$`git restore --staged .lintstagedrc`;
     await $$`git commit -m ${commit}`;
-    await $$`git push --force`;
+    await $$`git push origin --force`;
   }
 
   async createPullRequest({
@@ -143,6 +138,10 @@ export class Github {
   }
 
   private async getApi() {
+    await $`git config --global user.email "github-actions[bot]@users.noreply.github.com"`;
+    await $`git config --global user.name "github-actions[bot]"`;
+    await $`git config --global push.autoSetupRemote true`;
+
     const token = process.env.GITHUB_TOKEN;
     if (!token) {
       throw new Error('Missing GITHUB_TOKEN');
