@@ -27,6 +27,7 @@ export class Github {
       const { data: pulls }: { data: any[] } = await api.rest.pulls.list({
         owner: this.owner,
         repo: this.repo,
+        state: 'closed',
         base,
         head,
       });
@@ -43,7 +44,8 @@ export class Github {
           });
 
           const { merged_at: mergedAt } = pull;
-          if (mergedAt) {
+          const headRef = pull.head.ref;
+          if (mergedAt && headRef === head) {
             closed.push(number);
           }
         } catch (e) {
@@ -76,7 +78,8 @@ export class Github {
         base,
         head,
       });
-      return pulls?.map((pull) => pull.number);
+      const filtered = pulls?.filter((pull) => pull.head.ref === head);
+      return filtered?.map((pull) => pull.number);
     } catch (e: any) {
       console.error(e);
       if (e.status !== 404) {
