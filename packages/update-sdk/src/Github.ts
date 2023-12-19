@@ -60,14 +60,18 @@ export class Github {
     head?: string;
   }) {
     const api = await this.getApi();
-    const { data: pulls }: { data: any[] } = await api.rest.pulls.list({
-      owner: this.owner,
-      repo: this.repo,
-      state: 'open',
-      base,
-      head,
-    });
-    return pulls?.map((pull) => pull.number);
+    try {
+      const { data: pulls }: { data: any[] } = await api.rest.pulls.list({
+        owner: this.owner,
+        repo: this.repo,
+        state: 'open',
+        base,
+        head,
+      });
+      return pulls?.map((pull) => pull.number);
+    } catch (e) {
+      return [];
+    }
   }
 
   async getCurrentBranch() {
