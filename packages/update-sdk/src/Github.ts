@@ -52,6 +52,7 @@ export class Github {
       }
       return closed;
     } catch (e: any) {
+      console.error(e);
       if (e.status !== 404) {
         throw e;
       }
@@ -77,6 +78,7 @@ export class Github {
       });
       return pulls?.map((pull) => pull.number);
     } catch (e: any) {
+      console.error(e);
       if (e.status !== 404) {
         throw e;
       }
