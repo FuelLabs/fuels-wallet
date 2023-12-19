@@ -28,7 +28,7 @@ export class ReleaseBot {
 
     for (const version of versions) {
       try {
-        await this.checkoutBranch('master');
+        await this.git.checkoutBranch('master');
         await this._newReleaseBranch(version);
         await this._updateDependencies(version);
         await this._pushNewVersion(version);
