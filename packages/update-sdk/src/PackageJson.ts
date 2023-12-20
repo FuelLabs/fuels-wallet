@@ -1,4 +1,7 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import c from 'chalk';
+import { $ } from 'execa';
 import { glob } from 'glob';
 import { produce } from 'immer';
 import { promises as fs } from 'node:fs';
@@ -14,10 +17,11 @@ export class PackageJson {
   }
 
   static async updateDependency(
-    pkgJSONPath: string,
+    relativePath: string,
     version: string,
     matcher: (dep: string) => boolean
   ) {
+    const pkgJSONPath = resolve(process.cwd(), '../../', relativePath);
     const raw = await fs.readFile(pkgJSONPath, 'utf8');
     let pkgJSON = JSON.parse(raw);
 
@@ -26,7 +30,6 @@ export class PackageJson {
       const obj = pkgJSON?.[key] ?? {};
       const entries = Object.entries(obj);
       const sdkDeps = entries.filter(([dep]) => matcher(dep));
-      if (!sdkDeps.length) return false;
       pkgJSON = produce(pkgJSON, (draft: any) => {
         sdkDeps.forEach(([dep, _]) => {
           draft[key][dep] = version;
@@ -41,5 +44,19 @@ export class PackageJson {
     const buf = Buffer.from(formatted, 'utf-8');
     await fs.rm(pkgJSONPath);
     await fs.writeFile(pkgJSONPath, buf, 'utf-8');
+  }
+
+  static async updateAllDependencies(
+    version: string,
+    matcher: (dep: string) => boolean
+  ) {
+    console.log(c.white(`📝 Updating dependencies...`));
+    const pkgs = await PackageJson.getAllLocal();
+    for (const pkg of pkgs) {
+      await PackageJson.updateDependency(pkg, version, matcher);
+    }
+
+    console.log(c.white(`\n📟 Running pnpm install...`));
+    await $({ stdio: 'inherit' })`pnpm install --no-frozen-lockfile`;
   }
 }
