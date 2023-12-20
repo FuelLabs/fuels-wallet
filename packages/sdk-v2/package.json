@@ -35,8 +35,8 @@
     "fuels": ">=next"
   },
   "devDependencies": {
-    "@fuel-ts/wallet": "pr-1531",
-    "fuels": "pr-1531",
+    "@fuel-ts/wallet": "next",
+    "fuels": "next",
     "jest-environment-jsdom": "29.6.2",
     "tsup": "^7.2.0"
   }
