@@ -32,7 +32,8 @@ export class PackageJson {
       const sdkDeps = entries.filter(([dep]) => matcher(dep));
       pkgJSON = produce(pkgJSON, (draft: any) => {
         sdkDeps.forEach(([dep, _]) => {
-          draft[key][dep] = version;
+          draft[key][dep] =
+            key === 'peerDependencies' ? `>=${version}` : version;
         });
       });
     }
