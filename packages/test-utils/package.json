@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "adm-zip": "^0.5.10",
-    "fuels": "0.67.0"
+    "fuels": "0.0.0-rc-salamander-20231220114813"
   },
   "devDependencies": {
     "@playwright/test": "^1.39.0",
