@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import {
   createTheme,
   loadIcons,
@@ -76,7 +75,9 @@ setFuelThemes({
 export function Provider({ children }: ProviderProps) {
   return (
     <ThemeProvider>
-      <MDXProvider components={components as any}>{children}</MDXProvider>
+      <MDXProvider components={components as any}>
+        {children as any}
+      </MDXProvider>
     </ThemeProvider>
   );
 }

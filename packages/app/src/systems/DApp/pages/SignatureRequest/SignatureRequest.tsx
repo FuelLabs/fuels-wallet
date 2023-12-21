@@ -1,6 +1,6 @@
-import { Box, Button, Card, HelperIcon, Text } from '@fuel-ui/react';
+import { Box, Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
 import { AccountInfo } from '~/systems/Account';
-import { Layout, ConnectInfo } from '~/systems/Core';
+import { Layout, ConnectInfo, coreStyles } from '~/systems/Core';
 
 import { useSignatureRequest } from '../../hooks';
 
@@ -34,12 +34,23 @@ export function SignatureRequest() {
                 </HelperIcon>
               </Card.Header>
               <Card.Body>
-                <Text as="div">
-                  {/* For preserving line breaks using pre-wrap all
-                    the content inside the tag can't be formatted because of
-                    this we wrap the message in a div element */}
-                  <Box css={{ whiteSpace: 'pre-wrap' }}>{message}</Box>
-                </Text>
+                <Flex
+                  css={{
+                    ...coreStyles.scrollable(),
+                    overflowX: 'auto',
+                  }}
+                >
+                  <div>
+                    <Text
+                      css={{
+                        width: message.length > 80 ? '800px' : '100%',
+                        wordBreak: 'break-all',
+                      }}
+                    >
+                      {message}
+                    </Text>
+                  </div>
+                </Flex>
               </Card.Body>
             </Card>
           </Box.Flex>
