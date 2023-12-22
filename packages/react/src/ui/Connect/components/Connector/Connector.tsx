@@ -25,6 +25,7 @@ export function Connector({ className, connector, theme }: ConnectorProps) {
     <div className={className}>
       <ConnectorImage>
         <ConnectorIcon
+          connectorMetadata={connector.metadata}
           connectorName={connector.name}
           size={100}
           theme={theme}

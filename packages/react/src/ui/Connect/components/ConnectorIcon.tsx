@@ -1,13 +1,21 @@
+import type { ConnectorMetadata } from '@fuel-wallet/sdk';
+
 import type { SvgIconProps } from '../../types';
 import { FuelWalletDevelopmentIcon } from '../icons/FuelWalletDevelopmentIcon';
 import { FuelWalletIcon } from '../icons/FuelWalletIcon';
 import { FueletIcon } from '../icons/FueletIcon';
+import { getImageUrl } from '../utils/getImageUrl';
 
 type ConnectorIconProps = {
   connectorName: string;
+  connectorMetadata: ConnectorMetadata;
 } & SvgIconProps;
 
-export function ConnectorIcon({ connectorName, ...props }: ConnectorIconProps) {
+export function ConnectorIcon({
+  connectorName,
+  connectorMetadata,
+  ...props
+}: ConnectorIconProps) {
   switch (connectorName) {
     case 'Fuelet Wallet':
       return <FueletIcon {...props} />;
@@ -16,6 +24,11 @@ export function ConnectorIcon({ connectorName, ...props }: ConnectorIconProps) {
     case 'Fuel Wallet Development':
       return <FuelWalletDevelopmentIcon {...props} />;
     default:
-      return null;
+      return connectorMetadata.image ? (
+        <img
+          height={props.size}
+          src={getImageUrl(connectorMetadata, props.theme)}
+        />
+      ) : null;
   }
 }
