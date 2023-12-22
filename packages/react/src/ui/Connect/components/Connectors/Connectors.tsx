@@ -27,6 +27,7 @@ export function Connectors() {
           }}
         >
           <ConnectorIcon
+            connectorMetadata={connector.metadata}
             connectorName={connector.name}
             size={32}
             theme={theme}

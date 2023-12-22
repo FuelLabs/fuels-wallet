@@ -26,7 +26,8 @@ export function ConnectorIcon({
     default:
       return connectorMetadata.image ? (
         <img
-          height={props.size}
+          height={`${props.size}px`}
+          width={`${props.size}px`}
           src={getImageUrl(connectorMetadata, props.theme)}
         />
       ) : null;
