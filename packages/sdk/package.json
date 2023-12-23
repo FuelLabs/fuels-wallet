@@ -36,11 +36,11 @@
     "xstate": "^4.38.2"
   },
   "peerDependencies": {
-    "fuels": ">=0.67.0"
+    "fuels": "0.0.0-rc-salamander-20231222183238"
   },
   "devDependencies": {
     "@types/uuid": "^9.0.5",
-    "fuels": "0.67.0",
+    "fuels": "0.0.0-rc-salamander-20231222183238",
     "jest-webextension-mock": "^3.8.9",
     "tsup": "^7.2.0"
   }
