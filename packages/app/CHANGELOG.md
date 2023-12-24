@@ -1,5 +1,15 @@
 # fuels-wallet
 
+## 0.13.11
+
+### Patch Changes
+
+- [#997](https://github.com/FuelLabs/fuels-wallet/pull/997) [`85dab93`](https://github.com/FuelLabs/fuels-wallet/commit/85dab9376698bf65ab466647f7d933be64629427) Thanks [@matt-user](https://github.com/matt-user)! - Show all message info on sign message scree
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.13.11
+  - @fuel-wallet/types@0.13.11
+
 ## 0.13.10
 
 ### Patch Changes
