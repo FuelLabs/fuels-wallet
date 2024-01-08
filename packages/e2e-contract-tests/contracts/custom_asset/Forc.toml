@@ -5,6 +5,6 @@ license = "Apache-2.0"
 name = "custom_asset"
 
 [dependencies]
-src_20 = { git = "https://github.com/FuelLabs/sway-standards" }
-src_3 = { git = "https://github.com/FuelLabs/sway-standards" }
+src20 = { git = "https://github.com/FuelLabs/sway-standards" }
+src3 = { git = "https://github.com/FuelLabs/sway-standards" }
 token = { git = "https://github.com/FuelLabs/sway-libs" }

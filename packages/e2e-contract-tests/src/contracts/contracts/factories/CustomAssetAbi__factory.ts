@@ -6,7 +6,7 @@
 /*
   Fuels version: 0.70.0
   Forc version: 0.48.1
-  Fuel-Core version: 0.21.0
+  Fuel-Core version: 0.22.0
 */
 
 import { Interface, Contract, ContractFactory } from 'fuels';
@@ -381,12 +381,12 @@ const _abi = {
       },
       attributes: [
         {
-          name: 'storage',
-          arguments: ['read', 'write'],
-        },
-        {
           name: 'payable',
           arguments: [],
+        },
+        {
+          name: 'storage',
+          arguments: ['read', 'write'],
         },
       ],
     },
