@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "adm-zip": "^0.5.10",
-    "fuels": "next"
+    "fuels": "0.0.0-next-20240105135513"
   },
   "devDependencies": {
     "@playwright/test": "^1.39.0",

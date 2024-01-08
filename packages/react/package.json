@@ -38,6 +38,6 @@
   },
   "devDependencies": {
     "tsup": "^7.2.0",
-    "fuels": "next"
+    "fuels": "0.0.0-next-20240105135513"
   }
 }
