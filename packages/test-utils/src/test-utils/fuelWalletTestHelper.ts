@@ -117,16 +117,29 @@ export class FuelWalletTestHelper {
     await approveButton.click();
   }
 
-  async getWalletPopupPage() {
-    let walletNotificationPage = this.context.pages().find((page) => {
+  async _getWalletPopupPage() {
+    return this.context.pages().find((page) => {
       const url = page.url();
       return url.includes('/popup.html?');
     });
+  }
+
+  async getWalletPopupPage() {
+    let walletNotificationPage = await this._getWalletPopupPage();
+
+    try {
+      if (!walletNotificationPage) {
+        walletNotificationPage = await this.context.waitForEvent('page', {
+          predicate: (page) => page.url().includes('/popup'),
+          timeout: 2000,
+        });
+      }
+    } catch {
+      walletNotificationPage = await this._getWalletPopupPage();
+    }
 
     if (!walletNotificationPage) {
-      walletNotificationPage = await this.context.waitForEvent('page', {
-        predicate: (page) => page.url().includes('/popup'),
-      });
+      throw new Error('Wallet popup not found!');
     }
 
     return walletNotificationPage;
