@@ -123,7 +123,7 @@ test.describe('SendTransaction', () => {
     await hasText(page, 'success');
   });
 
-  test.only('Send max amount transaction', async () => {
+  test('Send max amount transaction', async () => {
     const receiverWallet = Wallet.generate({
       provider,
     });

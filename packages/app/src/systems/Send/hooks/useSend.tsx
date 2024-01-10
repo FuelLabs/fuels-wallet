@@ -40,8 +40,6 @@ const selectors = {
           state.matches('creatingTx') ||
           txStatus === TxRequestStatus.loading ||
           txStatus === TxRequestStatus.sending;
-
-        // if (state.matches('fetchingFakeTx')) return SendStatus.loading;
         if (isLoadingTx) return SendStatus.loadingTx;
         return SendStatus.selecting;
       },
