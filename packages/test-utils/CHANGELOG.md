@@ -1,5 +1,7 @@
 # @fuel-wallet/test-utils
 
+## 0.13.11
+
 ## 0.13.10
 
 ### Patch Changes
