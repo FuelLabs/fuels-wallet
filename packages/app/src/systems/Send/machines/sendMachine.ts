@@ -158,6 +158,20 @@ export const sendMachine = createMachine(
                   wallet.address,
                   transferRequest
                 );
+              fee = usedFee.add(minFee);
+              // If does not find ETH on the required coins add it before query resources
+              // TODO: check why the getResourcesForTransaction from TS-SDK do not return
+              // the ETH required on the requiredQuantities
+              if (
+                !requiredQuantities.find(
+                  (quantity) => quantity.assetId === BaseAssetId
+                )
+              ) {
+                requiredQuantities.push({
+                  assetId: BaseAssetId,
+                  amount: fee,
+                });
+              }
               const resources = await provider.getResourcesToSpend(
                 wallet.address,
                 requiredQuantities
@@ -165,7 +179,6 @@ export const sendMachine = createMachine(
               transferRequest.gasPrice = gasPrice;
               transferRequest.gasLimit = gasUsed;
               transferRequest.addResources(resources);
-              fee = usedFee.add(minFee);
             }
 
             return {
