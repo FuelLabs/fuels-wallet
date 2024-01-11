@@ -32,7 +32,7 @@
     "events": "^3.3.0"
   },
   "peerDependencies": {
-    "fuels": ">=next"
+    "fuels": ">=0.71.0"
   },
   "devDependencies": {
     "@fuel-ts/wallet": "0.71.0",

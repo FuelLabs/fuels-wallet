@@ -28,7 +28,7 @@
     "react": "^18.2.0",
     "@fuel-ui/css": "0.21.1",
     "@fuel-ui/react": "0.21.1",
-    "fuels": ">=next"
+    "fuels": ">=0.71.0"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.36.1",
