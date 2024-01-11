@@ -1,6 +1,6 @@
 name: 🐛 Bug Report
 description: Something is wrong with Fuel Wallet.
-labels: ['bug']
+labels: ['bug', 'triage']
 body:
   - type: markdown
     attributes:

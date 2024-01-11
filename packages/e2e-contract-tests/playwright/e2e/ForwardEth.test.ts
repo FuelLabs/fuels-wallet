@@ -8,9 +8,8 @@ import '../../load.envs';
 import { shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
+import { MAIN_CONTRACT_ID } from './config';
 import { checkFee, connect, checkAddresses } from './utils';
-
-const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward Eth', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;
@@ -58,7 +57,7 @@ test.describe('Forward Eth', () => {
     });
 
     // test to and from addresses
-    const fuelContractId = toBech32(VITE_CONTRACT_ID!);
+    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
       { address: fuelWallet.address.toAddress(), isContract: false },
       { address: fuelContractId, isContract: true },

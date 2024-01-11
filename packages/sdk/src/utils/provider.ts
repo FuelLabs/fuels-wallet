@@ -5,7 +5,7 @@ export const getGasConfig = async (provider: Provider) => {
   const nodeInfo = await provider.fetchNode();
 
   return {
-    gasLimit: chain.consensusParameters.maxGasPerTx,
+    gasLimit: chain.consensusParameters.maxGasPerTx.div(2),
     gasPrice: nodeInfo.minGasPrice,
     gasPriceFactor: chain.consensusParameters.gasPriceFactor,
   };

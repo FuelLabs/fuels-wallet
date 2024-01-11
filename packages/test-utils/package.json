@@ -1,6 +1,6 @@
 {
   "name": "@fuel-wallet/playwright-utils",
-  "version": "0.13.10",
+  "version": "0.13.11",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "adm-zip": "^0.5.10",
-    "fuels": "0.67.0"
+    "fuels": "0.71.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.39.0",

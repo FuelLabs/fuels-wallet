@@ -2,16 +2,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BigNumberish } from 'fuels';
 import { bn, isBech32 } from 'fuels';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useAccounts } from '~/systems/Account';
-import { isEth, useAssets } from '~/systems/Asset';
+import { useAssets } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
 import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
-import type { TxInputs } from '~/systems/Transaction/services';
+import { type TxInputs } from '~/systems/Transaction/services';
 
 import { sendMachine } from '../machines/sendMachine';
 import type { SendMachineState } from '../machines/sendMachine';
@@ -26,11 +26,11 @@ const selectors = {
   fee(state: SendMachineState) {
     return state.context.fee;
   },
-  isLoadingInitialFee(state: SendMachineState) {
-    return state.hasTag('isLoadingInitialFee');
+  readyToSend(state: SendMachineState) {
+    return state.matches('readyToSend');
   },
-  isInvalid(state: SendMachineState) {
-    return state.matches('invalid');
+  error(state: SendMachineState) {
+    return state.context.error;
   },
   status(txStatus?: TxRequestStatus) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -40,8 +40,6 @@ const selectors = {
           state.matches('creatingTx') ||
           txStatus === TxRequestStatus.loading ||
           txStatus === TxRequestStatus.sending;
-
-        if (state.matches('fetchingFakeTx')) return SendStatus.loading;
         if (isLoadingTx) return SendStatus.loadingTx;
         return SendStatus.selecting;
       },
@@ -54,7 +52,6 @@ const selectors = {
       (state: SendMachineState) => {
         if (state.matches('creatingTx') || txStatus === TxRequestStatus.loading)
           return 'Creating transaction';
-        if (state.matches('invalid')) return 'Invalid transaction';
         return 'Send';
       },
       [txStatus]
@@ -102,37 +99,67 @@ export function useSend() {
         goToHome() {
           navigate(Pages.index());
         },
-        callTransactionRequest(_, ev) {
-          txRequest.handlers.request(ev.data);
+        callTransactionRequest(ctx) {
+          const { providerUrl, transactionRequest, address } = ctx;
+          if (!providerUrl || !transactionRequest || !address) {
+            throw new Error('Params are required');
+          }
+          txRequest.handlers.request({
+            providerUrl,
+            transactionRequest,
+            address,
+          });
         },
       },
     })
   );
 
+  const amount = form.watch('amount');
+  const errorMessage = useSelector(service, selectors.error);
+
+  useEffect(() => {
+    if (bn(amount).gt(0) && form.formState.isValid) {
+      const asset = assets.find(
+        ({ assetId }) => assetId === form.getValues('asset')
+      );
+      const amount = bn(form.getValues('amount'));
+      const address = form.getValues('address');
+      const input = {
+        account,
+        asset,
+        amount,
+        address,
+      } as TxInputs['isValidTransaction'];
+      service.send('SET_DATA', { input });
+    }
+  }, [amount, form.formState.isValid]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      form.setError('amount', {
+        type: 'pattern',
+        message: errorMessage.split(':')[0],
+      });
+    }
+  }, [errorMessage]);
+
   const fee = useSelector(service, selectors.fee);
   const sendStatusSelector = selectors.status(txRequest.txStatus);
   const sendStatus = useSelector(service, sendStatusSelector);
-  const isInvalid = useSelector(service, selectors.isInvalid);
+  const readyToSend = useSelector(service, selectors.readyToSend);
+
   const titleSelector = selectors.title(txRequest.txStatus);
   const title = useSelector(service, titleSelector);
-  const isLoadingInitialFee = useSelector(
-    service,
-    selectors.isLoadingInitialFee
-  );
 
   const balanceAssets = accountBalanceAssets?.filter(({ assetId }) =>
     assets.find((asset) => asset.assetId === assetId)
   );
 
   const assetIdSelected = form.getValues('asset');
-  const balanceAssetSelected = balanceAssets?.find(
-    ({ assetId }) => assetId === assetIdSelected
-  );
-  const isEthSelected =
-    !!assetIdSelected && isEth({ assetId: assetIdSelected });
-  const maxAmountToSend = bn(balanceAssetSelected?.amount).sub(
-    isEthSelected ? bn(fee) : 0
-  );
+  const balanceAssetSelected =
+    bn(
+      balanceAssets?.find(({ assetId }) => assetId === assetIdSelected)?.amount
+    ) || bn(0);
 
   function status(status: keyof typeof SendStatus) {
     return sendStatus === status;
@@ -170,7 +197,7 @@ export function useSend() {
       });
       return;
     }
-    if (maxAmountToSend.lt(amount!)) {
+    if (bn(balanceAssetSelected).lt(amount!)) {
       form.setError('amount', {
         type: 'pattern',
         message: 'Insufficient funds',
@@ -186,13 +213,12 @@ export function useSend() {
     fee,
     title,
     status,
-    isInvalid,
+    readyToSend,
     balanceAssets,
     account,
     txRequest,
     assetIdSelected,
-    maxAmountToSend,
-    isLoadingInitialFee,
+    balanceAssetSelected,
     handlers: {
       cancel,
       submit,

@@ -193,8 +193,9 @@ describe('Fuel', () => {
     const toAddress = Address.fromString(toAccount);
     const amount = bn.parseUnits('0.1');
 
-    const gasLimit = (await wallet.provider.getChain()).consensusParameters
-      .maxGasPerTx;
+    const gasLimit = (
+      await wallet.provider.getChain()
+    ).consensusParameters.maxGasPerTx.div(2);
     const gasPrice = (await wallet.provider.fetchNode()).minGasPrice;
     const response = await wallet.transfer(toAddress, amount, BaseAssetId, {
       gasPrice,

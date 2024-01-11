@@ -126,7 +126,12 @@ export class FuelWalletTestHelper {
     if (!walletNotificationPage) {
       walletNotificationPage = await this.context.waitForEvent('page', {
         predicate: (page) => page.url().includes('/popup'),
+        timeout: 5000,
       });
+    }
+
+    if (!walletNotificationPage) {
+      throw new Error('Wallet popup not found!');
     }
 
     return walletNotificationPage;

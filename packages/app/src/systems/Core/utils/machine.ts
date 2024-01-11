@@ -41,6 +41,13 @@ export async function waitForState<
   }
 }
 
+export function assignError(): Action<any, any> {
+  return assign((ctx: any, ev: any) => ({
+    ...ctx,
+    error: ev.data.error.message,
+  }));
+}
+
 export function assignErrorMessage(message: string): Action<any, any> {
   return assign((ctx: any) => ({
     ...ctx,
