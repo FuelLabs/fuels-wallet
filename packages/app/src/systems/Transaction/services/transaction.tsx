@@ -1,7 +1,6 @@
 import { getGasConfig } from '@fuel-wallet/sdk';
 import type { Account, Asset } from '@fuel-wallet/types';
 import type {
-  BN,
   GetTransactionSummaryFromRequestParams,
   TransactionRequest,
   TransactionSummary,
@@ -20,6 +19,7 @@ import {
   assembleTransactionSummary,
   hexlify,
   processGqlReceipt,
+  BN,
 } from 'fuels';
 import { isEth } from '~/systems/Asset/utils/asset';
 import { db, uniqueId, WalletLockedCustom } from '~/systems/Core';
@@ -61,6 +61,13 @@ export type TxInputs = {
     amount: BN;
     assetId: string;
     provider: Provider;
+  };
+  resolveTransferCosts: {
+    amount: BN;
+    assetId: string;
+    account: Account;
+    provider: Provider;
+    transferRequest: ScriptTransactionRequest;
   };
   fetch: {
     txId: string;
@@ -240,6 +247,70 @@ export class TxService {
     const { assetId, amount } = input;
     request.addCoinOutput(to, amount, assetId);
     return request;
+  }
+
+  static async resolveTransferCosts(input: TxInputs['resolveTransferCosts']) {
+    try {
+      const { account, amount, assetId, provider, transferRequest } = input;
+      const wallet = new WalletLockedCustom(account.address, provider);
+      const nativeBalance = await wallet.getBalance();
+      let fee = new BN(0);
+      // If transaction is native asset and amount is equal to balance
+      // them we calculate the fee for the screen to reduce the input amount
+      if (assetId === BaseAssetId && amount.eq(nativeBalance)) {
+        const resources = await provider.getResourcesToSpend(wallet.address, [
+          {
+            assetId: BaseAssetId,
+            amount: nativeBalance,
+          },
+        ]);
+        transferRequest.addResources(resources);
+        const { gasUsed, gasPrice, usedFee, minFee } =
+          await provider.getTransactionCost(transferRequest);
+        transferRequest.gasPrice = gasPrice;
+        transferRequest.gasLimit = gasUsed;
+        fee = usedFee.add(minFee);
+      } else {
+        const { requiredQuantities, gasPrice, gasUsed, usedFee, minFee } =
+          await provider.getResourcesForTransaction(
+            wallet.address,
+            transferRequest
+          );
+        fee = usedFee.add(minFee);
+        // If does not find ETH on the required coins add it before query resources
+        // TODO: check why the getResourcesForTransaction from TS-SDK do not return
+        // the ETH required on the requiredQuantities
+        if (
+          !requiredQuantities.find(
+            (quantity) => quantity.assetId === BaseAssetId
+          )
+        ) {
+          requiredQuantities.push({
+            assetId: BaseAssetId,
+            amount: fee,
+          });
+        }
+        const resources = await provider.getResourcesToSpend(
+          wallet.address,
+          requiredQuantities
+        );
+        transferRequest.gasPrice = gasPrice;
+        transferRequest.gasLimit = gasUsed;
+        transferRequest.addResources(resources);
+      }
+
+      return {
+        fee,
+        transactionRequest: transferRequest,
+      };
+    } catch (err) {
+      if (err instanceof Error) {
+        if (err.message.includes('not enough coins to fit the target')) {
+          throw new Error('Insufficient funds to cover gas costs');
+        }
+      }
+      throw err;
+    }
   }
 
   static async addResources(input: TxInputs['addResources']) {
