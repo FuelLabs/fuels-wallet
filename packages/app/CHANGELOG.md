@@ -1,5 +1,21 @@
 # fuels-wallet
 
+## 0.14.0
+
+### Minor Changes
+
+- [#990](https://github.com/FuelLabs/fuels-wallet/pull/990) [`9458253`](https://github.com/FuelLabs/fuels-wallet/commit/94582534fb7303d88ef2523c54ae3d336ab693a8) Thanks [@luizstacio](https://github.com/luizstacio)! - Update wallet to beta-5
+
+- [#996](https://github.com/FuelLabs/fuels-wallet/pull/996) [`91dc3b9`](https://github.com/FuelLabs/fuels-wallet/commit/91dc3b96b4dac04a832e1ae8fb55fda641fb6803) Thanks [@richardgreg](https://github.com/richardgreg)! - Changed the text for "Add from private key" to "Import from private key."
+
+### Patch Changes
+
+- [#1034](https://github.com/FuelLabs/fuels-wallet/pull/1034) [`020dc09`](https://github.com/FuelLabs/fuels-wallet/commit/020dc09150dbc67b3b8274365162edf29542082d) Thanks [@luizstacio](https://github.com/luizstacio)! - Clean assets from database when reseting wallet
+
+- Updated dependencies [[`9458253`](https://github.com/FuelLabs/fuels-wallet/commit/94582534fb7303d88ef2523c54ae3d336ab693a8)]:
+  - @fuel-wallet/types@0.14.0
+  - @fuel-wallet/sdk@0.14.0
+
 ## 0.13.11
 
 ### Patch Changes
