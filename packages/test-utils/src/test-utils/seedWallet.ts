@@ -1,5 +1,5 @@
 import type { BN } from 'fuels';
-import { Address, BaseAssetId, Wallet, Provider } from 'fuels';
+import { Address, BaseAssetId, Wallet, Provider, bn } from 'fuels';
 
 type SeedWalletOptions = {
   gasPrice?: number;
@@ -19,7 +19,7 @@ export async function seedWallet(
     Address.fromString(address),
     amount,
     BaseAssetId,
-    { gasPrice: minGasPrice, ...options }
+    { gasPrice: minGasPrice, gasLimit: bn(100_000), ...options }
   );
   await response.wait();
 }

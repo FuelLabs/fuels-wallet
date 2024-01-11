@@ -5,14 +5,13 @@ import type { WalletUnlocked } from 'fuels';
 import { bn, BaseAssetId, toBech32 } from 'fuels';
 
 import { CustomAssetAbi__factory } from '../../src/contracts';
-import type { IdentityInput } from '../../src/contracts/CustomAssetAbi';
+import type { IdentityInput } from '../../src/contracts/contracts/CustomAssetAbi';
 import '../../load.envs';
 import { calculateAssetId, shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
+import { MAIN_CONTRACT_ID } from './config';
 import { checkFee, connect, checkAddresses } from './utils';
-
-const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward Half Custom Asset', () => {
   let fuelWallet: WalletUnlocked;
@@ -31,7 +30,7 @@ test.describe('Forward Half Custom Asset', () => {
 
     // Mint custom asset to wallet
     const contract = CustomAssetAbi__factory.connect(
-      VITE_CONTRACT_ID!,
+      MAIN_CONTRACT_ID,
       fuelWallet
     );
     const recipient: IdentityInput = {
@@ -41,7 +40,7 @@ test.describe('Forward Half Custom Asset', () => {
     };
     const response = await contract.functions
       .mint(recipient, BaseAssetId, bn(100_000_000_000))
-      .txParams({ gasPrice: 1 })
+      .txParams({ gasPrice: 1, gasLimit: 1_000_000 })
       .call();
     await response.transactionResponse.waitForResult();
 
@@ -64,7 +63,7 @@ test.describe('Forward Half Custom Asset', () => {
     // test the forward asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
     // test forward asset id is correct
-    const assetId = calculateAssetId(VITE_CONTRACT_ID!, BaseAssetId);
+    const assetId = calculateAssetId(MAIN_CONTRACT_ID, BaseAssetId);
     await hasText(walletNotificationPage, shortAddress(assetId));
     // test forward custom asset amount is correct
     await hasText(walletNotificationPage, forwardCustomAssetAmount);
@@ -85,7 +84,7 @@ test.describe('Forward Half Custom Asset', () => {
     });
 
     // test to and from addresses
-    const fuelContractId = toBech32(VITE_CONTRACT_ID!);
+    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
       { address: fuelWallet.address.toAddress(), isContract: false },
       { address: fuelContractId, isContract: true },

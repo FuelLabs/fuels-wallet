@@ -1,6 +1,6 @@
 import { TransactionType } from 'fuels';
 
-export const getTransactionTypeText = (type?: TransactionType) => {
+export const getTransactionTypeText = (type?: number) => {
   switch (type) {
     case TransactionType.Script:
       return 'Script';

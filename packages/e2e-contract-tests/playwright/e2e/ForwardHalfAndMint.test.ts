@@ -8,9 +8,8 @@ import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
 import { testSetup } from '../utils';
 
+import { MAIN_CONTRACT_ID } from './config';
 import { checkFee, connect, checkAddresses } from './utils';
-
-const { VITE_CONTRACT_ID } = process.env;
 
 test.describe('Forward Half ETH and Mint Custom Asset', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;
@@ -62,7 +61,7 @@ test.describe('Forward Half ETH and Mint Custom Asset', () => {
     // test mint asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
     // test mint asset id is shown
-    const assetId = calculateAssetId(VITE_CONTRACT_ID!, BaseAssetId);
+    const assetId = calculateAssetId(MAIN_CONTRACT_ID, BaseAssetId);
     await hasText(walletNotificationPage, shortAddress(assetId));
     // test mint amount is correct
     await hasText(walletNotificationPage, mintAmount);
@@ -76,7 +75,7 @@ test.describe('Forward Half ETH and Mint Custom Asset', () => {
     });
 
     // test to and from addresses
-    const fuelContractId = toBech32(VITE_CONTRACT_ID!);
+    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
       { address: fuelWallet.address.toAddress(), isContract: false },
       { address: fuelContractId, isContract: true },

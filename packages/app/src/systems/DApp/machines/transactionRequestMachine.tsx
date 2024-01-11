@@ -287,11 +287,15 @@ export const transactionRequestMachine = createMachine(
           error: JSON.stringify(txDryRunGroupedErrors),
         };
       }),
-      assignTxApproveError: assign({
-        errors: (ctx, ev) => ({
-          ...ctx.errors,
-          txApproveError: (ev.data as any)?.error,
-        }),
+      assignTxApproveError: assign((ctx, ev) => {
+        return {
+          ...ctx,
+          errors: {
+            ...ctx.errors,
+            txApproveError: (ev.data as any)?.error,
+          },
+          error: (ev.data as any)?.error,
+        };
       }),
     },
     services: {
