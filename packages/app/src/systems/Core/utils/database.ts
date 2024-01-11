@@ -54,9 +54,10 @@ export class FuelDB extends Dexie {
     await Promise.all([
       this.vaults.clear(),
       this.accounts.clear(),
-      this.transactions.clear(),
-      this.connections.clear(),
       this.networks.clear(),
+      this.connections.clear(),
+      this.transactions.clear(),
+      this.assets.clear(),
       this.abis.clear(),
       this.errors.clear(),
     ]);
