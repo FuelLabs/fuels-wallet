@@ -104,13 +104,13 @@ export class BackgroundService {
 
   async requireAccountConnection(
     connection: Connection | undefined,
-    address?: string,
+    address?: string
   ) {
     if (!connection) {
       throw new Error('connection not found');
     }
     const hasAccessToAddress = connection.accounts.includes(
-      Address.fromString(address || '0x00').toString(),
+      Address.fromString(address || '0x00').toString()
     );
     if (!hasAccessToAddress) {
       throw new Error(`address is not authorized for this connection.`);
@@ -121,7 +121,7 @@ export class BackgroundService {
     const isConnected = (connection?.accounts || []).length > 0;
     if (!isConnected) {
       throw new Error(
-        'Connection not established. Please call connect() first to request a connection',
+        'Connection not established. Please call connect() first to request a connection'
       );
     }
   }
@@ -129,7 +129,7 @@ export class BackgroundService {
   async connectionMiddleware(
     next: JSONRPCServerMiddlewareNext<EventOrigin>,
     request: JSONRPCRequest,
-    serverParams: EventOrigin,
+    serverParams: EventOrigin
   ) {
     const ALLOWED_METHODS = ['version', 'ping'];
 
@@ -140,7 +140,7 @@ export class BackgroundService {
 
     // Retrieve connection for use on accounts
     const connection = await ConnectionService.getConnection(
-      serverParams!.origin,
+      serverParams!.origin
     );
 
     // If the method is not `connect` or `isConnected`
@@ -200,7 +200,7 @@ export class BackgroundService {
       const popupService = await PopUpService.open(
         origin,
         Pages.requestConnection(),
-        this.communicationProtocol,
+        this.communicationProtocol
       );
       authorizedApp = await popupService.requestConnection({
         origin,
@@ -242,7 +242,7 @@ export class BackgroundService {
 
   async signMessage(
     input: Exclude<MessageInputs['signMessage'], 'origin'>,
-    serverParams: EventOrigin,
+    serverParams: EventOrigin
   ) {
     const origin = serverParams.origin;
     const title = serverParams.title;
@@ -253,7 +253,7 @@ export class BackgroundService {
     const popupService = await PopUpService.open(
       origin,
       Pages.requestMessage(),
-      this.communicationProtocol,
+      this.communicationProtocol
     );
     const signedMessage = await popupService.signMessage({
       ...input,
@@ -266,7 +266,7 @@ export class BackgroundService {
 
   async sendTransaction(
     input: Exclude<MessageInputs['sendTransaction'], 'origin'>,
-    serverParams: EventOrigin,
+    serverParams: EventOrigin
   ) {
     await this.requireAccountConnection(serverParams.connection, input.address);
     const origin = serverParams.origin;
@@ -279,14 +279,14 @@ export class BackgroundService {
         [
           `${input.provider.url} is different from the user current network!`,
           'Request the user to add the new network. fuel.addNetwork([...]).',
-        ].join('\n'),
+        ].join('\n')
       );
     }
 
     const popupService = await PopUpService.open(
       origin,
       Pages.requestTransaction(),
-      this.communicationProtocol,
+      this.communicationProtocol
     );
     const signedMessage = await popupService.sendTransaction({
       ...input,
@@ -302,7 +302,7 @@ export class BackgroundService {
 
     await this.requireAccountConnection(
       serverParams.connection,
-      currentAccount?.address,
+      currentAccount?.address
     );
 
     return currentAccount?.address;
@@ -323,7 +323,7 @@ export class BackgroundService {
 
   async addAssets(
     input: MessageInputs['addAssets'],
-    serverParams: EventOrigin,
+    serverParams: EventOrigin
   ) {
     const { assetsToAdd } = await AssetService.validateAddAssets(input.assets);
 
@@ -334,7 +334,7 @@ export class BackgroundService {
     const popupService = await PopUpService.open(
       origin,
       Pages.requestAddAssets(),
-      this.communicationProtocol,
+      this.communicationProtocol
     );
     await popupService.addAssets({
       assets: assetsToAdd,
@@ -358,7 +358,7 @@ export class BackgroundService {
 
   async addNetwork(
     input: MessageInputs['addNetwork'],
-    serverParams: EventOrigin,
+    serverParams: EventOrigin
   ) {
     const { network } = input;
     await NetworkService.assertAddNetwork({ data: network });
@@ -370,7 +370,7 @@ export class BackgroundService {
     const popupService = await PopUpService.open(
       origin,
       Pages.requestAddNetwork(),
-      this.communicationProtocol,
+      this.communicationProtocol
     );
     await popupService.addNetwork({
       network,

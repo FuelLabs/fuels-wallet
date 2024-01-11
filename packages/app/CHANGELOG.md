@@ -1,5 +1,105 @@
 # fuels-wallet
 
+## 0.13.11
+
+### Patch Changes
+
+- [#997](https://github.com/FuelLabs/fuels-wallet/pull/997) [`85dab93`](https://github.com/FuelLabs/fuels-wallet/commit/85dab9376698bf65ab466647f7d933be64629427) Thanks [@matt-user](https://github.com/matt-user)! - Show all message info on sign message scree
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.13.11
+  - @fuel-wallet/types@0.13.11
+
+## 0.13.10
+
+### Patch Changes
+
+- [#978](https://github.com/FuelLabs/fuels-wallet/pull/978) [`1f34e67`](https://github.com/FuelLabs/fuels-wallet/commit/1f34e67b36ef94a8164f6cabfea143ac4d92f197) Thanks [@luizstacio](https://github.com/luizstacio)! - chore: fix icons on fuel wallet development attachment
+
+- Updated dependencies [[`1f34e67`](https://github.com/FuelLabs/fuels-wallet/commit/1f34e67b36ef94a8164f6cabfea143ac4d92f197)]:
+  - @fuel-wallet/sdk@0.13.10
+  - @fuel-wallet/types@0.13.10
+
+## 0.13.9
+
+### Patch Changes
+
+- [#976](https://github.com/FuelLabs/fuels-wallet/pull/976) [`217f04d`](https://github.com/FuelLabs/fuels-wallet/commit/217f04dc918c547b9922a7403a12f5fb4b59f74f) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: attach development wallet on release tags
+
+- Updated dependencies [[`217f04d`](https://github.com/FuelLabs/fuels-wallet/commit/217f04dc918c547b9922a7403a12f5fb4b59f74f)]:
+  - @fuel-wallet/sdk@0.13.9
+  - @fuel-wallet/types@0.13.9
+
+## 0.13.8
+
+### Patch Changes
+
+- [#974](https://github.com/FuelLabs/fuels-wallet/pull/974) [`f24632a`](https://github.com/FuelLabs/fuels-wallet/commit/f24632aefe4496beb3da69df2d769b4fbdfe7c6f) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: update xstate-react to improve wallet render performance
+
+- [#973](https://github.com/FuelLabs/fuels-wallet/pull/973) [`208b955`](https://github.com/FuelLabs/fuels-wallet/commit/208b95563a9bfb4cd6700ee6abc315d82f5fc3e5) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: update fuels sdk to version 0.67.0
+
+- Updated dependencies [[`208b955`](https://github.com/FuelLabs/fuels-wallet/commit/208b95563a9bfb4cd6700ee6abc315d82f5fc3e5)]:
+  - @fuel-wallet/types@0.13.8
+  - @fuel-wallet/sdk@0.13.8
+
+## 0.13.7
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.13.7
+  - @fuel-wallet/types@0.13.7
+
+## 0.13.6
+
+### Patch Changes
+
+- [#940](https://github.com/FuelLabs/fuels-wallet/pull/940) [`bb05d1d`](https://github.com/FuelLabs/fuels-wallet/commit/bb05d1daefbb50d371bc56b7c7fedc458169ae5a) Thanks [@matt-user](https://github.com/matt-user)! - fix: showing assets with amount 0
+
+- Updated dependencies [[`c2baa3c`](https://github.com/FuelLabs/fuels-wallet/commit/c2baa3c5a4bc5212bce5275390dd71c111aa83c5)]:
+  - @fuel-wallet/types@0.13.6
+  - @fuel-wallet/sdk@0.13.6
+
+## 0.13.5
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.13.5
+  - @fuel-wallet/types@0.13.5
+
+## 0.13.4
+
+### Patch Changes
+
+- [#939](https://github.com/FuelLabs/fuels-wallet/pull/939) [`9939298`](https://github.com/FuelLabs/fuels-wallet/commit/9939298ba935ef30f79e1f47405451cfa34ff4b6) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - fix: password input showing incorrect error feedback
+
+- [#923](https://github.com/FuelLabs/fuels-wallet/pull/923) [`f683bae`](https://github.com/FuelLabs/fuels-wallet/commit/f683baeb6efbcc75561ac53c9c0d9d05f3bbae29) Thanks [@matt-user](https://github.com/matt-user)! - chore: bump fuels version
+
+- [#939](https://github.com/FuelLabs/fuels-wallet/pull/939) [`9939298`](https://github.com/FuelLabs/fuels-wallet/commit/9939298ba935ef30f79e1f47405451cfa34ff4b6) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: upgrade fuel-core
+
+- Updated dependencies [[`f683bae`](https://github.com/FuelLabs/fuels-wallet/commit/f683baeb6efbcc75561ac53c9c0d9d05f3bbae29)]:
+  - @fuel-wallet/types@0.13.4
+  - @fuel-wallet/sdk@0.13.4
+
+## 0.13.3
+
+### Patch Changes
+
+- [#920](https://github.com/FuelLabs/fuels-wallet/pull/920) [`7286df2`](https://github.com/FuelLabs/fuels-wallet/commit/7286df278f27c9bcbddd5c91d39c9e8ed1c272c6) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: add object-src for win7 compatibility.
+
+- Updated dependencies [[`7ef4fac`](https://github.com/FuelLabs/fuels-wallet/commit/7ef4facf3e61c409ad5e7b794700f90c62cbf865)]:
+  - @fuel-wallet/sdk@0.13.3
+  - @fuel-wallet/types@0.13.3
+
+## 0.13.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.13.2
+  - @fuel-wallet/types@0.13.2
+
 ## 0.13.1
 
 ### Patch Changes

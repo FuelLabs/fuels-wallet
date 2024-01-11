@@ -30,3 +30,14 @@ To listen to network events, you can use the `fuel.events.network` event.
 Switch the network in your wallet to see the event triggered.
 
 <Examples.Events.Network />
+
+## With React
+
+In a react app you can use the `useChain` hook as shown below to get information about the current chain.
+
+```tsx
+import { useChain } from '@fuel-wallet/react';
+// ...
+const { chain } = useChain();
+console.log(chain.name);
+```

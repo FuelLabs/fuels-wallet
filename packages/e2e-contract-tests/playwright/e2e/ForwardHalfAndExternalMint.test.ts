@@ -1,30 +1,32 @@
-import {
-  test,
-  getButtonByText,
-  getWalletPage,
-  hasText,
-  walletConnect,
-} from '@fuel-wallet/test-utils';
-import { BaseAssetId } from 'fuels';
+import type { FuelWalletTestHelper } from '@fuel-wallet/playwright-utils';
+import { test, getButtonByText, hasText } from '@fuel-wallet/playwright-utils';
+import { expect } from '@playwright/test';
+import { BaseAssetId, bn, toBech32 } from 'fuels';
+import type { WalletUnlocked } from 'fuels';
 
 import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
 import { testSetup } from '../utils';
 
-const { VITE_EXTERNAL_CONTRACT_ID } = process.env;
+import { MAIN_CONTRACT_ID, EXTERNAL_CONTRACT_ID } from './config';
+import { checkFee, connect, checkAddresses } from './utils';
 
 test.describe('Forward Half ETH and Mint External Custom Asset', () => {
+  let fuelWalletTestHelper: FuelWalletTestHelper;
+  let fuelWallet: WalletUnlocked;
+
   test.beforeEach(async ({ context, extensionId, page }) => {
-    await testSetup({ context, page, extensionId });
+    ({ fuelWalletTestHelper, fuelWallet } = await testSetup({
+      context,
+      page,
+      extensionId,
+    }));
   });
 
-  test('e2e foreward half eth and mint external custom asset', async ({
-    context,
+  test('e2e forward half eth and mint external custom asset', async ({
     page,
   }) => {
-    const connectButton = getButtonByText(page, 'Connect');
-    await connectButton.click();
-    await walletConnect(context);
+    await connect(page, fuelWalletTestHelper);
 
     const depositAmount = '1.000';
     const halfDepositAmount = '0.500';
@@ -37,36 +39,81 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
 
     const forwardHalfAndMintButton = getButtonByText(
       page,
-      'Forward Half And External Mint',
+      'Forward Half And External Mint'
     );
     await forwardHalfAndMintButton.click();
-
-    const walletPage = await getWalletPage(context);
+    const walletNotificationPage =
+      await fuelWalletTestHelper.getWalletPopupPage();
 
     // test forward asset name is shown
-    await hasText(walletPage, 'Ethereum');
+    await hasText(walletNotificationPage, 'Ethereum');
     // test forward asset id is shown
-    await hasText(walletPage, shortAddress(BaseAssetId));
+    await hasText(walletNotificationPage, shortAddress(BaseAssetId));
     // test forward eth amount is correct
-    await hasText(walletPage, `${depositAmount} ETH`);
+    await hasText(walletNotificationPage, `${depositAmount} ETH`);
 
     // test return asset name is shown
-    await hasText(walletPage, 'Ethereum', 1);
+    await hasText(walletNotificationPage, 'Ethereum', 1);
     // test return asset id is shown
-    await hasText(walletPage, shortAddress(BaseAssetId), 1);
+    await hasText(walletNotificationPage, shortAddress(BaseAssetId), 1);
     // test return eth amount is correct
-    await hasText(walletPage, `${halfDepositAmount} ETH`);
+    await hasText(walletNotificationPage, `${halfDepositAmount} ETH`);
 
     // test mint asset name is shown
-    await hasText(walletPage, 'Unknown', 0, 5000, true);
+    await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
     // test mint asset id is shown
-    const assetId = calculateAssetId(VITE_EXTERNAL_CONTRACT_ID!, BaseAssetId);
-    await hasText(walletPage, shortAddress(assetId));
+    const assetId = calculateAssetId(EXTERNAL_CONTRACT_ID, BaseAssetId);
+    await hasText(walletNotificationPage, shortAddress(assetId));
     // test mint amount is correct
-    await hasText(walletPage, mintAmount);
+    await hasText(walletNotificationPage, mintAmount);
 
     // test gas fee is shown and correct
-    await hasText(walletPage, 'Fee (network)');
-    await hasText(walletPage, '0.000000001 ETH');
+    await hasText(walletNotificationPage, 'Fee (network)');
+    const fee = bn.parseUnits('0.000000233');
+    await checkFee(walletNotificationPage, {
+      minFee: fee.sub(100),
+      maxFee: fee.add(100),
+    });
+
+    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
+    await checkAddresses(
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: fuelContractId, isContract: true },
+      walletNotificationPage
+    );
+    await checkAddresses(
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      { address: toBech32(EXTERNAL_CONTRACT_ID), isContract: true },
+      walletNotificationPage,
+      1,
+      1
+    );
+    await checkAddresses(
+      { address: fuelContractId, isContract: true },
+      { address: fuelWallet.address.toAddress(), isContract: false },
+      walletNotificationPage
+    );
+
+    // Test approve
+    const preDepositBalanceEth = await fuelWallet.getBalance();
+    const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
+    await fuelWalletTestHelper.walletApprove();
+    await hasText(page, 'Transaction successful.');
+    const postDepositBalanceEth = await fuelWallet.getBalance();
+    const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
+    expect(
+      parseFloat(
+        preDepositBalanceEth
+          .sub(postDepositBalanceEth)
+          .format({ precision: 6, units: 9 })
+      )
+    ).toBe(parseFloat(halfDepositAmount));
+    expect(
+      parseFloat(
+        postDepositBalanceTkn
+          .sub(preDepositBalanceTkn)
+          .format({ precision: 6, units: 9 })
+      )
+    ).toBe(parseFloat(mintAmount));
   });
 });

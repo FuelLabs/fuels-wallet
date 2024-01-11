@@ -6,7 +6,7 @@ on:
       - master
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -14,7 +14,7 @@ env:
 
 jobs:
   release-changesets:
-    name: Changesets Release
+    name: Release master or rc
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
@@ -53,18 +53,27 @@ jobs:
           ## with sourcemaps
           NODE_OPTIONS: "--max-old-space-size=4096"
 
+      - name: Build Fuel Wallet Development
+        run: pnpm build:crx
+        env:
+          VITE_CRX_RELEASE: false
+          VITE_CRX_NAME: "Fuel Wallet Development"
+          CRX_OUT: "dist-crx-dev"
+          APP_VERSION_POSTFIX: "-development"
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
       - name: Create Release Pull Request or Publish to NPM
         id: changesets
         uses: FuelLabs/changesets-action@main
         with:
-          publish: pnpm changeset publish --tag next
+          publish: pnpm changeset publish --tag rc
           commit: "ci(changesets): versioning packages"
           title: "ci(changesets): versioning packages"
           createGithubReleases: aggregate
           githubReleaseName: v${{ env.BUILD_VERSION }}
           githubTagName: v${{ env.BUILD_VERSION }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Release to @master tag

@@ -13,7 +13,7 @@ export async function waitForState<
   done?: D,
   failure?: D,
   failureMessage?: FK,
-  timeout: number = 60 * 5 * 1000,
+  timeout: number = 60 * 5 * 1000
 ) {
   try {
     const doneState = done || 'done';
@@ -23,7 +23,7 @@ export async function waitForState<
     const appState: T = await waitFor<I>(
       service,
       (state: T) => state.matches(doneState) || state.matches(failureState),
-      { timeout },
+      { timeout }
     );
 
     if (appState.matches(failureState)) {
@@ -36,9 +36,16 @@ export async function waitForState<
   } catch (err: any) {
     if (err.cause === 'CustomState') throw err;
     throw new Error(
-      `Window closed by inactivity after ${timeout / 1000 / 60} minutes!`,
+      `Window closed by inactivity after ${timeout / 1000 / 60} minutes!`
     );
   }
+}
+
+export function assignError(): Action<any, any> {
+  return assign((ctx: any, ev: any) => ({
+    ...ctx,
+    error: ev.data.error.message,
+  }));
 }
 
 export function assignErrorMessage(message: string): Action<any, any> {

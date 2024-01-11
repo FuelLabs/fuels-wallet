@@ -55,7 +55,7 @@ export function CreatePassword({
   const form = useForm<CreatePasswordValues>({
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
-    mode: 'onChange',
+    mode: 'onBlur',
     defaultValues: {
       password: '',
       confirmPassword: '',
@@ -74,7 +74,7 @@ export function CreatePassword({
     debounce(() => {
       trigger('confirmPassword');
     }, 500),
-    [],
+    []
   );
 
   return (

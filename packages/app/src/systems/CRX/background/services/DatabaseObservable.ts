@@ -36,7 +36,7 @@ export class DatabaseObservable<
 
   on<T extends DatabaseObservableEvent<TableNames>>(
     eventName: T,
-    listener: (event: DatabaseEventArg<T>) => void,
+    listener: (event: DatabaseEventArg<T>) => void
   ): this {
     return super.on(eventName, listener);
   }

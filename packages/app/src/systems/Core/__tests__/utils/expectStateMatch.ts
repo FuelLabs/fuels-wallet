@@ -7,7 +7,7 @@ export async function expectStateMatch<
   D extends I['machine']['__TResolvedTypesMeta']['resolved']['matchesStates'],
 >(service: I, stateName: D) {
   const state: T = await waitFor(service, (state: T) =>
-    state.matches(stateName),
+    state.matches(stateName)
   );
   expect(state.matches(stateName)).toBeTruthy();
   return state;

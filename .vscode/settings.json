@@ -1,9 +1,9 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "prettier.prettierPath": "./node_modules/prettier",
+  "prettier.prettierPath": "./node_modules/prettier/index.cjs",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "[sway]": {
     "editor.defaultFormatter": "FuelLabs.sway-vscode-plugin"

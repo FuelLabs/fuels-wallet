@@ -16,7 +16,7 @@ import {
 function filteredOrAll<T>(
   all: T[],
   filtered?: T[] | null,
-  searchText?: string,
+  searchText?: string
 ) {
   const hasSearch = Boolean(searchText?.length);
   return hasSearch ? filtered : filtered || all;
@@ -33,14 +33,14 @@ const selectors = {
     return filteredOrAll(
       context.response?.accounts || [],
       context.response?.filteredAccounts,
-      context.inputs.searchText,
+      context.inputs.searchText
     );
   },
   connections({ context }: ConnectionsMachineState) {
     return filteredOrAll(
       context.response?.connections || [],
       context.response?.filteredConnections,
-      context.inputs.searchText,
+      context.inputs.searchText
     );
   },
   connectedAccounts(state: ConnectionsMachineState) {
@@ -106,7 +106,7 @@ export function useConnections() {
             setSearchQuery(undefined);
           },
         },
-      }),
+      })
   );
 
   const navigate = useNavigate();

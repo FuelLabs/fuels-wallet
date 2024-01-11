@@ -83,7 +83,7 @@ export function Transfer() {
               // TODO: https://github.com/FuelLabs/fuel-ui/issues/323
               key={decimals}
               value={amount}
-              onChange={(value) => setAmount(value)}
+              onChange={(value) => setAmount(value ? bn(value) : null)}
               hiddenBalance
               units={decimals}
             />

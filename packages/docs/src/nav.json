@@ -15,7 +15,9 @@
     "Signing a Message",
     "ABIs",
     "Wallet Connectors",
-    "Reference"
+    "Reference",
+    "React Hooks Reference",
+    "Playwright Utils"
   ],
   "contributing": [
     "Running locally",

@@ -1,0 +1,11 @@
+name: Links
+
+on:
+    deployment_status
+
+jobs:
+    check-links:
+        uses: FuelLabs/github-actions/.github/workflows/next-links.yml@master
+        with:
+          status: ${{ github.event.deployment_status.state }}
+          preview-url: ${{ github.event.deployment_status.environment_url }}

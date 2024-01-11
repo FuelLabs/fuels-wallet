@@ -1,10 +1,10 @@
-name: "Release"
+name: "Release latest"
 
 on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
@@ -33,3 +33,4 @@ jobs:
           npm dist-tag add @fuel-wallet/sdk@${{ env.BUILD_VERSION }} latest
           npm dist-tag add @fuel-wallet/types@${{ env.BUILD_VERSION }} latest
           npm dist-tag add @fuel-wallet/react@${{ env.BUILD_VERSION }} latest
+          npm dist-tag add @fuel-wallet/playwright-utils@${{ env.BUILD_VERSION }} latest

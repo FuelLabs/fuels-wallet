@@ -18,7 +18,7 @@ export const useWallet = ({ address }: { address?: string }) => {
     },
     {
       enabled: !!fuel && !!address,
-    },
+    }
   );
 
   return {

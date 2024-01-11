@@ -7,7 +7,7 @@ type RenderWithRouterOpts = {
 
 export const renderWithRouter = (
   ui: JSX.Element,
-  { route = '/', wrapper }: RenderWithRouterOpts,
+  { route = '/', wrapper }: RenderWithRouterOpts
 ) => {
   window.history.pushState({}, 'Test page', route);
   return render(ui, { wrapper });

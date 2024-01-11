@@ -19,7 +19,7 @@ export async function switchAccount(popupPage: Page, name: string) {
   let account = await getAccountByName(popupPage, name);
 
   // If account is already selected return it
-  // to avoid unecessary changes
+  // to avoid unnecessary changes
   if (account.isCurrent) {
     return account;
   }

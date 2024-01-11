@@ -59,7 +59,7 @@ export class ConnectionService {
 
   static getConnectedAccounts(
     connection: Maybe<Connection>,
-    accounts: Account[],
+    accounts: Account[]
   ) {
     const addrs = connection?.accounts || [];
     return addrs.map((a) => accounts.find((acc) => acc.address === a));
@@ -71,7 +71,7 @@ export class ConnectionService {
       const connection = await db.connections.get({ origin });
       if (connection) {
         connection.accounts = connection.accounts.filter(
-          (acc) => acc !== account,
+          (acc) => acc !== account
         );
         await db.connections.put(connection);
       }
@@ -92,7 +92,7 @@ export class ConnectionService {
   }
 
   static async updateConnectedAccounts(
-    input: ConnectInputs['updateConnectedAccounts'],
+    input: ConnectInputs['updateConnectedAccounts']
   ) {
     const { origin, accounts } = input;
     return db.transaction('rw', db.connections, async () => {

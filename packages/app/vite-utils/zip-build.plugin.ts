@@ -19,7 +19,7 @@ type ZipBuildPluginOptions = {
 function addFilesToZipArchive(
   zip: JSZip,
   inDir: string,
-  excludeFiles?: RegExp,
+  excludeFiles?: RegExp
 ) {
   const listOfFiles = readdirSync(inDir);
 

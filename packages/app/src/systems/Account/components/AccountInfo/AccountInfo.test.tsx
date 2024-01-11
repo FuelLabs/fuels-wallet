@@ -24,7 +24,7 @@ describe('AccountInfo', () => {
   it('should show some part of the address', async () => {
     render(<AccountInfo {...PROPS} />);
     expect(
-      screen.getByText(shortAddress(MOCK_ACCOUNTS[0].address)),
+      screen.getByText(shortAddress(MOCK_ACCOUNTS[0].address))
     ).toBeInTheDocument();
   });
 

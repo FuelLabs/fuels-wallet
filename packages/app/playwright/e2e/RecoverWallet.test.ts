@@ -49,10 +49,10 @@ test.describe('RecoverWallet', () => {
     /** Adding password */
     await hasText(page, /Create password for encryption/i);
     const passwordInput = getByAriaLabel(page, 'Your Password');
-    await passwordInput.type(WALLET_PASSWORD);
+    await passwordInput.fill(WALLET_PASSWORD);
     await passwordInput.press('Tab');
     const confirmPasswordInput = getByAriaLabel(page, 'Confirm Password');
-    await confirmPasswordInput.type(WALLET_PASSWORD);
+    await confirmPasswordInput.fill(WALLET_PASSWORD);
     await confirmPasswordInput.press('Tab');
 
     await getButtonByText(page, /Next/i).click();
@@ -75,7 +75,7 @@ test.describe('RecoverWallet', () => {
     await getButtonByText(page, /Next: Seed Phrase/i).click();
 
     await getByAriaLabel(page, 'Select format').selectOption(
-      'I have a 24 words Seed Phrase',
+      'I have a 24 words Seed Phrase'
     );
 
     /** Copy words to clipboard area */
@@ -92,10 +92,10 @@ test.describe('RecoverWallet', () => {
     /** Adding password */
     await hasText(page, /Create password for encryption/i);
     const passwordInput = getByAriaLabel(page, 'Your Password');
-    await passwordInput.type(WALLET_PASSWORD);
+    await passwordInput.fill(WALLET_PASSWORD);
     await passwordInput.press('Tab');
     const confirmPasswordInput = getByAriaLabel(page, 'Confirm Password');
-    await confirmPasswordInput.type(WALLET_PASSWORD);
+    await confirmPasswordInput.fill(WALLET_PASSWORD);
     await confirmPasswordInput.press('Tab');
 
     await getButtonByText(page, /Next/i).click();

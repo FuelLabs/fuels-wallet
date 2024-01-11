@@ -1,13 +1,13 @@
 import { useAccount, useWallet } from '@fuel-wallet/react';
-import { bn } from 'fuels';
+import { BaseAssetId, bn } from 'fuels';
 import { useState } from 'react';
 
 import { mint } from '../contract_interactions';
 
 export const MintAssetCard = () => {
   const [amount, setAmount] = useState<string>('');
-  const account = useAccount();
-  const wallet = useWallet({ address: account.account });
+  const { account } = useAccount();
+  const { wallet } = useWallet({ address: account });
 
   return (
     <div>
@@ -21,10 +21,11 @@ export const MintAssetCard = () => {
         />
         <button
           onClick={async () => {
-            if (wallet.wallet && amount) {
+            if (wallet) {
               await mint({
-                wallet: wallet.wallet,
+                wallet,
                 amount: bn.parseUnits(amount),
+                subId: BaseAssetId,
               });
             }
           }}

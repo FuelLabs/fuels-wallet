@@ -1,6 +1,6 @@
 import type { Account } from '@fuel-wallet/types';
 import type { Browser, Page } from '@playwright/test';
-import test, { chromium } from '@playwright/test';
+import test, { chromium, expect } from '@playwright/test';
 import { bn, Provider, Wallet } from 'fuels';
 
 import {
@@ -10,6 +10,7 @@ import {
   getInputByName,
   getByAriaLabel,
   hasAriaLabel,
+  getElementByText,
 } from '../commons';
 import { seedWallet } from '../commons/seedWallet';
 import { ALT_ASSET, mockData } from '../mocks';
@@ -44,12 +45,12 @@ test.describe('SendTransaction', () => {
     await page.getByText('Ethereum').click();
 
     // Fill address
-    await getInputByName(page, 'address').type(
-      receiverWallet.address.toString(),
+    await getInputByName(page, 'address').fill(
+      receiverWallet.address.toString()
     );
 
     // Fill amount
-    await getInputByName(page, 'amount').type('0.001');
+    await getInputByName(page, 'amount').fill('0.001');
 
     // Submit transaction
     await getButtonByText(page, 'Confirm').click();
@@ -72,10 +73,10 @@ test.describe('SendTransaction', () => {
     await page.getByText('Ethereum').click();
 
     // Fill address
-    await getInputByName(page, 'address').type(account.address.toString());
+    await getInputByName(page, 'address').fill(account.address.toString());
 
     // Fill amount
-    await getInputByName(page, 'amount').type('0.001');
+    await getInputByName(page, 'amount').fill('0.001');
 
     // Submit transaction
     await getButtonByText(page, 'Confirm').click();
@@ -102,12 +103,12 @@ test.describe('SendTransaction', () => {
     await page.getByText(ALT_ASSET.name).click();
 
     // Fill address
-    await getInputByName(page, 'address').type(
-      receiverWallet.address.toString(),
+    await getInputByName(page, 'address').fill(
+      receiverWallet.address.toString()
     );
 
     // Fill amount
-    await getInputByName(page, 'amount').type('0.01');
+    await getInputByName(page, 'amount').fill('0.01');
     // Check the balance is correct formated with only 2 decimals
     await hasAriaLabel(page, 'Balance: 1,000,000.00');
 
@@ -136,19 +137,32 @@ test.describe('SendTransaction', () => {
     await page.getByText('Ethereum').click();
 
     // Fill address
-    await getInputByName(page, 'address').type(
-      receiverWallet.address.toString(),
+    await getInputByName(page, 'address').fill(
+      receiverWallet.address.toString()
     );
 
     // Fill amount
     await getByAriaLabel(page, 'Max').click();
-    const value = await getInputByName(page, 'amount').inputValue();
+    const maxAmount = await getInputByName(page, 'amount').inputValue();
+
+    // Get calculated fee
+    await hasText(page, /(.*)ETH/);
+    const el = await getElementByText(page, /(.*)ETH/);
+    const feeAmountText = (await el.textContent()).replace(' ETH', '').trim();
+    const feeAmount = bn.parseUnits(feeAmountText);
+
+    // Max amount after calculating fee
+    const maxAmountAfterFee = await getInputByName(page, 'amount').inputValue();
+    const totalAmount = feeAmount.add(bn.parseUnits(maxAmountAfterFee));
+    await expect(bn.parseUnits(maxAmount).toString()).toBe(
+      totalAmount.toString()
+    );
 
     // Submit transaction
     await getButtonByText(page, 'Confirm').click();
 
     // Approve transaction
-    await hasText(page, `${value} ETH`);
+    await hasText(page, `${maxAmountAfterFee} ETH`);
     await getButtonByText(page, 'Approve').click();
 
     // Wait for transaction to be confirmed

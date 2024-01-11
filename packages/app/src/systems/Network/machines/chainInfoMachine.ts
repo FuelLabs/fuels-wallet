@@ -103,7 +103,7 @@ export const chainInfoMachine = createMachine(
         },
       }),
     },
-  },
+  }
 );
 
 export type ChainInfoMachine = typeof chainInfoMachine;

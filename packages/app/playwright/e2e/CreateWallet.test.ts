@@ -48,15 +48,14 @@ test.describe('CreateWallet', () => {
     await hasText(page, /Confirm phrase/i);
     await getButtonByText(page, /Paste/i).click();
     await getButtonByText(page, /Next/i).click();
-    // await page.pause();
 
     /** Adding password */
     await hasText(page, /Create password for encryption/i);
     const passwordInput = getByAriaLabel(page, 'Your Password');
-    await passwordInput.type(WALLET_PASSWORD);
+    await passwordInput.fill(WALLET_PASSWORD);
     await passwordInput.press('Tab');
     const confirmPasswordInput = getByAriaLabel(page, 'Confirm Password');
-    await confirmPasswordInput.type(WALLET_PASSWORD);
+    await confirmPasswordInput.fill(WALLET_PASSWORD);
     await confirmPasswordInput.press('Tab');
 
     await getButtonByText(page, /Next/i).click();

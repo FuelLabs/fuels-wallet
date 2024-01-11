@@ -24,11 +24,11 @@ export function useAssets() {
   const assets = store.useSelector(Services.assets, selectors.assets);
   const assetsListed = store.useSelector(
     Services.assets,
-    selectors.assetsListed,
+    selectors.assetsListed
   );
   const assetsCustom = store.useSelector(
     Services.assets,
-    selectors.assetsCustom,
+    selectors.assetsCustom
   );
   const isLoading = store.useSelector(Services.assets, selectors.isLoading);
 
@@ -50,7 +50,7 @@ export function useAssets() {
 
   function goToEdit(
     assetId: string,
-    options: { eraseLastNavigation: boolean } = { eraseLastNavigation: false },
+    options: { eraseLastNavigation: boolean } = { eraseLastNavigation: false }
   ) {
     navigate(
       Pages.assetsEdit({ id: assetId }),
@@ -59,7 +59,7 @@ export function useAssets() {
             replace: true,
             state: { n: -1 },
           }
-        : undefined,
+        : undefined
     );
   }
 

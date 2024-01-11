@@ -29,7 +29,7 @@ test.describe('ViewSeedPhrase', () => {
 
       // Should show unlock screen
       await hasText(page, /Confirm your Password/i);
-      await getByAriaLabel(page, 'Your Password').type(WALLET_PASSWORD);
+      await getByAriaLabel(page, 'Your Password').fill(WALLET_PASSWORD);
       await getButtonByText(page, 'Unlock').click();
     });
 
@@ -38,7 +38,7 @@ test.describe('ViewSeedPhrase', () => {
       await hasText(page, /Seed Phrase/i);
       await getByAriaLabel(page, 'Copy seed phrase').click();
       const clipboardValue = await page.evaluate(() =>
-        navigator.clipboard.readText(),
+        navigator.clipboard.readText()
       );
       await expect(clipboardValue).toEqual(mnemonic);
     });

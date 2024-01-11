@@ -1,0 +1,49 @@
+{
+  "name": "@fuels/update-sdk",
+  "private": true,
+  "version": "0.13.10",
+  "license": "Apache-2.0",
+  "main": "src/index.ts",
+  "publishConfig": {
+    "access": "public",
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "typings": "./dist/index.d.ts",
+    "exports": {
+      ".": {
+        "require": "./dist/index.js",
+        "default": "./dist/index.mjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "ts:check": "tsc --noEmit",
+    "check-versions": "tsx src/index.ts"
+  },
+  "devDependencies": {
+    "@octokit/openapi-types": "^19.1.0",
+    "@types/minimist": "^1.2.5",
+    "@types/semver": "^7.5.6",
+    "chalk": "^5.3.0",
+    "compare-versions": "^6.1.0",
+    "execa": "^8.0.1",
+    "glob": "^10.3.10",
+    "immer": "^10.0.3",
+    "prettier": "^3.1.0",
+    "tsup": "^7.2.0",
+    "tsx": "^4.6.2"
+  },
+  "dependencies": {
+    "@octokit/auth-token": "^4.0.0",
+    "@octokit/core": "^5.0.2",
+    "@octokit/plugin-rest-endpoint-methods": "^10.2.0",
+    "axios": "^1.6.5",
+    "octokit": "^3.1.2",
+    "registry-url": "^6.0.1",
+    "semver": "^7.5.4"
+  }
+}

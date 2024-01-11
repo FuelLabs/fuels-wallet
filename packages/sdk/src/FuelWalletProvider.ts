@@ -17,7 +17,7 @@ export class FuelWalletProvider extends Provider {
 
   static async create(
     url: string,
-    options: FuelWalletProviderOptions,
+    options: FuelWalletProviderOptions
   ): Promise<FuelWalletProvider> {
     const provider = new FuelWalletProvider(url, options);
     await provider.fetchChainAndNodeInfo();
@@ -25,11 +25,11 @@ export class FuelWalletProvider extends Provider {
   }
 
   async sendTransaction(
-    transactionRequestLike: TransactionRequestLike & { signer?: string },
+    transactionRequestLike: TransactionRequestLike & { signer?: string }
   ): Promise<TransactionResponse> {
     const transactionId = await this.walletConnection.sendTransaction(
       transactionRequestLike,
-      { url: this.url },
+      { url: this.url }
     );
     const response = new TransactionResponse(transactionId, this);
     return response;

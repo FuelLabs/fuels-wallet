@@ -25,7 +25,7 @@ type MenuItemContentProps = {
 
 function commonActions(
   item: MenuItemObj,
-  navigate: ReturnType<typeof useNavigate>,
+  navigate: ReturnType<typeof useNavigate>
 ) {
   if (item?.onPress) {
     store.closeOverlay();

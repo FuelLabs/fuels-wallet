@@ -1,8 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Input, InputAmount, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { DECIMAL_UNITS, bn } from 'fuels';
-import { useMemo } from 'react';
+import { BaseAssetId, DECIMAL_UNITS, bn } from 'fuels';
+import { useEffect, useMemo } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import { animations, ControlledField, Layout } from '~/systems/Core';
 import { TxDetails } from '~/systems/Transaction';
@@ -16,15 +16,25 @@ export function SendSelect({
   form,
   balanceAssets,
   handlers,
-  maxAmountToSend,
-  isLoadingInitialFee,
-  ...ctx
+  balanceAssetSelected,
+  status,
+  fee,
 }: SendSelectProps) {
   const assetId = form.watch('asset', '');
   const decimals = useMemo(() => {
     const selectedAsset = balanceAssets?.find((a) => a.assetId === assetId);
     return selectedAsset?.decimals || DECIMAL_UNITS;
   }, [assetId]);
+  const isLoadingTx = status('loadingTx');
+
+  // If max balance is set on the input assume the user wants to send the max
+  // and change the amount to the max balance minus the fee.
+  useEffect(() => {
+    const amount = form.getValues('amount');
+    if (assetId === BaseAssetId && balanceAssetSelected.eq(amount) && fee) {
+      form.setValue('amount', balanceAssetSelected.sub(fee).toString());
+    }
+  }, [fee, balanceAssetSelected]);
 
   return (
     <MotionContent {...animations.slideInTop()}>
@@ -86,23 +96,19 @@ export function SendSelect({
             render={({ field }) => (
               <InputAmount
                 name={field.name}
-                balance={maxAmountToSend}
+                balance={balanceAssetSelected}
                 value={bn(field.value)}
                 units={decimals}
                 onChange={(value) => {
                   const amountValue = value || undefined;
                   form.setValue('amount', amountValue?.toString() || '');
-                  handlers.handleValidateAmount(amountValue);
+                  handlers.handleValidateAmount(bn(amountValue));
                 }}
               />
             )}
           />
         </Box.Stack>
-        {isLoadingInitialFee ? (
-          <TxDetails.Loader />
-        ) : (
-          <TxDetails fee={ctx.fee} />
-        )}
+        {fee && (isLoadingTx ? <TxDetails.Loader /> : <TxDetails fee={fee} />)}
       </Box.Stack>
     </MotionContent>
   );

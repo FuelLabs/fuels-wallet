@@ -42,7 +42,7 @@ export const Accounts = () => {
           variant="ghost"
           iconSize={14}
         >
-          Add from private key
+          Import from private key
         </Button>
         <Button
           intent="primary"
