@@ -14,7 +14,7 @@
     "@fuel-wallet/react": "workspace:*",
     "@fuel-wallet/sdk": "workspace:*",
     "@fuel-wallet/types": "workspace:*",
-    "fuels": "0.71.0",
+    "fuels": "0.0.0-rc-salamander-20240111185542",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1"
