@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@fontsource/source-code-pro": "^5.0.13",
-    "@fuel-ts/wallet-manager": "0.71.0",
+    "@fuel-ts/wallet-manager": "0.0.0-rc-salamander-20240112153904",
     "@fuel-ui/css": "0.21.1",
     "@fuel-ui/icons": "0.21.1",
     "@fuel-ui/react": "0.21.1",
@@ -46,7 +46,7 @@
     "events": "^3.3.0",
     "fake-indexeddb": "^4.0.2",
     "framer-motion": "^10.16.4",
-    "fuels": "0.71.0",
+    "fuels": "0.0.0-rc-salamander-20240112153904",
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
     "graphql-tag": "^2.12.6",
