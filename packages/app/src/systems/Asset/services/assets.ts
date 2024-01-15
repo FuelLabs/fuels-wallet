@@ -109,9 +109,9 @@ export class AssetService {
       throw new Error('No assets to add');
     }
 
-    // validate that all of the names are defined
+    // validate that all of the names are defined and not empty and not just consisting of spaces
     const someNameUndefined = assets.some((asset) => {
-      asset.name === undefined;
+      !asset.name || !asset.name.trim();
     });
     if (someNameUndefined) {
       throw new Error('Asset.name is undefined');
