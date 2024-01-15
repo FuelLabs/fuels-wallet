@@ -64,6 +64,12 @@ export class AssetService {
 
   static async addAssets(input: AssetInputs['addAssets']) {
     return db.transaction('rw', db.assets, async () => {
+      const someNameUndefined = input.data.some((asset) => {
+        asset.name === undefined;
+      });
+      if (someNameUndefined) {
+        throw new Error('Asset.name is undefined');
+      }
       await db.assets.bulkAdd(input.data);
 
       return true;
