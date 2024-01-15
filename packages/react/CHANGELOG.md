@@ -1,5 +1,17 @@
 # @fuel-wallet/react
 
+## 0.14.0
+
+### Minor Changes
+
+- [#990](https://github.com/FuelLabs/fuels-wallet/pull/990) [`9458253`](https://github.com/FuelLabs/fuels-wallet/commit/94582534fb7303d88ef2523c54ae3d336ab693a8) Thanks [@luizstacio](https://github.com/luizstacio)! - Update wallet to beta-5
+
+### Patch Changes
+
+- Updated dependencies [[`9458253`](https://github.com/FuelLabs/fuels-wallet/commit/94582534fb7303d88ef2523c54ae3d336ab693a8)]:
+  - @fuel-wallet/types@0.14.0
+  - @fuel-wallet/sdk@0.14.0
+
 ## 0.13.11
 
 ### Patch Changes

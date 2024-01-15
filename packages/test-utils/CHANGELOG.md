@@ -1,5 +1,11 @@
 # @fuel-wallet/test-utils
 
+## 0.14.0
+
+### Minor Changes
+
+- [#990](https://github.com/FuelLabs/fuels-wallet/pull/990) [`9458253`](https://github.com/FuelLabs/fuels-wallet/commit/94582534fb7303d88ef2523c54ae3d336ab693a8) Thanks [@luizstacio](https://github.com/luizstacio)! - Update wallet to beta-5
+
 ## 0.13.11
 
 ## 0.13.10
