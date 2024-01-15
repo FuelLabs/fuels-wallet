@@ -39,13 +39,13 @@ export function TermsOfUse() {
           </Form.Label>
         </Form.Control>
         <Box.Flex gap="$2" css={styles.footer}>
-          <Button variant="ghost" onPress={handlers.reset}>
+          <Button variant="ghost" onClick={handlers.reset}>
             Back
           </Button>
           <Button
             intent="primary"
             isDisabled={!isSavedChecked}
-            onPress={handlers.next}
+            onClick={handlers.next}
           >
             Next: Seed Phrase
           </Button>

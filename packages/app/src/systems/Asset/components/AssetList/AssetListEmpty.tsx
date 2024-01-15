@@ -28,7 +28,7 @@ export function AssetListEmpty({
             size="sm"
             intent="primary"
             leftIcon={Icon.is('Wand')}
-            onPress={openFaucet}
+            onClick={openFaucet}
           >
             Faucet
           </Button>

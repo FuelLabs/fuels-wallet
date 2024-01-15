@@ -63,7 +63,7 @@ export function AddNetwork() {
         </Box.Stack>
         <Box>
           <Button
-            onPress={() => handleAddNetwork(network)}
+            onClick={() => handleAddNetwork(network)}
             isLoading={isAddingNetwork}
             isDisabled={isAddingNetwork || !fuel}
           >

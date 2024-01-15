@@ -28,7 +28,7 @@ export const WithActions = () => {
           network={NETWORK}
           onUpdate={action('onUpdate')}
           onRemove={action('onRemove')}
-          onPress={action('onPress')}
+          onClick={action('onClick')}
         />
       </CardList>
     </Box>

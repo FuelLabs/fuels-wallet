@@ -76,7 +76,7 @@ export function UpsertAsset() {
             )}
           </Layout.Content>
           <Layout.BottomBar>
-            <Button variant="ghost" onPress={() => navigate(-1)}>
+            <Button variant="ghost" onClick={() => navigate(-1)}>
               Cancel
             </Button>
             <Button

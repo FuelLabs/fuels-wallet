@@ -24,7 +24,7 @@ const Template: StoryFn<typeof Accounts> = () => {
   return (
     <Layout isLoading={isLoading}>
       <Box.Centered css={{ minW: '100%', minH: '100%' }}>
-        <Button onPress={handlers.goToList} isLoading={isLoading}>
+        <Button onClick={handlers.goToList} isLoading={isLoading}>
           Toggle Modal
         </Button>
       </Box.Centered>

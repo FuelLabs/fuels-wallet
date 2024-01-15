@@ -26,7 +26,7 @@ export function Pre({ children, title }: PreProps) {
         css={styles.copyIcon}
         variant="ghost"
         aria-label="Copy to Clipborad"
-        onPress={() =>
+        onClick={() =>
           typeof window !== 'undefined' && navigator.clipboard.writeText(code)
         }
       />

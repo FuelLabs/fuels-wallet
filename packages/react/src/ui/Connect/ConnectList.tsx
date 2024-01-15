@@ -8,13 +8,13 @@ import { getImageUrl } from './utils/getImageUrl';
 export type ConnectListProps = {
   theme: string;
   connectors: ConnectorList;
-  onPress: (connector: Connector) => void;
+  onClick: (connector: Connector) => void;
 };
 
 export const ConnectList = ({
   connectors,
   theme,
-  onPress,
+  onClick,
 }: ConnectListProps) => {
   return (
     <CardList>
@@ -22,7 +22,7 @@ export const ConnectList = ({
         <CardList.Item
           variant="ghost"
           key={connector.connector}
-          onPress={() => onPress(connector)}
+          onClick={() => onClick(connector)}
           aria-label={`Connect to ${connector.name}`}
           data-theme={theme}
           css={styles.connector}

@@ -26,13 +26,13 @@ export function NetworkStatus({ network }: { network: Network }) {
 export type NetworkItemProps = {
   css?: ThemeUtilsCSS;
   network: Network;
-  onPress?: (network: Network) => Promise<void> | void;
+  onClick?: (network: Network) => Promise<void> | void;
   onRemove?: (network: Network) => Promise<void> | void;
   onUpdate?: (id?: string) => Promise<void> | void;
 };
 
 export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
-  ({ css, network, onRemove, onUpdate, onPress }, ref) => {
+  ({ css, network, onRemove, onUpdate, onClick }, ref) => {
     const showActions = Boolean(onUpdate || onRemove);
     const actions = (
       <Box.Flex gap="$2">
@@ -41,7 +41,7 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
             variant="link"
             icon={<Icon icon={Icon.is('Edit')} />}
             aria-label="Update"
-            onPress={() => onUpdate?.(network.id)}
+            onClick={() => onUpdate?.(network.id)}
           />
         )}
         {onRemove && (
@@ -63,7 +63,7 @@ export const NetworkItem = forwardRef<HTMLDivElement, NetworkItemProps>(
       <CardList.Item
         aria-label={`fuel_network-item-${network?.id}`}
         ref={ref}
-        onClick={() => onPress?.(network)}
+        onClick={() => onClick?.(network)}
         css={{ ...styles.root, ...css }}
         isActive={network?.isSelected}
         data-active={network?.isSelected}

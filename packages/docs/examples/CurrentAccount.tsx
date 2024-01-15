@@ -29,7 +29,7 @@ export function CurrentAccount() {
     <ExampleBox error={errorMessage}>
       <Box.Stack css={styles.root}>
         <Button
-          onPress={handleCurrentAccount}
+          onClick={handleCurrentAccount}
           isLoading={isLoadingCurrentAccount}
           isDisabled={isLoadingCurrentAccount || !fuel}
         >

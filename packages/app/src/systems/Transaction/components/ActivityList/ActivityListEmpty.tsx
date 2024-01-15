@@ -28,7 +28,7 @@ export function ActivityListEmpty({ isDevnet }: ActivityEmptyProps) {
         /**
          * TODO: need to add right faucet icon on @fuel-ui
          */
-        <Button size="sm" leftIcon={Icon.is('Wand')} onPress={openFaucet}>
+        <Button size="sm" leftIcon={Icon.is('Wand')} onClick={openFaucet}>
           Faucet
         </Button>
       )}

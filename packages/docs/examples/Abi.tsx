@@ -42,7 +42,7 @@ export function Abi() {
           />
         </Input>
         <Button
-          onPress={() => handleGetAbi(contractId)}
+          onClick={() => handleGetAbi(contractId)}
           isLoading={isLoadingAbi}
           isDisabled={isLoadingAbi || !fuel}
         >

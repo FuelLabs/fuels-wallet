@@ -24,7 +24,7 @@ const Template: StoryFn<typeof UpdateNetwork> = () => {
     <Layout isLoading={isLoading}>
       <Box.Centered css={{ minW: '100%', minH: '100%' }}>
         <Button
-          onPress={() => handlers.goToUpdate(networks[0].id)}
+          onClick={() => handlers.goToUpdate(networks[0].id)}
           isLoading={isLoading}
         >
           Toggle Modal

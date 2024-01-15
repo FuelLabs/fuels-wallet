@@ -26,7 +26,7 @@ export function SidebarSubmenu({
       <Button
         variant="link"
         rightIcon={isOpened ? Icon.is('ChevronUp') : Icon.is('ChevronDown')}
-        onPress={toggle}
+        onClick={toggle}
         className={cx({ active: isActive })}
       >
         {label}

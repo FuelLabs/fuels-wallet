@@ -34,7 +34,7 @@ const Template: StoryFn<typeof TxApprove> = (_args, { loaded }) => {
   return (
     <Layout>
       <Box.Centered css={{ minW: '100%', minH: '100%' }}>
-        <Button onPress={store.openTransactionApprove}>Toggle Modal</Button>
+        <Button onClick={store.openTransactionApprove}>Toggle Modal</Button>
       </Box.Centered>
     </Layout>
   );

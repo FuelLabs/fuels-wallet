@@ -166,7 +166,7 @@ export function ChangePassword() {
         </Layout.Content>
         <Layout.BottomBar>
           <Button
-            onPress={goBack}
+            onClick={goBack}
             variant="ghost"
             isDisabled={isChangingPassword}
           >

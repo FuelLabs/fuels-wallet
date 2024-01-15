@@ -42,7 +42,7 @@ export const Logout = () => {
       <Dialog.Footer>
         <Button
           aria-label="Logout"
-          onPress={handlers.logout}
+          onClick={handlers.logout}
           isLoading={isLoading}
           isDisabled={isLoading}
           variant="ghost"

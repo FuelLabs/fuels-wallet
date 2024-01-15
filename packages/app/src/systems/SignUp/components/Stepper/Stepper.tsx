@@ -27,7 +27,7 @@ export function Stepper({
             <Button
               size="sm"
               css={styles.button}
-              onPress={() => onStepChange?.(index)}
+              onClick={() => onStepChange?.(index)}
               intent={active >= index ? 'primary' : 'base'}
               variant={active > index ? 'solid' : 'outlined'}
               isDisabled={active <= index}

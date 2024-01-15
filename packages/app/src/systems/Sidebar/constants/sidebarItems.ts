@@ -20,7 +20,7 @@ export const sidebarItems = (): Array<MenuItemObj> => [
     key: 'networks',
     icon: 'BrandStackshare',
     label: 'Networks Management',
-    onPress() {
+    onClick() {
       store.openNetworksList();
     },
   },
@@ -28,7 +28,7 @@ export const sidebarItems = (): Array<MenuItemObj> => [
     key: 'accounts',
     icon: 'Users',
     label: 'Account Management',
-    onPress() {
+    onClick() {
       store.openAccountList();
     },
   },
@@ -53,7 +53,7 @@ export const sidebarItems = (): Array<MenuItemObj> => [
         key: 'view-seed-phrase',
         icon: 'Lock',
         label: 'View Seed Phrase',
-        onPress() {
+        onClick() {
           store.openViewSeedPhrase();
         },
       },
@@ -67,7 +67,7 @@ export const sidebarItems = (): Array<MenuItemObj> => [
         key: 'logout',
         icon: 'Logout',
         label: 'Logout',
-        onPress() {
+        onClick() {
           store.openAccountsLogout();
         },
       },
@@ -109,7 +109,7 @@ export const sidebarItems = (): Array<MenuItemObj> => [
     key: 'lock-wallet',
     icon: 'Lock',
     label: 'Lock Wallet',
-    onPress() {
+    onClick() {
       store.lock();
     },
   },

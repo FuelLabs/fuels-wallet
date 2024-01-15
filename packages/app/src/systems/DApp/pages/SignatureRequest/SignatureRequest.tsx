@@ -56,13 +56,13 @@ export function SignatureRequest() {
           </Box.Flex>
         </Layout.Content>
         <Layout.BottomBar>
-          <Button aria-label="Cancel" variant="ghost" onPress={handlers.reject}>
+          <Button aria-label="Cancel" variant="ghost" onClick={handlers.reject}>
             Cancel
           </Button>
           <Button
             intent="primary"
             aria-label="Sign"
-            onPress={handlers.sign}
+            onClick={handlers.sign}
             isLoading={isLoading}
           >
             Sign

@@ -64,7 +64,7 @@ export function AddNetwork() {
         </Focus.Scope>
       </Dialog.Description>
       <Dialog.Footer>
-        <Button variant="ghost" onPress={handlers.openNetworks}>
+        <Button variant="ghost" onClick={handlers.openNetworks}>
           Cancel
         </Button>
         <Button

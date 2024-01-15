@@ -31,7 +31,7 @@ export function Network() {
     <ExampleBox error={errorMessage}>
       <Box.Stack css={styles.root}>
         <Button
-          onPress={handleGetNetwork}
+          onClick={handleGetNetwork}
           isLoading={isLoadingNetwork}
           isDisabled={isLoadingNetwork || !fuel}
         >

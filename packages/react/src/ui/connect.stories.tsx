@@ -23,7 +23,7 @@ const FuelContainer = () => {
 
   return (
     <>
-      <Button onPress={connect}>
+      <Button onClick={connect}>
         {isConnecting ? 'Connecting' : 'Connect Wallet'}
       </Button>
       <Text>{account}</Text>

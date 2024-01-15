@@ -21,7 +21,7 @@ export function SendPage() {
         </MotionStack>
         {txRequest.showActions && (
           <Layout.BottomBar>
-            <Button variant="ghost" onPress={handlers.cancel}>
+            <Button variant="ghost" onClick={handlers.cancel}>
               Cancel
             </Button>
             <Button

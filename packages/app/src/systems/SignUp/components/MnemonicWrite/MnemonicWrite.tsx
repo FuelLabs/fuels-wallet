@@ -56,10 +56,10 @@ export function MnemonicWrite({
           />
         </Box.Stack>
         <Box.Flex css={styles.footer}>
-          <Button variant="ghost" onPress={onCancel}>
+          <Button variant="ghost" onClick={onCancel}>
             Back
           </Button>
-          <Button intent="primary" onPress={onNext} isDisabled={!canProceed}>
+          <Button intent="primary" onClick={onNext} isDisabled={!canProceed}>
             Next: Your password
           </Button>
         </Box.Flex>

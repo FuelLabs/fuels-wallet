@@ -90,7 +90,7 @@ export function Transfer() {
           </Box>
           <Box>
             <Button
-              onPress={() => amount && sendTransaction(amount, addr, assetId)}
+              onClick={() => amount && sendTransaction(amount, addr, assetId)}
               isLoading={sendingTransaction}
               isDisabled={sendingTransaction || !fuel}
             >

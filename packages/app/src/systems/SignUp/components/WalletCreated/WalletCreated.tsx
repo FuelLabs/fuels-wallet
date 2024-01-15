@@ -36,7 +36,7 @@ export function WalletCreated({ account }: WalletCreatedProps) {
         ) : (
           <>
             {account && <AccountItem account={account} />}
-            <Button intent="primary" onPress={handleGoToWallet}>
+            <Button intent="primary" onClick={handleGoToWallet}>
               Go to wallet
             </Button>
           </>

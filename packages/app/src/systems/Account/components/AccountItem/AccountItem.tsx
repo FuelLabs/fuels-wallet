@@ -22,7 +22,7 @@ export type AccountItemProps = {
   isToggleChecked?: boolean;
   isCurrent?: boolean;
   isHidden?: boolean;
-  onPress?: () => void;
+  onClick?: () => void;
   isDisabled?: boolean;
   compact?: boolean;
   onExport?: (address: string) => void;
@@ -43,7 +43,7 @@ export const AccountItem: AccountItemComponent = ({
   isToggleChecked,
   isCurrent,
   isHidden,
-  onPress,
+  onClick,
   isDisabled,
   compact,
   onExport,
@@ -135,7 +135,7 @@ export const AccountItem: AccountItemComponent = ({
   return (
     <CardList.Item
       isActive={isCurrent}
-      onClick={account.isHidden ? undefined : onPress}
+      onClick={account.isHidden ? undefined : onClick}
       rightEl={getRightEl()}
       css={{ ...styles.root, ...css }}
       aria-disabled={isDisabled}

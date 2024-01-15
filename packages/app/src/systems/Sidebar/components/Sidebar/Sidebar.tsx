@@ -23,7 +23,7 @@ function SidebarContent() {
           variant="link"
           css={styles.closeBtn}
           aria-label="drawer_closeButton"
-          onPress={overlay.close}
+          onClick={overlay.close}
         />
       </Box.Flex>
       <Menu items={sidebarItems()} />

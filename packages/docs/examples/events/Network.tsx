@@ -64,7 +64,7 @@ export function NetworkExample() {
           )}
           {!isConnected && (
             <Button
-              onPress={handleConnect}
+              onClick={handleConnect}
               isLoading={isConnecting}
               isDisabled={!fuel || isConnecting}
             >

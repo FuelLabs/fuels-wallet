@@ -31,14 +31,14 @@ export function ReportErrors() {
           intent="primary"
           isDisabled={isLoadingSendOnce}
           isLoading={isLoadingSendOnce}
-          onPress={handlers.reportErrors}
+          onClick={handlers.reportErrors}
           aria-label="Report Error"
         >
           Send reports
         </Button>
         <Button
           variant="ghost"
-          onPress={handlers.ignoreErrors}
+          onClick={handlers.ignoreErrors}
           aria-label="Don't send error report"
         >
           Ignore

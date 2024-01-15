@@ -48,7 +48,7 @@ export function Assets() {
       <Layout.BottomBar>
         <Button
           aria-label="Add Asset"
-          onPress={handlers.goToAdd}
+          onClick={handlers.goToAdd}
           leftIcon={Icon.is('Plus')}
           variant="ghost"
         >

@@ -66,7 +66,7 @@ export function Assets() {
           )}
           {!isConnected && (
             <Button
-              onPress={handleConnect}
+              onClick={handleConnect}
               isLoading={isConnecting}
               isDisabled={!fuel || isConnecting}
             >

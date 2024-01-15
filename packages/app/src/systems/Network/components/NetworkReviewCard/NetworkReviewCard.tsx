@@ -23,7 +23,7 @@ export function NetworkReviewCard({
       <Card.Header space="compact" css={styles.header}>
         <Text>{headerText}</Text>
         {onChangeUrl && (
-          <Button size="xs" variant="outlined" onPress={onChangeUrl}>
+          <Button size="xs" variant="outlined" onClick={onChangeUrl}>
             Change
           </Button>
         )}

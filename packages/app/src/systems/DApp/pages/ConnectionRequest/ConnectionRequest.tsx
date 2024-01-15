@@ -96,7 +96,7 @@ export function ConnectionRequest() {
                     <Button
                       size="xs"
                       variant="outlined"
-                      onPress={handlers.back}
+                      onClick={handlers.back}
                     >
                       Change
                     </Button>
@@ -125,7 +125,7 @@ export function ConnectionRequest() {
         </Text>
       </Box.Flex>
       <Layout.BottomBar>
-        <Button variant="ghost" onPress={() => handlers.rejectConnection()}>
+        <Button variant="ghost" onClick={() => handlers.rejectConnection()}>
           Reject
         </Button>
         <>
@@ -133,7 +133,7 @@ export function ConnectionRequest() {
             <Button
               type="submit"
               intent="primary"
-              onPress={() => handlers.next()}
+              onClick={() => handlers.next()}
               isDisabled={!hasCurrentAccounts}
             >
               Next
@@ -143,7 +143,7 @@ export function ConnectionRequest() {
             <Button
               type="submit"
               intent="primary"
-              onPress={handlers.authorizeConnection}
+              onClick={handlers.authorizeConnection}
             >
               Connect
             </Button>

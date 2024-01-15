@@ -38,7 +38,7 @@ export function MobileMenu() {
       icon={showing ? Icon.is('X') : Icon.is('Menu2')}
       iconSize={30}
       aria-label="Menu"
-      onPress={toggle}
+      onClick={toggle}
     />
   );
 

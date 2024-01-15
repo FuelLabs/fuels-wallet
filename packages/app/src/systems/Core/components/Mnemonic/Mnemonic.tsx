@@ -152,7 +152,7 @@ export function Mnemonic({
             size="sm"
             variant="solid"
             leftIcon={<Icon icon="Copy" color="intentsBase8" />}
-            onPress={handleCopy}
+            onClick={handleCopy}
           >
             Copy
           </Button>
@@ -162,7 +162,7 @@ export function Mnemonic({
             size="sm"
             variant="solid"
             leftIcon={<Icon icon="Copy" color="intentsBase8" />}
-            onPress={handlePaste}
+            onClick={handlePaste}
           >
             Paste
           </Button>

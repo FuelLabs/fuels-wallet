@@ -16,14 +16,14 @@ export const Networks = () => {
         <NetworkList
           networks={networks}
           onUpdate={handlers.goToUpdate}
-          onPress={handlers.selectNetwork}
+          onClick={handlers.selectNetwork}
           {...(networks?.length > 1 && { onRemove: handlers.removeNetwork })}
         />
       </Dialog.Description>
       <Dialog.Footer>
         <Button
           aria-label="Add network"
-          onPress={handlers.openNetworksAdd}
+          onClick={handlers.openNetworksAdd}
           leftIcon={Icon.is('Plus')}
           variant="ghost"
         >

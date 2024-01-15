@@ -24,7 +24,7 @@ export const Connect = ({ theme }: { theme: string }) => {
                   icon={Icon.is('ChevronLeft')}
                   aria-label="back"
                   variant="link"
-                  onPress={back}
+                  onClick={back}
                 />
               )}
             </Box>
@@ -36,7 +36,7 @@ export const Connect = ({ theme }: { theme: string }) => {
                 icon={Icon.is('X')}
                 aria-label="close"
                 variant="link"
-                onPress={cancel}
+                onClick={cancel}
               />
             </Box>
           </Box.HStack>
@@ -45,7 +45,7 @@ export const Connect = ({ theme }: { theme: string }) => {
           <ConnectList
             connectors={connectors}
             theme={theme}
-            onPress={connect}
+            onClick={connect}
           />
         ) : (
           <ConnectInstall connector={connector} />

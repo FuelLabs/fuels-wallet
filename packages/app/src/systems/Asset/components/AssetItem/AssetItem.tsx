@@ -62,7 +62,7 @@ export const AssetItem: AssetItemComponent = ({
                 variant="link"
                 icon={<Icon icon={Icon.is('Edit')} />}
                 aria-label="Edit Asset"
-                onPress={() => onEdit?.(assetId)}
+                onClick={() => onEdit?.(assetId)}
               />
               {onRemove && (
                 <AssetRemoveDialog
@@ -128,7 +128,7 @@ export const AssetItem: AssetItemComponent = ({
                 size="xs"
                 intent="primary"
                 variant="link"
-                onPress={goToAsset}
+                onClick={goToAsset}
                 css={styles.addAssetBtn}
               >
                 (Add)

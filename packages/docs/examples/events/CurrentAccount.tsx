@@ -61,7 +61,7 @@ export function CurrentAccount() {
           {currentAccount.length < 1 && <Text> No account connected </Text>}
           {!isConnected && (
             <Button
-              onPress={handleConnect}
+              onClick={handleConnect}
               isLoading={isConnecting}
               isDisabled={!fuel || isConnecting}
             >

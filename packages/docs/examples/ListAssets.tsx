@@ -31,7 +31,7 @@ export function ListAssets() {
     <ExampleBox error={errorMessage}>
       <Box.Stack css={styles.root}>
         <Button
-          onPress={handleGetAssets}
+          onClick={handleGetAssets}
           isLoading={isLoadingAssets}
           isDisabled={isLoadingAssets || !fuel}
         >

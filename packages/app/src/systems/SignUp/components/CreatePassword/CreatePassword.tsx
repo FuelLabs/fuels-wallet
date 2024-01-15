@@ -129,7 +129,7 @@ export function CreatePassword({
             />
           </Box.Stack>
           <Box.Flex gap="$4" css={styles.footer}>
-            <Button variant="ghost" onPress={onCancel}>
+            <Button variant="ghost" onClick={onCancel}>
               Back
             </Button>
             <Button

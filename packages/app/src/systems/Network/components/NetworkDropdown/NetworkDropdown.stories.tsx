@@ -15,7 +15,7 @@ export const Usage = () => {
   const [network, setNetwork] = useState<Network>(() => MOCK_NETWORKS[0]);
   return (
     <Box css={{ width: 200 }}>
-      <NetworkDropdown selected={network} onPress={(i) => setNetwork(i)} />
+      <NetworkDropdown selected={network} onClick={(i) => setNetwork(i)} />
     </Box>
   );
 };

@@ -46,7 +46,7 @@ export const ConnectionItem: ConnectionItemComponent = ({
             size="xs"
             variant="link"
             aria-label="Edit"
-            onPress={() => onEdit(origin)}
+            onClick={() => onEdit(origin)}
           />
           <ConnectionRemoveDialog
             isConfirming={Boolean(isDeleting)}

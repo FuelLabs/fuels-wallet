@@ -10,7 +10,7 @@ export type AccountListProps = {
   canHideAccounts?: boolean;
   hasHiddenAccounts?: boolean;
   isLoading?: boolean;
-  onPress?: (account: Account) => void;
+  onClick?: (account: Account) => void;
   onExport?: (address: string) => void;
   onToggleHidden?: (address: string, isHidden: boolean) => void;
   onUpdate?: (address: string) => void;
@@ -21,7 +21,7 @@ export function AccountList({
   canHideAccounts,
   hasHiddenAccounts,
   isLoading,
-  onPress,
+  onClick,
   onExport,
   onUpdate,
   onToggleHidden,
@@ -45,7 +45,7 @@ export function AccountList({
         <CardList isClickable>
           {(accounts ?? []).map((account) => (
             <AccountItem
-              onPress={() => onPress?.(account)}
+              onClick={() => onClick?.(account)}
               onUpdate={onUpdate}
               key={account.address}
               account={account}
@@ -65,7 +65,7 @@ export function AccountList({
         <Button
           size="xs"
           variant="link"
-          onPress={toggle}
+          onClick={toggle}
           css={styles.hiddenBtn}
           aria-label={`Toggle hidden accounts`}
         >

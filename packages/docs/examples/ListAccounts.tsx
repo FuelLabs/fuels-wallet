@@ -30,7 +30,7 @@ export function ListAccounts() {
     <ExampleBox error={errorMessage}>
       <Box.Stack css={styles.root}>
         <Button
-          onPress={handleGetAccounts}
+          onClick={handleGetAccounts}
           isLoading={isLoadingAccounts}
           isDisabled={isLoadingAccounts || !fuel}
         >

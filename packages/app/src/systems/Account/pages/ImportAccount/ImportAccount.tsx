@@ -25,7 +25,7 @@ export const ImportAccount = () => {
         <ImportAccountForm form={form} isLoading={isLoading} />
       </Dialog.Description>
       <Dialog.Footer>
-        <Button variant="ghost" onPress={accountsHandlers.goToList}>
+        <Button variant="ghost" onClick={accountsHandlers.goToList}>
           Cancel
         </Button>
         <Button

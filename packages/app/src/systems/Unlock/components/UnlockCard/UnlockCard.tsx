@@ -46,7 +46,7 @@ export function UnlockCard({
             variant="link"
             icon={<Icon icon="X" color="intentsBase8" />}
             aria-label="Close unlock card"
-            onPress={onClose}
+            onClick={onClose}
             css={styles.closeButton}
           />
         )}
@@ -71,7 +71,7 @@ export function UnlockCard({
           >
             <ButtonLink
               size="sm"
-              // TODO: should change to onPress when fix -> https://linear.app/fuel-network/issue/FRO-394/buttonlink-needs-to-pass-onpress-as-action
+              // TODO: should change to onClick when fix -> https://linear.app/fuel-network/issue/FRO-394/buttonlink-needs-to-pass-onClick-as-action
               onClick={() => store.openResetDialog()}
             >
               Forgot password?

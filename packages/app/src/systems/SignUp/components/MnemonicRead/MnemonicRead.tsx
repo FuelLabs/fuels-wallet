@@ -54,12 +54,12 @@ export function MnemonicRead({
           </Form.Control>
         </Box.Stack>
         <Box css={styles.footer}>
-          <Button variant="ghost" onPress={onCancel}>
+          <Button variant="ghost" onClick={onCancel}>
             Back
           </Button>
           <Button
             intent="primary"
-            onPress={onNext}
+            onClick={onNext}
             isDisabled={!isSavedChecked}
           >
             Next: Confirm phrase

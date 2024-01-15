@@ -23,7 +23,7 @@ const Template: StoryFn<typeof Networks> = () => {
   return (
     <Layout isLoading={isLoading}>
       <Box.Centered css={{ minW: '100%', minH: '100%' }}>
-        <Button onPress={handlers.openNetworks} isLoading={isLoading}>
+        <Button onClick={handlers.openNetworks} isLoading={isLoading}>
           Toggle Modal
         </Button>
       </Box.Centered>

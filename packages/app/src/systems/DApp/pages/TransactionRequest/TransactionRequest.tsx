@@ -69,7 +69,7 @@ export function TransactionRequest() {
                     size="sm"
                     variant="ghost"
                     intent="error"
-                    onPress={txRequest.handlers.tryAgain}
+                    onClick={txRequest.handlers.tryAgain}
                   >
                     Try again
                   </Button>
@@ -81,7 +81,7 @@ export function TransactionRequest() {
         {ctx.showActions && (
           <Layout.BottomBar>
             <Button
-              onPress={handlers.reject}
+              onClick={handlers.reject}
               variant="ghost"
               isDisabled={ctx.isLoading || status('sending')}
             >
@@ -89,7 +89,7 @@ export function TransactionRequest() {
             </Button>
             <Button
               intent="primary"
-              onPress={handlers.approve}
+              onClick={handlers.approve}
               isLoading={ctx.isLoading || status('sending')}
             >
               Approve

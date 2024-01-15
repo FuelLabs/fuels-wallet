@@ -28,7 +28,7 @@ const Template: StoryFn<typeof ViewSeedPhrase> = () => {
           <Text>Password: 123123123</Text>
           {account && (
             <Button
-              onPress={() => store.openViewSeedPhrase()}
+              onClick={() => store.openViewSeedPhrase()}
               isLoading={isLoading}
             >
               Toggle Modal

@@ -43,7 +43,7 @@ export function ConnectionRemoveDialog({
         </Box.Stack>
         <AlertDialog.Footer>
           <AlertDialog.Cancel>
-            <Button variant="outlined" onPress={handleCancel}>
+            <Button variant="outlined" onClick={handleCancel}>
               Cancel
             </Button>
           </AlertDialog.Cancel>
@@ -52,7 +52,7 @@ export function ConnectionRemoveDialog({
               aria-label="Confirm delete"
               variant="ghost"
               intent="error"
-              onPress={handleConfirm}
+              onClick={handleConfirm}
               isLoading={isConfirming}
             >
               Confirm

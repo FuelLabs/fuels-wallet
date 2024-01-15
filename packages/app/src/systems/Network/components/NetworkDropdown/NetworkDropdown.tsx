@@ -9,7 +9,7 @@ import { NetworkStatus } from '../NetworkItem';
 export type NetworkDropdownProps = {
   selected?: Network;
   isDisabled?: boolean;
-  onPress?: (network: Network) => void;
+  onClick?: (network: Network) => void;
 };
 
 export const NetworkDropdown = forwardRef<HTMLDivElement, NetworkDropdownProps>(

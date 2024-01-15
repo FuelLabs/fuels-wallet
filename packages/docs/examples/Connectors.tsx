@@ -103,14 +103,14 @@ export function Connectors() {
       </Input>
       <Box.Flex gap="$4">
         <Button
-          onPress={handleConnect}
+          onClick={handleConnect}
           isLoading={isConnecting}
           isDisabled={isConnecting || connected || !fuel}
         >
           {connected ? 'Connected' : 'Connect'}
         </Button>
         <Button
-          onPress={handleDisconnect}
+          onClick={handleDisconnect}
           isLoading={isDisconnecting}
           isDisabled={isDisconnecting || !connected || !fuel}
         >

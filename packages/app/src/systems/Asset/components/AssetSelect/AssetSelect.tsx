@@ -98,7 +98,7 @@ export function AssetSelect({
               variant="link"
               aria-label="Clear"
               icon={Icon.is('X')}
-              onPress={handleClear}
+              onClick={handleClear}
             />
           )}
         </Button>

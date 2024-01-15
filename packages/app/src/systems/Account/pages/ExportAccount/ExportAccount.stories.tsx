@@ -28,7 +28,7 @@ const Template: StoryFn<typeof ExportAccount> = () => {
           <Text>Password: 123123123</Text>
           {account && (
             <Button
-              onPress={() => handlers.goToExport(account.address)}
+              onClick={() => handlers.goToExport(account.address)}
               isLoading={isLoading}
             >
               Toggle Modal

@@ -39,10 +39,10 @@ export function AddAssetRequest() {
         </Card>
       </Layout.Content>
       <Layout.BottomBar>
-        <Button variant="ghost" onPress={handlers.reject}>
+        <Button variant="ghost" onClick={handlers.reject}>
           Reject
         </Button>
-        <Button type="submit" intent="primary" onPress={handlers.approve}>
+        <Button type="submit" intent="primary" onClick={handlers.approve}>
           Add Assets
         </Button>
       </Layout.BottomBar>

@@ -77,7 +77,7 @@ export function FaucetDialog() {
         <Dialog.Footer css={{ marginTop: 0 }}>
           <Button
             intent="primary"
-            onPress={() =>
+            onClick={() =>
               handlers.startFaucet({
                 address: account!.address || '',
                 captcha: captcha.value,

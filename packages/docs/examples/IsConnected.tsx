@@ -25,7 +25,7 @@ export function IsConnected() {
   return (
     <ExampleBox error={errorMessage}>
       <Box.Flex gap="$4">
-        <Button onPress={handleIsConnected} isLoading={isCheckingConnection}>
+        <Button onClick={handleIsConnected} isLoading={isCheckingConnection}>
           Check Connection
         </Button>
         <Text>

@@ -46,7 +46,7 @@ export function SignMessage() {
         </Input>
         <Box>
           <Button
-            onPress={() => handleSignMessage(message)}
+            onClick={() => handleSignMessage(message)}
             isLoading={isSingingMessage}
             isDisabled={isSingingMessage || !fuel}
           >

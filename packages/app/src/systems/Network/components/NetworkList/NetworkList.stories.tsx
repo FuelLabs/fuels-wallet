@@ -18,7 +18,7 @@ export const Usage = (args: NetworkListProps) => (
       networks={MOCK_NETWORKS}
       onUpdate={action('onUpdate')}
       onRemove={action('onRemove')}
-      onPress={action('onPress')}
+      onClick={action('onClick')}
     />
   </Box>
 );

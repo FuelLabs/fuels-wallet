@@ -30,7 +30,7 @@ export function UserAddressCard({ address }: Props) {
         <Button
           variant="ghost"
           aria-label="copy-account"
-          onPress={copyAccount}
+          onClick={copyAccount}
           size="sm"
         >
           Copy User Address

@@ -15,7 +15,7 @@ export type MenuItemObj = {
   path?: string;
   ahref?: string;
   submenu?: MenuItemObj[];
-  onPress?: () => void;
+  onClick?: () => void;
 };
 
 type MenuItemContentProps = {
@@ -27,9 +27,9 @@ function commonActions(
   item: MenuItemObj,
   navigate: ReturnType<typeof useNavigate>
 ) {
-  if (item?.onPress) {
+  if (item?.onClick) {
     store.closeOverlay();
-    item.onPress();
+    item.onClick();
     return;
   }
   if (item?.path) {

@@ -63,7 +63,7 @@ export function ResetDialog() {
           isDisabled={!isSavedChecked}
           isLoading={isReseting}
           leftIcon={Icon.is('LockOpen')}
-          onPress={handlers.reset}
+          onClick={handlers.reset}
           css={styles.button}
           aria-label="Reset wallet"
         >

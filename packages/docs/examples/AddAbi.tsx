@@ -97,7 +97,7 @@ export function AddAbi() {
             </Link>
           </Box.Flex>
           <Button
-            onPress={() => handleAddAbi(contractId, abiString)}
+            onClick={() => handleAddAbi(contractId, abiString)}
             isLoading={isAddingAbi}
             isDisabled={isAddingAbi || !isConnected}
           >

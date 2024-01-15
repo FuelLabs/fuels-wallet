@@ -36,14 +36,14 @@ export function Connect() {
     <ExampleBox error={errorMessage}>
       <Box.Flex gap="$4">
         <Button
-          onPress={handleConnect}
+          onClick={handleConnect}
           isLoading={isConnecting}
           isDisabled={isConnecting || !fuel}
         >
           Connect
         </Button>
         <Button
-          onPress={handleDisconnect}
+          onClick={handleDisconnect}
           isLoading={isDisconnecting}
           isDisabled={isDisconnecting || !connected || !fuel}
         >

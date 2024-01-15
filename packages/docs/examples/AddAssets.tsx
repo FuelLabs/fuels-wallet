@@ -65,7 +65,7 @@ export function AddAssets() {
                     variant="ghost"
                     intent="warning"
                     icon={<Icon icon="X" />}
-                    onPress={removeAsset(index)}
+                    onClick={removeAsset(index)}
                     aria-label="Remove Asset"
                   />
                 )}
@@ -129,7 +129,7 @@ export function AddAssets() {
         <Button
           variant="link"
           css={{ alignSelf: 'center' }}
-          onPress={() =>
+          onClick={() =>
             setAssets([
               ...assets,
               { assetId: '', name: '', symbol: '', imageUrl: '' },
@@ -140,7 +140,7 @@ export function AddAssets() {
         </Button>
         <Box>
           <Button
-            onPress={() => handleAddAsset(assets)}
+            onClick={() => handleAddAsset(assets)}
             isLoading={isSingingMessage}
             isDisabled={isSingingMessage || !fuel}
           >

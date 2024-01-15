@@ -65,7 +65,7 @@ export const TxApprove = () => {
                   size="sm"
                   variant="ghost"
                   intent="error"
-                  onPress={ctx.handlers.tryAgain}
+                  onClick={ctx.handlers.tryAgain}
                 >
                   Try again
                 </Button>
@@ -80,14 +80,14 @@ export const TxApprove = () => {
             <Button
               variant="ghost"
               isDisabled={ctx.isLoading}
-              onPress={ctx.handlers.closeDialog}
+              onClick={ctx.handlers.closeDialog}
             >
               Back
             </Button>
             <Button
               intent="primary"
               isLoading={ctx.isLoading}
-              onPress={ctx.handlers.approve}
+              onClick={ctx.handlers.approve}
             >
               Approve
             </Button>

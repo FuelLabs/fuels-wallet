@@ -20,7 +20,7 @@ export const HomeActions = ({
       leftIcon={<Icon icon="Send" />}
       intent="primary"
       aria-label="Send Button"
-      onPress={sendAction}
+      onClick={sendAction}
       isDisabled={isLoading || isDisabled || !hasBalance}
       css={{ ...styles.button }}
     >
@@ -38,7 +38,7 @@ export const HomeActions = ({
       <Button
         leftIcon={<Icon icon="Qrcode" />}
         isDisabled={isDisabled}
-        onPress={receiveAction}
+        onClick={receiveAction}
         variant="ghost"
         css={styles.button}
       >

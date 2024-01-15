@@ -31,7 +31,7 @@ export type BalanceWidgetProps = {
   account?: Maybe<Account>;
   isLoading?: boolean;
   visibility?: boolean;
-  onPressAccounts?: () => void;
+  onClickAccounts?: () => void;
   onChangeVisibility?: (visibility: boolean) => void;
 };
 
@@ -68,7 +68,7 @@ export function BalanceWidget({
             css={styles.accountChange}
             rightIcon={<Icon icon="ChevronDown" color="intentsBase8" />}
             aria-label="Accounts"
-            onPress={handlers.goToList}
+            onClick={handlers.goToList}
           >
             Change
           </Button>

@@ -24,7 +24,7 @@ const Template: StoryFn<typeof Logout> = () => {
   return (
     <Layout isLoading={isLoading}>
       <Box.Centered css={{ minW: '100%', minH: '100%' }}>
-        <Button onPress={handlers.logout} isLoading={isLoading}>
+        <Button onClick={handlers.logout} isLoading={isLoading}>
           Toggle Modal
         </Button>
       </Box.Centered>

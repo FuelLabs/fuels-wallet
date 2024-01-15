@@ -14,7 +14,7 @@ export function VisibilityButton({
   return (
     <IconButton
       {...props}
-      onPress={() => onChangeVisibility?.(!visibility)}
+      onClick={() => onChangeVisibility?.(!visibility)}
       size="xs"
       variant="link"
       icon={

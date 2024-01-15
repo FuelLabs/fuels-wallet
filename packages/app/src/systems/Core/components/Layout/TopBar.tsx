@@ -43,7 +43,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
               aria-label="Back"
               variant="link"
               css={styles.backIcon}
-              onPress={() => (onBack ? onBack() : navigate(-1))}
+              onClick={() => (onBack ? onBack() : navigate(-1))}
             />
             {isLoading && <Spinner />}
             {!isLoading && <Text css={styles.title}>{title}</Text>}
@@ -55,7 +55,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
             {selectedNetwork && !isLoading && (
               <NetworkDropdown
                 selected={selectedNetwork}
-                onPress={handlers.openNetworks}
+                onClick={handlers.openNetworks}
               />
             )}
           </>
@@ -68,7 +68,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
           aria-label="Menu"
           variant="link"
           css={styles.topbarIcon}
-          onPress={() => {
+          onClick={() => {
             overlay.open({ modal: 'sidebar' });
           }}
         />
@@ -94,7 +94,7 @@ function ExternalTopBar() {
       {selectedNetwork && (
         <NetworkDropdown
           selected={selectedNetwork}
-          onPress={handlers.openNetworks}
+          onClick={handlers.openNetworks}
           isDisabled
         />
       )}

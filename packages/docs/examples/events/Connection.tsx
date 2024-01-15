@@ -33,7 +33,7 @@ export function Connection() {
       <Box.Flex gap="$4">
         {!isConnected ? (
           <Button
-            onPress={handleConnect}
+            onClick={handleConnect}
             isLoading={isConnecting}
             isDisabled={isConnecting || isConnected || !fuel}
           >
@@ -42,7 +42,7 @@ export function Connection() {
         ) : null}
         {isConnected ? (
           <Button
-            onPress={handleDisconnect}
+            onClick={handleDisconnect}
             isLoading={isDisconnecting}
             isDisabled={isDisconnecting || !isConnected || !fuel}
           >
