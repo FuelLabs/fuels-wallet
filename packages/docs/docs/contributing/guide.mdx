@@ -30,6 +30,9 @@ This is a rough outline of what a contributor's workflow looks like:
 - Create a Git branch from where you want to base your work. This is usually master.
 - Write code, add test cases where applicable, and commit your work.
 - Run tests and make sure all tests pass.
+- Add a changeset to your PR.
+  - `pnpm changeset` - follow the prompt and add a description of your change at the end
+  - `pnpm changeset:empty` - if no packages are being bumped
 - If the PR contains any breaking changes, add the `breaking` label to your PR.
 - Push your changes to a branch in your fork of the repository and submit a pull request.
   - Use one of the following tags in the title of your PR:
