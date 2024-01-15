@@ -64,12 +64,6 @@ export class AssetService {
 
   static async addAssets(input: AssetInputs['addAssets']) {
     return db.transaction('rw', db.assets, async () => {
-      const someNameUndefined = input.data.some((asset) => {
-        asset.name === undefined;
-      });
-      if (someNameUndefined) {
-        throw new Error('Asset.name is undefined');
-      }
       await db.assets.bulkAdd(input.data);
 
       return true;
@@ -113,6 +107,14 @@ export class AssetService {
     // first validate has basic input
     if (!assets.length) {
       throw new Error('No assets to add');
+    }
+
+    // validate that all of the names are defined
+    const someNameUndefined = assets.some((asset) => {
+      asset.name === undefined;
+    });
+    if (someNameUndefined) {
+      throw new Error('Asset.name is undefined');
     }
 
     // trim asset props as will need to validate comparing strings
