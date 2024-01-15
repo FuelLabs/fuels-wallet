@@ -1,5 +1,6 @@
 import { createUUID } from '@fuel-wallet/sdk';
 import type { Network } from '@fuel-wallet/types';
+import { compare } from 'compare-versions';
 import { Provider } from 'fuels';
 import { MIN_NODE_VERSION } from '~/config';
 import { db } from '~/systems/Core/utils/database';
@@ -161,8 +162,7 @@ export class NetworkService {
     } catch (err: unknown) {
       throw new Error('Node version is not compatible with the wallet.');
     }
-    const nodeVersion = parseInt(nodeInfo.nodeVersion.replace('.', ''));
-    if (nodeVersion < MIN_NODE_VERSION) {
+    if (compare(nodeInfo.nodeVersion, MIN_NODE_VERSION, '<')) {
       throw new Error('Node version is not compatible with the wallet.');
     }
     const collection = await db.transaction('r', db.networks, async () => {

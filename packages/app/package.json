@@ -38,6 +38,7 @@
     "@storybook/jest": "^0.2.3",
     "@xstate/react": "^3.2.2",
     "asset-list": "workspace:../asset-list",
+    "compare-versions": "^6.1.0",
     "cross-fetch": "4.0.0",
     "dayjs": "^1.11.10",
     "dexie": "^3.2.4",
