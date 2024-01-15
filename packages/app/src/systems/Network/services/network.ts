@@ -159,7 +159,7 @@ export class NetworkService {
       const provider = await Provider.create(url);
       nodeInfo = await provider.fetchNode();
     } catch (err: unknown) {
-      throw new Error('Node version is not compativle with the wallet.');
+      throw new Error('Node version is not compatible with the wallet.');
     }
     const nodeVersion = parseInt(nodeInfo.nodeVersion.replace('.', ''));
     if (nodeVersion < MIN_NODE_VERSION) {
