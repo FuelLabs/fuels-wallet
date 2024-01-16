@@ -10,6 +10,6 @@ export const MOCK_NETWORKS = [
   {
     id: uniqueId(),
     name: 'Another',
-    url: 'http://test.network.fuel.sh/graphql',
+    url: 'https://beta-5.fuel.network/graphql',
   },
 ];

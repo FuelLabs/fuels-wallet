@@ -35,3 +35,4 @@ export const IS_CRX_POPUP =
   IS_CRX && globalThis.location.pathname === CRXPages.popup;
 /** Time in minutes before Wallet auto locks */
 export const AUTO_LOCK_IN_MINUTES = VITE_AUTO_LOCK_IN_MINUTES;
+export const MIN_NODE_VERSION = '0.22.0';
