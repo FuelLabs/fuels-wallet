@@ -32,11 +32,11 @@
     "events": "^3.3.0"
   },
   "peerDependencies": {
-    "fuels": ">=0.71.1"
+    "fuels": ">=0.0.0-rc-salamander-20240115111325"
   },
   "devDependencies": {
-    "@fuel-ts/wallet": "0.71.1",
-    "fuels": "0.71.1",
+    "@fuel-ts/wallet": "0.0.0-rc-salamander-20240115111325",
+    "fuels": "0.0.0-rc-salamander-20240115111325",
     "jest-environment-jsdom": "29.6.2",
     "tsup": "^7.2.0"
   }
