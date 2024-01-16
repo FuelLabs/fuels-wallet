@@ -120,7 +120,7 @@ export class AssetService {
 
     // validate that all of the names are defined and not empty and not just consisting of spaces
     const someNameUndefined = trimmedAssets.some((asset) => {
-      !asset.name;
+      return !asset.name;
     });
     if (someNameUndefined) {
       throw new Error('Asset.name is invalid');
