@@ -160,10 +160,10 @@ export class NetworkService {
       const provider = await Provider.create(url);
       nodeInfo = await provider.fetchNode();
     } catch (err: unknown) {
-      throw new Error('Node version is not compatible with the wallet.');
+      throw new Error(`Network version is not compatible with >=${MIN_NODE_VERSION} required by the Wallet`);
     }
     if (compare(nodeInfo.nodeVersion, MIN_NODE_VERSION, '<')) {
-      throw new Error('Node version is not compatible with the wallet.');
+        throw new Error(`Network version is not compatible with >=${MIN_NODE_VERSION} required by the Wallet`);
     }
     const collection = await db.transaction('r', db.networks, async () => {
       return db.networks
