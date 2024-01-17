@@ -1,4 +1,4 @@
-import type { AssetFuel, Fuel } from '@fuels/assets';
+import type { AssetFuel } from '@fuels/assets';
 import assets, { getAssetFuel } from '@fuels/assets';
 
 // export const fuelAssets = assets.map((asset) => {
@@ -13,10 +13,7 @@ import assets, { getAssetFuel } from '@fuels/assets';
 // });
 
 export const fuelAssets = assets.reduce((arr, asset) => {
-  const fuelAsset = getAssetFuel(
-    asset,
-    asset.networks.find((network) => network.type === 'fuel')?.chainId
-  );
+  const fuelAsset = getAssetFuel(asset);
   if (fuelAsset) {
     arr.push(fuelAsset);
   }
