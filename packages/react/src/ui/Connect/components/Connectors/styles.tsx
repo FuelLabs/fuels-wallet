@@ -34,3 +34,7 @@ export const ConnectorList = styled.div`
 export const ConnectorName = styled.div`
   font-size: var(--fuel-font-size);
 `;
+
+export const ConnectorImg = styled.img`
+  object-fit: cover;
+`;
