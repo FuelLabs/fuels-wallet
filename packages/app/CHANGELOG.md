@@ -1,5 +1,19 @@
 # fuels-wallet
 
+## 0.14.3
+
+### Patch Changes
+
+- [#1051](https://github.com/FuelLabs/fuels-wallet/pull/1051) [`f8b1af1`](https://github.com/FuelLabs/fuels-wallet/commit/f8b1af1ee15380e181fd052b7b0f685503ca7143) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: avoid dynamic dom manipulation by translators
+
+- [#1054](https://github.com/FuelLabs/fuels-wallet/pull/1054) [`3cc184d`](https://github.com/FuelLabs/fuels-wallet/commit/3cc184d338f91af3ea2e9b99365b453010886e5e) Thanks [@matt-user](https://github.com/matt-user)! - refactor fuel assets to use npm assets package
+
+- [#1056](https://github.com/FuelLabs/fuels-wallet/pull/1056) [`5ddd586`](https://github.com/FuelLabs/fuels-wallet/commit/5ddd5863403c4169221dd6fa942b89f29f29c81d) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: auto upgrade database
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.14.3
+  - @fuel-wallet/types@0.14.3
+
 ## 0.14.2
 
 ### Patch Changes
