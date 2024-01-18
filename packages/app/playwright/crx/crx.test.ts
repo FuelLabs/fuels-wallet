@@ -569,7 +569,7 @@ test.describe('FuelWallet Extension', () => {
 
       // Check if added network is selected
       let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      await expect(networkSelector).toHaveText(/Testnet Beta 4/);
+      await expect(networkSelector).toHaveText(/Testnet Beta 5/);
 
       // Remove added network
       await networkSelector.click();
@@ -595,7 +595,7 @@ test.describe('FuelWallet Extension', () => {
 
       // Check if re-added network is selected
       networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      await expect(networkSelector).toHaveText(/Testnet Beta 4/);
+      await expect(networkSelector).toHaveText(/Testnet Beta 5/);
     });
 
     await test.step('window.fuel.on("currentAccount") to a connected account', async () => {
