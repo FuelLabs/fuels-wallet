@@ -8,7 +8,7 @@
 
 The official wallet of the fastest modular execution layer: [Fuel](https://fuel.network).
 
-Fuel Wallet is a crypto wallet used to interact with the Fuel Network. This project enables users to access their assets and interact with decentralized applications through a browser extension. 
+Fuel Wallet is a crypto wallet used to interact with the Fuel Network. This project enables users to access their assets and interact with decentralized applications through a browser extension.
 
 [![Install Wallet](packages/docs/public/install-button.png)](https://wallet.fuel.network/docs/install/)
 
