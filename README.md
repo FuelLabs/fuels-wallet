@@ -12,7 +12,7 @@ Fuel Wallet is a crypto wallet used to interact with the Fuel Network. This proj
 
 [![Install Wallet](packages/docs/public/install-button.png)](https://wallet.fuel.network/docs/install/)
 
-For latest updates donwload the [Fuel Wallet Development](https://next-wallet.fuel.network/docs/install/) this version is made for developers. It can be unstable and have issues or bugs.
+For latest updates, download the [Fuel Wallet Development](https://next-wallet.fuel.network/docs/install/). This version is made for developers, so note that it can be unstable or buggy.
 
 Integrate your **DApp** using the [Wallet SDK](https://wallet.fuel.network/docs/dev/getting-started/)
 
