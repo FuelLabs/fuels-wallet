@@ -1,6 +1,6 @@
 import type { Account } from '@fuel-wallet/types';
 import type { Browser, Page } from '@playwright/test';
-import test, { chromium } from '@playwright/test';
+import test, { chromium, expect } from '@playwright/test';
 import { bn, Provider, Wallet } from 'fuels';
 
 import {
@@ -10,6 +10,7 @@ import {
   getInputByName,
   getByAriaLabel,
   hasAriaLabel,
+  getElementByText,
 } from '../commons';
 import { seedWallet } from '../commons/seedWallet';
 import { ALT_ASSET, mockData } from '../mocks';
@@ -142,13 +143,26 @@ test.describe('SendTransaction', () => {
 
     // Fill amount
     await getByAriaLabel(page, 'Max').click();
-    const value = await getInputByName(page, 'amount').inputValue();
+    const maxAmount = await getInputByName(page, 'amount').inputValue();
+
+    // Get calculated fee
+    await hasText(page, /(.*)ETH/);
+    const el = await getElementByText(page, /(.*)ETH/);
+    const feeAmountText = (await el.textContent()).replace(' ETH', '').trim();
+    const feeAmount = bn.parseUnits(feeAmountText);
+
+    // Max amount after calculating fee
+    const maxAmountAfterFee = await getInputByName(page, 'amount').inputValue();
+    const totalAmount = feeAmount.add(bn.parseUnits(maxAmountAfterFee));
+    await expect(bn.parseUnits(maxAmount).toString()).toBe(
+      totalAmount.toString()
+    );
 
     // Submit transaction
     await getButtonByText(page, 'Confirm').click();
 
     // Approve transaction
-    await hasText(page, `${value} ETH`);
+    await hasText(page, `${maxAmountAfterFee} ETH`);
     await getButtonByText(page, 'Approve').click();
 
     // Wait for transaction to be confirmed

@@ -191,7 +191,7 @@ describe('Fuel Wallet SDK Connector actions', () => {
       storage: null,
       connectors: [new MockConnector()],
     });
-    const networkUrl = 'https://beta-4.fuel.network';
+    const networkUrl = 'https://beta-5.fuel.network';
     const newNetwork = {
       url: networkUrl,
       chainId: 0,
@@ -219,7 +219,7 @@ describe('Fuel Wallet SDK Connector actions', () => {
       connectors: [new MockConnector()],
     });
     const newNetwork = {
-      url: 'https://beta-4.fuel.network',
+      url: 'https://beta-5.fuel.network',
       chainId: 0,
     };
 

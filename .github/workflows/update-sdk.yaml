@@ -1,6 +1,8 @@
-name: Update Fuels Package Version
+name: Check SDK release candidates
 
 on:
+  schedule:
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
 concurrency:
@@ -18,32 +20,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
-      #
-      # - name: Check versions
-      #   id: check_versions
-      #   run: |
-      #     node ./scripts/check-sdk-rc.mjs
-      #
-      # - name: Check for changes
-      #   id: git-check
-      #   run: |
-      #     git diff --exit-code || echo "::set-output name=changes::true"
-      #
-      # - name: Create new branch and commit changes
-      #   if: steps.git-check.outputs.changes == 'true'
-      #   run: |
-      #     latest_version=${{ steps.check_versions.outputs.latest_version }}
-      #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
-      #     git config --global user.name "github-actions[bot]"
-      #     branch_name="update-sdk-$latest_version"
-      #     git checkout -b $branch_name
-      #     git add .
-      #     git commit -m "chore: update sdk to $latest_version"
-      #     git push origin $branch_name
-      #
-      # - name: Create Pull Request
-      #   if: steps.git-check.outputs.changes == 'true'
-      #   run: |
-      #     latest_version=${{ steps.check_versions.outputs.latest_version }}
-      #     pr_title="chore: update sdk to $latest_version"
-      #     gh pr create --title "$pr_title" --body "This PR updates the SDK package to version $latest_version." --base main --head $branch_name
+
+      - name: Check versions
+        id: check_versions
+        run: |
+          cd packages/update-sdk
+          pnpm check-versions
+        env:
+          GITHUB_TOKEN: ${{secrets.REPO_TOKEN}}

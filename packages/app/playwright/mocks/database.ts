@@ -95,7 +95,8 @@ export const ALT_ASSET = {
 };
 
 export const FUEL_NETWORK = {
-  url: 'https://beta-4.fuel.network/graphql',
+  name: 'Fuel Testnet',
+  url: 'https://beta-5.fuel.network/graphql',
 };
 
 export async function getAccount(page: Page) {

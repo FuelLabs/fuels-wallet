@@ -5,3 +5,4 @@ dist
 /test-results/
 /playwright-report/
 /playwright/.cache/
+/src/contracts/contract-ids.json

@@ -391,7 +391,7 @@ test.describe('FuelWallet Extension', () => {
             // TODO: remove this gas config once SDK fixes and start with correct values
             const chain = await wallet.provider.getChain();
             const nodeInfo = await wallet.provider.fetchNode();
-            const gasLimit = chain.consensusParameters.maxGasPerTx;
+            const gasLimit = chain.consensusParameters.maxGasPerTx.div(2);
             const gasPrice = nodeInfo.minGasPrice;
             const response = await wallet.transfer(
               receiver,

@@ -7,7 +7,7 @@ import { useSend } from '../../hooks';
 
 export function SendPage() {
   const send = useSend();
-  const { handlers, txRequest, status, form, ...ctx } = send;
+  const { handlers, txRequest, status, form, readyToSend, ...ctx } = send;
 
   return (
     <form
@@ -27,7 +27,7 @@ export function SendPage() {
             <Button
               type="submit"
               intent="primary"
-              isDisabled={ctx.isInvalid || !form.formState.isValid}
+              isDisabled={!readyToSend || !form.formState.isValid}
               isLoading={status('loading') || status('loadingTx')}
             >
               Confirm

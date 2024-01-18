@@ -1,5 +1,46 @@
 # @fuel-wallet/sdk
 
+## 0.14.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/types@0.14.3
+
+## 0.14.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/types@0.14.2
+
+## 0.14.1
+
+### Patch Changes
+
+- [#1041](https://github.com/FuelLabs/fuels-wallet/pull/1041) [`4c222bf`](https://github.com/FuelLabs/fuels-wallet/commit/4c222bf16b4626a8ec11cc14bce6a19d8649cbd4) Thanks [@luizstacio](https://github.com/luizstacio)! - Update fuels to version 0.71.1
+
+- Updated dependencies [[`4c222bf`](https://github.com/FuelLabs/fuels-wallet/commit/4c222bf16b4626a8ec11cc14bce6a19d8649cbd4)]:
+  - @fuel-wallet/types@0.14.1
+
+## 0.14.0
+
+### Minor Changes
+
+- [#990](https://github.com/FuelLabs/fuels-wallet/pull/990) [`9458253`](https://github.com/FuelLabs/fuels-wallet/commit/94582534fb7303d88ef2523c54ae3d336ab693a8) Thanks [@luizstacio](https://github.com/luizstacio)! - Update wallet to beta-5
+
+### Patch Changes
+
+- Updated dependencies [[`9458253`](https://github.com/FuelLabs/fuels-wallet/commit/94582534fb7303d88ef2523c54ae3d336ab693a8)]:
+  - @fuel-wallet/types@0.14.0
+
+## 0.13.11
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/types@0.13.11
+
 ## 0.13.10
 
 ### Patch Changes

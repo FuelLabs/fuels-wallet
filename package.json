@@ -30,9 +30,6 @@
     "build:app": "turbo run build:app",
     "build:test": "NODE_ENV=test pnpm build:app",
     "build:libs": "turbo run build",
-    "build:e2e-contracts": "turbo run build:e2e-contracts",
-    "build:test-e2e-contracts": "NODE_ENV=test pnpm build:e2e-contracts",
-    "build:e2e-contracts-types": "pnpm run --filter=@fuel-wallet/e2e-contract-tests build:contracts",
     "changeset": "changeset",
     "changeset:empty": "changeset --empty",
     "changeset:release": "changeset publish --no-git-tag",
@@ -74,8 +71,8 @@
     "xstate:typegen": "pnpm -r xstate:typegen"
   },
   "dependencies": {
-    "@fuel-ui/css": "0.21.1",
-    "@fuel-ui/react": "0.21.1",
+    "@fuel-ui/css": "0.23.0",
+    "@fuel-ui/react": "0.23.0",
     "compare-versions": "^6.1.0",
     "execa": "^8.0.1"
   },

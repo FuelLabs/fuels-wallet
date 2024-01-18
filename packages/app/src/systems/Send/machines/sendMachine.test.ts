@@ -3,7 +3,7 @@ import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 import { MOCK_ASSETS } from '~/systems/Asset/__mocks__/assets';
 import type { MockVaultData } from '~/systems/Core/__tests__';
-import { mockVault } from '~/systems/Core/__tests__';
+import { expectStateMatch, mockVault } from '~/systems/Core/__tests__';
 
 import { sendMachine } from './sendMachine';
 import type { SendMachineService } from './sendMachine';
@@ -36,12 +36,7 @@ describe('sendMachine', () => {
 
   afterEach(() => {
     service.stop();
-  });
-
-  it('should fetch a fake transaction initially', async () => {
-    await waitFor(service, (state) => state.matches('idle'));
-    const { context } = service.getSnapshot();
-    expect(context.fee).toBeDefined();
+    jest.clearAllMocks();
   });
 
   it('should trigger go home on idle BACK event', async () => {
@@ -50,19 +45,11 @@ describe('sendMachine', () => {
     expect(goToHome).toHaveBeenCalled();
   });
 
-  it('should go to invalid state if transaction is invalid', async () => {
+  it('should create a transaction and calculate the fee', async () => {
     await waitFor(service, (state) => state.matches('idle'));
-    const invalidInput = { ...MOCK_INPUTS, address: 'invalid' };
-    service.send('CONFIRM', { input: invalidInput });
-    await waitFor(service, (state) => state.matches('invalid'));
-  });
-
-  it('should create transaction request after confirm', async () => {
-    await waitFor(service, (state) => state.matches('idle'));
-    const { fee } = service.getSnapshot().context;
-    const input = { ...MOCK_INPUTS, account: data.account, fee };
-    service.send('CONFIRM', { input });
-    await waitFor(service, (state) => state.matches('idle'));
+    service.send('SET_DATA', { input: MOCK_INPUTS });
+    await expectStateMatch(service, 'readyToSend');
+    service.send('CONFIRM');
     expect(callTransactionRequest).toHaveBeenCalled();
   });
 });

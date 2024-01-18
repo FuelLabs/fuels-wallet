@@ -98,3 +98,4 @@ UI
 assetId
 contractId
 boolean
+

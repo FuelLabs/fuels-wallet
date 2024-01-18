@@ -118,6 +118,14 @@ export class AssetService {
       imageUrl: a.imageUrl?.trim(),
     }));
 
+    // validate that all of the names are defined and not empty and not just consisting of spaces
+    const someNameUndefined = trimmedAssets.some((asset) => {
+      return !asset.name;
+    });
+    if (someNameUndefined) {
+      throw new Error('Asset.name is invalid');
+    }
+
     // validate if any assetId is wrong (not isB256)
     const invalidAssetId = trimmedAssets.find((a) => !isB256(a.assetId));
     if (invalidAssetId) {

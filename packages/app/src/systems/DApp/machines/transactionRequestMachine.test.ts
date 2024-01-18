@@ -18,7 +18,7 @@ describe('txApproveMachine', () => {
   beforeAll(async () => {
     data = await mockVault();
     transactionRequest = await getMockedTransaction(
-      data.account?.publicKey || '',
+      data.account?.address.toLocaleLowerCase() || '',
       '0xc7862855b418ba8f58878db434b21053a61a2025209889cc115989e8040ff077',
       data.network?.url || ''
     );

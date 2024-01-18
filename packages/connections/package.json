@@ -35,12 +35,12 @@
     "uuid": "^9.0.1"
   },
   "peerDependencies": {
-    "fuels": ">=0.67.0"
+    "fuels": ">=0.71.1"
   },
   "devDependencies": {
     "@types/uuid": "^9.0.5",
-    "@fuel-ts/wallet": "0.67.0",
-    "fuels": "0.67.0",
+    "@fuel-ts/wallet": "0.71.1",
+    "fuels": "0.71.1",
     "jest-environment-jsdom": "29.6.2",
     "tsup": "^7.2.0"
   }

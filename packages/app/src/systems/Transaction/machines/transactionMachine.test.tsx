@@ -2,8 +2,8 @@ import { graphql } from 'msw';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 import { mockServer } from '~/mocks/server';
+import { MOCK_CHAIN_INFO } from '~/systems/Network/__mocks__/chainInfo';
 
-import { MOCK_CHAIN_GQL } from '../__mocks__/chain';
 import { MOCK_TRANSACTION_WITH_RECEIPTS_GQL } from '../__mocks__/transaction';
 
 import type { TransactionMachineService } from './transactionMachine';
@@ -17,7 +17,7 @@ mockServer([
     return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
   }),
   graphql.query('getChain', (_req, res, ctx) => {
-    return res(ctx.data(MOCK_CHAIN_GQL));
+    return res(ctx.data(MOCK_CHAIN_INFO));
   }),
 ]);
 

@@ -1,10 +1,10 @@
 import type { WalletUnlocked } from 'fuels';
 import {
-  TransactionType,
   bn,
   ScriptTransactionRequest,
   Wallet,
   Provider,
+  TransactionType,
 } from 'fuels';
 import { VITE_FUEL_PROVIDER_URL } from '~/config';
 

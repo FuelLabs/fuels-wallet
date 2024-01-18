@@ -1,3 +1,4 @@
+import { createUUID } from '@fuel-wallet/sdk';
 import type {
   Account,
   Vault,
@@ -10,8 +11,7 @@ import type {
 import type { Table } from 'dexie';
 import Dexie from 'dexie';
 import 'dexie-observable';
-import { DECIMAL_UNITS } from 'fuels';
-import { DATABASE_VERSION } from '~/config';
+import { DATABASE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
 import type { Transaction } from '~/systems/Transaction/types';
 
 export class FuelDB extends Dexie {
@@ -38,15 +38,16 @@ export class FuelDB extends Dexie {
         errors: '&id',
       })
       .upgrade(async (tx) => {
-        // Update assets to include decimals for
-        // assets already in the database we set the
-        // decimals default 9 units.
-        await tx
-          .table('assets')
-          .toCollection()
-          .modify((asset) => {
-            asset.decimals = DECIMAL_UNITS;
-          });
+        const networks = tx.table('networks');
+        // Clean networks
+        await networks.clear();
+        // Insert beta-5 network
+        await networks.add({
+          name: 'Testnet Beta 5',
+          url: VITE_FUEL_PROVIDER_URL,
+          isSelected: true,
+          id: createUUID(),
+        });
       });
   }
 
@@ -54,9 +55,10 @@ export class FuelDB extends Dexie {
     await Promise.all([
       this.vaults.clear(),
       this.accounts.clear(),
-      this.transactions.clear(),
-      this.connections.clear(),
       this.networks.clear(),
+      this.connections.clear(),
+      this.transactions.clear(),
+      this.assets.clear(),
       this.abis.clear(),
       this.errors.clear(),
     ]);

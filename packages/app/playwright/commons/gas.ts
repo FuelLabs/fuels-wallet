@@ -5,7 +5,7 @@ import type { Provider, BN } from 'fuels';
 export const getGasConfig = async (provider: Provider) => {
   const chain = await provider.getChain();
   const nodeInfo = await provider.fetchNode();
-  const gasLimit = chain.consensusParameters.maxGasPerTx;
+  const gasLimit = chain.consensusParameters.maxGasPerTx.div(2);
   const gasPrice = nodeInfo.minGasPrice;
 
   return { gasLimit, gasPrice };

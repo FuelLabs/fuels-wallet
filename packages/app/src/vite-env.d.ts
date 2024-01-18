@@ -10,6 +10,7 @@ interface ImportMetaEnv {
   readonly VITE_CRX_NAME: string;
   readonly VITE_AUTO_LOCK_IN_MINUTES: number;
   readonly VITE_SENTRY_DSN: string;
+  readonly VITE_IGNORE_ERRORS: string;
 }
 
 interface ImportMeta {

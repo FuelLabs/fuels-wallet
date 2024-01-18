@@ -31,7 +31,7 @@ services:
       WALLET_SECRET_KEY: ${WALLET_SECRET}
       DISPENSE_AMOUNT: ${DISPENSE_AMOUNT}
       FUEL_NODE_URL: http://${PROJECT:-fuel-node}_fuel-core:4000/graphql
-    image: ghcr.io/fuellabs/faucet:v0.5.5
+    image: ghcr.io/fuellabs/faucet:v0.6.2
     ports:
       - '${FUEL_FAUCET_PORT:-4040}:3000'
     links:

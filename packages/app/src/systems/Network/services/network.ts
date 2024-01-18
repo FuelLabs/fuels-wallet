@@ -1,6 +1,8 @@
 import { createUUID } from '@fuel-wallet/connections';
 import type { NetworkData } from '@fuel-wallet/types';
+import { compare } from 'compare-versions';
 import { Provider } from 'fuels';
+import { MIN_NODE_VERSION } from '~/config';
 import { db } from '~/systems/Core/utils/database';
 
 import { isValidNetworkUrl } from '../utils';
@@ -50,7 +52,7 @@ export class NetworkService {
   }
 
   static async addNetwork(input: NetworkInputs['addNetwork']) {
-    await this.assertAddNetwork(input);
+    await this.validateAddNetwork(input);
     return db.transaction('rw', db.networks, async () => {
       const count = await db.networks.count();
       const inputToAdd = {
@@ -148,10 +150,24 @@ export class NetworkService {
     return provider.fetchNode();
   }
 
-  static async assertAddNetwork(input: NetworkInputs['addNetwork']) {
+  static async validateAddNetwork(input: NetworkInputs['addNetwork']) {
     const { name, url } = input.data;
     if (!isValidNetworkUrl(url)) {
       throw new Error('Invalid network URL');
+    }
+    let nodeInfo;
+    try {
+      const provider = await Provider.create(url);
+      nodeInfo = await provider.fetchNode();
+    } catch (err: unknown) {
+      throw new Error(
+        `Network version is not compatible with >=${MIN_NODE_VERSION} required by the Wallet`
+      );
+    }
+    if (compare(nodeInfo.nodeVersion, MIN_NODE_VERSION, '<')) {
+      throw new Error(
+        `Network version is not compatible with >=${MIN_NODE_VERSION} required by the Wallet`
+      );
     }
     const collection = await db.transaction('r', db.networks, async () => {
       return db.networks
