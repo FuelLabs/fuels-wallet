@@ -4,7 +4,6 @@ import {
   loadIcons,
   setFuelThemes,
   ThemeProvider,
-  useFuelTheme,
 } from '@fuel-ui/react';
 import { FuelProvider } from '@fuel-wallet/react';
 import { MDXProvider } from '@mdx-js/react';
@@ -76,26 +75,19 @@ setFuelThemes({
   },
 });
 
-function Providers({ children }: ProviderProps) {
-  const { current } = useFuelTheme();
-  return (
-    <FuelProvider
-      theme={current}
-      fuelConfig={{
-        devMode: true,
-      }}
-    >
-      <MDXProvider components={components as any}>
-        {children as any}
-      </MDXProvider>
-    </FuelProvider>
-  );
-}
-
 export function Provider({ children }: ProviderProps) {
   return (
     <ThemeProvider>
-      <Providers>{children}</Providers>
+      <FuelProvider
+        theme="dark"
+        fuelConfig={{
+          devMode: true,
+        }}
+      >
+        <MDXProvider components={components as any}>
+          {children as any}
+        </MDXProvider>
+      </FuelProvider>
     </ThemeProvider>
   );
 }
