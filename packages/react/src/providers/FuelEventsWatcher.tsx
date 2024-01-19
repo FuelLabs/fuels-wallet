@@ -37,6 +37,7 @@ export function FuelEventsWatcher() {
     fuelQueryClient.invalidateQueries([QUERY_KEYS.provider]);
     fuelQueryClient.invalidateQueries([QUERY_KEYS.nodeInfo]);
     fuelQueryClient.invalidateQueries([QUERY_KEYS.accounts]);
+    fuelQueryClient.invalidateQueries([QUERY_KEYS.connectorList]);
   }
 
   function onNetworkChange() {
