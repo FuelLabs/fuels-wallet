@@ -35,7 +35,7 @@
     "fuels": "0.0.0-rc-salamander-20240123151601"
   },
   "devDependencies": {
-    "@fuel-ts/wallet": "0.71.1",
+    "@fuel-ts/wallet": "0.0.0-rc-salamander-20240123151601",
     "fuels": "0.0.0-rc-salamander-20240123151601",
     "jest-environment-jsdom": "29.6.2",
     "tsup": "^7.2.0"
