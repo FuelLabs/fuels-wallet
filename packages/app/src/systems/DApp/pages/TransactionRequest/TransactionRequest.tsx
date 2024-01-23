@@ -16,6 +16,9 @@ export function TransactionRequest() {
 
   const shouldShowTx = status('waitingApproval') || isSendingTx;
 
+  console.log(`txRequest`, txRequest);
+  console.log(`status('failed')`, status('failed'));
+
   const Header = (
     <>
       <ConnectInfo

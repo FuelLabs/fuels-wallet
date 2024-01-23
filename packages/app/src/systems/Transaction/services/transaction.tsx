@@ -20,6 +20,7 @@ import {
   hexlify,
   processGqlReceipt,
   BN,
+  TransactionStatus,
 } from 'fuels';
 import { isEth } from '~/systems/Asset/utils/asset';
 import { db, uniqueId, WalletLockedCustom } from '~/systems/Core';
@@ -189,6 +190,16 @@ export class TxService {
       gasPriceFactor,
       maxInputs,
     });
+
+    transactionSummary.isStatusFailure = transactionSummary.receipts.some(
+      (receipt) => {
+        return receipt.type === 3;
+      }
+    );
+
+    if (transactionSummary.isStatusFailure) {
+      transactionSummary.status = TransactionStatus.failure;
+    }
 
     return transactionSummary;
   }

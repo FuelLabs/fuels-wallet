@@ -172,7 +172,7 @@ export const transactionRequestMachine = createMachine(
           },
           onDone: [
             {
-              target: 'failed',
+              target: 'txFailed',
               actions: ['assignTxApproveError'],
               cond: FetchMachine.hasError,
             },
@@ -288,6 +288,8 @@ export const transactionRequestMachine = createMachine(
         };
       }),
       assignTxApproveError: assign((ctx, ev) => {
+        alert(`ctx: ${ctx}`);
+        alert(`ev:  ${ev}`);
         return {
           ...ctx,
           errors: {
@@ -323,7 +325,9 @@ export const transactionRequestMachine = createMachine(
           // screen doesn't flash between states
           await delay(600);
           const { txResult } = await TxService.simulateTransaction(input);
-          return { txResult };
+          console.log(`txResult`, txResult);
+          // return { txResult };
+          return { error: true };
         },
       }),
       send: FetchMachine.create<
