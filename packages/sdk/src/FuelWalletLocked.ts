@@ -8,11 +8,11 @@ import { WalletLocked } from 'fuels';
 import type { FuelWalletProvider } from './FuelWalletProvider';
 
 export class FuelWalletLocked extends WalletLocked {
-  provider: FuelWalletProvider;
+  _provider: FuelWalletProvider;
 
   constructor(address: string | AbstractAddress, provider: FuelWalletProvider) {
     super(address, provider);
-    this.provider = provider;
+    this._provider = provider;
   }
 
   async signMessage(message: string): Promise<string> {
@@ -29,5 +29,9 @@ export class FuelWalletLocked extends WalletLocked {
       ...transaction,
       signer: this.address.toString(),
     });
+  }
+
+  get provider(): FuelWalletProvider {
+    return this._provider;
   }
 }
