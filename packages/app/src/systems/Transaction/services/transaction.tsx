@@ -191,12 +191,12 @@ export class TxService {
       maxInputs,
     });
 
+    // Workaround until https://github.com/FuelLabs/fuels-ts/issues/1674 is fixed
     transactionSummary.isStatusFailure = transactionSummary.receipts.some(
       (receipt) => {
         return receipt.type === 3;
       }
     );
-
     if (transactionSummary.isStatusFailure) {
       transactionSummary.status = TransactionStatus.failure;
     }

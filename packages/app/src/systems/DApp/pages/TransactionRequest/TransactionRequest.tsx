@@ -1,5 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Alert, Button } from '@fuel-ui/react';
+import { TransactionStatus } from 'fuels';
 import { useAssets } from '~/systems/Asset';
 import { Layout, ConnectInfo } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
@@ -15,9 +16,6 @@ export function TransactionRequest() {
   if (!ctx.account) return null;
 
   const shouldShowTx = status('waitingApproval') || isSendingTx;
-
-  console.log(`txRequest`, txRequest);
-  console.log(`status('failed')`, status('failed'));
 
   const Header = (
     <>
@@ -37,6 +35,30 @@ export function TransactionRequest() {
     </>
   );
 
+  const ErrorHeader = (
+    <>
+      <ConnectInfo
+        account={ctx.account}
+        origin={ctx.input.origin!}
+        favIconUrl={ctx.input.favIconUrl}
+        title={ctx.input.title}
+        headerText="Requesting a transaction from:"
+      />
+      <Alert status="error" css={styles.alert}>
+        <Alert.Title>
+          Simulating your transaction resulted in an error
+        </Alert.Title>
+        <Alert.Description>
+          {`Carefully check if all the details in your transaction are correct. ${
+            txResult?.operations.length
+              ? `Operations: ${txResult?.operations}`
+              : ''
+          }`}
+        </Alert.Description>
+      </Alert>
+    </>
+  );
+
   return (
     <>
       <Layout title={ctx.title} noBorder>
@@ -48,7 +70,11 @@ export function TransactionRequest() {
               showDetails
               tx={txResult}
               isLoading={status('loading')}
-              header={Header}
+              header={
+                txResult?.status === TransactionStatus.failure
+                  ? ErrorHeader
+                  : Header
+              }
               assets={assets}
             />
           )}
@@ -94,6 +120,7 @@ export function TransactionRequest() {
               intent="primary"
               onPress={handlers.approve}
               isLoading={ctx.isLoading || status('sending')}
+              isDisabled={txResult?.status === TransactionStatus.failure}
             >
               Approve
             </Button>

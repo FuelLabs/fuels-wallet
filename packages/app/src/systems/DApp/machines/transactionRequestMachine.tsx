@@ -325,9 +325,7 @@ export const transactionRequestMachine = createMachine(
           // screen doesn't flash between states
           await delay(600);
           const { txResult } = await TxService.simulateTransaction(input);
-          console.log(`txResult`, txResult);
-          // return { txResult };
-          return { error: true };
+          return { txResult };
         },
       }),
       send: FetchMachine.create<

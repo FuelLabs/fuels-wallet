@@ -29,10 +29,6 @@ const MAX_ATTEMPTS = 3;
 
 export const FetchMachine = {
   hasError(_: any, ev: { data: { error?: any } }) {
-    console.log(`FETCH ev`, ev);
-    alert(`fetch ev: ${ev}`);
-    alert(`temp: ${ev.data?.error}`);
-    alert(`data: ${ev.data}`);
     return Boolean(ev.data?.error);
   },
   errorState(state: string): TransitionConfig<any, any> {
