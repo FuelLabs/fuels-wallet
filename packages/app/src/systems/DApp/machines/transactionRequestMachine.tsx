@@ -172,7 +172,7 @@ export const transactionRequestMachine = createMachine(
           },
           onDone: [
             {
-              target: 'txFailed',
+              target: 'failed',
               actions: ['assignTxApproveError'],
               cond: FetchMachine.hasError,
             },
@@ -288,8 +288,6 @@ export const transactionRequestMachine = createMachine(
         };
       }),
       assignTxApproveError: assign((ctx, ev) => {
-        alert(`ctx: ${ctx}`);
-        alert(`ev:  ${ev}`);
         return {
           ...ctx,
           errors: {

@@ -47,7 +47,7 @@ export const deposit = async ({
   const result = await contract.functions
     .deposit()
     .callParams({ forward: [amount, assetId] })
-    .txParams({ gasPrice: 1, gasLimit: bn(10) })
+    .txParams(TX_PARAMS)
     .call();
   if (result.transactionResult.isStatusSuccess) {
     toast.success('Transaction successful.');
