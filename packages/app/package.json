@@ -119,7 +119,8 @@
     "vite": "^4.4.11",
     "vite-plugin-clean": "^1.0.0",
     "vite-plugin-static-copy": "^0.17.0",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite-tsconfig-paths": "^4.2.1",
+    "whatwg-fetch": "^3.6.20"
   },
   "msw": {
     "workerDirectory": "public"
