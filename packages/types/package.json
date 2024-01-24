@@ -9,9 +9,9 @@
     "json-rpc-2.0": "^1.6.0"
   },
   "peerDependencies": {
-    "fuels": "0.0.0-rc-salamander-20240123151601"
+    "fuels": "0.0.0-rc-salamander-20240124143837"
   },
   "devDependencies": {
-    "fuels": "0.0.0-rc-salamander-20240123151601"
+    "fuels": "0.0.0-rc-salamander-20240124143837"
   }
 }
