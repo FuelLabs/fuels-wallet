@@ -19,7 +19,7 @@ export function AddAssets() {
       name: 'New',
       symbol: 'NEW',
       imageUrl:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/1200px-Bitcoin.svg.png',
+        'https://www.logo.wine/logo/Ethereum',
       isCustom: true,
       decimals: 6,
     },
