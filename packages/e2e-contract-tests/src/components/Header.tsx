@@ -7,12 +7,12 @@ import {
 import { IS_TEST } from '../config';
 
 export const Header = () => {
-  const connect = useConnect();
+  const { connect } = useConnect();
 
   return (
     <button
       onClick={() => {
-        connect.mutate(
+        connect(
           IS_TEST
             ? FUEL_WALLET_CONNECTOR.connector
             : FUEL_WALLET_DEVELOPMENT_CONNECTOR.connector
