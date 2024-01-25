@@ -30,9 +30,6 @@ import {
 
 const WALLET_PASSWORD = 'Qwe123456$';
 
-/**
- * @todo: skip e2e tests of the wallet application for implement it on the next PR
- */
 test.describe('FuelWallet Extension', () => {
   test('On install sign-up page is open', async ({ context }) => {
     // In development mode files are render dynamically
