@@ -26,36 +26,27 @@ export function TransactionRequest() {
         title={ctx.input.title}
         headerText="Requesting a transaction from:"
       />
-      <Alert status="warning" css={styles.alert}>
-        <Alert.Title>Confirm before approving</Alert.Title>
-        <Alert.Description>
-          Carefully check if all the details in your transaction are correct
-        </Alert.Description>
-      </Alert>
-    </>
-  );
-
-  const ErrorHeader = (
-    <>
-      <ConnectInfo
-        account={ctx.account}
-        origin={ctx.input.origin!}
-        favIconUrl={ctx.input.favIconUrl}
-        title={ctx.input.title}
-        headerText="Requesting a transaction from:"
-      />
-      <Alert status="error" css={styles.alert}>
-        <Alert.Title>
-          Simulating your transaction resulted in an error
-        </Alert.Title>
-        <Alert.Description>
-          {`Carefully check if all the details in your transaction are correct. ${
-            txResult?.operations.length
-              ? `Operations: ${txResult?.operations}`
-              : ''
-          }`}
-        </Alert.Description>
-      </Alert>
+      {txResult?.status === TransactionStatus.failure ? (
+        <Alert status="error" css={styles.alert}>
+          <Alert.Title>
+            Simulating your transaction resulted in an error
+          </Alert.Title>
+          <Alert.Description>
+            {`Carefully check if all the details in your transaction are correct. ${
+              txResult?.operations.length
+                ? `Operations: ${txResult?.operations}`
+                : ''
+            }`}
+          </Alert.Description>
+        </Alert>
+      ) : (
+        <Alert status="warning" css={styles.alert}>
+          <Alert.Title>Confirm before approving</Alert.Title>
+          <Alert.Description>
+            Carefully check if all the details in your transaction are correct
+          </Alert.Description>
+        </Alert>
+      )}
     </>
   );
 
@@ -70,11 +61,7 @@ export function TransactionRequest() {
               showDetails
               tx={txResult}
               isLoading={status('loading')}
-              header={
-                txResult?.status === TransactionStatus.failure
-                  ? ErrorHeader
-                  : Header
-              }
+              header={Header}
               assets={assets}
             />
           )}

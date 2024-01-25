@@ -8,4 +8,4 @@ name = "custom_asset"
 # we need to use older versions of the libs bc fuels does not support the latest forc version (0.49.1)
 src20 = { git = "https://github.com/FuelLabs/sway-standards", tag = "v0.3.2" }
 src3 = { git = "https://github.com/FuelLabs/sway-standards", tag = "v0.3.2" }
-token = { git = "https://github.com/FuelLabs/sway-libs", tag = "v0.17.1" }
+token = { git = "https://github.com/FuelLabs/sway-libs", tag = "v0.17.2" }
