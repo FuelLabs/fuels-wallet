@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useFuel } from '../components';
+import { useFuel } from '../providers';
 import { QUERY_KEYS } from '../utils';
 
 export const useConnectors = () => {
@@ -9,15 +9,15 @@ export const useConnectors = () => {
   const query = useQuery(
     [QUERY_KEYS.connectorList],
     async () => {
-      return fuel?.listConnectors();
+      return fuel.connectors();
     },
     {
-      enabled: !!fuel,
+      initialData: [],
     }
   );
 
   return {
-    connectors: query.data || [],
+    connectors: query.data,
     ...query,
   };
 };

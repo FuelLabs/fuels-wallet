@@ -1,11 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { useFuel } from '../components';
+import { useFuel } from '../providers';
 
 export const useDisconnect = () => {
   const { fuel } = useFuel();
 
-  const { mutate, ...mutateProps } = useMutation({
+  const { mutate, mutateAsync, ...mutateProps } = useMutation({
     mutationFn: async () => {
       return fuel?.disconnect();
     },
@@ -13,6 +13,7 @@ export const useDisconnect = () => {
 
   return {
     disconnect: mutate,
+    disconnectAsync: mutateAsync,
     ...mutateProps,
   };
 };

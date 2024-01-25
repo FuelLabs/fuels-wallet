@@ -20,7 +20,7 @@ export function NetworkExample() {
   });
 
   const [handleNetwork, errorNetwork] = useLoading(async () => {
-    const network = await fuel.network();
+    const network = await fuel.currentNetwork();
     setNetwork(network);
   });
 
@@ -30,10 +30,10 @@ export function NetworkExample() {
   };
 
   useEffect(() => {
-    fuel?.on(fuel.events.network, handleNetworkChange);
+    fuel?.on(fuel.events.currentNetwork, handleNetworkChange);
 
     return () => {
-      fuel?.off(fuel.events.network, handleNetworkChange);
+      fuel?.off(fuel.events.currentNetwork, handleNetworkChange);
     };
   }, [fuel]);
   /* network:end */

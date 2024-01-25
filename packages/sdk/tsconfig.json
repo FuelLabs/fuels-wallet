@@ -3,6 +3,7 @@
   "compilerOptions": {
     "keyofStringsOnly": true,
     "ignoreDeprecations": "5.0",
+    "resolveJsonModule": true,
     "outDir": "./dist",
     "baseUrl": ".",
     "rootDir": "."

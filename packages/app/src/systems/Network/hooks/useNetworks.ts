@@ -1,4 +1,4 @@
-import type { Network } from '@fuel-wallet/types';
+import type { NetworkData } from '@fuel-wallet/types';
 import { useEffect } from 'react';
 import { store, Services } from '~/store';
 import { useOverlay } from '~/systems/Overlay';
@@ -17,7 +17,7 @@ const selectors = {
   },
   selectedNetwork: (state: NetworksMachineState) => {
     const networks = state.context?.networks || [];
-    return networks.find((n) => n.isSelected) as Network;
+    return networks.find((n) => n.isSelected) as NetworkData;
   },
 };
 

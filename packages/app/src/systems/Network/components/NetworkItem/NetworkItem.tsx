@@ -1,12 +1,12 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Text, CardList, IconButton, Icon, Box } from '@fuel-ui/react';
-import type { Network } from '@fuel-wallet/types';
+import type { NetworkData } from '@fuel-wallet/types';
 import { forwardRef } from 'react';
 
 import { NetworkRemoveDialog } from '../NetworkRemoveDialog/NetworkRemoveDialog';
 
-export function NetworkStatus({ network }: { network: Network }) {
+export function NetworkStatus({ network }: { network: NetworkData }) {
   return (
     <Text
       as="span"
@@ -25,9 +25,9 @@ export function NetworkStatus({ network }: { network: Network }) {
 
 export type NetworkItemProps = {
   css?: ThemeUtilsCSS;
-  network: Network;
-  onPress?: (network: Network) => Promise<void> | void;
-  onRemove?: (network: Network) => Promise<void> | void;
+  network: NetworkData;
+  onPress?: (network: NetworkData) => Promise<void> | void;
+  onRemove?: (network: NetworkData) => Promise<void> | void;
   onUpdate?: (id?: string) => Promise<void> | void;
 };
 
