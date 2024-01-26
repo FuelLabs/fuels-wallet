@@ -1,5 +1,11 @@
 # @fuel-wallet/test-utils
 
+## 0.15.0
+
+### Minor Changes
+
+- [#1032](https://github.com/FuelLabs/fuels-wallet/pull/1032) [`fdfa7d7`](https://github.com/FuelLabs/fuels-wallet/commit/fdfa7d7c74608071c41b1a36a44d42a49c13ee97) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: remove fuel-ui from connectors ui and update to the new connectors api.
+
 ## 0.14.3
 
 ## 0.14.2
