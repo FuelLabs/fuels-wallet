@@ -6,5 +6,13 @@ type ProviderProps = {
 };
 
 export const Providers = ({ children }: ProviderProps) => {
-  return <FuelProvider>{children}</FuelProvider>;
+  return (
+    <FuelProvider
+      fuelConfig={{
+        devMode: true,
+      }}
+    >
+      {children}
+    </FuelProvider>
+  );
 };
