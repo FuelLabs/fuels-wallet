@@ -1,4 +1,4 @@
-import type { Asset } from '@fuel-wallet/types';
+import type { AssetData } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import { useEffect, useRef } from 'react';
 import { store, Services } from '~/store';
@@ -32,7 +32,7 @@ const selectors = {
   account(state: AccountsMachineState) {
     return state.context.account;
   },
-  balanceAssets(assets: Asset[]) {
+  balanceAssets(assets: AssetData[]) {
     return (state: AccountsMachineState) =>
       state.context.account?.balances?.map((balance) => ({
         ...balance,

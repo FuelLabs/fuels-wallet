@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useFuel } from '../components';
+import { useFuel } from '../providers';
 import { QUERY_KEYS } from '../utils';
 
 export const useIsConnected = () => {
@@ -9,11 +9,15 @@ export const useIsConnected = () => {
   const { data, ...queryProps } = useQuery(
     [QUERY_KEYS.isConnected],
     async () => {
-      const isConnected = await fuel?.isConnected();
-      return isConnected || false;
+      try {
+        const isConnected = await fuel.isConnected();
+        return isConnected || false;
+      } catch {
+        return false;
+      }
     },
     {
-      enabled: !!fuel,
+      initialData: null,
     }
   );
 

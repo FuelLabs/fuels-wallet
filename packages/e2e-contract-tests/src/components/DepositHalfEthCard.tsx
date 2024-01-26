@@ -6,8 +6,8 @@ import { depositHalf } from '../contract_interactions';
 
 export const DepositHalfEthCard = () => {
   const [amount, setAmount] = useState<string>('');
-  const account = useAccount();
-  const wallet = useWallet({ address: account.account });
+  const { account } = useAccount();
+  const wallet = useWallet(account);
 
   return (
     <div>

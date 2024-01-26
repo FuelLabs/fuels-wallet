@@ -4,8 +4,7 @@
     "keyofStringsOnly": true,
     "outDir": "./dist",
     "baseUrl": ".",
-    "rootDir": ".",
-    "types": ["jest"]
+    "rootDir": "."
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["**/*.test.ts"]

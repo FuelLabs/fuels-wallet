@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useFuel } from '../components';
+import { useFuel } from '../providers';
 import { QUERY_KEYS } from '../utils';
 
 export const useProvider = () => {
@@ -9,16 +9,16 @@ export const useProvider = () => {
   const { data, ...queryProps } = useQuery(
     [QUERY_KEYS.provider],
     async () => {
-      const provider = await fuel?.getProvider();
+      const provider = await fuel.getProvider();
       return provider || null;
     },
     {
-      enabled: !!fuel,
+      initialData: null,
     }
   );
 
   return {
-    provider: data || undefined,
+    provider: data,
     ...queryProps,
   };
 };

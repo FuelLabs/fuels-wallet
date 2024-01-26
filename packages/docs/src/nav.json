@@ -11,12 +11,12 @@
     "Connecting",
     "Accounts",
     "Assets",
-    "Networks",
     "Signing a Message",
+    "Networks",
     "ABIs",
     "Wallet Connectors",
-    "Reference",
-    "React Hooks Reference",
+    "API Reference",
+    "Hooks Reference",
     "Playwright Utils"
   ],
   "contributing": [

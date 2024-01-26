@@ -1,5 +1,4 @@
-import { getGasConfig } from '@fuel-wallet/sdk';
-import type { Account, Asset } from '@fuel-wallet/types';
+import type { Account, AssetData } from '@fuel-wallet/types';
 import type {
   GetTransactionSummaryFromRequestParams,
   TransactionRequest,
@@ -91,7 +90,7 @@ export type TxInputs = {
   isValidTransaction: {
     address?: string;
     account?: Account;
-    asset?: Asset;
+    asset?: AssetData;
     amount?: BN;
     fee?: BN;
   };
@@ -249,7 +248,7 @@ export class TxService {
   }
 
   static async createTransfer(input: TxInputs['createTransfer']) {
-    const { gasPrice } = await getGasConfig(input.provider);
+    const { minGasPrice: gasPrice } = await input.provider.getGasConfig();
     // Because gasLimit is caulculated on the number of operations we can
     // safely assume that a transfer will consume at max 20 units, this should
     // be change once we add multiple transfers in a single transaction.

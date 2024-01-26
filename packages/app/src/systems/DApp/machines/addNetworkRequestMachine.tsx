@@ -1,4 +1,4 @@
-import type { Network } from '@fuel-wallet/types';
+import type { NetworkData } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
@@ -7,7 +7,7 @@ import { NetworkService } from '~/systems/Network';
 import { store } from '~/systems/Store';
 
 type MachineContext = {
-  network?: Network;
+  network?: NetworkData;
   origin?: string;
   title?: string;
   favIconUrl?: string;
@@ -16,14 +16,14 @@ type MachineContext = {
 
 type MachineServices = {
   saveNetwork: {
-    data: Network;
+    data: NetworkData;
   };
 };
 
 export type AddNetworkInputs = {
   start: {
     origin: string;
-    network: Network;
+    network: NetworkData;
     favIconUrl?: string;
     title?: string;
   };

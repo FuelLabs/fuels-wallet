@@ -2,7 +2,7 @@ name: Tests
 
 on:
   pull_request:
-    branches: [main, master]
+    branches: [main, master, sdk-v2]
     types: [opened, synchronize, reopened]
 
 concurrency:

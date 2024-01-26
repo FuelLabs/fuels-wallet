@@ -72,7 +72,7 @@ export function ExampleBox({
       <Box css={styles.root}>
         <Heading as="h6">
           Check it working
-          {notDetected && !error && (
+          {showNotDetectedOverlay && notDetected && !error && (
             <Tooltip content={downloadContent} side="left">
               <Tag
                 size="xs"

@@ -1,5 +1,4 @@
 import { render, testA11y, screen, act, fireEvent } from '@fuel-ui/test-utils';
-import { BLOCK_EXPLORER_URL } from '@fuel-wallet/sdk';
 import { TransactionStatus } from 'fuels';
 
 import {
@@ -83,7 +82,7 @@ describe('TxHeader', () => {
 
     await act(() => fireEvent.click(btn));
     expect(await navigator.clipboard.readText()).toBe(
-      `${BLOCK_EXPLORER_URL}transaction/${
+      `https://fuellabs.github.io/block-explorer-v2/transaction/${
         MOCK_TRANSACTION_CREATE.id
       }?providerUrl=${encodeURIComponent(
         process.env.VITE_FUEL_PROVIDER_URL || ''
