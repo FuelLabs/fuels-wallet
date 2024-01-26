@@ -10,8 +10,8 @@ export const AssetConfigurationCard = () => {
     subId: '',
     decimals: '',
   });
-  const account = useAccount();
-  const wallet = useWallet({ address: account.account });
+  const { account } = useAccount();
+  const wallet = useWallet(account);
 
   return (
     <div>

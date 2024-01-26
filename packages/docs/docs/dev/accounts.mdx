@@ -7,48 +7,64 @@ category: For Developers
 
 ## List user accounts
 
-Once the connection is authorized, you can list the user accounts using `window.fuel.accounts()`.
+Once the connection is authorized, you can list all the user accounts using `accounts()`.
 
-<CodeImport file="../../examples/ListAccounts.tsx" />
+<CodeImport
+  file="../../examples/accounts/Accounts.tsx"
+  commentBlock="accounts"
+/>
 
 <Examples.ListAccounts />
 
-### Listening to Account Changes
+### Watch Account Changes
 
-To listen to account events, you can use the `fuel.events.accounts` event.
+To watch account events, you can use the `accounts` event.
 
 <CodeImport
-  file="../../examples/events/Accounts.tsx"
-  commentBlock="eventAccountChanges"
+  file="../../examples/accounts/Accounts.tsx"
+  commentBlock="watchAccounts"
 />
-<Examples.Events.Accounts />
+<Examples.AccountsHook />
 
 ## Get Current Account
 
-You can also get the current account being used in the wallet using `window.fuel.currentAccount()`.
+You can also get the current account being used in the wallet using `currentAccount()`.
+If the return is `null` this means that the current account selected by the user is not connected.
 
-<CodeImport file="../../examples/CurrentAccount.tsx" />
+<CodeImport
+  file="../../examples/accounts/CurrentAccount.tsx"
+  commentBlock="currentAccount"
+/>
 
 <Examples.CurrentAccount />
 
-### Listening to Current Account Changes
+### Watch Current Account Changes
 
-To listen to current account events, you can use the `fuel.events.currentAccount` event.
+To monitor events related to the current account, utilize the `currentAccount` event. Receiving a `null` value from this event indicates that the user's currently selected account is not connected.
+If the event receive a `null` value this means that the current account selected by the user is not connected.
 
 <CodeImport
-  file="../../examples/events/CurrentAccount.tsx"
-  commentBlock="eventCurrentAccount"
+  file="../../examples/accounts/CurrentAccount.tsx"
+  commentBlock="watchCurrentAccount"
 />
-<Examples.Events.CurrentAccount />
+<Examples.CurrentAccountHook />
 
 ## With React
 
 You can keep track of the current account when using React using the `useAccount` hook as shown below:
 
-```tsx
-import { useAccount } from '@fuel-wallet/react';
-// ...
-const { accountAddress } = useAccount();
-console.log('Current Account ', currentAccount);
-// Current Account fuel1r20zhd...
-```
+### All Connected Accounts
+
+<CodeImport
+  file="../../examples/accounts/hooks/AccountsHook.tsx"
+  commentBlock="useAccounts"
+/>
+<Examples.AccountsHook />
+
+### Current Account
+
+<CodeImport
+  file="../../examples/accounts/hooks/CurrentAccountHook.tsx"
+  commentBlock="useAccount"
+/>
+<Examples.CurrentAccountHook />

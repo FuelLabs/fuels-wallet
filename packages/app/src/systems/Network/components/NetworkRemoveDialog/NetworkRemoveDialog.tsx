@@ -1,11 +1,11 @@
 import { AlertDialog, Button } from '@fuel-ui/react';
-import type { Network } from '@fuel-wallet/types';
+import type { NetworkData } from '@fuel-wallet/types';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
 type NetworkRemoveDialogProps = {
   children: ReactNode;
-  network: Network;
+  network: NetworkData;
   onConfirm: () => void;
 };
 

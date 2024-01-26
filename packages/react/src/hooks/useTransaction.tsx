@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type * as fuels from 'fuels';
 
-import { useFuel } from '../components';
+import { useFuel } from '../providers';
 
 export const useTransaction = (txId?: string) => {
   const { fuel } = useFuel();
@@ -21,12 +21,13 @@ export const useTransaction = (txId?: string) => {
       }
     },
     {
-      enabled: !!fuel && !!txId,
+      initialData: null,
+      enabled: !!txId,
     }
   );
 
   return {
-    transaction: data || undefined,
+    transaction: data,
     ...query,
   };
 };

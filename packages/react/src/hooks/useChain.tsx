@@ -21,12 +21,13 @@ export const useChain = () => {
       }
     },
     {
+      initialData: null,
       enabled: !!provider,
     }
   );
 
   return {
-    chain: query.data || undefined,
+    chain: query.data,
     ...query,
   };
 };

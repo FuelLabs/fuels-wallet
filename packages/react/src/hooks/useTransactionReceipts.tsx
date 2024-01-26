@@ -4,7 +4,7 @@ import { TransactionResponse } from 'fuels';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { TransactionResultReceipt } from 'fuels';
 
-import { useFuel } from '../components';
+import { useFuel } from '../providers';
 import { QUERY_KEYS } from '../utils';
 
 export const useTransactionReceipts = ({ txId }: { txId?: string }) => {
@@ -14,7 +14,7 @@ export const useTransactionReceipts = ({ txId }: { txId?: string }) => {
     [QUERY_KEYS.transactionReceipts, txId],
     async () => {
       try {
-        const provider = await fuel?.getProvider();
+        const provider = await fuel.getProvider();
         if (!provider) return null;
 
         const response = new TransactionResponse(txId || '', provider);
@@ -27,12 +27,13 @@ export const useTransactionReceipts = ({ txId }: { txId?: string }) => {
       }
     },
     {
-      enabled: !!fuel && !!txId,
+      initialData: null,
+      enabled: !!txId,
     }
   );
 
   return {
-    transactionReceipts: data || undefined,
+    transactionReceipts: data,
     ...queryProps,
   };
 };

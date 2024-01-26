@@ -3,8 +3,25 @@
   "version": "0.14.3",
   "license": "Apache-2.0",
   "main": "src/index.ts",
+  "publishConfig": {
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "typings": "dist/index.d.ts",
+    "exports": {
+      ".": {
+        "require": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      }
+    }
+  },
+  "scripts": {
+    "build": "pnpm ts:check && tsup",
+    "ts:check": "tsc --noEmit"
+  },
   "dependencies": {
-    "@types/chrome": "^0.0.246",
+    "@fuels/assets": "^0.1.1",
     "dexie-observable": "4.0.1-beta.13",
     "json-rpc-2.0": "^1.6.0"
   },
@@ -12,6 +29,7 @@
     "fuels": "0.0.0-rc-salamander-20240124143837"
   },
   "devDependencies": {
-    "fuels": "0.0.0-rc-salamander-20240124143837"
+    "fuels": "0.0.0-rc-salamander-20240124143837",
+    "tsup": "^7.2.0"
   }
 }

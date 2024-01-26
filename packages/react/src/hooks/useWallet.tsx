@@ -1,28 +1,29 @@
 import { useQuery } from '@tanstack/react-query';
+import { Address } from 'fuels';
 
-import { useFuel } from '../components';
+import { useFuel } from '../providers';
 import { QUERY_KEYS } from '../utils';
 
-export const useWallet = ({ address }: { address?: string }) => {
+export const useWallet = (address?: string | null) => {
   const { fuel } = useFuel();
 
   const { data, ...queryProps } = useQuery(
     [QUERY_KEYS.wallet, address],
     async () => {
       try {
-        const wallet = await fuel?.getWallet(address || '');
+        const accountAddress = address || (await fuel.currentAccount()) || '';
+        // Check if the address is valid
+        await Address.fromString(accountAddress);
+        const wallet = await fuel.getWallet(accountAddress);
         return wallet || null;
       } catch (error: unknown) {
         return null;
       }
-    },
-    {
-      enabled: !!fuel && !!address,
     }
   );
 
   return {
-    wallet: data || undefined,
+    wallet: data,
     ...queryProps,
   };
 };

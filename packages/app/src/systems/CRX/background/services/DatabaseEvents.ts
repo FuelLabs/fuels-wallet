@@ -5,7 +5,6 @@ import type {
   EventMessageEvents,
 } from '@fuel-wallet/types';
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
-import { AssetService } from '~/systems/Asset/services';
 import { ConnectionService } from '~/systems/DApp/services';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';
@@ -13,7 +12,7 @@ import { DatabaseObservable } from './DatabaseObservable';
 
 export class DatabaseEvents {
   readonly databaseObservable: DatabaseObservable<
-    ['networks', 'accounts', 'assets', 'connections']
+    ['networks', 'accounts', 'connections']
   >;
 
   readonly communicationProtocol: CommunicationProtocol;
@@ -48,10 +47,9 @@ export class DatabaseEvents {
         origins,
         this.createEvents([
           {
-            event: 'network',
+            event: 'currentNetwork',
             params: [
               {
-                id: updateEvent.obj.id,
                 url: updateEvent.obj.url,
               },
             ],
@@ -103,13 +101,6 @@ export class DatabaseEvents {
       }
     });
 
-    this.databaseObservable.on(
-      'assets:update',
-      (updateEvent) => updateEvent.obj.isCustom && this.broadcastAssets()
-    );
-    this.databaseObservable.on('assets:delete', () => this.broadcastAssets());
-    this.databaseObservable.on('assets:create', () => this.broadcastAssets());
-
     this.databaseObservable.on('connections:delete', async (updateEvent) => {
       const deletedConnection = updateEvent.oldObj as Connection;
 
@@ -123,21 +114,5 @@ export class DatabaseEvents {
         ])
       );
     });
-  }
-
-  async broadcastAssets() {
-    const connections = await ConnectionService.getConnections();
-    const origins = connections.map((connection) => connection.origin);
-    const assets = await AssetService.getAssets();
-
-    this.communicationProtocol.broadcast(
-      origins,
-      this.createEvents([
-        {
-          event: 'assets',
-          params: [assets],
-        },
-      ])
-    );
   }
 }

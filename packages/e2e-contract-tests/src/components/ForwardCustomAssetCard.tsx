@@ -8,8 +8,8 @@ import { calculateAssetId } from '../utils';
 
 export const ForwardCustomAssetCard = () => {
   const [amount, setAmount] = useState<string>('');
-  const account = useAccount();
-  const wallet = useWallet({ address: account.account });
+  const { account } = useAccount();
+  const wallet = useWallet(account);
 
   const assetId = calculateAssetId(MAIN_CONTRACT_ID, BaseAssetId);
 

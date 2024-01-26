@@ -1,6 +1,7 @@
 export const QUERY_KEYS = {
   account: 'account',
   accounts: 'accounts',
+  assets: 'assets',
   chain: 'chain',
   isConnected: 'isConnected',
   provider: 'provider',
@@ -11,8 +12,11 @@ export const QUERY_KEYS = {
   nodeInfo: 'nodeInfo',
   connectorList: 'connectorList',
   currentConnector: 'currentConnector',
+  currentNetwork: 'currentNetwork',
 };
 
 export const MUTATION_KEYS = {
   connect: 'connect',
+  addAssets: 'addAssets',
+  addNetwork: 'addNetwork',
 };

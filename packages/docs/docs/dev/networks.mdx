@@ -5,39 +5,44 @@ category: For Developers
 
 # Networks
 
-## Get the Current Network
+## Add custom networks
 
-To detect the current network the user's wallet is connected to, use the `network()` method on the `window.fuel` object.
+You can add new networks to the user's wallet by calling the `addNetwork()` method.
 
-<CodeImport file="../../examples/Network.tsx" />
-
-<Examples.Network />
-
-## Adding custom Network
-
-To add custom Network, use the `wallet.addNetwork` method and pass in the `Network` you want to add.
-
-<CodeImport file="../../examples/AddNetwork.tsx" commentBlock="addNetwork" />
-
+<CodeImport
+  file="../../examples/networks/AddNetwork.tsx"
+  commentBlock="addNetwork"
+/>
 <Examples.AddNetwork />
 
-## Listening for Network Changes
+## Get current network
 
-To listen to network events, you can use the `fuel.events.network` event.
+To retrieve the current network of the user, you can use the `currentNetwork()` method.
 
-<CodeImport file="../../examples/events/Network.tsx" commentBlock="network" />
-
-Switch the network in your wallet to see the event triggered.
-
-<Examples.Events.Network />
+<CodeImport
+  file="../../examples/networks/CurrentNetwork.tsx"
+  commentBlock="currentNetwork"
+/>
+<Examples.CurrentNetwork />
 
 ## With React
 
-In a react app you can use the `useChain` hook as shown below to get information about the current chain.
+### Add custom networks
 
-```tsx
-import { useChain } from '@fuel-wallet/react';
-// ...
-const { chain } = useChain();
-console.log(chain.name);
-```
+You can add new networks to the user's wallet by calling the `addNetwork()` method.
+
+<CodeImport
+  file="../../examples/networks/hooks/AddNetworkHook.tsx"
+  commentBlock="useAddNetwork"
+/>
+<Examples.AddNetworkHook />
+
+### Current network
+
+You can track the current network of the user by using the `currentNetwork()` method.
+
+<CodeImport
+  file="../../examples/networks/hooks/CurrentNetworkHook.tsx"
+  commentBlock="useNetwork"
+/>
+<Examples.CurrentNetworkHook />

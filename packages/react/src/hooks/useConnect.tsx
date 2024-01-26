@@ -1,23 +1,22 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { useFuel } from '../components';
-import { CONNECTOR_KEY } from '../config';
+import { useFuel } from '../providers';
 
 export const useConnect = () => {
   const { fuel } = useFuel();
 
-  const { mutateAsync, ...mutateProps } = useMutation({
-    mutationFn: async (connectorName?: string) => {
+  const { mutate, mutateAsync, ...mutateProps } = useMutation({
+    mutationFn: async (connectorName?: string | null) => {
       if (connectorName) {
-        localStorage.setItem(CONNECTOR_KEY, connectorName);
-        await fuel?.selectConnector(connectorName);
+        await fuel.selectConnector(connectorName);
       }
-      return fuel?.connect();
+      return fuel.connect();
     },
   });
 
   return {
-    connect: mutateAsync,
+    connect: (connectorName?: string | null) => mutate(connectorName),
+    connectAsync: (connectorName?: string | null) => mutateAsync(connectorName),
     ...mutateProps,
   };
 };

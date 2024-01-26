@@ -1,4 +1,4 @@
-import { BaseConnection, createUUID } from '@fuel-wallet/sdk';
+import { BaseConnection, createUUID } from '@fuel-wallet/connections';
 import type {
   CommunicationEventArg,
   CommunicationMessage,

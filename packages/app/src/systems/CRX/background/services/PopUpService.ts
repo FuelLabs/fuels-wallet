@@ -1,5 +1,5 @@
-import type { DeferPromise } from '@fuel-wallet/sdk';
 import { deferPromise } from '@fuel-wallet/sdk';
+import type { DeferPromise } from '@fuel-wallet/sdk';
 import { POPUP_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
 import type { ResponseMessage, UIEventMessage } from '@fuel-wallet/types';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
@@ -83,7 +83,7 @@ export class PopUpService {
   }
 
   onUIEvent = (message: UIEventMessage) => {
-    if (this.session === message.session && message.ready) {
+    if (this.session === message.session && message.ready && message.sender) {
       const tab = getTabFromSender(message.sender);
       this.tab = tab!;
       this.tabId = tab!.id!;

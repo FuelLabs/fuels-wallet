@@ -1,10 +1,10 @@
-import { createUUID } from '@fuel-wallet/sdk';
+import { createUUID } from '@fuel-wallet/connections';
 import type {
   Account,
   Vault,
   Connection,
-  Network,
-  Asset,
+  NetworkData,
+  AssetData,
   AbiTable,
   FuelWalletError,
 } from '@fuel-wallet/types';
@@ -17,10 +17,10 @@ import type { Transaction } from '~/systems/Transaction/types';
 export class FuelDB extends Dexie {
   vaults!: Table<Vault, string>;
   accounts!: Table<Account, string>;
-  networks!: Table<Network, string>;
+  networks!: Table<NetworkData, string>;
   connections!: Table<Connection, string>;
   transactions!: Table<Transaction, string>;
-  assets!: Table<Asset, string>;
+  assets!: Table<AssetData, string>;
   abis!: Table<AbiTable, string>;
   errors!: Table<FuelWalletError, string>;
 

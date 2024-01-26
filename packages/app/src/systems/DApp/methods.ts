@@ -1,4 +1,4 @@
-import { ExtensionPageConnection } from '@fuel-wallet/sdk';
+import { ExtensionPageConnection } from '@fuel-wallet/connections';
 import { transactionRequestify } from 'fuels';
 import { IS_CRX } from '~/config';
 import { Services, store } from '~/store';

@@ -1,4 +1,4 @@
-import type { Asset } from '@fuel-wallet/types';
+import type { AssetData } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import type { AssetInputs } from '~/systems/Asset';
@@ -6,7 +6,7 @@ import { AssetService } from '~/systems/Asset';
 import { assignErrorMessage, FetchMachine } from '~/systems/Core';
 
 type MachineContext = {
-  assets?: Asset[];
+  assets?: AssetData[];
   origin?: string;
   title?: string;
   favIconUrl?: string;
@@ -18,14 +18,14 @@ type MachineServices = {
     data: boolean;
   };
   filterAssets: {
-    data: Asset[];
+    data: AssetData[];
   };
 };
 
 export type AddAssetInputs = {
   start: {
     origin: string;
-    assets: Asset[];
+    assets: AssetData[];
     favIconUrl?: string;
     title?: string;
   };
