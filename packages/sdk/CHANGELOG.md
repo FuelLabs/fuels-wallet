@@ -1,5 +1,22 @@
 # @fuel-wallet/sdk
 
+## 0.15.0
+
+### Minor Changes
+
+- [#1032](https://github.com/FuelLabs/fuels-wallet/pull/1032) [`fdfa7d7`](https://github.com/FuelLabs/fuels-wallet/commit/fdfa7d7c74608071c41b1a36a44d42a49c13ee97) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: add hooks `useAddAssets`, `useAddNetwork`, `useAssets` and `useNetwork`.
+  feat: improve hooks `useWallet` `useConnect` and `useAccounts`.
+  feat: remove `FuelConnectorProvider` and consolidate into `FuelProvider`.
+
+- [#1032](https://github.com/FuelLabs/fuels-wallet/pull/1032) [`fdfa7d7`](https://github.com/FuelLabs/fuels-wallet/commit/fdfa7d7c74608071c41b1a36a44d42a49c13ee97) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: update sdk for the new connectors standard.
+
+- [#1032](https://github.com/FuelLabs/fuels-wallet/pull/1032) [`fdfa7d7`](https://github.com/FuelLabs/fuels-wallet/commit/fdfa7d7c74608071c41b1a36a44d42a49c13ee97) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: remove fuel-ui from connectors ui and update to the new connectors api.
+
+### Patch Changes
+
+- Updated dependencies [[`fdfa7d7`](https://github.com/FuelLabs/fuels-wallet/commit/fdfa7d7c74608071c41b1a36a44d42a49c13ee97), [`fdfa7d7`](https://github.com/FuelLabs/fuels-wallet/commit/fdfa7d7c74608071c41b1a36a44d42a49c13ee97)]:
+  - @fuel-wallet/types@0.15.0
+
 ## 0.14.3
 
 ### Patch Changes
