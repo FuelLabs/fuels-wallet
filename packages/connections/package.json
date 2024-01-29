@@ -35,7 +35,7 @@
     "uuid": "^9.0.1"
   },
   "peerDependencies": {
-    "fuels": "0.72.0"
+    "fuels": ">=0.72.0"
   },
   "devDependencies": {
     "@fuel-ts/wallet": "0.72.0",
