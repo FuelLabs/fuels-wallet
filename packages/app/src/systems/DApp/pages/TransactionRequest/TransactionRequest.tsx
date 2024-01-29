@@ -27,16 +27,13 @@ export function TransactionRequest() {
         headerText="Requesting a transaction from:"
       />
       {txResult?.status === TransactionStatus.failure ? (
-        <Alert status="error" css={styles.alert}>
+        <Alert hideIcon status="error" css={styles.alert}>
           <Alert.Title>
             Simulating your transaction resulted in an error
           </Alert.Title>
           <Alert.Description>
-            {`Carefully check if all the details in your transaction are correct. ${
-              txResult?.operations.length
-                ? `Operations: ${txResult?.operations}`
-                : ''
-            }`}
+            {/* TODO: add a reason for the transaction failing if the sdk ever supports it */}
+            The transaction will fail to run.
           </Alert.Description>
         </Alert>
       ) : (
