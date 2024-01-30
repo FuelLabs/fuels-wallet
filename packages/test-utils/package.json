@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "adm-zip": "^0.5.10",
-    "fuels": "0.71.1"
+    "fuels": "0.72.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.39.0",

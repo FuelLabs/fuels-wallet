@@ -31,7 +31,7 @@
     "ts:check": "pnpm tsc --noEmit"
   },
   "peerDependencies": {
-    "fuels": ">=0.71.1",
+    "fuels": ">=0.72.0",
     "react": "^18.2.0"
   },
   "dependencies": {
@@ -43,7 +43,7 @@
     "@fuel-wallet/sdk": "workspace:*",
     "styled-components": "^6.1.1",
     "compare-versions": "^6.1.0",
-    "fuels": "0.71.1",
+    "fuels": "0.72.0",
     "tsup": "^7.2.0"
   }
 }
