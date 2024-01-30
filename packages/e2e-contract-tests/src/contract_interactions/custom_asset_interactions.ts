@@ -171,3 +171,21 @@ export const depositAndMintMultiCall = async ({
     toast.success('Transaction successful.');
   }
 };
+
+export const panicTx = async ({ wallet }: { wallet: FuelWalletLocked }) => {
+  const contract = CustomAssetAbi__factory.connect(MAIN_CONTRACT_ID, wallet);
+  try {
+    await contract.functions.panic_tx().txParams(TX_PARAMS).call();
+  } catch (err) {
+    toast.error((err as Error).message);
+  }
+};
+
+export const revertTx = async ({ wallet }: { wallet: FuelWalletLocked }) => {
+  const contract = CustomAssetAbi__factory.connect(MAIN_CONTRACT_ID, wallet);
+  try {
+    await contract.functions.revert_tx().txParams(TX_PARAMS).call();
+  } catch (err) {
+    toast.error((err as Error).message);
+  }
+};

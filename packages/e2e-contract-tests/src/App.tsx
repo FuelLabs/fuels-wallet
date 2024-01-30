@@ -4,6 +4,7 @@ import {
   ForwardEthCard,
   Header,
   MintAssetCard,
+  RevertCard,
   Providers,
   DepositHalfEthCard,
   ForwardCustomAssetCard,
@@ -28,6 +29,7 @@ function App() {
         <ForwardHalfAndMintCard />
         <DepositAndMintMultiCalls />
         <AssetConfigurationCard />
+        <RevertCard />
       </div>
       <Toaster />
     </Providers>

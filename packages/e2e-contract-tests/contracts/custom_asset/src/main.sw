@@ -12,6 +12,7 @@ use token::{
         _total_supply,
     }
 };
+use std::{tx::tx_witness_data};
 
 use src20::SRC20;
 use src3::SRC3;
@@ -88,9 +89,21 @@ abi CustomBehavior {
     #[storage(read, write)]
     #[payable]
     fn deposit_half_and_mint_from_external_contract(recipient: Identity, sub_id: SubId, amount: u64, contract_id: ContractId) -> u64;
+
+    fn revert_tx();
+    fn panic_tx();
 }
 
 impl CustomBehavior for Contract {
+    fn revert_tx() {
+      let signature = tx_witness_data::<b256>(100);
+      log(signature);
+    }
+
+    fn panic_tx() {
+      revert(1);
+    }
+
     #[storage(read, write)]
     #[payable]
     fn deposit() -> u64 {
