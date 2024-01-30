@@ -475,14 +475,34 @@ const _abi = {
       },
       attributes: [
         {
-          name: 'storage',
-          arguments: ['read', 'write'],
-        },
-        {
           name: 'payable',
           arguments: [],
         },
+        {
+          name: 'storage',
+          arguments: ['read', 'write'],
+        },
       ],
+    },
+    {
+      inputs: [],
+      name: 'panic_tx',
+      output: {
+        name: '',
+        type: 0,
+        typeArguments: null,
+      },
+      attributes: null,
+    },
+    {
+      inputs: [],
+      name: 'revert_tx',
+      output: {
+        name: '',
+        type: 0,
+        typeArguments: null,
+      },
+      attributes: null,
     },
   ],
   loggedTypes: [
@@ -492,6 +512,14 @@ const _abi = {
         name: '',
         type: 2,
         typeArguments: [],
+      },
+    },
+    {
+      logId: 1,
+      loggedType: {
+        name: '',
+        type: 1,
+        typeArguments: null,
       },
     },
   ],
