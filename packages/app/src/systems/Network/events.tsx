@@ -1,4 +1,4 @@
-import type { Network } from '@fuel-wallet/types';
+import type { NetworkData } from '@fuel-wallet/types';
 import type { Store } from '~/store';
 import { Services } from '~/store';
 
@@ -24,13 +24,13 @@ export function networkEvents(store: Store) {
         input,
       });
     },
-    removeNetwork(network: Network) {
+    removeNetwork(network: NetworkData) {
       store.send(Services.networks, {
         type: 'REMOVE_NETWORK',
         input: { id: network.id! },
       });
     },
-    selectNetwork(network: Network) {
+    selectNetwork(network: NetworkData) {
       store.send(Services.networks, {
         type: 'SELECT_NETWORK',
         input: { id: network.id! },

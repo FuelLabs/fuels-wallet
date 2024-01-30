@@ -4,7 +4,7 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.70.0
+  Fuels version: 0.71.1
   Forc version: 0.48.1
   Fuel-Core version: 0.22.0
 */
@@ -61,6 +61,8 @@ interface CustomAssetAbiInterface extends Interface {
     deposit_half: FunctionFragment;
     deposit_half_and_mint: FunctionFragment;
     deposit_half_and_mint_from_external_contract: FunctionFragment;
+    panic_tx: FunctionFragment;
+    revert_tx: FunctionFragment;
   };
 
   encodeFunctionData(
@@ -98,6 +100,8 @@ interface CustomAssetAbiInterface extends Interface {
     functionFragment: 'deposit_half_and_mint_from_external_contract',
     values: [IdentityInput, string, BigNumberish, ContractIdInput]
   ): Uint8Array;
+  encodeFunctionData(functionFragment: 'panic_tx', values: []): Uint8Array;
+  encodeFunctionData(functionFragment: 'revert_tx', values: []): Uint8Array;
 
   decodeFunctionData(
     functionFragment: 'decimals',
@@ -131,6 +135,14 @@ interface CustomAssetAbiInterface extends Interface {
     functionFragment: 'deposit_half_and_mint_from_external_contract',
     data: BytesLike
   ): DecodedValue;
+  decodeFunctionData(
+    functionFragment: 'panic_tx',
+    data: BytesLike
+  ): DecodedValue;
+  decodeFunctionData(
+    functionFragment: 'revert_tx',
+    data: BytesLike
+  ): DecodedValue;
 }
 
 export class CustomAssetAbi extends Contract {
@@ -161,5 +173,7 @@ export class CustomAssetAbi extends Contract {
       ],
       BN
     >;
+    panic_tx: InvokeFunction<[], void>;
+    revert_tx: InvokeFunction<[], void>;
   };
 }

@@ -23,7 +23,7 @@ test.describe('Forward and Mint Multicall', () => {
     }));
   });
 
-  test('e2e foreward and mint multicall', async ({ page }) => {
+  test('e2e forward and mint multicall', async ({ page }) => {
     await connect(page, fuelWalletTestHelper);
 
     const depositAmount = '1.000';

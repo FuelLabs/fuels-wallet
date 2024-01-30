@@ -323,6 +323,10 @@ export const transactionRequestMachine = createMachine(
           // screen doesn't flash between states
           await delay(600);
           const { txResult } = await TxService.simulateTransaction(input);
+          if (txResult.isStatusFailure) {
+            // TODO: add reason for error failure if the sdk supports it
+            throw new Error(`The transaction will fail to run.`);
+          }
           return { txResult };
         },
       }),

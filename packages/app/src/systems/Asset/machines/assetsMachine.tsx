@@ -1,5 +1,5 @@
 import { toast } from '@fuel-ui/react';
-import type { Asset } from '@fuel-wallet/types';
+import type { AssetData } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { FetchMachine, fuelAssets } from '~/systems/Core';
@@ -15,12 +15,12 @@ export enum AssetsStatus {
 }
 
 export type MachineContext = {
-  assets?: Asset[];
+  assets?: AssetData[];
 };
 
 type MachineServices = {
   fetchAssets: {
-    data: Asset[];
+    data: AssetData[];
   };
   addAsset: {
     data: boolean;

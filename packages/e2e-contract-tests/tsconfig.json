@@ -5,7 +5,7 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "rootDir": ".",
-    "types": ["@fuel-wallet/sdk", "chrome"]
+    "types": ["chrome"]
   },
   "include": ["./src"],
   "references": [{ "path": "./tsconfig.node.json" }]

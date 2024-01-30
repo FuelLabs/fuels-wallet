@@ -1,5 +1,74 @@
 # fuels-wallet
 
+## 0.15.0
+
+### Minor Changes
+
+- [#1032](https://github.com/FuelLabs/fuels-wallet/pull/1032) [`fdfa7d7`](https://github.com/FuelLabs/fuels-wallet/commit/fdfa7d7c74608071c41b1a36a44d42a49c13ee97) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: update sdk for the new connectors standard.
+
+- [#1032](https://github.com/FuelLabs/fuels-wallet/pull/1032) [`fdfa7d7`](https://github.com/FuelLabs/fuels-wallet/commit/fdfa7d7c74608071c41b1a36a44d42a49c13ee97) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: remove fuel-ui from connectors ui and update to the new connectors api.
+
+### Patch Changes
+
+- Updated dependencies [[`fdfa7d7`](https://github.com/FuelLabs/fuels-wallet/commit/fdfa7d7c74608071c41b1a36a44d42a49c13ee97), [`fdfa7d7`](https://github.com/FuelLabs/fuels-wallet/commit/fdfa7d7c74608071c41b1a36a44d42a49c13ee97), [`fdfa7d7`](https://github.com/FuelLabs/fuels-wallet/commit/fdfa7d7c74608071c41b1a36a44d42a49c13ee97)]:
+  - @fuel-wallet/sdk@0.15.0
+  - @fuel-wallet/connections@0.15.0
+  - @fuel-wallet/types@0.15.0
+
+## 0.14.3
+
+### Patch Changes
+
+- [#1051](https://github.com/FuelLabs/fuels-wallet/pull/1051) [`f8b1af1`](https://github.com/FuelLabs/fuels-wallet/commit/f8b1af1ee15380e181fd052b7b0f685503ca7143) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: avoid dynamic dom manipulation by translators
+
+- [#1054](https://github.com/FuelLabs/fuels-wallet/pull/1054) [`3cc184d`](https://github.com/FuelLabs/fuels-wallet/commit/3cc184d338f91af3ea2e9b99365b453010886e5e) Thanks [@matt-user](https://github.com/matt-user)! - refactor fuel assets to use npm assets package
+
+- [#1056](https://github.com/FuelLabs/fuels-wallet/pull/1056) [`5ddd586`](https://github.com/FuelLabs/fuels-wallet/commit/5ddd5863403c4169221dd6fa942b89f29f29c81d) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: auto upgrade database
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.14.3
+  - @fuel-wallet/types@0.14.3
+
+## 0.14.2
+
+### Patch Changes
+
+- [#1045](https://github.com/FuelLabs/fuels-wallet/pull/1045) [`f5d512e`](https://github.com/FuelLabs/fuels-wallet/commit/f5d512ee50fa774465ffe335b074b9c556ee1121) Thanks [@matt-user](https://github.com/matt-user)! - Check supported network version when adding network
+
+- [#1043](https://github.com/FuelLabs/fuels-wallet/pull/1043) [`1bf46d6`](https://github.com/FuelLabs/fuels-wallet/commit/1bf46d63ec2ffa3d571a1bc0350955ca2b54f645) Thanks [@matt-user](https://github.com/matt-user)! - Throw an error when asset name is undefined
+
+- [#1048](https://github.com/FuelLabs/fuels-wallet/pull/1048) [`f010e4e`](https://github.com/FuelLabs/fuels-wallet/commit/f010e4ec21c32120cc464d27b31d3eb6b044754e) Thanks [@luizstacio](https://github.com/luizstacio)! - Update fuel-ui pacakge
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.14.2
+  - @fuel-wallet/types@0.14.2
+
+## 0.14.1
+
+### Patch Changes
+
+- [#1041](https://github.com/FuelLabs/fuels-wallet/pull/1041) [`4c222bf`](https://github.com/FuelLabs/fuels-wallet/commit/4c222bf16b4626a8ec11cc14bce6a19d8649cbd4) Thanks [@luizstacio](https://github.com/luizstacio)! - Update fuels to version 0.71.1
+
+- Updated dependencies [[`4c222bf`](https://github.com/FuelLabs/fuels-wallet/commit/4c222bf16b4626a8ec11cc14bce6a19d8649cbd4)]:
+  - @fuel-wallet/types@0.14.1
+  - @fuel-wallet/sdk@0.14.1
+
+## 0.14.0
+
+### Minor Changes
+
+- [#990](https://github.com/FuelLabs/fuels-wallet/pull/990) [`9458253`](https://github.com/FuelLabs/fuels-wallet/commit/94582534fb7303d88ef2523c54ae3d336ab693a8) Thanks [@luizstacio](https://github.com/luizstacio)! - Update wallet to beta-5
+
+- [#996](https://github.com/FuelLabs/fuels-wallet/pull/996) [`91dc3b9`](https://github.com/FuelLabs/fuels-wallet/commit/91dc3b96b4dac04a832e1ae8fb55fda641fb6803) Thanks [@richardgreg](https://github.com/richardgreg)! - Changed the text for "Add from private key" to "Import from private key."
+
+### Patch Changes
+
+- [#1034](https://github.com/FuelLabs/fuels-wallet/pull/1034) [`020dc09`](https://github.com/FuelLabs/fuels-wallet/commit/020dc09150dbc67b3b8274365162edf29542082d) Thanks [@luizstacio](https://github.com/luizstacio)! - Clean assets from database when reseting wallet
+
+- Updated dependencies [[`9458253`](https://github.com/FuelLabs/fuels-wallet/commit/94582534fb7303d88ef2523c54ae3d336ab693a8)]:
+  - @fuel-wallet/types@0.14.0
+  - @fuel-wallet/sdk@0.14.0
+
 ## 0.13.11
 
 ### Patch Changes

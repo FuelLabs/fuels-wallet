@@ -1,5 +1,5 @@
-import type { FuelWalletError } from '@fuel-wallet/sdk';
-import { createUUID } from '@fuel-wallet/sdk';
+import { createUUID } from '@fuel-wallet/connections';
+import type { FuelWalletError } from '@fuel-wallet/types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function parseFuelError(error: any): FuelWalletError {

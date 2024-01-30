@@ -361,7 +361,7 @@ export class BackgroundService {
     serverParams: EventOrigin
   ) {
     const { network } = input;
-    await NetworkService.assertAddNetwork({ data: network });
+    await NetworkService.validateAddNetwork({ data: network });
 
     const origin = serverParams.origin;
     const title = serverParams.title;

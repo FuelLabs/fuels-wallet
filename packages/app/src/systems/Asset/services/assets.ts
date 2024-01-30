@@ -1,21 +1,21 @@
-import type { Asset } from '@fuel-wallet/types';
+import type { AssetData } from '@fuel-wallet/types';
 import { isB256 } from 'fuels';
 import { db } from '~/systems/Core/utils/database';
 import { getUniqueString } from '~/systems/Core/utils/string';
 
 export type AssetInputs = {
   upsertAsset: {
-    data: Asset;
+    data: AssetData;
   };
   updateAsset: {
     id: string;
-    data: Partial<Asset>;
+    data: Partial<AssetData>;
   };
   addAsset: {
-    data: Asset;
+    data: AssetData;
   };
   addAssets: {
-    data: Asset[];
+    data: AssetData[];
   };
   removeAsset: {
     assetId: string;
@@ -96,14 +96,14 @@ export class AssetService {
     });
   }
 
-  static async getAssetsByFilter(filterFn: (asset: Asset) => boolean) {
+  static async getAssetsByFilter(filterFn: (asset: AssetData) => boolean) {
     return db.transaction('r', db.assets, async () => {
       const assets = db.assets.filter(filterFn).toArray();
       return assets;
     });
   }
 
-  static async validateAddAssets(assets: Asset[]) {
+  static async validateAddAssets(assets: AssetData[]) {
     // first validate has basic input
     if (!assets.length) {
       throw new Error('No assets to add');
@@ -117,6 +117,14 @@ export class AssetService {
       symbol: a.symbol?.trim(),
       imageUrl: a.imageUrl?.trim(),
     }));
+
+    // validate that all of the names are defined and not empty and not just consisting of spaces
+    const someNameUndefined = trimmedAssets.some((asset) => {
+      return !asset.name;
+    });
+    if (someNameUndefined) {
+      throw new Error('Asset.name is invalid');
+    }
 
     // validate if any assetId is wrong (not isB256)
     const invalidAssetId = trimmedAssets.find((a) => !isB256(a.assetId));
@@ -175,7 +183,7 @@ export class AssetService {
     return { assetsToAdd };
   }
 
-  static async avoidRepeatedFields(assets: Asset[]) {
+  static async avoidRepeatedFields(assets: AssetData[]) {
     const allAssets = await AssetService.getAssets();
     const allNameValues = allAssets.map((a) => a.name);
     const allSymbolValues = allAssets.map((a) => a.symbol);
@@ -195,7 +203,7 @@ export class AssetService {
 
         return [...assets, { ...asset, name, symbol, isCustom: true }];
       },
-      Promise.resolve([] as Asset[])
+      Promise.resolve([] as AssetData[])
     );
 
     return assetsNotRepeated;

@@ -1,4 +1,4 @@
-export type Network = {
+export type NetworkData = {
   id?: string;
   name: string;
   url: string;

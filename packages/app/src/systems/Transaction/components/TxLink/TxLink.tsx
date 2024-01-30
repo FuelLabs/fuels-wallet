@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Link } from '@fuel-ui/react';
-import { getBlockExplorerLink } from '@fuel-wallet/sdk';
+import { buildBlockExplorerUrl } from 'fuels';
 
 export type TxLinkProps = {
   txHash?: string;
@@ -12,8 +12,8 @@ export function TxLink({ txHash, providerUrl }: TxLinkProps) {
     <Link
       css={styles.root}
       isExternal
-      href={getBlockExplorerLink({
-        path: `/transaction/${txHash}`,
+      href={buildBlockExplorerUrl({
+        txId: txHash,
         providerUrl,
       })}
     >

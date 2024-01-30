@@ -1,4 +1,3 @@
-/// <reference types="@fuel-wallet/sdk/dist" />
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote';
 
 export type DocType = {

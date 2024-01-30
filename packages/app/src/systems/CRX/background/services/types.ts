@@ -1,8 +1,8 @@
 import type {
   AbiMap,
-  Asset,
+  AssetData,
   FuelProviderConfig,
-  Network,
+  NetworkData,
 } from '@fuel-wallet/types';
 
 export type MessageInputs = {
@@ -21,11 +21,8 @@ export type MessageInputs = {
     provider: FuelProviderConfig;
     transaction: string;
   };
-  addAsset: {
-    asset: Asset;
-  };
   addAssets: {
-    assets: Asset[];
+    assets: AssetData[];
     origin: string;
     title?: string;
     favIconUrl?: string;
@@ -43,7 +40,7 @@ export type MessageInputs = {
     contractId: string;
   };
   addNetwork: {
-    network: Network;
+    network: NetworkData;
     origin: string;
     title?: string;
     favIconUrl?: string;

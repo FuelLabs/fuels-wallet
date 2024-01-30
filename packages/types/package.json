@@ -1,17 +1,35 @@
 {
   "name": "@fuel-wallet/types",
-  "version": "0.13.11",
+  "version": "0.15.0",
   "license": "Apache-2.0",
   "main": "src/index.ts",
+  "publishConfig": {
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "typings": "dist/index.d.ts",
+    "exports": {
+      ".": {
+        "require": "./dist/index.js",
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      }
+    }
+  },
+  "scripts": {
+    "build": "pnpm ts:check && tsup",
+    "ts:check": "tsc --noEmit"
+  },
   "dependencies": {
-    "@types/chrome": "^0.0.246",
+    "@fuels/assets": "^0.1.1",
     "dexie-observable": "4.0.1-beta.13",
     "json-rpc-2.0": "^1.6.0"
   },
   "peerDependencies": {
-    "fuels": ">=0.71.0"
+    "fuels": ">=0.72.0"
   },
   "devDependencies": {
-    "fuels": "0.71.0"
+    "fuels": "0.72.0",
+    "tsup": "^7.2.0"
   }
 }

@@ -1,5 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Alert, Button } from '@fuel-ui/react';
+import { TransactionStatus } from 'fuels';
 import { useAssets } from '~/systems/Asset';
 import { Layout, ConnectInfo } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
@@ -25,12 +26,24 @@ export function TransactionRequest() {
         title={ctx.input.title}
         headerText="Requesting a transaction from:"
       />
-      <Alert status="warning" css={styles.alert}>
-        <Alert.Title>Confirm before approving</Alert.Title>
-        <Alert.Description>
-          Carefully check if all the details in your transaction are correct
-        </Alert.Description>
-      </Alert>
+      {txResult?.status === TransactionStatus.failure ? (
+        <Alert hideIcon status="error" css={styles.alert}>
+          <Alert.Title>
+            Simulating your transaction resulted in an error
+          </Alert.Title>
+          <Alert.Description>
+            {/* TODO: add a reason for the transaction failing if the sdk ever supports it */}
+            The transaction will fail to run.
+          </Alert.Description>
+        </Alert>
+      ) : (
+        <Alert status="warning" css={styles.alert}>
+          <Alert.Title>Confirm before approving</Alert.Title>
+          <Alert.Description>
+            Carefully check if all the details in your transaction are correct
+          </Alert.Description>
+        </Alert>
+      )}
     </>
   );
 
@@ -91,6 +104,7 @@ export function TransactionRequest() {
               intent="primary"
               onPress={handlers.approve}
               isLoading={ctx.isLoading || status('sending')}
+              isDisabled={txResult?.status === TransactionStatus.failure}
             >
               Approve
             </Button>

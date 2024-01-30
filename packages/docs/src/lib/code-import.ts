@@ -13,6 +13,7 @@ import { visit } from 'unist-util-visit';
 const PACKAGE_FOLDER = 'packages';
 const COMMENT_BLOCK_START = '/* example:start */';
 const COMMENT_BLOCK_END = '/* example:end */';
+const COMMENT_IGNORE_LINE = '// ignore-line';
 
 function toAST(content: string) {
   // Acorn Loose is a parser that is tolerant to errors
@@ -44,7 +45,9 @@ function extractLines(
 }
 
 function extractCommentBlock(content: string, commentBlock?: string) {
-  const lines = content.split(EOL);
+  const lines = content
+    .split(EOL)
+    .filter((l) => !l.endsWith(COMMENT_IGNORE_LINE));
   const commentStart = commentBlock
     ? COMMENT_BLOCK_START.replace('example', commentBlock)
     : COMMENT_BLOCK_START;

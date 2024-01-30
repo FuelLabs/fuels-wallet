@@ -5,6 +5,7 @@ services:
     platform: linux/amd64
     container_name: '${PROJECT:-fuel-node}_fuel-core'
     environment:
+      NETWORK_NAME: '${PROJECT} local'
       MIN_GAS_PRICE: ${MIN_GAS_PRICE}
       # This is the private key of the consensus.PoA.signing_key in the chainConfig.json
       # this key is responsible for validating the transactions

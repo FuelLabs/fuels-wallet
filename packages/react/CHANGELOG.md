@@ -1,5 +1,57 @@
 # @fuel-wallet/react
 
+## 0.15.0
+
+### Minor Changes
+
+- [#1032](https://github.com/FuelLabs/fuels-wallet/pull/1032) [`fdfa7d7`](https://github.com/FuelLabs/fuels-wallet/commit/fdfa7d7c74608071c41b1a36a44d42a49c13ee97) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: update sdk for the new connectors standard.
+
+- [#1032](https://github.com/FuelLabs/fuels-wallet/pull/1032) [`fdfa7d7`](https://github.com/FuelLabs/fuels-wallet/commit/fdfa7d7c74608071c41b1a36a44d42a49c13ee97) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: remove fuel-ui from connectors ui and update to the new connectors api.
+
+### Patch Changes
+
+- [#1032](https://github.com/FuelLabs/fuels-wallet/pull/1032) [`fdfa7d7`](https://github.com/FuelLabs/fuels-wallet/commit/fdfa7d7c74608071c41b1a36a44d42a49c13ee97) Thanks [@luizstacio](https://github.com/luizstacio)! - Feat support for image from connector metadata
+
+## 0.14.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.14.3
+  - @fuel-wallet/types@0.14.3
+
+## 0.14.2
+
+### Patch Changes
+
+- [#1048](https://github.com/FuelLabs/fuels-wallet/pull/1048) [`f010e4e`](https://github.com/FuelLabs/fuels-wallet/commit/f010e4ec21c32120cc464d27b31d3eb6b044754e) Thanks [@luizstacio](https://github.com/luizstacio)! - Update fuel-ui pacakge
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.14.2
+  - @fuel-wallet/types@0.14.2
+
+## 0.14.1
+
+### Patch Changes
+
+- [#1041](https://github.com/FuelLabs/fuels-wallet/pull/1041) [`4c222bf`](https://github.com/FuelLabs/fuels-wallet/commit/4c222bf16b4626a8ec11cc14bce6a19d8649cbd4) Thanks [@luizstacio](https://github.com/luizstacio)! - Update fuels to version 0.71.1
+
+- Updated dependencies [[`4c222bf`](https://github.com/FuelLabs/fuels-wallet/commit/4c222bf16b4626a8ec11cc14bce6a19d8649cbd4)]:
+  - @fuel-wallet/types@0.14.1
+  - @fuel-wallet/sdk@0.14.1
+
+## 0.14.0
+
+### Minor Changes
+
+- [#990](https://github.com/FuelLabs/fuels-wallet/pull/990) [`9458253`](https://github.com/FuelLabs/fuels-wallet/commit/94582534fb7303d88ef2523c54ae3d336ab693a8) Thanks [@luizstacio](https://github.com/luizstacio)! - Update wallet to beta-5
+
+### Patch Changes
+
+- Updated dependencies [[`9458253`](https://github.com/FuelLabs/fuels-wallet/commit/94582534fb7303d88ef2523c54ae3d336ab693a8)]:
+  - @fuel-wallet/types@0.14.0
+  - @fuel-wallet/sdk@0.14.0
+
 ## 0.13.11
 
 ### Patch Changes
