@@ -1,5 +1,14 @@
 # @fuel-wallet/sdk
 
+## 0.15.1
+
+### Patch Changes
+
+- [#1062](https://github.com/FuelLabs/fuels-wallet/pull/1062) [`b81704c`](https://github.com/FuelLabs/fuels-wallet/commit/b81704c6b2175444c4b4a815a6b5cd7618fcb139) Thanks [@arboleya](https://github.com/arboleya)! - chore: update fuels-ts to rc/salamander
+
+- Updated dependencies [[`b81704c`](https://github.com/FuelLabs/fuels-wallet/commit/b81704c6b2175444c4b4a815a6b5cd7618fcb139)]:
+  - @fuel-wallet/types@0.15.1
+
 ## 0.15.0
 
 ### Minor Changes
