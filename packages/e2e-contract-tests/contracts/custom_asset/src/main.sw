@@ -1,6 +1,6 @@
 contract;
 
-use token::{
+use asset::{
     mint::{
         _mint, _burn,
     },
@@ -22,7 +22,7 @@ use std::{
     hash::Hash,
     storage::storage_string::*,
     string::String,
-    token::transfer,
+    asset::transfer,
 };
 
 storage {
