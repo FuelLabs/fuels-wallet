@@ -1,5 +1,7 @@
 import { render, testA11y, screen, act, fireEvent } from '@fuel-ui/test-utils';
 import { TransactionStatus } from 'fuels';
+import { VITE_EXPLORER_URL } from '~/config';
+import { urlJoin } from '~/systems/Core';
 
 import {
   MOCK_TRANSACTION_CREATE,
@@ -82,11 +84,7 @@ describe('TxHeader', () => {
 
     await act(() => fireEvent.click(btn));
     expect(await navigator.clipboard.readText()).toBe(
-      `https://fuellabs.github.io/block-explorer-v2/transaction/${
-        MOCK_TRANSACTION_CREATE.id
-      }?providerUrl=${encodeURIComponent(
-        process.env.VITE_FUEL_PROVIDER_URL || ''
-      )}`
+      urlJoin(VITE_EXPLORER_URL, `tx/${MOCK_TRANSACTION_CREATE.id}`)
     );
   });
 
