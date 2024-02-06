@@ -4,8 +4,8 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.71.1
-  Forc version: 0.48.1
+  Fuels version: 0.73.0
+  Forc version: 0.49.2
   Fuel-Core version: 0.22.0
 */
 
@@ -42,7 +42,7 @@ const _abi = {
       type: 'enum BurnError',
       components: [
         {
-          name: 'NotEnoughTokens',
+          name: 'NotEnoughCoins',
           type: 0,
           typeArguments: null,
         },
@@ -381,12 +381,12 @@ const _abi = {
       },
       attributes: [
         {
-          name: 'storage',
-          arguments: ['read', 'write'],
-        },
-        {
           name: 'payable',
           arguments: [],
+        },
+        {
+          name: 'storage',
+          arguments: ['read', 'write'],
         },
       ],
     },

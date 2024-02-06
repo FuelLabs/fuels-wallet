@@ -4,8 +4,8 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.71.1
-  Forc version: 0.48.1
+  Fuels version: 0.73.0
+  Forc version: 0.49.2
   Fuel-Core version: 0.22.0
 */
 
@@ -25,10 +25,10 @@ import type {
 import type { Option, Enum } from './common';
 
 export enum BurnErrorInput {
-  NotEnoughTokens = 'NotEnoughTokens',
+  NotEnoughCoins = 'NotEnoughCoins',
 }
 export enum BurnErrorOutput {
-  NotEnoughTokens = 'NotEnoughTokens',
+  NotEnoughCoins = 'NotEnoughCoins',
 }
 export type IdentityInput = Enum<{
   Address: AddressInput;

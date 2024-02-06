@@ -10,6 +10,9 @@ import { localStorageMock } from './src/mocks/localStorage';
 (global as any).Uint8Array = Uint8Array;
 (global as any).structuredClone = (val: any) => JSON.parse(JSON.stringify(val));
 
+// https://github.com/jsdom/jsdom/issues/1724#issuecomment-720727999
+import 'whatwg-fetch';
+
 const noop = () => {};
 Object.defineProperty(window, 'scrollTo', { value: noop, writable: true });
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });

@@ -14,7 +14,7 @@
     "@fuel-wallet/react": "workspace:*",
     "@fuel-wallet/sdk": "workspace:*",
     "@fuel-wallet/types": "workspace:*",
-    "fuels": "0.71.1",
+    "fuels": "0.73.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.11",
