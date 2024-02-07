@@ -1,5 +1,14 @@
 # @fuel-wallet/sdk
 
+## 0.15.2
+
+### Patch Changes
+
+- [#1074](https://github.com/FuelLabs/fuels-wallet/pull/1074) [`cbd64ae`](https://github.com/FuelLabs/fuels-wallet/commit/cbd64ae5b433ee7964e934a016765db5d7756196) Thanks [@matt-user](https://github.com/matt-user)! - Update the fuels dependency to 0.73.0
+
+- Updated dependencies [[`cbd64ae`](https://github.com/FuelLabs/fuels-wallet/commit/cbd64ae5b433ee7964e934a016765db5d7756196)]:
+  - @fuel-wallet/types@0.15.2
+
 ## 0.15.1
 
 ### Patch Changes

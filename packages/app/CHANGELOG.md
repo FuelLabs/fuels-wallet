@@ -1,5 +1,18 @@
 # fuels-wallet
 
+## 0.15.2
+
+### Patch Changes
+
+- [#1077](https://github.com/FuelLabs/fuels-wallet/pull/1077) [`0531ab8`](https://github.com/FuelLabs/fuels-wallet/commit/0531ab82009715db695628522958e9751bf3b134) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: add new explorer link for default network
+
+- [#1074](https://github.com/FuelLabs/fuels-wallet/pull/1074) [`cbd64ae`](https://github.com/FuelLabs/fuels-wallet/commit/cbd64ae5b433ee7964e934a016765db5d7756196) Thanks [@matt-user](https://github.com/matt-user)! - Update the fuels dependency to 0.73.0
+
+- Updated dependencies [[`cbd64ae`](https://github.com/FuelLabs/fuels-wallet/commit/cbd64ae5b433ee7964e934a016765db5d7756196)]:
+  - @fuel-wallet/connections@0.15.2
+  - @fuel-wallet/types@0.15.2
+  - @fuel-wallet/sdk@0.15.2
+
 ## 0.15.1
 
 ### Patch Changes
