@@ -1,3 +1,4 @@
+import { resolver } from '@fuel-domains/sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BigNumberish } from 'fuels';
@@ -13,8 +14,8 @@ import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import { type TxInputs } from '~/systems/Transaction/services';
 
-import { sendMachine } from '../machines/sendMachine';
 import type { SendMachineState } from '../machines/sendMachine';
+import { sendMachine } from '../machines/sendMachine';
 
 export enum SendStatus {
   loading = 'loading',
@@ -168,6 +169,7 @@ export function useSend() {
   function cancel() {
     service.send('BACK');
   }
+
   function submit() {
     const asset = assets.find(
       ({ assetId }) => assetId === form.getValues('asset')
@@ -182,9 +184,11 @@ export function useSend() {
     } as TxInputs['isValidTransaction'];
     service.send('CONFIRM', { input });
   }
+
   function goHome() {
     navigate(Pages.index());
   }
+
   function tryAgain() {
     txRequest.handlers.tryAgain();
   }
@@ -208,6 +212,22 @@ export function useSend() {
     form.trigger('amount');
   }
 
+  async function handleResolveNameOrAddress(addressOrName: string) {
+    debugger;
+    const isDomain = addressOrName.includes('.fuel');
+
+    if (isDomain) {
+      // TODO: Change to use current network
+      const domain = await resolver({
+        providerURL: 'https://beta-5.fuel.network/graphql',
+        domain: addressOrName.replace('.fuel', ''),
+      });
+
+      // eslint-disable-next-line no-console
+      console.log(domain);
+    }
+  }
+
   return {
     form,
     fee,
@@ -225,6 +245,7 @@ export function useSend() {
       goHome,
       tryAgain,
       handleValidateAmount,
+      handleResolveNameOrAddress,
     },
   };
 }

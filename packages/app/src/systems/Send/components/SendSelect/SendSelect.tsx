@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Input, InputAmount, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { BaseAssetId, DECIMAL_UNITS, bn } from 'fuels';
+import { BaseAssetId, bn, DECIMAL_UNITS } from 'fuels';
 import { useEffect, useMemo } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import { animations, ControlledField, Layout } from '~/systems/Core';
@@ -75,6 +75,11 @@ export function SendSelect({
                 <Input size="sm">
                   <Input.Field
                     {...field}
+                    onChange={({ target }) => {
+                      const { value } = target;
+                      field.onChange(value);
+                      handlers.handleResolveNameOrAddress(value);
+                    }}
                     id="address"
                     aria-label="Address Input"
                     placeholder="Enter a fuel address"
