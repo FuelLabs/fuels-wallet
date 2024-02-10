@@ -213,7 +213,6 @@ export function useSend() {
   }
 
   async function handleResolveNameOrAddress(addressOrName: string) {
-    debugger;
     const isDomain = addressOrName.includes('.fuel');
 
     if (isDomain) {
