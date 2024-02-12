@@ -21,7 +21,7 @@
     "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
-    "@fuel-wallet/playwright-utils": "workspace:*",
+    "@fuels/playwright-utils": "0.15.1",
     "@playwright/test": "^1.39.0",
     "@types/chrome": "^0.0.246",
     "@types/node": "^20.8.4",
