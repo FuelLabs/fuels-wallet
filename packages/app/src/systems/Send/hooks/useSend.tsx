@@ -2,7 +2,7 @@ import { resolver } from '@fuel-domains/sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BigNumberish } from 'fuels';
-import { Address , bn, isBech32 } from 'fuels';
+import { Address, bn, isBech32 } from 'fuels';
 import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +22,8 @@ export enum SendStatus {
   selecting = 'selecting',
   loadingTx = 'loadingTx',
 }
+
+const ADDRESS_REGEX = /[\w\d]+\.fuel\s/g;
 
 const selectors = {
   fee(state: SendMachineState) {
@@ -96,10 +98,11 @@ export function useSend() {
           if (!providerUrl || !transactionRequest || !address) {
             throw new Error('Params are required');
           }
+          const _address = address.replace(ADDRESS_REGEX, '');
           txRequest.handlers.request({
             providerUrl,
             transactionRequest,
-            address,
+            address: _address,
           });
         },
       },
@@ -120,7 +123,7 @@ export function useSend() {
         account,
         asset,
         amount,
-        address,
+        address: address.replace(ADDRESS_REGEX, ''),
       } as TxInputs['isValidTransaction'];
       service.send('SET_DATA', { input });
     }
@@ -210,7 +213,7 @@ export function useSend() {
     if (isDomain) {
       // TODO: Change to use current network
       const domain = await resolver({
-        providerURL: 'https://beta-5.fuel.network/graphql',
+        providerURL: import.meta.env.VITE_FUEL_PROVIDER_URL,
         domain: addressOrName.replace('.fuel', ''),
       });
 
@@ -229,7 +232,7 @@ export function useSend() {
 
     if (isAddress) {
       try {
-        return Boolean(addressOrName && isBech32(addressOrName));
+        isBech32(addressOrName);
       } catch (error) {
         form.setError('address', {
           type: 'pattern',
