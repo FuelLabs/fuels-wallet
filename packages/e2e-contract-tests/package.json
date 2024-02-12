@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fuel-wallet/react": "workspace:*",
+    "@fuels/react": "0.15.1",
     "@fuel-wallet/sdk": "workspace:*",
     "@fuel-wallet/types": "workspace:*",
     "fuels": "0.73.0",

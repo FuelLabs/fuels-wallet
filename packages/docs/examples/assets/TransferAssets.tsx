@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Link, Text, InputAmount, Input } from '@fuel-ui/react';
-import { useFuel, useIsConnected, useAssets } from '@fuel-wallet/react';
 import { getAssetByChain } from '@fuel-wallet/sdk';
+import { useFuel, useIsConnected, useAssets } from '@fuels/react';
 import type { BN } from 'fuels';
 import { buildBlockExplorerUrl, BaseAssetId, bn, Address } from 'fuels';
 import { useMemo, useState } from 'react';

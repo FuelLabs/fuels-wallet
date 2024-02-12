@@ -1,4 +1,4 @@
-import { FuelProvider } from '@fuel-wallet/react';
+import { FuelProvider } from '@fuels/react';
 import type { ReactNode } from 'react';
 
 type ProviderProps = {

@@ -6,7 +6,7 @@ import {
   useIsConnected,
   useAddNetwork,
   useConnect,
-} from '@fuel-wallet/react';
+} from '@fuels/react';
 import { useState } from 'react';
 
 import { ExampleBox } from '../../../src/components/ExampleBox';

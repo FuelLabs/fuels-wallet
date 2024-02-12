@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Text } from '@fuel-ui/react';
-import { FuelProvider, useAccount, useConnectUI } from '@fuel-wallet/react';
+import { FuelProvider, useAccount, useConnectUI } from '@fuels/react';
 import { useDarkMode } from 'storybook-dark-mode';
 
 export default {

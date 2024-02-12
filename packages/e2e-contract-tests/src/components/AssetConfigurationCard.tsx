@@ -1,4 +1,4 @@
-import { useAccount, useWallet } from '@fuel-wallet/react';
+import { useAccount, useWallet } from '@fuels/react';
 import { bn } from 'fuels';
 import { useState } from 'react';
 
