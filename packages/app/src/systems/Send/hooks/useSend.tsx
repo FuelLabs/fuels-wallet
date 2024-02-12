@@ -2,7 +2,7 @@ import { resolver } from '@fuel-domains/sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BigNumberish } from 'fuels';
-import { bn, isBech32 } from 'fuels';
+import { Address , bn, isBech32 } from 'fuels';
 import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -64,16 +64,7 @@ const schema = yup
   .object({
     asset: yup.string().required('Asset is required'),
     amount: yup.string().required('Amount is required'),
-    address: yup
-      .string()
-      .required('Address is required')
-      .test('is-address', 'Invalid bech32 address', (value) => {
-        try {
-          return Boolean(value && isBech32(value));
-        } catch (error) {
-          return false;
-        }
-      }),
+    address: yup.string().required('Address or domain is required'),
   })
   .required();
 
@@ -213,7 +204,8 @@ export function useSend() {
   }
 
   async function handleResolveNameOrAddress(addressOrName: string) {
-    const isDomain = addressOrName.includes('.fuel');
+    const isDomain = addressOrName.endsWith('.fuel');
+    const isAddress = addressOrName.startsWith('fuel');
 
     if (isDomain) {
       // TODO: Change to use current network
@@ -222,8 +214,28 @@ export function useSend() {
         domain: addressOrName.replace('.fuel', ''),
       });
 
-      // eslint-disable-next-line no-console
-      console.log(domain);
+      if (domain) {
+        form.setValue(
+          'address',
+          `${addressOrName} ${Address.fromString(domain.resolver).toAddress()}`
+        );
+      } else {
+        form.setError('address', {
+          type: 'pattern',
+          message: 'Not found domain',
+        });
+      }
+    }
+
+    if (isAddress) {
+      try {
+        return Boolean(addressOrName && isBech32(addressOrName));
+      } catch (error) {
+        form.setError('address', {
+          type: 'pattern',
+          message: 'Invalid bech32 address',
+        });
+      }
     }
   }
 
