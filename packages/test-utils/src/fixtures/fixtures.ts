@@ -1,19 +1,13 @@
 // Use a test fixture to set the context so tests have access to the wallet extension.
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
-
-import { downloadFuel } from './downloadFuel';
+import path from 'path';
 
 export const test = base.extend<{
   context: BrowserContext;
   extensionId: string;
   pathToExtension: string;
-  fuelWalletVersion: string;
 }>({
-  fuelWalletVersion: '0.15.1',
-  pathToExtension: async ({ fuelWalletVersion }, use) => {
-    const fuelPath = await downloadFuel(fuelWalletVersion);
-    await use(fuelPath);
-  },
+  pathToExtension: path.join(__dirname, '../../../app/dist-crx'),
   context: async ({ pathToExtension }, use) => {
     const context = await chromium.launchPersistentContext('', {
       headless: false,
