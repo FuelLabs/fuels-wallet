@@ -1,5 +1,5 @@
-import { getButtonByText, getByAriaLabel } from '@fuels/playwright-utils';
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
+import { getButtonByText, getByAriaLabel } from '@fuels/playwright-utils';
 import type { Page } from '@playwright/test';
 
 export const connect = async (

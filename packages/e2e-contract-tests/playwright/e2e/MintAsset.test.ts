@@ -1,5 +1,5 @@
-import { test, getButtonByText, hasText } from '@fuels/playwright-utils';
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
+import { test, getButtonByText, hasText } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import { bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';

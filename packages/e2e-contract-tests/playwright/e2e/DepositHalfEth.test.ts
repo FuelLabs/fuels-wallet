@@ -14,7 +14,6 @@ import { checkFee, connect, checkAddresses } from './utils';
 test.describe('Deposit Half ETH', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;
   let fuelWallet: WalletUnlocked;
-
   test.beforeEach(async ({ context, extensionId, page }) => {
     ({ fuelWalletTestHelper, fuelWallet } = await testSetup({
       context,

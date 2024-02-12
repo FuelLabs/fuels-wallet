@@ -685,8 +685,8 @@ importers:
         version: 2.4.1(csstype@3.1.2)(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@fuels/playwright-utils':
-        specifier: 0.15.1
-        version: 0.15.1(@playwright/test@1.39.0)
+        specifier: 0.15.2-dev-3aee54c
+        version: 0.15.2-dev-3aee54c(@playwright/test@1.39.0)
       '@playwright/test':
         specifier: ^1.39.0
         version: 1.39.0
@@ -5104,8 +5104,8 @@ packages:
     resolution: {integrity: sha512-fdjgASY0VLEJHI1DgXfBuvQJ0tkmd89uFyyYx52swtffKh5BuVJKEfCiVm5DGxXWc4/BkPTLEcUMI4E5SbBOLA==}
     dev: false
 
-  /@fuels/playwright-utils@0.15.1(@playwright/test@1.39.0):
-    resolution: {integrity: sha512-QEKkXMOX6dhlazoiGgObF+2GPB/ElYcLGZu7d4PWlLdsNUw5QhrA8EyPBRG61khO0FFoby2ALMP+EorpqxXYPw==}
+  /@fuels/playwright-utils@0.15.2-dev-3aee54c(@playwright/test@1.39.0):
+    resolution: {integrity: sha512-Pecy5iaBRB+9IfnTqA6O+X0XVE8kc9ZgnQhi2OOyHLyTV+jPk0P6cV1MGB3UMFoCoeN+o65W4x2g3dCsoqEztg==}
     peerDependencies:
       '@playwright/test': ^1.39.0
     dependencies:
