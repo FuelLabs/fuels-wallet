@@ -1,4 +1,4 @@
-import { useConnectUI } from '@fuel-wallet/react';
+import { useConnectUI } from '@fuels/react';
 
 export const Header = () => {
   const { connect } = useConnectUI();

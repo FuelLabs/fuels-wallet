@@ -5,7 +5,7 @@ import {
   setFuelThemes,
   ThemeProvider,
 } from '@fuel-ui/react';
-import { FuelProvider } from '@fuel-wallet/react';
+import { FuelProvider } from '@fuels/react';
 import { MDXProvider } from '@mdx-js/react';
 import type { ReactNode } from 'react';
 

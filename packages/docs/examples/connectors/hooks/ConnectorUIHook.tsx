@@ -1,9 +1,5 @@
 import { Box, Button } from '@fuel-ui/react';
-import {
-  useIsConnected,
-  useDisconnect,
-  useConnectUI,
-} from '@fuel-wallet/react';
+import { useIsConnected, useDisconnect, useConnectUI } from '@fuels/react';
 
 import { ExampleBox } from '../../../src/components/ExampleBox';
 

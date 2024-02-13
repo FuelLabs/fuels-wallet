@@ -32,5 +32,3 @@ jobs:
         run: |
           npm dist-tag add @fuel-wallet/sdk@${{ env.BUILD_VERSION }} latest
           npm dist-tag add @fuel-wallet/types@${{ env.BUILD_VERSION }} latest
-          npm dist-tag add @fuel-wallet/react@${{ env.BUILD_VERSION }} latest
-          npm dist-tag add @fuel-wallet/playwright-utils@${{ env.BUILD_VERSION }} latest

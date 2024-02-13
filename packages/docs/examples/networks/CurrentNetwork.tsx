@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Button, Box, Tag, Text } from '@fuel-ui/react';
-import { useFuel, useIsConnected } from '@fuel-wallet/react';
+import { useFuel, useIsConnected } from '@fuels/react';
 import { useState } from 'react';
 
 import type { FuelProviderConfig } from '../../../types/src';
