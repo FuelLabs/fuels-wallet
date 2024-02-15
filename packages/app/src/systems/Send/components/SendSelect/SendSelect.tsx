@@ -1,10 +1,15 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Input, InputAmount, Text } from '@fuel-ui/react';
+import { Box, Form, Input, InputAmount, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { BaseAssetId, bn, DECIMAL_UNITS } from 'fuels';
+import { Address, BaseAssetId, bn, DECIMAL_UNITS } from 'fuels';
 import { useEffect, useMemo } from 'react';
 import { AssetSelect } from '~/systems/Asset';
-import { animations, ControlledField, Layout } from '~/systems/Core';
+import {
+  animations,
+  ControlledField,
+  Layout,
+  shortAddress,
+} from '~/systems/Core';
 import { TxDetails } from '~/systems/Transaction';
 
 import type { UseSendReturn } from '../../hooks';
@@ -13,12 +18,13 @@ const MotionContent = motion(Layout.Content);
 type SendSelectProps = UseSendReturn;
 
 export function SendSelect({
-  form,
-  balanceAssets,
-  handlers,
-  balanceAssetSelected,
-  status,
   fee,
+  form,
+  status,
+  domain,
+  handlers,
+  balanceAssets,
+  balanceAssetSelected,
 }: SendSelectProps) {
   const assetId = form.watch('asset', '');
   const decimals = useMemo(() => {
@@ -72,19 +78,33 @@ export function SendSelect({
               control={form.control}
               isInvalid={Boolean(form.formState.errors?.address)}
               render={({ field }) => (
-                <Input size="sm">
-                  <Input.Field
-                    {...field}
-                    onChange={({ target }) => {
-                      const { value } = target;
-                      field.onChange(value);
-                      handlers.handleResolveNameOrAddress(value);
-                    }}
-                    id="address"
-                    aria-label="Address Input"
-                    placeholder="Enter a fuel address"
-                  />
-                </Input>
+                <>
+                  <Input size="sm">
+                    <Input.Field
+                      {...field}
+                      onChange={({ target }) => {
+                        const { value } = target;
+                        field.onChange(value);
+                        handlers.handleResolveNameOrAddress(value);
+                      }}
+                      id="address"
+                      aria-label="Address Input"
+                      placeholder="Enter a fuel address"
+                    />
+                  </Input>
+                  {domain && (
+                    <Form.HelperText
+                      css={{ fontSize: '$sm', fontWeight: '$normal' }}
+                    >
+                      Address of {field.value}:{' '}
+                      <Text as="b" css={{ fontWeight: '$bold' }}>
+                        {shortAddress(
+                          Address.fromB256(domain.resolver).toAddress()
+                        )}
+                      </Text>
+                    </Form.HelperText>
+                  )}
+                </>
               )}
             />
           </Box>

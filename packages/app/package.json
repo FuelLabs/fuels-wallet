@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@fontsource/source-code-pro": "^5.0.13",
-    "@fuel-domains/sdk": "0.1.5",
+    "@fuel-domains/sdk": "0.1.6",
     "@fuel-ts/wallet-manager": "0.73.0",
     "@fuel-ui/css": "0.23.0",
     "@fuel-ui/icons": "0.23.0",

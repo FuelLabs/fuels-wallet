@@ -1,9 +1,9 @@
-import { resolver } from '@fuel-domains/sdk';
+import { resolver, type Domain } from '@fuel-domains/sdk';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BigNumberish } from 'fuels';
-import { Address, bn, isBech32 } from 'fuels';
-import { useCallback, useEffect } from 'react';
+import { bn, isBech32 } from 'fuels';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -75,6 +75,7 @@ export function useSend() {
   const txRequest = useTransactionRequest();
   const { account, balanceAssets: accountBalanceAssets } = useAccounts();
   const { assets } = useAssets();
+  const [domain, setDomain] = useState<Domain | null>(null);
 
   const form = useForm({
     resolver: yupResolver(schema),
@@ -118,12 +119,12 @@ export function useSend() {
         ({ assetId }) => assetId === form.getValues('asset')
       );
       const amount = bn(form.getValues('amount'));
-      const address = form.getValues('address');
+      const address = domain?.resolver ?? form.getValues('address');
       const input = {
         account,
         asset,
         amount,
-        address: address.replace(ADDRESS_REGEX, ''),
+        address,
       } as TxInputs['isValidTransaction'];
       service.send('SET_DATA', { input });
     }
@@ -169,7 +170,7 @@ export function useSend() {
       ({ assetId }) => assetId === form.getValues('asset')
     );
     const amount = bn(form.getValues('amount'));
-    const address = form.getValues('address');
+    const address = domain?.resolver ?? form.getValues('address');
     const input = {
       account,
       asset,
@@ -210,6 +211,8 @@ export function useSend() {
     const isDomain = addressOrName.endsWith('.fuel');
     const isAddress = addressOrName.startsWith('fuel');
 
+    setDomain(null);
+
     if (isDomain) {
       // TODO: Change to use current network
       const domain = await resolver({
@@ -218,10 +221,7 @@ export function useSend() {
       });
 
       if (domain) {
-        form.setValue(
-          'address',
-          `${addressOrName} ${Address.fromString(domain.resolver).toAddress()}`
-        );
+        setDomain(domain);
       } else {
         form.setError('address', {
           type: 'pattern',
@@ -243,14 +243,15 @@ export function useSend() {
   }
 
   return {
-    form,
     fee,
+    form,
     title,
+    domain,
     status,
-    readyToSend,
-    balanceAssets,
     account,
     txRequest,
+    readyToSend,
+    balanceAssets,
     assetIdSelected,
     balanceAssetSelected,
     handlers: {
