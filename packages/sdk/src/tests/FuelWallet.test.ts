@@ -2,14 +2,20 @@ import { EventEmitter } from 'events';
 import {
   Address,
   BaseAssetId,
+  Fuel,
   Provider,
   TransactionStatus,
   Wallet,
   bn,
+  LocalStorage,
 } from 'fuels';
 
-import { Fuel } from '../Fuel';
 import { FuelConnectorEventType } from '../api';
+import {
+  FuelWalletConnector,
+  FuelWalletDevelopmentConnector,
+  FueletWalletConnector,
+} from '../connectors';
 import { dispatchFuelConnectorEvent } from '../utils';
 
 import { MockConnector } from './MockConnector';
@@ -21,14 +27,20 @@ describe('Fuel Wallet SDK multiple connectors', () => {
   });
 
   test('Create using default connectors', async () => {
-    const fuel = new Fuel();
+    const fuel = new Fuel({
+      connectors: [new FuelWalletConnector(), new FuelWalletConnector()],
+    });
     const connectors = await fuel.connectors();
     expect(connectors.length).toBe(2);
   });
 
-  test('Create using default connectors devMode', async () => {
+  test('Create using default connectors including development connector', async () => {
     const fuel = new Fuel({
-      devMode: true,
+      connectors: [
+        new FuelWalletConnector(),
+        new FueletWalletConnector(),
+        new FuelWalletDevelopmentConnector(),
+      ],
     });
     const connectors = await fuel.connectors();
     expect(connectors.length).toBe(3);
@@ -177,6 +189,8 @@ describe('Fuel Wallet SDK multiple connectors', () => {
     expect(connectors[0].name).toEqual(walletConnectorName);
     expect(connectors[1].name).toEqual(thirdPartyConnectorName);
     // Switch between connectors
+
+    await fuel.selectConnector(walletConnectorName);
     expect(fuel.currentConnector()?.name).toBe(walletConnectorName);
     expect(await fuel.accounts()).toHaveLength(2);
     await fuel.selectConnector(thirdPartyConnectorName);
@@ -312,7 +326,7 @@ describe('Fuel Wallet SDK multiple connectors', () => {
     });
     const fuel = new Fuel({
       connectors: [walletConnector, thirdPartyConnector],
-      storage: window.localStorage,
+      storage: new LocalStorage(window.localStorage),
     });
 
     // Select third party connector
@@ -320,7 +334,7 @@ describe('Fuel Wallet SDK multiple connectors', () => {
 
     const fuelNewInstance = new Fuel({
       connectors: [walletConnector, thirdPartyConnector],
-      storage: window.localStorage,
+      storage: new LocalStorage(window.localStorage),
     });
     await fuelNewInstance.hasConnector();
     expect(fuelNewInstance.currentConnector()?.name).toBe(
