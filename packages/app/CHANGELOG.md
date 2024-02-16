@@ -1,5 +1,31 @@
 # fuels-wallet
 
+## 0.15.2
+
+### Patch Changes
+
+- [#1077](https://github.com/FuelLabs/fuels-wallet/pull/1077) [`0531ab8`](https://github.com/FuelLabs/fuels-wallet/commit/0531ab82009715db695628522958e9751bf3b134) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: add new explorer link for default network
+
+- [#1074](https://github.com/FuelLabs/fuels-wallet/pull/1074) [`cbd64ae`](https://github.com/FuelLabs/fuels-wallet/commit/cbd64ae5b433ee7964e934a016765db5d7756196) Thanks [@matt-user](https://github.com/matt-user)! - Update the fuels dependency to 0.73.0
+
+- Updated dependencies [[`cbd64ae`](https://github.com/FuelLabs/fuels-wallet/commit/cbd64ae5b433ee7964e934a016765db5d7756196)]:
+  - @fuel-wallet/connections@0.15.2
+  - @fuel-wallet/types@0.15.2
+  - @fuel-wallet/sdk@0.15.2
+
+## 0.15.1
+
+### Patch Changes
+
+- [#1062](https://github.com/FuelLabs/fuels-wallet/pull/1062) [`b81704c`](https://github.com/FuelLabs/fuels-wallet/commit/b81704c6b2175444c4b4a815a6b5cd7618fcb139) Thanks [@arboleya](https://github.com/arboleya)! - chore: update fuels-ts to rc/salamander
+
+- [#1063](https://github.com/FuelLabs/fuels-wallet/pull/1063) [`bdfb2fa`](https://github.com/FuelLabs/fuels-wallet/commit/bdfb2fa6094e49372109170ea8c60cef2ad2b2fa) Thanks [@matt-user](https://github.com/matt-user)! - Add an error message for a failed simulated tx
+
+- Updated dependencies [[`b81704c`](https://github.com/FuelLabs/fuels-wallet/commit/b81704c6b2175444c4b4a815a6b5cd7618fcb139)]:
+  - @fuel-wallet/types@0.15.1
+  - @fuel-wallet/sdk@0.15.1
+  - @fuel-wallet/connections@0.15.1
+
 ## 0.15.0
 
 ### Minor Changes

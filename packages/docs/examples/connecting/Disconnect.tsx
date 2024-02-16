@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 'use client';
 import { Box, Button, Text } from '@fuel-ui/react';
-import { useFuel, useIsConnected } from '@fuel-wallet/react';
+import { useFuel, useIsConnected } from '@fuels/react';
 
 import { ExampleBox } from '../../src/components/ExampleBox';
 import { useLoading } from '../../src/hooks/useLoading';

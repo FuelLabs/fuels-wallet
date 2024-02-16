@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Tag } from '@fuel-ui/react';
-import { useAssets } from '@fuel-wallet/react';
 import { getAssetByChain } from '@fuel-wallet/sdk';
+import { useAssets } from '@fuels/react';
 
 import { ExampleBox } from '../../../src/components/ExampleBox';
 

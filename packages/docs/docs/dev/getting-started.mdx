@@ -31,13 +31,13 @@ await fuel.connect();
 
 ## Using React
 
-Fuel Wallet SDK also provides a set of React hooks and a UI for working with it connectors without,
+We also provide a set of React hooks and a UI for working with it connectors without,
 the need for manually create a UI, for it.
 
 ### Installation
 
 ```bash
-npm install @fuel-wallet/react fuels
+npm install @fuels/react fuels
 ```
 
 ### Example
@@ -47,7 +47,7 @@ npm install @fuel-wallet/react fuels
 Wrap your application with the provider `FuelConnectProvider`.
 
 ```tsx
-import { FuelProvider } from '@fuel-wallet/react';
+import { FuelProvider } from '@fuels/react';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -63,7 +63,7 @@ Alternatively, you can use just the `FuelProvider` if you prefer not to use the 
 #### Usage
 
 ```ts
-import { useConnectUI } from '@fuel-wallet/react';
+import { useConnectUI } from '@fuels/react';
 const { connect, isConnecting } = useConnectUI();
 
 <button onClick={connect}>

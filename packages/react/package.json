@@ -1,7 +1,7 @@
 {
   "name": "@fuel-wallet/react",
   "description": "Interact with the Fuel Wallet Extension in React.",
-  "version": "0.15.0",
+  "version": "0.15.2",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "exports": {
@@ -31,7 +31,7 @@
     "ts:check": "pnpm tsc --noEmit"
   },
   "peerDependencies": {
-    "fuels": ">=0.72.0",
+    "fuels": ">=0.73.0",
     "react": "^18.2.0"
   },
   "dependencies": {
@@ -43,7 +43,7 @@
     "@fuel-wallet/sdk": "workspace:*",
     "styled-components": "^6.1.1",
     "compare-versions": "^6.1.0",
-    "fuels": "0.72.0",
+    "fuels": "0.73.0",
     "tsup": "^7.2.0"
   }
 }
