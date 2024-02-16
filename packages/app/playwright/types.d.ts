@@ -1,5 +1,4 @@
-import type { Fuel } from '@fuel-wallet/sdk';
-import type { Address } from 'fuels';
+import type { Fuel, Address } from 'fuels';
 
 declare global {
   interface Window {

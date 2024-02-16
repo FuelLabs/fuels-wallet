@@ -1,6 +1,6 @@
-import type { FuelConfig } from '@fuel-wallet/sdk';
-import { Fuel } from '@fuel-wallet/sdk';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { FuelConfig } from 'fuels';
+import { Fuel } from 'fuels';
 import type { ReactNode } from 'react';
 import { createContext, useContext, useMemo } from 'react';
 

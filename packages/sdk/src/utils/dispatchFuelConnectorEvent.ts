@@ -1,4 +1,5 @@
-import type { FuelConnector } from '../FuelConnector';
+import type { FuelConnector } from 'fuels';
+
 import { FuelConnectorEventType } from '../api';
 
 /**

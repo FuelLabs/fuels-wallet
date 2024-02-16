@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Asset } from '@fuel-wallet/types';
-import type { JsonAbi } from 'fuels';
+import type { FuelConnector, JsonAbi } from 'fuels';
 
-import type { FuelConnector } from './FuelConnector';
 import type { FuelConnectorEventTypes } from './api';
 
 /****

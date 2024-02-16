@@ -13,6 +13,7 @@ import type {
   AssetFuel,
 } from '@fuel-wallet/types';
 import {
+  FuelConnector,
   Provider,
   transactionRequestify,
   type TransactionRequestLike,
@@ -20,7 +21,6 @@ import {
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 import { JSONRPCClient } from 'json-rpc-2.0';
 
-import { FuelConnector } from '../FuelConnector';
 import { FuelConnectorEventTypes } from '../api';
 import {
   type ConnectorMetadata,

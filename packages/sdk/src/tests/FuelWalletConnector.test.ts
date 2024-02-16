@@ -6,9 +6,9 @@ import {
   TransactionStatus,
   Wallet,
   bn,
+  Fuel,
 } from 'fuels';
 
-import { Fuel } from '../Fuel';
 import { FuelConnectorEventType } from '../api';
 import { dispatchFuelConnectorEvent } from '../utils';
 

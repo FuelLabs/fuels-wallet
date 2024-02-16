@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { Box, Button, Text } from '@fuel-ui/react';
-import { Fuel } from '@fuel-wallet/sdk';
 import { useFuel } from '@fuels/react';
+import { Fuel } from 'fuels';
 import { useEffect, useState } from 'react';
 
 import { ExampleBox } from '../../src/components/ExampleBox';

@@ -1,4 +1,4 @@
-import type { FuelConfig } from '@fuel-wallet/sdk';
+import type { FuelConfig } from 'fuels';
 
 import { Connect } from '../ui/Connect';
 
