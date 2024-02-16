@@ -1,6 +1,5 @@
-import { Mnemonic, Provider, Wallet } from 'fuels';
+import { Mnemonic, Wallet } from 'fuels';
 import { interpret } from 'xstate';
-import { VITE_FUEL_PROVIDER_URL } from '~/config';
 import { db } from '~/systems/Core';
 import { expectStateMatch } from '~/systems/Core/__tests__';
 
@@ -83,8 +82,7 @@ describe('signUpMachine', () => {
       await expectStateMatch(service, 'import');
       // Import a 24 words mnemonic
       const words = Mnemonic.generate(32).split(' ');
-      const provider = await Provider.create(VITE_FUEL_PROVIDER_URL);
-      const wallet = Wallet.fromMnemonic(words.join(' '), provider);
+      const wallet = Wallet.fromMnemonic(words.join(' '));
       service.send('IMPORT_MNEMONIC', {
         data: {
           words,
@@ -108,8 +106,7 @@ describe('signUpMachine', () => {
       // Import a 24 words mnemonic
       const words = Mnemonic.generate(32).split(' ');
       const wrongWords = [...words.slice(1), 'notValid'];
-      const provider = await Provider.create(VITE_FUEL_PROVIDER_URL);
-      const wallet = Wallet.fromMnemonic(words.join(' '), provider);
+      const wallet = Wallet.fromMnemonic(words.join(' '));
       // Import invalid mnemonic
       service.send('IMPORT_MNEMONIC', {
         data: {

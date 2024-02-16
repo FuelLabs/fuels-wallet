@@ -1,8 +1,7 @@
-import { WalletManager } from '@fuel-ts/wallet-manager';
+import { WalletManager } from '@fuel-ts/account';
 import EventEmitter from 'events';
 import { transactionRequestify, Address, Provider } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
-import { VITE_FUEL_PROVIDER_URL } from '~/config';
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
 
 export type VaultAccount = {
@@ -84,11 +83,9 @@ export class VaultServer extends EventEmitter {
     type,
     secret,
   }: VaultInputs['createVault']): Promise<VaultAccount> {
-    const provider = await Provider.create(VITE_FUEL_PROVIDER_URL);
     await this.manager.addVault({
       type,
       secret,
-      provider,
     });
     const accounts = await this.manager.getAccounts();
     const vaults = await this.manager.getVaults();

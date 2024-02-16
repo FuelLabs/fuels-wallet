@@ -1,5 +1,5 @@
-import type { Account as WalletAccount } from '@fuel-ts/wallet-manager';
-import { WalletManager } from '@fuel-ts/wallet-manager';
+import type { WalletManagerAccount as WalletAccount } from '@fuel-ts/account';
+import { WalletManager } from '@fuel-ts/account';
 import type {
   Account,
   Asset,
@@ -114,7 +114,6 @@ export async function createManager(mnemonic: string) {
   await walletManager.addVault({
     type: 'mnemonic',
     secret: mnemonic,
-    provider: null,
   });
 
   return walletManager;
