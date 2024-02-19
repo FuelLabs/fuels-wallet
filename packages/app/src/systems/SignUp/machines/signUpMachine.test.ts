@@ -84,7 +84,8 @@ describe('signUpMachine', () => {
       // Import a 24 words mnemonic
       const words = Mnemonic.generate(32).split(' ');
       const provider = await Provider.create(VITE_FUEL_PROVIDER_URL);
-      const wallet = Wallet.fromMnemonic(words.join(' '), provider);
+      const wallet = Wallet.fromMnemonic(words.join(' '));
+      wallet.connect(provider);
       service.send('IMPORT_MNEMONIC', {
         data: {
           words,
@@ -109,7 +110,8 @@ describe('signUpMachine', () => {
       const words = Mnemonic.generate(32).split(' ');
       const wrongWords = [...words.slice(1), 'notValid'];
       const provider = await Provider.create(VITE_FUEL_PROVIDER_URL);
-      const wallet = Wallet.fromMnemonic(words.join(' '), provider);
+      const wallet = Wallet.fromMnemonic(words.join(' '));
+      wallet.connect(provider);
       // Import invalid mnemonic
       service.send('IMPORT_MNEMONIC', {
         data: {
