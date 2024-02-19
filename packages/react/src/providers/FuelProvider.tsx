@@ -1,3 +1,4 @@
+import { FuelWalletConnector, FueletWalletConnector } from '@fuel-wallet/sdk';
 import type { FuelConfig } from 'fuels';
 
 import { Connect } from '../ui/Connect';
@@ -16,7 +17,9 @@ type FuelProviderProps = {
 export function FuelProvider({
   theme,
   children,
-  fuelConfig,
+  fuelConfig = {
+    connectors: [new FuelWalletConnector(), new FueletWalletConnector()],
+  },
   ui = true,
 }: FuelProviderProps) {
   if (ui) {
