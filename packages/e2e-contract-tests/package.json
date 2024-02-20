@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fuels/react": "0.15.1",
+    "@fuels/react": "0.15.2",
     "@fuel-wallet/sdk": "workspace:*",
     "@fuel-wallet/types": "workspace:*",
     "fuels": "0.74.0",
@@ -21,7 +21,7 @@
     "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
-    "@fuels/playwright-utils": "0.15.2-dev-3aee54c",
+    "@fuels/playwright-utils": "0.15.2",
     "@playwright/test": "^1.39.0",
     "@types/chrome": "^0.0.246",
     "@types/node": "^20.8.4",
