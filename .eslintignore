@@ -13,4 +13,3 @@ contracts
 **/generated/*
 .changeset/**.md
 **/playwright-results/
-**/playwright-html/

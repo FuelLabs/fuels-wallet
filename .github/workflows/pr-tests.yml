@@ -103,9 +103,7 @@ jobs:
         if: always()
         with:
           name: playwright-app-report
-          path: |
-            packages/app/playwright-report/
-            packages/app/playwright-html/
+          path: packages/app/playwright-results
           retention-days: 30
 
       - name: Stop Test Node

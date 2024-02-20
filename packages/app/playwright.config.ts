@@ -11,10 +11,10 @@ export default defineConfig({
   workers: 1,
   testMatch: join(__dirname, './playwright/**/*.test.ts'),
   testDir: join(__dirname, './playwright/'),
-  outputDir: join(__dirname, './playwright-results/'),
+  outputDir: join(__dirname, './playwright-results/traces/'),
   reporter: [
     ['list', { printSteps: true }],
-    ['html', { outputFolder: join(__dirname, './playwright-html/') }],
+    ['html', { outputFolder: join(__dirname, './playwright-results/html/') }],
   ],
   // Retry tests on CI if they fail
   retries: IS_CI ? 2 : 0,

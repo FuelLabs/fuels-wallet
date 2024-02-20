@@ -13,4 +13,3 @@ pnpm-lock.yaml
 **/generated/
 .changeset/**.md
 **/playwright-results/
-**/playwright-html/
