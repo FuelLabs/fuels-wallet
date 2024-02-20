@@ -102,7 +102,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report
+          name: playwright-app-report
           path: |
             packages/app/playwright-report/
             packages/app/playwright-html/
@@ -154,7 +154,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report
+          name: playwright-contracts-report
           path: packages/e2e-contract-tests/playwright-report/
           retention-days: 30
 
