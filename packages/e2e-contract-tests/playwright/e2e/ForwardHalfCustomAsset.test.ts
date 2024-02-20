@@ -1,5 +1,5 @@
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
-import { test, getButtonByText, hasText } from '@fuels/playwright-utils';
+import { getButtonByText, hasText } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
 import { bn, BaseAssetId, toBech32 } from 'fuels';
@@ -11,6 +11,7 @@ import { calculateAssetId, shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
+import { test } from './test';
 import { checkFee, connect, checkAddresses } from './utils';
 
 test.describe('Forward Half Custom Asset', () => {
