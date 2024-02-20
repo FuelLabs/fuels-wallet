@@ -29,11 +29,11 @@ importers:
   .:
     dependencies:
       '@fuel-ui/css':
-        specifier: 0.23.0
-        version: 0.23.0
+        specifier: 0.23.1
+        version: 0.23.1
       '@fuel-ui/react':
-        specifier: 0.23.0
-        version: 0.23.0(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.2)
+        specifier: 0.23.1
+        version: 0.23.1(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.2)
       compare-versions:
         specifier: ^6.1.0
         version: 6.1.0
@@ -4854,8 +4854,27 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
+  /@fuel-ui/css@0.23.1:
+    resolution: {integrity: sha512-+H1taUNLSzrNWqpk7PFvzn0obDMt51yXU36JMRhMPpdx/gGmkfiESLEeKj+poSMKuWM6sFLClFsZwkhHv5fZ/A==}
+    dependencies:
+      '@fuel-ui/design-tokens': 0.23.1
+      '@radix-ui/colors': 2.1.0
+      classnames: 2.3.2
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /@fuel-ui/design-tokens@0.23.0:
     resolution: {integrity: sha512-6zrFPlAFLC52EFcfcqldWvI5kHbnqHXmW1EcWkE0SNH3PZkOMychXU9ksPMvWMkehetRwNwbdm4kBuvL2TpYww==}
+    dependencies:
+      '@radix-ui/colors': 2.1.0
+      chroma-js: 2.4.2
+      copy-to-clipboard: 3.3.3
+      lodash: 4.17.21
+    dev: false
+
+  /@fuel-ui/design-tokens@0.23.1:
+    resolution: {integrity: sha512-AbCYzUUlxC5qyFDQBhISzzw5jx0dYk6V7Cm1o6+ymdRRyLCf+KUYUNmrMPG8jYX0s/8VsFA2OoVbxIPxqpL/rg==}
     dependencies:
       '@radix-ui/colors': 2.1.0
       chroma-js: 2.4.2
@@ -4871,12 +4890,63 @@ packages:
       svgo: 3.0.2
     dev: false
 
+  /@fuel-ui/icons@0.23.1:
+    resolution: {integrity: sha512-eIPNMXXCZj5KBIuBSyDAclkLcDYPJfeH1/xpv1PWPFD06K4Hxl2xyZaj3A9HKe2Xu/w0JwBsJgKEKIxKjaWDrw==}
+    dependencies:
+      '@tabler/icons': 2.34.0
+      prettier: 3.1.0
+      svgo: 3.0.2
+    dev: false
+
   /@fuel-ui/react@0.23.0(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.2):
     resolution: {integrity: sha512-8x1FVTcQxjUzjKBfjWb/MRpQngzFAd/rP8p9okv0hdCzVUeIV2lCMXqSgVRnw1/Ei0ANIdf7zDlPX9hqdyvYXw==}
     dependencies:
       '@fuel-ts/math': 0.71.1
       '@fuel-ui/css': 0.23.0
       '@fuel-ui/icons': 0.23.0
+      '@radix-ui/react-accordion': 1.1.2(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-alert-dialog': 1.0.4(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-aspect-ratio': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-avatar': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-checkbox': 1.0.4(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-label': 2.0.2(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-popover': 1.0.6(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-radio-group': 1.1.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-switch': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-tabs': 1.0.4(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-tooltip': 1.0.6(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-visually-hidden': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
+      '@react-aria/focus': 3.14.1(react@18.2.0)
+      '@react-aria/overlays': 3.17.0(react-dom@18.2.0)(react@18.2.0)
+      '@react-aria/utils': 3.21.0(react@18.2.0)
+      '@testing-library/react': 14.0.0(react-dom@18.2.0)(react@18.2.0)
+      '@xstate/react': 3.2.2(@types/react@18.2.28)(react@18.2.0)(xstate@4.38.2)
+      deepmerge-json: 1.5.0
+      framer-motion: 10.16.4(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-aria: 3.28.0(react-dom@18.2.0)(react@18.2.0)
+      react-content-loader: 6.2.1(react@18.2.0)
+      react-dom: 18.2.0(react@18.2.0)
+      react-hot-toast: 2.4.1(csstype@3.1.2)(react-dom@18.2.0)(react@18.2.0)
+      react-number-format: 5.3.1(react-dom@18.2.0)(react@18.2.0)
+      react-stately: 3.26.0(react@18.2.0)
+      xstate: 4.38.2
+      zustand: 4.4.1(@types/react@18.2.28)(react@18.2.0)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+      - '@xstate/fsm'
+      - csstype
+      - immer
+    dev: false
+
+  /@fuel-ui/react@0.23.1(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.2):
+    resolution: {integrity: sha512-UMaO2e4oXbNvNlwoE4KMKA8j9hHzv3AjZteZgCtv0Sw5bBCojHP8O8BT4RAjNj1+b122zTfzLrj1s/grGNpvBg==}
+    dependencies:
+      '@fuel-ts/math': 0.74.0
+      '@fuel-ui/css': 0.23.1
+      '@fuel-ui/icons': 0.23.1
       '@radix-ui/react-accordion': 1.1.2(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-alert-dialog': 1.0.4(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-aspect-ratio': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
