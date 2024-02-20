@@ -99,11 +99,13 @@ jobs:
         env:
           NODE_ENV: test
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
-          path: playwright-report/
+          path: |
+            packages/app/playwright-report/
+            packages/app/playwright-html/
           retention-days: 30
 
       - name: Stop Test Node
@@ -149,13 +151,11 @@ jobs:
         env:
           NODE_ENV: test
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
-          path: |
-            packages/app/playwright-report/
-            packages/app/playwright-html/
+          path: packages/e2e-contract-tests/playwright-report/
           retention-days: 30
 
       - name: Stop Test Node
