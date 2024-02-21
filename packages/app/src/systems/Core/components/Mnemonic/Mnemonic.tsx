@@ -10,6 +10,11 @@ const WORDS = import.meta.env.VITE_MNEMONIC_WORDS;
 function fillArray(item: string[], format: number) {
   return Array.from({ length: format }).map((_, idx) => item[idx] || '');
 }
+
+function splitSeedPhrase(str: string) {
+  return str.trim().split(/\s+/);
+}
+
 function checkMoreThanOneWord(word: string) {
   if (word.split(' ').length > 1) {
     const first = word.split(' ')[0];
@@ -57,24 +62,34 @@ export function Mnemonic({
     toast.success('Seed phrase copied to clipboard');
   }
 
-  function handlePastInput(
+  function handlePaste(words: string[]) {
+    const numWords = words.length;
+    const selectedMnemonicSize =
+      MNEMONIC_SIZES.find((size) => size >= numWords) ??
+      MNEMONIC_SIZES[MNEMONIC_SIZES.length - 1];
+    setFormat(selectedMnemonicSize);
+    setValue(fillArray(words, selectedMnemonicSize));
+  }
+
+  function handlePasteInput(
     ev: React.ClipboardEvent<HTMLInputElement>,
     idx: number
   ) {
     const text = ev.clipboardData.getData('text/plain');
-    const words = text.split(' ');
+    const words = splitSeedPhrase(text);
 
     // Only allow paste on the first input or
     // if the paste has more than 12 words
-    if (idx === 0 || words.length > 11) {
+    const minWords = 12;
+    if (idx === 0 || words.length >= minWords) {
       ev.preventDefault();
-      setValue(fillArray(words, format));
+      handlePaste(words);
     }
   }
 
-  async function handlePaste() {
+  async function handlePastePress() {
     const text = await navigator.clipboard.readText();
-    setValue(fillArray(text.split(' '), format));
+    handlePaste(splitSeedPhrase(text));
   }
 
   function handleChange(val: string, idx: number) {
@@ -137,7 +152,7 @@ export function Mnemonic({
                     value={value[idx]}
                     index={idx}
                     onChange={handleChange}
-                    onPaste={handlePastInput}
+                    onPaste={handlePasteInput}
                   />
                 </div>
               </Grid>
@@ -162,7 +177,7 @@ export function Mnemonic({
             size="sm"
             variant="solid"
             leftIcon={<Icon icon="Copy" color="intentsBase8" />}
-            onPress={handlePaste}
+            onPress={handlePastePress}
           >
             Paste
           </Button>
