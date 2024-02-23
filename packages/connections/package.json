@@ -38,7 +38,7 @@
     "fuels": ">=0.74.0"
   },
   "devDependencies": {
-    "fuels": "0.74.0",
+    "fuels": "0.0.0-pr-1788-20240222094224",
     "@types/uuid": "^9.0.5",
     "blob-polyfill": "^7.0.20220408",
     "jest-environment-jsdom": "29.6.2",
