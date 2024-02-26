@@ -14,7 +14,7 @@
     "@fuels/react": "0.15.2",
     "@fuel-wallet/sdk": "workspace:*",
     "@fuel-wallet/types": "workspace:*",
-    "fuels": "0.0.0-pr-1788-20240222094224",
+    "fuels": "next",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.11",
