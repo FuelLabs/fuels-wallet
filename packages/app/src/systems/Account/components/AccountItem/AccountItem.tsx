@@ -184,11 +184,11 @@ const styles = {
         flex: 1,
         justifyContent: 'space-between',
       },
-      '.fuel_Avatar-generated': {
-        flexShrink: 0,
-      },
     },
 
+    '.fuel_Avatar-generated': {
+      flexShrink: 0,
+    },
     '.fuel_Button': {
       px: '$1 !important',
       color: '$intentsBase8',
