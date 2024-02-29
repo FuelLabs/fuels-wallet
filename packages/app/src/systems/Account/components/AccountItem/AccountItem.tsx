@@ -141,10 +141,9 @@ export const AccountItem: AccountItemComponent = ({
       aria-disabled={isDisabled}
       aria-label={account.name}
       data-compact={compact}
-      className="AccountItem"
     >
       <Avatar.Generated size={compact ? 'xsm' : 'md'} hash={account.address} />
-      <Box.Flex className="wrapper">
+      <Box.Flex className="wrapper" css={styles.content}>
         <Heading as="h6" css={styles.name}>
           {account.name}
         </Heading>
@@ -168,6 +167,10 @@ const styles = {
     background: '$cardBg',
     py: '$3 !important',
     cursor: 'pointer',
+
+    '& .fuel_Box-flex': {
+      minWidth: 0,
+    },
 
     '&[aria-disabled="true"]': {
       opacity: 0.5,
@@ -198,7 +201,14 @@ const styles = {
       color: '$intentsBase11',
     },
   }),
+  content: cssObj({
+    flex: 1,
+    minWidth: 0,
+  }),
   name: cssObj({
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
     margin: 0,
   }),
   address: cssObj({
