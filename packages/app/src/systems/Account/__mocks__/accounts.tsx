@@ -1,6 +1,4 @@
-import { WalletManager } from '@fuel-ts/wallet-manager';
-import { Provider, Signer } from 'fuels';
-import { VITE_FUEL_PROVIDER_URL } from '~/config';
+import { WalletManager, Signer } from 'fuels';
 import { db, Storage } from '~/systems/Core';
 
 import { AccountService } from '../services';
@@ -55,8 +53,7 @@ export async function createMockAccount() {
   /**
    * Add Vault
    * */
-  const provider = await Provider.create(VITE_FUEL_PROVIDER_URL);
-  await manager.addVault({ type: 'privateKey', secret: secretKey, provider });
+  await manager.addVault({ type: 'privateKey', secret: secretKey });
   const accounts = manager.getAccounts();
   const walletAccount =
     accounts.find((a) => a.address.toString().startsWith('0x94')) ||

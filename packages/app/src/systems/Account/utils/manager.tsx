@@ -1,4 +1,4 @@
-import { WalletManager } from '@fuel-ts/wallet-manager';
+import { WalletManager } from 'fuels';
 
 import { IndexedDBStorage } from './storage';
 

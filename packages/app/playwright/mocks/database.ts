@@ -1,5 +1,3 @@
-import type { Account as WalletAccount } from '@fuel-ts/wallet-manager';
-import { WalletManager } from '@fuel-ts/wallet-manager';
 import type {
   Account,
   Asset,
@@ -8,7 +6,8 @@ import type {
   NetworkData,
 } from '@fuel-wallet/sdk';
 import type { Page } from '@playwright/test';
-import { Mnemonic, encrypt, Address } from 'fuels';
+import type { Account as WalletAccount } from 'fuels';
+import { WalletManager, Mnemonic, encrypt, Address } from 'fuels';
 
 import { getByAriaLabel } from '../commons/locator';
 import { hasText } from '../commons/text';

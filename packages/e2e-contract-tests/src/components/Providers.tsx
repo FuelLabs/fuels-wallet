@@ -1,3 +1,7 @@
+import {
+  FuelWalletConnector,
+  FuelWalletDevelopmentConnector,
+} from '@fuel-wallet/sdk';
 import { FuelProvider } from '@fuels/react';
 import type { ReactNode } from 'react';
 
@@ -9,7 +13,10 @@ export const Providers = ({ children }: ProviderProps) => {
   return (
     <FuelProvider
       fuelConfig={{
-        devMode: true,
+        connectors: [
+          new FuelWalletConnector(),
+          new FuelWalletDevelopmentConnector(),
+        ],
       }}
     >
       {children}

@@ -12,3 +12,5 @@ contracts
 **/__generated__/
 **/generated/*
 .changeset/**.md
+**/playwright-html/
+**/playwright-results/

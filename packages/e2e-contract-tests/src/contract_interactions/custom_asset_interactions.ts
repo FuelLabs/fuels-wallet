@@ -1,5 +1,4 @@
-import type { FuelWalletLocked } from '@fuel-wallet/sdk';
-import type { BigNumberish } from 'fuels';
+import type { Account, BigNumberish } from 'fuels';
 import { bn, BaseAssetId } from 'fuels';
 import toast from 'react-hot-toast';
 
@@ -14,7 +13,7 @@ export const mint = async ({
   amount,
   subId,
 }: {
-  wallet: FuelWalletLocked;
+  wallet: Account;
   amount: BigNumberish;
   subId: string;
 }) => {
@@ -39,7 +38,7 @@ export const deposit = async ({
   amount,
   assetId,
 }: {
-  wallet: FuelWalletLocked;
+  wallet: Account;
   amount: BigNumberish;
   assetId: string;
 }) => {
@@ -59,7 +58,7 @@ export const depositHalf = async ({
   amount,
   assetId,
 }: {
-  wallet: FuelWalletLocked;
+  wallet: Account;
   amount: BigNumberish;
   assetId: string;
 }) => {
@@ -80,7 +79,7 @@ export const depositHalfAndMint = async ({
   mintAmount,
   assetId,
 }: {
-  wallet: FuelWalletLocked;
+  wallet: Account;
   forwardAmount: BigNumberish;
   mintAmount: BigNumberish;
   assetId: string;
@@ -107,7 +106,7 @@ export const depositHalfAndExternalMint = async ({
   mintAmount,
   assetId,
 }: {
-  wallet: FuelWalletLocked;
+  wallet: Account;
   forwardAmount: BigNumberish;
   mintAmount: BigNumberish;
   assetId: string;
@@ -146,7 +145,7 @@ export const depositAndMintMultiCall = async ({
   mintAmount,
   assetId,
 }: {
-  wallet: FuelWalletLocked;
+  wallet: Account;
   forwardAmount: BigNumberish;
   mintAmount: BigNumberish;
   assetId: string;
@@ -172,7 +171,7 @@ export const depositAndMintMultiCall = async ({
   }
 };
 
-export const panicTx = async ({ wallet }: { wallet: FuelWalletLocked }) => {
+export const panicTx = async ({ wallet }: { wallet: Account }) => {
   const contract = CustomAssetAbi__factory.connect(MAIN_CONTRACT_ID, wallet);
   try {
     await contract.functions.panic_tx().txParams(TX_PARAMS).call();
@@ -181,7 +180,7 @@ export const panicTx = async ({ wallet }: { wallet: FuelWalletLocked }) => {
   }
 };
 
-export const revertTx = async ({ wallet }: { wallet: FuelWalletLocked }) => {
+export const revertTx = async ({ wallet }: { wallet: Account }) => {
   const contract = CustomAssetAbi__factory.connect(MAIN_CONTRACT_ID, wallet);
   try {
     await contract.functions.revert_tx().txParams(TX_PARAMS).call();
