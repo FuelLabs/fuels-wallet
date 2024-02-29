@@ -32,10 +32,10 @@
     "json-rpc-2.0": "^1.6.0"
   },
   "peerDependencies": {
-    "fuels": ">=0.74.0"
+    "fuels": "next"
   },
   "devDependencies": {
-    "fuels": "0.0.0-pr-1788-20240222094224",
+    "fuels": "next",
     "jest-environment-jsdom": "29.6.2",
     "tsup": "^7.2.0",
     "undici": "^6.4.0",
