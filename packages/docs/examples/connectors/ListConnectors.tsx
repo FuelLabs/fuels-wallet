@@ -1,16 +1,17 @@
 /* eslint-disable no-console */
 import { Tag } from '@fuel-ui/react';
-import type { FuelConnector } from '@fuel-wallet/sdk';
 /* createInstance:start */
 import {
-  Fuel,
   FuelWalletConnector,
   FueletWalletConnector,
   FuelWalletDevelopmentConnector,
-} from '@fuel-wallet/sdk';
+} from '@fuels/connectors';
+import type { FuelConnector } from 'fuels';
+import { Fuel } from 'fuels';
 import { useEffect, useState } from 'react'; // ignore-line
 
 import { ExampleBox } from '../../src/components/ExampleBox'; // ignore-line
+
 
 const fuel = new Fuel({
   connectors: [

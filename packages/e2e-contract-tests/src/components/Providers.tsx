@@ -1,7 +1,7 @@
 import {
   FuelWalletConnector,
   FuelWalletDevelopmentConnector,
-} from '@fuel-wallet/sdk';
+} from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import type { ReactNode } from 'react';
 

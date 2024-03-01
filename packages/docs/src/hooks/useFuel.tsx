@@ -1,8 +1,8 @@
 import {
-  Fuel,
   FuelWalletConnector,
   FuelWalletDevelopmentConnector,
-} from '@fuel-wallet/sdk';
+} from '@fuels/connectors';
+import { Fuel } from 'fuels';
 import { useState, useEffect } from 'react';
 
 const fuelSDK = new Fuel({

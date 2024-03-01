@@ -6,7 +6,7 @@ import type {
   NetworkData,
 } from '@fuel-wallet/sdk';
 import type { Page } from '@playwright/test';
-import type { Account as WalletAccount } from 'fuels';
+import type { WalletManagerAccount as WalletAccount } from 'fuels';
 import { WalletManager, Mnemonic, encrypt, Address } from 'fuels';
 
 import { getByAriaLabel } from '../commons/locator';
@@ -113,7 +113,6 @@ export async function createManager(mnemonic: string) {
   await walletManager.addVault({
     type: 'mnemonic',
     secret: mnemonic,
-    provider: null,
   });
 
   return walletManager;

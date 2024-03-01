@@ -2,15 +2,15 @@ import { EventEmitter } from 'events';
 import {
   Address,
   BaseAssetId,
+  Fuel,
+  FuelConnectorEventType,
+  LocalStorage,
   Provider,
   TransactionStatus,
   Wallet,
   bn,
+  dispatchFuelConnectorEvent,
 } from 'fuels';
-
-import { Fuel } from '../Fuel';
-import { FuelConnectorEventType } from '../api';
-import { dispatchFuelConnectorEvent } from '../utils';
 
 import { MockConnector } from './MockConnector';
 import { promiseCallback } from './utils/promiseCallback';
@@ -24,14 +24,6 @@ describe('Fuel Wallet SDK multiple connectors', () => {
     const fuel = new Fuel();
     const connectors = await fuel.connectors();
     expect(connectors.length).toBe(2);
-  });
-
-  test('Create using default connectors devMode', async () => {
-    const fuel = new Fuel({
-      devMode: true,
-    });
-    const connectors = await fuel.connectors();
-    expect(connectors.length).toBe(3);
   });
 
   test('Add connector using event of a custom EventBus', async () => {
@@ -312,7 +304,7 @@ describe('Fuel Wallet SDK multiple connectors', () => {
     });
     const fuel = new Fuel({
       connectors: [walletConnector, thirdPartyConnector],
-      storage: window.localStorage,
+      storage: new LocalStorage(window.localStorage),
     });
 
     // Select third party connector
@@ -320,7 +312,7 @@ describe('Fuel Wallet SDK multiple connectors', () => {
 
     const fuelNewInstance = new Fuel({
       connectors: [walletConnector, thirdPartyConnector],
-      storage: window.localStorage,
+      storage: new LocalStorage(window.localStorage),
     });
     await fuelNewInstance.hasConnector();
     expect(fuelNewInstance.currentConnector()?.name).toBe(

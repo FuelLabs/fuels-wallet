@@ -26,10 +26,10 @@
     "json-rpc-2.0": "^1.6.0"
   },
   "peerDependencies": {
-    "fuels": "next"
+    "fuels": ">=0.74.0"
   },
   "devDependencies": {
-    "fuels": "next",
+    "fuels": ">=0.74.0",
     "tsup": "^7.2.0"
   }
 }

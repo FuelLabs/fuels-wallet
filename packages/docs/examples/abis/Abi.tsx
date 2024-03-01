@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Button, Box, Input } from '@fuel-ui/react';
-import type { FuelABI } from '@fuel-wallet/sdk';
 import { useFuel, useIsConnected } from '@fuels/react';
+import type { FuelABI } from 'fuels';
 import { useState } from 'react';
 
 import { ExampleBox } from '../../src/components/ExampleBox';

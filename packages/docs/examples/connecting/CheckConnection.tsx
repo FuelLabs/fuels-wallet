@@ -1,14 +1,15 @@
 /* eslint-disable no-console */
 import { Box, Button, Text } from '@fuel-ui/react';
-import { Fuel } from '@fuel-wallet/sdk';
+import { defaultConnectors } from '@fuels/connectors';
 import { useFuel } from '@fuels/react';
+import { Fuel } from 'fuels';
 import { useEffect, useState } from 'react';
 
 import { ExampleBox } from '../../src/components/ExampleBox';
 import { useLoading } from '../../src/hooks/useLoading';
 
 // Change default config for devMode to true
-Fuel.defaultConfig.devMode = true;
+Fuel.defaultConfig.connectors = defaultConnectors({ devMode: true });
 
 export function CheckConnection() {
   const { fuel } = useFuel();
