@@ -28,7 +28,6 @@ export const testSetup = async ({
     chainName
   );
   const fuelWallet = Wallet.fromMnemonic(FUEL_MNEMONIC);
-  fuelWallet.connect(fuelProvider);
   await seedWallet(
     fuelWallet.address.toString(),
     bn.parseUnits('100'),

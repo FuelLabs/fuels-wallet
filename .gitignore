@@ -84,3 +84,7 @@ act-actions
 
 # XState typegen
 *.typegen.ts
+
+
+playwright-results
+playwright-html

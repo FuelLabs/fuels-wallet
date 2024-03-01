@@ -21,6 +21,7 @@ describe('Fuel Wallet SDK test different options', () => {
       removeItem: jest.fn(),
       clear: jest.fn(),
     };
+
     const connector = new MockConnector();
     const fuel = new Fuel({
       connectors: [connector],
