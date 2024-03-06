@@ -53,7 +53,7 @@ export function BalanceWidget({
             hash={account?.address as string}
             css={{ boxShadow: '$sm' }}
           />
-          <Box.Stack gap="$1" css={{ flex: 1 }}>
+          <Box.Stack gap="$1" css={{ flex: 1, minWidth: 0 }}>
             <Heading as="h6" css={styles.name}>
               {account.name}
             </Heading>
@@ -130,6 +130,9 @@ const styles = {
     },
   }),
   name: cssObj({
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
     lineHeight: '$tight',
     margin: '0px 0px -6px',
   }),
