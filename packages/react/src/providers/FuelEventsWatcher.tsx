@@ -7,54 +7,54 @@ import { useFuel } from './FuelHooksProvider';
 
 export function FuelEventsWatcher() {
   const { fuel } = useFuel();
-  const fuelQueryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   function onCurrentConnectorChange() {
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.account]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.isConnected]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.wallet]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.balance]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.provider]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.nodeInfo]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.accounts]);
+    queryClient.invalidateQueries([QUERY_KEYS.account]);
+    queryClient.invalidateQueries([QUERY_KEYS.isConnected]);
+    queryClient.invalidateQueries([QUERY_KEYS.wallet]);
+    queryClient.invalidateQueries([QUERY_KEYS.balance]);
+    queryClient.invalidateQueries([QUERY_KEYS.provider]);
+    queryClient.invalidateQueries([QUERY_KEYS.nodeInfo]);
+    queryClient.invalidateQueries([QUERY_KEYS.accounts]);
   }
 
   function onConnectorsChange() {
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.connectorList]);
+    queryClient.invalidateQueries([QUERY_KEYS.connectorList]);
   }
 
   function onCurrentAccountChange() {
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.account]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.wallet]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.balance]);
+    queryClient.invalidateQueries([QUERY_KEYS.account]);
+    queryClient.invalidateQueries([QUERY_KEYS.wallet]);
+    queryClient.invalidateQueries([QUERY_KEYS.balance]);
   }
 
   function onConnectionChange() {
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.isConnected]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.account]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.wallet]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.balance]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.provider]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.nodeInfo]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.accounts]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.connectorList]);
+    queryClient.invalidateQueries([QUERY_KEYS.isConnected]);
+    queryClient.invalidateQueries([QUERY_KEYS.account]);
+    queryClient.invalidateQueries([QUERY_KEYS.wallet]);
+    queryClient.invalidateQueries([QUERY_KEYS.balance]);
+    queryClient.invalidateQueries([QUERY_KEYS.provider]);
+    queryClient.invalidateQueries([QUERY_KEYS.nodeInfo]);
+    queryClient.invalidateQueries([QUERY_KEYS.accounts]);
+    queryClient.invalidateQueries([QUERY_KEYS.connectorList]);
   }
 
   function onNetworkChange() {
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.currentNetwork]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.provider]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.transactionReceipts]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.chain]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.nodeInfo]);
+    queryClient.invalidateQueries([QUERY_KEYS.currentNetwork]);
+    queryClient.invalidateQueries([QUERY_KEYS.provider]);
+    queryClient.invalidateQueries([QUERY_KEYS.transactionReceipts]);
+    queryClient.invalidateQueries([QUERY_KEYS.chain]);
+    queryClient.invalidateQueries([QUERY_KEYS.nodeInfo]);
   }
 
   function onAccountsChange() {
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.account]);
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.accounts]);
+    queryClient.invalidateQueries([QUERY_KEYS.account]);
+    queryClient.invalidateQueries([QUERY_KEYS.accounts]);
   }
 
   function onAssetsChange() {
-    fuelQueryClient.invalidateQueries([QUERY_KEYS.assets]);
+    queryClient.invalidateQueries([QUERY_KEYS.assets]);
   }
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export function FuelEventsWatcher() {
       fuel.off(fuel.events.currentNetwork, onNetworkChange);
       fuel.off(fuel.events.assets, onAssetsChange);
     };
-  }, [fuel, fuelQueryClient]);
+  }, [fuel, queryClient]);
 
   return null;
 }
