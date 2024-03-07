@@ -5,10 +5,7 @@
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "default": "./dist/index.mjs"
-    }
+    ".": "./src/index.ts"
   },
   "publishConfig": {
     "access": "public",

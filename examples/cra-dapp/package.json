@@ -2,32 +2,20 @@
   "name": "cra-dapp",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@fuels/react": "0.15.1",
-    "@types/node": "^16.18.61",
-    "@types/react": "^18.2.37",
-    "@types/react-dom": "^18.2.15",
-    "fuels": "0.67.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
-  },
   "scripts": {
-    "start": "react-scripts start",
-    "eject": "react-scripts eject"
+    "start": "vite"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "@fuel-wallet/react": "workspace:*",
+    "fuels": "0.74.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "18.2.56",
+    "@types/react-dom": "18.2.19",
+    "@vitejs/plugin-react": "4.2.1",
+    "typescript": "5.2.2",
+    "vite": "5.1.4"
   }
 }
