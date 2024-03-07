@@ -1,11 +1,7 @@
 import type { FuelConfig } from '@fuel-wallet/sdk';
 import { Fuel } from '@fuel-wallet/sdk';
-import type {
-  QueryClientConfig} from '@tanstack/react-query';
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
+import type { QueryClientConfig } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { createContext, useContext, useMemo } from 'react';
 
@@ -15,7 +11,6 @@ const queryClientConfig: QueryClientConfig = {
   defaultOptions: {
     queries: {
       // These two are annoying during development
-      staleTime: Infinity,
       retry: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
