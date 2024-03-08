@@ -13,7 +13,6 @@ const queryClientConfig: QueryClientConfig = {
       // These two are annoying during development
       retry: false,
       refetchOnWindowFocus: false,
-      refetchOnMount: false,
       // This is disabled because it causes a bug with arrays with named keys
       // For example, if a query returns: [BN, BN, a: BN, b: BN]
       // with this option on it will be cached as: [BN, BN]
