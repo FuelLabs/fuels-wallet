@@ -20,9 +20,6 @@
       }
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "pnpm ts:check && tsup",
     "ts:check": "pnpm tsc --noEmit"
