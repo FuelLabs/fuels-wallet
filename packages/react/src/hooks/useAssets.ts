@@ -1,4 +1,4 @@
-import type { Asset } from 'fuels';
+import type { Asset } from '@fuel-wallet/sdk';
 
 import { useNamedQuery } from '../core';
 import { useFuel } from '../providers';
