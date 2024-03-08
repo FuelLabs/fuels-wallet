@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
 import type { BytesLike } from 'fuels';
 import { Address } from 'fuels';
 import { useEffect } from 'react';
 
+import { useNamedQuery } from '../core';
 import { QUERY_KEYS } from '../utils';
 
 import { useProvider } from './useProvider';
@@ -16,9 +16,9 @@ export const useBalance = ({
 }) => {
   const { provider } = useProvider();
 
-  const query = useQuery(
-    [QUERY_KEYS.balance, address, assetId],
-    async () => {
+  const query = useNamedQuery('balance', {
+    queryKey: [QUERY_KEYS.balance, address, assetId],
+    queryFn: async () => {
       try {
         // TODO: replace with ETH_ASSET_ID from asset-list package after this task gets done
         // https://linear.app/fuel-network/issue/FRO-144/make-asset-list-package-public-and-publish-in-npm
@@ -32,25 +32,21 @@ export const useBalance = ({
         return null;
       }
     },
-    {
-      initialData: null,
-      enabled: !!provider,
-    }
-  );
-
-  const listenerAccountFetcher = () => {
-    query.refetch();
-  };
+    initialData: null,
+    enabled: !!provider,
+  });
 
   useEffect(() => {
+    const listenerAccountFetcher = () => {
+      query.refetch();
+    };
+
     window.addEventListener('focus', listenerAccountFetcher);
+
     return () => {
       window.removeEventListener('focus', listenerAccountFetcher);
     };
-  }, []);
+  }, [query]);
 
-  return {
-    balance: query.data,
-    ...query,
-  };
+  return query;
 };

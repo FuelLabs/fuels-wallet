@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
 // should import ChainInfo because of this error: https://github.com/FuelLabs/fuels-ts/issues/1054
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { ChainInfo } from 'fuels';
 
+import { useNamedQuery } from '../core';
 import { QUERY_KEYS } from '../utils';
 
 import { useProvider } from './useProvider';
@@ -10,9 +10,9 @@ import { useProvider } from './useProvider';
 export const useChain = () => {
   const { provider } = useProvider();
 
-  const query = useQuery(
-    [QUERY_KEYS.chain],
-    async () => {
+  return useNamedQuery('chain', {
+    queryKey: [QUERY_KEYS.chain],
+    queryFn: async () => {
       try {
         const currentFuelChain = await provider?.getChain();
         return currentFuelChain || null;
@@ -20,14 +20,7 @@ export const useChain = () => {
         return null;
       }
     },
-    {
-      initialData: null,
-      enabled: !!provider,
-    }
-  );
-
-  return {
-    chain: query.data,
-    ...query,
-  };
+    initialData: null,
+    enabled: !!provider,
+  });
 };
