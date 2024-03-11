@@ -1,14 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
-
+import { useNamedQuery } from '../core';
 import { useFuel } from '../providers';
 import { QUERY_KEYS } from '../utils';
 
 export const useAccount = () => {
   const { fuel } = useFuel();
 
-  const { data, ...queryProps } = useQuery(
-    [QUERY_KEYS.account],
-    async () => {
+  return useNamedQuery('account', {
+    queryKey: [QUERY_KEYS.account],
+    queryFn: async () => {
       try {
         const currentFuelAccount = await fuel?.currentAccount();
         return currentFuelAccount || null;
@@ -16,13 +15,6 @@ export const useAccount = () => {
         return null;
       }
     },
-    {
-      initialData: null,
-    }
-  );
-
-  return {
-    account: data,
-    ...queryProps,
-  };
+    initialData: null,
+  });
 };

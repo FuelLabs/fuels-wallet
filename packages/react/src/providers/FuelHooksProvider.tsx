@@ -1,12 +1,13 @@
 import type { FuelConfig } from '@fuel-wallet/sdk';
 import { Fuel } from '@fuel-wallet/sdk';
+import type { QueryClientConfig } from '@tanstack/react-query';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { createContext, useContext, useMemo } from 'react';
 
 import { FuelEventsWatcher } from './FuelEventsWatcher';
 
-const queryClientConfig = {
+const queryClientConfig: QueryClientConfig = {
   defaultOptions: {
     queries: {
       // These two are annoying during development
@@ -41,7 +42,7 @@ export const useFuel = () => {
   }
   return context;
 };
-export const fuelQueryClient = new QueryClient(queryClientConfig);
+export const queryClient = new QueryClient(queryClientConfig);
 
 export const FuelHooksProvider = ({
   children,
@@ -53,7 +54,7 @@ export const FuelHooksProvider = ({
 
   return (
     <FuelReactContext.Provider value={{ fuel }}>
-      <QueryClientProvider client={fuelQueryClient}>
+      <QueryClientProvider client={queryClient}>
         <FuelEventsWatcher />
         {children}
       </QueryClientProvider>
