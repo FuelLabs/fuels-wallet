@@ -15,7 +15,7 @@ console.log(account);
 // fuel1r20zhd...
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useAccount.tsx)
+[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useAccount.ts)
 
 ## `useAccounts`
 
@@ -27,7 +27,7 @@ console.log(accounts);
 // [fuel1r20zhd..., fuel1qqluc9..., ...]
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useAccounts.tsx)
+[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useAccounts.ts)
 
 ## `useBalance`
 
@@ -43,7 +43,7 @@ console.log(balance);
 // 1000 (example balance)
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useBalance.tsx)
+[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useBalance.ts)
 
 ## `useChain`
 
@@ -54,7 +54,7 @@ const { chain } = useChain();
 console.log(chain.name);
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useChain.tsx)
+[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useChain.ts)
 
 ## `useConnect`
 
@@ -70,7 +70,7 @@ const handleConnect = async () => {
 handleConnect();
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useConnect.tsx)
+[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useConnect.ts)
 
 ## `useConnectors`
 
@@ -82,7 +82,7 @@ const { connector } = useConnectors();
 console.log(connectors);
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useConnectors.tsx)
+[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useConnectors.ts)
 
 ## `useDisconnect`
 
@@ -98,7 +98,7 @@ const handleDisconnect = async () => {
 handleDisconnect();
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useDisconnect.tsx)
+[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useDisconnect.ts)
 
 ## `useIsConnected`
 
@@ -110,7 +110,7 @@ console.log(isConnected);
 // true
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useIsConnected.tsx)
+[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useIsConnected.ts)
 
 ## `useNodeInfo`
 
@@ -120,7 +120,7 @@ Asynchronously retrieves information about the connected node, checks compatibil
 const { isCompatible } = useNodeInfo();
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useNodeInfo.tsx)
+[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useNodeInfo.ts)
 
 ## `useProvider`
 
@@ -130,7 +130,7 @@ Returns the provider from the Fuel object instance.
 const { provider } = useProvider();
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useProvider.tsx)
+[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useProvider.ts)
 
 ## `useTransaction`
 
@@ -140,7 +140,7 @@ Retrieves transaction information associated with a specific transaction ID by u
 const { transaction } = useTransaction({ txId: 'fuel1r20zhd...' });
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useTransaction.tsx)
+[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useTransaction.ts)
 
 ## `useTransactionReceipts`
 
@@ -152,7 +152,7 @@ const { transactionReceipts } = useTransactionReceipts({
 });
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useTransactionReceipts.tsx)
+[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useTransactionReceipts.ts)
 
 ## `useWallet`
 
@@ -162,4 +162,4 @@ Retrieves wallet instance `<Account | undefined>` and ensures the presence of a 
 const { wallet } = useWallet({ address: 'fuel1r20zhd...' });
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useWallet.tsx)
+[See the source file](https://github.com/FuelLabs/fuels-wallet/blob/master/packages/react/src/hooks/useWallet.ts)
