@@ -1,5 +1,11 @@
 # @fuel-wallet/react
 
+## 0.16.0
+
+### Minor Changes
+
+- [#1127](https://github.com/FuelLabs/fuels-wallet/pull/1127) [`af8c470`](https://github.com/FuelLabs/fuels-wallet/commit/af8c470c90e68dffbdbdd0b25b907db61e084356) Thanks [@helciofranco](https://github.com/helciofranco)! - fix: fuel hooks will only re-render tracked properties, instead of listening to every useQuery property.
+
 ## 0.15.2
 
 ### Patch Changes

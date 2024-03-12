@@ -1,5 +1,22 @@
 # fuels-wallet
 
+## 0.16.0
+
+### Minor Changes
+
+- [#1099](https://github.com/FuelLabs/fuels-wallet/pull/1099) [`82fba09`](https://github.com/FuelLabs/fuels-wallet/commit/82fba093fc298eebcbddb4b17703d3fa488279a5) Thanks [@helciofranco](https://github.com/helciofranco)! - Automatically identify seed phrase length and update the selected format to fit.
+
+### Patch Changes
+
+- [#1081](https://github.com/FuelLabs/fuels-wallet/pull/1081) [`15358f5`](https://github.com/FuelLabs/fuels-wallet/commit/15358f509596d823f201a2bfd3721d4e26fc52cc) Thanks [@matt-user](https://github.com/matt-user)! - Use the packages migrated to fuels npm packs
+
+- [#1118](https://github.com/FuelLabs/fuels-wallet/pull/1118) [`6585923`](https://github.com/FuelLabs/fuels-wallet/commit/65859237475addf90cc60b1b75567a3692271c7e) Thanks [@helciofranco](https://github.com/helciofranco)! - truncates long account name correctly
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.16.0
+  - @fuel-wallet/sdk@0.16.0
+  - @fuel-wallet/types@0.16.0
+
 ## 0.15.2
 
 ### Patch Changes
