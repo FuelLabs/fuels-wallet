@@ -3,7 +3,7 @@ import { Button, Icon, Tabs } from '@fuel-ui/react';
 import { AnimatePresence } from 'framer-motion';
 import { Layout, scrollable } from '~/systems/Core';
 
-import { AssetList } from '../../components';
+import { MemoAssetList } from '../../components';
 import { useAssets } from '../../hooks';
 
 export function Assets() {
@@ -26,7 +26,7 @@ export function Assets() {
               </Tabs.Trigger>
             </Tabs.List>
             <Tabs.Content value="custom">
-              <AssetList
+              <MemoAssetList
                 assets={state.assetsCustom}
                 showActions
                 onRemove={(assetId: string) =>
@@ -40,7 +40,7 @@ export function Assets() {
               />
             </Tabs.Content>
             <Tabs.Content value="listed">
-              <AssetList assets={state.assetsListed} />
+              <MemoAssetList assets={state.assetsListed} />
             </Tabs.Content>
           </Tabs>
         </AnimatePresence>
