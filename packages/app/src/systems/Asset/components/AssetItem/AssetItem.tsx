@@ -13,7 +13,7 @@ import {
 } from '@fuel-ui/react';
 import type { AssetAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
-import { useMemo, type FC } from 'react';
+import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AmountVisibility, Pages, shortAddress } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
@@ -108,22 +108,17 @@ export const AssetItem: AssetItemComponent = ({
     navigate(Pages.assetsEdit({ id: asset.assetId }));
   }
 
-  // Using memo to avoid avatar of token flash when component rerender
-  const MemoAvatar = useMemo(() => {
-    return imageUrl ? (
-      <Avatar
-        name={name}
-        src={imageUrl}
-        css={{ height: 36, width: 36, borderRadius: '$full' }}
-      />
-    ) : (
-      <Avatar.Generated hash={assetId} css={{ height: 36, width: 36 }} />
-    );
-  }, [name, imageUrl, assetId]);
-
   return (
     <CardList.Item rightEl={getRightEl()} css={{ alignItems: 'center' }}>
-      {MemoAvatar}
+      {imageUrl ? (
+        <Avatar
+          name={name}
+          src={imageUrl}
+          css={{ height: 36, width: 36, borderRadius: '$full' }}
+        />
+      ) : (
+        <Avatar.Generated hash={assetId} css={{ height: 36, width: 36 }} />
+      )}
       <Box.Flex direction="column">
         <Heading as="h6" css={styles.assetName}>
           {name || (
