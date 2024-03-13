@@ -21,7 +21,7 @@
     "ts:check": "tsc --noEmit"
   },
   "dependencies": {
-    "@fuels/assets": "^0.1.1",
+    "@fuels/assets": "0.15.3",
     "dexie-observable": "4.0.1-beta.13",
     "json-rpc-2.0": "^1.6.0"
   },
