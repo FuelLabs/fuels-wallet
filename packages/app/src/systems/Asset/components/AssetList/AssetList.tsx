@@ -1,7 +1,7 @@
 import { Button, CardList } from '@fuel-ui/react';
 import type { AssetAmount } from '@fuel-wallet/types';
 import type { FC } from 'react';
-import { useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 
 import { AssetItem } from '../AssetItem';
 
@@ -65,5 +65,6 @@ export const AssetList: AssetListComponent = ({
   );
 };
 
+export const MemoAssetList = memo(AssetList);
 AssetList.Empty = AssetListEmpty;
 AssetList.Loading = AssetListLoading;
