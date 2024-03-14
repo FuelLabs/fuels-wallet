@@ -41,7 +41,7 @@
     "@octokit/auth-token": "^4.0.0",
     "@octokit/core": "^5.0.2",
     "@octokit/plugin-rest-endpoint-methods": "^10.2.0",
-    "axios": "^1.6.5",
+    "axios": "^1.6.7",
     "octokit": "^3.1.2",
     "registry-url": "^6.0.1",
     "semver": "^7.5.4"
