@@ -128,6 +128,9 @@ importers:
 
   examples/cra-dapp:
     dependencies:
+      '@fuels/connectors':
+        specifier: 0.1.0
+        version: 0.1.0(fuels@0.74.0)
       '@fuels/react':
         specifier: 0.16.0
         version: 0.16.0(@types/react-dom@18.2.19)(@types/react@18.2.56)(fuels@0.74.0)(react-dom@18.2.0)(react@18.2.0)
