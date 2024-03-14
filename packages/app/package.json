@@ -29,7 +29,7 @@
     "@fuel-wallet/sdk": "workspace:*",
     "@fuel-wallet/types": "workspace:*",
     "@fuels/assets": "0.15.3",
-    "@fuels/connectors": "file:/Users/helciofranco/Documents/connectors/packages/connectors",
+    "@fuels/connectors": "0.1.0",
     "@fuels/local-storage": "0.15.3",
     "@fuels/react-xstore": "0.15.3",
     "@hookform/resolvers": "^3.3.2",
