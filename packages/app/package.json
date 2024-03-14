@@ -69,7 +69,7 @@
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^1.0.14",
-    "@fuels/react": "0.15.3",
+    "@fuels/react": "0.16.0",
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/named-operations-object": "^2.3.1",
     "@graphql-codegen/near-operation-file-preset": "^2.5.0",

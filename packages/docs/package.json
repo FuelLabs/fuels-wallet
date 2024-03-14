@@ -18,7 +18,7 @@
     "@fuel-ui/react": "0.23.0",
     "@fuel-wallet/sdk": "workspace:*",
     "@fuels/connectors": "0.1.0",
-    "@fuels/react": "0.15.1",
+    "@fuels/react": "0.16.0",
     "@mdx-js/react": "^2.3.0",
     "@next/mdx": "^13.5.4",
     "acorn": "^8.10.0",

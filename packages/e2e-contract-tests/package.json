@@ -11,9 +11,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fuels/react": "0.15.2",
-    "@fuels/connectors": "0.1.0",
     "@fuel-wallet/types": "workspace:*",
+    "@fuels/connectors": "0.1.0",
+    "@fuels/react": "0.16.0",
     "fuels": ">=0.74.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
