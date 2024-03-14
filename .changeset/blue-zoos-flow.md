@@ -5,4 +5,4 @@
 '@fuel-wallet/sdk': patch
 ---
 
-chore: update ts-sdk and fuel-ui pacakges
+chore: update ts-sdk and fuel-ui packages
