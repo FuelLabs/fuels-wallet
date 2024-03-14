@@ -1,5 +1,13 @@
 # @fuel-wallet/connections
 
+## 0.16.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/sdk@0.16.1
+  - @fuel-wallet/types@0.16.1
+
 ## 0.16.0
 
 ### Patch Changes
