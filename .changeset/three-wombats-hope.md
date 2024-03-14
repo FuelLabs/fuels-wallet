@@ -1,5 +1,5 @@
 ---
-'fuels-wallet': minor
+'fuels-wallet': patch
 ---
 
 perf: eliminating asset avatar flashing
