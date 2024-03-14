@@ -4,6 +4,7 @@ import {
   FueletWalletConnector,
 } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
@@ -21,6 +22,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       }}
     >
       <App />
+      <ReactQueryDevtools initialIsOpen={false} />
     </FuelProvider>
   </React.StrictMode>
 );
