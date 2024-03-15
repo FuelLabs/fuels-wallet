@@ -302,10 +302,10 @@ importers:
         specifier: 1.0.14
         version: 1.0.14(vite@4.5.2)
       '@fuel-wallet/sdk':
-        specifier: workspace:*
+        specifier: workspace:../sdk
         version: link:../sdk
       '@fuel-wallet/types':
-        specifier: workspace:*
+        specifier: workspace:../types
         version: link:../types
       '@fuels/react':
         specifier: 0.16.0
