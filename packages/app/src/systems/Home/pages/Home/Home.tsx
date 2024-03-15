@@ -1,9 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { VITE_FUEL_PROVIDER_URL } from '~/config';
 import { BalanceWidget, useAccounts } from '~/systems/Account';
-import { AssetList } from '~/systems/Asset';
+import { MemoAssetList } from '~/systems/Asset';
 import { Layout, Pages, scrollable } from '~/systems/Core';
 import { useBalanceVisibility } from '~/systems/Core/hooks/useVisibility';
 import { useNetworks } from '~/systems/Network';
@@ -24,6 +25,9 @@ export function Home() {
     navigate(Pages.receive());
   };
 
+  const emptyProps = useMemo(() => {
+    return { showFaucet: selectedNetwork?.url === VITE_FUEL_PROVIDER_URL };
+  }, [selectedNetwork]);
   return (
     <Layout title="Home" isHome>
       <Layout.TopBar />
@@ -45,12 +49,10 @@ export function Home() {
               <AssetsTitle />
             </Box>
             <Box.Stack css={styles.assetsList}>
-              <AssetList
+              <MemoAssetList
                 assets={balanceAssets}
                 isLoading={isLoading}
-                emptyProps={{
-                  showFaucet: selectedNetwork?.url === VITE_FUEL_PROVIDER_URL,
-                }}
+                emptyProps={emptyProps}
               />
             </Box.Stack>
           </Box.Stack>

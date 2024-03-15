@@ -1,5 +1,16 @@
 # fuels-wallet
 
+## 0.16.1
+
+### Patch Changes
+
+- [#1123](https://github.com/FuelLabs/fuels-wallet/pull/1123) [`e18231a`](https://github.com/FuelLabs/fuels-wallet/commit/e18231abf779d11e468ecf57b5805bc646609bfe) Thanks [@bethatguyad](https://github.com/bethatguyad)! - perf: eliminating asset avatar flashing
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.16.1
+  - @fuel-wallet/sdk@0.16.1
+  - @fuel-wallet/types@0.16.1
+
 ## 0.16.0
 
 ### Minor Changes
