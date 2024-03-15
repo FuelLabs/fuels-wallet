@@ -169,14 +169,14 @@ importers:
         specifier: 5.0.13
         version: 5.0.13
       '@fuel-ui/css':
-        specifier: 0.23.2-pr-338.1-ee58b79
-        version: 0.23.2-pr-338.1-ee58b79(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.23.2
+        version: 0.23.2(react-dom@18.2.0)(react@18.2.0)
       '@fuel-ui/icons':
-        specifier: 0.23.2-pr-338.1-ee58b79
-        version: 0.23.2-pr-338.1-ee58b79
+        specifier: 0.23.2
+        version: 0.23.2
       '@fuel-ui/react':
-        specifier: 0.23.2-pr-338.1-ee58b79
-        version: 0.23.2-pr-338.1-ee58b79(@fuel-ui/css@0.23.2-pr-338.1-ee58b79)(@fuel-ui/icons@0.23.2-pr-338.1-ee58b79)(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.3)(fuels@0.75.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.23.2
+        version: 0.23.2(@fuel-ui/css@0.23.2)(@fuel-ui/icons@0.23.2)(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.3)(fuels@0.75.0)(react-dom@18.2.0)(react@18.2.0)
       '@fuel-ui/test-utils':
         specifier: 0.17.0
         version: 0.17.0(@babel/core@7.24.0)(@jest/types@29.6.3)(@types/node@20.8.4)(esbuild@0.19.12)(react@18.2.0)(ts-node@10.9.1)(typescript@5.2.2)
@@ -522,14 +522,14 @@ importers:
         specifier: 3.5.2
         version: 3.5.2(@algolia/client-search@4.22.1)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)(search-insights@2.13.0)
       '@fuel-ui/css':
-        specifier: 0.23.2-pr-338.1-ee58b79
-        version: 0.23.2-pr-338.1-ee58b79(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.23.2
+        version: 0.23.2(react-dom@18.2.0)(react@18.2.0)
       '@fuel-ui/icons':
-        specifier: 0.23.2-pr-338.1-ee58b79
-        version: 0.23.2-pr-338.1-ee58b79
+        specifier: 0.23.2
+        version: 0.23.2
       '@fuel-ui/react':
-        specifier: 0.23.2-pr-338.1-ee58b79
-        version: 0.23.2-pr-338.1-ee58b79(@fuel-ui/css@0.23.2-pr-338.1-ee58b79)(@fuel-ui/icons@0.23.2-pr-338.1-ee58b79)(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.3)(fuels@0.75.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: 0.23.2
+        version: 0.23.2(@fuel-ui/css@0.23.2)(@fuel-ui/icons@0.23.2)(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.3)(fuels@0.75.0)(react-dom@18.2.0)(react@18.2.0)
       '@fuel-wallet/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -5027,8 +5027,8 @@ packages:
       chalk: 4.1.2
       cli-table: 0.3.11
 
-  /@fuel-ui/css@0.23.2-pr-338.1-ee58b79(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-BE5IuFfNpeEBeNsndNtqMxpE7VeBP7QPScvbTHxyG3yHxsSOO95aagd4hSPZVEkoh1WAjjvKRfY7e/QkF6Lycw==}
+  /@fuel-ui/css@0.23.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-5yt5iqUqHG/r6v97JDqbeg57mbHC2pYNl20mGwsYurcKdQx5BuWHLbDtGSyyEa8NuEeEmTX9pg5mGflt1up6Lg==}
     peerDependencies:
       react: '*'
       react-dom: '*'
@@ -5038,15 +5038,15 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@fuel-ui/design-tokens': 0.23.2-pr-338.1-ee58b79
+      '@fuel-ui/design-tokens': 0.23.2
       '@radix-ui/colors': 2.1.0
       classnames: 2.3.2
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@fuel-ui/design-tokens@0.23.2-pr-338.1-ee58b79:
-    resolution: {integrity: sha512-B81EJqf1IWpAMXzc3xVO52GOY/SMXevO3wyw4/Ei6YPpwIbrcHSd9fLSuDDOCNAuqGiabOXSXSsuTAUbi2Y5LA==}
+  /@fuel-ui/design-tokens@0.23.2:
+    resolution: {integrity: sha512-3MCo9n8m1vDaGb/s5Qc8kjSugGia8bAUYOwkfiL+lFsoSyfEqYmMye6gD0uQc+Yygk2kVJd6UqS0rgsEElojZQ==}
     dependencies:
       '@radix-ui/colors': 2.1.0
       chroma-js: 2.4.2
@@ -5054,18 +5054,18 @@ packages:
       lodash: 4.17.21
     dev: false
 
-  /@fuel-ui/icons@0.23.2-pr-338.1-ee58b79:
-    resolution: {integrity: sha512-7zNKSM7e+m/wHZEKzvF1EREM0gpdWqCUDzJdw+i/+dbR0e3307GBlOto8Sb1nTZspRs8V8HqaTKXr8zYfKGyAw==}
+  /@fuel-ui/icons@0.23.2:
+    resolution: {integrity: sha512-zrfvX63hZ0apHHQxcqwCtAOPyl6zi9wV+x7x2kbYpe8lX37uYunkOM/pnPWzq5I2KmmCKwA2modeTyEGCPP6+g==}
     dependencies:
       '@tabler/icons': 2.32.0
       svgo: 3.0.2
     dev: false
 
-  /@fuel-ui/react@0.23.2-pr-338.1-ee58b79(@fuel-ui/css@0.23.2-pr-338.1-ee58b79)(@fuel-ui/icons@0.23.2-pr-338.1-ee58b79)(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.3)(fuels@0.75.0)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-kbK97GYNud3+QqwXcaW2vJBQWxkU3GGd0sCUQ5DbPjE3dIG1MX0P3ncT69J9K9PorUsLOReNQBy9N5S7ZdSTTw==}
+  /@fuel-ui/react@0.23.2(@fuel-ui/css@0.23.2)(@fuel-ui/icons@0.23.2)(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.3)(fuels@0.75.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-NrmPTb3ycqRsFGdVO/K0aJ4kVJ/MNBEW2TO9g77kfAYpCpQfcsi5/6UrYfJGzIYdSpkKhzC9597bbSW3APXakg==}
     peerDependencies:
-      '@fuel-ui/css': 0.23.2-pr-338.1-ee58b79
-      '@fuel-ui/icons': 0.23.2-pr-338.1-ee58b79
+      '@fuel-ui/css': '>=0.23.2'
+      '@fuel-ui/icons': '>=0.23.2'
       fuels: '>=0.74.0'
       react: '*'
       react-dom: '*'
@@ -5075,8 +5075,8 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@fuel-ui/css': 0.23.2-pr-338.1-ee58b79(react-dom@18.2.0)(react@18.2.0)
-      '@fuel-ui/icons': 0.23.2-pr-338.1-ee58b79
+      '@fuel-ui/css': 0.23.2(react-dom@18.2.0)(react@18.2.0)
+      '@fuel-ui/icons': 0.23.2
       '@radix-ui/react-accordion': 1.1.2(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-alert-dialog': 1.0.4(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-aspect-ratio': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
@@ -6990,7 +6990,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.24.0
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-collapsible': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-collection': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
@@ -7023,7 +7023,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.24.0
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.28)(react@18.2.0)
@@ -7077,7 +7077,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.24.0
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.28
       '@types/react-dom': 18.2.13
@@ -7102,7 +7102,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.24.0
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.2.28)(react@18.2.0)
@@ -7130,7 +7130,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.24.0
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.28)(react@18.2.0)
@@ -7162,7 +7162,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.24.0
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.28)(react@18.2.0)
@@ -7283,7 +7283,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.24.0
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.28)(react@18.2.0)
@@ -7639,7 +7639,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.24.0
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.28
       '@types/react-dom': 18.2.13
@@ -7664,7 +7664,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.24.0
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.28)(react@18.2.0)
@@ -7909,7 +7909,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.24.0
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.28)(react@18.2.0)
@@ -8076,7 +8076,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.24.0
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.28)(react@18.2.0)
@@ -8107,7 +8107,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.24.0
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-direction': 1.0.1(@types/react@18.2.28)(react@18.2.0)
@@ -8225,7 +8225,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.24.0
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.28)(react@18.2.0)
@@ -8436,7 +8436,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.24.0
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.28
       '@types/react-dom': 18.2.13
@@ -12094,7 +12094,7 @@ packages:
     resolution: {integrity: sha512-5lxnyLEYFskErRPenYItLRSge5DjrJngYKdVjRSrWfza9G6KkgHEXi0vUZiyUeMU5JfXH1YnvXZzSp8ul88o2Q==}
     dependencies:
       legacy-swc-helpers: /@swc/helpers@0.4.14
-      tslib: 2.6.1
+      tslib: 2.6.2
     dev: false
 
   /@swc/helpers@0.5.2:
@@ -12207,7 +12207,7 @@ packages:
         optional: true
     dependencies:
       '@adobe/css-tools': 4.3.2
-      '@babel/runtime': 7.22.6
+      '@babel/runtime': 7.24.0
       '@types/jest': 28.1.3
       aria-query: 5.3.0
       chalk: 3.0.0
