@@ -45,7 +45,8 @@
         "useOptionalChain": "off",
         "noUselessSwitchCase": "off",
         "useArrowFunction": "off",
-        "noUselessEmptyExport": "off"
+        "noUselessEmptyExport": "off",
+        "useLiteralKeys": "off"
       },
       "performance": {
         "noAccumulatingSpread": "off",
