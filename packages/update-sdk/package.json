@@ -17,9 +17,7 @@
       }
     }
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "ts:check": "tsc --noEmit",
     "check-versions": "tsx src/index.ts"
