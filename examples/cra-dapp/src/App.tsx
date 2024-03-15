@@ -4,7 +4,7 @@ import {
   useDisconnect,
   useConnectUI,
   useIsConnected,
-} from '@fuel-wallet/react';
+} from '@fuels/react';
 import './App.css';
 
 function App() {

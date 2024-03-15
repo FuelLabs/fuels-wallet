@@ -11,10 +11,10 @@ If you are using **React** jump to the [React section](./#using-react).
 
 ## Installation
 
-To begin integrating the Fuel Wallet SDK into your DApp, you first need to install the packages `@fuel-wallet/sdk` and `fuels`.
+To begin integrating the Fuel Wallet SDK into your DApp, you first need to install the packages `@fuels/connectors` and `fuels`.
 
 ```bash
-npm install @fuel-wallet/sdk fuels
+npm install @fuels/connectors fuels
 ```
 
 The installation also requires the `fuels` SDK, as it is used to communicate with the Fuel Network and provides a set of utilities required for interacting with contracts on the Fuel Network.
@@ -22,7 +22,7 @@ The installation also requires the `fuels` SDK, as it is used to communicate wit
 ## Example
 
 ```ts
-import { Fuel } from '@fuel-wallet/sdk';
+import { Fuel } from 'fuels';
 
 const fuel = new Fuel();
 
@@ -37,7 +37,7 @@ the need for manually create a UI, for it.
 ### Installation
 
 ```bash
-npm install @fuels/react fuels
+npm install @fuels/react @fuels/connectors fuels
 ```
 
 ### Example

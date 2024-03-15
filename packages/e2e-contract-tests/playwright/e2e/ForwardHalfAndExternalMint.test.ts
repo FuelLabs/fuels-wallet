@@ -1,5 +1,5 @@
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
-import { test, getButtonByText, hasText } from '@fuels/playwright-utils';
+import { getButtonByText, hasText } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
@@ -9,6 +9,7 @@ import '../../load.envs.js';
 import { testSetup } from '../utils';
 
 import { MAIN_CONTRACT_ID, EXTERNAL_CONTRACT_ID } from './config';
+import { test } from './test';
 import { checkFee, connect, checkAddresses } from './utils';
 
 test.describe('Forward Half ETH and Mint External Custom Asset', () => {

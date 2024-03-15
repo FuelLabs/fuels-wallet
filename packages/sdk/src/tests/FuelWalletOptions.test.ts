@@ -1,8 +1,11 @@
-import type { AbstractAddress, BN, BytesLike, ProviderOptions } from 'fuels';
-import { BaseAssetId, Provider, Wallet, bn } from 'fuels';
-
-import { Fuel } from '../Fuel';
-import { FuelWalletProvider } from '../FuelWalletProvider';
+import type {
+  AbstractAddress,
+  BN,
+  BytesLike,
+  ProviderOptions,
+  StorageAbstract,
+} from 'fuels';
+import { BaseAssetId, Fuel, Provider, Wallet, bn } from 'fuels';
 
 import { MockConnector } from './MockConnector';
 
@@ -12,11 +15,13 @@ describe('Fuel Wallet SDK test different options', () => {
   });
 
   test('Using custom storage', async () => {
-    const storage = {
+    const storage: StorageAbstract = {
       setItem: jest.fn(),
       getItem: jest.fn(),
       removeItem: jest.fn(),
+      clear: jest.fn(),
     };
+
     const connector = new MockConnector();
     const fuel = new Fuel({
       connectors: [connector],
@@ -105,7 +110,7 @@ describe('Fuel Wallet SDK test different options', () => {
     const fuel = new Fuel({
       connectors: [connector],
     });
-    class CustomProvider extends FuelWalletProvider {
+    class CustomProvider extends Provider {
       static async create(url: string, opts?: ProviderOptions) {
         const provider = new CustomProvider(url, opts);
         await provider.fetchChainAndNodeInfo();

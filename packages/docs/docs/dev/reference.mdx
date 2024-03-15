@@ -66,7 +66,7 @@ Disconnect your project from the wallet. Return the connection state.
 Fuel emits events when certain actions occur. These events can be listened to by using the `on` method.
 
 The events API follows the native Node.js `EventEmitter` enabling, `on`, `once`, and `off`.
-The events enum `FuelWalletEvents` can be imported from the `@fuel-wallet/sdk` package.
+The events enum `FuelConnectorEventTypes` can be imported from the `@fuels` package.
 
 ### Usage
 
@@ -108,8 +108,8 @@ Return the connector with the given name.
 
 ## Get Wallet
 
-`getWallet(address: string | AbstractAddress, provider?: FuelWalletProvider): Promise<FuelWalletLocked>`<br />
-Return a `FuelWalletLocked` instance, which can be used for contracts, transfers, and other interactions.
+`getWallet(address: string | AbstractAddress, provider?: Provider): Promise<Account>`<br />
+Return a `Account` instance, which can be used for contracts, transfers, and other interactions.
 
 ## Has ABI
 

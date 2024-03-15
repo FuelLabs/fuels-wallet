@@ -243,26 +243,6 @@ export const MOCK_TRANSACTION_CONTRACT_CALL: MockTransaction = {
         },
       ],
     },
-    {
-      name: OperationName.contractTransfer,
-      from: {
-        type: AddressType.contract,
-        address:
-          '0x0a98320d39c03337401a4e46263972a9af6ce69ec2f35a5420b1bd35784c74b1',
-      },
-      to: {
-        type: AddressType.account,
-        address:
-          '0x3e7ddda4d0d3f8307ae5f1aed87623992c1c4decefec684936960775181b2302',
-      },
-      assetsSent: [
-        {
-          amount: bn(100000000),
-          assetId:
-            '0x0000000000000000000000000000000000000000000000000000000000000000',
-        },
-      ],
-    },
   ],
   gasUsed: bn('0x28f90'),
   fee: bn('0x1'),

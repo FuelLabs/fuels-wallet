@@ -1,5 +1,5 @@
 import { Text, Button, Box } from '@fuel-ui/react';
-import type { FuelProviderConfig } from '@fuel-wallet/sdk';
+import type { Network } from 'fuels';
 import { useEffect, useState } from 'react';
 
 import { Code } from '../../src/components/Code';
@@ -11,9 +11,7 @@ import { useLoading } from '../../src/hooks/useLoading';
 export function NetworkExample() {
   const [fuel, notDetected] = useFuel();
   const [isConnected] = useIsConnected();
-  const [currentNetwork, setNetwork] = useState<FuelProviderConfig | null>(
-    null
-  );
+  const [currentNetwork, setNetwork] = useState<Network | null>(null);
 
   const [handleConnect, isConnecting, errorConnect] = useLoading(async () => {
     await fuel.connect();
@@ -25,7 +23,7 @@ export function NetworkExample() {
   });
 
   /* network:start */
-  const handleNetworkChange = (network: FuelProviderConfig) => {
+  const handleNetworkChange = (network: Network) => {
     setNetwork(network);
   };
 

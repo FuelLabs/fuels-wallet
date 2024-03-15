@@ -5,6 +5,7 @@ import {
   setFuelThemes,
   ThemeProvider,
 } from '@fuel-ui/react';
+import { defaultConnectors } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import { MDXProvider } from '@mdx-js/react';
 import type { ReactNode } from 'react';
@@ -81,7 +82,7 @@ export function Provider({ children }: ProviderProps) {
       <FuelProvider
         theme="dark"
         fuelConfig={{
-          devMode: true,
+          connectors: defaultConnectors({ devMode: true }),
         }}
       >
         <MDXProvider components={components as any}>

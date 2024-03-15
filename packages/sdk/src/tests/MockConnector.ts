@@ -1,9 +1,12 @@
 import type { Asset } from '@fuel-wallet/types';
-import type { WalletUnlocked, TransactionRequestLike } from 'fuels';
+import {
+  type WalletUnlocked,
+  type TransactionRequestLike,
+  FuelConnectorEventTypes,
+  FuelConnector,
+} from 'fuels';
 import { setTimeout } from 'timers/promises';
 
-import { FuelConnector } from '../FuelConnector';
-import { FuelConnectorEventTypes } from '../api';
 import type { FuelABI, Network, ConnectorMetadata } from '../types';
 
 import { generateAccounts } from './utils/generateAccounts';

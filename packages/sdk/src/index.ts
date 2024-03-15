@@ -1,9 +1,10 @@
-export * from './api';
 export * from './types';
 export * from './utils';
-export * from './Fuel';
-export * from './FuelConnector';
-export * from './FuelWalletProvider';
-export * from './FuelWalletLocked';
-export * from './connectors';
-export * from '@fuel-wallet/types';
+export type {
+  Account,
+  Asset,
+  AssetFuel,
+  AssetData,
+  Connection,
+  NetworkData,
+} from '@fuel-wallet/types';

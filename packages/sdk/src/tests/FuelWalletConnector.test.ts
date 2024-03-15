@@ -2,15 +2,14 @@ import { EventEmitter } from 'events';
 import {
   Address,
   BaseAssetId,
+  Fuel,
+  FuelConnectorEventType,
   Provider,
   TransactionStatus,
   Wallet,
   bn,
+  dispatchFuelConnectorEvent,
 } from 'fuels';
-
-import { Fuel } from '../Fuel';
-import { FuelConnectorEventType } from '../api';
-import { dispatchFuelConnectorEvent } from '../utils';
 
 import { MockConnector } from './MockConnector';
 import { promiseCallback } from './utils/promiseCallback';
