@@ -1,5 +1,6 @@
 {
-  "**/*.(md|mdx|json|yml|yaml|css|html)": ["prettier --write"],
-  "*.{js,jsx,ts,tsx,html}": ["prettier --write", "eslint --fix"],
+  "**/*.(js|jsx|ts|tsx|md|json|mdx|html|css)": [
+    "biome check --apply-unsafe --diagnostic-level=error --max-diagnostics=1000"
+  ],
   ".{ts,tsx}": ["tsc --noEmit"]
 }
