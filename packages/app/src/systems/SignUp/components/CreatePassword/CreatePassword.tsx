@@ -5,6 +5,7 @@ import debounce from 'lodash.debounce';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { IS_DEVELOPMENT } from '~/config';
 import {
   ControlledField,
   InputSecurePassword,
@@ -120,6 +121,9 @@ export function CreatePassword({
                   autoComplete="new-password"
                   placeholder="Confirm your password"
                   aria-label="Confirm Password"
+                  onPaste={
+                    IS_DEVELOPMENT ? undefined : (e) => e.preventDefault()
+                  }
                   onChange={(e) => {
                     field.onChange(e);
                     debouncedValidate();
