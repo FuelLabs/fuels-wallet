@@ -14,7 +14,12 @@
   "access": "public",
   "baseBranch": "master",
   "updateInternalDependencies": "patch",
-  "ignore": ["docs", "@fuel-wallet/e2e-contract-tests", "@fuels/update-sdk"],
+  "ignore": [
+    "docs",
+    "@fuel-wallet/e2e-contract-tests",
+    "@fuels/update-sdk",
+    "@fuel-wallet/sdk"
+  ],
   "snapshot": {
     "useCalculatedVersion": true,
     "prereleaseTemplate": "{tag}-{commit}"
