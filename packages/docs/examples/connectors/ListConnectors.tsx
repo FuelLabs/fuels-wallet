@@ -12,7 +12,6 @@ import { useEffect, useState } from 'react'; // ignore-line
 
 import { ExampleBox } from '../../src/components/ExampleBox'; // ignore-line
 
-
 const fuel = new Fuel({
   connectors: [
     new FuelWalletDevelopmentConnector(),
