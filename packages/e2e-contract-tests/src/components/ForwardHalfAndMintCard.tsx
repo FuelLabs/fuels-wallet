@@ -1,4 +1,4 @@
-import { useAccount, useWallet } from '@fuel-wallet/react';
+import { useAccount, useWallet } from '@fuels/react';
 import { BaseAssetId, bn } from 'fuels';
 import { useState } from 'react';
 
@@ -7,8 +7,8 @@ import { depositHalfAndMint } from '../contract_interactions';
 export const ForwardHalfAndMintCard = () => {
   const [forwardAmount, setForwardAmount] = useState<string>('');
   const [mintAmount, setMintAmount] = useState<string>('');
-  const account = useAccount();
-  const wallet = useWallet({ address: account.account });
+  const { account } = useAccount();
+  const wallet = useWallet(account);
 
   return (
     <div>

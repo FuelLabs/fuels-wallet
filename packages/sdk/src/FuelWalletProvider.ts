@@ -1,37 +1,30 @@
-import type { ProviderOptions, TransactionRequestLike } from 'fuels';
+import type { ProviderOptions } from 'fuels';
 import { TransactionResponse, Provider } from 'fuels';
 
-import type { FuelWalletConnection } from './FuelWalletConnection';
-
-type FuelWalletProviderOptions = ProviderOptions & {
-  walletConnection: FuelWalletConnection;
-};
-
+/**
+ * @todo: We should add getTransactionResponse to TS-SDK in this way
+ * a provider becomes self contained enabling connectors to implement
+ * their on providers for customized responses.
+ *
+ * With the change we can remove the entire FuelWalletProvider.
+ */
 export class FuelWalletProvider extends Provider {
-  walletConnection: FuelWalletConnection;
-
-  constructor(url: string, options: FuelWalletProviderOptions) {
+  constructor(url: string, options?: ProviderOptions) {
     super(url, options);
-    this.walletConnection = options.walletConnection;
   }
 
   static async create(
     url: string,
-    options: FuelWalletProviderOptions
+    options?: ProviderOptions | undefined
   ): Promise<FuelWalletProvider> {
     const provider = new FuelWalletProvider(url, options);
     await provider.fetchChainAndNodeInfo();
     return provider;
   }
 
-  async sendTransaction(
-    transactionRequestLike: TransactionRequestLike & { signer?: string }
+  async getTransactionResponse(
+    transactionId: string
   ): Promise<TransactionResponse> {
-    const transactionId = await this.walletConnection.sendTransaction(
-      transactionRequestLike,
-      { url: this.url }
-    );
-    const response = new TransactionResponse(transactionId, this);
-    return response;
+    return new TransactionResponse(transactionId, this);
   }
 }

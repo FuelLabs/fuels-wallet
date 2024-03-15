@@ -5,18 +5,18 @@ category: For Developers
 
 # ABIs
 
-## Get ABI of contract ID
-
-To get the ABI of a contract ID use the `getAbi('contractId')` method on the `window.fuel` object.
-
-<CodeImport file="../../examples/Abi.tsx" />
-
-<Examples.Abi />
-
 ## Adding ABI
 
-To add an ABI, use the `wallet.addAbi` method and pass in the `AbiMap` you want to add.
+To add an ABI, use the `addABI()` method.
 
-<CodeImport file="../../examples/AddAbi.tsx" />
+<CodeImport file="../../examples/abis/AddAbi.tsx" commentBlock="addABI" />
 
 <Examples.AddAbi />
+
+## Get ABI of contract ID
+
+To retrieve the ABI of a contract, use the `getAbi()` method.
+
+<CodeImport file="../../examples/abis/Abi.tsx" commentBlock="getABI" />
+
+<Examples.Abi />

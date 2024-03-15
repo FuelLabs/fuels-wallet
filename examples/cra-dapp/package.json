@@ -1,0 +1,21 @@
+{
+  "name": "cra-dapp",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "vite"
+  },
+  "dependencies": {
+    "@fuel-wallet/react": "workspace:*",
+    "fuels": "0.74.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "18.2.56",
+    "@types/react-dom": "18.2.19",
+    "@vitejs/plugin-react": "4.2.1",
+    "typescript": "5.2.2",
+    "vite": "5.1.4"
+  }
+}

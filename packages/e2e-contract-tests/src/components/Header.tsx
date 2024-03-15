@@ -1,25 +1,7 @@
-import {
-  useConnect,
-  FUEL_WALLET_CONNECTOR,
-  FUEL_WALLET_DEVELOPMENT_CONNECTOR,
-} from '@fuel-wallet/react';
-
-import { IS_TEST } from '../config';
+import { useConnectUI } from '@fuels/react';
 
 export const Header = () => {
-  const connect = useConnect();
+  const { connect } = useConnectUI();
 
-  return (
-    <button
-      onClick={() => {
-        connect.mutate(
-          IS_TEST
-            ? FUEL_WALLET_CONNECTOR.connector
-            : FUEL_WALLET_DEVELOPMENT_CONNECTOR.connector
-        );
-      }}
-    >
-      Connect
-    </button>
-  );
+  return <button onClick={connect}>Connect</button>;
 };

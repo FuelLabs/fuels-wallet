@@ -5,108 +5,50 @@ category: For Developers
 
 # Getting Started
 
-You can integrate your DApp seamlessly with Fuel Wallet using our simple API, which is injected directly into the browser window.
-This eliminates the need for additional dependencies, allowing you to perform key actions effortlessly.
-For even more powerful and customizable integration, use Fuel Wallet in conjunction with the [Fuel TS SDK](https://fuellabs.github.io/fuels-ts/).
+The Fuel Wallet SDK serves as a connection manager between your DApp and other wallets compatible with the Fuel Network. This package ensures that you can connect to the Fuel Wallet as well as any other wallet using a unified API.
 
-<ConnectionAlert />
+If you are using **React** jump to the [React section](./#using-react).
 
-If you've correctly installed the Fuel wallet extension, the wallet SDK will be injected automatically on the `window` object on the property `fuel`. To access it, you can use `window.fuel`
+## Installation
 
-```ts
-window.fuel.connect();
-```
-
-You can try this code directly in the developer console.
-
-## TypeScript
-
-The Fuel Wallet SDK provides a package on npm, making it more convenient to use in TypeScript projects.
-To use it, you must also install the [`fuels`](https://www.npmjs.com/package/fuels) package as a dependency.
-
-### Installation
+To begin integrating the Fuel Wallet SDK into your DApp, you first need to install the packages `@fuel-wallet/sdk` and `fuels`.
 
 ```bash
-npm install fuels @fuel-wallet/sdk
+npm install @fuel-wallet/sdk fuels
 ```
 
-To install the latest prerelease of `@fuel-wallet/sdk`, use the command:
+The installation also requires the `fuels` SDK, as it is used to communicate with the Fuel Network and provides a set of utilities required for interacting with contracts on the Fuel Network.
 
-```bash
-npm install fuels @fuel-wallet/sdk@master
-```
-
-### Usage
-
-To use the SDK and the React Hooks in your TypeScript project, add the following line to your `tsconfig.json` file:
-
-```json
-{
-  "compilerOptions": {
-    "types": ["@fuel-wallet/sdk"]
-  }
-}
-```
-
-Alternatively, you can use a [TypeScript reference](https://www.typescriptlang.org/docs/handbook/triple-slash-directives.html) directive in any TypeScript file:
-
-```ts
-/// <reference types="@fuel-wallet/sdk" />
-```
-
-### Example
-
-#### Window
-
-With the SDK imported, `fuel` will be conveniently typed and accessible on the `window` object.
-
-```ts
-window.fuel?.connect();
-```
-
-#### SDK
-
-Alternatively, you can directly use the SDK by creating a new instance of `Fuel` to interact with the wallet.
+## Example
 
 ```ts
 import { Fuel } from '@fuel-wallet/sdk';
 
 const fuel = new Fuel();
+
 await fuel.connect();
 ```
 
-### Detect when fuel is loaded
-
-It's possible that your application loads before `window.fuel` is injected. To detect when `fuel` is loaded and ready to use, you can listen to the event `FuelLoaded` on the document.
-
-<CodeImport file="../../examples/FuelLoaded.tsx" commentBlock="detectFuel" />
-
-<Examples.FuelLoaded />
-
 ## Using React
 
-Fuel Wallet provides a set of React hooks that improve the developer experience.
+We also provide a set of React hooks and a UI for working with it connectors without,
+the need for manually create a UI, for it.
 
 ### Installation
 
 ```bash
-npm install @fuel-wallet/react
+npm install @fuels/react fuels
 ```
 
-To install the latest prerelease of `@fuel-wallet/react`, use the command:
+### Example
 
-```bash
-npm install fuels @fuel-wallet/react@master
-```
+#### Setup
 
-### Usage
-
-Wrap your application with the `FuelProvider` component.
+Wrap your application with the provider `FuelConnectProvider`.
 
 ```tsx
-// index.tsx
-import { FuelProvider } from '@fuel-wallet/react';
-//...
+import { FuelProvider } from '@fuels/react';
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <FuelProvider>
@@ -116,11 +58,17 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 );
 ```
 
-Here is how you can use the `useFuel` hook in a component to access an instance of `Fuel`:
+Alternatively, you can use just the `FuelProvider` if you prefer not to use the provided UI.
+
+#### Usage
 
 ```ts
-import { useFuel } from '@fuel-wallet/react';
-// ...
-const { fuel } = useFuel();
-await fuel.connect();
+import { useConnectUI } from '@fuels/react';
+const { connect, isConnecting } = useConnectUI();
+
+<button onClick={connect}>
+  {isConnecting ? 'Connecting...' : 'Connect'}
+</button>
 ```
+
+Check our example application for a [quick start](https://github.com/FuelLabs/fuels-wallet/tree/master/examples/cra-dapp).

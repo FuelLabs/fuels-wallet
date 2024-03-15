@@ -1,4 +1,4 @@
-import { useAccount, useWallet } from '@fuel-wallet/react';
+import { useAccount, useWallet } from '@fuels/react';
 import { BaseAssetId, bn } from 'fuels';
 import { useState } from 'react';
 
@@ -8,8 +8,8 @@ import { calculateAssetId } from '../utils';
 
 export const ForwardHalfCustomAssetCard = () => {
   const [amount, setAmount] = useState<string>('');
-  const account = useAccount();
-  const wallet = useWallet({ address: account.account });
+  const { account } = useAccount();
+  const wallet = useWallet(account);
 
   const assetId = calculateAssetId(MAIN_CONTRACT_ID, BaseAssetId);
 

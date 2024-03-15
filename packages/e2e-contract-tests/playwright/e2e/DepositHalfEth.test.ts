@@ -1,5 +1,5 @@
-import type { FuelWalletTestHelper } from '@fuel-wallet/playwright-utils';
-import { test, getButtonByText, hasText } from '@fuel-wallet/playwright-utils';
+import { test, getButtonByText, hasText } from '@fuels/playwright-utils';
+import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
@@ -14,7 +14,6 @@ import { checkFee, connect, checkAddresses } from './utils';
 test.describe('Deposit Half ETH', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;
   let fuelWallet: WalletUnlocked;
-
   test.beforeEach(async ({ context, extensionId, page }) => {
     ({ fuelWalletTestHelper, fuelWallet } = await testSetup({
       context,

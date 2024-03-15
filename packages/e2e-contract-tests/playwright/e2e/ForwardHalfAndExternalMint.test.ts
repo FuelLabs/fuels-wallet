@@ -1,5 +1,5 @@
-import type { FuelWalletTestHelper } from '@fuel-wallet/playwright-utils';
-import { test, getButtonByText, hasText } from '@fuel-wallet/playwright-utils';
+import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
+import { test, getButtonByText, hasText } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';

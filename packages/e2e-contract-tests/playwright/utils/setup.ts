@@ -2,7 +2,7 @@ import {
   seedWallet,
   FUEL_MNEMONIC,
   FuelWalletTestHelper,
-} from '@fuel-wallet/playwright-utils';
+} from '@fuels/playwright-utils';
 import type { BrowserContext, Page } from '@playwright/test';
 import { bn, Wallet, Provider } from 'fuels';
 

@@ -5,6 +5,7 @@ import {
   setFuelThemes,
   ThemeProvider,
 } from '@fuel-ui/react';
+import { FuelProvider } from '@fuels/react';
 import { MDXProvider } from '@mdx-js/react';
 import type { ReactNode } from 'react';
 
@@ -23,6 +24,7 @@ import { UL } from './List';
 import { Paragraph } from './Paragraph';
 import Player from './Player';
 import { Pre } from './Pre';
+import { SDKSection } from './SDKSection';
 import { Table, TD, TH } from './Table';
 
 const components = {
@@ -45,6 +47,7 @@ const components = {
   CodeImport,
   Player,
   InstallSection,
+  SDKSection,
   Examples,
   Demo,
   DownloadWalletZip,
@@ -75,9 +78,16 @@ setFuelThemes({
 export function Provider({ children }: ProviderProps) {
   return (
     <ThemeProvider>
-      <MDXProvider components={components as any}>
-        {children as any}
-      </MDXProvider>
+      <FuelProvider
+        theme="dark"
+        fuelConfig={{
+          devMode: true,
+        }}
+      >
+        <MDXProvider components={components as any}>
+          {children as any}
+        </MDXProvider>
+      </FuelProvider>
     </ThemeProvider>
   );
 }

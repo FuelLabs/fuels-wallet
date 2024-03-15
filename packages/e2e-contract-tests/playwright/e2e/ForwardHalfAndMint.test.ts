@@ -1,5 +1,5 @@
-import type { FuelWalletTestHelper } from '@fuel-wallet/playwright-utils';
-import { test, getButtonByText, hasText } from '@fuel-wallet/playwright-utils';
+import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
+import { test, getButtonByText, hasText } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
@@ -23,7 +23,7 @@ test.describe('Forward Half ETH and Mint Custom Asset', () => {
     }));
   });
 
-  test('e2e foreward half eth and mint custom asset', async ({ page }) => {
+  test('e2e forward half eth and mint custom asset', async ({ page }) => {
     await connect(page, fuelWalletTestHelper);
 
     const depositAmount = '1.000';

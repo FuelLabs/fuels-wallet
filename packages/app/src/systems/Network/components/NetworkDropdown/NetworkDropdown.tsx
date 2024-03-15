@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
-import type { Network } from '@fuel-wallet/types';
+import type { NetworkData } from '@fuel-wallet/types';
 import { forwardRef } from 'react';
 
 import { NetworkStatus } from '../NetworkItem';
 
 export type NetworkDropdownProps = {
-  selected?: Network;
+  selected?: NetworkData;
   isDisabled?: boolean;
-  onPress?: (network: Network) => void;
+  onPress?: (network: NetworkData) => void;
 };
 
 export const NetworkDropdown = forwardRef<HTMLDivElement, NetworkDropdownProps>(

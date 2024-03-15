@@ -1,26 +1,26 @@
+import { createUUID } from '@fuel-wallet/connections';
 import type {
   Account,
   Vault,
   Connection,
-  Network,
-  Asset,
+  NetworkData,
+  AssetData,
   AbiTable,
   FuelWalletError,
 } from '@fuel-wallet/types';
 import type { Table } from 'dexie';
 import Dexie from 'dexie';
 import 'dexie-observable';
-import { DECIMAL_UNITS } from 'fuels';
-import { DATABASE_VERSION } from '~/config';
+import { DATABASE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
 import type { Transaction } from '~/systems/Transaction/types';
 
 export class FuelDB extends Dexie {
   vaults!: Table<Vault, string>;
   accounts!: Table<Account, string>;
-  networks!: Table<Network, string>;
+  networks!: Table<NetworkData, string>;
   connections!: Table<Connection, string>;
   transactions!: Table<Transaction, string>;
-  assets!: Table<Asset, string>;
+  assets!: Table<AssetData, string>;
   abis!: Table<AbiTable, string>;
   errors!: Table<FuelWalletError, string>;
 
@@ -38,15 +38,16 @@ export class FuelDB extends Dexie {
         errors: '&id',
       })
       .upgrade(async (tx) => {
-        // Update assets to include decimals for
-        // assets already in the database we set the
-        // decimals default 9 units.
-        await tx
-          .table('assets')
-          .toCollection()
-          .modify((asset) => {
-            asset.decimals = DECIMAL_UNITS;
-          });
+        const networks = tx.table('networks');
+        // Clean networks
+        await networks.clear();
+        // Insert beta-5 network
+        await networks.add({
+          name: 'Testnet Beta 5',
+          url: VITE_FUEL_PROVIDER_URL,
+          isSelected: true,
+          id: createUUID(),
+        });
       });
   }
 

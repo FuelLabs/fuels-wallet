@@ -1,5 +1,5 @@
-import type { FuelWalletTestHelper } from '@fuel-wallet/playwright-utils';
-import { test, getButtonByText, hasText } from '@fuel-wallet/playwright-utils';
+import { test, getButtonByText, hasText } from '@fuels/playwright-utils';
+import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
@@ -23,7 +23,7 @@ test.describe('Forward and Mint Multicall', () => {
     }));
   });
 
-  test('e2e foreward and mint multicall', async ({ page }) => {
+  test('e2e forward and mint multicall', async ({ page }) => {
     await connect(page, fuelWalletTestHelper);
 
     const depositAmount = '1.000';
