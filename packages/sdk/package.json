@@ -18,7 +18,9 @@
       }
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "pnpm ts:check && tsup",
     "ts:check": "tsc --noEmit"
@@ -32,7 +34,7 @@
     "fuels": ">=0.75.0"
   },
   "devDependencies": {
-    "fuels": "0.75.0",
+    "fuels": "0.77.0",
     "jest-environment-jsdom": "29.6.2",
     "tsup": "^7.2.0",
     "undici": "^6.4.0",

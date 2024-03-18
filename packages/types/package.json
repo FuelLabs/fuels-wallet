@@ -29,7 +29,7 @@
     "fuels": ">=0.75.0"
   },
   "devDependencies": {
-    "fuels": "0.75.0",
+    "fuels": "0.77.0",
     "tsup": "^7.2.0"
   }
 }
