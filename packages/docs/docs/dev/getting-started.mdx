@@ -14,51 +14,82 @@ If you are using **React** jump to the [React section](./#using-react).
 To begin integrating the Fuel Wallet SDK into your DApp, you first need to install the packages `@fuels/connectors` and `fuels`.
 
 ```bash
-npm install @fuels/connectors fuels
+npm install fuels @fuels/connectors
 ```
 
 The installation also requires the `fuels` SDK, as it is used to communicate with the Fuel Network and provides a set of utilities required for interacting with contracts on the Fuel Network.
 
 ## Example
 
+You can import `defaultConnectors` from `@fuels/connectors` to get a list of all the default connectors. Besides that, you can also create your own connectors or import them individually.
+
+### Using default connectors
 ```ts
 import { Fuel } from 'fuels';
+import { defaultConnectors } from '@fuels/connectors';
 
-const fuel = new Fuel();
+const fuel = new Fuel({
+  connectors: defaultConnectors({ devMode: true }),
+});
 
+await fuel.selectConnector('Fuel Wallet');
+await fuel.connect();
+```
+
+### Using a custom list
+```ts
+import { Fuel } from 'fuels';
+import { FuelWalletConnector } from '@fuels/connectors';
+
+const fuel = new Fuel({
+  connectors: [new FuelWalletConnector()],
+});
+
+await fuel.selectConnector('Fuel Wallet');
 await fuel.connect();
 ```
 
 ## Using React
 
-We also provide a set of React hooks and a UI for working with it connectors without,
-the need for manually create a UI, for it.
+We also provide a set of React hooks and a user interface (UI) for seamless interaction with connectors, eliminating the need for manual UI creation.
 
 ### Installation
 
 ```bash
-npm install @fuels/react @fuels/connectors fuels
+npm install fuels @fuels/connectors @fuels/react @tanstack/react-query
 ```
+
+- [fuels](https://github.com/FuelLabs/fuels-ts) is the SDK that provides a set of utilities for interacting with the Fuel Network.
+- [@fuels/connectors](https://github.com/FuelLabs/fuel-connectors) is the collection of connectors that allow you to connect to the Fuel Wallet.
+- [@fuels/react](https://github.com/FuelLabs/fuels-react) is a set of React hooks and a UI for seamless interaction with connectors.
+- [@tanstack/react-query](https://github.com/tanstack/query) is a library for managing and caching data in React applications.
 
 ### Example
 
 #### Setup
 
-Wrap your application with the provider `FuelConnectProvider`.
+Wrap your application with the providers `QueryClientProvider` and `FuelProvider`.
 
 ```tsx
-import { FuelProvider } from '@fuels/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+import { FuelProvider } from '@fuels/react';
+import { defaultConnectors } from '@fuels/connectors';
+
+const queryClient = new QueryClient();
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <FuelProvider>
-      <App />
-    </FuelProvider>
+    <QueryClientProvider client={queryClient}>
+      <FuelProvider fuelConfig={{ connectors: defaultConnectors({ devMode: true }) }}>
+        <App />
+      </FuelProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );
 ```
 
-Alternatively, you can use just the `FuelProvider` if you prefer not to use the provided UI.
+Alternatively, you can pass `ui={false}` to the `FuelProvider` to disable the UI in order to implement your own UI.
 
 #### Usage
 
