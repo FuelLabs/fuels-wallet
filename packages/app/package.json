@@ -51,7 +51,7 @@
     "graphql": "16.8.1",
     "graphql-request": "6.1.0",
     "graphql-tag": "2.12.6",
-    "json-rpc-2.0": "1.6.0",
+    "json-rpc-2.0": "1.7.0",
     "lodash.clonedeep": "4.5.0",
     "lodash.debounce": "4.0.8",
     "react": "18.2.0",

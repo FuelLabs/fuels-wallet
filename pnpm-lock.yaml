@@ -262,8 +262,8 @@ importers:
         specifier: 2.12.6
         version: 2.12.6(graphql@16.8.1)
       json-rpc-2.0:
-        specifier: 1.6.0
-        version: 1.6.0
+        specifier: 1.7.0
+        version: 1.7.0
       lodash.clonedeep:
         specifier: 4.5.0
         version: 4.5.0
@@ -479,8 +479,8 @@ importers:
         specifier: ^3.3.0
         version: 3.3.0
       json-rpc-2.0:
-        specifier: ^1.6.0
-        version: 1.6.0
+        specifier: 1.7.0
+        version: 1.7.0
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
@@ -18668,10 +18668,6 @@ packages:
 
   /json-parse-even-better-errors@2.3.1:
     resolution: {integrity: sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==}
-
-  /json-rpc-2.0@1.6.0:
-    resolution: {integrity: sha512-+pKxaoIqnA5VjXmZiAI1+CkFG7mHLg+dhtliOe/mp1P5Gdn8P5kE/Xxp2CUBwnGL7pfw6gC8zWTWekhSnKzHFA==}
-    dev: false
 
   /json-rpc-2.0@1.7.0:
     resolution: {integrity: sha512-asnLgC1qD5ytP+fvBP8uL0rvj+l8P6iYICbzZ8dVxCpESffVjzA7KkYkbKCIbavs7cllwH1ZUaNtJwphdeRqpg==}

@@ -28,17 +28,17 @@
   "dependencies": {
     "@types/chrome": "^0.0.246",
     "events": "^3.3.0",
-    "json-rpc-2.0": "^1.6.0",
+    "json-rpc-2.0": "1.7.0",
     "uuid": "^9.0.1"
   },
   "peerDependencies": {
-    "fuels": ">=0.77.0",
+    "@fuel-wallet/types": ">=0.16.1",
     "@fuels/connectors": ">=0.1.1",
-    "@fuel-wallet/types": ">=0.16.1"
+    "fuels": ">=0.77.0"
   },
   "devDependencies": {
-    "@fuels/connectors": "0.1.1",
     "@fuel-wallet/types": "workspace:*",
+    "@fuels/connectors": "0.1.1",
     "@types/uuid": "^9.0.5",
     "blob-polyfill": "^7.0.20220408",
     "fuels": "0.77.0",
