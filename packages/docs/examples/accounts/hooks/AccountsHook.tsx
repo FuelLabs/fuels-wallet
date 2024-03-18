@@ -5,7 +5,7 @@ import { useAccounts, useConnect, useIsConnected } from '@fuels/react';
 import { ExampleBox } from '../../../src/components/ExampleBox';
 
 export function AccountsHook() {
-  const { connect, isLoading: isConnecting, error } = useConnect();
+  const { connect, isPending: isConnecting, error } = useConnect();
   const { isConnected } = useIsConnected();
   /* useAccounts:start */
   const { accounts } = useAccounts();

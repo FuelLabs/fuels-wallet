@@ -20,7 +20,7 @@ export function AddAssetsHook() {
   const [assets, setAssets] = useState<Asset[]>([ASSET]);
   const { connect, error: errorConnecting } = useConnect();
   /* addAssets:start */
-  const { addAssets, isLoading, error } = useAddAssets();
+  const { addAssets, isPending, error } = useAddAssets();
 
   async function handleAddAssets(assets: Asset[]) {
     if (!isConnected) await connect(); // ignore-line
@@ -160,8 +160,8 @@ export function AddAssetsHook() {
         <Box>
           <Button
             onPress={() => handleAddAssets(assets)}
-            isLoading={isLoading}
-            isDisabled={isLoading || !fuel}
+            isLoading={isPending}
+            isDisabled={isPending || !fuel}
           >
             Add Assets
           </Button>
