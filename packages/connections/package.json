@@ -26,7 +26,6 @@
     "ts:check": "tsc --noEmit"
   },
   "dependencies": {
-    "@fuel-wallet/types": "workspace:*",
     "@types/chrome": "^0.0.246",
     "events": "^3.3.0",
     "json-rpc-2.0": "^1.6.0",
@@ -34,10 +33,12 @@
   },
   "peerDependencies": {
     "fuels": ">=0.77.0",
-    "@fuels/connectors": ">=0.1.0"
+    "@fuels/connectors": ">=0.1.1",
+    "@fuel-wallet/types": ">=0.16.1"
   },
   "devDependencies": {
     "@fuels/connectors": "0.1.1-preview-505d82a5757e8c297deb73817c88d943d5d3c728",
+    "@fuel-wallet/types": "workspace:*",
     "@types/uuid": "^9.0.5",
     "blob-polyfill": "^7.0.20220408",
     "fuels": "0.77.0",

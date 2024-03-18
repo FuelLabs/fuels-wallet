@@ -11,9 +11,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fuel-wallet/types": "workspace:*",
-    "@fuels/connectors": "0.1.0",
-    "@fuels/react": "0.16.0",
+    "@fuels/connectors": "0.1.1-preview-505d82a5757e8c297deb73817c88d943d5d3c728",
+    "@fuels/react": "0.17.0",
+    "@tanstack/react-query": "5.28.4",
     "fuels": "0.77.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -21,6 +21,7 @@
     "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
+    "@fuel-wallet/types": "workspace:*",
     "@fuels/playwright-utils": "0.15.2",
     "@playwright/test": "^1.39.0",
     "@types/chrome": "^0.0.246",

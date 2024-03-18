@@ -24,7 +24,7 @@
     "dexie-observable": "4.0.1-beta.13"
   },
   "peerDependencies": {
-    "@fuels/connectors": ">=0.1.0",
+    "@fuels/connectors": ">=0.1.1",
     "fuels": ">=0.77.0"
   },
   "devDependencies": {
