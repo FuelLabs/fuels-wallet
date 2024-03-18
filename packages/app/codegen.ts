@@ -54,7 +54,7 @@ const config: CodegenConfig = {
     },
   },
   hooks: {
-    afterOneFileWrite: ['pnpm format'],
+    afterOneFileWrite: ['biome format --write'],
   },
 };
 
