@@ -1,4 +1,4 @@
-name: Check SDK release candidates
+name: Check SDK updates
 
 on:
   schedule:
@@ -15,18 +15,12 @@ permissions:
 
 jobs:
   update-version:
-    # Disable auto PR for now
-    if: false
     runs-on: buildjet-4vcpu-ubuntu-2204
+    strategy:
+      matrix:
+        tag: ['latest', 'next']
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: FuelLabs/github-actions/setups/node@master
-
-      - name: Check versions
-        id: check_versions
-        run: |
-          cd packages/update-sdk
-          pnpm check-versions
-        env:
-          GITHUB_TOKEN: ${{secrets.REPO_TOKEN}}
+      - uses: FuelLabs/github-actions/update-sdk@master
+        with:
+          npm-tag: ${{  matrix.tag }}
