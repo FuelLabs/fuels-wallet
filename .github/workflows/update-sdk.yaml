@@ -24,6 +24,9 @@ jobs:
         tag: ['latest', 'next']
 
     steps:
+      - uses: actions/checkout@v3
+      - uses: FuelLabs/github-actions/setups/node@master
+      
       - uses: FuelLabs/github-actions/update-sdk@hf/feat/update-sdk
         with:
           npm-tag: ${{  matrix.tag }}
