@@ -75,7 +75,7 @@ jobs:
       - name: Run lint
         run: |
           pnpm ts:check
-          pnpm lint
+          pnpm lint:ci
           
   docs:
     name: Docs

@@ -12,4 +12,4 @@ export CONTRACT_NAME="ExternalContract";
 pnpm fuels deploy
 
 echo "Prettify"
-pnpm -w prettier:format
+pnpm -w format

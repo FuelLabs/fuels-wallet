@@ -17,9 +17,7 @@
   "bugs": {
     "url": "https://github.com/FuelLabs/fuels-wallet/issues"
   },
-  "workspaces": [
-    "./packages/*"
-  ],
+  "workspaces": ["./packages/*"],
   "scripts": {
     "build:website": "node ./scripts/build-website/index.mjs",
     "build:preview": "turbo run build:preview",
@@ -41,9 +39,9 @@
     "dev:docs": "./scripts/dev.sh --docs",
     "dev:crx": "./scripts/dev.sh --crx",
     "dev:e2e-contracts": "./scripts/dev.sh --e2e-contracts-test",
-    "lint": "run-s lint:check prettier:check",
-    "lint:check": "eslint . --ext .ts,.tsx,.js,.jsx",
-    "lint:fix": "pnpm lint:check --fix",
+    "lint:check": "biome check --apply-unsafe .",
+    "lint:ci": "biome lint --max-diagnostics=1000 --diagnostic-level=error .",
+    "format": "biome format --write .",
     "node:up": "make -C ./docker up",
     "node:up:test": "make -C ./docker up-test",
     "node:down": "make -C ./docker down",
@@ -55,8 +53,6 @@
     "nodes:clean": "run-s node:clean node:clean:test",
     "nodes:reset": "run-s nodes:clean nodes:up",
     "packages:version": "node ./scripts/version.js",
-    "prettier:check": "prettier --check . !./packages/docs",
-    "prettier:format": "prettier --write .",
     "storybook": "pnpm -r --filter=fuels-wallet storybook",
     "test": "turbo run test --parallel",
     "test:ci": "turbo run test --parallel -- --ci --testLocationInResults --json --coverage",
@@ -76,10 +72,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.2",
+    "@biomejs/biome": "1.6.1",
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.2",
-    "@fuels/eslint-plugin": "0.1.4",
-    "@fuels/prettier-config": "0.1.4",
     "@fuels/ts-config": "0.17.0",
     "@jest/types": "29.6.3",
     "@playwright/test": "1.39.0",
@@ -89,7 +84,6 @@
     "@types/react-dom": "^18.2.13",
     "@xstate/cli": "0.5.2",
     "dotenv": "^16.3.1",
-    "eslint": "^8.51.0",
     "fs-extra": "^11.1.1",
     "http-server": "^14.1.1",
     "husky": "^8.0.3",
@@ -99,7 +93,6 @@
     "jest-transform-stub": "^2.0.0",
     "lint-staged": "^14.0.1",
     "npm-run-all": "^4.1.5",
-    "prettier": "3.0.3",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "turbo": "^1.10.15",
@@ -108,14 +101,8 @@
   },
   "pnpm": {
     "peerDependencyRules": {
-      "allowAny": [
-        "react",
-        "react-dom"
-      ],
-      "ignoreMissing": [
-        "react",
-        "react-dom"
-      ]
+      "allowAny": ["react", "react-dom"],
+      "ignoreMissing": ["react", "react-dom"]
     },
     "overrides": {
       "follow-redirects": ">=1.15.6",
