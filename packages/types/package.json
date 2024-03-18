@@ -28,7 +28,7 @@
     "fuels": ">=0.77.0"
   },
   "devDependencies": {
-    "@fuels/connectors": "0.1.1-preview-505d82a5757e8c297deb73817c88d943d5d3c728",
+    "@fuels/connectors": "0.1.1",
     "fuels": "0.77.0",
     "tsup": "^7.2.0"
   }
