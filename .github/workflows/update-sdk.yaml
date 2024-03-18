@@ -1,6 +1,9 @@
 name: Check SDK updates
 
 on:
+  # @TODO: Remove it before merge
+  pull_request:
+    types: [opened, synchronize, reopened, draft]
   schedule:
     - cron: '0 0 * * *'
   workflow_dispatch:
@@ -21,6 +24,6 @@ jobs:
         tag: ['latest', 'next']
 
     steps:
-      - uses: FuelLabs/github-actions/update-sdk@master
+      - uses: FuelLabs/github-actions/update-sdk@hf/feat/update-sdk
         with:
           npm-tag: ${{  matrix.tag }}
