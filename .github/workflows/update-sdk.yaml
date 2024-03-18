@@ -29,6 +29,7 @@ jobs:
 
       - name: Checking updates
         uses: FuelLabs/github-actions/update-sdk@hf/feat/update-sdk
+        working-directory: .
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           npm-tag: ${{ matrix.tag }}
