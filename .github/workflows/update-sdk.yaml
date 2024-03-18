@@ -30,6 +30,11 @@ jobs:
       - name: Checking updates
         uses: FuelLabs/github-actions/update-sdk@hf/feat/update-sdk
         with:
+          branch: master
+          packages: |
+            fuels
+            @fuels/react
+            @fuels/connectors
           npm-tag: ${{ matrix.tag }}
         env:
-          GH_TOKEN: ${{ secrets.REPO_TOKEN }}
+          GITH_TOKEN: ${{ secrets.REPO_TOKEN }}
