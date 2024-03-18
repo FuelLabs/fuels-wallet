@@ -21,7 +21,7 @@ jobs:
     runs-on: buildjet-4vcpu-ubuntu-2204
     strategy:
       matrix:
-        tag: ['latest', 'next']
+        tag: ['latest'] # Currently only "latest" tag is available across all packages
 
     steps:
       - uses: actions/checkout@v3
