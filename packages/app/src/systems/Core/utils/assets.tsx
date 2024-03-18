@@ -1,4 +1,5 @@
-import { type AssetFuel, assets } from 'fuels';
+import assets from '@fuels/assets';
+import type { AssetFuel } from 'fuels';
 
 export const fuelAssets = assets.map((asset) => {
   const fuelNetworkAsset = asset.networks.find(

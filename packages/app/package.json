@@ -26,6 +26,7 @@
     "@fuel-ui/react": "0.23.2",
     "@fuel-ui/test-utils": "0.17.0",
     "@fuel-wallet/connections": "workspace:*",
+    "@fuels/assets": "^0.17.0",
     "@fuels/connectors": "0.1.1",
     "@fuels/local-storage": "0.17.0",
     "@fuels/react": "0.17.0",
