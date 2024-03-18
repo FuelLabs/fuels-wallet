@@ -1,4 +1,5 @@
-import type { Asset, AssetData, AssetFuel } from '@fuel-wallet/types';
+import type { AssetData } from '@fuel-wallet/types';
+import type { Asset, AssetFuel } from 'fuels';
 
 export function getAssetByChain(
   asset: Asset,

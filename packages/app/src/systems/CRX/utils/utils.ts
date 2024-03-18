@@ -1,4 +1,4 @@
-import type { MessageSender } from '@fuel-wallet/types';
+import type { MessageSender } from '@fuels/connectors';
 
 export function getTabIdFromPort(port: chrome.runtime.Port) {
   return port.sender?.tab?.id;

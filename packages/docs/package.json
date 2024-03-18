@@ -16,7 +16,6 @@
     "@fuel-ui/css": "0.23.2",
     "@fuel-ui/icons": "0.23.2",
     "@fuel-ui/react": "0.23.2",
-    "@fuel-wallet/sdk": "workspace:*",
     "@fuels/connectors": "0.1.0",
     "@fuels/react": "0.16.0",
     "@mdx-js/react": "^2.3.0",
@@ -27,7 +26,7 @@
     "acorn-walk": "^8.2.0",
     "dotenv": "^16.3.1",
     "framer-motion": "^10.16.4",
-    "fuels": "0.75.0",
+    "fuels": "0.77.0",
     "globby": "^13.2.2",
     "gray-matter": "^4.0.3",
     "hast-util-heading-rank": "^3.0.0",
@@ -48,6 +47,7 @@
     "vfile": "^6.0.1"
   },
   "devDependencies": {
+    "@fuel-wallet/types": "workspace:*",
     "@svgr/webpack": "8.1.0",
     "@types/chrome": "^0.0.246",
     "@types/node": "^20.8.4",

@@ -1,4 +1,4 @@
-import type { Asset } from '@fuel-wallet/sdk';
+import type { Asset } from 'fuels';
 
 export const ASSET: Asset = {
   name: 'New',

@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  BACKGROUND_SCRIPT_NAME,
-  CONTENT_SCRIPT_NAME,
-  MessageTypes,
-} from '@fuel-wallet/types';
+import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
 import type { Connection } from '@fuel-wallet/types';
+import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuels/connectors';
 import { Address } from 'fuels';
 import type {
   JSONRPCParams,

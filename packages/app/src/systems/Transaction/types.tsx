@@ -1,5 +1,6 @@
-import type { AddressType, AssetAmount } from '@fuel-wallet/types';
+import type { AssetAmount } from '@fuel-wallet/types';
 import type {
+  AddressType,
   CallResult,
   CoinTransactionRequestInput,
   CoinTransactionRequestOutput,

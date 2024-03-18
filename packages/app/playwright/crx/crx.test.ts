@@ -1,6 +1,13 @@
-import type { Account, Asset } from '@fuel-wallet/sdk';
 import { expect } from '@playwright/test';
-import { Signer, bn, hashMessage, Wallet, Provider } from 'fuels';
+import {
+  Signer,
+  bn,
+  hashMessage,
+  Wallet,
+  Provider,
+  type Account,
+  type Asset,
+} from 'fuels';
 
 import {
   seedWallet,

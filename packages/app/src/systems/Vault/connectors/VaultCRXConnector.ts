@@ -1,14 +1,11 @@
+import { POPUP_SCRIPT_NAME, VAULT_SCRIPT_NAME } from '@fuel-wallet/types';
 import type {
   RequestMessage,
   ResponseMessage,
   CommunicationMessage,
   EventMessage,
-} from '@fuel-wallet/types';
-import {
-  POPUP_SCRIPT_NAME,
-  MessageTypes,
-  VAULT_SCRIPT_NAME,
-} from '@fuel-wallet/types';
+} from '@fuels/connectors';
+import { MessageTypes } from '@fuels/connectors';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 
 import type { VaultClient } from '../services/VaultClient';

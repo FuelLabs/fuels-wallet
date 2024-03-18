@@ -30,7 +30,6 @@ jobs:
         with:
           files: |
             **/packages/app/**  
-            **/packages/sdk/**
             **/packages/types/**
             **/packages/react/**
 
