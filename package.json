@@ -80,7 +80,7 @@
     "@changesets/cli": "^2.26.2",
     "@fuels/eslint-plugin": "0.1.4",
     "@fuels/prettier-config": "0.1.4",
-    "@fuels/ts-config": "0.1.4",
+    "@fuels/ts-config": "0.17.0",
     "@jest/types": "29.6.3",
     "@playwright/test": "1.39.0",
     "@types/jest": "^29.5.5",
