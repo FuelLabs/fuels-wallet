@@ -4,7 +4,6 @@ import { FuelProvider, useAccount, useConnectUI } from '@fuels/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useDarkMode } from 'storybook-dark-mode';
 
-
 export default {
   component: FuelProvider,
   title: 'Connect',
