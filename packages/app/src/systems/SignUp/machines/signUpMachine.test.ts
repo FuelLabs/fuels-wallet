@@ -44,7 +44,7 @@ describe('signUpMachine', () => {
       await expectStateMatch(service, 'done');
     });
 
-    it('should be able to conitnue create after failing to check mnemonic', async () => {
+    it('should be able to continue create after failing to check mnemonic', async () => {
       await expectStateMatch(service, 'atWelcome');
       service.send('CREATE');
       await expectStateMatch(service, 'aggrement');
@@ -97,7 +97,7 @@ describe('signUpMachine', () => {
       expect(accounts.length).toBe(1);
       expect(accounts[0].address).toEqual(wallet.address.toString());
     });
-    it('should be able to conitnue import after failing to check mnemonic', async () => {
+    it('should be able to continue import after failing to check mnemonic', async () => {
       await expectStateMatch(service, 'atWelcome');
       service.send('IMPORT');
       await expectStateMatch(service, 'aggrement');

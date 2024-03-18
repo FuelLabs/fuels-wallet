@@ -29,3 +29,5 @@ dist-ssr
 *.sw?
 
 cypress/videos
+
+.lh/
