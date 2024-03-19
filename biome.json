@@ -42,9 +42,7 @@
         "noForEach": "off",
         "useOptionalChain": "off",
         "noUselessSwitchCase": "off",
-        "useArrowFunction": "off",
-        "noUselessEmptyExport": "off",
-        "useLiteralKeys": "off"
+        "useArrowFunction": "off"
       },
       "performance": {
         "noAccumulatingSpread": "off",
