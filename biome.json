@@ -50,9 +50,6 @@
         "noAccumulatingSpread": "off",
         "noDelete": "off"
       },
-      "security": {
-        "noDangerouslySetInnerHtml": "off"
-      },
       "a11y": {
         "useButtonType": "off"
       }
