@@ -29,6 +29,7 @@ type MachineContext = {
 
 type MachineServices = {
   faucet: {
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
     data: void;
   };
 };

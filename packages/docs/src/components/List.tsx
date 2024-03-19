@@ -15,6 +15,7 @@ export function UL({ children, ...props }: any) {
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         .map((child: any, idx: number) => {
           if (!child?.type) return null;
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
           return <List.Item key={idx}>{child.props.children}</List.Item>;
         })
         .filter(Boolean)}

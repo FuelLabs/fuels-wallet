@@ -34,7 +34,9 @@ type MachineEvents =
       type: 'START';
       input: AddNetworkInputs['start'];
     }
+  // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
   | { type: 'APPROVE'; input: void }
+  // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
   | { type: 'REJECT'; input: void };
 
 export const addNetworkRequestMachine = createMachine(

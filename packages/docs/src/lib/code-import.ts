@@ -145,8 +145,13 @@ export function codeImport(options: Options = { filepath: '' }) {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     visit(tree, 'mdxJsxFlowElement', (node: any, idx, parent) => {
       if (node.name === 'CodeImport') {
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        nodes.push([node as any, idx == undefined ? null : idx, parent as any]);
+        nodes.push([
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          node as any,
+          idx === undefined ? null : idx,
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          parent as any,
+        ]);
       }
     });
 

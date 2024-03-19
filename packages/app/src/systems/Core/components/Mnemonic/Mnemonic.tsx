@@ -134,6 +134,7 @@ export function Mnemonic({
       {type === 'read' ? (
         <Grid css={styles.words}>
           {initialValue?.map((word, idx) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             <Box as="span" key={idx} css={styles.word} data-idx={idx + 1}>
               {word}
             </Box>
@@ -143,6 +144,7 @@ export function Mnemonic({
         <Grid css={styles.words}>
           {value.map((_, idx) => {
             return (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               <Grid key={idx} css={styles.inputWrapper}>
                 <span>{idx + 1}</span>
                 <div>

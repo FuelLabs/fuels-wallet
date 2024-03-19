@@ -68,6 +68,7 @@ const ownerAddress =
 
 export const Success = (args: TxItemProps) => {
   MOCK_TRANSACTION_CONTRACT_CALLS.map(
+    // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
     (tx) => (tx.status = TransactionStatus.success)
   );
   return (
@@ -93,6 +94,7 @@ export const Success = (args: TxItemProps) => {
 
 export const Pending = (args: TxItemProps) => {
   MOCK_TRANSACTION_CONTRACT_CALLS.map(
+    // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
     (tx) => (tx.status = TransactionStatus.submitted)
   );
   return (
@@ -119,6 +121,7 @@ export const Pending = (args: TxItemProps) => {
 // biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 export const Error = (args: TxItemProps) => {
   MOCK_TRANSACTION_CONTRACT_CALLS.map(
+    // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
     (tx) => (tx.status = TransactionStatus.failure)
   );
   return (

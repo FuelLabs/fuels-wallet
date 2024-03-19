@@ -37,6 +37,7 @@ export function AccountList({
       {isLoading && (
         <CardList>
           {[...Array(3)].map((_, i) => {
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             return <AccountItem.Loader key={i} />;
           })}
         </CardList>

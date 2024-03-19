@@ -22,12 +22,6 @@
         "noNonNullAssertion": "off",
         "noInferrableTypes": "off"
       },
-      "suspicious": {
-        "noArrayIndexKey": "off",
-        "noConfusingVoidType": "off",
-        "noAssignInExpressions": "off",
-        "noDoubleEquals": "off"
-      },
       "complexity": {
         "noThisInStatic": "off",
         "noStaticOnlyClass": "off",

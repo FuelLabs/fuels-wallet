@@ -13,6 +13,7 @@ export type ErrorMachineContext = {
 
 type MachineServices = {
   clearErrors: {
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
     data: void;
   };
   reportErrors: {

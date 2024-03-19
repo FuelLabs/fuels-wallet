@@ -12,9 +12,11 @@ export type UnlockMachineContext = {
 
 type MachineServices = {
   unlock: {
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
     data: void;
   };
   resetWallet: {
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
     data: void;
   };
   checkLocked: {
