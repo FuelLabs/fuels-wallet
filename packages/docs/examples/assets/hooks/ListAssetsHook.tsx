@@ -1,9 +1,9 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Tag } from '@fuel-ui/react';
-import { getAssetByChain } from '@fuel-wallet/sdk';
 import { useAssets } from '@fuels/react';
 
 import { ExampleBox } from '../../../src/components/ExampleBox';
+import { getAssetByChain } from '../../../src/utils/getAssetByChain';
 
 export function ListAssetsHook() {
   /* useAssets:start */

@@ -6,14 +6,15 @@
     "start": "vite"
   },
   "dependencies": {
-    "@fuels/connectors": "0.1.0",
-    "@fuels/react": "0.16.0",
-    "fuels": "0.75.0",
+    "@fuels/connectors": "0.1.1",
+    "@fuels/react": "0.17.0",
+    "@tanstack/react-query": "5.28.4",
+    "fuels": "0.77.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@tanstack/react-query-devtools": "^4.36.1",
+    "@tanstack/react-query-devtools": "5.28.4",
     "@types/react": "18.2.56",
     "@types/react-dom": "18.2.19",
     "@vitejs/plugin-react": "4.2.1",

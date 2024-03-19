@@ -17,7 +17,7 @@ export function SelectConnectorHook() {
   const { connectors } = useConnectors();
   const {
     connect,
-    isLoading: connecting,
+    isPending: connecting,
     error: errorConnecting,
   } = useConnect();
 
@@ -27,7 +27,7 @@ export function SelectConnectorHook() {
   /* useConnectors:end */
   const {
     disconnect,
-    isLoading: disconnecting,
+    isPending: disconnecting,
     error: errorDisconnecting,
   } = useDisconnect();
   const [selectedConnector, setCurrentConnector] = useState('');

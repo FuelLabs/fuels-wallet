@@ -7,7 +7,7 @@ import { ExampleBox } from '../../../src/components/ExampleBox';
 export function DisconnectHook() {
   const { isConnected } = useIsConnected();
   /* disconnect:start */
-  const { disconnect, isLoading, error } = useDisconnect();
+  const { disconnect, isPending, error } = useDisconnect();
   /* disconnect:end */
 
   return (
@@ -15,7 +15,7 @@ export function DisconnectHook() {
       <Box.Flex gap="$4" align={'center'}>
         <Button
           onPress={() => disconnect()}
-          isLoading={isLoading}
+          isLoading={isPending}
           isDisabled={!isConnected}
         >
           Disconnect

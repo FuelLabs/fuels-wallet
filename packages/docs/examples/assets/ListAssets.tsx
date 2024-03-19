@@ -1,12 +1,13 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Tag } from '@fuel-ui/react';
-import { getAssetByChain, type Asset } from '@fuel-wallet/sdk';
 import { useFuel, useIsConnected } from '@fuels/react';
+import type { Asset } from 'fuels';
 import { useState } from 'react';
 
 import { ExampleBox } from '../../src/components/ExampleBox';
 import { useLoading } from '../../src/hooks/useLoading';
+import { getAssetByChain } from '../../src/utils/getAssetByChain';
 
 export function ListAssets() {
   const { fuel } = useFuel();

@@ -1,17 +1,17 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Input, Text, IconButton, Icon } from '@fuel-ui/react';
-import type { AssetFuel, Asset } from '@fuel-wallet/sdk';
-import { getAssetByChain } from '@fuel-wallet/sdk';
 import {
   useFuel,
   useIsConnected,
   useAddAssets,
   useConnect,
 } from '@fuels/react';
+import type { AssetFuel, Asset } from 'fuels';
 import { useState } from 'react';
 
 import { ExampleBox } from '../../../src/components/ExampleBox';
+import { getAssetByChain } from '../../../src/utils/getAssetByChain';
 import { ASSET } from '../data';
 
 export function AddAssetsHook() {
@@ -20,7 +20,7 @@ export function AddAssetsHook() {
   const [assets, setAssets] = useState<Asset[]>([ASSET]);
   const { connect, error: errorConnecting } = useConnect();
   /* addAssets:start */
-  const { addAssets, isLoading, error } = useAddAssets();
+  const { addAssets, isPending, error } = useAddAssets();
 
   async function handleAddAssets(assets: Asset[]) {
     if (!isConnected) await connect(); // ignore-line
@@ -160,8 +160,8 @@ export function AddAssetsHook() {
         <Box>
           <Button
             onPress={() => handleAddAssets(assets)}
-            isLoading={isLoading}
-            isDisabled={isLoading || !fuel}
+            isLoading={isPending}
+            isDisabled={isPending || !fuel}
           >
             Add Assets
           </Button>

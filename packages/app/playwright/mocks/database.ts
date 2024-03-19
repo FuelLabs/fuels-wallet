@@ -1,12 +1,10 @@
+import type { AssetData, Connection, NetworkData } from '@fuel-wallet/types';
+import type { Page } from '@playwright/test';
 import type {
+  WalletManagerAccount as WalletAccount,
   Account,
   Asset,
-  AssetData,
-  Connection,
-  NetworkData,
-} from '@fuel-wallet/sdk';
-import type { Page } from '@playwright/test';
-import type { WalletManagerAccount as WalletAccount } from 'fuels';
+} from 'fuels';
 import { WalletManager, Mnemonic, encrypt, Address } from 'fuels';
 
 import { getByAriaLabel } from '../commons/locator';

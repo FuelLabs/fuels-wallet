@@ -1,10 +1,11 @@
-import { deferPromise } from '@fuel-wallet/sdk';
-import type { DeferPromise } from '@fuel-wallet/sdk';
-import { POPUP_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
-import type { ResponseMessage, UIEventMessage } from '@fuel-wallet/types';
+import { POPUP_SCRIPT_NAME } from '@fuel-wallet/types';
+import { MessageTypes } from '@fuels/connectors';
+import type { ResponseMessage, UIEventMessage } from '@fuels/connectors';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
 import { JSONRPCClient } from 'json-rpc-2.0';
 import { CRXPages } from '~/systems/Core/types';
+import type { DeferPromise } from '~/systems/Core/utils/promise';
+import { deferPromise } from '~/systems/Core/utils/promise';
 import { uniqueId } from '~/systems/Core/utils/string';
 
 import {

@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
+import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
 import {
-  BACKGROUND_SCRIPT_NAME,
+  type CommunicationMessage,
+  MessageTypes,
   CONNECTOR_SCRIPT,
   CONTENT_SCRIPT_NAME,
   EVENT_MESSAGE,
-  MessageTypes,
-} from '@fuel-wallet/types';
-import type { CommunicationMessage } from '@fuel-wallet/types';
+} from '@fuels/connectors';
 import { createJSONRPCSuccessResponse } from 'json-rpc-2.0';
 import type { JSONRPCID } from 'json-rpc-2.0';
 
