@@ -49,9 +49,6 @@
       "performance": {
         "noAccumulatingSpread": "off",
         "noDelete": "off"
-      },
-      "a11y": {
-        "useButtonType": "off"
       }
     }
   },

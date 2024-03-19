@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import {
   useAccounts,
-  useDisconnect,
   useConnectUI,
+  useDisconnect,
   useIsConnected,
 } from '@fuels/react';
 import './App.css';
@@ -19,6 +19,7 @@ function App() {
     <div className="App" data-theme={theme}>
       <div className="Actions">
         <button
+          type="button"
           onClick={() => {
             console.log('connect');
             connect();
@@ -27,9 +28,14 @@ function App() {
           {isConnecting ? 'Connecting' : 'Connect'}
         </button>
         {isConnected && (
-          <button onClick={() => disconnect()}>Disconnect</button>
+          <button type="button" onClick={() => disconnect()}>
+            Disconnect
+          </button>
         )}
-        <button onClick={() => setTheme(lightTheme ? 'dark' : 'light')}>
+        <button
+          type="button"
+          onClick={() => setTheme(lightTheme ? 'dark' : 'light')}
+        >
           {lightTheme ? '🌙' : '☀️'}
         </button>
       </div>

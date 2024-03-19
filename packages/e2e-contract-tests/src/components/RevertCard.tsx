@@ -11,6 +11,7 @@ export const RevertCard = () => {
       <p>Panic TX</p>
       <div aria-label="Panic asset card">
         <button
+          type="button"
           onClick={async () => {
             if (wallet) {
               await panicTx({
@@ -25,6 +26,7 @@ export const RevertCard = () => {
       <p>Revert TX</p>
       <div aria-label="Revert asset card">
         <button
+          type="button"
           onClick={async () => {
             if (wallet) {
               await revertTx({

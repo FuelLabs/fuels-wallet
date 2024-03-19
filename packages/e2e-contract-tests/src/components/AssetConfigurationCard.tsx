@@ -39,6 +39,7 @@ export const AssetConfigurationCard = () => {
           }
         />
         <button
+          type="button"
           onClick={async () => {
             if (wallet.wallet) {
               await mint({

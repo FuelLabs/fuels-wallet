@@ -22,6 +22,7 @@ export const ForwardHalfCustomAssetCard = () => {
           value={amount}
         />
         <button
+          type="button"
           onClick={async () => {
             if (wallet.wallet && amount) {
               await depositHalf({
