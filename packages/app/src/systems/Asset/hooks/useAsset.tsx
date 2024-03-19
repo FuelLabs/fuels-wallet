@@ -12,7 +12,7 @@ const selectors = {
   },
 };
 
-export function useAsset(assetId: string = '') {
+export function useAsset(assetId = '') {
   const asset = store.useSelector(Services.assets, selectors.asset(assetId));
 
   return asset;

@@ -168,7 +168,7 @@ export class AccountService {
     });
   }
 
-  static async checkAccountNameExists(name: string = '') {
+  static async checkAccountNameExists(name = '') {
     const accounts = await AccountService.getAccounts();
     const exitsAccountWithName = this.filterByName(accounts, name).length > 0;
     return exitsAccountWithName;
@@ -186,7 +186,7 @@ export class AccountService {
     return name || desiredName;
   }
 
-  static filterByName(accounts: Account[], name: string = '') {
+  static filterByName(accounts: Account[], name = '') {
     return accounts.filter((account) =>
       account.name.toLowerCase().includes(name.toLowerCase())
     );
@@ -197,7 +197,7 @@ export class AccountService {
 // Private methods
 // ----------------------------------------------------------------------------
 
-async function getBalances(providerUrl: string, publicKey: string = '0x00') {
+async function getBalances(providerUrl: string, publicKey = '0x00') {
   const provider = await Provider.create(providerUrl!);
   const address = Address.fromPublicKey(publicKey);
   const balances = await provider.getBalances(address);

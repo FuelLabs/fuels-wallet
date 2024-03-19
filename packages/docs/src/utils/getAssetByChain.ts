@@ -4,7 +4,7 @@ import type { Asset, AssetFuel } from 'fuels';
 export function getAssetByChain(
   asset: Asset,
   chainId: number,
-  network: string = 'fuel'
+  network = 'fuel'
 ): AssetData {
   const assetFuelNetwork = asset.networks.find(
     (item) => item.chainId === chainId && item.type === network

@@ -87,7 +87,7 @@ export class PopUpService {
     if (this.session === message.session && message.ready && message.sender) {
       const tab = getTabFromSender(message.sender);
       this.tab = tab!;
-      this.tabId = tab!.id!;
+      this.tabId = tab?.id!;
       this.eventId = message.id;
       this.openingPromise.resolve(this);
     }

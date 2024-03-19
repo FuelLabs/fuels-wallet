@@ -388,7 +388,7 @@ test.describe('FuelWallet Extension', () => {
         return blankPage.evaluate(
           async ([senderAddress, receiverAddress, amount]) => {
             const receiver = window.createAddress(receiverAddress as string);
-            const wallet = await window.fuel!.getWallet(
+            const wallet = await window.fuel?.getWallet(
               senderAddress as string
             );
 

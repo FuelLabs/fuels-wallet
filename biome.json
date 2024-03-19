@@ -18,8 +18,7 @@
         "noUnusedVariables": "error"
       },
       "style": {
-        "noNonNullAssertion": "off",
-        "noInferrableTypes": "off"
+        "noNonNullAssertion": "off"
       },
       "complexity": {
         "noThisInStatic": "off",

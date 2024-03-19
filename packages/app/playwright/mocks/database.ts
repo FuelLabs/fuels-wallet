@@ -116,7 +116,7 @@ export async function createManager(mnemonic: string) {
   return walletManager;
 }
 
-export function createAccount(wallet: WalletAccount, index: number = 0) {
+export function createAccount(wallet: WalletAccount, index = 0) {
   return {
     address: wallet.address.toAddress(),
     balance: '0',
@@ -129,10 +129,7 @@ export function createAccount(wallet: WalletAccount, index: number = 0) {
   };
 }
 
-export function createAccounts(
-  manager: WalletManager,
-  numberOfAccounts: number = 1
-) {
+export function createAccounts(manager: WalletManager, numberOfAccounts = 1) {
   return Promise.all(
     new Array(numberOfAccounts).fill(0).map(async (_, index) => {
       const walletAccount = await manager.addAccount();
@@ -178,7 +175,7 @@ export async function serializeVault(
 
 export async function mockData(
   page: Page,
-  numberOfAccounts: number = 1,
+  numberOfAccounts = 1,
   networks: Array<NetworkData> = DEFAULT_NETWORKS
 ) {
   await visit(page, '/');

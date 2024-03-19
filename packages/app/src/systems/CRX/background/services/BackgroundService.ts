@@ -62,9 +62,9 @@ export class BackgroundService {
   setupListeners() {
     this.communicationProtocol.on(MessageTypes.request, async (event) => {
       if (event.target !== BACKGROUND_SCRIPT_NAME) return;
-      const origin = event.sender!.origin!;
-      const title = event.sender!.tab!.title!;
-      const favIconUrl = event.sender!.tab!.favIconUrl!;
+      const origin = event.sender?.origin!;
+      const title = event.sender?.tab?.title!;
+      const favIconUrl = event.sender?.tab?.favIconUrl!;
       const response = await this.server.receive(event.request, {
         origin,
         title,
@@ -138,7 +138,7 @@ export class BackgroundService {
 
     // Retrieve connection for use on accounts
     const connection = await ConnectionService.getConnection(
-      serverParams!.origin
+      serverParams?.origin
     );
 
     // If the method is not `connect` or `isConnected`

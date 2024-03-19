@@ -79,7 +79,7 @@ export function FaucetDialog() {
             intent="primary"
             onPress={() =>
               handlers.startFaucet({
-                address: account!.address || '',
+                address: account?.address || '',
                 captcha: captcha.value,
               })
             }

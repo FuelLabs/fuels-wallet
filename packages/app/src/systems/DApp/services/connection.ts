@@ -105,16 +105,16 @@ export class ConnectionService {
     });
   }
 
-  static filterByOrigin(connections: Connection[], origin: string = '') {
+  static filterByOrigin(connections: Connection[], origin = '') {
     if (!origin.length) return null;
     return connections.filter(hasOriginIncluded(origin));
   }
 
-  static findByOrigin(connections: Connection[], origin: string = '') {
+  static findByOrigin(connections: Connection[], origin = '') {
     return connections.find(hasOriginIncluded(origin));
   }
 
-  static excludeByOrigin(connections: Connection[], origin: string = '') {
+  static excludeByOrigin(connections: Connection[], origin = '') {
     if (!origin.length) return connections;
     return connections.filter((c) => !hasOriginIncluded(origin)(c));
   }

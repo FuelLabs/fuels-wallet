@@ -36,7 +36,7 @@ function addFilesToZipArchive(
         dir: true,
         date: fileDate,
       });
-      const dir = zip!.folder(fileName);
+      const dir = zip?.folder(fileName);
 
       addFilesToZipArchive(dir, filePath, excludeFiles);
     } else {
