@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       package:
-        description: Package to update
+        description: Packages to update (comma separated)
         default: fuels
         required: true
       tag:
@@ -29,11 +29,10 @@ jobs:
       - uses: FuelLabs/github-actions/setups/node@master
 
       - name: Checking updates
-        uses: FuelLabs/github-actions/update-sdk@master
+        uses: FuelLabs/github-actions/update-sdk@hf/feat/multiline-packages
         with:
           branch: master
-          packages: |
-            ${{ inputs.package }}
+          packages: ${{ inputs.packages }}
           npm-tag: ${{ inputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
