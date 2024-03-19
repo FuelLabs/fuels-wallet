@@ -25,7 +25,7 @@ jobs:
       - uses: FuelLabs/github-actions/setups/node@master
 
       - name: Checking updates
-        uses: FuelLabs/github-actions/update-sdk@hf/feat/update-sdk
+        uses: FuelLabs/github-actions/update-sdk@master
         with:
           branch: master
           packages: |
