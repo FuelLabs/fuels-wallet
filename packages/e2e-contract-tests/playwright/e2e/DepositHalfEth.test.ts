@@ -82,11 +82,11 @@ test.describe('Deposit Half ETH', () => {
     await hasText(page, 'Transaction successful.');
     const postDepositBalanceEth = await fuelWallet.getBalance();
     expect(
-      parseFloat(
+      Number.parseFloat(
         preDepositBalanceEth
           .sub(postDepositBalanceEth)
           .format({ precision: 6, units: 9 })
       )
-    ).toBe(parseFloat(halfDepositAmount));
+    ).toBe(Number.parseFloat(halfDepositAmount));
   });
 });

@@ -103,11 +103,11 @@ test.describe('Forward Half Custom Asset', () => {
     await hasText(page, 'Transaction successful.');
     const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
-      parseFloat(
+      Number.parseFloat(
         preDepositBalanceTkn
           .sub(postDepositBalanceTkn)
           .format({ precision: 6, units: 9 })
       )
-    ).toBe(parseFloat(halfForwardCustomAssetAmount));
+    ).toBe(Number.parseFloat(halfForwardCustomAssetAmount));
   });
 });

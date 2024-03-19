@@ -71,11 +71,11 @@ test.describe('Forward Eth', () => {
     await hasText(page, 'Transaction successful.');
     const postDepositBalanceEth = await fuelWallet.getBalance();
     expect(
-      parseFloat(
+      Number.parseFloat(
         preDepositBalanceEth
           .sub(postDepositBalanceEth)
           .format({ precision: 6, units: 9 })
       )
-    ).toBe(parseFloat(forwardEthAmount));
+    ).toBe(Number.parseFloat(forwardEthAmount));
   });
 });

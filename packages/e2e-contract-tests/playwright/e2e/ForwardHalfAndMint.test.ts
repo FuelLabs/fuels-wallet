@@ -96,18 +96,18 @@ test.describe('Forward Half ETH and Mint Custom Asset', () => {
     const postDepositBalanceEth = await fuelWallet.getBalance();
     const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
-      parseFloat(
+      Number.parseFloat(
         preDepositBalanceEth
           .sub(postDepositBalanceEth)
           .format({ precision: 6, units: 9 })
       )
-    ).toBe(parseFloat(halfDepositAmount));
+    ).toBe(Number.parseFloat(halfDepositAmount));
     expect(
-      parseFloat(
+      Number.parseFloat(
         postDepositBalanceTkn
           .sub(preDepositBalanceTkn)
           .format({ precision: 6, units: 9 })
       )
-    ).toBe(parseFloat(mintAmount));
+    ).toBe(Number.parseFloat(mintAmount));
   });
 });

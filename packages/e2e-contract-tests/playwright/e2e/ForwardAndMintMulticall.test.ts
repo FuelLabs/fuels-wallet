@@ -88,18 +88,18 @@ test.describe('Forward and Mint Multicall', () => {
     const postDepositBalanceEth = await fuelWallet.getBalance();
     const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
-      parseFloat(
+      Number.parseFloat(
         preDepositBalanceEth
           .sub(postDepositBalanceEth)
           .format({ precision: 6, units: 9 })
       )
-    ).toBe(parseFloat(depositAmount));
+    ).toBe(Number.parseFloat(depositAmount));
     expect(
-      parseFloat(
+      Number.parseFloat(
         postDepositBalanceTkn
           .sub(preDepositBalanceTkn)
           .format({ precision: 6, units: 9 })
       )
-    ).toBe(parseFloat(mintAmount));
+    ).toBe(Number.parseFloat(mintAmount));
   });
 });
