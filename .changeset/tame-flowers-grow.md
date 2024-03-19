@@ -1,7 +1,7 @@
 ---
-'@fuel-wallet/connections': minor
-'@fuel-wallet/types': minor
-'fuels-wallet': minor
+'@fuel-wallet/connections': patch
+'@fuel-wallet/types': patch
+'fuels-wallet': patch
 ---
 
 feat: bump SDK to latest version

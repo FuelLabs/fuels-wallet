@@ -1,4 +1,4 @@
-name: Check SDK release candidates
+name: Check SDK updates
 
 on:
   schedule:
@@ -15,18 +15,23 @@ permissions:
 
 jobs:
   update-version:
-    # Disable auto PR for now
-    if: false
     runs-on: buildjet-4vcpu-ubuntu-2204
+    strategy:
+      matrix:
+        tag: ['latest'] # Currently only "latest" tag is available across all packages
 
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
 
-      - name: Check versions
-        id: check_versions
-        run: |
-          cd packages/update-sdk
-          pnpm check-versions
+      - name: Checking updates
+        uses: FuelLabs/github-actions/update-sdk@master
+        with:
+          branch: master
+          packages: |
+            fuels
+            @fuels/react
+            @fuels/connectors
+          npm-tag: ${{ matrix.tag }}
         env:
-          GITHUB_TOKEN: ${{secrets.REPO_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}

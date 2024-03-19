@@ -7,7 +7,7 @@ category: For Developers
 
 ## `useAccount`
 
-Retrieves the current fuel account and returns the account address `<string | undefined>`.
+Retrieves the current fuel account and returns the account address `<string | null>`.
 
 ```tsx
 const { account } = useAccount();
@@ -19,7 +19,7 @@ console.log(account);
 
 ## `useAccounts`
 
-Retrieves the fuel accounts and returns the addresses of the accounts `<string[] | undefined>`
+Retrieves the fuel accounts and returns the addresses of the accounts `<string[]>`
 
 ```tsx
 const { accounts } = useAccounts();
@@ -31,7 +31,7 @@ console.log(accounts);
 
 ## `useBalance`
 
-Fetches the balance `<number | undefined>` of a specified address and asset ID. Additionally, it includes a listener that triggers a balance refresh when the window gains focus.
+Fetches the balance `<BN | null>` of a specified address and asset ID. Additionally, it includes a listener that triggers a balance refresh when the window gains focus.
 
 ```tsx
 const { balance } = useBalance({
@@ -47,7 +47,7 @@ console.log(balance);
 
 ## `useChain`
 
-Fetches information about the current Fuel network `<ChainInfo | undefined>`.
+Fetches information about the current Fuel network `<ChainInfo | null>`.
 
 ```tsx
 const { chain } = useChain();
@@ -61,10 +61,13 @@ console.log(chain.name);
 Facilitates the connection to the Fuel wallet. Allows selecting a connector by name. It also provides a function `<UseMutateAsyncFunction<boolean | undefined>>` to initiate the connection and relevant mutation properties for managing the connection state.
 
 ```tsx
-const { connect } = useConnect();
+const { connect, connectAsync } = useConnect();
 
 const handleConnect = async () => {
-  await connect('exampleConnectorName');
+  connect('Fuel Wallet');
+
+  // Async way
+  await connectAsync('exampleConnectorName');
 };
 
 handleConnect();
@@ -74,10 +77,10 @@ handleConnect();
 
 ## `useConnectors`
 
-Retrieves a list of available connectors `<Array<FuelWalletConnector>>` for connecting to Fuel.
+Retrieves a list of available connectors `<Array<FuelConnector>>` for connecting to Fuel.
 
 ```tsx
-const { connector } = useConnectors();
+const { connectors } = useConnectors();
 
 console.log(connectors);
 ```
@@ -92,7 +95,10 @@ Facilitates disconnection from the Fuel Wallet. It provides a function `<UseMuta
 const { disconnect } = useDisconnect();
 
 const handleDisconnect = async () => {
-  await disconnect();
+  disconnect();
+
+  // Async way
+  await disconnectAsync();  
 };
 
 handleDisconnect();
@@ -144,7 +150,7 @@ const { transaction } = useTransaction({ txId: 'fuel1r20zhd...' });
 
 ## `useTransactionReceipts`
 
-Retrieves transaction receipts `<TransactionResponse.Receipts>` associated with a specific transaction ID using the `useFuel` hook.
+Retrieves transaction receipts `<Array<TransactionResultReceipt>>` associated with a specific transaction ID using the `useFuel` hook.
 
 ```tsx
 const { transactionReceipts } = useTransactionReceipts({
@@ -156,7 +162,7 @@ const { transactionReceipts } = useTransactionReceipts({
 
 ## `useWallet`
 
-Retrieves wallet instance `<Account | undefined>` and ensures the presence of a valid address and fuel instance.
+Retrieves wallet instance `<Account | null | undefined>` and ensures the presence of a valid address and fuel instance.
 
 ```tsx
 const { wallet } = useWallet({ address: 'fuel1r20zhd...' });
