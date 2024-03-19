@@ -1,5 +1,7 @@
-import { webcrypto } from 'node:crypto';
-import { TextDecoder, TextEncoder } from 'node:util';
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import { webcrypto } from 'crypto';
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import { TextDecoder, TextEncoder } from 'util';
 
 import { localStorageMock } from './src/mocks/localStorage';
 

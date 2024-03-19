@@ -1,4 +1,5 @@
-import { join } from 'node:path';
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import { join } from 'path';
 import { defineConfig } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 

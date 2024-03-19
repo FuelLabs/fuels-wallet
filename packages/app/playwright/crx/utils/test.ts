@@ -1,5 +1,5 @@
-import path from 'node:path';
-/* eslint-disable no-empty-pattern */
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import path from 'path';
 import type { BrowserContext } from '@playwright/test';
 import { test as base, chromium } from '@playwright/test';
 

@@ -1,6 +1,8 @@
 const { config } = require('dotenv');
-const { resolve } = require('node:path');
-const { readFileSync } = require('node:fs');
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+const { resolve } = require('path');
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+const { readFileSync } = require('fs');
 
 function getVersion() {
   const packageJson = JSON.parse(
