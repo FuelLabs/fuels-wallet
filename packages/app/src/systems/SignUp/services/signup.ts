@@ -13,6 +13,7 @@ export type SignUpServiceInputs = {
   };
 };
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class SignUpService {
   static async create({ data }: SignUpServiceInputs['create']) {
     if (!data?.password || !data?.mnemonic) {

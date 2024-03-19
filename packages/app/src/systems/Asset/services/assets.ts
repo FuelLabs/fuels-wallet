@@ -27,6 +27,7 @@ export type AssetInputs = {
   };
 };
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class AssetService {
   static async upsertAsset(input: AssetInputs['upsertAsset']) {
     return db.transaction('rw!', db.assets, async () => {

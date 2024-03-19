@@ -8,6 +8,7 @@ import { glob } from 'glob';
 import { produce } from 'immer';
 import prettier from 'prettier';
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class PackageJson {
   static async getAllLocal() {
     return glob(['package.json', '**/package.json'], {

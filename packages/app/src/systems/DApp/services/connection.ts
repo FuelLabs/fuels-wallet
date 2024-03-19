@@ -23,6 +23,7 @@ export type ConnectInputs = {
   };
 };
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class ConnectionService {
   static async addConnection(input: ConnectInputs['connection']) {
     return db.transaction('rw', db.connections, async () => {

@@ -41,6 +41,7 @@ export type AccountInputs = {
   };
 };
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class AccountService {
   static async addAccount(input: AccountInputs['addAccount']) {
     return db.transaction('rw', db.accounts, async () => {
@@ -171,6 +172,7 @@ export class AccountService {
 
   static async checkAccountNameExists(name = '') {
     const accounts = await AccountService.getAccounts();
+    // biome-ignore lint/complexity/noThisInStatic: <explanation>
     const exitsAccountWithName = this.filterByName(accounts, name).length > 0;
     return exitsAccountWithName;
   }

@@ -96,6 +96,7 @@ export type TxInputs = {
   };
 };
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class TxService {
   static async clear() {
     return db.transaction('rw', db.transactions, async () => {

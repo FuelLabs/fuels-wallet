@@ -19,10 +19,6 @@
       },
       "style": {
         "noNonNullAssertion": "off"
-      },
-      "complexity": {
-        "noThisInStatic": "off",
-        "noStaticOnlyClass": "off"
       }
     }
   },
@@ -51,6 +47,7 @@
       "**/build",
       "**/dist",
       "**/dist-crx",
+      "**/contracts",
       "pnpm-lock.yaml"
     ]
   }

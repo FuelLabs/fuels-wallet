@@ -38,6 +38,7 @@ export type NetworkInputs = {
   };
 };
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class NetworkService {
   static getNetworks() {
     return db.transaction('r', db.networks, async () => {
@@ -52,6 +53,7 @@ export class NetworkService {
   }
 
   static async addNetwork(input: NetworkInputs['addNetwork']) {
+    // biome-ignore lint/complexity/noThisInStatic: <explanation>
     await this.validateAddNetwork(input);
     return db.transaction('rw', db.networks, async () => {
       const count = await db.networks.count();

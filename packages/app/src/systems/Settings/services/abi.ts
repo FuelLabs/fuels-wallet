@@ -10,6 +10,7 @@ export type AbiInputs = {
   };
 };
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class AbiService {
   static async addAbi(input: AbiInputs['addAbi']) {
     return db.transaction('rw', db.abis, async () => {
