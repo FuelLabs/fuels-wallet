@@ -11,10 +11,10 @@ import { NetworkService } from '~/systems/Network';
 import { type TxInputs, TxService } from '~/systems/Transaction/services';
 
 export enum SendScreens {
-  select,
-  confirm,
-  success,
-  failed,
+  select = 0,
+  confirm = 1,
+  success = 2,
+  failed = 3,
 }
 
 export type MachineContext = {

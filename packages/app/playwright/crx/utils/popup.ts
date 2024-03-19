@@ -48,7 +48,7 @@ export async function hideAccount(popupPage: Page, name: string) {
   await hasText(popupPage, 'Show hidden accounts');
   await popupPage.getByText(name).isHidden();
 
-  await getByAriaLabel(popupPage, `Close dialog`).click();
+  await getByAriaLabel(popupPage, 'Close dialog').click();
 }
 
 export async function waitAccountPage(popupPage: Page, name: string) {

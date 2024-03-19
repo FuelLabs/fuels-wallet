@@ -293,7 +293,7 @@ test.describe('FuelWallet Extension', () => {
       await test.step('Current authorized current Account', async () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
         await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
-        await getByAriaLabel(popupPage, `Close dialog`).click();
+        await getByAriaLabel(popupPage, 'Close dialog').click();
         const currentAccountPromise = await blankPage.evaluate(async () => {
           return window.fuel.currentAccount();
         });
@@ -606,7 +606,7 @@ test.describe('FuelWallet Extension', () => {
       // Switch to account 2
       await switchAccount(popupPage, 'Account 2');
       await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
-      await getByAriaLabel(popupPage, `Close dialog`).click();
+      await getByAriaLabel(popupPage, 'Close dialog').click();
 
       const onChangeAccountPromise = blankPage.evaluate(() => {
         return new Promise((resolve) => {
@@ -628,7 +628,7 @@ test.describe('FuelWallet Extension', () => {
       // Switch to account 2
       await switchAccount(popupPage, 'Account 2');
       await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
-      await getByAriaLabel(popupPage, `Close dialog`).click();
+      await getByAriaLabel(popupPage, 'Close dialog').click();
 
       const onChangeAccountPromise = blankPage.evaluate(() => {
         return new Promise((resolve) => {

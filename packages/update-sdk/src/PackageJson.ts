@@ -52,13 +52,13 @@ export class PackageJson {
     version: string,
     matcher: (dep: string) => boolean
   ) {
-    console.log(c.white(`📝 Updating dependencies...`));
+    console.log(c.white('📝 Updating dependencies...'));
     const pkgs = await PackageJson.getAllLocal();
     for (const pkg of pkgs) {
       await PackageJson.updateDependency(pkg, version, matcher);
     }
 
-    console.log(c.white(`\n📟 Running pnpm install...`));
+    console.log(c.white('\n📟 Running pnpm install...'));
     await $({ stdio: 'inherit' })`pnpm install --no-frozen-lockfile`;
   }
 }

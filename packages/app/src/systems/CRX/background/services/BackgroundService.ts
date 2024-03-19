@@ -111,7 +111,7 @@ export class BackgroundService {
       Address.fromString(address || '0x00').toString()
     );
     if (!hasAccessToAddress) {
-      throw new Error(`address is not authorized for this connection.`);
+      throw new Error('address is not authorized for this connection.');
     }
   }
 

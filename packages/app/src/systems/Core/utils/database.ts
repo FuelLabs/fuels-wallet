@@ -1,12 +1,12 @@
 import { createUUID } from '@fuel-wallet/connections';
 import type {
-  Account,
-  Vault,
-  Connection,
-  NetworkData,
-  AssetData,
   AbiTable,
+  Account,
+  AssetData,
+  Connection,
   FuelWalletError,
+  NetworkData,
+  Vault,
 } from '@fuel-wallet/types';
 import type { Table } from 'dexie';
 import Dexie from 'dexie';
@@ -28,11 +28,11 @@ export class FuelDB extends Dexie {
     super('FuelDB');
     this.version(DATABASE_VERSION)
       .stores({
-        vaults: `key`,
-        accounts: `&address, &name`,
-        networks: `&id, &url, &name`,
+        vaults: 'key',
+        accounts: '&address, &name',
+        networks: '&id, &url, &name',
         connections: 'origin',
-        transactions: `&id`,
+        transactions: '&id',
         assets: '&assetId, &name, $symbol',
         abis: '&contractId',
         errors: '&id',

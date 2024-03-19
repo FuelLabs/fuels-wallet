@@ -16,17 +16,13 @@
       "recommended": true,
       "correctness": {
         "noUnusedVariables": "error",
-        "useExhaustiveDependencies": "off",
-        "noEmptyPattern": "off"
+        "useExhaustiveDependencies": "off"
       },
       "style": {
-        "useEnumInitializers": "off",
-        "noUnusedTemplateLiteral": "off",
         "noNonNullAssertion": "off",
         "noInferrableTypes": "off",
         "useNodejsImportProtocol": "off",
-        "useNumberNamespace": "off",
-        "useExportType": "off"
+        "useNumberNamespace": "off"
       },
       "suspicious": {
         "noArrayIndexKey": "off",

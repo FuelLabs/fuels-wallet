@@ -67,7 +67,7 @@ export function AccountList({
           variant="link"
           onPress={toggle}
           css={styles.hiddenBtn}
-          aria-label={`Toggle hidden accounts`}
+          aria-label={'Toggle hidden accounts'}
         >
           {showHidden ? 'Hide' : 'Show'} hidden accounts
         </Button>

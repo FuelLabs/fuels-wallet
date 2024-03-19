@@ -17,7 +17,7 @@ export function CheckWallet() {
       console.log('hasConnector', hasConnector);
       /* checkWallet:end */
       setMessage(
-        hasConnector ? `Wallet found!` : 'Wallet not detected on the browser'
+        hasConnector ? 'Wallet found!' : 'Wallet not detected on the browser'
       );
     }
 

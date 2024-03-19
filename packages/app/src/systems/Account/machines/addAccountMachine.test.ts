@@ -33,7 +33,7 @@ describe('addAccountMachine', () => {
       await expectStateMatch(service, 'idle');
 
       const accounts = await AccountService.getAccounts();
-      expect(accounts?.[1].name).toBe(`Account 2`);
+      expect(accounts?.[1].name).toBe('Account 2');
     });
   });
 });

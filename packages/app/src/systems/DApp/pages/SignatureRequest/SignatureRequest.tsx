@@ -1,6 +1,6 @@
 import { Box, Button, Card, Flex, HelperIcon, Text } from '@fuel-ui/react';
 import { AccountInfo } from '~/systems/Account';
-import { Layout, ConnectInfo, coreStyles } from '~/systems/Core';
+import { ConnectInfo, Layout, coreStyles } from '~/systems/Core';
 
 import { useSignatureRequest } from '../../hooks';
 
@@ -12,7 +12,7 @@ export function SignatureRequest() {
 
   return (
     <>
-      <Layout title={`Signature Request`} isLoading={isLoading} noBorder>
+      <Layout title={'Signature Request'} isLoading={isLoading} noBorder>
         <Layout.Content css={styles.content}>
           <Box.Flex gap="$4" direction="column">
             <ConnectInfo
