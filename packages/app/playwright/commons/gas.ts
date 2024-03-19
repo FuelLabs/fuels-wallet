@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { Provider, BN } from 'fuels';
+import type { BN, Provider } from 'fuels';
 
 // TODO: remove this function when SDK make transactions with correct gas configs
 export const getGasConfig = async (provider: Provider) => {

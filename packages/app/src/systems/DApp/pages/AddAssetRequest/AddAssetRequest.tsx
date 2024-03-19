@@ -2,7 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Button, Card } from '@fuel-ui/react';
 import { useAccounts } from '~/systems/Account';
 import { AssetItem } from '~/systems/Asset';
-import { Layout, ConnectInfo, shortAddress } from '~/systems/Core';
+import { ConnectInfo, Layout, shortAddress } from '~/systems/Core';
 
 import { useAddAssetRequest } from '../../hooks';
 

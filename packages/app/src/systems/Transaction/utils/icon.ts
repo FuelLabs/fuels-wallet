@@ -1,5 +1,5 @@
 import type { Icons } from '@fuel-ui/react';
-import { OperationName, type Bech32Address, type Operation } from 'fuels';
+import { type Bech32Address, type Operation, OperationName } from 'fuels';
 
 import { getLabel } from '../hooks/useTxMetadata';
 

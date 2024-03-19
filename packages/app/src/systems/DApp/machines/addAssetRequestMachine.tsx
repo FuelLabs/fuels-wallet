@@ -3,7 +3,7 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import type { AssetInputs } from '~/systems/Asset';
 import { AssetService } from '~/systems/Asset';
-import { assignErrorMessage, FetchMachine } from '~/systems/Core';
+import { FetchMachine, assignErrorMessage } from '~/systems/Core';
 
 type MachineContext = {
   assets?: AssetData[];

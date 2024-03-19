@@ -1,7 +1,7 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import type { FlexProps } from '@fuel-ui/react';
-import { Icon, Button, Box } from '@fuel-ui/react';
+import { Box, Button, Icon } from '@fuel-ui/react';
 import { Fragment } from 'react';
 
 export type StepperProps = FlexProps & {

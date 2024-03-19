@@ -1,7 +1,7 @@
 import { Box } from '@fuel-ui/react';
 import { expect } from '@storybook/jest';
 import type { ComponentStory, Meta } from '@storybook/react';
-import { waitFor, within, userEvent } from '@storybook/testing-library';
+import { userEvent, waitFor, within } from '@storybook/testing-library';
 
 import { connectionsLoader } from '../../__mocks__/connection';
 import { useConnections } from '../../hooks';

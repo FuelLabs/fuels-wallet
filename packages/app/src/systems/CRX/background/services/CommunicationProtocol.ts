@@ -1,10 +1,10 @@
 import { BaseConnection, createUUID } from '@fuel-wallet/connections';
 import type { CommunicationEventArg } from '@fuel-wallet/types';
-import { VAULT_SCRIPT_NAME, BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
+import { BACKGROUND_SCRIPT_NAME, VAULT_SCRIPT_NAME } from '@fuel-wallet/types';
 import {
-  MessageTypes,
   type CommunicationMessage,
   type EventMessage,
+  MessageTypes,
 } from '@fuels/connectors';
 
 export class CommunicationProtocol extends BaseConnection {

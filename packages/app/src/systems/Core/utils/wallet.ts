@@ -1,5 +1,5 @@
 import type { TransactionRequestLike, TransactionResponse } from 'fuels';
-import { transactionRequestify, hashMessage, WalletLocked } from 'fuels';
+import { WalletLocked, hashMessage, transactionRequestify } from 'fuels';
 import { VaultService } from '~/systems/Vault';
 
 export class WalletLockedCustom extends WalletLocked {

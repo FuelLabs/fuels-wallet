@@ -4,8 +4,8 @@ import { useEffect } from 'react';
 
 import type { TransactionHistoryMachineState } from '../machines';
 import {
-  transactionHistoryMachine,
   TRANSACTION_HISTORY_ERRORS,
+  transactionHistoryMachine,
 } from '../machines';
 import type { TxInputs } from '../services';
 

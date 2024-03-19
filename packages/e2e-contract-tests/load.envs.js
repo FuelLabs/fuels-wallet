@@ -1,5 +1,5 @@
 const { config } = require('dotenv');
-const { resolve } = require('path');
+const { resolve } = require('node:path');
 
 function getEnvName() {
   if (process.env.NODE_ENV === 'test') {

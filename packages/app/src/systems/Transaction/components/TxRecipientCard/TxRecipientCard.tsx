@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Card, Heading, Icon, Text } from '@fuel-ui/react';
 import type { OperationTransactionAddress } from 'fuels';
-import { AddressType, Address, ChainName, isB256, isBech32 } from 'fuels';
+import { Address, AddressType, ChainName, isB256, isBech32 } from 'fuels';
 import type { FC } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 

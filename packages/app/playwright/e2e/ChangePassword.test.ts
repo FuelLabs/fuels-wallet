@@ -2,7 +2,7 @@ import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
 
 import { getButtonByText, getByAriaLabel, hasText, visit } from '../commons';
-import { mockData, WALLET_PASSWORD } from '../mocks';
+import { WALLET_PASSWORD, mockData } from '../mocks';
 
 test.describe('ChangePassword', () => {
   let browser: Browser;

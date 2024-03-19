@@ -10,7 +10,7 @@ import { testSetup } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test } from './test';
-import { checkFee, connect, checkAddresses } from './utils';
+import { checkAddresses, checkFee, connect } from './utils';
 
 test.describe('Forward Eth', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;

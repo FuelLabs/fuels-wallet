@@ -4,13 +4,13 @@ import { expect } from '@playwright/test';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
 
-import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
+import { calculateAssetId, shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test } from './test';
-import { checkFee, connect, checkAddresses } from './utils';
+import { checkAddresses, checkFee, connect } from './utils';
 
 test.describe('Forward Half ETH and Mint Custom Asset', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;

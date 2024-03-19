@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Image, Box } from '@fuel-ui/react';
+import { Box, Image } from '@fuel-ui/react';
 import Plyr from 'plyr-react';
 
 interface Media {

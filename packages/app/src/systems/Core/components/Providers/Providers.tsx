@@ -1,10 +1,10 @@
 import { globalCss } from '@fuel-ui/css';
 import {
+  ThemeProvider,
   darkTheme,
   lightTheme,
   loadIcons,
   setFuelThemes,
-  ThemeProvider,
 } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 import { StoreProvider } from '~/store';

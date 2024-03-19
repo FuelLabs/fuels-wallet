@@ -1,6 +1,6 @@
 import fs from 'node:fs';
-import { EOL } from 'os';
-import path from 'path';
+import { EOL } from 'node:os';
+import path from 'node:path';
 import type { Node } from 'acorn';
 import * as acornLoose from 'acorn-loose';
 import * as walk from 'acorn-walk';

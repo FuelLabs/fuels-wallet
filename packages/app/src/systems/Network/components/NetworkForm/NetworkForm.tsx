@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
-import { Input, HelperIcon, Spinner, Box } from '@fuel-ui/react';
+import { Box, HelperIcon, Input, Spinner } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { animations, ControlledField } from '~/systems/Core';
+import { ControlledField, animations } from '~/systems/Core';
 import { NetworkReviewCard } from '~/systems/Network';
 
 import type { UseNetworkFormReturn } from '../../hooks';

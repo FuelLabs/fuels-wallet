@@ -2,10 +2,10 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Input, Text } from '@fuel-ui/react';
 import {
-  useFuel,
-  useIsConnected,
   useAddNetwork,
   useConnect,
+  useFuel,
+  useIsConnected,
 } from '@fuels/react';
 import { useState } from 'react';
 

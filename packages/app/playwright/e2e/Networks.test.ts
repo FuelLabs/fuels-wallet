@@ -2,12 +2,12 @@ import type { Browser, Page } from '@playwright/test';
 import test, { chromium, expect } from '@playwright/test';
 
 import {
-  visit,
+  getButtonByText,
   getByAriaLabel,
   getInputByName,
-  getButtonByText,
   hasText,
   reload,
+  visit,
 } from '../commons';
 import { mockData } from '../mocks';
 

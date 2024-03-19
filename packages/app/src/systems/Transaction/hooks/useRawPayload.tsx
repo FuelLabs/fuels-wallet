@@ -1,4 +1,4 @@
-import { hexlify, TransactionCoder, type Transaction } from 'fuels';
+import { type Transaction, TransactionCoder, hexlify } from 'fuels';
 import { useMemo } from 'react';
 
 type RawPayloadProps = {

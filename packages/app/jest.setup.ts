@@ -1,5 +1,5 @@
-import { webcrypto } from 'crypto';
-import { TextDecoder, TextEncoder } from 'util';
+import { webcrypto } from 'node:crypto';
+import { TextDecoder, TextEncoder } from 'node:util';
 
 import { localStorageMock } from './src/mocks/localStorage';
 

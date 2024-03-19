@@ -4,11 +4,11 @@ import { AUTO_LOCK_IN_MINUTES } from '~/config';
 import { VaultServer } from '~/systems/Vault/services/VaultServer';
 
 import {
-  saveSecret,
-  loadSecret,
-  getTimer,
   clearSession,
+  getTimer,
+  loadSecret,
   resetTimer,
+  saveSecret,
 } from '../../utils';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';

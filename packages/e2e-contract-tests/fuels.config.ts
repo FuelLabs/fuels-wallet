@@ -1,6 +1,6 @@
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { createConfig } from 'fuels';
-import { join } from 'path';
 
 export default createConfig({
   output: './src/contracts',

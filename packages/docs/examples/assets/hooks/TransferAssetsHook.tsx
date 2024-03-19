@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Link, Text, InputAmount, Input } from '@fuel-ui/react';
-import { useFuel, useAssets, useWallet } from '@fuels/react';
+import { Box, Button, Input, InputAmount, Link, Text } from '@fuel-ui/react';
+import { useAssets, useFuel, useWallet } from '@fuels/react';
 import type { BN } from 'fuels';
-import { buildBlockExplorerUrl, BaseAssetId, bn, Address } from 'fuels';
+import { Address, BaseAssetId, bn, buildBlockExplorerUrl } from 'fuels';
 import { useMemo, useState } from 'react';
 
 import { ExampleBox } from '../../../src/components/ExampleBox';

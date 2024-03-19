@@ -1,5 +1,5 @@
 import { Box, Button } from '@fuel-ui/react';
-import type { StoryFn, Meta } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 import { Layout } from '~/systems/Core';
 import { NetworkService, useNetworks } from '~/systems/Network';
 import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';

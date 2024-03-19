@@ -1,4 +1,4 @@
-import { hashMessage, Signer } from 'fuels';
+import { Signer, hashMessage } from 'fuels';
 import { interpret } from 'xstate';
 import type { MockVaultData } from '~/systems/Core/__tests__';
 import { expectStateMatch, mockVault } from '~/systems/Core/__tests__';

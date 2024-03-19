@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import type { BN } from 'fuels';
 import { Address, BaseAssetId, Provider, Wallet } from 'fuels';
 
-import { getAccount, ALT_ASSET } from '../mocks';
+import { ALT_ASSET, getAccount } from '../mocks';
 
 import { getGasConfig } from './gas';
 

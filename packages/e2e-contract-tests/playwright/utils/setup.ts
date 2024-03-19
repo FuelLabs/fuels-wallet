@@ -1,10 +1,10 @@
 import {
-  seedWallet,
   FUEL_MNEMONIC,
   FuelWalletTestHelper,
+  seedWallet,
 } from '@fuels/playwright-utils';
 import type { BrowserContext, Page } from '@playwright/test';
-import { bn, Wallet, Provider } from 'fuels';
+import { Provider, Wallet, bn } from 'fuels';
 
 import '../../load.envs';
 

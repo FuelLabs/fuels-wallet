@@ -1,12 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
 import {
   Alert,
+  Box,
   Button,
   Checkbox,
   Dialog,
   Form,
   Icon,
-  Box,
   Text,
 } from '@fuel-ui/react';
 import { useState } from 'react';

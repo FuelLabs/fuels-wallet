@@ -1,6 +1,6 @@
 import { buildBlockExplorerUrl } from 'fuels';
 import { useCallback } from 'react';
-import { IS_CRX, EXPLORER_URL, VITE_FUEL_PROVIDER_URL } from '~/config';
+import { EXPLORER_URL, IS_CRX, VITE_FUEL_PROVIDER_URL } from '~/config';
 import { openTab } from '~/systems/CRX/utils';
 import { urlJoin } from '~/systems/Core';
 

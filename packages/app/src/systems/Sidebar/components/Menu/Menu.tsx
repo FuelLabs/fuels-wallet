@@ -4,7 +4,7 @@ import { Box, Icon, Menu as RootMenu } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import type { Key } from 'react';
 import { useState } from 'react';
-import { useNavigate, useResolvedPath, useMatch } from 'react-router-dom';
+import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 import { store } from '~/store';
 import { coreStyles } from '~/systems/Core/styles';
 

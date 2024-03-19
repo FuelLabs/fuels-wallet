@@ -1,4 +1,4 @@
-import { render, testA11y, screen, act, fireEvent } from '@fuel-ui/test-utils';
+import { act, fireEvent, render, screen, testA11y } from '@fuel-ui/test-utils';
 import { TransactionStatus } from 'fuels';
 import { VITE_EXPLORER_URL } from '~/config';
 import { urlJoin } from '~/systems/Core';

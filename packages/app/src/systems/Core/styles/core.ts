@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { WALLET_WIDTH, WALLET_HEIGHT } from '~/config';
+import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 
 export const scrollable = (
   regularColor: string = '$intentsBase1',

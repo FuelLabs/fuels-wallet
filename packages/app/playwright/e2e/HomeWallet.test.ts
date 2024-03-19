@@ -5,8 +5,8 @@ import {
   getButtonByText,
   getByAriaLabel,
   hasText,
-  visit,
   reload,
+  visit,
 } from '../commons';
 import { mockData } from '../mocks';
 

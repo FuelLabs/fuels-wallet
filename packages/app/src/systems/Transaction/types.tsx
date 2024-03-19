@@ -7,10 +7,10 @@ import type {
   InputContract,
   OutputContract,
   OutputContractCreated,
-  TransactionStatus,
   TransactionRequestInput,
   TransactionRequestLike,
   TransactionResponse,
+  TransactionStatus,
   TransactionType,
 } from 'fuels';
 

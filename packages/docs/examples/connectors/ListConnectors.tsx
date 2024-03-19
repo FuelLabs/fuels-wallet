@@ -3,8 +3,8 @@ import { Tag } from '@fuel-ui/react';
 /* createInstance:start */
 import {
   FuelWalletConnector,
-  FueletWalletConnector,
   FuelWalletDevelopmentConnector,
+  FueletWalletConnector,
 } from '@fuels/connectors';
 import type { FuelConnector } from 'fuels';
 import { Fuel } from 'fuels';

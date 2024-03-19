@@ -1,8 +1,8 @@
-import fs from 'fs';
+import fs from 'node:fs';
+import { join } from 'node:path';
 import { globby } from 'globby';
 import matter from 'gray-matter';
 import { serialize } from 'next-mdx-remote/serialize';
-import { join } from 'path';
 import remarkGfm from 'remark-gfm';
 import remarkSlug from 'remark-slug';
 import { DOCS_REPO_LINK, FIELDS } from '~/src/constants';

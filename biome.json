@@ -21,7 +21,6 @@
       "style": {
         "noNonNullAssertion": "off",
         "noInferrableTypes": "off",
-        "useNodejsImportProtocol": "off",
         "useNumberNamespace": "off"
       },
       "suspicious": {

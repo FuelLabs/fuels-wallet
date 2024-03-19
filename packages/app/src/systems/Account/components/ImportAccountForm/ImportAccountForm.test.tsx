@@ -1,4 +1,4 @@
-import { render, testA11y, screen } from '@fuel-ui/test-utils';
+import { render, screen, testA11y } from '@fuel-ui/test-utils';
 
 import { useImportAccountForm } from '../../hooks/useImportAccountForm';
 

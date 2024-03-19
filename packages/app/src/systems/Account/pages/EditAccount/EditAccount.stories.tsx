@@ -1,5 +1,5 @@
 import { Box, Button } from '@fuel-ui/react';
-import type { StoryFn, Meta } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 import { store } from '~/store';
 import { Layout } from '~/systems/Core';
 

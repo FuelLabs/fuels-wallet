@@ -1,5 +1,5 @@
+import { join } from 'node:path';
 import { defineConfig } from '@playwright/test';
-import { join } from 'path';
 import './load.envs';
 
 const distDirectory = join(__dirname, './dist');

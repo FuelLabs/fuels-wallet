@@ -1,10 +1,10 @@
 import { Alert, Box, Button, Input, Text } from '@fuel-ui/react';
 import {
-  useFuel,
-  useConnectors,
-  useIsConnected,
   useConnect,
+  useConnectors,
   useDisconnect,
+  useFuel,
+  useIsConnected,
 } from '@fuels/react';
 import { useMemo, useState } from 'react';
 

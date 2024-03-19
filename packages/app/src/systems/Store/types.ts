@@ -3,11 +3,11 @@ import type { StoreClass } from '@fuels/react-xstore';
 import type { AccountsMachine } from '../Account';
 import type { AssetsMachine } from '../Asset';
 import type {
-  TransactionRequestMachine,
-  MessageRequestMachine,
-  ConnectRequestMachine,
   AddAssetMachine,
   AddNetworkRequestMachine,
+  ConnectRequestMachine,
+  MessageRequestMachine,
+  TransactionRequestMachine,
 } from '../DApp';
 import type { ReportErrorMachine } from '../Error';
 import type { NetworksMachine } from '../Network';

@@ -1,4 +1,4 @@
-import type { BigNumberish, BNInput } from 'fuels';
+import type { BNInput, BigNumberish } from 'fuels';
 
 import { formatAmount } from '../../utils';
 

@@ -1,4 +1,3 @@
-import JSZip from 'jszip';
 import {
   mkdirSync,
   readFileSync,
@@ -7,6 +6,7 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { join } from 'node:path';
+import JSZip from 'jszip';
 import type { Plugin } from 'vite';
 
 type ZipBuildPluginOptions = {

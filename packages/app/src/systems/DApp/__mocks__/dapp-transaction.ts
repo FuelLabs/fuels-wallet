@@ -1,4 +1,4 @@
-import { Address, bn, BaseAssetId, Provider, Wallet } from 'fuels';
+import { Address, BaseAssetId, Provider, Wallet, bn } from 'fuels';
 import { TxService } from '~/systems/Transaction/services';
 
 function getAddressFromString(address: string) {

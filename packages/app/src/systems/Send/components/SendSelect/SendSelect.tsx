@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { BaseAssetId, DECIMAL_UNITS, bn } from 'fuels';
 import { useEffect, useMemo } from 'react';
 import { AssetSelect } from '~/systems/Asset';
-import { animations, ControlledField, Layout } from '~/systems/Core';
+import { ControlledField, Layout, animations } from '~/systems/Core';
 import { TxDetails } from '~/systems/Transaction';
 
 import type { UseSendReturn } from '../../hooks';

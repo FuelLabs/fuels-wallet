@@ -1,5 +1,5 @@
-import EventEmitter from 'events';
-import { WalletManager, transactionRequestify, Address, Provider } from 'fuels';
+import EventEmitter from 'node:events';
+import { Address, Provider, WalletManager, transactionRequestify } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
 

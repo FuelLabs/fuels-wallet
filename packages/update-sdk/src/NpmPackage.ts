@@ -1,6 +1,6 @@
-import axios from 'axios';
 import { Agent as HttpAgent } from 'node:http';
 import { Agent as HttpsAgent } from 'node:https';
+import axios from 'axios';
 import registryUrl from 'registry-url';
 
 const agentOptions = {

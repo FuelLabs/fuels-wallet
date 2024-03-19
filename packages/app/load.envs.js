@@ -1,6 +1,6 @@
 const { config } = require('dotenv');
-const { resolve } = require('path');
-const { readFileSync } = require('fs');
+const { resolve } = require('node:path');
+const { readFileSync } = require('node:fs');
 
 function getVersion() {
   const packageJson = JSON.parse(

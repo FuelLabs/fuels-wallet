@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
-import { animations, Layout, MotionStack } from '~/systems/Core';
+import { Layout, MotionStack, animations } from '~/systems/Core';
 
 import { Send } from '../../components';
 import { useSend } from '../../hooks';

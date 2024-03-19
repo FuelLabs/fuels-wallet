@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { Alert, Box, Button, Input, Text } from '@fuel-ui/react';
-import { useFuel, useConnectors, useIsConnected } from '@fuels/react';
+import { useConnectors, useFuel, useIsConnected } from '@fuels/react';
 import { useMemo, useState } from 'react';
 import { useLoading } from '~/src/hooks/useLoading';
 

@@ -1,6 +1,6 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
-import { Text, CardList, IconButton, Icon, Box } from '@fuel-ui/react';
+import { Box, CardList, Icon, IconButton, Text } from '@fuel-ui/react';
 import type { NetworkData } from '@fuel-wallet/types';
 import { forwardRef } from 'react';
 

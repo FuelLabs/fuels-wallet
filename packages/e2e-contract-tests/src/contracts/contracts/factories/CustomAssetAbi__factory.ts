@@ -9,13 +9,13 @@
   Fuel-Core version: 0.22.1
 */
 
-import { Interface, Contract, ContractFactory } from 'fuels';
+import { Contract, ContractFactory, Interface } from 'fuels';
 import type {
-  Provider,
-  Account,
   AbstractAddress,
+  Account,
   BytesLike,
   DeployContractOptions,
+  Provider,
   StorageSlot,
 } from 'fuels';
 import type {

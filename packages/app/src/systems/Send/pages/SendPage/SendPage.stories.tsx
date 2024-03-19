@@ -1,8 +1,8 @@
 import type { ComponentStory, Meta } from '@storybook/react';
 import { userEvent, waitFor, within } from '@storybook/testing-library';
 import {
-  mockBalancesOnGraphQL,
   MOCK_ASSETS_NODE,
+  mockBalancesOnGraphQL,
 } from '~/systems/Asset/__mocks__/assets';
 
 import { sendLoader } from '../../__mocks__/send';

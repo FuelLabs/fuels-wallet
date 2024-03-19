@@ -1,8 +1,8 @@
+import EventEmitter from 'node:events';
 import type {
   DatabaseEventArg,
   DatabaseObservableEvent,
 } from '@fuel-wallet/types';
-import EventEmitter from 'events';
 import { db } from '~/systems/Core/utils/database';
 
 export class DatabaseObservable<

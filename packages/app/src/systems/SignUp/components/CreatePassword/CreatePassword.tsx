@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, InputPassword, Box } from '@fuel-ui/react';
+import { Box, Button, InputPassword } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import debounce from 'lodash.debounce';
 import { useCallback } from 'react';

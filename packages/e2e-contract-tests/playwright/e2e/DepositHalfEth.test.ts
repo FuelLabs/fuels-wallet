@@ -4,13 +4,13 @@ import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
 
-import { shortAddress } from '../../src/utils';
 import '../../load.envs.js';
+import { shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test } from './test';
-import { checkFee, connect, checkAddresses } from './utils';
+import { checkAddresses, checkFee, connect } from './utils';
 
 test.describe('Deposit Half ETH', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;

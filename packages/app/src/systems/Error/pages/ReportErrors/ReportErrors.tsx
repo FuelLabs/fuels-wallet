@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
-import { FuelLogo, Heading, Button, Box, Text, Input } from '@fuel-ui/react';
-import { WALLET_WIDTH, WALLET_HEIGHT } from '~/config';
+import { Box, Button, FuelLogo, Heading, Input, Text } from '@fuel-ui/react';
+import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { coreStyles } from '~/systems/Core/styles';
 
 import { useReportError } from '../../hooks';
