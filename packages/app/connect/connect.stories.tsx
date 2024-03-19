@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Text } from '@fuel-ui/react';
 import { FuelProvider, useAccount, useConnectUI } from '@fuels/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useDarkMode } from 'storybook-dark-mode';
 
 export default {
@@ -10,6 +11,8 @@ export default {
     layout: 'fullscreen',
   },
 };
+
+const queryClient = new QueryClient();
 
 const App = () => {
   const { account } = useAccount();
@@ -27,13 +30,14 @@ const App = () => {
 
 export const Usage = () => {
   const isDark = useDarkMode();
+
   return (
     <Box css={styles.box}>
-      <FuelProvider>
+      <QueryClientProvider client={queryClient}>
         <FuelProvider theme={isDark ? 'dark' : 'light'}>
           <App />
         </FuelProvider>
-      </FuelProvider>
+      </QueryClientProvider>
     </Box>
   );
 };

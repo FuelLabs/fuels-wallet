@@ -6,7 +6,7 @@ import { ExampleBox } from '../../../src/components/ExampleBox';
 
 export function CurrentAccountHook() {
   const { fuel } = useFuel();
-  const { connect, isLoading: isConnecting, error } = useConnect();
+  const { connect, isPending: isConnecting, error } = useConnect();
   const { isConnected } = useIsConnected();
   /* useAccount:start */
   const { account } = useAccount();

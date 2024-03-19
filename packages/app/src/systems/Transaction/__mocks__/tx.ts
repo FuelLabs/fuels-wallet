@@ -1,5 +1,5 @@
-import { AddressType } from '@fuel-wallet/types';
 import {
+  AddressType,
   ReceiptType,
   OutputType,
   InputType,

@@ -1,10 +1,6 @@
-import type {
-  Account,
-  Connection,
-  EventMessage,
-  EventMessageEvents,
-} from '@fuel-wallet/types';
-import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuel-wallet/types';
+import type { Account, Connection } from '@fuel-wallet/types';
+import type { EventMessage, EventMessageEvents } from '@fuels/connectors';
+import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuels/connectors';
 import { ConnectionService } from '~/systems/DApp/services';
 
 import type { CommunicationProtocol } from './CommunicationProtocol';

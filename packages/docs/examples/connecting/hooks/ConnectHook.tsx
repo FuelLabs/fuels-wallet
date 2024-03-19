@@ -8,7 +8,7 @@ export function ConnectHook() {
   const { isConnected } = useIsConnected();
   /* checkConnection:end */
   /* connect:start */
-  const { connect, isLoading, error } = useConnect();
+  const { connect, isPending, error } = useConnect();
   /* connect:end */
 
   return (
@@ -16,8 +16,8 @@ export function ConnectHook() {
       <Box.Flex gap="$4" align={'center'}>
         <Button
           onPress={() => connect()}
-          isLoading={isLoading}
-          isDisabled={isLoading}
+          isLoading={isPending}
+          isDisabled={isPending}
         >
           Connect
         </Button>

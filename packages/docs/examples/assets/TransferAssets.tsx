@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Link, Text, InputAmount, Input } from '@fuel-ui/react';
-import { getAssetByChain } from '@fuel-wallet/sdk';
 import { useFuel, useIsConnected, useAssets } from '@fuels/react';
 import type { BN } from 'fuels';
 import { buildBlockExplorerUrl, BaseAssetId, bn, Address } from 'fuels';
@@ -9,6 +8,7 @@ import { useMemo, useState } from 'react';
 
 import { ExampleBox } from '../../src/components/ExampleBox';
 import { useLoading } from '../../src/hooks/useLoading';
+import { getAssetByChain } from '../../src/utils/getAssetByChain';
 
 export function TransferAssets() {
   const { fuel } = useFuel();

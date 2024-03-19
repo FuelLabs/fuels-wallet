@@ -19,7 +19,7 @@ export function AddNetworkHook() {
     'http://localhost:4000/graphql'
   );
   /* useAddNetwork:start */
-  const { addNetwork, isLoading, error } = useAddNetwork();
+  const { addNetwork, isPending, error } = useAddNetwork();
 
   async function handleAddNetwork(networkUrl: string) {
     if (!isConnected) connect(); // ignore-line
@@ -49,8 +49,8 @@ export function AddNetworkHook() {
         <Box>
           <Button
             onPress={() => handleAddNetwork(network)}
-            isLoading={isLoading}
-            isDisabled={isLoading || !isConnected}
+            isLoading={isPending}
+            isDisabled={isPending || !isConnected}
           >
             Add Network
           </Button>

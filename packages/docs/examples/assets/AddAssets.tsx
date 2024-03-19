@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Input, Text, IconButton, Icon } from '@fuel-ui/react';
-import type { AssetFuel, Asset } from '@fuel-wallet/sdk';
-import { getAssetByChain } from '@fuel-wallet/sdk';
 import { useFuel, useIsConnected } from '@fuels/react';
+import type { AssetFuel, Asset } from 'fuels';
 import { useState } from 'react';
 
 import { ExampleBox } from '../../src/components/ExampleBox';
 import { useLoading } from '../../src/hooks/useLoading';
+import { getAssetByChain } from '../../src/utils/getAssetByChain';
 
 import { ASSET } from './data';
 

@@ -5,7 +5,7 @@ import { App } from './App';
 import './exports';
 import { RouterProvider } from './systems/Core/components/RouterProvider';
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById('root') as HTMLElement).render(
   <RouterProvider>
     <App />
   </RouterProvider>
