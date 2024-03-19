@@ -2,11 +2,11 @@ import type { Browser, Page } from '@playwright/test';
 import test, { chromium, expect } from '@playwright/test';
 
 import {
-  getByAriaLabel,
   getButtonByText,
-  visit,
-  hasText,
+  getByAriaLabel,
   getElementByText,
+  hasText,
+  visit,
 } from '../commons';
 import { logout } from '../commons/logout';
 import { WALLET_PASSWORD } from '../mocks';

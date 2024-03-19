@@ -1,4 +1,4 @@
 declare module 'acorn-loose' {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   export function parse(input: string, options?: any): any;
 }

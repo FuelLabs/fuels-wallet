@@ -40,6 +40,7 @@ export function useNetworkForm(opts: UseAddNetworkOpts = {}) {
     defaultValues: opts.defaultValues || DEFAULT_VALUES,
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     opts.defaultValues && form.reset(opts.defaultValues);
   }, [opts.defaultValues?.name, opts.defaultValues?.url]);

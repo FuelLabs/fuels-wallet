@@ -1,6 +1,6 @@
-import { Text, Button, Box } from '@fuel-ui/react';
+import { Box, Button, Text } from '@fuel-ui/react';
 import type { Network } from 'fuels';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Code } from '../../src/components/Code';
 import { ExampleBox } from '../../src/components/ExampleBox';
@@ -23,9 +23,9 @@ export function NetworkExample() {
   });
 
   /* network:start */
-  const handleNetworkChange = (network: Network) => {
+  const handleNetworkChange = useCallback((network: Network) => {
     setNetwork(network);
-  };
+  }, []);
 
   useEffect(() => {
     fuel?.on(fuel.events.currentNetwork, handleNetworkChange);
@@ -33,12 +33,12 @@ export function NetworkExample() {
     return () => {
       fuel?.off(fuel.events.currentNetwork, handleNetworkChange);
     };
-  }, [fuel]);
+  }, [fuel, handleNetworkChange]);
   /* network:end */
 
   useEffect(() => {
     if (isConnected) handleNetwork();
-  }, [isConnected]);
+  }, [isConnected, handleNetwork]);
 
   const errorMessage = errorNetwork || notDetected || errorConnect;
 

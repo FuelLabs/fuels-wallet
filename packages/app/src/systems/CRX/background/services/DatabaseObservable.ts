@@ -1,8 +1,9 @@
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import EventEmitter from 'events';
 import type {
   DatabaseEventArg,
   DatabaseObservableEvent,
 } from '@fuel-wallet/types';
-import EventEmitter from 'events';
 import { db } from '~/systems/Core/utils/database';
 
 export class DatabaseObservable<
@@ -15,6 +16,7 @@ export class DatabaseObservable<
 
   setupListeners() {
     db.on('changes', (changes) => {
+      // biome-ignore lint/complexity/noForEach: <explanation>
       changes.forEach((change) => {
         switch (change.type) {
           case 1:

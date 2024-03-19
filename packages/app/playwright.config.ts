@@ -1,5 +1,6 @@
-import { defineConfig } from '@playwright/test';
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import { join } from 'path';
+import { defineConfig } from '@playwright/test';
 import './load.envs';
 
 const distDirectory = join(__dirname, './dist');

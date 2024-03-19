@@ -29,6 +29,7 @@ export const DepositAndMintMultiCalls = () => {
           value={mintAmount}
         />
         <button
+          type="button"
           onClick={async () => {
             if (wallet.wallet && mintAmount && forwardAmount) {
               await depositAndMintMultiCall({

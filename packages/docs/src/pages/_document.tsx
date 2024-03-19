@@ -8,6 +8,7 @@ export default class Document extends NextDocument {
         <Head>
           <style
             id="stitches"
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
             dangerouslySetInnerHTML={{ __html: getCssText() }}
           />
         </Head>

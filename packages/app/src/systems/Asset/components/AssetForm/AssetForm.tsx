@@ -1,4 +1,4 @@
-import { Input, Box } from '@fuel-ui/react';
+import { Box, Input } from '@fuel-ui/react';
 import { ControlledField } from '~/systems/Core';
 
 import type { UseAssetFormReturn } from '../../hooks/useAssetForm';

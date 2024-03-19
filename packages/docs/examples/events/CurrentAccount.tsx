@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Tag, Text } from '@fuel-ui/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { ExampleBox } from '../../src/components/ExampleBox';
 import { useFuel } from '../../src/hooks/useFuel';
@@ -21,9 +21,9 @@ export function CurrentAccount() {
   });
 
   /* eventCurrentAccount:start */
-  const handleAccountEvent = (account: string) => {
+  const handleAccountEvent = useCallback((account: string) => {
     setCurrentAccount(account);
-  };
+  }, []);
 
   useEffect(() => {
     // listen to the current event account, and call the handleAccountEvent
@@ -32,12 +32,12 @@ export function CurrentAccount() {
       // remove the listener when the component is unmounted
       fuel?.off(fuel.events.currentAccount, handleAccountEvent);
     };
-  }, [fuel]);
+  }, [fuel, handleAccountEvent]);
   /* eventCurrentAccount:end */
 
   useEffect(() => {
     if (isConnected) handleCurrentAccount();
-  }, [isConnected]);
+  }, [isConnected, handleCurrentAccount]);
 
   const errorMessage = errorCurrentAccount || notDetected || errorConnect;
 

@@ -1,13 +1,12 @@
-/* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, Input, Text, IconButton, Icon } from '@fuel-ui/react';
+import { Box, Button, Icon, IconButton, Input, Text } from '@fuel-ui/react';
 import {
-  useFuel,
-  useIsConnected,
   useAddAssets,
   useConnect,
+  useFuel,
+  useIsConnected,
 } from '@fuels/react';
-import type { AssetFuel, Asset } from 'fuels';
+import type { Asset, AssetFuel } from 'fuels';
 import { useState } from 'react';
 
 import { ExampleBox } from '../../../src/components/ExampleBox';
@@ -50,6 +49,7 @@ export function AddAssetsHook() {
 
           return (
             <Box.Stack
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               key={assetData.assetId + index}
               css={styles.item(isLast)}
             >

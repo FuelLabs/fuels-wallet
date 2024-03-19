@@ -13,6 +13,7 @@ export type ErrorMachineContext = {
 
 type MachineServices = {
   clearErrors: {
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
     data: void;
   };
   reportErrors: {
@@ -43,7 +44,7 @@ export type ErrorMachineEvents =
 export const reportErrorMachine = createMachine(
   {
     predictableActionArguments: true,
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+
     tsTypes: {} as import('./reportErrorMachine.typegen').Typegen0,
     schema: {
       context: {} as ErrorMachineContext,

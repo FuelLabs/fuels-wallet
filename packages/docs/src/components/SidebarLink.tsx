@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { cx, styled } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
 import NextLink from 'next/link';
@@ -39,6 +37,7 @@ export const SidebarLink = forwardRef<unknown, SidebarLinkProps>(
         pathname.includes(fullSlug),
     });
     return (
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       <Link ref={ref} as={NextLink as any} href={fullSlug} className={isActive}>
         {item.label}
       </Link>

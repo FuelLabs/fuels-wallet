@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ReactNode } from 'react';
 import { BrowserRouter, MemoryRouter, useLocation } from 'react-router-dom';
 
@@ -10,6 +9,7 @@ const LocationDisplay = () => {
 };
 
 export type TestWrapperProps = {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   initialEntries?: any[];
   children?: ReactNode;
 };

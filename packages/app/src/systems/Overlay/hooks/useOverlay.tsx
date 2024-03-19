@@ -1,8 +1,8 @@
 import { Services, store } from '~/store';
 
 import type {
-  OverlayMachineState,
   OverlayKeys,
+  OverlayMachineState,
 } from '../machines/overlayMachine';
 
 const selectors = {

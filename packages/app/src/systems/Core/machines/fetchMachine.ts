@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { toast } from '@fuel-ui/react';
 import type { TransitionConfig } from 'xstate';
 import { assign, createMachine } from 'xstate';
@@ -28,14 +27,17 @@ export type CreateFetchMachineOpts<I, R> = {
 const MAX_ATTEMPTS = 3;
 
 export const FetchMachine = {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   hasError(_: any, ev: { data: { error?: any } }) {
     return Boolean(ev.data?.error);
   },
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   errorState(state: string): TransitionConfig<any, any> {
     return {
       cond: FetchMachine.hasError,
       target: state,
       actions: [
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         assign((ctx: any, ev: { data: { error?: any } }) => ({
           ...ctx,
           error: ev.data.error.message,
@@ -48,7 +50,7 @@ export const FetchMachine = {
     return createMachine(
       {
         predictableActionArguments: true,
-        // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+
         tsTypes: {} as import('./fetchMachine.typegen').Typegen0,
         schema: {
           context: {} as MachineContext<Input>,
@@ -91,7 +93,7 @@ export const FetchMachine = {
           failed: {
             entry: ['assignError', 'showError'],
             type: 'final',
-            data: (ctx, ev) => ({ error: ev.data }),
+            data: (_ctx, ev) => ({ error: ev.data }),
           },
           success: {
             type: 'final',
@@ -103,14 +105,15 @@ export const FetchMachine = {
         actions: {
           showError: (_, ev) => {
             if (!opts.showError) return;
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
             const error = ev.data as any;
             toast.error(error.message);
           },
           assignError: assign({
             error: (_, ev) => ev.data,
           }),
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           logError: (_, ev: { data: any }) => {
-            // eslint-disable-next-line no-console
             console.error(ev.data);
           },
           incrementAttempts: assign({

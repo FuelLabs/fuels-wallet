@@ -22,6 +22,7 @@ export function TxOperations({
     <Box.Stack gap="$4">
       {operations?.map((operation, index) => (
         <TxOperation
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
           key={index}
           operation={operation}
           status={status}

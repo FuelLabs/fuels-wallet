@@ -15,48 +15,10 @@
     "rules": {
       "recommended": true,
       "correctness": {
-        "noUnusedVariables": "off",
-        "useExhaustiveDependencies": "off",
-        "noEmptyPattern": "off"
+        "noUnusedVariables": "error"
       },
       "style": {
-        "useImportType": "off",
-        "useEnumInitializers": "off",
-        "noUnusedTemplateLiteral": "off",
-        "noNonNullAssertion": "off",
-        "noInferrableTypes": "off",
-        "useNodejsImportProtocol": "off",
-        "useNumberNamespace": "off",
-        "useExportType": "off"
-      },
-      "suspicious": {
-        "noArrayIndexKey": "off",
-        "noConfusingVoidType": "off",
-        "noExplicitAny": "off",
-        "noImplicitAnyLet": "off",
-        "noAssignInExpressions": "off",
-        "noShadowRestrictedNames": "off",
-        "noDoubleEquals": "off"
-      },
-      "complexity": {
-        "noThisInStatic": "off",
-        "noStaticOnlyClass": "off",
-        "noForEach": "off",
-        "useOptionalChain": "off",
-        "noUselessSwitchCase": "off",
-        "useArrowFunction": "off",
-        "noUselessEmptyExport": "off",
-        "useLiteralKeys": "off"
-      },
-      "performance": {
-        "noAccumulatingSpread": "off",
-        "noDelete": "off"
-      },
-      "security": {
-        "noDangerouslySetInnerHtml": "off"
-      },
-      "a11y": {
-        "useButtonType": "off"
+        "noNonNullAssertion": "off"
       }
     }
   },
@@ -85,6 +47,7 @@
       "**/build",
       "**/dist",
       "**/dist-crx",
+      "**/contracts",
       "pnpm-lock.yaml"
     ]
   }

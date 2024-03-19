@@ -1,5 +1,5 @@
 import { Box } from '@fuel-ui/react';
-import type { StoryFn, Meta } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 import { MOCK_ACCOUNTS } from '~/systems/Account';
 
 import { AccountInfo } from './AccountInfo';

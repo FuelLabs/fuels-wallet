@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cssObj } from '@fuel-ui/css';
-import { Box, IconButton, Icon, Link, FuelLogo } from '@fuel-ui/react';
+import { Box, FuelLogo, Icon, IconButton, Link } from '@fuel-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { AnimationProps } from 'framer-motion';
 import { useEffect, useState } from 'react';
@@ -10,6 +9,7 @@ import { IS_PUBLIC_PREVIEW } from '../constants';
 import { Search } from './Search';
 import { Sidebar } from './Sidebar';
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 const MotionBox = motion<any>(Box);
 const SPRING: AnimationProps['transition'] = {
   ease: 'linear',

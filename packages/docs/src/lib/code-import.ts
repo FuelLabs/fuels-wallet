@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
+import fs from 'node:fs';
+import { EOL } from 'node:os';
+import path from 'node:path';
 import type { Node } from 'acorn';
 import * as acornLoose from 'acorn-loose';
 import * as walk from 'acorn-walk';
-import fs from 'node:fs';
-import { EOL } from 'os';
-import path from 'path';
 import * as prettier from 'prettier';
 import type { Root } from 'remark-gfm';
 import { visit } from 'unist-util-visit';
@@ -32,7 +30,7 @@ function extractLines(
 ) {
   const lines = content.split(EOL);
   const start = fromLine || 1;
-  let end;
+  let end: number;
   if (toLine) {
     end = toLine;
   } else if (lines[lines.length - 1] === '') {
@@ -93,8 +91,10 @@ function extractTestCase(source: string, testCase: string) {
   const chars = source.split('');
   const linesOffset = getLineOffsets(source);
 
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   walk.fullAncestor(ast, (node: any, _state, ancestors) => {
     if (node.name === 'test') {
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       const parent = ancestors.reverse()[1] as any;
       const args = parent.arguments || [];
       const val = args[0]?.value;
@@ -120,6 +120,7 @@ function extractTestCase(source: string, testCase: string) {
 }
 
 const files = new Map<string, string>();
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 const attrsList = new Map<string, any[]>();
 
 function getFilesOnCache(filepath: string) {
@@ -138,14 +139,23 @@ export function codeImport(options: Options = { filepath: '' }) {
   const dirname = path.relative(rootDir, path.dirname(filepath));
 
   return function transformer(tree: Root) {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const nodes: [any, number | null, any][] = [];
 
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     visit(tree, 'mdxJsxFlowElement', (node: any, idx, parent) => {
       if (node.name === 'CodeImport') {
-        nodes.push([node as any, idx == undefined ? null : idx, parent as any]);
+        nodes.push([
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          node as any,
+          idx === undefined ? null : idx,
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          parent as any,
+        ]);
       }
     });
 
+    // biome-ignore lint/complexity/noForEach: <explanation>
     nodes.forEach(([node]) => {
       try {
         const attr = node.attributes;
@@ -155,11 +165,17 @@ export function codeImport(options: Options = { filepath: '' }) {
           throw new Error('CodeImport need to have properties defined');
         }
 
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         let lineStart = attr.find((i: any) => i.name === 'lineStart')?.value;
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         let lineEnd = attr.find((i: any) => i.name === 'lineEnd')?.value;
-        const commentBlock = attr.find((i: any) => i.name === 'commentBlock')
-          ?.value;
+        const commentBlock = attr.find(
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          (i: any) => i.name === 'commentBlock'
+        )?.value;
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         const file = attr.find((i: any) => i.name === 'file')?.value;
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         const testCase = attr.find((i: any) => i.name === 'testCase')?.value;
         const fileAbsPath = path.resolve(path.join(rootDir, dirname), file);
         const fileContent = fs.readFileSync(fileAbsPath, 'utf8');
@@ -235,7 +251,7 @@ export function codeImport(options: Options = { filepath: '' }) {
         attrsList.set(attrId, newAttrs);
       } catch (err) {
         // Log better error messages when parsing fails
-        // eslint-disable-next-line no-console
+
         console.error(err);
         throw err;
       }

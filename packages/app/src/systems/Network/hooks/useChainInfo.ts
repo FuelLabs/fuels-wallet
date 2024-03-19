@@ -25,6 +25,7 @@ export function useChainInfo(providerUrl?: string) {
     []
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (providerUrl) {
       fetchChainInfo(providerUrl);

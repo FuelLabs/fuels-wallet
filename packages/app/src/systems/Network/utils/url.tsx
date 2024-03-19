@@ -1,8 +1,8 @@
 function isValidUrl(url: string) {
-  let validUrl;
+  let validUrl: URL;
   try {
     validUrl = new URL(url);
-  } catch (e) {
+  } catch (_e) {
     return false;
   }
   return validUrl.protocol === 'http:' || validUrl.protocol === 'https:';

@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { FuelLogo, Icon, IconButton, Spinner, Text, Box } from '@fuel-ui/react';
+import { Box, FuelLogo, Icon, IconButton, Spinner, Text } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 /**
@@ -13,8 +13,8 @@ import { useOverlay } from '~/systems/Overlay';
 import { useLayoutContext } from './Layout';
 
 export enum TopBarType {
-  internal,
-  external,
+  internal = 0,
+  external = 1,
 }
 
 type TopBarProps = {

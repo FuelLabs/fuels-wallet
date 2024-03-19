@@ -1,6 +1,5 @@
-/* eslint-disable no-console */
 import { Alert, Box, Button, Input, Text } from '@fuel-ui/react';
-import { useFuel, useConnectors, useIsConnected } from '@fuels/react';
+import { useConnectors, useFuel, useIsConnected } from '@fuels/react';
 import { useMemo, useState } from 'react';
 import { useLoading } from '~/src/hooks/useLoading';
 
@@ -41,7 +40,7 @@ export function SelectConnector() {
 
   const fuelConnector = useMemo(() => {
     return fuel.getConnector(selectedConnector);
-  }, [selectedConnector]);
+  }, [fuel, selectedConnector]);
 
   return (
     <ExampleBox error={errorOnSelecting || errorOnConnect || errorOnDisconnect}>
@@ -49,7 +48,6 @@ export function SelectConnector() {
         as={'select'}
         isDisabled={selectingConnector}
         css={{ color: '$white' }}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         onChange={(e) => {
           setCurrentConnector(e.target.value);

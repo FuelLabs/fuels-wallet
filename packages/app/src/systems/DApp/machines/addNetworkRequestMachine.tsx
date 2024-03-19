@@ -1,7 +1,7 @@
 import type { NetworkData } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-import { assignErrorMessage, FetchMachine } from '~/systems/Core';
+import { FetchMachine, assignErrorMessage } from '~/systems/Core';
 import type { NetworkInputs } from '~/systems/Network';
 import { NetworkService } from '~/systems/Network';
 import { store } from '~/systems/Store';
@@ -34,13 +34,15 @@ type MachineEvents =
       type: 'START';
       input: AddNetworkInputs['start'];
     }
+  // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
   | { type: 'APPROVE'; input: void }
+  // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
   | { type: 'REJECT'; input: void };
 
 export const addNetworkRequestMachine = createMachine(
   {
     predictableActionArguments: true,
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+
     tsTypes: {} as import('./addNetworkRequestMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,

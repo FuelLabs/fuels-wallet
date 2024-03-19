@@ -20,6 +20,7 @@ export const MintAssetCard = () => {
           value={amount}
         />
         <button
+          type="button"
           onClick={async () => {
             if (wallet && amount) {
               await mint({

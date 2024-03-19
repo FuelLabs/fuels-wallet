@@ -1,5 +1,5 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
-import { cx, cssObj } from '@fuel-ui/css';
+import { cssObj, cx } from '@fuel-ui/css';
 import type { StackProps } from '@fuel-ui/react';
 import { Box, Heading } from '@fuel-ui/react';
 import type { ReactNode } from 'react';

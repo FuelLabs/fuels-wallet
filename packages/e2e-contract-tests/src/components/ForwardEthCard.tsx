@@ -18,6 +18,7 @@ export const ForwardEthCard = () => {
           value={amount}
         />
         <button
+          type="button"
           onClick={async () => {
             if (wallet.wallet && amount) {
               await deposit({

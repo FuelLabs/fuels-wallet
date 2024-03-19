@@ -27,11 +27,13 @@ export function useUnlockForm(formErrors?: UnlockFormValuesErrors) {
     },
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const errors = formErrors || {};
+    // biome-ignore lint/complexity/noForEach: <explanation>
     Object.keys(errors).forEach((key) => {
       if (errors[key]) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         form.setError(key as any, {
           type: 'manual',
           message: errors[key],

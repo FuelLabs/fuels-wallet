@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { headingRank } from 'hast-util-heading-rank';
-import { toString } from 'hast-util-to-string';
+import { toString as toHtmlString } from 'hast-util-to-string';
 import { visit } from 'unist-util-visit';
 import type { NodeHeading } from '~/src/types';
 
@@ -10,6 +9,7 @@ type Params = {
 };
 
 export function rehypeExtractHeadings({ headings }: Params) {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   return (tree: any) => {
     visit(tree, 'element', (node) => {
       const rank = headingRank(node);
@@ -18,7 +18,7 @@ export function rehypeExtractHeadings({ headings }: Params) {
       }
       if (rank === 2 && node?.type === 'element') {
         headings.push({
-          title: toString(node),
+          title: toHtmlString(node),
           id: node.properties.id.toString(),
         });
       }
@@ -27,7 +27,7 @@ export function rehypeExtractHeadings({ headings }: Params) {
         if (last) {
           last.children = last?.children || [];
           last.children.push({
-            title: toString(node),
+            title: toHtmlString(node),
             id: node.properties.id.toString(),
           });
         }

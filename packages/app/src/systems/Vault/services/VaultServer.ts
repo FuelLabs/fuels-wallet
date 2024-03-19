@@ -1,5 +1,6 @@
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import EventEmitter from 'events';
-import { WalletManager, transactionRequestify, Address, Provider } from 'fuels';
+import { Address, Provider, WalletManager, transactionRequestify } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
 
@@ -70,6 +71,7 @@ export class VaultServer extends EventEmitter {
   }
 
   setupMethods() {
+    // biome-ignore lint/complexity/noForEach: <explanation>
     VaultServer.methods.forEach((methodName) => {
       if (!this[methodName]) {
         throw new Error('Method not exists!');

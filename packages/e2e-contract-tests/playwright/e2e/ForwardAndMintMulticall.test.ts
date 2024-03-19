@@ -4,13 +4,13 @@ import { expect } from '@playwright/test';
 import { BaseAssetId, bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
 
-import { shortAddress, calculateAssetId } from '../../src/utils';
 import '../../load.envs.js';
+import { calculateAssetId, shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test } from './test';
-import { checkFee, connect, checkAddresses } from './utils';
+import { checkAddresses, checkFee, connect } from './utils';
 
 test.describe('Forward and Mint Multicall', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;
@@ -88,18 +88,18 @@ test.describe('Forward and Mint Multicall', () => {
     const postDepositBalanceEth = await fuelWallet.getBalance();
     const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
-      parseFloat(
+      Number.parseFloat(
         preDepositBalanceEth
           .sub(postDepositBalanceEth)
           .format({ precision: 6, units: 9 })
       )
-    ).toBe(parseFloat(depositAmount));
+    ).toBe(Number.parseFloat(depositAmount));
     expect(
-      parseFloat(
+      Number.parseFloat(
         postDepositBalanceTkn
           .sub(preDepositBalanceTkn)
           .format({ precision: 6, units: 9 })
       )
-    ).toBe(parseFloat(mintAmount));
+    ).toBe(Number.parseFloat(mintAmount));
   });
 });

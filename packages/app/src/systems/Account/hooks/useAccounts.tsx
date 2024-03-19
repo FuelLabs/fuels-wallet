@@ -1,7 +1,7 @@
 import type { AssetData } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import { useEffect, useRef } from 'react';
-import { store, Services } from '~/store';
+import { Services, store } from '~/store';
 import { useAssets } from '~/systems/Asset';
 import { useOverlay } from '~/systems/Overlay';
 

@@ -73,7 +73,7 @@ type Inputs = {
 export const connectionsMachine = createMachine(
   {
     predictableActionArguments: true,
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+
     tsTypes: {} as import('./connectionsMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,

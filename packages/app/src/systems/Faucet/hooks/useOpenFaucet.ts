@@ -14,7 +14,7 @@ export function useOpenFaucet() {
   const openFaucet = useCallback(() => {
     if (IS_CRX) {
       const url = stringifyUrl(VITE_FUEL_FAUCET_URL, {
-        address: account!.address,
+        address: account?.address,
       });
       openTab(url);
     } else {

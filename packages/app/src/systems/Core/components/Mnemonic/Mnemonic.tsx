@@ -1,7 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Grid, Icon, toast } from '@fuel-ui/react';
 import { MNEMONIC_SIZES } from 'fuels';
-import React, { useEffect, useState } from 'react';
+import type { ClipboardEvent } from 'react';
+import { useEffect, useState } from 'react';
 
 import { MnemonicInput } from './MnemonicInput';
 
@@ -71,10 +72,7 @@ export function Mnemonic({
     setValue(fillArray(words, selectedMnemonicSize));
   }
 
-  function handlePasteInput(
-    ev: React.ClipboardEvent<HTMLInputElement>,
-    idx: number
-  ) {
+  function handlePasteInput(ev: ClipboardEvent<HTMLInputElement>, idx: number) {
     const text = ev.clipboardData.getData('text/plain');
     const words = splitSeedPhrase(text);
 
@@ -107,6 +105,7 @@ export function Mnemonic({
     setValue(newValue);
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     onChange?.(value);
     if (value.every((word) => Boolean(word.length))) {
@@ -136,6 +135,7 @@ export function Mnemonic({
       {type === 'read' ? (
         <Grid css={styles.words}>
           {initialValue?.map((word, idx) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             <Box as="span" key={idx} css={styles.word} data-idx={idx + 1}>
               {word}
             </Box>
@@ -145,6 +145,7 @@ export function Mnemonic({
         <Grid css={styles.words}>
           {value.map((_, idx) => {
             return (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               <Grid key={idx} css={styles.inputWrapper}>
                 <span>{idx + 1}</span>
                 <div>

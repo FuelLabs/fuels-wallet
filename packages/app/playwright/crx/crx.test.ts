@@ -1,22 +1,22 @@
-import { expect } from '@playwright/test';
+import { type Locator, expect } from '@playwright/test';
 import {
-  Signer,
-  bn,
-  hashMessage,
-  Wallet,
-  Provider,
   type Account,
   type Asset,
+  Provider,
+  Signer,
+  Wallet,
+  bn,
+  hashMessage,
 } from 'fuels';
 
 import {
-  seedWallet,
   getButtonByText,
   getByAriaLabel,
-  hasText,
-  waitAriaLabel,
-  reload,
   getElementByText,
+  hasText,
+  reload,
+  seedWallet,
+  waitAriaLabel,
 } from '../commons';
 import {
   CUSTOM_ASSET_INPUT,
@@ -26,13 +26,13 @@ import {
 } from '../mocks';
 
 import {
-  test,
-  waitWalletToLoad,
   getAccountByName,
-  switchAccount,
-  waitAccountPage,
   getWalletAccounts,
   hideAccount,
+  switchAccount,
+  test,
+  waitAccountPage,
+  waitWalletToLoad,
 } from './utils';
 
 const WALLET_PASSWORD = 'Qwe123456$';
@@ -102,7 +102,7 @@ test.describe('FuelWallet Extension', () => {
           try {
             await window.fuel.ping();
             return true;
-          } catch (err) {
+          } catch (_err) {
             return testConnection();
           }
         }
@@ -293,7 +293,7 @@ test.describe('FuelWallet Extension', () => {
       await test.step('Current authorized current Account', async () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
         await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
-        await getByAriaLabel(popupPage, `Close dialog`).click();
+        await getByAriaLabel(popupPage, 'Close dialog').click();
         const currentAccountPromise = await blankPage.evaluate(async () => {
           return window.fuel.currentAccount();
         });
@@ -388,7 +388,7 @@ test.describe('FuelWallet Extension', () => {
         return blankPage.evaluate(
           async ([senderAddress, receiverAddress, amount]) => {
             const receiver = window.createAddress(receiverAddress as string);
-            const wallet = await window.fuel!.getWallet(
+            const wallet = await window.fuel?.getWallet(
               senderAddress as string
             );
 
@@ -581,7 +581,7 @@ test.describe('FuelWallet Extension', () => {
       const networkItemsCount = await items.count();
       expect(networkItemsCount).toEqual(2);
 
-      let selectedNetworkItem;
+      let selectedNetworkItem: Locator;
       for (let i = 0; i < networkItemsCount; i += 1) {
         const isSelected = await items.nth(i).getAttribute('data-active');
         if (isSelected === 'true') {
@@ -606,7 +606,7 @@ test.describe('FuelWallet Extension', () => {
       // Switch to account 2
       await switchAccount(popupPage, 'Account 2');
       await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
-      await getByAriaLabel(popupPage, `Close dialog`).click();
+      await getByAriaLabel(popupPage, 'Close dialog').click();
 
       const onChangeAccountPromise = blankPage.evaluate(() => {
         return new Promise((resolve) => {
@@ -628,7 +628,7 @@ test.describe('FuelWallet Extension', () => {
       // Switch to account 2
       await switchAccount(popupPage, 'Account 2');
       await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
-      await getByAriaLabel(popupPage, `Close dialog`).click();
+      await getByAriaLabel(popupPage, 'Close dialog').click();
 
       const onChangeAccountPromise = blankPage.evaluate(() => {
         return new Promise((resolve) => {

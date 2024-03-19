@@ -20,7 +20,7 @@ class ErrorBoundary extends React.Component<
   async componentDidCatch(error: Error, reactError: React.ErrorInfo) {
     await ReportErrorService.saveError({
       error,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       reactError: reactError as any,
     });
     this.setState({

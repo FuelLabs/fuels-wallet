@@ -12,7 +12,7 @@ import {
   waitUrl,
 } from '../commons';
 import type { MockData } from '../mocks';
-import { mockData, WALLET_PASSWORD } from '../mocks';
+import { WALLET_PASSWORD, mockData } from '../mocks';
 
 test.describe('Account', () => {
   let browser: Browser;

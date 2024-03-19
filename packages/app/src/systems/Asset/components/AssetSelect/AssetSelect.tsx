@@ -107,7 +107,7 @@ export function AssetSelect({
         autoFocus
         aria-label="Actions"
         css={styles.menu}
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         onAction={(assetId: any) => onSelect(assetId.toString())}
       >
         {(items || []).map((item) => {

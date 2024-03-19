@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { execa } from 'execa';
 import fs from 'node:fs';
 import { join } from 'path';

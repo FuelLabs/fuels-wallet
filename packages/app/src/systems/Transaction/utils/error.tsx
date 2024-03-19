@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export type VMApiError = {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   request: any;
   response: {
     errors: {
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       locations: any;
       message: string;
       path: string[];
@@ -21,6 +21,7 @@ export type InsufficientInputAmountError = {
 
 export type GroupedError = {
   errorMessage?: string;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   error?: InsufficientInputAmountError | any;
 };
 
@@ -54,12 +55,14 @@ export const getGroupedErrors = (rawErrors?: { message: string }[]) => {
           const [key, value] = keyValue.split(': ');
 
           return {
+            // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
             ...prevError,
             [key]: key === 'asset' ? `0x${value}` : value,
           };
         }, {});
 
         return {
+          // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
           ...prevGroupedError,
           [type]: [
             ...(prevGroupedError[type] || []),
@@ -72,6 +75,7 @@ export const getGroupedErrors = (rawErrors?: { message: string }[]) => {
       }
 
       return {
+        // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
         ...prevGroupedError,
         [type]: [
           ...(prevGroupedError[type] || []),
@@ -98,6 +102,7 @@ export const getFilteredErrors = (
     (prevGroupedErrors, key) => {
       if (!filterOutKeys.includes(key)) {
         return {
+          // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
           ...prevGroupedErrors,
           [key]: groupedErrors[key],
         };

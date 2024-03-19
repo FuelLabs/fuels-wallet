@@ -29,7 +29,7 @@ export function SearchInput({
          * @fuel-ui automatically add role to input. So, we need to pass
          * role="null" in order to remove it and pass a11y tests
          * */
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         role={null as any}
         aria-label="Search"
         value={value || ''}

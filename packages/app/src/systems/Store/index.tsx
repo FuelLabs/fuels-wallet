@@ -4,11 +4,11 @@ import { accountEvents } from '../Account/events';
 import { accountsMachine } from '../Account/machines';
 import { assetEvents, assetsMachine } from '../Asset';
 import {
-  transactionRequestMachine,
-  connectRequestMachine,
-  messageRequestMachine,
   addAssetRequestMachine,
   addNetworkRequestMachine,
+  connectRequestMachine,
+  messageRequestMachine,
+  transactionRequestMachine,
 } from '../DApp';
 import { requestEvents } from '../DApp/events';
 import { reportErrorMachine } from '../Error';

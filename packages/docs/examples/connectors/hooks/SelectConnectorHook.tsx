@@ -1,10 +1,10 @@
 import { Alert, Box, Button, Input, Text } from '@fuel-ui/react';
 import {
-  useFuel,
-  useConnectors,
-  useIsConnected,
   useConnect,
+  useConnectors,
   useDisconnect,
+  useFuel,
+  useIsConnected,
 } from '@fuels/react';
 import { useMemo, useState } from 'react';
 
@@ -34,7 +34,7 @@ export function SelectConnectorHook() {
 
   const fuelConnector = useMemo(() => {
     return fuel.getConnector(selectedConnector);
-  }, [selectedConnector]);
+  }, [selectedConnector, fuel]);
 
   return (
     <ExampleBox error={errorDisconnecting || errorConnecting}>
@@ -42,7 +42,6 @@ export function SelectConnectorHook() {
         as={'select'}
         isDisabled={connecting}
         css={{ color: '$white' }}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         onChange={(e) => {
           setCurrentConnector(e.target.value);

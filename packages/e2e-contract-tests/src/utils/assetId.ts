@@ -1,4 +1,4 @@
-import { BaseAssetId, Address, hash } from 'fuels';
+import { Address, BaseAssetId, hash } from 'fuels';
 
 export const calculateAssetId = (
   contractId: string,

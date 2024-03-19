@@ -37,6 +37,7 @@ export function AccountList({
       {isLoading && (
         <CardList>
           {[...Array(3)].map((_, i) => {
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             return <AccountItem.Loader key={i} />;
           })}
         </CardList>
@@ -67,7 +68,7 @@ export function AccountList({
           variant="link"
           onPress={toggle}
           css={styles.hiddenBtn}
-          aria-label={`Toggle hidden accounts`}
+          aria-label={'Toggle hidden accounts'}
         >
           {showHidden ? 'Hide' : 'Show'} hidden accounts
         </Button>

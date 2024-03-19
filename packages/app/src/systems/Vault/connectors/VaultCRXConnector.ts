@@ -1,9 +1,9 @@
 import { POPUP_SCRIPT_NAME, VAULT_SCRIPT_NAME } from '@fuel-wallet/types';
 import type {
-  RequestMessage,
-  ResponseMessage,
   CommunicationMessage,
   EventMessage,
+  RequestMessage,
+  ResponseMessage,
 } from '@fuels/connectors';
 import { MessageTypes } from '@fuels/connectors';
 import type { JSONRPCRequest } from 'json-rpc-2.0';
@@ -37,6 +37,7 @@ export class VaultCRXConnector {
   };
 
   async onEvent(message: EventMessage) {
+    // biome-ignore lint/complexity/noForEach: <explanation>
     message.events.forEach((event) => {
       this.clientVault.emit(event.event, ...event.params);
     });

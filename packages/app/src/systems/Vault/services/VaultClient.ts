@@ -1,3 +1,4 @@
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import EventEmitter from 'events';
 import type { JSONRPCParams, JSONRPCRequest } from 'json-rpc-2.0';
 import { JSONRPCClient } from 'json-rpc-2.0';
@@ -23,6 +24,7 @@ export class VaultClient extends EventEmitter {
   }
 
   setupMethods = () => {
+    // biome-ignore lint/complexity/noForEach: <explanation>
     VaultServer.methods.forEach((methodName) => {
       this[methodName] = this.createRequest(methodName);
     });

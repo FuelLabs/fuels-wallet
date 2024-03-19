@@ -1,6 +1,5 @@
-/* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
-import { Input, Box, Button, Link, Text, Tag } from '@fuel-ui/react';
+import { Box, Button, Input, Link, Tag, Text } from '@fuel-ui/react';
 import { useFuel, useIsConnected } from '@fuels/react';
 import { useState } from 'react';
 import { ExampleBox } from '~/src/components/ExampleBox';

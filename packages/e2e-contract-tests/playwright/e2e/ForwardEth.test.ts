@@ -10,7 +10,7 @@ import { testSetup } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test } from './test';
-import { checkFee, connect, checkAddresses } from './utils';
+import { checkAddresses, checkFee, connect } from './utils';
 
 test.describe('Forward Eth', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;
@@ -71,11 +71,11 @@ test.describe('Forward Eth', () => {
     await hasText(page, 'Transaction successful.');
     const postDepositBalanceEth = await fuelWallet.getBalance();
     expect(
-      parseFloat(
+      Number.parseFloat(
         preDepositBalanceEth
           .sub(postDepositBalanceEth)
           .format({ precision: 6, units: 9 })
       )
-    ).toBe(parseFloat(forwardEthAmount));
+    ).toBe(Number.parseFloat(forwardEthAmount));
   });
 });

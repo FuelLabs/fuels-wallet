@@ -1,4 +1,4 @@
-import { waitFor, fireEvent, screen } from '@fuel-ui/test-utils';
+import { fireEvent, screen, waitFor } from '@fuel-ui/test-utils';
 import type { Connection } from '@fuel-wallet/types';
 import { ConnectionService } from '~/systems/DApp/services';
 
@@ -11,7 +11,7 @@ export async function waitShowingConnections(...conns: Connection[]) {
 }
 
 export async function testRemovingConnection(
-  conn: Connection,
+  _conn: Connection,
   deleteFn: jest.SpyInstance = jest.spyOn(ConnectionService, 'removeConnection')
 ) {
   expect(await screen.findByText(/Disconnecting App/i)).toBeInTheDocument();

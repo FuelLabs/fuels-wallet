@@ -1,8 +1,8 @@
 import type { Account, BigNumberish } from 'fuels';
-import { bn, BaseAssetId } from 'fuels';
+import { BaseAssetId, bn } from 'fuels';
 import toast from 'react-hot-toast';
 
-import { MAIN_CONTRACT_ID, EXTERNAL_CONTRACT_ID } from '../config';
+import { EXTERNAL_CONTRACT_ID, MAIN_CONTRACT_ID } from '../config';
 import { CustomAssetAbi__factory } from '../contracts';
 import type { IdentityInput } from '../contracts/contracts/CustomAssetAbi';
 

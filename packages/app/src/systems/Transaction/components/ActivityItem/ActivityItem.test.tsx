@@ -1,8 +1,8 @@
-import { render, testA11y, screen } from '@fuel-ui/test-utils';
+import { render, screen, testA11y } from '@fuel-ui/test-utils';
 import { fireEvent } from '@storybook/testing-library';
 import { Address } from 'fuels';
 import { act } from 'react-dom/test-utils';
-import { Pages, shortAddress, TestWrapper } from '~/systems/Core';
+import { Pages, TestWrapper, shortAddress } from '~/systems/Core';
 
 import { MOCK_TRANSACTION_CONTRACT_CALL } from '../../__mocks__/tx';
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Create a route that can be parsed using a typed-obj as param
  *
@@ -21,9 +20,11 @@
  *              ^^ 'test' does not exist in type 'Record<"id", any>'.
  * ```
  */
-export function route<P extends string = any>(path: string) {
+export function route<P extends string>(path: string) {
   return function parse(
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     params?: Record<P, any>,
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     query?: Record<string, any>
   ): string {
     const split = path.match(/[^/]+/g);
@@ -45,6 +46,7 @@ export function route<P extends string = any>(path: string) {
  * searchStringify({ foo: 'bar', baz: 'qux' });
  * // returns '?foo=bar&baz=qux'
  */
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function searchStringify(query?: Record<any, any>) {
   const qs = new URLSearchParams(query).toString();
   return qs.length ? `?${qs}` : '';
@@ -61,6 +63,7 @@ export function searchStringify(query?: Record<any, any>) {
  * stringifyUrl('https://example.com', { foo: 'bar', baz: 'qux' });
  * // returns 'https://example.com/?foo=bar&baz=qux'
  */
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function stringifyUrl(url: string, query?: Record<any, any>) {
   const { href } = new URL(url, 'https://fuel.network/');
   return `${href}${searchStringify(query)}`;

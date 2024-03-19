@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import * as url from 'url';
+import * as url from 'node:url';
 
 const linkDeps = process.env.LINK_DEPS?.trim().split(' ').filter(Boolean) || [];
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));

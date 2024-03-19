@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Tag, Text } from '@fuel-ui/react';
 import { useFuel, useIsConnected } from '@fuels/react';
@@ -33,7 +32,7 @@ export function ListAccounts() {
     return () => {
       fuel.off(fuel.events.accounts, logAccounts);
     };
-  }, []);
+  }, [fuel]);
 
   return (
     <ExampleBox error={errorGetAccounts}>

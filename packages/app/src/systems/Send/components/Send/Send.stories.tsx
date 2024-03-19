@@ -1,7 +1,7 @@
 import type { Meta, StoryFn } from '@storybook/react';
 import {
-  mockBalancesOnGraphQL,
   MOCK_ASSETS_NODE,
+  mockBalancesOnGraphQL,
 } from '~/systems/Asset/__mocks__/assets';
 
 import { sendLoader } from '../../__mocks__/send';

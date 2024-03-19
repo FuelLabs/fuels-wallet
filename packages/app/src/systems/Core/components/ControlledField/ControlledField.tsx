@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { Form } from '@fuel-ui/react';
 import { mergeRefs } from '@react-aria/utils';
@@ -15,9 +14,11 @@ import { Controller } from 'react-hook-form';
 type RenderProps = {
   field: ControllerRenderProps & { id: string };
   fieldState: ControllerFieldState;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   formState: UseFormStateReturn<any>;
 };
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export type ControlledFieldProps = Omit<ControllerProps<any>, 'render'> & {
   css?: ThemeUtilsCSS;
   label?: ReactNode;
@@ -30,6 +31,7 @@ export type ControlledFieldProps = Omit<ControllerProps<any>, 'render'> & {
   hideError?: boolean;
 };
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const ControlledField = forwardRef<any, ControlledFieldProps>(
   (
     {
@@ -70,6 +72,7 @@ export const ControlledField = forwardRef<any, ControlledFieldProps>(
                 field: {
                   ...props.field,
                   id,
+                  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
                   ref: mergeRefs(props.field.ref, ref) as any,
                 },
               })}

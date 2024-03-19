@@ -3,7 +3,7 @@ import {
   FuelWalletDevelopmentConnector,
 } from '@fuels/connectors';
 import { Fuel } from 'fuels';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const fuelSDK = new Fuel({
   connectors: [new FuelWalletConnector(), new FuelWalletDevelopmentConnector()],

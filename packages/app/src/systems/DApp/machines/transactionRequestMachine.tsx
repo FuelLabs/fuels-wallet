@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Account } from '@fuel-wallet/types';
 import type {
-  TransactionSummary,
   BN,
   TransactionRequest,
   TransactionResponse,
+  TransactionSummary,
 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { AccountService } from '~/systems/Account';
-import { assignErrorMessage, delay, FetchMachine } from '~/systems/Core';
+import { FetchMachine, assignErrorMessage, delay } from '~/systems/Core';
 import type { NetworkInputs } from '~/systems/Network';
 import { NetworkService } from '~/systems/Network';
 import type { GroupedErrors, VMApiError } from '~/systems/Transaction';
@@ -77,7 +76,7 @@ type MachineEvents =
 export const transactionRequestMachine = createMachine(
   {
     predictableActionArguments: true,
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+
     tsTypes: {} as import('./transactionRequestMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,
@@ -276,6 +275,7 @@ export const transactionRequestMachine = createMachine(
       }),
       assignTxDryRunError: assign((ctx, ev) => {
         const txDryRunGroupedErrors = getGroupedErrors(
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           (ev.data as any)?.error?.response?.errors
         );
         return {
@@ -292,8 +292,10 @@ export const transactionRequestMachine = createMachine(
           ...ctx,
           errors: {
             ...ctx.errors,
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
             txApproveError: (ev.data as any)?.error,
           },
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           error: (ev.data as any)?.error,
         };
       }),
@@ -325,7 +327,7 @@ export const transactionRequestMachine = createMachine(
           const { txResult } = await TxService.simulateTransaction(input);
           if (txResult.isStatusFailure) {
             // TODO: add reason for error failure if the sdk supports it
-            throw new Error(`The transaction will fail to run.`);
+            throw new Error('The transaction will fail to run.');
           }
           return { txResult };
         },

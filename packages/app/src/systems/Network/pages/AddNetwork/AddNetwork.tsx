@@ -5,13 +5,13 @@ import { animations, styles } from '~/systems/Core';
 import type { NetworkFormValues } from '~/systems/Network';
 import {
   NetworkForm,
-  useNetworks,
-  useNetworkForm,
   useChainInfo,
+  useNetworkForm,
+  useNetworks,
 } from '~/systems/Network';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 const MotionStack = motion<any>(Box.Stack);
 
 export function AddNetwork() {
@@ -25,12 +25,14 @@ export function AddNetwork() {
     isLoading: isLoadingChainInfo,
   } = useChainInfo(isValidUrl ? form.getValues('url') : undefined);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isValidUrl && !isLoadingChainInfo && chainInfo) {
       form.setValue('name', chainInfo.name, { shouldValidate: true });
     }
   }, [chainInfo, isLoadingChainInfo, isValidUrl]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (chainInfoError) {
       form.setError('url', {

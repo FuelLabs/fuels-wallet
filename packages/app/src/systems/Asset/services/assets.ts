@@ -27,6 +27,7 @@ export type AssetInputs = {
   };
 };
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class AssetService {
   static async upsertAsset(input: AssetInputs['upsertAsset']) {
     return db.transaction('rw!', db.assets, async () => {
@@ -156,6 +157,7 @@ export class AssetService {
     if (trimmedAssets.length !== uniqueAssetsBySymbol.length) {
       throw new Error('Asset with same symbol being added multiple times');
     }
+    // biome-ignore lint/complexity/noForEach: <explanation>
     trimmedAssets.forEach((obj) => {
       if (
         !Number.isInteger(obj.decimals) ||

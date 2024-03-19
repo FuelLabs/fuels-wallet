@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cssObj } from '@fuel-ui/css';
 import { Button } from '@fuel-ui/react';
 import type { NetworkData } from '@fuel-wallet/types';
@@ -16,7 +15,9 @@ export const NetworkDropdown = forwardRef<HTMLDivElement, NetworkDropdownProps>(
   ({ selected, isDisabled, ...props }, ref) => {
     return (
       <Button
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         {...(props as any)}
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         ref={ref as any}
         size="xs"
         css={styles.trigger}

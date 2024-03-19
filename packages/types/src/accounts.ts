@@ -1,4 +1,4 @@
-import type { BigNumberish, BN } from 'fuels';
+import type { BN, BigNumberish } from 'fuels';
 
 import type { Coin } from './coin';
 

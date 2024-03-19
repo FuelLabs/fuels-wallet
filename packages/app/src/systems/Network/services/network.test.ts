@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { MOCK_NETWORKS } from '../__mocks__/networks';
 
 import { NetworkService } from './network';

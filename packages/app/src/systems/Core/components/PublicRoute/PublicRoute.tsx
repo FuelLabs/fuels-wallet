@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 import { Pages } from '../../types';
-import { guards, RouteGuard } from '../RouteGuard';
+import { RouteGuard, guards } from '../RouteGuard';
 
 type PublicRouteProps = {
   redirect?: string;

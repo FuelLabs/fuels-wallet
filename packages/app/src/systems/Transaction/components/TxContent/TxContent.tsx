@@ -4,7 +4,7 @@ import type { TransactionStatus, TransactionSummary } from 'fuels';
 import type { ReactNode } from 'react';
 import type { Maybe } from '~/systems/Core';
 import { MotionStack, animations } from '~/systems/Core';
-import { TxOperations, TxDetails } from '~/systems/Transaction';
+import { TxDetails, TxOperations } from '~/systems/Transaction';
 
 type TxContentLoaderProps = {
   header?: ReactNode;

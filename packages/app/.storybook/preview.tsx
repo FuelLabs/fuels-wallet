@@ -1,12 +1,12 @@
-import React from 'react';
 import { darkTheme, lightTheme } from '@fuel-ui/react';
 import { themes } from '@storybook/theming';
-import { mswDecorator, initialize } from 'msw-storybook-addon';
+import { initialize, mswDecorator } from 'msw-storybook-addon';
+import React from 'react';
 import { withRouter } from 'storybook-addon-react-router-v6';
 import { Providers } from '../src/systems/Core/components';
 
 import { MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
-import { WALLET_WIDTH, WALLET_HEIGHT } from '../src/config';
+import { WALLET_HEIGHT, WALLET_WIDTH } from '../src/config';
 
 import theme from './theme';
 
@@ -58,6 +58,7 @@ export const parameters = {
 export const decorators = [
   mswDecorator,
   withRouter,
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   (Story: any) => (
     <Providers>
       <Story />

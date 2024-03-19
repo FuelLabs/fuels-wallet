@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { store, Services } from '~/store';
+import { Services, store } from '~/store';
 import { VaultService } from '~/systems/Vault';
 
 import type { UnlockMachineState } from '../machines';

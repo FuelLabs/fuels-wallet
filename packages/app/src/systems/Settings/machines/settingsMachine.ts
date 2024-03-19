@@ -16,7 +16,6 @@ type MachineEvents = {
 
 export const settingsMachine = createMachine(
   {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./settingsMachine.typegen').Typegen0,
     schema: {
       events: {} as MachineEvents,
@@ -38,6 +37,7 @@ export const settingsMachine = createMachine(
         entry: 'clearError',
         invoke: {
           data: {
+            // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
             input: (_: void, ev: MachineEvents) => ev.input,
           },
           src: 'changePassword',

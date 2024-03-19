@@ -8,8 +8,8 @@ export const checkAddresses = async (
   from: { address: Bech32Address; isContract: boolean },
   to: { address: Bech32Address; isContract: boolean },
   page: Page,
-  fromPosition: number = 0,
-  toPosition: number = 0
+  fromPosition = 0,
+  toPosition = 0
 ) => {
   const fromArticle = page
     .getByRole('article')

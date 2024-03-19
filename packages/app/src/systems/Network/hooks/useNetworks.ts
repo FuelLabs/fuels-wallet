@@ -1,6 +1,6 @@
 import type { NetworkData } from '@fuel-wallet/types';
 import { useEffect } from 'react';
-import { store, Services } from '~/store';
+import { Services, store } from '~/store';
 import { useOverlay } from '~/systems/Overlay';
 
 import type { NetworksMachineState } from '../machines/networksMachine';

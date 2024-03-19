@@ -12,9 +12,11 @@ export type UnlockMachineContext = {
 
 type MachineServices = {
   unlock: {
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
     data: void;
   };
   resetWallet: {
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
     data: void;
   };
   checkLocked: {
@@ -43,7 +45,7 @@ export type UnlockWalletReturn = MachineServices['unlock'];
 export const unlockMachine = createMachine(
   {
     predictableActionArguments: true,
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+
     tsTypes: {} as import('./unlockMachine.typegen').Typegen0,
     schema: {
       context: {} as UnlockMachineContext,

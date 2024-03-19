@@ -1,11 +1,11 @@
 import type { AssetData, Connection, NetworkData } from '@fuel-wallet/types';
 import type { Page } from '@playwright/test';
 import type {
-  WalletManagerAccount as WalletAccount,
   Account,
   Asset,
+  WalletManagerAccount as WalletAccount,
 } from 'fuels';
-import { WalletManager, Mnemonic, encrypt, Address } from 'fuels';
+import { Address, Mnemonic, WalletManager, encrypt } from 'fuels';
 
 import { getByAriaLabel } from '../commons/locator';
 import { hasText } from '../commons/text';
@@ -116,7 +116,7 @@ export async function createManager(mnemonic: string) {
   return walletManager;
 }
 
-export function createAccount(wallet: WalletAccount, index: number = 0) {
+export function createAccount(wallet: WalletAccount, index = 0) {
   return {
     address: wallet.address.toAddress(),
     balance: '0',
@@ -129,10 +129,7 @@ export function createAccount(wallet: WalletAccount, index: number = 0) {
   };
 }
 
-export function createAccounts(
-  manager: WalletManager,
-  numberOfAccounts: number = 1
-) {
+export function createAccounts(manager: WalletManager, numberOfAccounts = 1) {
   return Promise.all(
     new Array(numberOfAccounts).fill(0).map(async (_, index) => {
       const walletAccount = await manager.addAccount();
@@ -178,7 +175,7 @@ export async function serializeVault(
 
 export async function mockData(
   page: Page,
-  numberOfAccounts: number = 1,
+  numberOfAccounts = 1,
   networks: Array<NetworkData> = DEFAULT_NETWORKS
 ) {
   await visit(page, '/');
@@ -246,7 +243,7 @@ export async function unlock(page, password = WALLET_PASSWORD) {
     await hasText(page, 'Welcome back');
     await getByAriaLabel(page, 'Your Password').fill(password);
     await getByAriaLabel(page, 'Unlock wallet').click();
-  } catch (err) {
+  } catch (_err) {
     // Ignore
   }
 }

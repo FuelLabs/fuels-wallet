@@ -4,8 +4,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import type { ConnectionsMachineState } from '../machines';
 import {
-  ConnectionStatus,
   ConnectionScreen,
+  ConnectionStatus,
   connectionsMachine,
 } from '../machines';
 

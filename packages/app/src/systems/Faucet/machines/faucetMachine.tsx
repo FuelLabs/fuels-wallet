@@ -29,6 +29,7 @@ type MachineContext = {
 
 type MachineServices = {
   faucet: {
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
     data: void;
   };
 };
@@ -44,7 +45,7 @@ export const faucetMachine =
   createMachine(
     {
       predictableActionArguments: true,
-      // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+
       tsTypes: {} as import('./faucetMachine.typegen').Typegen0,
       schema: {
         context: {} as MachineContext,

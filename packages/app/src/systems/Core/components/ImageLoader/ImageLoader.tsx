@@ -1,7 +1,7 @@
 import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import type { ImageProps } from '@fuel-ui/react';
-import { ContentLoader, Box, Image } from '@fuel-ui/react';
+import { Box, ContentLoader, Image } from '@fuel-ui/react';
 import { useState } from 'react';
 
 export type ImageLoaderProps = Omit<ImageProps, 'width' | 'height'> & {
@@ -42,7 +42,7 @@ function Loader({ width, height, css }: ImageLoaderProps) {
     <Box css={css}>
       <ContentLoader
         className="loader"
-        viewBox={`0 0 501 438`}
+        viewBox={'0 0 501 438'}
         width={width}
         height={height}
       >

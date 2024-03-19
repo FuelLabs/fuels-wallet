@@ -5,8 +5,8 @@ import { route } from './utils/route';
 export type Maybe<T> = T | null | undefined;
 
 export enum CRXPages {
-  'signup' = '/index.html',
-  'popup' = '/popup.html',
+  signup = '/index.html',
+  popup = '/popup.html',
 }
 
 export const Pages = {

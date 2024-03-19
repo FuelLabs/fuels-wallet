@@ -1,4 +1,4 @@
-import { Button, Box } from '@fuel-ui/react';
+import { Box, Button } from '@fuel-ui/react';
 import type { Account } from '@fuel-wallet/types';
 import { useNavigate } from 'react-router-dom';
 import { IS_CRX } from '~/config';

@@ -2,7 +2,7 @@ import type { Connection } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import type { FetchResponse } from '~/systems/Core';
-import { assignErrorMessage, FetchMachine } from '~/systems/Core';
+import { FetchMachine, assignErrorMessage } from '~/systems/Core';
 
 import { ConnectionService } from '../services';
 
@@ -49,7 +49,7 @@ type MachineEvents =
 export const connectRequestMachine = createMachine(
   {
     predictableActionArguments: true,
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+
     tsTypes: {} as import('./connectRequestMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,

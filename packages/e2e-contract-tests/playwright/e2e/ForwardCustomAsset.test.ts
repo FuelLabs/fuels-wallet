@@ -2,17 +2,17 @@ import { getButtonByText, hasText } from '@fuels/playwright-utils';
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
-import { bn, BaseAssetId, toBech32 } from 'fuels';
+import { BaseAssetId, bn, toBech32 } from 'fuels';
 
+import '../../load.envs';
 import { CustomAssetAbi__factory } from '../../src/contracts';
 import type { IdentityInput } from '../../src/contracts/contracts/CustomAssetAbi';
-import '../../load.envs';
 import { calculateAssetId, shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test } from './test';
-import { checkFee, connect, checkAddresses } from './utils';
+import { checkAddresses, checkFee, connect } from './utils';
 
 test.describe('Forward Custom Asset', () => {
   let fuelWallet: WalletUnlocked;
@@ -91,11 +91,11 @@ test.describe('Forward Custom Asset', () => {
     await hasText(page, 'Transaction successful.');
     const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
-      parseFloat(
+      Number.parseFloat(
         preDepositBalanceTkn
           .sub(postDepositBalanceTkn)
           .format({ precision: 6, units: 9 })
       )
-    ).toBe(parseFloat(forwardCustomAssetAmount));
+    ).toBe(Number.parseFloat(forwardCustomAssetAmount));
   });
 });

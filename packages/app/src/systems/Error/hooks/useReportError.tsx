@@ -1,6 +1,6 @@
 import { useMachine, useSelector } from '@xstate/react';
 
-import { reportErrorMachine, type ReportErrorMachineState } from '../machines';
+import { type ReportErrorMachineState, reportErrorMachine } from '../machines';
 
 const selectors = {
   hasErrorsToReport(state: ReportErrorMachineState) {

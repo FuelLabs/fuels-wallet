@@ -8,7 +8,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ErrorBoundary
       FallbackComponent={() => null}
-      // eslint-disable-next-line no-console
       onError={(err) => console.error(err)}
     >
       <App />

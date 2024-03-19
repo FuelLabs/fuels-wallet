@@ -1,4 +1,3 @@
-import JSZip from 'jszip';
 import {
   mkdirSync,
   readFileSync,
@@ -7,6 +6,7 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { join } from 'node:path';
+import JSZip from 'jszip';
 import type { Plugin } from 'vite';
 
 type ZipBuildPluginOptions = {
@@ -23,9 +23,10 @@ function addFilesToZipArchive(
 ) {
   const listOfFiles = readdirSync(inDir);
 
+  // biome-ignore lint/complexity/noForEach: <explanation>
   listOfFiles.forEach((fileName) => {
     // Filter files by excludeFiles RegExp
-    if (excludeFiles && excludeFiles?.test(fileName)) return;
+    if (excludeFiles?.test(fileName)) return;
     // Add file to zip archive
     const filePath = join(inDir, fileName);
     const file = statSync(filePath);
@@ -36,7 +37,7 @@ function addFilesToZipArchive(
         dir: true,
         date: fileDate,
       });
-      const dir = zip!.folder(fileName);
+      const dir = zip?.folder(fileName);
 
       addFilesToZipArchive(dir, filePath, excludeFiles);
     } else {

@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { AnyInterpreter, StateFrom, Action } from 'xstate';
+import type { Action, AnyInterpreter, StateFrom } from 'xstate';
 import { assign } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
 
@@ -33,6 +32,7 @@ export async function waitForState<
     }
 
     return appState.context as T['context'];
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   } catch (err: any) {
     if (err.cause === 'CustomState') throw err;
     throw new Error(
@@ -41,14 +41,18 @@ export async function waitForState<
   }
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function assignError(): Action<any, any> {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   return assign((ctx: any, ev: any) => ({
     ...ctx,
     error: ev.data.error.message,
   }));
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function assignErrorMessage(message: string): Action<any, any> {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   return assign((ctx: any) => ({
     ...ctx,
     error: message,

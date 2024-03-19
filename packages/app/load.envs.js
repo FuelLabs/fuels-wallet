@@ -1,5 +1,7 @@
 const { config } = require('dotenv');
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 const { resolve } = require('path');
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 const { readFileSync } = require('fs');
 
 function getVersion() {
@@ -22,6 +24,7 @@ function getEnvName() {
 }
 
 // Load from more specific env file to generic ->
+// biome-ignore lint/complexity/noForEach: <explanation>
 [getEnvName(), '.env'].forEach((envFile) => {
   if (!envFile) return;
   config({

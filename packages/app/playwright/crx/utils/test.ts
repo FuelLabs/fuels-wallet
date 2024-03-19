@@ -1,7 +1,7 @@
-/* eslint-disable no-empty-pattern */
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import path from 'path';
 import type { BrowserContext } from '@playwright/test';
 import { test as base, chromium } from '@playwright/test';
-import path from 'path';
 
 const pathToExtension = path.join(__dirname, '../../../dist-crx');
 
@@ -34,6 +34,7 @@ test.afterAll(({ context }) => {
 });
 
 test.use({
+  // biome-ignore lint/correctness/noEmptyPattern: <explanation>
   context: ({}, use) => {
     use(context);
   },

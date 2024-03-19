@@ -1,6 +1,6 @@
 import { bn } from 'fuels';
 import { interpret } from 'xstate';
-import { db, Storage } from '~/systems/Core';
+import { Storage, db } from '~/systems/Core';
 import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
 import { MOCK_ACCOUNTS, createMockAccount } from '../__mocks__';

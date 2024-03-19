@@ -1,10 +1,10 @@
-import '../styles/index.css';
+import type { AppProps } from 'next/app';
+import 'plyr-react/plyr.css';
 import '../styles/docsearch/_variables.css';
 import '../styles/docsearch/button.css';
 import '../styles/docsearch/modal.css';
 import '../styles/docsearch/style.css';
-import 'plyr-react/plyr.css';
-import type { AppProps } from 'next/app';
+import '../styles/index.css';
 
 import { Provider } from '../components/Provider';
 

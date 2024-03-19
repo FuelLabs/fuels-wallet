@@ -33,6 +33,7 @@ export type AccountsMachineEvents =
   | { type: 'REFRESH_ACCOUNTS'; input?: null }
   | { type: 'RELOAD_BALANCE'; input?: null }
   | { type: 'SET_CURRENT_ACCOUNT'; input: AccountInputs['setCurrentAccount'] }
+  // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
   | { type: 'LOGOUT'; input?: void }
   | {
       type: 'TOGGLE_HIDE_ACCOUNT';
@@ -64,7 +65,6 @@ const fetchAccount = {
 
 export const accountsMachine = createMachine(
   {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./accountsMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,

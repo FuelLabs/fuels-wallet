@@ -1,5 +1,5 @@
 import type { Operation } from 'fuels';
-import { bn, BaseAssetId, OperationName } from 'fuels';
+import { BaseAssetId, OperationName, bn } from 'fuels';
 
 import { MOCK_TX_RECIPIENT } from './tx-recipient';
 

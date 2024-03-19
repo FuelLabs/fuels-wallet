@@ -4,13 +4,13 @@ import { Pages } from '../Core/types';
 
 import { SignUpProvider } from './components/SignUpProvider';
 import {
-  RecoverWallet,
-  WelcomeScreen,
-  TermsOfUse,
-  EncryptWallet,
   BackupWallet,
   ConfirmWallet,
   CreatedWallet,
+  EncryptWallet,
+  RecoverWallet,
+  TermsOfUse,
+  WelcomeScreen,
 } from './pages';
 
 export const signUpRoutes = (

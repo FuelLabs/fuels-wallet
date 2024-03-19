@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Tag } from '@fuel-ui/react';
 /* createInstance:start */
 import {

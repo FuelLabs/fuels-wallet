@@ -3,7 +3,7 @@ import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import type { AssetInputs } from '~/systems/Asset';
 import { AssetService } from '~/systems/Asset';
-import { assignErrorMessage, FetchMachine } from '~/systems/Core';
+import { FetchMachine, assignErrorMessage } from '~/systems/Core';
 
 type MachineContext = {
   assets?: AssetData[];
@@ -36,13 +36,15 @@ type MachineEvents =
       type: 'START';
       input: AddAssetInputs['start'];
     }
+  // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
   | { type: 'APPROVE'; input: void }
+  // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
   | { type: 'REJECT'; input: void };
 
 export const addAssetRequestMachine = createMachine(
   {
     predictableActionArguments: true,
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+
     tsTypes: {} as import('./addAssetRequestMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,

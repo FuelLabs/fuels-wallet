@@ -1,6 +1,6 @@
 import { buildBlockExplorerUrl } from 'fuels';
 import { useCallback } from 'react';
-import { IS_CRX, EXPLORER_URL, VITE_FUEL_PROVIDER_URL } from '~/config';
+import { EXPLORER_URL, IS_CRX, VITE_FUEL_PROVIDER_URL } from '~/config';
 import { openTab } from '~/systems/CRX/utils';
 import { urlJoin } from '~/systems/Core';
 
@@ -15,6 +15,7 @@ export function useExplorerLink(providerUrl: string, id?: string) {
     href = urlJoin(EXPLORER_URL, `/tx/${id}`);
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const openExplorer = useCallback(() => {
     if (IS_CRX) {
       openTab(href);

@@ -7,7 +7,7 @@ import type { FaucetMachineService, FaucetMachineState } from './faucetMachine';
 import { faucetMachine } from './faucetMachine';
 
 mockServer([
-  rest.post('http://localhost:4041/dispense', (req, res, ctx) => {
+  rest.post('http://localhost:4041/dispense', (_req, res, ctx) => {
     return res(
       ctx.json({
         status: 'Success',

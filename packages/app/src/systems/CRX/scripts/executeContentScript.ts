@@ -7,6 +7,7 @@ import fileName from './contentScript?script';
  */
 export async function executeContentScript() {
   chrome.tabs.query({ url: '<all_urls>' }, (tabs) => {
+    // biome-ignore lint/complexity/noForEach: <explanation>
     tabs.forEach((tab) => {
       if (!tab.id) return;
       chrome.scripting

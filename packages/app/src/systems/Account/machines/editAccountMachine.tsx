@@ -29,7 +29,6 @@ export type EditAccountMachineEvents = {
 
 export const editAccountMachine = createMachine(
   {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./editAccountMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,

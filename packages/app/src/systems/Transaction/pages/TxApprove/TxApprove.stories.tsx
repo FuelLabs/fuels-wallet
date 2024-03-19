@@ -1,5 +1,5 @@
 import { Box, Button } from '@fuel-ui/react';
-import type { StoryFn, Meta } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 import { useEffect } from 'react';
 import { Layout } from '~/systems/Core';
 import { useTransactionRequest } from '~/systems/DApp';
@@ -23,6 +23,7 @@ const Template: StoryFn<typeof TxApprove> = (_args, { loaded }) => {
   const txRequest = useTransactionRequest();
   const { transactionRequest, network, address } = loaded || {};
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     txRequest.handlers.request({
       address,

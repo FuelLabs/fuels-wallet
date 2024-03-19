@@ -1,12 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button, Card, CardList, Box, Link, Text } from '@fuel-ui/react';
+import { Box, Button, Card, CardList, Link, Text } from '@fuel-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AccountItem } from '~/systems/Account/components/AccountItem';
 import {
-  animations,
-  Layout,
   ConnectInfo,
+  Layout,
   PermissionCard,
+  animations,
   coreStyles,
 } from '~/systems/Core';
 

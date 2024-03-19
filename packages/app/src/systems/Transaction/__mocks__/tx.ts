@@ -1,15 +1,15 @@
 import {
   AddressType,
-  ReceiptType,
-  OutputType,
-  InputType,
-  bn,
-  TransactionStatus,
-  TransactionTypeName,
-  OperationName,
   ChainName,
+  InputType,
+  OperationName,
+  OutputType,
   PolicyType,
+  ReceiptType,
+  TransactionStatus,
   TransactionType,
+  TransactionTypeName,
+  bn,
 } from 'fuels';
 import type {
   AbiMap,

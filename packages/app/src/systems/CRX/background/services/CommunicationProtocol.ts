@@ -1,10 +1,10 @@
 import { BaseConnection, createUUID } from '@fuel-wallet/connections';
 import type { CommunicationEventArg } from '@fuel-wallet/types';
-import { VAULT_SCRIPT_NAME, BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
+import { BACKGROUND_SCRIPT_NAME, VAULT_SCRIPT_NAME } from '@fuel-wallet/types';
 import {
-  MessageTypes,
   type CommunicationMessage,
   type EventMessage,
+  MessageTypes,
 } from '@fuels/connectors';
 
 export class CommunicationProtocol extends BaseConnection {
@@ -47,6 +47,7 @@ export class CommunicationProtocol extends BaseConnection {
 
   broadcast = (origins: Array<string> | string, message: EventMessage) => {
     const originList = Array.isArray(origins) ? origins : [origins];
+    // biome-ignore lint/complexity/noForEach: <explanation>
     this.ports.forEach((port) => {
       if (originList.includes(port.sender?.origin || '')) {
         port.postMessage(message);
@@ -90,6 +91,7 @@ export class CommunicationProtocol extends BaseConnection {
   };
 
   destroy() {
+    // biome-ignore lint/complexity/noForEach: <explanation>
     this.ports.forEach((port) => port.disconnect());
     this.ports.clear();
   }

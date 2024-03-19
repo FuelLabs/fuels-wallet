@@ -11,7 +11,7 @@ import { useAssets } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
 import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
-import { type TxInputs } from '~/systems/Transaction/services';
+import type { TxInputs } from '~/systems/Transaction/services';
 
 import { sendMachine } from '../machines/sendMachine';
 import type { SendMachineState } from '../machines/sendMachine';
@@ -33,7 +33,6 @@ const selectors = {
     return state.context.error;
   },
   status(txStatus?: TxRequestStatus) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useCallback(
       (state: SendMachineState) => {
         const isLoadingTx =
@@ -47,7 +46,6 @@ const selectors = {
     );
   },
   title(txStatus?: TxRequestStatus) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useCallback(
       (state: SendMachineState) => {
         if (state.matches('creatingTx') || txStatus === TxRequestStatus.loading)
@@ -69,7 +67,7 @@ const schema = yup
       .test('is-address', 'Invalid bech32 address', (value) => {
         try {
           return Boolean(value && isBech32(value));
-        } catch (error) {
+        } catch (_error) {
           return false;
         }
       }),
@@ -117,6 +115,7 @@ export function useSend() {
   const amount = form.watch('amount');
   const errorMessage = useSelector(service, selectors.error);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (bn(amount).gt(0) && form.formState.isValid) {
       const asset = assets.find(
@@ -134,6 +133,7 @@ export function useSend() {
     }
   }, [amount, form.formState.isValid]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (errorMessage) {
       form.setError('amount', {

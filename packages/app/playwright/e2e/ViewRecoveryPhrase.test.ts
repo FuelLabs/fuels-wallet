@@ -7,7 +7,7 @@ import {
   getElementByText,
   hasText,
 } from '../commons';
-import { mockData, WALLET_PASSWORD } from '../mocks';
+import { WALLET_PASSWORD, mockData } from '../mocks';
 
 test.describe('ViewSeedPhrase', () => {
   let browser: Browser;

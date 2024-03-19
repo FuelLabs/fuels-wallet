@@ -4,8 +4,8 @@ import { expect } from '@playwright/test';
 export async function hasText(
   page: Page,
   text: string | RegExp,
-  position: number = 0,
-  timeout: number = 5000
+  position = 0,
+  timeout = 5000
 ) {
   const textFound = page.getByText(text).nth(position);
   await expect(textFound).toHaveText(text, {

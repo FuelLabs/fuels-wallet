@@ -1,6 +1,6 @@
 import { render, screen, testA11y, waitFor } from '@fuel-ui/test-utils';
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';
-import { shortAddress, TestWrapper } from '~/systems/Core';
+import { TestWrapper, shortAddress } from '~/systems/Core';
 
 import { AccountInfo } from './AccountInfo';
 

@@ -1,9 +1,9 @@
 import { BACKGROUND_SCRIPT_NAME, POPUP_SCRIPT_NAME } from '@fuel-wallet/types';
 import {
-  MessageTypes,
   type CommunicationMessage,
-  type ResponseMessage,
+  MessageTypes,
   type RequestMessage,
+  type ResponseMessage,
 } from '@fuels/connectors';
 import type { JSONRPCResponse } from 'json-rpc-2.0';
 

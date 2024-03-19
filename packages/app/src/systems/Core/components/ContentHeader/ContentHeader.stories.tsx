@@ -1,5 +1,5 @@
 import { Text } from '@fuel-ui/react';
-import type { StoryFn, Meta } from '@storybook/react';
+import type { Meta, StoryFn } from '@storybook/react';
 
 import { ContentHeader } from '.';
 

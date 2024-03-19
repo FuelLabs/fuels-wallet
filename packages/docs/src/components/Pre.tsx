@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { cssObj } from '@fuel-ui/css';
 import { Box, Icon, IconButton, Text } from '@fuel-ui/react';
 import { Children } from 'react';
@@ -13,6 +11,7 @@ type PreProps = {
 };
 
 export function Pre({ children, title }: PreProps) {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const codeEl: any = Children.toArray(children)[0];
   const codeStr = codeEl?.props.children || '';
   const code = codeStr.endsWith('\n') ? codeStr.slice(0, -1) : codeStr;

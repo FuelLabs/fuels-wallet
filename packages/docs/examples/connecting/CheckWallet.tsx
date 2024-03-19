@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Box, Text } from '@fuel-ui/react';
 import { useFuel } from '@fuels/react';
 import type { FuelConnector } from 'fuels';
@@ -10,6 +9,7 @@ export function CheckWallet() {
   const { fuel } = useFuel();
   const [message, setMessage] = useState('');
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     async function handleConnector() {
       /* checkWallet:start */
@@ -17,7 +17,7 @@ export function CheckWallet() {
       console.log('hasConnector', hasConnector);
       /* checkWallet:end */
       setMessage(
-        hasConnector ? `Wallet found!` : 'Wallet not detected on the browser'
+        hasConnector ? 'Wallet found!' : 'Wallet not detected on the browser'
       );
     }
 

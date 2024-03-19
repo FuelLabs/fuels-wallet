@@ -1,4 +1,4 @@
-import { hexlify, TransactionCoder, type Transaction } from 'fuels';
+import { type Transaction, TransactionCoder, hexlify } from 'fuels';
 import { useMemo } from 'react';
 
 type RawPayloadProps = {
@@ -7,13 +7,13 @@ type RawPayloadProps = {
 
 export function useRawPayload(props: Partial<RawPayloadProps>) {
   const { transaction } = props;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const rawPayload = useMemo(() => {
     if (transaction) {
       try {
         const raw = hexlify(new TransactionCoder().encode(transaction));
 
         return raw;
-        // eslint-disable-next-line no-empty
       } catch (_) {}
     }
 

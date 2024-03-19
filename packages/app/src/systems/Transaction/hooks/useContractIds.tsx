@@ -8,6 +8,7 @@ type ContractIdsProps = {
 
 export function useContractIds(props: Partial<ContractIdsProps>) {
   const { inputs } = props;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const contractIds = useMemo(() => {
     if (!inputs?.length) return undefined;
 

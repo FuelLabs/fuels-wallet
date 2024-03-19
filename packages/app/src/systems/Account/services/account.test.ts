@@ -1,4 +1,4 @@
-import { bn, BaseAssetId } from 'fuels';
+import { BaseAssetId, bn } from 'fuels';
 import { mockServer } from '~/mocks/server';
 import { mockBalancesOnGraphQL } from '~/systems/Asset/__mocks__/assets';
 

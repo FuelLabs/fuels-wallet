@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Image, Box } from '@fuel-ui/react';
+import { Box, Image } from '@fuel-ui/react';
 import Plyr from 'plyr-react';
 
 interface Media {
@@ -19,9 +19,11 @@ export function Demo({ media }: DemoProps) {
         <Box.Flex gap={'20px'} css={styles.innerContainer}>
           {media.map((example, index) => {
             if (example.type === 'img') {
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               return <Image key={index} alt={example.alt} src={example.src} />;
             }
             return (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               <Box key={index} css={styles.player}>
                 <Plyr
                   source={{

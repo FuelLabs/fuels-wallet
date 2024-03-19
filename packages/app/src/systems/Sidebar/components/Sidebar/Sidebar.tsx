@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cssObj } from '@fuel-ui/css';
-import { Icon, Drawer, IconButton, Box, Text } from '@fuel-ui/react';
+import { Box, Drawer, Icon, IconButton, Text } from '@fuel-ui/react';
 import { forwardRef } from 'react';
 import { APP_VERSION } from '~/config';
 import { useOverlay } from '~/systems/Overlay';
@@ -43,6 +42,7 @@ export const Sidebar = forwardRef<HTMLDivElement>((_props, ref) => {
       isDismissable
       size={230}
       side="right"
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       containerRef={ref as any}
       onClose={overlay.close}
       isOpen={overlay.is('sidebar')}

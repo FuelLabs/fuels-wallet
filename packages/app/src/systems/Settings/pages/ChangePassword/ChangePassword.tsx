@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Focus, Box, Button, InputPassword } from '@fuel-ui/react';
+import { Alert, Box, Button, Focus, InputPassword } from '@fuel-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import debounce from 'lodash.debounce';
 import { useCallback, useEffect } from 'react';
@@ -66,6 +66,7 @@ export function ChangePassword() {
     []
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (error) {
       setError('currentPassword', { message: error });

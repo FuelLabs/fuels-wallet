@@ -9,7 +9,7 @@ type Props = {
 export function UserAddressCard({ address }: Props) {
   const copyAccount = useCallback(() => {
     navigator.clipboard.writeText(address);
-  }, []);
+  }, [address]);
 
   return (
     <Card>

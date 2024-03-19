@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { NetworkData } from '@fuel-wallet/types';
 import { interpret } from 'xstate';
 import { waitFor } from 'xstate/lib/waitFor';
@@ -57,6 +56,7 @@ describe('networksMachine', () => {
   });
 
   describe('add', () => {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const addEv: any = {
       type: 'ADD_NETWORK',
       input: {
@@ -86,6 +86,7 @@ describe('networksMachine', () => {
       state = await expectStateMatch(service, 'idle');
       const networks = state.context.networks || [];
 
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       const removeEv: any = {
         type: 'REMOVE_NETWORK',
         input: { id: networks[1]?.id },
@@ -110,7 +111,7 @@ describe('networksMachine', () => {
       const invertIdx = idx === 0 ? 1 : 0;
       expect(networks[idx]?.isSelected).toBeTruthy();
       expect(networks[invertIdx]?.isSelected).toBeFalsy();
-
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       const selectEv: any = {
         type: 'SELECT_NETWORK',
         input: { id: networks[invertIdx]?.id },
@@ -130,12 +131,14 @@ describe('networksMachine', () => {
 
   describe('update', () => {
     let network: NetworkData | undefined;
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     let editEv: any;
 
     beforeEach(async () => {
       editEv = {
         type: 'EDIT_NETWORK',
         input: {
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           id: network?.id as any,
         },
       };
@@ -155,6 +158,7 @@ describe('networksMachine', () => {
       state = await expectStateMatch(service, 'idle');
       const networks = state.context.networks || [];
 
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       const updateEv: any = {
         type: 'UPDATE_NETWORK',
         input: {

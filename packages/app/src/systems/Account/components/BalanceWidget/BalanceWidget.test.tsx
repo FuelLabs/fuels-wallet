@@ -1,7 +1,7 @@
 import { screen, testA11y } from '@fuel-ui/test-utils';
 import { fireEvent } from '@storybook/testing-library';
 import { act } from 'react-dom/test-utils';
-import { shortAddress, TestWrapper } from '~/systems/Core';
+import { TestWrapper, shortAddress } from '~/systems/Core';
 import { renderWithProvider } from '~/systems/Core/__tests__/utils';
 
 import { MOCK_ACCOUNTS } from '../../__mocks__';

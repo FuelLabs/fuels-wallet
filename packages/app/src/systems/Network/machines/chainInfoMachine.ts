@@ -1,10 +1,14 @@
-/* eslint-disable @typescript-eslint/consistent-type-imports */
-import { ChainInfo } from 'fuels';
-import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
+import type { ChainInfo } from 'fuels';
+import {
+  type InterpreterFrom,
+  type StateFrom,
+  assign,
+  createMachine,
+} from 'xstate';
 import type { FetchResponse } from '~/systems/Core';
 import { FetchMachine } from '~/systems/Core';
 
-import { NetworkInputs, NetworkService } from '../services';
+import { type NetworkInputs, NetworkService } from '../services';
 
 type MachineContext = {
   chainInfo?: ChainInfo;
@@ -76,7 +80,7 @@ export const chainInfoMachine = createMachine(
   {
     actions: {
       assignChainInfo: assign({
-        chainInfo: (ctx, ev) => ev.data,
+        chainInfo: (_ctx, ev) => ev.data,
       }),
       clearChainInfo: assign({
         chainInfo: undefined,

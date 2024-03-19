@@ -35,6 +35,7 @@ export function useSignUp() {
   const screen = useSelector(service, selectors.screen);
   const isLoading = useSelector(service, selectors.isLoading);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const sub = service.subscribe((state) => {
       if (state.matches('atWelcome')) {

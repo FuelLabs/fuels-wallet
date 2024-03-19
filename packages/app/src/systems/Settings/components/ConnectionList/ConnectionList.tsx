@@ -1,13 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
-import { Icon, CardList, Tooltip, Box } from '@fuel-ui/react';
+import { Box, CardList, Icon, Tooltip } from '@fuel-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  animations,
   EmptyList,
   Layout,
-  SearchInput,
-  PermissionCard,
   MotionBox,
+  PermissionCard,
+  SearchInput,
+  animations,
 } from '~/systems/Core';
 import { NOT_ALLOWED_LIST, PERMISSION_LIST } from '~/systems/DApp';
 

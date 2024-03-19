@@ -1,16 +1,16 @@
 import type { Account } from '@fuel-wallet/types';
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium, expect } from '@playwright/test';
-import { bn, Provider, Wallet } from 'fuels';
+import { Provider, Wallet, bn } from 'fuels';
 
 import {
   getButtonByText,
+  getByAriaLabel,
+  getElementByText,
+  getInputByName,
+  hasAriaLabel,
   hasText,
   visit,
-  getInputByName,
-  getByAriaLabel,
-  hasAriaLabel,
-  getElementByText,
 } from '../commons';
 import { seedWallet } from '../commons/seedWallet';
 import { ALT_ASSET, mockData } from '../mocks';

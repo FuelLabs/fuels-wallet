@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Box } from '@fuel-ui/react';
 import type { Meta, Story } from '@storybook/react';
 import { Signer } from 'fuels';
@@ -38,6 +37,7 @@ export default {
 } as Meta;
 
 export const Usage: Story = (_args, { loaded }) => {
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     alert(`use this password to unlock: ${loaded.password}`);
   }, []);

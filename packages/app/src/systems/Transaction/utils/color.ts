@@ -20,7 +20,6 @@ export const getTxIconBgColor = (status: TransactionStatus | undefined) => {
       return '$intentsPrimary2';
     case TransactionStatus.failure:
       return '$intentsError2';
-    case TransactionStatus.submitted:
     default:
       return '$intentsWarning2';
   }
@@ -32,7 +31,6 @@ export const getTxIconColor = (status: TransactionStatus | undefined) => {
       return 'intentsPrimary11';
     case TransactionStatus.failure:
       return 'intentsError8';
-    case TransactionStatus.submitted:
     default:
       return 'intentsWarning8';
   }

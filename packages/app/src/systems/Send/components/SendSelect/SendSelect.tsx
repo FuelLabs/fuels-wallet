@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { BaseAssetId, DECIMAL_UNITS, bn } from 'fuels';
 import { useEffect, useMemo } from 'react';
 import { AssetSelect } from '~/systems/Asset';
-import { animations, ControlledField, Layout } from '~/systems/Core';
+import { ControlledField, Layout, animations } from '~/systems/Core';
 import { TxDetails } from '~/systems/Transaction';
 
 import type { UseSendReturn } from '../../hooks';
@@ -21,6 +21,7 @@ export function SendSelect({
   fee,
 }: SendSelectProps) {
   const assetId = form.watch('asset', '');
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const decimals = useMemo(() => {
     const selectedAsset = balanceAssets?.find((a) => a.assetId === assetId);
     return selectedAsset?.decimals || DECIMAL_UNITS;
@@ -29,6 +30,7 @@ export function SendSelect({
 
   // If max balance is set on the input assume the user wants to send the max
   // and change the amount to the max balance minus the fee.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const amount = form.getValues('amount');
     if (assetId === BaseAssetId && balanceAssetSelected.eq(amount) && fee) {

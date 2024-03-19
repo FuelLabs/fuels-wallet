@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isB256 } from 'fuels';
 import { useEffect } from 'react';
@@ -15,15 +13,17 @@ export type AssetFormValues = {
   symbol: string;
 };
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 function isValidId(id: any) {
   return isB256(id);
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 function isValidUrl(url: any) {
   if (url === '') return true;
   try {
     new URL(url);
-  } catch (e) {
+  } catch (_e) {
     return false;
   }
   return true;
@@ -70,6 +70,7 @@ export function useAssetForm(opts: UseAddAssetOpts = {}) {
     defaultValues: opts.defaultValues || DEFAULT_VALUES,
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     opts.defaultValues && form.reset(opts.defaultValues);
   }, [JSON.stringify(opts.defaultValues)]);

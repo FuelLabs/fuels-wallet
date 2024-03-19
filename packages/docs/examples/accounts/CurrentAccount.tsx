@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Tag, Text } from '@fuel-ui/react';
 import { useFuel, useIsConnected } from '@fuels/react';
@@ -29,10 +28,11 @@ export function CurrentAccount() {
     }
     fuel.on(fuel.events.currentAccount, logCurrentAccount);
     /* watchCurrentAccount:end */
+
     return () => {
       fuel.off(fuel.events.currentAccount, logCurrentAccount);
     };
-  }, []);
+  }, [fuel]);
 
   return (
     <ExampleBox error={errorCurrentAccount}>

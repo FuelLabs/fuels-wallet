@@ -1,5 +1,5 @@
 import type { Account } from '@fuel-wallet/types';
-import { Address, bn, Provider } from 'fuels';
+import { Address, Provider, bn } from 'fuels';
 import { isEth } from '~/systems/Asset/utils/asset';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
@@ -41,6 +41,7 @@ export type AccountInputs = {
   };
 };
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class AccountService {
   static async addAccount(input: AccountInputs['addAccount']) {
     return db.transaction('rw', db.accounts, async () => {
@@ -107,7 +108,7 @@ export class AccountService {
         },
       });
       return nextAccount ?? account;
-    } catch (error) {
+    } catch (_error) {
       const nextAccount = await AccountService.setBalance({
         data: {
           address: account.address || '',
@@ -130,6 +131,7 @@ export class AccountService {
   }
 
   static toMap(accounts: Account[]) {
+    // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
     return accounts.reduce((obj, acc) => ({ ...obj, [acc.address]: acc }), {});
   }
 
@@ -168,8 +170,9 @@ export class AccountService {
     });
   }
 
-  static async checkAccountNameExists(name: string = '') {
+  static async checkAccountNameExists(name = '') {
     const accounts = await AccountService.getAccounts();
+    // biome-ignore lint/complexity/noThisInStatic: <explanation>
     const exitsAccountWithName = this.filterByName(accounts, name).length > 0;
     return exitsAccountWithName;
   }
@@ -186,7 +189,7 @@ export class AccountService {
     return name || desiredName;
   }
 
-  static filterByName(accounts: Account[], name: string = '') {
+  static filterByName(accounts: Account[], name = '') {
     return accounts.filter((account) =>
       account.name.toLowerCase().includes(name.toLowerCase())
     );
@@ -197,7 +200,7 @@ export class AccountService {
 // Private methods
 // ----------------------------------------------------------------------------
 
-async function getBalances(providerUrl: string, publicKey: string = '0x00') {
+async function getBalances(providerUrl: string, publicKey = '0x00') {
   const provider = await Provider.create(providerUrl!);
   const address = Address.fromPublicKey(publicKey);
   const balances = await provider.getBalances(address);

@@ -25,6 +25,7 @@ export const ForwardHalfAndExternalMintCard = () => {
           value={mintAmount}
         />
         <button
+          type="button"
           onClick={async () => {
             if (wallet.wallet && mintAmount && forwardAmount) {
               await depositHalfAndExternalMint({

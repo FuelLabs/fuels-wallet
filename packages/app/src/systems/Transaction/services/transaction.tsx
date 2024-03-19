@@ -6,23 +6,23 @@ import type {
   WalletLocked,
 } from 'fuels';
 import {
-  normalizeJSON,
   Address,
-  bn,
-  BaseAssetId,
-  ScriptTransactionRequest,
-  Provider,
-  getTransactionSummary,
-  TransactionResponse,
-  getTransactionsSummaries,
-  assembleTransactionSummary,
-  hexlify,
-  processGqlReceipt,
   BN,
+  BaseAssetId,
+  Provider,
+  ScriptTransactionRequest,
+  TransactionResponse,
   TransactionStatus,
+  assembleTransactionSummary,
+  bn,
+  getTransactionSummary,
+  getTransactionsSummaries,
+  hexlify,
+  normalizeJSON,
+  processGqlReceipt,
 } from 'fuels';
 import { isEth } from '~/systems/Asset/utils/asset';
-import { db, uniqueId, WalletLockedCustom } from '~/systems/Core';
+import { WalletLockedCustom, db, uniqueId } from '~/systems/Core';
 
 import type { Transaction } from '../types';
 import { getAbiMap } from '../utils';
@@ -96,6 +96,7 @@ export type TxInputs = {
   };
 };
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class TxService {
   static async clear() {
     return db.transaction('rw', db.transactions, async () => {

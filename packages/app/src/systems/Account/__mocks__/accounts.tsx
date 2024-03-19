@@ -1,5 +1,5 @@
-import { WalletManager, Signer } from 'fuels';
-import { db, Storage } from '~/systems/Core';
+import { Signer, WalletManager } from 'fuels';
+import { Storage, db } from '~/systems/Core';
 
 import { AccountService } from '../services';
 import { IndexedDBStorage } from '../utils';

@@ -10,8 +10,8 @@
 */
 
 import type {
-  BigNumberish,
   BN,
+  BigNumberish,
   Bytes,
   BytesLike,
   Contract,
@@ -22,7 +22,7 @@ import type {
   StdString,
 } from 'fuels';
 
-import type { Option, Enum } from './common';
+import type { Enum, Option } from './common';
 
 export enum BurnErrorInput {
   NotEnoughCoins = 'NotEnoughCoins',

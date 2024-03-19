@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
 import type { Connection } from '@fuel-wallet/types';
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuels/connectors';
@@ -63,9 +62,9 @@ export class BackgroundService {
   setupListeners() {
     this.communicationProtocol.on(MessageTypes.request, async (event) => {
       if (event.target !== BACKGROUND_SCRIPT_NAME) return;
-      const origin = event.sender!.origin!;
-      const title = event.sender!.tab!.title!;
-      const favIconUrl = event.sender!.tab!.favIconUrl!;
+      const origin = event.sender?.origin!;
+      const title = event.sender?.tab?.title!;
+      const favIconUrl = event.sender?.tab?.favIconUrl!;
       const response = await this.server.receive(event.request, {
         origin,
         title,
@@ -82,12 +81,15 @@ export class BackgroundService {
     });
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   externalMethods(methods: Array<string | any>) {
+    // biome-ignore lint/complexity/noForEach: <explanation>
     methods.forEach((method) => {
       let methodName = method;
       if (method.name) {
         methodName = method.name;
       }
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       this.server.addMethod(methodName, this[methodName].bind(this) as any);
     });
   }
@@ -110,7 +112,7 @@ export class BackgroundService {
       Address.fromString(address || '0x00').toString()
     );
     if (!hasAccessToAddress) {
-      throw new Error(`address is not authorized for this connection.`);
+      throw new Error('address is not authorized for this connection.');
     }
   }
 
@@ -137,7 +139,7 @@ export class BackgroundService {
 
     // Retrieve connection for use on accounts
     const connection = await ConnectionService.getConnection(
-      serverParams!.origin
+      serverParams?.origin
     );
 
     // If the method is not `connect` or `isConnected`
@@ -153,7 +155,7 @@ export class BackgroundService {
     });
   }
 
-  async sendEvent(origin: string, eventName: string, params: any[]) {
+  async sendEvent<T>(origin: string, eventName: string, params: T[]) {
     this.communicationProtocol.broadcast(origin, {
       target: CONTENT_SCRIPT_NAME,
       type: MessageTypes.event,

@@ -1,7 +1,7 @@
 import { createUUID } from '@fuel-wallet/connections';
 import type { NetworkData } from '@fuel-wallet/types';
 import { compare } from 'compare-versions';
-import { Provider } from 'fuels';
+import { type NodeInfo, Provider } from 'fuels';
 import { MIN_NODE_VERSION } from '~/config';
 import { db } from '~/systems/Core/utils/database';
 
@@ -38,6 +38,7 @@ export type NetworkInputs = {
   };
 };
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class NetworkService {
   static getNetworks() {
     return db.transaction('r', db.networks, async () => {
@@ -52,6 +53,7 @@ export class NetworkService {
   }
 
   static async addNetwork(input: NetworkInputs['addNetwork']) {
+    // biome-ignore lint/complexity/noThisInStatic: <explanation>
     await this.validateAddNetwork(input);
     return db.transaction('rw', db.networks, async () => {
       const count = await db.networks.count();
@@ -155,11 +157,11 @@ export class NetworkService {
     if (!isValidNetworkUrl(url)) {
       throw new Error('Invalid network URL');
     }
-    let nodeInfo;
+    let nodeInfo: NodeInfo;
     try {
       const provider = await Provider.create(url);
       nodeInfo = await provider.fetchNode();
-    } catch (err: unknown) {
+    } catch (_err) {
       throw new Error(
         `Network version is not compatible with >=${MIN_NODE_VERSION} required by the Wallet`
       );

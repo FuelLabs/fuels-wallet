@@ -6,5 +6,3 @@ declare global {
     createAddress: (string: string) => Address;
   }
 }
-
-export {};
