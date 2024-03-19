@@ -28,10 +28,7 @@ jobs:
         uses: FuelLabs/github-actions/update-sdk@master
         with:
           branch: master
-          packages: |
-            fuels
-            @fuels/react
-            @fuels/connectors
+          packages: fuels,@fuels/react,@fuels/connectors
           npm-tag: ${{ matrix.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
