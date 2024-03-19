@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function Code(props: any) {
   return <Box as="code" css={styles.root} {...props} />;
 }

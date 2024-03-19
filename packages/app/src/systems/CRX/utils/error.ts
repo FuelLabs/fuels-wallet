@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ReportErrorService } from '~/systems/Error/services';
 
 globalThis.addEventListener('error', (event) => {
@@ -12,7 +11,9 @@ globalThis.addEventListener('error', (event) => {
   });
 });
 
-export function errorBoundary<T extends () => any>(cb: T): ReturnType<T> {
+export function errorBoundary<T extends () => ReturnType<T>>(
+  cb: T
+): ReturnType<T> {
   try {
     return cb();
   } catch (err) {

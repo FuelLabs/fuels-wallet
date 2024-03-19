@@ -7,13 +7,13 @@ export type OverlayKeys = keyof typeof Overlays;
 
 export type OverlayData = {
   modal: OverlayKeys;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   params?: any;
 };
 
 type MachineContext = {
   overlay?: Overlays;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   metadata?: any;
 };
 

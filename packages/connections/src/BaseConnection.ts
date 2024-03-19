@@ -1,16 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import EventEmitter from 'events';
 import type {
   CommunicationMessage,
   EventMessage,
-  ResponseMessage,
   RequestMessage,
+  ResponseMessage,
   UIEventMessage,
 } from '@fuels/connectors';
 import { MessageTypes } from '@fuels/connectors';
-import EventEmitter from 'events';
 import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
-import { JSONRPCServer, JSONRPCClient } from 'json-rpc-2.0';
+import { JSONRPCClient, JSONRPCServer } from 'json-rpc-2.0';
 
 import { MAX_EVENT_LISTENERS } from './config';
 import { createUUID } from './utils/createUUID';
@@ -33,23 +31,25 @@ export class BaseConnection extends EventEmitter {
     return createUUID();
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   externalMethods(methods: Array<string | any>) {
     methods.forEach((method) => {
       let methodName = method;
       if (method.name) {
         methodName = method.name;
       }
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       this.server.addMethod(methodName, this[methodName].bind(this) as any);
     });
   }
 
-  async sendRequest(request: JSONRPCRequest | null): Promise<void> {
+  async sendRequest(_request: JSONRPCRequest | null): Promise<void> {
     throw new Error('Send request not implemented');
   }
 
   sendResponse(
-    response: JSONRPCResponse | null,
-    message: RequestMessage
+    _response: JSONRPCResponse | null,
+    _message: RequestMessage
   ): void {
     throw new Error('Send response not implemented');
   }
@@ -88,5 +88,5 @@ export class BaseConnection extends EventEmitter {
     });
   }
 
-  onUIEvent(message: UIEventMessage): void {}
+  onUIEvent(_message: UIEventMessage): void {}
 }

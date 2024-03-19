@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-export function reparse(v: any) {
+export function reparse<V extends object>(v: V) {
   return JSON.parse(JSON.stringify(v));
 }

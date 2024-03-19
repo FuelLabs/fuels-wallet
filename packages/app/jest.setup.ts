@@ -1,13 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { webcrypto } from 'crypto';
-import { TextEncoder, TextDecoder } from 'util';
+import { TextDecoder, TextEncoder } from 'util';
 
 import { localStorageMock } from './src/mocks/localStorage';
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 (global as any).TextEncoder = TextEncoder;
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 (global as any).TextDecoder = TextDecoder;
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 (global as any).ArrayBuffer = ArrayBuffer;
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 (global as any).Uint8Array = Uint8Array;
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 (global as any).structuredClone = (val: any) => JSON.parse(JSON.stringify(val));
 
 // https://github.com/jsdom/jsdom/issues/1724#issuecomment-720727999

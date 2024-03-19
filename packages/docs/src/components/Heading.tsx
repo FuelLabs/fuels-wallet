@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { cssObj } from '@fuel-ui/css';
 import { Heading as FuelHeading } from '@fuel-ui/react';
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function Heading({ children, ...props }: any) {
   return (
     <FuelHeading as={props['data-rank']} {...props} css={styles.root}>

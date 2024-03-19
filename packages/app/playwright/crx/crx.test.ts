@@ -1,22 +1,22 @@
-import { expect } from '@playwright/test';
+import { Locator, expect } from '@playwright/test';
 import {
-  Signer,
-  bn,
-  hashMessage,
-  Wallet,
-  Provider,
   type Account,
   type Asset,
+  Provider,
+  Signer,
+  Wallet,
+  bn,
+  hashMessage,
 } from 'fuels';
 
 import {
-  seedWallet,
   getButtonByText,
   getByAriaLabel,
-  hasText,
-  waitAriaLabel,
-  reload,
   getElementByText,
+  hasText,
+  reload,
+  seedWallet,
+  waitAriaLabel,
 } from '../commons';
 import {
   CUSTOM_ASSET_INPUT,
@@ -26,13 +26,13 @@ import {
 } from '../mocks';
 
 import {
-  test,
-  waitWalletToLoad,
   getAccountByName,
-  switchAccount,
-  waitAccountPage,
   getWalletAccounts,
   hideAccount,
+  switchAccount,
+  test,
+  waitAccountPage,
+  waitWalletToLoad,
 } from './utils';
 
 const WALLET_PASSWORD = 'Qwe123456$';
@@ -102,7 +102,7 @@ test.describe('FuelWallet Extension', () => {
           try {
             await window.fuel.ping();
             return true;
-          } catch (err) {
+          } catch (_err) {
             return testConnection();
           }
         }
@@ -581,7 +581,7 @@ test.describe('FuelWallet Extension', () => {
       const networkItemsCount = await items.count();
       expect(networkItemsCount).toEqual(2);
 
-      let selectedNetworkItem;
+      let selectedNetworkItem: Locator;
       for (let i = 0; i < networkItemsCount; i += 1) {
         const isSelected = await items.nth(i).getAttribute('data-active');
         if (isSelected === 'true') {

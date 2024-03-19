@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export type VMApiError = {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   request: any;
   response: {
     errors: {
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       locations: any;
       message: string;
       path: string[];
@@ -21,6 +21,7 @@ export type InsufficientInputAmountError = {
 
 export type GroupedError = {
   errorMessage?: string;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   error?: InsufficientInputAmountError | any;
 };
 

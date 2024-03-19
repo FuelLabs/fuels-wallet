@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { headingRank } from 'hast-util-heading-rank';
 import { toString } from 'hast-util-to-string';
 import { visit } from 'unist-util-visit';
@@ -10,6 +9,7 @@ type Params = {
 };
 
 export function rehypeExtractHeadings({ headings }: Params) {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   return (tree: any) => {
     visit(tree, 'element', (node) => {
       const rank = headingRank(node);

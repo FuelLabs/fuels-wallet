@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Account } from '@fuel-wallet/types';
 import { Mnemonic } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
@@ -6,10 +5,10 @@ import { assign, createMachine } from 'xstate';
 import { IS_LOGGED_KEY, MNEMONIC_SIZE } from '~/config';
 import { store } from '~/store';
 import {
+  Storage,
   assignErrorMessage,
   getPhraseFromValue,
   getWordsFromValue,
-  Storage,
 } from '~/systems/Core';
 import type { Maybe } from '~/systems/Core';
 
@@ -201,6 +200,7 @@ export const signUpMachine = createMachine(
         error: (_) => undefined,
       }),
       assignError: assign({
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         error: (_, ev) => ev.data as any,
       }),
       // Data

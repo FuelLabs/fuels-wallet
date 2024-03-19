@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  ThemeProvider,
   createTheme,
   loadIcons,
   setFuelThemes,
-  ThemeProvider,
 } from '@fuel-ui/react';
 import { defaultConnectors } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
@@ -28,7 +27,7 @@ import { Paragraph } from './Paragraph';
 import Player from './Player';
 import { Pre } from './Pre';
 import { SDKSection } from './SDKSection';
-import { Table, TD, TH } from './Table';
+import { TD, TH, Table } from './Table';
 
 const components = {
   a: Link,
@@ -70,6 +69,7 @@ const theme = createTheme('fuel-docs', {
       },
     },
   },
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 } as any);
 
 loadIcons('/icons/sprite.svg');
@@ -90,7 +90,9 @@ export function Provider({ children }: ProviderProps) {
             connectors: defaultConnectors({ devMode: true }),
           }}
         >
+          {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
           <MDXProvider components={components as any}>
+            {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
             {children as any}
           </MDXProvider>
         </FuelProvider>

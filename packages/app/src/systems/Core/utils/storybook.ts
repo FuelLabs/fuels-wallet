@@ -1,12 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Story } from '@storybook/react';
 
 export async function storyToComponent<T>(
   story: Story<T>,
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   args: any = {},
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   loaded: any = {}
 ): Promise<React.FC> {
   return () => {
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     const context: any = {
       id: '',
       kind: '',

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cssObj } from '@fuel-ui/css';
 import { Alert, Box, Input, Link, Spinner, Tag, Tooltip } from '@fuel-ui/react';
 import type { ReactNode } from 'react';
@@ -15,7 +14,9 @@ export function ExampleBox({
   showNotDetectedOverlay = true,
 }: {
   children: ReactNode;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   error?: any;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   overlayContent?: any;
   showNotDetectedOverlay?: boolean;
 }) {

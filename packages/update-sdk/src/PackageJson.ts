@@ -1,11 +1,11 @@
+import { promises as fs } from 'node:fs';
+import { resolve } from 'node:path';
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import c from 'chalk';
 import { $ } from 'execa';
 import { glob } from 'glob';
 import { produce } from 'immer';
-import { promises as fs } from 'node:fs';
-import { resolve } from 'node:path';
 import prettier from 'prettier';
 
 export class PackageJson {
@@ -30,6 +30,7 @@ export class PackageJson {
       const obj = pkgJSON?.[key] ?? {};
       const entries = Object.entries(obj);
       const sdkDeps = entries.filter(([dep]) => matcher(dep));
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       pkgJSON = produce(pkgJSON, (draft: any) => {
         sdkDeps.forEach(([dep, _]) => {
           draft[key][dep] =

@@ -115,7 +115,7 @@ export const AccountItem: AccountItemComponent = ({
             />
           </Dropdown.Trigger>
           <Dropdown.Menu
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
             onAction={(action: any) => {
               if (action === 'update') onUpdate?.(account.address);
               if (action === 'export') onExport?.(account.address);

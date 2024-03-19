@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { resolve } from 'node:path';
 /* eslint-disable no-console */
 import { createTokenAuth } from '@octokit/auth-token';
 import { Octokit as GithubOctokit } from '@octokit/core';
 import { restEndpointMethods } from '@octokit/plugin-rest-endpoint-methods';
 import c from 'chalk';
 import { $ } from 'execa';
-import { resolve } from 'node:path';
 
 const Octokit = GithubOctokit.plugin(restEndpointMethods);
 
@@ -24,6 +23,7 @@ export class Github {
   }) {
     const api = await this.getApi();
     try {
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       const { data: pulls }: { data: any[] } = await api.rest.pulls.list({
         owner: this.owner,
         repo: this.repo,
@@ -37,6 +37,7 @@ export class Github {
 
       for (const number of numbers) {
         try {
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           const { data: pull }: { data: any } = await api.rest.pulls.get({
             owner: this.owner,
             repo: this.repo,
@@ -53,6 +54,7 @@ export class Github {
         }
       }
       return closed;
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     } catch (e: any) {
       console.error(e);
       if (e.status !== 404) {
@@ -71,6 +73,7 @@ export class Github {
   }) {
     const api = await this.getApi();
     try {
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       const { data: pulls }: { data: any[] } = await api.rest.pulls.list({
         owner: this.owner,
         repo: this.repo,
@@ -80,6 +83,7 @@ export class Github {
       });
       const filtered = pulls?.filter((pull) => pull.head.ref === head);
       return filtered?.map((pull) => pull.number);
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     } catch (e: any) {
       console.error(e);
       if (e.status !== 404) {
@@ -101,7 +105,7 @@ export class Github {
     try {
       await $$`git show-ref --heads | grep ${branchName}`;
       branchExists = true;
-    } catch (e) {
+    } catch (_e) {
       branchExists = false;
     }
 

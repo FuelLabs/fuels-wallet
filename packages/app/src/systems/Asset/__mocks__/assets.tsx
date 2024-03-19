@@ -1,5 +1,5 @@
 import type { BigNumberish } from 'fuels';
-import { bn, BaseAssetId } from 'fuels';
+import { BaseAssetId, bn } from 'fuels';
 import { graphql } from 'msw';
 import { fuelAssets } from '~/systems/Core';
 
@@ -58,7 +58,7 @@ type BalanceNode = {
 };
 
 export function mockBalancesOnGraphQL(nodes: BalanceNode[] = MOCK_ASSETS_NODE) {
-  return graphql.query('getBalances', (req, res, ctx) => {
+  return graphql.query('getBalances', (_req, res, ctx) => {
     return res(ctx.data({ balances: { edges: nodes } }));
   });
 }

@@ -1,5 +1,5 @@
 import type { Account } from '@fuel-wallet/types';
-import { Address, bn, Provider } from 'fuels';
+import { Address, Provider, bn } from 'fuels';
 import { isEth } from '~/systems/Asset/utils/asset';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
@@ -107,7 +107,7 @@ export class AccountService {
         },
       });
       return nextAccount ?? account;
-    } catch (error) {
+    } catch (_error) {
       const nextAccount = await AccountService.setBalance({
         data: {
           address: account.address || '',

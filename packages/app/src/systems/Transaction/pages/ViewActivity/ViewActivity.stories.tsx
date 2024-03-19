@@ -14,7 +14,7 @@ export default {
     layout: 'fullscreen',
   },
   msw: [
-    graphql.query('getTransactionWithReceipts', (req, res, ctx) => {
+    graphql.query('getTransactionWithReceipts', (_req, res, ctx) => {
       return res(ctx.data(MOCK_TRANSACTIONS_BY_OWNER));
     }),
   ],

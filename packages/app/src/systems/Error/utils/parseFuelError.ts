@@ -1,7 +1,7 @@
 import { createUUID } from '@fuel-wallet/connections';
 import type { FuelWalletError } from '@fuel-wallet/types';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function parseFuelError(error: any): FuelWalletError {
   return {
     ...error,
@@ -11,7 +11,7 @@ export function parseFuelError(error: any): FuelWalletError {
 }
 
 export function createError(e: FuelWalletError): FuelWalletError | Error {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   let syntheticError: any = e;
 
   if (e.error && 'stack' in e.error) {

@@ -2,7 +2,7 @@ import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Box } from '@fuel-ui/react';
 import type { FC, ReactNode } from 'react';
-import { forwardRef, useRef, useContext, createContext } from 'react';
+import { createContext, forwardRef, useContext, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
 import { IS_CRX_POPUP, WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
@@ -24,7 +24,7 @@ type Context = {
 const ctx = createContext<Context>({});
 
 type ContentProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   as?: any;
   children: ReactNode;
   css?: ThemeUtilsCSS;

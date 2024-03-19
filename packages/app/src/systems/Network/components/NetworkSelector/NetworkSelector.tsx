@@ -29,7 +29,7 @@ export function NetworkSelector({
           disabledKeys={['edit']}
           aria-label="Actions"
           css={styles.dropdownMenu}
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           onAction={(id: any) => {
             const network = networks.find((n) => n.id === id);
             network && onSelectNetwork?.(network);

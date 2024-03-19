@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
 import type { Connection } from '@fuel-wallet/types';
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuels/connectors';
@@ -82,12 +81,14 @@ export class BackgroundService {
     });
   }
 
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   externalMethods(methods: Array<string | any>) {
     methods.forEach((method) => {
       let methodName = method;
       if (method.name) {
         methodName = method.name;
       }
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       this.server.addMethod(methodName, this[methodName].bind(this) as any);
     });
   }
@@ -153,7 +154,7 @@ export class BackgroundService {
     });
   }
 
-  async sendEvent(origin: string, eventName: string, params: any[]) {
+  async sendEvent<T>(origin: string, eventName: string, params: T[]) {
     this.communicationProtocol.broadcast(origin, {
       target: CONTENT_SCRIPT_NAME,
       type: MessageTypes.event,

@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
 import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
 import {
-  type CommunicationMessage,
-  MessageTypes,
   CONNECTOR_SCRIPT,
   CONTENT_SCRIPT_NAME,
+  type CommunicationMessage,
   EVENT_MESSAGE,
+  MessageTypes,
 } from '@fuels/connectors';
 import { createJSONRPCSuccessResponse } from 'json-rpc-2.0';
 import type { JSONRPCID } from 'json-rpc-2.0';
@@ -93,7 +93,7 @@ export class ContentProxyConnection {
         type: MessageTypes.ping,
       });
       this._keepAlive = setTimeout(this.keepAlive, PING_TIMEOUT);
-    } catch (err) {
+    } catch (_err) {
       this.onDisconnect();
     }
   };

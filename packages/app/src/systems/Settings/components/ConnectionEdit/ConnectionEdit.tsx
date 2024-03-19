@@ -2,21 +2,21 @@ import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import type { BoxProps } from '@fuel-ui/react';
 import { Box, CardList, Icon, Text } from '@fuel-ui/react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { AccountItem } from '~/systems/Account';
 import {
-  animations,
   ConnectInfo,
   EmptyList,
   Layout,
   SearchInput,
+  animations,
 } from '~/systems/Core';
 
 import type { useConnections } from '../../hooks';
 
 export type ConnectionEditProps = ReturnType<typeof useConnections>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 const MotionBox = motion<BoxProps & { css?: ThemeUtilsCSS }>(Box as any);
 const MotionCardList = motion(CardList);
 

@@ -1,11 +1,11 @@
 import type { AssetData, Connection, NetworkData } from '@fuel-wallet/types';
 import type { Page } from '@playwright/test';
 import type {
-  WalletManagerAccount as WalletAccount,
   Account,
   Asset,
+  WalletManagerAccount as WalletAccount,
 } from 'fuels';
-import { WalletManager, Mnemonic, encrypt, Address } from 'fuels';
+import { Address, Mnemonic, WalletManager, encrypt } from 'fuels';
 
 import { getByAriaLabel } from '../commons/locator';
 import { hasText } from '../commons/text';
@@ -246,7 +246,7 @@ export async function unlock(page, password = WALLET_PASSWORD) {
     await hasText(page, 'Welcome back');
     await getByAriaLabel(page, 'Your Password').fill(password);
     await getByAriaLabel(page, 'Unlock wallet').click();
-  } catch (err) {
+  } catch (_err) {
     // Ignore
   }
 }

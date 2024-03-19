@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { cssObj } from '@fuel-ui/css';
 import { List } from '@fuel-ui/react';
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function UL({ children, ...props }: any) {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const isOrdered = children.some((c: any) => c?.type === 'ol');
   return (
     <List
@@ -12,6 +12,7 @@ export function UL({ children, ...props }: any) {
       css={styles.root}
     >
       {children
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         .map((child: any, idx: number) => {
           if (!child?.type) return null;
           return <List.Item key={idx}>{child.props.children}</List.Item>;

@@ -1,5 +1,5 @@
 class LocalStorageMock {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   [key: string]: any;
 
   clear() {

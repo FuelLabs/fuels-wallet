@@ -31,7 +31,7 @@ export function useUnlockForm(formErrors?: UnlockFormValuesErrors) {
     const errors = formErrors || {};
     Object.keys(errors).forEach((key) => {
       if (errors[key]) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         form.setError(key as any, {
           type: 'manual',
           message: errors[key],

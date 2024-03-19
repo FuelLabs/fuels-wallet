@@ -15,7 +15,7 @@
     "rules": {
       "recommended": true,
       "correctness": {
-        "noUnusedVariables": "off",
+        "noUnusedVariables": "error",
         "useExhaustiveDependencies": "off",
         "noEmptyPattern": "off"
       },
@@ -32,8 +32,6 @@
       "suspicious": {
         "noArrayIndexKey": "off",
         "noConfusingVoidType": "off",
-        "noExplicitAny": "off",
-        "noImplicitAnyLet": "off",
         "noAssignInExpressions": "off",
         "noShadowRestrictedNames": "off",
         "noDoubleEquals": "off"

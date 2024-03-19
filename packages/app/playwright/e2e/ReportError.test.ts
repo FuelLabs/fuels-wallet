@@ -1,7 +1,7 @@
 import type { Browser, BrowserContext, Page } from '@playwright/test';
 import test, { chromium, expect } from '@playwright/test';
 
-import { visit, hasText, getButtonByText, reload } from '../commons';
+import { getButtonByText, hasText, reload, visit } from '../commons';
 import { mockData } from '../mocks';
 
 test.describe('ReportError', () => {
@@ -16,7 +16,7 @@ test.describe('ReportError', () => {
     await mockData(page);
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   async function getPageErrors(page: Page): Promise<any> {
     return page.evaluate(async () => {
       const fuelDB = window.fuelDB;

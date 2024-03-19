@@ -2,7 +2,7 @@ import type { VaultWebConnector } from '../connectors';
 import type { VaultInputs } from '../services';
 
 export function mockUnlock(connector: VaultWebConnector) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const clientVault = connector.clientVault as any;
   const password = localStorage.getItem('password');
   if (password) {

@@ -69,7 +69,7 @@ const schema = yup
       .test('is-address', 'Invalid bech32 address', (value) => {
         try {
           return Boolean(value && isBech32(value));
-        } catch (error) {
+        } catch (_error) {
           return false;
         }
       }),
