@@ -1,9 +1,6 @@
 name: Check SDK updates (manual)
 
 on:
-  # TODO: remove this once we have a way to trigger this workflow
-  pull_request:
-    types: [opened, synchronize, reopened]
   workflow_dispatch:
     inputs:
       package:
@@ -32,12 +29,10 @@ jobs:
       - uses: FuelLabs/github-actions/setups/node@master
 
       - name: Checking updates
-        # Revert it to master
-        uses: FuelLabs/github-actions/update-sdk@hf/feat/multiline-packages
+        uses: FuelLabs/github-actions/update-sdk@master
         with:
           branch: master
-          # Revert it
-          packages: ${{ inputs.packages || 'fuels,react-hook-form' }}
-          npm-tag: ${{ inputs.tag || 'latest' }}
+          packages: ${{ inputs.packages }}
+          npm-tag: ${{ inputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
