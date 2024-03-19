@@ -37,7 +37,7 @@ jobs:
         with:
           branch: master
           # Revert it
-          packages: ${{ inputs.packages || 'fuels' }}
+          packages: ${{ inputs.packages || 'fuels,react-hook-form' }}
           npm-tag: ${{ inputs.tag || 'latest' }}
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
