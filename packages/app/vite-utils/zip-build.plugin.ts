@@ -25,7 +25,7 @@ function addFilesToZipArchive(
 
   listOfFiles.forEach((fileName) => {
     // Filter files by excludeFiles RegExp
-    if (excludeFiles && excludeFiles?.test(fileName)) return;
+    if (excludeFiles?.test(fileName)) return;
     // Add file to zip archive
     const filePath = join(inDir, fileName);
     const file = statSync(filePath);

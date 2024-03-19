@@ -130,6 +130,7 @@ export class AccountService {
   }
 
   static toMap(accounts: Account[]) {
+    // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
     return accounts.reduce((obj, acc) => ({ ...obj, [acc.address]: acc }), {});
   }
 

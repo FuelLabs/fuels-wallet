@@ -23,13 +23,9 @@
       "complexity": {
         "noThisInStatic": "off",
         "noStaticOnlyClass": "off",
-        "noForEach": "off",
-        "useOptionalChain": "off",
-        "noUselessSwitchCase": "off",
-        "useArrowFunction": "off"
+        "noForEach": "off"
       },
       "performance": {
-        "noAccumulatingSpread": "off",
         "noDelete": "off"
       }
     }
