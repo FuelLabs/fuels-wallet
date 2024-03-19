@@ -117,6 +117,7 @@ export function useSend() {
   const amount = form.watch('amount');
   const errorMessage = useSelector(service, selectors.error);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (bn(amount).gt(0) && form.formState.isValid) {
       const asset = assets.find(
@@ -134,6 +135,7 @@ export function useSend() {
     }
   }, [amount, form.formState.isValid]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (errorMessage) {
       form.setError('amount', {

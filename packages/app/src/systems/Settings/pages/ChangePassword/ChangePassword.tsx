@@ -66,6 +66,7 @@ export function ChangePassword() {
     []
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (error) {
       setError('currentPassword', { message: error });

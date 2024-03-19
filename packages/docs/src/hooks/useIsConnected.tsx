@@ -19,11 +19,12 @@ export function useIsConnected() {
 
     /* eventConnection:start */
     fuel?.on(fuel.events.connection, handleConnection);
+
     return () => {
       fuel?.off(fuel.events.connection, handleConnection);
     };
     /* eventConnection:end */
-  }, [fuel, isLoading]);
+  }, [fuel, isLoading, error]);
 
   return [isConnected];
 }

@@ -38,6 +38,7 @@ export default {
 } as Meta;
 
 export const Usage: Story = (_args, { loaded }) => {
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     alert(`use this password to unlock: ${loaded.password}`);
   }, []);

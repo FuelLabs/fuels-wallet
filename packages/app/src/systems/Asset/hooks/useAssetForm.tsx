@@ -70,6 +70,7 @@ export function useAssetForm(opts: UseAddAssetOpts = {}) {
     defaultValues: opts.defaultValues || DEFAULT_VALUES,
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     opts.defaultValues && form.reset(opts.defaultValues);
   }, [JSON.stringify(opts.defaultValues)]);

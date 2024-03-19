@@ -15,8 +15,7 @@
     "rules": {
       "recommended": true,
       "correctness": {
-        "noUnusedVariables": "error",
-        "useExhaustiveDependencies": "off"
+        "noUnusedVariables": "error"
       },
       "style": {
         "noNonNullAssertion": "off",

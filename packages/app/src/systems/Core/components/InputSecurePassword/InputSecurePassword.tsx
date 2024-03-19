@@ -43,6 +43,7 @@ export function InputSecurePassword({
     unsafeList,
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     onChangeStrength?.(strength);
   }, [strength]);

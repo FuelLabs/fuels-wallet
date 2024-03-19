@@ -105,6 +105,7 @@ export function Mnemonic({
     setValue(newValue);
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     onChange?.(value);
     if (value.every((word) => Boolean(word.length))) {

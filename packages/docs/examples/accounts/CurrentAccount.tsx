@@ -29,10 +29,11 @@ export function CurrentAccount() {
     }
     fuel.on(fuel.events.currentAccount, logCurrentAccount);
     /* watchCurrentAccount:end */
+
     return () => {
       fuel.off(fuel.events.currentAccount, logCurrentAccount);
     };
-  }, []);
+  }, [fuel]);
 
   return (
     <ExampleBox error={errorCurrentAccount}>

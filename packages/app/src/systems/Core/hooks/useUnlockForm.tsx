@@ -27,6 +27,7 @@ export function useUnlockForm(formErrors?: UnlockFormValuesErrors) {
     },
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const errors = formErrors || {};
     Object.keys(errors).forEach((key) => {

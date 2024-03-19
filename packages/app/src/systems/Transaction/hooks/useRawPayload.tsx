@@ -7,6 +7,7 @@ type RawPayloadProps = {
 
 export function useRawPayload(props: Partial<RawPayloadProps>) {
   const { transaction } = props;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const rawPayload = useMemo(() => {
     if (transaction) {
       try {

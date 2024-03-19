@@ -15,6 +15,7 @@ export function useExplorerLink(providerUrl: string, id?: string) {
     href = urlJoin(EXPLORER_URL, `/tx/${id}`);
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const openExplorer = useCallback(() => {
     if (IS_CRX) {
       openTab(href);

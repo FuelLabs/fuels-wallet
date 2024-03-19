@@ -25,12 +25,14 @@ export function AddNetwork() {
     isLoading: isLoadingChainInfo,
   } = useChainInfo(isValidUrl ? form.getValues('url') : undefined);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isValidUrl && !isLoadingChainInfo && chainInfo) {
       form.setValue('name', chainInfo.name, { shouldValidate: true });
     }
   }, [chainInfo, isLoadingChainInfo, isValidUrl]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (chainInfoError) {
       form.setError('url', {

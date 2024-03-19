@@ -41,7 +41,7 @@ export function SelectConnector() {
 
   const fuelConnector = useMemo(() => {
     return fuel.getConnector(selectedConnector);
-  }, [selectedConnector]);
+  }, [fuel, selectedConnector]);
 
   return (
     <ExampleBox error={errorOnSelecting || errorOnConnect || errorOnDisconnect}>

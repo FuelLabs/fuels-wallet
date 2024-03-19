@@ -35,7 +35,7 @@ export function CheckConnection() {
     return () => {
       fuel.off(fuel.events.connection, logConnectionState);
     };
-  }, []);
+  }, [fuel]);
 
   return (
     <ExampleBox error={error}>

@@ -23,6 +23,7 @@ const Template: StoryFn<typeof TxApprove> = (_args, { loaded }) => {
   const txRequest = useTransactionRequest();
   const { transactionRequest, network, address } = loaded || {};
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     txRequest.handlers.request({
       address,

@@ -45,6 +45,7 @@ export function useTxResult({
 
   const { error, txResult } = context;
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const { shouldShowAlert, shouldShowTx, shouldShowTxDetails } = useMemo(() => {
     const shouldShowAlert =
       isTxNotFound ||

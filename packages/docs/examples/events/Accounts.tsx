@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Tag, Text } from '@fuel-ui/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { ExampleBox } from '../../src/components/ExampleBox';
 import { useFuel } from '../../src/hooks/useFuel';
@@ -25,20 +25,21 @@ export function Accounts() {
   });
 
   /* eventAccountChanges:start */
-  const handleAccountsEvent = (accounts: string[]) => {
+  const handleAccountsEvent = useCallback((accounts: string[]) => {
     setAccounts(accounts);
-  };
+  }, []);
 
   useEffect(() => {
     fuel?.on(fuel.events.accounts, handleAccountsEvent);
     return () => {
       fuel?.off(fuel.events.accounts, handleAccountsEvent);
     };
-  }, [fuel]);
+  }, [fuel, handleAccountsEvent]);
   /* eventAccountChanges:end */
+
   useEffect(() => {
     if (isConnected) handleAccounts();
-  }, [isConnected]);
+  }, [isConnected, handleAccounts]);
 
   const errorMessage = errorAccounts || notDetected || errorConnect;
 

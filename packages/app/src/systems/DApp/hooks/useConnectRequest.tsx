@@ -45,6 +45,7 @@ export function useConnectRequest() {
   }, [selectedAddresses, shownAccounts]);
   const hasCurrentAccounts = !!selectedAddresses?.length;
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (account && !hasCurrentAccounts) {
       service.send({

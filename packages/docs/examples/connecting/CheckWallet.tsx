@@ -10,6 +10,7 @@ export function CheckWallet() {
   const { fuel } = useFuel();
   const [message, setMessage] = useState('');
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     async function handleConnector() {
       /* checkWallet:start */

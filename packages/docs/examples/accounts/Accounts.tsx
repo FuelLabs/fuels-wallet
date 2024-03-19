@@ -33,7 +33,7 @@ export function ListAccounts() {
     return () => {
       fuel.off(fuel.events.accounts, logAccounts);
     };
-  }, []);
+  }, [fuel]);
 
   return (
     <ExampleBox error={errorGetAccounts}>
