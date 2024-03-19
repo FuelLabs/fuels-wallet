@@ -11,7 +11,7 @@ import { useAssets } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
 import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
-import { type TxInputs } from '~/systems/Transaction/services';
+import type { TxInputs } from '~/systems/Transaction/services';
 
 import { sendMachine } from '../machines/sendMachine';
 import type { SendMachineState } from '../machines/sendMachine';

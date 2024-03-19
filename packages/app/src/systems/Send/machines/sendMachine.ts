@@ -1,10 +1,14 @@
-/* eslint-disable @typescript-eslint/consistent-type-imports */
-import { BN, Provider, TransactionRequest } from 'fuels';
-import { assign, createMachine, InterpreterFrom, StateFrom } from 'xstate';
+import { type BN, Provider, type TransactionRequest } from 'fuels';
+import {
+  type InterpreterFrom,
+  type StateFrom,
+  assign,
+  createMachine,
+} from 'xstate';
 import { AccountService } from '~/systems/Account';
 import { FetchMachine, assignError } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
-import { TxInputs, TxService } from '~/systems/Transaction/services';
+import { type TxInputs, TxService } from '~/systems/Transaction/services';
 
 export enum SendScreens {
   select,

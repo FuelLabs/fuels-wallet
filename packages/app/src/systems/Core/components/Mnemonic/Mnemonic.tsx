@@ -1,7 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Grid, Icon, toast } from '@fuel-ui/react';
 import { MNEMONIC_SIZES } from 'fuels';
-import React, { useEffect, useState } from 'react';
+import type { ClipboardEvent } from 'react';
+import { useEffect, useState } from 'react';
 
 import { MnemonicInput } from './MnemonicInput';
 
@@ -71,10 +72,7 @@ export function Mnemonic({
     setValue(fillArray(words, selectedMnemonicSize));
   }
 
-  function handlePasteInput(
-    ev: React.ClipboardEvent<HTMLInputElement>,
-    idx: number
-  ) {
+  function handlePasteInput(ev: ClipboardEvent<HTMLInputElement>, idx: number) {
     const text = ev.clipboardData.getData('text/plain');
     const words = splitSeedPhrase(text);
 

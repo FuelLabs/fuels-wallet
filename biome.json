@@ -20,7 +20,6 @@
         "noEmptyPattern": "off"
       },
       "style": {
-        "useImportType": "off",
         "useEnumInitializers": "off",
         "noUnusedTemplateLiteral": "off",
         "noNonNullAssertion": "off",

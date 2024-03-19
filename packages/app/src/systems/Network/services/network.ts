@@ -1,7 +1,7 @@
 import { createUUID } from '@fuel-wallet/connections';
 import type { NetworkData } from '@fuel-wallet/types';
 import { compare } from 'compare-versions';
-import { NodeInfo, Provider } from 'fuels';
+import { type NodeInfo, Provider } from 'fuels';
 import { MIN_NODE_VERSION } from '~/config';
 import { db } from '~/systems/Core/utils/database';
 
