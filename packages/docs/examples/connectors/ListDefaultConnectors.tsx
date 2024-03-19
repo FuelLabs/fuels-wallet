@@ -1,11 +1,6 @@
-/* eslint-disable no-console */
 import { Tag } from '@fuel-ui/react';
 /* createInstance:start */
-import {
-  FuelWalletConnector,
-  FuelWalletDevelopmentConnector,
-  FueletWalletConnector,
-} from '@fuels/connectors';
+import { defaultConnectors } from '@fuels/connectors';
 import type { FuelConnector } from 'fuels'; // ignore-line
 import { Fuel } from 'fuels';
 import { useEffect, useState } from 'react'; // ignore-line
@@ -13,30 +8,25 @@ import { useEffect, useState } from 'react'; // ignore-line
 import { ExampleBox } from '../../src/components/ExampleBox'; // ignore-line
 
 const fuel = new Fuel({
-  connectors: [
-    new FuelWalletDevelopmentConnector(),
-    new FueletWalletConnector(),
-    new FuelWalletConnector(),
-  ],
+  connectors: defaultConnectors({ devMode: true }),
 });
 /* createInstance:end */
 
-export function ListConnectors() {
+export function ListDefaultConnectors() {
   const [connectors, setConnectors] = useState<Array<FuelConnector>>([]);
 
   useEffect(() => {
     async function handleConnectors() {
-      /* listConnectors:start */
       const connectors = await fuel.connectors();
       console.log('available connectors', connectors);
 
       fuel.on(fuel.events.connectors, (connectors) => {
         console.log('available connectors', connectors);
-        setConnectors(connectors); // ignore-line
+        setConnectors(connectors);
       });
-      /* listConnectors:end */
       setConnectors(connectors);
     }
+
     handleConnectors();
   }, []);
 
