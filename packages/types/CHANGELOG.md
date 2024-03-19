@@ -1,5 +1,17 @@
 # @fuel-wallet/types
 
+## 1.0.0
+
+### Minor Changes
+
+- [#1141](https://github.com/FuelLabs/fuels-wallet/pull/1141) [`96faa7f`](https://github.com/FuelLabs/fuels-wallet/commit/96faa7f0f6d6d7fea6ab0b26495dc32f5a86b4b8) Thanks [@helciofranco](https://github.com/helciofranco)! - feat: bump SDK to latest version
+
+### Patch Changes
+
+- [#1113](https://github.com/FuelLabs/fuels-wallet/pull/1113) [`3c5d91d`](https://github.com/FuelLabs/fuels-wallet/commit/3c5d91d04262c492253fc3c06388a0d155e54861) Thanks [@helciofranco](https://github.com/helciofranco)! - chore: update ts-sdk and fuel-ui packages
+
+- [#1137](https://github.com/FuelLabs/fuels-wallet/pull/1137) [`a0e5cbf`](https://github.com/FuelLabs/fuels-wallet/commit/a0e5cbfbcf5eed61f7a2e2c9871b7e02f0c281b2) Thanks [@helciofranco](https://github.com/helciofranco)! - ci: replace prettier and eslint with biomejs (dev)
+
 ## 0.16.1
 
 ## 0.16.0
