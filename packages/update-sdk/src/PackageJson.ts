@@ -32,6 +32,7 @@ export class PackageJson {
       const sdkDeps = entries.filter(([dep]) => matcher(dep));
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       pkgJSON = produce(pkgJSON, (draft: any) => {
+        // biome-ignore lint/complexity/noForEach: <explanation>
         sdkDeps.forEach(([dep, _]) => {
           draft[key][dep] =
             key === 'peerDependencies' ? `>=${version}` : version;

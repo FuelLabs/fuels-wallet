@@ -23,6 +23,7 @@ function addFilesToZipArchive(
 ) {
   const listOfFiles = readdirSync(inDir);
 
+  // biome-ignore lint/complexity/noForEach: <explanation>
   listOfFiles.forEach((fileName) => {
     // Filter files by excludeFiles RegExp
     if (excludeFiles?.test(fileName)) return;

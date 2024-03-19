@@ -15,6 +15,7 @@ export class DatabaseObservable<
 
   setupListeners() {
     db.on('changes', (changes) => {
+      // biome-ignore lint/complexity/noForEach: <explanation>
       changes.forEach((change) => {
         switch (change.type) {
           case 1:

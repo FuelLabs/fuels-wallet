@@ -3,6 +3,7 @@ class LocalStorageMock {
   [key: string]: any;
 
   clear() {
+    // biome-ignore lint/complexity/noForEach: <explanation>
     Object.keys(this).forEach((key) => {
       delete this[key];
     });

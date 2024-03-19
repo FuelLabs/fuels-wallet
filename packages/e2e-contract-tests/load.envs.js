@@ -8,6 +8,7 @@ function getEnvName() {
 }
 
 // Load from more specific env file to generic ->
+// biome-ignore lint/complexity/noForEach: <explanation>
 [getEnvName(), '.env'].forEach((envFile) => {
   if (!envFile) return;
   config({

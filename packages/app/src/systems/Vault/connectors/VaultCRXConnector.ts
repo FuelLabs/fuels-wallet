@@ -37,6 +37,7 @@ export class VaultCRXConnector {
   };
 
   async onEvent(message: EventMessage) {
+    // biome-ignore lint/complexity/noForEach: <explanation>
     message.events.forEach((event) => {
       this.clientVault.emit(event.event, ...event.params);
     });

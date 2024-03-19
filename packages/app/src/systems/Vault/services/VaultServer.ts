@@ -70,6 +70,7 @@ export class VaultServer extends EventEmitter {
   }
 
   setupMethods() {
+    // biome-ignore lint/complexity/noForEach: <explanation>
     VaultServer.methods.forEach((methodName) => {
       if (!this[methodName]) {
         throw new Error('Method not exists!');

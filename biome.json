@@ -22,11 +22,7 @@
       },
       "complexity": {
         "noThisInStatic": "off",
-        "noStaticOnlyClass": "off",
-        "noForEach": "off"
-      },
-      "performance": {
-        "noDelete": "off"
+        "noStaticOnlyClass": "off"
       }
     }
   },

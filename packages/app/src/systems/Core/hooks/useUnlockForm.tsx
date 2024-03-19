@@ -30,6 +30,7 @@ export function useUnlockForm(formErrors?: UnlockFormValuesErrors) {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const errors = formErrors || {};
+    // biome-ignore lint/complexity/noForEach: <explanation>
     Object.keys(errors).forEach((key) => {
       if (errors[key]) {
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>

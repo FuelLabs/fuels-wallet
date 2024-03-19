@@ -207,7 +207,7 @@ async function getResponse(event, client, requestId) {
     // comply with the server's CORS preflight check.
     // Operate with the headers as an object because request "Headers"
     // are immutable.
-    delete headers['x-msw-bypass'];
+    headers['x-msw-bypass'] = undefined;
 
     return fetch(clonedRequest, { headers });
   }

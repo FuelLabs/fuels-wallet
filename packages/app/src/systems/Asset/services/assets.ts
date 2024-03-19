@@ -156,6 +156,7 @@ export class AssetService {
     if (trimmedAssets.length !== uniqueAssetsBySymbol.length) {
       throw new Error('Asset with same symbol being added multiple times');
     }
+    // biome-ignore lint/complexity/noForEach: <explanation>
     trimmedAssets.forEach((obj) => {
       if (
         !Number.isInteger(obj.decimals) ||

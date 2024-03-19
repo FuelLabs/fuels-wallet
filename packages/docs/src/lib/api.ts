@@ -41,6 +41,7 @@ export async function getDocBySlug(
   };
 
   // Ensure only the minimal needed data is exposed
+  // biome-ignore lint/complexity/noForEach: <explanation>
   fields.forEach((field) => {
     if (field === 'slug') {
       doc[field] = data.slug || realSlug;

@@ -13,6 +13,7 @@ export class ReportErrorService {
       dsn: VITE_SENTRY_DSN,
       environment: process.env.NODE_ENV,
     });
+    // biome-ignore lint/complexity/noForEach: <explanation>
     errors.forEach((e) => {
       Sentry.captureException(createError(e), {
         extra: e,

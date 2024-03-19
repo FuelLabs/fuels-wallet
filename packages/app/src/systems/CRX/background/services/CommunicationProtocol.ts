@@ -47,6 +47,7 @@ export class CommunicationProtocol extends BaseConnection {
 
   broadcast = (origins: Array<string> | string, message: EventMessage) => {
     const originList = Array.isArray(origins) ? origins : [origins];
+    // biome-ignore lint/complexity/noForEach: <explanation>
     this.ports.forEach((port) => {
       if (originList.includes(port.sender?.origin || '')) {
         port.postMessage(message);
@@ -90,6 +91,7 @@ export class CommunicationProtocol extends BaseConnection {
   };
 
   destroy() {
+    // biome-ignore lint/complexity/noForEach: <explanation>
     this.ports.forEach((port) => port.disconnect());
     this.ports.clear();
   }

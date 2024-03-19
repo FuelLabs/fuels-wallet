@@ -83,6 +83,7 @@ export class BackgroundService {
 
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   externalMethods(methods: Array<string | any>) {
+    // biome-ignore lint/complexity/noForEach: <explanation>
     methods.forEach((method) => {
       let methodName = method;
       if (method.name) {

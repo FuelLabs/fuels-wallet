@@ -155,6 +155,7 @@ export function codeImport(options: Options = { filepath: '' }) {
       }
     });
 
+    // biome-ignore lint/complexity/noForEach: <explanation>
     nodes.forEach(([node]) => {
       try {
         const attr = node.attributes;

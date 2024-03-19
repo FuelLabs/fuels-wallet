@@ -33,6 +33,7 @@ export class BaseConnection extends EventEmitter {
 
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   externalMethods(methods: Array<string | any>) {
+    // biome-ignore lint/complexity/noForEach: <explanation>
     methods.forEach((method) => {
       let methodName = method;
       if (method.name) {
@@ -73,6 +74,7 @@ export class BaseConnection extends EventEmitter {
   };
 
   onEvent(message: EventMessage): void {
+    // biome-ignore lint/complexity/noForEach: <explanation>
     message.events.forEach((eventData) => {
       this.emit(eventData.event, ...eventData.params);
     });

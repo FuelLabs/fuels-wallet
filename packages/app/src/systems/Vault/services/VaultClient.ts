@@ -23,6 +23,7 @@ export class VaultClient extends EventEmitter {
   }
 
   setupMethods = () => {
+    // biome-ignore lint/complexity/noForEach: <explanation>
     VaultServer.methods.forEach((methodName) => {
       this[methodName] = this.createRequest(methodName);
     });
