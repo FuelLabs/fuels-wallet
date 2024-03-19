@@ -18,8 +18,3 @@ export type Account = {
   balances?: Coin[];
   isCurrent?: boolean;
 };
-
-export enum AddressType {
-  contract,
-  account,
-}

@@ -8,6 +8,8 @@ import {
 import { defaultConnectors } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import { MDXProvider } from '@mdx-js/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { ReactNode } from 'react';
 
 import * as Examples from '../../examples';
@@ -58,6 +60,8 @@ type ProviderProps = {
   children: ReactNode;
 };
 
+const queryClient = new QueryClient();
+
 const theme = createTheme('fuel-docs', {
   components: {
     Button: {
@@ -78,17 +82,21 @@ setFuelThemes({
 
 export function Provider({ children }: ProviderProps) {
   return (
-    <ThemeProvider>
-      <FuelProvider
-        theme="dark"
-        fuelConfig={{
-          connectors: defaultConnectors({ devMode: true }),
-        }}
-      >
-        <MDXProvider components={components as any}>
-          {children as any}
-        </MDXProvider>
-      </FuelProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <FuelProvider
+          theme="dark"
+          fuelConfig={{
+            connectors: defaultConnectors({ devMode: true }),
+          }}
+        >
+          <MDXProvider components={components as any}>
+            {children as any}
+          </MDXProvider>
+        </FuelProvider>
+      </ThemeProvider>
+
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }

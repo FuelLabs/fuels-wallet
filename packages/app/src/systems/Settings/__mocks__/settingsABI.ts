@@ -1,4 +1,4 @@
-import type { AbiMap } from '@fuel-wallet/types';
+import type { AbiMap } from 'fuels';
 
 import { AbiService } from '../services';
 

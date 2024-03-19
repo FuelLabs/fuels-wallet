@@ -14,7 +14,7 @@ export function ConnectorUIHook() {
   /* useConnectors:end */
   const {
     disconnect,
-    isLoading: disconnecting,
+    isPending: disconnecting,
     error: errorDisconnecting,
   } = useDisconnect();
 

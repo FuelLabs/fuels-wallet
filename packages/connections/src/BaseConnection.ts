@@ -3,11 +3,11 @@
 import type {
   CommunicationMessage,
   EventMessage,
-  RequestMessage,
   ResponseMessage,
+  RequestMessage,
   UIEventMessage,
-} from '@fuel-wallet/types';
-import { MessageTypes } from '@fuel-wallet/types';
+} from '@fuels/connectors';
+import { MessageTypes } from '@fuels/connectors';
 import EventEmitter from 'events';
 import type { JSONRPCRequest, JSONRPCResponse } from 'json-rpc-2.0';
 import { JSONRPCServer, JSONRPCClient } from 'json-rpc-2.0';
