@@ -116,6 +116,7 @@ export const Pending = (args: TxItemProps) => {
   );
 };
 
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 export const Error = (args: TxItemProps) => {
   MOCK_TRANSACTION_CONTRACT_CALLS.map(
     (tx) => (tx.status = TransactionStatus.failure)

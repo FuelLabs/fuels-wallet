@@ -24,6 +24,7 @@ export const Pending = (args: TxStatusAlertProps) => (
   />
 );
 
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 export const Error = (args: TxStatusAlertProps) => (
   <TxStatusAlert {...args} error={'Invalid Transaction ID'} />
 );

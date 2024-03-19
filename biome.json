@@ -26,7 +26,6 @@
         "noArrayIndexKey": "off",
         "noConfusingVoidType": "off",
         "noAssignInExpressions": "off",
-        "noShadowRestrictedNames": "off",
         "noDoubleEquals": "off"
       },
       "complexity": {
