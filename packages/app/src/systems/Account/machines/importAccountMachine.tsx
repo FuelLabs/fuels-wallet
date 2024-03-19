@@ -23,7 +23,6 @@ export type ImportAccountMachineEvents = {
 
 export const importAccountMachine = createMachine(
   {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./importAccountMachine.typegen').Typegen0,
     schema: {
       context: {},

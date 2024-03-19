@@ -14,7 +14,6 @@ export function useRawPayload(props: Partial<RawPayloadProps>) {
         const raw = hexlify(new TransactionCoder().encode(transaction));
 
         return raw;
-        // eslint-disable-next-line no-empty
       } catch (_) {}
     }
 

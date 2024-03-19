@@ -65,7 +65,6 @@ const fetchAccount = {
 
 export const accountsMachine = createMachine(
   {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./accountsMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,

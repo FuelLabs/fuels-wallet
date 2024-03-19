@@ -42,7 +42,6 @@ export function SelectConnectorHook() {
         as={'select'}
         isDisabled={connecting}
         css={{ color: '$white' }}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         onChange={(e) => {
           setCurrentConnector(e.target.value);

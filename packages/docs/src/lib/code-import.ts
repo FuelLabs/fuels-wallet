@@ -251,7 +251,7 @@ export function codeImport(options: Options = { filepath: '' }) {
         attrsList.set(attrId, newAttrs);
       } catch (err) {
         // Log better error messages when parsing fails
-        // eslint-disable-next-line no-console
+
         console.error(err);
         throw err;
       }

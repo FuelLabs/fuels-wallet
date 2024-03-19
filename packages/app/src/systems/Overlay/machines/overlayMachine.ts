@@ -23,7 +23,6 @@ type MachineEvents =
 
 export const overlayMachine = createMachine(
   {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./overlayMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,

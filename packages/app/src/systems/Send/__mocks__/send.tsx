@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Signer } from 'fuels';
 import { createMockAccount } from '~/systems/Account';
 import { getMockedTransaction } from '~/systems/DApp/__mocks__/dapp-transaction';

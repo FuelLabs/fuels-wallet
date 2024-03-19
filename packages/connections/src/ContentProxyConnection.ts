@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
 import {
   CONNECTOR_SCRIPT,

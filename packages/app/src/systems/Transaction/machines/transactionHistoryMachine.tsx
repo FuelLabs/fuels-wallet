@@ -33,7 +33,6 @@ type MachineEvents = {
 
 export const transactionHistoryMachine = createMachine(
   {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./transactionHistoryMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,

@@ -64,7 +64,7 @@ type MachineEvents =
 export const signUpMachine = createMachine(
   {
     predictableActionArguments: true,
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+
     tsTypes: {} as import('./signUpMachine.typegen').Typegen0,
     id: '(machine)',
     initial: 'atWelcome',

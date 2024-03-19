@@ -49,7 +49,7 @@ type MachineEvents =
 export const connectRequestMachine = createMachine(
   {
     predictableActionArguments: true,
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+
     tsTypes: {} as import('./connectRequestMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,

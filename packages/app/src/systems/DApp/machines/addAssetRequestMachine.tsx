@@ -44,7 +44,7 @@ type MachineEvents =
 export const addAssetRequestMachine = createMachine(
   {
     predictableActionArguments: true,
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+
     tsTypes: {} as import('./addAssetRequestMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,

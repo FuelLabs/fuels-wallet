@@ -22,7 +22,6 @@ type MachineEvents = {
 
 export const exportVaultMachine = createMachine(
   {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./exportVaultMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,

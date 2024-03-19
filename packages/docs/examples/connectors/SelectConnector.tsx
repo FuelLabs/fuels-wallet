@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Alert, Box, Button, Input, Text } from '@fuel-ui/react';
 import { useConnectors, useFuel, useIsConnected } from '@fuels/react';
 import { useMemo, useState } from 'react';
@@ -49,7 +48,6 @@ export function SelectConnector() {
         as={'select'}
         isDisabled={selectingConnector}
         css={{ color: '$white' }}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         onChange={(e) => {
           setCurrentConnector(e.target.value);

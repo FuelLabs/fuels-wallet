@@ -50,7 +50,7 @@ export const FetchMachine = {
     return createMachine(
       {
         predictableActionArguments: true,
-        // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+
         tsTypes: {} as import('./fetchMachine.typegen').Typegen0,
         schema: {
           context: {} as MachineContext<Input>,
@@ -114,7 +114,6 @@ export const FetchMachine = {
           }),
           // biome-ignore lint/suspicious/noExplicitAny: <explanation>
           logError: (_, ev: { data: any }) => {
-            // eslint-disable-next-line no-console
             console.error(ev.data);
           },
           incrementAttempts: assign({

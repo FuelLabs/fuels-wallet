@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Input } from '@fuel-ui/react';
 import { useFuel, useIsConnected } from '@fuels/react';

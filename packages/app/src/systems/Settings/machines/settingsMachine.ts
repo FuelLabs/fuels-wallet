@@ -16,7 +16,6 @@ type MachineEvents = {
 
 export const settingsMachine = createMachine(
   {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     tsTypes: {} as import('./settingsMachine.typegen').Typegen0,
     schema: {
       events: {} as MachineEvents,

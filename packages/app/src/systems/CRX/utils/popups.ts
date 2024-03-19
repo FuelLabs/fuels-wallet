@@ -28,7 +28,6 @@ export async function showPopUp(params?: ShowPopUp | null) {
       });
       return true;
     }
-    // eslint-disable-next-line no-empty
   } catch (_err) {}
 
   return false;

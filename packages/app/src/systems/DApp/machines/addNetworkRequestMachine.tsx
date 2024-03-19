@@ -42,7 +42,7 @@ type MachineEvents =
 export const addNetworkRequestMachine = createMachine(
   {
     predictableActionArguments: true,
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+
     tsTypes: {} as import('./addNetworkRequestMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,

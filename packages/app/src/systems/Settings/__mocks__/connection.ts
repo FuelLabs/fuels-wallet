@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import type { Connection } from '@fuel-wallet/types';
 import { Signer } from 'fuels';
 import { AccountService, MOCK_ACCOUNTS } from '~/systems/Account';

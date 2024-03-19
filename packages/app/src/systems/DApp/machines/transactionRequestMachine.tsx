@@ -76,7 +76,7 @@ type MachineEvents =
 export const transactionRequestMachine = createMachine(
   {
     predictableActionArguments: true,
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+
     tsTypes: {} as import('./transactionRequestMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,

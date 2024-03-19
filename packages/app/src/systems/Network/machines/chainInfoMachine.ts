@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-type-imports */
 import type { ChainInfo } from 'fuels';
 import {
   type InterpreterFrom,

@@ -33,7 +33,6 @@ const selectors = {
     return state.context.error;
   },
   status(txStatus?: TxRequestStatus) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useCallback(
       (state: SendMachineState) => {
         const isLoadingTx =
@@ -47,7 +46,6 @@ const selectors = {
     );
   },
   title(txStatus?: TxRequestStatus) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useCallback(
       (state: SendMachineState) => {
         if (state.matches('creatingTx') || txStatus === TxRequestStatus.loading)

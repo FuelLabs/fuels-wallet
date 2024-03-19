@@ -5,7 +5,6 @@ import { defaultsESM as tsjPreset } from 'ts-jest/presets';
 import { getPublicEnvs } from './load.envs';
 import pkg from './package.json';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { globals, preset, ...baseConfig } = baseDefaultConfig;
 
 const config: JestConfigWithTsJest = {

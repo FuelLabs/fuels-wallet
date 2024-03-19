@@ -35,7 +35,6 @@ const selectors = {
     return { txApproveError, unlockError, grouped, general, hasGeneral };
   },
   status(externalLoading?: boolean) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useCallback(
       (state: TransactionRequestState) => {
         const isLoading = state.hasTag('loading');

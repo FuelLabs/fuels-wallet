@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Box, Text } from '@fuel-ui/react';
 import { useFuel } from '@fuels/react';
 import type { FuelConnector } from 'fuels';
