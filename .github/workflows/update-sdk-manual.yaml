@@ -3,6 +3,12 @@ name: Check SDK updates (manual)
 on:
   workflow_dispatch:
     inputs:
+      publisher:
+        description: Publisher repo name (e.g. fuels-ts)
+        required: false
+      issue:
+        description: Publisher repo issue (e.g. 1905)
+        required: false
       packages:
         description: Packages to update (comma separated)
         default: fuels
@@ -29,10 +35,23 @@ jobs:
       - uses: FuelLabs/github-actions/setups/node@master
 
       - name: Checking updates
+        id: update
         uses: FuelLabs/github-actions/update-sdk@master
         with:
           branch: master
+          changeset: true
           packages: ${{ inputs.packages }}
           npm-tag: ${{ inputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+      - name: Add PR comment on the publisher repo
+        if: steps.update.outputs['has-updates'] == 'true' && inputs.issue && inputs.publisher
+        uses: mshick/add-pr-comment@v2
+        with:
+          repo-name: ${{ inputs.publisher }}
+          issue: ${{ inputs.issue }}
+          repo-token: ${{ secrets.REPO_TOKEN }}
+          message: |
+            ✨ A PR has been created under the `${{ inputs.tag }}` tag on `fuels-wallet` repo.
+            ${{ steps.update.outputs.pr }}
