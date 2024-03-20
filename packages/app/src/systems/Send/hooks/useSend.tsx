@@ -1,8 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
-import type { BigNumberish } from 'fuels';
+import { Address, type BigNumberish } from 'fuels';
 import { bn, isBech32 } from 'fuels';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -13,6 +13,8 @@ import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
 
+import { type Domain, config, isValidDomain, resolver } from '@bako-id/sdk';
+import debounce from 'lodash.debounce';
 import { sendMachine } from '../machines/sendMachine';
 import type { SendMachineState } from '../machines/sendMachine';
 
@@ -57,6 +59,14 @@ const selectors = {
   },
 };
 
+const isValidAddress = (value: string) => {
+  try {
+    return Boolean(value && isBech32(value));
+  } catch (_error) {
+    return false;
+  }
+};
+
 const schema = yup
   .object({
     asset: yup.string().required('Asset is required'),
@@ -64,13 +74,21 @@ const schema = yup
     address: yup
       .string()
       .required('Address is required')
-      .test('is-address', 'Invalid bech32 address', (value) => {
-        try {
-          return Boolean(value && isBech32(value));
-        } catch (_error) {
-          return false;
+      .test('is-address-or-handle', (value, _context) => {
+        const isAddress = value.startsWith('fuel');
+        const isHandle = value.startsWith('@');
+
+        if (isHandle) {
+          return isValidDomain(value) ?? 'Invalid handle name';
         }
-      }),
+
+        if (isAddress) {
+          return isValidAddress(value) ?? 'Invalid bech32 address';
+        }
+
+        return true;
+      })
+      .test('is-domain', 'Invalid handle name.', isValidDomain),
   })
   .required();
 
@@ -79,6 +97,7 @@ export function useSend() {
   const txRequest = useTransactionRequest();
   const { account, balanceAssets: accountBalanceAssets } = useAccounts();
   const { assets } = useAssets();
+  const [domain, setDomain] = useState<Domain | null>(null);
 
   const form = useForm({
     resolver: yupResolver(schema),
@@ -90,6 +109,33 @@ export function useSend() {
       address: '',
     },
   });
+
+  const fetchBakoHandle = useCallback(
+    debounce((name: string) => {
+      if (!isValidDomain(name)) return;
+      resolver({
+        providerURL: config.PROVIDER_DEPLOYED,
+        domain: name,
+      })
+        .then((value) => {
+          if (value) {
+            setDomain(value);
+          } else {
+            form.setError('address', {
+              type: 'pattern',
+              message: 'Not found bako handle.',
+            });
+          }
+        })
+        .catch(() => {
+          form.setError('address', {
+            type: 'pattern',
+            message: 'Not found bako handle.',
+          });
+        });
+    }, 500),
+    []
+  );
 
   const service = useInterpret(() =>
     sendMachine.withConfig({
@@ -113,7 +159,14 @@ export function useSend() {
   );
 
   const amount = form.watch('amount');
+  const address = form.watch('address');
   const errorMessage = useSelector(service, selectors.error);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    setDomain(null);
+    fetchBakoHandle(address);
+  }, [address]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -127,7 +180,9 @@ export function useSend() {
         account,
         asset,
         amount,
-        address,
+        address: Address.fromAddressOrString(
+          domain?.resolver ?? address
+        ).toAddress(),
       } as TxInputs['isValidTransaction'];
       service.send('SET_DATA', { input });
     }
@@ -212,6 +267,7 @@ export function useSend() {
     form,
     fee,
     title,
+    domain,
     status,
     readyToSend,
     balanceAssets,
