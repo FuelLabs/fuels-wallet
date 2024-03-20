@@ -2,4 +2,4 @@
 "@fuel-wallet/types": patch
 ---
 
-ci: keep types private from now on"
+ci: keep types private from now on
