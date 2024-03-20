@@ -36,6 +36,7 @@ jobs:
         uses: FuelLabs/github-actions/update-sdk@hf/feat/update-sdk-output
         with:
           branch: master
+          changeset: true
           # TODO: remove it when the workflow is ready
           packages: ${{ inputs.packages || 'fuels' }}
           npm-tag: ${{ inputs.tag || 'rc-1905' }}
