@@ -30,4 +30,4 @@ jobs:
 
       - name: Change tag to latest
         run: |
-          npm dist-tag add @fuel-wallet/connections@${{ env.BUILD_VERSION }} latest
+          npm dist-tag add @fuel-wallet/types@${{ env.BUILD_VERSION }} latest
