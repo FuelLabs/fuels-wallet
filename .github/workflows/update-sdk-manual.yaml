@@ -39,7 +39,7 @@ jobs:
 
       - name: Checking updates
         id: update
-        uses: FuelLabs/github-actions/update-sdk@hf/feat/update-sdk-output
+        uses: FuelLabs/github-actions/update-sdk@master
         with:
           branch: master
           changeset: true
@@ -50,14 +50,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
       - name: Add PR comment on the publisher repo
-        if: steps.update.outputs['has-updates'] == 'true' && inputs.issue && inputs.publisher
+        # if: steps.update.outputs['has-updates'] == 'true' && inputs.issue && inputs.publisher
+        if: steps.update.outputs['has-updates'] == 'true' # TODO: remove it when the workflow is ready
         uses: mshick/add-pr-comment@v2
         with:
           repo-name: ${{ inputs.publisher || 'fuels-ts' }} # TODO: remove it when the workflow is ready
           repo-token: ${{ secrets.REPO_TOKEN }}
           issue: ${{ inputs.issue || '1905' }} # TODO: remove it when the workflow is ready
           message: |
-            (Testing)
-            PR published under the `${{ inputs.tag }}` tag.
-            PR = ${{ steps.update.outputs.pr }}
-            Branch = ${{ steps.update.outputs.branch }}
+            ✨ A PR has been created under the `${{ inputs.tag }}` tag on `fuels-wallet` repo.
+            ${{ steps.update.outputs.pr }}
