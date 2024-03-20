@@ -1,9 +1,6 @@
 name: Check SDK updates (manual)
 
 on:
-  # TODO: remove it when the workflow is ready
-  pull_request:
-    types: [opened, synchronize, reopened]
   workflow_dispatch:
     inputs:
       publisher:
@@ -43,20 +40,18 @@ jobs:
         with:
           branch: master
           changeset: true
-          # TODO: remove it when the workflow is ready
-          packages: ${{ inputs.packages || 'fuels' }}
-          npm-tag: ${{ inputs.tag || 'rc-1905' }}
+          packages: ${{ inputs.packages }}
+          npm-tag: ${{ inputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
       - name: Add PR comment on the publisher repo
-        # if: steps.update.outputs['has-updates'] == 'true' && inputs.issue && inputs.publisher
-        if: steps.update.outputs['has-updates'] == 'true' # TODO: remove it when the workflow is ready
+        if: steps.update.outputs['has-updates'] == 'true' && inputs.issue && inputs.publisher
         uses: mshick/add-pr-comment@v2
         with:
-          repo-name: ${{ inputs.publisher || 'fuels-ts' }} # TODO: remove it when the workflow is ready
+          repo-name: ${{ inputs.publisher || 'fuels-ts' }}
           repo-token: ${{ secrets.REPO_TOKEN }}
-          issue: ${{ inputs.issue || '1905' }} # TODO: remove it when the workflow is ready
+          issue: ${{ inputs.issue }}
           message: |
             ✨ A PR has been created under the `${{ inputs.tag }}` tag on `fuels-wallet` repo.
             ${{ steps.update.outputs.pr }}
