@@ -38,17 +38,20 @@ jobs:
           branch: master
           # TODO: remove it when the workflow is ready
           packages: ${{ inputs.packages || 'fuels' }}
-          npm-tag: ${{ inputs.tag || 'latest' }}
+          npm-tag: ${{ inputs.tag || 'rc-1905' }}
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
-      - name: Add PR comment
+      - name: Add PR comment on the publisher repo
         if: steps.update.outputs['has-updates'] == 'true'
         uses: mshick/add-pr-comment@v2
         with:
+          repo-name: fuels-ts # TODO: Move it to the input
+          issue: 1905 # TODO: Move it to the input
           message: |
+            (Testing)
             PR published under the `${{ inputs.tag }}` tag.
             PR = ${{ steps.update.outputs.pr }}
-            Branch = ${{ steps.update.outputs.pr }}
+            Branch = ${{ steps.update.outputs.branch }}
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
