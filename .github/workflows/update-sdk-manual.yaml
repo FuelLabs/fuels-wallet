@@ -54,11 +54,10 @@ jobs:
         uses: mshick/add-pr-comment@v2
         with:
           repo-name: ${{ inputs.publisher || 'fuels-ts' }} # TODO: remove it when the workflow is ready
+          repo-token: ${{ secrets.REPO_TOKEN }}
           issue: ${{ inputs.issue || '1905' }} # TODO: remove it when the workflow is ready
           message: |
             (Testing)
             PR published under the `${{ inputs.tag }}` tag.
             PR = ${{ steps.update.outputs.pr }}
             Branch = ${{ steps.update.outputs.branch }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
