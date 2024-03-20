@@ -49,9 +49,9 @@ jobs:
         if: steps.update.outputs['has-updates'] == 'true' && inputs.issue && inputs.publisher
         uses: mshick/add-pr-comment@v2
         with:
-          repo-name: ${{ inputs.publisher || 'fuels-ts' }}
-          repo-token: ${{ secrets.REPO_TOKEN }}
+          repo-name: ${{ inputs.publisher }}
           issue: ${{ inputs.issue }}
+          repo-token: ${{ secrets.REPO_TOKEN }}
           message: |
             ✨ A PR has been created under the `${{ inputs.tag }}` tag on `fuels-wallet` repo.
             ${{ steps.update.outputs.pr }}
