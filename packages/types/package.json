@@ -1,5 +1,6 @@
 {
   "name": "@fuel-wallet/types",
+  "private": true,
   "version": "0.16.1",
   "license": "Apache-2.0",
   "main": "src/index.ts",
