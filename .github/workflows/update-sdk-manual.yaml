@@ -3,7 +3,7 @@ name: Check SDK updates (manual)
 on:
   workflow_dispatch:
     inputs:
-      package:
+      packages:
         description: Packages to update (comma separated)
         default: fuels
         required: true
