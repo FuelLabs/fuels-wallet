@@ -6,6 +6,12 @@ on:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
     inputs:
+      publisher:
+        description: Publisher repo name (e.g. fuels-ts)
+        required: false
+      issue:
+        description: Publisher repo issue (e.g. 1905)
+        required: false
       packages:
         description: Packages to update (comma separated)
         default: fuels
@@ -44,11 +50,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
       - name: Add PR comment on the publisher repo
-        if: steps.update.outputs['has-updates'] == 'true'
+        if: steps.update.outputs['has-updates'] == 'true' && inputs.issue && inputs.publisher
         uses: mshick/add-pr-comment@v2
         with:
-          repo-name: fuels-ts # TODO: Move it to the input
-          issue: 1905 # TODO: Move it to the input
+          repo-name: ${{ inputs.publisher || 'fuels-ts' }} # TODO: remove it when the workflow is ready
+          issue: ${{ inputs.issue || '1905' }} # TODO: remove it when the workflow is ready
           message: |
             (Testing)
             PR published under the `${{ inputs.tag }}` tag.
