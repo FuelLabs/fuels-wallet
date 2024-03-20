@@ -1,6 +1,9 @@
 name: Check SDK updates (manual)
 
 on:
+  # TODO: remove it when the workflow is ready
+  pull_request:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
     inputs:
       packages:
@@ -29,10 +32,23 @@ jobs:
       - uses: FuelLabs/github-actions/setups/node@master
 
       - name: Checking updates
-        uses: FuelLabs/github-actions/update-sdk@master
+        id: update
+        uses: FuelLabs/github-actions/update-sdk@hf/feat/update-sdk-output
         with:
           branch: master
-          packages: ${{ inputs.packages }}
-          npm-tag: ${{ inputs.tag }}
+          # TODO: remove it when the workflow is ready
+          packages: ${{ inputs.packages || 'fuels' }}
+          npm-tag: ${{ inputs.tag || 'latest' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+      - name: Add PR comment
+        if: steps.update.outputs['has-updates'] == 'true'
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            PR published under the `${{ inputs.tag }}` tag.
+            PR = ${{ steps.update.outputs.pr }}
+            Branch = ${{ steps.update.outputs.pr }}
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
