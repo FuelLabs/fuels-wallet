@@ -11,27 +11,33 @@ const DELETE_PACKAGES = process.env.DELETE_PACKAGES === 'true';
 const dryRun = DELETE_PACKAGES ? '' : '--dry-run';
 
 async function getPublicPackages() {
-  const packages = await readdir(join(__dirname, '../packages'), {
+  const base = join(__dirname, '../packages');
+  const packages = await readdir(base, {
     withFileTypes: true,
   });
 
   console.log('packages');
   console.log(packages);
+  console.log(base);
+  console.log(join(base, packages[0].name, 'package.json'));
 
-  const packagesNames = [];
-  for (const p of packages) {
-    const file = await readFile(join(p.path, p.name, 'package.json'), 'utf8');
-    const pkg = JSON.parse(file.toString());
+  const packagesNames = await Promise.all(
+    packages.map(async (p) => {
+      try {
+        const packageContent = await readFile(
+          join(base, p.name, 'package.json'),
+          'utf8'
+        );
+        const pkg = JSON.parse(packageContent.toString());
 
-    console.log(join(p.path, p.name, 'package.json'));
-    console.log(pkg.name, pkg.private);
-
-    if (pkg.private) continue;
-
-    packagesNames.push(pkg.name);
-  }
-
-  return packagesNames;
+        if (pkg.private) return null;
+        return pkg.name;
+      } catch (_err) {
+        return null;
+      }
+    })
+  );
+  return packagesNames.filter((p) => !!p);
 }
 
 async function main() {
