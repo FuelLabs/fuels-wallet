@@ -86,7 +86,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload aritifacts to Sentry
+      - name: Upload artifacts to Sentry
         if: steps.changesets.outputs.published == 'true'
         run: |
           pnpm sentry-cli sourcemaps inject --release ${{ env.BUILD_VERSION }} ./dist-crx
