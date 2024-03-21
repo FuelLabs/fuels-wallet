@@ -15,6 +15,9 @@ async function getPublicPackages() {
     withFileTypes: true,
   });
 
+  console.log('packages');
+  console.log(packages);
+
   const packagesNames = [];
   for (const p of packages) {
     const file = await readFile(join(p.path, p.name, 'package.json'), 'utf8');
