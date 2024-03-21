@@ -16,11 +16,6 @@ async function getPublicPackages() {
     withFileTypes: true,
   });
 
-  console.log('packages');
-  console.log(packages);
-  console.log(base);
-  console.log(join(base, packages[0].name, 'package.json'));
-
   const packagesNames = await Promise.all(
     packages.map(async (p) => {
       try {
