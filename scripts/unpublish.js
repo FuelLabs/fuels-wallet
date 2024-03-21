@@ -15,27 +15,21 @@ async function getPublicPackages() {
     withFileTypes: true,
   });
 
-  const packagesNames = await Promise.all(
-    packages.map(async (p) => {
-      try {
-        const packageContent = await readFile(
-          join(p.path, p.name, 'package.json'),
-          'utf8'
-        );
-        const pkg = JSON.parse(packageContent.toString());
+  const packagesNames = [];
+  for (const p of packages) {
+    const file = await readFile(join(p.path, p.name, 'package.json'), 'utf8');
+    const pkg = JSON.parse(file.toString());
 
-        console.log(join(p.path, p.name, 'package.json'));
-        console.log(packageContent.toString());
-        console.log(pkg.name);
+    console.log(join(pkg.path, pkg.name, 'package.json'));
+    console.log(file.toString());
+    console.log(pkg.name, pkg.private);
 
-        if (pkg.private) return null;
-        return pkg.name;
-      } catch (_err) {
-        return null;
-      }
-    })
-  );
-  return packagesNames.filter((p) => !!p);
+    if (pkg.private) continue;
+
+    packagesNames.push(pkg.name);
+  }
+
+  return packagesNames;
 }
 
 async function main() {
