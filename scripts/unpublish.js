@@ -20,8 +20,7 @@ async function getPublicPackages() {
     const file = await readFile(join(p.path, p.name, 'package.json'), 'utf8');
     const pkg = JSON.parse(file.toString());
 
-    console.log(join(pkg.path, pkg.name, 'package.json'));
-    console.log(file.toString());
+    console.log(join(p.path, p.name, 'package.json'));
     console.log(pkg.name, pkg.private);
 
     if (pkg.private) continue;
