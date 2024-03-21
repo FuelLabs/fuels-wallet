@@ -15,10 +15,6 @@ async function getPublicPackages() {
     withFileTypes: true,
   });
 
-  console.log(__dirname);
-  console.log(packages.length);
-  console.log(join(__dirname, '../packages'));
-
   const packagesNames = await Promise.all(
     packages.map(async (p) => {
       try {
@@ -27,6 +23,10 @@ async function getPublicPackages() {
           'utf8'
         );
         const pkg = JSON.parse(packageContent.toString());
+
+        console.log(join(p.path, p.name, 'package.json'));
+        console.log(packageContent.toString());
+        console.log(pkg.name);
 
         if (pkg.private) return null;
         return pkg.name;
