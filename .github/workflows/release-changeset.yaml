@@ -22,9 +22,6 @@ jobs:
           # need this to get full git-history/clone in order to build changelogs and check changesets
           fetch-depth: 0
       - uses: FuelLabs/github-actions/setups/node@master
-      - uses: FuelLabs/github-actions/setups/npm@master
-        with:
-          npm-token: ${{ secrets.NPM_TOKEN }}
 
       - name: Bump and Collect Version
         run: |
@@ -38,13 +35,6 @@ jobs:
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-
-      - name: Build Libs
-        run: pnpm build:libs
-        env:
-          ## increase node.js m memory limit for building
-          ## with sourcemaps
-          NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Build Fuel Wallet
         run: pnpm build:crx
@@ -62,11 +52,10 @@ jobs:
           APP_VERSION_POSTFIX: "-development"
           NODE_OPTIONS: "--max-old-space-size=4096"
 
-      - name: Create Release Pull Request or Publish to NPM
+      - name: Create Release Pull Request
         id: changesets
         uses: FuelLabs/changesets-action@main
         with:
-          publish: pnpm changeset publish --tag rc
           commit: "ci(changesets): versioning packages"
           title: "ci(changesets): versioning packages"
           createGithubReleases: aggregate
@@ -74,17 +63,6 @@ jobs:
           githubTagName: v${{ env.BUILD_VERSION }}
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Release to @master tag
-        if: steps.changesets.outputs.published != 'true'
-        run: |
-          git checkout master
-          pnpm changeset version --snapshot master
-          pnpm changeset publish --tag master
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload artifacts to Sentry
         if: steps.changesets.outputs.published == 'true'
