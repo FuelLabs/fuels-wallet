@@ -5,27 +5,29 @@ const { compare } = require('compare-versions');
 const exec = util.promisify(require('node:child_process').exec);
 const { version } = require('../packages/app/package.json');
 
-const DELETE_TAGS = /next|preview/;
+const DELETE_TAGS = /next|preview|master|rc/;
 const CURRENT_VERSION = version;
 const DELETE_PACKAGES = process.env.DELETE_PACKAGES === 'true';
 const dryRun = DELETE_PACKAGES ? '' : '--dry-run';
 
 async function getPublicPackages() {
-  const packages = await readdir(join(__dirname, '../packages'), {
+  const base = join(__dirname, '../packages');
+  const packages = await readdir(base, {
     withFileTypes: true,
   });
+
   const packagesNames = await Promise.all(
     packages.map(async (p) => {
       try {
         const packageContent = await readFile(
-          join(p.path, p.name, 'package.json'),
+          join(base, p.name, 'package.json'),
           'utf8'
         );
-        const package = JSON.parse(packageContent.toString());
+        const pkg = JSON.parse(packageContent.toString());
 
-        if (package.private) return null;
-        return package.name;
-      } catch (err) {
+        if (pkg.private) return null;
+        return pkg.name;
+      } catch (_err) {
         return null;
       }
     })
@@ -34,7 +36,7 @@ async function getPublicPackages() {
 }
 
 async function main() {
-  console.log(`Get public packages`);
+  console.log('Get public packages');
   const packages = await getPublicPackages();
 
   for (const packageName of packages) {
