@@ -21,6 +21,9 @@ jobs:
         with:
           # need this to get full git-history/clone in order to build changelogs and check changesets
           fetch-depth: 0
+          # workaround to ensure force pushes to changeset branch use REPO_TOKEN owner's account
+          # see https://github.com/changesets/action/issues/70
+          persist-credentials: false
       - uses: FuelLabs/github-actions/setups/node@master
 
       - name: Bump and Collect Version
