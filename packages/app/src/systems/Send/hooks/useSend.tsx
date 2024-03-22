@@ -71,24 +71,27 @@ const schema = yup
   .object({
     asset: yup.string().required('Asset is required'),
     amount: yup.string().required('Amount is required'),
-    address: yup
-      .string()
-      .required('Address is required')
-      .test('is-address-or-handle', (value, _context) => {
-        const isAddress = value.startsWith('fuel');
-        const isHandle = value.startsWith('@');
+    address: yup.lazy((value) => {
+      const addressSchema = yup
+        .string()
+        .required('Address or Bako Handle is required');
 
-        if (isHandle) {
-          return isValidDomain(value) ?? 'Invalid handle name';
-        }
+      const isHandle = value.startsWith('@');
 
-        if (isAddress) {
-          return isValidAddress(value) ?? 'Invalid bech32 address';
-        }
+      if (isHandle) {
+        return addressSchema.test(
+          'is-domain',
+          'Invalid handle name',
+          isValidDomain
+        );
+      }
 
-        return true;
-      })
-      .test('is-domain', 'Invalid handle name.', isValidDomain),
+      return addressSchema.test(
+        'is-address',
+        'Invalid bech32 address',
+        isValidAddress
+      );
+    }),
   })
   .required();
 
@@ -112,7 +115,7 @@ export function useSend() {
 
   const fetchBakoHandle = useCallback(
     debounce((name: string) => {
-      if (!isValidDomain(name)) return;
+      if (!name.includes('@') || !isValidDomain(name)) return;
       resolver({
         providerURL: config.PROVIDER_DEPLOYED,
         domain: name,
