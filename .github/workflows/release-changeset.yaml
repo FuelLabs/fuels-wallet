@@ -68,7 +68,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
       - name: Upload artifacts to Sentry
-        if: !steps.changesets.outputs.pullRequestNumber
+        if: steps.changesets.outputs.pullRequestNumber == ''
         run: |
           pnpm sentry-cli sourcemaps inject --release ${{ env.BUILD_VERSION }} ./dist-crx
           pnpm sentry-cli sourcemaps upload --release ${{ env.BUILD_VERSION }} ./dist-crx
@@ -79,7 +79,7 @@ jobs:
         working-directory: ./packages/app
 
       - name: Attach Fuel Wallet to release
-        if: !steps.changesets.outputs.pullRequestNumber
+        if: steps.changesets.outputs.pullRequestNumber == ''
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
