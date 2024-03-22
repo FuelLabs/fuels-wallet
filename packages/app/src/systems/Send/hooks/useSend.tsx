@@ -173,23 +173,28 @@ export function useSend() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (bn(amount).gt(0) && form.formState.isValid) {
-      const asset = assets.find(
-        ({ assetId }) => assetId === form.getValues('asset')
-      );
-      const amount = bn(form.getValues('amount'));
-      const address = form.getValues('address');
-      const input = {
-        account,
-        asset,
-        amount,
-        address: Address.fromAddressOrString(
-          domain?.resolver ?? address
-        ).toAddress(),
-      } as TxInputs['isValidTransaction'];
-      service.send('SET_DATA', { input });
-    }
-  }, [amount, form.formState.isValid]);
+    if (!form.formState.isValid) return;
+
+    const amount = bn(form.getValues('amount'));
+    if (bn(amount).lt(0)) return;
+
+    const address = form.getValues('address');
+    if (address.startsWith('@') && !domain) return;
+
+    const asset = assets.find(
+      ({ assetId }) => assetId === form.getValues('asset')
+    );
+    const bech32Address = Address.fromAddressOrString(
+      domain?.resolver ?? address
+    ).toAddress();
+    const input = {
+      account,
+      asset,
+      amount,
+      address: bech32Address,
+    } as TxInputs['isValidTransaction'];
+    service.send('SET_DATA', { input });
+  }, [amount, domain, form.formState.isValid]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
