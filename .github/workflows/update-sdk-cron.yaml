@@ -28,6 +28,11 @@ jobs:
           persist-credentials: false
       - uses: FuelLabs/github-actions/setups/node@master
 
+      - name: Setup git user
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
       - name: Checking updates
         uses: FuelLabs/github-actions/update-sdk@master
         with:
