@@ -51,7 +51,6 @@ export class VaultServer extends EventEmitter {
     'isLocked',
     'unlock',
     'createVault',
-    'removeVault',
     'getVaults',
     'getAccounts',
     'addAccount',
@@ -61,6 +60,7 @@ export class VaultServer extends EventEmitter {
     'exportVault',
     'exportPrivateKey',
     'lock',
+    'clear',
   ];
 
   constructor() {
@@ -100,10 +100,6 @@ export class VaultServer extends EventEmitter {
       publicKey: account.publicKey,
       vaultId: vault.vaultId,
     };
-  }
-
-  async removeVault(index: number): Promise<void> {
-    await this.manager.removeVault(index);
   }
 
   async getVaults() {
@@ -186,6 +182,14 @@ export class VaultServer extends EventEmitter {
   }: VaultInputs['exportPrivateKey']): Promise<string> {
     await this.manager.unlock(password);
     return this.manager.exportPrivateKey(Address.fromString(address));
+  }
+
+  async clear(): Promise<void> {
+    const vaults = this.manager.getVaults();
+    const vaultIds = vaults.map((vault) => {
+      return this.manager.removeVault(vault.vaultId);
+    });
+    await Promise.all(vaultIds);
   }
 }
 
