@@ -103,7 +103,7 @@ export class VaultServer extends EventEmitter {
   }
 
   async getVaults() {
-    return this.manager.getVaults();
+    return await this.manager.getVaults();
   }
 
   async isLocked(): Promise<boolean> {
