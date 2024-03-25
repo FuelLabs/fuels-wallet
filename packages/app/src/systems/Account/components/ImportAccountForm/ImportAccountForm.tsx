@@ -26,6 +26,8 @@ export const ImportAccountForm = ({
           <Input isDisabled={isLoading}>
             <Input.Field
               {...field}
+              autoComplete="off"
+              type="password"
               aria-label="Private Key"
               placeholder="Enter the private key to import from"
             />

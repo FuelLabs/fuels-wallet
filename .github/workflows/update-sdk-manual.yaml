@@ -32,10 +32,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        with:
-          # workaround to ensure force pushes to changeset branch use REPO_TOKEN owner's account
-          # see https://github.com/changesets/action/issues/70
-          persist-credentials: false
       - uses: FuelLabs/github-actions/setups/node@master
 
       - name: Checking updates
