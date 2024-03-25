@@ -95,9 +95,9 @@ export const addAccountMachine = createMachine(
             throw new Error('Account name already exists');
           }
 
-          // Get latest vault
+          // Get first vault, because the user can have multiple vaults added via private keys
           const vaults = await VaultService.getVaults();
-          const [vault] = vaults.slice(-1);
+          const [vault] = vaults;
 
           // Add account to vault
           const accountVault = await VaultService.addAccount({

@@ -22,7 +22,7 @@ export class SignUpService {
 
     // Ensure database is open
     await db.open();
-    // Clear databse on create
+    // Clear database on create
     await db.clear();
 
     // Add networks
@@ -38,9 +38,10 @@ export class SignUpService {
     });
 
     // Register the first account retuned from the vault
+    const name = await AccountService.generateAccountName();
     return AccountService.addAccount({
       data: {
-        name: 'Account 1',
+        name,
         address: account.address.toString(),
         publicKey: account.publicKey,
         isHidden: false,
