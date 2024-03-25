@@ -51,6 +51,7 @@ export class VaultServer extends EventEmitter {
     'isLocked',
     'unlock',
     'createVault',
+    'removeVault',
     'getVaults',
     'getAccounts',
     'addAccount',
@@ -92,12 +93,17 @@ export class VaultServer extends EventEmitter {
     const accounts = this.manager.getAccounts();
     const vaults = this.manager.getVaults();
     const [vault] = vaults.slice(-1);
-    const [account] = accounts;
+    const [account] = accounts.slice(-1);
+
     return {
       address: account.address.toString(),
       publicKey: account.publicKey,
       vaultId: vault.vaultId,
     };
+  }
+
+  async removeVault(index: number): Promise<void> {
+    await this.manager.removeVault(index);
   }
 
   async getVaults() {
