@@ -185,7 +185,7 @@ export class VaultServer extends EventEmitter {
   }
 
   async clear(): Promise<void> {
-    const vaults = this.manager.getVaults();
+    const vaults = await this.manager.getVaults();
     const vaultIds = vaults.map((vault) => {
       return this.manager.removeVault(vault.vaultId);
     });
