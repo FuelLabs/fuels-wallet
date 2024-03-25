@@ -90,8 +90,12 @@ export class VaultServer extends EventEmitter {
       type,
       secret,
     });
-    const accounts = this.manager.getAccounts();
-    const vaults = this.manager.getVaults();
+
+    const [vaults, accounts] = await Promise.all([
+      this.manager.getVaults(),
+      this.manager.getAccounts(),
+    ]);
+
     const [vault] = vaults.slice(-1);
     const [account] = accounts.slice(-1);
 
