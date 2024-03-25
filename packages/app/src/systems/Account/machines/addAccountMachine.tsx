@@ -95,27 +95,32 @@ export const addAccountMachine = createMachine(
             throw new Error('Account name already exists');
           }
 
+          // Get latest vault
+          const vaults = await VaultService.getVaults();
+          const [vault] = vaults.slice(-1);
+
           // Add account to vault
           const accountVault = await VaultService.addAccount({
-            // TODO: remove this when we have multiple vaults
-            // https://github.com/FuelLabs/fuels-wallet/issues/562
-            vaultId: 0,
+            vaultId: vault.vaultId,
           });
 
           // Add account to the database
-          let account = await AccountService.addAccount({
+          const account = await AccountService.addAccount({
             data: {
               name,
-              ...accountVault,
+              address: accountVault.address,
+              publicKey: accountVault.publicKey,
+              vaultId: accountVault.vaultId,
+              isHidden: false,
             },
           });
 
           // set as active account
-          account = await AccountService.setCurrentAccount({
-            address: account.address.toString(),
+          const activeAccount = await AccountService.setCurrentAccount({
+            address: account.address,
           });
 
-          return account;
+          return activeAccount;
         },
       }),
     },

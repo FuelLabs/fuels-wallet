@@ -112,7 +112,7 @@ export const importAccountMachine = createMachine(
           const account = await AccountService.addAccount({
             data: {
               name: input.name,
-              address: accountVault.address.toString(),
+              address: accountVault.address,
               publicKey: accountVault.publicKey,
               isHidden: false,
               vaultId: accountVault.vaultId,
@@ -121,7 +121,7 @@ export const importAccountMachine = createMachine(
 
           // set as active account
           const activeAccount = await AccountService.setCurrentAccount({
-            address: account.address.toString(),
+            address: account.address,
           });
 
           return activeAccount;

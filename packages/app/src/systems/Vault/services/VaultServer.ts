@@ -51,6 +51,7 @@ export class VaultServer extends EventEmitter {
     'isLocked',
     'unlock',
     'createVault',
+    'getVaults',
     'getAccounts',
     'addAccount',
     'signMessage',
@@ -88,15 +89,19 @@ export class VaultServer extends EventEmitter {
       type,
       secret,
     });
-    const accounts = await this.manager.getAccounts();
-    const vaults = await this.manager.getVaults();
-    const vaultId = vaults.length - 1;
-    const [account] = accounts.slice(-1);
+    const accounts = this.manager.getAccounts();
+    const vaults = this.manager.getVaults();
+    const [vault] = vaults.slice(-1);
+    const [account] = accounts;
     return {
       address: account.address.toString(),
       publicKey: account.publicKey,
-      vaultId,
+      vaultId: vault.vaultId,
     };
+  }
+
+  async getVaults() {
+    return this.manager.getVaults();
   }
 
   async isLocked(): Promise<boolean> {
@@ -123,7 +128,7 @@ export class VaultServer extends EventEmitter {
   }
 
   async getAccounts(): Promise<Array<VaultAccount>> {
-    const accounts = await this.manager.getAccounts();
+    const accounts = this.manager.getAccounts();
     return accounts.map((ac) => ({
       address: ac.address.toString(),
       publicKey: ac.publicKey,
