@@ -130,7 +130,7 @@ export class VaultServer extends EventEmitter {
   }
 
   async getAccounts(): Promise<Array<VaultAccount>> {
-    const accounts = this.manager.getAccounts();
+    const accounts = await this.manager.getAccounts();
     return accounts.map((ac) => ({
       address: ac.address.toString(),
       publicKey: ac.publicKey,
