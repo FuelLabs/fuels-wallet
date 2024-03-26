@@ -99,7 +99,7 @@ const styles = {
     marginRight: '$1',
 
     '.fuel_Icon': {
-      color: '$intentsBase8',
+      color: 'currentColor',
     },
   }),
 };
