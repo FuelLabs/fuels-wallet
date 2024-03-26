@@ -111,7 +111,7 @@ export function ChangePassword() {
                 render={({ field }) => (
                   <InputPassword
                     {...field}
-                    autoComplete="current-password"
+                    autoComplete="new-password"
                     css={styles.input}
                     aria-label="Current Password"
                     placeholder="Type your current password"

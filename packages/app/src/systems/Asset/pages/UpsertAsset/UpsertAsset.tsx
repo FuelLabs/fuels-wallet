@@ -52,7 +52,7 @@ export function UpsertAsset() {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
+    <form onSubmit={form.handleSubmit(onSubmit)} autoComplete="off">
       <Layout title={`${isEditing ? 'Edit' : 'Add'} Asset`}>
         <Layout.TopBar />
         <Focus.Scope autoFocus>
