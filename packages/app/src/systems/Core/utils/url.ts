@@ -19,6 +19,11 @@ export function relativeUrl(path: string) {
   return urlJoin(import.meta.env.BASE_URL, path);
 }
 
-export function parseUrl(url: string) {
-  return url.replace(/http(s?):\/\//, '');
+export function parseUrl(value: string) {
+  try {
+    const url = new URL(value);
+    return url.hostname;
+  } catch (_err) {
+    return value.replace(/http(s?):\/\//, '');
+  }
 }
