@@ -1,10 +1,15 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Input, InputAmount, Text } from '@fuel-ui/react';
+import { Box, Form, Input, InputAmount, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { BaseAssetId, DECIMAL_UNITS, bn } from 'fuels';
+import { Address, BaseAssetId, DECIMAL_UNITS, bn } from 'fuels';
 import { useEffect, useMemo } from 'react';
 import { AssetSelect } from '~/systems/Asset';
-import { ControlledField, Layout, animations } from '~/systems/Core';
+import {
+  ControlledField,
+  Layout,
+  animations,
+  shortAddress,
+} from '~/systems/Core';
 import { TxDetails } from '~/systems/Transaction';
 
 import type { UseSendReturn } from '../../hooks';
@@ -19,6 +24,7 @@ export function SendSelect({
   balanceAssetSelected,
   status,
   fee,
+  domain,
 }: SendSelectProps) {
   const assetId = form.watch('asset', '');
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -74,14 +80,28 @@ export function SendSelect({
               control={form.control}
               isInvalid={Boolean(form.formState.errors?.address)}
               render={({ field }) => (
-                <Input size="sm">
-                  <Input.Field
-                    {...field}
-                    id="address"
-                    aria-label="Address Input"
-                    placeholder="Enter a fuel address"
-                  />
-                </Input>
+                <>
+                  <Input size="sm">
+                    <Input.Field
+                      {...field}
+                      id="address"
+                      aria-label="Address Input"
+                      placeholder="Enter a fuel address or bako handle"
+                    />
+                  </Input>
+                  {domain && (
+                    <Form.HelperText
+                      css={{ fontSize: '$sm', fontWeight: '$normal' }}
+                    >
+                      Address of {field.value}:{' '}
+                      <Text as="b" css={{ fontWeight: '$bold' }}>
+                        {shortAddress(
+                          Address.fromB256(domain.resolver).toAddress()
+                        )}
+                      </Text>
+                    </Form.HelperText>
+                  )}
+                </>
               )}
             />
           </Box>

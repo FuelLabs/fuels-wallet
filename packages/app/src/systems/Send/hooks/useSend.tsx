@@ -1,8 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
-import type { BigNumberish } from 'fuels';
+import { Address, type BigNumberish } from 'fuels';
 import { bn, isBech32 } from 'fuels';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -13,6 +13,8 @@ import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
 
+import { type Domain, config, isValidDomain, resolver } from '@bako-id/sdk';
+import debounce from 'lodash.debounce';
 import { sendMachine } from '../machines/sendMachine';
 import type { SendMachineState } from '../machines/sendMachine';
 
@@ -57,20 +59,39 @@ const selectors = {
   },
 };
 
+const isValidAddress = (value: string) => {
+  try {
+    return Boolean(value && isBech32(value));
+  } catch (_error) {
+    return false;
+  }
+};
+
 const schema = yup
   .object({
     asset: yup.string().required('Asset is required'),
     amount: yup.string().required('Amount is required'),
-    address: yup
-      .string()
-      .required('Address is required')
-      .test('is-address', 'Invalid bech32 address', (value) => {
-        try {
-          return Boolean(value && isBech32(value));
-        } catch (_error) {
-          return false;
-        }
-      }),
+    address: yup.lazy((value) => {
+      const addressSchema = yup
+        .string()
+        .required('Address or Bako Handle is required');
+
+      const isHandle = value.startsWith('@');
+
+      if (isHandle) {
+        return addressSchema.test(
+          'is-domain',
+          'Invalid handle name',
+          isValidDomain
+        );
+      }
+
+      return addressSchema.test(
+        'is-address',
+        'Invalid bech32 address',
+        isValidAddress
+      );
+    }),
   })
   .required();
 
@@ -79,6 +100,7 @@ export function useSend() {
   const txRequest = useTransactionRequest();
   const { account, balanceAssets: accountBalanceAssets } = useAccounts();
   const { assets } = useAssets();
+  const [domain, setDomain] = useState<Domain | null>(null);
 
   const form = useForm({
     resolver: yupResolver(schema),
@@ -90,6 +112,33 @@ export function useSend() {
       address: '',
     },
   });
+
+  const fetchBakoHandle = useCallback(
+    debounce((name: string) => {
+      if (!name.includes('@') || !isValidDomain(name)) return;
+      resolver({
+        providerURL: config.PROVIDER_DEPLOYED,
+        domain: name,
+      })
+        .then((value) => {
+          if (value) {
+            setDomain(value);
+          } else {
+            form.setError('address', {
+              type: 'pattern',
+              message: 'Not found bako handle.',
+            });
+          }
+        })
+        .catch(() => {
+          form.setError('address', {
+            type: 'pattern',
+            message: 'Not found bako handle.',
+          });
+        });
+    }, 500),
+    []
+  );
 
   const service = useInterpret(() =>
     sendMachine.withConfig({
@@ -113,25 +162,39 @@ export function useSend() {
   );
 
   const amount = form.watch('amount');
+  const address = form.watch('address');
   const errorMessage = useSelector(service, selectors.error);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (bn(amount).gt(0) && form.formState.isValid) {
-      const asset = assets.find(
-        ({ assetId }) => assetId === form.getValues('asset')
-      );
-      const amount = bn(form.getValues('amount'));
-      const address = form.getValues('address');
-      const input = {
-        account,
-        asset,
-        amount,
-        address,
-      } as TxInputs['isValidTransaction'];
-      service.send('SET_DATA', { input });
-    }
-  }, [amount, form.formState.isValid]);
+    setDomain(null);
+    fetchBakoHandle(address);
+  }, [address]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!form.formState.isValid) return;
+
+    const amount = bn(form.getValues('amount'));
+    if (bn(amount).lt(0)) return;
+
+    const address = form.getValues('address');
+    if (address.startsWith('@') && !domain) return;
+
+    const asset = assets.find(
+      ({ assetId }) => assetId === form.getValues('asset')
+    );
+    const bech32Address = Address.fromAddressOrString(
+      domain?.resolver ?? address
+    ).toAddress();
+    const input = {
+      account,
+      asset,
+      amount,
+      address: bech32Address,
+    } as TxInputs['isValidTransaction'];
+    service.send('SET_DATA', { input });
+  }, [amount, domain, form.formState.isValid]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -212,6 +275,7 @@ export function useSend() {
     form,
     fee,
     title,
+    domain,
     status,
     readyToSend,
     balanceAssets,
