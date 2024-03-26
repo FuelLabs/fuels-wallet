@@ -1,6 +1,4 @@
-import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
-import type { BoxProps } from '@fuel-ui/react';
 import { Box, CardList, Icon, Text } from '@fuel-ui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AccountItem } from '~/systems/Account';
@@ -16,8 +14,7 @@ import type { useConnections } from '../../hooks';
 
 export type ConnectionEditProps = ReturnType<typeof useConnections>;
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-const MotionBox = motion<BoxProps & { css?: ThemeUtilsCSS }>(Box as any);
+const MotionBox = motion(Box);
 const MotionCardList = motion(CardList);
 
 export function ConnectionEdit({
@@ -27,14 +24,15 @@ export function ConnectionEdit({
 }: ConnectionEditProps) {
   if (!ctx.connection) return null;
   const { origin, title, favIconUrl } = ctx.connection;
+
   return (
     <Layout.Content>
       <Box.Stack gap="$3">
         <ConnectInfo
+          headerText="Edit your connection to:"
           origin={origin}
           favIconUrl={favIconUrl}
           title={title}
-          headerText="Edit your connection to:"
         />
         <Box.Flex css={styles.searchBar}>
           <SearchInput
@@ -101,7 +99,7 @@ const styles = {
     marginRight: '$1',
 
     '.fuel_Icon': {
-      color: '$intentsBase8',
+      color: 'currentColor',
     },
   }),
 };

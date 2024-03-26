@@ -2,7 +2,12 @@ export function getWordsFromValue(value?: string | string[]) {
   if (!Array.isArray(value)) {
     return value?.split(' ');
   }
+
   return value;
+}
+
+export function truncateByWordsNum(value: string, n: number) {
+  return value.split(' ').slice(0, n).join(' ');
 }
 
 export function getPhraseFromValue(value?: string | string[]) {
@@ -14,13 +19,6 @@ export function getPhraseFromValue(value?: string | string[]) {
 
 export const uniqueId = (size = 13) =>
   Math.random().toString(16).slice(2).slice(0, size);
-
-export const truncate = (str: string, length = 30) => {
-  if (str.length > length) {
-    return `${str.substring(0, length)}...`;
-  }
-  return str;
-};
 
 export type GetUniqueStringProps = {
   desired?: string;

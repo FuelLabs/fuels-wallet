@@ -3,7 +3,7 @@ import { Avatar, Box, CardList, Icon, IconButton, Text } from '@fuel-ui/react';
 import type { Connection } from '@fuel-wallet/types';
 import { motion } from 'framer-motion';
 import type { FC } from 'react';
-import { animations, parseUrl, truncate } from '~/systems/Core';
+import { animations, parseUrl, truncateByWordsNum } from '~/systems/Core';
 
 import { ConnectionRemoveDialog } from '../ConnectionRemoveDialog';
 
@@ -28,9 +28,8 @@ export const ConnectionItem: ConnectionItemComponent = ({
   onEdit,
   onDelete,
 }) => {
-  const origin = connection.origin;
-  const accounts = connection.accounts.length;
-  const favIconUrl = connection.favIconUrl;
+  const { origin, title, favIconUrl, accounts } = connection;
+  const connectedAccounts = accounts.length;
 
   function handleConfirm() {
     onDelete(connection.origin);
@@ -62,14 +61,23 @@ export const ConnectionItem: ConnectionItemComponent = ({
           </ConnectionRemoveDialog>
         </Box.Flex>
       }
+      css={styles.container}
     >
-      <Avatar size="sm" name={origin} src={favIconUrl} css={styles.avatar} />
-      <Box css={styles.text}>
-        <Text>{truncate(parseUrl(origin))}</Text>
-        <Text>
-          {accounts} {`account${accounts > 1 ? 's' : ''}`} connected
+      <Avatar
+        size="sm"
+        role="img"
+        name={truncateByWordsNum(title || origin, 2)}
+        src={favIconUrl}
+        css={styles.avatar}
+      />
+      <Box.Stack gap="$2" css={styles.stack}>
+        <Text css={styles.title}>{title}</Text>
+        <Text css={styles.link}>{parseUrl(origin)}</Text>
+        <Text css={styles.accounts}>
+          {connectedAccounts} {`account${connectedAccounts > 1 ? 's' : ''}`}{' '}
+          connected
         </Text>
-      </Box>
+      </Box.Stack>
     </MotionCardItem>
   );
 };
@@ -88,24 +96,35 @@ const styles = {
       height: 'auto',
     },
   }),
-  avatar: cssObj({
-    height: 32,
-    width: 32,
+  container: cssObj({
+    '& .fuel_Box-flex': {
+      minWidth: 0,
+    },
   }),
-  text: cssObj({
-    '.fuel_Text:first-of-type': {
-      width: 160,
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      textSize: 'sm',
-      fontWeight: '$normal',
-      color: '$intentsBase12',
-    },
-    '.fuel_Text:last-of-type': {
-      textSize: 'xs',
-      fontWeight: '$normal',
-      color: '$intentsBase8',
-    },
+  stack: cssObj({
+    minWidth: 0,
+  }),
+  avatar: cssObj({
+    flexShrink: 0,
+  }),
+  title: cssObj({
+    fontSize: '$sm',
+    lineHeight: '$none',
+    color: '$intentsBase12',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+  }),
+  link: cssObj({
+    fontSize: '$sm',
+    lineHeight: '$none',
+    color: '$intentsPrimary11',
+    fontWeight: '$normal',
+  }),
+  accounts: cssObj({
+    fontSize: '$xs',
+    lineHeight: '$none',
+    fontWeight: '$normal',
+    color: '$intentsBase8',
   }),
 };

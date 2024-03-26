@@ -1,8 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Avatar, Box, Card, Text } from '@fuel-ui/react';
-import type { Account } from '@fuel-wallet/types';
 
-import { parseUrl, truncate } from '../../utils';
+import { parseUrl, truncateByWordsNum } from '../../utils';
 
 import { ConnectInfoLoader } from './ConnectInfoLoader';
 
@@ -11,7 +10,6 @@ export type ConnectInfoProps = {
   title?: string;
   headerText: string;
   favIconUrl?: string;
-  account?: Account;
 };
 
 export function ConnectInfo({
@@ -27,18 +25,17 @@ export function ConnectInfo({
       )}
 
       <Card.Body css={styles.contentSection}>
-        <Box.Flex>
-          <Avatar
-            name={title || origin}
-            src={favIconUrl}
-            role="img"
-            size="sm"
-            aria-label={`${origin}-favicon`}
-          />
-        </Box.Flex>
-        <Box.Stack gap="$0">
+        <Avatar
+          name={truncateByWordsNum(title || origin, 2)}
+          src={favIconUrl}
+          role="img"
+          size="sm"
+          aria-label={`${origin}-favicon`}
+          css={styles.avatar}
+        />
+        <Box.Stack gap="$2" css={styles.stack}>
           <Text css={styles.title}>{title}</Text>
-          <Text css={styles.link}> {truncate(parseUrl(origin))} </Text>
+          <Text css={styles.link}>{parseUrl(origin)}</Text>
         </Box.Stack>
       </Card.Body>
     </Card>
@@ -55,19 +52,26 @@ const styles = {
   contentSection: cssObj({
     alignItems: 'center',
     display: 'flex',
-    gap: '$4',
-    py: '$2',
+    gap: '$3',
+    py: '$4',
+  }),
+  stack: cssObj({
+    minWidth: 0,
+  }),
+  avatar: cssObj({
+    flexShrink: 0,
   }),
   title: cssObj({
     fontSize: '$sm',
+    lineHeight: '$none',
     color: '$intentsBase12',
-    textOverflow: 'ellipsis',
-  }),
-  link: cssObj({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
+  }),
+  link: cssObj({
     fontSize: '$sm',
+    lineHeight: '$none',
     color: '$intentsPrimary11',
     fontWeight: '$normal',
   }),

@@ -20,7 +20,6 @@ export function TransactionRequest() {
   const Header = (
     <>
       <ConnectInfo
-        account={ctx.account}
         origin={ctx.input.origin!}
         favIconUrl={ctx.input.favIconUrl}
         title={ctx.input.title}
