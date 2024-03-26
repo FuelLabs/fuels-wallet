@@ -53,7 +53,7 @@ export const TxApprove = () => {
             assets={assets}
             header={
               <TxHeader
-                id={ctx.txResult?.id}
+                id={ctx.txResult?.id || ctx.approvedTx?.id}
                 type={ctx.txResult?.type}
                 status={ctx.approveStatus()}
                 providerUrl={ctx.providerUrl}
