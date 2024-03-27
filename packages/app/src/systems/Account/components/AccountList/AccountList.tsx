@@ -17,7 +17,7 @@ export type AccountListProps = {
 };
 
 export function AccountList({
-  accounts,
+  accounts = [],
   canHideAccounts,
   hasHiddenAccounts,
   isLoading,
@@ -36,15 +36,14 @@ export function AccountList({
     <Box.Stack gap="$4">
       {isLoading && (
         <CardList>
-          {[...Array(3)].map((_, i) => {
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+          {[...Array(3).keys()].map((i) => {
             return <AccountItem.Loader key={i} />;
           })}
         </CardList>
       )}
       {!isLoading && (
         <CardList isClickable>
-          {(accounts ?? []).map((account) => (
+          {accounts.map((account) => (
             <AccountItem
               onPress={() => onPress?.(account)}
               onUpdate={onUpdate}

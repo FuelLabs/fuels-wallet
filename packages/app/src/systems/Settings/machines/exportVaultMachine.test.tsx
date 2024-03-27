@@ -30,17 +30,19 @@ describe('exportAccountMachine', () => {
 
     it('should be able to export account private key', async () => {
       state = await expectStateMatch(service, 'waitingPassword');
-      service.send('EXPORT_VAULT', { input: { password: pass } });
+      service.send('EXPORT_VAULT', { input: { password: pass, vaultId: 0 } });
       state = await expectStateMatch(service, 'done');
       expect(state.context.words.join(' ')).toBe(phrase);
     });
 
     it('should fail with incorrect password and be able to try again', async () => {
       state = await expectStateMatch(service, 'waitingPassword');
-      service.send('EXPORT_VAULT', { input: { password: `${pass}1` } });
+      service.send('EXPORT_VAULT', {
+        input: { password: `${pass}1`, vaultId: 0 },
+      });
       state = await expectStateMatch(service, 'waitingPassword');
       expect(state.context.error).toBe('Invalid password');
-      service.send('EXPORT_VAULT', { input: { password: pass } });
+      service.send('EXPORT_VAULT', { input: { password: pass, vaultId: 0 } });
       state = await expectStateMatch(service, 'done');
       expect(state.context.words.join(' ')).toStrictEqual(phrase);
     });
