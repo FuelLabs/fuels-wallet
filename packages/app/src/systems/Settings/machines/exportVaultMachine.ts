@@ -17,7 +17,7 @@ type MachineContext = {
 
 type MachineEvents = {
   type: 'EXPORT_VAULT';
-  input: Omit<VaultInputs['exportVault'], 'vaultId'>;
+  input: VaultInputs['exportVault'];
 };
 
 export const exportVaultMachine = createMachine(
@@ -54,6 +54,7 @@ export const exportVaultMachine = createMachine(
               ev: Extract<MachineEvents, { type: 'EXPORT_VAULT' }>
             ) => ({
               password: ev.input.password,
+              vaultId: ev.input.vaultId,
             }),
           },
           onDone: [
@@ -94,12 +95,16 @@ export const exportVaultMachine = createMachine(
           if (!input?.password) {
             throw new Error('Password is required to export Vault!');
           }
+
+          if (input?.vaultId === undefined) {
+            throw new Error('Vault ID is required to export Vault!');
+          }
+
           const secret = await VaultService.exportVault({
-            ...input,
-            // TODO change once we add multiple vault management
-            // https://github.com/FuelLabs/fuels-wallet/issues/562
-            vaultId: 0,
+            password: input.password,
+            vaultId: input.vaultId,
           });
+
           return secret.split(' ');
         },
       }),

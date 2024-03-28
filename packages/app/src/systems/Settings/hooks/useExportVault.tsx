@@ -1,5 +1,6 @@
 import { useInterpret, useSelector } from '@xstate/react';
 
+import { VaultService } from '~/systems/Vault';
 import type { ExportVaultMachineState } from '../machines';
 import { exportVaultMachine } from '../machines';
 
@@ -18,11 +19,14 @@ export function useExportVault() {
   const words = useSelector(service, selectors.words);
   const isUnlockOpened = useSelector(service, selectors.isUnlockOpened);
 
-  function exportVault(password: string) {
+  async function exportVault(password: string) {
+    const [vault] = await VaultService.getVaults();
+
     service.send({
       type: 'EXPORT_VAULT',
       input: {
         password,
+        vaultId: vault.vaultId,
       },
     });
   }
