@@ -19,6 +19,9 @@ const selectors = {
   txResult(state: TransactionRequestState) {
     return state.context.response?.txResult;
   },
+  approvedTx(state: TransactionRequestState) {
+    return state.context.response?.approvedTx;
+  },
   isLoadingAccounts(state: TransactionRequestState) {
     return state.matches('fetchingAccount');
   },
@@ -100,6 +103,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const txStatus = useSelector(service, txStatusSelector);
   const title = useSelector(service, selectors.title);
   const txResult = useSelector(service, selectors.txResult);
+  const approvedTx = useSelector(service, selectors.approvedTx);
   const origin = useSelector(service, selectors.origin);
   const originTitle = useSelector(service, selectors.originTitle);
   const favIconUrl = useSelector(service, selectors.favIconUrl);
@@ -159,6 +163,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     title,
     txResult,
     txStatus,
+    approvedTx,
     isSendingTx,
     shouldShowTx,
     shouldShowLoader,
