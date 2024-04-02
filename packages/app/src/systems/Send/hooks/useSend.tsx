@@ -13,7 +13,7 @@ import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
 
-import { type Domain, config, isValidDomain, resolver } from '@bako-id/sdk';
+import { config, isValidDomain, resolver, reverseResolver } from '@bako-id/sdk';
 import debounce from 'lodash.debounce';
 import { sendMachine } from '../machines/sendMachine';
 import type { SendMachineState } from '../machines/sendMachine';
@@ -100,7 +100,8 @@ export function useSend() {
   const txRequest = useTransactionRequest();
   const { account, balanceAssets: accountBalanceAssets } = useAccounts();
   const { assets } = useAssets();
-  const [domain, setDomain] = useState<Domain | null>(null);
+  const [bakoResolver, setBakoResolver] = useState<string>('');
+  const [bakoName, setBakoName] = useState<string>('');
 
   const form = useForm({
     resolver: yupResolver(schema),
@@ -115,14 +116,13 @@ export function useSend() {
 
   const fetchBakoHandle = useCallback(
     debounce((name: string) => {
-      if (!name.includes('@') || !isValidDomain(name)) return;
       resolver({
         providerURL: config.PROVIDER_DEPLOYED,
         domain: name,
       })
         .then((value) => {
           if (value) {
-            setDomain(value);
+            setBakoResolver(value.resolver);
           } else {
             form.setError('address', {
               type: 'pattern',
@@ -136,6 +136,18 @@ export function useSend() {
             message: 'Not found bako handle.',
           });
         });
+    }, 500),
+    []
+  );
+
+  const fetchBakoName = useCallback(
+    debounce((resolver: string) => {
+      reverseResolver({
+        providerURL: config.PROVIDER_DEPLOYED,
+        resolver,
+      }).then((value) => {
+        setBakoName(value ?? '');
+      });
     }, 500),
     []
   );
@@ -167,8 +179,16 @@ export function useSend() {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    setDomain(null);
-    fetchBakoHandle(address);
+    setBakoResolver('');
+    setBakoName('');
+
+    if (address.includes('@') && isValidDomain(address)) {
+      fetchBakoHandle(address);
+    }
+
+    if (isValidAddress(address)) {
+      fetchBakoName(address);
+    }
   }, [address]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -179,13 +199,13 @@ export function useSend() {
     if (bn(amount).lt(0)) return;
 
     const address = form.getValues('address');
-    if (address.startsWith('@') && !domain) return;
+    if (address.startsWith('@') && !bakoResolver) return;
 
     const asset = assets.find(
       ({ assetId }) => assetId === form.getValues('asset')
     );
     const bech32Address = Address.fromAddressOrString(
-      domain?.resolver ?? address
+      bakoResolver || address
     ).toAddress();
     const input = {
       account,
@@ -194,7 +214,7 @@ export function useSend() {
       address: bech32Address,
     } as TxInputs['isValidTransaction'];
     service.send('SET_DATA', { input });
-  }, [amount, domain, form.formState.isValid]);
+  }, [amount, bakoResolver, form.formState.isValid]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -275,9 +295,10 @@ export function useSend() {
     form,
     fee,
     title,
-    domain,
     status,
     readyToSend,
+    bakoName,
+    bakoResolver,
     balanceAssets,
     account,
     txRequest,

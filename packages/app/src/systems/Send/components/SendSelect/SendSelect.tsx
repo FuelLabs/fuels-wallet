@@ -24,7 +24,8 @@ export function SendSelect({
   balanceAssetSelected,
   status,
   fee,
-  domain,
+  bakoResolver,
+  bakoName,
 }: SendSelectProps) {
   const assetId = form.watch('asset', '');
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -89,15 +90,25 @@ export function SendSelect({
                       placeholder="Enter a fuel address or bako handle"
                     />
                   </Input>
-                  {domain && (
+                  {bakoResolver && (
                     <Form.HelperText
                       css={{ fontSize: '$sm', fontWeight: '$normal' }}
                     >
                       Address of {field.value}:{' '}
                       <Text as="b" css={{ fontWeight: '$bold' }}>
                         {shortAddress(
-                          Address.fromB256(domain.resolver).toAddress()
+                          Address.fromB256(bakoResolver).toAddress()
                         )}
+                      </Text>
+                    </Form.HelperText>
+                  )}
+                  {bakoName && (
+                    <Form.HelperText
+                      css={{ fontSize: '$sm', fontWeight: '$normal' }}
+                    >
+                      Handle of address:
+                      <Text as="b" css={{ fontWeight: '$bold' }}>
+                        @{bakoName}
                       </Text>
                     </Form.HelperText>
                   )}
