@@ -46,11 +46,10 @@ export function ConnectionList({
             <Tooltip
               content={tooltipContent}
               as="div"
-              alignOffset={12}
               className="fuel_tooltip--container"
             >
               <Icon
-                icon={Icon.is('AlertTriangle')}
+                icon={Icon.is('InfoCircle')}
                 aria-label="Connection Alert"
               />
             </Tooltip>
@@ -118,7 +117,7 @@ const styles = {
     },
 
     '& > .fuel_Icon': {
-      color: '$intentsWarning9',
+      color: '$intentsBase9',
     },
 
     '.fuel_tooltip--container': {
@@ -129,7 +128,6 @@ const styles = {
   tooltipContent: cssObj({
     maxWidth: 250,
     textSize: 'sm',
-    textAlign: 'right',
     padding: '$0',
   }),
 };
