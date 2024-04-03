@@ -116,10 +116,7 @@ export function useSend() {
 
   const fetchBakoHandle = useCallback(
     debounce((name: string) => {
-      resolver({
-        providerURL: config.PROVIDER_DEPLOYED,
-        domain: name,
-      })
+      resolver(name)
         .then((value) => {
           if (value) {
             setBakoResolver(value.resolver);
@@ -142,10 +139,7 @@ export function useSend() {
 
   const fetchBakoName = useCallback(
     debounce((resolver: string) => {
-      reverseResolver({
-        providerURL: config.PROVIDER_DEPLOYED,
-        resolver,
-      }).then((value) => {
+      reverseResolver(resolver).then((value) => {
         setBakoName(value ?? '');
       });
     }, 500),

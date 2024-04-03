@@ -1,10 +1,19 @@
 import { cssObj } from '@fuel-ui/css';
-import { Avatar, Box, Card, Heading, Icon, Text } from '@fuel-ui/react';
+import {
+  Avatar,
+  Box,
+  Card,
+  ContentLoader,
+  Heading,
+  Icon,
+  Text,
+} from '@fuel-ui/react';
 import type { OperationTransactionAddress } from 'fuels';
 import { Address, AddressType, ChainName, isB256, isBech32 } from 'fuels';
-import type { FC } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { EthAddress, FuelAddress, useAccounts } from '~/systems/Account';
 
+import { config, reverseResolver } from '@bako-id/sdk';
 import { TxRecipientCardLoader } from './TxRecipientCardLoader';
 
 export type TxRecipientCardProps = {
@@ -21,6 +30,8 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   isReceiver,
 }) => {
   const { accounts } = useAccounts();
+  const [name, setName] = useState('');
+
   const address = recipient?.address || '';
   const isValidAddress = isB256(address) || isBech32(address);
   const fuelAddress = isValidAddress
@@ -29,8 +40,41 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
   const isContract = recipient?.type === AddressType.contract;
   const isEthChain = recipient?.chain === ChainName.ethereum;
   const isNetwork = address === 'Network';
-  const name =
-    accounts?.find((a) => a.address === fuelAddress)?.name || 'unknown';
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const setAccountName = () => {
+      const accountName =
+        accounts?.find((a) => a.address === fuelAddress)?.name || 'unknown';
+      setName(accountName);
+    };
+
+    const resolveAddressName = async () => {
+      const handleName = await reverseResolver(fuelAddress);
+
+      if (handleName) {
+        return setName(`@${handleName}`);
+      }
+
+      setAccountName();
+    };
+
+    if (!name && isReceiver) {
+      resolveAddressName();
+    }
+
+    if (!isReceiver) {
+      setAccountName();
+    }
+  }, [isReceiver, name]);
+
+  const Name = !name ? (
+    <ContentLoader width={100} height={17} viewBox="0 0 80 17">
+      <ContentLoader.Rect x="0" y="0" width="100" height="17" rx="4" />
+    </ContentLoader>
+  ) : (
+    `${name}`
+  );
 
   return (
     <Card
@@ -77,7 +121,7 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
           )}
           <Box.Flex css={styles.info}>
             <Heading as="h6" css={styles.name}>
-              {isNetwork ? address : name}
+              {isNetwork ? address : Name}
             </Heading>
             {!isNetwork && (
               <FuelAddress address={fuelAddress} css={styles.address} />
