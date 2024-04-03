@@ -13,7 +13,7 @@ import {
   visit,
 } from '../commons';
 import { seedWallet } from '../commons/seedWallet';
-import { ALT_ASSET, mockData } from '../mocks';
+import { ALT_ASSET, PRIVATE_KEY, mockData } from '../mocks';
 
 test.describe('SendTransaction', () => {
   let browser: Browser;
@@ -164,6 +164,38 @@ test.describe('SendTransaction', () => {
     // Approve transaction
     await hasText(page, `${maxAmountAfterFee} ETH`);
     await getButtonByText(page, 'Approve').click();
+
+    // Wait for transaction to be confirmed
+    await hasText(page, 'success');
+  });
+
+  test('Send using a Bako handle', async () => {
+    await visit(page, '/send');
+
+    // Check submit button is disable by default
+    await page.waitForSelector('[aria-disabled="true"]');
+
+    // Select asset
+    await getButtonByText(page, 'Select one asset').click();
+    await page.getByText('Ethereum').click();
+
+    // Fill Bako handle
+    await getInputByName(page, 'address').fill('@fueltests');
+    await hasText(page, /Address of @fueltests/);
+
+    // Fill Bako handle resolver
+    const account = Wallet.fromPrivateKey(PRIVATE_KEY);
+    await getInputByName(page, 'address').fill(account.address.toAddress());
+    await hasText(page, /Handle of address/);
+
+    // Fill amount
+    await getInputByName(page, 'amount').fill('0.001');
+
+    // Submit transaction
+    await getButtonByText(page, 'Confirm').click();
+
+    await getButtonByText(page, 'Approve').click();
+    await hasText(page, '0.001 ETH');
 
     // Wait for transaction to be confirmed
     await hasText(page, 'success');
