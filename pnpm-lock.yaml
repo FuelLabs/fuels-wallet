@@ -160,8 +160,8 @@ importers:
   packages/app:
     dependencies:
       '@bako-id/sdk':
-        specifier: 0.0.3
-        version: 0.0.3(fuels@0.77.0)
+        specifier: 0.0.6
+        version: 0.0.6(fuels@0.77.0)
       '@fontsource/source-code-pro':
         specifier: 5.0.13
         version: 5.0.13
@@ -3603,10 +3603,10 @@ packages:
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
 
-  /@bako-id/sdk@0.0.3(fuels@0.77.0):
-    resolution: {integrity: sha512-Ha+hc0JpquSwjLjJf3dwkbkGDmF0gdF14nudkptNc3lvZTHVta1EMfpBz6DI8z8HAiIEJcIdru4BZWC1hAjpew==}
+  /@bako-id/sdk@0.0.6(fuels@0.77.0):
+    resolution: {integrity: sha512-3dDKwORYuc9yxePTQVAPtXQuUIRmOrBfEoMcmfSpYdVdhZeYsSKzzsTXHi3JzRZ92vK1QFVWj3xtubj//TJmgQ==}
     peerDependencies:
-      fuels: 0.77.0
+      fuels: 0.78.0
     dependencies:
       fuels: 0.77.0(dexie@3.2.4)
     dev: false
@@ -12626,7 +12626,7 @@ packages:
       esbuild: '>=0.10.0'
     dependencies:
       esbuild: 0.18.20
-      tslib: 2.6.1
+      tslib: 2.6.2
     dev: true
 
   /@yarnpkg/fslib@2.10.3:
@@ -22581,7 +22581,6 @@ packages:
 
   /tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
-    dev: false
 
   /tsup@7.2.0(ts-node@10.9.1)(typescript@5.2.2):
     resolution: {integrity: sha512-vDHlczXbgUvY3rWvqFEbSqmC1L7woozbzngMqTtL2PGBODTtWlRwGDDawhvWzr5c1QjKe4OAKqJGfE1xeXUvtQ==}
