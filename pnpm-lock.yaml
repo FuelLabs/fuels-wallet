@@ -130,7 +130,7 @@ importers:
         version: 5.28.4(react@18.2.0)
       fuels:
         specifier: 0.79.0
-        version: 0.79.0(dexie@4.0.1)
+        version: 0.79.0(dexie@3.2.4)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -173,7 +173,7 @@ importers:
         version: 0.23.2(@fuel-ui/css@0.23.2)(@fuel-ui/icons@0.23.2)(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.3)(fuels@0.79.0)(react-dom@18.2.0)(react@18.2.0)
       '@fuel-ui/test-utils':
         specifier: 0.17.0
-        version: 0.17.0(@babel/core@7.24.3)(@jest/types@29.6.3)(@types/node@20.8.4)(esbuild@0.18.20)(react@18.2.0)(ts-node@10.9.1)(typescript@5.2.2)
+        version: 0.17.0(@babel/core@7.24.3)(@jest/types@29.6.3)(@types/node@20.8.4)(esbuild@0.19.12)(react@18.2.0)(ts-node@10.9.1)(typescript@5.2.2)
       '@fuel-wallet/connections':
         specifier: workspace:*
         version: link:../connections
@@ -290,7 +290,7 @@ importers:
         version: 1.0.0
       vite-plugin-markdown:
         specifier: 2.2.0
-        version: 2.2.0(vite@4.5.2)
+        version: 2.2.0(vite@4.5.3)
       xstate:
         specifier: 4.38.2
         version: 4.38.2
@@ -300,7 +300,7 @@ importers:
     devDependencies:
       '@crxjs/vite-plugin':
         specifier: 1.0.14
-        version: 1.0.14(vite@4.5.2)
+        version: 1.0.14(vite@4.5.3)
       '@fuel-wallet/types':
         specifier: workspace:*
         version: link:../types
@@ -369,10 +369,10 @@ importers:
         version: 7.4.6(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       '@storybook/react-vite':
         specifier: 7.4.6
-        version: 7.4.6(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(vite@4.5.2)
+        version: 7.4.6(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(vite@4.5.3)
       '@storybook/react-webpack5':
         specifier: 7.4.6
-        version: 7.4.6(@babel/core@7.24.3)(@swc/core@1.3.92)(@types/react-dom@18.2.13)(@types/react@18.2.28)(esbuild@0.18.20)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
+        version: 7.4.6(@babel/core@7.24.3)(@swc/core@1.3.92)(@types/react-dom@18.2.13)(@types/react@18.2.28)(esbuild@0.19.12)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       '@storybook/testing-library':
         specifier: 0.2.2
         version: 0.2.2
@@ -411,7 +411,7 @@ importers:
         version: 6.1.7
       '@vitejs/plugin-react':
         specifier: 4.1.0
-        version: 4.1.0(vite@4.5.2)
+        version: 4.1.0(vite@4.5.3)
       '@xstate/inspect':
         specifier: 0.8.0
         version: 0.8.0(ws@8.16.0)(xstate@4.38.2)
@@ -446,17 +446,17 @@ importers:
         specifier: 5.2.2
         version: 5.2.2
       vite:
-        specifier: 4.5.2
-        version: 4.5.2(@types/node@20.8.4)
+        specifier: 4.5.3
+        version: 4.5.3(@types/node@20.8.4)
       vite-plugin-clean:
         specifier: 1.0.0
         version: 1.0.0(@types/node@20.8.4)
       vite-plugin-static-copy:
         specifier: 0.17.0
-        version: 0.17.0(vite@4.5.2)
+        version: 0.17.0(vite@4.5.3)
       vite-tsconfig-paths:
         specifier: 4.2.1
-        version: 4.2.1(typescript@5.2.2)(vite@4.5.2)
+        version: 4.2.1(typescript@5.2.2)(vite@4.5.3)
       whatwg-fetch:
         specifier: 3.6.20
         version: 3.6.20
@@ -490,7 +490,7 @@ importers:
         version: 7.0.20220408
       fuels:
         specifier: 0.79.0
-        version: 0.79.0(dexie@4.0.1)
+        version: 0.79.0(dexie@3.2.4)
       jest-environment-jsdom:
         specifier: 29.6.2
         version: 29.6.2
@@ -559,7 +559,7 @@ importers:
         version: 10.16.4(react-dom@18.2.0)(react@18.2.0)
       fuels:
         specifier: 0.79.0
-        version: 0.79.0(dexie@4.0.1)
+        version: 0.79.0(dexie@3.2.4)
       globby:
         specifier: ^13.2.2
         version: 13.2.2
@@ -662,7 +662,7 @@ importers:
         version: 5.28.4(react@18.2.0)
       fuels:
         specifier: 0.79.0
-        version: 0.79.0(dexie@4.0.1)
+        version: 0.79.0(dexie@3.2.4)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -705,7 +705,7 @@ importers:
         version: 6.7.5(eslint@8.51.0)(typescript@5.2.2)
       '@vitejs/plugin-react':
         specifier: ^4.1.0
-        version: 4.1.0(vite@4.5.2)
+        version: 4.1.0(vite@4.5.3)
       eslint:
         specifier: ^8.51.0
         version: 8.51.0
@@ -719,21 +719,21 @@ importers:
         specifier: ^5.2.2
         version: 5.2.2
       vite:
-        specifier: 4.5.2
-        version: 4.5.2(@types/node@20.8.4)
+        specifier: 4.5.3
+        version: 4.5.3(@types/node@20.8.4)
 
   packages/types:
     dependencies:
       dexie-observable:
         specifier: 4.0.1-beta.13
-        version: 4.0.1-beta.13(dexie@4.0.1)
+        version: 4.0.1-beta.13(dexie@3.2.4)
     devDependencies:
       '@fuels/connectors':
         specifier: 0.1.1
         version: 0.1.1(fuels@0.79.0)
       fuels:
         specifier: 0.79.0
-        version: 0.79.0(dexie@4.0.1)
+        version: 0.79.0(dexie@3.2.4)
       tsup:
         specifier: ^7.2.0
         version: 7.2.0(ts-node@10.9.1)(typescript@5.2.2)
@@ -4503,7 +4503,7 @@ packages:
     dev: true
     optional: true
 
-  /@crxjs/vite-plugin@1.0.14(vite@4.5.2):
+  /@crxjs/vite-plugin@1.0.14(vite@4.5.3):
     resolution: {integrity: sha512-emOueVCqFRFmpcfT80Xsm4mfuFw9VSp5GY4eh5qeLDeiP81g0hddlobVQCo0pE2ZvNnWbyhLrXEYAaMAXjNL6A==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -4523,9 +4523,9 @@ packages:
       picocolors: 1.0.0
       react-refresh: 0.13.0
       rollup: 2.79.1
-      vite: 4.5.2(@types/node@20.8.4)
+      vite: 4.5.3(@types/node@20.8.4)
     optionalDependencies:
-      '@vitejs/plugin-react': 4.1.0(vite@4.5.2)
+      '@vitejs/plugin-react': 4.2.1(vite@4.5.3)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -5339,45 +5339,6 @@ packages:
       - encoding
       - supports-color
       - utf-8-validate
-    dev: false
-
-  /@fuel-ts/account@0.79.0(dexie@4.0.1):
-    resolution: {integrity: sha512-Rj0jV7JrXAolHk6/qlgCrK0YYjSVV6ehqf2g8lxmS102ShcS+/bVHvGhxhUeefGtHOdmHuVEJEcchcbpfuiYaQ==}
-    engines: {node: ^18.18.2 || ^20.0.0}
-    dependencies:
-      '@fuel-ts/abi-coder': 0.79.0
-      '@fuel-ts/address': 0.79.0
-      '@fuel-ts/crypto': 0.79.0
-      '@fuel-ts/errors': 0.79.0
-      '@fuel-ts/fuel-core': 0.79.0
-      '@fuel-ts/hasher': 0.79.0
-      '@fuel-ts/interfaces': 0.79.0
-      '@fuel-ts/math': 0.79.0
-      '@fuel-ts/merkle': 0.79.0
-      '@fuel-ts/transactions': 0.79.0
-      '@fuel-ts/utils': 0.79.0
-      '@fuel-ts/versions': 0.79.0
-      '@fuels/assets': 0.1.5
-      '@fuels/vm-asm': 0.42.1
-      '@noble/curves': 1.4.0
-      dexie-observable: 4.0.1-beta.13(dexie@4.0.1)
-      ethers: 6.11.1
-      events: 3.3.0
-      graphql: 16.8.1
-      graphql-request: 5.0.0(graphql@16.8.1)
-      graphql-tag: 2.12.6(graphql@16.8.1)
-      json-rpc-2.0: 1.7.0
-      portfinder: 1.0.32
-      ramda: 0.29.1
-      tai64: 1.0.0
-      tree-kill: 1.2.2
-      uuid: 9.0.1
-    transitivePeerDependencies:
-      - bufferutil
-      - dexie
-      - encoding
-      - supports-color
-      - utf-8-validate
 
   /@fuel-ts/address@0.79.0:
     resolution: {integrity: sha512-KiDWMQB6cyY9sUCi7e7NPx2sCCejYjC/vLQrTnu4AxV2aVVwQ4GWcRpHO1OGYZ5RalR/yvcR9ebQhpidnU0lUw==}
@@ -5407,30 +5368,6 @@ packages:
       '@fuel-ts/interfaces': 0.79.0
       '@fuel-ts/merkle': 0.79.0
       '@fuel-ts/program': 0.79.0(dexie@3.2.4)
-      '@fuel-ts/transactions': 0.79.0
-      '@fuel-ts/utils': 0.79.0
-      '@fuel-ts/versions': 0.79.0
-    transitivePeerDependencies:
-      - bufferutil
-      - dexie
-      - encoding
-      - supports-color
-      - utf-8-validate
-    dev: false
-
-  /@fuel-ts/contract@0.79.0(dexie@4.0.1):
-    resolution: {integrity: sha512-kyC/pynI5kgTcm9R7xl1qrfUfMWsUQhXfnyv8AXeFuPIIrQMxIvKlKL4bgmQ6AUFJhTDiAv2fmc5dlbqO8RS7w==}
-    engines: {node: ^18.18.2 || ^20.0.0}
-    dependencies:
-      '@fuel-ts/abi-coder': 0.79.0
-      '@fuel-ts/account': 0.79.0(dexie@4.0.1)
-      '@fuel-ts/address': 0.79.0
-      '@fuel-ts/crypto': 0.79.0
-      '@fuel-ts/errors': 0.79.0
-      '@fuel-ts/hasher': 0.79.0
-      '@fuel-ts/interfaces': 0.79.0
-      '@fuel-ts/merkle': 0.79.0
-      '@fuel-ts/program': 0.79.0(dexie@4.0.1)
       '@fuel-ts/transactions': 0.79.0
       '@fuel-ts/utils': 0.79.0
       '@fuel-ts/versions': 0.79.0
@@ -5536,29 +5473,6 @@ packages:
       - encoding
       - supports-color
       - utf-8-validate
-    dev: false
-
-  /@fuel-ts/program@0.79.0(dexie@4.0.1):
-    resolution: {integrity: sha512-TwLP2qYuR13anM57cDEUGPUlakuVGUnJ4W5h3uUGINfO5USnyQkW9vwvLcFsXL8WvqOimFGMnmRv+ElsMM4Q3A==}
-    engines: {node: ^18.18.2 || ^20.0.0}
-    dependencies:
-      '@fuel-ts/abi-coder': 0.79.0
-      '@fuel-ts/account': 0.79.0(dexie@4.0.1)
-      '@fuel-ts/address': 0.79.0
-      '@fuel-ts/errors': 0.79.0
-      '@fuel-ts/hasher': 0.79.0
-      '@fuel-ts/interfaces': 0.79.0
-      '@fuel-ts/math': 0.79.0
-      '@fuel-ts/transactions': 0.79.0
-      '@fuel-ts/utils': 0.79.0
-      '@fuel-ts/versions': 0.79.0
-      '@fuels/vm-asm': 0.42.1
-    transitivePeerDependencies:
-      - bufferutil
-      - dexie
-      - encoding
-      - supports-color
-      - utf-8-validate
 
   /@fuel-ts/script@0.79.0(dexie@3.2.4):
     resolution: {integrity: sha512-w3qB3oD1y/HMOzSU7pWRSMHDn+nurYB/zqk0HRDVPdF6t53hv6yaXQukSzHhsk2Fvsy+nsDEWVj63VZl0ehzAw==}
@@ -5572,28 +5486,6 @@ packages:
       '@fuel-ts/interfaces': 0.79.0
       '@fuel-ts/math': 0.79.0
       '@fuel-ts/program': 0.79.0(dexie@3.2.4)
-      '@fuel-ts/transactions': 0.79.0
-      '@fuel-ts/utils': 0.79.0
-    transitivePeerDependencies:
-      - bufferutil
-      - dexie
-      - encoding
-      - supports-color
-      - utf-8-validate
-    dev: false
-
-  /@fuel-ts/script@0.79.0(dexie@4.0.1):
-    resolution: {integrity: sha512-w3qB3oD1y/HMOzSU7pWRSMHDn+nurYB/zqk0HRDVPdF6t53hv6yaXQukSzHhsk2Fvsy+nsDEWVj63VZl0ehzAw==}
-    engines: {node: ^18.18.2 || ^20.0.0}
-    dependencies:
-      '@fuel-ts/abi-coder': 0.79.0
-      '@fuel-ts/abi-typegen': 0.79.0
-      '@fuel-ts/account': 0.79.0(dexie@4.0.1)
-      '@fuel-ts/address': 0.79.0
-      '@fuel-ts/errors': 0.79.0
-      '@fuel-ts/interfaces': 0.79.0
-      '@fuel-ts/math': 0.79.0
-      '@fuel-ts/program': 0.79.0(dexie@4.0.1)
       '@fuel-ts/transactions': 0.79.0
       '@fuel-ts/utils': 0.79.0
     transitivePeerDependencies:
@@ -5723,7 +5615,7 @@ packages:
       - immer
     dev: false
 
-  /@fuel-ui/test-utils@0.17.0(@babel/core@7.24.3)(@jest/types@29.6.3)(@types/node@20.8.4)(esbuild@0.18.20)(react@18.2.0)(ts-node@10.9.1)(typescript@5.2.2):
+  /@fuel-ui/test-utils@0.17.0(@babel/core@7.24.3)(@jest/types@29.6.3)(@types/node@20.8.4)(esbuild@0.19.12)(react@18.2.0)(ts-node@10.9.1)(typescript@5.2.2):
     resolution: {integrity: sha512-cQfMlrxG6gma/HSKj1v4Mcyr0hREY3w8KH0NXhtVHBOAU6rrWLlYpB26vXxriue5cv90gsRqOZU5YtgrKEHpyA==}
     peerDependencies:
       react: '*'
@@ -5745,7 +5637,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       resize-observer-polyfill: 1.5.1
-      ts-jest: 29.1.1(@babel/core@7.24.3)(@jest/types@29.6.3)(esbuild@0.18.20)(jest@29.7.0)(typescript@5.2.2)
+      ts-jest: 29.1.1(@babel/core@7.24.3)(@jest/types@29.6.3)(esbuild@0.19.12)(jest@29.7.0)(typescript@5.2.2)
     transitivePeerDependencies:
       - '@babel/core'
       - '@jest/types'
@@ -5774,7 +5666,7 @@ packages:
     peerDependencies:
       fuels: '>=0.77.0'
     dependencies:
-      fuels: 0.79.0(dexie@4.0.1)
+      fuels: 0.79.0(dexie@3.2.4)
       json-rpc-2.0: 1.7.0
 
   /@fuels/local-storage@0.17.0:
@@ -5789,7 +5681,7 @@ packages:
     dependencies:
       '@playwright/test': 1.39.0
       adm-zip: 0.5.12
-      fuels: 0.79.0(dexie@4.0.1)
+      fuels: 0.79.0(dexie@3.2.4)
     dev: true
 
   /@fuels/react-xstore@0.17.0(@types/react@18.2.28)(@xstate/react@3.2.2)(react-dom@18.2.0)(react@18.2.0)(ws@8.16.0)(xstate@4.38.2):
@@ -5854,7 +5746,7 @@ packages:
       '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.2.19)(@types/react@18.2.56)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query': 5.28.4(react@18.2.0)
       events: 3.3.0
-      fuels: 0.79.0(dexie@4.0.1)
+      fuels: 0.79.0(dexie@3.2.4)
       react: 18.2.0
     transitivePeerDependencies:
       - '@types/react'
@@ -6863,7 +6755,7 @@ packages:
       '@types/yargs': 17.0.24
       chalk: 4.1.2
 
-  /@joshwooding/vite-plugin-react-docgen-typescript@0.2.1(typescript@5.2.2)(vite@4.5.2):
+  /@joshwooding/vite-plugin-react-docgen-typescript@0.2.1(typescript@5.2.2)(vite@4.5.3):
     resolution: {integrity: sha512-ou4ZJSXMMWHqGS4g8uNRbC5TiTWxAgQZiVucoUrOCWuPrTbkpJbmVyIi9jU72SBry7gQtuMEDp4YR8EEXAg7VQ==}
     peerDependencies:
       typescript: '>= 4.3.x'
@@ -6877,7 +6769,7 @@ packages:
       magic-string: 0.27.0
       react-docgen-typescript: 2.2.2(typescript@5.2.2)
       typescript: 5.2.2
-      vite: 4.5.2(@types/node@20.8.4)
+      vite: 4.5.3(@types/node@20.8.4)
     dev: true
 
   /@jridgewell/gen-mapping@0.3.3:
@@ -7261,7 +7153,7 @@ packages:
       react-refresh: 0.11.0
       schema-utils: 3.3.0
       source-map: 0.7.4
-      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.18.20)
+      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.19.12)
     dev: true
 
   /@radix-ui/colors@2.1.0:
@@ -11129,7 +11021,7 @@ packages:
       - supports-color
     dev: true
 
-  /@storybook/builder-vite@7.4.6(typescript@5.2.2)(vite@4.5.2):
+  /@storybook/builder-vite@7.4.6(typescript@5.2.2)(vite@4.5.3):
     resolution: {integrity: sha512-xV9STYK+TkqWWTf2ydm6jx+7P70fjD2UPd1XTUw08uKszIjhuuxk+bG/OF5R1E25mPunAKXm6kBFh351AKejBg==}
     peerDependencies:
       '@preact/preset-vite': '*'
@@ -11164,13 +11056,13 @@ packages:
       remark-slug: 6.1.0
       rollup: 3.28.1
       typescript: 5.2.2
-      vite: 4.5.2(@types/node@20.8.4)
+      vite: 4.5.3(@types/node@20.8.4)
     transitivePeerDependencies:
       - encoding
       - supports-color
     dev: true
 
-  /@storybook/builder-webpack5@7.4.6(@types/react-dom@18.2.13)(@types/react@18.2.28)(esbuild@0.18.20)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
+  /@storybook/builder-webpack5@7.4.6(@types/react-dom@18.2.13)(@types/react@18.2.28)(esbuild@0.19.12)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
     resolution: {integrity: sha512-j7AyDPlUuO2GiH6riB8iGbT7blQpyVGB+rMHXPSm7v6/U7IITbNzxFwe+sSMLoFr8K1e2VXpgqQ9p3rHFey+nw==}
     peerDependencies:
       react: '*'
@@ -11221,13 +11113,13 @@ packages:
       semver: 7.5.4
       style-loader: 3.3.3(webpack@5.88.2)
       swc-loader: 0.2.3(@swc/core@1.3.92)(webpack@5.88.2)
-      terser-webpack-plugin: 5.3.9(@swc/core@1.3.92)(esbuild@0.18.20)(webpack@5.88.2)
+      terser-webpack-plugin: 5.3.9(@swc/core@1.3.92)(esbuild@0.19.12)(webpack@5.88.2)
       ts-dedent: 2.2.0
       typescript: 5.2.2
       url: 0.11.1
       util: 0.12.5
       util-deprecate: 1.0.2
-      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.18.20)
+      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.19.12)
       webpack-dev-middleware: 6.1.1(webpack@5.88.2)
       webpack-hot-middleware: 2.25.4
       webpack-virtual-modules: 0.5.0
@@ -11723,7 +11615,7 @@ packages:
     resolution: {integrity: sha512-TqI5BucPAGRWrkh55BYiG2/gHLFtC0In4cuu0GsUzB/1jc4i51npLRorCwhmT7r7YliGl5F7JaP0Bni/qHN3Lg==}
     dev: true
 
-  /@storybook/preset-react-webpack@7.4.6(@babel/core@7.24.3)(@swc/core@1.3.92)(esbuild@0.18.20)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
+  /@storybook/preset-react-webpack@7.4.6(@babel/core@7.24.3)(@swc/core@1.3.92)(esbuild@0.19.12)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
     resolution: {integrity: sha512-FfJvlk3bJfg66t06YLiyu+1o/DZN3uNfFP37zv5cJux7TpdmJRV/4m9LKQPJOvcnWBQYem8xX8k5cRS29vdW5g==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -11760,7 +11652,7 @@ packages:
       react-refresh: 0.11.0
       semver: 7.5.4
       typescript: 5.2.2
-      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.18.20)
+      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.19.12)
     transitivePeerDependencies:
       - '@swc/core'
       - '@types/webpack'
@@ -11831,7 +11723,7 @@ packages:
       react-docgen-typescript: 2.2.2(typescript@5.2.2)
       tslib: 2.6.1
       typescript: 5.2.2
-      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.18.20)
+      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.19.12)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -11851,7 +11743,7 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: true
 
-  /@storybook/react-vite@7.4.6(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(vite@4.5.2):
+  /@storybook/react-vite@7.4.6(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)(vite@4.5.3):
     resolution: {integrity: sha512-jkjnrf3FxzR5wcmebXRPflrsM4WIDjWyW/NVFJwxi5PeIOk7fE7/QAPrm4NFRUu2Q7DeuH3oLKsw8bigvUI9RA==}
     engines: {node: '>=16'}
     peerDependencies:
@@ -11864,17 +11756,17 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@joshwooding/vite-plugin-react-docgen-typescript': 0.2.1(typescript@5.2.2)(vite@4.5.2)
+      '@joshwooding/vite-plugin-react-docgen-typescript': 0.2.1(typescript@5.2.2)(vite@4.5.3)
       '@rollup/pluginutils': 5.0.2
-      '@storybook/builder-vite': 7.4.6(typescript@5.2.2)(vite@4.5.2)
+      '@storybook/builder-vite': 7.4.6(typescript@5.2.2)(vite@4.5.3)
       '@storybook/react': 7.4.6(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
-      '@vitejs/plugin-react': 3.1.0(vite@4.5.2)
+      '@vitejs/plugin-react': 3.1.0(vite@4.5.3)
       ast-types: 0.14.2
       magic-string: 0.30.2
       react: 18.2.0
       react-docgen: 6.0.0-alpha.3
       react-dom: 18.2.0(react@18.2.0)
-      vite: 4.5.2(@types/node@20.8.4)
+      vite: 4.5.3(@types/node@20.8.4)
     transitivePeerDependencies:
       - '@preact/preset-vite'
       - encoding
@@ -11884,7 +11776,7 @@ packages:
       - vite-plugin-glimmerx
     dev: true
 
-  /@storybook/react-webpack5@7.4.6(@babel/core@7.24.3)(@swc/core@1.3.92)(@types/react-dom@18.2.13)(@types/react@18.2.28)(esbuild@0.18.20)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
+  /@storybook/react-webpack5@7.4.6(@babel/core@7.24.3)(@swc/core@1.3.92)(@types/react-dom@18.2.13)(@types/react@18.2.28)(esbuild@0.19.12)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
     resolution: {integrity: sha512-OSwf+E2tRcfBmzCH+WwM7JlfEYjg5Womi1yrtotfcjVXAU6ubHOk2G87zsrKLp/TeCOFM2aHohHBTyWUCejQKQ==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -11903,8 +11795,8 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.24.3
-      '@storybook/builder-webpack5': 7.4.6(@types/react-dom@18.2.13)(@types/react@18.2.28)(esbuild@0.18.20)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
-      '@storybook/preset-react-webpack': 7.4.6(@babel/core@7.24.3)(@swc/core@1.3.92)(esbuild@0.18.20)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
+      '@storybook/builder-webpack5': 7.4.6(@types/react-dom@18.2.13)(@types/react@18.2.28)(esbuild@0.19.12)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
+      '@storybook/preset-react-webpack': 7.4.6(@babel/core@7.24.3)(@swc/core@1.3.92)(esbuild@0.19.12)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       '@storybook/react': 7.4.6(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       '@types/node': 16.18.68
       react: 18.2.0
@@ -12377,7 +12269,7 @@ packages:
   /@swc/helpers@0.4.14:
     resolution: {integrity: sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw==}
     dependencies:
-      tslib: 2.6.1
+      tslib: 2.6.2
     dev: false
 
   /@swc/helpers@0.4.36:
@@ -12586,7 +12478,7 @@ packages:
     resolution: {integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==}
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 20.11.30
+      '@types/node': 20.8.4
     dev: true
 
   /@types/chrome@0.0.246:
@@ -12603,7 +12495,7 @@ packages:
   /@types/connect@3.4.38:
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
     dependencies:
-      '@types/node': 20.11.30
+      '@types/node': 20.8.4
     dev: true
 
   /@types/cookie@0.4.1:
@@ -12698,7 +12590,7 @@ packages:
   /@types/express-serve-static-core@4.17.43:
     resolution: {integrity: sha512-oaYtiBirUOPQGSWNGPWnzyAFJ0BP3cwvN4oWZQY+zUBwpVIGsKUkpBpSztp74drYcjavs7SKFZ4DX1V2QeN8rg==}
     dependencies:
-      '@types/node': 20.11.30
+      '@types/node': 20.8.4
       '@types/qs': 6.9.14
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -12891,7 +12783,7 @@ packages:
   /@types/node-fetch@2.6.11:
     resolution: {integrity: sha512-24xFj9R5+rfQJLRyM56qh+wnVSYhyXC2tkoBndtY0U+vubqNsYXGjufB2nn8Q6gt0LrARwL6UBtMCSVCwl4B1g==}
     dependencies:
-      '@types/node': 18.19.26
+      '@types/node': 20.8.4
       form-data: 4.0.0
     dev: true
 
@@ -13038,7 +12930,7 @@ packages:
     resolution: {integrity: sha512-x2EM6TJOybec7c52BX0ZspPodMsQUd5L6PRwOunVyVUhXiBSKf3AezDL8Dgvgt5o0UfKNfuA0eMLr2wLT4AiBA==}
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 20.11.30
+      '@types/node': 20.8.4
     dev: true
 
   /@types/serve-static@1.15.2:
@@ -13053,7 +12945,7 @@ packages:
     dependencies:
       '@types/http-errors': 2.0.4
       '@types/mime': 3.0.4
-      '@types/node': 20.11.30
+      '@types/node': 20.8.4
     dev: true
 
   /@types/set-cookie-parser@2.4.3:
@@ -13235,7 +13127,7 @@ packages:
       eslint-visitor-keys: 3.4.3
     dev: true
 
-  /@vitejs/plugin-react@3.1.0(vite@4.5.2):
+  /@vitejs/plugin-react@3.1.0(vite@4.5.3):
     resolution: {integrity: sha512-AfgcRL8ZBhAlc3BFdigClmTUMISmmzHn7sB2h9U1odvc5U/MjWXsAaz18b/WoppUTDBzxOJwo2VdClfUcItu9g==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -13246,12 +13138,12 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.23.3(@babel/core@7.24.0)
       magic-string: 0.27.0
       react-refresh: 0.14.0
-      vite: 4.5.2(@types/node@20.8.4)
+      vite: 4.5.3(@types/node@20.8.4)
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@vitejs/plugin-react@4.1.0(vite@4.5.2):
+  /@vitejs/plugin-react@4.1.0(vite@4.5.3):
     resolution: {integrity: sha512-rM0SqazU9iqPUraQ2JlIvReeaxOoRj6n+PzB1C0cBzIbd8qP336nC39/R9yPi3wVcah7E7j/kdU1uCUqMEU4OQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -13262,10 +13154,27 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.23.3(@babel/core@7.24.0)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.0
-      vite: 4.5.2(@types/node@20.8.4)
+      vite: 4.5.3(@types/node@20.8.4)
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@vitejs/plugin-react@4.2.1(vite@4.5.3):
+    resolution: {integrity: sha512-oojO9IDc4nCUUi8qIR11KoQm0XFFLIwsRBwHRR4d/88IWghn1y6ckz/bJ8GHDCsYEJee8mDzqtJxh15/cisJNQ==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    peerDependencies:
+      vite: ^4.2.0 || ^5.0.0
+    dependencies:
+      '@babel/core': 7.24.0
+      '@babel/plugin-transform-react-jsx-self': 7.23.3(@babel/core@7.24.0)
+      '@babel/plugin-transform-react-jsx-source': 7.23.3(@babel/core@7.24.0)
+      '@types/babel__core': 7.20.5
+      react-refresh: 0.14.0
+      vite: 4.5.3(@types/node@20.8.4)
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+    optional: true
 
   /@vitejs/plugin-react@4.2.1(vite@5.1.4):
     resolution: {integrity: sha512-oojO9IDc4nCUUi8qIR11KoQm0XFFLIwsRBwHRR4d/88IWghn1y6ckz/bJ8GHDCsYEJee8mDzqtJxh15/cisJNQ==}
@@ -14109,7 +14018,7 @@ packages:
       '@babel/core': 7.24.0
       find-cache-dir: 4.0.0
       schema-utils: 4.2.0
-      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.18.20)
+      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.19.12)
     dev: true
 
   /babel-plugin-add-react-displayname@0.0.5:
@@ -15238,7 +15147,7 @@ packages:
       postcss-modules-values: 4.0.0(postcss@8.4.35)
       postcss-value-parser: 4.2.0
       semver: 7.5.4
-      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.18.20)
+      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.19.12)
     dev: true
 
   /css-select@4.3.0:
@@ -15595,14 +15504,6 @@ packages:
       dexie: ^3.0.2 || ^4.0.1-alpha.5
     dependencies:
       dexie: 3.2.4
-    dev: false
-
-  /dexie-observable@4.0.1-beta.13(dexie@4.0.1):
-    resolution: {integrity: sha512-axmgPk7yjoPwj+0DdQIE5s1MBXi+6XcIFIjBKdQAmSGpsLQSth/LHvMOQ3q3Wj6pwIE5hqIxg2GL75sVqQbhEw==}
-    peerDependencies:
-      dexie: ^3.0.2 || ^4.0.1-alpha.5
-    dependencies:
-      dexie: 4.0.1
 
   /dexie-react-hooks@1.1.6(@types/react@18.2.28)(dexie@3.2.4)(react@18.2.0):
     resolution: {integrity: sha512-xSblWtmPwhafWNWMECsW7zMMmBu8goH3QqTxEfwBNoNG1mgsM0oFclippev7ss9HhKICqBwTjgqpscci5Ed4mA==}
@@ -15622,10 +15523,6 @@ packages:
   /dexie@3.2.4:
     resolution: {integrity: sha512-VKoTQRSv7+RnffpOJ3Dh6ozknBqzWw/F3iqMdsZg958R0AS8AnY9x9d1lbwENr0gzeGJHXKcGhAMRaqys6SxqA==}
     engines: {node: '>=6.0'}
-    dev: false
-
-  /dexie@4.0.1:
-    resolution: {integrity: sha512-wSNn+TcCh+DuE2pdg058K3MhxA4g+IiZlW7yGz4cMd/t3z2rJXZcV3HDxZljbrICU2Iq0qY4UHnbolTMK/+bcA==}
 
   /diff-sequences@28.1.1:
     resolution: {integrity: sha512-FU0iFaH/E23a+a718l8Qa/19bF9p06kgE0KipMOMadwa3SjnaElKzPaUC0vnibs6/B/9ni97s61mcejk8W1fQw==}
@@ -16825,7 +16722,7 @@ packages:
       semver: 7.5.4
       tapable: 2.2.1
       typescript: 5.2.2
-      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.18.20)
+      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.19.12)
     dev: true
 
   /form-data@3.0.1:
@@ -17003,51 +16900,6 @@ packages:
       '@fuel-ts/merkle': 0.79.0
       '@fuel-ts/program': 0.79.0(dexie@3.2.4)
       '@fuel-ts/script': 0.79.0(dexie@3.2.4)
-      '@fuel-ts/transactions': 0.79.0
-      '@fuel-ts/utils': 0.79.0
-      '@fuel-ts/versions': 0.79.0
-      bundle-require: 4.0.2(esbuild@0.19.12)
-      chalk: 4.1.2
-      chokidar: 3.6.0
-      commander: 9.5.0
-      esbuild: 0.19.12
-      glob: 10.3.12
-      handlebars: 4.7.8
-      joycon: 3.1.1
-      lodash.camelcase: 4.3.0
-      portfinder: 1.0.32
-      rimraf: 3.0.2
-      toml: 3.0.0
-      tree-kill: 1.2.2
-      yup: 0.32.11
-    transitivePeerDependencies:
-      - bufferutil
-      - dexie
-      - encoding
-      - supports-color
-      - utf-8-validate
-    dev: false
-
-  /fuels@0.79.0(dexie@4.0.1):
-    resolution: {integrity: sha512-koo7YKNzq821FOa7aLXdSAEllCLHWd+dcNwoAqyHkPw/zGKIUmeNpPDFXuL1zMGxkibTTJEaQ22vM4zHKP2rng==}
-    engines: {node: ^18.18.2 || ^20.0.0}
-    hasBin: true
-    dependencies:
-      '@fuel-ts/abi-coder': 0.79.0
-      '@fuel-ts/abi-typegen': 0.79.0
-      '@fuel-ts/account': 0.79.0(dexie@4.0.1)
-      '@fuel-ts/address': 0.79.0
-      '@fuel-ts/contract': 0.79.0(dexie@4.0.1)
-      '@fuel-ts/crypto': 0.79.0
-      '@fuel-ts/errors': 0.79.0
-      '@fuel-ts/forc': 0.79.0
-      '@fuel-ts/fuel-core': 0.79.0
-      '@fuel-ts/hasher': 0.79.0
-      '@fuel-ts/interfaces': 0.79.0
-      '@fuel-ts/math': 0.79.0
-      '@fuel-ts/merkle': 0.79.0
-      '@fuel-ts/program': 0.79.0(dexie@4.0.1)
-      '@fuel-ts/script': 0.79.0(dexie@4.0.1)
       '@fuel-ts/transactions': 0.79.0
       '@fuel-ts/utils': 0.79.0
       '@fuel-ts/versions': 0.79.0
@@ -17640,7 +17492,7 @@ packages:
       lodash: 4.17.21
       pretty-error: 4.0.0
       tapable: 2.2.1
-      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.18.20)
+      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.19.12)
     dev: true
 
   /htmlparser2@6.1.0:
@@ -23244,7 +23096,7 @@ packages:
     peerDependencies:
       webpack: ^5.0.0
     dependencies:
-      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.18.20)
+      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.19.12)
     dev: true
 
   /style-to-object@0.4.1:
@@ -23338,7 +23190,7 @@ packages:
       webpack: '>=2'
     dependencies:
       '@swc/core': 1.3.92
-      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.18.20)
+      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.19.12)
     dev: true
 
   /symbol-tree@3.2.4:
@@ -23463,7 +23315,7 @@ packages:
       webpack: 5.91.0(esbuild@0.19.12)
     dev: true
 
-  /terser-webpack-plugin@5.3.9(@swc/core@1.3.92)(esbuild@0.18.20)(webpack@5.88.2):
+  /terser-webpack-plugin@5.3.9(@swc/core@1.3.92)(esbuild@0.19.12)(webpack@5.88.2):
     resolution: {integrity: sha512-ZuXsqE07EcggTWQjXUj+Aot/OMcD0bMKGgF63f7UxYcu5/AJF53aIpK1YoP5xR9l6s/Hy2b+t1AM0bLNPRuhwA==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -23481,12 +23333,12 @@ packages:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.18
       '@swc/core': 1.3.92
-      esbuild: 0.18.20
+      esbuild: 0.19.12
       jest-worker: 27.5.1
       schema-utils: 3.3.0
       serialize-javascript: 6.0.1
       terser: 5.19.2
-      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.18.20)
+      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.19.12)
     dev: true
 
   /terser@5.19.2:
@@ -23677,7 +23529,7 @@ packages:
     peerDependencies:
       ts-jest: '>=20.0.0'
     dependencies:
-      ts-jest: 29.1.2(@babel/core@7.24.3)(@jest/types@29.6.3)(esbuild@0.18.20)(jest@29.7.0)(typescript@5.2.2)
+      ts-jest: 29.1.2(@babel/core@7.24.3)(@jest/types@29.6.3)(esbuild@0.19.12)(jest@29.7.0)(typescript@5.2.2)
     dev: true
 
   /ts-jest@29.1.1(@babel/core@7.23.2)(@jest/types@29.6.3)(jest@29.7.0)(typescript@5.2.2):
@@ -23715,7 +23567,7 @@ packages:
       yargs-parser: 21.1.1
     dev: true
 
-  /ts-jest@29.1.1(@babel/core@7.24.3)(@jest/types@29.6.3)(esbuild@0.18.20)(jest@29.7.0)(typescript@5.2.2):
+  /ts-jest@29.1.1(@babel/core@7.24.3)(@jest/types@29.6.3)(esbuild@0.19.12)(jest@29.7.0)(typescript@5.2.2):
     resolution: {integrity: sha512-D6xjnnbP17cC85nliwGiL+tpoKN0StpgE0TeOjXQTU6MVCfsB4v7aW05CgQ/1OywGb0x/oy9hHFnN+sczTiRaA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     hasBin: true
@@ -23739,7 +23591,7 @@ packages:
       '@babel/core': 7.24.3
       '@jest/types': 29.6.3
       bs-logger: 0.2.6
-      esbuild: 0.18.20
+      esbuild: 0.19.12
       fast-json-stable-stringify: 2.1.0
       jest: 29.7.0(@types/node@20.8.4)(ts-node@10.9.1)
       jest-util: 29.6.2
@@ -23751,7 +23603,7 @@ packages:
       yargs-parser: 21.1.1
     dev: false
 
-  /ts-jest@29.1.2(@babel/core@7.24.3)(@jest/types@29.6.3)(esbuild@0.18.20)(jest@29.7.0)(typescript@5.2.2):
+  /ts-jest@29.1.2(@babel/core@7.24.3)(@jest/types@29.6.3)(esbuild@0.19.12)(jest@29.7.0)(typescript@5.2.2):
     resolution: {integrity: sha512-br6GJoH/WUX4pu7FbZXuWGKGNDuU7b8Uj77g/Sp7puZV6EXzuByl6JrECvm0MzVzSTkSHWTihsXt+5XYER5b+g==}
     engines: {node: ^16.10.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -23775,7 +23627,7 @@ packages:
       '@babel/core': 7.24.3
       '@jest/types': 29.6.3
       bs-logger: 0.2.6
-      esbuild: 0.18.20
+      esbuild: 0.19.12
       fast-json-stable-stringify: 2.1.0
       jest: 29.7.0(@types/node@20.8.4)(ts-node@10.9.1)
       jest-util: 29.7.0
@@ -24706,7 +24558,7 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-markdown@2.2.0(vite@4.5.2):
+  /vite-plugin-markdown@2.2.0(vite@4.5.3):
     resolution: {integrity: sha512-eH2tXMZcx3EHb5okd+/0VIyoR8Gp9pGe24UXitOOcGkzObbJ1vl48aGOAbakoT88FBdzC8MXNkMfBIB9VK0Ndg==}
     peerDependencies:
       vite: '>=2.9.16'
@@ -24715,10 +24567,10 @@ packages:
       front-matter: 4.0.2
       htmlparser2: 6.1.0
       markdown-it: 12.3.2
-      vite: 4.5.2(@types/node@20.8.4)
+      vite: 4.5.3(@types/node@20.8.4)
     dev: false
 
-  /vite-plugin-static-copy@0.17.0(vite@4.5.2):
+  /vite-plugin-static-copy@0.17.0(vite@4.5.3):
     resolution: {integrity: sha512-2HpNbHfDt8SDy393AGXh9llHkc8FJMQkI8s3T5WsH3SWLMO+f5cFIyPErl4yGKU9Uh3Vaqsd4lHZYTf042fQ2A==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -24728,10 +24580,10 @@ packages:
       fast-glob: 3.3.1
       fs-extra: 11.1.1
       picocolors: 1.0.0
-      vite: 4.5.2(@types/node@20.8.4)
+      vite: 4.5.3(@types/node@20.8.4)
     dev: true
 
-  /vite-tsconfig-paths@4.2.1(typescript@5.2.2)(vite@4.5.2):
+  /vite-tsconfig-paths@4.2.1(typescript@5.2.2)(vite@4.5.3):
     resolution: {integrity: sha512-GNUI6ZgPqT3oervkvzU+qtys83+75N/OuDaQl7HmOqFTb0pjZsuARrRipsyJhJ3enqV8beI1xhGbToR4o78nSQ==}
     peerDependencies:
       vite: '>=2.9.16'
@@ -24742,14 +24594,14 @@ packages:
       debug: 4.3.4
       globrex: 0.1.2
       tsconfck: 2.1.2(typescript@5.2.2)
-      vite: 4.5.2(@types/node@20.8.4)
+      vite: 4.5.3(@types/node@20.8.4)
     transitivePeerDependencies:
       - supports-color
       - typescript
     dev: true
 
-  /vite@4.5.2(@types/node@20.8.4):
-    resolution: {integrity: sha512-tBCZBNSBbHQkaGyhGCDUGqeo2ph8Fstyp6FMSvTtsXeZSPpSMGlviAOav2hxVTqFcx8Hj/twtWKsMJXNY0xI8w==}
+  /vite@4.5.3(@types/node@20.8.4):
+    resolution: {integrity: sha512-kQL23kMeX92v3ph7IauVkXkikdDRsYMGTVl5KY2E9OY4ONLvkHf04MDTbnfo6NKxZiDLWzVpP5oTa8hQD8U3dg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -24908,7 +24760,7 @@ packages:
       mime-types: 2.1.35
       range-parser: 1.2.1
       schema-utils: 4.2.0
-      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.18.20)
+      webpack: 5.88.2(@swc/core@1.3.92)(esbuild@0.19.12)
     dev: true
 
   /webpack-hot-middleware@2.25.4:
@@ -24928,7 +24780,7 @@ packages:
     resolution: {integrity: sha512-kyDivFZ7ZM0BVOUteVbDFhlRt7Ah/CSPwJdi8hBpkK7QLumUqdLtVfm/PX/hkcnrvr0i77fO5+TjZ94Pe+C9iw==}
     dev: true
 
-  /webpack@5.88.2(@swc/core@1.3.92)(esbuild@0.18.20):
+  /webpack@5.88.2(@swc/core@1.3.92)(esbuild@0.19.12):
     resolution: {integrity: sha512-JmcgNZ1iKj+aiR0OvTYtWQqJwq37Pf683dY9bVORwVbUrDhLhdn/PlO2sHsFHPkj7sHNQF3JwaAkp49V+Sq1tQ==}
     engines: {node: '>=10.13.0'}
     hasBin: true
@@ -24959,7 +24811,7 @@ packages:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.9(@swc/core@1.3.92)(esbuild@0.18.20)(webpack@5.88.2)
+      terser-webpack-plugin: 5.3.9(@swc/core@1.3.92)(esbuild@0.19.12)(webpack@5.88.2)
       watchpack: 2.4.0
       webpack-sources: 3.2.3
     transitivePeerDependencies:
