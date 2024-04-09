@@ -77,7 +77,7 @@ test.describe('ChangePassword', () => {
     // fills form data
     await getByAriaLabel(page, 'Current Password').fill('newPass12345$');
     await getByAriaLabel(page, 'New Password').fill('newPass12345$');
-    await getByAriaLabel(page, 'Confirm Password').fill('newPass123456$');
+    await getByAriaLabel(page, 'Confirm Password').fill('newPass12345$');
     await getByAriaLabel(page, 'Confirm Password').blur();
 
     await hasText(
