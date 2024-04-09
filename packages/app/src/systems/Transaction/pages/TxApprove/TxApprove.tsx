@@ -11,8 +11,10 @@ import { TxContent, TxHeader } from '~/systems/Transaction';
 export const TxApprove = () => {
   const ctx = useTransactionRequest();
   const navigate = useNavigate();
-  const { assets } = useAssets();
+  const { assets, isLoading: isLoadingAssets } = useAssets();
   const isSuccess = ctx.status('success');
+  const isLoading =
+    ctx.status('loading') || ctx.status('sending') || isLoadingAssets;
 
   const goToWallet = () => {
     ctx.handlers.closeDialog();
@@ -40,7 +42,7 @@ export const TxApprove = () => {
           <TxContent.Info
             showDetails
             tx={ctx.txResult}
-            isLoading={ctx.status('loading')}
+            isLoading={isLoading}
             header={Header}
             assets={assets}
           />
@@ -79,14 +81,14 @@ export const TxApprove = () => {
           <>
             <Button
               variant="ghost"
-              isDisabled={ctx.isLoading}
+              isDisabled={isLoading}
               onPress={ctx.handlers.closeDialog}
             >
               Back
             </Button>
             <Button
               intent="primary"
-              isLoading={ctx.isLoading}
+              isLoading={isLoading}
               onPress={ctx.handlers.approve}
             >
               Approve
