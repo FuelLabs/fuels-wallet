@@ -2,7 +2,7 @@
   "name": "@fuel-wallet/connections",
   "private": true,
   "description": "Fuel Wallet Connections for CRX.",
-  "version": "0.16.1",
+  "version": "0.16.2",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
@@ -19,9 +19,7 @@
       }
     }
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "pnpm ts:check && tsup",
     "ts:check": "tsc --noEmit"
@@ -33,7 +31,7 @@
     "uuid": "^9.0.1"
   },
   "peerDependencies": {
-    "@fuel-wallet/types": ">=0.16.1",
+    "@fuel-wallet/types": ">=0.16.2",
     "@fuels/connectors": ">=0.1.1",
     "fuels": ">=0.77.0"
   },
