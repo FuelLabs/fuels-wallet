@@ -1,16 +1,15 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { TransactionStatus } from 'fuels';
-import { useAssets } from '~/systems/Asset';
-import { TxRequestStatus, useTransactionRequest } from '~/systems/DApp';
+
+import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import { TxApprove } from './TxApprove';
 
 const mockNavigate = jest.fn();
 
 jest.mock('~/systems/DApp', () => ({
-  ...jest.requireActual('~/systems/DApp'), // use actual for all non-hook parts
   useTransactionRequest: jest.fn(),
 }));
-jest.mock('~/systems/Asset/hooks/useAssets', () => ({
+jest.mock('~/systems/Asset', () => ({
   useAssets: jest.fn(),
 }));
 jest.mock('react-router-dom', () => ({
@@ -28,10 +27,12 @@ jest.mock('~/systems/Store', () => ({
   ),
 }));
 
+import { useAssets } from '~/systems/Asset';
+import { useTransactionRequest } from '~/systems/DApp';
+
 const mockUseTransactionRequest = useTransactionRequest as jest.Mock;
 const mockUseAssets = useAssets as jest.Mock;
 
-// Mocking a simplified version of the transaction result for demonstration purposes
 const mockTxResult = {
   id: 'tx_123',
   status: TransactionStatus.success,
@@ -39,7 +40,7 @@ const mockTxResult = {
 };
 
 describe('TxApprove', () => {
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
@@ -52,7 +53,7 @@ describe('TxApprove', () => {
     mockUseTransactionRequest.mockReturnValue({
       isLoading: false,
       showActions: true,
-      status: jest.fn((status) => {
+      status: jest.fn().mockImplementation((status) => {
         switch (status) {
           case mockCustomStatus:
             if (!mockStatus?.status) {
