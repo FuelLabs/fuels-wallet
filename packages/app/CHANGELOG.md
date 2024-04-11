@@ -1,50 +1,5 @@
 # fuels-wallet
 
-## 0.16.2
-
-### Patch Changes
-
-- [#1113](https://github.com/FuelLabs/fuels-wallet/pull/1113) [`3c5d91d`](https://github.com/FuelLabs/fuels-wallet/commit/3c5d91d04262c492253fc3c06388a0d155e54861) Thanks [@helciofranco](https://github.com/helciofranco)! - chore: update ts-sdk and fuel-ui packages
-
-- [#1198](https://github.com/FuelLabs/fuels-wallet/pull/1198) [`7fac95e`](https://github.com/FuelLabs/fuels-wallet/commit/7fac95e0417bfa675d62538e010541878ea55120) Thanks [@fuel-service-user](https://github.com/fuel-service-user)! - ci: update to tag latest
-
-- [#1218](https://github.com/FuelLabs/fuels-wallet/pull/1218) [`616f091`](https://github.com/FuelLabs/fuels-wallet/commit/616f091c225420e04a3d96a1a80312e5578e48d7) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixes Approve Transaction screen staying in a partially loading state after approving a transaction
-
-- [#1196](https://github.com/FuelLabs/fuels-wallet/pull/1196) [`1427f2b`](https://github.com/FuelLabs/fuels-wallet/commit/1427f2b615c25cc5b50182ee261ea1bef6b96702) Thanks [@helciofranco](https://github.com/helciofranco)! - fix: transaction id available on transaction approved page, it was taking the user to a broken page (undefined id).
-
-- [#1170](https://github.com/FuelLabs/fuels-wallet/pull/1170) [`aa684b3`](https://github.com/FuelLabs/fuels-wallet/commit/aa684b3d965400f4c0c769840bb70559c9751ee6) Thanks [@fuel-service-user](https://github.com/fuel-service-user)! - ci: update to tag latest
-
-- [#1217](https://github.com/FuelLabs/fuels-wallet/pull/1217) [`8f94aee`](https://github.com/FuelLabs/fuels-wallet/commit/8f94aee7b105fa426655689cb6c8761a09ac23ed) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Prevent the Change Password dialog from allowing the new password to be the same as the current password #1203
-
-- [#1137](https://github.com/FuelLabs/fuels-wallet/pull/1137) [`a0e5cbf`](https://github.com/FuelLabs/fuels-wallet/commit/a0e5cbfbcf5eed61f7a2e2c9871b7e02f0c281b2) Thanks [@helciofranco](https://github.com/helciofranco)! - ci: replace prettier and eslint with biomejs (dev)
-
-- [#1197](https://github.com/FuelLabs/fuels-wallet/pull/1197) [`97a8a3c`](https://github.com/FuelLabs/fuels-wallet/commit/97a8a3c039f105ec41c8d53185e6729eecb38371) Thanks [@helciofranco](https://github.com/helciofranco)! - - Display the full app URL when it's big (instead of truncating it).
-
-  - Sync the information displayed in the connected app `list` and `edit` screens.
-  - Improve how the URL are displayed, focusing on the `hostname` mostly.
-  - Display only the first two initials on the Avatar when the page has a long title (2+ words).
-
-- [#1186](https://github.com/FuelLabs/fuels-wallet/pull/1186) [`45f6571`](https://github.com/FuelLabs/fuels-wallet/commit/45f6571760476f516061f03621a48c39516143d0) Thanks [@helciofranco](https://github.com/helciofranco)! - chore: replaces a warning icon (orange) with a info icon (gray) from the connection list screen.
-
-- [#1210](https://github.com/FuelLabs/fuels-wallet/pull/1210) [`0fa1abc`](https://github.com/FuelLabs/fuels-wallet/commit/0fa1abc02712109879cdc27e2eca6fb877393399) Thanks [@fuel-service-user](https://github.com/fuel-service-user)! - ci: update to tag latest
-
-- [#1141](https://github.com/FuelLabs/fuels-wallet/pull/1141) [`96faa7f`](https://github.com/FuelLabs/fuels-wallet/commit/96faa7f0f6d6d7fea6ab0b26495dc32f5a86b4b8) Thanks [@helciofranco](https://github.com/helciofranco)! - feat: bump SDK to latest version
-
-- [#1188](https://github.com/FuelLabs/fuels-wallet/pull/1188) [`d51591e`](https://github.com/FuelLabs/fuels-wallet/commit/d51591e13a7b84703e7ba124c6ba9e01194f3755) Thanks [@helciofranco](https://github.com/helciofranco)! - Previously, `Wallet Manager` was failing to clear properly when `db.clear();` is called.
-
-  This led to wrong account addresses generation, as updates to the `IndexedDB` didn't reflect in the Wallet Manager's internal state, particularly the `#vaults` property.
-
-  To resolve this issue, I implemented a manual call to `removeVault` during logout.
-
-  This ensures that each new wallet generated starts from scratch, free from interference by any previous mnemonic vault.
-
-- [#1150](https://github.com/FuelLabs/fuels-wallet/pull/1150) [`c0d8def`](https://github.com/FuelLabs/fuels-wallet/commit/c0d8deff8a3241444baef5e6b3a01e02073fe7ae) Thanks [@helciofranco](https://github.com/helciofranco)! - ci: enable biomejs rules (as it was with eslint and prettier)
-
-- [#1182](https://github.com/FuelLabs/fuels-wallet/pull/1182) [`ddb2440`](https://github.com/FuelLabs/fuels-wallet/commit/ddb2440258fb7ba115e139ee61ead9f3e5284352) Thanks [@helciofranco](https://github.com/helciofranco)! - fix: disable autocomplete from the private key input.
-
-- Updated dependencies [[`3c5d91d`](https://github.com/FuelLabs/fuels-wallet/commit/3c5d91d04262c492253fc3c06388a0d155e54861), [`aa684b3`](https://github.com/FuelLabs/fuels-wallet/commit/aa684b3d965400f4c0c769840bb70559c9751ee6), [`a0e5cbf`](https://github.com/FuelLabs/fuels-wallet/commit/a0e5cbfbcf5eed61f7a2e2c9871b7e02f0c281b2), [`ec58815`](https://github.com/FuelLabs/fuels-wallet/commit/ec588156afaad39f41886d96ebfbb17653216482), [`0fa1abc`](https://github.com/FuelLabs/fuels-wallet/commit/0fa1abc02712109879cdc27e2eca6fb877393399), [`96faa7f`](https://github.com/FuelLabs/fuels-wallet/commit/96faa7f0f6d6d7fea6ab0b26495dc32f5a86b4b8), [`c0d8def`](https://github.com/FuelLabs/fuels-wallet/commit/c0d8deff8a3241444baef5e6b3a01e02073fe7ae)]:
-  - @fuel-wallet/connections@0.16.2
-
 ## 0.16.1
 
 ### Patch Changes
