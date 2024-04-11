@@ -134,6 +134,7 @@ const styles = {
   }),
   name: cssObj({
     margin: '0px 0px -5px',
+    textAlign: 'center',
   }),
 };
 
