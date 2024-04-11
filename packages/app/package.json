@@ -1,7 +1,7 @@
 {
   "name": "fuels-wallet",
   "private": true,
-  "version": "0.16.1",
+  "version": "0.16.2",
   "database": "14",
   "scripts": {
     "build:all": "run-s build:web build:crx build:storybook",
@@ -47,7 +47,7 @@
     "events": "3.3.0",
     "fake-indexeddb": "4.0.2",
     "framer-motion": "10.16.4",
-    "fuels": "0.78.0",
+    "fuels": "0.79.0",
     "graphql": "16.8.1",
     "graphql-request": "6.1.0",
     "graphql-tag": "2.12.6",
@@ -118,7 +118,7 @@
     "ts-jest-mock-import-meta": "1.1.0",
     "tsconfig-paths-webpack-plugin": "4.1.0",
     "typescript": "5.2.2",
-    "vite": "4.5.2",
+    "vite": "4.5.3",
     "vite-plugin-clean": "1.0.0",
     "vite-plugin-static-copy": "0.17.0",
     "vite-tsconfig-paths": "4.2.1",

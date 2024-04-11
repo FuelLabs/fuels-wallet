@@ -24,7 +24,11 @@ const schema = yup
     }),
     confirmPassword: yup
       .string()
-      .oneOf([yup.ref('password'), undefined], 'Passwords must match'),
+      .oneOf([yup.ref('password'), undefined], 'Passwords must match')
+      .notOneOf(
+        [yup.ref('currentPassword')],
+        'New password cannot be the same as the current password'
+      ),
     currentPassword: yup.string().required('Current password is required'),
     strength: yup.string().required(),
   })
@@ -74,6 +78,11 @@ export function ChangePassword() {
   }, [error]);
 
   function onSubmit(values: ChangePasswordFormValues) {
+    if (values.currentPassword === values.password) {
+      return setError('confirmPassword', {
+        message: 'New password cannot be the same as the current password',
+      });
+    }
     if (values.confirmPassword !== values.password) {
       return setError('confirmPassword', {
         message: 'Passwords must match',
