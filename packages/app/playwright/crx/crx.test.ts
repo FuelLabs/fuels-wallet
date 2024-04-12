@@ -75,18 +75,38 @@ test.describe('FuelWallet Extension', () => {
     // the page.
     await blankPage.goto(new URL('e2e.html', baseURL).href);
 
+    await blankPage.waitForFunction(() => document.readyState === 'complete');
+
     await test.step('Has window.fuel', async () => {
-      const hasFuel = await blankPage.evaluate(async () => {
-        return typeof window.fuel === 'object';
-      });
+      await blankPage.waitForFunction(() => typeof window.fuel === 'object');
+
+      // Directly evaluate and assert after the condition is met
+      const hasFuel = await blankPage.evaluate(
+        () => typeof window.fuel === 'object'
+      );
       expect(hasFuel).toBeTruthy();
     });
 
     await test.step('Should return current version of Wallet', async () => {
-      const version = await blankPage.evaluate(async () => {
-        return window.fuel.version();
+      await blankPage.waitForFunction(() => document.readyState === 'complete');
+
+      // Explicitly wait for window.fuel to be available and for hasConnector to return true
+      await blankPage.waitForFunction(() => {
+        return (
+          window.fuel &&
+          typeof window.fuel.hasConnector === 'function' &&
+          window.fuel.hasConnector()
+        );
       });
-      expect(version).toEqual(process.env.VITE_APP_VERSION);
+
+      // Now that we've ensured window.fuel and hasConnector are ready, proceed with the assertions
+      const hasConnector = await blankPage.evaluate(() =>
+        window.fuel.hasConnector()
+      );
+      expect(hasConnector).toBeTruthy();
+
+      const version = await blankPage.evaluate(() => window.fuel.version());
+      expect(version).toBe(process.env.VITE_APP_VERSION);
     });
 
     await test.step('Should reconnect if service worker stops', async () => {
