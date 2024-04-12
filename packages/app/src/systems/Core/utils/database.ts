@@ -4,6 +4,7 @@ import type {
   Account,
   AssetData,
   Connection,
+  DatabaseRestartEvent,
   FuelWalletError,
   NetworkData,
   Vault,
@@ -23,6 +24,7 @@ export class FuelDB extends Dexie {
   assets!: Table<AssetData, string>;
   abis!: Table<AbiTable, string>;
   errors!: Table<FuelWalletError, string>;
+  readonly alwaysOpen = true;
 
   constructor() {
     super('FuelDB');
@@ -49,6 +51,26 @@ export class FuelDB extends Dexie {
           id: createUUID(),
         });
       });
+    this.on('blocked', () => this.restart('closed'));
+    this.on('close', () => this.restart('blocked'));
+  }
+
+  async restart(eventName: 'blocked' | 'closed') {
+    if (!this.alwaysOpen) {
+      return;
+    }
+    if (eventName !== 'closed') {
+      this.close();
+    }
+
+    this.open();
+
+    chrome.runtime.sendMessage({
+      type: 'DB_EVENT',
+      payload: {
+        event: 'restarted',
+      },
+    } as DatabaseRestartEvent);
   }
 
   async clear() {
