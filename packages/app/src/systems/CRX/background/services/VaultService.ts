@@ -1,5 +1,5 @@
 import { POPUP_SCRIPT_NAME, VAULT_SCRIPT_NAME } from '@fuel-wallet/types';
-import { MessageTypes } from '@fuels/connectors';
+import { MessageTypes, type RequestMessage } from '@fuels/connectors';
 import { AUTO_LOCK_IN_MINUTES } from '~/config';
 import { VaultServer } from '~/systems/Vault/services/VaultServer';
 
@@ -15,10 +15,12 @@ import type { CommunicationProtocol } from './CommunicationProtocol';
 
 export class VaultService extends VaultServer {
   readonly communicationProtocol: CommunicationProtocol;
+  private autoLockInterval?: NodeJS.Timeout;
 
   constructor(communicationProtocol: CommunicationProtocol) {
     super();
     this.communicationProtocol = communicationProtocol;
+    this.handleRequest = this.handleRequest.bind(this);
     this.autoLock();
     this.autoUnlock();
     this.setupListeners();
@@ -49,7 +51,7 @@ export class VaultService extends VaultServer {
   async autoLock() {
     // Check every second if the timer has expired
     // If so, clear the secret and lock the vault
-    setInterval(async () => {
+    this.autoLockInterval = setInterval(async () => {
       const timer = await getTimer();
       if (timer === 0) return;
       if (timer < Date.now()) {
@@ -71,21 +73,37 @@ export class VaultService extends VaultServer {
     return new VaultService(communicationProtocol);
   }
 
+  private stop() {
+    if (this.autoLockInterval) {
+      clearInterval(this.autoLockInterval);
+      this.autoLockInterval = undefined;
+    }
+    this.communicationProtocol.off(MessageTypes.request, this.handleRequest);
+    console.log('VaultService stopped.');
+  }
+
+  restart(communicationProtocol: CommunicationProtocol) {
+    this.stop();
+    return new VaultService(communicationProtocol);
+  }
+
+  async handleRequest(event: RequestMessage) {
+    if (!event.sender?.origin?.includes(chrome.runtime.id)) return;
+    if (event.sender?.id !== chrome.runtime.id) return;
+    if (event.target !== VAULT_SCRIPT_NAME) return;
+    const response = await this.server.receive(event.request);
+    if (response) {
+      this.communicationProtocol.postMessage({
+        id: event.id,
+        type: MessageTypes.response,
+        target: POPUP_SCRIPT_NAME,
+        response,
+      });
+    }
+  }
+
   setupListeners() {
-    this.communicationProtocol.on(MessageTypes.request, async (event) => {
-      if (!event.sender?.origin?.includes(chrome.runtime.id)) return;
-      if (event.sender?.id !== chrome.runtime.id) return;
-      if (event.target !== VAULT_SCRIPT_NAME) return;
-      const response = await this.server.receive(event.request);
-      if (response) {
-        this.communicationProtocol.postMessage({
-          id: event.id,
-          type: MessageTypes.response,
-          target: POPUP_SCRIPT_NAME,
-          response,
-        });
-      }
-    });
+    this.communicationProtocol.on(MessageTypes.request, this.handleRequest);
   }
 
   emitLockEvent() {

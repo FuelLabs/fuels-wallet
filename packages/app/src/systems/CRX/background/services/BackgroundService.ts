@@ -1,6 +1,10 @@
 import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
 import type { Connection } from '@fuel-wallet/types';
-import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuels/connectors';
+import {
+  CONTENT_SCRIPT_NAME,
+  MessageTypes,
+  type RequestMessage,
+} from '@fuels/connectors';
 import { Address } from 'fuels';
 import type {
   JSONRPCParams,
@@ -30,68 +34,85 @@ type EventOrigin = {
 export class BackgroundService {
   readonly server: JSONRPCServer<EventOrigin>;
   readonly communicationProtocol: CommunicationProtocol;
+  readonly methods = [
+    this.ping,
+    this.version,
+    this.isConnected,
+    this.accounts,
+    this.connect,
+    this.network,
+    this.disconnect,
+    this.signMessage,
+    this.sendTransaction,
+    this.currentAccount,
+    this.addAssets,
+    this.assets,
+    this.addNetwork,
+    this.addAbi,
+    this.getAbi,
+    // biome-ignore lint/complexity/noBannedTypes: Needed to imply that functions have the "name" property
+  ] as Array<Function>;
 
   constructor(communicationProtocol: CommunicationProtocol) {
     this.communicationProtocol = communicationProtocol;
     this.server = new JSONRPCServer<EventOrigin>();
     this.server.applyMiddleware(this.connectionMiddleware.bind(this));
     this.setupListeners();
-    this.externalMethods([
-      this.ping,
-      this.version,
-      this.isConnected,
-      this.accounts,
-      this.connect,
-      this.network,
-      this.disconnect,
-      this.signMessage,
-      this.sendTransaction,
-      this.currentAccount,
-      this.addAssets,
-      this.assets,
-      this.addNetwork,
-      this.addAbi,
-      this.getAbi,
-    ]);
+    this.externalMethods();
   }
 
   static start(communicationProtocol: CommunicationProtocol) {
     return new BackgroundService(communicationProtocol);
   }
 
-  setupListeners() {
-    this.communicationProtocol.on(MessageTypes.request, async (event) => {
-      if (event.target !== BACKGROUND_SCRIPT_NAME) return;
-      const origin = event.sender?.origin!;
-      const title = event.sender?.tab?.title!;
-      const favIconUrl = event.sender?.tab?.favIconUrl!;
-      const response = await this.server.receive(event.request, {
-        origin,
-        title,
-        favIconUrl,
-      });
-      if (response) {
-        this.communicationProtocol.postMessage({
-          id: event.id,
-          type: MessageTypes.response,
-          target: CONTENT_SCRIPT_NAME,
-          response,
-        });
-      }
-    });
+  private stop() {
+    this.clearExternalMethods();
+    this.communicationProtocol.off(MessageTypes.request, this.handleRequest);
   }
 
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  externalMethods(methods: Array<string | any>) {
-    // biome-ignore lint/complexity/noForEach: <explanation>
-    methods.forEach((method) => {
-      let methodName = method;
-      if (method.name) {
-        methodName = method.name;
-      }
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-      this.server.addMethod(methodName, this[methodName].bind(this) as any);
+  public restart(communicationProtocol: CommunicationProtocol) {
+    this.stop();
+    return new BackgroundService(communicationProtocol);
+  }
+
+  async handleRequest(event: RequestMessage) {
+    if (event.target !== BACKGROUND_SCRIPT_NAME) return;
+    const origin = event.sender?.origin!;
+    const title = event.sender?.tab?.title!;
+    const favIconUrl = event.sender?.tab?.favIconUrl!;
+    const response = await this.server.receive(event.request, {
+      origin,
+      title,
+      favIconUrl,
     });
+    if (response) {
+      this.communicationProtocol.postMessage({
+        id: event.id,
+        type: MessageTypes.response,
+        target: CONTENT_SCRIPT_NAME,
+        response,
+      });
+    }
+  }
+
+  setupListeners() {
+    this.communicationProtocol.on(MessageTypes.request, this.handleRequest);
+  }
+
+  externalMethods() {
+    for (let i = 0; i < this.methods.length; i++) {
+      const method = this.methods[i];
+      const methodName = String(method?.name || method);
+      this.server.addMethod(methodName, this[methodName].bind(this));
+    }
+  }
+
+  clearExternalMethods() {
+    for (let i = 0; i < this.methods.length; i++) {
+      const method = this.methods[i];
+      const methodName = String(method?.name || method);
+      this.server.removeMethod(methodName);
+    }
   }
 
   async requireAccounts() {

@@ -14,12 +14,23 @@ export class DatabaseEvents {
   readonly communicationProtocol: CommunicationProtocol;
 
   constructor(communicationProtocol: CommunicationProtocol) {
+    console.log('DatabaseEvents constructor');
     this.communicationProtocol = communicationProtocol;
     this.databaseObservable = new DatabaseObservable();
     this.setupApplicationWatcher();
   }
 
   static start(communicationProtocol: CommunicationProtocol) {
+    return new DatabaseEvents(communicationProtocol);
+  }
+
+  private stop() {
+    this.databaseObservable.removeAllListeners();
+    console.log('DatabaseEvents stopped.');
+  }
+
+  restart(communicationProtocol: CommunicationProtocol) {
+    this.stop();
     return new DatabaseEvents(communicationProtocol);
   }
 
