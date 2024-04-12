@@ -79,7 +79,6 @@ export class VaultService extends VaultServer {
       this.autoLockInterval = undefined;
     }
     this.communicationProtocol.off(MessageTypes.request, this.handleRequest);
-    console.log('VaultService stopped.');
   }
 
   restart(communicationProtocol: CommunicationProtocol) {

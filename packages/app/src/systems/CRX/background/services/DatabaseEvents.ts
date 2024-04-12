@@ -14,7 +14,6 @@ export class DatabaseEvents {
   readonly communicationProtocol: CommunicationProtocol;
 
   constructor(communicationProtocol: CommunicationProtocol) {
-    console.log('DatabaseEvents constructor');
     this.communicationProtocol = communicationProtocol;
     this.databaseObservable = new DatabaseObservable();
     this.setupApplicationWatcher();
@@ -26,7 +25,6 @@ export class DatabaseEvents {
 
   private stop() {
     this.databaseObservable.removeAllListeners();
-    console.log('DatabaseEvents stopped.');
   }
 
   restart(communicationProtocol: CommunicationProtocol) {
