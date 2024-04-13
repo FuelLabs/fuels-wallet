@@ -25,7 +25,6 @@ import {
   PRIVATE_KEY,
 } from '../mocks';
 
-import { mockConnectorVersion } from '../mocks/connector';
 import {
   getAccountByName,
   getWalletAccounts,
@@ -38,6 +37,7 @@ import {
 
 const WALLET_PASSWORD = 'Qwe123456$';
 
+test.describe.configure({ mode: 'parallel' });
 test.describe('FuelWallet Extension', () => {
   test('On install sign-up page is open', async ({ context }) => {
     // In development mode files are render dynamically
@@ -79,20 +79,23 @@ test.describe('FuelWallet Extension', () => {
     await blankPage.waitForFunction(() => document.readyState === 'complete');
 
     await test.step('Has window.fuel', async () => {
-      await blankPage.waitForFunction(() => typeof window.fuel === 'object');
-
-      // Directly evaluate and assert after the condition is met
-      const hasFuel = await blankPage.evaluate(
-        () => typeof window.fuel === 'object'
-      );
+      const hasFuel = await blankPage.evaluate(async () => {
+        return typeof window.fuel === 'object';
+      });
       expect(hasFuel).toBeTruthy();
     });
 
     await test.step('Should return current version of Wallet', async () => {
-      await blankPage.waitForFunction(() => window.fuel);
-      await blankPage.waitForFunction(() => window.fuel.currentConnector());
+      await blankPage.waitForFunction(() => {
+        return window.fuel?.currentConnector();
+      });
+
+      const hasConnector = await blankPage.evaluate(() =>
+        window.fuel.currentConnector()
+      );
+      expect(hasConnector).toBeDefined();
       const version = blankPage.evaluate(() => window.fuel.version());
-      expect(await version).toStrictEqual(mockConnectorVersion);
+      expect(await version).toStrictEqual(process.env.VITE_APP_VERSION);
     });
 
     await test.step('Should reconnect if service worker stops', async () => {
