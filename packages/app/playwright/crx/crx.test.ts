@@ -25,6 +25,7 @@ import {
   PRIVATE_KEY,
 } from '../mocks';
 
+import { mockConnectorVersion } from '../mocks/connector';
 import {
   getAccountByName,
   getWalletAccounts,
@@ -88,25 +89,10 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('Should return current version of Wallet', async () => {
-      await blankPage.waitForFunction(() => document.readyState === 'complete');
-
-      // Explicitly wait for window.fuel to be available and for hasConnector to return true
-      await blankPage.waitForFunction(() => {
-        return (
-          window.fuel &&
-          typeof window.fuel.hasConnector === 'function' &&
-          window.fuel.hasConnector()
-        );
-      });
-
-      // Now that we've ensured window.fuel and hasConnector are ready, proceed with the assertions
-      const hasConnector = await blankPage.evaluate(() =>
-        window.fuel.hasConnector()
-      );
-      expect(hasConnector).toBeTruthy();
-
-      const version = await blankPage.evaluate(() => window.fuel.version());
-      expect(version).toBe(process.env.VITE_APP_VERSION);
+      await blankPage.waitForFunction(() => window.fuel);
+      await blankPage.waitForFunction(() => window.fuel.currentConnector());
+      const version = blankPage.evaluate(() => window.fuel.version());
+      expect(await version).toStrictEqual(mockConnectorVersion);
     });
 
     await test.step('Should reconnect if service worker stops', async () => {
