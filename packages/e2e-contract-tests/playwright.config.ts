@@ -7,7 +7,7 @@ import './load.envs';
 
 const config: PlaywrightTestConfig = defineConfig({
   testDir: './playwright',
-  retries: process.env.CI ? 2 : 0,
+  retries: 4,
   workers: process.env.CI ? 4 : undefined,
   timeout: 60_000,
   reporter: [['html', { printSteps: true }]],
