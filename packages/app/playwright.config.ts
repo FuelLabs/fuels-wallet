@@ -5,11 +5,11 @@ import './load.envs';
 
 const distDirectory = join(__dirname, './dist');
 
-const IS_CI = !!process.env.CI;
+const _IS_CI = !!process.env.CI;
 const PORT = process.env.PORT;
 
 export default defineConfig({
-  workers: IS_CI ? 4 : undefined,
+  workers: 4,
   testMatch: join(__dirname, './playwright/**/*.test.ts'),
   testDir: join(__dirname, './playwright/'),
   outputDir: join(__dirname, './playwright-results/'),
