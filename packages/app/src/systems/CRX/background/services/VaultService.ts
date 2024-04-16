@@ -16,14 +16,14 @@ import type { CommunicationProtocol } from './CommunicationProtocol';
 export class VaultService extends VaultServer {
   readonly communicationProtocol: CommunicationProtocol;
   private autoLockInterval?: NodeJS.Timeout;
+  private removeCommunicationListeners: () => void;
 
   constructor(communicationProtocol: CommunicationProtocol) {
     super();
     this.communicationProtocol = communicationProtocol;
-    this.handleRequest = this.handleRequest.bind(this);
     this.autoLock();
     this.autoUnlock();
-    this.setupListeners();
+    this.removeCommunicationListeners = this.setupListeners();
   }
 
   async unlock({ password }: { password: string }): Promise<void> {
@@ -78,7 +78,8 @@ export class VaultService extends VaultServer {
       clearInterval(this.autoLockInterval);
       this.autoLockInterval = undefined;
     }
-    this.communicationProtocol.off(MessageTypes.request, this.handleRequest);
+    this.removeCommunicationListeners();
+    this.removeAllListeners();
   }
 
   restart(communicationProtocol: CommunicationProtocol) {
@@ -86,23 +87,25 @@ export class VaultService extends VaultServer {
     return new VaultService(communicationProtocol);
   }
 
-  async handleRequest(event: RequestMessage) {
-    if (!event.sender?.origin?.includes(chrome.runtime.id)) return;
-    if (event.sender?.id !== chrome.runtime.id) return;
-    if (event.target !== VAULT_SCRIPT_NAME) return;
-    const response = await this.server.receive(event.request);
-    if (response) {
-      this.communicationProtocol.postMessage({
-        id: event.id,
-        type: MessageTypes.response,
-        target: POPUP_SCRIPT_NAME,
-        response,
-      });
-    }
-  }
-
   setupListeners() {
-    this.communicationProtocol.on(MessageTypes.request, this.handleRequest);
+    const handleRequest = async (event: RequestMessage) => {
+      if (!event.sender?.origin?.includes(chrome.runtime.id)) return;
+      if (event.sender?.id !== chrome.runtime.id) return;
+      if (event.target !== VAULT_SCRIPT_NAME) return;
+      const response = await this.server.receive(event.request);
+      if (response) {
+        this.communicationProtocol.postMessage({
+          id: event.id,
+          type: MessageTypes.response,
+          target: POPUP_SCRIPT_NAME,
+          response,
+        });
+      }
+    };
+    this.communicationProtocol.on(MessageTypes.request, handleRequest);
+    return () => {
+      this.communicationProtocol.off(MessageTypes.request, handleRequest);
+    };
   }
 
   emitLockEvent() {

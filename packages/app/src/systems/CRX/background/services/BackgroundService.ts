@@ -34,6 +34,7 @@ type EventOrigin = {
 export class BackgroundService {
   readonly server: JSONRPCServer<EventOrigin>;
   readonly communicationProtocol: CommunicationProtocol;
+  readonly removeCommunicationListeners: () => void;
   readonly methods = [
     this.ping,
     this.version,
@@ -57,7 +58,7 @@ export class BackgroundService {
     this.communicationProtocol = communicationProtocol;
     this.server = new JSONRPCServer<EventOrigin>();
     this.server.applyMiddleware(this.connectionMiddleware.bind(this));
-    this.setupListeners();
+    this.removeCommunicationListeners = this.setupListeners();
     this.externalMethods();
   }
 
@@ -67,7 +68,7 @@ export class BackgroundService {
 
   private stop() {
     this.clearExternalMethods();
-    this.communicationProtocol.off(MessageTypes.request, this.handleRequest);
+    this.removeCommunicationListeners();
   }
 
   public restart(communicationProtocol: CommunicationProtocol) {
@@ -75,28 +76,32 @@ export class BackgroundService {
     return new BackgroundService(communicationProtocol);
   }
 
-  async handleRequest(event: RequestMessage) {
-    if (event.target !== BACKGROUND_SCRIPT_NAME) return;
-    const origin = event.sender?.origin!;
-    const title = event.sender?.tab?.title!;
-    const favIconUrl = event.sender?.tab?.favIconUrl!;
-    const response = await this.server.receive(event.request, {
-      origin,
-      title,
-      favIconUrl,
-    });
-    if (response) {
-      this.communicationProtocol.postMessage({
-        id: event.id,
-        type: MessageTypes.response,
-        target: CONTENT_SCRIPT_NAME,
-        response,
-      });
-    }
-  }
-
   setupListeners() {
-    this.communicationProtocol.on(MessageTypes.request, this.handleRequest);
+    const handleRequest = async (event: RequestMessage) => {
+      if (event.target !== BACKGROUND_SCRIPT_NAME) return;
+      const origin = event.sender?.origin!;
+      const title = event.sender?.tab?.title!;
+      const favIconUrl = event.sender?.tab?.favIconUrl!;
+      const response = await this.server.receive(event.request, {
+        origin,
+        title,
+        favIconUrl,
+      });
+      if (response) {
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        this.communicationProtocol.postMessage({
+          id: event.id,
+          type: MessageTypes.response,
+          target: CONTENT_SCRIPT_NAME,
+          response,
+        });
+      }
+    };
+
+    this.communicationProtocol.on(MessageTypes.request, handleRequest);
+    return () => {
+      this.communicationProtocol.off(MessageTypes.request, handleRequest);
+    };
   }
 
   externalMethods() {
