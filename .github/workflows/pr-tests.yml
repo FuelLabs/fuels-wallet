@@ -19,6 +19,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 18.14.1
+          pnpm-version: 9.0.0
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}
@@ -69,6 +72,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 18.14.1
+          pnpm-version: 9.0.0
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}
@@ -115,6 +121,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 18.14.1
+          pnpm-version: 9.0.0
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}

@@ -25,6 +25,9 @@ jobs:
           # see https://github.com/changesets/action/issues/70
           persist-credentials: false
       - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 18.14.1
+          pnpm-version: 9.0.0
 
       - name: Bump and Collect Version
         run: |
