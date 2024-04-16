@@ -5,10 +5,9 @@
   "description": "Fuel Wallet",
   "author": "Fuel Labs <contact@fuel.sh> (https://fuel.network/)",
   "engines": {
-    "node": ">=20.11.0",
-    "pnpm": ">=9"
+    "node": ">=18.14.1",
+    "pnpm": ">=8"
   },
-  "packageManager": "pnpm@9.0.0",
   "homepage": "https://github.com/FuelLabs/fuels-wallet",
   "repository": {
     "type": "git",

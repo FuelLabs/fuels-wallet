@@ -20,8 +20,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
         with:
-          node-version: 20.11.0
-          pnpm-version: 9.0.0
+          node-version: 18.14.1
+          pnpm-version: 8.15.7
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}
@@ -73,8 +73,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
         with:
-          node-version: 20.11.0
-          pnpm-version: 9.0.0
+          node-version: 18.14.1
+          pnpm-version: 8.15.7
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}
@@ -122,8 +122,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
         with:
-          node-version: 20.11.0
-          pnpm-version: 9.0.0
+          node-version: 18.14.1
+          pnpm-version: 8.15.7
       - uses: FuelLabs/github-actions/setups/docker@master
         with:
           username: ${{ github.repository_owner }}
