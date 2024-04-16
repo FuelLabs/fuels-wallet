@@ -37,6 +37,7 @@ import {
 
 const WALLET_PASSWORD = 'Qwe123456$';
 
+test.describe.configure({ mode: 'parallel' });
 test.describe('FuelWallet Extension', () => {
   test('On install sign-up page is open', async ({ context }) => {
     // In development mode files are render dynamically
@@ -75,6 +76,8 @@ test.describe('FuelWallet Extension', () => {
     // the page.
     await blankPage.goto(new URL('e2e.html', baseURL).href);
 
+    await blankPage.waitForFunction(() => document.readyState === 'complete');
+
     await test.step('Has window.fuel', async () => {
       const hasFuel = await blankPage.evaluate(async () => {
         return typeof window.fuel === 'object';
@@ -83,10 +86,16 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('Should return current version of Wallet', async () => {
-      const version = await blankPage.evaluate(async () => {
-        return window.fuel.version();
+      await blankPage.waitForFunction(() => {
+        return window.fuel?.currentConnector();
       });
-      expect(version).toEqual(process.env.VITE_APP_VERSION);
+
+      const hasConnector = await blankPage.evaluate(() =>
+        window.fuel.currentConnector()
+      );
+      expect(hasConnector).toBeDefined();
+      const version = blankPage.evaluate(() => window.fuel.version());
+      expect(await version).toStrictEqual(process.env.VITE_APP_VERSION);
     });
 
     await test.step('Should reconnect if service worker stops', async () => {
