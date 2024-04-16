@@ -30,23 +30,24 @@ errorBoundary(() => {
       communicationProtocol?.addConnection(port);
     }
   });
+  let backgroundService = BackgroundService.start(communicationProtocol);
+  let vaultService = VaultService.start(communicationProtocol);
+  let databaseEvents = DatabaseEvents.start(communicationProtocol);
 
-  const backgroundService = BackgroundService.start(communicationProtocol);
-  const vaultService = VaultService.start(communicationProtocol);
-  const databaseEvents = DatabaseEvents.start(communicationProtocol);
+  function restartProtocol(message: DatabaseRestartEvent) {
+    if (message?.type === 'DB_EVENT') {
+      if (message?.payload?.event === 'restarted') {
+        const oldProtocol = communicationProtocol;
 
-  chrome.runtime.onMessage.addListener(
-    (message: DatabaseRestartEvent, _sender, _sendResponse) => {
-      if (message?.type === 'DB_EVENT') {
-        if (message?.payload?.event === 'restarted') {
-          communicationProtocol?.destroy();
-          communicationProtocol = undefined;
-          communicationProtocol = new CommunicationProtocol();
-          backgroundService.restart(communicationProtocol);
-          vaultService.restart(communicationProtocol);
-          databaseEvents.restart(communicationProtocol);
-        }
+        communicationProtocol = new CommunicationProtocol();
+        backgroundService = backgroundService.restart(communicationProtocol);
+        vaultService = vaultService.restart(communicationProtocol);
+        databaseEvents = databaseEvents.restart(communicationProtocol);
+
+        oldProtocol?.destroy();
       }
     }
-  );
+  }
+
+  chrome.runtime.onMessage.addListener(restartProtocol);
 });
