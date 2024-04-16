@@ -33,6 +33,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 18.14.1
+          pnpm-version: 8.15.7
 
       - name: Checking updates
         id: update
