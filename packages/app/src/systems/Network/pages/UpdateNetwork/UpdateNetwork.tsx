@@ -16,7 +16,12 @@ export function UpdateNetwork() {
   }
 
   return (
-    <Box.Stack gap="$4" as="form" onSubmit={form.handleSubmit(onSubmit)}>
+    <Box.Stack
+      gap="$4"
+      as="form"
+      onSubmit={form.handleSubmit(onSubmit)}
+      autoComplete="off"
+    >
       <OverlayDialogTopbar onClose={handlers.closeDialog}>
         Update Network
       </OverlayDialogTopbar>

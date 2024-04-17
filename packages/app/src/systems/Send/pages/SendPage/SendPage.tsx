@@ -13,6 +13,7 @@ export function SendPage() {
     <form
       onSubmit={form.handleSubmit(handlers.submit)}
       data-testid={txRequest.txStatus}
+      autoComplete="off"
     >
       <Layout title={ctx.title} isLoading={status('loading')}>
         <Layout.TopBar onBack={handlers.cancel} />

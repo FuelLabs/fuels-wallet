@@ -26,7 +26,8 @@ export const ImportAccountForm = ({
           <Input isDisabled={isLoading}>
             <Input.Field
               {...field}
-              autoComplete="off"
+              autoComplete="new-password"
+              id="search-private-key"
               type="password"
               aria-label="Private Key"
               placeholder="Enter the private key to import from"
@@ -48,6 +49,7 @@ export const ImportAccountForm = ({
           <Input isDisabled={isLoading}>
             <Input.Field
               {...field}
+              id="search-account-name"
               aria-label="Account Name"
               placeholder="Type account name"
             />
