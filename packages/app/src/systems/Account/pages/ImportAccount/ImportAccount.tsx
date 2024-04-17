@@ -17,7 +17,12 @@ export const ImportAccount = () => {
   }
 
   return (
-    <Box.Stack gap="$4" as="form" onSubmit={form.handleSubmit(onSubmit)}>
+    <Box.Stack
+      gap="$4"
+      as="form"
+      onSubmit={form.handleSubmit(onSubmit)}
+      autoComplete="off"
+    >
       <OverlayDialogTopbar onClose={accountsHandlers.closeDialog}>
         Import Account
       </OverlayDialogTopbar>
