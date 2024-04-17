@@ -52,6 +52,7 @@ export function AddNetwork() {
       as="form"
       gap="$4"
       onSubmit={form.handleSubmit(onSubmit)}
+      autoComplete="off"
     >
       <OverlayDialogTopbar onClose={handlers.closeDialog}>
         Add Network

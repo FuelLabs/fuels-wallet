@@ -23,7 +23,9 @@ export function SearchInput({
       <Input.ElementLeft element={<Icon icon={Icon.is('Search')} />} />
       <Input.Field
         {...props}
+        autoComplete="off"
         type="search"
+        id="search-input"
         /**
          * Since we already have type="search" we don't need role here, but
          * @fuel-ui automatically add role to input. So, we need to pass
