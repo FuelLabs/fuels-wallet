@@ -23,15 +23,6 @@ export class DatabaseEvents {
     return new DatabaseEvents(communicationProtocol);
   }
 
-  private stop() {
-    this.databaseObservable.removeAllListeners();
-  }
-
-  restart(communicationProtocol: CommunicationProtocol) {
-    this.stop();
-    return new DatabaseEvents(communicationProtocol);
-  }
-
   createEvents(events: EventMessageEvents): EventMessage {
     return {
       target: CONTENT_SCRIPT_NAME,

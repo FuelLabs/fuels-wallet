@@ -1,10 +1,6 @@
 import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
 import type { Connection } from '@fuel-wallet/types';
-import {
-  CONTENT_SCRIPT_NAME,
-  MessageTypes,
-  type RequestMessage,
-} from '@fuels/connectors';
+import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuels/connectors';
 import { Address } from 'fuels';
 import type {
   JSONRPCParams,
@@ -34,50 +30,37 @@ type EventOrigin = {
 export class BackgroundService {
   readonly server: JSONRPCServer<EventOrigin>;
   readonly communicationProtocol: CommunicationProtocol;
-  readonly removeCommunicationListeners: () => void;
-  readonly methods = [
-    this.ping,
-    this.version,
-    this.isConnected,
-    this.accounts,
-    this.connect,
-    this.network,
-    this.disconnect,
-    this.signMessage,
-    this.sendTransaction,
-    this.currentAccount,
-    this.addAssets,
-    this.assets,
-    this.addNetwork,
-    this.addAbi,
-    this.getAbi,
-    // biome-ignore lint/complexity/noBannedTypes: Needed to imply that functions have the "name" property
-  ] as Array<Function>;
 
   constructor(communicationProtocol: CommunicationProtocol) {
     this.communicationProtocol = communicationProtocol;
     this.server = new JSONRPCServer<EventOrigin>();
     this.server.applyMiddleware(this.connectionMiddleware.bind(this));
-    this.removeCommunicationListeners = this.setupListeners();
-    this.externalMethods();
+    this.setupListeners();
+    this.externalMethods([
+      this.ping,
+      this.version,
+      this.isConnected,
+      this.accounts,
+      this.connect,
+      this.network,
+      this.disconnect,
+      this.signMessage,
+      this.sendTransaction,
+      this.currentAccount,
+      this.addAssets,
+      this.assets,
+      this.addNetwork,
+      this.addAbi,
+      this.getAbi,
+    ]);
   }
 
   static start(communicationProtocol: CommunicationProtocol) {
     return new BackgroundService(communicationProtocol);
   }
 
-  private stop() {
-    this.clearExternalMethods();
-    this.removeCommunicationListeners();
-  }
-
-  public restart(communicationProtocol: CommunicationProtocol) {
-    this.stop();
-    return new BackgroundService(communicationProtocol);
-  }
-
   setupListeners() {
-    const handleRequest = async (event: RequestMessage) => {
+    this.communicationProtocol.on(MessageTypes.request, async (event) => {
       if (event.target !== BACKGROUND_SCRIPT_NAME) return;
       const origin = event.sender?.origin!;
       const title = event.sender?.tab?.title!;
@@ -88,7 +71,6 @@ export class BackgroundService {
         favIconUrl,
       });
       if (response) {
-        await new Promise((resolve) => setTimeout(resolve, 1500));
         this.communicationProtocol.postMessage({
           id: event.id,
           type: MessageTypes.response,
@@ -96,28 +78,20 @@ export class BackgroundService {
           response,
         });
       }
-    };
-
-    this.communicationProtocol.on(MessageTypes.request, handleRequest);
-    return () => {
-      this.communicationProtocol.off(MessageTypes.request, handleRequest);
-    };
+    });
   }
 
-  externalMethods() {
-    for (let i = 0; i < this.methods.length; i++) {
-      const method = this.methods[i];
-      const methodName = String(method?.name || method);
-      this.server.addMethod(methodName, this[methodName].bind(this));
-    }
-  }
-
-  clearExternalMethods() {
-    for (let i = 0; i < this.methods.length; i++) {
-      const method = this.methods[i];
-      const methodName = String(method?.name || method);
-      this.server.removeMethod(methodName);
-    }
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  externalMethods(methods: Array<string | any>) {
+    // biome-ignore lint/complexity/noForEach: <explanation>
+    methods.forEach((method) => {
+      let methodName = method;
+      if (method.name) {
+        methodName = method.name;
+      }
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      this.server.addMethod(methodName, this[methodName].bind(this) as any);
+    });
   }
 
   async requireAccounts() {

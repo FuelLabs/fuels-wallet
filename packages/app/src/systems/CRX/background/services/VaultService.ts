@@ -21,14 +21,13 @@ import type { CommunicationProtocol } from './CommunicationProtocol';
 export class VaultService extends VaultServer {
   readonly communicationProtocol: CommunicationProtocol;
   private autoLockInterval?: NodeJS.Timeout;
-  private removeCommunicationListeners: () => void;
 
   constructor(communicationProtocol: CommunicationProtocol) {
     super();
     this.communicationProtocol = communicationProtocol;
     this.autoLock();
     this.autoUnlock();
-    this.removeCommunicationListeners = this.setupListeners();
+    this.setupListeners();
   }
 
   async checkVaultIntegrity() {
@@ -90,24 +89,6 @@ export class VaultService extends VaultServer {
     return new VaultService(communicationProtocol);
   }
 
-  private async stop() {
-    if (this.autoLockInterval) {
-      clearInterval(this.autoLockInterval);
-      this.autoLockInterval = undefined;
-    }
-    if (await this.isLocked()) {
-      const secret = await loadSecret();
-      secret && (await this.unlock({ password: secret, shouldSave: false }));
-    }
-    this.removeCommunicationListeners();
-    this.removeAllListeners();
-  }
-
-  async restart(communicationProtocol: CommunicationProtocol) {
-    await this.stop();
-    return new VaultService(communicationProtocol);
-  }
-
   setupListeners() {
     const handleRequest = async (event: RequestMessage) => {
       if (!event.sender?.origin?.includes(chrome.runtime.id)) return;
@@ -138,10 +119,6 @@ export class VaultService extends VaultServer {
     };
     chrome.runtime.onMessage.addListener(handleRestartEvent);
     this.communicationProtocol.on(MessageTypes.request, handleRequest);
-    return () => {
-      this.communicationProtocol.off(MessageTypes.request, handleRequest);
-      chrome.runtime.onMessage.removeListener(handleRestartEvent);
-    };
   }
 
   emitLockEvent() {

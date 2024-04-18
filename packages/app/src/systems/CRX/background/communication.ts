@@ -8,8 +8,11 @@ import { DatabaseEvents } from './services/DatabaseEvents';
 import { VaultService } from './services/VaultService';
 
 errorBoundary(() => {
-  const communicationProtocol: CommunicationProtocol | undefined =
-    new CommunicationProtocol();
+  const communicationProtocol = new CommunicationProtocol();
+
+  BackgroundService.start(communicationProtocol);
+  VaultService.start(communicationProtocol);
+  DatabaseEvents.start(communicationProtocol);
 
   chrome.runtime.onConnect.addListener((port) => {
     // Only allow connections from the extension
@@ -23,10 +26,7 @@ errorBoundary(() => {
       return;
     }
     if ([BACKGROUND_SCRIPT_NAME, VAULT_SCRIPT_NAME].includes(port.name)) {
-      communicationProtocol?.addConnection(port);
+      communicationProtocol.addConnection(port);
     }
   });
-  BackgroundService.start(communicationProtocol);
-  VaultService.start(communicationProtocol);
-  DatabaseEvents.start(communicationProtocol);
 });
