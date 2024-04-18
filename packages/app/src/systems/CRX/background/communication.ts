@@ -1,8 +1,4 @@
-import {
-  BACKGROUND_SCRIPT_NAME,
-  type DatabaseRestartEvent,
-  VAULT_SCRIPT_NAME,
-} from '@fuel-wallet/types';
+import { BACKGROUND_SCRIPT_NAME, VAULT_SCRIPT_NAME } from '@fuel-wallet/types';
 
 import { errorBoundary } from '../utils';
 
@@ -12,7 +8,7 @@ import { DatabaseEvents } from './services/DatabaseEvents';
 import { VaultService } from './services/VaultService';
 
 errorBoundary(() => {
-  let communicationProtocol: CommunicationProtocol | undefined =
+  const communicationProtocol: CommunicationProtocol | undefined =
     new CommunicationProtocol();
 
   chrome.runtime.onConnect.addListener((port) => {
@@ -30,24 +26,7 @@ errorBoundary(() => {
       communicationProtocol?.addConnection(port);
     }
   });
-  let backgroundService = BackgroundService.start(communicationProtocol);
-  let vaultService = VaultService.start(communicationProtocol);
-  let databaseEvents = DatabaseEvents.start(communicationProtocol);
-
-  function restartProtocol(message: DatabaseRestartEvent) {
-    if (message?.type === 'DB_EVENT') {
-      if (message?.payload?.event === 'restarted') {
-        const oldProtocol = communicationProtocol;
-
-        communicationProtocol = new CommunicationProtocol();
-        backgroundService = backgroundService.restart(communicationProtocol);
-        vaultService = vaultService.restart(communicationProtocol);
-        databaseEvents = databaseEvents.restart(communicationProtocol);
-
-        oldProtocol?.destroy();
-      }
-    }
-  }
-
-  chrome.runtime.onMessage.addListener(restartProtocol);
+  BackgroundService.start(communicationProtocol);
+  VaultService.start(communicationProtocol);
+  DatabaseEvents.start(communicationProtocol);
 });
