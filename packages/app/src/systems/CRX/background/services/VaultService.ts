@@ -20,7 +20,6 @@ import type { CommunicationProtocol } from './CommunicationProtocol';
 
 export class VaultService extends VaultServer {
   readonly communicationProtocol: CommunicationProtocol;
-  private autoLockInterval?: NodeJS.Timeout;
 
   constructor(communicationProtocol: CommunicationProtocol) {
     super();
@@ -39,12 +38,9 @@ export class VaultService extends VaultServer {
     return dbLoadedCorrectly && (!isLocked || !!(secret && isLocked));
   }
 
-  async unlock({
-    password,
-    shouldSave = true,
-  }: { password: string; shouldSave?: boolean }): Promise<void> {
+  async unlock({ password }: { password: string }): Promise<void> {
     await super.unlock({ password });
-    shouldSave && saveSecret(password, AUTO_LOCK_IN_MINUTES);
+    saveSecret(password, AUTO_LOCK_IN_MINUTES);
   }
 
   async lock(): Promise<void> {
@@ -67,7 +63,7 @@ export class VaultService extends VaultServer {
   async autoLock() {
     // Check every second if the timer has expired
     // If so, clear the secret and lock the vault
-    this.autoLockInterval = setInterval(async () => {
+    setInterval(async () => {
       const timer = await getTimer();
       if (timer === 0) return;
       if (timer < Date.now()) {
@@ -81,7 +77,7 @@ export class VaultService extends VaultServer {
     const secret = await loadSecret();
     if (secret) {
       // Unlock vault directly without saving a new timestamp
-      await this.unlock({ password: secret, shouldSave: false });
+      await super.unlock({ password: secret });
     }
   }
 
