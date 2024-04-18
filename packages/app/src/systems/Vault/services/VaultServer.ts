@@ -46,7 +46,7 @@ export type VaultInputs = {
 
 export class VaultServer extends EventEmitter {
   readonly server: JSONRPCServer;
-  readonly manager: WalletManager;
+  manager: WalletManager;
   static readonly methods: Array<string> = [
     'isLocked',
     'unlock',
@@ -193,6 +193,13 @@ export class VaultServer extends EventEmitter {
     for (const vault of vaults) {
       await this.manager.removeVault(vault.vaultId);
     }
+  }
+
+  resetAndReload() {
+    const storage = new IndexedDBStorage();
+    const manager = new WalletManager({ storage });
+    this.manager = manager;
+    chrome.runtime.reload();
   }
 }
 

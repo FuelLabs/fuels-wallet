@@ -1,4 +1,8 @@
-import { POPUP_SCRIPT_NAME, VAULT_SCRIPT_NAME } from '@fuel-wallet/types';
+import {
+  type DatabaseRestartEvent,
+  POPUP_SCRIPT_NAME,
+  VAULT_SCRIPT_NAME,
+} from '@fuel-wallet/types';
 import { MessageTypes, type RequestMessage } from '@fuels/connectors';
 import { AUTO_LOCK_IN_MINUTES } from '~/config';
 import { VaultServer } from '~/systems/Vault/services/VaultServer';
@@ -11,6 +15,7 @@ import {
   saveSecret,
 } from '../../utils';
 
+import { db } from '../../../../systems/Core/utils/database';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 
 export class VaultService extends VaultServer {
@@ -26,9 +31,21 @@ export class VaultService extends VaultServer {
     this.removeCommunicationListeners = this.setupListeners();
   }
 
-  async unlock({ password }: { password: string }): Promise<void> {
+  async checkVaultIntegrity() {
+    // Ensure integrity of database connection
+    const dbLoadedCorrectly = (await db.open().catch(() => false)) && true;
+    const secret = await loadSecret().catch(() => null);
+    const isLocked = await super.isLocked().catch(() => true);
+
+    return dbLoadedCorrectly && (!isLocked || !!(secret && isLocked));
+  }
+
+  async unlock({
+    password,
+    shouldSave = true,
+  }: { password: string; shouldSave?: boolean }): Promise<void> {
     await super.unlock({ password });
-    saveSecret(password, AUTO_LOCK_IN_MINUTES);
+    shouldSave && saveSecret(password, AUTO_LOCK_IN_MINUTES);
   }
 
   async lock(): Promise<void> {
@@ -65,7 +82,7 @@ export class VaultService extends VaultServer {
     const secret = await loadSecret();
     if (secret) {
       // Unlock vault directly without saving a new timestamp
-      await super.unlock({ password: secret });
+      await this.unlock({ password: secret, shouldSave: false });
     }
   }
 
@@ -73,17 +90,21 @@ export class VaultService extends VaultServer {
     return new VaultService(communicationProtocol);
   }
 
-  private stop() {
+  private async stop() {
     if (this.autoLockInterval) {
       clearInterval(this.autoLockInterval);
       this.autoLockInterval = undefined;
+    }
+    if (await this.isLocked()) {
+      const secret = await loadSecret();
+      secret && (await this.unlock({ password: secret, shouldSave: false }));
     }
     this.removeCommunicationListeners();
     this.removeAllListeners();
   }
 
-  restart(communicationProtocol: CommunicationProtocol) {
-    this.stop();
+  async restart(communicationProtocol: CommunicationProtocol) {
+    await this.stop();
     return new VaultService(communicationProtocol);
   }
 
@@ -102,9 +123,24 @@ export class VaultService extends VaultServer {
         });
       }
     };
+
+    const handleRestartEvent = async (message: DatabaseRestartEvent) => {
+      const { type: eventType, payload } = message ?? {};
+      const integrity = await this.checkVaultIntegrity();
+
+      if (
+        eventType === 'DB_EVENT' &&
+        payload.event === 'restarted' &&
+        !integrity
+      ) {
+        this.resetAndReload();
+      }
+    };
+    chrome.runtime.onMessage.addListener(handleRestartEvent);
     this.communicationProtocol.on(MessageTypes.request, handleRequest);
     return () => {
       this.communicationProtocol.off(MessageTypes.request, handleRequest);
+      chrome.runtime.onMessage.removeListener(handleRestartEvent);
     };
   }
 
