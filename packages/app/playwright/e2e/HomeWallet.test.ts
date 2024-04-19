@@ -21,7 +21,8 @@ test.describe('HomeWallet', () => {
     await mockData(page);
   });
 
-  test('should change balance when select a new network', async () => {
+  // @TODO: re-enable when we have testnet live link to be added as valid network
+  test.skip('should change balance when select a new network', async () => {
     await visit(page, '/wallet');
     await getButtonByText(page, 'Faucet').click();
     await getButtonByText(page, 'Give me ETH').click();

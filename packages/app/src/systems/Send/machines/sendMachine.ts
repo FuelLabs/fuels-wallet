@@ -1,4 +1,4 @@
-import { type BN, Provider, type TransactionRequest } from 'fuels';
+import { type BN, Provider, type TransactionRequest, bn } from 'fuels';
 import {
   type InterpreterFrom,
   type StateFrom,
@@ -6,7 +6,7 @@ import {
   createMachine,
 } from 'xstate';
 import { AccountService } from '~/systems/Account';
-import { FetchMachine, assignError } from '~/systems/Core';
+import { FetchMachine, WalletLockedCustom, assignError } from '~/systems/Core';
 import { NetworkService } from '~/systems/Network';
 import { type TxInputs, TxService } from '~/systems/Transaction/services';
 
@@ -21,15 +21,18 @@ export type MachineContext = {
   transactionRequest?: TransactionRequest;
   providerUrl?: string;
   address?: string;
-  fee?: BN;
+  regularFee?: BN;
+  fastFee?: BN;
   error?: string;
+  currentFeeType?: 'regular' | 'fast' | 'custom';
 };
 
 type CreateTransactionReturn = {
   transactionRequest: TransactionRequest;
   providerUrl: string;
   address: string;
-  fee: BN;
+  regularFee: BN;
+  fastFee: BN;
 };
 
 type MachineServices = {
@@ -42,7 +45,9 @@ type MachineEvents =
   | { type: 'RESET'; input: null }
   | { type: 'BACK'; input: null }
   | { type: 'SET_DATA'; input: TxInputs['isValidTransaction'] }
-  | { type: 'CONFIRM'; input: null };
+  | { type: 'CONFIRM'; input: null }
+  | { type: 'USE_REGULAR_FEE'; input: null }
+  | { type: 'USE_FAST_FEE'; input: null };
 
 const IDLE_STATE = {
   tags: ['selecting'],
@@ -85,6 +90,12 @@ export const sendMachine = createMachine(
       },
       readyToSend: {
         on: {
+          USE_REGULAR_FEE: {
+            actions: ['assignIsRegularFee'],
+          },
+          USE_FAST_FEE: {
+            actions: ['assignIsFastFee'],
+          },
           CONFIRM: { actions: ['callTransactionRequest'] },
         },
       },
@@ -98,12 +109,36 @@ export const sendMachine = createMachine(
   },
   {
     actions: {
-      assignTransactionData: assign((_, ev) => ({
+      assignTransactionData: assign((ctx, ev) => ({
         transactionRequest: ev.data.transactionRequest,
         providerUrl: ev.data.providerUrl,
         address: ev.data.address,
-        fee: ev.data.fee,
+        currentFeeType: !ctx.currentFeeType
+          ? ('regular' as const)
+          : ctx.currentFeeType,
+        regularFee: ev.data.regularFee,
+        fastFee: ev.data.fastFee,
       })),
+      assignIsRegularFee: assign((ctx) => {
+        const transactionRequest = ctx.transactionRequest;
+        if (!transactionRequest) return ctx;
+
+        transactionRequest.maxFee = ctx.regularFee;
+        return {
+          currentFeeType: 'regular' as const,
+          transactionRequest,
+        };
+      }),
+      assignIsFastFee: assign((ctx) => {
+        const transactionRequest = ctx.transactionRequest;
+        if (!transactionRequest) return ctx;
+
+        transactionRequest.maxFee = ctx.fastFee;
+        return {
+          currentFeeType: 'fast' as const,
+          transactionRequest,
+        };
+      }),
     },
     services: {
       createTransactionRequest: FetchMachine.create<
@@ -113,40 +148,13 @@ export const sendMachine = createMachine(
         showError: false,
         maxAttempts: 1,
         async fetch({ input }) {
-          const to = input?.address;
-          const assetId = input?.asset?.assetId;
-          const { amount } = input || {};
-          const [network, account] = await Promise.all([
-            NetworkService.getSelectedNetwork(),
-            AccountService.getCurrentAccount(),
-          ]);
-
-          if (!to || !assetId || !amount || !network?.url || !account) {
-            throw new Error('Missing params for transaction request');
-          }
-
-          const provider = await Provider.create(network.url);
-          const transferRequest = await TxService.createTransfer({
-            to,
-            amount,
-            assetId,
-            provider,
+          const transfer = await TxService.createTransfer({
+            to: input?.address,
+            amount: input?.amount,
+            assetId: input?.asset?.assetId,
           });
-          const { fee, transactionRequest } =
-            await TxService.resolveTransferCosts({
-              account,
-              transferRequest,
-              amount,
-              assetId,
-              provider,
-            });
 
-          return {
-            fee,
-            transactionRequest,
-            address: account.address,
-            providerUrl: network.url,
-          };
+          return transfer;
         },
       }),
     },

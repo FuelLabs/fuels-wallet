@@ -1,5 +1,5 @@
 export * from './TxContent';
-export * from './TxDetails';
+export * from './TxFee';
 export * from './TxFromTo';
 export * from './TxHeader';
 export * from './TxLink';

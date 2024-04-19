@@ -1,11 +1,11 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Input, InputAmount, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { BaseAssetId, DECIMAL_UNITS, bn } from 'fuels';
+import { BaseAssetId, DECIMAL_FUEL, bn } from 'fuels';
 import { useEffect, useMemo } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import { ControlledField, Layout, animations } from '~/systems/Core';
-import { TxDetails } from '~/systems/Transaction';
+import { TxFee } from '~/systems/Transaction';
 
 import type { UseSendReturn } from '../../hooks';
 
@@ -18,25 +18,34 @@ export function SendSelect({
   handlers,
   balanceAssetSelected,
   status,
-  fee,
+  regularFee,
+  fastFee,
+  currentFeeType,
 }: SendSelectProps) {
   const assetId = form.watch('asset', '');
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const decimals = useMemo(() => {
     const selectedAsset = balanceAssets?.find((a) => a.assetId === assetId);
-    return selectedAsset?.decimals || DECIMAL_UNITS;
+    return selectedAsset?.decimals || DECIMAL_FUEL;
   }, [assetId]);
-  const isLoadingTx = status('loadingTx');
+  const _isLoadingTx = status('loadingTx');
 
   // If max balance is set on the input assume the user wants to send the max
   // and change the amount to the max balance minus the fee.
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const amount = form.getValues('amount');
-    if (assetId === BaseAssetId && balanceAssetSelected.eq(amount) && fee) {
-      form.setValue('amount', balanceAssetSelected.sub(fee).toString());
+    if (assetId === BaseAssetId && balanceAssetSelected.eq(amount)) {
+      if (currentFeeType === 'fast' && fastFee) {
+        form.setValue('amount', balanceAssetSelected.sub(fastFee).toString());
+      } else if (currentFeeType === 'regular' && regularFee) {
+        form.setValue(
+          'amount',
+          balanceAssetSelected.sub(regularFee).toString()
+        );
+      }
     }
-  }, [fee, balanceAssetSelected]);
+  }, [regularFee, fastFee, currentFeeType, balanceAssetSelected]);
 
   return (
     <MotionContent {...animations.slideInTop()}>
@@ -95,22 +104,43 @@ export function SendSelect({
             name="amount"
             control={form.control}
             isInvalid={Boolean(form.formState.errors?.amount)}
-            render={({ field }) => (
-              <InputAmount
-                name={field.name}
-                balance={balanceAssetSelected}
-                value={bn(field.value)}
-                units={decimals}
-                onChange={(value) => {
-                  const amountValue = value || undefined;
-                  form.setValue('amount', amountValue?.toString() || '');
-                  handlers.handleValidateAmount(bn(amountValue));
-                }}
-              />
-            )}
+            render={({ field }) => {
+              return (
+                <InputAmount
+                  name={field.name}
+                  balance={balanceAssetSelected}
+                  value={bn(field.value)}
+                  units={decimals}
+                  onChange={(value) => {
+                    const amountValue = value || undefined;
+                    form.setValue('amount', amountValue?.toString() || '');
+                    handlers.handleValidateAmount(bn(amountValue));
+                  }}
+                />
+              );
+            }}
           />
         </Box.Stack>
-        {fee && (isLoadingTx ? <TxDetails.Loader /> : <TxDetails fee={fee} />)}
+        {regularFee && (
+          <Box.Stack gap="$3">
+            <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
+              Fee (network)
+            </Text>
+            <TxFee
+              fee={regularFee}
+              title="Regular"
+              checked={currentFeeType === 'regular'}
+              onChecked={() => handlers.changeCurrentFeeType('regular')}
+            />
+            <TxFee
+              fee={fastFee}
+              title="Fast"
+              checked={currentFeeType === 'fast'}
+              onChecked={() => handlers.changeCurrentFeeType('fast')}
+            />
+          </Box.Stack>
+        )}
+        {/* (isLoadingTx ? <TxFee.Loader /> : <TxFee fee={regularFee} />) */}
       </Box.Stack>
     </MotionContent>
   );

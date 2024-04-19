@@ -25,6 +25,7 @@ import {
   PRIVATE_KEY,
 } from '../mocks';
 
+import type { FuelWalletConnector } from '@fuels/connectors';
 import {
   getAccountByName,
   getWalletAccounts,
@@ -76,10 +77,18 @@ test.describe('FuelWallet Extension', () => {
     await blankPage.goto(new URL('e2e.html', baseURL).href);
 
     await test.step('Has window.fuel', async () => {
-      const hasFuel = await blankPage.evaluate(async () => {
-        return typeof window.fuel === 'object';
+      const fuelWalletConnector = await blankPage.evaluate(async () => {
+        return new Promise((resolve, _reject) => {
+          window.addEventListener('FuelConnector', (ev) => {
+            // biome-ignore lint/suspicious/noExplicitAny: can we replace with typed event from connector?
+            const detail: FuelWalletConnector = (ev as any).detail;
+            resolve(detail);
+          });
+        });
+        // return typeof window.fuel === 'object';
       });
-      expect(hasFuel).toBeTruthy();
+      console.log('listened', fuelWalletConnector);
+      expect(fuelWalletConnector).toBeTruthy();
     });
 
     await test.step('Should return current version of Wallet', async () => {

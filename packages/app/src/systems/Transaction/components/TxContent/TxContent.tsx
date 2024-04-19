@@ -4,7 +4,7 @@ import type { TransactionStatus, TransactionSummary } from 'fuels';
 import type { ReactNode } from 'react';
 import type { Maybe } from '~/systems/Core';
 import { MotionStack, animations } from '~/systems/Core';
-import { TxDetails, TxOperations } from '~/systems/Transaction';
+import { TxFee, TxOperations } from '~/systems/Transaction';
 
 type TxContentLoaderProps = {
   header?: ReactNode;
@@ -15,7 +15,7 @@ function TxContentLoader({ header }: TxContentLoaderProps) {
     <MotionStack {...animations.slideInTop()} gap="$4">
       {header}
       <TxOperations.Loader />
-      <TxDetails.Loader />
+      <TxFee.Loader />
     </MotionStack>
   );
 }
@@ -49,8 +49,8 @@ function TxContentInfo({
         assets={assets}
         isLoading={isLoading}
       />
-      {isLoading && !showDetails && <TxDetails.Loader />}
-      {showDetails && <TxDetails fee={tx?.fee} />}
+      {isLoading && !showDetails && <TxFee.Loader />}
+      {showDetails && <TxFee fee={tx?.fee} />}
       {footer}
     </Box.Stack>
   );

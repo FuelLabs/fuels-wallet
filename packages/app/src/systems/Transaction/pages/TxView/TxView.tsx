@@ -34,7 +34,7 @@ export function TxView() {
           <TxContent.Info
             tx={txResult}
             isLoading={ctx.isFetching}
-            showDetails={ctx.shouldShowTxDetails}
+            showDetails={ctx.shouldShowTxFee}
             assets={assets}
             header={
               <TxHeader

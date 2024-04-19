@@ -14,7 +14,8 @@ test.describe('FaucetDialog', () => {
     await mockData(page);
   });
 
-  test('should be able to faucet a wallet', async () => {
+  // @TODO: re-enable when faucet is available for testnet
+  test.skip('should be able to faucet a wallet', async () => {
     await visit(page, '/wallet');
     await hasText(page, /Faucet/i);
 

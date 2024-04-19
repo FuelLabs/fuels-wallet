@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BigNumberish } from 'fuels';
 import { bn, isBech32 } from 'fuels';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -13,6 +13,7 @@ import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
 
+import { useWallet } from '@fuels/react';
 import { sendMachine } from '../machines/sendMachine';
 import type { SendMachineState } from '../machines/sendMachine';
 
@@ -23,8 +24,14 @@ export enum SendStatus {
 }
 
 const selectors = {
-  fee(state: SendMachineState) {
-    return state.context.fee;
+  regularFee(state: SendMachineState) {
+    return state.context.regularFee;
+  },
+  fastFee(state: SendMachineState) {
+    return state.context.fastFee;
+  },
+  currentFeeType(state: SendMachineState) {
+    return state.context.currentFeeType;
   },
   readyToSend(state: SendMachineState) {
     return state.matches('readyToSend');
@@ -102,6 +109,7 @@ export function useSend() {
           if (!providerUrl || !transactionRequest || !address) {
             throw new Error('Params are required');
           }
+
           txRequest.handlers.request({
             providerUrl,
             transactionRequest,
@@ -143,7 +151,9 @@ export function useSend() {
     }
   }, [errorMessage]);
 
-  const fee = useSelector(service, selectors.fee);
+  const regularFee = useSelector(service, selectors.regularFee);
+  const fastFee = useSelector(service, selectors.fastFee);
+  const currentFeeType = useSelector(service, selectors.currentFeeType);
   const sendStatusSelector = selectors.status(txRequest.txStatus);
   const sendStatus = useSelector(service, sendStatusSelector);
   const readyToSend = useSelector(service, selectors.readyToSend);
@@ -208,9 +218,15 @@ export function useSend() {
     form.trigger('amount');
   }
 
+  function changeCurrentFeeType(type: 'regular' | 'fast') {
+    service.send(type === 'regular' ? 'USE_REGULAR_FEE' : 'USE_FAST_FEE');
+  }
+
   return {
     form,
-    fee,
+    regularFee,
+    fastFee,
+    currentFeeType,
     title,
     status,
     readyToSend,
@@ -225,6 +241,7 @@ export function useSend() {
       goHome,
       tryAgain,
       handleValidateAmount,
+      changeCurrentFeeType,
     },
   };
 }

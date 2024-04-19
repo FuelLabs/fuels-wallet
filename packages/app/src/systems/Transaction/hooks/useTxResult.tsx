@@ -46,7 +46,7 @@ export function useTxResult({
   const { error, txResult } = context;
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  const { shouldShowAlert, shouldShowTx, shouldShowTxDetails } = useMemo(() => {
+  const { shouldShowAlert, shouldShowTx, shouldShowTxFee } = useMemo(() => {
     const shouldShowAlert =
       isTxNotFound ||
       isInvalidTxId ||
@@ -54,12 +54,12 @@ export function useTxResult({
       txResult?.isStatusFailure;
     const shouldShowTx =
       txResult && !isFetching && !isInvalidTxId && !isTxNotFound;
-    const shouldShowTxDetails = shouldShowTx && !txResult?.isTypeMint;
+    const shouldShowTxFee = shouldShowTx && !txResult?.isTypeMint;
 
     return {
       shouldShowAlert,
       shouldShowTx,
-      shouldShowTxDetails,
+      shouldShowTxFee,
     };
   }, [
     isTxNotFound,
@@ -92,7 +92,7 @@ export function useTxResult({
     isTxReceiptsNotFound,
     shouldShowAlert,
     shouldShowTx,
-    shouldShowTxDetails,
+    shouldShowTxFee,
     txResult,
     error,
   };

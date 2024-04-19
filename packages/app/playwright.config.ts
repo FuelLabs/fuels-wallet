@@ -27,7 +27,7 @@ export default defineConfig({
   use: {
     baseURL: `http://localhost:${PORT}/`,
     permissions: ['clipboard-read', 'clipboard-write'],
-    headless: true,
+    headless: false,
     trace: 'on-first-retry',
   },
 });
