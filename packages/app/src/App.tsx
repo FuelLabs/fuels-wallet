@@ -2,6 +2,7 @@ import React from 'react';
 import { Providers } from '~/systems/Core';
 
 import { IS_DEVELOPMENT, IS_TEST } from './config';
+import { useRecoverWelcomeFromError } from './hooks';
 import { getRoutes } from './routes';
 
 const ThrowError = React.lazy(
@@ -9,6 +10,8 @@ const ThrowError = React.lazy(
 );
 
 export function App() {
+  useRecoverWelcomeFromError();
+
   return (
     <Providers>
       {getRoutes()}
