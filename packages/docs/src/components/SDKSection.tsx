@@ -20,7 +20,7 @@ export function SDKSection() {
             size="lg"
             intent="base"
             variant="outlined"
-            onPress={() => push('/docs/dev/getting-started/')}
+            onPress={() => push('/docs/wallet/dev/getting-started/')}
           >
             GET STARTED
           </Button>
