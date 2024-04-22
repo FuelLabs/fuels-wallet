@@ -1,0 +1,27 @@
+/* eslint-disable no-console */
+import { compareVersions } from 'compare-versions';
+import { APP_VERSION, VITE_CRX_VERSION_API } from '~/config';
+
+async function runVersionCheck() {
+  const { version } = await fetch(VITE_CRX_VERSION_API)
+    .then((res) => res.json())
+    // If fails to fetch the version return current version
+    .catch(() => ({ version: APP_VERSION }));
+  // If app version is greater than the one on the release API ignores the check
+  if (compareVersions(APP_VERSION, version) < 0) return;
+  // Request update check and reload if available
+  console.log('[FUEL WALLET] Checking for updates...');
+  chrome.runtime.requestUpdateCheck((details) => {
+    if (details === 'update_available') {
+      console.log('[FUEL WALLET] Update available reload application...');
+      chrome.runtime.reload();
+    }
+  });
+}
+
+chrome.alarms.create('autoUpdate', { periodInMinutes: 15 });
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name === 'autoUpdate') {
+    runVersionCheck();
+  }
+});
