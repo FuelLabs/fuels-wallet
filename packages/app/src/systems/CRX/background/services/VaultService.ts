@@ -1,5 +1,9 @@
-import { POPUP_SCRIPT_NAME, VAULT_SCRIPT_NAME } from '@fuel-wallet/types';
-import { MessageTypes } from '@fuels/connectors';
+import {
+  type DatabaseRestartEvent,
+  POPUP_SCRIPT_NAME,
+  VAULT_SCRIPT_NAME,
+} from '@fuel-wallet/types';
+import { MessageTypes, type RequestMessage } from '@fuels/connectors';
 import { AUTO_LOCK_IN_MINUTES } from '~/config';
 import { VaultServer } from '~/systems/Vault/services/VaultServer';
 
@@ -11,6 +15,7 @@ import {
   saveSecret,
 } from '../../utils';
 
+import { db } from '../../../../systems/Core/utils/database';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 
 export class VaultService extends VaultServer {
@@ -22,6 +27,15 @@ export class VaultService extends VaultServer {
     this.autoLock();
     this.autoUnlock();
     this.setupListeners();
+  }
+
+  async checkVaultIntegrity() {
+    // Ensure integrity of database connection
+    const dbLoadedCorrectly = (await db.open().catch(() => false)) && true;
+    const secret = await loadSecret().catch(() => null);
+    const isLocked = await super.isLocked().catch(() => true);
+
+    return dbLoadedCorrectly && (!isLocked || !!(secret && isLocked));
   }
 
   async unlock({ password }: { password: string }): Promise<void> {
@@ -72,7 +86,7 @@ export class VaultService extends VaultServer {
   }
 
   setupListeners() {
-    this.communicationProtocol.on(MessageTypes.request, async (event) => {
+    const handleRequest = async (event: RequestMessage) => {
       if (!event.sender?.origin?.includes(chrome.runtime.id)) return;
       if (event.sender?.id !== chrome.runtime.id) return;
       if (event.target !== VAULT_SCRIPT_NAME) return;
@@ -85,7 +99,22 @@ export class VaultService extends VaultServer {
           response,
         });
       }
-    });
+    };
+
+    const handleRestartEvent = async (message: DatabaseRestartEvent) => {
+      const { type: eventType, payload } = message ?? {};
+      const integrity = await this.checkVaultIntegrity();
+
+      if (
+        eventType === 'DB_EVENT' &&
+        payload.event === 'restarted' &&
+        !integrity
+      ) {
+        this.resetAndReload();
+      }
+    };
+    chrome.runtime.onMessage.addListener(handleRestartEvent);
+    this.communicationProtocol.on(MessageTypes.request, handleRequest);
   }
 
   emitLockEvent() {
