@@ -1,10 +1,10 @@
-import {
-  FuelWalletConnector,
-  FuelWalletDevelopmentConnector,
-} from '@fuels/connectors';
-import { Address, Fuel } from 'fuels';
+import { defaultConnectors } from '@fuels/connectors';
+import { Address, Fuel, type StorageAbstract } from 'fuels';
+
+localStorage.clear();
 
 window.fuel = new Fuel({
-  connectors: [new FuelWalletConnector(), new FuelWalletDevelopmentConnector()],
+  connectors: defaultConnectors(),
 });
+
 window.createAddress = (address: string) => Address.fromString(address);

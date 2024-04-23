@@ -46,6 +46,9 @@ jobs:
 
       - name: CI Setup
         uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 18.14.1
+          pnpm-version: 8.15.7
 
       - name: Validate Changeset
         run: pnpm changeset status --since=origin/${{ github.base_ref }}
@@ -56,6 +59,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 18.14.1
+          pnpm-version: 8.15.7
       - run: pnpm audit --prod
 
   lint:
@@ -71,6 +77,9 @@ jobs:
 
       - name: Setup Node
         uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 18.14.1
+          pnpm-version: 8.15.7
 
       - name: Run lint
         run: |
