@@ -1,6 +1,6 @@
 import type { DatabaseRestartEvent } from '@fuel-wallet/types';
 import { useLayoutEffect } from 'react';
-import { IS_CRX } from './config';
+import { IS_CRX } from '../../../config';
 
 /**
  * @description This hook is used to detect and flag the welcome screen to be recovered from an error state.
