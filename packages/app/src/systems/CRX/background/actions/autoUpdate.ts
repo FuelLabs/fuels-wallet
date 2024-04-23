@@ -4,7 +4,7 @@ import { APP_VERSION, VITE_CRX_VERSION_API, WALLET_NAME } from '~/config';
 
 // Check if user has any open tab if not return false
 async function isOpen() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: getContexts is not available on current types
   const contexts = await (chrome.runtime as any).getContexts({});
   const isOpen = !!contexts.find(({ contextType }: { contextType: string }) =>
     ['TAB', 'POPUP'].includes(contextType)
@@ -15,9 +15,9 @@ async function isOpen() {
 async function runVersionCheck() {
   const latestVersion = await fetch(VITE_CRX_VERSION_API)
     .then((res) => res.json())
-    // If fails to fetch the version return current version
-    .catch(() => ({ version: APP_VERSION }));
-  const version = latestVersion[WALLET_NAME];
+    // If fails to fetch the version return a empty object
+    .catch(() => ({}));
+  const version = latestVersion[WALLET_NAME] || APP_VERSION;
   // If app version is greater than the one on the release API ignores the check
   if (compareVersions(APP_VERSION, version) > -1) return;
   if (await isOpen()) return;
