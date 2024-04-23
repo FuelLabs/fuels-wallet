@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { compareVersions } from 'compare-versions';
 import { APP_VERSION, VITE_CRX_VERSION_API, WALLET_NAME } from '~/config';
 
