@@ -52,6 +52,7 @@ export function NetworkForm({ form, isEditing, isLoading }: NetworkFormProps) {
             <MotionInput {...animations.slideInTop()}>
               <Input.Field
                 {...field}
+                id="search-network-url"
                 aria-label="Network URL"
                 placeholder="https://node.fuel.network/graphql"
               />
@@ -75,6 +76,7 @@ export function NetworkForm({ form, isEditing, isLoading }: NetworkFormProps) {
             <Input>
               <Input.Field
                 {...field}
+                id="search-network-name"
                 aria-label="Network name"
                 placeholder="Name of your network..."
               />
