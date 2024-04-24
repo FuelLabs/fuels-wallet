@@ -193,15 +193,13 @@ test.describe('FuelWallet Extension', () => {
       await createAccountFromPrivateKey(PRIVATE_KEY, 'Account 4');
       await createAccount();
       await createAccount();
-      console.log(1);
       await switchAccount(popupPage, 'Account 1');
-      console.log(2);
       await hideAccount(popupPage, 'Account 5');
-      console.log(3);
     });
 
     async function connectAccounts() {
       console.log('before connection');
+      await delay(10000);
       const connectionResponse = blankPage.evaluate(async () => {
         const isConnected = await window.fuel.connect();
         if (!isConnected) {
