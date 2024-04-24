@@ -35,7 +35,7 @@ export class PopUpService {
     this.openingPromise = deferPromise<PopUpService>();
     this.client = new JSONRPCClient(this.sendRequest);
     this.setupUIListeners();
-    this.setTimeout();
+    this.setTimeout(1000000);
   }
 
   setTimeout(delay = 5000) {

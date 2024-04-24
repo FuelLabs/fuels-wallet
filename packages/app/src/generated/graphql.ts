@@ -1251,98 +1251,95 @@ export const gqlOperations = {
   },
 };
 export const ContractFragmentFragmentDoc = gql`
-  fragment contractFragment on Contract {
-    id
-    bytecode
-  }
-`;
+    fragment contractFragment on Contract {
+  id
+  bytecode
+}
+    `;
 export const ReceiptFragmentDoc = gql`
-  fragment receipt on Receipt {
-    contract {
-      ...contractFragment
-    }
-    pc
-    is
-    to {
-      ...contractFragment
-    }
-    toAddress
-    amount
-    assetId
-    gas
-    param1
-    param2
-    val
-    ptr
-    digest
-    reason
-    ra
-    rb
-    rc
-    rd
-    len
-    receiptType
-    result
-    gasUsed
-    data
-    sender
-    recipient
-    nonce
-    contractId
-    subId
+    fragment receipt on Receipt {
+  contract {
+    ...contractFragment
   }
-  ${ContractFragmentFragmentDoc}
-`;
+  pc
+  is
+  to {
+    ...contractFragment
+  }
+  toAddress
+  amount
+  assetId
+  gas
+  param1
+  param2
+  val
+  ptr
+  digest
+  reason
+  ra
+  rb
+  rc
+  rd
+  len
+  receiptType
+  result
+  gasUsed
+  data
+  sender
+  recipient
+  nonce
+  contractId
+  subId
+}
+    ${ContractFragmentFragmentDoc}`;
 export const TransactionFragmentDoc = gql`
-  fragment transaction on Transaction {
-    id
-    rawPayload
-    gasPrice
-    receipts {
-      ...receipt
+    fragment transaction on Transaction {
+  id
+  rawPayload
+  gasPrice
+  receipts {
+    ...receipt
+  }
+  status {
+    type: __typename
+    ... on SubmittedStatus {
+      time
     }
-    status {
-      type: __typename
-      ... on SubmittedStatus {
-        time
+    ... on SuccessStatus {
+      block {
+        id
       }
-      ... on SuccessStatus {
-        block {
-          id
-        }
-        time
-        programState {
-          returnType
-          data
-        }
+      time
+      programState {
+        returnType
+        data
       }
-      ... on FailureStatus {
-        block {
-          id
-        }
-        time
-        reason
+    }
+    ... on FailureStatus {
+      block {
+        id
       }
+      time
+      reason
     }
   }
-  ${ReceiptFragmentDoc}
-`;
+}
+    ${ReceiptFragmentDoc}`;
 export const AddressTransactionsDocument = gql`
-  query AddressTransactions($first: Int, $owner: Address!) {
-    transactionsByOwner(first: $first, owner: $owner) {
-      edges {
-        node {
-          ...transaction
-          receipts {
-            ...receipt
-          }
+    query AddressTransactions($first: Int, $owner: Address!) {
+  transactionsByOwner(first: $first, owner: $owner) {
+    edges {
+      node {
+        ...transaction
+        receipts {
+          ...receipt
         }
       }
     }
   }
-  ${TransactionFragmentDoc}
-  ${ReceiptFragmentDoc}
-`;
+}
+    ${TransactionFragmentDoc}
+${ReceiptFragmentDoc}`;
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,

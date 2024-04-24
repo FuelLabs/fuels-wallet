@@ -96,6 +96,7 @@ export class BackgroundService {
 
   async requireAccounts() {
     const accounts = await AccountService.getAccounts();
+    console.log('accounts', accounts);
     if (accounts.length === 0) {
       throw new Error('Unable to establish a connection. No accounts found');
     }
@@ -142,11 +143,13 @@ export class BackgroundService {
       serverParams?.origin
     );
 
+    console.log(' outside request.method', request.method);
     // If the method is not `connect` or `isConnected`
     // check if connection is already established
     if (!['connect', 'isConnected'].includes(request.method)) {
       await this.requireConnection(connection);
     } else {
+      console.log('inside request.method', request.method);
       await this.requireAccounts();
     }
     return next(request, {

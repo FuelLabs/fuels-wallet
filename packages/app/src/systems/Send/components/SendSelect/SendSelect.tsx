@@ -86,7 +86,7 @@ export function SendSelect({
                 <Input size="sm">
                   <Input.Field
                     {...field}
-                    id="address"
+                    id="search-address"
                     aria-label="Address Input"
                     placeholder="Enter a fuel address"
                   />

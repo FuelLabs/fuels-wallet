@@ -27,6 +27,7 @@ export const AccountForm = ({ form, isLoading }: AccountFormProps) => {
           <Input isDisabled={isLoading}>
             <Input.Field
               {...field}
+              id="search-account-name"
               aria-label="Account Name"
               placeholder="Type account name"
             />

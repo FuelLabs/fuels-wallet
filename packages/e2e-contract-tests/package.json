@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fuels/connectors": "0.1.1",
+    "@fuels/connectors": "0.2.2",
     "@fuels/react": "0.18.0",
     "@tanstack/react-query": "5.28.4",
     "fuels": "rc-2021",
@@ -35,6 +35,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "typescript": "^5.2.2",
-    "vite": "4.5.2"
+    "vite": "4.5.3"
   }
 }

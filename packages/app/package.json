@@ -1,7 +1,7 @@
 {
   "name": "fuels-wallet",
   "private": true,
-  "version": "0.16.1",
+  "version": "0.16.2",
   "database": "14",
   "scripts": {
     "build:all": "run-s build:web build:crx build:storybook",
@@ -27,7 +27,7 @@
     "@fuel-ui/test-utils": "0.17.0",
     "@fuel-wallet/connections": "workspace:*",
     "@fuels/assets": "^0.17.0",
-    "@fuels/connectors": "0.1.1",
+    "@fuels/connectors": "0.2.2",
     "@fuels/local-storage": "0.17.0",
     "@fuels/react": "0.18.0",
     "@fuels/react-xstore": "0.17.0",
@@ -118,7 +118,7 @@
     "ts-jest-mock-import-meta": "1.1.0",
     "tsconfig-paths-webpack-plugin": "4.1.0",
     "typescript": "5.2.2",
-    "vite": "4.5.2",
+    "vite": "4.5.3",
     "vite-plugin-clean": "1.0.0",
     "vite-plugin-static-copy": "0.17.0",
     "vite-tsconfig-paths": "4.2.1",

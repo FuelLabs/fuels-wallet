@@ -24,6 +24,7 @@ export function AssetForm({ form, isEditing, showOnlyId }: AssetFormProps) {
           <Input>
             <Input.Field
               {...field}
+              id="search-asset-id"
               aria-label="Asset ID"
               placeholder="Asset ID"
             />
@@ -42,6 +43,7 @@ export function AssetForm({ form, isEditing, showOnlyId }: AssetFormProps) {
               <Input>
                 <Input.Field
                   {...field}
+                  id="search-name"
                   aria-label="Asset name"
                   placeholder="Asset name"
                 />
@@ -58,6 +60,7 @@ export function AssetForm({ form, isEditing, showOnlyId }: AssetFormProps) {
               <Input>
                 <Input.Field
                   {...field}
+                  id="search-symbol"
                   aria-label="Asset symbol"
                   placeholder="Asset symbol"
                 />
@@ -74,6 +77,7 @@ export function AssetForm({ form, isEditing, showOnlyId }: AssetFormProps) {
               <Input>
                 <Input.Field
                   {...field}
+                  id="search-decimals"
                   type="number"
                   min={0}
                   max={19}
@@ -92,6 +96,7 @@ export function AssetForm({ form, isEditing, showOnlyId }: AssetFormProps) {
               <Input>
                 <Input.Field
                   {...field}
+                  id="search-image-url"
                   aria-label="Asset image Url"
                   placeholder="Asset image URL"
                 />
