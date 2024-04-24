@@ -7,6 +7,7 @@ declare namespace NodeJS {
     readonly VITE_MNEMONIC_WORDS: string;
     readonly VITE_ADDR_OWNER: string;
     readonly VITE_CRX_NAME: string;
+    readonly VITE_CRX_VERSION_API: string;
     readonly VITE_CRX_RELEASE: string;
     readonly VITE_AUTO_LOCK_IN_MINUTES: string;
   }
