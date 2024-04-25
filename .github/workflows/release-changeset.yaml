@@ -42,22 +42,6 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
-      - name: Build Fuel Wallet
-        run: pnpm build:crx
-        env:
-          ## increase node.js m memory limit for building
-          ## with sourcemaps
-          NODE_OPTIONS: "--max-old-space-size=4096"
-
-      - name: Build Fuel Wallet Development
-        run: pnpm build:crx
-        env:
-          VITE_CRX_RELEASE: false
-          VITE_CRX_NAME: "Fuel Wallet Development"
-          CRX_OUT: "dist-crx-dev"
-          APP_VERSION_POSTFIX: "-development"
-          NODE_OPTIONS: "--max-old-space-size=4096"
-
       - name: Create Release Pull Request
         id: changesets
         uses: FuelLabs/changesets-action@hf/fix/release
@@ -71,6 +55,24 @@ jobs:
           skipNpm: true
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+      - name: Build Fuel Wallet
+        if: steps.changesets.outputs.published == 'true'
+        run: pnpm build:crx
+        env:
+          ## increase node.js m memory limit for building
+          ## with sourcemaps
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
+      - name: Build Fuel Wallet Development
+        if: steps.changesets.outputs.published == 'true'
+        run: pnpm build:crx
+        env:
+          VITE_CRX_RELEASE: false
+          VITE_CRX_NAME: "Fuel Wallet Development"
+          CRX_OUT: "dist-crx-dev"
+          APP_VERSION_POSTFIX: "-development"
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Upload artifacts to Sentry
         if: steps.changesets.outputs.published == 'true'
