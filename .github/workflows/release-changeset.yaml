@@ -60,14 +60,15 @@ jobs:
 
       - name: Create Release Pull Request
         id: changesets
-        uses: FuelLabs/changesets-action@main
+        uses: FuelLabs/changesets-action@hf/fix/release
         with:
-          publish: pnpm changeset:release
+          publish: pnpm changeset tag
           commit: "ci(changesets): versioning packages"
           title: "ci(changesets): versioning packages"
           createGithubReleases: aggregate
           githubReleaseName: v${{ env.BUILD_VERSION }}
           githubTagName: v${{ env.BUILD_VERSION }}
+          skipNpm: true
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
