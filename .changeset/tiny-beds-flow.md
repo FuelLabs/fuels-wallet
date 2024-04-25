@@ -1,5 +1,5 @@
 ---
-"fuels-wallet": minor
+"fuels-wallet": patch
 ---
 
-feat: add auto update wallet in background
+feat: add auto-update wallet in the background
