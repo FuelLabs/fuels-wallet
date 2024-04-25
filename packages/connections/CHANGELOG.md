@@ -1,5 +1,11 @@
 # @fuel-wallet/connections
 
+## 0.16.4
+
+### Patch Changes
+
+- [#1251](https://github.com/FuelLabs/fuels-wallet/pull/1251) [`32ee2272`](https://github.com/FuelLabs/fuels-wallet/commit/32ee227254b1491a7ec8fc532f10517367f78013) Thanks [@helciofranco](https://github.com/helciofranco)! - fix: remove unused peer dependency
+
 ## 0.16.3
 
 ### Patch Changes
