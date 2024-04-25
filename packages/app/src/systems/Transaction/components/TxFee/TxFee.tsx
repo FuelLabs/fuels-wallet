@@ -18,41 +18,39 @@ type TxFeeComponent = FC<TxFeeProps> & {
 };
 
 export const TxFee: TxFeeComponent = ({
-  fee: initialFee,
+  fee,
   checked,
   onChecked,
   title,
 }: TxFeeProps) => {
-  const fee = bn(initialFee);
-
   return (
-    <Card css={styles.detailItem(!!checked)}>
+    <Card
+      css={styles.detailItem(!!checked, !!onChecked)}
+      onClick={() => onChecked?.(true)}
+    >
       <Flex gap="$3" align={'center'}>
-        {checked !== undefined && (
+        {/* {checked !== undefined && (
           <Checkbox
             id={`${title}FeeCheckbox`}
             aria-label={`${title} Checkbox`}
             checked={checked}
-            onCheckedChange={(e) => {
-              onChecked?.(e as boolean);
-            }}
             css={{
-              width: '$4',
-              height: '$4',
+              width: '$3',
+              height: '$3',
               borderRadius: '100%',
 
               '.fuel_Icon': {
-                width: '$3',
+                display: 'none'
               },
             }}
           />
-        )}
+        )} */}
         <Text color="intentsBase11" css={styles.text}>
           {title || 'Fee (network)'}
         </Text>
       </Flex>
       <Text color="intentsBase12" css={styles.text} aria-label="Fee Value">
-        {fee?.format()} ETH
+        {fee ? `${fee.format()} ETH` : '--'}
       </Text>
     </Card>
   );

@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BigNumberish } from 'fuels';
 import { bn, isBech32 } from 'fuels';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -23,12 +23,18 @@ export enum SendStatus {
   loadingTx = 'loadingTx',
 }
 
+export type PresetFeeType = 'regular' | 'fast';
+export type FeeType = PresetFeeType | 'advanced';
+
 const selectors = {
-  regularFee(state: SendMachineState) {
-    return state.context.regularFee;
+  maxFee(state: SendMachineState) {
+    return state.context.maxFee;
   },
-  fastFee(state: SendMachineState) {
-    return state.context.fastFee;
+  regularTip(state: SendMachineState) {
+    return state.context.regularTip;
+  },
+  fastTip(state: SendMachineState) {
+    return state.context.fastTip;
   },
   currentFeeType(state: SendMachineState) {
     return state.context.currentFeeType;
@@ -48,16 +54,6 @@ const selectors = {
           txStatus === TxRequestStatus.sending;
         if (isLoadingTx) return SendStatus.loadingTx;
         return SendStatus.selecting;
-      },
-      [txStatus]
-    );
-  },
-  title(txStatus?: TxRequestStatus) {
-    return useCallback(
-      (state: SendMachineState) => {
-        if (state.matches('creatingTx') || txStatus === TxRequestStatus.loading)
-          return 'Creating transaction';
-        return 'Send';
       },
       [txStatus]
     );
@@ -151,15 +147,22 @@ export function useSend() {
     }
   }, [errorMessage]);
 
-  const regularFee = useSelector(service, selectors.regularFee);
-  const fastFee = useSelector(service, selectors.fastFee);
+  const maxFee = useSelector(service, selectors.maxFee);
+  const regularTip = useSelector(service, selectors.regularTip);
+  const fastTip = useSelector(service, selectors.fastTip);
   const currentFeeType = useSelector(service, selectors.currentFeeType);
   const sendStatusSelector = selectors.status(txRequest.txStatus);
   const sendStatus = useSelector(service, sendStatusSelector);
   const readyToSend = useSelector(service, selectors.readyToSend);
 
-  const titleSelector = selectors.title(txRequest.txStatus);
-  const title = useSelector(service, titleSelector);
+  const { regularFee, fastFee } = useMemo(() => {
+    if (!maxFee || !regularTip || !fastTip) return {};
+
+    return {
+      regularFee: maxFee.add(regularTip),
+      fastFee: maxFee.add(fastTip),
+    };
+  }, [maxFee, regularTip, fastTip]);
 
   const balanceAssets = accountBalanceAssets?.filter(({ assetId }) =>
     assets.find((asset) => asset.assetId === assetId)
@@ -218,16 +221,24 @@ export function useSend() {
     form.trigger('amount');
   }
 
-  function changeCurrentFeeType(type: 'regular' | 'fast') {
-    service.send(type === 'regular' ? 'USE_REGULAR_FEE' : 'USE_FAST_FEE');
+  function changeCurrentFeeType(type: FeeType) {
+    const eventName =
+      type === 'regular'
+        ? 'USE_REGULAR_FEE'
+        : type === 'fast'
+          ? 'USE_FAST_FEE'
+          : 'USE_ADVANCED_FEE';
+    service.send(eventName);
   }
 
   return {
     form,
+    maxFee,
+    regularTip,
+    fastTip,
     regularFee,
     fastFee,
     currentFeeType,
-    title,
     status,
     readyToSend,
     balanceAssets,

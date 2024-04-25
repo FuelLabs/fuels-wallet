@@ -43,11 +43,8 @@ export function TransferAssets() {
       const wallet = await fuel.getWallet(account);
       // Create a Address instance to the receiver address
       const toAddress = Address.fromString(receiverAddress);
-      // Get the minGasPrice and maxGasPerTx for the network
-      const { minGasPrice } = await wallet.provider.getGasConfig();
       // Send a transaction to transfer the asset to the receiver address
       const response = await wallet.transfer(toAddress, amount, assetId, {
-        gasPrice: minGasPrice,
         gasLimit: 5_000,
       });
       console.log('Transaction created!', response.id);

@@ -7,6 +7,7 @@ import { AssetSelect } from '~/systems/Asset';
 import { ControlledField, Layout, animations } from '~/systems/Core';
 import { TxFee } from '~/systems/Transaction';
 
+import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
 import type { UseSendReturn } from '../../hooks';
 
 const MotionContent = motion(Layout.Content);
@@ -23,6 +24,7 @@ export function SendSelect({
   currentFeeType,
 }: SendSelectProps) {
   const assetId = form.watch('asset', '');
+  const amount = form.watch('amount', '');
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const decimals = useMemo(() => {
     const selectedAsset = balanceAssets?.find((a) => a.assetId === assetId);
@@ -52,7 +54,7 @@ export function SendSelect({
       <Box.Stack gap="$4">
         <Box.Flex css={styles.row}>
           <Text as="span" css={styles.title}>
-            Send
+            Asset
           </Text>
           <ControlledField
             isRequired
@@ -121,26 +123,20 @@ export function SendSelect({
             }}
           />
         </Box.Stack>
-        {regularFee && (
+        {!!(regularFee && currentFeeType && amount) && (
           <Box.Stack gap="$3">
             <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
               Fee (network)
             </Text>
-            <TxFee
-              fee={regularFee}
-              title="Regular"
-              checked={currentFeeType === 'regular'}
-              onChecked={() => handlers.changeCurrentFeeType('regular')}
-            />
-            <TxFee
-              fee={fastFee}
-              title="Fast"
-              checked={currentFeeType === 'fast'}
-              onChecked={() => handlers.changeCurrentFeeType('fast')}
+            <TxFeeOptions
+              fastFee={fastFee}
+              regularFee={regularFee}
+              currentFeeType={currentFeeType}
+              onChangeCurrentFeeType={handlers.changeCurrentFeeType}
             />
           </Box.Stack>
         )}
-        {/* (isLoadingTx ? <TxFee.Loader /> : <TxFee fee={regularFee} />) */}
+        {/* {isLoadingTx ? <TxFee.Loader /> : <TxFee fee={regularFee} />} */}
       </Box.Stack>
     </MotionContent>
   );
@@ -166,7 +162,7 @@ const styles = {
   title: cssObj({
     pt: '$2',
     color: '$intentsBase12',
-    fontSize: '$xl',
+    fontSize: '$lg',
     fontWeight: '$normal',
   }),
   amountTitle: cssObj({

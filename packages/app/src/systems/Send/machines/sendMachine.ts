@@ -1,13 +1,11 @@
-import { type BN, Provider, type TransactionRequest, bn } from 'fuels';
+import { type BN, type TransactionRequest, bn } from 'fuels';
 import {
   type InterpreterFrom,
   type StateFrom,
   assign,
   createMachine,
 } from 'xstate';
-import { AccountService } from '~/systems/Account';
-import { FetchMachine, WalletLockedCustom, assignError } from '~/systems/Core';
-import { NetworkService } from '~/systems/Network';
+import { FetchMachine, assignError } from '~/systems/Core';
 import { type TxInputs, TxService } from '~/systems/Transaction/services';
 
 export enum SendScreens {
@@ -21,23 +19,33 @@ export type MachineContext = {
   transactionRequest?: TransactionRequest;
   providerUrl?: string;
   address?: string;
-  regularFee?: BN;
-  fastFee?: BN;
+  maxFee?: BN;
+  regularTip?: BN;
+  fastTip?: BN;
   error?: string;
-  currentFeeType?: 'regular' | 'fast' | 'custom';
+  currentFeeType?: 'regular' | 'fast' | 'advanced';
+};
+
+type EstimateInitialFeeReturn = {
+  maxFee: BN;
+  regularTip: BN;
+  fastTip: BN;
 };
 
 type CreateTransactionReturn = {
   transactionRequest: TransactionRequest;
   providerUrl: string;
   address: string;
-  regularFee: BN;
-  fastFee: BN;
+  maxFee: BN;
+  gasLimit: BN;
 };
 
 type MachineServices = {
   createTransactionRequest: {
     data: CreateTransactionReturn;
+  };
+  estimateInitialFee: {
+    data: EstimateInitialFeeReturn;
   };
 };
 
@@ -47,7 +55,8 @@ type MachineEvents =
   | { type: 'SET_DATA'; input: TxInputs['isValidTransaction'] }
   | { type: 'CONFIRM'; input: null }
   | { type: 'USE_REGULAR_FEE'; input: null }
-  | { type: 'USE_FAST_FEE'; input: null };
+  | { type: 'USE_FAST_FEE'; input: null }
+  | { type: 'USE_ADVANCED_FEE'; input: null };
 
 const IDLE_STATE = {
   tags: ['selecting'],
@@ -68,13 +77,35 @@ export const sendMachine = createMachine(
       services: {} as MachineServices,
     },
     id: '(machine)',
-    initial: 'idle',
+    initial: 'estimatingInitialFee',
     states: {
+      estimatingInitialFee: {
+        invoke: {
+          src: 'estimateInitialFee',
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              target: 'idle',
+              actions: [assignError()],
+            },
+            {
+              actions: ['assignInitialFee'],
+              target: 'idle',
+            },
+          ],
+        },
+      },
       idle: IDLE_STATE,
       creatingTx: {
         invoke: {
           src: 'createTransactionRequest',
-          data: (_: MachineContext, { input }: MachineEvents) => ({ input }),
+          data: (ctx: MachineContext, { input }: MachineEvents) => ({
+            input: {
+              ...input,
+              tip:
+                ctx.currentFeeType === 'regular' ? ctx.regularTip : ctx.fastTip,
+            },
+          }),
           onDone: [
             {
               cond: FetchMachine.hasError,
@@ -96,6 +127,9 @@ export const sendMachine = createMachine(
           USE_FAST_FEE: {
             actions: ['assignIsFastFee'],
           },
+          USE_ADVANCED_FEE: {
+            actions: ['assignIsAdvancedFee'],
+          },
           CONFIRM: { actions: ['callTransactionRequest'] },
         },
       },
@@ -109,6 +143,12 @@ export const sendMachine = createMachine(
   },
   {
     actions: {
+      assignInitialFee: assign((_, ev) => ({
+        maxFee: ev.data.maxFee,
+        regularTip: ev.data.regularTip,
+        fastTip: ev.data.fastTip,
+        currentFeeType: 'regular' as const,
+      })),
       assignTransactionData: assign((ctx, ev) => ({
         transactionRequest: ev.data.transactionRequest,
         providerUrl: ev.data.providerUrl,
@@ -116,14 +156,15 @@ export const sendMachine = createMachine(
         currentFeeType: !ctx.currentFeeType
           ? ('regular' as const)
           : ctx.currentFeeType,
-        regularFee: ev.data.regularFee,
-        fastFee: ev.data.fastFee,
+        maxFee: ev.data.maxFee,
+        gasLimit: ev.data.gasLimit,
       })),
       assignIsRegularFee: assign((ctx) => {
         const transactionRequest = ctx.transactionRequest;
         if (!transactionRequest) return ctx;
 
-        transactionRequest.maxFee = ctx.regularFee;
+        transactionRequest.tip = bn(ctx.regularTip);
+        transactionRequest.maxFee = bn(ctx.maxFee).add(transactionRequest.tip);
         return {
           currentFeeType: 'regular' as const,
           transactionRequest,
@@ -133,14 +174,29 @@ export const sendMachine = createMachine(
         const transactionRequest = ctx.transactionRequest;
         if (!transactionRequest) return ctx;
 
-        transactionRequest.maxFee = ctx.fastFee;
+        transactionRequest.tip = bn(ctx.fastTip);
+        transactionRequest.maxFee = bn(ctx.maxFee).add(transactionRequest.tip);
         return {
           currentFeeType: 'fast' as const,
           transactionRequest,
         };
       }),
+      assignIsAdvancedFee: assign((_) => {
+        return {
+          currentFeeType: 'advanced' as const,
+        };
+      }),
     },
     services: {
+      estimateInitialFee: FetchMachine.create<never, EstimateInitialFeeReturn>({
+        showError: false,
+        maxAttempts: 1,
+        async fetch() {
+          const initialFees = await TxService.estimateInitialFee();
+
+          return initialFees;
+        },
+      }),
       createTransactionRequest: FetchMachine.create<
         TxInputs['isValidTransaction'],
         CreateTransactionReturn | null
@@ -152,6 +208,7 @@ export const sendMachine = createMachine(
             to: input?.address,
             amount: input?.amount,
             assetId: input?.asset?.assetId,
+            tip: input?.tip,
           });
 
           return transfer;

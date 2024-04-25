@@ -7,7 +7,7 @@ import { useSend } from '../../hooks';
 
 export function SendPage() {
   const send = useSend();
-  const { handlers, txRequest, status, form, readyToSend, ...ctx } = send;
+  const { handlers, txRequest, status, form, readyToSend } = send;
 
   return (
     <form
@@ -15,7 +15,7 @@ export function SendPage() {
       data-testid={txRequest.txStatus}
       autoComplete="off"
     >
-      <Layout title={ctx.title} isLoading={status('loading')}>
+      <Layout title={'Send'} isLoading={status('loading')}>
         <Layout.TopBar onBack={handlers.cancel} />
         <MotionStack {...animations.slideInTop()} gap="$4" css={styles.content}>
           <Send.Select {...send} />
@@ -31,7 +31,7 @@ export function SendPage() {
               isDisabled={!readyToSend || !form.formState.isValid}
               isLoading={status('loading') || status('loadingTx')}
             >
-              Confirm
+              Review
             </Button>
           </Layout.BottomBar>
         )}

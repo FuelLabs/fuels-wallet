@@ -11,12 +11,15 @@ import {
   Address,
   type BN,
   BaseAssetId,
+  PolicyType,
   Provider,
   ScriptTransactionRequest,
   TransactionResponse,
   TransactionStatus,
+  addressify,
   assembleTransactionSummary,
   bn,
+  coinQuantityfy,
   getTransactionSummary,
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
@@ -31,6 +34,7 @@ import { AccountService } from '~/systems/Account/services/account';
 import { NetworkService } from '~/systems/Network/services/network';
 import type { Transaction } from '../types';
 import { getAbiMap } from '../utils';
+import { getCurrentTips } from '../utils/fee';
 
 export type TxInputs = {
   get: {
@@ -65,6 +69,7 @@ export type TxInputs = {
     to?: string;
     amount?: BN;
     assetId?: string;
+    tip?: BN;
   };
   applyFee: {
     transactionRequest?: TransactionRequest;
@@ -93,6 +98,7 @@ export type TxInputs = {
     asset?: AssetData;
     amount?: BN;
     fee?: BN;
+    tip?: BN;
   };
 };
 
@@ -262,34 +268,47 @@ export class TxService {
     };
   }
 
+  static async estimateInitialFee() {
+    const currentNetwork = await NetworkService.getSelectedNetwork();
+    const provider = await Provider.create(currentNetwork?.url || '');
+    const request = new ScriptTransactionRequest();
+    const address = Address.fromRandom();
+
+    const coin = coinQuantityfy([1_000_000, BaseAssetId]);
+    request.addCoinOutput(address, coin.amount, coin.assetId);
+    const { maxFee } = await provider.getTransactionCost(request, {
+      estimateTxDependencies: true,
+    });
+
+    const { regularTip, fastTip } = await getCurrentTips(provider);
+
+    return { maxFee, regularTip: bn(regularTip), fastTip: bn(fastTip) };
+  }
+
   static async createTransfer(input: TxInputs['createTransfer']) {
-    const { amount, assetId, to } = input;
+    const { amount, assetId, to, tip } = input;
 
     const [network, account] = await Promise.all([
       NetworkService.getSelectedNetwork(),
       AccountService.getCurrentAccount(),
     ]);
 
-    if (!to || !assetId || !amount || !network?.url || !account) {
+    if (!to || !assetId || !amount || !network?.url || !account || !tip) {
       throw new Error('Missing params for transaction request');
     }
 
     const provider = await Provider.create(network.url);
     const wallet = new WalletLockedCustom(account.address, provider);
     const transactionRequest = await wallet.createTransfer(to, amount, assetId);
-
-    const gasPrice = await provider.estimateGasPrice(10);
-    const { maxFee: regularFee } = await provider.estimateTxGasAndFee({
+    const { maxFee, gasLimit } = await provider.estimateTxGasAndFee({
       transactionRequest,
     });
-    const { maxFee: fastFee } = await provider.estimateTxGasAndFee({
-      transactionRequest,
-      gasPrice: gasPrice.mul(2),
-    });
+    transactionRequest.tip = tip;
+    transactionRequest.maxFee = maxFee.add(tip);
 
     return {
-      regularFee,
-      fastFee,
+      maxFee,
+      gasLimit,
       transactionRequest,
       address: account.address,
       providerUrl: network.url,

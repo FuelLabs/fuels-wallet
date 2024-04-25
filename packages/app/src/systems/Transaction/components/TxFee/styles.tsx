@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 
 export const styles = {
-  detailItem: (active: boolean) =>
+  detailItem: (active: boolean, pointer: boolean) =>
     cssObj({
       padding: '$3 $4',
       flexDirection: 'row',
@@ -9,6 +9,7 @@ export const styles = {
       alignItems: 'center',
       display: 'flex',
       position: 'relative',
+      cursor: pointer ? 'pointer' : 'auto',
 
       ...(active && {
         '&::after': {
