@@ -44,7 +44,7 @@ jobs:
 
       - name: Create Release Pull Request
         id: changesets
-        uses: FuelLabs/changesets-action@hf/fix/release
+        uses: FuelLabs/changesets-action@main
         with:
           publish: pnpm changeset tag
           commit: "ci(changesets): versioning packages"
