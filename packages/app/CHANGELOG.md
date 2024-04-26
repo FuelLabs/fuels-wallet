@@ -1,5 +1,14 @@
 # fuels-wallet
 
+## 0.16.5
+
+### Patch Changes
+
+- [#1255](https://github.com/FuelLabs/fuels-wallet/pull/1255) [`4b7d4bd3`](https://github.com/FuelLabs/fuels-wallet/commit/4b7d4bd398448259a8eeb21bf7268df92891ad39) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: auto-update in background to wait for update to be downloaded
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.16.5
+
 ## 0.16.4
 
 ### Patch Changes
