@@ -38,23 +38,23 @@ type MachineContext = {
     account?: Account;
   };
   response?: {
-    txResult?: TransactionSummary;
-    approvedTx?: TransactionResponse;
+    txSummarySimulated?: TransactionSummary;
+    txSummaryExecuted?: TransactionSummary;
   };
   errors?: {
-    unlockError?: string;
     txApproveError?: VMApiError;
-    txDryRunGroupedErrors?: GroupedErrors;
+    simulateTxErrors?: GroupedErrors;
   };
 };
 
 type MachineServices = {
   send: {
-    data: TransactionResponse;
+    data: TransactionSummary;
   };
   simulateTransaction: {
     data: {
-      txResult: TransactionSummary;
+      txSummary: TransactionSummary;
+      simulateTxErrors?: GroupedErrors;
     };
   };
   fetchGasPrice: {
@@ -127,13 +127,8 @@ export const transactionRequestMachine = createMachine(
           data: ({ input }: MachineContext) => ({ input }),
           onDone: [
             {
-              actions: ['assignTxDryRunError'],
-              target: 'failed',
-              cond: FetchMachine.hasError,
-            },
-            {
               target: 'waitingApproval',
-              actions: ['assignTxResult'],
+              actions: ['assignTxSummarySimulated', 'assignSimulateTxErrors'],
             },
           ],
         },
@@ -245,26 +240,24 @@ export const transactionRequestMachine = createMachine(
         },
       }),
       assignApprovedTx: assign({
-        response: (ctx, ev) => ({ ...ctx.response, approvedTx: ev.data }),
-      }),
-      assignTxResult: assign({
         response: (ctx, ev) => ({
           ...ctx.response,
-          txResult: ev.data.txResult,
+          txSummaryExecuted: ev.data,
         }),
       }),
-      assignTxDryRunError: assign((ctx, ev) => {
-        const txDryRunGroupedErrors = getGroupedErrors(
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          (ev.data as any)?.error?.response?.errors
-        );
+      assignTxSummarySimulated: assign({
+        response: (ctx, ev) => ({
+          ...ctx.response,
+          txSummarySimulated: ev.data.txSummary,
+        }),
+      }),
+      assignSimulateTxErrors: assign((ctx, ev) => {
         return {
           ...ctx,
           errors: {
             ...ctx.errors,
-            txDryRunGroupedErrors,
+            simulateTxErrors: ev.data.simulateTxErrors,
           },
-          error: JSON.stringify(txDryRunGroupedErrors),
         };
       }),
       assignTxApproveError: assign((ctx, ev) => {
@@ -294,12 +287,9 @@ export const transactionRequestMachine = createMachine(
           // this creates a better experience for the user as the
           // screen doesn't flash between states
           await delay(600);
-          const { txResult } = await TxService.simulateTransaction(input);
-          if (txResult.isStatusFailure) {
-            // TODO: add reason for error failure if the sdk supports it
-            throw new Error('The transaction will fail to run.');
-          }
-          return { txResult };
+          const txSummary = await TxService.simulateTransaction(input);
+
+          return txSummary;
         },
       }),
       send: FetchMachine.create<
@@ -313,7 +303,10 @@ export const transactionRequestMachine = createMachine(
           if (!input?.address || !input?.transactionRequest) {
             throw new Error('Invalid approveTx input');
           }
-          return TxService.send(input);
+          const txResponse = await TxService.send(input);
+          const txSummary = await txResponse.getTransactionSummary();
+
+          return txSummary;
         },
       }),
       fetchAccount: FetchMachine.create<

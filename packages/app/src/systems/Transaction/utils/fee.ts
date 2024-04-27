@@ -24,6 +24,7 @@ export async function calculateTotalFee({
   );
 }
 
+// @TODO: this can be removed when fuel-core provides a way of querying tips in the network
 export async function getCurrentTips(provider: Provider) {
   const DEFAULT_REGULAR_TIP = 0;
   const DEFAULT_FAST_TIP = 1000;
@@ -36,7 +37,6 @@ export async function getCurrentTips(provider: Provider) {
     };
   }
 
-  // @TODO: this can be removed when fuel-core provides a way of querying tips in the network
   const orderedTips = blockWithTransactions.transactions
     .map(
       (tx) =>

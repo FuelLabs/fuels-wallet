@@ -36,8 +36,32 @@ const selectors = {
   fastTip(state: SendMachineState) {
     return state.context.fastTip;
   },
+  regularFee(state: SendMachineState) {
+    const { maxFee, regularTip } = state.context;
+    if (!maxFee || !regularTip) return undefined;
+    return maxFee.add(regularTip);
+  },
+  fastFee(state: SendMachineState) {
+    const { maxFee, fastTip } = state.context;
+    if (!maxFee || !fastTip) return undefined;
+    return maxFee.add(fastTip);
+  },
   currentFeeType(state: SendMachineState) {
     return state.context.currentFeeType;
+  },
+  currentFee(state: SendMachineState) {
+    const { maxFee, currentFeeType } = state.context;
+    const regularFee = selectors.regularFee(state);
+    const fastFee = selectors.fastFee(state);
+
+    if (!maxFee || !regularFee || !fastFee) return undefined;
+
+    if (currentFeeType === 'regular') return regularFee;
+    if (currentFeeType === 'fast') return fastFee;
+    // @TODO: add custom return here
+  },
+  baseAssetId(state: SendMachineState) {
+    return state.context.baseAssetId;
   },
   readyToSend(state: SendMachineState) {
     return state.matches('readyToSend');
@@ -117,52 +141,21 @@ export function useSend() {
   );
 
   const amount = form.watch('amount');
+  const address = form.watch('address');
+  const asset = form.watch('asset');
   const errorMessage = useSelector(service, selectors.error);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (bn(amount).gt(0) && form.formState.isValid) {
-      const asset = assets.find(
-        ({ assetId }) => assetId === form.getValues('asset')
-      );
-      const amount = bn(form.getValues('amount'));
-      const address = form.getValues('address');
-      const input = {
-        account,
-        asset,
-        amount,
-        address,
-      } as TxInputs['isValidTransaction'];
-      service.send('SET_DATA', { input });
-    }
-  }, [amount, form.formState.isValid]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (errorMessage) {
-      form.setError('amount', {
-        type: 'pattern',
-        message: errorMessage.split(':')[0],
-      });
-    }
-  }, [errorMessage]);
-
+  const baseAssetId = useSelector(service, selectors.baseAssetId);
   const maxFee = useSelector(service, selectors.maxFee);
   const regularTip = useSelector(service, selectors.regularTip);
   const fastTip = useSelector(service, selectors.fastTip);
+  const fastFee = useSelector(service, selectors.fastFee);
+  const regularFee = useSelector(service, selectors.regularFee);
+  const currentFee = useSelector(service, selectors.currentFee);
   const currentFeeType = useSelector(service, selectors.currentFeeType);
   const sendStatusSelector = selectors.status(txRequest.txStatus);
   const sendStatus = useSelector(service, sendStatusSelector);
   const readyToSend = useSelector(service, selectors.readyToSend);
-
-  const { regularFee, fastFee } = useMemo(() => {
-    if (!maxFee || !regularTip || !fastTip) return {};
-
-    return {
-      regularFee: maxFee.add(regularTip),
-      fastFee: maxFee.add(fastTip),
-    };
-  }, [maxFee, regularTip, fastTip]);
 
   const balanceAssets = accountBalanceAssets?.filter(({ assetId }) =>
     assets.find((asset) => asset.assetId === assetId)
@@ -182,18 +175,7 @@ export function useSend() {
     service.send('BACK');
   }
   function submit() {
-    const asset = assets.find(
-      ({ assetId }) => assetId === form.getValues('asset')
-    );
-    const amount = bn(form.getValues('amount'));
-    const address = form.getValues('address');
-    const input = {
-      account,
-      asset,
-      amount,
-      address,
-    } as TxInputs['isValidTransaction'];
-    service.send('CONFIRM', { input });
+    service.send('CONFIRM');
   }
   function goHome() {
     navigate(Pages.index());
@@ -210,7 +192,8 @@ export function useSend() {
       });
       return;
     }
-    if (bn(balanceAssetSelected).lt(amount!)) {
+    const totalAmount = bn(amount).add(bn(currentFee));
+    if (bn(balanceAssetSelected).lt(totalAmount)) {
       form.setError('amount', {
         type: 'pattern',
         message: 'Insufficient funds',
@@ -231,6 +214,41 @@ export function useSend() {
     service.send(eventName);
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const bnAmount = bn(amount);
+    const totalAmount = bnAmount.add(bn(currentFee));
+    const isAmountValid =
+      !bn(amount).lte(0) && !bn(balanceAssetSelected).lt(totalAmount);
+    if (
+      isAmountValid &&
+      address &&
+      asset &&
+      bnAmount.gt(0) &&
+      form.formState.isValid
+    ) {
+      const hasAsset = !!assets.find(({ assetId }) => assetId === asset);
+      if (!hasAsset) return;
+
+      const input = {
+        to: address,
+        assetId: asset,
+        amount: bnAmount,
+      } as TxInputs['createTransfer'];
+      service.send('SET_DATA', { input });
+    }
+  }, [amount, address, asset, currentFee?.toString(), form.formState.isValid]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (errorMessage) {
+      form.setError('amount', {
+        type: 'pattern',
+        message: errorMessage.split(':')[0],
+      });
+    }
+  }, [errorMessage]);
+
   return {
     form,
     maxFee,
@@ -238,6 +256,7 @@ export function useSend() {
     fastTip,
     regularFee,
     fastFee,
+    currentFee,
     currentFeeType,
     status,
     readyToSend,
@@ -246,6 +265,7 @@ export function useSend() {
     txRequest,
     assetIdSelected,
     balanceAssetSelected,
+    baseAssetId,
     handlers: {
       cancel,
       submit,

@@ -90,7 +90,7 @@ export function TransactionRequest() {
             />
           )}
         </Layout.Content>
-        {ctx.showActions && (
+        {ctx.shouldShowActions && (
           <Layout.BottomBar>
             <Button
               onPress={handlers.reject}

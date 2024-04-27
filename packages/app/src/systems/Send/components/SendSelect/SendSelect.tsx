@@ -1,14 +1,15 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Input, InputAmount, Text } from '@fuel-ui/react';
+import { Box, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { BaseAssetId, DECIMAL_FUEL, bn } from 'fuels';
-import { useEffect, useMemo } from 'react';
+import { DECIMAL_FUEL, bn } from 'fuels';
+import { useEffect, useMemo, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import { ControlledField, Layout, animations } from '~/systems/Core';
 import { TxFee } from '~/systems/Transaction';
 
+import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
-import type { UseSendReturn } from '../../hooks';
+import type { FeeType, UseSendReturn } from '../../hooks';
 
 const MotionContent = motion(Layout.Content);
 type SendSelectProps = UseSendReturn;
@@ -21,10 +22,12 @@ export function SendSelect({
   status,
   regularFee,
   fastFee,
+  currentFee,
   currentFeeType,
+  baseAssetId,
 }: SendSelectProps) {
+  const [watchMax, setWatchMax] = useState(false);
   const assetId = form.watch('asset', '');
-  const amount = form.watch('amount', '');
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const decimals = useMemo(() => {
     const selectedAsset = balanceAssets?.find((a) => a.assetId === assetId);
@@ -32,22 +35,49 @@ export function SendSelect({
   }, [assetId]);
   const _isLoadingTx = status('loadingTx');
 
+  const handleChangeCurrentFeeType = (feeType: FeeType) => {
+    handlers.changeCurrentFeeType(feeType);
+  };
+
+  const handleOverrideMaxAmount = () => {
+    if (assetId === baseAssetId) {
+      const newAmount = balanceAssetSelected.sub(bn(currentFee)).toString();
+      const currentAmount = form.getValues('amount');
+
+      if (currentAmount !== newAmount) {
+        form.setValue('amount', newAmount);
+        handlers.handleValidateAmount(newAmount);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (currentFee && watchMax) {
+      handleOverrideMaxAmount();
+    }
+  }, [currentFee, watchMax, handleOverrideMaxAmount]);
+
   // If max balance is set on the input assume the user wants to send the max
   // and change the amount to the max balance minus the fee.
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    const amount = form.getValues('amount');
-    if (assetId === BaseAssetId && balanceAssetSelected.eq(amount)) {
-      if (currentFeeType === 'fast' && fastFee) {
-        form.setValue('amount', balanceAssetSelected.sub(fastFee).toString());
-      } else if (currentFeeType === 'regular' && regularFee) {
-        form.setValue(
-          'amount',
-          balanceAssetSelected.sub(regularFee).toString()
-        );
-      }
-    }
-  }, [regularFee, fastFee, currentFeeType, balanceAssetSelected]);
+  // useEffect(() => {
+  //   const amount = form.getValues('amount');
+  //   if (watchMax && assetId === baseAssetId && balanceAssetSelected.eq(amount)) {
+  //     if (currentFeeType === 'fast' && fastFee) {
+  //       const newAmount = balanceAssetSelected.sub(fastFee).toString();
+  //       form.setValue('amount', newAmount);
+  //       handlers.handleValidateAmount(newAmount);
+
+  //     } else if (currentFeeType === 'regular' && regularFee) {
+  //       const newAmount = balanceAssetSelected.sub(regularFee).toString()
+  //       form.setValue(
+  //         'amount',
+  //         newAmount
+  //       );
+  //       handlers.handleValidateAmount(newAmount);
+  //     }
+  //   }
+  // }, [regularFee, fastFee, currentFeeType, balanceAssetSelected, watchMax]);
 
   return (
     <MotionContent {...animations.slideInTop()}>
@@ -113,17 +143,35 @@ export function SendSelect({
                   balance={balanceAssetSelected}
                   value={bn(field.value)}
                   units={decimals}
-                  onChange={(value) => {
+                  onChange={(value, isMaxClick) => {
+                    if (isMaxClick) {
+                      setWatchMax(true);
+                      handleOverrideMaxAmount();
+
+                      return;
+                    }
+
                     const amountValue = value || undefined;
-                    form.setValue('amount', amountValue?.toString() || '');
-                    handlers.handleValidateAmount(bn(amountValue));
+                    const prevAmount = form.getValues('amount');
+
+                    console.log(
+                      'onChange input',
+                      prevAmount !== amountValue?.toString(),
+                      prevAmount,
+                      amountValue?.toString()
+                    );
+                    if (prevAmount !== amountValue?.toString()) {
+                      form.setValue('amount', amountValue?.toString() || '');
+                      handlers.handleValidateAmount(amountValue?.toString());
+                      setWatchMax(false);
+                    }
                   }}
                 />
               );
             }}
           />
         </Box.Stack>
-        {!!(regularFee && currentFeeType && amount) && (
+        {!!(form.formState.isValid && currentFeeType) && (
           <Box.Stack gap="$3">
             <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
               Fee (network)
@@ -132,7 +180,7 @@ export function SendSelect({
               fastFee={fastFee}
               regularFee={regularFee}
               currentFeeType={currentFeeType}
-              onChangeCurrentFeeType={handlers.changeCurrentFeeType}
+              onChangeCurrentFeeType={handleChangeCurrentFeeType}
             />
           </Box.Stack>
         )}

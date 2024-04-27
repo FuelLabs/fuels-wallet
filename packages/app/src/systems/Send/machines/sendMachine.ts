@@ -22,6 +22,7 @@ export type MachineContext = {
   maxFee?: BN;
   regularTip?: BN;
   fastTip?: BN;
+  baseAssetId?: string;
   error?: string;
   currentFeeType?: 'regular' | 'fast' | 'advanced';
 };
@@ -30,6 +31,7 @@ type EstimateInitialFeeReturn = {
   maxFee: BN;
   regularTip: BN;
   fastTip: BN;
+  baseAssetId: string;
 };
 
 type CreateTransactionReturn = {
@@ -52,7 +54,7 @@ type MachineServices = {
 type MachineEvents =
   | { type: 'RESET'; input: null }
   | { type: 'BACK'; input: null }
-  | { type: 'SET_DATA'; input: TxInputs['isValidTransaction'] }
+  | { type: 'SET_DATA'; input: TxInputs['createTransfer'] }
   | { type: 'CONFIRM'; input: null }
   | { type: 'USE_REGULAR_FEE'; input: null }
   | { type: 'USE_FAST_FEE'; input: null }
@@ -89,7 +91,7 @@ export const sendMachine = createMachine(
               actions: [assignError()],
             },
             {
-              actions: ['assignInitialFee'],
+              actions: ['assignInitialFee', 'assignBaseAssetId'],
               target: 'idle',
             },
           ],
@@ -149,6 +151,9 @@ export const sendMachine = createMachine(
         fastTip: ev.data.fastTip,
         currentFeeType: 'regular' as const,
       })),
+      assignBaseAssetId: assign((_ctx, ev) => ({
+        baseAssetId: ev.data.baseAssetId,
+      })),
       assignTransactionData: assign((ctx, ev) => ({
         transactionRequest: ev.data.transactionRequest,
         providerUrl: ev.data.providerUrl,
@@ -159,26 +164,14 @@ export const sendMachine = createMachine(
         maxFee: ev.data.maxFee,
         gasLimit: ev.data.gasLimit,
       })),
-      assignIsRegularFee: assign((ctx) => {
-        const transactionRequest = ctx.transactionRequest;
-        if (!transactionRequest) return ctx;
-
-        transactionRequest.tip = bn(ctx.regularTip);
-        transactionRequest.maxFee = bn(ctx.maxFee).add(transactionRequest.tip);
+      assignIsRegularFee: assign((_ctx) => {
         return {
           currentFeeType: 'regular' as const,
-          transactionRequest,
         };
       }),
-      assignIsFastFee: assign((ctx) => {
-        const transactionRequest = ctx.transactionRequest;
-        if (!transactionRequest) return ctx;
-
-        transactionRequest.tip = bn(ctx.fastTip);
-        transactionRequest.maxFee = bn(ctx.maxFee).add(transactionRequest.tip);
+      assignIsFastFee: assign((_ctx) => {
         return {
           currentFeeType: 'fast' as const,
-          transactionRequest,
         };
       }),
       assignIsAdvancedFee: assign((_) => {
@@ -198,18 +191,13 @@ export const sendMachine = createMachine(
         },
       }),
       createTransactionRequest: FetchMachine.create<
-        TxInputs['isValidTransaction'],
+        TxInputs['createTransfer'],
         CreateTransactionReturn | null
       >({
         showError: false,
         maxAttempts: 1,
         async fetch({ input }) {
-          const transfer = await TxService.createTransfer({
-            to: input?.address,
-            amount: input?.amount,
-            assetId: input?.asset?.assetId,
-            tip: input?.tip,
-          });
+          const transfer = await TxService.createTransfer(input);
 
           return transfer;
         },

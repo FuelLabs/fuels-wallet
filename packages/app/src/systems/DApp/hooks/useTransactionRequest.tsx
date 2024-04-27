@@ -3,7 +3,6 @@ import { TransactionStatus } from 'fuels';
 import { useCallback } from 'react';
 import { Services, store } from '~/store';
 import { useOverlay } from '~/systems/Overlay';
-import { getFilteredErrors } from '~/systems/Transaction';
 import type { TxInputs } from '~/systems/Transaction/services';
 
 import { TxRequestStatus } from '../machines/transactionRequestMachine';
@@ -16,11 +15,11 @@ const selectors = {
   account(state: TransactionRequestState) {
     return state.context.input.account;
   },
-  txResult(state: TransactionRequestState) {
-    return state.context.response?.txResult;
+  txSummarySimulated(state: TransactionRequestState) {
+    return state.context.response?.txSummarySimulated;
   },
-  approvedTx(state: TransactionRequestState) {
-    return state.context.response?.approvedTx;
+  txSummaryExecuted(state: TransactionRequestState) {
+    return state.context.response?.txSummaryExecuted;
   },
   isLoadingAccounts(state: TransactionRequestState) {
     return state.matches('fetchingAccount');
@@ -30,12 +29,12 @@ const selectors = {
   },
   errors(state: TransactionRequestState) {
     if (!state.context.errors) return {};
-    const grouped = state.context.errors?.txDryRunGroupedErrors;
-    const general = getFilteredErrors(grouped, ['InsufficientInputAmount']);
-    const hasGeneral = Boolean(Object.keys(general || {}).length);
-    const unlockError = state.context.errors?.unlockError;
+    const simulateTxErrors = state.context.errors?.simulateTxErrors;
+    const hasSimulateTxErrors = Boolean(
+      Object.keys(simulateTxErrors || {}).length
+    );
     const txApproveError = state.context.errors?.txApproveError;
-    return { txApproveError, unlockError, grouped, general, hasGeneral };
+    return { txApproveError, simulateTxErrors, hasSimulateTxErrors };
   },
   status(externalLoading?: boolean) {
     return useCallback(
@@ -102,17 +101,24 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const txStatusSelector = selectors.status(isLoadingAccounts);
   const txStatus = useSelector(service, txStatusSelector);
   const title = useSelector(service, selectors.title);
-  const txResult = useSelector(service, selectors.txResult);
-  const approvedTx = useSelector(service, selectors.approvedTx);
+  const txSummarySimulated = useSelector(service, selectors.txSummarySimulated);
+  const txSummaryExecuted = useSelector(service, selectors.txSummaryExecuted);
   const origin = useSelector(service, selectors.origin);
   const originTitle = useSelector(service, selectors.originTitle);
   const favIconUrl = useSelector(service, selectors.favIconUrl);
   const isSendingTx = useSelector(service, selectors.sendingTx);
   const isPreLoading = useSelector(service, selectors.isPreLoading);
   const isLoading = status('loading');
-  const showActions = !status('failed') && !status('success');
-  const shouldShowTx = (status('waitingApproval') || isSendingTx) && !!txResult;
-  const shouldShowLoader = isPreLoading || !txResult;
+  const shouldShowActions = !status('success');
+  const shouldShowTxExecuted =
+    !!txSummaryExecuted && (status('success') || status('failed'));
+  const shouldShowTxSimulated =
+    !shouldShowTxExecuted &&
+    (status('waitingApproval') || isSendingTx) &&
+    !!txSummarySimulated;
+  const shouldDisableApproveBtn =
+    shouldShowTxSimulated && errors.hasSimulateTxErrors;
+  const shouldShowLoader = isPreLoading || !txSummarySimulated;
 
   function closeDialog() {
     reset();
@@ -123,10 +129,10 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     return txStatus === status;
   }
 
-  function approveStatus() {
+  function executedStatus() {
     if (status('success')) return TransactionStatus.success;
     if (status('failed')) return TransactionStatus.failure;
-    return txResult?.status;
+    return txSummarySimulated?.status;
   }
 
   function approve() {
@@ -151,21 +157,23 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   return {
     ...ctx,
     account,
-    approveStatus,
+    executedStatus,
     errors,
     isLoading,
     providerUrl,
-    showActions,
     status,
     origin,
     originTitle,
     favIconUrl,
     title,
-    txResult,
+    txSummarySimulated,
     txStatus,
-    approvedTx,
+    txSummaryExecuted,
     isSendingTx,
-    shouldShowTx,
+    shouldShowActions,
+    shouldDisableApproveBtn,
+    shouldShowTxSimulated,
+    shouldShowTxExecuted,
     shouldShowLoader,
     handlers: {
       request,

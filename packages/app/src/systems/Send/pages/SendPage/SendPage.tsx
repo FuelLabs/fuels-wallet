@@ -20,7 +20,7 @@ export function SendPage() {
         <MotionStack {...animations.slideInTop()} gap="$4" css={styles.content}>
           <Send.Select {...send} />
         </MotionStack>
-        {txRequest.showActions && (
+        {txRequest.shouldShowActions && (
           <Layout.BottomBar>
             <Button variant="ghost" onPress={handlers.cancel}>
               Cancel
