@@ -4,7 +4,12 @@ import { motion } from 'framer-motion';
 import { DECIMAL_FUEL, bn } from 'fuels';
 import { useEffect, useMemo, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
-import { ControlledField, Layout, animations } from '~/systems/Core';
+import {
+  ControlledField,
+  Layout,
+  MotionStack,
+  animations,
+} from '~/systems/Core';
 import { TxFee } from '~/systems/Transaction';
 
 import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
@@ -150,7 +155,7 @@ export function SendSelect({
           />
         </Box.Stack>
         {!!(form.formState.isValid && currentFeeType) && (
-          <Box.Stack gap="$3">
+          <MotionStack {...animations.slideInTop()} gap="$3">
             <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
               Fee (network)
             </Text>
@@ -160,7 +165,7 @@ export function SendSelect({
               currentFeeType={currentFeeType}
               onChangeCurrentFeeType={handleChangeCurrentFeeType}
             />
-          </Box.Stack>
+          </MotionStack>
         )}
         {/* {isLoadingTx ? <TxFee.Loader /> : <TxFee fee={regularFee} />} */}
       </Box.Stack>
