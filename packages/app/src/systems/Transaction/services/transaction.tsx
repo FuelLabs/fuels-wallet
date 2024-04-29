@@ -1,30 +1,20 @@
 import type { Account, AssetData } from '@fuel-wallet/types';
-import type {
-  Account as FuelsAccount,
-  GetTransactionSummaryFromRequestParams,
-  TransactionRequest,
-  TransactionSummary,
-  WalletLocked,
-} from 'fuels';
+import type { TransactionRequest, WalletLocked } from 'fuels';
 
 import {
   Address,
   type BN,
-  PolicyType,
   Provider,
   ScriptTransactionRequest,
   TransactionResponse,
   TransactionStatus,
-  addressify,
   assembleTransactionSummary,
   bn,
   coinQuantityfy,
   getTransactionSummary,
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
-  hexlify,
   normalizeJSON,
-  processGqlReceipt,
 } from 'fuels';
 import { WalletLockedCustom, db, uniqueId } from '~/systems/Core';
 
@@ -150,57 +140,6 @@ export class TxService {
       abiMap,
     });
     return { txResult: txResultWithCalls, txResponse };
-  }
-
-  // TODO: remove this once is fixed on the SDK
-  // https://github.com/FuelLabs/fuels-ts/issues/1314
-  static async getTransactionSummaryFromRequest<TTransactionType = void>(
-    params: GetTransactionSummaryFromRequestParams
-  ): Promise<TransactionSummary<TTransactionType>> {
-    const { provider, transactionRequest, abiMap } = params;
-    await provider.estimateTxDependencies(transactionRequest);
-    const transaction = transactionRequest.toTransaction();
-    const transactionBytes = transactionRequest.toTransactionBytes();
-    const { dryRun: gqlReceipts } = await provider.operations.dryRun({
-      encodedTransactions: hexlify(transactionBytes),
-      utxoValidation: false,
-    });
-    const receipts = gqlReceipts[0].receipts.map(processGqlReceipt);
-    const {
-      consensusParameters: {
-        gasPerByte,
-        gasPriceFactor,
-        maxInputs,
-        gasCosts,
-        maxGasPerTx,
-      },
-    } = provider.getChain();
-    const gasPrice = await provider.getLatestGasPrice();
-
-    const transactionSummary = assembleTransactionSummary<TTransactionType>({
-      gasCosts,
-      transaction,
-      transactionBytes,
-      abiMap,
-      receipts,
-      gasPerByte,
-      gasPriceFactor,
-      maxInputs,
-      maxGasPerTx,
-      gasPrice,
-    });
-
-    // Workaround until https://github.com/FuelLabs/fuels-ts/issues/1674 is fixed
-    transactionSummary.isStatusFailure = transactionSummary.receipts.some(
-      (receipt) => {
-        return receipt.type === 3;
-      }
-    );
-    if (transactionSummary.isStatusFailure) {
-      transactionSummary.status = TransactionStatus.failure;
-    }
-
-    return transactionSummary;
   }
 
   static async simulateTransaction({
