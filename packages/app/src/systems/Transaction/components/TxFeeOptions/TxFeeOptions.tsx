@@ -1,4 +1,4 @@
-import { Box, Button, Input } from '@fuel-ui/react';
+import { Box, Button, Input, Text, VStack } from '@fuel-ui/react';
 import { AnimatePresence } from 'framer-motion';
 import type { BN } from 'fuels';
 import { useController, useFormContext } from 'react-hook-form';
@@ -50,12 +50,18 @@ export const TxFeeOptions = ({
             gap="$3"
             layout
           >
-            <Input>
-              <Input.Field {...tip} placeholder="Tip" />
-            </Input>
-            <Input>
-              <Input.Field {...gasLimit} placeholder="Gas limit" />
-            </Input>
+            <VStack gap="$1">
+              <Text fontSize="xs">Tip</Text>
+              <Input>
+                <Input.Field {...tip} />
+              </Input>
+            </VStack>
+            <VStack gap="$1">
+              <Text fontSize="xs">Gas limit</Text>
+              <Input>
+                <Input.Field {...gasLimit} />
+              </Input>
+            </VStack>
           </MotionStack>
         ) : (
           <MotionStack
