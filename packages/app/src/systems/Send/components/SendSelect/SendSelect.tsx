@@ -16,6 +16,7 @@ import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFe
 import type { FeeType, UseSendReturn } from '../../hooks';
 
 const MotionContent = motion(Layout.Content);
+
 type SendSelectProps = UseSendReturn;
 
 export function SendSelect({

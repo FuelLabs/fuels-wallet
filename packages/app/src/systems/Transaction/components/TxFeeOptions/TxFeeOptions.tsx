@@ -1,8 +1,9 @@
-import { Box, Button } from '@fuel-ui/react';
+import { Box, Button, Input } from '@fuel-ui/react';
 import { AnimatePresence } from 'framer-motion';
 import type { BN } from 'fuels';
+import { useController, useFormContext } from 'react-hook-form';
 import { MotionFlex, MotionStack, animations } from '~/systems/Core';
-import type { FeeType } from '~/systems/Send/hooks';
+import type { FeeType, SendFormValues } from '~/systems/Send/hooks';
 import { TxFee } from '../TxFee';
 
 type TxFeeOptionsProps = {
@@ -18,6 +19,16 @@ export const TxFeeOptions = ({
   currentFeeType,
   onChangeCurrentFeeType,
 }: TxFeeOptionsProps) => {
+  const { control } = useFormContext<SendFormValues>();
+  const { field: tip } = useController({
+    control,
+    name: 'fees.tip',
+  });
+  const { field: gasLimit } = useController({
+    control,
+    name: 'fees.gasLimit',
+  });
+
   const isAdvanced = currentFeeType === 'advanced';
 
   const toggle = () => {
@@ -39,7 +50,12 @@ export const TxFeeOptions = ({
             gap="$3"
             layout
           >
-            @TODO: Add tip and gas limit fields here
+            <Input>
+              <Input.Field {...tip} placeholder="Tip" />
+            </Input>
+            <Input>
+              <Input.Field {...gasLimit} placeholder="Gas limit" />
+            </Input>
           </MotionStack>
         ) : (
           <MotionStack

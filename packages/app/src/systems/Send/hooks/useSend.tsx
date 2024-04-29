@@ -2,7 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BigNumberish } from 'fuels';
 import { bn, isBech32 } from 'fuels';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -13,7 +13,6 @@ import { useTransactionRequest } from '~/systems/DApp';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import type { TxInputs } from '~/systems/Transaction/services';
 
-import { useWallet } from '@fuels/react';
 import { sendMachine } from '../machines/sendMachine';
 import type { SendMachineState } from '../machines/sendMachine';
 
@@ -98,8 +97,24 @@ const schema = yup
           return false;
         }
       }),
+    fees: yup
+      .object({
+        tip: yup.string().required('Tip is required'),
+        gasLimit: yup.string().required('Gas limit is required'),
+      })
+      .required('Fees are required'),
   })
   .required();
+
+export type SendFormValues = {
+  asset: string;
+  amount: string;
+  address: string;
+  fees: {
+    tip: string;
+    gasLimit: string;
+  };
+};
 
 export function useSend() {
   const navigate = useNavigate();
@@ -107,14 +122,21 @@ export function useSend() {
   const { account, balanceAssets: accountBalanceAssets } = useAccounts();
   const { assets } = useAssets();
 
-  const form = useForm({
+  const form = useForm<SendFormValues>({
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
     mode: 'onChange',
     defaultValues: {
       asset: '',
       amount: '',
-      address: '',
+      // @TODO: Revert it
+      address:
+        'fuel1nxwnn86y8hhg4nklx53kr3c24kxaqp6txmyrp9nkrs6p6s82ykxsnj82x5',
+      // @TODO: Should it be a string?
+      fees: {
+        tip: '1.5',
+        gasLimit: '21000',
+      },
     },
   });
 
