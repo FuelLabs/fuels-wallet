@@ -260,12 +260,15 @@ export class TxService {
     }
     const provider = await Provider.create(network.url);
     const wallet = new WalletLockedCustom(account.address, provider);
-    const transactionRequest = await wallet.createTransfer(to, amount, assetId);
+    const transactionRequest = await wallet.createTransfer(
+      to,
+      amount,
+      assetId,
+      { tip }
+    );
     const { maxFee, gasLimit } = await provider.estimateTxGasAndFee({
       transactionRequest,
     });
-    transactionRequest.tip = tip;
-    transactionRequest.maxFee = maxFee.add(tip);
 
     return {
       maxFee,
