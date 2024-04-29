@@ -2,7 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { DECIMAL_FUEL, bn } from 'fuels';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import {
   ControlledField,
@@ -10,7 +10,6 @@ import {
   MotionStack,
   animations,
 } from '~/systems/Core';
-import { TxFee } from '~/systems/Transaction';
 
 import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
@@ -44,7 +43,7 @@ export function SendSelect({
     handlers.changeCurrentFeeType(feeType);
   };
 
-  const handleOverrideMaxAmount = () => {
+  const handleOverrideMaxAmount = useCallback(() => {
     if (assetId === baseAssetId) {
       const newAmount = balanceAssetSelected.sub(bn(currentFee)).toString();
       const currentAmount = form.getValues('amount');
@@ -54,7 +53,15 @@ export function SendSelect({
         handlers.handleValidateAmount(newAmount);
       }
     }
-  };
+  }, [
+    assetId,
+    baseAssetId,
+    balanceAssetSelected,
+    form.setValue,
+    form.getValues,
+    handlers.handleValidateAmount,
+    currentFee,
+  ]);
 
   useEffect(() => {
     if (currentFee && watchMax) {

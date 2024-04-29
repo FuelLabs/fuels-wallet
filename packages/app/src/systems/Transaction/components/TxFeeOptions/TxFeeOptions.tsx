@@ -3,7 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import type { BN } from 'fuels';
 import { MotionFlex, MotionStack, animations } from '~/systems/Core';
 import type { FeeType } from '~/systems/Send/hooks';
-import { TxFee } from '../TxFee/TxFee';
+import { TxFee } from '../TxFee';
 
 type TxFeeOptionsProps = {
   fastFee?: BN;
