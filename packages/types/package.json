@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@fuels/connectors": "0.2.2",
-    "fuels": "next",
+    "fuels": "0.83.0",
     "tsup": "^7.2.0"
   }
 }

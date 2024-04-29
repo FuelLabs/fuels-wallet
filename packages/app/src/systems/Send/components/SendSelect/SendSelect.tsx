@@ -57,28 +57,6 @@ export function SendSelect({
     }
   }, [currentFee, watchMax, handleOverrideMaxAmount]);
 
-  // If max balance is set on the input assume the user wants to send the max
-  // and change the amount to the max balance minus the fee.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  // useEffect(() => {
-  //   const amount = form.getValues('amount');
-  //   if (watchMax && assetId === baseAssetId && balanceAssetSelected.eq(amount)) {
-  //     if (currentFeeType === 'fast' && fastFee) {
-  //       const newAmount = balanceAssetSelected.sub(fastFee).toString();
-  //       form.setValue('amount', newAmount);
-  //       handlers.handleValidateAmount(newAmount);
-
-  //     } else if (currentFeeType === 'regular' && regularFee) {
-  //       const newAmount = balanceAssetSelected.sub(regularFee).toString()
-  //       form.setValue(
-  //         'amount',
-  //         newAmount
-  //       );
-  //       handlers.handleValidateAmount(newAmount);
-  //     }
-  //   }
-  // }, [regularFee, fastFee, currentFeeType, balanceAssetSelected, watchMax]);
-
   return (
     <MotionContent {...animations.slideInTop()}>
       <Box.Stack gap="$4">

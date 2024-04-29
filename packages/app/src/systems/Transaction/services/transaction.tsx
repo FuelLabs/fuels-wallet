@@ -263,12 +263,15 @@ export class TxService {
     const transactionRequest = await wallet.createTransfer(
       to,
       amount,
-      assetId,
-      { tip }
+      assetId
+      // { tip }
     );
     const { maxFee, gasLimit } = await provider.estimateTxGasAndFee({
       transactionRequest,
     });
+
+    transactionRequest.tip = tip;
+    transactionRequest.maxFee = maxFee.add(transactionRequest.tip);
 
     return {
       maxFee,
