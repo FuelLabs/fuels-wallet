@@ -253,19 +253,16 @@ export function useSend() {
   }, [tip, maxFee]);
 
   useEffect(() => {
-    // console.log('isValid', isValid, address, asset);
     if (isValid && address && asset) {
-      const _input: TxInputs['createTransfer'] = {
+      const input: TxInputs['createTransfer'] = {
         to: address,
         assetId: asset,
         amount,
       };
 
-      // @TODO
-      // console.log('input', input);
-      // service.send('SET_DATA', { input });
+      service.send('SET_DATA', { input });
     }
-  }, [amount, address, asset, isValid]);
+  }, [amount, address, asset, isValid, service.send]);
 
   return {
     form,
