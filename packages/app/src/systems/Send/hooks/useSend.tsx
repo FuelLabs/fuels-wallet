@@ -74,18 +74,19 @@ const schema = yup
       })
       .test('balance', 'Insufficient funds', (value, ctx) => {
         const { fees, asset } = ctx.parent as SendFormValues;
-        const { accountBalanceAssets, maxFee } = ctx.options as SchemaOptions;
+        const { accountBalanceAssets, maxFee } = ctx.options
+          .context as SchemaOptions;
 
         const balanceAssetSelected = accountBalanceAssets?.find(
           ({ assetId }) => assetId === asset
         );
 
-        if (!balanceAssetSelected?.amount || !maxFee) {
+        if (!balanceAssetSelected?.amount || !maxFee || !value) {
           return false;
         }
 
         const currentFee = maxFee.add(fees.tip);
-        const totalAmount = bn(value).add(currentFee);
+        const totalAmount = value.add(currentFee);
         return totalAmount.lte(bn(balanceAssetSelected.amount));
       })
       .required('Amount is required'),
@@ -198,7 +199,6 @@ export function useSend() {
   const amount = form.watch('amount');
   const address = form.watch('address');
   const asset = form.watch('asset');
-  const errorMessage = useSelector(service, selectors.error);
 
   const baseAssetId = useSelector(service, selectors.baseAssetId);
   const regularTip = useSelector(service, selectors.regularTip);
@@ -252,38 +252,20 @@ export function useSend() {
     return maxFee.add(tip);
   }, [tip, maxFee]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    const bnAmount = bn(amount);
-    const totalAmount = bnAmount.add(bn(currentFee));
-    const isAmountValid =
-      !bn(amount).lte(0) && !bn(balanceAssetSelected).lt(totalAmount);
-    if (isAmountValid && address && asset && bnAmount.gt(0) && isValid) {
-      const hasAsset = !!assets.find(({ assetId }) => assetId === asset);
-      if (!hasAsset) return;
-
+    // console.log('isValid', isValid, address, asset);
+    if (isValid && address && asset) {
       const _input: TxInputs['createTransfer'] = {
         to: address,
         assetId: asset,
-        amount: bnAmount,
-        tip: bn(0),
+        amount,
       };
 
       // @TODO
       // console.log('input', input);
       // service.send('SET_DATA', { input });
     }
-  }, [amount, address, asset, maxFee, currentFee, isValid]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (errorMessage) {
-      form.setError('amount', {
-        type: 'pattern',
-        message: errorMessage.split(':')[0],
-      });
-    }
-  }, [errorMessage]);
+  }, [amount, address, asset, isValid]);
 
   return {
     form,

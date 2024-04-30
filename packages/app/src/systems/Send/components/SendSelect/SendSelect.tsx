@@ -53,7 +53,9 @@ export function SendSelect({
 
   useEffect(() => {
     if (watchMax) {
-      form.setValue('amount', balanceAssetSelected.sub(currentFee));
+      form.setValue('amount', balanceAssetSelected.sub(currentFee), {
+        shouldValidate: true,
+      });
     }
   }, [watchMax, balanceAssetSelected, currentFee, form.setValue]);
 

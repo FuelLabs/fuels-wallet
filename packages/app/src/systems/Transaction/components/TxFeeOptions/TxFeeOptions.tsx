@@ -107,6 +107,7 @@ export const TxFeeOptions = ({
                 checked={option.tip.eq(tip.value)}
                 onChecked={() => {
                   setValue('fees.tip', option.tip);
+                  trigger('amount');
                 }}
               />
             ))}

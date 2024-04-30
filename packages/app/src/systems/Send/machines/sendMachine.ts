@@ -160,7 +160,9 @@ export const sendMachine = createMachine(
         showError: false,
         maxAttempts: 1,
         async fetch({ input }) {
+          console.log('input', input);
           const transfer = await TxService.createTransfer(input);
+          console.log('transfer', transfer);
           return transfer;
         },
       }),
