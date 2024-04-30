@@ -28,6 +28,7 @@ export function SendSelect({
   tip,
   regularTip,
   fastTip,
+  errorMessage,
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
   const isAmountFocused = useRef<boolean>(false);
@@ -138,9 +139,9 @@ export function SendSelect({
                 },
               }}
             />
-            {amountFieldState.error && (
+            {(errorMessage || amountFieldState.error) && (
               <Form.ErrorMessage aria-label="Error message">
-                {amountFieldState.error.message}
+                {errorMessage || amountFieldState.error?.message}
               </Form.ErrorMessage>
             )}
           </Form.Control>

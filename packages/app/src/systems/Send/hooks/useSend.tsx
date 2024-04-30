@@ -196,6 +196,7 @@ export function useSend() {
 
   const baseFee = useSelector(service, selectors.baseFee);
   const maxGasPerTx = useSelector(service, selectors.maxGasPerTx);
+  const errorMessage = useSelector(service, selectors.error);
 
   const form = useForm<SendFormValues>({
     resolver: yupResolver(schema),
@@ -286,8 +287,6 @@ export function useSend() {
         gasLimit,
       };
 
-      // @TODO
-      // console.log('input', input);
       service.send('SET_DATA', { input });
     }
   }, [isValid, amount, address, assetIdSelected, tip, gasLimit, service.send]);
@@ -306,6 +305,7 @@ export function useSend() {
     assetIdSelected,
     balanceAssetSelected,
     baseAssetId,
+    errorMessage,
     handlers: {
       cancel,
       submit,
