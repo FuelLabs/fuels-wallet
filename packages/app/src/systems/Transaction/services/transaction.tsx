@@ -57,7 +57,9 @@ export type TxInputs = {
     to?: string;
     amount?: BN;
     assetId?: string;
+    maxFee?: BN;
     tip?: BN;
+    gasLimit?: BN;
   };
   applyFee: {
     transactionRequest?: TransactionRequest;
@@ -241,9 +243,16 @@ export class TxService {
   }
 
   static async createTransfer(input: TxInputs['createTransfer'] | undefined) {
-    const { amount, assetId, to, tip } = input || {};
+    const {
+      amount,
+      assetId,
+      to,
+      tip,
+      maxFee: maxFeeInput,
+      gasLimit: gasLimitInput,
+    } = input || {};
 
-    if (!to || !assetId || !amount || !tip) {
+    if (!to || !assetId || !amount || !maxFeeInput || !tip || !gasLimitInput) {
       throw new Error('Missing params for transaction request');
     }
 
@@ -261,16 +270,17 @@ export class TxService {
     const transactionRequest = await wallet.createTransfer(
       to,
       amount,
-      assetId
-      // { tip }
+      assetId,
+      {
+        maxFee: maxFeeInput,
+        tip: tip.gt(0) ? tip : undefined,
+        gasLimit: gasLimitInput.gt(0) ? gasLimitInput : undefined,
+      }
     );
 
     const { maxFee, gasLimit } = await provider.estimateTxGasAndFee({
       transactionRequest,
     });
-
-    transactionRequest.tip = tip;
-    transactionRequest.maxFee = maxFee.add(transactionRequest.tip);
 
     return {
       maxFee,

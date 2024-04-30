@@ -194,11 +194,25 @@ export function useSend() {
     name: 'fees.tip',
   });
 
+  const gasLimit = useWatch({
+    control: form.control,
+    name: 'fees.gasLimit',
+  });
+
   const { isValid } = form.formState;
 
-  const amount = form.watch('amount');
-  const address = form.watch('address');
-  const asset = form.watch('asset');
+  const amount = useWatch({
+    control: form.control,
+    name: 'amount',
+  });
+  const address = useWatch({
+    control: form.control,
+    name: 'address',
+  });
+  const assetIdSelected = useWatch({
+    control: form.control,
+    name: 'asset',
+  });
 
   const baseAssetId = useSelector(service, selectors.baseAssetId);
   const regularTip = useSelector(service, selectors.regularTip);
@@ -206,11 +220,6 @@ export function useSend() {
   const sendStatusSelector = selectors.status(txRequest.txStatus);
   const sendStatus = useSelector(service, sendStatusSelector);
   const readyToSend = useSelector(service, selectors.readyToSend);
-
-  const assetIdSelected = useWatch({
-    control: form.control,
-    name: 'asset',
-  });
 
   const balanceAssets = useMemo(() => {
     return accountBalanceAssets?.filter(({ assetId }) =>
@@ -253,16 +262,28 @@ export function useSend() {
   }, [tip, maxFee]);
 
   useEffect(() => {
-    if (isValid && address && asset) {
+    if (isValid && address && assetIdSelected) {
       const input: TxInputs['createTransfer'] = {
         to: address,
-        assetId: asset,
+        assetId: assetIdSelected,
         amount,
+        maxFee,
+        tip,
+        gasLimit,
       };
 
       service.send('SET_DATA', { input });
     }
-  }, [amount, address, asset, isValid, service.send]);
+  }, [
+    isValid,
+    amount,
+    address,
+    assetIdSelected,
+    tip,
+    gasLimit,
+    maxFee,
+    service.send,
+  ]);
 
   return {
     form,

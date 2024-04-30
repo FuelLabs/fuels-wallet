@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Form, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { DECIMAL_FUEL, bn } from 'fuels';
+import { type BN, DECIMAL_FUEL, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import {
@@ -24,7 +24,6 @@ export function SendSelect({
   form,
   balanceAssets,
   balanceAssetSelected,
-  status,
   currentFee,
   maxFee,
   regularTip,
@@ -32,6 +31,7 @@ export function SendSelect({
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
   const isAmountFocused = useRef<boolean>(false);
+  const currentFeeRef = useRef<BN>(currentFee);
 
   const { field: amount, fieldState: amountFieldState } = useController({
     control: form.control,
@@ -49,10 +49,9 @@ export function SendSelect({
     return selectedAsset?.decimals || DECIMAL_FUEL;
   }, [assetId]);
 
-  const _isLoadingTx = status('loadingTx');
-
   useEffect(() => {
-    if (watchMax) {
+    if (watchMax && !currentFeeRef.current.eq(currentFee)) {
+      currentFeeRef.current = currentFee;
       form.setValue('amount', balanceAssetSelected.sub(currentFee), {
         shouldValidate: true,
       });
@@ -153,9 +152,6 @@ export function SendSelect({
             />
           </MotionStack>
         )}
-
-        {/* @TODO: do we still need this loading-state? */}
-        {/* {isLoadingTx ? <TxFee.Loader /> : <TxFee fee={regularFee} />} */}
       </Box.Stack>
     </MotionContent>
   );

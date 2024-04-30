@@ -140,7 +140,6 @@ export const sendMachine = createMachine(
         transactionRequest: ev.data.transactionRequest,
         providerUrl: ev.data.providerUrl,
         address: ev.data.address,
-        maxFee: ev.data.maxFee,
         gasLimit: ev.data.gasLimit,
       })),
     },
@@ -160,9 +159,7 @@ export const sendMachine = createMachine(
         showError: false,
         maxAttempts: 1,
         async fetch({ input }) {
-          console.log('input', input);
           const transfer = await TxService.createTransfer(input);
-          console.log('transfer', transfer);
           return transfer;
         },
       }),
