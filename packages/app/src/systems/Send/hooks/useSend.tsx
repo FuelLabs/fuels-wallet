@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
-import type { BigNumberish } from 'fuels';
+import type { BN, BigNumberish } from 'fuels';
 import { bn, isBech32 } from 'fuels';
 import { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -99,8 +99,20 @@ const schema = yup
       }),
     fees: yup
       .object({
-        tip: yup.string().required('Tip is required'),
-        gasLimit: yup.string().required('Gas limit is required'),
+        tip: yup
+          .mixed<BN>()
+          .test('integer', 'Tip must be greater or equal to 0', (value) => {
+            const isInteger = value?.gte(0);
+            return isInteger;
+          })
+          .required('Tip is required'),
+        gasLimit: yup
+          .mixed<BN>()
+          .test('positive', 'Gas limit must be greater tha 0', (value) => {
+            const isPositive = value?.gt(0);
+            return isPositive;
+          })
+          .required('Gas limit is required'),
       })
       .required('Fees are required'),
   })
@@ -111,9 +123,20 @@ export type SendFormValues = {
   amount: string;
   address: string;
   fees: {
-    tip: string;
-    gasLimit: string;
+    tip: BN;
+    gasLimit: BN;
   };
+};
+
+const DEFAULT_VALUES: SendFormValues = {
+  asset: '',
+  amount: '',
+  // @TODO: Revert it
+  address: 'fuel1nxwnn86y8hhg4nklx53kr3c24kxaqp6txmyrp9nkrs6p6s82ykxsnj82x5',
+  fees: {
+    tip: bn(0),
+    gasLimit: bn(0),
+  },
 };
 
 export function useSend() {
@@ -126,18 +149,7 @@ export function useSend() {
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
     mode: 'onChange',
-    defaultValues: {
-      asset: '',
-      amount: '',
-      // @TODO: Revert it
-      address:
-        'fuel1nxwnn86y8hhg4nklx53kr3c24kxaqp6txmyrp9nkrs6p6s82ykxsnj82x5',
-      // @TODO: Should it be a string?
-      fees: {
-        tip: '1.5',
-        gasLimit: '21000',
-      },
-    },
+    defaultValues: DEFAULT_VALUES,
   });
 
   const service = useInterpret(() =>
