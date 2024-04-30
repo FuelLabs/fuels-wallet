@@ -159,8 +159,7 @@ export type SendFormValues = {
 const DEFAULT_VALUES: SendFormValues = {
   asset: '',
   amount: bn(0),
-  // @TODO: Revert it
-  address: 'fuel1nxwnn86y8hhg4nklx53kr3c24kxaqp6txmyrp9nkrs6p6s82ykxsnj82x5',
+  address: '',
   fees: {
     tip: bn(0),
     gasLimit: bn(0),
