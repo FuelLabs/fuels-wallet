@@ -59,6 +59,14 @@ export function SendSelect({
       baseFeeRef.current = baseFee;
       tipRef.current = tip;
 
+      // @TODO: Remove this log later
+      console.log(
+        'updating amount for base fee',
+        baseFee.toNumber(),
+        ' and tip ',
+        tip.toNumber()
+      );
+
       form.setValue('amount', balanceAssetSelected.sub(baseFee.add(tip)), {
         shouldValidate: true,
       });
@@ -129,7 +137,10 @@ export function SendSelect({
                   amount.onChange(val);
                 }
               }}
-              onClickMax={() => setWatchMax(true)}
+              onClickMax={() => {
+                baseFeeRef.current = bn(1); // Workaround just to trigger the watcher when max is clicked and base fee is stable
+                setWatchMax(true);
+              }}
               inputProps={{
                 onFocus: () => {
                   isAmountFocused.current = true;
