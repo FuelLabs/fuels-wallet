@@ -56,6 +56,14 @@ const selectors = {
   },
 };
 
+type SchemaOptions = {
+  accountBalanceAssets: Array<{
+    assetId: string;
+    amount?: BNInput;
+  }>;
+  maxFee: BN | undefined;
+};
+
 const schema = yup
   .object({
     asset: yup.string().required('Asset is required'),
@@ -66,12 +74,7 @@ const schema = yup
       })
       .test('balance', 'Insufficient funds', (value, ctx) => {
         const { fees, asset } = ctx.parent as SendFormValues;
-        const accountBalanceAssets = ctx.options.context
-          ?.accountBalanceAssets as Array<{
-          assetId: string;
-          amount?: BNInput;
-        }>;
-        const maxFee = ctx.options.context?.maxFee as BN | undefined;
+        const { accountBalanceAssets, maxFee } = ctx.options as SchemaOptions;
 
         const balanceAssetSelected = accountBalanceAssets?.find(
           ({ assetId }) => assetId === asset
@@ -83,7 +86,6 @@ const schema = yup
 
         const currentFee = maxFee.add(fees.tip);
         const totalAmount = bn(value).add(currentFee);
-        console.log(totalAmount.lte(bn(balanceAssetSelected.amount)));
         return totalAmount.lte(bn(balanceAssetSelected.amount));
       })
       .required('Amount is required'),
