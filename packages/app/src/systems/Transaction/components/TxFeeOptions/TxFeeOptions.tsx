@@ -8,13 +8,13 @@ import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxFee } from '../TxFee';
 
 type TxFeeOptionsProps = {
-  maxFee: BN;
+  baseFee: BN;
   regularTip: BN;
   fastTip: BN;
 };
 
 export const TxFeeOptions = ({
-  maxFee,
+  baseFee,
   regularTip,
   fastTip,
 }: TxFeeOptionsProps) => {
@@ -33,10 +33,10 @@ export const TxFeeOptions = ({
 
   const options = useMemo(() => {
     return [
-      { name: 'Regular', fee: maxFee.add(regularTip), tip: regularTip },
-      { name: 'Fast', fee: maxFee.add(fastTip), tip: fastTip },
+      { name: 'Regular', fee: baseFee.add(regularTip), tip: regularTip },
+      { name: 'Fast', fee: baseFee.add(fastTip), tip: fastTip },
     ];
-  }, [maxFee, regularTip, fastTip]);
+  }, [baseFee, regularTip, fastTip]);
 
   const toggle = () => {
     setIsAdvanced((curr) => !curr);

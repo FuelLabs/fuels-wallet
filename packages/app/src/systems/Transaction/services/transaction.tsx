@@ -234,7 +234,7 @@ export class TxService {
     const { regularTip, fastTip } = await getCurrentTips(provider);
 
     return {
-      maxFee,
+      baseFee: maxFee,
       regularTip: bn(regularTip),
       fastTip: bn(fastTip),
       baseAssetId,
@@ -260,12 +260,13 @@ export class TxService {
 
     const provider = await Provider.create(network.url);
     const wallet = new WalletLockedCustom(account.address, provider);
+
     const transactionRequest = await wallet.createTransfer(
       to,
       amount,
       assetId,
       {
-        tip: tip.gt(0) ? tip : undefined,
+        tip,
         gasLimit: gasLimitInput.gt(0) ? gasLimitInput : undefined,
       }
     );
@@ -275,7 +276,7 @@ export class TxService {
     });
 
     return {
-      maxFee,
+      baseFee: maxFee.sub(transactionRequest.tip),
       gasLimit,
       transactionRequest,
       address: account.address,

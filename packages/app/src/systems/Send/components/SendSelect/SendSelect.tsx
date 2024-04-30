@@ -24,14 +24,15 @@ export function SendSelect({
   form,
   balanceAssets,
   balanceAssetSelected,
-  currentFee,
-  maxFee,
+  baseFee = bn(0),
+  tip,
   regularTip,
   fastTip,
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
   const isAmountFocused = useRef<boolean>(false);
-  const currentFeeRef = useRef<BN>(currentFee);
+  const baseFeeRef = useRef<BN>(baseFee);
+  const tipRef = useRef<BN>(tip);
 
   const { field: amount, fieldState: amountFieldState } = useController({
     control: form.control,
@@ -50,13 +51,18 @@ export function SendSelect({
   }, [assetId]);
 
   useEffect(() => {
-    if (watchMax && !currentFeeRef.current.eq(currentFee)) {
-      currentFeeRef.current = currentFee;
-      form.setValue('amount', balanceAssetSelected.sub(currentFee), {
+    if (
+      watchMax &&
+      (!baseFeeRef.current.eq(baseFee) || !tipRef.current.eq(tip))
+    ) {
+      baseFeeRef.current = baseFee;
+      tipRef.current = tip;
+
+      form.setValue('amount', balanceAssetSelected.sub(baseFee.add(tip)), {
         shouldValidate: true,
       });
     }
-  }, [watchMax, balanceAssetSelected, currentFee, form.setValue]);
+  }, [watchMax, balanceAssetSelected, baseFee, tip, form.setValue]);
 
   return (
     <MotionContent {...animations.slideInTop()}>
@@ -140,13 +146,13 @@ export function SendSelect({
           </Form.Control>
         </Box.Stack>
 
-        {assetId && maxFee && regularTip && fastTip && (
+        {assetId && baseFee && regularTip && fastTip && (
           <MotionStack {...animations.slideInTop()} gap="$3">
             <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
               Fee (network)
             </Text>
             <TxFeeOptions
-              maxFee={maxFee}
+              baseFee={baseFee}
               regularTip={regularTip}
               fastTip={fastTip}
             />

@@ -26,8 +26,8 @@ const selectors = {
   maxGasPerTx(state: SendMachineState) {
     return state.context.maxGasPerTx;
   },
-  maxFee(state: SendMachineState) {
-    return state.context.maxFee;
+  baseFee(state: SendMachineState) {
+    return state.context.baseFee;
   },
   regularTip(state: SendMachineState) {
     return state.context.regularTip;
@@ -64,7 +64,7 @@ type SchemaOptions = {
     assetId: string;
     amount?: BNInput;
   }>;
-  maxFee: BN | undefined;
+  baseFee: BN | undefined;
   maxGasPerTx: BN | undefined;
 };
 
@@ -77,20 +77,19 @@ const schema = yup
         return value?.gt(0);
       })
       .test('balance', 'Insufficient funds', (value, ctx) => {
-        const { fees, asset } = ctx.parent as SendFormValues;
-        const { accountBalanceAssets, maxFee } = ctx.options
+        const { asset, fees } = ctx.parent as SendFormValues;
+        const { accountBalanceAssets, baseFee } = ctx.options
           .context as SchemaOptions;
 
         const balanceAssetSelected = accountBalanceAssets?.find(
           ({ assetId }) => assetId === asset
         );
 
-        if (!balanceAssetSelected?.amount || !maxFee || !value) {
+        if (!balanceAssetSelected?.amount || !baseFee || !value) {
           return false;
         }
 
-        const currentFee = maxFee.add(fees.tip);
-        const totalAmount = value.add(currentFee);
+        const totalAmount = value.add(baseFee.add(fees.tip));
         return totalAmount.lte(bn(balanceAssetSelected.amount));
       })
       .required('Amount is required'),
@@ -159,7 +158,8 @@ export type SendFormValues = {
 const DEFAULT_VALUES: SendFormValues = {
   asset: '',
   amount: bn(0),
-  address: '',
+  // @TODO: Delete it (account 1)
+  address: 'fuel1pdyyuaq7jdr7mh5e2atjfwtx6swvflmkvqgpc9jwq3rz2wjmz9hsrmr3z4',
   fees: {
     tip: bn(0),
     gasLimit: bn(0),
@@ -194,7 +194,7 @@ export function useSend() {
     })
   );
 
-  const maxFee = useSelector(service, selectors.maxFee);
+  const baseFee = useSelector(service, selectors.baseFee);
   const maxGasPerTx = useSelector(service, selectors.maxGasPerTx);
 
   const form = useForm<SendFormValues>({
@@ -204,7 +204,7 @@ export function useSend() {
     defaultValues: DEFAULT_VALUES,
     context: {
       accountBalanceAssets,
-      maxFee,
+      baseFee,
       maxGasPerTx,
     },
   });
@@ -276,11 +276,6 @@ export function useSend() {
     txRequest.handlers.tryAgain();
   }
 
-  const currentFee = useMemo<BN>(() => {
-    if (!maxFee) return bn(0);
-    return maxFee.add(tip);
-  }, [tip, maxFee]);
-
   useEffect(() => {
     if (isValid && address && assetIdSelected) {
       const input: TxInputs['createTransfer'] = {
@@ -291,14 +286,16 @@ export function useSend() {
         gasLimit,
       };
 
+      // @TODO
+      // console.log('input', input);
       service.send('SET_DATA', { input });
     }
   }, [isValid, amount, address, assetIdSelected, tip, gasLimit, service.send]);
 
   return {
     form,
-    currentFee,
-    maxFee,
+    baseFee,
+    tip,
     regularTip,
     fastTip,
     status,

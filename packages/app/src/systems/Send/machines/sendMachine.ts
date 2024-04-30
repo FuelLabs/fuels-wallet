@@ -19,7 +19,7 @@ export type MachineContext = {
   transactionRequest?: TransactionRequest;
   providerUrl?: string;
   address?: string;
-  maxFee?: BN;
+  baseFee?: BN;
   regularTip?: BN;
   fastTip?: BN;
   maxGasPerTx?: BN;
@@ -28,7 +28,7 @@ export type MachineContext = {
 };
 
 type EstimateInitialFeeReturn = {
-  maxFee: BN;
+  baseFee: BN;
   regularTip: BN;
   fastTip: BN;
   maxGasPerTx: BN;
@@ -39,7 +39,7 @@ type CreateTransactionReturn = {
   transactionRequest: TransactionRequest;
   providerUrl: string;
   address: string;
-  maxFee: BN;
+  baseFee: BN;
   gasLimit: BN;
 };
 
@@ -131,7 +131,7 @@ export const sendMachine = createMachine(
   {
     actions: {
       assignInitialFee: assign((_, ev) => ({
-        maxFee: ev.data.maxFee,
+        baseFee: ev.data.baseFee,
         regularTip: ev.data.regularTip,
         fastTip: ev.data.fastTip,
         maxGasPerTx: ev.data.maxGasPerTx,
@@ -143,6 +143,7 @@ export const sendMachine = createMachine(
         transactionRequest: ev.data.transactionRequest,
         providerUrl: ev.data.providerUrl,
         address: ev.data.address,
+        baseFee: ev.data.baseFee,
         gasLimit: ev.data.gasLimit,
       })),
     },
