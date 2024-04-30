@@ -125,16 +125,21 @@ const schema = yup
               return value?.gte(0);
             }
           )
-          .test(
-            'max',
-            'Gas limit must be less than max gas per tx',
-            (value, ctx) => {
+          .test({
+            name: 'max',
+            test: (value, ctx) => {
               const { maxGasPerTx } = ctx.options.context as SchemaOptions;
               if (!maxGasPerTx) return false;
 
-              return value?.lte(maxGasPerTx);
-            }
-          )
+              if (value?.lte(maxGasPerTx)) {
+                return true;
+              }
+
+              return ctx.createError({
+                message: `Gas limit must be less or equal to ${maxGasPerTx.toString()}`,
+              });
+            },
+          })
           .required('Gas limit is required'),
       })
       .required('Fees are required'),

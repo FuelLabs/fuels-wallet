@@ -1,4 +1,4 @@
-import { Box, Button, Input, Text, VStack } from '@fuel-ui/react';
+import { Box, Button, Form, Input, Text, VStack } from '@fuel-ui/react';
 import { AnimatePresence } from 'framer-motion';
 import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useState } from 'react';
@@ -26,7 +26,7 @@ export const TxFeeOptions = ({
     name: 'fees.tip',
   });
 
-  const { field: gasLimit } = useController({
+  const { field: gasLimit, fieldState: gasLimitState } = useController({
     control,
     name: 'fees.gasLimit',
   });
@@ -79,17 +79,24 @@ export const TxFeeOptions = ({
             </VStack>
             <VStack gap="$1">
               <Text fontSize="xs">Gas limit</Text>
-              <Input>
-                <Input.Field
-                  ref={gasLimit.ref}
-                  value={gasLimit.value.toString()}
-                  onChange={(e) => {
-                    const ignore = /[.,\-+]/g;
-                    const val = (e.target.value || '').replaceAll(ignore, '');
-                    gasLimit.onChange(bn(val));
-                  }}
-                />
-              </Input>
+              <Form.Control isRequired isInvalid={Boolean(gasLimitState.error)}>
+                <Input>
+                  <Input.Field
+                    ref={gasLimit.ref}
+                    value={gasLimit.value.toString()}
+                    onChange={(e) => {
+                      const ignore = /[.,\-+]/g;
+                      const val = (e.target.value || '').replaceAll(ignore, '');
+                      gasLimit.onChange(bn(val));
+                    }}
+                  />
+                </Input>
+                {gasLimitState.error && (
+                  <Form.ErrorMessage aria-label="Error message">
+                    {gasLimitState.error.message}
+                  </Form.ErrorMessage>
+                )}
+              </Form.Control>
             </VStack>
           </MotionStack>
         ) : (
