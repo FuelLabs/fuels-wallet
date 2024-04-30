@@ -17,7 +17,7 @@ export function SendPage() {
         data-testid={txRequest.txStatus}
         autoComplete="off"
       >
-        <Layout title={'Send'} isLoading={status('loading')}>
+        <Layout title="Send" isLoading={status('loading')}>
           <Layout.TopBar onBack={handlers.cancel} />
           <MotionStack
             {...animations.slideInTop()}

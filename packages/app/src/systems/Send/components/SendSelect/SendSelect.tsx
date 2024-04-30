@@ -13,7 +13,7 @@ import {
 
 import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
-import type { FeeType, UseSendReturn } from '../../hooks';
+import type { UseSendReturn } from '../../hooks';
 
 const MotionContent = motion(Layout.Content);
 
@@ -25,14 +25,16 @@ export function SendSelect({
   handlers,
   balanceAssetSelected,
   status,
-  regularFee,
-  fastFee,
   currentFee,
-  currentFeeType,
+  maxFee,
+  regularTip,
+  fastTip,
   baseAssetId,
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
+
   const assetId = form.watch('asset', '');
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const decimals = useMemo(() => {
     const selectedAsset = balanceAssets?.find((a) => a.assetId === assetId);
@@ -40,13 +42,9 @@ export function SendSelect({
   }, [assetId]);
   const _isLoadingTx = status('loadingTx');
 
-  const handleChangeCurrentFeeType = (feeType: FeeType) => {
-    handlers.changeCurrentFeeType(feeType);
-  };
-
   const handleOverrideMaxAmount = useCallback(() => {
     if (assetId === baseAssetId) {
-      const newAmount = balanceAssetSelected.sub(bn(currentFee)).toString();
+      const newAmount = balanceAssetSelected.sub(currentFee).toString();
       const currentAmount = form.getValues('amount');
 
       if (currentAmount !== newAmount) {
@@ -56,19 +54,19 @@ export function SendSelect({
     }
   }, [
     assetId,
+    currentFee,
     baseAssetId,
     balanceAssetSelected,
     form.setValue,
     form.getValues,
     handlers.handleValidateAmount,
-    currentFee,
   ]);
 
   useEffect(() => {
     if (currentFee && watchMax) {
       handleOverrideMaxAmount();
     }
-  }, [currentFee, watchMax, handleOverrideMaxAmount]);
+  }, [watchMax, currentFee, handleOverrideMaxAmount]);
 
   return (
     <MotionContent {...animations.slideInTop()}>
@@ -162,19 +160,22 @@ export function SendSelect({
             }}
           />
         </Box.Stack>
-        {!!(form.formState.isValid && currentFeeType) && (
+
+        {/* @TODO: Render it only when there's asset + to + amount */}
+        {maxFee && regularTip && fastTip && (
           <MotionStack {...animations.slideInTop()} gap="$3">
             <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
               Fee (network)
             </Text>
             <TxFeeOptions
-              fastFee={fastFee}
-              regularFee={regularFee}
-              currentFeeType={currentFeeType}
-              onChangeCurrentFeeType={handleChangeCurrentFeeType}
+              maxFee={maxFee}
+              regularTip={regularTip}
+              fastTip={fastTip}
             />
           </MotionStack>
         )}
+
+        {/* @TODO: do we still need this loading-state? */}
         {/* {isLoadingTx ? <TxFee.Loader /> : <TxFee fee={regularFee} />} */}
       </Box.Stack>
     </MotionContent>

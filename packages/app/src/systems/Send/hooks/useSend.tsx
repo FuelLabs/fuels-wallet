@@ -2,8 +2,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BigNumberish } from 'fuels';
 import { bn, isBech32 } from 'fuels';
-import { useCallback, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useAccounts } from '~/systems/Account';
@@ -22,9 +22,6 @@ export enum SendStatus {
   loadingTx = 'loadingTx',
 }
 
-export type PresetFeeType = 'regular' | 'fast';
-export type FeeType = PresetFeeType | 'advanced';
-
 const selectors = {
   maxFee(state: SendMachineState) {
     return state.context.maxFee;
@@ -34,30 +31,6 @@ const selectors = {
   },
   fastTip(state: SendMachineState) {
     return state.context.fastTip;
-  },
-  regularFee(state: SendMachineState) {
-    const { maxFee, regularTip } = state.context;
-    if (!maxFee || !regularTip) return undefined;
-    return maxFee.add(regularTip);
-  },
-  fastFee(state: SendMachineState) {
-    const { maxFee, fastTip } = state.context;
-    if (!maxFee || !fastTip) return undefined;
-    return maxFee.add(fastTip);
-  },
-  currentFeeType(state: SendMachineState) {
-    return state.context.currentFeeType;
-  },
-  currentFee(state: SendMachineState) {
-    const { maxFee, currentFeeType } = state.context;
-    const regularFee = selectors.regularFee(state);
-    const fastFee = selectors.fastFee(state);
-
-    if (!maxFee || !regularFee || !fastFee) return undefined;
-
-    if (currentFeeType === 'regular') return regularFee;
-    if (currentFeeType === 'fast') return fastFee;
-    // @TODO: add custom return here
   },
   baseAssetId(state: SendMachineState) {
     return state.context.baseAssetId;
@@ -109,7 +82,7 @@ const schema = yup
         gasLimit: yup
           .mixed<BN>()
           .test('positive', 'Gas limit must be greater tha 0', (value) => {
-            const isPositive = value?.gt(0);
+            const isPositive = value?.gte(0);
             return isPositive;
           })
           .required('Gas limit is required'),
@@ -152,6 +125,11 @@ export function useSend() {
     defaultValues: DEFAULT_VALUES,
   });
 
+  const tip = useWatch({
+    control: form.control,
+    name: 'fees.tip',
+  });
+
   const service = useInterpret(() =>
     sendMachine.withConfig({
       actions: {
@@ -183,10 +161,6 @@ export function useSend() {
   const maxFee = useSelector(service, selectors.maxFee);
   const regularTip = useSelector(service, selectors.regularTip);
   const fastTip = useSelector(service, selectors.fastTip);
-  const fastFee = useSelector(service, selectors.fastFee);
-  const regularFee = useSelector(service, selectors.regularFee);
-  const currentFee = useSelector(service, selectors.currentFee);
-  const currentFeeType = useSelector(service, selectors.currentFeeType);
   const sendStatusSelector = selectors.status(txRequest.txStatus);
   const sendStatus = useSelector(service, sendStatusSelector);
   const readyToSend = useSelector(service, selectors.readyToSend);
@@ -208,15 +182,23 @@ export function useSend() {
   function cancel() {
     service.send('BACK');
   }
+
   function submit() {
     service.send('CONFIRM');
   }
+
   function goHome() {
     navigate(Pages.index());
   }
+
   function tryAgain() {
     txRequest.handlers.tryAgain();
   }
+
+  const currentFee = useMemo<BN>(() => {
+    if (!maxFee) return bn(0);
+    return maxFee.add(tip);
+  }, [tip, maxFee]);
 
   function handleValidateAmount(amount?: BigNumberish) {
     if (bn(amount).lte(0)) {
@@ -226,7 +208,9 @@ export function useSend() {
       });
       return;
     }
-    const totalAmount = bn(amount).add(bn(currentFee));
+
+    const totalAmount = bn(amount).add(currentFee);
+
     if (bn(balanceAssetSelected).lt(totalAmount)) {
       form.setError('amount', {
         type: 'pattern',
@@ -236,16 +220,6 @@ export function useSend() {
     }
     form.clearErrors('amount');
     form.trigger('amount');
-  }
-
-  function changeCurrentFeeType(type: FeeType) {
-    const eventName =
-      type === 'regular'
-        ? 'USE_REGULAR_FEE'
-        : type === 'fast'
-          ? 'USE_FAST_FEE'
-          : 'USE_ADVANCED_FEE';
-    service.send(eventName);
   }
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -264,14 +238,15 @@ export function useSend() {
       const hasAsset = !!assets.find(({ assetId }) => assetId === asset);
       if (!hasAsset) return;
 
-      const input = {
+      const input: TxInputs['createTransfer'] = {
         to: address,
         assetId: asset,
         amount: bnAmount,
-      } as TxInputs['createTransfer'];
+      };
+
       service.send('SET_DATA', { input });
     }
-  }, [amount, address, asset, currentFee?.toString(), form.formState.isValid]);
+  }, [amount, address, asset, maxFee, currentFee, form.formState.isValid]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -285,13 +260,10 @@ export function useSend() {
 
   return {
     form,
+    currentFee,
     maxFee,
     regularTip,
     fastTip,
-    regularFee,
-    fastFee,
-    currentFee,
-    currentFeeType,
     status,
     readyToSend,
     balanceAssets,
@@ -306,7 +278,6 @@ export function useSend() {
       goHome,
       tryAgain,
       handleValidateAmount,
-      changeCurrentFeeType,
     },
   };
 }

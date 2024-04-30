@@ -1,44 +1,56 @@
 import { Box, Button, Input, Text, VStack } from '@fuel-ui/react';
 import { AnimatePresence } from 'framer-motion';
-import type { BN } from 'fuels';
+import { type BN, bn } from 'fuels';
+import { useEffect, useMemo, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { MotionFlex, MotionStack, animations } from '~/systems/Core';
-import type { FeeType, SendFormValues } from '~/systems/Send/hooks';
+import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxFee } from '../TxFee';
 
 type TxFeeOptionsProps = {
-  fastFee?: BN;
-  regularFee?: BN;
-  currentFeeType: FeeType;
-  onChangeCurrentFeeType: (feeType: FeeType) => void;
+  maxFee: BN;
+  regularTip: BN;
+  fastTip: BN;
 };
 
 export const TxFeeOptions = ({
-  fastFee,
-  regularFee,
-  currentFeeType,
-  onChangeCurrentFeeType,
+  maxFee,
+  regularTip,
+  fastTip,
 }: TxFeeOptionsProps) => {
-  const { control } = useFormContext<SendFormValues>();
+  const [isAdvanced, setIsAdvanced] = useState(false);
+  const { control, setValue } = useFormContext<SendFormValues>();
+
   const { field: tip } = useController({
     control,
     name: 'fees.tip',
   });
+
   const { field: gasLimit } = useController({
     control,
     name: 'fees.gasLimit',
   });
 
-  const isAdvanced = currentFeeType === 'advanced';
+  const options = useMemo(() => {
+    return [
+      { name: 'Regular', fee: maxFee.add(regularTip), tip: regularTip },
+      { name: 'Fast', fee: maxFee.add(fastTip), tip: fastTip },
+    ];
+  }, [maxFee, regularTip, fastTip]);
 
   const toggle = () => {
-    if (isAdvanced) {
-      onChangeCurrentFeeType('regular');
-      return;
-    }
-
-    onChangeCurrentFeeType('advanced');
+    setIsAdvanced((curr) => !curr);
   };
+
+  /**
+   * Resetting fees if hiding advanced options (or initializing them)
+   */
+  useEffect(() => {
+    if (!isAdvanced) {
+      setValue('fees.tip', regularTip);
+      setValue('fees.gasLimit', bn(0));
+    }
+  }, [isAdvanced, setValue, regularTip]);
 
   return (
     <Box.Stack gap="$1">
@@ -53,13 +65,29 @@ export const TxFeeOptions = ({
             <VStack gap="$1">
               <Text fontSize="xs">Tip</Text>
               <Input>
-                <Input.Field {...tip} />
+                <Input.Field
+                  ref={tip.ref}
+                  value={tip.value.toString()}
+                  onChange={(e) => {
+                    const ignore = /[.,\-+]/g;
+                    const val = (e.target.value || '').replaceAll(ignore, '');
+                    tip.onChange(bn(val));
+                  }}
+                />
               </Input>
             </VStack>
             <VStack gap="$1">
               <Text fontSize="xs">Gas limit</Text>
               <Input>
-                <Input.Field {...gasLimit} />
+                <Input.Field
+                  ref={gasLimit.ref}
+                  value={gasLimit.value.toString()}
+                  onChange={(e) => {
+                    const ignore = /[.,\-+]/g;
+                    const val = (e.target.value || '').replaceAll(ignore, '');
+                    gasLimit.onChange(bn(val));
+                  }}
+                />
               </Input>
             </VStack>
           </MotionStack>
@@ -70,18 +98,17 @@ export const TxFeeOptions = ({
             gap="$3"
             layout
           >
-            <TxFee
-              fee={regularFee}
-              title="Regular"
-              checked={currentFeeType === 'regular'}
-              onChecked={() => onChangeCurrentFeeType('regular')}
-            />
-            <TxFee
-              fee={fastFee}
-              title="Fast"
-              checked={currentFeeType === 'fast'}
-              onChecked={() => onChangeCurrentFeeType('fast')}
-            />
+            {options.map((option) => (
+              <TxFee
+                key={option.name}
+                fee={option.fee}
+                title={option.name}
+                checked={option.tip.eq(tip.value)}
+                onChecked={() => {
+                  setValue('fees.tip', option.tip);
+                }}
+              />
+            ))}
           </MotionStack>
         )}
 
