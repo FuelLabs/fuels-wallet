@@ -267,23 +267,13 @@ export function useSend() {
         to: address,
         assetId: assetIdSelected,
         amount,
-        maxFee,
         tip,
         gasLimit,
       };
 
       service.send('SET_DATA', { input });
     }
-  }, [
-    isValid,
-    amount,
-    address,
-    assetIdSelected,
-    tip,
-    gasLimit,
-    maxFee,
-    service.send,
-  ]);
+  }, [isValid, amount, address, assetIdSelected, tip, gasLimit, service.send]);
 
   return {
     form,
