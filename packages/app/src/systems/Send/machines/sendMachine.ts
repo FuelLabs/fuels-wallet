@@ -22,6 +22,7 @@ export type MachineContext = {
   maxFee?: BN;
   regularTip?: BN;
   fastTip?: BN;
+  maxGasPerTx?: BN;
   baseAssetId?: string;
   error?: string;
 };
@@ -30,6 +31,7 @@ type EstimateInitialFeeReturn = {
   maxFee: BN;
   regularTip: BN;
   fastTip: BN;
+  maxGasPerTx: BN;
   baseAssetId: string;
 };
 
@@ -132,6 +134,7 @@ export const sendMachine = createMachine(
         maxFee: ev.data.maxFee,
         regularTip: ev.data.regularTip,
         fastTip: ev.data.fastTip,
+        maxGasPerTx: ev.data.maxGasPerTx,
       })),
       assignBaseAssetId: assign((_ctx, ev) => ({
         baseAssetId: ev.data.baseAssetId,

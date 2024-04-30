@@ -23,6 +23,9 @@ export enum SendStatus {
 }
 
 const selectors = {
+  maxGasPerTx(state: SendMachineState) {
+    return state.context.maxGasPerTx;
+  },
   maxFee(state: SendMachineState) {
     return state.context.maxFee;
   },
@@ -62,6 +65,7 @@ type SchemaOptions = {
     amount?: BNInput;
   }>;
   maxFee: BN | undefined;
+  maxGasPerTx: BN | undefined;
 };
 
 const schema = yup
@@ -121,6 +125,16 @@ const schema = yup
               return value?.gte(0);
             }
           )
+          .test(
+            'max',
+            'Gas limit must be less than max gas per tx',
+            (value, ctx) => {
+              const { maxGasPerTx } = ctx.options.context as SchemaOptions;
+              if (!maxGasPerTx) return false;
+
+              return value?.lte(maxGasPerTx);
+            }
+          )
           .required('Gas limit is required'),
       })
       .required('Fees are required'),
@@ -177,6 +191,7 @@ export function useSend() {
   );
 
   const maxFee = useSelector(service, selectors.maxFee);
+  const maxGasPerTx = useSelector(service, selectors.maxGasPerTx);
 
   const form = useForm<SendFormValues>({
     resolver: yupResolver(schema),
@@ -186,6 +201,7 @@ export function useSend() {
     context: {
       accountBalanceAssets,
       maxFee,
+      maxGasPerTx,
     },
   });
 
