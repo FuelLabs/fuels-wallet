@@ -68,6 +68,7 @@ export const TxFeeOptions = ({
                 <Input.Field
                   ref={tip.ref}
                   value={tip.value.toString()}
+                  type="number"
                   onChange={(e) => {
                     const ignore = /[.,\-+]/g;
                     const val = (e.target.value || '').replaceAll(ignore, '');
@@ -84,6 +85,7 @@ export const TxFeeOptions = ({
                   <Input.Field
                     ref={gasLimit.ref}
                     value={gasLimit.value.toString()}
+                    type="number"
                     onChange={(e) => {
                       const ignore = /[.,\-+]/g;
                       const val = (e.target.value || '').replaceAll(ignore, '');
