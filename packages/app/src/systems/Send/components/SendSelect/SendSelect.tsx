@@ -1,8 +1,8 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Input, Text } from '@fuel-ui/react';
+import { Box, Form, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { DECIMAL_FUEL, bn } from 'fuels';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import {
   ControlledField,
@@ -11,6 +11,7 @@ import {
   animations,
 } from '~/systems/Core';
 
+import { useController, useWatch } from 'react-hook-form';
 import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
 import type { UseSendReturn } from '../../hooks';
@@ -22,51 +23,39 @@ type SendSelectProps = UseSendReturn;
 export function SendSelect({
   form,
   balanceAssets,
-  handlers,
   balanceAssetSelected,
   status,
   currentFee,
   maxFee,
   regularTip,
   fastTip,
-  baseAssetId,
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
+  const isAmountFocused = useRef<boolean>(false);
 
-  const assetId = form.watch('asset', '');
+  const { field: amount, fieldState: amountFieldState } = useController({
+    control: form.control,
+    name: 'amount',
+  });
+
+  const assetId = useWatch({
+    control: form.control,
+    name: 'asset',
+  });
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const decimals = useMemo(() => {
     const selectedAsset = balanceAssets?.find((a) => a.assetId === assetId);
     return selectedAsset?.decimals || DECIMAL_FUEL;
   }, [assetId]);
+
   const _isLoadingTx = status('loadingTx');
 
-  const handleOverrideMaxAmount = useCallback(() => {
-    if (assetId === baseAssetId) {
-      const newAmount = balanceAssetSelected.sub(currentFee).toString();
-      const currentAmount = form.getValues('amount');
-
-      if (currentAmount !== newAmount) {
-        form.setValue('amount', newAmount);
-        handlers.handleValidateAmount(newAmount);
-      }
-    }
-  }, [
-    assetId,
-    currentFee,
-    baseAssetId,
-    balanceAssetSelected,
-    form.setValue,
-    form.getValues,
-    handlers.handleValidateAmount,
-  ]);
-
   useEffect(() => {
-    if (currentFee && watchMax) {
-      handleOverrideMaxAmount();
+    if (watchMax) {
+      form.setValue('amount', balanceAssetSelected.sub(currentFee));
     }
-  }, [watchMax, currentFee, handleOverrideMaxAmount]);
+  }, [watchMax, balanceAssetSelected, currentFee, form.setValue]);
 
   return (
     <MotionContent {...animations.slideInTop()}>
@@ -120,49 +109,37 @@ export function SendSelect({
           <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
             Amount
           </Text>
-          <ControlledField
-            isRequired
-            name="amount"
-            control={form.control}
-            isInvalid={Boolean(form.formState.errors?.amount)}
-            render={({ field }) => {
-              return (
-                <InputAmount
-                  name={field.name}
-                  balance={balanceAssetSelected}
-                  value={bn(field.value)}
-                  units={decimals}
-                  onChange={(value, isMaxClick) => {
-                    if (isMaxClick) {
-                      setWatchMax(true);
-                      handleOverrideMaxAmount();
-
-                      return;
-                    }
-
-                    const amountValue = value || undefined;
-                    const prevAmount = form.getValues('amount');
-
-                    console.log(
-                      'onChange input',
-                      prevAmount !== amountValue?.toString(),
-                      prevAmount,
-                      amountValue?.toString()
-                    );
-                    if (prevAmount !== amountValue?.toString()) {
-                      form.setValue('amount', amountValue?.toString() || '');
-                      handlers.handleValidateAmount(amountValue?.toString());
-                      setWatchMax(false);
-                    }
-                  }}
-                />
-              );
-            }}
-          />
+          <Form.Control isRequired isInvalid={Boolean(amountFieldState.error)}>
+            <InputAmount
+              name={amount.name}
+              balance={balanceAssetSelected}
+              value={amount.value}
+              units={decimals}
+              onChange={(val) => {
+                if (isAmountFocused.current) {
+                  setWatchMax(false);
+                  amount.onChange(val);
+                }
+              }}
+              onClickMax={() => setWatchMax(true)}
+              inputProps={{
+                onFocus: () => {
+                  isAmountFocused.current = true;
+                },
+                onBlur: () => {
+                  isAmountFocused.current = false;
+                },
+              }}
+            />
+            {amountFieldState.error && (
+              <Form.ErrorMessage aria-label="Error message">
+                {amountFieldState.error.message}
+              </Form.ErrorMessage>
+            )}
+          </Form.Control>
         </Box.Stack>
 
-        {/* @TODO: Render it only when there's asset + to + amount */}
-        {maxFee && regularTip && fastTip && (
+        {assetId && maxFee && regularTip && fastTip && (
           <MotionStack {...animations.slideInTop()} gap="$3">
             <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
               Fee (network)

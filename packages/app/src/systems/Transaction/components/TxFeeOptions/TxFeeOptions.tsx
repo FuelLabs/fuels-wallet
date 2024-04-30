@@ -19,7 +19,7 @@ export const TxFeeOptions = ({
   fastTip,
 }: TxFeeOptionsProps) => {
   const [isAdvanced, setIsAdvanced] = useState(false);
-  const { control, setValue } = useFormContext<SendFormValues>();
+  const { control, setValue, trigger } = useFormContext<SendFormValues>();
 
   const { field: tip } = useController({
     control,
@@ -72,6 +72,7 @@ export const TxFeeOptions = ({
                     const ignore = /[.,\-+]/g;
                     const val = (e.target.value || '').replaceAll(ignore, '');
                     tip.onChange(bn(val));
+                    trigger('amount');
                   }}
                 />
               </Input>

@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
-import type { BN, BigNumberish } from 'fuels';
+import type { BN, BNInput } from 'fuels';
 import { bn, isBech32 } from 'fuels';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
@@ -59,7 +59,34 @@ const selectors = {
 const schema = yup
   .object({
     asset: yup.string().required('Asset is required'),
-    amount: yup.string().required('Amount is required'),
+    amount: yup
+      .mixed<BN>()
+      .test('positive', 'Amount must be greater than 0', (value) => {
+        return value?.gt(0);
+      })
+      .test('balance', 'Insufficient funds', (value, ctx) => {
+        const { fees, asset } = ctx.parent as SendFormValues;
+        const accountBalanceAssets = ctx.options.context
+          ?.accountBalanceAssets as Array<{
+          assetId: string;
+          amount?: BNInput;
+        }>;
+        const maxFee = ctx.options.context?.maxFee as BN | undefined;
+
+        const balanceAssetSelected = accountBalanceAssets?.find(
+          ({ assetId }) => assetId === asset
+        );
+
+        if (!balanceAssetSelected?.amount || !maxFee) {
+          return false;
+        }
+
+        const currentFee = maxFee.add(fees.tip);
+        const totalAmount = bn(value).add(currentFee);
+        console.log(totalAmount.lte(bn(balanceAssetSelected.amount)));
+        return totalAmount.lte(bn(balanceAssetSelected.amount));
+      })
+      .required('Amount is required'),
     address: yup
       .string()
       .required('Address is required')
@@ -74,17 +101,23 @@ const schema = yup
       .object({
         tip: yup
           .mixed<BN>()
-          .test('integer', 'Tip must be greater or equal to 0', (value) => {
-            const isInteger = value?.gte(0);
-            return isInteger;
-          })
+          .test(
+            'integer',
+            'Tip must be greater than or equal to 0',
+            (value) => {
+              return value?.gte(0);
+            }
+          )
           .required('Tip is required'),
         gasLimit: yup
           .mixed<BN>()
-          .test('positive', 'Gas limit must be greater tha 0', (value) => {
-            const isPositive = value?.gte(0);
-            return isPositive;
-          })
+          .test(
+            'integer',
+            'Gas limit must be greater or equal to 0',
+            (value) => {
+              return value?.gte(0);
+            }
+          )
           .required('Gas limit is required'),
       })
       .required('Fees are required'),
@@ -93,8 +126,8 @@ const schema = yup
 
 export type SendFormValues = {
   asset: string;
-  amount: string;
   address: string;
+  amount: BN;
   fees: {
     tip: BN;
     gasLimit: BN;
@@ -103,7 +136,7 @@ export type SendFormValues = {
 
 const DEFAULT_VALUES: SendFormValues = {
   asset: '',
-  amount: '',
+  amount: bn(0),
   // @TODO: Revert it
   address: 'fuel1nxwnn86y8hhg4nklx53kr3c24kxaqp6txmyrp9nkrs6p6s82ykxsnj82x5',
   fees: {
@@ -117,18 +150,6 @@ export function useSend() {
   const txRequest = useTransactionRequest();
   const { account, balanceAssets: accountBalanceAssets } = useAccounts();
   const { assets } = useAssets();
-
-  const form = useForm<SendFormValues>({
-    resolver: yupResolver(schema),
-    reValidateMode: 'onChange',
-    mode: 'onChange',
-    defaultValues: DEFAULT_VALUES,
-  });
-
-  const tip = useWatch({
-    control: form.control,
-    name: 'fees.tip',
-  });
 
   const service = useInterpret(() =>
     sendMachine.withConfig({
@@ -152,28 +173,57 @@ export function useSend() {
     })
   );
 
+  const maxFee = useSelector(service, selectors.maxFee);
+
+  const form = useForm<SendFormValues>({
+    resolver: yupResolver(schema),
+    reValidateMode: 'onChange',
+    mode: 'onChange',
+    defaultValues: DEFAULT_VALUES,
+    context: {
+      accountBalanceAssets,
+      maxFee,
+    },
+  });
+
+  const tip = useWatch({
+    control: form.control,
+    name: 'fees.tip',
+  });
+
+  const { isValid } = form.formState;
+
   const amount = form.watch('amount');
   const address = form.watch('address');
   const asset = form.watch('asset');
   const errorMessage = useSelector(service, selectors.error);
 
   const baseAssetId = useSelector(service, selectors.baseAssetId);
-  const maxFee = useSelector(service, selectors.maxFee);
   const regularTip = useSelector(service, selectors.regularTip);
   const fastTip = useSelector(service, selectors.fastTip);
   const sendStatusSelector = selectors.status(txRequest.txStatus);
   const sendStatus = useSelector(service, sendStatusSelector);
   const readyToSend = useSelector(service, selectors.readyToSend);
 
-  const balanceAssets = accountBalanceAssets?.filter(({ assetId }) =>
-    assets.find((asset) => asset.assetId === assetId)
-  );
+  const assetIdSelected = useWatch({
+    control: form.control,
+    name: 'asset',
+  });
 
-  const assetIdSelected = form.getValues('asset');
-  const balanceAssetSelected =
-    bn(
-      balanceAssets?.find(({ assetId }) => assetId === assetIdSelected)?.amount
-    ) || bn(0);
+  const balanceAssets = useMemo(() => {
+    return accountBalanceAssets?.filter(({ assetId }) =>
+      assets.find((asset) => asset.assetId === assetId)
+    );
+  }, [assets, accountBalanceAssets]);
+
+  const balanceAssetSelected = useMemo<BN>(() => {
+    const asset = balanceAssets?.find(
+      ({ assetId }) => assetId === assetIdSelected
+    );
+    if (!asset) return bn(0);
+
+    return bn(asset.amount);
+  }, [balanceAssets, assetIdSelected]);
 
   function status(status: keyof typeof SendStatus) {
     return sendStatus === status;
@@ -200,53 +250,28 @@ export function useSend() {
     return maxFee.add(tip);
   }, [tip, maxFee]);
 
-  function handleValidateAmount(amount?: BigNumberish) {
-    if (bn(amount).lte(0)) {
-      form.setError('amount', {
-        type: 'pattern',
-        message: 'Amount is required',
-      });
-      return;
-    }
-
-    const totalAmount = bn(amount).add(currentFee);
-
-    if (bn(balanceAssetSelected).lt(totalAmount)) {
-      form.setError('amount', {
-        type: 'pattern',
-        message: 'Insufficient funds',
-      });
-      return;
-    }
-    form.clearErrors('amount');
-    form.trigger('amount');
-  }
-
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const bnAmount = bn(amount);
     const totalAmount = bnAmount.add(bn(currentFee));
     const isAmountValid =
       !bn(amount).lte(0) && !bn(balanceAssetSelected).lt(totalAmount);
-    if (
-      isAmountValid &&
-      address &&
-      asset &&
-      bnAmount.gt(0) &&
-      form.formState.isValid
-    ) {
+    if (isAmountValid && address && asset && bnAmount.gt(0) && isValid) {
       const hasAsset = !!assets.find(({ assetId }) => assetId === asset);
       if (!hasAsset) return;
 
-      const input: TxInputs['createTransfer'] = {
+      const _input: TxInputs['createTransfer'] = {
         to: address,
         assetId: asset,
         amount: bnAmount,
+        tip: bn(0),
       };
 
-      service.send('SET_DATA', { input });
+      // @TODO
+      // console.log('input', input);
+      // service.send('SET_DATA', { input });
     }
-  }, [amount, address, asset, maxFee, currentFee, form.formState.isValid]);
+  }, [amount, address, asset, maxFee, currentFee, isValid]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -277,7 +302,6 @@ export function useSend() {
       submit,
       goHome,
       tryAgain,
-      handleValidateAmount,
     },
   };
 }

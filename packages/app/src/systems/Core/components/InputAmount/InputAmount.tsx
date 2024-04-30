@@ -61,7 +61,8 @@ export type InputAmountProps = Omit<InputProps, 'size'> & {
   hiddenMaxButton?: boolean;
   hiddenBalance?: boolean;
   value?: BN | null;
-  onChange?: (val: BN | null, isMaxClick?: boolean) => void;
+  onChange?: (val: BN | null) => void;
+  onClickMax?: () => void;
   // biome-ignore lint/suspicious/noExplicitAny: allow any
   onClickAsset?: (e: any) => void;
   /* Input props */
@@ -82,6 +83,7 @@ export const InputAmount: InputAmountComponent = ({
   hiddenBalance,
   hiddenMaxButton,
   onChange,
+  onClickMax,
   inputProps,
   asset,
   assetTooltip,
@@ -113,16 +115,6 @@ export const InputAmount: InputAmountComponent = ({
     if (!currentAmount.eq(amount)) {
       onChange?.(newText.length ? amount : null);
       setAssetAmount(newText);
-    }
-  };
-
-  const handleSetBalance = () => {
-    if (balance) {
-      const { text: newText, amount } = createAmount(
-        balance.format(formatOpts),
-        formatOpts.units
-      );
-      onChange?.(newText.length ? amount : null, true);
     }
   };
 
@@ -176,7 +168,7 @@ export const InputAmount: InputAmountComponent = ({
                   aria-label="Max"
                   variant="link"
                   intent="primary"
-                  onPress={handleSetBalance}
+                  onPress={onClickMax}
                   css={styles.maxButton}
                 >
                   MAX

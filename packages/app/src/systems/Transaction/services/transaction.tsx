@@ -171,10 +171,7 @@ export class TxService {
       const transactionBytes = transactionRequest.toTransactionBytes();
 
       const gasPrice = await provider.getLatestGasPrice();
-      const simulateTxErrors = getGroupedErrors(
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        e.response?.errors
-      );
+      const simulateTxErrors = getGroupedErrors(e.response?.errors);
       const txSummary = assembleTransactionSummary({
         receipts: [],
         transaction,
@@ -258,6 +255,7 @@ export class TxService {
     if (!network?.url || !account) {
       throw new Error('Missing context for transaction request');
     }
+
     const provider = await Provider.create(network.url);
     const wallet = new WalletLockedCustom(account.address, provider);
     const transactionRequest = await wallet.createTransfer(
@@ -266,6 +264,7 @@ export class TxService {
       assetId
       // { tip }
     );
+
     const { maxFee, gasLimit } = await provider.estimateTxGasAndFee({
       transactionRequest,
     });

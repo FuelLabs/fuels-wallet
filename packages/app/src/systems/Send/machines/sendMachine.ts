@@ -161,7 +161,6 @@ export const sendMachine = createMachine(
         maxAttempts: 1,
         async fetch({ input }) {
           const transfer = await TxService.createTransfer(input);
-
           return transfer;
         },
       }),
