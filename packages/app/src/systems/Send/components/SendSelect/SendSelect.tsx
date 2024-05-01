@@ -32,7 +32,7 @@ export function SendSelect({
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
   const isAmountFocused = useRef<boolean>(false);
-  const baseFeeRef = useRef<BN>(baseFee);
+  const baseFeeRef = useRef<BN | null>(baseFee);
   const tipRef = useRef<BN>(tip);
 
   const { field: amount, fieldState: amountFieldState } = useController({
@@ -54,7 +54,7 @@ export function SendSelect({
   useEffect(() => {
     if (
       watchMax &&
-      (!baseFeeRef.current.eq(baseFee) || !tipRef.current.eq(tip))
+      (!baseFeeRef.current?.eq(baseFee) || !tipRef.current.eq(tip))
     ) {
       baseFeeRef.current = baseFee;
       tipRef.current = tip;
@@ -138,7 +138,7 @@ export function SendSelect({
                 }
               }}
               onClickMax={() => {
-                baseFeeRef.current = bn(1); // Workaround just to trigger the watcher when max is clicked and base fee is stable
+                baseFeeRef.current = null; // Workaround just to trigger the watcher when max is clicked and base fee is stable
                 setWatchMax(true);
               }}
               inputProps={{

@@ -1,4 +1,4 @@
-import type { Account, AssetData } from '@fuel-wallet/types';
+import type { Account } from '@fuel-wallet/types';
 import type { TransactionRequest, WalletLocked } from 'fuels';
 
 import {
