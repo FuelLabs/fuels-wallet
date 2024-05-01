@@ -26,7 +26,7 @@ export function TxView() {
     >
       <Layout.TopBar onBack={() => navigate(-1)} />
       <Layout.Content>
-        {!txResult && <TxContent.Loader header={<TxHeader.Loader />} />}
+        {!txResult && <TxContent.Loader />}
         {ctx.shouldShowAlert && (
           <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
         )}
@@ -36,14 +36,7 @@ export function TxView() {
             isLoading={ctx.isFetching}
             showDetails={ctx.shouldShowTxFee}
             assets={assets}
-            header={
-              <TxHeader
-                id={txResult.id}
-                type={txResult.type}
-                status={txResult.status}
-                providerUrl={providerUrl}
-              />
-            }
+            providerUrl={providerUrl}
           />
         )}
       </Layout.Content>
