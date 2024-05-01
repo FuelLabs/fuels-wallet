@@ -19,7 +19,6 @@ export function SendSelect({
   balanceAssets,
   handlers,
   balanceAssetSelected,
-  status,
   regularFee,
   fastFee,
   currentFee,
@@ -33,7 +32,6 @@ export function SendSelect({
     const selectedAsset = balanceAssets?.find((a) => a.assetId === assetId);
     return selectedAsset?.decimals || DECIMAL_FUEL;
   }, [assetId]);
-  const _isLoadingTx = status('loadingTx');
 
   const handleChangeCurrentFeeType = (feeType: FeeType) => {
     handlers.changeCurrentFeeType(feeType);
@@ -162,7 +160,6 @@ export function SendSelect({
             />
           </Box.Stack>
         )}
-        {/* {isLoadingTx ? <TxFee.Loader /> : <TxFee fee={regularFee} />} */}
       </Box.Stack>
     </MotionContent>
   );

@@ -170,11 +170,11 @@ export class TxService {
       const transaction = transactionRequest.toTransaction();
       const transactionBytes = transactionRequest.toTransactionBytes();
 
-      const gasPrice = await provider.getLatestGasPrice();
       const simulateTxErrors = getGroupedErrors(
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         e.response?.errors
       );
+      const gasPrice = await provider.getLatestGasPrice();
       const txSummary = assembleTransactionSummary({
         receipts: [],
         transaction,

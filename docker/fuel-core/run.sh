@@ -1,13 +1,5 @@
 #!/bin/bash
 
-# Change the network name
-# sed -i "s/local_testnet/$NETWORK_NAME/g" ./chainConfig.json
-
-ls -la
-cd config
-ls -la
-cd ..
-
 # Start the Fuel Core node
 /root/fuel-core run \
     --ip 0.0.0.0 \

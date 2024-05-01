@@ -31,7 +31,9 @@ export const getGroupedErrors = (rawErrors?: { message: string }[]) => {
   const groupedErrors = rawErrors.reduce<GroupedErrors>(
     (prevGroupedError, rawError) => {
       const { message } = rawError;
-      const regex = /Validity\((\w+)\s+(\{.*\})\)/;
+      // in some case I had to add the Validity() to the regex. why?
+      // const regex = /Validity\((\w+)\s+(\{.*\})\)/;
+      const regex = /(\w+)\s+(\{.*\})/;
 
       const match = message.match(regex);
       if (match) {

@@ -35,10 +35,6 @@ export async function showPopUp(params?: ShowPopUp | null) {
 
 export async function createPopUp(url: string) {
   const { left, top } = await getPopUpPosition();
-  console.log('left', left);
-  console.log('top', top);
-  console.log('WALLET_WIDTH', WALLET_WIDTH);
-  console.log('WALLET_HEIGHT + TAB_BAR_HEIGHT', WALLET_HEIGHT + TAB_BAR_HEIGHT);
   const win = await chrome.windows.create({
     type: 'popup',
     url,
