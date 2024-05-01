@@ -216,6 +216,10 @@ export const transactionRequestMachine = createMachine(
             favIconUrl,
           } = ev.input || {};
 
+          console.log('transactionRequest', transactionRequest);
+          console.log('maxFee', transactionRequest?.maxFee?.toNumber());
+          console.log('tip', transactionRequest?.tip?.toNumber());
+
           if (!providerUrl) {
             throw new Error('providerUrl is required');
           }

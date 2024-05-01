@@ -4,15 +4,14 @@ import {
   useDisconnect,
   useIsConnected,
 } from '@fuels/react';
+
 import './App.css';
 
 function App() {
-  const { connect, error, isError, theme, setTheme, isConnecting } =
-    useConnectUI();
+  const { connect, error, isError, theme, isConnecting } = useConnectUI();
   const { disconnect } = useDisconnect();
   const { isConnected } = useIsConnected();
   const { accounts } = useAccounts();
-  const lightTheme = theme === 'light';
 
   return (
     <div className="App" data-theme={theme}>
@@ -31,12 +30,6 @@ function App() {
             Disconnect
           </button>
         )}
-        <button
-          type="button"
-          onClick={() => setTheme(lightTheme ? 'dark' : 'light')}
-        >
-          {lightTheme ? '🌙' : '☀️'}
-        </button>
       </div>
       {isError && <p className="Error">{error?.message}</p>}
       {isConnected && (

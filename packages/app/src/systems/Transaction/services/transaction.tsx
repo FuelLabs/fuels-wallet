@@ -160,6 +160,15 @@ export class TxService {
         abiMap,
       });
 
+      console.log('txRequest max fee', transactionRequest.maxFee?.toNumber());
+      console.log(
+        'txSummary',
+        'fee = ',
+        txSummary.fee.toNumber(),
+        ' gas used = ',
+        txSummary.gasUsed.toNumber()
+      );
+
       return { txSummary };
 
       // biome-ignore lint/suspicious/noExplicitAny: allow any
@@ -274,6 +283,13 @@ export class TxService {
     const { maxFee, gasLimit } = await provider.estimateTxGasAndFee({
       transactionRequest,
     });
+
+    console.log(
+      'gasLimit',
+      gasLimit.toNumber(),
+      ' gasLimitInput',
+      gasLimitInput.toNumber()
+    );
 
     return {
       baseFee: maxFee.sub(transactionRequest.tip),
