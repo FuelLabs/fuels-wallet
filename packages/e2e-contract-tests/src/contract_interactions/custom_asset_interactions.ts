@@ -1,10 +1,11 @@
 import type { Account, BigNumberish } from 'fuels';
-import { BaseAssetId, bn } from 'fuels';
+import { Provider, bn } from 'fuels';
 import toast from 'react-hot-toast';
 
 import { EXTERNAL_CONTRACT_ID, MAIN_CONTRACT_ID } from '../config';
 import { CustomAssetAbi__factory } from '../contracts';
 import type { IdentityInput } from '../contracts/contracts/CustomAssetAbi';
+import { getBaseAssetId } from '../utils';
 
 const TX_PARAMS = { gasPrice: 1, gasLimit: bn(1_000_000) };
 
@@ -20,7 +21,7 @@ export const mint = async ({
   const contract = CustomAssetAbi__factory.connect(MAIN_CONTRACT_ID, wallet);
   const recipient: IdentityInput = {
     Address: {
-      value: wallet.address.toHexString(),
+      bits: wallet.address.toB256(),
     },
   };
   const invokeScope = await contract.functions
@@ -87,11 +88,11 @@ export const depositHalfAndMint = async ({
   const contract = CustomAssetAbi__factory.connect(MAIN_CONTRACT_ID, wallet);
   const recipient: IdentityInput = {
     Address: {
-      value: wallet.address.toHexString(),
+      bits: wallet.address.toB256(),
     },
   };
   const result = await contract.functions
-    .deposit_half_and_mint(recipient, BaseAssetId, mintAmount)
+    .deposit_half_and_mint(recipient, getBaseAssetId(), mintAmount)
     .callParams({ forward: [forwardAmount, assetId] })
     .txParams(TX_PARAMS)
     .call();
@@ -114,7 +115,7 @@ export const depositHalfAndExternalMint = async ({
   const contract = CustomAssetAbi__factory.connect(MAIN_CONTRACT_ID, wallet);
   const recipient: IdentityInput = {
     Address: {
-      value: wallet.address.toHexString(),
+      bits: wallet.address.toB256(),
     },
   };
 
@@ -125,9 +126,9 @@ export const depositHalfAndExternalMint = async ({
   const result = await contract.functions
     .deposit_half_and_mint_from_external_contract(
       recipient,
-      BaseAssetId,
+      getBaseAssetId(),
       mintAmount,
-      { value: externalContract.id.toB256() }
+      { bits: externalContract.id.toB256() }
     )
     .callParams({ forward: [forwardAmount, assetId] })
     .addContracts([externalContract])
@@ -153,7 +154,7 @@ export const depositAndMintMultiCall = async ({
   const contract = CustomAssetAbi__factory.connect(MAIN_CONTRACT_ID, wallet);
   const recipient: IdentityInput = {
     Address: {
-      value: wallet.address.toHexString(),
+      bits: wallet.address.toB256(),
     },
   };
 
@@ -162,7 +163,7 @@ export const depositAndMintMultiCall = async ({
       contract.functions
         .deposit()
         .callParams({ forward: [forwardAmount, assetId] }),
-      contract.functions.mint(recipient, BaseAssetId, mintAmount),
+      contract.functions.mint(recipient, getBaseAssetId(), mintAmount),
     ])
     .txParams(TX_PARAMS)
     .call();
