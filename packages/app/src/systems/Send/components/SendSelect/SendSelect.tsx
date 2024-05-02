@@ -158,7 +158,7 @@ export function SendSelect({
           </Form.Control>
         </Box.Stack>
 
-        {assetId && baseFee && regularTip && fastTip && (
+        {amount.value.gt(0) && assetId && baseFee && regularTip && fastTip && (
           <MotionStack {...animations.slideInTop()} gap="$3">
             <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
               Fee (network)
