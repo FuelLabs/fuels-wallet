@@ -68,6 +68,7 @@ impl SRC3 for Contract {
     }
 
     #[storage(read, write)]
+    #[payable]
     fn burn(sub_id: SubId, amount: u64) {
         _burn(storage.total_supply, sub_id, amount);
     }
