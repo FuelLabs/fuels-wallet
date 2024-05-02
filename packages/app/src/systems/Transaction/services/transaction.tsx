@@ -236,7 +236,7 @@ export class TxService {
 
     const coin = coinQuantityfy([1_000_000, baseAssetId]);
     request.addCoinOutput(address, coin.amount, coin.assetId);
-    const { maxFee } = await provider.getTransactionCost(request, {
+    const { maxFee, gasUsed } = await provider.getTransactionCost(request, {
       estimateTxDependencies: true,
     });
 
@@ -244,6 +244,7 @@ export class TxService {
 
     return {
       baseFee: maxFee,
+      baseGasLimit: gasUsed,
       regularTip: bn(regularTip),
       fastTip: bn(fastTip),
       baseAssetId,
@@ -293,7 +294,6 @@ export class TxService {
 
     return {
       baseFee: maxFee.sub(transactionRequest.tip),
-      gasLimit,
       transactionRequest,
       address: account.address,
       providerUrl: network.url,

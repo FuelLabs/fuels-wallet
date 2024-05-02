@@ -23,6 +23,9 @@ export enum SendStatus {
 }
 
 const selectors = {
+  baseGasLimit(state: SendMachineState) {
+    return state.context.baseGasLimit;
+  },
   maxGasPerTx(state: SendMachineState) {
     return state.context.maxGasPerTx;
   },
@@ -195,6 +198,7 @@ export function useSend() {
   );
 
   const baseFee = useSelector(service, selectors.baseFee);
+  const baseGasLimit = useSelector(service, selectors.baseGasLimit);
   const maxGasPerTx = useSelector(service, selectors.maxGasPerTx);
   const errorMessage = useSelector(service, selectors.error);
 
@@ -294,6 +298,7 @@ export function useSend() {
   return {
     form,
     baseFee,
+    baseGasLimit,
     tip,
     regularTip,
     fastTip,

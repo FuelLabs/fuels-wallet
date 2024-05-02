@@ -9,12 +9,14 @@ import { TxFee } from '../TxFee';
 
 type TxFeeOptionsProps = {
   baseFee: BN;
+  baseGasLimit: BN;
   regularTip: BN;
   fastTip: BN;
 };
 
 export const TxFeeOptions = ({
   baseFee,
+  baseGasLimit,
   regularTip,
   fastTip,
 }: TxFeeOptionsProps) => {
@@ -48,9 +50,9 @@ export const TxFeeOptions = ({
   useEffect(() => {
     if (!isAdvanced) {
       setValue('fees.tip', regularTip);
-      setValue('fees.gasLimit', bn(0));
+      setValue('fees.gasLimit', baseGasLimit);
     }
-  }, [isAdvanced, setValue, regularTip]);
+  }, [isAdvanced, setValue, regularTip, baseGasLimit]);
 
   return (
     <Box.Stack gap="$1">
