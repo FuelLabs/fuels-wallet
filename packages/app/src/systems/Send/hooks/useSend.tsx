@@ -2,7 +2,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BNInput } from 'fuels';
 import { bn, isBech32 } from 'fuels';
-import debounce from 'lodash.debounce';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -53,6 +52,7 @@ const selectors = {
       (state: SendMachineState) => {
         const isLoadingTx =
           state.matches('creatingTx') ||
+          state.matches('changingInput') ||
           txStatus === TxRequestStatus.loading ||
           txStatus === TxRequestStatus.sending;
         if (isLoadingTx) return SendStatus.loadingTx;
@@ -162,7 +162,7 @@ export type SendFormValues = {
 const DEFAULT_VALUES: SendFormValues = {
   asset: '',
   amount: bn(0),
-  address: '',
+  address: 'fuel1vpke60ap255hu6jnqppw8ywnwhgfwwxnwe5k2wl7wjr8hw3g0g3q08nhnv',
   fees: {
     tip: bn(0),
     gasLimit: bn(0),
@@ -281,13 +281,6 @@ export function useSend() {
     txRequest.handlers.tryAgain();
   }
 
-  const debounceInput = useCallback(
-    debounce((input: TxInputs['createTransfer']) => {
-      service.send('SET_DATA', { input });
-    }, 1000),
-    []
-  );
-
   useEffect(() => {
     if (isValid && address && assetIdSelected) {
       const input: TxInputs['createTransfer'] = {
@@ -298,9 +291,9 @@ export function useSend() {
         gasLimit,
       };
 
-      debounceInput(input);
+      service.send('SET_INPUT', { input });
     }
-  }, [isValid, debounceInput, address, assetIdSelected, amount, tip, gasLimit]);
+  }, [isValid, service.send, address, assetIdSelected, amount, tip, gasLimit]);
 
   return {
     form,

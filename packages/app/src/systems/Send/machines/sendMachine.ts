@@ -1,4 +1,4 @@
-import { type BN, type TransactionRequest, bn } from 'fuels';
+import type { BN, TransactionRequest } from 'fuels';
 import {
   type InterpreterFrom,
   type StateFrom,
@@ -24,6 +24,7 @@ export type MachineContext = {
   regularTip?: BN;
   fastTip?: BN;
   maxGasPerTx?: BN;
+  input?: TxInputs['createTransfer'];
   baseAssetId?: string;
   error?: string;
 };
@@ -56,7 +57,7 @@ type MachineServices = {
 type MachineEvents =
   | { type: 'RESET'; input: null }
   | { type: 'BACK'; input: null }
-  | { type: 'SET_DATA'; input: TxInputs['createTransfer'] }
+  | { type: 'SET_INPUT'; input: TxInputs['createTransfer'] }
   | { type: 'CONFIRM'; input: null };
 
 const IDLE_STATE = {
@@ -100,8 +101,8 @@ export const sendMachine = createMachine(
       creatingTx: {
         invoke: {
           src: 'createTransactionRequest',
-          data: (_ctx: MachineContext, { input }: MachineEvents) => ({
-            input,
+          data: (ctx: MachineContext) => ({
+            input: ctx.input,
           }),
           onDone: [
             {
@@ -116,6 +117,19 @@ export const sendMachine = createMachine(
           ],
         },
       },
+      changingInput: {
+        on: {
+          SET_INPUT: {
+            actions: ['assignInput'],
+            target: 'changingInput',
+          },
+        },
+        after: {
+          1000: {
+            target: 'creatingTx',
+          },
+        },
+      },
       readyToSend: {
         on: {
           CONFIRM: { actions: ['callTransactionRequest'] },
@@ -126,7 +140,7 @@ export const sendMachine = createMachine(
       BACK: {
         target: 'idle',
       },
-      SET_DATA: { target: 'creatingTx' },
+      SET_INPUT: { actions: ['assignInput'], target: 'changingInput' },
     },
   },
   {
@@ -140,6 +154,9 @@ export const sendMachine = createMachine(
       })),
       assignBaseAssetId: assign((_ctx, ev) => ({
         baseAssetId: ev.data.baseAssetId,
+      })),
+      assignInput: assign((_ctx, ev) => ({
+        input: ev.input,
       })),
       assignTransactionData: assign((ctx, ev) => ({
         transactionRequest: ev.data.transactionRequest,
