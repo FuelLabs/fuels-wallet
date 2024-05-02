@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BNInput } from 'fuels';
 import { bn, isBech32 } from 'fuels';
+import debounce from 'lodash.debounce';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -281,6 +282,13 @@ export function useSend() {
     txRequest.handlers.tryAgain();
   }
 
+  const debounceInput = useCallback(
+    debounce((input: TxInputs['createTransfer']) => {
+      service.send('SET_DATA', { input });
+    }, 1000),
+    []
+  );
+
   useEffect(() => {
     if (isValid && address && assetIdSelected) {
       const input: TxInputs['createTransfer'] = {
@@ -291,9 +299,9 @@ export function useSend() {
         gasLimit,
       };
 
-      service.send('SET_DATA', { input });
+      debounceInput(input);
     }
-  }, [isValid, amount, address, assetIdSelected, tip, gasLimit, service.send]);
+  }, [isValid, debounceInput, address, assetIdSelected, amount, tip, gasLimit]);
 
   return {
     form,

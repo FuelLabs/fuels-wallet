@@ -281,7 +281,7 @@ export class TxService {
       }
     );
 
-    const { maxFee, gasLimit } = await provider.estimateTxGasAndFee({
+    const { maxFee, gasLimit, minGas } = await provider.estimateTxGasAndFee({
       transactionRequest,
     });
 
@@ -289,7 +289,9 @@ export class TxService {
       'gasLimit',
       gasLimit.toNumber(),
       ' gasLimitInput',
-      gasLimitInput.toNumber()
+      gasLimitInput.toNumber(),
+      ' minGas',
+      minGas.toNumber()
     );
 
     return {
