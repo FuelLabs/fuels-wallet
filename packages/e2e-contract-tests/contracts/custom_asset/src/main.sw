@@ -1,7 +1,7 @@
 contract;
 
-use asset::{
-    mint::{
+use sway_libs::asset::{
+    supply::{
         _mint, _burn,
     },
     base::{
@@ -14,8 +14,8 @@ use asset::{
 };
 use std::{tx::tx_witness_data};
 
-use src20::SRC20;
-use src3::SRC3;
+use standards::src20::SRC20;
+use standards::src3::SRC3;
 use std::{
     call_frames::msg_asset_id,
     context::msg_amount,
