@@ -1,4 +1,4 @@
 [workspace]
 members = [
-  "packages/e2e-contract-tests/contracts/custom_assets"
+  "packages/e2e-contract-tests/contracts/custom_asset"
 ]
