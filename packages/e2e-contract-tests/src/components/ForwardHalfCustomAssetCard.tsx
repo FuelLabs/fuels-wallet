@@ -1,17 +1,17 @@
 import { useAccount, useWallet } from '@fuels/react';
-import { BaseAssetId, bn } from 'fuels';
+import { bn } from 'fuels';
 import { useState } from 'react';
 
 import { MAIN_CONTRACT_ID } from '../config';
 import { depositHalf } from '../contract_interactions';
-import { calculateAssetId } from '../utils';
+import { calculateAssetId, getBaseAssetId } from '../utils';
 
 export const ForwardHalfCustomAssetCard = () => {
   const [amount, setAmount] = useState<string>('');
   const { account } = useAccount();
   const wallet = useWallet(account);
 
-  const assetId = calculateAssetId(MAIN_CONTRACT_ID, BaseAssetId);
+  const assetId = calculateAssetId(MAIN_CONTRACT_ID, getBaseAssetId());
 
   return (
     <div>

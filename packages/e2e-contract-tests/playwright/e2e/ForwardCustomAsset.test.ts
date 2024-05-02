@@ -2,12 +2,16 @@ import { getButtonByText, hasText } from '@fuels/playwright-utils';
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
-import { BaseAssetId, bn, toBech32 } from 'fuels';
+import { bn, toBech32 } from 'fuels';
 
 import '../../load.envs';
 import { CustomAssetAbi__factory } from '../../src/contracts';
 import type { IdentityInput } from '../../src/contracts/contracts/CustomAssetAbi';
-import { calculateAssetId, shortAddress } from '../../src/utils';
+import {
+  calculateAssetId,
+  getBaseAssetId,
+  shortAddress,
+} from '../../src/utils';
 import { testSetup } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
@@ -36,12 +40,12 @@ test.describe('Forward Custom Asset', () => {
     );
     const recipient: IdentityInput = {
       Address: {
-        value: fuelWallet.address.toHexString(),
+        bits: fuelWallet.address.toB256(),
       },
     };
     const response = await contract.functions
-      .mint(recipient, BaseAssetId, bn(100_000_000_000))
-      .txParams({ gasPrice: 1, gasLimit: 1_000_000 })
+      .mint(recipient, getBaseAssetId(), bn(100_000_000_000))
+      .txParams({ gasLimit: 1_000_000 })
       .call();
     await response.transactionResponse.waitForResult();
 
@@ -64,7 +68,7 @@ test.describe('Forward Custom Asset', () => {
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
 
     // test asset id is correct
-    const assetId = calculateAssetId(MAIN_CONTRACT_ID, BaseAssetId);
+    const assetId = calculateAssetId(MAIN_CONTRACT_ID, getBaseAssetId());
     await hasText(walletNotificationPage, shortAddress(assetId));
 
     // test forward custom asset amount is correct
