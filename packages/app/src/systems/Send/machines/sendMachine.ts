@@ -138,6 +138,7 @@ export const sendMachine = createMachine(
     },
     on: {
       BACK: {
+        actions: ['goToHome'],
         target: 'idle',
       },
       SET_INPUT: { actions: ['assignInput'], target: 'changingInput' },
