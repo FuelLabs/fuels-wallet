@@ -162,8 +162,7 @@ export type SendFormValues = {
 const DEFAULT_VALUES: SendFormValues = {
   asset: '',
   amount: bn(0),
-  // @TODO: Delete it (account 1)
-  address: 'fuel1pdyyuaq7jdr7mh5e2atjfwtx6swvflmkvqgpc9jwq3rz2wjmz9hsrmr3z4',
+  address: '',
   fees: {
     tip: bn(0),
     gasLimit: bn(0),

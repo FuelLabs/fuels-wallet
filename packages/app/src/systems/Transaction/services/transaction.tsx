@@ -277,25 +277,11 @@ export class TxService {
       assetId,
       {
         tip,
-        gasLimit: gasLimitInput.gt(0) ? gasLimitInput : undefined,
       }
     );
 
-    const { maxFee, gasLimit, minGas } = await provider.estimateTxGasAndFee({
-      transactionRequest,
-    });
-
-    console.log(
-      'gasLimit',
-      gasLimit.toNumber(),
-      ' gasLimitInput',
-      gasLimitInput.toNumber(),
-      ' minGas',
-      minGas.toNumber()
-    );
-
     return {
-      baseFee: maxFee.sub(transactionRequest.tip),
+      baseFee: transactionRequest.maxFee?.sub(transactionRequest.tip),
       transactionRequest,
       address: account.address,
       providerUrl: network.url,

@@ -28,7 +28,8 @@ export const TxFeeOptions = ({
     name: 'fees.tip',
   });
 
-  const { field: gasLimit, fieldState: gasLimitState } = useController({
+  // @TODO: Remove this when the SDK gets to work with custom gas limits
+  const { field: _gasLimit, fieldState: _gasLimitState } = useController({
     control,
     name: 'fees.gasLimit',
   });
@@ -80,7 +81,8 @@ export const TxFeeOptions = ({
                 />
               </Input>
             </VStack>
-            <VStack gap="$1">
+            {/* @TODO: Remove this when the SDK gets to work with custom gas limits */}
+            {/* <VStack gap="$1">
               <Text fontSize="xs">Gas limit</Text>
               <Form.Control isRequired isInvalid={Boolean(gasLimitState.error)}>
                 <Input>
@@ -101,7 +103,7 @@ export const TxFeeOptions = ({
                   </Form.ErrorMessage>
                 )}
               </Form.Control>
-            </VStack>
+            </VStack> */}
           </MotionStack>
         ) : (
           <MotionStack

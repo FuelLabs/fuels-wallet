@@ -41,7 +41,7 @@ type CreateTransactionReturn = {
   transactionRequest: TransactionRequest;
   providerUrl: string;
   address: string;
-  baseFee: BN;
+  baseFee?: BN;
 };
 
 type MachineServices = {
@@ -141,11 +141,11 @@ export const sendMachine = createMachine(
       assignBaseAssetId: assign((_ctx, ev) => ({
         baseAssetId: ev.data.baseAssetId,
       })),
-      assignTransactionData: assign((_ctx, ev) => ({
+      assignTransactionData: assign((ctx, ev) => ({
         transactionRequest: ev.data.transactionRequest,
         providerUrl: ev.data.providerUrl,
         address: ev.data.address,
-        baseFee: ev.data.baseFee,
+        baseFee: ev.data.baseFee ?? ctx.baseFee,
       })),
     },
     services: {
