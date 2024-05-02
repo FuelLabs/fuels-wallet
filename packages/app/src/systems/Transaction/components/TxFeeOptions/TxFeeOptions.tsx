@@ -133,7 +133,7 @@ export const TxFeeOptions = ({
           layout
         >
           <Button size="xs" variant="link" onPress={toggle}>
-            {isAdvanced ? 'Hide' : 'Show'} advanced options
+            Use {isAdvanced ? 'regular' : 'advanced'} options
           </Button>
         </MotionFlex>
       </AnimatePresence>
