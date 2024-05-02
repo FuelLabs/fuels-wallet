@@ -160,15 +160,6 @@ export class TxService {
         abiMap,
       });
 
-      console.log('txRequest max fee', transactionRequest.maxFee?.toNumber());
-      console.log(
-        'txSummary',
-        'fee = ',
-        txSummary.fee.toNumber(),
-        ' gas used = ',
-        txSummary.gasUsed.toNumber()
-      );
-
       return { txSummary };
 
       // biome-ignore lint/suspicious/noExplicitAny: allow any
