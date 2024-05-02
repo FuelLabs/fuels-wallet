@@ -123,8 +123,8 @@ importers:
         specifier: 0.2.2
         version: 0.2.2(fuels@0.83.0)
       '@fuels/react':
-        specifier: 0.18.0
-        version: 0.18.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.19)(@types/react@18.2.56)(fuels@0.83.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: pr-72
+        version: 0.19.0-pr-72-1a5afab(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.19)(@types/react@18.2.56)(fuels@0.83.0)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
         specifier: 5.28.4
         version: 5.28.4(react@18.2.0)
@@ -184,14 +184,14 @@ importers:
         specifier: 0.2.2
         version: 0.2.2(fuels@0.83.0)
       '@fuels/local-storage':
-        specifier: 0.17.0
-        version: 0.17.0
+        specifier: pr-72
+        version: 0.19.0-pr-72-1a5afab
       '@fuels/react':
-        specifier: 0.18.0
-        version: 0.18.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.13)(@types/react@18.2.28)(fuels@0.83.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: pr-72
+        version: 0.19.0-pr-72-1a5afab(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.13)(@types/react@18.2.28)(fuels@0.83.0)(react-dom@18.2.0)(react@18.2.0)
       '@fuels/react-xstore':
-        specifier: 0.17.0
-        version: 0.17.0(@types/react@18.2.28)(@xstate/react@3.2.2)(react-dom@18.2.0)(react@18.2.0)(ws@8.16.0)(xstate@4.38.2)
+        specifier: pr-72
+        version: 0.19.0-pr-72-1a5afab(@types/react@18.2.28)(@xstate/react@3.2.2)(react-dom@18.2.0)(react@18.2.0)(ws@8.16.0)(xstate@4.38.2)
       '@hookform/resolvers':
         specifier: 3.3.2
         version: 3.3.2(react-hook-form@7.47.0)
@@ -528,8 +528,8 @@ importers:
         specifier: 0.2.2
         version: 0.2.2(fuels@0.83.0)
       '@fuels/react':
-        specifier: 0.18.0
-        version: 0.18.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.13)(@types/react@18.2.28)(fuels@0.83.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: pr-72
+        version: 0.19.0-pr-72-1a5afab(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.13)(@types/react@18.2.28)(fuels@0.83.0)(react-dom@18.2.0)(react@18.2.0)
       '@mdx-js/react':
         specifier: ^2.3.0
         version: 2.3.0(react@18.2.0)
@@ -655,8 +655,8 @@ importers:
         specifier: 0.2.2
         version: 0.2.2(fuels@0.83.0)
       '@fuels/react':
-        specifier: 0.18.0
-        version: 0.18.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.13)(@types/react@18.2.28)(fuels@0.83.0)(react-dom@18.2.0)(react@18.2.0)
+        specifier: pr-72
+        version: 0.19.0-pr-72-1a5afab(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.13)(@types/react@18.2.28)(fuels@0.83.0)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
         specifier: 5.28.4
         version: 5.28.4(react@18.2.0)
@@ -5731,8 +5731,8 @@ packages:
     dependencies:
       fuels: 0.83.0
 
-  /@fuels/local-storage@0.17.0:
-    resolution: {integrity: sha512-EV1ZxQB+9hnVDWL127mZz6zVHFXB/L3CBmK/ZxyD2usZxXl2x3xTl8uUWo12zO9b9idzqpwWFjU+tOZTBCi+NA==}
+  /@fuels/local-storage@0.19.0-pr-72-1a5afab:
+    resolution: {integrity: sha512-c1QoygmIP3JbFajizYM5LWeftz31u0UL/OcZI79LAE+lYMTsnappGCJc57tn+Nsp2zyHGnfTKgsHetHWKaKVxw==}
     dev: false
 
   /@fuels/playwright-utils@0.17.0(@playwright/test@1.39.0)(fuels@0.83.0):
@@ -5746,8 +5746,8 @@ packages:
       fuels: 0.83.0
     dev: true
 
-  /@fuels/react-xstore@0.17.0(@types/react@18.2.28)(@xstate/react@3.2.2)(react-dom@18.2.0)(react@18.2.0)(ws@8.16.0)(xstate@4.38.2):
-    resolution: {integrity: sha512-pQ02EcB3OwedDkgBT2+avJ89oDHBSHBInN9Azov+ZP38+fi/+H65dUpYBBSdLpFBMI1GO+DMxqal13HcZ27glg==}
+  /@fuels/react-xstore@0.19.0-pr-72-1a5afab(@types/react@18.2.28)(@xstate/react@3.2.2)(react-dom@18.2.0)(react@18.2.0)(ws@8.16.0)(xstate@4.38.2):
+    resolution: {integrity: sha512-h+bT0RauI08qQ+B9NiZ+g1G3GajO6QKPBQakWPSs1ggN0JHuOUFNX95n+PIfC+ohOpptIjZKz7VEGL1ZzX8MLw==}
     peerDependencies:
       '@xstate/react': ^3.2.2
       react: '*'
@@ -5759,7 +5759,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@fuels/local-storage': 0.17.0
+      '@fuels/local-storage': 0.19.0-pr-72-1a5afab
       '@xstate/inspect': 0.8.0(ws@8.16.0)(xstate@4.38.2)
       '@xstate/react': 3.2.2(@types/react@18.2.28)(react@18.2.0)(xstate@4.38.2)
       fast-equals: 5.0.1
@@ -5774,11 +5774,11 @@ packages:
       - ws
     dev: false
 
-  /@fuels/react@0.18.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.13)(@types/react@18.2.28)(fuels@0.83.0)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-y9IZ4/ZlZ7gq+VZFGMDoV4EzHbSvfv8GLVtwU/qfRL3aduZbUwg3/lJ8wMNArB/W8+o633ZswDHjGXEw0JPHIA==}
+  /@fuels/react@0.19.0-pr-72-1a5afab(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.13)(@types/react@18.2.28)(fuels@0.83.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-bFAzg4UtLjp4ysUibNhnXjrxtFyIPUJnJC33QPDpWsDl19aWZGO/9g/gm7xLFBSVYyD04TBt5yeQSf1rYVaGgw==}
     peerDependencies:
       '@tanstack/react-query': '>=5.0.0'
-      fuels: '>=0.74.0'
+      fuels: '>=0.83.0'
       react: '*'
     peerDependenciesMeta:
       react:
@@ -5795,11 +5795,11 @@ packages:
       - react-dom
     dev: false
 
-  /@fuels/react@0.18.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.19)(@types/react@18.2.56)(fuels@0.83.0)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-y9IZ4/ZlZ7gq+VZFGMDoV4EzHbSvfv8GLVtwU/qfRL3aduZbUwg3/lJ8wMNArB/W8+o633ZswDHjGXEw0JPHIA==}
+  /@fuels/react@0.19.0-pr-72-1a5afab(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.19)(@types/react@18.2.56)(fuels@0.83.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-bFAzg4UtLjp4ysUibNhnXjrxtFyIPUJnJC33QPDpWsDl19aWZGO/9g/gm7xLFBSVYyD04TBt5yeQSf1rYVaGgw==}
     peerDependencies:
       '@tanstack/react-query': '>=5.0.0'
-      fuels: '>=0.74.0'
+      fuels: '>=0.83.0'
       react: '*'
     peerDependenciesMeta:
       react:
