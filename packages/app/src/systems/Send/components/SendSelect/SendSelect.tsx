@@ -82,11 +82,7 @@ export function SendSelect({
               <AssetSelect
                 items={balanceAssets}
                 selected={field.value}
-                onSelect={(assetId) => {
-                  form.setValue('asset', assetId || '', {
-                    shouldValidate: true,
-                  });
-                }}
+                onSelect={field.onChange}
               />
             )}
           />
