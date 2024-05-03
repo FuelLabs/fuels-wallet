@@ -108,7 +108,9 @@ export function TransferAssetsHook() {
           <Box>
             <Button
               onPress={() =>
-                amount && sendTransaction(amount, receiverAddress, assetId)
+                amount &&
+                assetId &&
+                sendTransaction(amount, receiverAddress, assetId)
               }
               isLoading={sendingTransaction}
               isDisabled={sendingTransaction || !fuel}
