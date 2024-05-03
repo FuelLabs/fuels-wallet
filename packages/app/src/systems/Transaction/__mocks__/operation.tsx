@@ -1,7 +1,11 @@
 import type { Operation } from 'fuels';
-import { BaseAssetId, OperationName, bn } from 'fuels';
+import { OperationName, bn } from 'fuels';
 
 import { MOCK_TX_RECIPIENT } from './tx-recipient';
+
+// BaseAssetId replacement
+const MOCK_BASE_ASSET_ID =
+  '0x0000000000000000000000000000000000000000000000000000000000000000';
 
 export const MOCK_OPERATION_CONTRACT_CALL: Operation = {
   name: OperationName.contractCall,
@@ -10,7 +14,7 @@ export const MOCK_OPERATION_CONTRACT_CALL: Operation = {
   assetsSent: [
     {
       amount: bn.parseUnits('0.10001'),
-      assetId: BaseAssetId,
+      assetId: MOCK_BASE_ASSET_ID,
     },
   ],
   calls: [
