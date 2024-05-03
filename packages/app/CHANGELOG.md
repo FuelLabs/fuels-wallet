@@ -1,5 +1,38 @@
 # fuels-wallet
 
+## 0.16.5
+
+### Patch Changes
+
+- [#1255](https://github.com/FuelLabs/fuels-wallet/pull/1255) [`4b7d4bd3`](https://github.com/FuelLabs/fuels-wallet/commit/4b7d4bd398448259a8eeb21bf7268df92891ad39) Thanks [@luizstacio](https://github.com/luizstacio)! - fix: auto-update in background to wait for update to be downloaded
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.16.5
+
+## 0.16.4
+
+### Patch Changes
+
+- Updated dependencies [[`32ee2272`](https://github.com/FuelLabs/fuels-wallet/commit/32ee227254b1491a7ec8fc532f10517367f78013)]:
+  - @fuel-wallet/connections@0.16.4
+
+## 0.16.3
+
+### Patch Changes
+
+- [#1230](https://github.com/FuelLabs/fuels-wallet/pull/1230) [`21a7d80f`](https://github.com/FuelLabs/fuels-wallet/commit/21a7d80f5fdf13fdbced8931f9a74d1596572b57) Thanks [@arthurgeron](https://github.com/arthurgeron)! - fixes service worker services not restarting communication protocol when DB closes or blocks
+
+- [#1195](https://github.com/FuelLabs/fuels-wallet/pull/1195) [`4fbc8e78`](https://github.com/FuelLabs/fuels-wallet/commit/4fbc8e78ad7609ca0cf5902e8ac05b858a430042) Thanks [@helciofranco](https://github.com/helciofranco)! - fix: disables auto-complete for more input fields (sending transactions, adding asset and changing password).
+
+- [#1231](https://github.com/FuelLabs/fuels-wallet/pull/1231) [`0ff8cff1`](https://github.com/FuelLabs/fuels-wallet/commit/0ff8cff1bdf084e286a2c1516577663d725eaab8) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed flaky playwright e2e tests
+
+- [#1223](https://github.com/FuelLabs/fuels-wallet/pull/1223) [`5c0cdbf0`](https://github.com/FuelLabs/fuels-wallet/commit/5c0cdbf0df2d293e248107b9d9d0404b412db73f) Thanks [@arthurgeron](https://github.com/arthurgeron)! - fix: names labels not center justified
+
+- [#1243](https://github.com/FuelLabs/fuels-wallet/pull/1243) [`06e2bf1a`](https://github.com/FuelLabs/fuels-wallet/commit/06e2bf1a3ca6f5b5780794dd4b6ce71a9648c186) Thanks [@luizstacio](https://github.com/luizstacio)! - feat: add auto-update wallet in the background
+
+- Updated dependencies [[`4fbc8e78`](https://github.com/FuelLabs/fuels-wallet/commit/4fbc8e78ad7609ca0cf5902e8ac05b858a430042)]:
+  - @fuel-wallet/connections@0.16.3
+
 ## 0.16.2
 
 ### Patch Changes
