@@ -1,7 +1,7 @@
-import { Box, Button, Form, Input, Text, VStack } from '@fuel-ui/react';
+import { Box, Button, Input, Text, VStack } from '@fuel-ui/react';
 import { AnimatePresence } from 'framer-motion';
 import { type BN, bn } from 'fuels';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { MotionFlex, MotionStack, animations } from '~/systems/Core';
 import type { SendFormValues } from '~/systems/Send/hooks';
@@ -22,13 +22,14 @@ export const TxFeeOptions = ({
 }: TxFeeOptionsProps) => {
   const [isAdvanced, setIsAdvanced] = useState(false);
   const { control, setValue, trigger } = useFormContext<SendFormValues>();
+  const previousDefaultTip = useRef<BN>(regularTip);
 
   const { field: tip } = useController({
     control,
     name: 'fees.tip',
   });
 
-  // @TODO: Remove this when the SDK gets to work with custom gas limits
+  // @TODO: Enable this when the SDK gets to work with custom gas limits
   const { field: _gasLimit, fieldState: _gasLimitState } = useController({
     control,
     name: 'fees.gasLimit',
@@ -50,10 +51,10 @@ export const TxFeeOptions = ({
    */
   useEffect(() => {
     if (!isAdvanced) {
-      setValue('fees.tip', regularTip);
+      setValue('fees.tip', previousDefaultTip.current);
       setValue('fees.gasLimit', baseGasLimit);
     }
-  }, [isAdvanced, setValue, regularTip, baseGasLimit]);
+  }, [isAdvanced, setValue, baseGasLimit]);
 
   return (
     <Box.Stack gap="$1">
@@ -119,6 +120,7 @@ export const TxFeeOptions = ({
                 title={option.name}
                 checked={option.tip.eq(tip.value)}
                 onChecked={() => {
+                  previousDefaultTip.current = option.tip;
                   setValue('fees.tip', option.tip);
                   trigger('amount');
                 }}
@@ -135,7 +137,7 @@ export const TxFeeOptions = ({
           layout
         >
           <Button size="xs" variant="link" onPress={toggle}>
-            Use {isAdvanced ? 'regular' : 'advanced'} options
+            Use {isAdvanced ? 'regular options' : 'custom fees'}
           </Button>
         </MotionFlex>
       </AnimatePresence>
