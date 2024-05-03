@@ -1,4 +1,4 @@
-import { Card, Flex, Text } from '@fuel-ui/react';
+import { Card, Text } from '@fuel-ui/react';
 import type { BN } from 'fuels';
 import type { FC } from 'react';
 
@@ -27,11 +27,9 @@ export const TxFee: TxFeeComponent = ({
       css={styles.detailItem(!!checked, !!onChecked)}
       onClick={() => onChecked?.(true)}
     >
-      <Flex gap="$3" align="center">
-        <Text color="intentsBase11" css={styles.text}>
-          {title || 'Fee (network)'}
-        </Text>
-      </Flex>
+      <Text color="intentsBase11" css={styles.text}>
+        {title || 'Fee (network)'}
+      </Text>
       <Text color="intentsBase12" css={styles.text} aria-label="Fee Value">
         {fee ? `${fee.format()} ETH` : '--'}
       </Text>
