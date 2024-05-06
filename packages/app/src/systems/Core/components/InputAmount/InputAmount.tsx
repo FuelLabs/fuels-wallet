@@ -6,7 +6,7 @@
 
 import { cssObj } from '@fuel-ui/css';
 import type { BN } from 'fuels';
-import { bn, format } from 'fuels';
+import { DEFAULT_DECIMAL_UNITS, bn, format } from 'fuels';
 import { useEffect, useState } from 'react';
 import type { FC } from 'react';
 
@@ -25,7 +25,7 @@ import {
   Tooltip,
 } from '@fuel-ui/react';
 
-export const DECIMAL_UNITS = 9;
+export const DECIMAL_UNITS = DEFAULT_DECIMAL_UNITS;
 
 export function formatAmountLeadingZeros(text: string): string {
   const valueWithoutLeadingZeros = text

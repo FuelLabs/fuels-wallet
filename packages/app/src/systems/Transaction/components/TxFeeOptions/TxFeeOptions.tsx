@@ -1,6 +1,6 @@
 import { Box, Button, Input, Text, VStack } from '@fuel-ui/react';
 import { AnimatePresence } from 'framer-motion';
-import { type BN, bn } from 'fuels';
+import { type BN, DEFAULT_DECIMAL_UNITS, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { MotionFlex, MotionStack, animations } from '~/systems/Core';
@@ -42,6 +42,13 @@ export const TxFeeOptions = ({
     ];
   }, [baseFee, regularTip, fastTip]);
 
+  const tipFormatted = useMemo<string>(() => {
+    return tip.value.format({
+      units: DEFAULT_DECIMAL_UNITS,
+      minPrecision: 0,
+    });
+  }, [tip.value]);
+
   const toggle = () => {
     setIsAdvanced((curr) => !curr);
   };
@@ -69,14 +76,20 @@ export const TxFeeOptions = ({
             <VStack gap="$1">
               <Text fontSize="xs">Tip</Text>
               <Input>
-                <Input.Field
-                  ref={tip.ref}
-                  value={tip.value.toString()}
-                  type="number"
+                <Input.Number
+                  value={tipFormatted}
+                  inputMode="decimal"
+                  autoComplete="off"
+                  allowedDecimalSeparators={['.', ',']}
+                  allowNegative={false}
+                  thousandSeparator={false}
+                  decimalScale={DEFAULT_DECIMAL_UNITS}
                   onChange={(e) => {
-                    const ignore = /[.,\-+]/g;
-                    const val = (e.target.value || '').replaceAll(ignore, '');
-                    tip.onChange(bn(val));
+                    const text = e.target.value;
+                    const val = text.replaceAll(',', '');
+                    const units = bn.parseUnits(val, DEFAULT_DECIMAL_UNITS);
+
+                    tip.onChange(units);
                     trigger('amount');
                   }}
                 />
