@@ -72,7 +72,7 @@ export class FuelDB extends Dexie {
   }
 
   async close(safeClose = false) {
-    if (safeClose || this.restartAttempts > 3) {
+    if (!this.alwaysOpen || safeClose || this.restartAttempts > 3) {
       return super.close();
     }
     this.restartAttempts += 1;
