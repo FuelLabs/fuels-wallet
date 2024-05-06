@@ -59,23 +59,9 @@ export class FuelDB extends Dexie {
     this.on('close', () => this.restart('close'));
   }
 
-  open() {
-    return this.safeOpen().finally(() =>
-      this.watchConnection()
-    ) as PromiseExtended<Dexie>;
-  }
-
-  close(safeClose = false) {
-    if (safeClose) {
-      this.restartAttempts = 0;
-      clearInterval(this.integrityCheckInterval);
-    }
-    return super.close();
-  }
-
-  async safeOpen() {
+  open(): PromiseExtended<Dexie> {
     try {
-      const result = await super.open();
+      const result = super.open();
       this.restartAttempts = 0;
       return result;
     } catch (err) {
@@ -85,27 +71,12 @@ export class FuelDB extends Dexie {
     }
   }
 
-  async ensureDatabaseOpen() {
-    if (this.isOpen() && !this.hasBeenClosed() && !this.hasFailed()) return;
-
-    if (this.restartAttempts > 3) {
-      console.error('Reached max attempts to open DB. Sending restart signal.');
-      this.restart('blocked');
-      return;
+  async close(safeClose = false) {
+    if (safeClose || this.restartAttempts > 3) {
+      return super.close();
     }
-
     this.restartAttempts += 1;
-    console.warn('DB is not open. Attempting restart.');
-    await this.safeOpen();
-  }
-
-  watchConnection() {
-    if (!this.alwaysOpen) return;
-
-    clearInterval(this.integrityCheckInterval);
-    this.integrityCheckInterval = setInterval(() => {
-      this.ensureDatabaseOpen();
-    }, 1000);
+    await this.open().catch(() => this.close());
   }
 
   async restart(eventName: FailureEvents) {
