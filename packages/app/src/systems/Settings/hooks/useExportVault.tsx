@@ -22,13 +22,14 @@ export function useExportVault() {
   async function exportVault(password: string) {
     const [vault] = await VaultService.getVaults();
 
-    service.send({
-      type: 'EXPORT_VAULT',
-      input: {
-        password,
-        vaultId: vault.vaultId,
-      },
-    });
+    vault &&
+      service.send({
+        type: 'EXPORT_VAULT',
+        input: {
+          password,
+          vaultId: vault.vaultId,
+        },
+      });
   }
 
   return {
