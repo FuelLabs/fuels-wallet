@@ -240,7 +240,8 @@ export class TxService {
       regularTip: bn(regularTip),
       fastTip: bn(fastTip),
       baseAssetId,
-      maxGasPerTx: provider.getChain().consensusParameters.maxGasPerTx,
+      maxGasPerTx:
+        provider.getChain().consensusParameters.txParameters.maxGasPerTx,
     };
   }
 
@@ -273,7 +274,7 @@ export class TxService {
     );
 
     return {
-      baseFee: transactionRequest.maxFee?.sub(transactionRequest.tip),
+      baseFee: transactionRequest.maxFee?.sub(transactionRequest.tip ?? bn(0)),
       transactionRequest,
       address: account.address,
       providerUrl: network.url,
