@@ -46,7 +46,7 @@ export const MOCK_OPERATION_TRANSFER: Operation = {
   assetsSent: [
     {
       amount: bn.parseUnits('0.52'),
-      assetId: BaseAssetId,
+      assetId: MOCK_BASE_ASSET_ID,
     },
   ],
 };

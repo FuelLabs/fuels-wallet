@@ -34,7 +34,10 @@ export const Usage = () => {
   return (
     <Box css={styles.box}>
       <QueryClientProvider client={queryClient}>
-        <FuelProvider theme={isDark ? 'dark' : 'light'}>
+        <FuelProvider
+          theme={isDark ? 'dark' : 'light'}
+          fuelConfig={{ connectors: [] }}
+        >
           <App />
         </FuelProvider>
       </QueryClientProvider>

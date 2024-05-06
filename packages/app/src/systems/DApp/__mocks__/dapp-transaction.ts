@@ -20,7 +20,6 @@ export const getMockedTransaction = async (
     to: destinyAddress.toString(),
     amount: bn.parseUnits('0.1'),
     assetId: provider.getBaseAssetId(),
-    provider: ownerWallet.provider,
   });
 
   return TxService.fundTransaction({
