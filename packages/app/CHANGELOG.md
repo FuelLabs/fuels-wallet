@@ -1,5 +1,14 @@
 # fuels-wallet
 
+## 0.16.6
+
+### Patch Changes
+
+- [#1270](https://github.com/FuelLabs/fuels-wallet/pull/1270) [`27520126`](https://github.com/FuelLabs/fuels-wallet/commit/27520126e252a28272d80b51f6eff879049149ae) Thanks [@arthurgeron](https://github.com/arthurgeron)! - fix: database not recovering from error/closed state
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.16.6
+
 ## 0.16.5
 
 ### Patch Changes

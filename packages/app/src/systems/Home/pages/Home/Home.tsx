@@ -28,6 +28,7 @@ export function Home() {
   const emptyProps = useMemo(() => {
     return { showFaucet: selectedNetwork?.url === VITE_FUEL_PROVIDER_URL };
   }, [selectedNetwork]);
+
   return (
     <Layout title="Home" isHome>
       <Layout.TopBar />
