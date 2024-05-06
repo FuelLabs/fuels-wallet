@@ -113,7 +113,7 @@ export const InputAmount: InputAmountComponent = ({
       formatOpts.units
     );
     if (!currentAmount.eq(amount)) {
-      onChange?.(newText.length ? amount : null);
+      onChange?.(amount);
       setAssetAmount(newText);
     }
   };
