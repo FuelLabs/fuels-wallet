@@ -57,9 +57,6 @@ export class FuelDB extends Dexie {
       });
     this.on('blocked', () => this.restart('blocked'));
     this.on('close', () => this.restart('close'));
-    this.on('message', (e) => {
-      console.log('fsk changed', e);
-    });
   }
 
   open() {
