@@ -1,6 +1,5 @@
 // biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import EventEmitter from 'events';
-import { POPUP_SCRIPT_NAME } from '@fuel-wallet/types';
 import { Address, Provider, WalletManager, transactionRequestify } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
@@ -87,7 +86,6 @@ export class VaultServer extends EventEmitter {
       chrome.runtime.sendMessage({
         type: 'LOCK_STATUS_CHANGED',
         locked: false,
-        target: POPUP_SCRIPT_NAME,
       });
     });
     this.manager.on('lock', () => {
@@ -95,7 +93,6 @@ export class VaultServer extends EventEmitter {
       chrome.runtime.sendMessage({
         type: 'LOCK_STATUS_CHANGED',
         locked: true,
-        target: POPUP_SCRIPT_NAME,
       });
     });
   }
