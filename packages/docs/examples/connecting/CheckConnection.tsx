@@ -8,7 +8,7 @@ import { ExampleBox } from '../../src/components/ExampleBox';
 import { useLoading } from '../../src/hooks/useLoading';
 
 // Change default config for devMode to true
-Fuel.defaultConfig.connectors = defaultConnectors({ devMode: true });
+// Fuel.defaultConfig.connectors = defaultConnectors({ devMode: true });
 
 export function CheckConnection() {
   const { fuel } = useFuel();

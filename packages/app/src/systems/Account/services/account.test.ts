@@ -1,4 +1,4 @@
-import { BaseAssetId, bn } from 'fuels';
+import { Provider, bn } from 'fuels';
 import { mockServer } from '~/mocks/server';
 import { mockBalancesOnGraphQL } from '~/systems/Asset/__mocks__/assets';
 
@@ -7,20 +7,21 @@ import { MOCK_ACCOUNTS } from '../__mocks__';
 import { AccountService } from './account';
 
 const MOCK_ACCOUNT = MOCK_ACCOUNTS[0];
-const MOCK_BALANCES = [
-  {
-    node: {
-      assetId: BaseAssetId,
-      amount: bn(1000),
-    },
-  },
-];
-
-mockServer([mockBalancesOnGraphQL(MOCK_BALANCES)]);
 
 describe('AccountService', () => {
+  const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
+
   beforeEach(async () => {
+    const MOCK_BALANCES = [
+      {
+        node: {
+          assetId: (await Provider.create(providerUrl)).getBaseAssetId(),
+          amount: bn(1000),
+        },
+      },
+    ];
     await AccountService.clearAccounts();
+    mockServer([mockBalancesOnGraphQL(MOCK_BALANCES)]);
   });
 
   it('should add a new account', async () => {
@@ -32,12 +33,13 @@ describe('AccountService', () => {
 
   it('should fetch balance from account', async () => {
     const account = await AccountService.addAccount({ data: MOCK_ACCOUNT });
-    const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
     if (!account) return;
     const result = await AccountService.fetchBalance({ account, providerUrl });
     expect(result.balance).toBe(bn(1000).toString());
     expect(result.address).toBe(MOCK_ACCOUNT.address);
-    expect(result.balances?.[0].assetId).toBe(BaseAssetId);
+    expect(result.balances?.[0].assetId).toBe(
+      (await Provider.create(providerUrl)).getBaseAssetId()
+    );
   });
 
   it('should convert an array of accounts into a map', async () => {

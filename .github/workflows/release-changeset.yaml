@@ -42,7 +42,22 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
+      - name: Create Release Pull Request
+        id: changesets
+        uses: FuelLabs/changesets-action@main
+        with:
+          publish: pnpm changeset tag
+          commit: "ci(changesets): versioning packages"
+          title: "ci(changesets): versioning packages"
+          createGithubReleases: aggregate
+          githubReleaseName: v${{ env.BUILD_VERSION }}
+          githubTagName: v${{ env.BUILD_VERSION }}
+          skipNpm: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+
       - name: Build Fuel Wallet
+        if: steps.changesets.outputs.published == 'true'
         run: pnpm build:crx
         env:
           ## increase node.js m memory limit for building
@@ -50,6 +65,7 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Build Fuel Wallet Development
+        if: steps.changesets.outputs.published == 'true'
         run: pnpm build:crx
         env:
           VITE_CRX_RELEASE: false
@@ -57,19 +73,6 @@ jobs:
           CRX_OUT: "dist-crx-dev"
           APP_VERSION_POSTFIX: "-development"
           NODE_OPTIONS: "--max-old-space-size=4096"
-
-      - name: Create Release Pull Request
-        id: changesets
-        uses: FuelLabs/changesets-action@main
-        with:
-          publish: pnpm changeset:release
-          commit: "ci(changesets): versioning packages"
-          title: "ci(changesets): versioning packages"
-          createGithubReleases: aggregate
-          githubReleaseName: v${{ env.BUILD_VERSION }}
-          githubTagName: v${{ env.BUILD_VERSION }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
       - name: Upload artifacts to Sentry
         if: steps.changesets.outputs.published == 'true'

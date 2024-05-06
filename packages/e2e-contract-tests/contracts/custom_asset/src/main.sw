@@ -1,7 +1,7 @@
 contract;
 
-use asset::{
-    mint::{
+use sway_libs::asset::{
+    supply::{
         _mint, _burn,
     },
     base::{
@@ -14,8 +14,8 @@ use asset::{
 };
 use std::{tx::tx_witness_data};
 
-use src20::SRC20;
-use src3::SRC3;
+use standards::src20::SRC20;
+use standards::src3::SRC3;
 use std::{
     call_frames::msg_asset_id,
     context::msg_amount,
@@ -68,6 +68,7 @@ impl SRC3 for Contract {
     }
 
     #[storage(read, write)]
+    #[payable]
     fn burn(sub_id: SubId, amount: u64) {
         _burn(storage.total_supply, sub_id, amount);
     }
@@ -162,7 +163,7 @@ impl CustomBehavior for Contract {
         let new_balance = prev_balance + half_amount;
         storage.balances.insert((sender, asset_id), new_balance);
         transfer(sender, asset_id, half_amount);
-        let external_contract = abi(SRC3, contract_id.value);
+        let external_contract = abi(SRC3, contract_id.bits());
         external_contract.mint(recipient, sub_id, amount);
 
         new_balance

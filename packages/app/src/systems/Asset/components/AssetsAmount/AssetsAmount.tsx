@@ -4,10 +4,16 @@ import type { AssetAmount } from '@fuel-wallet/types';
 import { bn } from 'fuels';
 import type { FC } from 'react';
 import { shortAddress } from '~/systems/Core';
-import type { GroupedError } from '~/systems/Transaction';
+import type { InsufficientInputAmountError } from '~/systems/Transaction';
 
 import { AssetsAmountLoader } from './AssetsAmountLoader';
 import { styles } from './styles';
+
+type GroupedError = {
+  errorMessage?: string;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  error?: InsufficientInputAmountError | any;
+};
 
 export type AssetsAmountProps = {
   amounts: AssetAmount[];

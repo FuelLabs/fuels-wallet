@@ -1,5 +1,24 @@
 # @fuel-wallet/connections
 
+## 0.16.6
+
+## 0.16.5
+
+## 0.16.4
+
+### Patch Changes
+
+- [#1251](https://github.com/FuelLabs/fuels-wallet/pull/1251) [`32ee2272`](https://github.com/FuelLabs/fuels-wallet/commit/32ee227254b1491a7ec8fc532f10517367f78013) Thanks [@helciofranco](https://github.com/helciofranco)! - fix: remove unused peer dependency
+
+## 0.16.3
+
+### Patch Changes
+
+- [#1195](https://github.com/FuelLabs/fuels-wallet/pull/1195) [`4fbc8e78`](https://github.com/FuelLabs/fuels-wallet/commit/4fbc8e78ad7609ca0cf5902e8ac05b858a430042) Thanks [@helciofranco](https://github.com/helciofranco)! - fix: disables auto-complete for more input fields (sending transactions, adding asset and changing password).
+
+- Updated dependencies [[`21a7d80f`](https://github.com/FuelLabs/fuels-wallet/commit/21a7d80f5fdf13fdbced8931f9a74d1596572b57), [`4fbc8e78`](https://github.com/FuelLabs/fuels-wallet/commit/4fbc8e78ad7609ca0cf5902e8ac05b858a430042)]:
+  - @fuel-wallet/types@0.16.3
+
 ## 0.16.2
 
 ### Patch Changes

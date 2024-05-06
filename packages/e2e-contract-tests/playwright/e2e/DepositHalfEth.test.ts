@@ -2,10 +2,10 @@ import { getButtonByText, hasText } from '@fuels/playwright-utils';
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
 import type { WalletUnlocked } from 'fuels';
-import { BaseAssetId, bn, toBech32 } from 'fuels';
+import { bn, toBech32 } from 'fuels';
 
 import '../../load.envs.js';
-import { shortAddress } from '../../src/utils';
+import { getBaseAssetId, shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
@@ -44,14 +44,14 @@ test.describe('Deposit Half ETH', () => {
     // test forward asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');
     // test forward asset id is shown
-    await hasText(walletNotificationPage, shortAddress(BaseAssetId));
+    await hasText(walletNotificationPage, shortAddress(getBaseAssetId()));
     // test forward eth amount is correct
     await hasText(walletNotificationPage, `${depositAmount} ETH`);
 
     // test return asset name is shown
     await hasText(walletNotificationPage, 'Ethereum', 1);
     // test return asset id is shown
-    await hasText(walletNotificationPage, shortAddress(BaseAssetId), 1);
+    await hasText(walletNotificationPage, shortAddress(getBaseAssetId()), 1);
     // test return eth amount is correct
     await hasText(walletNotificationPage, `${halfDepositAmount} ETH`);
 

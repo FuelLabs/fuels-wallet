@@ -2,7 +2,7 @@ import {
   FuelWalletDevelopmentConnector,
   defaultConnectors,
 } from '@fuels/connectors';
-import { Address, Fuel } from 'fuels';
+import { Address, Fuel, Provider } from 'fuels';
 
 localStorage.clear();
 

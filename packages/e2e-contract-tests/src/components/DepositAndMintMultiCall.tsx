@@ -1,8 +1,9 @@
 import { useAccount, useWallet } from '@fuels/react';
-import { BaseAssetId, bn } from 'fuels';
+import { bn } from 'fuels';
 import { useState } from 'react';
 
 import { depositAndMintMultiCall } from '../contract_interactions';
+import { getBaseAssetId } from '../utils';
 
 export const DepositAndMintMultiCalls = () => {
   const [forwardAmount, setForwardAmount] = useState<string>('');
@@ -36,7 +37,7 @@ export const DepositAndMintMultiCalls = () => {
                 wallet: wallet.wallet,
                 forwardAmount: bn.parseUnits(forwardAmount),
                 mintAmount: bn.parseUnits(mintAmount),
-                assetId: BaseAssetId,
+                assetId: getBaseAssetId(),
               });
             }
           }}

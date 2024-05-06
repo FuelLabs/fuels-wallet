@@ -58,7 +58,7 @@ export class RequestMethods extends ExtensionPageConnection {
         ...WAIT_FOR_CONFIG,
         done: 'txSuccess',
       });
-    return state.context.response?.approvedTx?.id;
+    return state.context.response?.txSummaryExecuted?.id;
   }
 
   async addAssets(input: MessageInputs['addAssets']) {

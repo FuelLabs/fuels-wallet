@@ -3,7 +3,6 @@ import { CRXPages } from './systems/Core/types';
 export const {
   VITE_MNEMONIC_WORDS,
   VITE_FUEL_PROVIDER_URL,
-  VITE_FAUCET_RECAPTCHA_KEY,
   VITE_FUEL_FAUCET_URL,
   VITE_ADDR_OWNER,
   VITE_APP_VERSION,

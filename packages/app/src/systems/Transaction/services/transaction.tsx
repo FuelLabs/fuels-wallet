@@ -166,7 +166,8 @@ export class TxService {
     } catch (e: any) {
       const { gasPerByte, gasPriceFactor, gasCosts, maxGasPerTx } =
         provider.getGasConfig();
-      const maxInputs = provider.getChain().consensusParameters.maxInputs;
+      const consensusParameters = provider.getChain().consensusParameters;
+      const { maxInputs } = consensusParameters.txParameters;
 
       const transaction = transactionRequest.toTransaction();
       const transactionBytes = transactionRequest.toTransactionBytes();

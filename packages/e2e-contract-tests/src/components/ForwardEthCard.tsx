@@ -1,8 +1,9 @@
 import { useAccount, useWallet } from '@fuels/react';
-import { BaseAssetId, bn } from 'fuels';
+import { bn } from 'fuels';
 import { useState } from 'react';
 
 import { deposit } from '../contract_interactions';
+import { getBaseAssetId } from '../utils';
 
 export const ForwardEthCard = () => {
   const [amount, setAmount] = useState<string>('');
@@ -24,7 +25,7 @@ export const ForwardEthCard = () => {
               await deposit({
                 wallet: wallet.wallet,
                 amount: bn.parseUnits(amount),
-                assetId: BaseAssetId,
+                assetId: getBaseAssetId(),
               });
             }
           }}

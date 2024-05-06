@@ -1,5 +1,5 @@
 import type { BigNumberish } from 'fuels';
-import { BaseAssetId, bn } from 'fuels';
+import { bn } from 'fuels';
 import { graphql } from 'msw';
 import { fuelAssets } from '~/systems/Core';
 
@@ -7,6 +7,10 @@ export const MOCK_ASSETS = fuelAssets.map((item) => ({
   ...item,
   amount: bn(14563943834),
 }));
+
+// BaseAssetId replacement
+const MOCK_BASE_ASSET_ID =
+  '0x0000000000000000000000000000000000000000000000000000000000000000';
 
 export const MOCK_CUSTOM_ASSET = {
   assetId: '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d90',
@@ -28,7 +32,7 @@ export const MOCK_ASSETS_AMOUNTS = [
 export const MOCK_ASSETS_NODE = [
   {
     node: {
-      assetId: BaseAssetId,
+      assetId: MOCK_BASE_ASSET_ID,
       amount: bn(30000000000),
     },
   },
