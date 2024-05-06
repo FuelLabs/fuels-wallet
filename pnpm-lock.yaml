@@ -267,9 +267,6 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
-      react-google-recaptcha:
-        specifier: 3.1.0
-        version: 3.1.0(react@18.2.0)
       react-helmet:
         specifier: 6.1.0
         version: 6.1.0(react@18.2.0)
@@ -403,9 +400,6 @@ importers:
       '@types/react-dom':
         specifier: 18.2.13
         version: 18.2.13
-      '@types/react-google-recaptcha':
-        specifier: 2.1.6
-        version: 2.1.6
       '@types/react-helmet':
         specifier: 6.1.7
         version: 6.1.7
@@ -12934,12 +12928,6 @@ packages:
     dependencies:
       '@types/react': 18.2.56
 
-  /@types/react-google-recaptcha@2.1.6:
-    resolution: {integrity: sha512-U+dLY6lGoa9sDfArZAmAItk9MpOaNV7TJtRqEox74zkXL4Qx6FnakIeM9e3HQaWYwfBgoOa7SMhWBgpnyycdvQ==}
-    dependencies:
-      '@types/react': 18.2.56
-    dev: true
-
   /@types/react-helmet@6.1.7:
     resolution: {integrity: sha512-mUFOrdR3AIvHE8BEaqzfPEnR62xq5PHQJehhgNtj78x0d5NOxUCQ0j+r9OZ4RvB+prNZx9wvQnVW8ApFBX+fig==}
     dependencies:
@@ -17491,12 +17479,6 @@ packages:
   /highlight.js@10.7.3:
     resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
 
-  /hoist-non-react-statics@3.3.2:
-    resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
-    dependencies:
-      react-is: 16.13.1
-    dev: false
-
   /hosted-git-info@2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}
     dev: true
@@ -21487,19 +21469,6 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /react-async-script@1.2.0(react@18.2.0):
-    resolution: {integrity: sha512-bCpkbm9JiAuMGhkqoAiC0lLkb40DJ0HOEJIku+9JDjxX3Rcs+ztEOG13wbrOskt3n2DTrjshhaQ/iay+SnGg5Q==}
-    peerDependencies:
-      react: '*'
-    peerDependenciesMeta:
-      react:
-        optional: true
-    dependencies:
-      hoist-non-react-statics: 3.3.2
-      prop-types: 15.8.1
-      react: 18.2.0
-    dev: false
-
   /react-base16-styling@0.6.0:
     resolution: {integrity: sha512-yvh/7CArceR/jNATXOKDlvTnPKPmGZz7zsenQ3jUwLzHkNUR0CvY3yGYJbWJ/nnxsL8Sgmt5cO3/SILVuPO6TQ==}
     dependencies:
@@ -21626,19 +21595,6 @@ packages:
 
   /react-fast-compare@3.2.2:
     resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
-    dev: false
-
-  /react-google-recaptcha@3.1.0(react@18.2.0):
-    resolution: {integrity: sha512-cYW2/DWas8nEKZGD7SCu9BSuVz8iOcOLHChHyi7upUuVhkpkhYG/6N3KDiTQ3XAiZ2UAZkfvYKMfAHOzBOcGEg==}
-    peerDependencies:
-      react: '*'
-    peerDependenciesMeta:
-      react:
-        optional: true
-    dependencies:
-      prop-types: 15.8.1
-      react: 18.2.0
-      react-async-script: 1.2.0(react@18.2.0)
     dev: false
 
   /react-helmet@6.1.0(react@18.2.0):
