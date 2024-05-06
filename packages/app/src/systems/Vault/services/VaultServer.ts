@@ -82,14 +82,12 @@ export class VaultServer extends EventEmitter {
     });
 
     this.manager.on('unlock', () => {
-      console.log('fsk sending unlock');
       chrome.runtime.sendMessage({
         type: 'LOCK_STATUS_CHANGED',
         locked: false,
       });
     });
     this.manager.on('lock', () => {
-      console.log('fsk sending lock');
       chrome.runtime.sendMessage({
         type: 'LOCK_STATUS_CHANGED',
         locked: true,
