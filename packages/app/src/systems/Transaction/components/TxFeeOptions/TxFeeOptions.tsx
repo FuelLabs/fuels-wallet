@@ -86,6 +86,7 @@ export const TxFeeOptions = ({
                   allowNegative={false}
                   thousandSeparator={false}
                   decimalScale={DECIMAL_UNITS}
+                  placeholder="0.00"
                   onChange={(e) => {
                     const text = e.target.value;
                     const val = text.replaceAll(',', '');
