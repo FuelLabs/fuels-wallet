@@ -14,6 +14,8 @@ type TxFeeOptionsProps = {
   fastTip: BN;
 };
 
+const DECIMAL_UNITS = DEFAULT_DECIMAL_UNITS;
+
 export const TxFeeOptions = ({
   baseFee,
   baseGasLimit,
@@ -44,7 +46,7 @@ export const TxFeeOptions = ({
 
   const tipFormatted = useMemo<string>(() => {
     return tip.value.format({
-      units: DEFAULT_DECIMAL_UNITS,
+      units: DECIMAL_UNITS,
       minPrecision: 0,
     });
   }, [tip.value]);
@@ -83,11 +85,11 @@ export const TxFeeOptions = ({
                   allowedDecimalSeparators={['.', ',']}
                   allowNegative={false}
                   thousandSeparator={false}
-                  decimalScale={DEFAULT_DECIMAL_UNITS}
+                  decimalScale={DECIMAL_UNITS}
                   onChange={(e) => {
                     const text = e.target.value;
                     const val = text.replaceAll(',', '');
-                    const units = bn.parseUnits(val, DEFAULT_DECIMAL_UNITS);
+                    const units = bn.parseUnits(val, DECIMAL_UNITS);
 
                     tip.onChange(units);
                     trigger('amount');
