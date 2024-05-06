@@ -64,6 +64,9 @@ export const unlockMachine = createMachine(
           RESET_WALLET: {
             target: 'reseting',
           },
+          CHECK_LOCK: {
+            target: 'checkingLocked',
+          },
         },
       },
       checkingLocked: {
