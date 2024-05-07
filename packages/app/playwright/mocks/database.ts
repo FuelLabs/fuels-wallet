@@ -122,7 +122,7 @@ export function createAccount(wallet: WalletAccount, index = 0) {
     balance: '0',
     balanceSymbol: 'ETH',
     balances: [],
-    name: `Account ${index}`,
+    name: `Account ${index + 1}`,
     publicKey: wallet.publicKey,
     isHidden: false,
     isCurrent: index === 0,
