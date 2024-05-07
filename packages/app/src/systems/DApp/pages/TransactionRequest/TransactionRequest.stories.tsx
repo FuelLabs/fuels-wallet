@@ -10,12 +10,11 @@ import { getMockedTransaction } from '../../__mocks__/dapp-transaction';
 import { TransactionRequest } from './TransactionRequest';
 
 async function loader() {
-  const { account, password } = await createMockAccount();
+  const { password } = await createMockAccount();
   await NetworkService.clearNetworks();
   const network = await NetworkService.addDefaultNetworks();
   const wallet = new Signer(Signer.generatePrivateKey());
   const transactionRequest = await getMockedTransaction(
-    account?.publicKey || '',
     wallet.publicKey,
     network?.url!
   );

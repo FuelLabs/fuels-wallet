@@ -47,7 +47,7 @@ describe('sendMachine', () => {
 
   it('should create a transaction and calculate the fee', async () => {
     await waitFor(service, (state) => state.matches('idle'));
-    service.send('SET_DATA', { input: MOCK_INPUTS });
+    service.send('SET_INPUT', { input: MOCK_INPUTS });
     await expectStateMatch(service, 'readyToSend');
     service.send('CONFIRM');
     expect(callTransactionRequest).toHaveBeenCalled();
