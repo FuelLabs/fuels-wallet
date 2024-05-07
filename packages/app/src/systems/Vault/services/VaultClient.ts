@@ -8,11 +8,6 @@ import { VaultCRXConnector, VaultWebConnector } from '../connectors';
 
 import { VaultServer } from './VaultServer';
 
-type LockChangeEvent = {
-  type: 'LOCK_STATUS_CHANGED';
-  locked: boolean;
-};
-
 export class VaultClient extends EventEmitter {
   readonly client: JSONRPCClient;
 
@@ -33,14 +28,6 @@ export class VaultClient extends EventEmitter {
     VaultServer.methods.forEach((methodName) => {
       this[methodName] = this.createRequest(methodName);
     });
-
-    if (IS_CRX) {
-      chrome.runtime.onMessage.addListener((e: LockChangeEvent) => {
-        if (e.type === 'LOCK_STATUS_CHANGED' && e?.locked !== undefined) {
-          this.emit(e.locked ? 'lock' : 'unlock');
-        }
-      });
-    }
   };
 
   connect = () => {

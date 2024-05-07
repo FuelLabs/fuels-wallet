@@ -70,6 +70,16 @@ export class VaultServer extends EventEmitter {
     this.manager = manager;
     this.server = new JSONRPCServer();
     this.setupMethods();
+    this.setupEvents();
+  }
+
+  private setupEvents() {
+    this.manager.on('lock', () => {
+      this.emit('lock');
+    });
+    this.manager.on('unlock', () => {
+      this.emit('unlock');
+    });
   }
 
   setupMethods() {
@@ -79,19 +89,6 @@ export class VaultServer extends EventEmitter {
         throw new Error('Method not exists!');
       }
       this.server.addMethod(methodName, this[methodName].bind(this));
-    });
-
-    this.manager.on('unlock', () => {
-      chrome.runtime.sendMessage({
-        type: 'LOCK_STATUS_CHANGED',
-        locked: false,
-      });
-    });
-    this.manager.on('lock', () => {
-      chrome.runtime.sendMessage({
-        type: 'LOCK_STATUS_CHANGED',
-        locked: true,
-      });
     });
   }
 
