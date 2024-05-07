@@ -8,9 +8,6 @@ export default defineConfig({
   server: {
     port: Number(process.env.PORT),
   },
-  define: {
-    'process.env': {},
-  },
   build: {
     target: ['es2020'],
     outDir: process.env.BUILD_PATH || 'dist',
