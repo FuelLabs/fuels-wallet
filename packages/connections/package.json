@@ -31,9 +31,8 @@
     "uuid": "^9.0.1"
   },
   "peerDependencies": {
-    "@fuel-wallet/types": ">=0.16.2",
     "@fuels/connectors": ">=0.3.0",
-    "fuels": ">=0.79.0"
+    "fuels": ">=0.84.0"
   },
   "devDependencies": {
     "@fuel-wallet/types": "workspace:*",
