@@ -1,7 +1,4 @@
-import {
-  FuelWalletDevelopmentConnector,
-  defaultConnectors,
-} from '@fuels/connectors';
+import { FuelWalletDevelopmentConnector } from '@fuels/connectors';
 import { Address, Fuel, Provider } from 'fuels';
 
 localStorage.clear();

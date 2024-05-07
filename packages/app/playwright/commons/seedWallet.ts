@@ -4,8 +4,6 @@ import { Address, Provider, Wallet } from 'fuels';
 
 import { ALT_ASSET, getAccount } from '../mocks';
 
-import { getGasConfig } from './gas';
-
 const { GENESIS_SECRET, VITE_FUEL_PROVIDER_URL } = process.env;
 
 export async function seedCurrentAccount(page: Page, amount: BN) {
@@ -16,12 +14,10 @@ export async function seedCurrentAccount(page: Page, amount: BN) {
 export async function seedWallet(address: string, amount: BN) {
   const provider = await Provider.create(VITE_FUEL_PROVIDER_URL);
   const genesisWallet = Wallet.fromPrivateKey(GENESIS_SECRET, provider);
-  const { gasLimit } = await getGasConfig(genesisWallet.provider);
   const transfETH = await genesisWallet.transfer(
     Address.fromString(address),
     amount,
-    provider.getBaseAssetId(),
-    { gasLimit }
+    provider.getBaseAssetId()
   );
   await transfETH.wait();
   const transfAsset = await genesisWallet.transfer(

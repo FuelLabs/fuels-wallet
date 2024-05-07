@@ -9,7 +9,7 @@ const IS_CI = !!process.env.CI;
 const PORT = process.env.PORT;
 
 export default defineConfig({
-  workers: 4,
+  workers: 1,
   testMatch: join(__dirname, './playwright/**/*.test.ts'),
   testDir: join(__dirname, './playwright/'),
   outputDir: join(__dirname, './playwright-results/'),
