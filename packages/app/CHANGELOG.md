@@ -1,5 +1,18 @@
 # fuels-wallet
 
+## 0.17.0
+
+### Minor Changes
+
+- [#1273](https://github.com/FuelLabs/fuels-wallet/pull/1273) [`706aeb34`](https://github.com/FuelLabs/fuels-wallet/commit/706aeb3465572613893a444b6cc9db3e82440471) Thanks [@helciofranco](https://github.com/helciofranco)! - feat: remove reCAPTCHA dependencies
+
+### Patch Changes
+
+- [#1276](https://github.com/FuelLabs/fuels-wallet/pull/1276) [`a796df4f`](https://github.com/FuelLabs/fuels-wallet/commit/a796df4f5c76f69ebd5c22173d4b3513a44d7734) Thanks [@arthurgeron](https://github.com/arthurgeron)! - restore DB connection on close, removed interval
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.17.0
+
 ## 0.16.6
 
 ### Patch Changes
