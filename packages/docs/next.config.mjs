@@ -34,7 +34,6 @@ function resolveLinkDeps() {
 const nextConfig = {
   basePath: process.env.DOCS_BASE_URL || '',
   experimental: {
-    esmExternals: false,
     externalDir: true,
   },
   images: {
@@ -49,6 +48,11 @@ const nextConfig = {
       ...config.resolve.alias,
       ...depsAlias?.resolve?.alias,
     };
+
+    // https://github.com/WalletConnect/walletconnect-monorepo/issues/1908
+    // https://docs.walletconnect.com/web3modal/nextjs/about#extra-configuration
+    config.externals.push('pino-pretty', 'lokijs', 'encoding');
+
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
