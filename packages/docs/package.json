@@ -16,7 +16,7 @@
     "@fuel-ui/css": "0.23.2",
     "@fuel-ui/icons": "0.23.2",
     "@fuel-ui/react": "0.23.2",
-    "@fuels/connectors": "0.2.2",
+    "@fuels/connectors": "0.3.0",
     "@fuels/react": "0.19.0",
     "@mdx-js/react": "^2.3.0",
     "@next/mdx": "^13.5.4",

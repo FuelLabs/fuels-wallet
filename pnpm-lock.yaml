@@ -120,8 +120,8 @@ importers:
   examples/cra-dapp:
     dependencies:
       '@fuels/connectors':
-        specifier: 0.2.2
-        version: 0.2.2(fuels@0.84.0)
+        specifier: 0.3.0
+        version: 0.3.0(fuels@0.84.0)
       '@fuels/react':
         specifier: 0.19.0
         version: 0.19.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.19)(@types/react@18.2.56)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)
@@ -181,8 +181,8 @@ importers:
         specifier: ^0.19.0
         version: 0.19.0
       '@fuels/connectors':
-        specifier: 0.2.2
-        version: 0.2.2(fuels@0.84.0)
+        specifier: 0.3.0
+        version: 0.3.0(fuels@0.84.0)
       '@fuels/local-storage':
         specifier: 0.19.0
         version: 0.19.0
@@ -474,8 +474,8 @@ importers:
         specifier: workspace:*
         version: link:../types
       '@fuels/connectors':
-        specifier: 0.2.2
-        version: 0.2.2(fuels@0.84.0)
+        specifier: 0.3.0
+        version: 0.3.0(fuels@0.84.0)
       '@types/uuid':
         specifier: ^9.0.5
         version: 9.0.5
@@ -519,8 +519,8 @@ importers:
         specifier: 0.23.2
         version: 0.23.2(@fuel-ui/css@0.23.2)(@fuel-ui/icons@0.23.2)(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.3)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)
       '@fuels/connectors':
-        specifier: 0.2.2
-        version: 0.2.2(fuels@0.84.0)
+        specifier: 0.3.0
+        version: 0.3.0(fuels@0.84.0)
       '@fuels/react':
         specifier: 0.19.0
         version: 0.19.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.13)(@types/react@18.2.28)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)
@@ -646,8 +646,8 @@ importers:
   packages/e2e-contract-tests:
     dependencies:
       '@fuels/connectors':
-        specifier: 0.2.2
-        version: 0.2.2(fuels@0.84.0)
+        specifier: 0.3.0
+        version: 0.3.0(fuels@0.84.0)
       '@fuels/react':
         specifier: 0.19.0
         version: 0.19.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.13)(@types/react@18.2.28)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)
@@ -723,8 +723,8 @@ importers:
         version: 4.0.1-beta.13(dexie@4.0.4)
     devDependencies:
       '@fuels/connectors':
-        specifier: 0.2.2
-        version: 0.2.2(fuels@0.84.0)
+        specifier: 0.3.0
+        version: 0.3.0(fuels@0.84.0)
       fuels:
         specifier: 0.84.0
         version: 0.84.0
@@ -5756,10 +5756,10 @@ packages:
     resolution: {integrity: sha512-dcowWog3sgcQjova4XG5QXu8HVJuUcvWehwxPWnLPvbMpAlUoIB9UEZ78gGEKuajGYzwjyItvEFqq2rPzLcDkw==}
     dev: false
 
-  /@fuels/connectors@0.2.2(fuels@0.84.0):
-    resolution: {integrity: sha512-TbyJjK3GgyeF6ERZyoh8GfECAVBoI69w4Ee/Osw2Q1zzGIY5/oWwPJxCUzOzd+47eIRWlvtItl1mvkyDyn3aVA==}
+  /@fuels/connectors@0.3.0(fuels@0.84.0):
+    resolution: {integrity: sha512-3wKxELyvof/G58MuwwpJcRbPjJqSU5a2SVTpuxeee3bjVu49JBn8NDvqazVSU9bOvx1CMHDvyVd+BHxH2t1nqA==}
     peerDependencies:
-      fuels: '>=0.78.0'
+      fuels: '>=0.83.0'
     dependencies:
       fuels: 0.84.0
 
