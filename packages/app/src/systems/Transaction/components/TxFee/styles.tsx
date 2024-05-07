@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 
 export const styles = {
-  detailItem: (active: boolean, pointer: boolean) =>
+  detailItem: (active = false, pointer = false) =>
     cssObj({
       padding: '$3 $4',
       flexDirection: 'row',

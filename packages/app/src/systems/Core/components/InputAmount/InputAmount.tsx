@@ -6,7 +6,7 @@
 
 import { cssObj } from '@fuel-ui/css';
 import type { BN } from 'fuels';
-import { bn, format } from 'fuels';
+import { DEFAULT_DECIMAL_UNITS, bn, format } from 'fuels';
 import { useEffect, useState } from 'react';
 import type { FC } from 'react';
 
@@ -25,7 +25,7 @@ import {
   Tooltip,
 } from '@fuel-ui/react';
 
-export const DECIMAL_UNITS = 9;
+export const DECIMAL_UNITS = DEFAULT_DECIMAL_UNITS;
 
 export function formatAmountLeadingZeros(text: string): string {
   const valueWithoutLeadingZeros = text
@@ -61,7 +61,8 @@ export type InputAmountProps = Omit<InputProps, 'size'> & {
   hiddenMaxButton?: boolean;
   hiddenBalance?: boolean;
   value?: BN | null;
-  onChange?: (val: BN | null, isMaxClick?: boolean) => void;
+  onChange?: (val: BN | null) => void;
+  onClickMax?: () => void;
   // biome-ignore lint/suspicious/noExplicitAny: allow any
   onClickAsset?: (e: any) => void;
   /* Input props */
@@ -82,6 +83,7 @@ export const InputAmount: InputAmountComponent = ({
   hiddenBalance,
   hiddenMaxButton,
   onChange,
+  onClickMax,
   inputProps,
   asset,
   assetTooltip,
@@ -111,18 +113,8 @@ export const InputAmount: InputAmountComponent = ({
       formatOpts.units
     );
     if (!currentAmount.eq(amount)) {
-      onChange?.(newText.length ? amount : null);
+      onChange?.(amount);
       setAssetAmount(newText);
-    }
-  };
-
-  const handleSetBalance = () => {
-    if (balance) {
-      const { text: newText, amount } = createAmount(
-        balance.format(formatOpts),
-        formatOpts.units
-      );
-      onChange?.(newText.length ? amount : null, true);
     }
   };
 
@@ -176,7 +168,7 @@ export const InputAmount: InputAmountComponent = ({
                   aria-label="Max"
                   variant="link"
                   intent="primary"
-                  onPress={handleSetBalance}
+                  onPress={onClickMax}
                   css={styles.maxButton}
                 >
                   MAX

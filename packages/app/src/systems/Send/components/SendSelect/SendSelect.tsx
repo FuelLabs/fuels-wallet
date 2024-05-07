@@ -1,59 +1,77 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Input, Text } from '@fuel-ui/react';
+import { Box, Form, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { DECIMAL_FUEL, bn } from 'fuels';
-import { useEffect, useMemo, useState } from 'react';
+import { type BN, DECIMAL_FUEL, bn } from 'fuels';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
-import { ControlledField, Layout, animations } from '~/systems/Core';
-import { TxFee } from '~/systems/Transaction';
+import {
+  ControlledField,
+  Layout,
+  MotionStack,
+  animations,
+} from '~/systems/Core';
 
+import { useController, useWatch } from 'react-hook-form';
 import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
-import type { FeeType, UseSendReturn } from '../../hooks';
+import type { UseSendReturn } from '../../hooks';
 
 const MotionContent = motion(Layout.Content);
+
 type SendSelectProps = UseSendReturn;
 
 export function SendSelect({
   form,
   balanceAssets,
-  handlers,
   balanceAssetSelected,
-  regularFee,
-  fastFee,
-  currentFee,
-  currentFeeType,
-  baseAssetId,
+  baseFee = bn(0),
+  baseGasLimit = bn(0),
+  tip,
+  regularTip,
+  fastTip,
+  errorMessage,
 }: SendSelectProps) {
   const [watchMax, setWatchMax] = useState(false);
-  const assetId = form.watch('asset', '');
+  const isAmountFocused = useRef<boolean>(false);
+  const baseFeeRef = useRef<BN | null>(baseFee);
+  const tipRef = useRef<BN>(tip);
+
+  const { field: amount, fieldState: amountFieldState } = useController({
+    control: form.control,
+    name: 'amount',
+  });
+
+  const assetId = useWatch({
+    control: form.control,
+    name: 'asset',
+  });
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const decimals = useMemo(() => {
     const selectedAsset = balanceAssets?.find((a) => a.assetId === assetId);
     return selectedAsset?.decimals || DECIMAL_FUEL;
   }, [assetId]);
 
-  const handleChangeCurrentFeeType = (feeType: FeeType) => {
-    handlers.changeCurrentFeeType(feeType);
-  };
-
-  const handleOverrideMaxAmount = () => {
-    if (assetId === baseAssetId) {
-      const newAmount = balanceAssetSelected.sub(bn(currentFee)).toString();
-      const currentAmount = form.getValues('amount');
-
-      if (currentAmount !== newAmount) {
-        form.setValue('amount', newAmount);
-        handlers.handleValidateAmount(newAmount);
-      }
-    }
-  };
-
   useEffect(() => {
-    if (currentFee && watchMax) {
-      handleOverrideMaxAmount();
+    if (
+      watchMax &&
+      (!baseFeeRef.current?.eq(baseFee) || !tipRef.current.eq(tip))
+    ) {
+      baseFeeRef.current = baseFee;
+      tipRef.current = tip;
+
+      // Adding 2 magical units to match the fake unit that is added on TS SDK (.add(1))
+      // and then removed on the "transaction" service (.sub(1))
+      const maxFee = baseFee.add(tip).add(2);
+
+      // Subtracting 2000 units due to the dynamic fees behavior
+      const availableBalance = balanceAssetSelected.sub(2000);
+
+      form.setValue('amount', availableBalance.sub(maxFee), {
+        shouldValidate: true,
+      });
     }
-  }, [currentFee, watchMax, handleOverrideMaxAmount]);
+  }, [watchMax, balanceAssetSelected, baseFee, tip, form.setValue]);
 
   return (
     <MotionContent {...animations.slideInTop()}>
@@ -71,11 +89,7 @@ export function SendSelect({
               <AssetSelect
                 items={balanceAssets}
                 selected={field.value}
-                onSelect={(assetId) => {
-                  form.setValue('asset', assetId || '', {
-                    shouldValidate: true,
-                  });
-                }}
+                onSelect={field.onChange}
               />
             )}
           />
@@ -104,62 +118,59 @@ export function SendSelect({
           </Box>
         </Box.Flex>
         <Box.Stack gap="$3">
-          <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
+          <Text as="span" css={styles.title}>
             Amount
           </Text>
-          <ControlledField
-            isRequired
-            name="amount"
-            control={form.control}
-            isInvalid={Boolean(form.formState.errors?.amount)}
-            render={({ field }) => {
-              return (
-                <InputAmount
-                  name={field.name}
-                  balance={balanceAssetSelected}
-                  value={bn(field.value)}
-                  units={decimals}
-                  onChange={(value, isMaxClick) => {
-                    if (isMaxClick) {
-                      setWatchMax(true);
-                      handleOverrideMaxAmount();
-
-                      return;
-                    }
-
-                    const amountValue = value || undefined;
-                    const prevAmount = form.getValues('amount');
-
-                    console.log(
-                      'onChange input',
-                      prevAmount !== amountValue?.toString(),
-                      prevAmount,
-                      amountValue?.toString()
-                    );
-                    if (prevAmount !== amountValue?.toString()) {
-                      form.setValue('amount', amountValue?.toString() || '');
-                      handlers.handleValidateAmount(amountValue?.toString());
-                      setWatchMax(false);
-                    }
-                  }}
-                />
-              );
-            }}
-          />
-        </Box.Stack>
-        {!!(form.formState.isValid && currentFeeType) && (
-          <Box.Stack gap="$3">
-            <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
-              Fee (network)
-            </Text>
-            <TxFeeOptions
-              fastFee={fastFee}
-              regularFee={regularFee}
-              currentFeeType={currentFeeType}
-              onChangeCurrentFeeType={handleChangeCurrentFeeType}
+          <Form.Control isRequired isInvalid={Boolean(amountFieldState.error)}>
+            <InputAmount
+              name={amount.name}
+              balance={balanceAssetSelected}
+              value={amount.value}
+              units={decimals}
+              onChange={(val) => {
+                if (isAmountFocused.current) {
+                  setWatchMax(false);
+                  amount.onChange(val);
+                }
+              }}
+              onClickMax={() => {
+                baseFeeRef.current = null; // Workaround just to trigger the watcher when max is clicked and base fee is stable
+                setWatchMax(true);
+              }}
+              inputProps={{
+                onFocus: () => {
+                  isAmountFocused.current = true;
+                },
+                onBlur: () => {
+                  isAmountFocused.current = false;
+                },
+              }}
             />
-          </Box.Stack>
-        )}
+            {(errorMessage || amountFieldState.error) && (
+              <Form.ErrorMessage aria-label="Error message">
+                {errorMessage || amountFieldState.error?.message}
+              </Form.ErrorMessage>
+            )}
+          </Form.Control>
+        </Box.Stack>
+
+        {amount.value.gt(0) &&
+          assetId &&
+          baseFee.gt(0) &&
+          regularTip &&
+          fastTip && (
+            <MotionStack {...animations.slideInTop()} gap="$3">
+              <Text as="span" css={styles.title}>
+                Fee (network)
+              </Text>
+              <TxFeeOptions
+                baseFee={baseFee}
+                baseGasLimit={baseGasLimit}
+                regularTip={regularTip}
+                fastTip={fastTip}
+              />
+            </MotionStack>
+          )}
       </Box.Stack>
     </MotionContent>
   );
@@ -185,11 +196,8 @@ const styles = {
   title: cssObj({
     pt: '$2',
     color: '$intentsBase12',
-    fontSize: '$lg',
-    fontWeight: '$normal',
-  }),
-  amountTitle: cssObj({
     fontSize: '$md',
+    fontWeight: '$normal',
   }),
   addressRow: cssObj({
     flex: 1,

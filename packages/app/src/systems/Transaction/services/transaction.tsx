@@ -1,4 +1,4 @@
-import type { Account, AssetData } from '@fuel-wallet/types';
+import type { Account } from '@fuel-wallet/types';
 import type { TransactionRequest, WalletLocked } from 'fuels';
 
 import {
@@ -58,6 +58,7 @@ export type TxInputs = {
     amount?: BN;
     assetId?: string;
     tip?: BN;
+    gasLimit?: BN;
   };
   applyFee: {
     transactionRequest?: TransactionRequest;
@@ -171,10 +172,7 @@ export class TxService {
       const transaction = transactionRequest.toTransaction();
       const transactionBytes = transactionRequest.toTransactionBytes();
 
-      const simulateTxErrors = getGroupedErrors(
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        e.response?.errors
-      );
+      const simulateTxErrors = getGroupedErrors(e.response?.errors);
       const gasPrice = await provider.getLatestGasPrice();
       const txSummary = assembleTransactionSummary({
         receipts: [],
@@ -221,33 +219,33 @@ export class TxService {
     };
   }
 
-  static async estimateInitialFee() {
+  static async estimateDefaultTips() {
     const currentNetwork = await NetworkService.getSelectedNetwork();
     const provider = await Provider.create(currentNetwork?.url || '');
-    const baseAssetId = provider.getBaseAssetId();
-    const request = new ScriptTransactionRequest();
-    const address = Address.fromRandom();
-
-    const coin = coinQuantityfy([1_000_000, baseAssetId]);
-    request.addCoinOutput(address, coin.amount, coin.assetId);
-    const { maxFee } = await provider.getTransactionCost(request, {
-      estimateTxDependencies: true,
-    });
 
     const { regularTip, fastTip } = await getCurrentTips(provider);
 
     return {
-      maxFee,
       regularTip: bn(regularTip),
       fastTip: bn(fastTip),
-      baseAssetId,
+    };
+  }
+
+  static async estimateGasLimit() {
+    const currentNetwork = await NetworkService.getSelectedNetwork();
+    const provider = await Provider.create(currentNetwork?.url || '');
+    const consensusParameters = provider.getChain().consensusParameters;
+
+    return {
+      baseGasLimit: bn(1),
+      maxGasPerTx: consensusParameters.txParameters.maxGasPerTx,
     };
   }
 
   static async createTransfer(input: TxInputs['createTransfer'] | undefined) {
-    const { amount, assetId, to, tip } = input || {};
+    const { amount, assetId, to, tip, gasLimit: gasLimitInput } = input || {};
 
-    if (!to || !assetId || !amount || !tip) {
+    if (!to || !assetId || !amount || !tip || !gasLimitInput) {
       throw new Error('Missing params for transaction request');
     }
 
@@ -259,24 +257,25 @@ export class TxService {
     if (!network?.url || !account) {
       throw new Error('Missing context for transaction request');
     }
+
     const provider = await Provider.create(network.url);
     const wallet = new WalletLockedCustom(account.address, provider);
+
     const transactionRequest = await wallet.createTransfer(
       to,
       amount,
-      assetId
-      // { tip }
+      assetId,
+      {
+        tip,
+      }
     );
-    const { maxFee, gasLimit } = await provider.estimateTxGasAndFee({
-      transactionRequest,
-    });
 
-    transactionRequest.tip = tip;
-    transactionRequest.maxFee = maxFee.add(transactionRequest.tip);
+    const baseFee = transactionRequest.maxFee.sub(
+      transactionRequest.tip ?? bn(0)
+    );
 
     return {
-      maxFee,
-      gasLimit,
+      baseFee: baseFee.sub(1), // To match maxFee calculated on TS SDK (they add 1 unit)
       transactionRequest,
       address: account.address,
       providerUrl: network.url,
