@@ -38,9 +38,6 @@ const selectors = {
   fastTip(state: SendMachineState) {
     return state.context.fastTip;
   },
-  baseAssetId(state: SendMachineState) {
-    return state.context.baseAssetId;
-  },
   readyToSend(state: SendMachineState) {
     return state.matches('readyToSend');
   },
@@ -89,7 +86,12 @@ const schema = yup
           ({ assetId }) => assetId === asset
         );
 
-        if (!balanceAssetSelected?.amount || !baseFee || !value) {
+        // It means "baseFee" is being calculated
+        if (!baseFee) {
+          return true;
+        }
+
+        if (!balanceAssetSelected?.amount || !value) {
           return false;
         }
 
@@ -162,7 +164,7 @@ export type SendFormValues = {
 const DEFAULT_VALUES: SendFormValues = {
   asset: '',
   amount: bn(0),
-  address: '',
+  address: 'fuel13fuuqr464v77rxpcjjv0n74yjygfydrmmf6h4jxs26jstenzyk3spaax76',
   fees: {
     tip: bn(0),
     gasLimit: bn(0),
@@ -239,7 +241,6 @@ export function useSend() {
     name: 'asset',
   });
 
-  const baseAssetId = useSelector(service, selectors.baseAssetId);
   const regularTip = useSelector(service, selectors.regularTip);
   const fastTip = useSelector(service, selectors.fastTip);
   const sendStatusSelector = selectors.status(txRequest.txStatus);
@@ -309,7 +310,6 @@ export function useSend() {
     txRequest,
     assetIdSelected,
     balanceAssetSelected,
-    baseAssetId,
     errorMessage,
     handlers: {
       cancel,

@@ -60,7 +60,14 @@ export function SendSelect({
       baseFeeRef.current = baseFee;
       tipRef.current = tip;
 
-      form.setValue('amount', balanceAssetSelected.sub(baseFee.add(tip)), {
+      // Adding 2 magical units to match the fake unit that is added on TS SDK (.add(1))
+      // and then removed on the "transaction" service (.sub(1))
+      const maxFee = baseFee.add(tip).add(2);
+
+      // Subtracting 2000 units due to the dynamic fees behavior
+      const availableBalance = balanceAssetSelected.sub(2000);
+
+      form.setValue('amount', availableBalance.sub(maxFee), {
         shouldValidate: true,
       });
     }
@@ -111,7 +118,7 @@ export function SendSelect({
           </Box>
         </Box.Flex>
         <Box.Stack gap="$3">
-          <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
+          <Text as="span" css={styles.title}>
             Amount
           </Text>
           <Form.Control isRequired isInvalid={Boolean(amountFieldState.error)}>
@@ -147,19 +154,23 @@ export function SendSelect({
           </Form.Control>
         </Box.Stack>
 
-        {amount.value.gt(0) && assetId && baseFee && regularTip && fastTip && (
-          <MotionStack {...animations.slideInTop()} gap="$3">
-            <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
-              Fee (network)
-            </Text>
-            <TxFeeOptions
-              baseFee={baseFee}
-              baseGasLimit={baseGasLimit}
-              regularTip={regularTip}
-              fastTip={fastTip}
-            />
-          </MotionStack>
-        )}
+        {amount.value.gt(0) &&
+          assetId &&
+          baseFee.gt(0) &&
+          regularTip &&
+          fastTip && (
+            <MotionStack {...animations.slideInTop()} gap="$3">
+              <Text as="span" css={styles.title}>
+                Fee (network)
+              </Text>
+              <TxFeeOptions
+                baseFee={baseFee}
+                baseGasLimit={baseGasLimit}
+                regularTip={regularTip}
+                fastTip={fastTip}
+              />
+            </MotionStack>
+          )}
       </Box.Stack>
     </MotionContent>
   );
@@ -185,11 +196,8 @@ const styles = {
   title: cssObj({
     pt: '$2',
     color: '$intentsBase12',
-    fontSize: '$lg',
-    fontWeight: '$normal',
-  }),
-  amountTitle: cssObj({
     fontSize: '$md',
+    fontWeight: '$normal',
   }),
   addressRow: cssObj({
     flex: 1,

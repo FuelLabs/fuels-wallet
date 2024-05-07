@@ -25,17 +25,17 @@ export type MachineContext = {
   fastTip?: BN;
   maxGasPerTx?: BN;
   input?: TxInputs['createTransfer'];
-  baseAssetId?: string;
   error?: string;
 };
 
-type EstimateInitialFeeReturn = {
-  baseFee: BN;
-  baseGasLimit: BN;
+type EstimateDefaultTipsReturn = {
   regularTip: BN;
   fastTip: BN;
+};
+
+type EstimateGasLimitReturn = {
+  baseGasLimit: BN;
   maxGasPerTx: BN;
-  baseAssetId: string;
 };
 
 type CreateTransactionReturn = {
@@ -49,8 +49,11 @@ type MachineServices = {
   createTransactionRequest: {
     data: CreateTransactionReturn;
   };
-  estimateInitialFee: {
-    data: EstimateInitialFeeReturn;
+  estimateDefaultTips: {
+    data: EstimateDefaultTipsReturn;
+  };
+  estimateGasLimit: {
+    data: EstimateGasLimitReturn;
   };
 };
 
@@ -79,11 +82,11 @@ export const sendMachine = createMachine(
       services: {} as MachineServices,
     },
     id: '(machine)',
-    initial: 'estimatingInitialFee',
+    initial: 'estimatingInitialTips',
     states: {
-      estimatingInitialFee: {
+      estimatingInitialTips: {
         invoke: {
-          src: 'estimateInitialFee',
+          src: 'estimateDefaultTips',
           onDone: [
             {
               cond: FetchMachine.hasError,
@@ -91,7 +94,23 @@ export const sendMachine = createMachine(
               actions: [assignError()],
             },
             {
-              actions: ['assignInitialFee', 'assignBaseAssetId'],
+              actions: ['assignDefaultTips'],
+              target: 'estimatingGasLimit',
+            },
+          ],
+        },
+      },
+      estimatingGasLimit: {
+        invoke: {
+          src: 'estimateGasLimit',
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              target: 'idle',
+              actions: [assignError()],
+            },
+            {
+              actions: ['assignGasLimit'],
               target: 'idle',
             },
           ],
@@ -146,33 +165,42 @@ export const sendMachine = createMachine(
   },
   {
     actions: {
-      assignInitialFee: assign((_, ev) => ({
-        baseFee: ev.data.baseFee,
-        baseGasLimit: ev.data.baseGasLimit,
+      assignDefaultTips: assign((_ctx, ev) => ({
         regularTip: ev.data.regularTip,
         fastTip: ev.data.fastTip,
-        maxGasPerTx: ev.data.maxGasPerTx,
       })),
-      assignBaseAssetId: assign((_ctx, ev) => ({
-        baseAssetId: ev.data.baseAssetId,
+      assignGasLimit: assign((_ctx, ev) => ({
+        baseGasLimit: ev.data.baseGasLimit,
+        maxGasPerTx: ev.data.maxGasPerTx,
       })),
       assignInput: assign((_ctx, ev) => ({
         input: ev.input,
       })),
-      assignTransactionData: assign((ctx, ev) => ({
+      assignTransactionData: assign((_ctx, ev) => ({
         transactionRequest: ev.data.transactionRequest,
         providerUrl: ev.data.providerUrl,
         address: ev.data.address,
-        baseFee: ev.data.baseFee ?? ctx.baseFee,
+        baseFee: ev.data.baseFee,
       })),
     },
     services: {
-      estimateInitialFee: FetchMachine.create<never, EstimateInitialFeeReturn>({
+      estimateDefaultTips: FetchMachine.create<
+        never,
+        EstimateDefaultTipsReturn
+      >({
         showError: false,
         maxAttempts: 1,
         async fetch() {
-          const initialFees = await TxService.estimateInitialFee();
-          return initialFees;
+          const defaultTips = await TxService.estimateDefaultTips();
+          return defaultTips;
+        },
+      }),
+      estimateGasLimit: FetchMachine.create<never, EstimateGasLimitReturn>({
+        showError: false,
+        maxAttempts: 1,
+        async fetch() {
+          const gasLimit = await TxService.estimateGasLimit();
+          return gasLimit;
         },
       }),
       createTransactionRequest: FetchMachine.create<

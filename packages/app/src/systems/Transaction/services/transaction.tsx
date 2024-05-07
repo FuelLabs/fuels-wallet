@@ -219,29 +219,26 @@ export class TxService {
     };
   }
 
-  static async estimateInitialFee() {
+  static async estimateDefaultTips() {
     const currentNetwork = await NetworkService.getSelectedNetwork();
     const provider = await Provider.create(currentNetwork?.url || '');
-    const baseAssetId = provider.getBaseAssetId();
-    const request = new ScriptTransactionRequest();
-    const address = Address.fromRandom();
-
-    const coin = coinQuantityfy([1_000_000, baseAssetId]);
-    request.addCoinOutput(address, coin.amount, coin.assetId);
-    const { maxFee, gasUsed } = await provider.getTransactionCost(request, {
-      estimateTxDependencies: true,
-    });
 
     const { regularTip, fastTip } = await getCurrentTips(provider);
 
     return {
-      baseFee: maxFee,
-      baseGasLimit: gasUsed,
       regularTip: bn(regularTip),
       fastTip: bn(fastTip),
-      baseAssetId,
-      maxGasPerTx:
-        provider.getChain().consensusParameters.txParameters.maxGasPerTx,
+    };
+  }
+
+  static async estimateGasLimit() {
+    const currentNetwork = await NetworkService.getSelectedNetwork();
+    const provider = await Provider.create(currentNetwork?.url || '');
+    const consensusParameters = provider.getChain().consensusParameters;
+
+    return {
+      baseGasLimit: bn(1),
+      maxGasPerTx: consensusParameters.txParameters.maxGasPerTx,
     };
   }
 
@@ -273,8 +270,12 @@ export class TxService {
       }
     );
 
+    const baseFee = transactionRequest.maxFee.sub(
+      transactionRequest.tip ?? bn(0)
+    );
+
     return {
-      baseFee: transactionRequest.maxFee?.sub(transactionRequest.tip ?? bn(0)),
+      baseFee: baseFee.sub(1), // To match maxFee calculated on TS SDK (they add 1 unit)
       transactionRequest,
       address: account.address,
       providerUrl: network.url,

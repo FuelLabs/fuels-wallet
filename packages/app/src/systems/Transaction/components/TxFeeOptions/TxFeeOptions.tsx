@@ -25,6 +25,7 @@ export const TxFeeOptions = ({
   const [isAdvanced, setIsAdvanced] = useState(false);
   const { control, setValue, trigger } = useFormContext<SendFormValues>();
   const previousDefaultTip = useRef<BN>(regularTip);
+  const previousGasLimit = useRef<BN>(baseGasLimit);
 
   const { field: tip } = useController({
     control,
@@ -61,9 +62,9 @@ export const TxFeeOptions = ({
   useEffect(() => {
     if (!isAdvanced) {
       setValue('fees.tip', previousDefaultTip.current);
-      setValue('fees.gasLimit', baseGasLimit);
+      setValue('fees.gasLimit', previousGasLimit.current);
     }
-  }, [isAdvanced, setValue, baseGasLimit]);
+  }, [isAdvanced, setValue]);
 
   return (
     <Box.Stack gap="$1">
