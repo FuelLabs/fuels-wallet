@@ -68,7 +68,7 @@
   "devDependencies": {
     "@crxjs/vite-plugin": "1.0.14",
     "@fuel-wallet/types": "workspace:*",
-    "@fuels/connectors": "0.4.0-preview-e6a2b2cfc0598a0cf949c473b31c6fcb4f7b8ddd",
+    "@fuels/connectors": "0.4.0-preview-89d9c1a380a2f56505d2d80279bba3703ed37cba",
     "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/named-operations-object": "2.3.1",
     "@graphql-codegen/near-operation-file-preset": "2.5.0",
