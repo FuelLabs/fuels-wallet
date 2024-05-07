@@ -3,12 +3,13 @@ import { bn } from 'fuels';
 import { useState } from 'react';
 
 import { mint } from '../contract_interactions';
-import { getBaseAssetId } from '../utils';
+import { useBaseAssetId } from '../hooks/useBaseAssetId';
 
 export const MintAssetCard = () => {
   const [amount, setAmount] = useState<string>('');
   const { account } = useAccount();
   const { wallet } = useWallet(account);
+  const baseAssetId = useBaseAssetId();
 
   return (
     <div>
@@ -22,12 +23,13 @@ export const MintAssetCard = () => {
         />
         <button
           type="button"
+          disabled={!baseAssetId}
           onClick={async () => {
-            if (wallet && amount) {
+            if (baseAssetId && wallet && amount) {
               await mint({
                 wallet,
                 amount: bn.parseUnits(amount),
-                subId: getBaseAssetId(),
+                subId: baseAssetId,
               });
             }
           }}

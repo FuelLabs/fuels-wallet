@@ -4,14 +4,17 @@ import { useState } from 'react';
 
 import { MAIN_CONTRACT_ID } from '../config';
 import { deposit } from '../contract_interactions';
-import { calculateAssetId, getBaseAssetId } from '../utils';
+import { useBaseAssetId } from '../hooks/useBaseAssetId';
+import { calculateAssetId } from '../utils';
 
 export const ForwardCustomAssetCard = () => {
   const [amount, setAmount] = useState<string>('');
   const { account } = useAccount();
   const wallet = useWallet(account);
 
-  const assetId = calculateAssetId(MAIN_CONTRACT_ID, getBaseAssetId());
+  const baseAssetId = useBaseAssetId();
+  const assetId =
+    !!baseAssetId && calculateAssetId(MAIN_CONTRACT_ID, baseAssetId);
 
   return (
     <div>
@@ -23,8 +26,9 @@ export const ForwardCustomAssetCard = () => {
         />
         <button
           type="button"
+          disabled={!assetId}
           onClick={async () => {
-            if (wallet.wallet && amount) {
+            if (assetId && wallet.wallet && amount) {
               await deposit({
                 wallet: wallet.wallet,
                 amount: bn.parseUnits(amount),
