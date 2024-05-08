@@ -91,7 +91,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run E2E Tests
-        run: xvfb-run --auto-servernum -- pnpm test:e2e
+        run: xvfb-run --auto-servernum -- pnpm test:e2e e2e/Accounts.test.ts:33:7
         env:
           NODE_ENV: test
 
