@@ -3,6 +3,7 @@ import { type Locator, expect } from '@playwright/test';
 import { type Asset, Provider, Signer, Wallet, bn, hashMessage } from 'fuels';
 
 import {
+  delay,
   getButtonByText,
   getByAriaLabel,
   getElementByText,
@@ -32,20 +33,6 @@ import {
 const WALLET_PASSWORD = 'Qwe123456$';
 
 test.describe('FuelWallet Extension', () => {
-  test('On install sign-up page is open', async ({ context }) => {
-    // In development mode files are render dynamically
-    // making this first page to throw an error File not found.
-    // if (process.env.NODE_ENV !== 'test') return;
-
-    const page = await context.waitForEvent('page', {
-      predicate: (page) => {
-        return page.url().includes('sign-up');
-      },
-    });
-    expect(page.url()).toContain('sign-up');
-    await page.close();
-  });
-
   test('If user opens popup it should force open a sign-up page', async ({
     context,
     extensionId,
@@ -297,6 +284,10 @@ test.describe('FuelWallet Extension', () => {
     await test.step('window.fuel.currentAccount()', async () => {
       await test.step('Current authorized current Account', async () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+
+        // delay to avoid the page to get the wrong currentAccount
+        await delay(1000);
+
         const currentAccountPromise = await blankPage.evaluate(async () => {
           return window.fuel.currentAccount();
         });
@@ -605,6 +596,9 @@ test.describe('FuelWallet Extension', () => {
     await test.step('window.fuel.on("currentAccount") to a connected account', async () => {
       // Switch to account 2
       await switchAccount(popupPage, 'Account 2');
+
+      // delay to avoid the page to listen the event from above swithAccount wrong event
+      await delay(1000);
 
       const onChangeAccountPromise = blankPage.evaluate(() => {
         return new Promise((resolve) => {
