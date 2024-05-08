@@ -18,9 +18,6 @@ function getEnvName() {
   if (process.env.NODE_ENV === 'production') {
     return '.env.production';
   }
-  if (process.env.NODE_ENV === 'test') {
-    return '.env.example';
-  }
 }
 
 // Load from more specific env file to generic ->
