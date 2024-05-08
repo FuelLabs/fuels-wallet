@@ -59,7 +59,7 @@ jobs:
           base-coverage-file: ${{ env.COVERAGE_FILE }}
 
       - name: Stop Test Node
-        run: pnpm node:clean:test
+        run: pnpm node:clean
 
   tests-e2e:
     name: E2E Tests
@@ -105,7 +105,7 @@ jobs:
           retention-days: 30
 
       - name: Stop Test Node
-        run: pnpm node:clean:test
+        run: pnpm node:clean
   
   tests-e2e-contracts:
     name: E2E Contract Tests
@@ -160,5 +160,5 @@ jobs:
           retention-days: 30
 
       - name: Stop Test Node
-        run: pnpm node:clean:test
+        run: pnpm node:clean
 
