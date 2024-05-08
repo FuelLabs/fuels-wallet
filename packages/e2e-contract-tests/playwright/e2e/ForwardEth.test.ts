@@ -44,7 +44,7 @@ test.describe('Forward Eth', () => {
     await hasText(walletNotificationPage, 'Ethereum');
 
     // test asset id is correct
-    await hasText(walletNotificationPage, shortAddress(getBaseAssetId()));
+    await hasText(walletNotificationPage, shortAddress(await getBaseAssetId()));
 
     // test forward eth amount is correct
     await hasText(walletNotificationPage, `${forwardEthAmount} ETH`);

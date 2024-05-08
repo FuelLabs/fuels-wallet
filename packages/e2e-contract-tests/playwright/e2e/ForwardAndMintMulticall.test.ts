@@ -52,14 +52,14 @@ test.describe('Forward and Mint Multicall', () => {
     // test forward asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');
     // test forward asset id is shown
-    await hasText(walletNotificationPage, shortAddress(getBaseAssetId()));
+    await hasText(walletNotificationPage, shortAddress(await getBaseAssetId()));
     // test forward eth amount is correct
     await hasText(walletNotificationPage, `${depositAmount} ETH`);
 
     // test mint asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
     // test mint asset id is shown
-    const assetId = calculateAssetId(MAIN_CONTRACT_ID, getBaseAssetId());
+    const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
     await hasText(walletNotificationPage, shortAddress(assetId));
     // test mint amount is correct
     await hasText(walletNotificationPage, mintAmount);

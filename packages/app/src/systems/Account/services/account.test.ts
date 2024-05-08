@@ -1,27 +1,41 @@
 import { Provider, bn } from 'fuels';
 import { mockServer } from '~/mocks/server';
-import { mockBalancesOnGraphQL } from '~/systems/Asset/__mocks__/assets';
+import {
+  MOCK_BASE_ASSET_ID,
+  mockBalancesOnGraphQL,
+} from '~/systems/Asset/__mocks__/assets';
 
 import { MOCK_ACCOUNTS } from '../__mocks__';
 
+import { graphql } from 'msw';
+import { MOCK_TRANSACTION_WITH_RECEIPTS_GQL } from '~/systems/Transaction/__mocks__/transaction';
 import { AccountService } from './account';
 
+const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
 const MOCK_ACCOUNT = MOCK_ACCOUNTS[0];
 
-describe('AccountService', () => {
-  const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
+const MOCK_BALANCES = [
+  {
+    node: {
+      assetId: MOCK_BASE_ASSET_ID,
+      amount: bn(1000),
+    },
+  },
+];
 
+mockServer([
+  graphql.query('getChain', (_req, res, ctx) => {
+    return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
+  }),
+  graphql.query('getNodeInfo', (_req, res, ctx) => {
+    return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
+  }),
+  mockBalancesOnGraphQL(MOCK_BALANCES),
+]);
+
+describe('AccountService', () => {
   beforeEach(async () => {
-    const MOCK_BALANCES = [
-      {
-        node: {
-          assetId: (await Provider.create(providerUrl)).getBaseAssetId(),
-          amount: bn(1000),
-        },
-      },
-    ];
     await AccountService.clearAccounts();
-    mockServer([mockBalancesOnGraphQL(MOCK_BALANCES)]);
   });
 
   it('should add a new account', async () => {

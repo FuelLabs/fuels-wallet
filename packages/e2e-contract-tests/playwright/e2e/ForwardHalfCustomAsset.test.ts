@@ -40,12 +40,12 @@ test.describe('Forward Half Custom Asset', () => {
     );
     const recipient: IdentityInput = {
       Address: {
-        value: fuelWallet.address.toHexString(),
+        bits: fuelWallet.address.toB256(),
       },
     };
     const response = await contract.functions
-      .mint(recipient, getBaseAssetId(), bn(100_000_000_000))
-      .txParams({ gasPrice: 1, gasLimit: 1_000_000 })
+      .mint(recipient, await getBaseAssetId(), bn(100_000_000_000))
+      .txParams({ gasLimit: 1_000_000 })
       .call();
     await response.transactionResponse.waitForResult();
 
@@ -68,7 +68,7 @@ test.describe('Forward Half Custom Asset', () => {
     // test the forward asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
     // test forward asset id is correct
-    const assetId = calculateAssetId(MAIN_CONTRACT_ID, getBaseAssetId());
+    const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
     await hasText(walletNotificationPage, shortAddress(assetId));
     // test forward custom asset amount is correct
     await hasText(walletNotificationPage, forwardCustomAssetAmount);

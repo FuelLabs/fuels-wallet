@@ -44,7 +44,7 @@ test.describe('Forward Custom Asset', () => {
       },
     };
     const response = await contract.functions
-      .mint(recipient, getBaseAssetId(), bn(100_000_000_000))
+      .mint(recipient, await getBaseAssetId(), bn(100_000_000_000))
       .txParams({ gasLimit: 1_000_000 })
       .call();
     await response.transactionResponse.waitForResult();
@@ -68,7 +68,7 @@ test.describe('Forward Custom Asset', () => {
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
 
     // test asset id is correct
-    const assetId = calculateAssetId(MAIN_CONTRACT_ID, getBaseAssetId());
+    const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
     await hasText(walletNotificationPage, shortAddress(assetId));
 
     // test forward custom asset amount is correct
