@@ -22,7 +22,7 @@ export default defineConfig({
   webServer: {
     command: 'pnpm dev:crx',
     // command: `pnpm exec http-server -s -p ${PORT} ${distDirectory}`,
-    port: Number(PORT),
+    // port: Number(PORT),
     stdout: 'pipe',
     reuseExistingServer: true,
   },
