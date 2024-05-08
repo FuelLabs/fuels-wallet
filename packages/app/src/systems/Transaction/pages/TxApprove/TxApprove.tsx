@@ -1,20 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
-import {
-  Alert,
-  Box,
-  Button,
-  CardList,
-  ContentLoader,
-  Dialog,
-} from '@fuel-ui/react';
-import { useMemo } from 'react';
+import { Button, Dialog } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useAssets } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 import { useTransactionRequest } from '~/systems/DApp';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
-import { type GroupedErrors, TxContent, TxHeader } from '~/systems/Transaction';
+import { TxContent } from '~/systems/Transaction';
 
 export const TxApprove = () => {
   const ctx = useTransactionRequest();

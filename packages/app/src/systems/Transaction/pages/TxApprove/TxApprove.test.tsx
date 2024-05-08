@@ -72,7 +72,10 @@ describe('TxApprove', () => {
             return false;
         }
       }),
-      txResult: mockTxResult,
+      shouldShowTxSimulated: true,
+      shouldShowActions: true,
+      simulateTxErrors: mockTxResult,
+      txSummaryExecuted: mockTxResult,
       approveStatus: jest.fn().mockReturnValue(TransactionStatus.success),
       handlers: {
         closeDialog: jest.fn(),
@@ -83,6 +86,7 @@ describe('TxApprove', () => {
       shouldShowTx: true,
       title: 'Transaction Approval',
       providerUrl: 'https://example.com',
+      errors: {},
       ...transactionRequestOverrides,
     });
 
@@ -122,27 +126,49 @@ describe('TxApprove', () => {
   });
 
   it('displays success when a transaction was completed', () => {
-    setup({}, {}, { status: TxRequestStatus.success, result: true });
+    setup(
+      {
+        shouldShowTxSimulated: false,
+        shouldShowActions: false,
+        shouldShowTxExecuted: true,
+        executedStatus: () => TransactionStatus.success,
+      },
+      {},
+      { status: TxRequestStatus.success, result: true }
+    );
     expect(screen.getByText(/success/i)).toBeDefined();
   });
 
   it('displays an error message when the transaction fails', () => {
     setup(
-      { approveStatus: jest.fn().mockReturnValue(TransactionStatus.failure) },
+      {
+        errors: {
+          simulateTxErrors: {
+            InsufficientInputAmount: true,
+          },
+        },
+      },
       {},
       { status: TxRequestStatus.failed, result: true }
     );
-    expect(screen.getByText(/failure/i)).toBeDefined();
+    expect(screen.getByText('Not enough funds')).toBeDefined();
   });
 
   it('does not show the approve button show actions is false', () => {
-    setup({ showActions: false });
+    setup({ shouldShowActions: false });
     expect(screen.queryByText(/approve/i)).toBeNull();
   });
 
   it('shows the try again button when the transaction has failed', () => {
     setup(
-      { txResult: { ...mockTxResult, status: TransactionStatus.failure } },
+      {
+        shouldShowTxExecuted: true,
+        executedStatus: () => TransactionStatus.failure,
+        txSummaryExecuted: {
+          ...mockTxResult,
+          status: TransactionStatus.failure,
+        },
+      },
       {},
       { status: TxRequestStatus.failed, result: true }
     );
@@ -151,7 +177,14 @@ describe('TxApprove', () => {
 
   it('calls the try again handler when try again button is clicked', () => {
     setup(
-      { txResult: { ...mockTxResult, status: TransactionStatus.failure } },
+      {
+        shouldShowTxExecuted: true,
+        executedStatus: () => TransactionStatus.failure,
+        txSummaryExecuted: {
+          ...mockTxResult,
+          status: TransactionStatus.failure,
+        },
+      },
       {},
       { status: TxRequestStatus.failed, result: true }
     );
