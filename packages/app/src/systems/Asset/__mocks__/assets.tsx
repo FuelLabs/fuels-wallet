@@ -9,7 +9,7 @@ export const MOCK_ASSETS = fuelAssets.map((item) => ({
 }));
 
 // BaseAssetId replacement
-const MOCK_BASE_ASSET_ID =
+export const MOCK_BASE_ASSET_ID =
   '0x0000000000000000000000000000000000000000000000000000000000000000';
 
 export const MOCK_CUSTOM_ASSET = {
