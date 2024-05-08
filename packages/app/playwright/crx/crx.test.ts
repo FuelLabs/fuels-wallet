@@ -1,13 +1,6 @@
+import type { Account as WalletAccount } from '@fuel-wallet/types';
 import { type Locator, expect } from '@playwright/test';
-import {
-  type Account,
-  type Asset,
-  Provider,
-  Signer,
-  Wallet,
-  bn,
-  hashMessage,
-} from 'fuels';
+import { type Asset, Provider, Signer, Wallet, bn, hashMessage } from 'fuels';
 
 import {
   delay,
@@ -198,8 +191,7 @@ test.describe('FuelWallet Extension', () => {
     });
 
     async function connectAccounts() {
-      console.log('before connection');
-      await delay(10000);
+      await reload(blankPage);
       const connectionResponse = blankPage.evaluate(async () => {
         const isConnected = await window.fuel.connect();
         if (!isConnected) {
@@ -209,23 +201,15 @@ test.describe('FuelWallet Extension', () => {
 
         return true;
       });
-      console.log('after connection');
       const authorizeRequest = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
       });
 
-      await delay(2000);
-      console.log('before toggle account 3');
-      await delay(1000000);
-      // @TODO: check text due to some flakiness over here. connect popup not being rendered (white popup)
       await hasText(authorizeRequest, /connect/i);
       // Add Account 3 to the DApp connection
       await getByAriaLabel(authorizeRequest, 'Toggle Account 3').click();
-      console.log('before toggle account 4');
       // Add Account 4 to the DApp connection
       await getByAriaLabel(authorizeRequest, 'Toggle Account 4').click();
-
-      console.log('before click account 5');
 
       // Account 5 (Hidden) should not be shown to connect
       await expect(async () => {
@@ -234,25 +218,17 @@ test.describe('FuelWallet Extension', () => {
         });
       }).rejects.toThrow();
 
-      console.log(4);
       await hasText(authorizeRequest, /connect/i);
 
-      console.log(5);
       await getButtonByText(authorizeRequest, /next/i).click();
-      console.log(6);
       await hasText(authorizeRequest, /accounts/i);
-      console.log(7);
       await getButtonByText(authorizeRequest, /connect/i).click();
-      console.log(8);
 
       expect(await connectionResponse).toBeTruthy();
-      console.log(9);
       const isConnected = blankPage.evaluate(async () => {
         return window.fuel.isConnected();
       });
-      console.log(99);
       expect(await isConnected).toBeTruthy();
-      console.log(999);
     }
 
     await test.step('window.fuel.connect()', async () => {
@@ -260,18 +236,14 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.disconnect()', async () => {
-      console.log('before disconnect');
       const isDisconnected = blankPage.evaluate(async () => {
         return window.fuel.disconnect();
       });
 
-      console.log('after disconnect');
       expect(await isDisconnected).toBeTruthy();
 
-      console.log('before connect Accounts');
       // we need to reconnect the accounts for later tests
       await connectAccounts();
-      console.log('after connect Accounts');
     });
 
     await test.step('window.fuel.on("connection")', async () => {
@@ -356,7 +328,7 @@ test.describe('FuelWallet Extension', () => {
         );
       }
 
-      async function approveMessageSignCheck(authorizedAccount: Account) {
+      async function approveMessageSignCheck(authorizedAccount: WalletAccount) {
         const signedMessagePromise = signMessage(
           authorizedAccount.address.toString()
         );
@@ -413,126 +385,119 @@ test.describe('FuelWallet Extension', () => {
       });
     });
 
-    // @TODO: re-enable after we have faucet
-    // await test.step('window.fuel.sendTransaction()', async () => {
-    //   // Create transfer function
-    //   async function transfer(
-    //     senderAddress: string,
-    //     receiverAddress: string,
-    //     amount: number
-    //   ) {
-    //     return blankPage.evaluate(
-    //       async ([senderAddress, receiverAddress, amount]) => {
-    //         const receiver = window.createAddress(receiverAddress as string);
-    //         const wallet = await window.fuel?.getWallet(
-    //           senderAddress as string
-    //         );
+    await test.step('window.fuel.sendTransaction()', async () => {
+      // Create transfer function
+      async function transfer(
+        senderAddress: string,
+        receiverAddress: string,
+        amount: number
+      ) {
+        return blankPage.evaluate(
+          async ([senderAddress, receiverAddress, amount]) => {
+            const receiver = window.createAddress(receiverAddress as string);
+            const wallet = await window.fuel?.getWallet(
+              senderAddress as string
+            );
 
-    //         // TODO: remove this gas config once SDK fixes and start with correct values
-    //         const chain = await wallet.provider.getChain();
-    //         const nodeInfo = await wallet.provider.fetchNode();
-    //         const gasLimit = chain.consensusParameters.maxGasPerTx.div(2);
-    //         const gasPrice = nodeInfo.minGasPrice;
-    //         const response = await wallet.transfer(
-    //           receiver,
-    //           Number(amount),
-    //           undefined,
-    //           { gasPrice, gasLimit }
-    //         );
-    //         const result = await response.waitForResult();
-    //         return result.status;
-    //       },
-    //       [senderAddress, receiverAddress, String(amount)]
-    //     );
-    //   }
+            const response = await wallet.transfer(
+              receiver,
+              Number(amount),
+              undefined
+            );
+            const result = await response.waitForResult();
+            return result.status;
+          },
+          [senderAddress, receiverAddress, String(amount)]
+        );
+      }
 
-    //   async function approveTxCheck(senderAccount: Account) {
-    //     const provider = await Provider.create(
-    //       process.env.VITE_FUEL_PROVIDER_URL
-    //     );
-    //     const receiverWallet = Wallet.generate({
-    //       provider,
-    //     });
-    //     const AMOUNT_TRANSFER = 100;
+      async function approveTxCheck(senderAccount: WalletAccount) {
+        const provider = await Provider.create(
+          process.env.VITE_FUEL_PROVIDER_URL
+        );
+        const receiverWallet = Wallet.generate({
+          provider,
+        });
+        const AMOUNT_TRANSFER = 100;
 
-    //     // Add some coins to the account
-    //     await seedWallet(senderAccount.address, bn(100_000_000));
+        // Add some coins to the account
+        await seedWallet(senderAccount.address, bn(100_000_000));
 
-    //     // Create transfer
-    //     const transferStatus = transfer(
-    //       senderAccount.address,
-    //       receiverWallet.address.toString(),
-    //       AMOUNT_TRANSFER
-    //     );
+        // Create transfer
+        const transferStatus = transfer(
+          senderAccount.address,
+          receiverWallet.address.toString(),
+          AMOUNT_TRANSFER
+        );
 
-    //     // Wait for approve transaction page to show
-    //     const approveTransactionPage = await context.waitForEvent('page', {
-    //       predicate: (page) => page.url().includes(extensionId),
-    //     });
+        // Wait for approve transaction page to show
+        const approveTransactionPage = await context.waitForEvent('page', {
+          predicate: (page) => page.url().includes(extensionId),
+        });
 
-    //     // Approve transaction
-    //     await hasText(approveTransactionPage, /0\.0000001.ETH/i);
-    //     await waitAriaLabel(
-    //       approveTransactionPage,
-    //       senderAccount.address.toString()
-    //     );
-    //     await hasText(approveTransactionPage, /Confirm before approving/i);
-    //     await getButtonByText(approveTransactionPage, /Approve/i).click();
+        // Approve transaction
+        await hasText(approveTransactionPage, /0\.0000001.ETH/i);
+        await waitAriaLabel(
+          approveTransactionPage,
+          senderAccount.address.toString()
+        );
+        await hasText(approveTransactionPage, /Confirm before approving/i);
+        await getButtonByText(approveTransactionPage, /Approve/i).click();
 
-    //     await expect(transferStatus).resolves.toBe('success');
-    //     const balance = await receiverWallet.getBalance();
-    //     expect(balance.toNumber()).toBe(AMOUNT_TRANSFER);
-    //   }
+        await expect(transferStatus).resolves.toBe('success');
+        const balance = await receiverWallet.getBalance();
+        expect(balance.toNumber()).toBe(AMOUNT_TRANSFER);
+      }
 
-    //   await test.step('Send transfer using authorized Account', async () => {
-    //     const authorizedAccount = await switchAccount(popupPage, 'Account 1');
-    //     await approveTxCheck(authorizedAccount);
-    //   });
+      await test.step('Send transfer using authorized Account', async () => {
+        const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+        await approveTxCheck(authorizedAccount);
+      });
 
-    //   await test.step('Send transfer using authorized Account 3', async () => {
-    //     const authorizedAccount = await getAccountByName(
-    //       popupPage,
-    //       'Account 3'
-    //     );
-    //     await approveTxCheck(authorizedAccount);
-    //   });
+      await test.step('Send transfer using authorized Account 3', async () => {
+        const authorizedAccount = await getAccountByName(
+          popupPage,
+          'Account 3'
+        );
+        await approveTxCheck(authorizedAccount);
+      });
 
-    //   await test.step('Send transfer using authorized Account 4 (from Private Key)', async () => {
-    //     const authorizedAccount = await getAccountByName(
-    //       popupPage,
-    //       'Account 4'
-    //     );
-    //     await approveTxCheck(authorizedAccount);
-    //   });
+      await test.step('Send transfer using authorized Account 4 (from Private Key)', async () => {
+        const authorizedAccount = await getAccountByName(
+          popupPage,
+          'Account 4'
+        );
+        await approveTxCheck(authorizedAccount);
+      });
 
-    //   await test.step('Send transfer should block unauthorized account', async () => {
-    //     const nonAuthorizedAccount = await getAccountByName(
-    //       popupPage,
-    //       'Account 2'
-    //     );
-    //     const provider = await Provider.create(
-    //       process.env.VITE_FUEL_PROVIDER_URL
-    //     );
-    //     const receiverWallet = Wallet.generate({
-    //       provider,
-    //     });
-    //     const AMOUNT_TRANSFER = 100;
+      await test.step('Send transfer should block unauthorized account', async () => {
+        const nonAuthorizedAccount = await getAccountByName(
+          popupPage,
+          'Account 2'
+        );
+        const provider = await Provider.create(
+          process.env.VITE_FUEL_PROVIDER_URL
+        );
+        const receiverWallet = Wallet.generate({
+          provider,
+        });
+        const AMOUNT_TRANSFER = 100;
 
-    //     // Add some coins to the account
-    //     await seedWallet(nonAuthorizedAccount.address, bn(100_000_000));
+        // Add some coins to the account
+        await seedWallet(nonAuthorizedAccount.address, bn(100_000_000));
 
-    //     // Create transfer
-    //     const transferStatus = transfer(
-    //       nonAuthorizedAccount.address,
-    //       receiverWallet.address.toString(),
-    //       AMOUNT_TRANSFER
-    //     );
+        // Create transfer
+        const transferStatus = transfer(
+          nonAuthorizedAccount.address,
+          receiverWallet.address.toString(),
+          AMOUNT_TRANSFER
+        );
 
-    //     await expect(transferStatus).rejects.toThrowError(
-    //       'address is not authorized for this connection.'
-    //     );
-    //   });
-    // });
+        await expect(transferStatus).rejects.toThrowError(
+          'address is not authorized for this connection.'
+        );
+      });
+    });
 
     await test.step('window.fuel.assets()', async () => {
       const assets = await blankPage.evaluate(async () => {
@@ -609,7 +574,7 @@ test.describe('FuelWallet Extension', () => {
 
       // Check if added network is selected
       let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      await expect(networkSelector).toHaveText(/Testnet Beta 5/);
+      await expect(networkSelector).toHaveText(/Ignition\-Dev/);
 
       // Remove added network
       await networkSelector.click();
@@ -635,7 +600,7 @@ test.describe('FuelWallet Extension', () => {
 
       // Check if re-added network is selected
       networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      await expect(networkSelector).toHaveText(/Testnet Beta 5/);
+      await expect(networkSelector).toHaveText(/Ignition\-Dev/);
     });
 
     await test.step('window.fuel.on("currentAccount") to a connected account', async () => {

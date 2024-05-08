@@ -3,12 +3,13 @@ import { bn } from 'fuels';
 import { useState } from 'react';
 
 import { depositHalf } from '../contract_interactions';
-import { getBaseAssetId } from '../utils';
+import { useBaseAssetId } from '../hooks/useBaseAssetId';
 
 export const DepositHalfEthCard = () => {
   const [amount, setAmount] = useState<string>('');
   const { account } = useAccount();
   const wallet = useWallet(account);
+  const baseAssetId = useBaseAssetId();
 
   return (
     <div>
@@ -22,12 +23,13 @@ export const DepositHalfEthCard = () => {
         />
         <button
           type="button"
+          disabled={!baseAssetId}
           onClick={async () => {
-            if (wallet.wallet && amount) {
+            if (baseAssetId && wallet.wallet && amount) {
               await depositHalf({
                 wallet: wallet.wallet,
                 amount: bn.parseUnits(amount),
-                assetId: getBaseAssetId(),
+                assetId: baseAssetId,
               });
             }
           }}

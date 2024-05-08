@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 
-import { delay, getByAriaLabel, hasText, waitAriaLabel } from '../../commons';
+import { getByAriaLabel, hasText, waitAriaLabel } from '../../commons';
 
 export async function getAccountByName(popupPage: Page, name: string) {
   const accounts = await getWalletAccounts(popupPage);
