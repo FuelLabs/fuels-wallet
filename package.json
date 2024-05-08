@@ -26,7 +26,6 @@
     "build:web": "turbo run build:web",
     "build:crx": "turbo run build:crx",
     "build:app": "turbo run build:app",
-    "build:test": "NODE_ENV=test pnpm build:app",
     "build:libs": "turbo run build",
     "changeset": "changeset",
     "changeset:empty": "changeset --empty",

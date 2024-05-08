@@ -59,7 +59,7 @@ jobs:
           base-coverage-file: ${{ env.COVERAGE_FILE }}
 
       - name: Stop Test Node
-        run: pnpm node:clean:test
+        run: pnpm node:clean
 
   tests-e2e:
     name: E2E Tests
@@ -77,21 +77,23 @@ jobs:
 
       - name: Start Test Node
         run: pnpm node:up
+      
+      - name: Generate .env
+        run: cp packages/app/.env.example packages/app/.env
 
       - name: Build Application
-        run: pnpm build:test
+        run: pnpm build:app
         env:
           ## increase node.js m memory limit for building
           ## with sourcemaps
           NODE_OPTIONS: "--max-old-space-size=4096"
-          NODE_ENV: test
 
       # E2E tests running with Playwright
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
       - name: Run E2E Tests
-        run: xvfb-run --auto-servernum -- pnpm test:e2e e2e/Accounts.test.ts:33:7
+        run: xvfb-run --auto-servernum -- pnpm test:e2e
         env:
           NODE_ENV: test
 
@@ -103,7 +105,7 @@ jobs:
           retention-days: 30
 
       - name: Stop Test Node
-        run: pnpm node:clean:test
+        run: pnpm node:clean
   
   tests-e2e-contracts:
     name: E2E Contract Tests
@@ -126,6 +128,13 @@ jobs:
 
       - name: Start Test Node
         run: pnpm node:up
+      
+      
+      - name: Generate .env app
+        run: cp packages/app/.env.example packages/app/.env
+      
+      - name: Generate .env e2e-contracts
+        run: cp packages/e2e-contract-tests/.env.example packages/e2e-contract-tests/.env
 
       - name: Build Application
         run: pnpm build:all
@@ -158,5 +167,5 @@ jobs:
           retention-days: 30
 
       - name: Stop Test Node
-        run: pnpm node:clean:test
+        run: pnpm node:clean
 
