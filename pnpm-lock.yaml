@@ -486,8 +486,8 @@ importers:
         specifier: 0.23.3
         version: 0.23.3(@fuel-ui/css@0.23.3)(@fuel-ui/icons@0.23.3)(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.3)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)
       '@fuels/connectors':
-        specifier: file:/Users/helciofranco/Documents/connectors/packages/connectors/fuels-connectors-0.3.1.tgz
-        version: file:../connectors/packages/connectors/fuels-connectors-0.3.1.tgz(@types/react@18.2.28)(@wagmi/connectors@4.3.3)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
+        specifier: 0.4.0-preview-01ad938573dd474a17aefb7d2ec4f487807db77f
+        version: 0.4.0-preview-01ad938573dd474a17aefb7d2ec4f487807db77f(@types/react@18.2.28)(@wagmi/connectors@4.3.3)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       '@fuels/react':
         specifier: 0.19.0
         version: 0.19.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.13)(@types/react@18.2.28)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)
@@ -6449,6 +6449,31 @@ packages:
 
   /@fuels/assets@0.19.0:
     resolution: {integrity: sha512-dcowWog3sgcQjova4XG5QXu8HVJuUcvWehwxPWnLPvbMpAlUoIB9UEZ78gGEKuajGYzwjyItvEFqq2rPzLcDkw==}
+    dev: false
+
+  /@fuels/connectors@0.4.0-preview-01ad938573dd474a17aefb7d2ec4f487807db77f(@types/react@18.2.28)(@wagmi/connectors@4.3.3)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-tXGdXMRLBjsWIprDUOS06dzwNay1fCqBUfLW8YPVmAosYwChIocFtWU8OyDD9ivmUxkXGHot5ycBa/xeEW941Q==}
+    peerDependencies:
+      fuels: '>=0.84.0'
+    dependencies:
+      '@ethereumjs/util': 9.0.3
+      '@ethersproject/bytes': 5.7.0
+      '@wagmi/core': 2.9.1(@types/react@18.2.28)(react@18.2.0)(typescript@5.2.2)(viem@2.10.1)
+      '@web3modal/wagmi': 4.1.11(@types/react@18.2.28)(@wagmi/connectors@4.3.3)(@wagmi/core@2.9.1)(react-dom@18.2.0)(react@18.2.0)(viem@2.10.1)
+      fuels: 0.84.0
+      viem: 2.10.1(typescript@5.2.2)
+    transitivePeerDependencies:
+      - '@tanstack/query-core'
+      - '@types/react'
+      - '@wagmi/connectors'
+      - bufferutil
+      - immer
+      - react
+      - react-dom
+      - typescript
+      - utf-8-validate
+      - vue
+      - zod
     dev: false
 
   /@fuels/connectors@0.4.0-preview-89d9c1a380a2f56505d2d80279bba3703ed37cba(@types/react@18.2.28)(@wagmi/connectors@4.3.3)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
@@ -28565,32 +28590,4 @@ packages:
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
-    dev: false
-
-  file:../connectors/packages/connectors/fuels-connectors-0.3.1.tgz(@types/react@18.2.28)(@wagmi/connectors@4.3.3)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
-    resolution: {integrity: sha512-ndv26Ak5bSJ0A1oAxJeGHYASx4NRVsM2wODRpLTM0GXxQWZhGieD4SBOL/MNN3X8gHIXgV3/vBvyVuZkILrfBQ==, tarball: file:../connectors/packages/connectors/fuels-connectors-0.3.1.tgz}
-    id: file:../connectors/packages/connectors/fuels-connectors-0.3.1.tgz
-    name: '@fuels/connectors'
-    version: 0.3.1
-    peerDependencies:
-      fuels: '>=0.84.0'
-    dependencies:
-      '@ethereumjs/util': 9.0.3
-      '@ethersproject/bytes': 5.7.0
-      '@wagmi/core': 2.9.1(@types/react@18.2.28)(react@18.2.0)(typescript@5.2.2)(viem@2.10.1)
-      '@web3modal/wagmi': 4.1.11(@types/react@18.2.28)(@wagmi/connectors@4.3.3)(@wagmi/core@2.9.1)(react-dom@18.2.0)(react@18.2.0)(viem@2.10.1)
-      fuels: 0.84.0
-      viem: 2.10.1(typescript@5.2.2)
-    transitivePeerDependencies:
-      - '@tanstack/query-core'
-      - '@types/react'
-      - '@wagmi/connectors'
-      - bufferutil
-      - immer
-      - react
-      - react-dom
-      - typescript
-      - utf-8-validate
-      - vue
-      - zod
     dev: false
