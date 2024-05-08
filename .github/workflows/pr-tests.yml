@@ -77,14 +77,16 @@ jobs:
 
       - name: Start Test Node
         run: pnpm node:up
+      
+      - name: Generate .env
+        run: cp packages/app/.env.example packages/app/.env
 
       - name: Build Application
-        run: pnpm build:test
+        run: pnpm build:app
         env:
           ## increase node.js m memory limit for building
           ## with sourcemaps
           NODE_OPTIONS: "--max-old-space-size=4096"
-          NODE_ENV: test
 
       # E2E tests running with Playwright
       - name: Install Playwright Browsers
