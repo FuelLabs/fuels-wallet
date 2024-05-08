@@ -28,7 +28,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Start Test Node
-        run: pnpm node:up:test
+        run: pnpm node:up
 
       # Unit tests running with JEST
       - name: Find PR number
@@ -76,7 +76,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Start Test Node
-        run: pnpm node:up:test
+        run: pnpm node:up
 
       - name: Build Application
         run: pnpm build:test
@@ -125,7 +125,7 @@ jobs:
           pnpm recursive install --frozen-lockfile
 
       - name: Start Test Node
-        run: pnpm node:up:test
+        run: pnpm node:up
 
       - name: Build Application
         run: pnpm build:all
