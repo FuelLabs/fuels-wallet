@@ -128,6 +128,13 @@ jobs:
 
       - name: Start Test Node
         run: pnpm node:up
+      
+      
+      - name: Generate .env app
+        run: cp packages/app/.env.example packages/app/.env
+      
+      - name: Generate .env e2e-contracts
+        run: cp packages/e2e-contract-tests/.env.example packages/e2e-contract-tests/.env
 
       - name: Build Application
         run: pnpm build:all
