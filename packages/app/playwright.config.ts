@@ -3,7 +3,7 @@ import { join } from 'path';
 import { defineConfig } from '@playwright/test';
 import './load.envs';
 
-const distDirectory = join(__dirname, './dist');
+const _distDirectory = join(__dirname, './dist');
 
 const IS_CI = !!process.env.CI;
 const PORT = process.env.PORT;
@@ -20,7 +20,8 @@ export default defineConfig({
   // Retry tests on CI if they fail
   retries: IS_CI ? 0 : 0,
   webServer: {
-    command: `pnpm exec http-server -s -p ${PORT} ${distDirectory}`,
+    command: 'pnpm dev:crx',
+    // command: `pnpm exec http-server -s -p ${PORT} ${distDirectory}`,
     port: Number(PORT),
     reuseExistingServer: true,
   },
