@@ -18,6 +18,9 @@ mockServer([
   graphql.query('getNodeInfo', (_req, res, ctx) => {
     return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
   }),
+  graphql.query('getLatestGasPrice', (_req, res, ctx) => {
+    return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
+  }),
 ]);
 
 describe('transactionMachine', () => {
