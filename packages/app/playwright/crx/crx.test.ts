@@ -35,7 +35,7 @@ test.describe('FuelWallet Extension', () => {
   test('On install sign-up page is open', async ({ context }) => {
     // In development mode files are render dynamically
     // making this first page to throw an error File not found.
-    if (process.env.NODE_ENV !== 'test') return;
+    // if (process.env.NODE_ENV !== 'test') return;
 
     const page = await context.waitForEvent('page', {
       predicate: (page) => {
