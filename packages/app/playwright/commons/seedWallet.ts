@@ -14,17 +14,18 @@ export async function seedCurrentAccount(page: Page, amount: BN) {
 export async function seedWallet(address: string, amount: BN) {
   const provider = await Provider.create(VITE_FUEL_PROVIDER_URL);
   const genesisWallet = Wallet.fromPrivateKey(GENESIS_SECRET, provider);
+
   const transfETH = await genesisWallet.transfer(
     Address.fromString(address),
     amount,
     provider.getBaseAssetId()
   );
   await transfETH.wait();
+
   const transfAsset = await genesisWallet.transfer(
     Address.fromString(address),
     amount,
-    ALT_ASSET.assetId,
-    { gasLimit: 110_000 }
+    ALT_ASSET.assetId
   );
   await transfAsset.wait();
 }

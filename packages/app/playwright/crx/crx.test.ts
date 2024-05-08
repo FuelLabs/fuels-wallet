@@ -3,10 +3,10 @@ import { type Locator, expect } from '@playwright/test';
 import { type Asset, Provider, Signer, Wallet, bn, hashMessage } from 'fuels';
 
 import {
-  delay,
   getButtonByText,
   getByAriaLabel,
   getElementByText,
+  hasAriaLabel,
   hasText,
   reload,
   seedWallet,
@@ -441,7 +441,8 @@ test.describe('FuelWallet Extension', () => {
           approveTransactionPage,
           senderAccount.address.toString()
         );
-        await hasText(approveTransactionPage, /Confirm before approving/i);
+
+        await hasAriaLabel(approveTransactionPage, 'Confirm Transaction');
         await getButtonByText(approveTransactionPage, /Approve/i).click();
 
         await expect(transferStatus).resolves.toBe('success');

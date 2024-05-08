@@ -79,8 +79,7 @@ test.describe('Networks', () => {
     await expect(items.first()).toHaveAttribute('data-active', 'true');
   });
 
-  // @TODO: re-enable when we have testnet live link to be added as valid network
-  test.skip('should be able to add a new network', async () => {
+  test('should be able to add a new network', async () => {
     await visit(page, '/wallet');
     await getByAriaLabel(page, 'Selected Network').click();
     await hasText(page, /Add new network/i);
@@ -90,12 +89,12 @@ test.describe('Networks', () => {
     const urlInput = getInputByName(page, 'url');
     await expect(urlInput).toBeFocused();
     await urlInput.fill('https://devnet.fuel.network/v1/graphql');
-    await hasText(page, /Testnet/i, 0, 15000);
+    await hasText(page, /Ignition\-Dev/i, 0, 15000);
     await expect(buttonCreate).toBeEnabled();
     await buttonCreate.click();
     // Wait for save and close popup;
     await page.waitForTimeout(2000);
     await reload(page);
-    await hasText(page, /Testnet/i);
+    await hasText(page, /Ignition\-Dev/i);
   });
 });

@@ -36,7 +36,7 @@ const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
   }, [errors]);
 
   return (
-    <Alert status="error" css={styles.alert}>
+    <Alert status="error" css={styles.alert} aria-label="Transaction Error">
       <Alert.Description>
         {errorMessages.map((message) => (
           <Box key={message}>{message}</Box>
@@ -47,7 +47,7 @@ const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
 };
 
 const ConfirmHeader = () => (
-  <Alert status="warning" css={styles.alert}>
+  <Alert status="warning" css={styles.alert} aria-label="Confirm Transaction">
     <Alert.Description>
       Carefully check if all the details in your transaction are correct
     </Alert.Description>
@@ -55,7 +55,10 @@ const ConfirmHeader = () => (
 );
 
 const LoaderHeader = () => (
-  <CardList.Item css={{ padding: '$2 !important' }}>
+  <CardList.Item
+    css={{ padding: '$2 !important' }}
+    aria-label="Loading Transaction"
+  >
     <ContentLoader width={300} height={40} viewBox="0 0 300 40">
       <rect x="20" y="10" rx="4" ry="4" width="92" height="20" />
     </ContentLoader>
