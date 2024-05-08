@@ -23,6 +23,7 @@ export default defineConfig({
     command: 'pnpm dev:crx',
     // command: `pnpm exec http-server -s -p ${PORT} ${distDirectory}`,
     port: Number(PORT),
+    stdout: 'pipe',
     reuseExistingServer: true,
   },
   use: {
