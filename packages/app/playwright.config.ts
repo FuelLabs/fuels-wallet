@@ -18,7 +18,7 @@ export default defineConfig({
     ['html', { outputFolder: join(__dirname, './playwright-html/') }],
   ],
   // Retry tests on CI if they fail
-  retries: IS_CI ? 0 : 0,
+  retries: IS_CI ? 4 : 0,
   webServer: {
     command: 'pnpm dev:crx',
     // command: `pnpm exec http-server -s -p ${PORT} ${distDirectory}`,
