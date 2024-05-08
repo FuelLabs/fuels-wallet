@@ -76,7 +76,6 @@ type MachineEvents =
 export const transactionRequestMachine = createMachine(
   {
     predictableActionArguments: true,
-
     tsTypes: {} as import('./transactionRequestMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,

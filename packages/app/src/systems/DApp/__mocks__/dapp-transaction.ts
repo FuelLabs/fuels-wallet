@@ -17,6 +17,8 @@ export const getMockedTransaction = async (
     to: destinyAddress.toString(),
     amount: bn.parseUnits('0.1'),
     assetId: provider.getBaseAssetId(),
+    tip: bn(0),
+    gasLimit: bn(1_000_000),
   });
 
   return transactionRequest;

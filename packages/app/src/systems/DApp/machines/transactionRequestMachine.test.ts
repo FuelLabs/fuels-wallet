@@ -24,7 +24,7 @@ describe('txApproveMachine', () => {
     transactionRequest = mocked.transactionRequest;
   });
 
-  beforeEach(async () => {
+  beforeEach(() => {
     service = interpret(
       transactionRequestMachine
         .withContext({ input: {}, response: {} })
@@ -36,15 +36,15 @@ describe('txApproveMachine', () => {
     service.stop();
   });
 
-  it.only('should approve/send transaction', async () => {
+  it('should approve/send transaction', async () => {
     await expectStateMatch(service, 'idle');
 
     service.send('START', {
       input: {
         address: data.account?.address,
+        origin: 'foo.com',
         transactionRequest,
         providerUrl: data.network?.url,
-        origin: 'foo.com',
       },
     });
 
