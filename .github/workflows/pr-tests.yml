@@ -29,6 +29,9 @@ jobs:
 
       - name: Start Test Node
         run: pnpm node:up
+      
+      - name: Generate .env
+        run: cp packages/app/.env.example packages/app/.env
 
       # Unit tests running with JEST
       - name: Find PR number
@@ -128,7 +131,6 @@ jobs:
 
       - name: Start Test Node
         run: pnpm node:up
-      
       
       - name: Generate .env app
         run: cp packages/app/.env.example packages/app/.env
