@@ -20,6 +20,8 @@ export const test = base.extend<{
 let context: BrowserContext;
 
 test.beforeAll(async () => {
+  console.log('pathToExtension', pathToExtension);
+  console.log('pathToExtension', pathToExtension);
   context = await chromium.launchPersistentContext('', {
     headless: false,
     args: [
@@ -27,6 +29,7 @@ test.beforeAll(async () => {
       `--load-extension=${pathToExtension}`,
     ],
   });
+  console.log('ok?');
 });
 
 test.afterAll(({ context }) => {
