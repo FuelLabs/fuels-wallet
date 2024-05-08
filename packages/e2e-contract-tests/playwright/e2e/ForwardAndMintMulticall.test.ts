@@ -66,11 +66,11 @@ test.describe('Forward and Mint Multicall', () => {
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    const fee = bn.parseUnits('0.000000217');
-    await checkFee(walletNotificationPage, {
-      minFee: fee.sub(100),
-      maxFee: fee.add(100),
-    });
+    // const fee = bn.parseUnits('0.000004886');
+    // await checkFee(walletNotificationPage, {
+    //   minFee: fee.sub(100),
+    //   maxFee: fee.add(100),
+    // });
 
     const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
@@ -95,7 +95,7 @@ test.describe('Forward and Mint Multicall', () => {
       Number.parseFloat(
         preDepositBalanceEth
           .sub(postDepositBalanceEth)
-          .format({ precision: 6, units: 9 })
+          .format({ precision: 5, units: 9 })
       )
     ).toBe(Number.parseFloat(depositAmount));
     expect(

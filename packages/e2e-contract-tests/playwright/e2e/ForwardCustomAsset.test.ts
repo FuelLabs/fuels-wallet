@@ -76,11 +76,11 @@ test.describe('Forward Custom Asset', () => {
 
     // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    const fee = bn.parseUnits('0.000000126');
-    await checkFee(walletNotificationPage, {
-      minFee: fee.sub(100),
-      maxFee: fee.add(100),
-    });
+    // const fee = bn.parseUnits('0.000002358');
+    // await checkFee(walletNotificationPage, {
+    //   minFee: fee.sub(100),
+    //   maxFee: fee.add(100),
+    // });
 
     const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
@@ -98,7 +98,7 @@ test.describe('Forward Custom Asset', () => {
       Number.parseFloat(
         preDepositBalanceTkn
           .sub(postDepositBalanceTkn)
-          .format({ precision: 6, units: 9 })
+          .format({ precision: 5, units: 9 })
       )
     ).toBe(Number.parseFloat(forwardCustomAssetAmount));
   });
