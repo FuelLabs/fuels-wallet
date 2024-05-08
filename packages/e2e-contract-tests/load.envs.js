@@ -3,7 +3,7 @@ const { resolve } = require('node:path');
 
 function getEnvName() {
   if (process.env.NODE_ENV === 'test') {
-    return '.env.test';
+    return '.env.example';
   }
 }
 
