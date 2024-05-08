@@ -30,11 +30,6 @@ jobs:
       - name: Start Test Node
         run: pnpm node:up:test
 
-      - name: Graphql Codegen
-        run: pnpm codegen:app
-        env:
-          NODE_ENV: test
-
       # Unit tests running with JEST
       - name: Find PR number
         uses: jwalton/gh-find-current-pr@v1
@@ -82,11 +77,6 @@ jobs:
 
       - name: Start Test Node
         run: pnpm node:up:test
-
-      - name: Graphql Codegen
-        run: pnpm codegen:app
-        env:
-          NODE_ENV: test
 
       - name: Build Application
         run: pnpm build:test
