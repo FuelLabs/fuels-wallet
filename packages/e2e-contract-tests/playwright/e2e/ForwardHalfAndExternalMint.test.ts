@@ -53,21 +53,28 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
     // test forward asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');
     // test forward asset id is shown
-    await hasText(walletNotificationPage, shortAddress(getBaseAssetId()));
+    await hasText(walletNotificationPage, shortAddress(await getBaseAssetId()));
     // test forward eth amount is correct
     await hasText(walletNotificationPage, `${depositAmount} ETH`);
 
     // test return asset name is shown
     await hasText(walletNotificationPage, 'Ethereum', 1);
     // test return asset id is shown
-    await hasText(walletNotificationPage, shortAddress(getBaseAssetId()), 1);
+    await hasText(
+      walletNotificationPage,
+      shortAddress(await getBaseAssetId()),
+      1
+    );
     // test return eth amount is correct
     await hasText(walletNotificationPage, `${halfDepositAmount} ETH`);
 
     // test mint asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
     // test mint asset id is shown
-    const assetId = calculateAssetId(EXTERNAL_CONTRACT_ID, getBaseAssetId());
+    const assetId = calculateAssetId(
+      EXTERNAL_CONTRACT_ID,
+      await getBaseAssetId()
+    );
     await hasText(walletNotificationPage, shortAddress(assetId));
     // test mint amount is correct
     await hasText(walletNotificationPage, mintAmount);
