@@ -2,6 +2,7 @@
 import path from 'path';
 import type { BrowserContext } from '@playwright/test';
 import { test as base, chromium } from '@playwright/test';
+import { delay } from '../../commons';
 
 const pathToExtension = path.join(__dirname, '../../../dist-crx');
 
@@ -21,7 +22,8 @@ let context: BrowserContext;
 
 test.beforeAll(async () => {
   console.log('pathToExtension', pathToExtension);
-  console.log('pathToExtension', pathToExtension);
+  await delay(5000);
+  console.log('after delay');
   context = await chromium.launchPersistentContext('', {
     headless: false,
     args: [
