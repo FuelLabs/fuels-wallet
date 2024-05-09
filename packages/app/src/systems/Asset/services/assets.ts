@@ -88,13 +88,6 @@ export class AssetService {
             : fuelNetworkAsset.assetId,
         decimals: fuelNetworkAsset.decimals,
       };
-
-      console.log('fsk newAssetData', {
-        ...newAsset,
-        isCustom: false,
-        imageUrl: newAsset.icon,
-      });
-
       return AssetService.upsertAsset({
         data: {
           ...newAsset,
