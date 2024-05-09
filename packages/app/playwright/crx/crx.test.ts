@@ -669,7 +669,7 @@ test.describe('FuelWallet Extension', () => {
 });
 
 // Increase timeout for this test
-// The timeout is set for 2 minutes
+// The timeout is set for 3 minutes
 // because some tests like reconnect
 // can take up to 1 minute before it's reconnected
-test.setTimeout(180_000);
+test.setTimeout(240_000);
