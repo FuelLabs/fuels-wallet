@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@fuel-wallet/types": "workspace:*",
-    "@fuels/connectors": "0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20",
+    "@fuels/connectors": "next",
     "@types/uuid": "^9.0.5",
     "blob-polyfill": "^7.0.20220408",
     "fuels": "0.84.0",
