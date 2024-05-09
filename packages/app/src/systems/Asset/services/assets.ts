@@ -1,10 +1,6 @@
 import type { AssetData } from '@fuel-wallet/types';
-import {
-  type NetworkFuel,
-  Provider,
-  assets as initialAssets,
-  isB256,
-} from 'fuels';
+import initialAssets from '@fuels/assets';
+import { type NetworkFuel, Provider, isB256 } from 'fuels';
 import { db } from '~/systems/Core/utils/database';
 import { getUniqueString } from '~/systems/Core/utils/string';
 import { NetworkService } from '~/systems/Network/services/network';
