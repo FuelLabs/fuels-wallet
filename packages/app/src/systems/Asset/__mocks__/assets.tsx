@@ -1,5 +1,12 @@
 import { type AssetFuel, type BigNumberish, assets, bn } from 'fuels';
 import { graphql } from 'msw';
+import { uniqueId } from 'xstate/lib/utils';
+
+export const MOCK_NETWORK = {
+  id: uniqueId(),
+  name: 'Another',
+  url: 'https://devnet.fuel.network/v1/graphql',
+};
 
 export const MOCK_FUEL_ASSETS = assets.map((asset) => {
   const fuelNetworkAsset = asset.networks.find(
