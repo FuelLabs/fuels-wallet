@@ -6,7 +6,7 @@ import './load.envs';
 const PORT = process.env.PORT;
 
 export default defineConfig({
-  workers: 1,
+  workers: 4,
   testMatch: join(__dirname, './playwright/**/*.test.ts'),
   testDir: join(__dirname, './playwright/'),
   outputDir: join(__dirname, './playwright-results/'),
