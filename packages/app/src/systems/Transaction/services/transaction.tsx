@@ -261,22 +261,42 @@ export class TxService {
     const provider = await Provider.create(network.url);
     const wallet = new WalletLockedCustom(account.address, provider);
 
-    const transactionRequest = await wallet.createTransfer(
-      to,
-      amount,
-      assetId,
-      {
-        tip: tip.isZero() ? undefined : tip,
-      }
-    );
+    const maxAttempts = 10;
+    let attempts = 0;
 
-    const baseFee = transactionRequest.maxFee.sub(
-      transactionRequest.tip ?? bn(0)
-    );
+    while (attempts < maxAttempts) {
+      try {
+        const targetAmount = amount.sub(attempts * 1_000_000);
+        const realAmount = targetAmount.gt(0) ? targetAmount : bn(1);
+
+        const transactionRequest = await wallet.createTransfer(
+          to,
+          realAmount,
+          assetId,
+          {
+            tip: tip.isZero() ? undefined : tip,
+          }
+        );
+
+        const baseFee = transactionRequest.maxFee.sub(
+          transactionRequest.tip ?? bn(0)
+        );
+
+        return {
+          baseFee: baseFee.sub(1), // To match maxFee calculated on TS SDK (they add 1 unit)
+          transactionRequest,
+          address: account.address,
+          providerUrl: network.url,
+        };
+      } catch (e) {
+        attempts += 1;
+        console.log(e);
+      }
+    }
 
     return {
-      baseFee: baseFee.sub(1), // To match maxFee calculated on TS SDK (they add 1 unit)
-      transactionRequest,
+      baseFee: undefined,
+      transactionRequest: undefined,
       address: account.address,
       providerUrl: network.url,
     };

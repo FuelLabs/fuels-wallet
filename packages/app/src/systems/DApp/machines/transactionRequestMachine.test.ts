@@ -11,7 +11,7 @@ import { transactionRequestMachine } from './transactionRequestMachine';
 
 describe('txApproveMachine', () => {
   let service: TransactionRequestService;
-  let transactionRequest: TransactionRequest;
+  let transactionRequest: TransactionRequest | undefined;
   let data: MockVaultData;
   const openDialog = jest.fn();
 
@@ -21,7 +21,7 @@ describe('txApproveMachine', () => {
       '0xc7862855b418ba8f58878db434b21053a61a2025209889cc115989e8040ff077',
       data.network?.url || ''
     );
-    transactionRequest = mocked.transactionRequest;
+    transactionRequest = mocked?.transactionRequest;
   });
 
   beforeEach(() => {

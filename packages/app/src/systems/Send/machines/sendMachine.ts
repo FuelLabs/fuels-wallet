@@ -39,10 +39,10 @@ type EstimateGasLimitReturn = {
 };
 
 type CreateTransactionReturn = {
-  transactionRequest: TransactionRequest;
+  baseFee?: BN;
+  transactionRequest?: TransactionRequest;
   providerUrl: string;
   address: string;
-  baseFee?: BN;
 };
 
 type MachineServices = {
@@ -205,7 +205,7 @@ export const sendMachine = createMachine(
       }),
       createTransactionRequest: FetchMachine.create<
         TxInputs['createTransfer'],
-        CreateTransactionReturn | null
+        CreateTransactionReturn
       >({
         showError: false,
         maxAttempts: 1,

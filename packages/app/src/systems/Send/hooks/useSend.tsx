@@ -85,14 +85,17 @@ const schema = yup
         const balanceAssetSelected = accountBalanceAssets?.find(
           ({ assetId }) => assetId === asset
         );
+        if (!balanceAssetSelected?.amount || !value) {
+          return false;
+        }
+
+        if (value.gt(balanceAssetSelected.amount)) {
+          return false;
+        }
 
         // It means "baseFee" is being calculated
         if (!baseFee) {
           return true;
-        }
-
-        if (!balanceAssetSelected?.amount || !value) {
-          return false;
         }
 
         const totalAmount = value.add(baseFee.add(fees.tip));
