@@ -266,7 +266,7 @@ export class TxService {
       amount,
       assetId,
       {
-        tip,
+        tip: tip.isZero() ? undefined : tip,
       }
     );
 

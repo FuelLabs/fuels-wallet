@@ -46,11 +46,10 @@ export function SendSelect({
     name: 'asset',
   });
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const decimals = useMemo(() => {
     const selectedAsset = balanceAssets?.find((a) => a.assetId === assetId);
     return selectedAsset?.decimals || DECIMAL_FUEL;
-  }, [assetId]);
+  }, [assetId, balanceAssets]);
 
   useEffect(() => {
     if (
@@ -64,10 +63,7 @@ export function SendSelect({
       // and then removed on the "transaction" service (.sub(1))
       const maxFee = baseFee.add(tip).add(2);
 
-      // Subtracting 2000 units due to the dynamic fees behavior
-      const availableBalance = balanceAssetSelected.sub(2000);
-
-      form.setValue('amount', availableBalance.sub(maxFee), {
+      form.setValue('amount', balanceAssetSelected.sub(maxFee), {
         shouldValidate: true,
       });
     }
