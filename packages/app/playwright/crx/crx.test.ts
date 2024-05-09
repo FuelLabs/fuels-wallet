@@ -549,42 +549,28 @@ test.describe('FuelWallet Extension', () => {
       async function testAddNetwork() {
         const addingNetwork = addNetwork(FUEL_NETWORK.url);
 
-        console.log(11);
         const addNetworkPage = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
         });
 
-        console.log(12);
         await hasText(addNetworkPage, 'Review the Network to be added:');
-        console.log(13);
         await getButtonByText(addNetworkPage, /add network/i).click();
-        console.log(14);
         await expect(addingNetwork).resolves.toBeDefined();
-        console.log(15);
         await popupPage.reload();
-        console.log(16);
       }
 
-      console.log(1);
       // Add network
       await testAddNetwork();
 
-      console.log(2);
       // Check if added network is selected
       let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      console.log(3);
       await expect(networkSelector).toHaveText(/Ignition\-Dev/);
 
-      console.log(4);
       // Remove added network
       await networkSelector.click();
-      console.log(5);
       const items = popupPage.locator('[aria-label*=fuel_network]');
-      console.log(6);
       const networkItemsCount = await items.count();
-      console.log(7);
       expect(networkItemsCount).toEqual(2);
-      console.log(8);
 
       let selectedNetworkItem: Locator;
       for (let i = 0; i < networkItemsCount; i += 1) {
@@ -593,27 +579,18 @@ test.describe('FuelWallet Extension', () => {
           selectedNetworkItem = items.nth(i);
         }
       }
-      console.log(9);
       await selectedNetworkItem.getByLabel(/Remove/).click();
-      console.log('a');
       await hasText(popupPage, /Are you sure/i);
-      console.log('b');
       await getButtonByText(popupPage, /confirm/i).click();
-      console.log('c');
       await expect(items).toHaveCount(1);
-      console.log('d');
       await expect(items.first()).toHaveAttribute('data-active', 'true');
-      console.log('e');
 
       // Re-add network
       await testAddNetwork();
-      console.log('f');
 
       // Check if re-added network is selected
       networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      console.log('g');
       await expect(networkSelector).toHaveText(/Ignition\-Dev/);
-      console.log('h');
     });
 
     await test.step('window.fuel.on("currentAccount") to a connected account', async () => {
