@@ -6,6 +6,9 @@ import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 import { MOCK_ACCOUNTS, createMockAccount } from '../__mocks__';
 import { AccountService } from '../services';
 
+import { graphql } from 'msw';
+import { mockServer } from '~/mocks/server';
+import { MOCK_TRANSACTION_WITH_RECEIPTS_GQL } from '~/systems/Transaction/__mocks__/transaction';
 import type {
   AccountsMachineService,
   AccountsMachineEvents as MachineEvents,
@@ -32,6 +35,18 @@ const machine = accountsMachine.withContext({}).withConfig({
     refreshApplication() {},
   },
 });
+
+mockServer([
+  graphql.query('getChain', (_req, res, ctx) => {
+    return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
+  }),
+  graphql.query('getNodeInfo', (_req, res, ctx) => {
+    return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
+  }),
+  graphql.query('getBalances', (_req, res, ctx) => {
+    return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
+  }),
+]);
 
 describe('accountsMachine', () => {
   let service: AccountsMachineService;

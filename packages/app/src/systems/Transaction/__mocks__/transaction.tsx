@@ -108,4 +108,17 @@ export const MOCK_TRANSACTION_WITH_RECEIPTS_GQL = {
   latestGasPrice: {
     gasPrice: '1',
   },
+  balances: {
+    edges: [
+      {
+        node: {
+          owner:
+            '0xbbe95b34554ff07244f32234f95e56d7695c4e987e150eb1878cf9e70648aedd',
+          amount: '499985267',
+          assetId:
+            '0x0000000000000000000000000000000000000000000000000000000000000000',
+        },
+      },
+    ],
+  },
 };
