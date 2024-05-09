@@ -121,7 +121,10 @@ export function SendSelect({
           <Text as="span" css={styles.title}>
             Amount
           </Text>
-          <Form.Control isRequired isInvalid={Boolean(amountFieldState.error)}>
+          <Form.Control
+            isRequired
+            isInvalid={Boolean(errorMessage || amountFieldState.error)}
+          >
             <InputAmount
               name={amount.name}
               balance={balanceAssetSelected}
