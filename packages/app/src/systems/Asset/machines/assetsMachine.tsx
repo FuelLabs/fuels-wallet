@@ -41,6 +41,7 @@ type MachineEvents =
   | { type: 'ADD_ASSET'; input: AssetInputs['addAsset'] }
   | { type: 'UPDATE_ASSET'; input: AssetInputs['updateAsset'] }
   | { type: 'REMOVE_ASSET'; input: AssetInputs['removeAsset'] }
+  | { type: 'RELOAD_LISTED_ASSETS'; input?: never }
   | { type: 'CANCEL'; input?: null };
 
 export const assetsMachine = createMachine(
@@ -93,6 +94,9 @@ export const assetsMachine = createMachine(
           },
           REMOVE_ASSET: {
             target: 'removing',
+          },
+          RELOAD_LISTED_ASSETS: {
+            target: 'settingListedAssets',
           },
         },
       },
@@ -174,17 +178,7 @@ export const assetsMachine = createMachine(
       setListedAssets: FetchMachine.create<null, void>({
         showError: true,
         async fetch() {
-          await Promise.all(
-            fuelAssets.map((asset) =>
-              AssetService.upsertAsset({
-                data: {
-                  ...asset,
-                  isCustom: false,
-                  imageUrl: asset.icon,
-                },
-              })
-            )
-          );
+          await AssetService.setListedAssets();
         },
       }),
       fetchAssets: FetchMachine.create<

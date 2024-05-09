@@ -182,8 +182,11 @@ export const networksMachine = createMachine(
       assignNetworkId: assign({
         networkId: (_, ev) => ev.input.id,
       }),
-      assignNetworks: assign({
-        networks: (_, ev) => ev.data,
+      assignNetworks: assign((_, event) => {
+        store.reloadListedAssets();
+        return {
+          networks: event.data,
+        };
       }),
       assignNetwork: assign({
         network: (ctx, ev) =>
