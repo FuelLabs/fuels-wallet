@@ -1,6 +1,5 @@
 import type { AssetData } from '@fuel-wallet/types';
 import {
-  type AssetFuel,
   type NetworkFuel,
   Provider,
   assets as initialAssets,

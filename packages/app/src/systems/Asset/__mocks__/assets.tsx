@@ -1,9 +1,18 @@
-import type { BigNumberish } from 'fuels';
-import { bn } from 'fuels';
+import { type AssetFuel, type BigNumberish, assets, bn } from 'fuels';
 import { graphql } from 'msw';
-import { fuelAssets } from '~/systems/Core';
 
-export const MOCK_ASSETS = fuelAssets.map((item) => ({
+export const MOCK_FUEL_ASSETS = assets.map((asset) => {
+  const fuelNetworkAsset = asset.networks.find(
+    (n) => n.type === 'fuel'
+  ) as AssetFuel;
+  return {
+    ...asset,
+    assetId: fuelNetworkAsset.assetId,
+    decimals: fuelNetworkAsset.decimals,
+  };
+});
+
+export const MOCK_ASSETS = MOCK_FUEL_ASSETS.map((item) => ({
   ...item,
   amount: bn(14563943834),
 }));
@@ -22,7 +31,7 @@ export const MOCK_CUSTOM_ASSET = {
 };
 
 export const MOCK_ASSETS_AMOUNTS = [
-  ...fuelAssets.map((item, idx) => ({
+  ...MOCK_FUEL_ASSETS.map((item, idx) => ({
     ...item,
     amount: bn(idx % 2 === 0 ? 14563943834 : -14563943834),
   })),

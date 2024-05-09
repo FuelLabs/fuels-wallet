@@ -1,7 +1,7 @@
 import { Box } from '@fuel-ui/react';
 import { bn } from 'fuels';
-import { fuelAssets } from '~/systems/Core';
 
+import { MOCK_FUEL_ASSETS } from '../../__mocks__/assets';
 import type { AssetItemProps } from './AssetItem';
 import { AssetItem } from './AssetItem';
 
@@ -15,7 +15,7 @@ export const Usage = (args: AssetItemProps) => (
     <AssetItem
       {...args}
       asset={{
-        ...fuelAssets[0],
+        ...MOCK_FUEL_ASSETS[0],
         amount: bn(14563943834),
       }}
     />

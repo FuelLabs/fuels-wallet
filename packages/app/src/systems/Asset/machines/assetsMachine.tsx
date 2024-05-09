@@ -2,7 +2,7 @@ import { toast } from '@fuel-ui/react';
 import type { AssetData } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-import { FetchMachine, fuelAssets } from '~/systems/Core';
+import { FetchMachine } from '~/systems/Core';
 
 import type { AssetInputs } from '../services';
 import { AssetService } from '../services';
