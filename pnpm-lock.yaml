@@ -120,10 +120,10 @@ importers:
   examples/cra-dapp:
     dependencies:
       '@fuels/connectors':
-        specifier: 0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20
-        version: 0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20(@types/react@18.2.56)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
+        specifier: next
+        version: 0.4.0(@types/react@18.2.56)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       '@fuels/react':
-        specifier: 0.19.0
+        specifier: next
         version: 0.19.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.19)(@types/react@18.2.56)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
         specifier: 5.28.4
@@ -184,7 +184,7 @@ importers:
         specifier: 0.19.0
         version: 0.19.0
       '@fuels/react':
-        specifier: 0.19.0
+        specifier: next
         version: 0.19.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.13)(@types/react@18.2.28)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)
       '@fuels/react-xstore':
         specifier: 0.19.0
@@ -287,8 +287,8 @@ importers:
         specifier: workspace:*
         version: link:../types
       '@fuels/connectors':
-        specifier: 0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20
-        version: 0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20(@types/react@18.2.28)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
+        specifier: next
+        version: 0.4.0(@types/react@18.2.28)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       '@playwright/test':
         specifier: 1.39.0
         version: 1.39.0
@@ -435,8 +435,8 @@ importers:
         specifier: workspace:*
         version: link:../types
       '@fuels/connectors':
-        specifier: 0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20
-        version: 0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20(@types/react@18.2.28)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(typescript@5.2.2)
+        specifier: next
+        version: 0.4.0(@types/react@18.2.28)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(typescript@5.2.2)
       '@types/uuid':
         specifier: ^9.0.5
         version: 9.0.5
@@ -480,10 +480,10 @@ importers:
         specifier: 0.23.3
         version: 0.23.3(@fuel-ui/css@0.23.3)(@fuel-ui/icons@0.23.3)(@types/react-dom@18.2.13)(@types/react@18.2.28)(csstype@3.1.3)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)
       '@fuels/connectors':
-        specifier: 0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20
-        version: 0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20(@types/react@18.2.28)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
+        specifier: next
+        version: 0.4.0(@types/react@18.2.28)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       '@fuels/react':
-        specifier: 0.19.0
+        specifier: next
         version: 0.19.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.13)(@types/react@18.2.28)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)
       '@mdx-js/react':
         specifier: ^2.3.0
@@ -607,10 +607,10 @@ importers:
   packages/e2e-contract-tests:
     dependencies:
       '@fuels/connectors':
-        specifier: 0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20
-        version: 0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20(@types/react@18.2.28)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
+        specifier: next
+        version: 0.4.0(@types/react@18.2.28)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2)
       '@fuels/react':
-        specifier: 0.19.0
+        specifier: next
         version: 0.19.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.2.13)(@types/react@18.2.28)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)
       '@tanstack/react-query':
         specifier: 5.28.4
@@ -684,8 +684,8 @@ importers:
         version: 4.0.1-beta.13(dexie@3.2.4)
     devDependencies:
       '@fuels/connectors':
-        specifier: 0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20
-        version: 0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20(@types/react@18.2.28)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(typescript@5.2.2)
+        specifier: next
+        version: 0.4.0(@types/react@18.2.28)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(typescript@5.2.2)
       fuels:
         specifier: 0.84.0
         version: 0.84.0
@@ -6635,8 +6635,8 @@ packages:
     resolution: {integrity: sha512-dcowWog3sgcQjova4XG5QXu8HVJuUcvWehwxPWnLPvbMpAlUoIB9UEZ78gGEKuajGYzwjyItvEFqq2rPzLcDkw==}
     dev: false
 
-  /@fuels/connectors@0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20(@types/react@18.2.28)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
-    resolution: {integrity: sha512-zIt0hoosURVZ0ntPlSbTmHBBZdw9UDYFd8efWCOaYnF200xQOd5IH+/huVHr4JUSnCmzkFi5FcVVjNvE100wfw==}
+  /@fuels/connectors@0.4.0(@types/react@18.2.28)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-wIqsU0R51/4FyCEa8oIuyleNaUAllG0Z5HyWm2nCAWUBCbh9mVv6pCewUyLBw+u26RK4QntDqsrGJ/osn1m4Bg==}
     peerDependencies:
       fuels: '>=0.84.0'
     dependencies:
@@ -6659,8 +6659,8 @@ packages:
       - vue
       - zod
 
-  /@fuels/connectors@0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20(@types/react@18.2.28)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(typescript@5.2.2):
-    resolution: {integrity: sha512-zIt0hoosURVZ0ntPlSbTmHBBZdw9UDYFd8efWCOaYnF200xQOd5IH+/huVHr4JUSnCmzkFi5FcVVjNvE100wfw==}
+  /@fuels/connectors@0.4.0(@types/react@18.2.28)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-wIqsU0R51/4FyCEa8oIuyleNaUAllG0Z5HyWm2nCAWUBCbh9mVv6pCewUyLBw+u26RK4QntDqsrGJ/osn1m4Bg==}
     peerDependencies:
       fuels: '>=0.84.0'
     dependencies:
@@ -6684,8 +6684,8 @@ packages:
       - zod
     dev: true
 
-  /@fuels/connectors@0.4.0-main-6fb5d3f5baf0a35fd179c049a0cb112c04139e20(@types/react@18.2.56)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
-    resolution: {integrity: sha512-zIt0hoosURVZ0ntPlSbTmHBBZdw9UDYFd8efWCOaYnF200xQOd5IH+/huVHr4JUSnCmzkFi5FcVVjNvE100wfw==}
+  /@fuels/connectors@0.4.0(@types/react@18.2.56)(@wagmi/connectors@4.3.5)(fuels@0.84.0)(react-dom@18.2.0)(react@18.2.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-wIqsU0R51/4FyCEa8oIuyleNaUAllG0Z5HyWm2nCAWUBCbh9mVv6pCewUyLBw+u26RK4QntDqsrGJ/osn1m4Bg==}
     peerDependencies:
       fuels: '>=0.84.0'
     dependencies:
@@ -8352,7 +8352,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.1
+      '@babel/runtime': 7.24.5
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.28)(react@18.2.0)
@@ -8390,7 +8390,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.1
+      '@babel/runtime': 7.24.5
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.56)(react@18.2.0)
       '@radix-ui/react-context': 1.0.1(@types/react@18.2.56)(react@18.2.0)
@@ -8471,7 +8471,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.1
+      '@babel/runtime': 7.24.5
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
@@ -8500,7 +8500,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.1
+      '@babel/runtime': 7.24.5
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.56)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.56)(react-dom@18.2.0)(react@18.2.0)
@@ -8586,7 +8586,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.1
+      '@babel/runtime': 7.24.5
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.28)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.2.28)(react@18.2.0)
@@ -8613,7 +8613,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.1
+      '@babel/runtime': 7.24.5
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.56)(react@18.2.0)
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.56)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.2.56)(react@18.2.0)
@@ -8794,7 +8794,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.1
+      '@babel/runtime': 7.24.5
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.13)(@types/react@18.2.28)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.28
       '@types/react-dom': 18.2.13
@@ -8819,7 +8819,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.1
+      '@babel/runtime': 7.24.5
       '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.56)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.56
       '@types/react-dom': 18.2.19
@@ -11704,7 +11704,7 @@ packages:
     resolution: {integrity: sha512-N1ZhksgwD3OBlwTv3R6KFEcPojl/W4ElJOeCZdi+vuI5QmTFwLq3OFf2zd2ROpKvxFdgZ6hUpb0dx9bVNEwYCA==}
     dependencies:
       '@noble/curves': 1.2.0
-      '@noble/hashes': 1.3.2
+      '@noble/hashes': 1.3.3
       '@scure/base': 1.1.6
 
   /@scure/bip32@1.3.3:
@@ -11717,7 +11717,7 @@ packages:
   /@scure/bip39@1.2.1:
     resolution: {integrity: sha512-Z3/Fsz1yr904dduJD0NpiyRHhRYHdcnyh73FZWiV+/qhWi83wNJ3NWolYqCEN+ZWsUz2TWwajJggcRE9r1zUYg==}
     dependencies:
-      '@noble/hashes': 1.3.2
+      '@noble/hashes': 1.3.3
       '@scure/base': 1.1.6
 
   /@scure/bip39@1.2.2:
@@ -13841,7 +13841,7 @@ packages:
         optional: true
     dependencies:
       '@adobe/css-tools': 4.3.2
-      '@babel/runtime': 7.24.1
+      '@babel/runtime': 7.24.5
       '@types/jest': 28.1.3
       aria-query: 5.3.0
       chalk: 3.0.0
