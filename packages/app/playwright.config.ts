@@ -23,7 +23,6 @@ export default defineConfig({
     baseURL: `http://localhost:${PORT}/`,
     permissions: ['clipboard-read', 'clipboard-write'],
     headless: false,
-    trace: 'retain-on-failure',
-    screenshot: 'only-on-failure',
+    trace: 'on-first-retry',
   },
 });
