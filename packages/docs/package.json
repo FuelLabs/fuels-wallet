@@ -6,7 +6,7 @@
     "build:preview": "run-s build:docs",
     "build:docs": "next build",
     "dev": "next dev -p 3030",
-    "start": "next start",
+    "start": "DOCS_DIST=${DOCS_DIST:=dist} && npx --yes serve $DOCS_DIST",
     "lint": "next lint"
   },
   "dependencies": {
