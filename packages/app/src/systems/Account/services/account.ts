@@ -1,6 +1,5 @@
 import type { Account } from '@fuel-wallet/types';
 import { Address, Provider, bn } from 'fuels';
-import { isEth } from '~/systems/Asset/utils/asset';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
 import { getUniqueString } from '~/systems/Core/utils/string';
@@ -93,8 +92,13 @@ export class AccountService {
 
     const { account, providerUrl } = input;
     try {
-      const balances = await getBalances(providerUrl, account.publicKey);
-      const ethAsset = balances.find(isEth);
+      const provider = await Provider.create(providerUrl!);
+      const balances = await getBalances(provider, account.publicKey);
+      const baseAssetId = provider.getBaseAssetId();
+
+      const ethAsset = balances.find(
+        (balance) => balance.assetId === baseAssetId.toString()
+      );
       const ethBalance = ethAsset?.amount;
       const nextAccount = await AccountService.setBalance({
         data: {
@@ -200,8 +204,7 @@ export class AccountService {
 // Private methods
 // ----------------------------------------------------------------------------
 
-async function getBalances(providerUrl: string, publicKey = '0x00') {
-  const provider = await Provider.create(providerUrl!);
+async function getBalances(provider: Provider, publicKey = '0x00') {
   const address = Address.fromPublicKey(publicKey);
   const balances = await provider.getBalances(address);
   return balances;

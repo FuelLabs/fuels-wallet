@@ -3,4 +3,4 @@ export * from './button';
 export * from './visit';
 export * from './text';
 export * from './seedWallet';
-export * from './gas';
+export * from './delay';

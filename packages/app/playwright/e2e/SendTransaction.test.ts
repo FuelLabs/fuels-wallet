@@ -53,7 +53,7 @@ test.describe('SendTransaction', () => {
     await getInputByName(page, 'amount').fill('0.001');
 
     // Submit transaction
-    await getButtonByText(page, 'Confirm').click();
+    await getButtonByText(page, 'Review').click();
 
     await getButtonByText(page, 'Approve').click();
     await hasText(page, '0.001 ETH');
@@ -79,7 +79,7 @@ test.describe('SendTransaction', () => {
     await getInputByName(page, 'amount').fill('0.001');
 
     // Submit transaction
-    await getButtonByText(page, 'Confirm').click();
+    await getButtonByText(page, 'Review').click();
 
     // Approve transaction
     await hasText(page, '0.001 ETH');
@@ -113,7 +113,7 @@ test.describe('SendTransaction', () => {
     await hasAriaLabel(page, 'Balance: 1,000,000.00');
 
     // Submit transaction
-    await getButtonByText(page, 'Confirm').click();
+    await getButtonByText(page, 'Review').click();
 
     // Approve transaction
     await hasText(page, `0.01 ${ALT_ASSET.symbol}`);
@@ -147,8 +147,10 @@ test.describe('SendTransaction', () => {
 
     // Get calculated fee
     await hasText(page, /(.*)ETH/);
-    const el = await getElementByText(page, /(.*)ETH/);
-    const feeAmountText = (await el.textContent()).replace(' ETH', '').trim();
+    const regularFee = await getByAriaLabel(page, 'Fee Value').first();
+    const feeAmountText = (await regularFee.textContent())
+      .replace(' ETH', '')
+      .trim();
     const feeAmount = bn.parseUnits(feeAmountText);
 
     // Max amount after calculating fee
@@ -159,7 +161,7 @@ test.describe('SendTransaction', () => {
     );
 
     // Submit transaction
-    await getButtonByText(page, 'Confirm').click();
+    await getButtonByText(page, 'Review').click();
 
     // Approve transaction
     await hasText(page, `${maxAmountAfterFee} ETH`);

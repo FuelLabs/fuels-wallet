@@ -1,9 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
-import type { BigNumberish } from 'fuels';
+import type { BN, BNInput } from 'fuels';
 import { bn, isBech32 } from 'fuels';
-import { useCallback, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useAccounts } from '~/systems/Account';
@@ -23,8 +23,20 @@ export enum SendStatus {
 }
 
 const selectors = {
-  fee(state: SendMachineState) {
-    return state.context.fee;
+  baseGasLimit(state: SendMachineState) {
+    return state.context.baseGasLimit;
+  },
+  maxGasPerTx(state: SendMachineState) {
+    return state.context.maxGasPerTx;
+  },
+  baseFee(state: SendMachineState) {
+    return state.context.baseFee;
+  },
+  regularTip(state: SendMachineState) {
+    return state.context.regularTip;
+  },
+  fastTip(state: SendMachineState) {
+    return state.context.fastTip;
   },
   readyToSend(state: SendMachineState) {
     return state.matches('readyToSend');
@@ -37,6 +49,7 @@ const selectors = {
       (state: SendMachineState) => {
         const isLoadingTx =
           state.matches('creatingTx') ||
+          state.matches('changingInput') ||
           txStatus === TxRequestStatus.loading ||
           txStatus === TxRequestStatus.sending;
         if (isLoadingTx) return SendStatus.loadingTx;
@@ -45,22 +58,50 @@ const selectors = {
       [txStatus]
     );
   },
-  title(txStatus?: TxRequestStatus) {
-    return useCallback(
-      (state: SendMachineState) => {
-        if (state.matches('creatingTx') || txStatus === TxRequestStatus.loading)
-          return 'Creating transaction';
-        return 'Send';
-      },
-      [txStatus]
-    );
-  },
+};
+
+type SchemaOptions = {
+  accountBalanceAssets: Array<{
+    assetId: string;
+    amount?: BNInput;
+  }>;
+  baseFee: BN | undefined;
+  maxGasPerTx: BN | undefined;
 };
 
 const schema = yup
   .object({
     asset: yup.string().required('Asset is required'),
-    amount: yup.string().required('Amount is required'),
+    amount: yup
+      .mixed<BN>()
+      .test('positive', 'Amount must be greater than 0', (value) => {
+        return value?.gt(0);
+      })
+      .test('balance', 'Insufficient funds', (value, ctx) => {
+        const { asset, fees } = ctx.parent as SendFormValues;
+        const { accountBalanceAssets, baseFee } = ctx.options
+          .context as SchemaOptions;
+
+        const balanceAssetSelected = accountBalanceAssets?.find(
+          ({ assetId }) => assetId === asset
+        );
+        if (!balanceAssetSelected?.amount || !value) {
+          return false;
+        }
+
+        if (value.gt(balanceAssetSelected.amount)) {
+          return false;
+        }
+
+        // It means "baseFee" is being calculated
+        if (!baseFee) {
+          return true;
+        }
+
+        const totalAmount = value.add(baseFee.add(fees.tip));
+        return totalAmount.lte(bn(balanceAssetSelected.amount));
+      })
+      .required('Amount is required'),
     address: yup
       .string()
       .required('Address is required')
@@ -71,25 +112,73 @@ const schema = yup
           return false;
         }
       }),
+    fees: yup
+      .object({
+        tip: yup
+          .mixed<BN>()
+          .test(
+            'integer',
+            'Tip must be greater than or equal to 0',
+            (value) => {
+              return value?.gte(0);
+            }
+          )
+          .required('Tip is required'),
+        gasLimit: yup
+          .mixed<BN>()
+          .test(
+            'integer',
+            'Gas limit must be greater or equal to 0',
+            (value) => {
+              return value?.gte(0);
+            }
+          )
+          .test({
+            name: 'max',
+            test: (value, ctx) => {
+              const { maxGasPerTx } = ctx.options.context as SchemaOptions;
+              if (!maxGasPerTx) return false;
+
+              if (value?.lte(maxGasPerTx)) {
+                return true;
+              }
+
+              return ctx.createError({
+                message: `Gas limit must be less or equal to ${maxGasPerTx.toString()}`,
+              });
+            },
+          })
+          .required('Gas limit is required'),
+      })
+      .required('Fees are required'),
   })
   .required();
+
+export type SendFormValues = {
+  asset: string;
+  address: string;
+  amount: BN;
+  fees: {
+    tip: BN;
+    gasLimit: BN;
+  };
+};
+
+const DEFAULT_VALUES: SendFormValues = {
+  asset: '',
+  amount: bn(0),
+  address: '',
+  fees: {
+    tip: bn(0),
+    gasLimit: bn(0),
+  },
+};
 
 export function useSend() {
   const navigate = useNavigate();
   const txRequest = useTransactionRequest();
   const { account, balanceAssets: accountBalanceAssets } = useAccounts();
   const { assets } = useAssets();
-
-  const form = useForm({
-    resolver: yupResolver(schema),
-    reValidateMode: 'onChange',
-    mode: 'onChange',
-    defaultValues: {
-      asset: '',
-      amount: '',
-      address: '',
-    },
-  });
 
   const service = useInterpret(() =>
     sendMachine.withConfig({
@@ -102,6 +191,7 @@ export function useSend() {
           if (!providerUrl || !transactionRequest || !address) {
             throw new Error('Params are required');
           }
+
           txRequest.handlers.request({
             providerUrl,
             transactionRequest,
@@ -112,54 +202,68 @@ export function useSend() {
     })
   );
 
-  const amount = form.watch('amount');
+  const baseFee = useSelector(service, selectors.baseFee);
+  const baseGasLimit = useSelector(service, selectors.baseGasLimit);
+  const maxGasPerTx = useSelector(service, selectors.maxGasPerTx);
   const errorMessage = useSelector(service, selectors.error);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (bn(amount).gt(0) && form.formState.isValid) {
-      const asset = assets.find(
-        ({ assetId }) => assetId === form.getValues('asset')
-      );
-      const amount = bn(form.getValues('amount'));
-      const address = form.getValues('address');
-      const input = {
-        account,
-        asset,
-        amount,
-        address,
-      } as TxInputs['isValidTransaction'];
-      service.send('SET_DATA', { input });
-    }
-  }, [amount, form.formState.isValid]);
+  const form = useForm<SendFormValues>({
+    resolver: yupResolver(schema),
+    reValidateMode: 'onChange',
+    mode: 'onChange',
+    defaultValues: DEFAULT_VALUES,
+    context: {
+      accountBalanceAssets,
+      baseFee,
+      maxGasPerTx,
+    },
+  });
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (errorMessage) {
-      form.setError('amount', {
-        type: 'pattern',
-        message: errorMessage.split(':')[0],
-      });
-    }
-  }, [errorMessage]);
+  const tip = useWatch({
+    control: form.control,
+    name: 'fees.tip',
+  });
 
-  const fee = useSelector(service, selectors.fee);
+  const gasLimit = useWatch({
+    control: form.control,
+    name: 'fees.gasLimit',
+  });
+
+  const { isValid } = form.formState;
+
+  const amount = useWatch({
+    control: form.control,
+    name: 'amount',
+  });
+  const address = useWatch({
+    control: form.control,
+    name: 'address',
+  });
+  const assetIdSelected = useWatch({
+    control: form.control,
+    name: 'asset',
+  });
+
+  const regularTip = useSelector(service, selectors.regularTip);
+  const fastTip = useSelector(service, selectors.fastTip);
   const sendStatusSelector = selectors.status(txRequest.txStatus);
   const sendStatus = useSelector(service, sendStatusSelector);
   const readyToSend = useSelector(service, selectors.readyToSend);
 
-  const titleSelector = selectors.title(txRequest.txStatus);
-  const title = useSelector(service, titleSelector);
+  const balanceAssets = useMemo(() => {
+    return accountBalanceAssets?.filter(({ assetId }) =>
+      assets.find((asset) => asset.assetId === assetId)
+    );
+  }, [assets, accountBalanceAssets]);
 
-  const balanceAssets = accountBalanceAssets?.filter(({ assetId }) =>
-    assets.find((asset) => asset.assetId === assetId)
-  );
+  const balanceAssetSelected = useMemo<BN>(() => {
+    const asset = balanceAssets?.find(
+      ({ assetId }) => assetId === assetIdSelected
+    );
+    if (!asset) return bn(0);
 
-  const assetIdSelected = form.getValues('asset');
-  const balanceAssetSelected =
-    bn(
-      balanceAssets?.find(({ assetId }) => assetId === assetIdSelected)?.amount
-    ) || bn(0);
+    return bn(asset.amount);
+  }, [balanceAssets, assetIdSelected]);
 
   function status(status: keyof typeof SendStatus) {
     return sendStatus === status;
@@ -168,50 +272,40 @@ export function useSend() {
   function cancel() {
     service.send('BACK');
   }
+
   function submit() {
-    const asset = assets.find(
-      ({ assetId }) => assetId === form.getValues('asset')
-    );
-    const amount = bn(form.getValues('amount'));
-    const address = form.getValues('address');
-    const input = {
-      account,
-      asset,
-      amount,
-      address,
-    } as TxInputs['isValidTransaction'];
-    service.send('CONFIRM', { input });
+    service.send('CONFIRM');
   }
+
   function goHome() {
     navigate(Pages.index());
   }
+
   function tryAgain() {
     txRequest.handlers.tryAgain();
   }
 
-  function handleValidateAmount(amount?: BigNumberish) {
-    if (bn(amount).lte(0)) {
-      form.setError('amount', {
-        type: 'pattern',
-        message: 'Amount is required',
-      });
-      return;
+  useEffect(() => {
+    if (isValid && address && assetIdSelected) {
+      const input: TxInputs['createTransfer'] = {
+        to: address,
+        assetId: assetIdSelected,
+        amount,
+        tip,
+        gasLimit,
+      };
+
+      service.send('SET_INPUT', { input });
     }
-    if (bn(balanceAssetSelected).lt(amount!)) {
-      form.setError('amount', {
-        type: 'pattern',
-        message: 'Insufficient funds',
-      });
-      return;
-    }
-    form.clearErrors('amount');
-    form.trigger('amount');
-  }
+  }, [isValid, service.send, address, assetIdSelected, amount, tip, gasLimit]);
 
   return {
     form,
-    fee,
-    title,
+    baseFee,
+    baseGasLimit,
+    tip,
+    regularTip,
+    fastTip,
     status,
     readyToSend,
     balanceAssets,
@@ -219,12 +313,12 @@ export function useSend() {
     txRequest,
     assetIdSelected,
     balanceAssetSelected,
+    errorMessage,
     handlers: {
       cancel,
       submit,
       goHome,
       tryAgain,
-      handleValidateAmount,
     },
   };
 }

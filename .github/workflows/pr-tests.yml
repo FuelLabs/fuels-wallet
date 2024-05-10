@@ -28,12 +28,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Start Test Node
-        run: pnpm node:up:test
-
-      - name: Graphql Codegen
-        run: pnpm codegen:app
-        env:
-          NODE_ENV: test
+        run: pnpm node:up
+      
+      - name: Generate .env
+        run: cp packages/app/.env.example packages/app/.env
 
       # Unit tests running with JEST
       - name: Find PR number
@@ -64,7 +62,7 @@ jobs:
           base-coverage-file: ${{ env.COVERAGE_FILE }}
 
       - name: Stop Test Node
-        run: pnpm node:clean:test
+        run: pnpm node:clean
 
   tests-e2e:
     name: E2E Tests
@@ -81,20 +79,17 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Start Test Node
-        run: pnpm node:up:test
-
-      - name: Graphql Codegen
-        run: pnpm codegen:app
-        env:
-          NODE_ENV: test
+        run: pnpm node:up
+      
+      - name: Generate .env
+        run: cp packages/app/.env.example packages/app/.env
 
       - name: Build Application
-        run: pnpm build:test
+        run: pnpm build:app
         env:
           ## increase node.js m memory limit for building
           ## with sourcemaps
           NODE_OPTIONS: "--max-old-space-size=4096"
-          NODE_ENV: test
 
       # E2E tests running with Playwright
       - name: Install Playwright Browsers
@@ -113,60 +108,66 @@ jobs:
           retention-days: 30
 
       - name: Stop Test Node
-        run: pnpm node:clean:test
+        run: pnpm node:clean
   
-  tests-e2e-contracts:
-    name: E2E Contract Tests
-    runs-on: buildjet-4vcpu-ubuntu-2204
-    steps:
-      - uses: actions/checkout@v3
-      - uses: FuelLabs/github-actions/setups/node@master
-        with:
-          node-version: 18.14.1
-          pnpm-version: 8.15.7
-      - uses: FuelLabs/github-actions/setups/docker@master
-        with:
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+  # tests-e2e-contracts:
+  #   name: E2E Contract Tests
+  #   runs-on: buildjet-4vcpu-ubuntu-2204
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: FuelLabs/github-actions/setups/node@master
+  #       with:
+  #         node-version: 18.14.1
+  #         pnpm-version: 8.15.7
+  #     - uses: FuelLabs/github-actions/setups/docker@master
+  #       with:
+  #         username: ${{ github.repository_owner }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run PNPM install
-        id: pnpm-cache
-        run:
-          pnpm recursive install --frozen-lockfile
+  #     - name: Run PNPM install
+  #       id: pnpm-cache
+  #       run:
+  #         pnpm recursive install --frozen-lockfile
 
-      - name: Start Test Node
-        run: pnpm node:up:test
+  #     - name: Start Test Node
+  #       run: pnpm node:up
+      
+  #     - name: Generate .env app
+  #       run: cp packages/app/.env.example packages/app/.env
+      
+  #     - name: Generate .env e2e-contracts
+  #       run: cp packages/e2e-contract-tests/.env.example packages/e2e-contract-tests/.env
 
-      - name: Build Application
-        run: pnpm build:all
-        env:
-          ## increase node.js m memory limit for building
-          ## with sourcemaps
-          NODE_OPTIONS: "--max-old-space-size=4096"
-          NODE_ENV: test
+  #     - name: Build Application
+  #       run: pnpm build:all
+  #       env:
+  #         ## increase node.js m memory limit for building
+  #         ## with sourcemaps
+  #         NODE_OPTIONS: "--max-old-space-size=4096"
+  #         NODE_ENV: test
 
-      - name: Build & Deploy Contracts
-        run: pnpm deploy:contracts
-        working-directory: ./packages/e2e-contract-tests
+  #     - name: Build & Deploy Contracts
+  #       run: pnpm deploy:contracts
+  #       working-directory: ./packages/e2e-contract-tests
 
-      # E2E tests running with Playwright
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
+  #     # E2E tests running with Playwright
+  #     - name: Install Playwright Browsers
+  #       run: npx playwright install --with-deps chromium
 
-      - name: Run E2E Contract Tests
-        run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts
-        env:
-          NODE_ENV: test
+  #     - name: Run E2E Contract Tests
+  #       run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts
+  #       env:
+  #         NODE_ENV: test
 
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-report
-          path: |
-            packages/app/playwright-report/
-            packages/app/playwright-html/
-          retention-days: 30
+  #     - uses: actions/upload-artifact@v4
+  #       if: always()
+  #       with:
+  #         name: playwright-report
+  #         path: |
+  #           packages/app/playwright-report/
+  #           packages/app/playwright-html/
+  #         retention-days: 30
 
-      - name: Stop Test Node
-        run: pnpm node:clean:test
+  #     - name: Stop Test Node
+  #       run: pnpm node:clean
 

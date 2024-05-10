@@ -4,7 +4,10 @@ import {
   loadIcons,
   setFuelThemes,
 } from '@fuel-ui/react';
-import { defaultConnectors } from '@fuels/connectors';
+import {
+  FuelWalletConnector,
+  FuelWalletDevelopmentConnector,
+} from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import { MDXProvider } from '@mdx-js/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -87,7 +90,10 @@ export function Provider({ children }: ProviderProps) {
         <FuelProvider
           theme="dark"
           fuelConfig={{
-            connectors: defaultConnectors({ devMode: true }),
+            connectors: [
+              new FuelWalletConnector(),
+              new FuelWalletDevelopmentConnector(),
+            ],
           }}
         >
           {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}

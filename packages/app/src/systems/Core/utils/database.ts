@@ -39,7 +39,7 @@ export class FuelDB extends Dexie {
         networks: '&id, &url, &name',
         connections: 'origin',
         transactions: '&id',
-        assets: '&assetId, &name, $symbol',
+        assets: '&assetId, &name, &symbol',
         abis: '&contractId',
         errors: '&id',
       })

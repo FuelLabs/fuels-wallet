@@ -24,5 +24,10 @@ export function assetEvents(store: StoreClass<StoreMachines>) {
         input,
       });
     },
+    reloadListedAssets() {
+      store.send(Services.assets, {
+        type: 'RELOAD_LISTED_ASSETS',
+      });
+    },
   };
 }

@@ -54,7 +54,11 @@ export function BalanceWidget({
             css={{ boxShadow: '$sm' }}
           />
           <Box.Stack gap="$1" css={{ flex: 1, minWidth: 0 }}>
-            <Heading as="h6" css={styles.name}>
+            <Heading
+              as="h6"
+              css={styles.name}
+              aria-label={`${account.name} selected`}
+            >
               {account.name}
             </Heading>
             <FuelAddress

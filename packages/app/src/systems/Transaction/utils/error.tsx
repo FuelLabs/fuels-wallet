@@ -11,7 +11,7 @@ export type VMApiError = {
   };
 };
 
-export type VmErrorType = 'InsufficientInputAmount';
+export type VmErrorType = 'InsufficientInputAmount' | string;
 
 export type InsufficientInputAmountError = {
   asset: string;
@@ -19,22 +19,10 @@ export type InsufficientInputAmountError = {
   provided: string;
 };
 
-export type GroupedError = {
-  errorMessage?: string;
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  error?: InsufficientInputAmountError | any;
-};
-
 export type GroupedErrors = {
-  [key: VmErrorType | string]: GroupedError[];
-};
-
-// typeguard
-const isVmErrorTypeKey = <K extends string & keyof GroupedErrors>(
-  properties: K[],
-  vmError: string
-): vmError is K => {
-  return (properties as string[]).includes(vmError);
+  InsufficientInputAmount: InsufficientInputAmountError;
+  // biome-ignore lint/suspicious/noExplicitAny: allow any
+  [key: VmErrorType]: Record<string, any> | string | unknown;
 };
 
 export const getGroupedErrors = (rawErrors?: { message: string }[]) => {
@@ -43,75 +31,48 @@ export const getGroupedErrors = (rawErrors?: { message: string }[]) => {
   const groupedErrors = rawErrors.reduce<GroupedErrors>(
     (prevGroupedError, rawError) => {
       const { message } = rawError;
-      const [type, ...rest] = message.split(' ');
-      const errorMessage = rest.join(' ').trim();
+      // in some case I had to add the Validity() to the regex. why?
+      // const regex = /Validity\((\w+)\s+(\{.*\})\)/;
+      const regex = /(\w+)\s+(\{.*\})/;
 
-      if (isVmErrorTypeKey<VmErrorType>(['InsufficientInputAmount'], type)) {
-        const keyValuesMessage = errorMessage
-          .replace('{ ', '')
-          .replace(' }', '')
-          .split(', ');
-        const error = keyValuesMessage.reduce((prevError, keyValue) => {
-          const [key, value] = keyValue.split(': ');
+      const match = message.match(regex);
+      if (match) {
+        const errorType = match[1];
+        const errorMessage = match[2];
 
-          return {
-            // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-            ...prevError,
-            [key]: key === 'asset' ? `0x${value}` : value,
-          };
-        }, {});
+        // biome-ignore lint/suspicious/noImplicitAnyLet: allow any
+        let errorValue;
+        try {
+          const keyValuesMessage = errorMessage
+            .replace('{ ', '')
+            .replace(' }', '')
+            .split(', ');
+          const errorParsed = keyValuesMessage.reduce((prevError, keyValue) => {
+            const [key, value] = keyValue.split(': ');
+
+            return {
+              // biome-ignore lint/performance/noAccumulatingSpread:
+              ...prevError,
+              [key]: key === 'asset' ? `0x${value}` : value,
+            };
+          }, {});
+          errorValue = errorParsed;
+        } catch (_) {
+          errorValue = errorMessage;
+        }
 
         return {
-          // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
+          // biome-ignore lint/performance/noAccumulatingSpread:
           ...prevGroupedError,
-          [type]: [
-            ...(prevGroupedError[type] || []),
-            {
-              errorMessage: message,
-              error: error as InsufficientInputAmountError,
-            },
-          ],
+          [errorType]: errorValue,
         };
       }
 
-      return {
-        // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-        ...prevGroupedError,
-        [type]: [
-          ...(prevGroupedError[type] || []),
-          {
-            errorMessage: message,
-          },
-        ],
-      };
+      return prevGroupedError;
     },
-    {}
+    // biome-ignore lint/suspicious/noExplicitAny: allow any
+    {} as any
   );
 
   return groupedErrors;
-};
-
-export const getFilteredErrors = (
-  groupedErrors?: GroupedErrors,
-  filterOutKeys?: Array<VmErrorType | string>
-) => {
-  if (!groupedErrors) return undefined;
-  if (!filterOutKeys) return groupedErrors;
-
-  const filteredErrors = Object.keys(groupedErrors).reduce<GroupedErrors>(
-    (prevGroupedErrors, key) => {
-      if (!filterOutKeys.includes(key)) {
-        return {
-          // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-          ...prevGroupedErrors,
-          [key]: groupedErrors[key],
-        };
-      }
-
-      return prevGroupedErrors;
-    },
-    {}
-  );
-
-  return Object.keys(filteredErrors).length > 0 ? filteredErrors : undefined;
 };

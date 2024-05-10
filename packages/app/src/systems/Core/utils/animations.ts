@@ -15,9 +15,9 @@ export const animations = {
     factor = 30,
     transition = defaultTransition,
   }: Opts = defaultTransition) => ({
-    initial: { opacity: 0.4, y: -factor },
+    initial: { opacity: 0, y: -factor },
     animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0.4, y: -factor },
+    exit: { opacity: 0, y: -factor },
     transition: { default: transition } as Transition,
   }),
   slideInRight: ({
