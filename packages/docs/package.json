@@ -3,10 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build:preview": "run-s build:docs export:docs",
+    "build:preview": "run-s build:docs",
     "build:docs": "next build",
     "dev": "next dev -p 3030",
-    "export:docs": "DOCS_DIST=${DOCS_DIST:=dist} && next export -o $DOCS_DIST",
     "start": "next start",
     "lint": "next lint"
   },

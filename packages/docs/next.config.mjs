@@ -14,7 +14,6 @@ function resolveLinkDeps() {
     !!linkDeps.length && {
       resolve: {
         alias: linkDeps.reduce((obj, dep) => {
-          // remove TS SDK as it's not needed to resolve alias anymore.
           if (/@fuel-ui/.test(dep)) {
             obj[dep] = path.resolve(
               __dirname,
@@ -32,6 +31,8 @@ function resolveLinkDeps() {
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+  output: 'export',
+  distDir: process.env.DOCS_DIST || 'dist',
   basePath: process.env.DOCS_BASE_URL || '',
   experimental: {
     externalDir: true,
@@ -49,8 +50,6 @@ const nextConfig = {
       ...depsAlias?.resolve?.alias,
     };
 
-    // https://github.com/WalletConnect/walletconnect-monorepo/issues/1908
-    // https://docs.walletconnect.com/web3modal/nextjs/about#extra-configuration
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
 
     config.module.rules.push({
