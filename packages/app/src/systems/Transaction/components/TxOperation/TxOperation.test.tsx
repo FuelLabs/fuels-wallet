@@ -1,7 +1,8 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
-import { TestWrapper, fuelAssets } from '~/systems/Core';
+import { TestWrapper } from '~/systems/Core';
 
 import {
+  MOCK_FUEL_ASSETS,
   MOCK_OPERATION_CONTRACT_CALL,
   MOCK_OPERATION_TRANSFER,
 } from '../../__mocks__/operation';
@@ -10,7 +11,7 @@ import { TxOperation } from './TxOperation';
 
 const PROPS = {
   operation: MOCK_OPERATION_CONTRACT_CALL,
-  assets: fuelAssets,
+  assets: MOCK_FUEL_ASSETS,
 };
 
 describe('TxOperation', () => {

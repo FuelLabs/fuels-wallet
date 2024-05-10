@@ -1,0 +1,53 @@
+{
+  "coins": [
+    {
+      "tx_id": "0x260eabfd50937e92939fd92687e9302a72e91c5065f64f853f2ccbe02396fe09d665",
+      "output_index": 0,
+      "tx_pointer_block_height": 0,
+      "tx_pointer_tx_idx": 0,
+      "owner": "0x94ffcc53b892684acefaebc8a3d4a595e528a8cf664eeb3ef36f1020b0809d0d",
+      "amount": 18446744073709551615,
+      "asset_id": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "tx_id": "0x2a757c2317236f7883ac9bbbf7d402f034e0b725c544ef1c8725b1d2bd960f8c690f",
+      "output_index": 0,
+      "tx_pointer_block_height": 0,
+      "tx_pointer_tx_idx": 0,
+      "owner": "0x6684dd7bb61364e1ac458e9241f969178c4a2e302bbc23e143c49d8b6dba701a",
+      "amount": 18446744073709551615,
+      "asset_id": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "tx_id": "0x634ef6cda00bac63992bbde80c6d694d484d58025a5ca0c9c848f0d35a5a3eee74b2",
+      "output_index": 0,
+      "tx_pointer_block_height": 0,
+      "tx_pointer_tx_idx": 0,
+      "owner": "0xc8e615a4089466174459ef19cfd257d2e17adfabff3b8f219dbb5fb4eca87c50",
+      "amount": 18446744073709551615,
+      "asset_id": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "tx_id": "0xd3543bb1da137a7987a96a1bb71681fdd195ff25318c0d4a923aa30eb27ffa80bc7b",
+      "output_index": 0,
+      "tx_pointer_block_height": 0,
+      "tx_pointer_tx_idx": 0,
+      "owner": "0x92dffc873b56f219329ed03bb69bebe8c3d8b041088574882f7a6404f02e2f28",
+      "amount": 18446744073709551615,
+      "asset_id": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "tx_id": "0x00000000000000000000000000000000000000000000000000000000000000000001",
+      "output_index": 0,
+      "tx_pointer_block_height": 0,
+      "tx_pointer_tx_idx": 0,
+      "owner": "0x94ffcc53b892684acefaebc8a3d4a595e528a8cf664eeb3ef36f1020b0809d0d",
+      "amount": 18446744073709551615,
+      "asset_id": "0x0000000000000000000000000000000000000000000000000000000000000001"
+    }
+  ],
+  "messages": [],
+  "contracts": [],
+  "block_height": 0,
+  "da_block_height": 0
+}

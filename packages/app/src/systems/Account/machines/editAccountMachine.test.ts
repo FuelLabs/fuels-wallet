@@ -5,6 +5,9 @@ import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 import { MOCK_ACCOUNTS } from '../__mocks__';
 import { AccountService } from '../services';
 
+import { graphql } from 'msw';
+import { mockServer } from '~/mocks/server';
+import { MOCK_TRANSACTION_WITH_RECEIPTS_GQL } from '~/systems/Transaction/__mocks__/transaction';
 import type {
   EditAccountMachineService,
   EditAccountMachineEvents as MachineEvents,
@@ -30,6 +33,18 @@ const machine = editAccountMachine.withContext({}).withConfig({
     notifyUpdateAccounts() {},
   },
 });
+
+mockServer([
+  graphql.query('getChain', (_req, res, ctx) => {
+    return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
+  }),
+  graphql.query('getNodeInfo', (_req, res, ctx) => {
+    return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
+  }),
+  graphql.query('getBalances', (_req, res, ctx) => {
+    return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
+  }),
+]);
 
 describe('editAccountMachine', () => {
   let service: EditAccountMachineService;

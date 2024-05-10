@@ -28,9 +28,8 @@ describe('TxService', () => {
     transactionRequest = new ScriptTransactionRequest(params);
     const assetId = coins[0].assetId;
     transactionRequest.addCoinOutput(newAddr, amount, assetId);
-    const { maxFee, requiredQuantities } =
-      await provider.getTransactionCost(transactionRequest);
-    await wallet.fund(transactionRequest, requiredQuantities, maxFee);
+    const txCost = await provider.getTransactionCost(transactionRequest);
+    await wallet.fund(transactionRequest, txCost);
   });
 
   beforeEach(async () => {

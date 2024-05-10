@@ -7,12 +7,12 @@ import './load.envs';
 
 const config: PlaywrightTestConfig = defineConfig({
   testDir: './playwright',
-  retries: 4,
-  workers: 4,
+  retries: 1,
+  workers: 1,
   timeout: 60_000,
   reporter: [['html', { printSteps: true }]],
   webServer: {
-    command: `pnpm dev:e2e-contracts --mode test --port ${process.env.PORT}`,
+    command: `pnpm dev:e2e-contracts --port ${process.env.PORT}`,
     port: Number(process.env.PORT),
     reuseExistingServer: true,
   },

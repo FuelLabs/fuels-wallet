@@ -1,12 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Button, Dialog } from '@fuel-ui/react';
+import { Button, Dialog } from '@fuel-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useAssets } from '~/systems/Asset';
 import { Pages } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 import { useTransactionRequest } from '~/systems/DApp';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
-import { TxContent, TxHeader } from '~/systems/Transaction';
+import { TxContent } from '~/systems/Transaction';
 
 export const TxApprove = () => {
   const ctx = useTransactionRequest();
@@ -21,14 +21,6 @@ export const TxApprove = () => {
     navigate(Pages.index());
   };
 
-  const Header = (
-    <Alert status="warning" css={styles.alert}>
-      <Alert.Description>
-        Carefully check if all the details in your transaction are correct
-      </Alert.Description>
-    </Alert>
-  );
-
   return (
     <>
       <OverlayDialogTopbar
@@ -37,30 +29,24 @@ export const TxApprove = () => {
         {ctx.title}
       </OverlayDialogTopbar>
       <Dialog.Description as="div" css={styles.description}>
-        {ctx.shouldShowLoader && <TxContent.Loader header={Header} />}
-        {ctx.shouldShowTx && (
+        {ctx.shouldShowLoader && <TxContent.Loader />}
+        {ctx.shouldShowTxSimulated && (
           <TxContent.Info
             showDetails
-            tx={ctx.txResult}
+            tx={ctx.txSummarySimulated}
             isLoading={isLoading}
-            header={Header}
+            errors={ctx.errors.simulateTxErrors}
+            isConfirm
             assets={assets}
           />
         )}
-        {(ctx.status('success') || ctx.status('failed')) && (
+        {ctx.shouldShowTxExecuted && (
           <TxContent.Info
             showDetails
-            tx={ctx.txResult}
-            txStatus={ctx.approveStatus()}
+            tx={ctx.txSummaryExecuted}
+            txStatus={ctx.executedStatus()}
             assets={assets}
-            header={
-              <TxHeader
-                id={ctx.txResult?.id || ctx.approvedTx?.id}
-                type={ctx.txResult?.type}
-                status={ctx.approveStatus()}
-                providerUrl={ctx.providerUrl}
-              />
-            }
+            providerUrl={ctx.providerUrl}
             footer={
               ctx.status('failed') && (
                 <Button
@@ -77,7 +63,7 @@ export const TxApprove = () => {
         )}
       </Dialog.Description>
       <Dialog.Footer>
-        {ctx.showActions && (
+        {ctx.shouldShowActions && (
           <>
             <Button
               variant="ghost"
@@ -89,6 +75,7 @@ export const TxApprove = () => {
             <Button
               intent="primary"
               isLoading={isLoading}
+              isDisabled={ctx.shouldDisableApproveBtn}
               onPress={ctx.handlers.approve}
             >
               Approve
@@ -109,13 +96,5 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '$4',
-  }),
-  alert: cssObj({
-    '& .fuel_Alert-content': {
-      gap: '$1',
-    },
-    ' & .fuel_Heading': {
-      fontSize: '$sm',
-    },
   }),
 };

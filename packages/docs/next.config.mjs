@@ -14,7 +14,6 @@ function resolveLinkDeps() {
     !!linkDeps.length && {
       resolve: {
         alias: linkDeps.reduce((obj, dep) => {
-          // remove TS SDK as it's not needed to resolve alias anymore.
           if (/@fuel-ui/.test(dep)) {
             obj[dep] = path.resolve(
               __dirname,
@@ -32,9 +31,9 @@ function resolveLinkDeps() {
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+  output: 'export',
   basePath: process.env.DOCS_BASE_URL || '',
   experimental: {
-    esmExternals: false,
     externalDir: true,
   },
   images: {
@@ -49,6 +48,9 @@ const nextConfig = {
       ...config.resolve.alias,
       ...depsAlias?.resolve?.alias,
     };
+
+    config.externals.push('pino-pretty', 'lokijs', 'encoding');
+
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],

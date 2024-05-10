@@ -1,7 +1,9 @@
 import type { AssetData } from '@fuel-wallet/types';
-import { isB256 } from 'fuels';
+import initialAssets from '@fuels/assets';
+import { type NetworkFuel, Provider, isB256 } from 'fuels';
 import { db } from '~/systems/Core/utils/database';
 import { getUniqueString } from '~/systems/Core/utils/string';
+import { NetworkService } from '~/systems/Network/services/network';
 
 export type AssetInputs = {
   upsertAsset: {
@@ -31,16 +33,67 @@ export type AssetInputs = {
 export class AssetService {
   static async upsertAsset(input: AssetInputs['upsertAsset']) {
     return db.transaction('rw!', db.assets, async () => {
-      const { assetId, ...updateData } = input.data;
-      const asset = await db.assets.get({ assetId });
-      if (asset) {
-        await db.assets.update(assetId, updateData);
-      } else {
-        await db.assets.add(input.data);
+      const assets = await AssetService.getAssetsByFilter((a) => {
+        return a.name === input.data.name;
+      });
+      if (assets?.[0]) {
+        await db.assets.delete(assets[0].assetId);
       }
+      await db.assets.add(input.data);
 
-      return db.assets.get({ assetId });
+      return db.assets.get({ assetId: input.data.assetId });
     });
+  }
+
+  static async setListedAssets() {
+    // @TODO: Remove when SDK provide correct asset id for the network
+    const legacyFuelBaseAssetId =
+      '0x0000000000000000000000000000000000000000000000000000000000000000';
+    const currentNetwork = await NetworkService.getSelectedNetwork();
+    const provider = await Provider.create(currentNetwork?.url || '');
+    const networkBaseAssetId = provider.getBaseAssetId();
+
+    const assetsPromises = initialAssets.map((asset) => {
+      const fuelNetworkAssets = asset.networks.filter(
+        (n) => n.type === 'fuel'
+      ) as Array<NetworkFuel>;
+
+      const fuelNetworkAsset = asset.networks.find(
+        (n) => n.type === 'fuel' && n.chainId === provider.getChainId()
+      ) as NetworkFuel;
+
+      const networks = fuelNetworkAssets.map((network) => {
+        if (
+          network.chainId === provider.getChainId() &&
+          network.assetId === legacyFuelBaseAssetId
+        ) {
+          return {
+            ...network,
+            assetId: networkBaseAssetId,
+          };
+        }
+        return network;
+      });
+
+      const newAsset = {
+        ...asset,
+        networks,
+        assetId:
+          fuelNetworkAsset.assetId === legacyFuelBaseAssetId
+            ? networkBaseAssetId
+            : fuelNetworkAsset.assetId,
+        decimals: fuelNetworkAsset.decimals,
+      };
+      return AssetService.upsertAsset({
+        data: {
+          ...newAsset,
+          isCustom: false,
+          imageUrl: newAsset.icon,
+        },
+      });
+    });
+
+    await Promise.all(assetsPromises);
   }
 
   static updateAsset(input: AssetInputs['updateAsset']) {
@@ -99,7 +152,10 @@ export class AssetService {
 
   static async getAssetsByFilter(filterFn: (asset: AssetData) => boolean) {
     return db.transaction('r', db.assets, async () => {
-      const assets = db.assets.filter(filterFn).toArray();
+      const assets: Array<AssetData> = [];
+      await db.assets.filter(filterFn).each((data) => {
+        assets.push({ ...data });
+      });
       return assets;
     });
   }

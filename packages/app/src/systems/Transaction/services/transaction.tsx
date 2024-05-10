@@ -1,31 +1,28 @@
-import type { Account, AssetData } from '@fuel-wallet/types';
-import type {
-  GetTransactionSummaryFromRequestParams,
-  TransactionRequest,
-  TransactionSummary,
-  WalletLocked,
-} from 'fuels';
+import type { Account } from '@fuel-wallet/types';
+import type { TransactionRequest, WalletLocked } from 'fuels';
+
 import {
   Address,
-  BN,
-  BaseAssetId,
+  type BN,
   Provider,
   ScriptTransactionRequest,
   TransactionResponse,
   TransactionStatus,
   assembleTransactionSummary,
   bn,
+  coinQuantityfy,
   getTransactionSummary,
+  getTransactionSummaryFromRequest,
   getTransactionsSummaries,
-  hexlify,
   normalizeJSON,
-  processGqlReceipt,
 } from 'fuels';
-import { isEth } from '~/systems/Asset/utils/asset';
 import { WalletLockedCustom, db, uniqueId } from '~/systems/Core';
 
+import { AccountService } from '~/systems/Account/services/account';
+import { NetworkService } from '~/systems/Network/services/network';
 import type { Transaction } from '../types';
-import { getAbiMap } from '../utils';
+import { getAbiMap, getGroupedErrors } from '../utils';
+import { getCurrentTips } from '../utils/fee';
 
 export type TxInputs = {
   get: {
@@ -57,17 +54,14 @@ export type TxInputs = {
     account?: Account | null;
   };
   createTransfer: {
-    to: string;
-    amount: BN;
-    assetId: string;
-    provider: Provider;
+    to?: string;
+    amount?: BN;
+    assetId?: string;
+    tip?: BN;
+    gasLimit?: BN;
   };
-  resolveTransferCosts: {
-    amount: BN;
-    assetId: string;
-    account: Account;
-    provider: Provider;
-    transferRequest: ScriptTransactionRequest;
+  applyFee: {
+    transactionRequest?: TransactionRequest;
   };
   fetch: {
     txId: string;
@@ -77,22 +71,9 @@ export type TxInputs = {
     address: string;
     providerUrl?: string;
   };
-  addResources: {
-    wallet: WalletLocked;
-    gasFee?: BN;
-    transactionRequest: TransactionRequest;
-    needToAddResources?: boolean;
-  };
   fundTransaction: {
     wallet: WalletLocked;
     transactionRequest: TransactionRequest;
-  };
-  isValidTransaction: {
-    address?: string;
-    account?: Account;
-    asset?: AssetData;
-    amount?: BN;
-    fee?: BN;
   };
 };
 
@@ -162,48 +143,6 @@ export class TxService {
     return { txResult: txResultWithCalls, txResponse };
   }
 
-  // TODO: remove this once is fixed on the SDK
-  // https://github.com/FuelLabs/fuels-ts/issues/1314
-  static async getTransactionSummaryFromRequest<TTransactionType = void>(
-    params: GetTransactionSummaryFromRequestParams
-  ): Promise<TransactionSummary<TTransactionType>> {
-    const { provider, transactionRequest, abiMap } = params;
-    await provider.estimateTxDependencies(transactionRequest);
-    const transaction = transactionRequest.toTransaction();
-    const transactionBytes = transactionRequest.toTransactionBytes();
-    const { dryRun: gqlReceipts } = await provider.operations.dryRun({
-      encodedTransaction: hexlify(transactionBytes),
-      utxoValidation: false,
-    });
-    const receipts = gqlReceipts.map(processGqlReceipt);
-    const {
-      consensusParameters: { gasPerByte, gasPriceFactor, maxInputs, gasCosts },
-    } = provider.getChain();
-
-    const transactionSummary = assembleTransactionSummary<TTransactionType>({
-      gasCosts,
-      transaction,
-      transactionBytes,
-      abiMap,
-      receipts,
-      gasPerByte,
-      gasPriceFactor,
-      maxInputs,
-    });
-
-    // Workaround until https://github.com/FuelLabs/fuels-ts/issues/1674 is fixed
-    transactionSummary.isStatusFailure = transactionSummary.receipts.some(
-      (receipt) => {
-        return receipt.type === 3;
-      }
-    );
-    if (transactionSummary.isStatusFailure) {
-      transactionSummary.status = TransactionStatus.failure;
-    }
-
-    return transactionSummary;
-  }
-
   static async simulateTransaction({
     transactionRequest,
     providerUrl,
@@ -213,13 +152,45 @@ export class TxService {
     const abiMap = await getAbiMap({
       inputs: transaction.inputs,
     });
-    const txResult = await TxService.getTransactionSummaryFromRequest({
-      transactionRequest,
-      provider,
-      abiMap,
-    });
 
-    return { txResult };
+    try {
+      const txSummary = await getTransactionSummaryFromRequest({
+        provider,
+        transactionRequest,
+        abiMap,
+      });
+
+      return { txSummary };
+
+      // biome-ignore lint/suspicious/noExplicitAny: allow any
+    } catch (e: any) {
+      const { gasPerByte, gasPriceFactor, gasCosts, maxGasPerTx } =
+        provider.getGasConfig();
+      const consensusParameters = provider.getChain().consensusParameters;
+      const { maxInputs } = consensusParameters.txParameters;
+
+      const transaction = transactionRequest.toTransaction();
+      const transactionBytes = transactionRequest.toTransactionBytes();
+
+      const simulateTxErrors = getGroupedErrors(e.response?.errors);
+      const gasPrice = await provider.getLatestGasPrice();
+      const txSummary = assembleTransactionSummary({
+        receipts: [],
+        transaction,
+        transactionBytes,
+        abiMap,
+        gasPerByte,
+        gasPriceFactor,
+        maxInputs,
+        gasCosts,
+        maxGasPerTx,
+        gasPrice,
+      });
+      txSummary.isStatusFailure = true;
+      txSummary.status = TransactionStatus.failure;
+
+      return { txSummary, simulateTxErrors };
+    }
   }
 
   static async getTransactionHistory({
@@ -248,120 +219,87 @@ export class TxService {
     };
   }
 
-  static async createTransfer(input: TxInputs['createTransfer']) {
-    const { minGasPrice: gasPrice } = await input.provider.getGasConfig();
-    // Because gasLimit is caulculated on the number of operations we can
-    // safely assume that a transfer will consume at max 20 units, this should
-    // be change once we add multiple transfers in a single transaction.
-    const request = new ScriptTransactionRequest({ gasLimit: 20, gasPrice });
-    const to = Address.fromAddressOrString(input.to);
-    const { assetId, amount } = input;
-    request.addCoinOutput(to, amount, assetId);
-    return request;
+  static async estimateDefaultTips() {
+    const currentNetwork = await NetworkService.getSelectedNetwork();
+    const provider = await Provider.create(currentNetwork?.url || '');
+
+    const { regularTip, fastTip } = await getCurrentTips(provider);
+
+    return {
+      regularTip: bn(regularTip),
+      fastTip: bn(fastTip),
+    };
   }
 
-  static async resolveTransferCosts(input: TxInputs['resolveTransferCosts']) {
-    try {
-      const { account, amount, assetId, provider, transferRequest } = input;
-      const wallet = new WalletLockedCustom(account.address, provider);
-      const nativeBalance = await wallet.getBalance();
-      let fee = new BN(0);
-      // If transaction is native asset and amount is equal to balance
-      // them we calculate the fee for the screen to reduce the input amount
-      if (assetId === BaseAssetId && amount.eq(nativeBalance)) {
-        const resources = await provider.getResourcesToSpend(wallet.address, [
+  static async estimateGasLimit() {
+    const currentNetwork = await NetworkService.getSelectedNetwork();
+    const provider = await Provider.create(currentNetwork?.url || '');
+    const consensusParameters = provider.getChain().consensusParameters;
+
+    return {
+      baseGasLimit: bn(1),
+      maxGasPerTx: consensusParameters.txParameters.maxGasPerTx,
+    };
+  }
+
+  static async createTransfer(input: TxInputs['createTransfer'] | undefined) {
+    const { amount, assetId, to, tip, gasLimit: gasLimitInput } = input || {};
+
+    if (!to || !assetId || !amount || !tip || !gasLimitInput) {
+      throw new Error('Missing params for transaction request');
+    }
+
+    const [network, account] = await Promise.all([
+      NetworkService.getSelectedNetwork(),
+      AccountService.getCurrentAccount(),
+    ]);
+
+    if (!network?.url || !account) {
+      throw new Error('Missing context for transaction request');
+    }
+
+    const provider = await Provider.create(network.url);
+    const wallet = new WalletLockedCustom(account.address, provider);
+
+    const maxAttempts = 10;
+    let attempts = 0;
+
+    while (attempts < maxAttempts) {
+      try {
+        const targetAmount = amount.sub(attempts * 1_000_000);
+        const realAmount = targetAmount.gt(0) ? targetAmount : bn(1);
+
+        const transactionRequest = await wallet.createTransfer(
+          to,
+          realAmount,
+          assetId,
           {
-            assetId: BaseAssetId,
-            amount: nativeBalance,
-          },
-        ]);
-        transferRequest.addResources(resources);
-        const { gasUsed, gasPrice, usedFee, minFee } =
-          await provider.getTransactionCost(transferRequest);
-        transferRequest.gasPrice = gasPrice;
-        transferRequest.gasLimit = gasUsed;
-        fee = usedFee.add(minFee);
-      } else {
-        const { requiredQuantities, gasPrice, gasUsed, usedFee, minFee } =
-          await provider.getResourcesForTransaction(
-            wallet.address,
-            transferRequest
-          );
-        fee = usedFee.add(minFee);
-        // If does not find ETH on the required coins add it before query resources
-        // TODO: check why the getResourcesForTransaction from TS-SDK do not return
-        // the ETH required on the requiredQuantities
-        if (
-          !requiredQuantities.find(
-            (quantity) => quantity.assetId === BaseAssetId
-          )
-        ) {
-          requiredQuantities.push({
-            assetId: BaseAssetId,
-            amount: fee,
-          });
-        }
-        const resources = await provider.getResourcesToSpend(
-          wallet.address,
-          requiredQuantities
+            tip: tip.isZero() ? undefined : tip,
+          }
         );
-        transferRequest.gasPrice = gasPrice;
-        transferRequest.gasLimit = gasUsed;
-        transferRequest.addResources(resources);
+
+        const baseFee = transactionRequest.maxFee.sub(
+          transactionRequest.tip ?? bn(0)
+        );
+
+        return {
+          baseFee: baseFee.sub(1), // To match maxFee calculated on TS SDK (they add 1 unit)
+          transactionRequest,
+          address: account.address,
+          providerUrl: network.url,
+        };
+      } catch (e) {
+        attempts += 1;
+        console.log(e);
       }
-
-      return {
-        fee,
-        transactionRequest: transferRequest,
-      };
-    } catch (err) {
-      if (err instanceof Error) {
-        if (err.message.includes('not enough coins to fit the target')) {
-          throw new Error('Insufficient funds to cover gas costs');
-        }
-      }
-      throw err;
-    }
-  }
-
-  static async addResources(input: TxInputs['addResources']) {
-    const { gasFee = bn(0), wallet } = input || {};
-    const request = input.transactionRequest;
-    const coins = request.getCoinOutputs().map((coin) => ({
-      assetId: coin.assetId,
-      amount: isEth(coin) ? bn(coin.amount).add(gasFee) : bn(coin.amount),
-    }));
-
-    if (!coins.find(isEth)) {
-      coins.push({
-        assetId: BaseAssetId,
-        amount: gasFee,
-      });
     }
 
-    const resources = await wallet.getResourcesToSpend(coins);
-    request.addResources(resources);
-    return request;
-  }
-
-  static async fundTransaction(input: TxInputs['fundTransaction']) {
-    const { minGasPrice } = await input.wallet.provider.fetchNode();
-    const transactionRequest = await TxService.addResources({
-      ...input,
-      gasFee: minGasPrice,
-    });
-    return transactionRequest;
-  }
-
-  static isValidTransaction(input: TxInputs['isValidTransaction']) {
-    const { account, asset, fee, amount, address } = input;
-    if (!account || !asset || !fee || !amount || !address) return false;
-    const assetBalance = getAssetAccountBalance(account, asset?.assetId);
-    if (isEth(asset.assetId)) return assetBalance.gte(bn(amount).add(fee));
-    const ethBalance = getAssetAccountBalance(account, BaseAssetId);
-    const hasAssetBalance = assetBalance.gte(bn(amount));
-    const hasGasFeeBalance = ethBalance.gte(bn(fee));
-    return hasAssetBalance && hasGasFeeBalance;
+    return {
+      baseFee: undefined,
+      transactionRequest: undefined,
+      address: account.address,
+      providerUrl: network.url,
+    };
   }
 }
 

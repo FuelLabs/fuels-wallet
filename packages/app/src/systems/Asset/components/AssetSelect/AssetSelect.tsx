@@ -1,5 +1,4 @@
 import { cssObj, cx } from '@fuel-ui/css';
-import type { DropdownProps } from '@fuel-ui/react';
 import {
   Avatar,
   Box,
@@ -10,24 +9,19 @@ import {
   Text,
 } from '@fuel-ui/react';
 import type { AssetAmount } from '@fuel-wallet/types';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import type { Maybe } from '~/systems/Core';
 import { shortAddress } from '~/systems/Core';
 
 export type AssetSelectInput = AssetAmount;
 
-export type AssetSelectProps = DropdownProps & {
+export type AssetSelectProps = {
   items?: Maybe<AssetSelectInput[]>;
   selected?: Maybe<string>;
   onSelect: (asset?: string | null) => void;
 };
 
-export function AssetSelect({
-  items,
-  selected,
-  onSelect,
-  ...props
-}: AssetSelectProps) {
+function AssetSelectBase({ items, selected, onSelect }: AssetSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const assetAmount = items?.find((i) => i.assetId === selected);
 
@@ -37,7 +31,6 @@ export function AssetSelect({
 
   return (
     <Dropdown
-      {...props}
       isOpen={isOpen}
       onOpenChange={setIsOpen}
       popoverProps={{ align: 'start' }}
@@ -140,6 +133,8 @@ export function AssetSelect({
     </Dropdown>
   );
 }
+
+export const AssetSelect = memo(AssetSelectBase);
 
 const styles = {
   trigger: cssObj({

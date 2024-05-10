@@ -17,6 +17,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <FuelProvider
+        theme="dark"
         fuelConfig={{
           connectors: [
             new FuelWalletConnector(),

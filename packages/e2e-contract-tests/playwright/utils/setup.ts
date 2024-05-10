@@ -8,7 +8,7 @@ import { Provider, Wallet, bn } from 'fuels';
 
 import '../../load.envs';
 
-const { FUEL_PROVIDER_URL, WALLET_SECRET } = process.env;
+const { VITE_FUEL_PROVIDER_URL, VITE_WALLET_SECRET } = process.env;
 
 export const testSetup = async ({
   context,
@@ -19,7 +19,7 @@ export const testSetup = async ({
   page: Page;
   extensionId: string;
 }) => {
-  const fuelProvider = await Provider.create(FUEL_PROVIDER_URL!);
+  const fuelProvider = await Provider.create(VITE_FUEL_PROVIDER_URL!);
   const chainName = (await fuelProvider.fetchChain()).name;
   const fuelWalletTestHelper = await FuelWalletTestHelper.walletSetup(
     context,
@@ -32,8 +32,8 @@ export const testSetup = async ({
   await seedWallet(
     fuelWallet.address.toString(),
     bn.parseUnits('100'),
-    FUEL_PROVIDER_URL!,
-    WALLET_SECRET!
+    VITE_FUEL_PROVIDER_URL!,
+    VITE_WALLET_SECRET!
   );
   await page.goto('/');
   return { fuelWallet, fuelWalletTestHelper };
