@@ -3,10 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build:preview": "run-s build:docs",
-    "build:docs": "next build",
+    "build:preview": "next build",
     "dev": "next dev -p 3030",
-    "start": "DOCS_DIST=${DOCS_DIST:=dist} && npx --yes serve $DOCS_DIST",
+    "start": "npx --yes serve out/",
     "lint": "next lint"
   },
   "dependencies": {
