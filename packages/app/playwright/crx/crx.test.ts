@@ -286,7 +286,7 @@ test.describe('FuelWallet Extension', () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
 
         // delay to avoid the page to get the wrong currentAccount
-        await delay(1000);
+        await delay(2000);
 
         const currentAccountPromise = await blankPage.evaluate(async () => {
           return window.fuel.currentAccount();
@@ -296,6 +296,10 @@ test.describe('FuelWallet Extension', () => {
 
       await test.step('Throw on not Authorized Account', async () => {
         await switchAccount(popupPage, 'Account 2');
+
+        // delay to avoid the page to get the wrong currentAccount
+        await delay(2000);
+
         const currentAccountPromise = blankPage.evaluate(async () => {
           return window.fuel.currentAccount();
         });
