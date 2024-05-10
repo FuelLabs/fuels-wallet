@@ -32,7 +32,7 @@ function resolveLinkDeps() {
  */
 const nextConfig = {
   output: 'export',
-  distDir: process.env.DOCS_DIST || 'dist',
+  distDir: '../../dist',
   basePath: process.env.DOCS_BASE_URL || '',
   experimental: {
     externalDir: true,
