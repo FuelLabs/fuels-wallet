@@ -1,5 +1,14 @@
 # fuels-wallet
 
+## 0.18.1
+
+### Patch Changes
+
+- [#1286](https://github.com/FuelLabs/fuels-wallet/pull/1286) [`a6e3d75a`](https://github.com/FuelLabs/fuels-wallet/commit/a6e3d75af2ab2ade059e99f65cef5317378019fa) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: Auto-upgrade to devnet network
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.18.1
+
 ## 0.18.0
 
 ### Minor Changes
