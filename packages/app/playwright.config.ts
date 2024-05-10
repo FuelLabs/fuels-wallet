@@ -24,5 +24,6 @@ export default defineConfig({
     permissions: ['clipboard-read', 'clipboard-write'],
     headless: false,
     trace: 'on-first-retry',
+    actionTimeout: 5000,
   },
 });
