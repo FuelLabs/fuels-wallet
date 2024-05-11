@@ -1,5 +1,27 @@
 # fuels-wallet
 
+## 0.18.1
+
+### Patch Changes
+
+- [#1286](https://github.com/FuelLabs/fuels-wallet/pull/1286) [`a6e3d75a`](https://github.com/FuelLabs/fuels-wallet/commit/a6e3d75af2ab2ade059e99f65cef5317378019fa) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: Auto-upgrade to devnet network
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.18.1
+
+## 0.18.0
+
+### Minor Changes
+
+- [#1240](https://github.com/FuelLabs/fuels-wallet/pull/1240) [`b4f52e09`](https://github.com/FuelLabs/fuels-wallet/commit/b4f52e09af0952600ddcdf818632d8328d8fac8f) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: update wallet to the latest fuel core (0.26.0)
+
+- [#1240](https://github.com/FuelLabs/fuels-wallet/pull/1240) [`b4f52e09`](https://github.com/FuelLabs/fuels-wallet/commit/b4f52e09af0952600ddcdf818632d8328d8fac8f) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: add custom network fees, offering options like regular, fast and custom tip.
+
+### Patch Changes
+
+- Updated dependencies [[`b4f52e09`](https://github.com/FuelLabs/fuels-wallet/commit/b4f52e09af0952600ddcdf818632d8328d8fac8f)]:
+  - @fuel-wallet/connections@0.18.0
+
 ## 0.17.0
 
 ### Minor Changes
