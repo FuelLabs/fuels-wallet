@@ -21,6 +21,7 @@ export type InsufficientInputAmountError = {
 
 export type GroupedErrors = {
   InsufficientInputAmount: InsufficientInputAmountError;
+  NotEnoughCoins: string;
   // biome-ignore lint/suspicious/noExplicitAny: allow any
   [key: VmErrorType]: Record<string, any> | string | unknown;
 };
@@ -65,6 +66,13 @@ export const getGroupedErrors = (rawErrors?: { message: string }[]) => {
           // biome-ignore lint/performance/noAccumulatingSpread:
           ...prevGroupedError,
           [errorType]: errorValue,
+        };
+      }
+      if (message.includes('not enough coins to fit the target')) {
+        return {
+          // biome-ignore lint/performance/noAccumulatingSpread:
+          ...prevGroupedError,
+          NotEnoughCoins: message,
         };
       }
 

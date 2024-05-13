@@ -2,15 +2,12 @@ import type { Account } from '@fuel-wallet/types';
 import type { TransactionRequest, WalletLocked } from 'fuels';
 
 import {
-  Address,
   type BN,
   Provider,
-  ScriptTransactionRequest,
   TransactionResponse,
   TransactionStatus,
   assembleTransactionSummary,
   bn,
-  coinQuantityfy,
   getTransactionSummary,
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
@@ -39,6 +36,9 @@ export type TxInputs = {
     favIconUrl?: string;
     transactionRequest: TransactionRequest;
     providerUrl: string;
+  };
+  customFee: {
+    tip: BN;
   };
   send: {
     address: string;
@@ -148,12 +148,27 @@ export class TxService {
     providerUrl,
   }: TxInputs['simulateTransaction']) {
     const provider = await Provider.create(providerUrl || '');
-    const transaction = transactionRequest.toTransaction();
-    const abiMap = await getAbiMap({
-      inputs: transaction.inputs,
-    });
+    const account = await AccountService.getCurrentAccount();
+
+    if (!account) {
+      throw new Error('Missing context for transaction request');
+    }
 
     try {
+      const wallet = new WalletLockedCustom(account.address, provider);
+
+      const txCost = await provider.getTransactionCost(transactionRequest, {
+        estimateTxDependencies: true,
+        resourcesOwner: wallet,
+      });
+
+      await wallet.fund(transactionRequest, txCost);
+
+      const transaction = transactionRequest.toTransaction();
+      const abiMap = await getAbiMap({
+        inputs: transaction.inputs,
+      });
+
       const txSummary = await getTransactionSummaryFromRequest({
         provider,
         transactionRequest,
@@ -172,7 +187,12 @@ export class TxService {
       const transaction = transactionRequest.toTransaction();
       const transactionBytes = transactionRequest.toTransactionBytes();
 
+      const abiMap = await getAbiMap({
+        inputs: transaction.inputs,
+      });
+
       const simulateTxErrors = getGroupedErrors(e.response?.errors);
+
       const gasPrice = await provider.getLatestGasPrice();
       const txSummary = assembleTransactionSummary({
         receipts: [],
@@ -237,6 +257,7 @@ export class TxService {
     const consensusParameters = provider.getChain().consensusParameters;
 
     return {
+      // @TODO: Need to fetch the baseGasLimit here to put the gas limit back
       baseGasLimit: bn(1),
       maxGasPerTx: consensusParameters.txParameters.maxGasPerTx,
     };
