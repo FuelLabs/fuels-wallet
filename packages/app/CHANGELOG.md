@@ -1,5 +1,16 @@
 # fuels-wallet
 
+## 0.19.0
+
+### Minor Changes
+
+- [#1310](https://github.com/FuelLabs/fuels-wallet/pull/1310) [`00df2708`](https://github.com/FuelLabs/fuels-wallet/commit/00df27083e42fc6633311faff1f665ccbab26747) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Auto-update network to testnet (Ignition)
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.19.0
+
 ## 0.18.1
 
 ### Patch Changes
