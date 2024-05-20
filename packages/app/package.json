@@ -45,7 +45,7 @@
     "events": "3.3.0",
     "fake-indexeddb": "4.0.2",
     "framer-motion": "10.16.4",
-    "fuels": "0.84.0",
+    "fuels": "0.0.0-rc-2143-20240520152005",
     "json-rpc-2.0": "1.7.0",
     "lodash.debounce": "4.0.8",
     "react": "18.2.0",
