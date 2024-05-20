@@ -88,7 +88,7 @@ test.describe('Networks', () => {
     await expect(buttonCreate).toBeDisabled();
     const urlInput = getInputByName(page, 'url');
     await expect(urlInput).toBeFocused();
-    await urlInput.fill('https://devnet.fuel.network/v1/graphql');
+    await urlInput.fill('https://testnet.fuel.network/v1/graphql');
     await hasText(page, /Ignition\-Dev/i, 0, 15000);
     await expect(buttonCreate).toBeEnabled();
     await buttonCreate.click();
