@@ -132,9 +132,17 @@ export function createAccount(wallet: WalletAccount, index = 0) {
 export function createAccounts(manager: WalletManager, numberOfAccounts = 1) {
   return Promise.all(
     new Array(numberOfAccounts).fill(0).map(async (_, index) => {
-      const walletAccount = await manager.addAccount();
-      const account = createAccount(walletAccount, index);
-      return account;
+      let walletAccounts = null;
+      let walletAccount = null;
+      walletAccounts = await manager.getAccounts();
+      if (index === 0) {
+        walletAccount = walletAccounts[0];
+      } else {
+        walletAccount = await manager.addAccount();
+      }
+
+      const accounts = createAccount(walletAccount, index);
+      return accounts;
     })
   );
 }
@@ -175,11 +183,12 @@ export async function serializeVault(
 
 export async function mockData(
   page: Page,
-  numberOfAccounts = 1,
-  networks: Array<NetworkData> = DEFAULT_NETWORKS
+  numberOfAccounts,
+  networks: Array<NetworkData>,
+  seedPhrase
 ) {
   await visit(page, '/');
-  const mnemonic = Mnemonic.generate(16);
+  const mnemonic = seedPhrase || Mnemonic.generate(16);
   const manager = await createManager(mnemonic);
   const accounts = await createAccounts(manager, numberOfAccounts);
   const vault = await serializeVault(manager);
