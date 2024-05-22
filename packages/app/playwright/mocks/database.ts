@@ -132,11 +132,9 @@ export function createAccount(wallet: WalletAccount, index = 0) {
 export function createAccounts(manager: WalletManager, numberOfAccounts = 1) {
   return Promise.all(
     new Array(numberOfAccounts).fill(0).map(async (_, index) => {
-      let walletAccounts = null;
       let walletAccount = null;
-      walletAccounts = await manager.getAccounts();
       if (index === 0) {
-        walletAccount = walletAccounts[0];
+        walletAccount = await manager.getAccounts()[0];
       } else {
         walletAccount = await manager.addAccount();
       }

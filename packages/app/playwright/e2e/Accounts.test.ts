@@ -162,7 +162,7 @@ test.describe('New Accounts', () => {
   });
 });
 
-test.describe('Exising Accounts', () => {
+test.describe('Existing Accounts', () => {
   let browser: Browser;
   let page: Page;
   let _data: MockData;
