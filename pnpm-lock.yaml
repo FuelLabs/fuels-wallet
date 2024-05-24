@@ -635,8 +635,8 @@ importers:
         specifier: workspace:*
         version: link:../types
       '@fuels/playwright-utils':
-        specifier: 0.19.1-pr-76-57c8450
-        version: 0.19.1-pr-76-57c8450(@playwright/test@1.39.0)(fuels@0.84.0)
+        specifier: '0.20'
+        version: 0.20.0(@playwright/test@1.39.0)(fuels@0.84.0)
       '@playwright/test':
         specifier: ^1.39.0
         version: 1.39.0
@@ -7581,11 +7581,11 @@ packages:
     resolution: {integrity: sha512-Pev7w813YNFpbgkOcrI+pgA8fSV1biZOnXY2sxj/E6oIBAm0VFNYX64xTazb92nMWxENvY6aKMT6VihcpTsPYQ==}
     dev: false
 
-  /@fuels/playwright-utils@0.19.1-pr-76-57c8450(@playwright/test@1.39.0)(fuels@0.84.0):
-    resolution: {integrity: sha512-7gm0yC6MLjgb7LErtueXSzSYR9NGGQNvMI8M27HRRLymgOCuOGl6rbikj5tyq5v4N9E5H+uQjPxsPjLvowicvQ==}
+  /@fuels/playwright-utils@0.20.0(@playwright/test@1.39.0)(fuels@0.84.0):
+    resolution: {integrity: sha512-26vikCWdvyrVM/tME9zpd0K61MD9kYxVPQWlwX4FSZXHV3WPgueaESMfzTUos0ehrJv552q7nnJ/iwF96gZkMA==}
     peerDependencies:
       '@playwright/test': ^1.39.0
-      fuels: '>=0.84.0'
+      fuels: '>=0.86.0'
     dependencies:
       '@playwright/test': 1.39.0
       adm-zip: 0.5.12
@@ -16524,6 +16524,7 @@ packages:
 
   /@storybook/expect@28.1.3-5:
     resolution: {integrity: sha512-lS1oJnY1qTAxnH87C765NdfvGhksA6hBcbUVI5CHiSbNsEtr456wtg/z+dT9XlPriq1D5t2SgfNL9dBAoIGyIA==}
+    deprecated: In Storybook 8, this package functionality has been integrated to a new package called @storybook/test, which uses Vitest APIs for an improved experience. When upgrading to Storybook 8 with 'npx storybook@latest upgrade', you will get prompted and will get an automigration for the new package. Please migrate when you can.
     dependencies:
       '@types/jest': 28.1.3
     dev: false
