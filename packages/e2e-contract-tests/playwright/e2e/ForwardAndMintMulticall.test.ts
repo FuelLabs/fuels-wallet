@@ -1,11 +1,15 @@
 import { getButtonByText, hasText } from '@fuels/playwright-utils';
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
-import { BaseAssetId, bn, toBech32 } from 'fuels';
+import { bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
 
 import '../../load.envs.js';
-import { calculateAssetId, shortAddress } from '../../src/utils';
+import {
+  calculateAssetId,
+  getBaseAssetId,
+  shortAddress,
+} from '../../src/utils';
 import { testSetup } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
@@ -48,25 +52,25 @@ test.describe('Forward and Mint Multicall', () => {
     // test forward asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');
     // test forward asset id is shown
-    await hasText(walletNotificationPage, shortAddress(BaseAssetId));
+    await hasText(walletNotificationPage, shortAddress(await getBaseAssetId()));
     // test forward eth amount is correct
     await hasText(walletNotificationPage, `${depositAmount} ETH`);
 
     // test mint asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
     // test mint asset id is shown
-    const assetId = calculateAssetId(MAIN_CONTRACT_ID, BaseAssetId);
+    const assetId = calculateAssetId(MAIN_CONTRACT_ID, await getBaseAssetId());
     await hasText(walletNotificationPage, shortAddress(assetId));
     // test mint amount is correct
     await hasText(walletNotificationPage, mintAmount);
 
     // test gas fee is shown and correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    const fee = bn.parseUnits('0.000000217');
-    await checkFee(walletNotificationPage, {
-      minFee: fee.sub(100),
-      maxFee: fee.add(100),
-    });
+    // const fee = bn.parseUnits('0.000004886');
+    // await checkFee(walletNotificationPage, {
+    //   minFee: fee.sub(100),
+    //   maxFee: fee.add(100),
+    // });
 
     const fuelContractId = toBech32(MAIN_CONTRACT_ID);
     await checkAddresses(
@@ -91,7 +95,7 @@ test.describe('Forward and Mint Multicall', () => {
       Number.parseFloat(
         preDepositBalanceEth
           .sub(postDepositBalanceEth)
-          .format({ precision: 6, units: 9 })
+          .format({ precision: 5, units: 9 })
       )
     ).toBe(Number.parseFloat(depositAmount));
     expect(

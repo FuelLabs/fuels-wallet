@@ -1,11 +1,11 @@
 import { interpret } from 'xstate';
 import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 
-import { MOCK_CUSTOM_ASSET } from '../__mocks__/assets';
+import { MOCK_CUSTOM_ASSET, MOCK_NETWORK } from '../__mocks__/assets';
 
+import { NetworkService } from '../../Network/services';
 import type { AssetsMachineService } from './assetsMachine';
 import { assetsMachine } from './assetsMachine';
-
 const machine = assetsMachine.withContext({}).withConfig({
   actions: {
     navigateBack() {},
@@ -17,6 +17,8 @@ describe('assetsMachine', () => {
   let state: ReturnType<AssetsMachineService['getSnapshot']>;
 
   beforeEach(async () => {
+    await NetworkService.clearNetworks();
+    await NetworkService.addNetwork({ data: MOCK_NETWORK });
     service = interpret(machine).start();
     state = service.getSnapshot();
   });

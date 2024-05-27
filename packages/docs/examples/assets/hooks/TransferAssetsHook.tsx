@@ -2,8 +2,8 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Input, InputAmount, Link, Text } from '@fuel-ui/react';
 import { useAssets, useFuel, useWallet } from '@fuels/react';
 import type { BN } from 'fuels';
-import { Address, BaseAssetId, bn, buildBlockExplorerUrl } from 'fuels';
-import { useMemo, useState } from 'react';
+import { Address, Provider, bn, buildBlockExplorerUrl } from 'fuels';
+import { useEffect, useMemo, useState } from 'react';
 
 import { ExampleBox } from '../../../src/components/ExampleBox';
 import { useLoading } from '../../../src/hooks/useLoading';
@@ -18,7 +18,7 @@ export function TransferAssetsHook() {
   const [receiverAddress, setAddr] = useState<string>(
     'fuel1a6msn9zmjpvv84g08y3t6x6flykw622s48k2lqg257pf9924pnfq50tdmw'
   );
-  const [assetId, setAssetId] = useState<string>(BaseAssetId);
+  const [assetId, setAssetId] = useState<string>();
   const decimals = useMemo(() => {
     const asset = assets
       .map((asset) => getAssetByChain(asset, 0))
@@ -27,6 +27,12 @@ export function TransferAssetsHook() {
   }, [assetId, assets]);
   /* transferHook:start */
   const { wallet } = useWallet(); // or useAccount(address);
+
+  useEffect(() => {
+    Provider.create('http://localhost:4000/v1/graphql').then((provider) => {
+      setAssetId(provider.getBaseAssetId());
+    });
+  }, []);
 
   async function transfer(
     amount: BN,
@@ -38,11 +44,9 @@ export function TransferAssetsHook() {
     }
     // Create a Address instance to the receiver address
     const toAddress = Address.fromString(receiverAddress);
-    // Get the minGasPrice and maxGasPerTx for the network
-    const { minGasPrice } = await wallet.provider.getGasConfig();
+
     // Send a transaction to transfer the asset to the receiver address
     const response = await wallet.transfer(toAddress, bn(amount), assetId, {
-      gasPrice: minGasPrice,
       gasLimit: 5_000,
     });
     console.log('Transaction created!', response.id);
@@ -104,7 +108,9 @@ export function TransferAssetsHook() {
           <Box>
             <Button
               onPress={() =>
-                amount && sendTransaction(amount, receiverAddress, assetId)
+                amount &&
+                assetId &&
+                sendTransaction(amount, receiverAddress, assetId)
               }
               isLoading={sendingTransaction}
               isDisabled={sendingTransaction || !fuel}

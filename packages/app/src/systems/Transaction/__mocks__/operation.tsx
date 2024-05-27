@@ -1,7 +1,27 @@
-import type { Operation } from 'fuels';
-import { BaseAssetId, OperationName, bn } from 'fuels';
+import {
+  type AssetFuel,
+  type Operation,
+  OperationName,
+  assets,
+  bn,
+} from 'fuels';
 
 import { MOCK_TX_RECIPIENT } from './tx-recipient';
+
+// BaseAssetId replacement
+const MOCK_BASE_ASSET_ID =
+  '0x0000000000000000000000000000000000000000000000000000000000000000';
+
+export const MOCK_FUEL_ASSETS = assets.map((asset) => {
+  const fuelNetworkAsset = asset.networks.find(
+    (n) => n.type === 'fuel'
+  ) as AssetFuel;
+  return {
+    ...asset,
+    assetId: fuelNetworkAsset.assetId,
+    decimals: fuelNetworkAsset.decimals,
+  };
+});
 
 export const MOCK_OPERATION_CONTRACT_CALL: Operation = {
   name: OperationName.contractCall,
@@ -10,7 +30,7 @@ export const MOCK_OPERATION_CONTRACT_CALL: Operation = {
   assetsSent: [
     {
       amount: bn.parseUnits('0.10001'),
-      assetId: BaseAssetId,
+      assetId: MOCK_BASE_ASSET_ID,
     },
   ],
   calls: [
@@ -42,7 +62,7 @@ export const MOCK_OPERATION_TRANSFER: Operation = {
   assetsSent: [
     {
       amount: bn.parseUnits('0.52'),
-      assetId: BaseAssetId,
+      assetId: MOCK_BASE_ASSET_ID,
     },
   ],
 };

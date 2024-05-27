@@ -16,7 +16,7 @@ services:
     volumes:
       - fuel-core-db:/mnt/db
     healthcheck:
-      test: curl --fail http://localhost:4000/health || exit 1
+      test: curl --fail http://localhost:4000/v1/health || exit 1
       interval: 1s
       timeout: 5s
       retries: 20
@@ -30,8 +30,8 @@ services:
       MIN_GAS_PRICE: ${MIN_GAS_PRICE}
       WALLET_SECRET_KEY: ${WALLET_SECRET}
       DISPENSE_AMOUNT: ${DISPENSE_AMOUNT}
-      FUEL_NODE_URL: http://${PROJECT:-fuel-node}_fuel-core:4000/graphql
-    image: ghcr.io/fuellabs/faucet:v0.6.2
+      FUEL_NODE_URL: http://${PROJECT:-fuel-node}_fuel-core:4000/v1/graphql
+    image: ghcr.io/fuellabs/faucet:v0.7.2
     ports:
       - '${FUEL_FAUCET_PORT:-4040}:3000'
     links:

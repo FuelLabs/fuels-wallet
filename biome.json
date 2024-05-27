@@ -48,7 +48,7 @@
       "**/build",
       "**/dist",
       "**/dist-crx",
-      "**/contracts",
+      "**/contracts/**",
       "pnpm-lock.yaml"
     ]
   }

@@ -2,6 +2,7 @@
 import path from 'path';
 import type { BrowserContext } from '@playwright/test';
 import { test as base, chromium } from '@playwright/test';
+import { delay } from '../../commons';
 
 const pathToExtension = path.join(__dirname, '../../../dist-crx');
 
@@ -20,6 +21,9 @@ export const test = base.extend<{
 let context: BrowserContext;
 
 test.beforeAll(async () => {
+  // @TODO: remove delay. it was added to wait the extension to be available as playwright
+  // only waits for port 3000 to be available which is done before the dist-crx gets done
+  await delay(5000);
   context = await chromium.launchPersistentContext('', {
     headless: false,
     args: [

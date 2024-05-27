@@ -88,13 +88,13 @@ test.describe('Networks', () => {
     await expect(buttonCreate).toBeDisabled();
     const urlInput = getInputByName(page, 'url');
     await expect(urlInput).toBeFocused();
-    await urlInput.fill('https://beta-5.fuel.network/graphql');
-    await hasText(page, /Testnet/i, 0, 15000);
+    await urlInput.fill('https://testnet.fuel.network/v1/graphql');
+    await hasText(page, /Ignition/i, 0, 15000);
     await expect(buttonCreate).toBeEnabled();
     await buttonCreate.click();
     // Wait for save and close popup;
     await page.waitForTimeout(2000);
     await reload(page);
-    await hasText(page, /Testnet/i);
+    await hasText(page, /Ignition/i);
   });
 });

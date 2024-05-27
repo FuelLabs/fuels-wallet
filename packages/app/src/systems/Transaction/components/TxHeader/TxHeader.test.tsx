@@ -71,7 +71,8 @@ describe('TxHeader', () => {
     );
   });
 
-  it('should copy transaction link', async () => {
+  // @TODO: re-add when we have explorer link updated
+  it.skip('should copy transaction link', async () => {
     render(
       <TxHeader
         {...MOCK_TRANSACTION_CREATE}

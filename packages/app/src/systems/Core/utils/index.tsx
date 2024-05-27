@@ -11,4 +11,3 @@ export * from './storage';
 export * from './storybook';
 export * from './wallet';
 export * from './delay';
-export * from './assets';

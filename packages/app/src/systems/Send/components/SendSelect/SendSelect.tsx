@@ -1,49 +1,80 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Input, InputAmount, Text } from '@fuel-ui/react';
+import { Box, Form, Input, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
-import { BaseAssetId, DECIMAL_UNITS, bn } from 'fuels';
-import { useEffect, useMemo } from 'react';
+import { type BN, DECIMAL_FUEL, bn } from 'fuels';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
-import { ControlledField, Layout, animations } from '~/systems/Core';
-import { TxDetails } from '~/systems/Transaction';
+import {
+  ControlledField,
+  Layout,
+  MotionStack,
+  animations,
+} from '~/systems/Core';
 
+import { useController, useWatch } from 'react-hook-form';
+import { InputAmount } from '~/systems/Core/components/InputAmount/InputAmount';
+import { TxFeeOptions } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions';
 import type { UseSendReturn } from '../../hooks';
 
 const MotionContent = motion(Layout.Content);
+
 type SendSelectProps = UseSendReturn;
 
 export function SendSelect({
   form,
   balanceAssets,
-  handlers,
   balanceAssetSelected,
-  status,
-  fee,
+  baseFee = bn(0),
+  baseGasLimit = bn(0),
+  tip,
+  regularTip,
+  fastTip,
+  errorMessage,
 }: SendSelectProps) {
-  const assetId = form.watch('asset', '');
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  const [watchMax, setWatchMax] = useState(false);
+  const isAmountFocused = useRef<boolean>(false);
+  const baseFeeRef = useRef<BN | null>(baseFee);
+  const tipRef = useRef<BN>(tip);
+
+  const { field: amount, fieldState: amountFieldState } = useController({
+    control: form.control,
+    name: 'amount',
+  });
+
+  const assetId = useWatch({
+    control: form.control,
+    name: 'asset',
+  });
+
   const decimals = useMemo(() => {
     const selectedAsset = balanceAssets?.find((a) => a.assetId === assetId);
-    return selectedAsset?.decimals || DECIMAL_UNITS;
-  }, [assetId]);
-  const isLoadingTx = status('loadingTx');
+    return selectedAsset?.decimals || DECIMAL_FUEL;
+  }, [assetId, balanceAssets]);
 
-  // If max balance is set on the input assume the user wants to send the max
-  // and change the amount to the max balance minus the fee.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    const amount = form.getValues('amount');
-    if (assetId === BaseAssetId && balanceAssetSelected.eq(amount) && fee) {
-      form.setValue('amount', balanceAssetSelected.sub(fee).toString());
+    if (
+      watchMax &&
+      (!baseFeeRef.current?.eq(baseFee) || !tipRef.current.eq(tip))
+    ) {
+      baseFeeRef.current = baseFee;
+      tipRef.current = tip;
+
+      // Adding 2 magical units to match the fake unit that is added on TS SDK (.add(1))
+      // and then removed on the "transaction" service (.sub(1))
+      const maxFee = baseFee.add(tip).add(2);
+
+      form.setValue('amount', balanceAssetSelected.sub(maxFee), {
+        shouldValidate: true,
+      });
     }
-  }, [fee, balanceAssetSelected]);
+  }, [watchMax, balanceAssetSelected, baseFee, tip, form.setValue]);
 
   return (
     <MotionContent {...animations.slideInTop()}>
       <Box.Stack gap="$4">
         <Box.Flex css={styles.row}>
           <Text as="span" css={styles.title}>
-            Send
+            Asset
           </Text>
           <ControlledField
             isRequired
@@ -54,11 +85,7 @@ export function SendSelect({
               <AssetSelect
                 items={balanceAssets}
                 selected={field.value}
-                onSelect={(assetId) => {
-                  form.setValue('asset', assetId || '', {
-                    shouldValidate: true,
-                  });
-                }}
+                onSelect={field.onChange}
               />
             )}
           />
@@ -87,30 +114,62 @@ export function SendSelect({
           </Box>
         </Box.Flex>
         <Box.Stack gap="$3">
-          <Text as="span" css={{ ...styles.title, ...styles.amountTitle }}>
+          <Text as="span" css={styles.title}>
             Amount
           </Text>
-          <ControlledField
+          <Form.Control
             isRequired
-            name="amount"
-            control={form.control}
-            isInvalid={Boolean(form.formState.errors?.amount)}
-            render={({ field }) => (
-              <InputAmount
-                name={field.name}
-                balance={balanceAssetSelected}
-                value={bn(field.value)}
-                units={decimals}
-                onChange={(value) => {
-                  const amountValue = value || undefined;
-                  form.setValue('amount', amountValue?.toString() || '');
-                  handlers.handleValidateAmount(bn(amountValue));
-                }}
-              />
+            isInvalid={Boolean(errorMessage || amountFieldState.error)}
+          >
+            <InputAmount
+              name={amount.name}
+              balance={balanceAssetSelected}
+              value={amount.value}
+              units={decimals}
+              onChange={(val) => {
+                if (isAmountFocused.current) {
+                  setWatchMax(false);
+                  amount.onChange(val);
+                }
+              }}
+              onClickMax={() => {
+                baseFeeRef.current = null; // Workaround just to trigger the watcher when max is clicked and base fee is stable
+                setWatchMax(true);
+              }}
+              inputProps={{
+                onFocus: () => {
+                  isAmountFocused.current = true;
+                },
+                onBlur: () => {
+                  isAmountFocused.current = false;
+                },
+              }}
+            />
+            {(errorMessage || amountFieldState.error) && (
+              <Form.ErrorMessage aria-label="Error message">
+                {errorMessage || amountFieldState.error?.message}
+              </Form.ErrorMessage>
             )}
-          />
+          </Form.Control>
         </Box.Stack>
-        {fee && (isLoadingTx ? <TxDetails.Loader /> : <TxDetails fee={fee} />)}
+
+        {amount.value.gt(0) &&
+          assetId &&
+          baseFee.gt(0) &&
+          regularTip &&
+          fastTip && (
+            <MotionStack {...animations.slideInTop()} gap="$3">
+              <Text as="span" css={styles.title}>
+                Fee (network)
+              </Text>
+              <TxFeeOptions
+                baseFee={baseFee}
+                baseGasLimit={baseGasLimit}
+                regularTip={regularTip}
+                fastTip={fastTip}
+              />
+            </MotionStack>
+          )}
       </Box.Stack>
     </MotionContent>
   );
@@ -136,11 +195,8 @@ const styles = {
   title: cssObj({
     pt: '$2',
     color: '$intentsBase12',
-    fontSize: '$xl',
-    fontWeight: '$normal',
-  }),
-  amountTitle: cssObj({
     fontSize: '$md',
+    fontWeight: '$normal',
   }),
   addressRow: cssObj({
     flex: 1,
