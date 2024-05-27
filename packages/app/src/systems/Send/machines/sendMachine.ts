@@ -20,7 +20,6 @@ export type MachineContext = {
   providerUrl?: string;
   address?: string;
   baseFee?: BN;
-  baseGasLimit?: BN;
   regularTip?: BN;
   fastTip?: BN;
   maxGasPerTx?: BN;
@@ -34,7 +33,6 @@ type EstimateDefaultTipsReturn = {
 };
 
 type EstimateGasLimitReturn = {
-  baseGasLimit: BN;
   maxGasPerTx: BN;
 };
 
@@ -171,7 +169,6 @@ export const sendMachine = createMachine(
         error: undefined,
       })),
       assignGasLimit: assign((_ctx, ev) => ({
-        baseGasLimit: ev.data.baseGasLimit,
         maxGasPerTx: ev.data.maxGasPerTx,
         error: undefined,
       })),

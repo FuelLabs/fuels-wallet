@@ -2,15 +2,12 @@ import type { Account } from '@fuel-wallet/types';
 import type { TransactionRequest, WalletLocked } from 'fuels';
 
 import {
-  Address,
   type BN,
   Provider,
-  ScriptTransactionRequest,
   TransactionResponse,
   TransactionStatus,
   assembleTransactionSummary,
   bn,
-  coinQuantityfy,
   getTransactionSummary,
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
@@ -237,7 +234,6 @@ export class TxService {
     const consensusParameters = provider.getChain().consensusParameters;
 
     return {
-      baseGasLimit: bn(0),
       maxGasPerTx: consensusParameters.txParameters.maxGasPerTx,
     };
   }
@@ -291,7 +287,20 @@ export class TxService {
         };
       } catch (e) {
         attempts += 1;
-        console.log(e);
+
+        // @TODO: Waiting to match with FuelError type and ErrorCode enum from "fuels"
+        // These types are not exported from "fuels" package, but they exists in the "@fuels-ts/errors"
+        if (
+          e instanceof Error &&
+          'toObject' in e &&
+          typeof e.toObject === 'function'
+        ) {
+          const error: { code: string } = e.toObject();
+
+          if (error.code === 'gas-limit-too-low') {
+            throw e;
+          }
+        }
       }
     }
 

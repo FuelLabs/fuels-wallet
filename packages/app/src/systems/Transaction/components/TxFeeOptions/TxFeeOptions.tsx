@@ -9,7 +9,6 @@ import { TxFee } from '../TxFee';
 
 type TxFeeOptionsProps = {
   baseFee: BN;
-  baseGasLimit: BN;
   regularTip: BN;
   fastTip: BN;
 };
@@ -18,14 +17,12 @@ const DECIMAL_UNITS = DEFAULT_DECIMAL_UNITS;
 
 export const TxFeeOptions = ({
   baseFee,
-  baseGasLimit,
   regularTip,
   fastTip,
 }: TxFeeOptionsProps) => {
   const [isAdvanced, setIsAdvanced] = useState(false);
   const { control, setValue, trigger } = useFormContext<SendFormValues>();
   const previousDefaultTip = useRef<BN>(regularTip);
-  const previousGasLimit = useRef<BN>(baseGasLimit);
 
   const { field: tip } = useController({
     control,
@@ -51,6 +48,14 @@ export const TxFeeOptions = ({
     });
   }, [tip.value]);
 
+  const gasLimitFormatted = useMemo<string>(() => {
+    if (gasLimit.value.isZero()) {
+      return '';
+    }
+
+    return gasLimit.value.toString();
+  }, [gasLimit.value]);
+
   const toggle = () => {
     setIsAdvanced((curr) => !curr);
   };
@@ -61,14 +66,12 @@ export const TxFeeOptions = ({
   useEffect(() => {
     if (!isAdvanced) {
       setValue('fees.tip', previousDefaultTip.current);
-      setValue('fees.gasLimit', previousGasLimit.current);
+      setValue('fees.gasLimit', bn(0));
     }
   }, [isAdvanced, setValue]);
 
   return (
     <Box.Stack gap="$1">
-      Base fee = {baseFee.toString()} / tip = {tip.value.toString()} / gas limit
-      = {gasLimit.value.toString()}
       <AnimatePresence mode="popLayout">
         {isAdvanced ? (
           <MotionStack
@@ -106,8 +109,9 @@ export const TxFeeOptions = ({
                 <Input>
                   <Input.Field
                     ref={gasLimit.ref}
-                    value={gasLimit.value.toString()}
+                    value={gasLimitFormatted}
                     type="number"
+                    placeholder="0"
                     onChange={(e) => {
                       const ignore = /[.,\-+]/g;
                       const val = (e.target.value || '').replaceAll(ignore, '');
