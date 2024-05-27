@@ -118,31 +118,3 @@ export async function getAddressForAccountNumber(
 
   return getClipboardText(popupPage);
 }
-
-/* Not yet used and needs fixing */
-export async function exportPrivateKey(
-  popupPage: Page,
-  data: MockData,
-  walletPassword: string
-): Promise<string> {
-  await visit(popupPage, '/wallet');
-  await hasText(popupPage, /Assets/i);
-  await getByAriaLabel(popupPage, 'Accounts').click();
-  await hasText(popupPage, data.accounts[0].name);
-  await getByAriaLabel(
-    popupPage,
-    `Account Actions ${data.accounts[0].name}`
-  ).click();
-  await getByAriaLabel(popupPage, `Export ${data.accounts[0].name}`).click();
-  await hasText(popupPage, 'Unlock your wallet to continue');
-  await getByAriaLabel(popupPage, 'Your Password').fill(walletPassword);
-  await getByAriaLabel(popupPage, 'Unlock wallet').click();
-  await hasText(popupPage, /Export Private Key/i);
-  await hasText(popupPage, data.accounts[0].privateKey);
-
-  await popupPage.click('use[xlink\\:href="/icons/sprite.svg#Copy"]');
-  // await expect(page).toHaveText('Copied to clipboard');  TODO FIX!
-
-  console.log('12');
-  return getClipboardText(popupPage);
-}
