@@ -1,7 +1,14 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, CardList, ContentLoader } from '@fuel-ui/react';
+import {
+  Alert,
+  Box,
+  CardList,
+  ContentLoader,
+  Text,
+  VStack,
+} from '@fuel-ui/react';
 import type { AssetData } from '@fuel-wallet/types';
-import type { TransactionStatus, TransactionSummary } from 'fuels';
+import type { BN, TransactionStatus, TransactionSummary } from 'fuels';
 import { type ReactNode, useMemo } from 'react';
 import type { Maybe } from '~/systems/Core';
 import { MotionStack, animations } from '~/systems/Core';
@@ -11,16 +18,21 @@ import {
   TxHeader,
   TxOperations,
 } from '~/systems/Transaction';
+import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
 
 const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
   const errorMessages = useMemo(() => {
     const messages = [];
     if (errors) {
-      if (errors.InsufficientInputAmount) messages.push('Not enough funds');
+      if (errors.InsufficientInputAmount || errors.NotEnoughCoins) {
+        messages.push('Not enough funds');
+      }
 
       // biome-ignore lint: will not be a large array
       Object.keys(errors).forEach((key: string) => {
-        if (key === 'InsufficientInputAmount') return;
+        if (key === 'InsufficientInputAmount' || key === 'NotEnoughCoins') {
+          return;
+        }
 
         let errorMessage = `${key}: `;
         try {
@@ -85,6 +97,12 @@ type TxContentInfoProps = {
   isConfirm?: boolean;
   errors?: GroupedErrors;
   providerUrl?: string;
+  fees?: {
+    baseFee?: BN;
+    baseGasLimit?: BN;
+    regularTip?: BN;
+    fastTip?: BN;
+  };
 };
 
 function TxContentInfo({
@@ -97,6 +115,7 @@ function TxContentInfo({
   isConfirm,
   errors,
   providerUrl,
+  fees,
 }: TxContentInfoProps) {
   const status = txStatus || tx?.status || txStatus;
   const hasErrors = Boolean(Object.keys(errors || {}).length);
@@ -128,7 +147,22 @@ function TxContentInfo({
         isLoading={isLoading}
       />
       {isLoading && !showDetails && <TxFee.Loader />}
-      {showDetails && <TxFee fee={tx?.fee} />}
+      {showDetails && !fees && <TxFee fee={tx?.fee} />}
+      {showDetails &&
+        fees?.baseFee &&
+        fees?.baseGasLimit &&
+        fees?.regularTip &&
+        fees?.fastTip && (
+          <VStack gap="$3">
+            <Text as="span">Fee (network)</Text>
+            <TxFeeOptions
+              baseFee={fees.baseFee}
+              baseGasLimit={fees.baseGasLimit}
+              regularTip={fees.regularTip}
+              fastTip={fees.fastTip}
+            />
+          </VStack>
+        )}
       {footer}
     </Box.Stack>
   );
@@ -140,6 +174,11 @@ export const TxContent = {
 };
 
 const styles = {
+  fees: cssObj({
+    color: '$intentsBase12',
+    fontSize: '$md',
+    fontWeight: '$normal',
+  }),
   alert: cssObj({
     '& .fuel_Alert-content': {
       gap: '$1',
