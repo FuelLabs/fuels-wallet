@@ -168,10 +168,12 @@ export const sendMachine = createMachine(
       assignDefaultTips: assign((_ctx, ev) => ({
         regularTip: ev.data.regularTip,
         fastTip: ev.data.fastTip,
+        error: undefined,
       })),
       assignGasLimit: assign((_ctx, ev) => ({
         baseGasLimit: ev.data.baseGasLimit,
         maxGasPerTx: ev.data.maxGasPerTx,
+        error: undefined,
       })),
       assignInput: assign((_ctx, ev) => ({
         input: ev.input,
@@ -181,6 +183,7 @@ export const sendMachine = createMachine(
         providerUrl: ev.data.providerUrl,
         address: ev.data.address,
         baseFee: ev.data.baseFee,
+        error: undefined,
       })),
     },
     services: {
