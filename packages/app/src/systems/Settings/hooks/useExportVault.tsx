@@ -20,15 +20,19 @@ export function useExportVault() {
   const isUnlockOpened = useSelector(service, selectors.isUnlockOpened);
 
   async function exportVault(password: string) {
+    if (await VaultService.isLocked()) {
+      await VaultService.unlock({ password });
+    }
     const [vault] = await VaultService.getVaults();
 
-    service.send({
-      type: 'EXPORT_VAULT',
-      input: {
-        password,
-        vaultId: vault.vaultId,
-      },
-    });
+    vault &&
+      service.send({
+        type: 'EXPORT_VAULT',
+        input: {
+          password,
+          vaultId: vault.vaultId,
+        },
+      });
   }
 
   return {
