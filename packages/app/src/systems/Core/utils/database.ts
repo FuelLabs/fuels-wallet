@@ -49,7 +49,7 @@ export class FuelDB extends Dexie {
         await networks.clear();
         // Insert beta-5 network
         await networks.add({
-          name: 'Ignition-Dev',
+          name: 'Ignition',
           url: VITE_FUEL_PROVIDER_URL,
           isSelected: true,
           id: createUUID(),
