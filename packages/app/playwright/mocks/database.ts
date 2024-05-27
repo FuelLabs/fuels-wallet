@@ -181,9 +181,9 @@ export async function serializeVault(
 
 export async function mockData(
   page: Page,
-  numberOfAccounts,
-  networks: Array<NetworkData>,
-  seedPhrase
+  numberOfAccounts = 1,
+  networks: Array<NetworkData> = DEFAULT_NETWORKS,
+  seedPhrase?: string
 ) {
   await visit(page, '/');
   const mnemonic = seedPhrase || Mnemonic.generate(16);
