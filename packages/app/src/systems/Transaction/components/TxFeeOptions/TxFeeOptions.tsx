@@ -1,4 +1,4 @@
-import { Box, Button, Input, Text, VStack } from '@fuel-ui/react';
+import { Box, Button, Form, Input, Text, VStack } from '@fuel-ui/react';
 import { AnimatePresence } from 'framer-motion';
 import { type BN, DEFAULT_DECIMAL_UNITS, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -32,8 +32,7 @@ export const TxFeeOptions = ({
     name: 'fees.tip',
   });
 
-  // @TODO: Enable this when the SDK gets to work with custom gas limits
-  const { field: _gasLimit, fieldState: _gasLimitState } = useController({
+  const { field: gasLimit, fieldState: gasLimitState } = useController({
     control,
     name: 'fees.gasLimit',
   });
@@ -68,6 +67,8 @@ export const TxFeeOptions = ({
 
   return (
     <Box.Stack gap="$1">
+      Base fee = {baseFee.toString()} / tip = {tip.value.toString()} / gas limit
+      = {gasLimit.value.toString()}
       <AnimatePresence mode="popLayout">
         {isAdvanced ? (
           <MotionStack
@@ -99,8 +100,7 @@ export const TxFeeOptions = ({
                 />
               </Input>
             </VStack>
-            {/* @TODO: Remove this when the SDK gets to work with custom gas limits */}
-            {/* <VStack gap="$1">
+            <VStack gap="$1">
               <Text fontSize="xs">Gas limit</Text>
               <Form.Control isRequired isInvalid={Boolean(gasLimitState.error)}>
                 <Input>
@@ -121,7 +121,7 @@ export const TxFeeOptions = ({
                   </Form.ErrorMessage>
                 )}
               </Form.Control>
-            </VStack> */}
+            </VStack>
           </MotionStack>
         ) : (
           <MotionStack

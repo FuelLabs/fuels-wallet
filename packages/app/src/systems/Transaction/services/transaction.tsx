@@ -237,15 +237,15 @@ export class TxService {
     const consensusParameters = provider.getChain().consensusParameters;
 
     return {
-      baseGasLimit: bn(1),
+      baseGasLimit: bn(0),
       maxGasPerTx: consensusParameters.txParameters.maxGasPerTx,
     };
   }
 
   static async createTransfer(input: TxInputs['createTransfer'] | undefined) {
-    const { amount, assetId, to, tip, gasLimit: gasLimitInput } = input || {};
+    const { amount, assetId, to, tip, gasLimit } = input || {};
 
-    if (!to || !assetId || !amount || !tip || !gasLimitInput) {
+    if (!to || !assetId || !amount || !tip || !gasLimit) {
       throw new Error('Missing params for transaction request');
     }
 
@@ -275,6 +275,7 @@ export class TxService {
           assetId,
           {
             tip: tip.isZero() ? undefined : tip,
+            gasLimit: gasLimit.isZero() ? undefined : gasLimit,
           }
         );
 
