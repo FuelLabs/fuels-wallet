@@ -15,7 +15,7 @@ export function AddNetworkHook() {
   const { isConnected } = useIsConnected();
   const { connect, error: errorConnecting } = useConnect();
   const [network, setNetwork] = useState<string>(
-    'http://localhost:4000/graphql'
+    'http://localhost:4000/v1/graphql'
   );
   /* useAddNetwork:start */
   const { addNetwork, isPending, error } = useAddNetwork();

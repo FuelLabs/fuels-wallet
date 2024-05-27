@@ -10,10 +10,10 @@ export function sendLoader() {
     await NetworkService.clearNetworks();
     const network = await NetworkService.addDefaultNetworks();
     const transactionRequest = await getMockedTransaction(
-      acc1?.publicKey || '',
       signer.publicKey,
       network?.url!
     );
+
     return {
       acc1,
       network,

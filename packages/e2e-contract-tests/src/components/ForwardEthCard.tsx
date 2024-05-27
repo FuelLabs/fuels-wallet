@@ -1,13 +1,15 @@
 import { useAccount, useWallet } from '@fuels/react';
-import { BaseAssetId, bn } from 'fuels';
+import { bn } from 'fuels';
 import { useState } from 'react';
 
 import { deposit } from '../contract_interactions';
+import { useBaseAssetId } from '../hooks/useBaseAssetId';
 
 export const ForwardEthCard = () => {
   const [amount, setAmount] = useState<string>('');
   const { account } = useAccount();
   const wallet = useWallet(account);
+  const baseAssetId = useBaseAssetId();
 
   return (
     <div>
@@ -19,12 +21,13 @@ export const ForwardEthCard = () => {
         />
         <button
           type="button"
+          disabled={!baseAssetId}
           onClick={async () => {
-            if (wallet.wallet && amount) {
+            if (baseAssetId && wallet.wallet && amount) {
               await deposit({
                 wallet: wallet.wallet,
                 amount: bn.parseUnits(amount),
-                assetId: BaseAssetId,
+                assetId: baseAssetId,
               });
             }
           }}

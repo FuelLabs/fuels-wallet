@@ -1,5 +1,60 @@
 # fuels-wallet
 
+## 0.19.0
+
+### Minor Changes
+
+- [#1310](https://github.com/FuelLabs/fuels-wallet/pull/1310) [`00df2708`](https://github.com/FuelLabs/fuels-wallet/commit/00df27083e42fc6633311faff1f665ccbab26747) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Auto-update network to testnet (Ignition)
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.19.0
+
+## 0.18.1
+
+### Patch Changes
+
+- [#1286](https://github.com/FuelLabs/fuels-wallet/pull/1286) [`a6e3d75a`](https://github.com/FuelLabs/fuels-wallet/commit/a6e3d75af2ab2ade059e99f65cef5317378019fa) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - chore: Auto-upgrade to devnet network
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.18.1
+
+## 0.18.0
+
+### Minor Changes
+
+- [#1240](https://github.com/FuelLabs/fuels-wallet/pull/1240) [`b4f52e09`](https://github.com/FuelLabs/fuels-wallet/commit/b4f52e09af0952600ddcdf818632d8328d8fac8f) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: update wallet to the latest fuel core (0.26.0)
+
+- [#1240](https://github.com/FuelLabs/fuels-wallet/pull/1240) [`b4f52e09`](https://github.com/FuelLabs/fuels-wallet/commit/b4f52e09af0952600ddcdf818632d8328d8fac8f) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: add custom network fees, offering options like regular, fast and custom tip.
+
+### Patch Changes
+
+- Updated dependencies [[`b4f52e09`](https://github.com/FuelLabs/fuels-wallet/commit/b4f52e09af0952600ddcdf818632d8328d8fac8f)]:
+  - @fuel-wallet/connections@0.18.0
+
+## 0.17.0
+
+### Minor Changes
+
+- [#1273](https://github.com/FuelLabs/fuels-wallet/pull/1273) [`706aeb34`](https://github.com/FuelLabs/fuels-wallet/commit/706aeb3465572613893a444b6cc9db3e82440471) Thanks [@helciofranco](https://github.com/helciofranco)! - feat: remove reCAPTCHA dependencies
+
+### Patch Changes
+
+- [#1276](https://github.com/FuelLabs/fuels-wallet/pull/1276) [`a796df4f`](https://github.com/FuelLabs/fuels-wallet/commit/a796df4f5c76f69ebd5c22173d4b3513a44d7734) Thanks [@arthurgeron](https://github.com/arthurgeron)! - restore DB connection on close, removed interval
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.17.0
+
+## 0.16.6
+
+### Patch Changes
+
+- [#1270](https://github.com/FuelLabs/fuels-wallet/pull/1270) [`27520126`](https://github.com/FuelLabs/fuels-wallet/commit/27520126e252a28272d80b51f6eff879049149ae) Thanks [@arthurgeron](https://github.com/arthurgeron)! - fix: database not recovering from error/closed state
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.16.6
+
 ## 0.16.5
 
 ### Patch Changes

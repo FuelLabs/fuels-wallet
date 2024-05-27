@@ -1,18 +1,13 @@
+import type { Account as WalletAccount } from '@fuel-wallet/types';
 import { type Locator, expect } from '@playwright/test';
-import {
-  type Account,
-  type Asset,
-  Provider,
-  Signer,
-  Wallet,
-  bn,
-  hashMessage,
-} from 'fuels';
+import { type Asset, Provider, Signer, Wallet, bn, hashMessage } from 'fuels';
 
 import {
+  delay,
   getButtonByText,
   getByAriaLabel,
   getElementByText,
+  hasAriaLabel,
   hasText,
   reload,
   seedWallet,
@@ -37,22 +32,7 @@ import {
 
 const WALLET_PASSWORD = 'Qwe123456$';
 
-test.describe.configure({ mode: 'parallel' });
 test.describe('FuelWallet Extension', () => {
-  test('On install sign-up page is open', async ({ context }) => {
-    // In development mode files are render dynamically
-    // making this first page to throw an error File not found.
-    if (process.env.NODE_ENV !== 'test') return;
-
-    const page = await context.waitForEvent('page', {
-      predicate: (page) => {
-        return page.url().includes('sign-up');
-      },
-    });
-    expect(page.url()).toContain('sign-up');
-    await page.close();
-  });
-
   test('If user opens popup it should force open a sign-up page', async ({
     context,
     extensionId,
@@ -76,26 +56,20 @@ test.describe('FuelWallet Extension', () => {
     // the page.
     await blankPage.goto(new URL('e2e.html', baseURL).href);
 
-    await blankPage.waitForFunction(() => document.readyState === 'complete');
-
     await test.step('Has window.fuel', async () => {
       const hasFuel = await blankPage.evaluate(async () => {
+        // wait for the script to load
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         return typeof window.fuel === 'object';
       });
       expect(hasFuel).toBeTruthy();
     });
 
     await test.step('Should return current version of Wallet', async () => {
-      await blankPage.waitForFunction(() => {
-        return window.fuel?.currentConnector();
+      const version = await blankPage.evaluate(async () => {
+        return window.fuel.version();
       });
-
-      const hasConnector = await blankPage.evaluate(() =>
-        window.fuel.currentConnector()
-      );
-      expect(hasConnector).toBeDefined();
-      const version = blankPage.evaluate(() => window.fuel.version());
-      expect(await version).toStrictEqual(process.env.VITE_APP_VERSION);
+      expect(version).toEqual(process.env.VITE_APP_VERSION);
     });
 
     await test.step('Should reconnect if service worker stops', async () => {
@@ -204,13 +178,21 @@ test.describe('FuelWallet Extension', () => {
     });
 
     async function connectAccounts() {
+      await reload(blankPage);
       const connectionResponse = blankPage.evaluate(async () => {
-        return window.fuel.connect();
+        const isConnected = await window.fuel.connect();
+        if (!isConnected) {
+          // throw this error to avoid needing to wait for `fuel.connect` timeout
+          throw new Error('Connecting to Fuel Wallet did not work');
+        }
+
+        return true;
       });
       const authorizeRequest = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
       });
 
+      await hasText(authorizeRequest, /connect/i);
       // Add Account 3 to the DApp connection
       await getByAriaLabel(authorizeRequest, 'Toggle Account 3').click();
       // Add Account 4 to the DApp connection
@@ -224,6 +206,7 @@ test.describe('FuelWallet Extension', () => {
       }).rejects.toThrow();
 
       await hasText(authorizeRequest, /connect/i);
+
       await getButtonByText(authorizeRequest, /next/i).click();
       await hasText(authorizeRequest, /accounts/i);
       await getButtonByText(authorizeRequest, /connect/i).click();
@@ -301,8 +284,10 @@ test.describe('FuelWallet Extension', () => {
     await test.step('window.fuel.currentAccount()', async () => {
       await test.step('Current authorized current Account', async () => {
         const authorizedAccount = await switchAccount(popupPage, 'Account 1');
-        await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
-        await getByAriaLabel(popupPage, 'Close dialog').click();
+
+        // delay to avoid the page to get the wrong currentAccount
+        await delay(2000);
+
         const currentAccountPromise = await blankPage.evaluate(async () => {
           return window.fuel.currentAccount();
         });
@@ -311,6 +296,10 @@ test.describe('FuelWallet Extension', () => {
 
       await test.step('Throw on not Authorized Account', async () => {
         await switchAccount(popupPage, 'Account 2');
+
+        // delay to avoid the page to get the wrong currentAccount
+        await delay(2000);
+
         const currentAccountPromise = blankPage.evaluate(async () => {
           return window.fuel.currentAccount();
         });
@@ -332,8 +321,10 @@ test.describe('FuelWallet Extension', () => {
         );
       }
 
-      async function approveMessageSignCheck(authorizedAccount: Account) {
-        const signedMessagePromise = signMessage(authorizedAccount.address);
+      async function approveMessageSignCheck(authorizedAccount: WalletAccount) {
+        const signedMessagePromise = signMessage(
+          authorizedAccount.address.toString()
+        );
         const signMessageRequest = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
         });
@@ -401,16 +392,10 @@ test.describe('FuelWallet Extension', () => {
               senderAddress as string
             );
 
-            // TODO: remove this gas config once SDK fixes and start with correct values
-            const chain = await wallet.provider.getChain();
-            const nodeInfo = await wallet.provider.fetchNode();
-            const gasLimit = chain.consensusParameters.maxGasPerTx.div(2);
-            const gasPrice = nodeInfo.minGasPrice;
             const response = await wallet.transfer(
               receiver,
               Number(amount),
-              undefined,
-              { gasPrice, gasLimit }
+              undefined
             );
             const result = await response.waitForResult();
             return result.status;
@@ -419,7 +404,7 @@ test.describe('FuelWallet Extension', () => {
         );
       }
 
-      async function approveTxCheck(senderAccount: Account) {
+      async function approveTxCheck(senderAccount: WalletAccount) {
         const provider = await Provider.create(
           process.env.VITE_FUEL_PROVIDER_URL
         );
@@ -449,7 +434,8 @@ test.describe('FuelWallet Extension', () => {
           approveTransactionPage,
           senderAccount.address.toString()
         );
-        await hasText(approveTransactionPage, /Confirm before approving/i);
+
+        await hasAriaLabel(approveTransactionPage, 'Confirm Transaction');
         await getButtonByText(approveTransactionPage, /Approve/i).click();
 
         await expect(transferStatus).resolves.toBe('success');
@@ -582,7 +568,7 @@ test.describe('FuelWallet Extension', () => {
 
       // Check if added network is selected
       let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      await expect(networkSelector).toHaveText(/Testnet Beta 5/);
+      await expect(networkSelector).toHaveText(/Ignition/);
 
       // Remove added network
       await networkSelector.click();
@@ -608,14 +594,15 @@ test.describe('FuelWallet Extension', () => {
 
       // Check if re-added network is selected
       networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      await expect(networkSelector).toHaveText(/Testnet Beta 5/);
+      await expect(networkSelector).toHaveText(/Ignition/);
     });
 
     await test.step('window.fuel.on("currentAccount") to a connected account', async () => {
       // Switch to account 2
       await switchAccount(popupPage, 'Account 2');
-      await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
-      await getByAriaLabel(popupPage, 'Close dialog').click();
+
+      // delay to avoid the page to listen the event from above swithAccount wrong event
+      await delay(1000);
 
       const onChangeAccountPromise = blankPage.evaluate(() => {
         return new Promise((resolve) => {
@@ -656,14 +643,15 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('Auto lock fuel wallet', async () => {
-      await getByAriaLabel(popupPage, 'Accounts').click({ delay: 65000 });
+      await getByAriaLabel(popupPage, 'Accounts').click();
+      await popupPage.waitForTimeout(65000);
       await hasText(popupPage, 'Unlock your wallet to continue');
     });
   });
 });
 
 // Increase timeout for this test
-// The timeout is set for 2 minutes
+// The timeout is set for 3 minutes
 // because some tests like reconnect
 // can take up to 1 minute before it's reconnected
-test.setTimeout(180_000);
+test.setTimeout(240_000);

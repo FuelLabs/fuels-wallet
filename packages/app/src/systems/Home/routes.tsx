@@ -1,7 +1,6 @@
 import { Outlet, Route } from 'react-router-dom';
 
 import { Pages } from '../Core/types';
-import { FaucetDialog } from '../Faucet';
 
 import { Home, Receive } from './pages';
 
@@ -16,7 +15,6 @@ export const homeRoutes = (
         </>
       }
     />
-    <Route path={Pages.faucet()} element={<FaucetDialog />} />
     <Route path={Pages.receive()} element={<Receive />} />
   </Route>
 );

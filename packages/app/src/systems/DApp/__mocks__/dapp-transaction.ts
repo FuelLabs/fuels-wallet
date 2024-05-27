@@ -1,4 +1,4 @@
-import { Address, BaseAssetId, Provider, Wallet, bn } from 'fuels';
+import { Address, Provider, bn } from 'fuels';
 import { TxService } from '~/systems/Transaction/services';
 
 function getAddressFromString(address: string) {
@@ -8,23 +8,18 @@ function getAddressFromString(address: string) {
 }
 
 export const getMockedTransaction = async (
-  owner: string,
   destiny: string,
   providerUrl: string
 ) => {
-  const ownerAddress = getAddressFromString(owner);
   const destinyAddress = getAddressFromString(destiny);
   const provider = await Provider.create(providerUrl);
-  const ownerWallet = Wallet.fromAddress(ownerAddress, provider);
   const transactionRequest = await TxService.createTransfer({
     to: destinyAddress.toString(),
     amount: bn.parseUnits('0.1'),
-    assetId: BaseAssetId,
-    provider: ownerWallet.provider,
+    assetId: provider.getBaseAssetId(),
+    tip: bn(0),
+    gasLimit: bn(1_000_000),
   });
 
-  return TxService.fundTransaction({
-    wallet: ownerWallet,
-    transactionRequest,
-  });
+  return transactionRequest;
 };

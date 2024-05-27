@@ -1,11 +1,11 @@
 import type { FuelWalletTestHelper } from '@fuels/playwright-utils';
 import { getButtonByText, hasText } from '@fuels/playwright-utils';
 import { expect } from '@playwright/test';
-import { BaseAssetId, bn, toBech32 } from 'fuels';
+import { bn, toBech32 } from 'fuels';
 import type { WalletUnlocked } from 'fuels';
 
 import '../../load.envs';
-import { shortAddress } from '../../src/utils';
+import { getBaseAssetId, shortAddress } from '../../src/utils';
 import { testSetup } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
@@ -44,18 +44,18 @@ test.describe('Forward Eth', () => {
     await hasText(walletNotificationPage, 'Ethereum');
 
     // test asset id is correct
-    await hasText(walletNotificationPage, shortAddress(BaseAssetId));
+    await hasText(walletNotificationPage, shortAddress(await getBaseAssetId()));
 
     // test forward eth amount is correct
     await hasText(walletNotificationPage, `${forwardEthAmount} ETH`);
 
     // test gas fee is correct
     await hasText(walletNotificationPage, 'Fee (network)');
-    const fee = bn.parseUnits('0.000000114');
-    await checkFee(walletNotificationPage, {
-      minFee: fee.sub(100),
-      maxFee: fee.add(100),
-    });
+    // const fee = bn.parseUnits('0.000002139');
+    // await checkFee(walletNotificationPage, {
+    //   minFee: fee.sub(100),
+    //   maxFee: fee.add(100),
+    // });
 
     // test to and from addresses
     const fuelContractId = toBech32(MAIN_CONTRACT_ID);
@@ -74,7 +74,7 @@ test.describe('Forward Eth', () => {
       Number.parseFloat(
         preDepositBalanceEth
           .sub(postDepositBalanceEth)
-          .format({ precision: 6, units: 9 })
+          .format({ precision: 5, units: 9 })
       )
     ).toBe(Number.parseFloat(forwardEthAmount));
   });

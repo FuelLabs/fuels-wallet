@@ -33,7 +33,7 @@ export async function switchAccount(popupPage: Page, name: string) {
       y: 10,
     },
   });
-  await waitAriaLabel(popupPage, name);
+  await waitAriaLabel(popupPage, `${name} selected`);
 
   // Return account to be used on tests
   account = await getAccountByName(popupPage, name);

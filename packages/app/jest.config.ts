@@ -40,7 +40,7 @@ const config: JestConfigWithTsJest = {
     require.resolve('@fuel-ui/test-utils/setup'),
     './jest.setup.ts',
   ],
-  setupFiles: ['./load.envs.js', 'fake-indexeddb/auto'],
+  setupFiles: ['fake-indexeddb/auto'],
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
   injectGlobals: true,
   moduleNameMapper: {

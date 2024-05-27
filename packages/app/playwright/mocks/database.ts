@@ -1,10 +1,11 @@
-import type { AssetData, Connection, NetworkData } from '@fuel-wallet/types';
-import type { Page } from '@playwright/test';
 import type {
-  Account,
-  Asset,
-  WalletManagerAccount as WalletAccount,
-} from 'fuels';
+  AssetData,
+  Connection,
+  NetworkData,
+  Account as WalletAccount,
+} from '@fuel-wallet/types';
+import type { Page } from '@playwright/test';
+import type { Asset, WalletManagerAccount } from 'fuels';
 import { Address, Mnemonic, WalletManager, encrypt } from 'fuels';
 
 import { getByAriaLabel } from '../commons/locator';
@@ -92,8 +93,7 @@ export const ALT_ASSET = {
 };
 
 export const FUEL_NETWORK = {
-  name: 'Fuel Testnet',
-  url: 'https://beta-5.fuel.network/graphql',
+  url: 'https://testnet.fuel.network/v1/graphql',
 };
 
 export async function getAccount(page: Page) {
@@ -116,7 +116,7 @@ export async function createManager(mnemonic: string) {
   return walletManager;
 }
 
-export function createAccount(wallet: WalletAccount, index = 0) {
+export function createAccount(wallet: WalletManagerAccount, index = 0) {
   return {
     address: wallet.address.toAddress(),
     balance: '0',
@@ -196,7 +196,7 @@ export async function mockData(
 
   await page.evaluate(
     ([accounts, networks, connections, assets, vault, password]: [
-      Array<Account>,
+      Array<WalletAccount>,
       Array<NetworkData>,
       Array<Connection>,
       Array<AssetData>,

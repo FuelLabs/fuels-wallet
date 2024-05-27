@@ -9,11 +9,13 @@ import type {
   NetworkData,
   Vault,
 } from '@fuel-wallet/types';
-import type { Table } from 'dexie';
+import type { DbEvents, PromiseExtended, Table } from 'dexie';
 import Dexie from 'dexie';
 import 'dexie-observable';
 import { DATABASE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
 import type { Transaction } from '~/systems/Transaction/types';
+
+type FailureEvents = Extract<keyof DbEvents, 'close' | 'blocked'>;
 
 export class FuelDB extends Dexie {
   vaults!: Table<Vault, string>;
@@ -24,6 +26,8 @@ export class FuelDB extends Dexie {
   assets!: Table<AssetData, string>;
   abis!: Table<AbiTable, string>;
   errors!: Table<FuelWalletError, string>;
+  integrityCheckInterval?: NodeJS.Timeout;
+  restartAttempts = 0;
   readonly alwaysOpen = true;
 
   constructor() {
@@ -35,7 +39,7 @@ export class FuelDB extends Dexie {
         networks: '&id, &url, &name',
         connections: 'origin',
         transactions: '&id',
-        assets: '&assetId, &name, $symbol',
+        assets: '&assetId, &name, &symbol',
         abis: '&contractId',
         errors: '&id',
       })
@@ -45,22 +49,45 @@ export class FuelDB extends Dexie {
         await networks.clear();
         // Insert beta-5 network
         await networks.add({
-          name: 'Testnet Beta 5',
+          name: 'Ignition',
           url: VITE_FUEL_PROVIDER_URL,
           isSelected: true,
           id: createUUID(),
         });
       });
-    this.on('blocked', () => this.restart('closed'));
-    this.on('close', () => this.restart('blocked'));
+    this.on('blocked', () => this.restart('blocked'));
+    this.on('close', () => this.restart('close'));
   }
 
-  async restart(eventName: 'blocked' | 'closed') {
+  open(): PromiseExtended<Dexie> {
+    try {
+      const result = super.open();
+      this.restartAttempts = 0;
+      return result;
+    } catch (err) {
+      console.error('Failed to restart DB. Sending signal for restart');
+      this.restart('blocked');
+      throw err;
+    }
+  }
+
+  async close(safeClose = false) {
+    if (!this.alwaysOpen || safeClose || this.restartAttempts > 3) {
+      this.restartAttempts = 0;
+      return super.close();
+    }
+    this.restartAttempts += 1;
+    await this.open().catch(() => this.close());
+  }
+
+  async restart(eventName: FailureEvents) {
     if (!this.alwaysOpen) {
       return;
     }
-    if (eventName !== 'closed') {
-      this.close();
+    if (eventName === 'close') {
+      clearInterval(this.integrityCheckInterval);
+    } else {
+      this.close(true);
     }
 
     this.open();

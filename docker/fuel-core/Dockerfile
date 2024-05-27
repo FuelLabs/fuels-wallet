@@ -1,4 +1,4 @@
-FROM ghcr.io/fuellabs/fuel-core:v0.22.0
+FROM ghcr.io/fuellabs/fuel-core:v0.26.0
 
 ENV MIN_GAS_PRICE="${MIN_GAS_PRICE}"
 ENV CONSENSUS_KEY="${CONSENSUS_KEY}"
@@ -11,7 +11,7 @@ RUN apt install curl -y
 
 WORKDIR /root/
 
-COPY chainConfig.json .
+COPY config ./config
 COPY run.sh .
 EXPOSE ${PORT}
 

@@ -4,14 +4,14 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.75.0
-  Forc version: 0.50.0
-  Fuel-Core version: 0.22.1
+  Fuels version: 0.84.0
+  Forc version: 0.56.0
+  Fuel-Core version: 0.26.0
 */
 
 import type {
-  BN,
   BigNumberish,
+  BN,
   Bytes,
   BytesLike,
   Contract,
@@ -22,31 +22,21 @@ import type {
   StdString,
 } from 'fuels';
 
-import type { Enum, Option } from './common';
+import type { Option, Enum } from "./common";
 
-export enum BurnErrorInput {
-  NotEnoughCoins = 'NotEnoughCoins',
-}
-export enum BurnErrorOutput {
-  NotEnoughCoins = 'NotEnoughCoins',
-}
-export type IdentityInput = Enum<{
-  Address: AddressInput;
-  ContractId: ContractIdInput;
-}>;
-export type IdentityOutput = Enum<{
-  Address: AddressOutput;
-  ContractId: ContractIdOutput;
-}>;
+export enum BurnErrorInput { NotEnoughCoins = 'NotEnoughCoins' };
+export enum BurnErrorOutput { NotEnoughCoins = 'NotEnoughCoins' };
+export type IdentityInput = Enum<{ Address: AddressInput, ContractId: ContractIdInput }>;
+export type IdentityOutput = Enum<{ Address: AddressOutput, ContractId: ContractIdOutput }>;
 
-export type AddressInput = { value: string };
+export type AddressInput = { bits: string };
 export type AddressOutput = AddressInput;
-export type AssetIdInput = { value: string };
+export type AssetIdInput = { bits: string };
 export type AssetIdOutput = AssetIdInput;
-export type ContractIdInput = { value: string };
+export type ContractIdInput = { bits: string };
 export type ContractIdOutput = ContractIdInput;
-export type RawBytesInput = { ptr: BigNumberish; cap: BigNumberish };
-export type RawBytesOutput = { ptr: BN; cap: BN };
+export type RawBytesInput = { ptr: BigNumberish, cap: BigNumberish };
+export type RawBytesOutput = { ptr: BN, cap: BN };
 
 interface CustomAssetAbiInterface extends Interface {
   functions: {
@@ -65,84 +55,33 @@ interface CustomAssetAbiInterface extends Interface {
     revert_tx: FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: 'decimals',
-    values: [AssetIdInput]
-  ): Uint8Array;
-  encodeFunctionData(
-    functionFragment: 'name',
-    values: [AssetIdInput]
-  ): Uint8Array;
-  encodeFunctionData(
-    functionFragment: 'symbol',
-    values: [AssetIdInput]
-  ): Uint8Array;
+  encodeFunctionData(functionFragment: 'decimals', values: [AssetIdInput]): Uint8Array;
+  encodeFunctionData(functionFragment: 'name', values: [AssetIdInput]): Uint8Array;
+  encodeFunctionData(functionFragment: 'symbol', values: [AssetIdInput]): Uint8Array;
   encodeFunctionData(functionFragment: 'total_assets', values: []): Uint8Array;
-  encodeFunctionData(
-    functionFragment: 'total_supply',
-    values: [AssetIdInput]
-  ): Uint8Array;
-  encodeFunctionData(
-    functionFragment: 'burn',
-    values: [string, BigNumberish]
-  ): Uint8Array;
-  encodeFunctionData(
-    functionFragment: 'mint',
-    values: [IdentityInput, string, BigNumberish]
-  ): Uint8Array;
+  encodeFunctionData(functionFragment: 'total_supply', values: [AssetIdInput]): Uint8Array;
+  encodeFunctionData(functionFragment: 'burn', values: [string, BigNumberish]): Uint8Array;
+  encodeFunctionData(functionFragment: 'mint', values: [IdentityInput, string, BigNumberish]): Uint8Array;
   encodeFunctionData(functionFragment: 'deposit', values: []): Uint8Array;
   encodeFunctionData(functionFragment: 'deposit_half', values: []): Uint8Array;
-  encodeFunctionData(
-    functionFragment: 'deposit_half_and_mint',
-    values: [IdentityInput, string, BigNumberish]
-  ): Uint8Array;
-  encodeFunctionData(
-    functionFragment: 'deposit_half_and_mint_from_external_contract',
-    values: [IdentityInput, string, BigNumberish, ContractIdInput]
-  ): Uint8Array;
+  encodeFunctionData(functionFragment: 'deposit_half_and_mint', values: [IdentityInput, string, BigNumberish]): Uint8Array;
+  encodeFunctionData(functionFragment: 'deposit_half_and_mint_from_external_contract', values: [IdentityInput, string, BigNumberish, ContractIdInput]): Uint8Array;
   encodeFunctionData(functionFragment: 'panic_tx', values: []): Uint8Array;
   encodeFunctionData(functionFragment: 'revert_tx', values: []): Uint8Array;
 
-  decodeFunctionData(
-    functionFragment: 'decimals',
-    data: BytesLike
-  ): DecodedValue;
+  decodeFunctionData(functionFragment: 'decimals', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'name', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'symbol', data: BytesLike): DecodedValue;
-  decodeFunctionData(
-    functionFragment: 'total_assets',
-    data: BytesLike
-  ): DecodedValue;
-  decodeFunctionData(
-    functionFragment: 'total_supply',
-    data: BytesLike
-  ): DecodedValue;
+  decodeFunctionData(functionFragment: 'total_assets', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'total_supply', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'burn', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'mint', data: BytesLike): DecodedValue;
-  decodeFunctionData(
-    functionFragment: 'deposit',
-    data: BytesLike
-  ): DecodedValue;
-  decodeFunctionData(
-    functionFragment: 'deposit_half',
-    data: BytesLike
-  ): DecodedValue;
-  decodeFunctionData(
-    functionFragment: 'deposit_half_and_mint',
-    data: BytesLike
-  ): DecodedValue;
-  decodeFunctionData(
-    functionFragment: 'deposit_half_and_mint_from_external_contract',
-    data: BytesLike
-  ): DecodedValue;
-  decodeFunctionData(
-    functionFragment: 'panic_tx',
-    data: BytesLike
-  ): DecodedValue;
-  decodeFunctionData(
-    functionFragment: 'revert_tx',
-    data: BytesLike
-  ): DecodedValue;
+  decodeFunctionData(functionFragment: 'deposit', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'deposit_half', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'deposit_half_and_mint', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'deposit_half_and_mint_from_external_contract', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'panic_tx', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'revert_tx', data: BytesLike): DecodedValue;
 }
 
 export class CustomAssetAbi extends Contract {
@@ -154,25 +93,11 @@ export class CustomAssetAbi extends Contract {
     total_assets: InvokeFunction<[], BN>;
     total_supply: InvokeFunction<[asset: AssetIdInput], Option<BN>>;
     burn: InvokeFunction<[sub_id: string, amount: BigNumberish], void>;
-    mint: InvokeFunction<
-      [recipient: IdentityInput, sub_id: string, amount: BigNumberish],
-      void
-    >;
+    mint: InvokeFunction<[recipient: IdentityInput, sub_id: string, amount: BigNumberish], void>;
     deposit: InvokeFunction<[], BN>;
     deposit_half: InvokeFunction<[], BN>;
-    deposit_half_and_mint: InvokeFunction<
-      [recipient: IdentityInput, sub_id: string, amount: BigNumberish],
-      BN
-    >;
-    deposit_half_and_mint_from_external_contract: InvokeFunction<
-      [
-        recipient: IdentityInput,
-        sub_id: string,
-        amount: BigNumberish,
-        contract_id: ContractIdInput,
-      ],
-      BN
-    >;
+    deposit_half_and_mint: InvokeFunction<[recipient: IdentityInput, sub_id: string, amount: BigNumberish], BN>;
+    deposit_half_and_mint_from_external_contract: InvokeFunction<[recipient: IdentityInput, sub_id: string, amount: BigNumberish, contract_id: ContractIdInput], BN>;
     panic_tx: InvokeFunction<[], void>;
     revert_tx: InvokeFunction<[], void>;
   };

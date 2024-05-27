@@ -4,6 +4,7 @@ import test, { chromium } from '@playwright/test';
 import {
   getButtonByText,
   getByAriaLabel,
+  getInputByName,
   hasText,
   reload,
   visit,
@@ -21,17 +22,28 @@ test.describe('HomeWallet', () => {
     await mockData(page);
   });
 
-  test('should change balance when select a new network', async () => {
+  // @TODO: re-enable when interacting with faucet popup
+  test.skip('should change balance when select a new network', async ({
+    context,
+  }) => {
     await visit(page, '/wallet');
     await getButtonByText(page, 'Faucet').click();
-    await getButtonByText(page, 'Give me ETH').click();
+
+    // @TODO: detect faucetPage here
+    const pages = context.pages();
+    const faucetPage = pages.find((page) => {
+      page.url().includes('address');
+    });
+    await getInputByName(faucetPage, 'agreement1').click();
+    await getInputByName(faucetPage, 'agreement2').click();
+    await getInputByName(faucetPage, 'agreement3').click();
+    await getButtonByText(faucetPage, 'Give me ETH').click();
     await hasText(page, /Ethereum/i);
     await hasText(page, /ETH.0\.5/i);
 
     /** Select a new network */
     await getByAriaLabel(page, 'Selected Network').click();
     await getByAriaLabel(page, 'fuel_network-item-2').click();
-
     await hasText(page, "You don't have any assets");
   });
 

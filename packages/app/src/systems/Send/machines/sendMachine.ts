@@ -1,13 +1,11 @@
-import { type BN, Provider, type TransactionRequest } from 'fuels';
+import type { BN, TransactionRequest } from 'fuels';
 import {
   type InterpreterFrom,
   type StateFrom,
   assign,
   createMachine,
 } from 'xstate';
-import { AccountService } from '~/systems/Account';
 import { FetchMachine, assignError } from '~/systems/Core';
-import { NetworkService } from '~/systems/Network';
 import { type TxInputs, TxService } from '~/systems/Transaction/services';
 
 export enum SendScreens {
@@ -21,27 +19,48 @@ export type MachineContext = {
   transactionRequest?: TransactionRequest;
   providerUrl?: string;
   address?: string;
-  fee?: BN;
+  baseFee?: BN;
+  baseGasLimit?: BN;
+  regularTip?: BN;
+  fastTip?: BN;
+  maxGasPerTx?: BN;
+  input?: TxInputs['createTransfer'];
   error?: string;
 };
 
+type EstimateDefaultTipsReturn = {
+  regularTip: BN;
+  fastTip: BN;
+};
+
+type EstimateGasLimitReturn = {
+  baseGasLimit: BN;
+  maxGasPerTx: BN;
+};
+
 type CreateTransactionReturn = {
-  transactionRequest: TransactionRequest;
+  baseFee?: BN;
+  transactionRequest?: TransactionRequest;
   providerUrl: string;
   address: string;
-  fee: BN;
 };
 
 type MachineServices = {
   createTransactionRequest: {
     data: CreateTransactionReturn;
   };
+  estimateDefaultTips: {
+    data: EstimateDefaultTipsReturn;
+  };
+  estimateGasLimit: {
+    data: EstimateGasLimitReturn;
+  };
 };
 
 type MachineEvents =
   | { type: 'RESET'; input: null }
   | { type: 'BACK'; input: null }
-  | { type: 'SET_DATA'; input: TxInputs['isValidTransaction'] }
+  | { type: 'SET_INPUT'; input: TxInputs['createTransfer'] }
   | { type: 'CONFIRM'; input: null };
 
 const IDLE_STATE = {
@@ -63,13 +82,47 @@ export const sendMachine = createMachine(
       services: {} as MachineServices,
     },
     id: '(machine)',
-    initial: 'idle',
+    initial: 'estimatingInitialTips',
     states: {
+      estimatingInitialTips: {
+        invoke: {
+          src: 'estimateDefaultTips',
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              target: 'idle',
+              actions: [assignError()],
+            },
+            {
+              actions: ['assignDefaultTips'],
+              target: 'estimatingGasLimit',
+            },
+          ],
+        },
+      },
+      estimatingGasLimit: {
+        invoke: {
+          src: 'estimateGasLimit',
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              target: 'idle',
+              actions: [assignError()],
+            },
+            {
+              actions: ['assignGasLimit'],
+              target: 'idle',
+            },
+          ],
+        },
+      },
       idle: IDLE_STATE,
       creatingTx: {
         invoke: {
           src: 'createTransactionRequest',
-          data: (_: MachineContext, { input }: MachineEvents) => ({ input }),
+          data: (ctx: MachineContext) => ({
+            input: ctx.input,
+          }),
           onDone: [
             {
               cond: FetchMachine.hasError,
@@ -83,6 +136,19 @@ export const sendMachine = createMachine(
           ],
         },
       },
+      changingInput: {
+        on: {
+          SET_INPUT: {
+            actions: ['assignInput'],
+            target: 'changingInput',
+          },
+        },
+        after: {
+          1000: {
+            target: 'creatingTx',
+          },
+        },
+      },
       readyToSend: {
         on: {
           CONFIRM: { actions: ['callTransactionRequest'] },
@@ -91,62 +157,61 @@ export const sendMachine = createMachine(
     },
     on: {
       BACK: {
+        actions: ['goToHome'],
         target: 'idle',
       },
-      SET_DATA: { target: 'creatingTx' },
+      SET_INPUT: { actions: ['assignInput'], target: 'changingInput' },
     },
   },
   {
     actions: {
-      assignTransactionData: assign((_, ev) => ({
+      assignDefaultTips: assign((_ctx, ev) => ({
+        regularTip: ev.data.regularTip,
+        fastTip: ev.data.fastTip,
+      })),
+      assignGasLimit: assign((_ctx, ev) => ({
+        baseGasLimit: ev.data.baseGasLimit,
+        maxGasPerTx: ev.data.maxGasPerTx,
+      })),
+      assignInput: assign((_ctx, ev) => ({
+        input: ev.input,
+      })),
+      assignTransactionData: assign((_ctx, ev) => ({
         transactionRequest: ev.data.transactionRequest,
         providerUrl: ev.data.providerUrl,
         address: ev.data.address,
-        fee: ev.data.fee,
+        baseFee: ev.data.baseFee,
       })),
     },
     services: {
+      estimateDefaultTips: FetchMachine.create<
+        never,
+        EstimateDefaultTipsReturn
+      >({
+        showError: false,
+        maxAttempts: 1,
+        async fetch() {
+          const defaultTips = await TxService.estimateDefaultTips();
+          return defaultTips;
+        },
+      }),
+      estimateGasLimit: FetchMachine.create<never, EstimateGasLimitReturn>({
+        showError: false,
+        maxAttempts: 1,
+        async fetch() {
+          const gasLimit = await TxService.estimateGasLimit();
+          return gasLimit;
+        },
+      }),
       createTransactionRequest: FetchMachine.create<
-        TxInputs['isValidTransaction'],
-        CreateTransactionReturn | null
+        TxInputs['createTransfer'],
+        CreateTransactionReturn
       >({
         showError: false,
         maxAttempts: 1,
         async fetch({ input }) {
-          const to = input?.address;
-          const assetId = input?.asset?.assetId;
-          const { amount } = input || {};
-          const [network, account] = await Promise.all([
-            NetworkService.getSelectedNetwork(),
-            AccountService.getCurrentAccount(),
-          ]);
-
-          if (!to || !assetId || !amount || !network?.url || !account) {
-            throw new Error('Missing params for transaction request');
-          }
-
-          const provider = await Provider.create(network.url);
-          const transferRequest = await TxService.createTransfer({
-            to,
-            amount,
-            assetId,
-            provider,
-          });
-          const { fee, transactionRequest } =
-            await TxService.resolveTransferCosts({
-              account,
-              transferRequest,
-              amount,
-              assetId,
-              provider,
-            });
-
-          return {
-            fee,
-            transactionRequest,
-            address: account.address,
-            providerUrl: network.url,
-          };
+          const transfer = await TxService.createTransfer(input);
+          return transfer;
         },
       }),
     },

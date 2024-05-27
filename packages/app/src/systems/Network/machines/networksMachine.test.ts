@@ -64,21 +64,6 @@ describe('networksMachine', () => {
       },
     };
 
-    it('should be able to add a new network', async () => {
-      state = await expectStateMatch(service, 'idle');
-
-      const nextState = service.nextState(addEv);
-      expect(nextState.value).toBe('addingNetwork');
-      expect(nextState.hasTag('loading')).toBeTruthy();
-
-      service.send(addEv);
-      state = await expectStateMatch(service, 'idle');
-      const networks = state.context.networks || [];
-      expect(networks?.length).toBe(2);
-      const networkId = networks?.[1].id;
-      await NetworkService.removeNetwork({ id: networkId as string });
-    });
-
     it('should be able to remove a network', async () => {
       await expectStateMatch(service, 'idle');
 
@@ -98,6 +83,21 @@ describe('networksMachine', () => {
       service.send(removeEv);
       state = await expectStateMatch(service, 'idle');
       expect(state.context.networks?.length).toBe(1);
+    });
+
+    it('should be able to add a new network', async () => {
+      state = await expectStateMatch(service, 'idle');
+
+      const nextState = service.nextState(addEv);
+      expect(nextState.value).toBe('addingNetwork');
+      expect(nextState.hasTag('loading')).toBeTruthy();
+
+      service.send(addEv);
+      state = await expectStateMatch(service, 'idle');
+      const networks = state.context.networks || [];
+      expect(networks?.length).toBe(2);
+      const networkId = networks?.[1].id;
+      await NetworkService.removeNetwork({ id: networkId as string });
     });
 
     it('should be able to select a new network', async () => {

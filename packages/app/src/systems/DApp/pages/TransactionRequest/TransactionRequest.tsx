@@ -10,71 +10,43 @@ import { useTransactionRequest } from '../../hooks/useTransactionRequest';
 
 export function TransactionRequest() {
   const txRequest = useTransactionRequest({ isOriginRequired: true });
-  const { handlers, status, isSendingTx, txResult, ...ctx } = txRequest;
-  const { assets } = useAssets();
+  const {
+    handlers,
+    status,
+    isSendingTx,
+    txSummarySimulated,
+    txSummaryExecuted,
+    ...ctx
+  } = txRequest;
+  const { assets, isLoading: isLoadingAssets } = useAssets();
 
   if (!ctx.account) return null;
 
-  const shouldShowTx = status('waitingApproval') || isSendingTx;
-
-  const Header = (
-    <>
-      <ConnectInfo
-        origin={ctx.input.origin!}
-        favIconUrl={ctx.input.favIconUrl}
-        title={ctx.input.title}
-        headerText="Requesting a transaction from:"
-      />
-      {txResult?.status === TransactionStatus.failure ? (
-        <Alert hideIcon status="error" css={styles.alert}>
-          <Alert.Title>
-            Simulating your transaction resulted in an error
-          </Alert.Title>
-          <Alert.Description>
-            {/* TODO: add a reason for the transaction failing if the sdk ever supports it */}
-            The transaction will fail to run.
-          </Alert.Description>
-        </Alert>
-      ) : (
-        <Alert status="warning" css={styles.alert}>
-          <Alert.Title>Confirm before approving</Alert.Title>
-          <Alert.Description>
-            Carefully check if all the details in your transaction are correct
-          </Alert.Description>
-        </Alert>
-      )}
-    </>
-  );
+  const isLoading = status('loading') || status('sending') || isLoadingAssets;
 
   return (
     <>
       <Layout title={ctx.title} noBorder>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
-          {ctx.isLoading && !txResult && <TxContent.Loader header={Header} />}
-          {shouldShowTx && (
+          {ctx.shouldShowLoader && <TxContent.Loader />}
+          {ctx.shouldShowTxSimulated && (
             <TxContent.Info
               showDetails
-              tx={txResult}
-              isLoading={status('loading')}
-              header={Header}
+              tx={txSummarySimulated}
+              isLoading={isLoading}
+              errors={ctx.errors.simulateTxErrors}
+              isConfirm
               assets={assets}
             />
           )}
-          {(status('success') || status('failed')) && (
+          {ctx.shouldShowTxExecuted && (
             <TxContent.Info
               showDetails
-              tx={txResult}
-              txStatus={txRequest.approveStatus()}
+              tx={txSummaryExecuted}
+              txStatus={ctx.executedStatus()}
               assets={assets}
-              header={
-                <TxHeader
-                  id={txResult?.id}
-                  type={txResult?.type}
-                  status={txResult?.status}
-                  providerUrl={txRequest.providerUrl}
-                />
-              }
+              providerUrl={ctx.providerUrl}
               footer={
                 status('failed') && (
                   <Button
@@ -90,7 +62,7 @@ export function TransactionRequest() {
             />
           )}
         </Layout.Content>
-        {ctx.showActions && (
+        {ctx.shouldShowActions && (
           <Layout.BottomBar>
             <Button
               onPress={handlers.reject}
@@ -103,7 +75,7 @@ export function TransactionRequest() {
               intent="primary"
               onPress={handlers.approve}
               isLoading={ctx.isLoading || status('sending')}
-              isDisabled={txResult?.status === TransactionStatus.failure}
+              isDisabled={ctx.shouldDisableApproveBtn}
             >
               Approve
             </Button>

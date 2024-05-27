@@ -1,12 +1,32 @@
-import type { BigNumberish } from 'fuels';
-import { BaseAssetId, bn } from 'fuels';
+import { type AssetFuel, type BigNumberish, assets, bn } from 'fuels';
 import { graphql } from 'msw';
-import { fuelAssets } from '~/systems/Core';
+import { uniqueId } from 'xstate/lib/utils';
 
-export const MOCK_ASSETS = fuelAssets.map((item) => ({
+export const MOCK_NETWORK = {
+  id: uniqueId(),
+  name: 'Another',
+  url: 'https://testnet.fuel.network/v1/graphql',
+};
+
+export const MOCK_FUEL_ASSETS = assets.map((asset) => {
+  const fuelNetworkAsset = asset.networks.find(
+    (n) => n.type === 'fuel'
+  ) as AssetFuel;
+  return {
+    ...asset,
+    assetId: fuelNetworkAsset.assetId,
+    decimals: fuelNetworkAsset.decimals,
+  };
+});
+
+export const MOCK_ASSETS = MOCK_FUEL_ASSETS.map((item) => ({
   ...item,
   amount: bn(14563943834),
 }));
+
+// BaseAssetId replacement
+export const MOCK_BASE_ASSET_ID =
+  '0x0000000000000000000000000000000000000000000000000000000000000000';
 
 export const MOCK_CUSTOM_ASSET = {
   assetId: '0x566012155ae253353c7df01f36c8f6249c94131a69a3484bdb0234e3822b5d90',
@@ -18,7 +38,7 @@ export const MOCK_CUSTOM_ASSET = {
 };
 
 export const MOCK_ASSETS_AMOUNTS = [
-  ...fuelAssets.map((item, idx) => ({
+  ...MOCK_FUEL_ASSETS.map((item, idx) => ({
     ...item,
     amount: bn(idx % 2 === 0 ? 14563943834 : -14563943834),
   })),
@@ -28,7 +48,7 @@ export const MOCK_ASSETS_AMOUNTS = [
 export const MOCK_ASSETS_NODE = [
   {
     node: {
-      assetId: BaseAssetId,
+      assetId: MOCK_BASE_ASSET_ID,
       amount: bn(30000000000),
     },
   },

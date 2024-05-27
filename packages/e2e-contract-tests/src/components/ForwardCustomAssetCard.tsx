@@ -1,9 +1,10 @@
 import { useAccount, useWallet } from '@fuels/react';
-import { BaseAssetId, bn } from 'fuels';
+import { bn } from 'fuels';
 import { useState } from 'react';
 
 import { MAIN_CONTRACT_ID } from '../config';
 import { deposit } from '../contract_interactions';
+import { useBaseAssetId } from '../hooks/useBaseAssetId';
 import { calculateAssetId } from '../utils';
 
 export const ForwardCustomAssetCard = () => {
@@ -11,7 +12,9 @@ export const ForwardCustomAssetCard = () => {
   const { account } = useAccount();
   const wallet = useWallet(account);
 
-  const assetId = calculateAssetId(MAIN_CONTRACT_ID, BaseAssetId);
+  const baseAssetId = useBaseAssetId();
+  const assetId =
+    !!baseAssetId && calculateAssetId(MAIN_CONTRACT_ID, baseAssetId);
 
   return (
     <div>
@@ -23,8 +26,9 @@ export const ForwardCustomAssetCard = () => {
         />
         <button
           type="button"
+          disabled={!assetId}
           onClick={async () => {
-            if (wallet.wallet && amount) {
+            if (assetId && wallet.wallet && amount) {
               await deposit({
                 wallet: wallet.wallet,
                 amount: bn.parseUnits(amount),
