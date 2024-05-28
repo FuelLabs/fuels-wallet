@@ -14,7 +14,12 @@ import { testSetup } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import { checkAddresses, checkFee, connect } from './utils';
+import {
+  checkAddresses,
+  checkAriaLabelsContainsText,
+  checkFee,
+  connect,
+} from './utils';
 
 useLocalCRX();
 
@@ -50,6 +55,15 @@ test.describe('Forward and Mint Multicall', () => {
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
+
+    // Test if asset name is defined (not unknown)
+    checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Asset Name',
+      'Ethereum'
+    );
+    // Test if sender name is defined (not unknown)
+    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
 
     // test forward asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');

@@ -14,7 +14,12 @@ import { testSetup } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import { checkAddresses, checkFee, connect } from './utils';
+import {
+  checkAddresses,
+  checkAriaLabelsContainsText,
+  checkFee,
+  connect,
+} from './utils';
 
 useLocalCRX();
 
@@ -118,6 +123,15 @@ test.describe('Mint Assets', () => {
     // test asset is correct
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
+
+    // Test if asset name is defined (not unknown)
+    checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Asset Name',
+      'Ethereum'
+    );
+    // Test if sender name is defined (not unknown)
+    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
 
     await hasText(walletNotificationPage, name);
     await hasText(walletNotificationPage, shortAddress(assetId), 0, 10000);

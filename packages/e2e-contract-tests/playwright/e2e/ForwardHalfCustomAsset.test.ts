@@ -16,7 +16,7 @@ import { testSetup } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import { checkAddresses, connect } from './utils';
+import { checkAddresses, checkAriaLabelsContainsText, connect } from './utils';
 
 useLocalCRX();
 test.describe('Forward Half Custom Asset', () => {
@@ -66,6 +66,14 @@ test.describe('Forward Half Custom Asset', () => {
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
+    // Test if asset name is defined (not unknown)
+    checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Asset Name',
+      'Ethereum'
+    );
+    // Test if sender name is defined (not unknown)
+    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
     // test the forward asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
     // test forward asset id is correct
