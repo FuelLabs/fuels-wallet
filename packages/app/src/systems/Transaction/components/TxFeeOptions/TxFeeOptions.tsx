@@ -27,7 +27,7 @@ export const TxFeeOptions = ({
   const { control, setValue } = useFormContext<SendFormValues>();
   const previousDefaultTip = useRef<BN>(regularTip);
 
-  const { field: tip } = useController({
+  const { field: tip, fieldState: tipState } = useController({
     control,
     name: 'fees.tip',
   });
@@ -76,30 +76,37 @@ export const TxFeeOptions = ({
           >
             <VStack gap="$1">
               <Text fontSize="xs">Tip</Text>
-              <Input>
-                <Input.Number
-                  value={tip.value.text}
-                  inputMode="decimal"
-                  autoComplete="off"
-                  allowedDecimalSeparators={['.', ',']}
-                  allowNegative={false}
-                  thousandSeparator={false}
-                  decimalScale={DECIMAL_UNITS}
-                  placeholder="0.00"
-                  onChange={(e) => {
-                    const text = e.target.value;
-                    const { text: newText, amount } = createAmount(
-                      text,
-                      DECIMAL_UNITS
-                    );
+              <Form.Control isInvalid={Boolean(tipState.error || error)}>
+                <Input>
+                  <Input.Number
+                    value={tip.value.text}
+                    inputMode="decimal"
+                    autoComplete="off"
+                    allowedDecimalSeparators={['.', ',']}
+                    allowNegative={false}
+                    thousandSeparator={false}
+                    decimalScale={DECIMAL_UNITS}
+                    placeholder="0.00"
+                    onChange={(e) => {
+                      const text = e.target.value;
+                      const { text: newText, amount } = createAmount(
+                        text,
+                        DECIMAL_UNITS
+                      );
 
-                    tip.onChange({
-                      amount,
-                      text: newText,
-                    });
-                  }}
-                />
-              </Input>
+                      tip.onChange({
+                        amount,
+                        text: newText,
+                      });
+                    }}
+                  />
+                </Input>
+                {tipState.error && (
+                  <Form.ErrorMessage aria-label="Error message">
+                    {tipState.error?.message}
+                  </Form.ErrorMessage>
+                )}
+              </Form.Control>
             </VStack>
             <VStack gap="$1">
               <Text fontSize="xs">Gas limit</Text>

@@ -175,11 +175,11 @@ export const sendMachine = createMachine(
       assignInput: assign((_ctx, ev) => ({
         input: ev.input,
       })),
-      assignTransactionData: assign((_ctx, ev) => ({
+      assignTransactionData: assign((ctx, ev) => ({
         transactionRequest: ev.data.transactionRequest,
         providerUrl: ev.data.providerUrl,
         address: ev.data.address,
-        baseFee: ev.data.baseFee,
+        baseFee: ev.data.baseFee ?? ctx.baseFee,
         error: undefined,
       })),
     },

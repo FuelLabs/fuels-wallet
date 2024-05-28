@@ -57,11 +57,13 @@ const selectors = {
   },
 };
 
+type BalanceAsset = {
+  assetId: string;
+  amount?: BNInput;
+};
+
 type SchemaOptions = {
-  accountBalanceAssets: Array<{
-    assetId: string;
-    amount?: BNInput;
-  }>;
+  accountBalanceAssets: BalanceAsset[];
   baseFee: BN | undefined;
   maxGasPerTx: BN | undefined;
 };
