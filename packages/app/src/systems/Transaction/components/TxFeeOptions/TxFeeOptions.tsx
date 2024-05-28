@@ -1,12 +1,13 @@
-import { Box, Button, Form, Input, Text, VStack } from '@fuel-ui/react';
+import { Box, Button, Form, HStack, Input, Text, VStack } from '@fuel-ui/react';
 import { AnimatePresence } from 'framer-motion';
-import { type BN, DEFAULT_DECIMAL_UNITS, bn } from 'fuels';
+import { type BN, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { MotionFlex, MotionStack, animations } from '~/systems/Core';
 import { createAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxFee } from '../TxFee';
+import { DECIMAL_UNITS, formatTip } from './TxFeeOptions.utils';
 
 type TxFeeOptionsProps = {
   baseFee: BN;
@@ -15,8 +16,6 @@ type TxFeeOptionsProps = {
   error: string | null;
 };
 
-const DECIMAL_UNITS = DEFAULT_DECIMAL_UNITS;
-
 export const TxFeeOptions = ({
   baseFee,
   regularTip,
@@ -24,7 +23,7 @@ export const TxFeeOptions = ({
   error,
 }: TxFeeOptionsProps) => {
   const [isAdvanced, setIsAdvanced] = useState(false);
-  const { control, setValue } = useFormContext<SendFormValues>();
+  const { control, setValue, getValues } = useFormContext<SendFormValues>();
   const previousDefaultTip = useRef<BN>(regularTip);
 
   const { field: tip, fieldState: tipState } = useController({
@@ -53,16 +52,25 @@ export const TxFeeOptions = ({
    */
   useEffect(() => {
     if (!isAdvanced) {
-      setValue('fees.tip', {
-        amount: previousDefaultTip.current,
-        text: '',
-      });
-      setValue('fees.gasLimit', {
-        amount: bn(0),
-        text: '',
-      });
+      const [currentTip, currentGasLimit] = getValues([
+        'fees.tip.amount',
+        'fees.gasLimit.amount',
+      ]);
+      if (!currentTip.eq(previousDefaultTip.current)) {
+        setValue('fees.tip', {
+          amount: previousDefaultTip.current,
+          text: formatTip(previousDefaultTip.current),
+        });
+      }
+
+      if (!currentGasLimit.eq(bn(0))) {
+        setValue('fees.gasLimit', {
+          amount: bn(0),
+          text: '',
+        });
+      }
     }
-  }, [isAdvanced, setValue]);
+  }, [isAdvanced, setValue, getValues]);
 
   return (
     <Box.Stack gap="$1">
@@ -71,72 +79,79 @@ export const TxFeeOptions = ({
           <MotionStack
             {...animations.slideInTop()}
             key="advanced"
-            gap="$3"
+            gap="$1"
             layout
           >
-            <VStack gap="$1">
-              <Text fontSize="xs">Tip</Text>
-              <Form.Control isInvalid={Boolean(tipState.error)}>
-                <Input>
-                  <Input.Number
-                    value={tip.value.text}
-                    inputMode="decimal"
-                    autoComplete="off"
-                    allowedDecimalSeparators={['.', ',']}
-                    allowNegative={false}
-                    thousandSeparator={false}
-                    decimalScale={DECIMAL_UNITS}
-                    placeholder="0.00"
-                    onChange={(e) => {
-                      const text = e.target.value;
-                      const { text: newText, amount } = createAmount(
-                        text,
-                        DECIMAL_UNITS
-                      );
+            <HStack gap="$3">
+              <VStack gap="$1">
+                <Text fontSize="xs">Gas limit</Text>
+                <Form.Control isInvalid={Boolean(gasLimitState.error || error)}>
+                  <Input isInvalid={Boolean(gasLimitState.error || error)}>
+                    <Input.Number
+                      value={gasLimit.value.text}
+                      inputMode="numeric"
+                      autoComplete="off"
+                      allowNegative={false}
+                      thousandSeparator={false}
+                      placeholder="0"
+                      css={{ width: '100%' }}
+                      onChange={(e) => {
+                        const ignore = /[.,\-+]/g;
+                        const val = (e.target.value || '').replaceAll(
+                          ignore,
+                          ''
+                        );
 
-                      tip.onChange({
-                        amount,
-                        text: newText,
-                      });
-                    }}
-                  />
-                </Input>
-                {tipState.error && (
-                  <Form.ErrorMessage aria-label="Error message">
-                    {tipState.error?.message}
-                  </Form.ErrorMessage>
-                )}
-              </Form.Control>
-            </VStack>
-            <VStack gap="$1">
-              <Text fontSize="xs">Gas limit</Text>
-              <Form.Control isInvalid={Boolean(gasLimitState.error || error)}>
-                <Input isInvalid={Boolean(gasLimitState.error || error)}>
-                  <Input.Number
-                    value={gasLimit.value.text}
-                    inputMode="numeric"
-                    autoComplete="off"
-                    allowNegative={false}
-                    thousandSeparator={false}
-                    placeholder="0"
-                    onChange={(e) => {
-                      const ignore = /[.,\-+]/g;
-                      const val = (e.target.value || '').replaceAll(ignore, '');
+                        gasLimit.onChange({
+                          amount: bn(val),
+                          text: val,
+                        });
+                      }}
+                    />
+                  </Input>
+                </Form.Control>
+              </VStack>
+              <VStack gap="$1">
+                <Text fontSize="xs">Tip</Text>
+                <Form.Control isInvalid={Boolean(tipState.error)}>
+                  <Input>
+                    <Input.Number
+                      value={tip.value.text}
+                      inputMode="decimal"
+                      autoComplete="off"
+                      allowedDecimalSeparators={['.', ',']}
+                      allowNegative={false}
+                      thousandSeparator={false}
+                      decimalScale={DECIMAL_UNITS}
+                      placeholder="0.00"
+                      css={{ width: '100%' }}
+                      onChange={(e) => {
+                        const text = e.target.value;
+                        const { text: newText, amount } = createAmount(
+                          text,
+                          DECIMAL_UNITS
+                        );
 
-                      gasLimit.onChange({
-                        amount: bn(val),
-                        text: val,
-                      });
-                    }}
-                  />
-                </Input>
-                {(error || gasLimitState.error) && (
-                  <Form.ErrorMessage aria-label="Error message">
-                    {error || gasLimitState.error?.message}
-                  </Form.ErrorMessage>
-                )}
-              </Form.Control>
-            </VStack>
+                        tip.onChange({
+                          amount,
+                          text: newText,
+                        });
+                      }}
+                    />
+                  </Input>
+                </Form.Control>
+              </VStack>
+            </HStack>
+            <Form.Control isInvalid={Boolean(gasLimitState.error || error)}>
+              {(error || gasLimitState.error) && (
+                <Form.ErrorMessage
+                  aria-label="Error message"
+                  css={{ padding: 0 }}
+                >
+                  {error || gasLimitState.error?.message}
+                </Form.ErrorMessage>
+              )}
+            </Form.Control>
           </MotionStack>
         ) : (
           <MotionStack
@@ -155,10 +170,7 @@ export const TxFeeOptions = ({
                   previousDefaultTip.current = option.tip;
                   setValue('fees.tip', {
                     amount: option.tip,
-                    text: option.tip.format({
-                      units: DECIMAL_UNITS,
-                      precision: DECIMAL_UNITS,
-                    }),
+                    text: formatTip(option.tip),
                   });
                 }}
               />
