@@ -82,9 +82,10 @@ export const TxFeeOptions = ({
           <MotionStack
             {...animations.slideInTop()}
             key="advanced"
-            gap="$1"
+            gap="$2"
             layout
           >
+            <TxFee title="Fee + Tip" fee={baseFee.add(tip.value.amount)} />
             <HStack gap="$3">
               <VStack gap="$1">
                 <Text fontSize="xs">Gas limit</Text>
