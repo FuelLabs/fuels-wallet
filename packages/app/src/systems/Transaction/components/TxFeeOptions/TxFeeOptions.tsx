@@ -53,8 +53,14 @@ export const TxFeeOptions = ({
    */
   useEffect(() => {
     if (!isAdvanced) {
-      setValue('fees.tip', previousDefaultTip.current);
-      setValue('fees.gasLimit', bn(0));
+      setValue('fees.tip', {
+        amount: previousDefaultTip.current,
+        text: '',
+      });
+      setValue('fees.gasLimit', {
+        amount: bn(0),
+        text: '',
+      });
     }
   }, [isAdvanced, setValue]);
 
@@ -72,6 +78,7 @@ export const TxFeeOptions = ({
               <Text fontSize="xs">Tip</Text>
               <Input>
                 <Input.Number
+                  value={tip.value.text}
                   inputMode="decimal"
                   autoComplete="off"
                   allowedDecimalSeparators={['.', ',']}
@@ -81,9 +88,15 @@ export const TxFeeOptions = ({
                   placeholder="0.00"
                   onChange={(e) => {
                     const text = e.target.value;
-                    const val = text.replaceAll(',', '');
-                    const amount = bn.parseUnits(val, DECIMAL_UNITS);
-                    tip.onChange(amount);
+                    const { text: newText, amount } = createAmount(
+                      text,
+                      DECIMAL_UNITS
+                    );
+
+                    tip.onChange({
+                      amount,
+                      text: newText,
+                    });
                   }}
                 />
               </Input>
@@ -92,14 +105,21 @@ export const TxFeeOptions = ({
               <Text fontSize="xs">Gas limit</Text>
               <Form.Control isInvalid={Boolean(gasLimitState.error || error)}>
                 <Input isInvalid={Boolean(gasLimitState.error || error)}>
-                  <Input.Field
-                    ref={gasLimit.ref}
-                    type="number"
+                  <Input.Number
+                    value={gasLimit.value.text}
+                    inputMode="numeric"
+                    autoComplete="off"
+                    allowNegative={false}
+                    thousandSeparator={false}
                     placeholder="0"
                     onChange={(e) => {
                       const ignore = /[.,\-+]/g;
                       const val = (e.target.value || '').replaceAll(ignore, '');
-                      gasLimit.onChange(bn(val));
+
+                      gasLimit.onChange({
+                        amount: bn(val),
+                        text: val,
+                      });
                     }}
                   />
                 </Input>
@@ -123,10 +143,16 @@ export const TxFeeOptions = ({
                 key={option.name}
                 fee={option.fee}
                 title={option.name}
-                checked={option.tip.eq(tip.value)}
+                checked={option.tip.eq(tip.value.amount)}
                 onChecked={() => {
                   previousDefaultTip.current = option.tip;
-                  setValue('fees.tip', option.tip);
+                  setValue('fees.tip', {
+                    amount: option.tip,
+                    text: option.tip.format({
+                      units: DECIMAL_UNITS,
+                      precision: DECIMAL_UNITS,
+                    }),
+                  });
                 }}
               />
             ))}

@@ -95,7 +95,7 @@ const schema = yup
           return true;
         }
 
-        const totalAmount = value.add(baseFee.add(fees.tip));
+        const totalAmount = value.add(baseFee.add(fees.tip.amount));
         return totalAmount.lte(bn(balanceAssetSelected.amount));
       })
       .required('Amount is required'),
@@ -111,41 +111,47 @@ const schema = yup
       }),
     fees: yup
       .object({
-        tip: yup
-          .mixed<BN>()
-          .test(
-            'integer',
-            'Tip must be greater than or equal to 0',
-            (value) => {
-              return value?.gte(0);
-            }
-          )
-          .required('Tip is required'),
-        gasLimit: yup
-          .mixed<BN>()
-          .test(
-            'integer',
-            'Gas limit must be greater or equal to 0',
-            (value) => {
-              return value?.gte(0);
-            }
-          )
-          .test({
-            name: 'max',
-            test: (value, ctx) => {
-              const { maxGasPerTx } = ctx.options.context as SchemaOptions;
-              if (!maxGasPerTx) return false;
-
-              if (value?.lte(maxGasPerTx)) {
-                return true;
+        tip: yup.object({
+          amount: yup
+            .mixed<BN>()
+            .test(
+              'integer',
+              'Tip must be greater than or equal to 0',
+              (value) => {
+                return value?.gte(0);
               }
+            )
+            .required('Tip is required'),
+          text: yup.string(),
+        }),
+        gasLimit: yup.object({
+          amount: yup
+            .mixed<BN>()
+            .test(
+              'integer',
+              'Gas limit must be greater or equal to 0',
+              (value) => {
+                return value?.gte(0);
+              }
+            )
+            .test({
+              name: 'max',
+              test: (value, ctx) => {
+                const { maxGasPerTx } = ctx.options.context as SchemaOptions;
+                if (!maxGasPerTx) return false;
 
-              return ctx.createError({
-                message: `Gas limit '${value?.toString()}' is greater than the allowed: '${maxGasPerTx.toString()}'.`,
-              });
-            },
-          })
-          .required('Gas limit is required'),
+                if (value?.lte(maxGasPerTx)) {
+                  return true;
+                }
+
+                return ctx.createError({
+                  message: `Gas limit '${value?.toString()}' is greater than the allowed: '${maxGasPerTx.toString()}'.`,
+                });
+              },
+            })
+            .required('Gas limit is required'),
+          text: yup.string(),
+        }),
       })
       .required('Fees are required'),
   })
@@ -156,8 +162,14 @@ export type SendFormValues = {
   address: string;
   amount: BN;
   fees: {
-    tip: BN;
-    gasLimit: BN;
+    tip: {
+      amount: BN;
+      text?: string;
+    };
+    gasLimit: {
+      amount: BN;
+      text?: string;
+    };
   };
 };
 
@@ -166,8 +178,14 @@ const DEFAULT_VALUES: SendFormValues = {
   amount: bn(0),
   address: '',
   fees: {
-    tip: bn(0),
-    gasLimit: bn(0),
+    tip: {
+      amount: bn(0),
+      text: '',
+    },
+    gasLimit: {
+      amount: bn(0),
+      text: '',
+    },
   },
 };
 
@@ -217,12 +235,12 @@ export function useSend() {
 
   const tip = useWatch({
     control: form.control,
-    name: 'fees.tip',
+    name: 'fees.tip.amount',
   });
 
   const gasLimit = useWatch({
     control: form.control,
-    name: 'fees.gasLimit',
+    name: 'fees.gasLimit.amount',
   });
 
   const { isValid } = form.formState;
