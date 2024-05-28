@@ -4,8 +4,8 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.84.0
-  Forc version: 0.56.0
+  Fuels version: 0.88.1
+  Forc version: 0.59.0
   Fuel-Core version: 0.26.0
 */
 
@@ -24,3 +24,9 @@ export type Enum<T> = {
 export type Option<T> = T | undefined;
 
 export type Vec<T> = T[];
+
+/**  
+ * Mimics Sway Result enum type.
+ * Ok represents the success case, while Err represents the error case.
+ */  
+ export type Result<T, E> = Enum<{Ok: T, Err: E}>;
