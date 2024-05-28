@@ -1,5 +1,13 @@
 # @fuel-wallet/types
 
+## 0.20.0
+
+### Minor Changes
+
+- [#1317](https://github.com/FuelLabs/fuels-wallet/pull/1317) [`f1dab207`](https://github.com/FuelLabs/fuels-wallet/commit/f1dab20703785086e81d39c3cef140c54956b29f) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixes bug where wrong Asset Id is shown for other tokens (e.g. ETH)
+  Updated Fuels package to tag pr-2395
+  Updated NPM Packs dependencies packages (e.g. @fuels/react, @fuels/ts-config) to new minor 0.20.0
+
 ## 0.19.0
 
 ## 0.18.1
