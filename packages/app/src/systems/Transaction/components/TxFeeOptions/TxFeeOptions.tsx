@@ -76,7 +76,7 @@ export const TxFeeOptions = ({
           >
             <VStack gap="$1">
               <Text fontSize="xs">Tip</Text>
-              <Form.Control isInvalid={Boolean(tipState.error || error)}>
+              <Form.Control isInvalid={Boolean(tipState.error)}>
                 <Input>
                   <Input.Number
                     value={tip.value.text}
