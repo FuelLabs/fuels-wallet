@@ -1,11 +1,19 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Image, Text } from '@fuel-ui/react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import connectorsPreviewImg from '../../public/connectors-preview.png';
 
 export function SDKSection() {
   const { push } = useRouter();
+  const pathname = usePathname();
+
+  // Allows routing to work regardless of path structure (e.g. docs hub)
+  function routeToGettingStarted() {
+    const basePath = pathname.split('/').slice(0, -2).join('/');
+    const newCompletePath = `${basePath}/dev/getting-started/`;
+    push(newCompletePath);
+  }
 
   return (
     <Box.Flex css={styles.root} justify={'center'}>
@@ -20,7 +28,7 @@ export function SDKSection() {
             size="lg"
             intent="base"
             variant="outlined"
-            onPress={() => push('/docs/dev/getting-started/')}
+            onPress={routeToGettingStarted}
           >
             GET STARTED
           </Button>
