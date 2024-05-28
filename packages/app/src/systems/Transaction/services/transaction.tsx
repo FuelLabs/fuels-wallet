@@ -18,7 +18,11 @@ import { WalletLockedCustom, db, uniqueId } from '~/systems/Core';
 import { AccountService } from '~/systems/Account/services/account';
 import { NetworkService } from '~/systems/Network/services/network';
 import type { Transaction } from '../types';
-import { getAbiMap, getGroupedErrors } from '../utils';
+import {
+  getAbiMap,
+  getGroupedErrors,
+  isScriptTransactionRequest,
+} from '../utils';
 import { getCurrentTips } from '../utils/fee';
 
 export type TxInputs = {
@@ -237,7 +241,7 @@ export class TxService {
     const consensusParameters = provider.getChain().consensusParameters;
 
     return {
-      maxGasPerTx: consensusParameters.txParameters.maxGasPerTx,
+      maxGasLimit: consensusParameters.txParameters.maxGasPerTx,
     };
   }
 
@@ -282,8 +286,13 @@ export class TxService {
           transactionRequest.tip ?? bn(0)
         );
 
+        const minGasLimit = isScriptTransactionRequest(transactionRequest)
+          ? transactionRequest.gasLimit
+          : undefined;
+
         return {
           baseFee: baseFee.sub(1), // To match maxFee calculated on TS SDK (they add 1 unit)
+          minGasLimit,
           transactionRequest,
           address: account.address,
           providerUrl: network.url,
@@ -309,6 +318,7 @@ export class TxService {
 
     return {
       baseFee: undefined,
+      minGasLimit: undefined,
       transactionRequest: undefined,
       address: account.address,
       providerUrl: network.url,

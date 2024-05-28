@@ -11,6 +11,7 @@ import { DECIMAL_UNITS, formatTip } from './TxFeeOptions.utils';
 
 type TxFeeOptionsProps = {
   baseFee: BN;
+  minGasLimit: BN;
   regularTip: BN;
   fastTip: BN;
   error: string | null;
@@ -18,12 +19,14 @@ type TxFeeOptionsProps = {
 
 export const TxFeeOptions = ({
   baseFee,
+  minGasLimit,
   regularTip,
   fastTip,
   error,
 }: TxFeeOptionsProps) => {
   const [isAdvanced, setIsAdvanced] = useState(false);
   const { control, setValue, getValues } = useFormContext<SendFormValues>();
+  const previousMinGasLimit = useRef<BN>(minGasLimit);
   const previousDefaultTip = useRef<BN>(regularTip);
 
   const { field: tip, fieldState: tipState } = useController({
@@ -63,10 +66,10 @@ export const TxFeeOptions = ({
         });
       }
 
-      if (!currentGasLimit.eq(bn(0))) {
+      if (!currentGasLimit.eq(previousMinGasLimit.current)) {
         setValue('fees.gasLimit', {
-          amount: bn(0),
-          text: '',
+          amount: previousMinGasLimit.current,
+          text: previousMinGasLimit.current.toString(),
         });
       }
     }

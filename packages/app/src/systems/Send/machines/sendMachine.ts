@@ -22,7 +22,8 @@ export type MachineContext = {
   baseFee?: BN;
   regularTip?: BN;
   fastTip?: BN;
-  maxGasPerTx?: BN;
+  minGasLimit?: BN;
+  maxGasLimit?: BN;
   input?: TxInputs['createTransfer'];
   error?: string;
 };
@@ -33,11 +34,12 @@ type EstimateDefaultTipsReturn = {
 };
 
 type EstimateGasLimitReturn = {
-  maxGasPerTx: BN;
+  maxGasLimit: BN;
 };
 
 type CreateTransactionReturn = {
   baseFee?: BN;
+  minGasLimit?: BN;
   transactionRequest?: TransactionRequest;
   providerUrl: string;
   address: string;
@@ -169,7 +171,7 @@ export const sendMachine = createMachine(
         error: undefined,
       })),
       assignGasLimit: assign((_ctx, ev) => ({
-        maxGasPerTx: ev.data.maxGasPerTx,
+        maxGasLimit: ev.data.maxGasLimit,
         error: undefined,
       })),
       assignInput: assign((_ctx, ev) => ({
@@ -180,6 +182,7 @@ export const sendMachine = createMachine(
         providerUrl: ev.data.providerUrl,
         address: ev.data.address,
         baseFee: ev.data.baseFee ?? ctx.baseFee,
+        minGasLimit: ev.data.minGasLimit ?? ctx.minGasLimit,
         error: undefined,
       })),
     },

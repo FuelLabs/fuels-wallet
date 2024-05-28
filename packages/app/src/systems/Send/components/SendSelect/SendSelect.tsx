@@ -25,6 +25,7 @@ export function SendSelect({
   balanceAssets,
   balanceAssetSelected,
   baseFee = bn(0),
+  minGasLimit = bn(0),
   tip,
   regularTip,
   fastTip,
@@ -186,6 +187,7 @@ export function SendSelect({
               </Text>
               <TxFeeOptions
                 baseFee={baseFee}
+                minGasLimit={minGasLimit}
                 regularTip={regularTip}
                 fastTip={fastTip}
                 error={errorMsg.gasLimit}

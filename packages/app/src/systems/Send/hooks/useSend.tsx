@@ -23,8 +23,11 @@ export enum SendStatus {
 }
 
 const selectors = {
-  maxGasPerTx(state: SendMachineState) {
-    return state.context.maxGasPerTx;
+  minGasLimit(state: SendMachineState) {
+    return state.context.minGasLimit;
+  },
+  maxGasLimit(state: SendMachineState) {
+    return state.context.maxGasLimit;
   },
   baseFee(state: SendMachineState) {
     return state.context.baseFee;
@@ -65,7 +68,7 @@ type BalanceAsset = {
 type SchemaOptions = {
   accountBalanceAssets: BalanceAsset[];
   baseFee: BN | undefined;
-  maxGasPerTx: BN | undefined;
+  maxGasLimit: BN | undefined;
 };
 
 const schema = yup
@@ -124,7 +127,7 @@ const schema = yup
               }
             )
             .required('Tip is required'),
-          text: yup.string(),
+          text: yup.string().required('Tip is required'),
         }),
         gasLimit: yup.object({
           amount: yup
@@ -139,20 +142,20 @@ const schema = yup
             .test({
               name: 'max',
               test: (value, ctx) => {
-                const { maxGasPerTx } = ctx.options.context as SchemaOptions;
-                if (!maxGasPerTx) return false;
+                const { maxGasLimit } = ctx.options.context as SchemaOptions;
+                if (!maxGasLimit) return false;
 
-                if (value?.lte(maxGasPerTx)) {
+                if (value?.lte(maxGasLimit)) {
                   return true;
                 }
 
                 return ctx.createError({
-                  message: `Gas limit '${value?.toString()}' is greater than the allowed: '${maxGasPerTx.toString()}'.`,
+                  message: `Gas limit '${value?.toString()}' is greater than the allowed: '${maxGasLimit.toString()}'.`,
                 });
               },
             })
             .required('Gas limit is required'),
-          text: yup.string(),
+          text: yup.string().required('Gas limit is required'),
         }),
       })
       .required('Fees are required'),
@@ -166,11 +169,11 @@ export type SendFormValues = {
   fees: {
     tip: {
       amount: BN;
-      text?: string;
+      text: string;
     };
     gasLimit: {
       amount: BN;
-      text?: string;
+      text: string;
     };
   };
 };
@@ -178,15 +181,15 @@ export type SendFormValues = {
 const DEFAULT_VALUES: SendFormValues = {
   asset: '',
   amount: bn(0),
-  address: '',
+  address: 'fuel1szcrxk7ee258shhlw4a4tycqz8xl32ra0ukcddh58txluunlpjfqnl5mhv',
   fees: {
     tip: {
       amount: bn(0),
-      text: '',
+      text: '0',
     },
     gasLimit: {
       amount: bn(0),
-      text: '',
+      text: '0',
     },
   },
 };
@@ -220,7 +223,8 @@ export function useSend() {
   );
 
   const baseFee = useSelector(service, selectors.baseFee);
-  const maxGasPerTx = useSelector(service, selectors.maxGasPerTx);
+  const minGasLimit = useSelector(service, selectors.minGasLimit);
+  const maxGasLimit = useSelector(service, selectors.maxGasLimit);
   const errorMessage = useSelector(service, selectors.error);
 
   const form = useForm<SendFormValues>({
@@ -231,7 +235,7 @@ export function useSend() {
     context: {
       accountBalanceAssets,
       baseFee,
-      maxGasPerTx,
+      maxGasLimit,
     },
   });
 
@@ -318,6 +322,7 @@ export function useSend() {
   return {
     form,
     baseFee,
+    minGasLimit,
     tip,
     regularTip,
     fastTip,
