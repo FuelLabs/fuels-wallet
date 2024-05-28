@@ -42,6 +42,8 @@ export const TxFeeOptions = ({
   }, [baseFee, regularTip, fastTip]);
 
   const tipFormatted = useMemo<string>(() => {
+    if (tip.value.isZero()) return '';
+
     return tip.value.format({
       units: DECIMAL_UNITS,
       minPrecision: 0,
@@ -49,9 +51,7 @@ export const TxFeeOptions = ({
   }, [tip.value]);
 
   const gasLimitFormatted = useMemo<string>(() => {
-    if (gasLimit.value.isZero()) {
-      return '';
-    }
+    if (gasLimit.value.isZero()) return '';
 
     return gasLimit.value.toString();
   }, [gasLimit.value]);
