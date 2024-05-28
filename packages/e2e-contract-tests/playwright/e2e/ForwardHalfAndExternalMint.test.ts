@@ -13,8 +13,10 @@ import {
 import { testSetup } from '../utils';
 
 import { EXTERNAL_CONTRACT_ID, MAIN_CONTRACT_ID } from './config';
-import { test } from './test';
+import { test, useLocalCRX } from './test';
 import { checkAddresses, checkFee, connect } from './utils';
+
+useLocalCRX();
 
 test.describe('Forward Half ETH and Mint External Custom Asset', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;

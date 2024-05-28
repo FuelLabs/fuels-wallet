@@ -15,6 +15,7 @@ const config: PlaywrightTestConfig = defineConfig({
     command: `pnpm dev:e2e-contracts --port ${process.env.PORT}`,
     port: Number(process.env.PORT),
     reuseExistingServer: true,
+    timeout: 20000,
   },
   use: {
     baseURL: `http://localhost:${process.env.PORT}`,
