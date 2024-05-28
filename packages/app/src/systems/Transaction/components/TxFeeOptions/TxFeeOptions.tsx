@@ -11,6 +11,7 @@ type TxFeeOptionsProps = {
   baseFee: BN;
   regularTip: BN;
   fastTip: BN;
+  error: string | null;
 };
 
 const DECIMAL_UNITS = DEFAULT_DECIMAL_UNITS;
@@ -19,6 +20,7 @@ export const TxFeeOptions = ({
   baseFee,
   regularTip,
   fastTip,
+  error,
 }: TxFeeOptionsProps) => {
   const [isAdvanced, setIsAdvanced] = useState(false);
   const { control, setValue, trigger } = useFormContext<SendFormValues>();
@@ -105,8 +107,8 @@ export const TxFeeOptions = ({
             </VStack>
             <VStack gap="$1">
               <Text fontSize="xs">Gas limit</Text>
-              <Form.Control isRequired isInvalid={Boolean(gasLimitState.error)}>
-                <Input>
+              <Form.Control isInvalid={Boolean(gasLimitState.error || error)}>
+                <Input isInvalid={Boolean(gasLimitState.error || error)}>
                   <Input.Field
                     ref={gasLimit.ref}
                     value={gasLimitFormatted}
@@ -119,9 +121,9 @@ export const TxFeeOptions = ({
                     }}
                   />
                 </Input>
-                {gasLimitState.error && (
+                {(error || gasLimitState.error) && (
                   <Form.ErrorMessage aria-label="Error message">
-                    {gasLimitState.error.message}
+                    {error || gasLimitState.error?.message}
                   </Form.ErrorMessage>
                 )}
               </Form.Control>
