@@ -532,7 +532,7 @@ const _abi = {
   ],
   "loggedTypes": [
     {
-      "logId": 0,
+      "logId": "4237256875605624201",
       "loggedType": {
         "name": "",
         "type": 2,
@@ -540,23 +540,7 @@ const _abi = {
       }
     },
     {
-      "logId": 1,
-      "loggedType": {
-        "name": "",
-        "type": 1,
-        "typeArguments": null
-      }
-    },
-    {
-      "logId": 2,
-      "loggedType": {
-        "name": "",
-        "type": 2,
-        "typeArguments": []
-      }
-    },
-    {
-      "logId": 3,
+      "logId": "8961848586872524460",
       "loggedType": {
         "name": "",
         "type": 1,
@@ -575,31 +559,33 @@ const _storageSlots: StorageSlot[] = [
   }
 ];
 
-export const CustomAssetAbi__factory = {
-  abi: _abi,
+export class CustomAssetAbi__factory {
+  static readonly abi = _abi;
 
-  storageSlots: _storageSlots,
+  static readonly storageSlots = _storageSlots;
 
-  createInterface(): CustomAssetAbiInterface {
+  static createInterface(): CustomAssetAbiInterface {
     return new Interface(_abi) as unknown as CustomAssetAbiInterface
-  },
+  }
 
-  connect(
+  static connect(
     id: string | AbstractAddress,
     accountOrProvider: Account | Provider
   ): CustomAssetAbi {
     return new Contract(id, _abi, accountOrProvider) as unknown as CustomAssetAbi
-  },
+  }
 
-  async deployContract(
+  static async deployContract(
     bytecode: BytesLike,
     wallet: Account,
     options: DeployContractOptions = {}
   ): Promise<CustomAssetAbi> {
     const factory = new ContractFactory(bytecode, _abi, wallet);
 
+    const { storageSlots } = CustomAssetAbi__factory;
+
     const contract = await factory.deployContract({
-      storageSlots: _storageSlots,
+      storageSlots,
       ...options,
     });
 
