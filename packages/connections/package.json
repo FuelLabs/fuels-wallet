@@ -39,7 +39,7 @@
     "@fuels/connectors": "0.4.0",
     "@types/uuid": "^9.0.5",
     "blob-polyfill": "^7.0.20220408",
-    "fuels": "0.88.1",
+    "fuels": "0.0.0-pr-2407-20240528164024",
     "jest-environment-jsdom": "29.6.2",
     "tsup": "^7.2.0",
     "undici": "^6.4.0",
