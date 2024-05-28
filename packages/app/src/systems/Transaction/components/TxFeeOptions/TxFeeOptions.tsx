@@ -4,6 +4,7 @@ import { type BN, DEFAULT_DECIMAL_UNITS, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { MotionFlex, MotionStack, animations } from '~/systems/Core';
+import { createAmount } from '~/systems/Core/components/InputAmount/InputAmount';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxFee } from '../TxFee';
 
@@ -23,7 +24,7 @@ export const TxFeeOptions = ({
   error,
 }: TxFeeOptionsProps) => {
   const [isAdvanced, setIsAdvanced] = useState(false);
-  const { control, setValue, trigger } = useFormContext<SendFormValues>();
+  const { control, setValue } = useFormContext<SendFormValues>();
   const previousDefaultTip = useRef<BN>(regularTip);
 
   const { field: tip } = useController({
@@ -42,21 +43,6 @@ export const TxFeeOptions = ({
       { name: 'Fast', fee: baseFee.add(fastTip), tip: fastTip },
     ];
   }, [baseFee, regularTip, fastTip]);
-
-  const tipFormatted = useMemo<string>(() => {
-    if (tip.value.isZero()) return '';
-
-    return tip.value.format({
-      units: DECIMAL_UNITS,
-      minPrecision: 0,
-    });
-  }, [tip.value]);
-
-  const gasLimitFormatted = useMemo<string>(() => {
-    if (gasLimit.value.isZero()) return '';
-
-    return gasLimit.value.toString();
-  }, [gasLimit.value]);
 
   const toggle = () => {
     setIsAdvanced((curr) => !curr);
@@ -86,7 +72,6 @@ export const TxFeeOptions = ({
               <Text fontSize="xs">Tip</Text>
               <Input>
                 <Input.Number
-                  value={tipFormatted}
                   inputMode="decimal"
                   autoComplete="off"
                   allowedDecimalSeparators={['.', ',']}
@@ -97,10 +82,8 @@ export const TxFeeOptions = ({
                   onChange={(e) => {
                     const text = e.target.value;
                     const val = text.replaceAll(',', '');
-                    const units = bn.parseUnits(val, DECIMAL_UNITS);
-
-                    tip.onChange(units);
-                    trigger('amount');
+                    const amount = bn.parseUnits(val, DECIMAL_UNITS);
+                    tip.onChange(amount);
                   }}
                 />
               </Input>
@@ -111,7 +94,6 @@ export const TxFeeOptions = ({
                 <Input isInvalid={Boolean(gasLimitState.error || error)}>
                   <Input.Field
                     ref={gasLimit.ref}
-                    value={gasLimitFormatted}
                     type="number"
                     placeholder="0"
                     onChange={(e) => {
@@ -145,7 +127,6 @@ export const TxFeeOptions = ({
                 onChecked={() => {
                   previousDefaultTip.current = option.tip;
                   setValue('fees.tip', option.tip);
-                  trigger('amount');
                 }}
               />
             ))}

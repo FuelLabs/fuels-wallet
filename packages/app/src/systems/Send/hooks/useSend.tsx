@@ -141,7 +141,7 @@ const schema = yup
               }
 
               return ctx.createError({
-                message: `Gas limit must be less or equal to ${maxGasPerTx.toString()}`,
+                message: `Gas limit '${value?.toString()}' is greater than the allowed: '${maxGasPerTx.toString()}'.`,
               });
             },
           })
