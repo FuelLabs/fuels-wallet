@@ -172,7 +172,10 @@ export class TxService {
       const transaction = transactionRequest.toTransaction();
       const transactionBytes = transactionRequest.toTransactionBytes();
 
-      const simulateTxErrors = getGroupedErrors(e.response?.errors);
+      const errorsToParse =
+        e.name === 'FuelError' ? [{ message: e.message }] : e.response?.errors;
+      const simulateTxErrors = getGroupedErrors(errorsToParse);
+
       const gasPrice = await provider.getLatestGasPrice();
       const txSummary = assembleTransactionSummary({
         receipts: [],
