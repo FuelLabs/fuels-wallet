@@ -115,6 +115,10 @@ export class VaultService extends VaultServer {
     };
     chrome.runtime.onMessage.addListener(handleRestartEvent);
     this.communicationProtocol.on(MessageTypes.request, handleRequest);
+    // Broadcast the lock event
+    this.on('lock', () => {
+      this.emitLockEvent();
+    });
   }
 
   emitLockEvent() {
