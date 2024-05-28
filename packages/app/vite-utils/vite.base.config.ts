@@ -45,6 +45,9 @@ const baseConfig: UserConfig = {
   server: {
     port: Number(process.env.PORT),
     strictPort: true,
+    watch: {
+      ignored: ['**/playwright-html/**'], // Ignore changes in any 'playwright' folder
+    },
   },
   optimizeDeps: {
     esbuildOptions: {

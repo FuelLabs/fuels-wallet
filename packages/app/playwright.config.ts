@@ -18,6 +18,7 @@ export default defineConfig({
     command: 'pnpm dev:crx',
     port: Number(PORT),
     reuseExistingServer: true,
+    timeout: 20000,
   },
   use: {
     baseURL: `http://localhost:${PORT}/`,
