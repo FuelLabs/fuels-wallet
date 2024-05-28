@@ -43,7 +43,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
             <Box.Flex css={styles.header}>
               {title && (
                 <Text as="h3" css={styles.title}>
-                  {title}
+                  {title}ss
                 </Text>
               )}
               {hasError && (
@@ -101,7 +101,9 @@ const AssetsAmountItem = ({ assetAmount }: AssetsAmountItemProps) => {
         ) : (
           <Avatar.Generated hash={assetId} size="xsm" />
         )}
-        <Text as="span">{name || 'Unknown'}</Text>
+        <Text as="span" aria-label="Asset Name">
+          {name || 'Unknown'}
+        </Text>
       </Box.Flex>
       <Copyable value={assetId} css={styles.address}>
         <Text fontSize="xs" css={{ mt: '$1' }}>
