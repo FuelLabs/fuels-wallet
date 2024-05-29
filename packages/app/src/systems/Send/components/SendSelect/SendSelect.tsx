@@ -64,9 +64,7 @@ export function SendSelect({
       const maxFee = baseFee.add(tip).add(2);
       if (maxFee.gt(balanceAssetSelected)) return;
 
-      form.setValue('amount', balanceAssetSelected.sub(maxFee), {
-        shouldValidate: true,
-      });
+      form.setValue('amount', balanceAssetSelected.sub(maxFee));
     }
   }, [watchMax, balanceAssetSelected, baseFee, tip, form.setValue]);
 

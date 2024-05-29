@@ -250,8 +250,7 @@ export function useSend() {
 
   const form = useForm<SendFormValues>({
     resolver: yupResolver(schema),
-    reValidateMode: 'onChange',
-    mode: 'onChange',
+    mode: 'onSubmit',
     defaultValues: DEFAULT_VALUES,
     context: {
       accountBalanceAssets,
@@ -266,21 +265,6 @@ export function useSend() {
     name: 'fees.tip.amount',
   });
 
-  const gasLimit = useWatch({
-    control: form.control,
-    name: 'fees.gasLimit.amount',
-  });
-
-  const { isValid } = form.formState;
-
-  const amount = useWatch({
-    control: form.control,
-    name: 'amount',
-  });
-  const address = useWatch({
-    control: form.control,
-    name: 'address',
-  });
   const assetIdSelected = useWatch({
     control: form.control,
     name: 'asset',
@@ -328,18 +312,30 @@ export function useSend() {
   }
 
   useEffect(() => {
-    if (isValid && address && assetIdSelected) {
-      const input: TxInputs['createTransfer'] = {
-        to: address,
-        assetId: assetIdSelected,
-        amount,
-        tip,
-        gasLimit,
-      };
+    const { unsubscribe } = form.watch((values) => {
+      if (!values.address || !values.asset || !values.amount) {
+        return;
+      }
 
-      service.send('SET_INPUT', { input });
-    }
-  }, [isValid, service.send, address, assetIdSelected, amount, tip, gasLimit]);
+      form.trigger('amount');
+
+      form.handleSubmit((data) => {
+        const { address, asset, amount, fees } = data;
+
+        const input: TxInputs['createTransfer'] = {
+          to: address,
+          assetId: asset,
+          amount,
+          tip: fees.tip.amount,
+          gasLimit: fees.gasLimit.amount,
+        };
+
+        service.send('SET_INPUT', { input });
+      })();
+    });
+
+    return () => unsubscribe();
+  }, [form.watch, form.trigger, form.handleSubmit, service.send]);
 
   return {
     form,

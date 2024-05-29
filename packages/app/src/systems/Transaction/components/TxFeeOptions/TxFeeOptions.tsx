@@ -23,8 +23,7 @@ export const TxFeeOptions = ({
   fastTip,
 }: TxFeeOptionsProps) => {
   const [isAdvanced, setIsAdvanced] = useState(false);
-  const { control, trigger, setValue, getValues } =
-    useFormContext<SendFormValues>();
+  const { control, setValue, getValues } = useFormContext<SendFormValues>();
   const previousMinGasLimit = useRef<BN>(minGasLimit);
   const previousDefaultTip = useRef<BN>(regularTip);
 
@@ -58,28 +57,19 @@ export const TxFeeOptions = ({
         'fees.tip.amount',
         'fees.gasLimit.amount',
       ]);
-      if (!currentTip.eq(previousDefaultTip.current)) {
-        setValue(
-          'fees.tip',
-          {
-            amount: previousDefaultTip.current,
-            text: formatTip(previousDefaultTip.current),
-          },
-          {
-            shouldValidate: true,
-          }
-        );
-      }
 
       if (!currentGasLimit.eq(previousMinGasLimit.current)) {
-        setValue(
-          'fees.gasLimit',
-          {
-            amount: previousMinGasLimit.current,
-            text: previousMinGasLimit.current.toString(),
-          },
-          { shouldValidate: true }
-        );
+        setValue('fees.gasLimit', {
+          amount: previousMinGasLimit.current,
+          text: previousMinGasLimit.current.toString(),
+        });
+      }
+
+      if (!currentTip.eq(previousDefaultTip.current)) {
+        setValue('fees.tip', {
+          amount: previousDefaultTip.current,
+          text: formatTip(previousDefaultTip.current),
+        });
       }
     }
   }, [isAdvanced, setValue, getValues]);
@@ -119,7 +109,6 @@ export const TxFeeOptions = ({
                           amount: bn(val),
                           text: val,
                         });
-                        trigger('fees.gasLimit');
                       }}
                     />
                   </Input>
@@ -150,7 +139,6 @@ export const TxFeeOptions = ({
                           amount,
                           text: newText,
                         });
-                        trigger('amount');
                       }}
                     />
                   </Input>
