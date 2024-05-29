@@ -312,12 +312,11 @@ export function useSend() {
   }
 
   useEffect(() => {
-    const { unsubscribe } = form.watch((values) => {
-      if (!values.address || !values.asset || !values.amount) {
+    const { unsubscribe } = form.watch(() => {
+      const { address, asset, amount } = form.getValues();
+      if (!address || !asset || amount.eq(0)) {
         return;
       }
-
-      form.trigger('amount');
 
       form.handleSubmit((data) => {
         const { address, asset, amount, fees } = data;
@@ -331,11 +330,18 @@ export function useSend() {
         };
 
         service.send('SET_INPUT', { input });
+        form.trigger('amount');
       })();
     });
 
     return () => unsubscribe();
-  }, [form.watch, form.trigger, form.handleSubmit, service.send]);
+  }, [
+    form.watch,
+    form.getValues,
+    form.trigger,
+    form.handleSubmit,
+    service.send,
+  ]);
 
   return {
     form,
