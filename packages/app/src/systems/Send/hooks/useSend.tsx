@@ -42,6 +42,10 @@ const selectors = {
     return state.matches('readyToSend');
   },
   error(state: SendMachineState) {
+    if (state.context.error?.includes('Gas limit')) {
+      return '';
+    }
+
     return state.context.error;
   },
   status(txStatus?: TxRequestStatus) {
@@ -68,6 +72,7 @@ type BalanceAsset = {
 type SchemaOptions = {
   accountBalanceAssets: BalanceAsset[];
   baseFee: BN | undefined;
+  minGasLimit: BN | undefined;
   maxGasLimit: BN | undefined;
 };
 
@@ -140,6 +145,21 @@ const schema = yup
               }
             )
             .test({
+              name: 'min',
+              test: (value, ctx) => {
+                const { minGasLimit } = ctx.options.context as SchemaOptions;
+
+                if (!minGasLimit || value?.gte(minGasLimit)) {
+                  return true;
+                }
+
+                return ctx.createError({
+                  path: 'fees.gasLimit',
+                  message: `Gas limit '${value?.toString()}' is lower than the required: '${minGasLimit.toString()}'.`,
+                });
+              },
+            })
+            .test({
               name: 'max',
               test: (value, ctx) => {
                 const { maxGasLimit } = ctx.options.context as SchemaOptions;
@@ -150,6 +170,7 @@ const schema = yup
                 }
 
                 return ctx.createError({
+                  path: 'fees.gasLimit',
                   message: `Gas limit '${value?.toString()}' is greater than the allowed: '${maxGasLimit.toString()}'.`,
                 });
               },
@@ -235,6 +256,7 @@ export function useSend() {
     context: {
       accountBalanceAssets,
       baseFee,
+      minGasLimit,
       maxGasLimit,
     },
   });

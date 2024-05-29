@@ -51,28 +51,6 @@ export function SendSelect({
     return selectedAsset?.decimals || DECIMAL_FUEL;
   }, [assetId, balanceAssets]);
 
-  const errorMsg = useMemo(() => {
-    if (!errorMessage) {
-      return {
-        amount: null,
-        gasLimit: null,
-      };
-    }
-
-    const raw = errorMessage.toLowerCase();
-    if (raw.includes('gas limit')) {
-      return {
-        amount: null,
-        gasLimit: errorMessage,
-      };
-    }
-
-    return {
-      amount: errorMessage,
-      gasLimit: null,
-    };
-  }, [errorMessage]);
-
   useEffect(() => {
     if (
       watchMax &&
@@ -142,7 +120,7 @@ export function SendSelect({
           </Text>
           <Form.Control
             isRequired
-            isInvalid={Boolean(errorMsg?.amount || amountFieldState.error)}
+            isInvalid={Boolean(errorMessage || amountFieldState.error)}
           >
             <InputAmount
               name={amount.name}
@@ -168,9 +146,9 @@ export function SendSelect({
                 },
               }}
             />
-            {(errorMsg?.amount || amountFieldState.error) && (
+            {(errorMessage || amountFieldState.error) && (
               <Form.ErrorMessage aria-label="Error message">
-                {errorMsg?.amount || amountFieldState.error?.message}
+                {errorMessage || amountFieldState.error?.message}
               </Form.ErrorMessage>
             )}
           </Form.Control>
@@ -190,7 +168,6 @@ export function SendSelect({
                 minGasLimit={minGasLimit}
                 regularTip={regularTip}
                 fastTip={fastTip}
-                error={errorMsg.gasLimit}
               />
             </MotionStack>
           )}

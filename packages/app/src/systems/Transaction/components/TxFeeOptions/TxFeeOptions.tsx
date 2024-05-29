@@ -14,7 +14,6 @@ type TxFeeOptionsProps = {
   minGasLimit: BN;
   regularTip: BN;
   fastTip: BN;
-  error: string | null;
 };
 
 export const TxFeeOptions = ({
@@ -22,10 +21,10 @@ export const TxFeeOptions = ({
   minGasLimit,
   regularTip,
   fastTip,
-  error,
 }: TxFeeOptionsProps) => {
   const [isAdvanced, setIsAdvanced] = useState(false);
-  const { control, setValue, getValues } = useFormContext<SendFormValues>();
+  const { control, trigger, setValue, getValues } =
+    useFormContext<SendFormValues>();
   const previousMinGasLimit = useRef<BN>(minGasLimit);
   const previousDefaultTip = useRef<BN>(regularTip);
 
@@ -60,17 +59,27 @@ export const TxFeeOptions = ({
         'fees.gasLimit.amount',
       ]);
       if (!currentTip.eq(previousDefaultTip.current)) {
-        setValue('fees.tip', {
-          amount: previousDefaultTip.current,
-          text: formatTip(previousDefaultTip.current),
-        });
+        setValue(
+          'fees.tip',
+          {
+            amount: previousDefaultTip.current,
+            text: formatTip(previousDefaultTip.current),
+          },
+          {
+            shouldValidate: true,
+          }
+        );
       }
 
       if (!currentGasLimit.eq(previousMinGasLimit.current)) {
-        setValue('fees.gasLimit', {
-          amount: previousMinGasLimit.current,
-          text: previousMinGasLimit.current.toString(),
-        });
+        setValue(
+          'fees.gasLimit',
+          {
+            amount: previousMinGasLimit.current,
+            text: previousMinGasLimit.current.toString(),
+          },
+          { shouldValidate: true }
+        );
       }
     }
   }, [isAdvanced, setValue, getValues]);
@@ -89,8 +98,8 @@ export const TxFeeOptions = ({
             <HStack gap="$3">
               <VStack gap="$1">
                 <Text fontSize="xs">Gas limit</Text>
-                <Form.Control isInvalid={Boolean(gasLimitState.error || error)}>
-                  <Input isInvalid={Boolean(gasLimitState.error || error)}>
+                <Form.Control isInvalid={Boolean(gasLimitState.error)}>
+                  <Input isInvalid={Boolean(gasLimitState.error)}>
                     <Input.Number
                       value={gasLimit.value.text}
                       inputMode="numeric"
@@ -110,6 +119,7 @@ export const TxFeeOptions = ({
                           amount: bn(val),
                           text: val,
                         });
+                        trigger('fees.gasLimit');
                       }}
                     />
                   </Input>
@@ -140,19 +150,20 @@ export const TxFeeOptions = ({
                           amount,
                           text: newText,
                         });
+                        trigger('amount');
                       }}
                     />
                   </Input>
                 </Form.Control>
               </VStack>
             </HStack>
-            <Form.Control isInvalid={Boolean(gasLimitState.error || error)}>
-              {(error || gasLimitState.error) && (
+            <Form.Control isInvalid={Boolean(gasLimitState.error)}>
+              {gasLimitState.error && (
                 <Form.ErrorMessage
                   aria-label="Error message"
                   css={{ padding: 0 }}
                 >
-                  {error || gasLimitState.error?.message}
+                  {gasLimitState.error?.message}
                 </Form.ErrorMessage>
               )}
             </Form.Control>
