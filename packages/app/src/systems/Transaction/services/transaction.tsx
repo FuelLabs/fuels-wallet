@@ -282,7 +282,9 @@ export class TxService {
           resourcesOwner: wallet,
         });
 
-        const baseFee = txCost.maxFee.sub(transactionRequest.tip ?? bn(0));
+        const baseFee = transactionRequest.maxFee.sub(
+          transactionRequest.tip ?? bn(0)
+        );
 
         return {
           baseFee: baseFee.sub(1), // To match maxFee calculated on TS SDK (they add 1 unit)
