@@ -4,8 +4,8 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.88.1
-  Forc version: 0.59.0
+  Fuels version: 0.89.0
+  Forc version: 0.60.0
   Fuel-Core version: 0.26.0
 */
 
@@ -532,7 +532,7 @@ const _abi = {
   ],
   "loggedTypes": [
     {
-      "logId": "4237256875605624201",
+      "logId": 0,
       "loggedType": {
         "name": "",
         "type": 2,
@@ -540,7 +540,23 @@ const _abi = {
       }
     },
     {
-      "logId": "8961848586872524460",
+      "logId": 1,
+      "loggedType": {
+        "name": "",
+        "type": 1,
+        "typeArguments": null
+      }
+    },
+    {
+      "logId": 2,
+      "loggedType": {
+        "name": "",
+        "type": 2,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": 3,
       "loggedType": {
         "name": "",
         "type": 1,
@@ -559,33 +575,31 @@ const _storageSlots: StorageSlot[] = [
   }
 ];
 
-export class CustomAssetAbi__factory {
-  static readonly abi = _abi;
+export const CustomAssetAbi__factory = {
+  abi: _abi,
 
-  static readonly storageSlots = _storageSlots;
+  storageSlots: _storageSlots,
 
-  static createInterface(): CustomAssetAbiInterface {
+  createInterface(): CustomAssetAbiInterface {
     return new Interface(_abi) as unknown as CustomAssetAbiInterface
-  }
+  },
 
-  static connect(
+  connect(
     id: string | AbstractAddress,
     accountOrProvider: Account | Provider
   ): CustomAssetAbi {
     return new Contract(id, _abi, accountOrProvider) as unknown as CustomAssetAbi
-  }
+  },
 
-  static async deployContract(
+  async deployContract(
     bytecode: BytesLike,
     wallet: Account,
     options: DeployContractOptions = {}
   ): Promise<CustomAssetAbi> {
     const factory = new ContractFactory(bytecode, _abi, wallet);
 
-    const { storageSlots } = CustomAssetAbi__factory;
-
     const contract = await factory.deployContract({
-      storageSlots,
+      storageSlots: _storageSlots,
       ...options,
     });
 
