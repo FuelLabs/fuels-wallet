@@ -84,7 +84,11 @@ export const TxFeeOptions = ({
             gap="$2"
             layout
           >
-            <TxFee title="Fee + Tip" fee={baseFee.add(tip.value.amount)} />
+            <TxFee
+              title="Fee + Tip"
+              fee={baseFee.add(tip.value.amount)}
+              checked
+            />
             <HStack gap="$3">
               <VStack gap="$1">
                 <Text fontSize="xs">Gas limit</Text>
