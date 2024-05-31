@@ -102,7 +102,6 @@ export class VaultService extends VaultServer {
 
     const handleRestartEvent = async (message: DatabaseRestartEvent) => {
       const { type: eventType, payload } = message ?? {};
-      const integrity = await this.checkVaultIntegrity();
       const connected = await db
         .open()
         .then((db) => db.isOpen())
@@ -111,6 +110,8 @@ export class VaultService extends VaultServer {
       if (!connected) {
         return this.reload();
       }
+
+      const integrity = await this.checkVaultIntegrity();
 
       if (eventType === 'DB_EVENT' && payload.event === 'restarted') {
         if (!integrity) {
