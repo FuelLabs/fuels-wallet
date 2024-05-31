@@ -117,7 +117,6 @@ export class VaultService extends VaultServer {
           chrome.storage.local.set({ shouldRecoverWelcomeFromError: true });
           return this.resetAndReload();
         }
-        console.log('fsk here');
       }
     };
     chrome.runtime.onMessage.addListener(handleRestartEvent);
