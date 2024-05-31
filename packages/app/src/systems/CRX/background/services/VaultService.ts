@@ -30,12 +30,11 @@ export class VaultService extends VaultServer {
   }
 
   async checkVaultIntegrity() {
-    // Ensure integrity of database connection
-    const dbLoadedCorrectly = (await db.open().catch(() => false)) && true;
-    const secret = await loadSecret().catch(() => null);
-    const isLocked = await super.isLocked().catch(() => true);
+    // Ensure integrity of database
+    const vaultsCount = await db.table('vaults').count();
+    const accsCount = await db.table('accounts').count();
 
-    return dbLoadedCorrectly && (!isLocked || !!(secret && isLocked));
+    return !!(vaultsCount && accsCount);
   }
 
   async unlock({ password }: { password: string }): Promise<void> {
@@ -104,13 +103,20 @@ export class VaultService extends VaultServer {
     const handleRestartEvent = async (message: DatabaseRestartEvent) => {
       const { type: eventType, payload } = message ?? {};
       const integrity = await this.checkVaultIntegrity();
+      const connected = await db
+        .open()
+        .then((db) => db.isOpen())
+        .catch(() => false);
 
-      if (
-        eventType === 'DB_EVENT' &&
-        payload.event === 'restarted' &&
-        !integrity
-      ) {
-        this.resetAndReload();
+      if (!connected) {
+        return this.reload();
+      }
+
+      if (eventType === 'DB_EVENT' && payload.event === 'restarted') {
+        if (!integrity) {
+          return this.resetAndReload();
+        }
+        console.log('fsk here');
       }
     };
     chrome.runtime.onMessage.addListener(handleRestartEvent);
