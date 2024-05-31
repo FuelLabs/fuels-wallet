@@ -114,6 +114,7 @@ export class VaultService extends VaultServer {
 
       if (eventType === 'DB_EVENT' && payload.event === 'restarted') {
         if (!integrity) {
+          chrome.storage.local.set({ shouldRecoverWelcomeFromError: true });
           return this.resetAndReload();
         }
         console.log('fsk here');
