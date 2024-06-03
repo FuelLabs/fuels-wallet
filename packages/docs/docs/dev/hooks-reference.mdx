@@ -143,7 +143,7 @@ const { provider } = useProvider();
 Retrieves transaction information associated with a specific transaction ID by using the `provider.getTransaction` method.
 
 ```tsx
-const { transaction } = useTransaction({ txId: 'fuel1r20zhd...' });
+const { transaction } = useTransaction({ txId: '0xd7ad97...' });
 ```
 
 [See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useTransaction.ts)
@@ -154,15 +154,59 @@ Retrieves transaction receipts `<Array<TransactionResultReceipt>>` associated wi
 
 ```tsx
 const { transactionReceipts } = useTransactionReceipts({
-  txId: 'fuel1r20zhd...',
+  txId: '0xd7ad97...',
 });
 ```
 
 [See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useTransactionReceipts.ts)
 
+## `useTransactionResult`
+
+Retrieves a transaction result associated with a specific transaction ID.  
+This is accomplished internally using the `provider.getTransactionResponse` method along with the `TransactionResponse.waitForResult` method.
+
+##### Basic Usage
+
+```tsx
+const { transactionResult } = useTransactionResult({ txId: '0xd7ad97...' });
+```
+
+##### Custom Name
+
+Customize the `data` attribute of the most recently resolved data.
+
+```tsx
+const { anything } = useTransactionResult({ 
+  txId: '0xd7ad97...',
+  query: {
+    name: 'anything',
+  },
+});
+```
+
+##### Custom Selector
+
+Transform or select a specific part of the data returned by the query function.  
+This modification affects the returned data value but does not impact the data stored in the query cache.
+
+```tsx
+const { receipts } = useTransactionResult({ 
+  txId: '0xd7ad97...',
+  query: {
+    // you can omit custom "name" if you don't need it
+    name: 'receipts',
+    // ((data: TransactionResult<TransactionType> | null) => T) | undefined
+    select: (data) => data?.receipts,
+  },
+});
+```
+
+
+[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useTransactionResult.ts)
+
 ## `useWallet`
 
-Retrieves wallet instance `<Account | null | undefined>` and ensures the presence of a valid address and fuel instance.
+Retrieves wallet instance `<Account | null>` and ensures the presence of a valid address and fuel instance.
 
 ```tsx
 const { wallet } = useWallet({ address: 'fuel1r20zhd...' });
