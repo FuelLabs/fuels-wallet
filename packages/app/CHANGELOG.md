@@ -1,5 +1,14 @@
 # fuels-wallet
 
+## 0.21.1
+
+### Patch Changes
+
+- [#1340](https://github.com/FuelLabs/fuels-wallet/pull/1340) [`7c2ad248`](https://github.com/FuelLabs/fuels-wallet/commit/7c2ad248cf65060710e1b540b73f5f6c1cdb5c05) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Fix balances not showing for some accounts that have many assets in balance
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.21.1
+
 ## 0.21.0
 
 ### Minor Changes
