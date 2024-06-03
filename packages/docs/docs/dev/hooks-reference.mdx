@@ -12,7 +12,7 @@ Reads and calls a method from a Fuel contract, returns `<InvokeFunctions>`.
 
 ### Reading with a Contract instance
 ```tsx
-const { contract } = useContractRead({
+const { contractRead } = useContractRead({
   contract: _contract,
   functionName: 'get_count',
   args: undefined,
@@ -21,10 +21,8 @@ const { contract } = useContractRead({
 
 ### Reading with ABI + ContractId + Provider
 ```tsx
-const { contract } = useContractRead({
-  address,   
-  abi: counterAbi,
-  provider: fuelProvider,
+const { contractRead } = useContractRead({
+  contract: { address, abi: countAbi, provider },
   functionName: 'get_count',
   args: undefined,
 });
