@@ -1,4 +1,5 @@
 import {
+  HStack,
   ThemeProvider,
   createTheme,
   loadIcons,
@@ -59,6 +60,7 @@ const components = {
   Examples,
   Demo,
   DownloadWalletZip,
+  HStack,
 };
 
 type ProviderProps = {
