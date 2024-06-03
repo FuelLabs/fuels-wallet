@@ -43,7 +43,7 @@ export const AssetsAmount: AssetsAmountComponent = ({
             <Box.Flex css={styles.header}>
               {title && (
                 <Text as="h3" css={styles.title}>
-                  {title}ss
+                  {title}
                 </Text>
               )}
               {hasError && (
