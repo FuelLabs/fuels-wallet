@@ -99,3 +99,6 @@ assetId
 contractId
 boolean
 tanstack
+BadgeDeprecated
+tooltip
+useTransactionResult
