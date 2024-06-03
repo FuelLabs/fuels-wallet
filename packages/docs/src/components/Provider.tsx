@@ -45,6 +45,7 @@ const components = {
   pre: Pre,
   p: Paragraph,
   code: Code,
+  Code,
   blockquote: Blockquote,
   table: Table,
   td: TD,
