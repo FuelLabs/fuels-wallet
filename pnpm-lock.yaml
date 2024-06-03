@@ -483,8 +483,8 @@ importers:
         specifier: 0.4.0
         version: 0.4.0(@types/react@18.3.1)(@wagmi/connectors@4.3.7)(fuels@0.0.0-pr-2407-20240528164024)(react-dom@18.3.1)(react@18.3.1)(typescript@5.2.2)
       '@fuels/react':
-        specifier: 0.20.0
-        version: 0.20.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.3.0)(@types/react@18.3.1)(fuels@0.0.0-pr-2407-20240528164024)(react-dom@18.3.1)(react@18.3.1)
+        specifier: 0.21.0-main-30f37c8
+        version: 0.21.0-main-30f37c8(@tanstack/react-query@5.28.4)(@types/react-dom@18.3.0)(@types/react@18.3.1)(fuels@0.0.0-pr-2407-20240528164024)(react-dom@18.3.1)(react@18.3.1)
       '@mdx-js/react':
         specifier: ^2.3.0
         version: 2.3.0(react@18.3.1)
@@ -7689,8 +7689,8 @@ packages:
       - react-dom
     dev: false
 
-  /@fuels/react@0.20.0(@tanstack/react-query@5.28.4)(@types/react-dom@18.3.0)(@types/react@18.3.1)(fuels@0.0.0-pr-2407-20240528164024)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-oAjHUegWY6qiOQA2xMN1qz9HmNfhccL2dZdaD/fGe6LEqzCwmtJE5z5MLy6IussB+u9AaOulJouqv9bgcbY6/A==}
+  /@fuels/react@0.21.0-main-30f37c8(@tanstack/react-query@5.28.4)(@types/react-dom@18.3.0)(@types/react@18.3.1)(fuels@0.0.0-pr-2407-20240528164024)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-N3v7TRt25lM2neft4BIkEjXFCWgWAt/XuAXj5KI5gIJu0HLsZwheB2QCmuyvUiZ4tn642NGXBRrTaF5rJ/5z8A==}
     peerDependencies:
       '@tanstack/react-query': '>=5.0.0'
       fuels: '>=0.86.0'

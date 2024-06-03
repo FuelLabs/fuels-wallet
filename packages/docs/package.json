@@ -6,7 +6,8 @@
     "build:preview": "next build",
     "dev": "next dev -p 3030",
     "start": "npx --yes serve out/",
-    "lint": "next lint"
+    "lint": "next lint",
+    "ts:check": "tsc --noEmit"
   },
   "dependencies": {
     "@docsearch/css": "^3.5.2",
@@ -15,7 +16,7 @@
     "@fuel-ui/icons": "0.23.3",
     "@fuel-ui/react": "0.23.3",
     "@fuels/connectors": "0.4.0",
-    "@fuels/react": "0.20.0",
+    "@fuels/react": "0.21.0-main-30f37c8",
     "@mdx-js/react": "^2.3.0",
     "@next/mdx": "14.2.3",
     "@tanstack/react-query": "5.28.4",
