@@ -5,6 +5,46 @@ category: For Developers
 
 # React Hooks Reference
 
+## `useContractRead`
+
+Reads and calls a method from a Fuel contract, returns `<InvokeFunctions>`.
+
+
+### Reading with a Contract instance
+```tsx
+const { contract } = useContractRead({
+  contract: _contract,
+  functionName: 'get_count',
+  args: undefined,
+});
+```
+
+### Reading with ABI + ContractId + Provider
+```tsx
+const { contract } = useContractRead({
+  address,   
+  abi: counterAbi,
+  provider: fuelProvider,
+  functionName: 'get_count',
+  args: undefined,
+});
+```
+> See [here](/fuels-ts/cookbook/wallet-sdk-and-react-hooks/#the-provider) for more information on our Provider
+> Cick [here](https://github.com/FuelLabs/fuels-wallet/blob/b5766321dbc2a5e5f17f05e0cb9a9f697f137a23/packages/e2e-contract-tests/src/contracts/contracts/factories/CustomAssetAbi__factory.ts#L16) to see an example of an ABI for a Fuel contract
+
+[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useAccount.ts)
+
+## `useAccounts`
+
+Retrieves the fuel accounts and returns the addresses of the accounts `<string[]>`
+
+```tsx
+const { accounts } = useAccounts();
+console.log(accounts);
+// [fuel1r20zhd..., fuel1qqluc9..., ...]
+```
+
+[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useContractRead.ts)
 ## `useAccount`
 
 Retrieves the current fuel account and returns the account address `<string | null>`.
