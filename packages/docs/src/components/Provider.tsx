@@ -16,6 +16,7 @@ import type { ReactNode } from 'react';
 
 import * as Examples from '../../examples';
 
+import { BadgeDeprecated } from './BadgeDeprecated';
 import { Blockquote } from './Blockquote';
 import { Code } from './Code';
 import { CodeImport } from './CodeImport';
@@ -33,6 +34,7 @@ import { SDKSection } from './SDKSection';
 import { TD, TH, Table } from './Table';
 
 const components = {
+  BadgeDeprecated,
   a: Link,
   h1: Heading,
   h2: Heading,

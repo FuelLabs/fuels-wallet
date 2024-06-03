@@ -77,7 +77,7 @@ handleConnect();
 
 ## `useConnectors`
 
-Retrieves a list of available connectors `<Array<FuelConnector>>` for connecting to Fuel.
+Retrieves a list of available connectors `Array<FuelConnector>` for connecting to Fuel.
 
 ```tsx
 const { connectors } = useConnectors();
@@ -148,9 +148,9 @@ const { transaction } = useTransaction({ txId: '0xd7ad97...' });
 
 [See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useTransaction.ts)
 
-## `useTransactionReceipts`
+## `useTransactionReceipts` <BadgeDeprecated tooltip={<>This hook is deprecated and will be removed in a future release.<br />Please use <b>useTransactionResult</b> with the <b>select</b> function in the <b>query</b> parameter instead.</>} />
 
-Retrieves transaction receipts `<Array<TransactionResultReceipt>>` associated with a specific transaction ID using the `useFuel` hook.
+Retrieves transaction receipts `Array<TransactionResultReceipt>` associated with a specific transaction ID using the `useFuel` hook.
 
 ```tsx
 const { transactionReceipts } = useTransactionReceipts({
