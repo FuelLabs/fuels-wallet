@@ -1,5 +1,11 @@
 # @fuel-wallet/types
 
+## 0.21.0
+
+### Minor Changes
+
+- [#1328](https://github.com/FuelLabs/fuels-wallet/pull/1328) [`6e5330e2`](https://github.com/FuelLabs/fuels-wallet/commit/6e5330e2067cb5f8831d7c6c04fac1421f61d717) Thanks [@helciofranco](https://github.com/helciofranco)! - Rename network to `Fuel Sepolia Testnet`
+
 ## 0.20.0
 
 ### Minor Changes
