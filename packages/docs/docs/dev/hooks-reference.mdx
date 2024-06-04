@@ -92,7 +92,7 @@ console.log(connectors);
 Reads and calls a method from a Fuel contract, returns `<InvokeFunctions>`.
 
 
-### Reading with a Contract instance
+##### Reading with a Contract instance
 ```tsx
 const { contractRead } = useContractRead({
   contract: _contract,
@@ -101,7 +101,7 @@ const { contractRead } = useContractRead({
 });
 ```
 
-### Reading with ABI + ContractId + Provider
+##### Reading with ABI + ContractId + Provider
 ```tsx
 const { contractRead } = useContractRead({
   contract: { address, abi: countAbi, provider },
