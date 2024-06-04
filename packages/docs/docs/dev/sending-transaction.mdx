@@ -1,0 +1,26 @@
+---
+title: Sending a Transaction
+category: For Developers
+---
+
+# Sending a Transaction
+
+With access to the user account and the connection authorized, you can send a transaction using `sendTransaction()`.
+
+<CodeImport
+  file="../../examples/sendTransaction/SendTransaction.tsx"
+  commentBlock="sendTransaction"
+/>
+<Examples.SendTransaction />
+
+## With React
+
+In a React app, once the connection is established, you can use the `useSendTransaction()` to send a transaction.
+
+<CodeImport
+  file="../../examples/sendTransaction/hooks/SendTransactionHook.tsx"
+  commentBlock="sendTransaction"
+/>
+<Examples.SendTransactionHook />
+
+[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useSendTransaction.ts)
