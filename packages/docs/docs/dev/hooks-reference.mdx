@@ -140,7 +140,7 @@ const { provider } = useProvider();
 
 ## `useTransaction`
 
-Retrieves transaction information associated with a specific transaction ID by using the `provider.getTransaction` method.
+Retrieves transaction information associated with a specific transaction ID.
 
 ```tsx
 const { transaction } = useTransaction({ txId: '0xd7ad97...' });
@@ -163,7 +163,6 @@ const { transactionReceipts } = useTransactionReceipts({
 ## `useTransactionResult`
 
 Retrieves a transaction result associated with a specific transaction ID.  
-This is accomplished internally using the `provider.getTransactionResponse` method along with the `TransactionResponse.waitForResult` method.
 
 ##### Basic Usage
 
