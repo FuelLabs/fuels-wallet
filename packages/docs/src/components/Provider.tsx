@@ -8,6 +8,7 @@ import {
 import {
   FuelWalletConnector,
   FuelWalletDevelopmentConnector,
+  FueletWalletConnector,
 } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import { MDXProvider } from '@mdx-js/react';
@@ -98,6 +99,7 @@ export function Provider({ children }: ProviderProps) {
             connectors: [
               new FuelWalletConnector(),
               new FuelWalletDevelopmentConnector(),
+              new FueletWalletConnector(),
             ],
           }}
         >
