@@ -16,7 +16,7 @@
     "@fuel-ui/icons": "0.23.3",
     "@fuel-ui/react": "0.23.3",
     "@fuels/connectors": "0.4.0",
-    "@fuels/react": "0.21.0-main-30f37c8",
+    "@fuels/react": "0.21.0",
     "@mdx-js/react": "^2.3.0",
     "@next/mdx": "14.2.3",
     "@tanstack/react-query": "5.28.4",
