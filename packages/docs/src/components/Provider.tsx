@@ -1,4 +1,5 @@
 import {
+  HStack,
   ThemeProvider,
   createTheme,
   loadIcons,
@@ -7,6 +8,7 @@ import {
 import {
   FuelWalletConnector,
   FuelWalletDevelopmentConnector,
+  FueletWalletConnector,
 } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import { MDXProvider } from '@mdx-js/react';
@@ -16,6 +18,7 @@ import type { ReactNode } from 'react';
 
 import * as Examples from '../../examples';
 
+import { BadgeDeprecated } from './BadgeDeprecated';
 import { Blockquote } from './Blockquote';
 import { Code } from './Code';
 import { CodeImport } from './CodeImport';
@@ -33,6 +36,7 @@ import { SDKSection } from './SDKSection';
 import { TD, TH, Table } from './Table';
 
 const components = {
+  BadgeDeprecated,
   a: Link,
   h1: Heading,
   h2: Heading,
@@ -43,6 +47,7 @@ const components = {
   pre: Pre,
   p: Paragraph,
   code: Code,
+  Code,
   blockquote: Blockquote,
   table: Table,
   td: TD,
@@ -56,6 +61,7 @@ const components = {
   Examples,
   Demo,
   DownloadWalletZip,
+  HStack,
 };
 
 type ProviderProps = {
@@ -93,6 +99,7 @@ export function Provider({ children }: ProviderProps) {
             connectors: [
               new FuelWalletConnector(),
               new FuelWalletDevelopmentConnector(),
+              new FueletWalletConnector(),
             ],
           }}
         >
