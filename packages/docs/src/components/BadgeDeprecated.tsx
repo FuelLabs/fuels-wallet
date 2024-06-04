@@ -20,13 +20,13 @@ export function BadgeDeprecated({ tooltip }: BadgeDeprecatedProps) {
           columnGap: '$1',
         }}
       >
+        <span>Deprecated</span>
         <Icon
-          icon="HelpCircle"
+          icon="InfoCircle"
           className="main-icon"
           aria-label="Menu Icon"
-          size={14}
+          size={16}
         />
-        <span>Deprecated</span>
       </Badge>
     </Tooltip>
   );
