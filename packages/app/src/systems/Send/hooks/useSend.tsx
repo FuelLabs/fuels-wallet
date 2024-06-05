@@ -147,7 +147,7 @@ const schema = yup
 
                 const totalBlocked = baseFee.add(amount);
                 const totalAmount = totalBlocked.add(value);
-                if (totalAmount.lte(balance)) {
+                if (totalAmount.lte(balance) || value.isZero()) {
                   return true;
                 }
 
