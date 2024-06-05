@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BNInput } from 'fuels';
-import { bn, isBech32 } from 'fuels';
+import { DEFAULT_DECIMAL_UNITS, bn, isBech32 } from 'fuels';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -126,6 +126,33 @@ const schema = yup
             .mixed<BN>()
             .test('min', 'Tip must be greater than or equal to 0', (value) => {
               return value?.gte(0);
+            })
+            .test({
+              name: 'max',
+              test: (value, ctx) => {
+                const { asset, amount } = ctx.from?.[2].value as SendFormValues; // Two levels up
+                const { accountBalanceAssets, baseFee } = ctx.options
+                  .context as SchemaOptions;
+
+                const balanceAssetSelected = accountBalanceAssets?.find(
+                  ({ assetId }) => assetId === asset
+                );
+
+                // It means "baseFee" and/or "current balance" is being calculated
+                if (!balanceAssetSelected?.amount || !value || !baseFee) {
+                  return true;
+                }
+
+                const balance = bn(balanceAssetSelected.amount);
+
+                const totalBlocked = baseFee.add(amount);
+                const totalAmount = totalBlocked.add(value);
+                if (totalAmount.lte(balance)) {
+                  return true;
+                }
+
+                return totalAmount.lte(balance);
+              },
             })
             .required('Tip is required'),
           text: yup.string().required('Tip is required'),

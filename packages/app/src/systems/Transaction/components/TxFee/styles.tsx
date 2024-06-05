@@ -8,6 +8,7 @@ export const styles = {
       justifyContent: 'space-between',
       alignItems: 'center',
       display: 'flex',
+      columnGap: '$4',
       position: 'relative',
       cursor: pointer ? 'pointer' : 'auto',
 
@@ -25,8 +26,15 @@ export const styles = {
         },
       }),
     }),
-  text: cssObj({
+  title: cssObj({
     fontSize: '$sm',
     fontWeight: '$normal',
+    textWrap: 'nowrap',
+  }),
+  amount: cssObj({
+    fontSize: '$sm',
+    fontWeight: '$normal',
+    wordWrap: 'break-word',
+    minWidth: 0,
   }),
 };

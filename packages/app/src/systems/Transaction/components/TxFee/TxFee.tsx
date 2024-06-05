@@ -27,10 +27,10 @@ export const TxFee: TxFeeComponent = ({
       css={styles.detailItem(!!checked, !!onChecked)}
       onClick={() => onChecked?.(true)}
     >
-      <Text color="intentsBase11" css={styles.text}>
+      <Text color="intentsBase11" css={styles.title}>
         {title || 'Fee (network)'}
       </Text>
-      <Text color="intentsBase12" css={styles.text} aria-label="Fee Value">
+      <Text color="intentsBase12" css={styles.amount} aria-label="Fee Value">
         {fee ? `${fee.format()} ETH` : '--'}
       </Text>
     </Card>

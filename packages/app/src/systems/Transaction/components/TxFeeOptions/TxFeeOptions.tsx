@@ -149,13 +149,15 @@ export const TxFeeOptions = ({
                 </Form.Control>
               </VStack>
             </HStack>
-            <Form.Control isInvalid={Boolean(gasLimitState.error)}>
-              {gasLimitState.error && (
+            <Form.Control
+              isInvalid={Boolean(gasLimitState.error || tipState.error)}
+            >
+              {(gasLimitState.error || tipState.error) && (
                 <Form.ErrorMessage
                   aria-label="Error message"
                   css={{ padding: 0 }}
                 >
-                  {gasLimitState.error?.message}
+                  {gasLimitState.error?.message || tipState.error?.message}
                 </Form.ErrorMessage>
               )}
             </Form.Control>
