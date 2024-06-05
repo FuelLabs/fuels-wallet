@@ -58,7 +58,7 @@ console.log(chain.name);
 
 ## `useConnect`
 
-Facilitates the connection to the Fuel wallet. Allows selecting a connector by name. It also provides a function `<UseMutateAsyncFunction<boolean | undefined>>` to initiate the connection and relevant mutation properties for managing the connection state.
+Facilitates the connection to the Fuel wallet. Allows selecting a connector by name. It also provides a function `UseMutateAsyncFunction<boolean | undefined>` to initiate the connection and relevant mutation properties for managing the connection state.
 
 ```tsx
 const { connect, connectAsync } = useConnect();
@@ -89,7 +89,7 @@ console.log(connectors);
 
 ## `useDisconnect`
 
-Facilitates disconnection from the Fuel Wallet. It provides a function `<UseMutateAsyncFunction<boolean | undefined>>` to initiate disconnection.
+Facilitates disconnection from the Fuel Wallet. It provides a function `UseMutateAsyncFunction<boolean | undefined>` to initiate disconnection.
 
 ```tsx
 const { disconnect } = useDisconnect();
@@ -137,6 +137,40 @@ const { provider } = useProvider();
 ```
 
 [See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useProvider.ts)
+
+## `useSendTransaction`
+
+Hook for signing and sending transactions to the Fuel network.
+
+```tsx
+const { sendTransaction, sendTransactionAsync } = useSendTransaction();
+
+const handleSendTransaction = async () => {
+  // The amount of coins to transfer.
+  const amount = bn(1);
+
+  // Create a transaction request using wallet helper (check useWallet hook if needed)
+  const transactionRequest = await wallet.createTransfer(
+    destination,
+    amount
+  );
+
+  sendTransaction({
+    address: '0xd7ad97...', // The address to sign the transaction
+    transactionRequest,
+  })
+
+  // Async way
+  await sendTransactionAsync({
+    address: '0xd7ad97...', // The address to sign the transaction
+    transactionRequest,
+  });
+};
+
+handleSendTransaction();
+```
+
+[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useSendTransaction.ts)
 
 ## `useTransaction`
 
