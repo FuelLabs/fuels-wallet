@@ -87,6 +87,34 @@ console.log(connectors);
 
 [See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useConnectors.ts)
 
+## `useContractRead`
+
+Reads and calls a method from a Fuel contract, returns `<InvokeFunctions>`.
+
+
+##### Reading with a Contract instance
+```tsx
+const { contractRead } = useContractRead({
+  contract: _contract,
+  functionName: 'get_count',
+  args: undefined,
+});
+```
+
+##### Reading with ABI + ContractId + Provider
+```tsx
+const { contractRead } = useContractRead({
+  contract: { address, abi: countAbi, provider },
+  functionName: 'get_count',
+  args: undefined,
+});
+```
+> For more information on our Provider, refer to our TS SDK [docs](https://docs.fuel.network/docs/fuels-ts/)   
+
+> Click [here](https://github.com/FuelLabs/fuels-wallet/blob/b5766321dbc2a5e5f17f05e0cb9a9f697f137a23/packages/e2e-contract-tests/src/contracts/contracts/factories/CustomAssetAbi__factory.ts#L16) to see an example of an ABI for a Fuel contract
+
+[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useAccount.ts)
+
 ## `useDisconnect`
 
 Facilitates disconnection from the Fuel Wallet. It provides a function `UseMutateAsyncFunction<boolean | undefined>` to initiate disconnection.
