@@ -1,5 +1,14 @@
 # fuels-wallet
 
+## 0.21.2
+
+### Patch Changes
+
+- [#1349](https://github.com/FuelLabs/fuels-wallet/pull/1349) [`adfd3523`](https://github.com/FuelLabs/fuels-wallet/commit/adfd3523a6415ce9bc1825308e584fe54ad0c333) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Update tests to use new @fuels/react 0.21.0
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.21.2
+
 ## 0.21.1
 
 ### Patch Changes
