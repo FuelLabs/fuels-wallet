@@ -70,7 +70,7 @@ export function SendSelect({
 
   return (
     <MotionContent {...animations.slideInTop()}>
-      <Box.Stack gap="$4">
+      <Box.Stack gap="$3">
         <Box.Flex css={styles.row}>
           <Text as="span" css={styles.title}>
             Asset

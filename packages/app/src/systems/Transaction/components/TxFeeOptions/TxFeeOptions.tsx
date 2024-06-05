@@ -75,100 +75,93 @@ export const TxFeeOptions = ({
   }, [isAdvanced, setValue, getValues]);
 
   return (
-    <Box.Stack gap="$1">
+    <Box.Stack gap="$2">
       <AnimatePresence mode="popLayout">
         {isAdvanced ? (
-          <MotionStack
-            {...animations.slideInTop()}
-            key="advanced"
-            gap="$2"
-            layout
-          >
+          <MotionStack {...animations.slideInTop()} key="advanced" gap="$3">
             <TxFee
               title="Fee + Tip"
               fee={baseFee.add(tip.value.amount)}
               checked
             />
-            <HStack gap="$3">
-              <VStack gap="$1">
-                <Text fontSize="xs">Gas limit</Text>
-                <Form.Control isInvalid={Boolean(gasLimitState.error)}>
-                  <Input isInvalid={Boolean(gasLimitState.error)}>
-                    <Input.Number
-                      value={gasLimit.value.text}
-                      inputMode="numeric"
-                      autoComplete="off"
-                      allowNegative={false}
-                      thousandSeparator={false}
-                      placeholder="0"
-                      css={{ width: '100%' }}
-                      onChange={(e) => {
-                        const ignore = /[.,\-+]/g;
-                        const val = (e.target.value || '').replaceAll(
-                          ignore,
-                          ''
-                        );
 
-                        gasLimit.onChange({
-                          amount: bn(val),
-                          text: val,
-                        });
-                      }}
-                    />
-                  </Input>
-                </Form.Control>
-              </VStack>
-              <VStack gap="$1">
-                <Text fontSize="xs">Tip</Text>
-                <Form.Control isInvalid={Boolean(tipState.error)}>
-                  <Input>
-                    <Input.Number
-                      value={tip.value.text}
-                      inputMode="decimal"
-                      autoComplete="off"
-                      allowedDecimalSeparators={['.', ',']}
-                      allowNegative={false}
-                      thousandSeparator={false}
-                      decimalScale={DECIMAL_UNITS}
-                      placeholder="0.00"
-                      css={{ width: '100%' }}
-                      onChange={(e) => {
-                        const text = e.target.value;
-                        const { text: newText, amount } = createAmount(
-                          text,
-                          DECIMAL_UNITS
-                        );
+            <VStack gap="$1">
+              <HStack gap="$3">
+                <VStack gap="$2">
+                  <Text fontSize="xs">Gas limit</Text>
+                  <Form.Control isInvalid={Boolean(gasLimitState.error)}>
+                    <Input size="sm">
+                      <Input.Number
+                        value={gasLimit.value.text}
+                        inputMode="numeric"
+                        autoComplete="off"
+                        allowNegative={false}
+                        thousandSeparator={false}
+                        placeholder="0"
+                        css={{ width: '100%' }}
+                        onChange={(e) => {
+                          const ignore = /[.,\-+]/g;
+                          const val = (e.target.value || '').replaceAll(
+                            ignore,
+                            ''
+                          );
 
-                        tip.onChange({
-                          amount,
-                          text: newText,
-                        });
-                      }}
-                    />
-                  </Input>
-                </Form.Control>
-              </VStack>
-            </HStack>
-            <Form.Control
-              isInvalid={Boolean(gasLimitState.error || tipState.error)}
-            >
+                          gasLimit.onChange({
+                            amount: bn(val),
+                            text: val,
+                          });
+                        }}
+                      />
+                    </Input>
+                  </Form.Control>
+                </VStack>
+                <VStack gap="$2">
+                  <Text fontSize="xs">Tip</Text>
+                  <Form.Control isInvalid={Boolean(tipState.error)}>
+                    <Input size="sm">
+                      <Input.Number
+                        value={tip.value.text}
+                        inputMode="decimal"
+                        autoComplete="off"
+                        allowedDecimalSeparators={['.', ',']}
+                        allowNegative={false}
+                        thousandSeparator={false}
+                        decimalScale={DECIMAL_UNITS}
+                        placeholder="0.00"
+                        css={{ width: '100%' }}
+                        onChange={(e) => {
+                          const text = e.target.value;
+                          const { text: newText, amount } = createAmount(
+                            text,
+                            DECIMAL_UNITS
+                          );
+
+                          tip.onChange({
+                            amount,
+                            text: newText,
+                          });
+                        }}
+                      />
+                    </Input>
+                  </Form.Control>
+                </VStack>
+              </HStack>
               {(gasLimitState.error || tipState.error) && (
-                <Form.ErrorMessage
-                  aria-label="Error message"
-                  css={{ padding: 0 }}
-                >
-                  {gasLimitState.error?.message || tipState.error?.message}
-                </Form.ErrorMessage>
+                <MotionFlex {...animations.fadeIn()} key="error" layout>
+                  <Form.Control isInvalid>
+                    <Form.ErrorMessage
+                      aria-label="Error message"
+                      css={{ padding: 0 }}
+                    >
+                      {gasLimitState.error?.message || tipState.error?.message}
+                    </Form.ErrorMessage>
+                  </Form.Control>
+                </MotionFlex>
               )}
-            </Form.Control>
+            </VStack>
           </MotionStack>
         ) : (
-          <MotionStack
-            {...animations.slideInTop()}
-            key="regular"
-            gap="$3"
-            layout
-          >
+          <MotionStack {...animations.slideInTop()} key="regular" gap="$2">
             {options.map((option) => (
               <TxFee
                 key={option.name}
