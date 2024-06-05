@@ -1,12 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Form, Input, Text } from '@fuel-ui/react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { type BN, DECIMAL_FUEL, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import {
   ControlledField,
   Layout,
+  MotionFlex,
   MotionStack,
   animations,
 } from '~/systems/Core';
@@ -116,40 +117,44 @@ export function SendSelect({
           <Text as="span" css={styles.title}>
             Amount
           </Text>
-          <Form.Control
-            isRequired
-            isInvalid={Boolean(errorMessage || amountFieldState.error)}
-          >
-            <InputAmount
-              name={amount.name}
-              balance={balanceAssetSelected}
-              value={amount.value}
-              units={decimals}
-              onChange={(val) => {
-                if (isAmountFocused.current) {
-                  setWatchMax(false);
-                  amount.onChange(val);
-                }
-              }}
-              onClickMax={() => {
-                baseFeeRef.current = null; // Workaround just to trigger the watcher when max is clicked and base fee is stable
-                setWatchMax(true);
-              }}
-              inputProps={{
-                onFocus: () => {
-                  isAmountFocused.current = true;
-                },
-                onBlur: () => {
-                  isAmountFocused.current = false;
-                },
-              }}
-            />
-            {(errorMessage || amountFieldState.error) && (
-              <Form.ErrorMessage aria-label="Error message">
-                {errorMessage || amountFieldState.error?.message}
-              </Form.ErrorMessage>
-            )}
-          </Form.Control>
+          <AnimatePresence mode="popLayout">
+            <Form.Control
+              isRequired
+              isInvalid={Boolean(errorMessage || amountFieldState.error)}
+            >
+              <InputAmount
+                name={amount.name}
+                balance={balanceAssetSelected}
+                value={amount.value}
+                units={decimals}
+                onChange={(val) => {
+                  if (isAmountFocused.current) {
+                    setWatchMax(false);
+                    amount.onChange(val);
+                  }
+                }}
+                onClickMax={() => {
+                  baseFeeRef.current = null; // Workaround just to trigger the watcher when max is clicked and base fee is stable
+                  setWatchMax(true);
+                }}
+                inputProps={{
+                  onFocus: () => {
+                    isAmountFocused.current = true;
+                  },
+                  onBlur: () => {
+                    isAmountFocused.current = false;
+                  },
+                }}
+              />
+              {(errorMessage || amountFieldState.error) && (
+                <MotionFlex {...animations.fadeIn()} key="error">
+                  <Form.ErrorMessage aria-label="Error message">
+                    {errorMessage || amountFieldState.error?.message}
+                  </Form.ErrorMessage>
+                </MotionFlex>
+              )}
+            </Form.Control>
+          </AnimatePresence>
         </Box.Stack>
 
         {amount.value.gt(0) &&
@@ -157,7 +162,7 @@ export function SendSelect({
           baseFee.gt(0) &&
           regularTip &&
           fastTip && (
-            <MotionStack {...animations.slideInTop()} gap="$3">
+            <MotionStack {...animations.slideInTop()} layout gap="$3">
               <Text as="span" css={styles.title}>
                 Fee (network)
               </Text>
