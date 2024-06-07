@@ -177,6 +177,7 @@ export class TxService {
       const simulateTxErrors = getGroupedErrors(errorsToParse);
 
       const gasPrice = await provider.getLatestGasPrice();
+      const baseAssetId = provider.getBaseAssetId();
       const txSummary = assembleTransactionSummary({
         receipts: [],
         transaction,
@@ -188,6 +189,7 @@ export class TxService {
         gasCosts,
         maxGasPerTx,
         gasPrice,
+        baseAssetId,
       });
       txSummary.isStatusFailure = true;
       txSummary.status = TransactionStatus.failure;
