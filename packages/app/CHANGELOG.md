@@ -1,5 +1,16 @@
 # fuels-wallet
 
+## 0.21.3
+
+### Patch Changes
+
+- [#1361](https://github.com/FuelLabs/fuels-wallet/pull/1361) [`d4e39790`](https://github.com/FuelLabs/fuels-wallet/commit/d4e397902e7bcc09e2b1c7a8f20087a538efbedf) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - update fuel-connectors to 0.5.0
+
+- [#1361](https://github.com/FuelLabs/fuels-wallet/pull/1361) [`d4e39790`](https://github.com/FuelLabs/fuels-wallet/commit/d4e397902e7bcc09e2b1c7a8f20087a538efbedf) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - update fuels to get fix from contract operation
+
+- Updated dependencies [[`d4e39790`](https://github.com/FuelLabs/fuels-wallet/commit/d4e397902e7bcc09e2b1c7a8f20087a538efbedf), [`d4e39790`](https://github.com/FuelLabs/fuels-wallet/commit/d4e397902e7bcc09e2b1c7a8f20087a538efbedf)]:
+  - @fuel-wallet/connections@0.21.3
+
 ## 0.21.2
 
 ### Patch Changes
