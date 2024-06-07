@@ -26,11 +26,11 @@
   },
   "peerDependencies": {
     "@fuels/connectors": ">=0.4.0",
-    "fuels": ">=0.84.0"
+    "fuels": ">=0.88.1"
   },
   "devDependencies": {
     "@fuels/connectors": "0.4.0",
-    "fuels": "0.0.0-pr-2407-20240528164024",
+    "fuels": "pr-2479",
     "tsup": "^7.2.0"
   }
 }
