@@ -158,6 +158,7 @@ jobs:
         run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts
         env:
           NODE_ENV: test
+          VITE_MASTER_WALLET_MNEMONIC: ${{ secrets.VITE_MASTER_WALLET_MNEMONIC }}
 
       - uses: actions/upload-artifact@v4
         if: always()
