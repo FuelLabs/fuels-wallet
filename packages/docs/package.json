@@ -26,7 +26,7 @@
     "acorn-walk": "^8.2.0",
     "dotenv": "^16.3.1",
     "framer-motion": "^10.16.4",
-    "fuels": "pr-2479",
+    "fuels": "0.0.0-rc-2514-20240614135712",
     "globby": "^13.2.2",
     "gray-matter": "^4.0.3",
     "hast-util-heading-rank": "^3.0.0",
