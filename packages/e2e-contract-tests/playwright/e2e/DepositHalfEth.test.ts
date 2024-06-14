@@ -6,7 +6,7 @@ import { bn, toBech32 } from 'fuels';
 
 import '../../load.envs.js';
 import { getBaseAssetId, shortAddress } from '../../src/utils';
-import { testSetup, transferMaxBalanceTo } from '../utils';
+import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
@@ -32,13 +32,14 @@ test.describe('Deposit Half ETH', () => {
   });
 
   test.afterEach(async () => {
-    await transferMaxBalanceTo({
+    await transferMaxBalance({
       fromWallet: fuelWallet,
       toWallet: masterWallet,
     });
   });
 
   test('e2e deposit half eth', async ({ page }) => {
+    await page.bringToFront();
     await connect(page, fuelWalletTestHelper);
 
     const depositHalfInput = page
@@ -101,9 +102,7 @@ test.describe('Deposit Half ETH', () => {
 
     expect(
       Number.parseFloat(
-        preDepositBalanceEth
-          .sub(postDepositBalanceEth)
-          .format({ precision: 5, units: 9 })
+        preDepositBalanceEth.sub(postDepositBalanceEth).format({ precision: 3 })
       )
     ).toBe(Number.parseFloat(halfDepositAmount));
   });

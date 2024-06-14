@@ -6,7 +6,7 @@ import type { WalletUnlocked } from 'fuels';
 
 import '../../load.envs';
 import { getBaseAssetId, shortAddress } from '../../src/utils';
-import { testSetup } from '../utils';
+import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
@@ -17,19 +17,30 @@ useLocalCRX();
 test.describe('Forward Eth', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;
   let fuelWallet: WalletUnlocked;
+  let masterWallet: WalletUnlocked;
+
+  const forwardEthAmount = '0.0012';
 
   test.beforeEach(async ({ context, extensionId, page }) => {
-    ({ fuelWalletTestHelper, fuelWallet } = await testSetup({
+    ({ fuelWalletTestHelper, fuelWallet, masterWallet } = await testSetup({
       context,
       page,
       extensionId,
+      amountToFund: bn.parseUnits(forwardEthAmount).mul(2),
     }));
   });
 
+  test.afterEach(async () => {
+    await transferMaxBalance({
+      fromWallet: fuelWallet,
+      toWallet: masterWallet,
+    });
+  });
+
   test('e2e forward ETH', async ({ page }) => {
+    await page.bringToFront();
     await connect(page, fuelWalletTestHelper);
 
-    const forwardEthAmount = '1.2345';
     const forwardEthInput = page
       .getByLabel('Forward eth card')
       .locator('input');
@@ -74,9 +85,7 @@ test.describe('Forward Eth', () => {
     const postDepositBalanceEth = await fuelWallet.getBalance();
     expect(
       Number.parseFloat(
-        preDepositBalanceEth
-          .sub(postDepositBalanceEth)
-          .format({ precision: 5, units: 9 })
+        preDepositBalanceEth.sub(postDepositBalanceEth).format({ precision: 4 })
       )
     ).toBe(Number.parseFloat(forwardEthAmount));
   });

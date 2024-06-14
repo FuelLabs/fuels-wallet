@@ -62,7 +62,7 @@ export const testSetup = async ({
   return { fuelWallet, fuelWalletTestHelper, masterWallet };
 };
 
-export const transferMaxBalanceTo = async ({
+export const transferMaxBalance = async ({
   fromWallet,
   toWallet,
 }: {
@@ -95,7 +95,7 @@ export const transferMaxBalanceTo = async ({
       }
     } catch (e) {
       console.log('error sending remaining balance', e.message);
-      trySendMax(attempt + 1);
+      await trySendMax(attempt + 1);
     }
   };
 

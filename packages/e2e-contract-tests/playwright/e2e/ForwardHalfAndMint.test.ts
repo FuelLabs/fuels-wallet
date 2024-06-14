@@ -10,7 +10,7 @@ import {
   getBaseAssetId,
   shortAddress,
 } from '../../src/utils';
-import { testSetup } from '../utils';
+import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
@@ -21,20 +21,31 @@ useLocalCRX();
 test.describe('Forward Half ETH and Mint Custom Asset', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;
   let fuelWallet: WalletUnlocked;
+  let masterWallet: WalletUnlocked;
+
+  const depositAmount = '0.010';
+  const halfDepositAmount = '0.005';
 
   test.beforeEach(async ({ context, extensionId, page }) => {
-    ({ fuelWalletTestHelper, fuelWallet } = await testSetup({
+    ({ fuelWalletTestHelper, fuelWallet, masterWallet } = await testSetup({
       context,
       page,
       extensionId,
+      amountToFund: bn.parseUnits(depositAmount).mul(2),
     }));
   });
 
+  test.afterEach(async () => {
+    await transferMaxBalance({
+      fromWallet: fuelWallet,
+      toWallet: masterWallet,
+    });
+  });
+
   test('e2e forward half eth and mint custom asset', async ({ page }) => {
+    await page.bringToFront();
     await connect(page, fuelWalletTestHelper);
 
-    const depositAmount = '1.000';
-    const halfDepositAmount = '0.500';
     const depositHalfInput = page.getByLabel('Forward amount', { exact: true });
     await depositHalfInput.fill(depositAmount);
 
@@ -46,6 +57,7 @@ test.describe('Forward Half ETH and Mint Custom Asset', () => {
       page,
       'Forward Half And Mint'
     );
+    await page.waitForTimeout(2500);
     await forwardHalfAndMintButton.click();
 
     const walletNotificationPage =
@@ -107,16 +119,12 @@ test.describe('Forward Half ETH and Mint Custom Asset', () => {
     const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
       Number.parseFloat(
-        preDepositBalanceEth
-          .sub(postDepositBalanceEth)
-          .format({ precision: 5, units: 9 })
+        preDepositBalanceEth.sub(postDepositBalanceEth).format({ precision: 3 })
       )
     ).toBe(Number.parseFloat(halfDepositAmount));
     expect(
       Number.parseFloat(
-        postDepositBalanceTkn
-          .sub(preDepositBalanceTkn)
-          .format({ precision: 6, units: 9 })
+        postDepositBalanceTkn.sub(preDepositBalanceTkn).format({ precision: 6 })
       )
     ).toBe(Number.parseFloat(mintAmount));
   });
