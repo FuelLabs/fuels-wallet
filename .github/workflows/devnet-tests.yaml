@@ -1,10 +1,10 @@
-name: Testnet tests
+name: Devnet tests
 
 on:
   workflow_dispatch:
     inputs:
       providerUrl:
-        description: Provider URL (e.g. https://testnet.fuel.network/v1/graphql)
+        description: Provider URL (e.g. https://devnet.fuel.network/v1/graphql)
         required: false
       masterMnemonic:
         description: Mnemonic of the wallet that will fund the tests

@@ -69,8 +69,9 @@ export const transferMaxBalance = async ({
   fromWallet: WalletUnlocked;
   toWallet: WalletUnlocked;
 }) => {
-  const MAX_ATTEMPTS = 10;
+  if (!fromWallet || !toWallet) return;
 
+  const MAX_ATTEMPTS = 10;
   const trySendMax = async (attempt = 1) => {
     if (attempt > MAX_ATTEMPTS) return;
 
