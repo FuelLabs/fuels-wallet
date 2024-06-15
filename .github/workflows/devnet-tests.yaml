@@ -70,7 +70,7 @@ jobs:
         env:
           NODE_ENV: test
           VITE_MASTER_WALLET_MNEMONIC: ${{ secrets.VITE_MASTER_WALLET_MNEMONIC }}
-          VITE_PROVIDER_URL: ${{ inputs.providerUrl || 'https://testnet.fuel.network/v1/graphql' }}
+          VITE_PROVIDER_URL: ${{ inputs.providerUrl || 'https://devnet.fuel.network/v1/graphql' }}
 
       - uses: actions/upload-artifact@v4
         if: always()
