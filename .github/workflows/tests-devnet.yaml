@@ -9,9 +9,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches: [main, master, sdk-v2]
-    types: [opened, synchronize, reopened]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
