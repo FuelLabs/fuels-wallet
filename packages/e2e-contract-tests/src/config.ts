@@ -17,4 +17,3 @@ if (FUEL_PROVIDER_URL?.indexOf('testnet') !== -1) {
 
 export const MAIN_CONTRACT_ID = constracsIdsToUse.MainContract;
 export const EXTERNAL_CONTRACT_ID = constracsIdsToUse.ExternalContract;
-export const IS_TEST = import.meta.env.MODE === 'test';

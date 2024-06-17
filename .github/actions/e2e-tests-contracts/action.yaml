@@ -1,9 +1,6 @@
 name: 'E2E Contract Tests'
 
 inputs:
-  ghToken:
-    description: Github TOKEN
-    required: true
   providerUrl:
     description: Provider URL (e.g. https://testnet.fuel.network/v1/graphql)
     required: true
@@ -13,41 +10,11 @@ inputs:
   genesisSecret:
     description: Secret of genesis to fund the master wallet
     required: false
-  skipDeploy:
-    description: Skip deploying contracts
-    type: boolean
-    required: false
-    default: false
 
 runs:
   using: 'composite'
   steps:
-    - uses: FuelLabs/github-actions/setups/node@master
-      with:
-        node-version: 18.18.0
-        pnpm-version: 8.15.7
-    - uses: FuelLabs/github-actions/setups/docker@master
-      with:
-        username: ${{ github.repository_owner }}
-        password: ${{ inputs.ghToken }}
 
-    - name: Run PNPM install
-      id: pnpm-cache
-      shell: bash
-      run:
-        pnpm recursive install --frozen-lockfile
-
-    - name: Start Test Node
-      shell: bash
-      run: pnpm node:up
-
-    - name: Generate .env app
-      shell: bash
-      run: cp packages/app/.env.example packages/app/.env
-
-    - name: Generate .env e2e-contracts
-      shell: bash
-      run: cp packages/e2e-contract-tests/.env.example packages/e2e-contract-tests/.env
 
     - name: Build Application
       shell: bash
@@ -58,12 +25,6 @@ runs:
         NODE_OPTIONS: "--max-old-space-size=4096"
         NODE_ENV: test
 
-    - name: Build & Deploy Contracts
-      shell: bash
-      if: ${{ !inputs.skipDeploy }}
-      run: pnpm deploy:contracts
-      working-directory: ./packages/e2e-contract-tests
-
     # E2E tests running with Playwright
     - name: Install Playwright Browsers
       shell: bash
@@ -73,7 +34,6 @@ runs:
       shell: bash
       run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts
       env:
-        NODE_ENV: test
         VITE_FUEL_PROVIDER_URL: ${{ inputs.providerUrl }}
         VITE_MASTER_WALLET_MNEMONIC: ${{ inputs.masterMnemonic }}
         VITE_WALLET_SECRET: ${{ inputs.genesisSecret }}

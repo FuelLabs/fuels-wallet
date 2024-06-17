@@ -3,9 +3,6 @@ name: Devnet tests
 on:
   workflow_dispatch:
     inputs:
-      providerUrl:
-        description: Provider URL (e.g. https://devnet.fuel.network/v1/graphql)
-        required: false
       masterMnemonic:
         description: Mnemonic of the wallet that will fund the tests
         required: false
@@ -26,10 +23,30 @@ jobs:
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
+      - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 18.18.0
+          pnpm-version: 8.15.7
+      - uses: FuelLabs/github-actions/setups/docker@master
+        with:
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run PNPM install
+        id: pnpm-cache
+        run:
+          pnpm recursive install --frozen-lockfile
+
+      - name: Generate .env app
+        run: cp packages/app/.env.example packages/app/.env
+
+      - name: Generate .env e2e-contracts
+        run: cp packages/e2e-contract-tests/.env.example packages/e2e-contract-tests/.env
+
       - name: Run E2E Contract Tests - Devnet
         uses: ./.github/actions/e2e-tests-contracts
         with:
           ghToken: ${{ secrets.GITHUB_TOKEN }}
           providerUrl: "https://devnet.fuel.network/v1/graphql"
-          masterMnemonic: ${{ secrets.VITE_MASTER_WALLET_MNEMONIC }}
+          masterMnemonic: ${{ inputs.masterMnemonic || secrets.VITE_MASTER_WALLET_MNEMONIC }}
           skipDeploy: true
