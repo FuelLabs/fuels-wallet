@@ -15,7 +15,9 @@ inputs:
     required: false
   skipDeploy:
     description: Skip deploying contracts
+    type: boolean
     required: false
+    default: false
 
 runs:
   using: 'composite'
