@@ -1,86 +1,35 @@
-# name: Devnet tests
+name: Devnet tests
 
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       providerUrl:
-#         description: Provider URL (e.g. https://devnet.fuel.network/v1/graphql)
-#         required: false
-#       masterMnemonic:
-#         description: Mnemonic of the wallet that will fund the tests
-#         required: false
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     branches: [main, master, sdk-v2]
-#     types: [opened, synchronize, reopened]
+on:
+  workflow_dispatch:
+    inputs:
+      providerUrl:
+        description: Provider URL (e.g. https://devnet.fuel.network/v1/graphql)
+        required: false
+      masterMnemonic:
+        description: Mnemonic of the wallet that will fund the tests
+        required: false
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main, master, sdk-v2]
+    types: [opened, synchronize, reopened]
 
-# concurrency:
-#   group: ${{ github.workflow }}-${{ github.ref }}
-#   cancel-in-progress: true
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
-# jobs:
-#   tests-e2e-contracts:
-#     name: E2E Contract Tests
-#     runs-on: buildjet-4vcpu-ubuntu-2204
-#     steps:
-#       - uses: actions/checkout@v3
-#       - uses: FuelLabs/github-actions/setups/node@master
-#         with:
-#           node-version: 18.18.0
-#           pnpm-version: 8.15.7
-#       - uses: FuelLabs/github-actions/setups/docker@master
-#         with:
-#           username: ${{ github.repository_owner }}
-#           password: ${{ secrets.GITHUB_TOKEN }}
-
-#       - name: Run PNPM install
-#         id: pnpm-cache
-#         run:
-#           pnpm recursive install --frozen-lockfile
-
-#       - name: Start Test Node
-#         run: pnpm node:up
-      
-#       - name: Generate .env app
-#         run: cp packages/app/.env.example.testnet packages/app/.env
-      
-#       - name: Generate .env e2e-contracts
-#         run: cp packages/e2e-contract-tests/.env.example.testnet packages/e2e-contract-tests/.env
-
-#       - name: Build Application
-#         run: pnpm build:all
-#         env:
-#           ## increase node.js m memory limit for building
-#           ## with sourcemaps
-#           NODE_OPTIONS: "--max-old-space-size=4096"
-#           NODE_ENV: test
-
-#       - name: Build & Deploy Contracts
-#         run: pnpm deploy:contracts
-#         working-directory: ./packages/e2e-contract-tests
-
-#       # E2E tests running with Playwright
-#       - name: Install Playwright Browsers
-#         run: npx playwright install --with-deps chromium
-
-#       - name: Run E2E Contract Tests
-#         run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts
-#         env:
-#           NODE_ENV: test
-#           VITE_MASTER_WALLET_MNEMONIC: ${{ secrets.VITE_MASTER_WALLET_MNEMONIC }}
-#           VITE_PROVIDER_URL: ${{ inputs.providerUrl || 'https://devnet.fuel.network/v1/graphql' }}
-
-#       - uses: actions/upload-artifact@v4
-#         if: always()
-#         with:
-#           name: playwright-report
-#           path: |
-#             packages/app/playwright-report/
-#             packages/app/playwright-html/
-#           retention-days: 30
-
-#       - name: Stop Test Node
-#         run: pnpm node:clean
-
+jobs:
+  tests-e2e-contracts:
+    name: E2E Contract Tests - Devnet
+    runs-on: buildjet-4vcpu-ubuntu-2204
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run E2E Contract Tests - Devnet
+        uses: ./.github/actions/e2e-tests-contracts
+        with:
+          ghToken: ${{ secrets.GITHUB_TOKEN }}
+          providerUrl: "https://devnet.fuel.network/v1/graphql"
+          masterMnemonic: ${{ secrets.VITE_MASTER_WALLET_MNEMONIC }}
+          skipDeploy: true

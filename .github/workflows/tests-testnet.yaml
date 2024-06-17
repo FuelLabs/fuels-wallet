@@ -22,11 +22,11 @@ concurrency:
 
 jobs:
   tests-e2e-contracts:
-    name: E2E Contract Tests - Local
+    name: E2E Contract Tests - Testnet
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
-      - name: Run E2E Contract Tests
+      - name: Run E2E Contract Tests - Testnet
         uses: ./.github/actions/e2e-tests-contracts
         with:
           ghToken: ${{ secrets.GITHUB_TOKEN }}

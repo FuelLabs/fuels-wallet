@@ -115,7 +115,7 @@ jobs:
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
       - uses: actions/checkout@v3
-      - name: Run E2E Contract Tests
+      - name: Run E2E Contract Tests - Local
         uses: ./.github/actions/e2e-tests-contracts
         with:
           ghToken: ${{ secrets.GITHUB_TOKEN }}
