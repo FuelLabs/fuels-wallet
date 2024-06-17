@@ -49,7 +49,7 @@ runs:
         NODE_ENV: test
 
     - name: Build & Deploy Contracts
-      if: !inputs.packages
+      # if: !inputs.packages
       run: pnpm deploy:contracts
       working-directory: ./packages/e2e-contract-tests
 
