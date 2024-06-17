@@ -46,7 +46,5 @@ jobs:
       - name: Run E2E Contract Tests - Devnet
         uses: ./.github/actions/e2e-tests-contracts
         with:
-          ghToken: ${{ secrets.GITHUB_TOKEN }}
           providerUrl: "https://devnet.fuel.network/v1/graphql"
           masterMnemonic: ${{ inputs.masterMnemonic || secrets.VITE_MASTER_WALLET_MNEMONIC }}
-          skipDeploy: true
