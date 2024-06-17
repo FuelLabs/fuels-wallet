@@ -1,6 +1,9 @@
 name: 'E2E Contract Tests'
 
 inputs:
+  ghToken:
+    description: Github TOKEN
+    required: true
   providerUrl:
     description: Provider URL (e.g. https://testnet.fuel.network/v1/graphql)
     required: true
@@ -24,23 +27,28 @@ runs:
     - uses: FuelLabs/github-actions/setups/docker@master
       with:
         username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        password: ${{ inputs.ghToken }}
 
     - name: Run PNPM install
       id: pnpm-cache
+      shell: bash
       run:
         pnpm recursive install --frozen-lockfile
 
     - name: Start Test Node
+      shell: bash
       run: pnpm node:up
 
     - name: Generate .env app
+      shell: bash
       run: cp packages/app/.env.example packages/app/.env
 
     - name: Generate .env e2e-contracts
+      shell: bash
       run: cp packages/e2e-contract-tests/.env.example packages/e2e-contract-tests/.env
 
     - name: Build Application
+      shell: bash
       run: pnpm build:all
       env:
         ## increase node.js m memory limit for building
@@ -49,15 +57,18 @@ runs:
         NODE_ENV: test
 
     - name: Build & Deploy Contracts
+      shell: bash
       # if: !inputs.packages
       run: pnpm deploy:contracts
       working-directory: ./packages/e2e-contract-tests
 
     # E2E tests running with Playwright
     - name: Install Playwright Browsers
+      shell: bash
       run: npx playwright install --with-deps chromium
 
     - name: Run E2E Contract Tests
+      shell: bash
       run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts
       env:
         NODE_ENV: test
@@ -75,4 +86,5 @@ runs:
         retention-days: 30
 
     - name: Stop Test Node
+      shell: bash
       run: pnpm node:clean
