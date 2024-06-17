@@ -114,6 +114,7 @@ jobs:
     name: E2E Contract Tests - Local
     runs-on: buildjet-4vcpu-ubuntu-2204
     steps:
+      - uses: actions/checkout@v3
       - name: Run E2E Contract Tests
         uses: ./.github/actions/e2e-tests-contracts
         with:
