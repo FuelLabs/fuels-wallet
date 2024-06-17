@@ -206,6 +206,6 @@ export class AccountService {
 
 async function getBalances(provider: Provider, publicKey = '0x00') {
   const address = Address.fromPublicKey(publicKey);
-  const balances = await provider.getBalances(address);
+  const balances = await provider.getBalances(address, { first: 1000 });
   return balances;
 }

@@ -1,5 +1,48 @@
 # fuels-wallet
 
+## 0.21.3
+
+### Patch Changes
+
+- [#1361](https://github.com/FuelLabs/fuels-wallet/pull/1361) [`d4e39790`](https://github.com/FuelLabs/fuels-wallet/commit/d4e397902e7bcc09e2b1c7a8f20087a538efbedf) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - update fuel-connectors to 0.5.0
+
+- [#1361](https://github.com/FuelLabs/fuels-wallet/pull/1361) [`d4e39790`](https://github.com/FuelLabs/fuels-wallet/commit/d4e397902e7bcc09e2b1c7a8f20087a538efbedf) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - update fuels to get fix from contract operation
+
+- Updated dependencies [[`d4e39790`](https://github.com/FuelLabs/fuels-wallet/commit/d4e397902e7bcc09e2b1c7a8f20087a538efbedf), [`d4e39790`](https://github.com/FuelLabs/fuels-wallet/commit/d4e397902e7bcc09e2b1c7a8f20087a538efbedf)]:
+  - @fuel-wallet/connections@0.21.3
+
+## 0.21.2
+
+### Patch Changes
+
+- [#1349](https://github.com/FuelLabs/fuels-wallet/pull/1349) [`adfd3523`](https://github.com/FuelLabs/fuels-wallet/commit/adfd3523a6415ce9bc1825308e584fe54ad0c333) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Update tests to use new @fuels/react 0.21.0
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.21.2
+
+## 0.21.1
+
+### Patch Changes
+
+- [#1340](https://github.com/FuelLabs/fuels-wallet/pull/1340) [`7c2ad248`](https://github.com/FuelLabs/fuels-wallet/commit/7c2ad248cf65060710e1b540b73f5f6c1cdb5c05) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Fix balances not showing for some accounts that have many assets in balance
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.21.1
+
+## 0.21.0
+
+### Minor Changes
+
+- [#1328](https://github.com/FuelLabs/fuels-wallet/pull/1328) [`6e5330e2`](https://github.com/FuelLabs/fuels-wallet/commit/6e5330e2067cb5f8831d7c6c04fac1421f61d717) Thanks [@helciofranco](https://github.com/helciofranco)! - Rename network to `Fuel Sepolia Testnet`
+
+### Patch Changes
+
+- [#1332](https://github.com/FuelLabs/fuels-wallet/pull/1332) [`39cf9dfe`](https://github.com/FuelLabs/fuels-wallet/commit/39cf9dfe5369da37178d935830c600638e130e0e) Thanks [@arthurgeron](https://github.com/arthurgeron)! - - If a connection can't be made to IndexedDB (usually when "Application Data" gets cleared), instead of resetting the extension it'll attempt a reload for good measure
+  - IndexedDB + extension Reset only triggers if: An IndexedDB restart event is triggered, the DB can be accessed, and has no vaults or accounts data (corrupted or cleared)
+  - The flag used to show the Welcome Screen after a reset no longer depends on React's Scope to be set
+- Updated dependencies [[`6e5330e2`](https://github.com/FuelLabs/fuels-wallet/commit/6e5330e2067cb5f8831d7c6c04fac1421f61d717)]:
+  - @fuel-wallet/connections@0.21.0
+
 ## 0.20.0
 
 ### Minor Changes
