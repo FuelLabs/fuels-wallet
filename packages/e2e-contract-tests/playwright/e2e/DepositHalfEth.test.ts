@@ -10,7 +10,12 @@ import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import { checkAddresses, checkFee, connect } from './utils';
+import {
+  checkAddresses,
+  checkFee,
+  connect,
+  waitSuccessTransaction,
+} from './utils';
 
 useLocalCRX();
 
@@ -39,7 +44,6 @@ test.describe('Deposit Half ETH', () => {
   });
 
   test('e2e deposit half eth', async ({ page }) => {
-    await page.bringToFront();
     await connect(page, fuelWalletTestHelper);
 
     const depositHalfInput = page
@@ -97,7 +101,7 @@ test.describe('Deposit Half ETH', () => {
     const preDepositBalanceEth = await fuelWallet.getBalance();
 
     await fuelWalletTestHelper.walletApprove();
-    await hasText(page, 'Transaction successful.');
+    await waitSuccessTransaction(page);
     const postDepositBalanceEth = await fuelWallet.getBalance();
 
     expect(

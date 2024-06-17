@@ -14,7 +14,12 @@ import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import { checkAddresses, checkFee, connect } from './utils';
+import {
+  checkAddresses,
+  checkFee,
+  connect,
+  waitSuccessTransaction,
+} from './utils';
 
 useLocalCRX();
 
@@ -82,7 +87,7 @@ test.describe('Mint Assets', () => {
 
     const preMintBalanceTkn = await fuelWallet.getBalance(assetId);
     await fuelWalletTestHelper.walletApprove();
-    await hasText(page, 'Transaction successful.');
+    await waitSuccessTransaction(page);
     const postMintBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
       Number.parseFloat(
@@ -154,7 +159,7 @@ test.describe('Mint Assets', () => {
 
     const preMintBalanceTkn = await fuelWallet.getBalance(assetId);
     await fuelWalletTestHelper.walletApprove();
-    await hasText(page, 'Transaction successful.');
+    await waitSuccessTransaction(page);
     const postMintBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
       Number.parseFloat(

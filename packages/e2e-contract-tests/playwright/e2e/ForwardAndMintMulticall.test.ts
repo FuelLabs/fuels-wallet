@@ -14,7 +14,12 @@ import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import { checkAddresses, checkFee, connect } from './utils';
+import {
+  checkAddresses,
+  checkFee,
+  connect,
+  waitSuccessTransaction,
+} from './utils';
 
 useLocalCRX();
 
@@ -42,7 +47,6 @@ test.describe('Forward and Mint Multicall', () => {
   });
 
   test('e2e forward and mint multicall', async ({ page }) => {
-    await page.bringToFront();
     await connect(page, fuelWalletTestHelper);
 
     const depositHalfInput = page.getByLabel('Forward amount multicall');
@@ -101,7 +105,7 @@ test.describe('Forward and Mint Multicall', () => {
     const preDepositBalanceEth = await fuelWallet.getBalance();
     const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     await fuelWalletTestHelper.walletApprove();
-    await hasText(page, 'Transaction successful.');
+    await waitSuccessTransaction(page);
     const postDepositBalanceEth = await fuelWallet.getBalance();
     const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(

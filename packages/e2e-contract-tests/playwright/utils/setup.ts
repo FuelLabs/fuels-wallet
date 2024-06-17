@@ -58,6 +58,7 @@ export const testSetup = async ({
   );
 
   await page.goto('/');
+  await page.bringToFront();
 
   return { fuelWallet, fuelWalletTestHelper, masterWallet };
 };

@@ -16,7 +16,12 @@ import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import { checkAddresses, checkFee, connect } from './utils';
+import {
+  checkAddresses,
+  checkFee,
+  connect,
+  waitSuccessTransaction,
+} from './utils';
 
 useLocalCRX();
 
@@ -42,7 +47,6 @@ test.describe('Forward Custom Asset', () => {
   });
 
   test('e2e forward custom asset', async ({ page }) => {
-    await page.bringToFront();
     await connect(page, fuelWalletTestHelper);
 
     // Mint custom asset to wallet
@@ -104,7 +108,7 @@ test.describe('Forward Custom Asset', () => {
     // Test approve
     const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     await fuelWalletTestHelper.walletApprove();
-    await hasText(page, 'Transaction successful.');
+    await waitSuccessTransaction(page);
     const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
       Number.parseFloat(
