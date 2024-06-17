@@ -60,7 +60,7 @@ runs:
 
     - name: Build & Deploy Contracts
       shell: bash
-      if: !inputs.skipDeploy
+      if: ${{ !inputs.skipDeploy }}
       run: pnpm deploy:contracts
       working-directory: ./packages/e2e-contract-tests
 
