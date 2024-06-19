@@ -4,8 +4,7 @@ import contractIdsTestnet from '../../src/contract-ids.testnet.json';
 
 const { VITE_FUEL_PROVIDER_URL } = process.env;
 
-// biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
-let constracsIdsToUse;
+let contractsIdsToUse: Record<string, string> | undefined;
 
 if (VITE_FUEL_PROVIDER_URL?.indexOf('testnet') !== -1) {
   constracsIdsToUse = contractIdsTestnet;
