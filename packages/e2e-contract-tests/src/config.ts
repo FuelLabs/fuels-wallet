@@ -7,12 +7,12 @@ const FUEL_PROVIDER_URL = import.meta.env.VITE_FUEL_PROVIDER_URL;
 let contractsIdsToUse: Record<string, string> | undefined;
 
 if (FUEL_PROVIDER_URL?.indexOf('testnet') !== -1) {
-  constracsIdsToUse = contractIdsTestnet;
+  contractsIdsToUse = contractIdsTestnet;
 } else if (FUEL_PROVIDER_URL?.indexOf('devnet') !== -1) {
-  constracsIdsToUse = contractIdsDevnet;
+  contractsIdsToUse = contractIdsDevnet;
 } else {
-  constracsIdsToUse = contractIds;
+  contractsIdsToUse = contractIds;
 }
 
-export const MAIN_CONTRACT_ID = constracsIdsToUse.MainContract;
-export const EXTERNAL_CONTRACT_ID = constracsIdsToUse.ExternalContract;
+export const MAIN_CONTRACT_ID = contractsIdsToUse.MainContract;
+export const EXTERNAL_CONTRACT_ID = contractsIdsToUse.ExternalContract;
