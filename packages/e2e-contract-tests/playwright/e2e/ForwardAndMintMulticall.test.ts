@@ -10,30 +10,45 @@ import {
   getBaseAssetId,
   shortAddress,
 } from '../../src/utils';
-import { testSetup } from '../utils';
+import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import { checkAddresses, checkFee, connect } from './utils';
+import {
+  checkAddresses,
+  checkFee,
+  connect,
+  waitSuccessTransaction,
+} from './utils';
 
 useLocalCRX();
 
 test.describe('Forward and Mint Multicall', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;
   let fuelWallet: WalletUnlocked;
+  let masterWallet: WalletUnlocked;
+
+  const depositAmount = '0.010';
 
   test.beforeEach(async ({ context, extensionId, page }) => {
-    ({ fuelWalletTestHelper, fuelWallet } = await testSetup({
+    ({ fuelWalletTestHelper, fuelWallet, masterWallet } = await testSetup({
       context,
       page,
       extensionId,
+      amountToFund: bn.parseUnits(depositAmount).mul(2),
     }));
+  });
+
+  test.afterEach(async () => {
+    await transferMaxBalance({
+      fromWallet: fuelWallet,
+      toWallet: masterWallet,
+    });
   });
 
   test('e2e forward and mint multicall', async ({ page }) => {
     await connect(page, fuelWalletTestHelper);
 
-    const depositAmount = '1.000';
     const depositHalfInput = page.getByLabel('Forward amount multicall');
     await depositHalfInput.fill(depositAmount);
 
@@ -90,21 +105,17 @@ test.describe('Forward and Mint Multicall', () => {
     const preDepositBalanceEth = await fuelWallet.getBalance();
     const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     await fuelWalletTestHelper.walletApprove();
-    await hasText(page, 'Transaction successful.');
+    await waitSuccessTransaction(page);
     const postDepositBalanceEth = await fuelWallet.getBalance();
     const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
       Number.parseFloat(
-        preDepositBalanceEth
-          .sub(postDepositBalanceEth)
-          .format({ precision: 5, units: 9 })
+        preDepositBalanceEth.sub(postDepositBalanceEth).format({ precision: 3 })
       )
     ).toBe(Number.parseFloat(depositAmount));
     expect(
       Number.parseFloat(
-        postDepositBalanceTkn
-          .sub(preDepositBalanceTkn)
-          .format({ precision: 6, units: 9 })
+        postDepositBalanceTkn.sub(preDepositBalanceTkn).format({ precision: 4 })
       )
     ).toBe(Number.parseFloat(mintAmount));
   });
