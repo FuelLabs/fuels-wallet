@@ -17,6 +17,8 @@ export const AssetConfigurationCard = () => {
     <div>
       <p>Asset Configuration</p>
       <div>
+        <label>Amount</label>
+        <br />
         <input
           aria-label="Asset config amount"
           value={assetData.amount}
@@ -24,6 +26,9 @@ export const AssetConfigurationCard = () => {
             setAssetData({ ...assetData, amount: event.target.value })
           }
         />
+        <br />
+        <label>Asset SubId</label>
+        <br />
         <input
           aria-label="Asset config subid"
           value={assetData.subId}
@@ -31,6 +36,9 @@ export const AssetConfigurationCard = () => {
             setAssetData({ ...assetData, subId: event.target.value })
           }
         />
+        <br />
+        <label>Asset Decimals</label>
+        <br />
         <input
           aria-label="Asset config decimals"
           value={assetData.decimals}
@@ -38,6 +46,7 @@ export const AssetConfigurationCard = () => {
             setAssetData({ ...assetData, decimals: event.target.value })
           }
         />
+        <br />
         <button
           type="button"
           onClick={async () => {
@@ -55,6 +64,7 @@ export const AssetConfigurationCard = () => {
         >
           Mint Asset configuration
         </button>
+        <hr />
       </div>
     </div>
   );

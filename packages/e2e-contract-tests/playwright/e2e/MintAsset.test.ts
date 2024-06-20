@@ -10,24 +10,38 @@ import {
   getBaseAssetId,
   shortAddress,
 } from '../../src/utils';
-import { testSetup } from '../utils';
+import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
-import { checkAddresses, checkFee, connect } from './utils';
+import {
+  checkAddresses,
+  checkFee,
+  connect,
+  waitSuccessTransaction,
+} from './utils';
 
 useLocalCRX();
 
 test.describe('Mint Assets', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;
   let fuelWallet: WalletUnlocked;
+  let masterWallet: WalletUnlocked;
 
   test.beforeEach(async ({ context, extensionId, page }) => {
-    ({ fuelWalletTestHelper, fuelWallet } = await testSetup({
+    ({ fuelWalletTestHelper, fuelWallet, masterWallet } = await testSetup({
       context,
       page,
       extensionId,
+      amountToFund: bn.parseUnits('0.001'),
     }));
+  });
+
+  test.afterEach(async () => {
+    await transferMaxBalance({
+      fromWallet: fuelWallet,
+      toWallet: masterWallet,
+    });
   });
 
   test('e2e mint unknown assets', async ({ page }) => {
@@ -73,13 +87,11 @@ test.describe('Mint Assets', () => {
 
     const preMintBalanceTkn = await fuelWallet.getBalance(assetId);
     await fuelWalletTestHelper.walletApprove();
-    await hasText(page, 'Transaction successful.');
+    await waitSuccessTransaction(page);
     const postMintBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
       Number.parseFloat(
-        postMintBalanceTkn
-          .sub(preMintBalanceTkn)
-          .format({ precision: 6, units: 9 })
+        postMintBalanceTkn.sub(preMintBalanceTkn).format({ precision: 6 })
       )
     ).toBe(Number.parseFloat(mintAmount));
   });
@@ -147,7 +159,7 @@ test.describe('Mint Assets', () => {
 
     const preMintBalanceTkn = await fuelWallet.getBalance(assetId);
     await fuelWalletTestHelper.walletApprove();
-    await hasText(page, 'Transaction successful.');
+    await waitSuccessTransaction(page);
     const postMintBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
       Number.parseFloat(
