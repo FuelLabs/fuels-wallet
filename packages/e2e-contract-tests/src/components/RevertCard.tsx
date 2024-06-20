@@ -22,6 +22,7 @@ export const RevertCard = () => {
         >
           Panic
         </button>
+        <hr />
       </div>
       <p>Revert TX</p>
       <div aria-label="Revert asset card">
@@ -37,6 +38,7 @@ export const RevertCard = () => {
         >
           Revert
         </button>
+        <hr />
       </div>
     </div>
   );

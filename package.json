@@ -5,7 +5,7 @@
   "description": "Fuel Wallet",
   "author": "Fuel Labs <contact@fuel.sh> (https://fuel.network/)",
   "engines": {
-    "node": ">=18.14.1",
+    "node": ">=18.18.0",
     "pnpm": ">=8"
   },
   "homepage": "https://github.com/FuelLabs/fuels-wallet",
