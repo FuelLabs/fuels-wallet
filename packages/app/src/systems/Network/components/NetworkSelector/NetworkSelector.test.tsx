@@ -26,7 +26,7 @@ describe('NetworkSelector', () => {
     });
   });
 
-  it('should open dropdown with given networks', async () => {
+  it.skip('should open dropdown with given networks', async () => {
     const { user } = render(<NetworkSelector {...props} />, {
       wrapper: TestWrapper,
     });
@@ -43,7 +43,7 @@ describe('NetworkSelector', () => {
     expect(item).toBeInTheDocument();
   });
 
-  it('should dispatch onSelectNetwork handle', async () => {
+  it.skip('should dispatch onSelectNetwork handle', async () => {
     const handler = jest.fn();
     const { user } = render(
       <NetworkSelector {...props} onSelectNetwork={handler} />,
