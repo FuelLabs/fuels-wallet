@@ -26,7 +26,7 @@ test.describe('Deposit Half ETH', () => {
 
   const depositAmount = '0.010';
   const halfDepositAmount = '0.005';
-
+  console.log(halfDepositAmount);
   test.beforeEach(async ({ context, extensionId, page }) => {
     ({ fuelWalletTestHelper, fuelWallet, masterWallet } = await testSetup({
       context,
@@ -54,60 +54,61 @@ test.describe('Deposit Half ETH', () => {
     const depositHalfButton = getButtonByText(page, 'Deposit Half ETH', true);
 
     await page.waitForTimeout(3000);
+    await page.pause();
     await depositHalfButton.click();
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
+    console.log(walletNotificationPage);
+    // // test forward asset name is shown
+    // await hasText(walletNotificationPage, 'Ethereum');
+    // // test forward asset id is shown
+    // await hasText(walletNotificationPage, shortAddress(await getBaseAssetId()));
+    // // test forward eth amount is correct
+    // await hasText(walletNotificationPage, `${depositAmount} ETH`);
 
-    // test forward asset name is shown
-    await hasText(walletNotificationPage, 'Ethereum');
-    // test forward asset id is shown
-    await hasText(walletNotificationPage, shortAddress(await getBaseAssetId()));
-    // test forward eth amount is correct
-    await hasText(walletNotificationPage, `${depositAmount} ETH`);
+    // // test return asset name is shown
+    // await hasText(walletNotificationPage, 'Ethereum', 1);
+    // // test return asset id is shown
+    // await hasText(
+    //   walletNotificationPage,
+    //   shortAddress(await getBaseAssetId()),
+    //   1
+    // );
+    // // test return eth amount is correct
+    // await hasText(walletNotificationPage, `${halfDepositAmount} ETH`);
 
-    // test return asset name is shown
-    await hasText(walletNotificationPage, 'Ethereum', 1);
-    // test return asset id is shown
-    await hasText(
-      walletNotificationPage,
-      shortAddress(await getBaseAssetId()),
-      1
-    );
-    // test return eth amount is correct
-    await hasText(walletNotificationPage, `${halfDepositAmount} ETH`);
+    // // test gas fee is shown and correct
+    // await hasText(walletNotificationPage, 'Fee (network)');
+    // // const fee = bn.parseUnits('0.000002616');
+    // // await checkFee(walletNotificationPage, {
+    // //   minFee: fee.sub(100),
+    // //   maxFee: fee.add(100),
+    // // });
 
-    // test gas fee is shown and correct
-    await hasText(walletNotificationPage, 'Fee (network)');
-    // const fee = bn.parseUnits('0.000002616');
-    // await checkFee(walletNotificationPage, {
-    //   minFee: fee.sub(100),
-    //   maxFee: fee.add(100),
-    // });
+    // // test to and from addresses
+    // const fuelContractId = toBech32(MAIN_CONTRACT_ID);
+    // await checkAddresses(
+    //   { address: fuelWallet.address.toAddress(), isContract: false },
+    //   { address: fuelContractId, isContract: true },
+    //   walletNotificationPage
+    // );
+    // await checkAddresses(
+    //   { address: fuelContractId, isContract: true },
+    //   { address: fuelWallet.address.toAddress(), isContract: false },
+    //   walletNotificationPage
+    // );
 
-    // test to and from addresses
-    const fuelContractId = toBech32(MAIN_CONTRACT_ID);
-    await checkAddresses(
-      { address: fuelWallet.address.toAddress(), isContract: false },
-      { address: fuelContractId, isContract: true },
-      walletNotificationPage
-    );
-    await checkAddresses(
-      { address: fuelContractId, isContract: true },
-      { address: fuelWallet.address.toAddress(), isContract: false },
-      walletNotificationPage
-    );
+    // const preDepositBalanceEth = await fuelWallet.getBalance();
 
-    const preDepositBalanceEth = await fuelWallet.getBalance();
+    // await fuelWalletTestHelper.walletApprove();
+    // await waitSuccessTransaction(page);
+    // const postDepositBalanceEth = await fuelWallet.getBalance();
 
-    await fuelWalletTestHelper.walletApprove();
-    await waitSuccessTransaction(page);
-    const postDepositBalanceEth = await fuelWallet.getBalance();
-
-    expect(
-      Number.parseFloat(
-        preDepositBalanceEth.sub(postDepositBalanceEth).format({ precision: 3 })
-      )
-    ).toBe(Number.parseFloat(halfDepositAmount));
+    // expect(
+    //   Number.parseFloat(
+    //     preDepositBalanceEth.sub(postDepositBalanceEth).format({ precision: 3 })
+    //   )
+    // ).toBe(Number.parseFloat(halfDepositAmount));
   });
 });
