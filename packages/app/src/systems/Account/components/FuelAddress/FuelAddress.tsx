@@ -30,7 +30,6 @@ export const FuelAddress = ({ address, css }: AddressProps) => {
 
 const styles = {
   root: cssObj({
-    cursor: 'pointer',
     '.address_tooltip': cssObj({
       fontSize: '$sm',
       lineHeight: '$4',
