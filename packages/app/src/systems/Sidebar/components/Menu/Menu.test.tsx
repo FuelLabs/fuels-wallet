@@ -40,7 +40,7 @@ describe('Menu', () => {
     await testA11y(<Menu items={ITEMS} />, { wrapper: TestWrapper });
   });
 
-  it.skip('should navigate to path when click', async () => {
+  it('should navigate to path when click', async () => {
     const { user } = render(<Menu items={ITEMS} />, { wrapper: TestWrapper });
     const menuItem = screen.getByText('Wallet0');
     expect(screen.getByTestId('location-display').innerHTML).toBe('/');
@@ -48,7 +48,7 @@ describe('Menu', () => {
     expect(screen.getByTestId('location-display').innerHTML).toBe('/wallet');
   });
 
-  it.skip('should be able to expand submenu on click', async () => {
+  it('should be able to expand submenu on click', async () => {
     const { user } = render(<Menu items={ITEMS} />, { wrapper: TestWrapper });
     const menuItem = screen.getByText('Support');
 
