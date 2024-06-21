@@ -2,6 +2,7 @@ import type { ThemeUtilsCSS } from '@fuel-ui/css';
 import { cssObj } from '@fuel-ui/css';
 import { Box, Copyable, Text } from '@fuel-ui/react';
 import { Address } from 'fuels';
+import { useMemo } from 'react';
 import { shortAddress } from '~/systems/Core';
 
 export type AddressProps = {
@@ -10,8 +11,10 @@ export type AddressProps = {
 };
 
 export const FuelAddress = ({ address, css }: AddressProps) => {
-  const addressInstance = Address.fromDynamicInput(address);
-  const fuelAddress = addressInstance.toB256();
+  const fuelAddress = useMemo(
+    () => Address.fromDynamicInput(address).toB256(),
+    [address]
+  );
 
   return (
     <Box.Flex css={styles.root}>
