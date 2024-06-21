@@ -1,6 +1,7 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium, expect } from '@playwright/test';
 
+import { Address } from 'fuels';
 import {
   getButtonByText,
   getByAriaLabel,
@@ -61,7 +62,7 @@ test.describe('RecoverWallet', () => {
     /** Account created */
     await hasText(page, /Wallet created successfully/i);
     await hasText(page, /Account 1/i);
-    await hasText(page, 'fuel1r...xqqj');
+    await hasText(page, '0x1d23...e8e2');
   });
 
   test.describe('when pasting', () => {
@@ -114,7 +115,7 @@ test.describe('RecoverWallet', () => {
       /** Account created */
       await hasText(page, /Wallet created successfully/i);
       await hasText(page, /Account 1/i);
-      await hasText(page, 'fuel1w...4rtl');
+      await hasText(page, '0x73da...a71b');
     });
 
     test('should be able to auto-select a 15-word mnemonic if pasting only 13-words', async () => {
@@ -188,6 +189,6 @@ test.describe('RecoverWallet', () => {
     /** Account created */
     await hasText(page, /Wallet created successfully/i);
     await hasText(page, /Account 1/i);
-    await hasText(page, 'fuel1w...4rtl');
+    await hasText(page, '0x73da...a71b');
   });
 });
