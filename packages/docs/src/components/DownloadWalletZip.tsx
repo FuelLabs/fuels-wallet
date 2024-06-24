@@ -5,5 +5,5 @@ import { Link } from './Link';
 export function DownloadWalletZip() {
   const title = useExtensionTitle();
 
-  return <Link href={WALLET_DOWNLOAD_PATH}>{`${title}  zip file`}</Link>;
+  return <Link href={WALLET_DOWNLOAD_PATH}>{`${title} zip file`}</Link>;
 }
