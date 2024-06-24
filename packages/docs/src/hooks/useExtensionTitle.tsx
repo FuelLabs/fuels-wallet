@@ -1,9 +1,7 @@
-import { Environment, useCurrentEnv } from './useCurrentEnv';
+import { useIsPreviewEnv } from './useIsPreviewEnv';
 
 export function useExtensionTitle() {
-  const environment = useCurrentEnv();
+  const isPreview = useIsPreviewEnv();
 
-  return environment === Environment.STAGING
-    ? 'Fuel Wallet Development'
-    : 'Fuel Wallet';
+  return isPreview ? 'Fuel Wallet Development' : 'Fuel Wallet';
 }

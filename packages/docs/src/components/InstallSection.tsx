@@ -2,6 +2,7 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Heading, Image, Text } from '@fuel-ui/react';
 
 import { useExtensionTitle } from '~/src/hooks/useExtensionTitle';
+import { useIsPreviewEnv } from '~/src/hooks/useIsPreviewEnv';
 import walletPrivewImg from '../../public/fuell-wallet-preview.png';
 import braveImg from '../../public/icons/browser/brave.png';
 import chomreImg from '../../public/icons/browser/chrome.png';
@@ -11,17 +12,24 @@ import { Environment, useCurrentEnv } from '../hooks/useCurrentEnv';
 
 export function InstallSection() {
   const environment = useCurrentEnv();
+  const isPreview = useIsPreviewEnv();
   const isNext = environment === Environment.NEXT;
   const title = useExtensionTitle();
+
+  const headingIntro = isPreview
+    ? 'The Development Version of'
+    : 'The Official';
 
   return (
     <Box.Flex css={styles.root} justify={'center'}>
       <Box.Flex css={styles.content} justify="space-between">
         <Box.Stack css={styles.head}>
           <Box.Stack css={styles.header}>
-            <Heading color="brand">THE OFFICIAL</Heading>
+            <Heading color="brand" css={styles.headerIntro}>
+              {headingIntro}
+            </Heading>
             <Heading css={styles.title} fontSize={'7xl'}>
-              {title}
+              Fuel Wallet
             </Heading>
             <Text fontSize="lg">
               With the Fuel Wallet, <br /> you can explore DApps on Fuel <br />{' '}
@@ -82,6 +90,9 @@ const styles = {
   }),
   header: cssObj({
     marginTop: '$4',
+  }),
+  headerIntro: cssObj({
+    textTransform: 'uppercase',
   }),
   title: cssObj({
     marginTop: 0,
