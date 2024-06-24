@@ -1,14 +1,17 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, FuelLogo, Icon } from '@fuel-ui/react';
+import { Box, FuelLogo, Icon } from '@fuel-ui/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { IS_PUBLIC_PREVIEW } from '../constants';
 
+import { useExtensionTitle } from '../hooks/useExtensionTitle';
 import { MobileMenu } from './MobileMenu';
 import { Search } from './Search';
 
 export function Header() {
+  const title = useExtensionTitle();
+
   const pathname = usePathname();
   const isDocsActive = pathname?.startsWith('/docs');
 
@@ -18,7 +21,7 @@ export function Header() {
         <Link href="/" className="logo">
           <FuelLogo size={40} />
           <Box.Flex css={styles.logoText}>
-            <span>Fuel Wallet</span>
+            <span>{title}</span>
             <Box as="span" css={styles.version}>
               beta
             </Box>

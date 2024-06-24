@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import { useFuel } from '../hooks/useFuel';
 import { capitalize } from '../lib/str';
 
+import { useExtensionTitle } from '../hooks/useExtensionTitle';
 import { Heading } from './Heading';
 
 export function ExampleBox({
@@ -20,6 +21,7 @@ export function ExampleBox({
   overlayContent?: any;
   showNotDetectedOverlay?: boolean;
 }) {
+  const extensionName = useExtensionTitle();
   const [, notDetected, isLoading] = useFuel();
   const errorMsg = error?.response?.errors?.[0]?.message || error?.message;
   const shouldShowRawError = errorMsg !== error?.message;
@@ -43,7 +45,7 @@ export function ExampleBox({
     <Box.Stack css={styles.overlay} justify="center" align="center">
       <Heading as="h6">Wallet not detected</Heading>
       <Link href="/docs/install">
-        Please install the Fuel Wallet to use this demo.
+        Please install {extensionName}` to use this demo.
       </Link>
     </Box.Stack>
   );

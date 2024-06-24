@@ -4,12 +4,14 @@ import {
   WALLET_LINK_STAGING,
 } from '../constants';
 import { Environment, useCurrentEnv } from '../hooks/useCurrentEnv';
+import { useExtensionTitle } from '../hooks/useExtensionTitle';
 import { Link } from './Link';
 
 const alternativeWalletVersion = 'Staging';
 
 export function DownloadWalletPreview() {
   const environment = useCurrentEnv();
+  const title = useExtensionTitle();
   const isStaging = environment === Environment.STAGING;
   const isNext = environment === Environment.NEXT;
   const isPreviewEnvironment = isStaging || isNext;
@@ -25,9 +27,7 @@ export function DownloadWalletPreview() {
 
   return (
     <Link href={href}>
-      {`FuelWallet ${isStaging ? 'Development' : ''}  ${
-        isPreviewEnvironment ? 'Zip' : alternativeWalletVersion
-      }`}
+      {`${title}  ${isPreviewEnvironment ? 'Zip' : alternativeWalletVersion}`}
     </Link>
   );
 }
