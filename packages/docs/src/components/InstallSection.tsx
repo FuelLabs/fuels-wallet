@@ -1,13 +1,17 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Heading, Image, Text } from '@fuel-ui/react';
 
+import { useContext } from 'react';
 import walletPrivewImg from '../../public/fuell-wallet-preview.png';
 import braveImg from '../../public/icons/browser/brave.png';
 import chomreImg from '../../public/icons/browser/chrome.png';
 import edgeImg from '../../public/icons/browser/edge.png';
-import { INSTALL_LINK } from '../constants';
+import { DomainContext, INSTALL_LINK, WALLET_LINK_NEXT } from '../constants';
 
 export function InstallSection() {
+  const domainHostUrl = useContext(DomainContext);
+  const isNext = !!domainHostUrl?.includes(WALLET_LINK_NEXT);
+
   return (
     <Box.Flex css={styles.root} justify={'center'}>
       <Box.Flex css={styles.content} justify="space-between">
@@ -23,11 +27,13 @@ export function InstallSection() {
             </Text>
           </Box.Stack>
           <Box.Stack css={styles.action} justify={'end'}>
-            <a href={INSTALL_LINK} target="_blank" rel="noreferrer">
-              <Button size="lg" intent="primary">
-                Install Fuel Wallet
-              </Button>
-            </a>
+            {!isNext && (
+              <a href={INSTALL_LINK} target="_blank" rel="noreferrer">
+                <Button size="lg" intent="primary">
+                  Install Fuel Wallet
+                </Button>
+              </a>
+            )}
             <Box.Stack>
               <Text fontSize="sm">Supported on</Text>
               <Box.Flex gap={'$2'}>
