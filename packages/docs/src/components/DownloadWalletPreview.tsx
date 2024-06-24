@@ -8,6 +8,8 @@ import {
 
 import { Link } from './Link';
 
+const alternativeWalletVersion = 'Staging';
+
 export function DownloadWalletPreview() {
   const currentDomainUrl = useContext(DomainContext);
 
@@ -15,11 +17,18 @@ export function DownloadWalletPreview() {
     !!currentDomainUrl?.includes(WALLET_LINK_STAGING) ||
     !!currentDomainUrl?.includes(WALLET_LINK_NEXT);
 
+  const alternativeWalletUrl =
+    alternativeWalletVersion === 'Staging'
+      ? WALLET_LINK_STAGING
+      : WALLET_LINK_NEXT;
+
   const href = isPreviewEnvironment
     ? WALLET_DOWNLOAD_PATH
-    : WALLET_LINK_STAGING;
+    : alternativeWalletUrl;
 
   return (
-    <Link href={href}>FuelWallet{isPreviewEnvironment ? ' Zip' : ''}</Link>
+    <Link href={href}>
+      FuelWallet {isPreviewEnvironment ? 'Zip' : alternativeWalletVersion}
+    </Link>
   );
 }
