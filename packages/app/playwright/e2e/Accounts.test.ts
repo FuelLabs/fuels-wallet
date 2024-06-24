@@ -19,6 +19,7 @@ import {
   getAddressForAccountNumber,
 } from '../crx/utils';
 
+import { Address } from 'fuels';
 import type { MockData } from '../mocks';
 import { WALLET_PASSWORD, mockData } from '../mocks';
 
@@ -54,7 +55,7 @@ test.describe('New Accounts', () => {
     await waitUrl(page, '/wallet');
     await hasText(page, /Assets/i);
     const address = data.accounts[1].address.toString();
-    await hasAriaLabel(page, address);
+    await hasAriaLabel(page, Address.fromDynamicInput(address).toB256());
   });
 
   test('should be able to edit account name', async () => {
@@ -225,12 +226,12 @@ test.describe('Existing Accounts', () => {
 
     // Checks
     // saved wal 1 add account 1 = wal 3 add account 1
-    expect(wal1Account1).toBe(fuelAddress1);
+    expect(wal1Account1).toBe(Address.fromDynamicInput(fuelAddress1).toB256());
     // saved wal 1 add account 2 = wal 3 add account 2
-    expect(wal1Account2).toBe(fuelAddress2);
+    expect(wal1Account2).toBe(Address.fromDynamicInput(fuelAddress2).toB256());
     // saved wal 2 add account = wal 3 add account 3
-    expect(wal1Account3).toBe(fuelAddPriv);
+    expect(wal1Account3).toBe(Address.fromDynamicInput(fuelAddPriv).toB256());
     // saved wal 1 add account 3 = wal 3 add account 4
-    expect(wal1Account4).toBe(fuelAddress3);
+    expect(wal1Account4).toBe(Address.fromDynamicInput(fuelAddress3).toB256());
   });
 });

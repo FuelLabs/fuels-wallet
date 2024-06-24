@@ -1,12 +1,12 @@
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
-import type { Bech32Address } from 'fuels';
+import { Address, type Bech32Address } from 'fuels';
 
 import { shortAddress } from '../../../src/utils';
 
 export const checkAddresses = async (
-  from: { address: Bech32Address; isContract: boolean },
-  to: { address: Bech32Address; isContract: boolean },
+  from: { address: string; isContract: boolean },
+  to: { address: string; isContract: boolean },
   page: Page,
   fromPosition = 0,
   toPosition = 0
@@ -22,7 +22,9 @@ export const checkAddresses = async (
       hasNotText: 'To',
     })
     .nth(fromPosition);
-  const fromShortAddress = shortAddress(from.address.toString());
+  const fromShortAddress = shortAddress(
+    Address.fromDynamicInput(from.address).toB256()
+  );
   const fromAddressText = fromArticle
     .getByRole('paragraph')
     .getByText(fromShortAddress, { exact: true });
@@ -41,7 +43,9 @@ export const checkAddresses = async (
       hasNotText: 'From',
     })
     .nth(toPosition);
-  const toShortAddress = shortAddress(to.address.toString());
+  const toShortAddress = shortAddress(
+    Address.fromDynamicInput(to.address).toB256()
+  );
   const toAddressText = toArticle
     .getByRole('paragraph')
     .getByText(toShortAddress, { exact: true });

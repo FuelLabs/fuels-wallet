@@ -61,8 +61,8 @@ describe('TxItem', () => {
     );
     const address = MOCK_TRANSACTION_CONTRACT_CALL.operations[0].to?.address;
     if (address) {
-      const addressBech32 = Address.fromString(address ?? '').bech32Address;
-      const to = await screen.findByText(shortAddress(addressBech32));
+      const addressB256 = Address.fromString(address ?? '').toB256();
+      const to = await screen.findByText(shortAddress(addressB256));
       expect(to).toBeInTheDocument();
 
       const label = await screen.findByText(/To:/i);

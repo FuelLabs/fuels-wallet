@@ -3,10 +3,13 @@ import { shortAddress } from '~/systems/Core';
 
 import { MOCK_ACCOUNTS } from '../../__mocks__';
 
+import { Address } from 'fuels';
 import { AccountItem } from './AccountItem';
 
 const ACCOUNT = MOCK_ACCOUNTS[0];
-const SHORT_ADDRESS = shortAddress(ACCOUNT.address);
+const SHORT_ADDRESS = shortAddress(
+  Address.fromDynamicInput(ACCOUNT.address).toB256()
+);
 
 describe('AccountItem', () => {
   it('a11y', async () => {

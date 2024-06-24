@@ -1,5 +1,5 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
-import { TestWrapper } from '~/systems/Core';
+import { TestWrapper, shortAddress } from '~/systems/Core';
 
 import {
   MOCK_FUEL_ASSETS,
@@ -7,6 +7,7 @@ import {
   MOCK_OPERATION_TRANSFER,
 } from '../../__mocks__/operation';
 
+import { Address } from 'fuels';
 import { TxOperation } from './TxOperation';
 
 const PROPS = {
@@ -22,9 +23,21 @@ describe('TxOperation', () => {
   it('should render operation to contract and dont have spinner', async () => {
     render(<TxOperation {...PROPS} />, { wrapper: TestWrapper });
     expect(screen.getByText('From')).toBeInTheDocument();
-    expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(
+          Address.fromDynamicInput(PROPS.operation.from?.address!).toB256()
+        )
+      )
+    ).toBeInTheDocument();
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
-    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(
+          Address.fromDynamicInput(PROPS.operation.to?.address!).toB256()
+        )
+      )
+    ).toBeInTheDocument();
     expect(() => screen.getByLabelText('Loading Spinner')).toThrow();
     expect(screen.getByText('Ethereum')).toBeInTheDocument();
   });
@@ -37,9 +50,25 @@ describe('TxOperation', () => {
       }
     );
     expect(screen.getByText('From')).toBeInTheDocument();
-    expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(
+          Address.fromDynamicInput(
+            MOCK_OPERATION_TRANSFER.from?.address!
+          ).toB256()
+        )
+      )
+    ).toBeInTheDocument();
     expect(screen.getByText('To')).toBeInTheDocument();
-    expect(screen.getByText('fuel1a...7n30')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(
+          Address.fromDynamicInput(
+            MOCK_OPERATION_TRANSFER.to?.address!
+          ).toB256()
+        )
+      )
+    ).toBeInTheDocument();
     expect(() => screen.getByLabelText('Loading Spinner')).toThrow();
     expect(screen.getByText('Ethereum')).toBeInTheDocument();
   });
@@ -53,9 +82,25 @@ describe('TxOperation', () => {
       { wrapper: TestWrapper }
     );
     expect(screen.getByText('From')).toBeInTheDocument();
-    expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(
+          Address.fromDynamicInput(
+            MOCK_OPERATION_TRANSFER.from?.address!
+          ).toB256()
+        )
+      )
+    ).toBeInTheDocument();
     expect(screen.getByText('To')).toBeInTheDocument();
-    expect(screen.getByText('fuel1a...7n30')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(
+          Address.fromDynamicInput(
+            MOCK_OPERATION_TRANSFER.to?.address!
+          ).toB256()
+        )
+      )
+    ).toBeInTheDocument();
     expect(() => screen.getByLabelText('Loading Spinner')).toThrow();
     expect(() => screen.getByText('Ethereum')).toThrow();
   });
