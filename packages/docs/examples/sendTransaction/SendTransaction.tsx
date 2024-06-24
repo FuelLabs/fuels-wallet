@@ -56,7 +56,7 @@ export function SendTransaction() {
           <Input.Field
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            placeholder="Enter public address (fuel1z...)"
+            placeholder="Enter public address"
           />
         </Input>
         <Box>
