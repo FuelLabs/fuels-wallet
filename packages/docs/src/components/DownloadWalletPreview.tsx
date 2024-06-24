@@ -1,21 +1,18 @@
-import { useContext } from 'react';
 import {
-  DomainContext,
   WALLET_DOWNLOAD_PATH,
   WALLET_LINK_NEXT,
   WALLET_LINK_STAGING,
 } from '../constants';
-
+import { Environment, useCurrentEnv } from '../hooks/useCurrentEnv';
 import { Link } from './Link';
 
 const alternativeWalletVersion = 'Staging';
 
 export function DownloadWalletPreview() {
-  const currentDomainUrl = useContext(DomainContext);
-
-  const isPreviewEnvironment =
-    !!currentDomainUrl?.includes(WALLET_LINK_STAGING) ||
-    !!currentDomainUrl?.includes(WALLET_LINK_NEXT);
+  const environment = useCurrentEnv();
+  const isStaging = environment === Environment.STAGING;
+  const isNext = environment === Environment.NEXT;
+  const isPreviewEnvironment = isStaging || isNext;
 
   const alternativeWalletUrl =
     alternativeWalletVersion === 'Staging'
@@ -28,7 +25,9 @@ export function DownloadWalletPreview() {
 
   return (
     <Link href={href}>
-      FuelWallet {isPreviewEnvironment ? 'Zip' : alternativeWalletVersion}
+      {`FuelWallet ${isStaging ? 'Development' : ''}  ${
+        isPreviewEnvironment ? 'Zip' : alternativeWalletVersion
+      }`}
     </Link>
   );
 }

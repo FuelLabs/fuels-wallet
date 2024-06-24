@@ -1,16 +1,17 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Heading, Image, Text } from '@fuel-ui/react';
 
-import { useContext } from 'react';
 import walletPrivewImg from '../../public/fuell-wallet-preview.png';
 import braveImg from '../../public/icons/browser/brave.png';
 import chomreImg from '../../public/icons/browser/chrome.png';
 import edgeImg from '../../public/icons/browser/edge.png';
-import { DomainContext, INSTALL_LINK, WALLET_LINK_NEXT } from '../constants';
+import { INSTALL_LINK } from '../constants';
+import { Environment, useCurrentEnv } from '../hooks/useCurrentEnv';
 
 export function InstallSection() {
-  const domainHostUrl = useContext(DomainContext);
-  const isNext = !!domainHostUrl?.includes(WALLET_LINK_NEXT);
+  const environment = useCurrentEnv();
+  const isStaging = environment === Environment.STAGING;
+  const isNext = environment === Environment.NEXT;
 
   return (
     <Box.Flex css={styles.root} justify={'center'}>
@@ -30,7 +31,7 @@ export function InstallSection() {
             {!isNext && (
               <a href={INSTALL_LINK} target="_blank" rel="noreferrer">
                 <Button size="lg" intent="primary">
-                  Install Fuel Wallet
+                  Install Fuel Wallet{isStaging ? ' Development' : ''}
                 </Button>
               </a>
             )}
