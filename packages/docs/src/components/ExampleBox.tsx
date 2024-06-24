@@ -45,7 +45,7 @@ export function ExampleBox({
     <Box.Stack css={styles.overlay} justify="center" align="center">
       <Heading as="h6">Wallet not detected</Heading>
       <Link href="/docs/install">
-        Please install {extensionName}` to use this demo.
+        Please install {extensionName} to use this demo.
       </Link>
     </Box.Stack>
   );
