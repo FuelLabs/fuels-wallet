@@ -4,7 +4,7 @@ import { Link } from '~/src/components/Link';
 import { Paragraph } from '~/src/components/Paragraph';
 import { WALLET_LINK_NEXT, WALLET_LINK_STAGING } from '~/src/constants';
 import { useIsPreviewEnv } from '../hooks/useIsPreviewEnv';
-import { DownloadWalletPreview } from './DownloadWalletPreview';
+import { DownloadWalletZip } from './DownloadWalletZip';
 import { UL } from './List';
 
 export function InstallFromSource() {
@@ -36,7 +36,7 @@ export function InstallFromSource() {
         <>
           <UL>
             <li>
-              Download <DownloadWalletPreview />;
+              Download <DownloadWalletZip />;
             </li>
             <li>Inside Chrome or Brave;</li>
             <li>

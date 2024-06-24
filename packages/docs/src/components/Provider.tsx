@@ -25,7 +25,7 @@ import { Code } from './Code';
 import { CodeImport } from './CodeImport';
 import { ConnectionAlert } from './ConnectionAlert';
 import { Demo } from './Demo';
-import { DownloadWalletPreview } from './DownloadWalletPreview';
+import { DownloadWalletZip } from './DownloadWalletZip';
 import { Heading } from './Heading';
 import { InstallFromSource } from './InstallFromSource';
 import { InstallSection } from './InstallSection';
@@ -62,7 +62,7 @@ const components = {
   SDKSection,
   Examples,
   Demo,
-  DownloadWalletPreview,
+  DownloadWalletZip,
   InstallFromSource,
   HStack,
 };
