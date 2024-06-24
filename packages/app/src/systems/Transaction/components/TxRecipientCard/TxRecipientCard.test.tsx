@@ -1,9 +1,11 @@
 import { screen, testA11y } from '@fuel-ui/test-utils';
 import { TestWrapper } from '~/systems/Core';
+import { shortAddress } from '~/systems/Core';
 import { renderWithProvider } from '~/systems/Core/__tests__';
 
 import { MOCK_TX_RECIPIENT } from '../../__mocks__/tx-recipient';
 
+import { Address } from 'fuels';
 import { TxRecipientCard } from './TxRecipientCard';
 
 const { account: ACCOUNT, contract: CONTRACT } = MOCK_TX_RECIPIENT;
@@ -21,13 +23,21 @@ describe('TxRecipientCard', () => {
 
   it('should render account correctly', () => {
     renderWithProvider(<TxRecipientCard recipient={ACCOUNT} />);
-    expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(Address.fromDynamicInput(ACCOUNT.address).toB256())
+      )
+    ).toBeInTheDocument();
   });
 
   it('should render contract correctly', () => {
     renderWithProvider(<TxRecipientCard recipient={CONTRACT} />);
     expect(screen.getByText('From (Contract)')).toBeInTheDocument();
-    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(Address.fromDynamicInput(CONTRACT.address).toB256())
+      )
+    ).toBeInTheDocument();
   });
 
   it('should change title with isReceiver prop', () => {

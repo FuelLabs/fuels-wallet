@@ -273,9 +273,8 @@ export class TxService {
       try {
         const targetAmount = amount.sub(attempts * 1_000_000);
         const realAmount = targetAmount.gt(0) ? targetAmount : bn(1);
-
         const transactionRequest = await wallet.createTransfer(
-          to,
+          Address.fromDynamicInput(to),
           realAmount,
           assetId,
           {
