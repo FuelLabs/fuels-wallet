@@ -118,7 +118,11 @@ export function ConnectionRequest() {
       <Box.Flex css={styles.disclaimer} justify="center" align={'flex-end'}>
         <Text fontSize="sm" as={'h2'} className="warning">
           Only connect with sites you trust.{' '}
-          <Link href="#" color="intentsPrimary11">
+          <Link
+            href="https://wallet.fuel.network"
+            isExternal
+            color="intentsPrimary11"
+          >
             Learn more
           </Link>
           .
@@ -174,7 +178,6 @@ const styles = {
     marginTop: '$0',
   }),
   disclaimer: cssObj({
-    mb: '-10px',
     pt: '$1',
   }),
   header: cssObj({
