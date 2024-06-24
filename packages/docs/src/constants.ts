@@ -1,3 +1,4 @@
+import { createContext } from 'react';
 import ogImage from '../public/og-image.png';
 
 const { NEXT_PUBLIC_URL } = process.env;
@@ -41,3 +42,4 @@ export const IS_PUBLIC_PREVIEW = process.env.NEXT_PUBLIC_PREVIEW === 'true';
 // branch version of the documentation.
 export const WALLET_LINK_NEXT = 'https://next-wallet.fuel.network';
 export const WALLET_LINK_STAGING = 'https://staging-wallet.fuel.network';
+export const DomainContext = createContext<string>('');

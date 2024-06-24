@@ -18,6 +18,7 @@ import type { ReactNode } from 'react';
 
 import * as Examples from '../../examples';
 
+import { DomainContext } from '../constants';
 import { BadgeDeprecated } from './BadgeDeprecated';
 import { Blockquote } from './Blockquote';
 import { Code } from './Code';
@@ -66,6 +67,7 @@ const components = {
 
 type ProviderProps = {
   children: ReactNode;
+  currentDomainUrl: string;
 };
 
 const queryClient = new QueryClient();
@@ -89,29 +91,31 @@ setFuelThemes({
   },
 });
 
-export function Provider({ children }: ProviderProps) {
+export function Provider({ children, currentDomainUrl }: ProviderProps) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <FuelProvider
-          theme="dark"
-          fuelConfig={{
-            connectors: [
-              new FuelWalletConnector(),
-              new FuelWalletDevelopmentConnector(),
-              new FueletWalletConnector(),
-            ],
-          }}
-        >
-          {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
-          <MDXProvider components={components as any}>
+    <DomainContext.Provider value={currentDomainUrl}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <FuelProvider
+            theme="dark"
+            fuelConfig={{
+              connectors: [
+                new FuelWalletConnector(),
+                new FuelWalletDevelopmentConnector(),
+                new FueletWalletConnector(),
+              ],
+            }}
+          >
             {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
-            {children as any}
-          </MDXProvider>
-        </FuelProvider>
-      </ThemeProvider>
+            <MDXProvider components={components as any}>
+              {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
+              {children as any}
+            </MDXProvider>
+          </FuelProvider>
+        </ThemeProvider>
 
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </DomainContext.Provider>
   );
 }
