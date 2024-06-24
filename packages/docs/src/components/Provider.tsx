@@ -27,6 +27,7 @@ import { ConnectionAlert } from './ConnectionAlert';
 import { Demo } from './Demo';
 import { DownloadWalletPreview } from './DownloadWalletPreview';
 import { Heading } from './Heading';
+import { InstallFromSource } from './InstallFromSource';
 import { InstallSection } from './InstallSection';
 import { Link } from './Link';
 import { UL } from './List';
@@ -62,6 +63,7 @@ const components = {
   Examples,
   Demo,
   DownloadWalletPreview,
+  InstallFromSource,
   HStack,
 };
 
