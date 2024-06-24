@@ -39,6 +39,5 @@ export const IS_PUBLIC_PREVIEW = process.env.NEXT_PUBLIC_PREVIEW === 'true';
 
 // If preview link them download from the path otherwise download from the main
 // branch version of the documentation.
-export const DOWNLOAD_LINK = `${
-  IS_PUBLIC_PREVIEW ? '' : 'https://next-wallet.fuel.network'
-}/app/fuel-wallet-${process.env.NEXT_PUBLIC_APP_VERSION}.zip`;
+export const WALLET_LINK_NEXT = 'https://next-wallet.fuel.network';
+export const WALLET_LINK_STAGING = 'https://staging-wallet.fuel.network';

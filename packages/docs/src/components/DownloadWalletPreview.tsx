@@ -1,11 +1,11 @@
-import { DOWNLOAD_LINK } from '../constants';
+import { WALLET_LINK_NEXT, WALLET_LINK_STAGING } from '../constants';
 
 import { Link } from './Link';
 
-export function DownloadWalletZip() {
+export function DownloadWalletPreview({ staging }: { staging?: boolean }) {
   return (
-    <Link href={DOWNLOAD_LINK} download>
-      FuelWallet zip file
+    <Link href={staging ? WALLET_LINK_STAGING : WALLET_LINK_NEXT}>
+      FuelWallet
     </Link>
   );
 }
