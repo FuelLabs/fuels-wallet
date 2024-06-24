@@ -16,7 +16,8 @@ export function InstallFromSource() {
       {isPreview ? (
         <Paragraph>
           You can also install the development version of Fuel Wallet, built
-          directly from our source code. To do this:
+          directly from our source code, which is the same version as above. To
+          do this:
         </Paragraph>
       ) : (
         <>
