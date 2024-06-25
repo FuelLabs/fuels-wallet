@@ -1,4 +1,4 @@
-import { IS_PUBLIC_PREVIEW } from '../constants';
+'use client';
 import { Environment, useCurrentEnv } from './useCurrentEnv';
 
 export function useIsPreviewEnv() {

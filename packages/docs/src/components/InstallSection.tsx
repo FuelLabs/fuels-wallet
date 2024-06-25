@@ -1,3 +1,4 @@
+'use client';
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Heading, Image, Text } from '@fuel-ui/react';
 

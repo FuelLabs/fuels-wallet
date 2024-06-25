@@ -18,7 +18,7 @@ import type { ReactNode } from 'react';
 
 import * as Examples from '../../examples';
 
-import { DomainContext } from '../constants';
+import { DomainProvider } from '~/src/components/DomainProvider';
 import { BadgeDeprecated } from './BadgeDeprecated';
 import { Blockquote } from './Blockquote';
 import { Code } from './Code';
@@ -67,7 +67,6 @@ const components = {
 
 type ProviderProps = {
   children: ReactNode;
-  currentDomainUrl: string;
 };
 
 const queryClient = new QueryClient();
@@ -91,9 +90,9 @@ setFuelThemes({
   },
 });
 
-export function Provider({ children, currentDomainUrl }: ProviderProps) {
+export function Provider({ children }: ProviderProps) {
   return (
-    <DomainContext.Provider value={currentDomainUrl}>
+    <DomainProvider>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <FuelProvider
@@ -116,6 +115,6 @@ export function Provider({ children, currentDomainUrl }: ProviderProps) {
 
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-    </DomainContext.Provider>
+    </DomainProvider>
   );
 }
