@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 
 import { IS_PUBLIC_PREVIEW } from '../constants';
 
+import { EnvironmentDropdown } from '../components/EnvironmentDropdown';
 import { useExtensionTitle } from '../hooks/useExtensionTitle';
 import { MobileMenu } from './MobileMenu';
 import { Search } from './Search';
@@ -27,6 +28,7 @@ export function Header() {
             </Box>
           </Box.Flex>
         </Link>
+        <EnvironmentDropdown />
       </Box.Flex>
       <Box css={styles.desktop}>
         <Box.Flex css={styles.menu}>

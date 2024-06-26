@@ -18,7 +18,7 @@ export enum Environment {
 
 export function useCurrentEnv() {
   const currentDomain = useContext(DomainContext);
-  if (currentDomain?.includes('http://localhost')) return Environment.DEV;
+  if (!currentDomain?.includes('http://localhost')) return Environment.DEV;
   if (currentDomain?.includes(WALLET_LINK_NEXT)) return Environment.NEXT;
   if (currentDomain?.includes(WALLET_LINK_STAGING)) return Environment.STAGING;
   if (IS_PUBLIC_PREVIEW) return Environment.PREVIEW;
