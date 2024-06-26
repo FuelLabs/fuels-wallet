@@ -1,15 +1,5 @@
-'use client';
-import { Environment, useCurrentEnv } from './useCurrentEnv';
+import { IS_PUBLIC_PREVIEW } from '../constants';
 
 export function useIsPreviewEnv() {
-  const environment = useCurrentEnv();
-
-  switch (environment) {
-    case Environment.STAGING:
-    case Environment.NEXT:
-    case Environment.PREVIEW:
-      return true;
-    default:
-      return false;
-  }
+  return !!IS_PUBLIC_PREVIEW;
 }

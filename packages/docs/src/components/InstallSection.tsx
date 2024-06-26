@@ -1,4 +1,3 @@
-'use client';
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Heading, Image, Text } from '@fuel-ui/react';
 
@@ -9,12 +8,10 @@ import braveImg from '../../public/icons/browser/brave.png';
 import chomreImg from '../../public/icons/browser/chrome.png';
 import edgeImg from '../../public/icons/browser/edge.png';
 import { INSTALL_LINK } from '../constants';
-import { Environment, useCurrentEnv } from '../hooks/useCurrentEnv';
 
 export function InstallSection() {
-  const environment = useCurrentEnv();
   const isPreview = useIsPreviewEnv();
-  const isNext = environment === Environment.NEXT;
+
   const title = useExtensionTitle();
 
   const headingIntro = isPreview
@@ -38,7 +35,7 @@ export function InstallSection() {
             </Text>
           </Box.Stack>
           <Box.Stack css={styles.action} justify={'end'}>
-            {!isNext && (
+            {!!INSTALL_LINK && (
               <a href={INSTALL_LINK} target="_blank" rel="noreferrer">
                 <Button size="lg" intent="primary">
                   Install {title}
