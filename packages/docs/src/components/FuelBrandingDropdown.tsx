@@ -43,6 +43,7 @@ export function FuelBrandingDropdown() {
       <Dropdown.Trigger asChild>
         <Button
           variant="link"
+          aria-label="Change Environment"
           css={{
             borderWidth: '0px',
             backgorundColor: 'transparent',
@@ -52,13 +53,7 @@ export function FuelBrandingDropdown() {
           }}
         >
           <HeaderFuelBranding title={environmentsTitles[currentEnv]} />
-          <IconButton
-            size="xs"
-            variant="link"
-            intent="warning"
-            icon={<Icon icon="ChevronDown" />}
-            aria-label="Change Environment"
-          />
+          <Icon icon="ChevronDown" />
         </Button>
       </Dropdown.Trigger>
       <Dropdown.Menu
