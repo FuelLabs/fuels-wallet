@@ -2,7 +2,6 @@ import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Heading, Image, Text } from '@fuel-ui/react';
 
 import { useExtensionTitle } from '~/src/hooks/useExtensionTitle';
-import { useIsPreviewEnv } from '~/src/hooks/useIsPreviewEnv';
 import walletPrivewImg from '../../public/fuell-wallet-preview.png';
 import braveImg from '../../public/icons/browser/brave.png';
 import chomreImg from '../../public/icons/browser/chrome.png';
@@ -10,13 +9,7 @@ import edgeImg from '../../public/icons/browser/edge.png';
 import { INSTALL_LINK } from '../constants';
 
 export function InstallSection() {
-  const isPreview = useIsPreviewEnv();
-
   const title = useExtensionTitle();
-
-  const headingIntro = isPreview
-    ? 'The Development Version of'
-    : 'The Official';
 
   return (
     <Box.Flex css={styles.root} justify={'center'}>
@@ -24,7 +17,7 @@ export function InstallSection() {
         <Box.Stack css={styles.head}>
           <Box.Stack css={styles.header}>
             <Heading color="brand" css={styles.headerIntro}>
-              {headingIntro}
+              The Official
             </Heading>
             <Heading css={styles.title} fontSize={'7xl'}>
               Fuel Wallet
