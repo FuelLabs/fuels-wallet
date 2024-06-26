@@ -18,7 +18,6 @@ export function useCurrentEnv() {
     typeof window !== 'undefined'
       ? `${window.location.protocol}//${window.location.hostname}`
       : '';
-  console.log('fsk4 ', currentDomain);
 
   if (currentDomain?.includes('http://localhost')) return Environment.DEV;
   if (currentDomain?.includes(WALLET_LINK_NEXT)) return Environment.NEXT;
