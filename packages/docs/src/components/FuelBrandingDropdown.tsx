@@ -1,5 +1,6 @@
-import { Dropdown, Icon, IconButton } from '@fuel-ui/react';
+import { Button, Dropdown, Icon, IconButton } from '@fuel-ui/react';
 import { usePathname } from 'next/navigation';
+import { useCurrentEnv } from '~/src/hooks/useCurrentEnv';
 import {
   Environment,
   WALLET_LINK_NEXT,
@@ -17,6 +18,7 @@ const environmentsTitles: Record<Environment, string> = {
 const environments: Array<Environment> = Object.values(Environment);
 
 export function FuelBrandingDropdown() {
+  const currentEnv = useCurrentEnv();
   const currentPath = usePathname();
   const onSelect = (e: Environment) => {
     switch (e) {
@@ -39,19 +41,32 @@ export function FuelBrandingDropdown() {
       }}
     >
       <Dropdown.Trigger asChild>
-        <IconButton
-          size="xs"
+        <Button
           variant="link"
-          intent="warning"
-          icon={<Icon icon="ChevronDown" />}
-          aria-label="Change Environment"
-        />
+          css={{
+            borderWidth: '0px',
+            backgorundColor: 'transparent',
+            alignItems: 'center',
+            gap: '$2',
+            flexDirection: 'row',
+          }}
+        >
+          <HeaderFuelBranding title={environmentsTitles[currentEnv]} />
+          <IconButton
+            size="xs"
+            variant="link"
+            intent="warning"
+            icon={<Icon icon="ChevronDown" />}
+            aria-label="Change Environment"
+          />
+        </Button>
       </Dropdown.Trigger>
       <Dropdown.Menu
         css={{
-          gap: '$4',
+          gap: '$5',
           display: 'flex',
           flexDirection: 'column',
+          marginLeft: '20px',
         }}
         onAction={(e) => {
           onSelect(e as Environment);

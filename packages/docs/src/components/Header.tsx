@@ -1,26 +1,20 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, HStack, Icon } from '@fuel-ui/react';
+import { Box, Icon } from '@fuel-ui/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { FuelBrandingDropdown } from '../components/FuelBrandingDropdown';
-import { HeaderFuelBranding } from '../components/HeaderFuelBranding';
-import { ENV_TITLES, IS_PUBLIC_PREVIEW } from '../constants';
-import { useCurrentEnv } from '../hooks/useCurrentEnv';
+import { IS_PUBLIC_PREVIEW } from '../constants';
 import { MobileMenu } from './MobileMenu';
 import { Search } from './Search';
 
 export function Header() {
   const pathname = usePathname();
-  const environment = useCurrentEnv();
   const isDocsActive = pathname?.startsWith('/docs');
 
   return (
     <Box.Flex as="header" css={styles.root}>
-      <HStack css={{ flex: 1, alignItems: 'center' }}>
-        <HeaderFuelBranding title={ENV_TITLES[environment]} />
-        <FuelBrandingDropdown />
-      </HStack>
+      <FuelBrandingDropdown />
       <Box css={styles.desktop}>
         <Box.Flex css={styles.menu}>
           <Link href="/docs/install" className={isDocsActive ? 'active' : ''}>

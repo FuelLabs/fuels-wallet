@@ -1,23 +1,18 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, FuelLogo } from '@fuel-ui/react';
-import Link from 'next/link';
-
-import { useExtensionTitle } from '~/src/hooks/useExtensionTitle';
 
 export function HeaderFuelBranding({
   title = 'Fuel Wallet',
 }: { title: string }) {
   return (
     <Box.Flex css={{ alignItems: 'center' }}>
-      <Link href="/" className="logo">
-        <FuelLogo size={40} />
-        <Box.Flex css={styles.logoText}>
-          <span>{title}</span>
-          <Box as="span" css={styles.version}>
-            beta
-          </Box>
-        </Box.Flex>
-      </Link>
+      <FuelLogo size={40} />
+      <Box.Flex css={styles.logoText}>
+        <span>{title}</span>
+        <Box as="span" css={styles.version}>
+          beta
+        </Box>
+      </Box.Flex>
     </Box.Flex>
   );
 }
