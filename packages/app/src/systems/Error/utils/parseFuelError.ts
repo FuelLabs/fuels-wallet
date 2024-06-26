@@ -7,6 +7,9 @@ export function parseFuelError(error: any): FuelWalletError {
     ...error,
     timestamp: Date.now(),
     id: createUUID(),
+    location: window ? window.location.href : '-',
+    pathname: window ? window.location.pathname : '-',
+    hash: window ? window.location.hash : '-',
   };
 }
 
