@@ -1,35 +1,26 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, FuelLogo, Icon } from '@fuel-ui/react';
+import { Box, HStack, Icon } from '@fuel-ui/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { IS_PUBLIC_PREVIEW } from '../constants';
-
-import { EnvironmentDropdown } from '../components/EnvironmentDropdown';
-import { useExtensionTitle } from '../hooks/useExtensionTitle';
+import { FuelBrandingDropdown } from '../components/FuelBrandingDropdown';
+import { HeaderFuelBranding } from '../components/HeaderFuelBranding';
+import { ENV_TITLES, IS_PUBLIC_PREVIEW } from '../constants';
+import { useCurrentEnv } from '../hooks/useCurrentEnv';
 import { MobileMenu } from './MobileMenu';
 import { Search } from './Search';
 
 export function Header() {
-  const title = useExtensionTitle();
-
   const pathname = usePathname();
+  const environment = useCurrentEnv();
   const isDocsActive = pathname?.startsWith('/docs');
 
   return (
     <Box.Flex as="header" css={styles.root}>
-      <Box.Flex css={{ alignItems: 'center', flex: 1 }}>
-        <Link href="/" className="logo">
-          <FuelLogo size={40} />
-          <Box.Flex css={styles.logoText}>
-            <span>{title}</span>
-            <Box as="span" css={styles.version}>
-              beta
-            </Box>
-          </Box.Flex>
-        </Link>
-        <EnvironmentDropdown />
-      </Box.Flex>
+      <HStack css={{ flex: 1, alignItems: 'center' }}>
+        <HeaderFuelBranding title={ENV_TITLES[environment]} />
+        <FuelBrandingDropdown />
+      </HStack>
       <Box css={styles.desktop}>
         <Box.Flex css={styles.menu}>
           <Link href="/docs/install" className={isDocsActive ? 'active' : ''}>
@@ -86,21 +77,6 @@ const styles = {
       py: '$4',
       px: '$8',
     },
-  }),
-  logoText: cssObj({
-    pl: '$6',
-    alignItems: 'center',
-    flex: 1,
-    fontSize: '$2xl',
-    fontWeight: '$normal',
-    color: 'white',
-    letterSpacing: '-0.05em',
-  }),
-  version: cssObj({
-    ml: '$2',
-    color: '$intentsBase8',
-    fontSize: '$sm',
-    fontStyle: 'italic',
   }),
   desktop: cssObj({
     display: 'none',
