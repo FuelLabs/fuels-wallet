@@ -44,4 +44,3 @@ export const WALLET_LINK_NEXT = 'https://next-wallet.fuel.network';
 export const WALLET_LINK_STAGING = 'https://staging-wallet.fuel.network';
 export const WALLET_LINK_PROD = 'https://wallet.fuel.network';
 export const WALLET_DOWNLOAD_PATH = `/app/fuel-wallet-${process.env.NEXT_PUBLIC_APP_VERSION}.zip`;
-export const DomainContext = createContext<string>('');

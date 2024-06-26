@@ -18,7 +18,6 @@ import type { ReactNode } from 'react';
 
 import * as Examples from '../../examples';
 
-import { DomainProvider } from '~/src/components/DomainProvider';
 import { BadgeDeprecated } from './BadgeDeprecated';
 import { Blockquote } from './Blockquote';
 import { Code } from './Code';
@@ -92,29 +91,27 @@ setFuelThemes({
 
 export function Provider({ children }: ProviderProps) {
   return (
-    <DomainProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <FuelProvider
-            theme="dark"
-            fuelConfig={{
-              connectors: [
-                new FuelWalletConnector(),
-                new FuelWalletDevelopmentConnector(),
-                new FueletWalletConnector(),
-              ],
-            }}
-          >
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <FuelProvider
+          theme="dark"
+          fuelConfig={{
+            connectors: [
+              new FuelWalletConnector(),
+              new FuelWalletDevelopmentConnector(),
+              new FueletWalletConnector(),
+            ],
+          }}
+        >
+          {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
+          <MDXProvider components={components as any}>
             {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
-            <MDXProvider components={components as any}>
-              {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
-              {children as any}
-            </MDXProvider>
-          </FuelProvider>
-        </ThemeProvider>
+            {children as any}
+          </MDXProvider>
+        </FuelProvider>
+      </ThemeProvider>
 
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </DomainProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
