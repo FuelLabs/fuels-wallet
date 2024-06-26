@@ -6,6 +6,7 @@ import { renderWithProvider } from '~/systems/Core/__tests__/utils';
 
 import { MOCK_ACCOUNTS } from '../../__mocks__';
 
+import { Address } from 'fuels';
 import { BalanceWidget } from './BalanceWidget';
 
 const ACCOUNT = {
@@ -24,7 +25,11 @@ describe('BalanceWidget', () => {
   it('should show account name and user address', () => {
     renderWithProvider(<BalanceWidget account={ACCOUNT} />);
     expect(screen.getByText(ACCOUNT.name)).toBeInTheDocument();
-    expect(screen.getByText(shortAddress(ACCOUNT.address))).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(Address.fromDynamicInput(ACCOUNT.address).toB256())
+      )
+    ).toBeInTheDocument();
   });
 
   it('should show formatted balance', async () => {
@@ -68,7 +73,9 @@ describe('BalanceWidget', () => {
 
     await act(async () => {
       fireEvent.click(btn);
-      expect(await navigator.clipboard.readText()).toBe(ACCOUNT.address);
+      expect(await navigator.clipboard.readText()).toBe(
+        Address.fromDynamicInput(ACCOUNT.address).toB256()
+      );
     });
   });
 });

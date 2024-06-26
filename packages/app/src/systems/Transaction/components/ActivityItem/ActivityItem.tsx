@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Card, Copyable, Icon, Text } from '@fuel-ui/react';
-import type { TransactionSummary } from 'fuels';
+import { Address, type TransactionSummary } from 'fuels';
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Pages, shortAddress } from '~/systems/Core';
@@ -56,7 +56,9 @@ export const ActivityItem: TxItemComponent = ({
         <Box.Flex css={styles.row}>
           <Box.Flex css={styles.fromToTextWrapper}>
             <Text css={styles.label}>{toOrFromText}</Text>
-            <Text>{shortAddress(toOrFromAddress)}</Text>
+            <Text>
+              {shortAddress(Address.fromDynamicInput(toOrFromAddress).toB256())}
+            </Text>
           </Box.Flex>
           {timeFormatted && (
             <Box.Flex css={styles.item}>
