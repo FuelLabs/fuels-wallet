@@ -1,6 +1,7 @@
 'use client';
 import { cssObj } from '@fuel-ui/css';
 import { Button, Dropdown } from '@fuel-ui/react';
+import { useEffect, useState } from 'react';
 import {
   WALLET_LINK_NEXT,
   WALLET_LINK_PROD,
@@ -20,6 +21,11 @@ const displayedEnvironments: Array<DisplayedEnvs> = [
 
 export function EnvironmentDropdown() {
   const environment = useCurrentEnv();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   function getPlainNameForEnv(env: Environment) {
     switch (env) {
@@ -69,7 +75,7 @@ export function EnvironmentDropdown() {
           css={styles.button}
           variant="outlined"
         >
-          {currentEnvironmentName}
+          {isClient ? currentEnvironmentName : ''}
         </Button>
       </Dropdown.Trigger>
       <Dropdown.Menu
