@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 
 import { META_DESC, META_OGIMG } from '../constants';
 
+import { useExtensionTitle } from '../hooks/useExtensionTitle';
 import { Header } from './Header';
 
 type LayoutProps = {
@@ -13,7 +14,8 @@ type LayoutProps = {
 };
 
 export function Layout({ title, children }: LayoutProps) {
-  const titleText = title ? `${title} | Fuel Wallet` : 'Fuel Wallet';
+  const extensionName = useExtensionTitle();
+  const titleText = `${title ? `${title} ` : ''} | ${extensionName}`;
   return (
     <>
       <Head>
