@@ -2,6 +2,7 @@ import type { Account } from '@fuel-wallet/types';
 import type { TransactionRequest, WalletLocked } from 'fuels';
 
 import {
+  Address,
   type BN,
   Provider,
   TransactionResponse,
