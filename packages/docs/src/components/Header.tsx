@@ -14,7 +14,9 @@ export function Header() {
 
   return (
     <Box.Flex as="header" css={styles.root}>
-      <FuelBrandingDropdown />
+      <Box.Flex css={{ alignItems: 'center', flex: 1 }}>
+        <FuelBrandingDropdown />
+      </Box.Flex>
       <Box css={styles.desktop}>
         <Box.Flex css={styles.menu}>
           <Link href="/docs/install" className={isDocsActive ? 'active' : ''}>
