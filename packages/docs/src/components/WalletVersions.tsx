@@ -39,7 +39,6 @@ export function WalletVersions() {
 
 const styles = {
   root: cssObj({
-    py: '3px',
-    my: 100,
+    marginTop: 100,
   }),
 };

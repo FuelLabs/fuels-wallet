@@ -36,8 +36,9 @@ export function FuelBrandingDropdown() {
   return (
     <Dropdown
       popoverProps={{
-        alignOffset: -20,
-        align: 'end',
+        alignOffset: -10,
+        align: 'start',
+        sideOffset: -10,
       }}
     >
       <Dropdown.Trigger asChild>
@@ -50,6 +51,15 @@ export function FuelBrandingDropdown() {
             alignItems: 'center',
             gap: '$2',
             flexDirection: 'row',
+            color: 'transparent',
+            border: 'none',
+            '&:hover': {
+              color: 'transparent !important',
+              border: 'none !important',
+            },
+            '&:focus-visible': {
+              outline: 'none',
+            },
           }}
         >
           <HeaderFuelBranding title={environmentsTitles[currentEnv]} />
@@ -58,10 +68,9 @@ export function FuelBrandingDropdown() {
       </Dropdown.Trigger>
       <Dropdown.Menu
         css={{
-          gap: '$5',
+          gap: '$2',
           display: 'flex',
           flexDirection: 'column',
-          marginLeft: '20px',
         }}
         onAction={(e) => {
           onSelect(e as Environment);
@@ -72,6 +81,10 @@ export function FuelBrandingDropdown() {
             key={env}
             textValue={environmentsTitles[env]}
             aria-label={`fuel_environment-dropdown-item-${env}`}
+            css={{
+              paddingTop: '$3',
+              paddingBottom: '$3',
+            }}
           >
             <HeaderFuelBranding title={environmentsTitles[env]} />
           </Dropdown.MenuItem>
