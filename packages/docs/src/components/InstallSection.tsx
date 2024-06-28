@@ -1,6 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Button, Heading, Image, Text } from '@fuel-ui/react';
 
+import { useExtensionTitle } from '~/src/hooks/useExtensionTitle';
 import walletPrivewImg from '../../public/fuell-wallet-preview.png';
 import braveImg from '../../public/icons/browser/brave.png';
 import chomreImg from '../../public/icons/browser/chrome.png';
@@ -8,12 +9,16 @@ import edgeImg from '../../public/icons/browser/edge.png';
 import { INSTALL_LINK } from '../constants';
 
 export function InstallSection() {
+  const title = useExtensionTitle();
+
   return (
     <Box.Flex css={styles.root} justify={'center'}>
       <Box.Flex css={styles.content} justify="space-between">
         <Box.Stack css={styles.head}>
           <Box.Stack css={styles.header}>
-            <Heading color="brand">THE OFFICIAL</Heading>
+            <Heading color="brand" css={styles.headerIntro}>
+              The Official
+            </Heading>
             <Heading css={styles.title} fontSize={'7xl'}>
               Fuel Wallet
             </Heading>
@@ -23,11 +28,13 @@ export function InstallSection() {
             </Text>
           </Box.Stack>
           <Box.Stack css={styles.action} justify={'end'}>
-            <a href={INSTALL_LINK} target="_blank" rel="noreferrer">
-              <Button size="lg" intent="primary">
-                Install Fuel Wallet
-              </Button>
-            </a>
+            {!!INSTALL_LINK && (
+              <a href={INSTALL_LINK} target="_blank" rel="noreferrer">
+                <Button size="lg" intent="primary">
+                  Install {title}
+                </Button>
+              </a>
+            )}
             <Box.Stack>
               <Text fontSize="sm">Supported on</Text>
               <Box.Flex gap={'$2'}>
@@ -74,6 +81,9 @@ const styles = {
   }),
   header: cssObj({
     marginTop: '$4',
+  }),
+  headerIntro: cssObj({
+    textTransform: 'uppercase',
   }),
   title: cssObj({
     marginTop: 0,

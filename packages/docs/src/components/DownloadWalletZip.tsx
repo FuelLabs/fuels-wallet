@@ -1,11 +1,9 @@
-import { DOWNLOAD_LINK } from '../constants';
-
+import { WALLET_DOWNLOAD_PATH } from '../constants';
+import { useExtensionTitle } from '../hooks/useExtensionTitle';
 import { Link } from './Link';
 
 export function DownloadWalletZip() {
-  return (
-    <Link href={DOWNLOAD_LINK} download>
-      FuelWallet zip file
-    </Link>
-  );
+  const title = useExtensionTitle();
+
+  return <Link href={WALLET_DOWNLOAD_PATH}>{`${title} zip file`}</Link>;
 }

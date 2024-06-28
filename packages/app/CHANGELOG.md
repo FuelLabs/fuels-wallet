@@ -1,5 +1,20 @@
 # fuels-wallet
 
+## 0.22.0
+
+### Minor Changes
+
+- [#1397](https://github.com/FuelLabs/fuels-wallet/pull/1397) [`3966aa92`](https://github.com/FuelLabs/fuels-wallet/commit/3966aa929608520869486043e633a32156d93c19) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - Improved error handling and including location informations to support better understanding about the causes of erros
+
+- [#1385](https://github.com/FuelLabs/fuels-wallet/pull/1385) [`d49b9efe`](https://github.com/FuelLabs/fuels-wallet/commit/d49b9efe8b3133b67d748cc7a7dc3b0f506555f1) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - Support for Bech32 addresses has been removed and replaced with b256 (hex) addresses throughout the wallet screen components. All addresses, both existing and new, will now be displayed in the b256 format.
+
+  While Bech32 addresses can still be used on the send screen, they will be automatically converted and processed as b256 internally. QR codes on the receive screen will now encode addresses in the b256 format.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.22.0
+
 ## 0.21.3
 
 ### Patch Changes

@@ -34,6 +34,7 @@ import Player from './Player';
 import { Pre } from './Pre';
 import { SDKSection } from './SDKSection';
 import { TD, TH, Table } from './Table';
+import { WalletVersions } from './WalletVersions';
 
 const components = {
   BadgeDeprecated,
@@ -61,6 +62,7 @@ const components = {
   Examples,
   Demo,
   DownloadWalletZip,
+  WalletVersions,
   HStack,
 };
 
