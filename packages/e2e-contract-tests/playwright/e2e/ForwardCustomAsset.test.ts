@@ -12,7 +12,7 @@ import {
   getBaseAssetId,
   shortAddress,
 } from '../../src/utils';
-import { testSetup } from '../utils';
+import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
@@ -21,6 +21,7 @@ import {
   checkAriaLabelsContainsText,
   checkFee,
   connect,
+  waitSuccessTransaction,
 } from './utils';
 
 useLocalCRX();
@@ -28,13 +29,22 @@ useLocalCRX();
 test.describe('Forward Custom Asset', () => {
   let fuelWallet: WalletUnlocked;
   let fuelWalletTestHelper: FuelWalletTestHelper;
+  let masterWallet: WalletUnlocked;
 
   test.beforeEach(async ({ context, extensionId, page }) => {
-    ({ fuelWallet, fuelWalletTestHelper } = await testSetup({
+    ({ fuelWallet, fuelWalletTestHelper, masterWallet } = await testSetup({
       context,
       page,
       extensionId,
+      amountToFund: bn.parseUnits('0.001'),
     }));
+  });
+
+  test.afterEach(async () => {
+    await transferMaxBalance({
+      fromWallet: fuelWallet,
+      toWallet: masterWallet,
+    });
   });
 
   test('e2e forward custom asset', async ({ page }) => {
@@ -108,13 +118,11 @@ test.describe('Forward Custom Asset', () => {
     // Test approve
     const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     await fuelWalletTestHelper.walletApprove();
-    await hasText(page, 'Transaction successful.');
+    await waitSuccessTransaction(page);
     const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
       Number.parseFloat(
-        preDepositBalanceTkn
-          .sub(postDepositBalanceTkn)
-          .format({ precision: 5, units: 9 })
+        preDepositBalanceTkn.sub(postDepositBalanceTkn).format({ precision: 4 })
       )
     ).toBe(Number.parseFloat(forwardCustomAssetAmount));
   });

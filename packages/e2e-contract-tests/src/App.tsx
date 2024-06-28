@@ -1,5 +1,7 @@
 import { Toaster } from 'react-hot-toast';
 
+import './style.css';
+
 import {
   AssetConfigurationCard,
   DepositAndMintMultiCalls,

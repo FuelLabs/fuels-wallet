@@ -1,6 +1,6 @@
 import { screen, testA11y } from '@fuel-ui/test-utils';
-import { TransactionStatus } from 'fuels';
-import { TestWrapper } from '~/systems/Core';
+import { Address, TransactionStatus } from 'fuels';
+import { TestWrapper, shortAddress } from '~/systems/Core';
 import { renderWithProvider } from '~/systems/Core/__tests__';
 
 import { MOCK_TX_RECIPIENT } from '../../__mocks__/tx-recipient';
@@ -22,27 +22,51 @@ describe('TxFromTo', () => {
   it('should render both cards correctly and dont have spinner', async () => {
     renderWithProvider(<TxFromTo {...PROPS} />);
     expect(screen.getByText('From')).toBeInTheDocument();
-    expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(Address.fromDynamicInput(PROPS.from?.address!).toB256())
+      )
+    ).toBeInTheDocument();
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
-    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(Address.fromDynamicInput(PROPS.to?.address!).toB256())
+      )
+    ).toBeInTheDocument();
     expect(() => screen.getByLabelText('Loading Spinner')).toThrow();
   });
 
   it('should show spinner and loaders when isLoading is true and from and to are empty', async () => {
     renderWithProvider(<TxFromTo isLoading />);
     expect(() => screen.getByText('From')).toThrow();
-    expect(() => screen.getByText('fuel1g...kuj7')).toThrow();
+    expect(() =>
+      screen.getByText(
+        shortAddress(Address.fromDynamicInput(PROPS.from?.address!).toB256())
+      )
+    ).toThrow();
     expect(() => screen.getByText('To (Contract)')).toThrow();
-    expect(() => screen.getByText('fuel1y...y6wk')).toThrow();
+    expect(() =>
+      screen.getByText(
+        shortAddress(Address.fromDynamicInput(PROPS.to?.address!).toB256())
+      )
+    ).toThrow();
     expect(screen.getByLabelText('Loading Spinner')).toBeInTheDocument();
   });
 
   it('should show info and spinner when isLoading is true and from and to exits', async () => {
     renderWithProvider(<TxFromTo {...PROPS} isLoading />);
     expect(screen.getByText('From')).toBeInTheDocument();
-    expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(Address.fromDynamicInput(PROPS.from?.address!).toB256())
+      )
+    ).toBeInTheDocument();
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
-    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(Address.fromDynamicInput(PROPS.to?.address!).toB256())
+      )
+    ).toBeInTheDocument();
     expect(screen.getByLabelText('Loading Spinner')).toBeInTheDocument();
   });
 
@@ -51,9 +75,17 @@ describe('TxFromTo', () => {
       <TxFromTo {...PROPS} status={TransactionStatus.submitted} />
     );
     expect(screen.getByText('From')).toBeInTheDocument();
-    expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(Address.fromDynamicInput(PROPS.from?.address!).toB256())
+      )
+    ).toBeInTheDocument();
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
-    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(Address.fromDynamicInput(PROPS.to?.address!).toB256())
+      )
+    ).toBeInTheDocument();
     expect(() => screen.getByLabelText('Loading Spinner')).toThrow();
   });
 
@@ -62,9 +94,17 @@ describe('TxFromTo', () => {
       <TxFromTo {...PROPS} status={TransactionStatus.success} />
     );
     expect(screen.getByText('From')).toBeInTheDocument();
-    expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(Address.fromDynamicInput(PROPS.from?.address!).toB256())
+      )
+    ).toBeInTheDocument();
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
-    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(Address.fromDynamicInput(PROPS.to?.address!).toB256())
+      )
+    ).toBeInTheDocument();
     expect(() => screen.getByLabelText('Loading Spinner')).toThrow();
   });
 
@@ -73,9 +113,17 @@ describe('TxFromTo', () => {
       <TxFromTo {...PROPS} status={TransactionStatus.failure} />
     );
     expect(screen.getByText('From')).toBeInTheDocument();
-    expect(screen.getByText('fuel1g...kuj7')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(Address.fromDynamicInput(PROPS.from?.address!).toB256())
+      )
+    ).toBeInTheDocument();
     expect(screen.getByText('To (Contract)')).toBeInTheDocument();
-    expect(screen.getByText('fuel1y...y6wk')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        shortAddress(Address.fromDynamicInput(PROPS.to?.address!).toB256())
+      )
+    ).toBeInTheDocument();
     expect(() => screen.getByLabelText('Loading Spinner')).toThrow();
   });
 });
