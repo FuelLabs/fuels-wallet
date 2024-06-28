@@ -76,7 +76,13 @@ export const TxRecipientCard: TxRecipientCardComponent = ({
             </Box>
           )}
           <Box.Flex css={styles.info}>
-            <Heading as="h6" css={styles.name}>
+            <Heading
+              as="h6"
+              css={styles.name}
+              aria-label={`${isReceiver ? 'Recipient' : 'Sender'} ${
+                isNetwork ? 'Address' : 'Name'
+              }`}
+            >
               {isNetwork ? address : name}
             </Heading>
             {!isNetwork && (

@@ -16,6 +16,7 @@ import { EXTERNAL_CONTRACT_ID, MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
 import {
   checkAddresses,
+  checkAriaLabelsContainsText,
   checkFee,
   connect,
   waitSuccessTransaction,
@@ -68,6 +69,15 @@ test.describe('Forward Half ETH and Mint External Custom Asset', () => {
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
+
+    // Test if asset name is defined (not unknown)
+    checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Asset Name',
+      'Ethereum'
+    );
+    // Test if sender name is defined (not unknown)
+    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
 
     // test forward asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');
