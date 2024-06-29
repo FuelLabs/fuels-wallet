@@ -12,6 +12,7 @@ import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
 import {
   checkAddresses,
+  checkAriaLabelsContainsText,
   checkFee,
   connect,
   waitSuccessTransaction,
@@ -56,6 +57,15 @@ test.describe('Forward Eth', () => {
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
+
+    // Test if asset name is defined (not unknown)
+    checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Asset Name',
+      'Ethereum'
+    );
+    // Test if sender name is defined (not unknown)
+    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
 
     // test the asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');
