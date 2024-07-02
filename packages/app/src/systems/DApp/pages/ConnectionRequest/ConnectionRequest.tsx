@@ -115,7 +115,7 @@ export function ConnectionRequest() {
           )}
         </MotionCardList>
       </Layout.Content>
-      <Box.Flex css={styles.disclaimer} justify="center" align={'flex-end'}>
+      <Box.Flex css={styles.disclaimer} justify="flex-start" align={'flex-end'}>
         <Text fontSize="sm" as={'h2'} className="warning">
           Only connect with sites you trust.
         </Text>
@@ -171,6 +171,7 @@ const styles = {
   }),
   disclaimer: cssObj({
     pt: '$1',
+    ml: '$4',
   }),
   header: cssObj({
     display: 'flex',
