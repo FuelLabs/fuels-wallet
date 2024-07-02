@@ -34,6 +34,7 @@ runs:
       shell: bash
       run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts
       env:
+        PORT: 5173
         VITE_FUEL_PROVIDER_URL: ${{ inputs.providerUrl }}
         VITE_MASTER_WALLET_MNEMONIC: ${{ inputs.masterMnemonic }}
         VITE_WALLET_SECRET: ${{ inputs.genesisSecret }}
