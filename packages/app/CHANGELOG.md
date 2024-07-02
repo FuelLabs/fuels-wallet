@@ -1,5 +1,14 @@
 # fuels-wallet
 
+## 0.22.1
+
+### Patch Changes
+
+- [#1319](https://github.com/FuelLabs/fuels-wallet/pull/1319) [`e3bf65aa`](https://github.com/FuelLabs/fuels-wallet/commit/e3bf65aa5a070a0c2b5490d422b70e462090b25b) Thanks [@arthurgeron](https://github.com/arthurgeron)! - - Added aria labels to Recipient Sender and Asset Name on transaction approval screen;
+  - Validate all asset names during e2e contract tests on the transaction approval screen
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.22.1
+
 ## 0.22.0
 
 ### Minor Changes
