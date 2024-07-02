@@ -1,12 +1,13 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Form, Input, Text } from '@fuel-ui/react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { type BN, DECIMAL_FUEL, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
 import {
   ControlledField,
   Layout,
+  MotionFlex,
   MotionStack,
   animations,
 } from '~/systems/Core';
@@ -25,7 +26,7 @@ export function SendSelect({
   balanceAssets,
   balanceAssetSelected,
   baseFee = bn(0),
-  baseGasLimit = bn(0),
+  minGasLimit = bn(0),
   tip,
   regularTip,
   fastTip,
@@ -62,16 +63,15 @@ export function SendSelect({
       // Adding 2 magical units to match the fake unit that is added on TS SDK (.add(1))
       // and then removed on the "transaction" service (.sub(1))
       const maxFee = baseFee.add(tip).add(2);
+      if (maxFee.gt(balanceAssetSelected)) return;
 
-      form.setValue('amount', balanceAssetSelected.sub(maxFee), {
-        shouldValidate: true,
-      });
+      form.setValue('amount', balanceAssetSelected.sub(maxFee));
     }
   }, [watchMax, balanceAssetSelected, baseFee, tip, form.setValue]);
 
   return (
     <MotionContent {...animations.slideInTop()}>
-      <Box.Stack gap="$4">
+      <Box.Stack gap="$3">
         <Box.Flex css={styles.row}>
           <Text as="span" css={styles.title}>
             Asset
@@ -146,9 +146,11 @@ export function SendSelect({
               }}
             />
             {(errorMessage || amountFieldState.error) && (
-              <Form.ErrorMessage aria-label="Error message">
-                {errorMessage || amountFieldState.error?.message}
-              </Form.ErrorMessage>
+              <MotionFlex {...animations.fadeIn()} key="error">
+                <Form.ErrorMessage aria-label="Error message">
+                  {errorMessage || amountFieldState.error?.message}
+                </Form.ErrorMessage>
+              </MotionFlex>
             )}
           </Form.Control>
         </Box.Stack>
@@ -164,7 +166,7 @@ export function SendSelect({
               </Text>
               <TxFeeOptions
                 baseFee={baseFee}
-                baseGasLimit={baseGasLimit}
+                minGasLimit={minGasLimit}
                 regularTip={regularTip}
                 fastTip={fastTip}
               />

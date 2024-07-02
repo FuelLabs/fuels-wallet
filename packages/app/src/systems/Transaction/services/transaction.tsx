@@ -5,12 +5,10 @@ import {
   Address,
   type BN,
   Provider,
-  ScriptTransactionRequest,
   TransactionResponse,
   TransactionStatus,
   assembleTransactionSummary,
   bn,
-  coinQuantityfy,
   getTransactionSummary,
   getTransactionSummaryFromRequest,
   getTransactionsSummaries,
@@ -242,15 +240,14 @@ export class TxService {
     const consensusParameters = provider.getChain().consensusParameters;
 
     return {
-      baseGasLimit: bn(1),
-      maxGasPerTx: consensusParameters.txParameters.maxGasPerTx,
+      maxGasLimit: consensusParameters.txParameters.maxGasPerTx,
     };
   }
 
   static async createTransfer(input: TxInputs['createTransfer'] | undefined) {
-    const { amount, assetId, to, tip, gasLimit: gasLimitInput } = input || {};
+    const { amount, assetId, to, tip, gasLimit } = input || {};
 
-    if (!to || !assetId || !amount || !tip || !gasLimitInput) {
+    if (!to || !assetId || !amount || !tip || !gasLimit) {
       throw new Error('Missing params for transaction request');
     }
 
@@ -279,8 +276,13 @@ export class TxService {
           assetId,
           {
             tip: tip.isZero() ? undefined : tip,
+            gasLimit: gasLimit.isZero() ? undefined : gasLimit,
           }
         );
+
+        const txCost = await provider.getTransactionCost(transactionRequest, {
+          resourcesOwner: wallet,
+        });
 
         const baseFee = transactionRequest.maxFee.sub(
           transactionRequest.tip ?? bn(0)
@@ -288,18 +290,33 @@ export class TxService {
 
         return {
           baseFee: baseFee.sub(1), // To match maxFee calculated on TS SDK (they add 1 unit)
+          minGasLimit: txCost.gasUsed,
           transactionRequest,
           address: account.address,
           providerUrl: network.url,
         };
       } catch (e) {
         attempts += 1;
-        console.log(e);
+
+        // @TODO: Waiting to match with FuelError type and ErrorCode enum from "fuels"
+        // These types are not exported from "fuels" package, but they exists in the "@fuels-ts/errors"
+        if (
+          e instanceof Error &&
+          'toObject' in e &&
+          typeof e.toObject === 'function'
+        ) {
+          const error: { code: string } = e.toObject();
+
+          if (error.code === 'gas-limit-too-low') {
+            throw e;
+          }
+        }
       }
     }
 
     return {
       baseFee: undefined,
+      minGasLimit: undefined,
       transactionRequest: undefined,
       address: account.address,
       providerUrl: network.url,
