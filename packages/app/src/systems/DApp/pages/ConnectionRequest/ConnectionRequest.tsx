@@ -117,15 +117,7 @@ export function ConnectionRequest() {
       </Layout.Content>
       <Box.Flex css={styles.disclaimer} justify="center" align={'flex-end'}>
         <Text fontSize="sm" as={'h2'} className="warning">
-          Only connect with sites you trust.{' '}
-          <Link
-            href="https://wallet.fuel.network"
-            isExternal
-            color="intentsPrimary11"
-          >
-            Learn more
-          </Link>
-          .
+          Only connect with sites you trust.
         </Text>
       </Box.Flex>
       <Layout.BottomBar>
