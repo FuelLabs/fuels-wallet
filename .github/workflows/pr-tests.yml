@@ -135,9 +135,6 @@ jobs:
       - name: Generate .env app
         run: cp packages/app/.env.example packages/app/.env
 
-      - name: Generate .env e2e-contracts
-        run: cp packages/e2e-contract-tests/.env.example packages/e2e-contract-tests/.env
-
       - name: Build & Deploy Contracts
         run: pnpm deploy:contracts
         working-directory: ./packages/e2e-contract-tests
@@ -145,7 +142,6 @@ jobs:
       - name: Run E2E Contract Tests - Local
         uses: ./.github/actions/e2e-tests-contracts
         with:
-          ghToken: ${{ secrets.GITHUB_TOKEN }}
           providerUrl: "http://localhost:4000/v1/graphql"
           masterMnemonic: ${{ secrets.VITE_MASTER_WALLET_MNEMONIC }}
           genesisSecret: "0xa449b1ffee0e2205fa924c6740cc48b3b473aa28587df6dab12abc245d1f5298"
