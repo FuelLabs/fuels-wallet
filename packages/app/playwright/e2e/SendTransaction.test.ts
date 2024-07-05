@@ -123,6 +123,75 @@ test.describe('SendTransaction', () => {
     await hasText(page, 'success');
   });
 
+  test('Send transaction with custom fee', async () => {
+    const receiverWallet = Wallet.generate({
+      provider,
+    });
+    await visit(page, '/send');
+    await page.waitForSelector('[aria-disabled="true"]');
+    await getButtonByText(page, 'Select one asset').click();
+    await page.getByText('Ethereum').click();
+    await getInputByName(page, 'address').fill(receiverWallet.address.toB256());
+    await getInputByName(page, 'amount').fill('0.001');
+
+    // Selecting and extracting regular fee amount
+    const regularFeeComponent = getByAriaLabel(page, 'fee value:Regular');
+    await regularFeeComponent.click();
+    const regularFeeAmount = (await regularFeeComponent.textContent())
+      .replace(' ETH', '')
+      .trim();
+
+    await getButtonByText(page, 'Review').click();
+
+    // Extract and compare the network fee amount, checking if its equal to regular fee amont
+    const networkFeeComponentWithRegular = getByAriaLabel(
+      page,
+      'fee value:Network'
+    ).first();
+    const networkFeeAmountWithRegular = (
+      await networkFeeComponentWithRegular.textContent()
+    )
+      .replace(' ETH', '')
+      .trim();
+    // Validating the amount
+    expect(regularFeeAmount).toBe(networkFeeAmountWithRegular);
+
+    // Going back to select other fee value
+    await getButtonByText(page, 'Back').click();
+
+    //Selecting and extracting fast fee amount
+    const fastFeeComponent = getByAriaLabel(page, 'fee value:Fast');
+    await fastFeeComponent.click();
+    // Tricky, need to wait a little bit in order to change the fee amount
+    await page.waitForTimeout(3000);
+    const fastFeeAmount = (await fastFeeComponent.textContent())
+      .replace(' ETH', '')
+      .trim();
+
+    await getButtonByText(page, 'Review').click();
+
+    // Extract and compere the network fee amount, checking if its equal to fast fee amount
+    const networkFeeComponentWithFast = getByAriaLabel(
+      page,
+      'fee value:Network'
+    ).first();
+    const networkFeeAmountWithFast = (
+      await networkFeeComponentWithFast.textContent()
+    )
+      .replace(' ETH', '')
+      .trim();
+    // Validating the amount
+    expect(fastFeeAmount).toBe(networkFeeAmountWithFast);
+
+    await hasText(page, /(.*)ETH/);
+
+    await getButtonByText(page, 'Approve').click();
+    await hasText(page, '0.001 ETH');
+
+    // Wait for transaction to be confirmed
+    await hasText(page, 'success');
+  });
+
   test('Send max amount transaction', async () => {
     const receiverWallet = Wallet.generate({
       provider,
@@ -147,7 +216,7 @@ test.describe('SendTransaction', () => {
 
     // Get calculated fee
     await hasText(page, /(.*)ETH/);
-    const regularFee = await getByAriaLabel(page, 'Fee Value').first();
+    const regularFee = await getByAriaLabel(page, 'fee value:Regular').first();
     const feeAmountText = (await regularFee.textContent())
       .replace(' ETH', '')
       .trim();
