@@ -9,10 +9,8 @@ export function useOpenFaucet() {
   const { account } = useAccounts();
 
   const openFaucet = useCallback(() => {
-    if (!account || !account.address) return VITE_FUEL_FAUCET_URL;
-    const address = Address.fromDynamicInput(account.address).toB256();
     const url = stringifyUrl(VITE_FUEL_FAUCET_URL, {
-      address,
+      address: account?.address,
     });
 
     if (IS_CRX) {
