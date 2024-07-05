@@ -1,4 +1,3 @@
-import { Address } from 'fuels';
 import { useCallback } from 'react';
 import { IS_CRX, VITE_FUEL_FAUCET_URL } from '~/config';
 import { useAccounts } from '~/systems/Account';
