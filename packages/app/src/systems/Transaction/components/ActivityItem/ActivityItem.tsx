@@ -1,7 +1,7 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Card, Copyable, Icon, Text } from '@fuel-ui/react';
 import { Address, type TransactionSummary } from 'fuels';
-import type { FC } from 'react';
+import { type FC, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Pages, shortAddress } from '~/systems/Core';
 
@@ -34,6 +34,12 @@ export const ActivityItem: TxItemComponent = ({
     status,
   } = useTxMetadata({ ownerAddress, transaction });
 
+  const address = useMemo(() => {
+    if (!toOrFromAddress) return;
+
+    return Address.fromDynamicInput(toOrFromAddress);
+  }, [toOrFromAddress]);
+
   return (
     <Card
       css={styles.root}
@@ -56,9 +62,7 @@ export const ActivityItem: TxItemComponent = ({
         <Box.Flex css={styles.row}>
           <Box.Flex css={styles.fromToTextWrapper}>
             <Text css={styles.label}>{toOrFromText}</Text>
-            <Text>
-              {shortAddress(Address.fromDynamicInput(toOrFromAddress).toB256())}
-            </Text>
+            <Text>{!!address && shortAddress(address.toB256())}</Text>
           </Box.Flex>
           {timeFormatted && (
             <Box.Flex css={styles.item}>
