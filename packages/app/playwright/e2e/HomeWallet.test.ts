@@ -1,7 +1,6 @@
 import type { Browser, Page } from '@playwright/test';
 import test, { chromium } from '@playwright/test';
 
-import { getInputsByType } from 'fuels';
 import {
   getButtonByText,
   getByAriaLabel,
