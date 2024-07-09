@@ -11,3 +11,7 @@ export async function waitAriaLabel(page: Page, selector: string) {
 export function getInputByName(page: Page, name: string) {
   return page.locator(`input[name="${name}"]`);
 }
+
+export function getInputByValue(page: Page, value: string) {
+  return page.locator(`input[value='${value}']`);
+}
