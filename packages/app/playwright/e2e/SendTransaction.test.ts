@@ -134,9 +134,11 @@ test.describe('SendTransaction', () => {
     await getInputByName(page, 'address').fill(receiverWallet.address.toB256());
     await getInputByName(page, 'amount').fill('0.001');
 
+    // Waiting button change to Review in order to ensure that fee amount is updated
+    await page.waitForSelector('button:has-text("Review")');
+
     // Selecting and extracting regular fee amount
     const regularFeeComponent = getByAriaLabel(page, 'fee value:Regular');
-    await regularFeeComponent.click();
     const regularFeeAmount = (await regularFeeComponent.textContent())
       .replace(' ETH', '')
       .trim();
@@ -221,6 +223,9 @@ test.describe('SendTransaction', () => {
     await page.getByText('Ethereum').click();
     await getInputByName(page, 'address').fill(receiverWallet.address.toB256());
     await getInputByName(page, 'amount').fill('0.001');
+
+    // Waiting button change to Review in order to ensure that fee amount is updated
+    await page.waitForSelector('button:has-text("Review")');
 
     // Selecting and extracting regular fee amount
     const regularFeeComponent = getByAriaLabel(page, 'fee value:Regular');
