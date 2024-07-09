@@ -2,4 +2,4 @@
 "fuels-wallet": minor
 ---
 
-creating an e2e test for custom fees
+Add new e2e tests for custom fees in "Send Screen"
