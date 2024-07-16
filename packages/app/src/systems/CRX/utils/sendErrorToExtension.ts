@@ -23,7 +23,7 @@ export async function sendErrorToExtension(
       await client.request('saveError', { error });
     } catch (_) {
       // If forwarding fails, save error directly
-      await ReportErrorService.saveError({ error: error });
+      await ReportErrorService.saveError(error);
     }
     return;
   } catch (e) {
@@ -32,6 +32,6 @@ export async function sendErrorToExtension(
       'Failed to communicate error to extension, saving to indexedDB',
       e
     );
-    ReportErrorService.saveError({ error });
+    ReportErrorService.saveError(error);
   }
 }

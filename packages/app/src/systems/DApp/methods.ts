@@ -77,7 +77,7 @@ export class RequestMethods extends ExtensionPageConnection {
   }
 
   handleSaveError(error: Error) {
-    store.send(Services.reportError, { type: 'SAVE_ERROR', input: { error } });
+    store.send(Services.reportError, { type: 'SAVE_ERROR', input: error });
   }
 }
 
@@ -88,6 +88,6 @@ if (IS_CRX) {
 listenToGlobalErrors((error) => {
   store.send(Services.reportError, {
     type: 'SAVE_ERROR',
-    input: { error },
+    input: error,
   });
 });

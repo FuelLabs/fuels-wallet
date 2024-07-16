@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type ErrorInfo } from 'react';
 import { Services, store } from '~/store';
 import { ReportErrors } from '../../pages';
 
@@ -16,10 +16,10 @@ export class ErrorBoundary extends React.Component<
     return { hasError: true };
   }
 
-  async componentDidCatch(error: Error, reactError: React.ErrorInfo) {
+  async componentDidCatch(error: Error, info: ErrorInfo) {
     store.send(Services.reportError, {
       type: 'SAVE_ERROR',
-      input: { error, reactError },
+      input: { ...error, ...info },
     });
     this.setState({
       hasError: true,

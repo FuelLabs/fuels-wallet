@@ -5,5 +5,4 @@ export type FuelWalletError = {
   id?: string;
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   error?: Error | ErrorEvent | { message: string; stack?: any };
-  reactError?: ErrorInfo;
 };

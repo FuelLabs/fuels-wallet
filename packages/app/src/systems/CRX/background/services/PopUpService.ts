@@ -175,7 +175,7 @@ export class PopUpService {
       await this.client.request('saveError', { error });
     } catch (_) {
       // If forwarding fails, save error directly
-      await ReportErrorService.saveError({ error: error });
+      await ReportErrorService.saveError(error);
     }
   }
 }

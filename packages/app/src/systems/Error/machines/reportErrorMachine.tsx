@@ -1,4 +1,3 @@
-import type { FuelWalletError } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { ReportErrorService } from '../services';
@@ -6,7 +5,7 @@ import { ReportErrorService } from '../services';
 export type ErrorMachineContext = {
   error?: string;
   hasErrors?: boolean;
-  errors?: FuelWalletError[];
+  errors?: Error[];
   reportErrorService: ReportErrorService; // Ensure this is not optional
 };
 
@@ -22,7 +21,7 @@ type MachineServices = {
   checkForErrors: {
     data: {
       hasErrors: boolean;
-      errors: FuelWalletError[];
+      errors: Error[];
     };
   };
   saveError: {
@@ -46,7 +45,7 @@ export type ErrorMachineEvents =
     }
   | {
       type: 'SAVE_ERROR';
-      input: Pick<FuelWalletError, 'error' | 'reactError'>;
+      input: Error;
     };
 
 export const reportErrorMachine = createMachine(

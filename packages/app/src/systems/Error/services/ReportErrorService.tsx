@@ -1,4 +1,3 @@
-import type { FuelWalletError } from '@fuel-wallet/types';
 import {
   BrowserClient,
   Scope,
@@ -8,7 +7,7 @@ import {
 } from '@sentry/browser';
 import { APP_VERSION, VITE_SENTRY_DSN } from '~/config';
 import { db } from '~/systems/Core/utils/database';
-import { createError, parseFuelError } from '../utils';
+import { parseFuelError } from '../utils';
 
 const integrationsWithoutGlobalScope = getDefaultIntegrations({}).filter(
   (defaultIntegration) => {
@@ -47,22 +46,15 @@ export class ReportErrorService {
     const errors = await this.getErrors();
 
     for (const e of errors) {
-      this.scope.captureException(createError(e), {
+      this.scope.captureException(e, {
         extra: e,
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       } as any);
     }
   }
 
-  static saveError({
-    error,
-    reactError,
-  }: Pick<FuelWalletError, 'error' | 'reactError'>) {
-    const fuelError = parseFuelError({
-      error: { ...error },
-      reactError: { ...reactError },
-    });
-    return db.errors.add(fuelError);
+  static saveError(error: Error) {
+    return db.errors.add(parseFuelError(error));
   }
 
   async checkForErrors(): Promise<boolean> {
@@ -70,8 +62,8 @@ export class ReportErrorService {
     return errors.length > 0;
   }
 
-  async getErrors(): Promise<FuelWalletError[]> {
-    return db.errors.toArray() as Promise<FuelWalletError[]>;
+  async getErrors(): Promise<Error[]> {
+    return db.errors.toArray() as Promise<Error[]>;
   }
 
   async clearErrors() {
