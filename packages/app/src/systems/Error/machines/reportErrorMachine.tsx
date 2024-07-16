@@ -6,7 +6,7 @@ export type ErrorMachineContext = {
   error?: string;
   hasErrors?: boolean;
   errors?: Error[];
-  reportErrorService: ReportErrorService; // Ensure this is not optional
+  reportErrorService: ReportErrorService;
 };
 
 type MachineServices = {
@@ -59,7 +59,7 @@ export const reportErrorMachine = createMachine(
       events: {} as ErrorMachineEvents,
     },
     context: {
-      reportErrorService: new ReportErrorService(), // Ensure this is initialized
+      reportErrorService: new ReportErrorService(),
     },
     id: '(machine)',
     initial: 'checkForErrors',
