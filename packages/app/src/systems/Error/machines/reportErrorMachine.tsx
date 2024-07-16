@@ -3,7 +3,6 @@ import { assign, createMachine } from 'xstate';
 import { ReportErrorService } from '../services';
 
 export type ErrorMachineContext = {
-  error?: string;
   hasErrors?: boolean;
   errors?: Error[];
   reportErrorService: ReportErrorService;
@@ -33,15 +32,12 @@ type MachineServices = {
 export type ErrorMachineEvents =
   | {
       type: 'REPORT_ERRORS';
-      input?: null;
     }
   | {
       type: 'CHECK_FOR_ERRORS';
-      input?: null;
     }
   | {
       type: 'IGNORE_ERRORS';
-      input?: null;
     }
   | {
       type: 'SAVE_ERROR';
@@ -120,10 +116,6 @@ export const reportErrorMachine = createMachine(
           },
         },
       },
-      reported: {
-        type: 'final',
-      },
-      error: {},
     },
   },
   {
