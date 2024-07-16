@@ -1,12 +1,25 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, FuelLogo, Heading, Input, Text } from '@fuel-ui/react';
+import {
+  Box,
+  Button,
+  FuelLogo,
+  HStack,
+  Heading,
+  Input,
+  Text,
+} from '@fuel-ui/react';
+import { Icon, IconButton } from '@fuel-ui/react';
+import { useState } from 'react';
+import ReactJson from 'react-json-view';
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { coreStyles } from '~/systems/Core/styles';
-
 import { useReportError } from '../../hooks';
 
 export function ReportErrors() {
   const { handlers, isLoadingSendOnce, errors } = useReportError();
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const shownError = errors[currentPage];
 
   return (
     <Box.Stack css={styles.root} gap="$4">
@@ -22,9 +35,39 @@ export function ReportErrors() {
           <br />
           Would you like to send the following error logs to Fuel Wallet team?
         </Text>
-        <Input isDisabled={true} css={styles.textArea}>
-          <Input.Field as="textarea" name="reports" value={errors} />
-        </Input>
+        <HStack className="justify-end">
+          <Text>
+            {currentPage + 1} / {errors.length}
+          </Text>
+          <HStack>
+            <IconButton
+              variant="ghost"
+              aria-label="Previous error"
+              icon={Icon.is('ChevronLeft')}
+              disabled={currentPage <= 0}
+              onPress={() => setCurrentPage((prev) => prev - 1)}
+            />
+            <IconButton
+              variant="ghost"
+              aria-label="Next error"
+              icon={Icon.is('ChevronRight')}
+              disabled={currentPage >= errors.length - 1}
+              onPress={() => setCurrentPage((prev) => prev + 1)}
+            />
+          </HStack>
+        </HStack>
+        <ReactJson
+          src={shownError}
+          displayDataTypes={false}
+          displayObjectSize={false}
+          indentWidth={2}
+          sortKeys={true}
+          quotesOnKeys={false}
+          enableClipboard={false}
+          collapsed={true}
+          name="errors"
+          theme="summerfruit:inverted"
+        />
       </Box.Stack>
       <Box.Stack>
         <Button
