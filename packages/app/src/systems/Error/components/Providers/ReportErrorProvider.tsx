@@ -1,5 +1,5 @@
 import React, { type ErrorInfo } from 'react';
-import { Services, store } from '~/store';
+import { Services, StoreProvider, store } from '~/store';
 import { ReportErrors } from '../../pages';
 
 type ErrorProviderProps = {
@@ -40,7 +40,11 @@ export class ErrorBoundary extends React.Component<
 
   render() {
     if (this.state.hasError) {
-      return <ReportErrors onRestore={this.onRestore} />;
+      return (
+        <StoreProvider>
+          <ReportErrors onRestore={this.onRestore} />
+        </StoreProvider>
+      );
     }
     return this.props.children;
   }
