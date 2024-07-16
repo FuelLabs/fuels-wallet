@@ -27,6 +27,10 @@ type MachineServices = {
     // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
     data: void;
   };
+  dismissError: {
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
+    data: void;
+  };
 };
 
 export type ErrorMachineEvents =
@@ -42,6 +46,10 @@ export type ErrorMachineEvents =
   | {
       type: 'SAVE_ERROR';
       input: Error;
+    }
+  | {
+      type: 'DISMISS_ERROR';
+      input: number;
     };
 
 export const reportErrorMachine = createMachine(
@@ -73,6 +81,9 @@ export const reportErrorMachine = createMachine(
           },
           SAVE_ERROR: {
             target: 'savingError',
+          },
+          DISMISS_ERROR: {
+            target: 'dismissingError',
           },
         },
       },
@@ -116,6 +127,15 @@ export const reportErrorMachine = createMachine(
           },
         },
       },
+      dismissingError: {
+        invoke: {
+          src: 'dismissError',
+          onDone: {
+            target: 'checkForErrors',
+            actions: ['reload'],
+          },
+        },
+      },
     },
   },
   {
@@ -144,6 +164,9 @@ export const reportErrorMachine = createMachine(
       },
       saveError: async (_, event) => {
         await ReportErrorService.saveError(event.input);
+      },
+      dismissError: async (context, event) => {
+        await context.reportErrorService.dismissError(event.input);
       },
     },
   }

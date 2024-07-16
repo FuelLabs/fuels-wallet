@@ -1,16 +1,16 @@
 import { cssObj } from '@fuel-ui/css';
 import {
+  Alert,
   Box,
   Button,
   FuelLogo,
   HStack,
   Heading,
-  Input,
   Text,
 } from '@fuel-ui/react';
-import { Icon, IconButton } from '@fuel-ui/react';
-import { useState } from 'react';
-import ReactJson from 'react-json-view';
+import { Icon, IconButton, Tooltip } from '@fuel-ui/react';
+import { JsonEditor } from 'json-edit-react';
+import { useEffect, useState } from 'react';
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { coreStyles } from '~/systems/Core/styles';
 import { useReportError } from '../../hooks';
@@ -19,7 +19,12 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
   const { handlers, isLoadingSendOnce, errors } = useReportError();
   const [currentPage, setCurrentPage] = useState(0);
 
-  const shownError = errors[currentPage];
+  const [currentErrors, setCurrentErrors] = useState<Error[]>(errors);
+  const shownError = currentErrors?.[currentPage] ?? {};
+
+  useEffect(() => {
+    setCurrentErrors(errors);
+  }, [errors]);
 
   function reportErrors() {
     handlers.reportErrors();
@@ -31,8 +36,26 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
     onRestore();
   }
 
+  const onUpdate: Parameters<typeof JsonEditor>[0]['onUpdate'] = (newJson) => {
+    const { newData } = newJson;
+    if (!!newData && 'message' in newData && 'stack' in newData) {
+      setCurrentErrors((prev) => {
+        const errorsClone = [...prev];
+        errorsClone[currentPage] = newData as Error;
+        return errorsClone;
+      });
+    }
+  };
+
+  function dismissCurrentError() {
+    handlers.dismissError(currentPage);
+  }
+
+  const hasPreviousError = !!errors.length || currentPage - 1 >= 0;
+  const hasNextError = !!errors.length || currentPage + 1 <= errors.length - 1;
+
   return (
-    <Box.Stack css={styles.root} gap="$4">
+    <Box.Stack css={styles.root} gap="$4" data-scrollable>
       <Box.Stack>
         <FuelLogo size={30} />
         <Heading as="h3" css={styles.title}>
@@ -45,38 +68,71 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
           <br />
           Would you like to send the following error logs to Fuel Wallet team?
         </Text>
-        <HStack className="justify-end">
-          <Text>
-            {currentPage + 1} / {errors.length}
-          </Text>
-          <HStack>
+        <Alert status="warning">
+          <Alert.Description as="div">
+            <Text>
+              We try to sanitize error logs to remove sensitive information such
+              as private keys, but ultimately it's your responsibility to ensure
+              no private information is sent.
+            </Text>
+          </Alert.Description>
+        </Alert>
+        <HStack css={styles.controlsContainer}>
+          <Box css={styles.editorControls}>
+            <Tooltip content="Dismiss current error" side="top">
+              <IconButton
+                variant="ghost"
+                aria-label="Dismiss error"
+                icon={Icon.is('X')}
+                disabled={!shownError}
+                onPress={dismissCurrentError}
+                size="xs"
+              />
+            </Tooltip>
+          </Box>
+          <HStack css={styles.pageControls}>
+            <Text>
+              {currentPage + 1} / {errors.length}
+            </Text>
             <IconButton
               variant="ghost"
               aria-label="Previous error"
               icon={Icon.is('ChevronLeft')}
-              disabled={currentPage <= 0}
-              onPress={() => setCurrentPage((prev) => prev - 1)}
+              disabled={!hasPreviousError}
+              size="xs"
+              onPress={() =>
+                hasPreviousError && setCurrentPage((prev) => prev - 1)
+              }
             />
             <IconButton
               variant="ghost"
               aria-label="Next error"
               icon={Icon.is('ChevronRight')}
-              disabled={currentPage >= errors.length - 1}
-              onPress={() => setCurrentPage((prev) => prev + 1)}
+              disabled={!hasNextError}
+              size="xs"
+              onPress={() => hasNextError && setCurrentPage((prev) => prev + 1)}
             />
           </HStack>
         </HStack>
-        <ReactJson
-          src={shownError}
-          displayDataTypes={false}
-          displayObjectSize={false}
-          indentWidth={2}
-          sortKeys={true}
-          quotesOnKeys={false}
-          enableClipboard={false}
-          collapsed={true}
-          name="errors"
-          theme="summerfruit:inverted"
+        <JsonEditor
+          data={shownError}
+          onUpdate={onUpdate}
+          restrictEdit
+          restrictAdd
+          restrictDrag
+          indent={0}
+          theme={[
+            'githubDark',
+            {
+              iconEdit: 'grey',
+              boolean: {
+                color: 'red',
+                fontStyle: 'italic',
+                fontWeight: 'bold',
+                fontSize: '80%',
+              },
+            },
+          ]}
         />
       </Box.Stack>
       <Box.Stack>
@@ -115,6 +171,21 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     border: '1px solid $border',
+    overflowY: 'scroll',
+    overflowX: 'hidden',
+  }),
+  controlsContainer: cssObj({
+    display: 'flex',
+    justifyContent: 'space-between',
+  }),
+  editorControls: cssObj({
+    display: 'flex',
+    justifyContent: 'flex-start',
+  }),
+  pageControls: cssObj({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   }),
   title: cssObj({
     marginBottom: 0,

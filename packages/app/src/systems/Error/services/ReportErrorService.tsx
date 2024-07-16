@@ -69,4 +69,15 @@ export class ReportErrorService {
   async clearErrors() {
     await db.errors.clear();
   }
+
+  async dismissError(index: number) {
+    const errors = await this.getErrors();
+    if (index >= 0 && index < errors.length) {
+      errors.splice(index, 1);
+      await db.errors.clear();
+      for (const error of errors) {
+        await db.errors.add(error);
+      }
+    }
+  }
 }
