@@ -1,10 +1,4 @@
-// Copied from React.ErrorInfo
-interface ErrorInfo {
-  /**
-   * Captures which component contained the exception, and its ancestors.
-   */
-  componentStack: string;
-}
+import type { ErrorInfo } from 'react';
 
 export type FuelWalletError = {
   timestamp?: number;

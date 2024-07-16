@@ -1,14 +1,13 @@
 import type { FuelWalletError } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-import { FetchMachine } from '~/systems/Core/machines/fetchMachine';
-
 import { ReportErrorService } from '../services';
 
 export type ErrorMachineContext = {
   error?: string;
   hasErrors?: boolean;
   errors?: FuelWalletError[];
+  reportErrorService: ReportErrorService; // Ensure this is not optional
 };
 
 type MachineServices = {
@@ -17,13 +16,18 @@ type MachineServices = {
     data: void;
   };
   reportErrors: {
-    data: boolean;
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
+    data: void;
   };
   checkForErrors: {
     data: {
       hasErrors: boolean;
       errors: FuelWalletError[];
     };
+  };
+  saveError: {
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
+    data: void;
   };
 };
 
@@ -39,6 +43,10 @@ export type ErrorMachineEvents =
   | {
       type: 'IGNORE_ERRORS';
       input?: null;
+    }
+  | {
+      type: 'SAVE_ERROR';
+      input: Pick<FuelWalletError, 'error' | 'reactError'>;
     };
 
 export const reportErrorMachine = createMachine(
@@ -51,7 +59,9 @@ export const reportErrorMachine = createMachine(
       services: {} as MachineServices,
       events: {} as ErrorMachineEvents,
     },
-    context: {},
+    context: {
+      reportErrorService: new ReportErrorService(), // Ensure this is initialized
+    },
     id: '(machine)',
     initial: 'checkForErrors',
     states: {
@@ -65,6 +75,9 @@ export const reportErrorMachine = createMachine(
           },
           CHECK_FOR_ERRORS: {
             target: 'checkForErrors',
+          },
+          SAVE_ERROR: {
+            target: 'savingError',
           },
         },
       },
@@ -93,11 +106,17 @@ export const reportErrorMachine = createMachine(
         tags: ['loading'],
         invoke: {
           src: 'reportErrors',
-          data: {
-            input: (_: ErrorMachineContext, ev: ErrorMachineEvents) => ev.input,
-          },
           onDone: {
-            target: 'idle',
+            target: 'checkForErrors',
+            actions: ['reload'],
+          },
+        },
+      },
+      savingError: {
+        invoke: {
+          src: 'saveError',
+          onDone: {
+            target: 'checkForErrors',
             actions: ['reload'],
           },
         },
@@ -117,36 +136,24 @@ export const reportErrorMachine = createMachine(
       reload: () => {},
     },
     services: {
-      clearErrors: FetchMachine.create<void, void>({
-        showError: true,
-        maxAttempts: 1,
-        async fetch() {
-          await ReportErrorService.clearErrors();
-        },
-      }),
-      reportErrors: FetchMachine.create<void, void>({
-        showError: true,
-        maxAttempts: 2,
-        async fetch() {
-          await ReportErrorService.reportErrors();
-          await ReportErrorService.clearErrors();
-        },
-      }),
-      checkForErrors: FetchMachine.create<
-        void,
-        MachineServices['checkForErrors']['data']
-      >({
-        showError: false,
-        maxAttempts: 1,
-        async fetch() {
-          const hasErrors = await ReportErrorService.checkForErrors();
-          const errors = await ReportErrorService.getErrors();
-          return {
-            hasErrors,
-            errors,
-          };
-        },
-      }),
+      clearErrors: async (context) => {
+        await context.reportErrorService.clearErrors();
+      },
+      reportErrors: async (context) => {
+        await context.reportErrorService.reportErrors();
+        await context.reportErrorService.clearErrors();
+      },
+      checkForErrors: async (context) => {
+        const hasErrors = await context.reportErrorService.checkForErrors();
+        const errors = await context.reportErrorService.getErrors();
+        return {
+          hasErrors,
+          errors,
+        };
+      },
+      saveError: async (_, event) => {
+        await ReportErrorService.saveError(event.input);
+      },
     },
   }
 );

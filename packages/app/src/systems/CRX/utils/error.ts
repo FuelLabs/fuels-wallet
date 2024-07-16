@@ -1,14 +1,11 @@
-import { ReportErrorService } from '~/systems/Error/services';
+import { CommunicationProtocol } from '~/systems/CRX/background/services/CommunicationProtocol';
+import { listenToGlobalErrors } from '~/systems/Core/utils/listenToGlobalErrors';
+import { sendErrorToExtension } from './sendErrorToExtension';
 
-globalThis.addEventListener('error', (event) => {
-  if (typeof window !== 'undefined') return;
-  if (!event?.error) return;
-  ReportErrorService.saveError({
-    error: {
-      message: event?.error?.message,
-      stack: event?.error?.stack,
-    },
-  });
+export const communicationProtocol = new CommunicationProtocol();
+
+listenToGlobalErrors((error) => {
+  sendErrorToExtension(communicationProtocol, error);
 });
 
 export function errorBoundary<T extends () => ReturnType<T>>(
@@ -17,9 +14,7 @@ export function errorBoundary<T extends () => ReturnType<T>>(
   try {
     return cb();
   } catch (err) {
-    ReportErrorService.saveError({
-      error: err as Error,
-    });
+    sendErrorToExtension(communicationProtocol, err as Error);
     throw err;
   }
 }

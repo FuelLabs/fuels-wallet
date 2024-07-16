@@ -1,13 +1,12 @@
 import React from 'react';
-
+import { Services, store } from '~/store';
 import { ReportErrors } from '../../pages';
-import { ReportErrorService } from '../../services';
 
 type ErrorProviderProps = {
   children: React.ReactNode;
 };
 
-class ErrorBoundary extends React.Component<
+export class ErrorBoundary extends React.Component<
   ErrorProviderProps,
   { hasError: boolean }
 > {
@@ -18,10 +17,9 @@ class ErrorBoundary extends React.Component<
   }
 
   async componentDidCatch(error: Error, reactError: React.ErrorInfo) {
-    await ReportErrorService.saveError({
-      error,
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-      reactError: reactError as any,
+    store.send(Services.reportError, {
+      type: 'SAVE_ERROR',
+      input: { error, reactError },
     });
     this.setState({
       hasError: true,
@@ -33,12 +31,7 @@ class ErrorBoundary extends React.Component<
   }
 
   checkErrors = async () => {
-    const errors = await ReportErrorService.getErrors();
-    if (errors.length > 0) {
-      this.setState({
-        hasError: true,
-      });
-    }
+    store.send(Services.reportError, { type: 'CHECK_FOR_ERRORS' });
   };
 
   render() {
@@ -49,4 +42,6 @@ class ErrorBoundary extends React.Component<
   }
 }
 
-export { ErrorBoundary };
+export function ReportErrorProvider({ children }: ErrorProviderProps) {
+  return <ErrorBoundary>{children}</ErrorBoundary>;
+}

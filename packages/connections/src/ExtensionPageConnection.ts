@@ -9,7 +9,7 @@ import type { JSONRPCResponse } from 'json-rpc-2.0';
 
 import { BaseConnection } from './BaseConnection';
 
-export class ExtensionPageConnection extends BaseConnection {
+export abstract class ExtensionPageConnection extends BaseConnection {
   readonly connection: chrome.runtime.Port;
 
   constructor() {
@@ -54,5 +54,18 @@ export class ExtensionPageConnection extends BaseConnection {
 
   destroy() {
     this.connection.disconnect();
+  }
+
+  abstract handleSaveError(error: Error): void;
+
+  onRequest(message: RequestMessage) {
+    console.log('onRequest', message);
+    if (message.request.method === 'saveError') {
+      this.handleSaveError(message.request.params.error);
+    } else {
+      this.server.receive(message.request).then((response) => {
+        this.sendResponse(response, message);
+      });
+    }
   }
 }

@@ -15,6 +15,7 @@ import {
   showPopUp,
 } from '../../utils';
 
+import { ReportErrorService } from '~/systems/Error/services/ReportErrorService';
 import type { CommunicationProtocol } from './CommunicationProtocol';
 import type { MessageInputs } from './types';
 
@@ -166,5 +167,15 @@ export class PopUpService {
 
   async addNetwork(input: MessageInputs['addNetwork']) {
     return this.client.request('addNetwork', input);
+  }
+
+  // Forward to extension side
+  async captureError(error: Error) {
+    try {
+      await this.client.request('saveError', { error });
+    } catch (_) {
+      // If forwarding fails, save error directly
+      await ReportErrorService.saveError({ error: error });
+    }
   }
 }
