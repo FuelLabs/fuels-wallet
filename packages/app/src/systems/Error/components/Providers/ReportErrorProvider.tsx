@@ -34,9 +34,13 @@ export class ErrorBoundary extends React.Component<
     store.send(Services.reportError, { type: 'CHECK_FOR_ERRORS' });
   };
 
+  onRestore = () => {
+    this.setState({ hasError: false });
+  };
+
   render() {
     if (this.state.hasError) {
-      return <ReportErrors />;
+      return <ReportErrors onRestore={this.onRestore} />;
     }
     return this.props.children;
   }

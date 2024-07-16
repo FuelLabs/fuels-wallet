@@ -15,11 +15,21 @@ import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { coreStyles } from '~/systems/Core/styles';
 import { useReportError } from '../../hooks';
 
-export function ReportErrors() {
+export function ReportErrors({ onRestore }: { onRestore: () => void }) {
   const { handlers, isLoadingSendOnce, errors } = useReportError();
   const [currentPage, setCurrentPage] = useState(0);
 
   const shownError = errors[currentPage];
+
+  function reportErrors() {
+    handlers.reportErrors();
+    onRestore();
+  }
+
+  function ignoreErrors() {
+    handlers.ignoreErrors();
+    onRestore();
+  }
 
   return (
     <Box.Stack css={styles.root} gap="$4">
@@ -74,14 +84,14 @@ export function ReportErrors() {
           intent="primary"
           isDisabled={isLoadingSendOnce}
           isLoading={isLoadingSendOnce}
-          onPress={handlers.reportErrors}
+          onPress={reportErrors}
           aria-label="Report Error"
         >
           Send reports
         </Button>
         <Button
           variant="ghost"
-          onPress={handlers.ignoreErrors}
+          onPress={ignoreErrors}
           aria-label="Don't send error report"
         >
           Ignore
