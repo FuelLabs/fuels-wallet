@@ -8,9 +8,9 @@
   },
   "dependencies": {
     "@fuels/connectors": "0.5.0",
-    "@fuels/react": "0.21.0",
+    "@fuels/react": "0.20.0",
     "@tanstack/react-query": "5.28.4",
-    "fuels": "pr-2479",
+    "fuels": "0.92.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
