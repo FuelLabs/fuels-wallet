@@ -8,13 +8,10 @@ export function ErrorFloatingButton() {
   const { errors } = useReportError();
   const navigate = useNavigate();
   const location = useLocation();
-
-  console.log('fsk', location);
-
-  if (!errors.length || location.pathname === Pages.errors()) return null;
+  const hidden = !errors.length || location.pathname === Pages.errors();
 
   return (
-    <Box css={styles.alertContainer}>
+    <Box css={styles.alertContainer} className={hidden ? '' : 'show'}>
       <IconButton
         css={styles.button}
         onPress={() => navigate(Pages.errors())}
@@ -31,10 +28,15 @@ const styles = {
   alertContainer: cssObj({
     padding: '$2',
     position: 'absolute',
-    bottom: 20,
+    bottom: 0,
     right: 25,
     zIndex: '$10',
     borderRadius: '$full',
+    transform: 'translateY(50px)',
+    transition: 'transform 0.3s ease-in-out',
+    '&.show': {
+      transform: 'translateY(-20px)',
+    },
   }),
   button: cssObj({
     background: '$intentsError9',
