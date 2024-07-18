@@ -20,7 +20,7 @@ import {
   checkAddresses,
   checkAriaLabelsContainsText,
   connect,
-  waitSuccessTransaction 
+  waitSuccessTransaction,
 } from './utils';
 
 useLocalCRX();
