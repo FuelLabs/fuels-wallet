@@ -1,5 +1,24 @@
 # fuels-wallet
 
+## 0.23.0
+
+### Minor Changes
+
+- [#1403](https://github.com/FuelLabs/fuels-wallet/pull/1403) [`d4f89b17`](https://github.com/FuelLabs/fuels-wallet/commit/d4f89b17b84dcf9f02251787c17048829b74ccdb) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - re-enabling faucet e2e tests
+
+- [#1402](https://github.com/FuelLabs/fuels-wallet/pull/1402) [`b8b03704`](https://github.com/FuelLabs/fuels-wallet/commit/b8b03704e6ca093ab98831160ff195e50187f6b5) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - Converted the address from bech32 to b256 on faucet link
+
+### Patch Changes
+
+- [#1319](https://github.com/FuelLabs/fuels-wallet/pull/1319) [`e3bf65aa`](https://github.com/FuelLabs/fuels-wallet/commit/e3bf65aa5a070a0c2b5490d422b70e462090b25b) Thanks [@arthurgeron](https://github.com/arthurgeron)! - - Added aria labels to Recipient Sender and Asset Name on transaction approval screen;
+
+  - Validate all asset names during e2e contract tests on the transaction approval screen
+
+- [#1408](https://github.com/FuelLabs/fuels-wallet/pull/1408) [`24840bfe`](https://github.com/FuelLabs/fuels-wallet/commit/24840bfe38cda3a45b1dc43b4e4f8c8890b3ebaf) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - TransactionList breaking when have a failed transaction
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.23.0
+
 ## 0.22.0
 
 ### Minor Changes

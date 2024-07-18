@@ -1,5 +1,5 @@
 import { Card, Text } from '@fuel-ui/react';
-import type { BN } from 'fuels';
+import { type BN, DEFAULT_PRECISION } from 'fuels';
 import type { FC } from 'react';
 
 import { TxFeeLoader } from './TxFeeLoader';
@@ -27,11 +27,24 @@ export const TxFee: TxFeeComponent = ({
       css={styles.detailItem(!!checked, !!onChecked)}
       onClick={() => onChecked?.(true)}
     >
-      <Text color="intentsBase11" css={styles.title}>
+      <Text
+        color="intentsBase11"
+        css={styles.title}
+        aria-label={`fee title:${title || 'Network'}`}
+      >
         {title || 'Fee (network)'}
       </Text>
-      <Text color="intentsBase12" css={styles.amount} aria-label="Fee Value">
-        {fee ? `${fee.format()} ETH` : '--'}
+      <Text
+        color="intentsBase12"
+        css={styles.amount}
+        aria-label={`fee value:${title || 'Network'}`}
+      >
+        {fee
+          ? `${fee.format({
+              minPrecision: DEFAULT_PRECISION,
+              precision: DEFAULT_PRECISION,
+            })} ETH`
+          : '--'}
       </Text>
     </Card>
   );
