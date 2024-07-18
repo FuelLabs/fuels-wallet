@@ -5,6 +5,7 @@ import { Pages } from '~/systems/Core/types';
 import { homeRoutes } from '~/systems/Home';
 import { signUpRoutes } from '~/systems/SignUp';
 
+import { errorRoutes } from '~/systems/Error/routes';
 import { IS_CRX, IS_CRX_POPUP } from './config';
 import { CRXPrivateRoute, CRXPublicRoute } from './systems/CRX/components';
 import { dappRoutes } from './systems/DApp/routes';
@@ -15,6 +16,7 @@ import { UnlockGuard } from './systems/Unlock';
 
 const walletRoutes = (
   <>
+    {errorRoutes}
     {homeRoutes}
     {settingsRoutes}
     {dappRoutes}

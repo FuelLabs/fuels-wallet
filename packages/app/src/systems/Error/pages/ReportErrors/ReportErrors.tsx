@@ -20,11 +20,16 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
   const [currentPage, setCurrentPage] = useState(0);
 
   const [currentErrors, setCurrentErrors] = useState<Error[]>(errors);
-  const shownError = currentErrors?.[currentPage] ?? {};
+  const shownError = currentErrors?.[currentPage];
 
   useEffect(() => {
     setCurrentErrors(errors);
-  }, [errors]);
+    if (!errors.length) {
+      onRestore();
+    }
+  }, [errors, onRestore]);
+
+  useEffect(() => {}, []);
 
   function reportErrors() {
     handlers.reportErrors();
@@ -49,10 +54,16 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
 
   function dismissCurrentError() {
     handlers.dismissError(currentPage);
+    setCurrentPage((prev) => {
+      if (prev === errors.length - 1) {
+        return prev - 1;
+      }
+      return prev;
+    });
   }
 
-  const hasPreviousError = !!errors.length || currentPage - 1 >= 0;
-  const hasNextError = !!errors.length || currentPage + 1 <= errors.length - 1;
+  const hasPreviousError = !!errors.length && currentPage - 1 >= 0;
+  const hasNextError = !!errors.length && currentPage + 1 <= errors.length - 1;
 
   return (
     <Box.Stack css={styles.root} gap="$4" data-scrollable>
@@ -68,15 +79,6 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
           <br />
           Would you like to send the following error logs to Fuel Wallet team?
         </Text>
-        <Alert status="warning">
-          <Alert.Description as="div">
-            <Text>
-              We try to sanitize error logs to remove sensitive information such
-              as private keys, but ultimately it's your responsibility to ensure
-              no private information is sent.
-            </Text>
-          </Alert.Description>
-        </Alert>
         <HStack css={styles.controlsContainer}>
           <Box css={styles.editorControls}>
             <Tooltip content="Dismiss current error" side="top">
@@ -115,7 +117,7 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
           </HStack>
         </HStack>
         <JsonEditor
-          data={shownError}
+          data={shownError ?? {}}
           onUpdate={onUpdate}
           restrictEdit
           restrictAdd
@@ -136,6 +138,14 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
         />
       </Box.Stack>
       <Box.Stack>
+        <Alert status="warning">
+          <Alert.Description as="div">
+            <Text>
+              Ultimately it's your responsibility to ensure no private
+              information is sent.
+            </Text>
+          </Alert.Description>
+        </Alert>
         <Button
           intent="primary"
           isDisabled={isLoadingSendOnce}
