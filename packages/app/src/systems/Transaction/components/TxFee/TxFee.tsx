@@ -29,14 +29,14 @@ export const TxFee: TxFeeComponent = ({
     >
       <Text
         color="intentsBase11"
-        css={styles.text}
+        css={styles.title}
         aria-label={`fee title:${title || 'Network'}`}
       >
         {title || 'Fee (network)'}
       </Text>
       <Text
         color="intentsBase12"
-        css={styles.text}
+        css={styles.amount}
         aria-label={`fee value:${title || 'Network'}`}
       >
         {fee
