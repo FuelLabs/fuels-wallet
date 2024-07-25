@@ -26,10 +26,7 @@ export const TxHeader: TxHeaderComponent = ({
   type,
   providerUrl = '',
 }) => {
-  const { href: _href, openExplorer: _openExplorer } = useExplorerLink(
-    providerUrl,
-    id
-  );
+  const { href, openExplorer } = useExplorerLink(providerUrl, id);
 
   return (
     <Card css={styles.root}>
@@ -56,7 +53,7 @@ export const TxHeader: TxHeaderComponent = ({
             }}
             tooltipMessage="Copy Transaction ID"
           />
-          {/* <Copyable
+          <Copyable
             value={href}
             tooltipMessage="Copy Transaction Link"
             iconProps={{
@@ -71,7 +68,7 @@ export const TxHeader: TxHeaderComponent = ({
               onClick={openExplorer}
               aria-label="Open explorer"
             />
-          </Tooltip> */}
+          </Tooltip>
         </Box.Flex>
       </Box.Flex>
       <Box.Flex css={{ ...styles.row, ...styles.type }}>

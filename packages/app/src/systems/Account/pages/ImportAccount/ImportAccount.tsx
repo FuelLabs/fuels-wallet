@@ -1,7 +1,8 @@
-import { Box, Button, Dialog, Icon } from '@fuel-ui/react';
+import { Alert, Box, Button, Dialog, Icon } from '@fuel-ui/react';
 import { styles } from '~/systems/Core';
 import { OverlayDialogTopbar } from '~/systems/Overlay';
 
+import { cssObj } from '@fuel-ui/css';
 import { ImportAccountForm } from '../../components/ImportAccountForm';
 import { useAccounts, useImportAccount } from '../../hooks';
 import { useImportAccountForm } from '../../hooks/useImportAccountForm';
@@ -28,6 +29,16 @@ export const ImportAccount = () => {
       </OverlayDialogTopbar>
       <Dialog.Description as="div" css={styles.content}>
         <ImportAccountForm form={form} isLoading={isLoading} />
+        <Alert
+          status="warning"
+          aria-label="Non-recoverable account warning"
+          css={cssObj({ margin: '$2 0' })}
+        >
+          <Alert.Description>
+            Imported accounts using a private key are not recoverable via your
+            wallet's seed phrase.
+          </Alert.Description>
+        </Alert>
       </Dialog.Description>
       <Dialog.Footer>
         <Button variant="ghost" onPress={accountsHandlers.goToList}>

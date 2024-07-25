@@ -1,5 +1,120 @@
 # fuels-wallet
 
+## 0.23.0
+
+### Minor Changes
+
+- [#1403](https://github.com/FuelLabs/fuels-wallet/pull/1403) [`d4f89b17`](https://github.com/FuelLabs/fuels-wallet/commit/d4f89b17b84dcf9f02251787c17048829b74ccdb) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - re-enabling faucet e2e tests
+
+- [#1402](https://github.com/FuelLabs/fuels-wallet/pull/1402) [`b8b03704`](https://github.com/FuelLabs/fuels-wallet/commit/b8b03704e6ca093ab98831160ff195e50187f6b5) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - Converted the address from bech32 to b256 on faucet link
+
+### Patch Changes
+
+- [#1319](https://github.com/FuelLabs/fuels-wallet/pull/1319) [`e3bf65aa`](https://github.com/FuelLabs/fuels-wallet/commit/e3bf65aa5a070a0c2b5490d422b70e462090b25b) Thanks [@arthurgeron](https://github.com/arthurgeron)! - - Added aria labels to Recipient Sender and Asset Name on transaction approval screen;
+
+  - Validate all asset names during e2e contract tests on the transaction approval screen
+
+- [#1408](https://github.com/FuelLabs/fuels-wallet/pull/1408) [`24840bfe`](https://github.com/FuelLabs/fuels-wallet/commit/24840bfe38cda3a45b1dc43b4e4f8c8890b3ebaf) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - TransactionList breaking when have a failed transaction
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.23.0
+
+## 0.22.0
+
+### Minor Changes
+
+- [#1397](https://github.com/FuelLabs/fuels-wallet/pull/1397) [`3966aa92`](https://github.com/FuelLabs/fuels-wallet/commit/3966aa929608520869486043e633a32156d93c19) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - Improved error handling and including location informations to support better understanding about the causes of erros
+
+- [#1385](https://github.com/FuelLabs/fuels-wallet/pull/1385) [`d49b9efe`](https://github.com/FuelLabs/fuels-wallet/commit/d49b9efe8b3133b67d748cc7a7dc3b0f506555f1) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - Support for Bech32 addresses has been removed and replaced with b256 (hex) addresses throughout the wallet screen components. All addresses, both existing and new, will now be displayed in the b256 format.
+
+  While Bech32 addresses can still be used on the send screen, they will be automatically converted and processed as b256 internally. QR codes on the receive screen will now encode addresses in the b256 format.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.22.0
+
+## 0.21.3
+
+### Patch Changes
+
+- [#1361](https://github.com/FuelLabs/fuels-wallet/pull/1361) [`d4e39790`](https://github.com/FuelLabs/fuels-wallet/commit/d4e397902e7bcc09e2b1c7a8f20087a538efbedf) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - update fuel-connectors to 0.5.0
+
+- [#1361](https://github.com/FuelLabs/fuels-wallet/pull/1361) [`d4e39790`](https://github.com/FuelLabs/fuels-wallet/commit/d4e397902e7bcc09e2b1c7a8f20087a538efbedf) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - update fuels to get fix from contract operation
+
+- Updated dependencies [[`d4e39790`](https://github.com/FuelLabs/fuels-wallet/commit/d4e397902e7bcc09e2b1c7a8f20087a538efbedf), [`d4e39790`](https://github.com/FuelLabs/fuels-wallet/commit/d4e397902e7bcc09e2b1c7a8f20087a538efbedf)]:
+  - @fuel-wallet/connections@0.21.3
+
+## 0.21.2
+
+### Patch Changes
+
+- [#1349](https://github.com/FuelLabs/fuels-wallet/pull/1349) [`adfd3523`](https://github.com/FuelLabs/fuels-wallet/commit/adfd3523a6415ce9bc1825308e584fe54ad0c333) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Update tests to use new @fuels/react 0.21.0
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.21.2
+
+## 0.21.1
+
+### Patch Changes
+
+- [#1340](https://github.com/FuelLabs/fuels-wallet/pull/1340) [`7c2ad248`](https://github.com/FuelLabs/fuels-wallet/commit/7c2ad248cf65060710e1b540b73f5f6c1cdb5c05) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Fix balances not showing for some accounts that have many assets in balance
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.21.1
+
+## 0.21.0
+
+### Minor Changes
+
+- [#1328](https://github.com/FuelLabs/fuels-wallet/pull/1328) [`6e5330e2`](https://github.com/FuelLabs/fuels-wallet/commit/6e5330e2067cb5f8831d7c6c04fac1421f61d717) Thanks [@helciofranco](https://github.com/helciofranco)! - Rename network to `Fuel Sepolia Testnet`
+
+### Patch Changes
+
+- [#1332](https://github.com/FuelLabs/fuels-wallet/pull/1332) [`39cf9dfe`](https://github.com/FuelLabs/fuels-wallet/commit/39cf9dfe5369da37178d935830c600638e130e0e) Thanks [@arthurgeron](https://github.com/arthurgeron)! - - If a connection can't be made to IndexedDB (usually when "Application Data" gets cleared), instead of resetting the extension it'll attempt a reload for good measure
+  - IndexedDB + extension Reset only triggers if: An IndexedDB restart event is triggered, the DB can be accessed, and has no vaults or accounts data (corrupted or cleared)
+  - The flag used to show the Welcome Screen after a reset no longer depends on React's Scope to be set
+- Updated dependencies [[`6e5330e2`](https://github.com/FuelLabs/fuels-wallet/commit/6e5330e2067cb5f8831d7c6c04fac1421f61d717)]:
+  - @fuel-wallet/connections@0.21.0
+
+## 0.20.0
+
+### Minor Changes
+
+- [#1317](https://github.com/FuelLabs/fuels-wallet/pull/1317) [`f1dab207`](https://github.com/FuelLabs/fuels-wallet/commit/f1dab20703785086e81d39c3cef140c54956b29f) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixes bug where wrong Asset Id is shown for other tokens (e.g. ETH)
+  Updated Fuels package to tag pr-2395
+  Updated NPM Packs dependencies packages (e.g. @fuels/react, @fuels/ts-config) to new minor 0.20.0
+
+### Patch Changes
+
+- [#1313](https://github.com/FuelLabs/fuels-wallet/pull/1313) [`b5766321`](https://github.com/FuelLabs/fuels-wallet/commit/b5766321dbc2a5e5f17f05e0cb9a9f697f137a23) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Fix error not showing on Dapp Approve transaction
+
+- [#1313](https://github.com/FuelLabs/fuels-wallet/pull/1313) [`b5766321`](https://github.com/FuelLabs/fuels-wallet/commit/b5766321dbc2a5e5f17f05e0cb9a9f697f137a23) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Re-add block explorer link to transaction header
+
+- [#1279](https://github.com/FuelLabs/fuels-wallet/pull/1279) [`9ffddf70`](https://github.com/FuelLabs/fuels-wallet/commit/9ffddf70ad4a1ac51f97e03dabc0d96dc97721e0) Thanks [@arthurgeron](https://github.com/arthurgeron)! - vault crash on export seed auth fail
+
+- [#1280](https://github.com/FuelLabs/fuels-wallet/pull/1280) [`6e94172c`](https://github.com/FuelLabs/fuels-wallet/commit/6e94172cb75ff1c4e0055047996ce8f8d36fa894) Thanks [@arthurgeron](https://github.com/arthurgeron)! - vault client not propagating lock unlock events from server
+
+- [#1290](https://github.com/FuelLabs/fuels-wallet/pull/1290) [`57f87f84`](https://github.com/FuelLabs/fuels-wallet/commit/57f87f848d7893464f1af68043ff2391c43f5d70) Thanks [@arthurgeron](https://github.com/arthurgeron)! - - Re-enabled E2E contract tests
+  - Fixed biome trying to validate files generated by playwright test runs
+  - Fixed Playwright tests starting up before CRX files are available, now runs `build` beforehand.
+  - Fixed CRX dev server reloading during playwright tests, causing instabilities
+  - Fixed NODE_ENV being set to default (production) on local E2E tests, leading to the wrong version (i.e. production) being installed
+  - Fixed bug where only the first test file in a suite run would use the local CRX build, it'd then download and use a production build of the Wallet for the rest
+- Updated dependencies [[`f1dab207`](https://github.com/FuelLabs/fuels-wallet/commit/f1dab20703785086e81d39c3cef140c54956b29f)]:
+  - @fuel-wallet/connections@0.20.0
+
+## 0.19.0
+
+### Minor Changes
+
+- [#1310](https://github.com/FuelLabs/fuels-wallet/pull/1310) [`00df2708`](https://github.com/FuelLabs/fuels-wallet/commit/00df27083e42fc6633311faff1f665ccbab26747) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Auto-update network to testnet (Ignition)
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.19.0
+
 ## 0.18.1
 
 ### Patch Changes

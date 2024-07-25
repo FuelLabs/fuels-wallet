@@ -16,5 +16,9 @@ const styles = {
     background: '$intentsBase3',
     color: '$intentsBase10',
     fontSize: '0.9rem',
+    lineHeight: 'normal',
+    '&[data-decoration=line-through]': {
+      textDecoration: 'line-through',
+    },
   }),
 };

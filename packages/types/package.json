@@ -1,7 +1,7 @@
 {
   "name": "@fuel-wallet/types",
   "private": true,
-  "version": "0.18.1",
+  "version": "0.23.0",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "publishConfig": {
@@ -25,12 +25,12 @@
     "dexie-observable": "4.0.1-beta.13"
   },
   "peerDependencies": {
-    "@fuels/connectors": ">=0.4.0",
-    "fuels": ">=0.84.0"
+    "@fuels/connectors": ">=0.5.0",
+    "fuels": ">=0.88.1"
   },
   "devDependencies": {
-    "@fuels/connectors": "0.4.0",
-    "fuels": "0.84.0",
+    "@fuels/connectors": "0.5.0",
+    "fuels": "pr-2479",
     "tsup": "^7.2.0"
   }
 }

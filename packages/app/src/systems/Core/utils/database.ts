@@ -47,9 +47,9 @@ export class FuelDB extends Dexie {
         const networks = tx.table('networks');
         // Clean networks
         await networks.clear();
-        // Insert beta-5 network
+        // Insert testnet network
         await networks.add({
-          name: 'Ignition-Dev',
+          name: 'Fuel Sepolia Testnet',
           url: VITE_FUEL_PROVIDER_URL,
           isSelected: true,
           id: createUUID(),

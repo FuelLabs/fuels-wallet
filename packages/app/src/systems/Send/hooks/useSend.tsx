@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BNInput } from 'fuels';
-import { bn, isBech32 } from 'fuels';
+import { bn, isB256, isBech32 } from 'fuels';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -105,9 +105,9 @@ const schema = yup
     address: yup
       .string()
       .required('Address is required')
-      .test('is-address', 'Invalid bech32 address', (value) => {
+      .test('is-address', 'Invalid address', (value) => {
         try {
-          return Boolean(value && isBech32(value));
+          return Boolean(value && (isBech32(value) || isB256(value)));
         } catch (_error) {
           return false;
         }

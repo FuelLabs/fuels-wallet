@@ -12,22 +12,40 @@ import {
   getBaseAssetId,
   shortAddress,
 } from '../../src/utils';
-import { testSetup } from '../utils';
+import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
-import { test } from './test';
-import { checkAddresses, checkFee, connect } from './utils';
+import { test, useLocalCRX } from './test';
+import {
+  checkAddresses,
+  checkAriaLabelsContainsText,
+  connect,
+  waitSuccessTransaction,
+} from './utils';
 
+useLocalCRX();
 test.describe('Forward Half Custom Asset', () => {
   let fuelWallet: WalletUnlocked;
   let fuelWalletTestHelper: FuelWalletTestHelper;
+  let masterWallet: WalletUnlocked;
+
+  const forwardCustomAssetAmount = '0.010';
+  const halfForwardCustomAssetAmount = '0.005';
 
   test.beforeEach(async ({ context, extensionId, page }) => {
-    ({ fuelWallet, fuelWalletTestHelper } = await testSetup({
+    ({ fuelWallet, fuelWalletTestHelper, masterWallet } = await testSetup({
       context,
       page,
       extensionId,
+      amountToFund: bn.parseUnits(forwardCustomAssetAmount).mul(2),
     }));
+  });
+
+  test.afterEach(async () => {
+    await transferMaxBalance({
+      fromWallet: fuelWallet,
+      toWallet: masterWallet,
+    });
   });
 
   test('e2e forward half custom asset', async ({ page }) => {
@@ -49,8 +67,6 @@ test.describe('Forward Half Custom Asset', () => {
       .call();
     await response.transactionResponse.waitForResult();
 
-    const forwardCustomAssetAmount = '1.000';
-    const halfForwardCustomAssetAmount = '0.500';
     const forwardHalfCustomAssetInput = page
       .getByLabel('Forward half custom asset card')
       .locator('input');
@@ -60,11 +76,20 @@ test.describe('Forward Half Custom Asset', () => {
       page,
       'Forward Half Custom Asset'
     );
+    await page.waitForTimeout(2500);
     await forwardHalfCustomAssetButton.click();
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
 
+    // Test if asset name is defined (not unknown)
+    checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Asset Name',
+      'Ethereum'
+    );
+    // Test if sender name is defined (not unknown)
+    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
     // test the forward asset name is shown
     await hasText(walletNotificationPage, 'Unknown', 0, 5000, true);
     // test forward asset id is correct
@@ -104,7 +129,7 @@ test.describe('Forward Half Custom Asset', () => {
     // Test approve
     const preDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     await fuelWalletTestHelper.walletApprove();
-    await hasText(page, 'Transaction successful.');
+    await waitSuccessTransaction(page);
     const postDepositBalanceTkn = await fuelWallet.getBalance(assetId);
     expect(
       Number.parseFloat(

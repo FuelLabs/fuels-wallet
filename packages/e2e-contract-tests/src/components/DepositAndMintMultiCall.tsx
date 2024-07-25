@@ -16,6 +16,8 @@ export const DepositAndMintMultiCalls = () => {
     <div>
       <p>Deposit and Mint Multicall</p>
       <div aria-label="Deposit and mint multicall asset card">
+        <label>Forward Amount</label>
+        <br />
         <input
           aria-label="Forward amount multicall"
           onChange={(event) => {
@@ -23,6 +25,9 @@ export const DepositAndMintMultiCalls = () => {
           }}
           value={forwardAmount}
         />
+        <br />
+        <label>Mint Amount</label>
+        <br />
         <input
           aria-label="Mint amount multicall"
           onChange={(event) => {
@@ -30,6 +35,7 @@ export const DepositAndMintMultiCalls = () => {
           }}
           value={mintAmount}
         />
+        <br />
         <button
           type="button"
           disabled={!baseAssetId}
@@ -47,6 +53,7 @@ export const DepositAndMintMultiCalls = () => {
         >
           Deposit And Mint Multicall
         </button>
+        <hr />
       </div>
     </div>
   );

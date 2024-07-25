@@ -4,11 +4,11 @@ import { ImageLoader, relativeUrl } from '~/systems/Core';
 import { useOpenFaucet } from '~/systems/Faucet';
 
 type ActivityEmptyProps = {
-  isDevnet?: boolean;
+  isTestnet?: boolean;
   bridgeUrl?: string;
 };
 
-export function ActivityListEmpty({ isDevnet }: ActivityEmptyProps) {
+export function ActivityListEmpty({ isTestnet }: ActivityEmptyProps) {
   const openFaucet = useOpenFaucet();
   const { current: theme } = useFuelTheme();
   return (
@@ -24,7 +24,7 @@ export function ActivityListEmpty({ isDevnet }: ActivityEmptyProps) {
       <Text fontSize="sm">
         When you make a transaction you&apos;ll see it here
       </Text>
-      {isDevnet && (
+      {isTestnet && (
         /**
          * TODO: need to add right faucet icon on @fuel-ui
          */

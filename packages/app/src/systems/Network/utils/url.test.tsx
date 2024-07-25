@@ -3,7 +3,7 @@ import { isValidNetworkUrl } from './url';
 describe('isValidNetworkUrl()', () => {
   it('should return true for valid network urls', () => {
     expect(isValidNetworkUrl('http://localhost:4000/graphql')).toBe(true);
-    expect(isValidNetworkUrl('https://devnet.fuel.network/v1/graphql')).toBe(
+    expect(isValidNetworkUrl('https://testnet.fuel.network/v1/graphql')).toBe(
       true
     );
     expect(isValidNetworkUrl('https://beta-5.fuel.network/graphql')).toBe(true);

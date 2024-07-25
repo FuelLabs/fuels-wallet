@@ -4,8 +4,8 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.84.0
-  Forc version: 0.56.0
+  Fuels version: 0.88.1
+  Forc version: 0.59.0
   Fuel-Core version: 0.26.0
 */
 
@@ -532,7 +532,7 @@ const _abi = {
   ],
   "loggedTypes": [
     {
-      "logId": 0,
+      "logId": "4237256875605624201",
       "loggedType": {
         "name": "",
         "type": 2,
@@ -540,23 +540,7 @@ const _abi = {
       }
     },
     {
-      "logId": 1,
-      "loggedType": {
-        "name": "",
-        "type": 1,
-        "typeArguments": null
-      }
-    },
-    {
-      "logId": 2,
-      "loggedType": {
-        "name": "",
-        "type": 2,
-        "typeArguments": []
-      }
-    },
-    {
-      "logId": 3,
+      "logId": "8961848586872524460",
       "loggedType": {
         "name": "",
         "type": 1,

@@ -49,6 +49,7 @@
       "**/dist",
       "**/dist-crx",
       "**/contracts/**",
+      "**/playwright-report",
       "pnpm-lock.yaml"
     ]
   }

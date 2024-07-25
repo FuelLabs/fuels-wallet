@@ -115,13 +115,9 @@ export function ConnectionRequest() {
           )}
         </MotionCardList>
       </Layout.Content>
-      <Box.Flex css={styles.disclaimer} justify="center" align={'flex-end'}>
+      <Box.Flex css={styles.disclaimer} justify="flex-start" align={'flex-end'}>
         <Text fontSize="sm" as={'h2'} className="warning">
-          Only connect with sites you trust.{' '}
-          <Link href="#" color="intentsPrimary11">
-            Learn more
-          </Link>
-          .
+          Only connect with sites you trust.
         </Text>
       </Box.Flex>
       <Layout.BottomBar>
@@ -174,8 +170,8 @@ const styles = {
     marginTop: '$0',
   }),
   disclaimer: cssObj({
-    mb: '-10px',
     pt: '$1',
+    ml: '$4',
   }),
   header: cssObj({
     display: 'flex',

@@ -1,10 +1,10 @@
 import { cssObj } from '@fuel-ui/css';
-import { Box, Button, FuelLogo, Icon } from '@fuel-ui/react';
+import { Box, Icon } from '@fuel-ui/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { DOWNLOAD_LINK, INSTALL_LINK, IS_PUBLIC_PREVIEW } from '../constants';
-
+import { FuelBrandingDropdown } from '../components/FuelBrandingDropdown';
+import { IS_PUBLIC_PREVIEW } from '../constants';
 import { MobileMenu } from './MobileMenu';
 import { Search } from './Search';
 
@@ -15,15 +15,7 @@ export function Header() {
   return (
     <Box.Flex as="header" css={styles.root}>
       <Box.Flex css={{ alignItems: 'center', flex: 1 }}>
-        <Link href="/" className="logo">
-          <FuelLogo size={40} />
-          <Box.Flex css={styles.logoText}>
-            <span>Fuel Wallet</span>
-            <Box as="span" css={styles.version}>
-              beta
-            </Box>
-          </Box.Flex>
-        </Link>
+        <FuelBrandingDropdown />
       </Box.Flex>
       <Box css={styles.desktop}>
         <Box.Flex css={styles.menu}>
@@ -48,26 +40,6 @@ export function Header() {
           </a>
         </Box.Flex>
         <Search />
-        <Box css={{ ml: '$8' }}>
-          {IS_PUBLIC_PREVIEW ? (
-            <Box.Flex gap="$2">
-              <Button intent="base" as="a" href={DOWNLOAD_LINK}>
-                Download Wallet
-              </Button>
-              <Button
-                intent="primary"
-                as="a"
-                href={process.env.NEXT_PUBLIC_APP_URL}
-              >
-                Open Wallet
-              </Button>
-            </Box.Flex>
-          ) : (
-            <a href={INSTALL_LINK} target="_blank" rel="noreferrer">
-              <Button intent="primary">Install Fuel Wallet</Button>
-            </a>
-          )}
-        </Box>
       </Box>
       <MobileMenu />
     </Box.Flex>
@@ -101,21 +73,6 @@ const styles = {
       py: '$4',
       px: '$8',
     },
-  }),
-  logoText: cssObj({
-    pl: '$6',
-    alignItems: 'center',
-    flex: 1,
-    fontSize: '$2xl',
-    fontWeight: '$normal',
-    color: 'white',
-    letterSpacing: '-0.05em',
-  }),
-  version: cssObj({
-    ml: '$2',
-    color: '$intentsBase8',
-    fontSize: '$sm',
-    fontStyle: 'italic',
   }),
   desktop: cssObj({
     display: 'none',

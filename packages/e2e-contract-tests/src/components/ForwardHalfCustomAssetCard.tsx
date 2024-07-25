@@ -21,10 +21,13 @@ export const ForwardHalfCustomAssetCard = () => {
     <div>
       <p>Forward Half Custom Asset</p>
       <div aria-label="forward half custom asset card">
+        <label>Amount</label>
+        <br />
         <input
           onChange={(event) => setAmount(event.target.value)}
           value={amount}
         />
+        <br />
         <button
           type="button"
           disabled={!baseAssetId}
@@ -40,6 +43,7 @@ export const ForwardHalfCustomAssetCard = () => {
         >
           Forward Half Custom Asset
         </button>
+        <hr />
       </div>
     </div>
   );

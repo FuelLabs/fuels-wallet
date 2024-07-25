@@ -5,7 +5,7 @@ import { uniqueId } from 'xstate/lib/utils';
 export const MOCK_NETWORK = {
   id: uniqueId(),
   name: 'Another',
-  url: 'https://devnet.fuel.network/v1/graphql',
+  url: 'https://testnet.fuel.network/v1/graphql',
 };
 
 export const MOCK_FUEL_ASSETS = assets.map((asset) => {

@@ -15,10 +15,13 @@ export const ForwardEthCard = () => {
     <div>
       <p>Forward ETH</p>
       <div aria-label="forward eth card">
+        <label>Amount</label>
+        <br />
         <input
           onChange={(event) => setAmount(event.target.value)}
           value={amount}
         />
+        <br />
         <button
           type="button"
           disabled={!baseAssetId}
@@ -34,6 +37,7 @@ export const ForwardEthCard = () => {
         >
           Forward ETH
         </button>
+        <hr />
       </div>
     </div>
   );

@@ -70,6 +70,16 @@ export class VaultServer extends EventEmitter {
     this.manager = manager;
     this.server = new JSONRPCServer();
     this.setupMethods();
+    this.setupEvents();
+  }
+
+  private setupEvents() {
+    this.manager.on('lock', () => {
+      this.emit('lock');
+    });
+    this.manager.on('unlock', () => {
+      this.emit('unlock');
+    });
   }
 
   setupMethods() {
@@ -195,11 +205,15 @@ export class VaultServer extends EventEmitter {
     }
   }
 
+  reload() {
+    chrome.runtime.reload();
+  }
+
   resetAndReload() {
     const storage = new IndexedDBStorage();
     const manager = new WalletManager({ storage });
     this.manager = manager;
-    chrome.runtime.reload();
+    this.reload();
   }
 }
 

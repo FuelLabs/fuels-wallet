@@ -6,28 +6,47 @@ import { bn, toBech32 } from 'fuels';
 
 import '../../load.envs.js';
 import { getBaseAssetId, shortAddress } from '../../src/utils';
-import { testSetup } from '../utils';
+import { testSetup, transferMaxBalance } from '../utils';
 
 import { MAIN_CONTRACT_ID } from './config';
-import { test } from './test';
-import { checkAddresses, checkFee, connect } from './utils';
+import { test, useLocalCRX } from './test';
+import {
+  checkAddresses,
+  checkAriaLabelsContainsText,
+  checkFee,
+  connect,
+  waitSuccessTransaction,
+} from './utils';
+
+useLocalCRX();
 
 test.describe('Deposit Half ETH', () => {
   let fuelWalletTestHelper: FuelWalletTestHelper;
   let fuelWallet: WalletUnlocked;
+  let masterWallet: WalletUnlocked;
+
+  const depositAmount = '0.010';
+  const halfDepositAmount = '0.005';
+
   test.beforeEach(async ({ context, extensionId, page }) => {
-    ({ fuelWalletTestHelper, fuelWallet } = await testSetup({
+    ({ fuelWalletTestHelper, fuelWallet, masterWallet } = await testSetup({
       context,
       page,
       extensionId,
+      amountToFund: bn.parseUnits(depositAmount).mul(2),
     }));
+  });
+
+  test.afterEach(async () => {
+    await transferMaxBalance({
+      fromWallet: fuelWallet,
+      toWallet: masterWallet,
+    });
   });
 
   test('e2e deposit half eth', async ({ page }) => {
     await connect(page, fuelWalletTestHelper);
 
-    const depositAmount = '1.000';
-    const halfDepositAmount = '0.500';
     const depositHalfInput = page
       .getByLabel('Deposit half eth card')
       .locator('input');
@@ -40,6 +59,15 @@ test.describe('Deposit Half ETH', () => {
 
     const walletNotificationPage =
       await fuelWalletTestHelper.getWalletPopupPage();
+
+    // Test if asset name is defined (not unknown)
+    checkAriaLabelsContainsText(
+      walletNotificationPage,
+      'Asset Name',
+      'Ethereum'
+    );
+    // Test if sender name is defined (not unknown)
+    checkAriaLabelsContainsText(walletNotificationPage, 'Sender Name', '');
 
     // test forward asset name is shown
     await hasText(walletNotificationPage, 'Ethereum');
@@ -80,16 +108,15 @@ test.describe('Deposit Half ETH', () => {
       walletNotificationPage
     );
 
-    // Test approve
     const preDepositBalanceEth = await fuelWallet.getBalance();
+
     await fuelWalletTestHelper.walletApprove();
-    await hasText(page, 'Transaction successful.');
+    await waitSuccessTransaction(page);
     const postDepositBalanceEth = await fuelWallet.getBalance();
+
     expect(
       Number.parseFloat(
-        preDepositBalanceEth
-          .sub(postDepositBalanceEth)
-          .format({ precision: 5, units: 9 })
+        preDepositBalanceEth.sub(postDepositBalanceEth).format({ precision: 3 })
       )
     ).toBe(Number.parseFloat(halfDepositAmount));
   });

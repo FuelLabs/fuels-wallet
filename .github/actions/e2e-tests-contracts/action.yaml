@@ -1,0 +1,53 @@
+name: 'E2E Contract Tests'
+
+inputs:
+  providerUrl:
+    description: Provider URL (e.g. https://testnet.fuel.network/v1/graphql)
+    required: true
+  masterMnemonic:
+    description: Mnemonic of the master wallet that will fund the tests
+    required: true
+  genesisSecret:
+    description: Secret of genesis to fund the master wallet
+    required: false
+
+runs:
+  using: 'composite'
+  steps:
+
+
+    - name: Build Application
+      shell: bash
+      run: pnpm build:all
+      env:
+        ## increase node.js m memory limit for building
+        ## with sourcemaps
+        NODE_OPTIONS: "--max-old-space-size=4096"
+        NODE_ENV: test
+
+    # E2E tests running with Playwright
+    - name: Install Playwright Browsers
+      shell: bash
+      run: npx playwright install --with-deps chromium
+
+    - name: Run E2E Contract Tests
+      shell: bash
+      run: xvfb-run --auto-servernum -- pnpm test:e2e:contracts
+      env:
+        PORT: 5173
+        VITE_FUEL_PROVIDER_URL: ${{ inputs.providerUrl }}
+        VITE_MASTER_WALLET_MNEMONIC: ${{ inputs.masterMnemonic }}
+        VITE_WALLET_SECRET: ${{ inputs.genesisSecret }}
+
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report
+        path: |
+          packages/app/playwright-report/
+          packages/app/playwright-html/
+        retention-days: 30
+
+    - name: Stop Test Node
+      shell: bash
+      run: pnpm node:clean

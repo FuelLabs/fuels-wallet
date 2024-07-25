@@ -2,6 +2,7 @@ import type { Account } from '@fuel-wallet/types';
 import type { TransactionRequest, WalletLocked } from 'fuels';
 
 import {
+  Address,
   type BN,
   Provider,
   TransactionResponse,
@@ -191,9 +192,12 @@ export class TxService {
         inputs: transaction.inputs,
       });
 
-      const simulateTxErrors = getGroupedErrors(e.response?.errors);
+      const errorsToParse =
+        e.name === 'FuelError' ? [{ message: e.message }] : e.response?.errors;
+      const simulateTxErrors = getGroupedErrors(errorsToParse);
 
       const gasPrice = await provider.getLatestGasPrice();
+      const baseAssetId = provider.getBaseAssetId();
       const txSummary = assembleTransactionSummary({
         receipts: [],
         transaction,
@@ -205,6 +209,7 @@ export class TxService {
         gasCosts,
         maxGasPerTx,
         gasPrice,
+        baseAssetId,
       });
       txSummary.isStatusFailure = true;
       txSummary.status = TransactionStatus.failure;
@@ -289,9 +294,8 @@ export class TxService {
       try {
         const targetAmount = amount.sub(attempts * 1_000_000);
         const realAmount = targetAmount.gt(0) ? targetAmount : bn(1);
-
         const transactionRequest = await wallet.createTransfer(
-          to,
+          Address.fromDynamicInput(to),
           realAmount,
           assetId,
           {
