@@ -24,7 +24,9 @@ overrides:
   '@adobe/css-tools@<4.3.2': '>=4.3.2'
   '@babel/traverse@<7.23.2': '>=7.23.2'
   braces@<3.0.3: '>=3.0.3'
-  ws: 8.17.1
+  ws@>=8.0.0 <8.17.1: '>=8.17.1'
+  ws@>=7.0.0 <7.5.10: '>=7.5.10'
+  ws@>=6.0.0 <6.2.3: '>=6.2.3'
 
 importers:
 
@@ -19672,7 +19674,7 @@ packages:
     resolution: {integrity: sha512-wSkFeOnp+7dhn+zTThO0M4D2FEqZN9lGIWowJu5JLa2ojjtlzRwK8SkjcHZ4rLX8VnMev7kGjgQLrGs8kxy+hw==}
     peerDependencies:
       '@types/ws': ^8.0.0
-      ws: 8.17.1
+      ws: '>=8.17.1'
       xstate: ^4.37.0
     peerDependenciesMeta:
       '@types/ws':
@@ -24629,7 +24631,7 @@ packages:
   /isows@1.0.3(ws@8.17.1):
     resolution: {integrity: sha512-2cKei4vlmg2cxEjm3wVSqn8pcoRF/LX/wpifuuNquFO4SQmPwarClT+SUCA2lt+l581tTeZIPIZuIDo2jWN1fg==}
     peerDependencies:
-      ws: 8.17.1
+      ws: '>=8.17.1'
     dependencies:
       ws: 8.17.1
 

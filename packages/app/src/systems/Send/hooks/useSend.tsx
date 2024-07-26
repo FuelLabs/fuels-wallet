@@ -1,7 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useInterpret, useSelector } from '@xstate/react';
 import type { BN, BNInput } from 'fuels';
-import { bn, isB256, isBech32 } from 'fuels';
+import { DEFAULT_DECIMAL_UNITS, bn, isB256, isBech32 } from 'fuels';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -23,11 +23,11 @@ export enum SendStatus {
 }
 
 const selectors = {
-  baseGasLimit(state: SendMachineState) {
-    return state.context.baseGasLimit;
+  minGasLimit(state: SendMachineState) {
+    return state.context.minGasLimit;
   },
-  maxGasPerTx(state: SendMachineState) {
-    return state.context.maxGasPerTx;
+  maxGasLimit(state: SendMachineState) {
+    return state.context.maxGasLimit;
   },
   baseFee(state: SendMachineState) {
     return state.context.baseFee;
@@ -42,6 +42,10 @@ const selectors = {
     return state.matches('readyToSend');
   },
   error(state: SendMachineState) {
+    if (state.context.error?.includes('Gas limit')) {
+      return '';
+    }
+
     return state.context.error;
   },
   status(txStatus?: TxRequestStatus) {
@@ -60,13 +64,16 @@ const selectors = {
   },
 };
 
+type BalanceAsset = {
+  assetId: string;
+  amount?: BNInput;
+};
+
 type SchemaOptions = {
-  accountBalanceAssets: Array<{
-    assetId: string;
-    amount?: BNInput;
-  }>;
+  accountBalanceAssets: BalanceAsset[];
   baseFee: BN | undefined;
-  maxGasPerTx: BN | undefined;
+  minGasLimit: BN | undefined;
+  maxGasLimit: BN | undefined;
 };
 
 const schema = yup
@@ -98,7 +105,7 @@ const schema = yup
           return true;
         }
 
-        const totalAmount = value.add(baseFee.add(fees.tip));
+        const totalAmount = value.add(baseFee.add(fees.tip.amount));
         return totalAmount.lte(bn(balanceAssetSelected.amount));
       })
       .required('Amount is required'),
@@ -114,41 +121,79 @@ const schema = yup
       }),
     fees: yup
       .object({
-        tip: yup
-          .mixed<BN>()
-          .test(
-            'integer',
-            'Tip must be greater than or equal to 0',
-            (value) => {
+        tip: yup.object({
+          amount: yup
+            .mixed<BN>()
+            .test('min', 'Tip must be greater than or equal to 0', (value) => {
               return value?.gte(0);
-            }
-          )
-          .required('Tip is required'),
-        gasLimit: yup
-          .mixed<BN>()
-          .test(
-            'integer',
-            'Gas limit must be greater or equal to 0',
-            (value) => {
-              return value?.gte(0);
-            }
-          )
-          .test({
-            name: 'max',
-            test: (value, ctx) => {
-              const { maxGasPerTx } = ctx.options.context as SchemaOptions;
-              if (!maxGasPerTx) return false;
+            })
+            .test({
+              name: 'max',
+              test: (value, ctx) => {
+                const { asset, amount } = ctx.from?.[2].value as SendFormValues; // Two levels up
+                const { accountBalanceAssets, baseFee } = ctx.options
+                  .context as SchemaOptions;
 
-              if (value?.lte(maxGasPerTx)) {
-                return true;
-              }
+                const balanceAssetSelected = accountBalanceAssets?.find(
+                  ({ assetId }) => assetId === asset
+                );
 
-              return ctx.createError({
-                message: `Gas limit must be less or equal to ${maxGasPerTx.toString()}`,
-              });
-            },
-          })
-          .required('Gas limit is required'),
+                // It means "baseFee" and/or "current balance" is being calculated
+                if (!balanceAssetSelected?.amount || !value || !baseFee) {
+                  return true;
+                }
+
+                const balance = bn(balanceAssetSelected.amount);
+
+                const totalBlocked = baseFee.add(amount);
+                const totalAmount = totalBlocked.add(value);
+                if (totalAmount.lte(balance) || value.isZero()) {
+                  return true;
+                }
+
+                return totalAmount.lte(balance);
+              },
+            })
+            .required('Tip is required'),
+          text: yup.string().required('Tip is required'),
+        }),
+        gasLimit: yup.object({
+          amount: yup
+            .mixed<BN>()
+            .test({
+              name: 'min',
+              test: (value, ctx) => {
+                const { minGasLimit } = ctx.options.context as SchemaOptions;
+
+                if (!minGasLimit || value?.gte(minGasLimit)) {
+                  return true;
+                }
+
+                return ctx.createError({
+                  path: 'fees.gasLimit',
+                  message: `Gas limit must be greater than or equal to '${minGasLimit.toString()}'.`,
+                });
+              },
+            })
+            .test({
+              name: 'max',
+              test: (value, ctx) => {
+                const { maxGasLimit } = ctx.options.context as SchemaOptions;
+                if (!maxGasLimit) return false;
+
+                if (value?.lte(maxGasLimit)) {
+                  return true;
+                }
+
+                return ctx.createError({
+                  path: 'fees.gasLimit',
+                  message: `Gas limit must be lower than or equal to '${maxGasLimit.toString()}'.`,
+                });
+              },
+            })
+            .required('Gas limit is required'),
+          text: yup.string().required('Gas limit is required'),
+        }),
       })
       .required('Fees are required'),
   })
@@ -159,8 +204,14 @@ export type SendFormValues = {
   address: string;
   amount: BN;
   fees: {
-    tip: BN;
-    gasLimit: BN;
+    tip: {
+      amount: BN;
+      text: string;
+    };
+    gasLimit: {
+      amount: BN;
+      text: string;
+    };
   };
 };
 
@@ -169,8 +220,14 @@ const DEFAULT_VALUES: SendFormValues = {
   amount: bn(0),
   address: '',
   fees: {
-    tip: bn(0),
-    gasLimit: bn(0),
+    tip: {
+      amount: bn(0),
+      text: '0',
+    },
+    gasLimit: {
+      amount: bn(0),
+      text: '0',
+    },
   },
 };
 
@@ -203,42 +260,27 @@ export function useSend() {
   );
 
   const baseFee = useSelector(service, selectors.baseFee);
-  const baseGasLimit = useSelector(service, selectors.baseGasLimit);
-  const maxGasPerTx = useSelector(service, selectors.maxGasPerTx);
+  const minGasLimit = useSelector(service, selectors.minGasLimit);
+  const maxGasLimit = useSelector(service, selectors.maxGasLimit);
   const errorMessage = useSelector(service, selectors.error);
 
   const form = useForm<SendFormValues>({
     resolver: yupResolver(schema),
-    reValidateMode: 'onChange',
-    mode: 'onChange',
+    mode: 'onSubmit',
     defaultValues: DEFAULT_VALUES,
     context: {
       accountBalanceAssets,
       baseFee,
-      maxGasPerTx,
+      minGasLimit,
+      maxGasLimit,
     },
   });
 
   const tip = useWatch({
     control: form.control,
-    name: 'fees.tip',
+    name: 'fees.tip.amount',
   });
 
-  const gasLimit = useWatch({
-    control: form.control,
-    name: 'fees.gasLimit',
-  });
-
-  const { isValid } = form.formState;
-
-  const amount = useWatch({
-    control: form.control,
-    name: 'amount',
-  });
-  const address = useWatch({
-    control: form.control,
-    name: 'address',
-  });
   const assetIdSelected = useWatch({
     control: form.control,
     name: 'asset',
@@ -286,23 +328,41 @@ export function useSend() {
   }
 
   useEffect(() => {
-    if (isValid && address && assetIdSelected) {
-      const input: TxInputs['createTransfer'] = {
-        to: address,
-        assetId: assetIdSelected,
-        amount,
-        tip,
-        gasLimit,
-      };
+    const { unsubscribe } = form.watch(() => {
+      const { address, asset, amount } = form.getValues();
+      if (!address || !asset || amount.eq(0)) {
+        return;
+      }
 
-      service.send('SET_INPUT', { input });
-    }
-  }, [isValid, service.send, address, assetIdSelected, amount, tip, gasLimit]);
+      form.handleSubmit((data) => {
+        const { address, asset, amount, fees } = data;
+
+        const input: TxInputs['createTransfer'] = {
+          to: address,
+          assetId: asset,
+          amount,
+          tip: fees.tip.amount,
+          gasLimit: fees.gasLimit.amount,
+        };
+
+        service.send('SET_INPUT', { input });
+        form.trigger('amount');
+      })();
+    });
+
+    return () => unsubscribe();
+  }, [
+    form.watch,
+    form.getValues,
+    form.trigger,
+    form.handleSubmit,
+    service.send,
+  ]);
 
   return {
     form,
     baseFee,
-    baseGasLimit,
+    minGasLimit,
     tip,
     regularTip,
     fastTip,
