@@ -27,7 +27,7 @@ describe('txApproveMachine', () => {
   beforeEach(() => {
     service = interpret(
       transactionRequestMachine
-        .withContext({ input: {}, fees: {}, customFee: { tip: bn(0) } })
+        .withContext({ input: {}, fees: {} })
         .withConfig({ actions: { openDialog } })
     ).start();
   });

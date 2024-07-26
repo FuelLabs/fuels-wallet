@@ -38,17 +38,16 @@ export type TxInputs = {
     transactionRequest: TransactionRequest;
     providerUrl: string;
   };
-  customFee: {
-    tip: BN;
-  };
   send: {
     address: string;
     transactionRequest: TransactionRequest;
     providerUrl?: string;
   };
   simulateTransaction: {
-    transactionRequest: TransactionRequest;
+    transactionRequest?: TransactionRequest;
     providerUrl?: string;
+    tip?: BN;
+    gasLimit?: BN;
   };
   getOutputs: {
     transactionRequest?: TransactionRequest;
@@ -147,16 +146,32 @@ export class TxService {
   static async simulateTransaction({
     transactionRequest,
     providerUrl,
+    tip,
+    gasLimit,
   }: TxInputs['simulateTransaction']) {
     const provider = await Provider.create(providerUrl || '');
     const account = await AccountService.getCurrentAccount();
 
+    if (!transactionRequest) {
+      throw new Error('Missing transaction request');
+    }
     if (!account) {
       throw new Error('Missing context for transaction request');
     }
 
     try {
       const wallet = new WalletLockedCustom(account.address, provider);
+
+      // Set the gas limit and tip if provided
+      if ('gasLimit' in transactionRequest && gasLimit) {
+        transactionRequest.gasLimit = gasLimit;
+      }
+      if ('tip' in transactionRequest && tip) {
+        transactionRequest.tip = tip;
+      }
+      const baseFee = transactionRequest.maxFee.sub(
+        transactionRequest.tip ?? bn(0)
+      );
 
       const txCost = await provider.getTransactionCost(transactionRequest, {
         estimateTxDependencies: true,
@@ -176,7 +191,11 @@ export class TxService {
         abiMap,
       });
 
-      return { txSummary };
+      return {
+        baseFee: baseFee.sub(1), // To match maxFee calculated on TS SDK (they add 1 unit)
+        minGasLimit: txCost.gasUsed,
+        txSummary,
+      };
 
       // biome-ignore lint/suspicious/noExplicitAny: allow any
     } catch (e: any) {
@@ -214,7 +233,12 @@ export class TxService {
       txSummary.isStatusFailure = true;
       txSummary.status = TransactionStatus.failure;
 
-      return { txSummary, simulateTxErrors };
+      return {
+        baseFee: undefined,
+        minGasLimit: undefined,
+        txSummary,
+        simulateTxErrors,
+      };
     }
   }
 
@@ -262,9 +286,7 @@ export class TxService {
     const consensusParameters = provider.getChain().consensusParameters;
 
     return {
-      // @TODO: Need to fetch the baseGasLimit here to put the gas limit back
-      baseGasLimit: bn(1),
-      maxGasPerTx: consensusParameters.txParameters.maxGasPerTx,
+      maxGasLimit: consensusParameters.txParameters.maxGasPerTx,
     };
   }
 

@@ -99,7 +99,7 @@ type TxContentInfoProps = {
   providerUrl?: string;
   fees?: {
     baseFee?: BN;
-    baseGasLimit?: BN;
+    minGasLimit?: BN;
     regularTip?: BN;
     fastTip?: BN;
   };
@@ -150,14 +150,14 @@ function TxContentInfo({
       {showDetails && !fees && <TxFee fee={tx?.fee} />}
       {showDetails &&
         fees?.baseFee &&
-        fees?.baseGasLimit &&
+        fees?.minGasLimit &&
         fees?.regularTip &&
         fees?.fastTip && (
           <VStack gap="$3">
             <Text as="span">Fee (network)</Text>
             <TxFeeOptions
               baseFee={fees.baseFee}
-              baseGasLimit={fees.baseGasLimit}
+              minGasLimit={fees.minGasLimit}
               regularTip={fees.regularTip}
               fastTip={fees.fastTip}
             />

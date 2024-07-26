@@ -33,9 +33,8 @@ type MachineContext = {
     providerUrl?: string;
     transactionRequest?: TransactionRequest;
     account?: Account;
-  };
-  customFee: {
-    tip: BN;
+    tip?: BN;
+    gasLimit?: BN;
   };
   response?: {
     txSummarySimulated?: TransactionSummary;
@@ -43,10 +42,10 @@ type MachineContext = {
   };
   fees: {
     baseFee?: BN;
-    baseGasLimit?: BN;
     regularTip?: BN;
     fastTip?: BN;
-    maxGasPerTx?: BN;
+    minGasLimit?: BN;
+    maxGasLimit?: BN;
   };
   errors?: {
     txApproveError?: VMApiError;
@@ -60,8 +59,14 @@ type EstimateDefaultTipsReturn = {
 };
 
 type EstimateGasLimitReturn = {
-  baseGasLimit: BN;
-  maxGasPerTx: BN;
+  maxGasLimit: BN;
+};
+
+type SimulateTransactionReturn = {
+  baseFee?: BN;
+  minGasLimit?: BN;
+  txSummary: TransactionSummary;
+  simulateTxErrors?: GroupedErrors;
 };
 
 type MachineServices = {
@@ -75,13 +80,7 @@ type MachineServices = {
     data: EstimateGasLimitReturn;
   };
   simulateTransaction: {
-    data: {
-      txSummary: TransactionSummary;
-      simulateTxErrors?: GroupedErrors;
-    };
-  };
-  fetchGasPrice: {
-    data: BN;
+    data: SimulateTransactionReturn;
   };
   fetchAccount: {
     data: Account;
@@ -90,7 +89,7 @@ type MachineServices = {
 
 type MachineEvents =
   | { type: 'START'; input?: TxInputs['request'] }
-  | { type: 'SET_CUSTOM_FEE'; input: TxInputs['customFee'] }
+  | { type: 'SET_CUSTOM_FEES'; input: TxInputs['simulateTransaction'] }
   | { type: 'RESET'; input?: null }
   | { type: 'APPROVE'; input?: null }
   | { type: 'REJECT'; input?: null }
@@ -112,9 +111,6 @@ export const transactionRequestMachine = createMachine(
     context: {
       input: {},
       fees: {},
-      customFee: {
-        tip: bn(0),
-      },
     },
     states: {
       idle: {
@@ -162,10 +158,7 @@ export const transactionRequestMachine = createMachine(
         invoke: {
           src: 'fetchAccount',
           data: {
-            input: (ctx: MachineContext) => ({
-              address: ctx.input.address,
-              providerUrl: ctx.input.providerUrl,
-            }),
+            input: (ctx: MachineContext) => ctx.input,
           },
           onDone: [
             {
@@ -184,11 +177,7 @@ export const transactionRequestMachine = createMachine(
         invoke: {
           src: 'simulateTransaction',
           data: {
-            input: (ctx: MachineContext) => ({
-              transactionRequest: ctx.input.transactionRequest,
-              providerUrl: ctx.input.providerUrl,
-              customFee: ctx.customFee,
-            }),
+            input: (ctx: MachineContext) => ctx.input,
           },
           onDone: [
             {
@@ -198,12 +187,12 @@ export const transactionRequestMachine = createMachine(
           ],
         },
       },
-      changingCustomFee: {
+      changingCustomFees: {
         tags: ['loading'],
         on: {
-          SET_CUSTOM_FEE: {
-            actions: ['assignCustomFee'],
-            target: 'changingCustomFee',
+          SET_CUSTOM_FEES: {
+            actions: ['assignCustomFees'],
+            target: 'changingCustomFees',
           },
         },
         after: {
@@ -272,9 +261,9 @@ export const transactionRequestMachine = createMachine(
         actions: ['reset'],
         target: 'idle',
       },
-      SET_CUSTOM_FEE: {
-        actions: ['assignCustomFee'],
-        target: 'changingCustomFee',
+      SET_CUSTOM_FEES: {
+        actions: ['assignCustomFees'],
+        target: 'changingCustomFees',
       },
     },
   },
@@ -292,8 +281,7 @@ export const transactionRequestMachine = createMachine(
       assignGasLimit: assign((ctx, ev) => ({
         fees: {
           ...ctx.fees,
-          baseGasLimit: ev.data.baseGasLimit,
-          maxGasPerTx: ev.data.maxGasPerTx,
+          maxGasLimit: ev.data.maxGasLimit,
         },
       })),
       assignAccount: assign({
@@ -333,15 +321,18 @@ export const transactionRequestMachine = createMachine(
             providerUrl,
             title,
             favIconUrl,
+            tip: bn(0),
+            gasLimit: bn(0),
           };
         },
-        customFee: (ctx, ev) => ({
-          tip: ev.input?.transactionRequest.tip ?? ctx.customFee.tip,
-        }),
       }),
-      assignCustomFee: assign({
-        customFee: (_, ev) => ev.input,
-      }),
+      assignCustomFees: assign((ctx, ev) => ({
+        input: {
+          ...ctx.input,
+          tip: ev.input.tip ?? ctx.input.tip,
+          gasLimit: ev.input.gasLimit ?? ctx.input.gasLimit,
+        },
+      })),
       assignApprovedTx: assign({
         response: (ctx, ev) => ({
           ...ctx.response,
@@ -352,6 +343,11 @@ export const transactionRequestMachine = createMachine(
         response: (ctx, ev) => ({
           ...ctx.response,
           txSummarySimulated: ev.data.txSummary,
+        }),
+        fees: (ctx, ev) => ({
+          ...ctx.fees,
+          baseFee: ev.data.baseFee ?? ctx.fees.baseFee,
+          minGasLimit: ev.data.minGasLimit ?? ctx.fees.minGasLimit,
         }),
       }),
       assignSimulateTxErrors: assign((ctx, ev) => {
@@ -397,12 +393,8 @@ export const transactionRequestMachine = createMachine(
         },
       }),
       simulateTransaction: FetchMachine.create<
-        {
-          transactionRequest: TxInputs['simulateTransaction']['transactionRequest'];
-          providerUrl: TxInputs['simulateTransaction']['providerUrl'];
-          customFee: TxInputs['customFee'];
-        },
-        MachineServices['simulateTransaction']['data']
+        TxInputs['simulateTransaction'],
+        SimulateTransactionReturn
       >({
         showError: false,
         async fetch({ input }) {
@@ -415,13 +407,7 @@ export const transactionRequestMachine = createMachine(
           // screen doesn't flash between states
           await delay(600);
 
-          input.transactionRequest.tip = input.customFee.tip;
-
-          const txSummary = await TxService.simulateTransaction({
-            transactionRequest: input.transactionRequest,
-            providerUrl: input.providerUrl,
-          });
-
+          const txSummary = await TxService.simulateTransaction(input);
           return txSummary;
         },
       }),

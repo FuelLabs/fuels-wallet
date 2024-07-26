@@ -1,13 +1,12 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useSelector } from '@xstate/react';
 import { type BN, TransactionStatus, bn } from 'fuels';
 import { useCallback, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { Services, store } from '~/store';
 import { useOverlay } from '~/systems/Overlay';
 import type { TxInputs } from '~/systems/Transaction/services';
-
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, useWatch } from 'react-hook-form';
 import { TxRequestStatus } from '../machines/transactionRequestMachine';
 import type { TransactionRequestState } from '../machines/transactionRequestMachine';
 
@@ -15,14 +14,23 @@ const selectors = {
   context(state: TransactionRequestState) {
     return state.context;
   },
-  maxGasPerTx(state: TransactionRequestState) {
-    return state.context.fees.maxGasPerTx;
+  minGasLimit(state: TransactionRequestState) {
+    return state.context.fees.minGasLimit;
+  },
+  maxGasLimit(state: TransactionRequestState) {
+    return state.context.fees.maxGasLimit;
+  },
+  baseFee(state: TransactionRequestState) {
+    return state.context.fees.baseFee;
+  },
+  regularTip(state: TransactionRequestState) {
+    return state.context.fees.regularTip;
+  },
+  fastTip(state: TransactionRequestState) {
+    return state.context.fees.fastTip;
   },
   account(state: TransactionRequestState) {
     return state.context.input.account;
-  },
-  customTip(state: TransactionRequestState) {
-    return state.context.customFee?.tip ?? bn(0);
   },
   txSummarySimulated(state: TransactionRequestState) {
     return state.context.response?.txSummarySimulated;
@@ -85,61 +93,86 @@ export type UseTransactionRequestReturn = ReturnType<
 
 export type RequestFormValues = {
   fees: {
-    tip: BN;
-    gasLimit: BN;
+    tip: {
+      amount: BN;
+      text: string;
+    };
+    gasLimit: {
+      amount: BN;
+      text: string;
+    };
   };
 };
 
 const DEFAULT_VALUES: RequestFormValues = {
   fees: {
-    tip: bn(0),
-    gasLimit: bn(0),
+    tip: {
+      amount: bn(0),
+      text: '0',
+    },
+    gasLimit: {
+      amount: bn(0),
+      text: '0',
+    },
   },
 };
 
 type SchemaOptions = {
-  maxGasPerTx: BN | undefined;
+  baseFee: BN | undefined;
+  minGasLimit: BN | undefined;
+  maxGasLimit: BN | undefined;
 };
 
 const schema = yup
   .object({
     fees: yup
       .object({
-        tip: yup
-          .mixed<BN>()
-          .test(
-            'integer',
-            'Tip must be greater than or equal to 0',
-            (value) => {
+        tip: yup.object({
+          amount: yup
+            .mixed<BN>()
+            .test('min', 'Tip must be greater than or equal to 0', (value) => {
               return value?.gte(0);
-            }
-          )
-          .required('Tip is required'),
-        gasLimit: yup
-          .mixed<BN>()
-          .test(
-            'integer',
-            'Gas limit must be greater or equal to 0',
-            (value) => {
-              return value?.gte(0);
-            }
-          )
-          .test({
-            name: 'max',
-            test: (value, ctx) => {
-              const { maxGasPerTx } = ctx.options.context as SchemaOptions;
-              if (!maxGasPerTx) return false;
+            })
+            .required('Tip is required'),
+          text: yup.string().required('Tip is required'),
+        }),
+        gasLimit: yup.object({
+          amount: yup
+            .mixed<BN>()
+            .test({
+              name: 'min',
+              test: (value, ctx) => {
+                const { minGasLimit } = ctx.options.context as SchemaOptions;
 
-              if (value?.lte(maxGasPerTx)) {
-                return true;
-              }
+                if (!minGasLimit || value?.gte(minGasLimit)) {
+                  return true;
+                }
 
-              return ctx.createError({
-                message: `Gas limit must be less or equal to ${maxGasPerTx.toString()}`,
-              });
-            },
-          })
-          .required('Gas limit is required'),
+                return ctx.createError({
+                  path: 'fees.gasLimit',
+                  message: `Gas limit must be greater than or equal to '${minGasLimit.toString()}'.`,
+                });
+              },
+            })
+            .test({
+              name: 'max',
+              test: (value, ctx) => {
+                const { maxGasLimit } = ctx.options.context as SchemaOptions;
+                if (!maxGasLimit) return false;
+
+                if (value?.lte(maxGasLimit)) {
+                  return true;
+                }
+
+                return ctx.createError({
+                  path: 'fees.gasLimit',
+                  message: `Gas limit must be lower than or equal to '${maxGasLimit.toString()}'.`,
+                });
+              },
+            })
+            .required('Gas limit is required'),
+          text: yup.string().required('Gas limit is required'),
+        }),
       })
       .required('Fees are required'),
   })
@@ -148,7 +181,9 @@ const schema = yup
 export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const service = store.useService(Services.txRequest);
 
-  const maxGasPerTx = useSelector(service, selectors.maxGasPerTx);
+  const baseFee = useSelector(service, selectors.baseFee);
+  const minGasLimit = useSelector(service, selectors.minGasLimit);
+  const maxGasLimit = useSelector(service, selectors.maxGasLimit);
   const overlay = useOverlay();
 
   store.useUpdateMachineConfig(Services.txRequest, {
@@ -178,7 +213,6 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const txSummaryExecuted = useSelector(service, selectors.txSummaryExecuted);
   const origin = useSelector(service, selectors.origin);
   const originTitle = useSelector(service, selectors.originTitle);
-  const customTip = useSelector(service, selectors.customTip);
   const favIconUrl = useSelector(service, selectors.favIconUrl);
   const isSendingTx = useSelector(service, selectors.sendingTx);
   const isPreLoading = useSelector(service, selectors.isPreLoading);
@@ -194,16 +228,13 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const form = useForm<RequestFormValues>({
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
-    mode: 'onChange',
+    mode: 'onSubmit',
     defaultValues: DEFAULT_VALUES,
     context: {
-      maxGasPerTx,
+      baseFee,
+      minGasLimit,
+      maxGasLimit,
     },
-  });
-
-  const tip = useWatch({
-    control: form.control,
-    name: 'fees.tip',
   });
 
   function closeDialog() {
@@ -246,14 +277,21 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   }
 
   useEffect(() => {
-    if (!customTip.eq(tip)) {
-      const input: TxInputs['customFee'] = {
-        tip,
-      };
+    const { unsubscribe } = form.watch(() => {
+      form.handleSubmit((data) => {
+        const { fees } = data;
 
-      service.send('SET_CUSTOM_FEE', { input });
-    }
-  }, [service.send, customTip, tip]);
+        const input: TxInputs['simulateTransaction'] = {
+          tip: fees.tip.amount,
+          gasLimit: fees.gasLimit.amount,
+        };
+
+        service.send('SET_CUSTOM_FEES', { input });
+      })();
+    });
+
+    return () => unsubscribe();
+  }, [form.watch, form.handleSubmit, service.send]);
 
   return {
     ...ctx,
