@@ -149,8 +149,10 @@ export class TxService {
     tip,
     gasLimit,
   }: TxInputs['simulateTransaction']) {
-    const provider = await Provider.create(providerUrl || '');
-    const account = await AccountService.getCurrentAccount();
+    const [provider, account] = await Promise.all([
+      Provider.create(providerUrl || ''),
+      AccountService.getCurrentAccount(),
+    ]);
 
     if (!transactionRequest) {
       throw new Error('Missing transaction request');
@@ -159,9 +161,9 @@ export class TxService {
       throw new Error('Missing context for transaction request');
     }
 
-    try {
-      const wallet = new WalletLockedCustom(account.address, provider);
+    const wallet = new WalletLockedCustom(account.address, provider);
 
+    try {
       // Set the gas limit and tip if provided
       if ('gasLimit' in transactionRequest && gasLimit) {
         transactionRequest.gasLimit = gasLimit;
