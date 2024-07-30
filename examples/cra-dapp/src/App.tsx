@@ -42,12 +42,10 @@ function App() {
           type="button"
           onClick={async () => {
             const txn = await wallet?.createTransfer(
-              'fuel1vvpwz92v0gkk5dct9lmgnee23h3uj2fts4rmghffdvv88hyxzqas587le2',
+              '0xed73857a06ba2a706700e4e69e59f63a012ae6663a54309043e8fdc690bed926',
               bn(100),
               undefined,
-              {
-                tip: bn(10),
-              }
+              undefined
             );
 
             if (!txn || !account) return;
