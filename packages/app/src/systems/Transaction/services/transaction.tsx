@@ -174,21 +174,28 @@ export class TxService {
 
     try {
       // Set the gas limit and tip if provided
-      if ('gasLimit' in transactionRequest && gasLimit) {
+      if ('gasLimit' in transactionRequest && gasLimit?.gt(0)) {
         transactionRequest.gasLimit = gasLimit;
       }
-      if ('tip' in transactionRequest && tip) {
+      if ('tip' in transactionRequest && tip?.gt(0)) {
         transactionRequest.tip = tip;
       }
-      const baseFee = transactionRequest.maxFee.sub(
-        transactionRequest.tip ?? bn(0)
-      );
 
       const txCost = await provider.getTransactionCost(transactionRequest, {
         estimateTxDependencies: true,
         resourcesOwner: wallet,
       });
 
+      if ('gasLimit' in transactionRequest && gasLimit?.gt(0)) {
+        transactionRequest.gasLimit = txCost.gasUsed;
+      }
+      transactionRequest.maxFee = txCost.maxFee;
+
+      const baseFee = transactionRequest.maxFee.sub(
+        transactionRequest.tip ?? bn(0)
+      );
+
+      // funding the transaction with the required quantities (the maxFee might have changed)
       await wallet.fund(transactionRequest, txCost);
 
       const transaction = transactionRequest.toTransaction();
