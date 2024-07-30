@@ -51,6 +51,7 @@ export class ReportErrorService {
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       } as any);
     }
+    console.log('fsk Reported errors', errors);
   }
 
   static saveError(error: Error) {
@@ -59,7 +60,7 @@ export class ReportErrorService {
       console.warn(`Can't save error without a message`);
       return;
     }
-    if ('id' in parsedError) {
+    if (!('id' in parsedError)) {
       console.warn(`Can't save error without an id`);
       return;
     }
