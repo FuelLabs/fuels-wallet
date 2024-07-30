@@ -60,9 +60,8 @@ export function SendSelect({
       baseFeeRef.current = baseFee;
       tipRef.current = tip;
 
-      // Adding 2 magical units to match the fake unit that is added on TS SDK (.add(1))
-      // and then removed on the "transaction" service (.sub(1))
-      const maxFee = baseFee.add(tip).add(2);
+      // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
+      const maxFee = baseFee.add(tip).add(1);
       if (maxFee.gt(balanceAssetSelected)) return;
 
       form.setValue('amount', balanceAssetSelected.sub(maxFee));

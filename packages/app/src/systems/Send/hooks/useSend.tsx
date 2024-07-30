@@ -244,7 +244,17 @@ export function useSend() {
           navigate(Pages.index());
         },
         callTransactionRequest(ctx) {
-          const { providerUrl, transactionRequest, address } = ctx;
+          const {
+            providerUrl,
+            transactionRequest,
+            address,
+            input,
+            baseFee,
+            regularTip,
+            fastTip,
+            minGasLimit,
+            maxGasLimit,
+          } = ctx;
           if (!providerUrl || !transactionRequest || !address) {
             throw new Error('Params are required');
           }
@@ -253,6 +263,15 @@ export function useSend() {
             providerUrl,
             transactionRequest,
             address,
+            tip: input?.tip,
+            gasLimit: input?.gasLimit,
+            fees: {
+              baseFee,
+              regularTip,
+              fastTip,
+              minGasLimit,
+              maxGasLimit,
+            },
           });
         },
       },

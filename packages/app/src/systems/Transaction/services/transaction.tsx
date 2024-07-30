@@ -31,12 +31,21 @@ export type TxInputs = {
     id: string;
   };
   request: {
+    providerUrl: string;
+    transactionRequest: TransactionRequest;
     address?: string;
     origin?: string;
     title?: string;
     favIconUrl?: string;
-    transactionRequest: TransactionRequest;
-    providerUrl: string;
+    tip?: BN;
+    gasLimit?: BN;
+    fees?: {
+      baseFee?: BN;
+      regularTip?: BN;
+      fastTip?: BN;
+      minGasLimit?: BN;
+      maxGasLimit?: BN;
+    };
   };
   send: {
     address: string;
@@ -194,9 +203,13 @@ export class TxService {
       });
 
       return {
-        baseFee: baseFee.sub(1), // To match maxFee calculated on TS SDK (they add 1 unit)
+        baseFee,
         minGasLimit: txCost.gasUsed,
-        txSummary,
+        txSummary: {
+          ...txSummary,
+          // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
+          fee: txSummary.fee.add(1),
+        },
       };
 
       // biome-ignore lint/suspicious/noExplicitAny: allow any
@@ -337,7 +350,7 @@ export class TxService {
         );
 
         return {
-          baseFee: baseFee.sub(1), // To match maxFee calculated on TS SDK (they add 1 unit)
+          baseFee,
           minGasLimit: txCost.gasUsed,
           transactionRequest,
           address: account.address,

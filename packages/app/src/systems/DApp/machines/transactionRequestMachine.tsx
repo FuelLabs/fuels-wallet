@@ -299,6 +299,8 @@ export const transactionRequestMachine = createMachine(
             providerUrl,
             title,
             favIconUrl,
+            tip = bn(0),
+            gasLimit = bn(0),
           } = ev.input || {};
 
           if (!providerUrl) {
@@ -321,8 +323,18 @@ export const transactionRequestMachine = createMachine(
             providerUrl,
             title,
             favIconUrl,
-            tip: bn(0),
-            gasLimit: bn(0),
+            tip,
+            gasLimit,
+          };
+        },
+        fees: (_ctx, ev) => {
+          const { fees } = ev.input || {};
+          return {
+            baseFee: fees?.baseFee,
+            regularTip: fees?.regularTip,
+            fastTip: fees?.fastTip,
+            minGasLimit: fees?.minGasLimit,
+            maxGasLimit: fees?.maxGasLimit,
           };
         },
       }),
@@ -425,7 +437,11 @@ export const transactionRequestMachine = createMachine(
           const txResponse = await TxService.send(input);
           const txSummary = await txResponse.getTransactionSummary();
 
-          return txSummary;
+          return {
+            ...txSummary,
+            // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
+            fee: txSummary.fee.add(1),
+          };
         },
       }),
       fetchAccount: FetchMachine.create<
