@@ -54,7 +54,16 @@ export class ReportErrorService {
   }
 
   static saveError(error: Error) {
-    return db.errors.add(parseFuelError(error));
+    const parsedError = parseFuelError(error);
+    if (!parsedError) {
+      console.warn(`Can't save error without a message`);
+      return;
+    }
+    if ('id' in parsedError) {
+      console.warn(`Can't save error without an id`);
+      return;
+    }
+    return db.errors.add(parsedError);
   }
 
   async checkForErrors(): Promise<boolean> {
