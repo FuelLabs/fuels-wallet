@@ -75,10 +75,6 @@ export class RequestMethods extends ExtensionPageConnection {
       .waitForState(Services.addNetworkRequest, WAIT_FOR_CONFIG);
     return true;
   }
-
-  handleSaveError(error: Error) {
-    store.send(Services.reportError, { type: 'SAVE_ERROR', input: error });
-  }
 }
 
 if (IS_CRX) {
