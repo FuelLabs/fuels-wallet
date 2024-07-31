@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { assetRoutes } from '~/systems/Asset';
 import { PrivateRoute, PublicRoute } from '~/systems/Core';
@@ -14,6 +15,8 @@ import { settingsRoutes } from './systems/Settings';
 import { transactionRoutes } from './systems/Transaction/routes';
 import { UnlockGuard } from './systems/Unlock';
 
+const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
+
 const walletRoutes = (
   <>
     {errorRoutes}
@@ -29,7 +32,7 @@ const walletRoutes = (
 const initialPage = Pages.wallet();
 
 export const webAppRoutes = (
-  <Routes>
+  <SentryRoutes>
     <Route>
       <Route element={<PublicRoute />}>{signUpRoutes}</Route>
       <Route element={<PrivateRoute />}>
@@ -40,28 +43,28 @@ export const webAppRoutes = (
       </Route>
       <Route path="*" element={<Navigate to={initialPage} />} />
     </Route>
-  </Routes>
+  </SentryRoutes>
 );
 
 export const crxPopupRoutes = (
-  <Routes>
+  <SentryRoutes>
     <Route element={<CRXPrivateRoute />}>
       <Route element={<UnlockGuard />}>
         {walletRoutes}
         <Route path="*" element={<Navigate to={initialPage} />} />
       </Route>
     </Route>
-  </Routes>
+  </SentryRoutes>
 );
 
 export const crxSignUpRoutes = (
-  <Routes>
+  <SentryRoutes>
     <Route element={<CRXPublicRoute />}>
       {signUpRoutes}
       <Route path="*" element={<Navigate to={Pages.signUp()} />} />
     </Route>
     <Route element={<Navigate to={Pages.signUpCreatedWallet()} />} />
-  </Routes>
+  </SentryRoutes>
 );
 
 export const getRoutes = () => {
