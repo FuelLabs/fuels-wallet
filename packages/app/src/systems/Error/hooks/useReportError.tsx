@@ -40,14 +40,6 @@ export function useReportError() {
     ignoreErrors();
   };
 
-  store.useUpdateMachineConfig(Services.reportError, {
-    actions: {
-      reload: () => {
-        window.location.reload();
-      },
-    },
-  });
-
   return {
     hasErrorsToReport,
     isLoadingSendOnce,
