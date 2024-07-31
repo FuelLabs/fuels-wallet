@@ -6,6 +6,7 @@ import type {
   Connection,
   DatabaseRestartEvent,
   NetworkData,
+  StoredFuelWalletError,
   Vault,
 } from '@fuel-wallet/types';
 import type { DbEvents, PromiseExtended, Table } from 'dexie';
@@ -24,7 +25,7 @@ export class FuelDB extends Dexie {
   transactions!: Table<Transaction, string>;
   assets!: Table<AssetData, string>;
   abis!: Table<AbiTable, string>;
-  errors!: Table<Error, string>;
+  errors!: Table<StoredFuelWalletError, string>;
   integrityCheckInterval?: NodeJS.Timeout;
   restartAttempts = 0;
   readonly alwaysOpen = true;

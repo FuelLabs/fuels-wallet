@@ -1,27 +1,24 @@
+import type { StoredFuelWalletError } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { ReportErrorService } from '../services';
 
 export type ErrorMachineContext = {
   hasErrors?: boolean;
-  errors?: Error[];
+  errors?: StoredFuelWalletError[];
   reportErrorService: ReportErrorService;
 };
 
 type MachineServices = {
   clearErrors: {
-    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
-    data: void;
+    data: Pick<ErrorMachineContext, 'errors' | 'hasErrors'>;
   };
   reportErrors: {
     // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
     data: void;
   };
   checkForErrors: {
-    data: {
-      hasErrors: boolean;
-      errors: Error[];
-    };
+    data: Pick<ErrorMachineContext, 'errors' | 'hasErrors'>;
   };
   saveError: {
     // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
@@ -93,7 +90,6 @@ export const reportErrorMachine = createMachine(
           src: 'clearErrors',
           onDone: {
             target: 'idle',
-            actions: ['reload'],
           },
         },
       },
@@ -114,7 +110,6 @@ export const reportErrorMachine = createMachine(
           src: 'reportErrors',
           onDone: {
             target: 'checkForErrors',
-            actions: ['reload'],
           },
         },
       },
@@ -123,7 +118,6 @@ export const reportErrorMachine = createMachine(
           src: 'saveError',
           onDone: {
             target: 'checkForErrors',
-            actions: ['reload'],
           },
         },
       },
@@ -132,7 +126,6 @@ export const reportErrorMachine = createMachine(
           src: 'dismissError',
           onDone: {
             target: 'checkForErrors',
-            actions: ['reload'],
           },
         },
       },
@@ -144,11 +137,14 @@ export const reportErrorMachine = createMachine(
         hasErrors: (_, ev) => ev.data.hasErrors,
         errors: (_, ev) => ev.data.errors,
       }),
-      reload: () => {},
     },
     services: {
       clearErrors: async (context) => {
         await context.reportErrorService.clearErrors();
+        return {
+          hasErrors: false,
+          errors: [],
+        };
       },
       reportErrors: async (context) => {
         await context.reportErrorService.reportErrors();

@@ -9,6 +9,7 @@ import {
   Text,
 } from '@fuel-ui/react';
 import { Icon, IconButton, Tooltip } from '@fuel-ui/react';
+import type { StoredFuelWalletError } from '@fuel-wallet/types';
 import { JsonEditor } from 'json-edit-react';
 import { useEffect, useState } from 'react';
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
@@ -19,7 +20,8 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
   const { handlers, isLoadingSendOnce, errors } = useReportError();
   const [currentPage, setCurrentPage] = useState(0);
 
-  const [currentErrors, setCurrentErrors] = useState<Error[]>(errors);
+  const [currentErrors, setCurrentErrors] =
+    useState<StoredFuelWalletError[]>(errors);
   const shownError = currentErrors?.[currentPage];
 
   useEffect(() => {
@@ -46,7 +48,7 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
     if (!!newData && 'message' in newData && 'stack' in newData) {
       setCurrentErrors((prev) => {
         const errorsClone = [...prev];
-        errorsClone[currentPage] = newData as Error;
+        // errorsClone[currentPage] = newData as Error;
         return errorsClone;
       });
     }

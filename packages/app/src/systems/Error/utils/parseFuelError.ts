@@ -1,10 +1,14 @@
 import { createUUID } from '@fuel-wallet/connections';
+import type {
+  SentryExtraErrorData,
+  StoredFuelWalletError,
+} from '@fuel-wallet/types';
 
 const SANITIZE_REGEXP = /private key: \w+/g;
 
 function parseMessage(
   message: string | { name: string; message: string }
-): string | { message: string } {
+): string | { message: string; name?: string } {
   if (typeof message === 'string') {
     return message.replace(SANITIZE_REGEXP, 'private key');
   }
@@ -24,12 +28,13 @@ function parseMessage(
   return fallback;
 }
 
-export function parseFuelError(error: Error): Error | undefined {
+export function parseFuelError(
+  error: Error
+): StoredFuelWalletError | undefined {
   try {
-    const errorBase = {
-      ...error,
+    const id = createUUID();
+    const errorExtra: SentryExtraErrorData = {
       timestamp: Date.now(),
-      id: createUUID(),
       location: window ? window.location.href : '-',
       pathname: window ? window.location.pathname : '-',
       hash: window ? window.location.hash : '-',
@@ -38,17 +43,15 @@ export function parseFuelError(error: Error): Error | undefined {
     const sanitizedData = parseMessage(error.message);
 
     if (typeof sanitizedData === 'string') {
-      return {
-        ...errorBase,
-        message: sanitizedData,
-      } as Error;
+      error.message = sanitizedData;
+      return { id, error, extra: errorExtra };
     }
 
     if ('message' in sanitizedData) {
-      return {
-        ...errorBase,
-        ...sanitizedData,
-      } as Error;
+      const { message, name, ...rest } = sanitizedData;
+      error.name = name || error.name;
+      error.message = message;
+      return { id, error, extra: { ...errorExtra, ...rest } };
     }
 
     console.warn(`Can't report an error without an message is not a string`);

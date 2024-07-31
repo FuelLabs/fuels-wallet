@@ -6,3 +6,16 @@ export type FuelWalletError = {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   error?: Error | ErrorEvent | { message: string; stack?: any };
 };
+
+export type SentryExtraErrorData = {
+  timestamp: number;
+  location: string;
+  pathname: string;
+  hash: string;
+};
+
+export type StoredFuelWalletError = {
+  error: Error;
+  extra: SentryExtraErrorData;
+  id: string;
+};
