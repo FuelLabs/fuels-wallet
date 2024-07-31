@@ -248,7 +248,6 @@ export function useSend() {
             providerUrl,
             transactionRequest,
             address,
-            input,
             baseFee,
             regularTip,
             fastTip,
@@ -263,8 +262,6 @@ export function useSend() {
             providerUrl,
             transactionRequest,
             address,
-            tip: input?.tip,
-            gasLimit: input?.gasLimit,
             fees: {
               baseFee,
               regularTip,

@@ -281,7 +281,7 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
       form.handleSubmit((data) => {
         const { fees } = data;
 
-        const input: TxInputs['simulateTransaction'] = {
+        const input: TxInputs['setCustomFees'] = {
           tip: fees.tip.amount,
           gasLimit: fees.gasLimit.amount,
         };

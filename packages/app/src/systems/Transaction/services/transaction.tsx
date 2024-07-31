@@ -37,8 +37,6 @@ export type TxInputs = {
     origin?: string;
     title?: string;
     favIconUrl?: string;
-    tip?: BN;
-    gasLimit?: BN;
     fees?: {
       baseFee?: BN;
       regularTip?: BN;
@@ -53,8 +51,10 @@ export type TxInputs = {
     providerUrl?: string;
   };
   simulateTransaction: {
-    transactionRequest?: TransactionRequest;
+    transactionRequest: TransactionRequest;
     providerUrl?: string;
+  };
+  setCustomFees: {
     tip?: BN;
     gasLimit?: BN;
   };
@@ -155,8 +155,6 @@ export class TxService {
   static async simulateTransaction({
     transactionRequest,
     providerUrl,
-    tip,
-    gasLimit,
   }: TxInputs['simulateTransaction']) {
     const [provider, account] = await Promise.all([
       Provider.create(providerUrl || ''),
@@ -173,20 +171,16 @@ export class TxService {
     const wallet = new WalletLockedCustom(account.address, provider);
 
     try {
-      // Set the gas limit and tip if provided
-      if ('gasLimit' in transactionRequest && gasLimit?.gt(0)) {
-        transactionRequest.gasLimit = gasLimit;
-      }
-      if ('tip' in transactionRequest && tip?.gt(0)) {
-        transactionRequest.tip = tip;
-      }
-
+      // Getting updated maxFee and costs
       const txCost = await provider.getTransactionCost(transactionRequest, {
         estimateTxDependencies: true,
         resourcesOwner: wallet,
       });
 
-      if ('gasLimit' in transactionRequest && gasLimit?.gt(0)) {
+      if (
+        'gasLimit' in transactionRequest &&
+        transactionRequest.gasLimit?.gt(0)
+      ) {
         transactionRequest.gasLimit = txCost.gasUsed;
       }
       transactionRequest.maxFee = txCost.maxFee;

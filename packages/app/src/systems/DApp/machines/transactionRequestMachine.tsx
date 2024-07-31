@@ -89,7 +89,7 @@ type MachineServices = {
 
 type MachineEvents =
   | { type: 'START'; input?: TxInputs['request'] }
-  | { type: 'SET_CUSTOM_FEES'; input: TxInputs['simulateTransaction'] }
+  | { type: 'SET_CUSTOM_FEES'; input: TxInputs['setCustomFees'] }
   | { type: 'RESET'; input?: null }
   | { type: 'APPROVE'; input?: null }
   | { type: 'REJECT'; input?: null }
@@ -299,8 +299,6 @@ export const transactionRequestMachine = createMachine(
             providerUrl,
             title,
             favIconUrl,
-            tip = bn(0),
-            gasLimit = bn(0),
           } = ev.input || {};
 
           if (!providerUrl) {
@@ -315,6 +313,15 @@ export const transactionRequestMachine = createMachine(
           if (ctx.input.isOriginRequired && !origin) {
             throw new Error('origin is required');
           }
+
+          const tip = transactionRequest.tip?.gt(0)
+            ? transactionRequest.tip
+            : undefined;
+          const gasLimit =
+            'gasLimit' in transactionRequest &&
+            transactionRequest.gasLimit?.gt(0)
+              ? transactionRequest.gasLimit
+              : undefined;
 
           return {
             transactionRequest,
@@ -338,13 +345,28 @@ export const transactionRequestMachine = createMachine(
           };
         },
       }),
-      assignCustomFees: assign((ctx, ev) => ({
-        input: {
-          ...ctx.input,
-          tip: ev.input.tip ?? ctx.input.tip,
-          gasLimit: ev.input.gasLimit ?? ctx.input.gasLimit,
+      assignCustomFees: assign({
+        input: (ctx, ev) => {
+          const { tip, gasLimit } = ev.input || {};
+          const { transactionRequest } = ctx.input;
+
+          if (!transactionRequest) {
+            throw new Error('Missing transactionRequest');
+          }
+
+          if (tip?.gt(0)) {
+            transactionRequest.tip = tip;
+          }
+          if ('gasLimit' in transactionRequest && gasLimit?.gt(0)) {
+            transactionRequest.gasLimit = gasLimit;
+          }
+
+          return {
+            ...ctx.input,
+            transactionRequest,
+          };
         },
-      })),
+      }),
       assignApprovedTx: assign({
         response: (ctx, ev) => ({
           ...ctx.response,

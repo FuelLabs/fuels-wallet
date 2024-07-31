@@ -45,7 +45,10 @@ function App() {
               '0xed73857a06ba2a706700e4e69e59f63a012ae6663a54309043e8fdc690bed926',
               bn(100),
               undefined,
-              undefined
+              {
+                gasLimit: bn(53),
+                tip: bn(1000),
+              }
             );
 
             if (!txn || !account) return;
