@@ -7,13 +7,11 @@ function getGlobalThis() {
 
 export function listenToGlobalErrors(onError: (error: Error) => void) {
   getGlobalThis().addEventListener('error', (event) => {
-    if (typeof window !== 'undefined') return;
     if (!event?.error) return;
     onError(event.error);
   });
 
   getGlobalThis().addEventListener('unhandledrejection', (event) => {
-    if (typeof window !== 'undefined') return;
     if (!event?.reason) return;
     onError(event.reason);
   });
