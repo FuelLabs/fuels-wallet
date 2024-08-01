@@ -10,8 +10,10 @@ import {
 import type { AssetData } from '@fuel-wallet/types';
 import type { BN, TransactionStatus, TransactionSummary } from 'fuels';
 import { type ReactNode, useMemo } from 'react';
+import { useFormContext } from 'react-hook-form';
 import type { Maybe } from '~/systems/Core';
 import { MotionStack, animations } from '~/systems/Core';
+import type { SendFormValues } from '~/systems/Send/hooks';
 import {
   type GroupedErrors,
   TxFee,
@@ -117,9 +119,20 @@ function TxContentInfo({
   providerUrl,
   fees,
 }: TxContentInfoProps) {
+  const { getValues } = useFormContext<SendFormValues>();
+
   const status = txStatus || tx?.status || txStatus;
   const hasErrors = Boolean(Object.keys(errors || {}).length);
   const isExecuted = !!tx?.id;
+
+  const initialAdvanced = useMemo(() => {
+    if (!fees?.regularTip || !fees?.minGasLimit) return false;
+
+    return (
+      !getValues('fees.tip.amount').eq(fees.regularTip) ||
+      !getValues('fees.gasLimit.amount').eq(fees.minGasLimit)
+    );
+  }, [getValues, fees]);
 
   function getHeader() {
     if (hasErrors) return <ErrorHeader errors={errors} />;
@@ -156,6 +169,7 @@ function TxContentInfo({
           <VStack gap="$3">
             <Text as="span">Fee (network)</Text>
             <TxFeeOptions
+              initialAdvanced={initialAdvanced}
               baseFee={fees.baseFee}
               minGasLimit={fees.minGasLimit}
               regularTip={fees.regularTip}

@@ -1,6 +1,6 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Form, Input, Text } from '@fuel-ui/react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { type BN, DECIMAL_FUEL, bn } from 'fuels';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AssetSelect } from '~/systems/Asset';
@@ -164,6 +164,7 @@ export function SendSelect({
                 Fee (network)
               </Text>
               <TxFeeOptions
+                initialAdvanced={false}
                 baseFee={baseFee}
                 minGasLimit={minGasLimit}
                 regularTip={regularTip}

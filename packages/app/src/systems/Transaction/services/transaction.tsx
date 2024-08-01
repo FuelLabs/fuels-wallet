@@ -172,17 +172,11 @@ export class TxService {
 
     try {
       // Getting updated maxFee and costs
+      transactionRequest.maxFee = bn(0);
       const txCost = await provider.getTransactionCost(transactionRequest, {
         estimateTxDependencies: true,
         resourcesOwner: wallet,
       });
-
-      if (
-        'gasLimit' in transactionRequest &&
-        transactionRequest.gasLimit?.gt(0)
-      ) {
-        transactionRequest.gasLimit = txCost.gasUsed;
-      }
       transactionRequest.maxFee = txCost.maxFee;
 
       const baseFee = transactionRequest.maxFee.sub(
@@ -342,6 +336,7 @@ export class TxService {
           }
         );
 
+        // Getting updated maxFee and costs
         const txCost = await provider.getTransactionCost(transactionRequest, {
           resourcesOwner: wallet,
         });

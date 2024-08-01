@@ -46,8 +46,7 @@ function App() {
               bn(100),
               undefined,
               {
-                gasLimit: bn(53),
-                tip: bn(1000),
+                tip: bn(2000),
               }
             );
 
@@ -61,7 +60,29 @@ function App() {
             }
           }}
         >
-          Send transaction
+          Send transaction with custom fees
+        </button>
+        <button
+          type="button"
+          onClick={async () => {
+            const txn = await wallet?.createTransfer(
+              '0xed73857a06ba2a706700e4e69e59f63a012ae6663a54309043e8fdc690bed926',
+              bn(100),
+              undefined,
+              undefined
+            );
+
+            if (!txn || !account) return;
+
+            try {
+              const result = await fuel.sendTransaction(account, txn);
+              console.log(result);
+            } catch (e) {
+              console.error(e);
+            }
+          }}
+        >
+          Send transaction with default fees
         </button>
       </div>
       {isError && <p className="Error">{error?.message}</p>}
