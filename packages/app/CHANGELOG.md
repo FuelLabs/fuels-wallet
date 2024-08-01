@@ -1,5 +1,18 @@
 # fuels-wallet
 
+## 0.24.0
+
+### Minor Changes
+
+- [#1318](https://github.com/FuelLabs/fuels-wallet/pull/1318) [`a715ad6a`](https://github.com/FuelLabs/fuels-wallet/commit/a715ad6a9652e477cd7143493bd5ab3af63dbcfd) Thanks [@helciofranco](https://github.com/helciofranco)! - Add `Gas Limit` input to customize transaction fees when sending a transfer
+
+- [#1405](https://github.com/FuelLabs/fuels-wallet/pull/1405) [`de7771b6`](https://github.com/FuelLabs/fuels-wallet/commit/de7771b6a3520f075bc87d5683e42a0502923400) Thanks [@rodrigobranas](https://github.com/rodrigobranas)! - Add new e2e tests for custom fees in "Send Screen"
+
+### Patch Changes
+
+- Updated dependencies [[`a715ad6a`](https://github.com/FuelLabs/fuels-wallet/commit/a715ad6a9652e477cd7143493bd5ab3af63dbcfd)]:
+  - @fuel-wallet/connections@0.24.0
+
 ## 0.23.0
 
 ### Minor Changes

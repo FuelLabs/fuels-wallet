@@ -1,5 +1,11 @@
 # @fuel-wallet/types
 
+## 0.24.0
+
+### Minor Changes
+
+- [#1318](https://github.com/FuelLabs/fuels-wallet/pull/1318) [`a715ad6a`](https://github.com/FuelLabs/fuels-wallet/commit/a715ad6a9652e477cd7143493bd5ab3af63dbcfd) Thanks [@helciofranco](https://github.com/helciofranco)! - Add `Gas Limit` input to customize transaction fees when sending a transfer
+
 ## 0.23.0
 
 ## 0.22.0
