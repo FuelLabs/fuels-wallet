@@ -1,9 +1,6 @@
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useSelector } from '@xstate/react';
-import { type BN, TransactionStatus, bn } from 'fuels';
-import { useCallback, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
+import { TransactionStatus } from 'fuels';
+import { useCallback } from 'react';
 import { Services, store } from '~/store';
 import { useOverlay } from '~/systems/Overlay';
 import type { TxInputs } from '~/systems/Transaction/services';
@@ -14,20 +11,8 @@ const selectors = {
   context(state: TransactionRequestState) {
     return state.context;
   },
-  minGasLimit(state: TransactionRequestState) {
-    return state.context.fees.minGasLimit;
-  },
-  maxGasLimit(state: TransactionRequestState) {
-    return state.context.fees.maxGasLimit;
-  },
-  baseFee(state: TransactionRequestState) {
-    return state.context.fees.baseFee;
-  },
-  regularTip(state: TransactionRequestState) {
-    return state.context.fees.regularTip;
-  },
-  fastTip(state: TransactionRequestState) {
-    return state.context.fees.fastTip;
+  fees(state: TransactionRequestState) {
+    return state.context.fees;
   },
   account(state: TransactionRequestState) {
     return state.context.input.account;
@@ -40,9 +25,6 @@ const selectors = {
   },
   isLoadingAccounts(state: TransactionRequestState) {
     return state.matches('fetchingAccount');
-  },
-  isPreLoading(state: TransactionRequestState) {
-    return state.hasTag('preLoading');
   },
   errors(state: TransactionRequestState) {
     if (!state.context.errors) return {};
@@ -91,99 +73,10 @@ export type UseTransactionRequestReturn = ReturnType<
   typeof useTransactionRequest
 >;
 
-export type RequestFormValues = {
-  fees: {
-    tip: {
-      amount: BN;
-      text: string;
-    };
-    gasLimit: {
-      amount: BN;
-      text: string;
-    };
-  };
-};
-
-const DEFAULT_VALUES: RequestFormValues = {
-  fees: {
-    tip: {
-      amount: bn(0),
-      text: '0',
-    },
-    gasLimit: {
-      amount: bn(0),
-      text: '0',
-    },
-  },
-};
-
-type SchemaOptions = {
-  baseFee: BN | undefined;
-  minGasLimit: BN | undefined;
-  maxGasLimit: BN | undefined;
-};
-
-const schema = yup
-  .object({
-    fees: yup
-      .object({
-        tip: yup.object({
-          amount: yup
-            .mixed<BN>()
-            .test('min', 'Tip must be greater than or equal to 0', (value) => {
-              return value?.gte(0);
-            })
-            .required('Tip is required'),
-          text: yup.string().required('Tip is required'),
-        }),
-        gasLimit: yup.object({
-          amount: yup
-            .mixed<BN>()
-            .test({
-              name: 'min',
-              test: (value, ctx) => {
-                const { minGasLimit } = ctx.options.context as SchemaOptions;
-
-                if (!minGasLimit || value?.gte(minGasLimit)) {
-                  return true;
-                }
-
-                return ctx.createError({
-                  path: 'fees.gasLimit',
-                  message: `Gas limit must be greater than or equal to '${minGasLimit.toString()}'.`,
-                });
-              },
-            })
-            .test({
-              name: 'max',
-              test: (value, ctx) => {
-                const { maxGasLimit } = ctx.options.context as SchemaOptions;
-                if (!maxGasLimit) return false;
-
-                if (value?.lte(maxGasLimit)) {
-                  return true;
-                }
-
-                return ctx.createError({
-                  path: 'fees.gasLimit',
-                  message: `Gas limit must be lower than or equal to '${maxGasLimit.toString()}'.`,
-                });
-              },
-            })
-            .required('Gas limit is required'),
-          text: yup.string().required('Gas limit is required'),
-        }),
-      })
-      .required('Fees are required'),
-  })
-  .required();
-
 export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const service = store.useService(Services.txRequest);
 
-  const baseFee = useSelector(service, selectors.baseFee);
-  const minGasLimit = useSelector(service, selectors.minGasLimit);
-  const maxGasLimit = useSelector(service, selectors.maxGasLimit);
+  const fees = useSelector(service, selectors.fees);
   const overlay = useOverlay();
 
   store.useUpdateMachineConfig(Services.txRequest, {
@@ -215,7 +108,6 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const originTitle = useSelector(service, selectors.originTitle);
   const favIconUrl = useSelector(service, selectors.favIconUrl);
   const isSendingTx = useSelector(service, selectors.sendingTx);
-  const isPreLoading = useSelector(service, selectors.isPreLoading);
   const isLoading = status('loading');
   const shouldShowActions = !status('success');
   const shouldShowTxExecuted =
@@ -223,19 +115,6 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const shouldShowTxSimulated = !shouldShowTxExecuted && !!txSummarySimulated;
   const shouldDisableApproveBtn =
     shouldShowTxSimulated && errors.hasSimulateTxErrors;
-  const shouldShowLoader = isPreLoading || !txSummarySimulated;
-
-  const form = useForm<RequestFormValues>({
-    resolver: yupResolver(schema),
-    reValidateMode: 'onChange',
-    mode: 'onSubmit',
-    defaultValues: DEFAULT_VALUES,
-    context: {
-      baseFee,
-      minGasLimit,
-      maxGasLimit,
-    },
-  });
 
   function closeDialog() {
     reset();
@@ -276,26 +155,9 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     service.send('APPROVE');
   }
 
-  useEffect(() => {
-    const { unsubscribe } = form.watch(() => {
-      form.handleSubmit((data) => {
-        const { fees } = data;
-
-        const input: TxInputs['setCustomFees'] = {
-          tip: fees.tip.amount,
-          gasLimit: fees.gasLimit.amount,
-        };
-
-        service.send('SET_CUSTOM_FEES', { input });
-      })();
-    });
-
-    return () => unsubscribe();
-  }, [form.watch, form.handleSubmit, service.send]);
-
   return {
     ...ctx,
-    form,
+    fees,
     account,
     executedStatus,
     errors,
@@ -314,7 +176,6 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     shouldDisableApproveBtn,
     shouldShowTxSimulated,
     shouldShowTxExecuted,
-    shouldShowLoader,
     handlers: {
       request,
       reset,

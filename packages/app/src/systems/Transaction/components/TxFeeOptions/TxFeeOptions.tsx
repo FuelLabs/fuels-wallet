@@ -22,10 +22,14 @@ export const TxFeeOptions = ({
   regularTip,
   fastTip,
 }: TxFeeOptionsProps) => {
-  const [isAdvanced, setIsAdvanced] = useState(false);
   const { control, setValue, getValues } = useFormContext<SendFormValues>();
-  const previousMinGasLimit = useRef<BN>(minGasLimit);
-  const previousDefaultTip = useRef<BN>(regularTip);
+  const [isAdvanced, setIsAdvanced] = useState(
+    !getValues('fees.tip.amount').eq(regularTip) ||
+      !getValues('fees.tip.amount').eq(fastTip) ||
+      !getValues('fees.gasLimit.amount').eq(minGasLimit)
+  );
+  const previousMinGasLimit = useRef<BN>(getValues('fees.gasLimit.amount'));
+  const previousDefaultTip = useRef<BN>(getValues('fees.tip.amount'));
 
   const { field: tip, fieldState: tipState } = useController({
     control,

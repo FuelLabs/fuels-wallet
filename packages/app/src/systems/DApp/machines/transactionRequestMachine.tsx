@@ -122,7 +122,7 @@ export const transactionRequestMachine = createMachine(
         },
       },
       estimatingInitialTips: {
-        tags: ['loading', 'preLoading'],
+        tags: ['loading'],
         invoke: {
           src: 'estimateDefaultTips',
           onDone: [
@@ -154,7 +154,7 @@ export const transactionRequestMachine = createMachine(
       },
       fetchingAccount: {
         entry: ['openDialog'],
-        tags: ['loading', 'preLoading'],
+        tags: ['loading'],
         invoke: {
           src: 'fetchAccount',
           data: {
