@@ -5371,11 +5371,11 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
-      '@babel/compat-data': 7.23.5
+      '@babel/compat-data': 7.22.9
       '@babel/core': 7.24.0
-      '@babel/helper-compilation-targets': 7.23.6
+      '@babel/helper-compilation-targets': 7.22.10
       '@babel/helper-plugin-utils': 7.22.5
-      '@babel/helper-validator-option': 7.23.5
+      '@babel/helper-validator-option': 7.22.5
       '@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression': 7.22.5(@babel/core@7.24.5)
       '@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining': 7.22.5(@babel/core@7.24.5)
       '@babel/plugin-proposal-private-property-in-object': 7.21.0-placeholder-for-preset-env.2(@babel/core@7.24.5)
@@ -5446,7 +5446,7 @@ packages:
       '@babel/plugin-transform-unicode-regex': 7.22.5(@babel/core@7.24.5)
       '@babel/plugin-transform-unicode-sets-regex': 7.22.5(@babel/core@7.24.5)
       '@babel/preset-modules': 0.1.6(@babel/core@7.24.5)
-      '@babel/types': 7.24.0
+      '@babel/types': 7.22.11
       babel-plugin-polyfill-corejs2: 0.4.5(@babel/core@7.24.5)
       babel-plugin-polyfill-corejs3: 0.8.3(@babel/core@7.24.5)
       babel-plugin-polyfill-regenerator: 0.5.2(@babel/core@7.24.5)
@@ -5462,11 +5462,11 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
-      '@babel/compat-data': 7.23.5
+      '@babel/compat-data': 7.22.9
       '@babel/core': 7.24.5
-      '@babel/helper-compilation-targets': 7.23.6
+      '@babel/helper-compilation-targets': 7.22.10
       '@babel/helper-plugin-utils': 7.22.5
-      '@babel/helper-validator-option': 7.23.5
+      '@babel/helper-validator-option': 7.22.5
       '@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression': 7.22.5(@babel/core@7.24.5)
       '@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining': 7.22.5(@babel/core@7.24.5)
       '@babel/plugin-proposal-private-property-in-object': 7.21.0-placeholder-for-preset-env.2(@babel/core@7.24.5)
@@ -5537,7 +5537,7 @@ packages:
       '@babel/plugin-transform-unicode-regex': 7.22.5(@babel/core@7.24.5)
       '@babel/plugin-transform-unicode-sets-regex': 7.22.5(@babel/core@7.24.5)
       '@babel/preset-modules': 0.1.6(@babel/core@7.24.5)
-      '@babel/types': 7.24.0
+      '@babel/types': 7.22.11
       babel-plugin-polyfill-corejs2: 0.4.5(@babel/core@7.24.5)
       babel-plugin-polyfill-corejs3: 0.8.3(@babel/core@7.24.5)
       babel-plugin-polyfill-regenerator: 0.5.2(@babel/core@7.24.5)
