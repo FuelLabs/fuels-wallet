@@ -27,6 +27,7 @@ overrides:
   ws@>=8.0.0 <8.17.1: '>=8.17.1'
   ws@>=7.0.0 <7.5.10: '>=7.5.10'
   ws@>=6.0.0 <6.2.3: '>=6.2.3'
+  fast-xml-parser@<4.4.1: '>=4.4.1'
 
 importers:
 
@@ -5370,11 +5371,11 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
-      '@babel/compat-data': 7.23.5
+      '@babel/compat-data': 7.22.9
       '@babel/core': 7.24.0
-      '@babel/helper-compilation-targets': 7.23.6
+      '@babel/helper-compilation-targets': 7.22.10
       '@babel/helper-plugin-utils': 7.22.5
-      '@babel/helper-validator-option': 7.23.5
+      '@babel/helper-validator-option': 7.22.5
       '@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression': 7.22.5(@babel/core@7.24.5)
       '@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining': 7.22.5(@babel/core@7.24.5)
       '@babel/plugin-proposal-private-property-in-object': 7.21.0-placeholder-for-preset-env.2(@babel/core@7.24.5)
@@ -5445,7 +5446,7 @@ packages:
       '@babel/plugin-transform-unicode-regex': 7.22.5(@babel/core@7.24.5)
       '@babel/plugin-transform-unicode-sets-regex': 7.22.5(@babel/core@7.24.5)
       '@babel/preset-modules': 0.1.6(@babel/core@7.24.5)
-      '@babel/types': 7.24.0
+      '@babel/types': 7.22.11
       babel-plugin-polyfill-corejs2: 0.4.5(@babel/core@7.24.5)
       babel-plugin-polyfill-corejs3: 0.8.3(@babel/core@7.24.5)
       babel-plugin-polyfill-regenerator: 0.5.2(@babel/core@7.24.5)
@@ -5461,11 +5462,11 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
-      '@babel/compat-data': 7.23.5
+      '@babel/compat-data': 7.22.9
       '@babel/core': 7.24.5
-      '@babel/helper-compilation-targets': 7.23.6
+      '@babel/helper-compilation-targets': 7.22.10
       '@babel/helper-plugin-utils': 7.22.5
-      '@babel/helper-validator-option': 7.23.5
+      '@babel/helper-validator-option': 7.22.5
       '@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression': 7.22.5(@babel/core@7.24.5)
       '@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining': 7.22.5(@babel/core@7.24.5)
       '@babel/plugin-proposal-private-property-in-object': 7.21.0-placeholder-for-preset-env.2(@babel/core@7.24.5)
@@ -5536,7 +5537,7 @@ packages:
       '@babel/plugin-transform-unicode-regex': 7.22.5(@babel/core@7.24.5)
       '@babel/plugin-transform-unicode-sets-regex': 7.22.5(@babel/core@7.24.5)
       '@babel/preset-modules': 0.1.6(@babel/core@7.24.5)
-      '@babel/types': 7.24.0
+      '@babel/types': 7.22.11
       babel-plugin-polyfill-corejs2: 0.4.5(@babel/core@7.24.5)
       babel-plugin-polyfill-corejs3: 0.8.3(@babel/core@7.24.5)
       babel-plugin-polyfill-regenerator: 0.5.2(@babel/core@7.24.5)
@@ -13292,7 +13293,7 @@ packages:
       chalk: 4.1.2
       execa: 5.1.1
       fast-glob: 3.3.2
-      fast-xml-parser: 4.3.6
+      fast-xml-parser: 4.4.1
       logkitty: 0.7.1
 
   /@react-native-community/cli-platform-apple@13.6.6:
@@ -13302,7 +13303,7 @@ packages:
       chalk: 4.1.2
       execa: 5.1.1
       fast-glob: 3.3.2
-      fast-xml-parser: 4.3.6
+      fast-xml-parser: 4.4.1
       ora: 5.4.1
 
   /@react-native-community/cli-platform-ios@13.6.6:
@@ -22925,8 +22926,8 @@ packages:
   /fast-safe-stringify@2.1.1:
     resolution: {integrity: sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==}
 
-  /fast-xml-parser@4.3.6:
-    resolution: {integrity: sha512-M2SovcRxD4+vC493Uc2GZVcZaj66CCJhWurC4viynVSTvrpErCShNcDz1lAho6n9REQKvL/ll4A4/fw6Y9z8nw==}
+  /fast-xml-parser@4.4.1:
+    resolution: {integrity: sha512-xkjOecfnKGkSsOwtZ5Pz7Us/T6mrbPQrq0nh+aCO5V9nk5NLWmasAHumTKjiPJPWANe+kAZ84Jc8ooJkzZ88Sw==}
     hasBin: true
     dependencies:
       strnum: 1.0.5
