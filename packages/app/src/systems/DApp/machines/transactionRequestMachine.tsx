@@ -354,9 +354,8 @@ export const transactionRequestMachine = createMachine(
             throw new Error('Missing transactionRequest');
           }
 
-          if (tip?.gt(0)) {
-            transactionRequest.tip = tip;
-          }
+          transactionRequest.tip = tip?.gt(0) ? tip : undefined;
+
           if ('gasLimit' in transactionRequest && gasLimit?.gt(0)) {
             transactionRequest.gasLimit = gasLimit;
           }
