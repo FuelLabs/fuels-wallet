@@ -12,6 +12,7 @@ export type SentryExtraErrorData = {
   location: string;
   pathname: string;
   hash: string;
+  counts?: number;
 };
 
 export type StoredFuelWalletError = {
