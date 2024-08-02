@@ -57,7 +57,6 @@ export class BaseConnection extends EventEmitter {
   }
 
   onCommunicationMessage = (message: CommunicationMessage) => {
-    console.log('fsk onCommunicationMessage', message);
     switch (message.type) {
       case MessageTypes.response:
         this.onResponse(message);
