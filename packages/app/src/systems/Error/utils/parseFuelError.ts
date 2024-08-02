@@ -43,8 +43,8 @@ export function parseFuelError(
     const sanitizedData = parseMessage(error.message);
 
     if (typeof sanitizedData === 'string') {
+      error.name = error.name || error.message;
       error.message = sanitizedData;
-      error.message = error.name || error.message;
       return { id, error, extra: { ...errorExtra } };
     }
 
