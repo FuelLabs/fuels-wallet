@@ -66,6 +66,11 @@ export const reportErrorMachine = createMachine(
     initial: 'checkForErrors',
     states: {
       idle: {
+        after: {
+          5000: {
+            target: 'checkForErrors',
+          },
+        },
         on: {
           IGNORE_ERRORS: {
             target: 'cleaning',
