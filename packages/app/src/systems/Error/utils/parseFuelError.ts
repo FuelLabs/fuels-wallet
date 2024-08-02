@@ -44,12 +44,14 @@ export function parseFuelError(
 
     if (typeof sanitizedData === 'string') {
       error.message = sanitizedData;
-      return { id, error, extra: errorExtra };
+      error.message = error.name || error.message;
+      return { id, error, extra: { ...errorExtra } };
     }
 
     if ('message' in sanitizedData) {
       const { message, name, ...rest } = sanitizedData;
-      error.name = name || error.name;
+      // biome-ignore lint/suspicious/noExplicitAny: If undefined is replaced in Sentry with <unknown>
+      error.name = (name || (error?.stack && message) || undefined) as any;
       error.message = message;
       return { id, error, extra: { ...errorExtra, ...rest } };
     }
