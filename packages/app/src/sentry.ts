@@ -13,9 +13,13 @@ import {
   VITE_SENTRY_DSN,
 } from '~/config';
 
-if (IS_CRX_POPUP) {
-  console.log('Sentry enabled');
+const DISABLED_INTEGRATIONS = {
+  Dedupe: true,
+  GlobalHandlers: true,
+  InboundFilters: true,
+};
 
+if (IS_CRX_POPUP) {
   Sentry.init({
     dsn: VITE_SENTRY_DSN,
     release: APP_VERSION,
@@ -23,7 +27,7 @@ if (IS_CRX_POPUP) {
     integrations: (integrations) => {
       // integrations will be all default integrations
       const filteredIntegrations = integrations.filter((integration) => {
-        return integration.name !== 'Dedupe';
+        return !DISABLED_INTEGRATIONS[integration.name];
       });
 
       filteredIntegrations.push(
@@ -36,10 +40,10 @@ if (IS_CRX_POPUP) {
         })
       );
 
+      filteredIntegrations.push(Sentry.debugIntegration());
+
       return filteredIntegrations;
     },
-    tracesSampleRate: 1.0, // debug: true,
-    enabled: true,
     beforeSend(event) {
       if (!event.tags?.manual) {
         IS_DEVELOPMENT &&
