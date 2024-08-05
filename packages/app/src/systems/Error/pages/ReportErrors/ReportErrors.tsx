@@ -27,7 +27,6 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
     if (!err) return undefined;
     return JSON.parse(JSON.stringify(err, Object.getOwnPropertyNames(err)));
   }, [currentPage, currentErrors?.[currentPage]?.error]);
-  console.log('fsk shownError', shownError);
 
   useEffect(() => {
     setCurrentErrors(errors);
