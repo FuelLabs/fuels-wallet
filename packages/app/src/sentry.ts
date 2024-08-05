@@ -6,7 +6,12 @@ import {
   useLocation,
   useNavigationType,
 } from 'react-router-dom';
-import { APP_VERSION, IS_CRX_POPUP, VITE_SENTRY_DSN } from '~/config';
+import {
+  APP_VERSION,
+  IS_CRX_POPUP,
+  IS_DEVELOPMENT,
+  VITE_SENTRY_DSN,
+} from '~/config';
 
 if (IS_CRX_POPUP) {
   console.log('Sentry enabled');
@@ -35,6 +40,20 @@ if (IS_CRX_POPUP) {
     },
     tracesSampleRate: 1.0, // debug: true,
     enabled: true,
+    beforeSend(event) {
+      if (!event.tags?.manual) {
+        IS_DEVELOPMENT &&
+          console.log('Automatic error reporting disabled, skipping...');
+        return null;
+      }
+      if (IS_DEVELOPMENT) {
+        console.log(
+          'Error reporting automatically disabled in development mode, skipping...'
+        );
+        return null;
+      }
+      return event;
+    },
     debug: true,
   });
 }

@@ -14,7 +14,7 @@ export class ReportErrorService {
     for (const e of errors) {
       Sentry.captureException(e.error, {
         extra: e.extra,
-        tags: { id: e.id },
+        tags: { id: e.id, manual: true },
       });
     }
   }
