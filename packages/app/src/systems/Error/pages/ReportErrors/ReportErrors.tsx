@@ -11,7 +11,7 @@ import {
 import { Icon, IconButton, Tooltip } from '@fuel-ui/react';
 import type { StoredFuelWalletError } from '@fuel-wallet/types';
 import { JsonEditor } from 'json-edit-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
 import { coreStyles } from '~/systems/Core/styles';
 import { useReportError } from '../../hooks';
@@ -22,7 +22,12 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
 
   const [currentErrors, setCurrentErrors] =
     useState<StoredFuelWalletError[]>(errors);
-  const shownError = currentErrors?.[currentPage];
+  const shownError = useMemo(() => {
+    const err = currentErrors?.[currentPage]?.error;
+    if (!err) return undefined;
+    return JSON.parse(JSON.stringify(err, Object.getOwnPropertyNames(err)));
+  }, [currentPage, currentErrors?.[currentPage]?.error]);
+  console.log('fsk shownError', shownError);
 
   useEffect(() => {
     setCurrentErrors(errors);
