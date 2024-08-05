@@ -54,6 +54,5 @@ if (IS_CRX_POPUP) {
       }
       return event;
     },
-    debug: true,
   });
 }
