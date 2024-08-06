@@ -106,12 +106,13 @@ export const reportErrorMachine = createMachine(
         },
       },
       cleaning: {
-        tags: ['loading'],
         invoke: {
           src: 'clearErrors',
-          onDone: {
-            target: 'idle',
-          },
+          onDone: [
+            {
+              target: 'checkForErrors',
+            },
+          ],
         },
       },
       checkForErrors: {
