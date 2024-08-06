@@ -1,6 +1,8 @@
 import type { StoredFuelWalletError } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
+
+import { db } from '~/systems/Core/utils/database';
 import { ErrorProcessorService } from '~/systems/Error/services/ErrorProcessorService';
 import { ReportErrorService } from '../services';
 
@@ -69,9 +71,20 @@ export const reportErrorMachine = createMachine(
     initial: 'checkForErrors',
     states: {
       idle: {
-        after: {
-          5000: {
-            target: 'checkForErrors',
+        invoke: {
+          src: () => (sendBack) => {
+            let abort = false;
+            const handleDBChange = async () => {
+              await new Promise((resolve) => setTimeout(resolve, 500));
+              if (abort) return;
+              sendBack('CHECK_FOR_ERRORS');
+            };
+
+            db.errors.hook('creating', handleDBChange);
+            return () => {
+              abort = true;
+              db.errors.hook('creating').unsubscribe(handleDBChange);
+            };
           },
         },
         on: {
@@ -159,6 +172,7 @@ export const reportErrorMachine = createMachine(
         await context.reportErrorService.clearErrors();
       },
       checkForErrors: async (context) => {
+        await context.errorProcessorService.processErrors();
         const hasErrors = await context.reportErrorService.checkForErrors();
         const errors = await context.reportErrorService.getErrors();
         return {
