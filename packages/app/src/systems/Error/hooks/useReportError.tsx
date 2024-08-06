@@ -32,6 +32,10 @@ export function useReportError() {
     store.send(Services.reportError, { type: 'DISMISS_ERRORS' });
   };
 
+  const reloadErrors = () => {
+    store.send(Services.reportError, { type: 'CHECK_FOR_ERRORS' });
+  };
+
   const dismissError = (key: string) => {
     store.send(Services.reportError, { type: 'DISMISS_ERROR', input: key });
   };
@@ -44,6 +48,7 @@ export function useReportError() {
       reportErrors,
       dismissError,
       dismissAllErrors,
+      reloadErrors,
     },
   };
 }

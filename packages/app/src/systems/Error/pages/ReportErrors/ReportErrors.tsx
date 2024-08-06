@@ -56,6 +56,7 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
   }
 
   function ignoreErrors() {
+    handlers.reloadErrors();
     onRestore();
   }
 
@@ -205,7 +206,7 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
         <Button
           variant="ghost"
           onPress={ignoreErrors}
-          aria-label="Ignore error reports"
+          aria-label="Dismiss all changes and ignore error reports"
         >
           Ignore
         </Button>
@@ -254,6 +255,7 @@ const styles = {
   editorControls: cssObj({
     display: 'flex',
     justifyContent: 'flex-start',
+    flexDirection: 'row',
   }),
   pageControls: cssObj({
     display: 'flex',
