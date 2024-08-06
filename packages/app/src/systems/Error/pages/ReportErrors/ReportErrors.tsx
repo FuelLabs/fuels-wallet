@@ -12,7 +12,9 @@ import { Icon, IconButton, Tooltip } from '@fuel-ui/react';
 import type { StoredFuelWalletError } from '@fuel-wallet/types';
 import { JsonEditor } from 'json-edit-react';
 import { useEffect, useMemo, useState } from 'react';
+
 import { WALLET_HEIGHT, WALLET_WIDTH } from '~/config';
+import { scrollable } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 import { useReportError } from '../../hooks';
 
@@ -129,6 +131,7 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
           restrictAdd
           restrictDrag
           indent={0}
+          data-scrollable
           theme={[
             'githubDark',
             {
@@ -189,6 +192,14 @@ const styles = {
     border: '1px solid $border',
     overflowY: 'scroll',
     overflowX: 'hidden',
+    '.jer-editor-container': {
+      ...scrollable(),
+      fontSize: '$base',
+      overflow: 'overlay',
+    },
+    '.jer-component': {
+      width: 'max-content',
+    },
   }),
   controlsContainer: cssObj({
     display: 'flex',
