@@ -203,21 +203,28 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
         >
           Send reports
         </Button>
-        <Button
-          variant="ghost"
-          onPress={ignoreErrors}
-          aria-label="Dismiss all changes and ignore error reports"
+        <Tooltip
+          content="Ignore all changes and ignore error reports"
+          side="top"
         >
-          Ignore
-        </Button>
-        <Button
-          variant="ghost"
-          intent="error"
-          onPress={dismissAllErrors}
-          aria-label="Ignore and dismiss all errors"
-        >
-          Dismiss All
-        </Button>
+          <Button
+            variant="ghost"
+            onPress={ignoreErrors}
+            aria-label="Dismiss all changes and ignore error reports"
+          >
+            Ignore
+          </Button>
+        </Tooltip>
+        <Tooltip content="Dismiss all errors permanently" side="top">
+          <Button
+            variant="ghost"
+            intent="error"
+            onPress={dismissAllErrors}
+            aria-label="Ignore and dismiss all errors permanently"
+          >
+            Dismiss All
+          </Button>
+        </Tooltip>
       </Box.Stack>
     </Box.Stack>
   );
