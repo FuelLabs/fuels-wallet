@@ -136,7 +136,7 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
           indent={0}
           data-scrollable
           theme={[
-            'githubDark',
+            'monoDark',
             {
               iconEdit: 'grey',
               boolean: {
