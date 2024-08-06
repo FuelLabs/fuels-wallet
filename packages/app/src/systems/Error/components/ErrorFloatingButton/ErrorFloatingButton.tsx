@@ -5,10 +5,13 @@ import { Pages } from '~/systems/Core';
 import { useReportError } from '~/systems/Error';
 
 export function ErrorFloatingButton() {
-  const { errors } = useReportError();
+  const { errors, hasErrorsToReport } = useReportError();
   const navigate = useNavigate();
   const location = useLocation();
-  const hidden = !errors.length || location.pathname === Pages.errors();
+  const hidden =
+    !hasErrorsToReport ||
+    !errors.length ||
+    location.pathname === Pages.errors();
 
   return (
     <Box css={styles.alertContainer} className={hidden ? '' : 'show'}>
@@ -18,6 +21,7 @@ export function ErrorFloatingButton() {
         aria-label="Click to visualize unreviewed errrors"
         iconSize={20}
         size="sm"
+        disabled={hidden}
         icon={<Icon icon="AlertTriangle" color="intentsWarning3" />}
       />
     </Box>
