@@ -19,6 +19,17 @@ import { localStorageMock } from './src/mocks/localStorage';
 // https://github.com/jsdom/jsdom/issues/1724#issuecomment-720727999
 import 'whatwg-fetch';
 
+import { act } from 'react';
+
+// Replace ReactDOMTestUtils.act with React.act
+jest.mock('react-dom/test-utils', () => {
+  const originalModule = jest.requireActual('react-dom/test-utils');
+  return {
+    ...originalModule,
+    act: act,
+  };
+});
+
 const noop = () => {};
 Object.defineProperty(window, 'scrollTo', { value: noop, writable: true });
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });

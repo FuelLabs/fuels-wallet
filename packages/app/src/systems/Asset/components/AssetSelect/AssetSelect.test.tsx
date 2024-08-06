@@ -1,5 +1,5 @@
-import { act, fireEvent, render, screen } from '@fuel-ui/test-utils';
-import { useState } from 'react';
+import { fireEvent, render, screen } from '@fuel-ui/test-utils';
+import { act, useState } from 'react';
 import { TestWrapper } from '~/systems/Core';
 
 import { MOCK_ASSETS_AMOUNTS } from '../../__mocks__/assets';

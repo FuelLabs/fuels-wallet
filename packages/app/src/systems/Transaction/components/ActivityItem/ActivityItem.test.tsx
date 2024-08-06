@@ -1,11 +1,11 @@
 import { render, screen, testA11y } from '@fuel-ui/test-utils';
 import { fireEvent } from '@storybook/testing-library';
 import { Address } from 'fuels';
-import { act } from 'react-dom/test-utils';
 import { Pages, TestWrapper, shortAddress } from '~/systems/Core';
 
 import { MOCK_TRANSACTION_CONTRACT_CALL } from '../../__mocks__/tx';
 
+import { act } from 'react';
 import { ActivityItem } from './ActivityItem';
 
 const ownerAddress =
