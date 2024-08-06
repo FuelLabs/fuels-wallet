@@ -1,13 +1,9 @@
 import type { StoredFuelWalletError } from '@fuel-wallet/types';
 import * as Sentry from '@sentry/react';
 import { db } from '~/systems/Core/utils/database';
-import { ErrorProcessorService } from '~/systems/Error/services/ErrorProcessorService';
 import { parseFuelError } from '../utils';
 
 export class ReportErrorService {
-  private _errorProcessorService: ErrorProcessorService =
-    new ErrorProcessorService();
-
   async reportErrors() {
     const errors = await this.getErrors();
 

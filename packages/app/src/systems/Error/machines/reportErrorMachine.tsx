@@ -1,12 +1,14 @@
 import type { StoredFuelWalletError } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
+import { ErrorProcessorService } from '~/systems/Error/services/ErrorProcessorService';
 import { ReportErrorService } from '../services';
 
 export type ErrorMachineContext = {
   hasErrors?: boolean;
   errors?: StoredFuelWalletError[];
   reportErrorService: ReportErrorService;
+  errorProcessorService: ErrorProcessorService;
 };
 
 type MachineServices = {
@@ -61,6 +63,7 @@ export const reportErrorMachine = createMachine(
     },
     context: {
       reportErrorService: new ReportErrorService(),
+      errorProcessorService: new ErrorProcessorService(),
     },
     id: '(machine)',
     initial: 'checkForErrors',
