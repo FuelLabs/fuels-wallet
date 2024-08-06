@@ -32,8 +32,8 @@ export function useReportError() {
     store.send(Services.reportError, { type: 'DISMISS_ERRORS' });
   };
 
-  const dismissError = (index: number) => {
-    store.send(Services.reportError, { type: 'DISMISS_ERROR', input: index });
+  const dismissError = (key: string) => {
+    store.send(Services.reportError, { type: 'DISMISS_ERROR', input: key });
   };
 
   return {

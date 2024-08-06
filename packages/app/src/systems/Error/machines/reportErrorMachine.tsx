@@ -50,7 +50,7 @@ export type ErrorMachineEvents =
     }
   | {
       type: 'DISMISS_ERROR';
-      input: number;
+      input: string; // Id
     };
 
 export const reportErrorMachine = createMachine(

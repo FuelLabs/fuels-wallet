@@ -65,7 +65,7 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
   };
 
   function dismissCurrentError() {
-    handlers.dismissError(currentPage);
+    handlers.dismissError(currentErrors?.[currentPage]?.id);
     setCurrentPage((prev) => {
       if (prev === errors.length - 1) {
         return prev - 1;
