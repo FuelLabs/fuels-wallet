@@ -58,7 +58,6 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
     if (!!newData && 'message' in newData && 'stack' in newData) {
       setCurrentErrors((prev) => {
         const errorsClone = [...prev];
-        // errorsClone[currentPage] = newData as Error;
         return errorsClone;
       });
     }
