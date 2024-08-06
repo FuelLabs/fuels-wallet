@@ -18,6 +18,17 @@ import { scrollable } from '~/systems/Core';
 import { coreStyles } from '~/systems/Core/styles';
 import { useReportError } from '../../hooks';
 
+// Level/Name
+const PROTECTED_ERROR_PROPERTIES = {
+  0: {
+    root: true,
+  },
+  1: {
+    stack: true,
+    message: true,
+  },
+};
+
 export function ReportErrors({ onRestore }: { onRestore: () => void }) {
   const { handlers, isLoadingSendOnce, errors } = useReportError();
   const [currentPage, setCurrentPage] = useState(0);
@@ -28,7 +39,7 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
     const err = currentErrors?.[currentPage]?.error;
     if (!err) return undefined;
     return JSON.parse(JSON.stringify(err, Object.getOwnPropertyNames(err)));
-  }, [currentPage, currentErrors?.[currentPage]?.error]);
+  }, [currentPage, currentErrors?.[currentPage]]);
 
   useEffect(() => {
     setCurrentErrors(errors);
@@ -53,14 +64,35 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
     onRestore();
   }
 
-  const onUpdate: Parameters<typeof JsonEditor>[0]['onUpdate'] = (newJson) => {
-    const { newData } = newJson;
-    if (!!newData && 'message' in newData && 'stack' in newData) {
-      setCurrentErrors((prev) => {
+  const onDelete: Parameters<typeof JsonEditor>[0]['onDelete'] = (newJson) => {
+    const { path: paths } = newJson;
+    let level = 0;
+    setCurrentErrors((prev) => {
+      const currentErrorData = prev[currentPage];
+      const errorClone = currentErrorData.error;
+      let modified = false;
+      let currentErrorPath = errorClone;
+      for (const path of paths) {
+        level++;
+        if (PROTECTED_ERROR_PROPERTIES[level]?.[path]) {
+          return prev;
+        }
+        if (level === paths.length) {
+          delete currentErrorPath[path];
+          modified = true;
+        }
+        currentErrorPath = currentErrorPath[path];
+      }
+      if (modified) {
         const errorsClone = [...prev];
+        errorsClone[currentPage] = {
+          ...errorsClone[currentPage],
+          error: errorClone,
+        };
         return errorsClone;
-      });
-    }
+      }
+      return prev;
+    });
   };
 
   function dismissCurrentError() {
@@ -129,10 +161,13 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
         </HStack>
         <JsonEditor
           data={shownError ?? {}}
-          onUpdate={onUpdate}
+          onDelete={onDelete}
           restrictEdit
           restrictAdd
           restrictDrag
+          restrictDelete={({ key, level }) => {
+            return PROTECTED_ERROR_PROPERTIES[level]?.[key];
+          }}
           indent={0}
           data-scrollable
           theme={[
