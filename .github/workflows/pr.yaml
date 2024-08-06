@@ -62,6 +62,35 @@ jobs:
         with:
           node-version: 18.18.0
           pnpm-version: 8.15.7
+      - name: Install jq
+        run: sudo apt-get install jq
+      - run: |
+          pnpm audit --prod --json | jq '
+            def has_fix: 
+              .advisories | to_entries | map(.value.patched_versions != "<0.0.0") | any;
+            if has_fix then
+              1
+            else
+              0
+            end
+          ' > audit_result.txt
+          if [ "$(cat audit_result.txt)" -eq "1" ]; then
+            echo "Actionable vulnerabilities found"
+            exit 1
+          else
+            echo "No actionable vulnerabilities"
+            exit 0
+          fi
+  
+  strict-audit:
+    name: Strict Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 18.18.0
+          pnpm-version: 8.15.7
       - run: pnpm audit --prod
 
   lint:
