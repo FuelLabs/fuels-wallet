@@ -27,7 +27,7 @@ export function ErrorFloatingButton() {
 const styles = {
   alertContainer: cssObj({
     padding: '$2',
-    position: 'absolute',
+    position: 'fixed',
     bottom: 0,
     right: 25,
     zIndex: '$10',
