@@ -28,16 +28,12 @@ export function useReportError() {
     store.send(Services.reportError, { type: 'REPORT_ERRORS' });
   };
 
-  const ignoreErrors = () => {
-    store.send(Services.reportError, { type: 'IGNORE_ERRORS' });
+  const dismissAllErrors = () => {
+    store.send(Services.reportError, { type: 'DISMISS_ERRORS' });
   };
 
   const dismissError = (index: number) => {
     store.send(Services.reportError, { type: 'DISMISS_ERROR', input: index });
-  };
-
-  const close = () => {
-    ignoreErrors();
   };
 
   return {
@@ -46,9 +42,8 @@ export function useReportError() {
     errors,
     handlers: {
       reportErrors,
-      ignoreErrors,
-      close,
       dismissError,
+      dismissAllErrors,
     },
   };
 }

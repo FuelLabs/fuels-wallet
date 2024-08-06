@@ -45,7 +45,11 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
   }
 
   function ignoreErrors() {
-    handlers.ignoreErrors();
+    onRestore();
+  }
+
+  function dismissAllErrors() {
+    handlers.dismissAllErrors();
     onRestore();
   }
 
@@ -167,9 +171,17 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
         <Button
           variant="ghost"
           onPress={ignoreErrors}
-          aria-label="Don't send error report"
+          aria-label="Ignore error reports"
         >
           Ignore
+        </Button>
+        <Button
+          variant="ghost"
+          intent="error"
+          onPress={dismissAllErrors}
+          aria-label="Ignore and dismiss all errors"
+        >
+          Dismiss All
         </Button>
       </Box.Stack>
     </Box.Stack>

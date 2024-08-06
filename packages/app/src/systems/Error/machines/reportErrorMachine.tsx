@@ -38,7 +38,7 @@ export type ErrorMachineEvents =
       type: 'CHECK_FOR_ERRORS';
     }
   | {
-      type: 'IGNORE_ERRORS';
+      type: 'DISMISS_ERRORS';
     }
   | {
       type: 'SAVE_ERROR';
@@ -72,7 +72,7 @@ export const reportErrorMachine = createMachine(
           },
         },
         on: {
-          IGNORE_ERRORS: {
+          DISMISS_ERRORS: {
             target: 'cleaning',
           },
           REPORT_ERRORS: {
