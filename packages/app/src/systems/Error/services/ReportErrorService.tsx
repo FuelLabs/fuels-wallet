@@ -29,7 +29,12 @@ export class ReportErrorService {
       console.warn('Error saving error: db is closed');
       return;
     }
-    return await db.errors.add(parsedError);
+
+    try {
+      return await db.errors.add(parsedError);
+    } catch (e) {
+      console.warn('Failed to save error', e);
+    }
   }
 
   async checkForErrors(): Promise<boolean> {
