@@ -25,6 +25,10 @@ export class ReportErrorService {
       console.warn(`Can't save error without an id`);
       return;
     }
+    if (!db.isOpen() || db.hasBeenClosed()) {
+      console.warn('Error saving error: db is closed');
+      return;
+    }
     return await db.errors.add(parsedError);
   }
 
