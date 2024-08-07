@@ -22,6 +22,7 @@ export function ErrorFloatingButton() {
         iconSize={20}
         size="sm"
         disabled={hidden}
+        data-testid="ErrorFloatingButton"
         icon={<Icon icon="AlertTriangle" color="intentsWarning3" />}
       />
     </Box>
