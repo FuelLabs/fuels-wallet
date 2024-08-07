@@ -1,18 +1,15 @@
 import type { Account } from '@fuel-wallet/types';
-import type {
-  BN,
-  TransactionRequest,
-  TransactionResponse,
-  TransactionSummary,
+import {
+  type BN,
+  type TransactionRequest,
+  type TransactionSummary,
+  bn,
 } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { AccountService } from '~/systems/Account';
 import { FetchMachine, assignErrorMessage, delay } from '~/systems/Core';
-import type { NetworkInputs } from '~/systems/Network';
-import { NetworkService } from '~/systems/Network';
 import type { GroupedErrors, VMApiError } from '~/systems/Transaction';
-import { getGroupedErrors } from '~/systems/Transaction';
 import type { TxInputs } from '~/systems/Transaction/services';
 import { TxService } from '~/systems/Transaction/services';
 
@@ -36,10 +33,19 @@ type MachineContext = {
     providerUrl?: string;
     transactionRequest?: TransactionRequest;
     account?: Account;
+    tip?: BN;
+    gasLimit?: BN;
   };
   response?: {
     txSummarySimulated?: TransactionSummary;
     txSummaryExecuted?: TransactionSummary;
+  };
+  fees: {
+    baseFee?: BN;
+    regularTip?: BN;
+    fastTip?: BN;
+    minGasLimit?: BN;
+    maxGasLimit?: BN;
   };
   errors?: {
     txApproveError?: VMApiError;
@@ -47,18 +53,34 @@ type MachineContext = {
   };
 };
 
+type EstimateDefaultTipsReturn = {
+  regularTip: BN;
+  fastTip: BN;
+};
+
+type EstimateGasLimitReturn = {
+  maxGasLimit: BN;
+};
+
+type SimulateTransactionReturn = {
+  baseFee?: BN;
+  minGasLimit?: BN;
+  txSummary: TransactionSummary;
+  simulateTxErrors?: GroupedErrors;
+};
+
 type MachineServices = {
   send: {
     data: TransactionSummary;
   };
-  simulateTransaction: {
-    data: {
-      txSummary: TransactionSummary;
-      simulateTxErrors?: GroupedErrors;
-    };
+  estimateDefaultTips: {
+    data: EstimateDefaultTipsReturn;
   };
-  fetchGasPrice: {
-    data: BN;
+  estimateGasLimit: {
+    data: EstimateGasLimitReturn;
+  };
+  simulateTransaction: {
+    data: SimulateTransactionReturn;
   };
   fetchAccount: {
     data: Account;
@@ -67,6 +89,7 @@ type MachineServices = {
 
 type MachineEvents =
   | { type: 'START'; input?: TxInputs['request'] }
+  | { type: 'SET_CUSTOM_FEES'; input: TxInputs['setCustomFees'] }
   | { type: 'RESET'; input?: null }
   | { type: 'APPROVE'; input?: null }
   | { type: 'REJECT'; input?: null }
@@ -75,6 +98,7 @@ type MachineEvents =
 
 export const transactionRequestMachine = createMachine(
   {
+    /** @xstate-layout N4IgpgJg5mDOIC5QAoC2BDAxgCwJYDswBKAYgCUBRAZQoBUBtABgF1FQAHAe1lwBddO+NiAAeiACwAmADQgAnogCskxQDoAjAHYAnIoBsi7YyONJ6gL7nZaLHkJFVuCABswJKrQCCZBi2FcefkFhMQRJAGY9DRVGU0lNQ3F1cQAOWQUEZTUtXQMjEzNLawwcAmJVOH4MfnwoAEl8Plx0ZwAxMDcIQTBHfAA3TgBrHptS+wrYKvQa+sb+FvawBAIBzGmBfCZmLf9uJuCkUUQ9FPVVRnETzRTGFMjtE-SldXDVSUZw2Mk9bV1fopAozs5QAZmBeGMoJ5MJhOABXfC8EhdQi9AbDVRAsoOMEQuxQmHwxHLfqcNZBTYsHaHAL7ISHULqJmSVSXYx6DnaSQpRSpJ4IU6s37aF6Re7clIArHjXGQ6GwhFIlE9FZDEYlYE48FywmKkmrdaCLb0dSsGl7CkhRBM9QstkPTnc3lpeRKcRqb6SLnxXl6dQpSRSjXY1Q8VBw5zrWq0ABO6HwsCwFOR3TRasxwfGYYjUagsfjicwFP1ZMNlO2fnNgQ2VoQ6j0mhZjbyH004nCvz0-MU4TO1z04R7eg+4iSgasgMz5QA7ugmrVPOx2DHOH0WiRPAAFTdkADyADUKNSOBaawzEO8UikNJp1EZR2OdN2DKojH7nQ3e8kg7YQ7P51CS4rmuzjkBQABSFAAMK+GaJ7VgcoChJe15aHeFyjraT6ugg4RmEKvzGIosSDrcP5jOUsBgPgEAEHmIgpqiqoYtKlHUbR0YiCW5IbMalbwXStYRHcqinColzqIoCTuvylwet84iaAkHwXIwSnkZqobsXRtAMcqaYsVODhUTROlcaqPFGlSpq7Ah9JIRe4QiWJvqSdJijdoo14Ng8jD1pIqSNpKE6sQ4vAiFQcIwnAsAkFBAAyu40MeIC0pa55hEpmispoBhSLovLJB5OFeYwGj6PWmhqbcvziBpIbha0c6uBAJC0GQACaAD6ngAOKeHUAByKVpWeDl1g2TbfIYrbtp2smCtyA7DuEmiRHokjjsUv7jI1zWQHFiXJfxqWnohRwTY2qjNjNq1zQ8-LvGVba-LaV6ueElgTvgnAQHAwihbZgkZQAtF2OEg2owrQzD2gpHo9XjE4rhA+l42SSyG3Ef5sTtv53apKoBh+qtXonKYCMhUZExTDMDRNAsHSo2NF2YddUk6JtWMPt2KjlcO2hrbEXIpHVVM7aC2r4vKRK8Mz52hCkcOqJ8lxtp8fnGJo3a2vzty2rE9ZeYjlG4OGkYzPmCZJizo0K9aSTXlI6E-JrZgE68a26P6vwdtokQmw4-4zIuy6ri08v2Rdd6Sa+Vzq22fngxkiiGK+SupP7Xp+YogdaaZnGR0Jm0skyjbfDotXhATLJvkygXJKtFjixRYURVFmAxUXGUKdlvYqKKnz6C6Kc3ETFUNtVSvaGL22t6oe24C13foxV5w8oLDZZWtI8SAkKs-D8qSDpE+iz5OEsOMqK8XdyRg3g8imGC8a3iN2OisowfpVQ8Nxts3c9NIgn2hAG+yE9CKRVraRQg9GDD35OEDs0QIHwwCloAM8MvrmCAA */
     predictableActionArguments: true,
     tsTypes: {} as import('./transactionRequestMachine.typegen').Typegen0,
     schema: {
@@ -86,26 +110,55 @@ export const transactionRequestMachine = createMachine(
     initial: 'idle',
     context: {
       input: {},
+      fees: {},
     },
     states: {
       idle: {
         on: {
           START: {
             actions: ['assignTxRequestData'],
-            target: 'fetchingAccount',
+            target: 'estimatingInitialTips',
           },
+        },
+      },
+      estimatingInitialTips: {
+        tags: ['loading'],
+        invoke: {
+          src: 'estimateDefaultTips',
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              target: 'failed',
+            },
+            {
+              actions: ['assignDefaultTips'],
+              target: 'estimatingGasLimit',
+            },
+          ],
+        },
+      },
+      estimatingGasLimit: {
+        invoke: {
+          src: 'estimateGasLimit',
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              target: 'failed',
+            },
+            {
+              actions: ['assignGasLimit'],
+              target: 'fetchingAccount',
+            },
+          ],
         },
       },
       fetchingAccount: {
         entry: ['openDialog'],
-        tags: ['loading', 'preLoading'],
+        tags: ['loading'],
         invoke: {
           src: 'fetchAccount',
           data: {
-            input: (ctx: MachineContext) => ({
-              address: ctx.input.address,
-              providerUrl: ctx.input.providerUrl,
-            }),
+            input: (ctx: MachineContext) => ctx.input,
           },
           onDone: [
             {
@@ -120,16 +173,32 @@ export const transactionRequestMachine = createMachine(
         },
       },
       simulatingTransaction: {
-        tags: ['loading', 'preLoading'],
+        tags: ['loading'],
         invoke: {
           src: 'simulateTransaction',
-          data: ({ input }: MachineContext) => ({ input }),
+          data: {
+            input: (ctx: MachineContext) => ctx.input,
+          },
           onDone: [
             {
               target: 'waitingApproval',
               actions: ['assignTxSummarySimulated', 'assignSimulateTxErrors'],
             },
           ],
+        },
+      },
+      changingCustomFees: {
+        tags: ['loading'],
+        on: {
+          SET_CUSTOM_FEES: {
+            actions: ['assignCustomFees'],
+            target: 'changingCustomFees',
+          },
+        },
+        after: {
+          1000: {
+            target: 'simulatingTransaction',
+          },
         },
       },
       waitingApproval: {
@@ -192,12 +261,29 @@ export const transactionRequestMachine = createMachine(
         actions: ['reset'],
         target: 'idle',
       },
+      SET_CUSTOM_FEES: {
+        actions: ['assignCustomFees'],
+        target: 'changingCustomFees',
+      },
     },
   },
   {
     delays: { TIMEOUT: 1300 },
     actions: {
       reset: assign(() => ({})),
+      assignDefaultTips: assign((ctx, ev) => ({
+        fees: {
+          ...ctx.fees,
+          regularTip: ev.data.regularTip,
+          fastTip: ev.data.fastTip,
+        },
+      })),
+      assignGasLimit: assign((ctx, ev) => ({
+        fees: {
+          ...ctx.fees,
+          maxGasLimit: ev.data.maxGasLimit,
+        },
+      })),
       assignAccount: assign({
         input: (ctx, ev) => ({
           ...ctx.input,
@@ -228,6 +314,15 @@ export const transactionRequestMachine = createMachine(
             throw new Error('origin is required');
           }
 
+          const tip = transactionRequest.tip?.gt(0)
+            ? transactionRequest.tip
+            : undefined;
+          const gasLimit =
+            'gasLimit' in transactionRequest &&
+            transactionRequest.gasLimit?.gt(0)
+              ? transactionRequest.gasLimit
+              : undefined;
+
           return {
             transactionRequest,
             origin,
@@ -235,6 +330,39 @@ export const transactionRequestMachine = createMachine(
             providerUrl,
             title,
             favIconUrl,
+            tip,
+            gasLimit,
+          };
+        },
+        fees: (_ctx, ev) => {
+          const { fees } = ev.input || {};
+          return {
+            baseFee: fees?.baseFee,
+            regularTip: fees?.regularTip,
+            fastTip: fees?.fastTip,
+            minGasLimit: fees?.minGasLimit,
+            maxGasLimit: fees?.maxGasLimit,
+          };
+        },
+      }),
+      assignCustomFees: assign({
+        input: (ctx, ev) => {
+          const { tip, gasLimit } = ev.input || {};
+          const { transactionRequest } = ctx.input;
+
+          if (!transactionRequest) {
+            throw new Error('Missing transactionRequest');
+          }
+
+          transactionRequest.tip = tip?.gt(0) ? tip : undefined;
+
+          if ('gasLimit' in transactionRequest && gasLimit?.gt(0)) {
+            transactionRequest.gasLimit = gasLimit;
+          }
+
+          return {
+            ...ctx.input,
+            transactionRequest,
           };
         },
       }),
@@ -248,6 +376,11 @@ export const transactionRequestMachine = createMachine(
         response: (ctx, ev) => ({
           ...ctx.response,
           txSummarySimulated: ev.data.txSummary,
+        }),
+        fees: (ctx, ev) => ({
+          ...ctx.fees,
+          baseFee: ev.data.baseFee ?? ctx.fees.baseFee,
+          minGasLimit: ev.data.minGasLimit ?? ctx.fees.minGasLimit,
         }),
       }),
       assignSimulateTxErrors: assign((ctx, ev) => {
@@ -273,21 +406,41 @@ export const transactionRequestMachine = createMachine(
       }),
     },
     services: {
+      estimateDefaultTips: FetchMachine.create<
+        never,
+        EstimateDefaultTipsReturn
+      >({
+        showError: false,
+        maxAttempts: 1,
+        async fetch() {
+          const defaultTips = await TxService.estimateDefaultTips();
+          return defaultTips;
+        },
+      }),
+      estimateGasLimit: FetchMachine.create<never, EstimateGasLimitReturn>({
+        showError: false,
+        maxAttempts: 1,
+        async fetch() {
+          const gasLimit = await TxService.estimateGasLimit();
+          return gasLimit;
+        },
+      }),
       simulateTransaction: FetchMachine.create<
         TxInputs['simulateTransaction'],
-        MachineServices['simulateTransaction']['data']
+        SimulateTransactionReturn
       >({
         showError: false,
         async fetch({ input }) {
           if (!input?.transactionRequest) {
             throw new Error('Invalid simulateTransaction input');
           }
+
           // Enforce a minimum delay to show the loading state
           // this creates a better experience for the user as the
           // screen doesn't flash between states
           await delay(600);
-          const txSummary = await TxService.simulateTransaction(input);
 
+          const txSummary = await TxService.simulateTransaction(input);
           return txSummary;
         },
       }),
@@ -305,7 +458,11 @@ export const transactionRequestMachine = createMachine(
           const txResponse = await TxService.send(input);
           const txSummary = await txResponse.getTransactionSummary();
 
-          return txSummary;
+          return {
+            ...txSummary,
+            // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
+            fee: txSummary.fee.add(1),
+          };
         },
       }),
       fetchAccount: FetchMachine.create<

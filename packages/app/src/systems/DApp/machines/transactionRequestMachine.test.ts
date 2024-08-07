@@ -1,4 +1,4 @@
-import type { TransactionRequest } from 'fuels';
+import { type TransactionRequest, bn } from 'fuels';
 import { interpret } from 'xstate';
 import { expectStateMatch } from '~/systems/Core/__tests__/utils';
 import type { MockVaultData } from '~/systems/Core/__tests__/utils/mockVault';
@@ -27,7 +27,7 @@ describe('txApproveMachine', () => {
   beforeEach(() => {
     service = interpret(
       transactionRequestMachine
-        .withContext({ input: {}, response: {} })
+        .withContext({ input: {}, fees: {} })
         .withConfig({ actions: { openDialog } })
     ).start();
   });

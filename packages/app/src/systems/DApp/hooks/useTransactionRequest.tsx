@@ -4,13 +4,15 @@ import { useCallback } from 'react';
 import { Services, store } from '~/store';
 import { useOverlay } from '~/systems/Overlay';
 import type { TxInputs } from '~/systems/Transaction/services';
-
 import { TxRequestStatus } from '../machines/transactionRequestMachine';
 import type { TransactionRequestState } from '../machines/transactionRequestMachine';
 
 const selectors = {
   context(state: TransactionRequestState) {
     return state.context;
+  },
+  fees(state: TransactionRequestState) {
+    return state.context.fees;
   },
   account(state: TransactionRequestState) {
     return state.context.input.account;
@@ -23,9 +25,6 @@ const selectors = {
   },
   isLoadingAccounts(state: TransactionRequestState) {
     return state.matches('fetchingAccount');
-  },
-  isPreLoading(state: TransactionRequestState) {
-    return state.hasTag('preLoading');
   },
   errors(state: TransactionRequestState) {
     if (!state.context.errors) return {};
@@ -76,6 +75,8 @@ export type UseTransactionRequestReturn = ReturnType<
 
 export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const service = store.useService(Services.txRequest);
+
+  const fees = useSelector(service, selectors.fees);
   const overlay = useOverlay();
 
   store.useUpdateMachineConfig(Services.txRequest, {
@@ -107,18 +108,13 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
   const originTitle = useSelector(service, selectors.originTitle);
   const favIconUrl = useSelector(service, selectors.favIconUrl);
   const isSendingTx = useSelector(service, selectors.sendingTx);
-  const isPreLoading = useSelector(service, selectors.isPreLoading);
   const isLoading = status('loading');
   const shouldShowActions = !status('success');
   const shouldShowTxExecuted =
     !!txSummaryExecuted && (status('success') || status('failed'));
-  const shouldShowTxSimulated =
-    !shouldShowTxExecuted &&
-    (status('waitingApproval') || isSendingTx) &&
-    !!txSummarySimulated;
+  const shouldShowTxSimulated = !shouldShowTxExecuted && !!txSummarySimulated;
   const shouldDisableApproveBtn =
     shouldShowTxSimulated && errors.hasSimulateTxErrors;
-  const shouldShowLoader = isPreLoading || !txSummarySimulated;
 
   function closeDialog() {
     reset();
@@ -135,27 +131,33 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     return txSummarySimulated?.status;
   }
 
-  function approve() {
-    service.send('APPROVE');
-  }
   function reset() {
     service.send('RESET');
   }
+
   function reject() {
     service.send('REJECT');
   }
+
   function request(input: TxInputs['request']) {
     service.send('START', { input });
   }
+
   function tryAgain() {
     service.send('TRY_AGAIN');
   }
+
   function close() {
     service.send('CLOSE');
   }
 
+  function approve() {
+    service.send('APPROVE');
+  }
+
   return {
     ...ctx,
+    fees,
     account,
     executedStatus,
     errors,
@@ -174,7 +176,6 @@ export function useTransactionRequest(opts: UseTransactionRequestOpts = {}) {
     shouldDisableApproveBtn,
     shouldShowTxSimulated,
     shouldShowTxExecuted,
-    shouldShowLoader,
     handlers: {
       request,
       reset,

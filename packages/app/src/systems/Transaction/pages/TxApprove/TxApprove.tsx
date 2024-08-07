@@ -29,7 +29,7 @@ export const TxApprove = () => {
         {ctx.title}
       </OverlayDialogTopbar>
       <Dialog.Description as="div" css={styles.description}>
-        {ctx.shouldShowLoader && <TxContent.Loader />}
+        {!ctx.txSummarySimulated && <TxContent.Loader />}
         {ctx.shouldShowTxSimulated && (
           <TxContent.Info
             showDetails

@@ -42,11 +42,11 @@ function App() {
           type="button"
           onClick={async () => {
             const txn = await wallet?.createTransfer(
-              'fuel1vvpwz92v0gkk5dct9lmgnee23h3uj2fts4rmghffdvv88hyxzqas587le2',
+              '0xed73857a06ba2a706700e4e69e59f63a012ae6663a54309043e8fdc690bed926',
               bn(100),
               undefined,
               {
-                tip: bn(10),
+                tip: bn(2000),
               }
             );
 
@@ -60,7 +60,29 @@ function App() {
             }
           }}
         >
-          Send transaction
+          Send transaction with custom fees
+        </button>
+        <button
+          type="button"
+          onClick={async () => {
+            const txn = await wallet?.createTransfer(
+              '0xed73857a06ba2a706700e4e69e59f63a012ae6663a54309043e8fdc690bed926',
+              bn(100),
+              undefined,
+              undefined
+            );
+
+            if (!txn || !account) return;
+
+            try {
+              const result = await fuel.sendTransaction(account, txn);
+              console.log(result);
+            } catch (e) {
+              console.error(e);
+            }
+          }}
+        >
+          Send transaction with default fees
         </button>
       </div>
       {isError && <p className="Error">{error?.message}</p>}

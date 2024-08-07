@@ -1,52 +1,107 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Button } from '@fuel-ui/react';
-import { TransactionStatus } from 'fuels';
+import { Button } from '@fuel-ui/react';
+import { useMemo } from 'react';
 import { useAssets } from '~/systems/Asset';
-import { ConnectInfo, Layout } from '~/systems/Core';
+import { Layout } from '~/systems/Core';
 import { TopBarType } from '~/systems/Core/components/Layout/TopBar';
-import { TxContent, TxHeader } from '~/systems/Transaction';
-
+import { TxContent } from '~/systems/Transaction';
+import { formatTip } from '~/systems/Transaction/components/TxFeeOptions/TxFeeOptions.utils';
 import { useTransactionRequest } from '../../hooks/useTransactionRequest';
+import { AutoSubmit } from './TransactionRequest.AutoSubmit';
+import {
+  FormProvider,
+  type TransactionRequestFormData,
+} from './TransactionRequest.FormProvider';
 
 export function TransactionRequest() {
   const txRequest = useTransactionRequest({ isOriginRequired: true });
   const {
     handlers,
     status,
-    isSendingTx,
     txSummarySimulated,
     txSummaryExecuted,
-    ...ctx
+    fees,
+    isLoading,
+    title,
+    shouldShowTxSimulated,
+    shouldShowTxExecuted,
+    shouldShowActions,
+    shouldDisableApproveBtn,
+    errors,
+    providerUrl,
+    executedStatus,
   } = txRequest;
   const { assets, isLoading: isLoadingAssets } = useAssets();
 
-  if (!ctx.account) return null;
+  const defaultValues = useMemo<TransactionRequestFormData | undefined>(() => {
+    if (!txSummarySimulated) return undefined;
 
-  const isLoading = status('loading') || status('sending') || isLoadingAssets;
+    const tip = txSummarySimulated.tip;
+    const gasLimit = txSummarySimulated.gasUsed;
 
-  return (
-    <>
-      <Layout title={ctx.title} noBorder>
+    return {
+      fees: {
+        tip: {
+          amount: tip,
+          text: formatTip(tip),
+        },
+        gasLimit: {
+          amount: gasLimit,
+          text: gasLimit.toString(),
+        },
+      },
+    };
+  }, [txSummarySimulated]);
+
+  const isLoadingInfo = useMemo<boolean>(() => {
+    return status('loading') || status('sending') || isLoadingAssets;
+  }, [status, isLoadingAssets]);
+
+  if (!defaultValues) {
+    return (
+      <Layout title={title} noBorder>
         <Layout.TopBar type={TopBarType.external} />
         <Layout.Content css={styles.content}>
-          {ctx.shouldShowLoader && <TxContent.Loader />}
-          {ctx.shouldShowTxSimulated && (
+          <TxContent.Loader />
+        </Layout.Content>
+      </Layout>
+    );
+  }
+
+  return (
+    <FormProvider
+      onSubmit={handlers.approve}
+      defaultValues={defaultValues}
+      testId={txRequest.txStatus}
+      context={{
+        baseFee: fees.baseFee,
+        minGasLimit: fees.minGasLimit,
+        maxGasLimit: fees.maxGasLimit,
+      }}
+    >
+      <AutoSubmit />
+
+      <Layout title={title} noBorder>
+        <Layout.TopBar type={TopBarType.external} />
+        <Layout.Content css={styles.content}>
+          {shouldShowTxSimulated && (
             <TxContent.Info
               showDetails
               tx={txSummarySimulated}
-              isLoading={isLoading}
-              errors={ctx.errors.simulateTxErrors}
+              isLoading={isLoadingInfo}
+              errors={errors.simulateTxErrors}
               isConfirm
               assets={assets}
+              fees={fees}
             />
           )}
-          {ctx.shouldShowTxExecuted && (
+          {shouldShowTxExecuted && (
             <TxContent.Info
               showDetails
               tx={txSummaryExecuted}
-              txStatus={ctx.executedStatus()}
+              txStatus={executedStatus()}
               assets={assets}
-              providerUrl={ctx.providerUrl}
+              providerUrl={providerUrl}
               footer={
                 status('failed') && (
                   <Button
@@ -62,27 +117,27 @@ export function TransactionRequest() {
             />
           )}
         </Layout.Content>
-        {ctx.shouldShowActions && (
+        {shouldShowActions && (
           <Layout.BottomBar>
             <Button
               onPress={handlers.reject}
               variant="ghost"
-              isDisabled={ctx.isLoading || status('sending')}
+              isDisabled={isLoading || status('sending')}
             >
               Reject
             </Button>
             <Button
+              type="submit"
               intent="primary"
-              onPress={handlers.approve}
-              isLoading={ctx.isLoading || status('sending')}
-              isDisabled={ctx.shouldDisableApproveBtn}
+              isLoading={isLoading || status('sending')}
+              isDisabled={shouldDisableApproveBtn}
             >
               Approve
             </Button>
           </Layout.BottomBar>
         )}
       </Layout>
-    </>
+    </FormProvider>
   );
 }
 

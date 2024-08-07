@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { TransactionStatus } from 'fuels';
-
+import { TransactionStatus, bn } from 'fuels';
 import { TxRequestStatus } from '~/systems/DApp/machines/transactionRequestMachine';
 import { TxApprove } from './TxApprove';
 
@@ -29,6 +28,7 @@ jest.mock('~/systems/Store', () => ({
 
 import { useAssets } from '~/systems/Asset';
 import { useTransactionRequest } from '~/systems/DApp';
+import { FormProvider } from '~/systems/DApp/pages/TransactionRequest/TransactionRequest.FormProvider';
 
 const mockUseTransactionRequest = useTransactionRequest as jest.Mock;
 const mockUseAssets = useAssets as jest.Mock;
@@ -73,16 +73,16 @@ describe('TxApprove', () => {
         }
       }),
       shouldShowTxSimulated: true,
+      shouldShowTxExecuted: false,
       shouldShowActions: true,
       simulateTxErrors: mockTxResult,
-      txSummaryExecuted: mockTxResult,
+      txSummarySimulated: mockTxResult,
       approveStatus: jest.fn().mockReturnValue(TransactionStatus.success),
       handlers: {
         closeDialog: jest.fn(),
         approve: jest.fn(),
         tryAgain: jest.fn(),
       },
-      shouldShowLoader: false,
       shouldShowTx: true,
       title: 'Transaction Approval',
       providerUrl: 'https://example.com',
@@ -96,7 +96,31 @@ describe('TxApprove', () => {
       ...assetsOverrides,
     });
 
-    render(<TxApprove />);
+    render(
+      <FormProvider
+        testId=""
+        defaultValues={{
+          fees: {
+            tip: {
+              amount: bn(0),
+              text: '0',
+            },
+            gasLimit: {
+              amount: bn(53),
+              text: '53',
+            },
+          },
+        }}
+        onSubmit={jest.fn()}
+        context={{
+          baseFee: undefined,
+          minGasLimit: undefined,
+          maxGasLimit: undefined,
+        }}
+      >
+        <TxApprove />
+      </FormProvider>
+    );
   };
 
   it('calls the approve handler when approve button is clicked', () => {
@@ -131,6 +155,7 @@ describe('TxApprove', () => {
         shouldShowTxSimulated: false,
         shouldShowActions: false,
         shouldShowTxExecuted: true,
+        txSummaryExecuted: mockTxResult,
         executedStatus: () => TransactionStatus.success,
       },
       {},

@@ -233,8 +233,10 @@ test.describe('SendTransaction', () => {
     const regularFeeAmount = (await regularFeeComponent.textContent())
       .replace(' ETH', '')
       .trim();
-
     await getButtonByText(page, 'Review').click();
+
+    // Waiting button change to Approve in order to get updated fee amount
+    await page.waitForSelector('button:has-text("Approve")');
 
     // Extract and compare the network fee amount, checking if its equal to regular fee amont
     const networkFeeComponentWithRegular = getByAriaLabel(
@@ -246,13 +248,14 @@ test.describe('SendTransaction', () => {
     )
       .replace(' ETH', '')
       .trim();
+
     // Validating the amount
     expect(regularFeeAmount).toBe(networkFeeAmountWithRegular);
 
     // Going back to select other fee value
     await getButtonByText(page, 'Back').click();
 
-    //Selecting and extracting fast fee amount
+    // Selecting and extracting fast fee amount
     const fastFeeComponent = getByAriaLabel(page, 'fee value:Fast');
     await fastFeeComponent.click();
 
@@ -265,6 +268,9 @@ test.describe('SendTransaction', () => {
 
     await getButtonByText(page, 'Review').click();
 
+    // Waiting button change to Approve in order to get updated fee amount
+    await page.waitForSelector('button:has-text("Approve")');
+
     // Extract and compere the network fee amount, checking if its equal to fast fee amount
     const networkFeeComponentWithFast = getByAriaLabel(
       page,
@@ -275,6 +281,7 @@ test.describe('SendTransaction', () => {
     )
       .replace(' ETH', '')
       .trim();
+
     // Validating the amount
     expect(fastFeeAmount).toBe(networkFeeAmountWithFast);
 

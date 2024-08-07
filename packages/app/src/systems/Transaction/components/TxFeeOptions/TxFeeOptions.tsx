@@ -10,6 +10,7 @@ import { TxFee } from '../TxFee';
 import { DECIMAL_UNITS, formatTip } from './TxFeeOptions.utils';
 
 type TxFeeOptionsProps = {
+  initialAdvanced: boolean;
   baseFee: BN;
   minGasLimit: BN;
   regularTip: BN;
@@ -17,13 +18,14 @@ type TxFeeOptionsProps = {
 };
 
 export const TxFeeOptions = ({
+  initialAdvanced,
   baseFee,
   minGasLimit,
   regularTip,
   fastTip,
 }: TxFeeOptionsProps) => {
-  const [isAdvanced, setIsAdvanced] = useState(false);
   const { control, setValue, getValues } = useFormContext<SendFormValues>();
+  const [isAdvanced, setIsAdvanced] = useState(initialAdvanced);
   const previousMinGasLimit = useRef<BN>(minGasLimit);
   const previousDefaultTip = useRef<BN>(regularTip);
 
@@ -179,7 +181,6 @@ export const TxFeeOptions = ({
             ))}
           </MotionStack>
         )}
-
         <MotionFlex
           {...animations.fadeIn()}
           key="toggle"

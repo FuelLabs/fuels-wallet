@@ -1,9 +1,10 @@
+import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAssets } from '~/systems/Asset';
 import { Layout } from '~/systems/Core';
 import { useNetworks } from '~/systems/Network';
-
-import { TxHeader, TxStatusAlert } from '../../components';
+import type { SendFormValues } from '~/systems/Send/hooks';
+import { TxStatusAlert } from '../../components';
 import { TxContent } from '../../components/TxContent';
 import { useTxResult } from '../../hooks';
 
@@ -19,6 +20,8 @@ export function TxView() {
   });
   const { assets } = useAssets();
 
+  const form = useForm<SendFormValues>();
+
   return (
     <Layout
       title="Transaction"
@@ -31,13 +34,15 @@ export function TxView() {
           <TxStatusAlert txStatus={txResult?.status} error={ctx.error} />
         )}
         {txResult && (
-          <TxContent.Info
-            tx={txResult}
-            isLoading={ctx.isFetching}
-            showDetails={ctx.shouldShowTxFee}
-            assets={assets}
-            providerUrl={providerUrl}
-          />
+          <FormProvider {...form}>
+            <TxContent.Info
+              tx={txResult}
+              isLoading={ctx.isFetching}
+              showDetails={ctx.shouldShowTxFee}
+              assets={assets}
+              providerUrl={providerUrl}
+            />
+          </FormProvider>
         )}
       </Layout.Content>
     </Layout>
