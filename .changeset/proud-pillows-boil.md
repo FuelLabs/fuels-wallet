@@ -7,3 +7,4 @@
 - Refactored Sentry implementation
 - Refactored error handling and report logic
 - New error review screen
+- Fixed broken links to `@fuels/react` in docs
