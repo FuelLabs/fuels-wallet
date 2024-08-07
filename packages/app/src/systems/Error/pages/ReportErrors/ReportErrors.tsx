@@ -29,7 +29,10 @@ const PROTECTED_ERROR_PROPERTIES = {
   },
 };
 
-export function ReportErrors({ onRestore }: { onRestore: () => void }) {
+export function ReportErrors({
+  onRestore,
+  errorBoundary,
+}: { onRestore: () => void; errorBoundary: boolean }) {
   const { handlers, isLoadingSendOnce, errors } = useReportError();
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -43,10 +46,10 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
 
   useEffect(() => {
     setCurrentErrors(errors);
-    if (!errors.length) {
+    if (!errors.length && !errorBoundary) {
       onRestore();
     }
-  }, [errors, onRestore]);
+  }, [errors, errorBoundary, onRestore]);
 
   useEffect(() => {}, []);
 
@@ -99,6 +102,10 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
   function dismissCurrentError() {
     handlers.dismissError(currentErrors?.[currentPage]?.id);
     setCurrentPage((prev) => {
+      if (errors.length - 1 === 0) {
+        onRestore();
+        return 0;
+      }
       if (prev === errors.length - 1) {
         return prev - 1;
       }
@@ -130,7 +137,7 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
                 variant="ghost"
                 aria-label="Dismiss error"
                 icon={Icon.is('X')}
-                disabled={!shownError}
+                isDisabled={!shownError}
                 onPress={dismissCurrentError}
                 size="xs"
               />
@@ -144,7 +151,7 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
               variant="ghost"
               aria-label="Previous error"
               icon={Icon.is('ChevronLeft')}
-              disabled={!hasPreviousError}
+              isDisabled={!hasPreviousError}
               size="xs"
               onPress={() =>
                 hasPreviousError && setCurrentPage((prev) => prev - 1)
@@ -154,7 +161,7 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
               variant="ghost"
               aria-label="Next error"
               icon={Icon.is('ChevronRight')}
-              disabled={!hasNextError}
+              isDisabled={!hasNextError}
               size="xs"
               onPress={() => hasNextError && setCurrentPage((prev) => prev + 1)}
             />
@@ -220,6 +227,7 @@ export function ReportErrors({ onRestore }: { onRestore: () => void }) {
             variant="ghost"
             intent="error"
             onPress={dismissAllErrors}
+            isDisabled={!shownError}
             aria-label="Ignore and dismiss all errors permanently"
           >
             Dismiss All

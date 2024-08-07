@@ -42,7 +42,7 @@ export class ErrorBoundary extends React.Component<
     if (this.state.hasError) {
       return (
         <StoreProvider>
-          <ReportErrors onRestore={this.onRestore} />
+          <ReportErrors onRestore={this.onRestore} errorBoundary />
         </StoreProvider>
       );
     }
