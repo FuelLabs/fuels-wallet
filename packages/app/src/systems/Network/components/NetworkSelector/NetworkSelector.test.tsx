@@ -1,8 +1,9 @@
-import { act, render, screen, testA11y } from '@fuel-ui/test-utils';
+import { render, screen, testA11y } from '@fuel-ui/test-utils';
 import { configure } from '@testing-library/react';
 import { TestWrapper } from '~/systems/Core/components/TestWrapper';
 import { MOCK_NETWORKS } from '~/systems/Network/__mocks__/networks';
 
+import { act } from 'react';
 import { NetworkSelector } from './NetworkSelector';
 
 const SELECTED = MOCK_NETWORKS[0];

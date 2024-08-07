@@ -1,6 +1,7 @@
-import { act, render, screen } from '@fuel-ui/test-utils';
+import { render, screen } from '@fuel-ui/test-utils';
 import { TestWrapper } from '~/systems/Core';
 
+import { act } from 'react';
 import { UserAddressCard } from '.';
 
 const TEST_ACCOUNT =

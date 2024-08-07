@@ -1,6 +1,5 @@
 import { screen, waitFor } from '@fuel-ui/test-utils';
 import { Mnemonic as FuelMnemonic } from 'fuels';
-import { act } from 'react-dom/test-utils';
 import { MNEMONIC_SIZE } from '~/config';
 import type { TestWrapperProps } from '~/systems/Core';
 import { TestWrapper, getPhraseFromValue } from '~/systems/Core';
@@ -8,6 +7,7 @@ import { renderWithProvider } from '~/systems/Core/__tests__';
 
 import { SignUpProvider } from '../SignUpProvider';
 
+import { act } from 'react';
 import { MnemonicWrite } from './MnemonicWrite';
 
 const onFilledHandler = jest.fn();
