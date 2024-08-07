@@ -32,7 +32,7 @@ const PROTECTED_ERROR_PROPERTIES = {
 export function ReportErrors({
   onRestore,
   errorBoundary,
-}: { onRestore: () => void; errorBoundary: boolean }) {
+}: { onRestore: () => void; errorBoundary?: boolean }) {
   const { handlers, isLoadingSendOnce, errors } = useReportError();
   const [currentPage, setCurrentPage] = useState(0);
 
