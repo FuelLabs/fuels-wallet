@@ -11,13 +11,13 @@
     "@fuels/react": "0.21.0",
     "@tanstack/react-query": "5.28.4",
     "fuels": "pr-2479",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "5.28.4",
-    "@types/react": "18.2.56",
-    "@types/react-dom": "18.2.19",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
     "@vitejs/plugin-react": "4.2.1",
     "typescript": "5.2.2",
     "vite": "5.1.4"

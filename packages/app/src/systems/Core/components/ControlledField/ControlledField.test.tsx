@@ -1,9 +1,10 @@
 import { Button, Input } from '@fuel-ui/react';
-import { act, fireEvent, render, screen, waitFor } from '@fuel-ui/test-utils';
+import { fireEvent, render, screen, waitFor } from '@fuel-ui/test-utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
+import { act } from 'react';
 import type { ControlledFieldProps } from './ControlledField';
 import { ControlledField } from './ControlledField';
 
