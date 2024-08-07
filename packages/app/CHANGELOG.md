@@ -1,5 +1,18 @@
 # fuels-wallet
 
+## 0.25.0
+
+### Minor Changes
+
+- [#1277](https://github.com/FuelLabs/fuels-wallet/pull/1277) [`87cc8099`](https://github.com/FuelLabs/fuels-wallet/commit/87cc8099fcbd5d1f470c27848ecd1027d6e155dc) Thanks [@helciofranco](https://github.com/helciofranco)! - feat: add custom network fees, offering options like regular, fast and custom tip when approving a transaction through Dapps.
+
+### Patch Changes
+
+- [#1424](https://github.com/FuelLabs/fuels-wallet/pull/1424) [`abfad2e6`](https://github.com/FuelLabs/fuels-wallet/commit/abfad2e6f134795a62ffb68ef2f7ca7e1ca42ccb) Thanks [@arthurgeron](https://github.com/arthurgeron)! - - Audit check now ignores vulnerabilities with no known patched version
+  - Test utils using act methods deprecated in React 18.3
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.25.0
+
 ## 0.24.0
 
 ### Minor Changes
