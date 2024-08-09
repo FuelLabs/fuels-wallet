@@ -55,4 +55,10 @@ export class ExtensionPageConnection extends BaseConnection {
   destroy() {
     this.connection.disconnect();
   }
+
+  onRequest(message: RequestMessage) {
+    this.server.receive(message.request).then((response) => {
+      this.sendResponse(response, message);
+    });
+  }
 }

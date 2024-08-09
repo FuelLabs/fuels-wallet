@@ -73,6 +73,7 @@ describe('MnemonicRead', () => {
   });
 
   it('should trigger onCancel and onNext', async () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     const saveCheckbox = screen.getByLabelText(/Confirm Saved/i);
     expect(saveCheckbox).toBeInTheDocument();
     await user.click(saveCheckbox);
@@ -87,5 +88,6 @@ describe('MnemonicRead', () => {
       expect(onNextHandler).toBeCalledTimes(1);
       expect(onCancelHandler).toBeCalledTimes(1);
     });
+    consoleErrorSpy.mockRestore();
   });
 });

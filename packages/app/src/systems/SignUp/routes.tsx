@@ -2,6 +2,8 @@ import { Navigate, Route } from 'react-router-dom';
 
 import { Pages } from '../Core/types';
 
+import { listenToGlobalErrors } from '~/systems/Core/utils/listenToGlobalErrors';
+import { ReportErrorService } from '~/systems/Error';
 import { SignUpProvider } from './components/SignUpProvider';
 import {
   BackupWallet,
@@ -12,6 +14,10 @@ import {
   TermsOfUse,
   WelcomeScreen,
 } from './pages';
+
+listenToGlobalErrors((error) => {
+  ReportErrorService.saveError(error);
+});
 
 export const signUpRoutes = (
   <Route path={Pages.signUp()} element={<SignUpProvider />}>

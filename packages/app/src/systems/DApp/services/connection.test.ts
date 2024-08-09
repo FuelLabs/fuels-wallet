@@ -1,6 +1,7 @@
 import type { Connection } from '@fuel-wallet/types';
 import { MOCK_ACCOUNTS } from '~/systems/Account';
 
+import { error } from 'node:console';
 import { ConnectionService } from './connection';
 
 const MOCK_APP: Connection = {
@@ -29,19 +30,13 @@ describe('ConnectionService', () => {
   });
 
   it('should not add two apps with same origin', async () => {
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation();
     await ConnectionService.addConnection({ data: MOCK_APP });
-    expect(async () => {
+    await expect(async () => {
       await ConnectionService.addConnection({ data: MOCK_APP });
     }).rejects.toThrow();
     expect((await ConnectionService.getConnections()).length).toBe(1);
-  });
-
-  it('should not add two apps with same origin', async () => {
-    await ConnectionService.addConnection({ data: MOCK_APP });
-    expect(async () => {
-      await ConnectionService.addConnection({ data: MOCK_APP });
-    }).rejects.toThrow();
-    expect((await ConnectionService.getConnections()).length).toBe(1);
+    errorSpy.mockRestore();
   });
 
   it('should list all apps', async () => {

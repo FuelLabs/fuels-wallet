@@ -1,44 +1,56 @@
-import type { FuelWalletError } from '@fuel-wallet/types';
+import type { StoredFuelWalletError } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
-import { FetchMachine } from '~/systems/Core/machines/fetchMachine';
 
+import { db } from '~/systems/Core/utils/database';
+import { ErrorProcessorService } from '~/systems/Error/services/ErrorProcessorService';
 import { ReportErrorService } from '../services';
 
 export type ErrorMachineContext = {
-  error?: string;
   hasErrors?: boolean;
-  errors?: FuelWalletError[];
+  errors?: StoredFuelWalletError[];
+  reportErrorService: ReportErrorService;
+  errorProcessorService: ErrorProcessorService;
 };
 
 type MachineServices = {
   clearErrors: {
+    data: Pick<ErrorMachineContext, 'errors' | 'hasErrors'>;
+  };
+  reportErrors: {
     // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
     data: void;
   };
-  reportErrors: {
-    data: boolean;
-  };
   checkForErrors: {
-    data: {
-      hasErrors: boolean;
-      errors: FuelWalletError[];
-    };
+    data: Pick<ErrorMachineContext, 'errors' | 'hasErrors'>;
+  };
+  saveError: {
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
+    data: void;
+  };
+  dismissError: {
+    // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
+    data: void;
   };
 };
 
 export type ErrorMachineEvents =
   | {
       type: 'REPORT_ERRORS';
-      input?: null;
     }
   | {
       type: 'CHECK_FOR_ERRORS';
-      input?: null;
     }
   | {
-      type: 'IGNORE_ERRORS';
-      input?: null;
+      type: 'DISMISS_ERRORS';
+    }
+  | {
+      type: 'SAVE_ERROR';
+      input: Error;
+    }
+  | {
+      type: 'DISMISS_ERROR';
+      input: string; // Id
     };
 
 export const reportErrorMachine = createMachine(
@@ -51,13 +63,32 @@ export const reportErrorMachine = createMachine(
       services: {} as MachineServices,
       events: {} as ErrorMachineEvents,
     },
-    context: {},
+    context: {
+      reportErrorService: new ReportErrorService(),
+      errorProcessorService: new ErrorProcessorService(),
+    },
     id: '(machine)',
     initial: 'checkForErrors',
     states: {
       idle: {
+        invoke: {
+          src: () => (sendBack) => {
+            let abort = false;
+            const handleDBChange = async () => {
+              await new Promise((resolve) => setTimeout(resolve, 500));
+              if (abort) return;
+              sendBack('CHECK_FOR_ERRORS');
+            };
+
+            db.errors.hook('creating', handleDBChange);
+            return () => {
+              abort = true;
+              db.errors.hook('creating').unsubscribe(handleDBChange);
+            };
+          },
+        },
         on: {
-          IGNORE_ERRORS: {
+          DISMISS_ERRORS: {
             target: 'cleaning',
           },
           REPORT_ERRORS: {
@@ -66,16 +97,22 @@ export const reportErrorMachine = createMachine(
           CHECK_FOR_ERRORS: {
             target: 'checkForErrors',
           },
+          SAVE_ERROR: {
+            target: 'savingError',
+          },
+          DISMISS_ERROR: {
+            target: 'dismissingError',
+          },
         },
       },
       cleaning: {
-        tags: ['loading'],
         invoke: {
           src: 'clearErrors',
-          onDone: {
-            target: 'idle',
-            actions: ['reload'],
-          },
+          onDone: [
+            {
+              target: 'checkForErrors',
+            },
+          ],
         },
       },
       checkForErrors: {
@@ -93,19 +130,27 @@ export const reportErrorMachine = createMachine(
         tags: ['loading'],
         invoke: {
           src: 'reportErrors',
-          data: {
-            input: (_: ErrorMachineContext, ev: ErrorMachineEvents) => ev.input,
-          },
           onDone: {
-            target: 'idle',
-            actions: ['reload'],
+            target: 'checkForErrors',
           },
         },
       },
-      reported: {
-        type: 'final',
+      savingError: {
+        invoke: {
+          src: 'saveError',
+          onDone: {
+            target: 'checkForErrors',
+          },
+        },
       },
-      error: {},
+      dismissingError: {
+        invoke: {
+          src: 'dismissError',
+          onDone: {
+            target: 'checkForErrors',
+          },
+        },
+      },
     },
   },
   {
@@ -114,39 +159,34 @@ export const reportErrorMachine = createMachine(
         hasErrors: (_, ev) => ev.data.hasErrors,
         errors: (_, ev) => ev.data.errors,
       }),
-      reload: () => {},
     },
     services: {
-      clearErrors: FetchMachine.create<void, void>({
-        showError: true,
-        maxAttempts: 1,
-        async fetch() {
-          await ReportErrorService.clearErrors();
-        },
-      }),
-      reportErrors: FetchMachine.create<void, void>({
-        showError: true,
-        maxAttempts: 2,
-        async fetch() {
-          await ReportErrorService.reportErrors();
-          await ReportErrorService.clearErrors();
-        },
-      }),
-      checkForErrors: FetchMachine.create<
-        void,
-        MachineServices['checkForErrors']['data']
-      >({
-        showError: false,
-        maxAttempts: 1,
-        async fetch() {
-          const hasErrors = await ReportErrorService.checkForErrors();
-          const errors = await ReportErrorService.getErrors();
-          return {
-            hasErrors,
-            errors,
-          };
-        },
-      }),
+      clearErrors: async (context) => {
+        await context.reportErrorService.clearErrors();
+        return {
+          hasErrors: false,
+          errors: [],
+        };
+      },
+      reportErrors: async (context) => {
+        await context.reportErrorService.reportErrors();
+        await context.reportErrorService.clearErrors();
+      },
+      checkForErrors: async (context) => {
+        await context.errorProcessorService.processErrors();
+        const hasErrors = await context.reportErrorService.checkForErrors();
+        const errors = await context.reportErrorService.getErrors();
+        return {
+          hasErrors,
+          errors,
+        };
+      },
+      saveError: async (_, event) => {
+        await ReportErrorService.saveError(event.input);
+      },
+      dismissError: async (context, event) => {
+        await context.reportErrorService.dismissError(event.input);
+      },
     },
   }
 );

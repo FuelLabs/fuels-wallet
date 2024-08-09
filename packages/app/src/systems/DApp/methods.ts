@@ -3,6 +3,7 @@ import { transactionRequestify } from 'fuels';
 import { IS_CRX } from '~/config';
 import { Services, store } from '~/store';
 import type { MessageInputs } from '~/systems/CRX/background/services/types';
+import { listenToGlobalErrors } from '~/systems/Core/utils/listenToGlobalErrors';
 
 // On external methods we need to wait for the state to be updated
 // this can take time as the user can take a while to respond
@@ -79,3 +80,10 @@ export class RequestMethods extends ExtensionPageConnection {
 if (IS_CRX) {
   RequestMethods.start();
 }
+
+listenToGlobalErrors((error) => {
+  store.send(Services.reportError, {
+    type: 'SAVE_ERROR',
+    input: error,
+  });
+});

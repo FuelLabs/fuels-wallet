@@ -1,13 +1,12 @@
-import React from 'react';
-
+import React, { type ErrorInfo } from 'react';
+import { Services, StoreProvider, store } from '~/store';
 import { ReportErrors } from '../../pages';
-import { ReportErrorService } from '../../services';
 
 type ErrorProviderProps = {
   children: React.ReactNode;
 };
 
-class ErrorBoundary extends React.Component<
+export class ErrorBoundary extends React.Component<
   ErrorProviderProps,
   { hasError: boolean }
 > {
@@ -17,11 +16,10 @@ class ErrorBoundary extends React.Component<
     return { hasError: true };
   }
 
-  async componentDidCatch(error: Error, reactError: React.ErrorInfo) {
-    await ReportErrorService.saveError({
-      error,
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-      reactError: reactError as any,
+  async componentDidCatch(error: Error, info: ErrorInfo) {
+    store.send(Services.reportError, {
+      type: 'SAVE_ERROR',
+      input: { ...error, ...info },
     });
     this.setState({
       hasError: true,
@@ -33,20 +31,25 @@ class ErrorBoundary extends React.Component<
   }
 
   checkErrors = async () => {
-    const errors = await ReportErrorService.getErrors();
-    if (errors.length > 0) {
-      this.setState({
-        hasError: true,
-      });
-    }
+    store.send(Services.reportError, { type: 'CHECK_FOR_ERRORS' });
+  };
+
+  onRestore = () => {
+    this.setState({ hasError: false });
   };
 
   render() {
     if (this.state.hasError) {
-      return <ReportErrors />;
+      return (
+        <StoreProvider>
+          <ReportErrors onRestore={this.onRestore} errorBoundary />
+        </StoreProvider>
+      );
     }
     return this.props.children;
   }
 }
 
-export { ErrorBoundary };
+export function ReportErrorProvider({ children }: ErrorProviderProps) {
+  return <ErrorBoundary>{children}</ErrorBoundary>;
+}
