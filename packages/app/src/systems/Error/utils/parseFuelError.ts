@@ -4,7 +4,7 @@ import type {
   StoredFuelWalletError,
 } from '@fuel-wallet/types';
 
-const SANITIZE_REGEXP = /private key: \w+/g;
+const SANITIZE_REGEXP = /(0x[a-fA-Z0-9]{64})|(fuel[a-zA-Z0-9]{59})/g;
 
 function parseMessage(
   message: string | { name: string; message: string }
