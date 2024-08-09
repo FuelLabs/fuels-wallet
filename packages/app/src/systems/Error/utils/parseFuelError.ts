@@ -10,18 +10,18 @@ function parseMessage(
   message: string | { name: string; message: string }
 ): string | { message: string; name?: string } {
   if (typeof message === 'string') {
-    return message.replace(SANITIZE_REGEXP, 'private key');
+    return message.replace(SANITIZE_REGEXP, '[REDACTED KEY]');
   }
   if ('name' in message || 'message' in message) {
     const { message: previousMessage, ...rest } = message;
     return {
-      message: previousMessage.replace(SANITIZE_REGEXP, 'private key'),
+      message: previousMessage.replace(SANITIZE_REGEXP, '[REDACTED KEY]'),
       ...rest,
     };
   }
   const fallback = (message as unknown)
     ?.toString()
-    .replace(SANITIZE_REGEXP, 'private key');
+    .replace(SANITIZE_REGEXP, '[REDACTED KEY]');
   if (!fallback) {
     throw new Error('message is not a string');
   }
