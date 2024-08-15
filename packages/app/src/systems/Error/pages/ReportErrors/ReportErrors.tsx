@@ -119,7 +119,16 @@ export function ReportErrors({
   return (
     <Box.Stack css={styles.root} gap="$4" data-scrollable>
       <Box.Stack>
-        <FuelLogo size={30} />
+        <Box.Stack direction="row" justify="space-between">
+          <FuelLogo size={30} />
+          <IconButton
+            variant="outlined"
+            aria-label="Ignore error(s)"
+            icon={Icon.is('X')}
+            onPress={ignoreErrors}
+            size="xs"
+          />
+        </Box.Stack>
         <Heading as="h3" css={styles.title}>
           Unexpected Error
         </Heading>
