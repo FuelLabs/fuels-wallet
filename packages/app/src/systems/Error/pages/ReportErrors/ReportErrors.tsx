@@ -139,8 +139,9 @@ export function ReportErrors({
             <Tooltip content="Dismiss current error" side="top">
               <IconButton
                 variant="ghost"
+                intent="error"
                 aria-label="Dismiss error"
-                icon={Icon.is('X')}
+                icon={Icon.is('Trash')}
                 isDisabled={!shownError}
                 onPress={dismissCurrentError}
                 size="xs"
