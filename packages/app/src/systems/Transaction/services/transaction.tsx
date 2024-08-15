@@ -175,7 +175,6 @@ export class TxService {
       transactionRequest.maxFee = bn(0);
       const txCost = await provider.getTransactionCost(transactionRequest, {
         estimateTxDependencies: true,
-        resourcesOwner: wallet,
       });
       transactionRequest.maxFee = txCost.maxFee;
 
@@ -184,7 +183,10 @@ export class TxService {
       );
 
       // funding the transaction with the required quantities (the maxFee might have changed)
-      await wallet.fund(transactionRequest, txCost);
+      await wallet.fund(transactionRequest, {
+        ...txCost,
+        requiredQuantities: [],
+      });
 
       const transaction = transactionRequest.toTransaction();
       const abiMap = await getAbiMap({
@@ -262,7 +264,7 @@ export class TxService {
       provider,
       filters: {
         owner: address,
-        first: 1000,
+        first: 100,
       },
     });
 
@@ -337,9 +339,7 @@ export class TxService {
         );
 
         // Getting updated maxFee and costs
-        const txCost = await provider.getTransactionCost(transactionRequest, {
-          resourcesOwner: wallet,
-        });
+        const txCost = await provider.getTransactionCost(transactionRequest);
 
         const baseFee = transactionRequest.maxFee.sub(
           transactionRequest.tip ?? bn(0)
