@@ -123,6 +123,12 @@ export function ReportErrors({
         <Heading as="h3" css={styles.title}>
           Unexpected Error
         </Heading>
+        <Alert status="warning">
+          <Alert.Description as="div">
+            Ultimately it's your responsibility to ensure no private information
+            is sent.
+          </Alert.Description>
+        </Alert>
       </Box.Stack>
       <Box.Stack css={styles.content}>
         <Text>
@@ -190,47 +196,28 @@ export function ReportErrors({
           ]}
         />
       </Box.Stack>
-      <Box.Stack>
-        <Alert status="warning">
-          <Alert.Description as="div">
-            <Text>
-              Ultimately it's your responsibility to ensure no private
-              information is sent.
-            </Text>
-          </Alert.Description>
-        </Alert>
-        <Button
-          intent="primary"
-          isDisabled={isLoadingSendOnce}
-          isLoading={isLoadingSendOnce}
-          onPress={reportErrors}
-          aria-label="Report Error"
-        >
-          Send reports
-        </Button>
-        <Tooltip
-          content="Ignore all changes and ignore error reports"
-          side="top"
-        >
-          <Button
-            variant="ghost"
-            onPress={ignoreErrors}
-            aria-label="Dismiss all changes and ignore error reports"
-          >
-            Ignore
-          </Button>
-        </Tooltip>
+      <Box.Stack direction="row">
         <Tooltip content="Dismiss all errors permanently" side="top">
           <Button
+            css={styles.actionButton}
             variant="ghost"
-            intent="error"
             onPress={dismissAllErrors}
             isDisabled={!shownError}
             aria-label="Ignore and dismiss all errors permanently"
           >
-            Dismiss All
+            Dismiss
           </Button>
         </Tooltip>
+        <Button
+          css={styles.actionButton}
+          intent="primary"
+          isDisabled={isLoadingSendOnce}
+          isLoading={isLoadingSendOnce}
+          onPress={reportErrors}
+          aria-label="Send"
+        >
+          Send
+        </Button>
       </Box.Stack>
     </Box.Stack>
   );
@@ -260,6 +247,9 @@ const styles = {
     '.jer-component': {
       width: 'max-content',
     },
+  }),
+  actionButton: cssObj({
+    width: '100%',
   }),
   controlsContainer: cssObj({
     display: 'flex',
