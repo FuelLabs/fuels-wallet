@@ -17,13 +17,14 @@ export function ErrorFloatingButton() {
     <Box css={styles.alertContainer} className={hidden ? '' : 'show'}>
       <IconButton
         css={styles.button}
+        intent="error"
         onPress={() => navigate(Pages.errors())}
         aria-label="Click to visualize unreviewed errrors"
         iconSize={20}
         size="sm"
         disabled={hidden}
         data-testid="ErrorFloatingButton"
-        icon={<Icon icon="AlertTriangle" color="intentsWarning3" />}
+        icon={Icon.is('AlertTriangle')}
       />
     </Box>
   );
@@ -44,7 +45,7 @@ const styles = {
     },
   }),
   button: cssObj({
-    background: '$intentsError9',
     borderRadius: '$full',
+    borderWidth: 0,
   }),
 };
