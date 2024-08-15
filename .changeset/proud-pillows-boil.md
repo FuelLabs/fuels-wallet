@@ -3,4 +3,4 @@
 "fuels-wallet": minor
 ---
 
-Refactored Sentry implementation, error handling and report logic
+Refactored Sentry implementation, error handling, and report logic
