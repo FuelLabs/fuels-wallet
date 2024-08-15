@@ -126,8 +126,6 @@ export function ReportErrors({
       </Box.Stack>
       <Box.Stack css={styles.content}>
         <Text>
-          Unexpected errors detected. We&apos;re sorry for the inconvenience.
-          <br />
           Would you like to send the following error logs to Fuel Wallet team?
         </Text>
         <HStack css={styles.controlsContainer}>
