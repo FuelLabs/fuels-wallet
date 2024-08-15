@@ -238,12 +238,14 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     border: '1px solid $border',
-    overflowY: 'scroll',
+    overflowY: 'hidden',
     overflowX: 'hidden',
     '.jer-editor-container': {
       ...scrollable(),
       fontSize: '$base',
       overflow: 'overlay',
+      height: 200,
+      maxHeight: 200,
     },
     '.jer-component': {
       width: 'max-content',
