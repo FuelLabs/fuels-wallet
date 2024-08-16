@@ -5,11 +5,13 @@ services:
     platform: linux/amd64
     container_name: '${PROJECT:-fuel-node}_fuel-core'
     environment:
+      FUEL_IP: ${FUEL_IP}
+      FUEL_CORE_PORT: ${FUEL_CORE_PORT}
       NETWORK_NAME: '${PROJECT} local'
       MIN_GAS_PRICE: ${MIN_GAS_PRICE}
       # This is the private key of the consensus.PoA.signing_key in the chainConfig.json
       # this key is responsible for validating the transactions
-      CONSENSUS_KEY: ${WALLET_SECRET}
+      CONSENSUS_KEY_SECRET: ${WALLET_SECRET}
     build: ./fuel-core
     ports:
       - '${FUEL_CORE_PORT:-4000}:4000'
@@ -31,7 +33,7 @@ services:
       WALLET_SECRET_KEY: ${WALLET_SECRET}
       DISPENSE_AMOUNT: ${DISPENSE_AMOUNT}
       FUEL_NODE_URL: http://${PROJECT:-fuel-node}_fuel-core:4000/v1/graphql
-    image: ghcr.io/fuellabs/faucet:v0.7.2
+    image: ghcr.io/fuellabs/faucet:4f7bec0
     ports:
       - '${FUEL_FAUCET_PORT:-4040}:3000'
     links:

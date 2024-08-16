@@ -326,7 +326,7 @@ export class TxService {
 
     while (attempts < maxAttempts) {
       try {
-        const targetAmount = amount.sub(attempts * 1_000_000);
+        const targetAmount = amount.sub(attempts * 200_000);
         const realAmount = targetAmount.gt(0) ? targetAmount : bn(1);
         const transactionRequest = await wallet.createTransfer(
           Address.fromDynamicInput(to),
@@ -345,6 +345,8 @@ export class TxService {
           transactionRequest.tip ?? bn(0)
         );
 
+        console.log('asd realAmount', realAmount);
+
         return {
           baseFee,
           minGasLimit: txCost.gasUsed,
@@ -357,6 +359,8 @@ export class TxService {
 
         // @TODO: Waiting to match with FuelError type and ErrorCode enum from "fuels"
         // These types are not exported from "fuels" package, but they exists in the "@fuels-ts/errors"
+        console.log('asd e.code', e.code);
+        console.log('asd e.message', e.message);
         if (
           e instanceof Error &&
           'toObject' in e &&
