@@ -8,6 +8,10 @@ export class ReportErrorService {
     const errors = await this.getErrors();
 
     for (const e of errors) {
+      // biome-ignore lint/suspicious/noExplicitAny: playwright is injected late into the window context
+      if (typeof window !== 'undefined' && (window as any).playwright) {
+        return;
+      }
       Sentry.captureException(e.error, {
         extra: e.extra,
         tags: { id: e.id, manual: true },
