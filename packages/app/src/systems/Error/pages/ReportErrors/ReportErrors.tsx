@@ -224,7 +224,7 @@ export function ReportErrors({
           isDisabled={isLoadingSendOnce}
           isLoading={isLoadingSendOnce}
           onPress={reportErrors}
-          aria-label="Send"
+          aria-label="Send error reports"
         >
           Send
         </Button>

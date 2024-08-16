@@ -26,7 +26,7 @@ test.describe('ReportError', () => {
   async function getPageErrors(page: Page): Promise<any> {
     return await page.evaluate(async () => {
       const fuelDB = window.fuelDB;
-      const errors = (await fuelDB?.errors?.toArray()) ?? [];
+      const errors = (await fuelDB?.errors?.toArray?.()) ?? [];
       return errors;
     });
   }
@@ -37,15 +37,15 @@ test.describe('ReportError', () => {
       window.testCrash();
     });
 
-    await hasText(page, /Unexpected errors detected/i);
+    await hasText(page, /Unexpected error/i);
 
     // get errors from indexedDB
     const errors = await getPageErrors(page);
     expect(errors.length).toBeGreaterThan(0);
 
     // report error
-    await getButtonByText(page, 'Send reports').click();
-    await expect(page.getByText(/Unexpected errors detected/)).toHaveCount(0);
+    await getByAriaLabel(page, 'Send error reports').click();
+    await expect(page.getByText(/Unexpected error/)).toHaveCount(0);
 
     const errorsAfterReporting = await getPageErrors(page);
     expect(errorsAfterReporting.length).toBe(0);
@@ -106,11 +106,11 @@ test.describe('ReportError', () => {
         state: 'visible',
       })
     ).click();
-    await hasText(page, /Unexpected errors detected/i);
+    await hasText(page, /Unexpected error/i);
 
     // report error
-    await getButtonByText(page, /Ignore/i).click();
-    await expect(page.getByText(/Unexpected errors detected/i)).toHaveCount(0);
+    await getByAriaLabel(page, 'Ignore error(s)').click();
+    await expect(page.getByText(/Unexpected error/i)).toHaveCount(0);
 
     const errorsAfterReporting = await getPageErrors(page);
     expect(errorsAfterReporting.length).toBe(1);
@@ -141,11 +141,14 @@ test.describe('ReportError', () => {
         state: 'visible',
       })
     ).click();
-    await hasText(page, /Unexpected errors detected/i);
+    await hasText(page, /Unexpected error/i);
 
     // report error
-    await getButtonByText(page, /Dismiss All/i).click();
-    await expect(page.getByText(/Unexpected errors detected/i)).toHaveCount(0);
+    await getByAriaLabel(
+      page,
+      'Ignore and dismiss all errors permanently'
+    ).click();
+    await expect(page.getByText(/Unexpected error/i)).toHaveCount(0);
 
     const errorsAfterReporting = await getPageErrors(page);
     expect(errorsAfterReporting.length).toBe(0);
@@ -176,11 +179,11 @@ test.describe('ReportError', () => {
         state: 'visible',
       })
     ).click();
-    await hasText(page, /Unexpected errors detected/i);
+    await hasText(page, /Unexpected error/i);
 
     // report error
     await getByAriaLabel(page, 'Dismiss error').click();
-    await expect(page.getByText(/Unexpected errors detected/i)).toHaveCount(0);
+    await expect(page.getByText(/Unexpected error/i)).toHaveCount(0);
 
     const errorsAfterReporting = await getPageErrors(page);
     expect(errorsAfterReporting.length).toBe(0);
@@ -197,7 +200,7 @@ test.describe('ReportError', () => {
         state: 'visible',
       })
     ).click();
-    await hasText(page, /Unexpected errors detected/i);
+    await hasText(page, /Unexpected error/i);
 
     const errorsAfterReporting = await getPageErrors(page);
     expect(errorsAfterReporting.length).toBe(1);
@@ -244,7 +247,7 @@ test.describe('ReportError', () => {
         state: 'visible',
       })
     ).click();
-    await hasText(page, /Unexpected errors detected/i);
+    await hasText(page, /Unexpected error/i);
     await reload(page);
     const errorsAfterReporting = await getPageErrors(page);
     expect(errorsAfterReporting.length).toBe(1);
