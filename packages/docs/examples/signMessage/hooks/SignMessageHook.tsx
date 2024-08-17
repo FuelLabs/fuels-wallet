@@ -16,7 +16,7 @@ export function SignMessageHook() {
   const { wallet } = useWallet();
 
   async function handleSignMessage(message: string) {
-    if (!isConnected) return connect(); // ignore-line
+    if (!isConnected) return connect(undefined); // ignore-line
     console.log('Request signature of message!');
     if (!wallet) {
       throw new Error('Current wallet is not authorized for this connection!');

@@ -22,7 +22,7 @@ export function AddAssetsHook() {
   const { addAssets, isPending, error } = useAddAssets();
 
   async function handleAddAssets(assets: Asset[]) {
-    if (!isConnected) await connect(); // ignore-line
+    if (!isConnected) await connect(undefined); // ignore-line
     console.log('Add Assets', assets);
     addAssets(assets);
   }
