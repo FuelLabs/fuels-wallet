@@ -37,6 +37,7 @@ export type TxInputs = {
     origin?: string;
     title?: string;
     favIconUrl?: string;
+    skipCustomFee?: boolean;
     fees?: {
       baseFee?: BN;
       regularTip?: BN;
@@ -53,6 +54,7 @@ export type TxInputs = {
   simulateTransaction: {
     transactionRequest: TransactionRequest;
     providerUrl?: string;
+    skipCustomFee?: boolean;
   };
   setCustomFees: {
     tip?: BN;
@@ -81,6 +83,10 @@ export type TxInputs = {
     providerUrl?: string;
   };
   fundTransaction: {
+    wallet: WalletLocked;
+    transactionRequest: TransactionRequest;
+  };
+  computeCustomFee: {
     wallet: WalletLocked;
     transactionRequest: TransactionRequest;
   };
@@ -153,6 +159,7 @@ export class TxService {
   }
 
   static async simulateTransaction({
+    skipCustomFee,
     transactionRequest,
     providerUrl,
   }: TxInputs['simulateTransaction']) {
@@ -171,22 +178,12 @@ export class TxService {
     const wallet = new WalletLockedCustom(account.address, provider);
 
     try {
-      // Getting updated maxFee and costs
-      transactionRequest.maxFee = bn(0);
-      const txCost = await provider.getTransactionCost(transactionRequest, {
-        estimateTxDependencies: true,
-      });
-      transactionRequest.maxFee = txCost.maxFee;
-
-      const baseFee = transactionRequest.maxFee.sub(
-        transactionRequest.tip ?? bn(0)
-      );
-
-      // funding the transaction with the required quantities (the maxFee might have changed)
-      await wallet.fund(transactionRequest, {
-        ...txCost,
-        requiredQuantities: [],
-      });
+      const customFee = !skipCustomFee
+        ? await TxService.computeCustomFee({
+            wallet,
+            transactionRequest,
+          })
+        : undefined;
 
       const transaction = transactionRequest.toTransaction();
       const abiMap = await getAbiMap({
@@ -200,8 +197,8 @@ export class TxService {
       });
 
       return {
-        baseFee,
-        minGasLimit: txCost.gasUsed,
+        baseFee: customFee?.baseFee,
+        minGasLimit: customFee?.txCost?.gasUsed,
         txSummary: {
           ...txSummary,
           // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
@@ -339,7 +336,7 @@ export class TxService {
         );
 
         // Getting updated maxFee and costs
-        const txCost = await provider.getTransactionCost(transactionRequest);
+        const txCost = await wallet.getTransactionCost(transactionRequest);
 
         const baseFee = transactionRequest.maxFee.sub(
           transactionRequest.tip ?? bn(0)
@@ -382,6 +379,30 @@ export class TxService {
       address: account.address,
       providerUrl: network.url,
     };
+  }
+
+  static async computeCustomFee({
+    wallet,
+    transactionRequest,
+  }: TxInputs['computeCustomFee']) {
+    // Getting updated maxFee and costs
+    transactionRequest.maxFee = bn(0);
+    const txCost = await wallet.getTransactionCost(transactionRequest, {
+      estimateTxDependencies: true,
+    });
+    transactionRequest.maxFee = txCost.maxFee;
+
+    const baseFee = transactionRequest.maxFee.sub(
+      transactionRequest.tip ?? bn(0)
+    );
+
+    // funding the transaction with the required quantities (the maxFee might have changed)
+    await wallet.fund(transactionRequest, {
+      ...txCost,
+      requiredQuantities: [],
+    });
+
+    return { baseFee, txCost };
   }
 }
 

@@ -35,6 +35,7 @@ type MachineContext = {
     account?: Account;
     tip?: BN;
     gasLimit?: BN;
+    skipCustomFee?: boolean;
   };
   response?: {
     txSummarySimulated?: TransactionSummary;
@@ -299,6 +300,7 @@ export const transactionRequestMachine = createMachine(
             providerUrl,
             title,
             favIconUrl,
+            skipCustomFee,
           } = ev.input || {};
 
           if (!providerUrl) {
@@ -332,6 +334,7 @@ export const transactionRequestMachine = createMachine(
             favIconUrl,
             tip,
             gasLimit,
+            skipCustomFee,
           };
         },
         fees: (_ctx, ev) => {

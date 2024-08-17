@@ -269,6 +269,7 @@ export function useSend() {
               minGasLimit,
               maxGasLimit,
             },
+            skipCustomFee: true,
           });
         },
       },
