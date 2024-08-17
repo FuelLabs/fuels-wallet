@@ -5,7 +5,7 @@ import type { WalletUnlocked } from 'fuels';
 import { bn, toBech32 } from 'fuels';
 
 import '../../load.envs';
-import { CustomAssetAbi__factory } from '../../src/contracts';
+import { CustomAssetFactory } from '../../src/contracts/contracts';
 import type { IdentityInput } from '../../src/contracts/contracts/CustomAssetAbi';
 import {
   calculateAssetId,
@@ -51,9 +51,8 @@ test.describe('Forward Custom Asset', () => {
     await connect(page, fuelWalletTestHelper);
 
     // Mint custom asset to wallet
-    const contract = CustomAssetAbi__factory.connect(
-      MAIN_CONTRACT_ID,
-      fuelWallet
+    const contract = new CustomAssetFactory(fuelWallet).connect(
+      fuelWallet.provider
     );
     const recipient: IdentityInput = {
       Address: {
