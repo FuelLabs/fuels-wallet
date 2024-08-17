@@ -342,8 +342,6 @@ export class TxService {
           transactionRequest.tip ?? bn(0)
         );
 
-        console.log('asd realAmount', realAmount);
-
         return {
           baseFee,
           minGasLimit: txCost.gasUsed,
@@ -356,8 +354,6 @@ export class TxService {
 
         // @TODO: Waiting to match with FuelError type and ErrorCode enum from "fuels"
         // These types are not exported from "fuels" package, but they exists in the "@fuels-ts/errors"
-        console.log('asd e.code', e.code);
-        console.log('asd e.message', e.message);
         if (
           e instanceof Error &&
           'toObject' in e &&

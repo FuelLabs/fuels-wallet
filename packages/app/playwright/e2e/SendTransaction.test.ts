@@ -6,7 +6,6 @@ import { Provider, Wallet, bn } from 'fuels';
 import {
   getButtonByText,
   getByAriaLabel,
-  getElementByText,
   getInputByName,
   hasAriaLabel,
   hasText,
