@@ -6,7 +6,17 @@ import { getPublicEnvs } from './load.envs';
 import pkg from './package.json';
 
 const { globals, preset, ...baseConfig } = baseDefaultConfig;
-
+const esModules = [
+  'nanoid',
+  'p-cancelable',
+  'reaflow',
+  'easy-email-core',
+  'uuid/dist/esm-browser',
+  'd3-path/src',
+  'd3-shape/src',
+  '@web3modal',
+  '@fuels/connectors',
+].join('|');
 const config: JestConfigWithTsJest = {
   ...baseConfig,
   transform: {
@@ -29,10 +39,11 @@ const config: JestConfigWithTsJest = {
       },
     ],
   },
+  transformIgnorePatterns: [`/node_modules/(?!${esModules})`],
   testTimeout: 10000,
   forceExit: false,
   detectOpenHandles: true,
-  modulePathIgnorePatterns: ['/dist/', 'playwright'],
+  modulePathIgnorePatterns: ['/dist/', 'playwright', 'uuid/dist/esm-browser'],
   maxWorkers: 1,
   rootDir: __dirname,
   displayName: pkg.name,
@@ -52,6 +63,9 @@ const config: JestConfigWithTsJest = {
      * */
     '^react$': require.resolve('react'),
     '^react-dom$': require.resolve('react-dom'),
+    '^uuid$': require.resolve('uuid'),
+    '^@web3modal/core$': require.resolve('@web3modal/core'),
+    '^@fuels/connectors$': require.resolve('@fuels/connectors'),
   },
 };
 
