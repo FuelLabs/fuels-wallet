@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@fuels/connectors": "0.25.0",
-    "fuels": "next",
+    "fuels": "pr-2982",
     "tsup": "^7.2.0"
   }
 }

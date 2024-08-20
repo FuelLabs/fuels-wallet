@@ -9,9 +9,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-env:
-  COVERAGE_FILE: ./coverage/report.json
-
 jobs:
   tests-jest:
     name: JEST Tests
@@ -44,22 +41,10 @@ jobs:
 
       - name: Run Jest Tests
         run: |
-          pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
+          pnpm test:ci
         timeout-minutes: 20
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
-
-      - name: Publish coverage
-        uses: artiomtr/jest-coverage-report-action@v2.0.5
-        if: ${{ steps.findPr.outputs.number }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          package-manager: pnpm
-          annotations: failed-tests
-          test-script: pnpm test:ci
-          working-directory: ./packages/app
-          coverage-file: ${{ env.COVERAGE_FILE }}
-          base-coverage-file: ${{ env.COVERAGE_FILE }}
 
       - name: Stop Test Node
         run: pnpm node:clean
