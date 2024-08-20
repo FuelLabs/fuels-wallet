@@ -90,9 +90,7 @@ export const transferMaxBalance = async ({
         );
         await txResponse.waitForResult();
         console.log(
-          `----- Success sending ${amountToSend?.format()} back to ${
-            toWallet.address
-          }`
+          `----- Success sending ${amountToSend?.format()} back to ${toWallet.address.toB256()}`
         );
       }
     } catch (e) {
