@@ -64,7 +64,7 @@
     "@crxjs/vite-plugin": "1.0.14",
     "@fuel-wallet/types": "workspace:*",
     "@fuels/connectors": "0.5.0",
-    "@playwright/test": "1.39.0",
+    "@playwright/test": "^1.46.1",
     "@sentry/cli": "2.21.2",
     "@storybook/addon-a11y": "7.4.6",
     "@storybook/addon-actions": "7.4.6",

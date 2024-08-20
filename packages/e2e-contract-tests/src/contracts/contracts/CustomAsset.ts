@@ -586,7 +586,7 @@ const storageSlots: StorageSlot[] = [
 
 export class CustomAssetInterface extends Interface {
   constructor() {
-    super(abi);
+    super(abi as any);
   }
 
   declare functions: {
@@ -631,6 +631,6 @@ export class CustomAsset extends Contract {
     id: string | AbstractAddress,
     accountOrProvider: Account | Provider,
   ) {
-    super(id, abi, accountOrProvider);
+    super(id, abi as any, accountOrProvider);
   }
 }

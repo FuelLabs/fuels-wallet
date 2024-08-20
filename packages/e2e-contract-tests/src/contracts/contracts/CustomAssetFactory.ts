@@ -22,7 +22,7 @@ export class CustomAssetFactory extends ContractFactory {
   static readonly bytecode = bytecode;
 
   constructor(accountOrProvider: Account | Provider) {
-    super(bytecode, CustomAsset.abi, accountOrProvider);
+    super(bytecode, CustomAsset.abi as any, accountOrProvider);
   }
 
   static async deploy (

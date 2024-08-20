@@ -244,6 +244,7 @@ export class TxService {
         maxGasPerTx,
         gasPrice,
         baseAssetId,
+        id: '',
       });
       txSummary.isStatusFailure = true;
       txSummary.status = TransactionStatus.failure;
