@@ -15,7 +15,7 @@ export default defineConfig({
     ['html', { outputFolder: join(__dirname, './playwright-html/') }],
   ],
   webServer: {
-    command: 'pnpm dev:crx',
+    command: 'NODE_ENV=test pnpm dev:crx',
     port: Number(PORT),
     reuseExistingServer: true,
     timeout: 20000,
