@@ -5,7 +5,6 @@ import type { WalletUnlocked } from 'fuels';
 import { bn, toBech32 } from 'fuels';
 
 import '../../load.envs';
-import { CustomAssetAbi__factory } from '../../src/contracts';
 import type { IdentityInput } from '../../src/contracts/contracts/CustomAssetAbi';
 import {
   calculateAssetId,
@@ -14,6 +13,7 @@ import {
 } from '../../src/utils';
 import { testSetup, transferMaxBalance } from '../utils';
 
+import { CustomAsset } from '../../src/contracts/contracts';
 import { MAIN_CONTRACT_ID } from './config';
 import { test, useLocalCRX } from './test';
 import {
@@ -52,20 +52,18 @@ test.describe('Forward Half Custom Asset', () => {
     await connect(page, fuelWalletTestHelper);
 
     // Mint custom asset to wallet
-    const contract = CustomAssetAbi__factory.connect(
-      MAIN_CONTRACT_ID,
-      fuelWallet
-    );
+    const contract = new CustomAsset(MAIN_CONTRACT_ID, fuelWallet);
     const recipient: IdentityInput = {
       Address: {
         bits: fuelWallet.address.toB256(),
       },
     };
-    const response = await contract.functions
+    const { waitForResult } = await contract.functions
       .mint(recipient, await getBaseAssetId(), bn(100_000_000_000))
       .txParams({ gasLimit: 1_000_000 })
       .call();
-    await response.transactionResponse.waitForResult();
+
+    await waitForResult();
 
     const forwardHalfCustomAssetInput = page
       .getByLabel('Forward half custom asset card')

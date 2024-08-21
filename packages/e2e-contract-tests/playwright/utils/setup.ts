@@ -34,7 +34,7 @@ export const testSetup = async ({
   if (VITE_WALLET_SECRET) {
     await seedWallet(
       masterWallet.address.toString(),
-      bn.parseUnits('100'),
+      bn.parseUnits('1'),
       VITE_FUEL_PROVIDER_URL!,
       VITE_WALLET_SECRET!
     );
