@@ -136,6 +136,7 @@ function TxContentInfo({
 
   function getHeader() {
     if (hasErrors) return <ErrorHeader errors={errors} />;
+    if (isConfirm) return <ConfirmHeader />;
     if (isExecuted)
       return (
         <TxHeader
@@ -145,7 +146,6 @@ function TxContentInfo({
           providerUrl={providerUrl}
         />
       );
-    if (isConfirm) return <ConfirmHeader />;
 
     return <ConfirmHeader />;
   }
