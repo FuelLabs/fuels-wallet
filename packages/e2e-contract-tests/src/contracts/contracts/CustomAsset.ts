@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 /*
-  Fuels version: 0.93.0
+  Fuels version: 0.94.0
   Forc version: 0.63.1
   Fuel-Core version: 0.33.0
 */
@@ -16,12 +16,6 @@ import type {
   Account,
   StorageSlot,
   AbstractAddress,
-  BigNumberish,
-  BN,
-  Bytes,
-  FunctionFragment,
-  InvokeFunction,
-  StdString,
 } from 'fuels';
 
 import type { Option, Enum } from "./common";
