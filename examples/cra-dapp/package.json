@@ -10,7 +10,7 @@
     "@fuels/connectors": "0.25.0",
     "@fuels/react": "0.25.0",
     "@tanstack/react-query": "5.28.4",
-    "fuels": "pr-2982",
+    "fuels": "0.94.0",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },

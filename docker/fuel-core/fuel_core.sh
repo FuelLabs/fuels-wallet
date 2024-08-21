@@ -1,12 +1,6 @@
 #!/bin/bash
 
-
-
 # TODO change to --poa-interval-period 1sec \
-# TODO check if its needed --consensus-key ${CONSENSUS_KEY_SECRET} \
-
-
-
 
 # Start the Fuel Core node
 /root/fuel-core run \

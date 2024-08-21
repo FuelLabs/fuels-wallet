@@ -92,6 +92,8 @@ export type TxInputs = {
   };
 };
 
+const AMOUNT_SUB_PER_TX_RETRY = 200_000;
+
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class TxService {
   static async clear() {
@@ -330,7 +332,7 @@ export class TxService {
 
     while (attempts < maxAttempts) {
       try {
-        const targetAmount = amount.sub(attempts * 200_000);
+        const targetAmount = amount.sub(attempts * AMOUNT_SUB_PER_TX_RETRY);
         const realAmount = targetAmount.gt(0) ? targetAmount : bn(1);
         const transactionRequest = await wallet.createTransfer(
           Address.fromDynamicInput(to),
