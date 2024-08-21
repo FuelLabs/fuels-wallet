@@ -6,6 +6,7 @@ import './load.envs.js';
 // to use the white logo instead of the black one
 const isReleaseVersion = process.env.VITE_CRX_RELEASE === 'true';
 const imageNameColor = `${isReleaseVersion ? '' : '-black'}`;
+const IS_TEST = process.env.NODE_ENV === 'test';
 
 export default defineManifest({
   manifest_version: 3,
@@ -45,4 +46,16 @@ export default defineManifest({
   content_security_policy: {
     extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'",
   },
+  // this is needed to work in e2e tests
+  ...(IS_TEST
+    ? {
+        web_accessible_resources: [
+          {
+            extension_ids: ['*'],
+            resources: ['*'],
+            matches: ['<all_urls>'],
+          },
+        ],
+      }
+    : {}),
 });
