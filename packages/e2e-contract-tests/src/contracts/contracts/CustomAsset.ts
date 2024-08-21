@@ -6,8 +6,8 @@
 
 /*
   Fuels version: 0.93.0
-  Forc version: 0.62.0
-  Fuel-Core version: 0.32.1
+  Forc version: 0.63.1
+  Fuel-Core version: 0.33.0
 */
 
 import { Contract, Interface } from "fuels";
@@ -39,173 +39,201 @@ export type ContractIdInput = { bits: string };
 export type ContractIdOutput = ContractIdInput;
 
 const abi = {
-  "encoding": "1",
-  "types": [
+  "programType": "contract",
+  "specVersion": "1",
+  "encodingVersion": "1",
+  "concreteTypes": [
     {
-      "typeId": 0,
       "type": "()",
-      "components": [],
-      "typeParameters": null
+      "concreteTypeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
     },
     {
-      "typeId": 1,
       "type": "b256",
-      "components": null,
-      "typeParameters": null
+      "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
     },
     {
-      "typeId": 2,
-      "type": "enum BurnError",
-      "components": [
-        {
-          "name": "NotEnoughCoins",
-          "type": 0,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "enum std::identity::Identity",
+      "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335",
+      "metadataTypeId": 0
     },
     {
-      "typeId": 3,
-      "type": "enum Identity",
-      "components": [
-        {
-          "name": "Address",
-          "type": 7,
-          "typeArguments": null
-        },
-        {
-          "name": "ContractId",
-          "type": 10,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
-    },
-    {
-      "typeId": 4,
-      "type": "enum Option",
-      "components": [
-        {
-          "name": "None",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "Some",
-          "type": 5,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": [
-        5
+      "type": "enum std::option::Option<b256>",
+      "concreteTypeId": "0c2beb9013490c4f753f2757dfe2d8340b22ce3827d596d81d249b7038033cb6",
+      "metadataTypeId": 1,
+      "typeArguments": [
+        "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
       ]
     },
     {
-      "typeId": 5,
+      "type": "enum std::option::Option<struct std::string::String>",
+      "concreteTypeId": "7c06d929390a9aeeb8ffccf8173ac0d101a9976d99dda01cce74541a81e75ac0",
+      "metadataTypeId": 1,
+      "typeArguments": [
+        "9a7f1d3e963c10e0a4ea70a8e20a4813d1dc5682e28f74cb102ae50d32f7f98c"
+      ]
+    },
+    {
+      "type": "enum std::option::Option<u64>",
+      "concreteTypeId": "d852149004cc9ec0bbe7dc4e37bffea1d41469b759512b6136f2e865a4c06e7d",
+      "metadataTypeId": 1,
+      "typeArguments": [
+        "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+      ]
+    },
+    {
+      "type": "enum std::option::Option<u8>",
+      "concreteTypeId": "2da102c46c7263beeed95818cd7bee801716ba8303dddafdcd0f6c9efda4a0f1",
+      "metadataTypeId": 1,
+      "typeArguments": [
+        "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b"
+      ]
+    },
+    {
+      "type": "enum sway_libs::asset::errors::BurnError",
+      "concreteTypeId": "3acdc2adac8e0589c5864525e0edc9dc61a9571a4d09c3c57b58ea76d33f4b46",
+      "metadataTypeId": 2
+    },
+    {
+      "type": "struct std::asset_id::AssetId",
+      "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974",
+      "metadataTypeId": 6
+    },
+    {
+      "type": "struct std::contract_id::ContractId",
+      "concreteTypeId": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54",
+      "metadataTypeId": 9
+    },
+    {
+      "type": "struct std::string::String",
+      "concreteTypeId": "9a7f1d3e963c10e0a4ea70a8e20a4813d1dc5682e28f74cb102ae50d32f7f98c",
+      "metadataTypeId": 10
+    },
+    {
+      "type": "u64",
+      "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+    },
+    {
+      "type": "u8",
+      "concreteTypeId": "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b"
+    }
+  ],
+  "metadataTypes": [
+    {
+      "type": "enum std::identity::Identity",
+      "metadataTypeId": 0,
+      "components": [
+        {
+          "name": "Address",
+          "typeId": 5
+        },
+        {
+          "name": "ContractId",
+          "typeId": 9
+        }
+      ]
+    },
+    {
+      "type": "enum std::option::Option",
+      "metadataTypeId": 1,
+      "components": [
+        {
+          "name": "None",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Some",
+          "typeId": 3
+        }
+      ],
+      "typeParameters": [
+        3
+      ]
+    },
+    {
+      "type": "enum sway_libs::asset::errors::BurnError",
+      "metadataTypeId": 2,
+      "components": [
+        {
+          "name": "NotEnoughCoins",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        }
+      ]
+    },
+    {
       "type": "generic T",
-      "components": null,
-      "typeParameters": null
+      "metadataTypeId": 3
     },
     {
-      "typeId": 6,
       "type": "raw untyped ptr",
-      "components": null,
-      "typeParameters": null
+      "metadataTypeId": 4
     },
     {
-      "typeId": 7,
-      "type": "struct Address",
+      "type": "struct std::address::Address",
+      "metadataTypeId": 5,
       "components": [
         {
           "name": "bits",
-          "type": 1,
-          "typeArguments": null
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         }
-      ],
-      "typeParameters": null
+      ]
     },
     {
-      "typeId": 8,
-      "type": "struct AssetId",
+      "type": "struct std::asset_id::AssetId",
+      "metadataTypeId": 6,
       "components": [
         {
           "name": "bits",
-          "type": 1,
-          "typeArguments": null
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         }
-      ],
-      "typeParameters": null
+      ]
     },
     {
-      "typeId": 9,
-      "type": "struct Bytes",
+      "type": "struct std::bytes::Bytes",
+      "metadataTypeId": 7,
       "components": [
         {
           "name": "buf",
-          "type": 11,
-          "typeArguments": null
+          "typeId": 8
         },
         {
           "name": "len",
-          "type": 13,
-          "typeArguments": null
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
-      ],
-      "typeParameters": null
+      ]
     },
     {
-      "typeId": 10,
-      "type": "struct ContractId",
-      "components": [
-        {
-          "name": "bits",
-          "type": 1,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
-    },
-    {
-      "typeId": 11,
-      "type": "struct RawBytes",
+      "type": "struct std::bytes::RawBytes",
+      "metadataTypeId": 8,
       "components": [
         {
           "name": "ptr",
-          "type": 6,
-          "typeArguments": null
+          "typeId": 4
         },
         {
           "name": "cap",
-          "type": 13,
-          "typeArguments": null
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
-      ],
-      "typeParameters": null
+      ]
     },
     {
-      "typeId": 12,
-      "type": "struct String",
+      "type": "struct std::contract_id::ContractId",
+      "metadataTypeId": 9,
+      "components": [
+        {
+          "name": "bits",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        }
+      ]
+    },
+    {
+      "type": "struct std::string::String",
+      "metadataTypeId": 10,
       "components": [
         {
           "name": "bytes",
-          "type": 9,
-          "typeArguments": null
+          "typeId": 7
         }
-      ],
-      "typeParameters": null
-    },
-    {
-      "typeId": 13,
-      "type": "u64",
-      "components": null,
-      "typeParameters": null
-    },
-    {
-      "typeId": 14,
-      "type": "u8",
-      "components": null,
-      "typeParameters": null
+      ]
     }
   ],
   "functions": [
@@ -213,22 +241,11 @@ const abi = {
       "inputs": [
         {
           "name": "asset",
-          "type": 8,
-          "typeArguments": null
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
       "name": "decimals",
-      "output": {
-        "name": "",
-        "type": 4,
-        "typeArguments": [
-          {
-            "name": "",
-            "type": 14,
-            "typeArguments": null
-          }
-        ]
-      },
+      "output": "2da102c46c7263beeed95818cd7bee801716ba8303dddafdcd0f6c9efda4a0f1",
       "attributes": [
         {
           "name": "storage",
@@ -242,22 +259,11 @@ const abi = {
       "inputs": [
         {
           "name": "asset",
-          "type": 8,
-          "typeArguments": null
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
       "name": "name",
-      "output": {
-        "name": "",
-        "type": 4,
-        "typeArguments": [
-          {
-            "name": "",
-            "type": 12,
-            "typeArguments": null
-          }
-        ]
-      },
+      "output": "7c06d929390a9aeeb8ffccf8173ac0d101a9976d99dda01cce74541a81e75ac0",
       "attributes": [
         {
           "name": "storage",
@@ -271,22 +277,11 @@ const abi = {
       "inputs": [
         {
           "name": "asset",
-          "type": 8,
-          "typeArguments": null
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
       "name": "symbol",
-      "output": {
-        "name": "",
-        "type": 4,
-        "typeArguments": [
-          {
-            "name": "",
-            "type": 12,
-            "typeArguments": null
-          }
-        ]
-      },
+      "output": "7c06d929390a9aeeb8ffccf8173ac0d101a9976d99dda01cce74541a81e75ac0",
       "attributes": [
         {
           "name": "storage",
@@ -299,11 +294,7 @@ const abi = {
     {
       "inputs": [],
       "name": "total_assets",
-      "output": {
-        "name": "",
-        "type": 13,
-        "typeArguments": null
-      },
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
           "name": "storage",
@@ -317,22 +308,11 @@ const abi = {
       "inputs": [
         {
           "name": "asset",
-          "type": 8,
-          "typeArguments": null
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
       "name": "total_supply",
-      "output": {
-        "name": "",
-        "type": 4,
-        "typeArguments": [
-          {
-            "name": "",
-            "type": 13,
-            "typeArguments": null
-          }
-        ]
-      },
+      "output": "d852149004cc9ec0bbe7dc4e37bffea1d41469b759512b6136f2e865a4c06e7d",
       "attributes": [
         {
           "name": "storage",
@@ -346,21 +326,15 @@ const abi = {
       "inputs": [
         {
           "name": "sub_id",
-          "type": 1,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         },
         {
           "name": "amount",
-          "type": 13,
-          "typeArguments": null
+          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
       "name": "burn",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "storage",
@@ -379,26 +353,19 @@ const abi = {
       "inputs": [
         {
           "name": "recipient",
-          "type": 3,
-          "typeArguments": null
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         },
         {
           "name": "sub_id",
-          "type": 1,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         },
         {
           "name": "amount",
-          "type": 13,
-          "typeArguments": null
+          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
       "name": "mint",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "storage",
@@ -412,11 +379,7 @@ const abi = {
     {
       "inputs": [],
       "name": "deposit",
-      "output": {
-        "name": "",
-        "type": 13,
-        "typeArguments": null
-      },
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
           "name": "storage",
@@ -434,11 +397,7 @@ const abi = {
     {
       "inputs": [],
       "name": "deposit_half",
-      "output": {
-        "name": "",
-        "type": 13,
-        "typeArguments": null
-      },
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
           "name": "storage",
@@ -457,26 +416,19 @@ const abi = {
       "inputs": [
         {
           "name": "recipient",
-          "type": 3,
-          "typeArguments": null
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         },
         {
           "name": "sub_id",
-          "type": 1,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         },
         {
           "name": "amount",
-          "type": 13,
-          "typeArguments": null
+          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
       "name": "deposit_half_and_mint",
-      "output": {
-        "name": "",
-        "type": 13,
-        "typeArguments": null
-      },
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
           "name": "storage",
@@ -495,31 +447,23 @@ const abi = {
       "inputs": [
         {
           "name": "recipient",
-          "type": 3,
-          "typeArguments": null
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         },
         {
           "name": "sub_id",
-          "type": 1,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         },
         {
           "name": "amount",
-          "type": 13,
-          "typeArguments": null
+          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
           "name": "contract_id",
-          "type": 10,
-          "typeArguments": null
+          "concreteTypeId": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54"
         }
       ],
       "name": "deposit_half_and_mint_from_external_contract",
-      "output": {
-        "name": "",
-        "type": 13,
-        "typeArguments": null
-      },
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
           "name": "storage",
@@ -537,40 +481,24 @@ const abi = {
     {
       "inputs": [],
       "name": "panic_tx",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": null
     },
     {
       "inputs": [],
       "name": "revert_tx",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": null
     }
   ],
   "loggedTypes": [
     {
       "logId": "4237256875605624201",
-      "loggedType": {
-        "name": "",
-        "type": 2,
-        "typeArguments": []
-      }
+      "concreteTypeId": "3acdc2adac8e0589c5864525e0edc9dc61a9571a4d09c3c57b58ea76d33f4b46"
     },
     {
-      "logId": "8961848586872524460",
-      "loggedType": {
-        "name": "",
-        "type": 1,
-        "typeArguments": null
-      }
+      "logId": "877053556485065807",
+      "concreteTypeId": "0c2beb9013490c4f753f2757dfe2d8340b22ce3827d596d81d249b7038033cb6"
     }
   ],
   "messagesTypes": [],
@@ -586,18 +514,51 @@ const storageSlots: StorageSlot[] = [
 
 export class CustomAssetInterface extends Interface {
   constructor() {
-    super(abi as any);
+    super(abi);
   }
+
+  declare functions: {
+    decimals: FunctionFragment;
+    name: FunctionFragment;
+    symbol: FunctionFragment;
+    total_assets: FunctionFragment;
+    total_supply: FunctionFragment;
+    burn: FunctionFragment;
+    mint: FunctionFragment;
+    deposit: FunctionFragment;
+    deposit_half: FunctionFragment;
+    deposit_half_and_mint: FunctionFragment;
+    deposit_half_and_mint_from_external_contract: FunctionFragment;
+    panic_tx: FunctionFragment;
+    revert_tx: FunctionFragment;
+  };
 }
 
 export class CustomAsset extends Contract {
   static readonly abi = abi;
   static readonly storageSlots = storageSlots;
 
+  declare interface: CustomAssetInterface;
+  declare functions: {
+    decimals: InvokeFunction<[asset: AssetIdInput], Option<number>>;
+    name: InvokeFunction<[asset: AssetIdInput], Option<StdString>>;
+    symbol: InvokeFunction<[asset: AssetIdInput], Option<StdString>>;
+    total_assets: InvokeFunction<[], BN>;
+    total_supply: InvokeFunction<[asset: AssetIdInput], Option<BN>>;
+    burn: InvokeFunction<[sub_id: string, amount: BigNumberish], void>;
+    mint: InvokeFunction<[recipient: IdentityInput, sub_id: string, amount: BigNumberish], void>;
+    deposit: InvokeFunction<[], BN>;
+    deposit_half: InvokeFunction<[], BN>;
+    deposit_half_and_mint: InvokeFunction<[recipient: IdentityInput, sub_id: string, amount: BigNumberish], BN>;
+    deposit_half_and_mint_from_external_contract: InvokeFunction<[recipient: IdentityInput, sub_id: string, amount: BigNumberish, contract_id: ContractIdInput], BN>;
+    panic_tx: InvokeFunction<[], void>;
+    revert_tx: InvokeFunction<[], void>;
+  };
+
   constructor(
     id: string | AbstractAddress,
     accountOrProvider: Account | Provider,
   ) {
-    super(id, abi as any, accountOrProvider);
+    super(id, abi, accountOrProvider);
   }
 }

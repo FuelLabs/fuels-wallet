@@ -391,7 +391,9 @@ export class TxService {
     const txCost = await wallet.getTransactionCost(transactionRequest, {
       estimateTxDependencies: true,
     });
-    transactionRequest.maxFee = txCost.maxFee;
+
+    // add 10% to have some buffer as gasPrice may vary
+    transactionRequest.maxFee = txCost.maxFee.add(txCost.maxFee.div(10));
 
     // funding the transaction with the required quantities (the maxFee might have changed)
     await wallet.fund(transactionRequest, {
