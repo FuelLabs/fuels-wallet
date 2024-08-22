@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Skip build due to "declare error" babel plugin error from CustomAsset generate file
-# echo "Build contracts"
-# pnpm fuels build
+echo "Build contracts"
+pnpm fuels build
 
 echo "Deploy contract 1"
 export CONTRACT_NAME="MainContract";
