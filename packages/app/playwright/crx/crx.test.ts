@@ -261,19 +261,6 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.getWallet()', async () => {
-      const currentAccount = await blankPage.evaluate(async () => {
-        const currentAccount = await window.fuel.currentAccount();
-
-        return currentAccount;
-      });
-      const wallet = await blankPage.evaluate(async () => {
-        const currentAccount = await window.fuel.currentAccount();
-        const wallet = await window.fuel.getWallet(currentAccount);
-        return wallet;
-      });
-      console.log('asd currentAccount', currentAccount);
-      console.log('asd wallet.address', wallet.address);
-
       const isCorrectAddress = await blankPage.evaluate(async () => {
         const currentAccount = await window.fuel.currentAccount();
         const wallet = await window.fuel.getWallet(currentAccount);
