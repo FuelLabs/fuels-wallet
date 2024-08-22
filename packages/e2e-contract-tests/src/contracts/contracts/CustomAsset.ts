@@ -18,7 +18,7 @@ import type {
   AbstractAddress,
 } from 'fuels';
 
-import type { Option, Enum } from "./common";
+import type { Enum } from "./common";
 
 export enum BurnErrorInput { NotEnoughCoins = 'NotEnoughCoins' };
 export enum BurnErrorOutput { NotEnoughCoins = 'NotEnoughCoins' };
