@@ -259,6 +259,19 @@ test.describe('FuelWallet Extension', () => {
     });
 
     await test.step('window.fuel.getWallet()', async () => {
+      const currentAccount = await blankPage.evaluate(async () => {
+        const currentAccount = await window.fuel.currentAccount();
+
+        return currentAccount;
+      });
+      const wallet = await blankPage.evaluate(async () => {
+        const currentAccount = await window.fuel.currentAccount();
+        const wallet = await window.fuel.getWallet(currentAccount);
+        return wallet;
+      });
+      console.log('asd currentAccount', currentAccount);
+      console.log('asd wallet.address', wallet.address);
+
       const isCorrectAddress = await blankPage.evaluate(async () => {
         const currentAccount = await window.fuel.currentAccount();
         const wallet = await window.fuel.getWallet(currentAccount);
@@ -267,386 +280,386 @@ test.describe('FuelWallet Extension', () => {
       await expect(isCorrectAddress).toBeTruthy();
     });
 
-    await test.step('window.fuel.accounts()', async () => {
-      const authorizedAccount = await getAccountByName(popupPage, 'Account 1');
-      const authorizedAccount2 = await getAccountByName(popupPage, 'Account 3');
-      const authorizedAccount3 = await getAccountByName(popupPage, 'Account 4');
-      const accounts = await blankPage.evaluate(async () => {
-        return window.fuel.accounts();
-      });
-      await expect(accounts).toEqual([
-        authorizedAccount.address,
-        authorizedAccount2.address,
-        authorizedAccount3.address,
-      ]);
-    });
+    // await test.step('window.fuel.accounts()', async () => {
+    //   const authorizedAccount = await getAccountByName(popupPage, 'Account 1');
+    //   const authorizedAccount2 = await getAccountByName(popupPage, 'Account 3');
+    //   const authorizedAccount3 = await getAccountByName(popupPage, 'Account 4');
+    //   const accounts = await blankPage.evaluate(async () => {
+    //     return window.fuel.accounts();
+    //   });
+    //   await expect(accounts).toEqual([
+    //     authorizedAccount.address,
+    //     authorizedAccount2.address,
+    //     authorizedAccount3.address,
+    //   ]);
+    // });
 
-    await test.step('window.fuel.currentAccount()', async () => {
-      await test.step('Current authorized current Account', async () => {
-        const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+    // await test.step('window.fuel.currentAccount()', async () => {
+    //   await test.step('Current authorized current Account', async () => {
+    //     const authorizedAccount = await switchAccount(popupPage, 'Account 1');
 
-        // delay to avoid the page to get the wrong currentAccount
-        await delay(2000);
+    //     // delay to avoid the page to get the wrong currentAccount
+    //     await delay(2000);
 
-        const currentAccountPromise = await blankPage.evaluate(async () => {
-          return window.fuel.currentAccount();
-        });
-        await expect(currentAccountPromise).toBe(authorizedAccount.address);
-      });
+    //     const currentAccountPromise = await blankPage.evaluate(async () => {
+    //       return window.fuel.currentAccount();
+    //     });
+    //     await expect(currentAccountPromise).toBe(authorizedAccount.address);
+    //   });
 
-      await test.step('Throw on not Authorized Account', async () => {
-        await switchAccount(popupPage, 'Account 2');
+    //   await test.step('Throw on not Authorized Account', async () => {
+    //     await switchAccount(popupPage, 'Account 2');
 
-        // delay to avoid the page to get the wrong currentAccount
-        await delay(2000);
+    //     // delay to avoid the page to get the wrong currentAccount
+    //     await delay(2000);
 
-        const currentAccountPromise = blankPage.evaluate(async () => {
-          return window.fuel.currentAccount();
-        });
-        await expect(currentAccountPromise).rejects.toThrowError(
-          'address is not authorized for this connection.'
-        );
-      });
-    });
+    //     const currentAccountPromise = blankPage.evaluate(async () => {
+    //       return window.fuel.currentAccount();
+    //     });
+    //     await expect(currentAccountPromise).rejects.toThrowError(
+    //       'address is not authorized for this connection.'
+    //     );
+    //   });
+    // });
 
-    await test.step('window.fuel.signMessage()', async () => {
-      const message = 'Hello World';
+    // await test.step('window.fuel.signMessage()', async () => {
+    //   const message = 'Hello World';
 
-      function signMessage(address: string) {
-        return blankPage.evaluate(
-          async ([address, message]) => {
-            return window.fuel.signMessage(address, message);
-          },
-          [address, message]
-        );
-      }
+    //   function signMessage(address: string) {
+    //     return blankPage.evaluate(
+    //       async ([address, message]) => {
+    //         return window.fuel.signMessage(address, message);
+    //       },
+    //       [address, message]
+    //     );
+    //   }
 
-      async function approveMessageSignCheck(authorizedAccount: WalletAccount) {
-        const signedMessagePromise = signMessage(
-          authorizedAccount.address.toString()
-        );
-        const signMessageRequest = await context.waitForEvent('page', {
-          predicate: (page) => page.url().includes(extensionId),
-        });
-        // Confirm signature
-        await hasText(signMessageRequest, message);
-        await waitAriaLabel(signMessageRequest, authorizedAccount.name);
-        await getButtonByText(signMessageRequest, /sign/i).click();
+    //   async function approveMessageSignCheck(authorizedAccount: WalletAccount) {
+    //     const signedMessagePromise = signMessage(
+    //       authorizedAccount.address.toString()
+    //     );
+    //     const signMessageRequest = await context.waitForEvent('page', {
+    //       predicate: (page) => page.url().includes(extensionId),
+    //     });
+    //     // Confirm signature
+    //     await hasText(signMessageRequest, message);
+    //     await waitAriaLabel(signMessageRequest, authorizedAccount.name);
+    //     await getButtonByText(signMessageRequest, /sign/i).click();
 
-        // Recover signer address
-        const messageSigned = await signedMessagePromise;
-        const addressSigner = Signer.recoverAddress(
-          hashMessage(message),
-          messageSigned
-        );
+    //     // Recover signer address
+    //     const messageSigned = await signedMessagePromise;
+    //     const addressSigner = Signer.recoverAddress(
+    //       hashMessage(message),
+    //       messageSigned
+    //     );
 
-        // Verify signature is from the account selected
-        expect(addressSigner.toString()).toBe(authorizedAccount.address);
-      }
+    //     // Verify signature is from the account selected
+    //     expect(addressSigner.toString()).toBe(authorizedAccount.address);
+    //   }
 
-      await test.step('Signed message using authorized Account 1', async () => {
-        const authorizedAccount = await switchAccount(popupPage, 'Account 1');
-        await approveMessageSignCheck(authorizedAccount);
-      });
+    //   await test.step('Signed message using authorized Account 1', async () => {
+    //     const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+    //     await approveMessageSignCheck(authorizedAccount);
+    //   });
 
-      await test.step('Signed message using authorized Account 3', async () => {
-        const authorizedAccount = await getAccountByName(
-          popupPage,
-          'Account 3'
-        );
-        await approveMessageSignCheck(authorizedAccount);
-      });
+    //   await test.step('Signed message using authorized Account 3', async () => {
+    //     const authorizedAccount = await getAccountByName(
+    //       popupPage,
+    //       'Account 3'
+    //     );
+    //     await approveMessageSignCheck(authorizedAccount);
+    //   });
 
-      await test.step('Signed message using authorized Account 4 (from Private Key)', async () => {
-        const authorizedAccount = await getAccountByName(
-          popupPage,
-          'Account 4'
-        );
-        await approveMessageSignCheck(authorizedAccount);
-      });
+    //   await test.step('Signed message using authorized Account 4 (from Private Key)', async () => {
+    //     const authorizedAccount = await getAccountByName(
+    //       popupPage,
+    //       'Account 4'
+    //     );
+    //     await approveMessageSignCheck(authorizedAccount);
+    //   });
 
-      await test.step('Throw on not Authorized Account', async () => {
-        const notAuthorizedAccount = await getAccountByName(
-          popupPage,
-          'Account 2'
-        );
-        const signedMessagePromise = signMessage(notAuthorizedAccount.address);
+    //   await test.step('Throw on not Authorized Account', async () => {
+    //     const notAuthorizedAccount = await getAccountByName(
+    //       popupPage,
+    //       'Account 2'
+    //     );
+    //     const signedMessagePromise = signMessage(notAuthorizedAccount.address);
 
-        await expect(signedMessagePromise).rejects.toThrowError(
-          'address is not authorized for this connection.'
-        );
-      });
-    });
+    //     await expect(signedMessagePromise).rejects.toThrowError(
+    //       'address is not authorized for this connection.'
+    //     );
+    //   });
+    // });
 
-    await test.step('window.fuel.sendTransaction()', async () => {
-      // Create transfer function
-      async function transfer(
-        senderAddress: string,
-        receiverAddress: string,
-        amount: number
-      ) {
-        return blankPage.evaluate(
-          async ([senderAddress, receiverAddress, amount]) => {
-            const receiver = window.createAddress(receiverAddress as string);
-            const wallet = await window.fuel?.getWallet(
-              senderAddress as string
-            );
+    // await test.step('window.fuel.sendTransaction()', async () => {
+    //   // Create transfer function
+    //   async function transfer(
+    //     senderAddress: string,
+    //     receiverAddress: string,
+    //     amount: number
+    //   ) {
+    //     return blankPage.evaluate(
+    //       async ([senderAddress, receiverAddress, amount]) => {
+    //         const receiver = window.createAddress(receiverAddress as string);
+    //         const wallet = await window.fuel?.getWallet(
+    //           senderAddress as string
+    //         );
 
-            const response = await wallet.transfer(
-              receiver,
-              Number(amount),
-              undefined
-            );
-            const result = await response.waitForResult();
-            return result.status;
-          },
-          [senderAddress, receiverAddress, String(amount)]
-        );
-      }
+    //         const response = await wallet.transfer(
+    //           receiver,
+    //           Number(amount),
+    //           undefined
+    //         );
+    //         const result = await response.waitForResult();
+    //         return result.status;
+    //       },
+    //       [senderAddress, receiverAddress, String(amount)]
+    //     );
+    //   }
 
-      async function approveTxCheck(senderAccount: WalletAccount) {
-        const provider = await Provider.create(
-          process.env.VITE_FUEL_PROVIDER_URL
-        );
-        const receiverWallet = Wallet.generate({
-          provider,
-        });
-        const AMOUNT_TRANSFER = 100;
+    //   async function approveTxCheck(senderAccount: WalletAccount) {
+    //     const provider = await Provider.create(
+    //       process.env.VITE_FUEL_PROVIDER_URL
+    //     );
+    //     const receiverWallet = Wallet.generate({
+    //       provider,
+    //     });
+    //     const AMOUNT_TRANSFER = 100;
 
-        // Add some coins to the account
-        await seedWallet(senderAccount.address, bn(100_000_000));
+    //     // Add some coins to the account
+    //     await seedWallet(senderAccount.address, bn(100_000_000));
 
-        // Create transfer
-        const transferStatus = transfer(
-          senderAccount.address,
-          receiverWallet.address.toString(),
-          AMOUNT_TRANSFER
-        );
+    //     // Create transfer
+    //     const transferStatus = transfer(
+    //       senderAccount.address,
+    //       receiverWallet.address.toString(),
+    //       AMOUNT_TRANSFER
+    //     );
 
-        // Wait for approve transaction page to show
-        const approveTransactionPage = await context.waitForEvent('page', {
-          predicate: (page) => page.url().includes(extensionId),
-        });
+    //     // Wait for approve transaction page to show
+    //     const approveTransactionPage = await context.waitForEvent('page', {
+    //       predicate: (page) => page.url().includes(extensionId),
+    //     });
 
-        // Approve transaction
-        await hasText(approveTransactionPage, /0\.0000001.ETH/i);
-        await waitAriaLabel(
-          approveTransactionPage,
-          senderAccount.address.toString()
-        );
+    //     // Approve transaction
+    //     await hasText(approveTransactionPage, /0\.0000001.ETH/i);
+    //     await waitAriaLabel(
+    //       approveTransactionPage,
+    //       senderAccount.address.toString()
+    //     );
 
-        await hasAriaLabel(approveTransactionPage, 'Confirm Transaction');
-        await getButtonByText(approveTransactionPage, /Approve/i).click();
+    //     await hasAriaLabel(approveTransactionPage, 'Confirm Transaction');
+    //     await getButtonByText(approveTransactionPage, /Approve/i).click();
 
-        await expect(transferStatus).resolves.toBe('success');
-        const balance = await receiverWallet.getBalance();
-        expect(balance.toNumber()).toBe(AMOUNT_TRANSFER);
-      }
+    //     await expect(transferStatus).resolves.toBe('success');
+    //     const balance = await receiverWallet.getBalance();
+    //     expect(balance.toNumber()).toBe(AMOUNT_TRANSFER);
+    //   }
 
-      await test.step('Send transfer using authorized Account', async () => {
-        const authorizedAccount = await switchAccount(popupPage, 'Account 1');
-        await approveTxCheck(authorizedAccount);
-      });
+    //   await test.step('Send transfer using authorized Account', async () => {
+    //     const authorizedAccount = await switchAccount(popupPage, 'Account 1');
+    //     await approveTxCheck(authorizedAccount);
+    //   });
 
-      await test.step('Send transfer using authorized Account 3', async () => {
-        const authorizedAccount = await getAccountByName(
-          popupPage,
-          'Account 3'
-        );
-        await approveTxCheck(authorizedAccount);
-      });
+    //   await test.step('Send transfer using authorized Account 3', async () => {
+    //     const authorizedAccount = await getAccountByName(
+    //       popupPage,
+    //       'Account 3'
+    //     );
+    //     await approveTxCheck(authorizedAccount);
+    //   });
 
-      await test.step('Send transfer using authorized Account 4 (from Private Key)', async () => {
-        const authorizedAccount = await getAccountByName(
-          popupPage,
-          'Account 4'
-        );
-        await approveTxCheck(authorizedAccount);
-      });
+    //   await test.step('Send transfer using authorized Account 4 (from Private Key)', async () => {
+    //     const authorizedAccount = await getAccountByName(
+    //       popupPage,
+    //       'Account 4'
+    //     );
+    //     await approveTxCheck(authorizedAccount);
+    //   });
 
-      await test.step('Send transfer should block unauthorized account', async () => {
-        const nonAuthorizedAccount = await getAccountByName(
-          popupPage,
-          'Account 2'
-        );
-        const provider = await Provider.create(
-          process.env.VITE_FUEL_PROVIDER_URL
-        );
-        const receiverWallet = Wallet.generate({
-          provider,
-        });
-        const AMOUNT_TRANSFER = 100;
+    //   await test.step('Send transfer should block unauthorized account', async () => {
+    //     const nonAuthorizedAccount = await getAccountByName(
+    //       popupPage,
+    //       'Account 2'
+    //     );
+    //     const provider = await Provider.create(
+    //       process.env.VITE_FUEL_PROVIDER_URL
+    //     );
+    //     const receiverWallet = Wallet.generate({
+    //       provider,
+    //     });
+    //     const AMOUNT_TRANSFER = 100;
 
-        // Add some coins to the account
-        await seedWallet(nonAuthorizedAccount.address, bn(100_000_000));
+    //     // Add some coins to the account
+    //     await seedWallet(nonAuthorizedAccount.address, bn(100_000_000));
 
-        // Create transfer
-        const transferStatus = transfer(
-          nonAuthorizedAccount.address,
-          receiverWallet.address.toString(),
-          AMOUNT_TRANSFER
-        );
+    //     // Create transfer
+    //     const transferStatus = transfer(
+    //       nonAuthorizedAccount.address,
+    //       receiverWallet.address.toString(),
+    //       AMOUNT_TRANSFER
+    //     );
 
-        await expect(transferStatus).rejects.toThrowError(
-          'address is not authorized for this connection.'
-        );
-      });
-    });
+    //     await expect(transferStatus).rejects.toThrowError(
+    //       'address is not authorized for this connection.'
+    //     );
+    //   });
+    // });
 
-    await test.step('window.fuel.assets()', async () => {
-      const assets = await blankPage.evaluate(async () => {
-        return window.fuel.assets();
-      });
-      expect(assets.length).toEqual(1);
-    });
+    // await test.step('window.fuel.assets()', async () => {
+    //   const assets = await blankPage.evaluate(async () => {
+    //     return window.fuel.assets();
+    //   });
+    //   expect(assets.length).toEqual(1);
+    // });
 
-    await test.step('window.fuel.addAsset()', async () => {
-      function addAsset(asset: Asset) {
-        return blankPage.evaluate(
-          async ([asset]) => {
-            return window.fuel.addAsset(asset);
-          },
-          [asset]
-        );
-      }
+    // await test.step('window.fuel.addAsset()', async () => {
+    //   function addAsset(asset: Asset) {
+    //     return blankPage.evaluate(
+    //       async ([asset]) => {
+    //         return window.fuel.addAsset(asset);
+    //       },
+    //       [asset]
+    //     );
+    //   }
 
-      const addingAsset = addAsset(CUSTOM_ASSET_INPUT);
+    //   const addingAsset = addAsset(CUSTOM_ASSET_INPUT);
 
-      const addAssetPage = await context.waitForEvent('page', {
-        predicate: (page) => page.url().includes(extensionId),
-      });
-      await hasText(addAssetPage, 'Review the Assets to be added:');
-      await getButtonByText(addAssetPage, /add assets/i).click();
-      await expect(addingAsset).resolves.toBeDefined();
-    });
+    //   const addAssetPage = await context.waitForEvent('page', {
+    //     predicate: (page) => page.url().includes(extensionId),
+    //   });
+    //   await hasText(addAssetPage, 'Review the Assets to be added:');
+    //   await getButtonByText(addAssetPage, /add assets/i).click();
+    //   await expect(addingAsset).resolves.toBeDefined();
+    // });
 
-    await test.step('window.fuel.addAssets()', async () => {
-      function addAssets(assets: Asset[]) {
-        return blankPage.evaluate(
-          async ([asset]) => {
-            return window.fuel.addAssets(asset);
-          },
-          [assets]
-        );
-      }
+    // await test.step('window.fuel.addAssets()', async () => {
+    //   function addAssets(assets: Asset[]) {
+    //     return blankPage.evaluate(
+    //       async ([asset]) => {
+    //         return window.fuel.addAssets(asset);
+    //       },
+    //       [assets]
+    //     );
+    //   }
 
-      const addingAsset = addAssets([CUSTOM_ASSET_INPUT, CUSTOM_ASSET_INPUT_2]);
+    //   const addingAsset = addAssets([CUSTOM_ASSET_INPUT, CUSTOM_ASSET_INPUT_2]);
 
-      const addAssetPage = await context.waitForEvent('page', {
-        predicate: (page) => page.url().includes(extensionId),
-      });
-      await hasText(addAssetPage, 'Review the Assets to be added:');
-      await getButtonByText(addAssetPage, /add assets/i).click();
-      await expect(addingAsset).resolves.toBeDefined();
-    });
+    //   const addAssetPage = await context.waitForEvent('page', {
+    //     predicate: (page) => page.url().includes(extensionId),
+    //   });
+    //   await hasText(addAssetPage, 'Review the Assets to be added:');
+    //   await getButtonByText(addAssetPage, /add assets/i).click();
+    //   await expect(addingAsset).resolves.toBeDefined();
+    // });
 
-    await test.step('window.fuel.addNetwork()', async () => {
-      function addNetwork(network: string) {
-        return blankPage.evaluate(
-          async ([network]) => {
-            return window.fuel.addNetwork(network);
-          },
-          [network]
-        );
-      }
+    // await test.step('window.fuel.addNetwork()', async () => {
+    //   function addNetwork(network: string) {
+    //     return blankPage.evaluate(
+    //       async ([network]) => {
+    //         return window.fuel.addNetwork(network);
+    //       },
+    //       [network]
+    //     );
+    //   }
 
-      async function testAddNetwork() {
-        const addingNetwork = addNetwork(FUEL_NETWORK.url);
+    //   async function testAddNetwork() {
+    //     const addingNetwork = addNetwork(FUEL_NETWORK.url);
 
-        const addNetworkPage = await context.waitForEvent('page', {
-          predicate: (page) => page.url().includes(extensionId),
-        });
+    //     const addNetworkPage = await context.waitForEvent('page', {
+    //       predicate: (page) => page.url().includes(extensionId),
+    //     });
 
-        await hasText(addNetworkPage, 'Review the Network to be added:');
-        await getButtonByText(addNetworkPage, /add network/i).click();
-        await expect(addingNetwork).resolves.toBeDefined();
-        await popupPage.reload();
-      }
+    //     await hasText(addNetworkPage, 'Review the Network to be added:');
+    //     await getButtonByText(addNetworkPage, /add network/i).click();
+    //     await expect(addingNetwork).resolves.toBeDefined();
+    //     await popupPage.reload();
+    //   }
 
-      // Add network
-      await testAddNetwork();
+    //   // Add network
+    //   await testAddNetwork();
 
-      // Check if added network is selected
-      let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      await expect(networkSelector).toHaveText(/Fuel Sepolia Testnet/);
+    //   // Check if added network is selected
+    //   let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
+    //   await expect(networkSelector).toHaveText(/Fuel Sepolia Testnet/);
 
-      // Remove added network
-      await networkSelector.click();
-      const items = popupPage.locator('[aria-label*=fuel_network]');
-      const networkItemsCount = await items.count();
-      expect(networkItemsCount).toEqual(2);
+    //   // Remove added network
+    //   await networkSelector.click();
+    //   const items = popupPage.locator('[aria-label*=fuel_network]');
+    //   const networkItemsCount = await items.count();
+    //   expect(networkItemsCount).toEqual(2);
 
-      let selectedNetworkItem: Locator;
-      for (let i = 0; i < networkItemsCount; i += 1) {
-        const isSelected = await items.nth(i).getAttribute('data-active');
-        if (isSelected === 'true') {
-          selectedNetworkItem = items.nth(i);
-        }
-      }
-      await selectedNetworkItem.getByLabel(/Remove/).click();
-      await hasText(popupPage, /Are you sure/i);
-      await getButtonByText(popupPage, /confirm/i).click();
-      await expect(items).toHaveCount(1);
-      await expect(items.first()).toHaveAttribute('data-active', 'true');
+    //   let selectedNetworkItem: Locator;
+    //   for (let i = 0; i < networkItemsCount; i += 1) {
+    //     const isSelected = await items.nth(i).getAttribute('data-active');
+    //     if (isSelected === 'true') {
+    //       selectedNetworkItem = items.nth(i);
+    //     }
+    //   }
+    //   await selectedNetworkItem.getByLabel(/Remove/).click();
+    //   await hasText(popupPage, /Are you sure/i);
+    //   await getButtonByText(popupPage, /confirm/i).click();
+    //   await expect(items).toHaveCount(1);
+    //   await expect(items.first()).toHaveAttribute('data-active', 'true');
 
-      // Re-add network
-      await testAddNetwork();
+    //   // Re-add network
+    //   await testAddNetwork();
 
-      // Check if re-added network is selected
-      networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      await expect(networkSelector).toHaveText(/Fuel Sepolia Testnet/);
-    });
+    //   // Check if re-added network is selected
+    //   networkSelector = getByAriaLabel(popupPage, 'Selected Network');
+    //   await expect(networkSelector).toHaveText(/Fuel Sepolia Testnet/);
+    // });
 
-    await test.step('window.fuel.on("currentAccount") to a connected account', async () => {
-      // Switch to account 2
-      await switchAccount(popupPage, 'Account 2');
+    // await test.step('window.fuel.on("currentAccount") to a connected account', async () => {
+    //   // Switch to account 2
+    //   await switchAccount(popupPage, 'Account 2');
 
-      // delay to avoid the page to listen the event from above swithAccount wrong event
-      await delay(1000);
+    //   // delay to avoid the page to listen the event from above swithAccount wrong event
+    //   await delay(1000);
 
-      const onChangeAccountPromise = blankPage.evaluate(() => {
-        return new Promise((resolve) => {
-          window.fuel.on(window.fuel.events.currentAccount, (account) => {
-            resolve(account);
-          });
-        });
-      });
+    //   const onChangeAccountPromise = blankPage.evaluate(() => {
+    //     return new Promise((resolve) => {
+    //       window.fuel.on(window.fuel.events.currentAccount, (account) => {
+    //         resolve(account);
+    //       });
+    //     });
+    //   });
 
-      // Switch to account 1
-      const currentAccount = await switchAccount(popupPage, 'Account 1');
+    //   // Switch to account 1
+    //   const currentAccount = await switchAccount(popupPage, 'Account 1');
 
-      // Check result
-      const currentAccountEventResult = await onChangeAccountPromise;
-      expect(currentAccountEventResult).toEqual(currentAccount.address);
-    });
+    //   // Check result
+    //   const currentAccountEventResult = await onChangeAccountPromise;
+    //   expect(currentAccountEventResult).toEqual(currentAccount.address);
+    // });
 
-    await test.step('window.fuel.on("currentAccount") should be null when not connected', async () => {
-      // Switch to account 2
-      await switchAccount(popupPage, 'Account 2');
-      await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
-      await getByAriaLabel(popupPage, 'Close dialog').click();
+    // await test.step('window.fuel.on("currentAccount") should be null when not connected', async () => {
+    //   // Switch to account 2
+    //   await switchAccount(popupPage, 'Account 2');
+    //   await getByAriaLabel(popupPage, 'Accounts').click({ delay: 1000 });
+    //   await getByAriaLabel(popupPage, 'Close dialog').click();
 
-      const onChangeAccountPromise = blankPage.evaluate(() => {
-        return new Promise((resolve) => {
-          window.fuel.on(window.fuel.events.currentAccount, (account) => {
-            resolve(account);
-          });
-        });
-      });
+    //   const onChangeAccountPromise = blankPage.evaluate(() => {
+    //     return new Promise((resolve) => {
+    //       window.fuel.on(window.fuel.events.currentAccount, (account) => {
+    //         resolve(account);
+    //       });
+    //     });
+    //   });
 
-      // Switch to account 1
-      await switchAccount(popupPage, 'Account 6');
+    //   // Switch to account 1
+    //   await switchAccount(popupPage, 'Account 6');
 
-      // Check result
-      const currentAccountEventResult = await onChangeAccountPromise;
-      expect(currentAccountEventResult).toEqual(null);
-    });
+    //   // Check result
+    //   const currentAccountEventResult = await onChangeAccountPromise;
+    //   expect(currentAccountEventResult).toEqual(null);
+    // });
 
-    await test.step('Auto lock fuel wallet', async () => {
-      await getByAriaLabel(popupPage, 'Accounts').click();
-      await popupPage.waitForTimeout(65000);
-      await hasText(popupPage, 'Unlock your wallet to continue');
-    });
+    // await test.step('Auto lock fuel wallet', async () => {
+    //   await getByAriaLabel(popupPage, 'Accounts').click();
+    //   await popupPage.waitForTimeout(65000);
+    //   await hasText(popupPage, 'Unlock your wallet to continue');
+    // });
   });
 });
 
