@@ -1,8 +1,10 @@
 #!/bin/bash
 
-# Skip build due to "declare error" babel plugin error from CustomAsset generate file
 echo "Build contracts"
 pnpm fuels build
+
+# need to discard due to "declare" issue on playwright typescript usage
+git checkout -- packages/e2e-contract-tests/src/contracts/contracts/CustomAsset.ts
 
 echo "Deploy contract 1"
 export CONTRACT_NAME="MainContract";
