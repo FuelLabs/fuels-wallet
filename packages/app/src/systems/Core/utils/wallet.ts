@@ -1,7 +1,7 @@
 import type { TransactionRequestLike, TransactionResponse } from 'fuels';
 import { WalletLocked, hashMessage, transactionRequestify } from 'fuels';
 import { VaultService } from '~/systems/Vault';
-asdasdasdasd;
+
 export class WalletLockedCustom extends WalletLocked {
   /**
    * Sign message with wallet instance privateKey
