@@ -152,6 +152,7 @@ test.describe('SendTransaction', () => {
 
     // Waiting button change to Review in order to ensure that fee amount is updated
     await page.waitForSelector('button:has-text("Review")');
+    await page.waitForTimeout(1000);
 
     // Selecting and extracting regular fee amount
     const regularFeeComponent = getByAriaLabel(page, 'fee value:Regular');
@@ -205,6 +206,7 @@ test.describe('SendTransaction', () => {
 
     // Waiting button change to Review in order to change fee amount
     await page.waitForSelector('button:has-text("Review")');
+    await page.waitForTimeout(1000);
 
     const fastFeeAmount = (await fastFeeComponent.textContent())
       .replace(' ETH', '')
@@ -234,7 +236,7 @@ test.describe('SendTransaction', () => {
     await hasText(page, 'success');
   });
 
-  test('Send transaction starting with regular and changing to fast fee', async () => {
+  test.only('Send transaction starting with regular and changing to fast fee', async () => {
     const receiverWallet = Wallet.generate({
       provider,
     });
@@ -252,6 +254,7 @@ test.describe('SendTransaction', () => {
 
     // Waiting button change to Review in order to ensure that fee amount is updated
     await page.waitForSelector('button:has-text("Review")');
+    await page.waitForTimeout(1000);
 
     // Selecting and extracting regular fee amount
     const regularFeeComponent = getByAriaLabel(page, 'fee value:Regular');
@@ -263,6 +266,7 @@ test.describe('SendTransaction', () => {
 
     // Waiting button change to Approve in order to get updated fee amount
     await page.waitForSelector('button:has-text("Approve")');
+    await page.waitForTimeout(1000);
 
     // Extract and compare the network fee amount, checking if its equal to regular fee amont
     const networkFeeComponentWithRegular = getByAriaLabel(
@@ -287,15 +291,18 @@ test.describe('SendTransaction', () => {
 
     // Waiting button change to Review in order to change fee amount
     await page.waitForSelector('button:has-text("Review")');
+    await page.waitForTimeout(1000);
 
     const fastFeeAmount = (await fastFeeComponent.textContent())
       .replace(' ETH', '')
       .trim();
 
+    await page.waitForTimeout(1000);
     await getButtonByText(page, 'Review').click();
 
     // Waiting button change to Approve in order to get updated fee amount
     await page.waitForSelector('button:has-text("Approve")');
+    await page.waitForTimeout(1000);
 
     // Extract and compere the network fee amount, checking if its equal to fast fee amount
     const networkFeeComponentWithFast = getByAriaLabel(
@@ -313,6 +320,7 @@ test.describe('SendTransaction', () => {
 
     await hasText(page, /(.*)ETH/);
 
+    await page.waitForTimeout(1000);
     await getButtonByText(page, 'Approve').click();
     await hasText(page, '0.001 ETH');
 
