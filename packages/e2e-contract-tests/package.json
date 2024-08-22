@@ -4,7 +4,6 @@
   "version": "0.13.5",
   "scripts": {
     "dev:e2e-contracts": "vite",
-    "build:e2e": "tsc --incremental -p tsconfig.playwright.json",
     "build:web": "vite build",
     "ts:check": "tsc --noEmit",
     "test:e2e": "playwright test",
