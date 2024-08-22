@@ -256,6 +256,9 @@ test.describe('FuelWallet Extension', () => {
       (await hasText(popupPage, 'Wallet')).click();
 
       await connectAccounts();
+
+      await popupPage.waitForTimeout(1000);
+      await blankPage.waitForTimeout(1000);
     });
 
     await test.step('window.fuel.getWallet()', async () => {
