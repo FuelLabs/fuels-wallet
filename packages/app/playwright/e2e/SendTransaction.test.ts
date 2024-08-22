@@ -48,6 +48,10 @@ test.describe('SendTransaction', () => {
       receiverWallet.address.toString()
     );
 
+    await getInputByName(page, 'amount').focus();
+
+    await page.waitForTimeout(1000);
+
     // Fill amount
     await getInputByName(page, 'amount').fill('0.001');
 
@@ -73,6 +77,10 @@ test.describe('SendTransaction', () => {
 
     // Fill address
     await getInputByName(page, 'address').fill(account.address.toString());
+
+    // Focus on input and wait, to avoid flakiness
+    await getInputByName(page, 'amount').focus();
+    await page.waitForTimeout(500);
 
     // Fill amount
     await getInputByName(page, 'amount').fill('0.001');
@@ -106,6 +114,10 @@ test.describe('SendTransaction', () => {
       receiverWallet.address.toString()
     );
 
+    // Focus on input and wait, to avoid flakiness
+    await getInputByName(page, 'amount').focus();
+    await page.waitForTimeout(500);
+
     // Fill amount
     await getInputByName(page, 'amount').fill('0.01');
     // Check the balance is correct formated with only 2 decimals
@@ -131,6 +143,11 @@ test.describe('SendTransaction', () => {
     await getButtonByText(page, 'Select one asset').click();
     await page.getByText('Ethereum').click();
     await getInputByName(page, 'address').fill(receiverWallet.address.toB256());
+
+    // Focus on input and wait, to avoid flakiness
+    await getInputByName(page, 'amount').focus();
+    await page.waitForTimeout(500);
+
     await getInputByName(page, 'amount').fill('0.001');
 
     // Waiting button change to Review in order to ensure that fee amount is updated
@@ -175,6 +192,11 @@ test.describe('SendTransaction', () => {
     await getButtonByText(page, 'Select one asset').click();
     await page.getByText('Ethereum').click();
     await getInputByName(page, 'address').fill(receiverWallet.address.toB256());
+
+    // Focus on input and wait, to avoid flakiness
+    await getInputByName(page, 'amount').focus();
+    await page.waitForTimeout(500);
+
     await getInputByName(page, 'amount').fill('0.001');
 
     //Selecting and extracting fast fee amount
@@ -221,6 +243,11 @@ test.describe('SendTransaction', () => {
     await getButtonByText(page, 'Select one asset').click();
     await page.getByText('Ethereum').click();
     await getInputByName(page, 'address').fill(receiverWallet.address.toB256());
+
+    // Focus on input and wait, to avoid flakiness
+    await getInputByName(page, 'amount').focus();
+    await page.waitForTimeout(500);
+
     await getInputByName(page, 'amount').fill('0.001');
 
     // Waiting button change to Review in order to ensure that fee amount is updated
@@ -310,6 +337,10 @@ test.describe('SendTransaction', () => {
     await getInputByName(page, 'address').fill(
       receiverWallet.address.toString()
     );
+
+    // Focus on input and wait, to avoid flakiness
+    await getInputByName(page, 'amount').focus();
+    await page.waitForTimeout(500);
 
     // Fill amount
     await getByAriaLabel(page, 'Max').click();
