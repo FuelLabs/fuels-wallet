@@ -236,7 +236,7 @@ test.describe('SendTransaction', () => {
     await hasText(page, 'success');
   });
 
-  test.only('Send transaction starting with regular and changing to fast fee', async () => {
+  test('Send transaction starting with regular and changing to fast fee', async () => {
     const receiverWallet = Wallet.generate({
       provider,
     });
