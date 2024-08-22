@@ -108,6 +108,7 @@ jobs:
         with:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: ./.github/actions/setup-rust
 
       - name: Run PNPM install
         id: pnpm-cache
