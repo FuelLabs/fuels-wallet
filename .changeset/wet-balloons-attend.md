@@ -2,4 +2,4 @@
 "fuels-wallet": patch
 ---
 
-New error review screen
+Include "Error Review" screen allowing the user to review and report screens
