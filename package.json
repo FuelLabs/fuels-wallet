@@ -50,8 +50,8 @@
     "test:ci": "turbo run test --parallel -- --ci --testLocationInResults --json --coverage",
     "test:clear": "pnpm -r exec jest --clearCache",
     "test:coverage": "turbo run test --parallel -- --coverage",
-    "test:e2e": "NODE_ENV=test run-s build:crx && playwright test --config=packages/app/playwright.config.ts",
-    "test:e2e:contracts": "NODE_ENV=test run-s build:crx && playwright test --config=packages/e2e-contract-tests/playwright.config.ts",
+    "test:e2e": "NODE_ENV=test pnpm build:crx && playwright test --config=packages/app/playwright.config.ts",
+    "test:e2e:contracts": "NODE_ENV=test pnpm build:crx && pnpm --filter=@fuel-wallet/e2e-contract-tests test:e2e",
     "test:appfile": "pnpm --filter=fuels-wallet test --",
     "ts:check": "turbo run ts:check",
     "prepare": "husky install",
@@ -68,7 +68,7 @@
     "@changesets/cli": "^2.26.2",
     "@fuels/ts-config": "0.20.0",
     "@jest/types": "29.6.3",
-    "@playwright/test": "1.39.0",
+    "@playwright/test": "^1.46.1",
     "@types/jest": "^29.5.5",
     "@types/node": "20.8.4",
     "@types/react": "^18.3.3",
@@ -118,7 +118,10 @@
       "ws@>=8.0.0 <8.17.1": ">=8.17.1",
       "ws@>=7.0.0 <7.5.10": ">=7.5.10",
       "ws@>=6.0.0 <6.2.3": ">=6.2.3",
-      "fast-xml-parser@<4.4.1": ">=4.4.1"
+      "fast-xml-parser@<4.4.1": ">=4.4.1",
+      "elliptic@>=4.0.0 <=6.5.6": ">=6.5.7",
+      "elliptic@>=2.0.0 <=6.5.6": ">=6.5.7",
+      "elliptic@>=5.2.1 <=6.5.6": ">=6.5.7"
     }
   }
 }

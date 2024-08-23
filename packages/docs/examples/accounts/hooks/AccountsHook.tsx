@@ -36,7 +36,7 @@ export function AccountsHook() {
           <Box>
             {!isConnected && (
               <Button
-                onPress={() => connect()}
+                onPress={() => connect(undefined)}
                 isLoading={isConnecting}
                 isDisabled={isConnecting}
               >

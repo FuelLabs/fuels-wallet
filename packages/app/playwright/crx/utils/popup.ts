@@ -27,6 +27,7 @@ export async function switchAccount(popupPage: Page, name: string) {
 
   await getByAriaLabel(popupPage, 'Accounts').click();
   // Add position to click on the element and not on copy button
+  await hasText(popupPage, name);
   await getByAriaLabel(popupPage, name).click({
     position: {
       x: 10,

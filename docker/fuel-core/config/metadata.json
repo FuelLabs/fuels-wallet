@@ -1,8 +1,0 @@
-{
-  "chain_config": "chainConfig.json",
-  "table_encoding": {
-    "Json": {
-      "filepath": "stateConfig.json"
-    }
-  }
-}

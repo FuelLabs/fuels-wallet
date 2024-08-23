@@ -34,7 +34,7 @@ export function CurrentAccountHook() {
           )}
           {!isConnected && (
             <Button
-              onPress={() => connect()}
+              onPress={() => connect(undefined)}
               isLoading={isConnecting}
               isDisabled={!fuel || isConnecting}
             >

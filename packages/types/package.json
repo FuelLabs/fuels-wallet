@@ -25,12 +25,12 @@
     "dexie-observable": "4.0.1-beta.13"
   },
   "peerDependencies": {
-    "@fuels/connectors": ">=0.5.0",
-    "fuels": ">=0.88.1"
+    "@fuels/connectors": ">=0.25.0",
+    "fuels": ">=0.94.0"
   },
   "devDependencies": {
-    "@fuels/connectors": "0.5.0",
-    "fuels": "pr-2479",
+    "@fuels/connectors": "0.25.0",
+    "fuels": "0.94.0",
     "tsup": "^7.2.0"
   }
 }
