@@ -32,6 +32,8 @@ import {
 
 const WALLET_PASSWORD = 'Qwe123456$';
 
+const isLocalNetwork = process.env.VITE_FUEL_PROVIDER_URL.includes('localhost');
+
 test.describe('FuelWallet Extension', () => {
   test('If user opens popup it should force open a sign-up page', async ({
     context,
@@ -565,36 +567,41 @@ test.describe('FuelWallet Extension', () => {
         await popupPage.reload();
       }
 
+      const initialNetworkAmount = isLocalNetwork ? 3 : 2;
+      let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
+      await networkSelector.click();
+
+      // Check initial amount of networks
+      const itemsAfterRemove = popupPage.locator('[aria-label*=fuel_network]');
+      const networkItemsCount = await itemsAfterRemove.count();
+      expect(networkItemsCount).toEqual(initialNetworkAmount);
+
+      // Remove network so we can test adding it again
+      let testnetNetwork: Locator;
+      for (let i = 0; i < networkItemsCount; i += 1) {
+        const text = await itemsAfterRemove.nth(i).innerText();
+        if (text.includes('Fuel Sepolia Testnet')) {
+          testnetNetwork = itemsAfterRemove.nth(i);
+        }
+      }
+      await testnetNetwork.getByLabel(/Remove/).click();
+      await hasText(popupPage, /Are you sure/i);
+      await getButtonByText(popupPage, /confirm/i).click();
+      await expect(itemsAfterRemove).toHaveCount(initialNetworkAmount - 1);
+      await expect(itemsAfterRemove.first()).toHaveAttribute(
+        'data-active',
+        'true'
+      );
+
       // Add network
       await testAddNetwork();
 
-      // Check if added network is selected
-      let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      await expect(networkSelector).toHaveText(/Fuel Sepolia Testnet/);
-
-      // Remove added network
+      // Check initial amount of networks
       await networkSelector.click();
-      const items = popupPage.locator('[aria-label*=fuel_network]');
-      const networkItemsCount = await items.count();
-      expect(networkItemsCount).toEqual(2);
+      const itemsAfterAdd = popupPage.locator('[aria-label*=fuel_network]');
+      await expect(itemsAfterAdd).toHaveCount(initialNetworkAmount);
 
-      let selectedNetworkItem: Locator;
-      for (let i = 0; i < networkItemsCount; i += 1) {
-        const isSelected = await items.nth(i).getAttribute('data-active');
-        if (isSelected === 'true') {
-          selectedNetworkItem = items.nth(i);
-        }
-      }
-      await selectedNetworkItem.getByLabel(/Remove/).click();
-      await hasText(popupPage, /Are you sure/i);
-      await getButtonByText(popupPage, /confirm/i).click();
-      await expect(items).toHaveCount(1);
-      await expect(items.first()).toHaveAttribute('data-active', 'true');
-
-      // Re-add network
-      await testAddNetwork();
-
-      // Check if re-added network is selected
+      // Check if added network is selected
       networkSelector = getByAriaLabel(popupPage, 'Selected Network');
       await expect(networkSelector).toHaveText(/Fuel Sepolia Testnet/);
     });
