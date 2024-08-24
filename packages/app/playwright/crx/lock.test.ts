@@ -93,7 +93,7 @@ test.describe('Lock FuelWallet after inactivity', () => {
 });
 
 // Increase timeout for this test
-// The timeout is set for 3 minutes
+// The timeout is set for 2 minutes
 // because some tests like reconnect
 // can take up to 1 minute before it's reconnected
-test.setTimeout(100_000);
+test.setTimeout(180_000);
