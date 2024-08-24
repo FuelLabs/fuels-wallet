@@ -1,5 +1,20 @@
 # fuels-wallet
 
+## 0.26.0
+
+### Minor Changes
+
+- [#1427](https://github.com/FuelLabs/fuels-wallet/pull/1427) [`7ba78a86`](https://github.com/FuelLabs/fuels-wallet/commit/7ba78a867f9202c10faac204a00a8efd3360aaf0) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Update to fuel-core@0.33.0 and forc@0.63.1 and fuels@0.94.0
+
+### Patch Changes
+
+- [#1427](https://github.com/FuelLabs/fuels-wallet/pull/1427) [`7ba78a86`](https://github.com/FuelLabs/fuels-wallet/commit/7ba78a867f9202c10faac204a00a8efd3360aaf0) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Add 10% buffer on maxFee to sendTransaction, to avoid crashing on `getTxSummaryFromRequest` missing few units
+
+- [#1427](https://github.com/FuelLabs/fuels-wallet/pull/1427) [`7ba78a86`](https://github.com/FuelLabs/fuels-wallet/commit/7ba78a867f9202c10faac204a00a8efd3360aaf0) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Added `web_accessible_resources` to manifest due to error in extension setup for playwright test
+
+- Updated dependencies [[`7ba78a86`](https://github.com/FuelLabs/fuels-wallet/commit/7ba78a867f9202c10faac204a00a8efd3360aaf0)]:
+  - @fuel-wallet/connections@0.26.0
+
 ## 0.25.0
 
 ### Minor Changes
