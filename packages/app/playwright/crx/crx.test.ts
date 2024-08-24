@@ -604,6 +604,7 @@ test.describe('FuelWallet Extension', () => {
       // Check if added network is selected
       networkSelector = getByAriaLabel(popupPage, 'Selected Network');
       await expect(networkSelector).toHaveText(/Fuel Sepolia Testnet/);
+      await getByAriaLabel(popupPage, 'Close dialog').click();
     });
 
     await test.step('window.fuel.on("currentAccount") to a connected account', async () => {
