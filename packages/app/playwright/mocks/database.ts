@@ -194,6 +194,8 @@ export async function mockData(
     accounts.map((account) => account.address)
   );
 
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
   await page.evaluate(
     ([accounts, networks, connections, assets, vault, password]: [
       Array<WalletAccount>,

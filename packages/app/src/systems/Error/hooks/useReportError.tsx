@@ -1,6 +1,5 @@
-import { useMachine, useSelector } from '@xstate/react';
-
-import { type ReportErrorMachineState, reportErrorMachine } from '../machines';
+import { Services, store } from '~/store';
+import type { ReportErrorMachineState } from '../machines';
 
 const selectors = {
   hasErrorsToReport(state: ReportErrorMachineState) {
@@ -10,48 +9,46 @@ const selectors = {
     return state.hasTag('loading');
   },
   errors(state: ReportErrorMachineState) {
-    const errors = state.context?.errors || [];
-    return errors.map((error) => JSON.stringify(error, null, 2)).join('\n');
+    return state.context?.errors || [];
   },
 };
 
 export function useReportError() {
-  const [state, send, service] = useMachine(() =>
-    reportErrorMachine.withConfig({
-      actions: {
-        reload: () => {
-          window.location.reload();
-        },
-      },
-    })
+  const hasErrorsToReport = store.useSelector(
+    Services.reportError,
+    selectors.hasErrorsToReport
   );
-
-  const hasErrorsToReport = useSelector(service, selectors.hasErrorsToReport);
-  const isLoadingSendOnce = useSelector(service, selectors.isLoadingSendOnce);
-
-  const errors = useSelector(service, selectors.errors);
+  const isLoadingSendOnce = store.useSelector(
+    Services.reportError,
+    selectors.isLoadingSendOnce
+  );
+  const errors = store.useSelector(Services.reportError, selectors.errors);
 
   const reportErrors = () => {
-    send('REPORT_ERRORS');
+    store.send(Services.reportError, { type: 'REPORT_ERRORS' });
   };
 
-  const ignoreErrors = () => {
-    send('IGNORE_ERRORS');
+  const dismissAllErrors = () => {
+    store.send(Services.reportError, { type: 'DISMISS_ERRORS' });
   };
 
-  const close = () => {
-    ignoreErrors();
+  const reloadErrors = () => {
+    store.send(Services.reportError, { type: 'CHECK_FOR_ERRORS' });
+  };
+
+  const dismissError = (key: string) => {
+    store.send(Services.reportError, { type: 'DISMISS_ERROR', input: key });
   };
 
   return {
     hasErrorsToReport,
     isLoadingSendOnce,
-    state,
     errors,
     handlers: {
       reportErrors,
-      ignoreErrors,
-      close,
+      dismissError,
+      dismissAllErrors,
+      reloadErrors,
     },
   };
 }

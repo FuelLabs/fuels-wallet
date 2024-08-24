@@ -1,50 +1,61 @@
-import type { FuelWalletError } from '@fuel-wallet/types';
-import * as Sentry from '@sentry/browser';
-import { APP_VERSION, VITE_SENTRY_DSN } from '~/config';
+import type { StoredFuelWalletError } from '@fuel-wallet/types';
+import * as Sentry from '@sentry/react';
 import { db } from '~/systems/Core/utils/database';
+import { parseFuelError } from '../utils';
 
-import { createError, parseFuelError } from '../utils';
-
-// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class ReportErrorService {
-  static async reportErrors() {
-    // biome-ignore lint/complexity/noThisInStatic: <explanation>
+  async reportErrors() {
     const errors = await this.getErrors();
-    Sentry.init({
-      release: APP_VERSION,
-      dsn: VITE_SENTRY_DSN,
-      environment: process.env.NODE_ENV,
-    });
-    // biome-ignore lint/complexity/noForEach: <explanation>
-    errors.forEach((e) => {
-      Sentry.captureException(createError(e), {
-        extra: e,
+
+    for (const e of errors) {
+      // biome-ignore lint/suspicious/noExplicitAny: playwright is injected late into the window context
+      if (typeof window !== 'undefined' && (window as any).playwright) {
+        return;
+      }
+      Sentry.captureException(e.error, {
+        extra: e.extra,
+        tags: { id: e.id, manual: true },
       });
-    });
+    }
   }
 
-  static saveError({
-    error,
-    reactError,
-  }: Pick<FuelWalletError, 'error' | 'reactError'>) {
-    const fuelError = parseFuelError({
-      error: { ...error },
-      reactError: { ...reactError },
-    });
-    return db.errors.add(fuelError);
+  static async saveError(error: Error) {
+    const parsedError = parseFuelError(error);
+    if (!parsedError) {
+      console.warn(`Can't save error without a message`);
+      return;
+    }
+    if (!('id' in parsedError)) {
+      console.warn(`Can't save error without an id`);
+      return;
+    }
+    if (!db.isOpen() || db.hasBeenClosed()) {
+      console.warn('Error saving error: db is closed');
+      return;
+    }
+
+    try {
+      return await db.errors.add(parsedError);
+    } catch (e) {
+      console.warn('Failed to save error', e);
+    }
   }
 
-  static async checkForErrors(): Promise<boolean> {
-    // biome-ignore lint/complexity/noThisInStatic: <explanation>
+  async checkForErrors(): Promise<boolean> {
     const errors = await this.getErrors();
     return errors.length > 0;
   }
 
-  static async getErrors(): Promise<FuelWalletError[]> {
-    return db.errors.toArray() as Promise<FuelWalletError[]>;
+  async getErrors(): Promise<StoredFuelWalletError[]> {
+    return db.errors.toArray();
   }
 
-  static async clearErrors() {
+  async clearErrors() {
     await db.errors.clear();
+  }
+
+  async dismissError(key: string) {
+    if (!key) return;
+    db.errors.delete(key);
   }
 }

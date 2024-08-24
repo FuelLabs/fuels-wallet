@@ -14,7 +14,7 @@ export default {
 } as Meta;
 
 const Template: StoryFn<typeof ReportErrors> = (_args) => {
-  return <ReportErrors />;
+  return <ReportErrors onRestore={() => {}} />;
 };
 
 export const Usage = Template.bind({});
