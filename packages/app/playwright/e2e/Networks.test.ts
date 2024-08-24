@@ -89,6 +89,8 @@ test.describe('Networks', () => {
     const urlInput = getInputByName(page, 'url');
     await expect(urlInput).toBeFocused();
     await urlInput.fill('https://testnet.fuel.network/v1/graphql');
+    await hasText(page, /Test connection/i);
+    await getByAriaLabel(page, 'Test connection').click();
     await hasText(page, /Fuel Sepolia Testnet/i, 0, 15000);
     await expect(buttonCreate).toBeEnabled();
     await buttonCreate.click();

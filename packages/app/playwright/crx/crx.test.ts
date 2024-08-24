@@ -32,6 +32,8 @@ import {
 
 const WALLET_PASSWORD = 'Qwe123456$';
 
+const isLocalNetwork = process.env.VITE_FUEL_PROVIDER_URL.includes('localhost');
+
 test.describe('FuelWallet Extension', () => {
   test('If user opens popup it should force open a sign-up page', async ({
     context,
@@ -188,28 +190,40 @@ test.describe('FuelWallet Extension', () => {
 
         return true;
       });
-      const authorizeRequest = await context.waitForEvent('page', {
+      const connectPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
       });
 
-      await hasText(authorizeRequest, /connect/i);
+      await hasText(connectPage, /connect/i);
+
+      // Account 1 should be toggled by default
+      const toggleAccountOneLocator = await getByAriaLabel(
+        connectPage,
+        'Toggle Account 1'
+      );
+      // avoid flakiness as if you toggle account 3 and account 4 too quick, account 1 will not be toggled
+      await expect(toggleAccountOneLocator).toHaveAttribute(
+        'aria-checked',
+        'true'
+      );
+
       // Add Account 3 to the DApp connection
-      await getByAriaLabel(authorizeRequest, 'Toggle Account 3').click();
+      await getByAriaLabel(connectPage, 'Toggle Account 3').click();
       // Add Account 4 to the DApp connection
-      await getByAriaLabel(authorizeRequest, 'Toggle Account 4').click();
+      await getByAriaLabel(connectPage, 'Toggle Account 4').click();
 
       // Account 5 (Hidden) should not be shown to connect
       await expect(async () => {
-        await getByAriaLabel(authorizeRequest, 'Toggle Account 5').click({
+        await getByAriaLabel(connectPage, 'Toggle Account 5').click({
           timeout: 3000,
         });
       }).rejects.toThrow();
 
-      await hasText(authorizeRequest, /connect/i);
+      await hasText(connectPage, /connect/i);
 
-      await getButtonByText(authorizeRequest, /next/i).click();
-      await hasText(authorizeRequest, /accounts/i);
-      await getButtonByText(authorizeRequest, /connect/i).click();
+      await getButtonByText(connectPage, /next/i).click();
+      await hasText(connectPage, /accounts/i);
+      await getButtonByText(connectPage, /connect/i).click();
 
       expect(await connectionResponse).toBeTruthy();
       const isConnected = blankPage.evaluate(async () => {
@@ -256,17 +270,15 @@ test.describe('FuelWallet Extension', () => {
       (await hasText(popupPage, 'Wallet')).click();
 
       await connectAccounts();
-
-      await delay(1000);
     });
 
     await test.step('window.fuel.getWallet()', async () => {
-      const isCorrectAddress = await blankPage.evaluate(async () => {
+      const isCorrectAddress = blankPage.evaluate(async () => {
         const currentAccount = await window.fuel.currentAccount();
         const wallet = await window.fuel.getWallet(currentAccount);
         return wallet.address.toString() === currentAccount;
       });
-      await expect(isCorrectAddress).toBeTruthy();
+      expect(await isCorrectAddress).toBeTruthy();
     });
 
     await test.step('window.fuel.accounts()', async () => {
@@ -276,7 +288,7 @@ test.describe('FuelWallet Extension', () => {
       const accounts = await blankPage.evaluate(async () => {
         return window.fuel.accounts();
       });
-      await expect(accounts).toEqual([
+      expect(accounts).toEqual([
         authorizedAccount.address,
         authorizedAccount2.address,
         authorizedAccount3.address,
@@ -565,38 +577,40 @@ test.describe('FuelWallet Extension', () => {
         await popupPage.reload();
       }
 
+      const initialNetworkAmount = isLocalNetwork ? 3 : 2;
+      let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
+      await networkSelector.click();
+
+      // Check initial amount of networks
+      const itemsAfterRemove = popupPage.locator('[aria-label*=fuel_network]');
+      const networkItemsCount = await itemsAfterRemove.count();
+      expect(networkItemsCount).toEqual(initialNetworkAmount);
+
+      // Remove network so we can test adding it again
+      let testnetNetwork: Locator;
+      for (let i = 0; i < networkItemsCount; i += 1) {
+        const text = await itemsAfterRemove.nth(i).innerText();
+        if (text.includes('Fuel Sepolia Testnet')) {
+          testnetNetwork = itemsAfterRemove.nth(i);
+        }
+      }
+      await testnetNetwork.getByLabel(/Remove/).click();
+      await hasText(popupPage, /Are you sure/i);
+      await getButtonByText(popupPage, /confirm/i).click();
+      await expect(itemsAfterRemove).toHaveCount(initialNetworkAmount - 1);
+
       // Add network
       await testAddNetwork();
 
-      // Check if added network is selected
-      let networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      await expect(networkSelector).toHaveText(/Fuel Sepolia Testnet/);
-
-      // Remove added network
+      // Check initial amount of networks
       await networkSelector.click();
-      const items = popupPage.locator('[aria-label*=fuel_network]');
-      const networkItemsCount = await items.count();
-      expect(networkItemsCount).toEqual(2);
+      const itemsAfterAdd = popupPage.locator('[aria-label*=fuel_network]');
+      await expect(itemsAfterAdd).toHaveCount(initialNetworkAmount);
 
-      let selectedNetworkItem: Locator;
-      for (let i = 0; i < networkItemsCount; i += 1) {
-        const isSelected = await items.nth(i).getAttribute('data-active');
-        if (isSelected === 'true') {
-          selectedNetworkItem = items.nth(i);
-        }
-      }
-      await selectedNetworkItem.getByLabel(/Remove/).click();
-      await hasText(popupPage, /Are you sure/i);
-      await getButtonByText(popupPage, /confirm/i).click();
-      await expect(items).toHaveCount(1);
-      await expect(items.first()).toHaveAttribute('data-active', 'true');
-
-      // Re-add network
-      await testAddNetwork();
-
-      // Check if re-added network is selected
+      // Check if added network is selected
       networkSelector = getByAriaLabel(popupPage, 'Selected Network');
       await expect(networkSelector).toHaveText(/Fuel Sepolia Testnet/);
+      await getByAriaLabel(popupPage, 'Close dialog').click();
     });
 
     await test.step('window.fuel.on("currentAccount") to a connected account', async () => {
