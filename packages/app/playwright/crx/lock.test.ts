@@ -11,7 +11,25 @@ import { WALLET_PASSWORD, mockData } from '../mocks';
 
 import { test } from './utils';
 
+// Increase timeout for this test
+// The timeout is set for 2 minutes
+// because some tests like reconnect
+// can take up to 1 minute before it's reconnected
+test.setTimeout(180_000);
+
 test.describe('Lock FuelWallet after inactivity', () => {
+  test('If user opens popup it should force open a sign-up page', async ({
+    context,
+    extensionId,
+  }) => {
+    const popupPage = await context.newPage();
+    await popupPage.goto(`chrome-extension://${extensionId}/popup.html`);
+    const page = await context.waitForEvent('page', {
+      predicate: (page) => page.url().includes('sign-up'),
+    });
+    expect(page.url()).toContain('sign-up');
+  });
+
   test('should lock the wallet after 1 minute of inactivity (config in .env file)', async ({
     context,
     baseURL,
@@ -91,9 +109,3 @@ test.describe('Lock FuelWallet after inactivity', () => {
     });
   });
 });
-
-// Increase timeout for this test
-// The timeout is set for 2 minutes
-// because some tests like reconnect
-// can take up to 1 minute before it's reconnected
-test.setTimeout(180_000);
