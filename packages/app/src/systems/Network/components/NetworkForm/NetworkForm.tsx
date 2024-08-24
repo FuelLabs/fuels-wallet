@@ -92,6 +92,7 @@ export function NetworkForm({
               onPress={onClickCheckNetwork}
               intent="primary"
               isLoading={isLoading}
+              aria-label="Test connection"
             >
               Test connection
             </MotionButton>
