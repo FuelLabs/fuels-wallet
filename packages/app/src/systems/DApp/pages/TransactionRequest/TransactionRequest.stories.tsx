@@ -12,7 +12,8 @@ import { TransactionRequest } from './TransactionRequest';
 async function loader() {
   const { password } = await createMockAccount();
   await NetworkService.clearNetworks();
-  const network = await NetworkService.addDefaultNetworks();
+  await NetworkService.addDefaultNetworks();
+  const network = await NetworkService.getSelectedNetwork();
   const wallet = new Signer(Signer.generatePrivateKey());
   const transactionRequest = await getMockedTransaction(
     wallet.publicKey,
