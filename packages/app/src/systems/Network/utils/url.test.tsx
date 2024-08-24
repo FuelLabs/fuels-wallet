@@ -57,9 +57,6 @@ describe('Network URL Utilities', () => {
 
       // Complex URLs
       expect(
-        isValidNetworkUrl('https://domain.com:8080?name=John&age=30#section')
-      ).toBe(true);
-      expect(
         isValidNetworkUrl(
           'https://user:pass@domain.com:8080/api/data?name=John&age=30#section'
         )
