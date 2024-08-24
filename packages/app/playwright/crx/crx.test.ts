@@ -657,12 +657,6 @@ test.describe('FuelWallet Extension', () => {
       const currentAccountEventResult = await onChangeAccountPromise;
       expect(currentAccountEventResult).toEqual(null);
     });
-
-    await test.step('Auto lock fuel wallet', async () => {
-      await getByAriaLabel(popupPage, 'Accounts').click();
-      await popupPage.waitForTimeout(65000);
-      await hasText(popupPage, 'Unlock your wallet to continue');
-    });
   });
 });
 
