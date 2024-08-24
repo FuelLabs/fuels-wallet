@@ -190,28 +190,40 @@ test.describe('FuelWallet Extension', () => {
 
         return true;
       });
-      const authorizeRequest = await context.waitForEvent('page', {
+      const connectPage = await context.waitForEvent('page', {
         predicate: (page) => page.url().includes(extensionId),
       });
 
-      await hasText(authorizeRequest, /connect/i);
+      await hasText(connectPage, /connect/i);
+
+      // Account 1 should be toggled by default
+      const toggleAccountOneLocator = await getByAriaLabel(
+        connectPage,
+        'Toggle Account 1'
+      );
+      // avoid flakiness as if you toggle account 3 and account 4 too quick, account 1 will not be toggled
+      await expect(toggleAccountOneLocator).toHaveAttribute(
+        'aria-checked',
+        'true'
+      );
+
       // Add Account 3 to the DApp connection
-      await getByAriaLabel(authorizeRequest, 'Toggle Account 3').click();
+      await getByAriaLabel(connectPage, 'Toggle Account 3').click();
       // Add Account 4 to the DApp connection
-      await getByAriaLabel(authorizeRequest, 'Toggle Account 4').click();
+      await getByAriaLabel(connectPage, 'Toggle Account 4').click();
 
       // Account 5 (Hidden) should not be shown to connect
       await expect(async () => {
-        await getByAriaLabel(authorizeRequest, 'Toggle Account 5').click({
+        await getByAriaLabel(connectPage, 'Toggle Account 5').click({
           timeout: 3000,
         });
       }).rejects.toThrow();
 
-      await hasText(authorizeRequest, /connect/i);
+      await hasText(connectPage, /connect/i);
 
-      await getButtonByText(authorizeRequest, /next/i).click();
-      await hasText(authorizeRequest, /accounts/i);
-      await getButtonByText(authorizeRequest, /connect/i).click();
+      await getButtonByText(connectPage, /next/i).click();
+      await hasText(connectPage, /accounts/i);
+      await getButtonByText(connectPage, /connect/i).click();
 
       expect(await connectionResponse).toBeTruthy();
       const isConnected = blankPage.evaluate(async () => {
@@ -258,17 +270,15 @@ test.describe('FuelWallet Extension', () => {
       (await hasText(popupPage, 'Wallet')).click();
 
       await connectAccounts();
-
-      await delay(1000);
     });
 
     await test.step('window.fuel.getWallet()', async () => {
-      const isCorrectAddress = await blankPage.evaluate(async () => {
+      const isCorrectAddress = blankPage.evaluate(async () => {
         const currentAccount = await window.fuel.currentAccount();
         const wallet = await window.fuel.getWallet(currentAccount);
         return wallet.address.toString() === currentAccount;
       });
-      await expect(isCorrectAddress).toBeTruthy();
+      expect(await isCorrectAddress).toBeTruthy();
     });
 
     await test.step('window.fuel.accounts()', async () => {
@@ -278,7 +288,7 @@ test.describe('FuelWallet Extension', () => {
       const accounts = await blankPage.evaluate(async () => {
         return window.fuel.accounts();
       });
-      await expect(accounts).toEqual([
+      expect(accounts).toEqual([
         authorizedAccount.address,
         authorizedAccount2.address,
         authorizedAccount3.address,
