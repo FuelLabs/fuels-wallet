@@ -259,6 +259,11 @@ test.describe('SendTransaction', () => {
     // Selecting and extracting regular fee amount
     const regularFeeComponent = getByAriaLabel(page, 'fee value:Regular');
     await regularFeeComponent.click();
+
+    // Waiting button change to Review in order to ensure that fee amount is updated
+    await page.waitForSelector('button:has-text("Review")');
+    await page.waitForTimeout(1000);
+
     const regularFeeAmount = (await regularFeeComponent.textContent())
       .replace(' ETH', '')
       .trim();

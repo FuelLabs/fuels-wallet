@@ -34,5 +34,5 @@ export function useChainInfo(providerUrl?: string) {
     }
   }, [providerUrl]);
 
-  return { chainInfo, error, isLoading };
+  return { chainInfo, error, isLoading, handlers: { fetchChainInfo } };
 }

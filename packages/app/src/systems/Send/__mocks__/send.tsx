@@ -8,7 +8,8 @@ export function sendLoader() {
     const signer = new Signer(Signer.generatePrivateKey());
     const { account: acc1 } = await createMockAccount();
     await NetworkService.clearNetworks();
-    const network = await NetworkService.addDefaultNetworks();
+    await NetworkService.addDefaultNetworks();
+    const network = await NetworkService.getSelectedNetwork();
     const transactionRequest = await getMockedTransaction(
       signer.publicKey,
       network?.url!

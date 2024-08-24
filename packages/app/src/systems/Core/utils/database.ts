@@ -12,6 +12,7 @@ import type {
 import type { DbEvents, PromiseExtended, Table } from 'dexie';
 import Dexie from 'dexie';
 import 'dexie-observable';
+import { DEVNET_NETWORK_URL, TESTNET_NETWORK_URL } from 'fuels';
 import { DATABASE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
 import type { Transaction } from '~/systems/Transaction/types';
 
@@ -50,8 +51,14 @@ export class FuelDB extends Dexie {
         // Insert testnet network
         await networks.add({
           name: 'Fuel Sepolia Testnet',
-          url: VITE_FUEL_PROVIDER_URL,
+          url: TESTNET_NETWORK_URL,
           isSelected: true,
+          id: createUUID(),
+        });
+        await networks.add({
+          name: 'Fuel Ignition Sepolia Devnet',
+          url: DEVNET_NETWORK_URL,
+          isSelected: false,
           id: createUUID(),
         });
       });
