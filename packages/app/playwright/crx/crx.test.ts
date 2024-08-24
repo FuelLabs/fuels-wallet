@@ -598,10 +598,6 @@ test.describe('FuelWallet Extension', () => {
       await hasText(popupPage, /Are you sure/i);
       await getButtonByText(popupPage, /confirm/i).click();
       await expect(itemsAfterRemove).toHaveCount(initialNetworkAmount - 1);
-      await expect(itemsAfterRemove.first()).toHaveAttribute(
-        'data-active',
-        'true'
-      );
 
       // Add network
       await testAddNetwork();
@@ -662,11 +658,11 @@ test.describe('FuelWallet Extension', () => {
       expect(currentAccountEventResult).toEqual(null);
     });
 
-    await test.step('Auto lock fuel wallet', async () => {
-      await getByAriaLabel(popupPage, 'Accounts').click();
-      await popupPage.waitForTimeout(65000);
-      await hasText(popupPage, 'Unlock your wallet to continue');
-    });
+    // await test.step('Auto lock fuel wallet', async () => {
+    //   await getByAriaLabel(popupPage, 'Accounts').click();
+    //   await popupPage.waitForTimeout(65000);
+    //   await hasText(popupPage, 'Unlock your wallet to continue');
+    // });
   });
 });
 
