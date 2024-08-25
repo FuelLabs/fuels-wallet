@@ -7,7 +7,7 @@ import {
   hasText,
   reload,
 } from '../commons';
-import { WALLET_PASSWORD, mockData } from '../mocks';
+import { WALLET_PASSWORD } from '../mocks';
 
 import { test } from './utils';
 
