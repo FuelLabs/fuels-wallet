@@ -14,7 +14,6 @@ overrides:
   vite@<2.9.16: '>=2.9.16'
   semver@<7.5.2: '>=7.5.2'
   node-fetch@<2.6.7: '>=2.6.7'
-  node-fetch@>=3.0.0: <3.0.0
   word-wrap: npm:@aashutoshrathi/word-wrap
   cross-fetch: 4.0.0
   pnpm@>=8.0.0 <8.6.8: '>=8.6.8'
@@ -8324,7 +8323,6 @@ packages:
       - '@babel/core'
       - '@babel/preset-env'
       - bufferutil
-      - encoding
       - supports-color
       - utf-8-validate
 
@@ -20258,7 +20256,6 @@ packages:
       metro-runtime: 0.80.9
     transitivePeerDependencies:
       - bufferutil
-      - encoding
       - supports-color
       - utf-8-validate
 
@@ -20363,7 +20360,6 @@ packages:
       nullthrows: 1.1.1
     transitivePeerDependencies:
       - bufferutil
-      - encoding
       - supports-color
       - utf-8-validate
 
@@ -20406,7 +20402,7 @@ packages:
       metro-transform-plugins: 0.80.9
       metro-transform-worker: 0.80.9
       mime-types: 2.1.35
-      node-fetch: 2.7.0
+      node-fetch: 3.3.2
       nullthrows: 1.1.1
       rimraf: 3.0.2
       serialize-error: 2.1.0
@@ -20417,7 +20413,6 @@ packages:
       yargs: 17.7.2
     transitivePeerDependencies:
       - bufferutil
-      - encoding
       - supports-color
       - utf-8-validate
 
@@ -22650,7 +22645,6 @@ packages:
       - '@babel/core'
       - '@babel/preset-env'
       - bufferutil
-      - encoding
       - supports-color
       - utf-8-validate
     dev: true
@@ -22711,7 +22705,6 @@ packages:
       - '@babel/core'
       - '@babel/preset-env'
       - bufferutil
-      - encoding
       - supports-color
       - utf-8-validate
 
