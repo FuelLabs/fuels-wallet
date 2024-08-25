@@ -34,6 +34,12 @@ const WALLET_PASSWORD = 'Qwe123456$';
 
 const isLocalNetwork = process.env.VITE_FUEL_PROVIDER_URL.includes('localhost');
 
+// Increase timeout for this test
+// The timeout is set for 3 minutes
+// because some tests like reconnect
+// can take up to 1 minute before it's reconnected
+test.setTimeout(240_000);
+
 test.describe('FuelWallet Extension', () => {
   test('If user opens popup it should force open a sign-up page', async ({
     context,
@@ -657,17 +663,5 @@ test.describe('FuelWallet Extension', () => {
       const currentAccountEventResult = await onChangeAccountPromise;
       expect(currentAccountEventResult).toEqual(null);
     });
-
-    await test.step('Auto lock fuel wallet', async () => {
-      await getByAriaLabel(popupPage, 'Accounts').click();
-      await popupPage.waitForTimeout(65000);
-      await hasText(popupPage, 'Unlock your wallet to continue');
-    });
   });
 });
-
-// Increase timeout for this test
-// The timeout is set for 3 minutes
-// because some tests like reconnect
-// can take up to 1 minute before it's reconnected
-test.setTimeout(240_000);

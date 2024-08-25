@@ -1,11 +1,11 @@
 // biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import { join } from 'path';
-import { defineConfig } from '@playwright/test';
+import { type PlaywrightTestConfig, defineConfig } from '@playwright/test';
 import './load.envs';
 
 const PORT = process.env.PORT;
 
-export default defineConfig({
+export const playwrightConfig: PlaywrightTestConfig = {
   workers: 1,
   testMatch: join(__dirname, './playwright/**/*.test.ts'),
   testDir: join(__dirname, './playwright/'),
@@ -27,4 +27,8 @@ export default defineConfig({
     trace: 'on-first-retry',
     actionTimeout: 5000,
   },
-});
+  // ignore lock test because it takes too long and it will be tested in a separate config
+  testIgnore: [join(__dirname, './playwright/crx/lock.test.ts')],
+};
+
+export default defineConfig(playwrightConfig);
