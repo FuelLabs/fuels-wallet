@@ -1,5 +1,26 @@
 # fuels-wallet
 
+## 0.27.0
+
+### Minor Changes
+
+- [#1420](https://github.com/FuelLabs/fuels-wallet/pull/1420) [`737652ba`](https://github.com/FuelLabs/fuels-wallet/commit/737652badce501292fad509ebadda751ea8792df) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Refactored Sentry implementation, error handling, and report logic
+
+### Patch Changes
+
+- [#1429](https://github.com/FuelLabs/fuels-wallet/pull/1429) [`3486bee0`](https://github.com/FuelLabs/fuels-wallet/commit/3486bee0cd249939833f00809dc27fe7260e3a1f) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Upgrade DB version to include testnet and devnet as initial networks in database
+
+- [#1431](https://github.com/FuelLabs/fuels-wallet/pull/1431) [`c1d3dd6b`](https://github.com/FuelLabs/fuels-wallet/commit/c1d3dd6be885cc3b30a704150c89adc8a1c7e22a) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: run e2e test of Lock CRX isolated and remove from regular flow to increase its speed
+
+- [#1429](https://github.com/FuelLabs/fuels-wallet/pull/1429) [`3486bee0`](https://github.com/FuelLabs/fuels-wallet/commit/3486bee0cd249939833f00809dc27fe7260e3a1f) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Include networks Testnet and Devnet by default in network list
+
+- [#1420](https://github.com/FuelLabs/fuels-wallet/pull/1420) [`737652ba`](https://github.com/FuelLabs/fuels-wallet/commit/737652badce501292fad509ebadda751ea8792df) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Include "Error Review" screen allowing the user to review and report screens
+
+- [#1429](https://github.com/FuelLabs/fuels-wallet/pull/1429) [`3486bee0`](https://github.com/FuelLabs/fuels-wallet/commit/3486bee0cd249939833f00809dc27fe7260e3a1f) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Improve flow of network URL to wait for click to "Test connection", instead of load automatically
+
+- Updated dependencies [[`737652ba`](https://github.com/FuelLabs/fuels-wallet/commit/737652badce501292fad509ebadda751ea8792df)]:
+  - @fuel-wallet/connections@0.27.0
+
 ## 0.26.0
 
 ### Minor Changes
