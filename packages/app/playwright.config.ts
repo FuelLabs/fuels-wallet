@@ -4,6 +4,7 @@ import { type PlaywrightTestConfig, defineConfig } from '@playwright/test';
 import './load.envs';
 
 const PORT = process.env.PORT;
+const IS_CI = process.env.CI === 'true';
 
 export const playwrightConfig: PlaywrightTestConfig = {
   workers: 1,
@@ -23,7 +24,7 @@ export const playwrightConfig: PlaywrightTestConfig = {
   use: {
     baseURL: `http://localhost:${PORT}/`,
     permissions: ['clipboard-read', 'clipboard-write'],
-    headless: false,
+    headless: IS_CI,
     trace: 'on-first-retry',
     actionTimeout: 5000,
   },
