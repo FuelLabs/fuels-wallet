@@ -1,5 +1,11 @@
 # @fuel-wallet/types
 
+## 0.27.0
+
+### Minor Changes
+
+- [#1420](https://github.com/FuelLabs/fuels-wallet/pull/1420) [`737652ba`](https://github.com/FuelLabs/fuels-wallet/commit/737652badce501292fad509ebadda751ea8792df) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Refactored Sentry implementation, error handling, and report logic
+
 ## 0.26.0
 
 ### Minor Changes
