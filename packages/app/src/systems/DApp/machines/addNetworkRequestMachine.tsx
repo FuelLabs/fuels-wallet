@@ -120,6 +120,7 @@ export const addNetworkRequestMachine = createMachine(
           if (!input?.data) {
             throw new Error('Invalid network');
           }
+          await NetworkService.validateAddNetwork(input);
           const createdNetwork = await NetworkService.addNetwork(input);
           if (!createdNetwork) {
             throw new Error('Failed to add network');
