@@ -1,15 +1,22 @@
 import { cssObj } from '@fuel-ui/css';
 import { Box, Drawer, Icon, IconButton, Text } from '@fuel-ui/react';
-import { forwardRef } from 'react';
+import { forwardRef, useMemo } from 'react';
 import { APP_VERSION } from '~/config';
 import { useOverlay } from '~/systems/Overlay';
 
+import { useReportError } from '~/systems/Error';
 import { Menu } from '..';
 import { sidebarItems } from '../../constants';
 import { ThemeToggler } from '../ThemeToggler';
 
 function SidebarContent() {
   const overlay = useOverlay();
+  const { hasErrorsToReport } = useReportError();
+
+  const menuItems = useMemo(
+    () => sidebarItems(hasErrorsToReport),
+    [hasErrorsToReport]
+  );
 
   return (
     <>
@@ -25,7 +32,7 @@ function SidebarContent() {
           onPress={overlay.close}
         />
       </Box.Flex>
-      <Menu items={sidebarItems()} />
+      <Menu items={menuItems} />
       <Box css={styles.version}>
         <Text fontSize="xs" color="intentsBase8">
           Version: {APP_VERSION}{' '}
