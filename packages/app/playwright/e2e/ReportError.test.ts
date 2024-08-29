@@ -1,13 +1,7 @@
 import type { Browser, BrowserContext, Page } from '@playwright/test';
 import test, { chromium, expect } from '@playwright/test';
 
-import {
-  getButtonByText,
-  getByAriaLabel,
-  hasText,
-  reload,
-  visit,
-} from '../commons';
+import { getByAriaLabel, hasText, reload, visit } from '../commons';
 import { mockData } from '../mocks';
 
 test.describe('ReportError', () => {
@@ -51,7 +45,7 @@ test.describe('ReportError', () => {
     expect(errorsAfterReporting.length).toBe(0);
   });
 
-  test('should show floating error button when there is a error in the database', async () => {
+  test('should show Review Error in menu when there is a error in the database', async () => {
     await visit(page, '/');
     await page.evaluate(async () => {
       await window.fuelDB.errors.clear();
@@ -73,10 +67,8 @@ test.describe('ReportError', () => {
     });
 
     await reload(page);
-    const floatingButton = await page.waitForSelector(
-      '[data-testid="ErrorFloatingButton"]',
-      { state: 'visible' }
-    );
+    await getByAriaLabel(page, 'Menu').click();
+    const floatingButton = page.locator(`[data-key="hasErrors"]`);
     expect(floatingButton.isVisible).toBeTruthy();
   });
 
@@ -101,11 +93,8 @@ test.describe('ReportError', () => {
       });
     });
     await reload(page);
-    (
-      await page.waitForSelector('[data-testid="ErrorFloatingButton"]', {
-        state: 'visible',
-      })
-    ).click();
+    await getByAriaLabel(page, 'Menu').click();
+    page.locator(`[data-key="hasErrors"]`).click();
     await hasText(page, /Unexpected error/i);
 
     // report error
@@ -136,11 +125,8 @@ test.describe('ReportError', () => {
       });
     });
     await reload(page);
-    (
-      await page.waitForSelector('[data-testid="ErrorFloatingButton"]', {
-        state: 'visible',
-      })
-    ).click();
+    await getByAriaLabel(page, 'Menu').click();
+    page.locator(`[data-key="hasErrors"]`).click();
     await hasText(page, /Unexpected error/i);
 
     // report error
@@ -174,11 +160,8 @@ test.describe('ReportError', () => {
       });
     });
     await reload(page);
-    (
-      await page.waitForSelector('[data-testid="ErrorFloatingButton"]', {
-        state: 'visible',
-      })
-    ).click();
+    await getByAriaLabel(page, 'Menu').click();
+    page.locator(`[data-key="hasErrors"]`).click();
     await hasText(page, /Unexpected error/i);
 
     // report error
@@ -195,11 +178,8 @@ test.describe('ReportError', () => {
       console.error(new Error('Test Error'));
     });
     await reload(page);
-    (
-      await page.waitForSelector('[data-testid="ErrorFloatingButton"]', {
-        state: 'visible',
-      })
-    ).click();
+    await getByAriaLabel(page, 'Menu').click();
+    page.locator(`[data-key="hasErrors"]`).click();
     await hasText(page, /Unexpected error/i);
 
     const errorsAfterReporting = await getPageErrors(page);
@@ -242,11 +222,8 @@ test.describe('ReportError', () => {
       });
     });
     await reload(page);
-    (
-      await page.waitForSelector('[data-testid="ErrorFloatingButton"]', {
-        state: 'visible',
-      })
-    ).click();
+    await getByAriaLabel(page, 'Menu').click();
+    page.locator(`[data-key="hasErrors"]`).click();
     await hasText(page, /Unexpected error/i);
     await reload(page);
     const errorsAfterReporting = await getPageErrors(page);
