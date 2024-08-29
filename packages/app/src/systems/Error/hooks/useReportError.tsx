@@ -41,7 +41,7 @@ export function useReportError() {
   };
 
   return {
-    hasErrorsToReport,
+    hasErrorsToReport: !!hasErrorsToReport || !!errors.length,
     isLoadingSendOnce,
     errors,
     handlers: {
