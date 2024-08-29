@@ -56,9 +56,12 @@ export class ContentProxyConnection {
   }
 
   destroy() {
+    this.connection.onMessage.removeListener(this.onMessageFromExtension);
+    this.connection.onDisconnect.removeListener(this.onDisconnect);
     this.connection.disconnect();
     clearInterval(this._tryReconnect);
     clearTimeout(this._keepAlive);
+    window.removeEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
   }
 
   onDisconnect = () => {
