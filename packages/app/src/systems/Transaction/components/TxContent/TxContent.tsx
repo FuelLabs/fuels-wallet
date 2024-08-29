@@ -53,7 +53,14 @@ const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
     <Alert status="error" css={styles.alert} aria-label="Transaction Error">
       <Alert.Description as="div">
         {errorMessages.map((message) => (
-          <Box key={message}>{message}</Box>
+          <Box
+            key={message}
+            css={{
+              wordBreak: 'break-word',
+            }}
+          >
+            {message}
+          </Box>
         ))}
       </Alert.Description>
     </Alert>
