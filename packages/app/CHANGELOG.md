@@ -1,5 +1,20 @@
 # fuels-wallet
 
+## 0.27.1
+
+### Patch Changes
+
+- [#1440](https://github.com/FuelLabs/fuels-wallet/pull/1440) [`dc9b4525`](https://github.com/FuelLabs/fuels-wallet/commit/dc9b4525e4401b5eba7e0b31cd96e1247747a686) Thanks [@arthurgeron](https://github.com/arthurgeron)! - - New "Review Errors" option in Hamburger Menu when new errors are detected.
+
+- [#1440](https://github.com/FuelLabs/fuels-wallet/pull/1440) [`dc9b4525`](https://github.com/FuelLabs/fuels-wallet/commit/dc9b4525e4401b5eba7e0b31cd96e1247747a686) Thanks [@arthurgeron](https://github.com/arthurgeron)! - - Removed Error Floating Button
+
+- [#1437](https://github.com/FuelLabs/fuels-wallet/pull/1437) [`32a2d53a`](https://github.com/FuelLabs/fuels-wallet/commit/32a2d53ab10707e6bcc5943e2c21046ddbab4494) Thanks [@helciofranco](https://github.com/helciofranco)! - Fixes the signup flow by ensuring the default networks being offline no longer prevent users from completing wallet setup.
+
+- [#1438](https://github.com/FuelLabs/fuels-wallet/pull/1438) [`d5c61dea`](https://github.com/FuelLabs/fuels-wallet/commit/d5c61dea3228ad8d2d0109b3a059abacc4e50bfa) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Fix text of error not breaking line on transaction screen
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.27.1
+
 ## 0.27.0
 
 ### Minor Changes
