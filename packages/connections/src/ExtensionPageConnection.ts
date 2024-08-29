@@ -54,6 +54,7 @@ export class ExtensionPageConnection extends BaseConnection {
 
   destroy() {
     this.connection.disconnect();
+    this.connection.onMessage.removeListener(this.onCommunicationMessage);
   }
 
   onRequest(message: RequestMessage) {
