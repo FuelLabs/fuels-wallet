@@ -1,13 +1,12 @@
 import { cssObj } from '@fuel-ui/css';
-import type { Icons } from '@fuel-ui/react';
-import { Box, Icon, Menu as RootMenu } from '@fuel-ui/react';
+import { Badge, Box, Icon, Menu as RootMenu, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import type { Key } from 'react';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 import { store } from '~/store';
 import { coreStyles } from '~/systems/Core/styles';
-import type { MenuItemObj, MenuItemContentProps, MenuProps } from './types';
+import type { MenuItemContentProps, MenuItemObj, MenuProps } from './types';
 
 function commonActions(
   item: MenuItemObj,
@@ -49,6 +48,7 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
 
   return (
     <Box css={styles.routeContent}>
+      {item.badge && <Text css={styles.badge}>●</Text>}
       <Box.Flex
         css={styles.route}
         data-active={Boolean(match && item.path)}
@@ -79,11 +79,7 @@ function MenuItemContent({ item, isOpened }: MenuItemContentProps) {
   );
 }
 
-export type MenuProps = {
-  items: MenuItemObj[];
-};
-
-export function Menu({ items }: MenuProps) {
+function _Menu({ items }: MenuProps) {
   const [opened, setOpened] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -119,6 +115,8 @@ export function Menu({ items }: MenuProps) {
     </RootMenu>
   );
 }
+
+export const Menu = memo(_Menu);
 
 const styles = {
   root: cssObj({
@@ -172,6 +170,7 @@ const styles = {
   }),
   routeContent: cssObj({
     flex: 1,
+    position: 'relative',
   }),
   submenu: cssObj({
     position: 'relative',
@@ -214,5 +213,13 @@ const styles = {
       background: '$intentsBase6',
       transform: 'translateY(-50%)',
     },
+  }),
+  badge: cssObj({
+    position: 'absolute',
+    top: 2,
+    left: 2,
+    fontSize: 8,
+    color: '$intentsError10 !important',
+    transform: 'translate(25%, -25%)',
   }),
 };
