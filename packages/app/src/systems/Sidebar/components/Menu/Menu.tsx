@@ -7,21 +7,7 @@ import { useState } from 'react';
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 import { store } from '~/store';
 import { coreStyles } from '~/systems/Core/styles';
-
-export type MenuItemObj = {
-  key: string;
-  icon: Icons;
-  label: string;
-  path?: string;
-  ahref?: string;
-  submenu?: MenuItemObj[];
-  onPress?: () => void;
-};
-
-type MenuItemContentProps = {
-  item: MenuItemObj;
-  isOpened?: boolean;
-};
+import type { MenuItemObj, MenuItemContentProps, MenuProps } from './types';
 
 function commonActions(
   item: MenuItemObj,
