@@ -58,8 +58,6 @@ export class NetworkService {
   }
 
   static async addNetwork(input: NetworkInputs['addNetwork']) {
-    // biome-ignore lint/complexity/noThisInStatic: <explanation>
-    await this.validateAddNetwork(input);
     return db.transaction('rw', db.networks, async () => {
       const count = await db.networks.count();
       const inputToAdd = {
@@ -130,17 +128,18 @@ export class NetworkService {
     // Add testnet network by default
     const testnetInfo = await NetworkService.getChainInfo({
       providerUrl: TESTNET_NETWORK_URL,
-    });
+    }).catch(() => ({ name: 'Fuel Sepolia Testnet' }));
     const testnetNetwork = await NetworkService.addNetwork({
       data: {
         name: testnetInfo.name,
         url: TESTNET_NETWORK_URL,
       },
     });
+
     // Add testnet network by default
     const devnetInfo = await NetworkService.getChainInfo({
       providerUrl: DEVNET_NETWORK_URL,
-    });
+    }).catch(() => ({ name: 'Fuel Ignition Sepolia Devnet' }));
     const devnetNetwork = await NetworkService.addNetwork({
       data: {
         name: devnetInfo.name,
@@ -159,7 +158,7 @@ export class NetworkService {
       // if it's custom network, add and select it
       const customInfo = await NetworkService.getChainInfo({
         providerUrl: envProviderUrl,
-      });
+      }).catch(() => ({ name: 'Custom Network' }));
       const customNetwork = await NetworkService.addNetwork({
         data: {
           name: customInfo.name,
