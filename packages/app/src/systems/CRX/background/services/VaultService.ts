@@ -129,6 +129,8 @@ export class VaultService extends VaultServer {
         return this.resetAndReload();
       }
     }
+
+    return true;
   }
 
   private setupListeners() {

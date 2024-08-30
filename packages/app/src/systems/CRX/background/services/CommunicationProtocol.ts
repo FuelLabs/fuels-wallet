@@ -81,10 +81,10 @@ export class CommunicationProtocol extends BaseConnection {
 
   onMessage = (message: CommunicationMessage, port: chrome.runtime.Port) => {
     const sender = port.sender;
-    if (sender?.id !== chrome.runtime.id) return;
+    if (sender?.id !== chrome.runtime.id) return true;
     if (![VAULT_SCRIPT_NAME, BACKGROUND_SCRIPT_NAME].includes(message.target))
-      return;
-    if (!Object.keys(MessageTypes).includes(message.type)) return;
+      return true;
+    if (!Object.keys(MessageTypes).includes(message.type)) return true;
 
     const portId = this.getPortId(port);
 
@@ -96,6 +96,7 @@ export class CommunicationProtocol extends BaseConnection {
         sender: port.sender,
       })
     );
+    return true;
   };
 
   destroy() {
