@@ -43,10 +43,17 @@ errorBoundary(() => {
     databaseEvents = DatabaseEvents.start(communicationProtocol);
   }
 
+  function onRestartHandler() {
+    console.log('fsk onRestartHandler');
+    onSuspendHandler();
+    onStartupHandler();
+  }
+
   // Initialize services when the background script starts up
   onStartupHandler();
 
   chrome.runtime.onConnect.addListener(onConnectHandler);
   chrome.runtime.onSuspend.addListener(onSuspendHandler);
   chrome.runtime.onStartup.addListener(onStartupHandler);
+  chrome.runtime.onUpdateAvailable.addListener(onRestartHandler);
 });
