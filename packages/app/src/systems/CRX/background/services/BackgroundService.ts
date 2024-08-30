@@ -224,6 +224,7 @@ export class BackgroundService {
         favIconUrl,
         totalAccounts: shownAccounts?.length || 0,
       });
+      popupService.destroy();
     }
 
     if (authorizedApp) {
@@ -277,6 +278,7 @@ export class BackgroundService {
       title,
       favIconUrl,
     });
+    popupService.destroy();
     return signedMessage;
   }
 
@@ -310,6 +312,7 @@ export class BackgroundService {
       title,
       favIconUrl,
     });
+    popupService.destroy();
     return signedMessage;
   }
 
@@ -358,6 +361,7 @@ export class BackgroundService {
       title,
       favIconUrl,
     });
+    popupService.destroy();
 
     return true;
   }
@@ -394,6 +398,7 @@ export class BackgroundService {
       title,
       favIconUrl,
     });
+    popupService.destroy();
 
     return true;
   }
