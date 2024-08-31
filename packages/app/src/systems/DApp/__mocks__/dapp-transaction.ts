@@ -1,3 +1,4 @@
+import { createProvider } from '@fuel-wallet/connections';
 import { Address, Provider, bn } from 'fuels';
 import { TxService } from '~/systems/Transaction/services';
 
@@ -12,7 +13,7 @@ export const getMockedTransaction = async (
   providerUrl: string
 ) => {
   const destinyAddress = getAddressFromString(destiny);
-  const provider = await Provider.create(providerUrl);
+  const provider = await createProvider(providerUrl);
   const transactionRequest = await TxService.createTransfer({
     to: destinyAddress.toString(),
     amount: bn.parseUnits('0.1'),
