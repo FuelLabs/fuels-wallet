@@ -1,6 +1,6 @@
 import EventEmitter from 'node:events';
 import { createProvider } from '@fuel-wallet/connections';
-import { Address, Provider, WalletManager, transactionRequestify } from 'fuels';
+import { Address, WalletManager, transactionRequestify } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
 
