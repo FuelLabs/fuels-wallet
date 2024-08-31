@@ -1,0 +1,35 @@
+[[package]]
+name = "core"
+source = "path+from-root-EF1196EF955CE54B"
+
+[[package]]
+name = "custom_asset"
+source = "member"
+dependencies = [
+    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.4.1#0a6f3ba0bce036a0ce61f15ed4480c71af32d3aa",
+    "std",
+    "sway_libs",
+]
+
+[[package]]
+name = "standards"
+source = "git+https://github.com/FuelLabs/sway-standards?tag=v0.4.1#0a6f3ba0bce036a0ce61f15ed4480c71af32d3aa"
+dependencies = ["std"]
+
+[[package]]
+name = "standards"
+source = "git+https://github.com/FuelLabs/sway-standards?tag=v0.4.3#6f63eb7dff2458a7d976184e565b5cbf26f61da2"
+dependencies = ["std"]
+
+[[package]]
+name = "std"
+source = "git+https://github.com/fuellabs/sway?tag=v0.63.3#f55c81cce61aac31913ac0e87306cbaed7da679a"
+dependencies = ["core"]
+
+[[package]]
+name = "sway_libs"
+source = "git+https://github.com/FuelLabs/sway-libs?tag=v0.21.0#6a227ed34c86fe1ebd334dbdfeccf66c43e3915b"
+dependencies = [
+    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.4.3#6f63eb7dff2458a7d976184e565b5cbf26f61da2",
+    "std",
+]
