@@ -1,4 +1,5 @@
-import EventEmitter from 'node:events';
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import EventEmitter from 'events';
 import { createProvider } from '@fuel-wallet/connections';
 import { Address, WalletManager, transactionRequestify } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
