@@ -26,8 +26,8 @@
   },
   "devDependencies": {
     "fuels": "0.86.0",
-    "@fuels/ts-config": "workspace:*",
-    "@fuels/tsup-config": "workspace:*",
+    "@fuels/ts-config": "^0.23.0",
+    "@fuels/tsup-config": "^0.23.0",
     "@playwright/test": "^1.39.0",
     "@types/adm-zip": "^0.5.3",
     "tsup": "^7.2.0"
