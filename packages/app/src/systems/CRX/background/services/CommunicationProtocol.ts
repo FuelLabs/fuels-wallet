@@ -10,6 +10,15 @@ import {
 export class CommunicationProtocol extends BaseConnection {
   ports: Map<string, chrome.runtime.Port>;
   portsDisconnectionHandlers: Map<string, () => void>;
+  messageTypesMap: Record<keyof typeof MessageTypes, boolean> = Object.keys(
+    MessageTypes
+  ).reduce(
+    (acc, type) => {
+      acc[type] = type !== 'ping';
+      return acc;
+    },
+    {} as Record<keyof typeof MessageTypes, boolean>
+  );
 
   constructor() {
     super();
@@ -79,12 +88,18 @@ export class CommunicationProtocol extends BaseConnection {
     return super.on(eventName, listener);
   }
 
-  onMessage = (message: CommunicationMessage, port: chrome.runtime.Port) => {
+  onMessage = async (
+    message: CommunicationMessage,
+    port: chrome.runtime.Port
+  ) => {
     const sender = port.sender;
-    if (sender?.id !== chrome.runtime.id) return true;
-    if (![VAULT_SCRIPT_NAME, BACKGROUND_SCRIPT_NAME].includes(message.target))
-      return true;
-    if (!Object.keys(MessageTypes).includes(message.type)) return true;
+    if (sender?.id !== chrome.runtime.id) return;
+    if (
+      message.target !== VAULT_SCRIPT_NAME &&
+      message.target !== BACKGROUND_SCRIPT_NAME
+    )
+      return;
+    if (!this.messageTypesMap[message.type]) return;
 
     const portId = this.getPortId(port);
 
@@ -96,7 +111,7 @@ export class CommunicationProtocol extends BaseConnection {
         sender: port.sender,
       })
     );
-    return true;
+    return;
   };
 
   destroy() {
