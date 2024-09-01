@@ -28,6 +28,9 @@ jobs:
         with:
           node-version: 18.18.0
           pnpm-version: 8.15.7
+      - uses: FuelLabs/github-actions/setups/npm@master
+        with:
+          npm-token: ${{ secrets.NPM_TOKEN }}
 
       - name: Bump and Collect Version
         run: |
@@ -42,19 +45,19 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
-      - name: Create Release Pull Request
+      - name: Create Release Pull Request or Publish to NPM
         id: changesets
         uses: FuelLabs/changesets-action@main
         with:
-          publish: pnpm changeset tag
+          publish: pnpm changeset publish --tag next
           commit: "ci(changesets): versioning packages"
           title: "ci(changesets): versioning packages"
           createGithubReleases: aggregate
           githubReleaseName: v${{ env.BUILD_VERSION }}
           githubTagName: v${{ env.BUILD_VERSION }}
-          skipNpm: true
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Build Fuel Wallet
         if: steps.changesets.outputs.published == 'true'
