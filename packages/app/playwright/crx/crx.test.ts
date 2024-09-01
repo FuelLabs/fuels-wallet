@@ -187,6 +187,8 @@ test.describe('FuelWallet Extension', () => {
 
     async function connectAccounts() {
       await reload(blankPage);
+      await blankPage.waitForTimeout(2000);
+
       const connectionResponse = blankPage.evaluate(async () => {
         const isConnected = await window.fuel.connect();
         if (!isConnected) {
