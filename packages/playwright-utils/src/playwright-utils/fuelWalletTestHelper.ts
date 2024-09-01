@@ -233,6 +233,8 @@ export class FuelWalletTestHelper {
       const urlInput = getByAriaLabel(this.walletPage, 'Network url');
       await urlInput.fill(providerUrl);
 
+      await getByAriaLabel(this.walletPage, 'Test connection').click();
+
       const addNewNetworkButton = getByAriaLabel(
         this.walletPage,
         'Add new network'
