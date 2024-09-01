@@ -17,8 +17,12 @@ export class ContentProxyConnection {
   readonly connectorName: string;
 
   constructor(connectorName: string) {
-    this.connection = this.connect();
     this.connectorName = connectorName;
+    this.onMessageFromWindow = this.onMessageFromWindow.bind(this);
+    this.onMessageFromExtension = this.onMessageFromExtension.bind(this);
+    this.onDisconnect = this.onDisconnect.bind(this);
+
+    this.connection = this.connect();
     window.addEventListener(EVENT_MESSAGE, this.onMessageFromWindow);
     this.onStartEvent();
   }
