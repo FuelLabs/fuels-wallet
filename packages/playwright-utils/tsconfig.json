@@ -1,0 +1,11 @@
+{
+  "extends": "@fuels/ts-config/base.json",
+  "compilerOptions": {
+    "keyofStringsOnly": true,
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "rootDir": "."
+  },
+  "include": ["**/*.ts", "**/*.tsx", "tsup.config.js"],
+  "exclude": ["**/*.test.ts", "dist"]
+}
