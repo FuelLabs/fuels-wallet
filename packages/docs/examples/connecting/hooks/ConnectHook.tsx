@@ -15,7 +15,7 @@ export function ConnectHook() {
     <ExampleBox error={error}>
       <Box.Flex gap="$4" align={'center'}>
         <Button
-          onPress={() => connect()}
+          onPress={() => connect(undefined)}
           isLoading={isPending}
           isDisabled={isPending}
         >

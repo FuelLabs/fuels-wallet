@@ -34,8 +34,9 @@ test.describe('HomeWallet', () => {
     await getInputByName(faucetTab, 'agreement2').click();
     await getInputByName(faucetTab, 'agreement3').click();
     await getInputByValue(faucetTab, 'Give me Test Ether').click();
+    await page.bringToFront();
     await hasText(page, /Ethereum/i);
-    await hasText(page, /ETH.0\.5/i);
+    await hasText(page, /ETH.0\.002/i);
     await getByAriaLabel(page, 'Selected Network').click();
     await getByAriaLabel(page, 'fuel_network-item-2').click();
     await hasText(page, "You don't have any assets");

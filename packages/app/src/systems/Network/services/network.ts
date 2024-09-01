@@ -1,11 +1,16 @@
 import { createUUID } from '@fuel-wallet/connections';
 import type { NetworkData } from '@fuel-wallet/types';
 import { compare } from 'compare-versions';
-import { type NodeInfo, Provider } from 'fuels';
-import { MIN_NODE_VERSION } from '~/config';
+import {
+  DEVNET_NETWORK_URL,
+  type NodeInfo,
+  Provider,
+  TESTNET_NETWORK_URL,
+} from 'fuels';
+import { MIN_NODE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
 import { db } from '~/systems/Core/utils/database';
 
-import { isValidNetworkUrl } from '../utils';
+import { isNetworkDevnet, isNetworkTestnet, isValidNetworkUrl } from '../utils';
 
 export type NetworkInputs = {
   getNetwork: {
@@ -53,8 +58,6 @@ export class NetworkService {
   }
 
   static async addNetwork(input: NetworkInputs['addNetwork']) {
-    // biome-ignore lint/complexity/noThisInStatic: <explanation>
-    await this.validateAddNetwork(input);
     return db.transaction('rw', db.networks, async () => {
       const count = await db.networks.count();
       const inputToAdd = {
@@ -122,18 +125,48 @@ export class NetworkService {
   }
 
   static async addDefaultNetworks() {
-    const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
-    const chainInfo = await NetworkService.getChainInfo({
-      providerUrl,
-    }).catch(() => ({
-      name: 'Localhost',
-    }));
-    return NetworkService.addNetwork({
+    // Add testnet network by default
+    const testnetInfo = await NetworkService.getChainInfo({
+      providerUrl: TESTNET_NETWORK_URL,
+    }).catch(() => ({ name: 'Fuel Sepolia Testnet' }));
+    const testnetNetwork = await NetworkService.addNetwork({
       data: {
-        name: chainInfo.name,
-        url: providerUrl,
+        name: testnetInfo.name,
+        url: TESTNET_NETWORK_URL,
       },
     });
+
+    // Add testnet network by default
+    const devnetInfo = await NetworkService.getChainInfo({
+      providerUrl: DEVNET_NETWORK_URL,
+    }).catch(() => ({ name: 'Fuel Ignition Sepolia Devnet' }));
+    const devnetNetwork = await NetworkService.addNetwork({
+      data: {
+        name: devnetInfo.name,
+        url: DEVNET_NETWORK_URL,
+      },
+    });
+
+    const envProviderUrl = VITE_FUEL_PROVIDER_URL;
+    if (isNetworkDevnet(envProviderUrl)) {
+      // if it's devnet start with devnet selected
+      await NetworkService.selectNetwork({ id: devnetNetwork.id || '' });
+    } else if (isNetworkTestnet(envProviderUrl)) {
+      // if it's testnet start with testnet selected
+      await NetworkService.selectNetwork({ id: testnetNetwork.id || '' });
+    } else if (envProviderUrl) {
+      // if it's custom network, add and select it
+      const customInfo = await NetworkService.getChainInfo({
+        providerUrl: envProviderUrl,
+      }).catch(() => ({ name: 'Custom Network' }));
+      const customNetwork = await NetworkService.addNetwork({
+        data: {
+          name: customInfo.name,
+          url: envProviderUrl,
+        },
+      });
+      await NetworkService.selectNetwork({ id: customNetwork.id || '' });
+    }
   }
 
   static clearNetworks() {
@@ -163,12 +196,12 @@ export class NetworkService {
       nodeInfo = await provider.fetchNode();
     } catch (_err) {
       throw new Error(
-        `Network version is not compatible with >=${MIN_NODE_VERSION} required by the Wallet`
+        `Network not compatible with Fuel Wallet. Required version is >=${MIN_NODE_VERSION}`
       );
     }
     if (compare(nodeInfo.nodeVersion, MIN_NODE_VERSION, '<')) {
       throw new Error(
-        `Network version is not compatible with >=${MIN_NODE_VERSION} required by the Wallet`
+        `Network not compatible with Fuel Wallet. Required version is >=${MIN_NODE_VERSION}`
       );
     }
     const collection = await db.transaction('r', db.networks, async () => {

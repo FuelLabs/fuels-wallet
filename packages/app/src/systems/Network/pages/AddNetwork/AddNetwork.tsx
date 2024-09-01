@@ -23,7 +23,8 @@ export function AddNetwork() {
     chainInfo,
     error: chainInfoError,
     isLoading: isLoadingChainInfo,
-  } = useChainInfo(isValidUrl ? form.getValues('url') : undefined);
+    handlers: chainInfoHandlers,
+  } = useChainInfo();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -46,6 +47,11 @@ export function AddNetwork() {
     handlers.addNetwork({ data });
   }
 
+  function onClickReview() {
+    if (!isValidUrl) return;
+    chainInfoHandlers.fetchChainInfo(form.getValues('url'));
+  }
+
   return (
     <MotionStack
       {...animations.slideInTop()}
@@ -63,6 +69,8 @@ export function AddNetwork() {
             form={form}
             isEditing={false}
             isLoading={isLoadingChainInfo}
+            onClickReview={onClickReview}
+            isValidUrl={isValidUrl}
           />
         </Focus.Scope>
       </Dialog.Description>

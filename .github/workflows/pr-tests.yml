@@ -9,9 +9,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-env:
-  COVERAGE_FILE: ./coverage/report.json
-
 jobs:
   tests-jest:
     name: JEST Tests
@@ -44,22 +41,10 @@ jobs:
 
       - name: Run Jest Tests
         run: |
-          pnpm test:ci --outputFile="${{ env.COVERAGE_FILE }}"
+          pnpm test:ci
         timeout-minutes: 20
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
-
-      - name: Publish coverage
-        uses: artiomtr/jest-coverage-report-action@v2.0.5
-        if: ${{ steps.findPr.outputs.number }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          package-manager: pnpm
-          annotations: failed-tests
-          test-script: pnpm test:ci
-          working-directory: ./packages/app
-          coverage-file: ${{ env.COVERAGE_FILE }}
-          base-coverage-file: ${{ env.COVERAGE_FILE }}
 
       - name: Stop Test Node
         run: pnpm node:clean
@@ -109,7 +94,53 @@ jobs:
 
       - name: Stop Test Node
         run: pnpm node:clean
-  
+
+  tests-e2e-crx-lock:
+    name: E2E Tests - Lock CRX
+    runs-on: buildjet-4vcpu-ubuntu-2204
+    steps:
+      - uses: actions/checkout@v3
+      - uses: FuelLabs/github-actions/setups/node@master
+        with:
+          node-version: 18.18.0
+          pnpm-version: 8.15.7
+      - uses: FuelLabs/github-actions/setups/docker@master
+        with:
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Start Test Node
+        run: pnpm node:up
+      
+      - name: Generate .env
+        run: cp packages/app/.env.example packages/app/.env
+
+      - name: Build Application
+        run: pnpm build:app
+        env:
+          ## increase node.js m memory limit for building
+          ## with sourcemaps
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
+      # E2E tests running with Playwright
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E Tests
+        run: xvfb-run --auto-servernum -- pnpm test:e2e:crx-lock
+        env:
+          NODE_ENV: test
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-app-crx-lock-report
+          path: packages/app/playwright-results
+          retention-days: 30
+
+      - name: Stop Test Node
+        run: pnpm node:clean
+
   tests-e2e-contracts:
     name: E2E Contract Tests - Local
     runs-on: buildjet-4vcpu-ubuntu-2204
@@ -123,6 +154,7 @@ jobs:
         with:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: ./.github/actions/setup-rust
 
       - name: Run PNPM install
         id: pnpm-cache

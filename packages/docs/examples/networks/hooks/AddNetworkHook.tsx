@@ -21,7 +21,7 @@ export function AddNetworkHook() {
   const { addNetwork, isPending, error } = useAddNetwork();
 
   async function handleAddNetwork(networkUrl: string) {
-    if (!isConnected) connect(); // ignore-line
+    if (!isConnected) connect(undefined); // ignore-line
     console.log('Add network', networkUrl);
     const networkAdded = await addNetwork(networkUrl);
     console.log('Network added', networkAdded);

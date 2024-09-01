@@ -35,6 +35,7 @@ const nextConfig = {
   basePath: process.env.DOCS_BASE_URL || '',
   experimental: {
     externalDir: true,
+    esmExternals: 'loose',
   },
   images: {
     dangerouslyAllowSVG: true,
@@ -42,6 +43,7 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   trailingSlash: true,
+  transpilePackages: ['@fuels/connectors', '@fuels/react'],
   webpack(config) {
     const depsAlias = resolveLinkDeps();
     config.resolve.alias = {

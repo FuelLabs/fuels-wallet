@@ -10,6 +10,7 @@ import { NetworkDropdown } from '~/systems/Network/components';
 import { useNetworks } from '~/systems/Network/hooks';
 import { useOverlay } from '~/systems/Overlay';
 
+import { useReportError } from '~/systems/Error';
 import { useLayoutContext } from './Layout';
 
 export enum TopBarType {
@@ -32,6 +33,7 @@ function InternalTopBar({ onBack }: TopBarProps) {
   const overlay = useOverlay();
   const { isLoading, title, isHome } = useLayoutContext();
   const { selectedNetwork, handlers } = useNetworks();
+  const { hasErrorsToReport } = useReportError();
 
   return (
     <Box.Flex as="nav" css={styles.root}>
@@ -61,7 +63,8 @@ function InternalTopBar({ onBack }: TopBarProps) {
           </>
         )}
       </Box.Flex>
-      <Box.Stack direction="row" gap="$2">
+      <Box.Stack direction="row" gap="$2" css={styles.menuContainer}>
+        {hasErrorsToReport && <Text css={styles.badge}>●</Text>}
         <IconButton
           iconSize={20}
           icon={<Icon icon="Menu2" />}
@@ -126,6 +129,17 @@ const styles = {
     alignItems: 'center',
     minHeight: '50px',
     transition: 'none',
+  }),
+  menuContainer: cssObj({
+    position: 'relative',
+  }),
+  badge: cssObj({
+    position: 'absolute',
+    top: -6,
+    right: -2,
+    fontSize: 8,
+    color: '$intentsError10 !important',
+    transform: 'translate(25%, -25%)',
   }),
   topbarIcon: cssObj({
     px: '$0 !important',

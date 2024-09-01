@@ -29,3 +29,6 @@ dist-ssr
 *.sw?
 
 cypress/videos
+
+# Sentry Config File
+.env.sentry-build-plugin

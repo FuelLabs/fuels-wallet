@@ -1,6 +1,6 @@
 import { BACKGROUND_SCRIPT_NAME, VAULT_SCRIPT_NAME } from '@fuel-wallet/types';
 
-import { errorBoundary } from '../utils';
+import { communicationProtocol, errorBoundary } from '../utils';
 
 import { BackgroundService } from './services/BackgroundService';
 import { CommunicationProtocol } from './services/CommunicationProtocol';
@@ -8,8 +8,6 @@ import { DatabaseEvents } from './services/DatabaseEvents';
 import { VaultService } from './services/VaultService';
 
 errorBoundary(() => {
-  const communicationProtocol = new CommunicationProtocol();
-
   BackgroundService.start(communicationProtocol);
   VaultService.start(communicationProtocol);
   DatabaseEvents.start(communicationProtocol);

@@ -1,5 +1,5 @@
-import { act, fireEvent, render, screen } from '@fuel-ui/test-utils';
-import { useState } from 'react';
+import { fireEvent, render, screen } from '@fuel-ui/test-utils';
+import { act, useState } from 'react';
 import { TestWrapper } from '~/systems/Core';
 
 import { MOCK_ASSETS_AMOUNTS } from '../../__mocks__/assets';
@@ -41,10 +41,11 @@ describe('AssetSelect', () => {
     expect(etherItem).toBeInTheDocument();
     await act(() => fireEvent.click(etherItem));
 
-    const trigger = container.querySelector('#fuel_asset-select');
+    const trigger = container.querySelector('.fuel_Dropdown-trigger');
     expect(() => screen.getByText('Select one asset')).toThrow();
-    expect(trigger?.textContent?.includes('Ethereum')).toBe(true);
-    expect(onSelect).toBeCalledWith(MOCK_ASSETS_AMOUNTS[0].assetId);
+    // debug();
+    expect(trigger?.getAttribute('data-value')).toBe('Ethereum');
+    expect(onSelect).toHaveBeenCalledWith(MOCK_ASSETS_AMOUNTS[0].assetId);
   });
 
   it('should have an initial selected item', async () => {
@@ -53,7 +54,7 @@ describe('AssetSelect', () => {
       { wrapper: TestWrapper }
     );
     // expect(() => screen.getByText('Select one asset')).toThrow();
-    const trigger = container.querySelector('#fuel_asset-select');
+    const trigger = container.querySelector('.fuel_Dropdown-trigger');
     // console.log(`trigger?.textContent`, trigger?.textContent);
     expect(trigger?.textContent?.includes('Ethereum')).toBe(true);
   });
@@ -67,7 +68,7 @@ describe('AssetSelect', () => {
     await act(() => fireEvent.click(etherItem));
     expect(onSelect).toBeCalledWith(MOCK_ASSETS_AMOUNTS[0].assetId);
 
-    const trigger = container.querySelector('#fuel_asset-select');
+    const trigger = container.querySelector('.fuel_Dropdown-trigger');
     expect(trigger?.textContent?.includes('Ethereum')).toBe(true);
 
     const clearBtn = await screen.findByLabelText('Clear');

@@ -1,5 +1,69 @@
 # fuels-wallet
 
+## 0.27.1
+
+### Patch Changes
+
+- [#1440](https://github.com/FuelLabs/fuels-wallet/pull/1440) [`dc9b4525`](https://github.com/FuelLabs/fuels-wallet/commit/dc9b4525e4401b5eba7e0b31cd96e1247747a686) Thanks [@arthurgeron](https://github.com/arthurgeron)! - - New "Review Errors" option in Hamburger Menu when new errors are detected.
+
+- [#1440](https://github.com/FuelLabs/fuels-wallet/pull/1440) [`dc9b4525`](https://github.com/FuelLabs/fuels-wallet/commit/dc9b4525e4401b5eba7e0b31cd96e1247747a686) Thanks [@arthurgeron](https://github.com/arthurgeron)! - - Removed Error Floating Button
+
+- [#1437](https://github.com/FuelLabs/fuels-wallet/pull/1437) [`32a2d53a`](https://github.com/FuelLabs/fuels-wallet/commit/32a2d53ab10707e6bcc5943e2c21046ddbab4494) Thanks [@helciofranco](https://github.com/helciofranco)! - Fixes the signup flow by ensuring the default networks being offline no longer prevent users from completing wallet setup.
+
+- [#1438](https://github.com/FuelLabs/fuels-wallet/pull/1438) [`d5c61dea`](https://github.com/FuelLabs/fuels-wallet/commit/d5c61dea3228ad8d2d0109b3a059abacc4e50bfa) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Fix text of error not breaking line on transaction screen
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.27.1
+
+## 0.27.0
+
+### Minor Changes
+
+- [#1420](https://github.com/FuelLabs/fuels-wallet/pull/1420) [`737652ba`](https://github.com/FuelLabs/fuels-wallet/commit/737652badce501292fad509ebadda751ea8792df) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Refactored Sentry implementation, error handling, and report logic
+
+### Patch Changes
+
+- [#1429](https://github.com/FuelLabs/fuels-wallet/pull/1429) [`3486bee0`](https://github.com/FuelLabs/fuels-wallet/commit/3486bee0cd249939833f00809dc27fe7260e3a1f) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Upgrade DB version to include testnet and devnet as initial networks in database
+
+- [#1431](https://github.com/FuelLabs/fuels-wallet/pull/1431) [`c1d3dd6b`](https://github.com/FuelLabs/fuels-wallet/commit/c1d3dd6be885cc3b30a704150c89adc8a1c7e22a) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - feat: run e2e test of Lock CRX isolated and remove from regular flow to increase its speed
+
+- [#1429](https://github.com/FuelLabs/fuels-wallet/pull/1429) [`3486bee0`](https://github.com/FuelLabs/fuels-wallet/commit/3486bee0cd249939833f00809dc27fe7260e3a1f) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Include networks Testnet and Devnet by default in network list
+
+- [#1420](https://github.com/FuelLabs/fuels-wallet/pull/1420) [`737652ba`](https://github.com/FuelLabs/fuels-wallet/commit/737652badce501292fad509ebadda751ea8792df) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Include "Error Review" screen allowing the user to review and report screens
+
+- [#1429](https://github.com/FuelLabs/fuels-wallet/pull/1429) [`3486bee0`](https://github.com/FuelLabs/fuels-wallet/commit/3486bee0cd249939833f00809dc27fe7260e3a1f) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Improve flow of network URL to wait for click to "Test connection", instead of load automatically
+
+- Updated dependencies [[`737652ba`](https://github.com/FuelLabs/fuels-wallet/commit/737652badce501292fad509ebadda751ea8792df)]:
+  - @fuel-wallet/connections@0.27.0
+
+## 0.26.0
+
+### Minor Changes
+
+- [#1427](https://github.com/FuelLabs/fuels-wallet/pull/1427) [`7ba78a86`](https://github.com/FuelLabs/fuels-wallet/commit/7ba78a867f9202c10faac204a00a8efd3360aaf0) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Update to fuel-core@0.33.0 and forc@0.63.1 and fuels@0.94.0
+
+### Patch Changes
+
+- [#1427](https://github.com/FuelLabs/fuels-wallet/pull/1427) [`7ba78a86`](https://github.com/FuelLabs/fuels-wallet/commit/7ba78a867f9202c10faac204a00a8efd3360aaf0) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Add 10% buffer on maxFee to sendTransaction, to avoid crashing on `getTxSummaryFromRequest` missing few units
+
+- [#1427](https://github.com/FuelLabs/fuels-wallet/pull/1427) [`7ba78a86`](https://github.com/FuelLabs/fuels-wallet/commit/7ba78a867f9202c10faac204a00a8efd3360aaf0) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Added `web_accessible_resources` to manifest due to error in extension setup for playwright test
+
+- Updated dependencies [[`7ba78a86`](https://github.com/FuelLabs/fuels-wallet/commit/7ba78a867f9202c10faac204a00a8efd3360aaf0)]:
+  - @fuel-wallet/connections@0.26.0
+
+## 0.25.0
+
+### Minor Changes
+
+- [#1277](https://github.com/FuelLabs/fuels-wallet/pull/1277) [`87cc8099`](https://github.com/FuelLabs/fuels-wallet/commit/87cc8099fcbd5d1f470c27848ecd1027d6e155dc) Thanks [@helciofranco](https://github.com/helciofranco)! - feat: add custom network fees, offering options like regular, fast and custom tip when approving a transaction through Dapps.
+
+### Patch Changes
+
+- [#1424](https://github.com/FuelLabs/fuels-wallet/pull/1424) [`abfad2e6`](https://github.com/FuelLabs/fuels-wallet/commit/abfad2e6f134795a62ffb68ef2f7ca7e1ca42ccb) Thanks [@arthurgeron](https://github.com/arthurgeron)! - - Audit check now ignores vulnerabilities with no known patched version
+  - Test utils using act methods deprecated in React 18.3
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.25.0
+
 ## 0.24.0
 
 ### Minor Changes

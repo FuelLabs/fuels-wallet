@@ -6,7 +6,6 @@ import { Provider, Wallet, bn } from 'fuels';
 import {
   getButtonByText,
   getByAriaLabel,
-  getElementByText,
   getInputByName,
   hasAriaLabel,
   hasText,
@@ -49,6 +48,10 @@ test.describe('SendTransaction', () => {
       receiverWallet.address.toString()
     );
 
+    await getInputByName(page, 'amount').focus();
+
+    await page.waitForTimeout(1000);
+
     // Fill amount
     await getInputByName(page, 'amount').fill('0.001');
 
@@ -74,6 +77,10 @@ test.describe('SendTransaction', () => {
 
     // Fill address
     await getInputByName(page, 'address').fill(account.address.toString());
+
+    // Focus on input and wait, to avoid flakiness
+    await getInputByName(page, 'amount').focus();
+    await page.waitForTimeout(500);
 
     // Fill amount
     await getInputByName(page, 'amount').fill('0.001');
@@ -107,6 +114,10 @@ test.describe('SendTransaction', () => {
       receiverWallet.address.toString()
     );
 
+    // Focus on input and wait, to avoid flakiness
+    await getInputByName(page, 'amount').focus();
+    await page.waitForTimeout(500);
+
     // Fill amount
     await getInputByName(page, 'amount').fill('0.01');
     // Check the balance is correct formated with only 2 decimals
@@ -132,10 +143,16 @@ test.describe('SendTransaction', () => {
     await getButtonByText(page, 'Select one asset').click();
     await page.getByText('Ethereum').click();
     await getInputByName(page, 'address').fill(receiverWallet.address.toB256());
+
+    // Focus on input and wait, to avoid flakiness
+    await getInputByName(page, 'amount').focus();
+    await page.waitForTimeout(500);
+
     await getInputByName(page, 'amount').fill('0.001');
 
     // Waiting button change to Review in order to ensure that fee amount is updated
     await page.waitForSelector('button:has-text("Review")');
+    await page.waitForTimeout(1000);
 
     // Selecting and extracting regular fee amount
     const regularFeeComponent = getByAriaLabel(page, 'fee value:Regular');
@@ -176,6 +193,11 @@ test.describe('SendTransaction', () => {
     await getButtonByText(page, 'Select one asset').click();
     await page.getByText('Ethereum').click();
     await getInputByName(page, 'address').fill(receiverWallet.address.toB256());
+
+    // Focus on input and wait, to avoid flakiness
+    await getInputByName(page, 'amount').focus();
+    await page.waitForTimeout(500);
+
     await getInputByName(page, 'amount').fill('0.001');
 
     //Selecting and extracting fast fee amount
@@ -184,6 +206,7 @@ test.describe('SendTransaction', () => {
 
     // Waiting button change to Review in order to change fee amount
     await page.waitForSelector('button:has-text("Review")');
+    await page.waitForTimeout(1000);
 
     const fastFeeAmount = (await fastFeeComponent.textContent())
       .replace(' ETH', '')
@@ -222,19 +245,33 @@ test.describe('SendTransaction', () => {
     await getButtonByText(page, 'Select one asset').click();
     await page.getByText('Ethereum').click();
     await getInputByName(page, 'address').fill(receiverWallet.address.toB256());
+
+    // Focus on input and wait, to avoid flakiness
+    await getInputByName(page, 'amount').focus();
+    await page.waitForTimeout(500);
+
     await getInputByName(page, 'amount').fill('0.001');
 
     // Waiting button change to Review in order to ensure that fee amount is updated
     await page.waitForSelector('button:has-text("Review")');
+    await page.waitForTimeout(1000);
 
     // Selecting and extracting regular fee amount
     const regularFeeComponent = getByAriaLabel(page, 'fee value:Regular');
     await regularFeeComponent.click();
+
+    // Waiting button change to Review in order to ensure that fee amount is updated
+    await page.waitForSelector('button:has-text("Review")');
+    await page.waitForTimeout(1000);
+
     const regularFeeAmount = (await regularFeeComponent.textContent())
       .replace(' ETH', '')
       .trim();
-
     await getButtonByText(page, 'Review').click();
+
+    // Waiting button change to Approve in order to get updated fee amount
+    await page.waitForSelector('button:has-text("Approve")');
+    await page.waitForTimeout(1000);
 
     // Extract and compare the network fee amount, checking if its equal to regular fee amont
     const networkFeeComponentWithRegular = getByAriaLabel(
@@ -246,24 +283,31 @@ test.describe('SendTransaction', () => {
     )
       .replace(' ETH', '')
       .trim();
+
     // Validating the amount
     expect(regularFeeAmount).toBe(networkFeeAmountWithRegular);
 
     // Going back to select other fee value
     await getButtonByText(page, 'Back').click();
 
-    //Selecting and extracting fast fee amount
+    // Selecting and extracting fast fee amount
     const fastFeeComponent = getByAriaLabel(page, 'fee value:Fast');
     await fastFeeComponent.click();
 
     // Waiting button change to Review in order to change fee amount
     await page.waitForSelector('button:has-text("Review")');
+    await page.waitForTimeout(1000);
 
     const fastFeeAmount = (await fastFeeComponent.textContent())
       .replace(' ETH', '')
       .trim();
 
+    await page.waitForTimeout(1000);
     await getButtonByText(page, 'Review').click();
+
+    // Waiting button change to Approve in order to get updated fee amount
+    await page.waitForSelector('button:has-text("Approve")');
+    await page.waitForTimeout(1000);
 
     // Extract and compere the network fee amount, checking if its equal to fast fee amount
     const networkFeeComponentWithFast = getByAriaLabel(
@@ -275,11 +319,13 @@ test.describe('SendTransaction', () => {
     )
       .replace(' ETH', '')
       .trim();
+
     // Validating the amount
     expect(fastFeeAmount).toBe(networkFeeAmountWithFast);
 
     await hasText(page, /(.*)ETH/);
 
+    await page.waitForTimeout(1000);
     await getButtonByText(page, 'Approve').click();
     await hasText(page, '0.001 ETH');
 
@@ -304,6 +350,10 @@ test.describe('SendTransaction', () => {
     await getInputByName(page, 'address').fill(
       receiverWallet.address.toString()
     );
+
+    // Focus on input and wait, to avoid flakiness
+    await getInputByName(page, 'amount').focus();
+    await page.waitForTimeout(500);
 
     // Fill amount
     await getByAriaLabel(page, 'Max').click();

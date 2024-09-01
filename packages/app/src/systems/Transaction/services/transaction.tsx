@@ -31,12 +31,20 @@ export type TxInputs = {
     id: string;
   };
   request: {
+    providerUrl: string;
+    transactionRequest: TransactionRequest;
     address?: string;
     origin?: string;
     title?: string;
     favIconUrl?: string;
-    transactionRequest: TransactionRequest;
-    providerUrl: string;
+    skipCustomFee?: boolean;
+    fees?: {
+      baseFee?: BN;
+      regularTip?: BN;
+      fastTip?: BN;
+      minGasLimit?: BN;
+      maxGasLimit?: BN;
+    };
   };
   send: {
     address: string;
@@ -46,6 +54,11 @@ export type TxInputs = {
   simulateTransaction: {
     transactionRequest: TransactionRequest;
     providerUrl?: string;
+    skipCustomFee?: boolean;
+  };
+  setCustomFees: {
+    tip?: BN;
+    gasLimit?: BN;
   };
   getOutputs: {
     transactionRequest?: TransactionRequest;
@@ -73,7 +86,13 @@ export type TxInputs = {
     wallet: WalletLocked;
     transactionRequest: TransactionRequest;
   };
+  computeCustomFee: {
+    wallet: WalletLocked;
+    transactionRequest: TransactionRequest;
+  };
 };
+
+const AMOUNT_SUB_PER_TX_RETRY = 200_000;
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class TxService {
@@ -142,23 +161,58 @@ export class TxService {
   }
 
   static async simulateTransaction({
+    skipCustomFee,
     transactionRequest,
     providerUrl,
   }: TxInputs['simulateTransaction']) {
-    const provider = await Provider.create(providerUrl || '');
-    const transaction = transactionRequest.toTransaction();
-    const abiMap = await getAbiMap({
-      inputs: transaction.inputs,
-    });
+    const [provider, account] = await Promise.all([
+      Provider.create(providerUrl || ''),
+      AccountService.getCurrentAccount(),
+    ]);
+
+    if (!transactionRequest) {
+      throw new Error('Missing transaction request');
+    }
+    if (!account) {
+      throw new Error('Missing context for transaction request');
+    }
+
+    const wallet = new WalletLockedCustom(account.address, provider);
 
     try {
+      const customFee = !skipCustomFee
+        ? await TxService.computeCustomFee({
+            wallet,
+            transactionRequest,
+          })
+        : undefined;
+
+      const transaction = transactionRequest.toTransaction();
+      const abiMap = await getAbiMap({
+        inputs: transaction.inputs,
+      });
+
       const txSummary = await getTransactionSummaryFromRequest({
         provider,
         transactionRequest,
         abiMap,
       });
 
-      return { txSummary };
+      // Adding 1 magical unit to match the fake unit that is added on TS SDK (.add(1))
+      const feeAdaptedToSdkDiff = txSummary.fee.add(1);
+
+      return {
+        baseFee: customFee?.baseFee,
+        minGasLimit: customFee?.gasUsed,
+        txSummary: {
+          ...txSummary,
+          // if customFee was chosen, we override the txSummary fee with the customFee
+          fee: feeAdaptedToSdkDiff,
+          gasUsed: txSummary.gasUsed,
+          // fee: customFee?.txCost?.maxFee || feeAdaptedToSdkDiff,
+          // gasUsed: customFee?.txCost?.gasUsed || txSummary.gasUsed,
+        },
+      };
 
       // biome-ignore lint/suspicious/noExplicitAny: allow any
     } catch (e: any) {
@@ -169,6 +223,10 @@ export class TxService {
 
       const transaction = transactionRequest.toTransaction();
       const transactionBytes = transactionRequest.toTransactionBytes();
+
+      const abiMap = await getAbiMap({
+        inputs: transaction.inputs,
+      });
 
       const errorsToParse =
         e.name === 'FuelError' ? [{ message: e.message }] : e.response?.errors;
@@ -188,11 +246,17 @@ export class TxService {
         maxGasPerTx,
         gasPrice,
         baseAssetId,
+        id: '',
       });
       txSummary.isStatusFailure = true;
       txSummary.status = TransactionStatus.failure;
 
-      return { txSummary, simulateTxErrors };
+      return {
+        baseFee: undefined,
+        minGasLimit: undefined,
+        txSummary,
+        simulateTxErrors,
+      };
     }
   }
 
@@ -206,7 +270,7 @@ export class TxService {
       provider,
       filters: {
         owner: address,
-        first: 1000,
+        first: 100,
       },
     });
 
@@ -268,7 +332,7 @@ export class TxService {
 
     while (attempts < maxAttempts) {
       try {
-        const targetAmount = amount.sub(attempts * 1_000_000);
+        const targetAmount = amount.sub(attempts * AMOUNT_SUB_PER_TX_RETRY);
         const realAmount = targetAmount.gt(0) ? targetAmount : bn(1);
         const transactionRequest = await wallet.createTransfer(
           Address.fromDynamicInput(to),
@@ -280,16 +344,15 @@ export class TxService {
           }
         );
 
-        const txCost = await provider.getTransactionCost(transactionRequest, {
-          resourcesOwner: wallet,
-        });
+        // Getting updated maxFee and costs
+        const txCost = await wallet.getTransactionCost(transactionRequest);
 
         const baseFee = transactionRequest.maxFee.sub(
           transactionRequest.tip ?? bn(0)
         );
 
         return {
-          baseFee: baseFee.sub(1), // To match maxFee calculated on TS SDK (they add 1 unit)
+          baseFee,
           minGasLimit: txCost.gasUsed,
           transactionRequest,
           address: account.address,
@@ -321,6 +384,30 @@ export class TxService {
       address: account.address,
       providerUrl: network.url,
     };
+  }
+
+  static async computeCustomFee({
+    wallet,
+    transactionRequest,
+  }: TxInputs['computeCustomFee']) {
+    const txCost = await wallet.getTransactionCost(transactionRequest, {
+      estimateTxDependencies: true,
+    });
+
+    // add 10% to have some buffer as gasPrice may vary
+    transactionRequest.maxFee = txCost.maxFee.add(txCost.maxFee.div(10));
+
+    // funding the transaction with the required quantities (the maxFee might have changed)
+    await wallet.fund(transactionRequest, {
+      ...txCost,
+      requiredQuantities: [],
+    });
+
+    const baseFee = transactionRequest.maxFee.sub(
+      transactionRequest.tip ?? bn(0)
+    );
+
+    return { baseFee, gasUsed: txCost.gasUsed };
   }
 }
 

@@ -34,7 +34,7 @@ export const testSetup = async ({
   if (VITE_WALLET_SECRET) {
     await seedWallet(
       masterWallet.address.toString(),
-      bn.parseUnits('100'),
+      bn.parseUnits('1'),
       VITE_FUEL_PROVIDER_URL!,
       VITE_WALLET_SECRET!
     );
@@ -90,9 +90,7 @@ export const transferMaxBalance = async ({
         );
         await txResponse.waitForResult();
         console.log(
-          `----- Success sending ${amountToSend?.format()} back to ${
-            toWallet.address
-          }`
+          `----- Success sending ${amountToSend?.format()} back to ${toWallet.address.toB256()}`
         );
       }
     } catch (e) {

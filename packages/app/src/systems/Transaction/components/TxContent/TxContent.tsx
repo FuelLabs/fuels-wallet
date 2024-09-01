@@ -1,26 +1,40 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Box, CardList, ContentLoader } from '@fuel-ui/react';
+import {
+  Alert,
+  Box,
+  CardList,
+  ContentLoader,
+  Text,
+  VStack,
+} from '@fuel-ui/react';
 import type { AssetData } from '@fuel-wallet/types';
-import type { TransactionStatus, TransactionSummary } from 'fuels';
+import type { BN, TransactionStatus, TransactionSummary } from 'fuels';
 import { type ReactNode, useMemo } from 'react';
+import { useFormContext } from 'react-hook-form';
 import type { Maybe } from '~/systems/Core';
 import { MotionStack, animations } from '~/systems/Core';
+import type { SendFormValues } from '~/systems/Send/hooks';
 import {
   type GroupedErrors,
   TxFee,
   TxHeader,
   TxOperations,
 } from '~/systems/Transaction';
+import { TxFeeOptions } from '../TxFeeOptions/TxFeeOptions';
 
 const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
   const errorMessages = useMemo(() => {
     const messages = [];
     if (errors) {
-      if (errors.InsufficientInputAmount) messages.push('Not enough funds');
+      if (errors.InsufficientInputAmount || errors.NotEnoughCoins) {
+        messages.push('Not enough funds');
+      }
 
       // biome-ignore lint: will not be a large array
       Object.keys(errors).forEach((key: string) => {
-        if (key === 'InsufficientInputAmount') return;
+        if (key === 'InsufficientInputAmount' || key === 'NotEnoughCoins') {
+          return;
+        }
 
         let errorMessage = `${key}: `;
         try {
@@ -39,7 +53,14 @@ const ErrorHeader = ({ errors }: { errors?: GroupedErrors }) => {
     <Alert status="error" css={styles.alert} aria-label="Transaction Error">
       <Alert.Description as="div">
         {errorMessages.map((message) => (
-          <Box key={message}>{message}</Box>
+          <Box
+            key={message}
+            css={{
+              wordBreak: 'break-word',
+            }}
+          >
+            {message}
+          </Box>
         ))}
       </Alert.Description>
     </Alert>
@@ -85,6 +106,12 @@ type TxContentInfoProps = {
   isConfirm?: boolean;
   errors?: GroupedErrors;
   providerUrl?: string;
+  fees?: {
+    baseFee?: BN;
+    minGasLimit?: BN;
+    regularTip?: BN;
+    fastTip?: BN;
+  };
 };
 
 function TxContentInfo({
@@ -97,13 +124,26 @@ function TxContentInfo({
   isConfirm,
   errors,
   providerUrl,
+  fees,
 }: TxContentInfoProps) {
+  const { getValues } = useFormContext<SendFormValues>();
+
   const status = txStatus || tx?.status || txStatus;
   const hasErrors = Boolean(Object.keys(errors || {}).length);
   const isExecuted = !!tx?.id;
 
+  const initialAdvanced = useMemo(() => {
+    if (!fees?.regularTip || !fees?.minGasLimit) return false;
+
+    return (
+      !getValues('fees.tip.amount').eq(fees.regularTip) ||
+      !getValues('fees.gasLimit.amount').eq(fees.minGasLimit)
+    );
+  }, [getValues, fees]);
+
   function getHeader() {
     if (hasErrors) return <ErrorHeader errors={errors} />;
+    if (isConfirm) return <ConfirmHeader />;
     if (isExecuted)
       return (
         <TxHeader
@@ -113,7 +153,6 @@ function TxContentInfo({
           providerUrl={providerUrl}
         />
       );
-    if (isConfirm) return <ConfirmHeader />;
 
     return <ConfirmHeader />;
   }
@@ -128,7 +167,23 @@ function TxContentInfo({
         isLoading={isLoading}
       />
       {isLoading && !showDetails && <TxFee.Loader />}
-      {showDetails && <TxFee fee={tx?.fee} />}
+      {showDetails && !fees && <TxFee fee={tx?.fee} />}
+      {showDetails &&
+        fees?.baseFee &&
+        fees?.minGasLimit &&
+        fees?.regularTip &&
+        fees?.fastTip && (
+          <VStack gap="$3">
+            <Text as="span">Fee (network)</Text>
+            <TxFeeOptions
+              initialAdvanced={initialAdvanced}
+              baseFee={fees.baseFee}
+              minGasLimit={fees.minGasLimit}
+              regularTip={fees.regularTip}
+              fastTip={fees.fastTip}
+            />
+          </VStack>
+        )}
       {footer}
     </Box.Stack>
   );
@@ -140,6 +195,11 @@ export const TxContent = {
 };
 
 const styles = {
+  fees: cssObj({
+    color: '$intentsBase12',
+    fontSize: '$md',
+    fontWeight: '$normal',
+  }),
   alert: cssObj({
     '& .fuel_Alert-content': {
       gap: '$1',

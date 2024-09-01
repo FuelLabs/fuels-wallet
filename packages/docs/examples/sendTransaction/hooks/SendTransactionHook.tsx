@@ -25,7 +25,7 @@ export function SendTransactionHook() {
   const { sendTransaction, data, isPending, error } = useSendTransaction();
 
   async function handleSendTransaction(destination: string) {
-    if (!isConnected) return connect(); // ignore-line
+    if (!isConnected) return connect(undefined); // ignore-line
     if (!wallet) {
       throw new Error('Current wallet is not authorized for this connection!');
     }

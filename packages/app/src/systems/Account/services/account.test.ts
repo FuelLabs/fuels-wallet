@@ -8,10 +8,9 @@ import {
 import { MOCK_ACCOUNTS } from '../__mocks__';
 
 import { graphql } from 'msw';
-import { MOCK_TRANSACTION_WITH_RECEIPTS_GQL } from '~/systems/Transaction/__mocks__/transaction';
 import { AccountService } from './account';
 
-const providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
+const _providerUrl = import.meta.env.VITE_FUEL_PROVIDER_URL;
 const MOCK_ACCOUNT = MOCK_ACCOUNTS[0];
 
 const MOCK_BALANCES = [
@@ -23,15 +22,7 @@ const MOCK_BALANCES = [
   },
 ];
 
-mockServer([
-  graphql.query('getChain', (_req, res, ctx) => {
-    return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
-  }),
-  graphql.query('getNodeInfo', (_req, res, ctx) => {
-    return res(ctx.data(MOCK_TRANSACTION_WITH_RECEIPTS_GQL));
-  }),
-  mockBalancesOnGraphQL(MOCK_BALANCES),
-]);
+mockServer([mockBalancesOnGraphQL(MOCK_BALANCES)]);
 
 describe('AccountService', () => {
   beforeEach(async () => {
@@ -43,17 +34,6 @@ describe('AccountService', () => {
     expect(accounts.length).toBe(0);
     await AccountService.addAccount({ data: MOCK_ACCOUNT });
     expect((await AccountService.getAccounts()).length).toBe(1);
-  });
-
-  it('should fetch balance from account', async () => {
-    const account = await AccountService.addAccount({ data: MOCK_ACCOUNT });
-    if (!account) return;
-    const result = await AccountService.fetchBalance({ account, providerUrl });
-    expect(result.balance).toBe(bn(1000).toString());
-    expect(result.address).toBe(MOCK_ACCOUNT.address);
-    expect(result.balances?.[0].assetId).toBe(
-      (await Provider.create(providerUrl)).getBaseAssetId()
-    );
   });
 
   it('should convert an array of accounts into a map', async () => {

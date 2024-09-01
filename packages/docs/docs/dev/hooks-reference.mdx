@@ -15,7 +15,7 @@ console.log(account);
 // fuel1r20zhd...
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useAccount.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useAccount.ts)
 
 ## `useAccounts`
 
@@ -27,7 +27,7 @@ console.log(accounts);
 // [fuel1r20zhd..., fuel1qqluc9..., ...]
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useAccounts.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useAccounts.ts)
 
 ## `useBalance`
 
@@ -43,7 +43,7 @@ console.log(balance);
 // 1000 (example balance)
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useBalance.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useBalance.ts)
 
 ## `useChain`
 
@@ -54,7 +54,7 @@ const { chain } = useChain();
 console.log(chain.name);
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useChain.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useChain.ts)
 
 ## `useConnect`
 
@@ -73,7 +73,7 @@ const handleConnect = async () => {
 handleConnect();
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useConnect.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useConnect.ts)
 
 ## `useConnectors`
 
@@ -85,7 +85,7 @@ const { connectors } = useConnectors();
 console.log(connectors);
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useConnectors.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useConnectors.ts)
 
 ## `useContractRead`
 
@@ -113,7 +113,7 @@ const { contractRead } = useContractRead({
 
 > Click [here](https://github.com/FuelLabs/fuels-wallet/blob/b5766321dbc2a5e5f17f05e0cb9a9f697f137a23/packages/e2e-contract-tests/src/contracts/contracts/factories/CustomAssetAbi__factory.ts#L16) to see an example of an ABI for a Fuel contract
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useAccount.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useAccount.ts)
 
 ## `useDisconnect`
 
@@ -132,7 +132,7 @@ const handleDisconnect = async () => {
 handleDisconnect();
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useDisconnect.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useDisconnect.ts)
 
 ## `useIsConnected`
 
@@ -144,7 +144,7 @@ console.log(isConnected);
 // true
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useIsConnected.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useIsConnected.ts)
 
 ## `useNodeInfo`
 
@@ -154,7 +154,7 @@ Asynchronously retrieves information about the connected node, checks compatibil
 const { isCompatible } = useNodeInfo();
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useNodeInfo.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useNodeInfo.ts)
 
 ## `useProvider`
 
@@ -164,7 +164,7 @@ Returns the provider from the Fuel object instance.
 const { provider } = useProvider();
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useProvider.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useProvider.ts)
 
 ## `useSendTransaction`
 
@@ -198,7 +198,7 @@ const handleSendTransaction = async () => {
 handleSendTransaction();
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useSendTransaction.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useSendTransaction.ts)
 
 ## `useTransaction`
 
@@ -208,7 +208,7 @@ Retrieves transaction information associated with a specific transaction ID.
 const { transaction } = useTransaction({ txId: '0xd7ad97...' });
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useTransaction.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useTransaction.ts)
 
 ## <HStack align="center" justify="flex-start" direction="row" wrap="nowrap"> <Code data-decoration="line-through">useTransactionReceipts</Code> <BadgeDeprecated tooltip={<>This hook is deprecated and will be removed in a future release.<br />Please use <b>useTransactionResult</b> with the <b>select</b> function in the <b>query</b> parameter instead.</>} /> </HStack>
 
@@ -220,7 +220,7 @@ const { transactionReceipts } = useTransactionReceipts({
 });
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useTransactionReceipts.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useTransactionReceipts.ts)
 
 ## `useTransactionResult`
 
@@ -263,7 +263,7 @@ const { receipts } = useTransactionResult({
 ```
 
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useTransactionResult.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useTransactionResult.ts)
 
 ## `useWallet`
 
@@ -273,4 +273,4 @@ Retrieves wallet instance `<Account | null>` and ensures the presence of a valid
 const { wallet } = useWallet({ address: 'fuel1r20zhd...' });
 ```
 
-[See the source file](https://github.com/FuelLabs/fuels-npm-packs/tree/main/packages/react/src/hooks/useWallet.ts)
+[See the source file](https://github.com/FuelLabs/fuel-connectors/tree/main/packages/react/src/hooks/useWallet.ts)
