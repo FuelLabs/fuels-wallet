@@ -31,7 +31,6 @@ export class VaultService extends VaultServer {
     this.emitLockEvent = this.emitLockEvent.bind(this);
 
     this.communicationProtocol = communicationProtocol;
-    this.autoLock();
     this.autoUnlock();
     this.setupListeners();
   }
@@ -47,10 +46,12 @@ export class VaultService extends VaultServer {
   async unlock({ password }: { password: string }): Promise<void> {
     await super.unlock({ password });
     saveSecret(password, AUTO_LOCK_IN_MINUTES);
+    this.startAutoLockTimer();
   }
 
   async lock(): Promise<void> {
     await super.lock();
+    this.stopAutoLockTimer();
     this.emitLockEvent();
   }
 
@@ -66,13 +67,9 @@ export class VaultService extends VaultServer {
     return isWalletLocked;
   }
 
-  async autoLock() {
-    // Clear any existing interval
-    if (this.autoLockInterval) {
-      clearInterval(this.autoLockInterval);
-    }
+  private startAutoLockTimer() {
+    this.stopAutoLockTimer(); // Clear any existing interval
 
-    // Check every second if the timer has expired
     this.autoLockInterval = setInterval(async () => {
       const timer = await getTimer();
       if (timer === 0) return;
@@ -83,11 +80,19 @@ export class VaultService extends VaultServer {
     }, 1000);
   }
 
+  private stopAutoLockTimer() {
+    if (this.autoLockInterval) {
+      clearInterval(this.autoLockInterval);
+      this.autoLockInterval = null;
+    }
+  }
+
   async autoUnlock() {
     const secret = await loadSecret();
     if (secret) {
       // Unlock vault directly without saving a new timestamp
       await super.unlock({ password: secret });
+      this.startAutoLockTimer(); // Start the timer after unlocking
     }
   }
 
@@ -140,9 +145,7 @@ export class VaultService extends VaultServer {
   }
 
   stop() {
-    if (this.autoLockInterval) {
-      clearInterval(this.autoLockInterval);
-    }
+    this.stopAutoLockTimer();
     this.communicationProtocol.removeListener(
       MessageTypes.request,
       this.handleRequest
