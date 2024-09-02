@@ -15,8 +15,6 @@
     "vite.config.ts",
     "vite-utils/*.ts",
     "./package.json",
-    "manifest.config.ts",
-    "./src/systems/Core/utils/database.ts",
-    "./src/config.ts"
+    "manifest.config.ts"
   ]
 }
