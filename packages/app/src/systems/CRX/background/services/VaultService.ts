@@ -135,7 +135,7 @@ export class VaultService extends VaultServer {
       }
     }
 
-    return true;
+    return;
   }
 
   private setupListeners() {

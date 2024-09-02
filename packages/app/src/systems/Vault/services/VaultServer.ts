@@ -206,12 +206,11 @@ export class VaultServer extends EventEmitter {
     }
   }
 
-  reload() {
+  async reload() {
     chrome.runtime.reload();
-    return true;
   }
 
-  resetAndReload() {
+  async resetAndReload() {
     const storage = new IndexedDBStorage();
     const manager = new WalletManager({ storage });
     this.manager = manager;
