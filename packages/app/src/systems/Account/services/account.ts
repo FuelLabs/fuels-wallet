@@ -1,5 +1,6 @@
+import { createProvider } from '@fuel-wallet/connections';
 import type { Account } from '@fuel-wallet/types';
-import { Address, Provider, bn } from 'fuels';
+import { Address, type Provider, bn } from 'fuels';
 import type { Maybe } from '~/systems/Core/types';
 import { db } from '~/systems/Core/utils/database';
 import { getUniqueString } from '~/systems/Core/utils/string';
@@ -92,7 +93,7 @@ export class AccountService {
 
     const { account, providerUrl } = input;
     try {
-      const provider = await Provider.create(providerUrl!);
+      const provider = await createProvider(providerUrl!);
       const balances = await getBalances(provider, account.publicKey);
       const baseAssetId = provider.getBaseAssetId();
 
