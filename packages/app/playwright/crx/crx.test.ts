@@ -186,9 +186,6 @@ test.describe('FuelWallet Extension', () => {
     });
 
     async function connectAccounts() {
-      await reload(blankPage);
-      await blankPage.waitForTimeout(2000);
-
       const connectionResponse = blankPage.evaluate(async () => {
         const isConnected = await window.fuel.connect();
         if (!isConnected) {
@@ -241,6 +238,8 @@ test.describe('FuelWallet Extension', () => {
     }
 
     await test.step('window.fuel.connect()', async () => {
+      await reload(blankPage);
+      await blankPage.waitForFunction(() => window.fuel.hasConnector());
       await connectAccounts();
     });
 
@@ -251,7 +250,13 @@ test.describe('FuelWallet Extension', () => {
 
       expect(await isDisconnected).toBeTruthy();
 
-      // we need to reconnect the accounts for later tests
+      await blankPage.waitForTimeout(1_000);
+      const isConnected = blankPage.evaluate(async () => {
+        return window.fuel.isConnected();
+      });
+      expect(await isConnected).toBeFalsy();
+
+      // we need to reconnect the accounts to continue the tests
       await connectAccounts();
     });
 
