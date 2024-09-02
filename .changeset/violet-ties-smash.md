@@ -1,0 +1,3 @@
+---
+"@fuel-wallet/types": patch
+---

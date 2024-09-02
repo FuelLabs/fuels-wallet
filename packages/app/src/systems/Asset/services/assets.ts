@@ -1,6 +1,7 @@
+import { createProvider } from '@fuel-wallet/connections';
 import type { AssetData } from '@fuel-wallet/types';
 import initialAssets from '@fuels/assets';
-import { type NetworkFuel, Provider, isB256 } from 'fuels';
+import { type NetworkFuel, type Provider, isB256 } from 'fuels';
 import { db } from '~/systems/Core/utils/database';
 import { getUniqueString } from '~/systems/Core/utils/string';
 import { NetworkService } from '~/systems/Network/services/network';
@@ -50,21 +51,28 @@ export class AssetService {
     const legacyFuelBaseAssetId =
       '0x0000000000000000000000000000000000000000000000000000000000000000';
     const currentNetwork = await NetworkService.getSelectedNetwork();
-    const provider = await Provider.create(currentNetwork?.url || '');
+    const provider = await createProvider(currentNetwork?.url || '');
     const networkBaseAssetId = provider.getBaseAssetId();
 
+    const isSameChainId = (chainId: number, provider: Provider) => {
+      if (provider.getChainId() === 9889) {
+        return chainId === 0;
+      }
+
+      return chainId === provider.getChainId();
+    };
     const assetsPromises = initialAssets.map((asset) => {
       const fuelNetworkAssets = asset.networks.filter(
         (n) => n.type === 'fuel'
       ) as Array<NetworkFuel>;
 
       const fuelNetworkAsset = asset.networks.find(
-        (n) => n.type === 'fuel' && n.chainId === provider.getChainId()
+        (n) => n.type === 'fuel' && isSameChainId(n.chainId, provider)
       ) as NetworkFuel;
 
       const networks = fuelNetworkAssets.map((network) => {
         if (
-          network.chainId === provider.getChainId() &&
+          isSameChainId(network.chainId, provider) &&
           network.assetId === legacyFuelBaseAssetId
         ) {
           return {

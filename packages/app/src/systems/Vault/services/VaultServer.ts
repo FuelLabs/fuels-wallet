@@ -1,6 +1,7 @@
 // biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import EventEmitter from 'events';
-import { Address, Provider, WalletManager, transactionRequestify } from 'fuels';
+import { createProvider } from '@fuel-wallet/connections';
+import { Address, WalletManager, transactionRequestify } from 'fuels';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { IndexedDBStorage } from '~/systems/Account/utils/storage';
 
@@ -159,7 +160,7 @@ export class VaultServer extends EventEmitter {
   }: VaultInputs['signTransaction']): Promise<string> {
     const wallet = await this.manager.getWallet(Address.fromString(address));
     const transactionRequest = transactionRequestify(JSON.parse(transaction));
-    const provider = await Provider.create(providerUrl);
+    const provider = await createProvider(providerUrl);
     wallet.connect(provider);
     const signature = await wallet.signTransaction(transactionRequest);
     return signature;
