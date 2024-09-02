@@ -115,6 +115,7 @@ export class CommunicationProtocol extends BaseConnection {
   };
 
   destroy() {
+    this.client.rejectAllPendingRequests('Connection closed');
     // biome-ignore lint/complexity/noForEach: <explanation>
     this.ports.forEach((port) => port.disconnect());
     this.ports.clear();

@@ -53,6 +53,7 @@ export class ExtensionPageConnection extends BaseConnection {
   }
 
   destroy() {
+    this.client.rejectAllPendingRequests('Connection closed');
     this.connection.disconnect();
     this.connection.onMessage.removeListener(this.onCommunicationMessage);
   }
