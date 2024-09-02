@@ -3,7 +3,9 @@
 # https://github.com/FuelLabs/chain-configuration/tree/master/upgradelog/ignition-devnet
 # and apply the latest state_transition_function and consensus_parameter
 # when upgrading fuel-core
-FROM ghcr.io/fuellabs/fuel-core:v0.33.0
+# We should be supporting always the same fuel-core version as the fuels (ts-sdk)
+# https://github.com/FuelLabs/fuels-ts/blob/master/internal/fuel-core/VERSION
+FROM ghcr.io/fuellabs/fuel-core:v0.34.0
 
 # dependencies
 ENV DEBIAN_FRONTEND=noninteractive

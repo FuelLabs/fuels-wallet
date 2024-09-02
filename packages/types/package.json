@@ -26,7 +26,7 @@
   },
   "peerDependencies": {
     "@fuels/connectors": ">=0.25.0",
-    "fuels": ">=0.94.0"
+    "fuels": ">=0.94.3"
   },
   "devDependencies": {
     "@fuels/connectors": "0.25.0",

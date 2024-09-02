@@ -32,7 +32,7 @@
   },
   "peerDependencies": {
     "@fuels/connectors": ">=0.5.0",
-    "fuels": ">=0.94.0"
+    "fuels": ">=0.94.3"
   },
   "devDependencies": {
     "@fuel-wallet/types": "workspace:*",
