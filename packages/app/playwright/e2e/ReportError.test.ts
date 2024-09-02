@@ -41,6 +41,7 @@ test.describe('ReportError', () => {
     await getByAriaLabel(page, 'Send error reports').click();
     await expect(page.getByText(/Unexpected error/)).toHaveCount(0);
 
+    page.waitForTimeout(2000);
     const errorsAfterReporting = await getPageErrors(page);
     expect(errorsAfterReporting.length).toBe(0);
   });
