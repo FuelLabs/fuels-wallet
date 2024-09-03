@@ -2,6 +2,7 @@ import { BACKGROUND_SCRIPT_NAME, VAULT_SCRIPT_NAME } from '@fuel-wallet/types';
 
 import { communicationProtocol, errorBoundary } from '../utils';
 
+import { db } from '~/systems/Core/utils/database';
 import { BackgroundService } from './services/BackgroundService';
 import { DatabaseEvents } from './services/DatabaseEvents';
 import { VaultService } from './services/VaultService';
@@ -34,6 +35,7 @@ errorBoundary(() => {
     backgroundService = null;
     vaultService = null;
     databaseEvents = null;
+    db.close();
   }
 
   function onStartupHandler() {
