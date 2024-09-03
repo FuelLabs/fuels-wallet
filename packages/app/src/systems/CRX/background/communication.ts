@@ -44,7 +44,6 @@ errorBoundary(() => {
   }
 
   function onRestartHandler() {
-    console.log('fsk onRestartHandler');
     onSuspendHandler();
     onStartupHandler();
   }
