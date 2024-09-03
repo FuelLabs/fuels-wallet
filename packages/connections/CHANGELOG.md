@@ -1,5 +1,13 @@
 # @fuel-wallet/connections
 
+## 0.27.2
+
+### Patch Changes
+
+- [#1443](https://github.com/FuelLabs/fuels-wallet/pull/1443) [`69c2765b`](https://github.com/FuelLabs/fuels-wallet/commit/69c2765b8bc85faa1934832144b2d76fb067e08a) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Create fuel providers on centralized way to support middleware to insert headers with basic auth
+
+- [#1449](https://github.com/FuelLabs/fuels-wallet/pull/1449) [`875c38b6`](https://github.com/FuelLabs/fuels-wallet/commit/875c38b65080926bed0e06a3594865aef239fd0b) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - update to `fuel-core@0.34.0` , `forc@0.63.3` , `fuels@0.94.3`
+
 ## 0.27.1
 
 ## 0.27.0
