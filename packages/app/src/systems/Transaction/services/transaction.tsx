@@ -16,6 +16,7 @@ import {
 } from 'fuels';
 import { WalletLockedCustom, db, uniqueId } from '~/systems/Core';
 
+import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
 import { NetworkService } from '~/systems/Network/services/network';
 import type { Transaction } from '../types';
@@ -137,7 +138,7 @@ export class TxService {
     transactionRequest,
     providerUrl = '',
   }: TxInputs['send']) {
-    const provider = await Provider.create(providerUrl);
+    const provider = await createProvider(providerUrl);
     const wallet = new WalletLockedCustom(address, provider);
     const txSent = await wallet.sendTransaction(transactionRequest);
 
@@ -145,7 +146,7 @@ export class TxService {
   }
 
   static async fetch({ txId, providerUrl = '' }: TxInputs['fetch']) {
-    const provider = await Provider.create(providerUrl);
+    const provider = await createProvider(providerUrl);
     const txResult = await getTransactionSummary({ id: txId, provider });
     const txResponse = new TransactionResponse(txId, provider);
     // TODO: remove this when we get SDK with new TransactionResponse flow
@@ -166,7 +167,7 @@ export class TxService {
     providerUrl,
   }: TxInputs['simulateTransaction']) {
     const [provider, account] = await Promise.all([
-      Provider.create(providerUrl || ''),
+      createProvider(providerUrl || ''),
       AccountService.getCurrentAccount(),
     ]);
 
@@ -264,7 +265,7 @@ export class TxService {
     address,
     providerUrl = '',
   }: TxInputs['getTransactionHistory']) {
-    const provider = await Provider.create(providerUrl || '');
+    const provider = await createProvider(providerUrl || '');
 
     const txSummaries = await getTransactionsSummaries({
       provider,
@@ -288,7 +289,7 @@ export class TxService {
 
   static async estimateDefaultTips() {
     const currentNetwork = await NetworkService.getSelectedNetwork();
-    const provider = await Provider.create(currentNetwork?.url || '');
+    const provider = await createProvider(currentNetwork?.url || '');
 
     const { regularTip, fastTip } = await getCurrentTips(provider);
 
@@ -300,7 +301,7 @@ export class TxService {
 
   static async estimateGasLimit() {
     const currentNetwork = await NetworkService.getSelectedNetwork();
-    const provider = await Provider.create(currentNetwork?.url || '');
+    const provider = await createProvider(currentNetwork?.url || '');
     const consensusParameters = provider.getChain().consensusParameters;
 
     return {
@@ -324,7 +325,7 @@ export class TxService {
       throw new Error('Missing context for transaction request');
     }
 
-    const provider = await Provider.create(network.url);
+    const provider = await createProvider(network.url);
     const wallet = new WalletLockedCustom(account.address, provider);
 
     const maxAttempts = 10;

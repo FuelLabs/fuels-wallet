@@ -1,4 +1,4 @@
-import { createUUID } from '@fuel-wallet/connections';
+import { createProvider, createUUID } from '@fuel-wallet/connections';
 import type { NetworkData } from '@fuel-wallet/types';
 import { compare } from 'compare-versions';
 import {
@@ -176,12 +176,12 @@ export class NetworkService {
   }
 
   static async getChainInfo(input: NetworkInputs['getChainInfo']) {
-    const provider = await Provider.create(input.providerUrl);
+    const provider = await createProvider(input.providerUrl);
     return provider.getChain();
   }
 
   static async getNodeInfo(input: NetworkInputs['getNodeInfo']) {
-    const provider = await Provider.create(input.providerUrl);
+    const provider = await createProvider(input.providerUrl);
     return provider.fetchNode();
   }
 
@@ -192,7 +192,7 @@ export class NetworkService {
     }
     let nodeInfo: NodeInfo;
     try {
-      const provider = await Provider.create(url);
+      const provider = await createProvider(url);
       nodeInfo = await provider.fetchNode();
     } catch (_err) {
       throw new Error(
