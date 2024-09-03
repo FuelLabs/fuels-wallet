@@ -50,6 +50,5 @@ export class DatabaseObservable<
 
   destroy() {
     this.removeAllListeners();
-    db.close();
   }
 }
