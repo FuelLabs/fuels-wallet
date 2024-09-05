@@ -40,7 +40,7 @@ export const createProvider = async (url: string) => {
   // create provider with the URL without basic auth credentials
   providers[url] = await Provider.create(urlNoBasicAuth, {
     requestMiddleware: async (req) => {
-      if (req.headers && username && password) {
+      if (req?.headers && username && password) {
         // Add basic auth credentials to the request following browser way
         const auth = `Basic ${btoa(`${username}:${password}`)}`;
         // biome-ignore lint/complexity/useLiteralKeys: <explanation>
