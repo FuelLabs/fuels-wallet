@@ -33,11 +33,12 @@ export function parseFuelError(
 ): StoredFuelWalletError | undefined {
   try {
     const id = createUUID();
+    const validWindow = typeof window !== 'undefined';
     const errorExtra: SentryExtraErrorData = {
       timestamp: Date.now(),
-      location: window ? window.location.href : '-',
-      pathname: window ? window.location.pathname : '-',
-      hash: window ? window.location.hash : '-',
+      location: validWindow ? window.location.href : '-',
+      pathname: validWindow ? window.location.pathname : '-',
+      hash: validWindow ? window.location.hash : '-',
     };
 
     const sanitizedData = parseMessage(error.message);
