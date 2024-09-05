@@ -37,7 +37,7 @@ export function parseFuelError(
     const errorExtra: SentryExtraErrorData = {
       timestamp: Date.now(),
       location: validWindow ? window.location.href : '-',
-      pathname: validWindow ? window.location.pathname : '-',
+      pathname: validWindow ? window.location.pathname : 'Service Worker',
       hash: validWindow ? window.location.hash : '-',
     };
 
