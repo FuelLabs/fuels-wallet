@@ -1,5 +1,14 @@
 # fuels-wallet
 
+## 0.27.3
+
+### Patch Changes
+
+- [#1455](https://github.com/FuelLabs/fuels-wallet/pull/1455) [`f386ff86`](https://github.com/FuelLabs/fuels-wallet/commit/f386ff8625f0592017371f88852833da6078162f) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - Update to `fuels@0.94.4` and `fuel-core@0.35.0`
+
+- Updated dependencies [[`f386ff86`](https://github.com/FuelLabs/fuels-wallet/commit/f386ff8625f0592017371f88852833da6078162f)]:
+  - @fuel-wallet/connections@0.27.3
+
 ## 0.27.2
 
 ### Patch Changes
