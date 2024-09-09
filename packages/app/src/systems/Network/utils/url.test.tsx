@@ -83,6 +83,14 @@ describe('Network URL Utilities', () => {
 
       // URLs with illegal characters in the domain
       expect(isValidNetworkUrl('http://exa$mple.com')).toBe(false);
+
+      //Tests if authentication URL without ":" should fail without hanging the V8 Thread
+      // https://issues.chromium.org/issues/365066528
+      expect(
+        isValidNetworkUrl(
+          'https://fffffff10abbxyFfffFFOfFffF0Fff@supernet.ffff.network/v1/graphql'
+        )
+      ).toBe(false);
     });
   });
 
