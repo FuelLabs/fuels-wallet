@@ -21,25 +21,31 @@ function App() {
   const { wallet } = useWallet();
   const { account } = useAccount();
   const { accounts } = useAccounts();
-  const { addNetwork } = useAddNetwork();
+  const { addNetworkAsync } = useAddNetwork();
+
+  if (!isConnected) {
+    return (
+      <div className="App" data-theme={theme}>
+        <div className="Actions">
+          <button
+            type="button"
+            onClick={() => {
+              connect();
+            }}
+          >
+            {isConnecting ? 'Connecting' : 'Connect'}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="App" data-theme={theme}>
       <div className="Actions">
-        <button
-          type="button"
-          onClick={() => {
-            console.log('connect');
-            connect();
-          }}
-        >
-          {isConnecting ? 'Connecting' : 'Connect'}
+        <button type="button" onClick={() => disconnect()}>
+          Disconnect
         </button>
-        {isConnected && (
-          <button type="button" onClick={() => disconnect()}>
-            Disconnect
-          </button>
-        )}
         <button
           type="button"
           onClick={async () => {
@@ -88,8 +94,12 @@ function App() {
         </button>
         <button
           type="button"
-          onClick={() => {
-            addNetwork(TESTNET_NETWORK_URL);
+          onClick={async () => {
+            try {
+              addNetworkAsync(TESTNET_NETWORK_URL);
+            } catch (e) {
+              console.error(e);
+            }
           }}
         >
           Switch to Testnet
