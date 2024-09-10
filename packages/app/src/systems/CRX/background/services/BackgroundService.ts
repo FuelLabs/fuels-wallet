@@ -361,10 +361,10 @@ export class BackgroundService {
   ) {
     const { network } = input;
 
-    const existingNetwork = await NetworkService.getNetworkByNameOrUrl(network);
-    if (!existingNetwork) {
-      await NetworkService.validateNetworkVersion({ data: network });
-    }
+    const [existingNetwork] = await Promise.all([
+      NetworkService.getNetworkByNameOrUrl(network),
+      NetworkService.validateNetworkVersion({ data: network }),
+    ]);
 
     const origin = serverParams.origin;
     const title = serverParams.title;
