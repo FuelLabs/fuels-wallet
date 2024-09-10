@@ -1,5 +1,16 @@
 # fuels-wallet
 
+## 0.27.4
+
+### Patch Changes
+
+- [#1463](https://github.com/FuelLabs/fuels-wallet/pull/1463) [`4fbc6955`](https://github.com/FuelLabs/fuels-wallet/commit/4fbc69553c2d30a2112bdfa1a2f373c9b8655ec4) Thanks [@LuizAsFight](https://github.com/LuizAsFight)! - force providerUrl on signTransactions, instead of using directly from provider
+
+- [#1459](https://github.com/FuelLabs/fuels-wallet/pull/1459) [`00234c0a`](https://github.com/FuelLabs/fuels-wallet/commit/00234c0aecf1255f173bbe4387dd8d08546c55b5) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Fixed extension freezing when validating a specifically malformed network URL
+
+- Updated dependencies []:
+  - @fuel-wallet/connections@0.27.4
+
 ## 0.27.3
 
 ### Patch Changes
