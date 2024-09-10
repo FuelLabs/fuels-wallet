@@ -7,8 +7,8 @@
     "start": "vite"
   },
   "dependencies": {
-    "@fuels/connectors": "0.25.0",
-    "@fuels/react": "0.25.0",
+    "@fuels/connectors": "0.27.1",
+    "@fuels/react": "0.27.1",
     "@tanstack/react-query": "5.28.4",
     "fuels": "0.94.4",
     "react": "18.3.1",
