@@ -26,8 +26,8 @@ jobs:
           persist-credentials: false
       - uses: FuelLabs/github-actions/setups/node@master
         with:
-          node-version: 18.18.0
-          pnpm-version: 8.15.7
+          node-version: 20.11.0
+          pnpm-version: 9.4.0
       - uses: FuelLabs/github-actions/setups/npm@master
         with:
           npm-token: ${{ secrets.NPM_TOKEN }}
