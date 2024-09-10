@@ -1,5 +1,7 @@
 # @fuel-wallet/connections
 
+## 0.27.4
+
 ## 0.27.3
 
 ### Patch Changes
