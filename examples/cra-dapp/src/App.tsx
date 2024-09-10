@@ -1,6 +1,7 @@
 import {
   useAccount,
   useAccounts,
+  useAddNetwork,
   useConnectUI,
   useDisconnect,
   useFuel,
@@ -8,7 +9,7 @@ import {
   useWallet,
 } from '@fuels/react';
 
-import { bn } from 'fuels';
+import { TESTNET_NETWORK_URL, bn } from 'fuels';
 import './App.css';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
   const { wallet } = useWallet();
   const { account } = useAccount();
   const { accounts } = useAccounts();
+  const { addNetwork } = useAddNetwork();
 
   return (
     <div className="App" data-theme={theme}>
@@ -83,6 +85,14 @@ function App() {
           }}
         >
           Send transaction with default fees
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            addNetwork(TESTNET_NETWORK_URL);
+          }}
+        >
+          Switch to Testnet
         </button>
       </div>
       {isError && <p className="Error">{error?.message}</p>}
