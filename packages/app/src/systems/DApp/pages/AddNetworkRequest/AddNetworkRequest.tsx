@@ -13,19 +13,24 @@ export function AddNetworkRequest() {
 
   if (!origin || !network || !account) return null;
 
-  const { name, url } = network;
+  const { id, name, url } = network;
+  const action = id ? 'Switch' : 'Add';
 
   return (
-    <Layout title="Add Network Request" noBorder>
+    <Layout title={`${action} Network Request`} noBorder>
       <Layout.Content css={styles.content} noBorder>
         <ConnectInfo
           origin={origin}
           title={title || ''}
           favIconUrl={favIconUrl}
-          headerText="Request to Add Network from:"
+          headerText={`Request to ${action} Network from:`}
         />
         <NetworkReviewCard
-          headerText="Review the Network to be added:"
+          headerText={
+            id
+              ? 'Review the Network to be switched:'
+              : 'Review the Network to be added:'
+          }
           name={name}
           url={url}
         />
@@ -35,7 +40,7 @@ export function AddNetworkRequest() {
           Reject
         </Button>
         <Button type="submit" intent="primary" onPress={handlers.approve}>
-          Add Network
+          {action} Network
         </Button>
       </Layout.BottomBar>
     </Layout>
