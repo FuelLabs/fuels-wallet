@@ -377,10 +377,7 @@ export class BackgroundService {
     );
 
     await popupService.addNetwork({
-      network: {
-        ...network,
-        id: existingNetwork?.id,
-      },
+      network: existingNetwork ?? network,
       origin,
       title,
       favIconUrl,
