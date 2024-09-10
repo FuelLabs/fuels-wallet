@@ -2,7 +2,6 @@ import type { NetworkData } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { FetchMachine, assignErrorMessage } from '~/systems/Core';
-import type { NetworkInputs } from '~/systems/Network';
 import { NetworkService } from '~/systems/Network';
 import { store } from '~/systems/Store';
 
@@ -112,15 +111,22 @@ export const addNetworkRequestMachine = createMachine(
     },
     services: {
       saveNetwork: FetchMachine.create<
-        NetworkInputs['addNetwork'],
-        MachineServices['saveNetwork']['data']
+        MachineServices['saveNetwork'],
+        NetworkData
       >({
         showError: true,
         async fetch({ input }) {
           if (!input?.data) {
             throw new Error('Invalid network');
           }
-          await NetworkService.validateAddNetwork(input);
+
+          // If network exists, we can only select it
+          if (input.data.id) {
+            return NetworkService.selectNetwork({ id: input.data.id });
+          }
+
+          // Otherwise, we can add it if it's still valid
+          await NetworkService.validateNetworkVersion(input);
           const createdNetwork = await NetworkService.addNetwork(input);
           if (!createdNetwork) {
             throw new Error('Failed to add network');

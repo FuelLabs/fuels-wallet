@@ -1,20 +1,19 @@
 import { createProvider, createUUID } from '@fuel-wallet/connections';
 import type { NetworkData } from '@fuel-wallet/types';
 import { compare } from 'compare-versions';
-import {
-  DEVNET_NETWORK_URL,
-  type NodeInfo,
-  Provider,
-  TESTNET_NETWORK_URL,
-} from 'fuels';
+import { DEVNET_NETWORK_URL, type NodeInfo, TESTNET_NETWORK_URL } from 'fuels';
 import { MIN_NODE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
 import { db } from '~/systems/Core/utils/database';
 
 import { isNetworkDevnet, isNetworkTestnet, isValidNetworkUrl } from '../utils';
 
 export type NetworkInputs = {
-  getNetwork: {
+  getNetworkById: {
     id: string;
+  };
+  getNetworkByNameOrUrl: {
+    name: string;
+    url: string;
   };
   addNetwork: {
     data: {
@@ -51,9 +50,20 @@ export class NetworkService {
     });
   }
 
-  static getNetwork(input: NetworkInputs['getNetwork']) {
+  static getNetworkById(input: NetworkInputs['getNetworkById']) {
     return db.transaction('r', db.networks, async () => {
       return db.networks.get({ id: input.id });
+    });
+  }
+
+  static getNetworkByNameOrUrl(input: NetworkInputs['getNetworkByNameOrUrl']) {
+    return db.transaction('r', db.networks, async () => {
+      return db.networks
+        .where('url')
+        .equalsIgnoreCase(input.url)
+        .or('name')
+        .equalsIgnoreCase(input.name)
+        .first();
     });
   }
 
@@ -89,7 +99,7 @@ export class NetworkService {
       if (networks.length === 1) {
         throw new Error('You need to stay with at least one network');
       }
-      const network = await NetworkService.getNetwork(input);
+      const network = await NetworkService.getNetworkById(input);
       if (network?.isSelected) {
         const nextNetwork = networks.filter((i) => i.id !== input.id)[0];
         await NetworkService.selectNetwork({ id: nextNetwork.id as string });
@@ -185,8 +195,19 @@ export class NetworkService {
     return provider.fetchNode();
   }
 
-  static async validateAddNetwork(input: NetworkInputs['addNetwork']) {
+  static async validateNetworkExists(input: NetworkInputs['addNetwork']) {
     const { name, url } = input.data;
+    const network = await NetworkService.getNetworkByNameOrUrl({
+      name,
+      url,
+    });
+    if (network) {
+      throw new Error('Network with Name or URL already exists');
+    }
+  }
+
+  static async validateNetworkVersion(input: NetworkInputs['addNetwork']) {
+    const { url } = input.data;
     if (!isValidNetworkUrl(url)) {
       throw new Error('Invalid network URL');
     }
@@ -203,17 +224,6 @@ export class NetworkService {
       throw new Error(
         `Network not compatible with Fuel Wallet. Required version is >=${MIN_NODE_VERSION}`
       );
-    }
-    const collection = await db.transaction('r', db.networks, async () => {
-      return db.networks
-        .where('url')
-        .equalsIgnoreCase(url)
-        .or('name')
-        .equalsIgnoreCase(name);
-    });
-    const isExistingNetwork = await collection.count();
-    if (isExistingNetwork) {
-      throw new Error('Network with Name or URL already exists');
     }
   }
 }

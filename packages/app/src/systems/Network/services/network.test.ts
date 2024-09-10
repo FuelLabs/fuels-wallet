@@ -30,13 +30,13 @@ describe('NetworkService', () => {
     const network = await NetworkService.addNetwork({ data: NETWORK });
     const id = network?.id!;
     await NetworkService.updateNetwork({ id, data: { name: 'Network Test' } });
-    const result = await NetworkService.getNetwork({ id });
+    const result = await NetworkService.getNetworkById({ id });
     expect(result?.name).toBe('Network Test');
   });
 
   it('should be able to retrieve a new network', async () => {
     const network = await NetworkService.addNetwork({ data: NETWORK });
-    const result = await NetworkService.getNetwork({ id: network?.id! });
+    const result = await NetworkService.getNetworkById({ id: network?.id! });
     expect(result?.name).toBe(NETWORK.name);
   });
 
@@ -56,7 +56,7 @@ describe('NetworkService', () => {
     });
     await NetworkService.selectNetwork({ id: network2?.id! });
 
-    const res = await NetworkService.getNetwork({ id: network1?.id! });
+    const res = await NetworkService.getNetworkById({ id: network1?.id! });
     expect(res?.isSelected).toBe(false);
   });
 

@@ -211,7 +211,8 @@ export const networksMachine = createMachine(
             if (!input?.data) {
               throw new Error('Invalid network input');
             }
-            await NetworkService.validateAddNetwork(input);
+            await NetworkService.validateNetworkExists(input);
+            await NetworkService.validateNetworkVersion(input);
             const createdNetwork = await NetworkService.addNetwork(input);
             if (!createdNetwork) {
               throw new Error('Failed to add network');

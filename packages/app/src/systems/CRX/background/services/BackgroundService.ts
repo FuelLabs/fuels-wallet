@@ -360,7 +360,11 @@ export class BackgroundService {
     serverParams: EventOrigin
   ) {
     const { network } = input;
-    await NetworkService.validateAddNetwork({ data: network });
+
+    const existingNetwork = await NetworkService.getNetworkByNameOrUrl(network);
+    if (!existingNetwork) {
+      await NetworkService.validateNetworkVersion({ data: network });
+    }
 
     const origin = serverParams.origin;
     const title = serverParams.title;
@@ -371,8 +375,12 @@ export class BackgroundService {
       Pages.requestAddNetwork(),
       this.communicationProtocol
     );
+
     await popupService.addNetwork({
-      network,
+      network: {
+        ...network,
+        id: existingNetwork?.id,
+      },
       origin,
       title,
       favIconUrl,
