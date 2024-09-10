@@ -1,0 +1,3 @@
+---
+"@fuels/playwright-utils": patch
+---
