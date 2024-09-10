@@ -30,7 +30,9 @@ export function NetworkReviewCard({
       </Card.Header>
       <Card.Body css={styles.cardContentSection}>
         <Text as="h2">{name}</Text>
-        <Text fontSize="sm">{url}</Text>
+        <Text fontSize="sm" css={styles.url}>
+          {url}
+        </Text>
       </Card.Body>
     </MotionCard>
   );
@@ -45,6 +47,9 @@ const styles = {
       py: '$1',
       height: '$6',
     },
+  }),
+  url: cssObj({
+    wordWrap: 'break-word',
   }),
   cardContentSection: cssObj({
     py: '$2',
