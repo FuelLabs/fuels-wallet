@@ -226,14 +226,11 @@ importers:
         specifier: 1.11.10
         version: 1.11.10
       dexie:
-        specifier: 3.2.4
-        version: 3.2.4
+        specifier: 3.2.7
+        version: 3.2.7
       dexie-observable:
         specifier: 4.0.1-beta.13
-        version: 4.0.1-beta.13(dexie@3.2.4)
-      dexie-react-hooks:
-        specifier: 1.1.6
-        version: 1.1.6(@types/react@18.3.3)(dexie@3.2.4)(react@18.3.1)
+        version: 4.0.1-beta.13(dexie@3.2.7)
       events:
         specifier: 3.3.0
         version: 3.3.0
@@ -715,7 +712,7 @@ importers:
     dependencies:
       dexie-observable:
         specifier: 4.0.1-beta.13
-        version: 4.0.1-beta.13(dexie@3.2.4)
+        version: 4.0.1-beta.13(dexie@3.2.7)
     devDependencies:
       '@fuels/connectors':
         specifier: 0.25.0
@@ -18866,31 +18863,16 @@ packages:
       - supports-color
     dev: true
 
-  /dexie-observable@4.0.1-beta.13(dexie@3.2.4):
+  /dexie-observable@4.0.1-beta.13(dexie@3.2.7):
     resolution: {integrity: sha512-axmgPk7yjoPwj+0DdQIE5s1MBXi+6XcIFIjBKdQAmSGpsLQSth/LHvMOQ3q3Wj6pwIE5hqIxg2GL75sVqQbhEw==}
     peerDependencies:
       dexie: ^3.0.2 || ^4.0.1-alpha.5
     dependencies:
-      dexie: 3.2.4
+      dexie: 3.2.7
     dev: false
 
-  /dexie-react-hooks@1.1.6(@types/react@18.3.3)(dexie@3.2.4)(react@18.3.1):
-    resolution: {integrity: sha512-xSblWtmPwhafWNWMECsW7zMMmBu8goH3QqTxEfwBNoNG1mgsM0oFclippev7ss9HhKICqBwTjgqpscci5Ed4mA==}
-    peerDependencies:
-      '@types/react': '>=16'
-      dexie: ^3.2 || ^4.0.1-alpha
-      react: '*'
-    peerDependenciesMeta:
-      react:
-        optional: true
-    dependencies:
-      '@types/react': 18.3.3
-      dexie: 3.2.4
-      react: 18.3.1
-    dev: false
-
-  /dexie@3.2.4:
-    resolution: {integrity: sha512-VKoTQRSv7+RnffpOJ3Dh6ozknBqzWw/F3iqMdsZg958R0AS8AnY9x9d1lbwENr0gzeGJHXKcGhAMRaqys6SxqA==}
+  /dexie@3.2.7:
+    resolution: {integrity: sha512-2a+BXvVhY5op+smDRLxeBAivE7YcYaneXJ1la3HOkUfX9zKkE/AJ8CNgjiXbtXepFyFmJNGSbmjOwqbT749r/w==}
     engines: {node: '>=6.0'}
     dev: false
 
@@ -20711,7 +20693,7 @@ packages:
       source-map: 0.6.1
       wordwrap: 1.0.0
     optionalDependencies:
-      uglify-js: 3.19.2
+      uglify-js: 3.19.3
     dev: true
 
   /handlebars@4.7.8:
@@ -28260,14 +28242,6 @@ packages:
 
   /ufo@1.5.3:
     resolution: {integrity: sha512-Y7HYmWaFwPUmkoQCUIAYpKqkOf+SbVj/2fJJZ4RJMCfZp0rTGwRbzQD+HghfnhKOjL9E01okqz+ncJskGYfBNw==}
-
-  /uglify-js@3.19.2:
-    resolution: {integrity: sha512-S8KA6DDI47nQXJSi2ctQ629YzwOVs+bQML6DAtvy0wgNdpi+0ySpQK0g2pxBq2xfF2z3YCscu7NNA8nXT9PlIQ==}
-    engines: {node: '>=0.8.0'}
-    hasBin: true
-    requiresBuild: true
-    dev: true
-    optional: true
 
   /uglify-js@3.19.3:
     resolution: {integrity: sha512-v3Xu+yuwBXisp6QYTcH4UbH+xYJXqnq2m/LtQVWKWzYc1iehYnLixoQDN9FH6/j9/oybfd6W9Ghwkl8+UMKTKQ==}
