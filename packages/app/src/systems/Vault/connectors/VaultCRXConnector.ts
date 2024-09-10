@@ -11,16 +11,21 @@ import type { JSONRPCRequest } from 'json-rpc-2.0';
 import type { VaultClient } from '../services/VaultClient';
 
 export class VaultCRXConnector {
-  readonly connection: chrome.runtime.Port;
+  connection: chrome.runtime.Port | undefined;
   readonly clientVault: VaultClient;
 
   constructor(clientVault: VaultClient) {
     this.clientVault = clientVault;
+    this.clientVault.onRequest = this.onRequest.bind(this);
+    this.onCommunicationMessage = this.onCommunicationMessage.bind(this);
+    this.connectAndAttachListeners();
+  }
+
+  connectAndAttachListeners() {
     this.connection = chrome.runtime.connect(chrome.runtime.id, {
       name: VAULT_SCRIPT_NAME,
     });
     this.connection.onMessage.addListener(this.onCommunicationMessage);
-    this.clientVault.onRequest = this.onRequest.bind(this);
   }
 
   onCommunicationMessage = (message: CommunicationMessage) => {
@@ -49,11 +54,18 @@ export class VaultCRXConnector {
 
   async onRequest(request: JSONRPCRequest): Promise<void> {
     if (!request) return;
-    const responseMessage: RequestMessage = {
-      target: VAULT_SCRIPT_NAME,
-      type: MessageTypes.request,
-      request,
-    };
-    this.connection.postMessage(responseMessage);
+    if (!this.connection) this.connectAndAttachListeners();
+    if (this.connection) {
+      const responseMessage: RequestMessage = {
+        target: VAULT_SCRIPT_NAME,
+        type: MessageTypes.request,
+        request,
+      };
+      this.connection.postMessage(responseMessage);
+    }
+  }
+
+  destroy() {
+    this.connection?.onMessage.removeListener(this.onCommunicationMessage);
   }
 }
