@@ -126,11 +126,11 @@ importers:
   examples/cra-dapp:
     dependencies:
       '@fuels/connectors':
-        specifier: 0.27.1
-        version: 0.27.1(@types/react@18.3.3)(@wagmi/connectors@4.3.7)(fuels@0.94.4)(react-dom@18.3.1)(react@18.3.1)(typescript@5.2.2)
+        specifier: pr-251
+        version: 0.28.0-pr-251-ccf7ce112bc7d9118f8e1563a46933945866ceaf(@types/react@18.3.3)(@wagmi/connectors@4.3.7)(fuels@0.94.4)(react-dom@18.3.1)(react@18.3.1)(typescript@5.2.2)
       '@fuels/react':
-        specifier: 0.27.1
-        version: 0.27.1(@tanstack/react-query@5.28.4)(@types/react-dom@18.3.0)(fuels@0.94.4)(react-dom@18.3.1)(react@18.3.1)
+        specifier: pr-251
+        version: 0.28.0-pr-251-ccf7ce112bc7d9118f8e1563a46933945866ceaf(@tanstack/react-query@5.28.4)(@types/react-dom@18.3.0)(fuels@0.94.4)(react-dom@18.3.1)(react@18.3.1)
       '@tanstack/react-query':
         specifier: 5.28.4
         version: 5.28.4(react@18.3.1)
@@ -7011,8 +7011,8 @@ packages:
       - zod
     dev: true
 
-  /@fuels/connectors@0.27.1(@types/react@18.3.3)(@wagmi/connectors@4.3.7)(fuels@0.94.4)(react-dom@18.3.1)(react@18.3.1)(typescript@5.2.2):
-    resolution: {integrity: sha512-gn5OyniNyFMjq611PfUm2asZ07oUr/wLo9Mx/Kr5vMmc33KAxA2B6uxRhBaBY8ysHwGuab6ZeONjVGnJ7iO8Vw==}
+  /@fuels/connectors@0.28.0-pr-251-ccf7ce112bc7d9118f8e1563a46933945866ceaf(@types/react@18.3.3)(@wagmi/connectors@4.3.7)(fuels@0.94.4)(react-dom@18.3.1)(react@18.3.1)(typescript@5.2.2):
+    resolution: {integrity: sha512-BRw25zidjXhjUzsPAtAHC5tGUzKe7FS2bKhvBk/4yfNaexKcBBt1EVYhDl35oo9Qt5CgmPhQAW8Yw4PfRXG+fg==}
     peerDependencies:
       fuels: '>=0.94.0'
     dependencies:
@@ -7182,8 +7182,8 @@ packages:
       - react-dom
     dev: false
 
-  /@fuels/react@0.27.1(@tanstack/react-query@5.28.4)(@types/react-dom@18.3.0)(fuels@0.94.4)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-qVlgjvIiP8+SGvNIrKAdTWvVTKSoYhjzabL/S6KhJ8Rp3DxWulpyZ0zYuLv5ElOmHMyOKYu5clHZbkhYsvVLYA==}
+  /@fuels/react@0.28.0-pr-251-ccf7ce112bc7d9118f8e1563a46933945866ceaf(@tanstack/react-query@5.28.4)(@types/react-dom@18.3.0)(fuels@0.94.4)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-xrJ4Y7xXnkv5HmyhJQNNts/mYYPrmaxPBNEZ1Tp1mh8MTQ1QHac3lTdDaxrvPz6427AEdsqbgLp9SR8te6sr9Q==}
     peerDependencies:
       '@tanstack/react-query': '>=5.0.0'
       fuels: '>=0.94.0'
@@ -8815,7 +8815,7 @@ packages:
       react-dom:
         optional: true
     dependencies:
-      '@babel/runtime': 7.24.5
+      '@babel/runtime': 7.25.0
       '@radix-ui/primitive': 1.0.1
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.3.1)(react@18.3.1)
       '@radix-ui/react-context': 1.0.1(@types/react@18.3.1)(react@18.3.1)

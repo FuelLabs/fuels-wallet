@@ -1,7 +1,7 @@
 import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
 import type { Connection } from '@fuel-wallet/types';
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuels/connectors';
-import { Address } from 'fuels';
+import { Address, type Network } from 'fuels';
 import type {
   JSONRPCParams,
   JSONRPCRequest,
@@ -43,6 +43,7 @@ export class BackgroundService {
       this.accounts,
       this.connect,
       this.network,
+      this.networks,
       this.disconnect,
       this.signMessage,
       this.sendTransaction,
@@ -312,6 +313,16 @@ export class BackgroundService {
     return {
       url: selectedNetwork?.url,
     };
+  }
+
+  async networks(): Promise<Network[]> {
+    const networks = await NetworkService.getNetworks();
+    return networks.map((network) => {
+      return {
+        chainId: Number(network.id) || 0,
+        url: network.url,
+      };
+    });
   }
 
   async assets(_: JSONRPCParams) {
