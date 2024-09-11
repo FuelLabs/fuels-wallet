@@ -48,7 +48,7 @@ jobs:
         uses: FuelLabs/github-actions/setups/node@master
         with:
           node-version: 20.11.0
-          pnpm-version: 9.4.0
+          pnpm-version: 9.5.0
 
       - name: Validate Changeset
         run: pnpm changeset status --since=origin/${{ github.base_ref }}
@@ -61,7 +61,7 @@ jobs:
       - uses: FuelLabs/github-actions/setups/node@master
         with:
           node-version: 20.11.0
-          pnpm-version: 9.4.0
+          pnpm-version: 9.5.0
       - name: Install jq
         run: sudo apt-get install jq
       - run: |
@@ -90,7 +90,7 @@ jobs:
       - uses: FuelLabs/github-actions/setups/node@master
         with:
           node-version: 20.11.0
-          pnpm-version: 9.4.0
+          pnpm-version: 9.5.0
       - run: pnpm audit --prod
 
   lint:
@@ -108,7 +108,7 @@ jobs:
         uses: FuelLabs/github-actions/setups/node@master
         with:
           node-version: 20.11.0
-          pnpm-version: 9.4.0
+          pnpm-version: 9.5.0
 
       - name: Run lint
         run: |
