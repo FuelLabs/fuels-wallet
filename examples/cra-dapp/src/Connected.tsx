@@ -1,11 +1,12 @@
 import {
   useAccount,
   useAccounts,
+  useAddNetwork,
   useDisconnect,
   useFuel,
   useNetwork,
   useNetworks,
-  useSwitchNetwork,
+  useSelectNetwork,
   useWallet,
 } from '@fuels/react';
 
@@ -18,9 +19,11 @@ export function Connected() {
   const { wallet } = useWallet();
   const { account } = useAccount();
   const { accounts } = useAccounts();
+
   const { network } = useNetwork();
   const { networks } = useNetworks();
-  const { switchNetworkAsync } = useSwitchNetwork();
+  const { addNetworkAsync } = useAddNetwork();
+  const { selectNetworkAsync } = useSelectNetwork();
 
   return (
     <div>
@@ -84,7 +87,7 @@ export function Connected() {
           type="button"
           onClick={async () => {
             try {
-              const res = await switchNetworkAsync({
+              const res = await selectNetworkAsync({
                 chainId: 0,
                 url: DEVNET_NETWORK_URL,
               });
@@ -94,13 +97,13 @@ export function Connected() {
             }
           }}
         >
-          Switch to Devnet
+          Select Devnet
         </button>
         <button
           type="button"
           onClick={async () => {
             try {
-              const res = await switchNetworkAsync({
+              const res = await selectNetworkAsync({
                 chainId: 0,
                 url: TESTNET_NETWORK_URL,
               });
@@ -110,7 +113,20 @@ export function Connected() {
             }
           }}
         >
-          Switch to Testnet
+          Select Testnet
+        </button>
+        <button
+          type="button"
+          onClick={async () => {
+            try {
+              const res = await addNetworkAsync(TESTNET_NETWORK_URL);
+              console.log(res);
+            } catch (e) {
+              console.error(e);
+            }
+          }}
+        >
+          Add Testnet
         </button>
       </div>
 
