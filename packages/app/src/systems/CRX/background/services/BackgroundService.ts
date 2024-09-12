@@ -325,8 +325,10 @@ export class BackgroundService {
   async networks(): Promise<Network[]> {
     const networks = await NetworkService.getNetworks();
     return networks.map((network) => {
+      const isValidChainId = !Number.isNaN(Number(network.id));
+
       return {
-        chainId: 5,
+        chainId: isValidChainId ? Number(network.id) : 0,
         url: network.url,
       };
     });

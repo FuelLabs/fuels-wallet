@@ -121,8 +121,7 @@ export const selectNetworkRequestMachine = createMachine(
           }
 
           // If url is provided and network exists, we can select it
-          const hasNetworkByUrl = await NetworkService.getNetworkByNameOrUrl({
-            name: input.data.name,
+          const hasNetworkByUrl = await NetworkService.getNetworkByUrl({
             url: input.data.url,
           });
           if (hasNetworkByUrl?.id) {

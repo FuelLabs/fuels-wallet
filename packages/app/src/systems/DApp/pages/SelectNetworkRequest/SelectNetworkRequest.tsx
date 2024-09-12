@@ -14,7 +14,7 @@ export function SelectNetworkRequest() {
   if (!origin || !network || !account) return null;
 
   const { id, name, url } = network;
-  const action = id ? 'Switch' : 'Add';
+  const action = id ? 'Select' : 'Add';
 
   return (
     <Layout title={`${action} Network Request`} noBorder>
@@ -28,7 +28,7 @@ export function SelectNetworkRequest() {
         <NetworkReviewCard
           headerText={
             id
-              ? 'Review the Network to be switched:'
+              ? 'Review the Network to be selected:'
               : 'Review the Network to be added:'
           }
           name={name}
