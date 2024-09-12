@@ -1,27 +1,26 @@
 import {
   useAccount,
   useAccounts,
-  useAddNetwork,
-  useConnectUI,
   useDisconnect,
   useFuel,
+  useNetwork,
   useNetworks,
+  useSwitchNetwork,
   useWallet,
 } from '@fuels/react';
 
-import { TESTNET_NETWORK_URL, bn } from 'fuels';
+import { DEVNET_NETWORK_URL, TESTNET_NETWORK_URL, bn } from 'fuels';
 import './App.css';
 
 export function Connected() {
-  const { error, isError } = useConnectUI();
-
   const { fuel } = useFuel();
   const { disconnect } = useDisconnect();
   const { wallet } = useWallet();
   const { account } = useAccount();
   const { accounts } = useAccounts();
+  const { network } = useNetwork();
   const { networks } = useNetworks();
-  const { addNetworkAsync } = useAddNetwork();
+  const { switchNetworkAsync } = useSwitchNetwork();
 
   return (
     <div>
@@ -75,11 +74,37 @@ export function Connected() {
         >
           Send transaction with default fees
         </button>
+      </div>
+
+      <br />
+      <br />
+
+      <div className="Actions">
         <button
           type="button"
           onClick={async () => {
             try {
-              addNetworkAsync(TESTNET_NETWORK_URL);
+              const res = await switchNetworkAsync({
+                chainId: 0,
+                url: DEVNET_NETWORK_URL,
+              });
+              console.log(res);
+            } catch (e) {
+              console.error(e);
+            }
+          }}
+        >
+          Switch to Devnet
+        </button>
+        <button
+          type="button"
+          onClick={async () => {
+            try {
+              const res = await switchNetworkAsync({
+                chainId: 0,
+                url: TESTNET_NETWORK_URL,
+              });
+              console.log(res);
             } catch (e) {
               console.error(e);
             }
@@ -88,7 +113,17 @@ export function Connected() {
           Switch to Testnet
         </button>
       </div>
-      {isError && <p className="Error">{error?.message}</p>}
+
+      <div className="Accounts">
+        <h3>Current Network</h3>
+        <div>
+          <b>Chain Id:</b> {network?.chainId?.toString()}
+        </div>
+        <div>
+          <b>Url:</b> {network?.url}
+        </div>
+      </div>
+
       <div className="Accounts">
         <h3>Connected accounts</h3>
         {accounts?.map((account) => (

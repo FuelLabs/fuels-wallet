@@ -19,7 +19,7 @@ type MachineServices = {
   };
 };
 
-export type AddNetworkInputs = {
+export type SelectNetworkInputs = {
   start: {
     origin: string;
     network: NetworkData;
@@ -31,18 +31,18 @@ export type AddNetworkInputs = {
 type MachineEvents =
   | {
       type: 'START';
-      input: AddNetworkInputs['start'];
+      input: SelectNetworkInputs['start'];
     }
   // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
   | { type: 'APPROVE'; input: void }
   // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
   | { type: 'REJECT'; input: void };
 
-export const addNetworkRequestMachine = createMachine(
+export const selectNetworkRequestMachine = createMachine(
   {
     predictableActionArguments: true,
 
-    tsTypes: {} as import('./addNetworkRequestMachine.typegen').Typegen0,
+    tsTypes: {} as import('./selectNetworkRequestMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,
       services: {} as MachineServices,
@@ -120,9 +120,24 @@ export const addNetworkRequestMachine = createMachine(
             throw new Error('Invalid network');
           }
 
-          // If network exists, we can only select it
+          // If url is provided and network exists, we can select it
+          const hasNetworkByUrl = await NetworkService.getNetworkByNameOrUrl({
+            name: input.data.name,
+            url: input.data.url,
+          });
+          if (hasNetworkByUrl?.id) {
+            return NetworkService.selectNetwork({ id: hasNetworkByUrl.id });
+          }
+
+          // If chainId is provided and network exists, we can select it
           if (input.data.id) {
-            return NetworkService.selectNetwork({ id: input.data.id });
+            const networkById = await NetworkService.getNetworkById({
+              id: input.data.id,
+            });
+
+            if (networkById?.id) {
+              return NetworkService.selectNetwork({ id: networkById.id });
+            }
           }
 
           // Otherwise, we can add it if it's still valid
@@ -138,10 +153,10 @@ export const addNetworkRequestMachine = createMachine(
   }
 );
 
-export type AddNetworkRequestMachine = typeof addNetworkRequestMachine;
-export type AddNetworkRequestMachineService = InterpreterFrom<
-  typeof addNetworkRequestMachine
+export type SelectNetworkRequestMachine = typeof selectNetworkRequestMachine;
+export type SelectNetworkRequestMachineService = InterpreterFrom<
+  typeof selectNetworkRequestMachine
 >;
-export type AddNetworkRequestMachineState = StateFrom<
-  typeof addNetworkRequestMachine
+export type SelectNetworkRequestMachineState = StateFrom<
+  typeof selectNetworkRequestMachine
 >;

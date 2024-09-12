@@ -20,6 +20,7 @@ export class RequestMethods extends ExtensionPageConnection {
       this.signMessage,
       this.sendTransaction,
       this.addAssets,
+      this.selectNetwork,
       this.addNetwork,
     ]);
   }
@@ -69,10 +70,17 @@ export class RequestMethods extends ExtensionPageConnection {
     return true;
   }
 
+  async selectNetwork(input: MessageInputs['selectNetwork']) {
+    await store
+      .requestSelectNetwork(input)
+      .waitForState(Services.selectNetworkRequest, WAIT_FOR_CONFIG);
+    return true;
+  }
+
   async addNetwork(input: MessageInputs['addNetwork']) {
     await store
-      .requestAddNetwork(input)
-      .waitForState(Services.addNetworkRequest, WAIT_FOR_CONFIG);
+      .requestSelectNetwork(input)
+      .waitForState(Services.selectNetworkRequest, WAIT_FOR_CONFIG);
     return true;
   }
 }

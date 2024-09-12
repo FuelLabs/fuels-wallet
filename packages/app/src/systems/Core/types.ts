@@ -29,7 +29,7 @@ export const Pages = {
   requestTransaction: route('/request/transaction'),
   requestMessage: route('/request/message'),
   requestAddAssets: route('/request/assets'),
-  requestAddNetwork: route('/request/network'),
+  requestSelectNetwork: route('/request/network'),
   txs: route('/transactions'),
   tx: route<'txId'>('/transactions/view/:txId'),
   settings: route('/settings'),

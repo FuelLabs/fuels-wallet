@@ -4,9 +4,9 @@ import type { AccountsMachine } from '../Account';
 import type { AssetsMachine } from '../Asset';
 import type {
   AddAssetMachine,
-  AddNetworkRequestMachine,
   ConnectRequestMachine,
   MessageRequestMachine,
+  SelectNetworkRequestMachine,
   TransactionRequestMachine,
 } from '../DApp';
 import type { ReportErrorMachine } from '../Error';
@@ -26,7 +26,7 @@ export enum Services {
   connectRequest = 'connectRequest',
   addAssetRequest = 'addAssetRequest',
   reportError = 'reportError',
-  addNetworkRequest = 'addNetworkRequest',
+  selectNetworkRequest = 'selectNetworkRequest',
 }
 
 export type StoreMachines = {
@@ -40,7 +40,7 @@ export type StoreMachines = {
   connectRequest: ConnectRequestMachine;
   addAssetRequest: AddAssetMachine;
   reportError: ReportErrorMachine;
-  addNetworkRequest: AddNetworkRequestMachine;
+  selectNetworkRequest: SelectNetworkRequestMachine;
 };
 
 export type Store = StoreClass<StoreMachines>;

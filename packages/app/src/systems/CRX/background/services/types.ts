@@ -39,6 +39,12 @@ export type MessageInputs = {
   getAbi: {
     contractId: string;
   };
+  selectNetwork: {
+    network: NetworkData;
+    origin: string;
+    title?: string;
+    favIconUrl?: string;
+  };
   addNetwork: {
     network: NetworkData;
     origin: string;

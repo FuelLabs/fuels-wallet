@@ -4,11 +4,11 @@ import { useAccounts } from '~/systems/Account';
 import { ConnectInfo, Layout } from '~/systems/Core';
 import { NetworkReviewCard } from '~/systems/Network';
 
-import { useAddNetworkRequest } from '../../hooks';
+import { useSelectNetworkRequest } from '../../hooks';
 
-export function AddNetworkRequest() {
+export function SelectNetworkRequest() {
   const { handlers, title, favIconUrl, origin, network } =
-    useAddNetworkRequest();
+    useSelectNetworkRequest();
   const { account } = useAccounts();
 
   if (!origin || !network || !account) return null;

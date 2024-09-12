@@ -1,5 +1,5 @@
 export * from './AddAssetRequest';
-export * from './AddNetworkRequest';
+export * from './SelectNetworkRequest';
 export * from './ConnectionRequest';
 export * from './SignatureRequest';
 export * from './TransactionRequest';

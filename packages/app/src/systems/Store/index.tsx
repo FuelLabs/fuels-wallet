@@ -5,9 +5,9 @@ import { accountsMachine } from '../Account/machines';
 import { assetEvents, assetsMachine } from '../Asset';
 import {
   addAssetRequestMachine,
-  addNetworkRequestMachine,
   connectRequestMachine,
   messageRequestMachine,
+  selectNetworkRequestMachine,
   transactionRequestMachine,
 } from '../DApp';
 import { requestEvents } from '../DApp/events';
@@ -39,7 +39,7 @@ export const store = store$
   .addMachine(Services.txRequest, () => transactionRequestMachine)
   .addMachine(Services.addAssetRequest, () => addAssetRequestMachine)
   .addMachine(Services.reportError, () => reportErrorMachine)
-  .addMachine(Services.addNetworkRequest, () => addNetworkRequestMachine)
+  .addMachine(Services.selectNetworkRequest, () => selectNetworkRequestMachine)
   .addHandlers(accountEvents)
   .addHandlers(networkEvents)
   .addHandlers(assetEvents)

@@ -1,7 +1,7 @@
 import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
-import type { Connection } from '@fuel-wallet/types';
+import type { Connection, NetworkData } from '@fuel-wallet/types';
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuels/connectors';
-import { Address, type Network } from 'fuels';
+import { Address, type Network, Provider } from 'fuels';
 import type {
   JSONRPCParams,
   JSONRPCRequest,
@@ -50,6 +50,7 @@ export class BackgroundService {
       this.currentAccount,
       this.addAssets,
       this.assets,
+      this.selectNetwork,
       this.addNetwork,
       this.addAbi,
       this.getAbi,
@@ -308,10 +309,16 @@ export class BackgroundService {
     return currentAccount?.address;
   }
 
-  async network() {
+  async network(): Promise<Network> {
     const selectedNetwork = await NetworkService.getSelectedNetwork();
+
+    if (!selectedNetwork) return { chainId: 0, url: '' };
+
+    const isValidChainId = !Number.isNaN(Number(selectedNetwork.id));
+
     return {
-      url: selectedNetwork?.url,
+      chainId: isValidChainId ? Number(selectedNetwork.id) : 0,
+      url: selectedNetwork.url,
     };
   }
 
@@ -319,7 +326,7 @@ export class BackgroundService {
     const networks = await NetworkService.getNetworks();
     return networks.map((network) => {
       return {
-        chainId: Number(network.id) || 0,
+        chainId: 5,
         url: network.url,
       };
     });
@@ -366,16 +373,21 @@ export class BackgroundService {
     return abi;
   }
 
-  async addNetwork(
-    input: MessageInputs['addNetwork'],
+  async selectNetwork(
+    input: MessageInputs['selectNetwork'],
     serverParams: EventOrigin
-  ) {
-    const { network } = input;
+  ): Promise<boolean> {
+    const provider = await Provider.create(input.network.url);
+    const chainId = (await provider.getChainId()).toString();
+    const name = provider.getChain().name;
 
-    const [existingNetwork] = await Promise.all([
-      NetworkService.getNetworkByNameOrUrl(network),
-      NetworkService.validateNetworkVersion({ data: network }),
-    ]);
+    const network: NetworkData = {
+      id: chainId,
+      name,
+      url: provider.url,
+    };
+
+    await NetworkService.validateNetworkVersion({ data: network });
 
     const origin = serverParams.origin;
     const title = serverParams.title;
@@ -383,12 +395,40 @@ export class BackgroundService {
 
     const popupService = await PopUpService.open(
       origin,
-      Pages.requestAddNetwork(),
+      Pages.requestSelectNetwork(),
+      this.communicationProtocol
+    );
+
+    await popupService.selectNetwork({
+      network,
+      origin,
+      title,
+      favIconUrl,
+    });
+
+    return true;
+  }
+
+  async addNetwork(
+    input: MessageInputs['addNetwork'],
+    serverParams: EventOrigin
+  ): Promise<boolean> {
+    const { network } = input;
+    await NetworkService.validateNetworkExists({ data: network });
+    await NetworkService.validateNetworkVersion({ data: network });
+
+    const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
+
+    const popupService = await PopUpService.open(
+      origin,
+      Pages.requestSelectNetwork(),
       this.communicationProtocol
     );
 
     await popupService.addNetwork({
-      network: existingNetwork ?? network,
+      network,
       origin,
       title,
       favIconUrl,

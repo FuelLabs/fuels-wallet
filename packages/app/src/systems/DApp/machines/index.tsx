@@ -1,5 +1,5 @@
 export * from './addAssetRequestMachine';
-export * from './addNetworkRequestMachine';
+export * from './selectNetworkRequestMachine';
 export * from './messageRequestMachine';
 export * from './connectRequestMachine';
 export * from './transactionRequestMachine';

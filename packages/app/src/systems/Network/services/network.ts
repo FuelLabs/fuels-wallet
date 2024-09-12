@@ -11,12 +11,16 @@ export type NetworkInputs = {
   getNetworkById: {
     id: string;
   };
+  getNetworkByUrl: {
+    url: string;
+  };
   getNetworkByNameOrUrl: {
     name: string;
     url: string;
   };
   addNetwork: {
     data: {
+      id?: string;
       name: string;
       url: string;
     };
@@ -56,6 +60,12 @@ export class NetworkService {
     });
   }
 
+  static getNetworkByUrl(input: NetworkInputs['getNetworkByUrl']) {
+    return db.transaction('r', db.networks, async () => {
+      return db.networks.get({ url: input.url });
+    });
+  }
+
   static getNetworkByNameOrUrl(input: NetworkInputs['getNetworkByNameOrUrl']) {
     return db.transaction('r', db.networks, async () => {
       return db.networks
@@ -73,7 +83,7 @@ export class NetworkService {
       const inputToAdd = {
         ...input.data,
         ...(count === 0 && { isSelected: true }),
-        id: createUUID(),
+        id: input.data.id || createUUID(),
       };
       const id = await db.networks.add(inputToAdd);
       return db.networks.get(id) as Promise<NetworkData>;
