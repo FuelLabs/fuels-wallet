@@ -119,6 +119,21 @@ export function Connected() {
           type="button"
           onClick={async () => {
             try {
+              const res = await selectNetworkAsync({
+                chainId: 111,
+              });
+              console.log(res);
+            } catch (e) {
+              console.error(e);
+            }
+          }}
+        >
+          Select Unknown ChainId
+        </button>
+        <button
+          type="button"
+          onClick={async () => {
+            try {
               const res = await addNetworkAsync(TESTNET_NETWORK_URL);
               console.log(res);
             } catch (e) {

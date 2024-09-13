@@ -13,24 +13,19 @@ export function SelectNetworkRequest() {
 
   if (!origin || !network || !account) return null;
 
-  const { id, name, url } = network;
-  const action = id ? 'Select' : 'Add';
+  const { name = '', url = '' } = network;
 
   return (
-    <Layout title={`${action} Network Request`} noBorder>
+    <Layout title="Select Network Request" noBorder>
       <Layout.Content css={styles.content} noBorder>
         <ConnectInfo
           origin={origin}
           title={title || ''}
           favIconUrl={favIconUrl}
-          headerText={`Request to ${action} Network from:`}
+          headerText="Request to Select Network from:"
         />
         <NetworkReviewCard
-          headerText={
-            id
-              ? 'Review the Network to be selected:'
-              : 'Review the Network to be added:'
-          }
+          headerText="Review the Network to be selected:"
           name={name}
           url={url}
         />
@@ -40,7 +35,7 @@ export function SelectNetworkRequest() {
           Reject
         </Button>
         <Button type="submit" intent="primary" onPress={handlers.approve}>
-          {action} Network
+          Select Network
         </Button>
       </Layout.BottomBar>
     </Layout>

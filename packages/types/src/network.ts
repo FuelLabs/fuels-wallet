@@ -1,5 +1,6 @@
 export type NetworkData = {
   id?: string;
+  chainId: number;
   name: string;
   url: string;
   isSelected?: boolean;

@@ -1,4 +1,5 @@
 import type { NetworkData } from '@fuel-wallet/types';
+import { Provider } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { FetchMachine, assignErrorMessage } from '~/systems/Core';
@@ -6,7 +7,7 @@ import { NetworkService } from '~/systems/Network';
 import { store } from '~/systems/Store';
 
 type MachineContext = {
-  network?: NetworkData;
+  network?: Partial<NetworkData>;
   origin?: string;
   title?: string;
   favIconUrl?: string;
@@ -15,16 +16,16 @@ type MachineContext = {
 
 type MachineServices = {
   saveNetwork: {
-    data: NetworkData;
+    data: Partial<NetworkData>;
   };
 };
 
 export type SelectNetworkInputs = {
   start: {
+    network: Partial<NetworkData>;
     origin: string;
-    network: NetworkData;
-    favIconUrl?: string;
-    title?: string;
+    favIconUrl: string;
+    title: string;
   };
 };
 
@@ -120,32 +121,50 @@ export const selectNetworkRequestMachine = createMachine(
             throw new Error('Invalid network');
           }
 
-          // If url is provided and network exists, we can select it
-          const hasNetworkByUrl = await NetworkService.getNetworkByUrl({
-            url: input.data.url,
-          });
-          if (hasNetworkByUrl?.id) {
-            return NetworkService.selectNetwork({ id: hasNetworkByUrl.id });
+          // If url is provided
+          if (input.data.url) {
+            // If network exists in our database, we can select it
+            const hasNetworkByUrl = await NetworkService.getNetworkByUrl({
+              url: input.data.url,
+            });
+            if (hasNetworkByUrl?.id) {
+              return NetworkService.selectNetwork({ id: hasNetworkByUrl.id });
+            }
+
+            // We can still add it if it's still valid
+            const provider = await Provider.create(input.data.url);
+            const url = provider.url;
+            const name = provider.getChain().name;
+            const chainId = await provider.getChainId();
+
+            await NetworkService.validateNetworkVersion({
+              url: input.data.url,
+            });
+
+            const createdNetwork = await NetworkService.addNetwork({
+              data: {
+                name,
+                url,
+                chainId,
+              },
+            });
+
+            return NetworkService.selectNetwork({ id: createdNetwork.id! });
           }
 
           // If chainId is provided and network exists, we can select it
-          if (input.data.id) {
-            const networkById = await NetworkService.getNetworkById({
-              id: input.data.id,
+          if (input.data.chainId) {
+            const networkByChainId = await NetworkService.getNetworkByChainId({
+              chainId: input.data.chainId,
             });
 
-            if (networkById?.id) {
-              return NetworkService.selectNetwork({ id: networkById.id });
+            if (networkByChainId?.id) {
+              return NetworkService.selectNetwork({ id: networkByChainId.id });
             }
           }
 
-          // Otherwise, we can add it if it's still valid
-          await NetworkService.validateNetworkVersion(input);
-          const createdNetwork = await NetworkService.addNetwork(input);
-          if (!createdNetwork) {
-            throw new Error('Failed to add network');
-          }
-          return NetworkService.selectNetwork({ id: createdNetwork.id! });
+          // Since we don't have a url or created network by chainId, we can't select a network
+          throw new Error('Network not found by chainId');
         },
       }),
     },

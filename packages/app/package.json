@@ -2,7 +2,7 @@
   "name": "fuels-wallet",
   "private": true,
   "version": "0.27.4",
-  "database": "18",
+  "database": "19",
   "scripts": {
     "build:all": "run-s build:web build:crx build:storybook",
     "build:web": "./scripts/build.sh --app=vite",
@@ -45,7 +45,7 @@
     "events": "3.3.0",
     "fake-indexeddb": "4.0.2",
     "framer-motion": "10.16.4",
-    "fuels": "0.94.4",
+    "fuels": "0.94.6",
     "json-edit-react": "1.13.3",
     "json-rpc-2.0": "1.7.0",
     "lodash.debounce": "4.0.8",

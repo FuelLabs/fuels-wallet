@@ -1,7 +1,12 @@
 import { createProvider, createUUID } from '@fuel-wallet/connections';
 import type { NetworkData } from '@fuel-wallet/types';
 import { compare } from 'compare-versions';
-import { DEVNET_NETWORK_URL, type NodeInfo, TESTNET_NETWORK_URL } from 'fuels';
+import {
+  DEVNET_NETWORK_URL,
+  type NodeInfo,
+  Provider,
+  TESTNET_NETWORK_URL,
+} from 'fuels';
 import { MIN_NODE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
 import { db } from '~/systems/Core/utils/database';
 
@@ -10,6 +15,9 @@ import { isNetworkDevnet, isNetworkTestnet, isValidNetworkUrl } from '../utils';
 export type NetworkInputs = {
   getNetworkById: {
     id: string;
+  };
+  getNetworkByChainId: {
+    chainId: number;
   };
   getNetworkByUrl: {
     url: string;
@@ -20,7 +28,7 @@ export type NetworkInputs = {
   };
   addNetwork: {
     data: {
-      id?: string;
+      chainId: number;
       name: string;
       url: string;
     };
@@ -44,6 +52,13 @@ export type NetworkInputs = {
   getChainInfo: {
     providerUrl: string;
   };
+  validateNetworkExists: {
+    name: string;
+    url: string;
+  };
+  validateNetworkVersion: {
+    url: string;
+  };
 };
 
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
@@ -57,6 +72,12 @@ export class NetworkService {
   static getNetworkById(input: NetworkInputs['getNetworkById']) {
     return db.transaction('r', db.networks, async () => {
       return db.networks.get({ id: input.id });
+    });
+  }
+
+  static getNetworkByChainId(input: NetworkInputs['getNetworkByChainId']) {
+    return db.transaction('r', db.networks, async () => {
+      return db.networks.get({ chainId: input.chainId });
     });
   }
 
@@ -80,10 +101,12 @@ export class NetworkService {
   static async addNetwork(input: NetworkInputs['addNetwork']) {
     return db.transaction('rw', db.networks, async () => {
       const count = await db.networks.count();
-      const inputToAdd = {
-        ...input.data,
-        ...(count === 0 && { isSelected: true }),
-        id: input.data.id || createUUID(),
+      const inputToAdd: Required<NetworkData> = {
+        id: createUUID(),
+        chainId: input.data.chainId,
+        name: input.data.name,
+        url: input.data.url,
+        isSelected: Boolean(count === 0),
       };
       const id = await db.networks.add(inputToAdd);
       return db.networks.get(id) as Promise<NetworkData>;
@@ -151,6 +174,7 @@ export class NetworkService {
     }).catch(() => ({ name: 'Fuel Sepolia Testnet' }));
     const testnetNetwork = await NetworkService.addNetwork({
       data: {
+        chainId: 0,
         name: testnetInfo.name,
         url: TESTNET_NETWORK_URL,
       },
@@ -162,6 +186,7 @@ export class NetworkService {
     }).catch(() => ({ name: 'Fuel Ignition Sepolia Devnet' }));
     const devnetNetwork = await NetworkService.addNetwork({
       data: {
+        chainId: 0,
         name: devnetInfo.name,
         url: DEVNET_NETWORK_URL,
       },
@@ -181,6 +206,7 @@ export class NetworkService {
       }).catch(() => ({ name: 'Custom Network' }));
       const customNetwork = await NetworkService.addNetwork({
         data: {
+          chainId: 0,
           name: customInfo.name,
           url: envProviderUrl,
         },
@@ -205,8 +231,10 @@ export class NetworkService {
     return provider.fetchNode();
   }
 
-  static async validateNetworkExists(input: NetworkInputs['addNetwork']) {
-    const { name, url } = input.data;
+  static async validateNetworkExists(
+    input: NetworkInputs['validateNetworkExists']
+  ) {
+    const { name, url } = input;
     const network = await NetworkService.getNetworkByNameOrUrl({
       name,
       url,
@@ -216,8 +244,10 @@ export class NetworkService {
     }
   }
 
-  static async validateNetworkVersion(input: NetworkInputs['addNetwork']) {
-    const { url } = input.data;
+  static async validateNetworkVersion(
+    input: NetworkInputs['validateNetworkVersion']
+  ) {
+    const { url } = input;
     if (!isValidNetworkUrl(url)) {
       throw new Error('Invalid network URL');
     }

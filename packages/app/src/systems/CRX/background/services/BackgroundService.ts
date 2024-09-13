@@ -312,12 +312,12 @@ export class BackgroundService {
   async network(): Promise<Network> {
     const selectedNetwork = await NetworkService.getSelectedNetwork();
 
-    if (!selectedNetwork) return { chainId: 0, url: '' };
-
-    const isValidChainId = !Number.isNaN(Number(selectedNetwork.id));
+    if (!selectedNetwork) {
+      throw new Error('Current network not found');
+    }
 
     return {
-      chainId: isValidChainId ? Number(selectedNetwork.id) : 0,
+      chainId: selectedNetwork.chainId,
       url: selectedNetwork.url,
     };
   }
@@ -325,10 +325,8 @@ export class BackgroundService {
   async networks(): Promise<Network[]> {
     const networks = await NetworkService.getNetworks();
     return networks.map((network) => {
-      const isValidChainId = !Number.isNaN(Number(network.id));
-
       return {
-        chainId: isValidChainId ? Number(network.id) : 0,
+        chainId: network.chainId,
         url: network.url,
       };
     });
@@ -379,17 +377,7 @@ export class BackgroundService {
     input: MessageInputs['selectNetwork'],
     serverParams: EventOrigin
   ): Promise<boolean> {
-    const provider = await Provider.create(input.network.url);
-    const chainId = (await provider.getChainId()).toString();
-    const name = provider.getChain().name;
-
-    const network: NetworkData = {
-      id: chainId,
-      name,
-      url: provider.url,
-    };
-
-    await NetworkService.validateNetworkVersion({ data: network });
+    const { network } = input;
 
     const origin = serverParams.origin;
     const title = serverParams.title;
@@ -402,7 +390,10 @@ export class BackgroundService {
     );
 
     await popupService.selectNetwork({
-      network,
+      network: {
+        chainId: network.chainId,
+        url: network.url,
+      },
       origin,
       title,
       favIconUrl,
@@ -416,8 +407,8 @@ export class BackgroundService {
     serverParams: EventOrigin
   ): Promise<boolean> {
     const { network } = input;
-    await NetworkService.validateNetworkExists({ data: network });
-    await NetworkService.validateNetworkVersion({ data: network });
+    await NetworkService.validateNetworkExists(network);
+    await NetworkService.validateNetworkVersion(network);
 
     const origin = serverParams.origin;
     const title = serverParams.title;
@@ -430,7 +421,10 @@ export class BackgroundService {
     );
 
     await popupService.addNetwork({
-      network,
+      network: {
+        name: network.name,
+        url: network.url,
+      },
       origin,
       title,
       favIconUrl,

@@ -7,10 +7,10 @@
     "start": "vite"
   },
   "dependencies": {
-    "@fuels/connectors": "pr-251",
-    "@fuels/react": "pr-251",
+    "@fuels/connectors": "pr-252",
+    "@fuels/react": "pr-252",
     "@tanstack/react-query": "5.28.4",
-    "fuels": "0.94.4",
+    "fuels": "0.94.6",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
