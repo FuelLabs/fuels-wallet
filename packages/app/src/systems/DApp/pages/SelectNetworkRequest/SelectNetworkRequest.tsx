@@ -7,7 +7,7 @@ import { NetworkReviewCard } from '~/systems/Network';
 import { useSelectNetworkRequest } from '../../hooks';
 
 export function SelectNetworkRequest() {
-  const { handlers, title, favIconUrl, origin, network } =
+  const { handlers, isLoading, title, favIconUrl, origin, network } =
     useSelectNetworkRequest();
   const { account } = useAccounts();
 
@@ -34,7 +34,12 @@ export function SelectNetworkRequest() {
         <Button variant="ghost" onPress={handlers.reject}>
           Reject
         </Button>
-        <Button type="submit" intent="primary" onPress={handlers.approve}>
+        <Button
+          type="submit"
+          intent="primary"
+          isLoading={isLoading}
+          onPress={handlers.approve}
+        >
           Select Network
         </Button>
       </Layout.BottomBar>

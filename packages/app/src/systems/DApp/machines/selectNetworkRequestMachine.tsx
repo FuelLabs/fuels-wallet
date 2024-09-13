@@ -72,6 +72,7 @@ export const selectNetworkRequestMachine = createMachine(
         },
       },
       addingNetwork: {
+        tags: ['loading'],
         invoke: {
           src: 'saveNetwork',
           data: {
@@ -172,9 +173,7 @@ export const selectNetworkRequestMachine = createMachine(
 );
 
 export type SelectNetworkRequestMachine = typeof selectNetworkRequestMachine;
-export type SelectNetworkRequestMachineService = InterpreterFrom<
-  typeof selectNetworkRequestMachine
->;
-export type SelectNetworkRequestMachineState = StateFrom<
-  typeof selectNetworkRequestMachine
->;
+export type SelectNetworkRequestMachineService =
+  InterpreterFrom<SelectNetworkRequestMachine>;
+export type SelectNetworkRequestMachineState =
+  StateFrom<SelectNetworkRequestMachine>;
