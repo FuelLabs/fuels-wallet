@@ -30,19 +30,21 @@ export function SelectNetworkRequest() {
           url={url}
         />
       </Layout.Content>
-      <Layout.BottomBar>
-        <Button variant="ghost" onPress={handlers.reject}>
-          Reject
-        </Button>
-        <Button
-          type="submit"
-          intent="primary"
-          isLoading={isLoading}
-          onPress={handlers.approve}
-        >
-          Select Network
-        </Button>
-      </Layout.BottomBar>
+      {!!url && (
+        <Layout.BottomBar>
+          <Button variant="ghost" onPress={handlers.reject}>
+            Reject
+          </Button>
+          <Button
+            type="submit"
+            intent="primary"
+            isLoading={isLoading}
+            onPress={handlers.approve}
+          >
+            Select Network
+          </Button>
+        </Layout.BottomBar>
+      )}
     </Layout>
   );
 }
