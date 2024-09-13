@@ -15,6 +15,9 @@ type MachineContext = {
 };
 
 type MachineServices = {
+  fetchUrlByChainId: {
+    data: Partial<NetworkData>;
+  };
   saveNetwork: {
     data: Partial<NetworkData>;
   };
@@ -54,10 +57,38 @@ export const selectNetworkRequestMachine = createMachine(
     states: {
       idle: {
         on: {
-          START: {
-            actions: ['assignStartData'],
-            target: 'reviewNetwork',
+          START: [
+            {
+              actions: ['assignStartData'],
+              target: 'fetchingUrlByChainId',
+              cond: 'hasOnlyChainId',
+            },
+            {
+              actions: ['assignStartData'],
+              target: 'reviewNetwork',
+            },
+          ],
+        },
+      },
+      fetchingUrlByChainId: {
+        tags: ['loading'],
+        invoke: {
+          src: 'fetchUrlByChainId',
+          data: {
+            input: (ctx: MachineContext) => ({
+              data: ctx.network,
+            }),
           },
+          onDone: [
+            {
+              cond: FetchMachine.hasError,
+              target: 'idle',
+            },
+            {
+              actions: ['assignNetworkUrl'],
+              target: 'reviewNetwork',
+            },
+          ],
         },
       },
       reviewNetwork: {
@@ -104,6 +135,12 @@ export const selectNetworkRequestMachine = createMachine(
         favIconUrl: ev.input.favIconUrl,
         network: ev.input.network,
       })),
+      assignNetworkUrl: assign({
+        network: (ctx, ev) => ({
+          ...ctx.network,
+          url: ev.data.url,
+        }),
+      }),
       notifyRefreshNetworks: () => {
         store.refreshNetworks();
       },
@@ -112,62 +149,72 @@ export const selectNetworkRequestMachine = createMachine(
       },
     },
     services: {
+      fetchUrlByChainId: FetchMachine.create<
+        MachineServices['saveNetwork'],
+        NetworkData
+      >({
+        showError: false,
+        async fetch({ input }) {
+          if (typeof input?.data?.chainId !== 'number') {
+            throw new Error('chainId is required');
+          }
+
+          const networkByChainId = await NetworkService.getNetworkByChainId({
+            chainId: input.data.chainId,
+          });
+
+          if (!networkByChainId) {
+            throw new Error('Network not found by chainId');
+          }
+
+          return networkByChainId;
+        },
+      }),
       saveNetwork: FetchMachine.create<
         MachineServices['saveNetwork'],
         NetworkData
       >({
         showError: true,
         async fetch({ input }) {
-          if (!input?.data) {
-            throw new Error('Invalid network');
+          if (!input?.data.url) {
+            throw new Error('Missing network URL');
           }
 
-          // If url is provided
-          if (input.data.url) {
-            // If network exists in our database, we can select it
-            const hasNetworkByUrl = await NetworkService.getNetworkByUrl({
-              url: input.data.url,
-            });
-            if (hasNetworkByUrl?.id) {
-              return NetworkService.selectNetwork({ id: hasNetworkByUrl.id });
-            }
-
-            // We can still add it if it's still valid
-            const provider = await Provider.create(input.data.url);
-            const url = provider.url;
-            const name = provider.getChain().name;
-            const chainId = await provider.getChainId();
-
-            await NetworkService.validateNetworkVersion({
-              url: input.data.url,
-            });
-
-            const createdNetwork = await NetworkService.addNetwork({
-              data: {
-                name,
-                url,
-                chainId,
-              },
-            });
-
-            return NetworkService.selectNetwork({ id: createdNetwork.id! });
+          // If network exists in our database, we can select it
+          const hasNetworkByUrl = await NetworkService.getNetworkByUrl({
+            url: input.data.url,
+          });
+          if (hasNetworkByUrl?.id) {
+            return NetworkService.selectNetwork({ id: hasNetworkByUrl.id });
           }
 
-          // If chainId is provided and network exists, we can select it
-          if (input.data.chainId) {
-            const networkByChainId = await NetworkService.getNetworkByChainId({
-              chainId: input.data.chainId,
-            });
+          // We can still add it if it's still a valid URL
+          const provider = await Provider.create(input.data.url);
+          const url = provider.url;
+          const name = provider.getChain().name;
+          const chainId = await provider.getChainId();
 
-            if (networkByChainId?.id) {
-              return NetworkService.selectNetwork({ id: networkByChainId.id });
-            }
-          }
+          await NetworkService.validateNetworkVersion({
+            url: input.data.url,
+          });
 
-          // Since we don't have a url or created network by chainId, we can't select a network
-          throw new Error('Network not found by chainId');
+          const createdNetwork = await NetworkService.addNetwork({
+            data: {
+              name,
+              url,
+              chainId,
+            },
+          });
+
+          return NetworkService.selectNetwork({ id: createdNetwork.id! });
         },
       }),
+    },
+    guards: {
+      hasOnlyChainId: (_ctx, ev) => {
+        const { chainId, url } = ev.input.network;
+        return Boolean(typeof chainId === 'number' && !url);
+      },
     },
   }
 );
