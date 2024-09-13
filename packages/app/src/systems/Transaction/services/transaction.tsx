@@ -4,7 +4,6 @@ import type { TransactionRequest, WalletLocked } from 'fuels';
 import {
   Address,
   type BN,
-  Provider,
   TransactionResponse,
   TransactionStatus,
   assembleTransactionSummary,
