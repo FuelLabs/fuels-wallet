@@ -128,10 +128,10 @@ importers:
     dependencies:
       '@fuels/connectors':
         specifier: pr-252
-        version: 0.28.0-pr-252-f1766572a9c1137a4c2dbaca0307fcfeb7829af2(np2hhjyadnfl65m4hs5teni324)
+        version: 0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19(np2hhjyadnfl65m4hs5teni324)
       '@fuels/react':
         specifier: pr-252
-        version: 0.28.0-pr-252-f1766572a9c1137a4c2dbaca0307fcfeb7829af2(@tanstack/react-query@5.28.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19(@tanstack/react-query@5.28.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-query':
         specifier: 5.28.4
         version: 5.28.4(react@18.3.1)
@@ -3164,10 +3164,10 @@ packages:
     peerDependencies:
       fuels: '>=0.93.0'
 
-  '@fuels/connectors@0.28.0-pr-252-f1766572a9c1137a4c2dbaca0307fcfeb7829af2':
-    resolution: {integrity: sha512-FUiX8p7quY/Yltt+xO1093t6drZF1D8ey1sk6yUh9jInPBPVjUo0rxBPKZ7ky4JDpFhCkVOCBZwIzdVg2SYyOw==}
+  '@fuels/connectors@0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19':
+    resolution: {integrity: sha512-JpPjaMt8PwmvIT7bup9hTmJ8zj2dzD2nvcjAL7C3WrmpS1atd6OqmJvoBgNl3uO/4LwHb32tv2vuEqDBa5nL7A==}
     peerDependencies:
-      fuels: '>=0.94.0'
+      fuels: '>=0.94.6'
 
   '@fuels/connectors@0.5.0':
     resolution: {integrity: sha512-lwafZPzWO9dxOcUXYYrQPaOMRtmrmyn0SEb0RYwk/B5f8WeOKfiTL5yxP7QXaTYPNAyb1qW0Gx9Dykn517XxqA==}
@@ -3199,11 +3199,11 @@ packages:
       fuels: '>=0.93.0'
       react: ^18.2.0
 
-  '@fuels/react@0.28.0-pr-252-f1766572a9c1137a4c2dbaca0307fcfeb7829af2':
-    resolution: {integrity: sha512-EqsWLFLlutYD/GwtMojih9aFRtg2IbKa5uJcNZa5c+D2YJRuNgdexDP+LL+lqKT0dWCudXvVbr25fBvV2V7TYg==}
+  '@fuels/react@0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19':
+    resolution: {integrity: sha512-SuCuu0BVGvHhsm5GGgFGEA4kqHssRORPOCRq4sRPKgqFnYjqZySThNEiH0HOB7Hwhjo/H7kCLQFCS95MHAR/Bw==}
     peerDependencies:
       '@tanstack/react-query': '>=5.0.0'
-      fuels: '>=0.94.0'
+      fuels: '>=0.94.6'
       react: ^18.2.0
 
   '@fuels/ts-config@0.20.0':
@@ -18675,7 +18675,7 @@ snapshots:
       - vue
       - zod
 
-  '@fuels/connectors@0.28.0-pr-252-f1766572a9c1137a4c2dbaca0307fcfeb7829af2(np2hhjyadnfl65m4hs5teni324)':
+  '@fuels/connectors@0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19(np2hhjyadnfl65m4hs5teni324)':
     dependencies:
       '@ethereumjs/util': 9.0.3
       '@ethersproject/bytes': 5.7.0
@@ -18802,7 +18802,7 @@ snapshots:
       - '@types/react-dom'
       - react-dom
 
-  '@fuels/react@0.28.0-pr-252-f1766572a9c1137a4c2dbaca0307fcfeb7829af2(@tanstack/react-query@5.28.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@fuels/react@0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19(@tanstack/react-query@5.28.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-query': 5.28.4(react@18.3.1)
@@ -19502,7 +19502,7 @@ snapshots:
   '@metamask/utils@8.4.0':
     dependencies:
       '@ethereumjs/tx': 4.2.0
-      '@noble/hashes': 1.5.0
+      '@noble/hashes': 1.4.0
       '@scure/base': 1.1.6
       '@types/debug': 4.1.12
       debug: 4.3.4
@@ -23626,7 +23626,7 @@ snapshots:
   '@testing-library/jest-dom@6.1.4(@jest/globals@29.7.0)(@types/jest@28.1.3)(jest@29.7.0(@types/node@20.12.11)(ts-node@10.9.1(@swc/core@1.3.92)(@types/node@20.8.4)(typescript@5.2.2)))':
     dependencies:
       '@adobe/css-tools': 4.3.2
-      '@babel/runtime': 7.25.0
+      '@babel/runtime': 7.24.5
       aria-query: 5.3.0
       chalk: 3.0.0
       css.escape: 1.5.1
