@@ -127,11 +127,11 @@ importers:
   examples/cra-dapp:
     dependencies:
       '@fuels/connectors':
-        specifier: pr-252
-        version: 0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19(np2hhjyadnfl65m4hs5teni324)
+        specifier: 0.28.0
+        version: 0.28.0(np2hhjyadnfl65m4hs5teni324)
       '@fuels/react':
-        specifier: pr-252
-        version: 0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19(@tanstack/react-query@5.28.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 0.28.0
+        version: 0.28.0(@tanstack/react-query@5.28.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-query':
         specifier: 5.28.4
         version: 5.28.4(react@18.3.1)
@@ -490,11 +490,11 @@ importers:
         specifier: 0.23.3
         version: 0.23.3(@fuel-ui/css@0.23.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@fuel-ui/icons@0.23.3)(@types/react-dom@18.3.0)(@types/react@18.3.3)(fuels@0.94.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@fuels/connectors':
-        specifier: pr-252
-        version: 0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19(swdvs36mpocjnt3yvmqrjwvcy4)
+        specifier: 0.28.0
+        version: 0.28.0(swdvs36mpocjnt3yvmqrjwvcy4)
       '@fuels/react':
-        specifier: pr-252
-        version: 0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19(@tanstack/react-query@5.28.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 0.28.0
+        version: 0.28.0(@tanstack/react-query@5.28.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mdx-js/react':
         specifier: ^2.3.0
         version: 2.3.0(react@18.3.1)
@@ -617,11 +617,11 @@ importers:
   packages/e2e-contract-tests:
     dependencies:
       '@fuels/connectors':
-        specifier: pr-252
-        version: 0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19(oxltm6vnwruho7dgaj74t4y3ba)
+        specifier: 0.28.0
+        version: 0.28.0(oxltm6vnwruho7dgaj74t4y3ba)
       '@fuels/react':
-        specifier: pr-252
-        version: 0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19(@tanstack/react-query@5.28.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 0.28.0
+        version: 0.28.0(@tanstack/react-query@5.28.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-query':
         specifier: 5.28.4
         version: 5.28.4(react@18.3.1)
@@ -2954,8 +2954,8 @@ packages:
     peerDependencies:
       fuels: '>=0.93.0'
 
-  '@fuels/connectors@0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19':
-    resolution: {integrity: sha512-JpPjaMt8PwmvIT7bup9hTmJ8zj2dzD2nvcjAL7C3WrmpS1atd6OqmJvoBgNl3uO/4LwHb32tv2vuEqDBa5nL7A==}
+  '@fuels/connectors@0.28.0':
+    resolution: {integrity: sha512-ew5epS1pglbP4TMvYViV/9tMBl8ZE18NTTRvGEEK9QEeJnNHl+8R8TgWDFYe+i/WoYdrP5IT1uxoYAsNTAPfOg==}
     peerDependencies:
       fuels: '>=0.94.6'
 
@@ -2982,8 +2982,8 @@ packages:
       fuels: '>=0.86.0'
       react: ^18.2.0
 
-  '@fuels/react@0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19':
-    resolution: {integrity: sha512-SuCuu0BVGvHhsm5GGgFGEA4kqHssRORPOCRq4sRPKgqFnYjqZySThNEiH0HOB7Hwhjo/H7kCLQFCS95MHAR/Bw==}
+  '@fuels/react@0.28.0':
+    resolution: {integrity: sha512-uAZUta9/RWodKG2+NSoFujTBgzMPCIlWuTxsazZr1zxoIyAeI2ddKTBcM3gQYkWKf2wWCxVVzI+07ATvnTB4ng==}
     peerDependencies:
       '@tanstack/react-query': '>=5.0.0'
       fuels: '>=0.94.6'
@@ -3433,9 +3433,6 @@ packages:
 
   '@noble/curves@1.4.0':
     resolution: {integrity: sha512-p+4cb332SFCrReJkCYe8Xzm0OWi4Jji5jVdIZRL/PmacmDkFNw6MrrV+gGpiPxLHbV+zKFRywUWbaseT+tZRXg==}
-
-  '@noble/curves@1.5.0':
-    resolution: {integrity: sha512-J5EKamIHnKPyClwVrzmaf5wSdQXgdHcPZIZLu3bwnbeCx8/7NPK5q2ZBWF+5FvYGByjiQQsJYX6jfgB2wDPn3A==}
 
   '@noble/curves@1.6.0':
     resolution: {integrity: sha512-TlaHRXDehJuRNR9TfZDNQ45mMEd5dwUwmicsafcIX4SsNiqnCHKjE/1alYPd/lDRVhxdhUAlv8uEhMCI5zjIJQ==}
@@ -18125,7 +18122,7 @@ snapshots:
       - vue
       - zod
 
-  '@fuels/connectors@0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19(np2hhjyadnfl65m4hs5teni324)':
+  '@fuels/connectors@0.28.0(np2hhjyadnfl65m4hs5teni324)':
     dependencies:
       '@ethereumjs/util': 9.0.3
       '@ethersproject/bytes': 5.7.0
@@ -18168,7 +18165,7 @@ snapshots:
       - vue
       - zod
 
-  '@fuels/connectors@0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19(oxltm6vnwruho7dgaj74t4y3ba)':
+  '@fuels/connectors@0.28.0(oxltm6vnwruho7dgaj74t4y3ba)':
     dependencies:
       '@ethereumjs/util': 9.0.3
       '@ethersproject/bytes': 5.7.0
@@ -18211,7 +18208,7 @@ snapshots:
       - vue
       - zod
 
-  '@fuels/connectors@0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19(swdvs36mpocjnt3yvmqrjwvcy4)':
+  '@fuels/connectors@0.28.0(swdvs36mpocjnt3yvmqrjwvcy4)':
     dependencies:
       '@ethereumjs/util': 9.0.3
       '@ethersproject/bytes': 5.7.0
@@ -18326,7 +18323,7 @@ snapshots:
       - '@types/react-dom'
       - react-dom
 
-  '@fuels/react@0.28.0-pr-252-880cf8549c595f4911e0403b31bcd5cabd92db19(@tanstack/react-query@5.28.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@fuels/react@0.28.0(@tanstack/react-query@5.28.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.6)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-query': 5.28.4(react@18.3.1)
@@ -19150,10 +19147,6 @@ snapshots:
       '@noble/hashes': 1.3.3
 
   '@noble/curves@1.4.0':
-    dependencies:
-      '@noble/hashes': 1.4.0
-
-  '@noble/curves@1.5.0':
     dependencies:
       '@noble/hashes': 1.4.0
 
@@ -21846,8 +21839,8 @@ snapshots:
   '@solana/web3.js@1.91.7(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
       '@babel/runtime': 7.25.0
-      '@noble/curves': 1.5.0
-      '@noble/hashes': 1.4.0
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
       '@solana/buffer-layout': 4.0.1
       agentkeepalive: 4.5.0
       bigint-buffer: 1.1.5
@@ -21868,8 +21861,8 @@ snapshots:
   '@solana/web3.js@1.93.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
       '@babel/runtime': 7.25.0
-      '@noble/curves': 1.5.0
-      '@noble/hashes': 1.4.0
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
       '@solana/buffer-layout': 4.0.1
       agentkeepalive: 4.5.0
       bigint-buffer: 1.1.5
@@ -33643,8 +33636,8 @@ snapshots:
 
   webauthn-p256@0.0.5:
     dependencies:
-      '@noble/curves': 1.5.0
-      '@noble/hashes': 1.4.0
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
 
   webextension-polyfill@0.10.0: {}
 
