@@ -1,7 +1,6 @@
 import {
   useAccount,
   useAccounts,
-  useAddNetwork,
   useDisconnect,
   useFuel,
   useNetwork,
@@ -10,7 +9,7 @@ import {
   useWallet,
 } from '@fuels/react';
 
-import { DEVNET_NETWORK_URL, TESTNET_NETWORK_URL, bn } from 'fuels';
+import { TESTNET_NETWORK_URL, bn } from 'fuels';
 import './App.css';
 
 export function Connected() {
@@ -22,7 +21,6 @@ export function Connected() {
 
   const { network } = useNetwork();
   const { networks } = useNetworks();
-  const { addNetworkAsync, isPending: isAddingNetwork } = useAddNetwork();
   const { selectNetworkAsync, isPending: isSelectingNetwork } =
     useSelectNetwork();
 
@@ -90,7 +88,6 @@ export function Connected() {
             try {
               const res = await selectNetworkAsync({
                 chainId: 0,
-                url: DEVNET_NETWORK_URL,
               });
               console.log(res);
             } catch (e) {
@@ -98,14 +95,13 @@ export function Connected() {
             }
           }}
         >
-          {isSelectingNetwork ? 'Loading...' : 'Select Devnet'}
+          {isSelectingNetwork ? 'Loading...' : 'Select chainId 0'}
         </button>
         <button
           type="button"
           onClick={async () => {
             try {
               const res = await selectNetworkAsync({
-                chainId: 0,
                 url: TESTNET_NETWORK_URL,
               });
               console.log(res);
@@ -114,7 +110,7 @@ export function Connected() {
             }
           }}
         >
-          {isSelectingNetwork ? 'Loading...' : 'Select Testnet'}
+          {isSelectingNetwork ? 'Loading...' : 'Select Testnet by URL'}
         </button>
         <button
           type="button"
@@ -130,19 +126,6 @@ export function Connected() {
           }}
         >
           {isSelectingNetwork ? 'Loading...' : 'Select Unknown ChainId'}
-        </button>
-        <button
-          type="button"
-          onClick={async () => {
-            try {
-              const res = await addNetworkAsync(TESTNET_NETWORK_URL);
-              console.log(res);
-            } catch (e) {
-              console.error(e);
-            }
-          }}
-        >
-          {isAddingNetwork ? 'Loading...' : 'Add Testnet'}
         </button>
       </div>
 
