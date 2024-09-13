@@ -1,7 +1,12 @@
 import { createProvider, createUUID } from '@fuel-wallet/connections';
 import type { NetworkData } from '@fuel-wallet/types';
 import { compare } from 'compare-versions';
-import { DEVNET_NETWORK_URL, type NodeInfo, TESTNET_NETWORK_URL } from 'fuels';
+import {
+  CHAIN_IDS,
+  DEVNET_NETWORK_URL,
+  type NodeInfo,
+  TESTNET_NETWORK_URL,
+} from 'fuels';
 import { MIN_NODE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
 import { db } from '~/systems/Core/utils/database';
 
@@ -169,7 +174,7 @@ export class NetworkService {
     }).catch(() => ({ name: 'Fuel Sepolia Testnet' }));
     const testnetNetwork = await NetworkService.addNetwork({
       data: {
-        chainId: 0,
+        chainId: CHAIN_IDS.fuel.testnet,
         name: testnetInfo.name,
         url: TESTNET_NETWORK_URL,
       },
@@ -181,7 +186,7 @@ export class NetworkService {
     }).catch(() => ({ name: 'Fuel Ignition Sepolia Devnet' }));
     const devnetNetwork = await NetworkService.addNetwork({
       data: {
-        chainId: 0,
+        chainId: CHAIN_IDS.fuel.devnet,
         name: devnetInfo.name,
         url: DEVNET_NETWORK_URL,
       },

@@ -21,12 +21,14 @@ export const PRIVATE_KEY =
 export const DEFAULT_NETWORKS: Array<NetworkData> = [
   {
     id: '1',
+    chainId: 0,
     isSelected: true,
     name: 'Local',
     url: VITE_FUEL_PROVIDER_URL,
   },
   {
     id: '2',
+    chainId: 0,
     isSelected: false,
     name: 'Another',
     url: 'https://another.network.fuel/graphql',

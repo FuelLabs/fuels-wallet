@@ -12,8 +12,8 @@ import type {
 import type { DbEvents, PromiseExtended, Table } from 'dexie';
 import Dexie from 'dexie';
 import 'dexie-observable';
-import { DEVNET_NETWORK_URL, TESTNET_NETWORK_URL } from 'fuels';
-import { DATABASE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
+import { CHAIN_IDS, DEVNET_NETWORK_URL, TESTNET_NETWORK_URL } from 'fuels';
+import { DATABASE_VERSION } from '~/config';
 import type { Transaction } from '~/systems/Transaction/types';
 
 type FailureEvents = Extract<keyof DbEvents, 'close' | 'blocked'>;
@@ -52,14 +52,14 @@ export class FuelDB extends Dexie {
         // Insert testnet and devnet networks
         await networks.bulkAdd([
           {
-            chainId: 0,
+            chainId: CHAIN_IDS.fuel.testnet,
             name: 'Fuel Sepolia Testnet',
             url: TESTNET_NETWORK_URL,
             isSelected: true,
             id: createUUID(),
           },
           {
-            chainId: 0,
+            chainId: CHAIN_IDS.fuel.devnet,
             name: 'Fuel Ignition Sepolia Devnet',
             url: DEVNET_NETWORK_URL,
             isSelected: false,
