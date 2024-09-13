@@ -62,8 +62,12 @@ describe('NetworkService', () => {
 
   it('should not be able to add two networks with the same name', async () => {
     try {
-      await NetworkService.addNetwork({ data: { name: 'test', url: 'test1' } });
-      await NetworkService.addNetwork({ data: { name: 'test', url: 'test2' } });
+      await NetworkService.addNetwork({
+        data: { chainId: 0, name: 'test', url: 'test1' },
+      });
+      await NetworkService.addNetwork({
+        data: { chainId: 0, name: 'test', url: 'test2' },
+      });
     } catch (error) {
       expect(error).toBeDefined();
     }
@@ -71,8 +75,12 @@ describe('NetworkService', () => {
 
   it('should not be able to add two networks with the same url', async () => {
     try {
-      await NetworkService.addNetwork({ data: { name: 'test1', url: 'test' } });
-      await NetworkService.addNetwork({ data: { name: 'test2', url: 'test' } });
+      await NetworkService.addNetwork({
+        data: { chainId: 0, name: 'test1', url: 'test' },
+      });
+      await NetworkService.addNetwork({
+        data: { chainId: 0, name: 'test2', url: 'test' },
+      });
     } catch (error) {
       expect(error).toBeDefined();
     }
