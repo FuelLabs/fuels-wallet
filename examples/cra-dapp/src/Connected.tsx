@@ -22,8 +22,9 @@ export function Connected() {
 
   const { network } = useNetwork();
   const { networks } = useNetworks();
-  const { addNetworkAsync } = useAddNetwork();
-  const { selectNetworkAsync } = useSelectNetwork();
+  const { addNetworkAsync, isPending: isAddingNetwork } = useAddNetwork();
+  const { selectNetworkAsync, isPending: isSelectingNetwork } =
+    useSelectNetwork();
 
   return (
     <div>
@@ -97,7 +98,7 @@ export function Connected() {
             }
           }}
         >
-          Select Devnet
+          {isSelectingNetwork ? 'Loading...' : 'Select Devnet'}
         </button>
         <button
           type="button"
@@ -113,7 +114,7 @@ export function Connected() {
             }
           }}
         >
-          Select Testnet
+          {isSelectingNetwork ? 'Loading...' : 'Select Testnet'}
         </button>
         <button
           type="button"
@@ -128,7 +129,7 @@ export function Connected() {
             }
           }}
         >
-          Select Unknown ChainId
+          {isSelectingNetwork ? 'Loading...' : 'Select Unknown ChainId'}
         </button>
         <button
           type="button"
@@ -141,7 +142,7 @@ export function Connected() {
             }
           }}
         >
-          Add Testnet
+          {isAddingNetwork ? 'Loading...' : 'Add Testnet'}
         </button>
       </div>
 
