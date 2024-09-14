@@ -107,7 +107,7 @@ const styles = {
     my: 'auto',
   }),
   lowOpacity: cssObj({
-    opacity: 0.5,
+    opacity: 0.7,
   }),
   arrow: cssObj({
     alignSelf: 'center',
