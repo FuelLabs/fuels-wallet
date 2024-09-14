@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Alert, Button, Card, Text } from '@fuel-ui/react';
+import { Button, Card, Text } from '@fuel-ui/react';
 import { motion } from 'framer-motion';
 import { animations } from '~/systems/Core';
 
@@ -18,14 +18,6 @@ export function NetworkReviewCard({
   onChangeUrl,
   url,
 }: NetworkReviewCardProps) {
-  if (!url) {
-    return (
-      <Alert status="error">
-        <Alert.Description>Unable to find the network</Alert.Description>
-      </Alert>
-    );
-  }
-
   return (
     <MotionCard {...animations.slideInTop()}>
       <Card.Header space="compact" css={styles.header}>

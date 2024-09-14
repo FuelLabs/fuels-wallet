@@ -9,6 +9,7 @@ const selectors = {
   favIconUrl: (state: SelectNetworkRequestMachineState) =>
     state.context.favIconUrl,
   network: (state: SelectNetworkRequestMachineState) => state.context.network,
+  popup: (state: SelectNetworkRequestMachineState) => state.context.popup,
   isLoading: (state: SelectNetworkRequestMachineState) => {
     return state.hasTag('loading');
   },
@@ -22,6 +23,7 @@ export function useSelectNetworkRequest() {
   const title = useSelector(service, selectors.title);
   const favIconUrl = useSelector(service, selectors.favIconUrl);
   const network = useSelector(service, selectors.network);
+  const popup = useSelector(service, selectors.popup);
   const isLoading = useSelector(service, selectors.isLoading);
 
   function approve() {
@@ -41,6 +43,7 @@ export function useSelectNetworkRequest() {
     origin,
     title,
     favIconUrl,
+    popup,
     network,
   };
 }

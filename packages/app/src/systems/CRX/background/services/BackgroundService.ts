@@ -377,7 +377,12 @@ export class BackgroundService {
     input: MessageInputs['selectNetwork'],
     serverParams: EventOrigin
   ): Promise<boolean> {
-    const { network } = input;
+    // If network is already selected, we don't need to open the popup
+    const { isSelected, popup, network } =
+      await NetworkService.validateNetworkSelect(input.network);
+    if (isSelected) {
+      return true;
+    }
 
     const origin = serverParams.origin;
     const title = serverParams.title;
@@ -390,10 +395,8 @@ export class BackgroundService {
     );
 
     await popupService.selectNetwork({
-      network: {
-        chainId: network.chainId,
-        url: network.url,
-      },
+      network,
+      popup,
       origin,
       title,
       favIconUrl,
@@ -425,6 +428,7 @@ export class BackgroundService {
         name: network.name,
         url: network.url,
       },
+      popup: 'add',
       origin,
       title,
       favIconUrl,

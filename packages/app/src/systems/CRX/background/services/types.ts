@@ -50,12 +50,14 @@ export type MessageInputs = {
 export type PopUpServiceInputs = {
   selectNetwork: {
     network: Partial<NetworkData>;
+    popup: 'add' | 'select';
     origin: string;
     title: string;
     favIconUrl: string;
   };
   addNetwork: {
     network: Partial<NetworkData>;
+    popup: 'add';
     origin: string;
     title: string;
     favIconUrl: string;

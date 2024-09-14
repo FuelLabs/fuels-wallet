@@ -7,44 +7,43 @@ import { NetworkReviewCard } from '~/systems/Network';
 import { useSelectNetworkRequest } from '../../hooks';
 
 export function SelectNetworkRequest() {
-  const { handlers, isLoading, title, favIconUrl, origin, network } =
+  const { handlers, isLoading, title, favIconUrl, origin, network, popup } =
     useSelectNetworkRequest();
   const { account } = useAccounts();
 
-  if (!origin || !network || !account) return null;
+  if (!origin || !network || !account || !popup) return null;
 
   const { name = '', url = '' } = network;
+  const action = popup === 'add' ? 'Add' : 'Select';
 
   return (
-    <Layout title="Select Network Request" noBorder>
+    <Layout title={`${action} Network Request`} noBorder>
       <Layout.Content css={styles.content} noBorder>
         <ConnectInfo
           origin={origin}
           title={title || ''}
           favIconUrl={favIconUrl}
-          headerText="Request to Select Network from:"
+          headerText={`Request to ${action} Network from:`}
         />
         <NetworkReviewCard
-          headerText="Review the Network to be selected:"
+          headerText={`Review the Network to be ${action}:`}
           name={name}
           url={url}
         />
       </Layout.Content>
-      {!!url && (
-        <Layout.BottomBar>
-          <Button variant="ghost" onPress={handlers.reject}>
-            Reject
-          </Button>
-          <Button
-            type="submit"
-            intent="primary"
-            isLoading={isLoading}
-            onPress={handlers.approve}
-          >
-            Select Network
-          </Button>
-        </Layout.BottomBar>
-      )}
+      <Layout.BottomBar>
+        <Button variant="ghost" onPress={handlers.reject}>
+          Reject
+        </Button>
+        <Button
+          type="submit"
+          intent="primary"
+          isLoading={isLoading}
+          onPress={handlers.approve}
+        >
+          {action} Network
+        </Button>
+      </Layout.BottomBar>
     </Layout>
   );
 }

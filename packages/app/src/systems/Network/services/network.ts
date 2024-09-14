@@ -5,6 +5,8 @@ import {
   CHAIN_IDS,
   DEVNET_NETWORK_URL,
   type NodeInfo,
+  Provider,
+  type SelectNetworkArguments,
   TESTNET_NETWORK_URL,
 } from 'fuels';
 import { MIN_NODE_VERSION, VITE_FUEL_PROVIDER_URL } from '~/config';
@@ -52,6 +54,7 @@ export type NetworkInputs = {
   getChainInfo: {
     providerUrl: string;
   };
+  validateNetworkSelect: SelectNetworkArguments;
   validateNetworkExists: {
     name: string;
     url: string;
@@ -229,6 +232,139 @@ export class NetworkService {
   static async getNodeInfo(input: NetworkInputs['getNodeInfo']) {
     const provider = await createProvider(input.providerUrl);
     return provider.fetchNode();
+  }
+
+  static async validateNetworkSelect(
+    input: NetworkInputs['validateNetworkSelect']
+  ) {
+    const { chainId, url } = input;
+    const hasChainId = typeof chainId === 'number';
+    const hasUrl = typeof url === 'string';
+
+    // When chainId and provider are provided:
+    // 1. If chainId and provider does not exist in our database, validate if the chainId is valid.
+    // 2. If chainId and provider does not exist in our database, show popup to create if the chainId match the URL.
+    // 2. If chainId exists in our database and is selected, return true.
+    // 3. If chainId exists in our database but is not selected, show popup to select.
+    if (hasChainId && hasUrl) {
+      const networkByChainId = await NetworkService.getNetworkByChainId({
+        chainId,
+      });
+      const networkByUrl = await NetworkService.getNetworkByUrl({
+        url,
+      });
+
+      if (!networkByChainId || !networkByUrl) {
+        const provider = await Provider.create(url);
+        const providerName = provider.getChain().name;
+        const providerChainId = provider.getChainId();
+
+        if (providerChainId !== chainId) {
+          throw new Error(
+            `The URL you have entered returned a different chain ID (${providerChainId}). Please update the Chain ID to match the URL of the network you are trying to add.`
+          );
+        }
+
+        await NetworkService.validateNetworkVersion({
+          url,
+        });
+
+        return {
+          isSelected: false,
+          popup: 'add',
+          network: {
+            chainId: providerChainId,
+            name: providerName,
+            url,
+          },
+        } as const;
+      }
+
+      if (networkByUrl.isSelected) {
+        return {
+          isSelected: true,
+          popup: false,
+        } as const;
+      }
+
+      return {
+        isSelected: false,
+        popup: 'select',
+        network: networkByUrl,
+      } as const;
+    }
+
+    // When only chainId is provided:
+    // 2. If chainId does not exist and the network is unknown, throw an error.
+    // 3. If chainId exists in our database and is selected, return true.
+    // 4. If chainId exists in our database but is not selected, show popup to select.
+    if (hasChainId) {
+      const networkByChainId = await NetworkService.getNetworkByChainId({
+        chainId,
+      });
+
+      if (!networkByChainId) {
+        throw new Error('Unknown network, please create it manually');
+      }
+
+      if (networkByChainId.isSelected) {
+        return {
+          isSelected: true,
+          popup: false,
+        } as const;
+      }
+
+      return {
+        isSelected: false,
+        popup: 'select',
+        network: networkByChainId,
+      } as const;
+    }
+
+    // When only URL is provided:
+    // 1. If URL does not exist in our database, show popup to create the network.
+    // 2. If URL exists in our database and is selected, return true and don't open the popup.
+    // 3. If URL exists in our database but is not selected, show popup to select.
+    if (hasUrl) {
+      const networkByUrl = await NetworkService.getNetworkByUrl({
+        url,
+      });
+
+      if (!networkByUrl) {
+        const provider = await Provider.create(url);
+        const providerName = provider.getChain().name;
+        const providerChainId = await provider.getChainId();
+
+        await NetworkService.validateNetworkVersion({
+          url,
+        });
+
+        return {
+          isSelected: false,
+          popup: 'add',
+          network: {
+            chainId: providerChainId,
+            name: providerName,
+            url,
+          },
+        } as const;
+      }
+
+      if (networkByUrl.isSelected) {
+        return {
+          isSelected: true,
+          popup: false,
+        } as const;
+      }
+
+      return {
+        isSelected: false,
+        popup: 'select',
+        network: networkByUrl,
+      } as const;
+    }
+
+    throw new Error('Invalid network input, either chainId or url is required');
   }
 
   static async validateNetworkExists(
