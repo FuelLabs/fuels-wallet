@@ -46,26 +46,27 @@ export class FuelDB extends Dexie {
       })
       .upgrade(async (tx) => {
         const networks = tx.table('networks');
+
         // Clean networks
         await networks.clear();
 
-        // Insert testnet and devnet networks
-        await networks.bulkAdd([
-          {
-            chainId: CHAIN_IDS.fuel.testnet,
-            name: 'Fuel Sepolia Testnet',
-            url: TESTNET_NETWORK_URL,
-            isSelected: true,
-            id: createUUID(),
-          },
-          {
-            chainId: CHAIN_IDS.fuel.devnet,
-            name: 'Fuel Ignition Sepolia Devnet',
-            url: DEVNET_NETWORK_URL,
-            isSelected: false,
-            id: createUUID(),
-          },
-        ]);
+        // Insert testnet  network
+        await networks.add({
+          chainId: CHAIN_IDS.fuel.testnet,
+          name: 'Fuel Sepolia Testnet',
+          url: TESTNET_NETWORK_URL,
+          isSelected: true,
+          id: createUUID(),
+        });
+
+        // Insert devnet network
+        await networks.add({
+          chainId: CHAIN_IDS.fuel.devnet,
+          name: 'Fuel Ignition Sepolia Devnet',
+          url: DEVNET_NETWORK_URL,
+          isSelected: false,
+          id: createUUID(),
+        });
       });
     this.on('blocked', () => this.restart('blocked'));
     this.on('close', () => this.restart('close'));
