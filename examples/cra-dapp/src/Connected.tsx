@@ -9,7 +9,7 @@ import {
   useWallet,
 } from '@fuels/react';
 
-import { TESTNET_NETWORK_URL, bn } from 'fuels';
+import { DEVNET_NETWORK_URL, TESTNET_NETWORK_URL, bn } from 'fuels';
 import './App.css';
 
 export function Connected() {
@@ -96,6 +96,21 @@ export function Connected() {
           }}
         >
           {isSelectingNetwork ? 'Loading...' : 'Select chainId 0'}
+        </button>
+        <button
+          type="button"
+          onClick={async () => {
+            try {
+              const res = await selectNetworkAsync({
+                url: DEVNET_NETWORK_URL,
+              });
+              console.log(res);
+            } catch (e) {
+              console.error(e);
+            }
+          }}
+        >
+          {isSelectingNetwork ? 'Loading...' : 'Select Devnet by URL'}
         </button>
         <button
           type="button"
