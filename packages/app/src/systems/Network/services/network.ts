@@ -241,6 +241,8 @@ export class NetworkService {
     const hasChainId = typeof chainId === 'number';
     const hasUrl = typeof url === 'string';
 
+    const currentNetwork = await NetworkService.getSelectedNetwork();
+
     // When chainId and provider are provided:
     // 1. If chainId and provider does not exist in our database, validate if the chainId is valid.
     // 2. If chainId and provider does not exist in our database, show popup to create if the chainId match the URL.
@@ -277,6 +279,7 @@ export class NetworkService {
             name: providerName,
             url,
           },
+          currentNetwork,
         } as const;
       }
 
@@ -291,6 +294,7 @@ export class NetworkService {
         isSelected: false,
         popup: 'select',
         network: networkByUrl,
+        currentNetwork,
       } as const;
     }
 
@@ -318,6 +322,7 @@ export class NetworkService {
         isSelected: false,
         popup: 'select',
         network: networkByChainId,
+        currentNetwork,
       } as const;
     }
 
@@ -347,6 +352,7 @@ export class NetworkService {
             name: providerName,
             url,
           },
+          currentNetwork,
         } as const;
       }
 
@@ -361,6 +367,7 @@ export class NetworkService {
         isSelected: false,
         popup: 'select',
         network: networkByUrl,
+        currentNetwork,
       } as const;
     }
 

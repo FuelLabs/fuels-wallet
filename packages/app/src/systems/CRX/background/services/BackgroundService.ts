@@ -378,7 +378,7 @@ export class BackgroundService {
     serverParams: EventOrigin
   ): Promise<boolean> {
     // If network is already selected, we don't need to open the popup
-    const { isSelected, popup, network } =
+    const { isSelected, popup, network, currentNetwork } =
       await NetworkService.validateNetworkSelect(input.network);
     if (isSelected) {
       return true;
@@ -396,6 +396,7 @@ export class BackgroundService {
 
     await popupService.selectNetwork({
       network,
+      currentNetwork,
       popup,
       origin,
       title,

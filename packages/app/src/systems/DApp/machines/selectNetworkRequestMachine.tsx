@@ -1,5 +1,4 @@
 import type { NetworkData } from '@fuel-wallet/types';
-import { Provider } from 'fuels';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { FetchMachine, assignErrorMessage } from '~/systems/Core';
@@ -8,6 +7,7 @@ import { store } from '~/systems/Store';
 
 type MachineContext = {
   network?: Partial<NetworkData>;
+  currentNetwork?: NetworkData;
   popup?: 'add' | 'select';
   origin?: string;
   title?: string;
@@ -25,6 +25,7 @@ type MachineServices = {
 export type SelectNetworkInputs = {
   start: {
     network: Partial<NetworkData>;
+    currentNetwork?: NetworkData;
     popup: 'add' | 'select';
     origin: string;
     favIconUrl: string;
@@ -108,6 +109,7 @@ export const selectNetworkRequestMachine = createMachine(
         favIconUrl: ev.input.favIconUrl,
         popup: ev.input.popup,
         network: ev.input.network,
+        currentNetwork: ev.input.currentNetwork,
       })),
       notifyRefreshNetworks: () => {
         store.refreshNetworks();

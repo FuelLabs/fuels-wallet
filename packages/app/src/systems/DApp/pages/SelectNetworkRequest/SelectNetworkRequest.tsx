@@ -1,5 +1,5 @@
 import { cssObj } from '@fuel-ui/css';
-import { Button } from '@fuel-ui/react';
+import { Box, Button, Text, VStack } from '@fuel-ui/react';
 import { useAccounts } from '~/systems/Account';
 import { ConnectInfo, Layout } from '~/systems/Core';
 import { NetworkReviewCard } from '~/systems/Network';
@@ -7,26 +7,74 @@ import { NetworkReviewCard } from '~/systems/Network';
 import { useSelectNetworkRequest } from '../../hooks';
 
 export function SelectNetworkRequest() {
-  const { handlers, isLoading, title, favIconUrl, origin, network, popup } =
-    useSelectNetworkRequest();
+  const {
+    handlers,
+    isLoading,
+    title,
+    favIconUrl,
+    origin,
+    network,
+    currentNetwork,
+    popup,
+  } = useSelectNetworkRequest();
   const { account } = useAccounts();
 
   if (!origin || !network || !account || !popup) return null;
 
   const { name = '', url = '' } = network;
-  const action = popup === 'add' ? 'Add' : 'Select';
+
+  if (popup === 'select') {
+    return (
+      <Layout title="Select Network Request" noBorder>
+        <Layout.Content css={styles.content} noBorder>
+          <ConnectInfo
+            origin={origin}
+            title={title || ''}
+            favIconUrl={favIconUrl}
+            headerText="Request to Select Network from:"
+          />
+          <VStack gap="$1" css={styles.center}>
+            <Box css={styles.lowOpacity}>
+              <ConnectInfo
+                headerText="Current Network"
+                title={currentNetwork?.name || 'Unknown'}
+                origin={currentNetwork?.url || 'Unknown'}
+              />
+            </Box>
+            <Text as="span" fontSize="lg" css={styles.arrow}>
+              &#8595;
+            </Text>
+            <ConnectInfo headerText="Switching To" title={name} origin={url} />
+          </VStack>
+        </Layout.Content>
+        <Layout.BottomBar>
+          <Button variant="ghost" onPress={handlers.reject}>
+            Reject
+          </Button>
+          <Button
+            type="submit"
+            intent="primary"
+            isLoading={isLoading}
+            onPress={handlers.approve}
+          >
+            Select Network
+          </Button>
+        </Layout.BottomBar>
+      </Layout>
+    );
+  }
 
   return (
-    <Layout title={`${action} Network Request`} noBorder>
+    <Layout title="Add Network Request" noBorder>
       <Layout.Content css={styles.content} noBorder>
         <ConnectInfo
           origin={origin}
           title={title || ''}
           favIconUrl={favIconUrl}
-          headerText={`Request to ${action} Network from:`}
+          headerText="Request to Add Network from:"
         />
         <NetworkReviewCard
-          headerText={`Review the Network to be ${action}:`}
+          headerText="Review the Network to be added:"
           name={name}
           url={url}
         />
@@ -41,7 +89,7 @@ export function SelectNetworkRequest() {
           isLoading={isLoading}
           onPress={handlers.approve}
         >
-          {action} Network
+          Add Network
         </Button>
       </Layout.BottomBar>
     </Layout>
@@ -54,5 +102,14 @@ const styles = {
     flexDirection: 'column',
     gap: '$4',
     padding: '$4 !important',
+  }),
+  center: cssObj({
+    my: 'auto',
+  }),
+  lowOpacity: cssObj({
+    opacity: 0.5,
+  }),
+  arrow: cssObj({
+    alignSelf: 'center',
   }),
 };
