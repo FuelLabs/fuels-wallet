@@ -3,9 +3,6 @@ import { WalletLocked, hashMessage, transactionRequestify } from 'fuels';
 import { VaultService } from '~/systems/Vault';
 
 export class WalletLockedCustom extends WalletLocked {
-  // @TODO: remove this workaround asap, because it's a security issue
-  // fuels is not keeping the url correct in this.provider.url so we need to override
-  providerUrl = '';
   /**
    * Sign message with wallet instance privateKey
    *
@@ -25,7 +22,7 @@ export class WalletLockedCustom extends WalletLocked {
     const signature = await VaultService.signTransaction({
       transaction: JSON.stringify(transactionRequest),
       address: this.address.toString(),
-      providerUrl: this.providerUrl,
+      providerUrl: this.provider.url,
     });
     return signature;
   }
