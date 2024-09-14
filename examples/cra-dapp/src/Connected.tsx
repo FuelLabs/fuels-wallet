@@ -1,6 +1,7 @@
 import {
   useAccount,
   useAccounts,
+  useAddNetwork,
   useDisconnect,
   useFuel,
   useNetwork,
@@ -23,6 +24,8 @@ export function Connected() {
   const { networks } = useNetworks();
   const { selectNetworkAsync, isPending: isSelectingNetwork } =
     useSelectNetwork();
+
+  const { addNetworkAsync, isPending: isAddingNetwork } = useAddNetwork();
 
   return (
     <div>
@@ -141,6 +144,20 @@ export function Connected() {
           }}
         >
           {isSelectingNetwork ? 'Loading...' : 'Select Unknown ChainId'}
+        </button>
+
+        <button
+          type="button"
+          onClick={async () => {
+            try {
+              const res = await addNetworkAsync(TESTNET_NETWORK_URL);
+              console.log(res);
+            } catch (e) {
+              console.error(e);
+            }
+          }}
+        >
+          {isAddingNetwork ? 'Loading...' : 'Add testnet'}
         </button>
       </div>
 

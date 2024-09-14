@@ -410,9 +410,14 @@ export class BackgroundService {
     input: MessageInputs['addNetwork'],
     serverParams: EventOrigin
   ): Promise<boolean> {
-    const { network } = input;
-    await NetworkService.validateNetworkExists(network);
-    await NetworkService.validateNetworkVersion(network);
+    await NetworkService.validateNetworkExists(input.network);
+    const { isSelected, network } = await NetworkService.validateNetworkSelect({
+      chainId: undefined,
+      url: input.network.url,
+    });
+    if (isSelected) {
+      return true;
+    }
 
     const origin = serverParams.origin;
     const title = serverParams.title;
@@ -425,10 +430,7 @@ export class BackgroundService {
     );
 
     await popupService.addNetwork({
-      network: {
-        name: network.name,
-        url: network.url,
-      },
+      network,
       popup: 'add',
       origin,
       title,
