@@ -25,13 +25,13 @@ export function SelectNetworkRequest() {
 
   if (popup === 'select') {
     return (
-      <Layout title="Select Network Request" noBorder>
+      <Layout title="Switch Network Request" noBorder>
         <Layout.Content css={styles.content} noBorder>
           <ConnectInfo
             origin={origin}
             title={title || ''}
             favIconUrl={favIconUrl}
-            headerText="Request to Select Network from:"
+            headerText="Request to Switch Network from:"
           />
           <VStack gap="$1" css={styles.center}>
             <Box css={styles.lowOpacity}>
@@ -57,7 +57,7 @@ export function SelectNetworkRequest() {
             isLoading={isLoading}
             onPress={handlers.approve}
           >
-            Select Network
+            Switch Network
           </Button>
         </Layout.BottomBar>
       </Layout>
