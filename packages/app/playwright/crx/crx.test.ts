@@ -1,6 +1,14 @@
 import type { Account as WalletAccount } from '@fuel-wallet/types';
 import { type Locator, expect } from '@playwright/test';
-import { type Asset, Provider, Signer, Wallet, bn, hashMessage } from 'fuels';
+import {
+  type Asset,
+  Provider,
+  type SelectNetworkArguments,
+  Signer,
+  Wallet,
+  bn,
+  hashMessage,
+} from 'fuels';
 
 import {
   delay,
@@ -582,7 +590,7 @@ test.describe('FuelWallet Extension', () => {
       }
 
       async function testAddNetwork() {
-        const addingNetwork = addNetwork(FUEL_NETWORK.url);
+        const addingNetwork = addNetwork(FUEL_NETWORK.testnet);
 
         const addNetworkPage = await context.waitForEvent('page', {
           predicate: (page) => page.url().includes(extensionId),
@@ -627,6 +635,41 @@ test.describe('FuelWallet Extension', () => {
       // Check if added network is selected
       networkSelector = getByAriaLabel(popupPage, 'Selected Network');
       await expect(networkSelector).toHaveText(/Fuel Sepolia Testnet/);
+      await getByAriaLabel(popupPage, 'Close dialog').click();
+    });
+
+    await test.step('window.fuel.selectNetwork()', async () => {
+      function selectNetwork(network: SelectNetworkArguments) {
+        return blankPage.evaluate(
+          async ([network]) => {
+            return window.fuel.selectNetwork(network);
+          },
+          [network]
+        );
+      }
+
+      async function testSelectNetwork() {
+        const addingNetwork = selectNetwork({
+          chainId: 0,
+          url: FUEL_NETWORK.devnet,
+        });
+
+        const addNetworkPage = await context.waitForEvent('page', {
+          predicate: (page) => page.url().includes(extensionId),
+        });
+
+        await hasText(addNetworkPage, 'Switching To:');
+        await getButtonByText(addNetworkPage, /switch network/i).click();
+        await expect(addingNetwork).resolves.toBeDefined();
+        await popupPage.reload();
+      }
+
+      // Select network
+      await testSelectNetwork();
+
+      // Check if added network is selected
+      const networkSelector = getByAriaLabel(popupPage, 'Selected Network');
+      await expect(networkSelector).toHaveText(/Fuel Ignition Sepolia Devnet/);
       await getByAriaLabel(popupPage, 'Close dialog').click();
     });
 
