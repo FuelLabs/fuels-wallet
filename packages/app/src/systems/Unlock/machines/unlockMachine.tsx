@@ -1,3 +1,4 @@
+import { toast } from '@fuel-ui/react';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { CoreService } from '~/systems/Core';
@@ -169,7 +170,12 @@ export const unlockMachine = createMachine(
           if (!input || !input?.password) {
             throw new Error('Password is required to unlock wallet');
           }
-          await VaultService.unlock(input);
+          try {
+            await VaultService.unlock(input);
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+          } catch (err: any) {
+            toast.error(err?.message || 'Invalid credentials.');
+          }
         },
       }),
       lock: FetchMachine.create<void, void>({
