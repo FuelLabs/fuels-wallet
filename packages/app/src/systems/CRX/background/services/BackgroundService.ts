@@ -282,17 +282,23 @@ export class BackgroundService {
       );
     }
 
+    const { address, provider, transaction } = input;
+
     const popupService = await PopUpService.open(
       origin,
       Pages.requestTransaction(),
       this.communicationProtocol
     );
+
     const signedMessage = await popupService.sendTransaction({
-      ...input,
+      address,
+      provider,
+      transaction,
       origin,
       title,
       favIconUrl,
     });
+
     return signedMessage;
   }
 
