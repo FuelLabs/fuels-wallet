@@ -227,14 +227,11 @@ importers:
         specifier: 1.11.10
         version: 1.11.10
       dexie:
-        specifier: 3.2.4
-        version: 3.2.4
+        specifier: 3.2.7
+        version: 3.2.7
       dexie-observable:
         specifier: 4.0.1-beta.13
-        version: 4.0.1-beta.13(dexie@3.2.4)
-      dexie-react-hooks:
-        specifier: 1.1.6
-        version: 1.1.6(@types/react@18.3.3)(dexie@3.2.4)(react@18.3.1)
+        version: 4.0.1-beta.13(dexie@3.2.7)
       events:
         specifier: 3.3.0
         version: 3.3.0
@@ -716,7 +713,7 @@ importers:
     dependencies:
       dexie-observable:
         specifier: 4.0.1-beta.13
-        version: 4.0.1-beta.13(dexie@3.2.4)
+        version: 4.0.1-beta.13(dexie@3.2.7)
     devDependencies:
       '@fuels/connectors':
         specifier: 0.25.0
@@ -7822,15 +7819,8 @@ packages:
     peerDependencies:
       dexie: ^3.0.2 || ^4.0.1-alpha.5
 
-  dexie-react-hooks@1.1.6:
-    resolution: {integrity: sha512-xSblWtmPwhafWNWMECsW7zMMmBu8goH3QqTxEfwBNoNG1mgsM0oFclippev7ss9HhKICqBwTjgqpscci5Ed4mA==}
-    peerDependencies:
-      '@types/react': '>=16'
-      dexie: ^3.2 || ^4.0.1-alpha
-      react: '>=16'
-
-  dexie@3.2.4:
-    resolution: {integrity: sha512-VKoTQRSv7+RnffpOJ3Dh6ozknBqzWw/F3iqMdsZg958R0AS8AnY9x9d1lbwENr0gzeGJHXKcGhAMRaqys6SxqA==}
+  dexie@3.2.7:
+    resolution: {integrity: sha512-2a+BXvVhY5op+smDRLxeBAivE7YcYaneXJ1la3HOkUfX9zKkE/AJ8CNgjiXbtXepFyFmJNGSbmjOwqbT749r/w==}
     engines: {node: '>=6.0'}
 
   diff-sequences@28.1.1:
@@ -8679,11 +8669,6 @@ packages:
 
   glob@10.3.10:
     resolution: {integrity: sha512-fa46+tv1Ak0UPK1TOy/pZrIybNNt4HCv7SDzwyfiOZkvZLEbjsZkJBPtDHVshZjbecAoAGSC20MjLDG/qr679g==}
-    engines: {node: '>=16 || 14 >=14.17'}
-    hasBin: true
-
-  glob@10.3.12:
-    resolution: {integrity: sha512-TCNv8vJ+xz4QiqTpfOJA7HvYv+tNIRHKfUWw/q+v2jdgN4ebz+KY9tGx5J4rHP0o84mNP+ApH66HRX8us3Khqg==}
     engines: {node: '>=16 || 14 >=14.17'}
     hasBin: true
 
@@ -10802,10 +10787,6 @@ packages:
 
   path-scurry@1.10.1:
     resolution: {integrity: sha512-MkhCqzzBEpPvxxQ71Md0b1Kk51W01lrYvlMzSUaIzNsODdd7mqhiimSZlr+VegAz5Z6Vzt9Xg2ttE//XBhH3EQ==}
-    engines: {node: '>=16 || 14 >=14.17'}
-
-  path-scurry@1.10.2:
-    resolution: {integrity: sha512-7xTavNy5RQXnsjANvVvMkEjvloOinkAjv/Z6Ildz9v2RinZ4SBKTWFOVRbaF8p0vpHnyjV/UwNDdKuUv6M5qcA==}
     engines: {node: '>=16 || 14 >=14.17'}
 
   path-scurry@1.11.1:
@@ -26572,17 +26553,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  dexie-observable@4.0.1-beta.13(dexie@3.2.4):
+  dexie-observable@4.0.1-beta.13(dexie@3.2.7):
     dependencies:
-      dexie: 3.2.4
+      dexie: 3.2.7
 
-  dexie-react-hooks@1.1.6(@types/react@18.3.3)(dexie@3.2.4)(react@18.3.1):
-    dependencies:
-      '@types/react': 18.3.3
-      dexie: 3.2.4
-      react: 18.3.1
-
-  dexie@3.2.4: {}
+  dexie@3.2.7: {}
 
   diff-sequences@28.1.1: {}
 
@@ -27710,14 +27685,6 @@ snapshots:
       minimatch: 9.0.3
       minipass: 7.0.4
       path-scurry: 1.10.1
-
-  glob@10.3.12:
-    dependencies:
-      foreground-child: 3.1.1
-      jackspeak: 2.3.6
-      minimatch: 9.0.4
-      minipass: 7.0.4
-      path-scurry: 1.10.2
 
   glob@10.4.5:
     dependencies:
@@ -30725,11 +30692,6 @@ snapshots:
       lru-cache: 10.2.0
       minipass: 7.0.4
 
-  path-scurry@1.10.2:
-    dependencies:
-      lru-cache: 10.2.2
-      minipass: 7.0.4
-
   path-scurry@1.11.1:
     dependencies:
       lru-cache: 10.2.2
@@ -32029,7 +31991,7 @@ snapshots:
 
   rimraf@5.0.10:
     dependencies:
-      glob: 10.3.12
+      glob: 10.4.5
 
   rollup-plugin-visualizer@5.12.0(rollup@3.28.1):
     dependencies:

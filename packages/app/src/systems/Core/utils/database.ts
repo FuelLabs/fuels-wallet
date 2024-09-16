@@ -68,15 +68,20 @@ export class FuelDB extends Dexie {
           id: createUUID(),
         });
       });
+    this.setupListeners();
+  }
+
+  setupListeners() {
     this.on('blocked', () => this.restart('blocked'));
     this.on('close', () => this.restart('close'));
   }
 
   open(): PromiseExtended<Dexie> {
     try {
-      const result = super.open();
-      this.restartAttempts = 0;
-      return result;
+      return super.open().then((res) => {
+        this.restartAttempts = 0;
+        return res;
+      });
     } catch (err) {
       console.error('Failed to restart DB. Sending signal for restart');
       this.restart('blocked');

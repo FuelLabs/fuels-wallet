@@ -30,8 +30,15 @@ export class PopUpService {
   eventId?: string;
   client: JSONRPCClient;
   readonly communicationProtocol: CommunicationProtocol;
+  private timeoutId: NodeJS.Timeout | null = null;
+  private origin: string;
 
-  constructor(communicationProtocol: CommunicationProtocol) {
+  constructor(communicationProtocol: CommunicationProtocol, origin: string) {
+    // Bind methods to ensure correct `this` context
+    this.onUIEvent = this.onUIEvent.bind(this);
+    this.onResponse = this.onResponse.bind(this);
+
+    this.origin = origin;
     this.communicationProtocol = communicationProtocol;
     this.openingPromise = deferPromise<PopUpService>();
     this.client = new JSONRPCClient(this.sendRequest);
@@ -40,9 +47,16 @@ export class PopUpService {
   }
 
   setTimeout(delay = 5000) {
-    setTimeout(() => {
+    this.timeoutId = setTimeout(() => {
       this.openingPromise.reject(new Error('PopUp not opened!'));
     }, delay);
+  }
+
+  clearTimeout() {
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+      this.timeoutId = null;
+    }
   }
 
   rejectAllRequests = (id: string) => {
@@ -84,6 +98,15 @@ export class PopUpService {
     );
   }
 
+  removeUIListeners() {
+    this.communicationProtocol.off(MessageTypes.uiEvent, this.onUIEvent);
+    this.communicationProtocol.off(MessageTypes.response, this.onResponse);
+    this.communicationProtocol.off(
+      MessageTypes.removeConnection,
+      this.rejectAllRequests
+    );
+  }
+
   onUIEvent = (message: UIEventMessage) => {
     if (this.session === message.session && message.ready && message.sender) {
       const tab = getTabFromSender(message.sender);
@@ -114,7 +137,7 @@ export class PopUpService {
     communicationProtocol: CommunicationProtocol
   ) => {
     const session = uniqueId(4);
-    const popupService = new PopUpService(communicationProtocol);
+    const popupService = new PopUpService(communicationProtocol, origin);
 
     // Set current instance to memory to avoid
     // Multiple instances
@@ -180,6 +203,19 @@ export class PopUpService {
     } catch (_) {
       // If forwarding fails, save error directly
       await ReportErrorService.saveError(error);
+    }
+  }
+
+  destroy() {
+    this.clearTimeout();
+    this.removeUIListeners();
+    this.client.rejectAllPendingRequests('Service is being cleaned up');
+    popups.delete(this.origin);
+  }
+
+  static destroyAll() {
+    for (const popup of popups.values()) {
+      popup.destroy();
     }
   }
 }

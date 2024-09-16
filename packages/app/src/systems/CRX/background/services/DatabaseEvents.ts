@@ -111,4 +111,8 @@ export class DatabaseEvents {
       );
     });
   }
+
+  stop() {
+    this.databaseObservable.destroy();
+  }
 }
