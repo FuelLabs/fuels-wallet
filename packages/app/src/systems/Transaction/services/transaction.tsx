@@ -208,11 +208,8 @@ export class TxService {
         minGasLimit: customFee?.gasUsed,
         txSummary: {
           ...txSummary,
-          // if customFee was chosen, we override the txSummary fee with the customFee
           fee: feeAdaptedToSdkDiff,
           gasUsed: txSummary.gasUsed,
-          // fee: customFee?.txCost?.maxFee || feeAdaptedToSdkDiff,
-          // gasUsed: customFee?.txCost?.gasUsed || txSummary.gasUsed,
         },
       };
 
@@ -401,7 +398,10 @@ export class TxService {
 
     // funding the transaction with the required quantities (the maxFee might have changed)
     await wallet.fund(transactionRequest, {
-      ...txCost,
+      estimatedPredicates: txCost.estimatedPredicates,
+      addedSignatures: txCost.addedSignatures,
+      gasPrice: txCost.gasPrice,
+      updateMaxFee: txCost.updateMaxFee,
       requiredQuantities: [],
     });
 
