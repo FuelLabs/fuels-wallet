@@ -1,3 +1,5 @@
+import type { FuelError } from 'fuels';
+
 export type VMApiError = {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   request: any;
@@ -26,7 +28,7 @@ export type GroupedErrors = {
   [key: VmErrorType]: Record<string, any> | string | unknown;
 };
 
-export const getGroupedErrors = (rawErrors?: { message: string }[]) => {
+export const getGroupedErrors = (rawErrors?: FuelError[]) => {
   if (!rawErrors) return undefined;
 
   const groupedErrors = rawErrors.reduce<GroupedErrors>(
