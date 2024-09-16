@@ -1,11 +1,12 @@
 import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
-import type { Connection } from '@fuel-wallet/types';
+import type { CommunicationEventArg, Connection } from '@fuel-wallet/types';
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuels/connectors';
 import { Address } from 'fuels';
 import type {
   JSONRPCParams,
   JSONRPCRequest,
   JSONRPCServerMiddlewareNext,
+  SimpleJSONRPCMethod,
 } from 'json-rpc-2.0';
 import { JSONRPCServer } from 'json-rpc-2.0';
 import { APP_VERSION } from '~/config';
@@ -27,71 +28,87 @@ type EventOrigin = {
   connection?: Connection;
 };
 
+type Methods<T> = {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  [K in keyof T]: T[K] extends (...args: any[]) => any ? K : never;
+}[keyof T];
+
 export class BackgroundService {
   readonly server: JSONRPCServer<EventOrigin>;
   readonly communicationProtocol: CommunicationProtocol;
+  readonly methods: Array<Methods<Omit<BackgroundService, 'methods'>>> = [
+    'ping',
+    'version',
+    'isConnected',
+    'accounts',
+    'connect',
+    'network',
+    'disconnect',
+    'signMessage',
+    'sendTransaction',
+    'currentAccount',
+    'addAssets',
+    'assets',
+    'addNetwork',
+    'addAbi',
+    'getAbi',
+  ];
 
   constructor(communicationProtocol: CommunicationProtocol) {
+    // Bind methods to ensure correct `this` context
+    this.handleRequest = this.handleRequest.bind(this);
+    this.connectionMiddleware = this.connectionMiddleware.bind(this);
+
     this.communicationProtocol = communicationProtocol;
     this.server = new JSONRPCServer<EventOrigin>();
-    this.server.applyMiddleware(this.connectionMiddleware.bind(this));
+    this.server.applyMiddleware(this.connectionMiddleware);
     this.setupListeners();
-    this.externalMethods([
-      this.ping,
-      this.version,
-      this.isConnected,
-      this.accounts,
-      this.connect,
-      this.network,
-      this.disconnect,
-      this.signMessage,
-      this.sendTransaction,
-      this.currentAccount,
-      this.addAssets,
-      this.assets,
-      this.addNetwork,
-      this.addAbi,
-      this.getAbi,
-    ]);
+    this.addExternalMethods();
   }
 
   static start(communicationProtocol: CommunicationProtocol) {
     return new BackgroundService(communicationProtocol);
   }
 
-  setupListeners() {
-    this.communicationProtocol.on(MessageTypes.request, async (event) => {
-      if (event.target !== BACKGROUND_SCRIPT_NAME) return;
-      const origin = event.sender?.origin!;
-      const title = event.sender?.tab?.title!;
-      const favIconUrl = event.sender?.tab?.favIconUrl!;
-      const response = await this.server.receive(event.request, {
-        origin,
-        title,
-        favIconUrl,
-      });
-      if (response) {
-        this.communicationProtocol.postMessage({
-          id: event.id,
-          type: MessageTypes.response,
-          target: CONTENT_SCRIPT_NAME,
-          response,
-        });
-      }
+  private async handleRequest(
+    event: CommunicationEventArg<MessageTypes.request>
+  ) {
+    if (event.target !== BACKGROUND_SCRIPT_NAME) return;
+    const origin = event.sender?.origin!;
+    const title = event.sender?.tab?.title!;
+    const favIconUrl = event.sender?.tab?.favIconUrl!;
+    const response = await this.server.receive(event.request, {
+      origin,
+      title,
+      favIconUrl,
     });
+    if (response) {
+      this.communicationProtocol.postMessage({
+        id: event.id,
+        type: MessageTypes.response,
+        target: CONTENT_SCRIPT_NAME,
+        response,
+      });
+    }
   }
 
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  externalMethods(methods: Array<string | any>) {
-    // biome-ignore lint/complexity/noForEach: <explanation>
-    methods.forEach((method) => {
-      let methodName = method;
-      if (method.name) {
-        methodName = method.name;
-      }
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-      this.server.addMethod(methodName, this[methodName].bind(this) as any);
-    });
+  setupListeners() {
+    this.communicationProtocol.on(MessageTypes.request, this.handleRequest);
+  }
+
+  private addExternalMethods() {
+    for (const methodName of this.methods) {
+      this.server.addMethod(
+        methodName,
+        this[methodName].bind(this) as SimpleJSONRPCMethod<unknown>
+      );
+    }
+  }
+
+  private removeExternalMethods() {
+    for (const methodName of this.methods) {
+      this.server.removeMethod(methodName);
+    }
   }
 
   async requireAccounts() {
@@ -207,6 +224,7 @@ export class BackgroundService {
         favIconUrl,
         totalAccounts: shownAccounts?.length || 0,
       });
+      popupService.destroy();
     }
 
     if (authorizedApp) {
@@ -260,6 +278,7 @@ export class BackgroundService {
       title,
       favIconUrl,
     });
+    popupService.destroy();
     return signedMessage;
   }
 
@@ -302,7 +321,7 @@ export class BackgroundService {
       title,
       favIconUrl,
     });
-
+    popupService.destroy();
     return signedMessage;
   }
 
@@ -351,6 +370,7 @@ export class BackgroundService {
       title,
       favIconUrl,
     });
+    popupService.destroy();
 
     return true;
   }
@@ -387,7 +407,19 @@ export class BackgroundService {
       title,
       favIconUrl,
     });
+    popupService.destroy();
 
     return true;
+  }
+
+  stop() {
+    if (this.handleRequest) {
+      this.communicationProtocol.removeListener(
+        MessageTypes.request,
+        this.handleRequest
+      );
+    }
+    this.removeExternalMethods();
+    PopUpService.destroyAll();
   }
 }

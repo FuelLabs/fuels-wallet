@@ -10,15 +10,22 @@ import type { JSONRPCResponse } from 'json-rpc-2.0';
 import { BaseConnection } from './BaseConnection';
 
 export class ExtensionPageConnection extends BaseConnection {
-  readonly connection: chrome.runtime.Port;
+  connection: chrome.runtime.Port | undefined;
 
   constructor() {
     super();
+    this.onCommunicationMessage = this.onCommunicationMessage.bind(this);
+    this.destroy = this.destroy.bind(this);
+    this.connectAndAttachListeners();
+    this.ready();
+  }
+
+  connectAndAttachListeners() {
     this.connection = chrome.runtime.connect(chrome.runtime.id, {
       name: BACKGROUND_SCRIPT_NAME,
     });
     this.connection.onMessage.addListener(this.onCommunicationMessage);
-    this.ready();
+    this.connection.onDisconnect.addListener(this.destroy);
   }
 
   allowMessage(message: CommunicationMessage): boolean {
@@ -33,8 +40,13 @@ export class ExtensionPageConnection extends BaseConnection {
       type: MessageTypes.response,
       response,
     };
-    this.connection.postMessage(responseMessage);
-    this.onResponseSent();
+    if (!this.connection) {
+      this.connectAndAttachListeners();
+    }
+    if (this.connection) {
+      this.connection.postMessage(responseMessage);
+      this.onResponseSent();
+    }
   }
 
   onResponseSent() {
@@ -44,7 +56,7 @@ export class ExtensionPageConnection extends BaseConnection {
   ready() {
     // Get session from query params
     const session = new URLSearchParams(window.location.search).get('s');
-    this.connection.postMessage({
+    this.connection?.postMessage({
       target: BACKGROUND_SCRIPT_NAME,
       type: MessageTypes.uiEvent,
       ready: true,
@@ -53,7 +65,10 @@ export class ExtensionPageConnection extends BaseConnection {
   }
 
   destroy() {
-    this.connection.disconnect();
+    this.client.rejectAllPendingRequests('Connection closed');
+    this.connection?.disconnect();
+    this.connection?.onMessage.removeListener(this.onCommunicationMessage);
+    this.connection = undefined;
   }
 
   onRequest(message: RequestMessage) {

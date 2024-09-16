@@ -13,15 +13,16 @@ const WAIT_FOR_CONFIG = {
 };
 
 export class RequestMethods extends ExtensionPageConnection {
+  readonly methods = [
+    this.requestConnection,
+    this.signMessage,
+    this.sendTransaction,
+    this.addAssets,
+    this.addNetwork,
+  ];
   constructor() {
     super();
-    super.externalMethods([
-      this.requestConnection,
-      this.signMessage,
-      this.sendTransaction,
-      this.addAssets,
-      this.addNetwork,
-    ]);
+    super.externalMethods(this.methods);
   }
 
   static start() {

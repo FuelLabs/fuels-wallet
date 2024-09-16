@@ -21,10 +21,16 @@ import type { CommunicationProtocol } from './CommunicationProtocol';
 export class VaultService extends VaultServer {
   readonly communicationProtocol: CommunicationProtocol;
 
+  private autoLockInterval: NodeJS.Timeout | null = null;
+
   constructor(communicationProtocol: CommunicationProtocol) {
     super();
+    // Bind methods to ensure correct `this` context
+    this.handleRequest = this.handleRequest.bind(this);
+    this.handleRestartEvent = this.handleRestartEvent.bind(this);
+    this.emitLockEvent = this.emitLockEvent.bind(this);
+
     this.communicationProtocol = communicationProtocol;
-    this.autoLock();
     this.autoUnlock();
     this.setupListeners();
   }
@@ -40,10 +46,12 @@ export class VaultService extends VaultServer {
   async unlock({ password }: { password: string }): Promise<void> {
     await super.unlock({ password });
     saveSecret(password, AUTO_LOCK_IN_MINUTES);
+    this.startAutoLockTimer();
   }
 
   async lock(): Promise<void> {
     await super.lock();
+    this.stopAutoLockTimer();
     this.emitLockEvent();
   }
 
@@ -59,10 +67,10 @@ export class VaultService extends VaultServer {
     return isWalletLocked;
   }
 
-  async autoLock() {
-    // Check every second if the timer has expired
-    // If so, clear the secret and lock the vault
-    setInterval(async () => {
+  private startAutoLockTimer() {
+    this.stopAutoLockTimer(); // Clear any existing interval
+
+    this.autoLockInterval = setInterval(async () => {
       const timer = await getTimer();
       if (timer === 0) return;
       if (timer < Date.now()) {
@@ -72,11 +80,19 @@ export class VaultService extends VaultServer {
     }, 1000);
   }
 
+  private stopAutoLockTimer() {
+    if (this.autoLockInterval) {
+      clearInterval(this.autoLockInterval);
+      this.autoLockInterval = null;
+    }
+  }
+
   async autoUnlock() {
     const secret = await loadSecret();
     if (secret) {
       // Unlock vault directly without saving a new timestamp
       await super.unlock({ password: secret });
+      this.startAutoLockTimer(); // Start the timer after unlocking
     }
   }
 
@@ -84,48 +100,58 @@ export class VaultService extends VaultServer {
     return new VaultService(communicationProtocol);
   }
 
-  setupListeners() {
-    const handleRequest = async (event: RequestMessage) => {
-      if (!event.sender?.origin?.includes(chrome.runtime.id)) return;
-      if (event.sender?.id !== chrome.runtime.id) return;
-      if (event.target !== VAULT_SCRIPT_NAME) return;
-      const response = await this.server.receive(event.request);
-      if (response) {
-        this.communicationProtocol.postMessage({
-          id: event.id,
-          type: MessageTypes.response,
-          target: POPUP_SCRIPT_NAME,
-          response,
-        });
+  private async handleRequest(event: RequestMessage) {
+    if (!event.sender?.origin?.includes(chrome.runtime.id)) return;
+    if (event.sender?.id !== chrome.runtime.id) return;
+    if (event.target !== VAULT_SCRIPT_NAME) return;
+    const response = await this.server.receive(event.request);
+    if (response) {
+      this.communicationProtocol.postMessage({
+        id: event.id,
+        type: MessageTypes.response,
+        target: POPUP_SCRIPT_NAME,
+        response,
+      });
+    }
+  }
+
+  private async handleRestartEvent(message: DatabaseRestartEvent) {
+    const { type: eventType, payload } = message ?? {};
+    const connected = await db
+      .open()
+      .then((db) => db.isOpen())
+      .catch(() => false);
+
+    if (!connected) {
+      return this.reload();
+    }
+
+    const integrity = await this.checkVaultIntegrity();
+
+    if (eventType === 'DB_EVENT' && payload.event === 'restarted') {
+      if (!integrity) {
+        chrome.storage.local.set({ shouldRecoverWelcomeFromError: true });
+        return this.resetAndReload();
       }
-    };
+    }
 
-    const handleRestartEvent = async (message: DatabaseRestartEvent) => {
-      const { type: eventType, payload } = message ?? {};
-      const connected = await db
-        .open()
-        .then((db) => db.isOpen())
-        .catch(() => false);
+    return;
+  }
 
-      if (!connected) {
-        return this.reload();
-      }
+  private setupListeners() {
+    chrome.runtime.onMessage.addListener(this.handleRestartEvent);
+    this.communicationProtocol.on(MessageTypes.request, this.handleRequest);
+    this.on('lock', this.emitLockEvent);
+  }
 
-      const integrity = await this.checkVaultIntegrity();
-
-      if (eventType === 'DB_EVENT' && payload.event === 'restarted') {
-        if (!integrity) {
-          chrome.storage.local.set({ shouldRecoverWelcomeFromError: true });
-          return this.resetAndReload();
-        }
-      }
-    };
-    chrome.runtime.onMessage.addListener(handleRestartEvent);
-    this.communicationProtocol.on(MessageTypes.request, handleRequest);
-    // Broadcast the lock event
-    this.on('lock', () => {
-      this.emitLockEvent();
-    });
+  stop() {
+    this.stopAutoLockTimer();
+    this.communicationProtocol.removeListener(
+      MessageTypes.request,
+      this.handleRequest
+    );
+    chrome.runtime.onMessage.removeListener(this.handleRestartEvent);
+    this.removeListener('lock', this.emitLockEvent);
   }
 
   emitLockEvent() {
