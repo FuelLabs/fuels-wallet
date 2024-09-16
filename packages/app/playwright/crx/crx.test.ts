@@ -638,42 +638,6 @@ test.describe('FuelWallet Extension', () => {
       await getByAriaLabel(popupPage, 'Close dialog').click();
     });
 
-    // @TODO: We can enable this test once we update the @fuels/connectors version
-    await test.skip('window.fuel.selectNetwork()', async () => {
-      function selectNetwork(network: SelectNetworkArguments) {
-        return blankPage.evaluate(
-          async ([network]) => {
-            return window.fuel.selectNetwork(network);
-          },
-          [network]
-        );
-      }
-
-      async function testSelectNetwork() {
-        const addingNetwork = selectNetwork({
-          chainId: 0,
-          url: FUEL_NETWORK.devnet,
-        });
-
-        const addNetworkPage = await context.waitForEvent('page', {
-          predicate: (page) => page.url().includes(extensionId),
-        });
-
-        await hasText(addNetworkPage, 'Switching To:');
-        await getButtonByText(addNetworkPage, /switch network/i).click();
-        await expect(addingNetwork).resolves.toBeDefined();
-        await popupPage.reload();
-      }
-
-      // Select network
-      await testSelectNetwork();
-
-      // Check if added network is selected
-      const networkSelector = getByAriaLabel(popupPage, 'Selected Network');
-      await expect(networkSelector).toHaveText(/Fuel Ignition Sepolia Devnet/);
-      await getByAriaLabel(popupPage, 'Close dialog').click();
-    });
-
     await test.step('window.fuel.on("currentAccount") to a connected account', async () => {
       // Switch to account 2
       await switchAccount(popupPage, 'Account 2');
