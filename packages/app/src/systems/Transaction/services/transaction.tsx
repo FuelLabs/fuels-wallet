@@ -4,7 +4,8 @@ import type { TransactionRequest, WalletLocked } from 'fuels';
 import {
   Address,
   type BN,
-  Provider,
+  ErrorCode,
+  FuelError,
   TransactionResponse,
   TransactionStatus,
   assembleTransactionSummary,
@@ -228,7 +229,7 @@ export class TxService {
       });
 
       const errorsToParse =
-        e.name === 'FuelError' ? [{ message: e.message }] : e.response?.errors;
+        e instanceof FuelError ? [{ message: e.message }] : e?.response?.errors;
       const simulateTxErrors = getGroupedErrors(errorsToParse);
 
       const gasPrice = await provider.getLatestGasPrice();
@@ -360,16 +361,10 @@ export class TxService {
       } catch (e) {
         attempts += 1;
 
-        // @TODO: Waiting to match with FuelError type and ErrorCode enum from "fuels"
-        // These types are not exported from "fuels" package, but they exists in the "@fuels-ts/errors"
-        if (
-          e instanceof Error &&
-          'toObject' in e &&
-          typeof e.toObject === 'function'
-        ) {
-          const error: { code: string } = e.toObject();
+        if (e instanceof FuelError) {
+          const error = e.toObject();
 
-          if (error.code === 'gas-limit-too-low') {
+          if (error.code === ErrorCode.GAS_LIMIT_TOO_LOW) {
             throw e;
           }
         }
