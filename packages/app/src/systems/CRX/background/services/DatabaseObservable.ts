@@ -4,6 +4,7 @@ import type {
   DatabaseEventArg,
   DatabaseObservableEvent,
 } from '@fuel-wallet/types';
+import type { IDatabaseChange } from 'dexie-observable/api';
 import { db } from '~/systems/Core/utils/database';
 
 export class DatabaseObservable<
@@ -11,28 +12,32 @@ export class DatabaseObservable<
 > extends EventEmitter {
   constructor() {
     super();
+    // Bind methods to ensure correct `this` context
+    this.onChanges = this.onChanges.bind(this);
+
     this.setupListeners();
   }
 
+  onChanges(changes: Array<IDatabaseChange>) {
+    for (const change of changes) {
+      switch (change.type) {
+        case 1:
+          super.emit(`${change.table}:create`, change);
+          break;
+        case 2:
+          super.emit(`${change.table}:update`, change);
+          break;
+        case 3:
+          super.emit(`${change.table}:delete`, change);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
   setupListeners() {
-    db.on('changes', (changes) => {
-      // biome-ignore lint/complexity/noForEach: <explanation>
-      changes.forEach((change) => {
-        switch (change.type) {
-          case 1:
-            super.emit(`${change.table}:create`, change);
-            break;
-          case 2:
-            super.emit(`${change.table}:update`, change);
-            break;
-          case 3:
-            super.emit(`${change.table}:delete`, change);
-            break;
-          default:
-            break;
-        }
-      });
-    });
+    db.on('changes', this.onChanges);
     db.open();
   }
 
@@ -41,5 +46,9 @@ export class DatabaseObservable<
     listener: (event: DatabaseEventArg<T>) => void
   ): this {
     return super.on(eventName, listener);
+  }
+
+  destroy() {
+    this.removeAllListeners();
   }
 }

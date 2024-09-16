@@ -9,12 +9,13 @@ listenToGlobalErrors((error) => {
 });
 
 export function errorBoundary<T extends () => ReturnType<T>>(
-  cb: T
-): ReturnType<T> {
+  cb: T,
+  onError: (error?: Error) => void
+) {
   try {
     return cb();
   } catch (err) {
     ReportErrorService.saveError(err as Error);
-    throw err;
+    onError?.(err as Error);
   }
 }
