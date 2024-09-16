@@ -638,7 +638,8 @@ test.describe('FuelWallet Extension', () => {
       await getByAriaLabel(popupPage, 'Close dialog').click();
     });
 
-    await test.step('window.fuel.selectNetwork()', async () => {
+    // @TODO: We can enable this test once we update the @fuels/connectors version
+    await test.skip('window.fuel.selectNetwork()', async () => {
       function selectNetwork(network: SelectNetworkArguments) {
         return blankPage.evaluate(
           async ([network]) => {
