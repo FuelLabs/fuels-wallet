@@ -290,8 +290,12 @@ export class BackgroundService {
       this.communicationProtocol
     );
 
+    // We need to forward bech32 addresses to the popup, regardless if we receive a b256 here
+    // our database is storing fuel addresses
+    const bech32Address = Address.fromDynamicInput(address).toString();
+
     const signedMessage = await popupService.sendTransaction({
-      address,
+      address: bech32Address,
       provider,
       transaction,
       origin,
