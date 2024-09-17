@@ -36,10 +36,9 @@ export function ViewSeedPhrase() {
           <Alert status="warning">
             <Alert.Description as="div">
               <Box css={styles.alertFirstLine}>
-                DON&apos;T SHARE your Recovery Phrase. {'\n'}
+                DO NOT SHARE your seed phrase with anyone. {'\n'}
                 It provides access to all your accounts.
               </Box>
-              Sharing or losing it may result in a permanent loss of funds.
             </Alert.Description>
           </Alert>
         </Box.Flex>
