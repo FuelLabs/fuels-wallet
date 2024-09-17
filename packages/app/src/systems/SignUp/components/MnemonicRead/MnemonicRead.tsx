@@ -35,8 +35,7 @@ export function MnemonicRead({
           <Mnemonic value={words} type="read" />
           <Alert status="warning">
             <Alert.Description>
-              Anyone with access to your recovery phrase could take your assets,
-              store it securely. Fuel does not keep a backup of your 12 words.
+              Anyone with access to your recovery phrase can access your wallet. Store it securely. 
             </Alert.Description>
           </Alert>
           <Form.Control css={{ flexDirection: 'row' }}>

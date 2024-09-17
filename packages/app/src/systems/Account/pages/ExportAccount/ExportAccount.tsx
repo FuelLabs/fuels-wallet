@@ -19,7 +19,7 @@ export const ExportAccount = () => {
         onUnlock={(password) => {
           handlers.exportAccount(password);
         }}
-        headerText="Confirm your Password"
+        headerText="Confirm Password"
         onClose={accountsHandlers.goToList}
         unlockError={error}
         isLoading={isLoading}

@@ -17,8 +17,8 @@ export function TermsOfUse() {
       <MotionStack gap="$6" align="center" {...animations.slideInRight()}>
         <Stepper steps={steps} active={1} />
         <Header
-          title="Terms of use Agreement"
-          subtitle="Read and check to accept our terms of service"
+          title="Terms of Use Agreement"
+          subtitle="Please read our terms of service."
         />
         <Box css={styles.termsContainer}>
           <Box.Flex css={styles.termsWrapper}>

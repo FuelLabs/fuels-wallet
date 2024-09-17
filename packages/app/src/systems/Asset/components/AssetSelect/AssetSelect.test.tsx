@@ -33,7 +33,7 @@ describe('AssetSelect', () => {
   it('should select an asset when click', async () => {
     const { container } = render(<Content />, { wrapper: TestWrapper });
 
-    const input = screen.getByText('Select one asset');
+    const input = screen.getByText('Select an asset');
     expect(input).toBeInTheDocument();
     await act(() => fireEvent.click(input));
 
