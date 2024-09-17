@@ -5,9 +5,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { MotionFlex, MotionStack, animations } from '~/systems/Core';
 import { createAmount } from '~/systems/Core/components/InputAmount/InputAmount';
+import { isAmountAllowed } from '~/systems/Core/components/InputAmount/InputAmount.utils';
 import type { SendFormValues } from '~/systems/Send/hooks';
 import { TxFee } from '../TxFee';
-import { DECIMAL_UNITS, formatTip } from './TxFeeOptions.utils';
+import {
+  DECIMAL_UNITS,
+  formatTip,
+  isGasLimitAllowed,
+} from './TxFeeOptions.utils';
 
 type TxFeeOptionsProps = {
   initialAdvanced: boolean;
@@ -103,7 +108,7 @@ export const TxFeeOptions = ({
                         css={{ width: '100%' }}
                         name={gasLimit.name}
                         decimalScale={0}
-                        isAllowed={({ value }) => value.charAt(0) !== '0'}
+                        isAllowed={isGasLimitAllowed}
                         onChange={(e) => {
                           const val = e.target.value;
 
@@ -130,25 +135,7 @@ export const TxFeeOptions = ({
                         decimalScale={DECIMAL_UNITS}
                         placeholder="0.00"
                         css={{ width: '100%' }}
-                        isAllowed={({ value }) => {
-                          // Allow to clear the input
-                          if (!value) {
-                            return true;
-                          }
-
-                          // Allow numbers starting with '0.' (e.g., 0.0005)
-                          if (/^0\.\d*$/.test(value)) {
-                            return true;
-                          }
-
-                          // Disallow leading zeros unless it's part of a decimal number
-                          if (/^0\d+/.test(value)) {
-                            return false;
-                          }
-
-                          // Allow positive numbers without leading zeros
-                          return /^\d+(\.\d+)?$/.test(value);
-                        }}
+                        isAllowed={isAmountAllowed}
                         onChange={(e) => {
                           const text = e.target.value;
                           const { text: newText, amount } = createAmount(
