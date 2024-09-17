@@ -21,7 +21,7 @@ import { createProvider } from '@fuel-wallet/connections';
 import { AccountService } from '~/systems/Account/services/account';
 import { NetworkService } from '~/systems/Network/services/network';
 import type { Transaction } from '../types';
-import { getAbiMap, getGroupedErrors } from '../utils';
+import { type GroupedErrors, getAbiMap, getErrorMessage } from '../utils';
 import { getCurrentTips } from '../utils/fee';
 
 export type TxInputs = {
@@ -212,9 +212,7 @@ export class TxService {
           gasUsed: txSummary.gasUsed,
         },
       };
-
-      // biome-ignore lint/suspicious/noExplicitAny: allow any
-    } catch (e: any) {
+    } catch (e) {
       const { gasPerByte, gasPriceFactor, gasCosts, maxGasPerTx } =
         provider.getGasConfig();
       const consensusParameters = provider.getChain().consensusParameters;
@@ -227,9 +225,8 @@ export class TxService {
         inputs: transaction.inputs,
       });
 
-      const errorsToParse =
-        e instanceof FuelError ? [{ message: e.message }] : e?.response?.errors;
-      const simulateTxErrors = getGroupedErrors(errorsToParse);
+      const simulateTxErrors: GroupedErrors =
+        e instanceof FuelError ? getErrorMessage(e) : 'Unknown error';
 
       const gasPrice = await provider.getLatestGasPrice();
       const baseAssetId = provider.getBaseAssetId();
@@ -251,8 +248,8 @@ export class TxService {
       txSummary.status = TransactionStatus.failure;
 
       return {
-        baseFee: undefined,
-        minGasLimit: undefined,
+        baseFee: transactionRequest.maxFee, // @TODO: Can we return it here?
+        minGasLimit: bn(53), // @TODO: Add something here
         txSummary,
         simulateTxErrors,
       };
