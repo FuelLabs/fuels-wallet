@@ -142,7 +142,7 @@ export function CreatePassword({
               isDisabled={!isValid}
               isLoading={isLoading}
             >
-              Next: Finish set-up
+              Next: Finish set up
             </Button>
           </Box.Flex>
         </MotionStack>

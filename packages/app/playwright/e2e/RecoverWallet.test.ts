@@ -79,7 +79,7 @@ test.describe('RecoverWallet', () => {
 
       /** Select the wrong mnemonic size */
       const format = await getByAriaLabel(page, 'Select format');
-      await format.selectOption('I have a 12 words Seed Phrase');
+      await format.selectOption('I have a 12 words seed phrase');
 
       /** Copy words to clipboard area */
       await page.evaluate(`navigator.clipboard.writeText('${WORDS_24}')`);
@@ -131,7 +131,7 @@ test.describe('RecoverWallet', () => {
 
       /** Select the wrong mnemonic size */
       const format = await getByAriaLabel(page, 'Select format');
-      await format.selectOption('I have a 12 words Seed Phrase');
+      await format.selectOption('I have a 12 words seed phrase');
 
       /** Copy words to clipboard area */
       await page.evaluate(`navigator.clipboard.writeText('${WORDS_13}')`);
@@ -163,7 +163,7 @@ test.describe('RecoverWallet', () => {
 
     /** Select the mnemonic size */
     const format = await getByAriaLabel(page, 'Select format');
-    await format.selectOption('I have a 24 words Seed Phrase');
+    await format.selectOption('I have a 24 words seed phrase');
 
     /** Copy words to clipboard area */
     await page.evaluate(`navigator.clipboard.writeText('${WORDS_24}')`);

@@ -35,7 +35,8 @@ export function MnemonicRead({
           <Mnemonic value={words} type="read" />
           <Alert status="warning">
             <Alert.Description>
-              Anyone with access to your recovery phrase can access your wallet. Store it securely. 
+              Anyone with access to your seed phrase can access your wallet.
+              Store your seed phrase securely.
             </Alert.Description>
           </Alert>
           <Form.Control css={{ flexDirection: 'row' }}>
