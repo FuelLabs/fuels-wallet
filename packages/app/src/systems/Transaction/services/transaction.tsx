@@ -247,9 +247,14 @@ export class TxService {
       txSummary.isStatusFailure = true;
       txSummary.status = TransactionStatus.failure;
 
+      // Fallback to the values from the transactionRequest
+      if ('gasLimit' in transactionRequest) {
+        txSummary.gasUsed = transactionRequest.gasLimit;
+      }
+
       return {
-        baseFee: transactionRequest.maxFee, // @TODO: Can we return it here?
-        minGasLimit: bn(53), // @TODO: Add something here
+        baseFee: txSummary.fee.add(1),
+        minGasLimit: txSummary.gasUsed,
         txSummary,
         simulateTxErrors,
       };
