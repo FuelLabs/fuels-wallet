@@ -194,6 +194,17 @@ export class TxService {
         inputs: transaction.inputs,
       });
 
+      // Validity(NoSpendableInput)
+      // transactionRequest.inputs = [];
+
+      // Validity(TransactionMaxGasExceeded)
+      // if ('gasLimit' in transactionRequest) {
+      //   transactionRequest.gasLimit = bn(5_000_000_000_000);
+      // }
+
+      // InsufficientMaxFee { max_fee_from_policies: 0, max_fee_from_gas_price: 571 }
+      transactionRequest.maxFee = bn(0);
+
       const txSummary = await getTransactionSummaryFromRequest({
         provider,
         transactionRequest,
