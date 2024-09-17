@@ -101,12 +101,11 @@ export const TxFeeOptions = ({
                         thousandSeparator={false}
                         placeholder="0"
                         css={{ width: '100%' }}
+                        name={gasLimit.name}
+                        decimalScale={0}
+                        isAllowed={({ value }) => value.charAt(0) !== '0'}
                         onChange={(e) => {
-                          const ignore = /[.,\-+]/g;
-                          const val = (e.target.value || '').replaceAll(
-                            ignore,
-                            ''
-                          );
+                          const val = e.target.value;
 
                           gasLimit.onChange({
                             amount: bn(val),
