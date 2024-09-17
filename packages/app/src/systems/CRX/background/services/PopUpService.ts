@@ -17,7 +17,7 @@ import {
 
 import { ReportErrorService } from '~/systems/Error/services/ReportErrorService';
 import type { CommunicationProtocol } from './CommunicationProtocol';
-import type { MessageInputs } from './types';
+import type { MessageInputs, PopUpServiceInputs } from './types';
 
 const popups = new Map<string, PopUpService>();
 
@@ -188,7 +188,11 @@ export class PopUpService {
     return this.client.request('addAssets', input);
   }
 
-  async addNetwork(input: MessageInputs['addNetwork']) {
+  async selectNetwork(input: PopUpServiceInputs['selectNetwork']) {
+    return this.client.request('selectNetwork', input);
+  }
+
+  async addNetwork(input: PopUpServiceInputs['addNetwork']) {
     return this.client.request('addNetwork', input);
   }
 

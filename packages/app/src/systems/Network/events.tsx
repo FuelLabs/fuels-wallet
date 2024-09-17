@@ -1,12 +1,12 @@
 import type { NetworkData } from '@fuel-wallet/types';
 import type { Store } from '~/store';
 import { Services } from '~/store';
-
+import type { AddNetworkInput } from './machines';
 import type { NetworkInputs } from './services';
 
 export function networkEvents(store: Store) {
   return {
-    addNetwork(input: NetworkInputs['addNetwork']) {
+    addNetwork(input: AddNetworkInput) {
       store.send(Services.networks, {
         type: 'ADD_NETWORK',
         input,

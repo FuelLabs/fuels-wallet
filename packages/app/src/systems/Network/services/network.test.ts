@@ -30,13 +30,13 @@ describe('NetworkService', () => {
     const network = await NetworkService.addNetwork({ data: NETWORK });
     const id = network?.id!;
     await NetworkService.updateNetwork({ id, data: { name: 'Network Test' } });
-    const result = await NetworkService.getNetwork({ id });
+    const result = await NetworkService.getNetworkById({ id });
     expect(result?.name).toBe('Network Test');
   });
 
   it('should be able to retrieve a new network', async () => {
     const network = await NetworkService.addNetwork({ data: NETWORK });
-    const result = await NetworkService.getNetwork({ id: network?.id! });
+    const result = await NetworkService.getNetworkById({ id: network?.id! });
     expect(result?.name).toBe(NETWORK.name);
   });
 
@@ -56,14 +56,18 @@ describe('NetworkService', () => {
     });
     await NetworkService.selectNetwork({ id: network2?.id! });
 
-    const res = await NetworkService.getNetwork({ id: network1?.id! });
+    const res = await NetworkService.getNetworkById({ id: network1?.id! });
     expect(res?.isSelected).toBe(false);
   });
 
   it('should not be able to add two networks with the same name', async () => {
     try {
-      await NetworkService.addNetwork({ data: { name: 'test', url: 'test1' } });
-      await NetworkService.addNetwork({ data: { name: 'test', url: 'test2' } });
+      await NetworkService.addNetwork({
+        data: { chainId: 0, name: 'test', url: 'test1' },
+      });
+      await NetworkService.addNetwork({
+        data: { chainId: 0, name: 'test', url: 'test2' },
+      });
     } catch (error) {
       expect(error).toBeDefined();
     }
@@ -71,8 +75,12 @@ describe('NetworkService', () => {
 
   it('should not be able to add two networks with the same url', async () => {
     try {
-      await NetworkService.addNetwork({ data: { name: 'test1', url: 'test' } });
-      await NetworkService.addNetwork({ data: { name: 'test2', url: 'test' } });
+      await NetworkService.addNetwork({
+        data: { chainId: 0, name: 'test1', url: 'test' },
+      });
+      await NetworkService.addNetwork({
+        data: { chainId: 0, name: 'test2', url: 'test' },
+      });
     } catch (error) {
       expect(error).toBeDefined();
     }

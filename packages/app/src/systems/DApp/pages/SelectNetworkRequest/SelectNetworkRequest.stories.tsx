@@ -2,7 +2,7 @@ import { Box } from '@fuel-ui/react';
 import { useEffect } from 'react';
 import { createMockAccount } from '~/systems/Account';
 
-import { AddNetworkRequest } from './AddNetworkRequest';
+import { SelectNetworkRequest } from './SelectNetworkRequest';
 
 let passwordToUnlock: string;
 async function loader() {
@@ -11,8 +11,8 @@ async function loader() {
 }
 
 export default {
-  component: AddNetworkRequest,
-  title: 'DApp/Pages/AddNetworkRequest',
+  component: SelectNetworkRequest,
+  title: 'DApp/Pages/SelectNetworkRequest',
   loaders: [loader],
   parameters: {
     layout: 'fullscreen',
@@ -29,7 +29,7 @@ export const Usage = () => {
 
   return (
     <Box css={{ width: 300 }}>
-      <AddNetworkRequest />
+      <SelectNetworkRequest />
     </Box>
   );
 };

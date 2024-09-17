@@ -4,8 +4,8 @@ import { Pages } from '../Core/types';
 
 import {
   AddAssetRequest,
-  AddNetworkRequest,
   ConnectionRequest,
+  SelectNetworkRequest,
   SignatureRequest,
   TransactionRequest,
 } from './pages';
@@ -16,6 +16,9 @@ export const dappRoutes = (
     <Route path={Pages.requestMessage()} element={<SignatureRequest />} />
     <Route path={Pages.requestTransaction()} element={<TransactionRequest />} />
     <Route path={Pages.requestAddAssets()} element={<AddAssetRequest />} />
-    <Route path={Pages.requestAddNetwork()} element={<AddNetworkRequest />} />
+    <Route
+      path={Pages.requestSelectNetwork()}
+      element={<SelectNetworkRequest />}
+    />
   </Route>
 );

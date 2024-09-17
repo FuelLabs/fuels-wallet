@@ -2,12 +2,13 @@ import type { NetworkData } from '@fuel-wallet/types';
 import type { InterpreterFrom, StateFrom } from 'xstate';
 import { assign, createMachine } from 'xstate';
 import { FetchMachine, assignErrorMessage } from '~/systems/Core';
-import type { NetworkInputs } from '~/systems/Network';
 import { NetworkService } from '~/systems/Network';
 import { store } from '~/systems/Store';
 
 type MachineContext = {
-  network?: NetworkData;
+  network?: Partial<NetworkData>;
+  currentNetwork?: NetworkData;
+  popup?: 'add' | 'select';
   origin?: string;
   title?: string;
   favIconUrl?: string;
@@ -16,34 +17,37 @@ type MachineContext = {
 
 type MachineServices = {
   saveNetwork: {
-    data: NetworkData;
+    data: Partial<NetworkData>;
+    popup: 'add' | 'select';
   };
 };
 
-export type AddNetworkInputs = {
+export type SelectNetworkInputs = {
   start: {
+    network: Partial<NetworkData>;
+    currentNetwork?: NetworkData;
+    popup: 'add' | 'select';
     origin: string;
-    network: NetworkData;
-    favIconUrl?: string;
-    title?: string;
+    favIconUrl: string;
+    title: string;
   };
 };
 
 type MachineEvents =
   | {
       type: 'START';
-      input: AddNetworkInputs['start'];
+      input: SelectNetworkInputs['start'];
     }
   // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
   | { type: 'APPROVE'; input: void }
   // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
   | { type: 'REJECT'; input: void };
 
-export const addNetworkRequestMachine = createMachine(
+export const selectNetworkRequestMachine = createMachine(
   {
     predictableActionArguments: true,
 
-    tsTypes: {} as import('./addNetworkRequestMachine.typegen').Typegen0,
+    tsTypes: {} as import('./selectNetworkRequestMachine.typegen').Typegen0,
     schema: {
       context: {} as MachineContext,
       services: {} as MachineServices,
@@ -72,11 +76,13 @@ export const addNetworkRequestMachine = createMachine(
         },
       },
       addingNetwork: {
+        tags: ['loading'],
         invoke: {
           src: 'saveNetwork',
           data: {
             input: (ctx: MachineContext) => ({
               data: ctx.network,
+              popup: ctx.popup,
             }),
           },
           onDone: [
@@ -101,7 +107,9 @@ export const addNetworkRequestMachine = createMachine(
         origin: ev.input.origin,
         title: ev.input.title,
         favIconUrl: ev.input.favIconUrl,
+        popup: ev.input.popup,
         network: ev.input.network,
+        currentNetwork: ev.input.currentNetwork,
       })),
       notifyRefreshNetworks: () => {
         store.refreshNetworks();
@@ -112,30 +120,47 @@ export const addNetworkRequestMachine = createMachine(
     },
     services: {
       saveNetwork: FetchMachine.create<
-        NetworkInputs['addNetwork'],
-        MachineServices['saveNetwork']['data']
+        MachineServices['saveNetwork'],
+        NetworkData
       >({
         showError: true,
         async fetch({ input }) {
-          if (!input?.data) {
-            throw new Error('Invalid network');
+          if (!input) {
+            throw new Error('Missing input');
           }
-          await NetworkService.validateAddNetwork(input);
-          const createdNetwork = await NetworkService.addNetwork(input);
-          if (!createdNetwork) {
-            throw new Error('Failed to add network');
+
+          // Selecting existing and inactive network
+          if (input.popup === 'select' && input.data.id) {
+            return NetworkService.selectNetwork({ id: input.data.id });
           }
-          return NetworkService.selectNetwork({ id: createdNetwork.id! });
+
+          // Adding network
+          if (
+            input.popup === 'add' &&
+            typeof input.data.chainId === 'number' &&
+            input.data.name &&
+            input.data.url
+          ) {
+            const createdNetwork = await NetworkService.addNetwork({
+              data: {
+                chainId: input.data.chainId,
+                name: input.data.name,
+                url: input.data.url,
+              },
+            });
+
+            return NetworkService.selectNetwork({ id: createdNetwork.id! });
+          }
+
+          throw new Error('Unable to add network');
         },
       }),
     },
   }
 );
 
-export type AddNetworkRequestMachine = typeof addNetworkRequestMachine;
-export type AddNetworkRequestMachineService = InterpreterFrom<
-  typeof addNetworkRequestMachine
->;
-export type AddNetworkRequestMachineState = StateFrom<
-  typeof addNetworkRequestMachine
->;
+export type SelectNetworkRequestMachine = typeof selectNetworkRequestMachine;
+export type SelectNetworkRequestMachineService =
+  InterpreterFrom<SelectNetworkRequestMachine>;
+export type SelectNetworkRequestMachineState =
+  StateFrom<SelectNetworkRequestMachine>;

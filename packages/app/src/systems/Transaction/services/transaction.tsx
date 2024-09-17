@@ -4,7 +4,6 @@ import type { TransactionRequest, WalletLocked } from 'fuels';
 import {
   Address,
   type BN,
-  Provider,
   TransactionResponse,
   TransactionStatus,
   assembleTransactionSummary,
@@ -140,7 +139,6 @@ export class TxService {
   }: TxInputs['send']) {
     const provider = await createProvider(providerUrl);
     const wallet = new WalletLockedCustom(address, provider);
-    wallet.providerUrl = providerUrl;
     const txSent = await wallet.sendTransaction(transactionRequest);
 
     return txSent;

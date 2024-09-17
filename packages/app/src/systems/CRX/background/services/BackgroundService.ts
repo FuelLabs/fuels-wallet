@@ -1,7 +1,7 @@
 import { BACKGROUND_SCRIPT_NAME } from '@fuel-wallet/types';
 import type { CommunicationEventArg, Connection } from '@fuel-wallet/types';
 import { CONTENT_SCRIPT_NAME, MessageTypes } from '@fuels/connectors';
-import { Address } from 'fuels';
+import { Address, type Network } from 'fuels';
 import type {
   JSONRPCParams,
   JSONRPCRequest,
@@ -49,6 +49,7 @@ export class BackgroundService {
     'currentAccount',
     'addAssets',
     'assets',
+    'selectNetwork',
     'addNetwork',
     'addAbi',
     'getAbi',
@@ -327,11 +328,27 @@ export class BackgroundService {
     return currentAccount?.address;
   }
 
-  async network() {
+  async network(): Promise<Network> {
     const selectedNetwork = await NetworkService.getSelectedNetwork();
+
+    if (!selectedNetwork) {
+      throw new Error('Current network not found');
+    }
+
     return {
-      url: selectedNetwork?.url,
+      chainId: selectedNetwork.chainId,
+      url: selectedNetwork.url,
     };
+  }
+
+  async networks(): Promise<Network[]> {
+    const networks = await NetworkService.getNetworks();
+    return networks.map((network) => {
+      return {
+        chainId: network.chainId,
+        url: network.url,
+      };
+    });
   }
 
   async assets(_: JSONRPCParams) {
@@ -376,12 +393,16 @@ export class BackgroundService {
     return abi;
   }
 
-  async addNetwork(
-    input: MessageInputs['addNetwork'],
+  async selectNetwork(
+    input: MessageInputs['selectNetwork'],
     serverParams: EventOrigin
-  ) {
-    const { network } = input;
-    await NetworkService.validateAddNetwork({ data: network });
+  ): Promise<boolean> {
+    // If network is already selected, we don't need to open the popup
+    const { isSelected, popup, network, currentNetwork } =
+      await NetworkService.validateNetworkSelect(input.network);
+    if (isSelected) {
+      return true;
+    }
 
     const origin = serverParams.origin;
     const title = serverParams.title;
@@ -389,11 +410,48 @@ export class BackgroundService {
 
     const popupService = await PopUpService.open(
       origin,
-      Pages.requestAddNetwork(),
+      Pages.requestSelectNetwork(),
       this.communicationProtocol
     );
+
+    await popupService.selectNetwork({
+      network,
+      currentNetwork,
+      popup,
+      origin,
+      title,
+      favIconUrl,
+    });
+
+    return true;
+  }
+
+  async addNetwork(
+    input: MessageInputs['addNetwork'],
+    serverParams: EventOrigin
+  ): Promise<boolean> {
+    await NetworkService.validateNetworkExists(input.network);
+    const { isSelected, network } = await NetworkService.validateNetworkSelect({
+      chainId: undefined,
+      url: input.network.url,
+    });
+    if (isSelected) {
+      return true;
+    }
+
+    const origin = serverParams.origin;
+    const title = serverParams.title;
+    const favIconUrl = serverParams.favIconUrl;
+
+    const popupService = await PopUpService.open(
+      origin,
+      Pages.requestSelectNetwork(),
+      this.communicationProtocol
+    );
+
     await popupService.addNetwork({
       network,
+      popup: 'add',
       origin,
       title,
       favIconUrl,

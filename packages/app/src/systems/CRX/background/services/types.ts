@@ -3,7 +3,7 @@ import type {
   FuelProviderConfig,
   NetworkData,
 } from '@fuel-wallet/types';
-import type { AbiMap } from 'fuels';
+import type { AbiMap, SelectNetworkArguments } from 'fuels';
 
 export type MessageInputs = {
   signMessage: {
@@ -39,10 +39,28 @@ export type MessageInputs = {
   getAbi: {
     contractId: string;
   };
+  selectNetwork: {
+    network: SelectNetworkArguments;
+  };
   addNetwork: {
-    network: NetworkData;
+    network: Pick<NetworkData, 'url' | 'name'>;
+  };
+};
+
+export type PopUpServiceInputs = {
+  selectNetwork: {
+    network: Partial<NetworkData>;
+    currentNetwork?: NetworkData;
+    popup: 'add' | 'select';
     origin: string;
-    title?: string;
-    favIconUrl?: string;
+    title: string;
+    favIconUrl: string;
+  };
+  addNetwork: {
+    network: Partial<NetworkData>;
+    popup: 'add';
+    origin: string;
+    title: string;
+    favIconUrl: string;
   };
 };

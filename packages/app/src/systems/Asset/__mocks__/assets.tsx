@@ -1,9 +1,11 @@
+import type { NetworkData } from '@fuel-wallet/types';
 import { type AssetFuel, type BigNumberish, assets, bn } from 'fuels';
 import { graphql } from 'msw';
 import { uniqueId } from 'xstate/lib/utils';
 
-export const MOCK_NETWORK = {
+export const MOCK_NETWORK: NetworkData = {
   id: uniqueId(),
+  chainId: 0,
   name: 'Another',
   url: 'https://testnet.fuel.network/v1/graphql',
 };
