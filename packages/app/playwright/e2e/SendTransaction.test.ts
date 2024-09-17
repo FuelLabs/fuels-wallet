@@ -40,7 +40,7 @@ test.describe('SendTransaction', () => {
     await page.waitForSelector('[aria-disabled="true"]');
 
     // Select asset
-    await getButtonByText(page, 'Select one asset').click();
+    await getButtonByText(page, 'Select an asset').click();
     await page.getByText('Ethereum').click();
 
     // Fill address
@@ -72,7 +72,7 @@ test.describe('SendTransaction', () => {
     await page.waitForSelector('[aria-disabled="true"]');
 
     // Select asset
-    await getButtonByText(page, 'Select one asset').click();
+    await getButtonByText(page, 'Select an asset').click();
     await page.getByText('Ethereum').click();
 
     // Fill address
@@ -106,7 +106,7 @@ test.describe('SendTransaction', () => {
     await page.waitForSelector('[aria-disabled="true"]');
 
     // Select asset
-    await getButtonByText(page, 'Select one asset').click();
+    await getButtonByText(page, 'Select an asset').click();
     await page.getByText(ALT_ASSET.name).click();
 
     // Fill address
@@ -140,7 +140,7 @@ test.describe('SendTransaction', () => {
     });
     await visit(page, '/send');
     await page.waitForSelector('[aria-disabled="true"]');
-    await getButtonByText(page, 'Select one asset').click();
+    await getButtonByText(page, 'Select an asset').click();
     await page.getByText('Ethereum').click();
     await getInputByName(page, 'address').fill(receiverWallet.address.toB256());
 
@@ -190,7 +190,7 @@ test.describe('SendTransaction', () => {
     });
     await visit(page, '/send');
     await page.waitForSelector('[aria-disabled="true"]');
-    await getButtonByText(page, 'Select one asset').click();
+    await getButtonByText(page, 'Select an asset').click();
     await page.getByText('Ethereum').click();
     await getInputByName(page, 'address').fill(receiverWallet.address.toB256());
 
@@ -343,7 +343,7 @@ test.describe('SendTransaction', () => {
     await page.waitForSelector('[aria-disabled="true"]');
 
     // Select asset
-    await getButtonByText(page, 'Select one asset').click();
+    await getButtonByText(page, 'Select an asset').click();
     await page.getByText('Ethereum').click();
 
     // Fill address

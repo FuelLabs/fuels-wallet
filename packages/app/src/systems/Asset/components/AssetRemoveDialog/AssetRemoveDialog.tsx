@@ -32,7 +32,7 @@ export function AssetRemoveDialog({
       <AlertDialog.Content css={styles.popupContent}>
         <AlertDialog.Heading>Are you sure?</AlertDialog.Heading>
         <AlertDialog.Description>
-          {asset.name} will be deleted. This action cannot be undone.
+          The asset {asset.name} will be deleted from your wallet.
         </AlertDialog.Description>
         <AlertDialog.Footer>
           <AlertDialog.Cancel>

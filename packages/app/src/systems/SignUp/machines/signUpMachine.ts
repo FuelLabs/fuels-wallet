@@ -26,7 +26,7 @@ export enum SignUpType {
 export const ERRORS = {
   seedPhraseMatchError: "The seed phrase doesn't match.",
   seedPhraseInvalidError:
-    'The seed phrase is invalid. Check carefully whether you have typed all words correctly.',
+    'The seed phrase is invalid. Check carefully that you have typed all words correctly.',
 };
 
 type FormValues = {

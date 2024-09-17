@@ -26,16 +26,15 @@ export const Logout = () => {
             IMPORTANT
           </Text>
           <Text css={styles.line}>
-            This action will remove all data from this device, including your
-            seedphrase and accounts.
+            This action will remove all wallet data from this device.
           </Text>
           <Text css={styles.line}>
-            Make sure you have securely backed up your Seed Phrase before
+            Make sure you have securely backed up your seed phrase before
             removing the wallet.
           </Text>
           <Text css={styles.line}>
-            If you have not backed up your Seed Phrase, you will lose access to
-            your funds.
+            As long as you have your seed phrase, you can always restore your
+            wallet.
           </Text>
         </Card>
       </Dialog.Description>
