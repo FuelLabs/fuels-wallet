@@ -43,6 +43,7 @@ export class BackgroundService {
     'accounts',
     'connect',
     'network',
+    'networks',
     'disconnect',
     'signMessage',
     'sendTransaction',
