@@ -24,6 +24,7 @@ import {
   Text,
   Tooltip,
 } from '@fuel-ui/react';
+import { isAmountAllowed } from './InputAmount.utils';
 
 export const DECIMAL_UNITS = DEFAULT_DECIMAL_UNITS;
 
@@ -158,6 +159,7 @@ export const InputAmount: InputAmountComponent = ({
             handleAmountChange(e.target.value);
           }}
           decimalScale={units}
+          isAllowed={isAmountAllowed}
           {...inputProps}
         />
         {initialBalance && (
