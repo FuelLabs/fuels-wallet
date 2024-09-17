@@ -154,6 +154,7 @@ export const InputAmount: InputAmountComponent = ({
           allowedDecimalSeparators={['.', ',']}
           allowNegative={false}
           thousandSeparator={false}
+          allowLeadingZeros={false}
           value={assetAmount}
           onChange={(e) => {
             handleAmountChange(e.target.value);
