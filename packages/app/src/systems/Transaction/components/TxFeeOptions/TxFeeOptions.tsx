@@ -124,12 +124,31 @@ export const TxFeeOptions = ({
                         value={tip.value.text}
                         inputMode="decimal"
                         autoComplete="off"
-                        allowedDecimalSeparators={['.', ',']}
+                        allowedDecimalSeparators={['.']}
                         allowNegative={false}
                         thousandSeparator={false}
                         decimalScale={DECIMAL_UNITS}
                         placeholder="0.00"
                         css={{ width: '100%' }}
+                        isAllowed={({ value }) => {
+                          // Allow to clear the input
+                          if (!value) {
+                            return true;
+                          }
+
+                          // Allow numbers starting with '0.' (e.g., 0.0005)
+                          if (/^0\.\d*$/.test(value)) {
+                            return true;
+                          }
+
+                          // Disallow leading zeros unless it's part of a decimal number
+                          if (/^0\d+/.test(value)) {
+                            return false;
+                          }
+
+                          // Allow positive numbers without leading zeros
+                          return /^\d+(\.\d+)?$/.test(value);
+                        }}
                         onChange={(e) => {
                           const text = e.target.value;
                           const { text: newText, amount } = createAmount(
