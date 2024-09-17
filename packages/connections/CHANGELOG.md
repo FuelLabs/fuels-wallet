@@ -1,5 +1,11 @@
 # @fuel-wallet/connections
 
+## 0.28.0
+
+### Patch Changes
+
+- [#1442](https://github.com/FuelLabs/fuels-wallet/pull/1442) [`32abae8c`](https://github.com/FuelLabs/fuels-wallet/commit/32abae8cc4cdd7c5e91db37dd2475c18f2bc5df0) Thanks [@arthurgeron](https://github.com/arthurgeron)! - Refactored Service Worker and Content Scripts to close running processes and listeners correctly. Fixes memory leaks.
+
 ## 0.27.4
 
 ## 0.27.3
