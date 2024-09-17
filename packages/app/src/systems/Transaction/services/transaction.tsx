@@ -380,7 +380,7 @@ export class TxService {
     };
   }
 
-  static async computeCustomFee({
+  private static async computeCustomFee({
     wallet,
     transactionRequest,
   }: TxInputs['computeCustomFee']) {
